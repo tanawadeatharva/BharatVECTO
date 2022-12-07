@@ -1,0 +1,4 @@
+Architecture, OVC,  GenericSOCMin, GenericSOCMax, GenericDeterioration
+PEV, 1, 5, 95, 5
+HEV, 1, 15, 85, 5
+HEV, 0, 25, 75, 5

@@ -53,6 +53,11 @@ Public Class VehicleForm
 		StringId = 2
 	End Enum
 
+	Private Enum PTOStandStillType
+		Mechanical = 0
+		Electrical = 1
+	End Enum
+
 
 	Private _axlDlog As VehicleAxleDialog
 	Private _hdVclass As VehicleClass
@@ -92,7 +97,9 @@ Public Class VehicleForm
 		CbCdMode.Enabled = Not Cfg.DeclMode
 		PnWheelDiam.Enabled = Not Cfg.DeclMode
 		pnPTO.Enabled = Not Cfg.DeclMode
+		gbEPTO.Enabled = Not Cfg.DeclMode
 		gbPTODrive.Enabled = Not Cfg.DeclMode
+		cbPTOStandstillCycleType.Enabled = Not Cfg.DeclMode
 		tpRoadSweeper.Visible = Not Cfg.DeclMode
 
 		CbCdMode.DataSource = EnumHelper.GetKeyValuePairs(Of CrossWindCorrectionMode)(Function(t) t.GetLabel())
@@ -132,6 +139,17 @@ Public Class VehicleForm
 
 		cbPTOType.DataSource = DeclarationData.PTOTransmission.GetTechnologies.Select(
 			Function(technology) New With {.Key = technology, .Value = technology}).ToList()
+		cbPTOStandstillCycleType.DataSource =
+			EnumHelper.GetValues(Of PTOStandStillType)
+		
+		If(Cfg.DeclMode) Then
+			cbPTOStandstillCycleType.SelectedIndex = -1
+		Else
+			'VehicleType
+		End If
+
+	
+		
 
 		cbLegislativeClass.DataSource = EnumHelper.GetKeyValuePairs(Of LegislativeClass)(Function(t) t.GetLabel())
 		'cbLegislativeClass.DataSource = EnumHelper.GetValues(Of LegislativeClass).Cast(Of LegislativeClass?).Select( _
@@ -457,9 +475,17 @@ Public Class VehicleForm
 		tbVehicleHeight.Text = If(vehicle.Height Is Nothing, "", vehicle.Height.ToGUIFormat())
 
 		cbPTOType.SelectedValue = pto.PTOTransmissionType
+
+
 		tbPTOLossMap.Text =
 			If(Cfg.DeclMode OrElse pto.PTOLossMap Is Nothing, "", GetRelativePath(pto.PTOLossMap.Source, basePath))
-		tbPTOCycle.Text = If(Cfg.DeclMode OrElse pto.PTOCycleDuringStop Is Nothing, "", GetRelativePath(pto.PTOCycleDuringStop.Source, basePath))
+		
+		If(vehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.IEPC_S))
+			cbPTOStandstillCycleType.SelectedIndex = 1
+		End If
+
+	    tbPTOCycle.Text = If(Cfg.DeclMode OrElse pto.PTOCycleDuringStop Is Nothing, "", GetRelativePath(pto.PTOCycleDuringStop.Source, basePath))
+		tbPTOElectricCycle.Text = If(Cfg.DeclMode OrElse pto.EPTOCycleDuringStop Is Nothing, "", GetRelativePath(pto.EPTOCycleDuringStop.Source, basePath))
 		tbPTODrive.Text = If(Cfg.DeclMode OrElse pto.PTOCycleWhileDriving Is Nothing, "", GetRelativePath(pto.PTOCycleWhileDriving.Source, basePath))
 
 		cbAngledriveType.SelectedValue = angledrive.Type
@@ -703,7 +729,7 @@ Public Class VehicleForm
 
 			    'PTO
 			    gbPTODrive.Enabled = False
-			    pnPtoMode1.Enabled = false
+			    'pnPtoMode1.Enabled = false
 			    pnPtoMode3.Enabled = False
 				lblNotePtoPEV_HEVS.Visible = true
 			Case VectoSimulationJobType.IEPC_E
@@ -873,7 +899,8 @@ Public Class VehicleForm
 
 			veh.PtoType = CType(cbPTOType.SelectedValue, String)
 			veh.PtoLossMap.Init(GetPath(file), tbPTOLossMap.Text)
-			veh.PtoCycleStandstill.Init(GetPath(file), tbPTOCycle.Text)
+
+			
 			veh.PtoCycleDriving.Init(GetPath(file), tbPTODrive.Text)
 
 			For Each item As ListViewItem In lvTorqueLimits.Items
@@ -885,6 +912,13 @@ Public Class VehicleForm
 
 			veh.VehicleTankSystem = CType(If(cbTankSystem.SelectedIndex > 0, cbTankSystem.SelectedValue, Nothing), TankSystem?)
 		End If
+
+		If(cbPTOStandstillCycleType.SelectedValue.ToString() = PTOStandStillType.Mechanical.ToString())
+			veh.PtoCycleStandstill.Init(GetPath(file), tbPTOCycle.Text)
+		Else
+			veh.EPtoCycleStandstill.Init(GetPath(file), tbPTOElectricCycle.Text)
+		End If
+
 
 		if (VehicleType = VectoSimulationJobType.BatteryElectricVehicle) Then
 		    veh.PtoType = CType(cbPTOType.SelectedValue, String)
@@ -1346,6 +1380,7 @@ Public Class VehicleForm
 			pnPTO.Enabled = False
 			gbPTODrive.Enabled = False
 			tbPTOLossMap.Text = ""
+			'cbPTOStandstillCycleType.SelectedIndex = -1
 		Else
 			pnPTO.Enabled = True
 			gbPTODrive.Enabled = True
@@ -1501,6 +1536,12 @@ Public Class VehicleForm
 	Private Sub btPTOCycleDrive_Click(sender As Object, e As EventArgs) Handles btPTOCycleDrive.Click
 		If PTODrivingCycleDrivingFileBrowser.OpenDialog(FileRepl(tbPTODrive.Text, GetPath(_vehFile))) Then
 			tbPTODrive.Text = GetFilenameWithoutDirectory(PTODrivingCycleDrivingFileBrowser.Files(0), GetPath(_vehFile))
+		End If
+	End Sub
+
+	Private Sub btnPTOelCycle_Click(sender As Object, e As EventArgs) Handles btnPTOelCycle.Click
+		If PTODrivingCycleElectricStandstillFileBrowser.OpenDialog(FileRepl(tbPTOElectricCycle.Text, GetPath(_vehFile))) Then
+			tbPTOElectricCycle.Text = GetFilenameWithoutDirectory(PTODrivingCycleElectricStandstillFileBrowser.Files(0), GetPath(_vehFile))
 		End If
 	End Sub
 
@@ -1730,18 +1771,18 @@ Public Class VehicleForm
 		Dim f = FileRepl(tbIHPCFilePath.Text, GetPath(_vehFile))
 
 		IHPCForm.JobDir = GetPath(_vehFile)
-	    IHPCForm.AutoSendTo = Sub(file, vehicleForm)
-	        If UCase(FileRepl(vehicleForm.tbIHPCFilePath.Text, JobDir)) <> UCase(file) Then _
-	            vehicleForm.tbIHPCFilePath.Text = GetFilenameWithoutDirectory(file, JobDir)
-	        VectoJobForm.UpdatePic()
-	    End Sub
+		IHPCForm.AutoSendTo = Sub(file, vehicleForm)
+								  If UCase(FileRepl(vehicleForm.tbIHPCFilePath.Text, JobDir)) <> UCase(file) Then _
+				vehicleForm.tbIHPCFilePath.Text = GetFilenameWithoutDirectory(file, JobDir)
+								  VectoJobForm.UpdatePic()
+							  End Sub
 
-	    If Not Trim(f) = "" Then
-	        If Not File.Exists(f) Then
-	            MsgBox("File not found!")
-	            Exit Sub
-	        End If
-	    End If
+		If Not Trim(f) = "" Then
+			If Not File.Exists(f) Then
+				MsgBox("File not found!")
+				Exit Sub
+			End If
+		End If
 
 		If Not IHPCForm.Visible Then
 			IHPCForm.ClearIHPC()
@@ -1758,5 +1799,23 @@ Public Class VehicleForm
 				MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading IHPC File")
 			End Try
 		End If
+	End Sub
+
+	Private Sub cbPTOStandstillCycleType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbPTOStandstillCycleType.SelectedIndexChanged
+		Dim cb = TryCast(sender, ComboBox)
+	
+		If (Cfg.DeclMode) Then
+			Exit Sub
+		End If
+		If ((cb Is Nothing) Or (cb.SelectedIndex = -1)) Then
+			gbPTOICEGroupBox.Enabled = false
+			gbEPTO.Enabled = false
+			Return
+		End If
+
+		Dim val = CType(cb.SelectedValue, PTOStandStillType)
+
+		gbPTOICEGroupBox.Enabled = (val = PTOStandStillType.Mechanical)
+		gbEPTO.Enabled = (val = PTOStandStillType.Electrical)
 	End Sub
 End Class

@@ -405,7 +405,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	{
 		public override void Load()
 		{
-			
+			Bind<IResultWriterFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(
+				new CombineArgumentsToNameInstanceProvider.MethodSettings() {
+					combineToNameDelegate = ,
+					skipArguments = 6,
+					takeArguments = 6,
+					methods = new[] {
+						typeof(IResultWriterFactory).GetMethod(nameof(IResultWriterFactory.GetCIFResultWriter))
+					}
+				}));
+
 			Bind<IResultWriter>().To<ExemptedResultsWriter>();
 		}
 	}

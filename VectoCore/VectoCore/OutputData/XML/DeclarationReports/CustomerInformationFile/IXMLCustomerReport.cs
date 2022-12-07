@@ -9,7 +9,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	{
 		void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes);
 		XDocument Report { get; }
-		void WriteResult(XMLDeclarationReport.ResultEntry resultValue);
+		void WriteResult(IResultEntry resultValue);
 		void GenerateReport(XElement resultSignature);
 	}
 }

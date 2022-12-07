@@ -57,6 +57,7 @@ namespace TUGraz.VectoCommon.Models
 		public const string Lorry = "Lorry";
 		public const string CompletedBus = "CompletedBus";
 		public const string Van = "Van";
+
 		public static HashSet<string> SuperCategories { get; } = new HashSet<string>() {
 			PrimaryBus,
 			Lorry,

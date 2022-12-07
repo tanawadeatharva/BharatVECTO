@@ -36,7 +36,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 					: Formulas.InertiaPower(currOutAngularVelocity, prevOutAngularVelocity, 
 						ElectricMotorData.Inertia, dt) / avgSpeed;
 				//var dragTorque = ElectricMotorData.DragCurve.Lookup()
-				return (-inertiaTorqueLoss); //.LimitTo(maxDriveTorque, maxRecuperationTorque);
+				//return ((-1)*(inertiaTorqueLoss + outTorque)).LimitTo(maxDriveTorque, maxRecuperationTorque ?? VectoMath.Max(maxDriveTorque, 0.SI<NewtonMeter>())); //.LimitTo(maxDriveTorque, maxRecuperationTorque);
+				return -inertiaTorqueLoss;
 			}
             if (DataBus.DriverInfo.DrivingAction == DrivingAction.Coast ||
                 DataBus.DriverInfo.DrivingAction == DrivingAction.Roll) {

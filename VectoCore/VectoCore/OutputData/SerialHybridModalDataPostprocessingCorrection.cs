@@ -80,6 +80,9 @@ namespace TUGraz.VectoCore.OutputData
 					: comp.PowerOff * r.ICEOffTimeDriving * engLine * (1 - essParams.UtilityFactorDriving),
 				FcREESSSoc = r.DeltaEReessMech * socCorr,
 				FcBusAuxEs = engLine * r.WorkBusAuxESMech,
+				FcHeatPumpHeatingEl = engLine * r.WorkBusAuxHeatPumpHeatingElMech,
+				FcHeatPumpHeatingMech = engLine * r.WorkBusAuxHeatPumpHeatingMech,
+				FcBusAuxEletcricHeater = engLine * r.WorkBusAuxElectricHeater,
 				FcWHR = engLine * r.WorkWHR,
 				FcAuxHtr = 0.SI<Kilogram>()
 			};

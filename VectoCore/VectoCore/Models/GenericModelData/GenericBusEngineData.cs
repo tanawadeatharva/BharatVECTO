@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			};
 
 			var limits = primaryVehicle.TorqueLimits.ToDictionary(e => e.Gear);
-			var gears = AbstractSimulationDataAdapter.FilterDisabledGears(primaryVehicle.TorqueLimits, gearbox);
+			var gears = GearboxDataAdapterBase.FilterDisabledGears(primaryVehicle.TorqueLimits, gearbox);
 			
 			var numGears = gears.Count;
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);

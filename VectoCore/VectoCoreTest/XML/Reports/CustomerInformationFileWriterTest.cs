@@ -8,6 +8,8 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.CustomerInformationFile;
@@ -70,11 +72,21 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		{
 			var report = GetCustomerReport(fileName, out var dataProvider) as ConventionalLorry_CIF;
 			Assert.NotNull(report);
-			report.InitializeVehicleData(dataProvider);
+			report.Initialize(GetRunData(dataProvider));
 			report.GenerateReport(XMLHelper.CreateDummySig(XNamespace.Get("http://www.w3.org/2000/09/xmldsig#")));
 
 			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.CustomerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+		}
+
+		private VectoRunData GetRunData(IDeclarationInputDataProvider dataProvider)
+		{
+			return new VectoRunData() {
+				InputData = dataProvider,
+				VehicleData = new VehicleData() {
+					OffVehicleCharging = false
+				}
+			};
 		}
 
 		[TestCase(HEV_Px_HeavyLorry)]
@@ -82,7 +94,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		{
 			var report = GetCustomerReport(fileName, out var dataProvider) as HEV_PxLorry_CIF;
 			Assert.NotNull(report);
-			report.InitializeVehicleData(dataProvider);
+			report.Initialize(GetRunData(dataProvider));
 			report.GenerateReport(XMLHelper.CreateDummySig(XNamespace.Get("http://www.w3.org/2000/09/xmldsig#")));
 
 			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.CustomerReport));
@@ -94,7 +106,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		{
 			var report = GetCustomerReport(fileName, out var dataProvider) as HEV_S2_Lorry_CIF;
 			Assert.NotNull(report);
-			report.InitializeVehicleData(dataProvider);
+			report.Initialize(GetRunData(dataProvider));
 
 			report.GenerateReport(XMLHelper.CreateDummySig(XNamespace.Get("http://www.w3.org/2000/09/xmldsig#")));
 
@@ -107,7 +119,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		{
 			var report = GetCustomerReport(fileName, out var dataProvider) as HEV_S3_Lorry_CIF;
 			Assert.NotNull(report);
-			report.InitializeVehicleData(dataProvider);
+			report.Initialize(GetRunData(dataProvider));
 
 			report.GenerateReport(XMLHelper.CreateDummySig(XNamespace.Get("http://www.w3.org/2000/09/xmldsig#")));
 
@@ -122,7 +134,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		{
 			var report = GetCustomerReport(fileName, out var dataProvider) as HEV_S4_Lorry_CIF;
 			Assert.NotNull(report);
-			report.InitializeVehicleData(dataProvider);
+			report.Initialize(GetRunData(dataProvider));
 
 			report.GenerateReport(XMLHelper.CreateDummySig(XNamespace.Get("http://www.w3.org/2000/09/xmldsig#")));
 
@@ -135,7 +147,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		{
 			var report = GetCustomerReport(fileName, out var dataProvider) as HEV_IEPC_Lorry_CIF;
 			Assert.NotNull(report);
-			report.InitializeVehicleData(dataProvider);
+			report.Initialize(GetRunData(dataProvider));
 
 			report.GenerateReport(XMLHelper.CreateDummySig(XNamespace.Get("http://www.w3.org/2000/09/xmldsig#")));
 
@@ -148,7 +160,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		{
 			var report = GetCustomerReport(fileName, out var dataProvider) as PEV_E2_Lorry_CIF;
 			Assert.NotNull(report);
-			report.InitializeVehicleData(dataProvider);
+			report.Initialize(GetRunData(dataProvider));
 
 			report.GenerateReport(XMLHelper.CreateDummySig(XNamespace.Get("http://www.w3.org/2000/09/xmldsig#")));
 
@@ -161,7 +173,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		{
 			var report = GetCustomerReport(fileName, out var dataProvider) as PEV_E3_Lorry_CIF;
 			Assert.NotNull(report);
-			report.InitializeVehicleData(dataProvider);
+			report.Initialize(GetRunData(dataProvider));
 			report.GenerateReport(XMLHelper.CreateDummySig(XNamespace.Get("http://www.w3.org/2000/09/xmldsig#")));
 
 			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.CustomerReport));
@@ -172,7 +184,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		{
 			var report = GetCustomerReport(fileName, out var dataProvider) as PEV_E4_Lorry_CIF;
 			Assert.NotNull(report);
-			report.InitializeVehicleData(dataProvider);
+			report.Initialize(GetRunData(dataProvider));
 
 			report.GenerateReport(XMLHelper.CreateDummySig(XNamespace.Get("http://www.w3.org/2000/09/xmldsig#")));
 
@@ -184,7 +196,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
         {
             var report = GetCustomerReport(fileName, out var dataProvider) as PEV_IEPC_Lorry_CIF;
             Assert.NotNull(report);
-            report.InitializeVehicleData(dataProvider);
+            report.Initialize(GetRunData(dataProvider));
 
 			report.GenerateReport(XMLHelper.CreateDummySig(XNamespace.Get("http://www.w3.org/2000/09/xmldsig#")));
 
@@ -197,7 +209,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		{
 			var report = GetCustomerReport(fileName, out var dataProvider) as Exempted_Lorry_CIF;
 			Assert.NotNull(report);
-			report.InitializeVehicleData(dataProvider);
+			report.Initialize(GetRunData(dataProvider));
 			report.GenerateReport(XMLHelper.CreateDummySig(XNamespace.Get("http://www.w3.org/2000/09/xmldsig#")));
 
 			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.CustomerReport));
@@ -211,7 +223,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		{
 			var report = GetCompletedBusCustomerReport(fileName, out var dataProvider) as Conventional_CompletedBusCIF;
 			Assert.NotNull(report);
-			report.InitializeVehicleData(dataProvider);
+			report.Initialize(GetRunData(dataProvider));
 			report.GenerateReport(XMLHelper.CreateDummySig(XNamespace.Get("http://www.w3.org/2000/09/xmldsig#")));
 
 			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.CustomerReport));
@@ -225,7 +237,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		{
 			var report = GetCompletedBusCustomerReport(fileName, out var dataProvider) as Exempted_CompletedBusCIF;
 			Assert.NotNull(report);
-			report.InitializeVehicleData(dataProvider);
+			report.Initialize(GetRunData(dataProvider));
 			report.GenerateReport(XMLHelper.CreateDummySig(XNamespace.Get("http://www.w3.org/2000/09/xmldsig#")));
 
 			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.CustomerReport));

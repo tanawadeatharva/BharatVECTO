@@ -138,6 +138,7 @@ namespace TUGraz.VectoCore.OutputData
 		public const string E_FORMAT = "E_{0} [kWh]";
 		public const string E_AUX_FORMAT = "E_aux_{0} [kWh]";
 		public const string E_AUX = "E_aux_sum [kWh]";
+		public const string E_AUX_EL = "E_aux_sum_el [kWh]";
 
 		public const string E_AUX_EL_HV = "E_aux_el(HV) [kWh]";
 
@@ -465,7 +466,8 @@ namespace TUGraz.VectoCore.OutputData
 			{ E_POWERTRAIN_INERTIA, SumFunc((r, m) => m.PowerAccelerations().ConvertToKiloWattHour(), ModalResultField.P_ice_inertia, ModalResultField.P_gbx_inertia)},
 			
 			{ E_AUX, SumFunc((r, m) => m.WorkAuxiliaries()?.ConvertToKiloWattHour(), ModalResultField.P_aux_mech)},
-			{ E_AUX_EL_HV, SumFunc((r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_aux_el).ConvertToKiloWattHour(), ModalResultField.P_aux_el)},
+			{ E_AUX_EL, SumFunc((r, m) => m.WorkElectricAuxiliaries()?.ConvertToKiloWattHour(), ModalResultField.P_aux_el)},
+			{ E_AUX_EL_HV, SumFunc((r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_Aux_el_HV).ConvertToKiloWattHour(), ModalResultField.P_Aux_el_HV)},
 			{ E_CLUTCH_LOSS, SumFunc((r, m) => m.WorkClutch().ConvertToKiloWattHour(), ModalResultField.P_clutch_loss)},
 			{ E_TC_LOSS, SumFunc((r, m) => m.WorkTorqueConverter().ConvertToKiloWattHour(), ModalResultField.P_TC_loss)},
 			{ E_SHIFT_LOSS, SumFunc((r, m) => m.WorkGearshift().ConvertToKiloWattHour(), ModalResultField.P_gbx_shift_loss)},
@@ -580,7 +582,12 @@ namespace TUGraz.VectoCore.OutputData
 				}, ModalResultField.P_axle_in, ModalResultField.P_brake_in)
 			},
 
-			{ NUM_GEARSHIFTS, SumFunc((r, m) => ((uint?)r.GearboxData?.Gears.Count ?? 0u) == 1 ? 0.SI<Scalar>() : (ConvertedSI)m.GearshiftCount())},
+			{ NUM_GEARSHIFTS, SumFunc((r, m) => {
+				var gears = ((uint?)r.GearboxData?.Gears.Count ?? 0u);
+				return (gears == 1 || gears == 0)
+					? 0.SI<Scalar>()
+					: (ConvertedSI)m.GearshiftCount();
+			})},
 			
 			{ COASTING_TIME_SHARE, SumFunc((r, m) => (ConvertedSI)m.CoastingTimeShare(), ModalResultField.drivingBehavior) },
 			{ BRAKING_TIME_SHARE, SumFunc((r, m) => (ConvertedSI)m.BrakingTimeShare(), ModalResultField.drivingBehavior) },

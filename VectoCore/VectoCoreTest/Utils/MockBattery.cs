@@ -4,7 +4,7 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Tests.Utils {
-	public class MockBattery : IElectricEnergyStorage, IElectricEnergyStoragePort, IElectricAuxConnecor
+	public class MockBattery : IElectricEnergyStorage, IElectricEnergyStoragePort, IElectricAuxConnector
 	{
 		public Volt InternalVoltage => 640.SI<Volt>();
 
@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 
 		public IElectricEnergyStoragePort MainBatteryPort => this;
 
-		public IElectricAuxConnecor AuxBatteryPort()
+		public IElectricAuxConnector AuxBatteryPort()
 		{
 			return this;
 		}

@@ -4,7 +4,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 {
     public enum HeatingDistributionCase
     {
-        HeatingDistribution1,
+        HeatingDistribution1 = 1,
         HeatingDistribution2,
         HeatingDistribution3,
         HeatingDistribution4,
@@ -16,6 +16,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
         HeatingDistribution10,
         HeatingDistribution11,
         HeatingDistribution12,
+
+        HeatingDistribution_NotAvailable_,
     }
 
 	public static class HeatingDistributionCaseHelper

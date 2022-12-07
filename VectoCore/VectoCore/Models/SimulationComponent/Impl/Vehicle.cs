@@ -142,6 +142,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, MeterPerSquareSecond acceleration, Radian gradient,
 			bool dryRun = false)
 		{
+
 			Log.Debug("Vehicle: acceleration: {0}", acceleration);
 			CurrentState.SimulationInterval = dt;
 			CurrentState.Acceleration = acceleration;
@@ -193,10 +194,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Warn("Distance field is not set!");
 			} else {
 				var distance = (SI)container[ModalResultField.dist];
-				if (!distance.IsEqual(CurrentState.Distance)) {
-					Log.Warn("Vehicle Distance diverges from Cycle by {0} [m]. Distance: {1}",
-						(distance - CurrentState.Distance).Value(), distance);
-				}
+				//if (!distance.IsEqual(CurrentState.Distance)) {
+				//	Log.Warn("Vehicle Distance diverges from Cycle by {0} [m]. Distance: {1}",
+				//		(distance - CurrentState.Distance).Value(), distance);
+				//}
 			}
 		}
 

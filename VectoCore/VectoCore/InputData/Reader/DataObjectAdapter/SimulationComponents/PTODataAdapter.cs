@@ -1,6 +1,9 @@
-﻿using TUGraz.VectoCommon.InputData;
+﻿using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -8,13 +11,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 {
 	public interface IPTODataAdapter
 	{
-		PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto);
-		PTOData CreateDefaultPTOData();
+		PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto, IGearboxDeclarationInputData gbx);
+		PTOData CreateDefaultPTOData(IPTOTransmissionInputData pto, IGearboxDeclarationInputData gbx);
 	}
 
 	public class PTODataAdapterLorry : IPTODataAdapter
 	{
-		public static PTOData DefaultPTOData()
+
+        public virtual PTOData CreateDefaultPTOData(IPTOTransmissionInputData pto, IGearboxDeclarationInputData gbx)
 		{
 			return new PTOData()
 			{
@@ -22,19 +26,62 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				LossMap = PTOIdleLossMapReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.PTO.DefaultPTOIdleLosses)),
 				PTOCycle =
 					DrivingCycleDataReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.PTO.DefaultPTOActivationCycle),
-						CycleType.PTO, "PTO", false)
+						CycleType.PTO, "PTO", false),
+				TransmissionPowerDemand = DeclarationData.PTOTransmission.Lookup(DeclarationData.PTO.DefaultPTOTechnology).PowerDemand,
 			};
 		}
-        public PTOData CreateDefaultPTOData()
+        public virtual PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto, IGearboxDeclarationInputData gbx)
 		{
-			return DefaultPTOData();
-		}
-        public PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto)
-		{
-			if (pto != null && pto.PTOTransmissionType != "None")
-			{
+			if (pto != null && pto.PTOTransmissionType != "None"){
+				var powerDemand = DeclarationData.PTOTransmission.Lookup(pto.PTOTransmissionType).PowerDemand;
 				return new PTOData
 				{
+					TransmissionPowerDemand = powerDemand,
+					TransmissionType = pto.PTOTransmissionType,
+					LossMap = PTOIdleLossMapReader.GetZeroLossMap(),
+				};
+			}
+			return null;
+		}
+	}
+
+
+	public class ElectricPTODataAdapter : PTODataAdapterLorry
+	{
+		public override PTOData CreateDefaultPTOData(IPTOTransmissionInputData pto, IGearboxDeclarationInputData gbx)
+		{
+			Watt powerDemand = null;
+			string transmissionType = null;
+			if (pto != null && gbx != null && pto.PTOTransmissionType != "None") {
+				powerDemand = DeclarationData.PTOTransmission.Lookup(pto.PTOTransmissionType).PowerDemand;
+				transmissionType = pto.PTOTransmissionType;
+			}
+
+
+			return new PTOData()
+			{
+				TransmissionType = transmissionType,
+				LossMap = PTOIdleLossMapReader.GetZeroLossMap(),
+				PTOCycle =
+					DrivingCycleDataReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.PTO.DefaultE_PTOActivationCycle),
+						CycleType.EPTO, "PTO", false),
+				TransmissionPowerDemand = powerDemand,
+			};
+		}
+
+		public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto, IGearboxDeclarationInputData gbx)
+		{
+
+			if (gbx == null && pto != null && (pto.PTOTransmissionType != "None")) {
+				throw new VectoException("PTO specified but the vehicle has no gearbox");
+			} 
+				
+			if ((gbx != null) && (pto != null) && (pto.PTOTransmissionType != "None"))
+			{
+				var powerDemand = DeclarationData.PTOTransmission.Lookup(pto.PTOTransmissionType).PowerDemand;
+				return new PTOData
+				{
+					TransmissionPowerDemand = powerDemand,
 					TransmissionType = pto.PTOTransmissionType,
 					LossMap = PTOIdleLossMapReader.GetZeroLossMap(),
 				};
@@ -42,26 +89,5 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			return null;
 		}
-	}
-
-	public class PTODataAdapterBus : IPTODataAdapter
-	{
-		public static PTOData DefaultPTOData()
-		{
-			return null;
-		}
-		#region Implementation of IPTODataAdapter
-
-		public PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto)
-		{
-			return null;
-		}
-
-		public PTOData CreateDefaultPTOData()
-		{
-			return DefaultPTOData();
-		}
-
-		#endregion
 	}
 }

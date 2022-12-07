@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCore.Models.Declaration;
+﻿using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
@@ -6,7 +7,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 	public interface IDriverDataAdapter
 	{
-		DriverData CreateDriverData();
+		DriverData CreateDriverData(Segment segment);
 	}
 	internal abstract class DriverDataAdapter : IDriverDataAdapter
 	{
@@ -16,7 +17,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 		
 
-		public virtual DriverData CreateDriverData()
+		public virtual DriverData CreateDriverData(Segment segment)
 		{
             var lookAheadData = new DriverData.LACData
             {
@@ -63,6 +64,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
                     OverspeedUseCase3 = DeclarationData.Driver.PCC.OverspeedUseCase3
                 }
             };
+
+            retVal.AccelerationCurve = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
             return retVal;
         }
         #endregion
@@ -74,9 +77,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 		#region Overrides of DriverDataAdapter
 
-		public override DriverData CreateDriverData()
+		public override DriverData CreateDriverData(Segment segment)
 		{
-			return base.CreateDriverData();
+			return base.CreateDriverData(segment:segment);
 		}
 
 		#endregion
@@ -86,9 +89,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 	{
 		#region Overrides of DriverDataAdapter
 
-		public override DriverData CreateDriverData()
+		public override DriverData CreateDriverData(Segment segment)
 		{
-			var retVal = base.CreateDriverData();
+			var retVal = base.CreateDriverData(segment);
 			retVal.LookAheadCoasting.Enabled = true;
 			return retVal;
         }
@@ -98,9 +101,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 	internal sealed class CompletedBusGenericDriverDataAdapter : DriverDataAdapter
 	{
-		public override DriverData CreateDriverData()
+		public override DriverData CreateDriverData(Segment segment)
 		{
-			var retVal = base.CreateDriverData();
+			var retVal = base.CreateDriverData(segment);
 			retVal.LookAheadCoasting.Enabled = false;
 			retVal.OverSpeed.Enabled = false;
 			return retVal;
@@ -109,9 +112,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 	internal sealed class CompletedBusSpecificDriverDataAdapter : DriverDataAdapter
 	{
-		public override DriverData CreateDriverData()
+		public override DriverData CreateDriverData(Segment segment)
 		{
-			var retVal = base.CreateDriverData();
+			var retVal = base.CreateDriverData(segment);
 			retVal.LookAheadCoasting.Enabled = false;
 			retVal.OverSpeed.Enabled = false;
 			return retVal;

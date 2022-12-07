@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var vehicle = InputDataProvider.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle;
 			var powertrainConfig = CreateVectoRunData(vehicle, 0, null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>());
 			var fuels = new List<List<FuelData.Entry>>();
-			Report.InitializeReport(powertrainConfig, fuels);
+			Report.InitializeReport(powertrainConfig);
 		}
 	}
 }

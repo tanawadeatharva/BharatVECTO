@@ -13,6 +13,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDataFactory
@@ -62,6 +63,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				}
 			}
 
+			protected override VectoRunData GetPowertrainConfigForReportInit()
+			{
+				var vehicle = InputDataProvider.JobInputData.Vehicle;
+				return _segment.Missions.Select(
+						mission => CreateVectoRunData(
+							vehicle, mission, mission.Loadings.First(), 0))
+					.FirstOrDefault(x => x != null);
+			}
+
 			protected Segment GetSegment(IVehicleDeclarationInputData vehicle)
 			{
 				if (vehicle.VehicleCategory != VehicleCategory.HeavyBusPrimaryVehicle)
@@ -92,8 +102,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				}
 
 				_segment = GetSegment(vehicle);
-				_driverdata = DataAdapter.CreateDriverData();
-				_driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segment.AccelerationFile);
+				_driverdata = DataAdapter.CreateDriverData(_segment);
 				var tempVehicle = DataAdapter.CreateVehicleData(vehicle, _segment, _segment.Missions.First(),
 														_segment.Missions.First().Loadings.First(), _allowVocational);
 				_airdragData = DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData,
@@ -107,25 +116,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					_axlegearData = DataAdapter.CreateAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData);
 				}
 				_angledriveData = DataAdapter.CreateAngledriveData(InputDataProvider.JobInputData.Vehicle.Components.AngledriveInputData);
-               
-				var tmpEngine = DataAdapter.CreateEngineData(
-					vehicle, vehicle.Components.EngineInputData.EngineModes[0], _segment.Missions.First());
-				InitGearboxAndGearshiftData(vehicle, tmpEngine, tempVehicle);
-
 
 				_retarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData);
 
-				_ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
-
-
 			}
 
-			protected abstract void InitGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle,
-				CombustionEngineData tmpEngine, VehicleData tempVehicle);
-
 			#endregion
-			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx,
+			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle,
 				Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
+				int? modeIdx,
 				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
 			{
 				if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle)
@@ -146,7 +145,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 				var engine = vehicle.Components.EngineInputData;
 				var engineModes = engine.EngineModes;
-				var engineMode = engineModes[modeIdx];
+				var engineMode = engineModes[modeIdx.Value];
 
 				var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
 
@@ -166,7 +165,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 						vehicle.Components.AuxiliaryInputData,
 						vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 						vehicle.Length ?? mission.BusParameter.VehicleLength,
-						vehicle.Components.AxleWheels.NumSteeredAxles),
+						vehicle.Components.AxleWheels.NumSteeredAxles, vehicle.VehicleType),
 					Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
 					Retarder = _retarderData,
 					DriverData = _driverdata,
@@ -181,10 +180,22 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					GearshiftParameters = _gearshiftData,
 					JobType = vehicle.VehicleType,
 				};
-				simulationRunData.EngineData.FuelMode = modeIdx;
+				simulationRunData.EngineData.FuelMode = modeIdx.Value;
 				simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
 				simulationRunData.BusAuxiliaries = DataAdapter.CreateBusAuxiliariesData(
 					mission, InputDataProvider.JobInputData.Vehicle, simulationRunData);
+				var shiftStrategyName =
+					PowertrainBuilder.GetShiftStrategyName(vehicle.Components.GearboxInputData.Type,
+						vehicle.VehicleType);
+				simulationRunData.GearboxData = DataAdapter.CreateGearboxData(vehicle, simulationRunData,
+					ShiftPolygonCalculator.Create(shiftStrategyName, simulationRunData.GearshiftParameters));
+				simulationRunData.GearshiftParameters =
+					DataAdapter.CreateGearshiftData(
+						simulationRunData.GearboxData,
+						(simulationRunData.AxleGearData?.AxleGear.Ratio ?? 1.0) * (simulationRunData.AngledriveData?.Angledrive.Ratio ?? 1.0),
+						vehicle.EngineIdleSpeed
+					);
+				
 				return simulationRunData;
 			}
 		}
@@ -208,7 +219,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					{
 						foreach (var loading in mission.Loadings)
 						{
-							var simulationRunData = CreateVectoRunData(vehicle, modeIdx, mission, loading);
+							var simulationRunData = CreateVectoRunData(vehicle, mission, loading, modeIdx);
 							if (simulationRunData == null)
 							{
 								continue;
@@ -221,29 +232,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 			#endregion
 
-			#region Overrides of AbstractDeclarationVectoRunDataFactory
-			protected override void InitGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle,
-				CombustionEngineData tmpEngine,
-				VehicleData tempVehicle)
-			{
-				var tmpRunData = new VectoRunData()
-				{
-					GearboxData = new GearboxData()
-					{
-						Type = vehicle.Components.GearboxInputData.Type,
-					}
-				};
-				var tmpStrategy = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData));
-				_gearboxData = DataAdapter.CreateGearboxData(
-					vehicle, new VectoRunData() { EngineData = tmpEngine, AxleGearData = _axlegearData, VehicleData = tempVehicle },
-					tmpStrategy);
-
-				_gearshiftData = DataAdapter.CreateGearshiftData(
-					_gearboxData, _axlegearData.AxleGear.Ratio * (_angledriveData?.Angledrive.Ratio ?? 1.0), tmpEngine.IdleSpeed);
-			}
-
-
-			#endregion
 		}
 
 		public abstract class Hybrid : PrimaryBusBase
@@ -262,7 +250,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					{
 						foreach (var loading in mission.Loadings)
 						{
-							var simulationRunData = CreateVectoRunData(vehicle, modeIdx, mission, loading);
+							var simulationRunData = CreateVectoRunData(vehicle, mission, loading, modeIdx);
 							if (simulationRunData == null)
 							{
 								continue;
@@ -283,13 +271,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 			}
 
-			protected override void InitGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle,
-				CombustionEngineData tmpEngine,
-				VehicleData tempVehicle)
-			{
-				//_gearboxData = ;
-				_gearshiftData = null;
-			}
 		}
 
 
@@ -361,15 +342,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				throw new NotImplementedException();
 			}
 
-			protected override void InitGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle,
-				CombustionEngineData tmpEngine,
-				VehicleData tempVehicle)
-			{
-
-
-			}
-
-
 			#endregion
 		}
 
@@ -434,13 +406,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 			#region Overrides of PrimaryBusBase
 
 			protected override IEnumerable<VectoRunData> VectoRunDataHeavyBusPrimary()
-			{
-				throw new NotImplementedException();
-			}
-
-			protected override void InitGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle,
-				CombustionEngineData tmpEngine,
-				VehicleData tempVehicle)
 			{
 				throw new NotImplementedException();
 			}
@@ -511,16 +476,24 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 			#region Overrides of PrimaryBusBase
 
-			protected override IEnumerable<VectoRunData> VectoRunDataHeavyBusPrimary()
+			protected override VectoRunData GetPowertrainConfigForReportInit()
 			{
-				throw new NotImplementedException();
+				var vehicle = InputDataProvider.JobInputData.Vehicle;
+				return CreateVectoRunData(vehicle, null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(), 0);
 			}
 
-			protected override void InitGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle,
-				CombustionEngineData tmpEngine,
-				VehicleData tempVehicle)
+			protected override IEnumerable<VectoRunData> VectoRunDataHeavyBusPrimary()
 			{
-				throw new NotImplementedException();
+				yield return new VectoRunData {
+					Exempted = true,
+					Report = Report,
+					Mission = new Mission { MissionType = MissionType.ExemptedMission },
+					VehicleData = DataAdapter.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, new Segment(),
+						null,
+						new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.ReferenceLoad,
+							Tuple.Create<Kilogram, double?>(0.SI<Kilogram>(), null)), _allowVocational),
+					InputDataHash = InputDataProvider.XMLHash
+				};
 			}
 
 			#endregion

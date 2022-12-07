@@ -98,6 +98,8 @@ namespace TUGraz.VectoCore
 			LoadModule<MRFNinjectModule>();
 
 			LoadModule<CIFNinjectModule>();
+
+			LoadModule<CIFResultsNinjectModule>();
 			
 			LoadModule<VIFNinjectModule>();
 			

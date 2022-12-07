@@ -21,8 +21,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
 			IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes);
 
-		ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio,
-			PerSecond engineIdlingSpeed);
+		ShiftStrategyParameters CreateGearshiftData(double axleRatio,
+			PerSecond engineIdlingSpeed, GearboxType gearboxType, int gearsCount);
 	}
 
 	public abstract class GearboxDataAdapterBase : ComponentDataAdapterBase, IGearboxDataAdapter
@@ -155,8 +155,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		protected abstract GearboxData DoCreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes);
 
 
-		public ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio,
-			PerSecond engineIdlingSpeed)
+		public ShiftStrategyParameters CreateGearshiftData(double axleRatio,
+			PerSecond engineIdlingSpeed, GearboxType gearboxType, int gearsCount)
 		{
 			var retVal = new ShiftStrategyParameters
 			{
@@ -184,7 +184,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					DeclarationData.GearboxTCU.CurrentCardanPowerThresholdPropulsion,
 				TargetSpeedDeviationFactor = DeclarationData.GearboxTCU.TargetSpeedDeviationFactor,
 				EngineSpeedHighDriveOffFactor = DeclarationData.GearboxTCU.EngineSpeedHighDriveOffFactor,
-				RatingFactorCurrentGear = gbx.Type.AutomaticTransmission()
+				RatingFactorCurrentGear = gearboxType.AutomaticTransmission()
 					? DeclarationData.GearboxTCU.RatingFactorCurrentGearAT
 					: DeclarationData.GearboxTCU.RatingFactorCurrentGear,
 				AccelerationReserveLookup = AccelerationReserveLookupReader.ReadFromStream(
@@ -213,8 +213,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				//--------------------
 				RatioEarlyUpshiftFC = DeclarationData.GearboxTCU.RatioEarlyUpshiftFC / axleRatio,
 				RatioEarlyDownshiftFC = DeclarationData.GearboxTCU.RatioEarlyDownshiftFC / axleRatio,
-				AllowedGearRangeFC = gbx.Type.AutomaticTransmission()
-					? (gbx.Gears.Count > DeclarationData.GearboxTCU.ATSkipGearsThreshold
+				AllowedGearRangeFC = gearboxType.AutomaticTransmission()
+					? (gearsCount > DeclarationData.GearboxTCU.ATSkipGearsThreshold
 						? DeclarationData.GearboxTCU.AllowedGearRangeFCATSkipGear
 						: DeclarationData.GearboxTCU.AllowedGearRangeFCAT)
 					: DeclarationData.GearboxTCU.AllowedGearRangeFCAMT,
@@ -225,11 +225,47 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 				LoadStageThresoldsUp = DeclarationData.GearboxTCU.LoadStageThresholdsUp,
 				LoadStageThresoldsDown = DeclarationData.GearboxTCU.LoadStageThresoldsDown,
-				ShiftSpeedsTCToLocked = DeclarationData.GearboxTCU.ShiftSpeedsTCToLocked
+				ShiftSpeedsTCToLocked = engineIdlingSpeed == null ? null : DeclarationData.GearboxTCU.ShiftSpeedsTCToLocked
 					.Select(x => x.Select(y => y + engineIdlingSpeed.AsRPM).ToArray()).ToArray(),
 			};
 
 			return retVal;
+		}
+
+		/// <summary>
+		/// Filters the gears based on disabling rule: Disable either the last 1 or 2 gears by setting their vehicle-level torque limit to 0.
+		/// </summary>
+		internal static IList<ITransmissionInputData> FilterDisabledGears(IList<ITorqueLimitInputData> torqueLimits, IGearboxDeclarationInputData gearboxData)
+		{
+			if (torqueLimits == null || torqueLimits.Count == 0) {
+				return gearboxData?.Gears ?? new List<ITransmissionInputData>();
+			}
+
+			if (gearboxData == null) {
+				return new List<ITransmissionInputData>();
+			}
+
+			var gearsInput = gearboxData.Gears;
+			var lastGearNumber = gearsInput.Max(g => g.Gear);
+			var toRemove = torqueLimits
+				.Where(tqLimit => tqLimit.MaxTorque.IsEqual(0))
+				.Select(tqLimit => gearsInput.FirstOrDefault(g => g.Gear == tqLimit.Gear))
+				.Where(g => g != default)
+				.OrderBy(g => g.Gear)
+				.ToList();
+
+			if ((toRemove.Count == 1 && toRemove[0].Gear != lastGearNumber)
+				|| (toRemove.Count == 2 && (toRemove[0].Gear != lastGearNumber - 1 || toRemove[1].Gear != lastGearNumber))
+				|| toRemove.Count > 2) {
+				throw new VectoException("Only the last 1 or 2 gears can be disabled. Disabling gear {0} for a {1}-speed gearbox is not allowed.",
+					toRemove.Min(g => g.Gear), gearsInput.Count);
+			}
+
+			foreach (var entry in toRemove) {
+				gearsInput.Remove(entry);
+			}
+
+			return gearsInput;
 		}
 	}
 
@@ -252,7 +288,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var torqueConverter = inputData.Components.TorqueConverterInputData;
 
 			var engine = runData.EngineData;
-			var axlegearRatio = runData.AxleGearData.AxleGear.Ratio;
+			var axlegearRatio = runData.AxleGearData?.AxleGear.Ratio ?? 1.0f;
 			var dynamicTyreRadius = runData.VehicleData.DynamicTyreRadius;
 
 			var retVal = SetCommonGearboxData(gearbox);
@@ -272,21 +308,23 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				throw new VectoSimulationException("Unsupported gearbox type: {0}!", retVal.Type);
 			}
 
-			var gearsInput = gearbox.Gears;
+			var gearsInput = FilterDisabledGears(inputData.TorqueLimits, gearbox);  //gearbox.Gears;
 			if (gearsInput.Count < 1)
 			{
 				throw new VectoSimulationException(
 					"At least one Gear-Entry must be defined in Gearbox!");
 			}
-
+			
 			SetDeclarationData(retVal);
-
+			
 			var gearDifferenceRatio = gearbox.Type.AutomaticTransmission() && gearbox.Gears.Count > 2
 				? gearbox.Gears[0].Ratio / gearbox.Gears[1].Ratio
 				: 1.0;
 
 			var gears = new Dictionary<uint, GearData>();
-			var tcShiftPolygon = DeclarationData.TorqueConverter.ComputeShiftPolygon(engine.FullLoadCurves[0]);
+			var tcShiftPolygon = engine?.FullLoadCurves != null ? DeclarationData.TorqueConverter.ComputeShiftPolygon(engine.FullLoadCurves[0]) : null;
+
+			
 			var vehicleCategory = runData.VehicleData.VehicleCategory == VehicleCategory.GenericBusVehicle
 				? VehicleCategory.GenericBusVehicle
 				: inputData.VehicleCategory;
@@ -297,12 +335,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 				var shiftPolygon = shiftPolygonCalculator != null
 					? shiftPolygonCalculator.ComputeDeclarationShiftPolygon(
-						gearbox.Type, (int)i, engine.FullLoadCurves[i + 1], gearbox.Gears, engine, axlegearRatio,
-						dynamicTyreRadius)
+						gearbox.Type, (int)i, engine?.FullLoadCurves[i + 1], gearbox.Gears, engine, axlegearRatio,
+						dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2)
 					: DeclarationData.Gearbox.ComputeShiftPolygon(
-						gearbox.Type, (int)i, engine.FullLoadCurves[i + 1],
+						gearbox.Type, (int)i, engine?.FullLoadCurves[i + 1],
 						gearsInput, engine,
-						axlegearRatio, dynamicTyreRadius, null);
+						axlegearRatio, dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2);
 
 				var gearData = new GearData
 				{
@@ -379,6 +417,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 
 		#endregion
+
 	}
 
 	public class GenericCompletedBusGearboxDataAdapter : GearboxDataAdapter
@@ -386,6 +425,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		public const double GearEfficiencyDirectGear = 0.98;
 		public const double GearEfficiencyIndirectGear = 0.96;
 		public const double GearEfficiencyAT = 0.925;
+
 		public GenericCompletedBusGearboxDataAdapter(ITorqueConverterDataAdapter torqueConverterDataAdapter) : base(
 			torqueConverterDataAdapter)
 		{
@@ -414,5 +454,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 
 		#endregion
+	}
+
+	public class CompletedSpecifigBusGearboxDataAdapter : GenericCompletedBusGearboxDataAdapter
+	{
+		public CompletedSpecifigBusGearboxDataAdapter(ITorqueConverterDataAdapter torqueConverterDataAdapter) : base(torqueConverterDataAdapter) { }
 	}
 }

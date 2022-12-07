@@ -9,7 +9,6 @@ using System.Xml.Linq;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Utils;
@@ -51,10 +50,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		
 		#region Implementation of IXMLPrimaryVehicleReport
 
-		public void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public void Initialize(VectoRunData modelData)
 		{
 			InitializeVehicleData(modelData.InputData);
-			Results = new XElement(VIF + XMLNames.Report_Results);
+			// TODO MQ: write dummy result element for testcases (2022-12-02), remove once result writing is implemented
+			Results = new XElement(VIF + XMLNames.Report_Results,
+				new XElement(VIF + "Status", "success"),
+				new XElement(VIF + "ExemptedVehicle"));
 			InputDataIntegrity = new XElement(VIF + XMLNames.Report_InputDataSignature,
 				modelData.InputDataHash == null ? XMLHelper.CreateDummySig(_di) : new XElement(modelData.InputDataHash));
 

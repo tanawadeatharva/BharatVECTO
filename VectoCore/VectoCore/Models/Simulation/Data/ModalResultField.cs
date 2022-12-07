@@ -110,14 +110,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), name: "P_ice_inertia", caption: "P_ice_inertia [kW]", outputFactor: 1e-3)] P_ice_inertia,
 
 		/// <summary>
-		///     [kW]	Total auxiliary power demand .
+		///     [kW]	Total mechanic auxiliary power demand .
 		/// </summary>
 		[ModalResultField(typeof(SI), caption: "P_aux_mech [kW]", outputFactor: 1e-3)] P_aux_mech,
 
 		/// <summary>
-		///     [kW]	Total auxiliary power demand .
+		///     [kW]	Total electric auxiliary power demand .
 		/// </summary>
 		[ModalResultField(typeof(SI), caption: "P_aux_el [kW]", outputFactor: 1e-3)] P_aux_el,
+
+		/// <summary>
+		///     [kW]	Total auxiliary power demand .
+		/// </summary>
+		[ModalResultField(typeof(SI), caption: "P_aux_el_HV [kW]", outputFactor: 1e-3)] P_Aux_el_HV,
 		
 		/// <summary>
 		/// [g/h] Fuel consumption from FC map..
@@ -181,6 +186,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(uint), caption: "Gear [-]")] Gear,
 
 		[ModalResultField(typeof(SI), caption: "n_gbx_out_avg [1/min]", outputFactor: 60 / (2 * Math.PI))] n_gbx_out_avg,
+		[ModalResultField(typeof(SI), caption: "n_gbx_in_avg [1/min]", outputFactor: 60 / (2 * Math.PI))] n_gbx_in_avg,
 
 		[ModalResultField(typeof(SI), caption: "T_gbx_out [Nm]")] T_gbx_out,
 
@@ -411,6 +417,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "P_{0}_loss [kW]", outputFactor: 1e-3)] P_IEPC_electricMotorLoss_,
 		[ModalResultField(typeof(SI), caption: "{0}_off")] IEPC_Off_,
 		[ModalResultField(typeof(SI), caption: "{0}_OVL [%]", outputFactor: 100)] IEPC_OvlBuffer_,
+
+
+
+		//[ModalResultField(typeof(ulong), caption: "debug_dcdc_state")] DCDCStateCount_,
+		//[ModalResultField(typeof(SI), caption: "sim_interval_current")] SimIntervalCurrent_,
+		//[ModalResultField(typeof(SI), caption: "sim_interval_prev")] SimIntervalPrev_,
 
 
 

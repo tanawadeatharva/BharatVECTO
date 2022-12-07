@@ -49,6 +49,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
@@ -953,7 +954,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	public class JSONInputDataSingleBusV6 : JSONFile, ISingleBusInputDataProvider, IDeclarationJobInputData
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
-
+		
 		public JSONInputDataSingleBusV6(JObject data, string filename, bool tolerateMissing = false) : base(
 			data, filename, tolerateMissing)
 		{
@@ -963,19 +964,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			var primaryInputData = Path.Combine(BasePath,  Body.GetEx<string>(JsonKeys.PrimaryVehicle));
 			var completedInputData = Path.Combine(BasePath,  Body.GetEx<string>("CompletedVehicle"));
 
-			PrimaryVehicle = CreateReader(primaryInputData);
-			CompletedVehicle = CreateReader(completedInputData);
+			var primaryJob = CreateReader(primaryInputData);
+			PrimaryVehicle = primaryJob.JobInputData.Vehicle;
+			XMLHash = primaryJob.XMLHash;
+			var completedJob = CreateReader(completedInputData);
+			CompletedVehicle = completedJob.JobInputData.Vehicle;
+			XMLHashCompleted = completedJob.XMLHash;
 
 			JobName = CompletedVehicle.VIN;
 		}
 
-		private IVehicleDeclarationInputData CreateReader(string vehicleFileName)
+		private IDeclarationInputDataProvider CreateReader(string vehicleFileName)
 		{
 			if (Path.GetExtension(vehicleFileName) != ".xml") {
 				throw new VectoException("unsupported vehicle file format {0}", vehicleFileName);
 			}
 
-			return _xmlInputReader.CreateDeclaration(vehicleFileName).JobInputData.Vehicle;
+			return _xmlInputReader.CreateDeclaration(vehicleFileName);
 
 		}
 
@@ -996,7 +1001,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IDeclarationJobInputData JobInputData => this;
 		public virtual IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData => null;
-		public XElement XMLHash => new XElement(XMLNames.DI_Signature);
+		public XElement XMLHash { get; }
+		public XElement XMLHashCompleted { get; }
 
 		#endregion
 

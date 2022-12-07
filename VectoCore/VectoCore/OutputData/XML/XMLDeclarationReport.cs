@@ -60,7 +60,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected IDictionary<Tuple<MissionType, LoadingType>, double> _weightingFactors;
 
-		public XMLDeclarationReport(IReportWriter writer) : base(writer) { }
+		public XMLDeclarationReport(IReportWriter writer) : base(writer)
+		{
+			throw new NotImplementedException("Use new implementation...");
+		}
+
+		protected XMLDeclarationReport(IReportWriter writer, bool dummy) : base(writer) { }
 
 		public class ResultEntry : IResultEntry
 		{
@@ -226,7 +231,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		}
 
 
-		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void InitializeReport(VectoRunData modelData)
 		{
 			if (modelData.Exempted) {
 				WeightingGroup = WeightingGroup.Unknown;
@@ -247,8 +252,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			InstantiateReports(modelData);
 
-			ManufacturerRpt.Initialize(modelData, fuelModes);
-			CustomerRpt?.Initialize(modelData, fuelModes);
+			ManufacturerRpt.Initialize(modelData);
+			CustomerRpt?.Initialize(modelData);
 		}
 
 		public WeightingGroup WeightingGroup { get; protected set; }

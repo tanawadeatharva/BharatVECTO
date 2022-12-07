@@ -246,7 +246,7 @@ Public Class Gearbox
                                                        New VehicleData() _
                                                        With {.DynamicTyreRadius = rdyn,
                                                        .VehicleCategory = vehiclecategory}},
-                    Nothing, DeclarationDataAdapterHeavyLorry.Conventional.SupportedGearboxTypes)
+                    Nothing, DeclarationDataAdapterHeavyLorry.Conventional.SupportsGearboxTypes)
             Else
 
                 Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()

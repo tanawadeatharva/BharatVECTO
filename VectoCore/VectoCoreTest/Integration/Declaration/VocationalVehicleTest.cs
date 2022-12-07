@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.IO;
 using System.Linq;
 using Ninject;
@@ -41,7 +40,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 
-namespace TUGraz.VectoCore.Tests.Integration
+namespace TUGraz.VectoCore.Tests.Integration.Declaration
 {
 	[TestFixture]
 	[Parallelizable(ParallelScope.All)]
@@ -82,7 +81,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			}
 			//jobContainer.AddRuns(factory);
 
-			jobContainer.Execute();
+			jobContainer.Execute(false);
 			jobContainer.WaitFinished();
 			var progress = jobContainer.GetProgress();
 			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
