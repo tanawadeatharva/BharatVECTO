@@ -250,7 +250,7 @@ namespace TUGraz.VectoCore.Utils.Ninject
 			return classification.GetHashCode().ToString();
 		}
 
-		public string GetName(string vehicleCategory, VectoSimulationJobType jobType, bool ovc = false,
+		public string GetName(string vehicleCategory, string jobType, bool ovc,
 			bool exempted = false)
 		{
 			return GetName(new ResultsVehicleClassification(vehicleCategory, jobType, ovc, exempted));
@@ -258,27 +258,27 @@ namespace TUGraz.VectoCore.Utils.Ninject
 
 		public string GetName(string vehicleType, bool exempted)
 		{
-			return GetName(vehicleType, VectoSimulationJobType.ConventionalVehicle, exempted: exempted);
+			return GetName(vehicleType, VectoSimulationJobTypeHelper.Conventional, false, exempted: exempted);
 		}
 
 		public struct ResultsVehicleClassification
 		{
 			private readonly string _vehicleCategory;
-			private readonly VectoSimulationJobType _jobType;
+			private readonly string _powertrainCategory;
 			private readonly bool _ovc;
 			private readonly bool _exempted;
 
-			public ResultsVehicleClassification(string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
+			public ResultsVehicleClassification(string vehicleCategory, string powertrainCategory, bool ovc, bool exempted)
 			{
 				_vehicleCategory = vehicleCategory;
-				_jobType = jobType;
+				_powertrainCategory = powertrainCategory;
 				_ovc = ovc;
 				_exempted = exempted;
 
 			}
 
 			public bool Exempted => _exempted;
-			public VectoSimulationJobType JobType => Exempted ? VectoSimulationJobType.ConventionalVehicle : _jobType;
+			public string JobType => Exempted ? VectoSimulationJobTypeHelper.Conventional : _powertrainCategory;
 
 			public string VehicleCategory => _vehicleCategory;
 			public bool OVC => _ovc;
@@ -301,10 +301,10 @@ namespace TUGraz.VectoCore.Utils.Ninject
 			public override int GetHashCode()
 			{
 				unchecked {
-					var hashCode = VehicleCategory != null ? VehicleCategory.GetHashCode() : 0;
-					hashCode = (hashCode * 397) ^ (int)JobType;
-					hashCode = (hashCode * 397) ^ OVC.GetHashCode();
-					hashCode = (hashCode * 397) ^ Exempted.GetHashCode();
+					var hashCode = (_vehicleCategory != null ? _vehicleCategory.GetHashCode() : 0);
+					hashCode = (hashCode * 397) ^ (_powertrainCategory != null ? _powertrainCategory.GetHashCode() : 0);
+					hashCode = (hashCode * 397) ^ _ovc.GetHashCode();
+					hashCode = (hashCode * 397) ^ _exempted.GetHashCode();
 					return hashCode;
 				}
 			}

@@ -420,8 +420,29 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 					}
 				})).InSingletonScope();
 
-			Bind<IResultsWriter>().To<ExemptedResultsWriter>().Named(
+			Bind<IResultsWriter>().To<CIFResultsWriter.ConventionalLorry>().Named(
+				_namingHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobTypeHelper.Conventional, false));
+			Bind<IResultsWriter>().To<CIFResultsWriter.HEVNonOVCLorry>().Named(
+				_namingHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobTypeHelper.Hybrid, false));
+			Bind<IResultsWriter>().To<CIFResultsWriter.HEVOVCLorry>().Named(
+				_namingHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobTypeHelper.Hybrid, true));
+			Bind<IResultsWriter>().To<CIFResultsWriter.PEVLorry>().Named(
+				_namingHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobTypeHelper.PureElectric, true));
+			Bind<IResultsWriter>().To<CIFResultsWriter.ExemptedResultsWriter>().Named(
 				_namingHelper.GetName(VehicleCategoryHelper.Lorry, true));
+
+			Bind<IResultsWriter>().To<CIFResultsWriter.ConventionalBus>().Named(
+				_namingHelper.GetName(VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.Conventional, false));
+			Bind<IResultsWriter>().To<CIFResultsWriter.HEVNonOVCBus>().Named(
+				_namingHelper.GetName(VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.Hybrid, false));
+			Bind<IResultsWriter>().To<CIFResultsWriter.HEVOVCBus>().Named(
+				_namingHelper.GetName(VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.Hybrid, true));
+			Bind<IResultsWriter>().To<CIFResultsWriter.PEVBus>().Named(
+				_namingHelper.GetName(VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.PureElectric, true));
+			Bind<IResultsWriter>().To<CIFResultsWriter.ExemptedResultsWriter>().Named(
+				_namingHelper.GetName(VehicleCategoryHelper.CompletedBus, true));
+
+
 			
 		}
 	}

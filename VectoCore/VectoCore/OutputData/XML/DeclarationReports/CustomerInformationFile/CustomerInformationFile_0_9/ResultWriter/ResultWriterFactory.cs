@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			try {
 				return _internalFactory.GetCIFResultsWriter(
 					new VehicleTypeAndArchitectureStringHelperResults.ResultsVehicleClassification(vehicleCategory,
-						jobType, ovc, exempted));
+						jobType.GetPowertrainArchitectureType(), ovc, exempted));
 			} catch (Exception e) {
 				throw new Exception($"Could not create ResultsWriter for vehicle category {vehicleCategory}, {jobType}, ovc: {ovc}, exempted: {exempted}", e);
 			}

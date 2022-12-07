@@ -24,7 +24,15 @@ public class TestXMLResultsWriting
 		_reportResultsFactory = _kernel.Get<IResultsWriterFactory>();
 	}
 
-	[TestCase(VehicleCategory.RigidTruck, VectoSimulationJobType.ConventionalVehicle, false, true, typeof(ExemptedResultsWriter))]
+	[
+		TestCase(VehicleCategory.RigidTruck, VectoSimulationJobType.ConventionalVehicle, false, true, typeof(CIFResultsWriter.ExemptedResultsWriter)),
+		TestCase(VehicleCategory.RigidTruck, VectoSimulationJobType.ConventionalVehicle, false, false, typeof(CIFResultsWriter.ConventionalLorry)),
+		TestCase(VehicleCategory.Tractor, VectoSimulationJobType.ConventionalVehicle, false, false, typeof(CIFResultsWriter.ConventionalLorry)),
+		TestCase(VehicleCategory.RigidTruck, VectoSimulationJobType.ParallelHybridVehicle, false, false, typeof(CIFResultsWriter.HEVNonOVCLorry)),
+		TestCase(VehicleCategory.RigidTruck, VectoSimulationJobType.SerialHybridVehicle, true, false, typeof(CIFResultsWriter.HEVOVCLorry)),
+		TestCase(VehicleCategory.RigidTruck, VectoSimulationJobType.BatteryElectricVehicle, true, false, typeof(CIFResultsWriter.PEVLorry)),
+		//TestCase(VehicleCategory.RigidTruck, VectoSimulationJobType.BatteryElectricVehicle, false, false, typeof(CIFResultsWriter.PEVLorry)), // for PEV, OVC is always true!
+	]
 	public void TestReportResultInstance(VehicleCategory vehicleCategory, VectoSimulationJobType jobType, bool ovc,
 		bool exempted, Type expectedResultWriterType)
 	{
