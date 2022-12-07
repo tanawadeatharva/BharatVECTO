@@ -408,15 +408,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override void Load()
 		{
-			Bind<IResultWriterFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(
+			Bind<IResultsWriterFactory>().To<ResultWriterFactory>().InSingletonScope();
+
+			Bind<IInternalResultWriterFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(
 				new CombineArgumentsToNameInstanceProvider.MethodSettings() {
 					combineToNameDelegate = _namingHelper.CreateName,
 					skipArguments = 1,
 					takeArguments = 1,
 					methods = new[] {
-						typeof(IResultWriterFactory).GetMethod(nameof(IResultWriterFactory.GetCIFResultWriter))
+						typeof(IInternalResultWriterFactory).GetMethod(nameof(IInternalResultWriterFactory.GetCIFResultsWriter))
 					}
-				}));
+				})).InSingletonScope();
 
 			Bind<IResultsWriter>().To<ExemptedResultsWriter>().Named(
 				_namingHelper.GetName(VehicleCategoryHelper.Lorry, true));

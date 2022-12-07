@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -21,7 +22,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	public abstract class AbstractCustomerReport : IXMLCustomerReport
 	{
 		protected readonly ICustomerInformationFileFactory _cifFactory;
-		protected readonly IResultWriterFactory _resultFactory;
+		protected readonly IResultsWriterFactory _resultFactory;
 
 		protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 
@@ -39,7 +40,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public abstract string OutputDataType { get; }
 
 		protected bool _ovc = false;
-		protected AbstractCustomerReport(ICustomerInformationFileFactory cifFactory, IResultWriterFactory resultFactory)
+		protected AbstractCustomerReport(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultFactory)
 		{
 			_cifFactory = cifFactory;
 			_resultFactory = resultFactory;
@@ -54,7 +55,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 			InitializeVehicleData(modelData.InputData);
 			_ovc = modelData.VehicleData.OffVehicleCharging;
-			Results = _resultFactory.GetCIFResultWriter(modelData.VehicleData.VehicleCategory, 
+			Results = _resultFactory.GetCIFResultsWriter(modelData.VehicleData.VehicleCategory.GetVehicleType(), 
 				modelData.JobType, modelData.VehicleData.OffVehicleCharging, modelData.Exempted); 
 			InputDataIntegrity = new XElement(Cif_0_9 + XMLNames.Report_InputDataSignature,
 				modelData.InputData.XMLHash == null ? XMLHelper.CreateDummySig(_di) : new XElement(modelData.InputData.XMLHash));
