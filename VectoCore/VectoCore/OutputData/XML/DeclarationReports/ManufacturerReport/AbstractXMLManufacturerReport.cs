@@ -108,14 +108,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 		}
 
 
-		public virtual void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
+		public virtual void WriteResult(IResultEntry resultEntry)
 		{
 			_allSuccess &= resultEntry.Status == VectoRun.Status.Success;
 			Results.Add(
 				resultEntry.Status == VectoRun.Status.Success ? GetSuccessResult(resultEntry) : GetErrorResult(resultEntry));
 		}
 
-		protected virtual XElement GetErrorResult( XMLDeclarationReport.ResultEntry resultEntry)
+		protected virtual XElement GetErrorResult(IResultEntry resultEntry)
 		{
 			var content = new object[] {};
 			switch (resultEntry.Status) {
@@ -149,7 +149,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 				content);
 		}
 
-		protected virtual XElement GetSuccessResult(XMLDeclarationReport.ResultEntry result)
+		protected virtual XElement GetSuccessResult(IResultEntry result)
 		{
 			return new XElement(
 				tns + XMLNames.Report_Result_Result,
@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 			);
 		}
 
-		private XElement GetVehiclePerformance(XMLDeclarationReport.ResultEntry result)
+		private XElement GetVehiclePerformance(IResultEntry result)
 		{
 			return new XElement(
 				tns + XMLNames.Report_ResultEntry_VehiclePerformance,
@@ -212,7 +212,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 			);
 		}
 
-		protected virtual XElement GetSimulationParameters(XMLDeclarationReport.ResultEntry result)
+		protected virtual XElement GetSimulationParameters(IResultEntry result)
 		{
 			return new XElement(
 				tns + XMLNames.Report_ResultEntry_SimulationParameters,

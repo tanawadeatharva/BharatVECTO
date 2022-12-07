@@ -8,7 +8,6 @@ using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter;
@@ -33,7 +32,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 
 		protected XElement Vehicle { get; set; }
-		protected IResultWriter Results { get; set; }
+		protected IResultsWriter Results { get; set; }
 
 		protected XElement InputDataIntegrity { get; set; }
 
@@ -51,7 +50,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Implementation of IXMLCustomerReport
 
-		public virtual void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public virtual void Initialize(VectoRunData modelData)
 		{
 			InitializeVehicleData(modelData.InputData);
 			_ovc = modelData.VehicleData.OffVehicleCharging;
@@ -102,9 +101,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				Vehicle,
 				InputDataIntegrity,
 				new XElement(Cif_0_9 + XMLNames.Report_ManufacturerRecord_Signature, resultSignature),
-				Results.GenerateResults(results),
+				GetResultsXML(),
 				XMLHelper.GetApplicationInfo(Cif_0_9)
 			};
+		}
+
+		protected XElement GetResultsXML()
+		{
+			return Results.GenerateResults(results);
 		}
 
 		#endregion

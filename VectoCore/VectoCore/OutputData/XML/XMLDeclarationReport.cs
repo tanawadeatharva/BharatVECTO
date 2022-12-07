@@ -95,9 +95,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public Joule EnergyConsumptionTotal { get; private set; }
 
-			public Kilogram CO2Total { get; private set; }
+            public IFuelConsumptionCorrection FuelConsumptionFinal(FuelType fuelType)
+			{
+				return CorrectedFinalFuelConsumption[fuelType];
+			}
 
-			public Dictionary<FuelType, IFuelConsumptionCorrection> FuelConsumptionFinal { get; private set; }
+            public Kilogram CO2Total { get; private set; }
+
+			public Dictionary<FuelType, IFuelConsumptionCorrection> CorrectedFinalFuelConsumption { get; private set; }
 
 			public Meter Distance { get; private set; }
 
@@ -161,7 +166,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				EngineSpeedDrivingMax = entriesDriving.Max(x => x.nEng);
 				Distance = data.Distance;
 
-				FuelConsumptionFinal = data.CorrectedModalData.FuelCorrection;
+				CorrectedFinalFuelConsumption = data.CorrectedModalData.FuelCorrection;
 				CO2Total = data.CorrectedModalData.CO2Total;
 				EnergyConsumptionTotal = data.CorrectedModalData.EnergyConsumptionTotal;
 
@@ -298,13 +303,13 @@ namespace TUGraz.VectoCore.OutputData.XML
 				});
 
 
-		public static IEnumerable<XElement> GetResults(ResultEntry result, XNamespace tns, bool fullOutput)
+		public static IEnumerable<XElement> GetResults(IResultEntry result, XNamespace tns, bool fullOutput)
 		{
 			//var fuel = result.FuelData;
 			var retVal = new List<XElement>();
 
 			foreach (var fuel in result.FuelData) {
-				var entry = result.FuelConsumptionFinal[fuel.FuelType];
+				var entry = result.FuelConsumptionFinal(fuel.FuelType);
 				var fcResult = new XElement(tns + XMLNames.Report_Results_Fuel, new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fuel.FuelType.ToXMLFormat()));
 				fcResult.Add(
 					new XElement(

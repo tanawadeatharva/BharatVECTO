@@ -39,6 +39,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
 namespace TUGraz.VectoCore.OutputData
@@ -71,12 +72,35 @@ namespace TUGraz.VectoCore.OutputData
 
 	public interface IResultEntry
 	{
+		VectoRun.Status Status { get; }
 		MissionType Mission { get; set; }
 
 		LoadingType LoadingType { get; set; }
 
 		int FuelMode { get; set; }
 		IList<IFuelProperties> FuelData { get; set; }
+
+		MeterPerSecond AverageSpeed { get; }
+
+		MeterPerSecond AverageDrivingSpeed { get; }
+		MeterPerSecond MaxSpeed { get; }
+		MeterPerSecond MinSpeed { get; }
+		MeterPerSquareSecond MaxDeceleration { get; }
+		MeterPerSquareSecond MaxAcceleration { get; }
+
+		PerSecond EngineSpeedDrivingMin { get; }
+		PerSecond EngineSpeedDrivingAvg { get;}
+		PerSecond EngineSpeedDrivingMax { get; }
+		double AverageGearboxEfficiency { get;  }
+
+		double AverageAxlegearEfficiency { get; }
+		Scalar FullLoadPercentage { get; }
+		Scalar GearshiftCount { get; }
+		Meter Distance { get; }
+
+		IFuelConsumptionCorrection FuelConsumptionFinal(FuelType fuelType);
+
+		Kilogram CO2Total { get; }
 		Kilogram Payload { get; set; }
 		Kilogram TotalVehicleMass { get; set; }
 		CubicMeter CargoVolume { get; set; }
@@ -84,7 +108,13 @@ namespace TUGraz.VectoCore.OutputData
 		double? PassengerCount { get; set; }
 		VehicleClass VehicleClass { get; set; }
 
+		double WeightingFactor { get; }
+
 		void SetResultData(VectoRunData runData, IModalDataContainer data, double weightingFactor);
+
+		string Error { get; }
+
+		string StackTrace { get; }
 	}
 
 	/// <summary>

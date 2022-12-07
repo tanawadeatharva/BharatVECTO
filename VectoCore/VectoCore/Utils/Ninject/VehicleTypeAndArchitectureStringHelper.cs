@@ -127,56 +127,28 @@ namespace TUGraz.VectoCore.Utils.Ninject
 		#endregion
 		public struct VehicleClassification
 		{
+			private const string _singlebus = "SingleBus";
+
 			private readonly VectoSimulationJobType _jobType;
-
-			private VectoSimulationJobType JobType
-			{
-				get
-				{
-					if (Exempted) {
-						return VectoSimulationJobType.ConventionalVehicle; //ignored for exempted vehicles
-					}
-					return _jobType;
-				}
-			}
-
+			private readonly bool _exempted;
 			private readonly ArchitectureID _archId;
-
-			private ArchitectureID ArchId
-			{
-				get
-				{
-					if (Exempted) {
-						return ArchitectureID.UNKNOWN; //ignored for exempted vehicles
-                    }
-					return _archId;
-				}
-			}
-
 			private readonly string _vehicleType;
+			private readonly bool _iepc;
+			private readonly bool _ihpc;
+			private readonly bool _isSingleBus;
 
+			private VectoSimulationJobType JobType => Exempted ? VectoSimulationJobType.ConventionalVehicle : _jobType; //ignored for exempted vehicles
+
+			private ArchitectureID ArchId => Exempted ? ArchitectureID.UNKNOWN : _archId;//ignored for exempted vehicles
+			
 			private string VehicleType => _vehicleType;
 
-			private readonly bool _exempted;
-
-			private bool Exempted
-			{
-				get
-				{
-					return _exempted;
-				}
-			}
-
-			private readonly bool _iepc;
+			private bool Exempted => _exempted;
 
 			private bool Iepc => _iepc;
 
-			private readonly bool _ihpc;
-
 			private bool Ihpc => _ihpc;
 
-			private readonly bool _isSingleBus;
-			private const string _singlebus = "SingleBus";
 			private bool IsSingleBus => _isSingleBus;
 
 			public VehicleClassification(VectoSimulationJobType jobType, ArchitectureID archId, string vehicleType, bool exempted, bool iepc, bool ihpc, bool singleBus = false)
@@ -256,6 +228,85 @@ namespace TUGraz.VectoCore.Utils.Ninject
 			{
 				return string.Join("\n", VehicleType, JobType, ArchId, Exempted ? "Exempted" : "Non Exempted",
 					IsSingleBus ? "Single Bus" : "");
+			}
+
+			#endregion
+		}
+
+	}
+
+	public class VehicleTypeAndArchitectureStringHelperResults
+	{
+		public CombineArgumentsToNameInstanceProvider.CombineToName CreateName { get; } = arguments => {
+			if (arguments[0] is ResultsVehicleClassification classification) {
+				return GetName(classification);
+			} else {
+				throw new ArgumentException($"{nameof(arguments)}[0] must be of type {typeof(ResultsVehicleClassification)}");
+			}
+		};
+
+		private static string GetName(ResultsVehicleClassification classification)
+		{
+			return classification.GetHashCode().ToString();
+		}
+
+		public string GetName(string vehicleCategory, VectoSimulationJobType jobType, bool ovc = false,
+			bool exempted = false)
+		{
+			return GetName(new ResultsVehicleClassification(vehicleCategory, jobType, ovc, exempted));
+		}
+
+		public string GetName(string vehicleType, bool exempted)
+		{
+			return GetName(vehicleType, VectoSimulationJobType.ConventionalVehicle, exempted: exempted);
+		}
+
+		public struct ResultsVehicleClassification
+		{
+			private readonly string _vehicleCategory;
+			private readonly VectoSimulationJobType _jobType;
+			private readonly bool _ovc;
+			private readonly bool _exempted;
+
+			public ResultsVehicleClassification(string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
+			{
+				_vehicleCategory = vehicleCategory;
+				_jobType = jobType;
+				_ovc = ovc;
+				_exempted = exempted;
+
+			}
+
+			public bool Exempted => _exempted;
+			public VectoSimulationJobType JobType => Exempted ? VectoSimulationJobType.ConventionalVehicle : _jobType;
+
+			public string VehicleCategory => _vehicleCategory;
+			public bool OVC => _ovc;
+
+			#region Overrides of ValueType
+
+			public override bool Equals(object obj)
+			{
+				return obj is ResultsVehicleClassification other && Equals(other);
+			}
+
+			public bool Equals(ResultsVehicleClassification other)
+			{
+				return VehicleCategory == other.VehicleCategory 
+					&& JobType == other.JobType
+					&& OVC == other.OVC
+					&& Exempted == other.Exempted;
+			}
+
+			public override int GetHashCode()
+			{
+				unchecked {
+					var hashCode = VehicleCategory != null ? VehicleCategory.GetHashCode() : 0;
+					hashCode = (hashCode * 397) ^ (int)JobType;
+					hashCode = (hashCode * 397) ^ OVC.GetHashCode();
+					hashCode = (hashCode * 397) ^ Exempted.GetHashCode();
+					return hashCode;
+				}
 			}
 
 			#endregion

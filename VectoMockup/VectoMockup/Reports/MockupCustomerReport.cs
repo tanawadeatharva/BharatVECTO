@@ -3,6 +3,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
@@ -48,7 +49,7 @@ namespace TUGraz.VectoMockup.Reports
             }
         }
 
-        public void WriteResult(XMLDeclarationReport.ResultEntry resultValue)
+        public void WriteResult(IResultEntry resultValue)
         {
             _originalCustomerReport.WriteResult(resultValue);
         }

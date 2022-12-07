@@ -594,7 +594,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					new XElement(
 						tns + XMLNames.Report_Result_EnergyConsumption,
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/km"),
-						(result.FuelConsumptionFinal[fuel.FuelType].EnergyDemand /
+						(result.FuelConsumptionFinal(fuel.FuelType).EnergyDemand /
 						result.Distance.ConvertToKiloMeter() / 1e6)
 						.Value().ToMinSignificantDigits(5, 5)));
 				retVal.Add(fcResult);

@@ -195,7 +195,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 			);
 		}
 
-		protected override XElement GetSimulationParameters(XMLDeclarationReport.ResultEntry result)
+		protected override XElement GetSimulationParameters(IResultEntry result)
 		{
 			return new XElement(
 				tns + "SimulationParametersCompletedVehicle",
@@ -397,7 +397,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 		
 		#endregion
 
-		public override void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
+		public override void WriteResult(IResultEntry resultEntry)
 		{
 			throw new NotSupportedException();
 		}

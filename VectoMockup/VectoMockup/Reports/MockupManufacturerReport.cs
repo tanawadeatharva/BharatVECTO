@@ -5,6 +5,7 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
@@ -29,7 +30,7 @@ namespace TUGraz.VectoMockup.Reports
 			Results = new XElement(Mrf + XMLNames.Report_Results);
 		}
 
-		public void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue)
+		public void WriteMockupResult(IResultEntry resultValue)
 		{
 
 			Results.Add(MockupResultReader.GetMRFMockupResult(_outputData, resultValue, Mrf + "Result", _modelData));

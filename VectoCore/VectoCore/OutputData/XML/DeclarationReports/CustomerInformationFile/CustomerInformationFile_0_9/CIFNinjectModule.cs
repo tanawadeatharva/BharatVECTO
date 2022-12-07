@@ -403,19 +403,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	internal class CIFResultsNinjectModule : NinjectModule
 	{
+		private VehicleTypeAndArchitectureStringHelperResults _namingHelper =
+			new VehicleTypeAndArchitectureStringHelperResults();
+
 		public override void Load()
 		{
 			Bind<IResultWriterFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(
 				new CombineArgumentsToNameInstanceProvider.MethodSettings() {
-					combineToNameDelegate = ,
-					skipArguments = 6,
-					takeArguments = 6,
+					combineToNameDelegate = _namingHelper.CreateName,
+					skipArguments = 1,
+					takeArguments = 1,
 					methods = new[] {
 						typeof(IResultWriterFactory).GetMethod(nameof(IResultWriterFactory.GetCIFResultWriter))
 					}
 				}));
 
-			Bind<IResultWriter>().To<ExemptedResultsWriter>();
+			Bind<IResultsWriter>().To<ExemptedResultsWriter>().Named(
+				_namingHelper.GetName(VehicleCategoryHelper.Lorry, true));
+			
 		}
 	}
 }

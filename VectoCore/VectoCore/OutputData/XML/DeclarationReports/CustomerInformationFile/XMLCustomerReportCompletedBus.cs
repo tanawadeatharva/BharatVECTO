@@ -306,7 +306,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
             Report = h.AddHash();
         }
 
-        public override void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
+        public override void WriteResult(IResultEntry resultEntry)
 		{
 			throw new NotSupportedException();
 		}
