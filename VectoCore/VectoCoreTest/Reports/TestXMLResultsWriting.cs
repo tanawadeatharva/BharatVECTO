@@ -1,10 +1,30 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
+using Castle.Components.DictionaryAdapter.Xml;
+using Moq;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter;
+using TUGraz.VectoCore.Utils;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.VectoCore.Tests.Reports;
 
@@ -39,5 +59,167 @@ public class TestXMLResultsWriting
 		var resultsWriter = _reportResultsFactory.GetCIFResultsWriter(vehicleCategory.GetVehicleType(), jobType, ovc, exempted);
 
 		Assert.AreEqual(expectedResultWriterType, resultsWriter.GetType());
+	}
+
+
+	[
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, false, false, TestName = "ReportResult_WritingResults: Lorry HEV OVC ERROR"),
+
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, false, true, TestName = "ReportResult_WritingResults: Lorry HEV OVC"),
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, true, true, TestName = "ReportResult_WritingResults: Lorry HEV exempted"),
+	]
+	public void TestReportResult_WritingResults_Lorry(VectoSimulationJobType jobType, bool ovc, bool exempted, bool success)
+	{
+		var vehicleCategory = VehicleCategory.RigidTruck;
+		var ovcmode = ovc ? VectoRunData.OvcHevMode.ChargeDepleting : VectoRunData.OvcHevMode.NotApplicable;
+		var runData = GetMockRunData(vehicleCategory, jobType, ovc, exempted, ovcmode);
+		var modData = GetMockModData(success ? VectoRun.Status.Success : VectoRun.Status.Aborted);
+
+		var resultEntries = new List<IResultEntry>();
+
+		var resultEntry = GetResultEntry(runData);
+		resultEntry.SetResultData(runData, modData, 1);
+		resultEntries.Add(resultEntry);
+
+		if (ovc) {
+			var run2 = GetMockRunData(vehicleCategory, jobType, true, exempted, VectoRunData.OvcHevMode.ChargeSustaining);
+			var res2 = GetResultEntry(run2);
+			res2.SetResultData(run2, modData, 1);
+			resultEntries.Add(res2);
+		}
+
+		var resultsWriter = _reportResultsFactory.GetCIFResultsWriter(
+			runData.VehicleData.VehicleCategory.GetVehicleType(),
+			runData.JobType, runData.VehicleData.OffVehicleCharging, runData.Exempted);
+
+		var results = resultsWriter.GenerateResults(resultEntries);
+
+		Assert.NotNull(results);
+
+		var doc = CreateXmlDocument(results);
+		var validator = GetValidator(doc);
+
+		var m = new MemoryStream();
+		var writer = new XmlTextWriter(m, Encoding.UTF8) {Formatting = Formatting.Indented};
+		doc.WriteTo(writer);
+		writer.Flush();
+		m.Flush();
+		m.Seek(0, SeekOrigin.Begin);
+		Console.WriteLine(new StreamReader(m).ReadToEnd());
+		
+		Assert.IsTrue(validator.ValidateXML(XmlDocumentType.CustomerReport), validator.ValidationError);
+	}
+
+	private static XMLDeclarationReport.ResultEntry GetResultEntry(VectoRunData runData)
+	{
+		var resultEntry = new XMLDeclarationReport.ResultEntry() {
+			Mission = runData.Mission.MissionType,
+			LoadingType = runData.Loading,
+			FuelMode = runData.EngineData?.FuelMode ?? 0,
+			FuelData = runData.EngineData?.Fuels.Select(x => x.FuelData).ToList(),
+			Payload = runData.VehicleData.Loading,
+			TotalVehicleMass = runData.VehicleData.TotalVehicleMass,
+			CargoVolume = runData.VehicleData.CargoVolume,
+			VehicleClass = runData.VehicleData.VehicleClass,
+		};
+		return resultEntry;
+	}
+
+	private XMLValidator GetValidator(XDocument doc)
+	{
+		var ms = new MemoryStream();
+		var writer = new XmlTextWriter(ms, Encoding.UTF8);
+		doc.WriteTo(writer);
+		writer.Flush();
+		ms.Flush();
+		ms.Seek(0, SeekOrigin.Begin);
+		return new XMLValidator(new XmlTextReader(ms));
+	}
+
+	private XDocument CreateXmlDocument(XElement results)
+	{
+		var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
+		var ns = XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9");
+		var doc = new XDocument();
+		doc.Add(new XElement(ns + "VectoMockResults",
+			new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
+			new XAttribute(xsi + "schemaLocation", $@"{ns.NamespaceName} V:\VectoCore\VectoCore\Resources\XSD\VectoOutputCustomer.0.9.xsd"),
+			results));
+
+		return doc;
+	}
+
+	private IModalDataContainer GetMockModData(VectoRun.Status runStatus)
+	{
+		var modData = new Mock<IModalDataContainer>();
+		modData.Setup(x => x.RunStatus).Returns(runStatus);
+		modData.Setup(x => x.Duration).Returns(3600.SI<Second>());
+		modData.Setup(x => x.Distance).Returns(30000.SI<Meter>());
+		modData.Setup(x => x.GetValues<MeterPerSecond>(ModalResultField.v_act)).Returns(new[] { 0.KMPHtoMeterPerSecond(), 50.KMPHtoMeterPerSecond() });
+		modData.Setup(x => x.GetValues<MeterPerSquareSecond>(ModalResultField.acc)).Returns(new[] { -1.SI<MeterPerSquareSecond>(), 0.SI<MeterPerSquareSecond>(), 1.SI<MeterPerSquareSecond>()});
+		modData.Setup(x => x.GetValues<uint>(ModalResultField.Gear)).Returns(new[] { 0u, 2u, 0u, 3u, 0u });
+
+		var e_gbxIn = 1000.SI<WattSecond>();
+		var gbxEff = 0.98;
+		var axlEff = 0.97;
+		modData.Setup(x => x.TimeIntegral<WattSecond>(ModalResultField.P_gbx_in, It.IsNotNull<Func<SI, bool>>())).Returns(e_gbxIn);
+		modData.Setup(x => x.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, It.IsNotNull<Func<SI, bool>>())).Returns(e_gbxIn * gbxEff);
+		modData.Setup(x => x.TimeIntegral<WattSecond>(ModalResultField.P_brake_in, It.IsNotNull<Func<SI, bool>>())).Returns(e_gbxIn * gbxEff * axlEff);
+
+		if (runStatus != VectoRun.Status.Success) {
+			modData.Setup(x => x.Error).Returns("TestCase Error!");
+			modData.Setup(x => x.StackTrace).Returns("Testcase Stacktrace");
+		}
+
+		var mc = new Mock<ICorrectedModalData>();
+		var fc = new Mock<IFuelConsumptionCorrection>();
+		modData.Setup(x => x.CorrectedModalData).Returns(mc.Object);
+		mc.Setup(x => x.FuelCorrection).Returns(new Dictionary<FuelType, IFuelConsumptionCorrection>() {
+			{ FuelType.DieselCI, fc.Object }
+		});
+
+		fc.Setup(x => x.Fuel).Returns(FuelData.Diesel);
+		fc.Setup(x => x.TotalFuelConsumptionCorrected).Returns(31.SI<Kilogram>());
+		mc.Setup(x => x.CO2Total).Returns(20.SI<Kilogram>());
+		mc.Setup(x => x.EnergyConsumptionTotal).Returns(1e9.SI<Joule>());
+
+
+
+		return modData.Object;
+	}
+
+	private VectoRunData GetMockRunData(VehicleCategory vehicleCategory, VectoSimulationJobType jobType,
+		bool offVehicleCharging, bool exempted, VectoRunData.OvcHevMode ovcMode)
+	{
+		return new VectoRunData() {
+			Mission = new Mission() {
+				MissionType = MissionType.LongHaul
+			},
+			OVCMode = ovcMode,
+			Exempted = exempted,
+			JobType = jobType,
+			Loading = LoadingType.LowLoading,
+			VehicleData = new VehicleData() {
+				CurbMass = 7600.SI<Kilogram>(),
+				Loading = 5000.SI<Kilogram>(),
+				CargoVolume = 20.SI<CubicMeter>(),
+				VehicleClass = VehicleClass.Class5,
+				VehicleCategory = vehicleCategory,
+				OffVehicleCharging = offVehicleCharging
+			},
+			EngineData = new CombustionEngineData() {
+				FuelMode = 0,
+				Fuels = new List<CombustionEngineFuelData>() {
+					new CombustionEngineFuelData() {
+						FuelData = FuelData.Diesel,
+
+					}
+				}
+			},
+			Retarder = new RetarderData() {
+				Type = RetarderType.None,
+			},
+			
+		};
 	}
 }

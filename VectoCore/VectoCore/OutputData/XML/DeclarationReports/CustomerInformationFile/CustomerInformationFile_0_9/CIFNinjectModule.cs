@@ -442,8 +442,38 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			Bind<IResultsWriter>().To<CIFResultsWriter.ExemptedResultsWriter>().Named(
 				_namingHelper.GetName(VehicleCategoryHelper.CompletedBus, true));
 
+			Bind<ICifResultsWriterFactory>().ToFactory().InSingletonScope();
 
-			
+			Bind<IResultGroupWriter>().To<LorryOVCResultWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetLorryOVCSuccessResultWriter());
+			Bind<IResultGroupWriter>().To<ErrorResultWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetLorryOVCErrorResultWriter());
+
+			Bind<IResultGroupWriter>().To<ResultMissionWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetMissionWriter());
+			Bind<IResultGroupWriter>().To<ResultSimulationParameterLorryWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetSimulationParameterWriter());
+
+			Bind<IResultGroupWriter>().To<LorryOVCChargeDepletingWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetLorryOVCResultWriterChargeDepleting());
+			Bind<IResultGroupWriter>().To<LorryOVCChargeSustainingWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetLorryOVCResultWriterChargeSustaining());
+
+
+			Bind<IFuelConsumptionWriter>().To<LorryFuelConsumptionWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetFuelConsumptionLorry());
+
+			Bind<IResultGroupWriter>().To<LorryElectricEnergyConsumptionWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetElectricEnergyConsumptionLorry());
+
+		}
+
+		private bool AccessedViaCIFResultsWriterFactory(IRequest request)
+		{
+			if (request.ParentRequest == null) {
+				return false;
+			}
+			return typeof(ICifResultsWriterFactory).IsAssignableFrom(request.ParentRequest.Service);
 		}
 	}
 }

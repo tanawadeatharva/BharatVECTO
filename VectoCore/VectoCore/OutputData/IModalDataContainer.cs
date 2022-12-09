@@ -612,12 +612,14 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static Scalar ICEMaxLoadTimeShare(this IModalDataContainer data)
 		{
-			var sum = data.GetValues(x => new {
+			var tmp = data.GetValues(x => new {
 				tMax = x.Field<NewtonMeter>(ModalResultField.T_ice_full.GetName()).DefaultIfNull(-1),
 				tEng = x.Field<NewtonMeter>(ModalResultField.T_ice_fcmap.GetName()).DefaultIfNull(0),
 				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName()),
-				iceOn =  !(x[ModalResultField.ICEOn.GetName()] is DBNull) && x.Field<bool>(ModalResultField.ICEOn.GetName())
-			}).Where(x => x.iceOn).Sum(x => x.tMax.IsEqual(x.tEng, 5.SI<NewtonMeter>()) ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
+				iceOn = !(x[ModalResultField.ICEOn.GetName()] is DBNull) &&
+						x.Field<bool>(ModalResultField.ICEOn.GetName())
+			});
+			var sum = tmp.Where(x => x.iceOn).Sum(x => x.tMax.IsEqual(x.tEng, 5.SI<NewtonMeter>()) ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
 			return 100 * sum / data.Duration;
 		}
 

@@ -59,20 +59,21 @@ namespace TUGraz.VectoCore.OutputData
 		 * Hence, the report class knows which and how many results to expect after the simulation
 		 * (calls to AddResult)
 		 */
-		void PrepareResult(LoadingType loading, Mission mission, int fuelMode, VectoRunData runData);
+		void PrepareResult(VectoRunData runData);
 
 		/**
 		 * called after the simulation run providing the modal data of the simulation 
 		 * for the given configuration
 		 */
-		void AddResult(
-			LoadingType loadingType, Mission mission, int fuelMode, VectoRunData runData, IModalDataContainer modData);
+		void AddResult(VectoRunData runData, IModalDataContainer modData);
 
 	}
 
 	public interface IResultEntry
 	{
 		VectoRun.Status Status { get; }
+
+		VectoRunData.OvcHevMode OVCMode { get; }
 		MissionType Mission { get; set; }
 
 		LoadingType LoadingType { get; set; }
@@ -162,7 +163,7 @@ namespace TUGraz.VectoCore.OutputData
 
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
-		public void PrepareResult(LoadingType loading, Mission mission, int fuelMode, VectoRunData runData)
+		public void PrepareResult(VectoRunData runData)
 		{
 			_resultCount++;
 		}
@@ -177,16 +178,15 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		public void AddResult(
-			LoadingType loadingType, Mission mission, int fuelMode, VectoRunData runData,
+		public void AddResult(VectoRunData runData,
 			IModalDataContainer modData)
 		{
 			//return;
-			if (mission.MissionType != MissionType.ExemptedMission) {
+			if (runData.Mission.MissionType != MissionType.ExemptedMission) {
 				var entry = new T {
-					Mission = mission.MissionType,
-					LoadingType = loadingType,
-					FuelMode = fuelMode,
+					Mission = runData.Mission.MissionType, // mission.MissionType,
+					LoadingType = runData.Loading, // loadingType,
+					FuelMode = runData.EngineData?.FuelMode ?? 0, // fuelMode,
 					FuelData = runData.EngineData?.Fuels.Select(x => x.FuelData).ToList(),
 					Payload = runData.VehicleData.Loading,
 					TotalVehicleMass = runData.VehicleData.TotalVehicleMass,

@@ -167,7 +167,7 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			const int CubicMeterToLiter = 10 * 10 * 10;
 			const int MeterTo100KiloMeter = 100 * Kilo;
-			return new ConvertedSI(value.Value() * CubicMeterToLiter * MeterTo100KiloMeter, "l/100m^3km");
+			return new ConvertedSI(value.Value() * CubicMeterToLiter * MeterTo100KiloMeter, "l/100m³-km");
 		}
 
 		public static ConvertedSI ConvertToGrammPerHour(this KilogramPerSecond value)
@@ -182,17 +182,17 @@ namespace TUGraz.VectoCommon.Utils
 
 		public static ConvertedSI ConvertToCubicCentiMeter(this CubicMeter value)
 		{
-			return new ConvertedSI(value.Value() * 100 * 100 * 100, "cm^3");
+			return new ConvertedSI(value.Value() * 100 * 100 * 100, "cm³");
 		}
 
 		public static ConvertedSI ConvertToGrammPerCubicMeterKiloMeter(this KilogramPerMeterCubicMeter value)
 		{
-			return new ConvertedSI(value.Value()  * Kilo * Kilo, "g/m^3km");
+			return new ConvertedSI(value.Value()  * Kilo * Kilo, "g/m³-km");
 		}
 
 		public static ConvertedSI ConvertToGrammPerTonKilometer(this KilogramPerMeterMass value)
 		{
-			return new ConvertedSI(value.Value() * Kilo * Kilo * Kilo, "g/tkm");
+			return new ConvertedSI(value.Value() * Kilo * Kilo * Kilo, "g/t-km");
 		}
 
 		public static ConvertedSI ConvertToKiloWattHour(this WattSecond value)

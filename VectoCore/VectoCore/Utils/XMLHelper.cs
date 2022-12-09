@@ -77,6 +77,7 @@ namespace TUGraz.VectoCore.Utils
 				.Replace(versionPrefix, string.Empty);
 		}
 
+
 		public static object[] ValueAsUnit(this Kilogram mass, string unit, uint? decimals = 0)
 		{
 			switch (unit) {
@@ -177,6 +178,15 @@ namespace TUGraz.VectoCore.Utils
 				case "%": return GetValueAsUnit(value * 100, unit, decimals);
 				default: return GetValueAsUnit(value, unit, decimals);
 			}
+		}
+
+		public static object[] ValueAsUnit(this ConvertedSI value, uint? significant = null, uint? decimals = null)
+		{
+			//return GetValueAsUnit, value.Units, decimals);
+			return new object[] {
+				new XAttribute(XMLNames.Report_Results_Unit_Attr, value.Units),
+				value.Value.ToMinSignificantDigits(significant, decimals)
+			};
 		}
 
 		private static object[] GetValueAsUnit(this double? value, string unit, uint? decimals)

@@ -281,7 +281,7 @@ namespace TUGraz.VectoCore.Utils.Ninject
 			public string JobType => Exempted ? VectoSimulationJobTypeHelper.Conventional : _powertrainCategory;
 
 			public string VehicleCategory => _vehicleCategory;
-			public bool OVC => _ovc;
+			public bool OVC => Exempted ? false : _ovc;
 
 			#region Overrides of ValueType
 
@@ -301,10 +301,10 @@ namespace TUGraz.VectoCore.Utils.Ninject
 			public override int GetHashCode()
 			{
 				unchecked {
-					var hashCode = (_vehicleCategory != null ? _vehicleCategory.GetHashCode() : 0);
-					hashCode = (hashCode * 397) ^ (_powertrainCategory != null ? _powertrainCategory.GetHashCode() : 0);
-					hashCode = (hashCode * 397) ^ _ovc.GetHashCode();
-					hashCode = (hashCode * 397) ^ _exempted.GetHashCode();
+					var hashCode = (VehicleCategory != null ? VehicleCategory.GetHashCode() : 0);
+					hashCode = (hashCode * 397) ^ (JobType != null ? JobType.GetHashCode() : 0);
+					hashCode = (hashCode * 397) ^ OVC.GetHashCode();
+					hashCode = (hashCode * 397) ^ Exempted.GetHashCode();
 					return hashCode;
 				}
 			}

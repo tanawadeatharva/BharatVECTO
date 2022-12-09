@@ -134,12 +134,15 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public double WeightingFactor { get; set; }
 
+			public VectoRunData.OvcHevMode OVCMode { get; set; }
+
 			// used for factor method
 			public IResult PrimaryResult { get; set; }
 
 
 			public virtual void SetResultData(VectoRunData runData, IModalDataContainer data, double weightingFactor)
 			{
+				OVCMode = runData.OVCMode;
 				Status = data.RunStatus;
 				Error = data.Error;
 				StackTrace = data.StackTrace;
@@ -158,12 +161,16 @@ namespace TUGraz.VectoCore.OutputData.XML
 						v = r.Field<MeterPerSecond>(ModalResultField.v_act.GetName()),
 						nEng = r.Field<PerSecond>(ModalResultField.n_ice_avg.GetName())
 					}).Where(x => x.v.IsGreater(0)).ToArray();
-				var drivingTime = entriesDriving.Sum(x => x.dt);
+				if (entriesDriving.Length > 0) {
+					var drivingTime = entriesDriving.Sum(x => x.dt);
 
-				AverageDrivingSpeed = entriesDriving.Sum(x => x.v * x.dt) / drivingTime;
-				EngineSpeedDrivingAvg = (entriesDriving.Sum(x => (x.nEng * x.dt).Value()) / drivingTime.Value()).SI<PerSecond>();
-				EngineSpeedDrivingMin = entriesDriving.Min(x => x.nEng);
-				EngineSpeedDrivingMax = entriesDriving.Max(x => x.nEng);
+					AverageDrivingSpeed = entriesDriving.Sum(x => x.v * x.dt) / drivingTime;
+					EngineSpeedDrivingAvg = (entriesDriving.Sum(x => (x.nEng * x.dt).Value()) / drivingTime.Value())
+						.SI<PerSecond>();
+					EngineSpeedDrivingMin = entriesDriving.Min(x => x.nEng);
+					EngineSpeedDrivingMax = entriesDriving.Max(x => x.nEng);
+				}
+
 				Distance = data.Distance;
 
 				CorrectedFinalFuelConsumption = data.CorrectedModalData.FuelCorrection;
