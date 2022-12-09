@@ -93,6 +93,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
 
+		public static readonly HEVStrategyParameters InitEquivalenceFactors = new HEVStrategyParametersLorry();
+		//public static readonly HEVStrategyParameters InitEquivalenceFactorsBus = new HEVStrategyParametersBus();
+
 		public static readonly double ElectricMachineDefaultMechanicalTransmissionEfficiency = 1;
 		//public static MeterPerSecond CycleSpeedLimit;
 		public const double LossMapExtrapolationFactor = 6;

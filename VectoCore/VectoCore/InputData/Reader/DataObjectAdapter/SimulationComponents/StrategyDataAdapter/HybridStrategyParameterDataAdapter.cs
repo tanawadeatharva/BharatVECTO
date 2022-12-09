@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NLog.Targets;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
@@ -17,7 +18,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 	public class ParallelHybridStrategyParameterDataAdapter : HybridStrategyDataAdapter
 	{
-		public HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData, SuperCapData superCap)
+		public HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData,
+			SuperCapData superCap, VectoRunData.OvcHevMode ovcMode)
 		{
 			if (batterySystemData == null && superCap == null) {
 				return null;
@@ -39,12 +41,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 									superCap.MaxVoltage.Value();
 			}
 
-			//TODO Move to DeclarationData.Hybridstrategy.Parallel
+
+
+			//var equivalenceFactor = DeclarationData.HevStrategyParameters.
+
 			result.AuxReserveTime = 0.SI<Second>();
 			result.AuxReserveChargeTime = 0.SI<Second>();
 			result.MinICEOnTime = 10.SI<Second>();
 			result.ICEStartPenaltyFactor = 0.1;
 			result.CostFactorSOCExponent = 1;
+
+
 
 			
 
