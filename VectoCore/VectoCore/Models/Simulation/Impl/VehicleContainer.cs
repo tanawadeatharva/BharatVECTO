@@ -100,6 +100,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		internal readonly Dictionary<PowertrainPosition, IElectricMotorInfo> ElectricMotors =
 			new Dictionary<PowertrainPosition, IElectricMotorInfo>();
 
+		private IList<IResetableVectoSimulationComponent> _resetableComponents = new List<IResetableVectoSimulationComponent>(3);
+
 
 		public VehicleContainer(ExecutionMode executionMode, IModalDataContainer modData = null,
 			ISumData writeSumData = null)
@@ -137,6 +139,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public virtual void AddComponent(VectoSimulationComponent component)
 		{
 			var commitPriority = 0;
+
+			if (component is IResetableVectoSimulationComponent resetable) {
+				_resetableComponents.Add(resetable);
+			}
 
 			if (component is IEngineControl c1) { EngineCtl = c1; }
 			if (component is IDriverInfo c2) { DriverInfo = c2; }
@@ -271,13 +277,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		public virtual void FinishSimulationRun(Exception e = null)
+		public virtual void FinishSingleSimulationRun(Exception e = null)
 		{
 			Log.Info("VehicleContainer finishing simulation.");
 			ModData?.Finish(RunStatus, e);
 
 			WriteSumData?.Write(ModData, RunData);
 
+		}
+		public virtual void FinishSimulationRun(Exception e = null)
+		{
+			FinishSingleSimulationRun(e);
+			
 			ModData?.FinishSimulation();
 			DrivingCycleInfo?.FinishSimulation();
 		}
@@ -302,6 +313,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public IReadOnlyCollection<VectoSimulationComponent> SimulationComponents()
 		{
 			return new ReadOnlyCollection<VectoSimulationComponent>(_components.Select(x => x.Item2).ToList());
+		}
+
+		public void ResetComponents()
+		{
+			foreach (var resetableVectoSimulationComponent in _resetableComponents) {
+				resetableVectoSimulationComponent.Reset(this);
+			}
 		}
 
 		public virtual bool HasElectricMotor { get; private set; }
