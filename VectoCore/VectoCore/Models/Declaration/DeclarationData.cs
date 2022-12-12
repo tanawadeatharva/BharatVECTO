@@ -52,10 +52,12 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
+using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-    public static class DeclarationData
+	public static class DeclarationData
 	{
 		/// <summary>
 		/// The standard acceleration for gravity on earth.
@@ -412,19 +414,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-            public static double CalculateCOP(Watt coolingPwrDriver, double copDriver, Watt coolingPwrPass, double copPass)
-            {
-                if (coolingPwrDriver.IsGreater(0) && copDriver.IsEqual(0)) {
-                    copDriver = copPass;
-                }
-                if (coolingPwrDriver.IsEqual(0) && coolingPwrPass.IsEqual(0)) {
-                    return 1.0;
-                }
-                return (coolingPwrDriver * copDriver + coolingPwrPass * copPass) /
-                        (coolingPwrDriver + coolingPwrPass);
-            }
+			public static double CalculateCOP(Watt coolingPwrDriver, double copDriver, Watt coolingPwrPass, double copPass)
+			{
+				if (coolingPwrDriver.IsGreater(0) && copDriver.IsEqual(0)) {
+					copDriver = copPass;
+				}
+				if (coolingPwrDriver.IsEqual(0) && coolingPwrPass.IsEqual(0)) {
+					return 1.0;
+				}
+				return (coolingPwrDriver * copDriver + coolingPwrPass * copPass) /
+						(coolingPwrDriver + coolingPwrPass);
+			}
 
-            public static Meter CorrectionLengthDrivetrainVolume(VehicleCode? vehicleCode, bool? lowEntry, int numAxles, bool articulated)
+			public static Meter CorrectionLengthDrivetrainVolume(VehicleCode? vehicleCode, bool? lowEntry, int numAxles, bool articulated)
 			{
 				if ((vehicleCode == VehicleCode.CE || vehicleCode == VehicleCode.CG) && (bool)lowEntry) {
 					switch (numAxles) {
@@ -1365,6 +1367,32 @@ namespace TUGraz.VectoCore.Models.Declaration
 						throw new ArgumentOutOfRangeException(nameof(type), type, null);
 				}
 			}
+		}
+
+		public static IWeightedResult CalculateWeightedResult(IResultEntry cdResult, IResultEntry csResult)
+		{
+			if (cdResult.Status != VectoRun.Status.Success || csResult.Status != VectoRun.Status.Success) {
+				return null;
+			}
+			// ToDo MQ 2022-12-12: add correct calculation method!
+			return new WeightedResult(cdResult) {
+				AverageSpeed = cdResult.AverageSpeed,
+				FuelConsumption = cdResult.FuelData.Select(x => Tuple.Create(x,
+						(cdResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected +
+						csResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected) / 2.0))
+					.ToDictionary(x => x.Item1, x => x.Item2),
+				ElectricEnergyConsumption = (cdResult.ElectricEnergyConsumption + csResult.ElectricEnergyConsumption) / 2.0,
+				CO2Total = (cdResult.CO2Total + csResult.CO2Total) / 2.0,
+				ActualChargeDepletingRange = cdResult.Distance,
+				EquivalentAllElectricRange = cdResult.Distance,
+				ZeroCO2EmissionsRange = cdResult.Distance,
+				UtilityFactor = 1
+			};
+		}
+
+		public static IWeightedResult CalculateWeightedSummary(IList<IResultEntry> entries)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

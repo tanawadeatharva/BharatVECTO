@@ -100,7 +100,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 				return CorrectedFinalFuelConsumption[fuelType];
 			}
 
-            public Kilogram CO2Total { get; private set; }
+			public WattSecond ElectricEnergyConsumption { get; private set; }
+
+			public Kilogram CO2Total { get; private set; }
 
 			public Dictionary<FuelType, IFuelConsumptionCorrection> CorrectedFinalFuelConsumption { get; private set; }
 
@@ -175,9 +177,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 				CorrectedFinalFuelConsumption = data.CorrectedModalData.FuelCorrection;
 				CO2Total = data.CorrectedModalData.CO2Total;
-				EnergyConsumptionTotal = data.CorrectedModalData.EnergyConsumptionTotal;
+				EnergyConsumptionTotal = data.CorrectedModalData.FuelEnergyConsumptionTotal;
+				ElectricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption;
 
-				var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
+
+                var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
 					? ModalResultField.P_retarder_in
 					: (runData.AngledriveData == null ? ModalResultField.P_axle_in : ModalResultField.P_angle_in);
 				var eGbxIn = data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_in, x => x > 0);

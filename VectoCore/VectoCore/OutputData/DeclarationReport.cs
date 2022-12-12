@@ -101,6 +101,8 @@ namespace TUGraz.VectoCore.OutputData
 
 		IFuelConsumptionCorrection FuelConsumptionFinal(FuelType fuelType);
 
+		WattSecond ElectricEnergyConsumption { get; }
+
 		Kilogram CO2Total { get; }
 		Kilogram Payload { get; set; }
 		Kilogram TotalVehicleMass { get; set; }
@@ -117,6 +119,45 @@ namespace TUGraz.VectoCore.OutputData
 
 		string StackTrace { get; }
 	}
+
+	public interface IWeightedResult
+	{
+		MeterPerSecond AverageSpeed { get; }
+
+		Meter Distance { get; }
+
+		Kilogram Payload { get; }
+
+		CubicMeter CargoVolume { get; }
+
+		double? PassengerCount { get; }
+
+		IDictionary<IFuelProperties, Kilogram> FuelConsumption { get; }
+
+		WattSecond ElectricEnergyConsumption { get; }
+
+		Kilogram CO2Total { get; }
+
+		Meter ActualChargeDepletingRange { get; }
+
+		Meter EquivalentAllElectricRange { get; }
+
+		Meter ZeroCO2EmissionsRange { get; }
+
+		double UtilityFactor { get; }
+	}
+
+	public interface IOVCResultEntry 
+	{
+
+		IResultEntry ChargeDepletingResult { get; }
+
+		IResultEntry ChargeSustainingResult { get; }
+
+		IWeightedResult Weighted { get; }
+
+	}
+
 
 	/// <summary>
 	/// Class for creating a declaration report.

@@ -392,7 +392,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		public Joule EnergyConsumptionTotal
+		public Joule FuelEnergyConsumptionTotal
 		{
 			get
 			{
@@ -400,6 +400,8 @@ namespace TUGraz.VectoCore.OutputData
 					x.Value.TotalFuelConsumptionCorrected * x.Value.Fuel.LowerHeatingValueVecto);
 			}
 		}
+
+		public WattSecond ElectricEnergyConsumption { get; }
 
 		public Second ICEOffTimeStandstill { get; set; }
 		public WattSecond EnergyAuxICEOffStandstill { get; set; }
@@ -562,7 +564,8 @@ namespace TUGraz.VectoCore.OutputData
 		public KilogramPerMeter KilogramCO2PerMeter => 0.SI<KilogramPerMeter>();
 		public Dictionary<FuelType, IFuelConsumptionCorrection> FuelCorrection => new Dictionary<FuelType, IFuelConsumptionCorrection>();
 		public Kilogram CO2Total => 0.SI<Kilogram>();
-		public Joule EnergyConsumptionTotal => 0.SI<Joule>();
+		public Joule FuelEnergyConsumptionTotal => 0.SI<Joule>();
+		public WattSecond ElectricEnergyConsumption => 0.SI<WattSecond>();
 
 		#endregion
 	}

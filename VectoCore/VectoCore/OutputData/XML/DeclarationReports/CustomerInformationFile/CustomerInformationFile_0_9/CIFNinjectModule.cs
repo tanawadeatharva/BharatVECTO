@@ -444,6 +444,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			Bind<ICifResultsWriterFactory>().ToFactory().InSingletonScope();
 
+			// -- Lorry
+
 			Bind<IResultGroupWriter>().To<LorryOVCResultWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetLorryOVCSuccessResultWriter());
 			Bind<IResultGroupWriter>().To<ErrorResultWriter>().When(AccessedViaCIFResultsWriterFactory)
@@ -452,19 +454,53 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			Bind<IResultGroupWriter>().To<ResultMissionWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetMissionWriter());
 			Bind<IResultGroupWriter>().To<ResultSimulationParameterLorryWriter>().When(AccessedViaCIFResultsWriterFactory)
-				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetSimulationParameterWriter());
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetLorrySimulationParameterWriter());
 
 			Bind<IResultGroupWriter>().To<LorryOVCChargeDepletingWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetLorryOVCResultWriterChargeDepleting());
 			Bind<IResultGroupWriter>().To<LorryOVCChargeSustainingWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetLorryOVCResultWriterChargeSustaining());
+			Bind<IResultGroupWriter>().To<LorryOVCTotalWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetLorryOVCSummaryWriter());
 
 
 			Bind<IFuelConsumptionWriter>().To<LorryFuelConsumptionWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetFuelConsumptionLorry());
-
 			Bind<IResultGroupWriter>().To<LorryElectricEnergyConsumptionWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetElectricEnergyConsumptionLorry());
+			Bind<ICO2Writer>().To<LorryCO2Writer>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetCO2ResultLorry());
+
+			Bind<ICifSummaryWriter>().To<LorryOVCCifSummaryWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetLorryOVCCifSummaryWriter());
+
+
+			// -- Bus
+
+			Bind<IResultGroupWriter>().To<BusOVCTotalWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusOVCSuccessResultWriter());
+			Bind<IResultGroupWriter>().To<ErrorResultWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusOVCErrorResultWriter());
+
+			Bind<IResultGroupWriter>().To<ResultSimulationParameterBusWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusSimulationParameterWriter());
+
+			Bind<IResultGroupWriter>().To<BusOVCChargeDepletingWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusOVCResultWriterChargeDepleting());
+			Bind<IResultGroupWriter>().To<BusOVCChargeSustainingWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusOVCResultWriterChargeSustaining());
+			Bind<IResultGroupWriter>().To<BusOVCSummaryWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusOVCSummaryWriter());
+
+			Bind<IFuelConsumptionWriter>().To<BusFuelConsumptionWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetFuelConsumptionBus());
+			Bind<IResultGroupWriter>().To<BusElectricEnergyConsumptionWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetElectricEnergyConsumptionBus());
+			Bind<ICO2Writer>().To<BusCO2Writer>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetCO2ResultBus());
+
+			Bind<ICifSummaryWriter>().To<BusOVCCifSummaryWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusOVCCifSummaryWriter());
 
 		}
 
