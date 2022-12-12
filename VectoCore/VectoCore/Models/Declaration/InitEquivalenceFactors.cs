@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Ninject.Infrastructure.Language;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.CIFWriter;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
@@ -23,19 +20,21 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 	public abstract class HEVStrategyParameters
 	{
-
 		private Dictionary<int, InitEquivalenceFactors> _initEquivalenceFactors =
 			new Dictionary<int, InitEquivalenceFactors>(3);
 
-		private IList<int> socRanges = new List<int>{ 10, 20, 40 };
+		private readonly IList<int> _socRanges = new List<int>{ 10, 20, 40 };
+
+		private readonly Slope _slope;
 
         protected HEVStrategyParameters(string vehicle)
 		{
-			
-			foreach(var range in socRanges)
+			foreach(var range in _socRanges)
 			{
                 _initEquivalenceFactors.Add(range, new InitEquivalenceFactors(range, vehicle));
 			}
+
+			_slope = new Slope(vehicle);
 		}
 
         /// <summary>
@@ -49,8 +48,22 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public double LookupEquivalenceFactor(MissionType mission, VehicleClass hdvClass, LoadingType loading,
 			double socRange)
 		{
-			var range = socRanges.MinBy((i => Math.Abs(socRange - i)));
-			return _initEquivalenceFactors[range].LookupEquivalenceFactor(mission, hdvClass, loading);
+			var a = _socRanges.MinBy((i => Math.Abs(socRange - i))); //closest
+
+			if (socRange <= _socRanges.Min() || socRange >= _socRanges.Max()) {
+				return _initEquivalenceFactors[a].LookupEquivalenceFactor(mission, hdvClass, loading);
+            }
+
+			var b = _socRanges.Where(x => x != a).MinBy((i => Math.Abs(socRange - i))); //next close
+
+			return VectoMath.Interpolate(a, b, _initEquivalenceFactors[a].LookupEquivalenceFactor(mission, hdvClass, loading),
+				_initEquivalenceFactors[b].LookupEquivalenceFactor(mission, hdvClass, loading), socRange);
+		}
+
+		public double LookupSlope(MissionType mission, VehicleClass hdvClass, LoadingType loading)
+		{
+			return _slope.Lookup( hdvClass.GetClassNumber(), mission.GetNonEMSMissionType().GetName().ToLowerInvariant(),
+                loading);
 		}
 
 		private sealed class InitEquivalenceFactors : LookupData<string, InitEquivalenceFactors.Entry>
@@ -72,7 +85,7 @@ namespace TUGraz.VectoCore.Models.Declaration
             }
             public double LookupEquivalenceFactor(MissionType mission, VehicleClass hdvClass, LoadingType loading)
             {
-                var entry = Lookup(hdvClass.GetClassNumber()).cycleDict[mission];
+                var entry = Lookup(hdvClass.GetClassNumber()).cycleDict[mission.GetNonEMSMissionType()];
 
                 switch (loading)
                 {
@@ -94,8 +107,7 @@ namespace TUGraz.VectoCore.Models.Declaration
             {
                 var vehicleClasses = table.Rows.Cast<DataRow>().Select(row => row.Field<string>("vehiclegroup"));
 
-
-                var cycleEntries = table.Rows.Cast<DataRow>().Select(row => new CycleEntry
+				var cycleEntries = table.Rows.Cast<DataRow>().Select(row => new CycleEntry
                 {
                     VehicleGroup = row.Field<string>("vehiclegroup").RemoveWhitespace(),
                     LongHaul = SplitStringToDoubleTuple(row.Field<string>("longhaul")),
@@ -105,8 +117,7 @@ namespace TUGraz.VectoCore.Models.Declaration
                     Construction = SplitStringToDoubleTuple(row.Field<string>("construction"))
                 });
 
-
-                foreach (var cycleEntry in cycleEntries)
+				foreach (var cycleEntry in cycleEntries)
                 {
                     foreach (string vehClass in cycleEntry.VehicleGroup.Split('/'))
                     {
@@ -144,14 +155,57 @@ namespace TUGraz.VectoCore.Models.Declaration
                 public Dictionary<MissionType, Tuple<double, double>> cycleDict;
             }
 
-
-            private Tuple<double, double> SplitStringToDoubleTuple(string input)
+			private Tuple<double, double> SplitStringToDoubleTuple(string input)
             {
                 var arr = input.Split('/');
                 return input.IsNullOrEmpty() ? Tuple.Create(0.0, 0.0) : Tuple.Create(Convert.ToDouble(arr[0]), Convert.ToDouble(arr[1]));
             }
         }
-    }
+
+
+		private sealed class Slope : LookupData<string, string, LoadingType, double> //Class, MissionNonEMS, LoadingType
+		{
+            #region Overrides of LookupData
+
+			private string ResourceIdFormatString = DeclarationData.DeclarationDataResourcePrefix + ".HEVParameters.{0}.Gradient_40.csv";
+            private string _resourceId;
+
+			protected override string ResourceId => _resourceId;
+			protected override string ErrorMessage { get; }
+
+			public Slope(string vehicleType)
+			{
+				_resourceId = string.Format(ResourceIdFormatString, vehicleType);
+				ReadData(); //call again here because the base constructor doesn't consider the updated ResourceId
+            }
+			protected override void ParseData(DataTable table)
+            {
+                foreach (DataRow row in table.Rows)
+                {
+                    var vehicleClass = row.Field<string>("vehiclegroup");
+
+                    foreach (DataColumn col in table.Columns)
+                    {
+                        if (col.Caption == "vehiclegroup")
+                        {
+                            continue;
+                        }
+
+                        var values = SplitStringToDoubleTuple(row.Field<string>(col));
+                        Data[Tuple.Create(vehicleClass, col.Caption, LoadingType.LowLoading)] = values.Item1;
+                        Data[Tuple.Create(vehicleClass, col.Caption, LoadingType.ReferenceLoad)] = values.Item2;
+                    }
+                }
+            }
+
+			private Tuple<double, double> SplitStringToDoubleTuple(string input)
+			{
+				var arr = input.Split('/');
+				return input.IsNullOrEmpty() ? Tuple.Create(0.0, 0.0) : Tuple.Create(Convert.ToDouble(arr[0]), Convert.ToDouble(arr[1]));
+			}
+			#endregion
+        }
+	}
 
 }
 
