@@ -11,28 +11,19 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	{
 		protected CO2WriterBase(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
 
-		#region Implementation of IFuelConsumptionWriter
-
-		public XElement[] GetElement(IResultEntry entry)
+		public XElement[] GetElements(IResultEntry entry)
 		{
-			return GetFuelConsumption(entry.CO2Total, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount).Select(x =>
+			return GetCO2ResultEntries(entry.CO2Total, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount).Select(x =>
 				new XElement(Cif + XMLNames.Report_Results_CO2, XMLHelper.ValueAsUnit(x, 3, 1))).ToArray();
 		}
 
-		protected abstract IList<ConvertedSI> GetFuelConsumption(Kilogram co2, Meter distance, Kilogram payload, CubicMeter volume, double? passengers);
-
-		#endregion
-
-		#region Overrides of AbstractResultWriter
-
-		public virtual XElement[] GetElement(IOVCResultEntry ovcEntry)
+		public virtual XElement[] GetElements(IWeightedResult entry)
 		{
-			var entry = ovcEntry.Weighted;
-			return GetFuelConsumption(entry.CO2Total, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount).Select(x =>
+			return GetCO2ResultEntries(entry.CO2Total, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount).Select(x =>
 				new XElement(Cif + XMLNames.Report_Results_CO2, XMLHelper.ValueAsUnit(x, 3, 1))).ToArray();
 		}
 
-		#endregion
+		protected abstract IList<ConvertedSI> GetCO2ResultEntries(Kilogram co2, Meter distance, Kilogram payload, CubicMeter volume, double? passengers);
 
 	}
 
@@ -41,9 +32,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public LorryCO2Writer(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
 
 
-		#region Overrides of FuelConsumptionWriterBase
-
-		protected override IList<ConvertedSI> GetFuelConsumption(Kilogram CO2Total, Meter distance, Kilogram payload, CubicMeter volume, double? passengers)
+		protected override IList<ConvertedSI> GetCO2ResultEntries(Kilogram CO2Total, Meter distance, Kilogram payload, CubicMeter volume, double? passengers)
 		{
 			return new[] {
 				(CO2Total / distance).ConvertToGrammPerKiloMeter(),
@@ -52,17 +41,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			};
 		}
 
-		#endregion
 	}
 
 	public class BusCO2Writer : CO2WriterBase
 	{
 		public BusCO2Writer(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
 
-
-		#region Overrides of FuelConsumptionWriterBase
-
-		protected override IList<ConvertedSI> GetFuelConsumption(Kilogram CO2Total, Meter distance, Kilogram payload, CubicMeter volume, double? passengers)
+		protected override IList<ConvertedSI> GetCO2ResultEntries(Kilogram CO2Total, Meter distance, Kilogram payload, CubicMeter volume, double? passengers)
 		{
 			return new[] {
 				(CO2Total / distance).ConvertToGrammPerKiloMeter(),
@@ -70,6 +55,5 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			};
 		}
 
-		#endregion
 	}
 }

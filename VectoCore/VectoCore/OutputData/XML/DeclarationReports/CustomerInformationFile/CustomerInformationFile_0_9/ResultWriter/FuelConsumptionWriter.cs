@@ -10,7 +10,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter
 {
-	public abstract class FuelConsumptionWriterBase : AbstractResultGroupWriter, IFuelConsumptionWriter
+	public abstract class FuelConsumptionWriterBase : AbstractResultWriter, IFuelConsumptionWriter
 	{
 		protected FuelConsumptionWriterBase(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
 
@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 			return new XElement(Cif + XMLNames.Report_Results_Fuel,
 				new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fc.Fuel.FuelType.ToXMLFormat()),
-				GetFuelConsumption(fc.TotalFuelConsumptionCorrected, fc.Fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount).Select(x => new XElement(Cif + XMLNames.Report_Results_FuelConsumption, XMLHelper.ValueAsUnit(x, 3, 1)))
+				GetFuelConsumptionEntries(fc.TotalFuelConsumptionCorrected, fc.Fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount).Select(x => new XElement(Cif + XMLNames.Report_Results_FuelConsumption, XMLHelper.ValueAsUnit(x, 3, 1)))
 			);
 		}
 
@@ -28,22 +28,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 			return new XElement(Cif + XMLNames.Report_Results_Fuel,
 				new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fuel.FuelType.ToXMLFormat()),
-				GetFuelConsumption(consumption, fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount).Select(x => new XElement(Cif + XMLNames.Report_Results_FuelConsumption, XMLHelper.ValueAsUnit(x, 3, 1)))
+				GetFuelConsumptionEntries(consumption, fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount).Select(x => new XElement(Cif + XMLNames.Report_Results_FuelConsumption, XMLHelper.ValueAsUnit(x, 3, 1)))
 			);
 		}
 
-		protected abstract IList<ConvertedSI> GetFuelConsumption(Kilogram fc,
+		protected abstract IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc,
 			IFuelProperties fuel, Meter distance, Kilogram payload, CubicMeter volume,
 			double? passenger);
-
-		#endregion
-
-		#region Overrides of AbstractResultWriter
-
-		public override XElement GetElement(IResultEntry entry)
-		{
-			throw new NotImplementedException();
-		}
 
 		#endregion
 
@@ -56,7 +47,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Overrides of FuelConsumptionWriterBase
 
-		protected override IList<ConvertedSI> GetFuelConsumption(Kilogram fc, IFuelProperties fuel, Meter distance, Kilogram payload, CubicMeter volume, double? passenger)
+		protected override IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc, IFuelProperties fuel, Meter distance, Kilogram payload, CubicMeter volume, double? passenger)
 		{
 			var retVal =  new List<ConvertedSI> {
 				(fc / distance).ConvertToGrammPerKiloMeter(),
@@ -89,7 +80,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Overrides of FuelConsumptionWriterBase
 
-		protected override IList<ConvertedSI> GetFuelConsumption(Kilogram fc, IFuelProperties fuel, Meter distance, Kilogram payload, CubicMeter volume, double? passenger)
+		protected override IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc, IFuelProperties fuel, Meter distance, Kilogram payload, CubicMeter volume, double? passenger)
 		{
 			var retVal = new List<ConvertedSI> {
 				(fc / distance).ConvertToGrammPerKiloMeter(),

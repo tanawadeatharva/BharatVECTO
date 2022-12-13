@@ -113,6 +113,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		double WeightingFactor { get; }
 
+		Meter ActualChargeDepletingRange { get; set; }
+
+		Meter EquivalentAllElectricRange { get; set; }
+
+		Meter ZeroCO2EmissionsRange { get; set; }
+
 		void SetResultData(VectoRunData runData, IModalDataContainer data, double weightingFactor);
 
 		string Error { get; }

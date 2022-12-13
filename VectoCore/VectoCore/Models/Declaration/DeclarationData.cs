@@ -52,8 +52,10 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.XML;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
@@ -1392,7 +1394,50 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static IWeightedResult CalculateWeightedSummary(IList<IResultEntry> entries)
 		{
-			throw new NotImplementedException();
+			// ToDo MQ 2022-12-12: add correct calculation method!
+			var cdResult = entries.First();
+			var csResult = entries.First();
+			return new WeightedResult(cdResult) {
+				AverageSpeed = cdResult.AverageSpeed,
+				FuelConsumption = cdResult.FuelData.Select(x => Tuple.Create(x,
+						(cdResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected +
+						csResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected) / 2.0))
+					.ToDictionary(x => x.Item1, x => x.Item2),
+				ElectricEnergyConsumption = (cdResult.ElectricEnergyConsumption + csResult.ElectricEnergyConsumption) / 2.0,
+				CO2Total = (cdResult.CO2Total + csResult.CO2Total) / 2.0,
+				ActualChargeDepletingRange = cdResult.Distance,
+				EquivalentAllElectricRange = cdResult.Distance,
+				ZeroCO2EmissionsRange = cdResult.Distance,
+				UtilityFactor = 1
+			};
+		}
+
+		public static IWeightedResult CalculateWeightedSummary(IList<IOVCResultEntry> entries)
+		{
+			// ToDo MQ 2022-12-12: add correct calculation method!
+			var cdResult = entries.First().ChargeDepletingResult;
+			var csResult = entries.First().ChargeSustainingResult;
+			return new WeightedResult(cdResult) {
+				AverageSpeed = cdResult.AverageSpeed,
+				FuelConsumption = cdResult.FuelData.Select(x => Tuple.Create(x,
+						(cdResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected +
+						csResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected) / 2.0))
+					.ToDictionary(x => x.Item1, x => x.Item2),
+				ElectricEnergyConsumption = (cdResult.ElectricEnergyConsumption + csResult.ElectricEnergyConsumption) / 2.0,
+				CO2Total = (cdResult.CO2Total + csResult.CO2Total) / 2.0,
+				ActualChargeDepletingRange = cdResult.Distance,
+				EquivalentAllElectricRange = cdResult.Distance,
+				ZeroCO2EmissionsRange = cdResult.Distance,
+				UtilityFactor = 1
+			};
+		}
+
+		public static void SetElectricRangesPEV(IResultEntry resultEntry, VectoRunData runData, IModalDataContainer data)
+		{
+			// ToDo MQ 2022-12-12: add correct calculation method!
+			resultEntry.ActualChargeDepletingRange = 100.SI<Meter>();
+			resultEntry.EquivalentAllElectricRange = 100.SI<Meter>();
+			resultEntry.ZeroCO2EmissionsRange = 100.SI<Meter>();
 		}
 	}
 }

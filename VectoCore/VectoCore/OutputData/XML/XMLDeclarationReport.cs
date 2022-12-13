@@ -135,6 +135,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 			public double AverageAxlegearEfficiency { get; private set; }
 
 			public double WeightingFactor { get; set; }
+			public Meter ActualChargeDepletingRange { get; set; }
+			public Meter EquivalentAllElectricRange { get; set; }
+			public Meter ZeroCO2EmissionsRange { get; set; }
 
 			public VectoRunData.OvcHevMode OVCMode { get; set; }
 
@@ -180,6 +183,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 				EnergyConsumptionTotal = data.CorrectedModalData.FuelEnergyConsumptionTotal;
 				ElectricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption;
 
+				if (runData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
+						VectoSimulationJobType.IEPC_E)) {
+					DeclarationData.SetElectricRangesPEV(this, runData, data);
+				}
 
                 var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
 					? ModalResultField.P_retarder_in

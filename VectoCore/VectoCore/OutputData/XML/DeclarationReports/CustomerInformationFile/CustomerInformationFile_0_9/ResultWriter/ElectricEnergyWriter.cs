@@ -9,13 +9,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	ResultWriter
 {
 
-	public abstract class ElectricEnergyConsumptionWriterBase : AbstractResultGroupWriter
+	public abstract class ElectricEnergyConsumptionWriterBase : AbstractResultWriter, IElectricEnergyConsumptionWriter
 	{
 		public ElectricEnergyConsumptionWriterBase(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
 
 		#region Overrides of AbstractResultWriter
 
-		public override XElement GetElement(IResultEntry entry)
+		public virtual XElement GetElement(IResultEntry entry)
 		{
 			return new XElement(Cif + "ElectricEnergy",
 				GetEnergyConsumption(entry.ElectricEnergyConsumption, entry.Distance, entry.Payload, entry.CargoVolume,
@@ -24,12 +24,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			);
 		}
 
-		public override XElement GetElement(IOVCResultEntry ovcEntry)
+		public virtual XElement GetElement(IWeightedResult weighted)
 		{
-			var entry = ovcEntry.Weighted;
 			return new XElement(Cif + "ElectricEnergy",
-				GetEnergyConsumption(entry.ElectricEnergyConsumption, entry.Distance, entry.Payload, entry.CargoVolume,
-					entry.PassengerCount).Select(x =>
+				GetEnergyConsumption(weighted.ElectricEnergyConsumption, weighted.Distance, weighted.Payload, weighted.CargoVolume,
+					weighted.PassengerCount).Select(x =>
 					new XElement(Cif + XMLNames.Report_Result_EnergyConsumption, XMLHelper.ValueAsUnit(x, 3, 1)))
 			);
 
