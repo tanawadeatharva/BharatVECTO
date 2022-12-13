@@ -1408,7 +1408,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 				ActualChargeDepletingRange = cdResult.Distance,
 				EquivalentAllElectricRange = cdResult.Distance,
 				ZeroCO2EmissionsRange = cdResult.Distance,
-				UtilityFactor = 1
+				UtilityFactor = 1,
+
+				AuxHeaterFuel = cdResult.AuxHeaterFuel,
+				ZEV_CO2 = cdResult.ZEV_CO2,
+				ZEV_FuelConsumption_AuxHtr = cdResult.ZEV_FuelConsumption_AuxHtr
 			};
 		}
 

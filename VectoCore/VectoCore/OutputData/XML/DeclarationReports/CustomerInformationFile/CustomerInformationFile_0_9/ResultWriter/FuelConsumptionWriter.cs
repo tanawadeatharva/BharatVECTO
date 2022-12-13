@@ -80,14 +80,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Overrides of FuelConsumptionWriterBase
 
-		protected override IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc, IFuelProperties fuel, Meter distance, Kilogram payload, CubicMeter volume, double? passenger)
+		protected override IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc, IFuelProperties fuel,
+			Meter distance, Kilogram payload, CubicMeter volume, double? passenger)
 		{
 			var retVal = new List<ConvertedSI> {
 				(fc / distance).ConvertToGrammPerKiloMeter(),
 				(fc / distance / passenger.Value).ConvertToGrammPerPassengerKilometer(),
 
 				(fc * fuel.LowerHeatingValueVecto / distance).ConvertToMegaJoulePerKilometer(),
-				(fc * fuel.LowerHeatingValueVecto / distance / passenger.Value).ConvertToMegaJoulePerPassengerKilometer(),
+				(fc * fuel.LowerHeatingValueVecto / distance / passenger.Value)
+				.ConvertToMegaJoulePerPassengerKilometer(),
 			};
 
 			if (fuel.FuelDensity != null) {
@@ -101,5 +103,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		}
 
 		#endregion
+
+		public virtual IList<ConvertedSI> FuelConsumptionEntries(Kilogram fc, IFuelProperties fuel, Meter distance,
+			Kilogram payload, CubicMeter volume, double? passenger)
+		{
+			return GetFuelConsumptionEntries(fc, fuel, distance, payload, volume, passenger);
+		}
 	}
+
 }

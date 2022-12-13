@@ -146,9 +146,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Overrides of CIFResultWriterBase
 
-		public override string ResultXMLType { get; }
-		public override IResultGroupWriter SimulationParameterWriter { get; }
-		public override IResultGroupWriter ResultTotalWriter { get; }
+		public override string ResultXMLType => "ResultSuccessConventionalType";
+		public override IResultGroupWriter SimulationParameterWriter => _cifFactory.GetBusSimulationParameterWriter();
+		public override IResultGroupWriter ResultTotalWriter => _cifFactory.GetBusConvTotalWriter();
 
 		#endregion
 	}
@@ -159,9 +159,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Overrides of CIFResultWriterBase
 
-		public override string ResultXMLType { get; }
-		public override IResultGroupWriter SimulationParameterWriter { get; }
-		public override IResultGroupWriter ResultTotalWriter { get; }
+		public override string ResultXMLType => "ResultSuccessNonOVCHEVType";
+		public override IResultGroupWriter SimulationParameterWriter => _cifFactory.GetBusSimulationParameterWriter();
+		public override IResultGroupWriter ResultTotalWriter => _cifFactory.GetBusHEVNonOVCTotalWriter();
 
 		#endregion
 	}
@@ -172,9 +172,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Overrides of CIFResultWriterBase
 
-		public override string ResultXMLType { get; }
-		public override IResultGroupWriter SimulationParameterWriter { get; }
-		public override IResultGroupWriter ResultTotalWriter { get; }
+		public override string ResultXMLType => "ResultSuccessPEVType";
+		public override IResultGroupWriter SimulationParameterWriter => _cifFactory.GetBusSimulationParameterWriter();
+		public override IResultGroupWriter ResultTotalWriter => _cifFactory.GetBusPEVTotalWriter();
 
 		#endregion
 	}
@@ -199,9 +199,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XAttribute(xsi + "type", "ResultSuccessOVCHEVType"),
 				_cifFactory.GetMissionWriter().GetElement(entry.ChargeDepletingResult),
 				_cifFactory.GetBusSimulationParameterWriter().GetElement(entry.ChargeDepletingResult),
-				_cifFactory.GetBusOVCResultWriterChargeDepleting().GetElement(entry.ChargeDepletingResult),
-				_cifFactory.GetBusOVCResultWriterChargeSustaining().GetElement(entry.ChargeSustainingResult),
-				_cifFactory.GetBusOVCTotalWriter().GetElement(entry)
+				_cifFactory.GetBusHEVOVCResultWriterChargeDepleting().GetElement(entry.ChargeDepletingResult),
+				_cifFactory.GetBusHEVOVCResultWriterChargeSustaining().GetElement(entry.ChargeSustainingResult),
+				_cifFactory.GetBusHEVOVCTotalWriter().GetElement(entry)
 			);
 		}
 

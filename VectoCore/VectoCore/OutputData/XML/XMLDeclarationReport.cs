@@ -138,6 +138,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 			public Meter ActualChargeDepletingRange { get; set; }
 			public Meter EquivalentAllElectricRange { get; set; }
 			public Meter ZeroCO2EmissionsRange { get; set; }
+			public IFuelProperties AuxHeaterFuel { get; set; }
+			public Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
+			public Kilogram ZEV_CO2 { get; set; }
 
 			public VectoRunData.OvcHevMode OVCMode { get; set; }
 
@@ -188,7 +191,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					DeclarationData.SetElectricRangesPEV(this, runData, data);
 				}
 
-                var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
+				var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
 					? ModalResultField.P_retarder_in
 					: (runData.AngledriveData == null ? ModalResultField.P_axle_in : ModalResultField.P_angle_in);
 				var eGbxIn = data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_in, x => x > 0);

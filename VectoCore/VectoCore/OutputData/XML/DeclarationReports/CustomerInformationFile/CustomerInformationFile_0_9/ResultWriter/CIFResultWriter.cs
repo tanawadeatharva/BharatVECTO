@@ -143,7 +143,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetLorryHEVOVCSuccessResultWriter();
 			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetLorryErrorResultWriter();
-
 			public override ICifSummaryWriter SummaryWriter => _cifFactory.GetLorryHEVOVCSummaryWriter();
 
 		}
@@ -163,10 +162,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 			public ConventionalBus(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
 
-			protected override IResultGroupWriter ResultSuccessWriter => null;
-			protected override IResultGroupWriter ResultErrorWriter => null;
-
-			public override ICifSummaryWriter SummaryWriter => null;
+			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetBusConvSuccessResultWriter();
+			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetBusErrorResultWriter();
+			public override ICifSummaryWriter SummaryWriter => _cifFactory.GetBusConvSummaryWriter();
 
 		}
 
@@ -174,10 +172,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 			public HEVNonOVCBus(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
 
-			protected override IResultGroupWriter ResultSuccessWriter => null;
-			protected override IResultGroupWriter ResultErrorWriter => null;
-
-			public override ICifSummaryWriter SummaryWriter => null;
+			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetBusHEVNonOVCSuccessResultWriter();
+			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetLorryErrorResultWriter();
+			public override ICifSummaryWriter SummaryWriter => _cifFactory.GetBusHEVNonOVCSummaryWriter();
 
 		}
 
@@ -200,10 +197,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				);
 			}
 
-			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetBusOVCSuccessResultWriter();
-			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetBusOVCErrorResultWriter();
-
-			public override ICifSummaryWriter SummaryWriter => _cifFactory.GetBusOVCCifSummaryWriter();
+			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetBusHEVOVCSuccessResultWriter();
+			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetBusErrorResultWriter();
+			public override ICifSummaryWriter SummaryWriter => _cifFactory.GetBusHEVOVCSummaryWriter();
 
 		}
 
@@ -211,9 +207,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 			public PEVBus(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
 
-			protected override IResultGroupWriter ResultSuccessWriter => null;
-			protected override IResultGroupWriter ResultErrorWriter => null;
-			public override ICifSummaryWriter SummaryWriter => null;
+			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetBusPEVSuccessResultWriter();
+			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetBusErrorResultWriter();
+			public override ICifSummaryWriter SummaryWriter => _cifFactory.GetBusPEVSummaryWriter();
 
 		}
 

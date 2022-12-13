@@ -146,6 +146,12 @@ public class TestXMLResultsWriting
 		resultEntry.SetResultData(runData, modData, 1);
 		resultEntries.Add(resultEntry);
 
+		if (jobType.GetPowertrainArchitectureType() == VectoSimulationJobTypeHelper.PureElectric) {
+			resultEntry.AuxHeaterFuel = FuelData.Diesel;
+			resultEntry.ZEV_FuelConsumption_AuxHtr = 1.SI<Kilogram>();
+			resultEntry.ZEV_CO2 = resultEntry.ZEV_FuelConsumption_AuxHtr * resultEntry.AuxHeaterFuel.CO2PerFuelWeight;
+		}
+
 		if (ovc && jobType.GetPowertrainArchitectureType() == VectoSimulationJobTypeHelper.Hybrid) {
 			var run2 = GetMockRunData(vehicleCategory, jobType, true, exempted, VectoRunData.OvcHevMode.ChargeSustaining);
 			var res2 = GetResultEntry(run2);

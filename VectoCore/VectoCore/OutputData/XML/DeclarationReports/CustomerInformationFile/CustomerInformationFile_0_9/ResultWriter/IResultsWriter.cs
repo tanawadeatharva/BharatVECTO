@@ -67,16 +67,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	{
 		IResultGroupWriter GetLorryConvSuccessResultWriter();
 		IResultGroupWriter GetLorryHEVNonOVCSuccessResultWriter();
-
 		IResultGroupWriter GetLorryHEVOVCSuccessResultWriter();
 		IResultGroupWriter GetLorryPEVSuccessResultWriter();
 
 		IResultGroupWriter GetLorryErrorResultWriter();
 
-		IResultGroupWriter GetBusSuccessResultWriter();
-		IResultGroupWriter GetBusOVCSuccessResultWriter();
+		IResultGroupWriter GetBusConvSuccessResultWriter();
+		IResultGroupWriter GetBusHEVNonOVCSuccessResultWriter();
+		IResultGroupWriter GetBusHEVOVCSuccessResultWriter();
+		IResultGroupWriter GetBusPEVSuccessResultWriter();
+		
 		IResultGroupWriter GetBusErrorResultWriter();
-		IResultGroupWriter GetBusOVCErrorResultWriter();
 
 		IResultGroupWriter GetMissionWriter();
 		IResultGroupWriter GetLorrySimulationParameterWriter();
@@ -88,6 +89,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		IResultGroupWriter GetLorryHEVOVCTotalWriter();
 		IResultGroupWriter GetLorryPEVTotalWriter();
 
+		IResultGroupWriter GetBusConvTotalWriter();
+		IResultGroupWriter GetBusHEVNonOVCTotalWriter();
+		IResultGroupWriter GetBusHEVOVCResultWriterChargeDepleting();
+		IResultGroupWriter GetBusHEVOVCResultWriterChargeSustaining();
+		IResultGroupWriter GetBusHEVOVCTotalWriter();
+		IResultGroupWriter GetBusPEVTotalWriter();
+
+
 		IFuelConsumptionWriter GetFuelConsumptionLorry();
 		IElectricEnergyConsumptionWriter GetElectricEnergyConsumptionLorry();
 		ICO2Writer GetCO2ResultLorry();
@@ -97,17 +106,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		ICifSummaryWriter GetLorryHEVOVCSummaryWriter();
 		ICifSummaryWriter GetLorryPEVSummaryWriter();
 
+		ICifSummaryWriter GetBusConvSummaryWriter();
+		ICifSummaryWriter GetBusHEVNonOVCSummaryWriter();
+		ICifSummaryWriter GetBusHEVOVCSummaryWriter();
+		ICifSummaryWriter GetBusPEVSummaryWriter();
 
 		IResultGroupWriter GetBusSimulationParameterWriter();
-		IResultGroupWriter GetBusOVCResultWriterChargeDepleting();
-		IResultGroupWriter GetBusOVCResultWriterChargeSustaining();
-		IResultGroupWriter GetBusOVCTotalWriter();
 
 		IFuelConsumptionWriter GetFuelConsumptionBus();
 		IElectricEnergyConsumptionWriter GetElectricEnergyConsumptionBus();
 		ICO2Writer GetCO2ResultBus();
+		ICO2Writer GetCO2ResultPEVBus();
 
-		ICifSummaryWriter GetBusOVCCifSummaryWriter();
 
 
 		IElectricRangeWriter GetElectricRangeWriter();

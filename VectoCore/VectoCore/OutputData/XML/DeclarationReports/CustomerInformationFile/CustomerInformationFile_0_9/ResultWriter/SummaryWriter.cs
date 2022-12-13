@@ -132,9 +132,39 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		}
 	}
 
-	public class BusOVCCifSummaryWriter : BusSummaryWriterBase
+	public class BusConvSummaryWriter : BusSummaryWriterBase
 	{
-		public BusOVCCifSummaryWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public BusConvSummaryWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of CifSummaryWriterBase
+
+		public override string ResultSummaryXMLType => "ResultSummaryConventionalType";
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => _cifFactory.GetFuelConsumptionBus();
+		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => null;
+		protected override ICO2Writer CO2Writer => _cifFactory.GetCO2ResultBus();
+		protected override IElectricRangeWriter ElectricRangeWriter => null;
+
+		#endregion
+	}
+
+	public class BusHEVNonOVCSummaryWriter : BusSummaryWriterBase
+	{
+		public BusHEVNonOVCSummaryWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of CifSummaryWriterBase
+
+		public override string ResultSummaryXMLType => "ResultSummaryNonOVCHEVType";
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => _cifFactory.GetFuelConsumptionBus();
+		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => null;
+		protected override ICO2Writer CO2Writer => _cifFactory.GetCO2ResultBus();
+		protected override IElectricRangeWriter ElectricRangeWriter => null;
+
+		#endregion
+	}
+
+	public class BusHEVOVCSummaryWriter : BusSummaryWriterBase
+	{
+		public BusHEVOVCSummaryWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
 
 
 		#region Overrides of CifSummaryWriterBase
@@ -148,4 +178,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#endregion
 	}
+
+	public class BusPEVSummaryWriter : BusSummaryWriterBase
+	{
+		public BusPEVSummaryWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of CifSummaryWriterBase
+
+		public override string ResultSummaryXMLType => "ResultSummaryPEVType";
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => null;
+
+		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _cifFactory.GetElectricEnergyConsumptionBus();
+		protected override ICO2Writer CO2Writer => _cifFactory.GetCO2ResultPEVBus();
+		protected override IElectricRangeWriter ElectricRangeWriter => _cifFactory.GetElectricRangeWriter();
+
+		#endregion
+	}
+
 }

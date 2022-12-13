@@ -498,20 +498,34 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			// -- Bus
 
+			Bind<IResultGroupWriter>().To<BusConvResultWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusConvSuccessResultWriter());
+			Bind<IResultGroupWriter>().To<BusHEVNonOVCResultWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusHEVNonOVCSuccessResultWriter());
 			Bind<IResultGroupWriter>().To<BusHEVOVCResultWriter>().When(AccessedViaCIFResultsWriterFactory)
-				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusOVCSuccessResultWriter());
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusHEVOVCSuccessResultWriter());
+			Bind<IResultGroupWriter>().To<BusPEVResultWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusPEVSuccessResultWriter());
 			Bind<IResultGroupWriter>().To<ErrorResultWriter>().When(AccessedViaCIFResultsWriterFactory)
-				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusOVCErrorResultWriter());
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusErrorResultWriter());
 
 			Bind<IResultGroupWriter>().To<ResultSimulationParameterBusWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusSimulationParameterWriter());
 
+			Bind<IResultGroupWriter>().To<BusConvTotalWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusConvTotalWriter());
+			Bind<IResultGroupWriter>().To<BusHEVNonOVCTotalWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusHEVNonOVCTotalWriter());
 			Bind<IResultGroupWriter>().To<BusOVCChargeDepletingWriter>().When(AccessedViaCIFResultsWriterFactory)
-				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusOVCResultWriterChargeDepleting());
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusHEVOVCResultWriterChargeDepleting());
 			Bind<IResultGroupWriter>().To<BusOVCChargeSustainingWriter>().When(AccessedViaCIFResultsWriterFactory)
-				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusOVCResultWriterChargeSustaining());
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusHEVOVCResultWriterChargeSustaining());
 			Bind<IResultGroupWriter>().To<BusOVCTotalWriter>().When(AccessedViaCIFResultsWriterFactory)
-				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusOVCTotalWriter());
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusHEVOVCTotalWriter());
+			Bind<IResultGroupWriter>().To<BusPEVTotalWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusPEVTotalWriter());
+			
+
 
 			Bind<IFuelConsumptionWriter>().To<BusFuelConsumptionWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetFuelConsumptionBus());
@@ -519,9 +533,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetElectricEnergyConsumptionBus());
 			Bind<ICO2Writer>().To<BusCO2Writer>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetCO2ResultBus());
+			Bind<ICO2Writer>().To<BusPEVCO2Writer>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetCO2ResultPEVBus());
 
-			Bind<ICifSummaryWriter>().To<BusOVCCifSummaryWriter>().When(AccessedViaCIFResultsWriterFactory)
-				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusOVCCifSummaryWriter());
+			Bind<ICifSummaryWriter>().To<BusConvSummaryWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusConvSummaryWriter());
+			Bind<ICifSummaryWriter>().To<BusHEVNonOVCSummaryWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusHEVNonOVCSummaryWriter());
+			Bind<ICifSummaryWriter>().To<BusHEVOVCSummaryWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusHEVOVCSummaryWriter());
+			Bind<ICifSummaryWriter>().To<BusPEVSummaryWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICifResultsWriterFactory c) => c.GetBusPEVSummaryWriter());
 
 		}
 

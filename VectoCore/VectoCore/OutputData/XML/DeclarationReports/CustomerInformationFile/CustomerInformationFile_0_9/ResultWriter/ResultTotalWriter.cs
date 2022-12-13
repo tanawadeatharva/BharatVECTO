@@ -161,10 +161,39 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Overrides of NonOVCTotalWriterBase
 
-		protected override IFuelConsumptionWriter FuelConsumptionWriter { get; }
-		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter { get; }
-		protected override ICO2Writer CO2Writer { get; }
-		protected override IElectricRangeWriter ElectricRangeWriter { get; }
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => _cifFactory.GetFuelConsumptionBus();
+		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => null;
+		protected override ICO2Writer CO2Writer => _cifFactory.GetCO2ResultBus();
+		protected override IElectricRangeWriter ElectricRangeWriter => null;
+
+		#endregion
+	}
+
+	public class BusHEVNonOVCTotalWriter : NonOVCTotalWriterBase
+	{
+		public BusHEVNonOVCTotalWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of NonOVCTotalWriterBase
+
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => _cifFactory.GetFuelConsumptionBus();
+		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => null;
+		protected override ICO2Writer CO2Writer => _cifFactory.GetCO2ResultBus();
+		protected override IElectricRangeWriter ElectricRangeWriter => null;
+
+		#endregion
+	}
+
+	public class BusPEVTotalWriter : NonOVCTotalWriterBase
+	{
+		public BusPEVTotalWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of NonOVCTotalWriterBase
+
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => null;
+
+		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _cifFactory.GetElectricEnergyConsumptionBus();
+		protected override ICO2Writer CO2Writer => _cifFactory.GetCO2ResultPEVBus();
+		protected override IElectricRangeWriter ElectricRangeWriter => _cifFactory.GetElectricRangeWriter();
 
 		#endregion
 	}

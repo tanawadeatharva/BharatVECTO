@@ -119,6 +119,10 @@ namespace TUGraz.VectoCore.OutputData
 
 		Meter ZeroCO2EmissionsRange { get; set; }
 
+		IFuelProperties AuxHeaterFuel { get; set; }
+		Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
+		Kilogram ZEV_CO2 { get; set; }
+
 		void SetResultData(VectoRunData runData, IModalDataContainer data, double weightingFactor);
 
 		string Error { get; }
@@ -151,6 +155,10 @@ namespace TUGraz.VectoCore.OutputData
 		Meter ZeroCO2EmissionsRange { get; }
 
 		double UtilityFactor { get; }
+
+		IFuelProperties AuxHeaterFuel { get; set; }
+		Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
+		Kilogram ZEV_CO2 { get; set; }
 	}
 
 	public interface IOVCResultEntry 
