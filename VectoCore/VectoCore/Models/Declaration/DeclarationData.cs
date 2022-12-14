@@ -1395,24 +1395,22 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static IWeightedResult CalculateWeightedSummary(IList<IResultEntry> entries)
 		{
 			// ToDo MQ 2022-12-12: add correct calculation method!
-			var cdResult = entries.First();
-			var csResult = entries.First();
-			return new WeightedResult(cdResult) {
-				AverageSpeed = cdResult.AverageSpeed,
-				FuelConsumption = cdResult.FuelData.Select(x => Tuple.Create(x,
-						(cdResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected +
-						csResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected) / 2.0))
+			var first = entries.First();
+			return new WeightedResult(first) {
+				AverageSpeed = first.AverageSpeed,
+				FuelConsumption = first.FuelData.Select(x => Tuple.Create(x,
+						first.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected))
 					.ToDictionary(x => x.Item1, x => x.Item2),
-				ElectricEnergyConsumption = (cdResult.ElectricEnergyConsumption + csResult.ElectricEnergyConsumption) / 2.0,
-				CO2Total = (cdResult.CO2Total + csResult.CO2Total) / 2.0,
-				ActualChargeDepletingRange = cdResult.Distance,
-				EquivalentAllElectricRange = cdResult.Distance,
-				ZeroCO2EmissionsRange = cdResult.Distance,
+				ElectricEnergyConsumption = first.ElectricEnergyConsumption,
+				CO2Total = first.CO2Total,
+				ActualChargeDepletingRange = first.Distance,
+				EquivalentAllElectricRange = first.Distance,
+				ZeroCO2EmissionsRange = first.Distance,
 				UtilityFactor = 1,
 
-				AuxHeaterFuel = cdResult.AuxHeaterFuel,
-				ZEV_CO2 = cdResult.ZEV_CO2,
-				ZEV_FuelConsumption_AuxHtr = cdResult.ZEV_FuelConsumption_AuxHtr
+				AuxHeaterFuel = first.AuxHeaterFuel,
+				ZEV_CO2 = first.ZEV_CO2,
+				ZEV_FuelConsumption_AuxHtr = first.ZEV_FuelConsumption_AuxHtr
 			};
 		}
 
