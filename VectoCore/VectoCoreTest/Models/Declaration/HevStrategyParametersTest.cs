@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[TestCase(MissionType.LongHaul, VehicleClass.Class2, LoadingType.ReferenceLoad, 0.10, 10)]
 
 
-		//Lookup in nearest table if higher or lower than given soc range
+		
 		[TestCase(MissionType.LongHaul, VehicleClass.Class2, LoadingType.LowLoading, 2.00, 90)]
 		[TestCase(MissionType.LongHaul, VehicleClass.Class2, LoadingType.ReferenceLoad, 2.20, 90)]
 		[TestCase(MissionType.LongHaul, VehicleClass.Class2, LoadingType.LowLoading, 0.10, 5)]
@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 
 
-        //Currently looks up in the soc 20 csv, change if needed and remove the other testcase
+        //Interpolate if between two tables
         [TestCase(MissionType.LongHaul, VehicleClass.Class2, LoadingType.LowLoading, 1.95, 30)]
 		[TestCase(MissionType.LongHaul, VehicleClass.Class2, LoadingType.LowLoading, 1.0, 15)]
 

@@ -45,7 +45,9 @@ public class HeavyLorrySimulation
 	TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2_pto_transm.xml"),
 	TestCase(@"HeavyLorry\PEV_heavyLorry_E4.xml"),
 	TestCase(@"HeavyLorry\Group2_HEV_S2.xml"),
-	TestCase(@"HeavyLorry\Group5_HEV_P2_.xml")]
+	TestCase(@"HeavyLorry\Group5_HEV_P2_.xml"),
+	TestCase(@"HeavyLorry\Group5_HEV_P3_ovc.xml")]
+	[TestCase(@"HeavyLorry\HEV_heavy_lorry_S4_ovc.xml")]
 	public void HeavyLorrySimulationTest(string jobFile)
 	{
 #if singlethreaded
@@ -79,7 +81,32 @@ public class HeavyLorrySimulation
 		PrintFiles(fileWriter);
 	}
 
-	
+    [TestCase(@"HeavyLorry\HEV_heavy_lorry_S4_ovc.xml", 12)]
+    [TestCase(@"HeavyLorry\Group5_HEV_P3_ovc.xml", 20)]
+    public void OVCHevSimulationSingleRun(string jobFile, int nrRuns)
+	{
+		var filePath = Path.Combine(BASE_DIR, jobFile);
+		var dataProvider = _xmlReader.CreateDeclaration(filePath);
+		var fileWriter = new FileOutputWriter(filePath);
+		var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
+		runsFactory.WriteModalResults = true;
+		var sumWriter = new MockSumWriter();
+		var jobContainer = new JobContainer(sumWriter);
+		runsFactory.SumData = sumWriter;
+		var runs = runsFactory.SimulationRuns().ToList();
+		Assert.AreEqual(nrRuns, runs.Count);
+		jobContainer.AddRun(runs.First(r => r.GetContainer().RunData.BatteryData.Batteries.Any(tuple => !tuple.Item2.ChargeSustainingBattery)));
+		Assert.AreEqual(1, jobContainer.Runs.Count);
+		jobContainer.Execute(false);
+
+
+		jobContainer.WaitFinished();
+		Assert.IsTrue(jobContainer.AllCompleted);
+		Assert.IsTrue(jobContainer.Runs.TrueForAll(runEntry => runEntry.Success));
+		PrintRuns(jobContainer, fileWriter);
+		PrintFiles(fileWriter);
+	}
+
 
 	
 

@@ -49,6 +49,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						{
 							if (vehicle.OvcHev) {
 								yield return CreateVectoRunData(vehicle, mission, loading, modeIdx, VectoRunData.OvcHevMode.ChargeDepleting);
+
+
 								yield return CreateVectoRunData(vehicle, mission, loading, modeIdx, VectoRunData.OvcHevMode.ChargeSustaining);
 							} else {
 								yield return CreateVectoRunData(vehicle, mission, loading, modeIdx);
@@ -127,7 +129,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					};
 				}
 				runData.HybridStrategyParameters =
-					DataAdapter.CreateHybridStrategy(runData.BatteryData, runData.SuperCapData, runData.VehicleData.TotalVehicleMass, ovcMode);
+					DataAdapter.CreateHybridStrategy(runData.BatteryData, runData.SuperCapData, runData.VehicleData.TotalVehicleMass, ovcMode, loading.Key, runData.VehicleData.VehicleClass, mission.MissionType);
 
 				if (ovcMode != VectoRunData.OvcHevMode.NotApplicable) {
 					runData.BatteryData.InitialSoC = runData.HybridStrategyParameters.InitialSoc;
@@ -145,6 +147,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					: ptoTransmissionData;
 
 
+				if (ovcMode != VectoRunData.OvcHevMode.NotApplicable) {
+					runData.ModFileSuffix += ovcMode == VectoRunData.OvcHevMode.ChargeSustaining ? "CS" : "CD";
+
+				}
+
+				if (ovcMode == VectoRunData.OvcHevMode.ChargeDepleting) {
+					runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
+				}
 
 
 				return runData;
@@ -194,9 +204,76 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				var engineMode = engineModes[modeIdx.Value];
 				var runData = CreateCommonRunData(vehicle, mission, loading, _segment, engineModes, modeIdx.Value);
 
+				runData.DriverData = DataAdapter.CreateDriverData(_segment);
+
+
+				runData.AirdragData =
+					DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData, mission, _segment);
+				runData.VehicleData = DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading, _allowVocational);
+
+
+				runData.EngineData = DataAdapter.CreateEngineData(vehicle, engineMode, mission);
+				DataAdapter.CreateREESSData(vehicle.Components.ElectricStorage, vehicle.VehicleType, vehicle.OvcHev,
+					((batteryData) => runData.BatteryData = batteryData),
+					((sCdata => runData.SuperCapData = sCdata)));
+				runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
+					vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits,
+					runData.BatteryData.CalculateAverageVoltage());
+				
+				if (vehicle.Components.AxleGearInputData != null)
+				{
+					runData.AxleGearData = DataAdapter.CreateAxleGearData(vehicle.Components.AxleGearInputData);
+				}
+
+				runData.Retarder = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData);
+				runData.Aux = DataAdapter.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData, null, mission.MissionType,
+					_segment.VehicleClass, vehicle.Length, vehicle.Components.AxleWheels.NumSteeredAxles,
+					VectoSimulationJobType.SerialHybridVehicle);
+
+		
+				runData.GearshiftParameters =
+					DataAdapter.CreateGearshiftData(
+						runData.AxleGearData?.AxleGear.Ratio ?? 1.0,
+						null,
+						vehicle.Components.GearboxInputData.Type,
+						vehicle.Components.GearboxInputData.Gears.Count
+					);
+				var shiftStrategyName =
+					PowertrainBuilder.GetShiftStrategyName(vehicle.Components.GearboxInputData.Type,
+						vehicle.VehicleType);
+				runData.GearboxData = DataAdapter.CreateGearboxData(vehicle, runData,
+					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+
+				runData.HybridStrategyParameters =
+					DataAdapter.CreateHybridStrategy(runData.BatteryData, runData.SuperCapData, runData.VehicleData.TotalVehicleMass, ovcMode, loading.Key, runData.VehicleData.VehicleClass, mission.MissionType);
+
+				if (ovcMode != VectoRunData.OvcHevMode.NotApplicable)
+				{
+					runData.BatteryData.InitialSoC = runData.HybridStrategyParameters.InitialSoc;
+				}
+
+				if (ovcMode == VectoRunData.OvcHevMode.ChargeDepleting)
+				{
+					runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
+				}
 
 
 
+
+
+				var ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData, vehicle.Components.GearboxInputData);
+
+				var municipalPtoTransmissionData = DataAdapter.CreatePTOCycleData(vehicle.Components.GearboxInputData, vehicle.Components.PTOTransmissionInputData);
+
+				runData.PTO = mission.MissionType == MissionType.MunicipalUtility
+					? municipalPtoTransmissionData
+					: ptoTransmissionData;
+
+
+				if (ovcMode != VectoRunData.OvcHevMode.NotApplicable)
+				{
+					runData.ModFileSuffix += ovcMode == VectoRunData.OvcHevMode.ChargeSustaining ? "CS" : "CD";
+				}
 
 				return runData;
 			}
@@ -205,8 +282,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			protected override void Initialize()
 			{
-				
+				//throw new NotImplementedException("ParallelHybrid not implemented");
+				_segment = GetSegment(InputDataProvider.JobInputData.Vehicle, false);
 			}
+		
 
 			#endregion
 

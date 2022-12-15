@@ -85,6 +85,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public void Reset(IVehicleContainer vehicleContainer)
 		{
 			CycleIntervalIterator.Reset();
+			
 			InitState(vehicleContainer);
 			if (!(Initialize() is ResponseSuccess)) {
 				throw new VectoException("Initialization failed");

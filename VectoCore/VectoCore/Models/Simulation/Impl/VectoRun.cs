@@ -188,7 +188,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 
 
-			var runAgain = _followUpCreator.RunAgain(Run,
+			var runAgain = _followUpCreator.RunAgain((data) => {
+					
+					Container.ModalData.Reset(true);
+					Container = PowertrainBuilder.Build(data, Container.ModalData, Container.SumData);
+					AbsTime = 0.SI<Second>();
+					CyclePort = Container.GetCycleOutPort();
+					Initialize();
+					Run();
+				},
 				this,
 				() => Container.FinishSingleSimulationRun());
 			if (!runAgain) {

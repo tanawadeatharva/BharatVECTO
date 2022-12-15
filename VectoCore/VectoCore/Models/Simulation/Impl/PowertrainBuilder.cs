@@ -514,6 +514,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 			}
 
+
+			///TODO: remove
+			data.ElectricAuxDemand = 0.SI<Watt>();
+
 			return container;
 		}
 
@@ -1511,7 +1515,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			foreach (var auxData in data.Aux) {
 				// id's in upper case
 				var id = auxData.ID.ToUpper();
-
+				if (auxData.ConnectToREESS) {
+					continue;
+				}
 				switch (auxData.DemandType) {
 					case AuxiliaryDemandType.Constant:
 						aux.AddConstant(id, auxData.PowerDemandMech);

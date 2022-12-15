@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			ModalResultField.TorqueConverterTorqueRatio
 		};
 
-		// ------------------------------------------------------------------------------------
+		// ------------------------------------------------------------------------------------t
 		public static readonly ModalResultField[] RetarderSignals = {
 			ModalResultField.P_retarder_in,
 			ModalResultField.P_ret_loss
@@ -498,6 +498,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 					Columns.Add(col);
 				}
 			}
+		}
+
+		public void Reset()
+		{
+			FuelColumns.Clear();
+			ElectricMotors.Clear();
+			BatteryColumns.Clear();
 		}
 	}
 }

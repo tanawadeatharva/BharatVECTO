@@ -191,7 +191,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 					data, ReportWriter,
 					(_mode == ExecutionMode.Declaration) ? addReportResult : null,
 					GetModDataFilter(data)) {
-					WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults,
+						WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults,
 				};
 
 
@@ -252,6 +252,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 					}
 
 					var container = PowertrainBuilder.Build(data, modData, sumWriter);
+					
 					run = new DistanceRun(container, followUpRunCreatorFactory.CreateFollowUpRunCreator(data)); 
 					break;
 				case CycleType.EngineOnly:

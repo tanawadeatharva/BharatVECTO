@@ -115,7 +115,8 @@ namespace TUGraz.VectoCore.OutputData
 
 		string GetColumnName(IFuelProperties fuelData, ModalResultField mrf);
 
-		void Reset();
+		void Reset(bool clearColumns = false);
+		
 
 		Second Duration { get; }
 
@@ -728,6 +729,12 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_reess_loss);
 		}
+
+		public static double REESSDeltaSoc(this IModalDataContainer data)
+		{
+			return data.REESSEndSoC() - data.REESSStartSoC();
+		}
+
 
 		public static double REESSStartSoC(this IModalDataContainer data)
 		{

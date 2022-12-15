@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			}
 
 			public virtual HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
-				SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode)
+				SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType)
 			{
 				throw new NotImplementedException();
 			}
@@ -282,7 +282,26 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 					numSteeredAxles, jobType);
 			}
 
-			//public RetarderData CreateRetarderData 
+			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
+				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
+			{
+				var batteryData = _eletricStorageAdapter.CreateBatteryData(componentsElectricStorage, jobType, ovc);
+				var superCapData = _eletricStorageAdapter.CreateSuperCapData(componentsElectricStorage);
+
+
+				if (batteryData == null)
+				{
+					throw new VectoException("Could not create BatterySystem for PEV");
+				}
+				setBatteryData(batteryData);
+
+
+				if (superCapData != null)
+				{
+					throw new VectoException("Supercaps are not allowed for PEVs");
+				}
+
+			}
 
 			#endregion
 		}
@@ -296,11 +315,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			private SerialHybridStrategyParameterDataAdapter _hybridStrategyParameterData =
 				new SerialHybridStrategyParameterDataAdapter();
 
-			protected ElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
+			//protected ElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
 
 
 			public override HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
-				SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode)
+				SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType)
 			{
 				return _hybridStrategyParameterData.CreateHybridStrategyParameters(runDataBatteryData,
 					runDataSuperCapData, vehicleMass, ovcMode);
@@ -325,18 +344,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
 			{
-				var batteryData = _electricStorageAdapter.CreateBatteryData(componentsElectricStorage, jobType, ovc);
-				var superCapData = _electricStorageAdapter.CreateSuperCapData(componentsElectricStorage);
-
-
-
-				if (superCapData != null && batteryData != null)
-				{
-					throw new VectoException("SuperCap AND Battery not supported");
-				}
-
-				setBatteryData(batteryData);
-				setSuperCapData(superCapData);
+				base.CreateREESSData(componentsElectricStorage, jobType, ovc, setBatteryData, setSuperCapData);
 			}
 
 
@@ -353,7 +361,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			private PTODataAdapterLorry _ptoAdapterLorry = new PTODataAdapterLorry();
 			protected override GearboxType[] SupportedGearboxTypes => new[]
 				{ GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial };
+			//private IGearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(new TorqueConverterDataAdapter());
 			private GearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(null);
+
+			//private ElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
 			#region Overrides of LorryBase
 
 			public override ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed, GearboxType type, int gearsCount)
@@ -362,24 +373,42 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _gearboxDataAdapter.CreateGearshiftData(axleRatio, engineIdlingSpeed, type, gearsCount);
 			}
 
+			#region Overrides of AbstractSimulationDataAdapter
+
+			protected override TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback,
+				VehicleCategory vehicleCategory, GearboxType gearboxType)
+			{
+				return base.CreateGearLossMap(gear, i, useEfficiencyFallback, vehicleCategory, gearboxType);
+			}
+
+			#endregion
+
+			public override GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
+				IShiftPolygonCalculator shiftPolygonCalc)
+			{
+				return _gearboxDataAdapter.CreateGearboxData(inputData, runData, shiftPolygonCalc, SupportedGearboxTypes);
+			}
+
 			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
 				IBusAuxiliariesDeclarationData busAuxData,
 				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
 				VectoSimulationJobType jobType)
 			{
-				throw new NotImplementedException();
+				return base.CreateAuxiliaryData(auxData, busAuxData, missionType, vehicleClass, vehicleLength,
+					numSteeredAxles, jobType);
 			}
 
 			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
 			{
-				throw new NotImplementedException();
+				base.CreateREESSData(componentsElectricStorage, jobType, ovc, setBatteryData, setSuperCapData);
+				
 			}
 
 			public override HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
-				SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode)
+				SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType)
 			{
-				return _hybridStrategyDataAdapter.CreateHybridStrategyParameters(runDataBatteryData, runDataSuperCapData, ovcMode);
+				return _hybridStrategyDataAdapter.CreateHybridStrategyParameters(runDataBatteryData, runDataSuperCapData, ovcMode, loading, vehicleClass, missionType);
 			}
 
 			#endregion

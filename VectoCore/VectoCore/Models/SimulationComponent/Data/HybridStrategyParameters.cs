@@ -6,6 +6,8 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 	public class HybridStrategyParameters 
 	{
+		public double EquivalenceFactor { get; set; }
+
 		public double EquivalenceFactorDischarge { get; set; }
 
 		public double EquivalenceFactorCharge { get; set; }

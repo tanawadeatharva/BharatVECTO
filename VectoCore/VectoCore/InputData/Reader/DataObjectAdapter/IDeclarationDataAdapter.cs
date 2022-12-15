@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			bool ovc);
 		SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData componentsElectricStorage);
 		HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
-			SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode);
+			SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType);
 		ShiftStrategyParameters CreateDummyGearshiftStrategy();
 	}
 

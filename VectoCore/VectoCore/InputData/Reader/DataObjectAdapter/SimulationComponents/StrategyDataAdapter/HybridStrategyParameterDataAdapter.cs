@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NLog.Targets;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -19,26 +20,31 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 	public class ParallelHybridStrategyParameterDataAdapter : HybridStrategyDataAdapter
 	{
 		public HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData,
-			SuperCapData superCap, VectoRunData.OvcHevMode ovcMode)
+			SuperCapData superCap, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType)
 		{
 			if (batterySystemData == null && superCap == null) {
 				return null;
 			}
-			if(batterySystemData != null && superCap != null) {
+
+			if (batterySystemData != null && superCap != null) {
 				throw new VectoException("Supercap AND Batteries not supported");
 			}
+
 			var result = new HybridStrategyParameters();
+			
 			if (batterySystemData != null) {
 				var tmpBatterySystem = new BatterySystem(null, batterySystemData);
 				result.MinSoC = tmpBatterySystem.MinSoC;
 				result.MaxSoC = tmpBatterySystem.MaxSoC;
 				result.TargetSoC = (result.MaxSoC - result.MinSoC) / 2;
+				result.InitialSoc = batterySystemData.InitialSoC;
 			} else {
 				result.MinSoC = superCap.MinVoltage / superCap.MaxVoltage;
 				result.MaxSoC = 1;// superCap.MaxVoltage / superCap.MaxVoltage;
 				
 				result.TargetSoC = Math.Sqrt(Math.Pow(superCap.MaxVoltage.Value(), 2) - Math.Pow(superCap.MaxVoltage.Value(), 2)) /
 									superCap.MaxVoltage.Value();
+				result.InitialSoc = superCap.InitialSoC;
 			}
 
 
@@ -50,9 +56,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			result.MinICEOnTime = 10.SI<Second>();
 			result.ICEStartPenaltyFactor = 0.1;
 			result.CostFactorSOCExponent = 1;
+			
 
-
-
+			result.EquivalenceFactor =
+				DeclarationData.HEVStrategyParameters.LookupEquivalenceFactor(missionType,
+					vehicleClass, loading, result.MaxSoC - result.MinSoC);
+			result.EquivalenceFactorCharge = result.EquivalenceFactor * 0.85;
+			result.EquivalenceFactorDischarge = result.EquivalenceFactor / 0.85;
 			
 
 			return result;
@@ -82,11 +92,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			result.AuxReserveChargeTime = null;
 			result.MinICEOnTime = null;
 			result.GensetMinOptPowerFactor = 0;
-			result.ICEStartPenaltyFactor = double.NaN;
+			result.ICEStartPenaltyFactor = 0.1;
 			result.MaxPropulsionTorque = new Dictionary<GearshiftPosition, VehicleMaxPropulsionTorque>();
 			result.EquivalenceFactorCharge = double.NaN;
 			result.EquivalenceFactorDischarge = double.NaN;
-			result.CostFactorSOCExponent = 5;
+			result.CostFactorSOCExponent = 1;
 
 			var tmpSystem = new BatterySystem(null, batterySystemData);
 

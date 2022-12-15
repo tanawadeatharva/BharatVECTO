@@ -232,9 +232,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			}
 		}
 
-		public void Reset()
+		public void Reset(bool clearColumns = false)
 		{
-
+			
 		}
 
 		public Second Duration => null;
