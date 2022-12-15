@@ -40,6 +40,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         public abstract IReportResultsSummaryWriter SummaryWriter { get; }
 
+
         protected virtual IList<IResultEntry> GetOrderedResults(List<IResultEntry> results)
         {
             return results.OrderBy(x => x.VehicleClass)

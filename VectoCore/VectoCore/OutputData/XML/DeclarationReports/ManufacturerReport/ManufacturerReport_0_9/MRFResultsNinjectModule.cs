@@ -13,7 +13,7 @@ using TUGraz.VectoCore.Utils.Ninject;
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9
 {
 
-	internal class MRFResultsNinjectModule : NinjectModule
+    internal class MRFResultsNinjectModule : NinjectModule
 	{
 		private VehicleTypeAndArchitectureStringHelperResults _namingHelper =
 			new VehicleTypeAndArchitectureStringHelperResults();

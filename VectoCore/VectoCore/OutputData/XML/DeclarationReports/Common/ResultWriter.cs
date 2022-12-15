@@ -2,14 +2,30 @@
 using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
-using TUGraz.VectoCore.Utils;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter;
 
-namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter
+namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 {
-    public abstract class CIFResultWriterBase : AbstractResultGroupWriter
+	public abstract class AbstractResultWriter
 	{
-		protected CIFResultWriterBase(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		protected static readonly XNamespace xsi = "http://www.w3.org/2001/XMLSchema-instance";
+
+		protected ICommonResultsWriterFactory _factory;
+
+		protected AbstractResultWriter(ICommonResultsWriterFactory factory, XNamespace ns)
+		{
+			_factory = factory;
+			TNS = ns;
+		}
+
+		protected XNamespace TNS { get; }
+	}
+
+
+	public abstract class ResultWriterBase : AbstractResultGroupWriter
+	{
+		protected ResultWriterBase(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Overrides of AbstractResultGroupWriter
 
@@ -31,7 +47,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public abstract IResultGroupWriter ResultTotalWriter { get; }
 	}
 
-	public class LorryConvResultWriter : CIFResultWriterBase
+	public class LorryConvResultWriter : ResultWriterBase
 	{
 
 		public LorryConvResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
@@ -43,7 +59,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	}
 
-	public class LorryHEVNonOVCResultWriter : CIFResultWriterBase
+	public class LorryHEVNonOVCResultWriter : ResultWriterBase
 	{
 
 		public LorryHEVNonOVCResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
@@ -55,7 +71,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	}
 
-	public class LorryPEVResultWriter : CIFResultWriterBase
+	public class LorryPEVResultWriter : ResultWriterBase
 	{
 
 		public LorryPEVResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
@@ -143,7 +159,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	// ----- bus
 
-	public class BusConvResultWriter : CIFResultWriterBase
+	public class BusConvResultWriter : ResultWriterBase
 	{
 		public BusConvResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
@@ -156,7 +172,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
-	public class BusHEVNonOVCResultWriter : CIFResultWriterBase
+	public class BusHEVNonOVCResultWriter : ResultWriterBase
 	{
 		public BusHEVNonOVCResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
@@ -169,7 +185,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
-	public class BusPEVResultWriter : CIFResultWriterBase
+	public class BusPEVResultWriter : ResultWriterBase
 	{
 		public BusPEVResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
@@ -181,7 +197,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#endregion
 	}
-	
+
 
 	public class BusHEVOVCResultWriter : AbstractResultGroupWriter
 	{

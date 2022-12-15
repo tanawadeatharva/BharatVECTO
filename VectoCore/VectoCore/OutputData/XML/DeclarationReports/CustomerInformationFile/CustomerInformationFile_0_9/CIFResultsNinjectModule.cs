@@ -12,7 +12,7 @@ using TUGraz.VectoCore.Utils.Ninject;
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9
 {
 
-	internal class CIFResultsNinjectModule : NinjectModule
+    internal class CIFResultsNinjectModule : NinjectModule
 	{
 		private VehicleTypeAndArchitectureStringHelperResults _namingHelper =
 			new VehicleTypeAndArchitectureStringHelperResults();
@@ -68,8 +68,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetSuccessMissionWriter(null, XNamespace.None));
 			Bind<IResultSequenceWriter>().To<ResultErrorMissionWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetErrorMissionWriter(null, XNamespace.None));
-			Bind<IResultGroupWriter>().To<ResultSimulationParameterLorryWriter>()
-				.When(AccessedViaCIFResultsWriterFactory).NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetLorrySimulationParameterWriter(null, XNamespace.None));
+			Bind<IResultGroupWriter>().To<ResultSimulationParameterLorryWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetLorrySimulationParameterWriter(null, XNamespace.None));
 
 			Bind<IResultGroupWriter>().To<LorryConvTotalWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetLorryConvTotalWriter(null, XNamespace.None));
@@ -92,8 +92,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			Bind<IFuelConsumptionWriter>().To<LorryFuelConsumptionWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetFuelConsumptionLorry(null, XNamespace.None));
-			Bind<IElectricEnergyConsumptionWriter>().To<LorryElectricEnergyConsumptionWriter>()
-				.When(AccessedViaCIFResultsWriterFactory)
+			Bind<IElectricEnergyConsumptionWriter>().To<LorryElectricEnergyConsumptionWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetElectricEnergyConsumptionLorry(null, XNamespace.None));
 			Bind<ICO2Writer>().To<LorryCO2Writer>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetCO2ResultLorry(null, XNamespace.None));
@@ -120,7 +119,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			Bind<IResultGroupWriter>().To<ErrorResultWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetBusErrorResultWriter(null, XNamespace.None));
 
-			Bind<IResultGroupWriter>().To<ResultSimulationParameterBusWriter>().When(AccessedViaCIFResultsWriterFactory)
+			Bind<IResultGroupWriter>().To<ResultSimulationParameterCIFBusWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetBusSimulationParameterWriter(null, XNamespace.None));
 
 			Bind<IResultGroupWriter>().To<BusConvTotalWriter>().When(AccessedViaCIFResultsWriterFactory)

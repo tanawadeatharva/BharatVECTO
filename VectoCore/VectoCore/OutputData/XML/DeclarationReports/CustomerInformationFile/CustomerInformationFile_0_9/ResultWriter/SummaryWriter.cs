@@ -56,22 +56,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
-	public class NoSummaryWriter : IReportResultsSummaryWriter
-	{
-		#region Implementation of IReportResultsSummaryWriter
-
-		public XElement GetElement(IList<IResultEntry> entries)
-		{
-			return null;
-		}
-
-		public XElement GetElement(IList<IOVCResultEntry> entries)
-		{
-			return null;
-		}
-
-		#endregion
-	}
+	
 
 	public abstract class LorrySummaryWriterBase : SummaryWriterBase
 	{

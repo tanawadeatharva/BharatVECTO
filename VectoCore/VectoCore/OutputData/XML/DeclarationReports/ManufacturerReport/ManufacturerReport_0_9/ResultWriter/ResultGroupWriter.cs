@@ -34,6 +34,27 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
+	public class ResultSimulationParameterMRFBusWriter : AbstractResultGroupWriter
+	{
+		public ResultSimulationParameterMRFBusWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		#region Overrides of AbstractResultWriter
+
+		public override XElement GetElement(IResultEntry entry)
+		{
+			return new XElement(TNS + XMLNames.Report_ResultEntry_SimulationParameters,
+				new XElement(TNS + XMLNames.Report_ResultEntry_TotalVehicleMass,
+					entry.TotalVehicleMass.ValueAsUnit(XMLNames.Unit_kg)),
+				new XElement(TNS + XMLNames.Report_Result_Payload,
+					entry.Payload.ValueAsUnit(XMLNames.Unit_kg)),
+				new XElement(TNS + XMLNames.Report_Result_PassengerCount,
+					(entry.PassengerCount ?? double.NaN).ToXMLFormat(2))
+			);
+		}
+
+		#endregion
+	}
+
 	public class VehiclePerformanceMRFWriter : AbstractResultGroupWriter
 	{
 		public VehiclePerformanceMRFWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
