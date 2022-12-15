@@ -1379,6 +1379,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			// ToDo MQ 2022-12-12: add correct calculation method!
 			return new WeightedResult(cdResult) {
 				AverageSpeed = cdResult.AverageSpeed,
+				AverageDrivingSpeed = (cdResult.AverageDrivingSpeed + csResult.AverageDrivingSpeed) / 2.0,
 				FuelConsumption = cdResult.FuelData.Select(x => Tuple.Create(x,
 						(cdResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected +
 						csResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected) / 2.0))

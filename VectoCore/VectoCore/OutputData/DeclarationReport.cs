@@ -134,6 +134,8 @@ namespace TUGraz.VectoCore.OutputData
 	{
 		MeterPerSecond AverageSpeed { get; }
 
+		MeterPerSecond AverageDrivingSpeed { get; }
+
 		Meter Distance { get; }
 
 		Kilogram Payload { get; }

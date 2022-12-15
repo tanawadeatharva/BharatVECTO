@@ -20,6 +20,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter;
@@ -36,6 +37,9 @@ public class TestXMLResultsWriting
 	private IResultsWriterFactory _reportResultsFactory;
 	//private IXMLInputDataReader _xmlReader;
 
+	XNamespace CIF_NS = XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9");
+	XNamespace MRF_NS = XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9");
+
 	[OneTimeSetUp]
 	public void OneTimeSetup()
 	{
@@ -46,14 +50,14 @@ public class TestXMLResultsWriting
 
 
 	[
-		TestCase(VehicleCategory.RigidTruck, VectoSimulationJobType.ConventionalVehicle, false, true, typeof(CIFResultsWriter.ExemptedResultsWriter)),
+		TestCase(VehicleCategory.RigidTruck, VectoSimulationJobType.ConventionalVehicle, false, true, typeof(CIFResultsWriter.ExemptedVehicle)),
 		TestCase(VehicleCategory.RigidTruck, VectoSimulationJobType.ConventionalVehicle, false, false, typeof(CIFResultsWriter.ConventionalLorry)),
 		TestCase(VehicleCategory.Tractor, VectoSimulationJobType.ConventionalVehicle, false, false, typeof(CIFResultsWriter.ConventionalLorry)),
 		TestCase(VehicleCategory.RigidTruck, VectoSimulationJobType.ParallelHybridVehicle, false, false, typeof(CIFResultsWriter.HEVNonOVCLorry)),
 		TestCase(VehicleCategory.RigidTruck, VectoSimulationJobType.SerialHybridVehicle, true, false, typeof(CIFResultsWriter.HEVOVCLorry)),
 		TestCase(VehicleCategory.RigidTruck, VectoSimulationJobType.BatteryElectricVehicle, true, false, typeof(CIFResultsWriter.PEVLorry)),
 	]
-	public void TestReportResultInstance(VehicleCategory vehicleCategory, VectoSimulationJobType jobType, bool ovc,
+	public void Test_CIF_ReportResultInstance(VehicleCategory vehicleCategory, VectoSimulationJobType jobType, bool ovc,
 		bool exempted, Type expectedResultWriterType)
 	{
 		var resultsWriter = _reportResultsFactory.GetCIFResultsWriter(vehicleCategory.GetVehicleType(), jobType, ovc, exempted);
@@ -64,26 +68,26 @@ public class TestXMLResultsWriting
 
 
 	[
-		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, true, TestName = "ReportResult_WritingResults: Lorry Conv SUCCESS"),
-		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, true, FuelType.NGCI, FuelType.DieselCI, TestName = "ReportResult_WritingResults: Lorry Conv DualFuel SUCCESS"),
-		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, true, FuelType.NGPI, TestName = "ReportResult_WritingResults: Lorry Conv LNG SUCCESS"),
-		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, false, TestName = "ReportResult_WritingResults: Lorry Conv ERROR"),
+		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, true, TestName = "CIF_ReportResult_WritingResults: Lorry Conv SUCCESS"),
+		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, true, FuelType.NGCI, FuelType.DieselCI, TestName = "CIF_ReportResult_WritingResults: Lorry Conv DualFuel SUCCESS"),
+		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, true, FuelType.NGPI, TestName = "CIF_ReportResult_WritingResults: Lorry Conv LNG SUCCESS"),
+		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, false, TestName = "CIF_ReportResult_WritingResults: Lorry Conv ERROR"),
 
-		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, false, true, TestName = "ReportResult_WritingResults: Lorry HEV OVC SUCCESS"),
-		TestCase(VectoSimulationJobType.SerialHybridVehicle, true, false, true, FuelType.NGCI, FuelType.DieselCI, TestName = "ReportResult_WritingResults: Lorry HEV OVC DualFuel SUCCESS"),
-		TestCase(VectoSimulationJobType.IEPC_S, true, false, true, FuelType.NGPI, TestName = "ReportResult_WritingResults: Lorry HEV OVC LNG SUCCESS"),
-		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, false, false, TestName = "ReportResult_WritingResults: Lorry HEV OVC ERROR"),
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, false, true, TestName = "CIF_ReportResult_WritingResults: Lorry HEV OVC SUCCESS"),
+		TestCase(VectoSimulationJobType.SerialHybridVehicle, true, false, true, FuelType.NGCI, FuelType.DieselCI, TestName = "CIF_ReportResult_WritingResults: Lorry HEV OVC DualFuel SUCCESS"),
+		TestCase(VectoSimulationJobType.IEPC_S, true, false, true, FuelType.NGPI, TestName = "CIF_ReportResult_WritingResults: Lorry HEV OVC LNG SUCCESS"),
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, false, false, TestName = "CIF_ReportResult_WritingResults: Lorry HEV OVC ERROR"),
 
-		TestCase(VectoSimulationJobType.ParallelHybridVehicle, false, false, true, TestName = "ReportResult_WritingResults: Lorry HEV non-OVC SUCCESS"),
-		TestCase(VectoSimulationJobType.ParallelHybridVehicle, false, false, false, TestName = "ReportResult_WritingResults: Lorry HEV non-OVC ERROR"),
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, false, false, true, TestName = "CIF_ReportResult_WritingResults: Lorry HEV non-OVC SUCCESS"),
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, false, false, false, TestName = "CIF_ReportResult_WritingResults: Lorry HEV non-OVC ERROR"),
 
-		TestCase(VectoSimulationJobType.BatteryElectricVehicle, true, false, true, TestName = "ReportResult_WritingResults: Lorry PEV SUCCESS"),
-		TestCase(VectoSimulationJobType.BatteryElectricVehicle, true, false, false, TestName = "ReportResult_WritingResults: Lorry PEV ERROR"),
+		TestCase(VectoSimulationJobType.BatteryElectricVehicle, true, false, true, TestName = "CIF_ReportResult_WritingResults: Lorry PEV SUCCESS"),
+		TestCase(VectoSimulationJobType.BatteryElectricVehicle, true, false, false, TestName = "CIF_ReportResult_WritingResults: Lorry PEV ERROR"),
 
-		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, true, true, TestName = "ReportResult_WritingResults: Lorry HEV exempted"),
-		TestCase(VectoSimulationJobType.ConventionalVehicle, true, true, true, TestName = "ReportResult_WritingResults: Lorry Conv exempted"),
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, true, true, TestName = "CIF_ReportResult_WritingResults: Lorry HEV exempted"),
+		TestCase(VectoSimulationJobType.ConventionalVehicle, true, true, true, TestName = "CIF_ReportResult_WritingResults: Lorry Conv exempted"),
 	]
-	public void TestReportResult_WritingResults_Lorry(VectoSimulationJobType jobType, bool ovc, bool exempted, bool success, params FuelType[] fuels)
+	public void Test_CIF_ReportResult_WritingResults_Lorry(VectoSimulationJobType jobType, bool ovc, bool exempted, bool success, params FuelType[] fuels)
 	{
 		var vehicleCategory = VehicleCategory.RigidTruck;
 		var ovcmode = ovc ? VectoRunData.OvcHevMode.ChargeDepleting : VectoRunData.OvcHevMode.NotApplicable;
@@ -111,36 +115,36 @@ public class TestXMLResultsWriting
 
 		Assert.NotNull(results);
 
-		var doc = CreateXmlDocument(results);
+		var doc = CreateXmlDocument(results, "VectoOutputCustomer", CIF_NS);
 		var validator = GetValidator(doc);
 
 		WriteToConsole(doc);
 
 		Assert.IsTrue(validator.ValidateXML(XmlDocumentType.CustomerReport), validator.ValidationError);
 
-		WriteToFile(doc, runData, success, exempted);
+		WriteToFile("CIF", doc, runData, success, exempted);
 	}
 
 	
 
 	[
-		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, true, TestName = "ReportResult_WritingResults: CompletedBus Conv SUCCESS"),
-		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, true, FuelType.NGCI, FuelType.DieselCI, TestName = "ReportResult_WritingResults: CompletedBus Conv DualFuel SUCCESS"),
-		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, true, FuelType.NGPI, TestName = "ReportResult_WritingResults: CompletedBus Conv LNG SUCCESS"),
-		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, false, TestName = "ReportResult_WritingResults: CompletedBus Conv ERROR"),
+		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, true, TestName = "CIF_ReportResult_WritingResults: CompletedBus Conv SUCCESS"),
+		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, true, FuelType.NGCI, FuelType.DieselCI, TestName = "CIF_ReportResult_WritingResults: CompletedBus Conv DualFuel SUCCESS"),
+		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, true, FuelType.NGPI, TestName = "CIF_ReportResult_WritingResults: CompletedBus Conv LNG SUCCESS"),
+		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, false, TestName = "CIF_ReportResult_WritingResults: CompletedBus Conv ERROR"),
 
-		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, false, true, TestName = "ReportResult_WritingResults: CompletedBus HEV OVC SUCCESS"),
-		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, false, true, FuelType.NGCI, FuelType.DieselCI, TestName = "ReportResult_WritingResults: CompletedBus HEV OVC DualFuel SUCCESS"),
-		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, false, true, FuelType.NGPI, TestName = "ReportResult_WritingResults: CompletedBus HEV OVC LNG SUCCESS"),
-		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, false, false, TestName = "ReportResult_WritingResults: CompletedBus HEV OVC ERROR"),
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, false, true, TestName = "CIF_ReportResult_WritingResults: CompletedBus HEV OVC SUCCESS"),
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, false, true, FuelType.NGCI, FuelType.DieselCI, TestName = "CIF_ReportResult_WritingResults: CompletedBus HEV OVC DualFuel SUCCESS"),
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, false, true, FuelType.NGPI, TestName = "CIF_ReportResult_WritingResults: CompletedBus HEV OVC LNG SUCCESS"),
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, false, false, TestName = "CIF_ReportResult_WritingResults: CompletedBus HEV OVC ERROR"),
 
-		TestCase(VectoSimulationJobType.ParallelHybridVehicle, false, false, true, TestName = "ReportResult_WritingResults: CompletedBus HEV non-OVC SUCCESS"),
-		TestCase(VectoSimulationJobType.ParallelHybridVehicle, false, false, false, TestName = "ReportResult_WritingResults: CompletedBus HEV non-OVC ERROR"),
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, false, false, true, TestName = "CIF_ReportResult_WritingResults: CompletedBus HEV non-OVC SUCCESS"),
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, false, false, false, TestName = "CIF_ReportResult_WritingResults: CompletedBus HEV non-OVC ERROR"),
 
-		TestCase(VectoSimulationJobType.BatteryElectricVehicle, true, false, true, TestName = "ReportResult_WritingResults: CompletedBus PEV SUCCESS"),
-		TestCase(VectoSimulationJobType.BatteryElectricVehicle, true, false, false, TestName = "ReportResult_WritingResults: CompletedBus PEV ERROR"),
+		TestCase(VectoSimulationJobType.BatteryElectricVehicle, true, false, true, TestName = "CIF_ReportResult_WritingResults: CompletedBus PEV SUCCESS"),
+		TestCase(VectoSimulationJobType.BatteryElectricVehicle, true, false, false, TestName = "CIF_ReportResult_WritingResults: CompletedBus PEV ERROR"),
 
-		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, true, true, TestName = "ReportResult_WritingResults: CompletedBus HEV exempted"),
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, true, true, TestName = "CIF_ReportResult_WritingResults: CompletedBus HEV exempted"),
 	]
 	public void TestReportResult_WritingResults_CompletedBus(VectoSimulationJobType jobType, bool ovc, bool exempted, bool success, params FuelType[] fuels)
 	{
@@ -176,15 +180,158 @@ public class TestXMLResultsWriting
 
 		Assert.NotNull(results);
 
-		var doc = CreateXmlDocument(results);
+		var doc = CreateXmlDocument(results, "VectoOutputCustomer", CIF_NS);
 		var validator = GetValidator(doc);
 
 		WriteToConsole(doc);
 
 		Assert.IsTrue(validator.ValidateXML(XmlDocumentType.CustomerReport), validator.ValidationError);
 
-		WriteToFile(doc, runData, success, exempted);
+		WriteToFile("CIF", doc, runData, success, exempted);
 	}
+
+
+	// ---------------------------
+	// MRF Tests
+
+	[
+		TestCase(VehicleCategory.RigidTruck, VectoSimulationJobType.ConventionalVehicle, false, true, typeof(MRFResultsWriter.ExemptedVehicle)),
+		TestCase(VehicleCategory.RigidTruck, VectoSimulationJobType.ConventionalVehicle, false, false, typeof(MRFResultsWriter.ConventionalLorry)),
+		TestCase(VehicleCategory.Tractor, VectoSimulationJobType.ConventionalVehicle, false, false, typeof(MRFResultsWriter.ConventionalLorry)),
+		TestCase(VehicleCategory.RigidTruck, VectoSimulationJobType.ParallelHybridVehicle, false, false, typeof(MRFResultsWriter.HEVNonOVCLorry)),
+		TestCase(VehicleCategory.RigidTruck, VectoSimulationJobType.SerialHybridVehicle, true, false, typeof(MRFResultsWriter.HEVOVCLorry)),
+		TestCase(VehicleCategory.RigidTruck, VectoSimulationJobType.BatteryElectricVehicle, true, false, typeof(MRFResultsWriter.PEVLorry)),
+	]
+	public void Test_MRF_ReportResultInstance(VehicleCategory vehicleCategory, VectoSimulationJobType jobType, bool ovc,
+		bool exempted, Type expectedResultWriterType)
+	{
+		var resultsWriter = _reportResultsFactory.GetMRFResultsWriter(vehicleCategory.GetVehicleType(), jobType, ovc, exempted);
+
+		Assert.AreEqual(expectedResultWriterType, resultsWriter.GetType());
+	}
+
+
+	[
+		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, true, TestName = "MRF_ReportResult_WritingResults: Lorry Conv SUCCESS"),
+		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, true, FuelType.NGCI, FuelType.DieselCI, TestName = "MRF_ReportResult_WritingResults: Lorry Conv DualFuel SUCCESS"),
+		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, true, FuelType.NGPI, TestName = "MRF_ReportResult_WritingResults: Lorry Conv LNG SUCCESS"),
+		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, false, TestName = "MRF_ReportResult_WritingResults: Lorry Conv ERROR"),
+
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, false, true, TestName = "MRF_ReportResult_WritingResults: Lorry HEV OVC SUCCESS"),
+		TestCase(VectoSimulationJobType.SerialHybridVehicle, true, false, true, FuelType.NGCI, FuelType.DieselCI, TestName = "MRF_ReportResult_WritingResults: Lorry HEV OVC DualFuel SUCCESS"),
+		TestCase(VectoSimulationJobType.IEPC_S, true, false, true, FuelType.NGPI, TestName = "MRF_ReportResult_WritingResults: Lorry HEV OVC LNG SUCCESS"),
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, false, false, TestName = "MRF_ReportResult_WritingResults: Lorry HEV OVC ERROR"),
+
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, false, false, true, TestName = "MRF_ReportResult_WritingResults: Lorry HEV non-OVC SUCCESS"),
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, false, false, false, TestName = "MRF_ReportResult_WritingResults: Lorry HEV non-OVC ERROR"),
+
+		TestCase(VectoSimulationJobType.BatteryElectricVehicle, true, false, true, TestName = "MRF_ReportResult_WritingResults: Lorry PEV SUCCESS"),
+		TestCase(VectoSimulationJobType.BatteryElectricVehicle, true, false, false, TestName = "MRF_ReportResult_WritingResults: Lorry PEV ERROR"),
+
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, true, true, TestName = "MRF_ReportResult_WritingResults: Lorry HEV exempted"),
+		TestCase(VectoSimulationJobType.ConventionalVehicle, true, true, true, TestName = "MRF_ReportResult_WritingResults: Lorry Conv exempted"),
+	]
+	public void Test_MRF_ReportResult_WritingResults_Lorry(VectoSimulationJobType jobType, bool ovc, bool exempted, bool success, params FuelType[] fuels)
+	{
+		var vehicleCategory = VehicleCategory.RigidTruck;
+		var ovcmode = ovc ? VectoRunData.OvcHevMode.ChargeDepleting : VectoRunData.OvcHevMode.NotApplicable;
+		var runData = GetMockRunData(vehicleCategory, jobType, ovc, exempted, ovcmode, fuels);
+		var modData = GetMockModData(success ? VectoRun.Status.Success : VectoRun.Status.Aborted, fuels);
+
+		var resultEntries = new List<IResultEntry>();
+
+		var resultEntry = GetResultEntry(runData);
+		resultEntry.SetResultData(runData, modData, 1);
+
+		resultEntries.Add(resultEntry);
+
+		if (ovc && jobType.GetPowertrainArchitectureType() == VectoSimulationJobTypeHelper.Hybrid) {
+			var run2 = GetMockRunData(vehicleCategory, jobType, true, exempted, VectoRunData.OvcHevMode.ChargeSustaining, fuels);
+			var res2 = GetResultEntry(run2);
+			res2.SetResultData(run2, modData, 1);
+			resultEntries.Add(res2);
+		}
+
+		var resultsWriter = _reportResultsFactory.GetMRFResultsWriter(
+			runData.VehicleData.VehicleCategory.GetVehicleType(),
+			runData.JobType, runData.VehicleData.OffVehicleCharging, runData.Exempted);
+
+		var results = resultsWriter.GenerateResults(resultEntries);
+
+		Assert.NotNull(results);
+
+		var doc = CreateXmlDocument(results, "VectoOutputManufacturer", MRF_NS);
+		var validator = GetValidator(doc);
+
+		WriteToConsole(doc);
+
+		Assert.IsTrue(validator.ValidateXML(XmlDocumentType.ManufacturerReport), validator.ValidationError);
+
+		WriteToFile("MRF", doc, runData, success, exempted);
+	}
+
+	[
+		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, true, TestName = "MRF_ReportResult_WritingResults: CompletedBus Conv SUCCESS"),
+		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, true, FuelType.NGCI, FuelType.DieselCI, TestName = "MRF_ReportResult_WritingResults: CompletedBus Conv DualFuel SUCCESS"),
+		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, true, FuelType.NGPI, TestName = "MRF_ReportResult_WritingResults: CompletedBus Conv LNG SUCCESS"),
+		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, false, TestName = "MRF_ReportResult_WritingResults: CompletedBus Conv ERROR"),
+
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, false, true, TestName = "MRF_ReportResult_WritingResults: CompletedBus HEV OVC SUCCESS"),
+		TestCase(VectoSimulationJobType.SerialHybridVehicle, true, false, true, FuelType.NGCI, FuelType.DieselCI, TestName = "MRF_ReportResult_WritingResults: CompletedBus HEV OVC DualFuel SUCCESS"),
+		TestCase(VectoSimulationJobType.IEPC_S, true, false, true, FuelType.NGPI, TestName = "MRF_ReportResult_WritingResults: CompletedBus HEV OVC LNG SUCCESS"),
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, false, false, TestName = "MRF_ReportResult_WritingResults: CompletedBus HEV OVC ERROR"),
+
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, false, false, true, TestName = "MRF_ReportResult_WritingResults: CompletedBus HEV non-OVC SUCCESS"),
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, false, false, false, TestName = "MRF_ReportResult_WritingResults: CompletedBus HEV non-OVC ERROR"),
+
+		TestCase(VectoSimulationJobType.BatteryElectricVehicle, true, false, true, TestName = "MRF_ReportResult_WritingResults: CompletedBus PEV SUCCESS"),
+		TestCase(VectoSimulationJobType.BatteryElectricVehicle, true, false, false, TestName = "MRF_ReportResult_WritingResults: CompletedBus PEV ERROR"),
+
+		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, true, true, TestName = "MRF_ReportResult_WritingResults: CompletedBus HEV exempted"),
+		TestCase(VectoSimulationJobType.ConventionalVehicle, true, true, true, TestName = "MRF_ReportResult_WritingResults: CompletedBus Conv exempted"),
+	]
+	public void Test_MRF_ReportResult_WritingResults_Bus(VectoSimulationJobType jobType, bool ovc, bool exempted, bool success, params FuelType[] fuels)
+	{
+		var vehicleCategory = VehicleCategory.HeavyBusCompletedVehicle;
+		var ovcmode = ovc ? VectoRunData.OvcHevMode.ChargeDepleting : VectoRunData.OvcHevMode.NotApplicable;
+		var runData = GetMockRunData(vehicleCategory, jobType, ovc, exempted, ovcmode, fuels);
+		var modData = GetMockModData(success ? VectoRun.Status.Success : VectoRun.Status.Aborted, fuels);
+
+		var resultEntries = new List<IResultEntry>();
+
+		var resultEntry = GetResultEntry(runData);
+		resultEntry.SetResultData(runData, modData, 1);
+
+		resultEntries.Add(resultEntry);
+
+		if (ovc && jobType.GetPowertrainArchitectureType() == VectoSimulationJobTypeHelper.Hybrid) {
+			var run2 = GetMockRunData(vehicleCategory, jobType, true, exempted, VectoRunData.OvcHevMode.ChargeSustaining, fuels);
+			var res2 = GetResultEntry(run2);
+			res2.SetResultData(run2, modData, 1);
+			resultEntries.Add(res2);
+		}
+
+		var resultsWriter = _reportResultsFactory.GetMRFResultsWriter(
+			runData.VehicleData.VehicleCategory.GetVehicleType(),
+			runData.JobType, runData.VehicleData.OffVehicleCharging, runData.Exempted);
+
+		var results = resultsWriter.GenerateResults(resultEntries);
+
+		Assert.NotNull(results);
+
+		var doc = CreateXmlDocument(results, "VectoOutputManufacturer", MRF_NS);
+		var validator = GetValidator(doc);
+
+		WriteToConsole(doc);
+
+		Assert.IsTrue(validator.ValidateXML(XmlDocumentType.ManufacturerReport), validator.ValidationError);
+
+		WriteToFile("MRF", doc, runData, success, exempted);
+	}
+
+
+
+	// ===================================
 
 	private static void WriteToConsole(XDocument doc)
 	{
@@ -198,10 +345,10 @@ public class TestXMLResultsWriting
 	}
 
     
-	private void WriteToFile(XDocument doc, VectoRunData runData, bool success, bool exempted)
+	private void WriteToFile(string prefix, XDocument doc, VectoRunData runData, bool success, bool exempted)
 	{
 		lock (this) {
-			var fileName = GetFilename(runData, success, exempted);
+			var fileName = GetFilename(prefix, runData, success, exempted);
 			var filePath = Path.Combine("TestDummyResults", fileName);
 			if (!Directory.Exists(Path.GetDirectoryName(filePath))) {
 				Directory.CreateDirectory(Path.GetDirectoryName(filePath));
@@ -217,7 +364,7 @@ public class TestXMLResultsWriting
 		}
 	}
 
-	private string GetFilename(VectoRunData runData, bool success, bool exempted)
+	private string GetFilename(string prefix, VectoRunData runData, bool success, bool exempted)
 	{
 		var arch = string.Empty;
 		switch (runData.JobType.GetPowertrainArchitectureType()) {
@@ -241,7 +388,7 @@ public class TestXMLResultsWriting
 		if (fuels.Any(x => x.FuelData.FuelType != FuelType.DieselCI)) {
 			fuelSuffix = "_" + fuels.Select(x => x.FuelData.FuelType.ToXMLFormat().Replace(' ', '-')).Join("_");
 		}
-		return $"CIF_MockupResults_{arch}_{category}{fuelSuffix}{suffix}{exept}.xml";
+		return $"{prefix}_MockupResults_{arch}_{category}{fuelSuffix}{suffix}{exept}.xml";
 	}
 
 
@@ -272,14 +419,14 @@ public class TestXMLResultsWriting
 		return new XMLValidator(new XmlTextReader(ms));
 	}
 
-	private XDocument CreateXmlDocument(XElement results)
+	private XDocument CreateXmlDocument(XElement results, string reportType, XNamespace ns)
 	{
 		var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
-		var ns = XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9");
+		
 		var doc = new XDocument();
 		doc.Add(new XElement(ns + "VectoMockResults",
 			new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
-			new XAttribute(xsi + "schemaLocation", $@"{ns.NamespaceName} V:\VectoCore\VectoCore\Resources\XSD\VectoOutputCustomer.0.9.xsd"),
+			new XAttribute(xsi + "schemaLocation", $@"{ns.NamespaceName} V:\VectoCore\VectoCore\Resources\XSD\{reportType}.0.9.xsd"),
 			results));
 
 		return doc;

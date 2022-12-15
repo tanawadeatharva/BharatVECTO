@@ -177,6 +177,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 						.SI<PerSecond>();
 					EngineSpeedDrivingMin = entriesDriving.Min(x => x.nEng);
 					EngineSpeedDrivingMax = entriesDriving.Max(x => x.nEng);
+				} else {
+					AverageDrivingSpeed = 0.KMPHtoMeterPerSecond();
+					EngineSpeedDrivingAvg = 0.RPMtoRad();
+					EngineSpeedDrivingMax = 0.RPMtoRad();
+					EngineSpeedDrivingMin = 0.RPMtoRad();
 				}
 
 				Distance = data.Distance;

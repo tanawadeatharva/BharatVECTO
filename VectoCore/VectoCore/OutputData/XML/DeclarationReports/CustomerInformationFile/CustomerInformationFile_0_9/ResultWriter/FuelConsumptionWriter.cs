@@ -6,29 +6,30 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter
 {
-	public abstract class FuelConsumptionWriterBase : AbstractResultWriter, IFuelConsumptionWriter
+    public abstract class FuelConsumptionWriterBase : AbstractResultWriter, IFuelConsumptionWriter
 	{
-		protected FuelConsumptionWriterBase(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		protected FuelConsumptionWriterBase(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Implementation of IFuelConsumptionWriter
 
 		public XElement GetElement(IResultEntry entry, IFuelConsumptionCorrection fc)
 		{
-			return new XElement(Cif + XMLNames.Report_Results_Fuel,
+			return new XElement(TNS + XMLNames.Report_Results_Fuel,
 				new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fc.Fuel.FuelType.ToXMLFormat()),
-				GetFuelConsumptionEntries(fc.TotalFuelConsumptionCorrected, fc.Fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount).Select(x => new XElement(Cif + XMLNames.Report_Results_FuelConsumption, XMLHelper.ValueAsUnit(x, 3, 1)))
+				GetFuelConsumptionEntries(fc.TotalFuelConsumptionCorrected, fc.Fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount).Select(x => new XElement(TNS + XMLNames.Report_Results_FuelConsumption, XMLHelper.ValueAsUnit(x, 3, 1)))
 			);
 		}
 
 		public XElement GetElement(IWeightedResult entry, IFuelProperties fuel, Kilogram consumption)
 		{
-			return new XElement(Cif + XMLNames.Report_Results_Fuel,
+			return new XElement(TNS + XMLNames.Report_Results_Fuel,
 				new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fuel.FuelType.ToXMLFormat()),
-				GetFuelConsumptionEntries(consumption, fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount).Select(x => new XElement(Cif + XMLNames.Report_Results_FuelConsumption, XMLHelper.ValueAsUnit(x, 3, 1)))
+				GetFuelConsumptionEntries(consumption, fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount).Select(x => new XElement(TNS + XMLNames.Report_Results_FuelConsumption, XMLHelper.ValueAsUnit(x, 3, 1)))
 			);
 		}
 
@@ -42,7 +43,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class LorryFuelConsumptionWriter : FuelConsumptionWriterBase
 	{
-		public LorryFuelConsumptionWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public LorryFuelConsumptionWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 
 		#region Overrides of FuelConsumptionWriterBase
@@ -75,7 +76,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class BusFuelConsumptionWriter : FuelConsumptionWriterBase
 	{
-		public BusFuelConsumptionWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public BusFuelConsumptionWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 
 		#region Overrides of FuelConsumptionWriterBase

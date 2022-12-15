@@ -4,13 +4,14 @@ using System.Xml.Linq;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter
 {
-	public abstract class CifSummaryWriterBase : AbstractResultWriter, ICifSummaryWriter
+    public abstract class SummaryWriterBase : AbstractResultWriter, IReportResultsSummaryWriter
 	{
-		protected CifSummaryWriterBase(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		protected SummaryWriterBase(ICIFResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Implementation of ICifSummaryWriter
 
@@ -28,7 +29,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		protected virtual XElement DoGetElement(IWeightedResult weighted)
 		{
-			return new XElement(Cif + XMLNames.Report_Results_Summary,
+			return new XElement(TNS + XMLNames.Report_Results_Summary,
 				new XAttribute(xsi + XMLNames.XSIType, ResultSummaryXMLType),
 				GetSummary(weighted),
 				weighted.FuelConsumption.Select(x =>
@@ -55,93 +56,110 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
-	public abstract class LorrySummaryWriterBase : CifSummaryWriterBase
+	public class NoSummaryWriter : IReportResultsSummaryWriter
 	{
-		protected LorrySummaryWriterBase(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		#region Implementation of IReportResultsSummaryWriter
+
+		public XElement GetElement(IList<IResultEntry> entries)
+		{
+			return null;
+		}
+
+		public XElement GetElement(IList<IOVCResultEntry> entries)
+		{
+			return null;
+		}
+
+		#endregion
+	}
+
+	public abstract class LorrySummaryWriterBase : SummaryWriterBase
+	{
+		protected LorrySummaryWriterBase(ICIFResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		protected override XElement[] GetSummary(IWeightedResult weighted)
 		{
 			return new[] {
-				new XElement(Cif + "AveragePayload", XMLHelper.ValueAsUnit(weighted.Payload, "t"))
+				new XElement(TNS + "AveragePayload", XMLHelper.ValueAsUnit(weighted.Payload, "t"))
 			};
 		}
 	}
 
 	public class LorryConvSummaryWriter : LorrySummaryWriterBase
 	{
-		public LorryConvSummaryWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public LorryConvSummaryWriter(ICIFResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		public override string ResultSummaryXMLType => "ResultSummaryConventionalType";
-		protected override IFuelConsumptionWriter FuelConsumptionWriter => _cifFactory.GetFuelConsumptionLorry();
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => _factory.GetFuelConsumptionLorry(_factory, TNS);
 		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => null;
-		protected override ICO2Writer CO2Writer => _cifFactory.GetCO2ResultLorry();
+		protected override ICO2Writer CO2Writer => _factory.GetCO2ResultLorry(_factory, TNS);
 		protected override IElectricRangeWriter ElectricRangeWriter => null;
 		
 	}
 
 	public class LorryHEVNonOVCSummaryWriter : LorrySummaryWriterBase
 	{
-		public LorryHEVNonOVCSummaryWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public LorryHEVNonOVCSummaryWriter(ICIFResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		public override string ResultSummaryXMLType => "ResultSummaryNonOVCHEVType";
-		protected override IFuelConsumptionWriter FuelConsumptionWriter => _cifFactory.GetFuelConsumptionLorry();
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => _factory.GetFuelConsumptionLorry(_factory, TNS);
 		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => null;
-		protected override ICO2Writer CO2Writer => _cifFactory.GetCO2ResultLorry();
+		protected override ICO2Writer CO2Writer => _factory.GetCO2ResultLorry(_factory, TNS);
 		protected override IElectricRangeWriter ElectricRangeWriter => null;
 		
 	}
 
 	public class LorryHEVOVCSummaryWriter : LorrySummaryWriterBase
 	{
-		public LorryHEVOVCSummaryWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public LorryHEVOVCSummaryWriter(ICIFResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Overrides of CifSummaryWriterBase
 
 		public override string ResultSummaryXMLType => "ResultSummaryOVCHEVType";
-		protected override IFuelConsumptionWriter FuelConsumptionWriter => _cifFactory.GetFuelConsumptionLorry();
-		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _cifFactory.GetElectricEnergyConsumptionLorry();
-		protected override ICO2Writer CO2Writer => _cifFactory.GetCO2ResultLorry();
-		protected override IElectricRangeWriter ElectricRangeWriter => _cifFactory.GetElectricRangeWriter();
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => _factory.GetFuelConsumptionLorry(_factory, TNS);
+		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _factory.GetElectricEnergyConsumptionLorry(_factory, TNS);
+		protected override ICO2Writer CO2Writer => _factory.GetCO2ResultLorry(_factory, TNS);
+		protected override IElectricRangeWriter ElectricRangeWriter => _factory.GetElectricRangeWriter(_factory, TNS);
 
 		#endregion
 	}
 
 	public class LorryPEVSummaryWriter : LorrySummaryWriterBase
 	{
-		public LorryPEVSummaryWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public LorryPEVSummaryWriter(ICIFResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		public override string ResultSummaryXMLType => "ResultSummaryPEVType";
 		protected override IFuelConsumptionWriter FuelConsumptionWriter => null;
-		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _cifFactory.GetElectricEnergyConsumptionLorry();
+		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _factory.GetElectricEnergyConsumptionLorry(_factory, TNS);
 		protected override ICO2Writer CO2Writer => null;
-		protected override IElectricRangeWriter ElectricRangeWriter => _cifFactory.GetElectricRangeWriter();
+		protected override IElectricRangeWriter ElectricRangeWriter => _factory.GetElectricRangeWriter(_factory, TNS);
 
 	}
 
 	// ---- bus
 
-	public abstract class BusSummaryWriterBase : CifSummaryWriterBase
+	public abstract class BusSummaryWriterBase : SummaryWriterBase
 	{
-		protected BusSummaryWriterBase(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		protected BusSummaryWriterBase(ICIFResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		protected override XElement[] GetSummary(IWeightedResult weighted)
 		{
 			return new[] {
-				new XElement(Cif + "AveragePassengerCount", weighted.PassengerCount.Value.ToXMLFormat(2))
+				new XElement(TNS + "AveragePassengerCount", weighted.PassengerCount.Value.ToXMLFormat(2))
 			};
 		}
 	}
 
 	public class BusConvSummaryWriter : BusSummaryWriterBase
 	{
-		public BusConvSummaryWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public BusConvSummaryWriter(ICIFResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Overrides of CifSummaryWriterBase
 
 		public override string ResultSummaryXMLType => "ResultSummaryConventionalType";
-		protected override IFuelConsumptionWriter FuelConsumptionWriter => _cifFactory.GetFuelConsumptionBus();
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => _factory.GetFuelConsumptionBus(_factory, TNS);
 		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => null;
-		protected override ICO2Writer CO2Writer => _cifFactory.GetCO2ResultBus();
+		protected override ICO2Writer CO2Writer => _factory.GetCO2ResultBus(_factory, TNS);
 		protected override IElectricRangeWriter ElectricRangeWriter => null;
 
 		#endregion
@@ -149,14 +167,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class BusHEVNonOVCSummaryWriter : BusSummaryWriterBase
 	{
-		public BusHEVNonOVCSummaryWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public BusHEVNonOVCSummaryWriter(ICIFResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Overrides of CifSummaryWriterBase
 
 		public override string ResultSummaryXMLType => "ResultSummaryNonOVCHEVType";
-		protected override IFuelConsumptionWriter FuelConsumptionWriter => _cifFactory.GetFuelConsumptionBus();
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => _factory.GetFuelConsumptionBus(_factory, TNS);
 		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => null;
-		protected override ICO2Writer CO2Writer => _cifFactory.GetCO2ResultBus();
+		protected override ICO2Writer CO2Writer => _factory.GetCO2ResultBus(_factory, TNS);
 		protected override IElectricRangeWriter ElectricRangeWriter => null;
 
 		#endregion
@@ -164,33 +182,33 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class BusHEVOVCSummaryWriter : BusSummaryWriterBase
 	{
-		public BusHEVOVCSummaryWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public BusHEVOVCSummaryWriter(ICIFResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 
 		#region Overrides of CifSummaryWriterBase
 
 		public override string ResultSummaryXMLType => "ResultSummaryOVCHEVType";
-		protected override IFuelConsumptionWriter FuelConsumptionWriter => _cifFactory.GetFuelConsumptionBus();
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => _factory.GetFuelConsumptionBus(_factory, TNS);
 
-		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _cifFactory.GetElectricEnergyConsumptionBus();
-		protected override ICO2Writer CO2Writer => _cifFactory.GetCO2ResultBus();
-		protected override IElectricRangeWriter ElectricRangeWriter => _cifFactory.GetElectricRangeWriter();
+		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _factory.GetElectricEnergyConsumptionBus(_factory, TNS);
+		protected override ICO2Writer CO2Writer => _factory.GetCO2ResultBus(_factory, TNS);
+		protected override IElectricRangeWriter ElectricRangeWriter => _factory.GetElectricRangeWriter(_factory, TNS);
 
 		#endregion
 	}
 
 	public class BusPEVSummaryWriter : BusSummaryWriterBase
 	{
-		public BusPEVSummaryWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public BusPEVSummaryWriter(ICIFResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Overrides of CifSummaryWriterBase
 
 		public override string ResultSummaryXMLType => "ResultSummaryPEVType";
 		protected override IFuelConsumptionWriter FuelConsumptionWriter => null;
 
-		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _cifFactory.GetElectricEnergyConsumptionBus();
-		protected override ICO2Writer CO2Writer => _cifFactory.GetCO2ResultPEVBus();
-		protected override IElectricRangeWriter ElectricRangeWriter => _cifFactory.GetElectricRangeWriter();
+		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _factory.GetElectricEnergyConsumptionBus(_factory, TNS);
+		protected override ICO2Writer CO2Writer => _factory.GetCO2ResultPEVBus(_factory, TNS);
+		protected override IElectricRangeWriter ElectricRangeWriter => _factory.GetElectricRangeWriter(_factory, TNS);
 
 		#endregion
 	}

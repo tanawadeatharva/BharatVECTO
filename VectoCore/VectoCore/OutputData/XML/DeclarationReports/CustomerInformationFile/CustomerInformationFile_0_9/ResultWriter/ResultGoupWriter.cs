@@ -9,29 +9,33 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.
-	ResultWriter
+    ResultWriter
 {
-	public abstract class AbstractResultWriter
+    public abstract class AbstractResultWriter
 	{
-		protected static readonly XNamespace Cif = "urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9";
+		
 		protected static readonly XNamespace xsi = "http://www.w3.org/2001/XMLSchema-instance";
 
-		protected ICifResultsWriterFactory _cifFactory;
+		protected ICommonResultsWriterFactory _factory;
 
-		protected AbstractResultWriter(ICifResultsWriterFactory cifFactory)
+		protected AbstractResultWriter(ICommonResultsWriterFactory factory, XNamespace ns)
 		{
-			_cifFactory = cifFactory;
+			_factory = factory;
+			TNS = ns;
 		}
+
+		protected  XNamespace TNS { get; }
 	}
 
 
 
     public abstract class AbstractResultGroupWriter : AbstractResultWriter, IResultGroupWriter
 	{
-		protected AbstractResultGroupWriter(ICifResultsWriterFactory cifFactory): base(cifFactory) {}
+		protected AbstractResultGroupWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) {}
 
 		#region Implementation of IResultGroupWriter
 
@@ -49,7 +53,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class ErrorResultWriter : AbstractResultGroupWriter
 	{
-		public ErrorResultWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public ErrorResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 
 		#region Overrides of AbstractResultWriter
@@ -57,15 +61,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override XElement GetElement(IResultEntry entry)
 		{
 			if (entry.Status == VectoRun.Status.Success) {
-				throw new Exception("Siimulation run needs to be unsuccessful!");
+				throw new Exception("Simulation run needs to be unsuccessful!");
 			}
-			return new XElement(Cif + XMLNames.Report_Result_Result,
+
+			return new XElement(TNS + XMLNames.Report_Result_Result,
 				new XAttribute(XMLNames.Report_Result_Status_Attr, "error"),
 				new XAttribute(xsi + "type", "ResultErrorType"),
-				_cifFactory.GetMissionWriter().GetElement(entry),
-				_cifFactory.GetLorrySimulationParameterWriter().GetElement(entry),
-				new XElement(Cif + XMLNames.Report_Results_Error, entry.Error),
-				new XElement(Cif + XMLNames.Report_Results_ErrorDetails, entry.StackTrace)
+				_factory.GetErrorMissionWriter(_factory, TNS).GetElement(entry),
+				_factory.GetLorrySimulationParameterWriter(_factory, TNS).GetElement(entry),
+				_factory.GetErrorDetailsWriter(_factory, TNS).GetElement(entry)
+				//new XElement(TNS + XMLNames.Report_Results_Error, entry.Error),
+				//new XElement(TNS + XMLNames.Report_Results_ErrorDetails, entry.StackTrace)
 				);
 		}
 
@@ -75,28 +81,53 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			if (errorEntry == null) {
 				throw new Exception("At least one entry needs to be unsuccessful!");
 			}
-			return new XElement(Cif + XMLNames.Report_Result_Result,
+			return new XElement(TNS + XMLNames.Report_Result_Result,
 				new XAttribute(XMLNames.Report_Result_Status_Attr, "error"),
 				new XAttribute(xsi + "type", "ResultErrorType"),
-				_cifFactory.GetMissionWriter().GetElement(errorEntry),
-				_cifFactory.GetLorrySimulationParameterWriter().GetElement(errorEntry),
-				new XElement(Cif + XMLNames.Report_Results_Error, errorEntry.Error),
-				new XElement(Cif + XMLNames.Report_Results_ErrorDetails, errorEntry.StackTrace)
+				_factory.GetErrorMissionWriter(_factory, TNS).GetElement(errorEntry),
+				_factory.GetLorrySimulationParameterWriter(_factory, TNS).GetElement(errorEntry),
+				_factory.GetErrorDetailsWriter(_factory, TNS).GetElement(errorEntry)
+				//new XElement(TNS + XMLNames.Report_Results_Error, errorEntry.Error),
+				//new XElement(TNS + XMLNames.Report_Results_ErrorDetails, errorEntry.StackTrace)
 			);
 		}
 
 		#endregion
 	}
 
-	public class ResultMissionWriter : AbstractResultGroupWriter
+	public class CIFResultMissionWriter : AbstractResultWriter, IResultSequenceWriter
 	{
-		public ResultMissionWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public CIFResultMissionWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Overrides of AbstractResultWriter
 
-		public override XElement GetElement(IResultEntry entry)
+		public virtual XElement[] GetElement(IResultEntry entry)
 		{
-			return new XElement(Cif + XMLNames.Report_Result_Mission, entry.Mission.ToXMLFormat());
+			return new[] { new XElement(TNS + XMLNames.Report_Result_Mission, entry.Mission.ToXMLFormat()) };
+		}
+
+		public XElement[] GetElement(IOVCResultEntry entry)
+		{
+			return null;
+		}
+
+		#endregion
+	}
+
+	public class ResultErrorMissionWriter : AbstractResultWriter, IResultSequenceWriter
+	{
+		public ResultErrorMissionWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		#region Overrides of AbstractResultWriter
+
+		public virtual XElement[] GetElement(IResultEntry entry)
+		{
+			return new[] { new XElement(TNS + XMLNames.Report_Result_Mission, entry.Mission.ToXMLFormat()) };
+		}
+
+		public XElement[] GetElement(IOVCResultEntry entry)
+		{
+			return null;
 		}
 
 		#endregion
@@ -104,16 +135,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class ResultSimulationParameterLorryWriter : AbstractResultGroupWriter
 	{
-		public ResultSimulationParameterLorryWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public ResultSimulationParameterLorryWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Overrides of AbstractResultWriter
 
 		public override XElement GetElement(IResultEntry entry)
 		{
-			return new XElement(Cif + XMLNames.Report_ResultEntry_SimulationParameters,
-				new XElement(Cif + XMLNames.Report_ResultEntry_TotalVehicleMass,
+			return new XElement(TNS + XMLNames.Report_ResultEntry_SimulationParameters,
+				new XElement(TNS + XMLNames.Report_ResultEntry_TotalVehicleMass,
 					XMLHelper.ValueAsUnit(entry.TotalVehicleMass, XMLNames.Unit_kg)),
-				new XElement(Cif + XMLNames.Report_ResultEntry_Payload,
+				new XElement(TNS + XMLNames.Report_ResultEntry_Payload,
 					XMLHelper.ValueAsUnit(entry.Payload, XMLNames.Unit_kg)));
 		}
 
@@ -122,18 +153,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class ResultSimulationParameterBusWriter : AbstractResultGroupWriter
 	{
-		public ResultSimulationParameterBusWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public ResultSimulationParameterBusWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Overrides of AbstractResultWriter
 
 		public override XElement GetElement(IResultEntry entry)
 		{
-			return new XElement(Cif + XMLNames.Report_ResultEntry_SimulationParameters,
-				new XElement(Cif + XMLNames.Report_ResultEntry_TotalVehicleMass,
+			return new XElement(TNS + XMLNames.Report_ResultEntry_SimulationParameters,
+				new XElement(TNS + XMLNames.Report_ResultEntry_TotalVehicleMass,
 					XMLHelper.ValueAsUnit(entry.TotalVehicleMass, XMLNames.Unit_kg)),
-				new XElement(Cif + XMLNames.Report_Result_MassPassengers,
+				new XElement(TNS + XMLNames.Report_Result_MassPassengers,
 					XMLHelper.ValueAsUnit(entry.Payload, XMLNames.Unit_kg)),
-				new XElement(Cif + XMLNames.Report_Result_PassengerCount,
+				new XElement(TNS + XMLNames.Report_Result_PassengerCount,
 					(entry.PassengerCount ?? double.NaN).ToXMLFormat(2))
 			);
 		}
@@ -141,20 +172,62 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
+	public class ResultSimulationParameterMRFBusWriter : AbstractResultGroupWriter
+	{
+		public ResultSimulationParameterMRFBusWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		#region Overrides of AbstractResultWriter
+
+		public override XElement GetElement(IResultEntry entry)
+		{
+			return new XElement(TNS + XMLNames.Report_ResultEntry_SimulationParameters,
+				new XElement(TNS + XMLNames.Report_ResultEntry_TotalVehicleMass,
+					XMLHelper.ValueAsUnit(entry.TotalVehicleMass, XMLNames.Unit_kg)),
+				new XElement(TNS + XMLNames.Report_Result_Payload,
+					XMLHelper.ValueAsUnit(entry.Payload, XMLNames.Unit_kg)),
+				new XElement(TNS + XMLNames.Report_Result_PassengerCount,
+					(entry.PassengerCount ?? double.NaN).ToXMLFormat(2))
+			);
+		}
+
+		#endregion
+	}
+
+	public class VehiclePerformanceCIFWriter : AbstractResultGroupWriter
+	{
+		public VehiclePerformanceCIFWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		#region Overrides of AbstractResultGroupWriter
+
+		public override XElement GetElement(IResultEntry entry)
+		{
+			return new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed,
+				XMLHelper.ValueAsUnit(entry.AverageSpeed, "km/h", 1));
+		}
+
+		public override XElement GetElement(IOVCResultEntry entry)
+		{
+			return new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed,
+				XMLHelper.ValueAsUnit(entry.Weighted.AverageSpeed, "km/h", 1));
+		}
+
+		#endregion
+	}
+
 	public class ElectricRangeWriter : AbstractResultWriter, IElectricRangeWriter
 	{
-		public ElectricRangeWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public ElectricRangeWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Implementation of IElectricRangeWriter
 
 		public XElement[] GetElements(IResultEntry result)
 		{
 			return new[] {
-				new XElement(Cif + "ActualChargeDepletingRange",
+				new XElement(TNS + "ActualChargeDepletingRange",
 					XMLHelper.ValueAsUnit(result.ActualChargeDepletingRange.ConvertToKiloMeter())),
-				new XElement(Cif + "EquivalentAllElectricRange",
+				new XElement(TNS + "EquivalentAllElectricRange",
 					XMLHelper.ValueAsUnit(result.EquivalentAllElectricRange.ConvertToKiloMeter())),
-				new XElement(Cif + "ZeroCO2EmissionsRange",
+				new XElement(TNS + "ZeroCO2EmissionsRange",
 					XMLHelper.ValueAsUnit(result.ZeroCO2EmissionsRange.ConvertToKiloMeter())),
 			};
 		}
@@ -162,11 +235,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public XElement[] GetElements(IWeightedResult weightedResult)
 		{
 			return new[] {
-				new XElement(Cif + "ActualChargeDepletingRange",
+				new XElement(TNS + "ActualChargeDepletingRange",
 					XMLHelper.ValueAsUnit(weightedResult.ActualChargeDepletingRange.ConvertToKiloMeter())),
-				new XElement(Cif + "EquivalentAllElectricRange",
+				new XElement(TNS + "EquivalentAllElectricRange",
 					XMLHelper.ValueAsUnit(weightedResult.EquivalentAllElectricRange.ConvertToKiloMeter())),
-				new XElement(Cif + "ZeroCO2EmissionsRange",
+				new XElement(TNS + "ZeroCO2EmissionsRange",
 					XMLHelper.ValueAsUnit(weightedResult.ZeroCO2EmissionsRange.ConvertToKiloMeter())),
 			};
 		}
@@ -174,6 +247,26 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
+	public class CIFErrorDetailsWriter : AbstractResultWriter, IResultSequenceWriter
+	{
+		public CIFErrorDetailsWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
+		#region Implementation of IResultSequenceWriter
+
+		public XElement[] GetElement(IResultEntry entry)
+		{
+			return new[] {
+				new XElement(TNS + XMLNames.Report_Results_Error, entry.Error),
+				new XElement(TNS + XMLNames.Report_Results_ErrorDetails, entry.StackTrace)
+			};
+		}
+
+		public XElement[] GetElement(IOVCResultEntry entry)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
 }
 

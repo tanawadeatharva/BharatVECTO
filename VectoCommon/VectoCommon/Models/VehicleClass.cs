@@ -173,6 +173,11 @@ namespace TUGraz.VectoCommon.Models
 			return hdvClass == VehicleClass.Unknown ? "-" : hdvClass.ToString().Substring(Prefix.Length).Replace('_', '/');
 		}
 
+		public static string ToXML(this VehicleClass hdvClass)
+		{
+			return hdvClass.GetClassNumber();
+		}
+
 		public static bool IsMediumLorry(this VehicleClass vehicleClass)
 		{
 			switch (vehicleClass) {

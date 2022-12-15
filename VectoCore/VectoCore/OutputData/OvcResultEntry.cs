@@ -32,6 +32,7 @@ namespace TUGraz.VectoCore.OutputData
 		public CubicMeter CargoVolume => ChargeDepletingResult.CargoVolume;
 		public double? PassengerCount => ChargeDepletingResult.PassengerCount;
 		public MeterPerSecond AverageSpeed { get; internal set; }
+		public MeterPerSecond AverageDrivingSpeed { get; internal set; }
 
 		public IDictionary<IFuelProperties, Kilogram> FuelConsumption { get; internal set; }
 		public WattSecond ElectricEnergyConsumption { get; internal set; }

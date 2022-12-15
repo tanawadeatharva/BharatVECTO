@@ -3,21 +3,23 @@ using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter
 {
-	public abstract class NonOVCTotalWriterBase : AbstractResultGroupWriter
+    public abstract class NonOVCTotalWriterBase : AbstractResultGroupWriter
 	{
-		protected NonOVCTotalWriterBase(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		protected NonOVCTotalWriterBase(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Overrides of AbstractResultWriter
 
 		public override XElement GetElement(IResultEntry entry)
 		{
-			return new XElement(Cif + "Total",
-				new XElement(Cif + XMLNames.Report_ResultEntry_AverageSpeed,
-					XMLHelper.ValueAsUnit(entry.AverageSpeed, "km/h", 1)),
+			return new XElement(TNS + "Total",
+				VehiclePerformanceWriter.GetElement(entry),
+				//new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed,
+				//	XMLHelper.ValueAsUnit(entry.AverageSpeed, "km/h", 1)),
 				entry.FuelData.Select(f =>
 					FuelConsumptionWriter?.GetElement(entry, entry.FuelConsumptionFinal(f.FuelType))),
 				ElectricEnergyConsumptionWriter?.GetElement(entry),
@@ -27,6 +29,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		}
 
 		#endregion
+
+		protected abstract IResultGroupWriter VehiclePerformanceWriter { get; }
 
 		protected abstract IFuelConsumptionWriter FuelConsumptionWriter { get; }
 
@@ -40,16 +44,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class LorryConvTotalWriter : NonOVCTotalWriterBase
 	{
-		public LorryConvTotalWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public LorryConvTotalWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 
 		#region Overrides of NonOVCTotalWriterBase
 
-		protected override IFuelConsumptionWriter FuelConsumptionWriter => _cifFactory.GetFuelConsumptionLorry();
+		protected override IResultGroupWriter VehiclePerformanceWriter => _factory.GetVehiclePerformanceLorry(_factory, TNS);
+
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => _factory.GetFuelConsumptionLorry(_factory, TNS);
 
 		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => null;
 
-		protected override ICO2Writer CO2Writer => _cifFactory.GetCO2ResultLorry();
+		protected override ICO2Writer CO2Writer => _factory.GetCO2ResultLorry(_factory, TNS);
 
 		protected override IElectricRangeWriter ElectricRangeWriter => null;
 
@@ -58,16 +64,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class LorryHEVNonOVCTotalWriter : NonOVCTotalWriterBase
 	{
-		public LorryHEVNonOVCTotalWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public LorryHEVNonOVCTotalWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 
 		#region Overrides of NonOVCTotalWriterBase
 
-		protected override IFuelConsumptionWriter FuelConsumptionWriter => _cifFactory.GetFuelConsumptionLorry();
+		protected override IResultGroupWriter VehiclePerformanceWriter => _factory.GetVehiclePerformanceLorry(_factory, TNS);
+
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => _factory.GetFuelConsumptionLorry(_factory, TNS);
 
 		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => null;
 
-		protected override ICO2Writer CO2Writer => _cifFactory.GetCO2ResultLorry();
+		protected override ICO2Writer CO2Writer => _factory.GetCO2ResultLorry(_factory, TNS);
 
 		protected override IElectricRangeWriter ElectricRangeWriter => null;
 
@@ -76,25 +84,27 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class LorryPEVTotalWriter : NonOVCTotalWriterBase
 	{
-		public LorryPEVTotalWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public LorryPEVTotalWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 
 		#region Overrides of NonOVCTotalWriterBase
 
+		protected override IResultGroupWriter VehiclePerformanceWriter => _factory.GetVehiclePerformancePEVLorry(_factory, TNS);
+
 		protected override IFuelConsumptionWriter FuelConsumptionWriter => null;
 
-		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _cifFactory.GetElectricEnergyConsumptionLorry();
+		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _factory.GetElectricEnergyConsumptionLorry(_factory, TNS);
 
 		protected override ICO2Writer CO2Writer => null;
 
-		protected override IElectricRangeWriter ElectricRangeWriter => _cifFactory.GetElectricRangeWriter();
+		protected override IElectricRangeWriter ElectricRangeWriter => _factory.GetElectricRangeWriter(_factory, TNS);
 
 		#endregion
 	}
 
 	public abstract class OVCTotalWriterBase : AbstractResultGroupWriter
 	{
-		protected OVCTotalWriterBase(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		protected OVCTotalWriterBase(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Overrides of AbstractResultWriter
 
@@ -106,14 +116,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override XElement GetElement(IOVCResultEntry entry)
 		{
 			var total = entry.Weighted;
-			return new XElement(Cif + "Total",
-				new XElement(Cif + XMLNames.Report_ResultEntry_AverageSpeed,
-					XMLHelper.ValueAsUnit(total.AverageSpeed, "km/h", 1)),
+			return new XElement(TNS + "Total",
+				_factory.GetVehiclePerformanceBus(_factory, TNS).GetElement(entry),
+				//new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed,
+				//	XMLHelper.ValueAsUnit(total.AverageSpeed, "km/h", 1)),
 				GetFuelConsumption(entry),
 				GetElectricConsumption(entry),
 				GetCO2(entry),
-				_cifFactory.GetElectricRangeWriter().GetElements(total),
-				new XElement(Cif + "UtilityFactor", total.UtilityFactor.ToXMLFormat(3))
+				_factory.GetElectricRangeWriter(_factory, TNS).GetElements(total),
+				new XElement(TNS + "UtilityFactor", total.UtilityFactor.ToXMLFormat(3))
 			);
 		}
 
@@ -129,24 +140,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class LorryHEVOVCTotalWriter : OVCTotalWriterBase
 	{
-		public LorryHEVOVCTotalWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public LorryHEVOVCTotalWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Overrides of OVCSummaryWriterBase
 
 		protected override XElement[] GetFuelConsumption(IOVCResultEntry entry)
 		{
 			return entry.Weighted.FuelConsumption.Select(e =>
-					_cifFactory.GetFuelConsumptionLorry().GetElement(entry.Weighted, e.Key, e.Value)).ToArray();
+					_factory.GetFuelConsumptionLorry(_factory, TNS).GetElement(entry.Weighted, e.Key, e.Value)).ToArray();
 		}
 
 		protected override XElement GetElectricConsumption(IOVCResultEntry entry)
 		{
-			return _cifFactory.GetElectricEnergyConsumptionLorry().GetElement(entry.Weighted);
+			return _factory.GetElectricEnergyConsumptionLorry(_factory, TNS).GetElement(entry.Weighted);
 		}
 
 		protected override XElement[] GetCO2(IOVCResultEntry entry)
 		{
-			return _cifFactory.GetCO2ResultLorry().GetElements(entry.Weighted);
+			return _factory.GetCO2ResultLorry(_factory, TNS).GetElements(entry.Weighted);
 		}
 
 		#endregion
@@ -157,13 +168,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class BusConvTotalWriter : NonOVCTotalWriterBase
 	{
-		public BusConvTotalWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public BusConvTotalWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Overrides of NonOVCTotalWriterBase
 
-		protected override IFuelConsumptionWriter FuelConsumptionWriter => _cifFactory.GetFuelConsumptionBus();
+		protected override IResultGroupWriter VehiclePerformanceWriter => _factory.GetVehiclePerformanceBus(_factory, TNS);
+
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => _factory.GetFuelConsumptionBus(_factory, TNS);
 		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => null;
-		protected override ICO2Writer CO2Writer => _cifFactory.GetCO2ResultBus();
+		protected override ICO2Writer CO2Writer => _factory.GetCO2ResultBus(_factory, TNS);
 		protected override IElectricRangeWriter ElectricRangeWriter => null;
 
 		#endregion
@@ -171,13 +184,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class BusHEVNonOVCTotalWriter : NonOVCTotalWriterBase
 	{
-		public BusHEVNonOVCTotalWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public BusHEVNonOVCTotalWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Overrides of NonOVCTotalWriterBase
 
-		protected override IFuelConsumptionWriter FuelConsumptionWriter => _cifFactory.GetFuelConsumptionBus();
+		protected override IResultGroupWriter VehiclePerformanceWriter => _factory.GetVehiclePerformanceBus(_factory, TNS); 
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => _factory.GetFuelConsumptionBus(_factory, TNS);
 		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => null;
-		protected override ICO2Writer CO2Writer => _cifFactory.GetCO2ResultBus();
+		protected override ICO2Writer CO2Writer => _factory.GetCO2ResultBus(_factory, TNS);
 		protected override IElectricRangeWriter ElectricRangeWriter => null;
 
 		#endregion
@@ -185,39 +199,40 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class BusPEVTotalWriter : NonOVCTotalWriterBase
 	{
-		public BusPEVTotalWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public BusPEVTotalWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Overrides of NonOVCTotalWriterBase
 
+		protected override IResultGroupWriter VehiclePerformanceWriter => _factory.GetVehiclePerformancePEVBus(_factory, TNS); 
 		protected override IFuelConsumptionWriter FuelConsumptionWriter => null;
 
-		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _cifFactory.GetElectricEnergyConsumptionBus();
-		protected override ICO2Writer CO2Writer => _cifFactory.GetCO2ResultPEVBus();
-		protected override IElectricRangeWriter ElectricRangeWriter => _cifFactory.GetElectricRangeWriter();
+		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _factory.GetElectricEnergyConsumptionBus(_factory, TNS);
+		protected override ICO2Writer CO2Writer => _factory.GetCO2ResultPEVBus(_factory, TNS);
+		protected override IElectricRangeWriter ElectricRangeWriter => _factory.GetElectricRangeWriter(_factory, TNS);
 
 		#endregion
 	}
 
 	public class BusOVCTotalWriter : OVCTotalWriterBase
 	{
-		public BusOVCTotalWriter(ICifResultsWriterFactory cifFactory) : base(cifFactory) { }
+		public BusOVCTotalWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Overrides of OVCSummaryWriterBase
 
 		protected override XElement[] GetFuelConsumption(IOVCResultEntry entry)
 		{
 			return entry.Weighted.FuelConsumption.Select(e =>
-				_cifFactory.GetFuelConsumptionBus().GetElement(entry.Weighted, e.Key, e.Value)).ToArray();
+				_factory.GetFuelConsumptionBus(_factory, TNS).GetElement(entry.Weighted, e.Key, e.Value)).ToArray();
 		}
 
 		protected override XElement GetElectricConsumption(IOVCResultEntry entry)
 		{
-			return _cifFactory.GetElectricEnergyConsumptionBus().GetElement(entry.Weighted);
+			return _factory.GetElectricEnergyConsumptionBus(_factory, TNS).GetElement(entry.Weighted);
 		}
 
 		protected override XElement[] GetCO2(IOVCResultEntry entry)
 		{
-			return _cifFactory.GetCO2ResultBus().GetElements(entry.Weighted);
+			return _factory.GetCO2ResultBus(_factory, TNS).GetElements(entry.Weighted);
 		}
 
 		#endregion

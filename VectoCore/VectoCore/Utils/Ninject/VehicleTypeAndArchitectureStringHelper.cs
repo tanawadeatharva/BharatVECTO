@@ -250,15 +250,15 @@ namespace TUGraz.VectoCore.Utils.Ninject
 			return classification.GetHashCode().ToString();
 		}
 
-		public string GetName(string vehicleCategory, string jobType, bool ovc,
+		public string GetName(XmlDocumentType type, string vehicleCategory, string jobType, bool ovc,
 			bool exempted = false)
 		{
-			return GetName(new ResultsVehicleClassification(vehicleCategory, jobType, ovc, exempted));
+			return GetName(new ResultsVehicleClassification(type, vehicleCategory, jobType, ovc, exempted));
 		}
 
-		public string GetName(string vehicleType, bool exempted)
+		public string GetName(XmlDocumentType type, string vehicleType, bool exempted)
 		{
-			return GetName(vehicleType, VectoSimulationJobTypeHelper.Conventional, false, exempted: exempted);
+			return GetName(type, vehicleType, VectoSimulationJobTypeHelper.Conventional, false, exempted: exempted);
 		}
 
 		public struct ResultsVehicleClassification
@@ -268,14 +268,16 @@ namespace TUGraz.VectoCore.Utils.Ninject
 			private readonly bool _ovc;
 			private readonly bool _exempted;
 
-			public ResultsVehicleClassification(string vehicleCategory, string powertrainCategory, bool ovc, bool exempted)
+			public ResultsVehicleClassification(XmlDocumentType type, string vehicleCategory, string powertrainCategory, bool ovc, bool exempted)
 			{
 				_vehicleCategory = vehicleCategory;
 				_powertrainCategory = powertrainCategory;
 				_ovc = ovc;
 				_exempted = exempted;
-
+				DocumentType = type;
 			}
+
+			public XmlDocumentType DocumentType { get; }
 
 			public bool Exempted => _exempted;
 			public string JobType => Exempted ? VectoSimulationJobTypeHelper.Conventional : _powertrainCategory;
@@ -305,6 +307,7 @@ namespace TUGraz.VectoCore.Utils.Ninject
 					hashCode = (hashCode * 397) ^ (JobType != null ? JobType.GetHashCode() : 0);
 					hashCode = (hashCode * 397) ^ OVC.GetHashCode();
 					hashCode = (hashCode * 397) ^ Exempted.GetHashCode();
+					hashCode = (hashCode * 397) ^ DocumentType.GetHashCode();
 					return hashCode;
 				}
 			}
