@@ -40,6 +40,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 			}
         }
 
+		public IResultsWriter GetVIFResultsWriter(string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
+		{
+			try {
+				return _internalFactory.GetVIFResultsWriter(
+					new VehicleTypeAndArchitectureStringHelperResults.ResultsVehicleClassification(
+						XmlDocumentType.MultistepOutputData, vehicleCategory,
+						jobType.GetPowertrainArchitectureType(), ovc, exempted));
+			} catch (Exception e) {
+				throw new Exception($"Could not create ResultsWriter for vehicle category {vehicleCategory}, {jobType}, ovc: {ovc}, exempted: {exempted}", e);
+			}
+		}
+
 		#endregion
     }
 }

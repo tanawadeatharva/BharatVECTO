@@ -145,6 +145,7 @@
     <Folder Include="InputData\Reader\DataObjectAdapter\CompletedBus\Generic\" />
     <Folder Include="InputData\Reader\DataObjectAdapter\SimulationComponents\StrategyDataAdapter\" />
     <Folder Include="Models\SimulationComponent\Impl\Controller\" />
+    <Folder Include="OutputData\XML\DeclarationReports\VehicleInformationFile\VehicleInformationFile_0_1\ResultWriter\" />
   </ItemGroup>
 
 </Project>

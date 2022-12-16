@@ -67,6 +67,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		#endregion
 	}
 
+	public class ResultSimulationParameterErrorWriter : AbstractResultGroupWriter
+	{
+		public ResultSimulationParameterErrorWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		#region Overrides of AbstractResultWriter
+
+		public override XElement GetElement(IResultEntry entry)
+		{
+			return new XElement(TNS + XMLNames.Report_ResultEntry_SimulationParameters,
+				new XElement(TNS + XMLNames.Report_ResultEntry_TotalVehicleMass,
+					XMLHelper.ValueAsUnit(entry.TotalVehicleMass, XMLNames.Unit_kg)),
+				new XElement(TNS + XMLNames.Report_ResultEntry_Payload,
+					XMLHelper.ValueAsUnit(entry.Payload, XMLNames.Unit_kg)));
+		}
+
+		#endregion
+	}
+
 	public class ElectricRangeWriter : AbstractResultWriter, IElectricRangeWriter
 	{
 		public ElectricRangeWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
@@ -115,9 +133,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 			return new XElement(TNS + XMLNames.Report_Result_Result,
 				new XAttribute(XMLNames.Report_Result_Status_Attr, "error"),
-				new XAttribute(xsi + "type", "ResultErrorType"),
+				ResultXMLType != null ? new XAttribute(xsi + "type", ResultXMLType) : null,
 				_factory.GetErrorMissionWriter(_factory, TNS).GetElement(entry),
-				_factory.GetLorrySimulationParameterWriter(_factory, TNS).GetElement(entry),
+				_factory.GetErrorSimulationParameterWriter(_factory, TNS).GetElement(entry),
 				_factory.GetErrorDetailsWriter(_factory, TNS).GetElement(entry)
 			);
 		}
@@ -130,13 +148,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 			}
 			return new XElement(TNS + XMLNames.Report_Result_Result,
 				new XAttribute(XMLNames.Report_Result_Status_Attr, "error"),
-				new XAttribute(xsi + "type", "ResultErrorType"),
+				ResultXMLType != null ? new XAttribute(xsi + "type", ResultXMLType) : null,
 				_factory.GetErrorMissionWriter(_factory, TNS).GetElement(errorEntry),
-				_factory.GetLorrySimulationParameterWriter(_factory, TNS).GetElement(errorEntry),
+				_factory.GetErrorSimulationParameterWriter(_factory, TNS).GetElement(errorEntry),
 				_factory.GetErrorDetailsWriter(_factory, TNS).GetElement(errorEntry)
 			);
 		}
 
 		#endregion
+
+		protected virtual string ResultXMLType => "ResultErrorType";
 	}
 }

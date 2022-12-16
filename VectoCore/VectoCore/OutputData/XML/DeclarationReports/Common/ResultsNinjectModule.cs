@@ -25,7 +25,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 						typeof(IInternalResultWriterFactory).GetMethod(nameof(IInternalResultWriterFactory
 							.GetCIFResultsWriter)),
 						typeof(IInternalResultWriterFactory).GetMethod(nameof(IInternalResultWriterFactory
-							.GetMRFResultsWriter))
+							.GetMRFResultsWriter)),
+						typeof(IInternalResultWriterFactory).GetMethod(nameof(IInternalResultWriterFactory
+							.GetVIFResultsWriter))
+
 					}
 				})).InSingletonScope();
 		}

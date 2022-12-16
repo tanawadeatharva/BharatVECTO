@@ -71,6 +71,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
             Bind<IResultGroupWriter>().To<ResultSimulationParameterLorryWriter>().When(AccessedViaMRFResultsWriterFactory)
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetLorrySimulationParameterWriter(null, XNamespace.None));
 
+			Bind<IResultGroupWriter>().To<ResultSimulationParameterErrorWriter>().When(AccessedViaMRFResultsWriterFactory)
+				.NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetErrorSimulationParameterWriter(null, XNamespace.None));
+
             Bind<IResultGroupWriter>().To<LorryConvTotalWriter>().When(AccessedViaMRFResultsWriterFactory)
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetLorryConvTotalWriter(null, XNamespace.None));
             Bind<IResultGroupWriter>().To<LorryHEVNonOVCTotalWriter>().When(AccessedViaMRFResultsWriterFactory)

@@ -108,8 +108,10 @@ namespace TUGraz.VectoCore
 			
 			LoadModule<VIFNinjectModule>();
 			
+			LoadModule<VIFResultsNinjectModule>();
 
-#if (MOCKUP)  
+
+#if (MOCKUP)
 			var compiledModuleLoaderPlugin = new CompiledModuleLoaderPlugin(Kernel, new AssemblyNameRetriever());
 			var assembly = Assembly.LoadFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"VectoMockup.dll"));
 			//var assembly = Assembly.LoadFile("VectoMockup.dll");
@@ -122,10 +124,10 @@ namespace TUGraz.VectoCore
 
 		}
 
-		
 
-#endregion
 
-		
+		#endregion
+
+
 	}
 }

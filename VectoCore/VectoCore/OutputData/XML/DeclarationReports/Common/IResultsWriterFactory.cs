@@ -10,5 +10,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		IResultsWriter GetMRFResultsWriter(string vehicleCategory, VectoSimulationJobType jobType, bool ovc,
 			bool exempted);
 
+		IResultsWriter GetVIFResultsWriter(string vehicleCategory, VectoSimulationJobType jobType, bool ovc,
+			bool exempted);
+
     }
 }

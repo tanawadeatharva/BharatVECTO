@@ -89,6 +89,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         IResultSequenceWriter GetSuccessMissionWriter(ICommonResultsWriterFactory factory, XNamespace ns);
 		IResultSequenceWriter GetErrorMissionWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IResultGroupWriter GetLorrySimulationParameterWriter(ICommonResultsWriterFactory factory, XNamespace ns);
+		IResultGroupWriter GetErrorSimulationParameterWriter(ICommonResultsWriterFactory factory, XNamespace ns);
 
         IResultGroupWriter GetLorryConvTotalWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IResultGroupWriter GetLorryHEVNonOVCTotalWriter(ICommonResultsWriterFactory factory, XNamespace ns);

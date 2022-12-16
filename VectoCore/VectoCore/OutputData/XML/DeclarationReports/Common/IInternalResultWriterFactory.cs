@@ -10,5 +10,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		IResultsWriter GetMRFResultsWriter(
 			VehicleTypeAndArchitectureStringHelperResults.ResultsVehicleClassification vehicleClasiClassification);
 
+		IResultsWriter GetVIFResultsWriter(
+			VehicleTypeAndArchitectureStringHelperResults.ResultsVehicleClassification vehicleClasiClassification);
+
     }
 }

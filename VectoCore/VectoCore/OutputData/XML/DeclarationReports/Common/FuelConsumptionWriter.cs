@@ -33,11 +33,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
             );
         }
 
-        protected abstract IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc,
-            IFuelProperties fuel, Meter distance, Kilogram payload, CubicMeter volume,
-            double? passenger);
-
         #endregion
+
+		protected abstract IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc,
+			IFuelProperties fuel, Meter distance, Kilogram payload, CubicMeter volume,
+			double? passenger);
 
     }
 

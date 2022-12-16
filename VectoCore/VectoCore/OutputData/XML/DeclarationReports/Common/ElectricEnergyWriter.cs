@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         public virtual XElement GetElement(IResultEntry entry)
         {
-            return new XElement(TNS + "ElectricEnergy",
+            return new XElement(TNS + ElectricEnergyConsumptionXMLElementName,
                 GetEnergyConsumption(entry.ElectricEnergyConsumption, entry.Distance, entry.Payload, entry.CargoVolume,
                     entry.PassengerCount).Select(x =>
                     new XElement(TNS + XMLNames.Report_Result_EnergyConsumption, x.ValueAsUnit(3, 1)))
@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         public virtual XElement GetElement(IWeightedResult weighted)
         {
-            return new XElement(TNS + "ElectricEnergy",
+            return new XElement(TNS + ElectricEnergyConsumptionXMLElementName,
                 GetEnergyConsumption(weighted.ElectricEnergyConsumption, weighted.Distance, weighted.Payload, weighted.CargoVolume,
                     weighted.PassengerCount).Select(x =>
                     new XElement(TNS + XMLNames.Report_Result_EnergyConsumption, x.ValueAsUnit(3, 1)))
@@ -39,7 +39,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
             Kilogram payload, CubicMeter volume, double? passengers);
 
         #endregion
-    }
+
+		protected virtual string ElectricEnergyConsumptionXMLElementName => "ElectricEnergy";
+	}
 
     public class LorryElectricEnergyConsumptionWriter : ElectricEnergyConsumptionWriterBase
     {
