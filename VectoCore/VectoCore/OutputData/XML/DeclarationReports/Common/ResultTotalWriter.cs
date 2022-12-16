@@ -16,10 +16,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         public override XElement GetElement(IResultEntry entry)
         {
-            return new XElement(TNS + "Total",
+            return new XElement(TNS + XMLNames.Report_ResultEntry_Total,
                 VehiclePerformanceWriter.GetElement(entry),
-                //new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed,
-                //	XMLHelper.ValueAsUnit(entry.AverageSpeed, "km/h", 1)),
                 entry.FuelData.Select(f =>
                     FuelConsumptionWriter?.GetElement(entry, entry.FuelConsumptionFinal(f.FuelType))),
                 ElectricEnergyConsumptionWriter?.GetElement(entry),
@@ -116,10 +114,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         public override XElement GetElement(IOVCResultEntry entry)
         {
             var total = entry.Weighted;
-            return new XElement(TNS + "Total",
+            return new XElement(TNS + XMLNames.Report_ResultEntry_Total,
                 _factory.GetVehiclePerformanceBus(_factory, TNS).GetElement(entry),
-                //new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed,
-                //	XMLHelper.ValueAsUnit(total.AverageSpeed, "km/h", 1)),
                 GetFuelConsumption(entry),
                 GetElectricConsumption(entry),
                 GetCO2(entry),

@@ -1,11 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 
@@ -62,8 +58,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			{
 				var ordered = GetOrderedResultsOVC(results);
 				var allSuccess = results.All(x => x.Status == VectoRun.Status.Success);
-				return new XElement(TNS + "Results",
-					new XElement(TNS + XMLNames.Report_Result_Status, allSuccess ? "success" : "error"),
+				return new XElement(TNS + XMLNames.Report_Results,
+					new XElement(TNS + XMLNames.Report_Result_Status,
+						allSuccess
+							? XMLNames.Report_Results_Status_Success_Val
+							: XMLNames.Report_Results_Status_Error_Val),
 					ordered.Select(x =>
 						x.ChargeDepletingResult.Status == VectoRun.Status.Success &&
 						x.ChargeSustainingResult.Status == VectoRun.Status.Success
@@ -120,8 +119,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			{
 				var ordered = GetOrderedResultsOVC(results);
 				var allSuccess = results.All(x => x.Status == VectoRun.Status.Success);
-				return new XElement(TNS + "Results",
-					new XElement(TNS + XMLNames.Report_Result_Status, allSuccess ? "success" : "error"),
+				return new XElement(TNS + XMLNames.Report_Results,
+					new XElement(TNS + XMLNames.Report_Result_Status,
+						allSuccess
+							? XMLNames.Report_Results_Status_Success_Val
+							: XMLNames.Report_Results_Status_Error_Val),
 					ordered.Select(x =>
 						x.ChargeDepletingResult.Status == VectoRun.Status.Success &&
 						x.ChargeSustainingResult.Status == VectoRun.Status.Success
@@ -155,9 +157,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			public override XElement GenerateResults(List<IResultEntry> results)
 			{
-				return new XElement(TNS + "Results",
-					new XElement(TNS + "Status", "success"),
-					new XElement(TNS + "ExemptedVehicle"));
+				return new XElement(TNS + XMLNames.Report_Results,
+					new XElement(TNS + XMLNames.Report_Result_Status, XMLNames.Report_Results_Status_Success_Val),
+					new XElement(TNS + XMLNames.Report_ExemptedVehicle));
 			}
 
 			protected override IResultGroupWriter ResultSuccessWriter => null;

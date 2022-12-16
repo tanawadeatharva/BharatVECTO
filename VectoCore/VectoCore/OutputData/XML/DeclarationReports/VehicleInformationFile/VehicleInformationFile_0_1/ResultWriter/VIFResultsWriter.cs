@@ -50,8 +50,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			{
 				var ordered = GetOrderedResultsOVC(results);
 				var allSuccess = results.All(x => x.Status == VectoRun.Status.Success);
-				return new XElement(TNS + "Results",
-					new XElement(TNS + XMLNames.Report_Result_Status, allSuccess ? "success" : "error"),
+				return new XElement(TNS + XMLNames.Report_Results,
+					new XElement(TNS + XMLNames.Report_Result_Status,
+						allSuccess
+							? XMLNames.Report_Results_Status_Success_Val
+							: XMLNames.Report_Results_Status_Error_Val),
 					ordered.Select(x =>
 						x.ChargeDepletingResult.Status == VectoRun.Status.Success &&
 						x.ChargeSustainingResult.Status == VectoRun.Status.Success
@@ -86,7 +89,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			public override XElement GenerateResults(List<IResultEntry> results)
 			{
 				return new XElement(TNS + "Results",
-					new XElement(TNS + "Status", "success"),
+					new XElement(TNS + "Status", XMLNames.Report_Results_Status_Success_Val),
 					new XElement(TNS + "ExemptedVehicle"));
 			}
 

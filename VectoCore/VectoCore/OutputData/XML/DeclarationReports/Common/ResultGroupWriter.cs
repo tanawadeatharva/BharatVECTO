@@ -94,11 +94,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		public XElement[] GetElements(IResultEntry result)
 		{
 			return new[] {
-				new XElement(TNS + "ActualChargeDepletingRange",
+				new XElement(TNS + XMLNames.Report_ResultEntry_ActualChargeDepletingRange,
 					XMLHelper.ValueAsUnit(result.ActualChargeDepletingRange.ConvertToKiloMeter())),
-				new XElement(TNS + "EquivalentAllElectricRange",
+				new XElement(TNS + XMLNames.Report_ResultEntry_EquivalentAllElectricRange,
 					XMLHelper.ValueAsUnit(result.EquivalentAllElectricRange.ConvertToKiloMeter())),
-				new XElement(TNS + "ZeroCO2EmissionsRange",
+				new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
 					XMLHelper.ValueAsUnit(result.ZeroCO2EmissionsRange.ConvertToKiloMeter())),
 			};
 		}
@@ -106,11 +106,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		public XElement[] GetElements(IWeightedResult weightedResult)
 		{
 			return new[] {
-				new XElement(TNS + "ActualChargeDepletingRange",
+				new XElement(TNS + XMLNames.Report_ResultEntry_ActualChargeDepletingRange,
 					XMLHelper.ValueAsUnit(weightedResult.ActualChargeDepletingRange.ConvertToKiloMeter())),
-				new XElement(TNS + "EquivalentAllElectricRange",
+				new XElement(TNS + XMLNames.Report_ResultEntry_EquivalentAllElectricRange,
 					XMLHelper.ValueAsUnit(weightedResult.EquivalentAllElectricRange.ConvertToKiloMeter())),
-				new XElement(TNS + "ZeroCO2EmissionsRange",
+				new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
 					XMLHelper.ValueAsUnit(weightedResult.ZeroCO2EmissionsRange.ConvertToKiloMeter())),
 			};
 		}
@@ -132,8 +132,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 			}
 
 			return new XElement(TNS + XMLNames.Report_Result_Result,
-				new XAttribute(XMLNames.Report_Result_Status_Attr, "error"),
-				ResultXMLType != null ? new XAttribute(xsi + "type", ResultXMLType) : null,
+				new XAttribute(XMLNames.Report_Result_Status_Attr, XMLNames.Report_Results_Status_Error_Val),
+				ResultXMLType != null ? new XAttribute(xsi + XMLNames.XSIType, ResultXMLType) : null,
 				_factory.GetErrorMissionWriter(_factory, TNS).GetElement(entry),
 				_factory.GetErrorSimulationParameterWriter(_factory, TNS).GetElement(entry),
 				_factory.GetErrorDetailsWriter(_factory, TNS).GetElement(entry)
@@ -147,8 +147,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 				throw new Exception("At least one entry needs to be unsuccessful!");
 			}
 			return new XElement(TNS + XMLNames.Report_Result_Result,
-				new XAttribute(XMLNames.Report_Result_Status_Attr, "error"),
-				ResultXMLType != null ? new XAttribute(xsi + "type", ResultXMLType) : null,
+				new XAttribute(XMLNames.Report_Result_Status_Attr, XMLNames.Report_Results_Status_Error_Val),
+				ResultXMLType != null ? new XAttribute(xsi + XMLNames.XSIType, ResultXMLType) : null,
 				_factory.GetErrorMissionWriter(_factory, TNS).GetElement(errorEntry),
 				_factory.GetErrorSimulationParameterWriter(_factory, TNS).GetElement(errorEntry),
 				_factory.GetErrorDetailsWriter(_factory, TNS).GetElement(errorEntry)

@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 			// MQ: write dummy result element for testcases (2022-07-13)
 			Results = new XElement(Mrf_0_9 + "Results",
-				new XElement(Mrf_0_9 + "Status", "success"),
+				new XElement(Mrf_0_9 + "Status", XMLNames.Report_Results_Status_Success_Val),
 				new XElement(Mrf_0_9 + "ExemptedVehicle"));
 		}
 

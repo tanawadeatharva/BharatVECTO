@@ -12,7 +12,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 {
     public abstract class AbstractResultsWriter : IResultsWriter
     {
-        //protected static readonly XNamespace Cif = "urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9";
 
         #region Implementation of IResultsWriter
 
@@ -20,15 +19,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         {
             var ordered = GetOrderedResults(results);
             var allSuccess = results.All(x => x.Status == VectoRun.Status.Success);
-            return new XElement(TNS + "Results",
-                new XElement(TNS + XMLNames.Report_Result_Status, allSuccess ? "success" : "error"),
-                ordered.Select(x =>
-                    x.Status == VectoRun.Status.Success
-                        ? ResultSuccessWriter.GetElement(x)
-                        : ResultErrorWriter.GetElement(x)),
-                allSuccess ? SummaryWriter.GetElement(ordered) : null
-            );
-        }
+			return new XElement(TNS + XMLNames.Report_Results,
+				new XElement(TNS + XMLNames.Report_Result_Status,
+					allSuccess ? XMLNames.Report_Results_Status_Success_Val : XMLNames.Report_Results_Status_Error_Val),
+				ordered.Select(x =>
+					x.Status == VectoRun.Status.Success
+						? ResultSuccessWriter.GetElement(x)
+						: ResultErrorWriter.GetElement(x)),
+				allSuccess ? SummaryWriter.GetElement(ordered) : null
+			);
+		}
 
         #endregion
 

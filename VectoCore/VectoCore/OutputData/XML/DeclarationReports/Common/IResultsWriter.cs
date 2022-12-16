@@ -14,61 +14,6 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 {
-    public interface IResultsWriter
-    {
-        XElement GenerateResults(List<IResultEntry> results);
-    }
-
-    public interface IResultGroupWriter
-    {
-        XElement GetElement(IResultEntry entry);
-
-        XElement GetElement(IOVCResultEntry entry);
-    }
-
-	public interface IResultSequenceWriter
-	{
-		XElement[] GetElement(IResultEntry entry);
-
-		XElement[] GetElement(IOVCResultEntry entry);
-	}
-
-    public interface IFuelConsumptionWriter
-    {
-        XElement GetElement(IResultEntry entry, IFuelConsumptionCorrection fuelConsumptionCorrection);
-        XElement GetElement(IWeightedResult entry, IFuelProperties fuel, Kilogram consumption);
-
-    }
-
-    public interface IElectricEnergyConsumptionWriter
-    {
-        XElement GetElement(IResultEntry entry);
-
-        XElement GetElement(IWeightedResult weighted);
-    }
-
-    public interface ICO2Writer
-    {
-        XElement[] GetElements(IResultEntry entry);
-
-        XElement[] GetElements(IWeightedResult entry);
-    }
-
-    public interface IReportResultsSummaryWriter
-    {
-        XElement GetElement(IList<IResultEntry> entries);
-
-        XElement GetElement(IList<IOVCResultEntry> entries);
-    }
-
-    public interface IElectricRangeWriter
-    {
-        XElement[] GetElements(IResultEntry weightedResult);
-
-        XElement[] GetElements(IWeightedResult weightedResult);
-
-    }
-
 
     public interface ICommonResultsWriterFactory
     {
@@ -140,6 +85,62 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		IResultSequenceWriter GetErrorDetailsWriter(ICommonResultsWriterFactory factory, XNamespace ns);
 	}
 
+	public interface IResultsWriter
+	{
+		XElement GenerateResults(List<IResultEntry> results);
+	}
 
+	public interface IResultGroupWriter
+	{
+		XElement GetElement(IResultEntry entry);
+
+		XElement GetElement(IOVCResultEntry entry);
+	}
+
+	public interface IResultSequenceWriter
+	{
+		XElement[] GetElement(IResultEntry entry);
+
+		XElement[] GetElement(IOVCResultEntry entry);
+	}
+
+	public interface IFuelConsumptionWriter
+	{
+		XElement GetElement(IResultEntry entry, IFuelConsumptionCorrection fuelConsumptionCorrection);
+		XElement GetElement(IWeightedResult entry, IFuelProperties fuel, Kilogram consumption);
+
+		IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc,
+			IFuelProperties fuel, Meter distance, Kilogram payload, CubicMeter volume,
+			double? passenger);
+	}
+
+	public interface IElectricEnergyConsumptionWriter
+	{
+		XElement GetElement(IResultEntry entry);
+
+		XElement GetElement(IWeightedResult weighted);
+	}
+
+	public interface ICO2Writer
+	{
+		XElement[] GetElements(IResultEntry entry);
+
+		XElement[] GetElements(IWeightedResult entry);
+	}
+
+	public interface IReportResultsSummaryWriter
+	{
+		XElement GetElement(IList<IResultEntry> entries);
+
+		XElement GetElement(IList<IOVCResultEntry> entries);
+	}
+
+	public interface IElectricRangeWriter
+	{
+		XElement[] GetElements(IResultEntry weightedResult);
+
+		XElement[] GetElements(IWeightedResult weightedResult);
+
+	}
 
 }

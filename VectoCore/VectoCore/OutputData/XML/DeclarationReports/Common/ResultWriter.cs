@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 {
@@ -32,8 +31,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		public override XElement GetElement(IResultEntry entry)
 		{
 			return new XElement(TNS + XMLNames.Report_Result_Result,
-				new XAttribute(XMLNames.Report_Result_Status_Attr, "success"),
-				new XAttribute(xsi + "type", ResultXMLType),
+				new XAttribute(XMLNames.Report_Result_Status_Attr, XMLNames.Report_Results_Status_Success_Val),
+				new XAttribute(xsi + XMLNames.XSIType, ResultXMLType),
 				_factory.GetSuccessMissionWriter(_factory, TNS).GetElement(entry),
 				SimulationParameterWriter.GetElement(entry),
 				ResultTotalWriter.GetElement(entry)
@@ -98,8 +97,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		public override XElement GetElement(IOVCResultEntry entry)
 		{
 			return new XElement(TNS + XMLNames.Report_Result_Result,
-				new XAttribute(XMLNames.Report_Result_Status_Attr, "success"),
-				new XAttribute(xsi + "type", "ResultSuccessOVCHEVType"),
+				new XAttribute(XMLNames.Report_Result_Status_Attr, XMLNames.Report_Results_Status_Success_Val),
+				new XAttribute(xsi + XMLNames.XSIType, ResultXMLType),
 				_factory.GetSuccessMissionWriter(_factory, TNS).GetElement(entry.ChargeDepletingResult),
 				_factory.GetLorrySimulationParameterWriter(_factory, TNS).GetElement(entry.ChargeDepletingResult),
 				_factory.GetLorryHEVOVCResultWriterChargeDepleting(_factory, TNS).GetElement(entry.ChargeDepletingResult),
@@ -109,6 +108,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		}
 
 		#endregion
+
+		protected virtual string ResultXMLType => "ResultSuccessOVCHEVType";
 	}
 
 	public class LorryHEVOVCChargeDepletingWriter : AbstractResultGroupWriter
@@ -119,10 +120,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 		public override XElement GetElement(IResultEntry entry)
 		{
-			return new XElement(TNS + "OVCMode",
-				new XAttribute("type", "charge depleting"),
+			return new XElement(TNS + XMLNames.Report_Results_OVCMode,
+				new XAttribute(XMLNames.Results_Report_OVCModeAttr, XMLNames.Results_Report_OVCModeAttr_ChargeDepleting),
 				_factory.GetVehiclePerformanceLorry(_factory, TNS).GetElement(entry),
-				//new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed, XMLHelper.ValueAsUnit(entry.AverageSpeed, XMLNames.Unit_kmph, 1)),
 				entry.FuelData.Select(f =>
 					_factory.GetFuelConsumptionLorry(_factory, TNS).GetElement(entry, entry.FuelConsumptionFinal(f.FuelType))),
 				_factory.GetElectricEnergyConsumptionLorry(_factory, TNS).GetElement(entry),
@@ -142,10 +142,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 		public override XElement GetElement(IResultEntry entry)
 		{
-			return new XElement(TNS + "OVCMode",
-				new XAttribute("type", "charge depleting"),
+			return new XElement(TNS + XMLNames.Report_Results_OVCMode,
+				new XAttribute(XMLNames.Results_Report_OVCModeAttr, XMLNames.Results_Report_OVCModeAttr_ChargeDepleting),
 				_factory.GetVehiclePerformanceLorry(_factory, TNS).GetElement(entry),
-				//new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed, XMLHelper.ValueAsUnit(entry.AverageSpeed, XMLNames.Unit_kmph, 1)),
 				entry.FuelData.Select(f =>
 					_factory.GetFuelConsumptionLorry(_factory, TNS).GetElement(entry, entry.FuelConsumptionFinal(f.FuelType))),
 				_factory.GetCO2ResultLorry(_factory, TNS).GetElements(entry)
@@ -214,8 +213,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		public override XElement GetElement(IOVCResultEntry entry)
 		{
 			return new XElement(TNS + XMLNames.Report_Result_Result,
-				new XAttribute(XMLNames.Report_Result_Status_Attr, "success"),
-				new XAttribute(xsi + "type", "ResultSuccessOVCHEVType"),
+				new XAttribute(XMLNames.Report_Result_Status_Attr, XMLNames.Report_Results_Status_Success_Val),
+				new XAttribute(xsi + XMLNames.XSIType, ResultXMLType),
 				_factory.GetSuccessMissionWriter(_factory, TNS).GetElement(entry.ChargeDepletingResult),
 				_factory.GetBusSimulationParameterWriter(_factory, TNS).GetElement(entry.ChargeDepletingResult),
 				_factory.GetBusHEVOVCResultWriterChargeDepleting(_factory, TNS).GetElement(entry.ChargeDepletingResult),
@@ -226,6 +225,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 		#endregion
 
+		protected virtual string ResultXMLType => "ResultSuccessOVCHEVType";
 	}
 
 	public class BusOVCChargeDepletingWriter : AbstractResultGroupWriter
@@ -236,10 +236,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 		public override XElement GetElement(IResultEntry entry)
 		{
-			return new XElement(TNS + "OVCMode",
-				new XAttribute("type", "charge depleting"),
+			return new XElement(TNS + XMLNames.Report_Results_OVCMode,
+				new XAttribute(XMLNames.Results_Report_OVCModeAttr, XMLNames.Results_Report_OVCModeAttr_ChargeDepleting),
 				_factory.GetVehiclePerformanceBus(_factory, TNS).GetElement(entry),
-				//new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed, XMLHelper.ValueAsUnit(entry.AverageSpeed, XMLNames.Unit_kmph, 1)),
 				entry.FuelData.Select(f =>
 					_factory.GetFuelConsumptionBus(_factory, TNS).GetElement(entry, entry.FuelConsumptionFinal(f.FuelType))),
 				_factory.GetElectricEnergyConsumptionBus(_factory, TNS).GetElement(entry),
@@ -257,8 +256,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 		public override XElement GetElement(IResultEntry entry)
 		{
-			return new XElement(TNS + "OVCMode",
-				new XAttribute("type", "charge depleting"),
+			return new XElement(TNS + XMLNames.Report_Results_OVCMode,
+				new XAttribute(XMLNames.Results_Report_OVCModeAttr, XMLNames.Results_Report_OVCModeAttr_ChargeDepleting),
 				_factory.GetVehiclePerformanceBus(_factory, TNS).GetElement(entry),
 				//new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed, XMLHelper.ValueAsUnit(entry.AverageSpeed, XMLNames.Unit_kmph, 1)),
 				entry.FuelData.Select(f =>

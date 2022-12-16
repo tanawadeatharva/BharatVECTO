@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		#endregion
 
-		protected virtual IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc, IFuelProperties fuel,
+		public virtual IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc, IFuelProperties fuel,
 			Meter distance, Kilogram payload, CubicMeter volume, double? passenger)
 		{
 			return new List<ConvertedSI> {
@@ -152,7 +152,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		#region Overrides of ElectricEnergyConsumptionWriterBase
 
-		protected override string ElectricEnergyConsumptionXMLElementName => "ElectricEnergyConsumption";
+		protected override string ElectricEnergyConsumptionXMLElementName => XMLNames.Report_ResultEntry_VIF_ElectricEnergyConsumption;
 
 
 		protected override IList<ConvertedSI> GetEnergyConsumption(WattSecond elEnergy, Meter distance,

@@ -3,8 +3,6 @@ using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.
-    ResultWriter;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
@@ -40,7 +38,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         #endregion
 
-		protected virtual string ElectricEnergyConsumptionXMLElementName => "ElectricEnergy";
+		protected virtual string ElectricEnergyConsumptionXMLElementName => XMLNames.Report_ResultEntry_ElectricEnergyConsumption;
 	}
 
     public class LorryElectricEnergyConsumptionWriter : ElectricEnergyConsumptionWriterBase

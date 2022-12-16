@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         #endregion
 
-		protected abstract IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc,
+		public abstract IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc,
 			IFuelProperties fuel, Meter distance, Kilogram payload, CubicMeter volume,
 			double? passenger);
 
@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         #region Overrides of FuelConsumptionWriterBase
 
-        protected override IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc, IFuelProperties fuel, Meter distance, Kilogram payload, CubicMeter volume, double? passenger)
+        public override IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc, IFuelProperties fuel, Meter distance, Kilogram payload, CubicMeter volume, double? passenger)
         {
             var retVal = new List<ConvertedSI> {
                 (fc / distance).ConvertToGrammPerKiloMeter(),
@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         #region Overrides of FuelConsumptionWriterBase
 
-        protected override IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc, IFuelProperties fuel,
+        public override IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc, IFuelProperties fuel,
             Meter distance, Kilogram payload, CubicMeter volume, double? passenger)
         {
             var retVal = new List<ConvertedSI> {
@@ -105,11 +105,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         #endregion
 
-        public virtual IList<ConvertedSI> FuelConsumptionEntries(Kilogram fc, IFuelProperties fuel, Meter distance,
-            Kilogram payload, CubicMeter volume, double? passenger)
-        {
-            return GetFuelConsumptionEntries(fc, fuel, distance, payload, volume, passenger);
-        }
     }
 
 }

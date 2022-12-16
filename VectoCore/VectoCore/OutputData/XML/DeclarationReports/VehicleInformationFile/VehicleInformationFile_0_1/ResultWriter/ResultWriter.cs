@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public override XElement GetElement(IResultEntry entry)
 		{
 			return new XElement(TNS + XMLNames.Report_Result_Result,
-				new XAttribute(XMLNames.Report_Result_Status_Attr, "success"),
+				new XAttribute(XMLNames.Report_Result_Status_Attr, XMLNames.Report_Results_Status_Success_Val),
 				//new XAttribute(xsi + "type", ResultXMLType),
 				_factory.GetSuccessMissionWriter(_factory, TNS).GetElement(entry),
 				SimulationParameterWriter.GetElement(entry),
@@ -92,7 +92,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public override XElement GetElement(IOVCResultEntry entry)
 		{
 			return new XElement(TNS + XMLNames.Report_Result_Result,
-				new XAttribute(XMLNames.Report_Result_Status_Attr, "success"),
+				new XAttribute(XMLNames.Report_Result_Status_Attr, XMLNames.Report_Results_Status_Success_Val),
 				_factory.GetSuccessMissionWriter(_factory, TNS).GetElement(entry.ChargeDepletingResult),
 				_factory.GetBusSimulationParameterWriter(_factory, TNS).GetElement(entry.ChargeDepletingResult),
 				_factory.GetBusHEVOVCResultWriterChargeDepleting(_factory, TNS).GetElement(entry.ChargeDepletingResult),
@@ -110,8 +110,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		public override XElement GetElement(IResultEntry entry)
 		{
-			return new XElement(TNS + "OVCMode",
-				new XAttribute("type", OVCMode),
+			return new XElement(TNS + XMLNames.Report_Results_OVCMode,
+				new XAttribute(XMLNames.Results_Report_OVCModeAttr, OVCMode),
 				entry.FuelData.Select(f =>
 					_factory.GetFuelConsumptionBus(_factory, TNS).GetElement(entry, entry.FuelConsumptionFinal(f.FuelType))),
 				_factory.GetElectricEnergyConsumptionBus(_factory, TNS).GetElement(entry)
@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		#region Overrides of VIFOVCCModeWriter
 
-		public override string OVCMode => "charge depleting";
+		public override string OVCMode => XMLNames.Results_Report_OVCModeAttr_ChargeDepleting;
 		
 		#endregion
 	}
@@ -138,7 +138,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		#region Overrides of VIFOVCCModeWriter
 
-		public override string OVCMode => "charge sustaining";
+		public override string OVCMode => XMLNames.Results_Report_OVCModeAttr_ChargeDepleting;
 
 		#endregion
 	}
