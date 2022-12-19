@@ -36,15 +36,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				_namingHelper.GetName(mrf, VehicleCategoryHelper.Lorry, true));
 
 			Bind<IResultsWriter>().To<MRFResultsWriter.ConventionalBus>().Named(
-				_namingHelper.GetName(mrf, VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.Conventional,
-					false));
+				_namingHelper.GetName(mrf, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.Conventional, false));
+			Bind<IResultsWriter>().To<MRFResultsWriter.HEVNonOVCBus>().Named(
+				_namingHelper.GetName(mrf, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.Hybrid, false));
+			Bind<IResultsWriter>().To<MRFResultsWriter.HEVOVCBus>().Named(
+				_namingHelper.GetName(mrf, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.Hybrid, true));
+			Bind<IResultsWriter>().To<MRFResultsWriter.PEVBus>().Named(
+				_namingHelper.GetName(mrf, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.PureElectric, true));
+			Bind<IResultsWriter>().To<MRFResultsWriter.ExemptedVehicle>().Named(
+				_namingHelper.GetName(mrf, VehicleCategoryHelper.PrimaryBus, true));
+
+            Bind<IResultsWriter>().To<MRFResultsWriter.ConventionalBus>().Named(
+				_namingHelper.GetName(mrf, VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.Conventional, false));
 			Bind<IResultsWriter>().To<MRFResultsWriter.HEVNonOVCBus>().Named(
 				_namingHelper.GetName(mrf, VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.Hybrid, false));
 			Bind<IResultsWriter>().To<MRFResultsWriter.HEVOVCBus>().Named(
 				_namingHelper.GetName(mrf, VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.Hybrid, true));
 			Bind<IResultsWriter>().To<MRFResultsWriter.PEVBus>().Named(
-				_namingHelper.GetName(mrf, VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.PureElectric,
-					true));
+				_namingHelper.GetName(mrf, VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.PureElectric,true));
 			Bind<IResultsWriter>().To<MRFResultsWriter.ExemptedVehicle>().Named(
 				_namingHelper.GetName(mrf, VehicleCategoryHelper.CompletedBus, true));
 
