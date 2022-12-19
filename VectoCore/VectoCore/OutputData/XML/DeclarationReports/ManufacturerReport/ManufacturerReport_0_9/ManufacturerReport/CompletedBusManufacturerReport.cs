@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Utils;
 
@@ -17,7 +19,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 	{
 		protected XNamespace _mrf = XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9");
 		private bool _allSuccess;
-		public CompletedBusManufacturerReportBase(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+		public CompletedBusManufacturerReportBase(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
 
 		public override void Initialize(VectoRunData modelData)
 		{
@@ -27,7 +29,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			if (inputData == null) {
 				throw new VectoException("CompletedBus ManrufacturersRecordFile requires MultistepBusInputData");
 			}
-			//Results = new XElement(Mrf_0_9 + XMLNames.Report_Results);
+			Results = _resultFactory.GetMRFResultsWriter(modelData.VehicleData.VehicleCategory.GetVehicleType(),
+				modelData.JobType, modelData.VehicleData.OffVehicleCharging, modelData.Exempted);
 			InputDataIntegrity = new XElement(Mrf_0_9 + XMLNames.Report_InputDataSignature,
 				inputData.JobInputData.ConsolidateManufacturingStage.Signature == null
 					? XMLHelper.CreateDummySig(_di)
@@ -41,11 +44,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			_allSuccess &= genericResult.Status == VectoRun.Status.Success;
 			_allSuccess &= specificResult.Status == VectoRun.Status.Success;
-			//Results.Add(
-			//	genericResult.Status == VectoRun.Status.Success && specificResult.Status == VectoRun.Status.Success
-			//		? GetSuccessResultEntry(genericResult, specificResult, primaryResult)
-			//		: GetErrorResultEntry(genericResult, specificResult, primaryResult));
-
 		}
 
 		#endregion
@@ -53,7 +51,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	internal class Conventional_CompletedBusManufacturerReport : CompletedBusManufacturerReportBase
     {
-		public Conventional_CompletedBusManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+		public Conventional_CompletedBusManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
 
 		#region Overrides of AbstractManufacturerReport
 
@@ -73,7 +71,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	internal class HEV_CompletedBusManufacturerReport : CompletedBusManufacturerReportBase
 	{
-		public HEV_CompletedBusManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+		public HEV_CompletedBusManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
 
 		#region Overrides of AbstractManufacturerReport
 
@@ -90,7 +88,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	internal class PEV_CompletedBusManufacturerReport : CompletedBusManufacturerReportBase
 	{
-		public PEV_CompletedBusManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+		public PEV_CompletedBusManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
 
 		#region Overrides of AbstractManufacturerReport
 
@@ -107,7 +105,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	internal class Exempted_CompletedBusManufacturerReport : CompletedBusManufacturerReportBase
 	{
-		public Exempted_CompletedBusManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+		public Exempted_CompletedBusManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
 
 		#region Overrides of AbstractManufacturerReport
 

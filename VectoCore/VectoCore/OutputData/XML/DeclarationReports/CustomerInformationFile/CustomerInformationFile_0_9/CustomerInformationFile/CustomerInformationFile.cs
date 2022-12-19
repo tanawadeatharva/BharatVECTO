@@ -241,7 +241,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				ManufacturerReportIntegrityPrimaryVehicle,
 				InputDataIntegrity,
 				new XElement(Cif_0_9 + XMLNames.Report_ManufacturerRecord_Signature, resultSignature),
-				GetResultsXML(),
+				Results.GenerateResults(results),
 				XMLHelper.GetApplicationInfo(Cif_0_9)
 			};
 		}

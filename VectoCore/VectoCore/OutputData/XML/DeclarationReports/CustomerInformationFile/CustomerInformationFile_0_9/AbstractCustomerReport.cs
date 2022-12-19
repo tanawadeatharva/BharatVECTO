@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public XDocument Report { get; protected set; }
 
-		private List<IResultEntry> results = new List<IResultEntry>();
+		protected List<IResultEntry> results = new List<IResultEntry>();
 
 		public void WriteResult(IResultEntry resultValue)
 		{
@@ -102,14 +102,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				Vehicle,
 				InputDataIntegrity,
 				new XElement(Cif_0_9 + XMLNames.Report_ManufacturerRecord_Signature, resultSignature),
-				GetResultsXML(),
+				Results.GenerateResults(results),
 				XMLHelper.GetApplicationInfo(Cif_0_9)
 			};
-		}
-
-		protected XElement GetResultsXML()
-		{
-			return Results.GenerateResults(results);
 		}
 
 		#endregion
