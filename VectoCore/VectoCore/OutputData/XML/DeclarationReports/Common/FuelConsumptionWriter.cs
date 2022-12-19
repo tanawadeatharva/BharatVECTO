@@ -52,20 +52,27 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         {
             var retVal = new List<ConvertedSI> {
                 (fc / distance).ConvertToGrammPerKiloMeter(),
-                (fc / distance /payload).ConvertToGrammPerTonKilometer(),
-                (fc / distance / volume).ConvertToGrammPerCubicMeterKiloMeter(),
+                (fc / distance /payload).ConvertToGrammPerTonKilometer()};
+            if (volume.IsGreater(0)) {
+				retVal.Add((fc / distance / volume).ConvertToGrammPerCubicMeterKiloMeter());
+			}
 
+			retVal.AddRange(new [] {
                 (fc * fuel.LowerHeatingValueVecto / distance).ConvertToMegaJoulePerKilometer(),
                 (fc * fuel.LowerHeatingValueVecto / distance / payload).ConvertToMegaJoulePerTonKiloMeter(),
-                (fc * fuel.LowerHeatingValueVecto / distance / volume).ConvertToMegaJoulePerCubicMeterKiloMeter(),
-            };
+			});
+			if (volume.IsGreater(0)) {
+                retVal.Add((fc * fuel.LowerHeatingValueVecto / distance / volume).ConvertToMegaJoulePerCubicMeterKiloMeter());
+			}
 
             if (fuel.FuelDensity != null) {
                 retVal.AddRange(new[] {
                     (fc / fuel.FuelDensity / distance).ConvertToLiterPer100KiloMeter(),
                     (fc / fuel.FuelDensity / distance / payload).ConvertToLiterPerTonKiloMeter(),
-                    (fc / fuel.FuelDensity / distance /volume).ConvertToLiterPerCubicMeterKiloMeter(),
-                });
+				});
+				if (volume.IsGreater(0)) {
+					retVal.Add((fc / fuel.FuelDensity / distance / volume).ConvertToLiterPerCubicMeterKiloMeter());
+				}
             }
 
             return retVal;

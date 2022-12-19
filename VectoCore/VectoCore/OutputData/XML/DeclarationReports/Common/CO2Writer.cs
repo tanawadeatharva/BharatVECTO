@@ -42,11 +42,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		protected override IList<ConvertedSI> GetCO2ResultEntries(Kilogram CO2Total, Meter distance, Kilogram payload,
 			CubicMeter volume, double? passengers)
 		{
-			return new[] {
+			var retVal = new List<ConvertedSI>() {
 				(CO2Total / distance).ConvertToGrammPerKiloMeter(),
 				(CO2Total / distance / payload).ConvertToGrammPerTonKilometer(),
-				(CO2Total / distance / volume).ConvertToGrammPerCubicMeterKiloMeter(),
 			};
+			if (volume.IsGreater(0)) {
+				retVal.Add((CO2Total / distance / volume).ConvertToGrammPerCubicMeterKiloMeter());
+			}
+			return retVal;
 		}
 
 	}
