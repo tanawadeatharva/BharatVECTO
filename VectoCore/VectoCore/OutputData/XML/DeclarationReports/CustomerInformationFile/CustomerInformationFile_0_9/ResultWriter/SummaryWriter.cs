@@ -29,6 +29,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		protected virtual XElement DoGetElement(IWeightedResult weighted)
 		{
+			if (weighted == null) {
+				return null;
+			}
 			return new XElement(TNS + XMLNames.Report_Results_Summary,
 				new XAttribute(xsi + XMLNames.XSIType, ResultSummaryXMLType),
 				GetSummary(weighted),

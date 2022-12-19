@@ -427,8 +427,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 			var writer = new FileOutputWriter(outputFile);
 
-			var xmlreport = new XMLDeclarationReportPrimaryVehicle(writer);
-			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer, xmlreport);
+            var xmlreport = new XMLDeclarationReportPrimaryVehicle(writer);
+            var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
 			factory.WriteModalResults = true;
 			factory.Validate = false;
 

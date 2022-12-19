@@ -380,7 +380,8 @@ namespace TUGraz.VectoCore.Tests.XML
 					break;
 			}
 
-			TestxEvParametersSequenceGroup(vehicle);
+			Assert.AreEqual(true, vehicle.OvcHev);
+			Assert.IsNull(vehicle.MaxChargingPower);
 		}
 
 
@@ -410,7 +411,8 @@ namespace TUGraz.VectoCore.Tests.XML
 					break;
 			}
 
-			TestxEvParametersSequenceGroup(vehicle);
+			Assert.AreEqual(true, vehicle.OvcHev);
+			Assert.IsNull(vehicle.MaxChargingPower);
 		}
 
 

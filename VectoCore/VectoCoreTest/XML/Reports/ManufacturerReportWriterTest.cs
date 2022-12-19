@@ -21,7 +21,9 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport;
@@ -29,6 +31,7 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 using TUGraz.VectoCore.Tests.Integration.CompletedBus;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Utils;
+using TUGraz.VectoCore.Utils.Ninject;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.VectoCore.Tests.XML.Reports
@@ -175,6 +178,17 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				new VectoNinjectModule()
 			);
 			outputBasePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "XMLReports_0.9");
+
+			// create a binding just for the tests to write dummy results (exempted). Vehicle category is set to Unknown
+			_kernel.Bind<IResultsWriter>().To<MRFResultsWriter.ExemptedVehicle>()
+				.Named(new VehicleTypeAndArchitectureStringHelperResults().GetName(XmlDocumentType.ManufacturerReport,
+					"Unknown", VectoSimulationJobTypeHelper.Conventional, false));
+			_kernel.Bind<IResultsWriter>().To<CIFResultsWriter.ExemptedVehicle>().Named(
+				new VehicleTypeAndArchitectureStringHelperResults().GetName(XmlDocumentType.CustomerReport,
+					"Unknown", VectoSimulationJobTypeHelper.Conventional, false));
+			_kernel.Bind<IResultsWriter>().To<CIFResultsWriter.ExemptedVehicle>().Named(
+				new VehicleTypeAndArchitectureStringHelperResults().GetName(XmlDocumentType.CustomerReport,
+					"Unknown", VectoSimulationJobTypeHelper.Conventional, false, true));
 		}
 
 		[SetUp]
@@ -184,6 +198,8 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			_xmlReader = _kernel.Get<IXMLInputDataReader>();
 			_mrfFactory = _kernel.Get<IManufacturerReportFactory>();
 			_cifFactory = _kernel.Get<ICustomerInformationFileFactory>();
+
+			
 		}
 	}
 

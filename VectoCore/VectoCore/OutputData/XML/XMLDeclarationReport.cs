@@ -219,7 +219,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public virtual XDocument FullReport => ManufacturerRpt.Report;
 
-		public virtual XDocument CustomerReport => CustomerRpt.Report;
+		public virtual XDocument CustomerReport => CustomerRpt?.Report;
 
 		public virtual XDocument PrimaryVehicleReport => null;
 
@@ -238,20 +238,23 @@ namespace TUGraz.VectoCore.OutputData.XML
 			}
 
 			ManufacturerRpt.WriteResult(result);
-			CustomerRpt.WriteResult(result);
+			CustomerRpt?.WriteResult(result);
 		}
 
 		protected override void GenerateReports()
 		{
 			ManufacturerRpt.GenerateReport();
 			var fullReportHash = GetSignature(ManufacturerRpt.Report);
-			CustomerRpt.GenerateReport(fullReportHash);
+			CustomerRpt?.GenerateReport(fullReportHash);
 		}
 
 
 		protected override void OutputReports()
 		{
-			Writer.WriteReport(ReportType.DeclarationReportCustomerXML, CustomerRpt.Report);
+			if (CustomerReport != null) {
+				Writer.WriteReport(ReportType.DeclarationReportCustomerXML, CustomerRpt.Report);
+			}
+
 			Writer.WriteReport(ReportType.DeclarationReportManufacturerXML, ManufacturerRpt.Report);
 		}
 

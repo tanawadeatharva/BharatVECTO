@@ -1396,7 +1396,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static IWeightedResult CalculateWeightedSummary(IList<IResultEntry> entries)
 		{
 			// ToDo MQ 2022-12-12: add correct calculation method!
-			var first = entries.First();
+			var first = entries.FirstOrDefault();
+			if (first == null) {
+				return null;
+			}
 			return new WeightedResult(first) {
 				AverageSpeed = first.AverageSpeed,
 				FuelConsumption = first.FuelData.Select(x => Tuple.Create(x,

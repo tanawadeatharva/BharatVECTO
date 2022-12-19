@@ -18,9 +18,10 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.XML.Reports
 {
-    [TestFixture]
+	[TestFixture]
     internal class CustomerInformationFileWriterTest : MRF_CIF_WriterTestBase
     {
+
 		private IXMLCustomerReport GetCustomerReport(string fileName,
 			out IDeclarationInputDataProvider dataProvider)
 		{
@@ -81,10 +82,13 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 
 		private VectoRunData GetRunData(IDeclarationInputDataProvider dataProvider)
 		{
+			var multistage = dataProvider as IMultistepBusInputDataProvider;
 			return new VectoRunData() {
 				InputData = dataProvider,
+				Exempted = multistage != null ? multistage.JobInputData.PrimaryVehicle.Vehicle.ExemptedVehicle : dataProvider.JobInputData.Vehicle.ExemptedVehicle,
 				VehicleData = new VehicleData() {
-					OffVehicleCharging = false
+					OffVehicleCharging = false,
+					//VehicleCategory = multistage != null ? VehicleCategory.HeavyBusCompletedVehicle : dataProvider.JobInputData.Vehicle.VehicleCategory,
 				}
 			};
 		}
