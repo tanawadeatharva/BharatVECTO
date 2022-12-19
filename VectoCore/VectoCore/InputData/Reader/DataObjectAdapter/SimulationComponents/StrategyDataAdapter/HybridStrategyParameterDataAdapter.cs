@@ -91,21 +91,21 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			result.AuxReserveTime = null;
 			result.AuxReserveChargeTime = null;
 			result.MinICEOnTime = null;
-			result.GensetMinOptPowerFactor = 0;
-			result.ICEStartPenaltyFactor = 0.1;
+			result.GensetMinOptPowerFactor = 0.2;
+
+			result.ICEStartPenaltyFactor = double.NaN;
 			result.MaxPropulsionTorque = new Dictionary<GearshiftPosition, VehicleMaxPropulsionTorque>();
 			result.EquivalenceFactorCharge = double.NaN;
 			result.EquivalenceFactorDischarge = double.NaN;
-			result.CostFactorSOCExponent = 1;
+			result.CostFactorSOCExponent = double.NaN;
 
 			var tmpSystem = new BatterySystem(null, batterySystemData);
 
 			SetGenericParameters(result, tmpSystem, superCapData, vehicleMass, out var deltaSoc);
 
 			switch (ovcMode) {
-				case VectoRunData.OvcHevMode.NotApplicable:
 
-					break;
+				case VectoRunData.OvcHevMode.NotApplicable:
 				case VectoRunData.OvcHevMode.ChargeSustaining:
 					result.InitialSoc = (tmpSystem.MaxSoC + tmpSystem.MinSoC) / 2;
 					break;
