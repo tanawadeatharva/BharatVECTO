@@ -182,6 +182,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public int JobNumber { get; set; }
 		public int RunNumber { get; set; }
 
+
+		public OvcHevMode OVCMode { get; internal set; }
+
 		public class AuxData
 		{
 			public delegate Watt PowerDemandFunc(IDataBus dataBus, bool mechPower = true);
