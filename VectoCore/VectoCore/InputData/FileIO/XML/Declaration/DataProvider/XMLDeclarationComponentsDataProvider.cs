@@ -572,8 +572,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of XMLDeclarationComponentsDataProviderV10
 		
-		public override IAngledriveInputData AngledriveInputData =>
-			ElementExists(XMLNames.Component_Angledrive) ? base.AngledriveInputData : null;
+		//public override IAngledriveInputData AngledriveInputData =>
+		//	ElementExists(XMLNames.Component_Angledrive) ? base.AngledriveInputData : null;
 
 		public override IRetarderInputData RetarderInputData =>
 			ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
@@ -652,8 +652,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override IIEPCDeclarationInputData IEPC => null;
 
-		public override IAngledriveInputData AngledriveInputData =>
-			ElementExists(XMLNames.Component_Angledrive) ? base.AngledriveInputData : null;
+		//public override IAngledriveInputData AngledriveInputData =>
+		//	ElementExists(XMLNames.Component_Angledrive) ? base.AngledriveInputData : null;
 
 		public override IRetarderInputData RetarderInputData =>
 			ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
@@ -696,20 +696,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		public XMLDeclarationHeavyLorryHEVIEPCSComponentDataV24(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
-		
-		#region Overrides of XMLDeclarationComponentsDataProviderV10
 
-		//public override IRetarderInputData RetarderInputData =>
-		//	ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
+        #region Overrides of XMLDeclarationComponentsDataProviderV10
 
-		//public override IAxleGearInputData AxleGearInputData =>
-		//	ElementExists(XMLNames.Component_Axlegear) ? base.AxleGearInputData : null;
+        //public override IRetarderInputData RetarderInputData =>
+        //	ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
 
-		//public override IAirdragDeclarationInputData AirdragInputData => 
-		//	ElementExists(XMLNames.Component_AirDrag) ? base.AirdragInputData : null;
-		
-		#endregion
-	}
+        public override IAxleGearInputData AxleGearInputData =>
+            ElementExists(XMLNames.Component_Axlegear) ? base.AxleGearInputData : null;
+
+        //public override IAirdragDeclarationInputData AirdragInputData => 
+        //	ElementExists(XMLNames.Component_AirDrag) ? base.AirdragInputData : null;
+
+        #endregion
+    }
 
 	// ---------------------------------------------------------------------------------------
 
@@ -754,8 +754,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of XMLDeclarationComponentsDataProviderV10
 
-		public override IAngledriveInputData AngledriveInputData =>
-			ElementExists(XMLNames.Component_Angledrive) ? base.AngledriveInputData : null;
+		//public override IAngledriveInputData AngledriveInputData =>
+		//	ElementExists(XMLNames.Component_Angledrive) ? base.AngledriveInputData : null;
 		
 		//public override IRetarderInputData RetarderInputData =>
 		//	ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
@@ -801,14 +801,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override IBusAuxiliariesDeclarationData BusAuxiliaries  => _busAuxiliariesDeclarationInputData ??
 																 	 (_busAuxiliariesDeclarationInputData = ComponentReader.BusAuxiliariesInputData);
 
-		//public override IAngledriveInputData AngledriveInputData =>
-		//	ElementExists(XMLNames.Component_Angledrive) ? base.AngledriveInputData : null;
+        //public override IAngledriveInputData AngledriveInputData =>
+        //    ElementExists(XMLNames.Component_Angledrive) ? base.AngledriveInputData : null;
 
-		//public override IRetarderInputData RetarderInputData =>
-		//	ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
+        //public override IRetarderInputData RetarderInputData =>
+        //	ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
 
-		#endregion
-	}
+        #endregion
+    }
 
 	// ---------------------------------------------------------------------------------------
 
