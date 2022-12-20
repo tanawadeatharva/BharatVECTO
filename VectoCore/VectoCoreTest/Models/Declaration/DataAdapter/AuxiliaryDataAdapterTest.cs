@@ -34,9 +34,7 @@ public class AuxiliaryDataAdapterTest
 
         Assert.That(ps.ConnectToREESS == fullyElectric);
         Assert.That(ps.IsFullyElectric == fullyElectric);
-
-
-    }
+	}
 
     [TestCase("Small + AMS", "", true, 0.0f, true, TestName = "PEV Fail 2")]
 	[TestCase("Small + ESS", "", true, 0.0f, true, TestName = "PEV Fail 3")]

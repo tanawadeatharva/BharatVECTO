@@ -5,12 +5,16 @@
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Ninject;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
@@ -27,6 +31,10 @@ public class HeavyLorrySimulation
 
 
 	private const string BASE_DIR = @"TestData\Integration\DeclarationMode\V24_DeclarationMode\";
+
+
+	private const string HeavylorryGroup2HevS2XML = @"HeavyLorry\Group2_HEV_S2.xml";
+	private const string HeavylorryGroup2HevS4XML = @"HeavyLorry\Group2_HEV_S4.xml";
 	private StandardKernel _kernel;
 	private IXMLInputDataReader _xmlReader;
 
@@ -44,7 +52,8 @@ public class HeavyLorrySimulation
 	TestCase(@"HeavyLorry\PEV_heavyLorry_E3_realistic_municipal.xml"),
 	TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2_pto_transm.xml"),
 	TestCase(@"HeavyLorry\PEV_heavyLorry_E4.xml"),
-	TestCase(@"HeavyLorry\Group2_HEV_S2.xml"),
+	TestCase(HeavylorryGroup2HevS2XML),
+	TestCase(HeavylorryGroup2HevS4XML),
 	TestCase(@"HeavyLorry\Group5_HEV_P2_.xml"),
 	TestCase(@"HeavyLorry\Group5_HEV_P3_ovc.xml")]
 	[TestCase(@"HeavyLorry\HEV_heavy_lorry_S4_ovc.xml")]
@@ -60,12 +69,9 @@ public class HeavyLorrySimulation
 	public void RunSimulation(string jobFile, bool multiThreaded = true)
 	{
 		var filePath = Path.Combine(BASE_DIR, jobFile);
-		var dataProvider = _xmlReader.CreateDeclaration(filePath);
-		var fileWriter = new FileOutputWriter(filePath);
-		var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
+		var runsFactory = GetSimulatorFactory(filePath, out var dataProvider, out var fileWriter, out var summaryDataContainer);
 		runsFactory.WriteModalResults = true;
-		var jobContainer = new JobContainer(new MockSumWriter()){};
-		//var jobContainer = new JobContainer(new MockSumWriter()) { };
+		var jobContainer = new JobContainer(summaryDataContainer){};
 		jobContainer.AddRuns(runsFactory);
 		PrintRuns(jobContainer, null);
 		
@@ -81,7 +87,58 @@ public class HeavyLorrySimulation
 		PrintFiles(fileWriter);
 	}
 
+	private ISimulatorFactory GetSimulatorFactory(string filePath, out IDeclarationInputDataProvider dataProvider,
+		out FileOutputWriter fileWriter, out SummaryDataContainer sumWriter)
+	{
+		dataProvider = _xmlReader.CreateDeclaration(filePath);
+		fileWriter = new FileOutputWriter(filePath);
+	
+		var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
+		sumWriter = new MockSumWriter();
+		runsFactory.SumData = sumWriter;
+		return runsFactory;
+	}
+
+
+	[Test]
+	public void HEVS4()
+	{
+		var simFactory = GetSimulatorFactory(Path.Combine(BASE_DIR, HeavylorryGroup2HevS4XML), out var dataProvider,
+			out var fileWriter, out var mockSumWriter);
+		
+		var runs = simFactory.SimulationRuns();
+		foreach (var vectoRun in runs) {
+			var rd = vectoRun.GetContainer().RunData;
+		}
+		var container = runs.First().GetContainer();
+		var runData = container.RunData;
+		
+		
+		
+		//Pneumatic system data test
+
+
+
+		var ps = runData.Aux.Where(x => x.ID == Constants.Auxiliaries.IDs.PneumaticSystem).Single();
+		Assume.That(ps.IsFullyElectric);
+
+
+		//Fully electric aux have a seperate electric power table
+		//Assume.That(ps.PowerDemandMech != ps.PowerDemandElectric * DeclarationData.AlternatorEfficiency);
+
+		Assert.That(ps.ConnectToREESS);
+		
+
+
+
+	}
+
+
+
+
+
     [TestCase(@"HeavyLorry\HEV_heavy_lorry_S4_ovc.xml", 12)]
+	[TestCase(HeavylorryGroup2HevS2XML, 6)]
     [TestCase(@"HeavyLorry\Group5_HEV_P3_ovc.xml", 20)]
     public void OVCHevSimulationSingleRun(string jobFile, int nrRuns)
 	{
@@ -95,6 +152,8 @@ public class HeavyLorrySimulation
 		runsFactory.SumData = sumWriter;
 		var runs = runsFactory.SimulationRuns().ToList();
 		Assert.AreEqual(nrRuns, runs.Count);
+
+
 		jobContainer.AddRun(runs.First(r => r.GetContainer().RunData.BatteryData.Batteries.Any(tuple => !tuple.Item2.ChargeSustainingBattery)));
 		Assert.AreEqual(1, jobContainer.Runs.Count);
 		jobContainer.Execute(false);
@@ -105,6 +164,8 @@ public class HeavyLorrySimulation
 		Assert.IsTrue(jobContainer.Runs.TrueForAll(runEntry => runEntry.Success));
 		PrintRuns(jobContainer, fileWriter);
 		PrintFiles(fileWriter);
+
+		
 	}
 
 

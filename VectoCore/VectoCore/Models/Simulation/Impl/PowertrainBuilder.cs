@@ -413,6 +413,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// </summary>
 		private static IVehicleContainer BuildFullPowertrainParallelHybrid(VectoRunData data, IModalDataContainer modData, ISumData _sumWriter)
 		{
+			if (data.SavedInDeclarationMode) {
+				throw new NotImplementedException();
+			}
 			if (_sumWriter == null)
 				throw new ArgumentNullException(nameof(_sumWriter));
 			if (data.Cycle.CycleType != CycleType.DistanceBased) {
@@ -661,7 +664,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				IEPTO epto = null;
 				if (data.PTO?.PTOCycle != null)
 				{
-					var pevPTOController = GetPEVIdleController(data.PTO, container);
+					var pevPTOController = GetPEV_SHEVIdleController(data.PTO, container);
 					cycle.IdleController = pevPTOController;
 					var eptoAux = new EPTO(pevPTOController);
 					elAux.AddAuxiliary(eptoAux);
@@ -807,7 +810,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				IEPTO epto = null;
 				if (data.PTO?.PTOCycle != null)
 				{
-					var pevPTOController = GetPEVIdleController(data.PTO, container);
+					var pevPTOController = GetPEV_SHEVIdleController(data.PTO, container);
 					cycle.IdleController = pevPTOController;
 					var eptoAux = new EPTO(pevPTOController);
 					elAux.AddAuxiliary(eptoAux);
@@ -1492,7 +1495,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				? engine.IdleController
 				: new IdleControllerSwitcher(engine.IdleController, new PTOCycleController(container, pto.PTOCycle));
 
-		private static IIdleControllerSwitcher GetPEVIdleController(PTOData pto,
+		private static IIdleControllerSwitcher GetPEV_SHEVIdleController(PTOData pto,
 			IVehicleContainer container) => pto?.PTOCycle is null ? null : new EPTOCycleController(container, pto?.PTOCycle);
 			
 

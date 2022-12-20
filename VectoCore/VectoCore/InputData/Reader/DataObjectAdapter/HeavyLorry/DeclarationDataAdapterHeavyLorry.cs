@@ -314,9 +314,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			private SerialHybridStrategyParameterDataAdapter _hybridStrategyParameterData =
 				new SerialHybridStrategyParameterDataAdapter();
-
-			//protected ElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
-
+			private readonly ElectricPTODataAdapter _ptoDataAdapter = new ElectricPTODataAdapter();
 
 			public override HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
 				SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType)
@@ -331,15 +329,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			public override PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto)
 			{
-				//throw new NotImplementedException();
-				return null;
+				return _ptoDataAdapter.CreateDefaultPTOData(pto, gbx);
 			}
 
 			public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData,
 				IGearboxDeclarationInputData gbx)
 			{
-				//throw new NotImplementedException();
-				return null;
+				return _ptoDataAdapter.CreatePTOTransmissionData(ptoData, gbx);
 			}
 			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)

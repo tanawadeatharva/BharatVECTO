@@ -46,7 +46,7 @@ public class NoFollowUpRunCreator : LoggingObject, IFollowUpRunCreator
 
 	public bool RunAgain(Action<VectoRunData> runAgainAction, IVectoRun run, Action beforeNextRun)
 	{
-		throw new NotImplementedException();
+		return false;
 	}
 
 	#endregion
@@ -79,6 +79,9 @@ public class NoFollowUpRunCreator : LoggingObject, IFollowUpRunCreator
 		/// <return>true if the run is executed again, false otherwise</return>
 		public bool RunAgain(Action<VectoRunData> runAgainAction, IVectoRun run, Action beforeNextRun)
 		{
+			if (run.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.ChargeSustaining) {
+				return false;
+			}
 #pragma warning disable IDE0054 // Verbundzuweisung verwenden
             original_modfile_suffix = original_modfile_suffix ?? (original_modfile_suffix = run.GetContainer().RunData.ModFileSuffix);
 #pragma warning restore IDE0054 // Verbundzuweisung verwenden

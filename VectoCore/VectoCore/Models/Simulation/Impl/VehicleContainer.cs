@@ -53,6 +53,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 	public class VehicleContainer : LoggingObject, IVehicleContainer, IPowertainInfo
 	{
+
 		private List<Tuple<int, VectoSimulationComponent>> _components =
 			new List<Tuple<int, VectoSimulationComponent>>();
 
@@ -111,7 +112,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			ExecutionMode = executionMode;
 		}
 
-		#region IVehicleContainer
+#region IVehicleContainer
 
 		public virtual IModalDataContainer ModalData => ModData;
 

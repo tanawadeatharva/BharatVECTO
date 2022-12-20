@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCore.Models.Simulation.Data;
+﻿using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
@@ -12,7 +13,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public IFollowUpRunCreator CreateFollowUpRunCreator(VectoRunData runData)
 		{
-            if (runData.VehicleData.InputData.OvcHev)
+            if (runData.OVCMode == VectoRunData.OvcHevMode.ChargeSustaining && runData.JobType == VectoSimulationJobType.ParallelHybridVehicle)
             {
 				return new FollowUpOvcRunCreator();
             }
