@@ -39,56 +39,56 @@ namespace TUGraz.VectoCore.Tests.XML
 		private const string ADDITONAL_TESTS_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\";
 		private const string Optional_TESTS_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\WithoutOptionalEntries";
 
-
-		[TestCase(@"HeavyLorry\Conventional_heavyLorry_AMT.xml"),
-		TestCase(@"HeavyLorry\HEV-S_heavyLorry_AMT_S2.xml"),
-		TestCase(@"HeavyLorry\HEV-S_heavyLorry_AMT_S2_ovc.xml"),
-		TestCase(@"HeavyLorry\HEV-S_heavyLorry_IEPC-S.xml"),
-		TestCase(@"HeavyLorry\HEV-S_heavyLorry_S3.xml"),
-		TestCase(@"HeavyLorry\HEV-S_heavyLorry_S4.xml"),
-		TestCase(@"HeavyLorry\HEV_heavyLorry_AMT_Px.xml"),
-		TestCase(@"HeavyLorry\IEPC_heavyLorry.xml"),
-		TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2.xml"),
-		TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2_realistic.xml"),
-		TestCase(@"HeavyLorry\PEV_heavyLorry_APT-N_E2.xml"),
-		TestCase(@"HeavyLorry\PEV_heavyLorry_E3.xml"),
-		TestCase(@"HeavyLorry\PEV_heavyLorry_E4.xml"),
-		TestCase(@"MediumLorry\Conventional_mediumLorry_AMT.xml"),
-		TestCase(@"MediumLorry\HEV-S_mediumLorry_AMT_S2.xml"),
-		TestCase(@"MediumLorry\HEV-S_mediumLorry_AMT_S2_ovc.xml"),
-		TestCase(@"MediumLorry\HEV-S_mediumLorry_IEPC-S.xml"),
-		TestCase(@"MediumLorry\HEV-S_mediumLorry_S3.xml"),
-		TestCase(@"MediumLorry\HEV-S_mediumLorry_S4.xml"),
-		TestCase(@"MediumLorry\HEV_mediumLorry_AMT_Px.xml"),
-		TestCase(@"MediumLorry\IEPC_mediumLorry.xml"),
-		TestCase(@"MediumLorry\PEV_mediumLorry_AMT_E2.xml"),
-		TestCase(@"MediumLorry\PEV_mediumLorry_APT-N_E2.xml"),
-		TestCase(@"MediumLorry\PEV_mediumLorry_E3.xml"),
-		TestCase(@"MediumLorry\PEV_mediumLorry_E4.xml"),
-		TestCase(@"PrimaryBus\Conventional_primaryBus_AMT.xml"),
-		TestCase(@"PrimaryBus\HEV-S_primaryBus_AMT_S2.xml"),
-		TestCase(@"PrimaryBus\HEV-S_primaryBus_IEPC-S.xml"),
-		TestCase(@"PrimaryBus\HEV-S_primaryBus_S3.xml"),
-		TestCase(@"PrimaryBus\HEV-S_primaryBus_S4.xml"),
-		TestCase(@"PrimaryBus\HEV_primaryBus_AMT_Px.xml"),
-		TestCase(@"PrimaryBus\IEPC_primaryBus.xml"),
-		TestCase(@"PrimaryBus\PEV_primaryBus_AMT_E2.xml"),
-		TestCase(@"PrimaryBus\PEV_primaryBus_E3.xml"),
-		TestCase(@"PrimaryBus\PEV_primaryBus_E4.xml"),
-		//TestCase(@"CompletedBus\Conventional_completedBus_1.xml"),
-		//TestCase(@"CompletedBus\HEV_completedBus_1.xml"),
-		//TestCase(@"CompletedBus\IEPC_completedBus_1.xml"),
-		//TestCase(@"CompletedBus\PEV_completedBus_1.xml"),
-		TestCase(@"ExemptedVehicles\exempted_completedBus_input_full.xml"),
-		TestCase(@"ExemptedVehicles\exempted_completedBus_input_only_mandatory_entries.xml"),
-		TestCase(@"ExemptedVehicles\exempted_heavyLorry.xml"),
-		TestCase(@"ExemptedVehicles\exempted_mediumLorry.xml"),
-		TestCase(@"ExemptedVehicles\exempted_primaryBus.xml"),
-		]
-		public void TestReadingJobVersion_V24(string jobFile)
-		{
-			ReadDeclarationJob(jobFile);
-		}
+		// MQ: These jobs cannot be run as the sample XML files do not contain meaningful vehicle data
+		//[TestCase(@"HeavyLorry\Conventional_heavyLorry_AMT.xml"),
+		//TestCase(@"HeavyLorry\HEV-S_heavyLorry_AMT_S2.xml"),
+		//TestCase(@"HeavyLorry\HEV-S_heavyLorry_AMT_S2_ovc.xml"),
+		//TestCase(@"HeavyLorry\HEV-S_heavyLorry_IEPC-S.xml"),
+		//TestCase(@"HeavyLorry\HEV-S_heavyLorry_S3.xml"),
+		//TestCase(@"HeavyLorry\HEV-S_heavyLorry_S4.xml"),
+		//TestCase(@"HeavyLorry\HEV_heavyLorry_AMT_Px.xml"),
+		//TestCase(@"HeavyLorry\IEPC_heavyLorry.xml"),
+		//TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2.xml"),
+		//TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2_realistic.xml"),
+		//TestCase(@"HeavyLorry\PEV_heavyLorry_APT-N_E2.xml"),
+		//TestCase(@"HeavyLorry\PEV_heavyLorry_E3.xml"),
+		//TestCase(@"HeavyLorry\PEV_heavyLorry_E4.xml"),
+		//TestCase(@"MediumLorry\Conventional_mediumLorry_AMT.xml"),
+		//TestCase(@"MediumLorry\HEV-S_mediumLorry_AMT_S2.xml"),
+		//TestCase(@"MediumLorry\HEV-S_mediumLorry_AMT_S2_ovc.xml"),
+		//TestCase(@"MediumLorry\HEV-S_mediumLorry_IEPC-S.xml"),
+		//TestCase(@"MediumLorry\HEV-S_mediumLorry_S3.xml"),
+		//TestCase(@"MediumLorry\HEV-S_mediumLorry_S4.xml"),
+		//TestCase(@"MediumLorry\HEV_mediumLorry_AMT_Px.xml"),
+		//TestCase(@"MediumLorry\IEPC_mediumLorry.xml"),
+		//TestCase(@"MediumLorry\PEV_mediumLorry_AMT_E2.xml"),
+		//TestCase(@"MediumLorry\PEV_mediumLorry_APT-N_E2.xml"),
+		//TestCase(@"MediumLorry\PEV_mediumLorry_E3.xml"),
+		//TestCase(@"MediumLorry\PEV_mediumLorry_E4.xml"),
+		//TestCase(@"PrimaryBus\Conventional_primaryBus_AMT.xml"),
+		//TestCase(@"PrimaryBus\HEV-S_primaryBus_AMT_S2.xml"),
+		//TestCase(@"PrimaryBus\HEV-S_primaryBus_IEPC-S.xml"),
+		//TestCase(@"PrimaryBus\HEV-S_primaryBus_S3.xml"),
+		//TestCase(@"PrimaryBus\HEV-S_primaryBus_S4.xml"),
+		//TestCase(@"PrimaryBus\HEV_primaryBus_AMT_Px.xml"),
+		//TestCase(@"PrimaryBus\IEPC_primaryBus.xml"),
+		//TestCase(@"PrimaryBus\PEV_primaryBus_AMT_E2.xml"),
+		//TestCase(@"PrimaryBus\PEV_primaryBus_E3.xml"),
+		//TestCase(@"PrimaryBus\PEV_primaryBus_E4.xml"),
+		////TestCase(@"CompletedBus\Conventional_completedBus_1.xml"),
+		////TestCase(@"CompletedBus\HEV_completedBus_1.xml"),
+		////TestCase(@"CompletedBus\IEPC_completedBus_1.xml"),
+		////TestCase(@"CompletedBus\PEV_completedBus_1.xml"),
+		//TestCase(@"ExemptedVehicles\exempted_completedBus_input_full.xml"),
+		//TestCase(@"ExemptedVehicles\exempted_completedBus_input_only_mandatory_entries.xml"),
+		//TestCase(@"ExemptedVehicles\exempted_heavyLorry.xml"),
+		//TestCase(@"ExemptedVehicles\exempted_mediumLorry.xml"),
+		//TestCase(@"ExemptedVehicles\exempted_primaryBus.xml"),
+		//]
+		//public void TestReadingJobVersion_V24(string jobFile)
+		//{
+		//	ReadDeclarationJob(jobFile);
+		//}
 
 
 		[TestCase(@"CompletedBus\Conventional_completedBus_1.xml"),
@@ -161,15 +161,15 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			if (testDir == Optional_TESTS_DIR) {//optional test
 				Assert.IsNull(vehicle.TankSystem);
-				//Assert.IsNull(vehicle.Components.AngledriveInputData);//optional
-				//Assert.IsNull(vehicle.Components.RetarderInputData);//optional
-				Assert.IsNull(vehicle.Components.AirdragInputData);//optional
+                Assert.NotNull(vehicle.Components.AngledriveInputData);//optional
+                Assert.NotNull(vehicle.Components.RetarderInputData);//optional
+                Assert.NotNull(vehicle.Components.AirdragInputData);//optional
 				Assert.IsEmpty(vehicle.TorqueLimits);//optional
 			} else {
 				Assert.IsNotNull(vehicle.TankSystem);
-				//Assert.IsNotNull(vehicle.Components.AngledriveInputData);//optional
-				//Assert.IsNotNull(vehicle.Components.RetarderInputData);//optional
-				Assert.IsNotNull(vehicle.Components.AirdragInputData);//optional
+                Assert.NotNull(vehicle.Components.AngledriveInputData);//optional
+                Assert.NotNull(vehicle.Components.RetarderInputData);//optional
+                Assert.IsNotNull(vehicle.Components.AirdragInputData);//optional
 				Assert.IsNotNull(vehicle.TorqueLimits);//optional
 				Assert.IsNotEmpty(vehicle.TorqueLimits);//optional
 			}
@@ -222,9 +222,9 @@ namespace TUGraz.VectoCore.Tests.XML
 			//optional test
 			if (testDir == Optional_TESTS_DIR) {
 				Assert.IsNull(vehicle.TankSystem);
-				Assert.IsNull(vehicle.Components.AngledriveInputData);
-				Assert.IsNull(vehicle.Components.RetarderInputData);
-				Assert.IsNull(vehicle.Components.AirdragInputData);
+				Assert.NotNull(vehicle.Components.AngledriveInputData);
+				Assert.NotNull(vehicle.Components.RetarderInputData);
+				Assert.NotNull(vehicle.Components.AirdragInputData);
 				Assert.IsNull(vehicle.CargoVolume);
 				Assert.IsEmpty(vehicle.TorqueLimits);
 			}
@@ -321,9 +321,9 @@ namespace TUGraz.VectoCore.Tests.XML
 			{
 				TestElectricMachinesData(vehicle.Components.ElectricMachines.Entries.First(), true);
 				Assert.IsNull(vehicle.TankSystem);
-				Assert.IsNull(vehicle.Components.AngledriveInputData);
-				Assert.IsNull(vehicle.Components.RetarderInputData);
-				Assert.IsNull(vehicle.Components.AirdragInputData);
+				Assert.NotNull(vehicle.Components.AngledriveInputData);
+				Assert.NotNull(vehicle.Components.RetarderInputData);
+				Assert.NotNull(vehicle.Components.AirdragInputData);
 				Assert.IsEmpty(vehicle.TorqueLimits);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);
 				Assert.IsNull(vehicle.BoostingLimitations);
@@ -698,9 +698,9 @@ namespace TUGraz.VectoCore.Tests.XML
 			if (testDir == Optional_TESTS_DIR)
 			{
 				Assert.IsNull(vehicle.TankSystem);
-				Assert.IsNull(vehicle.Components.AngledriveInputData);
-				Assert.IsNull(vehicle.Components.RetarderInputData);
-				Assert.IsNull(vehicle.Components.AirdragInputData);
+				Assert.NotNull(vehicle.Components.AngledriveInputData);
+				Assert.NotNull(vehicle.Components.RetarderInputData);
+				Assert.NotNull(vehicle.Components.AirdragInputData);
 				Assert.IsNull(vehicle.CargoVolume);
 				Assert.IsEmpty(vehicle.TorqueLimits);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
@@ -752,8 +752,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			//optional test
 			if (testDir == Optional_TESTS_DIR)
 			{
-				Assert.IsNull(vehicle.Components.AngledriveInputData);
-				Assert.IsNull(vehicle.Components.RetarderInputData);
+				Assert.NotNull(vehicle.Components.AngledriveInputData);
+				Assert.NotNull(vehicle.Components.RetarderInputData);
 				Assert.IsEmpty(vehicle.TorqueLimits);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 				Assert.IsNull(vehicle.BoostingLimitations);//Vehicle Max Prop. Limit
@@ -804,9 +804,9 @@ namespace TUGraz.VectoCore.Tests.XML
 			if (testDir == Optional_TESTS_DIR)
 			{
 				Assert.IsNull(vehicle.TankSystem);
-				Assert.IsNull(vehicle.Components.AngledriveInputData);
-				Assert.IsNull(vehicle.Components.RetarderInputData);
-				Assert.IsNull(vehicle.Components.AirdragInputData);
+				Assert.NotNull(vehicle.Components.AngledriveInputData);
+				Assert.NotNull(vehicle.Components.RetarderInputData);
+				Assert.NotNull(vehicle.Components.AirdragInputData);
 				Assert.IsNull(vehicle.TorqueLimits);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 			}
@@ -910,8 +910,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			if (testDir == Optional_TESTS_DIR)
 			{
 				Assert.IsNull(vehicle.TankSystem);
-				Assert.IsNull(vehicle.Components.RetarderInputData);
-				Assert.IsNull(vehicle.Components.AirdragInputData);
+				Assert.NotNull(vehicle.Components.RetarderInputData);
+				Assert.NotNull(vehicle.Components.AirdragInputData);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 			}
 			else
@@ -960,8 +960,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			if (testDir == Optional_TESTS_DIR)
 			{
 				Assert.IsNull(vehicle.TankSystem);
-				Assert.IsNull(vehicle.Components.RetarderInputData);
-				Assert.IsNull(vehicle.Components.AirdragInputData);
+				Assert.NotNull(vehicle.Components.RetarderInputData);
+				Assert.NotNull(vehicle.Components.AirdragInputData);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 			}
 			else
@@ -1008,9 +1008,9 @@ namespace TUGraz.VectoCore.Tests.XML
 			if (testDir == Optional_TESTS_DIR)
 			{
 				Assert.IsNull(vehicle.TankSystem);
-				Assert.IsNull(vehicle.Components.AngledriveInputData);
-				Assert.IsNull(vehicle.Components.RetarderInputData);
-				Assert.IsNull(vehicle.Components.AirdragInputData);
+				Assert.NotNull(vehicle.Components.AngledriveInputData);
+				Assert.NotNull(vehicle.Components.RetarderInputData);
+				Assert.NotNull(vehicle.Components.AirdragInputData);
 				Assert.IsNull(vehicle.CargoVolume);
 				Assert.IsNull(vehicle.TorqueLimits);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);
@@ -1059,8 +1059,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			if (testDir == Optional_TESTS_DIR)
 			{
 				Assert.IsNull(vehicle.TankSystem);
-				Assert.IsNull(vehicle.Components.RetarderInputData);
-				Assert.IsNull(vehicle.Components.AirdragInputData);
+				Assert.NotNull(vehicle.Components.RetarderInputData);
+				Assert.NotNull(vehicle.Components.AirdragInputData);
 				Assert.IsNull(vehicle.CargoVolume);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);
 			}
@@ -1110,8 +1110,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			if (testDir == Optional_TESTS_DIR)
 			{
 				Assert.IsNull(vehicle.TankSystem);
-				Assert.IsNull(vehicle.Components.RetarderInputData);
-				Assert.IsNull(vehicle.Components.AirdragInputData);
+				Assert.NotNull(vehicle.Components.RetarderInputData);
+				Assert.NotNull(vehicle.Components.AirdragInputData);
 				Assert.IsNull(vehicle.CargoVolume);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);
 			}
@@ -1158,8 +1158,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			
 			if (testDir == Optional_TESTS_DIR)
 			{
-				Assert.IsNull(vehicle.Components.AngledriveInputData);
-				Assert.IsNull(vehicle.Components.RetarderInputData);
+				Assert.NotNull(vehicle.Components.AngledriveInputData);
+				Assert.NotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.TorqueLimits);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);
 			}
@@ -1205,7 +1205,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			if (testDir == Optional_TESTS_DIR)
 			{
-				Assert.IsNull(vehicle.Components.RetarderInputData);
+				Assert.NotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);
 			}
 			else
@@ -1250,7 +1250,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			
 			if (testDir == Optional_TESTS_DIR)
 			{
-				Assert.IsNull(vehicle.Components.RetarderInputData);
+				Assert.NotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);
 			}
 			else
