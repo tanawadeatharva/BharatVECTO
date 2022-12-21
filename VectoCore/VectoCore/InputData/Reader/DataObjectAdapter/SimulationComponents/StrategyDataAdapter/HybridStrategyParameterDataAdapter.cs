@@ -109,6 +109,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					break;
 				case VectoRunData.OvcHevMode.ChargeDepleting:
 					result.InitialSoc = (tmpSystem.MaxSoC + tmpSystem.MinSoC) / 2;
+					result.TargetSoC = result.InitialSoc - 1;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(ovcMode), ovcMode, null);
