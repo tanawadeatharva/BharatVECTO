@@ -104,13 +104,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			SetGenericParameters(result, tmpSystem, superCapData, vehicleMass, out var deltaSoc);
 
 			switch (ovcMode) {
-
-				case VectoRunData.OvcHevMode.NotApplicable:
 				case VectoRunData.OvcHevMode.ChargeSustaining:
-					result.InitialSoc = (tmpSystem.MaxSoC + tmpSystem.MinSoC) / 2;
+					result.InitialSoc = tmpSystem.MinSoC + deltaSoc;
 					break;
 				case VectoRunData.OvcHevMode.ChargeDepleting:
-					result.InitialSoc = tmpSystem.MinSoC + deltaSoc;
+					result.InitialSoc = (tmpSystem.MaxSoC + tmpSystem.MinSoC) / 2;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(ovcMode), ovcMode, null);
