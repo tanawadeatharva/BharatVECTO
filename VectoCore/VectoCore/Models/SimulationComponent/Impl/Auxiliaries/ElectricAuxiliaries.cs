@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			
 			foreach (var auxId in _auxData.Keys) {
-				var name = $"P_{auxId}_el";
+				var name = $"P_{auxId}_el [kW]";
 				_auxColumnName.Add(auxId, name); //use column name as ID
 				VehicleContainer.AddAuxiliary(name, name);
 			}
