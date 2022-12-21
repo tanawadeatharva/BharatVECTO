@@ -313,6 +313,11 @@ namespace TUGraz.VectoCore.Utils.Ninject
 			}
 
 			#endregion
+
+			public override string ToString()
+			{
+				return string.Join("|", VehicleCategory, JobType, OVC ? "OVC" : "Non-OVC", Exempted ? "Exempted" : "Non Exempted");
+			}
 		}
 	}
 }

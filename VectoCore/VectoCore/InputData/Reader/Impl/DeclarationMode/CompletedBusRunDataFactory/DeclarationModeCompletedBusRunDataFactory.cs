@@ -395,6 +395,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 						LegislativeClass = CompletedVehicle.LegislativeClass,
 						RegisteredClass = CompletedVehicle.RegisteredClass,
 						VehicleCode = CompletedVehicle.VehicleCode,
+						VehicleCategory = VehicleCategory.HeavyBusCompletedVehicle,
 						CurbMass = CompletedVehicle.CurbMassChassis,
 						GrossVehicleMass = CompletedVehicle.GrossVehicleMassRating,
 						ZeroEmissionVehicle = PrimaryVehicle.ZeroEmissionVehicle,
