@@ -17,6 +17,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 {
 	public abstract partial class DeclarationModeHeavyLorryRunDataFactory
 	{
+		
 		public abstract class Hybrid : LorryBase
 		{
 			public Hybrid(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
@@ -154,6 +155,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
 				}
 
+				runData.OVCMode = ovcMode;
 
 				return runData;
 			}
