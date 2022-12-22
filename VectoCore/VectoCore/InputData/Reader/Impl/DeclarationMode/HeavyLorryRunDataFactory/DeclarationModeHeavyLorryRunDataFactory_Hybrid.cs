@@ -6,6 +6,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -228,7 +229,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				runData.Retarder = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData);
 				runData.Aux = DataAdapter.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData, null, mission.MissionType,
 					_segment.VehicleClass, vehicle.Length, vehicle.Components.AxleWheels.NumSteeredAxles,
-					VectoSimulationJobType.SerialHybridVehicle);
+					VectoSimulationJobType.ParallelHybridVehicle);
 
 		
 				runData.GearshiftParameters =
@@ -257,6 +258,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
 				}
 
+				if (ovcMode == VectoRunData.OvcHevMode.ChargeSustaining) {
+					runData.IterativeRunStrategy = new OVCHevIterativeRunStrategy();
+				}
 
 
 

@@ -86,8 +86,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 		public bool CreateFollowUpSimulatorFactory { get; set; } = false;
 		protected readonly ExecutionMode _mode;
-		private IFollowUpRunCreatorFactory _followUpRunFactory = new FollowUpRunCreatorFactory();
-
 
 		#region Constructors and Factory Methods to instantiate Instances of SimulatorFactory without NInject (should only be used in Testcases that are not updated yet)
 
@@ -204,7 +202,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			}
 			data.JobNumber = JobNumber;
 			data.RunNumber = current;
-			var run = GetVectoRun(data, modContainer, _followUpRunFactory, SumData);
+			var run = GetVectoRun(data, modContainer, SumData);
 
 			if (Validate && firstRun) {
 				ValidateVectoRunData(
@@ -240,8 +238,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			}
 		}
 
-		private static VectoRun GetVectoRun(VectoRunData data, IModalDataContainer modData,
-			IFollowUpRunCreatorFactory followUpRunCreatorFactory, ISumData sumWriter)
+		private static VectoRun GetVectoRun(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
 		{
 			VectoRun run;
 			
@@ -253,7 +250,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 					var container = PowertrainBuilder.Build(data, modData, sumWriter);
 					
-					run = new DistanceRun(container, followUpRunCreatorFactory.CreateFollowUpRunCreator(data)); 
+					run = new DistanceRun(container, new FollowUpRunCreator(data.IterativeRunStrategy)); 
 					break;
 				case CycleType.EngineOnly:
 					if ((data.SimulationType & SimulationType.EngineOnly) == 0) {
