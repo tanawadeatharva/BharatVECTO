@@ -84,6 +84,8 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		IVehicleDeclarationInputData PrimaryVehicle { get; }
 		IVehicleDeclarationInputData CompletedVehicle { get; }
+
+		XElement XMLHashCompleted { get; }
 	}
 
 	

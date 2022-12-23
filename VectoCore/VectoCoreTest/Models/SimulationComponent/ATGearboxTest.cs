@@ -48,6 +48,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Integration;
@@ -254,8 +255,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				
 			};
 
-			var gbx = GetATGearbox(GearboxData8SpdFile, limits);
-			Assert.AreEqual(8, gbx.Gears.Count);
+			AssertHelper.Exception<VectoException>(() => GetATGearbox(GearboxData8SpdFile, limits), messageContains: "Only the last 1 or 2 gears can be disabled.");
+			//Assert.AreEqual(8, gbx.Gears.Count);
 		}
 
 		public GearboxData GetATGearbox(string gbxFile, IList<ITorqueLimitInputData> torqueLimits)

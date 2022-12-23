@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport;
 using TUGraz.VectoCore.Utils;
@@ -18,9 +19,11 @@ using TUGraz.VectoHashing;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9
 {
-	public abstract class AbstractCustomerReport : IXMLCustomerReport
+    public abstract class AbstractCustomerReport : IXMLCustomerReport
 	{
 		protected readonly ICustomerInformationFileFactory _cifFactory;
+		protected readonly IResultsWriterFactory _resultFactory;
+
 		protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 
 		public static XNamespace Cif => XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput");
@@ -30,21 +33,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 
 		protected XElement Vehicle { get; set; }
-		protected XElement Results { get; set; }
+		protected IResultsWriter Results { get; set; }
 
 		protected XElement InputDataIntegrity { get; set; }
 
 		public abstract string OutputDataType { get; }
 
 		protected bool _ovc = false;
-		protected AbstractCustomerReport(ICustomerInformationFileFactory cifFactory)
+		protected AbstractCustomerReport(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultFactory)
 		{
 			_cifFactory = cifFactory;
-
-			// MQ: write dummy result element for testcases (2022-07-13)
-			Results = new  XElement(Cif_0_9 + "Results",
-				new XElement(Cif_0_9 + "Status", "success"),
-				new XElement(Cif_0_9 + "ExemptedVehicle"));
+			_resultFactory = resultFactory;
 		}
 
 
@@ -52,22 +51,23 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Implementation of IXMLCustomerReport
 
-		public virtual void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public virtual void Initialize(VectoRunData modelData)
 		{
 			InitializeVehicleData(modelData.InputData);
-			_ovc = modelData.VehicleData.Ocv;
-			Results = new XElement(Cif_0_9 + "Results");
+			_ovc = modelData.VehicleData.OffVehicleCharging;
+			Results = _resultFactory.GetCIFResultsWriter(modelData.VehicleData.VehicleCategory.GetVehicleType(), 
+				modelData.JobType, modelData.VehicleData.OffVehicleCharging, modelData.Exempted); 
 			InputDataIntegrity = new XElement(Cif_0_9 + XMLNames.Report_InputDataSignature,
 				modelData.InputData.XMLHash == null ? XMLHelper.CreateDummySig(_di) : new XElement(modelData.InputData.XMLHash));
 		}
 
 		public XDocument Report { get; protected set; }
 
-		private List<XMLDeclarationReport.ResultEntry> results = new List<XMLDeclarationReport.ResultEntry>();
-		public void WriteResult(XMLDeclarationReport.ResultEntry resultValue)
+		protected List<IResultEntry> results = new List<IResultEntry>();
+
+		public void WriteResult(IResultEntry resultValue)
 		{
 			results.Add(resultValue);
-
 		}
 
 		public void GenerateReport(XElement resultSignature)
@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				Vehicle,
 				InputDataIntegrity,
 				new XElement(Cif_0_9 + XMLNames.Report_ManufacturerRecord_Signature, resultSignature),
-				Results,
+				Results.GenerateResults(results),
 				XMLHelper.GetApplicationInfo(Cif_0_9)
 			};
 		}

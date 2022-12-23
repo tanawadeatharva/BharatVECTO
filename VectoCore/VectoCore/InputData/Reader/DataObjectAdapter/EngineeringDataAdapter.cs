@@ -217,7 +217,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.EngineStartTime = engine.EngineStartTime ?? DeclarationData.Engine.DefaultEngineStartTime;
 			var limits = vehicle.TorqueLimits.ToDictionary(e => e.Gear);
 
-			var gears = FilterDisabledGears(vehicle.TorqueLimits, gbx);
+			var gears = GearboxDataAdapterBase.FilterDisabledGears(vehicle.TorqueLimits, gbx);
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(gears.Count + 1);
 			fullLoadCurves[0] = FullLoadCurveReader.Create(engine.EngineModes.First().FullLoadCurve);
 			fullLoadCurves[0].EngineData = retVal;
@@ -331,7 +331,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				throw new VectoSimulationException("At least two Gear-Entries must be defined in Gearbox!");
 			}
 
-			var gearsInput = FilterDisabledGears(inputData.JobInputData.Vehicle.TorqueLimits, gearbox);
+			var gearsInput = GearboxDataAdapterBase.FilterDisabledGears(inputData.JobInputData.Vehicle.TorqueLimits, gearbox);
 			
 			SetEngineeringData(gearbox, gearshiftData, retVal);
 
@@ -430,21 +430,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		private static void SetEngineeringData(
-			IGearboxEngineeringInputData gearbox, IGearshiftEngineeringInputData gearshiftData, GearboxData retVal)
-		{
+			IGearboxEngineeringInputData gearbox, IGearshiftEngineeringInputData gearshiftData, GearboxData retVal) {
 			retVal.Inertia = gearbox.Type.ManualTransmission() ? gearbox.Inertia : 0.SI<KilogramSquareMeter>();
 			retVal.TractionInterruption = gearbox.Type == GearboxType.APTN || gearbox.Type == GearboxType.IHPC ? 0.SI<Second>() : gearbox.TractionInterruption;
 		}
 
-		public AxleGearData CreateAxleGearData(IAxleGearInputData data)
-		{
+		public AxleGearData CreateAxleGearData(IAxleGearInputData data) {
 			var retVal = SetCommonAxleGearData(data);
 			retVal.AxleGear.LossMap = ReadAxleLossMap(data, true);
 			return retVal;
 		}
 
-		public AngledriveData CreateAngledriveData(IAngledriveInputData data)
-		{
+		public AngledriveData CreateAngledriveData(IAngledriveInputData data) {
 			return DoCreateAngledriveData(data, true);
 		}
 
@@ -461,16 +458,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var fanDemand = pwrICEOn - pwrICEOffDriving;
 
 			var auxList = new List<VectoRunData.AuxData>() {
-				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_BASE, DemandType = AuxiliaryDemandType.Constant, PowerDemand = baseDemand},
-				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_STP, DemandType = AuxiliaryDemandType.Constant, PowerDemand = stpDemand},
-				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_FAN, DemandType = AuxiliaryDemandType.Constant, PowerDemand = fanDemand},
+				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_BASE, DemandType = AuxiliaryDemandType.Constant, PowerDemandMech = baseDemand},
+				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_STP, DemandType = AuxiliaryDemandType.Constant, PowerDemandMech = stpDemand},
+				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_FAN, DemandType = AuxiliaryDemandType.Constant, PowerDemandMech = fanDemand},
 			};
 
 			return auxList;
 		}
 
-		internal DriverData CreateDriverData(IDriverEngineeringInputData driver)
-		{
+		internal DriverData CreateDriverData(IDriverEngineeringInputData driver) {
 			if (driver.SavedInDeclarationMode) {
 				WarnEngineeringMode("DriverData");
 			}
@@ -546,6 +542,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				};
 				if (pto.PTOCycleDuringStop != null) {
 					ptoData.PTOCycle = DrivingCycleDataReader.ReadFromDataTable(pto.PTOCycleDuringStop, "PTO", false);
+
 				}
 				return ptoData;
 			}
@@ -1301,17 +1298,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public PTOData CreateBatteryElectricPTOTransmissionData(IPTOTransmissionInputData pto)
 		{
-			if (pto.PTOTransmissionType != "None") {
-				var ptoData = new PTOData() {
-					TransmissionType = pto.PTOTransmissionType,
-					LossMap = pto.PTOLossMap == null
-						? PTOIdleLossMapReader.GetZeroLossMap()
-						: PTOIdleLossMapReader.Create(pto.PTOLossMap)
-				};
-				return ptoData;
-			}
 
-			return null;
+
+			var ptoData = new PTOData() {
+				TransmissionType = pto.PTOTransmissionType,
+				LossMap = pto.PTOLossMap == null
+					? PTOIdleLossMapReader.GetZeroLossMap()
+					: PTOIdleLossMapReader.Create(pto.PTOLossMap),
+				PTOCycle = pto.EPTOCycleDuringStop != null
+					? DrivingCycleDataReader.ReadFromDataTable(pto.EPTOCycleDuringStop, "PTO", false)
+					: null,
+			};
+
+			return ptoData;
 		}
 
 		internal VehicleData SetCommonVehicleData(IVehicleDeclarationInputData data)

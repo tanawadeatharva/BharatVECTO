@@ -140,7 +140,11 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	[DebuggerDisplay("Overload({Delta,nq})")]
 	public class ResponseOverload : AbstractResponse
 	{
-		public Watt Delta { get; set; }
+		public Watt Delta
+		{
+			get;
+			set;
+		}
 		public ResponseOverload(object source) : base(source) { }
 	}
 

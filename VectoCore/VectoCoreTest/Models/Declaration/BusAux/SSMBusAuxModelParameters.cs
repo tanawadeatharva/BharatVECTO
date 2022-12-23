@@ -89,7 +89,9 @@ static internal class SSMBusAuxModelParameters
 		var completedComponents = new Mock<IVehicleComponentsDeclaration>();
 		var completedBusAux = new Mock<IBusAuxiliariesDeclarationData>();
 		var completedHVACAux = new Mock<IHVACBusAuxiliariesDeclarationData>();
+		var completedElectricConsumers = new Mock<IElectricConsumersDeclarationData>();
 		completedBusAux.Setup(c => c.HVACAux).Returns(completedHVACAux.Object);
+		completedBusAux.Setup(c => c.ElectricConsumers).Returns(completedElectricConsumers.Object);
 		completedComponents.Setup(c => c.BusAuxiliaries).Returns(completedBusAux.Object);
 		completedVehicle.Setup(c => c.Components).Returns(completedComponents.Object);
 
@@ -104,6 +106,11 @@ static internal class SSMBusAuxModelParameters
 		completedHVACAux.Setup(c => c.WaterElectricHeater).Returns(waterElectricHeater);
 		completedHVACAux.Setup(c => c.OtherHeatingTechnology).Returns(otherElectricHeater);
 
+		completedElectricConsumers.Setup(c => c.DayrunninglightsLED).Returns(false);
+		completedElectricConsumers.Setup(c => c.PositionlightsLED).Returns(false);
+		completedElectricConsumers.Setup(c => c.BrakelightsLED).Returns(false);
+		completedElectricConsumers.Setup(c => c.InteriorLightsLED).Returns(false);
+		completedElectricConsumers.Setup(c => c.HeadlightsLED).Returns(false);
 
 		var runData = new VectoRunData() {
 			Mission = mission,

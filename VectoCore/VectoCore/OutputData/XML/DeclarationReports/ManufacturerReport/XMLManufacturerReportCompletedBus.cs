@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 
 		#region Overrides of AbstractXMLManufacturerReport
 
-		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void Initialize(VectoRunData modelData)
 		{
 			_tankSystem = modelData.VehicleData.InputData.TankSystem;
 			VehiclePart.Add(
@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 					new XElement(tns + XMLNames.Vehicle_CurbMassChassis, XMLHelper.ValueAsUnit(modelData.VehicleData.CurbMass, XMLNames.Unit_kg)),
 					new XElement(tns + XMLNames.TPMLM,
 								XMLHelper.ValueAsUnit(modelData.VehicleData.GrossVehicleMass, XMLNames.Unit_t, 2)),
-					new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.ZeroEmissionVehicle),
+					//new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.ZeroEmissionVehicle),
 					new XElement(tns + XMLNames.Vehicle_ZeroEmissionVehicle, modelData.VehicleData.ZeroEmissionVehicle),
 					new XElement(tns + XMLNames.Vehicle_HybridElectricHDV, modelData.VehicleData.HybridElectricHDV),
 					new XElement(tns + XMLNames.Vehicle_DualFuelVehicle, modelData.VehicleData.DualFuelVehicle),
@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 					new XElement(tns + XMLNames.Bus_VehicleWidth, modelData.VehicleData.InputData.Width.ToXMLFormat(3)),
 					new XElement(tns + XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology, modelData.VehicleData.InputData.DoorDriveTechnology.ToXMLFormat()),
 					
-					VehicleComponents(modelData, fuelModes),
+					VehicleComponents(modelData),
 					GetInputDataSignature(modelData)
 				)
 			);
@@ -195,7 +195,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 			);
 		}
 
-		protected override XElement GetSimulationParameters(XMLDeclarationReport.ResultEntry result)
+		protected override XElement GetSimulationParameters(IResultEntry result)
 		{
 			return new XElement(
 				tns + "SimulationParametersCompletedVehicle",
@@ -337,7 +337,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 			return retVal.ToArray();
 		}
 
-		protected override XElement VehicleComponents(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		protected override XElement VehicleComponents(VectoRunData modelData)
 		{
 			return new XElement(
 				tns + XMLNames.Vehicle_Components,
@@ -397,7 +397,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 		
 		#endregion
 
-		public override void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
+		public override void WriteResult(IResultEntry resultEntry)
 		{
 			throw new NotSupportedException();
 		}

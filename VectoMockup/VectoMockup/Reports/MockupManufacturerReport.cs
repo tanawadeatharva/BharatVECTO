@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
@@ -31,7 +30,7 @@ namespace TUGraz.VectoMockup.Reports
 			Results = new XElement(Mrf + XMLNames.Report_Results);
 		}
 
-		public void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue)
+		public void WriteMockupResult(IResultEntry resultValue)
 		{
 
 			Results.Add(MockupResultReader.GetMRFMockupResult(_outputData, resultValue, Mrf + "Result", _modelData));
@@ -60,10 +59,10 @@ namespace TUGraz.VectoMockup.Reports
 			_ixmlManufacturerReportImplementation.InitializeVehicleData(inputData);
 		}
 
-		public void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public void Initialize(VectoRunData modelData)
 		{
 			_modelData = modelData;
-			_ixmlManufacturerReportImplementation.Initialize(modelData, fuelModes);
+			_ixmlManufacturerReportImplementation.Initialize(modelData);
 		}
 
 		public XDocument Report

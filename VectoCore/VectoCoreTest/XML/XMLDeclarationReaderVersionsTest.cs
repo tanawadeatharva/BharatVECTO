@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			xml.Load(writer.XMLCustomerReportName);
 			var volumeResults =
 				xml.SelectNodes(
-					".//*[local-name()='Result']/*[local-name()='Fuel']/*[local-name()='FuelConsumption' and @unit='l/m³-km']");
+					".//*[local-name()='Result']/*[local-name()='Total']/*[local-name()='Fuel']/*[local-name()='FuelConsumption' and @unit='l/m³-km']");
 			Assert.IsTrue(volumeResults.Count > 0);
 		}
 

@@ -433,7 +433,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		IAngledriveInputData IVehicleComponentsEngineering.AngledriveInputData => _angledriveData ?? (_angledriveData = new JSONAngledriveInputData(this));
 
-		public virtual IEngineEngineeringInputData EngineInputData => Job.Engine;
+		public virtual IEngineEngineeringInputData EngineInputData => Job?.Engine;
 
 		IAxleGearInputData IVehicleComponentsDeclaration.AxleGearInputData => Job.AxleGear;
 

@@ -45,16 +45,21 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
+using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.XML;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-    public static class DeclarationData
+	public static class DeclarationData
 	{
 		/// <summary>
 		/// The standard acceleration for gravity on earth.
@@ -68,6 +73,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public const string DeclarationDataResourcePrefix = "TUGraz.VectoCore.Resources.Declaration";
 
 		public static readonly Watt MinEnginePowerForEMS = 300e3.SI<Watt>();
+		public static readonly Watt MinEnginePowerForEMS_PEV = 300e3.SI<Watt>();
 
 		public static readonly TruckSegments TruckSegments = new TruckSegments();
 		public static readonly PrimaryBusSegments PrimaryBusSegments = new PrimaryBusSegments();
@@ -87,10 +93,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly WHTCCorrection WHTCCorrection = new WHTCCorrection();
 		public static readonly AirDrag AirDrag = new AirDrag();
 		public static readonly StandardBodies StandardBodies = new StandardBodies();
+		public static readonly Conditioning Conditioning = new Conditioning();
 		public static readonly Payloads Payloads = new Payloads();
 
 		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
 
+		public static readonly double ElectricMachineDefaultMechanicalTransmissionEfficiency = 1;
 		//public static MeterPerSecond CycleSpeedLimit;
 		public const double LossMapExtrapolationFactor = 6;
 
@@ -100,6 +108,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly WeightingFactors WeightingFactors = new WeightingFactors();
 
 		public const double AlternatorEfficiency = 0.7;
+		public const double DCDCEfficiency = 1.0;
+
+		public const double HVACElectricEfficiencyFactor = 0.8;
 
 		public const double WHRChargerEfficiency = 0.98;
 
@@ -140,26 +151,35 @@ namespace TUGraz.VectoCore.Models.Declaration
 						grossVehicleWeight - curbWeight).Value() / 100, 0) * 100).SI<Kilogram>();
 		}
 
-		public static VehicleClass GetVehicleGroupGroup(IVehicleDeclarationInputData vehicleData)
+		public static Tuple<VehicleClass, bool?> GetVehicleGroupGroup(IVehicleDeclarationInputData vehicleData)
 		{
 			switch (vehicleData.VehicleCategory) {
 				case VehicleCategory.Van:
 				case VehicleCategory.RigidTruck:
 				case VehicleCategory.Tractor:
-					var truckSegment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory,
-						vehicleData.AxleConfiguration, vehicleData.GrossVehicleMassRating, vehicleData.CurbMassChassis,
-						vehicleData.VocationalVehicle);
-					return truckSegment.VehicleClass;
+					try {
+						var truckSegment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory,
+							vehicleData.AxleConfiguration, vehicleData.GrossVehicleMassRating,
+							vehicleData.CurbMassChassis,
+							vehicleData.VocationalVehicle);
+						return Tuple.Create(truckSegment.VehicleClass, (bool?)false);
+					} catch (VectoException) {
+						var truckSegment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory,
+							vehicleData.AxleConfiguration, vehicleData.GrossVehicleMassRating,
+							vehicleData.CurbMassChassis,
+							false);
+						return Tuple.Create(truckSegment.VehicleClass, (bool?)false);
+					}
 				case VehicleCategory.HeavyBusPrimaryVehicle:
 					var primarySegment = DeclarationData.PrimaryBusSegments.Lookup(vehicleData.VehicleCategory,
 						vehicleData.AxleConfiguration, vehicleData.Articulated);
-					return primarySegment.VehicleClass;
+					return Tuple.Create(primarySegment.VehicleClass, (bool?)null);
 				case VehicleCategory.HeavyBusCompletedVehicle:
 					var segment = DeclarationData.CompletedBusSegments.Lookup(vehicleData.AxleConfiguration.NumAxles(),
 						vehicleData.VehicleCode,
 						vehicleData.RegisteredClass, vehicleData.NumberPassengerSeatsLowerDeck, vehicleData.Height,
 						vehicleData.LowEntry);
-					return segment.VehicleClass;
+					return Tuple.Create(segment.VehicleClass, (bool?)null);
 			}
 
 			throw new VectoException("No Group found for vehicle");
@@ -178,7 +198,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 											.Sum(x => x.ElectricMachine.R85RatedPower * x.Count) ?? 0.SI<Watt>()) +
 										(vehicleData.Components?.IEPC?.R85RatedPower ?? 0.SI<Watt>()) + 
 										(vehicleData.MaxNetPower1 ?? 0.SI<Watt>()); 
-					var co2Group = WeightingGroup.Lookup(vehicleGroup, vehicleData.SleeperCab ?? false, propulsionPower);
+					var co2Group = WeightingGroup.Lookup(vehicleGroup.Item1, vehicleData.SleeperCab ?? false, propulsionPower);
 					return co2Group;
 				default:
 					return Declaration.WeightingGroup.Unknown;
@@ -191,7 +211,25 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return Declaration.WeightingGroup.Unknown;
 		}
 
+		public static double GetNumberOfPassengers(Mission mission, Meter length, Meter width, double registeredPassengerSeats,
+			double registeredPassengersStanding, LoadingType loading)
+		{
+			var busFloorArea = DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(length, width);
+			var passengerCountRef = busFloorArea * (loading == LoadingType.LowLoading
+				? mission.BusParameter.PassengerDensityLow
+				: mission.BusParameter.PassengerDensityRef);
 
+			if (loading != LoadingType.ReferenceLoad && loading != LoadingType.LowLoading) {
+				throw new VectoException("Unhandled loading type: {0}", loading);
+			}
+
+			var passengerCount = registeredPassengerSeats +
+								(mission.MissionType == MissionType.Coach ? 0 : registeredPassengersStanding);
+
+			return loading == LoadingType.ReferenceLoad
+				? VectoMath.Min(passengerCountRef, passengerCount)
+				: VectoMath.Min(passengerCountRef * mission.MissionType.GetLowLoadFactorBus(), passengerCount);
+		}
 
 		public static class BusAuxiliaries
 		{
@@ -387,19 +425,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-            public static double CalculateCOP(Watt coolingPwrDriver, double copDriver, Watt coolingPwrPass, double copPass)
-            {
-                if (coolingPwrDriver.IsGreater(0) && copDriver.IsEqual(0)) {
-                    copDriver = copPass;
-                }
-                if (coolingPwrDriver.IsEqual(0) && coolingPwrPass.IsEqual(0)) {
-                    return 1.0;
-                }
-                return (coolingPwrDriver * copDriver + coolingPwrPass * copPass) /
-                        (coolingPwrDriver + coolingPwrPass);
-            }
+			public static double CalculateCOP(Watt coolingPwrDriver, double copDriver, Watt coolingPwrPass, double copPass)
+			{
+				if (coolingPwrDriver.IsGreater(0) && copDriver.IsEqual(0)) {
+					copDriver = copPass;
+				}
+				if (coolingPwrDriver.IsEqual(0) && coolingPwrPass.IsEqual(0)) {
+					return 1.0;
+				}
+				return (coolingPwrDriver * copDriver + coolingPwrPass * copPass) /
+						(coolingPwrDriver + coolingPwrPass);
+			}
 
-            public static Meter CorrectionLengthDrivetrainVolume(VehicleCode? vehicleCode, bool? lowEntry, int numAxles, bool articulated)
+			public static Meter CorrectionLengthDrivetrainVolume(VehicleCode? vehicleCode, bool? lowEntry, int numAxles, bool articulated)
 			{
 				if ((vehicleCode == VehicleCode.CE || vehicleCode == VehicleCode.CG) && (bool)lowEntry) {
 					switch (numAxles) {
@@ -1231,6 +1269,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public const string DefaultPTOActivationCycle =
 				DeclarationDataResourcePrefix + ".MissionCycles.MunicipalUtility_PTO_generic.vptoc";
+
+			public const string DefaultE_PTOActivationCycle = DeclarationDataResourcePrefix + ".MissionCycles.MunicipalUtility_PTO_generic.vptoel";
 		}
 
 		public static class VTPMode
@@ -1296,11 +1336,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static class Battery
 		{
+			public static GenericSOC GenericSOC = new GenericSOC();
+
 			/// <summary>
 			/// Percentage of the maximum voltage of the battery
 			/// </summary>
-			private const double SOCMinHP = 0.2;
-			private const double SOCMaxHP = 0.8;
+			private const double SOCMinHP = 0.05;
+			private const double SOCMaxHP = 0.95;
 
 			private const double SOCMinHE = 0.05;
 			private const double SOCMaxHE = 0.95;
@@ -1319,6 +1361,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
+			public static double GenericDeterioration => 0.05;
+
 
 			public static double GetMaxSoc(BatteryType type)
 			{
@@ -1334,6 +1378,81 @@ namespace TUGraz.VectoCore.Models.Declaration
 						throw new ArgumentOutOfRangeException(nameof(type), type, null);
 				}
 			}
+		}
+
+		public static IWeightedResult CalculateWeightedResult(IResultEntry cdResult, IResultEntry csResult)
+		{
+			if (cdResult.Status != VectoRun.Status.Success || csResult.Status != VectoRun.Status.Success) {
+				return null;
+			}
+			// ToDo MQ 2022-12-12: add correct calculation method!
+			return new WeightedResult(cdResult) {
+				AverageSpeed = cdResult.AverageSpeed,
+				AverageDrivingSpeed = (cdResult.AverageDrivingSpeed + csResult.AverageDrivingSpeed) / 2.0,
+				FuelConsumption = cdResult.FuelData.Select(x => Tuple.Create(x,
+						(cdResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected +
+						csResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected) / 2.0))
+					.ToDictionary(x => x.Item1, x => x.Item2),
+				ElectricEnergyConsumption = (cdResult.ElectricEnergyConsumption + csResult.ElectricEnergyConsumption) / 2.0,
+				CO2Total = (cdResult.CO2Total + csResult.CO2Total) / 2.0,
+				ActualChargeDepletingRange = cdResult.Distance,
+				EquivalentAllElectricRange = cdResult.Distance,
+				ZeroCO2EmissionsRange = cdResult.Distance,
+				UtilityFactor = 1
+			};
+		}
+
+		public static IWeightedResult CalculateWeightedSummary(IList<IResultEntry> entries)
+		{
+			// ToDo MQ 2022-12-12: add correct calculation method!
+			var first = entries.FirstOrDefault();
+			if (first == null) {
+				return null;
+			}
+			return new WeightedResult(first) {
+				AverageSpeed = first.AverageSpeed,
+				FuelConsumption = first.FuelData?.Select(x => Tuple.Create(x,
+						first.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected))
+					.ToDictionary(x => x.Item1, x => x.Item2),
+				ElectricEnergyConsumption = first.ElectricEnergyConsumption,
+				CO2Total = first.CO2Total,
+				ActualChargeDepletingRange = first.Distance,
+				EquivalentAllElectricRange = first.Distance,
+				ZeroCO2EmissionsRange = first.Distance,
+				UtilityFactor = 1,
+
+				AuxHeaterFuel = first.AuxHeaterFuel,
+				ZEV_CO2 = first.ZEV_CO2,
+				ZEV_FuelConsumption_AuxHtr = first.ZEV_FuelConsumption_AuxHtr
+			};
+		}
+
+		public static IWeightedResult CalculateWeightedSummary(IList<IOVCResultEntry> entries)
+		{
+			// ToDo MQ 2022-12-12: add correct calculation method!
+			var cdResult = entries.First().ChargeDepletingResult;
+			var csResult = entries.First().ChargeSustainingResult;
+			return new WeightedResult(cdResult) {
+				AverageSpeed = cdResult.AverageSpeed,
+				FuelConsumption = cdResult.FuelData.Select(x => Tuple.Create(x,
+						(cdResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected +
+						csResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected) / 2.0))
+					.ToDictionary(x => x.Item1, x => x.Item2),
+				ElectricEnergyConsumption = (cdResult.ElectricEnergyConsumption + csResult.ElectricEnergyConsumption) / 2.0,
+				CO2Total = (cdResult.CO2Total + csResult.CO2Total) / 2.0,
+				ActualChargeDepletingRange = cdResult.Distance,
+				EquivalentAllElectricRange = cdResult.Distance,
+				ZeroCO2EmissionsRange = cdResult.Distance,
+				UtilityFactor = 1
+			};
+		}
+
+		public static void SetElectricRangesPEV(IResultEntry resultEntry, VectoRunData runData, IModalDataContainer data)
+		{
+			// ToDo MQ 2022-12-12: add correct calculation method!
+			resultEntry.ActualChargeDepletingRange = 100.SI<Meter>();
+			resultEntry.EquivalentAllElectricRange = 100.SI<Meter>();
+			resultEntry.ZeroCO2EmissionsRange = 100.SI<Meter>();
 		}
 	}
 }

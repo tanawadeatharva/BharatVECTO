@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		public const string CompletedFile32 = @"TestData\Integration\Buses\FactorMethod\vecto_vehicle-completed_heavyBus_41.xml";
 		//public const string CompletedFile33b1 = @"TestData\Integration\Buses\FactorMethod\CompletedHeavyBus_33b1.RSLT_VIF.xml";
         public const string CompletedFile33b1 = @"TestData\Integration\Buses\FactorMethod\vecto_vehicle-completed_heavyBus_42.xml";
-        public const string  PifFile_33_34 = @"TestData\Integration\Buses\FactorMethod\primary_heavyBus group42_SmartPS.RSLT_VIF.xml";
+        public const string  PifFile_33_34 = @"TestData\Integration\Buses\FactorMethod\VIF\primary_heavyBus group42_SmartPS.RSLT_VIF.xml";
 
         [OneTimeSetUp]
 		public void RunBeforeAnyTests()
@@ -134,6 +134,16 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var hvacCfgNode = completedXML.SelectSingleNode("//*[local-name()='SystemConfiguration']");
 			hvacCfgNode.InnerText = hvacConfig.ToXmlFormat();
 
+			var (hpDriver, hpPassenger) = GetHeatpumps(hvacConfig);
+			var hpDriverCoolingNode =
+				completedXML.SelectSingleNode(
+					"//*[local-name()='HeatPumpTypeDriverCompartment']/*[local-name()='Cooling']");
+			hpDriverCoolingNode.InnerText = hpDriver.ToXML();
+			var hpPassengerCoolingNode =
+				completedXML.SelectSingleNode(
+					"//*[local-name()='HeatPumpTypePassengerCompartment']/*[local-name()='Cooling']");
+			hpPassengerCoolingNode.InnerText = hpPassenger.ToXML();
+
 			var airDuctsNode = completedXML.SelectSingleNode("//*[local-name()='SeparateAirDistributionDucts']");
 			airDuctsNode.InnerText = XmlConvert.ToString(separateDucts);
 			var modified = XmlReader.Create(new StringReader(completedXML.OuterXml));
@@ -158,6 +168,27 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			File.Delete(writer.XMLMultistageReportFileName);
 
 			return completedVif as IMultistepBusInputDataProvider;
+		}
+
+		private (HeatPumpType, HeatPumpType) GetHeatpumps(BusHVACSystemConfiguration? hvacConfig)
+		{
+			var mapping = new Dictionary<BusHVACSystemConfiguration, Tuple<HeatPumpType, HeatPumpType>>() {
+				{ BusHVACSystemConfiguration.Configuration1, Tuple.Create(HeatPumpType.none, HeatPumpType.none) },
+				{ BusHVACSystemConfiguration.Configuration2, Tuple.Create(HeatPumpType.non_R_744_2_stage, HeatPumpType.none) },
+				{ BusHVACSystemConfiguration.Configuration3, Tuple.Create(HeatPumpType.none, HeatPumpType.none) },
+				{ BusHVACSystemConfiguration.Configuration4, Tuple.Create(HeatPumpType.non_R_744_2_stage, HeatPumpType.none) },
+				{ BusHVACSystemConfiguration.Configuration5, Tuple.Create(HeatPumpType.none, HeatPumpType.non_R_744_3_stage) },
+				{ BusHVACSystemConfiguration.Configuration6, Tuple.Create(HeatPumpType.none, HeatPumpType.non_R_744_3_stage) },
+				{ BusHVACSystemConfiguration.Configuration7, Tuple.Create(HeatPumpType.non_R_744_2_stage, HeatPumpType.non_R_744_3_stage) },
+				{ BusHVACSystemConfiguration.Configuration8, Tuple.Create(HeatPumpType.none, HeatPumpType.non_R_744_3_stage) },
+				{ BusHVACSystemConfiguration.Configuration9, Tuple.Create(HeatPumpType.non_R_744_2_stage, HeatPumpType.non_R_744_3_stage) },
+				{ BusHVACSystemConfiguration.Configuration10, Tuple.Create(HeatPumpType.none, HeatPumpType.non_R_744_3_stage) },
+			};
+			if (!hvacConfig.HasValue || !mapping.ContainsKey(hvacConfig.Value)) {
+				throw new VectoException("invalid hvac configuration");
+			}
+			var entry = mapping[hvacConfig.Value];
+			return (entry.Item1, entry.Item2);
 		}
 	}
 

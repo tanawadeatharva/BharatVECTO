@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.IO;
 using System.Text;
 using System.Data;
@@ -47,6 +48,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
@@ -80,13 +82,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 					}
 				},
 				VehicleData = new VehicleData {
-					//DynamicTyreRadius = 
+                    DynamicTyreRadius = 0.5.SI<Meter>()
 				},
 				AxleGearData = new AxleGearData {
 					AxleGear = new TransmissionData {
 						Ratio = 2.3
 					}
-				}
+				},
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
 
 			var container = new VehicleContainer(ExecutionMode.Engineering);

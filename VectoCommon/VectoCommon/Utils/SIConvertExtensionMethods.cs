@@ -114,8 +114,14 @@ namespace TUGraz.VectoCommon.Utils
 	public static class SIConvertExtensionMethods
 	{
 		private const int Kilo = 1000;
+		private const double Mega = 1e6;
 		private const int SecondsPerHour = 60 * 60;
-		
+		private const int SecondsPerMinute = 60 * 60;
+		const int CubicMeterToLiter = 10 * 10 * 10;
+		const int CubicMeterToCubicCentimeter = 100 * 100 * 100;
+		const int MeterTo100KiloMeter = 100 * Kilo;
+		const int KilogrammToTon = Kilo;
+
 		public static ConvertedSI ConvertToGramm(this Kilogram value)
 		{
 			return new ConvertedSI(value.Value() * Kilo, "g");
@@ -133,20 +139,25 @@ namespace TUGraz.VectoCommon.Utils
 			return value == null ? null : new ConvertedSI(value.Value() * Kilo * Kilo, "g/km");
 		}
 
+		public static ConvertedSI ConvertToGrammPerPassengerKilometer(this KilogramPerMeter value)
+		{
+			return value == null ? null : new ConvertedSI(value.Value() * Kilo * Kilo, "g/p-km");
+		}
+
 		public static ConvertedSI ConvertToKiloWattHourPerKiloMeter(this JoulePerMeter value)
 		{
-			return new ConvertedSI(value.Value() / 3600, "kWh/km");
+			return new ConvertedSI(value.Value() / SecondsPerHour, "kWh/km");
 		}
 
 
         public static ConvertedSI ConvertToGramPerKiloWattHour(this SpecificFuelConsumption value)
 		{
-			return new ConvertedSI(value.Value() * 3600e6, "g/kWh");
+			return new ConvertedSI(value.Value() * SecondsPerHour * Mega, "g/kWh");
 		}
 
 		public static ConvertedSI ConvertToGramPerKiloWattHour(this KilogramPerWattSecond value)
 		{
-			return new ConvertedSI(value.Value() * 3600e6, "g/kWh");
+			return new ConvertedSI(value.Value() * SecondsPerHour *Mega, "g/kWh");
 		}
 
 		public static ConvertedSI ConvertToLiterPer100Kilometer(this VolumePerMeter value)
@@ -156,18 +167,12 @@ namespace TUGraz.VectoCommon.Utils
 		
 		public static ConvertedSI ConvertToLiterPer100TonKiloMeter(this VolumePerMeterMass value)
 		{
-			const int CubicMeterToLiter = 10 * 10 * 10;
-			const int MeterTo100KiloMeter = 100 * Kilo;
-			const int KilogrammToTon = Kilo;
-
 			return value == null ? null  : new ConvertedSI(value.Value() * CubicMeterToLiter * (MeterTo100KiloMeter * KilogrammToTon), "l/100tkm");
 		}
 
 		public static ConvertedSI ConvertToLiterPerCubicMeter100KiloMeter(this VolumePerMeterVolume value)
 		{
-			const int CubicMeterToLiter = 10 * 10 * 10;
-			const int MeterTo100KiloMeter = 100 * Kilo;
-			return new ConvertedSI(value.Value() * CubicMeterToLiter * MeterTo100KiloMeter, "l/100m^3km");
+			return new ConvertedSI(value.Value() * CubicMeterToLiter * MeterTo100KiloMeter, "l/100m³-km");
 		}
 
 		public static ConvertedSI ConvertToGrammPerHour(this KilogramPerSecond value)
@@ -182,23 +187,63 @@ namespace TUGraz.VectoCommon.Utils
 
 		public static ConvertedSI ConvertToCubicCentiMeter(this CubicMeter value)
 		{
-			return new ConvertedSI(value.Value() * 100 * 100 * 100, "cm^3");
+			return new ConvertedSI(value.Value() * CubicMeterToCubicCentimeter, "cm³");
 		}
 
 		public static ConvertedSI ConvertToGrammPerCubicMeterKiloMeter(this KilogramPerMeterCubicMeter value)
 		{
-			return new ConvertedSI(value.Value()  * Kilo * Kilo, "g/m^3km");
+			return new ConvertedSI(value.Value()  * Kilo * Kilo, "g/m³-km");
 		}
 
 		public static ConvertedSI ConvertToGrammPerTonKilometer(this KilogramPerMeterMass value)
 		{
-			return new ConvertedSI(value.Value() * Kilo * Kilo * Kilo, "g/tkm");
+			return new ConvertedSI(value.Value() * Kilo * Kilo * Kilo, "g/t-km");
 		}
 
 		public static ConvertedSI ConvertToKiloWattHour(this WattSecond value)
 		{
 			return new ConvertedSI(value.Value() / Kilo / SecondsPerHour, "kWh");
 		}
+
+		public static ConvertedSI ConvertToKiloWattHourPerKiloMeter(this WattSecondPerMeter value)
+		{
+			return new ConvertedSI(value.Value() / Kilo / SecondsPerHour * Kilo, "kWh/km");
+		}
+
+		public static ConvertedSI ConvertToKiloWattHourPerPassengerKiloMeter(this WattSecondPerMeter value)
+		{
+			return new ConvertedSI(value.Value() / Kilo / SecondsPerHour * Kilo, "kWh/p-km");
+		}
+
+		public static ConvertedSI ConvertToKiloWattHourPerTonKiloMeter(this WattSecondPerMeterKilogram value)
+		{
+			return new ConvertedSI(value.Value() / Kilo / SecondsPerHour * Kilo * KilogrammToTon, "kWh/t-km");
+		}
+
+		public static ConvertedSI ConvertToKiloWattHourPerCubicMeterKiloMeter(this WattSecondPerCubicMeterMeter value)
+		{
+			return new ConvertedSI(value.Value() / Kilo / SecondsPerHour * Kilo, "kWh/m³-km");
+		}
+
+		public static ConvertedSI ConvertToMegaJoulePerKiloMeter(this WattSecondPerMeter value)
+		{
+			return new ConvertedSI(value.Value() / Mega * Kilo, "MJ/km");
+		}
+		public static ConvertedSI ConvertToMegaJoulePerPassengerKiloMeter(this WattSecondPerMeter value)
+		{
+			return new ConvertedSI(value.Value() / Mega * Kilo, "MJ/p-km");
+		}
+
+		public static ConvertedSI ConvertToMegaJoulePerTonKiloMeter(this WattSecondPerMeterKilogram value)
+		{
+			return new ConvertedSI(value.Value() / Mega * Kilo * KilogrammToTon, "MJ/t-km");
+		}
+
+		public static ConvertedSI ConvertToMegaJoulePerCubicMeterKiloMeter(this WattSecondPerCubicMeterMeter value)
+		{
+			return new ConvertedSI(value.Value() / Mega * Kilo , "MJ/m³-km");
+		}
+
 		public static ConvertedSI ConvertToWattHour(this WattSecond value)
 		{
 			return new ConvertedSI(value.Value() / SecondsPerHour, "Wh");
@@ -225,7 +270,7 @@ namespace TUGraz.VectoCommon.Utils
 
 		public static ConvertedSI ConvertToCubicDeziMeter(this CubicMeter value)
 		{
-			return new ConvertedSI(value.Value() * 10 * 10 * 10, "dm^3");
+			return new ConvertedSI(value.Value() * CubicMeterToLiter, "dm^3");
 		}
 		public static ConvertedSI ConvertToMilliMeter(this Meter value)
 		{
@@ -244,17 +289,52 @@ namespace TUGraz.VectoCommon.Utils
 
 		public static ConvertedSI ConvertToMinutes(this Second sec)
 		{
-			return new ConvertedSI(sec.Value() / 60.0, "min");
+			return new ConvertedSI(sec.Value() / SecondsPerMinute, "min");
 		}
 
 		public static ConvertedSI ConvertToNlPerMin(this NormLiterPerSecond nlps)
 		{
-			return new ConvertedSI(nlps.Value() * 60.0, "Nl/min");
+			return new ConvertedSI(nlps.Value() * SecondsPerMinute, "Nl/min");
 		}
 
 		public static ConvertedSI ConvertToMegaJoulePerKilometer(this JoulePerMeter jpm)
 		{
-			return new ConvertedSI(jpm.Value() * 1e-3, "MJ/km");
+			return new ConvertedSI(jpm.Value() / Mega * Kilo, "MJ/km");
+		}
+
+		public static ConvertedSI ConvertToMegaJoulePerPassengerKilometer(this JoulePerMeter jpm)
+		{
+			return new ConvertedSI(jpm.Value() / Mega * Kilo, "MJ/p-km");
+		}
+
+		public static ConvertedSI ConvertToMegaJoulePerTonKiloMeter(this JoulePerKilogramMeter jpkgm)
+		{
+			return new ConvertedSI(jpkgm.Value() /Mega * Kilo * Kilo, "MJ/t-km");
+		}
+
+		public static ConvertedSI ConvertToMegaJoulePerCubicMeterKiloMeter(this JoulePerCubicMeterMeter jpm3m)
+		{
+			return new ConvertedSI(jpm3m.Value() / Mega * Kilo, "MJ/m³-km");
+		}
+
+		public static ConvertedSI ConvertToLiterPer100KiloMeter(this CubicMeterPerMeter jpm3m)
+		{
+			return new ConvertedSI(jpm3m.Value() * CubicMeterToLiter * MeterTo100KiloMeter, "l/100km");
+		}
+
+		public static ConvertedSI ConvertToLiterPerPassengerKiloMeter(this CubicMeterPerMeter jpm3m)
+		{
+			return new ConvertedSI(jpm3m.Value() * CubicMeterToLiter * Kilo, "l/p-km");
+		}
+
+		public static ConvertedSI ConvertToLiterPerTonKiloMeter(this CubicMeterPerKilogramMeter m3pkmm)
+		{
+			return new ConvertedSI(m3pkmm.Value() * CubicMeterToLiter * Kilo * Kilo, "l/t-km");
+		}
+
+		public static ConvertedSI ConvertToLiterPerCubicMeterKiloMeter(this CubicMeterPerCubicMeterMeter m3pm3m)
+		{
+			return new ConvertedSI(m3pm3m.Value() * CubicMeterToLiter * Kilo, "l/m³-km");
 		}
 
 		public static Meter ConvertToMeter(this ConvertedSI mm)

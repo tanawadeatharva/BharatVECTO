@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 							multistagePrimaryAndStageInputDataProvider,
 							ReportWriter,
 							currentStageDeclarationReport,
-						_simFactoryFactory, _xmlInputDataReader, Validate);
+						_simFactoryFactory, _xmlDeclarationReportFactory, _xmlInputDataReader, Validate);
 				case IMultistageVIFInputData multistageVifInputData:
 					if (multistageVifInputData.VehicleInputData != null) {
 						return new CompletedAfterInterimPrimaryFactoryCreator(

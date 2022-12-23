@@ -338,6 +338,10 @@ namespace TUGraz.VectoCore.OutputData
 			Tuple.Create(SumDataFields.TOTAL_VEHICLE_MASS, typeof(ConvertedSI)),
 		};
 
+		public static readonly Tuple<string, Type>[] ElectricAuxiliariesSignals = {
+			Tuple.Create(SumDataFields.E_AUX_EL, typeof(ConvertedSI))
+		};
+
 		private object _tableLock = new object();
 		internal readonly DataTable Table;
 		private readonly ISummaryWriter _sumWriter;
@@ -438,7 +442,9 @@ namespace TUGraz.VectoCore.OutputData
 					//CreateColumns(HybridControllerSignals);
 					break;
 				case IDCDCConverter _:
-					//CreateColumns(DCDCConverterSignals);
+				//CreateColumns(DCDCConverterSignals);
+				case ElectricAuxiliaries _:
+					CreateColumns(ElectricAuxiliariesSignals);
 					break;
 			}
 		}
@@ -593,6 +599,7 @@ namespace TUGraz.VectoCore.OutputData
 			cols.AddRange(AuxColumns.OrderBy(x => x));
 			cols.AddRange(new[] {
 				SumDataFields.E_AUX,
+				SumDataFields.E_AUX_EL,
 				SumDataFields.E_AUX_EL_HV, 
 				SumDataFields.E_CLUTCH_LOSS,
 				SumDataFields.E_TC_LOSS, 
@@ -958,7 +965,8 @@ namespace TUGraz.VectoCore.OutputData
 		}
 
 
-		//[MethodImpl(MethodImplOptions.Synchronized)]
+		//[MethodImpl(MethodImplOptions.Synchronized)
+		[Obsolete]
 		public virtual void WriteXXX(IModalDataContainer modData, VectoRunData runData)
 		{
 			//var row = GetResultRow(modData, runData); // Replace row with dictionary

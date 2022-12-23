@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -133,11 +134,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		public class ElectricMotorPowerMap : AbstractXMLType, IElectricMotorPowerMap
 		{
-			private Dictionary<string, string> powerMapMapping = new Dictionary<string, string> {
-				{ XMLNames.PowerMap_OutShaftSpeed, XMLNames.PowerMap_OutShaftSpeed },
-				{ XMLNames.PowerMap_Torque, XMLNames.PowerMap_Torque },
-				{ XMLNames.PowerMap_ElectricPower, XMLNames.PowerMap_ElectricPower }
-			};
+			private Dictionary<string, string> powerMapMapping = AttributeMappings.EMPowerMap;
 			
 			public ElectricMotorPowerMap(XmlNode xmlNode) : base(xmlNode) { }
 			

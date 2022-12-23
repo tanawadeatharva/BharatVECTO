@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + XMLNames.Vehicle_VehicleCategory, vehicleData.LegislativeClass.ToXMLFormat()),
 				new XElement(_cif + XMLNames.Vehicle_AxleConfiguration, vehicleData.AxleConfiguration.ToXMLFormat()),
 				new XElement(_cif + XMLNames.Vehicle_TPMLM, XMLHelper.ValueAsUnit(vehicleData.GrossVehicleMassRating, "kg")),
-				new XElement(_cif + XMLNames.Report_Vehicle_VehicleGroup, DeclarationData.GetVehicleGroupGroup(vehicleData).GetClassNumber()),
+				new XElement(_cif + XMLNames.Report_Vehicle_VehicleGroup, DeclarationData.GetVehicleGroupGroup(vehicleData).Item1.GetClassNumber()),
 				new XElement(_cif + "VehicleGroupCO2", DeclarationData.GetVehicleGroupCO2StandardsGroup(vehicleData).ToXMLFormat()),
 
 			};
@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + XMLNames.Vehicle_VehicleCategory, consolidatedVehicleData.LegislativeClass.ToXMLFormat()),
 				new XElement(_cif + XMLNames.Vehicle_AxleConfiguration, primary.AxleConfiguration.ToXMLFormat()),
 				new XElement(_cif + XMLNames.Vehicle_TPMLM, XMLHelper.ValueAsUnit(consolidatedVehicleData.GrossVehicleMassRating, "kg")),
-				new XElement(_cif + XMLNames.Report_Vehicle_VehicleGroup, DeclarationData.GetVehicleGroupGroup(consolidatedVehicleData).GetClassNumber()),
+				new XElement(_cif + XMLNames.Report_Vehicle_VehicleGroup, DeclarationData.GetVehicleGroupGroup(consolidatedVehicleData).Item1.GetClassNumber()),
 				new XElement(_cif + "VehicleGroupCO2", DeclarationData.GetVehicleGroupCO2StandardsGroup(multiStageInputDataProvider).ToXMLFormat()),
 			};
 			return result;
@@ -77,6 +77,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
 			var vehicleData = inputData.JobInputData.Vehicle;
+			var vehicleGroup = DeclarationData.GetVehicleGroupGroup(vehicleData);
 			var result = new List<XElement>() {
 				new XElement(_cif + XMLNames.Component_Manufacturer, vehicleData.Manufacturer),
 				new XElement(_cif + XMLNames.Component_ManufacturerAddress, vehicleData.ManufacturerAddress),
@@ -88,7 +89,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				//	? vehicleData.VehicleTypeApprovalNumber 
 				//	: null),
 				new XElement(_cif + XMLNames.CorrectedActualMass, vehicleData.CurbMassChassis.ValueAsUnit("kg")),
-				new XElement(_cif + XMLNames.Vehicle_VocationalVehicle, vehicleData.VocationalVehicle),
+				new XElement(_cif + XMLNames.Vehicle_VocationalVehicle, vehicleGroup.Item2),
 				new XElement(_cif + XMLNames.Vehicle_SleeperCab, vehicleData.SleeperCab),
 				new XElement(_cif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicleData.ZeroEmissionVehicle),
 				new XElement(_cif + XMLNames.Vehicle_HybridElectricHDV, vehicleData.HybridElectricHDV)
@@ -444,5 +445,71 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			return result;
 		}
 
+	}
+
+
+	public class SingleBusVehicleTypeGroup : AbstractCIFGroupWriter
+	{
+		private XElement GetManufacturerAndAddress(string manufacturer, string manufacturerAddress, int stepCount)
+		{
+			return new XElement(_cif + "Step",
+				new XAttribute(XMLNames.ManufacturingStep_StepCount, stepCount),
+				new XElement(_cif + XMLNames.Component_Manufacturer, manufacturer),
+				new XElement(_cif + XMLNames.Component_ManufacturerAddress, manufacturerAddress));
+		}
+		public SingleBusVehicleTypeGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCIFGroupWriter
+
+		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+			var singleBusData = inputData as ISingleBusInputDataProvider;
+			if (singleBusData == null) {
+				throw new ArgumentException(
+					$"{nameof(inputData)} must implement {nameof(IMultistepBusInputDataProvider)}");
+			}
+			var result = new List<XElement>();
+			result.AddRange(
+				_cifFactory.GetGeneralVehicleSequenceGroupWriter().GetElements(singleBusData.JobInputData.Vehicle));
+			result.Add(GetManufacturers(singleBusData));
+
+
+
+			var primaryVehicle = singleBusData.PrimaryVehicle;
+			var completedVehicle = singleBusData.CompletedVehicle;
+			var dualFuel = singleBusData.JobInputData.Vehicle.Components.EngineInputData.EngineModes.Any(x => x.Fuels.Count > 1);
+
+			result.AddRange(new List<XElement>() {
+				new XElement(_cif + XMLNames.Component_Model, primaryVehicle.Model),
+				new XElement(_cif + XMLNames.CorrectedActualMass, completedVehicle.CurbMassChassis.ValueAsUnit("kg", 0)),
+				new XElement(_cif + XMLNames.Vehicle_ZeroEmissionVehicle, primaryVehicle.ZeroEmissionVehicle),
+				new XElement(_cif + XMLNames.Vehicle_HybridElectricHDV, primaryVehicle.HybridElectricHDV),
+				new XElement(_cif + "WasteHeatRecovery", singleBusData.JobInputData.Vehicle.Components.EngineInputData.WHRType != WHRType.None),
+				new XElement(_cif + XMLNames.Vehicle_DualFuelVehicle, dualFuel),
+				new XElement(_cif + XMLNames.Vehicle_RegisteredClass, primaryVehicle.RegisteredClass.ToXMLFormat()),
+				new XElement(_cif + "TotalNumberOfPassengers", primaryVehicle.NumberPassengerSeatsLowerDeck
+																+ primaryVehicle.NumberPassengerSeatsUpperDeck
+																+ primaryVehicle.NumberPassengersStandingLowerDeck
+																+ primaryVehicle.NumberPassengersStandingUpperDeck),
+				!primaryVehicle.VehicleTypeApprovalNumber.IsNullOrEmpty() ? new XElement(_cif + XMLNames.VehicleTypeApprovalNumber, primaryVehicle.VehicleTypeApprovalNumber) : null
+			});
+
+			return result;
+		}
+
+		protected XElement GetManufacturers(ISingleBusInputDataProvider completedBusData)
+		{
+			var manufacturers = new XElement(_cif + "Manufacturers",
+				GetManufacturerAndAddress(completedBusData.JobInputData.Vehicle.Manufacturer,
+					completedBusData.JobInputData.Vehicle.ManufacturerAddress, 1));
+			//foreach (var step in completedBusData.JobInputData.ManufacturingStages) {
+			//	manufacturers.Add(GetManufacturerAndAddress(step.Vehicle.Manufacturer, step.Vehicle.ManufacturerAddress,
+			//		step.StepCount));
+			//}
+
+			return manufacturers;
+		}
+
+		#endregion
 	}
 }

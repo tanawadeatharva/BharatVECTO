@@ -287,6 +287,11 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 			return retVal.Value;
 		}
 
+		public static string ToXML(this HeatPumpType type)
+		{
+			return type.GetLabel();
+		}
+
 
 		public static string GetLabel(this HeatPumpType? type)
 		{

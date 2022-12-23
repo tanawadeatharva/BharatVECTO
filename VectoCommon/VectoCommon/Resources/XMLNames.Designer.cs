@@ -4075,6 +4075,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ActualChargeDepletingRange.
+        /// </summary>
+        public static string Report_ResultEntry_ActualChargeDepletingRange {
+            get {
+                return ResourceManager.GetString("Report_ResultEntry_ActualChargeDepletingRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AverageSpeed.
         /// </summary>
         public static string Report_ResultEntry_AverageSpeed {
@@ -4093,11 +4102,29 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CO2_ZEV_AuxHeater.
+        /// </summary>
+        public static string Report_ResultEntry_CO2ZEVAuxHeater {
+            get {
+                return ResourceManager.GetString("Report_ResultEntry_CO2ZEVAuxHeater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Distance.
         /// </summary>
         public static string Report_ResultEntry_Distance {
             get {
                 return ResourceManager.GetString("Report_ResultEntry_Distance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ElectricEnergy.
+        /// </summary>
+        public static string Report_ResultEntry_ElectricEnergyConsumption {
+            get {
+                return ResourceManager.GetString("Report_ResultEntry_ElectricEnergyConsumption", resourceCulture);
             }
         }
         
@@ -4134,6 +4161,24 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Report_ResultEntry_EngineSpeedDriving_Min {
             get {
                 return ResourceManager.GetString("Report_ResultEntry_EngineSpeedDriving_Min", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EquivalentAllElectricRange.
+        /// </summary>
+        public static string Report_ResultEntry_EquivalentAllElectricRange {
+            get {
+                return ResourceManager.GetString("Report_ResultEntry_EquivalentAllElectricRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FC_ZEV_AuxHeater.
+        /// </summary>
+        public static string Report_ResultEntry_FCZEVAuxHeater {
+            get {
+                return ResourceManager.GetString("Report_ResultEntry_FCZEVAuxHeater", resourceCulture);
             }
         }
         
@@ -4228,6 +4273,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total.
+        /// </summary>
+        public static string Report_ResultEntry_Total {
+            get {
+                return ResourceManager.GetString("Report_ResultEntry_Total", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to TotalVehicleMass.
         /// </summary>
         public static string Report_ResultEntry_TotalVehicleMass {
@@ -4242,6 +4296,24 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Report_ResultEntry_VehiclePerformance {
             get {
                 return ResourceManager.GetString("Report_ResultEntry_VehiclePerformance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ElectricEnergyConsumption.
+        /// </summary>
+        public static string Report_ResultEntry_VIF_ElectricEnergyConsumption {
+            get {
+                return ResourceManager.GetString("Report_ResultEntry_VIF_ElectricEnergyConsumption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ZeroCO2EmissionsRange.
+        /// </summary>
+        public static string Report_ResultEntry_ZeroCO2EmissionsRange {
+            get {
+                return ResourceManager.GetString("Report_ResultEntry_ZeroCO2EmissionsRange", resourceCulture);
             }
         }
         
@@ -4345,11 +4417,38 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to OVCMode.
+        /// </summary>
+        public static string Report_Results_OVCMode {
+            get {
+                return ResourceManager.GetString("Report_Results_OVCMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PrimaryVehicleSubgroup.
         /// </summary>
         public static string Report_Results_PrimaryVehicleSubgroup {
             get {
                 return ResourceManager.GetString("Report_Results_PrimaryVehicleSubgroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to error.
+        /// </summary>
+        public static string Report_Results_Status_Error_Val {
+            get {
+                return ResourceManager.GetString("Report_Results_Status_Error_Val", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to success.
+        /// </summary>
+        public static string Report_Results_Status_Success_Val {
+            get {
+                return ResourceManager.GetString("Report_Results_Status_Success_Val", resourceCulture);
             }
         }
         
@@ -4512,6 +4611,24 @@ namespace TUGraz.VectoCommon.Resources {
         public static string ResultCard_Entry_SmartCurrent_Attr {
             get {
                 return ResourceManager.GetString("ResultCard_Entry_SmartCurrent_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to type.
+        /// </summary>
+        public static string Results_Report_OVCModeAttr {
+            get {
+                return ResourceManager.GetString("Results_Report_OVCModeAttr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to charge depleting.
+        /// </summary>
+        public static string Results_Report_OVCModeAttr_ChargeDepleting {
+            get {
+                return ResourceManager.GetString("Results_Report_OVCModeAttr_ChargeDepleting", resourceCulture);
             }
         }
         

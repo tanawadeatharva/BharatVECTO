@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 			var dataProvider = xmlInputReader.CreateDeclaration(modified);
 
 			var writer = new FileOutputWriter(jobfile);
-			var xmlReport = new XMLDeclarationReport(writer);
+			var xmlReport = _kernel.Get<IXMLDeclarationReportFactory>().CreateReport(dataProvider, writer);
 			var sumData = new SummaryDataContainer(null);
 			var jobContainer = new JobContainer(sumData);
 
@@ -69,9 +69,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 			// no need to run the simulation, we only check whether the meta-data is correct, no results are considered
 			//jobContainer.Execute();
 			//jobContainer.WaitFinished();
-			xmlReport.DoWriteReport();
+			(xmlReport as XMLDeclarationReport09).DoWriteReport();
 
-			var manufacturerReport = xmlReport.FullReport;
+			var manufacturerReport = (xmlReport as XMLDeclarationReport09).FullReport;
 
 			Assert.IsFalse(XmlConvert.ToBoolean(manufacturerReport.XPathSelectElement(XMLHelper.QueryLocalName(XMLNames.Vehicle_VocationalVehicle))?.Value ?? ""));
 		}

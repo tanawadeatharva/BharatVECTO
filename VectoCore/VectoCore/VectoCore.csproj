@@ -74,7 +74,7 @@
     <PackageReference Include="Ninject.Extensions.Factory" Version="3.3.3" />
     <PackageReference Include="NLog" Version="4.7.13" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-  </ItemGroup>
+</ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='net45'">
     <Reference Include="Microsoft.VisualBasic" />
@@ -105,13 +105,17 @@
     <InternalsVisibleTo Include="VectoAuxiliariesTests" />
     <InternalsVisibleTo Include="VECTO3" />
     <InternalsVisibleTo Include="VECTOMultistage" />
-    <InternalsVisibleTo Include="VectoMockup"/>
+    <InternalsVisibleTo Include="VectoMockup" />
     <InternalsVisibleTo Include="Vecto3GUI2020Test" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj" />
-    <ProjectReference Include="..\..\VectoCommon\VectoHashing\VectoHashing.csproj" />
+    <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VectoCommon\VectoHashing\VectoHashing.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -140,6 +144,8 @@
   <ItemGroup>
     <Folder Include="InputData\Reader\DataObjectAdapter\CompletedBus\Generic\" />
     <Folder Include="InputData\Reader\DataObjectAdapter\SimulationComponents\StrategyDataAdapter\" />
+    <Folder Include="Models\SimulationComponent\Impl\Controller\" />
+    <Folder Include="OutputData\XML\DeclarationReports\VehicleInformationFile\VehicleInformationFile_0_1\ResultWriter\" />
   </ItemGroup>
 
 </Project>

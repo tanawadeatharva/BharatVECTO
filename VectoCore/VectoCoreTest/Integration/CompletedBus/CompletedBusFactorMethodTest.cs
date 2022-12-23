@@ -411,7 +411,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(genericGearData.Count, specificGearData.Count);
 			for (int i = 0; i < genericGearData.Count; i++) {
 				Assert.IsNotNull(genericGearData[i].LossMap);
-				Assert.AreEqual(genericGearData[i].LossMap, specificGearData[i].LossMap);
+				Assert.AreEqual(genericGearData[i].LossMap.LossMapSerialized, specificGearData[i].LossMap.LossMapSerialized);
 			}
 		}
 
@@ -437,7 +437,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(genericTorqueConverterData.CCUpshiftMinAcceleration, specificTorqueConverterData.CCUpshiftMinAcceleration);
 			Assert.AreEqual(genericTorqueConverterData.CLUpshiftMinAcceleration, specificTorqueConverterData.CLUpshiftMinAcceleration);
 
-			Assert.AreEqual(genericTorqueConverterData.TorqueConverterEntries, specificTorqueConverterData.TorqueConverterEntries);
+			Assert.AreEqual(genericTorqueConverterData.CharacteristicCurve, specificTorqueConverterData.CharacteristicCurve);
 		}
 
 
@@ -1311,6 +1311,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 			public IVehicleDeclarationInputData PrimaryVehicle { get; set; }
 			public IVehicleDeclarationInputData CompletedVehicle { get; set; }
+			public XElement XMLHashCompleted { get; }
 
 			#endregion
 

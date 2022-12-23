@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 	}
 
-	public interface IElectricAuxConnecor
+	public interface IElectricAuxConnector
 	{
 		void Connect(IElectricAuxPort aux);
 	}

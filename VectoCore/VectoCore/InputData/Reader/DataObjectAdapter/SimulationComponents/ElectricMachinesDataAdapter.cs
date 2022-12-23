@@ -9,7 +9,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.Components;
+
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 {
@@ -26,27 +26,30 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			{
 				throw new VectoException("multiple electric propulsion motors are not supported at the moment");
 			}
-			CheckTorqueLimits(electricMachines, torqueLimits);
-
+			CheckTorqueLimitVoltageLevels(electricMachines, torqueLimits);
+			
 			return electricMachines.Entries
 				.Select(m => Tuple.Create(m.Position,
-					CreateElectricMachine(m.Position, m.ElectricMachine, m.Count, m.RatioADC, m.RatioPerGear, m.MechanicalTransmissionEfficiency,
-						m.MechanicalTransmissionLossMap, torqueLimits?.First(t => t.Key == m.Position).Value, averageVoltage, gearlist))).ToList();
+					CreateElectricMachine(m.Position, m.ElectricMachine, m.Count, m.ADC?.Ratio ?? 1.0, m.RatioPerGear,
+						m.MechanicalTransmissionLossMap, torqueLimits?.FirstOrDefault(t => t.Key == m.Position).Value, averageVoltage, gearlist))).ToList();
 
 		}
 
-		private void CheckTorqueLimits(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits)
+		private void CheckTorqueLimitVoltageLevels(IElectricMachinesDeclarationInputData electricMachines, 
+			IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits)
 		{
+			if (torqueLimits == null) {
+				return;
+			}
 			
 			foreach (var torqueLimit  in torqueLimits.OrderBy(x => x.Key)) {
 				
 				//E-machines at position
-				foreach(var eMachine in electricMachines.Entries.Where(e => e.Position == torqueLimit.Key).Select(e => e.ElectricMachine))
-				{
+				foreach(var eMachine in electricMachines.Entries.Where(e => e.Position == torqueLimit.Key).Select(x => x.ElectricMachine)) {
 					foreach (var torqueLimitVoltageLevel in torqueLimit.Value.Select(tl => tl.Item1)) {
 						if (eMachine.VoltageLevels.All(vl => vl.VoltageLevel != torqueLimitVoltageLevel)) {
 							throw new VectoException(
-								$"Voltage level {torqueLimitVoltageLevel} not found in {eMachine.ElectricMachineType} at position {torqueLimit.Key}");
+								$"EM Torque Limit: Voltage level {torqueLimitVoltageLevel} not found for EM at position {torqueLimit.Key}");
 						}
 					}
 				}
@@ -56,12 +59,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		private ElectricMotorData CreateElectricMachine(PowertrainPosition powertrainPosition, 
 			IElectricMotorDeclarationInputData motorData,
 			int count, 
-			double ratio,
+			double adcRatio,
 			double[] ratioPerGear,
-			double efficiency,
 			TableData adcLossMap,
 			IList<Tuple<Volt, TableData>> torqueLimits,
-			Volt averageVoltage, GearList gearList)
+			Volt averageVoltage,
+			GearList gearList)
 		{
 
 			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
@@ -76,11 +79,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 				var fullLoadCurveCombined = IntersectEMFullLoadCurves(fullLoadCurve, maxTorqueCurve);
 
-				var vLevelData = powertrainPosition == PowertrainPosition.IHPC
-					? CreateIHPCVoltageLevelData(count, entry, fullLoadCurveCombined, gearList)
-					: CreateEmVoltageLevelData(count, entry, fullLoadCurveCombined);
-				voltageLevels.Add(vLevelData);
-
+				try {
+					var vLevelData = powertrainPosition == PowertrainPosition.IHPC
+						? CreateIHPCVoltageLevelData(count, entry, fullLoadCurveCombined, gearList)
+						: CreateEmVoltageLevelData(count, entry, fullLoadCurveCombined);
+					voltageLevels.Add(vLevelData);
+				} catch (Exception ex) {
+					throw new VectoException(
+						$"Could not create Voltage Level data for {entry.VoltageLevel} at position {powertrainPosition}!\n" +
+						$"{ex.Message}",
+						ex);
+				}
 			}
 
 			if (averageVoltage == null)
@@ -92,8 +101,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var lossMap = powertrainPosition == PowertrainPosition.IHPC
 				? TransmissionLossMapReader.CreateEmADCLossMap(1.0, 1.0, "EM ADC IHPC LossMap Eff")
 				: adcLossMap != null
-					? TransmissionLossMapReader.CreateEmADCLossMap(adcLossMap, ratio, "EM ADC LossMap")
-					: TransmissionLossMapReader.CreateEmADCLossMap(efficiency, ratio, "EM ADC LossMap Eff");
+					? TransmissionLossMapReader.CreateEmADCLossMap(adcLossMap, adcRatio, "EM ADC LossMap")
+					: TransmissionLossMapReader.CreateEmADCLossMap(DeclarationData.ElectricMachineDefaultMechanicalTransmissionEfficiency, adcRatio, "EM ADC LossMap Eff");
+			
 
 			var retVal = new ElectricMotorData()
 			{
@@ -101,7 +111,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				EMDragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, count),
 				Inertia = motorData.Inertia * count,
 				OverloadRecoveryFactor = DeclarationData.OverloadRecoveryFactor,
-				RatioADC = ratio,
+				RatioADC = adcRatio,
 				RatioPerGear = ratioPerGear,
 				TransmissionLossMap = lossMap,
 			};
@@ -234,16 +244,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			};
 		}
 
-		private static ElectricMotorVoltageLevelData CreateEmVoltageLevelData(int count, IElectricMotorVoltageLevel entry, ElectricMotorFullLoadCurve fullLoadCurveCombined)
+		private static ElectricMotorVoltageLevelData CreateEmVoltageLevelData(int count,
+			IElectricMotorVoltageLevel entry, ElectricMotorFullLoadCurve fullLoadCurveCombined)
 		{
-			return new ElectricMotorVoltageLevelData()
-			{
-				Voltage = entry.VoltageLevel,
+			try {
+				return new ElectricMotorVoltageLevelData() {
+					Voltage = entry.VoltageLevel,
 
-				FullLoadCurve = fullLoadCurveCombined,
-				// DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
-				EfficiencyMap = ElectricMotorMapReader.Create(entry.PowerMap.First().PowerMap, count), //PowerMap
-			};
+					FullLoadCurve = fullLoadCurveCombined,
+					// DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
+					EfficiencyMap = ElectricMotorMapReader.Create(entry.PowerMap.First().PowerMap, count), //PowerMap
+				};
+			} catch (Exception ex) {
+				throw new VectoException($"Invalid efficiency map at voltage level {entry.VoltageLevel}", ex);
+			}
 		}
 
 		private OverloadData CalculateOverloadData(IElectricMotorDeclarationInputData motorData, int count, VoltageLevelData voltageLevels, Volt averageVoltage)
@@ -283,8 +297,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var overloadTestSpeed = (voltageEntry.OverloadTestSpeed ?? 0.RPMtoRad()) * gearRatioUsedForMeasurement;
 
 
-			var peakElPwr = voltageLevels.LookupElectricPower(voltageEntry.VoltageLevel, overloadTestSpeed, -overloadTorque, gear, true)
-				.ElectricalPower;
+            var peakElPwr = voltageLevels.LookupElectricPower(voltageEntry.VoltageLevel,
+                    overloadTestSpeed,
+					-overloadTorque,
+					gear, 
+					true)
+					.ElectricalPower;
 			var peakPwrLoss = -peakElPwr - overloadTorque * overloadTestSpeed; // losses need to be positive
 
 			var contElPwr = voltageLevels.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,

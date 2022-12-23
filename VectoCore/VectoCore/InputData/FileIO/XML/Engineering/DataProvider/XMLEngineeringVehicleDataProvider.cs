@@ -249,6 +249,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 				BaseNode, DataSource.SourcePath, XMLNames.Vehicle_PTOCycle, XMLNames.Vehicle_PTOCycle_Entry,
 				AttributeMappings.PTOCycleMap);
 
+		public TableData EPTOCycleDuringStop => throw new NotImplementedException();
+
 		public virtual TableData PTOCycleWhileDriving => null;
 		
 		#endregion

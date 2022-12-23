@@ -29,12 +29,10 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Collections.Generic;
 using Ninject.Extensions.Factory;
 using Ninject.Modules;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
@@ -68,17 +66,17 @@ namespace TUGraz.VectoCore.Models.Simulation
 	{
 		#region Implementation of IDeclarationReport
 
-		public void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public void InitializeReport(VectoRunData modelData)
 		{
 
 		}
 
-		public void PrepareResult(LoadingType loading, Mission mission, int fuelMode, VectoRunData runData)
+		public void PrepareResult(VectoRunData runData)
 		{
 
 		}
 
-		public void AddResult(LoadingType loadingType, Mission mission, int fuelMode, VectoRunData runData, IModalDataContainer modData)
+		public void AddResult(VectoRunData runData, IModalDataContainer modData)
 		{
 
 		}
@@ -92,17 +90,17 @@ namespace TUGraz.VectoCore.Models.Simulation
 	{
 		#region Implementation of IDeclarationReport
 
-		public void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public void InitializeReport(VectoRunData modelData)
 		{
 
 		}
 
-		public void PrepareResult(LoadingType loading, Mission mission, int fuelMode, VectoRunData runData)
+		public void PrepareResult(VectoRunData runData)
 		{
 
 		}
 
-		public void AddResult(LoadingType loadingType, Mission mission, int fuelMode, VectoRunData runData, IModalDataContainer modData)
+		public void AddResult(VectoRunData runData, IModalDataContainer modData)
 		{
 
 		}

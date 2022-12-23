@@ -15,7 +15,10 @@ Changelog:
     12.04.2022: Remove TorqueLimits element on vehicle level for PEV, HEV-S, HEV-IEPC-S
                 Remove BoostingLimitations for HEV-IEPC-S
 	14.04.2022: Added new RetarderTypeType definition to cover AxlegearInputRetarder (used only for E3, S3, S-IEPC, E-IEPC)
-	17.08.2022 Changed datatype of ChassisConfiguration, AxleConfiguration and LegislativeCategory for Vehicle_Exempted_MediumLorryDeclarationType-->
+	17.08.2022: Changed datatype of ChassisConfiguration, AxleConfiguration and LegislativeCategory for Vehicle_Exempted_MediumLorryDeclarationType
+	16.11.2022: 	- Removed trailing white spaces from PSTechnologies and SPTechnologies
+				- changed Small + elec. driven + ESS to Small + AMS + elec. driven	
+	-->
 	<xs:complexType name="Abstract_ADAS_ConventionalType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="v2.1:AbstractAdvancedDriverAssistantSystemsType"/>
@@ -2514,9 +2517,9 @@ Changelog:
 	<xs:simpleType name="AuxPSTechnology_PEV_LorryType">
 		<xs:restriction base="v2.4:AuxPSTechnologyLorryType">
 			<xs:enumeration value="Small + elec. driven"/>
-			<xs:enumeration value="Small + AMS + elec. driven "/>
+			<xs:enumeration value="Small + AMS + elec. driven"/>
 			<xs:enumeration value="Medium Supply 1-stage + elec. driven"/>
-			<xs:enumeration value="Medium Supply 1-stage + AMS + elec. driven "/>
+			<xs:enumeration value="Medium Supply 1-stage + AMS + elec. driven"/>
 			<xs:enumeration value="Medium Supply 2-stage + elec. driven"/>
 			<xs:enumeration value="Medium Supply 2-stage + AMS + elec. driven"/>
 			<xs:enumeration value="Large Supply + elec. driven"/>
@@ -2529,37 +2532,38 @@ Changelog:
 			<xs:enumeration value="Crankshaft mounted - Electronically controlled visco clutch"/>
 			<xs:enumeration value="Small"/>
 			<xs:enumeration value="Small + ESS"/>
-			<xs:enumeration value="Small + visco clutch "/>
+			<xs:enumeration value="Small + visco clutch"/>
 			<xs:enumeration value="Small + mech. clutch"/>
 			<xs:enumeration value="Small + ESS + AMS"/>
 			<xs:enumeration value="Small + visco clutch + AMS"/>
 			<xs:enumeration value="Small + mech. clutch + AMS"/>
 			<xs:enumeration value="Medium Supply 1-stage"/>
 			<xs:enumeration value="Medium Supply 1-stage + ESS"/>
-			<xs:enumeration value="Medium Supply 1-stage + visco clutch "/>
+			<xs:enumeration value="Medium Supply 1-stage + visco clutch"/>
 			<xs:enumeration value="Medium Supply 1-stage + mech. clutch"/>
 			<xs:enumeration value="Medium Supply 1-stage + ESS + AMS"/>
 			<xs:enumeration value="Medium Supply 1-stage + visco clutch + AMS"/>
 			<xs:enumeration value="Medium Supply 1-stage + mech. clutch + AMS"/>
 			<xs:enumeration value="Medium Supply 2-stage"/>
 			<xs:enumeration value="Medium Supply 2-stage + ESS"/>
-			<xs:enumeration value="Medium Supply 2-stage + visco clutch "/>
+			<xs:enumeration value="Medium Supply 2-stage + visco clutch"/>
 			<xs:enumeration value="Medium Supply 2-stage + mech. clutch"/>
 			<xs:enumeration value="Medium Supply 2-stage + ESS + AMS"/>
 			<xs:enumeration value="Medium Supply 2-stage + visco clutch + AMS"/>
 			<xs:enumeration value="Medium Supply 2-stage + mech. clutch + AMS"/>
 			<xs:enumeration value="Large Supply"/>
 			<xs:enumeration value="Large Supply + ESS"/>
-			<xs:enumeration value="Large Supply + visco clutch "/>
+			<xs:enumeration value="Large Supply + visco clutch"/>
 			<xs:enumeration value="Large Supply + mech. clutch"/>
 			<xs:enumeration value="Large Supply + ESS + AMS"/>
 			<xs:enumeration value="Large Supply + visco clutch + AMS"/>
 			<xs:enumeration value="Large Supply + mech. clutch + AMS"/>
 			<xs:enumeration value="Vacuum pump"/>
+			<!--fully electric-->
 			<xs:enumeration value="Small + elec. driven"/>
-			<xs:enumeration value="Small + AMS + elec. driven "/>
+			<xs:enumeration value="Small + AMS + elec. driven"/>
 			<xs:enumeration value="Medium Supply 1-stage + elec. driven"/>
-			<xs:enumeration value="Medium Supply 1-stage + AMS + elec. driven "/>
+			<xs:enumeration value="Medium Supply 1-stage + AMS + elec. driven"/>
 			<xs:enumeration value="Medium Supply 2-stage + elec. driven"/>
 			<xs:enumeration value="Medium Supply 2-stage + AMS + elec. driven"/>
 			<xs:enumeration value="Large Supply + elec. driven"/>
