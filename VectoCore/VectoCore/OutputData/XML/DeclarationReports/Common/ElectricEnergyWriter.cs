@@ -49,16 +49,23 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         protected override IList<ConvertedSI> GetEnergyConsumption(WattSecond elEnergy, Meter distance,
             Kilogram payload, CubicMeter volume, double? passengers)
-        {
-            return new[] {
-                (elEnergy / distance).ConvertToKiloWattHourPerKiloMeter(),
-                (elEnergy / distance / payload).ConvertToKiloWattHourPerTonKiloMeter(),
-                (elEnergy / distance / volume).ConvertToKiloWattHourPerCubicMeterKiloMeter(),
+		{
+			var retVal = new List<ConvertedSI>() {
+				(elEnergy / distance).ConvertToKiloWattHourPerKiloMeter(),
+				(elEnergy / distance / payload).ConvertToKiloWattHourPerTonKiloMeter(),
+			};
+			if (volume?.IsGreater(0) ?? false) {
+				retVal.Add((elEnergy / distance / volume).ConvertToKiloWattHourPerCubicMeterKiloMeter());
+			}
 
-                (elEnergy / distance).ConvertToMegaJoulePerKiloMeter(),
-                (elEnergy / distance / payload).ConvertToMegaJoulePerTonKiloMeter(),
-                (elEnergy / distance / volume).ConvertToMegaJoulePerCubicMeterKiloMeter(),
-            };
+			retVal.AddRange(new[] {
+				(elEnergy / distance).ConvertToMegaJoulePerKiloMeter(),
+				(elEnergy / distance / payload).ConvertToMegaJoulePerTonKiloMeter()
+			});
+            if (volume?.IsGreater(0) ?? false){
+                retVal.Add((elEnergy / distance / volume).ConvertToMegaJoulePerCubicMeterKiloMeter());
+            }
+            return retVal;
         }
 
         #endregion
