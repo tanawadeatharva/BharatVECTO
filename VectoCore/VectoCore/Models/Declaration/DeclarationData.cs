@@ -151,26 +151,35 @@ namespace TUGraz.VectoCore.Models.Declaration
 						grossVehicleWeight - curbWeight).Value() / 100, 0) * 100).SI<Kilogram>();
 		}
 
-		public static VehicleClass GetVehicleGroupGroup(IVehicleDeclarationInputData vehicleData)
+		public static Tuple<VehicleClass, bool?> GetVehicleGroupGroup(IVehicleDeclarationInputData vehicleData)
 		{
 			switch (vehicleData.VehicleCategory) {
 				case VehicleCategory.Van:
 				case VehicleCategory.RigidTruck:
 				case VehicleCategory.Tractor:
-					var truckSegment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory,
-						vehicleData.AxleConfiguration, vehicleData.GrossVehicleMassRating, vehicleData.CurbMassChassis,
-						vehicleData.VocationalVehicle);
-					return truckSegment.VehicleClass;
+					try {
+						var truckSegment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory,
+							vehicleData.AxleConfiguration, vehicleData.GrossVehicleMassRating,
+							vehicleData.CurbMassChassis,
+							vehicleData.VocationalVehicle);
+						return Tuple.Create(truckSegment.VehicleClass, (bool?)false);
+					} catch (VectoException) {
+						var truckSegment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory,
+							vehicleData.AxleConfiguration, vehicleData.GrossVehicleMassRating,
+							vehicleData.CurbMassChassis,
+							false);
+						return Tuple.Create(truckSegment.VehicleClass, (bool?)false);
+					}
 				case VehicleCategory.HeavyBusPrimaryVehicle:
 					var primarySegment = DeclarationData.PrimaryBusSegments.Lookup(vehicleData.VehicleCategory,
 						vehicleData.AxleConfiguration, vehicleData.Articulated);
-					return primarySegment.VehicleClass;
+					return Tuple.Create(primarySegment.VehicleClass, (bool?)null);
 				case VehicleCategory.HeavyBusCompletedVehicle:
 					var segment = DeclarationData.CompletedBusSegments.Lookup(vehicleData.AxleConfiguration.NumAxles(),
 						vehicleData.VehicleCode,
 						vehicleData.RegisteredClass, vehicleData.NumberPassengerSeatsLowerDeck, vehicleData.Height,
 						vehicleData.LowEntry);
-					return segment.VehicleClass;
+					return Tuple.Create(segment.VehicleClass, (bool?)null);
 			}
 
 			throw new VectoException("No Group found for vehicle");
@@ -189,7 +198,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 											.Sum(x => x.ElectricMachine.R85RatedPower * x.Count) ?? 0.SI<Watt>()) +
 										(vehicleData.Components?.IEPC?.R85RatedPower ?? 0.SI<Watt>()) + 
 										(vehicleData.MaxNetPower1 ?? 0.SI<Watt>()); 
-					var co2Group = WeightingGroup.Lookup(vehicleGroup, vehicleData.SleeperCab ?? false, propulsionPower);
+					var co2Group = WeightingGroup.Lookup(vehicleGroup.Item1, vehicleData.SleeperCab ?? false, propulsionPower);
 					return co2Group;
 				default:
 					return Declaration.WeightingGroup.Unknown;
@@ -1402,7 +1411,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 			return new WeightedResult(first) {
 				AverageSpeed = first.AverageSpeed,
-				FuelConsumption = first.FuelData.Select(x => Tuple.Create(x,
+				FuelConsumption = first.FuelData?.Select(x => Tuple.Create(x,
 						first.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected))
 					.ToDictionary(x => x.Item1, x => x.Item2),
 				ElectricEnergyConsumption = first.ElectricEnergyConsumption,

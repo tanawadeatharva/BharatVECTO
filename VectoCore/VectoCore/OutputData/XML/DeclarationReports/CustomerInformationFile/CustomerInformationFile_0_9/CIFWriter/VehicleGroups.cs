@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + XMLNames.Vehicle_VehicleCategory, vehicleData.LegislativeClass.ToXMLFormat()),
 				new XElement(_cif + XMLNames.Vehicle_AxleConfiguration, vehicleData.AxleConfiguration.ToXMLFormat()),
 				new XElement(_cif + XMLNames.Vehicle_TPMLM, XMLHelper.ValueAsUnit(vehicleData.GrossVehicleMassRating, "kg")),
-				new XElement(_cif + XMLNames.Report_Vehicle_VehicleGroup, DeclarationData.GetVehicleGroupGroup(vehicleData).GetClassNumber()),
+				new XElement(_cif + XMLNames.Report_Vehicle_VehicleGroup, DeclarationData.GetVehicleGroupGroup(vehicleData).Item1.GetClassNumber()),
 				new XElement(_cif + "VehicleGroupCO2", DeclarationData.GetVehicleGroupCO2StandardsGroup(vehicleData).ToXMLFormat()),
 
 			};
@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + XMLNames.Vehicle_VehicleCategory, consolidatedVehicleData.LegislativeClass.ToXMLFormat()),
 				new XElement(_cif + XMLNames.Vehicle_AxleConfiguration, primary.AxleConfiguration.ToXMLFormat()),
 				new XElement(_cif + XMLNames.Vehicle_TPMLM, XMLHelper.ValueAsUnit(consolidatedVehicleData.GrossVehicleMassRating, "kg")),
-				new XElement(_cif + XMLNames.Report_Vehicle_VehicleGroup, DeclarationData.GetVehicleGroupGroup(consolidatedVehicleData).GetClassNumber()),
+				new XElement(_cif + XMLNames.Report_Vehicle_VehicleGroup, DeclarationData.GetVehicleGroupGroup(consolidatedVehicleData).Item1.GetClassNumber()),
 				new XElement(_cif + "VehicleGroupCO2", DeclarationData.GetVehicleGroupCO2StandardsGroup(multiStageInputDataProvider).ToXMLFormat()),
 			};
 			return result;
@@ -77,6 +77,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
 			var vehicleData = inputData.JobInputData.Vehicle;
+			var vehicleGroup = DeclarationData.GetVehicleGroupGroup(vehicleData);
 			var result = new List<XElement>() {
 				new XElement(_cif + XMLNames.Component_Manufacturer, vehicleData.Manufacturer),
 				new XElement(_cif + XMLNames.Component_ManufacturerAddress, vehicleData.ManufacturerAddress),
@@ -88,7 +89,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				//	? vehicleData.VehicleTypeApprovalNumber 
 				//	: null),
 				new XElement(_cif + XMLNames.CorrectedActualMass, vehicleData.CurbMassChassis.ValueAsUnit("kg")),
-				new XElement(_cif + XMLNames.Vehicle_VocationalVehicle, vehicleData.VocationalVehicle),
+				new XElement(_cif + XMLNames.Vehicle_VocationalVehicle, vehicleGroup.Item2),
 				new XElement(_cif + XMLNames.Vehicle_SleeperCab, vehicleData.SleeperCab),
 				new XElement(_cif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicleData.ZeroEmissionVehicle),
 				new XElement(_cif + XMLNames.Vehicle_HybridElectricHDV, vehicleData.HybridElectricHDV)

@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 					new XElement(tns + XMLNames.Vehicle_CurbMassChassis, XMLHelper.ValueAsUnit(modelData.VehicleData.CurbMass, XMLNames.Unit_kg)),
 					new XElement(tns + XMLNames.TPMLM,
 								XMLHelper.ValueAsUnit(modelData.VehicleData.GrossVehicleMass, XMLNames.Unit_t, 2)),
-					new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.ZeroEmissionVehicle),
+					//new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.ZeroEmissionVehicle),
 					new XElement(tns + XMLNames.Vehicle_ZeroEmissionVehicle, modelData.VehicleData.ZeroEmissionVehicle),
 					new XElement(tns + XMLNames.Vehicle_HybridElectricHDV, modelData.VehicleData.HybridElectricHDV),
 					new XElement(tns + XMLNames.Vehicle_DualFuelVehicle, modelData.VehicleData.DualFuelVehicle),
