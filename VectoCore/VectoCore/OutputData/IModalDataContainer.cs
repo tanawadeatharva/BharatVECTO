@@ -615,6 +615,9 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static Scalar ICEMaxLoadTimeShare(this IModalDataContainer data)
 		{
+			if (!data.HasCombustionEngine) {
+				return 0.SI<Scalar>();
+			}
 			var tmp = data.GetValues(x => new {
 				tMax = x.Field<NewtonMeter>(ModalResultField.T_ice_full.GetName()).DefaultIfNull(-1),
 				tEng = x.Field<NewtonMeter>(ModalResultField.T_ice_fcmap.GetName()).DefaultIfNull(0),
@@ -656,6 +659,9 @@ namespace TUGraz.VectoCore.OutputData
 		/// <returns></returns>
 		public static Scalar GearshiftCount(this IModalDataContainer data)
 		{
+			if (!data.HasGearbox) {
+				return 0.SI<Scalar>();
+			}
 			var prevGear = data.GetValues<uint>(ModalResultField.Gear).First();
 			var lastGear = prevGear;
 			var gearCount = 0;
