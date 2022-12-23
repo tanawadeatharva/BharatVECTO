@@ -270,6 +270,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public bool HasCombustionEngine { get; set; }
+		public bool HasGearbox { get; set; }
+
 		public WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos)
 		{
 			throw new NotImplementedException();
@@ -336,6 +338,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public ICorrectedModalData CorrectedModalData { get; }
+		public bool HasAxlegear { get; set; }
+
 		public void RegisterComponent(VectoSimulationComponent component)
 		{
 			

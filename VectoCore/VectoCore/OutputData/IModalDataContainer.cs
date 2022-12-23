@@ -130,6 +130,8 @@ namespace TUGraz.VectoCore.OutputData
 		//void AddElectricMotor(PowertrainPosition pos);
 		KilogramPerWattSecond VehicleLineSlope(IFuelProperties fuel);
 		bool HasCombustionEngine { get; }
+		bool HasGearbox { get; }
+		bool HasAxlegear { get; }
 		WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos);
 		WattSecond TotalElectricMotorWorkRecuperate(PowertrainPosition emPos);
 		WattSecond TotalElectricMotorMotWorkDrive(PowertrainPosition emPos);

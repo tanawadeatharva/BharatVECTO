@@ -224,6 +224,11 @@ namespace TUGraz.VectoCore.OutputData
 
 		public bool HasCombustionEngine => !(_runData.JobType == VectoSimulationJobType.BatteryElectricVehicle || _runData.JobType == VectoSimulationJobType.IEPC_E);
 
+		public bool HasGearbox => _runData.GearboxData != null;
+
+		public bool HasAxlegear => _runData.AxleGearData != null;
+
+
 		public WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos)
 		{
 			var offField = emPos == PowertrainPosition.IEPC ? ModalResultField.IEPC_Off_ : ModalResultField.EM_Off_;
