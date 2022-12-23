@@ -29,17 +29,17 @@
 			<ElectricMachine>
 				<Position>3</Position>
 				<VoltageLevel>
-					<Voltage>100</Voltage>
+					<Voltage>300</Voltage>
 					<MaxTorqueCurve>
 						<v2.3:Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-200.00"/>
-						<v2.3:Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
+						<v2.3:Entry outShaftSpeed="7500.00" maxTorque="300.00" minTorque="-300.00"/>
 					</MaxTorqueCurve>
 				</VoltageLevel>
 				<VoltageLevel>
-					<Voltage>500</Voltage>
+					<Voltage>600</Voltage>
 					<MaxTorqueCurve>
 						<v2.3:Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-						<v2.3:Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
+						<v2.3:Entry outShaftSpeed="7500.00" maxTorque="300.00" minTorque="-300.00"/>
 					</MaxTorqueCurve>
 				</VoltageLevel>
 			</ElectricMachine>
@@ -62,7 +62,7 @@
 						<DcDcConverterIncluded>true</DcDcConverterIncluded>
 						<IHPCType>None</IHPCType>
 						<VoltageLevel>
-							<Voltage>600</Voltage>
+							<Voltage>300</Voltage>
 							<ContinuousTorque>350.00</ContinuousTorque>
 							<TestSpeedContinuousTorque>2400.00</TestSpeedContinuousTorque>
 							<OverloadTorque>470.00</OverloadTorque>
