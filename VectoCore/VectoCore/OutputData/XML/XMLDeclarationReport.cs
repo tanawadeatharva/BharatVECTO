@@ -163,13 +163,15 @@ namespace TUGraz.VectoCore.OutputData.XML
 				FullLoadPercentage = data.ICEMaxLoadTimeShare();
 				GearshiftCount = data.GearshiftCount();
 
-				var entriesDriving = data.GetValues(
-					r => new {
-						dt = r.Field<Second>(ModalResultField.simulationInterval.GetName()),
-						v = r.Field<MeterPerSecond>(ModalResultField.v_act.GetName()),
-						nEng = r.Field<PerSecond>(ModalResultField.n_ice_avg.GetName())
-					}).Where(x => x.v.IsGreater(0)).ToArray();
-				if (entriesDriving.Length > 0) {
+				var entriesDriving = data.HasCombustionEngine
+					? data.GetValues(
+						r => new {
+							dt = r.Field<Second>(ModalResultField.simulationInterval.GetName()),
+							v = r.Field<MeterPerSecond>(ModalResultField.v_act.GetName()),
+							nEng = r.Field<PerSecond>(ModalResultField.n_ice_avg.GetName())
+						}).Where(x => x.v.IsGreater(0)).ToArray()
+					: null;
+				if (entriesDriving?.Length > 0) {
 					var drivingTime = entriesDriving.Sum(x => x.dt);
 
 					AverageDrivingSpeed = entriesDriving.Sum(x => x.v * x.dt) / drivingTime;
@@ -196,16 +198,24 @@ namespace TUGraz.VectoCore.OutputData.XML
 					DeclarationData.SetElectricRangesPEV(this, runData, data);
 				}
 
-				var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
-					? ModalResultField.P_retarder_in
-					: (runData.AngledriveData == null ? ModalResultField.P_axle_in : ModalResultField.P_angle_in);
-				var eGbxIn = data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_in, x => x > 0);
-				var eGbxOut = data.TimeIntegral<WattSecond>(gbxOutSignal, x => x > 0);
-				AverageGearboxEfficiency = eGbxOut / eGbxIn;
+				if (data.HasGearbox) {
+					var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
+						? ModalResultField.P_retarder_in
+						: (runData.AngledriveData == null ? ModalResultField.P_axle_in : ModalResultField.P_angle_in);
+					var eGbxIn = data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_in, x => x > 0);
+					var eGbxOut = data.TimeIntegral<WattSecond>(gbxOutSignal, x => x > 0);
+					AverageGearboxEfficiency = eGbxOut / eGbxIn;
+				} else {
+					AverageGearboxEfficiency = double.NaN;
+				}
 
-				var eAxlIn = data.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, x => x > 0);
-				var eAxlOut = data.TimeIntegral<WattSecond>(ModalResultField.P_brake_in, x => x > 0);
-				AverageAxlegearEfficiency = eAxlOut == null || eAxlIn == null ? double.NaN : eAxlOut / eAxlIn;
+				if (data.HasAxlegear) {
+					var eAxlIn = data.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, x => x > 0);
+					var eAxlOut = data.TimeIntegral<WattSecond>(ModalResultField.P_brake_in, x => x > 0);
+					AverageAxlegearEfficiency = eAxlOut == null || eAxlIn == null ? double.NaN : eAxlOut / eAxlIn;
+				} else {
+					AverageAxlegearEfficiency = double.NaN;
+				}
 
 				WeightingFactor = weightingFactor;
 
