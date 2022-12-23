@@ -266,7 +266,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						foreach (var run in Runs) {
 							var r = run;
 							task = task.ContinueWith(t => r.RunWorkerAsync().Wait(),
-								TaskContinuationOptions.OnlyOnRanToCompletion);
+								TaskContinuationOptions.NotOnCanceled);
+							
 						}
 
 						first.Start();
