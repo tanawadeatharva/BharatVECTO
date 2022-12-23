@@ -32,11 +32,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			if (weighted == null) {
 				return null;
 			}
+
+			var fcWriter = FuelConsumptionWriter;
 			return new XElement(TNS + XMLNames.Report_Results_Summary,
 				new XAttribute(xsi + XMLNames.XSIType, ResultSummaryXMLType),
 				GetSummary(weighted),
-				weighted.FuelConsumption.Select(x =>
-					FuelConsumptionWriter?.GetElement(weighted, x.Key, x.Value)).ToArray(),
+				fcWriter != null
+					? weighted.FuelConsumption.Select(x =>
+						fcWriter.GetElement(weighted, x.Key, x.Value)).ToArray()
+					: null,
 				ElectricEnergyConsumptionWriter?.GetElement(weighted),
 				CO2Writer?.GetElements(weighted),
 				ElectricRangeWriter?.GetElements(weighted)

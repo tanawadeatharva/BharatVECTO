@@ -15,16 +15,19 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         #region Overrides of AbstractResultWriter
 
         public override XElement GetElement(IResultEntry entry)
-        {
-            return new XElement(TNS + XMLNames.Report_ResultEntry_Total,
-                VehiclePerformanceWriter.GetElement(entry),
-                entry.FuelData.Select(f =>
-                    FuelConsumptionWriter?.GetElement(entry, entry.FuelConsumptionFinal(f.FuelType))),
-                ElectricEnergyConsumptionWriter?.GetElement(entry),
-                CO2Writer?.GetElements(entry),
-                ElectricRangeWriter?.GetElements(entry)
-            );
-        }
+		{
+			var fcWrtier = FuelConsumptionWriter;
+			return new XElement(TNS + XMLNames.Report_ResultEntry_Total,
+				VehiclePerformanceWriter.GetElement(entry),
+				fcWrtier != null
+					? entry.FuelData.Select(f =>
+						fcWrtier.GetElement(entry, entry.FuelConsumptionFinal(f.FuelType)))
+					: null,
+				ElectricEnergyConsumptionWriter?.GetElement(entry),
+				CO2Writer?.GetElements(entry),
+				ElectricRangeWriter?.GetElements(entry)
+			);
+		}
 
         #endregion
 
