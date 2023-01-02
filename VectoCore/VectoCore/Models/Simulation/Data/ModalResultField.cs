@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Reflection;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -274,6 +275,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		///     [kW]	Power demand of Auxiliary with ID xxx. See also Aux Dialog and Driving Cycle.
 		/// </summary>
 		[ModalResultField(typeof(SI), caption: "P_aux_{0} [kW]", outputFactor: 1e-3)] P_aux_,
+		[ModalResultField(typeof(SI), caption: "P_aux_{0}_el [kW]", outputFactor: 1e-3)] P_aux_el_,
 
 		/// Bus Aux Data
 		[ModalResultField(typeof(SI), caption: "P_busAux_ES_HVAC [kW]", outputFactor: 1e-3)] P_busAux_ES_HVAC,
@@ -451,15 +453,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		// -->
 
-		[ModalResultField(typeof(SI), caption: "P_REESS_T [kW]", outputFactor: 1e-3)] P_reess_terminal,
-		[ModalResultField(typeof(SI), caption: "P_REESS_int [kW]", outputFactor: 1e-3)] P_reess_int,
-		[ModalResultField(typeof(SI), caption: "P_REESS_loss [kW]", outputFactor: 1e-3)] P_reess_loss,
-		[ModalResultField(typeof(SI), caption: "REESS SOC [%]", outputFactor: 100)] REESSStateOfCharge,
-		[ModalResultField(typeof(SI), caption: "P_REESS_charge_max [kW]", outputFactor: 1e-3)] P_reess_charge_max,
-		[ModalResultField(typeof(SI), caption: "P_REESS_discharge_max [kW]", outputFactor: 1e-3)] P_reess_discharge_max,
-		[ModalResultField(typeof(SI), caption: "U_REESS_terminal [V]")] U_reess_terminal,
-		[ModalResultField(typeof(SI), caption: "U_0_REESS [V]")] U0_reess,
-		[ModalResultField(typeof(SI), caption: "I_REESS [A]")] I_reess,
+		[ModalResultField(typeof(SI), caption: "P_REESS_T [kW]", outputFactor: 1e-3, showUnit: true)] P_reess_terminal,
+		[ModalResultField(typeof(SI), caption: "P_REESS_int [kW]", outputFactor: 1e-3, showUnit: true)] P_reess_int,
+		[ModalResultField(typeof(SI), caption: "P_REESS_loss [kW]", outputFactor: 1e-3, showUnit: true)] P_reess_loss,
+		[ModalResultField(typeof(SI), caption: "REESS SOC [%]", outputFactor: 100, showUnit: true)] REESSStateOfCharge,
+		[ModalResultField(typeof(SI), caption: "P_REESS_charge_max [kW]", outputFactor: 1e-3, showUnit: true)] P_reess_charge_max,
+		[ModalResultField(typeof(SI), caption: "P_REESS_discharge_max [kW]", outputFactor: 1e-3, showUnit:true)] P_reess_discharge_max,
+		[ModalResultField(typeof(SI), caption: "U_REESS_terminal [V]", showUnit:true)] U_reess_terminal,
+		[ModalResultField(typeof(SI), caption: "U_0_REESS [V]", showUnit:true)] U0_reess,
+		[ModalResultField(typeof(SI), caption: "I_REESS [A]", showUnit: true)] I_reess,
 		[ModalResultField(typeof(SI), caption: "T_max_propulsion [Nm]")] MaxPropulsionTorqe,
 
 		[ModalResultField(typeof(SI), caption: "P_DC/DC_In [kW]", outputFactor: 1e-3)] P_DCDC_In,
@@ -500,10 +502,21 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			return GetAttribute(field).Name ?? field.ToString();
 		}
 
-		public static string GetCaption(this ModalResultField field)
+
+		public static string GetCaption(this ModalResultField field, string suffix = null)
 		{
 			var attribute = GetAttribute(field);
-			return attribute.Caption ?? attribute.Name ?? field.ToString();
+			if (suffix != null) {
+				var captionNoUnit = field.GetShortCaption();
+				var captionUnit = field.GetCaption();
+				var captionWithSuffix = captionUnit.Replace(captionNoUnit, captionNoUnit + suffix);
+
+				return captionWithSuffix;
+			} else {
+				return attribute.Caption ?? attribute.Name ?? field.ToString();
+			}
+
+			
 		}
 
 		public static string GetShortCaption(this ModalResultField field)
@@ -511,6 +524,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			var caption = GetCaption(field);
 			return Regex.Replace(caption, @"\[.*?\]|\<|\>", "").Trim();
 		}
+
 
 		public static Type GetDataType(this ModalResultField field)
 		{

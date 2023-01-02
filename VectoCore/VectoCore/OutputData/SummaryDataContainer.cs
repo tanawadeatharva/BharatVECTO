@@ -564,9 +564,11 @@ namespace TUGraz.VectoCore.OutputData
 				SumDataFields.AXLE_RATIO
 			});
             cols.AddRange(new[] {
-                Constants.Auxiliaries.IDs.SteeringPump, Constants.Auxiliaries.IDs.Fan,
+                Constants.Auxiliaries.IDs.SteeringPump, 
+				Constants.Auxiliaries.IDs.Fan,
                 Constants.Auxiliaries.IDs.HeatingVentilationAirCondition,
-                Constants.Auxiliaries.IDs.PneumaticSystem, Constants.Auxiliaries.IDs.ElectricSystem
+                Constants.Auxiliaries.IDs.PneumaticSystem,
+				Constants.Auxiliaries.IDs.ElectricSystem
             }.Select(x => string.Format(SumDataFields.AUX_TECH_FORMAT, x)));
 
 			cols.AddRange(new[] {

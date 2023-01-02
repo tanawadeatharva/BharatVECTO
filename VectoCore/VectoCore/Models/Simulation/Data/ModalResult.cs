@@ -438,7 +438,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				var entry = BatteryColumns.GetOrAdd(idx, _ => new Dictionary<ModalResultField, DataColumn>());
 				foreach (var key in BatterySignals) {
 					entry.GetOrAdd(key, _ => {
-						var c = Columns.Add($"{key.GetName()}_{idx}", typeof(SI));
+						var c = Columns.Add($"{key.GetName()}_{idx}", 
+							typeof(SI));
+						c.Caption = key.GetCaption("_" + idx.ToString());
 						c.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] = key.GetAttribute().Decimals;
 						c.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
 							key.GetAttribute().OutputFactor;
