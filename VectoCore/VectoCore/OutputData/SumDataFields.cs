@@ -24,6 +24,7 @@ namespace TUGraz.VectoCore.OutputData
 		public const string JOB = "Job [-]";
 		public const string INPUTFILE = "Input File [-]";
 		public const string CYCLE = "Cycle [-]";
+		public const string OVCHEVMode = "Ovc Mode [-]";
 		public const string STATUS = "Status";
 		public const string CURB_MASS = "Corrected Actual Curb Mass [kg]";
 		public const string LOADING = "Loading [kg]";
@@ -329,7 +330,7 @@ namespace TUGraz.VectoCore.OutputData
 			{ INPUTFILE, SumFunc((r,m) => SummaryDataContainer.ReplaceNotAllowedCharacters(r.JobName)) },
 			{ CYCLE, SumFunc((r, m) => SummaryDataContainer.ReplaceNotAllowedCharacters(r.Cycle.Name + Constants.FileExtensions.CycleFile))},
 			{ STATUS, SumFunc((r, m) => m.RunStatus)},
-
+			{ OVCHEVMode, SumFunc((r, m) => r.OVCMode)},
 			{ TIME, SumFunc((r,m) => (ConvertedSI)m.Duration, ModalResultField.time)},
 			{ DISTANCE, SumFunc((r, m) => m.Distance?.ConvertToKiloMeter(), ModalResultField.dist)},
 			{ SPEED, SumFunc((r, m) => m.Speed()?.ConvertToKiloMeterPerHour(), ModalResultField.dist, ModalResultField.time)},
