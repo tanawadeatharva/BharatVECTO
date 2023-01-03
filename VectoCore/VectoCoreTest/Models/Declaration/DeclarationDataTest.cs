@@ -2392,5 +2392,70 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             //Assert.IsTrue(expectedClass.Equals(tyreClass, StringComparison.InvariantCultureIgnoreCase));
             Assert.AreEqual(expectedClass, tyreClass);
         }
-    }
+
+
+        [TestCase(VehicleClass.Class1s, MissionType.RegionalDelivery, 2)]
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 2)]
+		[TestCase(VehicleClass.Class16, MissionType.Construction, 2)]
+		[TestCase(VehicleClass.Class53, MissionType.UrbanDelivery, 4)]
+        public void VehicleOperationLookupChargingEventsLorry(VehicleClass hdvClass, MissionType mission, double expected)
+		{
+			var val = DeclarationData.VehicleOperation.LookupChargingEventsPerDay(hdvClass, mission);
+			Assert.AreEqual(expected, val);
+		}
+
+		[TestCase(VehicleClass.Class1s, MissionType.RegionalDelivery, 0.5)]
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 0.5)]
+		[TestCase(VehicleClass.Class16, MissionType.Construction, 0.5)]
+		[TestCase(VehicleClass.Class53, MissionType.UrbanDelivery, 0.5)]
+		public void VehicleOperationLookupChargingDurationLorry(VehicleClass hdvClass, MissionType mission, double expected)
+		{
+			var val = DeclarationData.VehicleOperation.LookupChargingDurationPerEvent(hdvClass, mission);
+			Assert.AreEqual(expected * 3600, val.Value()); //stored in seconds
+		}
+
+		[TestCase(VehicleClass.Class1s, MissionType.RegionalDelivery, 250)]
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 250)]
+		[TestCase(VehicleClass.Class16, MissionType.Construction, 100)]
+		[TestCase(VehicleClass.Class53, MissionType.UrbanDelivery, 250)]
+		public void VehicleOperationLookupMaxChargingPowerLorry(VehicleClass hdvClass, MissionType mission, double expected)
+		{
+			var val = DeclarationData.VehicleOperation.LookupMaxChargingPower(hdvClass, mission);
+			Assert.AreEqual(expected * 1000, val.Value()); //stored in watt
+		}
+
+		[TestCase(VehicleClass.Class1s, MissionType.RegionalDelivery, 80000, 320)]
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 80000, 320)]
+		[TestCase(VehicleClass.Class16, MissionType.Construction, 60000, 240)]
+		[TestCase(VehicleClass.Class53, MissionType.UrbanDelivery, 60000, 240)]
+		public void VehicleOperationLookupMileageLorry(VehicleClass hdvClass, MissionType mission, double expectedAnnual, double expectedDaily)
+		{
+			var val = DeclarationData.VehicleOperation.LookupMileage(hdvClass, mission);
+			Assert.AreEqual(expectedAnnual * 1000, val.annualMileage.Value()); //stored in meter
+			Assert.AreEqual(expectedDaily * 1000, val.dailyMileage.Value()); //stored in meter
+		}
+
+
+        [TestCase(VehicleClass.Class53, MissionType.LongHaul)]
+		[TestCase(VehicleClass.Class16, MissionType.UrbanDelivery)]
+		[TestCase(VehicleClass.Class1s, MissionType.Coach)]
+        public void VehicleOperationHeavyLorryFail(VehicleClass hdvClass, MissionType mission)
+		{
+			Assert.Throws<VectoException>(() => {
+				DeclarationData.VehicleOperation.LookupChargingDurationPerEvent(hdvClass, mission);
+			});
+
+			Assert.Throws<VectoException>(() => {
+				DeclarationData.VehicleOperation.LookupChargingEventsPerDay(hdvClass, mission);
+			});
+
+			Assert.Throws<VectoException>(() => {
+				DeclarationData.VehicleOperation.LookupMaxChargingPower(hdvClass, mission);
+			});
+
+			Assert.Throws<VectoException>(() => {
+				DeclarationData.VehicleOperation.LookupMileage(hdvClass, mission);
+			});
+        }
+	}
 }
