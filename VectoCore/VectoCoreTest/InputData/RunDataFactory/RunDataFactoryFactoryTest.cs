@@ -637,6 +637,27 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 			var type = arch.ToString().StartsWith("P")
 				? VectoSimulationJobType.ParallelHybridVehicle
 				: VectoSimulationJobType.SerialHybridVehicle;
+
+
+			switch (arch) {
+				case ArchitectureID.P1:
+				case ArchitectureID.P2:
+				case ArchitectureID.P2_5:
+				case ArchitectureID.P3:
+				case ArchitectureID.P4:
+					type = VectoSimulationJobType.ParallelHybridVehicle;
+					break;
+				case ArchitectureID.S2:
+				case ArchitectureID.S3:
+				case ArchitectureID.S4:
+					type = VectoSimulationJobType.SerialHybridVehicle;
+					break;
+				case ArchitectureID.S_IEPC:
+					type = VectoSimulationJobType.IEPC_S;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(arch), arch, null);
+			}
 			mock.Setup(p => p.JobInputData.Vehicle.ArchitectureID).
 				Returns(arch);
 			mock.Setup(p => p.JobInputData.JobType).

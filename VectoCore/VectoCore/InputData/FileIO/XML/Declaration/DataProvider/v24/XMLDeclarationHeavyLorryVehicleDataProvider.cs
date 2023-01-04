@@ -196,7 +196,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override VectoSimulationJobType VehicleType
 		{
-			get => VectoSimulationJobType.BatteryElectricVehicle;
+			get => VectoSimulationJobType.IEPC_E;
 		}
 	}
 
@@ -239,7 +239,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override VectoSimulationJobType VehicleType
 		{
-			get => VectoSimulationJobType.SerialHybridVehicle;
+			get => VectoSimulationJobType.IEPC_S;
 		}
 
 		public override bool HybridElectricHDV => true;
