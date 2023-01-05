@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			return new EfficiencyMap.Entry(
 				speed: row.ParseDouble(Fields.MotorSpeed).RPMtoRad() * ratio,
 				torque: row.ParseDouble(Fields.Torque).SI<NewtonMeter>() / ratio,
-				powerElectrical: row.ParseDouble(Fields.PowerElectrical).SI(Unit.SI.Kilo.Watt).Cast<Watt>());
+				powerElectrical: row.ParseDouble(Fields.PowerElectrical).SI<Watt>());
 		}
 
 
