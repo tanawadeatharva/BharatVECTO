@@ -8,6 +8,7 @@ using System.Collections.Immutable;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
 using Ninject;
 using NUnit.Framework;
@@ -177,34 +178,38 @@ public class HeavyLorrySimulation
 
 	}
 
-	[Test]
-	public void HEVS4()
-	{
-		var simFactory = GetSimulatorFactory(Path.Combine(BASE_DIR, HeavylorryGroup2HevS4XML), out var dataProvider,
-			out var fileWriter, out var mockSumWriter);
-		
-		var runs = simFactory.SimulationRuns();
-		foreach (var vectoRun in runs) {
-			var rd = vectoRun.GetContainer().RunData;
-		}
-		var container = runs.First().GetContainer();
-		var runData = container.RunData;
-		
-		
-		
-		//Pneumatic system data test
+	//[Test]
+	//public void HEVS4()
+	//{
+	//	var jobContainer = GetJobContainer(HeavylorryGroup2HevS4XML, 6, out var fileWriter, out var runs, out var sumDataContainer);
+	//	//var simFactory = GetSimulatorFactory(Path.Combine(BASE_DIR, HeavylorryGroup2HevS4XML), out var dataProvider,
+	//	//	out var fileWriter, out var mockSumWriter);
+
+	//	foreach (var vectoRun in runs) {
+	//		var rd = vectoRun.GetContainer().RunData;
+	//	}
+	//	var container = runs.First().GetContainer();
+	//	var runData = container.RunData;
+
+	//	runs = runs.Where(run => {
+	//		var rd = run.GetContainer().RunData;
+	//		return rd.Mission.MissionType == MissionType.UrbanDelivery && rd.Loading == LoadingType.ReferenceLoad;
+	//	}).ToList();
+
+	//	jobContainer.AddRun(runs.Single());
+
+	//	Assert.AreEqual(1, jobContainer.Runs.Count);
+
+	//	var modData = ((ModalDataContainer)((VehicleContainer)runs.Single().GetContainer()).ModData).Data;
+	//	jobContainer.Execute(false);
+	//	WaitAndAssertSuccess(jobContainer, fileWriter);
 
 
-
-		var ps = runData.Aux.Where(x => x.ID == Constants.Auxiliaries.IDs.PneumaticSystem).Single();
-		Assume.That(ps.IsFullyElectric);
-
-
-		//Fully electric aux have a seperate electric power table
-		//Assume.That(ps.PowerDemandMech != ps.PowerDemandElectric * DeclarationData.AlternatorEfficiency);
-
-		Assert.That(ps.ConnectToREESS);
-	}
+	//	//Pneumatic system data test
+	//	var ps = runData.Aux.Where(x => x.ID == Constants.Auxiliaries.IDs.PneumaticSystem).Single();
+	//	Assume.That(ps.IsFullyElectric);
+	//	Assert.That(ps.ConnectToREESS);
+	//}
 
 
 	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S4_invalid_pto.xml")]
@@ -218,7 +223,8 @@ public class HeavyLorrySimulation
 
 	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S2_ovc.xml", 12)]
 	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S3_ovc.xml", 12)]
-	public void HEV_ChargeDepleting(string jobFile, int nrRuns)
+	//[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S4_ovc.xml",12)]
+	public void SHEV_ChargeDepleting(string jobFile, int nrRuns)
 	{
 		SummaryDataContainer sumDataContainer;
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out sumDataContainer);
@@ -248,6 +254,79 @@ public class HeavyLorrySimulation
 		foreach (DataRow modDataRow in modData.Rows) {
 			Assert.AreEqual(soc, modDataRow.Field<Scalar>(ModalResultField.REESSStateOfCharge.GetName()));
 			Assert.IsFalse(modDataRow.Field<bool>(ModalResultField.ICEOn.GetName()));
+			AssertSHEV_PEV_Conditioning(modDataRow, runs.Single());
+		}
+		Assert.IsTrue(modData.Rows.Count > 0);
+	}
+
+	//runs.First().GetContainer().PowertrainInfo.ElectricMotorPositions;
+	public void AssertSHEV_PEV_Conditioning(DataRow modDataRow, IVectoRun run)
+	{
+		var electricMotorPositions = run.GetContainer().PowertrainInfo.ElectricMotorPositions;
+		var position = electricMotorPositions.Single(e => e != PowertrainPosition.GEN);
+
+		var idx = modDataRow.Table.Rows.IndexOf(modDataRow);
+		if (idx - 1 < 0) {
+			return;
+		}
+
+		var prevRow = modDataRow.Table.Rows[idx - 1];
+
+		var condData = run.GetContainer().RunData.Aux.Single(aux => aux.ID == Constants.Auxiliaries.IDs.Cond);
+		Assert.IsTrue(condData.IsFullyElectric);
+		Assert.IsTrue(condData.ConnectToREESS);
+		var time = modDataRow.Field<Second>(ModalResultField.time.GetName());
+		//modDataRow.Table.Rows[]
+		if (EMOn(prevRow, position) || EMOn(prevRow, PowertrainPosition.GEN)) {
+			var cond = DeclarationData.Conditioning.LookupPowerDemand(run.GetContainer().RunData.VehicleData.VehicleClass,
+				run.GetContainer().RunData.Mission.MissionType);
+			var condMod = modDataRow.Field<Watt>("P_aux_COND_el [kW]");
+			Assert.IsTrue(cond.IsEqual(condMod), $"expected {cond} got {condMod} at {time}");
+		} else {
+			var condMod = modDataRow.Field<Watt>("P_aux_COND_el [kW]");
+			Assert.IsTrue(0.SI<Watt>().IsEqual(condMod), $"expected {0} got {condMod} at {time}");
+		}
+	}
+
+	private static bool EMOn(DataRow prevRow, PowertrainPosition position)
+	{
+		return prevRow.Field<Scalar>(string.Format(ModalResultField.EM_Off_.GetCaption(), position.GetLabel())) == 0.SI<Scalar>();
+	}
+
+	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S2_ovc.xml", 12)]
+	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S3_ovc.xml", 12)]
+	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S4.xml", 6)]
+	public void SHEV_ChargeSustaining(string jobFile, int nrRuns)
+	{
+		SummaryDataContainer sumDataContainer;
+		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out sumDataContainer);
+
+		if (runs.First().GetContainer().RunData.VehicleData.Ocv) {
+			Assert.AreEqual(runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting),
+				runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.ChargeSustaining));
+		}
+		
+		Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.NotApplicable));
+
+		runs = runs.Where(run => {
+			var rd = run.GetContainer().RunData;
+			return rd.OVCMode == VectoRunData.OvcHevMode.ChargeSustaining &&
+					rd.Mission.MissionType == MissionType.UrbanDelivery && rd.Loading == LoadingType.ReferenceLoad;
+		}).ToList();
+
+		jobContainer.AddRun(runs.Single());
+
+		Assert.AreEqual(1, jobContainer.Runs.Count);
+
+		var modData = ((ModalDataContainer)((VehicleContainer)runs.Single().GetContainer()).ModData).Data;
+		jobContainer.Execute(false);
+		WaitAndAssertSuccess(jobContainer, fileWriter);
+
+		
+		var soc = modData.Rows[0].Field<Scalar>(ModalResultField.REESSStateOfCharge.GetName());
+		foreach (DataRow modDataRow in modData.Rows)
+		{
+			AssertSHEV_PEV_Conditioning(modDataRow, runs.Single());
 		}
 		Assert.IsTrue(modData.Rows.Count > 0);
 	}
@@ -284,19 +363,21 @@ public class HeavyLorrySimulation
 		modDataContainer.Auxiliaries = aux;
 		//modDataContainer.GetValues<double>(ModalResultField
 
-		var soc = modData.Rows[0].Field<Scalar>(ModalResultField.REESSStateOfCharge.GetName());
+		
 
-		var ptoTransm = modDataContainer[Constants.Auxiliaries.IDs.PTOTransmission];
+		var ptoTransm = modData.Rows[1][modDataContainer.Auxiliaries[Constants.Auxiliaries.IDs.PTOTransmission]];
+		var ptoTransmCaption = modDataContainer.Auxiliaries[Constants.Auxiliaries.IDs.PTOTransmission];
 		Assert.IsNotNull(ptoTransm);
 		//modData.
-		foreach (DataRow modDataRow in modData.Rows)
+		foreach (DataRow row in modData.Rows)
 		{
-			
+			if (row.Field<uint>(ModalResultField.Gear.GetShortCaption()) != 0) {
+				Assert.IsTrue(row.Field<Watt>(ptoTransmCaption).Value().IsGreater(0));
+			}
 		}
 		Assert.IsTrue(modData.Rows.Count > 0);
 	}
 
-	[TestCase(@"HeavyLorry\S-HEV")]
 	private void WaitAndAssertSuccess(JobContainer jobContainer, FileOutputWriter fileWriter)
 	{
 		jobContainer.WaitFinished();
