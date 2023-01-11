@@ -453,15 +453,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		// -->
 
-		[ModalResultField(typeof(SI), caption: "P_REESS_T [kW]", outputFactor: 1e-3, showUnit: true)] P_reess_terminal,
-		[ModalResultField(typeof(SI), caption: "P_REESS_int [kW]", outputFactor: 1e-3, showUnit: true)] P_reess_int,
-		[ModalResultField(typeof(SI), caption: "P_REESS_loss [kW]", outputFactor: 1e-3, showUnit: true)] P_reess_loss,
-		[ModalResultField(typeof(SI), caption: "REESS SOC [%]", outputFactor: 100, showUnit: true)] REESSStateOfCharge,
-		[ModalResultField(typeof(SI), caption: "P_REESS_charge_max [kW]", outputFactor: 1e-3, showUnit: true)] P_reess_charge_max,
-		[ModalResultField(typeof(SI), caption: "P_REESS_discharge_max [kW]", outputFactor: 1e-3, showUnit:true)] P_reess_discharge_max,
-		[ModalResultField(typeof(SI), caption: "U_REESS_terminal [V]", showUnit:true)] U_reess_terminal,
-		[ModalResultField(typeof(SI), caption: "U_0_REESS [V]", showUnit:true)] U0_reess,
-		[ModalResultField(typeof(SI), caption: "I_REESS [A]", showUnit: true)] I_reess,
+		[ModalResultField(typeof(SI), caption: "P_REESS_T [kW]", outputFactor: 1e-3)] P_reess_terminal,
+		[ModalResultField(typeof(SI), caption: "P_REESS_int [kW]", outputFactor: 1e-3)] P_reess_int,
+		[ModalResultField(typeof(SI), caption: "P_REESS_loss [kW]", outputFactor: 1e-3)] P_reess_loss,
+		[ModalResultField(typeof(SI), caption: "REESS SOC [%]", outputFactor: 100)] REESSStateOfCharge,
+		[ModalResultField(typeof(SI), caption: "P_REESS_charge_max [kW]", outputFactor: 1e-3)] P_reess_charge_max,
+		[ModalResultField(typeof(SI), caption: "P_REESS_discharge_max [kW]", outputFactor: 1e-3)] P_reess_discharge_max,
+		[ModalResultField(typeof(SI), caption: "U_REESS_terminal [V]")] U_reess_terminal,
+		[ModalResultField(typeof(SI), caption: "U_0_REESS [V]")] U0_reess,
+		[ModalResultField(typeof(SI), caption: "I_REESS [A]")] I_reess,
 		[ModalResultField(typeof(SI), caption: "T_max_propulsion [Nm]")] MaxPropulsionTorqe,
 
 		[ModalResultField(typeof(SI), caption: "P_DC/DC_In [kW]", outputFactor: 1e-3)] P_DCDC_In,
