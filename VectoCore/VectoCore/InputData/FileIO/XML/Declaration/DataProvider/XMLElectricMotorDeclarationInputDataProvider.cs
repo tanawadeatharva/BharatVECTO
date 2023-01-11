@@ -321,38 +321,48 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 			foreach (var voltageLevel in VoltageLevels) {
 				foreach (var powerMap in voltageLevel.PowerMap) {
-					if(powerMap.Gear <= 0)
+					if (powerMap.Gear <= 0) {
 						continue;
+					}
 
-					if (currentGears.ContainsKey(powerMap.Gear))
+					if (currentGears.ContainsKey(powerMap.Gear)) {
 						currentGears[powerMap.Gear] = true;
-					else
-						throw new ArgumentException("The PowerMaps contains a gear which was not specified under gears");
+					} else {
+						throw new ArgumentException(
+							"The PowerMaps contains a gear which was not specified under gears");
+					}
 				}
-				if(AnyMissingGear(currentGears))
+
+				if (AnyMissingGear(currentGears)) {
 					throw new ArgumentException("The PowerMaps contains a gear which was not specified under gears");
+				}
 			}
 
 			foreach (var dragCurve in DragCurves) {
-				if(dragCurve.Gear == null)
+				if (dragCurve.Gear == null) {
 					continue;
+				}
 
-				if (currentGears.ContainsKey((int)dragCurve.Gear))
+				if (currentGears.ContainsKey((int)dragCurve.Gear)) {
 					currentGears[(int)dragCurve.Gear] = true;
-				else
+				} else {
 					throw new ArgumentException("The DragCurve contains a gear which was not specified under gears");
+				}
 			}
 
-			if (AnyMissingGear(currentGears))
+			if (AnyMissingGear(currentGears)) {
 				throw new ArgumentException("The DragCurve contains a gear which was not specified under gears");
+			}
 		}
 
 		private bool AnyMissingGear(Dictionary<int, bool> foundedGears)
 		{
 			var keys = foundedGears.Keys.ToList();
 			foreach (var key in keys) {
-				if(!foundedGears[key])
+				if (!foundedGears[key]) {
 					return true;
+				}
+
 				foundedGears[key] = false;
 			}
 
