@@ -1563,10 +1563,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 	public class IEPCGearboxInputData : IGearboxDeclarationInputData
 	{
-		protected readonly IIEPCEngineeringInputData _iepc;
+		protected readonly IIEPCDeclarationInputData _iepc;
 		private IList<ITransmissionInputData> _gears;
 
-		public IEPCGearboxInputData(IIEPCEngineeringInputData iepc)
+		public IEPCGearboxInputData(IIEPCDeclarationInputData iepc)
 		{
 			_iepc = iepc;
 		}
