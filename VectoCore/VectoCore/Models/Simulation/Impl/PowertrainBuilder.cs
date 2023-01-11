@@ -656,29 +656,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					throw new VectoException("BusAux data set but no BusAux component found!");
 				}
 			} else {
-				var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
-
-				es.Connect(dcdc);
-				var elAux = new ElectricAuxiliaries(container);
-
-				IEPTO epto = null;
-				if (data.PTO?.PTOCycle != null)
-				{
-					var pevPTOController = GetPEV_SHEVIdleController(data.PTO, container);
-					cycle.IdleController = pevPTOController;
-					var eptoAux = new EPTO(pevPTOController);
-					elAux.AddAuxiliary(eptoAux);
-					epto = eptoAux;
-				}
-
-				elAux.AddAuxiliaries(data.Aux.Where(x => x.ConnectToREESS && x.ID != Constants.Auxiliaries.IDs.Cond));
-				if (data.Aux.Any(aux => aux.ID == Constants.Auxiliaries.IDs.Cond))
-				{
-					elAux.AddAuxiliary(new Conditioning(data.Aux.FirstOrDefault(aux => aux.ID == Constants.Auxiliaries.IDs.Cond), epto));
-				}
-
-				dcdc.Connect(elAux);
-				dcdc.Initialize();
+				AddElectricAuxiliaries(data, container, es, cycle);
 			}
 
 			ctl.GenSet.AddComponent(GetElectricMachine(PowertrainPosition.GEN, data.ElectricMachinesData, container, es,
@@ -687,6 +665,39 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddAuxiliariesSerialHybrid(container, data);
 
 			return container;
+		}
+		/// <summary>
+		/// Adds electric auxilaries and EPTO to the powertrain
+		/// </summary>
+		/// <param name="data"></param>
+		/// <param name="container"></param>
+		/// <param name="es"></param>
+		/// <param name="cycle"></param>
+		private static void AddElectricAuxiliaries(VectoRunData data, VehicleContainer container, ElectricSystem es,
+			DistanceBasedDrivingCycle cycle)
+		{
+			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+
+			es.Connect(dcdc);
+			var elAux = new ElectricAuxiliaries(container);
+
+			IEPTO epto = null;
+			if (data.PTO?.PTOCycle != null) {
+				var pevPTOController = GetPEV_SHEVIdleController(data.PTO, container);
+				cycle.IdleController = pevPTOController;
+				var eptoAux = new EPTO(pevPTOController);
+				elAux.AddAuxiliary(eptoAux);
+				epto = eptoAux;
+			}
+
+			elAux.AddAuxiliaries(data.Aux.Where(x => x.ConnectToREESS && x.ID != Constants.Auxiliaries.IDs.Cond));
+			if (data.Aux.Any(aux => aux.ID == Constants.Auxiliaries.IDs.Cond)) {
+				elAux.AddAuxiliary(new Conditioning(data.Aux.FirstOrDefault(aux => aux.ID == Constants.Auxiliaries.IDs.Cond),
+					epto));
+			}
+
+			dcdc.Connect(elAux);
+			dcdc.Initialize();
 		}
 
 
@@ -788,7 +799,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		
 			if (data.BusAuxiliaries != null) {
-				
 				if (!data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
 					throw new VectoException("BusAux must be supplied from REESS!");
 				}
@@ -802,33 +812,34 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				es.Connect(dcdc);
 				em.BusAux = busAux;
 			} else {
-				var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+				AddElectricAuxiliaries(data, container, es, cycle);
+				//var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
 
-                es.Connect(dcdc);
-				var elAux = new ElectricAuxiliaries(container);
+    //            es.Connect(dcdc);
+				//var elAux = new ElectricAuxiliaries(container);
 
-				IEPTO epto = null;
-				if (data.PTO?.PTOCycle != null)
-				{
-					var pevPTOController = GetPEV_SHEVIdleController(data.PTO, container);
-					cycle.IdleController = pevPTOController;
-					var eptoAux = new EPTO(pevPTOController);
-					elAux.AddAuxiliary(eptoAux);
-					epto = eptoAux;
-				}
+				//IEPTO epto = null;
+				//if (data.PTO?.PTOCycle != null)
+				//{
+				//	var pevPTOController = GetPEV_SHEVIdleController(data.PTO, container);
+				//	cycle.IdleController = pevPTOController;
+				//	var eptoAux = new EPTO(pevPTOController);
+				//	elAux.AddAuxiliary(eptoAux);
+				//	epto = eptoAux;
+				//}
 
-				elAux.AddAuxiliaries(data.Aux.Where(x => x.ConnectToREESS && x.ID != Constants.Auxiliaries.IDs.Cond));
-				if (data.Aux.Any(aux => aux.ID == Constants.Auxiliaries.IDs.Cond)) {
-					elAux.AddAuxiliary(new Conditioning(data.Aux.FirstOrDefault(aux => aux.ID == Constants.Auxiliaries.IDs.Cond), epto));
-				}
+				//elAux.AddAuxiliaries(data.Aux.Where(x => x.ConnectToREESS && x.ID != Constants.Auxiliaries.IDs.Cond));
+				//if (data.Aux.Any(aux => aux.ID == Constants.Auxiliaries.IDs.Cond)) {
+				//	elAux.AddAuxiliary(new Conditioning(data.Aux.FirstOrDefault(aux => aux.ID == Constants.Auxiliaries.IDs.Cond), epto));
+				//}
 				
-				dcdc.Connect(elAux);
+				//dcdc.Connect(elAux);
 			
 
 
 
 
-				dcdc.Initialize();
+				//dcdc.Initialize();
             }
 
 		
@@ -999,6 +1010,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				busAux.DCDCConverter = dcdc;
 				es.Connect(dcdc);
 				em.BusAux = busAux;
+			} else {
+				AddElectricAuxiliaries(data, container, es, cycle);
 			}
 
 			return container;
@@ -1092,11 +1105,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				busAux.DCDCConverter = dcdc;
 				es.Connect(dcdc);
 				em.BusAux = busAux;
+			} else {
+				AddElectricAuxiliaries(data, container, es, cycle);
 			}
 
 			ctl.GenSet.AddComponent(GetElectricMachine(PowertrainPosition.GEN, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
+
+			
+
 
 			return container;
 		}
