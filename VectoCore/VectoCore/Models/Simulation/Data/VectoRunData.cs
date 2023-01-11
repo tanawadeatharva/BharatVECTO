@@ -157,6 +157,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public VTPData VTPData { get; internal set; }
 
 		public ShiftStrategyParameters GearshiftParameters { get; internal set; }
+
 		public bool Exempted { get; internal set; }
 
 		public bool MultistageRun { get; internal set; }
@@ -407,4 +408,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public Meter FanDiameter;
 	}
 
+	public class VehicleOperationData
+	{
+		private double AnnualMileage;
+		private double MissionSpecificMileage;
+		
+	}
 }
