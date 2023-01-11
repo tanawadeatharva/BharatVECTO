@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Policy;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
@@ -116,9 +117,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 	{
 		public static Volt CalculateAverageVoltage(this BatterySystemData battery)
 		{
-			if (battery == null)
-			{
-				return null;
+			if (battery == null) {
+				throw new VectoException("Battery not set");
 			}
 			var tmpBattery = new BatterySystem(null, battery);
 			var min = tmpBattery.MinSoC;

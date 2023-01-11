@@ -116,6 +116,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				throw new NotImplementedException();
 			}
 
+
+			
+
 			public virtual AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission,
 				Segment segment)
 			{
@@ -173,6 +176,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			}
 
 			#endregion
+
+			public virtual List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(
+				IIEPCDeclarationInputData iepc, Volt averageVoltage)
+			{
+				throw new NotImplementedException();
+			}
 		}
 
 		public class Conventional : LorryBase
@@ -536,7 +545,36 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 		}
 		public class HEV_S3 : SerialHybrid { }
 		public class HEV_S4 : SerialHybrid { }
-		public class HEV_S_IEPC : SerialHybrid { }
+
+		public class HEV_S_IEPC : SerialHybrid
+		{
+			
+			protected override GearboxType[] SupportedGearboxTypes => new[]
+				{ GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial, GearboxType.APTN };
+
+
+
+			private IGearboxDataAdapter _gearBoxDataAdaper = new IEPCGearboxDataAdapter();
+			private ElectricMachinesDataAdapter _electricMachinesDataAdapter = new ElectricMachinesDataAdapter();
+
+			public override GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
+				IShiftPolygonCalculator shiftPolygonCalc)
+			{
+				return _gearBoxDataAdaper.CreateGearboxData(inputData, runData, shiftPolygonCalc, SupportedGearboxTypes);
+			}
+
+			public override ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed,
+				GearboxType gearboxType, int gearsCount)
+			{
+				return _gearBoxDataAdaper.CreateGearshiftData(axleRatio, engineIdlingSpeed, gearboxType, gearsCount);
+			}
+
+			public override List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(
+				IIEPCDeclarationInputData iepc, Volt averageVoltage)
+			{
+				return _electricMachinesDataAdapter.CreateIEPCElectricMachines(iepc, averageVoltage);
+			}
+		}
 
 		public class HEV_P1 : ParallelHybrid
 		{

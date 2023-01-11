@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					ArchitectureID.S4));
 
 			Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.HEV_S_IEPC>().Named(
-				_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.SerialHybridVehicle,
+				_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.IEPC_S,
 					ArchitectureID.S_IEPC));
 			
 

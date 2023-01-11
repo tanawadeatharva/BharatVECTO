@@ -74,8 +74,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		public HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData,
 			SuperCapData superCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode)
 		{
-
-			
 			if (batterySystemData == null && superCapData == null) {
 				return null;
 			}
@@ -83,9 +81,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			if (superCapData != null) {
 				throw new VectoException("Super cap for serial hybrid is not implemented");
 			}
-
-
-		
 			var result = new HybridStrategyParameters();
 			
 			result.AuxReserveTime = null;
@@ -115,18 +110,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					throw new ArgumentOutOfRangeException(nameof(ovcMode), ovcMode, null);
 			}
 
-
-
-
 			return result;
-
 		}
 
 		private void SetGenericParameters(HybridStrategyParameters result, BatterySystem tmpSystem,
 			SuperCapData superCapData, Kilogram vehicleMass, out double deltaSoc){
 			
 			deltaSoc = CalculatedDeltaSocSHev(vehicleMass, tmpSystem);
-
 
 			result.MinSoC = tmpSystem.MinSoC + 2 * deltaSoc;
 			result.TargetSoC = tmpSystem.MaxSoC - 5 * deltaSoc;
