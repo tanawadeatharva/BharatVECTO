@@ -448,6 +448,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			private readonly HeavyLorryPEVAuxiliaryDataAdapter
 				_auxDataAdapter = new HeavyLorryPEVAuxiliaryDataAdapter();
+
 			public override GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
 				IShiftPolygonCalculator shiftPolygonCalc)
 			{
@@ -610,7 +611,29 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 		public class PEV_E_IEPC : BatteryElectric
 		{
+			#region Overrides of LorryBase
 
+			private ElectricMachinesDataAdapter _emDataAdapter = new ElectricMachinesDataAdapter();
+			private IEPCGearboxDataAdapter _gearboxDataAdapter = new IEPCGearboxDataAdapter();
+			public override List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(IIEPCDeclarationInputData iepc, Volt averageVoltage)
+			{
+				return _emDataAdapter.CreateIEPCElectricMachines(iepc, averageVoltage);
+			}
+
+			#region Overrides of BatteryElectric
+
+			public override GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
+				IShiftPolygonCalculator shiftPolygonCalc)
+			{
+				return _gearboxDataAdapter.CreateGearboxData(inputData, runData, shiftPolygonCalc, new GearboxType[]
+					{
+						GearboxType.APTN
+				});
+			}
+
+			#endregion
+
+			#endregion
 		}
 		public class Exempted : LorryBase
 		{

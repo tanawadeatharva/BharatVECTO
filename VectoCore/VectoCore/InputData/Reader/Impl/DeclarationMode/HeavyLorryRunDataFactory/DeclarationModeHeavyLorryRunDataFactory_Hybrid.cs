@@ -420,31 +420,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				runData.GearboxData = DataAdapter.CreateGearboxData(vehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
 
-				//var gearshiftParams = dao.CreateGearshiftData(GearboxType.APTN,
-				//	InputDataProvider.DriverInputData.GearshiftInputData,
-				//	axlegearData?.AxleGear.Ratio ?? 1.0, null);
-				//var tmpRunData = new VectoRunData()
-				//{
-				//	JobType = VectoSimulationJobType.IEPC_E,
-				//	GearboxData = new GearboxData()
-				//	{
-				//		Type = GearboxType.APTN,
-				//	},
-				//	GearshiftParameters = gearshiftParams,
-				//	ElectricMachinesData = electricMachinesData,
-				//	//VehicleData = dao.CreateVehicleData(vehicle)
-				//};
-				//var tempVehicle = dao.CreateVehicleData(vehicle);
-				//var tmpStrategy = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData));
-				//var gearboxData = dao.CreateIEPCGearboxData(
-				//	InputDataProvider, new VectoRunData()
-				//	{
-				//		JobType = VectoSimulationJobType.IEPC_E,
-				//		VehicleData = tempVehicle,
-				//		AxleGearData = axlegearData,
-				//		ElectricMachinesData = electricMachinesData
-				//	}, tmpStrategy);
-
 			}
 
 			#endregion
