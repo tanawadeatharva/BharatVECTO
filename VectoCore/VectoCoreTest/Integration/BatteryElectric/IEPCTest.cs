@@ -17,23 +17,23 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 	public class IEPCTest
 	{
 
-		protected const string IEPC_Gbx3Speed = @"TestData\BatteryElectric\GenericIEPC\IEPC_Gbx3Speed\IEPC_ENG_Gbx3.vecto";
+		protected const string IEPC_Gbx3Speed = @"TestData/BatteryElectric/GenericIEPC/IEPC_Gbx3Speed/IEPC_ENG_Gbx3.vecto";
 
-		protected const string IEPC_Gbx3Speed_drag = @"TestData\BatteryElectric\GenericIEPC\IEPC_Gbx3Speed\IEPC_ENG_Gbx3_drag.vecto";
+		protected const string IEPC_Gbx3Speed_drag = @"TestData/BatteryElectric/GenericIEPC/IEPC_Gbx3Speed/IEPC_ENG_Gbx3_drag.vecto";
 
-		protected const string IEPC_Gbx3SpeedAxle = @"TestData\BatteryElectric\GenericIEPC\IEPC_Gbx3Speed+Axle\IEPC_ENG_Gbx3Axl.vecto";
+		protected const string IEPC_Gbx3SpeedAxle = @"TestData/BatteryElectric/GenericIEPC/IEPC_Gbx3Speed+Axle/IEPC_ENG_Gbx3Axl.vecto";
 
-		protected const string IEPC_Gbx3SpeedWhl1 = @"TestData\BatteryElectric\GenericIEPC\IEPC_Gbx3Speed-Whl1\IEPC_ENG_Gbx3Whl1.vecto";
+		protected const string IEPC_Gbx3SpeedWhl1 = @"TestData/BatteryElectric/GenericIEPC/IEPC_Gbx3Speed-Whl1/IEPC_ENG_Gbx3Whl1.vecto";
 
-		protected const string IEPC_Gbx3SpeedWhl2 = @"TestData\BatteryElectric\GenericIEPC\IEPC_Gbx3Speed-Whl2\IEPC_ENG_Gbx3Whl2.vecto";
+		protected const string IEPC_Gbx3SpeedWhl2 = @"TestData/BatteryElectric/GenericIEPC/IEPC_Gbx3Speed-Whl2/IEPC_ENG_Gbx3Whl2.vecto";
 
-		protected const string IEPC_Gbx1Speed = @"TestData\BatteryElectric\GenericIEPC\IEPC_Gbx1Speed\IEPC_ENG_Gbx1.vecto";
+		protected const string IEPC_Gbx1Speed = @"TestData/BatteryElectric/GenericIEPC/IEPC_Gbx1Speed/IEPC_ENG_Gbx1.vecto";
 
-		protected const string IEPC_Gbx1SpeedAxl = @"TestData\BatteryElectric\GenericIEPC\IEPC_Gbx1Speed+Axle\IEPC_ENG_Gbx1Axl.vecto";
+		protected const string IEPC_Gbx1SpeedAxl = @"TestData/BatteryElectric/GenericIEPC/IEPC_Gbx1Speed+Axle/IEPC_ENG_Gbx1Axl.vecto";
 
-		protected const string IEPC_Gbx1SpeedWhl1 = @"TestData\BatteryElectric\GenericIEPC\IEPC_Gbx1Speed-Whl1\IEPC_ENG_Gbx1Whl1.vecto";
+		protected const string IEPC_Gbx1SpeedWhl1 = @"TestData/BatteryElectric/GenericIEPC/IEPC_Gbx1Speed-Whl1/IEPC_ENG_Gbx1Whl1.vecto";
 
-		protected const string IEPC_Gbx1SpeedWhl2 = @"TestData\BatteryElectric\GenericIEPC\IEPC_Gbx1Speed-Whl2\IEPC_ENG_Gbx1Whl2.vecto";
+		protected const string IEPC_Gbx1SpeedWhl2 = @"TestData/BatteryElectric/GenericIEPC/IEPC_Gbx1Speed-Whl2/IEPC_ENG_Gbx1Whl2.vecto";
 
 
 		[OneTimeSetUp]

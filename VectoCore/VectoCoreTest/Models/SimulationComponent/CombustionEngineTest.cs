@@ -58,9 +58,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	{
 		protected double Tolerance = 1E-3;
 
-		private const string CoachEngine = @"TestData\Components\24t Coach.veng";
+		private const string CoachEngine = @"TestData/Components/24t Coach.veng";
 
-		private const string TruckEngine = @"TestData\Components\40t_Long_Haul_Truck.veng";
+		private const string TruckEngine = @"TestData/Components/40t_Long_Haul_Truck.veng";
 
 
 		[OneTimeSetUp]
@@ -160,14 +160,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			VectoCSVFile.Write(@"test1.csv", dataWriter.Data, true);
 		}
 
-		[TestCase("Test1Hz", @"TestData\Components\24t Coach.veng", 1000, 50, 50,
-			@"TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_1Hz.csv")]
-		[TestCase("Test10Hz", @"TestData\Components\24t Coach.veng", 1000, 50, 50,
-			@"TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_10Hz.csv")]
-		[TestCase("TestvarHz", @"TestData\Components\24t Coach.veng", 1000, 50, 50,
-			@"TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_varHz.csv")]
-		[TestCase("Test10Hz", @"TestData\Components\24t Coach_IncPT1.veng", 1000, 50, 50,
-			@"TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_10Hz_IncPT1.csv")]
+		[TestCase("Test1Hz", @"TestData/Components/24t Coach.veng", 1000, 50, 50,
+			@"TestData/Results/EngineFullLoadJumps/EngineFLJ_1000rpm_1Hz.csv")]
+		[TestCase("Test10Hz", @"TestData/Components/24t Coach.veng", 1000, 50, 50,
+			@"TestData/Results/EngineFullLoadJumps/EngineFLJ_1000rpm_10Hz.csv")]
+		[TestCase("TestvarHz", @"TestData/Components/24t Coach.veng", 1000, 50, 50,
+			@"TestData/Results/EngineFullLoadJumps/EngineFLJ_1000rpm_varHz.csv")]
+		[TestCase("Test10Hz", @"TestData/Components/24t Coach_IncPT1.veng", 1000, 50, 50,
+			@"TestData/Results/EngineFullLoadJumps/EngineFLJ_1000rpm_10Hz_IncPT1.csv")]
 		public void TestEngineOnlyEngineFullLoadJump(string testName, string engineFile, double rpm, double initialIdleLoad,
 			double finalIdleLoad, string resultFile)
 		{
@@ -219,14 +219,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			modalData.Finish(VectoRun.Status.Success);
 		}
 
-		[TestCase("Test1Hz", @"TestData\Components\24t Coach.veng", 1000, 50, 50,
-			@"TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_1Hz.csv")]
-		[TestCase("Test10Hz", @"TestData\Components\24t Coach.veng", 1000, 50, 50,
-			@"TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_10Hz.csv")]
-		[TestCase("TestvarHz", @"TestData\Components\24t Coach.veng", 1000, 50, 50,
-			@"TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_varHz.csv")]
-		[TestCase("Test10Hz", @"TestData\Components\24t Coach_IncPT1.veng", 1000, 50, 50,
-			@"TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_10Hz_IncPT1.csv")]
+		[TestCase("Test1Hz", @"TestData/Components/24t Coach.veng", 1000, 50, 50,
+			@"TestData/Results/EngineFullLoadJumps/EngineFLJ_1000rpm_1Hz.csv")]
+		[TestCase("Test10Hz", @"TestData/Components/24t Coach.veng", 1000, 50, 50,
+			@"TestData/Results/EngineFullLoadJumps/EngineFLJ_1000rpm_10Hz.csv")]
+		[TestCase("TestvarHz", @"TestData/Components/24t Coach.veng", 1000, 50, 50,
+			@"TestData/Results/EngineFullLoadJumps/EngineFLJ_1000rpm_varHz.csv")]
+		[TestCase("Test10Hz", @"TestData/Components/24t Coach_IncPT1.veng", 1000, 50, 50,
+			@"TestData/Results/EngineFullLoadJumps/EngineFLJ_1000rpm_10Hz_IncPT1.csv")]
 		public void TestEngineFullLoadJump(string testName, string engineFile, double rpm, double initialIdleLoad,
 			double finalIdleLoad, string resultFile)
 		{

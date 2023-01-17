@@ -28,10 +28,10 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 	public class RoadSweeperTests
 	{
 		public const string RoadSweeperJob =
-			@"TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Class9_RigidTruck_ENG_PTO.vecto";
+			@"TestData/RoadSweepers/Class9_RigidTruck_6x2_PTO/Class9_RigidTruck_ENG_PTO.vecto";
 
 		public const string SideLoaderJob =
-			@"TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Class9_RigidTruck_ENG_PTO-SideLoader.vecto";
+			@"TestData/RoadSweepers/Class9_RigidTruck_6x2_PTO/Class9_RigidTruck_ENG_PTO-SideLoader.vecto";
 
 		[OneTimeSetUp]
 		public void OneTimeSetup()
@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 		[TestCase()]
 		public void TestReadingPTOCycleDuringDrive()
 		{
-			var cycle = @"TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\PTO-cycle.vptor";
+			var cycle = @"TestData/RoadSweepers/Class9_RigidTruck_6x2_PTO/PTO-cycle.vptor";
 			var cyleTbl = VectoCSVFile.Read(cycle);
 
 			var cycleData = DrivingCycleDataReader.ReadFromDataTable(cyleTbl, "PTO During Drive", false);

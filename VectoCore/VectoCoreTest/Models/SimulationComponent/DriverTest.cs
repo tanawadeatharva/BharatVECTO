@@ -60,10 +60,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	[Parallelizable(ParallelScope.All)]
 	public class DriverTest
 	{
-		public const string JobFile = @"TestData\Jobs\24t Coach EngineOnly.vecto";
-		public const string EngineFile = @"TestData\Components\24t Coach.veng";
-		public const string EngineFileHigh = @"TestData\Components\24t Coach_high.veng";
-		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
+		public const string JobFile = @"TestData/Jobs/24t Coach EngineOnly.vecto";
+		public const string EngineFile = @"TestData/Components/24t Coach.veng";
+		public const string EngineFileHigh = @"TestData/Components/24t Coach_high.veng";
+		public const string AccelerationFile = @"TestData/Components/Coach.vacc";
 		public const double Tolerance = 0.001;
 
 		[OneTimeSetUp]

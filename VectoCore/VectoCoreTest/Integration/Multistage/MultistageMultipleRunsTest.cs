@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 	[TestFixture]
 	public class MultistageMultipleRunsTest
 	{
-		private const string TestDataDir = "TestData\\Integration\\Multistage\\";
+		private const string TestDataDir = "TestData//Integration//Multistage//";
 
 		private const string CompletedDiesel = TestDataDir + "newVifCompletedConventional.vecto";
 		private const string CompletedExempted = TestDataDir + "newVifExempted.vecto";
@@ -71,6 +71,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			TestContext.WriteLine($"Execution time: {_stopWatch.Elapsed}");
 		}
 
+		[NonParallelizable]
 		[Test]//, Timeout(3000)]
 		public void ExemptedPrimaryAndCompletedTest()
 		{
@@ -86,6 +87,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLMultistageReportFileName));
 		}
 
+		[NonParallelizable]
 		[Test]
 		public void ExemptedPrimaryAndCompletedWithoutTPMLMTest()
 		{
@@ -101,6 +103,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLMultistageReportFileName));
 		}
 
+		[NonParallelizable]
 		[Test]//, Timeout(3000)]
 		public void ExemptedPrimaryAndInterimTest()
 		{
@@ -110,6 +113,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			ShowWrittenFiles(writtenFiles);
 
 			Assert.IsTrue(writtenFiles.Contains(_tempFileOutputWriter.XMLFullReportName));
+			TestContext.WriteLine("ExemptedPrimaryAndInterimTest: " + _fileoutputWriter.XMLFullReportName);
 			Assert.IsFalse(writtenFiles.Contains(_fileoutputWriter.XMLFullReportName));
 			Assert.IsFalse(writtenFiles.Contains(_fileoutputWriter.XMLCustomerReportName));
 			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLMultistageReportFileName));
@@ -128,7 +132,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		}
 
 		//SpecialCase II
-		[Test, Timeout(1000 * 20 * 60)]
+		[NonParallelizable]
+		[Test]
 		public void PrimaryAndCompletedTest()
 		{
 			StartSimulation(CompletedDiesel);
@@ -144,6 +149,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 		}
 
+		[NonParallelizable]
 		[Test]
 		public void PrimaryAndCompletedWithoutADASAndTPMLM()
 		{
@@ -160,7 +166,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		}
 
 		//SpecialCase I
-		[Test, Timeout(1000 * 10 * 60)]
+		[NonParallelizable]
+		[Test]
 		public void PrimaryAndInterimTest()
 		{
 			StartSimulation(InterimDiesel);

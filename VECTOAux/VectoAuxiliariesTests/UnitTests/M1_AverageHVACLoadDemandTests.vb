@@ -15,9 +15,9 @@ Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 Namespace UnitTests
     <TestFixture()>
     Public Class M1_AverageHVACLoadDemandTests
-        Private Const _GOODMAP As String = "TestFiles\testAlternatorMap.aalt"
-        Private Const _SSMMAP As String = "TestFiles\ssm.Ahsm"
-        Private Const _BusDatabase As String = "TestFiles\BusDatabase.abdb"
+        Private Const _GOODMAP As String = "TestFiles/testAlternatorMap.aalt"
+        Private Const _SSMMAP As String = "TestFiles/ssm.Ahsm"
+        Private Const _BusDatabase As String = "TestFiles/BusDatabase.abdb"
 
         Private signals As ISignals = New Signals With {.EngineSpeed = 2000.RPMtoRad()}
         Private powernetVoltage As Volt = 26.3.SI (of Volt)

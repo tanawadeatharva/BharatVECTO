@@ -196,7 +196,7 @@ namespace TUGraz.VectoCore.Tests.Algorithms
 
 				var map = new DelaunayMap("TEST");
 				var points =
-					File.ReadAllLines(@"TestData\Components\40t_Long_Haul_Truck.vmap")
+					File.ReadAllLines(@"TestData/Components/40t_Long_Haul_Truck.vmap")
 						.Skip(1)
 						.Select(s => {
 							var p = s.Split(',').ToDouble().ToList();

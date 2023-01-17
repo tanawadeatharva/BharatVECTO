@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestCase]
 		public void AccelerationTest()
 		{
-			Data = AccelerationCurveReader.ReadFromFile(@"TestData\Components\Coach.vacc");
+			Data = AccelerationCurveReader.ReadFromFile(@"TestData/Components/Coach.vacc");
 
 			// FIXED POINTS
 			EqualAcceleration(0, 1.01570922360353, -0.231742702878269);
@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			]
 		public void ComputeAccelerationDistanceTest(double v1, double v2, double expectedDistance)
 		{
-			Data = AccelerationCurveReader.ReadFromFile(@"TestData\Components\Truck.vacc");	
+			Data = AccelerationCurveReader.ReadFromFile(@"TestData/Components/Truck.vacc");	
 
 			var result = Data.ComputeDecelerationDistance(v1.KMPHtoMeterPerSecond(), v2.KMPHtoMeterPerSecond());
 			Assert.AreEqual(expectedDistance, result.Value(), Tolerance);
@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		 ]
 		public void ComputeEndVelocity(double startSpeed, double accTime, double expectedVelocity)
 		{
-			Data = AccelerationCurveReader.ReadFromFile(@"TestData\Components\Truck.vacc");
+			Data = AccelerationCurveReader.ReadFromFile(@"TestData/Components/Truck.vacc");
 
 			var result = Data.ComputeEndVelocityAccelerate(startSpeed.KMPHtoMeterPerSecond(), accTime.SI<Second>());
 			Assert.AreEqual(expectedVelocity, result.AsKmph, 1e-3);

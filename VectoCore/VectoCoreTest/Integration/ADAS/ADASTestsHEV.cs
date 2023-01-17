@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 	[Parallelizable(ParallelScope.All)]
 	public class ADASTestsHEV
 	{
-		private const string BasePath = @"TestData\Integration\ADAS-HEV\Group5PCCEng\";
+		private const string BasePath = @"TestData/Integration/ADAS-HEV/Group5PCCEng/";
 		private const double tolerance = 1; //seconds of tolerance. Tolerance distance is calculated dynamically based on speed.
 
 		[OneTimeSetUp]
@@ -53,8 +53,8 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			return graphWriter;
 		}
 
-		[TestCase(@"TestData\Integration\ADAS-HEV\VECTO-1493\P1_CityBus.vecto", TestName = "VECTO-1493_P1Citybus")]
-		[TestCase(@"TestData\Integration\ADAS-HEV\VECTO-1484\P2_Group5_s2c0_rep_Payload.vecto", TestName = "VECTO-1484_P2Group5")]
+		[TestCase(@"TestData/Integration/ADAS-HEV/VECTO-1493/P1_CityBus.vecto", TestName = "VECTO-1493_P1Citybus")]
+		[TestCase(@"TestData/Integration/ADAS-HEV/VECTO-1484/P2_Group5_s2c0_rep_Payload.vecto", TestName = "VECTO-1484_P2Group5")]
 		public static void RunEngineeringJob(string jobName)
 		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		]
 		public void TestEcoRoll(int cycleIdx)
 		{
-			var jobName = @"TestData\Integration\ADAS-HEV\Group5EcoRollEng\Class5_Tractor_ENG.vecto";
+			var jobName = @"TestData/Integration/ADAS-HEV/Group5EcoRollEng/Class5_Tractor_ENG.vecto";
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 
@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		]
 		public void TestEcoRollAT_Neutral(int cycleIdx)
 		{
-			var jobName = @"TestData\Integration\ADAS-HEV\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng_Neutral.vecto";
+			var jobName = @"TestData/Integration/ADAS-HEV/Group9_RigidTruck_AT/Class_9_RigidTruck_AT_Eng_Neutral.vecto";
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 
@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		]
 		public void TestEcoRollAT_TC(int cycleIdx)
 		{
-			var jobName = @"TestData\Integration\ADAS-HEV\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng_TC.vecto";
+			var jobName = @"TestData/Integration/ADAS-HEV/Group9_RigidTruck_AT/Class_9_RigidTruck_AT_Eng_TC.vecto";
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 

@@ -52,29 +52,29 @@ namespace TUGraz.VectoCore.Tests.Integration
 	public class TorqueLimitsTest
 	{
 		const string GearboxLimitJobDecl_865 =
-			@"Testdata\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxTorqueLimits\Class2_RigidTruck_gbxTqLimit-865_DECL.vecto";
+			@"TestData/Integration/DeclarationMode/Class2_RigidTruck_4x2_GbxTorqueLimits/Class2_RigidTruck_gbxTqLimit-865_DECL.vecto";
 
 		const string GearboxLimitJobDecl_800 =
-			@"Testdata\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxTorqueLimits\Class2_RigidTruck_gbxTqLimit-800_DECL.vecto";
+			@"TestData/Integration/DeclarationMode/Class2_RigidTruck_4x2_GbxTorqueLimits/Class2_RigidTruck_gbxTqLimit-800_DECL.vecto";
 
 
 		const string VehicleLimitJobDecl_910 =
-			@"Testdata\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Class2_RigidTruck_vehTqLimit-910_DECL.vecto";
+			@"TestData/Integration/DeclarationMode/Class2_RigidTruck_4x2_VehTorqueLimits/Class2_RigidTruck_vehTqLimit-910_DECL.vecto";
 
 		const string VehicleLimitJobDecl_850 =
-			@"Testdata\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Class2_RigidTruck_vehTqLimit-850_DECL.vecto";
+			@"TestData/Integration/DeclarationMode/Class2_RigidTruck_4x2_VehTorqueLimits/Class2_RigidTruck_vehTqLimit-850_DECL.vecto";
 
 		const string GearboxSpeedLimitJobDecl =
-			@"Testdata\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxSpeedLimits\Class2_RigidTruck_DECL.vecto";
+			@"TestData/Integration/DeclarationMode/Class2_RigidTruck_4x2_GbxSpeedLimits/Class2_RigidTruck_DECL.vecto";
 
 		const string EngineSpeedLimitJobDecl =
-			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_engineSpeedlimit\Class2_RigidTruck_DECL.vecto";
+			@"TestData/Integration/DeclarationMode/Class2_RigidTruck_4x2_engineSpeedlimit/Class2_RigidTruck_DECL.vecto";
 
 		const string EngineSpeedLimitJobATDecl =
-			@"TestData\Integration\EngineeringMode\TruckAT_GbxSpeedLimit\TruckAT.vecto";
+			@"TestData/Integration/EngineeringMode/TruckAT_GbxSpeedLimit/TruckAT.vecto";
 
 		private const string DeclarationVehicle9GearsFord =
-			@"TestData\Integration\DeclarationMode\EngineSpeedTooHigh\vecto_vehicle-sample_9gears.xml";
+			@"TestData/Integration/DeclarationMode/EngineSpeedTooHigh/vecto_vehicle-sample_9gears.xml";
 
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;

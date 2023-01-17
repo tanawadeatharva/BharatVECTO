@@ -32,9 +32,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 	[Parallelizable(ParallelScope.All)]
 	public class MultistageVehicleTest
 	{
-		const string VIFDirPath = @"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\";
-		const string InputDirPath = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\";
-		private const string PrimaryInputDirPath = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\";
+		const string VIFDirPath = @"TestData/XML/XMLReaderDeclaration/SchemaVersionMultistage.0.1/";
+		const string InputDirPath = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/";
+		private const string PrimaryInputDirPath = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/";
 
 
 		const string InputFilePath = InputDirPath  + "vecto_vehicle-stage_input_full-sample.xml";

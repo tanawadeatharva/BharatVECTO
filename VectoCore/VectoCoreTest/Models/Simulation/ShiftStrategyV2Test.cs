@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	public class ShiftStrategyV2Test
 	{
 		public const string Class9Decl =
-			@"TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Class9_RigidTruck_DECL.vecto";
+			@"TestData/Generic Vehicles/Declaration Mode/Class9_RigidTruck_6x2/Class9_RigidTruck_DECL.vecto";
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
 
@@ -35,8 +35,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 
-		[TestCase(@"TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Class5_Tractor_ENG_TCU.vecto"),
-		TestCase(@"TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Class5_Tractor_ENG_FC.vecto")]
+		[TestCase(@"TestData/Integration/ShiftStrategyV2/Class5_Tractor_4x2/Class5_Tractor_ENG_TCU.vecto"),
+		TestCase(@"TestData/Integration/ShiftStrategyV2/Class5_Tractor_4x2/Class5_Tractor_ENG_FC.vecto")]
 		public void TestShiftStrategyEngineering(string jobFile, int runIdx = 0)
 		{
 			var relativeJobPath = jobFile;
@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		]
 		public void RunDeclarationTestNewShiftStrategy_Group1(string filename, int? idx)
 		{
-			var job = @"TestData\Integration\ShiftStrategyV2\SampleVehicles\" + filename;
+			var job = @"TestData/Integration/ShiftStrategyV2/SampleVehicles/" + filename;
 
 			if (idx.HasValue) {
 				RunJob_DeclSingle(job, idx.Value);
@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		]
 		public void RunDeclarationTestNewShiftStrategy_Group2(string filename, int? idx)
 		{
-			var job = @"TestData\Integration\ShiftStrategyV2\SampleVehicles\" + filename;
+			var job = @"TestData/Integration/ShiftStrategyV2/SampleVehicles/" + filename;
 
 			if (idx.HasValue) {
 				RunJob_DeclSingle(job, idx.Value);
@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		]
 		public void RunDeclarationTestNewShiftStrategy_Group3(string filename, int? idx)
 		{
-			var job = @"TestData\Integration\ShiftStrategyV2\SampleVehicles\" + filename;
+			var job = @"TestData/Integration/ShiftStrategyV2/SampleVehicles/" + filename;
 
 			if (idx.HasValue) {
 				RunJob_DeclSingle(job, idx.Value);
@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			]
 		public void RunDeclarationTestNewShiftStrategy_Group4(string filename, int? idx)
 		{
-			var job = @"TestData\Integration\ShiftStrategyV2\SampleVehicles\" + filename;
+			var job = @"TestData/Integration/ShiftStrategyV2/SampleVehicles/" + filename;
 
 			if (idx.HasValue) {
 				RunJob_DeclSingle(job, idx.Value);
@@ -150,7 +150,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			]
 		public void RunDeclarationTestNewShiftStrategy_Group5(string filename, int? idx)
 		{
-			var job = @"TestData\Integration\ShiftStrategyV2\SampleVehicles\" + filename;
+			var job = @"TestData/Integration/ShiftStrategyV2/SampleVehicles/" + filename;
 
 			if (idx.HasValue) {
 				RunJob_DeclSingle(job, idx.Value);
@@ -173,7 +173,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			]
 		public void RunDeclarationTestNewShiftStrategy_Group9(string filename, int? idx)
 		{
-			var job = @"TestData\Integration\ShiftStrategyV2\SampleVehicles\" + filename;
+			var job = @"TestData/Integration/ShiftStrategyV2/SampleVehicles/" + filename;
 
 			if (idx.HasValue) {
 				RunJob_DeclSingle(job, idx.Value);
@@ -198,7 +198,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			]
 		public void RunDeclarationTestNewShiftStrategy_Group10(string filename, int? idx)
 		{
-			var job = @"TestData\Integration\ShiftStrategyV2\SampleVehicles\" + filename;
+			var job = @"TestData/Integration/ShiftStrategyV2/SampleVehicles/" + filename;
 
 
 			if (idx.HasValue) {
@@ -224,7 +224,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		]
 		public void RunDeclarationTestNewShiftStrategy_Group11(string filename, int? idx)
 		{
-			var job = @"TestData\Integration\ShiftStrategyV2\SampleVehicles\" + filename;
+			var job = @"TestData/Integration/ShiftStrategyV2/SampleVehicles/" + filename;
 
 
 			if (idx.HasValue) {
@@ -248,7 +248,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		]
 		public void RunDeclarationTestNewShiftStrategy_Group12(string filename, int? idx)
 		{
-			var job = @"TestData\Integration\ShiftStrategyV2\SampleVehicles\" + filename;
+			var job = @"TestData/Integration/ShiftStrategyV2/SampleVehicles/" + filename;
 
 
 			if (idx.HasValue) {
@@ -265,7 +265,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		]
 		public void RunDeclarationTestNewShiftStrategy_Group16(string filename, int? idx)
 		{
-			var job = @"TestData\Integration\ShiftStrategyV2\SampleVehicles\" + filename;
+			var job = @"TestData/Integration/ShiftStrategyV2/SampleVehicles/" + filename;
 
 
 			if (idx.HasValue) {
@@ -281,7 +281,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		]
 		public void RunDeclarationTestNewShiftStrategy_Group5_FCMapInfluence(string filename, int? idx)
 		{
-			var job = @"TestData\Integration\ShiftStrategyV2\SampleVehicles\" + filename;
+			var job = @"TestData/Integration/ShiftStrategyV2/SampleVehicles/" + filename;
 
 			if (idx.HasValue) {
 				RunJob_DeclSingle(job, idx.Value);
@@ -291,16 +291,16 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 
-		[TestCase(@"TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\CityBus_AT_PS.vecto"),
-		TestCase(@"TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\CityBus_AT_Ser.vecto"),
+		[TestCase(@"TestData/Integration/ShiftStrategyV2/CityBus_AT_GSVoith/CityBus_AT_PS.vecto"),
+		TestCase(@"TestData/Integration/ShiftStrategyV2/CityBus_AT_GSVoith/CityBus_AT_Ser.vecto"),
 		Ignore("Voith Shift strategy no longer maintained")]
 		public void RunEngineeringVoith(string jobName)
 		{
 			RunJob_Engineering(jobName);
 		}
 
-		[TestCase(@"TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\CityBus_AT_PS.vecto"),
-		TestCase(@"TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\CityBus_AT_Ser.vecto")]
+		[TestCase(@"TestData/Integration/ShiftStrategyV2/CityBus_AT_FCOpt/CityBus_AT_PS.vecto"),
+		TestCase(@"TestData/Integration/ShiftStrategyV2/CityBus_AT_FCOpt/CityBus_AT_Ser.vecto")]
 		public void RunEngineeringFCoptimized(string jobName)
 		{
 			RunJob_Engineering(jobName);

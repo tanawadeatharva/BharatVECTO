@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.ModelbasedTests.DriverStrategy
 			if (!slope.IsEqual(0)) {
 				slopePrefix = slope > 0 ? "uh_" : "dh_";
 			}
-			var modFile = string.Format(@"Coast_{0}_{1}\Truck_Coast_{0}_{1}_{3}{2:0.0}.vmod", v1, v2, Math.Abs(slope),
+			var modFile = string.Format(@"Coast_{0}_{1}/Truck_Coast_{0}_{1}_{3}{2:0.0}.vmod", v1, v2, Math.Abs(slope),
 				slopePrefix);
 			var cycleData = SimpleDrivingCycles.CreateCycleData(cycle);
 			var run = Truck40tPowerTrain.CreateEngineeringRun(cycleData, modFile);

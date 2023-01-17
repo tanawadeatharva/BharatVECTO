@@ -56,12 +56,12 @@ namespace TUGraz.VectoCore.Tests.Integration
 	[Parallelizable(ParallelScope.All)]
 	public class ExemptedVehicleTest
 	{
-		const string ExemptedVehicle = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml";
-		const string ExemptedVehicleNoHEV = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted_nonHEV.xml";
-		const string ExemptedVehicleV2 = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted_v2.xml";
-		const string ExemptedVehicleV2NoHEV = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted_v2_nonHEV.xml";
+		const string ExemptedVehicle = @"TestData/Integration/DeclarationMode/ExemptedVehicle/vecto_vehicle-sample_exempted.xml";
+		const string ExemptedVehicleNoHEV = @"TestData/Integration/DeclarationMode/ExemptedVehicle/vecto_vehicle-sample_exempted_nonHEV.xml";
+		const string ExemptedVehicleV2 = @"TestData/Integration/DeclarationMode/ExemptedVehicle/vecto_vehicle-sample_exempted_v2.xml";
+		const string ExemptedVehicleV2NoHEV = @"TestData/Integration/DeclarationMode/ExemptedVehicle/vecto_vehicle-sample_exempted_v2_nonHEV.xml";
 
-		const string ExemptedPrimaryBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\exempted_primary_heavyBus.xml";
+		const string ExemptedPrimaryBus = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/exempted_primary_heavyBus.xml";
 
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;

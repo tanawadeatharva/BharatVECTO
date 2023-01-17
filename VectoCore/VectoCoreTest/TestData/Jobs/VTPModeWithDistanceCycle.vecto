@@ -15,7 +15,7 @@
     ],
     "FanDiameter": 0.225,
     "Cycles": [
-      "..\\Cycles\\Coach.vdri"
+      "..//Cycles//Coach.vdri"
     ]
   }
 }

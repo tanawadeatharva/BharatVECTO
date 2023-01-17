@@ -28,7 +28,7 @@ Namespace UnitTests
 
 
 
-        Private Const COMBINEDALT_GOODMAP = "testfiles\testCombinedAlternatorMap.aalt"
+        Private Const COMBINEDALT_GOODMAP = "testfiles/testCombinedAlternatorMap.aalt"
 
 
         Sub New()

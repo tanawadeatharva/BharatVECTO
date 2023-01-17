@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 	[Parallelizable(ParallelScope.All)]
 	public class DistanceCycleDataTest
 	{
-//		public readonly string CycleFile = @"TestData\Cycles\";
+//		public readonly string CycleFile = @"TestData/Cycles/";
 		private const string ResourceNamespace = "TUGraz.VectoCore.Resources.Declaration.";
 
 

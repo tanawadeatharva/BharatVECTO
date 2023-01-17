@@ -17,9 +17,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 	[TestFixture]
 	public class InputDataSanityChecks
 	{
-		public const string HeavyLorryConventional = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\Conventional_heavyLorry_AMT.xml";
-		public const string MediumLorryConventional = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\MediumLorry\Conventional_mediumLorry_AMT.xml";
-		public const string PrimaryBusConventional = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\Conventional_primaryBus_AMT.xml";
+		public const string HeavyLorryConventional = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/HeavyLorry/Conventional_heavyLorry_AMT.xml";
+		public const string MediumLorryConventional = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/Conventional_mediumLorry_AMT.xml";
+		public const string PrimaryBusConventional = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/PrimaryBus/Conventional_primaryBus_AMT.xml";
 
 		private IXMLInputDataReader _xmlInputReader;
 

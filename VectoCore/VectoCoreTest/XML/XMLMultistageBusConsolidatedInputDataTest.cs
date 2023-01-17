@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		protected IXMLInputDataReader _xmlInputReader;
 		private IKernel _kernel;
 
-		const string _dirPath = @"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\";
+		const string _dirPath = @"TestData/XML/XMLReaderDeclaration/SchemaVersionMultistage.0.1/";
 		const string _consolidatedInputData = _dirPath + "vecto_multistage_consolidated_multiple_stages.xml";
 		const string _primaryOnlyInputData = _dirPath + "vecto_multistage_primary_vehicle_only.xml";
 		const string _oneStageInputData = _dirPath + "vecto_multistage_consolidated_one_stage.xml";

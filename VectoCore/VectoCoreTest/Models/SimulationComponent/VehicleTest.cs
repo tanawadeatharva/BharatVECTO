@@ -53,8 +53,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	[Parallelizable(ParallelScope.All)]
 	public class VehicleTest
 	{
-		private const string VehicleDataFileCoach = @"TestData\Components\24t Coach.vveh";
-		private const string VehicleDataFileTruck = @"TestData\Components\40t_Long_Haul_Truck.vveh";
+		private const string VehicleDataFileCoach = @"TestData/Components/24t Coach.vveh";
+		private const string VehicleDataFileTruck = @"TestData/Components/40t_Long_Haul_Truck.vveh";
 		public static readonly double Tolerance = 0.001;
 
         [OneTimeSetUp]

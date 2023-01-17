@@ -242,22 +242,22 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var engineData = new CombustionEngineData {
 				FullLoadCurves =
 					new Dictionary<uint, EngineFullLoadCurve>() {
-						{ 0, FullLoadCurveReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") },
-						{ 1, FullLoadCurveReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") },
+						{ 0, FullLoadCurveReader.ReadFromFile(@"TestData/Components/12t Delivery Truck.vfld") },
+						{ 1, FullLoadCurveReader.ReadFromFile(@"TestData/Components/12t Delivery Truck.vfld") },
 					},
 				IdleSpeed = 560.RPMtoRad()
 			};
 
 			var gearboxData = new GearboxData();
 			gearboxData.Gears[1] = new GearData {
-				LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\Direct Gear.vtlm", 1, "1"),
+				LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData/Components/Direct Gear.vtlm", 1, "1"),
 				Ratio = 1
 			};
 
 			var axleGearData = new AxleGearData {
 				AxleGear = new GearData {
 					Ratio = 1,
-					LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
+					LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData/Components/limited.vtlm", 1, "1"),
 				}
 			};
 			var vehicleData = new VehicleData {
@@ -320,21 +320,21 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var engineData = new CombustionEngineData {
 				FullLoadCurves =
 					new Dictionary<uint, EngineFullLoadCurve>() {
-						{ 0, FullLoadCurveReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") },
-						{ 1, FullLoadCurveReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") }
+						{ 0, FullLoadCurveReader.ReadFromFile(@"TestData/Components/12t Delivery Truck.vfld") },
+						{ 1, FullLoadCurveReader.ReadFromFile(@"TestData/Components/12t Delivery Truck.vfld") }
 					},
 				IdleSpeed = 560.RPMtoRad()
 			};
 
 			var gearboxData = new GearboxData();
 			gearboxData.Gears[1] = new GearData {
-				LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\Direct Gear.vtlm", 1, "1"),
+				LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData/Components/Direct Gear.vtlm", 1, "1"),
 				Ratio = 1,
 			};
 
 			var axleGearData = new AxleGearData {
 				AxleGear = new GearData {
-					LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
+					LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData/Components/limited.vtlm", 1, "1"),
 					Ratio = 1,
 				}
 			};

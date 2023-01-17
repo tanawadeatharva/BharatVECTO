@@ -125,9 +125,9 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 
 		public static BusAuxiliariesAdapter CreateBusAuxAdapterForTesting(double vehicleMass, out MockDriver driver)
 		{
-			var auxFilePath = @"TestData\Integration\BusAuxiliaries\AdvAuxTest.aaux";
-			var engineFLDFilePath = @"TestData\Integration\BusAuxiliaries\24t Coach.vfld";
-			var engineFCMapFilePath = @"TestData\Integration\BusAuxiliaries\24t Coach.vmap";
+			var auxFilePath = @"TestData/Integration/BusAuxiliaries/AdvAuxTest.aaux";
+			var engineFLDFilePath = @"TestData/Integration/BusAuxiliaries/24t Coach.vfld";
+			var engineFCMapFilePath = @"TestData/Integration/BusAuxiliaries/24t Coach.vmap";
 
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering, new MockModalDataContainer());
 			var fcMap = FuelConsumptionMapReader.ReadFromFile(engineFCMapFilePath);

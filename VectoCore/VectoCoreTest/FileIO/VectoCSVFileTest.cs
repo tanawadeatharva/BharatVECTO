@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		[TestCase]
 		public void VectoCSVFile_Read()
 		{
-			var table = VectoCSVFile.Read(@"TestData\test.csv");
+			var table = VectoCSVFile.Read(@"TestData/test.csv");
 			Assert.AreEqual(3, table.Columns.Count);
 			CollectionAssert.AreEqual(new[] { "a", "b", "c" }, table.Columns.Cast<DataColumn>().Select(c => c.ColumnName));
 			Assert.AreEqual(2, table.Rows.Count);
@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		[TestCase]
 		public void VectoCSVFile_Read_RealLossMap()
 		{
-			var table = VectoCSVFile.Read(@"TestData\Components\Axle.vtlm");
+			var table = VectoCSVFile.Read(@"TestData/Components/Axle.vtlm");
 			Assert.AreEqual(3, table.Columns.Count);
 			CollectionAssert.AreEqual(
 				new[] { "Input Speed", "Input Torque", "Torque Loss" }, table.Columns.Cast<DataColumn>().Select(c => c.ColumnName));
@@ -189,8 +189,9 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			VectoCSVFile.Write(fileName, table);
 
-			var text = File.ReadAllText(fileName);
-			Assert.AreEqual("a,b\r\n1,2\r\n", text);
+			var lines = File.ReadAllLines(fileName);
+			Assert.AreEqual("a,b", lines[0]);
+			Assert.AreEqual("1,2", lines[1]);
 		}
 
 		[TestCase]
@@ -211,7 +212,11 @@ namespace TUGraz.VectoCore.Tests.FileIO
 					stream.Position = 0;
 
 					using (var sr = new StreamReader(stream)) {
-						Assert.AreEqual("a,b\r\n1,2\r\n", sr.ReadToEnd());
+						string line1 = sr.ReadLine();
+						Assert.AreEqual("a,b", line1);
+						
+						string line2 = sr.ReadLine();
+						Assert.AreEqual("1,2", line2);
 					}
 				}
 			}

@@ -47,8 +47,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 	[Parallelizable(ParallelScope.All)]
 	public class VocationalVehicleTest
 	{
-		const string Class4Vocational = @"Testdata\Integration\DeclarationMode\Class4_Vocational\Rigid Truck_4x2_vehicle-class-4_EURO6_2018.xml";
-		const string Class5Vocational = @"Testdata\Integration\DeclarationMode\Class5_Vocational\Tractor_4x2_vehicle-class-5_EURO6_2018.xml";
+		const string Class4Vocational = @"TestData/Integration/DeclarationMode/Class4_Vocational/Rigid Truck_4x2_vehicle-class-4_EURO6_2018.xml";
+		const string Class5Vocational = @"TestData/Integration/DeclarationMode/Class5_Vocational/Tractor_4x2_vehicle-class-5_EURO6_2018.xml";
 
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;

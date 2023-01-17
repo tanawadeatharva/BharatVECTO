@@ -34,7 +34,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		//public void VECTO_EffShift()
 		//{
 		//	var jobName =
-		//		@"E:\QUAM\tmp\1a_EffShift_high-engine-rev_UD-cycle_LH-tractor_model\vecto_tractor_4x2_overdr_EffShift-def.vecto";
+		//		@"E:/QUAM/tmp/1a_EffShift_high-engine-rev_UD-cycle_LH-tractor_model/vecto_tractor_4x2_overdr_EffShift-def.vecto";
 		//	RunJob_DeclSingle(jobName, 9);
 		//}
 

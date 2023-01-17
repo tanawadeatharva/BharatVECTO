@@ -22,7 +22,7 @@
 </ItemGroup>
 
   <ItemGroup>
-    <None Include="TestData\**\*.xml">
+    <None Include="Testdata\**\*.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

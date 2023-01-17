@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DualFuel
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleDualModeDualFuel.xml")]
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.3/vehicle_sampleDualModeDualFuel.xml")]
 		public void DualModeDualFuelVehicleTest(string jobName)
 		{
 			var fileWriter = new FileOutputWriter(jobName);
@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DualFuel
 			Assert.IsTrue(jobContainer.GetProgress().All(x => x.Value.Success));
 		}
 
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleSingleModeDualFuel.xml")]
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.3/vehicle_sampleSingleModeDualFuel.xml")]
 		public void SingleModeDualFuelVehicleTest(string jobName)
 		{
 			var fileWriter = new FileOutputWriter(jobName);

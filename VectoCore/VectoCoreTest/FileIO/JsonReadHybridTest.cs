@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		[TestCase()]
 		public void TestReadBatteryPack()
 		{
-			var inputProvider = JSONInputDataFactory.ReadREESSData(@"TestData\Hybrids\Battery\GenericBattery.vbat", false) as IBatteryPackEngineeringInputData;
+			var inputProvider = JSONInputDataFactory.ReadREESSData(@"TestData/Hybrids/Battery/GenericBattery.vbat", false) as IBatteryPackEngineeringInputData;
 
 			Assert.AreEqual(7.5.SI(Unit.SI.Ampere.Hour), inputProvider.Capacity);
 			
@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		public void TestReadElectricMotor()
 		{
 			var inputProvider =
-				JSONInputDataFactory.ReadElectricMotorData(@"TestData\Hybrids\ElectricMotor\GenericEMotor.vem", false);
+				JSONInputDataFactory.ReadElectricMotorData(@"TestData/Hybrids/ElectricMotor/GenericEMotor.vem", false);
 
 			Assert.AreEqual(0.15, inputProvider.Inertia.Value(), 1e-6);
 
@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		public void TestReadElectricMotorV3()
 		{
 			var inputProvider =
-				JSONInputDataFactory.ReadElectricMotorData(@"TestData\Hybrids\ElectricMotor\GenericEMotorV3.vem", false);
+				JSONInputDataFactory.ReadElectricMotorData(@"TestData/Hybrids/ElectricMotor/GenericEMotorV3.vem", false);
 
 			Assert.AreEqual(0.15, inputProvider.Inertia.Value(), 1e-6);
 
@@ -143,7 +143,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		public void TestElectricMotorV3_Lookup()
 		{
 			var inputProvider =
-				new JSONComponentInputData(@"TestData\Hybrids\ElectricMotor\GenericEMotorV3.vem", null,
+				new JSONComponentInputData(@"TestData/Hybrids/ElectricMotor/GenericEMotorV3.vem", null,
 					false);
 			var daa = new EngineeringDataAdapter();
 			var emData = daa.CreateElectricMachines(inputProvider.ElectricMachines, null, null).First().Item2;
@@ -183,7 +183,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		public void TestReadElectricMotorAggregation()
 		{
 			var inputProvider =
-				JSONInputDataFactory.ReadElectricMotorData(@"TestData\Hybrids\ElectricMotor\GenericEMotor.vem", false);
+				JSONInputDataFactory.ReadElectricMotorData(@"TestData/Hybrids/ElectricMotor/GenericEMotor.vem", false);
 
 			Assert.AreEqual(0.15, inputProvider.Inertia.Value(), 1e-6);
 
@@ -217,7 +217,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
         [TestCase()]
 		public void TestReadHybridVehicle()
 		{
-			var inputProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Hybrids\GenericVehicle_Group2_P2\Class2_RigidTruck_ParHyb_ENG.vecto");
+			var inputProvider = JSONInputDataFactory.ReadJsonJob(@"TestData/Hybrids/GenericVehicle_Group2_P2/Class2_RigidTruck_ParHyb_ENG.vecto");
 
 			var engineering = inputProvider as IEngineeringInputDataProvider;
 
@@ -251,7 +251,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		[TestCase()]
 		public void TestCreateHybridPowertrain()
 		{
-			var inputProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Hybrids\GenericVehicle_Group2_P2\Class2_RigidTruck_ParHyb_ENG.vecto");
+			var inputProvider = JSONInputDataFactory.ReadJsonJob(@"TestData/Hybrids/GenericVehicle_Group2_P2/Class2_RigidTruck_ParHyb_ENG.vecto");
 
 			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, null);
 
@@ -278,7 +278,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		[TestCase()]
 		public void TestCreateBatteryElectricPowertrain()
 		{
-			var inputProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\BatteryElectric\GenericVehicleB4\BEV_ENG.vecto");
+			var inputProvider = JSONInputDataFactory.ReadJsonJob(@"TestData/BatteryElectric/GenericVehicleB4/BEV_ENG.vecto");
 
 			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, null);
 

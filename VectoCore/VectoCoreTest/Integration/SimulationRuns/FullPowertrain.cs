@@ -61,14 +61,14 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 	[Parallelizable(ParallelScope.All)]
 	public class FullPowerTrain
 	{
-		public const string CycleFile = @"TestData\Integration\FullPowerTrain\1-Gear-Test-dist.vdri";
-		public const string CoachCycleFile = @"TestData\Integration\FullPowerTrain\Coach.vdri";
-		public const string EngineFile = @"TestData\Components\24t Coach.veng";
-		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
-		public const string GearboxLossMap = @"TestData\Components\Indirect Gear.vtlm";
-		public const string AxleLossMap = @"TestData\Components\Axle.vtlm";
-		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
-		//public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
+		public const string CycleFile = @"TestData/Integration/FullPowerTrain/1-Gear-Test-dist.vdri";
+		public const string CoachCycleFile = @"TestData/Integration/FullPowerTrain/Coach.vdri";
+		public const string EngineFile = @"TestData/Components/24t Coach.veng";
+		public const string AccelerationFile = @"TestData/Components/Coach.vacc";
+		public const string GearboxLossMap = @"TestData/Components/Indirect Gear.vtlm";
+		public const string AxleLossMap = @"TestData/Components/Axle.vtlm";
+		public const string GearboxShiftPolygonFile = @"TestData/Components/ShiftPolygons.vgbs";
+		//public const string GearboxFullLoadCurveFile = @"TestData/Components/Gearbox.vfld";
 		private static readonly LoggingObject Log = LogManager.GetLogger(typeof(FullPowerTrain).ToString());
 
 		[OneTimeSetUp]
@@ -336,7 +336,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		[TestCase]
 		public void Test_FullPowerTrain_JobFile()
 		{
-			const string jobFile = @"TestData\job.vecto";
+			const string jobFile = @"TestData/job.vecto";
 			var fileWriter = new FileOutputWriter(jobFile);
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
@@ -348,10 +348,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			jobContainer.Execute();
 
 			jobContainer.WaitFinished();
-			ResultFileHelper.TestSumFile(@"TestData\Results\Integration\job.vsum", @"TestData\job.vsum");
+			ResultFileHelper.TestSumFile(@"TestData/Results/Integration/job.vsum", @"TestData/job.vsum");
 
-			ResultFileHelper.TestModFile(@"TestData\Results\Integration\job_1-Gear-Test-dist.vmod",
-				@"TestData\job_1-Gear-Test-dist.vmod", testRowCount: false);
+			ResultFileHelper.TestModFile(@"TestData/Results/Integration/job_1-Gear-Test-dist.vmod",
+				@"TestData/job_1-Gear-Test-dist.vmod", testRowCount: false);
 		}
 
 		private static GearboxData CreateGearboxData()

@@ -38,33 +38,33 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 	public class BatteryElectricTest
 	{
 
-		protected const string BEV_Job = @"TestData\BatteryElectric\GenericVehicleB4\BEV_ENG.vecto";
-		protected const string BEV_Job_Cont30kW = @"TestData\BatteryElectric\GenericVehicleB4\BEV_ENG_Cont30kW.vecto";
+		protected const string BEV_Job = @"TestData/BatteryElectric/GenericVehicleB4/BEV_ENG.vecto";
+		protected const string BEV_Job_Cont30kW = @"TestData/BatteryElectric/GenericVehicleB4/BEV_ENG_Cont30kW.vecto";
 
-		protected const string BEV_E3_Job = @"TestData\BatteryElectric\GenericVehicleB3\BEV_ENG.vecto";
-		protected const string BEV_E3_Job_Cont30kW = @"TestData\BatteryElectric\GenericVehicleB3\BEV_ENG_Cont30kW.vecto";
+		protected const string BEV_E3_Job = @"TestData/BatteryElectric/GenericVehicleB3/BEV_ENG.vecto";
+		protected const string BEV_E3_Job_Cont30kW = @"TestData/BatteryElectric/GenericVehicleB3/BEV_ENG_Cont30kW.vecto";
 
 
-		protected const string BEV_E2_Job = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG.vecto";
-		protected const string BEV_E2_Job_3Speed = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_3speed.vecto";
-		protected const string BEV_E2_Job_BusAux = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_BusAux.vecto";
-		protected const string BEV_E2_Job_Cont30kW = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_Cont30kW.vecto";
+		protected const string BEV_E2_Job = @"TestData/BatteryElectric/GenericVehicleB2/BEV_ENG.vecto";
+		protected const string BEV_E2_Job_3Speed = @"TestData/BatteryElectric/GenericVehicleB2/BEV_ENG_3speed.vecto";
+		protected const string BEV_E2_Job_BusAux = @"TestData/BatteryElectric/GenericVehicleB2/BEV_ENG_BusAux.vecto";
+		protected const string BEV_E2_Job_Cont30kW = @"TestData/BatteryElectric/GenericVehicleB2/BEV_ENG_Cont30kW.vecto";
 
-		protected const string BEV_E2_APTN_Job = @"TestData\BatteryElectric\GenericVehicleB2_APTN\BEV_B2_Group5LH_rl_APTN.vecto";
+		protected const string BEV_E2_APTN_Job = @"TestData/BatteryElectric/GenericVehicleB2_APTN/BEV_B2_Group5LH_rl_APTN.vecto";
 		
-		protected const string BEV_E2_APTS_Job = @"TestData\BatteryElectric\GenericVehicleB2_AT\BEV_B2_Group5LH_rl_APTS.vecto";
-		protected const string BEV_E2_APTP_Job = @"TestData\BatteryElectric\GenericVehicleB2_AT\BEV_B2_Group5LH_rl_APTP.vecto";
+		protected const string BEV_E2_APTS_Job = @"TestData/BatteryElectric/GenericVehicleB2_AT/BEV_B2_Group5LH_rl_APTS.vecto";
+		protected const string BEV_E2_APTP_Job = @"TestData/BatteryElectric/GenericVehicleB2_AT/BEV_B2_Group5LH_rl_APTP.vecto";
 
-		protected const string BEV_E2_3Speed_PTO_Job = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_3speed_PTO.vecto";
+		protected const string BEV_E2_3Speed_PTO_Job = @"TestData/BatteryElectric/GenericVehicleB2/BEV_ENG_3speed_PTO.vecto";
 
-		public const string MotorFile = @"TestData\BatteryElectric\GenericVehicleB4\GenericEMotor_125kW_485Nm.vem";
-		public const string BatFile = @"TestData\BatteryElectric\GenericVehicleB4\GenericBattery_243kWh_750V.vbat";
+		public const string MotorFile = @"TestData/BatteryElectric/GenericVehicleB4/GenericEMotor_125kW_485Nm.vem";
+		public const string BatFile = @"TestData/BatteryElectric/GenericVehicleB4/GenericBattery_243kWh_750V.vbat";
 
-		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
-		//public const string MotorFile240kW = @"TestData\Hybrids\ElectricMotor\GenericEMotor240kW.vem";
+		public const string AccelerationFile = @"TestData/Components/Truck.vacc";
+		//public const string MotorFile240kW = @"TestData/Hybrids/ElectricMotor/GenericEMotor240kW.vem";
 
-		public const string GearboxIndirectLoss = @"TestData\Components\Indirect Gear.vtlm";
-		public const string GearboxDirectLoss = @"TestData\Components\Direct Gear.vtlm";
+		public const string GearboxIndirectLoss = @"TestData/Components/Indirect Gear.vtlm";
+		public const string GearboxDirectLoss = @"TestData/Components/Direct Gear.vtlm";
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
@@ -801,7 +801,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 		[TestCase]
 		public void RunJob_E3_AxlegearInputRetarder() {
-			var jobFile = @"TestData\Components\Retarder\E3\E3WithAxlegearInputRetarder.vecto";
+			var jobFile = @"TestData/Components/Retarder/E3/E3WithAxlegearInputRetarder.vecto";
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 			var writer = new FileOutputWriter(jobFile);
 			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
@@ -823,7 +823,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		[TestCase]
 		public void RunJob_E3_NoAxlegearInputRetarder()
 		{
-			var jobFile = @"TestData\Components\Retarder\E3\E3WithoutAxlegearInputRetarder.vecto";
+			var jobFile = @"TestData/Components/Retarder/E3/E3WithoutAxlegearInputRetarder.vecto";
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 			var writer = new FileOutputWriter(jobFile);
 			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);

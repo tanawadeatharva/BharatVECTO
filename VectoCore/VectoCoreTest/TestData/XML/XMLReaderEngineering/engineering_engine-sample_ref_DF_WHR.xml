@@ -7,7 +7,7 @@
 	xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0"  
 	xmlns:vecomp="urn:tugraz:ivt:VectoAPI:EngineeringComponent"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringComponent E:\QUAM\Workspace\VECTO_DEV_ADAS\VectoCore\VectoCore\Resources\XSD/VectoEngineeringComponent.xsd"
+	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringComponent E:/QUAM/Workspace/VECTO_DEV_ADAS/VectoCore/VectoCore/Resources/XSD/VectoEngineeringComponent.xsd"
 	xsi:type="VectoComponentEngineeringType">
 	<Engine>
 		<ve1.0:Data id="ENG-gooZah3D" xsi:type="ve1.1:EngineDataEngineeringType" xmlns="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v1.1">

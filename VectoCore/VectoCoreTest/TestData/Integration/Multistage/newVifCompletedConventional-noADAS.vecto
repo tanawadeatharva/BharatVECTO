@@ -6,8 +6,8 @@
     "FileVersion": 10
   },
   "Body": {
-    "PrimaryVehicle": "..\\..\\XML\\XMLReaderDeclaration\\SchemaVersion2.4\\vecto_vehicle-primary_heavyBus-sample.xml",
-    "InterimStep": "..\\..\\XML\\XMLReaderDeclaration\\SchemaVersion2.4\\vecto_vehicle-stage_input_full-sample-final-noADAS.xml",
+    "PrimaryVehicle": "..//..//XML//XMLReaderDeclaration//SchemaVersion2.4//vecto_vehicle-primary_heavyBus-sample.xml",
+    "InterimStep": "..//..//XML//XMLReaderDeclaration//SchemaVersion2.4//vecto_vehicle-stage_input_full-sample-final-noADAS.xml",
     "Completed": false
   }
 }

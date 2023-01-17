@@ -23,11 +23,11 @@ namespace TUGraz.VectoCore.Tests.Models
 	[Parallelizable(ParallelScope.All)]
 	public class WHRMapTest
 	{
-		public const string SingleFuelWHRVehicle = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleSingleModeSingleFuel_WHR.xml";
+		public const string SingleFuelWHRVehicle = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.3/vehicle_sampleSingleModeSingleFuel_WHR.xml";
 
-		public const string DualFuelWHRVehicle = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleSingleModeDualFuel_WHR.xml";
+		public const string DualFuelWHRVehicle = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.3/vehicle_sampleSingleModeDualFuel_WHR.xml";
 
-		public const string EngineeringDualFuelWHRVehicle = @"TestData\XML\XMLReaderEngineering\engineering_job-sample_ref_DF_WHR.xml";
+		public const string EngineeringDualFuelWHRVehicle = @"TestData/XML/XMLReaderEngineering/engineering_job-sample_ref_DF_WHR.xml";
 
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;

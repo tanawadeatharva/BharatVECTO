@@ -56,14 +56,14 @@ namespace TUGraz.VectoCore.Tests.Integration
 	// ReSharper disable once InconsistentNaming
 	public class Truck40tPowerTrain
 	{
-		public const string ShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
-		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
-		public const string EngineFile = @"TestData\Components\40t_Long_Haul_Truck.veng";
-		public const string AxleGearLossMap = @"TestData\Components\Axle 40t Truck.vtlm";
-		public const string GearboxIndirectLoss = @"TestData\Components\Indirect Gear.vtlm";
-		public const string GearboxDirectLoss = @"TestData\Components\Direct Gear.vtlm";
-		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
-		//public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
+		public const string ShiftPolygonFile = @"TestData/Components/ShiftPolygons.vgbs";
+		public const string AccelerationFile = @"TestData/Components/Truck.vacc";
+		public const string EngineFile = @"TestData/Components/40t_Long_Haul_Truck.veng";
+		public const string AxleGearLossMap = @"TestData/Components/Axle 40t Truck.vtlm";
+		public const string GearboxIndirectLoss = @"TestData/Components/Indirect Gear.vtlm";
+		public const string GearboxDirectLoss = @"TestData/Components/Direct Gear.vtlm";
+		public const string GearboxShiftPolygonFile = @"TestData/Components/ShiftPolygons.vgbs";
+		//public const string GearboxFullLoadCurveFile = @"TestData/Components/Gearbox.vfld";
 
 		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
 			bool overspeed = false, GearboxType gbxType = GearboxType.AMT)

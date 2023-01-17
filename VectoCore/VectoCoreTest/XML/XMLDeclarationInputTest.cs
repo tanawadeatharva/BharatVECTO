@@ -1092,7 +1092,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 		}
 
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vecto_vehicle-fullElectricSP.xml")]
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.3/vecto_vehicle-fullElectricSP.xml")]
 		public void TestReadingNewSteeringPumpTechnologies(string file)
 		{
 			var reader = XmlReader.Create(file);

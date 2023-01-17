@@ -51,8 +51,8 @@ namespace TUGraz.VectoCore.Tests.Dummy
 		[TestCase]
 		public void CompareFLDLookupPerformance()
 		{
-			var engineFile1 = @"TestData\Components\40t_Long_Haul_Truck.vfld";
-			var engineFile2 = @"E:\QUAM\Downloads\EngineFLD\Map_375c_BB1390_modTUG_R49_375c_BB1386.vfld";
+			var engineFile1 = @"TestData/Components/40t_Long_Haul_Truck.vfld";
+			var engineFile2 = @"E:/QUAM/Downloads/EngineFLD/Map_375c_BB1390_modTUG_R49_375c_BB1386.vfld";
 
 			if (!File.Exists(engineFile2)) {
 				Assert.Inconclusive("Confidential File not found. Test cannot run without file.");
@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.Dummy
 		[TestCase]
 		public void LookupTest()
 		{
-			var engineFile2 = @"E:\QUAM\Downloads\EngineFLD\Map_375c_BB1390_modTUG_R49_375c_BB1386.vfld";
+			var engineFile2 = @"E:/QUAM/Downloads/EngineFLD/Map_375c_BB1390_modTUG_R49_375c_BB1386.vfld";
 
 			if (!File.Exists(engineFile2)) {
 				Assert.Inconclusive("Confidential File not found. Test cannot run without file.");

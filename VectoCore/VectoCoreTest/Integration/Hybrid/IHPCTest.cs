@@ -22,9 +22,9 @@ public class IHPCTest
 		//InitGraphWriter();
 	}
 
-	public const string IHPCTEst_12speed = @"TestData\Hybrids\GenericIHPC\12SpeedGbx\IHPC Group 5.vecto";
+	public const string IHPCTEst_12speed = @"TestData/Hybrids/GenericIHPC/12SpeedGbx/IHPC Group 5.vecto";
 
-	public const string IHPCTEst_6speed = @"TestData\Hybrids\GenericIHPC\6SpeedGbx\IHPC Group 5.vecto";
+	public const string IHPCTEst_6speed = @"TestData/Hybrids/GenericIHPC/6SpeedGbx/IHPC Group 5.vecto";
 
 	[
 		TestCase(IHPCTEst_12speed, 0, TestName = "IHPC 12spd Group 5 DriveCycle LongHaul"),

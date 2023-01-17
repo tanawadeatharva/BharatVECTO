@@ -34,62 +34,62 @@ namespace TUGraz.VectoCore.Tests.XML
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		private const string BASE_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\";
-		private const string ADDITONAL_TESTS_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\";
-		private const string Optional_TESTS_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\WithoutOptionalEntries";
+		private const string BASE_DIR = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/";
+		private const string ADDITONAL_TESTS_DIR = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/";
+		private const string Optional_TESTS_DIR = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/WithoutOptionalEntries";
 
 
-		[TestCase(@"HeavyLorry\Conventional_heavyLorry_AMT.xml"),
-		TestCase(@"HeavyLorry\HEV-S_heavyLorry_AMT_S2.xml"),
-		TestCase(@"HeavyLorry\HEV-S_heavyLorry_IEPC-S.xml"),
-		TestCase(@"HeavyLorry\HEV-S_heavyLorry_S3.xml"),
-		TestCase(@"HeavyLorry\HEV-S_heavyLorry_S4.xml"),
-		TestCase(@"HeavyLorry\HEV_heavyLorry_AMT_Px.xml"),
-		TestCase(@"HeavyLorry\IEPC_heavyLorry.xml"),
-		TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2.xml"),
-		TestCase(@"HeavyLorry\PEV_heavyLorry_APT-N_E2.xml"),
-		TestCase(@"HeavyLorry\PEV_heavyLorry_E3.xml"),
-		TestCase(@"HeavyLorry\PEV_heavyLorry_E4.xml"),
-		TestCase(@"MediumLorry\Conventional_mediumLorry_AMT.xml"),
-		TestCase(@"MediumLorry\HEV-S_mediumLorry_AMT_S2.xml"),
-		TestCase(@"MediumLorry\HEV-S_mediumLorry_IEPC-S.xml"),
-		TestCase(@"MediumLorry\HEV-S_mediumLorry_S3.xml"),
-		TestCase(@"MediumLorry\HEV-S_mediumLorry_S4.xml"),
-		TestCase(@"MediumLorry\HEV_mediumLorry_AMT_Px.xml"),
-		TestCase(@"MediumLorry\IEPC_mediumLorry.xml"),
-		TestCase(@"MediumLorry\PEV_mediumLorry_AMT_E2.xml"),
-		TestCase(@"MediumLorry\PEV_mediumLorry_APT-N_E2.xml"),
-		TestCase(@"MediumLorry\PEV_mediumLorry_E3.xml"),
-		TestCase(@"MediumLorry\PEV_mediumLorry_E4.xml"),
-		TestCase(@"PrimaryBus\Conventional_primaryBus_AMT.xml"),
-		TestCase(@"PrimaryBus\HEV-S_primaryBus_AMT_S2.xml"),
-		TestCase(@"PrimaryBus\HEV-S_primaryBus_IEPC-S.xml"),
-		TestCase(@"PrimaryBus\HEV-S_primaryBus_S3.xml"),
-		TestCase(@"PrimaryBus\HEV-S_primaryBus_S4.xml"),
-		TestCase(@"PrimaryBus\HEV_primaryBus_AMT_Px.xml"),
-		TestCase(@"PrimaryBus\IEPC_primaryBus.xml"),
-		TestCase(@"PrimaryBus\PEV_primaryBus_AMT_E2.xml"),
-		TestCase(@"PrimaryBus\PEV_primaryBus_E3.xml"),
-		TestCase(@"PrimaryBus\PEV_primaryBus_E4.xml"),
-		//TestCase(@"CompletedBus\Conventional_completedBus_1.xml"),
-		//TestCase(@"CompletedBus\HEV_completedBus_1.xml"),
-		//TestCase(@"CompletedBus\IEPC_completedBus_1.xml"),
-		//TestCase(@"CompletedBus\PEV_completedBus_1.xml"),
-		TestCase(@"ExemptedVehicles\exempted_completedBus_input_full.xml"),
-		TestCase(@"ExemptedVehicles\exempted_completedBus_input_only_mandatory_entries.xml"),
-		TestCase(@"ExemptedVehicles\exempted_heavyLorry.xml"),
-		TestCase(@"ExemptedVehicles\exempted_mediumLorry.xml"),
-		TestCase(@"ExemptedVehicles\exempted_primaryBus.xml"),
+		[TestCase(@"HeavyLorry/Conventional_heavyLorry_AMT.xml"),
+		TestCase(@"HeavyLorry/HEV-S_heavyLorry_AMT_S2.xml"),
+		TestCase(@"HeavyLorry/HEV-S_heavyLorry_IEPC-S.xml"),
+		TestCase(@"HeavyLorry/HEV-S_heavyLorry_S3.xml"),
+		TestCase(@"HeavyLorry/HEV-S_heavyLorry_S4.xml"),
+		TestCase(@"HeavyLorry/HEV_heavyLorry_AMT_Px.xml"),
+		TestCase(@"HeavyLorry/IEPC_heavyLorry.xml"),
+		TestCase(@"HeavyLorry/PEV_heavyLorry_AMT_E2.xml"),
+		TestCase(@"HeavyLorry/PEV_heavyLorry_APT-N_E2.xml"),
+		TestCase(@"HeavyLorry/PEV_heavyLorry_E3.xml"),
+		TestCase(@"HeavyLorry/PEV_heavyLorry_E4.xml"),
+		TestCase(@"MediumLorry/Conventional_mediumLorry_AMT.xml"),
+		TestCase(@"MediumLorry/HEV-S_mediumLorry_AMT_S2.xml"),
+		TestCase(@"MediumLorry/HEV-S_mediumLorry_IEPC-S.xml"),
+		TestCase(@"MediumLorry/HEV-S_mediumLorry_S3.xml"),
+		TestCase(@"MediumLorry/HEV-S_mediumLorry_S4.xml"),
+		TestCase(@"MediumLorry/HEV_mediumLorry_AMT_Px.xml"),
+		TestCase(@"MediumLorry/IEPC_mediumLorry.xml"),
+		TestCase(@"MediumLorry/PEV_mediumLorry_AMT_E2.xml"),
+		TestCase(@"MediumLorry/PEV_mediumLorry_APT-N_E2.xml"),
+		TestCase(@"MediumLorry/PEV_mediumLorry_E3.xml"),
+		TestCase(@"MediumLorry/PEV_mediumLorry_E4.xml"),
+		TestCase(@"PrimaryBus/Conventional_primaryBus_AMT.xml"),
+		TestCase(@"PrimaryBus/HEV-S_primaryBus_AMT_S2.xml"),
+		TestCase(@"PrimaryBus/HEV-S_primaryBus_IEPC-S.xml"),
+		TestCase(@"PrimaryBus/HEV-S_primaryBus_S3.xml"),
+		TestCase(@"PrimaryBus/HEV-S_primaryBus_S4.xml"),
+		TestCase(@"PrimaryBus/HEV_primaryBus_AMT_Px.xml"),
+		TestCase(@"PrimaryBus/IEPC_primaryBus.xml"),
+		TestCase(@"PrimaryBus/PEV_primaryBus_AMT_E2.xml"),
+		TestCase(@"PrimaryBus/PEV_primaryBus_E3.xml"),
+		TestCase(@"PrimaryBus/PEV_primaryBus_E4.xml"),
+		//TestCase(@"CompletedBus/Conventional_completedBus_1.xml"),
+		//TestCase(@"CompletedBus/HEV_completedBus_1.xml"),
+		//TestCase(@"CompletedBus/IEPC_completedBus_1.xml"),
+		//TestCase(@"CompletedBus/PEV_completedBus_1.xml"),
+		TestCase(@"ExemptedVehicles/exempted_completedBus_input_full.xml"),
+		TestCase(@"ExemptedVehicles/exempted_completedBus_input_only_mandatory_entries.xml"),
+		TestCase(@"ExemptedVehicles/exempted_heavyLorry.xml"),
+		TestCase(@"ExemptedVehicles/exempted_mediumLorry.xml"),
+		TestCase(@"ExemptedVehicles/exempted_primaryBus.xml"),
 		]
 		public void TestReadingJobVersion_V24(string jobFile)
 		{
 			ReadDeclarationJob(jobFile);
 		}
 
-		[TestCase(@"CompletedBus\Conventional_completedBus_1.xml"),
-		TestCase(@"CompletedBus\HEV_completedBus_1.xml"),
-		TestCase(@"CompletedBus\IEPC_completedBus_1.xml"),
-		TestCase(@"CompletedBus\PEV_completedBus_1.xml"),
+		[TestCase(@"CompletedBus/Conventional_completedBus_1.xml"),
+		TestCase(@"CompletedBus/HEV_completedBus_1.xml"),
+		TestCase(@"CompletedBus/IEPC_completedBus_1.xml"),
+		TestCase(@"CompletedBus/PEV_completedBus_1.xml"),
 		]
 		public void TestReadingCompletedBus_V24(string jobfile)
 		{
@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			return runs;
 		}
 
-		[TestCase(@"HeavyLorry\Conventional_heavyLorry_AMT.xml", BASE_DIR)]
+		[TestCase(@"HeavyLorry/Conventional_heavyLorry_AMT.xml", BASE_DIR)]
 		[TestCase(@"Conventional_heavyLorry_AMT_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestConventionalHeavyLorry(string jobfile, string testDir)
 		{
@@ -194,7 +194,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("None", pto.PTOTransmissionType);
 		}
 
-		[TestCase(@"MediumLorry\Conventional_mediumLorry_AMT.xml", BASE_DIR) ]
+		[TestCase(@"MediumLorry/Conventional_mediumLorry_AMT.xml", BASE_DIR) ]
 		[TestCase(@"Conventional_mediumLorry_AMT_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestConventionalMediumLorry(string jobfile, string testDir)
 		{
@@ -244,7 +244,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.BoostingLimitations);//Vehicle Max Prop. Limit
 		}
 
-		[TestCase(@"PrimaryBus\Conventional_primaryBus_AMT.xml", BASE_DIR)]
+		[TestCase(@"PrimaryBus/Conventional_primaryBus_AMT.xml", BASE_DIR)]
 		[TestCase(@"Conventional_primaryBus_AMT_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestConventionalPrimaryHeavyBus(string jobfile, string testDir)
 		{
@@ -289,7 +289,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.BoostingLimitations);//Vehicle Max Prop. Limit
 		}
 		
-		[TestCase(@"HeavyLorry\HEV_heavyLorry_AMT_Px.xml", BASE_DIR)]
+		[TestCase(@"HeavyLorry/HEV_heavyLorry_AMT_Px.xml", BASE_DIR)]
 		[TestCase(@"HEV_heavyLorry_AMT_Px_Capacitor.xml", ADDITONAL_TESTS_DIR)]
 		[TestCase(@"HEV_heavyLorry_AMT_Px_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestHEVHeavyLorryPx(string jobfile, string testDir)
@@ -669,7 +669,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		#endregion
 
 		
-		[TestCase(@"MediumLorry\HEV_mediumLorry_AMT_Px.xml", BASE_DIR)]
+		[TestCase(@"MediumLorry/HEV_mediumLorry_AMT_Px.xml", BASE_DIR)]
 		[TestCase(@"HEV_mediumLorry_AMT_Px_n_opt.xml", Optional_TESTS_DIR )]
 		public void TestHEVMediumLorry(string jobfile, string testDir)
 		{
@@ -724,7 +724,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 		
 
-		[TestCase(@"PrimaryBus\HEV_primaryBus_AMT_Px.xml", BASE_DIR)]
+		[TestCase(@"PrimaryBus/HEV_primaryBus_AMT_Px.xml", BASE_DIR)]
 		[TestCase(@"HEV_primaryBus_AMT_Px_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestHEVPrimaryBusAMTPx(string jobfile, string testDir)
 		{
@@ -774,7 +774,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase(@"HeavyLorry\HEV-S_heavyLorry_AMT_S2.xml", BASE_DIR)]
+		[TestCase(@"HeavyLorry/HEV-S_heavyLorry_AMT_S2.xml", BASE_DIR)]
 		[TestCase(@"HEV-S_heavyLorry_AMT_S2_ADC.xml", ADDITONAL_TESTS_DIR)]
 		[TestCase(@"HEV-S_heavyLorry_AMT_S2_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestHEVHeavyLorryAMTS2(string jobfile, string testDir)
@@ -881,7 +881,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase(@"HeavyLorry\HEV-S_heavyLorry_S3.xml", BASE_DIR)]
+		[TestCase(@"HeavyLorry/HEV-S_heavyLorry_S3.xml", BASE_DIR)]
 		[TestCase(@"HEV-S_heavyLorry_S3_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestHEVHeavyLorryS3(string jobfile, string testDir)
 		{
@@ -931,7 +931,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase(@"HeavyLorry\HEV-S_heavyLorry_S4.xml", BASE_DIR)]
+		[TestCase(@"HeavyLorry/HEV-S_heavyLorry_S4.xml", BASE_DIR)]
 		[TestCase(@"HEV-S_heavyLorry_S4_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestHEVHeavyLorryS4(string jobfile, string testDir)
 		{
@@ -979,7 +979,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.BoostingLimitations);
 		}
 
-		[TestCase(@"MediumLorry\HEV-S_mediumLorry_AMT_S2.xml", BASE_DIR)]
+		[TestCase(@"MediumLorry/HEV-S_mediumLorry_AMT_S2.xml", BASE_DIR)]
 		[TestCase(@"HEV-S_mediumLorry_AMT_S2_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestHEVMediumLorryS2(string jobfile, string testDir)
 		{
@@ -1030,7 +1030,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.BoostingLimitations);
 		}
 
-		[TestCase(@"MediumLorry\HEV-S_mediumLorry_S3.xml", BASE_DIR)]
+		[TestCase(@"MediumLorry/HEV-S_mediumLorry_S3.xml", BASE_DIR)]
 		[TestCase(@"HEV-S_mediumLorry_S3_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestHevMediumLorryS3(string jobfile, string testDir)
 		{
@@ -1081,7 +1081,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase(@"MediumLorry\HEV-S_mediumLorry_S4.xml", BASE_DIR)]
+		[TestCase(@"MediumLorry/HEV-S_mediumLorry_S4.xml", BASE_DIR)]
 		[TestCase(@"HEV-S_mediumLorry_S4_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestHEVMediumLorryS4(string jobfile, string testDir)
 		{
@@ -1130,7 +1130,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.BoostingLimitations);
 		}
 
-		[TestCase(@"PrimaryBus\HEV-S_primaryBus_AMT_S2.xml", BASE_DIR)]
+		[TestCase(@"PrimaryBus/HEV-S_primaryBus_AMT_S2.xml", BASE_DIR)]
 		[TestCase(@"HEV-S_primaryBus_AMT_S2_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestHEVPrimaryBusS2(string jobfile, string testDir)
 		{
@@ -1177,7 +1177,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.BoostingLimitations);
 		}
 
-		[TestCase(@"PrimaryBus\HEV-S_primaryBus_S3.xml", BASE_DIR)]
+		[TestCase(@"PrimaryBus/HEV-S_primaryBus_S3.xml", BASE_DIR)]
 		[TestCase(@"HEV-S_primaryBus_S3_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestHEVPrimaryBusS3(string jobfile, string testDir)
 		{
@@ -1222,7 +1222,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.BoostingLimitations);
 		}
 
-		[TestCase(@"PrimaryBus\HEV-S_primaryBus_S4.xml", BASE_DIR)]
+		[TestCase(@"PrimaryBus/HEV-S_primaryBus_S4.xml", BASE_DIR)]
 		[TestCase(@"HEV-S_primaryBus_S4_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestHEVPrimaryBusS4(string jobfile, string testDir)
 		{
@@ -1268,7 +1268,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase(@"HeavyLorry\HEV-S_heavyLorry_IEPC-S.xml", BASE_DIR)]
+		[TestCase(@"HeavyLorry/HEV-S_heavyLorry_IEPC-S.xml", BASE_DIR)]
 		[TestCase(@"HEV-S_heavyLorry_IEPC-S_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestHEVIEPCHeavyLorry(string jobfile, string testDir)
 		{
@@ -1368,7 +1368,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		#endregion
 
 
-		[TestCase(@"MediumLorry\HEV-S_mediumLorry_IEPC-S.xml", BASE_DIR)]
+		[TestCase(@"MediumLorry/HEV-S_mediumLorry_IEPC-S.xml", BASE_DIR)]
 		[TestCase(@"HEV-S_mediumLorry_IEPC-S_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestHEVIEPCSMediumLorry(string jobfile, string testDir)
 		{
@@ -1418,7 +1418,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.BoostingLimitations);
 		}
 
-		[TestCase(@"PrimaryBus\HEV-S_primaryBus_IEPC-S.xml", BASE_DIR)]
+		[TestCase(@"PrimaryBus/HEV-S_primaryBus_IEPC-S.xml", BASE_DIR)]
 		[TestCase(@"HEV-S_primaryBus_IEPC-S_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestHEVIEPCSPrimaryBus(string jobfile, string testDir)
 		{
@@ -1461,9 +1461,9 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.BoostingLimitations);
 		}
 
-		[TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2.xml", BASE_DIR)]
+		[TestCase(@"HeavyLorry/PEV_heavyLorry_AMT_E2.xml", BASE_DIR)]
 		[TestCase(@"PEV_heavyLorry_AMT_E2_n_opt.xml", Optional_TESTS_DIR)]
-		[TestCase(@"HeavyLorry\PEV_heavyLorry_APT-N_E2.xml", BASE_DIR)]
+		[TestCase(@"HeavyLorry/PEV_heavyLorry_APT-N_E2.xml", BASE_DIR)]
 		[TestCase(@"PEV_heavyLorry_APT-N_E2_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestPEVE2HeavyLorry(string jobfile, string testDir)
 		{
@@ -1510,7 +1510,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase(@"HeavyLorry\PEV_heavyLorry_E3.xml", BASE_DIR)]
+		[TestCase(@"HeavyLorry/PEV_heavyLorry_E3.xml", BASE_DIR)]
 		[TestCase(@"PEV_heavyLorry_E3_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestPEVE3HeavyLorry(string jobfile, string testDir)
 		{
@@ -1556,7 +1556,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.BoostingLimitations);
 		}
 
-		[TestCase(@"HeavyLorry\PEV_heavyLorry_E4.xml", BASE_DIR)]
+		[TestCase(@"HeavyLorry/PEV_heavyLorry_E4.xml", BASE_DIR)]
 		[TestCase(@"PEV_heavyLorry_E4_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestPEVE4HeavyLorry(string jobfile, string testDir)
 		{
@@ -1602,9 +1602,9 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.BoostingLimitations);
 		}
 
-		[TestCase(@"MediumLorry\PEV_mediumLorry_AMT_E2.xml", BASE_DIR)]
+		[TestCase(@"MediumLorry/PEV_mediumLorry_AMT_E2.xml", BASE_DIR)]
 		[TestCase(@"PEV_mediumLorry_AMT_E2_n_opt.xml", Optional_TESTS_DIR)]
-		[TestCase(@"MediumLorry\PEV_mediumLorry_APT-N_E2.xml", BASE_DIR)]
+		[TestCase(@"MediumLorry/PEV_mediumLorry_APT-N_E2.xml", BASE_DIR)]
 		[TestCase(@"PEV_mediumLorry_APT-N_E2_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestPEVE2MediumLorry(string jobfile, string testDir)
 		{
@@ -1657,7 +1657,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase(@"MediumLorry\PEV_mediumLorry_E3.xml", BASE_DIR)]
+		[TestCase(@"MediumLorry/PEV_mediumLorry_E3.xml", BASE_DIR)]
 		[TestCase(@"PEV_mediumLorry_E3_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestPEVE3MediumLorry(string jobfile, string testDir)
 		{
@@ -1703,7 +1703,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase(@"MediumLorry\PEV_mediumLorry_E4.xml", BASE_DIR)]
+		[TestCase(@"MediumLorry/PEV_mediumLorry_E4.xml", BASE_DIR)]
 		[TestCase(@"PEV_mediumLorry_E4_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestPEVE4MediumLorry(string jobfile, string testDir)
 		{
@@ -1749,7 +1749,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase(@"PrimaryBus\PEV_primaryBus_AMT_E2.xml", BASE_DIR)]
+		[TestCase(@"PrimaryBus/PEV_primaryBus_AMT_E2.xml", BASE_DIR)]
 		[TestCase(@"PEV_primaryBus_AMT_E2_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestPEVPrimaryBusE2(string jobfile, string testDir)
 		{
@@ -1794,7 +1794,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.BoostingLimitations);
 		}
 
-		[TestCase(@"PrimaryBus\PEV_primaryBus_E3.xml", BASE_DIR)]
+		[TestCase(@"PrimaryBus/PEV_primaryBus_E3.xml", BASE_DIR)]
 		[TestCase(@"PEV_primaryBus_E3_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestPEVPrimaryBusE3(string jobfile, string testDir)
 		{
@@ -1837,7 +1837,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase(@"PrimaryBus\PEV_primaryBus_E4.xml", BASE_DIR)]
+		[TestCase(@"PrimaryBus/PEV_primaryBus_E4.xml", BASE_DIR)]
 		[TestCase(@"PEV_primaryBus_E4_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestPEVPrimaryBusE4(string jobfile, string testDir)
 		{
@@ -1879,7 +1879,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.BoostingLimitations);
 		}
 
-		[TestCase(@"HeavyLorry\IEPC_heavyLorry.xml", BASE_DIR)]
+		[TestCase(@"HeavyLorry/IEPC_heavyLorry.xml", BASE_DIR)]
 		[TestCase(@"IEPC_heavyLorry_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestIEPCHeayLorry(string jobfile, string testDir)
 		{
@@ -1922,7 +1922,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase(@"MediumLorry\IEPC_mediumLorry.xml", BASE_DIR)]
+		[TestCase(@"MediumLorry/IEPC_mediumLorry.xml", BASE_DIR)]
 		[TestCase(@"IEPC_mediumLorry_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestIEPCMediumLorry(string jobfile, string testDir)
 		{
@@ -1966,7 +1966,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase(@"PrimaryBus\IEPC_primaryBus.xml", BASE_DIR)]
+		[TestCase(@"PrimaryBus/IEPC_primaryBus.xml", BASE_DIR)]
 		[TestCase(@"IEPC_primaryBus_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestIEPCPrimaryBus(string jobfile, string testDir)
 		{
@@ -2006,7 +2006,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.BoostingLimitations);
 		}
 
-		//[TestCase(@"PrimaryBus\HEV-S_primaryBus_IEPC-S_IEPC_Std.xml", BASE_DIR)]
+		//[TestCase(@"PrimaryBus/HEV-S_primaryBus_IEPC-S_IEPC_Std.xml", BASE_DIR)]
 		//public void TestHEVSPrimaryBusIEPCStd(string jobfile, string testDir)
 		//{
 		//	var filename = Path.Combine(testDir, jobfile);
@@ -2039,7 +2039,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 
 
-		[TestCase(@"HeavyLorry\HEV_heavyLorry_AMT_Px_IHPC.xml", BASE_DIR)]
+		[TestCase(@"HeavyLorry/HEV_heavyLorry_AMT_Px_IHPC.xml", BASE_DIR)]
 		public void TestHEVHeavyLorryAMTPxIHPC(string jobfile, string testDir)
 		{
 			var filename = Path.Combine(testDir, jobfile);
@@ -2076,7 +2076,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase(@"MediumLorry\PEV_mediumLorry_AMT_E2_EM_Std.xml", BASE_DIR)]
+		[TestCase(@"MediumLorry/PEV_mediumLorry_AMT_E2_EM_Std.xml", BASE_DIR)]
 		public void TestPEVMediumLorryAMTE2EMStd(string jobfile, string testDir)
 		{
 			var filename = Path.Combine(testDir, jobfile);

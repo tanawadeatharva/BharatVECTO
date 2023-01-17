@@ -84,9 +84,9 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		[TestCase, Category("ComparisonV2")]
 		public void TestGraph()
 		{
-			var imgV3 = @"TestData\Results\Integration\40t_Long_Haul_Truck_Cycle_Drive_50_Dec_Increasing_Slope_v3.vmod";
+			var imgV3 = @"TestData/Results/Integration/40t_Long_Haul_Truck_Cycle_Drive_50_Dec_Increasing_Slope_v3.vmod";
 			var imgv22 =
-				@"TestData\Results\Integration\40t_Long_Haul_Truck_Cycle_Drive_50_Dec_Increasing_Slope_v22.vmod";
+				@"TestData/Results/Integration/40t_Long_Haul_Truck_Cycle_Drive_50_Dec_Increasing_Slope_v22.vmod";
 
 			GetGraphWriter().Write(imgV3, imgv22);
 		}
@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		[TestCase, Category("ComparisonV2")]
 		public void TestSingleGraph()
 		{
-			var imgV3 = @"TestData\Results\Integration\40t_Long_Haul_Truck_Cycle_Drive_50_Dec_Increasing_Slope_v3.vmod";
+			var imgV3 = @"TestData/Results/Integration/40t_Long_Haul_Truck_Cycle_Drive_50_Dec_Increasing_Slope_v3.vmod";
 
 			GetGraphWriter().Write(imgV3);
 		}
@@ -263,7 +263,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
 			GetGraphWriter().Write(modFileName,
-				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\" + modFileName);
+				@"../../TestData/Integration/DriverStrategy/Vecto2.2/40t Truck/" + modFileName);
 		}
 
 		[Category("ComparisonV2"),
@@ -293,7 +293,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
 			GetGraphWriter().Write(modFileName,
-				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck_Overspeed\" + modFileName);
+				@"../../TestData/Integration/DriverStrategy/Vecto2.2/40t Truck_Overspeed/" + modFileName);
 		}
 
 		[Category("ComparisonV2"),
@@ -451,7 +451,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			GetGraphWriter().Write(modFileName, @"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\" + modFileName);
+			GetGraphWriter().Write(modFileName, @"../../TestData/Integration/DriverStrategy/Vecto2.2/Coach/" + modFileName);
 		}
 
 		[Category("ComparisonV2"),
@@ -481,7 +481,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
 			GetGraphWriter().Write(modFileName,
-				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach_Overspeed\" + modFileName);
+				@"../../TestData/Integration/DriverStrategy/Vecto2.2/Coach_Overspeed/" + modFileName);
 		}
 
 		// ####################################################
@@ -621,15 +621,15 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			//GraphWriter.Write(modFileName, @"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\" + modFileName);
+			//GraphWriter.Write(modFileName, @"../../TestData/Integration/DriverStrategy/Vecto2.2/Coach/" + modFileName);
 		}
 
 		//[TestCase()]
 		//public void HugoTest()
 		//{
-		//	//var source = @"E:\QUAM\Workspace\Projekt HUGO\Jobs generated\Tractor_4x4_vehicle-class-8_EURO6_2018_CO.xml";
-		//	var source = @"E:\QUAM\Workspace\Projekt HUGO\Jobs generated\Rigid Truck_4x2_vehicle-class-4_EURO1_LH.xml";
-		//	//@"E:\QUAM\Workspace\Projekt HUGO\Jobs generated\Rigid Truck_4x2_vehicle-class-4_EURO1_LH.xml";
+		//	//var source = @"E:/QUAM/Workspace/Projekt HUGO/Jobs generated/Tractor_4x4_vehicle-class-8_EURO6_2018_CO.xml";
+		//	var source = @"E:/QUAM/Workspace/Projekt HUGO/Jobs generated/Rigid Truck_4x2_vehicle-class-4_EURO1_LH.xml";
+		//	//@"E:/QUAM/Workspace/Projekt HUGO/Jobs generated/Rigid Truck_4x2_vehicle-class-4_EURO1_LH.xml";
 		//	var writer = new FileOutputWriter(source);
 		//	var apiRun = VectoEngineeringApi.VectoInstance(source, writer);
 		//	try {

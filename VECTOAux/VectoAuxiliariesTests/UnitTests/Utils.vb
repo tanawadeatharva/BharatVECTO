@@ -105,7 +105,7 @@ Public Class Utils
                 .ResultCardIdle = New DummyResultCard(), ' New ResultCard(New List(Of SmartResult)()),
                 .ResultCardTraction = New DummyResultCard(), 'New ResultCard(New List(Of SmartResult)()),
                 .ResultCardOverrun = New DummyResultCard(), 'New ResultCard(New List(Of SmartResult)()),
-                .AlternatorMap = AlternatorReader.ReadMap("TestFiles\testAlternatormap.aalt"),
+                .AlternatorMap = AlternatorReader.ReadMap("TestFiles/testAlternatormap.aalt"),
                 .DoorActuationTimeSecond = Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond,
                 .PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
                 .AlternatorType = AlternatorType.Conventional

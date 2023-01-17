@@ -45,16 +45,16 @@ namespace TUGraz.VectoCore.Tests.XML
 	//[Parallelizable(ParallelScope.All)]
 	public class XMLWritingTests
 	{
-		const string EngineOnlyJob = @"TestData\XML\EngineOnlyJob\EngineOnly.vecto";
-		const string EngineeringJob = @"TestData\XML\EngineeringJob\Class5_Tractor_4x2\Class5_Tractor_ENG.vecto";
+		const string EngineOnlyJob = @"TestData/XML/EngineOnlyJob/EngineOnly.vecto";
+		const string EngineeringJob = @"TestData/XML/EngineeringJob/Class5_Tractor_4x2/Class5_Tractor_ENG.vecto";
 
 		const string EngineeringJobFull =
-			@"TestData\XML\XMLWriter\EngineeringJob\Class5_Tractor_4x2\Class5_Tractor_ENG-FULL.vecto";
+			@"TestData/XML/XMLWriter/EngineeringJob/Class5_Tractor_4x2/Class5_Tractor_ENG-FULL.vecto";
 
-		const string DeclarationJob = @"TestData\XML\XMLWriter\DeclarationJob\Class5_Tractor_4x2\Class5_Tractor_DECL.vecto";
+		const string DeclarationJob = @"TestData/XML/XMLWriter/DeclarationJob/Class5_Tractor_4x2/Class5_Tractor_DECL.vecto";
 
 		const string DeclarationJobFull =
-			@"TestData\XML\XMLWriter\DeclarationJob\Class5_Tractor_4x2\Class5_Tractor_DECL-FULL.vecto";
+			@"TestData/XML/XMLWriter/DeclarationJob/Class5_Tractor_4x2/Class5_Tractor_DECL-FULL.vecto";
 
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;

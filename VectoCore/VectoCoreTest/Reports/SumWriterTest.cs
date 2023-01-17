@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				EngineData = new CombustionEngineData() {
 					Fuels = new[] {new CombustionEngineFuelData {
 						FuelData = FuelData.Diesel,
-						ConsumptionMap = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vmap")
+						ConsumptionMap = FuelConsumptionMapReader.ReadFromFile(@"TestData/Components/12t Delivery Truck.vmap")
 					}}.ToList(),
 					IdleSpeed = 600.RPMtoRad()
 				},
@@ -161,7 +161,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				EngineData = new CombustionEngineData() {
 					Fuels = new[] {new CombustionEngineFuelData {
 						FuelData = FuelData.Diesel,
-						ConsumptionMap = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vmap")
+						ConsumptionMap = FuelConsumptionMapReader.ReadFromFile(@"TestData/Components/12t Delivery Truck.vmap")
 					}}.ToList(),
 					IdleSpeed = 600.RPMtoRad()
 				},
@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		[TestCase]
 		public void TestSumDataMetaInformation()
 		{
-			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
+			var jobfile = @"TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(jobfile);
 			var xmlReport = new XMLDeclarationReport(writer);
@@ -285,7 +285,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			
 
-			var jobFile = @"TestData\Integration\DeclarationMode\Class5_Vocational\Tractor_4x2_vehicle-class-5_EURO6_2018.xml";
+			var jobFile = @"TestData/Integration/DeclarationMode/Class5_Vocational/Tractor_4x2_vehicle-class-5_EURO6_2018.xml";
 
 			var modFilename = Path.Combine(Path.GetDirectoryName(jobFile), "VEH-Class5_ConstructionReferenceLoad_sim.vmod");
 
@@ -316,7 +316,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 
 
-			var jobFile = @"TestData\Integration\DeclarationMode\Class5_Vocational\Tractor_4x2_vehicle-class-5_EURO6_2018.xml";
+			var jobFile = @"TestData/Integration/DeclarationMode/Class5_Vocational/Tractor_4x2_vehicle-class-5_EURO6_2018.xml";
 
 			var sumFilename = Path.Combine(Path.GetDirectoryName(jobFile), "Tractor_4x2_vehicle-class-5_EURO6_2018.vsum");
 

@@ -48,13 +48,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	[Parallelizable(ParallelScope.All)]
 	public class PowerTrainBuilderTest
 	{
-		public const string JobFile = @"TestData\Jobs\24t Coach.vecto";
-		public const string JobFileNoAngular = @"TestData\Jobs\24t CoachNoAng.vecto";
-		public const string JobFileAngEfficiency = @"TestData\Jobs\24t Coach_Ang_Efficiency.vecto";
+		public const string JobFile = @"TestData/Jobs/24t Coach.vecto";
+		public const string JobFileNoAngular = @"TestData/Jobs/24t CoachNoAng.vecto";
+		public const string JobFileAngEfficiency = @"TestData/Jobs/24t Coach_Ang_Efficiency.vecto";
 
-		public const string JobFileDecl = @"TestData\Jobs\40t_Long_Haul_Truck.vecto";
-		public const string JobFileDeclNoAngular = @"TestData\Jobs\40t_Long_Haul_Truck_NoAng.vecto";
-		public const string JobFileDeclAngEfficiency = @"TestData\Jobs\40t_Long_Haul_Truck with AngleEfficiency.vecto";
+		public const string JobFileDecl = @"TestData/Jobs/40t_Long_Haul_Truck.vecto";
+		public const string JobFileDeclNoAngular = @"TestData/Jobs/40t_Long_Haul_Truck_NoAng.vecto";
+		public const string JobFileDeclAngEfficiency = @"TestData/Jobs/40t_Long_Haul_Truck with AngleEfficiency.vecto";
 
 
 		

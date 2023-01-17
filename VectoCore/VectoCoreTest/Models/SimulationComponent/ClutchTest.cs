@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	[Parallelizable(ParallelScope.All)]
 	public class ClutchTest
 	{
-		private const string CoachEngine = @"TestData\Components\24t Coach.veng";
+		private const string CoachEngine = @"TestData/Components/24t Coach.veng";
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{

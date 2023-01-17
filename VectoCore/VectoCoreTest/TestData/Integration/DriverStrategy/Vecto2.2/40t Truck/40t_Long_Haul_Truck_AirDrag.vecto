@@ -11,8 +11,8 @@
     "EngineFile": "40t_Long_Haul_Truck.veng",
     "GearboxFile": "40t_Long_Haul_Truck.vgbx",
     "Cycles": [
-      "C:\\Workspaces\\VisualStudio\\VECTO_quam\\VectoCoreTest\\TestData\\Integration\\DriverStrategy\\Cycles\\Cycle_Drive_80_level.vdri",
-      "C:\\Workspaces\\VisualStudio\\VECTO_quam\\VectoCoreTest\\TestData\\Integration\\DriverStrategy\\Cycles\\Cycle_Drive_10_level.vdri"
+      "C://Workspaces//VisualStudio//VECTO_quam//VectoCoreTest//TestData//Integration//DriverStrategy//Cycles//Cycle_Drive_80_level.vdri",
+      "C://Workspaces//VisualStudio//VECTO_quam//VectoCoreTest//TestData//Integration//DriverStrategy//Cycles//Cycle_Drive_10_level.vdri"
     ],
     "VACC": "Truck.vacc",
     "EngineOnlyMode": false,

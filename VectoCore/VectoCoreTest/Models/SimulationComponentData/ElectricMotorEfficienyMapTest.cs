@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 		public void TestLookupTorqueForBatPower(double batPwr, double emSpeed, double expectedTq)
 		{
 			var inputProvider =
-				JSONInputDataFactory.ReadElectricMotorData(@"TestData\Hybrids\ElectricMotor\GenericEMotor.vem", false);
+				JSONInputDataFactory.ReadElectricMotorData(@"TestData/Hybrids/ElectricMotor/GenericEMotor.vem", false);
 
 			var fld = inputProvider.VoltageLevels.First().FullLoadCurve;
 			var fldMap = ElectricFullLoadCurveReader.Create(fld, 1);
@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 		public void TestLookupTorqueForBatPower2(double batPwr, double emSpeed)
 		{
 			var inputProvider =
-				JSONInputDataFactory.ReadElectricMotorData(@"TestData\Hybrids\ElectricMotor\GenericEMotor.vem", false);
+				JSONInputDataFactory.ReadElectricMotorData(@"TestData/Hybrids/ElectricMotor/GenericEMotor.vem", false);
 
 			var fld = inputProvider.VoltageLevels.First().FullLoadCurve;
 			var fldMap = ElectricFullLoadCurveReader.Create(fld, 1); 
@@ -74,9 +74,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 
 		}
 
-		[TestCase(@"TestData\Components\ElectricMotor\vem_P_inverter_DC_90_fine.vemo", 0.8999, 0.9001),
-		TestCase(@"TestData\Components\ElectricMotor\vem_P_inverter_DC_90_coarse.vemo", 0.8999, 0.9001),
-		TestCase(@"TestData\Components\ElectricMotor\vem_P_inverter_DC_std.vemo", 0, 1)]
+		[TestCase(@"TestData/Components/ElectricMotor/vem_P_inverter_DC_90_fine.vemo", 0.8999, 0.9001),
+		TestCase(@"TestData/Components/ElectricMotor/vem_P_inverter_DC_90_coarse.vemo", 0.8999, 0.9001),
+		TestCase(@"TestData/Components/ElectricMotor/vem_P_inverter_DC_std.vemo", 0, 1)]
 		public void TestInterpolationMethod_PowerMap(string filename, double etaMin, double etaMax)
 		{
 			EfficiencyMap emMap;
