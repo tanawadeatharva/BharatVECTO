@@ -118,47 +118,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public void UpdateComponents() => Container.UpdateComponents(RealContainer);
 	}
 
-	public class MockBrakes : VectoSimulationComponent, IBrakes, IUpdateable
-	{
-		public MockBrakes(IVehicleContainer container) : base(container)
-		{
-			BrakePower = 0.SI<Watt>();
-		}
-
-		#region Overrides of VectoSimulationComponent
-
-		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
-		{
-
-		}
-
-		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
-		{
-
-		}
-
-		#endregion
-
-		#region Implementation of IBrakes
-
-		public Watt BrakePower { get; set; }
-
-		#endregion
-
-		#region Implementation of IUpdateable
-
-		public bool UpdateFrom(object other) {
-			if (other is IBrakes b) {
-				BrakePower = b.BrakePower;
-				return true;
-			}
-
-			return false;
-		}
-
-		#endregion
-	}
-
 	public class MockDrivingCycle : VectoSimulationComponent, IDrivingCycleInfo
 	{
 		private IDataBus realContainer;
