@@ -92,9 +92,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 
-			if (HybridController == null) {
-				throw new VectoException("Unknown HybridController in TestContainer: {0}", Container.HybridController?.GetType().FullName);
-			}
+			//if (HybridController == null) {
+			//	throw new VectoException("Unknown HybridController in TestContainer: {0}", Container.HybridController?.GetType().FullName);
+			//}
 
 			var busAux = container.RunData.BusAuxiliaries;
 			if (busAux != null && busAux.ElectricalUserInputsConfig.ConnectESToREESS) {
