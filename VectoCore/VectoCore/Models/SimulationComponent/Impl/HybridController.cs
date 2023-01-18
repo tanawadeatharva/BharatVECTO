@@ -11,10 +11,12 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
+using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -307,6 +309,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			protected readonly GearList GearList;
 			protected readonly VectoRunData _runData;
 
+			protected TestPowertrain<Gearbox> TestPowertrain;
+
 			public HybridCtlShiftStrategy(HybridController hybridController, IVehicleContainer container) : base(
 				container)
 			{
@@ -334,6 +338,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					MaxStartGear = gear;
 					break;
 				}
+
+				// create testcontainer
+				var testContainer = new SimplePowertrainContainer(_runData);
+				PowertrainBuilder.BuildSimpleHybridPowertrain(_runData, testContainer);
+
+				TestPowertrain = new TestPowertrain<Gearbox>(testContainer, DataBus);
 			}
 
 			public override ShiftPolygon ComputeDeclarationShiftPolygon(GearboxType gearboxType, int i,
@@ -378,10 +388,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				foreach (var entry in GearList.Reverse()) {
 					var gear = entry;
 					//for (var gear = (uint)GearboxModelData.Gears.Count; gear > 1; gear--) {
-					var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
+
+					TestPowertrain.UpdateComponents();
+					TestPowertrain.Gearbox.Gear = gear;
+					TestPowertrain.Gearbox._nextGear = gear;
+					if (_controller.CurrentStrategySettings != null) {
+						TestPowertrain.HybridController.ApplyStrategySettings(_controller.CurrentStrategySettings);
+					}
+					var response = TestPowertrain.Gearbox.Initialize(outTorque, outAngularVelocity);
+					response = TestPowertrain.Gearbox.Request(absTime,
+						Constants.SimulationSettings.MeasuredSpeedTargetTimeInterval, outTorque, outAngularVelocity,
+						true);
 
 					var inAngularSpeed = outAngularVelocity * GearboxModelData.Gears[gear.Gear].Ratio;
-					var fullLoadPower = response.Engine.PowerRequest - response.DeltaFullLoad;
+					var fullLoadPower = DataBus.EngineInfo.EngineStationaryFullPower(response.Engine.EngineSpeed);
 					var reserve = 1 - response.Engine.PowerRequest / fullLoadPower;
 					var inTorque = response.Clutch.PowerRequest / inAngularSpeed;
 
@@ -426,7 +446,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						continue;
 					}
 
-					var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
+					//var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
+					TestPowertrain.UpdateComponents();
+					TestPowertrain.Gearbox.Gear = gear;
+					TestPowertrain.Gearbox._nextGear = gear;
+					if (_controller.CurrentStrategySettings != null) {
+						TestPowertrain.HybridController.ApplyStrategySettings(_controller.CurrentStrategySettings);
+					}
+
+					var response = TestPowertrain.Gearbox.Initialize(outTorque, outAngularVelocity);
+					response = TestPowertrain.Gearbox.Request(absTime,
+						Constants.SimulationSettings.MeasuredSpeedTargetTimeInterval, outTorque, outAngularVelocity,
+						true);
 
 					var fullLoadPower =
 						response.Engine.DynamicFullLoadTorque; //EnginePowerRequest - response.DeltaFullLoad;
@@ -599,8 +630,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				foreach (var gear in Gears.Reverse()) {
-					var response = _gearbox.Initialize(absTime, gear, torque, outAngularVelocity);
+					//var response = _gearbox.Initialize(absTime, gear, torque, outAngularVelocity);
+					TestPowertrain.UpdateComponents();
+					TestPowertrain.Gearbox.Gear = gear;
+					TestPowertrain.Gearbox._nextGear = gear;
+					if (_controller.CurrentStrategySettings != null) {
+						TestPowertrain.HybridController.ApplyStrategySettings(_controller.CurrentStrategySettings);
+					}
 
+					var response = TestPowertrain.Gearbox.Initialize(torque, outAngularVelocity);
+					response = TestPowertrain.Gearbox.Request(absTime,
+						Constants.SimulationSettings.MeasuredSpeedTargetTimeInterval, torque, outAngularVelocity,
+						true);
 					if (response.Engine.EngineSpeed > DataBus.EngineInfo.EngineRatedSpeed || response.Engine.EngineSpeed < DataBus.EngineInfo.EngineIdleSpeed) {
 						continue;
 					}
@@ -633,7 +674,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						continue;
 					}
 
-					var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
+					//var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
+					TestPowertrain.UpdateComponents();
+					TestPowertrain.Gearbox.Gear = gear;
+					TestPowertrain.Gearbox._nextGear = gear;
+					if (_controller.CurrentStrategySettings != null) {
+						TestPowertrain.HybridController.ApplyStrategySettings(_controller.CurrentStrategySettings);
+					}
+
+					var response = TestPowertrain.Gearbox.Initialize(outTorque, outAngularVelocity);
+					response = TestPowertrain.Gearbox.Request(absTime,
+						Constants.SimulationSettings.MeasuredSpeedTargetTimeInterval, outTorque, outAngularVelocity,
+						true);
 
 					var fullLoadPower =
 						response.Engine.DynamicFullLoadTorque; //EnginePowerRequest - response.DeltaFullLoad;
