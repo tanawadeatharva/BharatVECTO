@@ -183,6 +183,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DebugData = new DebugData();
 		}
 
+		protected override bool DoUpdateFrom(object other) => false;
+
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			PreviousState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);

@@ -226,5 +226,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public bool CombustionEngineOn { get; set; }
 
 		#endregion
+
+		protected override bool DoUpdateFrom(object other) => false;
+
 	}
 }

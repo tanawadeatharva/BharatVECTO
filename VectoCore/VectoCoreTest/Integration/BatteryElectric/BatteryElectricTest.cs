@@ -1186,6 +1186,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{ }
 
+		protected override bool DoUpdateFrom(object other) => false;
+
 		public PerSecond EngineSpeed
 		{
 			get;

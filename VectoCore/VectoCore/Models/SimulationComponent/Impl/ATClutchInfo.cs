@@ -34,5 +34,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 		public Watt ClutchLosses => 0.SI<Watt>();
 
 		#endregion
+
+		protected override bool DoUpdateFrom(object other) => false;
 	}
 }

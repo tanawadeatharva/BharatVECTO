@@ -219,6 +219,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		}
 
+		protected override bool DoUpdateFrom(object other) => false;
+
 		#endregion
 	}
 
@@ -254,6 +256,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		{
 
 		}
+
+		protected override bool DoUpdateFrom(object other) => false;
 
 		#endregion
 	}

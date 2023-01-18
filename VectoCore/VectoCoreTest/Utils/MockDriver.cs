@@ -125,5 +125,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public MeterPerSquareSecond DriverAcceleration { get; set; }
 		public PCCStates PCCState => PCCStates.OutsideSegment;
 		public MeterPerSecond NextBrakeTriggerSpeed => 0.SI<MeterPerSecond>();
+
+		protected override bool DoUpdateFrom(object other) => false;
+
 	}
 }

@@ -246,6 +246,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DebugData = new DebugData();
 		}
 
+		protected override bool DoUpdateFrom(object other) => false;
+
 		protected override void DoWriteModalResults(
 			Second time, Second simulationInterval,
 			IModalDataContainer container)

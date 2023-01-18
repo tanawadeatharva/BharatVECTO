@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region Implementation of IUpdateable
 
-		public bool UpdateFrom(object other) {
+		protected override bool DoUpdateFrom(object other) {
 			if (other is Wheels w) {
 				PreviousState = w.PreviousState.Clone();
 				return true;
