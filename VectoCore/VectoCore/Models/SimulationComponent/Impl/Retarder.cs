@@ -106,5 +106,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			base.DoCommitSimulationStep(time, simulationInterval);
 		}
+
+		protected override bool DoUpdateFrom(object other) => false;
 	}
 }

@@ -26,5 +26,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public double Ratio => 1;
 
 		#endregion
+
+		protected override bool DoUpdateFrom(object other) => false;
 	}
 }

@@ -41,6 +41,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			// nothing to write - this is only used in test-container
 		}
 
+		protected override bool DoUpdateFrom(object other) => false;
+
 		#endregion
 
 		#region Implementation of ITnInProvider

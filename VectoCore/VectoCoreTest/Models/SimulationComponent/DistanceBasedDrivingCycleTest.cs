@@ -343,5 +343,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public MeterPerSecond MaxVehicleSpeed => throw new System.NotImplementedException();
 
 		#endregion
+		protected override bool DoUpdateFrom(object other) => false;
+
 	}
 }

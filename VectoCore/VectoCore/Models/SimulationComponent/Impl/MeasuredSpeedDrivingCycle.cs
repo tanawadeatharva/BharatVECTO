@@ -391,6 +391,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AdvanceState();
 		}
 
+		protected override bool DoUpdateFrom(object other) => false;
+
 		public double Progress => AbsTime == null ? 0 : AbsTime.Value() / Data.Entries.Last().Time.Value();
 
 		public CycleData CycleData =>

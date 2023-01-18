@@ -2200,6 +2200,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public bool CombustionEngineOn { get => false; set { } }
 
 		#endregion
+
+		protected override bool DoUpdateFrom(object other) => false;
 	}
 
 	public class SimpleElectricMotorControl : IElectricMotorControl
@@ -2282,6 +2284,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public MeterPerSecond NextBrakeTriggerSpeed => 0.SI<MeterPerSecond>();
 
 		#endregion
+
+		protected override bool DoUpdateFrom(object other) => false;
 	}
 
 	internal class EngineOnlyGearboxInfo : VectoSimulationComponent, IGearboxInfo
@@ -2349,6 +2353,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public bool RequestAfterGearshift { get; set; }
 
 		#endregion
+
+		protected override bool DoUpdateFrom(object other) => false;
 	}
 
 	internal class ZeroMileageCounter : VectoSimulationComponent, IMileageCounter
@@ -2377,6 +2383,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public Meter Distance => 0.SI<Meter>();
 
 		#endregion
+
+		protected override bool DoUpdateFrom(object other) => false;
 	}
 
 	public class DummyVehicleInfo : VectoSimulationComponent, IVehicleInfo
@@ -2432,5 +2440,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public MeterPerSecond MaxVehicleSpeed => throw new NotImplementedException();
 
 		#endregion
+
+		protected override bool DoUpdateFrom(object other) => false;
 	}
 }

@@ -51,6 +51,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.T_IEPC_out] = CurrentState.OutTorque;
 		}
 
+		protected override bool DoUpdateFrom(object other) => false;
+
 		#endregion
 
 		#region Implementation of IGearboxInfo

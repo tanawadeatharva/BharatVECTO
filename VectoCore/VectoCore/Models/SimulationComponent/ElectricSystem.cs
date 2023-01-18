@@ -150,7 +150,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		#region Implementation of IUpdateable
 
-		public bool UpdateFrom(object other) {
+		protected override bool DoUpdateFrom(object other) {
 			if (other is ElectricSystem s) {
 				PreviousState = s.PreviousState.Clone();
 				return true;
