@@ -61,6 +61,10 @@
     <Folder Include="Models\Declaration\BusAux\" />
     <Folder Include="Integration\Declaration\HeavyLorry\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="TestData\XML\XMLVIFBusReport\" />
+  </ItemGroup>
 	<Choose>
 		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
 			<ItemGroup>
