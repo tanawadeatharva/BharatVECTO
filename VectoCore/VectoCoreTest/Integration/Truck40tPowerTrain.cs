@@ -102,6 +102,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 				AirdragData = airdragData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
+				Retarder = new RetarderData() { Type = RetarderType.None},
+				Aux = new List<VectoRunData.AuxData>(),
 				GearshiftParameters = CreateGearshiftData(),
 				SimulationType = SimulationType.DistanceCycle,
 				Cycle = cycleData,

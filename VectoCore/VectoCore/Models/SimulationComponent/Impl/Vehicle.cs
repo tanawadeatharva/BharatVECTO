@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			ModelData = modelData;
 			AirdragData = airdrag;
-			if (AirdragData.CrossWindCorrectionCurve != null) {
+			if (AirdragData?.CrossWindCorrectionCurve != null) {
 				AirdragData.CrossWindCorrectionCurve.SetDataBus(container);
 			}
 			var model = container.RunData;

@@ -263,6 +263,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = new CombustionEngineData() {
 				IdleSpeed = 600.RPMtoRad(),
 				Inertia = 0.SI<KilogramSquareMeter>(),
+				EngineStartTime = 1.SI<Second>(),
 			};
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>();
 			fullLoadCurves[0] = FullLoadCurveReader.Create(
@@ -276,13 +277,23 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			engineData.FullLoadCurves = fullLoadCurves;
 			return new VectoRunData() {
 				VehicleData = new VehicleData() {
-					DynamicTyreRadius = 0.492.SI<Meter>()
+					DynamicTyreRadius = 0.492.SI<Meter>(),
+					CurbMass = 10000.SI<Kilogram>(),
+					AxleData = new List<Axle>() {
+						new Axle() {
+							AxleWeightShare = 1,
+							Inertia = 0.SI<KilogramSquareMeter>(),
+							RollResistanceCoefficient = 0.0055,
+							TyreTestLoad = 33500.SI<Newton>(),
+						}
+					}
 				},
 				AxleGearData = new AxleGearData() {
 					AxleGear = new GearData() {
 						Ratio = 2.64
 					}
 				},
+				Retarder = new RetarderData() { Type = RetarderType.None },
 				EngineData = engineData,
 				GearboxData = gearboxData,
 				GearshiftParameters = new ShiftStrategyParameters() {
@@ -292,6 +303,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
 					UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
 					UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration,
+				},
+				Cycle = new DrivingCycleData() {
+					CycleType = CycleType.EngineOnly
 				}
 			};
 		}
