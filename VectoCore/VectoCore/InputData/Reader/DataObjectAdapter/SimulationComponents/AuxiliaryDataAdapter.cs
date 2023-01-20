@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 						AddPneumaticSystem(mission, jobType, auxData, alternatorEfficiency, aux,retVal);
 						break;
 					case AuxiliaryType.ElectricSystem:
-						AddElectricSystem(mission, jobType, aux, auxData, alternatorEfficiency, retVal);
+						AddElectricSystem(mission, hdvClass, jobType, aux, auxData, alternatorEfficiency, retVal);
 						break;
 					default: continue;
 				}
@@ -206,11 +206,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 
 
-		private static void AddElectricSystem(MissionType mission, VectoSimulationJobType vectoSimulationJobType,
+		private static void AddElectricSystem(MissionType mission, VehicleClass hdvClass,
+			VectoSimulationJobType vectoSimulationJobType,
 			VectoRunData.AuxData aux,
 			IAuxiliaryDeclarationInputData auxData, double alternatorEfficiency, List<VectoRunData.AuxData> auxDataList)
 		{
-			aux.PowerDemandMech = DeclarationData.ElectricSystem.Lookup(mission, auxData.Technology.FirstOrDefault()).PowerDemand;
+			aux.PowerDemandMech = DeclarationData.ElectricSystem.Lookup(hdvClass, mission, auxData.Technology.FirstOrDefault()).PowerDemand;
 			aux.ID = Constants.Auxiliaries.IDs.ElectricSystem;
 			aux.PowerDemandElectric = aux.PowerDemandMech * alternatorEfficiency;
 			aux.ConnectToREESS = vectoSimulationJobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
