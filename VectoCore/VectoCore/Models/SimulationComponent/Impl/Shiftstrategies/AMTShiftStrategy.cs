@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					true);
 
 				var inAngularSpeed = outAngularVelocity * GearboxModelData.Gears[gear.Gear].Ratio;
-				var fullLoadPower = DataBus.EngineInfo.EngineStationaryFullPower(response.Engine.EngineSpeed);
+				var fullLoadPower = TestPowertrain.CombustionEngine.EngineStationaryFullPower(response.Engine.EngineSpeed);
 				var reserve = 1 - response.Engine.PowerRequest / fullLoadPower;
 				var inTorque = response.Clutch.PowerRequest / inAngularSpeed;
 

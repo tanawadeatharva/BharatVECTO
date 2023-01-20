@@ -32,6 +32,7 @@
 using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.Reports
@@ -44,7 +45,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 		public void TestGearshiftCountTractionInterruptionShiftup()
 		{
 			var rundata = new VectoRunData() {
-				JobName = "GearshiftRun"
+				JobName = "GearshiftRun",
+				GearboxData = new GearboxData()
             };
 			var modData = new ModalDataContainer(rundata, null, null);
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
@@ -72,7 +74,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			var rundata = new VectoRunData()
 			{
-				JobName = "GearshiftRun"
+				JobName = "GearshiftRun",
+				GearboxData = new GearboxData()
 			};
 			var modData = new ModalDataContainer(rundata, null, null);
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
@@ -100,7 +103,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			var rundata = new VectoRunData()
 			{
-				JobName = "GearshiftRun"
+				JobName = "GearshiftRun",
+				GearboxData = new GearboxData()
 			};
 			var modData = new ModalDataContainer(rundata, null, null);
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
@@ -129,7 +133,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			var rundata = new VectoRunData()
 			{
-				JobName = "GearshiftRun"
+				JobName = "GearshiftRun",
+				GearboxData = new GearboxData()
 			};
 			var modData = new ModalDataContainer(rundata, null, null);
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
@@ -157,7 +162,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			var rundata = new VectoRunData()
 			{
-				JobName = "GearshiftRun"
+				JobName = "GearshiftRun",
+				GearboxData = new GearboxData()
 			};
 			var modData = new ModalDataContainer(rundata, null, null);
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
@@ -187,7 +193,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			var rundata = new VectoRunData()
 			{
-				JobName = "GearshiftRun"
+				JobName = "GearshiftRun",
+				GearboxData = new GearboxData()
 			};
 			var modData = new ModalDataContainer(rundata, null, null);
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
@@ -216,7 +223,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			var rundata = new VectoRunData()
 			{
-				JobName = "GearshiftRun"
+				JobName = "GearshiftRun",
+				GearboxData = new GearboxData()
 			};
 			var modData = new ModalDataContainer(rundata, null, null);
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
