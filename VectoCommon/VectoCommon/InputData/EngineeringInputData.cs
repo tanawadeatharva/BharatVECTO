@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -62,6 +63,32 @@ namespace TUGraz.VectoCommon.InputData
 		IEPC_E,
 		IEPC_S,
 		IHPC
+	}
+
+	public static class VectoSimulationJobTypeHelper
+	{
+		public const string Conventional = "Conventional";
+		public const string Hybrid = "Hybrid";
+		public const string PureElectric = "PureElectric";
+
+		public static string GetPowertrainArchitectureType(this VectoSimulationJobType jobType)
+		{
+			switch (jobType) {
+				case VectoSimulationJobType.EngineOnlySimulation:
+				case VectoSimulationJobType.ConventionalVehicle:
+					return Conventional;
+				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.SerialHybridVehicle:
+				case VectoSimulationJobType.IHPC:
+				case VectoSimulationJobType.IEPC_S:
+					return Hybrid;
+				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.IEPC_E:
+					return PureElectric;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
+			}
+		}
 	}
 
 	public interface IHybridStrategyParameters

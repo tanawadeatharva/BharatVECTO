@@ -57,7 +57,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				ElectricalUserInputsConfig = ec,
 				PneumaticAuxillariesConfig  = pac,
 				PneumaticUserInputsConfig  = puc,
-				SSMInputs = ssm,
+				SSMInputsCooling = ssm,
+				SSMInputsHeating = ssm,
 				Actuations = actuations,
 				VehicleData = vehicleData
 			};

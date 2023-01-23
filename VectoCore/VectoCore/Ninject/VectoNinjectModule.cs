@@ -42,6 +42,7 @@ using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 using TUGraz.VectoCore.OutputData.XML.ComponentWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
 using TUGraz.VectoCore.OutputData.XML.Engineering;
 
@@ -95,14 +96,22 @@ namespace TUGraz.VectoCore
 
 			LoadModule<SimulatorFactoryNinjectModule>();
 
+			LoadModule<ResultsNinjectModule>();
+
 			LoadModule<MRFNinjectModule>();
 
+			LoadModule<MRFResultsNinjectModule>();
+
 			LoadModule<CIFNinjectModule>();
+
+			LoadModule<CIFResultsNinjectModule>();
 			
 			LoadModule<VIFNinjectModule>();
 			
+			LoadModule<VIFResultsNinjectModule>();
 
-#if (MOCKUP)  
+
+#if (MOCKUP)
 			var compiledModuleLoaderPlugin = new CompiledModuleLoaderPlugin(Kernel, new AssemblyNameRetriever());
 			var assembly = Assembly.LoadFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"VectoMockup.dll"));
 			//var assembly = Assembly.LoadFile("VectoMockup.dll");
@@ -115,10 +124,10 @@ namespace TUGraz.VectoCore
 
 		}
 
-		
 
-#endregion
 
-		
+		#endregion
+
+
 	}
 }

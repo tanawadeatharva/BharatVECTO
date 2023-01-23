@@ -32,11 +32,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
@@ -330,98 +335,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		/// <summary>
-		/// Intersects max torque curve.
-		/// </summary>
-		/// <param name="maxTorqueEntries"></param>
-		/// <param name="maxTorque"></param>
-		/// <returns>A combined EngineFullLoadCurve with the minimum full load torque over all inputs curves.</returns>
-		internal static IList<VehicleMaxPropulsionTorque.FullLoadEntry> IntersectMaxPropulsionTorqueCurve(IList<VehicleMaxPropulsionTorque.FullLoadEntry> maxTorqueEntries, NewtonMeter maxTorque)
-		{
-			if (maxTorque == null) {
-				return maxTorqueEntries;
-			}
-
-			var entries = new List<VehicleMaxPropulsionTorque.FullLoadEntry>();
-			var firstEntry = maxTorqueEntries.First();
-			if (firstEntry.FullDriveTorque < maxTorque) {
-				entries.Add(maxTorqueEntries.First());
-			} else {
-				entries.Add(new VehicleMaxPropulsionTorque.FullLoadEntry {
-					MotorSpeed = firstEntry.MotorSpeed,
-					FullDriveTorque = maxTorque,
-				});
-			}
-			foreach (var entry in maxTorqueEntries.Pairwise(Tuple.Create)) {
-				if (entry.Item1.FullDriveTorque <= maxTorque && entry.Item2.FullDriveTorque <= maxTorque) {
-					// segment is below maxTorque line -> use directly
-					entries.Add(entry.Item2);
-				} else if (entry.Item1.FullDriveTorque > maxTorque && entry.Item2.FullDriveTorque > maxTorque) {
-					// segment is above maxTorque line -> add limited entry
-					entries.Add(new VehicleMaxPropulsionTorque.FullLoadEntry {
-						MotorSpeed = entry.Item2.MotorSpeed,
-						FullDriveTorque = maxTorque,
-					});
-				} else {
-					// segment intersects maxTorque line -> add new entry at intersection
-					var edgeFull = Edge.Create(
-						new Point(entry.Item1.MotorSpeed.Value(), entry.Item1.FullDriveTorque.Value()),
-						new Point(entry.Item2.MotorSpeed.Value(), entry.Item2.FullDriveTorque.Value()));
-					
-					var intersectionX = (maxTorque.Value() - edgeFull.OffsetXY) / edgeFull.SlopeXY;
-					if (!entries.Any(x => x.MotorSpeed.IsEqual(intersectionX)) && !intersectionX.IsEqual(entry.Item2.MotorSpeed.Value())) {
-						entries.Add(new VehicleMaxPropulsionTorque.FullLoadEntry {
-							MotorSpeed = intersectionX.SI<PerSecond>(),
-							FullDriveTorque = maxTorque,
-						});
-					}
-
-					entries.Add(new VehicleMaxPropulsionTorque.FullLoadEntry {
-						MotorSpeed = entry.Item2.MotorSpeed,
-						FullDriveTorque = entry.Item2.FullDriveTorque > maxTorque ? maxTorque : entry.Item2.FullDriveTorque,
-						
-					});
-				}
-			}
-
-			
-			return entries;
-		}
-
-		/// <summary>
-		/// Filters the gears based on disabling rule: Disable either the last 1 or 2 gears by setting their vehicle-level torque limit to 0.
-		/// </summary>
-		internal static IList<ITransmissionInputData> FilterDisabledGears(IList<ITorqueLimitInputData> torqueLimits, IGearboxDeclarationInputData gearboxData) {
-			if (torqueLimits == null || torqueLimits.Count == 0){
-				return gearboxData?.Gears ?? new List<ITransmissionInputData>();
-			}
-
-			if (gearboxData == null) {
-				return new List<ITransmissionInputData>();
-			}
-
-			var gearsInput = gearboxData.Gears;
-			var lastGearNumber = gearsInput.Max(g => g.Gear);
-			var toRemove = torqueLimits
-				.Where(tqLimit => tqLimit.MaxTorque.IsEqual(0))
-				.Select(tqLimit => gearsInput.FirstOrDefault(g => g.Gear == tqLimit.Gear))
-				.Where(g => g != default)
-				.OrderBy(g => g.Gear)
-				.ToList();
-			
-			if ((toRemove.Count == 1 && toRemove[0].Gear != lastGearNumber)
-				|| (toRemove.Count == 2 && (toRemove[0].Gear != lastGearNumber-1 || toRemove[1].Gear != lastGearNumber))
-				|| toRemove.Count > 2) {
-				throw new VectoException("Only the last 1 or 2 gears can be disabled. Disabling gear {0} for a {1}-speed gearbox is not allowed.", 
-					toRemove.Min(g => g.Gear), gearsInput.Count);
-			}
-
-			foreach (var entry in toRemove) {
-				gearsInput.Remove(entry);
-			}
-			
-			return gearsInput;
-		}
+		
 	}
 }
 

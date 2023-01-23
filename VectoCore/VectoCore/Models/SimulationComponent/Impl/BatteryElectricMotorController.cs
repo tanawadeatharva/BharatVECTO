@@ -9,7 +9,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 	public class BatteryElectricMotorController : IElectricMotorControl
 	{
-		private VehicleContainer DataBus;
+		protected VehicleContainer DataBus;
 		private ElectricSystem ElectricSystem;
 		protected ElectricMotorData ElectricMotorData;
 
@@ -44,8 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
                 return null;
             }
 			
-            if (DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(GearboxModelData?.DisengageWhenHaltingSpeed ?? Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed) 
-				&& outTorque.IsSmaller(0)) {
+            if (CannotProvideRecuperationAtLowSpeed(outTorque)) {
                 return null;
             }
 
@@ -54,8 +53,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			}
 
 			return (-outTorque).LimitTo(maxDriveTorque, maxRecuperationTorque ?? VectoMath.Max(maxDriveTorque, 0.SI<NewtonMeter>()));
+        }
+
+        #endregion
+
+        protected virtual bool CannotProvideRecuperationAtLowSpeed(NewtonMeter outTorque)
+        { 
+			return (DataBus.VehicleInfo.VehicleSpeed ?? 0.SI<MeterPerSecond>()).IsSmallerOrEqual(
+				GearboxModelData?.DisengageWhenHaltingSpeed ?? Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed)
+					&& outTorque.IsSmaller(0);
 		}
 
-		#endregion
-	}
+    }
 }

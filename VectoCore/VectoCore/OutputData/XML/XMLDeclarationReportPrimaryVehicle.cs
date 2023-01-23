@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Xml.Linq;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
@@ -13,8 +11,9 @@ namespace TUGraz.VectoCore.OutputData.XML {
 		protected IXMLVehicleInformationFile VehicleInformationFile;
 
 
-		public XMLDeclarationReportPrimaryVehicle(IReportWriter writer) : base(writer)
+		public XMLDeclarationReportPrimaryVehicle(IReportWriter writer) : base(writer, true)
 		{
+			throw new NotSupportedException("Use new implementation!");
 		}
 
 		public override XDocument CustomerReport => null;
@@ -40,10 +39,10 @@ namespace TUGraz.VectoCore.OutputData.XML {
 
 		}
 
-		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void InitializeReport(VectoRunData modelData)
 		{
-			base.InitializeReport(modelData, fuelModes);
-			VehicleInformationFile.Initialize(modelData,fuelModes);
+			base.InitializeReport(modelData);
+			VehicleInformationFile.Initialize(modelData);
 		}
 
 

@@ -611,7 +611,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region Implementation of IUpdateable
 
-		public bool UpdateFrom(object other) {
+		protected override bool DoUpdateFrom(object other) {
 			if (other is DistanceBasedDrivingCycle c) {
 				PreviousState = c.PreviousState.Clone();
 				CycleIntervalIterator = c.CycleIntervalIterator;

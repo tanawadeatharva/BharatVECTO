@@ -98,6 +98,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 				AirdragData = airDragData,
 				SimulationType = SimulationType.DistanceCycle,
 				Cycle = cycleData, 
+				Retarder = new RetarderData() { Type = RetarderType.None},
+				Aux = new List<VectoRunData.AuxData>(),
 				DriverData = driverData
 			};
 			var fileWriter = new FileOutputWriter(modFileName);

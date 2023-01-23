@@ -97,6 +97,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				GearshiftParameters = CreateGearshiftData(),
 				VehicleData = vehicleData,
 				AirdragData = airDragData,
+				Retarder = new RetarderData() { Type = RetarderType.None},
+				Cycle = cycleData,
+				Aux = new List<VectoRunData.AuxData>(),
 				SimulationType = SimulationType.DistanceCycle,
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
@@ -262,7 +265,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				GearboxData = gearboxData,
 				GearshiftParameters = CreateGearshiftData(),
 				AirdragData = airDragData,
+				Retarder = new RetarderData() { Type = RetarderType.None},
 				DriverData = driverData,
+				Cycle = cycleData,
+				Aux = new List<VectoRunData.AuxData>(),
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_LowSpeed");

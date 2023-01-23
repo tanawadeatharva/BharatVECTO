@@ -1995,4 +1995,43 @@
 <data name="Report_Results_PrimaryVehicleSubgroup" xml:space="preserve">
 	<value>PrimaryVehicleSubgroup</value>
 </data>
+<data name="Results_Report_OVCModeAttr_ChargeDepleting" xml:space="preserve">
+	<value>charge depleting</value>
+</data>
+<data name="Results_Report_OVCModeAttr" xml:space="preserve">
+	<value>type</value>
+</data>
+<data name="Report_Results_OVCMode" xml:space="preserve">
+	<value>OVCMode</value>
+</data>
+<data name="Report_ResultEntry_ActualChargeDepletingRange" xml:space="preserve">
+	<value>ActualChargeDepletingRange</value>
+</data>
+<data name="Report_ResultEntry_EquivalentAllElectricRange" xml:space="preserve">
+	<value>EquivalentAllElectricRange</value>
+</data>
+<data name="Report_ResultEntry_ZeroCO2EmissionsRange" xml:space="preserve">
+	<value>ZeroCO2EmissionsRange</value>
+</data>
+<data name="Report_ResultEntry_Total" xml:space="preserve">
+	<value>Total</value>
+</data>
+<data name="Report_ResultEntry_FCZEVAuxHeater" xml:space="preserve">
+	<value>FC_ZEV_AuxHeater</value>
+</data>
+<data name="Report_ResultEntry_CO2ZEVAuxHeater" xml:space="preserve">
+	<value>CO2_ZEV_AuxHeater</value>
+</data>
+<data name="Report_ResultEntry_ElectricEnergyConsumption" xml:space="preserve">
+	<value>ElectricEnergy</value>
+</data>
+<data name="Report_ResultEntry_VIF_ElectricEnergyConsumption" xml:space="preserve">
+	<value>ElectricEnergyConsumption</value>
+</data>
+<data name="Report_Results_Status_Error_Val" xml:space="preserve">
+	<value>error</value>
+</data>
+<data name="Report_Results_Status_Success_Val" xml:space="preserve">
+	<value>success</value>
+</data>
 </root>

@@ -952,7 +952,16 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die TwinTyres ähnelt.
+        ///   Looks up a localized string similar to Steered.
+        /// </summary>
+        internal static string Vehicle_Axles_Steered {
+            get {
+                return ResourceManager.GetString("Vehicle_Axles_Steered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TwinTyres.
         /// </summary>
         internal static string Vehicle_Axles_TwinTyres {
             get {

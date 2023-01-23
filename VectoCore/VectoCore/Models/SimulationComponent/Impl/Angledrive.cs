@@ -61,5 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public double Ratio => ModelData.Ratio;
+
+		protected override bool DoUpdateFrom(object other) => false;
 	}
 }

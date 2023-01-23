@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                                         x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, JobInputData.Vehicle.TankSystem))
                                             .ToList())
                                     .ToList();
-            Report.InitializeReport(powertrainConfig, fuels);
+            Report.InitializeReport(powertrainConfig);
         }
 
         protected virtual List<VectoRunData.AuxData> CreateVTPAuxData(IVehicleDeclarationInputData vehicle)

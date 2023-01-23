@@ -43,6 +43,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies;
@@ -312,7 +313,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 								angledriveRatio * dynamicTyreRadius;
 			var maxSpeed = VectoMath.Min(vehicleMaxSpeed, (runData.VehicleDesignSpeed ?? 90.KMPHtoMeterPerSecond()) + (runData.DriverData?.OverSpeed?.OverSpeed ?? 0.KMPHtoMeterPerSecond()));
 
-			var gearsInput = AbstractSimulationDataAdapter.FilterDisabledGears(runData.VehicleData.InputData.TorqueLimits, gearboxData.InputData);
+			var gearsInput = GearboxDataAdapterBase.FilterDisabledGears(runData.VehicleData.InputData.TorqueLimits, gearboxData.InputData);
 			var gears = gearboxData.Gears.Where(f => gearsInput.Any(g => f.Key == g.Gear)).ToList();
 			
 			if (gears.Count + 1 != engineData.FullLoadCurves.Count) {

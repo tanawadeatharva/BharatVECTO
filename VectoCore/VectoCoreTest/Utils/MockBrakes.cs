@@ -51,7 +51,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		#region Implementation of IUpdateable
 
-		public bool UpdateFrom(object other) {
+		protected override bool DoUpdateFrom(object other)
+		{
 			if (other is IBrakes b) {
 				BrakePower = b.BrakePower;
 				return true;

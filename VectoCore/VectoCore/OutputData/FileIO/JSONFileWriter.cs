@@ -1164,9 +1164,10 @@ public class JSONFileWriter : IOutputFileWriter
 		if (job.Vehicle.Components.GearboxInputData != null) {
 			body.Add("GearboxFile",
 				GetRelativePath(input.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, basePath));
-			if (input.DriverInputData.GearshiftInputData != null && !job.SavedInDeclarationMode) {
-				body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
-			}
+			
+		}
+		if (input.DriverInputData.GearshiftInputData != null && !job.SavedInDeclarationMode) {
+			body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
 		}
 
 		if (!job.SavedInDeclarationMode && job.Vehicle.VehicleType == VectoSimulationJobType.IEPC_S) {

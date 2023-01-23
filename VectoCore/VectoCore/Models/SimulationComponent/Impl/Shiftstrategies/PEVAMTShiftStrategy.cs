@@ -5,6 +5,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
@@ -16,6 +17,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -89,13 +91,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 		protected bool DriveOffStandstill { get; set; }
 
+		protected TestPowertrain<Gearbox> TestPowertrain;
+
 		public PEVAMTShiftStrategy(IVehicleContainer dataBus) : this(dataBus, false)
 		{
 			if (dataBus.RunData.VehicleData == null) {
 				return;
 			}
-
-			
 
 			EMPos = dataBus.RunData.ElectricMachinesData.FirstOrDefault(x =>
 				x.Item1 == PowertrainPosition.BatteryElectricE2 || x.Item1 == PowertrainPosition.IEPC)?.Item1 ?? PowertrainPosition.HybridPositionNotSet;
@@ -136,6 +138,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			DeRatedShiftpolygons = CalculateDeratedShiftLines(em,
 				runData.GearboxData.InputData.Gears, runData.VehicleData.DynamicTyreRadius,
 				runData.AxleGearData?.AxleGear.Ratio ?? 1.0, runData.GearboxData.Type);
+
+			// create testcontainer
+			var testContainer = new SimplePowertrainContainer(runData);
+			PowertrainBuilder.BuildSimplePowertrainElectric(runData, testContainer);
+
+			TestPowertrain = new TestPowertrain<Gearbox>(testContainer, DataBus);
 		}
 
 		protected void SetupVelocityDropPreprocessor(IVehicleContainer dataBus)
@@ -585,7 +593,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected double GetFCRating(ResponseDryRun response)//PerSecond engineSpeed, NewtonMeter tqCurrent)
 		{
 			var currentGear = response.Gearbox.Gear;
-
+			if (currentGear.Gear == 0)
+			{
+				return 0;
+			}
+			// there's no power if the gear is 0.
 			var maxGenTorque = VectoMath.Min(GearboxModelData.Gears[currentGear.Gear].MaxTorque, response.ElectricMotor.MaxRecuperationTorque);
 			var maxDriveTorque = GearboxModelData.Gears[currentGear.Gear].MaxTorque != null
 				? VectoMath.Max(-GearboxModelData.Gears[currentGear.Gear].MaxTorque, response.ElectricMotor.MaxDriveTorque)
@@ -665,10 +677,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			var emCtl = emE2.Control;
 			emE2.Control = new PEVInitControl(DataBus as IVehicleContainer);
 			foreach (var gear in GearList.Reverse()) {
-				//for (var gear = (uint)GearboxModelData.Gears.Count; gear > 1; gear--) {
-				var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
+                //for (var gear = (uint)GearboxModelData.Gears.Count; gear > 1; gear--) {
+                //var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
+                TestPowertrain.UpdateComponents();
+                TestPowertrain.Gearbox.Gear = gear;
+                TestPowertrain.Gearbox._nextGear = gear;
 
-				var inAngularSpeed = outAngularVelocity * GearboxModelData.Gears[gear.Gear].Ratio;
+                var response = TestPowertrain.Gearbox.Initialize(outTorque, outAngularVelocity);
+                response = TestPowertrain.Gearbox.Request(absTime,
+                    Constants.SimulationSettings.MeasuredSpeedTargetTimeInterval, outTorque, outAngularVelocity,
+                    true);
+
+                var inAngularSpeed = outAngularVelocity * GearboxModelData.Gears[gear.Gear].Ratio;
 				var inTorque = response.ElectricMotor.PowerRequest / inAngularSpeed;
 
 				// if in shift curve and torque reserve is provided: return the current gear
@@ -706,11 +726,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 					continue;
 				}
 
-				var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
+                //var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
+                TestPowertrain.UpdateComponents();
+                TestPowertrain.Gearbox.Gear = gear;
+                TestPowertrain.Gearbox._nextGear = gear;
 
-				var fullLoadPower = -(response.ElectricMotor.MaxDriveTorque * response.ElectricMotor.AngularVelocity);
+                var response = TestPowertrain.Gearbox.Initialize(outTorque, outAngularVelocity);
+                response = TestPowertrain.Gearbox.Request(absTime,
+                    Constants.SimulationSettings.MeasuredSpeedTargetTimeInterval, outTorque, outAngularVelocity,
+                    true);
+
+                var fullLoadPower = -(response.ElectricMotor.MaxDriveTorque * response.ElectricMotor.AngularVelocity);
 				//.DynamicFullLoadPower; //EnginePowerRequest - response.DeltaFullLoad;
-				var reserve = 1 - response.ElectricMotor.TorqueRequestEmMap / response.ElectricMotor.MaxDriveTorqueEM;
+				var reserve = 1 - (response.ElectricMotor.TorqueRequestEmMap ?? 0.SI<NewtonMeter>()) / response.ElectricMotor.MaxDriveTorqueEM;
 
 				var isBelowDownshift = gear.Gear > 1 &&
 										IsBelowDownshiftCurve(GearboxModelData.Gears[gear.Gear].ShiftPolygon, response.ElectricMotor.TorqueRequest,
@@ -721,7 +749,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 					//return gear;
 					emSpeeds[gear] = Tuple.Create(response.ElectricMotor.AngularVelocity,
 						(GearshiftParams.StartSpeed * TransmissionRatio * GearboxModelData.Gears[gear.Gear].Ratio)
-						.Cast<PerSecond>(), (response.ElectricMotor.ElectricMotorPowerMech / response.ElectricSystem.RESSPowerDemand).Value());
+						.Cast<PerSecond>(), 
+						!response.ElectricSystem.RESSPowerDemand.IsEqual(0) 
+							? (response.ElectricMotor.ElectricMotorPowerMech / response.ElectricSystem.RESSPowerDemand).Value()
+							: 0
+						);
 				}
 			}
 

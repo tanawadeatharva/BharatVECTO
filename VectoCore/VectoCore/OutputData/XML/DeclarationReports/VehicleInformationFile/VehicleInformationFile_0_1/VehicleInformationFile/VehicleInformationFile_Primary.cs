@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.VIFReport
 {
@@ -11,7 +12,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	{
 		private string _outputDataType;
 
-		public VehicleInformationFile_PrimaryStep(IVIFReportFactory vifFactory) : base(vifFactory)
+		public VehicleInformationFile_PrimaryStep(IVIFReportFactory vifFactory, IResultsWriterFactory resultFactory) : base(vifFactory, resultFactory)
 		{
 			_tns = VIF;
 		}
@@ -27,7 +28,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 	internal class Conventional_PrimaryBus_VIF : VehicleInformationFile_PrimaryStep
 	{
-		public Conventional_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
+		public Conventional_PrimaryBus_VIF(IVIFReportFactory vifFactory, IResultsWriterFactory resultFactory) : base(vifFactory, resultFactory) { }
 
 		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -37,7 +38,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 	internal class HEV_Px_PrimaryBus_VIF : VehicleInformationFile_PrimaryStep
 	{
-		public HEV_Px_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
+		public HEV_Px_PrimaryBus_VIF(IVIFReportFactory vifFactory, IResultsWriterFactory resultFactory) : base(vifFactory, resultFactory) { }
 
 		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -47,7 +48,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 	internal class HEV_S2_PrimaryBus_VIF : VehicleInformationFile_PrimaryStep
 	{
-		public HEV_S2_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
+		public HEV_S2_PrimaryBus_VIF(IVIFReportFactory vifFactory, IResultsWriterFactory resultFactory) : base(vifFactory, resultFactory) { }
 
 		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -57,7 +58,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 	internal class HEV_S3_PrimaryBus_VIF : VehicleInformationFile_PrimaryStep
 	{
-		public HEV_S3_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
+		public HEV_S3_PrimaryBus_VIF(IVIFReportFactory vifFactory, IResultsWriterFactory resultFactory) : base(vifFactory, resultFactory) { }
 
 		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -67,7 +68,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 	internal class HEV_S4_PrimaryBus_VIF : VehicleInformationFile_PrimaryStep
 	{
-		public HEV_S4_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
+		public HEV_S4_PrimaryBus_VIF(IVIFReportFactory vifFactory, IResultsWriterFactory resultFactory) : base(vifFactory, resultFactory) { }
 
 		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -77,7 +78,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 	internal class HEV_IEPC_S_PrimaryBus_VIF : VehicleInformationFile_PrimaryStep
 	{
-		public HEV_IEPC_S_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
+		public HEV_IEPC_S_PrimaryBus_VIF(IVIFReportFactory vifFactory, IResultsWriterFactory resultFactory) : base(vifFactory, resultFactory) { }
 
 		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -87,7 +88,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 	internal class PEV_E2_PrimaryBus_VIF : VehicleInformationFile_PrimaryStep
 	{
-		public PEV_E2_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
+		public PEV_E2_PrimaryBus_VIF(IVIFReportFactory vifFactory, IResultsWriterFactory resultFactory) : base(vifFactory, resultFactory) { }
 
 		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -97,7 +98,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 	internal class PEV_E3_PrimaryBus_VIF : VehicleInformationFile_PrimaryStep
 	{
-		public PEV_E3_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
+		public PEV_E3_PrimaryBus_VIF(IVIFReportFactory vifFactory, IResultsWriterFactory resultFactory) : base(vifFactory, resultFactory) { }
 
 		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -107,7 +108,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 	internal class PEV_E4_PrimaryBus_VIF : VehicleInformationFile_PrimaryStep
 	{
-		public PEV_E4_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
+		public PEV_E4_PrimaryBus_VIF(IVIFReportFactory vifFactory, IResultsWriterFactory resultFactory) : base(vifFactory, resultFactory) { }
 
 		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -117,7 +118,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 	internal class PEV_IEPC_PrimaryBus_VIF : VehicleInformationFile_PrimaryStep
 	{
-		public PEV_IEPC_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
+		public PEV_IEPC_PrimaryBus_VIF(IVIFReportFactory vifFactory, IResultsWriterFactory resultFactory) : base(vifFactory, resultFactory) { }
 
 		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -127,7 +128,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 	internal class Exempted_PrimaryBus_VIF : VehicleInformationFile_PrimaryStep
 	{
-		public Exempted_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
+		public Exempted_PrimaryBus_VIF(IVIFReportFactory vifFactory, IResultsWriterFactory resultFactory) : base(vifFactory, resultFactory) { }
 
 		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{

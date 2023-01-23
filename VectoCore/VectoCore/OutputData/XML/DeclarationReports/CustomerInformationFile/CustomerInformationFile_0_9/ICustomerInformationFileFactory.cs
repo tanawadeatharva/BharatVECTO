@@ -44,6 +44,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		IXmlTypeWriter GetPEV_IEPC_CompletedBusVehicleType();
 
 
+		IXmlTypeWriter GetConventional_SingleBusVehicleType();
+
+
+
 		//IXmlTypeWriter GetPEV_CompletedBusVehicleType();
 
 		IXmlTypeWriter GetExemptedCompletedBusVehicleType();
@@ -74,13 +78,19 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		IReportOutputGroup GetPEV_CompletedBusVehicleSequenceGroupWriter();
 		IReportOutputGroup GetCompletedBusVehicleTypeGroup();
 		IReportOutputGroup GetExemptedCompletedBusVehicleTypeGroup();
+		
 		IReportCompletedBusOutputGroup GetGeneralVehicleSequenceGroupWriterCompletedBus();
+
+		IReportOutputGroup GetConventionalSingleBusAuxGroup();
+
+
+		IReportOutputGroup GetSingleBusVehicleTypeGroup();
 
 
 		ICIFAdasType GetConventionalADASType();
 		ICIFAdasType GetHEVADASType();
 		ICIFAdasType GetPEVADASType();
-		//IReportOutputGroup GetHEV_VehicleSequenceGroup();
+
 		IReportOutputGroup GetPEVCompletedBusVehicleTypeGroup();
 		IReportOutputGroup GetIEPCTransmissionGroup();
 	}

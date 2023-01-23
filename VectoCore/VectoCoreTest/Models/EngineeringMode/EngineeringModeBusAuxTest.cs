@@ -1036,7 +1036,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 					ParkBrakeAndDoors = 0,
 					CycleTime = 1.SI<Second>()
 				},
-				SSMInputs = new SSMEngineeringInputs() {
+				SSMInputsCooling = new SSMEngineeringInputs() {
 					MechanicalPower = MechanicalPowerDemand,
 					ElectricPower = ElectricPowerDemand,
 					AuxHeaterPower = AuxHeaterPower,
@@ -1048,7 +1048,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 				},
 				VehicleData = vehicleData,
 			};
-
+			retVal.SSMInputsHeating = retVal.SSMInputsCooling;
 			return retVal;
 		}
 

@@ -135,64 +135,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override bool TCLocked => true;
 
-		protected internal virtual ResponseDryRun Initialize(Second absTime, GearshiftPosition gear, NewtonMeter outTorque, PerSecond outAngularVelocity)
-		{
-			var oldGear = Gear;
-			Gear = gear;
-			var inAngularVelocity = outAngularVelocity * ModelData.Gears[gear.Gear].Ratio;
-			var torqueLossResult = ModelData.Gears[gear.Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
-			
-			CurrentState.TorqueLossResult = torqueLossResult;
-			var inTorque = outTorque / ModelData.Gears[gear.Gear].Ratio + torqueLossResult.Value;
-
-			if (DataBus.PowertrainInfo.ElectricMotorPositions.Any(x => x.IsOneOf(PowertrainPosition.HybridP2, PowertrainPosition.HybridP2_5))) {
-				// if there is an electric motor after the transmission, initialize the EM first
-				NextComponent.Initialize(inTorque, inAngularVelocity);
-			}
-
-			if (!inAngularVelocity.IsEqual(0)) {
-				var alpha = ModelData.Inertia.IsEqual(0)
-					? 0.SI<PerSquareSecond>()
-					: outTorque / ModelData.Inertia;
-
-				var inertiaPowerLoss = Formulas.InertiaPower(inAngularVelocity, alpha, ModelData.Inertia,
-					Constants.SimulationSettings.TargetTimeInterval);
-				inTorque += inertiaPowerLoss / inAngularVelocity;
-			}
-
-			var response = NextComponent.Request(absTime, Constants.SimulationSettings.TargetTimeInterval,
-				inTorque, inAngularVelocity, true);
-			//NextComponent.Initialize(inTorque, inAngularVelocity);
-			//response.Switch().
-			//	Case<ResponseSuccess>().
-			//	Case<ResponseOverload>().
-			//	Case<ResponseUnderload>().
-			//	Default(r => { throw new UnexpectedResponseException("Gearbox.Initialize", r); });
-
-			var fullLoad = DataBus.EngineInfo.EngineStationaryFullPower(inAngularVelocity);
-
-			Gear = oldGear;
-			return new ResponseDryRun(this) {
-				Engine = {
-					PowerRequest = response.Engine.PowerRequest,
-					EngineSpeed = response.Engine.EngineSpeed,
-					DynamicFullLoadPower = response.Engine.DynamicFullLoadPower,
-					TorqueOutDemand = response.Engine.TorqueOutDemand,
-					DynamicFullLoadTorque = response.Engine.DynamicFullLoadTorque
-				},
-				Clutch = {
-					PowerRequest = response.Clutch.PowerRequest,
-				},
-				Gearbox = {
-					PowerRequest = outTorque * outAngularVelocity,
-					InputSpeed = inAngularVelocity,
-					InputTorque = inTorque,
-					OutputTorque = outTorque,
-					OutputSpeed = outAngularVelocity,
-				},
-				DeltaFullLoad = response.Engine.PowerRequest - fullLoad
-			};
-		}
 
 		/// <summary>
 		/// Requests the Gearbox to deliver torque and angularVelocity
@@ -377,6 +319,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.TransmissionTorqueLoss = inTorque * ModelData.Gears[gear.Gear].Ratio - outTorque;
 
 			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, false);
+
+			InvokeGearShiftTriggered();
 
 			response.Gearbox.PowerRequest = outTorque * avgAngularVelocity;
 			response.Gearbox.Gear = new GearshiftPosition(0);
@@ -578,7 +522,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region Implementation of IUpdateable
 
-		public bool UpdateFrom(object other) {
+		protected override bool DoUpdateFrom(object other) {
 			if (other is Gearbox g) {
 				PreviousState = g.PreviousState.Clone();
 				return true;

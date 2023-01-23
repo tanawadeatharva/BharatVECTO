@@ -55,9 +55,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		private readonly IDeclarationInputDataProvider _currentStageInputData;
 
 		public InterimAfterPrimaryFactoryCreator(IMultistagePrimaryAndStageInputDataProvider originalStageInputData,
-			IOutputDataWriter originalReportWriter, 
+			IOutputDataWriter originalReportWriter,
 			IDeclarationReport originalDeclarationReport,
-			ISimulatorFactoryFactory simFactoryFactory, 
+			ISimulatorFactoryFactory simFactoryFactory,
+			IXMLDeclarationReportFactory xmlDeclarationReportFactory,
 			IXMLInputDataReader inputDataReader, bool validate) : base(simFactoryFactory, validate)
 		{
 
@@ -69,7 +70,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 				new TempFileOutputWriter(originalReportWriter, ReportType.DeclarationReportManufacturerXML)
 				;
 			_currentStageDeclarationReport =
-				new XMLDeclarationReportPrimaryVehicle(_currentStageOutputDataWriter);
+				xmlDeclarationReportFactory.CreateReport(originalStageInputData.PrimaryVehicle, _currentStageOutputDataWriter);
 			_currentStageInputData = originalStageInputData.PrimaryVehicle;
 
 		}

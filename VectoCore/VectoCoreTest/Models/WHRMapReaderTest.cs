@@ -41,6 +41,7 @@ namespace TUGraz.VectoCore.Tests.Models
 
 			_kernel = new StandardKernel(new VectoNinjectModule());
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
+			_runDataFactory = _kernel.Get<IVectoRunDataFactoryFactory>();
 		}
 
 		[TestCase]

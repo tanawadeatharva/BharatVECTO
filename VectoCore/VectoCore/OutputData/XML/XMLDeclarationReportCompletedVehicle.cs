@@ -13,7 +13,7 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 namespace TUGraz.VectoCore.OutputData.XML {
 	public class XMLDeclarationReportCompletedVehicle : XMLDeclarationReport
 	{
-		public XMLDeclarationReportCompletedVehicle(IReportWriter writer) : base(writer) { }
+		public XMLDeclarationReportCompletedVehicle(IReportWriter writer) : base(writer, true) { }
 
 		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleReportInputData { get; set; }
 
@@ -38,14 +38,14 @@ namespace TUGraz.VectoCore.OutputData.XML {
 				};
 		}
 
-		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void InitializeReport(VectoRunData modelData)
 		{
 			_weightingFactors = EqualWeighting;
 
 			InstantiateReports(modelData);
 
-			ManufacturerRpt.Initialize(modelData, fuelModes);
-			CustomerRpt.Initialize(modelData, fuelModes);
+			ManufacturerRpt.Initialize(modelData);
+			CustomerRpt.Initialize(modelData);
 		}
 		#endregion
 
@@ -92,8 +92,8 @@ namespace TUGraz.VectoCore.OutputData.XML {
 						genericResult.VehicleClass, genericResult.Mission, genericResult.Payload);
 				}
 
-				(ManufacturerRpt as XMLManufacturerReportCompletedBus).WriteResult(genericResult, specificResult, primaryResult);
-				(CustomerRpt as XMLCustomerReportCompletedBus).WriteResult(genericResult, specificResult, primaryResult);
+				(ManufacturerRpt as IXMLManufacturerReportCompletedBus)?.WriteResult(genericResult, specificResult, primaryResult);
+				(CustomerRpt as IXMLCustomerReportCompletedBus)?.WriteResult(genericResult, specificResult, primaryResult);
 			}
 
 			GenerateReports();

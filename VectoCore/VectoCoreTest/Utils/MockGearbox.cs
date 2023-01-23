@@ -48,6 +48,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		private ITnOutPort _outPort;
 		private bool _clutchClosed;
 
+		public event Action GearShiftTriggered;
+
 		public MockGearbox(IVehicleContainer cockpit) : base(cockpit)
 		{
 			_clutchClosed = true;
@@ -156,6 +158,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			throw new NotImplementedException();
 		}
+
+		protected override bool DoUpdateFrom(object other) => false;
+
 	}
 
 	public class MockAxlegear : VectoSimulationComponent, IAxlegear
@@ -192,5 +197,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			
 		}
+
+		protected override bool DoUpdateFrom(object other) => false;
+
 	}
 }

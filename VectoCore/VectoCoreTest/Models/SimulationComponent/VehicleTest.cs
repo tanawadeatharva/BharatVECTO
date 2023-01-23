@@ -296,5 +296,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 		#endregion
+
+		protected override bool DoUpdateFrom(object other) => false;
+
 	}
 }

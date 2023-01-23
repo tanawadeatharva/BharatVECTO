@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		}
 
 		#region Implementation of IUpdateable
-		public bool UpdateFrom(object other) {
+		protected override bool DoUpdateFrom(object other) {
 			if (other is DCDCConverter d) {
 				PreviousState = d.PreviousState.Clone();
 				return true;

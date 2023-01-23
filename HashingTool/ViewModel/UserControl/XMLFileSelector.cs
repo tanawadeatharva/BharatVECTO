@@ -275,7 +275,7 @@ namespace HashingTool.ViewModel.UserControl
 			var valid = true;
 			try {
 				var validator = new AsyncXMLValidator(xml, r => { valid = r; },
-													(s, e) => {
+													(s, e, m) => {
 														Application.Current.Dispatcher.Invoke(
 															() => {
 																if (e.ValidationEventArgs == null) {

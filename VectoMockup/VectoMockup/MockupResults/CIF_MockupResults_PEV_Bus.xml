@@ -31,7 +31,8 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9 V:\VectoCore\Vec
 				<CO2_ZEV_AuxHeater><!-- only if aux heater power > 0 -->
 					<CO2 unit="g/km">8.1</CO2>
 					<CO2 unit="g/p-km">8.2</CO2>
-				</CO2_ZEV_AuxHeater><ActualChargeDepletingRange unit="km">9.1</ActualChargeDepletingRange>
+				</CO2_ZEV_AuxHeater>
+				<ActualChargeDepletingRange unit="km">9.1</ActualChargeDepletingRange>
 				<EquivalentAllElectricRange unit="km">9.2</EquivalentAllElectricRange>
 				<ZeroCO2EmissionsRange unit="km">9.3</ZeroCO2EmissionsRange>
 			</Total>

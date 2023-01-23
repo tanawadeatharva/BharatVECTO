@@ -283,7 +283,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region Implementation of IUpdateable
 
-		public bool UpdateFrom(object other) {
+		#region Overrides of VectoSimulationComponent
+
+		public override bool UpdateFrom(object other)
+		{
+			if (DataBus == null) {
+				// in case the battery is part of a battery system, the databus is null because we shall not write any data.
+				// allow updating the state, erroneous updates are covered by the batterysystem
+				return DoUpdateFrom(other);
+			}
+			return base.UpdateFrom(other);
+		}
+
+		#endregion
+
+		protected override bool DoUpdateFrom(object other) {
 			if (other is Battery b) {
 				PreviousState = b.PreviousState.Clone();
 				return true;

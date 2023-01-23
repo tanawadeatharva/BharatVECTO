@@ -484,7 +484,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override BusHVACSystemConfiguration? SystemConfiguration =>
 			ElementExists(XMLNames.Bus_SystemConfiguration) 
-				? BusHVACSystemConfigurationHelper.Parse(GetString(XMLNames.Bus_SystemConfiguration)) : null;
+				? BusHVACSystemConfigurationHelper.Parse(GetString(XMLNames.Bus_SystemConfiguration)) : (BusHVACSystemConfiguration?)null;
 
 		public override HeatPumpType? HeatPumpTypeCoolingDriverCompartment =>
 			ElementExists(XMLNames.Bus_HeatPumpTypeDriver)

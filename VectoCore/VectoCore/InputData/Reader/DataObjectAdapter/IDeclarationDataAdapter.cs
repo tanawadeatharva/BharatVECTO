@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
 			IBusAuxiliariesDeclarationData busAuxData, MissionType missionType, VehicleClass vehicleClass,
-			Meter vehicleLength, int? numSteeredAxles);
+			Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType);
 
 		AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission);
 

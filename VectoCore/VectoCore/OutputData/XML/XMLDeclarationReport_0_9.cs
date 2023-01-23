@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
@@ -36,17 +35,18 @@ namespace TUGraz.VectoCore.OutputData.XML
 			_vifFactory = vifFactory;
 		}
 
-		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void InitializeReport(VectoRunData modelData)
 		{
-			base.InitializeReport(modelData, fuelModes);
-			VehicleInformationFile.Initialize(modelData, fuelModes);
+			base.InitializeReport(modelData);
+			VehicleInformationFile.Initialize(modelData);
 		}
 
 
 
 		protected override void WriteResult(ResultEntry result)
 		{
-			base.WriteResult(result);
+			ManufacturerRpt.WriteResult(result);
+			//base.WriteResult(result);
 			VehicleInformationFile.WriteResult(result);
 		}
 
@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			ManufacturerRpt.GenerateReport();
 			var fullReportHash = GetSignature(ManufacturerRpt.Report);
-			CustomerRpt.GenerateReport(fullReportHash);
+			//CustomerRpt.GenerateReport(fullReportHash);
 			VehicleInformationFile.GenerateReport(fullReportHash);
 		}
 
@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		#endregion
 
-		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void InitializeReport(VectoRunData modelData)
 		{
 			//_multistageBusReport =
 			//	modelData.Exempted ? new XMLMultistageExemptedBusReport() : new XMLMultistageBusReport();
@@ -219,12 +219,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 	/// </summary>
 	public class XMLDeclarationReport09 : XMLDeclarationReport
 	{
-		private readonly IManufacturerReportFactory _mrfFactory;
-		private readonly ICustomerInformationFileFactory _cifFactory;
+		protected readonly IManufacturerReportFactory _mrfFactory;
+		protected readonly ICustomerInformationFileFactory _cifFactory;
 
-
-
-		public XMLDeclarationReport09(IReportWriter writer, IManufacturerReportFactory mrfFactory, ICustomerInformationFileFactory cifFactory) : base(writer)
+		public XMLDeclarationReport09(IReportWriter writer, IManufacturerReportFactory mrfFactory, ICustomerInformationFileFactory cifFactory) : base(writer, true)
 		{
 			_mrfFactory = mrfFactory;
 			_cifFactory = cifFactory;
@@ -251,11 +249,30 @@ namespace TUGraz.VectoCore.OutputData.XML
 				ihpc);
 		}
 
+	}
 
 
+	public class XMLDeclarationReportSingleBus09 : XMLDeclarationReport09
+	{
+		
+		public XMLDeclarationReportSingleBus09(IReportWriter writer, IManufacturerReportFactory mrfFactory, ICustomerInformationFileFactory cifFactory) : base(writer, mrfFactory, cifFactory)
+		{ }
 
+		protected override void InstantiateReports(VectoRunData modelData)
+		{
+			var vehicleData = modelData.VehicleData.InputData;
+			var iepc = vehicleData.Components?.IEPC != null;
+			var ihpc =
+				vehicleData.Components?.ElectricMachines?.Entries?.Count(e => e.ElectricMachine.IHPCType != "None") > 0;
 
-
+			ManufacturerRpt = _mrfFactory.GetManufacturerReport(vehicleData.VehicleCategory,
+				vehicleData.VehicleType,
+				vehicleData.ArchitectureID,
+				vehicleData.ExemptedVehicle,
+				iepc,
+				ihpc);
+			// do not instantiate customer report for single bus - not fully implemented, not needed in the final application
+		}
 
 	}
 
