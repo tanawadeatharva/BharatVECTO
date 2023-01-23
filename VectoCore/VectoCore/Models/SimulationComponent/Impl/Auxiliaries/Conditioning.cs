@@ -66,17 +66,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
         {
 			switch (dataBus.PowertrainInfo.VehicleArchitecutre) {
 				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.SerialHybridVehicle:
+				case VectoSimulationJobType.IEPC_S:
 					return GetPEV_SHEV_PowerDemand(dataBus);
 				case VectoSimulationJobType.ParallelHybridVehicle:
 					return GetP_HEV_PowerDemand(dataBus);
 				case VectoSimulationJobType.EngineOnlySimulation:
-				case VectoSimulationJobType.IEPC_E:
-				case VectoSimulationJobType.IEPC_S:
 				case VectoSimulationJobType.IHPC:
 				case VectoSimulationJobType.ConventionalVehicle:
 				default:
-					throw new ArgumentOutOfRangeException();
+					throw new ArgumentOutOfRangeException($"{nameof(dataBus)}");
 			}
 		}
 
