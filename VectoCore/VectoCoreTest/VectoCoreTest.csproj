@@ -42,9 +42,10 @@
   </ItemGroup>
 
 	<ItemGroup>
-    <None Update="TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b.vecto">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+		<None Update="TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b.vecto">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
   <ItemGroup>
     <None Update="TestData\Integration\DeclarationMode\V24_DeclarationMode\HeavyLorry\Group5_HEV_P3_ovc.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
