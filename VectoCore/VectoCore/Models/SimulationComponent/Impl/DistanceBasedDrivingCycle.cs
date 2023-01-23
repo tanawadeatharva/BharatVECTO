@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
@@ -52,7 +53,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// </summary>
 	public sealed class DistanceBasedDrivingCycle : StatefulProviderComponent
 		<DistanceBasedDrivingCycle.DrivingCycleState, ISimulationOutPort, IDrivingCycleInPort, IDrivingCycleOutPort>,
-		IDrivingCycle, ISimulationOutPort, IDrivingCycleInPort, IDisposable, IUpdateable
+		IDrivingCycle, ISimulationOutPort, IDrivingCycleInPort, IDisposable, IUpdateable, IResetableVectoSimulationComponent
 	{
 		private const double LookaheadTimeSafetyMargin = 1.5;
 		internal readonly IDrivingCycleData Data;
@@ -76,6 +77,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CycleStartDistance = Data.Entries.Count > 0 ? Data.Entries.First().Distance : 0.SI<Meter>();
 			CycleEndDistance = Data.Entries.Count > 0 ? Data.Entries.Last().Distance : 0.SI<Meter>();
 
+			InitState(container);
+		}
+
+		#region Overrides of VectoSimulationComponent
+
+		public void Reset(IVehicleContainer vehicleContainer)
+		{
+			CycleIntervalIterator.Reset();
+			
+			InitState(vehicleContainer);
+			if (!(Initialize() is ResponseSuccess)) {
+				throw new VectoException("Initialization failed");
+			}
+
+			;
+		}
+
+		#endregion
+
+		private void InitState(IVehicleContainer container)
+		{
 			var first = Data.Entries.First();
 			PreviousState = new DrivingCycleState {
 				AbsTime = 0.SI<Second>(),
@@ -85,10 +107,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				VehicleTargetSpeed = Data.Entries.First().VehicleTargetSpeed
 			};
 			CurrentState = PreviousState.Clone();
-			
+
 			StartSpeed = container.RunData.GearshiftParameters?.StartSpeed;
 			StartAcceleration = container.RunData.GearshiftParameters?.StartAcceleration;
-			
 		}
 
 		public IResponse Initialize()

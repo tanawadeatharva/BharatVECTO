@@ -33,7 +33,7 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-	enum PTOConsumerType
+	public enum PTOConsumerType
 	{
 		mechanical,
 		electrical
@@ -53,5 +53,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public ILossMap LossMap;
 		public DrivingCycleData PTOCycle;
+		public PTOConsumerType ConsumerType = PTOConsumerType.mechanical;
 	}
 }

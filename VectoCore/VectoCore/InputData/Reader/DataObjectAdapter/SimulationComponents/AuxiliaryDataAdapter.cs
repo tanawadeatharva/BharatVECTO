@@ -108,6 +108,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			AuxiliaryType.PneumaticSystem,
 			AuxiliaryType.SteeringPump
 		};
+
+		protected override string errorStringVehicleType => "battery electric";
 	}
 
 	public class HeavyLorryAuxiliaryDataAdapter : AuxiliaryDataAdapter
@@ -119,6 +121,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			AuxiliaryType.Fan,
 			AuxiliaryType.SteeringPump
 		};
+		protected virtual string errorStringVehicleType => "conventional/hybrid";
+
 		#region Overrides of AuxiliaryDataAdapter
 
 		public override AuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle, VectoRunData runData)
@@ -135,12 +139,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		{
 			var retVal = new List<VectoRunData.AuxData>();
 
-			if (!new HashSet<AuxiliaryType>(auxInputData.Auxiliaries.Select(aux => aux.Type)).SetEquals(AuxiliaryTypes))
-			{
-				Log.Error(
-					"In Declaration Mode exactly 4 Auxiliaries must be defined for battery electric vehicles: Steering pump, HVAC, Electric System, Pneumatic System.");
+			if (!new HashSet<AuxiliaryType>(auxInputData.Auxiliaries.Select(aux => aux.Type)).SetEquals(AuxiliaryTypes)) {
+				var error = string.Format(
+					"In Declaration Mode exactly {0} Auxiliaries must be defined for {2} vehicles: {1}",
+					AuxiliaryTypes.Count, string.Join(", ", AuxiliaryTypes.Select(aux => aux.ToString())), errorStringVehicleType);
+				Log.Error(error);
 				throw new VectoException(
-					"In Declaration Mode exactly 4 Auxiliaries must be defined for battery electric vehicles: Steering pump, HVAC, Electric System, Pneumatic System.");
+					error);
 			}
 
 			var alternatorEfficiency = DeclarationData.AlternatorEfficiency;
@@ -177,7 +182,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 						AddPneumaticSystem(mission, jobType, auxData, alternatorEfficiency, aux,retVal);
 						break;
 					case AuxiliaryType.ElectricSystem:
-						AddElectricSystem(mission, jobType, aux, auxData, alternatorEfficiency, retVal);
+						AddElectricSystem(mission, hdvClass, jobType, aux, auxData, alternatorEfficiency, retVal);
 						break;
 					default: continue;
 				}
@@ -208,15 +213,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 
 
-		private static void AddElectricSystem(MissionType mission, VectoSimulationJobType vectoSimulationJobType,
+		private static void AddElectricSystem(MissionType mission, VehicleClass hdvClass,
+			VectoSimulationJobType vectoSimulationJobType,
 			VectoRunData.AuxData aux,
 			IAuxiliaryDeclarationInputData auxData, double alternatorEfficiency, List<VectoRunData.AuxData> auxDataList)
 		{
-			aux.PowerDemandMech = DeclarationData.ElectricSystem.Lookup(mission, auxData.Technology.FirstOrDefault()).PowerDemand;
+			aux.PowerDemandMech = DeclarationData.ElectricSystem.Lookup(hdvClass, mission, auxData.Technology.FirstOrDefault()).PowerDemand;
 			aux.ID = Constants.Auxiliaries.IDs.ElectricSystem;
 			aux.PowerDemandElectric = aux.PowerDemandMech * alternatorEfficiency;
 			aux.ConnectToREESS = vectoSimulationJobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
-				VectoSimulationJobType.ParallelHybridVehicle);
+				VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.IEPC_S);
 			auxDataList.Add(aux);
 		}
 
@@ -362,8 +368,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 		#endregion
 	}
-
-
 
 	public class PrimaryBusAuxiliaryDataAdapter : AuxiliaryDataAdapter, IPrimaryBusAuxiliaryDataAdapter
 	{

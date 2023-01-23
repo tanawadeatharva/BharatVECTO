@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 					axleRatio, gearRatioAtMeasurement.Value, GearEfficiency, axleEfficiency);
 				
 				var deNormalizedMap = DeNormalizeData(GetNormalizedEfficiencyMap(electricMachineType), ratedPoint, gearRatio);
-				result.Add((uint) gearEntry.Key, IEPCMapReader.Create(deNormalizedMap, count, gearRatio));
+				result.Add((uint) gearEntry.Key, IEPCMapReader.Create(deNormalizedMap, count, gearRatio, null));
 			}
 
 			return result;

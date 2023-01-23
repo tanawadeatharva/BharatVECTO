@@ -39,6 +39,11 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
+	public interface IResetableVectoSimulationComponent
+	{
+		void Reset(IVehicleContainer vehicleContainer);
+	}
+
 	/// <summary>
 	/// Base class for all vecto simulation components.
 	/// </summary>
@@ -92,6 +97,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		protected abstract bool DoUpdateFrom(object other);
 
 	}
+
+
 
 	public abstract class StatefulVectoSimulationComponent<TStateType> : VectoSimulationComponent where TStateType : new()
 	{

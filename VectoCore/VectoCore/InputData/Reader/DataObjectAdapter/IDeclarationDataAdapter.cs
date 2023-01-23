@@ -31,6 +31,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission first, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> keyValuePair, bool allowVocational);
 		RetarderData CreateRetarderData(IRetarderInputData retarderData, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet);
 
+		List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(
+			IIEPCDeclarationInputData iepc, Volt averageVoltage);
 	}
 
 	public interface ILorryDeclarationDataAdapter : IDeclarationDataAdapter
@@ -77,7 +79,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			bool ovc);
 		SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData componentsElectricStorage);
 		HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
-			SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode);
+			SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType);
 		ShiftStrategyParameters CreateDummyGearshiftStrategy();
 	}
 

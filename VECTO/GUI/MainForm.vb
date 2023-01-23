@@ -1505,8 +1505,8 @@ lbFound:
         ChBoxMod1Hz.Checked = Cfg.Mod1Hz
 
         RbDecl.Checked = Cfg.DeclMode
-        cbValidateRunData.Checked = cfg.ValidateRunData
-
+        cbValidateRunData.Checked = Cfg.ValidateRunData
+        cbSaveVectoRunData.Checked = Cfg.SaveVectoRunData
         tbOutputFolder.Text = Cfg.OutputFolder
 
     End Sub
@@ -1516,6 +1516,7 @@ lbFound:
         Cfg.ModOut = ChBoxModOut.Checked
         Cfg.Mod1Hz = ChBoxMod1Hz.Checked
         Cfg.ValidateRunData = cbValidateRunData.Checked
+        Cfg.SaveVectoRunData = cbSaveVectoRunData.Checked
         Cfg.OutputFolder = tbOutputFolder.Text
     End Sub
 

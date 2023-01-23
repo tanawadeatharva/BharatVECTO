@@ -515,13 +515,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			switch (EcoRollState.State) {
 				case EcoRollStates.EcoRollOn:
-					dBus.GearboxCtl.DisengageGearbox = true;
+					if (dBus.GearboxCtl != null) {
+						dBus.GearboxCtl.DisengageGearbox = true;
+					}
+			
 					if (ADAS.EcoRoll == EcoRollType.WithEngineStop) {
 						dBus.EngineCtl.CombustionEngineOn = false;
 					}
 					return;
 				case EcoRollStates.EcoRollOff:
-					dBus.GearboxCtl.DisengageGearbox = false;
+					if (dBus.GearboxCtl != null) {
+						dBus.GearboxCtl.DisengageGearbox = false;
+					} 
+					
 					if (ADAS.EcoRoll == EcoRollType.WithEngineStop) {
 						dBus.EngineCtl.CombustionEngineOn = true;
 					}
@@ -1058,6 +1064,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private IResponse FirstAccelerateOrCoast(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
 			bool prohibitOverspeed, MeterPerSecond velocityWithOverspeed, DebugData debug)
 		{
+			
 			if (DriverStrategy.pccState == PCCStates.UseCase1 || DriverStrategy.pccState == PCCStates.UseCase2) {
 				var response = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
 				debug.Add("[DMD.FAOC-0] Coast", response);

@@ -260,6 +260,106 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 		}
 
+		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(IIEPCDeclarationInputData iepc, Volt averageVoltage)
+		{
+			if (iepc == null)
+			{
+				return null;
+			}
+
+			var pos = PowertrainPosition.IEPC;
+			var count = iepc.DesignTypeWheelMotor && iepc.NrOfDesignTypeWheelMotorMeasured == 1 ? 2 : 1;
+
+			// the full-load curve is measured in the gear with the ratio closest to 1,
+			// in case two gears have the same difference, the higher one is used
+			var gearRatioUsedForMeasurement = iepc.Gears
+				.Select(x => new { x.GearNumber, x.Ratio, Diff = Math.Round(Math.Abs(x.Ratio - 1), 6) }).GroupBy(x => x.Diff)
+				.OrderBy(x => x.Key).First().OrderBy(x => x.Ratio).Reverse().First();
+
+
+			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
+			foreach (var entry in iepc.VoltageLevels.OrderBy(x => x.VoltageLevel))
+			{
+				var effMap = new Dictionary<uint, EfficiencyMap>();
+				var fldCurve =
+					IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, gearRatioUsedForMeasurement.Ratio);
+				for (var i = 0u; i < entry.PowerMap.Count; i++)
+				{
+					var ratio = iepc.Gears.First(x => x.GearNumber == i + 1).Ratio;
+					effMap.Add(i + 1, IEPCMapReader.Create(entry.PowerMap[(int)i].PowerMap, count, ratio, fldCurve));
+					//fullLoadCurves.Add(i + 1, IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, ratio));
+				}
+				voltageLevels.Add(new IEPCVoltageLevelData()
+				{
+					Voltage = entry.VoltageLevel,
+					FullLoadCurve = fldCurve,
+					EfficiencyMaps = effMap,
+				});
+			}
+
+			var dragCurves = new Dictionary<uint, DragCurve>();
+			if (iepc.DragCurves.Count > 1)
+			{
+				for (var i = 0u; i < iepc.DragCurves.Count; i++)
+				{
+					var ratio = iepc.Gears.First(x => x.GearNumber == i + 1).Ratio;
+					dragCurves.Add(i + 1, IEPCDragCurveReader.Create(iepc.DragCurves[(int)i].DragCurve, count, ratio));
+				}
+			}
+			else
+			{
+				var dragCurve = iepc.DragCurves.First().DragCurve;
+				for (var i = 0u; i < iepc.Gears.Count; i++)
+				{
+					var ratio = iepc.Gears.First(x => x.GearNumber == i + 1).Ratio;
+					dragCurves.Add(i + 1, IEPCDragCurveReader.Create(dragCurve, count, ratio));
+				}
+			}
+
+			var retVal = new IEPCElectricMotorData()
+			{
+				EfficiencyData = new VoltageLevelData() { VoltageLevels = voltageLevels },
+				IEPCDragCurves = dragCurves,
+				Inertia = iepc.Inertia * count,
+				OverloadRecoveryFactor = DeclarationData.OverloadRecoveryFactor,
+				RatioADC = 1,
+				RatioPerGear = null,
+				TransmissionLossMap = TransmissionLossMapReader.CreateEmADCLossMap(1.0, 1.0, "EM ADC LossMap Eff"),
+
+			};
+			retVal.Overload = CalculateOverloadData(iepc, count, retVal.EfficiencyData, averageVoltage,
+				Tuple.Create((uint)gearRatioUsedForMeasurement.GearNumber, gearRatioUsedForMeasurement.Ratio));
+			;
+			return new List<Tuple<PowertrainPosition, ElectricMotorData>>() { Tuple.Create<PowertrainPosition, ElectricMotorData>(pos, retVal) };
+		}
+
+		private OverloadData CalculateOverloadData(IIEPCDeclarationInputData iepc, int count,
+			VoltageLevelData voltageLevels, Volt averageVoltage, Tuple<uint, double> gearRatioUsedForMeasurement)
+		{
+			// if average voltage is outside of the voltage-level range, do not extrapolate but take the min voltage entry, or max voltage entry
+			if (averageVoltage < iepc.VoltageLevels.Min(x => x.VoltageLevel))
+			{
+				return CalculateOverloadBuffer(iepc.VoltageLevels.First(), count, voltageLevels, gearRatioUsedForMeasurement);
+			}
+			if (averageVoltage > iepc.VoltageLevels.Max(x => x.VoltageLevel))
+			{
+				return CalculateOverloadBuffer(iepc.VoltageLevels.Last(), count, voltageLevels, gearRatioUsedForMeasurement);
+			}
+
+			var (vLow, vHigh) = iepc.VoltageLevels.OrderBy(x => x.VoltageLevel).GetSection(x => x.VoltageLevel < averageVoltage);
+			var ovlLo = CalculateOverloadBuffer(vLow, count, voltageLevels, gearRatioUsedForMeasurement);
+			var ovlHi = CalculateOverloadBuffer(vHigh, count, voltageLevels, gearRatioUsedForMeasurement);
+
+			var retVal = new OverloadData()
+			{
+				OverloadBuffer = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.OverloadBuffer, ovlHi.OverloadBuffer, averageVoltage),
+				ContinuousTorque = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.ContinuousTorque, ovlHi.ContinuousTorque, averageVoltage),
+				ContinuousPowerLoss = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.ContinuousPowerLoss, ovlHi.ContinuousPowerLoss, averageVoltage)
+			};
+			return retVal;
+		}
+
+
 		private OverloadData CalculateOverloadData(IElectricMotorDeclarationInputData motorData, int count, VoltageLevelData voltageLevels, Volt averageVoltage)
 		{
 

@@ -39,7 +39,7 @@
 	</PropertyGroup>
 
 	<Choose>
-		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
+		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
 			<ItemGroup>
 				<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
 					<_Parameter1>VectoMockup</_Parameter1>
@@ -141,11 +141,6 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="InputData\Reader\DataObjectAdapter\CompletedBus\Generic\" />
-    <Folder Include="InputData\Reader\DataObjectAdapter\SimulationComponents\StrategyDataAdapter\" />
-    <Folder Include="Models\SimulationComponent\Impl\Controller\" />
-    <Folder Include="OutputData\XML\DeclarationReports\VehicleInformationFile\VehicleInformationFile_0_1\ResultWriter\" />
-  </ItemGroup>
+  
 
 </Project>

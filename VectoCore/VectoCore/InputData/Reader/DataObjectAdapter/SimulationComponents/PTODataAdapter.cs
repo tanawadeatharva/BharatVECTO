@@ -28,6 +28,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					DrivingCycleDataReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.PTO.DefaultPTOActivationCycle),
 						CycleType.PTO, "PTO", false),
 				TransmissionPowerDemand = DeclarationData.PTOTransmission.Lookup(DeclarationData.PTO.DefaultPTOTechnology).PowerDemand,
+				ConsumerType = PTOConsumerType.mechanical,
 			};
 		}
         public virtual PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto, IGearboxDeclarationInputData gbx)
@@ -39,6 +40,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					TransmissionPowerDemand = powerDemand,
 					TransmissionType = pto.PTOTransmissionType,
 					LossMap = PTOIdleLossMapReader.GetZeroLossMap(),
+					ConsumerType = PTOConsumerType.mechanical,
 				};
 			}
 			return null;
@@ -66,6 +68,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					DrivingCycleDataReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.PTO.DefaultE_PTOActivationCycle),
 						CycleType.EPTO, "PTO", false),
 				TransmissionPowerDemand = powerDemand,
+				ConsumerType = PTOConsumerType.electrical,
 			};
 		}
 
@@ -84,6 +87,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					TransmissionPowerDemand = powerDemand,
 					TransmissionType = pto.PTOTransmissionType,
 					LossMap = PTOIdleLossMapReader.GetZeroLossMap(),
+					ConsumerType = PTOConsumerType.electrical,
 				};
 			}
 

@@ -209,6 +209,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(gears.Count + 1);
 			fullLoadCurves[0] = FullLoadCurveReader.Create(mode.FullLoadCurve, true);
 			fullLoadCurves[0].EngineData = retVal;
+			
 			foreach (var gear in gearbox?.Gears ?? new List<ITransmissionInputData>(0))
 			{
 				var maxTorque = VectoMath.Min(
@@ -216,6 +217,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					VehicleDataAdapter.VehMaxTorque(gear, gears.Count + 1, limits, fullLoadCurves[0].MaxTorque));
 				fullLoadCurves[(uint)gear.Gear] = IntersectFullLoadCurves(fullLoadCurves[0], maxTorque);
 			}
+
+			//Add first full load curve for every gear present in iepc
+
+			if (vehicle.Components.IEPC?.Gears != null)
+				foreach (var gear in vehicle.Components.IEPC.Gears) {
+					fullLoadCurves[(uint)gear.GearNumber] = fullLoadCurves[0];
+				}
+
 
 			retVal.FullLoadCurves = fullLoadCurves;
 

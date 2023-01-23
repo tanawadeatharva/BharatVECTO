@@ -153,9 +153,15 @@ namespace TUGraz.VectoCore.OutputData
 				: (SimException.StackTrace ?? SimException.InnerException?.StackTrace);
 
 
-		public void Reset()
+		public void Reset(bool clearColumns = false)
 		{
 			Data.Rows.Clear();
+			if (clearColumns) {
+				_additionalColumns.Clear();
+				Auxiliaries.Clear();
+				Data.Columns.Clear();
+				Data.Reset();
+			}
 			CurrentRow = Data.NewRow();
 			ClearAggregateResults();
 		}

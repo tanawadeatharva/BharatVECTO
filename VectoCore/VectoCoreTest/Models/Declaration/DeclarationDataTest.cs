@@ -51,289 +51,305 @@ using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
-    [TestFixture]
+	[TestFixture]
 	[Parallelizable(ParallelScope.All)]
-    public class DeclarationDataTest
-    {
-        private const double Tolerance = 0.0001;
+	public class DeclarationDataTest
+	{
+		private const double Tolerance = 0.0001;
 
-        private readonly MissionType[] _missions = {
-            MissionType.LongHaul,
-            MissionType.RegionalDelivery,
-            MissionType.UrbanDelivery,
-            MissionType.MunicipalUtility,
-            MissionType.Construction,
-        };
+		private readonly MissionType[] _missions = {
+			MissionType.LongHaul,
+			MissionType.RegionalDelivery,
+			MissionType.UrbanDelivery,
+			MissionType.MunicipalUtility,
+			MissionType.Construction,
+		};
 
-        [OneTimeSetUp]
-        public void RunBeforeAnyTests()
-        {
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-        }
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
 
-        [TestCase("285/60 R22.5", 10.6, 0.914, 3.03, 0.440766),
-        TestCase("285/70 R19.5", 7.9, 0.895, 3.05, 0.434453),
-        TestCase("395/85 R20", 27.9, 1.18, 3.05, 0.572798)]
-        public void WheelDataTest(string wheels, double inertia, double wheelsDiameter, double circumferenceFactor,
-            double expectedDynamicRadius)
-        {
-            var tmp = DeclarationData.Wheels.Lookup(wheels);
+		[TestCase("285/60 R22.5", 10.6, 0.914, 3.03, 0.440766),
+		TestCase("285/70 R19.5", 7.9, 0.895, 3.05, 0.434453),
+		TestCase("395/85 R20", 27.9, 1.18, 3.05, 0.572798)]
+		public void WheelDataTest(string wheels, double inertia, double wheelsDiameter, double circumferenceFactor,
+			double expectedDynamicRadius)
+		{
+			var tmp = DeclarationData.Wheels.Lookup(wheels);
 
-            AssertHelper.AreRelativeEqual(inertia, tmp.Inertia);
-            AssertHelper.AreRelativeEqual(wheelsDiameter, tmp.WheelsDiameter);
-            AssertHelper.AreRelativeEqual(circumferenceFactor, tmp.CircumferenceFactor);
-            Assert.AreEqual(expectedDynamicRadius, tmp.DynamicTyreRadius.Value(), 1e-6);
-        }
+			AssertHelper.AreRelativeEqual(inertia, tmp.Inertia);
+			AssertHelper.AreRelativeEqual(wheelsDiameter, tmp.WheelsDiameter);
+			AssertHelper.AreRelativeEqual(circumferenceFactor, tmp.CircumferenceFactor);
+			Assert.AreEqual(expectedDynamicRadius, tmp.DynamicTyreRadius.Value(), 1e-6);
+		}
 
-        [
-            // fixed points
-            TestCase(400, 0),
-            TestCase(800, 0.47),
-            TestCase(1000, 0.58),
-            TestCase(1200, 0.53),
-            TestCase(1400, 0.46),
-            TestCase(1500, 0.43),
-            TestCase(1750, 0.22),
-            TestCase(1800, 0.2),
-            TestCase(2000, 0.11),
-            TestCase(2500, 0.11),
-            // interpolate
-            TestCase(600, 0.235),
-            TestCase(900, 0.525),
-            TestCase(1100, 0.555),
-            TestCase(1300, 0.495),
-            TestCase(1450, 0.445),
-            TestCase(1625, 0.325),
-            TestCase(1775, 0.21),
-            TestCase(1900, 0.155),
-            TestCase(2250, 0.11),
-        ]
-        public void PT1Test(double rpm, double expectedPt1)
-        {
-            var pt1 = DeclarationData.PT1.Lookup(rpm.RPMtoRad());
-            Assert.AreEqual(expectedPt1, pt1.Value.Value(), Tolerance);
-            Assert.IsFalse(pt1.Extrapolated);
-        }
+		[
+			// fixed points
+			TestCase(400, 0),
+			TestCase(800, 0.47),
+			TestCase(1000, 0.58),
+			TestCase(1200, 0.53),
+			TestCase(1400, 0.46),
+			TestCase(1500, 0.43),
+			TestCase(1750, 0.22),
+			TestCase(1800, 0.2),
+			TestCase(2000, 0.11),
+			TestCase(2500, 0.11),
+			// interpolate
+			TestCase(600, 0.235),
+			TestCase(900, 0.525),
+			TestCase(1100, 0.555),
+			TestCase(1300, 0.495),
+			TestCase(1450, 0.445),
+			TestCase(1625, 0.325),
+			TestCase(1775, 0.21),
+			TestCase(1900, 0.155),
+			TestCase(2250, 0.11),
+		]
+		public void PT1Test(double rpm, double expectedPt1)
+		{
+			var pt1 = DeclarationData.PT1.Lookup(rpm.RPMtoRad());
+			Assert.AreEqual(expectedPt1, pt1.Value.Value(), Tolerance);
+			Assert.IsFalse(pt1.Extrapolated);
+		}
 
-        [TestCase(200),
-        TestCase(0),
-        TestCase(13000),]
-        public void PT1ExceptionsTest(double rpm)
-        {
-            // EXTRAPOLATE 
-            var tmp = DeclarationData.PT1.Lookup(rpm.RPMtoRad());
-            Assert.IsTrue(tmp.Extrapolated);
-        }
+		[TestCase(200),
+		TestCase(0),
+		TestCase(13000),]
+		public void PT1ExceptionsTest(double rpm)
+		{
+			// EXTRAPOLATE 
+			var tmp = DeclarationData.PT1.Lookup(rpm.RPMtoRad());
+			Assert.IsTrue(tmp.Extrapolated);
+		}
 
-        [TestCase]
-        public void WHTCTest()
-        {
-            var whtc = DeclarationData.WHTCCorrection;
+		[TestCase]
+		public void WHTCTest()
+		{
+			var whtc = DeclarationData.WHTCCorrection;
 
-            var factors = new
-            {
-                urban = new[] { 0.0, 0.17, 0.69, 0.98, 0.62, 1.0, 1.0, 1.0, 0.45, 0.0 },
-                rural = new[] { 0.0, 0.3, 0.27, 0.0, 0.32, 0.0, 0.0, 0.0, 0.36, 0.22 },
-                motorway = new[] { 1.0, 0.53, 0.04, 0.02, 0.06, 0.0, 0.0, 0.0, 0.19, 0.78 }
-            };
+			var factors = new {
+				urban = new[] { 0.0, 0.17, 0.69, 0.98, 0.62, 1.0, 1.0, 1.0, 0.45, 0.0 },
+				rural = new[] { 0.0, 0.3, 0.27, 0.0, 0.32, 0.0, 0.0, 0.0, 0.36, 0.22 },
+				motorway = new[] { 1.0, 0.53, 0.04, 0.02, 0.06, 0.0, 0.0, 0.0, 0.19, 0.78 }
+			};
 
-            var r = new Random();
-            for (var i = 0; i < _missions.Length; i++)
-            {
-                var urban = r.NextDouble() * 2;
-                var rural = r.NextDouble() * 2;
-                var motorway = r.NextDouble() * 2;
-                var whtcValue = whtc.Lookup(_missions[i], rural: rural, urban: urban, motorway: motorway);
-                Assert.AreEqual(urban * factors.urban[i] + rural * factors.rural[i] + motorway * factors.motorway[i],
-                    whtcValue);
-            }
-        }
+			var r = new Random();
+			for (var i = 0; i < _missions.Length; i++) {
+				var urban = r.NextDouble() * 2;
+				var rural = r.NextDouble() * 2;
+				var motorway = r.NextDouble() * 2;
+				var whtcValue = whtc.Lookup(_missions[i], rural: rural, urban: urban, motorway: motorway);
+				Assert.AreEqual(urban * factors.urban[i] + rural * factors.rural[i] + motorway * factors.motorway[i],
+					whtcValue);
+			}
+		}
 
-        [TestCase]
-        public void WHTCLookupTestLongHaul()
-        {
-            var expected = 1.0057;
+		[TestCase]
+		public void WHTCLookupTestLongHaul()
+		{
+			var expected = 1.0057;
 
-            var rural = 1.0265;
-            var urban = 1.0948;
-            var motorway = 1.0057;
+			var rural = 1.0265;
+			var urban = 1.0948;
+			var motorway = 1.0057;
 
-            var lookup = DeclarationData.WHTCCorrection.Lookup(MissionType.LongHaul, rural: rural, urban: urban,
-                motorway: motorway);
-            Assert.AreEqual(expected, lookup, 1e-8);
-        }
+			var lookup = DeclarationData.WHTCCorrection.Lookup(MissionType.LongHaul, rural: rural, urban: urban,
+				motorway: motorway);
+			Assert.AreEqual(expected, lookup, 1e-8);
+		}
 
-        [TestCase]
-        public void WHTCLookupTestRegionalDelivery()
-        {
-            var expected = 1.02708700;
+		[TestCase]
+		public void WHTCLookupTestRegionalDelivery()
+		{
+			var expected = 1.02708700;
 
-            var rural = 1.0265;
-            var urban = 1.0948;
-            var motorway = 1.0057;
+			var rural = 1.0265;
+			var urban = 1.0948;
+			var motorway = 1.0057;
 
-            var lookup = DeclarationData.WHTCCorrection.Lookup(MissionType.RegionalDelivery, rural: rural, urban: urban,
-                motorway: motorway);
-            Assert.AreEqual(expected, lookup, 1e-8);
-        }
+			var lookup = DeclarationData.WHTCCorrection.Lookup(MissionType.RegionalDelivery, rural: rural, urban: urban,
+				motorway: motorway);
+			Assert.AreEqual(expected, lookup, 1e-8);
+		}
 
-        [
-        //TestCase("MediumLorryVan",),   
-        //TestCase("MediumLorryRigid"),
-        TestCase("RigidSolo", 0.013526, 0.017746, -0.000666),
-        TestCase("RigidTrailer", 0.017125, 0.072275, -0.004148),
-        TestCase("TractorSemitrailer", 0.030042, 0.040817, -0.00213),
-        TestCase("CoachBus", -0.000794, 0.02109, -0.00109),
-        TestCase("MediumLorriesRigid",-0.0015 ,0.0086, -0.00029),
-		TestCase("MediumLorriesVan", 0.0032, 0.00532, -0.00028)]
+		[
+			//TestCase("MediumLorryVan",),   
+			//TestCase("MediumLorryRigid"),
+			TestCase("RigidSolo", 0.013526, 0.017746, -0.000666),
+			TestCase("RigidTrailer", 0.017125, 0.072275, -0.004148),
+			TestCase("TractorSemitrailer", 0.030042, 0.040817, -0.00213),
+			TestCase("CoachBus", -0.000794, 0.02109, -0.00109),
+			TestCase("MediumLorriesRigid", -0.0015, 0.0086, -0.00029),
+			TestCase("MediumLorriesVan", 0.0032, 0.00532, -0.00028)]
 
-        public void AirDrag_WithStringKey(string key, double a1, double a2, double a3)
-        {
-            var value = DeclarationData.AirDrag.Lookup(key);
-            AssertHelper.AreRelativeEqual(a1, value.A1);
-            AssertHelper.AreRelativeEqual(a2, value.A2);
-            AssertHelper.AreRelativeEqual(a3, value.A3);
-        }
+		public void AirDrag_WithStringKey(string key, double a1, double a2, double a3)
+		{
+			var value = DeclarationData.AirDrag.Lookup(key);
+			AssertHelper.AreRelativeEqual(a1, value.A1);
+			AssertHelper.AreRelativeEqual(a2, value.A2);
+			AssertHelper.AreRelativeEqual(a3, value.A3);
+		}
 
-        [
-        //TestCase("MediumLorryVan",),   
-        //TestCase("MediumLorryRigid"),
-        TestCase("RigidSolo", 0.013526, 0.017746, -0.000666),
-        TestCase("TractorSemitrailer", 0.030042, 0.040817, -0.00213),
-        TestCase("RigidTrailer", 0.017125, 0.072275, -0.004148),
-        TestCase("CoachBus", -0.000794, 0.02109, -0.00109),
-		TestCase("MediumLorriesRigid", -0.0015, 0.0086, -0.00029),
-		TestCase("MediumLorriesVan", 0.0032, 0.00532, -0.00028)]
-        public void AirDrag_WithVehicleCategory(string parameterSet, double a1, double a2, double a3)
-        {
-            var value = DeclarationData.AirDrag.Lookup(parameterSet);
-            AssertHelper.AreRelativeEqual(a1, value.A1);
-            AssertHelper.AreRelativeEqual(a2, value.A2);
-            AssertHelper.AreRelativeEqual(a3, value.A3);
-        }
+		[
+			//TestCase("MediumLorryVan",),   
+			//TestCase("MediumLorryRigid"),
+			TestCase("RigidSolo", 0.013526, 0.017746, -0.000666),
+			TestCase("TractorSemitrailer", 0.030042, 0.040817, -0.00213),
+			TestCase("RigidTrailer", 0.017125, 0.072275, -0.004148),
+			TestCase("CoachBus", -0.000794, 0.02109, -0.00109),
+			TestCase("MediumLorriesRigid", -0.0015, 0.0086, -0.00029),
+			TestCase("MediumLorriesVan", 0.0032, 0.00532, -0.00028)]
+		public void AirDrag_WithVehicleCategory(string parameterSet, double a1, double a2, double a3)
+		{
+			var value = DeclarationData.AirDrag.Lookup(parameterSet);
+			AssertHelper.AreRelativeEqual(a1, value.A1);
+			AssertHelper.AreRelativeEqual(a2, value.A2);
+			AssertHelper.AreRelativeEqual(a3, value.A3);
+		}
 
-        [TestCase("TractorSemitrailer", 6.46, 0, 4.0, 7.71712257),
-        TestCase("TractorSemitrailer", 6.46, 60, 4.0, 7.71712257),
-        TestCase("TractorSemitrailer", 6.46, 75, 3.75, 7.35129203),
-        TestCase("TractorSemitrailer", 6.46, 100, 4.0, 7.03986404),
-        TestCase("TractorSemitrailer", 6.46, 62.1234, 4.0, 7.65751048),
-        TestCase("TractorSemitrailer", 6.46, 73.5432, 3.75, 7.37814098),
-        TestCase("TractorSemitrailer", 6.46, 92.8765, 4.0, 7.11234364),
-        TestCase("TractorSemitrailer", 6.46, 100.449, 4.0, 7.03571556),
-        TestCase("TractorSemitrailer", 6.46, 103, 3.6, 6.99454230),
-        TestCase("TractorSemitrailer", 6.46, 105, 3.9, 6.99177143),
-        TestCase("TractorSemitrailer", 6.46, 115, 4.0, 6.92267778),
-        TestCase("TractorSemitrailer", 6.46, 130, 4.0, 6.83867361),]
-        public void CrossWindCorrectionTest(string parameterSet, double crossSectionArea, double kmph, double height,
-            double expected)
-        {
-            var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
-				new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>(),
-                    height.SI<Meter>()),
-                CrossWindCorrectionMode.DeclarationModeCorrection);
+		[TestCase("TractorSemitrailer", 6.46, 0, 4.0, 7.71712257),
+		TestCase("TractorSemitrailer", 6.46, 60, 4.0, 7.71712257),
+		TestCase("TractorSemitrailer", 6.46, 75, 3.75, 7.35129203),
+		TestCase("TractorSemitrailer", 6.46, 100, 4.0, 7.03986404),
+		TestCase("TractorSemitrailer", 6.46, 62.1234, 4.0, 7.65751048),
+		TestCase("TractorSemitrailer", 6.46, 73.5432, 3.75, 7.37814098),
+		TestCase("TractorSemitrailer", 6.46, 92.8765, 4.0, 7.11234364),
+		TestCase("TractorSemitrailer", 6.46, 100.449, 4.0, 7.03571556),
+		TestCase("TractorSemitrailer", 6.46, 103, 3.6, 6.99454230),
+		TestCase("TractorSemitrailer", 6.46, 105, 3.9, 6.99177143),
+		TestCase("TractorSemitrailer", 6.46, 115, 4.0, 6.92267778),
+		TestCase("TractorSemitrailer", 6.46, 130, 4.0, 6.83867361),]
+		public void CrossWindCorrectionTest(string parameterSet, double crossSectionArea, double kmph, double height,
+			double expected)
+		{
+			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
+				new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet,
+					crossSectionArea.SI<SquareMeter>(),
+					height.SI<Meter>()),
+				CrossWindCorrectionMode.DeclarationModeCorrection);
 
-            var tmp = crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond());
-            AssertHelper.AreRelativeEqual(expected, tmp.Value(), toleranceFactor: 1e-3);
-        }
+			var tmp = crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond());
+			AssertHelper.AreRelativeEqual(expected, tmp.Value(), toleranceFactor: 1e-3);
+		}
 
-        [TestCase("TractorSemitrailer", 5.8, 4.0)]
-        public void CrossWindGetDeclarationAirResistance(string parameterSet, double cdxa0, double height)
-        {
-            var curve =
-				new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet, cdxa0.SI<SquareMeter>(), height.SI<Meter>());
+		[TestCase("TractorSemitrailer", 5.8, 4.0)]
+		public void CrossWindGetDeclarationAirResistance(string parameterSet, double cdxa0, double height)
+		{
+			var curve =
+				new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet, cdxa0.SI<SquareMeter>(),
+					height.SI<Meter>());
 
-            AssertHelper.AreRelativeEqual(60.KMPHtoMeterPerSecond(), curve[1].Velocity);
-            AssertHelper.AreRelativeEqual(7.0418009.SI<SquareMeter>(), curve[1].EffectiveCrossSectionArea);
+			AssertHelper.AreRelativeEqual(60.KMPHtoMeterPerSecond(), curve[1].Velocity);
+			AssertHelper.AreRelativeEqual(7.0418009.SI<SquareMeter>(), curve[1].EffectiveCrossSectionArea);
 
-            AssertHelper.AreRelativeEqual(65.KMPHtoMeterPerSecond(), curve[2].Velocity);
-            AssertHelper.AreRelativeEqual(6.90971991.SI<SquareMeter>(), curve[2].EffectiveCrossSectionArea);
+			AssertHelper.AreRelativeEqual(65.KMPHtoMeterPerSecond(), curve[2].Velocity);
+			AssertHelper.AreRelativeEqual(6.90971991.SI<SquareMeter>(), curve[2].EffectiveCrossSectionArea);
 
-            AssertHelper.AreRelativeEqual(85.KMPHtoMeterPerSecond(), curve[6].Velocity);
-            AssertHelper.AreRelativeEqual(6.54224222.SI<SquareMeter>(), curve[6].EffectiveCrossSectionArea);
+			AssertHelper.AreRelativeEqual(85.KMPHtoMeterPerSecond(), curve[6].Velocity);
+			AssertHelper.AreRelativeEqual(6.54224222.SI<SquareMeter>(), curve[6].EffectiveCrossSectionArea);
 
-            AssertHelper.AreRelativeEqual(100.KMPHtoMeterPerSecond(), curve[9].Velocity);
-            AssertHelper.AreRelativeEqual(6.37434824.SI<SquareMeter>(), curve[9].EffectiveCrossSectionArea);
+			AssertHelper.AreRelativeEqual(100.KMPHtoMeterPerSecond(), curve[9].Velocity);
+			AssertHelper.AreRelativeEqual(6.37434824.SI<SquareMeter>(), curve[9].EffectiveCrossSectionArea);
 
-            AssertHelper.AreRelativeEqual(105.KMPHtoMeterPerSecond(), curve[10].Velocity);
-            AssertHelper.AreRelativeEqual(6.33112792.SI<SquareMeter>(), curve[10].EffectiveCrossSectionArea);
+			AssertHelper.AreRelativeEqual(105.KMPHtoMeterPerSecond(), curve[10].Velocity);
+			AssertHelper.AreRelativeEqual(6.33112792.SI<SquareMeter>(), curve[10].EffectiveCrossSectionArea);
 
 
 			Assert.AreEqual(16, curve.Count);
-        }
+		}
 
-        [
-            TestCase("TractorSemitrailer", 6.46, -0.1, 3.0),
+		[
+			TestCase("TractorSemitrailer", 6.46, -0.1, 3.0),
 			TestCase("TractorSemitrailer", 6.46, 200.1, 3.0),
-        ]
-        public void CrossWindCorrectionExceptionTest(string parameterSet, double crossSectionArea, double kmph, double height)
+		]
+		public void CrossWindCorrectionExceptionTest(string parameterSet, double crossSectionArea, double kmph,
+			double height)
+		{
+			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
+				new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet,
+					crossSectionArea.SI<SquareMeter>(),
+					height.SI<Meter>()),
+				CrossWindCorrectionMode.DeclarationModeCorrection);
+
+			AssertHelper.Exception<VectoException>(() =>
+				crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond()));
+		}
+
+		[TestCase]
+		public void CrossWindAreaCdxANotSet_DeclarationMode()
+		{
+			var airDrag = new AirdragData() {
+				CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection,
+				CrossWindCorrectionCurve =
+					new CrosswindCorrectionCdxALookup(null, null, CrossWindCorrectionMode.DeclarationModeCorrection)
+			};
+
+			Assert.IsTrue(airDrag.IsValid(),
+				"In Speed Dependent (Declaration Mode) Crosswind Correction the CdxA Value can be empty.");
+		}
+
+		[TestCase]
+		public void CrossWindAreaCdxANotSet_Other()
+		{
+			foreach (var correctionMode in EnumHelper.GetValues<CrossWindCorrectionMode>()) {
+				if (correctionMode == CrossWindCorrectionMode.DeclarationModeCorrection) {
+					continue;
+				}
+
+				var airDrag = new AirdragData {
+					CrossWindCorrectionMode = correctionMode,
+					CrossWindCorrectionCurve =
+						new CrosswindCorrectionCdxALookup(null, null, correctionMode)
+				};
+
+				Assert.IsFalse(airDrag.IsValid(),
+					"Only in Speed Dependent (Declaration Mode) Crosswind Correction the CdxA Value can be empty.");
+			}
+		}
+
+		//Heavy Lorry
+		[TestCase(VehicleClass.Class6, MissionType.LongHaul, "Standard technology", 1200, 0.7),
+		TestCase(VehicleClass.Class6, MissionType.RegionalDelivery, "Standard technology", 1000, 0.7),
+		TestCase(VehicleClass.Class6, MissionType.UrbanDelivery, "Standard technology", 1000, 0.7),
+		TestCase(VehicleClass.Class6, MissionType.MunicipalUtility, "Standard technology", 1000, 0.7),
+		TestCase(VehicleClass.Class6, MissionType.Construction, "Standard technology", 1000, 0.7),
+		TestCase(VehicleClass.Class6, MissionType.LongHaul, "Standard technology - LED headlights, all", 1150, 0.7),
+		TestCase(VehicleClass.Class6, MissionType.RegionalDelivery, "Standard technology - LED headlights, all", 950,
+			0.7),
+		TestCase(VehicleClass.Class6, MissionType.UrbanDelivery, "Standard technology - LED headlights, all", 950, 0.7),
+		TestCase(VehicleClass.Class6, MissionType.MunicipalUtility, "Standard technology - LED headlights, all", 950,
+			0.7),
+		TestCase(VehicleClass.Class6, MissionType.Construction, "Standard technology - LED headlights, all", 950, 0.7),]
+
+		//Medium Lorry
+		[TestCase(VehicleClass.Class51, MissionType.RegionalDelivery, "Standard technology", 600, 0.7),
+		TestCase(VehicleClass.Class52, MissionType.UrbanDelivery, "Standard technology", 600, 0.7),
+		TestCase(VehicleClass.Class53, MissionType.RegionalDelivery, "Standard technology - LED headlights, all", 550,
+			0.7),
+		TestCase(VehicleClass.Class55, MissionType.UrbanDelivery, "Standard technology - LED headlights, all", 550,
+			0.7)]
+		public void AuxElectricSystemTest(VehicleClass hdvClass, MissionType mission, string technology, double value,
+			double efficiency)
+		{
+			AssertHelper.AreRelativeEqual(value / efficiency,
+				DeclarationData.ElectricSystem.Lookup(hdvClass, mission, technology).PowerDemand.Value());
+		}
+
+		//Heavy Lorry
+		[TestCase(VehicleClass.Class6, MissionType.Interurban, "Standard technology"),
+		TestCase(VehicleClass.Class6, MissionType.LongHaul, "Standard technology - Flux-Compensator")]
+		//Medium Lorry
+		[TestCase(VehicleClass.Class55, MissionType.LongHaul, "Standard technology"),
+		TestCase(VehicleClass.Class55, MissionType.UrbanDelivery, "Standard technology - Flux-Compensator"),
+		TestCase(VehicleClass.Class55, MissionType.LongHaul, "Standard technology - LED headlights, all")]
+
+		public void AuxElectricSystem_NotExistingError(VehicleClass hdvClass, MissionType mission, string technology)
         {
-            var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
-				new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>(),
-                    height.SI<Meter>()),
-                CrossWindCorrectionMode.DeclarationModeCorrection);
-
-            AssertHelper.Exception<VectoException>(() =>
-                crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond()));
-        }
-
-        [TestCase]
-        public void CrossWindAreaCdxANotSet_DeclarationMode()
-        {
-            var airDrag = new AirdragData()
-            {
-                CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection,
-                CrossWindCorrectionCurve =
-                    new CrosswindCorrectionCdxALookup(null, null, CrossWindCorrectionMode.DeclarationModeCorrection)
-            };
-
-            Assert.IsTrue(airDrag.IsValid(),
-                "In Speed Dependent (Declaration Mode) Crosswind Correction the CdxA Value can be empty.");
-        }
-
-        [TestCase]
-        public void CrossWindAreaCdxANotSet_Other()
-        {
-            foreach (var correctionMode in EnumHelper.GetValues<CrossWindCorrectionMode>())
-            {
-                if (correctionMode == CrossWindCorrectionMode.DeclarationModeCorrection)
-                {
-                    continue;
-                }
-
-                var airDrag = new AirdragData
-                {
-                    CrossWindCorrectionMode = correctionMode,
-                    CrossWindCorrectionCurve =
-                        new CrosswindCorrectionCdxALookup(null, null, correctionMode)
-                };
-
-                Assert.IsFalse(airDrag.IsValid(),
-                    "Only in Speed Dependent (Declaration Mode) Crosswind Correction the CdxA Value can be empty.");
-            }
-        }
-
-        [TestCase(MissionType.LongHaul, "Standard technology", 1200, 0.7),
-        TestCase(MissionType.RegionalDelivery, "Standard technology", 1000, 0.7),
-        TestCase(MissionType.UrbanDelivery, "Standard technology", 1000, 0.7),
-        TestCase(MissionType.MunicipalUtility, "Standard technology", 1000, 0.7),
-        TestCase(MissionType.Construction, "Standard technology", 1000, 0.7),
-        TestCase(MissionType.LongHaul, "Standard technology - LED headlights, all", 1150, 0.7),
-        TestCase(MissionType.RegionalDelivery, "Standard technology - LED headlights, all", 950, 0.7),
-        TestCase(MissionType.UrbanDelivery, "Standard technology - LED headlights, all", 950, 0.7),
-        TestCase(MissionType.MunicipalUtility, "Standard technology - LED headlights, all", 950, 0.7),
-        TestCase(MissionType.Construction, "Standard technology - LED headlights, all", 950, 0.7),]
-        public void AuxElectricSystemTest(MissionType mission, string technology, double value, double efficiency)
-        {
-            AssertHelper.AreRelativeEqual(value / efficiency,
-                DeclarationData.ElectricSystem.Lookup(mission, technology).PowerDemand.Value());
-        }
-
-        [TestCase(MissionType.Interurban, "Standard technology"),
-        TestCase(MissionType.LongHaul, "Standard technology - Flux-Compensator")]
-        public void AuxElectricSystem_NotExistingError(MissionType mission, string technology)
-        {
-            AssertHelper.Exception<VectoException>(() => { DeclarationData.ElectricSystem.Lookup(mission, technology); });
+            AssertHelper.Exception<VectoException>(() => { DeclarationData.ElectricSystem.Lookup(hdvClass, mission, technology); });
         }
 
         [TestCase("only the drive shaft of the PTO - shift claw, synchronizer, sliding gearwheel", 50),
@@ -2392,5 +2408,70 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             //Assert.IsTrue(expectedClass.Equals(tyreClass, StringComparison.InvariantCultureIgnoreCase));
             Assert.AreEqual(expectedClass, tyreClass);
         }
-    }
+
+
+        [TestCase(VehicleClass.Class1s, MissionType.RegionalDelivery, 2)]
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 2)]
+		[TestCase(VehicleClass.Class16, MissionType.Construction, 2)]
+		[TestCase(VehicleClass.Class53, MissionType.UrbanDelivery, 4)]
+        public void VehicleOperationLookupChargingEventsLorry(VehicleClass hdvClass, MissionType mission, double expected)
+		{
+			var val = DeclarationData.VehicleOperation.LookupChargingEventsPerDay(hdvClass, mission);
+			Assert.AreEqual(expected, val);
+		}
+
+		[TestCase(VehicleClass.Class1s, MissionType.RegionalDelivery, 0.5)]
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 0.5)]
+		[TestCase(VehicleClass.Class16, MissionType.Construction, 0.5)]
+		[TestCase(VehicleClass.Class53, MissionType.UrbanDelivery, 0.5)]
+		public void VehicleOperationLookupChargingDurationLorry(VehicleClass hdvClass, MissionType mission, double expected)
+		{
+			var val = DeclarationData.VehicleOperation.LookupChargingDurationPerEvent(hdvClass, mission);
+			Assert.AreEqual(expected * 3600, val.Value()); //stored in seconds
+		}
+
+		[TestCase(VehicleClass.Class1s, MissionType.RegionalDelivery, 250)]
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 250)]
+		[TestCase(VehicleClass.Class16, MissionType.Construction, 100)]
+		[TestCase(VehicleClass.Class53, MissionType.UrbanDelivery, 250)]
+		public void VehicleOperationLookupMaxChargingPowerLorry(VehicleClass hdvClass, MissionType mission, double expected)
+		{
+			var val = DeclarationData.VehicleOperation.LookupMaxChargingPower(hdvClass, mission);
+			Assert.AreEqual(expected * 1000, val.Value()); //stored in watt
+		}
+
+		[TestCase(VehicleClass.Class1s, MissionType.RegionalDelivery, 80000, 320)]
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 80000, 320)]
+		[TestCase(VehicleClass.Class16, MissionType.Construction, 60000, 240)]
+		[TestCase(VehicleClass.Class53, MissionType.UrbanDelivery, 60000, 240)]
+		public void VehicleOperationLookupMileageLorry(VehicleClass hdvClass, MissionType mission, double expectedAnnual, double expectedDaily)
+		{
+			var val = DeclarationData.VehicleOperation.LookupMileage(hdvClass, mission);
+			Assert.AreEqual(expectedAnnual * 1000, val.annualMileage.Value()); //stored in meter
+			Assert.AreEqual(expectedDaily * 1000, val.dailyMileage.Value()); //stored in meter
+		}
+
+
+        [TestCase(VehicleClass.Class53, MissionType.LongHaul)]
+		[TestCase(VehicleClass.Class16, MissionType.UrbanDelivery)]
+		[TestCase(VehicleClass.Class1s, MissionType.Coach)]
+        public void VehicleOperationHeavyLorryFail(VehicleClass hdvClass, MissionType mission)
+		{
+			Assert.Throws<VectoException>(() => {
+				DeclarationData.VehicleOperation.LookupChargingDurationPerEvent(hdvClass, mission);
+			});
+
+			Assert.Throws<VectoException>(() => {
+				DeclarationData.VehicleOperation.LookupChargingEventsPerDay(hdvClass, mission);
+			});
+
+			Assert.Throws<VectoException>(() => {
+				DeclarationData.VehicleOperation.LookupMaxChargingPower(hdvClass, mission);
+			});
+
+			Assert.Throws<VectoException>(() => {
+				DeclarationData.VehicleOperation.LookupMileage(hdvClass, mission);
+			});
+        }
+	}
 }

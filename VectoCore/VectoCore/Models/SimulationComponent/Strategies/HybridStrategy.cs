@@ -2143,7 +2143,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			// TODO: MQ 20210712 how to handle with batterysystem
-			var auxEnergyReserve = ModelData.ElectricAuxDemand * StrategyParameters.AuxReserveTime;
+			var auxEnergyReserve = ModelData?.ElectricAuxDemand * StrategyParameters.AuxReserveTime;
 			if (auxEnergyReserve > 0) {
 				var minSoc = Math.Max(DataBus.BatteryInfo.MinSoC, StrategyParameters.MinSoC);
 				BatteryDischargeEnergyThreshold =

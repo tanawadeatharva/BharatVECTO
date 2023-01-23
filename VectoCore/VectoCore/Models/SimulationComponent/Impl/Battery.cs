@@ -91,8 +91,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.TotalCurrent = current;
 			CurrentState.BatteryLoss = batteryLoss;
 
-			
-			CurrentState.StateOfCharge = (currentCharge + current * dt) / ModelData.Capacity;
+			var soc = (currentCharge + current * dt) / ModelData.Capacity;
+			if (ModelData.ChargeSustainingBattery) {
+				soc = PreviousState.StateOfCharge.SI<Scalar>();
+			}
+			CurrentState.StateOfCharge = soc;
 			CurrentState.MaxChargePower = maxChargePower;
 			CurrentState.MaxDischargePower = maxDischargePower;
 			return new RESSResponseSuccess(this) {
@@ -102,7 +105,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				MaxDischargePower = maxDischargePower,
 				PowerDemand = powerDemand,
 				LossPower = batteryLoss,
-				StateOfCharge = (currentCharge + current * dt) / ModelData.Capacity
+				StateOfCharge = soc,
 			};
 		}
 
@@ -180,9 +183,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? PreviousState.PulseDuration
 				: 0.SI<Second>();
 			CurrentState.PulseDuration = tPulse + simulationInterval;
-			if (ModelData.ChargeSustainingBattery) {
-				CurrentState.StateOfCharge = PreviousState.StateOfCharge;
-			}
+			//if (ModelData.ChargeSustainingBattery) {
+			//	CurrentState.StateOfCharge = PreviousState.StateOfCharge;
+			//}
 			AdvanceState();
 		}
 
