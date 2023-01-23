@@ -4,15 +4,15 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9 V:\VectoCore\VectoCore\Resources\XSD\VectoOutputCustomer.0.9.xsd">
 	<Results>
 		<Status>success</Status>
-		<!-- OCV HEV (and OCV FCV in future) Bus -->
-		<Result status="success" xsi:type="ResultSuccessOCVHEVType">
+		<!-- OVC HEV (and OVC FCV in future) Bus -->
+		<Result status="success" xsi:type="ResultSuccessOVCHEVType">
 			<Mission>Long Haul</Mission>
 			<SimulationParameters>
 				<TotalVehicleMass unit="kg">17200</TotalVehicleMass>
 				<MassPassengers unit="kg">2600</MassPassengers>
 				<PassengerCount>13.75</PassengerCount>
 			</SimulationParameters>
-			<OCVMode type="charge depleting">
+			<OVCMode type="charge depleting">
 				<AverageSpeed unit="km/h">1.0</AverageSpeed>
 				<Fuel type="Diesel CI"><!-- repeat for every fuel used -->
 					<FuelConsumption unit="g/km">3.1</FuelConsumption>
@@ -30,8 +30,8 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9 V:\VectoCore\Vec
 				</ElectricEnergy>
 				<CO2 unit="g/km">5.1</CO2>
 				<CO2 unit="g/p-km">5.2</CO2>
-			</OCVMode>
-			<OCVMode type="charge sustaining">
+			</OVCMode>
+			<OVCMode type="charge sustaining">
 				<AverageSpeed unit="km/h">1.2</AverageSpeed>
 				<Fuel type="Diesel CI"><!-- repeat for every fuel used -->
 					<FuelConsumption unit="g/km">6.1</FuelConsumption>
@@ -43,7 +43,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9 V:\VectoCore\Vec
 				</Fuel>
 				<CO2 unit="g/km">8.1</CO2>
 				<CO2 unit="g/p-km">8.2</CO2>
-			</OCVMode>
+			</OVCMode>
 			<Total>
 				<AverageSpeed unit="km/h">1.2</AverageSpeed>					
 				<Fuel type="Diesel CI"><!-- repeat for every fuel used -->
@@ -68,8 +68,8 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9 V:\VectoCore\Vec
 				<UtilityFactor>0.345</UtilityFactor>
 			</Total>
 		</Result>
-		<!-- END OCV HEV (and OCV FCV in future) Bus -->
-		<Summary xsi:type="ResultSummaryOCVHEVType">
+		<!-- END OVC HEV (and OVC FCV in future) Bus -->
+		<Summary xsi:type="ResultSummaryOVCHEVType">
 			<AveragePassengerCount>3.141</AveragePassengerCount>
 			<Fuel type="Diesel CI"><!-- repeat for every fuel used -->
 				<FuelConsumption unit="g/km">6.1</FuelConsumption>

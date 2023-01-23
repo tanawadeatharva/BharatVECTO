@@ -19,6 +19,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		AirdragData CreateAirdragData(
 			IAirdragDeclarationInputData airdragInputData, Mission mission,
 			Segment segment);
+
+		AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission);
 	}
 
 	public static class AirdragDataAdapterHelper
@@ -166,18 +168,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return retVal;
 		}
 
-	}
-
-	public class SingleBusAirdragDataAdapter
-	{
-		#region Overrides of AirdragDataAdapter
-		public AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission)
+		public virtual AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission)
 		{
 			if (!mission.BusParameter.AirDragMeasurementAllowed ||
-				completedVehicle.Components.AirdragInputData?.AirDragArea == null)
-			{
-				return new AirdragData()
-				{
+				completedVehicle.Components.AirdragInputData?.AirDragArea == null) {
+				return new AirdragData() {
 					CertificationMethod = CertificationMethod.StandardValues,
 					DeclaredAirdragArea = mission.DefaultCDxA,
 					CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
@@ -205,7 +200,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return retVal;
 		}
 
-
-		#endregion
 	}
+
+	public class CompletedBusSpecificAirdragDataAdapter : AirdragDataAdapter { }
+
+	public class SingleBusAirdragDataAdapter : CompletedBusSpecificAirdragDataAdapter { }
+
 }

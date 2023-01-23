@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -234,6 +232,42 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			return retVal;
 		}
+
+		/// <summary>
+		/// Filters the gears based on disabling rule: Disable either the last 1 or 2 gears by setting their vehicle-level torque limit to 0.
+		/// </summary>
+		internal static IList<ITransmissionInputData> FilterDisabledGears(IList<ITorqueLimitInputData> torqueLimits, IGearboxDeclarationInputData gearboxData)
+		{
+			if (torqueLimits == null || torqueLimits.Count == 0) {
+				return gearboxData?.Gears ?? new List<ITransmissionInputData>();
+			}
+
+			if (gearboxData == null) {
+				return new List<ITransmissionInputData>();
+			}
+
+			var gearsInput = gearboxData.Gears;
+			var lastGearNumber = gearsInput.Max(g => g.Gear);
+			var toRemove = torqueLimits
+				.Where(tqLimit => tqLimit.MaxTorque.IsEqual(0))
+				.Select(tqLimit => gearsInput.FirstOrDefault(g => g.Gear == tqLimit.Gear))
+				.Where(g => g != default)
+				.OrderBy(g => g.Gear)
+				.ToList();
+
+			if ((toRemove.Count == 1 && toRemove[0].Gear != lastGearNumber)
+				|| (toRemove.Count == 2 && (toRemove[0].Gear != lastGearNumber - 1 || toRemove[1].Gear != lastGearNumber))
+				|| toRemove.Count > 2) {
+				throw new VectoException("Only the last 1 or 2 gears can be disabled. Disabling gear {0} for a {1}-speed gearbox is not allowed.",
+					toRemove.Min(g => g.Gear), gearsInput.Count);
+			}
+
+			foreach (var entry in toRemove) {
+				gearsInput.Remove(entry);
+			}
+
+			return gearsInput;
+		}
 	}
 
 	public class GearboxDataAdapter : GearboxDataAdapterBase
@@ -275,13 +309,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				throw new VectoSimulationException("Unsupported gearbox type: {0}!", retVal.Type);
 			}
 
-			var gearsInput = gearbox.Gears;
+			var gearsInput = FilterDisabledGears(inputData.TorqueLimits, gearbox);  //gearbox.Gears;
 			if (gearsInput.Count < 1)
 			{
 				throw new VectoSimulationException(
 					"At least one Gear-Entry must be defined in Gearbox!");
 			}
-
+			
 			SetDeclarationData(retVal);
 			
 			var gearDifferenceRatio = gearbox.Type.AutomaticTransmission() && gearbox.Gears.Count > 2
@@ -384,6 +418,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 
 		#endregion
+
 	}
 
 	public class GenericCompletedBusGearboxDataAdapter : GearboxDataAdapter
@@ -391,6 +426,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		public const double GearEfficiencyDirectGear = 0.98;
 		public const double GearEfficiencyIndirectGear = 0.96;
 		public const double GearEfficiencyAT = 0.925;
+
 		public GenericCompletedBusGearboxDataAdapter(ITorqueConverterDataAdapter torqueConverterDataAdapter) : base(
 			torqueConverterDataAdapter)
 		{
@@ -421,11 +457,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		#endregion
 	}
 
+
 	public class IEPCGearboxDataAdapter : GearboxDataAdapterBase
 	{
 		private GearboxData CreateIEPCGearboxData(IVehicleDeclarationInputData vehicle, VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalc)
 		{
-			
+
 
 			var iepc = vehicle.Components.IEPC;
 
@@ -501,5 +538,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return CreateIEPCGearboxData(inputData, runData, shiftPolygonCalculator);
 		}
 		#endregion
+	}
+
+
+	public class CompletedSpecifigBusGearboxDataAdapter : GenericCompletedBusGearboxDataAdapter
+	{
+		public CompletedSpecifigBusGearboxDataAdapter(ITorqueConverterDataAdapter torqueConverterDataAdapter) : base(torqueConverterDataAdapter) { }
 	}
 }

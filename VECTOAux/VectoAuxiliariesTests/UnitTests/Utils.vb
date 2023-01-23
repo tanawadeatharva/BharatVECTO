@@ -121,14 +121,13 @@ Public Class Utils
                 .SmartAirCompression = False,
                 .SmartRegeneration = False 
                 },
-                .SSMInputs = New SSMInputs(Nothing, heatingFuel) With {
+                .SSMInputsCooling = New SSMInputs(Nothing, heatingFuel) With {
                 .Technologies = techBenefits,
                 .BusFloorType = FloorType.HighFloor,
                 .BusSurfaceArea = 0.SI(Of SquareMeter),
-                .BusVolume = 0.SI(Of CubicMeter),
+                .BusVolumeVentilation = 0.SI(Of CubicMeter),
                 .BusWindowSurface = 0.SI(of SquareMeter),
                 .UValue = 3.SI(Of WattPerKelvinSquareMeter),
-                .COP = 3.5,
                 .VentilationRate = 20.SI(Unit.SI.Per.Hour).Cast (Of PerSecond),
                 .VentilationRateHeating = 20.SI(Unit.SI.Per.Hour).Cast (Of PerSecond),
                 .DefaultConditions =
@@ -137,8 +136,7 @@ Public Class Utils
                 .HeatingBoundaryTemperature = 18.0.DegCelsiusToKelvin(),
                 .CoolingBoundaryTemperature = 23.0.DegCelsiusToKelvin(),
                 .SpecificVentilationPower = 0.56.SI(Unit.SI.Watt.Hour.Per.Cubic.Meter).Cast (Of JoulePerCubicMeter),
-                .HVACCompressorType = HeatPumpType.non_R_744_2_stage, 
-                .HVACMaxCoolingPower = 18.si(Unit.SI.kilo.watt).Cast (of Watt),
+                .HVACMaxCoolingPowerPassenger = 18.si(Unit.SI.kilo.watt).Cast (of Watt),
                 .AuxHeaterEfficiency =  0.84,
                 .FuelFiredHeaterPower = 30.SI(Unit.SI.kilo.watt).Cast (Of Watt),
                 .FuelEnergyToHeatToCoolant = Constants.BusAuxiliaries.Heater.FuelEnergyToHeatToCoolant,

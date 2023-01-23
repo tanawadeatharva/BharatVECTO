@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 			public static readonly GearboxType[] SupportedGearboxTypes =
 				{ GearboxType.MT, GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial };
 
-			private SingleBusAirdragDataAdapter _airdragDataAdapter = new SingleBusAirdragDataAdapter();
+			private IAirdragDataAdapter _airdragDataAdapter = new SingleBusAirdragDataAdapter();
 			private IGearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(new TorqueConverterDataAdapter());
 
 			private ICompletedBusAuxiliaryDataAdapter _busAuxiliaryDataAdapter =

@@ -229,8 +229,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						}
 					}
 
-					if (container[Constants.Auxiliaries.IDs.PTOConsumer] == null ||
-						container[Constants.Auxiliaries.IDs.PTOConsumer] == DBNull.Value) {
+					if (container.ContainsColumn(Constants.Auxiliaries.IDs.PTOConsumer) && (container[Constants.Auxiliaries.IDs.PTOConsumer] == null ||
+						container[Constants.Auxiliaries.IDs.PTOConsumer] == DBNull.Value)) {
 						container[Constants.Auxiliaries.IDs.PTOConsumer] = ptoConsumer;
 					}
 				}
@@ -259,7 +259,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region Implementation of IUpdateable
 
-		public bool UpdateFrom(object other) {
+		protected override bool DoUpdateFrom(object other) {
 			if (other is EngineAuxiliary a) {
 				PreviousState = a.PreviousState.Clone();
 				return true;

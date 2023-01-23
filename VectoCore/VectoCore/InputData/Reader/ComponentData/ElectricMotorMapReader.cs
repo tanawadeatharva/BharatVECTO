@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 			if (speeds.Count <= 2) {
 				throw new VectoException(
-						"Failed to generate electric power map - at least two speed entries > 0 are required!");
+						"Failed to generate electric power map - at least three speed entries > 0 are required!");
 			}
 			var lowerSpeed = speeds.First().RPMtoRad() / 2.0;
 			var upperSpeed = speeds.First().RPMtoRad() + (speeds[1] - speeds.First()).RPMtoRad() / 2.0;

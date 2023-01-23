@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 			if (data.Rows.Count < 4) {
 				throw new VectoException(
-					"TransmissionLossMap for {0} must consist of at least four lines with numeric values (below file header", gearName);
+					"TransmissionLossMap for {0} must consist of at least four lines with numeric values (below file header)", gearName);
 			}
 
 			List<TransmissionLossMap.GearLossMapEntry> entries;

@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			Bind<IGenericCompletedBusDeclarationDataAdapter>()
 				.To<DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.HEV_S_IEPC>()
-				.WhenInjectedExactlyInto<DeclarationModeCompletedBusRunDataFactory.HEV_S4>();
+				.WhenInjectedExactlyInto<DeclarationModeCompletedBusRunDataFactory.HEV_S_IEPC>();
 
 			Bind<IGenericCompletedBusDeclarationDataAdapter>()
 				.To<DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.HEV_P1>()
@@ -177,11 +177,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			Bind<IGenericCompletedBusDeclarationDataAdapter>()
 				.To<DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.PEV_E_IEPC>()
 				.WhenInjectedExactlyInto<DeclarationModeCompletedBusRunDataFactory.PEV_E_IEPC>();
+			Bind<IGenericCompletedBusDeclarationDataAdapter>()
+				.To<DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.Exempted>()
+				.WhenInjectedExactlyInto<DeclarationModeCompletedBusRunDataFactory.Exempted>();
+			#endregion
 
-            #endregion
-
-            #region CompletedBus Specific
-            Bind<ISpecificCompletedBusDeclarationDataAdapter>()
+			#region CompletedBus Specific
+			Bind<ISpecificCompletedBusDeclarationDataAdapter>()
 			    .To<DeclarationDataAdapterSpecificCompletedBus.Conventional>()
 			    .WhenInjectedExactlyInto<DeclarationModeCompletedBusRunDataFactory.Conventional>();
 
@@ -202,7 +204,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
             Bind<ISpecificCompletedBusDeclarationDataAdapter>()
                 .To<DeclarationDataAdapterSpecificCompletedBus.HEV_S_IEPC>()
-                .WhenInjectedExactlyInto<DeclarationModeCompletedBusRunDataFactory.HEV_S4>();
+                .WhenInjectedExactlyInto<DeclarationModeCompletedBusRunDataFactory.HEV_S_IEPC>();
 
             Bind<ISpecificCompletedBusDeclarationDataAdapter>()
                 .To<DeclarationDataAdapterSpecificCompletedBus.HEV_P1>()
@@ -238,6 +240,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
             Bind<ISpecificCompletedBusDeclarationDataAdapter>()
                 .To<DeclarationDataAdapterSpecificCompletedBus.PEV_E_IEPC>()
                 .WhenInjectedExactlyInto<DeclarationModeCompletedBusRunDataFactory.PEV_E_IEPC>();
+			Bind<ISpecificCompletedBusDeclarationDataAdapter>()
+				.To<DeclarationDataAdapterSpecificCompletedBus.Exempted>()
+				.WhenInjectedExactlyInto<DeclarationModeCompletedBusRunDataFactory.Exempted>();
 			#endregion
 
 			#region SingleBus
@@ -273,65 +278,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				.WhenInjectedExactlyInto<DeclarationModeSingleBusRunDataFactory.PEV_E_IEPC>();
 			#endregion
 
-			#region Factory
-
-			//Bind<IDeclarationDataAdapterFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(
-			//	new CombineArgumentsToNameInstanceProvider.MethodSettings() {
-			//		combineToNameDelegate = _vehicleStringHelper.CreateName,
-			//		methods = new[] {
-			//			typeof(IDeclarationDataAdapterFactory).GetMethod(nameof(IDeclarationDataAdapterFactory
-			//				.CreateDataAdapter))
-			//		},
-			//		skipArguments = 1,
-			//		takeArguments = 1,
-			//	})).InSingletonScope();
-
-			//Bind<IDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.Conventional>().Named(
-			//	_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.ConventionalVehicle,
-			//		ArchitectureID.UNKNOWN));
-			//Bind<IDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.HEV_S2>().Named(
-			//	_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.SerialHybridVehicle,
-			//		ArchitectureID.S2));
-			//Bind<IDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.HEV_S3>().Named(
-			//	_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.SerialHybridVehicle,
-			//		ArchitectureID.S3));
-			//Bind<IDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.HEV_S4>().Named(
-			//	_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.SerialHybridVehicle,
-			//		ArchitectureID.S4));
-			//Bind<IDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.HEV_S_IEPC>().Named(
-			//	_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.SerialHybridVehicle,
-			//		ArchitectureID.S_IEPC));
-			//Bind<IDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.HEV_P1>().Named(
-			//	_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.ParallelHybridVehicle,
-			//		ArchitectureID.P1));
-			//Bind<IDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.HEV_P2>().Named(
-			//	_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.ParallelHybridVehicle,
-			//		ArchitectureID.P2));
-			//Bind<IDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.HEV_P2_5>().Named(
-			//	_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.ParallelHybridVehicle,
-			//		ArchitectureID.P2_5));
-			//Bind<IDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.HEV_P3>().Named(
-			//	_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.ParallelHybridVehicle,
-			//		ArchitectureID.P3));
-			//Bind<IDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.HEV_P4>().Named(
-			//	_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.ParallelHybridVehicle,
-			//		ArchitectureID.P4));
-			//Bind<IDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.PEV_E2>().Named(
-			//	_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.BatteryElectricVehicle,
-			//		ArchitectureID.E2));
-			//Bind<IDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.PEV_E3>().Named(
-			//	_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.BatteryElectricVehicle,
-			//		ArchitectureID.E3));
-			//Bind<IDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.PEV_E4>().Named(
-			//	_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.BatteryElectricVehicle,
-			//		ArchitectureID.E4));
-			//Bind<IDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.PEV_E_IEPC>().Named(
-			//	_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.BatteryElectricVehicle,
-			//		ArchitectureID.E_IEPC));
-
-
-
-			#endregion
 		}
 
 		#endregion

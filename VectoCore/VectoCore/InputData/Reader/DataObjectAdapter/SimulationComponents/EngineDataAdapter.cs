@@ -204,16 +204,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			retVal.EngineStartTime = DeclarationData.Engine.DefaultEngineStartTime;
 			var limits = vehicle.TorqueLimits?.ToDictionary(e => e.Gear) ??
 						new Dictionary<int, ITorqueLimitInputData>();
-			var numGears = gearbox?.Gears.Count ?? 0;
-			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
+			//var numGears = gearbox?.Gears.Count ?? 0;
+			var gears = GearboxDataAdapterBase.FilterDisabledGears(vehicle.TorqueLimits, gearbox);
+			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(gears.Count + 1);
 			fullLoadCurves[0] = FullLoadCurveReader.Create(mode.FullLoadCurve, true);
 			fullLoadCurves[0].EngineData = retVal;
 			
 			foreach (var gear in gearbox?.Gears ?? new List<ITransmissionInputData>(0))
 			{
 				var maxTorque = VectoMath.Min(
-					GearboxDataAdapterBase.GbxMaxTorque(gear, numGears, fullLoadCurves[0].MaxTorque),
-					VehicleDataAdapter.VehMaxTorque(gear, numGears, limits, fullLoadCurves[0].MaxTorque));
+					GearboxDataAdapterBase.GbxMaxTorque(gear, gears.Count + 1, fullLoadCurves[0].MaxTorque),
+					VehicleDataAdapter.VehMaxTorque(gear, gears.Count + 1, limits, fullLoadCurves[0].MaxTorque));
 				fullLoadCurves[(uint)gear.Gear] = IntersectFullLoadCurves(fullLoadCurves[0], maxTorque);
 			}
 

@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -117,18 +118,22 @@ namespace TUGraz.VectoCore.OutputData
 
 		void Reset(bool clearColumns = false);
 		
+		string GetColumnName(PowertrainPosition pos, ModalResultField mrf);
+
 
 		Second Duration { get; }
 
 		Meter Distance { get; }
 
-		Func<Second, Joule, Joule> AuxHeaterDemandCalc { get; set; }
+		Func<Second, Joule, Joule, HeaterDemandResult> AuxHeaterDemandCalc { get; set; }
 
 		KilogramPerWattSecond EngineLineCorrectionFactor(IFuelProperties fuel);
 		void CalculateAggregateValues();
 		//void AddElectricMotor(PowertrainPosition pos);
 		KilogramPerWattSecond VehicleLineSlope(IFuelProperties fuel);
 		bool HasCombustionEngine { get; }
+		bool HasGearbox { get; }
+		bool HasAxlegear { get; }
 		WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos);
 		WattSecond TotalElectricMotorWorkRecuperate(PowertrainPosition emPos);
 		WattSecond TotalElectricMotorMotWorkDrive(PowertrainPosition emPos);
@@ -161,6 +166,11 @@ namespace TUGraz.VectoCore.OutputData
 		WattSecond WorkWHR { get; }
 		WattSecond WorkBusAuxPSCorr { get; }
 		WattSecond WorkBusAuxESMech { get; }
+		WattSecond WorkBusAuxHeatPumpHeatingElMech { get; }
+		WattSecond WorkBusAuxHeatPumpHeatingMech { get; }
+
+		WattSecond WorkBusAuxElectricHeater { get; }
+
 		WattSecond WorkBusAuxCorr { get; }
 		WattSecond EnergyDCDCMissing { get; }
 		Joule AuxHeaterDemand { get; }
@@ -170,7 +180,8 @@ namespace TUGraz.VectoCore.OutputData
 		KilogramPerMeter KilogramCO2PerMeter { get; }
 		Dictionary<FuelType, IFuelConsumptionCorrection> FuelCorrection { get; }
 		Kilogram CO2Total { get; }
-		Joule EnergyConsumptionTotal { get; }
+		Joule FuelEnergyConsumptionTotal { get; }
+		WattSecond ElectricEnergyConsumption { get; }
 	}
 
 	public interface IFuelConsumptionCorrection
@@ -606,12 +617,17 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static Scalar ICEMaxLoadTimeShare(this IModalDataContainer data)
 		{
-			var sum = data.GetValues(x => new {
+			if (!data.HasCombustionEngine) {
+				return 0.SI<Scalar>();
+			}
+			var tmp = data.GetValues(x => new {
 				tMax = x.Field<NewtonMeter>(ModalResultField.T_ice_full.GetName()).DefaultIfNull(-1),
 				tEng = x.Field<NewtonMeter>(ModalResultField.T_ice_fcmap.GetName()).DefaultIfNull(0),
 				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName()),
-				iceOn =  !(x[ModalResultField.ICEOn.GetName()] is DBNull) && x.Field<bool>(ModalResultField.ICEOn.GetName())
-			}).Where(x => x.iceOn).Sum(x => x.tMax.IsEqual(x.tEng, 5.SI<NewtonMeter>()) ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
+				iceOn = !(x[ModalResultField.ICEOn.GetName()] is DBNull) &&
+						x.Field<bool>(ModalResultField.ICEOn.GetName())
+			});
+			var sum = tmp.Where(x => x.iceOn).Sum(x => x.tMax.IsEqual(x.tEng, 5.SI<NewtonMeter>()) ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
 			return 100 * sum / data.Duration;
 		}
 
@@ -645,6 +661,9 @@ namespace TUGraz.VectoCore.OutputData
 		/// <returns></returns>
 		public static Scalar GearshiftCount(this IModalDataContainer data)
 		{
+			if (!data.HasGearbox) {
+				return 0.SI<Scalar>();
+			}
 			var prevGear = data.GetValues<uint>(ModalResultField.Gear).First();
 			var lastGear = prevGear;
 			var gearCount = 0;
@@ -738,12 +757,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static double REESSStartSoC(this IModalDataContainer data)
 		{
-			return (data.GetValues(x => x.Field<SI>(ModalResultField.REESSStateOfCharge.GetName())).First()?.Value() ?? 0) * 100;
+			return (data.GetValues<SI>(ModalResultField.REESSStateOfCharge).First()?.Value() ?? 0) * 100;
 		}
 
 		public static double REESSEndSoC(this IModalDataContainer data)
 		{
-			return (data.GetValues(x => x.Field<SI>(ModalResultField.REESSStateOfCharge.GetName())).Last()?.Value() ?? 0) * 100;
+			return (data.GetValues<SI>(ModalResultField.REESSStateOfCharge).Last()?.Value() ?? 0) * 100;
 		}
 	}
 }

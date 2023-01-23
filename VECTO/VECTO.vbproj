@@ -81,6 +81,7 @@
 	</Choose>
 
 	<ItemGroup>
+	<ProjectReference Include="..\HashingTool\HashingTool.csproj" />
 	<ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj" />
 	<ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj" />
 	</ItemGroup>

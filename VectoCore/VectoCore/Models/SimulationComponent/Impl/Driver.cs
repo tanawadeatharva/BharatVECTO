@@ -1472,6 +1472,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public MeterPerSecond NextBrakeTriggerSpeed => DriverStrategy.BrakeTrigger?.NextTargetSpeed;
 
-
+		protected override bool DoUpdateFrom(object other) => false;
 	}
 }

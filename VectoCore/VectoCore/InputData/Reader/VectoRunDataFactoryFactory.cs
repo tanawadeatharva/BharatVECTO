@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				//	declDataProvider.JobInputData.Vehicle.ExemptedVehicle, iepc, ihpc, declDataProvider, report);
 			} catch (Exception ex) {
 				throw new Exception(
-					$"Could not create RunDataFactory for Vehicle Category {declDataProvider.JobInputData.Vehicle.VehicleCategory} {declDataProvider.JobInputData.Vehicle.ArchitectureID} {declDataProvider.JobInputData.JobType}", ex);
+					$"Could not create RunDataFactory for Vehicle Category {declDataProvider.JobInputData.Vehicle.VehicleCategory} {declDataProvider.JobInputData.Vehicle.ArchitectureID}", ex);
 			}
 			
 		}

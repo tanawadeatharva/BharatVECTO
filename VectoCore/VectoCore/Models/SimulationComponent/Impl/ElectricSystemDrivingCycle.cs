@@ -132,5 +132,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Data.Finish();
 		}
+
+		protected override bool DoUpdateFrom(object other) => false;
 	}
 }

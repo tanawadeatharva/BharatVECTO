@@ -41,6 +41,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -169,7 +170,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public Meter Distance => _distance ?? (_distance = CalcDistance());
 
-		public Func<Second, Joule, Joule> AuxHeaterDemandCalc { get; set; }
+		public Func<Second, Joule, Joule, HeaterDemandResult> AuxHeaterDemandCalc { get; set; }
 
 		public KilogramPerWattSecond EngineLineCorrectionFactor(IFuelProperties fuel)
 		{
@@ -228,6 +229,11 @@ namespace TUGraz.VectoCore.OutputData
 		}
 
 		public bool HasCombustionEngine => !(_runData.JobType == VectoSimulationJobType.BatteryElectricVehicle || _runData.JobType == VectoSimulationJobType.IEPC_E);
+
+		public bool HasGearbox => _runData.GearboxData != null;
+
+		public bool HasAxlegear => _runData.AxleGearData != null;
+
 
 		public WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos)
 		{
@@ -983,6 +989,11 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
+		public string GetColumnName(PowertrainPosition pos, ModalResultField mrf)
+		{
+			return string.Format(mrf.GetCaption(), pos.GetName());
+		}
+
 		public object this[ModalResultField key, IFuelProperties fuel]
 		{
 			get {
@@ -1003,8 +1014,8 @@ namespace TUGraz.VectoCore.OutputData
 
 		public object this[ModalResultField key, PowertrainPosition pos]
 		{
-			get => CurrentRow[string.Format(key.GetCaption(), pos.GetName())];
-			set => CurrentRow[string.Format(key.GetCaption(), pos.GetName())] = value;
+			get => CurrentRow[GetColumnName(pos, key)];
+			set => CurrentRow[GetColumnName(pos, key)] = value;
 		}
 
 		public object this[ModalResultField key, int? idx]

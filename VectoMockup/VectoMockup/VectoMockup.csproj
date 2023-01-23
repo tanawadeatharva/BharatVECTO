@@ -76,6 +76,7 @@
     <PackageReference Include="Ninject.Extensions.Factory" Version="3.3.3" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj" />
     <ProjectReference Include="..\..\VectoCore\VectoCore\VectoCore.csproj" />
   </ItemGroup>
 

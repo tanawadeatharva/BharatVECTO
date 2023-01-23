@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
@@ -13,6 +14,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class SingleSpeedGearbox : TransmissionComponent, IGearbox
 	{
 		protected GearData GearData;
+
+		public event Action GearShiftTriggered;
 
 		public SingleSpeedGearbox(IVehicleContainer container, GearboxData modelData) : base(container,
 			modelData.Gears.First().Value)
@@ -47,6 +50,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 														CurrentState.OutAngularVelocity) / 2.0;
 			container[ModalResultField.T_IEPC_out] = CurrentState.OutTorque;
 		}
+
+		protected override bool DoUpdateFrom(object other) => false;
 
 		#endregion
 

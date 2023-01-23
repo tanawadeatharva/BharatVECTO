@@ -28,7 +28,7 @@ Namespace UnitTests
 
             Dim auxconfig = Utils.GetAuxTestConfig()
 
-            Dim ssm As SSMTOOL = New SSMTOOL(auxconfig.SSMInputs) _
+            Dim ssm As SSMTOOL = New SSMTOOL(auxconfig.SSMInputsCooling) _
             ', New HVACConstants())
             'CType(CType(ssm.SSMInputs, SSMInputs).Vehicle, VehicleData).Height=  0.SI (Of Meter)
             'ssm.Load(_SSMMAP)
@@ -68,7 +68,7 @@ Namespace UnitTests
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap =alternatorMap
 
             Dim target As IM0_NonSmart_AlternatorsSetEfficiency = New M00Impl(auxConfig.ElectricalUserInputsConfig,
-                                                                              signals,  New SSMTOOL(auxconfig.SSMInputs).ElectricalWAdjusted)
+                                                                              signals,  New SSMTOOL(auxconfig.SSMInputsCooling).ElectricalWAdjusted)
             Assert.IsNotNull(target)
         End Sub
 
@@ -93,7 +93,7 @@ Namespace UnitTests
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage = powernetVoltage
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap = Nothing
 
-            Assert.That(Sub() target = New M00Impl(auxConfig.ElectricalUserInputsConfig, signals, New SSMTOOL(auxconfig.SSMInputs).ElectricalWAdjusted),
+            Assert.That(Sub() target = New M00Impl(auxConfig.ElectricalUserInputsConfig, signals, New SSMTOOL(auxconfig.SSMInputsCooling).ElectricalWAdjusted),
                         Throws.InstanceOf (Of ArgumentException))
         End Sub
 
@@ -111,7 +111,7 @@ Namespace UnitTests
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap =alternatorMap
 
 
-            Dim target As M00Impl = New M00Impl(auxConfig.ElectricalUserInputsConfig, signals, New SSMTOOL(auxconfig.SSMInputs).ElectricalWAdjusted)
+            Dim target As M00Impl = New M00Impl(auxConfig.ElectricalUserInputsConfig, signals, New SSMTOOL(auxconfig.SSMInputsCooling).ElectricalWAdjusted)
 
             Dim actual As Double = target.AlternatorsEfficiency
 
@@ -128,7 +128,7 @@ Namespace UnitTests
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap =alternatorMap
 
 
-            Dim target As IM0_NonSmart_AlternatorsSetEfficiency = New M00Impl(auxConfig.ElectricalUserInputsConfig, signals, New SSMTOOL(auxconfig.SSMInputs).ElectricalWAdjusted)
+            Dim target As IM0_NonSmart_AlternatorsSetEfficiency = New M00Impl(auxConfig.ElectricalUserInputsConfig, signals, New SSMTOOL(auxconfig.SSMInputsCooling).ElectricalWAdjusted)
 
             Dim actual As Ampere
             Dim expected As Single = 0

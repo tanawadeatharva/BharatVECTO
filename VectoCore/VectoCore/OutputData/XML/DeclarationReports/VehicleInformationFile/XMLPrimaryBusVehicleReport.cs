@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));
 		}
 
-		public virtual void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public virtual void Initialize(VectoRunData modelData)
 		{
 			VehiclePart.Add(
 				new XAttribute(xsi + XMLNames.XSIType, "ConventionalVehicleVIFType"),
@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XElement(tns + XMLNames.Vehicle_ZeroEmissionVehicle, modelData.VehicleData.ZeroEmissionVehicle),
 				GetADAS(modelData.VehicleData.ADAS),
 				GetTorqueLimits(modelData),
-				VehicleComponents(modelData, fuelModes)
+				VehicleComponents(modelData)
 			);
 			
 			InputDataIntegrity = new XElement(tns + XMLNames.Report_InputDataSignature,
@@ -193,12 +193,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			);
 		}
 
-		private XElement VehicleComponents(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		private XElement VehicleComponents(VectoRunData modelData)
 		{
 			return new XElement(
 				tns + XMLNames.Vehicle_Components,
 				new XAttribute(xsi + XMLNames.XSIType, "Vehicle_Conventional_ComponentsVIFType"),
-				GetEngineDescription(modelData.EngineData, fuelModes),
+				GetEngineDescription(modelData.EngineData),
 				GetGearboxDescription(modelData.GearboxData),
 				GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
 				GetAngledriveDescription(modelData.AngledriveData),
@@ -434,7 +434,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		}
 
-		private XElement GetEngineDescription(CombustionEngineData engineData, List<List<FuelData.Entry>> fuelModes)
+		private XElement GetEngineDescription(CombustionEngineData engineData)
 		{
 			
 			var fuels = new List<XElement>();
@@ -594,7 +594,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					new XElement(
 						tns + XMLNames.Report_Result_EnergyConsumption,
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/km"),
-						(result.FuelConsumptionFinal[fuel.FuelType].EnergyDemand /
+						(result.FuelConsumptionFinal(fuel.FuelType).EnergyDemand /
 						result.Distance.ConvertToKiloMeter() / 1e6)
 						.Value().ToMinSignificantDigits(5, 5)));
 				retVal.Add(fcResult);

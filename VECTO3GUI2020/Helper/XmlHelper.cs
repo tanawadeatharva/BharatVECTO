@@ -36,7 +36,7 @@ namespace VECTO3GUI2020.Helper
 		}
 
 		public static bool ValidateXDocument(XDocument xDocument, Action<bool> resultAction = null,
-			Action<XmlSeverityType, ValidationEvent> validationErrorAction = null)
+			Action<XmlSeverityType, ValidationEvent, string> validationErrorAction = null)
 		{
 			var xmlDocument = xDocument.ToXmlDocument();
 			if (xmlDocument == null)

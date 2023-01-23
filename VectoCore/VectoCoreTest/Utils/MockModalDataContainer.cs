@@ -38,6 +38,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -232,6 +233,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			}
 		}
 
+		public string GetColumnName(PowertrainPosition pos, ModalResultField mrf)
+		{
+			return string.Format(mrf.GetCaption(), pos.GetName());
+		}
+
 		public void Reset(bool clearColumns = false)
 		{
 			
@@ -241,7 +247,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public Meter Distance => null;
 
-		public Func<Second, Joule, Joule> AuxHeaterDemandCalc { get; set; }
+		public Func<Second, Joule, Joule, HeaterDemandResult> AuxHeaterDemandCalc { get; set; }
 
 		public KilogramPerWattSecond EngineLineCorrectionFactor(IFuelProperties fuel)
 		{
@@ -264,6 +270,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public bool HasCombustionEngine { get; set; }
+		public bool HasGearbox { get; set; }
+
 		public WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos)
 		{
 			throw new NotImplementedException();
@@ -330,6 +338,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public ICorrectedModalData CorrectedModalData { get; }
+		public bool HasAxlegear { get; set; }
+
 		public void RegisterComponent(VectoSimulationComponent component)
 		{
 			

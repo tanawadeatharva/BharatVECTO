@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -85,9 +84,9 @@ namespace TUGraz.VectoMockup.Reports
 
 		#region Overrides of XMLDeclarationReportCompletedVehicle
 
-		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void InitializeReport(VectoRunData modelData)
 		{
-			base.InitializeReport(modelData, fuelModes);
+			base.InitializeReport(modelData);
 			_modelData = modelData;
 		}
 

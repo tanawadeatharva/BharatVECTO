@@ -217,7 +217,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.EngineStartTime = engine.EngineStartTime ?? DeclarationData.Engine.DefaultEngineStartTime;
 			var limits = vehicle.TorqueLimits.ToDictionary(e => e.Gear);
 
-			var gears = FilterDisabledGears(vehicle.TorqueLimits, gbx);
+			var gears = GearboxDataAdapterBase.FilterDisabledGears(vehicle.TorqueLimits, gbx);
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(gears.Count + 1);
 			fullLoadCurves[0] = FullLoadCurveReader.Create(engine.EngineModes.First().FullLoadCurve);
 			fullLoadCurves[0].EngineData = retVal;
@@ -331,7 +331,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				throw new VectoSimulationException("At least two Gear-Entries must be defined in Gearbox!");
 			}
 
-			var gearsInput = FilterDisabledGears(inputData.JobInputData.Vehicle.TorqueLimits, gearbox);
+			var gearsInput = GearboxDataAdapterBase.FilterDisabledGears(inputData.JobInputData.Vehicle.TorqueLimits, gearbox);
 			
 			SetEngineeringData(gearbox, gearshiftData, retVal);
 
@@ -565,7 +565,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		private IAuxiliaryConfig GetBusAuxiliariesData(VehicleData vehicleData, IBusAuxiliariesEngineeringData busAux)
 		{
-			return new AuxiliaryConfig() {
+			var retVal = new AuxiliaryConfig() {
 				//InputData = auxInputData.BusAuxiliariesData,
 				ElectricalUserInputsConfig = new ElectricsUserInputsConfig() {
 					PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
@@ -621,7 +621,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					ParkBrakeAndDoors = 0,
 					CycleTime = 1.SI<Second>()
 				},
-				SSMInputs = new SSMEngineeringInputs() {
+				SSMInputsCooling = new SSMEngineeringInputs() {
 					MechanicalPower = busAux.HVACData.MechanicalPowerDemand,
 					ElectricPower = busAux.HVACData.ElectricalPowerDemand,
 					AuxHeaterPower = busAux.HVACData.AuxHeaterPower,
@@ -633,11 +633,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				},
 				VehicleData = vehicleData,
 			};
+			retVal.SSMInputsHeating = retVal.SSMInputsCooling;
+			return retVal;
 		}
 
 		private IAuxiliaryConfig GetBatteryElectricBusAuxiliariesData(VehicleData vehicleData, IBusAuxiliariesEngineeringData busAux)
 		{
-			return new AuxiliaryConfig() {
+			var retVal = new AuxiliaryConfig() {
 				//InputData = auxInputData.BusAuxiliariesData,
 				ElectricalUserInputsConfig = new ElectricsUserInputsConfig() {
 					PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
@@ -691,7 +693,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					ParkBrakeAndDoors = 0,
 					CycleTime = 1.SI<Second>()
 				},
-				SSMInputs = new SSMEngineeringInputs() {
+				SSMInputsCooling = new SSMEngineeringInputs() {
 					MechanicalPower = 0.SI<Watt>(),
 					ElectricPower = 0.SI<Watt>(),
 					AuxHeaterPower = 0.SI<Watt>(),
@@ -703,6 +705,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				},
 				VehicleData = vehicleData,
 			};
+			retVal.SSMInputsHeating = retVal.SSMInputsCooling;
+			return retVal;
 		}
 
 		

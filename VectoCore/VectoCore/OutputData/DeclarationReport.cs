@@ -39,6 +39,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
 namespace TUGraz.VectoCore.OutputData
@@ -51,32 +52,58 @@ namespace TUGraz.VectoCore.OutputData
 		 * This methodd is called once befor creating the simulation runs with a temporary 
 		 * VectoRunData instance
 		 */
-		void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes);
+		void InitializeReport(VectoRunData modelData);
 
 		/**
 		 * called when creating the simulation run (before starting the simulations)
 		 * Hence, the report class knows which and how many results to expect after the simulation
 		 * (calls to AddResult)
 		 */
-		void PrepareResult(LoadingType loading, Mission mission, int fuelMode, VectoRunData runData);
+		void PrepareResult(VectoRunData runData);
 
 		/**
 		 * called after the simulation run providing the modal data of the simulation 
 		 * for the given configuration
 		 */
-		void AddResult(
-			LoadingType loadingType, Mission mission, int fuelMode, VectoRunData runData, IModalDataContainer modData);
+		void AddResult(VectoRunData runData, IModalDataContainer modData);
 
 	}
 
 	public interface IResultEntry
 	{
+		VectoRun.Status Status { get; }
+
+		VectoRunData.OvcHevMode OVCMode { get; }
 		MissionType Mission { get; set; }
 
 		LoadingType LoadingType { get; set; }
 
 		int FuelMode { get; set; }
 		IList<IFuelProperties> FuelData { get; set; }
+
+		MeterPerSecond AverageSpeed { get; }
+
+		MeterPerSecond AverageDrivingSpeed { get; }
+		MeterPerSecond MaxSpeed { get; }
+		MeterPerSecond MinSpeed { get; }
+		MeterPerSquareSecond MaxDeceleration { get; }
+		MeterPerSquareSecond MaxAcceleration { get; }
+
+		PerSecond EngineSpeedDrivingMin { get; }
+		PerSecond EngineSpeedDrivingAvg { get;}
+		PerSecond EngineSpeedDrivingMax { get; }
+		double AverageGearboxEfficiency { get;  }
+
+		double AverageAxlegearEfficiency { get; }
+		Scalar FullLoadPercentage { get; }
+		Scalar GearshiftCount { get; }
+		Meter Distance { get; }
+
+		IFuelConsumptionCorrection FuelConsumptionFinal(FuelType fuelType);
+
+		WattSecond ElectricEnergyConsumption { get; }
+
+		Kilogram CO2Total { get; }
 		Kilogram Payload { get; set; }
 		Kilogram TotalVehicleMass { get; set; }
 		CubicMeter CargoVolume { get; set; }
@@ -84,8 +111,69 @@ namespace TUGraz.VectoCore.OutputData
 		double? PassengerCount { get; set; }
 		VehicleClass VehicleClass { get; set; }
 
+		double WeightingFactor { get; }
+
+		Meter ActualChargeDepletingRange { get; set; }
+
+		Meter EquivalentAllElectricRange { get; set; }
+
+		Meter ZeroCO2EmissionsRange { get; set; }
+
+		IFuelProperties AuxHeaterFuel { get; set; }
+		Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
+		Kilogram ZEV_CO2 { get; set; }
+
 		void SetResultData(VectoRunData runData, IModalDataContainer data, double weightingFactor);
+
+		string Error { get; }
+
+		string StackTrace { get; }
 	}
+
+	public interface IWeightedResult
+	{
+		MeterPerSecond AverageSpeed { get; }
+
+		MeterPerSecond AverageDrivingSpeed { get; }
+
+		Meter Distance { get; }
+
+		Kilogram Payload { get; }
+
+		CubicMeter CargoVolume { get; }
+
+		double? PassengerCount { get; }
+
+		IDictionary<IFuelProperties, Kilogram> FuelConsumption { get; }
+
+		WattSecond ElectricEnergyConsumption { get; }
+
+		Kilogram CO2Total { get; }
+
+		Meter ActualChargeDepletingRange { get; }
+
+		Meter EquivalentAllElectricRange { get; }
+
+		Meter ZeroCO2EmissionsRange { get; }
+
+		double UtilityFactor { get; }
+
+		IFuelProperties AuxHeaterFuel { get; set; }
+		Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
+		Kilogram ZEV_CO2 { get; set; }
+	}
+
+	public interface IOVCResultEntry 
+	{
+
+		IResultEntry ChargeDepletingResult { get; }
+
+		IResultEntry ChargeSustainingResult { get; }
+
+		IWeightedResult Weighted { get; }
+
+	}
+
 
 	/// <summary>
 	/// Class for creating a declaration report.
@@ -132,7 +220,7 @@ namespace TUGraz.VectoCore.OutputData
 
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
-		public void PrepareResult(LoadingType loading, Mission mission, int fuelMode, VectoRunData runData)
+		public void PrepareResult(VectoRunData runData)
 		{
 			_resultCount++;
 		}
@@ -147,16 +235,15 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		public void AddResult(
-			LoadingType loadingType, Mission mission, int fuelMode, VectoRunData runData,
+		public void AddResult(VectoRunData runData,
 			IModalDataContainer modData)
 		{
-			return;
-			if (mission.MissionType != MissionType.ExemptedMission) {
+			//return;
+			if (runData.Mission.MissionType != MissionType.ExemptedMission) {
 				var entry = new T {
-					Mission = mission.MissionType,
-					LoadingType = loadingType,
-					FuelMode = fuelMode,
+					Mission = runData.Mission.MissionType, // mission.MissionType,
+					LoadingType = runData.Loading, // loadingType,
+					FuelMode = runData.EngineData?.FuelMode ?? 0, // fuelMode,
 					FuelData = runData.EngineData?.Fuels.Select(x => x.FuelData).ToList(),
 					Payload = runData.VehicleData.Loading,
 					TotalVehicleMass = runData.VehicleData.TotalVehicleMass,
@@ -215,6 +302,6 @@ namespace TUGraz.VectoCore.OutputData
 
 		protected abstract void WriteResult(T result);
 
-		public abstract void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes);
+		public abstract void InitializeReport(VectoRunData modelData);
 	}
 }

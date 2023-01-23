@@ -216,6 +216,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 			Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.PEV_E_IEPC>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.CompletedBus, VectoSimulationJobType.IEPC_E,
 					ArchitectureID.E_IEPC));
+			Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.Exempted>().Named(
+				_vehicleStringHelper.GetName(VehicleCategoryHelper.CompletedBus, true));
 			#endregion
 
 			#region SingleBus

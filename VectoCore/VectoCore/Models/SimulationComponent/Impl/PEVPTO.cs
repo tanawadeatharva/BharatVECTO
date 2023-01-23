@@ -130,6 +130,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
+		protected override bool DoUpdateFrom(object other) => false;
+
 		#endregion
 	}
 }
