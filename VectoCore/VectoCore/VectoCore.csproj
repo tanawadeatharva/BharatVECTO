@@ -61,6 +61,7 @@
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_1-Stage_650ccm.acmp" />
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_2-Stage_398ccm.acmp" />
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_3-Cylinder_2-Stage_598ccm.acmp" />
+    <None Remove="Resources\Declaration\VehicleOperation\RealWorldUsageFactors.csv" />
     <None Remove="Resources\MockupCIFResults.xml" />
     <None Remove="Resources\MockupMRFResults.xml" />
     <None Remove="Resources\XSD\VectoDeclarationDefinitions.2.2.1.xsd" />

@@ -111,6 +111,8 @@ namespace TUGraz.VectoCore.OutputData
 		double? PassengerCount { get; set; }
 		VehicleClass VehicleClass { get; set; }
 
+		Watt MaxChargingPower { get; set; }
+
 		double WeightingFactor { get; }
 
 		Meter ActualChargeDepletingRange { get; set; }
@@ -250,7 +252,8 @@ namespace TUGraz.VectoCore.OutputData
 					CargoVolume = runData.VehicleData.CargoVolume,
 					VehicleClass = runData.Mission?.BusParameter?.BusGroup ?? runData.VehicleData.VehicleClass,
 					//runData.VehicleData.VehicleClass,
-					PassengerCount = runData.VehicleData.PassengerCount
+					PassengerCount = runData.VehicleData.PassengerCount,
+					MaxChargingPower = runData.MaxChargingPower,
 				};
 				lock (Results) {
 					Results.Add(entry);

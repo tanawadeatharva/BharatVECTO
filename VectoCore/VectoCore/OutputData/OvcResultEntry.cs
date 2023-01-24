@@ -18,19 +18,13 @@ namespace TUGraz.VectoCore.OutputData
 
 	public class WeightedResult : IWeightedResult
 	{
-		public WeightedResult(IResultEntry cdResult)
-		{
-			ChargeDepletingResult = cdResult;
-		}
-
-		protected IResultEntry ChargeDepletingResult;
 
 		#region Implementation of IWeightedResult
 
-		public Meter Distance => ChargeDepletingResult.Distance;
-		public Kilogram Payload => ChargeDepletingResult.Payload;
-		public CubicMeter CargoVolume => ChargeDepletingResult.CargoVolume;
-		public double? PassengerCount => ChargeDepletingResult.PassengerCount;
+		public Meter Distance  { get; internal set; }
+		public Kilogram Payload { get; internal set; }
+		public CubicMeter CargoVolume { get; internal set; }
+		public double? PassengerCount { get; internal set; }
 		public MeterPerSecond AverageSpeed { get; internal set; }
 		public MeterPerSecond AverageDrivingSpeed { get; internal set; }
 

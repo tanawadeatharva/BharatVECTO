@@ -88,6 +88,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public double? PassengerCount { get; set; }
 			public VehicleClass VehicleClass { get; set; }
+			public Watt MaxChargingPower { get; set; }
 
 			public MeterPerSecond AverageSpeed { get; private set; }
 

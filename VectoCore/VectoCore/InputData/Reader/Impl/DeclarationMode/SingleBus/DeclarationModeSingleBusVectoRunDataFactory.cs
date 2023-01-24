@@ -210,6 +210,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 					SimulationType = SimulationType.DistanceCycle,
 					GearshiftParameters = _gearshiftData,
 					VehicleDesignSpeed = _segment.DesignSpeed,
+					MaxChargingPower = primaryVehicle.MaxChargingPower,
 					//ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy
 				};
 				simulationRunData.EngineData.FuelMode = modeIdx;

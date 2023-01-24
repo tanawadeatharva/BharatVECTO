@@ -92,6 +92,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					ModFileSuffix = (engineModes?.Count > 1 ? $"_EngineMode{modeIdx}_" : "") + loading.Key,
 					VehicleDesignSpeed = segment.DesignSpeed,
 					InputDataHash = InputDataProvider.XMLHash,
+					MaxChargingPower = InputDataProvider.JobInputData.Vehicle.MaxChargingPower,
 				};
 				return simulationRunData;
 			}

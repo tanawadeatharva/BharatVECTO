@@ -122,6 +122,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
                     InputDataHash = DataProvider.MultistageJobInputData.XMLHash,
                     SimulationType = SimulationType.DistanceCycle,
                     VehicleDesignSpeed = _segmentCompletedBus.DesignSpeed,
+                    MaxChargingPower = PrimaryVehicle.MaxChargingPower,
                     //GearshiftParameters = _gearshiftData,
                 };
                 simulationRunData.EngineData.FuelMode = 0;
@@ -170,6 +171,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
                     InputDataHash = DataProvider.MultistageJobInputData.XMLHash,// right hash?!?
                     SimulationType = SimulationType.DistanceCycle,
                     VehicleDesignSpeed = _segmentCompletedBus.DesignSpeed,
+                    MaxChargingPower = PrimaryVehicle.MaxChargingPower,
                     //GearshiftParameters = _gearshiftData,
                 };
                 simulationRunData.EngineData.FuelMode = 0;
