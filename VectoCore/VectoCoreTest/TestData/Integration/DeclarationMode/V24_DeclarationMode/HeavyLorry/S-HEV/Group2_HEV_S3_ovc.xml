@@ -26,6 +26,7 @@
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>S3</ArchitectureID>
 		<OvcHev>true</OvcHev>
+		<MaxChargingPower>15000</MaxChargingPower>
 		<ADAS xsi:type="ADAS_HEV_Type">
 			<EngineStopStart>true</EngineStopStart>
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
