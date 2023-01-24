@@ -147,10 +147,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			protected override VectoRunData GetPowertrainConfigForReportInit()
 			{
 				var vehicle = InputDataProvider.JobInputData.Vehicle;
-				return _segment.Missions.Select(
-						mission => CreateVectoRunData(
-							vehicle, mission, mission.Loadings.First(), 0))
-					.FirstOrDefault(x => x != null);
+				return GetNextRun().First(x => x != null);
+				//return _segment.Missions.Select(
+				//		mission => CreateVectoRunData(
+				//			vehicle, mission, mission.Loadings.First(), 0))
+				//	.FirstOrDefault(x => x != null);
 			}
 
 			#endregion

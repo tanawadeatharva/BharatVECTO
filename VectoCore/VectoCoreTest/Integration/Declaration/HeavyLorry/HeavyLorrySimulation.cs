@@ -301,7 +301,7 @@ public class HeavyLorrySimulation
 		SummaryDataContainer sumDataContainer;
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out sumDataContainer);
 
-		if (runs.First().GetContainer().RunData.VehicleData.Ocv) {
+		if (runs.First().GetContainer().RunData.VehicleData.OffVehicleCharging) {
 			Assert.AreEqual(runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting),
 				runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.ChargeSustaining));
 		}
