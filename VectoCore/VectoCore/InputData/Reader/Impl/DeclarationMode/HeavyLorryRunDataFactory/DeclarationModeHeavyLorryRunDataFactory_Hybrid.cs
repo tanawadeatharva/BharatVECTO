@@ -4,6 +4,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
@@ -63,6 +64,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			}
 			
 			#endregion
+
+			protected void CheckMaxChargingPowerPresent(IVehicleDeclarationInputData vehicle)
+			{
+				if (vehicle.OvcHev && vehicle.MaxChargingPower == null) {
+					throw new VectoException($"{XMLNames.Vehicle_MaxChargingPower} must be set for OVC Vehicles");
+				}
+			}
 		}
 
 		public class SerialHybrid : Hybrid
@@ -84,7 +92,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
 			{
 				_segment = GetSegment(InputDataProvider.JobInputData.Vehicle, false);
-
+				CheckMaxChargingPowerPresent(vehicle);
+				
 				var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 				var engineModes = engine.EngineModes;
 				var engineMode = engineModes[modeIdx.Value];
@@ -197,6 +206,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				int? modeIdx = null, VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
 			{
 				_segment = GetSegment(InputDataProvider.JobInputData.Vehicle, false);
+				CheckMaxChargingPowerPresent(vehicle);
 				var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 				var engineModes = engine.EngineModes;
 				var engineMode = engineModes[modeIdx.Value];
