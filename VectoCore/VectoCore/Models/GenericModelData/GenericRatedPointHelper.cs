@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Castle.Core.Internal;
+using System.Data;
+using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.ElectricMotor;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.GenericModelData
@@ -30,34 +32,34 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 
 	public static class GenericRatedPointHelper
 	{
-		struct FullLoadCurveEntry
-		{
-			public PerSecond MotorSpeed { get; }
-			public NewtonMeter TorqueDrive { get; }
-			public NewtonMeter TorqueDrag { get; }
-			public Watt PowerDrive { get; }
+		//struct FullLoadCurveEntry
+		//{
+		//	public PerSecond MotorSpeed { get; }
+		//	public NewtonMeter TorqueDrive { get; }
+		//	public NewtonMeter TorqueDrag { get; }
+		//	public Watt PowerDrive { get; }
 
-			public FullLoadCurveEntry(PerSecond motorSpeed, NewtonMeter torqueDrive, NewtonMeter torqueDrag)
-			{
-				MotorSpeed = motorSpeed;
-				TorqueDrive = torqueDrive;
-				TorqueDrag = torqueDrag;
-				PowerDrive = motorSpeed * torqueDrive * Math.PI / 30000;
-			}
-		}
+		//	public FullLoadCurveEntry(PerSecond motorSpeed, NewtonMeter torqueDrive, NewtonMeter torqueDrag)
+		//	{
+		//		MotorSpeed = motorSpeed;
+		//		TorqueDrive = torqueDrive;
+		//		TorqueDrag = torqueDrag;
+		//		PowerDrive = motorSpeed * torqueDrive * Math.PI / 30000;
+		//	}
+		//}
 
 
-		struct SlopeValueEntry
-		{
-			public double Slope { get; }
-			public double Delta { get; }
+		//struct SlopeValueEntry
+		//{
+		//	public double Slope { get; }
+		//	public double Delta { get; }
 
-			public SlopeValueEntry(double slope, double delta)
-			{
-				Slope = slope;
-				Delta = delta;
-			}
-		}
+		//	public SlopeValueEntry(double slope, double delta)
+		//	{
+		//		Slope = slope;
+		//		Delta = delta;
+		//	}
+		//}
 
 
 		#region Constants
@@ -68,29 +70,40 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 
 		#endregion
 
-		private static List<FullLoadCurveEntry> fullLoadCurveEntries;
-		private static List<SlopeValueEntry> slopeValueEntries;
+		//private static List<FullLoadCurveEntry> fullLoadCurveEntries;
+		//private static List<SlopeValueEntry> slopeValueEntries;
 		
 
 		public static RatedPoint GetRatedPointOfFullLoadCurveAtEM(TableData fullLoadCurve)
 		{
-			SetCurveValues(fullLoadCurve);
-			var ratedIndex = FindRowOfRatedPoint();
-			var n = fullLoadCurveEntries[ratedIndex].MotorSpeed;
-			var tDrive = GetHighestTorque();
+            var n = ElectricMotorRatedSpeedHelper.GetRatedSpeed(fullLoadCurve.AsEnumerable(),
+                row => row.ParseDouble(MotorSpeedColumn).SI<PerSecond>(), row => row.ParseDouble(TorqueDriveColumn).SI<NewtonMeter>());
 
-			return new RatedPoint (n, tDrive);
-		}
+            var tDrive = fullLoadCurve.AsEnumerable()
+                .Max(row => row.ParseDouble(TorqueDriveColumn).SI<NewtonMeter>());
+
+            return new RatedPoint(n, tDrive);
+
+            //SetCurveValues(fullLoadCurve);
+            //var ratedIndex = FindRowOfRatedPoint();
+            //var n = fullLoadCurveEntries[ratedIndex].MotorSpeed;
+            //var tDrive = GetHighestTorque();
+
+            //return new RatedPoint(n, tDrive);
+        }
 
 		public static RatedPoint GetRatedPointOfFullLoadCurveAtIEPC(TableData fullLoadCurve,
 			double axleRatio, double gearRatio,
 			double gearEfficiency, double axleEfficiency)
 		{
 
-			SetCurveValues(fullLoadCurve);
-			var ratedIndex = FindRowOfRatedPoint();
-			var n = fullLoadCurveEntries[ratedIndex].MotorSpeed;
-			var tDrive = GetHighestTorque();
+			var n = ElectricMotorRatedSpeedHelper.GetRatedSpeed(fullLoadCurve.AsEnumerable(),
+				row => row.ParseDouble(MotorSpeedColumn).SI<PerSecond>(), row => row.ParseDouble(TorqueDriveColumn).SI<NewtonMeter>());
+			var tDrive = fullLoadCurve.AsEnumerable().Max(row => row.ParseDouble(TorqueDriveColumn).SI<NewtonMeter>());
+			//SetCurveValues(fullLoadCurve);
+			//var ratedIndex = FindRowOfRatedPoint();
+			
+
 
 			var nRated = GetNRatedAtIEPC(n, axleRatio, gearRatio);
 			var tRated = GetTRatedAtIEPC(tDrive, gearRatio, gearEfficiency, axleRatio, axleEfficiency);
@@ -98,59 +111,59 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 			return new RatedPoint(nRated, tRated);
 		}
 
-		private static void SetCurveValues(TableData fullLoadCurve)
-		{
-			fullLoadCurveEntries = new List<FullLoadCurveEntry>();
-			slopeValueEntries = new List<SlopeValueEntry>();
+		//private static void SetCurveValues(TableData fullLoadCurve)
+		//{
+		//	fullLoadCurveEntries = new List<FullLoadCurveEntry>();
+		//	slopeValueEntries = new List<SlopeValueEntry>();
 
-			for (int r = 0; r < fullLoadCurve.Rows.Count; r++) {
+		//	for (int r = 0; r < fullLoadCurve.Rows.Count; r++) {
 
-				var motorSpeed = fullLoadCurve.Rows[r].ParseDouble(MotorSpeedColumn).SI<PerSecond>();
-				var torqueDrive = fullLoadCurve.Rows[r].ParseDouble(TorqueDriveColumn).SI<NewtonMeter>();
-				var torqueDrag = fullLoadCurve.Rows[r].ParseDouble(TorqueDragColumn).SI<NewtonMeter>();
+		//		var motorSpeed = fullLoadCurve.Rows[r].ParseDouble(MotorSpeedColumn).SI<PerSecond>();
+		//		var torqueDrive = fullLoadCurve.Rows[r].ParseDouble(TorqueDriveColumn).SI<NewtonMeter>();
+		//		var torqueDrag = fullLoadCurve.Rows[r].ParseDouble(TorqueDragColumn).SI<NewtonMeter>();
 
-				fullLoadCurveEntries.Add(new FullLoadCurveEntry(motorSpeed, torqueDrive, torqueDrag));
+		//		fullLoadCurveEntries.Add(new FullLoadCurveEntry(motorSpeed, torqueDrive, torqueDrag));
 
-				if (r == 0)
-					continue;
+		//		if (r == 0)
+		//			continue;
 				
-				var slopeValue = (fullLoadCurveEntries[r].PowerDrive.Value() - fullLoadCurveEntries[r - 1].PowerDrive.Value()) /
-								 (fullLoadCurveEntries[r].MotorSpeed.Value() - fullLoadCurveEntries[r - 1].MotorSpeed.Value());
+		//		var slopeValue = (fullLoadCurveEntries[r].PowerDrive.Value() - fullLoadCurveEntries[r - 1].PowerDrive.Value()) /
+		//						 (fullLoadCurveEntries[r].MotorSpeed.Value() - fullLoadCurveEntries[r - 1].MotorSpeed.Value());
 
-				var deltaValue = slopeValue / (slopeValueEntries.IsNullOrEmpty() ? slopeValue  : slopeValueEntries[0].Slope ) -1;
+		//		var deltaValue = slopeValue / ((slopeValueEntries.Count == 0) ? slopeValue  : slopeValueEntries[0].Slope ) -1;
 
-				slopeValueEntries.Add(new SlopeValueEntry(slopeValue, deltaValue));
-			}
-		}
+		//		slopeValueEntries.Add(new SlopeValueEntry(slopeValue, deltaValue));
+		//	}
+		//}
 		
 
-		private static NewtonMeter GetHighestTorque()
-		{
-			var value = double.MinValue;
+		//private static NewtonMeter GetHighestTorque()
+		//{
+		//	var value = double.MinValue;
 
-			foreach (var entry in fullLoadCurveEntries)
-			{
-				var currentValue = entry.TorqueDrive.Value();
-				if (value < currentValue)
-					value = currentValue;
-			}
+		//	foreach (var entry in fullLoadCurveEntries)
+		//	{
+		//		var currentValue = entry.TorqueDrive.Value();
+		//		if (value < currentValue)
+		//			value = currentValue;
+		//	}
 
-			return value.SI<NewtonMeter>();
-		}
+		//	return value.SI<NewtonMeter>();
+		//}
 
 
-		private static int FindRowOfRatedPoint()
-		{
-			for (int i = 0; i < slopeValueEntries.Count; i++)
-			{
-				var deltaValue = slopeValueEntries[i].Delta;
+		//private static int FindRowOfRatedPoint()
+		//{
+		//	for (int i = 0; i < slopeValueEntries.Count; i++)
+		//	{
+		//		var deltaValue = slopeValueEntries[i].Delta;
 
-				if (Math.Abs(deltaValue) > 0.2)
-					return i;
-			}
+		//		if (Math.Abs(deltaValue) > 0.2)
+		//			return i;
+		//	}
 
-			return -1;
-		}
+		//	return -1;
+		//}
 
 
 		private static PerSecond GetNRatedAtIEPC(PerSecond n, double axleRatio, double gearRatio)
