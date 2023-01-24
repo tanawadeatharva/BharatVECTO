@@ -525,6 +525,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override bool DoUpdateFrom(object other) {
 			if (other is Gearbox g) {
 				PreviousState = g.PreviousState.Clone();
+				LastShift = g.LastShift;
 				return true;
 			}
 			return false;
