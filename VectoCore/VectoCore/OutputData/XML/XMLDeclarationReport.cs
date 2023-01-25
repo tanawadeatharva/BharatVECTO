@@ -74,6 +74,21 @@ namespace TUGraz.VectoCore.OutputData.XML
 				Distance = double.MaxValue.SI<Meter>();
 			}
 
+			public void Initialize(VectoRunData runData)
+			{
+				Mission = runData.Mission.MissionType;
+				LoadingType = runData.Loading;
+				FuelMode = runData.EngineData?.FuelMode ?? 0;
+				FuelData = runData.EngineData?.Fuels.Select(x => x.FuelData).ToList();
+				Payload = runData.VehicleData.Loading;
+				TotalVehicleMass = runData.VehicleData.TotalVehicleMass;
+				CargoVolume = runData.VehicleData.CargoVolume;
+				VehicleClass = runData.Mission?.BusParameter?.BusGroup ?? runData.VehicleData.VehicleClass;
+				PassengerCount = runData.VehicleData.PassengerCount;
+				MaxChargingPower = runData.MaxChargingPower;
+				UseableBatteryCapacity = runData.BatteryData?.UseableStoredEnergy;
+			}
+
 			public MissionType Mission { get; set; }
 			public LoadingType LoadingType { get; set; }
 			public int FuelMode { get; set; }
@@ -123,9 +138,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public string Error { get; private set; }
 
+
 			public VectoRun.Status Status { get; private set; }
 
 			public string StackTrace { get; private set; }
+			public WattSecond UseableBatteryCapacity { get; private set; }
 
 			public PerSecond EngineSpeedDrivingMin { get; private set; }
 			public PerSecond EngineSpeedDrivingAvg { get; private set; }
@@ -196,7 +213,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 				if (runData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
 						VectoSimulationJobType.IEPC_E)) {
-					DeclarationData.SetElectricRangesPEV(this, runData, data);
+					var ranges = DeclarationData.SetElectricRangesPEV(runData, data);
+					ActualChargeDepletingRange = ranges.ActualChargeDepletingRange;
+					EquivalentAllElectricRange = ranges.EquivalentAllElectricRange;
+					ZeroCO2EmissionsRange = ranges.ZeroCO2EmissionsRange;
 				}
 
 				if (data.HasGearbox) {
