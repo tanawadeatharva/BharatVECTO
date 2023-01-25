@@ -46,6 +46,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 
@@ -86,7 +87,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				VehicleClass = runData.Mission?.BusParameter?.BusGroup ?? runData.VehicleData.VehicleClass;
 				PassengerCount = runData.VehicleData.PassengerCount;
 				MaxChargingPower = runData.MaxChargingPower;
-				UseableBatteryCapacity = runData.BatteryData?.UseableStoredEnergy;
+				BatteryData = runData.BatteryData;
 			}
 
 			public MissionType Mission { get; set; }
@@ -142,7 +143,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			public VectoRun.Status Status { get; private set; }
 
 			public string StackTrace { get; private set; }
-			public WattSecond UseableBatteryCapacity { get; private set; }
+			public BatterySystemData BatteryData { get; private set; }
 
 			public PerSecond EngineSpeedDrivingMin { get; private set; }
 			public PerSecond EngineSpeedDrivingAvg { get; private set; }

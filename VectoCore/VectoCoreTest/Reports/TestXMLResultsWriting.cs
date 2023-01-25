@@ -14,10 +14,12 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
@@ -135,7 +137,6 @@ public class TestXMLResultsWriting
 		WriteToFile("CIF", doc, runData, success, exempted);
 	}
 
-	
 
 	[
 		TestCase(VectoSimulationJobType.ConventionalVehicle, false, false, true, TestName = "CIF_ReportResult_WritingResults: CompletedBus Conv SUCCESS"),
@@ -422,6 +423,42 @@ public class TestXMLResultsWriting
 		WriteToFile("VIF", doc, runData, success, exempted);
 	}
 
+	// ---------
+
+	[TestCase()]
+	public void TestCalculateOVCWeightedResult(params FuelType[] fuels)
+	{
+		var jobType = VectoSimulationJobType.ParallelHybridVehicle;
+		var vehicleCategory = VehicleCategory.RigidTruck;
+		var ovcmode = VectoRunData.OvcHevMode.ChargeDepleting;
+		var runData = GetMockRunData(vehicleCategory, jobType, true, false, ovcmode, fuels);
+		var modData = GetMockModData(VectoRun.Status.Success, fuels, ovcmode);
+
+		var cdResult = GetResultEntry(runData);
+		cdResult.SetResultData(runData, modData, 1);
+
+		var run2 = GetMockRunData(vehicleCategory, jobType, true, false, VectoRunData.OvcHevMode.ChargeSustaining, fuels);
+		var modData2 = GetMockModData(VectoRun.Status.Success, fuels, VectoRunData.OvcHevMode.ChargeSustaining);
+		var csResult = GetResultEntry(run2);
+		csResult.SetResultData(run2, modData2, 1);
+
+		var weighted = DeclarationData.CalculateWeightedResult(cdResult, csResult);
+
+		Console.WriteLine($"{weighted.ActualChargeDepletingRange.Value().ToXMLFormat(3)} {weighted.EquivalentAllElectricRange.Value().ToXMLFormat(3)} {weighted.ZeroCO2EmissionsRange.Value().ToXMLFormat(3)} {weighted.UtilityFactor.ToXMLFormat(3)}" +
+						$" {weighted.ElectricEnergyConsumption.Value().ToXMLFormat(3)} {weighted.FuelConsumption[FuelData.Diesel].Value().ToXMLFormat(3)} {weighted.CO2Total.Value().ToXMLFormat(3)}");
+
+		//1518.750 1366.875 1366.875 0.004 797877.345 30.890 20.000
+
+		Assert.AreEqual(1518.750, weighted.ActualChargeDepletingRange.Value(), 1e-3);
+		Assert.AreEqual(1366.875, weighted.EquivalentAllElectricRange.Value(), 1e-3);
+		Assert.AreEqual(1366.875, weighted.ZeroCO2EmissionsRange.Value(), 1e-3);
+		Assert.AreEqual(0.004, weighted.UtilityFactor, 1e-3);
+		Assert.AreEqual(797877.345, weighted.ElectricEnergyConsumption.Value(), 1e-3);
+		Assert.AreEqual(30.890, weighted.FuelConsumption[FuelData.Diesel].Value(), 1e-3);
+		Assert.AreEqual(20.000, weighted.CO2Total.Value(), 1e-3);
+
+	}
+
 	// ===================================
 
 	private static void WriteToConsole(XDocument doc)
@@ -485,17 +522,8 @@ public class TestXMLResultsWriting
 
 	private static XMLDeclarationReport.ResultEntry GetResultEntry(VectoRunData runData)
 	{
-		var resultEntry = new XMLDeclarationReport.ResultEntry() {
-			Mission = runData.Mission.MissionType,
-			LoadingType = runData.Loading,
-			FuelMode = runData.EngineData?.FuelMode ?? 0,
-			FuelData = runData.EngineData?.Fuels.Select(x => x.FuelData).ToList(),
-			Payload = runData.VehicleData.Loading,
-			TotalVehicleMass = runData.VehicleData.TotalVehicleMass,
-			CargoVolume = runData.VehicleData.CargoVolume,
-			VehicleClass = runData.VehicleData.VehicleClass,
-			PassengerCount = runData.VehicleData.PassengerCount,
-		};
+		var resultEntry = new XMLDeclarationReport.ResultEntry();
+		resultEntry.Initialize(runData);
 		return resultEntry;
 	}
 
@@ -523,7 +551,7 @@ public class TestXMLResultsWriting
 		return doc;
 	}
 
-	private IModalDataContainer GetMockModData(VectoRun.Status runStatus, FuelType[] fuelTypes)
+	private IModalDataContainer GetMockModData(VectoRun.Status runStatus, FuelType[] fuelTypes, VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
 	{
 		var fuels = fuelTypes == null || fuelTypes.Length == 0 ? new[] { FuelType.DieselCI } : fuelTypes;
 
@@ -551,21 +579,22 @@ public class TestXMLResultsWriting
 		modData.Setup(x => x.CorrectedModalData).Returns(mc.Object);
 
 		var fcCorrected = new Dictionary<FuelType, IFuelConsumptionCorrection>();
+		var ovcFactor = ovcMode == VectoRunData.OvcHevMode.ChargeDepleting ? 0.1 : 1.0;
 		foreach (var fuelType in fuels) {
 			var factor = fcCorrected.Count == 0 ? 1 : 0.1;
 			var fc = new Mock<IFuelConsumptionCorrection>();
 			fc.Setup(x => x.Fuel).Returns(DeclarationData.FuelData.Lookup(fuelType, TankSystem.Liquefied));
-			fc.Setup(x => x.TotalFuelConsumptionCorrected).Returns(31.SI<Kilogram>() * factor);
-			fc.Setup(x => x.EnergyDemand).Returns(31.SI<Kilogram>() * factor * FuelData.Diesel.LowerHeatingValueVecto);
+			fc.Setup(x => x.TotalFuelConsumptionCorrected).Returns(31.SI<Kilogram>() * factor * ovcFactor);
+			fc.Setup(x => x.EnergyDemand).Returns(31.SI<Kilogram>() * factor * ovcFactor * FuelData.Diesel.LowerHeatingValueVecto);
 			fcCorrected.Add(fuelType, fc.Object);
 		}
 		mc.Setup(x => x.FuelCorrection).Returns(fcCorrected);
 
 		mc.Setup(x => x.CO2Total).Returns(20.SI<Kilogram>());
 		mc.Setup(x => x.FuelEnergyConsumptionTotal).Returns(1e9.SI<Joule>());
-		mc.Setup(x => x.ElectricEnergyConsumption).Returns(200.SI(Unit.SI.Mega.Joule).Cast<WattSecond>());
 
-
+		var elOvcFactor = ovcMode == VectoRunData.OvcHevMode.ChargeSustaining ? 0 : 1.0;
+		mc.Setup(x => x.ElectricEnergyConsumption).Returns(200.SI(Unit.SI.Mega.Joule).Cast<WattSecond>() * elOvcFactor);
 
 		return modData.Object;
 	}
@@ -582,6 +611,7 @@ public class TestXMLResultsWriting
 			Exempted = exempted,
 			JobType = jobType,
 			Loading = LoadingType.LowLoading,
+			MaxChargingPower = 250.SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
 			VehicleData = new VehicleData() {
 				CurbMass = 7600.SI<Kilogram>(),
 				Loading = 5000.SI<Kilogram>(),
@@ -589,7 +619,7 @@ public class TestXMLResultsWriting
 				PassengerCount = 20,
 				VehicleClass = VehicleClass.Class5,
 				VehicleCategory = vehicleCategory,
-				OffVehicleCharging = offVehicleCharging
+				OffVehicleCharging = offVehicleCharging,
 			},
 			EngineData = new CombustionEngineData() {
 				FuelMode = 0,
@@ -599,6 +629,21 @@ public class TestXMLResultsWriting
 			Retarder = new RetarderData() {
 				Type = RetarderType.None,
 			},
+			BatteryData = new BatterySystemData() {
+				Batteries = new List<Tuple<int, BatteryData>>() {
+					Tuple.Create(1, new BatteryData() {
+						BatteryId = 0,
+						Capacity = 7.5.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(),
+						ChargeSustainingBattery = true,
+						MinSOC = 0.2,
+						MaxSOC = 0.8,
+						SOCMap = BatterySOCReader.Create("SoC, V\n0, 600\n100, 650\n".ToStream()),
+						InternalResistance = BatteryInternalResistanceReader.Create("SoC, Ri-2, Ri-10, Ri-20\n0, 20, 20, 20\n100, 20, 20, 20\n".ToStream(), true),
+						MaxCurrent = BatteryMaxCurrentReader.Create("SoC, I_charge, I_discharge\n0, 300, 300\n100, 500, 500\n".ToStream())
+						
+					})
+				}
+			}
 		};
 	}
 }

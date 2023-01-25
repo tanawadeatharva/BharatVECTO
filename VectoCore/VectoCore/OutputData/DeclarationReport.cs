@@ -40,6 +40,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
 namespace TUGraz.VectoCore.OutputData
@@ -133,7 +134,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		string StackTrace { get; }
 
-		WattSecond UseableBatteryCapacity { get; }
+		BatterySystemData BatteryData { get; }
 	}
 
 	public interface IWeightedResult
