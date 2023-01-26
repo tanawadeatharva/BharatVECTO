@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			aux.AddConstant("STP",
 				DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, hdvClass,
 					new[] { "Variable displacement mech. controlled" }).mechanicalPumps);
-			aux.AddConstant("ES", DeclarationData.ElectricSystem.Lookup(mission).PowerDemand);
+			aux.AddConstant("ES", DeclarationData.ElectricSystem.Lookup(hdvClass, mission).PowerDemand);
 			aux.AddConstant("AC",
 				DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, "Default", hdvClass).PowerDemand);
 

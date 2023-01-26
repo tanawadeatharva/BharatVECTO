@@ -4,17 +4,15 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
+namespace TUGraz.VectoCore.InputData.Reader.ComponentData
+{
 
-	public class ElectricMotorMapReader
+    public class ElectricMotorMapReader
 	{
 		public static EfficiencyMap Create(Stream data, int count)
 		{
@@ -66,6 +64,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 			delaunayMap.Triangulate();
 			return retVal;
 		}
+
+		
 
 		private static List<EfficiencyMap.Entry> GetEntriesAtZeroRpm(List<EfficiencyMap.Entry> entries)
 		{
@@ -138,7 +138,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 			return new EfficiencyMap.Entry(
 				speed: row.ParseDouble(Fields.MotorSpeed).RPMtoRad(),
 				torque: row.ParseDouble(Fields.Torque).SI<NewtonMeter>(),
-				powerElectrical: row.ParseDouble(Fields.PowerElectrical).SI(Unit.SI.Kilo.Watt).Cast<Watt>());
+				//powerElectrical: row.ParseDouble(Fields.PowerElectrical).SI(Unit.SI.Kilo.Watt).Cast<Watt>());
+				powerElectrical: row.ParseDouble(Fields.PowerElectrical).SI<Watt>());
 		}
 
 

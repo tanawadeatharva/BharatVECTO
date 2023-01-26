@@ -29,16 +29,35 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[
-		TestCase(0.5, 0.5, -500, 0.499985523),
-		TestCase(0.5, 1, -14000, 0.499175514),
-		TestCase(0.5, 1, 7000, 0.5004016980),
-		TestCase(0.35, 0.5, -200, 0.349994175),
-		TestCase(0.35, 0.5, -16000, 0.3495245545),
-		TestCase(0.75, 0.5, -300, 0.7499913702),
-		TestCase(0.75, 0.5, -14500, 0.7495755113),
-			]
+        [TestCase(0.2, 0.8, 2.8725),
+		TestCase(0.25, 0.75, 2.395125),
+		TestCase(0.42, 0.64, 1.05564)]
+		public void BatteryUseableEnergyTest(double minSoc, double maxSoc, double expectedEnergy)
+		{
+			var inputData = JSONInputDataFactory.ReadREESSData(componentFile, false);
+			Assert.NotNull(inputData);
 
+			var dao = new EngineeringDataAdapter();
+			var tmp = new MockBatteryInputData() {
+				REESSPack = inputData,
+			};
+			var batteryData = dao.CreateBatteryData(tmp, 0.8);
+			batteryData.Batteries.ForEach(x => x.Item2.MinSOC = minSoc);
+			batteryData.Batteries.ForEach(x => x.Item2.MaxSOC = maxSoc);
+
+			Assert.AreEqual(expectedEnergy, batteryData.UseableStoredEnergy.ConvertToKiloWattHour().Value, 1e-6);
+		}
+
+
+		[
+			TestCase(0.5, 0.5, -500, 0.499985523),
+			TestCase(0.5, 1, -14000, 0.499175514),
+			TestCase(0.5, 1, 7000, 0.5004016980),
+			TestCase(0.35, 0.5, -200, 0.349994175),
+			TestCase(0.35, 0.5, -16000, 0.3495245545),
+			TestCase(0.75, 0.5, -300, 0.7499913702),
+			TestCase(0.75, 0.5, -14500, 0.7495755113),
+		]
 		public void BatteryRequestTest(double initialSoC, double simInterval, double powerDemand, double expectedSoC)
 		{
 			var inputData = JSONInputDataFactory.ReadREESSData(componentFile, false) ;

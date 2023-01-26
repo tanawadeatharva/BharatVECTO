@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 		private static object _kernelLock = new object();
 		private static IKernel _kernel; //Kernel is only used when the SimulatorFactory is created with the Factory Method.
-
+        
 		protected IFollowUpSimulatorFactoryCreator _followUpSimulatorFactoryCreator = null;
 
 		protected bool _simulate = true;
@@ -82,8 +82,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		public bool CreateFollowUpSimulatorFactory { get; set; } = false;
 		protected readonly ExecutionMode _mode;
 
-
-#region Constructors and Factory Methods to instantiate Instances of SimulatorFactory without NInject (should only be used in Testcases that are not updated yet)
+		#region Constructors and Factory Methods to instantiate Instances of SimulatorFactory without NInject (should only be used in Testcases that are not updated yet)
 
 		[Obsolete("Creation of new SimulatorFactories should be done with SimulatorFactoryFactory NInject Factory", false)]
 		public static ISimulatorFactory CreateSimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer, IDeclarationReport declarationReport = null, IVTPReport vtpReport=null, bool validate = true)
@@ -185,7 +184,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 					data, ReportWriter,
 					(_mode == ExecutionMode.Declaration) ? addReportResult : null,
 					GetModDataFilter(data)) {
-					WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults,
+						WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults,
 				};
 
 
@@ -196,7 +195,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 						(ReportWriter as FileOutputWriter)?.BasePath ?? "", $"{data.JobName}_{data.Cycle.Name}{data.ModFileSuffix}.json"),
 					JsonConvert.SerializeObject(data, Formatting.Indented));
 			}
-
 			data.JobNumber = JobNumber;
 			data.RunNumber = current;
 			var run = GetVectoRun(data, modContainer, SumData);
@@ -238,12 +236,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		private static VectoRun GetVectoRun(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
 		{
 			VectoRun run;
+			
 			switch (data.Cycle.CycleType) {
 				case CycleType.DistanceBased:
 					if ((data.SimulationType & SimulationType.DistanceCycle) == 0) {
 						throw new VectoException("Distance-based cycle can not be simulated in {0} mode", data.SimulationType);
 					}
-					run = new DistanceRun(PowertrainBuilder.Build(data, modData, sumWriter));
+
+					var container = PowertrainBuilder.Build(data, modData, sumWriter);
+					
+					run = new DistanceRun(container, new FollowUpRunCreator(data.IterativeRunStrategy)); 
 					break;
 				case CycleType.EngineOnly:
 					if ((data.SimulationType & SimulationType.EngineOnly) == 0) {

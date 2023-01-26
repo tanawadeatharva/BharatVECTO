@@ -139,6 +139,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 							null,
 							new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.ReferenceLoad,
 								Tuple.Create<Kilogram, double?>(0.SI<Kilogram>(), null)), _allowVocational),
+						//MaxChargingPower = InputDataProvider.JobInputData.Vehicle.MaxChargingPower,
 						InputDataHash = InputDataProvider.XMLHash
 					};
 				}
@@ -179,6 +180,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					SimulationType = SimulationType.DistanceCycle,
 					GearshiftParameters = _gearshiftData,
 					JobType = vehicle.VehicleType,
+					MaxChargingPower = vehicle.MaxChargingPower,
 				};
 				simulationRunData.EngineData.FuelMode = modeIdx.Value;
 				simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;

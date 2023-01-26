@@ -27,11 +27,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Battery {
 			}
 		}
 
-        
-    }
+		public WattSecond UseableStoredEnergy
+		{
+			get
+			{
+				return Batteries.Select(x => x.Item1).Distinct().OrderBy(x => x).Aggregate(0.SI<WattSecond>(),
+					(current, s) => current + Batteries.Where(x => x.Item1 == s).Min(x => x.Item2.UseableStoredEnergy));
+			}
+		}
+	}
 
 	public class BatteryData
 	{
+		private WattSecond _useableStoredEnergy;
+
 		[ValidateObject]
 		public SOCMap SOCMap { get; internal set; }
 
@@ -50,6 +59,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Battery {
 		public int BatteryId { get; internal set; }
 		public bool ChargeSustainingBattery { get; internal set; }
 
+		public WattSecond UseableStoredEnergy => _useableStoredEnergy ?? (_useableStoredEnergy = CalculateUsableEnergy());
+
+		protected WattSecond CalculateUsableEnergy()
+		{
+			var retVal = 0.SI<WattSecond>();
+			foreach (var (low, high) in SOCMap.Entries.Pairwise()) {
+				if (low.SOC.IsSmaller(MinSOC) && high.SOC.IsSmaller(MinSOC)) {
+					continue;
+				}
+
+				if (low.SOC.IsGreater(MaxSOC) && high.SOC.IsGreater(MaxSOC)) {
+					continue;
+				}
+
+				var min = VectoMath.Max(MinSOC, low.SOC);
+				var max = VectoMath.Min(MaxSOC, high.SOC);
+				var voltage = SOCMap.Lookup((min + max) / 2.0);
+				retVal += (max - min) * Capacity * voltage;
+			}
+			return retVal;
+		}
 	}
 
 	public class SuperCapData

@@ -400,5 +400,15 @@ namespace TUGraz.VectoCore.Configuration
 
 			public const double RetarderGenericFactor = 1;
 		}
+
+		public static class PowerMapSettings
+		{
+			public const double EfficiencyMapExtrapolationFactor = 1.2f;
+		}
+
+		public static class EMFullLoadCurveSettings
+		{
+			public const double RatedSpeedGradientDelta = 0.2f;
+		}
 	}
 }

@@ -665,7 +665,10 @@ namespace TUGraz.VectoCommon.Utils
 			return SIBase<WattSecondPerMeter>.Create(wattSecond.Val / m.Value());
 		}
 
-		
+		public static Meter operator /(WattSecond wattSecond, WattSecondPerMeter m)
+		{
+			return SIBase<Meter>.Create(wattSecond.Val / m.Value());
+		}
 	}
 
 	public class WattSecondPerMeter : SIBase<WattSecondPerMeter>
@@ -1591,7 +1594,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="val">The value.</param>
 		/// <param name="unitFactor"></param>
 		/// <param name="units">The units.</param>
-		//[DebuggerHidden]
+		[DebuggerHidden]
 		protected SI(double val, double unitFactor, int[] units)
 		{
 			Val = val;

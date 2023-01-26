@@ -86,6 +86,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 				return _retarderDataAdapter.CreateRetarderData(retarderData, position);
 			}
 
+			public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(IIEPCDeclarationInputData iepc, Volt averageVoltage)
+			{
+				throw new NotImplementedException();
+			}
+
 			public DriverData CreateDriverData(Segment segment)
 			{
 				return _driverDataAdapter.CreateDriverData(segment);

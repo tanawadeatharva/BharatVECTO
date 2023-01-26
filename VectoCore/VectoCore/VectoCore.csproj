@@ -39,7 +39,7 @@
 	</PropertyGroup>
 
 	<Choose>
-		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
+		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
 			<ItemGroup>
 				<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
 					<_Parameter1>VectoMockup</_Parameter1>
@@ -61,6 +61,7 @@
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_1-Stage_650ccm.acmp" />
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_2-Stage_398ccm.acmp" />
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_3-Cylinder_2-Stage_598ccm.acmp" />
+    <None Remove="Resources\Declaration\VehicleOperation\RealWorldUsageFactors.csv" />
     <None Remove="Resources\MockupCIFResults.xml" />
     <None Remove="Resources\MockupMRFResults.xml" />
     <None Remove="Resources\XSD\VectoDeclarationDefinitions.2.2.1.xsd" />
@@ -141,11 +142,6 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="InputData\Reader\DataObjectAdapter\CompletedBus\Generic\" />
-    <Folder Include="InputData\Reader\DataObjectAdapter\SimulationComponents\StrategyDataAdapter\" />
-    <Folder Include="Models\SimulationComponent\Impl\Controller\" />
-    <Folder Include="OutputData\XML\DeclarationReports\VehicleInformationFile\VehicleInformationFile_0_1\ResultWriter\" />
-  </ItemGroup>
+  
 
 </Project>

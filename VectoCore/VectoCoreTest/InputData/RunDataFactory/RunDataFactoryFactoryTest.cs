@@ -183,6 +183,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 			CreateRunDataFactory(input, typeof(DeclarationModeHeavyLorryRunDataFactory.HEV_P4), expectedDataAdapter);
 		}
 
+
 		[TestCase()]
 		[TestCase(typeof(DeclarationDataAdapterHeavyLorry.PEV_E2))]
 		public void PEV_E2_HeavyLorryTest(Type expectedDataAdapter = null)
@@ -218,7 +219,6 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 				.PEV(ArchitectureID.E_IEPC)
 				.Lorry();
 			CreateRunDataFactory(input, typeof(DeclarationModeHeavyLorryRunDataFactory.PEV_E_IEPC), expectedDataAdapter);
-
 		}
 
 		[Test]
@@ -637,6 +637,27 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 			var type = arch.ToString().StartsWith("P")
 				? VectoSimulationJobType.ParallelHybridVehicle
 				: VectoSimulationJobType.SerialHybridVehicle;
+
+
+			switch (arch) {
+				case ArchitectureID.P1:
+				case ArchitectureID.P2:
+				case ArchitectureID.P2_5:
+				case ArchitectureID.P3:
+				case ArchitectureID.P4:
+					type = VectoSimulationJobType.ParallelHybridVehicle;
+					break;
+				case ArchitectureID.S2:
+				case ArchitectureID.S3:
+				case ArchitectureID.S4:
+					type = VectoSimulationJobType.SerialHybridVehicle;
+					break;
+				case ArchitectureID.S_IEPC:
+					type = VectoSimulationJobType.IEPC_S;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(arch), arch, null);
+			}
 			mock.Setup(p => p.JobInputData.Vehicle.ArchitectureID).
 				Returns(arch);
 			mock.Setup(p => p.JobInputData.JobType).
@@ -648,6 +669,11 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 
 		internal static Mock<IDeclarationInputDataProvider> PEV(this Mock<IDeclarationInputDataProvider> mock, ArchitectureID arch)
 		{
+			var type = VectoSimulationJobType.BatteryElectricVehicle;
+			if (arch == ArchitectureID.E_IEPC) {
+				type = VectoSimulationJobType.IEPC_E;
+			}
+
 			mock.Setup(p => p.JobInputData.Vehicle.ArchitectureID).
 				Returns(arch);
 			mock.Setup(p => p.JobInputData.JobType).
@@ -655,7 +681,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 				VectoSimulationJobType.BatteryElectricVehicle);
 			mock.Setup(p => p.JobInputData.Vehicle.VehicleType).
 				Returns(
-				VectoSimulationJobType.BatteryElectricVehicle);
+				type);
 			return mock;
 		}
 		internal static Mock<IDeclarationInputDataProvider> Lorry(this Mock<IDeclarationInputDataProvider> mock)

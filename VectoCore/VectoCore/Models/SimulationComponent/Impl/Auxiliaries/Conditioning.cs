@@ -66,24 +66,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
         {
 			switch (dataBus.PowertrainInfo.VehicleArchitecutre) {
 				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.SerialHybridVehicle:
+				case VectoSimulationJobType.IEPC_S:
 					return GetPEV_SHEV_PowerDemand(dataBus);
 				case VectoSimulationJobType.ParallelHybridVehicle:
 					return GetP_HEV_PowerDemand(dataBus);
 				case VectoSimulationJobType.EngineOnlySimulation:
-				case VectoSimulationJobType.IEPC_E:
-				case VectoSimulationJobType.IEPC_S:
 				case VectoSimulationJobType.IHPC:
 				case VectoSimulationJobType.ConventionalVehicle:
 				default:
-					throw new ArgumentOutOfRangeException();
+					throw new ArgumentOutOfRangeException($"{nameof(dataBus)}");
 			}
 		}
 
 		public Watt GetPEV_SHEV_PowerDemand(IDataBus dataBus)
 		{
-			var elInfo = GetElectricMotorInfo(dataBus);
-			if (!elInfo.EmOff || EPTOOn(dataBus)) {
+			var oneEmOn = dataBus.GetElectricMotors().Any(elInfo => !elInfo.EmOff);
+			if (oneEmOn || EPTOOn(dataBus)) {
 				return _electricPowerDemand;
 			} else {
 				return 0.SI<Watt>();
@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
 		{
 			double xFactor = 0;
 
-			var elInfo = GetElectricMotorInfo(dataBus);
+			var elInfo = dataBus.GetElectricMotors().Single();
 			if (!elInfo.EmOff)
 			{
 				var iceInfo = dataBus.EngineInfo;
@@ -105,19 +105,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
 			}
 
 			return _electricPowerDemand * xFactor;
-		}
-
-		private IElectricMotorInfo GetElectricMotorInfo(IDataBus dataBus)
-		{
-			try
-			{
-				return dataBus.ElectricMotorInfo(dataBus.PowertrainInfo.ElectricMotorPositions.Single());
-			}
-			catch (Exception ex)
-			{
-				throw new VectoException("Only one electric motor position supported");
-			}
-
 		}
 	}
 

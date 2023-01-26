@@ -1190,14 +1190,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
 			foreach (var entry in iepc.VoltageLevels.OrderBy(x => x.VoltageLevel)) {
 				var effMap = new Dictionary<uint, EfficiencyMap>();
+				var fldCurve =
+					IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, gearRatioUsedForMeasurement.Ratio);
 				for (var i = 0u; i < entry.PowerMap.Count; i++) {
 					var ratio = iepc.Gears.First(x => x.GearNumber == i + 1).Ratio;
-					effMap.Add(i + 1, IEPCMapReader.Create(entry.PowerMap[(int)i].PowerMap, count, ratio));
+					effMap.Add(i + 1, IEPCMapReader.Create(entry.PowerMap[(int)i].PowerMap, count, ratio, fldCurve));
 					//fullLoadCurves.Add(i + 1, IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, ratio));
 				}
 				voltageLevels.Add(new IEPCVoltageLevelData() {
 					Voltage = entry.VoltageLevel,
-					FullLoadCurve = IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, gearRatioUsedForMeasurement.Ratio),
+					FullLoadCurve = fldCurve,
 					EfficiencyMaps = effMap,
 				});
 			}
@@ -1567,10 +1569,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 	public class IEPCGearboxInputData : IGearboxDeclarationInputData
 	{
-		protected readonly IIEPCEngineeringInputData _iepc;
+		protected readonly IIEPCDeclarationInputData _iepc;
 		private IList<ITransmissionInputData> _gears;
 
-		public IEPCGearboxInputData(IIEPCEngineeringInputData iepc)
+		public IEPCGearboxInputData(IIEPCDeclarationInputData iepc)
 		{
 			_iepc = iepc;
 		}
