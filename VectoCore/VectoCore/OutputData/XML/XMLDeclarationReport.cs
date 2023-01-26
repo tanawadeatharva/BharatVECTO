@@ -214,7 +214,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 				if (runData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
 						VectoSimulationJobType.IEPC_E)) {
-					var ranges = DeclarationData.SetElectricRangesPEV(runData, data);
+					var ranges = DeclarationData.CalculateElectricRangesPEV(runData, data);
 					ActualChargeDepletingRange = ranges.ActualChargeDepletingRange;
 					EquivalentAllElectricRange = ranges.EquivalentAllElectricRange;
 					ZeroCO2EmissionsRange = ranges.ZeroCO2EmissionsRange;

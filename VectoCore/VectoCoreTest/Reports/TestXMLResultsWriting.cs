@@ -447,13 +447,13 @@ public class TestXMLResultsWriting
 		Console.WriteLine($"{weighted.ActualChargeDepletingRange.Value().ToXMLFormat(3)} {weighted.EquivalentAllElectricRange.Value().ToXMLFormat(3)} {weighted.ZeroCO2EmissionsRange.Value().ToXMLFormat(3)} {weighted.UtilityFactor.ToXMLFormat(3)}" +
 						$" {weighted.ElectricEnergyConsumption.Value().ToXMLFormat(3)} {weighted.FuelConsumption[FuelData.Diesel].Value().ToXMLFormat(3)} {weighted.CO2Total.Value().ToXMLFormat(3)}");
 
-		//1518.750 1366.875 1366.875 0.004 797877.345 30.890 20.000
+		//1518.750 1366.875 1366.875 0.004 795230.237 30.890 20.000
 
 		Assert.AreEqual(1518.750, weighted.ActualChargeDepletingRange.Value(), 1e-3);
 		Assert.AreEqual(1366.875, weighted.EquivalentAllElectricRange.Value(), 1e-3);
 		Assert.AreEqual(1366.875, weighted.ZeroCO2EmissionsRange.Value(), 1e-3);
 		Assert.AreEqual(0.004, weighted.UtilityFactor, 1e-3);
-		Assert.AreEqual(797877.345, weighted.ElectricEnergyConsumption.Value(), 1e-3);
+		Assert.AreEqual(795230.237, weighted.ElectricEnergyConsumption.Value(), 1e-3);
 		Assert.AreEqual(30.890, weighted.FuelConsumption[FuelData.Diesel].Value(), 1e-3);
 		Assert.AreEqual(20.000, weighted.CO2Total.Value(), 1e-3);
 
