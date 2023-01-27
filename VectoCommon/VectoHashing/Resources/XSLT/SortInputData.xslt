@@ -364,4 +364,105 @@
 		</xsl:if>
 	</xsl:template>
 
+	<xsl:template match="*[local-name()='ElectricEnergy']">
+		<xsl:element name="{local-name()}">
+			<xsl:for-each select="*[local-name()='EnergyConsumption']">
+				<xsl:sort data-type="text" select="@unit" order="ascending"/>
+				<xsl:element name="{local-name()}">
+					<xsl:apply-templates select="@*|node()"/>
+				</xsl:element>
+			</xsl:for-each>
+		</xsl:element>
+	</xsl:template>
+
+
+	<xsl:template match="*[local-name()='Result']//*[local-name()='Fuel' and @type]">
+		<xsl:if test="count(preceding-sibling::*[local-name()='Fuel']) = 0">
+			<xsl:for-each select="../*[local-name()='Fuel']">
+				<xsl:sort data-type="text" select="@type" order="ascending"/>
+				<xsl:element name="{local-name()}">
+					<xsl:apply-templates select="@*|node()">
+						<xsl:sort data-type="text" select="@unit" order="ascending"/>
+					</xsl:apply-templates>
+				</xsl:element>
+			</xsl:for-each>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="*[local-name()='Summary']//*[local-name()='Fuel' and @type]">
+		<xsl:if test="count(preceding-sibling::*[local-name()='Fuel']) = 0">
+			<xsl:for-each select="../*[local-name()='Fuel']">
+				<xsl:sort data-type="text" select="@type" order="ascending"/>
+				<xsl:element name="{local-name()}">
+					<xsl:apply-templates select="@*|node()">
+						<xsl:sort data-type="text" select="@unit" order="ascending"/>
+					</xsl:apply-templates>
+				</xsl:element>
+			</xsl:for-each>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="*[local-name()='CO2']">
+		<xsl:if test="count(preceding-sibling::*[local-name()='CO2']) = 0">
+			<xsl:for-each select="../*[local-name()='CO2']">
+				<xsl:sort data-type="text" select="@unit" order="ascending"/>
+
+				<xsl:element name="{local-name()}">
+					<xsl:apply-templates select="@*|node()"/>
+				</xsl:element>
+			</xsl:for-each>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="*[local-name()='Result']//*[local-name()='OVCMode' and @type]">
+		<xsl:if test="count(preceding-sibling::*[local-name()='OVCMode']) = 0">
+			<xsl:for-each select="../*[local-name()='OVCMode']">
+				<xsl:sort data-type="text" select="@type" order="ascending"/>
+				<xsl:element name="{local-name()}">
+					<xsl:apply-templates select="@*|node()">
+						<xsl:sort data-type="text" select="@unit" order="ascending"/>
+					</xsl:apply-templates>
+				</xsl:element>
+			</xsl:for-each>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="*[local-name()='Results']//*[local-name()='Result']">
+		<xsl:if test="count(preceding-sibling::*[local-name()='Result']) = 0">
+			<xsl:for-each select="../*[local-name()='Result']">
+				<xsl:sort data-type="text" select="./*[local-name()='Mission']" order="ascending"/>
+				<xsl:sort data-type="number" select="*[local-name()='SimulationParameters']//*[local-name()='TotalVehicleMass']" order="ascending"/>
+				<xsl:element name="{local-name()}">
+					<xsl:apply-templates select="@*|node()"/>
+				</xsl:element>
+			</xsl:for-each>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="*[local-name()='FC_ZEV_AuxHeater' and @type]">
+		<xsl:if test="count(preceding-sibling::*[local-name()='FC_ZEV_AuxHeater']) = 0">
+			<xsl:for-each select="../*[local-name()='FC_ZEV_AuxHeater']">
+				<xsl:sort data-type="text" select="@type" order="ascending"/>
+				<xsl:element name="{local-name()}">
+					<xsl:apply-templates select="@*|node()">
+						<xsl:sort data-type="text" select="@unit" order="ascending"/>
+					</xsl:apply-templates>
+				</xsl:element>
+			</xsl:for-each>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="*[local-name()='CO2_ZEV_AuxHeater' and @type]">
+		<xsl:if test="count(preceding-sibling::*[local-name()='CO2_ZEV_AuxHeater']) = 0">
+			<xsl:for-each select="../*[local-name()='CO2_ZEV_AuxHeater']">
+				<xsl:sort data-type="text" select="@type" order="ascending"/>
+				<xsl:element name="{local-name()}">
+					<xsl:apply-templates select="@*|node()">
+						<xsl:sort data-type="text" select="@unit" order="ascending"/>
+					</xsl:apply-templates>
+				</xsl:element>
+			</xsl:for-each>
+		</xsl:if>
+	</xsl:template>
+
 </xsl:transform>
