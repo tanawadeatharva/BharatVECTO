@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob X:\VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"  xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
-	<v2.0:Vehicle xsi:type="Vehicle_HEV-Sx_HeavyLorryDeclarationType" id="Group2_HEV_S2">
+<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"  xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
+	<v2.0:Vehicle xsi:type="Vehicle_PEV_HeavyLorryDeclarationType" id="PEV_E3_HeavyLorry">
 		<Manufacturer>TU Graz</Manufacturer>
 		<ManufacturerAddress>Inffeldgasse 19</ManufacturerAddress>
 		<Model>HEV Heavy Lorry Px</Model>
@@ -10,1096 +10,43 @@
 		<ChassisConfiguration>Rigid Lorry</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
 		<CorrectedActualMass>4670</CorrectedActualMass>
-		<TechnicalPermissibleMaximumLadenMass>18900</TechnicalPermissibleMaximumLadenMass>
-		<IdlingSpeed>600</IdlingSpeed>
+		<TechnicalPermissibleMaximumLadenMass>11900</TechnicalPermissibleMaximumLadenMass>
 		<RetarderType>None</RetarderType>
 		<AngledriveType>None</AngledriveType>
-		<PTO xsi:type="PTOType">
+		<PTO xsi:type="PTOType"> <!-- syntactically allowed, not supported by VECTO - no gearbox! -->
 			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
 			<PTOOtherElements>none</PTOOtherElements>
 		</PTO>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<VocationalVehicle>false</VocationalVehicle>
-		<NgTankSystem>Liquefied</NgTankSystem>
-		<!-- optional -->
 		<SleeperCab>false</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
-		<ArchitectureID>S3</ArchitectureID>
-		<OvcHev>false</OvcHev>
-		<ADAS xsi:type="ADAS_HEV_Type">
-			<EngineStopStart>true</EngineStopStart>
-			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
+		<ArchitectureID>E3</ArchitectureID>
+		<ADAS xsi:type="ADAS_PEV_Type">
+			<PredictiveCruiseControl>none</PredictiveCruiseControl>
 		</ADAS>
-		<Components xsi:type="Components_HEV-S3_LorryType">
-			<Engine>
-				<v2.0:Data xsi:type="v1.0:EngineDataDeclarationType" id="ENG-gooZah3D" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0">
-					<Manufacturer>Generic Engine Manufacturer</Manufacturer>
-					<Model>Generic 40t Long Haul Truck Engine</Model>
-					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
-					<Date>2017-02-15T11:00:00Z</Date>
-					<AppVersion>VectoEngine x.y</AppVersion>
-					<Displacement>12700</Displacement>
-					<IdlingSpeed>600</IdlingSpeed>
-					<RatedSpeed>1800</RatedSpeed>
-					<RatedPower>325000</RatedPower>
-					<MaxEngineTorque>2134</MaxEngineTorque>
-					<WHTCUrban>1.0431</WHTCUrban>
-					<WHTCRural>1.0193</WHTCRural>
-					<WHTCMotorway>1.0024</WHTCMotorway>
-					<BFColdHot>1.0005</BFColdHot>
-					<CFRegPer>1.0000</CFRegPer>
-					<CFNCV>1.0000</CFNCV>
-					<FuelType>Diesel CI</FuelType>
-					<FuelConsumptionMap>
-						<Entry engineSpeed='600.00' torque='0.00' fuelConsumption='1017.15'/>
-						<Entry engineSpeed='600.00' torque='216.90' fuelConsumption='2697.16'/>
-						<Entry engineSpeed='600.00' torque='433.80' fuelConsumption='5027.12'/>
-						<Entry engineSpeed='600.00' torque='650.70' fuelConsumption='7960.53'/>
-						<Entry engineSpeed='600.00' torque='867.60' fuelConsumption='10064.41'/>
-						<Entry engineSpeed='600.00' torque='1084.50' fuelConsumption='12292.76'/>
-						<Entry engineSpeed='600.00' torque='1301.40' fuelConsumption='14663.02'/>
-						<Entry engineSpeed='600.00' torque='1518.30' fuelConsumption='17043.72'/>
-						<Entry engineSpeed='600.00' torque='1735.20' fuelConsumption='19425.41'/>
-						<Entry engineSpeed='600.00' torque='1952.10' fuelConsumption='21808.12'/>
-						<Entry engineSpeed='600.00' torque='2169.00' fuelConsumption='24191.84'/>
-						<Entry engineSpeed='748.90' torque='0.00' fuelConsumption='1211.61'/>
-						<Entry engineSpeed='748.90' torque='216.90' fuelConsumption='3235.00'/>
-						<Entry engineSpeed='748.90' torque='433.80' fuelConsumption='6289.28'/>
-						<Entry engineSpeed='748.90' torque='650.70' fuelConsumption='9498.69'/>
-						<Entry engineSpeed='748.90' torque='867.60' fuelConsumption='12318.62'/>
-						<Entry engineSpeed='748.90' torque='1084.50' fuelConsumption='15232.52'/>
-						<Entry engineSpeed='748.90' torque='1301.40' fuelConsumption='18318.03'/>
-						<Entry engineSpeed='748.90' torque='1518.30' fuelConsumption='21372.13'/>
-						<Entry engineSpeed='748.90' torque='1735.20' fuelConsumption='24537.89'/>
-						<Entry engineSpeed='748.90' torque='1952.10' fuelConsumption='27678.12'/>
-						<Entry engineSpeed='748.90' torque='2169.00' fuelConsumption='30824.27'/>
-						<Entry engineSpeed='897.80' torque='0.00' fuelConsumption='1586.45'/>
-						<Entry engineSpeed='897.80' torque='216.90' fuelConsumption='4014.99'/>
-						<Entry engineSpeed='897.80' torque='433.80' fuelConsumption='7602.90'/>
-						<Entry engineSpeed='897.80' torque='650.70' fuelConsumption='11000.03'/>
-						<Entry engineSpeed='897.80' torque='867.60' fuelConsumption='14404.97'/>
-						<Entry engineSpeed='897.80' torque='1084.50' fuelConsumption='17919.09'/>
-						<Entry engineSpeed='897.80' torque='1301.40' fuelConsumption='21460.42'/>
-						<Entry engineSpeed='897.80' torque='1518.30' fuelConsumption='25050.01'/>
-						<Entry engineSpeed='897.80' torque='1735.20' fuelConsumption='28796.23'/>
-						<Entry engineSpeed='897.80' torque='1952.10' fuelConsumption='32637.26'/>
-						<Entry engineSpeed='897.80' torque='2169.00' fuelConsumption='36771.35'/>
-						<Entry engineSpeed='1046.70' torque='0.00' fuelConsumption='2011.04'/>
-						<Entry engineSpeed='1046.70' torque='216.90' fuelConsumption='4872.19'/>
-						<Entry engineSpeed='1046.70' torque='433.80' fuelConsumption='8715.31'/>
-						<Entry engineSpeed='1046.70' torque='650.70' fuelConsumption='12557.54'/>
-						<Entry engineSpeed='1046.70' torque='867.60' fuelConsumption='16475.40'/>
-						<Entry engineSpeed='1046.70' torque='1084.50' fuelConsumption='20537.07'/>
-						<Entry engineSpeed='1046.70' torque='1301.40' fuelConsumption='24462.25'/>
-						<Entry engineSpeed='1046.70' torque='1518.30' fuelConsumption='28489.22'/>
-						<Entry engineSpeed='1046.70' torque='1735.20' fuelConsumption='32710.67'/>
-						<Entry engineSpeed='1046.70' torque='1952.10' fuelConsumption='37226.90'/>
-						<Entry engineSpeed='1046.70' torque='2169.00' fuelConsumption='42188.14'/>
-						<Entry engineSpeed='1195.57' torque='0.00' fuelConsumption='2185.40'/>
-						<Entry engineSpeed='1195.57' torque='216.90' fuelConsumption='5364.25'/>
-						<Entry engineSpeed='1195.57' torque='433.80' fuelConsumption='9653.82'/>
-						<Entry engineSpeed='1195.57' torque='650.70' fuelConsumption='14190.70'/>
-						<Entry engineSpeed='1195.57' torque='867.60' fuelConsumption='18700.48'/>
-						<Entry engineSpeed='1195.57' torque='1084.50' fuelConsumption='23295.78'/>
-						<Entry engineSpeed='1195.57' torque='1301.40' fuelConsumption='27743.06'/>
-						<Entry engineSpeed='1195.57' torque='1518.30' fuelConsumption='32148.61'/>
-						<Entry engineSpeed='1195.57' torque='1735.20' fuelConsumption='36847.41'/>
-						<Entry engineSpeed='1195.57' torque='1952.10' fuelConsumption='42042.40'/>
-						<Entry engineSpeed='1195.57' torque='2169.00' fuelConsumption='47220.90'/>
-						<Entry engineSpeed='1359.19' torque='0.00' fuelConsumption='2772.48'/>
-						<Entry engineSpeed='1359.19' torque='216.90' fuelConsumption='6067.08'/>
-						<Entry engineSpeed='1359.19' torque='433.80' fuelConsumption='10995.64'/>
-						<Entry engineSpeed='1359.19' torque='650.70' fuelConsumption='16287.47'/>
-						<Entry engineSpeed='1359.19' torque='867.60' fuelConsumption='21027.31'/>
-						<Entry engineSpeed='1359.19' torque='1084.50' fuelConsumption='25950.61'/>
-						<Entry engineSpeed='1359.19' torque='1301.40' fuelConsumption='31137.39'/>
-						<Entry engineSpeed='1359.19' torque='1518.30' fuelConsumption='36273.70'/>
-						<Entry engineSpeed='1359.19' torque='1735.20' fuelConsumption='41991.43'/>
-						<Entry engineSpeed='1359.19' torque='1952.10' fuelConsumption='48335.18'/>
-						<Entry engineSpeed='1359.19' torque='2169.00' fuelConsumption='54142.82'/>
-						<Entry engineSpeed='1484.00' torque='0.00' fuelConsumption='3222.96'/>
-						<Entry engineSpeed='1484.00' torque='216.90' fuelConsumption='7056.43'/>
-						<Entry engineSpeed='1484.00' torque='433.80' fuelConsumption='12204.86'/>
-						<Entry engineSpeed='1484.00' torque='650.70' fuelConsumption='17817.02'/>
-						<Entry engineSpeed='1484.00' torque='867.60' fuelConsumption='23009.24'/>
-						<Entry engineSpeed='1484.00' torque='1084.50' fuelConsumption='28313.44'/>
-						<Entry engineSpeed='1484.00' torque='1301.40' fuelConsumption='33868.19'/>
-						<Entry engineSpeed='1484.00' torque='1518.30' fuelConsumption='39622.85'/>
-						<Entry engineSpeed='1484.00' torque='1735.20' fuelConsumption='46027.31'/>
-						<Entry engineSpeed='1484.00' torque='1952.10' fuelConsumption='53051.27'/>
-						<Entry engineSpeed='1484.00' torque='2169.00' fuelConsumption='59594.90'/>
-						<Entry engineSpeed='1608.90' torque='0.00' fuelConsumption='3676.48'/>
-						<Entry engineSpeed='1608.90' torque='216.90' fuelConsumption='7771.36'/>
-						<Entry engineSpeed='1608.90' torque='433.80' fuelConsumption='13347.97'/>
-						<Entry engineSpeed='1608.90' torque='650.70' fuelConsumption='19338.07'/>
-						<Entry engineSpeed='1608.90' torque='867.60' fuelConsumption='25127.50'/>
-						<Entry engineSpeed='1608.90' torque='1084.50' fuelConsumption='30866.79'/>
-						<Entry engineSpeed='1608.90' torque='1301.40' fuelConsumption='36723.14'/>
-						<Entry engineSpeed='1608.90' torque='1518.30' fuelConsumption='43120.16'/>
-						<Entry engineSpeed='1608.90' torque='1735.20' fuelConsumption='50153.47'/>
-						<Entry engineSpeed='1608.90' torque='1952.10' fuelConsumption='57745.79'/>
-						<Entry engineSpeed='1608.90' torque='2169.00' fuelConsumption='65121.91'/>
-						<Entry engineSpeed='1733.80' torque='0.00' fuelConsumption='4243.10'/>
-						<Entry engineSpeed='1733.80' torque='216.90' fuelConsumption='8890.92'/>
-						<Entry engineSpeed='1733.80' torque='433.80' fuelConsumption='14882.92'/>
-						<Entry engineSpeed='1733.80' torque='650.70' fuelConsumption='21023.58'/>
-						<Entry engineSpeed='1733.80' torque='867.60' fuelConsumption='27743.50'/>
-						<Entry engineSpeed='1733.80' torque='1084.50' fuelConsumption='33764.85'/>
-						<Entry engineSpeed='1733.80' torque='1301.40' fuelConsumption='40312.73'/>
-						<Entry engineSpeed='1733.80' torque='1518.30' fuelConsumption='47320.20'/>
-						<Entry engineSpeed='1733.80' torque='1735.20' fuelConsumption='54863.24'/>
-						<Entry engineSpeed='1733.80' torque='1952.10' fuelConsumption='62856.92'/>
-						<Entry engineSpeed='1733.80' torque='2169.00' fuelConsumption='70740.49'/>
-						<Entry engineSpeed='1858.61' torque='0.00' fuelConsumption='5123.27'/>
-						<Entry engineSpeed='1858.61' torque='216.90' fuelConsumption='10119.05'/>
-						<Entry engineSpeed='1858.61' torque='433.80' fuelConsumption='16419.00'/>
-						<Entry engineSpeed='1858.61' torque='650.70' fuelConsumption='22983.31'/>
-						<Entry engineSpeed='1858.61' torque='867.60' fuelConsumption='30330.60'/>
-						<Entry engineSpeed='1858.61' torque='1084.50' fuelConsumption='37253.85'/>
-						<Entry engineSpeed='1858.61' torque='1301.40' fuelConsumption='44572.85'/>
-						<Entry engineSpeed='1858.61' torque='1518.30' fuelConsumption='52192.55'/>
-						<Entry engineSpeed='1858.61' torque='1735.20' fuelConsumption='60150.49'/>
-						<Entry engineSpeed='1858.61' torque='1952.10' fuelConsumption='68389.55'/>
-						<Entry engineSpeed='1858.61' torque='2169.00' fuelConsumption='76591.65'/>
-						<Entry engineSpeed='600.00' torque='-125.55' fuelConsumption='0.00'/>
-						<Entry engineSpeed='748.90' torque='-129.40' fuelConsumption='0.00'/>
-						<Entry engineSpeed='897.80' torque='-133.23' fuelConsumption='0.00'/>
-						<Entry engineSpeed='1046.70' torque='-138.39' fuelConsumption='0.00'/>
-						<Entry engineSpeed='1195.57' torque='-146.47' fuelConsumption='0.00'/>
-						<Entry engineSpeed='1359.19' torque='-154.76' fuelConsumption='0.00'/>
-						<Entry engineSpeed='1484.00' torque='-168.17' fuelConsumption='0.00'/>
-						<Entry engineSpeed='1608.90' torque='-223.56' fuelConsumption='0.00'/>
-						<Entry engineSpeed='1733.80' torque='-199.54' fuelConsumption='0.00'/>
-						<Entry engineSpeed='1858.61' torque='-215.92' fuelConsumption='0.00'/>
-						<Entry engineSpeed='600.00' torque='-140.55' fuelConsumption='0.00'/>
-						<Entry engineSpeed='748.90' torque='-144.40' fuelConsumption='0.00'/>
-						<Entry engineSpeed='897.80' torque='-148.23' fuelConsumption='0.00'/>
-						<Entry engineSpeed='1046.70' torque='-153.39' fuelConsumption='0.00'/>
-						<Entry engineSpeed='1195.57' torque='-161.47' fuelConsumption='0.00'/>
-						<Entry engineSpeed='1359.19' torque='-169.76' fuelConsumption='0.00'/>
-						<Entry engineSpeed='1484.00' torque='-183.17' fuelConsumption='0.00'/>
-						<Entry engineSpeed='1608.90' torque='-238.56' fuelConsumption='0.00'/>
-						<Entry engineSpeed='1733.80' torque='-214.54' fuelConsumption='0.00'/>
-						<Entry engineSpeed='1858.61' torque='-230.92' fuelConsumption='0.00'/>
-					</FuelConsumptionMap>
-					<FullLoadAndDragCurve>
-						<Entry engineSpeed='600.00' maxTorque='1188.00' dragTorque='-125.56'/>
-						<Entry engineSpeed='800.00' maxTorque='1661.00' dragTorque='-130.72'/>
-						<Entry engineSpeed='1000.00' maxTorque='2134.00' dragTorque='-135.85'/>
-						<Entry engineSpeed='1200.00' maxTorque='2134.00' dragTorque='-146.72'/>
-						<Entry engineSpeed='1400.00' maxTorque='2134.00' dragTorque='-156.83'/>
-						<Entry engineSpeed='1600.00' maxTorque='1928.00' dragTorque='-183.84'/>
-						<Entry engineSpeed='1800.00' maxTorque='1722.00' dragTorque='-207.31'/>
-						<Entry engineSpeed='2000.00' maxTorque='1253.00' dragTorque='-236.72'/>
-						<Entry engineSpeed='2100.00' maxTorque='1019.00' dragTorque='-248.49'/>
-						<Entry engineSpeed='2200.00' maxTorque='0.00' dragTorque='-274.38'/>  
-					</FullLoadAndDragCurve>
-				</v2.0:Data>
-				<v2.0:Signature>
-					<di:Reference URI="#ENG-gooZah3D">
-						<di:Transforms>
-							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-						</di:Transforms>
-						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>/qqS7iMvDm0MYurhsIRZTF5FeS+MNA2HnoS1P8SrSdA=</di:DigestValue>
-					</di:Reference>
-				</v2.0:Signature>
-			</Engine>
-			<ElectricMachineGEN>
-				<PowertrainPosition>GEN</PowertrainPosition>
-				<Count>1</Count>
-				<ElectricMachineSystem>
-					<v2.3:Data xsi:type="ElectricMachineSystemMeasuredDataDeclarationType" id="EM-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">
-						<Manufacturer>a</Manufacturer>
-						<Model>a</Model>
-						<CertificationNumber>token</CertificationNumber>
-						<Date>2017-01-01T00:00:00Z</Date>
-						<AppVersion>aaaaa</AppVersion>
-						<ElectricMachineType>ASM</ElectricMachineType>
-						<CertificationMethod>Measured</CertificationMethod>
-						<R85RatedPower>200000</R85RatedPower>
-						<RotationalInertia>0.13</RotationalInertia>
-						<DcDcConverterIncluded>true</DcDcConverterIncluded>
-						<IHPCType>None</IHPCType>
-						<VoltageLevel>
-							<Voltage>1</Voltage>
-							<ContinuousTorque>798.00</ContinuousTorque>
-							<TestSpeedContinuousTorque>1850.00</TestSpeedContinuousTorque>
-							<OverloadTorque>1030.00</OverloadTorque>
-							<TestSpeedOverloadTorque>1850.00</TestSpeedOverloadTorque>
-							<OverloadDuration>120.00</OverloadDuration>
-							<MaxTorqueCurve>
-								<Entry outShaftSpeed='0.00' maxTorque='1030.00' minTorque='-1030.00'/>
-								<Entry outShaftSpeed='37.00' maxTorque='1030.00' minTorque='-1030.00'/>
-								<Entry outShaftSpeed='370.00' maxTorque='1030.00' minTorque='-1030.00'/>
-								<Entry outShaftSpeed='740.00' maxTorque='1030.00' minTorque='-1030.00'/>
-								<Entry outShaftSpeed='1110.00' maxTorque='1030.00' minTorque='-1030.00'/>
-								<Entry outShaftSpeed='1480.00' maxTorque='1030.00' minTorque='-1030.00'/>
-								<Entry outShaftSpeed='1850.00' maxTorque='1030.00' minTorque='-1030.00'/>
-								<Entry outShaftSpeed='2220.00' maxTorque='858.33' minTorque='-858.33'/>
-								<Entry outShaftSpeed='2590.00' maxTorque='735.71' minTorque='-735.71'/>
-							</MaxTorqueCurve>
-							<PowerMap>
-								<Entry outShaftSpeed='0.00' torque='-1030.00' electricPower='0.00' />
-								<Entry outShaftSpeed='0.00' torque='-978.50' electricPower='0.00' />
-								<Entry outShaftSpeed='0.00' torque='-927.00' electricPower='0.00' />
-								<Entry outShaftSpeed='0.00' torque='-875.50' electricPower='0.00' />
-								<Entry outShaftSpeed='0.00' torque='-824.00' electricPower='0.00' />
-								<Entry outShaftSpeed='0.00' torque='-772.50' electricPower='0.00' />
-								<Entry outShaftSpeed='0.00' torque='-721.00' electricPower='-220.00' />
-								<Entry outShaftSpeed='0.00' torque='-669.50' electricPower='-510.00' />
-								<Entry outShaftSpeed='0.00' torque='-618.00' electricPower='-671.00' />
-								<Entry outShaftSpeed='0.00' torque='-566.50' electricPower='-765.00' />
-								<Entry outShaftSpeed='0.00' torque='-515.00' electricPower='-813.00' />
-								<Entry outShaftSpeed='0.00' torque='-463.50' electricPower='-826.00' />
-								<Entry outShaftSpeed='0.00' torque='-412.00' electricPower='-811.00' />
-								<Entry outShaftSpeed='0.00' torque='-360.50' electricPower='-771.00' />
-								<Entry outShaftSpeed='0.00' torque='-309.00' electricPower='-710.00' />
-								<Entry outShaftSpeed='0.00' torque='-257.50' electricPower='-629.00' />
-								<Entry outShaftSpeed='0.00' torque='-206.00' electricPower='-531.00' />
-								<Entry outShaftSpeed='0.00' torque='-154.50' electricPower='-416.00' />
-								<Entry outShaftSpeed='0.00' torque='-103.00' electricPower='-287.00' />
-								<Entry outShaftSpeed='0.00' torque='-51.50' electricPower='-143.00' />
-								<Entry outShaftSpeed='0.00' torque='-10.30' electricPower='-15.00' />
-								<Entry outShaftSpeed='0.00' torque='10.30' electricPower='59.00' />
-								<Entry outShaftSpeed='0.00' torque='51.50' electricPower='264.00' />
-								<Entry outShaftSpeed='0.00' torque='103.00' electricPower='527.00' />
-								<Entry outShaftSpeed='0.00' torque='154.50' electricPower='800.00' />
-								<Entry outShaftSpeed='0.00' torque='206.00' electricPower='1080.00' />
-								<Entry outShaftSpeed='0.00' torque='257.50' electricPower='1370.00' />
-								<Entry outShaftSpeed='0.00' torque='309.00' electricPower='1667.00' />
-								<Entry outShaftSpeed='0.00' torque='360.50' electricPower='1972.00' />
-								<Entry outShaftSpeed='0.00' torque='412.00' electricPower='2285.00' />
-								<Entry outShaftSpeed='0.00' torque='463.50' electricPower='2606.00' />
-								<Entry outShaftSpeed='0.00' torque='515.00' electricPower='2935.00' />
-								<Entry outShaftSpeed='0.00' torque='566.50' electricPower='3270.00' />
-								<Entry outShaftSpeed='0.00' torque='618.00' electricPower='3613.00' />
-								<Entry outShaftSpeed='0.00' torque='669.50' electricPower='3964.00' />
-								<Entry outShaftSpeed='0.00' torque='721.00' electricPower='4321.00' />
-								<Entry outShaftSpeed='0.00' torque='772.50' electricPower='4685.00' />
-								<Entry outShaftSpeed='0.00' torque='824.00' electricPower='5056.00' />
-								<Entry outShaftSpeed='0.00' torque='875.50' electricPower='5433.00' />
-								<Entry outShaftSpeed='0.00' torque='927.00' electricPower='5818.00' />
-								<Entry outShaftSpeed='0.00' torque='978.50' electricPower='6209.00' />
-								<Entry outShaftSpeed='0.00' torque='1030.00' electricPower='6606.00' />
-								<Entry outShaftSpeed='37.00' torque='-1030.00' electricPower='0.00' />
-								<Entry outShaftSpeed='37.00' torque='-978.50' electricPower='0.00' />
-								<Entry outShaftSpeed='37.00' torque='-927.00' electricPower='0.00' />
-								<Entry outShaftSpeed='37.00' torque='-875.50' electricPower='0.00' />
-								<Entry outShaftSpeed='37.00' torque='-824.00' electricPower='0.00' />
-								<Entry outShaftSpeed='37.00' torque='-772.50' electricPower='0.00' />
-								<Entry outShaftSpeed='37.00' torque='-721.00' electricPower='-447.00' />
-								<Entry outShaftSpeed='37.00' torque='-669.50' electricPower='-678.00' />
-								<Entry outShaftSpeed='37.00' torque='-618.00' electricPower='-798.00' />
-								<Entry outShaftSpeed='37.00' torque='-566.50' electricPower='-860.00' />
-								<Entry outShaftSpeed='37.00' torque='-515.00' electricPower='-883.00' />
-								<Entry outShaftSpeed='37.00' torque='-463.50' electricPower='-876.00' />
-								<Entry outShaftSpeed='37.00' torque='-412.00' electricPower='-845.00' />
-								<Entry outShaftSpeed='37.00' torque='-360.50' electricPower='-792.00' />
-								<Entry outShaftSpeed='37.00' torque='-309.00' electricPower='-721.00' />
-								<Entry outShaftSpeed='37.00' torque='-257.50' electricPower='-633.00' />
-								<Entry outShaftSpeed='37.00' torque='-206.00' electricPower='-530.00' />
-								<Entry outShaftSpeed='37.00' torque='-154.50' electricPower='-413.00' />
-								<Entry outShaftSpeed='37.00' torque='-103.00' electricPower='-283.00' />
-								<Entry outShaftSpeed='37.00' torque='-51.50' electricPower='-141.00' />
-								<Entry outShaftSpeed='37.00' torque='-10.30' electricPower='-15.00' />
-								<Entry outShaftSpeed='37.00' torque='10.30' electricPower='55.00' />
-								<Entry outShaftSpeed='37.00' torque='51.50' electricPower='248.00' />
-								<Entry outShaftSpeed='37.00' torque='103.00' electricPower='495.00' />
-								<Entry outShaftSpeed='37.00' torque='154.50' electricPower='749.00' />
-								<Entry outShaftSpeed='37.00' torque='206.00' electricPower='1011.00' />
-								<Entry outShaftSpeed='37.00' torque='257.50' electricPower='1280.00' />
-								<Entry outShaftSpeed='37.00' torque='309.00' electricPower='1556.00' />
-								<Entry outShaftSpeed='37.00' torque='360.50' electricPower='1840.00' />
-								<Entry outShaftSpeed='37.00' torque='412.00' electricPower='2129.00' />
-								<Entry outShaftSpeed='37.00' torque='463.50' electricPower='2426.00' />
-								<Entry outShaftSpeed='37.00' torque='515.00' electricPower='2729.00' />
-								<Entry outShaftSpeed='37.00' torque='566.50' electricPower='3039.00' />
-								<Entry outShaftSpeed='37.00' torque='618.00' electricPower='3355.00' />
-								<Entry outShaftSpeed='37.00' torque='669.50' electricPower='3677.00' />
-								<Entry outShaftSpeed='37.00' torque='721.00' electricPower='4005.00' />
-								<Entry outShaftSpeed='37.00' torque='772.50' electricPower='4340.00' />
-								<Entry outShaftSpeed='37.00' torque='824.00' electricPower='4680.00' />
-								<Entry outShaftSpeed='37.00' torque='875.50' electricPower='5026.00' />
-								<Entry outShaftSpeed='37.00' torque='927.00' electricPower='5378.00' />
-								<Entry outShaftSpeed='37.00' torque='978.50' electricPower='5735.00' />
-								<Entry outShaftSpeed='37.00' torque='1030.00' electricPower='6098.00' />
-								<Entry outShaftSpeed='370.00' torque='-1030.00' electricPower='-36344.00' />
-								<Entry outShaftSpeed='370.00' torque='-978.50' electricPower='-34617.00' />
-								<Entry outShaftSpeed='370.00' torque='-927.00' electricPower='-32881.00' />
-								<Entry outShaftSpeed='370.00' torque='-875.50' electricPower='-31134.00' />
-								<Entry outShaftSpeed='370.00' torque='-824.00' electricPower='-29376.00' />
-								<Entry outShaftSpeed='370.00' torque='-772.50' electricPower='-27609.00' />
-								<Entry outShaftSpeed='370.00' torque='-721.00' electricPower='-25831.00' />
-								<Entry outShaftSpeed='370.00' torque='-669.50' electricPower='-24043.00' />
-								<Entry outShaftSpeed='370.00' torque='-618.00' electricPower='-22244.00' />
-								<Entry outShaftSpeed='370.00' torque='-566.50' electricPower='-20436.00' />
-								<Entry outShaftSpeed='370.00' torque='-515.00' electricPower='-18617.00' />
-								<Entry outShaftSpeed='370.00' torque='-463.50' electricPower='-16789.00' />
-								<Entry outShaftSpeed='370.00' torque='-412.00' electricPower='-14950.00' />
-								<Entry outShaftSpeed='370.00' torque='-360.50' electricPower='-13102.00' />
-								<Entry outShaftSpeed='370.00' torque='-309.00' electricPower='-11244.00' />
-								<Entry outShaftSpeed='370.00' torque='-257.50' electricPower='-9375.00' />
-								<Entry outShaftSpeed='370.00' torque='-206.00' electricPower='-7497.00' />
-								<Entry outShaftSpeed='370.00' torque='-154.50' electricPower='-5609.00' />
-								<Entry outShaftSpeed='370.00' torque='-103.00' electricPower='-3711.00' />
-								<Entry outShaftSpeed='370.00' torque='-51.50' electricPower='-1802.00' />
-								<Entry outShaftSpeed='370.00' torque='-10.30' electricPower='-248.00' />
-								<Entry outShaftSpeed='370.00' torque='10.30' electricPower='515.00' />
-								<Entry outShaftSpeed='370.00' torque='51.50' electricPower='2185.00' />
-								<Entry outShaftSpeed='370.00' torque='103.00' electricPower='4271.00' />
-								<Entry outShaftSpeed='370.00' torque='154.50' electricPower='6366.00' />
-								<Entry outShaftSpeed='370.00' torque='206.00' electricPower='8470.00' />
-								<Entry outShaftSpeed='370.00' torque='257.50' electricPower='10584.00' />
-								<Entry outShaftSpeed='370.00' torque='309.00' electricPower='12707.00' />
-								<Entry outShaftSpeed='370.00' torque='360.50' electricPower='14839.00' />
-								<Entry outShaftSpeed='370.00' torque='412.00' electricPower='16982.00' />
-								<Entry outShaftSpeed='370.00' torque='463.50' electricPower='19133.00' />
-								<Entry outShaftSpeed='370.00' torque='515.00' electricPower='21294.00' />
-								<Entry outShaftSpeed='370.00' torque='566.50' electricPower='23465.00' />
-								<Entry outShaftSpeed='370.00' torque='618.00' electricPower='25644.00' />
-								<Entry outShaftSpeed='370.00' torque='669.50' electricPower='27833.00' />
-								<Entry outShaftSpeed='370.00' torque='721.00' electricPower='30032.00' />
-								<Entry outShaftSpeed='370.00' torque='772.50' electricPower='32239.00' />
-								<Entry outShaftSpeed='370.00' torque='824.00' electricPower='34456.00' />
-								<Entry outShaftSpeed='370.00' torque='875.50' electricPower='36682.00' />
-								<Entry outShaftSpeed='370.00' torque='927.00' electricPower='38918.00' />
-								<Entry outShaftSpeed='370.00' torque='978.50' electricPower='41162.00' />
-								<Entry outShaftSpeed='370.00' torque='1030.00' electricPower='43415.00' />
-								<Entry outShaftSpeed='740.00' torque='-1030.00' electricPower='-74961.00' />
-								<Entry outShaftSpeed='740.00' torque='-978.50' electricPower='-71312.00' />
-								<Entry outShaftSpeed='740.00' torque='-927.00' electricPower='-67651.00' />
-								<Entry outShaftSpeed='740.00' torque='-875.50' electricPower='-63979.00' />
-								<Entry outShaftSpeed='740.00' torque='-824.00' electricPower='-60294.00' />
-								<Entry outShaftSpeed='740.00' torque='-772.50' electricPower='-56597.00' />
-								<Entry outShaftSpeed='740.00' torque='-721.00' electricPower='-52889.00' />
-								<Entry outShaftSpeed='740.00' torque='-669.50' electricPower='-49169.00' />
-								<Entry outShaftSpeed='740.00' torque='-618.00' electricPower='-45436.00' />
-								<Entry outShaftSpeed='740.00' torque='-566.50' electricPower='-41693.00' />
-								<Entry outShaftSpeed='740.00' torque='-515.00' electricPower='-37937.00' />
-								<Entry outShaftSpeed='740.00' torque='-463.50' electricPower='-34170.00' />
-								<Entry outShaftSpeed='740.00' torque='-412.00' electricPower='-30391.00' />
-								<Entry outShaftSpeed='740.00' torque='-360.50' electricPower='-26600.00' />
-								<Entry outShaftSpeed='740.00' torque='-309.00' electricPower='-22798.00' />
-								<Entry outShaftSpeed='740.00' torque='-257.50' electricPower='-18984.00' />
-								<Entry outShaftSpeed='740.00' torque='-206.00' electricPower='-15158.00' />
-								<Entry outShaftSpeed='740.00' torque='-154.50' electricPower='-11321.00' />
-								<Entry outShaftSpeed='740.00' torque='-103.00' electricPower='-7471.00' />
-								<Entry outShaftSpeed='740.00' torque='-51.50' electricPower='-3607.00' />
-								<Entry outShaftSpeed='740.00' torque='-10.30' electricPower='-452.00' />
-								<Entry outShaftSpeed='740.00' torque='10.30' electricPower='1051.00' />
-								<Entry outShaftSpeed='740.00' torque='51.50' electricPower='4367.00' />
-								<Entry outShaftSpeed='740.00' torque='103.00' electricPower='8495.00' />
-								<Entry outShaftSpeed='740.00' torque='154.50' electricPower='12632.00' />
-								<Entry outShaftSpeed='740.00' torque='206.00' electricPower='16780.00' />
-								<Entry outShaftSpeed='740.00' torque='257.50' electricPower='20940.00' />
-								<Entry outShaftSpeed='740.00' torque='309.00' electricPower='25111.00' />
-								<Entry outShaftSpeed='740.00' torque='360.50' electricPower='29294.00' />
-								<Entry outShaftSpeed='740.00' torque='412.00' electricPower='33488.00' />
-								<Entry outShaftSpeed='740.00' torque='463.50' electricPower='37693.00' />
-								<Entry outShaftSpeed='740.00' torque='515.00' electricPower='41910.00' />
-								<Entry outShaftSpeed='740.00' torque='566.50' electricPower='46139.00' />
-								<Entry outShaftSpeed='740.00' torque='618.00' electricPower='50379.00' />
-								<Entry outShaftSpeed='740.00' torque='669.50' electricPower='54630.00' />
-								<Entry outShaftSpeed='740.00' torque='721.00' electricPower='58893.00' />
-								<Entry outShaftSpeed='740.00' torque='772.50' electricPower='63167.00' />
-								<Entry outShaftSpeed='740.00' torque='824.00' electricPower='67452.00' />
-								<Entry outShaftSpeed='740.00' torque='875.50' electricPower='71749.00' />
-								<Entry outShaftSpeed='740.00' torque='927.00' electricPower='76057.00' />
-								<Entry outShaftSpeed='740.00' torque='978.50' electricPower='80377.00' />
-								<Entry outShaftSpeed='740.00' torque='1030.00' electricPower='84707.00' />
-								<Entry outShaftSpeed='1110.00' torque='-1030.00' electricPower='-113264.00' />
-								<Entry outShaftSpeed='1110.00' torque='-978.50' electricPower='-107719.00' />
-								<Entry outShaftSpeed='1110.00' torque='-927.00' electricPower='-102159.00' />
-								<Entry outShaftSpeed='1110.00' torque='-875.50' electricPower='-96584.00' />
-								<Entry outShaftSpeed='1110.00' torque='-824.00' electricPower='-90994.00' />
-								<Entry outShaftSpeed='1110.00' torque='-772.50' electricPower='-85390.00' />
-								<Entry outShaftSpeed='1110.00' torque='-721.00' electricPower='-79770.00' />
-								<Entry outShaftSpeed='1110.00' torque='-669.50' electricPower='-74136.00' />
-								<Entry outShaftSpeed='1110.00' torque='-618.00' electricPower='-68486.00' />
-								<Entry outShaftSpeed='1110.00' torque='-566.50' electricPower='-62822.00' />
-								<Entry outShaftSpeed='1110.00' torque='-515.00' electricPower='-57144.00' />
-								<Entry outShaftSpeed='1110.00' torque='-463.50' electricPower='-51450.00' />
-								<Entry outShaftSpeed='1110.00' torque='-412.00' electricPower='-45742.00' />
-								<Entry outShaftSpeed='1110.00' torque='-360.50' electricPower='-40018.00' />
-								<Entry outShaftSpeed='1110.00' torque='-309.00' electricPower='-34281.00' />
-								<Entry outShaftSpeed='1110.00' torque='-257.50' electricPower='-28528.00' />
-								<Entry outShaftSpeed='1110.00' torque='-206.00' electricPower='-22760.00' />
-								<Entry outShaftSpeed='1110.00' torque='-154.50' electricPower='-16978.00' />
-								<Entry outShaftSpeed='1110.00' torque='-103.00' electricPower='-11179.00' />
-								<Entry outShaftSpeed='1110.00' torque='-51.50' electricPower='-5359.00' />
-								<Entry outShaftSpeed='1110.00' torque='-10.30' electricPower='-563.00' />
-								<Entry outShaftSpeed='1110.00' torque='10.30' electricPower='1626.00' />
-								<Entry outShaftSpeed='1110.00' torque='51.50' electricPower='6595.00' />
-								<Entry outShaftSpeed='1110.00' torque='103.00' electricPower='12768.00' />
-								<Entry outShaftSpeed='1110.00' torque='154.50' electricPower='18951.00' />
-								<Entry outShaftSpeed='1110.00' torque='206.00' electricPower='25148.00' />
-								<Entry outShaftSpeed='1110.00' torque='257.50' electricPower='31359.00' />
-								<Entry outShaftSpeed='1110.00' torque='309.00' electricPower='37584.00' />
-								<Entry outShaftSpeed='1110.00' torque='360.50' electricPower='43824.00' />
-								<Entry outShaftSpeed='1110.00' torque='412.00' electricPower='50078.00' />
-								<Entry outShaftSpeed='1110.00' torque='463.50' electricPower='56347.00' />
-								<Entry outShaftSpeed='1110.00' torque='515.00' electricPower='62631.00' />
-								<Entry outShaftSpeed='1110.00' torque='566.50' electricPower='68929.00' />
-								<Entry outShaftSpeed='1110.00' torque='618.00' electricPower='75242.00' />
-								<Entry outShaftSpeed='1110.00' torque='669.50' electricPower='81569.00' />
-								<Entry outShaftSpeed='1110.00' torque='721.00' electricPower='87911.00' />
-								<Entry outShaftSpeed='1110.00' torque='772.50' electricPower='94268.00' />
-								<Entry outShaftSpeed='1110.00' torque='824.00' electricPower='100638.00' />
-								<Entry outShaftSpeed='1110.00' torque='875.50' electricPower='107024.00' />
-								<Entry outShaftSpeed='1110.00' torque='927.00' electricPower='113423.00' />
-								<Entry outShaftSpeed='1110.00' torque='978.50' electricPower='119838.00' />
-								<Entry outShaftSpeed='1110.00' torque='1030.00' electricPower='126266.00' />
-								<Entry outShaftSpeed='1480.00' torque='-1030.00' electricPower='-151257.00' />
-								<Entry outShaftSpeed='1480.00' torque='-978.50' electricPower='-143841.00' />
-								<Entry outShaftSpeed='1480.00' torque='-927.00' electricPower='-136405.00' />
-								<Entry outShaftSpeed='1480.00' torque='-875.50' electricPower='-128950.00' />
-								<Entry outShaftSpeed='1480.00' torque='-824.00' electricPower='-121475.00' />
-								<Entry outShaftSpeed='1480.00' torque='-772.50' electricPower='-113982.00' />
-								<Entry outShaftSpeed='1480.00' torque='-721.00' electricPower='-106469.00' />
-								<Entry outShaftSpeed='1480.00' torque='-669.50' electricPower='-98937.00' />
-								<Entry outShaftSpeed='1480.00' torque='-618.00' electricPower='-91386.00' />
-								<Entry outShaftSpeed='1480.00' torque='-566.50' electricPower='-83815.00' />
-								<Entry outShaftSpeed='1480.00' torque='-515.00' electricPower='-76226.00' />
-								<Entry outShaftSpeed='1480.00' torque='-463.50' electricPower='-68618.00' />
-								<Entry outShaftSpeed='1480.00' torque='-412.00' electricPower='-60990.00' />
-								<Entry outShaftSpeed='1480.00' torque='-360.50' electricPower='-53344.00' />
-								<Entry outShaftSpeed='1480.00' torque='-309.00' electricPower='-45678.00' />
-								<Entry outShaftSpeed='1480.00' torque='-257.50' electricPower='-37993.00' />
-								<Entry outShaftSpeed='1480.00' torque='-206.00' electricPower='-30289.00' />
-								<Entry outShaftSpeed='1480.00' torque='-154.50' electricPower='-22565.00' />
-								<Entry outShaftSpeed='1480.00' torque='-103.00' electricPower='-14819.00' />
-								<Entry outShaftSpeed='1480.00' torque='-51.50' electricPower='-7042.00' />
-								<Entry outShaftSpeed='1480.00' torque='-10.30' electricPower='-493.00' />
-								<Entry outShaftSpeed='1480.00' torque='10.30' electricPower='2246.00' />
-								<Entry outShaftSpeed='1480.00' torque='51.50' electricPower='8883.00' />
-								<Entry outShaftSpeed='1480.00' torque='103.00' electricPower='17106.00' />
-								<Entry outShaftSpeed='1480.00' torque='154.50' electricPower='25338.00' />
-								<Entry outShaftSpeed='1480.00' torque='206.00' electricPower='33588.00' />
-								<Entry outShaftSpeed='1480.00' torque='257.50' electricPower='41855.00' />
-								<Entry outShaftSpeed='1480.00' torque='309.00' electricPower='50141.00' />
-								<Entry outShaftSpeed='1480.00' torque='360.50' electricPower='58446.00' />
-								<Entry outShaftSpeed='1480.00' torque='412.00' electricPower='66770.00' />
-								<Entry outShaftSpeed='1480.00' torque='463.50' electricPower='75112.00' />
-								<Entry outShaftSpeed='1480.00' torque='515.00' electricPower='83474.00' />
-								<Entry outShaftSpeed='1480.00' torque='566.50' electricPower='91854.00' />
-								<Entry outShaftSpeed='1480.00' torque='618.00' electricPower='100253.00' />
-								<Entry outShaftSpeed='1480.00' torque='669.50' electricPower='108671.00' />
-								<Entry outShaftSpeed='1480.00' torque='721.00' electricPower='117108.00' />
-								<Entry outShaftSpeed='1480.00' torque='772.50' electricPower='125563.00' />
-								<Entry outShaftSpeed='1480.00' torque='824.00' electricPower='134038.00' />
-								<Entry outShaftSpeed='1480.00' torque='875.50' electricPower='142531.00' />
-								<Entry outShaftSpeed='1480.00' torque='927.00' electricPower='151043.00' />
-								<Entry outShaftSpeed='1480.00' torque='978.50' electricPower='159573.00' />
-								<Entry outShaftSpeed='1480.00' torque='1030.00' electricPower='168122.00' />
-								<Entry outShaftSpeed='1850.00' torque='-1030.00' electricPower='-188930.00' />
-								<Entry outShaftSpeed='1850.00' torque='-978.50' electricPower='-179665.00' />
-								<Entry outShaftSpeed='1850.00' torque='-927.00' electricPower='-170376.00' />
-								<Entry outShaftSpeed='1850.00' torque='-875.50' electricPower='-161062.00' />
-								<Entry outShaftSpeed='1850.00' torque='-824.00' electricPower='-151723.00' />
-								<Entry outShaftSpeed='1850.00' torque='-772.50' electricPower='-142360.00' />
-								<Entry outShaftSpeed='1850.00' torque='-721.00' electricPower='-132971.00' />
-								<Entry outShaftSpeed='1850.00' torque='-669.50' electricPower='-123558.00' />
-								<Entry outShaftSpeed='1850.00' torque='-618.00' electricPower='-114120.00' />
-								<Entry outShaftSpeed='1850.00' torque='-566.50' electricPower='-104657.00' />
-								<Entry outShaftSpeed='1850.00' torque='-515.00' electricPower='-95170.00' />
-								<Entry outShaftSpeed='1850.00' torque='-463.50' electricPower='-85659.00' />
-								<Entry outShaftSpeed='1850.00' torque='-412.00' electricPower='-76122.00' />
-								<Entry outShaftSpeed='1850.00' torque='-360.50' electricPower='-66561.00' />
-								<Entry outShaftSpeed='1850.00' torque='-309.00' electricPower='-56976.00' />
-								<Entry outShaftSpeed='1850.00' torque='-257.50' electricPower='-47365.00' />
-								<Entry outShaftSpeed='1850.00' torque='-206.00' electricPower='-37729.00' />
-								<Entry outShaftSpeed='1850.00' torque='-154.50' electricPower='-28067.00' />
-								<Entry outShaftSpeed='1850.00' torque='-103.00' electricPower='-18376.00' />
-								<Entry outShaftSpeed='1850.00' torque='-51.50' electricPower='-8638.00' />
-								<Entry outShaftSpeed='1850.00' torque='-10.30' electricPower='0.00' />
-								<Entry outShaftSpeed='1850.00' torque='10.30' electricPower='2921.00' />
-								<Entry outShaftSpeed='1850.00' torque='51.50' electricPower='11243.00' />
-								<Entry outShaftSpeed='1850.00' torque='103.00' electricPower='21520.00' />
-								<Entry outShaftSpeed='1850.00' torque='154.50' electricPower='31807.00' />
-								<Entry outShaftSpeed='1850.00' torque='206.00' electricPower='42113.00' />
-								<Entry outShaftSpeed='1850.00' torque='257.50' electricPower='52443.00' />
-								<Entry outShaftSpeed='1850.00' torque='309.00' electricPower='62797.00' />
-								<Entry outShaftSpeed='1850.00' torque='360.50' electricPower='73174.00' />
-								<Entry outShaftSpeed='1850.00' torque='412.00' electricPower='83576.00' />
-								<Entry outShaftSpeed='1850.00' torque='463.50' electricPower='94003.00' />
-								<Entry outShaftSpeed='1850.00' torque='515.00' electricPower='104453.00' />
-								<Entry outShaftSpeed='1850.00' torque='566.50' electricPower='114928.00' />
-								<Entry outShaftSpeed='1850.00' torque='618.00' electricPower='125427.00' />
-								<Entry outShaftSpeed='1850.00' torque='669.50' electricPower='135950.00' />
-								<Entry outShaftSpeed='1850.00' torque='721.00' electricPower='146498.00' />
-								<Entry outShaftSpeed='1850.00' torque='772.50' electricPower='157070.00' />
-								<Entry outShaftSpeed='1850.00' torque='824.00' electricPower='167666.00' />
-								<Entry outShaftSpeed='1850.00' torque='875.50' electricPower='178286.00' />
-								<Entry outShaftSpeed='1850.00' torque='927.00' electricPower='188931.00' />
-								<Entry outShaftSpeed='1850.00' torque='978.50' electricPower='199599.00' />
-								<Entry outShaftSpeed='1850.00' torque='1030.00' electricPower='210291.00' />
-								<Entry outShaftSpeed='2220.00' torque='-1030.00' electricPower='-226266.00' />
-								<Entry outShaftSpeed='2220.00' torque='-978.50' electricPower='-215178.00' />
-								<Entry outShaftSpeed='2220.00' torque='-927.00' electricPower='-204058.00' />
-								<Entry outShaftSpeed='2220.00' torque='-875.50' electricPower='-192907.00' />
-								<Entry outShaftSpeed='2220.00' torque='-824.00' electricPower='-181723.00' />
-								<Entry outShaftSpeed='2220.00' torque='-772.50' electricPower='-170509.00' />
-								<Entry outShaftSpeed='2220.00' torque='-721.00' electricPower='-159262.00' />
-								<Entry outShaftSpeed='2220.00' torque='-669.50' electricPower='-147984.00' />
-								<Entry outShaftSpeed='2220.00' torque='-618.00' electricPower='-136675.00' />
-								<Entry outShaftSpeed='2220.00' torque='-566.50' electricPower='-125334.00' />
-								<Entry outShaftSpeed='2220.00' torque='-515.00' electricPower='-113962.00' />
-								<Entry outShaftSpeed='2220.00' torque='-463.50' electricPower='-102558.00' />
-								<Entry outShaftSpeed='2220.00' torque='-412.00' electricPower='-91123.00' />
-								<Entry outShaftSpeed='2220.00' torque='-360.50' electricPower='-79656.00' />
-								<Entry outShaftSpeed='2220.00' torque='-309.00' electricPower='-68158.00' />
-								<Entry outShaftSpeed='2220.00' torque='-257.50' electricPower='-56628.00' />
-								<Entry outShaftSpeed='2220.00' torque='-206.00' electricPower='-45066.00' />
-								<Entry outShaftSpeed='2220.00' torque='-154.50' electricPower='-33469.00' />
-								<Entry outShaftSpeed='2220.00' torque='-103.00' electricPower='-21833.00' />
-								<Entry outShaftSpeed='2220.00' torque='-51.50' electricPower='-10128.00' />
-								<Entry outShaftSpeed='2220.00' torque='-10.30' electricPower='0.00' />
-								<Entry outShaftSpeed='2220.00' torque='10.30' electricPower='3656.00' />
-								<Entry outShaftSpeed='2220.00' torque='51.50' electricPower='13687.00' />
-								<Entry outShaftSpeed='2220.00' torque='103.00' electricPower='26025.00' />
-								<Entry outShaftSpeed='2220.00' torque='154.50' electricPower='38369.00' />
-								<Entry outShaftSpeed='2220.00' torque='206.00' electricPower='50739.00' />
-								<Entry outShaftSpeed='2220.00' torque='257.50' electricPower='63137.00' />
-								<Entry outShaftSpeed='2220.00' torque='309.00' electricPower='75565.00' />
-								<Entry outShaftSpeed='2220.00' torque='360.50' electricPower='88023.00' />
-								<Entry outShaftSpeed='2220.00' torque='412.00' electricPower='100512.00' />
-								<Entry outShaftSpeed='2220.00' torque='463.50' electricPower='113032.00' />
-								<Entry outShaftSpeed='2220.00' torque='515.00' electricPower='125583.00' />
-								<Entry outShaftSpeed='2220.00' torque='566.50' electricPower='138165.00' />
-								<Entry outShaftSpeed='2220.00' torque='618.00' electricPower='150778.00' />
-								<Entry outShaftSpeed='2220.00' torque='669.50' electricPower='163421.00' />
-								<Entry outShaftSpeed='2220.00' torque='721.00' electricPower='176096.00' />
-								<Entry outShaftSpeed='2220.00' torque='772.50' electricPower='188801.00' />
-								<Entry outShaftSpeed='2220.00' torque='824.00' electricPower='201537.00' />
-								<Entry outShaftSpeed='2220.00' torque='875.50' electricPower='214304.00' />
-								<Entry outShaftSpeed='2220.00' torque='927.00' electricPower='227101.00' />
-								<Entry outShaftSpeed='2220.00' torque='978.50' electricPower='239929.00' />
-								<Entry outShaftSpeed='2220.00' torque='1030.00' electricPower='252787.00' />
-								<Entry outShaftSpeed='2590.00' torque='-1030.00' electricPower='-263249.00' />
-								<Entry outShaftSpeed='2590.00' torque='-978.50' electricPower='-250362.00' />
-								<Entry outShaftSpeed='2590.00' torque='-927.00' electricPower='-237434.00' />
-								<Entry outShaftSpeed='2590.00' torque='-875.50' electricPower='-224467.00' />
-								<Entry outShaftSpeed='2590.00' torque='-824.00' electricPower='-211460.00' />
-								<Entry outShaftSpeed='2590.00' torque='-772.50' electricPower='-198413.00' />
-								<Entry outShaftSpeed='2590.00' torque='-721.00' electricPower='-185327.00' />
-								<Entry outShaftSpeed='2590.00' torque='-669.50' electricPower='-172200.00' />
-								<Entry outShaftSpeed='2590.00' torque='-618.00' electricPower='-159035.00' />
-								<Entry outShaftSpeed='2590.00' torque='-566.50' electricPower='-145830.00' />
-								<Entry outShaftSpeed='2590.00' torque='-515.00' electricPower='-132585.00' />
-								<Entry outShaftSpeed='2590.00' torque='-463.50' electricPower='-119301.00' />
-								<Entry outShaftSpeed='2590.00' torque='-412.00' electricPower='-105977.00' />
-								<Entry outShaftSpeed='2590.00' torque='-360.50' electricPower='-92614.00' />
-								<Entry outShaftSpeed='2590.00' torque='-309.00' electricPower='-79211.00' />
-								<Entry outShaftSpeed='2590.00' torque='-257.50' electricPower='-65768.00' />
-								<Entry outShaftSpeed='2590.00' torque='-206.00' electricPower='-52283.00' />
-								<Entry outShaftSpeed='2590.00' torque='-154.50' electricPower='-38755.00' />
-								<Entry outShaftSpeed='2590.00' torque='-103.00' electricPower='-25173.00' />
-								<Entry outShaftSpeed='2590.00' torque='-51.50' electricPower='-11490.00' />
-								<Entry outShaftSpeed='2590.00' torque='-10.30' electricPower='0.00' />
-								<Entry outShaftSpeed='2590.00' torque='10.30' electricPower='4457.00' />
-								<Entry outShaftSpeed='2590.00' torque='51.50' electricPower='16224.00' />
-								<Entry outShaftSpeed='2590.00' torque='103.00' electricPower='30631.00' />
-								<Entry outShaftSpeed='2590.00' torque='154.50' electricPower='45039.00' />
-								<Entry outShaftSpeed='2590.00' torque='206.00' electricPower='59477.00' />
-								<Entry outShaftSpeed='2590.00' torque='257.50' electricPower='73949.00' />
-								<Entry outShaftSpeed='2590.00' torque='309.00' electricPower='88458.00' />
-								<Entry outShaftSpeed='2590.00' torque='360.50' electricPower='103005.00' />
-								<Entry outShaftSpeed='2590.00' torque='412.00' electricPower='117591.00' />
-								<Entry outShaftSpeed='2590.00' torque='463.50' electricPower='132215.00' />
-								<Entry outShaftSpeed='2590.00' torque='515.00' electricPower='146877.00' />
-								<Entry outShaftSpeed='2590.00' torque='566.50' electricPower='161579.00' />
-								<Entry outShaftSpeed='2590.00' torque='618.00' electricPower='176319.00' />
-								<Entry outShaftSpeed='2590.00' torque='669.50' electricPower='191097.00' />
-								<Entry outShaftSpeed='2590.00' torque='721.00' electricPower='205914.00' />
-								<Entry outShaftSpeed='2590.00' torque='772.50' electricPower='220770.00' />
-								<Entry outShaftSpeed='2590.00' torque='824.00' electricPower='235664.00' />
-								<Entry outShaftSpeed='2590.00' torque='875.50' electricPower='250596.00' />
-								<Entry outShaftSpeed='2590.00' torque='927.00' electricPower='265567.00' />
-								<Entry outShaftSpeed='2590.00' torque='978.50' electricPower='280576.00' />
-								<Entry outShaftSpeed='2590.00' torque='1030.00' electricPower='295623.00' />
-							</PowerMap>
-						</VoltageLevel>
-						<VoltageLevel>
-							<Voltage>1000</Voltage>
-							<ContinuousTorque>798.00</ContinuousTorque>
-							<TestSpeedContinuousTorque>1850.00</TestSpeedContinuousTorque>
-							<OverloadTorque>1030.00</OverloadTorque>
-							<TestSpeedOverloadTorque>1850.00</TestSpeedOverloadTorque>
-							<OverloadDuration>120.00</OverloadDuration>
-							<MaxTorqueCurve>
-								<Entry outShaftSpeed='0.00' maxTorque='1030.00' minTorque='-1030.00'/>
-								<Entry outShaftSpeed='37.00' maxTorque='1030.00' minTorque='-1030.00'/>
-								<Entry outShaftSpeed='370.00' maxTorque='1030.00' minTorque='-1030.00'/>
-								<Entry outShaftSpeed='740.00' maxTorque='1030.00' minTorque='-1030.00'/>
-								<Entry outShaftSpeed='1110.00' maxTorque='1030.00' minTorque='-1030.00'/>
-								<Entry outShaftSpeed='1480.00' maxTorque='1030.00' minTorque='-1030.00'/>
-								<Entry outShaftSpeed='1850.00' maxTorque='1030.00' minTorque='-1030.00'/>
-								<Entry outShaftSpeed='2220.00' maxTorque='858.33' minTorque='-858.33'/>
-								<Entry outShaftSpeed='2590.00' maxTorque='735.71' minTorque='-735.71'/>
-							</MaxTorqueCurve>
-							<PowerMap>
-								<Entry outShaftSpeed='0.00' torque='-1030.00' electricPower='0.00' />
-								<Entry outShaftSpeed='0.00' torque='-978.50' electricPower='0.00' />
-								<Entry outShaftSpeed='0.00' torque='-927.00' electricPower='0.00' />
-								<Entry outShaftSpeed='0.00' torque='-875.50' electricPower='0.00' />
-								<Entry outShaftSpeed='0.00' torque='-824.00' electricPower='0.00' />
-								<Entry outShaftSpeed='0.00' torque='-772.50' electricPower='0.00' />
-								<Entry outShaftSpeed='0.00' torque='-721.00' electricPower='-220.00' />
-								<Entry outShaftSpeed='0.00' torque='-669.50' electricPower='-510.00' />
-								<Entry outShaftSpeed='0.00' torque='-618.00' electricPower='-671.00' />
-								<Entry outShaftSpeed='0.00' torque='-566.50' electricPower='-765.00' />
-								<Entry outShaftSpeed='0.00' torque='-515.00' electricPower='-813.00' />
-								<Entry outShaftSpeed='0.00' torque='-463.50' electricPower='-826.00' />
-								<Entry outShaftSpeed='0.00' torque='-412.00' electricPower='-811.00' />
-								<Entry outShaftSpeed='0.00' torque='-360.50' electricPower='-771.00' />
-								<Entry outShaftSpeed='0.00' torque='-309.00' electricPower='-710.00' />
-								<Entry outShaftSpeed='0.00' torque='-257.50' electricPower='-629.00' />
-								<Entry outShaftSpeed='0.00' torque='-206.00' electricPower='-531.00' />
-								<Entry outShaftSpeed='0.00' torque='-154.50' electricPower='-416.00' />
-								<Entry outShaftSpeed='0.00' torque='-103.00' electricPower='-287.00' />
-								<Entry outShaftSpeed='0.00' torque='-51.50' electricPower='-143.00' />
-								<Entry outShaftSpeed='0.00' torque='-10.30' electricPower='-15.00' />
-								<Entry outShaftSpeed='0.00' torque='10.30' electricPower='59.00' />
-								<Entry outShaftSpeed='0.00' torque='51.50' electricPower='264.00' />
-								<Entry outShaftSpeed='0.00' torque='103.00' electricPower='527.00' />
-								<Entry outShaftSpeed='0.00' torque='154.50' electricPower='800.00' />
-								<Entry outShaftSpeed='0.00' torque='206.00' electricPower='1080.00' />
-								<Entry outShaftSpeed='0.00' torque='257.50' electricPower='1370.00' />
-								<Entry outShaftSpeed='0.00' torque='309.00' electricPower='1667.00' />
-								<Entry outShaftSpeed='0.00' torque='360.50' electricPower='1972.00' />
-								<Entry outShaftSpeed='0.00' torque='412.00' electricPower='2285.00' />
-								<Entry outShaftSpeed='0.00' torque='463.50' electricPower='2606.00' />
-								<Entry outShaftSpeed='0.00' torque='515.00' electricPower='2935.00' />
-								<Entry outShaftSpeed='0.00' torque='566.50' electricPower='3270.00' />
-								<Entry outShaftSpeed='0.00' torque='618.00' electricPower='3613.00' />
-								<Entry outShaftSpeed='0.00' torque='669.50' electricPower='3964.00' />
-								<Entry outShaftSpeed='0.00' torque='721.00' electricPower='4321.00' />
-								<Entry outShaftSpeed='0.00' torque='772.50' electricPower='4685.00' />
-								<Entry outShaftSpeed='0.00' torque='824.00' electricPower='5056.00' />
-								<Entry outShaftSpeed='0.00' torque='875.50' electricPower='5433.00' />
-								<Entry outShaftSpeed='0.00' torque='927.00' electricPower='5818.00' />
-								<Entry outShaftSpeed='0.00' torque='978.50' electricPower='6209.00' />
-								<Entry outShaftSpeed='0.00' torque='1030.00' electricPower='6606.00' />
-								<Entry outShaftSpeed='37.00' torque='-1030.00' electricPower='0.00' />
-								<Entry outShaftSpeed='37.00' torque='-978.50' electricPower='0.00' />
-								<Entry outShaftSpeed='37.00' torque='-927.00' electricPower='0.00' />
-								<Entry outShaftSpeed='37.00' torque='-875.50' electricPower='0.00' />
-								<Entry outShaftSpeed='37.00' torque='-824.00' electricPower='0.00' />
-								<Entry outShaftSpeed='37.00' torque='-772.50' electricPower='0.00' />
-								<Entry outShaftSpeed='37.00' torque='-721.00' electricPower='-447.00' />
-								<Entry outShaftSpeed='37.00' torque='-669.50' electricPower='-678.00' />
-								<Entry outShaftSpeed='37.00' torque='-618.00' electricPower='-798.00' />
-								<Entry outShaftSpeed='37.00' torque='-566.50' electricPower='-860.00' />
-								<Entry outShaftSpeed='37.00' torque='-515.00' electricPower='-883.00' />
-								<Entry outShaftSpeed='37.00' torque='-463.50' electricPower='-876.00' />
-								<Entry outShaftSpeed='37.00' torque='-412.00' electricPower='-845.00' />
-								<Entry outShaftSpeed='37.00' torque='-360.50' electricPower='-792.00' />
-								<Entry outShaftSpeed='37.00' torque='-309.00' electricPower='-721.00' />
-								<Entry outShaftSpeed='37.00' torque='-257.50' electricPower='-633.00' />
-								<Entry outShaftSpeed='37.00' torque='-206.00' electricPower='-530.00' />
-								<Entry outShaftSpeed='37.00' torque='-154.50' electricPower='-413.00' />
-								<Entry outShaftSpeed='37.00' torque='-103.00' electricPower='-283.00' />
-								<Entry outShaftSpeed='37.00' torque='-51.50' electricPower='-141.00' />
-								<Entry outShaftSpeed='37.00' torque='-10.30' electricPower='-15.00' />
-								<Entry outShaftSpeed='37.00' torque='10.30' electricPower='55.00' />
-								<Entry outShaftSpeed='37.00' torque='51.50' electricPower='248.00' />
-								<Entry outShaftSpeed='37.00' torque='103.00' electricPower='495.00' />
-								<Entry outShaftSpeed='37.00' torque='154.50' electricPower='749.00' />
-								<Entry outShaftSpeed='37.00' torque='206.00' electricPower='1011.00' />
-								<Entry outShaftSpeed='37.00' torque='257.50' electricPower='1280.00' />
-								<Entry outShaftSpeed='37.00' torque='309.00' electricPower='1556.00' />
-								<Entry outShaftSpeed='37.00' torque='360.50' electricPower='1840.00' />
-								<Entry outShaftSpeed='37.00' torque='412.00' electricPower='2129.00' />
-								<Entry outShaftSpeed='37.00' torque='463.50' electricPower='2426.00' />
-								<Entry outShaftSpeed='37.00' torque='515.00' electricPower='2729.00' />
-								<Entry outShaftSpeed='37.00' torque='566.50' electricPower='3039.00' />
-								<Entry outShaftSpeed='37.00' torque='618.00' electricPower='3355.00' />
-								<Entry outShaftSpeed='37.00' torque='669.50' electricPower='3677.00' />
-								<Entry outShaftSpeed='37.00' torque='721.00' electricPower='4005.00' />
-								<Entry outShaftSpeed='37.00' torque='772.50' electricPower='4340.00' />
-								<Entry outShaftSpeed='37.00' torque='824.00' electricPower='4680.00' />
-								<Entry outShaftSpeed='37.00' torque='875.50' electricPower='5026.00' />
-								<Entry outShaftSpeed='37.00' torque='927.00' electricPower='5378.00' />
-								<Entry outShaftSpeed='37.00' torque='978.50' electricPower='5735.00' />
-								<Entry outShaftSpeed='37.00' torque='1030.00' electricPower='6098.00' />
-								<Entry outShaftSpeed='370.00' torque='-1030.00' electricPower='-36344.00' />
-								<Entry outShaftSpeed='370.00' torque='-978.50' electricPower='-34617.00' />
-								<Entry outShaftSpeed='370.00' torque='-927.00' electricPower='-32881.00' />
-								<Entry outShaftSpeed='370.00' torque='-875.50' electricPower='-31134.00' />
-								<Entry outShaftSpeed='370.00' torque='-824.00' electricPower='-29376.00' />
-								<Entry outShaftSpeed='370.00' torque='-772.50' electricPower='-27609.00' />
-								<Entry outShaftSpeed='370.00' torque='-721.00' electricPower='-25831.00' />
-								<Entry outShaftSpeed='370.00' torque='-669.50' electricPower='-24043.00' />
-								<Entry outShaftSpeed='370.00' torque='-618.00' electricPower='-22244.00' />
-								<Entry outShaftSpeed='370.00' torque='-566.50' electricPower='-20436.00' />
-								<Entry outShaftSpeed='370.00' torque='-515.00' electricPower='-18617.00' />
-								<Entry outShaftSpeed='370.00' torque='-463.50' electricPower='-16789.00' />
-								<Entry outShaftSpeed='370.00' torque='-412.00' electricPower='-14950.00' />
-								<Entry outShaftSpeed='370.00' torque='-360.50' electricPower='-13102.00' />
-								<Entry outShaftSpeed='370.00' torque='-309.00' electricPower='-11244.00' />
-								<Entry outShaftSpeed='370.00' torque='-257.50' electricPower='-9375.00' />
-								<Entry outShaftSpeed='370.00' torque='-206.00' electricPower='-7497.00' />
-								<Entry outShaftSpeed='370.00' torque='-154.50' electricPower='-5609.00' />
-								<Entry outShaftSpeed='370.00' torque='-103.00' electricPower='-3711.00' />
-								<Entry outShaftSpeed='370.00' torque='-51.50' electricPower='-1802.00' />
-								<Entry outShaftSpeed='370.00' torque='-10.30' electricPower='-248.00' />
-								<Entry outShaftSpeed='370.00' torque='10.30' electricPower='515.00' />
-								<Entry outShaftSpeed='370.00' torque='51.50' electricPower='2185.00' />
-								<Entry outShaftSpeed='370.00' torque='103.00' electricPower='4271.00' />
-								<Entry outShaftSpeed='370.00' torque='154.50' electricPower='6366.00' />
-								<Entry outShaftSpeed='370.00' torque='206.00' electricPower='8470.00' />
-								<Entry outShaftSpeed='370.00' torque='257.50' electricPower='10584.00' />
-								<Entry outShaftSpeed='370.00' torque='309.00' electricPower='12707.00' />
-								<Entry outShaftSpeed='370.00' torque='360.50' electricPower='14839.00' />
-								<Entry outShaftSpeed='370.00' torque='412.00' electricPower='16982.00' />
-								<Entry outShaftSpeed='370.00' torque='463.50' electricPower='19133.00' />
-								<Entry outShaftSpeed='370.00' torque='515.00' electricPower='21294.00' />
-								<Entry outShaftSpeed='370.00' torque='566.50' electricPower='23465.00' />
-								<Entry outShaftSpeed='370.00' torque='618.00' electricPower='25644.00' />
-								<Entry outShaftSpeed='370.00' torque='669.50' electricPower='27833.00' />
-								<Entry outShaftSpeed='370.00' torque='721.00' electricPower='30032.00' />
-								<Entry outShaftSpeed='370.00' torque='772.50' electricPower='32239.00' />
-								<Entry outShaftSpeed='370.00' torque='824.00' electricPower='34456.00' />
-								<Entry outShaftSpeed='370.00' torque='875.50' electricPower='36682.00' />
-								<Entry outShaftSpeed='370.00' torque='927.00' electricPower='38918.00' />
-								<Entry outShaftSpeed='370.00' torque='978.50' electricPower='41162.00' />
-								<Entry outShaftSpeed='370.00' torque='1030.00' electricPower='43415.00' />
-								<Entry outShaftSpeed='740.00' torque='-1030.00' electricPower='-74961.00' />
-								<Entry outShaftSpeed='740.00' torque='-978.50' electricPower='-71312.00' />
-								<Entry outShaftSpeed='740.00' torque='-927.00' electricPower='-67651.00' />
-								<Entry outShaftSpeed='740.00' torque='-875.50' electricPower='-63979.00' />
-								<Entry outShaftSpeed='740.00' torque='-824.00' electricPower='-60294.00' />
-								<Entry outShaftSpeed='740.00' torque='-772.50' electricPower='-56597.00' />
-								<Entry outShaftSpeed='740.00' torque='-721.00' electricPower='-52889.00' />
-								<Entry outShaftSpeed='740.00' torque='-669.50' electricPower='-49169.00' />
-								<Entry outShaftSpeed='740.00' torque='-618.00' electricPower='-45436.00' />
-								<Entry outShaftSpeed='740.00' torque='-566.50' electricPower='-41693.00' />
-								<Entry outShaftSpeed='740.00' torque='-515.00' electricPower='-37937.00' />
-								<Entry outShaftSpeed='740.00' torque='-463.50' electricPower='-34170.00' />
-								<Entry outShaftSpeed='740.00' torque='-412.00' electricPower='-30391.00' />
-								<Entry outShaftSpeed='740.00' torque='-360.50' electricPower='-26600.00' />
-								<Entry outShaftSpeed='740.00' torque='-309.00' electricPower='-22798.00' />
-								<Entry outShaftSpeed='740.00' torque='-257.50' electricPower='-18984.00' />
-								<Entry outShaftSpeed='740.00' torque='-206.00' electricPower='-15158.00' />
-								<Entry outShaftSpeed='740.00' torque='-154.50' electricPower='-11321.00' />
-								<Entry outShaftSpeed='740.00' torque='-103.00' electricPower='-7471.00' />
-								<Entry outShaftSpeed='740.00' torque='-51.50' electricPower='-3607.00' />
-								<Entry outShaftSpeed='740.00' torque='-10.30' electricPower='-452.00' />
-								<Entry outShaftSpeed='740.00' torque='10.30' electricPower='1051.00' />
-								<Entry outShaftSpeed='740.00' torque='51.50' electricPower='4367.00' />
-								<Entry outShaftSpeed='740.00' torque='103.00' electricPower='8495.00' />
-								<Entry outShaftSpeed='740.00' torque='154.50' electricPower='12632.00' />
-								<Entry outShaftSpeed='740.00' torque='206.00' electricPower='16780.00' />
-								<Entry outShaftSpeed='740.00' torque='257.50' electricPower='20940.00' />
-								<Entry outShaftSpeed='740.00' torque='309.00' electricPower='25111.00' />
-								<Entry outShaftSpeed='740.00' torque='360.50' electricPower='29294.00' />
-								<Entry outShaftSpeed='740.00' torque='412.00' electricPower='33488.00' />
-								<Entry outShaftSpeed='740.00' torque='463.50' electricPower='37693.00' />
-								<Entry outShaftSpeed='740.00' torque='515.00' electricPower='41910.00' />
-								<Entry outShaftSpeed='740.00' torque='566.50' electricPower='46139.00' />
-								<Entry outShaftSpeed='740.00' torque='618.00' electricPower='50379.00' />
-								<Entry outShaftSpeed='740.00' torque='669.50' electricPower='54630.00' />
-								<Entry outShaftSpeed='740.00' torque='721.00' electricPower='58893.00' />
-								<Entry outShaftSpeed='740.00' torque='772.50' electricPower='63167.00' />
-								<Entry outShaftSpeed='740.00' torque='824.00' electricPower='67452.00' />
-								<Entry outShaftSpeed='740.00' torque='875.50' electricPower='71749.00' />
-								<Entry outShaftSpeed='740.00' torque='927.00' electricPower='76057.00' />
-								<Entry outShaftSpeed='740.00' torque='978.50' electricPower='80377.00' />
-								<Entry outShaftSpeed='740.00' torque='1030.00' electricPower='84707.00' />
-								<Entry outShaftSpeed='1110.00' torque='-1030.00' electricPower='-113264.00' />
-								<Entry outShaftSpeed='1110.00' torque='-978.50' electricPower='-107719.00' />
-								<Entry outShaftSpeed='1110.00' torque='-927.00' electricPower='-102159.00' />
-								<Entry outShaftSpeed='1110.00' torque='-875.50' electricPower='-96584.00' />
-								<Entry outShaftSpeed='1110.00' torque='-824.00' electricPower='-90994.00' />
-								<Entry outShaftSpeed='1110.00' torque='-772.50' electricPower='-85390.00' />
-								<Entry outShaftSpeed='1110.00' torque='-721.00' electricPower='-79770.00' />
-								<Entry outShaftSpeed='1110.00' torque='-669.50' electricPower='-74136.00' />
-								<Entry outShaftSpeed='1110.00' torque='-618.00' electricPower='-68486.00' />
-								<Entry outShaftSpeed='1110.00' torque='-566.50' electricPower='-62822.00' />
-								<Entry outShaftSpeed='1110.00' torque='-515.00' electricPower='-57144.00' />
-								<Entry outShaftSpeed='1110.00' torque='-463.50' electricPower='-51450.00' />
-								<Entry outShaftSpeed='1110.00' torque='-412.00' electricPower='-45742.00' />
-								<Entry outShaftSpeed='1110.00' torque='-360.50' electricPower='-40018.00' />
-								<Entry outShaftSpeed='1110.00' torque='-309.00' electricPower='-34281.00' />
-								<Entry outShaftSpeed='1110.00' torque='-257.50' electricPower='-28528.00' />
-								<Entry outShaftSpeed='1110.00' torque='-206.00' electricPower='-22760.00' />
-								<Entry outShaftSpeed='1110.00' torque='-154.50' electricPower='-16978.00' />
-								<Entry outShaftSpeed='1110.00' torque='-103.00' electricPower='-11179.00' />
-								<Entry outShaftSpeed='1110.00' torque='-51.50' electricPower='-5359.00' />
-								<Entry outShaftSpeed='1110.00' torque='-10.30' electricPower='-563.00' />
-								<Entry outShaftSpeed='1110.00' torque='10.30' electricPower='1626.00' />
-								<Entry outShaftSpeed='1110.00' torque='51.50' electricPower='6595.00' />
-								<Entry outShaftSpeed='1110.00' torque='103.00' electricPower='12768.00' />
-								<Entry outShaftSpeed='1110.00' torque='154.50' electricPower='18951.00' />
-								<Entry outShaftSpeed='1110.00' torque='206.00' electricPower='25148.00' />
-								<Entry outShaftSpeed='1110.00' torque='257.50' electricPower='31359.00' />
-								<Entry outShaftSpeed='1110.00' torque='309.00' electricPower='37584.00' />
-								<Entry outShaftSpeed='1110.00' torque='360.50' electricPower='43824.00' />
-								<Entry outShaftSpeed='1110.00' torque='412.00' electricPower='50078.00' />
-								<Entry outShaftSpeed='1110.00' torque='463.50' electricPower='56347.00' />
-								<Entry outShaftSpeed='1110.00' torque='515.00' electricPower='62631.00' />
-								<Entry outShaftSpeed='1110.00' torque='566.50' electricPower='68929.00' />
-								<Entry outShaftSpeed='1110.00' torque='618.00' electricPower='75242.00' />
-								<Entry outShaftSpeed='1110.00' torque='669.50' electricPower='81569.00' />
-								<Entry outShaftSpeed='1110.00' torque='721.00' electricPower='87911.00' />
-								<Entry outShaftSpeed='1110.00' torque='772.50' electricPower='94268.00' />
-								<Entry outShaftSpeed='1110.00' torque='824.00' electricPower='100638.00' />
-								<Entry outShaftSpeed='1110.00' torque='875.50' electricPower='107024.00' />
-								<Entry outShaftSpeed='1110.00' torque='927.00' electricPower='113423.00' />
-								<Entry outShaftSpeed='1110.00' torque='978.50' electricPower='119838.00' />
-								<Entry outShaftSpeed='1110.00' torque='1030.00' electricPower='126266.00' />
-								<Entry outShaftSpeed='1480.00' torque='-1030.00' electricPower='-151257.00' />
-								<Entry outShaftSpeed='1480.00' torque='-978.50' electricPower='-143841.00' />
-								<Entry outShaftSpeed='1480.00' torque='-927.00' electricPower='-136405.00' />
-								<Entry outShaftSpeed='1480.00' torque='-875.50' electricPower='-128950.00' />
-								<Entry outShaftSpeed='1480.00' torque='-824.00' electricPower='-121475.00' />
-								<Entry outShaftSpeed='1480.00' torque='-772.50' electricPower='-113982.00' />
-								<Entry outShaftSpeed='1480.00' torque='-721.00' electricPower='-106469.00' />
-								<Entry outShaftSpeed='1480.00' torque='-669.50' electricPower='-98937.00' />
-								<Entry outShaftSpeed='1480.00' torque='-618.00' electricPower='-91386.00' />
-								<Entry outShaftSpeed='1480.00' torque='-566.50' electricPower='-83815.00' />
-								<Entry outShaftSpeed='1480.00' torque='-515.00' electricPower='-76226.00' />
-								<Entry outShaftSpeed='1480.00' torque='-463.50' electricPower='-68618.00' />
-								<Entry outShaftSpeed='1480.00' torque='-412.00' electricPower='-60990.00' />
-								<Entry outShaftSpeed='1480.00' torque='-360.50' electricPower='-53344.00' />
-								<Entry outShaftSpeed='1480.00' torque='-309.00' electricPower='-45678.00' />
-								<Entry outShaftSpeed='1480.00' torque='-257.50' electricPower='-37993.00' />
-								<Entry outShaftSpeed='1480.00' torque='-206.00' electricPower='-30289.00' />
-								<Entry outShaftSpeed='1480.00' torque='-154.50' electricPower='-22565.00' />
-								<Entry outShaftSpeed='1480.00' torque='-103.00' electricPower='-14819.00' />
-								<Entry outShaftSpeed='1480.00' torque='-51.50' electricPower='-7042.00' />
-								<Entry outShaftSpeed='1480.00' torque='-10.30' electricPower='-493.00' />
-								<Entry outShaftSpeed='1480.00' torque='10.30' electricPower='2246.00' />
-								<Entry outShaftSpeed='1480.00' torque='51.50' electricPower='8883.00' />
-								<Entry outShaftSpeed='1480.00' torque='103.00' electricPower='17106.00' />
-								<Entry outShaftSpeed='1480.00' torque='154.50' electricPower='25338.00' />
-								<Entry outShaftSpeed='1480.00' torque='206.00' electricPower='33588.00' />
-								<Entry outShaftSpeed='1480.00' torque='257.50' electricPower='41855.00' />
-								<Entry outShaftSpeed='1480.00' torque='309.00' electricPower='50141.00' />
-								<Entry outShaftSpeed='1480.00' torque='360.50' electricPower='58446.00' />
-								<Entry outShaftSpeed='1480.00' torque='412.00' electricPower='66770.00' />
-								<Entry outShaftSpeed='1480.00' torque='463.50' electricPower='75112.00' />
-								<Entry outShaftSpeed='1480.00' torque='515.00' electricPower='83474.00' />
-								<Entry outShaftSpeed='1480.00' torque='566.50' electricPower='91854.00' />
-								<Entry outShaftSpeed='1480.00' torque='618.00' electricPower='100253.00' />
-								<Entry outShaftSpeed='1480.00' torque='669.50' electricPower='108671.00' />
-								<Entry outShaftSpeed='1480.00' torque='721.00' electricPower='117108.00' />
-								<Entry outShaftSpeed='1480.00' torque='772.50' electricPower='125563.00' />
-								<Entry outShaftSpeed='1480.00' torque='824.00' electricPower='134038.00' />
-								<Entry outShaftSpeed='1480.00' torque='875.50' electricPower='142531.00' />
-								<Entry outShaftSpeed='1480.00' torque='927.00' electricPower='151043.00' />
-								<Entry outShaftSpeed='1480.00' torque='978.50' electricPower='159573.00' />
-								<Entry outShaftSpeed='1480.00' torque='1030.00' electricPower='168122.00' />
-								<Entry outShaftSpeed='1850.00' torque='-1030.00' electricPower='-188930.00' />
-								<Entry outShaftSpeed='1850.00' torque='-978.50' electricPower='-179665.00' />
-								<Entry outShaftSpeed='1850.00' torque='-927.00' electricPower='-170376.00' />
-								<Entry outShaftSpeed='1850.00' torque='-875.50' electricPower='-161062.00' />
-								<Entry outShaftSpeed='1850.00' torque='-824.00' electricPower='-151723.00' />
-								<Entry outShaftSpeed='1850.00' torque='-772.50' electricPower='-142360.00' />
-								<Entry outShaftSpeed='1850.00' torque='-721.00' electricPower='-132971.00' />
-								<Entry outShaftSpeed='1850.00' torque='-669.50' electricPower='-123558.00' />
-								<Entry outShaftSpeed='1850.00' torque='-618.00' electricPower='-114120.00' />
-								<Entry outShaftSpeed='1850.00' torque='-566.50' electricPower='-104657.00' />
-								<Entry outShaftSpeed='1850.00' torque='-515.00' electricPower='-95170.00' />
-								<Entry outShaftSpeed='1850.00' torque='-463.50' electricPower='-85659.00' />
-								<Entry outShaftSpeed='1850.00' torque='-412.00' electricPower='-76122.00' />
-								<Entry outShaftSpeed='1850.00' torque='-360.50' electricPower='-66561.00' />
-								<Entry outShaftSpeed='1850.00' torque='-309.00' electricPower='-56976.00' />
-								<Entry outShaftSpeed='1850.00' torque='-257.50' electricPower='-47365.00' />
-								<Entry outShaftSpeed='1850.00' torque='-206.00' electricPower='-37729.00' />
-								<Entry outShaftSpeed='1850.00' torque='-154.50' electricPower='-28067.00' />
-								<Entry outShaftSpeed='1850.00' torque='-103.00' electricPower='-18376.00' />
-								<Entry outShaftSpeed='1850.00' torque='-51.50' electricPower='-8638.00' />
-								<Entry outShaftSpeed='1850.00' torque='-10.30' electricPower='0.00' />
-								<Entry outShaftSpeed='1850.00' torque='10.30' electricPower='2921.00' />
-								<Entry outShaftSpeed='1850.00' torque='51.50' electricPower='11243.00' />
-								<Entry outShaftSpeed='1850.00' torque='103.00' electricPower='21520.00' />
-								<Entry outShaftSpeed='1850.00' torque='154.50' electricPower='31807.00' />
-								<Entry outShaftSpeed='1850.00' torque='206.00' electricPower='42113.00' />
-								<Entry outShaftSpeed='1850.00' torque='257.50' electricPower='52443.00' />
-								<Entry outShaftSpeed='1850.00' torque='309.00' electricPower='62797.00' />
-								<Entry outShaftSpeed='1850.00' torque='360.50' electricPower='73174.00' />
-								<Entry outShaftSpeed='1850.00' torque='412.00' electricPower='83576.00' />
-								<Entry outShaftSpeed='1850.00' torque='463.50' electricPower='94003.00' />
-								<Entry outShaftSpeed='1850.00' torque='515.00' electricPower='104453.00' />
-								<Entry outShaftSpeed='1850.00' torque='566.50' electricPower='114928.00' />
-								<Entry outShaftSpeed='1850.00' torque='618.00' electricPower='125427.00' />
-								<Entry outShaftSpeed='1850.00' torque='669.50' electricPower='135950.00' />
-								<Entry outShaftSpeed='1850.00' torque='721.00' electricPower='146498.00' />
-								<Entry outShaftSpeed='1850.00' torque='772.50' electricPower='157070.00' />
-								<Entry outShaftSpeed='1850.00' torque='824.00' electricPower='167666.00' />
-								<Entry outShaftSpeed='1850.00' torque='875.50' electricPower='178286.00' />
-								<Entry outShaftSpeed='1850.00' torque='927.00' electricPower='188931.00' />
-								<Entry outShaftSpeed='1850.00' torque='978.50' electricPower='199599.00' />
-								<Entry outShaftSpeed='1850.00' torque='1030.00' electricPower='210291.00' />
-								<Entry outShaftSpeed='2220.00' torque='-1030.00' electricPower='-226266.00' />
-								<Entry outShaftSpeed='2220.00' torque='-978.50' electricPower='-215178.00' />
-								<Entry outShaftSpeed='2220.00' torque='-927.00' electricPower='-204058.00' />
-								<Entry outShaftSpeed='2220.00' torque='-875.50' electricPower='-192907.00' />
-								<Entry outShaftSpeed='2220.00' torque='-824.00' electricPower='-181723.00' />
-								<Entry outShaftSpeed='2220.00' torque='-772.50' electricPower='-170509.00' />
-								<Entry outShaftSpeed='2220.00' torque='-721.00' electricPower='-159262.00' />
-								<Entry outShaftSpeed='2220.00' torque='-669.50' electricPower='-147984.00' />
-								<Entry outShaftSpeed='2220.00' torque='-618.00' electricPower='-136675.00' />
-								<Entry outShaftSpeed='2220.00' torque='-566.50' electricPower='-125334.00' />
-								<Entry outShaftSpeed='2220.00' torque='-515.00' electricPower='-113962.00' />
-								<Entry outShaftSpeed='2220.00' torque='-463.50' electricPower='-102558.00' />
-								<Entry outShaftSpeed='2220.00' torque='-412.00' electricPower='-91123.00' />
-								<Entry outShaftSpeed='2220.00' torque='-360.50' electricPower='-79656.00' />
-								<Entry outShaftSpeed='2220.00' torque='-309.00' electricPower='-68158.00' />
-								<Entry outShaftSpeed='2220.00' torque='-257.50' electricPower='-56628.00' />
-								<Entry outShaftSpeed='2220.00' torque='-206.00' electricPower='-45066.00' />
-								<Entry outShaftSpeed='2220.00' torque='-154.50' electricPower='-33469.00' />
-								<Entry outShaftSpeed='2220.00' torque='-103.00' electricPower='-21833.00' />
-								<Entry outShaftSpeed='2220.00' torque='-51.50' electricPower='-10128.00' />
-								<Entry outShaftSpeed='2220.00' torque='-10.30' electricPower='0.00' />
-								<Entry outShaftSpeed='2220.00' torque='10.30' electricPower='3656.00' />
-								<Entry outShaftSpeed='2220.00' torque='51.50' electricPower='13687.00' />
-								<Entry outShaftSpeed='2220.00' torque='103.00' electricPower='26025.00' />
-								<Entry outShaftSpeed='2220.00' torque='154.50' electricPower='38369.00' />
-								<Entry outShaftSpeed='2220.00' torque='206.00' electricPower='50739.00' />
-								<Entry outShaftSpeed='2220.00' torque='257.50' electricPower='63137.00' />
-								<Entry outShaftSpeed='2220.00' torque='309.00' electricPower='75565.00' />
-								<Entry outShaftSpeed='2220.00' torque='360.50' electricPower='88023.00' />
-								<Entry outShaftSpeed='2220.00' torque='412.00' electricPower='100512.00' />
-								<Entry outShaftSpeed='2220.00' torque='463.50' electricPower='113032.00' />
-								<Entry outShaftSpeed='2220.00' torque='515.00' electricPower='125583.00' />
-								<Entry outShaftSpeed='2220.00' torque='566.50' electricPower='138165.00' />
-								<Entry outShaftSpeed='2220.00' torque='618.00' electricPower='150778.00' />
-								<Entry outShaftSpeed='2220.00' torque='669.50' electricPower='163421.00' />
-								<Entry outShaftSpeed='2220.00' torque='721.00' electricPower='176096.00' />
-								<Entry outShaftSpeed='2220.00' torque='772.50' electricPower='188801.00' />
-								<Entry outShaftSpeed='2220.00' torque='824.00' electricPower='201537.00' />
-								<Entry outShaftSpeed='2220.00' torque='875.50' electricPower='214304.00' />
-								<Entry outShaftSpeed='2220.00' torque='927.00' electricPower='227101.00' />
-								<Entry outShaftSpeed='2220.00' torque='978.50' electricPower='239929.00' />
-								<Entry outShaftSpeed='2220.00' torque='1030.00' electricPower='252787.00' />
-								<Entry outShaftSpeed='2590.00' torque='-1030.00' electricPower='-263249.00' />
-								<Entry outShaftSpeed='2590.00' torque='-978.50' electricPower='-250362.00' />
-								<Entry outShaftSpeed='2590.00' torque='-927.00' electricPower='-237434.00' />
-								<Entry outShaftSpeed='2590.00' torque='-875.50' electricPower='-224467.00' />
-								<Entry outShaftSpeed='2590.00' torque='-824.00' electricPower='-211460.00' />
-								<Entry outShaftSpeed='2590.00' torque='-772.50' electricPower='-198413.00' />
-								<Entry outShaftSpeed='2590.00' torque='-721.00' electricPower='-185327.00' />
-								<Entry outShaftSpeed='2590.00' torque='-669.50' electricPower='-172200.00' />
-								<Entry outShaftSpeed='2590.00' torque='-618.00' electricPower='-159035.00' />
-								<Entry outShaftSpeed='2590.00' torque='-566.50' electricPower='-145830.00' />
-								<Entry outShaftSpeed='2590.00' torque='-515.00' electricPower='-132585.00' />
-								<Entry outShaftSpeed='2590.00' torque='-463.50' electricPower='-119301.00' />
-								<Entry outShaftSpeed='2590.00' torque='-412.00' electricPower='-105977.00' />
-								<Entry outShaftSpeed='2590.00' torque='-360.50' electricPower='-92614.00' />
-								<Entry outShaftSpeed='2590.00' torque='-309.00' electricPower='-79211.00' />
-								<Entry outShaftSpeed='2590.00' torque='-257.50' electricPower='-65768.00' />
-								<Entry outShaftSpeed='2590.00' torque='-206.00' electricPower='-52283.00' />
-								<Entry outShaftSpeed='2590.00' torque='-154.50' electricPower='-38755.00' />
-								<Entry outShaftSpeed='2590.00' torque='-103.00' electricPower='-25173.00' />
-								<Entry outShaftSpeed='2590.00' torque='-51.50' electricPower='-11490.00' />
-								<Entry outShaftSpeed='2590.00' torque='-10.30' electricPower='0.00' />
-								<Entry outShaftSpeed='2590.00' torque='10.30' electricPower='4457.00' />
-								<Entry outShaftSpeed='2590.00' torque='51.50' electricPower='16224.00' />
-								<Entry outShaftSpeed='2590.00' torque='103.00' electricPower='30631.00' />
-								<Entry outShaftSpeed='2590.00' torque='154.50' electricPower='45039.00' />
-								<Entry outShaftSpeed='2590.00' torque='206.00' electricPower='59477.00' />
-								<Entry outShaftSpeed='2590.00' torque='257.50' electricPower='73949.00' />
-								<Entry outShaftSpeed='2590.00' torque='309.00' electricPower='88458.00' />
-								<Entry outShaftSpeed='2590.00' torque='360.50' electricPower='103005.00' />
-								<Entry outShaftSpeed='2590.00' torque='412.00' electricPower='117591.00' />
-								<Entry outShaftSpeed='2590.00' torque='463.50' electricPower='132215.00' />
-								<Entry outShaftSpeed='2590.00' torque='515.00' electricPower='146877.00' />
-								<Entry outShaftSpeed='2590.00' torque='566.50' electricPower='161579.00' />
-								<Entry outShaftSpeed='2590.00' torque='618.00' electricPower='176319.00' />
-								<Entry outShaftSpeed='2590.00' torque='669.50' electricPower='191097.00' />
-								<Entry outShaftSpeed='2590.00' torque='721.00' electricPower='205914.00' />
-								<Entry outShaftSpeed='2590.00' torque='772.50' electricPower='220770.00' />
-								<Entry outShaftSpeed='2590.00' torque='824.00' electricPower='235664.00' />
-								<Entry outShaftSpeed='2590.00' torque='875.50' electricPower='250596.00' />
-								<Entry outShaftSpeed='2590.00' torque='927.00' electricPower='265567.00' />
-								<Entry outShaftSpeed='2590.00' torque='978.50' electricPower='280576.00' />
-								<Entry outShaftSpeed='2590.00' torque='1030.00' electricPower='295623.00' />
-							</PowerMap>
-						</VoltageLevel>
-						<DragCurve>
-							<Entry outShaftSpeed='0.00' dragTorque='-1.89'/>
-							<Entry outShaftSpeed='37.00' dragTorque='-2.01'/>
-							<Entry outShaftSpeed='370.00' dragTorque='-3.02'/>
-							<Entry outShaftSpeed='740.00' dragTorque='-4.14'/>
-							<Entry outShaftSpeed='1110.00' dragTorque='-5.26'/>
-							<Entry outShaftSpeed='1480.00' dragTorque='-6.38'/>
-							<Entry outShaftSpeed='1850.00' dragTorque='-7.50'/>
-							<Entry outShaftSpeed='2220.00' dragTorque='-8.62'/>
-							<Entry outShaftSpeed='2590.00' dragTorque='-9.74'/>
-						</DragCurve>
-						<Conditioning>
-							<Entry coolantTempInlet="30" coolingPower="5000"/>
-						</Conditioning>
-					</v2.3:Data>
-					<v2.3:Signature>
-						<di:Reference URI="#EM-1234">
-							<di:Transforms>
-								<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-								<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-							</di:Transforms>
-							<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-							<di:DigestValue>siONkqzC3QW+4si2eVwLNTwtAxUM0dxMFdAYXjVNl+0=</di:DigestValue>
-						</di:Reference>
-					</v2.3:Signature>
-				</ElectricMachineSystem>
-			</ElectricMachineGEN>
-			<ElectricEnergyStorage>
-				<Battery>
-					<StringID>0</StringID>
-					<REESS>
-						<v2.4:Data xsi:type="BatterySystemDataType" id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">
-							<Manufacturer>a</Manufacturer>
-							<Model>a</Model>
-							<CertificationNumber>token</CertificationNumber>
-							<Date>2017-01-01T00:00:00Z</Date>
-							<AppVersion>aaaaa</AppVersion>
-							<CertificationMethod>Measured</CertificationMethod>
-							<BatteryType>HPBS</BatteryType>
-							<RatedCapacity>68.75</RatedCapacity>
-							<ConnectorsSubsystemsIncluded>true</ConnectorsSubsystemsIncluded>
-							<JunctionboxIncluded>true</JunctionboxIncluded>
-							<TestingTemperature>20</TestingTemperature>
-							<OCV>
-								<Entry SoC='0' OCV='718.42'/>
-								<Entry SoC='10' OCV='746.84'/>
-								<Entry SoC='20' OCV='763.14'/>
-								<Entry SoC='30' OCV='771.85'/>
-								<Entry SoC='40' OCV='776.26'/>
-								<Entry SoC='50' OCV='778.61'/>
-								<Entry SoC='60' OCV='780.43'/>
-								<Entry SoC='70' OCV='782.70'/>
-								<Entry SoC='80' OCV='786.19'/>
-								<Entry SoC='90' OCV='791.68'/>
-								<Entry SoC='100' OCV='800.21'/>
-							</OCV>
-							<InternalResistance>
-								<Entry SoC='0' R_2='0.04' R_10='0.04' R_20='0.04'/>
-								<Entry SoC='100' R_2='0.04' R_10='0.04' R_20='0.04'/>
-							</InternalResistance>
-							<CurrentLimits>
-								<Entry SoC='0' maxChargingCurrent='1620.00' maxDischargingCurrent='1620.00'/>
-								<Entry SoC='100' maxChargingCurrent='1620.00' maxDischargingCurrent='1620.00'/>
-							</CurrentLimits>
-						</v2.4:Data>
-						<Signature>
-							<di:Reference URI="#BAT-asdf">
-								<di:Transforms>
-									<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-									<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-								</di:Transforms>
-								<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-								<di:DigestValue>22QLOYTZK+bUIolzdEzc3Ut0wPIOXEBdWv72ST0Zbyw=</di:DigestValue>
-							</di:Reference>
-						</Signature>
-					</REESS>
-					<SOCmin>20</SOCmin>
-					<SOCmax>80</SOCmax>
-				</Battery>
-			</ElectricEnergyStorage>
+		<!--<ElectricMotorTorqueLimits xsi:type="ElectricMachineTorqueLimitsType">
+			--><!-- optional --><!--
+			--><!-- should be ignored in this case --><!--
+			<ElectricMachine>
+				<Position>2</Position>
+				<VoltageLevel>
+					<Voltage>100</Voltage>
+					<MaxTorqueCurve>
+						<v2.3:Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-200.00"/>
+						<v2.3:Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
+					</MaxTorqueCurve>
+				</VoltageLevel>
+				<VoltageLevel>
+					<Voltage>500</Voltage>
+					<MaxTorqueCurve>
+						<v2.3:Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
+						<v2.3:Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
+					</MaxTorqueCurve>
+				</VoltageLevel>
+			</ElectricMachine>
+		</ElectricMotorTorqueLimits>-->
+		<Components xsi:type="Components_PEV-E3_LorryType">
 			<ElectricMachine>
 				<PowertrainPosition>4</PowertrainPosition>
 				<Count>2</Count>
@@ -3175,6 +2122,115 @@
 					</v2.3:Signature>
 				</ADC>
 			</ElectricMachine>
+			<ElectricEnergyStorage>
+				<!--<Battery>
+					<StringID>0</StringID>
+					<REESS>
+						<v2.4:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xsi:type="BatterySystemDataType">
+							<Manufacturer>a</Manufacturer>
+							<Model>a</Model>
+							<CertificationNumber>token</CertificationNumber>
+							<Date>2017-01-01T00:00:00Z</Date>
+							<AppVersion>aaaaa</AppVersion>
+							<CertificationMethod>Measured</CertificationMethod>
+							<BatteryType>HPBS</BatteryType>
+							<RatedCapacity>72.00</RatedCapacity>
+							<ConnectorsSubsystemsIncluded>true</ConnectorsSubsystemsIncluded>
+							<JunctionboxIncluded>true</JunctionboxIncluded>
+							<TestingTemperature>20</TestingTemperature>
+							<OCV>
+								<Entry SoC="0" OCV="620.00"/>
+								<Entry SoC="100" OCV="640.00"/>
+							</OCV>
+							<InternalResistance>
+								<Entry SoC="0" R_2="10.00" R_10="11.00" R_20="12.00"/>
+								<Entry SoC="100" R_2="12.00" R_10="14.00" R_20="16.00"/>
+							</InternalResistance>
+							<CurrentLimits>
+								<Entry SoC="0" maxChargingCurrent="50.00" maxDischargingCurrent="0.00"/>
+								<Entry SoC="100" maxChargingCurrent="0.00" maxDischargingCurrent="50.00"/>
+							</CurrentLimits>
+						</v2.4:Data>
+						<Signature>
+							<di:Reference URI="#BAT-asdf">
+								<di:Transforms>
+									<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+									<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+								</di:Transforms>
+								<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+								<di:DigestValue>22QLOYTZK+bUIolzdEzc3Ut0wPIOXEBdWv72ST0Zbyw=</di:DigestValue>
+							</di:Reference>
+						</Signature>
+					</REESS>
+					<SOCmin>20</SOCmin>
+					<SOCmax>80</SOCmax>
+				</Battery>-->
+				<Battery>
+					<StringID>0</StringID>
+					<REESS>
+						<v2.4:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xsi:type="BatterySystemDataType">
+							<Manufacturer>a</Manufacturer>
+							<Model>a</Model>
+							<CertificationNumber>token</CertificationNumber>
+							<Date>2017-01-01T00:00:00Z</Date>
+							<AppVersion>aaaaa</AppVersion>
+							<CertificationMethod>Measured</CertificationMethod>
+							<BatteryType>HPBS</BatteryType>
+							<RatedCapacity>324.00</RatedCapacity>
+							<ConnectorsSubsystemsIncluded>true</ConnectorsSubsystemsIncluded>
+							<JunctionboxIncluded>true</JunctionboxIncluded>
+							<TestingTemperature>20</TestingTemperature>
+							<OCV>
+								<Entry SoC="0" OCV="673.50"/>
+								<Entry SoC="100" OCV="750.20"/>
+							</OCV>
+							<InternalResistance>
+								<Entry SoC="0" R_2="10.00" R_10="11.00" R_20="12.00"/>
+								<Entry SoC="100" R_2="12.00" R_10="14.00" R_20="16.00"/>
+							</InternalResistance>
+							<CurrentLimits>
+								<Entry SoC="0" maxChargingCurrent="500.00" maxDischargingCurrent="500.00"/>
+								<Entry SoC="100" maxChargingCurrent="500.00" maxDischargingCurrent="500.00"/>
+							</CurrentLimits>
+						</v2.4:Data>
+						<Signature>
+							<di:Reference URI="#BAT-asdf">
+								<di:Transforms>
+									<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+									<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+								</di:Transforms>
+								<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+								<di:DigestValue>22QLOYTZK+bUIolzdEzc3Ut0wPIOXEBdWv72ST0Zbyw=</di:DigestValue>
+							</di:Reference>
+						</Signature>
+					</REESS>
+				</Battery>
+			</ElectricEnergyStorage>
+			<Retarder>
+				<!-- optional -->
+				<v2.0:Data id="RET-Shai9imi" xsi:type="v2.0:RetarderDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+					<Manufacturer>Generic Retarder Manufacturer</Manufacturer>
+					<Model>Generic Retarder</Model>
+					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
+					<Date>2017-01-11T11:00:00Z</Date>
+					<AppVersion>3.0.1</AppVersion>
+					<CertificationMethod>Standard values</CertificationMethod>
+					<RetarderLossMap>
+						<Entry retarderSpeed="0.00" torqueLoss="10.00"/>
+						<Entry retarderSpeed="2300.00" torqueLoss="20.58"/>
+					</RetarderLossMap>
+				</v2.0:Data>
+				<v2.0:Signature>
+					<di:Reference URI="#RET-Shai9imi">
+						<di:Transforms>
+							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+						</di:Transforms>
+						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+						<di:DigestValue>xcfok6Uo1kvFefSRo+W/oMfEfS5BdTklBugAjby2DUQ=</di:DigestValue>
+					</di:Reference>
+				</v2.0:Signature>
+			</Retarder>
 			<Axlegear>
 				<v2.0:Data id="AXL-EC3ohnoh" xsi:type="v2.0:AxlegearDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
@@ -3183,19 +2239,326 @@
 					<Date>2017-01-11T11:00:00Z</Date>
 					<AppVersion>3.0.1</AppVersion>
 					<LineType>Single portal axle</LineType>
-					<Ratio>2.640</Ratio>
+					<Ratio>2.590</Ratio>
 					<CertificationMethod>Standard values</CertificationMethod>
 					<TorqueLossMap>
-						<Entry inputSpeed='0.00' inputTorque='-50000.00' torqueLoss='1500.00'/>
-						<Entry inputSpeed='0.00' inputTorque='-200.00' torqueLoss='6.00'/>
-						<Entry inputSpeed='0.00' inputTorque='0.00' torqueLoss='6.00'/>
-						<Entry inputSpeed='0.00' inputTorque='200.00' torqueLoss='6.00'/>
-						<Entry inputSpeed='0.00' inputTorque='50000.00' torqueLoss='1500.00'/>
-						<Entry inputSpeed='5000.00' inputTorque='-50000.00' torqueLoss='1500.00'/>
-						<Entry inputSpeed='5000.00' inputTorque='-1253.00' torqueLoss='37.50'/>
-						<Entry inputSpeed='5000.00' inputTorque='0.00' torqueLoss='37.50'/>
-						<Entry inputSpeed='5000.00' inputTorque='1253.00' torqueLoss='37.50'/>
-						<Entry inputSpeed='5000.00' inputTorque='50000.00' torqueLoss='1500.00'/>
+						<Entry inputSpeed="0.00" inputTorque="-5478.00" torqueLoss="220.00"/>
+						<Entry inputSpeed="0.00" inputTorque="-176.00" torqueLoss="28.00"/>
+						<Entry inputSpeed="0.00" inputTorque="0.00" torqueLoss="8.00"/>
+						<Entry inputSpeed="0.00" inputTorque="116.00" torqueLoss="14.00"/>
+						<Entry inputSpeed="0.00" inputTorque="220.00" torqueLoss="17.00"/>
+						<Entry inputSpeed="0.00" inputTorque="326.00" torqueLoss="21.00"/>
+						<Entry inputSpeed="0.00" inputTorque="432.00" torqueLoss="24.00"/>
+						<Entry inputSpeed="0.00" inputTorque="641.00" torqueLoss="31.00"/>
+						<Entry inputSpeed="0.00" inputTorque="853.00" torqueLoss="38.00"/>
+						<Entry inputSpeed="0.00" inputTorque="1274.00" torqueLoss="53.00"/>
+						<Entry inputSpeed="0.00" inputTorque="1696.00" torqueLoss="67.00"/>
+						<Entry inputSpeed="0.00" inputTorque="2117.00" torqueLoss="82.00"/>
+						<Entry inputSpeed="0.00" inputTorque="2538.00" torqueLoss="96.00"/>
+						<Entry inputSpeed="0.00" inputTorque="2959.00" torqueLoss="110.00"/>
+						<Entry inputSpeed="0.00" inputTorque="3376.00" torqueLoss="119.00"/>
+						<Entry inputSpeed="0.00" inputTorque="3785.00" torqueLoss="123.00"/>
+						<Entry inputSpeed="0.00" inputTorque="4200.00" torqueLoss="130.00"/>
+						<Entry inputSpeed="0.00" inputTorque="6309.00" torqueLoss="204.00"/>
+						<Entry inputSpeed="0.00" inputTorque="8409.00" torqueLoss="268.00"/>
+						<Entry inputSpeed="0.00" inputTorque="10507.00" torqueLoss="332.00"/>
+						<Entry inputSpeed="0.00" inputTorque="12606.00" torqueLoss="396.00"/>
+						<Entry inputSpeed="0.00" inputTorque="16804.00" torqueLoss="523.00"/>
+						<Entry inputSpeed="0.00" inputTorque="21002.00" torqueLoss="651.00"/>
+						<Entry inputSpeed="0.00" inputTorque="25199.00" torqueLoss="778.00"/>
+						<Entry inputSpeed="0.00" inputTorque="29397.00" torqueLoss="905.00"/>
+						<Entry inputSpeed="0.00" inputTorque="33594.00" torqueLoss="1032.00"/>
+						<Entry inputSpeed="0.00" inputTorque="37792.00" torqueLoss="1160.00"/>
+						<Entry inputSpeed="0.00" inputTorque="41990.00" torqueLoss="1288.00"/>
+						<Entry inputSpeed="0.00" inputTorque="46187.00" torqueLoss="1415.00"/>
+						<Entry inputSpeed="0.00" inputTorque="50385.00" torqueLoss="1542.00"/>
+						<Entry inputSpeed="143.00" inputTorque="-5482.00" torqueLoss="216.00"/>
+						<Entry inputSpeed="143.00" inputTorque="-174.00" torqueLoss="28.00"/>
+						<Entry inputSpeed="143.00" inputTorque="0.00" torqueLoss="9.00"/>
+						<Entry inputSpeed="143.00" inputTorque="116.00" torqueLoss="14.00"/>
+						<Entry inputSpeed="143.00" inputTorque="222.00" torqueLoss="17.00"/>
+						<Entry inputSpeed="143.00" inputTorque="326.00" torqueLoss="21.00"/>
+						<Entry inputSpeed="143.00" inputTorque="432.00" torqueLoss="24.00"/>
+						<Entry inputSpeed="143.00" inputTorque="641.00" torqueLoss="31.00"/>
+						<Entry inputSpeed="143.00" inputTorque="853.00" torqueLoss="38.00"/>
+						<Entry inputSpeed="143.00" inputTorque="1273.00" torqueLoss="52.00"/>
+						<Entry inputSpeed="143.00" inputTorque="1694.00" torqueLoss="66.00"/>
+						<Entry inputSpeed="143.00" inputTorque="2115.00" torqueLoss="80.00"/>
+						<Entry inputSpeed="143.00" inputTorque="2536.00" torqueLoss="94.00"/>
+						<Entry inputSpeed="143.00" inputTorque="2957.00" torqueLoss="108.00"/>
+						<Entry inputSpeed="143.00" inputTorque="3372.00" torqueLoss="116.00"/>
+						<Entry inputSpeed="143.00" inputTorque="3786.00" torqueLoss="123.00"/>
+						<Entry inputSpeed="143.00" inputTorque="4200.00" torqueLoss="130.00"/>
+						<Entry inputSpeed="143.00" inputTorque="6323.00" torqueLoss="218.00"/>
+						<Entry inputSpeed="143.00" inputTorque="8427.00" torqueLoss="287.00"/>
+						<Entry inputSpeed="143.00" inputTorque="10532.00" torqueLoss="356.00"/>
+						<Entry inputSpeed="143.00" inputTorque="12635.00" torqueLoss="425.00"/>
+						<Entry inputSpeed="143.00" inputTorque="16843.00" torqueLoss="563.00"/>
+						<Entry inputSpeed="143.00" inputTorque="21052.00" torqueLoss="701.00"/>
+						<Entry inputSpeed="143.00" inputTorque="25260.00" torqueLoss="839.00"/>
+						<Entry inputSpeed="143.00" inputTorque="29467.00" torqueLoss="977.00"/>
+						<Entry inputSpeed="143.00" inputTorque="33676.00" torqueLoss="1115.00"/>
+						<Entry inputSpeed="143.00" inputTorque="37884.00" torqueLoss="1253.00"/>
+						<Entry inputSpeed="143.00" inputTorque="42092.00" torqueLoss="1391.00"/>
+						<Entry inputSpeed="143.00" inputTorque="46300.00" torqueLoss="1529.00"/>
+						<Entry inputSpeed="143.00" inputTorque="50509.00" torqueLoss="1667.00"/>
+						<Entry inputSpeed="285.00" inputTorque="-5496.00" torqueLoss="202.00"/>
+						<Entry inputSpeed="285.00" inputTorque="-172.00" torqueLoss="32.00"/>
+						<Entry inputSpeed="285.00" inputTorque="0.00" torqueLoss="10.00"/>
+						<Entry inputSpeed="285.00" inputTorque="118.00" torqueLoss="16.00"/>
+						<Entry inputSpeed="285.00" inputTorque="223.00" torqueLoss="19.00"/>
+						<Entry inputSpeed="285.00" inputTorque="327.00" torqueLoss="22.00"/>
+						<Entry inputSpeed="285.00" inputTorque="432.00" torqueLoss="24.00"/>
+						<Entry inputSpeed="285.00" inputTorque="641.00" torqueLoss="31.00"/>
+						<Entry inputSpeed="285.00" inputTorque="851.00" torqueLoss="37.00"/>
+						<Entry inputSpeed="285.00" inputTorque="1271.00" torqueLoss="50.00"/>
+						<Entry inputSpeed="285.00" inputTorque="1690.00" torqueLoss="63.00"/>
+						<Entry inputSpeed="285.00" inputTorque="2110.00" torqueLoss="75.00"/>
+						<Entry inputSpeed="285.00" inputTorque="2530.00" torqueLoss="88.00"/>
+						<Entry inputSpeed="285.00" inputTorque="2950.00" torqueLoss="101.00"/>
+						<Entry inputSpeed="285.00" inputTorque="3369.00" torqueLoss="113.00"/>
+						<Entry inputSpeed="285.00" inputTorque="3780.00" torqueLoss="117.00"/>
+						<Entry inputSpeed="285.00" inputTorque="4195.00" torqueLoss="124.00"/>
+						<Entry inputSpeed="285.00" inputTorque="6305.00" torqueLoss="200.00"/>
+						<Entry inputSpeed="285.00" inputTorque="8402.00" torqueLoss="262.00"/>
+						<Entry inputSpeed="285.00" inputTorque="10499.00" torqueLoss="324.00"/>
+						<Entry inputSpeed="285.00" inputTorque="12596.00" torqueLoss="386.00"/>
+						<Entry inputSpeed="285.00" inputTorque="16791.00" torqueLoss="510.00"/>
+						<Entry inputSpeed="285.00" inputTorque="20987.00" torqueLoss="636.00"/>
+						<Entry inputSpeed="285.00" inputTorque="25181.00" torqueLoss="760.00"/>
+						<Entry inputSpeed="285.00" inputTorque="29376.00" torqueLoss="884.00"/>
+						<Entry inputSpeed="285.00" inputTorque="33570.00" torqueLoss="1009.00"/>
+						<Entry inputSpeed="285.00" inputTorque="37765.00" torqueLoss="1133.00"/>
+						<Entry inputSpeed="285.00" inputTorque="41960.00" torqueLoss="1259.00"/>
+						<Entry inputSpeed="285.00" inputTorque="46154.00" torqueLoss="1383.00"/>
+						<Entry inputSpeed="285.00" inputTorque="50350.00" torqueLoss="1507.00"/>
+						<Entry inputSpeed="428.00" inputTorque="-5501.00" torqueLoss="200.00"/>
+						<Entry inputSpeed="428.00" inputTorque="-167.00" torqueLoss="35.00"/>
+						<Entry inputSpeed="428.00" inputTorque="0.00" torqueLoss="12.00"/>
+						<Entry inputSpeed="428.00" inputTorque="119.00" torqueLoss="17.00"/>
+						<Entry inputSpeed="428.00" inputTorque="224.00" torqueLoss="21.00"/>
+						<Entry inputSpeed="428.00" inputTorque="328.00" torqueLoss="23.00"/>
+						<Entry inputSpeed="428.00" inputTorque="433.00" torqueLoss="26.00"/>
+						<Entry inputSpeed="428.00" inputTorque="643.00" torqueLoss="31.00"/>
+						<Entry inputSpeed="428.00" inputTorque="851.00" torqueLoss="37.00"/>
+						<Entry inputSpeed="428.00" inputTorque="1270.00" torqueLoss="49.00"/>
+						<Entry inputSpeed="428.00" inputTorque="1689.00" torqueLoss="61.00"/>
+						<Entry inputSpeed="428.00" inputTorque="2109.00" torqueLoss="74.00"/>
+						<Entry inputSpeed="428.00" inputTorque="2529.00" torqueLoss="87.00"/>
+						<Entry inputSpeed="428.00" inputTorque="2949.00" torqueLoss="100.00"/>
+						<Entry inputSpeed="428.00" inputTorque="3365.00" torqueLoss="109.00"/>
+						<Entry inputSpeed="428.00" inputTorque="3778.00" torqueLoss="115.00"/>
+						<Entry inputSpeed="428.00" inputTorque="4191.00" torqueLoss="121.00"/>
+						<Entry inputSpeed="428.00" inputTorque="6296.00" torqueLoss="191.00"/>
+						<Entry inputSpeed="428.00" inputTorque="8390.00" torqueLoss="251.00"/>
+						<Entry inputSpeed="428.00" inputTorque="10485.00" torqueLoss="310.00"/>
+						<Entry inputSpeed="428.00" inputTorque="12579.00" torqueLoss="369.00"/>
+						<Entry inputSpeed="428.00" inputTorque="16767.00" torqueLoss="486.00"/>
+						<Entry inputSpeed="428.00" inputTorque="20955.00" torqueLoss="604.00"/>
+						<Entry inputSpeed="428.00" inputTorque="25143.00" torqueLoss="723.00"/>
+						<Entry inputSpeed="428.00" inputTorque="29332.00" torqueLoss="841.00"/>
+						<Entry inputSpeed="428.00" inputTorque="33521.00" torqueLoss="958.00"/>
+						<Entry inputSpeed="428.00" inputTorque="37708.00" torqueLoss="1076.00"/>
+						<Entry inputSpeed="428.00" inputTorque="41897.00" torqueLoss="1195.00"/>
+						<Entry inputSpeed="428.00" inputTorque="46084.00" torqueLoss="1313.00"/>
+						<Entry inputSpeed="428.00" inputTorque="50273.00" torqueLoss="1430.00"/>
+						<Entry inputSpeed="570.00" inputTorque="-5512.00" torqueLoss="188.00"/>
+						<Entry inputSpeed="570.00" inputTorque="-167.00" torqueLoss="37.00"/>
+						<Entry inputSpeed="570.00" inputTorque="0.00" torqueLoss="13.00"/>
+						<Entry inputSpeed="570.00" inputTorque="121.00" torqueLoss="19.00"/>
+						<Entry inputSpeed="570.00" inputTorque="224.00" torqueLoss="21.00"/>
+						<Entry inputSpeed="570.00" inputTorque="328.00" torqueLoss="23.00"/>
+						<Entry inputSpeed="570.00" inputTorque="433.00" torqueLoss="26.00"/>
+						<Entry inputSpeed="570.00" inputTorque="641.00" torqueLoss="31.00"/>
+						<Entry inputSpeed="570.00" inputTorque="850.00" torqueLoss="36.00"/>
+						<Entry inputSpeed="570.00" inputTorque="1268.00" torqueLoss="46.00"/>
+						<Entry inputSpeed="570.00" inputTorque="1685.00" torqueLoss="58.00"/>
+						<Entry inputSpeed="570.00" inputTorque="2104.00" torqueLoss="70.00"/>
+						<Entry inputSpeed="570.00" inputTorque="2523.00" torqueLoss="81.00"/>
+						<Entry inputSpeed="570.00" inputTorque="2943.00" torqueLoss="94.00"/>
+						<Entry inputSpeed="570.00" inputTorque="3363.00" torqueLoss="107.00"/>
+						<Entry inputSpeed="570.00" inputTorque="3776.00" torqueLoss="113.00"/>
+						<Entry inputSpeed="570.00" inputTorque="4189.00" torqueLoss="118.00"/>
+						<Entry inputSpeed="570.00" inputTorque="6281.00" torqueLoss="175.00"/>
+						<Entry inputSpeed="570.00" inputTorque="8369.00" torqueLoss="230.00"/>
+						<Entry inputSpeed="570.00" inputTorque="10459.00" torqueLoss="283.00"/>
+						<Entry inputSpeed="570.00" inputTorque="12547.00" torqueLoss="336.00"/>
+						<Entry inputSpeed="570.00" inputTorque="16724.00" torqueLoss="443.00"/>
+						<Entry inputSpeed="570.00" inputTorque="20901.00" torqueLoss="550.00"/>
+						<Entry inputSpeed="570.00" inputTorque="25078.00" torqueLoss="658.00"/>
+						<Entry inputSpeed="570.00" inputTorque="29255.00" torqueLoss="764.00"/>
+						<Entry inputSpeed="570.00" inputTorque="33432.00" torqueLoss="871.00"/>
+						<Entry inputSpeed="570.00" inputTorque="37611.00" torqueLoss="979.00"/>
+						<Entry inputSpeed="570.00" inputTorque="41788.00" torqueLoss="1086.00"/>
+						<Entry inputSpeed="570.00" inputTorque="45965.00" torqueLoss="1192.00"/>
+						<Entry inputSpeed="570.00" inputTorque="50142.00" torqueLoss="1299.00"/>
+						<Entry inputSpeed="713.00" inputTorque="-5517.00" torqueLoss="181.00"/>
+						<Entry inputSpeed="713.00" inputTorque="-165.00" torqueLoss="39.00"/>
+						<Entry inputSpeed="713.00" inputTorque="0.00" torqueLoss="14.00"/>
+						<Entry inputSpeed="713.00" inputTorque="122.00" torqueLoss="20.00"/>
+						<Entry inputSpeed="713.00" inputTorque="225.00" torqueLoss="22.00"/>
+						<Entry inputSpeed="713.00" inputTorque="329.00" torqueLoss="24.00"/>
+						<Entry inputSpeed="713.00" inputTorque="433.00" torqueLoss="27.00"/>
+						<Entry inputSpeed="713.00" inputTorque="641.00" torqueLoss="30.00"/>
+						<Entry inputSpeed="713.00" inputTorque="850.00" torqueLoss="36.00"/>
+						<Entry inputSpeed="713.00" inputTorque="1267.00" torqueLoss="45.00"/>
+						<Entry inputSpeed="713.00" inputTorque="1684.00" torqueLoss="56.00"/>
+						<Entry inputSpeed="713.00" inputTorque="2102.00" torqueLoss="67.00"/>
+						<Entry inputSpeed="713.00" inputTorque="2521.00" torqueLoss="79.00"/>
+						<Entry inputSpeed="713.00" inputTorque="2939.00" torqueLoss="90.00"/>
+						<Entry inputSpeed="713.00" inputTorque="3358.00" torqueLoss="102.00"/>
+						<Entry inputSpeed="713.00" inputTorque="3775.00" torqueLoss="111.00"/>
+						<Entry inputSpeed="713.00" inputTorque="4188.00" torqueLoss="118.00"/>
+						<Entry inputSpeed="713.00" inputTorque="6272.00" torqueLoss="166.00"/>
+						<Entry inputSpeed="713.00" inputTorque="8357.00" torqueLoss="217.00"/>
+						<Entry inputSpeed="713.00" inputTorque="10442.00" torqueLoss="267.00"/>
+						<Entry inputSpeed="713.00" inputTorque="12527.00" torqueLoss="317.00"/>
+						<Entry inputSpeed="713.00" inputTorque="16697.00" torqueLoss="416.00"/>
+						<Entry inputSpeed="713.00" inputTorque="20867.00" torqueLoss="517.00"/>
+						<Entry inputSpeed="713.00" inputTorque="25039.00" torqueLoss="617.00"/>
+						<Entry inputSpeed="713.00" inputTorque="29209.00" torqueLoss="717.00"/>
+						<Entry inputSpeed="713.00" inputTorque="33379.00" torqueLoss="818.00"/>
+						<Entry inputSpeed="713.00" inputTorque="37549.00" torqueLoss="918.00"/>
+						<Entry inputSpeed="713.00" inputTorque="41719.00" torqueLoss="1017.00"/>
+						<Entry inputSpeed="713.00" inputTorque="45890.00" torqueLoss="1117.00"/>
+						<Entry inputSpeed="713.00" inputTorque="50060.00" torqueLoss="1218.00"/>
+						<Entry inputSpeed="855.00" inputTorque="-5524.00" torqueLoss="174.00"/>
+						<Entry inputSpeed="855.00" inputTorque="-162.00" torqueLoss="42.00"/>
+						<Entry inputSpeed="855.00" inputTorque="0.00" torqueLoss="15.00"/>
+						<Entry inputSpeed="855.00" inputTorque="122.00" torqueLoss="21.00"/>
+						<Entry inputSpeed="855.00" inputTorque="226.00" torqueLoss="22.00"/>
+						<Entry inputSpeed="855.00" inputTorque="329.00" torqueLoss="24.00"/>
+						<Entry inputSpeed="855.00" inputTorque="434.00" torqueLoss="27.00"/>
+						<Entry inputSpeed="855.00" inputTorque="641.00" torqueLoss="31.00"/>
+						<Entry inputSpeed="855.00" inputTorque="849.00" torqueLoss="35.00"/>
+						<Entry inputSpeed="855.00" inputTorque="1266.00" torqueLoss="45.00"/>
+						<Entry inputSpeed="855.00" inputTorque="1683.00" torqueLoss="55.00"/>
+						<Entry inputSpeed="855.00" inputTorque="2100.00" torqueLoss="65.00"/>
+						<Entry inputSpeed="855.00" inputTorque="2518.00" torqueLoss="77.00"/>
+						<Entry inputSpeed="855.00" inputTorque="2937.00" torqueLoss="87.00"/>
+						<Entry inputSpeed="855.00" inputTorque="3355.00" torqueLoss="99.00"/>
+						<Entry inputSpeed="855.00" inputTorque="3775.00" torqueLoss="111.00"/>
+						<Entry inputSpeed="855.00" inputTorque="4188.00" torqueLoss="117.00"/>
+						<Entry inputSpeed="855.00" inputTorque="6264.00" torqueLoss="158.00"/>
+						<Entry inputSpeed="855.00" inputTorque="8346.00" torqueLoss="205.00"/>
+						<Entry inputSpeed="855.00" inputTorque="10427.00" torqueLoss="252.00"/>
+						<Entry inputSpeed="855.00" inputTorque="12509.00" torqueLoss="299.00"/>
+						<Entry inputSpeed="855.00" inputTorque="16674.00" torqueLoss="393.00"/>
+						<Entry inputSpeed="855.00" inputTorque="20838.00" torqueLoss="487.00"/>
+						<Entry inputSpeed="855.00" inputTorque="25003.00" torqueLoss="581.00"/>
+						<Entry inputSpeed="855.00" inputTorque="29167.00" torqueLoss="675.00"/>
+						<Entry inputSpeed="855.00" inputTorque="33330.00" torqueLoss="769.00"/>
+						<Entry inputSpeed="855.00" inputTorque="37495.00" torqueLoss="863.00"/>
+						<Entry inputSpeed="855.00" inputTorque="41659.00" torqueLoss="957.00"/>
+						<Entry inputSpeed="855.00" inputTorque="45823.00" torqueLoss="1051.00"/>
+						<Entry inputSpeed="855.00" inputTorque="49988.00" torqueLoss="1145.00"/>
+						<Entry inputSpeed="998.00" inputTorque="-5526.00" torqueLoss="172.00"/>
+						<Entry inputSpeed="998.00" inputTorque="-160.00" torqueLoss="44.00"/>
+						<Entry inputSpeed="998.00" inputTorque="0.00" torqueLoss="16.00"/>
+						<Entry inputSpeed="998.00" inputTorque="123.00" torqueLoss="22.00"/>
+						<Entry inputSpeed="998.00" inputTorque="227.00" torqueLoss="23.00"/>
+						<Entry inputSpeed="998.00" inputTorque="331.00" torqueLoss="26.00"/>
+						<Entry inputSpeed="998.00" inputTorque="435.00" torqueLoss="28.00"/>
+						<Entry inputSpeed="998.00" inputTorque="641.00" torqueLoss="31.00"/>
+						<Entry inputSpeed="998.00" inputTorque="850.00" torqueLoss="36.00"/>
+						<Entry inputSpeed="998.00" inputTorque="1266.00" torqueLoss="45.00"/>
+						<Entry inputSpeed="998.00" inputTorque="1682.00" torqueLoss="55.00"/>
+						<Entry inputSpeed="998.00" inputTorque="2100.00" torqueLoss="64.00"/>
+						<Entry inputSpeed="998.00" inputTorque="2517.00" torqueLoss="74.00"/>
+						<Entry inputSpeed="998.00" inputTorque="2935.00" torqueLoss="86.00"/>
+						<Entry inputSpeed="998.00" inputTorque="3354.00" torqueLoss="97.00"/>
+						<Entry inputSpeed="998.00" inputTorque="3772.00" torqueLoss="109.00"/>
+						<Entry inputSpeed="998.00" inputTorque="4185.00" torqueLoss="115.00"/>
+						<Entry inputSpeed="998.00" inputTorque="6258.00" torqueLoss="153.00"/>
+						<Entry inputSpeed="998.00" inputTorque="8338.00" torqueLoss="197.00"/>
+						<Entry inputSpeed="998.00" inputTorque="10418.00" torqueLoss="242.00"/>
+						<Entry inputSpeed="998.00" inputTorque="12498.00" torqueLoss="288.00"/>
+						<Entry inputSpeed="998.00" inputTorque="16658.00" torqueLoss="377.00"/>
+						<Entry inputSpeed="998.00" inputTorque="20817.00" torqueLoss="466.00"/>
+						<Entry inputSpeed="998.00" inputTorque="24977.00" torqueLoss="556.00"/>
+						<Entry inputSpeed="998.00" inputTorque="29137.00" torqueLoss="645.00"/>
+						<Entry inputSpeed="998.00" inputTorque="33297.00" torqueLoss="735.00"/>
+						<Entry inputSpeed="998.00" inputTorque="37456.00" torqueLoss="825.00"/>
+						<Entry inputSpeed="998.00" inputTorque="41616.00" torqueLoss="914.00"/>
+						<Entry inputSpeed="998.00" inputTorque="45776.00" torqueLoss="1003.00"/>
+						<Entry inputSpeed="998.00" inputTorque="49936.00" torqueLoss="1093.00"/>
+						<Entry inputSpeed="1140.00" inputTorque="-5529.00" torqueLoss="169.00"/>
+						<Entry inputSpeed="1140.00" inputTorque="-158.00" torqueLoss="46.00"/>
+						<Entry inputSpeed="1140.00" inputTorque="0.00" torqueLoss="18.00"/>
+						<Entry inputSpeed="1140.00" inputTorque="125.00" torqueLoss="23.00"/>
+						<Entry inputSpeed="1140.00" inputTorque="229.00" torqueLoss="24.00"/>
+						<Entry inputSpeed="1140.00" inputTorque="332.00" torqueLoss="27.00"/>
+						<Entry inputSpeed="1140.00" inputTorque="436.00" torqueLoss="29.00"/>
+						<Entry inputSpeed="1140.00" inputTorque="643.00" torqueLoss="32.00"/>
+						<Entry inputSpeed="1140.00" inputTorque="851.00" torqueLoss="37.00"/>
+						<Entry inputSpeed="1140.00" inputTorque="1267.00" torqueLoss="45.00"/>
+						<Entry inputSpeed="1140.00" inputTorque="1683.00" torqueLoss="55.00"/>
+						<Entry inputSpeed="1140.00" inputTorque="2100.00" torqueLoss="64.00"/>
+						<Entry inputSpeed="1140.00" inputTorque="2516.00" torqueLoss="74.00"/>
+						<Entry inputSpeed="1140.00" inputTorque="2934.00" torqueLoss="85.00"/>
+						<Entry inputSpeed="1140.00" inputTorque="3352.00" torqueLoss="96.00"/>
+						<Entry inputSpeed="1140.00" inputTorque="3771.00" torqueLoss="108.00"/>
+						<Entry inputSpeed="1140.00" inputTorque="4183.00" torqueLoss="114.00"/>
+						<Entry inputSpeed="1283.00" inputTorque="-5529.00" torqueLoss="169.00"/>
+						<Entry inputSpeed="1283.00" inputTorque="-155.00" torqueLoss="49.00"/>
+						<Entry inputSpeed="1283.00" inputTorque="0.00" torqueLoss="19.00"/>
+						<Entry inputSpeed="1283.00" inputTorque="126.00" torqueLoss="24.00"/>
+						<Entry inputSpeed="1283.00" inputTorque="230.00" torqueLoss="26.00"/>
+						<Entry inputSpeed="1283.00" inputTorque="333.00" torqueLoss="28.00"/>
+						<Entry inputSpeed="1283.00" inputTorque="437.00" torqueLoss="30.00"/>
+						<Entry inputSpeed="1283.00" inputTorque="644.00" torqueLoss="34.00"/>
+						<Entry inputSpeed="1283.00" inputTorque="853.00" torqueLoss="38.00"/>
+						<Entry inputSpeed="1283.00" inputTorque="1267.00" torqueLoss="46.00"/>
+						<Entry inputSpeed="1283.00" inputTorque="1683.00" torqueLoss="55.00"/>
+						<Entry inputSpeed="1283.00" inputTorque="2098.00" torqueLoss="64.00"/>
+						<Entry inputSpeed="1283.00" inputTorque="2516.00" torqueLoss="74.00"/>
+						<Entry inputSpeed="1283.00" inputTorque="2934.00" torqueLoss="85.00"/>
+						<Entry inputSpeed="1283.00" inputTorque="3351.00" torqueLoss="95.00"/>
+						<Entry inputSpeed="1283.00" inputTorque="3764.00" torqueLoss="101.00"/>
+						<Entry inputSpeed="1425.00" inputTorque="-5531.00" torqueLoss="167.00"/>
+						<Entry inputSpeed="1425.00" inputTorque="-153.00" torqueLoss="51.00"/>
+						<Entry inputSpeed="1425.00" inputTorque="0.00" torqueLoss="20.00"/>
+						<Entry inputSpeed="1425.00" inputTorque="128.00" torqueLoss="26.00"/>
+						<Entry inputSpeed="1425.00" inputTorque="231.00" torqueLoss="27.00"/>
+						<Entry inputSpeed="1425.00" inputTorque="336.00" torqueLoss="30.00"/>
+						<Entry inputSpeed="1425.00" inputTorque="436.00" torqueLoss="29.00"/>
+						<Entry inputSpeed="1425.00" inputTorque="646.00" torqueLoss="36.00"/>
+						<Entry inputSpeed="1425.00" inputTorque="853.00" torqueLoss="38.00"/>
+						<Entry inputSpeed="1425.00" inputTorque="1268.00" torqueLoss="46.00"/>
+						<Entry inputSpeed="1425.00" inputTorque="1683.00" torqueLoss="55.00"/>
+						<Entry inputSpeed="1425.00" inputTorque="2098.00" torqueLoss="63.00"/>
+						<Entry inputSpeed="1425.00" inputTorque="2516.00" torqueLoss="73.00"/>
+						<Entry inputSpeed="1425.00" inputTorque="2932.00" torqueLoss="84.00"/>
+						<Entry inputSpeed="1425.00" inputTorque="3345.00" torqueLoss="89.00"/>
+						<Entry inputSpeed="1568.00" inputTorque="-5538.00" torqueLoss="160.00"/>
+						<Entry inputSpeed="1568.00" inputTorque="-148.00" torqueLoss="56.00"/>
+						<Entry inputSpeed="1568.00" inputTorque="0.00" torqueLoss="21.00"/>
+						<Entry inputSpeed="1568.00" inputTorque="129.00" torqueLoss="28.00"/>
+						<Entry inputSpeed="1568.00" inputTorque="232.00" torqueLoss="29.00"/>
+						<Entry inputSpeed="1568.00" inputTorque="336.00" torqueLoss="31.00"/>
+						<Entry inputSpeed="1568.00" inputTorque="440.00" torqueLoss="32.00"/>
+						<Entry inputSpeed="1568.00" inputTorque="647.00" torqueLoss="37.00"/>
+						<Entry inputSpeed="1568.00" inputTorque="854.00" torqueLoss="41.00"/>
+						<Entry inputSpeed="1568.00" inputTorque="1269.00" torqueLoss="48.00"/>
+						<Entry inputSpeed="1568.00" inputTorque="1684.00" torqueLoss="57.00"/>
+						<Entry inputSpeed="1568.00" inputTorque="2101.00" torqueLoss="65.00"/>
+						<Entry inputSpeed="1568.00" inputTorque="2517.00" torqueLoss="74.00"/>
+						<Entry inputSpeed="1568.00" inputTorque="2929.00" torqueLoss="80.00"/>
+						<Entry inputSpeed="1853.00" inputTorque="-5540.00" torqueLoss="158.00"/>
+						<Entry inputSpeed="1853.00" inputTorque="-144.00" torqueLoss="60.00"/>
+						<Entry inputSpeed="1853.00" inputTorque="0.00" torqueLoss="24.00"/>
+						<Entry inputSpeed="1853.00" inputTorque="132.00" torqueLoss="30.00"/>
+						<Entry inputSpeed="1853.00" inputTorque="234.00" torqueLoss="31.00"/>
+						<Entry inputSpeed="1853.00" inputTorque="340.00" torqueLoss="34.00"/>
+						<Entry inputSpeed="1853.00" inputTorque="442.00" torqueLoss="35.00"/>
+						<Entry inputSpeed="1853.00" inputTorque="650.00" torqueLoss="38.00"/>
+						<Entry inputSpeed="1853.00" inputTorque="856.00" torqueLoss="42.00"/>
+						<Entry inputSpeed="1853.00" inputTorque="1269.00" torqueLoss="49.00"/>
+						<Entry inputSpeed="1853.00" inputTorque="1684.00" torqueLoss="57.00"/>
+						<Entry inputSpeed="1853.00" inputTorque="2098.00" torqueLoss="64.00"/>
+						<Entry inputSpeed="1853.00" inputTorque="2515.00" torqueLoss="73.00"/>
+						<Entry inputSpeed="1853.00" inputTorque="2928.00" torqueLoss="79.00"/>
+						
 					</TorqueLossMap>
 				</v2.0:Data>
 				<v2.0:Signature>
@@ -3223,9 +2586,9 @@
 									<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 									<Date>2017-01-11T14:00:00Z</Date>
 									<AppVersion>Tyre Generation App 1.0</AppVersion>
-									<Dimension>265/70 R19.5</Dimension>
-									<RRCDeclared>0.0065</RRCDeclared>
-									<FzISO>20850</FzISO>
+									<Dimension>315/70 R22.5</Dimension>
+									<RRCDeclared>0.0055</RRCDeclared>
+									<FzISO>31300</FzISO>
 								</Data>
 								<Signature>
 									<di:Reference URI="#WHL-5432198760-315-70-R22.5">
@@ -3250,9 +2613,9 @@
 									<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 									<Date>2017-01-11T14:00:00Z</Date>
 									<AppVersion>Tyre Generation App 1.0</AppVersion>
-									<Dimension>265/70 R19.5</Dimension>
-									<RRCDeclared>0.0075</RRCDeclared>
-									<FzISO>20850</FzISO>
+									<Dimension>315/70 R22.5</Dimension>
+									<RRCDeclared>0.0063</RRCDeclared>
+									<FzISO>31300</FzISO>
 								</Data>
 								<Signature>
 									<di:Reference URI="#WHL-5432198760-315-70-R22.5">
@@ -3270,18 +2633,15 @@
 				</v2.0:Data>
 			</AxleWheels>
 			<Auxiliaries>
-				<Data xsi:type="AUX_HEV-S_LorryDataType">
-					<Fan>
-						<Technology>Hydraulic driven - Constant displacement pump</Technology>
-					</Fan>
+				<Data xsi:type="AUX_PEV_LorryDataType">
 					<SteeringPump>
-						<Technology axleNumber="1">Full electric steering gear</Technology>
+						<Technology axleNumber="1">Electric driven pump</Technology>
 					</SteeringPump>
 					<ElectricSystem>
 						<Technology>Standard technology - LED headlights, all</Technology>
 					</ElectricSystem>
 					<PneumaticSystem>
-						<Technology>Medium Supply 2-stage</Technology>
+						<Technology>Medium Supply 2-stage + elec. driven</Technology>
 					</PneumaticSystem>
 					<HVAC>
 						<Technology>Default</Technology>
@@ -3296,9 +2656,9 @@
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 					<Date>2017-03-24T15:00:00Z</Date>
 					<AppVersion>Vecto AirDrag x.y</AppVersion>
-					<CdxA_0>4.31</CdxA_0>
-					<TransferredCdxA>4.31</TransferredCdxA>
-					<DeclaredCdxA>4.31</DeclaredCdxA>
+					<CdxA_0>6.31</CdxA_0>
+					<TransferredCdxA>6.32</TransferredCdxA>
+					<DeclaredCdxA>6.34</DeclaredCdxA>
 				</Data>
 				<v2.0:Signature>
 					<di:Reference URI="#CabinX23h">
