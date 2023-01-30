@@ -653,7 +653,6 @@ Public Class DummyVehicle
 	Public Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV
 	Public Property DualFuelVehicle As Boolean Implements IVehicleDeclarationInputData.DualFuelVehicle
 	Public Property MaxNetPower1 As Watt Implements IVehicleDeclarationInputData.MaxNetPower1
-	Public Property MaxNetPower2 As Watt Implements IVehicleDeclarationInputData.MaxNetPower2
     Public ReadOnly Property ExemptedTechnology As String Implements IVehicleDeclarationInputData.ExemptedTechnology
     Public ReadOnly Property RegisteredClass As RegistrationClass? Implements IVehicleDeclarationInputData.RegisteredClass
 	Public ReadOnly Property NumberPassengerSeatsUpperDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengerSeatsUpperDeck

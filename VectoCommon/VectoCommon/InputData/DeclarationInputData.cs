@@ -161,9 +161,10 @@ namespace TUGraz.VectoCommon.InputData
 
         bool DualFuelVehicle { get; }
 
+		/// <summary>
+		/// SumNetPower in 2nd amendment
+		/// </summary>
         Watt MaxNetPower1 { get; }
-
-		Watt MaxNetPower2 { get; }
 
 		string ExemptedTechnology { get; }
 
@@ -804,7 +805,27 @@ namespace TUGraz.VectoCommon.InputData
 		IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> Entries { get; }
 	}
 
-	public class ElectricMachineEntry<T> where T : IElectricMotorDeclarationInputData
+	//public interface IElectricMachineEntry<T>
+	//{
+	//	T ElectricMachine { get; set; }
+
+	//	int Count { get; set; }
+
+	//	PowertrainPosition Position { get; set; }
+
+	//	double RatioADC { get; set; }
+
+	//	double[] RatioPerGear { get; set; }
+
+	//	double MechanicalTransmissionEfficiency { get; set; }
+
+	//	TableData MechanicalTransmissionLossMap { get; set; }
+
+	//	IADCDeclarationInputData ADC { get; set; }
+	//}
+
+
+	public class ElectricMachineEntry<T> where T : class, IElectricMotorDeclarationInputData
 	{
 		public T ElectricMachine { get; set; }
 

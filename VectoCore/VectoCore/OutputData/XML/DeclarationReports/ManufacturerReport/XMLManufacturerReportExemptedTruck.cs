@@ -55,10 +55,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 			if (modelData.VehicleData.MaxNetPower1 != null)
 				retVal.Add(new XElement(tns + XMLNames.Vehicle_MaxNetPower1,
 					XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower1, XMLNames.Unit_W)));
-			if (modelData.VehicleData.MaxNetPower2 != null) {
-				retVal.Add(new XElement(tns + XMLNames.Vehicle_MaxNetPower2,
-					XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower2, XMLNames.Unit_W)));
-			}
 
 			return retVal.ToArray();
 		}

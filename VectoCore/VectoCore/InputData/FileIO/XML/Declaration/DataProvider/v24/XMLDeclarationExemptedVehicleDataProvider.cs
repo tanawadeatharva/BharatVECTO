@@ -60,8 +60,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override Watt MaxNetPower1 => GetDouble("SumNetPower").SI<Watt>();
 
-		public override Watt MaxNetPower2 => null;
-
 		public override string ExemptedTechnology => GetString("Technology");
 
 		public override IVehicleComponentsDeclaration Components => null;
