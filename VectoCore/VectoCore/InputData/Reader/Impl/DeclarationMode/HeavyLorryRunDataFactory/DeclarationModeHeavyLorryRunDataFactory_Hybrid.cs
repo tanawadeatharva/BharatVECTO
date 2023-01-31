@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					foreach (var mission in _segment.Missions)
 					{
 						if (mission.MissionType.IsEMS() &&
-							engine.RatedPowerDeclared.IsSmaller(DeclarationData.MinEnginePowerForEMS))
+							DeclarationData.GetReferencePropulsionPower(vehicle).IsSmaller(DeclarationData.MinEnginePowerForEMS))
 						{
 							continue;
 						}
@@ -173,8 +173,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				return runData;
 			}
 
-			protected virtual void CreateGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle, VectoRunData runData)
+			protected override void CreateGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle, VectoRunData runData)
 			{
+				if (vehicle.ArchitectureID.IsOneOf(ArchitectureID.S2, ArchitectureID.S_IEPC)) {
+					throw new ArgumentException(nameof(vehicle.ArchitectureID));
+				}
 				runData.GearshiftParameters = new ShiftStrategyParameters() {
 					StartSpeed = DeclarationData.GearboxTCU.StartSpeed,
 					StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration
@@ -241,18 +244,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					VectoSimulationJobType.ParallelHybridVehicle);
 
 		
-				runData.GearshiftParameters =
-					DataAdapter.CreateGearshiftData(
-						runData.AxleGearData?.AxleGear.Ratio ?? 1.0,
-						null,
-						vehicle.Components.GearboxInputData.Type,
-						vehicle.Components.GearboxInputData.Gears.Count
-					);
-				var shiftStrategyName =
-					PowertrainBuilder.GetShiftStrategyName(vehicle.Components.GearboxInputData.Type,
-						vehicle.VehicleType);
-				runData.GearboxData = DataAdapter.CreateGearboxData(vehicle, runData,
-					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+				CreateGearboxAndGearshiftData(vehicle, runData);
 
 				runData.HybridStrategyParameters =
 					DataAdapter.CreateHybridStrategy(runData.BatteryData, runData.SuperCapData, runData.VehicleData.TotalVehicleMass, ovcMode, loading.Key, runData.VehicleData.VehicleClass, mission.MissionType);
@@ -287,7 +279,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				{
 					runData.ModFileSuffix += ovcMode == VectoRunData.OvcHevMode.ChargeSustaining ? "CS" : "CD";
 				}
-
+				runData.OVCMode = ovcMode;
 				return runData;
 			}
 
@@ -298,7 +290,22 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				//throw new NotImplementedException("ParallelHybrid not implemented");
 				_segment = GetSegment(InputDataProvider.JobInputData.Vehicle, false);
 			}
-		
+
+			protected override void CreateGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle, VectoRunData runData)
+			{
+				runData.GearshiftParameters =
+					DataAdapter.CreateGearshiftData(
+						runData.AxleGearData?.AxleGear.Ratio ?? 1.0,
+						null,
+						vehicle.Components.GearboxInputData.Type,
+						vehicle.Components.GearboxInputData.Gears.Count
+					);
+				var shiftStrategyName =
+					PowertrainBuilder.GetShiftStrategyName(vehicle.Components.GearboxInputData.Type,
+						vehicle.VehicleType);
+				runData.GearboxData = DataAdapter.CreateGearboxData(vehicle, runData,
+					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+			}
 
 			#endregion
 
