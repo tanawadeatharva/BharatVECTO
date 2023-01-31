@@ -39,7 +39,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + XMLNames.Vehicle_AxleConfiguration, vehicleData.AxleConfiguration.ToXMLFormat()),
 				new XElement(_cif + XMLNames.Vehicle_TPMLM, XMLHelper.ValueAsUnit(vehicleData.GrossVehicleMassRating, "kg")),
 				new XElement(_cif + XMLNames.Report_Vehicle_VehicleGroup, DeclarationData.GetVehicleGroupGroup(vehicleData).Item1.GetClassNumber()),
-				new XElement(_cif + "VehicleGroupCO2", DeclarationData.GetVehicleGroupCO2StandardsGroup(vehicleData).ToXMLFormat()),
+				new XElement(_cif + XMLNames.VehicleGroupCO2, string.Empty), //the value of this element will be replaced later, write empty string to let the validation fail if the value is not replaced
+				//new XElement(_cif + XMLNames.VehicleGroupCO2, DeclarationData.GetVehicleGroupCO2StandardsGroup(vehicleData).ToXMLFormat()),
 
 			};
 			return result;
@@ -59,7 +60,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + XMLNames.Vehicle_AxleConfiguration, primary.AxleConfiguration.ToXMLFormat()),
 				new XElement(_cif + XMLNames.Vehicle_TPMLM, XMLHelper.ValueAsUnit(consolidatedVehicleData.GrossVehicleMassRating, "kg")),
 				new XElement(_cif + XMLNames.Report_Vehicle_VehicleGroup, DeclarationData.GetVehicleGroupGroup(consolidatedVehicleData).Item1.GetClassNumber()),
-				new XElement(_cif + "VehicleGroupCO2", DeclarationData.GetVehicleGroupCO2StandardsGroup(multiStageInputDataProvider).ToXMLFormat()),
+				new XElement(_cif + XMLNames.VehicleGroupCO2, DeclarationData.GetVehicleGroupCO2StandardsGroup(multiStageInputDataProvider).ToXMLFormat()),
 			};
 			return result;
 		}

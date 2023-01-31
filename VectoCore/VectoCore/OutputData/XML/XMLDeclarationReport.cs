@@ -198,7 +198,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					DeclarationData.SetElectricRangesPEV(this, runData, data);
 				}
 
-				if (data.HasGearbox) {
+				if (data.HasGearbox && !runData.JobType.IsOneOf(VectoSimulationJobType.IEPC_E, VectoSimulationJobType.IEPC_S)) {
 					var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
 						? ModalResultField.P_retarder_in
 						: (runData.AngledriveData == null ? ModalResultField.P_axle_in : ModalResultField.P_angle_in);

@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Linq;
-using System.Data.Common;
-using System.Diagnostics;
-using System.Threading;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.CIFWriter;
+using TUGraz.VectoCommon.Utils;
+
 
 namespace TUGraz.VectoCore.Utils.Ninject
 {
@@ -24,6 +21,7 @@ namespace TUGraz.VectoCore.Utils.Ninject
 
 	public class VehicleTypeAndArchitectureStringHelperReport : IVehicleTypeAndArchitectureStringHelperReport
 	{
+		
 		public  CombineArgumentsToNameInstanceProvider.CombineToName CreateName { get; } = (arguments => {
 
 			//may be called with first argument of type string (when defining the bindings) or VehicleCategory when using the factory
@@ -36,11 +34,17 @@ namespace TUGraz.VectoCore.Utils.Ninject
 			
 			VectoSimulationJobType jobType = (VectoSimulationJobType)arguments[1];
 			ArchitectureID archId = (ArchitectureID)arguments[2];
+			if (jobType == VectoSimulationJobType.ParallelHybridVehicle){
+				archId = ArchitectureID.P1; //same report for all p-hevs
+			}
+
 			bool exempted = (bool)arguments[3];
 			bool iepc = (bool)arguments[4];
 			bool ihpc = (bool)arguments[5];
-
-
+			var classification =
+				new VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification(jobType, archId, vehicleType,
+					exempted, iepc, ihpc);
+			return classification.ToString();
 
 			string result = "";
 			if (exempted) {

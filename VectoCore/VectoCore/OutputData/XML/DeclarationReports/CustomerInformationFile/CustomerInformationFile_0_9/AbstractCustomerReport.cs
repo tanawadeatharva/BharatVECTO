@@ -6,9 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.XPath;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
@@ -33,6 +35,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 
 		protected XElement Vehicle { get; set; }
+
+		protected IVehicleDeclarationInputData Input { get; set; }
 		protected IResultsWriter Results { get; set; }
 
 		protected XElement InputDataIntegrity { get; set; }
@@ -53,6 +57,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public virtual void Initialize(VectoRunData modelData)
 		{
+			if (modelData.VehicleData.VehicleClass.IsBus()) {
+				Input = modelData.InputData.PrimaryVehicleData.Vehicle;
+			} else {
+				Input = modelData.InputData.JobInputData.Vehicle;
+			}
 			InitializeVehicleData(modelData.InputData);
 			_ovc = modelData.VehicleData.OffVehicleCharging;
 			Results = _resultFactory.GetCIFResultsWriter(modelData.VehicleData.VehicleCategory.GetVehicleType(), 
@@ -87,6 +96,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				)
 			);
 
+		
+			var lh = results.SingleOrDefault(res => res.Mission == MissionType.LongHaul && res.LoadingType == LoadingType.ReferenceLoad);
+			Vehicle.XPathSelectElement($"//*[local-name()='{XMLNames.VehicleGroupCO2}']").Value = DeclarationData
+				.GetVehicleGroupCO2StandardsGroup(Input).ToXMLFormat();
+
 			var stream = new MemoryStream();
 			var writer = new StreamWriter(stream);
 			writer.Write(retVal);
@@ -111,4 +125,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 
 	}
+
+
 }

@@ -92,7 +92,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 			Bind<IXMLManufacturerReport>().To<HEV_IEPC_S_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
 					VehicleCategoryHelper.Lorry,
-					VectoSimulationJobType.SerialHybridVehicle,
+					VectoSimulationJobType.IEPC_S,
 					ArchitectureID.S_IEPC,
 					false,
 					true,
@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					false)));
 
 			Bind<IXMLManufacturerReport>().To<PEV_IEPC_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.Lorry,
-					VectoSimulationJobType.BatteryElectricVehicle,
+					VectoSimulationJobType.IEPC_E,
 					ArchitectureID.E_IEPC,
 					false,
 					true,
@@ -179,7 +179,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 			Bind<IXMLManufacturerReport>().To<HEV_IEPC_S_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
 					VehicleCategoryHelper.Van,
-					VectoSimulationJobType.SerialHybridVehicle,
+					VectoSimulationJobType.IEPC_S,
 					ArchitectureID.S_IEPC,
 					false,
 					true,
@@ -211,7 +211,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 			Bind<IXMLManufacturerReport>().To<PEV_IEPC_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
 					VehicleCategoryHelper.Van,
-					VectoSimulationJobType.BatteryElectricVehicle,
+					VectoSimulationJobType.IEPC_E,
 					ArchitectureID.E_IEPC,
 					false,
 					true,
