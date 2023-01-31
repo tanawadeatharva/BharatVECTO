@@ -1820,7 +1820,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(data.GearboxData is null ? null : GetSimpleGearbox(container, data))
 				.AddComponent(GetElectricMachine(data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1,
-					data.ElectricMachinesData, container, es, new DummyElectricMotorControl()));
+					data.ElectricMachinesData, container, es, new SimpleElectricMotorControl()));
 			if (data.AxleGearData == null) {
 				new DummyAxleGearInfo(container); // necessary for certain IEPC configurations
 			}
@@ -2206,10 +2206,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 	public class SimpleElectricMotorControl : IElectricMotorControl
 	{
+		public bool EmOff { get; set; }
+
 		public NewtonMeter MechanicalAssistPower(Second absTime, Second dt, NewtonMeter outTorque, PerSecond prevOutAngularVelocity,
 			PerSecond currOutAngularVelocity, NewtonMeter maxDriveTorque, NewtonMeter maxRecuperationTorque,
 			PowertrainPosition position, bool dryRun)
 		{
+			if (EmOff) {
+				return null;
+			}
+
+			
 			if (dryRun) {
 				return -outTorque;
 			}
@@ -2238,6 +2245,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		#endregion
 	}
 
+	[Obsolete("Replaced with SimpleElectricMotorControl")]
 	public class DummyElectricMotorControl : IElectricMotorControl
 	{
 		#region Implementation of IElectricMotorControl
