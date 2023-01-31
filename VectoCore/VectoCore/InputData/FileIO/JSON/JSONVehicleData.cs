@@ -91,6 +91,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return _batteries ?? (_batteries = ReadBatteries());
 		}
 
+		public override ArchitectureID ArchitectureID
+		{
+			get
+			{
+				return VehicleType.GetArchitectureID(GetElectricMachines().Entries
+					.First(e => e.Position != PowertrainPosition.GEN).Position);
+			}
+		}
+
 		public override VectoSimulationJobType VehicleType
 		{
 			get {
@@ -339,7 +348,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public int? NumSteeredAxles => null;
 		XmlNode IVehicleDeclarationInputData.XMLSource => null;
 		public virtual string VehicleTypeApprovalNumber { get; }
-		public ArchitectureID ArchitectureID { get; }
+		public virtual ArchitectureID ArchitectureID { get; }
 		public bool OvcHev { get; }
 		public Watt MaxChargingPower { get; }
 
@@ -496,8 +505,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual bool DualFuelVehicle => DeclarationData.Vehicle.DualFuelVehicleDefault;
 
 		public virtual Watt MaxNetPower1 => null;
-
-		public virtual Watt MaxNetPower2 => null;
 
 		public virtual string ExemptedTechnology => null;
 

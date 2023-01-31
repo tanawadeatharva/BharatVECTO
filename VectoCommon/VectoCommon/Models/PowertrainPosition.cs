@@ -5,7 +5,7 @@ using TUGraz.VectoCommon.Utils;
 namespace TUGraz.VectoCommon.InputData {
 	public enum PowertrainPosition
 	{
-		HybridPositionNotSet, // this has to be the first entrie so that it is used as default for not initialized fields!
+		HybridPositionNotSet, // this has to be the first entry so that it is used as default for not initialized fields!
 		HybridP0,
 		HybridP1,
 		HybridP2,
