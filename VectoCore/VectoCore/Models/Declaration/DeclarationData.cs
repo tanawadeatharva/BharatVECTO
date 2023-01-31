@@ -191,6 +191,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			throw new VectoException("No Group found for vehicle");
 		}
 
+
+
 		public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IVehicleDeclarationInputData vehicleData)
 		{
 			switch (vehicleData.VehicleCategory) {
@@ -198,18 +200,36 @@ namespace TUGraz.VectoCore.Models.Declaration
 				case VehicleCategory.RigidTruck:
 				case VehicleCategory.Tractor:
 					var vehicleGroup = GetVehicleGroupGroup(vehicleData);
-					var propulsionPower = (vehicleData.Components?.EngineInputData?.RatedPowerDeclared ?? 0.SI<Watt>()) +
-										(vehicleData.Components?.ElectricMachines?.Entries
-											.Where(x => x.Position != PowertrainPosition.GEN)
-											.Sum(x => x.ElectricMachine.R85RatedPower * x.Count) ?? 0.SI<Watt>()) +
-										(vehicleData.Components?.IEPC?.R85RatedPower ?? 0.SI<Watt>()) + 
-										(vehicleData.MaxNetPower1 ?? 0.SI<Watt>()); 
+					var propulsionPower = GetReferencePropulsionPower(vehicleData);
 					var co2Group = WeightingGroup.Lookup(vehicleGroup.Item1, vehicleData.SleeperCab ?? false, propulsionPower);
 					return co2Group;
 				default:
 					return Declaration.WeightingGroup.Unknown;
 			}
 			//throw new VectoException("No CO2 Group found for vehicle");
+		}
+
+		public static Watt GetReferencePropulsionPower(IVehicleDeclarationInputData vehicleData)
+		{
+			switch (vehicleData.VehicleType) {
+				case VectoSimulationJobType.ConventionalVehicle:
+				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.EngineOnlySimulation:
+				case VectoSimulationJobType.IHPC:
+					return vehicleData.Components.EngineInputData?.RatedPowerDeclared ?? 0.SI<Watt>() + vehicleData.MaxNetPower1 ?? 0.SI<Watt>();
+				case VectoSimulationJobType.SerialHybridVehicle:
+				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.IEPC_E:
+				case VectoSimulationJobType.IEPC_S:
+					return (vehicleData.Components?.EngineInputData?.RatedPowerDeclared ?? 0.SI<Watt>()) +
+							(vehicleData.Components?.ElectricMachines?.Entries
+								.Where(x => x.Position != PowertrainPosition.GEN)
+								.Sum(x => x.ElectricMachine.R85RatedPower * x.Count) ?? 0.SI<Watt>()) +
+							(vehicleData.Components?.IEPC?.R85RatedPower ?? 0.SI<Watt>()) +
+							(vehicleData.MaxNetPower1 ?? 0.SI<Watt>());
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
 		}
 
 		public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IMultistepBusInputDataProvider multiStageInputDataProvider)
