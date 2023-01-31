@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			switch (ovcMode) {
 				case VectoRunData.OvcHevMode.ChargeSustaining:
-					result.InitialSoc = tmpSystem.MinSoC + deltaSoc;
+					result.InitialSoc = result.MinSoC + deltaSoc;
 					break;
 				case VectoRunData.OvcHevMode.ChargeDepleting:
 					result.InitialSoc = (tmpSystem.MaxSoC + tmpSystem.MinSoC) / 2;
