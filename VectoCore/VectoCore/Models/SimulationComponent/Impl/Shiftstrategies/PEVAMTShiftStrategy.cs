@@ -144,6 +144,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			PowertrainBuilder.BuildSimplePowertrainElectric(runData, testContainer);
 
 			TestPowertrain = new TestPowertrain<Gearbox>(testContainer, DataBus);
+			foreach (var motor in testContainer.ElectricMotors.Values)
+			{
+				if ((motor as ElectricMotor).Control is SimpleElectricMotorControl emCtl) {
+					emCtl.EmOff = false; //Make sure em is switched on
+				}
+			}
 		}
 
 		protected void SetupVelocityDropPreprocessor(IVehicleContainer dataBus)
