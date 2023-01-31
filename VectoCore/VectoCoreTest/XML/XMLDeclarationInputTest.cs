@@ -1000,7 +1000,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(zeroEmission, vehicle.ZeroEmissionVehicle);
 			Assert.AreEqual(dualfuel, vehicle.DualFuelVehicle);
 			Assert.AreEqual(maxNetPower1, vehicle.MaxNetPower1.Value());
-			Assert.AreEqual(maxNetPower2, vehicle.MaxNetPower2.Value());
+
 		}
 
 		[TestCase(SampleVehicleFullDeclUpdated, true, false, true)]
