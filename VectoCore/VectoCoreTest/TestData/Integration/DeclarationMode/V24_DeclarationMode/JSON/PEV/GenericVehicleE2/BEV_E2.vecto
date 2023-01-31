@@ -17,17 +17,10 @@
 
     "Aux": [
       {
-        "ID": "FAN",
-        "Type": "Fan",
-        "Technology": [
-          "Crankshaft mounted - On/off clutch"
-        ]
-      },
-      {
         "ID": "STP",
         "Type": "Steering pump",
         "Technology": [
-          "Fixed displacement with elec. control"
+          "Full electric steering gear"
         ]
       },
       {
@@ -48,7 +41,7 @@
         "ID": "PS",
         "Type": "Pneumatic System",
         "Technology": [
-          "Medium Supply 2-stage + ESS + AMS"
+          "Vacuum pump + elec. driven"
         ]
       }
     ],

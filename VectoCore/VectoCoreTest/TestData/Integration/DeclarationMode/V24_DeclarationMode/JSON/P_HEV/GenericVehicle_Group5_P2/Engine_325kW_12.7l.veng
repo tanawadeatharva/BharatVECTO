@@ -13,9 +13,9 @@
     "Inertia": 5.1498,
     "Fuels": [
       {
-        "WHTC-Urban": 0.0,
-        "WHTC-Rural": 0.0,
-        "WHTC-Motorway": 0.0,
+        "WHTC-Urban": 1.0097,
+        "WHTC-Rural": 1.0035,
+        "WHTC-Motorway": 1.0035,
         "WHTC-Engineering": 1.0,
         "ColdHotBalancingFactor": 0.0,
         "CFRegPer": 1.0,

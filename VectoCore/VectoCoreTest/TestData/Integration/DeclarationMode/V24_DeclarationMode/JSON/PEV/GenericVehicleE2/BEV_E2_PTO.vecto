@@ -26,21 +26,29 @@
     "PCCOverSpeed": 5.0,
     "PCCPreviewDistanceUC1": 1500.0,
     "PCCPreviewDistanceUC2": 1000.0,
-
-
+    "LAC": {
+      "Enabled": true,
+      "PreviewDistanceFactor": 10.0,
+      "DF_offset": 2.5,
+      "DF_scaling": 1.5,
+      "DF_targetSpeedLookup": "",
+      "Df_velocityDropLookup": "",
+      "MinSpeed": 50.0
+    },
+    "OverSpeedEcoRoll": {
+      "Mode": "Off",
+      "MinSpeed": 50.0,
+      "OverSpeed": 5.0
+    },
+    "Cycles": [
+      "MunicipalUtility"
+    ],
     "Aux": [
-      {
-        "ID": "FAN",
-        "Type": "Fan",
-        "Technology": [
-          "Crankshaft mounted - On/off clutch"
-        ]
-      },
       {
         "ID": "STP",
         "Type": "Steering pump",
         "Technology": [
-          "Fixed displacement with elec. control"
+          "Full electric steering gear"
         ]
       },
       {
@@ -61,29 +69,9 @@
         "ID": "PS",
         "Type": "Pneumatic System",
         "Technology": [
-          "Medium Supply 2-stage + ESS + AMS"
+          "Vacuum pump + elec. driven"
         ]
       }
     ],
-
-
-
-    "LAC": {
-      "Enabled": true,
-      "PreviewDistanceFactor": 10.0,
-      "DF_offset": 2.5,
-      "DF_scaling": 1.5,
-      "DF_targetSpeedLookup": "",
-      "Df_velocityDropLookup": "",
-      "MinSpeed": 50.0
-    },
-    "OverSpeedEcoRoll": {
-      "Mode": "Off",
-      "MinSpeed": 50.0,
-      "OverSpeed": 5.0
-    },
-    "Cycles": [
-      "MunicipalUtility"
-    ]
   }
 }
