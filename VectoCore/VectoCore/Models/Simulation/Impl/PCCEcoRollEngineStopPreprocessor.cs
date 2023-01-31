@@ -125,8 +125,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var gradient = 0.SI<Radian>();
 
 			foreach (var motor in container.ElectricMotors.Values) {
-				if ((motor as ElectricMotor).Control is DummyElectricMotorControl emCtl) {
-					emCtl.EmTorque = null;
+				if ((motor as ElectricMotor).Control is SimpleElectricMotorControl emCtl) {
+					emCtl.EmOff = true;
 				}
 			}
 
