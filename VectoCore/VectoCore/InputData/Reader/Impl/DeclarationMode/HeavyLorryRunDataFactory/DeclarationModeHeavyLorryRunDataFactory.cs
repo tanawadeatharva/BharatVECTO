@@ -163,13 +163,16 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			protected Segment GetSegment(IVehicleDeclarationInputData vehicle, bool batteryElectric = false)
 			{
 				_allowVocational = true;
+				var ng = vehicle.Components.EngineInputData?.EngineModes.Any(e =>
+					e.Fuels.Any(f => f.FuelType.IsOneOf(FuelType.LPGPI, FuelType.NGCI, FuelType.NGPI))) ?? false;
+				var ovcHev = vehicle.OvcHev;
 				Segment segment;
 				try
 				{
 					segment = DeclarationData.TruckSegments.Lookup(
 						vehicle.VehicleCategory, batteryElectric, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating,
 						vehicle.CurbMassChassis,
-						vehicle.VocationalVehicle);
+						vehicle.VocationalVehicle, ng, ovcHev);
 				}
 				catch (VectoException)
 				{
@@ -177,7 +180,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					segment = DeclarationData.TruckSegments.Lookup(
 						vehicle.VehicleCategory, batteryElectric, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating,
 						vehicle.CurbMassChassis,
-						false);
+						false, ng, ovcHev);
 				}
 
 				if (!segment.Found)

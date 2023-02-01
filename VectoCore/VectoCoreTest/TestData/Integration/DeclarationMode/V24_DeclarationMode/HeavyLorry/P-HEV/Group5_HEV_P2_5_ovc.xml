@@ -2188,35 +2188,20 @@
 						</di:Reference>
 					</v2.3:Signature>
 				</ElectricMachineSystem>
-				<ADC>
-					<v2.3:Data xsi:type="v2.3:ADCDataDeclarationType" id="ADC34533">
-						<v2.3:Manufacturer>ADC Manufacturer</v2.3:Manufacturer>
-						<v2.3:Model>Some ADC Model</v2.3:Model>
-						<v2.3:CertificationNumber>CertNmbr23451</v2.3:CertificationNumber>
-						<v2.3:Date>2022-01-01T00:00:00Z</v2.3:Date>
-						<v2.3:AppVersion>ADC Declaration App</v2.3:AppVersion>
-						<v2.3:Ratio>1.000</v2.3:Ratio>
-						<v2.3:CertificationMethod>Option 2</v2.3:CertificationMethod>
-						<v2.3:TorqueLossMap>
-							<v2.3:Entry inputSpeed='0.00' inputTorque='-50000.00' torqueLoss='0.00'/>
-							<v2.3:Entry inputSpeed='0.00' inputTorque='-200.00' torqueLoss='0.00'/>
-							<v2.3:Entry inputSpeed='0.00' inputTorque='0.00' torqueLoss='0.00'/>
-							<v2.3:Entry inputSpeed='0.00' inputTorque='200.00' torqueLoss='0.00'/>
-							<v2.3:Entry inputSpeed='0.00' inputTorque='50000.00' torqueLoss='0.00'/>
-							<v2.3:Entry inputSpeed='5000.00' inputTorque='-50000.00' torqueLoss='0.00'/>
-							<v2.3:Entry inputSpeed='5000.00' inputTorque='-1253.00' torqueLoss='0.00'/>
-							<v2.3:Entry inputSpeed='5000.00' inputTorque='0.00' torqueLoss='0.00'/>
-							<v2.3:Entry inputSpeed='5000.00' inputTorque='1253.00' torqueLoss='0.00'/>
-							<v2.3:Entry inputSpeed='5000.00' inputTorque='50000.00' torqueLoss='0.00'/>
-						</v2.3:TorqueLossMap>
-					</v2.3:Data>
-					<v2.3:Signature>
-						<di:Reference>
-							<di:DigestMethod Algorithm=""></di:DigestMethod>
-							<di:DigestValue>DummyDigestValue</di:DigestValue>
-						</di:Reference>
-					</v2.3:Signature>
-				</ADC>
+				<P2.5GearRatios>
+					<Ratio gear="1">1.025</Ratio>
+					<Ratio gear="2">0.813</Ratio>
+					<Ratio gear="3">1.026</Ratio>
+					<Ratio gear="4">0.813</Ratio>
+					<Ratio gear="5">1.026</Ratio>
+					<Ratio gear="6">0.813</Ratio>
+					<Ratio gear="7">1.025</Ratio>
+					<Ratio gear="8">0.813</Ratio>
+					<Ratio gear="9">1.026</Ratio>
+					<Ratio gear="10">0.813</Ratio>
+					<Ratio gear="11">1.026</Ratio>
+					<Ratio gear="12">0.813</Ratio>
+				</P2.5GearRatios>
 			</ElectricMachine>
 			<ElectricEnergyStorage>
 				<Battery>

@@ -183,6 +183,19 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 			CreateRunDataFactory(input, typeof(DeclarationModeHeavyLorryRunDataFactory.HEV_P4), expectedDataAdapter);
 		}
 
+		[TestCase()]
+		//[TestCase(typeof(DeclarationDataAdapterHeavyLorry.HEV_))]
+		public void HEV_P_IHPC_HeavyLorryTest(Type expectedDataAdapter = null)
+		{
+			var input = new Mock<IDeclarationInputDataProvider>()
+				.HEV(ArchitectureID.P_IHPC)
+				.Lorry();
+			CreateRunDataFactory(input, typeof(DeclarationModeHeavyLorryRunDataFactory.HEV_P_IHPC), expectedDataAdapter);
+		}
+
+
+
+
 
 		[TestCase()]
 		[TestCase(typeof(DeclarationDataAdapterHeavyLorry.PEV_E2))]
@@ -634,11 +647,8 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 
 		internal static Mock<IDeclarationInputDataProvider> HEV(this Mock<IDeclarationInputDataProvider> mock, ArchitectureID arch)
 		{
-			var type = arch.ToString().StartsWith("P")
-				? VectoSimulationJobType.ParallelHybridVehicle
-				: VectoSimulationJobType.SerialHybridVehicle;
 
-
+			VectoSimulationJobType type;
 			switch (arch) {
 				case ArchitectureID.P1:
 				case ArchitectureID.P2:
@@ -646,6 +656,9 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 				case ArchitectureID.P3:
 				case ArchitectureID.P4:
 					type = VectoSimulationJobType.ParallelHybridVehicle;
+					break;
+				case ArchitectureID.P_IHPC:
+					type = VectoSimulationJobType.IHPC;
 					break;
 				case ArchitectureID.S2:
 				case ArchitectureID.S3:

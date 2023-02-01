@@ -1236,6 +1236,7 @@ namespace TUGraz.VectoCommon.InputData
 		P2_5,
 		P3,
 		P4,
+		P_IHPC,
 		S2,
 		S3,
 		S4,

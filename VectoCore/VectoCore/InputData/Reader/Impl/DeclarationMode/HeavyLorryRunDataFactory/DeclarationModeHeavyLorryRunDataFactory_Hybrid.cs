@@ -457,5 +457,16 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			public HEV_P4(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
 				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
 		}
+
+		public class HEV_P_IHPC : HEV_P2
+		{
+
+			public HEV_P_IHPC(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report,
+				declarationDataAdapter)
+			{
+
+			}
+		}
 	}
 }

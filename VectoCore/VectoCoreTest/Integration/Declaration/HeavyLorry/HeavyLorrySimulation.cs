@@ -275,7 +275,7 @@ public class HeavyLorrySimulation
 	[TestCase(Group5_HEV_P3_OVC, 20)]
 	[TestCase(Group5_HEV_P4_OVC, 20)]
 	[TestCase(Group5_HEV_P2_5_OVC, 20)]
-	[TestCase(@"E:\MARTINI\source\hm_vecto-dev\VectoCore\VectoCoreTest\TestData\Integration\DeclarationMode\V24_DeclarationMode\HeavyLorry\P-HEV\Group5_HEV_IHPC.xml", 20)]
+	[TestCase(@"HeavyLorry\P-HEV\Group5_HEV_IHPC.xml", 20)]
 
 	public void PHEV_ChargeDepleting(string jobFile, int nrRuns)
 	{
