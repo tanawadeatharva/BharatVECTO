@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 			Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.HEV_P_IHPC>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.IHPC,
-					ArchitectureID.P_IHPC));
+					ArchitectureID.P2));
 
 			Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.PEV_E2>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.BatteryElectricVehicle,
