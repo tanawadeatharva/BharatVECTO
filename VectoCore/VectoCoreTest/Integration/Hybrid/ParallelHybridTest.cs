@@ -1526,7 +1526,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			graphWriter.Write(modFilename);
 		}
 
-		public const string Group5_P4_AMT = @"TestData\Hybrids\GenericVehicle_Group5_P3\P3 Group 5.vecto";
+		public const string Group5_P4_AMT = @"TestData\Hybrids\GenericVehicle_Group5_P4\P4 Group 5.vecto";
 
 		[
 			TestCase(Group5_P4_AMT, 0, TestName = "P4 Hybrid DriveCycle LongHaul"),
