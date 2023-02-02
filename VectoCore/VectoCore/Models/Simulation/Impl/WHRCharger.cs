@@ -23,6 +23,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			AdvanceState();
+			if (PreviousState.GeneratedEnergy == null && DataBus.IsTestPowertrain) {
+				// the method GeneratedEnergy is not called because there is no moddata to write and we are in a testpowertrain
+				// make sure the value is not null...
+				PreviousState.GeneratedEnergy = 0.SI<WattSecond>();
+			}
 		}
 
 		#endregion
