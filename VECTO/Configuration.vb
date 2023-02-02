@@ -44,7 +44,7 @@ Public Class Configuration
 	'Test Settings 2nd amendment
 	Public InitialSOCOverrideValue As Double
 	Public InitialSOCOverride As Boolean
-	Public ChargeSustainingIterationModeActivated As Boolean
+	Public ChargeSustainingIterationModeDeActivated As Boolean
     Private _body as String = "Body"
     Private _mod1Hz as String = "Mod1Hz"
     Private _modOut as String = "ModOut"
@@ -61,7 +61,7 @@ Public Class Configuration
     Private _saverundata as String = "SaveRunData"
     Private _overrideinitialsoc as String = "OverrideInitialSOC"
     Private _overrideinitialsocvalue as String = "OverrideInitialSOCValue"
-    Private _csItActive as String = "CS_it_Active"
+    Private _csItActive as String = "CS_it_deactivated"
 
     Public Sub New()
 		SetDefault()
@@ -88,6 +88,9 @@ Public Class Configuration
         OutputFolder = ""
 		Multithreaded = True
 		SaveVectoRunData = False
+		ChargeSustainingIterationModeDeActivated = False
+		InitialSOCOverride = False
+		InitialSOCOverrideValue = 50
 	End Sub
 
 	Public Sub Load()
@@ -124,7 +127,7 @@ Public Class Configuration
 
 				InitialSOCOverride = body.GetEx(Of Boolean)(_overrideinitialsoc)
 				InitialSOCOverrideValue = body.GetEx(Of Double)(_overrideinitialsocvalue)
-				ChargeSustainingIterationModeActivated = body.GetEx(Of Boolean)(_csItActive)
+				ChargeSustainingIterationModeDeActivated = body.GetEx(Of Boolean)(_csItActive)
 
 
 			End Using
@@ -157,7 +160,7 @@ Public Class Configuration
 
 		body.Add(_overrideinitialsoc, InitialSOCOverride)
 		body.Add(_overrideinitialsocvalue, InitialSOCOverrideValue)
-		body.Add(_csItActive, ChargeSustainingIterationModeActivated)
+		body.Add(_csItActive, ChargeSustainingIterationModeDeActivated)
 
 
 

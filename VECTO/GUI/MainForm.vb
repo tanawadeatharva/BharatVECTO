@@ -1070,7 +1070,7 @@ lbFound:
                         End If
                     End If
 
-                    runData.IterativeRunStrategy.Enabled = cbCSIteratingMode.Checked
+                    runData.IterativeRunStrategy.Enabled = Not cbCSIteratingModeDeactivated.Checked
                 End Sub
 
                
@@ -1541,7 +1541,7 @@ lbFound:
         tbOutputFolder.Text = Cfg.OutputFolder
 
         'Test Settings for 2nd amendment
-        cbCSIteratingMode.Checked = Cfg.ChargeSustainingIterationModeActivated
+        cbCSIteratingModeDeactivated.Checked = Cfg.ChargeSustainingIterationModeDeActivated
         cbInitialSOC.Checked = Cfg.InitialSOCOverride
         tbInitSOCinPercent.Text = Cfg.InitialSOCOverrideValue.ToString()
     End Sub
@@ -1554,7 +1554,7 @@ lbFound:
         Cfg.SaveVectoRunData = cbSaveVectoRunData.Checked
         Cfg.OutputFolder = tbOutputFolder.Text
 
-        Cfg.ChargeSustainingIterationModeActivated = cbCSIteratingMode.Checked
+        Cfg.ChargeSustainingIterationModeDeActivated = cbCSIteratingModeDeactivated.Checked
         Cfg.InitialSOCOverride =  cbInitialSOC.Checked 
 
         Dim initSoc as Double

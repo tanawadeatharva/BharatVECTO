@@ -63,7 +63,7 @@ Partial Class MainForm
         Me.Label1 = New System.Windows.Forms.Label()
         Me.tbInitSOCinPercent = New System.Windows.Forms.TextBox()
         Me.cbInitialSOC = New System.Windows.Forms.CheckBox()
-        Me.cbCSIteratingMode = New System.Windows.Forms.CheckBox()
+        Me.cbCSIteratingModeDeactivated = New System.Windows.Forms.CheckBox()
         Me.GroupBox5 = New System.Windows.Forms.GroupBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -421,10 +421,10 @@ Partial Class MainForm
         Me.GroupBox6.Controls.Add(Me.Label1)
         Me.GroupBox6.Controls.Add(Me.tbInitSOCinPercent)
         Me.GroupBox6.Controls.Add(Me.cbInitialSOC)
-        Me.GroupBox6.Controls.Add(Me.cbCSIteratingMode)
+        Me.GroupBox6.Controls.Add(Me.cbCSIteratingModeDeactivated)
         Me.GroupBox6.Location = New System.Drawing.Point(217, 187)
         Me.GroupBox6.Name = "GroupBox6"
-        Me.GroupBox6.Size = New System.Drawing.Size(300, 144)
+        Me.GroupBox6.Size = New System.Drawing.Size(335, 144)
         Me.GroupBox6.TabIndex = 21
         Me.GroupBox6.TabStop = false
         Me.GroupBox6.Text = "2nd Amendment Test Settings"
@@ -432,7 +432,7 @@ Partial Class MainForm
         'Label1
         '
         Me.Label1.AutoSize = true
-        Me.Label1.Location = New System.Drawing.Point(232, 63)
+        Me.Label1.Location = New System.Drawing.Point(304, 116)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(25, 15)
         Me.Label1.TabIndex = 3
@@ -440,7 +440,7 @@ Partial Class MainForm
         '
         'tbInitSOCinPercent
         '
-        Me.tbInitSOCinPercent.Location = New System.Drawing.Point(181, 59)
+        Me.tbInitSOCinPercent.Location = New System.Drawing.Point(254, 112)
         Me.tbInitSOCinPercent.Name = "tbInitSOCinPercent"
         Me.tbInitSOCinPercent.Size = New System.Drawing.Size(44, 23)
         Me.tbInitSOCinPercent.TabIndex = 2
@@ -448,24 +448,24 @@ Partial Class MainForm
         'cbInitialSOC
         '
         Me.cbInitialSOC.AutoSize = true
-        Me.cbInitialSOC.Location = New System.Drawing.Point(9, 63)
+        Me.cbInitialSOC.Location = New System.Drawing.Point(10, 56)
         Me.cbInitialSOC.Name = "cbInitialSOC"
-        Me.cbInitialSOC.Size = New System.Drawing.Size(148, 19)
+        Me.cbInitialSOC.Size = New System.Drawing.Size(267, 19)
         Me.cbInitialSOC.TabIndex = 1
-        Me.cbInitialSOC.Text = "CD Initial SOC Override"
+        Me.cbInitialSOC.Text = "Charge Depleting Mode Central SOC Override"
         Me.cbInitialSOC.UseVisualStyleBackColor = true
         '
         'cbCSIteratingMode
         '
-        Me.cbCSIteratingMode.AutoSize = true
-        Me.cbCSIteratingMode.Checked = true
-        Me.cbCSIteratingMode.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.cbCSIteratingMode.Location = New System.Drawing.Point(10, 24)
-        Me.cbCSIteratingMode.Name = "cbCSIteratingMode"
-        Me.cbCSIteratingMode.Size = New System.Drawing.Size(253, 19)
-        Me.cbCSIteratingMode.TabIndex = 0
-        Me.cbCSIteratingMode.Text = "OVC HEV Charge Sustaining Iterative Mode"
-        Me.cbCSIteratingMode.UseVisualStyleBackColor = true
+        Me.cbCSIteratingModeDeactivated.AutoSize = true
+        Me.cbCSIteratingModeDeactivated.Checked = true
+        Me.cbCSIteratingModeDeactivated.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.cbCSIteratingModeDeactivated.Location = New System.Drawing.Point(10, 24)
+        Me.cbCSIteratingModeDeactivated.Name = "cbCSIteratingModeDeactivated"
+        Me.cbCSIteratingModeDeactivated.Size = New System.Drawing.Size(301, 19)
+        Me.cbCSIteratingModeDeactivated.TabIndex = 0
+        Me.cbCSIteratingModeDeactivated.Text = "P-HEV Single Simulation in Charge Sustaining Mode"
+        Me.cbCSIteratingModeDeactivated.UseVisualStyleBackColor = true
         '
         'GroupBox5
         '
@@ -478,7 +478,7 @@ Partial Class MainForm
         Me.GroupBox5.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.GroupBox5.Name = "GroupBox5"
         Me.GroupBox5.Padding = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.GroupBox5.Size = New System.Drawing.Size(303, 115)
+        Me.GroupBox5.Size = New System.Drawing.Size(338, 115)
         Me.GroupBox5.TabIndex = 20
         Me.GroupBox5.TabStop = false
         Me.GroupBox5.Text = "Look-Ahead Coasting Override"
@@ -540,7 +540,7 @@ Partial Class MainForm
         Me.GroupBox4.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.GroupBox4.Name = "GroupBox4"
         Me.GroupBox4.Padding = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.GroupBox4.Size = New System.Drawing.Size(303, 53)
+        Me.GroupBox4.Size = New System.Drawing.Size(338, 53)
         Me.GroupBox4.TabIndex = 19
         Me.GroupBox4.TabStop = false
         Me.GroupBox4.Text = "Output Directory"
@@ -1157,7 +1157,7 @@ End Sub
     Friend WithEvents JobEditorIEPC_S_VehicleToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents JobEditorIHPCVehicleToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents GroupBox6 As GroupBox
-    Friend WithEvents cbCSIteratingMode As CheckBox
+    Friend WithEvents cbCSIteratingModeDeactivated As CheckBox
     Friend WithEvents Label1 As Label
     Friend WithEvents tbInitSOCinPercent As TextBox
     Friend WithEvents cbInitialSOC As CheckBox
