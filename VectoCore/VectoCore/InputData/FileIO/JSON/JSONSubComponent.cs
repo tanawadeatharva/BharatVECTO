@@ -631,6 +631,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> Entries =>
 			_entries;
+
+
 	}
 
 	// ###################################################################

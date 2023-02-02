@@ -62,7 +62,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#region Overrides of JSONVehicleDataV10_HEV_BEV
 
 		public override TableData BoostingLimitations => null;
-		
+
+		public override ArchitectureID ArchitectureID { get => VehicleType.GetArchitectureID(PowertrainPosition.IEPC); }
+
 		#endregion
 	}
 
@@ -120,27 +122,32 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected virtual JSONElectricMotors ReadMotors()
 		{
 			var retVal = new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>();
-			foreach (var entry in Body["ElectricMotors"]) {
-				var tmp = new ElectricMachineEntry<IElectricMotorEngineeringInputData> {
-					Position = PowertrainPositionHelper.Parse(entry.GetEx<string>("Position")),
-					RatioADC = entry.GetEx<double>("Ratio"),
-					RatioPerGear = entry["RatioPerGear"] != null
-						? entry["RatioPerGear"].Select(x => x.Value<double>()).ToArray()
-						: new double[] { },
-					MechanicalTransmissionEfficiency = entry["MechanicalEfficiency"] != null
-						? entry.GetEx<double>("MechanicalEfficiency")
-						: double.NaN,
-					MechanicalTransmissionLossMap = entry["MechanicalTransmissionLossMap"] != null
-						? ReadTableData(Path.Combine(BasePath, entry.GetEx<string>("MechanicalTransmissionLossMap")),
-							"EM ADC LossMap")
-						: null,
-					Count = entry.GetEx<int>("Count"),
-					ElectricMachine = 
-						JSONInputDataFactory.ReadElectricMotorData(
-							Path.Combine(BasePath, entry.GetEx<string>("MotorFile")), false)
-				};
-				retVal.Add(tmp);
+			if (Body["ElectricMotors"] != null) {
+				foreach (var entry in Body["ElectricMotors"])
+				{
+					var tmp = new ElectricMachineEntry<IElectricMotorEngineeringInputData>
+					{
+						Position = PowertrainPositionHelper.Parse(entry.GetEx<string>("Position")),
+						RatioADC = entry.GetEx<double>("Ratio"),
+						RatioPerGear = entry["RatioPerGear"] != null
+							? entry["RatioPerGear"].Select(x => x.Value<double>()).ToArray()
+							: new double[] { },
+						MechanicalTransmissionEfficiency = entry["MechanicalEfficiency"] != null
+							? entry.GetEx<double>("MechanicalEfficiency")
+							: double.NaN,
+						MechanicalTransmissionLossMap = entry["MechanicalTransmissionLossMap"] != null
+							? ReadTableData(Path.Combine(BasePath, entry.GetEx<string>("MechanicalTransmissionLossMap")),
+								"EM ADC LossMap")
+							: null,
+						Count = entry.GetEx<int>("Count"),
+						ElectricMachine =
+							JSONInputDataFactory.ReadElectricMotorData(
+								Path.Combine(BasePath, entry.GetEx<string>("MotorFile")), false)
+					};
+					retVal.Add(tmp);
+				}
 			}
+			
 
 			return new JSONElectricMotors(retVal);
 		}

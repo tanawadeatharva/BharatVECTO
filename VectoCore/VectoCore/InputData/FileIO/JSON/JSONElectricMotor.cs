@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -219,7 +220,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 
 		public ElectricMachineType ElectricMachineType { get; }
-		public Watt R85RatedPower => null;
+		public Watt R85RatedPower => !SavedInDeclarationMode ?  null : Body.GetEx<double>("R85RatedPower").SI<Watt>();
 		public virtual KilogramSquareMeter Inertia => Body.GetEx<double>("Inertia").SI<KilogramSquareMeter>();
 
 		//public virtual Joule OverloadBuffer => Body.GetValueOrDefault<double>("ThermalOverloadBuffer")?.SI(Unit.SI.Mega.Joule).Cast<Joule>() ?? 1e18.SI<Joule>();
