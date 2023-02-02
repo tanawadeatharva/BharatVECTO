@@ -536,6 +536,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			if (ModelData.Overload.OverloadBuffer.Value() != 0) { // mk2021-08-03 overloadbuffer was 0 in Test Case: "ADASTestPEV.TestPCCEngineeringSampleCases G5Eng PCC12 Case A"
 				container[ModalResultField.ElectricMotor_OvlBuffer_, Position] = VectoMath.Max(0, (ThermalBuffer + contribution) / ModelData.Overload.OverloadBuffer);
+			} else {
+				container[ModalResultField.ElectricMotor_OvlBuffer_, Position] = 0.SI<Scalar>();
 			}
 				
 			if (NextComponent == null && BusAux != null) {
