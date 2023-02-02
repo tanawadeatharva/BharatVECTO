@@ -1460,6 +1460,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public PCCStates PCCState => DriverStrategy.PCCState;
 
 		public MeterPerSecond NextBrakeTriggerSpeed => DriverStrategy.BrakeTrigger?.NextTargetSpeed;
+		public MeterPerSecond ApplyOverspeed(MeterPerSecond targetSpeed) => DriverStrategy.ApplyOverspeed(targetSpeed);
 
 		protected override bool DoUpdateFrom(object other) => false;
 	}
