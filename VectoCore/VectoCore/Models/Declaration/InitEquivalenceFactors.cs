@@ -24,8 +24,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			new Dictionary<int, InitEquivalenceFactors>(3);
 
 		private readonly IList<int> _socRanges = new List<int>{ 10, 20, 40 };
-
-		private readonly Slope _slope;
+		public double PHEVChargeDepletingEquivalenceFactor => 0.01;
+        private readonly Slope _slope;
 
         protected HEVStrategyParameters(string vehicle)
 		{
@@ -37,7 +37,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			_slope = new Slope(vehicle);
 		}
 
-        /// <summary>
+
+
+		/// <summary>
         /// Looks up the initial equivalence factor.
         /// </summary>
         /// <param name="mission"></param>

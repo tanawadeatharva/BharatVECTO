@@ -56,11 +56,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			result.MinICEOnTime = 10.SI<Second>();
 			result.ICEStartPenaltyFactor = 0.1;
 			result.CostFactorSOCExponent = 1;
-			
 
-			result.EquivalenceFactor =
-				DeclarationData.HEVStrategyParameters.LookupEquivalenceFactor(missionType,
-					vehicleClass, loading, result.MaxSoC - result.MinSoC);
+			if (ovcMode == VectoRunData.OvcHevMode.ChargeSustaining) {
+				result.EquivalenceFactor =
+					DeclarationData.HEVStrategyParameters.LookupEquivalenceFactor(missionType,
+						vehicleClass, loading, result.MaxSoC - result.MinSoC);
+			} else {
+				result.EquivalenceFactor = DeclarationData.HEVStrategyParameters.PHEVChargeDepletingEquivalenceFactor;
+			}
+
+
 			result.EquivalenceFactorCharge = result.EquivalenceFactor * 0.85;
 			result.EquivalenceFactorDischarge = result.EquivalenceFactor / 0.85;
 			
