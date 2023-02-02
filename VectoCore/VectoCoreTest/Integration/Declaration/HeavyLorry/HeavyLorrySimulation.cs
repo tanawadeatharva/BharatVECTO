@@ -51,7 +51,7 @@ public class HeavyLorrySimulation
 		PTOActive, // Pto is active 
 	}
 
-	private const string BASE_DIR = @"TestData\Integration\DeclarationMode\V24_DeclarationMode\";
+	private const string BASE_DIR = @"TestData\Integration\DeclarationMode\2nd_AmendmentDeclarationMode\";
 	private const string Group5_HEV_P2_OVC = @"HeavyLorry\P-HEV\Group5_HEV_P2_ovc.xml";
 	private const string Group5_HEV_P3_OVC = @"HeavyLorry\P-HEV\Group5_HEV_P3_ovc.xml";
 	private const string Group5_HEV_P4_OVC = @"HeavyLorry\P-HEV\Group5_HEV_P4_ovc.xml";
@@ -556,21 +556,34 @@ public class HeavyLorrySimulation
 	[Test, TestCaseSource(nameof(GetJsonJobs))]
 	public void JSONDeclarationSmokeTest(string path)
 	{
+		RunJsonJob(path, ExecutionMode.Declaration);
+	}
+
+	private void RunJsonJob(string path, ExecutionMode executionMode)
+	{
 		var writeReports = false;
 		var inputData = JSONInputDataFactory.ReadJsonJob(path, false);
 		var fileWriter = new FileOutputWriter(path);
-		var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter, writeReports? null : new NullDeclarationReport());    //, writeReports ? null : new NullDeclarationReport());
+		var runsFactory = SimulatorFactory.CreateSimulatorFactory(executionMode, inputData, fileWriter,
+			writeReports ? null : new NullDeclarationReport()); //, writeReports ? null : new NullDeclarationReport());
 		runsFactory.WriteModalResults = true;
 		var sumWriter = new MockSumWriter();
 
 		var jobContainer = new JobContainer(sumWriter);
 		runsFactory.SumData = sumWriter;
 		//var sumDataContainer = sumWriter;
-		//var runs = runsFactory.SimulationRuns().ToList();
-		jobContainer.AddRuns(runsFactory);
+		var runs = runsFactory.SimulationRuns();
+		jobContainer.AddRun(runs.First(r => r.GetContainer().RunData.Mission.MissionType == MissionType.RegionalDelivery));
 		jobContainer.Execute(true);
 		WaitAndAssertSuccess(jobContainer, fileWriter);
+	}
 
+
+	[Test, TestCaseSource(nameof(GetJsonJobs))]
+	[Ignore("Just for comparison")]
+	public void JSONEngineering(string path)
+	{
+		RunJsonJob(path, ExecutionMode.Engineering);
 	}
 
 	public static string[] GetJsonJobs()
