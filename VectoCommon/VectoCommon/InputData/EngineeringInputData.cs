@@ -112,6 +112,7 @@ namespace TUGraz.VectoCommon.InputData
 					return GetIepcArchitectureId(jobType, em);
 
 				case VectoSimulationJobType.IHPC:
+					return ArchitectureID.P2;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
