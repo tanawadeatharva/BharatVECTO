@@ -769,6 +769,14 @@ namespace TUGraz.VectoCommon.InputData
 		//double OverloadRecoveryFactor { get; }
 	}
 
+	public static class IElectricMotorInputDataHelper
+	{
+		public static bool IsIHPC(this IElectricMotorDeclarationInputData em)
+		{
+			return ((!em.IHPCType.IsNullOrEmpty()) && (em.IHPCType != "None"));
+		}
+	}
+
 	public interface IElectricMotorVoltageLevel
 	{
 		Volt VoltageLevel { get; }
@@ -833,7 +841,23 @@ namespace TUGraz.VectoCommon.InputData
 
 		public PowertrainPosition Position { get; set; }
 
-		public double RatioADC { get; set; }
+		private double? _ratioADC = null;
+		/// <summary>
+		/// If not overridden RatioADC == ADC?.Ratio ?? 1;
+		/// Can only be overridden when ADC == null;
+		/// </summary>
+		public double RatioADC { 
+			get
+			{
+				//Engineering mode sets RatioADC, decl mode sets ADC
+				if (_ratioADC.HasValue && ADC == null) {
+					return _ratioADC.Value;
+				} else {
+					return ADC?.Ratio ?? 1;
+				}
+			}
+			set => _ratioADC = value;
+		}
 
 		public double[] RatioPerGear { get; set; }
 
