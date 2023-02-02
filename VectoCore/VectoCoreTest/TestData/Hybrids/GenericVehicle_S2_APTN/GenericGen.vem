@@ -13,7 +13,7 @@
     "ContinuousTorqueSpeed": 1850,
     "OverloadTorque": 1030,
     "OverloadTorqueSpeed": 1850,
-    "OverloadTime": 120,
+    "OverloadTime": 240,
     "ThermalOverloadRecoveryFactor": 0.9,
     "VoltageLevels": [
       {
