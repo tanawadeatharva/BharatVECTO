@@ -435,9 +435,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			protected virtual GearshiftPosition InitStartGear(Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
-				if (!DataBus.EngineCtl.CombustionEngineOn) {
-					return _nextGear;
-				}
+				//if (!DataBus.EngineCtl.CombustionEngineOn) {
+				//	return _nextGear;
+				//}
 
 				foreach (var gear in GearList.IterateGears(MaxStartGear, GearList.First())) {
 					//for (var gear = MaxStartGear; gear > 1; gear--) {
@@ -450,11 +450,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 					//var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
 					TestPowertrain.UpdateComponents();
+					
 					TestPowertrain.Gearbox.Gear = gear;
 					TestPowertrain.Gearbox._nextGear = gear;
 					if (_controller.CurrentStrategySettings != null) {
 						TestPowertrain.HybridController.ApplyStrategySettings(_controller.CurrentStrategySettings);
 					}
+
+					TestPowertrain.CombustionEngine.CombustionEngineOn = true;
 
 					var response = TestPowertrain.Gearbox.Initialize(outTorque, outAngularVelocity);
 					response = TestPowertrain.Gearbox.Request(absTime,
