@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		#region Overrides of Clutch
 
-		public override bool ClutchClosed(Second absTime) { return !ClutchOpen; } 
+		//public override bool ClutchClosed(Second absTime) { return !ClutchOpen; } 
 
 		#endregion
 
