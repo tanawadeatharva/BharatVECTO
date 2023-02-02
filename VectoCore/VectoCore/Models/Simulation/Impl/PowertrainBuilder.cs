@@ -92,6 +92,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			{
 				{ VectoSimulationJobType.ConventionalVehicle, BuildFullPowertrainConventional },
 				{ VectoSimulationJobType.ParallelHybridVehicle, BuildFullPowertrainParallelHybrid },
+				{ VectoSimulationJobType.IHPC, BuildFullPowertrainParallelHybrid },
 				{ VectoSimulationJobType.SerialHybridVehicle, BuildFullPowertrainSerialHybrid },
 				{ VectoSimulationJobType.BatteryElectricVehicle, BuildFullPowertrainBatteryElectric },
 				{ VectoSimulationJobType.EngineOnlySimulation, BuildEngineOnly },
@@ -2092,7 +2093,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					switch (jobType) {
 						case VectoSimulationJobType.ConventionalVehicle:
 						case VectoSimulationJobType.ParallelHybridVehicle:
-
 							return AMTShiftStrategyOptimized.Name;
 						case VectoSimulationJobType.BatteryElectricVehicle:
 						case VectoSimulationJobType.SerialHybridVehicle:
