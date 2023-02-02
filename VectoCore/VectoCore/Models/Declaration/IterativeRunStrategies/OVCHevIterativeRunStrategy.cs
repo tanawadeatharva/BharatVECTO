@@ -11,7 +11,8 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 
 		public override bool RunAgain(int iteration, IModalDataContainer modData, VectoRunData runData)
 		{
-			return iteration < 2;
+
+			return Enabled && iteration < 2;
 		}
 
 		public override void UpdateRunData(int iteration, IModalDataContainer modData, VectoRunData runData)

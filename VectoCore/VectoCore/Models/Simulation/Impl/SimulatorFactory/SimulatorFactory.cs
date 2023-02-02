@@ -138,6 +138,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 		public bool SerializeVectoRunData { get; set; }
 
+
+		/// <summary>
+		/// Only for testing purposes
+		/// </summary>
+		public Action<VectoRunData> ModifyRunData { get; set; }
+
+
 		/// <summary>
 		/// Creates powertrain and initializes it with the component's data.
 		/// </summary>
@@ -152,9 +159,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			}
 			foreach (var data in RunDataFactory.NextRun()) {
 				var current = i++;
-				var d = data;
 				data.JobRunId = current;
-				yield return (data.Exempted || data.MultistageRun) ? GetExemptedRun(data) : GetNonExemptedRun(data, current, d, ref warning1Hz, ref firstRun);
+
+
+
+				if (ModifyRunData != null) {
+					ModifyRunData(data);
+
+				}
+
+
+				yield return (data.Exempted || data.MultistageRun) ? GetExemptedRun(data) : GetNonExemptedRun(data, current, ref warning1Hz, ref firstRun);
 			}
 		}
 
@@ -171,7 +186,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			});
 		}
 
-		protected virtual IVectoRun GetNonExemptedRun(VectoRunData data, int current, VectoRunData d, ref bool warning1Hz, ref bool firstRun)
+		protected virtual IVectoRun GetNonExemptedRun(VectoRunData data, int current, ref bool warning1Hz, ref bool firstRun)
 		{
 			var addReportResult = PrepareReport(data);
 			if (!data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz && !warning1Hz) {

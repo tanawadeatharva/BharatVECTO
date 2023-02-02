@@ -47,6 +47,7 @@ Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.InputData.FileIO.XML
 Imports TUGraz.VectoCore.Models.Simulation
+Imports TUGraz.VectoCore.Models.Simulation.Data
 Imports TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 Imports TUGraz.VectoCore.OutputData
 Imports TUGraz.VectoCore.OutputData.FileIO
@@ -1050,11 +1051,41 @@ lbFound:
                 Dim fileWriter As FileOutputWriter = New FileOutputWriter(outFile)
 
                 Dim runsFactory As ISimulatorFactory = SimulatorFactory.CreateSimulatorFactory(mode, input, fileWriter)
+                'Remove
+
+               
+                runsFactory.ModifyRunData = Sub(data) 
+                    Dim runData = data
+                    If(cbInitialSOC.Checked And (runData.OVCMode = VectoRunData.OvcHevMode.ChargeDepleting))
+                        
+                        Dim initSOC = Double.Parse(tbInitSOCinPercent.Text) / 100
+
+                        If(runData.HybridStrategyParameters IsNot Nothing)
+                            runData.HybridStrategyParameters.InitialSoc = initSOC
+                            runData.HybridStrategyParameters.TargetSoC = initSOC - 1
+                        End If
+
+                        If(runData.BatteryData IsNot Nothing)
+                            runData.BatteryData.InitialSoc = initSOC
+                        End If
+                    End If
+
+                    runData.IterativeRunStrategy.Enabled = cbCSIteratingMode.Checked
+                End Sub
+
+               
+
+
+
+
+
                 runsFactory.WriteModalResults = Cfg.ModOut
                 runsFactory.ModalResults1Hz = Cfg.Mod1Hz
                 runsFactory.Validate = cbValidateRunData.Checked
                 runsFactory.ActualModalData = cbActVmod.Checked
                 runsFactory.SerializeVectoRunData = cbSaveVectoRunData.Checked
+
+
 
                 For Each run as integer In jobContainer.AddRuns(runsFactory)
                     fileWriters.Add(run, fileWriter)
@@ -1509,6 +1540,10 @@ lbFound:
         cbSaveVectoRunData.Checked = Cfg.SaveVectoRunData
         tbOutputFolder.Text = Cfg.OutputFolder
 
+        'Test Settings for 2nd amendment
+        cbCSIteratingMode.Checked = Cfg.ChargeSustainingIterationModeActivated
+        cbInitialSOC.Checked = Cfg.InitialSOCOverride
+        tbInitSOCinPercent.Text = Cfg.InitialSOCOverrideValue.ToString()
     End Sub
 
     'Update config class from options in GUI, e.g. before running calculations 
@@ -1518,6 +1553,17 @@ lbFound:
         Cfg.ValidateRunData = cbValidateRunData.Checked
         Cfg.SaveVectoRunData = cbSaveVectoRunData.Checked
         Cfg.OutputFolder = tbOutputFolder.Text
+
+        Cfg.ChargeSustainingIterationModeActivated = cbCSIteratingMode.Checked
+        Cfg.InitialSOCOverride =  cbInitialSOC.Checked 
+
+        Dim initSoc as Double
+        Dim parsingOk = Double.TryParse(tbInitSOCinPercent.Text, initSoc)
+        Cfg.InitialSOCOverrideValue = If(parsingOk, initSoc, 0d)
+
+        
+        'Test Settings for 2nd amendment
+        '
     End Sub
 
 #End Region
@@ -2232,5 +2278,9 @@ lbFound:
 
     Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles JobEditorIEPC_S_VehicleToolStripMenuItem.Click
         OpenVECTOeditor("<New>", VectoSimulationJobType.IEPC_S)
+    End Sub
+
+    Private Sub tbInitSOCinPercent_TextChanged(sender As Object, e As EventArgs) Handles tbInitSOCinPercent.TextChanged
+        
     End Sub
 End Class

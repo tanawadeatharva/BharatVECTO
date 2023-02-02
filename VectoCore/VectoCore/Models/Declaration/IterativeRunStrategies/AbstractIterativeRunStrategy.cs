@@ -18,6 +18,7 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 		public abstract bool RunAgain(int iteration, IModalDataContainer modData, VectoRunData runData);
 
 		public abstract void UpdateRunData(int iteration, IModalDataContainer modData, VectoRunData runData);
+		public bool Enabled { get; set; }
 
 		#endregion
 	}
