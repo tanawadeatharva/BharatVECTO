@@ -43,6 +43,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			Bind<IXMLCustomerReport>().To<HEV_PxLorry_CIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.Lorry, VectoSimulationJobType.ParallelHybridVehicle,
 					ArchitectureID.UNKNOWN, false, false, false)));
+			Bind<IXMLCustomerReport>().To<HEV_PxLorry_CIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.Lorry, 
+				VectoSimulationJobType.IHPC,
+				ArchitectureID.P2, false, false, false)));
 
 			Bind<IXMLCustomerReport>().To<HEV_S2_Lorry_CIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.Lorry, VectoSimulationJobType.SerialHybridVehicle,
 					ArchitectureID.S2, false, false, false)));
@@ -102,6 +105,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			Bind<IXMLCustomerReport>().To<HEV_PxLorry_CIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.Van, VectoSimulationJobType.ParallelHybridVehicle,
 					ArchitectureID.UNKNOWN, false, false, false)));
+
+			Bind<IXMLCustomerReport>().To<HEV_PxLorry_CIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.Van,
+				VectoSimulationJobType.IHPC,
+				ArchitectureID.P2, false, false, false)));
 
 			Bind<IXMLCustomerReport>().To<HEV_S2_Lorry_CIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.Van, VectoSimulationJobType.SerialHybridVehicle,
 					ArchitectureID.S2, false, false, false)));

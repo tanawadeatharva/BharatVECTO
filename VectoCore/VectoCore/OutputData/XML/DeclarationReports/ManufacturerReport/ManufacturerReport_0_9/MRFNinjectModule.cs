@@ -65,6 +65,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					false, 
 					true)));
 
+			Bind<IXMLManufacturerReport>().To<HEV_Px_IHPC_LorryManufacturerReport>()
+				.Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+					VehicleCategoryHelper.Lorry,
+					VectoSimulationJobType.IHPC,
+					ArchitectureID.P2,
+					false,
+					false,
+					true)));
+
 			Bind<IXMLManufacturerReport>().To<HEV_S2_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
 					VehicleCategoryHelper.Lorry,
 					VectoSimulationJobType.SerialHybridVehicle,
@@ -148,6 +157,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					VehicleCategoryHelper.Van,
 					VectoSimulationJobType.ParallelHybridVehicle,
 					ArchitectureID.UNKNOWN,
+					false,
+					false,
+					true)));
+
+			Bind<IXMLManufacturerReport>().To<HEV_Px_IHPC_LorryManufacturerReport>()
+				.Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+					VehicleCategoryHelper.Van,
+					VectoSimulationJobType.IHPC,
+					ArchitectureID.P2,
 					false,
 					false,
 					true)));
