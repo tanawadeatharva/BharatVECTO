@@ -20,6 +20,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRunDataFactory;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDataFactory;
+using TUGraz.VectoCore.Tests.Integration.Hybrid;
 
 namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 {
@@ -671,6 +672,8 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 				default:
 					throw new ArgumentOutOfRangeException(nameof(arch), arch, null);
 			}
+
+			arch = arch == ArchitectureID.P_IHPC ? ArchitectureID.P2 : arch; 
 			mock.Setup(p => p.JobInputData.Vehicle.ArchitectureID).
 				Returns(arch);
 			mock.Setup(p => p.JobInputData.JobType).
