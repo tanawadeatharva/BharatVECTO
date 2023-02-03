@@ -9,7 +9,7 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 {
 
 
-	public abstract class StationaryChargingLookup : LookupData<string, MissionType, double>
+	public abstract class StationaryChargingLookup<T> : LookupData<string, MissionType, double>
 	{
 
 		protected override void ParseData(DataTable table)
@@ -28,14 +28,16 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 			}
 		}
 
-		public double Lookup(VehicleClass hdvClass, MissionType mission)
+		public T Lookup(VehicleClass hdvClass, MissionType mission)
 		{
-			return Lookup(hdvClass.GetClassNumber(), mission);
+			return ConvertValue(Lookup(hdvClass.GetClassNumber(), mission));
 		}
+
+		protected abstract T ConvertValue(double val);
 	}
 
 
-	public class StationaryChargingDurationPerEventLookup : StationaryChargingLookup
+	public class StationaryChargingDurationPerEventLookup : StationaryChargingLookup<Second>
 	{
 		#region Overrides of LookupData
 
@@ -47,11 +49,19 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 		#endregion
 
 
+		#region Overrides of StationaryChargingLookup<Second>
+
+		protected override Second ConvertValue(double val)
+		{
+			return val.SI(Unit.SI.Hour).Cast<Second>();
+		}
+
+		#endregion
 	}
 
 
 
-	public class StationaryChargingFromInfrastructureLookup : StationaryChargingLookup
+	public class StationaryChargingPowerFromInfrastructureLookup : StationaryChargingLookup<Watt>
 	{
 		#region Overrides of LookupData
 
@@ -61,10 +71,19 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 		protected override string ErrorMessage => "Error looking up stationary charging power from infrastructure";
 
 		#endregion
+
+		#region Overrides of StationaryChargingLookup<Watt>
+
+		protected override Watt ConvertValue(double val)
+		{
+			return val.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
+		}
+
+		#endregion
 	}
 
 
-	public class StationaryChargingEventsPerDayLookup : StationaryChargingLookup
+	public class StationaryChargingEventsPerDayLookup : StationaryChargingLookup<double>
 	{
 		#region Overrides of LookupData
 
@@ -72,6 +91,15 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 			"TUGraz.VectoCore.Resources.Declaration.VehicleOperation.ChargingEventDuringMission.csv";
 
 		protected override string ErrorMessage => "Error looking up Number of charging events during mission";
+
+		#endregion
+
+		#region Overrides of StationaryChargingLookup<double>
+
+		protected override double ConvertValue(double val)
+		{
+			return val;
+		}
 
 		#endregion
 	}

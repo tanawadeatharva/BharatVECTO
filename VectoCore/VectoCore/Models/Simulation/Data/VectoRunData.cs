@@ -189,6 +189,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public OvcHevMode OVCMode { get; internal set; }
 
+		public Watt MaxChargingPower { get; internal set; }
+
 		[JsonIgnore]
 		public IIterativeRunStrategy IterativeRunStrategy { get; internal set; } = new DefaultIterativeStrategy();
 
@@ -409,10 +411,4 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public Meter FanDiameter;
 	}
 
-	public class VehicleOperationData
-	{
-		private double AnnualMileage;
-		private double MissionSpecificMileage;
-		
-	}
 }

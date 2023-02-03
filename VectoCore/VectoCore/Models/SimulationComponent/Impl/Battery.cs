@@ -193,7 +193,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 		#region Implementation of IRESSInfo
-
+		
 		public Volt InternalVoltage => ModelData.SOCMap.Lookup(PreviousState.StateOfCharge);
 
 

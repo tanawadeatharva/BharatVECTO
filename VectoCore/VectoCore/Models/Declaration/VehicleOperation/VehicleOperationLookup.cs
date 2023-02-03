@@ -11,33 +11,38 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 		private StationaryChargingDurationPerEventLookup _chargingDurationLookup =
 			new StationaryChargingDurationPerEventLookup();
 
-		private StationaryChargingFromInfrastructureLookup _chargingFromInfrastructureLookup =
-			new StationaryChargingFromInfrastructureLookup();
+		private StationaryChargingPowerFromInfrastructureLookup _chargingPowerFromInfrastructureLookup =
+			new StationaryChargingPowerFromInfrastructureLookup();
 
 		private StationaryChargingEventsPerDayLookup _numberOfChargingEventsLookup =
 			new StationaryChargingEventsPerDayLookup();
 
+		private RealWorldUsageFactors _realWorldUsageFactors = new RealWorldUsageFactors();
 
 
-		public MileageLookup.MileageEntry LookupMileage(VehicleClass hdvClass, MissionType mission)
+		public VehicleOperationData LookupVehicleOperation(VehicleClass hdvClass, MissionType mission)
 		{
-			return _mileageLookup.Lookup(hdvClass.GetClassNumber(), mission);
+			return new VehicleOperationData() {
+				Mileage = _mileageLookup.Lookup(hdvClass, mission),
+				StationaryChargingMaxPwrInfrastructure = _chargingPowerFromInfrastructureLookup.Lookup(hdvClass, mission),
+				StationaryChargingDuringMission_AvgDurationPerEvent = _chargingDurationLookup.Lookup(hdvClass, mission),
+				StationaryChargingDuringMission_NbrEvents = _numberOfChargingEventsLookup.Lookup(hdvClass, mission),
+				RealWorldUsageFactors = _realWorldUsageFactors.Lookup(hdvClass),
+			};
 		}
 
-		public Second LookupChargingDurationPerEvent(VehicleClass hdvClass, MissionType mission)
+		public class VehicleOperationData
 		{
-			return _chargingDurationLookup.Lookup(hdvClass, mission).SI(Unit.SI.Hour).Cast<Second>();
-		}
+			public MileageLookup.MileageEntry Mileage { get; internal set; }
 
-		public Watt LookupMaxChargingPower(VehicleClass hdvClass, MissionType mission)
-		{
-			return _chargingFromInfrastructureLookup.Lookup(hdvClass, mission).SI(Unit.SI.Kilo.Watt).Cast<Watt>();
-		}
+			public Watt StationaryChargingMaxPwrInfrastructure { get; internal set; }
 
-		public double LookupChargingEventsPerDay(VehicleClass hdvClass, MissionType mission)
-		{
-			return _numberOfChargingEventsLookup.Lookup(hdvClass, mission);
-		}
+			public Second StationaryChargingDuringMission_AvgDurationPerEvent { get; internal set; }
 
+			public double StationaryChargingDuringMission_NbrEvents { get; internal set; }
+
+			public RealWorldUsageFactors.Entry RealWorldUsageFactors { get; internal set; }
+
+		}
 	}
 }

@@ -92,6 +92,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					ModFileSuffix = (engineModes?.Count > 1 ? $"_EngineMode{modeIdx}_" : "") + loading.Key,
 					VehicleDesignSpeed = segment.DesignSpeed,
 					InputDataHash = InputDataProvider.XMLHash,
+					MaxChargingPower = InputDataProvider.JobInputData.Vehicle.MaxChargingPower,
 				};
 				return simulationRunData;
 			}
@@ -156,7 +157,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				//			vehicle, mission, mission.Loadings.First(), 0))
 				//	.FirstOrDefault(x => x != null);
 			}
-
 
 			#endregion
 
@@ -385,10 +385,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					(sc) => result.SuperCapData = sc);
 				// result.BatteryData = DataAdapter.CreateBatteryData(componentsElectricStorage: vehicle.Components.ElectricStorage, vehicle.VehicleType, true);
 				// result.SuperCapData = DataAdapter.CreateSuperCapData(componentsElectricStorage: vehicle.Components.ElectricStorage);
+				
+				
 
 				result.ElectricMachinesData = DataAdapter.CreateElectricMachines(vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits, result.BatteryData.CalculateAverageVoltage(), null);
 				if (vehicle.VehicleType == VectoSimulationJobType.IEPC_E)
 				{
+					
 					result.ElectricMachinesData = DataAdapter.CreateIEPCElectricMachines(vehicle.Components.IEPC,
 						result.BatteryData.CalculateAverageVoltage());
 					
@@ -569,6 +572,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						vehicle.VehicleType);
 				runData.GearboxData = DataAdapter.CreateGearboxData(vehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+
 			}
 
 			#endregion

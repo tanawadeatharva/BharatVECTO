@@ -901,13 +901,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				//}
 
 				//dcdc.Connect(elAux);
-
-
-
+				//dcdc.Initialize();
 
 			}
 
 			return container;
+
 		}
 		
 		private static IVehicleContainer BuildPWheelBatteryElectric(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)

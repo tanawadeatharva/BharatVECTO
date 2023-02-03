@@ -277,6 +277,4 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 	}
 
-
-	
 }

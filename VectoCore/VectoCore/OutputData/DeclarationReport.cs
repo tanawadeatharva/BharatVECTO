@@ -40,6 +40,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
 namespace TUGraz.VectoCore.OutputData
@@ -71,15 +72,17 @@ namespace TUGraz.VectoCore.OutputData
 
 	public interface IResultEntry
 	{
+		void Initialize(VectoRunData vectoRunData);
+
 		VectoRun.Status Status { get; }
 
 		VectoRunData.OvcHevMode OVCMode { get; }
-		MissionType Mission { get; set; }
+		MissionType Mission { get; }
 
-		LoadingType LoadingType { get; set; }
+		LoadingType LoadingType { get; }
 
-		int FuelMode { get; set; }
-		IList<IFuelProperties> FuelData { get; set; }
+		int FuelMode { get; }
+		IList<IFuelProperties> FuelData { get; }
 
 		MeterPerSecond AverageSpeed { get; }
 
@@ -105,29 +108,33 @@ namespace TUGraz.VectoCore.OutputData
 
 		Kilogram CO2Total { get; }
 		Kilogram Payload { get; set; }
-		Kilogram TotalVehicleMass { get; set; }
-		CubicMeter CargoVolume { get; set; }
+		Kilogram TotalVehicleMass { get; }
+		CubicMeter CargoVolume { get; }
 
-		double? PassengerCount { get; set; }
-		VehicleClass VehicleClass { get; set; }
+		double? PassengerCount { get; }
+		VehicleClass VehicleClass { get; }
+
+		Watt MaxChargingPower { get; }
 
 		double WeightingFactor { get; }
 
-		Meter ActualChargeDepletingRange { get; set; }
+		Meter ActualChargeDepletingRange { get; }
 
-		Meter EquivalentAllElectricRange { get; set; }
+		Meter EquivalentAllElectricRange { get; }
 
-		Meter ZeroCO2EmissionsRange { get; set; }
+		Meter ZeroCO2EmissionsRange { get; }
 
-		IFuelProperties AuxHeaterFuel { get; set; }
-		Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
-		Kilogram ZEV_CO2 { get; set; }
+		IFuelProperties AuxHeaterFuel { get; }
+		Kilogram ZEV_FuelConsumption_AuxHtr { get; }
+		Kilogram ZEV_CO2 { get; }
 
 		void SetResultData(VectoRunData runData, IModalDataContainer data, double weightingFactor);
 
 		string Error { get; }
 
 		string StackTrace { get; }
+
+		BatterySystemData BatteryData { get; }
 	}
 
 	public interface IWeightedResult
@@ -240,18 +247,8 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			//return;
 			if (runData.Mission.MissionType != MissionType.ExemptedMission) {
-				var entry = new T {
-					Mission = runData.Mission.MissionType, // mission.MissionType,
-					LoadingType = runData.Loading, // loadingType,
-					FuelMode = runData.EngineData?.FuelMode ?? 0, // fuelMode,
-					FuelData = runData.EngineData?.Fuels.Select(x => x.FuelData).ToList(),
-					Payload = runData.VehicleData.Loading,
-					TotalVehicleMass = runData.VehicleData.TotalVehicleMass,
-					CargoVolume = runData.VehicleData.CargoVolume,
-					VehicleClass = runData.Mission?.BusParameter?.BusGroup ?? runData.VehicleData.VehicleClass,
-					//runData.VehicleData.VehicleClass,
-					PassengerCount = runData.VehicleData.PassengerCount
-				};
+				var entry = new T();
+				entry.Initialize(runData);
 				lock (Results) {
 					Results.Add(entry);
                 }

@@ -30,25 +30,28 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 					var annualMileage = tableRow.ParseDouble(col).SI(Unit.SI.Kilo.Meter).Cast<Meter>();
 					Data.Add(Tuple.Create<string, MissionType>(group, mission),
 						new MileageEntry() {
-							annualMileage = annualMileage,
-							workingDaysPerYear = workingDays,
-							dailyMileage = annualMileage / workingDays,
+							AnnualMileage = annualMileage,
+							WorkingDaysPerYear = workingDays,
+							DailyMileage = annualMileage / workingDays,
 						});
 				}
 			}
 		}
 		#endregion
 
-
+		public MileageEntry Lookup(VehicleClass hdvClass, MissionType mission)
+		{
+			return Lookup(hdvClass.GetClassNumber(), mission);
+		}
 
 
 
 
 		public struct MileageEntry
 		{
-			public Meter annualMileage;
-			public double workingDaysPerYear;
-			public Meter dailyMileage;
+			public Meter AnnualMileage { get; internal set; }
+			public double WorkingDaysPerYear { get; internal set; }
+			public Meter DailyMileage { get; internal set; }
 		}
 	}
 }
