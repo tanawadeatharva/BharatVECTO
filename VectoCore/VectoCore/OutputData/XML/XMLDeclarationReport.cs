@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				Mission = runData.Mission.MissionType;
 				LoadingType = runData.Loading;
 				FuelMode = runData.EngineData?.FuelMode ?? 0;
-				FuelData = runData.EngineData?.Fuels.Select(x => x.FuelData).ToList();
+				FuelData = runData.EngineData?.Fuels.Select(x => x.FuelData).ToList() ?? new List<IFuelProperties>();
 				Payload = runData.VehicleData.Loading;
 				TotalVehicleMass = runData.VehicleData.TotalVehicleMass;
 				CargoVolume = runData.VehicleData.CargoVolume;

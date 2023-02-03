@@ -1556,7 +1556,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				Distance = entries.Sum(e => e.Distance * e.WeightingFactor),
 				Payload = entries.Sum(e => e.Payload * e.WeightingFactor),
 				CargoVolume = entries.All(e => e.CargoVolume != null) ? entries.Sum(e => e.CargoVolume * e.WeightingFactor) : 0.SI<CubicMeter>(),
-				PassengerCount = entries.All(e => e.PassengerCount != null) ? entries.Sum(e => e.PassengerCount.Value * e.WeightingFactor) : (double?)null,
+				PassengerCount = entries.All(e => e.PassengerCount != null) ? entries.Sum(e => e.PassengerCount.GetValueOrDefault(0) * e.WeightingFactor) : (double?)null,
 				FuelConsumption = fuels.Select(f => Tuple.Create(f,
 						entries.All(e => e.FuelConsumptionFinal(f.FuelType) != null) ? entries.Sum(e =>
 							e.FuelConsumptionFinal(f.FuelType).TotalFuelConsumptionCorrected * e.WeightingFactor) : null))

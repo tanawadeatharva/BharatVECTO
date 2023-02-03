@@ -8,6 +8,19 @@ namespace TUGraz.VectoCore.OutputData
 {
 	public class SerialHybridModalDataPostprocessingCorrection : ModalDataPostprocessingCorrection
 	{
+		#region Overrides of ModalDataPostprocessingCorrection
+
+		public override ICorrectedModalData ApplyCorrection(IModalDataContainer modData, VectoRunData runData)
+		{
+			var r = base.ApplyCorrection(modData, runData);
+
+
+
+			r.ElectricEnergyConsumption = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int);
+			return r;
+		}
+
+		#endregion
 
 		protected override void SetReesCorrectionDemand(IModalDataContainer modData, VectoRunData runData,
 			CorrectedModalData r)

@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.OutputData
 		
 		#region Implementation of IModalDataPostProcessor
 
-		public ICorrectedModalData ApplyCorrection(IModalDataContainer modData, VectoRunData runData)
+		public virtual ICorrectedModalData ApplyCorrection(IModalDataContainer modData, VectoRunData runData)
 		{
 			var essParams = runData.DriverData.EngineStopStart;
 			var r = new CorrectedModalData {
@@ -335,7 +335,7 @@ namespace TUGraz.VectoCore.OutputData
 	{
 		public ICorrectedModalData ApplyCorrection(IModalDataContainer modData, VectoRunData runData)
 		{
-			return new NoCorrectionModalData(modData);
+			return new PEVCorrectedModalData(modData);
 		}
 	}
 
@@ -401,7 +401,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		public WattSecond ElectricEnergyConsumption { get; }
+		public WattSecond ElectricEnergyConsumption { get; set; }
 
 		public Second ICEOffTimeStandstill { get; set; }
 		public WattSecond EnergyAuxICEOffStandstill { get; set; }
@@ -532,13 +532,14 @@ namespace TUGraz.VectoCore.OutputData
 	}
 
 
-	public class NoCorrectionModalData : ICorrectedModalData
+	public class PEVCorrectedModalData : ICorrectedModalData
 	{
 		private IModalDataContainer _modData;
 
-		public NoCorrectionModalData(IModalDataContainer modData)
+		public PEVCorrectedModalData(IModalDataContainer modData)
 		{
 			_modData = modData;
+			
 		}
 
 		#region Implementation of ICorrectedModalData
@@ -565,7 +566,7 @@ namespace TUGraz.VectoCore.OutputData
 		public Dictionary<FuelType, IFuelConsumptionCorrection> FuelCorrection => new Dictionary<FuelType, IFuelConsumptionCorrection>();
 		public Kilogram CO2Total => 0.SI<Kilogram>();
 		public Joule FuelEnergyConsumptionTotal => 0.SI<Joule>();
-		public WattSecond ElectricEnergyConsumption => 0.SI<WattSecond>();
+		public WattSecond ElectricEnergyConsumption { get; set; } = 0.SI<WattSecond>();
 
 		#endregion
 	}
