@@ -427,7 +427,7 @@ public class HeavyLorrySimulation
 	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_AMT_E2.xml", 6)]
 	[TestCase(Group5_PEV_E3,10)]
 	[TestCase(@"HeavyLorry\PEV\Group5_ PEV_E4.xml",10)]
-	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_E4_standardValues.xml", 10)]
+	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_E4_standardValues.xml", 6)]
 	[TestCase(@"HeavyLorry\PEV\Group5_ PEV_IEPC_E.xml",10)]
 	public void PEV(string jobFile, int nrRuns)
 	{

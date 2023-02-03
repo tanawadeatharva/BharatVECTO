@@ -366,8 +366,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			private PTODataAdapterLorry _ptoAdapterLorry = new PTODataAdapterLorry();
 			protected override GearboxType[] SupportedGearboxTypes => new[]
 				{ GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial };
-			//private IGearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(new TorqueConverterDataAdapter());
-			private GearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(null);
+			private IGearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(new TorqueConverterDataAdapter());
+			//private GearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(null);
 
 			//private ElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
 			#region Overrides of LorryBase

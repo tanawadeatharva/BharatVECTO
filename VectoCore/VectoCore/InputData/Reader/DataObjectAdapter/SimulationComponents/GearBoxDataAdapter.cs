@@ -377,7 +377,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 
 			retVal.Gears = gears;
-			if (retVal.Type.AutomaticTransmission())
+			
+			if (retVal.Type.AutomaticTransmission() && retVal.Type != GearboxType.APTN && retVal.Type != GearboxType.IHPC)
 			{
 				var ratio = double.IsNaN(retVal.Gears[1].Ratio)
 					? 1

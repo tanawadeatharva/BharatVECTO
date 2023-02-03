@@ -156,6 +156,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			}
 
+			public IList<IElectricMotorVoltageLevel> VoltageLevels => _voltageLevels;
+
 
 			#region Implementation of IComponentInputData
 
@@ -191,7 +193,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			public string IHPCType => _electricMotorDeclarationInputDataImplementation.IHPCType;
 
-			public IList<IElectricMotorVoltageLevel> VoltageLevels => _electricMotorDeclarationInputDataImplementation.VoltageLevels;
+		
 
 			public TableData DragCurve => _electricMotorDeclarationInputDataImplementation.DragCurve;
 
@@ -211,18 +213,26 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			IElectricMachinesDeclarationInputData electricMachines,
 			IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage, GearList gearlist = null)
 		{
+
+
 			if (electricMachines == null) {
 				return null;
 			}
+
+
 			if (electricMachines.Entries.Select(x => x.Position).Where(x => x != PowertrainPosition.GEN).Distinct().Count() > 1)
 			{
 				throw new VectoException("multiple electric propulsion motors are not supported at the moment");
 			}
+
+
+
+
 			CheckTorqueLimitVoltageLevels(electricMachines, torqueLimits);
 			
 			return electricMachines.Entries
 				.Select(m => Tuple.Create(m.Position,
-					CreateElectricMachine(m.Position, m.ElectricMachine, m.Count, m.ADC?.Ratio ?? 1.0, m.RatioPerGear,
+					CreateElectricMachine(m.Position, m.ElectricMachine, m.Count, m.RatioADC, m.RatioPerGear,
 						m.MechanicalTransmissionLossMap, torqueLimits?.FirstOrDefault(t => t.Key == m.Position).Value, averageVoltage, gearlist))).ToList();
 
 		}
@@ -275,7 +285,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				var fullLoadCurveCombined = IntersectEMFullLoadCurves(fullLoadCurve, maxTorqueCurve);
 
 				try {
-					var vLevelData = powertrainPosition == PowertrainPosition.IHPC
+					var vLevelData = motorData.IsIHPC()
 						? CreateIHPCVoltageLevelData(count, entry, fullLoadCurveCombined, gearList)
 						: CreateEmVoltageLevelData(count, entry, fullLoadCurveCombined);
 					voltageLevels.Add(vLevelData);
@@ -482,13 +492,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 
 			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
-			var inputDataVoltageLevels = iepc.CertificationMethod != CertificationMethod.StandardValues
-				? iepc.VoltageLevels.OrderBy(x => x.VoltageLevel).AsEnumerable()
-				: new List<IElectricMotorVoltageLevel>() {
-					iepc.VoltageLevels.First(), iepc.VoltageLevels.First()
-				};
 
-			foreach (var entry in inputDataVoltageLevels)
+			foreach (var entry in iepc.VoltageLevels.OrderBy(x => x.VoltageLevel).AsEnumerable())
 			{
 				var effMap = new Dictionary<uint, EfficiencyMap>();
 				var fldCurve =
