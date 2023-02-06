@@ -96,8 +96,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				)
 			);
 
-		
-			var lh = results.SingleOrDefault(res => res.Mission == MissionType.LongHaul && res.LoadingType == LoadingType.ReferenceLoad);
+			// ReSharper disable once PossibleNullReferenceException
 			Vehicle.XPathSelectElement($"//*[local-name()='{XMLNames.VehicleGroupCO2}']").Value = DeclarationData
 				.GetVehicleGroupCO2StandardsGroup(Input).ToXMLFormat();
 

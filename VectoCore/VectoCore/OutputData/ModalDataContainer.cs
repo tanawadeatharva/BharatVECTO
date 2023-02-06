@@ -126,6 +126,9 @@ namespace TUGraz.VectoCore.OutputData
 				case VectoSimulationJobType.IEPC_S:
 				case VectoSimulationJobType.SerialHybridVehicle:
 					return new SerialHybridModalDataPostprocessingCorrection();
+				case VectoSimulationJobType.IHPC:
+				case VectoSimulationJobType.ParallelHybridVehicle:
+					return new ParallelHybridModalDataPostprocessingCorrection();
 				case VectoSimulationJobType.EngineOnlySimulation:
 					return new EngineOnlyPostprocessingCorrection();
 				default:
