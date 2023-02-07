@@ -188,7 +188,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 
 
-			var runAgain = _followUpCreator.RunAgain((data) => {
+			var runAgain = _followUpCreator?.RunAgain((data) => {
 					
 					Container.ModalData.Reset(true);
 					Container = PowertrainBuilder.Build(data, Container.ModalData, Container.SumData);
@@ -198,7 +198,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					Run();
 				},
 				this,
-				() => Container.FinishSingleSimulationRun());
+				() => Container.FinishSingleSimulationRun()) ?? false;
 			if (!runAgain) {
 				Container.FinishSimulationRun();
 				WritingResultsDone = true;
