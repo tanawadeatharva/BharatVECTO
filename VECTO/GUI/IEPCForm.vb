@@ -21,6 +21,7 @@ Public Class IEPCForm
 
 	
 	Private Sub IEPCForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+		pnThermalOverloadRecovery.Enabled = not Cfg.DeclMode
 		_powerMapDlg = New IEPCInputDialog(IEPCDialogType.PowerMapDialog)
 		_dragCurveDlg = New IEPCInputDialog(IEPCDialogType.DragCurveDialog)
 		_gearDlg = New IEPCGearInputDialog()

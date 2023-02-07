@@ -640,5 +640,9 @@ Public Class IHPCForm
         End If
     End Sub
 
+    Private Sub IHPCForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        pnThermalOverloadRecovery.Enabled = not Cfg.DeclMode
+    End Sub
+
 #End Region
 End Class

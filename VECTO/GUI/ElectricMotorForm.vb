@@ -53,6 +53,8 @@ Public Class ElectricMotorForm
 
         _changed = False
 
+        pnThermalOverloadRecovery.Enabled = not cfg.DeclMode
+
 
         NewEngine()
     End Sub
