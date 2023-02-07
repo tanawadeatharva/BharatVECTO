@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (retryCount > 10) {
 					throw new VectoException("HybridStrategy: retry count exceeded! {0}", DebugData);
 				}
-
+				var engaged = DataBus.GearboxInfo.GearEngaged(absTime);
 				retry = false;
 				var strategyResponse = Strategy.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				DebugData.Add($"[HC-R-0-{retryCount}]", strategyResponse);
@@ -162,6 +162,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					SelectedGear = strategySettings.NextGear;
 				}
 
+				
 				CurrentStrategySettings = strategySettings;
 				retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				DebugData.Add($"HC.R-1-{retryCount}", new {
@@ -200,6 +201,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				if (retVal is ResponseDifferentGearEngaged) {
+					retryCount++;
+					retry = true;
+					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun,
+						retVal);
+					continue;
+				}
+
+				if (retVal is ResponseOverload && DataBus.DriverInfo.DrivingAction == DrivingAction.Brake &&
+					engaged != DataBus.GearboxInfo.GearEngaged(absTime)) {
 					retryCount++;
 					retry = true;
 					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun,
