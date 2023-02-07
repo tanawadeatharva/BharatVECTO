@@ -148,7 +148,8 @@ Public Class VehicleForm
 			'VehicleType
 		End If
 
-	
+		pnInitialSoC.Enabled = not cfg.DeclMode
+
 		
 
 		cbLegislativeClass.DataSource = EnumHelper.GetKeyValuePairs(Of LegislativeClass)(Function(t) t.GetLabel())
