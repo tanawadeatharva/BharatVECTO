@@ -611,12 +611,21 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			#region Overrides of AbstractDeclarationVectoRunDataFactory
 
+
 			protected override IEnumerable<VectoRunData> GetNextRun()
 			{
-				throw new NotImplementedException();
+				var vehicle = InputDataProvider.JobInputData.Vehicle;
+
+
+				var simulationRunData = CreateVectoRunData(vehicle,
+					null, 
+					new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(), 
+					0);
+
+				yield return simulationRunData;
 			}
 
-			#region Overrides of LorryBase
+		#region Overrides of LorryBase
 
 			protected override VectoRunData GetPowertrainConfigForReportInit()
 			{
@@ -637,7 +646,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				int? modeIdx,
 				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
 			{
-				throw new NotImplementedException();
+				var runData = new VectoRunData
+				{
+					InputData = InputDataProvider,
+					Exempted = true,
+					Report = Report,
+					Mission = new Mission() { MissionType = MissionType.ExemptedMission },
+					VehicleData = DataAdapter.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, new Segment(), null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.ReferenceLoad, Tuple.Create<Kilogram, double?>(0.SI<Kilogram>(), null)), _allowVocational),
+					InputDataHash = InputDataProvider.XMLHash
+				};
+				runData.VehicleData.InputData = vehicle;
+				return runData;
 			}
 
 			#endregion
