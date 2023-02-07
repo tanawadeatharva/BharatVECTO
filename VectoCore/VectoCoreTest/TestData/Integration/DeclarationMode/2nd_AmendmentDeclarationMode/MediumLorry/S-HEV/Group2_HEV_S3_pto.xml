@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob X:\VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"  xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
-	<v2.0:Vehicle xsi:type="Vehicle_HEV-Sx_HeavyLorryDeclarationType" id="Group2_HEV_S2">
+	<v2.0:Vehicle xsi:type="Vehicle_HEV-Sx_MediumLorryDeclarationType" id="Group2_HEV_S2">
 		<Manufacturer>TU Graz</Manufacturer>
 		<ManufacturerAddress>Inffeldgasse 19</ManufacturerAddress>
 		<Model>HEV Heavy Lorry Px</Model>
 		<VIN>1234</VIN>
 		<Date>2017-01-01T00:00:00Z</Date>
-		<LegislativeCategory>N3</LegislativeCategory>
+		<LegislativeCategory>N2</LegislativeCategory>
 		<ChassisConfiguration>Rigid Lorry</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
 		<CorrectedActualMass>5000</CorrectedActualMass>
@@ -14,15 +14,11 @@
 		<IdlingSpeed>600</IdlingSpeed>
 		<RetarderType>None</RetarderType>
 		<AngledriveType>None</AngledriveType>
-		<PTO xsi:type="PTOType">
-			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
-			<PTOOtherElements>none</PTOOtherElements>
-		</PTO>
 		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
-		<VocationalVehicle>false</VocationalVehicle>
+		
 		<NgTankSystem>Liquefied</NgTankSystem>
 		<!-- optional -->
-		<SleeperCab>false</SleeperCab>
+		
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>S3</ArchitectureID>
 		<OvcHev>false</OvcHev>
