@@ -921,7 +921,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				if (offResponse.Source is ATGearbox && offResponse is ResponseOverload && GearList.HasPredecessor(nextGear)) {
 					off.Gear = GearList.Predecessor(nextGear);
 				}
-				eval.Add(ResponseEmOff);
+				eval.Add(off);
 				return;
 			}
 
