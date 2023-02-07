@@ -8,7 +8,7 @@ Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Battery
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery
 Imports TUGraz.VectoCore.Utils
 ' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');

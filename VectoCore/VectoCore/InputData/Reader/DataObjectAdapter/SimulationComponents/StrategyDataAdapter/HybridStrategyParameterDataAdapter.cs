@@ -7,7 +7,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.StrategyDataAdapter
@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				result.MinSoC = superCap.MinVoltage / superCap.MaxVoltage;
 				result.MaxSoC = 1;// superCap.MaxVoltage / superCap.MaxVoltage;
 				
-				result.TargetSoC = Math.Sqrt(Math.Pow(superCap.MaxVoltage.Value(), 2) - Math.Pow(superCap.MaxVoltage.Value(), 2)) /
+				result.TargetSoC = Math.Sqrt(Math.Pow(superCap.MaxVoltage.Value(), 2) - Math.Pow(superCap.MinVoltage.Value(), 2)) /
 									superCap.MaxVoltage.Value();
 				result.InitialSoc = superCap.InitialSoC;
 			}
@@ -99,9 +99,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			result.EquivalenceFactorDischarge = double.NaN;
 			result.CostFactorSOCExponent = double.NaN;
 
-			var tmpSystem = new BatterySystem(null, batterySystemData);
+	
 
-			SetGenericParameters(result, tmpSystem, superCapData, vehicleMass, out var deltaSoc);
+			SetGenericParameters(result, batterySystemData, superCapData, vehicleMass, out var deltaSoc, out var tmpSystem);
 
 			switch (ovcMode) {
 				case VectoRunData.OvcHevMode.ChargeSustaining:
@@ -118,32 +118,42 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return result;
 		}
 
-		private void SetGenericParameters(HybridStrategyParameters result, BatterySystem tmpSystem,
-			SuperCapData superCapData, Kilogram vehicleMass, out double deltaSoc){
-			
-			deltaSoc = CalculatedDeltaSocSHev(vehicleMass, tmpSystem);
+		private void SetGenericParameters(HybridStrategyParameters result, BatterySystemData batterySystemData,
+			SuperCapData superCapData, Kilogram vehicleMass, out double deltaSoc, out BatterySystem tmpSystem)
+		{
+			tmpSystem = null;
+			if (batterySystemData != null) {
+				tmpSystem = new BatterySystem(null, batterySystemData);
+			}
 
-			result.MinSoC = tmpSystem.MinSoC + 2 * deltaSoc;
+			deltaSoc = CalculatedDeltaSocSHev(vehicleMass, tmpSystem, superCapData);
+
+			var reessMinSoc = tmpSystem?.MinSoC ?? (superCapData.MinVoltage / superCapData.MaxVoltage);
+			var reessMaxSoc = tmpSystem?.MaxSoC ?? 1;
+
+
+
+			result.MinSoC = reessMinSoc + 2 * deltaSoc;
 			result.TargetSoC = tmpSystem.MaxSoC - 5 * deltaSoc;
 			result.MaxSoC = double.NaN;
 
 
 			if (result.MinSoC >= result.TargetSoC) {
-				deltaSoc = CalculatedDeltaSocSHev(vehicleMass, tmpSystem, 50);
+				deltaSoc = CalculatedDeltaSocSHev(vehicleMass, tmpSystem, superCapData, 50);
 				//Small battery
-				result.TargetSoC = tmpSystem.MaxSoC - 1 * deltaSoc;
-				result.MinSoC = tmpSystem.MinSoC + 2 * deltaSoc;
-				if (result.MinSoC >= result.TargetSoC) {
+				result.TargetSoC = reessMaxSoc - 1 * deltaSoc;
+				result.MinSoC = reessMinSoc + 2 * deltaSoc;
+				if (reessMinSoc >= result.TargetSoC) {
 					throw new VectoException("Min SOC higher than Target SOC");
 				}
 			}
 		}
 
 		private double CalculatedDeltaSocSHev(Kilogram vehicleMass, 
-			BatterySystem tmpSystem, double kmph = 100)
-
+			BatterySystem tmpSystem, SuperCapData superCap, double kmph = 100)
 		{
-			var v_nom = tmpSystem.NominalVoltage;
+
+			var v_nom = tmpSystem?.NominalVoltage ?? (superCap.MaxVoltage + superCap.MinVoltage)/2;
 			var c_nom = tmpSystem.Capacity.AsAmpHour;
 			var v = kmph.KMPHtoMeterPerSecond();
 			var result = ((vehicleMass / 2 * v * v) / 3600) * (1 / v_nom) * (1 / c_nom);

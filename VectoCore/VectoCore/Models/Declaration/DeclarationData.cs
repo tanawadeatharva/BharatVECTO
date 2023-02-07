@@ -56,7 +56,7 @@ using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;

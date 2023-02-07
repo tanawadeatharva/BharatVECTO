@@ -76,7 +76,6 @@
   <ItemGroup>
     <Folder Include="InputData\DeclarationDataAdapterTest\" />
     <Folder Include="Models\Declaration\BusAux\" />
-    <Folder Include="Integration\Declaration\HeavyLorry\" />
     <Folder Include="TestUtils\" />
   </ItemGroup>
 

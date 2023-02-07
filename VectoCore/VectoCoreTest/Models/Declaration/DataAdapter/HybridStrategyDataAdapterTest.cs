@@ -9,7 +9,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.StrategyDataAdapter;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter;

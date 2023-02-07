@@ -12,7 +12,6 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
@@ -77,7 +76,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			{
 				var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType,
 					_ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
-				
+
+				CheckSuperCap(vehicle);
+
 				var simulationRunData = new VectoRunData
 				{
 					Loading = loading.Key,
@@ -97,7 +98,32 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				return simulationRunData;
 			}
 
+			/// <summary>
+			/// Super caps are not allowed for ovc hevs or pevs
+			/// </summary>
+			protected void CheckSuperCap(IVehicleDeclarationInputData vehicle)
+			{
+				if (vehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle || vehicle.OvcHev) {
+					if (vehicle.Components.ElectricStorage.ElectricStorageElements.Any(e =>
+							e.REESSPack.StorageType == REESSType.SuperCap)) {
+						throw new VectoException("Super caps are not allowed for OVC-HEVs or PEVs");
+					}
+				}
 
+				if (vehicle.Components.ElectricStorage?.ElectricStorageElements == null) {
+					return;
+				}
+
+				var hasSuperCap = vehicle.Components.ElectricStorage.ElectricStorageElements.Any(e =>
+					e.REESSPack.StorageType == REESSType.SuperCap);
+				var hasBattery = vehicle.Components.ElectricStorage.ElectricStorageElements.Any(e =>
+						e.REESSPack.StorageType == REESSType.Battery);
+
+				if (hasSuperCap && hasBattery) {
+					//Already handled by XML Schema
+					throw new VectoException("Super caps AND batteries are not supported");
+				}
+			}
 			protected override void Initialize()
 			{
 				var vehicle = InputDataProvider.JobInputData.Vehicle;
