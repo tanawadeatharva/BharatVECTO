@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration.HeavyLorry;
 
 [TestFixture]
 //[Parallelizable(ParallelScope.Children)]
-public class HeavyLorrySimulation
+public class LorrySimulation
 {
 	private enum PTOState
 	{
@@ -86,8 +86,10 @@ public class HeavyLorrySimulation
 
 	//PEV
 	[TestCase(Group5_PEV_E3)]
-	///Runs a f
-    public void HeavyLorrySimulationTest(string jobFile)
+
+	//P-HEV
+	[TestCase(Group5_HEV_P2_OVC)]
+	public void HeavyLorrySimulationTest(string jobFile)
     {
 #if singlethreaded
 		RunSimulation(jobFile, false);
@@ -95,6 +97,20 @@ public class HeavyLorrySimulation
         RunSimulation(jobFile, true);
 #endif
     }
+
+	//S-HEV
+	[TestCase(@"MediumLorry\S-HEV\Group2_HEV_S2.xml")]
+
+
+	//P-HEV
+	[TestCase(@"MediumLorry\P-HEV\Group5_HEV_P3_ovc.xml")]
+
+	//PEV
+	[TestCase(@"MediumLorry\PEV\Group5_ PEV_E3_ES_Standard.xml")]
+	public void MediumLorrySimulationTest(string jobFile)
+	{
+		RunSimulation(jobFile, true);
+	}
 
     public void RunSimulation(string jobFile, bool multiThreaded = true)
     {
@@ -250,6 +266,46 @@ public class HeavyLorrySimulation
 		TestContext.WriteLine(exception.Message);
 	}
 
+
+	[TestCase(@"HeavyLorry\P-HEV\Group5_HEV_P2_supercap.xml", 10)]
+	[TestCase(@"HeavyLorry\P-HEV\Group5_HEV_P1_supercap.xml", 10)]
+	public void PHEV_SuperCap(string jobFile, int nrRuns)
+	{
+		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out var sumDataContainer);
+		Assert.AreEqual(0, runs.Count(r => 
+			r.GetContainer().RunData.OVCMode is VectoRunData.OvcHevMode.ChargeDepleting or VectoRunData.OvcHevMode.NotApplicable));
+
+		var run = runs.First(r => {
+			var rd = r.GetContainer().RunData;
+			return rd.Mission.MissionType == MissionType.UrbanDelivery;
+		});
+
+		jobContainer.AddRun(run);
+		var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+		jobContainer.Execute(false);
+		WaitAndAssertSuccess(jobContainer, fileWriter);
+
+	}
+
+
+	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S2_ovc_supercap.xml", 10)]
+	public void SHEV_SuperCap(string jobFile, int nrRuns)
+	{
+		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out var sumDataContainer);
+		Assert.AreEqual(0, runs.Count(r =>
+			r.GetContainer().RunData.OVCMode is VectoRunData.OvcHevMode.ChargeDepleting or VectoRunData.OvcHevMode.NotApplicable));
+
+		var run = runs.First(r => {
+			var rd = r.GetContainer().RunData;
+			return rd.Mission.MissionType == MissionType.UrbanDelivery;
+		});
+
+		jobContainer.AddRun(run);
+		var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+		jobContainer.Execute(false);
+		WaitAndAssertSuccess(jobContainer, fileWriter);
+	}
+
 	[TestCase(Group5_HEV_P2_OVC, 20)]
 	[TestCase(Group5_HEV_P3_OVC, 20)]
 	[TestCase(Group5_HEV_P4_OVC, 20)]
@@ -276,7 +332,6 @@ public class HeavyLorrySimulation
 	[TestCase(Group5_HEV_P4_OVC, 20)]
 	[TestCase(Group5_HEV_P2_5_OVC, 20)]
 	[TestCase(@"HeavyLorry\P-HEV\Group5_HEV_IHPC.xml", 20)]
-
 	public void PHEV_ChargeDepleting(string jobFile, int nrRuns)
 	{
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out var sumDataContainer);
@@ -480,6 +535,23 @@ public class HeavyLorrySimulation
 		Assert.Fail();
 	}
 
+
+
+	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_E3_supercap_invalid.xml", TestName="SuperCap used in PEV")]
+	[TestCase(@"HeavyLorry\P-HEV\Group5_HEV_P2_ovc_supercap_invalid.xml", TestName="SuperCap used in OVC P-HEV")]
+	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S2_ovc_supercap_invalid.xml", TestName="SuperCap used in OVC S-HEV")]
+	public void SuperCapFailTest(string jobFile)
+	{
+		var ex = Assert.Throws<VectoException>(() => {
+			GetJobContainer(jobFile, null, out var fileWriter, out var runs, out var sumDataContainer,
+				true);
+		});
+
+		Assert.IsTrue(ex!.Message.Contains("Super cap"));
+	}
+
+
+
 	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_E4_pto.xml", 8)]
 	[TestCase(@"HeavyLorry\PEV\Group5_ PEV_IEPC_E_pto.xml", 8)]
 	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S3_pto.xml", 8)]
@@ -588,19 +660,114 @@ public class HeavyLorrySimulation
 
 	public static string[] GetJsonJobs()
 	{
-		var dirPath = Path.Combine(BASE_DIR, "JSON");
-		List<string> vectoJobs = new List<string>();
-		foreach (var fileName in Directory.EnumerateFiles(dirPath, "*.vecto", SearchOption.AllDirectories))
-		{
-			vectoJobs.Add(fileName);
-		};
+		return GetFiles("JSON", "*.vecto").ToArray();
+	}
 
-		return vectoJobs.ToArray();
+	public static string[] GetHeavyLorryJobs()
+	{
+		return GetFiles("HeavyLorry", "*.xml").ToArray();
+	}
+
+	public static string[] GetMediumLorryJobs()
+	{
+		return GetFiles("MediumLorry", "*.xml").ToArray();
+	}
+
+	private static List<string> GetFiles(string path, string searchPattern)
+	{
+		var dirPath = Path.Combine(BASE_DIR, path);
+		List<string> vectoJobs = new List<string>();
+		foreach (var fileName in Directory.EnumerateFiles(dirPath, searchPattern, SearchOption.AllDirectories)) {
+			vectoJobs.Add(fileName);
+		}
+		return vectoJobs;
 	}
 
 
+	[Test, TestCaseSource(nameof(GetHeavyLorryJobs))]
+	public void FilesAreHeavyLorry(string file)
+	{
+		IDeclarationInputDataProvider dataProvider = null;
+		try
+		{
+			dataProvider = _xmlReader.CreateDeclaration(file);
 
+		}
+		catch (Exception ex)
+		{
+			if (ex.Message.Contains("unknown"))
+			{
+				Assert.Ignore(ex.Message);
+			}
+			else
+			{
+				Assert.Fail(ex.Message);
+			}
 
+		}
+		Assert.That(dataProvider.JobInputData.Vehicle.VehicleCategory.IsLorry());
+		var segment = GetSegment(dataProvider.JobInputData.Vehicle);
+		Assert.That(segment.VehicleClass.IsHeavyLorry());
+	}
+
+	[Test, TestCaseSource(nameof(GetMediumLorryJobs))]
+	public void FilesAreMediumLorry(string file)
+	{
+		IDeclarationInputDataProvider dataProvider = null;
+		try
+		{
+			dataProvider = _xmlReader.CreateDeclaration(file);
+	
+		}
+		catch (Exception ex)
+		{
+			if (ex.Message.Contains("unknown"))
+			{
+				Assert.Ignore(ex.Message);
+			}
+			else
+			{
+				Assert.Fail(ex.Message);
+			}
+
+		}
+		Assert.That(dataProvider.JobInputData.Vehicle.VehicleCategory.IsLorry());
+		var segment = GetSegment(dataProvider.JobInputData.Vehicle);
+		Assert.That(segment.VehicleClass.IsMediumLorry());
+	}
+
+	protected Segment GetSegment(IVehicleDeclarationInputData vehicle)
+	{
+		var batteryElectric = vehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
+			VectoSimulationJobType.IEPC_E);
+		var ng = vehicle.Components.EngineInputData?.EngineModes.Any(e =>
+			e.Fuels.Any(f => f.FuelType.IsOneOf(FuelType.LPGPI, FuelType.NGCI, FuelType.NGPI))) ?? false;
+		var ovcHev = vehicle.OvcHev;
+		Segment segment;
+		try
+		{
+			segment = DeclarationData.TruckSegments.Lookup(
+				vehicle.VehicleCategory, batteryElectric, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating,
+				vehicle.CurbMassChassis,
+				vehicle.VocationalVehicle, ng, ovcHev);
+		}
+		catch (VectoException)
+		{
+			segment = DeclarationData.TruckSegments.Lookup(
+				vehicle.VehicleCategory, batteryElectric, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating,
+				vehicle.CurbMassChassis,
+				false, ng, ovcHev);
+		}
+
+		if (!segment.Found)
+		{
+			throw new VectoException(
+				"no segment found for vehicle configuration: vehicle category: {0}, axle configuration: {1}, GVMR: {2}",
+				vehicle.VehicleCategory, vehicle.AxleConfiguration,
+				vehicle.GrossVehicleMassRating);
+		}
+		return segment;
+	}
 
 	private void WaitAndAssertSuccess(JobContainer jobContainer, FileOutputWriter fileWriter)
 	{
@@ -620,6 +787,8 @@ public class HeavyLorrySimulation
 		var dataProvider = _xmlReader.CreateDeclaration(filePath);
 		fileWriter = new FileOutputWriter(filePath);
 		var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter, writeReports ? null : new NullDeclarationReport());
+		//runsFactory.ActualModalData = true;
+		runsFactory.SerializeVectoRunData = true;
 		runsFactory.WriteModalResults = true;
 		var sumWriter = new MockSumWriter();
 		

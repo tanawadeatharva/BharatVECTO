@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Battery {
+namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery {
 
 	public class BatterySystemData
 	{
@@ -22,8 +21,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Battery {
 		{
 			get
 			{
-				return Batteries.Select(x => x.Item1).Distinct().OrderBy(x => x).Aggregate(0.SI<AmpereSecond>(),
-					(current, s) => current + Batteries.Where(x => x.Item1 == s).Min(x => x.Item2.Capacity));
+				return Batteries.Select(x => x.Item1).Distinct().OrderBy(x => x)
+					.Aggregate(0.SI<AmpereSecond>(), 
+						(current, s) => current + Batteries.Where(x => x.Item1 == s).Min(x => x.Item2.Capacity));
 			}
 		}
 

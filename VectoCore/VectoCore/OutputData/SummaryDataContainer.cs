@@ -326,6 +326,15 @@ namespace TUGraz.VectoCore.OutputData
 			Tuple.Create(SumDataFields.CO2_PKM, typeof(ConvertedSI)),
 		};
 
+		public static readonly Tuple<string, Type>[] ElectricEnergyConsumption = {
+			Tuple.Create(SumDataFields.ElectricEnergyConsumption_total, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.ElectricEnergyConsumption_KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.ElectricEnergyConsumption_TKM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.ElectricEnergyConsumption_M3KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.ElectricEnergyConsumption_PKM, typeof(ConvertedSI)),
+		};
+
+
 		public static readonly Tuple<string, Type>[] VTPCycleColumns = {
 			Tuple.Create(SumDataFields.E_WHEEL, typeof(ConvertedSI)),
 		};
@@ -375,6 +384,7 @@ namespace TUGraz.VectoCore.OutputData
 			//InitTableColumns();
 			CreateColumns(CommonColumns);
 			CreateColumns(CO2Columns);
+			CreateColumns(ElectricEnergyConsumption);
 		}
 
 		public void RegisterComponent(VectoSimulationComponent component, VectoRunData runData)
@@ -615,6 +625,14 @@ namespace TUGraz.VectoCore.OutputData
 				SumDataFields.E_FCMAP_POS,
 				SumDataFields.E_FCMAP_NEG,
 				SumDataFields.E_POWERTRAIN_INERTIA,
+			});
+
+			cols.AddRange(new [] {
+				SumDataFields.ElectricEnergyConsumption_total,
+				SumDataFields.ElectricEnergyConsumption_KM,
+				SumDataFields.ElectricEnergyConsumption_TKM,
+				SumDataFields.ElectricEnergyConsumption_M3KM,
+				SumDataFields.ElectricEnergyConsumption_PKM,
 			});
 			cols.AddRange(AuxColumns.OrderBy(x => x));
 			cols.AddRange(new[] {
@@ -1034,15 +1052,15 @@ namespace TUGraz.VectoCore.OutputData
 	//		} else {
 	//			if (runData.ElectricMachinesData.Count > 0) {
 	//				//lock (Table) {
-	//				//	if (!Table.Columns.Contains(SumDataFields.ElectricEnergyConsumptionPerKm)) {
+	//				//	if (!Table.Columns.Contains(SumDataFields.ElectricEnergyConsumption_KM)) {
 	//				//		lock (_tableLock) {
-	//				//			var col = Table.Columns.Add(SumDataFields.ElectricEnergyConsumptionPerKm, typeof(ConvertedSI));
+	//				//			var col = Table.Columns.Add(SumDataFields.ElectricEnergyConsumption_KM, typeof(ConvertedSI));
 	//				//			col.SetOrdinal(Table.Columns[SumDataFields.CO2_KM].Ordinal);
 	//				//		}
 	//				//	}
 	//				//}
 
-	//				//row[SumDataFields.ElectricEnergyConsumptionPerKm] =
+	//				//row[SumDataFields.ElectricEnergyConsumption_KM] =
 	//				//	(-modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int) / modData.Distance).Cast<JoulePerMeter>().ConvertToKiloWattHourPerKiloMeter();
 	//			}
 	//		}

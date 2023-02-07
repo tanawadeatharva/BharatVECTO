@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.OutputData
 
 
 
-			r.ElectricEnergyConsumption = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int);
+			r.ElectricEnergyConsumption = -modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int);
 			return r;
 		}
 

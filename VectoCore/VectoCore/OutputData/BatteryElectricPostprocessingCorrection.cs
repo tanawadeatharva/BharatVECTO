@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			
 			return new PEVCorrectedModalData(modData) {
-				ElectricEnergyConsumption = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int),
+				ElectricEnergyConsumption = -modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int),
 			};
 		}
 

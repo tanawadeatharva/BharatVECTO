@@ -262,7 +262,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 				if (ovcMode != VectoRunData.OvcHevMode.NotApplicable)
 				{
-					runData.BatteryData.InitialSoC = runData.HybridStrategyParameters.InitialSoc;
+					if (runData.BatteryData?.InitialSoC != null) {
+						runData.BatteryData.InitialSoC = runData.HybridStrategyParameters.InitialSoc;
+					}
+
+					if (runData.SuperCapData?.InitialSoC != null) {
+						runData.SuperCapData.InitialSoC = runData.HybridStrategyParameters.InitialSoc;
+					}
 				}
 
 				if (ovcMode == VectoRunData.OvcHevMode.ChargeDepleting)
