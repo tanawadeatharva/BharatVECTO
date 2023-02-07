@@ -328,10 +328,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					switch (ADAS.EcoRoll) {
 						case EcoRollType.None: break;
 						case EcoRollType.WithoutEngineStop:
-							DataBus.GearboxCtl.DisengageGearbox = true;
+							if (DataBus.GearboxCtl != null) {
+								DataBus.GearboxCtl.DisengageGearbox = true;
+							}
+						
 							break;
 						case EcoRollType.WithEngineStop:
-							DataBus.GearboxCtl.DisengageGearbox = true;
+							if (DataBus.GearboxCtl != null) {
+								DataBus.GearboxCtl.DisengageGearbox = true;
+							}
 							if (DataBus.EngineCtl != null) {
 								DataBus.EngineCtl.CombustionEngineOn = false;
 							}

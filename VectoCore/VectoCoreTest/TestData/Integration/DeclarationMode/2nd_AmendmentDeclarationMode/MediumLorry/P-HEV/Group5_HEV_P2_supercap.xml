@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"  xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
-	<v2.0:Vehicle xsi:type="Vehicle_HEV-Px_HeavyLorryDeclarationType" id="Group5_HEV_P2_sc">
+	<v2.0:Vehicle xsi:type="Vehicle_HEV-Px_MediumLorryDeclarationType" id="Group5_HEV_P2_sc">
 		<Manufacturer>TU Graz</Manufacturer>
 		<ManufacturerAddress>Inffeldgasse 19</ManufacturerAddress>
 		<Model>HEV Heavy Lorry Px</Model>
 		<VIN>1234</VIN>
 		<Date>2017-01-01T00:00:00Z</Date>
-		<LegislativeCategory>N3</LegislativeCategory>
+		<LegislativeCategory>N2</LegislativeCategory>
 		<ChassisConfiguration>Tractor</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
 		<CorrectedActualMass>5000</CorrectedActualMass>
@@ -14,15 +14,11 @@
 		<IdlingSpeed>600</IdlingSpeed>
 		<RetarderType>None</RetarderType>
 		<AngledriveType>None</AngledriveType>
-		<PTO xsi:type="PTOType">
-			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
-			<PTOOtherElements>none</PTOOtherElements>
-		</PTO>
 		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
-		<VocationalVehicle>false</VocationalVehicle>
+		
 		<NgTankSystem>Liquefied</NgTankSystem>
 		<!-- optional -->
-		<SleeperCab>false</SleeperCab>
+		
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>P2</ArchitectureID>
 		<OvcHev>false</OvcHev>
@@ -2184,7 +2180,7 @@
 								<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 							</di:Transforms>
 							<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-							<di:DigestValue>SRYiAOd48DGe63vPJXjcBoFN3q2fkWjPKvxIKhQaKac=</di:DigestValue>
+							<di:DigestValue>SRYiAOd48DGe63vPJXjcBoFN2q2fkWjPKvxIKhQaKac=</di:DigestValue>
 						</di:Reference>
 					</v2.3:Signature>
 				</ElectricMachineSystem>

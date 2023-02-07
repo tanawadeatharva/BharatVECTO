@@ -83,7 +83,7 @@ public class LorrySimulation
 
 	//S-HEV
 	[TestCase(Group5_HEV_S2_OVC)]
-
+	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S3_stefan.xml", TestName = "Stefan")]
 	//PEV
 	[TestCase(Group5_PEV_E3)]
 
@@ -108,6 +108,12 @@ public class LorrySimulation
 	//PEV
 	[TestCase(@"MediumLorry\PEV\Group5_ PEV_E3_ES_Standard.xml")]
 	public void MediumLorrySimulationTest(string jobFile)
+	{
+		RunSimulation(jobFile, true);
+	}
+
+	[TestCase(@"HeavyLorry\Exempted\exempted_heavy_lorry.xml")]
+	public void ExemptedTest(string jobFile)
 	{
 		RunSimulation(jobFile, true);
 	}

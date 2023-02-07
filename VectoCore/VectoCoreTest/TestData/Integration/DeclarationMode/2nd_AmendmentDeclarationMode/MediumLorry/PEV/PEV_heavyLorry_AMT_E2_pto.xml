@@ -10,13 +10,13 @@
         xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"  
         xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3"
          xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
-	<v2.0:Vehicle xsi:type="Vehicle_PEV_HeavyLorryDeclarationType" id="PEV_E2_HEAVY_LORRY">
+	<v2.0:Vehicle xsi:type="Vehicle_PEV_MediumLorryDeclarationType" id="PEV_E2_HEAVY_LORRY">
 		<Manufacturer>TU Graz</Manufacturer>
 		<ManufacturerAddress>Inffeldgasse 19</ManufacturerAddress>
 		<Model>PEV Heavy Lorry E2</Model>
 		<VIN>123467890</VIN>
 		<Date>2017-01-01T00:00:00Z</Date>
-		<LegislativeCategory>N3</LegislativeCategory>
+		<LegislativeCategory>N2</LegislativeCategory>
 		<ChassisConfiguration>Rigid Lorry</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
 		<CorrectedActualMass>5000</CorrectedActualMass>
@@ -24,14 +24,11 @@
 		<RetarderType>None</RetarderType>
 		<RetarderRatio>2.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
-		<PTO xsi:type="PTOType">
-			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
-			<PTOOtherElements>none</PTOOtherElements>
-		</PTO>
+
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
-		<VocationalVehicle>false</VocationalVehicle>
+		
 		<!-- optional -->
-		<SleeperCab>true</SleeperCab>
+		
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>E2</ArchitectureID>
 		<ADAS xsi:type="ADAS_PEV_Type">
