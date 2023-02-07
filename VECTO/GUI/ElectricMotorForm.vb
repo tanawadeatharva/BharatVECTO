@@ -203,6 +203,8 @@ Public Class ElectricMotorForm
         tbMapLow.Text = GetRelativePath(voltageLevelLow.PowerMap.First().PowerMap.Source, basePath)
         tbVoltageLow.Text = voltageLevelLow.VoltageLevel.Value().ToGUIFormat()
         
+        tbRatedPower.Text = engine.R85RatedPower.ConvertToKiloWatt().Value.ToGUIFormat()
+
         DeclInit()
 
         ElectricMotorFileBrowser.UpdateHistory(file)
@@ -260,6 +262,8 @@ Public Class ElectricMotorForm
         em.PathMaxTorqueHi = tbMaxTorqueHi.Text
         em.PathMapHi = tbMapHi.Text
         em.VoltageLevelHigh = tbVoltageHi.Text.ToDouble(0)
+
+        em.R85RatedPower = tbRatedPower.Text.ToDouble(0).SI(unit.SI.Kilo.Watt).Cast(of Watt)()
 
         If Not em.SaveFile Then
             MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)

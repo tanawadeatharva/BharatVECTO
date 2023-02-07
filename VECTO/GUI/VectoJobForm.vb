@@ -1029,15 +1029,14 @@ Public Class VectoJobForm
 
         pnVehicle.Enabled = True
         pnGearbox.Enabled = True
-        pnShiftParams.Enabled = True
+        pnShiftParams.Enabled = not Cfg.DeclMode
         TabPgADAS.Enabled = True
         tpAuxiliaries.Enabled = True
         gbElectricAux.Enabled = True
         GrAuxMech.Enabled = True
         pnEngine.Enabled = True
-        pnShiftParams.Enabled = True
-        pnHybridStrategy.Enabled = False
-        gbEngineStopStart.Visible = True
+        pnHybridStrategy.Enabled = not Cfg.DeclMode
+        gbEngineStopStart.Visible = not Cfg.DeclMode
         lblESSUtilityFactorDriving.Visible = True
         tbESSUtilityFactorDriving.Visible = True
         lblESSUtilityFactorDrivingUnit.Visible = True
@@ -1064,28 +1063,28 @@ Public Class VectoJobForm
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = True
                 GrAuxMech.Enabled = False
-                pnShiftParams.Enabled = True
+                pnShiftParams.Enabled = not Cfg.DeclMode
                 gbEngineStopStart.Visible = False
             Case VectoSimulationJobType.IHPC
                 pnEngine.Enabled = True
                 pnGearbox.Enabled = True
                 GrAuxMech.Enabled = True
-                pnShiftParams.Enabled = True
+                pnShiftParams.Enabled = not Cfg.DeclMode
                 gbEngineStopStart.Visible = False
-                pnHybridStrategy.Enabled = true
+                pnHybridStrategy.Enabled = not cfg.DeclMode
             Case VectoSimulationJobType.IEPC_E
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = True
                 GrAuxMech.Enabled = False
-                pnShiftParams.Enabled = True
+                pnShiftParams.Enabled = not Cfg.DeclMode
                 gbEngineStopStart.Visible = False
             Case VectoSimulationJobType.IEPC_S
                 pnEngine.Enabled = True
                 pnGearbox.Enabled = True
                 GrAuxMech.Enabled = False
-                pnShiftParams.Enabled = True
+                pnShiftParams.Enabled = not Cfg.DeclMode
                 gbEngineStopStart.Visible = False
-                pnHybridStrategy.Enabled = true
+                pnHybridStrategy.Enabled = not Cfg.DeclMode
         End Select
     End Sub
 

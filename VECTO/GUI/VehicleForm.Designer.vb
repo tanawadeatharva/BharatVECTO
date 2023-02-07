@@ -250,6 +250,7 @@ Partial Class VehicleForm
         Me.cbLegislativeClass = New System.Windows.Forms.ComboBox()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.lblTitle = New System.Windows.Forms.Label()
+        Me.pnInitialSoC = New System.Windows.Forms.Panel()
         Me.GroupBox6.SuspendLayout
         Me.ToolStrip1.SuspendLayout
         Me.gbRetarderLosses.SuspendLayout
@@ -306,6 +307,7 @@ Partial Class VehicleForm
         Me.gbPTOLossmap.SuspendLayout
         Me.gbEPTO.SuspendLayout
         Me.GroupBox5.SuspendLayout
+        Me.pnInitialSoC.SuspendLayout
         Me.SuspendLayout
         '
         'Label1
@@ -1766,13 +1768,11 @@ Partial Class VehicleForm
         '
         'gbBattery
         '
+        Me.gbBattery.Controls.Add(Me.pnInitialSoC)
         Me.gbBattery.Controls.Add(Me.lvREESSPacks)
         Me.gbBattery.Controls.Add(Me.btnAddReessPack)
         Me.gbBattery.Controls.Add(Me.lblEditReessPack)
         Me.gbBattery.Controls.Add(Me.btnRemoveReessPack)
-        Me.gbBattery.Controls.Add(Me.lblInitialSoCUnit)
-        Me.gbBattery.Controls.Add(Me.tbInitialSoC)
-        Me.gbBattery.Controls.Add(Me.lblInitialSoC)
         Me.gbBattery.Location = New System.Drawing.Point(7, 7)
         Me.gbBattery.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.gbBattery.Name = "gbBattery"
@@ -1847,7 +1847,7 @@ Partial Class VehicleForm
         'lblInitialSoCUnit
         '
         Me.lblInitialSoCUnit.AutoSize = true
-        Me.lblInitialSoCUnit.Location = New System.Drawing.Point(309, 24)
+        Me.lblInitialSoCUnit.Location = New System.Drawing.Point(304, 5)
         Me.lblInitialSoCUnit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblInitialSoCUnit.Name = "lblInitialSoCUnit"
         Me.lblInitialSoCUnit.Size = New System.Drawing.Size(25, 15)
@@ -1856,7 +1856,7 @@ Partial Class VehicleForm
         '
         'tbInitialSoC
         '
-        Me.tbInitialSoC.Location = New System.Drawing.Point(238, 22)
+        Me.tbInitialSoC.Location = New System.Drawing.Point(233, 3)
         Me.tbInitialSoC.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.tbInitialSoC.Name = "tbInitialSoC"
         Me.tbInitialSoC.Size = New System.Drawing.Size(68, 23)
@@ -1865,7 +1865,7 @@ Partial Class VehicleForm
         'lblInitialSoC
         '
         Me.lblInitialSoC.AutoSize = true
-        Me.lblInitialSoC.Location = New System.Drawing.Point(8, 25)
+        Me.lblInitialSoC.Location = New System.Drawing.Point(3, 6)
         Me.lblInitialSoC.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblInitialSoC.Name = "lblInitialSoC"
         Me.lblInitialSoC.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -2641,6 +2641,16 @@ Partial Class VehicleForm
         Me.lblTitle.TabIndex = 43
         Me.lblTitle.Text = "Vehicle TITLE"
         '
+        'pnInitialSoC
+        '
+        Me.pnInitialSoC.Controls.Add(Me.tbInitialSoC)
+        Me.pnInitialSoC.Controls.Add(Me.lblInitialSoC)
+        Me.pnInitialSoC.Controls.Add(Me.lblInitialSoCUnit)
+        Me.pnInitialSoC.Location = New System.Drawing.Point(7, 22)
+        Me.pnInitialSoC.Name = "pnInitialSoC"
+        Me.pnInitialSoC.Size = New System.Drawing.Size(351, 28)
+        Me.pnInitialSoC.TabIndex = 4
+        '
         'VehicleForm
         '
         Me.AcceptButton = Me.ButOK
@@ -2760,6 +2770,8 @@ Partial Class VehicleForm
         Me.gbEPTO.ResumeLayout(false)
         Me.GroupBox5.ResumeLayout(false)
         Me.GroupBox5.PerformLayout
+        Me.pnInitialSoC.ResumeLayout(false)
+        Me.pnInitialSoC.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -2996,5 +3008,6 @@ End Sub
     Friend WithEvents gbPTOICEGroupBox As GroupBox
     Friend WithEvents cbPTOStandstillCycleType As ComboBox
     Friend WithEvents FlowLayoutPanel4 As FlowLayoutPanel
+    Friend WithEvents pnInitialSoC As Panel
     '>>>>>>> VECTO_CERT/master
 End Class

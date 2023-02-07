@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#region Implementation of IIEPCDeclarationInputData
 
 		public ElectricMachineType ElectricMachineType { get; }
-		public Watt R85RatedPower => null;
+		public Watt R85RatedPower => Body.ContainsKey("R85RatedPower") ? Body.GetEx<double>("R85RatedPower").SI<Watt>() : 0.SI<Watt>();
 		public KilogramSquareMeter Inertia => Body.GetEx<double>(JsonKeys.IEPC_Inertia).SI<KilogramSquareMeter>();
 		public bool DifferentialIncluded => Body.GetEx<bool>(JsonKeys.IEPC_DifferentialIncluded);
 		public bool DesignTypeWheelMotor => Body.GetEx<bool>(JsonKeys.IEPC_DesignTypeWheelMotor);

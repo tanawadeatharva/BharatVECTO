@@ -220,7 +220,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 
 		public ElectricMachineType ElectricMachineType { get; }
-		public Watt R85RatedPower => !SavedInDeclarationMode ?  null : Body.GetEx<double>("R85RatedPower").SI<Watt>();
+		public Watt R85RatedPower => Body.ContainsKey("R85RatedPower") ? Body.GetEx<double>("R85RatedPower").SI<Watt>() : 0.SI<Watt>();
 		public virtual KilogramSquareMeter Inertia => Body.GetEx<double>("Inertia").SI<KilogramSquareMeter>();
 
 		//public virtual Joule OverloadBuffer => Body.GetValueOrDefault<double>("ThermalOverloadBuffer")?.SI(Unit.SI.Mega.Joule).Cast<Joule>() ?? 1e18.SI<Joule>();

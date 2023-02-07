@@ -38,6 +38,7 @@ Public Class IEPCForm
 		cbDesignTypeWheelMotor.Checked = inputData.DesignTypeWheelMotor
 		tbNumberOfDesignTypeWheelMotor.Text = inputData.NrOfDesignTypeWheelMotorMeasured.Value.ToGUIFormat()
 		tbThermalOverload.Text = inputData.OverloadRecoveryFactor.ToGUIFormat()
+		tbRatedPower.Text = inputData.R85RatedPower.ConvertToKiloWatt().Value.ToGUIFormat()
 
 		Dim voltageLevel = inputData.VoltageLevels.First()
 		SetFirstVoltageLevel(voltageLevel)
@@ -410,6 +411,7 @@ Public Class IEPCForm
 		iepc.SetCommonEntries(tbModel.Text, tbInertia.Text, cbDesignTypeWheelMotor.Checked, 
 							  tbNumberOfDesignTypeWheelMotor.Text, cbDifferentialIncluded.Checked,
 							  tbThermalOverload.Text)
+		iepc.R85RatedPower = tbRatedPower.Text.ToDouble(0).SI(Unit.SI.Kilo.Watt).Cast(of Watt)
 		
 		iepc.SetVoltageLevelEntries(tbVoltage1.Text, tbContinousTorque1.Text, tbContinousTorqueSpeed1.Text,
 									tbOverloadTime1.Text, tbOverloadTorque1.Text, tboverloadTorqueSpeed1.Text, 
