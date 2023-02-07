@@ -13,6 +13,10 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 
 		}
 
+		public DefaultIterativeStrategy()
+		{
+			Enabled = false;
+		}
 
 		public override bool RunAgain(int iteration, IModalDataContainer modData, VectoRunData runData)
 		{
