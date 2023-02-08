@@ -21,6 +21,7 @@ Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
+Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.Declaration.Auxiliaries
 Imports TUGraz.VectoCore.Models.Simulation.Impl
@@ -119,7 +120,7 @@ Public Class VectoJobForm
             Case VectoSimulationJobType.IEPC_E
                 lblTitle.Text = prefix + "IEPC-E Vehicle"
                 gbElectricAux.Enabled = True
-                GrAuxMech.Enabled = False
+                GrAuxMech.Enabled = Cfg.DeclMode
             case VectoSimulationJobType.IEPC_S
                 lblTitle.Text = prefix + "IEPC-S Vehicle"
                 gbElectricAux.Enabled = True
@@ -157,27 +158,34 @@ Public Class VectoJobForm
         ' cDeclaration.Underspeed
         TbVmin.Text = DeclarationData.Driver.OverSpeed.MinSpeed.AsKmph.ToGUIFormat()     'cDeclaration.ECvmin
         TbAuxPAuxICEOn.Text = ""
-        If _
-            LvAux.Items.Count <> 5 OrElse
-            (LvAux.Items(0).Text <> VectoCore.Configuration.Constants.Auxiliaries.IDs.Fan OrElse
-            LvAux.Items(1).Text <> VectoCore.Configuration.Constants.Auxiliaries.IDs.SteeringPump OrElse
-            LvAux.Items(2).Text <> VectoCore.Configuration.Constants.Auxiliaries.IDs.HeatingVentilationAirCondition OrElse
-            LvAux.Items(3).Text <> VectoCore.Configuration.Constants.Auxiliaries.IDs.ElectricSystem OrElse
-            LvAux.Items(4).Text <> VectoCore.Configuration.Constants.Auxiliaries.IDs.PneumaticSystem) Then
-            LvAux.Items.Clear()
 
+        Dim auxList As List(Of AuxiliaryType)
+        Select case JobType
+            Case VectoSimulationJobType.ConventionalVehicle
+            Case VectoSimulationJobType.ParallelHybridVehicle
+            case VectoSimulationJobType.IHPC
+            Case VectoSimulationJobType.SerialHybridVehicle
+            case VectoSimulationJobType.IEPC_S
+                auxList = New HeavyLorryAuxiliaryDataAdapter().AuxiliaryTypes.OrderBy(Function(x) x).ToList()
+            Case VectoSimulationJobType.BatteryElectricVehicle
+            Case VectoSimulationJobType.IEPC_E
+                auxList = new HeavyLorryPEVAuxiliaryDataAdapter().AuxiliaryTypes.OrderBy(Function(x) x).ToList()
+        End Select
 
-            LvAux.Items.Add(GetTechListForAux(AuxiliaryType.Fan, DeclarationData.Fan))
+        Dim auxTechs = New Dictionary(Of AuxiliaryType, IDeclarationAuxiliaryTable) from {
+                {AuxiliaryType.Fan, DeclarationData.Fan},
+                {AuxiliaryType.SteeringPump, DeclarationData.SteeringPump},
+                {AuxiliaryType.HVAC, DeclarationData.HeatingVentilationAirConditioning},
+                {AuxiliaryType.ElectricSystem, DeclarationData.ElectricSystem},
+                {AuxiliaryType.PneumaticSystem, DeclarationData.PneumaticSystem}
+                }
 
-            LvAux.Items.Add(GetTechListForAux(AuxiliaryType.SteeringPump, DeclarationData.SteeringPump))
+        LvAux.Items.Clear()
 
-            LvAux.Items.Add(GetTechListForAux(AuxiliaryType.HVAC, DeclarationData.HeatingVentilationAirConditioning))
+        For Each auxiliaryType As AuxiliaryType In auxList
+            LvAux.Items.Add(GetTechListForAux(auxiliaryType, auxTechs(auxiliaryType)))
+        Next
 
-            LvAux.Items.Add(GetTechListForAux(AuxiliaryType.ElectricSystem, DeclarationData.ElectricSystem))
-
-            LvAux.Items.Add(GetTechListForAux(AuxiliaryType.PneumaticSystem, DeclarationData.PneumaticSystem))
-
-        End If
     End Sub
 
     Protected Function GetTechListForAux(type As AuxiliaryType, aux As IDeclarationAuxiliaryTable) _
@@ -1076,7 +1084,7 @@ Public Class VectoJobForm
             Case VectoSimulationJobType.IEPC_E
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = True
-                GrAuxMech.Enabled = False
+                GrAuxMech.Enabled = Cfg.DeclMode
                 pnShiftParams.Enabled = not Cfg.DeclMode
                 gbEngineStopStart.Enabled = False
             Case VectoSimulationJobType.IEPC_S
