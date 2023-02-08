@@ -2472,6 +2472,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var hdvMissionDict = new Dictionary<VehicleClass, HashSet<MissionType>>();
 
 			foreach (DataRow row in segmentTable.Rows) {
+				if (!row["valid"].ToString().ToBoolean()) {
+					continue;
+				}
 				var hdvGroup = VehicleClassHelper.Parse(row["HDV group"].ToString());
 				hdvMissionDict.TryAdd(hdvGroup, new HashSet<MissionType>());
 				foreach (var missionType in missions.Where(
