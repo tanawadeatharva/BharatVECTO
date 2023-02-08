@@ -81,7 +81,7 @@ public class JSONFileWriter : IOutputFileWriter
 			{ JsonKeys.SavedInDeclMode, declMode },
 			{ JsonKeys.Component_Model, electricMachine.Model },
 			{ JsonKeys.Engine_Inertia, electricMachine.Inertia.Value() },
-			{ JsonKeys.EM_ElectricMachineType, electricMachine.ElectricMachineType},
+			{ JsonKeys.EM_ElectricMachineType, electricMachine.ElectricMachineType.ToString() },
 			{ JsonKeys.EM_ThermalOverloadRecoveryFactor, electricMachine.OverloadRecoveryFactor },
 			{ JsonKeys.EM_RatedPower, electricMachine.R85RatedPower.Value() }
 		};
@@ -147,12 +147,13 @@ public class JSONFileWriter : IOutputFileWriter
 		{
 			{JsonKeys.SavedInDeclMode, declMode},
 			{JsonKeys.Component_Model, iepc.Model},
-			{ JsonKeys.EM_ElectricMachineType, iepc.ElectricMachineType},
+			{ JsonKeys.EM_ElectricMachineType, iepc.ElectricMachineType.ToString() },
 			{JsonKeys.IEPC_Inertia, iepc.Inertia.Value()},
 			{JsonKeys.IEPC_DifferentialIncluded, iepc.DifferentialIncluded},
 			{JsonKeys.IEPC_DesignTypeWheelMotor, iepc.DesignTypeWheelMotor},
 			{JsonKeys.IEPC_NrOfDesignTypeWheelMotorMeasured, iepc.NrOfDesignTypeWheelMotorMeasured},
-			{JsonKeys.IEPC_ThermalOverloadRecoveryFactor, iepc.OverloadRecoveryFactor}
+			{JsonKeys.IEPC_ThermalOverloadRecoveryFactor, iepc.OverloadRecoveryFactor},
+			{ JsonKeys.EM_RatedPower, iepc.R85RatedPower.Value().ToGUIFormat() }
 		};
 
 		var gears = new List<Dictionary<string, object>>();
@@ -217,7 +218,7 @@ public class JSONFileWriter : IOutputFileWriter
 			{ "MaxCurrentMap", GetRelativePath(battery.MaxCurrentMap.Source, Path.GetDirectoryName(filename)) },
 			{ "InternalResistanceCurve", GetRelativePath(battery.InternalResistanceCurve.Source, Path.GetDirectoryName(filename)) },
 			{ "SoCCurve", GetRelativePath(battery.VoltageCurve.Source, Path.GetDirectoryName(filename)) },
-			{ "TestingTemperature", battery.TestingTemperature.AsDegCelsius.ToGUIFormat() },
+			{ "TestingTemperature", battery.TestingTemperature.AsDegCelsius},
 			{ "JunctionboxIncluded", battery.JunctionboxIncluded },
 			{ "ConnectorsSubsystemsIncluded", battery.JunctionboxIncluded }
 		};
@@ -239,7 +240,7 @@ public class JSONFileWriter : IOutputFileWriter
 			{ "U_max", superCap.MaxVoltage.Value() },
 			{ "I_maxCharge", superCap.MaxCurrentCharge.Value() },
 			{ "I_maxDischarge", superCap.MaxCurrentDischarge.Value() },
-			{ "TestingTemperature", superCap.TestingTemperature.AsDegCelsius.ToGUIFormat() },
+			{ "TestingTemperature", superCap.TestingTemperature.AsDegCelsius },
 		};
 
 		WriteFile(header, body, filename);
