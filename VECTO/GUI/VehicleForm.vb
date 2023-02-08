@@ -499,7 +499,11 @@ Public Class VehicleForm
 			For Each entry As IElectricStorageEngineeringInputData In vehicle.Components.ElectricStorage.ElectricStorageElements.OrderBy(Function(x) x.StringId)
 				lvREESSPacks.Items.Add(CreateREESSPackListViewItem(GetRelativePath(entry.REESSPack.DataSource.SourceFile, basePath), entry.Count, entry.StringId))
 			Next
-			tbInitialSoC.Text = (vehicle.InitialSOC * 100).ToGUIFormat()
+			if (cfg.DeclMode) Then 
+				tbInitialSoC.Text = string.Empty
+			Else 
+				tbInitialSoC.Text = (vehicle.InitialSOC * 100).ToGUIFormat()
+			End If
 
 			if (vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse vehicle.VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle) then
 			Dim em As ElectricMachineEntry(Of IElectricMotorEngineeringInputData) = vehicle.Components.ElectricMachines.Entries.First(Function(x) x.Position <> PowertrainPosition.GEN)

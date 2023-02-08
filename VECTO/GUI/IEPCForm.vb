@@ -42,9 +42,12 @@ Public Class IEPCForm
 		cbDifferentialIncluded.Checked = inputData.DifferentialIncluded
 		cbDesignTypeWheelMotor.Checked = inputData.DesignTypeWheelMotor
 		tbNumberOfDesignTypeWheelMotor.Text = inputData.NrOfDesignTypeWheelMotorMeasured.Value.ToGUIFormat()
-		tbThermalOverload.Text = inputData.OverloadRecoveryFactor.ToGUIFormat()
+		
 		tbRatedPower.Text = inputData.R85RatedPower.ConvertToKiloWatt().Value.ToGUIFormat()
 		cbEmType.SelectedValue = inputData.ElectricMachineType
+		if Not Cfg.DeclMode Then
+		    tbThermalOverload.Text = inputData.OverloadRecoveryFactor.ToGUIFormat()
+		End If
 
 		Dim voltageLevel = inputData.VoltageLevels.First()
 		SetFirstVoltageLevel(voltageLevel)
@@ -521,6 +524,9 @@ Public Class IEPCForm
 	End Function
 
 	Private Function ValidateOverloadRecoveryFactor() As Boolean
+		if cfg.DeclMode Then
+			return true
+		End If
 		If Not ValidDoubleValue(tbThermalOverload.Text) Then
 			ShowErrorMessageBox("Thermal Overload Recovery Factor", tbThermalOverload)
 			Return False

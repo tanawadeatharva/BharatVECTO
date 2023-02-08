@@ -49,7 +49,7 @@ Public Class IEPCInputData
         _wheelMotorMeasured = designTypeWheelMotorMeasured
         _nrDesignTypeWheelMotor = nrOfDesignTypeWheelMotorMeasured.ToInt(Nothing)
         _differentialIncluded = differentialIncluded
-        _overloadRecoverFactor = thermalOverloadRecoverFactor.ToDouble()
+        _overloadRecoverFactor = thermalOverloadRecoverFactor.ToDouble(0)
 
     End Sub
     
