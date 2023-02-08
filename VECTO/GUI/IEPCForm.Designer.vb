@@ -133,12 +133,12 @@ Partial Class IEPCForm
         Me.ButOK = New System.Windows.Forms.Button()
         Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
         Me.FlowLayoutPanel4 = New System.Windows.Forms.FlowLayoutPanel()
-        Me.FlowLayoutPanel5 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.FlowLayoutPanel5 = New System.Windows.Forms.Panel()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.pnInertia = New System.Windows.Forms.Panel()
         Me.lblinertiaUnit = New System.Windows.Forms.Label()
         Me.FlowLayoutPanel7 = New System.Windows.Forms.FlowLayoutPanel()
-        Me.pnThermalOverloadRecovery = New System.Windows.Forms.FlowLayoutPanel()
+        Me.pnThermalOverloadRecovery = New System.Windows.Forms.Panel()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.LbStatus = New System.Windows.Forms.ToolStripStatusLabel()
@@ -149,6 +149,9 @@ Partial Class IEPCForm
         Me.lblRatedPower = New System.Windows.Forms.Label()
         Me.lblRatedPowerUnit = New System.Windows.Forms.Label()
         Me.tbRatedPower = New System.Windows.Forms.TextBox()
+        Me.pnElectricMachineType = New System.Windows.Forms.Panel()
+        Me.cbEmType = New System.Windows.Forms.ComboBox()
+        Me.lblEmType = New System.Windows.Forms.Label()
         Me.tcVoltageLevels.SuspendLayout
         Me.tpFirstVoltageLevel.SuspendLayout
         Me.FlowLayoutPanel9.SuspendLayout
@@ -177,6 +180,7 @@ Partial Class IEPCForm
         Me.StatusStrip1.SuspendLayout
         Me.CmOpenFile.SuspendLayout
         Me.pnRatedPower.SuspendLayout
+        Me.pnElectricMachineType.SuspendLayout
         Me.SuspendLayout
         '
         'btFLCurveFile1
@@ -192,8 +196,7 @@ Partial Class IEPCForm
         '
         'tbThermalOverload
         '
-        Me.tbThermalOverload.Anchor = System.Windows.Forms.AnchorStyles.Left
-        Me.tbThermalOverload.Location = New System.Drawing.Point(239, 3)
+        Me.tbThermalOverload.Location = New System.Drawing.Point(222, 3)
         Me.tbThermalOverload.Margin = New System.Windows.Forms.Padding(35, 3, 4, 3)
         Me.tbThermalOverload.Name = "tbThermalOverload"
         Me.tbThermalOverload.Size = New System.Drawing.Size(65, 23)
@@ -201,10 +204,9 @@ Partial Class IEPCForm
         '
         'Label52
         '
-        Me.Label52.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label52.AutoSize = true
-        Me.Label52.Location = New System.Drawing.Point(4, 7)
-        Me.Label52.Margin = New System.Windows.Forms.Padding(4, 0, 12, 0)
+        Me.Label52.Location = New System.Drawing.Point(6, 6)
+        Me.Label52.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label52.Name = "Label52"
         Me.Label52.Size = New System.Drawing.Size(188, 15)
         Me.Label52.TabIndex = 50
@@ -212,7 +214,6 @@ Partial Class IEPCForm
         '
         'Label48
         '
-        Me.Label48.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label48.AutoSize = true
         Me.Label48.Location = New System.Drawing.Point(4, 7)
         Me.Label48.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
@@ -223,9 +224,8 @@ Partial Class IEPCForm
         '
         'tbNumberOfDesignTypeWheelMotor
         '
-        Me.tbNumberOfDesignTypeWheelMotor.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.tbNumberOfDesignTypeWheelMotor.Enabled = false
-        Me.tbNumberOfDesignTypeWheelMotor.Location = New System.Drawing.Point(239, 3)
+        Me.tbNumberOfDesignTypeWheelMotor.Location = New System.Drawing.Point(254, 4)
         Me.tbNumberOfDesignTypeWheelMotor.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.tbNumberOfDesignTypeWheelMotor.Name = "tbNumberOfDesignTypeWheelMotor"
         Me.tbNumberOfDesignTypeWheelMotor.Size = New System.Drawing.Size(34, 23)
@@ -243,7 +243,7 @@ Partial Class IEPCForm
         '
         'tbInertia
         '
-        Me.tbInertia.Location = New System.Drawing.Point(119, 3)
+        Me.tbInertia.Location = New System.Drawing.Point(222, 4)
         Me.tbInertia.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.tbInertia.Name = "tbInertia"
         Me.tbInertia.Size = New System.Drawing.Size(66, 23)
@@ -274,7 +274,7 @@ Partial Class IEPCForm
         Me.tcVoltageLevels.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.tcVoltageLevels.Controls.Add(Me.tpFirstVoltageLevel)
         Me.tcVoltageLevels.Controls.Add(Me.tpVoltageLevel)
-        Me.tcVoltageLevels.Location = New System.Drawing.Point(19, 239)
+        Me.tcVoltageLevels.Location = New System.Drawing.Point(19, 258)
         Me.tcVoltageLevels.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.tcVoltageLevels.Name = "tcVoltageLevels"
         Me.tcVoltageLevels.SelectedIndex = 0
@@ -1358,7 +1358,7 @@ Partial Class IEPCForm
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(908, 613)
+        Me.ButCancel.Location = New System.Drawing.Point(908, 621)
         Me.ButCancel.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(88, 27)
@@ -1369,7 +1369,7 @@ Partial Class IEPCForm
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(813, 613)
+        Me.ButOK.Location = New System.Drawing.Point(813, 621)
         Me.ButOK.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(88, 27)
@@ -1392,7 +1392,7 @@ Partial Class IEPCForm
         Me.FlowLayoutPanel4.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.FlowLayoutPanel4.Controls.Add(Me.Label3)
         Me.FlowLayoutPanel4.Controls.Add(Me.cbDesignTypeWheelMotor)
-        Me.FlowLayoutPanel4.Location = New System.Drawing.Point(14, 183)
+        Me.FlowLayoutPanel4.Location = New System.Drawing.Point(14, 190)
         Me.FlowLayoutPanel4.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.FlowLayoutPanel4.Name = "FlowLayoutPanel4"
         Me.FlowLayoutPanel4.Size = New System.Drawing.Size(245, 30)
@@ -1403,7 +1403,7 @@ Partial Class IEPCForm
         Me.FlowLayoutPanel5.Controls.Add(Me.Label48)
         Me.FlowLayoutPanel5.Controls.Add(Me.tbNumberOfDesignTypeWheelMotor)
         Me.FlowLayoutPanel5.Controls.Add(Me.Label9)
-        Me.FlowLayoutPanel5.Location = New System.Drawing.Point(265, 151)
+        Me.FlowLayoutPanel5.Location = New System.Drawing.Point(265, 190)
         Me.FlowLayoutPanel5.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.FlowLayoutPanel5.Name = "FlowLayoutPanel5"
         Me.FlowLayoutPanel5.Size = New System.Drawing.Size(348, 30)
@@ -1411,9 +1411,8 @@ Partial Class IEPCForm
         '
         'Label9
         '
-        Me.Label9.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label9.AutoSize = true
-        Me.Label9.Location = New System.Drawing.Point(281, 7)
+        Me.Label9.Location = New System.Drawing.Point(296, 7)
         Me.Label9.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(20, 15)
@@ -1425,16 +1424,16 @@ Partial Class IEPCForm
         Me.pnInertia.Controls.Add(Me.Label51)
         Me.pnInertia.Controls.Add(Me.lblinertiaUnit)
         Me.pnInertia.Controls.Add(Me.tbInertia)
-        Me.pnInertia.Location = New System.Drawing.Point(14, 120)
+        Me.pnInertia.Location = New System.Drawing.Point(265, 125)
         Me.pnInertia.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.pnInertia.Name = "pnInertia"
-        Me.pnInertia.Size = New System.Drawing.Size(245, 30)
+        Me.pnInertia.Size = New System.Drawing.Size(348, 30)
         Me.pnInertia.TabIndex = 102
         '
         'lblinertiaUnit
         '
         Me.lblinertiaUnit.AutoSize = true
-        Me.lblinertiaUnit.Location = New System.Drawing.Point(193, 7)
+        Me.lblinertiaUnit.Location = New System.Drawing.Point(296, 7)
         Me.lblinertiaUnit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblinertiaUnit.Name = "lblinertiaUnit"
         Me.lblinertiaUnit.Size = New System.Drawing.Size(43, 15)
@@ -1445,10 +1444,10 @@ Partial Class IEPCForm
         '
         Me.FlowLayoutPanel7.Controls.Add(Me.Label2)
         Me.FlowLayoutPanel7.Controls.Add(Me.cbDifferentialIncluded)
-        Me.FlowLayoutPanel7.Location = New System.Drawing.Point(265, 183)
+        Me.FlowLayoutPanel7.Location = New System.Drawing.Point(14, 223)
         Me.FlowLayoutPanel7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.FlowLayoutPanel7.Name = "FlowLayoutPanel7"
-        Me.FlowLayoutPanel7.Size = New System.Drawing.Size(347, 30)
+        Me.FlowLayoutPanel7.Size = New System.Drawing.Size(247, 30)
         Me.FlowLayoutPanel7.TabIndex = 106
         '
         'pnThermalOverloadRecovery
@@ -1456,7 +1455,7 @@ Partial Class IEPCForm
         Me.pnThermalOverloadRecovery.Controls.Add(Me.Label52)
         Me.pnThermalOverloadRecovery.Controls.Add(Me.tbThermalOverload)
         Me.pnThermalOverloadRecovery.Controls.Add(Me.Label10)
-        Me.pnThermalOverloadRecovery.Location = New System.Drawing.Point(265, 120)
+        Me.pnThermalOverloadRecovery.Location = New System.Drawing.Point(265, 157)
         Me.pnThermalOverloadRecovery.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.pnThermalOverloadRecovery.Name = "pnThermalOverloadRecovery"
         Me.pnThermalOverloadRecovery.Size = New System.Drawing.Size(348, 30)
@@ -1464,9 +1463,8 @@ Partial Class IEPCForm
         '
         'Label10
         '
-        Me.Label10.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label10.AutoSize = true
-        Me.Label10.Location = New System.Drawing.Point(312, 7)
+        Me.Label10.Location = New System.Drawing.Point(296, 6)
         Me.Label10.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(20, 15)
@@ -1477,7 +1475,7 @@ Partial Class IEPCForm
         '
         Me.StatusStrip1.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 647)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 655)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Padding = New System.Windows.Forms.Padding(1, 0, 16, 0)
         Me.StatusStrip1.Size = New System.Drawing.Size(1008, 22)
@@ -1515,7 +1513,7 @@ Partial Class IEPCForm
         Me.pnRatedPower.Controls.Add(Me.lblRatedPower)
         Me.pnRatedPower.Controls.Add(Me.lblRatedPowerUnit)
         Me.pnRatedPower.Controls.Add(Me.tbRatedPower)
-        Me.pnRatedPower.Location = New System.Drawing.Point(14, 151)
+        Me.pnRatedPower.Location = New System.Drawing.Point(14, 157)
         Me.pnRatedPower.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.pnRatedPower.Name = "pnRatedPower"
         Me.pnRatedPower.Size = New System.Drawing.Size(245, 30)
@@ -1549,11 +1547,39 @@ Partial Class IEPCForm
         Me.tbRatedPower.Size = New System.Drawing.Size(66, 23)
         Me.tbRatedPower.TabIndex = 2
         '
+        'pnElectricMachineType
+        '
+        Me.pnElectricMachineType.Controls.Add(Me.cbEmType)
+        Me.pnElectricMachineType.Controls.Add(Me.lblEmType)
+        Me.pnElectricMachineType.Location = New System.Drawing.Point(14, 125)
+        Me.pnElectricMachineType.Name = "pnElectricMachineType"
+        Me.pnElectricMachineType.Size = New System.Drawing.Size(245, 30)
+        Me.pnElectricMachineType.TabIndex = 108
+        '
+        'cbEmType
+        '
+        Me.cbEmType.FormattingEnabled = true
+        Me.cbEmType.Location = New System.Drawing.Point(75, 4)
+        Me.cbEmType.Name = "cbEmType"
+        Me.cbEmType.Size = New System.Drawing.Size(151, 23)
+        Me.cbEmType.TabIndex = 26
+        '
+        'lblEmType
+        '
+        Me.lblEmType.AutoSize = true
+        Me.lblEmType.Location = New System.Drawing.Point(5, 6)
+        Me.lblEmType.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblEmType.Name = "lblEmType"
+        Me.lblEmType.Size = New System.Drawing.Size(51, 15)
+        Me.lblEmType.TabIndex = 25
+        Me.lblEmType.Text = "EM Type"
+        '
         'IEPCForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7!, 15!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1008, 669)
+        Me.ClientSize = New System.Drawing.Size(1008, 677)
+        Me.Controls.Add(Me.pnElectricMachineType)
         Me.Controls.Add(Me.pnRatedPower)
         Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.FlowLayoutPanel7)
@@ -1623,6 +1649,8 @@ Partial Class IEPCForm
         Me.CmOpenFile.ResumeLayout(false)
         Me.pnRatedPower.ResumeLayout(false)
         Me.pnRatedPower.PerformLayout
+        Me.pnElectricMachineType.ResumeLayout(false)
+        Me.pnElectricMachineType.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1718,10 +1746,8 @@ End Sub
     Friend WithEvents ButOK As Button
     Friend WithEvents FlowLayoutPanel1 As FlowLayoutPanel
     Friend WithEvents FlowLayoutPanel4 As FlowLayoutPanel
-    Friend WithEvents FlowLayoutPanel5 As FlowLayoutPanel
     Friend WithEvents pnInertia As Panel
     Friend WithEvents FlowLayoutPanel7 As FlowLayoutPanel
-    Friend WithEvents pnThermalOverloadRecovery As FlowLayoutPanel
     Friend WithEvents FlowLayoutPanel9 As FlowLayoutPanel
     Friend WithEvents lblinertiaUnit As Label
     Friend WithEvents Label9 As Label
@@ -1752,4 +1778,9 @@ End Sub
     Friend WithEvents lblRatedPower As Label
     Friend WithEvents lblRatedPowerUnit As Label
     Friend WithEvents tbRatedPower As TextBox
+    Friend WithEvents pnElectricMachineType As Panel
+    Friend WithEvents cbEmType As ComboBox
+    Friend WithEvents lblEmType As Label
+    Friend WithEvents FlowLayoutPanel5 As Panel
+    Friend WithEvents pnThermalOverloadRecovery As Panel
 End Class

@@ -231,9 +231,9 @@ Public Class Battery
         End Get
     End Property
 
-    Public ReadOnly Property ConnectorsSubsystemsIncluded As Boolean Implements IBatteryPackDeclarationInputData.ConnectorsSubsystemsIncluded
-    Public ReadOnly Property JunctionboxIncluded As Boolean Implements IBatteryPackDeclarationInputData.JunctionboxIncluded
-    Public ReadOnly Property TestingTemperature As Kelvin Implements IBatteryPackDeclarationInputData.TestingTemperature
+    Public Property ConnectorsSubsystemsIncluded As Boolean Implements IBatteryPackDeclarationInputData.ConnectorsSubsystemsIncluded
+    Public Property JunctionboxIncluded As Boolean Implements IBatteryPackDeclarationInputData.JunctionboxIncluded
+    Public Property TestingTemperature As Kelvin Implements IBatteryPackDeclarationInputData.TestingTemperature
 
     Public ReadOnly Property InternalResistanceCurve As TableData Implements IBatteryPackDeclarationInputData.InternalResistanceCurve
         Get

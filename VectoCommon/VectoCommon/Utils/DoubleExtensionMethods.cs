@@ -203,6 +203,11 @@ namespace TUGraz.VectoCommon.Utils
 			return SI<Kelvin>(self + 273.16);
 		}
 
+		public static Kelvin DegCelsiusToKelvin(this int self)
+		{
+			return SI<Kelvin>(self + 273.16);
+		}
+
 		/// <summary>
 		/// Converts the double-value from RPM (rounds per minute) to the SI Unit PerSecond.
 		/// </summary>

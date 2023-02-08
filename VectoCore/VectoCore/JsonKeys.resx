@@ -492,4 +492,10 @@
 <data name="BUS_RunSimulation" xml:space="preserve">
 	<value>RunSimulation</value>
 </data>
+<data name="EM_RatedPower" xml:space="preserve">
+	<value>R85RatedPower</value>
+</data>
+<data name="EM_ElectricMachineType" xml:space="preserve">
+	<value>ElectricMachineType</value>
+</data>
 </root>

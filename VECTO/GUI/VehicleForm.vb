@@ -880,7 +880,7 @@ Public Class VehicleForm
             tcVehicleComponents.SelectedTab = tpGeneral
             Return False
         End If
-        If (relCheck < 1) Or (relCheck > 1) Then
+        If not cfg.DeclMode	 andalso ((relCheck < 1) Or (relCheck > 1)) Then
             MsgBox("Relative Weight distribution on axle does not sum to 1")
             tcVehicleComponents.SelectedTab = tpGeneral
             Return False
@@ -913,13 +913,13 @@ Public Class VehicleForm
 
 			veh.VehicleTankSystem = CType(If(cbTankSystem.SelectedIndex > 0, cbTankSystem.SelectedValue, Nothing), TankSystem?)
 		End If
-
-		If(cbPTOStandstillCycleType.SelectedValue.ToString() = PTOStandStillType.Mechanical.ToString())
-			veh.PtoCycleStandstill.Init(GetPath(file), tbPTOCycle.Text)
-		Else
-			veh.EPtoCycleStandstill.Init(GetPath(file), tbPTOElectricCycle.Text)
-		End If
-
+		if (not cfg.DeclMode) then
+		    If(cbPTOStandstillCycleType.SelectedValue.ToString() = PTOStandStillType.Mechanical.ToString())
+			    veh.PtoCycleStandstill.Init(GetPath(file), tbPTOCycle.Text)
+		    Else
+			    veh.EPtoCycleStandstill.Init(GetPath(file), tbPTOElectricCycle.Text)
+		    End If
+		end if
 
 		if (VehicleType = VectoSimulationJobType.BatteryElectricVehicle) Then
 		    veh.PtoType = CType(cbPTOType.SelectedValue, String)

@@ -140,6 +140,9 @@ Partial Class ElectricMotorForm
         Me.lblRatedPower = New System.Windows.Forms.Label()
         Me.lblRatedPowerUnit = New System.Windows.Forms.Label()
         Me.tbRatedPower = New System.Windows.Forms.TextBox()
+        Me.pnElectricMachineType = New System.Windows.Forms.Panel()
+        Me.lblEmType = New System.Windows.Forms.Label()
+        Me.cbEmType = New System.Windows.Forms.ComboBox()
         Me.ToolStrip1.SuspendLayout
         Me.StatusStrip1.SuspendLayout
         CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).BeginInit
@@ -162,11 +165,12 @@ Partial Class ElectricMotorForm
         Me.Panel10.SuspendLayout
         Me.pnDragCurve.SuspendLayout
         Me.pnRatedPower.SuspendLayout
+        Me.pnElectricMachineType.SuspendLayout
         Me.SuspendLayout
         '
         'tbInertia
         '
-        Me.tbInertia.Location = New System.Drawing.Point(148, 6)
+        Me.tbInertia.Location = New System.Drawing.Point(192, 6)
         Me.tbInertia.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.tbInertia.Name = "tbInertia"
         Me.tbInertia.Size = New System.Drawing.Size(56, 23)
@@ -175,7 +179,7 @@ Partial Class ElectricMotorForm
         'lblinertiaUnit
         '
         Me.lblinertiaUnit.AutoSize = true
-        Me.lblinertiaUnit.Location = New System.Drawing.Point(212, 9)
+        Me.lblinertiaUnit.Location = New System.Drawing.Point(256, 9)
         Me.lblinertiaUnit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblinertiaUnit.Name = "lblinertiaUnit"
         Me.lblinertiaUnit.Size = New System.Drawing.Size(43, 15)
@@ -367,10 +371,10 @@ Partial Class ElectricMotorForm
         Me.pnInertia.Controls.Add(Me.lblInertia)
         Me.pnInertia.Controls.Add(Me.lblinertiaUnit)
         Me.pnInertia.Controls.Add(Me.tbInertia)
-        Me.pnInertia.Location = New System.Drawing.Point(14, 125)
+        Me.pnInertia.Location = New System.Drawing.Point(287, 124)
         Me.pnInertia.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.pnInertia.Name = "pnInertia"
-        Me.pnInertia.Size = New System.Drawing.Size(258, 35)
+        Me.pnInertia.Size = New System.Drawing.Size(304, 35)
         Me.pnInertia.TabIndex = 3
         '
         'btnEmMapOpenHi
@@ -559,7 +563,7 @@ Partial Class ElectricMotorForm
         Me.pnThermalOverloadRecovery.Controls.Add(Me.lblOvlRecovery)
         Me.pnThermalOverloadRecovery.Controls.Add(Me.lblOvlRecoveryFactorUnit)
         Me.pnThermalOverloadRecovery.Controls.Add(Me.tbOverloadRecoveryFactor)
-        Me.pnThermalOverloadRecovery.Location = New System.Drawing.Point(287, 125)
+        Me.pnThermalOverloadRecovery.Location = New System.Drawing.Point(287, 160)
         Me.pnThermalOverloadRecovery.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.pnThermalOverloadRecovery.Name = "pnThermalOverloadRecovery"
         Me.pnThermalOverloadRecovery.Size = New System.Drawing.Size(304, 35)
@@ -578,7 +582,7 @@ Partial Class ElectricMotorForm
         'lblOvlRecoveryFactorUnit
         '
         Me.lblOvlRecoveryFactorUnit.AutoSize = true
-        Me.lblOvlRecoveryFactorUnit.Location = New System.Drawing.Point(268, 8)
+        Me.lblOvlRecoveryFactorUnit.Location = New System.Drawing.Point(256, 9)
         Me.lblOvlRecoveryFactorUnit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblOvlRecoveryFactorUnit.Name = "lblOvlRecoveryFactorUnit"
         Me.lblOvlRecoveryFactorUnit.Size = New System.Drawing.Size(20, 15)
@@ -587,7 +591,7 @@ Partial Class ElectricMotorForm
         '
         'tbOverloadRecoveryFactor
         '
-        Me.tbOverloadRecoveryFactor.Location = New System.Drawing.Point(206, 6)
+        Me.tbOverloadRecoveryFactor.Location = New System.Drawing.Point(192, 5)
         Me.tbOverloadRecoveryFactor.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.tbOverloadRecoveryFactor.Name = "tbOverloadRecoveryFactor"
         Me.tbOverloadRecoveryFactor.Size = New System.Drawing.Size(56, 23)
@@ -1165,7 +1169,7 @@ Partial Class ElectricMotorForm
         Me.pnRatedPower.Location = New System.Drawing.Point(14, 160)
         Me.pnRatedPower.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.pnRatedPower.Name = "pnRatedPower"
-        Me.pnRatedPower.Size = New System.Drawing.Size(258, 35)
+        Me.pnRatedPower.Size = New System.Drawing.Size(268, 35)
         Me.pnRatedPower.TabIndex = 25
         '
         'lblRatedPower
@@ -1174,14 +1178,14 @@ Partial Class ElectricMotorForm
         Me.lblRatedPower.Location = New System.Drawing.Point(4, 8)
         Me.lblRatedPower.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblRatedPower.Name = "lblRatedPower"
-        Me.lblRatedPower.Size = New System.Drawing.Size(70, 15)
+        Me.lblRatedPower.Size = New System.Drawing.Size(73, 15)
         Me.lblRatedPower.TabIndex = 0
-        Me.lblRatedPower.Text = "RatedPower"
+        Me.lblRatedPower.Text = "Rated Power"
         '
         'lblRatedPowerUnit
         '
         Me.lblRatedPowerUnit.AutoSize = true
-        Me.lblRatedPowerUnit.Location = New System.Drawing.Point(212, 9)
+        Me.lblRatedPowerUnit.Location = New System.Drawing.Point(232, 9)
         Me.lblRatedPowerUnit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblRatedPowerUnit.Name = "lblRatedPowerUnit"
         Me.lblRatedPowerUnit.Size = New System.Drawing.Size(32, 15)
@@ -1190,11 +1194,38 @@ Partial Class ElectricMotorForm
         '
         'tbRatedPower
         '
-        Me.tbRatedPower.Location = New System.Drawing.Point(148, 6)
+        Me.tbRatedPower.Location = New System.Drawing.Point(168, 6)
         Me.tbRatedPower.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.tbRatedPower.Name = "tbRatedPower"
         Me.tbRatedPower.Size = New System.Drawing.Size(56, 23)
         Me.tbRatedPower.TabIndex = 3
+        '
+        'pnElectricMachineType
+        '
+        Me.pnElectricMachineType.Controls.Add(Me.cbEmType)
+        Me.pnElectricMachineType.Controls.Add(Me.lblEmType)
+        Me.pnElectricMachineType.Location = New System.Drawing.Point(14, 124)
+        Me.pnElectricMachineType.Name = "pnElectricMachineType"
+        Me.pnElectricMachineType.Size = New System.Drawing.Size(268, 35)
+        Me.pnElectricMachineType.TabIndex = 54
+        '
+        'lblEmType
+        '
+        Me.lblEmType.AutoSize = true
+        Me.lblEmType.Location = New System.Drawing.Point(5, 9)
+        Me.lblEmType.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblEmType.Name = "lblEmType"
+        Me.lblEmType.Size = New System.Drawing.Size(51, 15)
+        Me.lblEmType.TabIndex = 25
+        Me.lblEmType.Text = "EM Type"
+        '
+        'cbEmType
+        '
+        Me.cbEmType.FormattingEnabled = true
+        Me.cbEmType.Location = New System.Drawing.Point(113, 7)
+        Me.cbEmType.Name = "cbEmType"
+        Me.cbEmType.Size = New System.Drawing.Size(151, 23)
+        Me.cbEmType.TabIndex = 26
         '
         'ElectricMotorForm
         '
@@ -1203,6 +1234,7 @@ Partial Class ElectricMotorForm
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
         Me.ClientSize = New System.Drawing.Size(1098, 591)
+        Me.Controls.Add(Me.pnElectricMachineType)
         Me.Controls.Add(Me.pnRatedPower)
         Me.Controls.Add(Me.pnDragCurve)
         Me.Controls.Add(Me.tcVoltageLevels)
@@ -1265,6 +1297,8 @@ Partial Class ElectricMotorForm
         Me.pnDragCurve.PerformLayout
         Me.pnRatedPower.ResumeLayout(false)
         Me.pnRatedPower.PerformLayout
+        Me.pnElectricMachineType.ResumeLayout(false)
+        Me.pnElectricMachineType.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1372,4 +1406,7 @@ End Sub
     Friend WithEvents lblRatedPower As Label
     Friend WithEvents lblRatedPowerUnit As Label
     Friend WithEvents tbRatedPower As TextBox
+    Friend WithEvents pnElectricMachineType As Panel
+    Friend WithEvents cbEmType As ComboBox
+    Friend WithEvents lblEmType As Label
 End Class

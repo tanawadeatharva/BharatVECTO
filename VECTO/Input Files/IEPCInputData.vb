@@ -189,11 +189,7 @@ Public Class IEPCInputData
         End Get
     End Property
 
-    Public ReadOnly Property ElectricMachineType As ElectricMachineType Implements IIEPCDeclarationInputData.ElectricMachineType
-        Get
-            Return Nothing
-        End Get
-    End Property
+    Public Property ElectricMachineType As ElectricMachineType Implements IIEPCDeclarationInputData.ElectricMachineType
 
     Public Property R85RatedPower As Watt Implements IIEPCDeclarationInputData.R85RatedPower
        

@@ -81,7 +81,9 @@ public class JSONFileWriter : IOutputFileWriter
 			{ JsonKeys.SavedInDeclMode, declMode },
 			{ JsonKeys.Component_Model, electricMachine.Model },
 			{ JsonKeys.Engine_Inertia, electricMachine.Inertia.Value() },
-			{ JsonKeys.EM_ThermalOverloadRecoveryFactor, electricMachine.OverloadRecoveryFactor }
+			{ JsonKeys.EM_ElectricMachineType, electricMachine.ElectricMachineType},
+			{ JsonKeys.EM_ThermalOverloadRecoveryFactor, electricMachine.OverloadRecoveryFactor },
+			{ JsonKeys.EM_RatedPower, electricMachine.R85RatedPower.Value() }
 		};
 
 		var vlevels = GetVoltageLevelEntries(electricMachine.VoltageLevels, filename);
@@ -100,7 +102,9 @@ public class JSONFileWriter : IOutputFileWriter
 			{ JsonKeys.Component_Model, electricMachine.Model },
 			{ JsonKeys.EM_DragCurve,  GetRelativePath(electricMachine.DragCurve.Source, Path.GetDirectoryName(filename))},
 			{ JsonKeys.Engine_Inertia, electricMachine.Inertia.Value() },
-			{ JsonKeys.EM_ThermalOverloadRecoveryFactor, electricMachine.OverloadRecoveryFactor }
+			{ JsonKeys.EM_ThermalOverloadRecoveryFactor, electricMachine.OverloadRecoveryFactor },
+			{ JsonKeys.EM_RatedPower, electricMachine.R85RatedPower.Value().ToGUIFormat() }
+
 		};
 		
 		var vlevels = GetVoltageLevelEntries(electricMachine.VoltageLevels, filename);
@@ -116,7 +120,7 @@ public class JSONFileWriter : IOutputFileWriter
 			var vlevel = new Dictionary<string, object> {
 				{ JsonKeys.EM_Voltage, entry.VoltageLevel.Value() },
 				{ JsonKeys.EM_ContinuousTorque, entry.ContinuousTorque.Value() },
-				{ JsonKeys.EM_ContinuousTorqueSpeed, entry.ContinuousTorqueSpeed.AsRPM },
+				{ JsonKeys.EM_ContinuousTorqueSpeed, entry.ContinuousTorqueSpeed.AsRPM.ToGUIFormat() },
 				{ JsonKeys.EM_OverloadTorque, entry.OverloadTorque.Value() },
 				{ JsonKeys.EM_OverloadTorqueSpeed, entry.OverloadTestSpeed.AsRPM },
 				{ JsonKeys.EM_OverloadTime, entry.OverloadTime.Value() },
@@ -143,6 +147,7 @@ public class JSONFileWriter : IOutputFileWriter
 		{
 			{JsonKeys.SavedInDeclMode, declMode},
 			{JsonKeys.Component_Model, iepc.Model},
+			{ JsonKeys.EM_ElectricMachineType, iepc.ElectricMachineType},
 			{JsonKeys.IEPC_Inertia, iepc.Inertia.Value()},
 			{JsonKeys.IEPC_DifferentialIncluded, iepc.DifferentialIncluded},
 			{JsonKeys.IEPC_DesignTypeWheelMotor, iepc.DesignTypeWheelMotor},
@@ -211,7 +216,10 @@ public class JSONFileWriter : IOutputFileWriter
 			{ "SOC_max", battery.MaxSOC * 100.0 },
 			{ "MaxCurrentMap", GetRelativePath(battery.MaxCurrentMap.Source, Path.GetDirectoryName(filename)) },
 			{ "InternalResistanceCurve", GetRelativePath(battery.InternalResistanceCurve.Source, Path.GetDirectoryName(filename)) },
-			{ "SoCCurve", GetRelativePath(battery.VoltageCurve.Source, Path.GetDirectoryName(filename)) }
+			{ "SoCCurve", GetRelativePath(battery.VoltageCurve.Source, Path.GetDirectoryName(filename)) },
+			{ "TestingTemperature", battery.TestingTemperature.AsDegCelsius.ToGUIFormat() },
+			{ "JunctionboxIncluded", battery.JunctionboxIncluded },
+			{ "ConnectorsSubsystemsIncluded", battery.JunctionboxIncluded }
 		};
 
 		WriteFile(header, body, filename);
@@ -230,7 +238,8 @@ public class JSONFileWriter : IOutputFileWriter
 			{ "U_min", superCap.MinVoltage.Value() },
 			{ "U_max", superCap.MaxVoltage.Value() },
 			{ "I_maxCharge", superCap.MaxCurrentCharge.Value() },
-			{ "I_maxDischarge", superCap.MaxCurrentDischarge.Value() }
+			{ "I_maxDischarge", superCap.MaxCurrentDischarge.Value() },
+			{ "TestingTemperature", superCap.TestingTemperature.AsDegCelsius.ToGUIFormat() },
 		};
 
 		WriteFile(header, body, filename);
