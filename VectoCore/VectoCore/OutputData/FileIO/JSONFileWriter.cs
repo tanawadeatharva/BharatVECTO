@@ -220,7 +220,7 @@ public class JSONFileWriter : IOutputFileWriter
 			{ "SoCCurve", GetRelativePath(battery.VoltageCurve.Source, Path.GetDirectoryName(filename)) },
 			{ "TestingTemperature", battery.TestingTemperature.AsDegCelsius},
 			{ "JunctionboxIncluded", battery.JunctionboxIncluded },
-			{ "ConnectorsSubsystemsIncluded", battery.JunctionboxIncluded }
+			{ "ConnectorsSubsystemsIncluded", battery.ConnectorsSubsystemsIncluded }
 		};
 
 		WriteFile(header, body, filename);
@@ -590,7 +590,8 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("PowertrainConfiguration", vehicle.VehicleType == VectoSimulationJobType.SerialHybridVehicle ? "SerialHybrid" : vehicle.VehicleType == VectoSimulationJobType.IHPC ? "IHPC":  "ParallelHybrid");
 		body.Add("ElectricMotors", GetElectricMotors(vehicle, basePath));
 		body.Add("Batteries", GetBattery(vehicle, basePath));
-
+		body.Add("OvcHev", true);
+		body.Add("MaxChargingPower", vehicle.MaxChargingPower.ConvertToKiloWatt().Value);
 		WriteFile(header, body, filename);
 	}
 
@@ -615,6 +616,7 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("PowertrainConfiguration", "BatteryElectric");
 		body.Add("ElectricMotors", electricMotorsOut);
 		body.Add("Batteries", battery);
+		//body.Add("OvcHev", true);
 
 		//body.Add("IdlingSpeed", vehicle.EngineIdleSpeed.AsRPM);
 		if (retarder.Type != RetarderType.None)
@@ -654,9 +656,13 @@ public class JSONFileWriter : IOutputFileWriter
 		}
 
 		body.Add("Batteries", battery);
+		if (vehicle.VehicleType == VectoSimulationJobType.IEPC_S) {
+			body.Add("OvcHev", vehicle.OvcHev);
+			body.Add("MaxChargingPower", vehicle.MaxChargingPower.ConvertToKiloWatt().Value);
+		}
 
 		//body.Add("IdlingSpeed", vehicle.EngineIdleSpeed.AsRPM);
-		if (retarder.Type != RetarderType.None)
+        if (retarder.Type != RetarderType.None)
 			body.Add("Retarder", retarderOut);
 		//body.Add("Angledrive", angledriveOut);
 		body.Add("PTO", ptoOut);
@@ -1193,7 +1199,27 @@ public class JSONFileWriter : IOutputFileWriter
 						basePath));
 			}
 		}
-		
+
+		if (job.SavedInDeclarationMode && job.Vehicle is IVehicleDeclarationInputData declVehicle) {
+			var aux = declVehicle.Components.AuxiliaryInputData;
+			var auxList = new List<object>();
+			foreach (var auxEntry in aux.Auxiliaries) {
+				var auxOut = new Dictionary<string, object>();
+				var engineeringAuxEntry = auxEntry;
+				if (!job.SavedInDeclarationMode) {
+					auxOut.Add("Type", auxEntry.Type.Name());
+					auxOut.Add("Technology", new string[] { });
+				} else {
+					auxOut.Add("ID", auxEntry.Type.Key());
+					auxOut.Add("Type", auxEntry.Type.Name());
+					auxOut.Add("Technology", engineeringAuxEntry.Technology);
+				}
+
+				auxList.Add(auxOut);
+			}
+			body.Add("Aux", auxList);
+		}
+
 		var driver = input.DriverInputData;
 
 		if (!job.SavedInDeclarationMode) {
@@ -1237,14 +1263,16 @@ public class JSONFileWriter : IOutputFileWriter
 			});
 		}
 
-		// Overspeed / EcoRoll
-		var overspeedDic = new Dictionary<string, object> {
-			{ "Mode", driver.OverSpeedData.Enabled ? "Overspeed" : "Off" },
-			{ "MinSpeed", driver.OverSpeedData.MinSpeed.AsKmph },
-			{ "OverSpeed", driver.OverSpeedData.OverSpeed.AsKmph }
-		};
+		if (!job.SavedInDeclarationMode) {
+			// Overspeed / EcoRoll
+			var overspeedDic = new Dictionary<string, object> {
+				{ "Mode", driver.OverSpeedData.Enabled ? "Overspeed" : "Off" },
+				{ "MinSpeed", driver.OverSpeedData.MinSpeed.AsKmph },
+				{ "OverSpeed", driver.OverSpeedData.OverSpeed.AsKmph }
+			};
 
-		body.Add("OverSpeedEcoRoll", overspeedDic);
+			body.Add("OverSpeedEcoRoll", overspeedDic);
+		}
 
 		// Cycles
 		if (!job.SavedInDeclarationMode)

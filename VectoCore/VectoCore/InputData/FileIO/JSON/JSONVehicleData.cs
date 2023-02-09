@@ -65,6 +65,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public override ArchitectureID ArchitectureID { get => VehicleType.GetArchitectureID(PowertrainPosition.IEPC); }
 
+		#region Overrides of JSONVehicleDataV7
+
+		//public override bool OvcHev => true;
+
+		//public override Watt MaxChargingPower => 0.SI<Watt>();
+
+		#endregion
+
 		#endregion
 	}
 
@@ -80,6 +88,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#region Overrides of JSONVehicleDataV7
 
 		public override double InitialSOC => Body.GetEx<double>("InitialSoC") / 100.0;
+
+		public override bool OvcHev =>
+			VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E) ||
+			Body.ContainsKey("OvcHev") && Body.GetEx<bool>("OvcHev");
+
+		public override Watt MaxChargingPower => OvcHev && Body.ContainsKey("MaxChargingPower") ? Body.GetEx<double>("MaxChargingPower").SI(Unit.SI.Kilo.Watt).Cast<Watt>() : 0.SI<Watt>();
 
 		protected override IRetarderInputData GetRetarder => _retarderInputData ?? (_retarderInputData = new JSONRetarderInputData(this));
 
@@ -356,8 +370,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		XmlNode IVehicleDeclarationInputData.XMLSource => null;
 		public virtual string VehicleTypeApprovalNumber { get; }
 		public virtual ArchitectureID ArchitectureID { get; }
-		public bool OvcHev { get; }
-		public Watt MaxChargingPower { get; }
+		public virtual bool OvcHev { get; }
+		public virtual Watt MaxChargingPower { get; }
 
 		public GearshiftPosition PTO_DriveGear => Body["GearDuringPTODrive"] != null ? new GearshiftPosition(Body["GearDuringPTODrive"].Value<uint>()) : null;
 

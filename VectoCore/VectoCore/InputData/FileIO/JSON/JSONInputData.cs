@@ -415,6 +415,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual IOverSpeedEngineeringInputData OverSpeedData
 		{
 			get {
+				if (!Body.ContainsKey(JsonKeys.DriverData_OverspeedEcoRoll)) {
+					return new OverSpeedInputData() {
+						Enabled = true,
+						MinSpeed = DeclarationData.Driver.OverSpeed.MinSpeed,
+						OverSpeed = DeclarationData.Driver.OverSpeed.AllowedOverSpeed
+					};
+				}
 				var overspeed = Body.GetEx(JsonKeys.DriverData_OverspeedEcoRoll);
 				return new OverSpeedInputData() {
 					Enabled = DriverData.ParseDriverMode(
