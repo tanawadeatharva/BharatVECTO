@@ -94,7 +94,7 @@ Public Class VehicleAuxiliariesDialog
 					DeclarationData.ElectricSystem.GetTechnologies().Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
 			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.PneumaticSystem
 				CbTech.DataSource =
-					DeclarationData.PneumaticSystem.GetTechnologies().Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
+					if(batteryElectricAuxOnly, DeclarationData.PneumaticSystem.FullyElectricTechnologies(), DeclarationData.PneumaticSystem.GetTechnologies()).Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
 		End Select
 		If CbTech.Items.Count > 0 Then
 			'CbTech.SelectedIndex = 0
