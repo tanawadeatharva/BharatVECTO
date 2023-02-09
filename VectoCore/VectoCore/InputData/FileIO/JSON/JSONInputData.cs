@@ -235,7 +235,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData => null;
 
-		public XElement XMLHash => new XElement(XMLNames.DI_Signature);
+		public XElement XMLHash => XMLHelper.CreateDummySig("http://www.w3.org/2000/09/xmldsig#"); //new XElement(XMLNames.DI_Signature);
 
 		IDeclarationJobInputData IDeclarationInputDataProvider.JobInputData => this;
 
