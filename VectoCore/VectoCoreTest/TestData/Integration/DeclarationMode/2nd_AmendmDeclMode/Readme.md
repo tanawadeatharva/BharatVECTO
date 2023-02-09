@@ -1,0 +1,1 @@
+Watch out for the windows path lenght limitation when creating testfiles!

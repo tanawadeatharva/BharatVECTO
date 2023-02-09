@@ -276,7 +276,7 @@ namespace TUGraz.VectoCore.OutputData
 		/// <param name="entry"></param>
 		/// <param name="runData"></param>
 		/// <param name="modData">The mod data.</param>
-		//[MethodImpl(MethodImplOptions.Synchronized)]
+		//[MethodImpl(MethodImplOptions.Synchronized)] //Results are already locked
 		protected abstract void DoStoreResult(T entry, VectoRunData runData, IModalDataContainer modData);
 
 

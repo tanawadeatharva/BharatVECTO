@@ -88,6 +88,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				PassengerCount = runData.VehicleData.PassengerCount;
 				MaxChargingPower = runData.MaxChargingPower;
 				BatteryData = runData.BatteryData;
+				OVCMode = runData.OVCMode;
 			}
 
 			public MissionType Mission { get; set; }
