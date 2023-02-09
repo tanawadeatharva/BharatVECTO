@@ -8,6 +8,7 @@ using System.Collections.Immutable;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
@@ -31,6 +32,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Tests.TestUtils;
 using TUGraz.VectoCore.Tests.Utils;
@@ -51,7 +53,7 @@ public class LorrySimulation
 		PTOActive, // Pto is active 
 	}
 
-	private const string BASE_DIR = @"TestData\Integration\DeclarationMode\2nd_AmendmentDeclarationMode\";
+	private const string BASE_DIR = @"TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\";
 	private const string Group5_HEV_P2_OVC = @"HeavyLorry\P-HEV\Group5_HEV_P2_ovc.xml";
 	private const string Group5_HEV_P3_OVC = @"HeavyLorry\P-HEV\Group5_HEV_P3_ovc.xml";
 	private const string Group5_HEV_P4_OVC = @"HeavyLorry\P-HEV\Group5_HEV_P4_ovc.xml";
@@ -79,14 +81,13 @@ public class LorrySimulation
 	}
 
 	//Conventional
-
-
+	[TestCase(@"HeavyLorry\Conventional\Group5_Conv_ES_Standard.xml", TestName = "Stefan_Conv")]
 	//S-HEV
 	[TestCase(Group5_HEV_S2_OVC)]
-	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S3_stefan.xml", TestName = "Stefan")]
+	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S3_stefan.xml", TestName = "Stefan_S2")]
 	//PEV
 	[TestCase(Group5_PEV_E3)]
-
+	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_APT_E2.xml")]
 	//P-HEV
 	[TestCase(Group5_HEV_P2_OVC)]
 	public void HeavyLorrySimulationTest(string jobFile)
@@ -94,7 +95,7 @@ public class LorrySimulation
 #if singlethreaded
 		RunSimulation(jobFile, false);
 #else
-        RunSimulation(jobFile, true);
+        RunSimulation(jobFile, true, true);
 #endif
     }
 
@@ -118,12 +119,15 @@ public class LorrySimulation
 		RunSimulation(jobFile, true);
 	}
 
-    public void RunSimulation(string jobFile, bool multiThreaded = true)
+    public void RunSimulation(string jobFile, bool multiThreaded = true, bool disableIterativeRuns = false)
     {
         var filePath = Path.Combine(BASE_DIR, jobFile);
         var runsFactory = GetSimulatorFactory(filePath, out var dataProvider, out var fileWriter, out var summaryDataContainer);
+		if (disableIterativeRuns) {
+			DisableIterativeRuns(runsFactory);
+		}
         runsFactory.WriteModalResults = true;
-        var jobContainer = new JobContainer(summaryDataContainer) { };
+		var jobContainer = new JobContainer(summaryDataContainer) { };
         jobContainer.AddRuns(runsFactory);
         PrintRuns(jobContainer, null);
 
@@ -154,7 +158,7 @@ public class LorrySimulation
         fileWriter = new FileOutputWriter(filePath);
 
         var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
-        sumWriter = new MockSumWriter();
+		sumWriter = new SummaryDataContainer(fileWriter);
         runsFactory.SumData = sumWriter;
         return runsFactory;
     }
@@ -327,7 +331,7 @@ public class LorrySimulation
 			return rd.OVCMode == VectoRunData.OvcHevMode.ChargeSustaining &&
 					rd.Mission.MissionType == MissionType.UrbanDelivery && rd.Loading == LoadingType.ReferenceLoad;
 		}).ToList();
-
+		
 		jobContainer.AddRun(runs.Single());
 		var modData = ((ModalDataContainer)((VehicleContainer)runs.Single().GetContainer()).ModData).Data;
 		jobContainer.Execute(false);
@@ -490,6 +494,7 @@ public class LorrySimulation
 	[TestCase(@"HeavyLorry\PEV\Group5_ PEV_E4.xml",10)]
 	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_E4_standardValues.xml", 6)]
 	[TestCase(@"HeavyLorry\PEV\Group5_ PEV_IEPC_E.xml",10)]
+	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_APT_E2.xml", null)]
 	public void PEV(string jobFile, int nrRuns)
 	{
 		SummaryDataContainer sumDataContainer;
@@ -498,6 +503,12 @@ public class LorrySimulation
 		Assert.IsTrue(runs.All(run => run.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.NotApplicable));
 		//Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.NotApplicable));
 
+		Assert.That(runs.All(run => {
+			var rd = run.GetContainer().RunData;
+			// PEV with APT-S or APT-P transmission are simulated as APT-N
+			return rd.VehicleData.InputData.Components.GearboxInputData == null || 
+					rd.GearboxData.Type.IsOneOf(GearboxType.AMT, GearboxType.APTN);
+		}));
 
 		var run = runs.Single(run => {
 			var rd = run.GetContainer().RunData;
@@ -639,11 +650,19 @@ public class LorrySimulation
 
 	private void RunJsonJob(string path, ExecutionMode executionMode)
 	{
-		var writeReports = false;
+		var writeReports = true;
 		var inputData = JSONInputDataFactory.ReadJsonJob(path, false);
+		if (inputData is IDeclarationInputDataProvider decl)
+        {
+			if (decl.JobInputData.Vehicle.VehicleCategory.IsBus()) {
+				Assert.Ignore("Bus");
+			}
+
+        }
 		var fileWriter = new FileOutputWriter(path);
 		var runsFactory = SimulatorFactory.CreateSimulatorFactory(executionMode, inputData, fileWriter,
 			writeReports ? null : new NullDeclarationReport()); //, writeReports ? null : new NullDeclarationReport());
+		DisableIterativeRuns(runsFactory);
 		runsFactory.WriteModalResults = true;
 		var sumWriter = new MockSumWriter();
 
@@ -651,11 +670,37 @@ public class LorrySimulation
 		runsFactory.SumData = sumWriter;
 		//var sumDataContainer = sumWriter;
 		var runs = runsFactory.SimulationRuns();
-		jobContainer.AddRun(runs.First(r => r.GetContainer().RunData.Mission.MissionType == MissionType.RegionalDelivery));
+		var simulatedRun =
+			runs.FirstOrDefault(r => r.GetContainer().RunData.Mission?.MissionType == MissionType.RegionalDelivery,
+				runs.First());
+		
+
+		jobContainer.AddRun(simulatedRun);
+		SetResultCountInReport(1, simulatedRun.GetContainer().RunData.Report);
 		jobContainer.Execute(true);
 		WaitAndAssertSuccess(jobContainer, fileWriter);
 	}
 
+
+	public void SetResultCountInReport(int count, IDeclarationReport report)
+	{
+		if (report is XMLDeclarationReport09 rep09) {
+			FieldInfo[] fields = rep09.GetType().GetFields(
+				BindingFlags.NonPublic |
+				BindingFlags.Instance);
+			fields.First().SetValue(rep09, count);
+
+
+			return;
+		}
+		Assert.Fail("Reflection failed");
+
+	}
+
+	public void DisableIterativeRuns(ISimulatorFactory factory)
+	{
+		factory.ModifyRunData = (rd) => rd.IterativeRunStrategy.Enabled = false;
+	}
 
 	[Test, TestCaseSource(nameof(GetJsonJobs))]
 	[Ignore("Just for comparison")]
@@ -746,7 +791,7 @@ public class LorrySimulation
 	{
 		var batteryElectric = vehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
 			VectoSimulationJobType.IEPC_E);
-		var ng = vehicle.Components.EngineInputData?.EngineModes.Any(e =>
+		var ng = vehicle.Components?.EngineInputData?.EngineModes.Any(e =>
 			e.Fuels.Any(f => f.FuelType.IsOneOf(FuelType.LPGPI, FuelType.NGCI, FuelType.NGPI))) ?? false;
 		var ovcHev = vehicle.OvcHev;
 		Segment segment;

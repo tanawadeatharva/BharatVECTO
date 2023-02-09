@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory;
 [TestFixture]
 public class RunDataFactoryTest
 {
-	private const string BASE_DIR = @"TestData\Integration\DeclarationMode\2nd_AmendmentDeclarationMode\";
+	private const string BASE_DIR = @"TestData\Integration\DeclarationMode\2nd_AmendDeclMode\";
 	private const string HEAVY_LORRY_DIR = BASE_DIR + @"HeavyLorry\";
 	protected IXMLInputDataReader xmlInputReader;
 	private IKernel _kernel;
