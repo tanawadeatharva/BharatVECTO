@@ -601,23 +601,36 @@ namespace TUGraz.VectoCore.OutputData
 			{ NUM_ICE_STARTS, SumFunc((r, m) => (ConvertedSI)m.NumICEStarts().SI<Scalar>(), ModalResultField.ICEOn) },
 
 			// CO2
-			{ CO2_KM, SumFunc((r, m) => m.CorrectedModalData.KilogramCO2PerMeter.ConvertToGrammPerKiloMeter(), ModalResultField.dist) },
-			{ CO2_TKM, SumFunc((r, m) => r.VehicleData?.Loading == null || r.VehicleData.Loading.IsEqual(0) ? null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.Loading).ConvertToGrammPerTonKilometer(), ModalResultField.dist) },
-			{ CO2_M3KM, SumFunc((r, m) => r.VehicleData?.CargoVolume == null || r.VehicleData.CargoVolume.IsEqual(0) ? null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.CargoVolume).ConvertToGrammPerCubicMeterKiloMeter(), ModalResultField.dist) },
-			{ CO2_PKM, SumFunc((r, m) => r.VehicleData?.PassengerCount == null ? null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.PassengerCount.Value).ConvertToGrammPerKiloMeter(), ModalResultField.dist) },
+			{ CO2_KM, SumFunc((r, m) 
+				=> m.CorrectedModalData.KilogramCO2PerMeter.ConvertToGrammPerKiloMeter(), ModalResultField.dist) },
+			{ CO2_TKM, SumFunc((r, m) 
+				=> r.VehicleData?.Loading == null || r.VehicleData.Loading.IsEqual(0) ?
+					null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.Loading).ConvertToGrammPerTonKilometer(), ModalResultField.dist) },
+			{ CO2_M3KM, SumFunc((r, m)
+				=> r.VehicleData?.CargoVolume == null || r.VehicleData.CargoVolume.IsEqual(0) ?
+					null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.CargoVolume).ConvertToGrammPerCubicMeterKiloMeter(), ModalResultField.dist) },
+			{ CO2_PKM, SumFunc((r, m)
+				=> r.VehicleData?.PassengerCount == null ?
+					null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.PassengerCount.Value).ConvertToGrammPerKiloMeter(), ModalResultField.dist) },
 
 			// electric consumption
 			{ ElectricEnergyConsumption_total, SumFunc( (r , m ) 
-				=> (m.CorrectedModalData.ElectricEnergyConsumption.ConvertToKiloWattHour()))},
+				=> (m.CorrectedModalData.ElectricEnergyConsumption?.ConvertToKiloWattHour()))},
 			{ ElectricEnergyConsumption_KM, SumFunc((r, m) 
-				=> (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter).ConvertToKiloWattHourPerKiloMeter())},
+				=> (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter)?.ConvertToKiloWattHourPerKiloMeter())},
 			{ ElectricEnergyConsumption_TKM, SumFunc((r, m) 
-				=> r.VehicleData?.Loading == null || r.VehicleData.Loading.IsEqual(0) ? null : 
-					(m.CorrectedModalData.ElectricEnergyConsumptionPerMeter / r.VehicleData.Loading).ConvertToKiloWattHourPerTonKiloMeter())},
-			{ ElectricEnergyConsumption_M3KM, SumFunc((r, m) => r.VehicleData.CargoVolume == null || r.VehicleData.CargoVolume.IsEqual(0) ? null :
-					(m.CorrectedModalData.ElectricEnergyConsumptionPerMeter / r.VehicleData.CargoVolume).ConvertToKiloWattHourPerCubicMeterKiloMeter())},
-			{ ElectricEnergyConsumption_PKM, SumFunc((r, m) => r.VehicleData?.PassengerCount == null ? null : 
-				(m.CorrectedModalData.ElectricEnergyConsumptionPerMeter / r.VehicleData.PassengerCount.Value).ConvertToKiloWattHourPerPassengerKiloMeter())},
+				=> r.VehicleData?.Loading == null || 
+					r.VehicleData.Loading.IsEqual(0) || 
+					m.CorrectedModalData.ElectricEnergyConsumption == null 
+					? null : (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter / r.VehicleData.Loading).ConvertToKiloWattHourPerTonKiloMeter())},
+			{ ElectricEnergyConsumption_M3KM, SumFunc((r, m) 
+				=> r.VehicleData.CargoVolume == null ||
+					r.VehicleData.CargoVolume.IsEqual(0)  ||
+					m.CorrectedModalData.ElectricEnergyConsumption == null 
+					? null : (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter / r.VehicleData.CargoVolume).ConvertToKiloWattHourPerCubicMeterKiloMeter())},
+			{ ElectricEnergyConsumption_PKM, SumFunc((r, m)
+				=> r.VehicleData?.PassengerCount == null || m.CorrectedModalData.ElectricEnergyConsumption == null ?
+					null : (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter / r.VehicleData.PassengerCount.Value).ConvertToKiloWattHourPerPassengerKiloMeter())},
 			//			{, SumFunc((r, m) =>)},
 
 		};
