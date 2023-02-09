@@ -929,6 +929,9 @@ Public Class VectoJobForm
 
         End If
 
+        _auxDialog.JobType = JobType
+        ' clear and set selected item to force re-init of tech dropdown (apply filter for electric-only aux)
+        _auxDialog.CbType.SelectedIndex = -1
         _auxDialog.CbType.SelectedValue = selItem.SubItems(AuxViewColumns.AuxID).Text   ' last call, updates GUI
         
         If selItem.SubItems(AuxViewColumns.AuxID).Text = AuxiliaryTypeHelper.GetAuxKey(AuxiliaryType.SteeringPump) Then
@@ -1769,6 +1772,10 @@ Public Class VectoJobForm
     End Sub
 
     Private Sub Label5_Click(sender As Object, e As EventArgs) Handles Label5.Click
+
+    End Sub
+
+    Private Sub LvAux_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvAux.SelectedIndexChanged
 
     End Sub
 End Class
