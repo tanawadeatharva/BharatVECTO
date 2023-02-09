@@ -216,6 +216,9 @@ Public Class VehicleForm
 			Dim axleCount As Integer = s0.Missions(0).AxleWeightDistribution.Count()
 			Dim i0 As Integer = LvRRC.Items.Count
 
+		    TbHDVclass.Text = _hdVclass.GetClassNumber()
+		    PicVehicle.Image = ConvPicPath(_hdVclass, False)
+
 			Dim i As Integer
 			If axleCount > i0 Then
 				For i = 1 To axleCount - LvRRC.Items.Count
