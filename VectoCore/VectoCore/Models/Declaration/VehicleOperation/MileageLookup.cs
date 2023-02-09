@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
     {
 		#region Overrides of LookupData
 		protected override string ResourceId => "TUGraz.VectoCore.Resources.Declaration.VehicleOperation.AnnualMileage.csv";
-		protected override string ErrorMessage => "Error looking up mileage {0}";
+		protected override string ErrorMessage => "Error looking up mileage {0} {1}";
 
 		protected override void ParseData(DataTable table)
 		{

@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 		protected override string ResourceId =>
 			"TUGraz.VectoCore.Resources.Declaration.VehicleOperation.StationaryChargingDuration.csv";
 
-		protected override string ErrorMessage => "Error looking up stationary charging duration per event";
+		protected override string ErrorMessage => "Error looking up stationary charging duration per event {0} {1}";
 
 		#endregion
 
@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 		protected override string ResourceId =>
 			"TUGraz.VectoCore.Resources.Declaration.VehicleOperation.StationaryChargingPower.csv";
 
-		protected override string ErrorMessage => "Error looking up stationary charging power from infrastructure";
+		protected override string ErrorMessage => "Error looking up stationary charging power from infrastructure  {0} {1}";
 
 		#endregion
 
@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 		protected override string ResourceId =>
 			"TUGraz.VectoCore.Resources.Declaration.VehicleOperation.ChargingEventDuringMission.csv";
 
-		protected override string ErrorMessage => "Error looking up Number of charging events during mission";
+		protected override string ErrorMessage => "Error looking up Number of charging events during mission  {0} {1}";
 
 		#endregion
 
