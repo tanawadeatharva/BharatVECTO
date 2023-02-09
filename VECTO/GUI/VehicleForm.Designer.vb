@@ -173,6 +173,10 @@ Partial Class VehicleForm
         Me.btIHPCFile = New System.Windows.Forms.Button()
         Me.tpReess = New System.Windows.Forms.TabPage()
         Me.gbBattery = New System.Windows.Forms.GroupBox()
+        Me.pnInitialSoC = New System.Windows.Forms.Panel()
+        Me.tbInitialSoC = New System.Windows.Forms.TextBox()
+        Me.lblInitialSoC = New System.Windows.Forms.Label()
+        Me.lblInitialSoCUnit = New System.Windows.Forms.Label()
         Me.lvREESSPacks = New System.Windows.Forms.ListView()
         Me.chReessPackPack = New System.Windows.Forms.ColumnHeader()
         Me.chReessPackCount = New System.Windows.Forms.ColumnHeader()
@@ -180,9 +184,6 @@ Partial Class VehicleForm
         Me.btnAddReessPack = New System.Windows.Forms.Button()
         Me.lblEditReessPack = New System.Windows.Forms.Label()
         Me.btnRemoveReessPack = New System.Windows.Forms.Button()
-        Me.lblInitialSoCUnit = New System.Windows.Forms.Label()
-        Me.tbInitialSoC = New System.Windows.Forms.TextBox()
-        Me.lblInitialSoC = New System.Windows.Forms.Label()
         Me.tpGensetComponents = New System.Windows.Forms.TabPage()
         Me.Label30 = New System.Windows.Forms.Label()
         Me.gbGenSet = New System.Windows.Forms.GroupBox()
@@ -250,7 +251,13 @@ Partial Class VehicleForm
         Me.cbLegislativeClass = New System.Windows.Forms.ComboBox()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.lblTitle = New System.Windows.Forms.Label()
-        Me.pnInitialSoC = New System.Windows.Forms.Panel()
+        Me.pnOvcHEV = New System.Windows.Forms.Panel()
+        Me.lblOvcChg = New System.Windows.Forms.Label()
+        Me.pnMaxChargingPwr = New System.Windows.Forms.Panel()
+        Me.tbMaxChargingPwr = New System.Windows.Forms.TextBox()
+        Me.lblMaxChargingPwr = New System.Windows.Forms.Label()
+        Me.lblMaxChargingPwrUnit = New System.Windows.Forms.Label()
+        Me.cbOvc = New System.Windows.Forms.CheckBox()
         Me.GroupBox6.SuspendLayout
         Me.ToolStrip1.SuspendLayout
         Me.gbRetarderLosses.SuspendLayout
@@ -284,6 +291,7 @@ Partial Class VehicleForm
         Me.FlowLayoutPanel2.SuspendLayout
         Me.tpReess.SuspendLayout
         Me.gbBattery.SuspendLayout
+        Me.pnInitialSoC.SuspendLayout
         Me.tpGensetComponents.SuspendLayout
         Me.gbGenSet.SuspendLayout
         Me.pnGenSetEM.SuspendLayout
@@ -307,7 +315,8 @@ Partial Class VehicleForm
         Me.gbPTOLossmap.SuspendLayout
         Me.gbEPTO.SuspendLayout
         Me.GroupBox5.SuspendLayout
-        Me.pnInitialSoC.SuspendLayout
+        Me.pnOvcHEV.SuspendLayout
+        Me.pnMaxChargingPwr.SuspendLayout
         Me.SuspendLayout
         '
         'Label1
@@ -1768,6 +1777,8 @@ Partial Class VehicleForm
         '
         'gbBattery
         '
+        Me.gbBattery.Controls.Add(Me.pnMaxChargingPwr)
+        Me.gbBattery.Controls.Add(Me.pnOvcHEV)
         Me.gbBattery.Controls.Add(Me.pnInitialSoC)
         Me.gbBattery.Controls.Add(Me.lvREESSPacks)
         Me.gbBattery.Controls.Add(Me.btnAddReessPack)
@@ -1777,10 +1788,49 @@ Partial Class VehicleForm
         Me.gbBattery.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.gbBattery.Name = "gbBattery"
         Me.gbBattery.Padding = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.gbBattery.Size = New System.Drawing.Size(738, 216)
+        Me.gbBattery.Size = New System.Drawing.Size(738, 296)
         Me.gbBattery.TabIndex = 3
         Me.gbBattery.TabStop = false
         Me.gbBattery.Text = "Electric Energy Storage system"
+        '
+        'pnInitialSoC
+        '
+        Me.pnInitialSoC.Controls.Add(Me.tbInitialSoC)
+        Me.pnInitialSoC.Controls.Add(Me.lblInitialSoC)
+        Me.pnInitialSoC.Controls.Add(Me.lblInitialSoCUnit)
+        Me.pnInitialSoC.Location = New System.Drawing.Point(7, 22)
+        Me.pnInitialSoC.Name = "pnInitialSoC"
+        Me.pnInitialSoC.Size = New System.Drawing.Size(351, 28)
+        Me.pnInitialSoC.TabIndex = 4
+        '
+        'tbInitialSoC
+        '
+        Me.tbInitialSoC.Location = New System.Drawing.Point(233, 3)
+        Me.tbInitialSoC.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.tbInitialSoC.Name = "tbInitialSoC"
+        Me.tbInitialSoC.Size = New System.Drawing.Size(68, 23)
+        Me.tbInitialSoC.TabIndex = 0
+        '
+        'lblInitialSoC
+        '
+        Me.lblInitialSoC.AutoSize = true
+        Me.lblInitialSoC.Location = New System.Drawing.Point(3, 6)
+        Me.lblInitialSoC.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblInitialSoC.Name = "lblInitialSoC"
+        Me.lblInitialSoC.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.lblInitialSoC.Size = New System.Drawing.Size(60, 15)
+        Me.lblInitialSoC.TabIndex = 25
+        Me.lblInitialSoC.Text = "Initial SoC"
+        '
+        'lblInitialSoCUnit
+        '
+        Me.lblInitialSoCUnit.AutoSize = true
+        Me.lblInitialSoCUnit.Location = New System.Drawing.Point(304, 5)
+        Me.lblInitialSoCUnit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblInitialSoCUnit.Name = "lblInitialSoCUnit"
+        Me.lblInitialSoCUnit.Size = New System.Drawing.Size(25, 15)
+        Me.lblInitialSoCUnit.TabIndex = 27
+        Me.lblInitialSoCUnit.Text = "[%]"
         '
         'lvREESSPacks
         '
@@ -1789,7 +1839,7 @@ Partial Class VehicleForm
         Me.lvREESSPacks.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.chReessPackPack, Me.chReessPackCount, Me.chReessPackStringId})
         Me.lvREESSPacks.FullRowSelect = true
         Me.lvREESSPacks.GridLines = true
-        Me.lvREESSPacks.Location = New System.Drawing.Point(7, 52)
+        Me.lvREESSPacks.Location = New System.Drawing.Point(7, 89)
         Me.lvREESSPacks.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.lvREESSPacks.MultiSelect = false
         Me.lvREESSPacks.Name = "lvREESSPacks"
@@ -1817,7 +1867,7 @@ Partial Class VehicleForm
         'btnAddReessPack
         '
         Me.btnAddReessPack.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
-        Me.btnAddReessPack.Location = New System.Drawing.Point(7, 177)
+        Me.btnAddReessPack.Location = New System.Drawing.Point(7, 214)
         Me.btnAddReessPack.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.btnAddReessPack.Name = "btnAddReessPack"
         Me.btnAddReessPack.Size = New System.Drawing.Size(28, 28)
@@ -1827,7 +1877,7 @@ Partial Class VehicleForm
         'lblEditReessPack
         '
         Me.lblEditReessPack.AutoSize = true
-        Me.lblEditReessPack.Location = New System.Drawing.Point(527, 171)
+        Me.lblEditReessPack.Location = New System.Drawing.Point(527, 208)
         Me.lblEditReessPack.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblEditReessPack.Name = "lblEditReessPack"
         Me.lblEditReessPack.Size = New System.Drawing.Size(121, 15)
@@ -1837,41 +1887,12 @@ Partial Class VehicleForm
         'btnRemoveReessPack
         '
         Me.btnRemoveReessPack.Image = Global.TUGraz.VECTO.My.Resources.Resources.minus_circle_icon
-        Me.btnRemoveReessPack.Location = New System.Drawing.Point(38, 177)
+        Me.btnRemoveReessPack.Location = New System.Drawing.Point(38, 214)
         Me.btnRemoveReessPack.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.btnRemoveReessPack.Name = "btnRemoveReessPack"
         Me.btnRemoveReessPack.Size = New System.Drawing.Size(28, 28)
         Me.btnRemoveReessPack.TabIndex = 2
         Me.btnRemoveReessPack.UseVisualStyleBackColor = true
-        '
-        'lblInitialSoCUnit
-        '
-        Me.lblInitialSoCUnit.AutoSize = true
-        Me.lblInitialSoCUnit.Location = New System.Drawing.Point(304, 5)
-        Me.lblInitialSoCUnit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblInitialSoCUnit.Name = "lblInitialSoCUnit"
-        Me.lblInitialSoCUnit.Size = New System.Drawing.Size(25, 15)
-        Me.lblInitialSoCUnit.TabIndex = 27
-        Me.lblInitialSoCUnit.Text = "[%]"
-        '
-        'tbInitialSoC
-        '
-        Me.tbInitialSoC.Location = New System.Drawing.Point(233, 3)
-        Me.tbInitialSoC.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.tbInitialSoC.Name = "tbInitialSoC"
-        Me.tbInitialSoC.Size = New System.Drawing.Size(68, 23)
-        Me.tbInitialSoC.TabIndex = 0
-        '
-        'lblInitialSoC
-        '
-        Me.lblInitialSoC.AutoSize = true
-        Me.lblInitialSoC.Location = New System.Drawing.Point(3, 6)
-        Me.lblInitialSoC.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblInitialSoC.Name = "lblInitialSoC"
-        Me.lblInitialSoC.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblInitialSoC.Size = New System.Drawing.Size(60, 15)
-        Me.lblInitialSoC.TabIndex = 25
-        Me.lblInitialSoC.Text = "Initial SoC"
         '
         'tpGensetComponents
         '
@@ -2641,15 +2662,73 @@ Partial Class VehicleForm
         Me.lblTitle.TabIndex = 43
         Me.lblTitle.Text = "Vehicle TITLE"
         '
-        'pnInitialSoC
+        'pnOvcHEV
         '
-        Me.pnInitialSoC.Controls.Add(Me.tbInitialSoC)
-        Me.pnInitialSoC.Controls.Add(Me.lblInitialSoC)
-        Me.pnInitialSoC.Controls.Add(Me.lblInitialSoCUnit)
-        Me.pnInitialSoC.Location = New System.Drawing.Point(7, 22)
-        Me.pnInitialSoC.Name = "pnInitialSoC"
-        Me.pnInitialSoC.Size = New System.Drawing.Size(351, 28)
-        Me.pnInitialSoC.TabIndex = 4
+        Me.pnOvcHEV.Controls.Add(Me.cbOvc)
+        Me.pnOvcHEV.Controls.Add(Me.lblOvcChg)
+        Me.pnOvcHEV.Location = New System.Drawing.Point(7, 54)
+        Me.pnOvcHEV.Name = "pnOvcHEV"
+        Me.pnOvcHEV.Size = New System.Drawing.Size(351, 28)
+        Me.pnOvcHEV.TabIndex = 28
+        '
+        'lblOvcChg
+        '
+        Me.lblOvcChg.AutoSize = true
+        Me.lblOvcChg.Location = New System.Drawing.Point(3, 6)
+        Me.lblOvcChg.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblOvcChg.Name = "lblOvcChg"
+        Me.lblOvcChg.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.lblOvcChg.Size = New System.Drawing.Size(118, 15)
+        Me.lblOvcChg.TabIndex = 25
+        Me.lblOvcChg.Text = "Off-Vehicle Charging"
+        '
+        'pnMaxChargingPwr
+        '
+        Me.pnMaxChargingPwr.Controls.Add(Me.tbMaxChargingPwr)
+        Me.pnMaxChargingPwr.Controls.Add(Me.lblMaxChargingPwr)
+        Me.pnMaxChargingPwr.Controls.Add(Me.lblMaxChargingPwrUnit)
+        Me.pnMaxChargingPwr.Location = New System.Drawing.Point(364, 54)
+        Me.pnMaxChargingPwr.Name = "pnMaxChargingPwr"
+        Me.pnMaxChargingPwr.Size = New System.Drawing.Size(288, 28)
+        Me.pnMaxChargingPwr.TabIndex = 29
+        '
+        'tbMaxChargingPwr
+        '
+        Me.tbMaxChargingPwr.Location = New System.Drawing.Point(176, 3)
+        Me.tbMaxChargingPwr.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.tbMaxChargingPwr.Name = "tbMaxChargingPwr"
+        Me.tbMaxChargingPwr.Size = New System.Drawing.Size(68, 23)
+        Me.tbMaxChargingPwr.TabIndex = 0
+        '
+        'lblMaxChargingPwr
+        '
+        Me.lblMaxChargingPwr.AutoSize = true
+        Me.lblMaxChargingPwr.Location = New System.Drawing.Point(3, 6)
+        Me.lblMaxChargingPwr.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblMaxChargingPwr.Name = "lblMaxChargingPwr"
+        Me.lblMaxChargingPwr.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.lblMaxChargingPwr.Size = New System.Drawing.Size(121, 15)
+        Me.lblMaxChargingPwr.TabIndex = 25
+        Me.lblMaxChargingPwr.Text = "Max. Charging Power"
+        '
+        'lblMaxChargingPwrUnit
+        '
+        Me.lblMaxChargingPwrUnit.AutoSize = true
+        Me.lblMaxChargingPwrUnit.Location = New System.Drawing.Point(252, 6)
+        Me.lblMaxChargingPwrUnit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblMaxChargingPwrUnit.Name = "lblMaxChargingPwrUnit"
+        Me.lblMaxChargingPwrUnit.Size = New System.Drawing.Size(32, 15)
+        Me.lblMaxChargingPwrUnit.TabIndex = 27
+        Me.lblMaxChargingPwrUnit.Text = "[kW]"
+        '
+        'cbOvc
+        '
+        Me.cbOvc.AutoSize = true
+        Me.cbOvc.Location = New System.Drawing.Point(286, 7)
+        Me.cbOvc.Name = "cbOvc"
+        Me.cbOvc.Size = New System.Drawing.Size(15, 14)
+        Me.cbOvc.TabIndex = 26
+        Me.cbOvc.UseVisualStyleBackColor = true
         '
         'VehicleForm
         '
@@ -2733,6 +2812,8 @@ Partial Class VehicleForm
         Me.tpReess.ResumeLayout(false)
         Me.gbBattery.ResumeLayout(false)
         Me.gbBattery.PerformLayout
+        Me.pnInitialSoC.ResumeLayout(false)
+        Me.pnInitialSoC.PerformLayout
         Me.tpGensetComponents.ResumeLayout(false)
         Me.tpGensetComponents.PerformLayout
         Me.gbGenSet.ResumeLayout(false)
@@ -2770,8 +2851,10 @@ Partial Class VehicleForm
         Me.gbEPTO.ResumeLayout(false)
         Me.GroupBox5.ResumeLayout(false)
         Me.GroupBox5.PerformLayout
-        Me.pnInitialSoC.ResumeLayout(false)
-        Me.pnInitialSoC.PerformLayout
+        Me.pnOvcHEV.ResumeLayout(false)
+        Me.pnOvcHEV.PerformLayout
+        Me.pnMaxChargingPwr.ResumeLayout(false)
+        Me.pnMaxChargingPwr.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -3009,5 +3092,12 @@ End Sub
     Friend WithEvents cbPTOStandstillCycleType As ComboBox
     Friend WithEvents FlowLayoutPanel4 As FlowLayoutPanel
     Friend WithEvents pnInitialSoC As Panel
+    Friend WithEvents pnMaxChargingPwr As Panel
+    Friend WithEvents tbMaxChargingPwr As TextBox
+    Friend WithEvents lblMaxChargingPwr As Label
+    Friend WithEvents lblMaxChargingPwrUnit As Label
+    Friend WithEvents pnOvcHEV As Panel
+    Friend WithEvents cbOvc As CheckBox
+    Friend WithEvents lblOvcChg As Label
     '>>>>>>> VECTO_CERT/master
 End Class
