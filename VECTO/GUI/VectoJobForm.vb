@@ -161,14 +161,9 @@ Public Class VectoJobForm
 
         Dim auxList As List(Of AuxiliaryType)
         Select case JobType
-            Case VectoSimulationJobType.ConventionalVehicle
-            Case VectoSimulationJobType.ParallelHybridVehicle
-            case VectoSimulationJobType.IHPC
-            Case VectoSimulationJobType.SerialHybridVehicle
-            case VectoSimulationJobType.IEPC_S
+            Case VectoSimulationJobType.ConventionalVehicle, VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.IHPC, VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_S
                 auxList = New HeavyLorryAuxiliaryDataAdapter().AuxiliaryTypes.OrderBy(Function(x) x).ToList()
-            Case VectoSimulationJobType.BatteryElectricVehicle
-            Case VectoSimulationJobType.IEPC_E
+            Case VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E
                 auxList = new HeavyLorryPEVAuxiliaryDataAdapter().AuxiliaryTypes.OrderBy(Function(x) x).ToList()
         End Select
 
@@ -180,11 +175,34 @@ Public Class VectoJobForm
                 {AuxiliaryType.PneumaticSystem, DeclarationData.PneumaticSystem}
                 }
 
-        LvAux.Items.Clear()
+        Dim toRemove As List(Of  ListViewItem) = new List(Of ListViewItem)
 
-        For Each auxiliaryType As AuxiliaryType In auxList
-            LvAux.Items.Add(GetTechListForAux(auxiliaryType, auxTechs(auxiliaryType)))
+        For Each item As ListViewItem In LvAux.Items
+            If not auxTechs.Keys.Select(Function(x) x.Key()).Contains(item.Text) then
+                toRemove.Add(item)
+            End If
         Next
+        For Each item As ListViewItem In toRemove
+            item.Remove()
+        Next
+
+        For Each entry As AuxiliaryType In auxList
+           dim found = false
+            For Each item As ListViewItem In LvAux.Items
+                If item.Text.Equals(entry.Key(), StringComparison.CurrentCultureIgnoreCase) Then
+                    found = true
+                    exit For
+                End If
+            Next
+            if found Then continue for 
+
+            LvAux.Items.Add(GetTechListForAux(entry, auxTechs(entry)))
+
+        Next
+
+        'For Each auxiliaryType As AuxiliaryType In auxList
+        '    LvAux.Items.Add(GetTechListForAux(auxiliaryType, auxTechs(auxiliaryType)))
+        'Next
 
     End Sub
 
