@@ -334,9 +334,37 @@ public class LorrySimulation
 		
 		jobContainer.AddRun(runs.Single());
 		var modData = ((ModalDataContainer)((VehicleContainer)runs.Single().GetContainer()).ModData).Data;
+
 		jobContainer.Execute(false);
 		WaitAndAssertSuccess(jobContainer, fileWriter);
 	}
+
+	[TestCase(Group5_HEV_P2_OVC)]
+	public void PHEV_CD_CS_weighted(string jobFile)
+	{
+		var jobContainer = GetJobContainer(jobFile, null, out var fileWriter, out var runs, out var sumDataContainer);
+
+		Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.NotApplicable));
+
+		runs = runs.Where(run => {
+			var rd = run.GetContainer().RunData;
+			return (rd.OVCMode == VectoRunData.OvcHevMode.ChargeSustaining || rd.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting) &&
+					rd.Mission.MissionType == MissionType.RegionalDelivery && rd.Loading == LoadingType.ReferenceLoad;
+		}).ToList();
+
+		Assert.AreEqual(2, runs.Count);
+
+		foreach (var run in runs) {
+			jobContainer.AddRun(run);
+		}
+		SetResultCountInReport(2, runs.First().GetContainer().RunData.Report);
+
+
+		jobContainer.Execute(false);
+		WaitAndAssertSuccess(jobContainer, fileWriter);
+	}
+
+
 	[TestCase(Group5_HEV_P2_OVC, 20)]
 	[TestCase(Group5_HEV_P3_OVC, 20)]
 	[TestCase(Group5_HEV_P4_OVC, 20)]
@@ -676,26 +704,50 @@ public class LorrySimulation
 		
 
 		jobContainer.AddRun(simulatedRun);
-		SetResultCountInReport(1, simulatedRun.GetContainer().RunData.Report);
+		if (writeReports) {
+			SetResultCountInReport(1, simulatedRun.GetContainer().RunData.Report);
+		}
 		jobContainer.Execute(true);
 		WaitAndAssertSuccess(jobContainer, fileWriter);
 	}
 
 
-	public void SetResultCountInReport(int count, IDeclarationReport report)
+	private void SetResultCountInReport(int count, IDeclarationReport report)
 	{
 		if (report is XMLDeclarationReport09 rep09) {
-			FieldInfo[] fields = rep09.GetType().GetFields(
-				BindingFlags.NonPublic |
-				BindingFlags.Instance);
-			fields.First().SetValue(rep09, count);
+			
 
-
+			GetField("_resultCount", rep09.GetType()).SetValue(rep09, count);
 			return;
 		}
 		Assert.Fail("Reflection failed");
 
 	}
+
+	private FieldInfo GetField(string name, Type type)
+	{
+		bool found = false;
+		while (!found) {
+			FieldInfo[] fields = type.GetFields(
+				BindingFlags.NonPublic |
+				BindingFlags.Instance);
+			var field = fields.FirstOrDefault(f => f.Name == name);
+			if (field == null) {
+				type = type.BaseType;
+				if (type == null) {
+					Assert.Fail("Field not found");
+				}
+			} else {
+				return field;
+			}
+		}
+
+		return null;
+
+	}
+
+
+
 
 	public void DisableIterativeRuns(ISimulatorFactory factory)
 	{
