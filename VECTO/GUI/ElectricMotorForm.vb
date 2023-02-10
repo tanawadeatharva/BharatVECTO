@@ -53,6 +53,12 @@ Public Class ElectricMotorForm
 
         _changed = False
 
+        pnThermalOverloadRecovery.Enabled = not cfg.DeclMode
+
+        cbEmType.ValueMember = "Value"
+        cbEmType.DisplayMember = "Label"
+        cbEmType.DataSource = [enum].GetValues(GetType(ElectricMachineType)).Cast(Of ElectricMachineType).Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
 
         NewEngine()
     End Sub
@@ -176,7 +182,7 @@ Public Class ElectricMotorForm
 
         tbOverloadRecoveryFactor.Text = engine.OverloadRecoveryFactor.ToGUIFormat()
         tbDragTorque.Text = GetRelativePath(engine.DragCurve.Source, basePath)
-
+        cbEmType.SelectedValue = engine.ElectricMachineType
 
         Dim voltageLevelLow As IElectricMotorVoltageLevel = engine.VoltageLevels.MinBy(function(level) level.VoltageLevel.Value())
         Dim voltageLevelHigh As IElectricMotorVoltageLevel = engine.VoltageLevels.MaxBy(function(level) level.VoltageLevel.Value())
@@ -201,6 +207,8 @@ Public Class ElectricMotorForm
         tbMapLow.Text = GetRelativePath(voltageLevelLow.PowerMap.First().PowerMap.Source, basePath)
         tbVoltageLow.Text = voltageLevelLow.VoltageLevel.Value().ToGUIFormat()
         
+        tbRatedPower.Text = engine.R85RatedPower.ConvertToKiloWatt().Value.ToGUIFormat()
+
         DeclInit()
 
         ElectricMotorFileBrowser.UpdateHistory(file)
@@ -234,6 +242,7 @@ Public Class ElectricMotorForm
         em.ModelName = tbMakeModel.Text
         If Trim(em.ModelName) = "" Then em.ModelName = "Undefined"
         em.MotorInertia = tbInertia.Text.ToDouble(0)
+        em.ElectricMachineType = CType(cbEmType.SelectedValue, ElectricMachineType)
         em.PathDrag = tbDragTorque.Text
 
         em.OvlTqLo = tbOverloadTqLo.Text.ToDouble(0)
@@ -258,6 +267,8 @@ Public Class ElectricMotorForm
         em.PathMaxTorqueHi = tbMaxTorqueHi.Text
         em.PathMapHi = tbMapHi.Text
         em.VoltageLevelHigh = tbVoltageHi.Text.ToDouble(0)
+
+        em.R85RatedPower = tbRatedPower.Text.ToDouble(0).SI(unit.SI.Kilo.Watt).Cast(of Watt)()
 
         If Not em.SaveFile Then
             MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
@@ -607,4 +618,5 @@ Public Class ElectricMotorForm
             OpenFiles(FileRepl(tbMaxTorqueLow.Text, GetPath(_emFile)))
         End If
     End Sub
+
 End Class

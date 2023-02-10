@@ -1242,6 +1242,14 @@ namespace TUGraz.VectoCommon.InputData
 		RM
 	}
 
+	public static class ElectricMachineTypeHelper
+	{
+		public static string GetLabel(this ElectricMachineType type)
+		{
+			return type.ToString();
+		}
+	}
+
 	public enum BatteryType
 	{
 		HPBS,

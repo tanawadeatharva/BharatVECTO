@@ -219,8 +219,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			ReadTableData(Body.GetEx<string>("Conditioning"), "ElectricMotor Conditioning", false);
 
 
-		public ElectricMachineType ElectricMachineType { get; }
-		public Watt R85RatedPower => !SavedInDeclarationMode ?  null : Body.GetEx<double>("R85RatedPower").SI<Watt>();
+		public ElectricMachineType ElectricMachineType => Body.ContainsKey(JsonKeys.EM_ElectricMachineType)
+			? Body.GetEx<string>(JsonKeys.EM_ElectricMachineType).ParseEnum<ElectricMachineType>()
+			: ElectricMachineType.PSM;
+
+		public Watt R85RatedPower => Body.ContainsKey(JsonKeys.EM_RatedPower) ? Body.GetEx<double>(JsonKeys.EM_RatedPower).SI(Unit.SI.Kilo.Watt).Cast<Watt>() : 0.SI<Watt>();
 		public virtual KilogramSquareMeter Inertia => Body.GetEx<double>("Inertia").SI<KilogramSquareMeter>();
 
 		//public virtual Joule OverloadBuffer => Body.GetValueOrDefault<double>("ThermalOverloadBuffer")?.SI(Unit.SI.Mega.Joule).Cast<Joule>() ?? 1e18.SI<Joule>();

@@ -131,6 +131,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				{
 					return;
 				}
+				if (!vehicle.LegislativeClass.IsOneOf(LegislativeClass.M3,
+						LegislativeClass.N2, LegislativeClass.N3)) {
+					throw new VectoException("Unsupported Legislative class '{0}'",
+						InputDataProvider.JobInputData.Vehicle.LegislativeClass.ToString());
+				}
 
 				_segment = GetSegment(vehicle);
 				_driverdata = DataAdapter.CreateDriverData(_segment);
@@ -484,6 +489,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			protected override void Initialize()
 			{
+				if (!InputDataProvider.JobInputData.Vehicle.LegislativeClass.IsOneOf(LegislativeClass.M3,
+						LegislativeClass.N2, LegislativeClass.N3)) {
+					throw new VectoException("Unsupported Legislative class '{0}'",
+						InputDataProvider.JobInputData.Vehicle.LegislativeClass.ToString());
+				}
 				_segment = GetSegment(InputDataProvider.JobInputData.Vehicle, true);
 
 			}

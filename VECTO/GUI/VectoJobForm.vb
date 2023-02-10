@@ -21,6 +21,7 @@ Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
+Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.Declaration.Auxiliaries
 Imports TUGraz.VectoCore.Models.Simulation.Impl
@@ -84,7 +85,7 @@ Public Class VectoJobForm
 		PnEcoRoll.Enabled = Not Cfg.DeclMode
 
 		gbEcoRoll.Enabled = not Cfg.DeclMode
-        gbEngineStopStart.Visible = Not Cfg.DeclMode
+        gbEngineStopStart.Enabled = Not Cfg.DeclMode
         gbPCC.Enabled = Not Cfg.DeclMode
 
 		_changed = False
@@ -119,7 +120,7 @@ Public Class VectoJobForm
             Case VectoSimulationJobType.IEPC_E
                 lblTitle.Text = prefix + "IEPC-E Vehicle"
                 gbElectricAux.Enabled = True
-                GrAuxMech.Enabled = False
+                GrAuxMech.Enabled = Cfg.DeclMode
             case VectoSimulationJobType.IEPC_S
                 lblTitle.Text = prefix + "IEPC-S Vehicle"
                 gbElectricAux.Enabled = True
@@ -157,27 +158,52 @@ Public Class VectoJobForm
         ' cDeclaration.Underspeed
         TbVmin.Text = DeclarationData.Driver.OverSpeed.MinSpeed.AsKmph.ToGUIFormat()     'cDeclaration.ECvmin
         TbAuxPAuxICEOn.Text = ""
-        If _
-            LvAux.Items.Count <> 5 OrElse
-            (LvAux.Items(0).Text <> VectoCore.Configuration.Constants.Auxiliaries.IDs.Fan OrElse
-            LvAux.Items(1).Text <> VectoCore.Configuration.Constants.Auxiliaries.IDs.SteeringPump OrElse
-            LvAux.Items(2).Text <> VectoCore.Configuration.Constants.Auxiliaries.IDs.HeatingVentilationAirCondition OrElse
-            LvAux.Items(3).Text <> VectoCore.Configuration.Constants.Auxiliaries.IDs.ElectricSystem OrElse
-            LvAux.Items(4).Text <> VectoCore.Configuration.Constants.Auxiliaries.IDs.PneumaticSystem) Then
-            LvAux.Items.Clear()
 
+        Dim auxList As List(Of AuxiliaryType)
+        Select case JobType
+            Case VectoSimulationJobType.ConventionalVehicle, VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.IHPC, VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_S
+                auxList = New HeavyLorryAuxiliaryDataAdapter().AuxiliaryTypes.OrderBy(Function(x) x).ToList()
+            Case VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E
+                auxList = new HeavyLorryPEVAuxiliaryDataAdapter().AuxiliaryTypes.OrderBy(Function(x) x).ToList()
+        End Select
 
-            LvAux.Items.Add(GetTechListForAux(AuxiliaryType.Fan, DeclarationData.Fan))
+        Dim auxTechs = New Dictionary(Of AuxiliaryType, IDeclarationAuxiliaryTable) from {
+                {AuxiliaryType.Fan, DeclarationData.Fan},
+                {AuxiliaryType.SteeringPump, DeclarationData.SteeringPump},
+                {AuxiliaryType.HVAC, DeclarationData.HeatingVentilationAirConditioning},
+                {AuxiliaryType.ElectricSystem, DeclarationData.ElectricSystem},
+                {AuxiliaryType.PneumaticSystem, DeclarationData.PneumaticSystem}
+                }
 
-            LvAux.Items.Add(GetTechListForAux(AuxiliaryType.SteeringPump, DeclarationData.SteeringPump))
+        Dim toRemove As List(Of  ListViewItem) = new List(Of ListViewItem)
 
-            LvAux.Items.Add(GetTechListForAux(AuxiliaryType.HVAC, DeclarationData.HeatingVentilationAirConditioning))
+        For Each item As ListViewItem In LvAux.Items
+            If not auxTechs.Keys.Select(Function(x) x.Key()).Contains(item.Text) then
+                toRemove.Add(item)
+            End If
+        Next
+        For Each item As ListViewItem In toRemove
+            item.Remove()
+        Next
 
-            LvAux.Items.Add(GetTechListForAux(AuxiliaryType.ElectricSystem, DeclarationData.ElectricSystem))
+        For Each entry As AuxiliaryType In auxList
+           dim found = false
+            For Each item As ListViewItem In LvAux.Items
+                If item.Text.Equals(entry.Key(), StringComparison.CurrentCultureIgnoreCase) Then
+                    found = true
+                    exit For
+                End If
+            Next
+            if found Then continue for 
 
-            LvAux.Items.Add(GetTechListForAux(AuxiliaryType.PneumaticSystem, DeclarationData.PneumaticSystem))
+            LvAux.Items.Add(GetTechListForAux(entry, auxTechs(entry)))
 
-        End If
+        Next
+
+        'For Each auxiliaryType As AuxiliaryType In auxList
+        '    LvAux.Items.Add(GetTechListForAux(auxiliaryType, auxTechs(auxiliaryType)))
+        'Next
+
     End Sub
 
     Protected Function GetTechListForAux(type As AuxiliaryType, aux As IDeclarationAuxiliaryTable) _
@@ -490,12 +516,13 @@ Public Class VectoJobForm
 		Else
 			TbGBX.Text = ""
 		End If
-		If (inputData.DriverInputData.GearshiftInputData Is Nothing) Then
+		If (cfg.DeclMode OrElse inputData.DriverInputData.GearshiftInputData Is Nothing) Then
 			TbShiftStrategyParams.Text = ""
 		Else
 			TbShiftStrategyParams.Text = GetRelativePath(inputData.DriverInputData.GearshiftInputData.Source, _basePath)
 		End If
-		If (JobType = VectoSimulationJobType.ParallelHybridVehicle OrElse JobType = VectoSimulationJobType.SerialHybridVehicle OrElse JobType = VectoSimulationJobType.IEPC_S OrElse JobType = VectoSimulationJobType.IHPC) Then
+		If (not Cfg.DeclMode AndAlso ( JobType = VectoSimulationJobType.ParallelHybridVehicle OrElse JobType = VectoSimulationJobType.SerialHybridVehicle _
+                OrElse JobType = VectoSimulationJobType.IEPC_S OrElse JobType = VectoSimulationJobType.IHPC)) Then
 			tbHybridStrategyParams.Text = GetRelativePath(inputData.JobInputData.HybridStrategyParameters.Source, _basePath)
 		End If
 
@@ -902,6 +929,9 @@ Public Class VectoJobForm
 
         End If
 
+        _auxDialog.JobType = JobType
+        ' clear and set selected item to force re-init of tech dropdown (apply filter for electric-only aux)
+        _auxDialog.CbType.SelectedIndex = -1
         _auxDialog.CbType.SelectedValue = selItem.SubItems(AuxViewColumns.AuxID).Text   ' last call, updates GUI
         
         If selItem.SubItems(AuxViewColumns.AuxID).Text = AuxiliaryTypeHelper.GetAuxKey(AuxiliaryType.SteeringPump) Then
@@ -1029,15 +1059,14 @@ Public Class VectoJobForm
 
         pnVehicle.Enabled = True
         pnGearbox.Enabled = True
-        pnShiftParams.Enabled = True
+        pnShiftParams.Enabled = not Cfg.DeclMode
         TabPgADAS.Enabled = True
         tpAuxiliaries.Enabled = True
         gbElectricAux.Enabled = True
         GrAuxMech.Enabled = True
         pnEngine.Enabled = True
-        pnShiftParams.Enabled = True
-        pnHybridStrategy.Enabled = False
-        gbEngineStopStart.Visible = True
+        pnHybridStrategy.Enabled = not Cfg.DeclMode
+        gbEngineStopStart.Enabled = not Cfg.DeclMode
         lblESSUtilityFactorDriving.Visible = True
         tbESSUtilityFactorDriving.Visible = True
         lblESSUtilityFactorDrivingUnit.Visible = True
@@ -1051,7 +1080,7 @@ Public Class VectoJobForm
                 TabPgADAS.Enabled = False
                 tpAuxiliaries.Enabled = False
                 pnShiftParams.Enabled = False
-                gbEngineStopStart.Visible = False
+                gbEngineStopStart.Enabled = False
             Case VectoSimulationJobType.ParallelHybridVehicle
                 pnHybridStrategy.Enabled = Not Cfg.DeclMode
                 lblESSUtilityFactorDriving.Visible = False
@@ -1059,33 +1088,33 @@ Public Class VectoJobForm
                 lblESSUtilityFactorDrivingUnit.Visible = False
             Case VectoSimulationJobType.SerialHybridVehicle
                 pnHybridStrategy.Enabled = Not Cfg.DeclMode
-                gbEngineStopStart.Visible = False
+                gbEngineStopStart.Enabled = False
             Case VectoSimulationJobType.BatteryElectricVehicle
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = True
                 GrAuxMech.Enabled = False
-                pnShiftParams.Enabled = True
-                gbEngineStopStart.Visible = False
+                pnShiftParams.Enabled = not Cfg.DeclMode
+                gbEngineStopStart.Enabled = False
             Case VectoSimulationJobType.IHPC
                 pnEngine.Enabled = True
                 pnGearbox.Enabled = True
                 GrAuxMech.Enabled = True
-                pnShiftParams.Enabled = True
-                gbEngineStopStart.Visible = False
-                pnHybridStrategy.Enabled = true
+                pnShiftParams.Enabled = not Cfg.DeclMode
+                gbEngineStopStart.Enabled = False
+                pnHybridStrategy.Enabled = not cfg.DeclMode
             Case VectoSimulationJobType.IEPC_E
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = True
-                GrAuxMech.Enabled = False
-                pnShiftParams.Enabled = True
-                gbEngineStopStart.Visible = False
+                GrAuxMech.Enabled = Cfg.DeclMode
+                pnShiftParams.Enabled = not Cfg.DeclMode
+                gbEngineStopStart.Enabled = False
             Case VectoSimulationJobType.IEPC_S
                 pnEngine.Enabled = True
                 pnGearbox.Enabled = True
                 GrAuxMech.Enabled = False
-                pnShiftParams.Enabled = True
-                gbEngineStopStart.Visible = False
-                pnHybridStrategy.Enabled = true
+                pnShiftParams.Enabled = not Cfg.DeclMode
+                gbEngineStopStart.Enabled = False
+                pnHybridStrategy.Enabled = not Cfg.DeclMode
         End Select
     End Sub
 
@@ -1743,6 +1772,10 @@ Public Class VectoJobForm
     End Sub
 
     Private Sub Label5_Click(sender As Object, e As EventArgs) Handles Label5.Click
+
+    End Sub
+
+    Private Sub LvAux_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvAux.SelectedIndexChanged
 
     End Sub
 End Class
