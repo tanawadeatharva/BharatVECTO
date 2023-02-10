@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			? Body.GetEx<string>(JsonKeys.EM_ElectricMachineType).ParseEnum<ElectricMachineType>()
 			: ElectricMachineType.PSM;
 
-		public Watt R85RatedPower => Body.ContainsKey(JsonKeys.EM_RatedPower) ? Body.GetEx<double>(JsonKeys.EM_RatedPower).SI<Watt>() : 0.SI<Watt>();
+		public Watt R85RatedPower => Body.ContainsKey(JsonKeys.EM_RatedPower) ? Body.GetEx<double>(JsonKeys.EM_RatedPower).SI(Unit.SI.Kilo.Watt).Cast<Watt>() : 0.SI<Watt>();
 		public KilogramSquareMeter Inertia => Body.GetEx<double>(JsonKeys.IEPC_Inertia).SI<KilogramSquareMeter>();
 		public bool DifferentialIncluded => Body.GetEx<bool>(JsonKeys.IEPC_DifferentialIncluded);
 		public bool DesignTypeWheelMotor => Body.GetEx<bool>(JsonKeys.IEPC_DesignTypeWheelMotor);

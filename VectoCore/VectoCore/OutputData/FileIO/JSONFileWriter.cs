@@ -94,7 +94,7 @@ public class JSONFileWriter : IOutputFileWriter
 			{ JsonKeys.Engine_Inertia, electricMachine.Inertia.Value() },
 			{ JsonKeys.EM_ElectricMachineType, electricMachine.ElectricMachineType.ToString() },
 			{ JsonKeys.EM_ThermalOverloadRecoveryFactor, electricMachine.OverloadRecoveryFactor },
-			{ JsonKeys.EM_RatedPower, electricMachine.R85RatedPower.Value() }
+			{ JsonKeys.EM_RatedPower, electricMachine.R85RatedPower.ConvertToKiloWatt().Value }
 		};
 
 		var vlevels = GetVoltageLevelEntries(electricMachine.VoltageLevels, filename);
@@ -114,7 +114,7 @@ public class JSONFileWriter : IOutputFileWriter
 			{ JsonKeys.EM_DragCurve,  GetRelativePath(electricMachine.DragCurve.Source, Path.GetDirectoryName(filename))},
 			{ JsonKeys.Engine_Inertia, electricMachine.Inertia.Value() },
 			{ JsonKeys.EM_ThermalOverloadRecoveryFactor, electricMachine.OverloadRecoveryFactor },
-			{ JsonKeys.EM_RatedPower, electricMachine.R85RatedPower.Value().ToGUIFormat() }
+			{ JsonKeys.EM_RatedPower, electricMachine.R85RatedPower.ConvertToKiloWatt().Value }
 
 		};
 		
@@ -164,7 +164,7 @@ public class JSONFileWriter : IOutputFileWriter
 			{JsonKeys.IEPC_DesignTypeWheelMotor, iepc.DesignTypeWheelMotor},
 			{JsonKeys.IEPC_NrOfDesignTypeWheelMotorMeasured, iepc.NrOfDesignTypeWheelMotorMeasured},
 			{JsonKeys.IEPC_ThermalOverloadRecoveryFactor, iepc.OverloadRecoveryFactor},
-			{ JsonKeys.EM_RatedPower, iepc.R85RatedPower.Value().ToGUIFormat() }
+			{ JsonKeys.EM_RatedPower, iepc.R85RatedPower.ConvertToKiloWatt().Value }
 		};
 
 		var gears = new List<Dictionary<string, object>>();
