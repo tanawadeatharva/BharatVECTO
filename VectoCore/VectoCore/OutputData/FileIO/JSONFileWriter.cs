@@ -13,6 +13,7 @@ using TUGraz.VectoCore;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
+using TUGraz.VectoCore.Utils;
 
 public class JSONFileWriter : IOutputFileWriter
 {
@@ -66,12 +67,22 @@ public class JSONFileWriter : IOutputFileWriter
 			return filePath;
 		}
 
+		var filePathNormalized = new Uri(Path.GetFullPath(filePath));
+		var basePathNormalized = new Uri(Path.GetFullPath(basePath) + (Path.GetFullPath(basePath).EndsWith(Path.DirectorySeparatorChar.ToString()) ? "" : Path.DirectorySeparatorChar.ToString()));
+		var commonPrefix = PathHelper.GetLongestCommonPrefix(basePathNormalized.AbsolutePath, filePathNormalized.AbsolutePath);
+		if (commonPrefix.Length > 3) {
+			// at least on the same drive...
+			var relative = basePathNormalized.MakeRelativeUri(filePathNormalized);
+			return relative.ToString();
+		}
+
 		if (Path.GetDirectoryName(Path.GetFullPath(filePath)).StartsWith(basePath, StringComparison.OrdinalIgnoreCase)) {
 			return Path.GetFullPath(filePath).Substring(basePath.Length + (basePath.EndsWith(@"\") ? 0 : 1));
 		}
 
 		return filePath;
 	}
+
 
 	public void SaveElectricMotor(IElectricMotorEngineeringInputData electricMachine, string filename, bool declMode)
 	{

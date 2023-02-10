@@ -500,7 +500,7 @@ Public Class VehicleForm
 		If (vehicle.VehicleType <> VectoSimulationJobType.ConventionalVehicle AndAlso vehicle.VehicleType <> VectoSimulationJobType.EngineOnlySimulation) Then
 			lvREESSPacks.Items.Clear()
 			For Each entry As IElectricStorageEngineeringInputData In vehicle.Components.ElectricStorage.ElectricStorageElements.OrderBy(Function(x) x.StringId)
-				lvREESSPacks.Items.Add(CreateREESSPackListViewItem(GetRelativePath(entry.REESSPack.DataSource.SourceFile, basePath), entry.Count, entry.StringId))
+				lvREESSPacks.Items.Add(CreateREESSPackListViewItem(entry.REESSPack.DataSource.SourceFile, entry.Count, entry.StringId))
 			Next
 			if (cfg.DeclMode) Then 
 				tbInitialSoC.Text = string.Empty
