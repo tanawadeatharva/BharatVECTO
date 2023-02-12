@@ -66,22 +66,39 @@ namespace TUGraz.VectoCore.OutputData
 	public class SummaryDataContainer : LoggingObject, ISumData, IDisposable
 	{
 		public static readonly string[] FcColumns = {
-			SumDataFields.FCMAP_H, SumDataFields.FCMAP_KM,
-			SumDataFields.FCNCVC_H, SumDataFields.FCNCVC_KM,
-			SumDataFields.FCWHTCC_H, SumDataFields.FCWHTCC_KM,
-			SumDataFields.FCESS_H, SumDataFields.FCESS_KM,
-			SumDataFields.FCESS_H_CORR, SumDataFields.FCESS_KM_CORR,
-			SumDataFields.FC_BusAux_PS_CORR_H, SumDataFields.FC_BusAux_PS_CORR_KM,
-			SumDataFields.FC_BusAux_ES_CORR_H, SumDataFields.FC_BusAux_ES_CORR_KM,
-			SumDataFields.FCWHR_H_CORR, SumDataFields.FCWHR_KM_CORR,
-			SumDataFields.FC_HEV_SOC_H, SumDataFields.FC_HEV_SOC_KM,
-			SumDataFields.FC_HEV_SOC_CORR_H, SumDataFields.FC_HEV_SOC_CORR_KM,
-			SumDataFields.FC_AUXHTR_H, SumDataFields.FC_AUXHTR_KM,
-			SumDataFields.FC_AUXHTR_H_CORR, SumDataFields.FC_AUXHTR_KM_CORR,
-			SumDataFields.FCFINAL_H, SumDataFields.FCFINAL_KM, SumDataFields.FCFINAL_LITERPER100KM,
+			SumDataFields.FCMAP_H, 
+			SumDataFields.FCMAP_KM,
+			SumDataFields.FCNCVC_H, 
+			SumDataFields.FCNCVC_KM,
+			SumDataFields.FCWHTCC_H, 
+			SumDataFields.FCWHTCC_KM,
+			SumDataFields.FCESS_H, 
+			SumDataFields.FCESS_KM,
+			SumDataFields.FCESS_H_CORR, 
+			SumDataFields.FCESS_KM_CORR,
+			SumDataFields.FC_BusAux_PS_CORR_H, 
+			SumDataFields.FC_BusAux_PS_CORR_KM,
+			SumDataFields.FC_BusAux_ES_CORR_H, 
+			SumDataFields.FC_BusAux_ES_CORR_KM,
+			SumDataFields.FCWHR_H_CORR, 
+			SumDataFields.FCWHR_KM_CORR,
+			SumDataFields.FC_HEV_SOC_H, 
+			SumDataFields.FC_HEV_SOC_KM,
+			SumDataFields.FC_HEV_SOC_CORR_H, 
+			SumDataFields.FC_HEV_SOC_CORR_KM,
+			SumDataFields.FC_AUXHTR_H, 
+			SumDataFields.FC_AUXHTR_KM,
+			SumDataFields.FC_AUXHTR_H_CORR, 
+			SumDataFields.FC_AUXHTR_KM_CORR,
+			SumDataFields.FCFINAL_H, 
+			SumDataFields.FCFINAL_KM, 
+			SumDataFields.FCFINAL_LITERPER100KM,
 			SumDataFields.FCFINAL_LITERPER100TKM,
-			SumDataFields.FCFINAL_LiterPer100M3KM, SumDataFields.FCFINAL_LiterPer100PassengerKM,
-			SumDataFields.SPECIFIC_FC, SumDataFields.K_VEHLINE, SumDataFields.K_ENGLINE
+			SumDataFields.FCFINAL_LiterPer100M3KM,
+			SumDataFields.FCFINAL_LiterPer100PassengerKM,
+			SumDataFields.SPECIFIC_FC,
+			SumDataFields.K_VEHLINE,
+			SumDataFields.K_ENGLINE
 		};
 
 
@@ -368,9 +385,9 @@ namespace TUGraz.VectoCore.OutputData
 		internal readonly DataTable Table;
 		private readonly ISummaryWriter _sumWriter;
 		
-		protected HashSet<string> FcCols = new HashSet<string>();
-		protected HashSet<string> GearColumns = new HashSet<string>();
-		protected HashSet<string> AuxColumns = new HashSet<string>();
+		protected IList<string> FcCols = new List<string>();
+		protected IList<string> GearColumns = new List<string>();
+		protected IList<string> AuxColumns = new List<string>();
 
 
 		/// <summary>
@@ -383,7 +400,7 @@ namespace TUGraz.VectoCore.OutputData
 			Table = new DataTable();
 			//InitTableColumns();
 			CreateColumns(CommonColumns);
-			CreateColumns(CO2Columns);
+			
 			CreateColumns(ElectricEnergyConsumption);
 		}
 
@@ -393,6 +410,7 @@ namespace TUGraz.VectoCore.OutputData
 				case ICombustionEngine _:
 					CreateColumns(CombustionEngineColumns);
 					UpdateTableColumns(runData.EngineData);
+					CreateColumns(CO2Columns);
 					break;
 				case BusAuxiliariesAdapter _:
 					CreateColumns(BusAuxiliariesSignals);
@@ -500,10 +518,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		private void CreateGearTimeShareColumns(GearList gears)
 		{
+			
 			lock (Table) {
-				var gearColNames = gears
-					.Select(x => string.Format(SumDataFields.TIME_SHARE_PER_GEAR_FORMAT, x.Gear))
-					.Concat(new[] { string.Format(SumDataFields.TIME_SHARE_PER_GEAR_FORMAT, 0) }).Distinct()
+				var gearNumbers = new uint[] { 0 }.Concat(gears.Select(x => x.Gear)).Distinct().OrderBy(x => x);
+				
+				var gearColNames = gearNumbers
+					.Select(x => string.Format(SumDataFields.TIME_SHARE_PER_GEAR_FORMAT, x))
 					.Where(x => !Table.Columns.Contains(x)).Select(x => new DataColumn(x, typeof(ConvertedSI)))
 					.ToArray();
 				Table.Columns.AddRange(gearColNames);
@@ -611,7 +631,7 @@ namespace TUGraz.VectoCore.OutputData
 				SumDataFields.ALTITUDE_DELTA,
 			});
 
-			cols.AddRange(FcCols);
+			cols.AddRange(FcCols.Reverse());
 
 			cols.AddRange(new[] {
 				SumDataFields.CO2_KM,
@@ -708,7 +728,7 @@ namespace TUGraz.VectoCore.OutputData
 				SumDataFields.AIRDRAG_CERTIFICATION_NUMBER,
 				SumDataFields.AIRDRAG_CERTIFICATION_METHOD, 
 			});
-			cols.AddRange(GearColumns.OrderBy(x => x));
+			cols.AddRange(GearColumns);
 
 			cols.AddRange(new[] {
 				SumDataFields.REESS_StartSoC,
@@ -885,10 +905,12 @@ namespace TUGraz.VectoCore.OutputData
 							Table.Columns.Add(col);
 							col.SetOrdinal(Table.Columns.IndexOf(SumDataFields.ALTITUDE_DELTA) + 1);
 							FcCols.Add(colName);
+							
 						}
 					}
 				}
 			}
+			
 		}
 
 		/// <summary>
