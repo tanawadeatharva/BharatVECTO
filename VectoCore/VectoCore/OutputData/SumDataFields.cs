@@ -124,10 +124,10 @@ namespace TUGraz.VectoCore.OutputData
 		public const string FCFINAL_LiterPer100M3KM = "FC-Final{0} [l/100m³km]";
 		public const string FCFINAL_LiterPer100PassengerKM = "FC-Final{0} [l/100Pkm]";
 
-		public const string ElectricEnergyConsumption_total = "EC_el_final [kWh]";
-		public const string ElectricEnergyConsumption_KM = "EC_el_final [kWh/km]";
-		public const string ElectricEnergyConsumption_TKM = "EC_el_final [kWh/tkm]";
-		public const string ElectricEnergyConsumption_M3KM = "EC_el_final  [g/m³km]";
+		public const string EC_el_final = "EC_el_final [kWh]";
+		public const string EC_el_final_KM = "EC_el_final [kWh/km]";
+		public const string EC_el_final_TKM = "EC_el_final [kWh/tkm]";
+		public const string EC_el_final_M3KM = "EC_el_final  [g/m³km]";
 		public const string ElectricEnergyConsumption_PKM = "EC_el_final [g/Pkm]";
 
 		public const string CO2_KM = "CO2 [g/km]";
@@ -285,6 +285,8 @@ namespace TUGraz.VectoCore.OutputData
 		public const string REESS_CAPACITY = "REESS Capacity";
 		public const string REESS_StartSoC = "REESS Start SoC [%]";
 		public const string REESS_EndSoC = "REESS End SoC [%]";
+		public const string REESS_MinSoC = "REESS Min SoC [%]";
+		public const string REESS_MaxSoC = "REESS Max SoC [%]";
 		public const string REESS_DeltaEnergy = "ΔE_REESS [kWh]";
 
 		public const string E_REESS_LOSS = "E_REESS_loss [kWh]";
@@ -302,6 +304,8 @@ namespace TUGraz.VectoCore.OutputData
 		public const string E_IEPC_OFF_Loss_Format = "E_{0}_off_loss [kWh]";
 		public const string E_IEPC_LOSS_FORMAT = "E_{0}_loss [kWh]";
 		public const string E_IEPC_OFF_TIME_SHARE = "{0} off time share [%]";
+
+		public const string f_equiv = "f_equiv";
 
 		public delegate object WriteSumEntry(VectoRunData r, IModalDataContainer m);
 
@@ -513,7 +517,12 @@ namespace TUGraz.VectoCore.OutputData
 
 			{ REESS_StartSoC, SumFunc((r, m) => r.BatteryData != null ? r.BatteryData.InitialSoC * 100 : r.SuperCapData != null ? r.SuperCapData.InitialSoC * 100 : double.NaN)},
 			{ REESS_EndSoC, SumFunc((r, m) => m.REESSEndSoC(), ModalResultField.REESSStateOfCharge)},
+			{ REESS_MinSoC, SumFunc((r, m) => m.REESSMinSoc(), ModalResultField.REESSStateOfCharge)},
+			{ REESS_MaxSoC, SumFunc((r, m) => m.REESSMaxSoc(), ModalResultField.REESSStateOfCharge)},
 			{ REESS_DeltaEnergy, SumFunc((r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_reess_int.GetName()).ConvertToKiloWattHour(), ModalResultField.P_reess_int)},
+
+			//P-HEV
+			{ f_equiv, SumFunc((r, m) => r.HybridStrategyParameters.EquivalenceFactor)},
 
 			// performance entries
 			{ ACC, SumFunc((r, m) => (ConvertedSI)m.AccelerationAverage(), ModalResultField.acc)},
@@ -614,16 +623,16 @@ namespace TUGraz.VectoCore.OutputData
 					null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.PassengerCount.Value).ConvertToGrammPerKiloMeter(), ModalResultField.dist) },
 
 			// electric consumption
-			{ ElectricEnergyConsumption_total, SumFunc( (r , m ) 
+			{ EC_el_final, SumFunc( (r , m ) 
 				=> (m.CorrectedModalData.ElectricEnergyConsumption?.ConvertToKiloWattHour()))},
-			{ ElectricEnergyConsumption_KM, SumFunc((r, m) 
+			{ EC_el_final_KM, SumFunc((r, m) 
 				=> (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter)?.ConvertToKiloWattHourPerKiloMeter())},
-			{ ElectricEnergyConsumption_TKM, SumFunc((r, m) 
+			{ EC_el_final_TKM, SumFunc((r, m) 
 				=> r.VehicleData?.Loading == null || 
 					r.VehicleData.Loading.IsEqual(0) || 
 					m.CorrectedModalData.ElectricEnergyConsumption == null 
 					? null : (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter / r.VehicleData.Loading).ConvertToKiloWattHourPerTonKiloMeter())},
-			{ ElectricEnergyConsumption_M3KM, SumFunc((r, m) 
+			{ EC_el_final_M3KM, SumFunc((r, m) 
 				=> r.VehicleData.CargoVolume == null ||
 					r.VehicleData.CargoVolume.IsEqual(0)  ||
 					m.CorrectedModalData.ElectricEnergyConsumption == null 
@@ -704,6 +713,7 @@ namespace TUGraz.VectoCore.OutputData
 		};
 
 		public static readonly WriteAuxEntry AuxDataValue = (r, m, a) => m.AuxiliaryWork(a).ConvertToKiloWattHour();
+
 	}
 	
 }

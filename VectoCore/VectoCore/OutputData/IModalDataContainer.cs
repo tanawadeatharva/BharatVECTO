@@ -765,5 +765,15 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			return (data.GetValues<SI>(ModalResultField.REESSStateOfCharge).Last()?.Value() ?? 0) * 100;
 		}
+
+		public static double REESSMinSoc(this IModalDataContainer data)
+		{
+			return (data.GetValues<Scalar>(ModalResultField.REESSStateOfCharge).Min()?.Value() ?? 0) * 100;
+		}
+
+		public static double REESSMaxSoc(this IModalDataContainer data)
+		{
+			return (data.GetValues<Scalar>(ModalResultField.REESSStateOfCharge).Max()?.Value() ?? 0) * 100;
+		}
 	}
 }

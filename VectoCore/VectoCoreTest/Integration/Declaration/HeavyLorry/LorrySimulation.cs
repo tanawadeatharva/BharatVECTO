@@ -249,6 +249,20 @@ public class LorrySimulation
 
 	public void VSUM_order_test(string fileName, VectoRunData runData)
 	{
+		List<string> GbxTimeShareFields()
+		{
+
+			var gbxTimeShareFields = new List<string> { };
+			if (runData.GearboxData?.Gears != null && runData.GearboxData.Gears.Count > 0) {
+				for (var i = 0; i <= runData.GearboxData.Gears.Count; i++)
+				{
+					gbxTimeShareFields.Add(string.Format(SumDataFields.TIME_SHARE_PER_GEAR_FORMAT, i));
+				}
+
+			}
+			return gbxTimeShareFields;
+		}
+
 		#region local helper
 		void AssertColumnNotPresent(TableData tableData, List<string> notPresent)
 		{
@@ -264,6 +278,9 @@ public class LorrySimulation
 
 		void SearchForPattern(TableData tableData, List<string> pattern)
 		{
+			if (pattern.Count == 0) {
+				return;
+			}
 			var comparePattern = false;
 			using (var enumerator = pattern.GetEnumerator()) {
 				enumerator.MoveNext();
@@ -331,51 +348,87 @@ public class LorrySimulation
 
 			
 		};
-
 		var CO2fields = new List<string> {
 			SumDataFields.CO2_KM,
 			SumDataFields.CO2_TKM,
 			SumDataFields.CO2_M3KM,
 		};
-
 		var EC_el = new List<string> {
+			SumDataFields.EC_el_final,
+			SumDataFields.EC_el_final_KM,
+			SumDataFields.EC_el_final_TKM,
+			SumDataFields.EC_el_final_M3KM,
 
-		};
-		if (runData.JobType == VectoSimulationJobType.ConventionalVehicle) {
 			
 
-			var gbxTimeShareFields = new List<string> {
-				
-			};
-			for (var i = 0; i <= runData.GearboxData.Gears.Count; i++) {
-				gbxTimeShareFields.Add(string.Format(SumDataFields.TIME_SHARE_PER_GEAR_FORMAT, i));
-			}
+		};
+		var p_hev_fields = new List<string> {
+			SumDataFields.f_equiv
+		};
+		var REESS_fields = new List<string> {
+			SumDataFields.REESS_StartSoC,
+			SumDataFields.REESS_EndSoC,
+			SumDataFields.REESS_DeltaEnergy,
+
+			SumDataFields.REESS_MinSoC,
+			SumDataFields.REESS_MaxSoC,
+
+			SumDataFields.E_REESS_LOSS,
+			SumDataFields.E_REESS_T_chg,
+			SumDataFields.E_REESS_T_dischg,
+			SumDataFields.E_REESS_int_chg,
+			SumDataFields.E_REESS_int_dischg,
+		};
+		if (runData.JobType == VectoSimulationJobType.ConventionalVehicle) {
+			var gbxTimeShareFields = GbxTimeShareFields();
+			SearchForPattern(sumData, gbxTimeShareFields);
 
 			if (runData.EngineData.Fuels.Count > 1) {
-				foreach (var fuel in runData.EngineData.Fuels.Select(f => f.FuelData.FuelType.GetLabel()))
-				{
+				foreach (var fuel in runData.EngineData.Fuels.Select(f => f.FuelData.FuelType.GetLabel())) {
 					SearchForPattern(sumData, new List<string>(fcFields.Select(fc => string.Format(fc, fuel)).Concat(CO2fields)));
 				}
 			} else {
 				SearchForPattern(sumData, new List<string>(fcFields.Select(fc => string.Format(fc, "")).Concat(CO2fields)));
 			}
-			SearchForPattern(sumData, gbxTimeShareFields);
+			
 		}
 
 		if (runData.JobType is VectoSimulationJobType.BatteryElectricVehicle or VectoSimulationJobType.IEPC_E) {
-
 			//PEV CHECKS
 			AssertColumnNotPresent(sumData, CO2fields);
 			AssertColumnNotPresent(sumData, fcFields);
 
+			SearchForPattern(sumData, new List<string>(EC_el.Concat(REESS_fields)));
+			SearchForPattern(sumData, GbxTimeShareFields());
+		}
 
+		if (runData.JobType is VectoSimulationJobType.SerialHybridVehicle or VectoSimulationJobType.IEPC_S) {
+			if (runData.EngineData.Fuels.Count > 1) {
+				foreach (var fuel in runData.EngineData.Fuels.Select(f => f.FuelData.FuelType.GetLabel())) {
+					SearchForPattern(sumData, new List<string>(fcFields.Select(fc => string.Format(fc, fuel)).Concat(CO2fields)));
+				}
+			} else {
+				SearchForPattern(sumData, new List<string>(fcFields.Select(fc => string.Format(fc, "")).Concat(CO2fields)));
+			}
 
+			SearchForPattern(sumData, new List<string>(EC_el.Concat(REESS_fields)));
+			SearchForPattern(sumData, GbxTimeShareFields());
 		}
 
 
+		if (runData.JobType is VectoSimulationJobType.ParallelHybridVehicle or VectoSimulationJobType.IHPC) {
+			if (runData.EngineData.Fuels.Count > 1) {
+				foreach (var fuel in runData.EngineData.Fuels.Select(f => f.FuelData.FuelType.GetLabel())) {
+					SearchForPattern(sumData, new List<string>(fcFields.Select(fc => string.Format(fc, fuel)).Concat(CO2fields)));
+				}
+			}
+			else {
+				SearchForPattern(sumData, new List<string>(fcFields.Select(fc => string.Format(fc, "")).Concat(CO2fields)));
+			}
 
-
-		
+			SearchForPattern(sumData, new List<string>(EC_el.Concat(p_hev_fields).Concat(REESS_fields)));
+			SearchForPattern(sumData,GbxTimeShareFields());
+		}
 	}
 
 
