@@ -47,7 +47,7 @@
     "VehicleHeight": 3.0,
     "InitialSoC": 80.0,
     "PowertrainConfiguration": "IEPC_E",
-    "IEPC": "E:\\QUAM\\Workspace\\VECTO_DEV_Buses\\VectoCore\\VectoCoreTest\\TestData\\Integration\\DeclarationMode\\2nd_AmendmDeclMode\\JSON\\PEV\\GenericIEPC\\IEPC_Gbx3Speed-Whl1\\GenericIEPC_Gbx3Whl1.viepc",
+    "IEPC": "GenericIEPC_Gbx3Whl1.viepc",
     "Batteries": [
       {
         "NumPacks": 1,
