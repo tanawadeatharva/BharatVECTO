@@ -303,8 +303,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			if ((inputData.VehicleType == VectoSimulationJobType.BatteryElectricVehicle || inputData.VehicleType == VectoSimulationJobType.SerialHybridVehicle) &&
 				gearbox.Type.AutomaticTransmission())
 			{
+
 				// PEV with APT-S or APT-P transmission are simulated as APT-N
-				retVal.Type = GearboxType.APTN;
+				if (retVal.Type.IsOneOf(GearboxType.ATPowerSplit, GearboxType.ATSerial)) {
+					retVal.Type = GearboxType.APTN;
+				}
 			}
 
 			retVal.ATEcoRollReleaseLockupClutch =
