@@ -661,7 +661,7 @@ public class JSONFileWriter : IOutputFileWriter
 		var body = GetVehicle(vehicle, airdrag, DeclMode, basePath);
 		body.Add("InitialSoC", vehicle.InitialSOC * 100);
 		body.Add("PowertrainConfiguration", vehicle.VehicleType.ToString());
-		body.Add("IEPC", vehicle.Components.IEPCEngineeringInputData.DataSource.SourceFile);
+		body.Add("IEPC", GetRelativePath(vehicle.Components.IEPCEngineeringInputData.DataSource.SourceFile, basePath));
 		if (electricMotorsOut != null) {
 			body.Add("ElectricMotors", electricMotorsOut);
 		}
