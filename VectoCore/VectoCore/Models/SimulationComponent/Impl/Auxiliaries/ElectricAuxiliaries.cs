@@ -113,8 +113,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				consideredAuxiliaries = consideredAuxiliaries?.Where(aux => !auxiliarieIgnoredDuringVehicleStop.Contains(aux.Key));
 			}
 
-			if (DataBus.PowertrainInfo.HasCombustionEngine && !DataBus.EngineInfo.EngineOn) {
-				consideredAuxiliaries = consideredAuxiliaries?.Where(aux => !auxiliarieIgnoredDuringVehicleStop.Contains(aux.Key));
+			if (!DataBus.EngineInfo.EngineOn) {
+				consideredAuxiliaries = consideredAuxiliaries?.Where(aux => !auxiliariesIgnoredWhenICEIsOff.Contains(aux.Key));
 			}
 
 			if (consideredAuxiliaries == null) {
@@ -166,7 +166,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		protected override bool DoUpdateFrom(object other) => false;
+		protected override bool DoUpdateFrom(object other)
+		{
+			//if (other is ElectricAuxiliaries eAux) {
+
+			//	var updateableConsumers = this._electricConsumers.OfType<IUpdateable>();
+			//	var updateableConsumersSource = d._electricConsumers.OfType<IUpdateable>();
+			//	System.Diagnostics.Debug.Assert(updateableConsumers.Count() <= 1
+			//									&& updateableConsumersSource.Count() <= 1,
+			//		"Only 1 updateable subcomponent supported");
+
+
+
+
+
+
+
+
+			//	return true;
+			//} else {
+			//	return false;
+			//}
+			return false;
+		}
 	}
 }
 
