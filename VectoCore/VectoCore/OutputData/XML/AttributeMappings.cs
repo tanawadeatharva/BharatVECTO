@@ -163,6 +163,11 @@ namespace TUGraz.IVT.VectoXML
 			{ ElectricMotorMapReader.Fields.PowerElectrical, XMLNames.PowerMap_ElectricPower }
 		};
 
+		public static readonly Dictionary<string, string> BoostingLimitsMapping = new Dictionary<string, string> {
+				{MaxBoostingTorqueReader.Fields.MotorSpeed, XMLNames.BoostingLimitation_RotationalSpeed},
+				{MaxBoostingTorqueReader.Fields.DrivingTorque, XMLNames.BoostingLimitation_BoostingTorque}
+		};
+
 		//ElectricMotorMapReader
 	}
 }
