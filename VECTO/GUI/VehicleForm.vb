@@ -621,6 +621,7 @@ Public Class VehicleForm
 		End If
 
 		lblNotePtoPEV_HEVS.Visible = False
+		gbVehicleIdlingSpeed.Enabled = true
 		Select Case vehType
 			Case VectoSimulationJobType.ConventionalVehicle
 				lblTitle.Text = "Conventional Vehicle"
@@ -757,6 +758,7 @@ Public Class VehicleForm
 			    'pnPtoMode1.Enabled = false
 			    pnPtoMode3.Enabled = False
 				lblNotePtoPEV_HEVS.Visible = true
+				gbVehicleIdlingSpeed.Enabled = false
 			Case VectoSimulationJobType.IEPC_E
 				lblTitle.Text = "IEPC-E Vehicle"
 				
@@ -777,6 +779,7 @@ Public Class VehicleForm
 				'PTO
 				gbPTO.Enabled = False
 				pnPTO.Enabled = false
+				gbVehicleIdlingSpeed.Enabled = false
 			Case VectoSimulationJobType.IEPC_S
 				lblTitle.Text = "IEPC-S Vehicle"
 				tcVehicleComponents.TabPages.Remove(tpElectricMachine)
