@@ -1771,13 +1771,6 @@ Public Class VectoJobForm
         End If
     End Sub
 
-    Private Sub Label5_Click(sender As Object, e As EventArgs) Handles Label5.Click
-
-    End Sub
-
-    Private Sub LvAux_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvAux.SelectedIndexChanged
-
-    End Sub
 End Class
 
 
