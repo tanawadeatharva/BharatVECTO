@@ -8,7 +8,7 @@
   "Body": {
     "SavedInDeclMode": true,
     "VehCat": "RigidTruck",
-    "LegislativeClass": "M3",
+		"LegislativeClass": "N3",
     "CurbWeight": 4670.0,
     "CurbWeightExtra": 0.0,
     "MassMax": 11.99,

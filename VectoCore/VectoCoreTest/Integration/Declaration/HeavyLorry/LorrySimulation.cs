@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -67,6 +68,7 @@ public class LorrySimulation
 
 	private const string Group5_PEV_E3 = @"HeavyLorry\PEV\Group5_ PEV_E3_ES_Standard.xml";
 	private const string Group2_HEV_IEPC_S_StdVal = @"HeavyLorry\S-HEV\Group2_HEV_IEPC_S_standard_values.xml";
+	private const string ConventionalHeavyLorry = @"HeavyLorry\Conventional\Group5_Conv_ES_Standard.xml";
 
 
 	private StandardKernel _kernel;
@@ -81,7 +83,7 @@ public class LorrySimulation
 	}
 
 	//Conventional
-	[TestCase(@"HeavyLorry\Conventional\Group5_Conv_ES_Standard.xml", TestName = "Stefan_Conv")]
+	[TestCase(ConventionalHeavyLorry, TestName = "Stefan_Conv")]
 	//S-HEV
 	[TestCase(Group5_HEV_S2_OVC)]
 	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S3_stefan.xml", TestName = "Stefan_S2")]
@@ -149,6 +151,8 @@ public class LorrySimulation
 		var mrfSchema = XMLValidator.GetXMLSchema(XmlDocumentType.ManufacturerReport);
 		XDocument.Load(mrfPath).Validate(mrfSchema, (sender, args) => Assert.Fail(args.Message));
 		XDocument.Load(cifPath).Validate(cifSchema, (sender, args) => Assert.Fail(args.Message));
+
+		VSUM_order_test(fileWriter.SumFileName, jobContainer.Runs.First().Run.GetContainer().RunData);
 	}
 
     private ISimulatorFactory GetSimulatorFactory(string filePath, out IDeclarationInputDataProvider dataProvider,
@@ -177,22 +181,7 @@ public class LorrySimulation
 
 		//	.ToHashSet();
 
-		var filePath = Path.Combine(BASE_DIR, jobFile);
-		SummaryDataContainer sumDataContainer;
-		var jobContainer = GetJobContainer(jobFile, null, out var fileWriter, out var runs, out sumDataContainer, false);
-	
-		var run = runs.First();
-		jobContainer.AddRun(run);
-
-        run.GetContainer().ModalData[ModalResultField.time] = 1.SI<Second>(); //fake duration for run
-        run.GetContainer().ModalData[ModalResultField.Gear] = 2;
-        run.GetContainer().ModalData.CommitSimulationStep();
-		run.GetContainer().FinishSingleSimulationRun(null);
-		var modFileName = fileWriter.GetModDataFileName(run.RunName, run.CycleName, run.RunSuffix); 
-
-		var sumFileName = fileWriter.SumFileName;
-		Assert.IsTrue(File.Exists(modFileName));
-		var mod = VectoCSVFile.Read(modFileName, false, true);
+		GetEmptySumAndModData(jobFile, out var sumDataContainer, out var run, out var modData, out var sumData);
 
 		var columnsWithoutUnitHashSet = new HashSet<string>();
         foreach (var col in columnsWithoutUnit) {
@@ -204,7 +193,7 @@ public class LorrySimulation
 
 
         List<string> columnHeaders = new List<string>();
-		foreach (DataColumn modColumn in mod.Columns) {
+		foreach (DataColumn modColumn in modData.Columns) {
 			columnHeaders.Add(modColumn.Caption);
 		}
 
@@ -233,38 +222,214 @@ public class LorrySimulation
 		}
 	}
 
-	//[Test]
-	//public void HEVS4()
-	//{
-	//	var jobContainer = GetJobContainer(HeavylorryGroup2HevS4XML, 6, out var fileWriter, out var runs, out var sumDataContainer);
-	//	//var simFactory = GetSimulatorFactory(Path.Combine(BASE_DIR, HeavylorryGroup2HevS4XML), out var dataProvider,
-	//	//	out var fileWriter, out var mockSumWriter);
+	private void GetEmptySumAndModData(string jobFile, out SummaryDataContainer sumDataContainer, out IVectoRun run,
+		out TableData modData, out TableData sumData)
+	{
+		var filePath = Path.Combine(BASE_DIR, jobFile);
+		sumDataContainer = null;
+		var jobContainer = GetJobContainer(jobFile, null, out var fileWriter, out var runs, out sumDataContainer, false);
+		//sumDataContainer.Finish();
+		run = runs.First();
+		jobContainer.AddRun(run);
 
-	//	foreach (var vectoRun in runs) {
-	//		var rd = vectoRun.GetContainer().RunData;
-	//	}
-	//	var container = runs.First().GetContainer();
-	//	var runData = container.RunData;
+		run.GetContainer().ModalData[ModalResultField.time] = 1.SI<Second>(); //fake duration for run
+		run.GetContainer().ModalData[ModalResultField.Gear] = 2;
+		run.GetContainer().ModalData.CommitSimulationStep();
+		run.GetContainer().FinishSingleSimulationRun(null);
+		var modFileName = fileWriter.GetModDataFileName(run.RunName, run.CycleName, run.RunSuffix);
 
-	//	runs = runs.Where(run => {
-	//		var rd = run.GetContainer().RunData;
-	//		return rd.Mission.MissionType == MissionType.UrbanDelivery && rd.Loading == LoadingType.ReferenceLoad;
-	//	}).ToList();
-
-	//	jobContainer.AddRun(runs.Single());
-
-	//	Assert.AreEqual(1, jobContainer.Runs.Count);
-
-	//	var modData = ((ModalDataContainer)((VehicleContainer)runs.Single().GetContainer()).ModData).Data;
-	//	jobContainer.Execute(false);
-	//	WaitAndAssertSuccess(jobContainer, fileWriter);
+		var sumFileName = fileWriter.SumFileName;
+		Assert.IsTrue(File.Exists(modFileName));
+		Assert.IsTrue(File.Exists(sumFileName));
+		modData = VectoCSVFile.Read(modFileName, false, true);
+		sumData = VectoCSVFile.Read(sumFileName, false, true);
+	}
 
 
-	//	//Pneumatic system data test
-	//	var ps = runData.Aux.Where(x => x.ID == Constants.Auxiliaries.IDs.PneumaticSystem).Single();
-	//	Assume.That(ps.IsFullyElectric);
-	//	Assert.That(ps.ConnectToREESS);
-	//}
+
+	public void VSUM_order_test(string fileName, VectoRunData runData)
+	{
+		List<string> GbxTimeShareFields()
+		{
+
+			var gbxTimeShareFields = new List<string> { };
+			if (runData.GearboxData?.Gears != null && runData.GearboxData.Gears.Count > 0) {
+				for (var i = 0; i <= runData.GearboxData.Gears.Count; i++)
+				{
+					gbxTimeShareFields.Add(string.Format(SumDataFields.TIME_SHARE_PER_GEAR_FORMAT, i));
+				}
+
+			}
+			return gbxTimeShareFields;
+		}
+
+		#region local helper
+		void AssertColumnNotPresent(TableData tableData, List<string> notPresent)
+		{
+			foreach (var name in notPresent) {
+				Assert.IsFalse(tableData.Columns.Contains(name), name);
+			}
+		}
+
+		void AssertOrder(TableData tableData, List<string> ordered)
+		{
+			
+		}
+
+		void SearchForPattern(TableData tableData, List<string> pattern)
+		{
+			if (pattern.Count == 0) {
+				return;
+			}
+			var comparePattern = false;
+			using (var enumerator = pattern.GetEnumerator()) {
+				enumerator.MoveNext();
+				foreach (DataColumn column in tableData.Columns)
+				{
+					if (!comparePattern && column.ColumnName == enumerator.Current)
+					{
+						comparePattern = true;
+					}
+
+					if (comparePattern) {
+						TestContext.Write(column.ColumnName + "|" + enumerator.Current);
+						if (column.ColumnName != enumerator.Current) {
+							TestContext.WriteLine("X");
+							Assert.Fail($"expected {enumerator.Current} got {column.ColumnName}");
+						}
+						TestContext.WriteLine("OK");
+						if (!enumerator.MoveNext()) {
+							return;
+						}
+					}
+				}
+				Assert.Fail($"Reached end of table searching for {enumerator.Current}");
+			}
+			
+		}
+#endregion
+
+		var sumData = VectoCSVFile.Read(fileName, false, true);
+		var fcFields = new List<string>() {
+			//FUEL
+			SumDataFields.FCMAP_H,
+			SumDataFields.FCMAP_KM,
+			SumDataFields.FCNCVC_H,
+			SumDataFields.FCNCVC_KM,
+			SumDataFields.FCWHTCC_H,
+			SumDataFields.FCWHTCC_KM,
+			SumDataFields.FCESS_H,
+			SumDataFields.FCESS_KM,
+			SumDataFields.FCESS_H_CORR,
+			SumDataFields.FCESS_KM_CORR,
+			SumDataFields.FC_BusAux_PS_CORR_H,
+			SumDataFields.FC_BusAux_PS_CORR_KM,
+			SumDataFields.FC_BusAux_ES_CORR_H,
+			SumDataFields.FC_BusAux_ES_CORR_KM,
+			SumDataFields.FCWHR_H_CORR,
+			SumDataFields.FCWHR_KM_CORR,
+			SumDataFields.FC_HEV_SOC_H,
+			SumDataFields.FC_HEV_SOC_KM,
+			SumDataFields.FC_HEV_SOC_CORR_H,
+			SumDataFields.FC_HEV_SOC_CORR_KM,
+			SumDataFields.FC_AUXHTR_H,
+			SumDataFields.FC_AUXHTR_KM,
+			SumDataFields.FC_AUXHTR_H_CORR,
+			SumDataFields.FC_AUXHTR_KM_CORR,
+			SumDataFields.FCFINAL_H,
+			SumDataFields.FCFINAL_KM,
+			SumDataFields.FCFINAL_LITERPER100KM,
+			SumDataFields.FCFINAL_LITERPER100TKM,
+			SumDataFields.FCFINAL_LiterPer100M3KM,
+			SumDataFields.FCFINAL_LiterPer100PassengerKM,
+			SumDataFields.SPECIFIC_FC,
+			SumDataFields.K_VEHLINE,
+			SumDataFields.K_ENGLINE,
+
+			
+		};
+		var CO2fields = new List<string> {
+			SumDataFields.CO2_KM,
+			SumDataFields.CO2_TKM,
+			SumDataFields.CO2_M3KM,
+		};
+		var EC_el = new List<string> {
+			SumDataFields.EC_el_final,
+			SumDataFields.EC_el_final_KM,
+			SumDataFields.EC_el_final_TKM,
+			SumDataFields.EC_el_final_M3KM,
+
+			
+
+		};
+		var p_hev_fields = new List<string> {
+			SumDataFields.f_equiv
+		};
+		var REESS_fields = new List<string> {
+			SumDataFields.REESS_StartSoC,
+			SumDataFields.REESS_EndSoC,
+			SumDataFields.REESS_DeltaEnergy,
+
+			SumDataFields.REESS_MinSoC,
+			SumDataFields.REESS_MaxSoC,
+
+			SumDataFields.E_REESS_LOSS,
+			SumDataFields.E_REESS_T_chg,
+			SumDataFields.E_REESS_T_dischg,
+			SumDataFields.E_REESS_int_chg,
+			SumDataFields.E_REESS_int_dischg,
+		};
+		if (runData.JobType == VectoSimulationJobType.ConventionalVehicle) {
+			var gbxTimeShareFields = GbxTimeShareFields();
+			SearchForPattern(sumData, gbxTimeShareFields);
+
+			if (runData.EngineData.Fuels.Count > 1) {
+				foreach (var fuel in runData.EngineData.Fuels.Select(f => f.FuelData.FuelType.GetLabel())) {
+					SearchForPattern(sumData, new List<string>(fcFields.Select(fc => string.Format(fc, fuel)).Concat(CO2fields)));
+				}
+			} else {
+				SearchForPattern(sumData, new List<string>(fcFields.Select(fc => string.Format(fc, "")).Concat(CO2fields)));
+			}
+			
+		}
+
+		if (runData.JobType is VectoSimulationJobType.BatteryElectricVehicle or VectoSimulationJobType.IEPC_E) {
+			//PEV CHECKS
+			AssertColumnNotPresent(sumData, CO2fields);
+			AssertColumnNotPresent(sumData, fcFields);
+
+			SearchForPattern(sumData, new List<string>(EC_el.Concat(REESS_fields)));
+			SearchForPattern(sumData, GbxTimeShareFields());
+		}
+
+		if (runData.JobType is VectoSimulationJobType.SerialHybridVehicle or VectoSimulationJobType.IEPC_S) {
+			if (runData.EngineData.Fuels.Count > 1) {
+				foreach (var fuel in runData.EngineData.Fuels.Select(f => f.FuelData.FuelType.GetLabel())) {
+					SearchForPattern(sumData, new List<string>(fcFields.Select(fc => string.Format(fc, fuel)).Concat(CO2fields)));
+				}
+			} else {
+				SearchForPattern(sumData, new List<string>(fcFields.Select(fc => string.Format(fc, "")).Concat(CO2fields)));
+			}
+
+			SearchForPattern(sumData, new List<string>(EC_el.Concat(REESS_fields)));
+			SearchForPattern(sumData, GbxTimeShareFields());
+		}
+
+
+		if (runData.JobType is VectoSimulationJobType.ParallelHybridVehicle or VectoSimulationJobType.IHPC) {
+			if (runData.EngineData.Fuels.Count > 1) {
+				foreach (var fuel in runData.EngineData.Fuels.Select(f => f.FuelData.FuelType.GetLabel())) {
+					SearchForPattern(sumData, new List<string>(fcFields.Select(fc => string.Format(fc, fuel)).Concat(CO2fields)));
+				}
+			}
+			else {
+				SearchForPattern(sumData, new List<string>(fcFields.Select(fc => string.Format(fc, "")).Concat(CO2fields)));
+			}
+
+			SearchForPattern(sumData, new List<string>(EC_el.Concat(p_hev_fields).Concat(REESS_fields)));
+			SearchForPattern(sumData,GbxTimeShareFields());
+		}
+	}
 
 
 	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S4_invalid_pto.xml")]
@@ -334,9 +499,37 @@ public class LorrySimulation
 		
 		jobContainer.AddRun(runs.Single());
 		var modData = ((ModalDataContainer)((VehicleContainer)runs.Single().GetContainer()).ModData).Data;
+
 		jobContainer.Execute(false);
 		WaitAndAssertSuccess(jobContainer, fileWriter);
 	}
+
+	[TestCase(Group5_HEV_P2_OVC)]
+	public void PHEV_CD_CS_weighted(string jobFile)
+	{
+		var jobContainer = GetJobContainer(jobFile, null, out var fileWriter, out var runs, out var sumDataContainer);
+
+		Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.NotApplicable));
+
+		runs = runs.Where(run => {
+			var rd = run.GetContainer().RunData;
+			return (rd.OVCMode == VectoRunData.OvcHevMode.ChargeSustaining || rd.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting) &&
+					rd.Mission.MissionType == MissionType.RegionalDelivery && rd.Loading == LoadingType.ReferenceLoad;
+		}).ToList();
+
+		Assert.AreEqual(2, runs.Count);
+
+		foreach (var run in runs) {
+			jobContainer.AddRun(run);
+		}
+		SetResultCountInReport(2, runs.First().GetContainer().RunData.Report);
+
+
+		jobContainer.Execute(false);
+		WaitAndAssertSuccess(jobContainer, fileWriter);
+	}
+
+
 	[TestCase(Group5_HEV_P2_OVC, 20)]
 	[TestCase(Group5_HEV_P3_OVC, 20)]
 	[TestCase(Group5_HEV_P4_OVC, 20)]
@@ -676,26 +869,50 @@ public class LorrySimulation
 		
 
 		jobContainer.AddRun(simulatedRun);
-		SetResultCountInReport(1, simulatedRun.GetContainer().RunData.Report);
+		if (writeReports) {
+			SetResultCountInReport(1, simulatedRun.GetContainer().RunData.Report);
+		}
 		jobContainer.Execute(true);
 		WaitAndAssertSuccess(jobContainer, fileWriter);
 	}
 
 
-	public void SetResultCountInReport(int count, IDeclarationReport report)
+	private void SetResultCountInReport(int count, IDeclarationReport report)
 	{
 		if (report is XMLDeclarationReport09 rep09) {
-			FieldInfo[] fields = rep09.GetType().GetFields(
-				BindingFlags.NonPublic |
-				BindingFlags.Instance);
-			fields.First().SetValue(rep09, count);
+			
 
-
+			GetField("_resultCount", rep09.GetType()).SetValue(rep09, count);
 			return;
 		}
 		Assert.Fail("Reflection failed");
 
 	}
+
+	private FieldInfo GetField(string name, Type type)
+	{
+		bool found = false;
+		while (!found) {
+			FieldInfo[] fields = type.GetFields(
+				BindingFlags.NonPublic |
+				BindingFlags.Instance);
+			var field = fields.FirstOrDefault(f => f.Name == name);
+			if (field == null) {
+				type = type.BaseType;
+				if (type == null) {
+					Assert.Fail("Field not found");
+				}
+			} else {
+				return field;
+			}
+		}
+
+		return null;
+
+	}
+
+
+
 
 	public void DisableIterativeRuns(ISimulatorFactory factory)
 	{
@@ -841,7 +1058,7 @@ public class LorrySimulation
 		//runsFactory.ActualModalData = true;
 		runsFactory.SerializeVectoRunData = true;
 		runsFactory.WriteModalResults = true;
-		var sumWriter = new MockSumWriter();
+		var sumWriter = new SummaryDataContainer(fileWriter);
 		
 		var jobContainer = new JobContainer(sumWriter);
 		runsFactory.SumData = sumWriter;

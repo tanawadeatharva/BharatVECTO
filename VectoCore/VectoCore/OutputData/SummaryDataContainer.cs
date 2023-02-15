@@ -66,22 +66,39 @@ namespace TUGraz.VectoCore.OutputData
 	public class SummaryDataContainer : LoggingObject, ISumData, IDisposable
 	{
 		public static readonly string[] FcColumns = {
-			SumDataFields.FCMAP_H, SumDataFields.FCMAP_KM,
-			SumDataFields.FCNCVC_H, SumDataFields.FCNCVC_KM,
-			SumDataFields.FCWHTCC_H, SumDataFields.FCWHTCC_KM,
-			SumDataFields.FCESS_H, SumDataFields.FCESS_KM,
-			SumDataFields.FCESS_H_CORR, SumDataFields.FCESS_KM_CORR,
-			SumDataFields.FC_BusAux_PS_CORR_H, SumDataFields.FC_BusAux_PS_CORR_KM,
-			SumDataFields.FC_BusAux_ES_CORR_H, SumDataFields.FC_BusAux_ES_CORR_KM,
-			SumDataFields.FCWHR_H_CORR, SumDataFields.FCWHR_KM_CORR,
-			SumDataFields.FC_HEV_SOC_H, SumDataFields.FC_HEV_SOC_KM,
-			SumDataFields.FC_HEV_SOC_CORR_H, SumDataFields.FC_HEV_SOC_CORR_KM,
-			SumDataFields.FC_AUXHTR_H, SumDataFields.FC_AUXHTR_KM,
-			SumDataFields.FC_AUXHTR_H_CORR, SumDataFields.FC_AUXHTR_KM_CORR,
-			SumDataFields.FCFINAL_H, SumDataFields.FCFINAL_KM, SumDataFields.FCFINAL_LITERPER100KM,
+			SumDataFields.FCMAP_H, 
+			SumDataFields.FCMAP_KM,
+			SumDataFields.FCNCVC_H, 
+			SumDataFields.FCNCVC_KM,
+			SumDataFields.FCWHTCC_H, 
+			SumDataFields.FCWHTCC_KM,
+			SumDataFields.FCESS_H, 
+			SumDataFields.FCESS_KM,
+			SumDataFields.FCESS_H_CORR, 
+			SumDataFields.FCESS_KM_CORR,
+			SumDataFields.FC_BusAux_PS_CORR_H, 
+			SumDataFields.FC_BusAux_PS_CORR_KM,
+			SumDataFields.FC_BusAux_ES_CORR_H, 
+			SumDataFields.FC_BusAux_ES_CORR_KM,
+			SumDataFields.FCWHR_H_CORR, 
+			SumDataFields.FCWHR_KM_CORR,
+			SumDataFields.FC_HEV_SOC_H, 
+			SumDataFields.FC_HEV_SOC_KM,
+			SumDataFields.FC_HEV_SOC_CORR_H, 
+			SumDataFields.FC_HEV_SOC_CORR_KM,
+			SumDataFields.FC_AUXHTR_H, 
+			SumDataFields.FC_AUXHTR_KM,
+			SumDataFields.FC_AUXHTR_H_CORR, 
+			SumDataFields.FC_AUXHTR_KM_CORR,
+			SumDataFields.FCFINAL_H, 
+			SumDataFields.FCFINAL_KM, 
+			SumDataFields.FCFINAL_LITERPER100KM,
 			SumDataFields.FCFINAL_LITERPER100TKM,
-			SumDataFields.FCFINAL_LiterPer100M3KM, SumDataFields.FCFINAL_LiterPer100PassengerKM,
-			SumDataFields.SPECIFIC_FC, SumDataFields.K_VEHLINE, SumDataFields.K_ENGLINE
+			SumDataFields.FCFINAL_LiterPer100M3KM,
+			SumDataFields.FCFINAL_LiterPer100PassengerKM,
+			SumDataFields.SPECIFIC_FC,
+			SumDataFields.K_VEHLINE,
+			SumDataFields.K_ENGLINE
 		};
 
 
@@ -216,6 +233,9 @@ namespace TUGraz.VectoCore.OutputData
 			Tuple.Create(SumDataFields.OVCHEVMode, typeof(string))
 		};
 
+		public static readonly Tuple<string, Type>[] PHEVColumns = {
+			Tuple.Create(SumDataFields.f_equiv, typeof(double))
+		};
 
 		public static readonly Tuple<string, Type>[] VehilceColumns = {
 			Tuple.Create(SumDataFields.E_VEHICLE_INERTIA, typeof(ConvertedSI)),
@@ -232,6 +252,8 @@ namespace TUGraz.VectoCore.OutputData
 		public static readonly Tuple<string, Type>[] BusVehicleColumns = {
 			Tuple.Create(SumDataFields.PassengerCount, typeof(double)),
 		};
+
+		
 
 		public static readonly Tuple<string, Type>[] ClutchColumns = {
 			Tuple.Create(SumDataFields.E_CLUTCH_LOSS, typeof(ConvertedSI)),
@@ -284,6 +306,9 @@ namespace TUGraz.VectoCore.OutputData
 			Tuple.Create(SumDataFields.REESS_StartSoC, typeof(double)),
 			Tuple.Create(SumDataFields.REESS_EndSoC, typeof(double)),
 			Tuple.Create(SumDataFields.REESS_DeltaEnergy, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.REESS_MinSoC, typeof(double)),
+			Tuple.Create(SumDataFields.REESS_MaxSoC, typeof(double)),
+
 			Tuple.Create(SumDataFields.E_REESS_LOSS, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.E_REESS_T_chg, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.E_REESS_T_dischg, typeof(ConvertedSI)),
@@ -327,10 +352,10 @@ namespace TUGraz.VectoCore.OutputData
 		};
 
 		public static readonly Tuple<string, Type>[] ElectricEnergyConsumption = {
-			Tuple.Create(SumDataFields.ElectricEnergyConsumption_total, typeof(ConvertedSI)),
-			Tuple.Create(SumDataFields.ElectricEnergyConsumption_KM, typeof(ConvertedSI)),
-			Tuple.Create(SumDataFields.ElectricEnergyConsumption_TKM, typeof(ConvertedSI)),
-			Tuple.Create(SumDataFields.ElectricEnergyConsumption_M3KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.EC_el_final, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.EC_el_final_KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.EC_el_final_TKM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.EC_el_final_M3KM, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.ElectricEnergyConsumption_PKM, typeof(ConvertedSI)),
 		};
 
@@ -368,9 +393,9 @@ namespace TUGraz.VectoCore.OutputData
 		internal readonly DataTable Table;
 		private readonly ISummaryWriter _sumWriter;
 		
-		protected HashSet<string> FcCols = new HashSet<string>();
-		protected HashSet<string> GearColumns = new HashSet<string>();
-		protected HashSet<string> AuxColumns = new HashSet<string>();
+		protected IList<string> FcCols = new List<string>();
+		protected IList<string> GearColumns = new List<string>();
+		protected IList<string> AuxColumns = new List<string>();
 
 
 		/// <summary>
@@ -383,8 +408,8 @@ namespace TUGraz.VectoCore.OutputData
 			Table = new DataTable();
 			//InitTableColumns();
 			CreateColumns(CommonColumns);
-			CreateColumns(CO2Columns);
-			CreateColumns(ElectricEnergyConsumption);
+			
+			
 		}
 
 		public void RegisterComponent(VectoSimulationComponent component, VectoRunData runData)
@@ -393,6 +418,7 @@ namespace TUGraz.VectoCore.OutputData
 				case ICombustionEngine _:
 					CreateColumns(CombustionEngineColumns);
 					UpdateTableColumns(runData.EngineData);
+					CreateColumns(CO2Columns);
 					break;
 				case BusAuxiliariesAdapter _:
 					CreateColumns(BusAuxiliariesSignals);
@@ -446,6 +472,11 @@ namespace TUGraz.VectoCore.OutputData
 						CreateColumns(BusVehicleColumns);
 					}
 
+					if (runData.JobType == VectoSimulationJobType.ParallelHybridVehicle ||
+						runData.JobType == VectoSimulationJobType.IHPC) {
+						CreateColumns(PHEVColumns);
+					}
+
 					if (runData.OVCMode != VectoRunData.OvcHevMode.NotApplicable) {
 						CreateColumns(OVCModeColumns);
 					}
@@ -457,9 +488,11 @@ namespace TUGraz.VectoCore.OutputData
 					CreateElectricMotorColumns(c4, runData, ElectricMotorColumns);
 					break;
 				case IElectricEnergyStorage c5 when c5 is BatterySystem:
+					CreateColumns(ElectricEnergyConsumption.Where(x => runData.VehicleData.VehicleCategory.IsBus() || x.Item1 != SumDataFields.ElectricEnergyConsumption_PKM).ToArray());
 					CreateColumns(BatteryColumns);
 					break;
 				case IElectricEnergyStorage _:
+					CreateColumns(ElectricEnergyConsumption.Where(x => runData.VehicleData.VehicleCategory.IsBus() || x.Item1 != SumDataFields.ElectricEnergyConsumption_PKM).ToArray());
 					CreateColumns(BatteryColumns);
 					break;
 				case IElectricSystem _:
@@ -500,10 +533,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		private void CreateGearTimeShareColumns(GearList gears)
 		{
+			
 			lock (Table) {
-				var gearColNames = gears
-					.Select(x => string.Format(SumDataFields.TIME_SHARE_PER_GEAR_FORMAT, x.Gear))
-					.Concat(new[] { string.Format(SumDataFields.TIME_SHARE_PER_GEAR_FORMAT, 0) }).Distinct()
+				var gearNumbers = new uint[] { 0 }.Concat(gears.Select(x => x.Gear)).Distinct().OrderBy(x => x);
+				
+				var gearColNames = gearNumbers
+					.Select(x => string.Format(SumDataFields.TIME_SHARE_PER_GEAR_FORMAT, x))
 					.Where(x => !Table.Columns.Contains(x)).Select(x => new DataColumn(x, typeof(ConvertedSI)))
 					.ToArray();
 				Table.Columns.AddRange(gearColNames);
@@ -611,7 +646,7 @@ namespace TUGraz.VectoCore.OutputData
 				SumDataFields.ALTITUDE_DELTA,
 			});
 
-			cols.AddRange(FcCols);
+			cols.AddRange(FcCols.Reverse());
 
 			cols.AddRange(new[] {
 				SumDataFields.CO2_KM,
@@ -628,11 +663,27 @@ namespace TUGraz.VectoCore.OutputData
 			});
 
 			cols.AddRange(new [] {
-				SumDataFields.ElectricEnergyConsumption_total,
-				SumDataFields.ElectricEnergyConsumption_KM,
-				SumDataFields.ElectricEnergyConsumption_TKM,
-				SumDataFields.ElectricEnergyConsumption_M3KM,
+				SumDataFields.EC_el_final,
+				SumDataFields.EC_el_final_KM,
+				SumDataFields.EC_el_final_TKM,
+				SumDataFields.EC_el_final_M3KM,
 				SumDataFields.ElectricEnergyConsumption_PKM,
+			});
+			cols.AddRange( new [] {
+				SumDataFields.f_equiv,
+			});
+
+			cols.AddRange(new[] {
+				SumDataFields.REESS_StartSoC,
+				SumDataFields.REESS_EndSoC,
+				SumDataFields.REESS_DeltaEnergy,
+				SumDataFields.REESS_MinSoC,
+				SumDataFields.REESS_MaxSoC,
+				SumDataFields.E_REESS_LOSS,
+				SumDataFields.E_REESS_T_chg,
+				SumDataFields.E_REESS_T_dischg,
+				SumDataFields.E_REESS_int_chg,
+				SumDataFields.E_REESS_int_dischg,
 			});
 			cols.AddRange(AuxColumns.OrderBy(x => x));
 			cols.AddRange(new[] {
@@ -708,19 +759,7 @@ namespace TUGraz.VectoCore.OutputData
 				SumDataFields.AIRDRAG_CERTIFICATION_NUMBER,
 				SumDataFields.AIRDRAG_CERTIFICATION_METHOD, 
 			});
-			cols.AddRange(GearColumns.OrderBy(x => x));
-
-			cols.AddRange(new[] {
-				SumDataFields.REESS_StartSoC,
-				SumDataFields.REESS_EndSoC,
-				SumDataFields.REESS_DeltaEnergy,
-				SumDataFields.E_REESS_LOSS,
-				SumDataFields.E_REESS_T_chg,
-				SumDataFields.E_REESS_T_dischg,
-				SumDataFields.E_REESS_int_chg,
-				SumDataFields.E_REESS_int_dischg,
-			});
-
+			cols.AddRange(GearColumns);
 			return cols.Where(x => Table.Columns.Contains(x)).ToArray();
 		}
 
@@ -885,10 +924,12 @@ namespace TUGraz.VectoCore.OutputData
 							Table.Columns.Add(col);
 							col.SetOrdinal(Table.Columns.IndexOf(SumDataFields.ALTITUDE_DELTA) + 1);
 							FcCols.Add(colName);
+							
 						}
 					}
 				}
 			}
+			
 		}
 
 		/// <summary>
@@ -1052,15 +1093,15 @@ namespace TUGraz.VectoCore.OutputData
 	//		} else {
 	//			if (runData.ElectricMachinesData.Count > 0) {
 	//				//lock (Table) {
-	//				//	if (!Table.Columns.Contains(SumDataFields.ElectricEnergyConsumption_KM)) {
+	//				//	if (!Table.Columns.Contains(SumDataFields.EC_el_final_KM)) {
 	//				//		lock (_tableLock) {
-	//				//			var col = Table.Columns.Add(SumDataFields.ElectricEnergyConsumption_KM, typeof(ConvertedSI));
+	//				//			var col = Table.Columns.Add(SumDataFields.EC_el_final_KM, typeof(ConvertedSI));
 	//				//			col.SetOrdinal(Table.Columns[SumDataFields.CO2_KM].Ordinal);
 	//				//		}
 	//				//	}
 	//				//}
 
-	//				//row[SumDataFields.ElectricEnergyConsumption_KM] =
+	//				//row[SumDataFields.EC_el_final_KM] =
 	//				//	(-modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int) / modData.Distance).Cast<JoulePerMeter>().ConvertToKiloWattHourPerKiloMeter();
 	//			}
 	//		}
