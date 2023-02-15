@@ -1052,6 +1052,26 @@ public class JSONFileWriter : IOutputFileWriter
 		}
 		body.Add("Padd_electric", input.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand.Value());
 
+		if (job.SavedInDeclarationMode && job.Vehicle is IVehicleDeclarationInputData declVehicle) {
+			var aux = declVehicle.Components.AuxiliaryInputData;
+			var auxList = new List<object>();
+			foreach (var auxEntry in aux.Auxiliaries) {
+				var auxOut = new Dictionary<string, object>();
+				var engineeringAuxEntry = auxEntry;
+				if (!job.SavedInDeclarationMode) {
+					auxOut.Add("Type", auxEntry.Type.Name());
+					auxOut.Add("Technology", new string[] { });
+				} else {
+					auxOut.Add("ID", auxEntry.Type.Key());
+					auxOut.Add("Type", auxEntry.Type.Name());
+					auxOut.Add("Technology", engineeringAuxEntry.Technology);
+				}
+
+				auxList.Add(auxOut);
+			}
+			body.Add("Aux", auxList);
+		}
+
 		if (!job.SavedInDeclarationMode && job.Vehicle is IVehicleEngineeringInputData engVehicle) {
 			var aux = engVehicle.Components.AuxiliaryInputData;
 			if (aux.BusAuxiliariesData != null) {
