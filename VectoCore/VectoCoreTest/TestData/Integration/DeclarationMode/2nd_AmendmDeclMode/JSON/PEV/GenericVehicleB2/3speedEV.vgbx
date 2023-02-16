@@ -24,14 +24,14 @@
       },
       {
         "Ratio": 6.49,
-        "LossMap": "Transmission\\Gear_2.vtlm",
+        "LossMap": "Transmission\\Gear_4.vtlm",
         "ShiftPolygon": "",
         "MaxTorque": "",
         "MaxSpeed": ""
       },
       {
-        "Ratio": 2.48,
-        "LossMap": "Transmission\\Gear_3.vtlm",
+        "Ratio": 2.65,
+        "LossMap": "Transmission\\Gear_8.vtlm",
         "ShiftPolygon": "",
         "MaxTorque": "",
         "MaxSpeed": ""

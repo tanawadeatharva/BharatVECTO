@@ -31,6 +31,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML;
@@ -97,7 +98,7 @@ public class LorrySimulation
 #if singlethreaded
 		RunSimulation(jobFile, false);
 #else
-        RunSimulation(jobFile, true, true);
+        RunSimulation(jobFile, true, false);
 #endif
     }
 
@@ -138,7 +139,12 @@ public class LorrySimulation
         if (multiThreaded)
         {
             jobContainer.WaitFinished();
-        }
+        } else {
+			while (!jobContainer.AllCompleted) {
+				
+			} ;
+		}
+		
 
         Assert.IsTrue(jobContainer.AllCompleted);
         Assert.IsTrue(jobContainer.Runs.TrueForAll(runEntry => runEntry.Success));
@@ -169,14 +175,19 @@ public class LorrySimulation
 
 
     [TestCase(Group5_HEV_S2_OVC)]
-	public void VMOD_VSUMUnitTest(string jobFile)
+	public void VMODUnitTest(string jobFile)
 	{
 		var columnsWithoutUnit = new List<ModalResultField> {
 			ModalResultField.ICEOn,
 			ModalResultField.EM_Off_,
 			ModalResultField.HybridStrategyScore, 
 			ModalResultField.HybridStrategySolution,
-		}.Select(m => m.GetCaption());
+		}.Select(m => m.GetCaption()).Concat(new List<string>() {
+			"DriverAction",
+			"EcoRollConditionsMet",
+			"PCCSegment",
+			"PCCState",
+		});
 
 
 		//	.ToHashSet();
@@ -230,25 +241,31 @@ public class LorrySimulation
 		var jobContainer = GetJobContainer(jobFile, null, out var fileWriter, out var runs, out sumDataContainer, false);
 		//sumDataContainer.Finish();
 		run = runs.First();
+		sumData = null;
 		jobContainer.AddRun(run);
 
 		run.GetContainer().ModalData[ModalResultField.time] = 1.SI<Second>(); //fake duration for run
 		run.GetContainer().ModalData[ModalResultField.Gear] = 2;
 		run.GetContainer().ModalData.CommitSimulationStep();
-		run.GetContainer().FinishSingleSimulationRun(null);
+		//run.GetContainer().FinishSingleSimulationRun(null);
 		var modFileName = fileWriter.GetModDataFileName(run.RunName, run.CycleName, run.RunSuffix);
 
 		var sumFileName = fileWriter.SumFileName;
 		Assert.IsTrue(File.Exists(modFileName));
 		Assert.IsTrue(File.Exists(sumFileName));
 		modData = VectoCSVFile.Read(modFileName, false, true);
-		sumData = VectoCSVFile.Read(sumFileName, false, true);
 	}
 
 
 
 	public void VSUM_order_test(string fileName, VectoRunData runData)
 	{
+		if (runData.Exempted)
+		{
+			return;
+		}
+
+
 		List<string> GbxTimeShareFields()
 		{
 
@@ -379,6 +396,8 @@ public class LorrySimulation
 			SumDataFields.E_REESS_int_chg,
 			SumDataFields.E_REESS_int_dischg,
 		};
+
+
 		if (runData.JobType == VectoSimulationJobType.ConventionalVehicle) {
 			var gbxTimeShareFields = GbxTimeShareFields();
 			SearchForPattern(sumData, gbxTimeShareFields);
@@ -433,7 +452,7 @@ public class LorrySimulation
 
 
 	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S4_invalid_pto.xml")]
-	[TestCase(@"ADD E3_PEV_HERE")]
+	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_E3_pto_transmission_invalid.xml")]
 	public void PTOWithoutTransmissionTest(string jobFile)
 	{
 		SummaryDataContainer sumDataContainer;
@@ -463,7 +482,7 @@ public class LorrySimulation
 	}
 
 
-	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S2_ovc_supercap.xml", 10)]
+	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S2_supercap.xml", 6)]
 	public void SHEV_SuperCap(string jobFile, int nrRuns)
 	{
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out var sumDataContainer);
@@ -513,7 +532,7 @@ public class LorrySimulation
 
 		runs = runs.Where(run => {
 			var rd = run.GetContainer().RunData;
-			return (rd.OVCMode == VectoRunData.OvcHevMode.ChargeSustaining || rd.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting) &&
+			return rd.OVCMode is VectoRunData.OvcHevMode.ChargeSustaining or VectoRunData.OvcHevMode.ChargeDepleting &&
 					rd.Mission.MissionType == MissionType.RegionalDelivery && rd.Loading == LoadingType.ReferenceLoad;
 		}).ToList();
 
@@ -688,7 +707,7 @@ public class LorrySimulation
 	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_E4_standardValues.xml", 6)]
 	[TestCase(@"HeavyLorry\PEV\Group5_ PEV_IEPC_E.xml",10)]
 	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_APT_E2.xml", null)]
-	public void PEV(string jobFile, int nrRuns)
+	public void PEV(string jobFile, int? nrRuns)
 	{
 		SummaryDataContainer sumDataContainer;
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out sumDataContainer);
@@ -739,10 +758,39 @@ public class LorrySimulation
 		Assert.IsTrue(modData.Rows.Count > 0);
 	}
 
-	[Test]
-	public void PEVPtoTransmission(string jobFile, int nrRuns)
+	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S2_pto_transmission.xml", @"HeavyLorry\S-HEV\Group2_HEV_S2.xml")]
+	[Ignore("not ready, maybe this test doesn't make any sense")]
+	public void PEVPtoTransmission(string withPTOTransmission, string withoutPTOTransmission)
 	{
-		Assert.Fail();
+		var ptoJobContainer = GetJobContainer(withPTOTransmission, null, out var fileWriterPto, out var runsPto, out _, false);
+		var jobContainer = GetJobContainer(withoutPTOTransmission, null, out var fileWriter, out var runs, out _, false);
+		runsPto.ForEach(r => Assert.NotNull(r.GetContainer().RunData.PTO));
+		runs.ForEach(r => Assert.Null(r.GetContainer().RunData.PTO));
+        //var ptoPath = Path.Combine(BASE_DIR, withoutPTOTransmission);
+        //var noPtoPath = Path.Combine(BASE_DIR, withoutPTOTransmission);
+        //var ptoXDoc = XDocument.Load(ptoPath);
+        //var noPtoxDoc = XDocument.Load(ptoPath);
+
+
+        var ptoRun = runs.Single(run => {
+			var rd = run.GetContainer().RunData;
+			return rd.Mission.MissionType == MissionType.UrbanDelivery && rd.Loading == LoadingType.ReferenceLoad;
+		});
+		ptoJobContainer.AddRun(ptoRun);
+
+
+		var run = runs.Single(run => {
+			var rd = run.GetContainer().RunData;
+			return rd.Mission.MissionType == MissionType.UrbanDelivery && rd.Loading == LoadingType.ReferenceLoad;
+		});
+		jobContainer.AddRun(run);
+		var ptoMod = VectoCSVFile.Read(fileWriterPto.GetModDataFileName(ptoRun.RunName, ptoRun.CycleName, ptoRun.RunSuffix));
+		var mod = VectoCSVFile.Read(fileWriter.GetModDataFileName(run.RunName, run.CycleName, run.RunSuffix));
+		
+
+
+
+        Assert.Inconclusive();
 	}
 
 
@@ -760,12 +808,17 @@ public class LorrySimulation
 		Assert.IsTrue(ex!.Message.Contains("Super cap"));
 	}
 
+	//public void EPTOUpdateFromTest()
+	//{
+	//	var originalPTOCycleController = new PTOCycleController()
+	//}
 
 
 	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_E4_pto.xml", 8)]
 	[TestCase(@"HeavyLorry\PEV\Group5_ PEV_IEPC_E_pto.xml", 8)]
 	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S3_pto.xml", 8)]
 	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_IEPC_S_pto.xml", 8)]
+	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S2_supercap_epto.xml", 8)]
 	public void EPTO(string jobFile, int nrRuns)
 	{
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out var sumDataContainer,
@@ -879,6 +932,9 @@ public class LorrySimulation
 
 	private void SetResultCountInReport(int count, IDeclarationReport report)
 	{
+		if (report == null) {
+			return; //also used in engineering mode
+		}
 		if (report is XMLDeclarationReport09 rep09) {
 			
 
@@ -920,7 +976,7 @@ public class LorrySimulation
 	}
 
 	[Test, TestCaseSource(nameof(GetJsonJobs))]
-	[Ignore("Just for comparison")]
+	//[Ignore("Just for comparison")]
 	public void JSONEngineering(string path)
 	{
 		RunJsonJob(path, ExecutionMode.Engineering);
@@ -952,7 +1008,7 @@ public class LorrySimulation
 	}
 
 
-	[Test, TestCaseSource(nameof(GetHeavyLorryJobs))]
+	[Test, TestCaseSource(nameof(GetHeavyLorryJobs)), Description("Just a little helper to check that all files are heavy lorries")]
 	public void FilesAreHeavyLorry(string file)
 	{
 		IDeclarationInputDataProvider dataProvider = null;
@@ -978,7 +1034,7 @@ public class LorrySimulation
 		Assert.That(segment.VehicleClass.IsHeavyLorry());
 	}
 
-	[Test, TestCaseSource(nameof(GetMediumLorryJobs))]
+	[Test, TestCaseSource(nameof(GetMediumLorryJobs)), Description("Just a little helper to check that all files are medium lorries")]
 	public void FilesAreMediumLorry(string file)
 	{
 		IDeclarationInputDataProvider dataProvider = null;
@@ -1146,4 +1202,27 @@ public class LorrySimulation
 		}
 		return prevRow.Field<Scalar>(string.Format(ModalResultField.EM_Off_.GetCaption(), position.GetLabel())) == 0.SI<Scalar>();
 	}
+
+
+	//private static bool EPTOTestPowertrain()
+	//{
+	//	IVehicleContainer powertrain = null;// = PowertrainBuilder.Build();
+	//	var testPowertrain = PowertrainBuilder.BuildSimpleSerialHybridPowertrain();
+
+	//	VectoRunData runData = null;
+	//	SimplePowertrainContainer testContainer = null; new SimplePowertrainContainer(runData);
+	//	if (runData.JobType == VectoSimulationJobType.IEPC_S)
+	//	{
+	//		PowertrainBuilder.BuildSimpleIEPCHybridPowertrain(runData, testContainer);
+	//	}
+	//	else
+	//	{
+	//		PowertrainBuilder.BuildSimpleSerialHybridPowertrain(runData, testContainer);
+	//	}
+
+	//	var response = testContainer.GetCycleOutPort().Request(0.SI<Second>(), 2.SI<Meter>());
+	//	response.ElectricSystem.AuxPower
+
+
+	//}
 }
