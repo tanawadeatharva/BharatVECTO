@@ -313,6 +313,7 @@ Public Class VectoJobForm
         'Thus Veh-file is returned
         EngineForm.JobDir = GetPath(VectoFile)
         EngineForm.AutoSendTo = True
+        EngineForm.JobType = JobType
 
         If Not Trim(f) = "" Then
             If Not File.Exists(f) Then
@@ -1111,7 +1112,7 @@ Public Class VectoJobForm
             Case VectoSimulationJobType.IEPC_S
                 pnEngine.Enabled = True
                 pnGearbox.Enabled = True
-                GrAuxMech.Enabled = False
+                GrAuxMech.Enabled = Cfg.DeclMode
                 pnShiftParams.Enabled = not Cfg.DeclMode
                 gbEngineStopStart.Enabled = False
                 pnHybridStrategy.Enabled = not Cfg.DeclMode
