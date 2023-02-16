@@ -253,6 +253,17 @@ namespace TUGraz.VectoCommon.InputData
 		IIEPCDeclarationInputData IEPC { get; }
 	}
 
+	public static class ComponentsHelper{
+		/// <summary>
+		/// Returns the gearbox type of Gearbox- or IEPC-Component
+		/// </summary>
+		/// <param name=""></param>
+		public static GearboxType? GetGearboxType(this IVehicleComponentsDeclaration components)
+		{
+			return components?.GearboxInputData?.Type ?? (components?.IEPC != null ? new GearboxType?(GearboxType.IEPC) : null);
+		}
+	}
+
 	public interface IAxlesDeclarationInputData
 	{
 		/// <summary>
