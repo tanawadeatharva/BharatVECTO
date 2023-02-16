@@ -762,6 +762,7 @@ Public Class GearboxForm
 
         If LvGears.Items.Count <= 1 Then Exit Sub
 
+        dim lossmap As TransmissionLossMap = Nothing
         Try
             If LvGears.SelectedItems.Count > 0 AndAlso LvGears.SelectedIndices(0) > 0 Then
                 path = FileRepl(LvGears.SelectedItems(0).SubItems(GearboxTbl.ShiftPolygons).Text, GetPath(_gbxFile))
@@ -772,6 +773,11 @@ Public Class GearboxForm
             End If
 
             If File.Exists(path) Then shiftPolygon = ShiftPolygonReader.ReadFromFile(path)
+            
+            if LvGears.SelectedItems.Count > 0 AndAlso LvGears.SelectedIndices(0) > 1 Then
+                lossmap = TransmissionLossMapReader.ReadFromFile(FileRepl(LvGears.SelectedItems(0).SubItems(GearboxTbl.LossMapEfficiency).Text, GetPath(_gbxFile)), 
+                                                                          LvGears.SelectedItems(0).SubItems(GearboxTbl.Ratio).Text.ToDouble(),"gear plot")
+            End If
 
         Catch ex As Exception
 
@@ -782,6 +788,16 @@ Public Class GearboxForm
         chart.Height = PicBox.Height
 
         a = New ChartArea
+
+        if Not lossmap Is Nothing Then
+            s = new Series()
+            s.Points.DataBindXY(lossmap._entries.Select(Function(x) x.InputSpeed.AsRPM).ToArray(),
+                                lossmap._entries.Select(function(y) y.InputTorque.Value()).ToArray())
+            s.ChartType = SeriesChartType.FastPoint
+            s.Color = color.ForestGreen
+            s.Name = "LossMap Entries"
+            chart.Series.Add(s)
+        End If
 
         'Shiftpolygons from file
 
