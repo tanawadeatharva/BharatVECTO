@@ -1,7 +1,7 @@
 {
   "Header": {
     "CreatedBy": "",
-    "Date": "2021-06-17T07:29:46.1581600Z",
+    "Date": "2023-02-16T10:54:38.4841708Z",
     "AppVersion": "3",
     "FileVersion": 5
   },
@@ -10,10 +10,10 @@
     "ModelName": "209kW 7.7l Engine",
     "Displacement": "7700",
     "IdlingSpeed": 600.0,
-    "Inertia": 3.33,
+    "Inertia": 3.789,
     "Fuels": [
       {
-       "WHTC-Urban": 1.0097,
+        "WHTC-Urban": 1.0097,
         "WHTC-Rural": 1.0035,
         "WHTC-Motorway": 1.0035,
         "WHTC-Engineering": 1.0090832895,
@@ -23,9 +23,9 @@
         "FuelType": "DieselCI"
       }
     ],
-    "RatedPower": 209000,
+    "RatedPower": 209000.0,
     "RatedSpeed": 2550.0,
-    "MaxTorque": 1100,
+    "MaxTorque": 1100.0,
     "FullLoadCurve": "209kW_ICE_fld.vfld",
     "WHRType": [
       "None"
