@@ -153,7 +153,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					DataAdapter.CreateHybridStrategy(runData.BatteryData, runData.SuperCapData, runData.VehicleData.TotalVehicleMass, ovcMode, loading.Key, runData.VehicleData.VehicleClass, mission.MissionType);
 
 				if (ovcMode != VectoRunData.OvcHevMode.NotApplicable) {
-					runData.BatteryData.InitialSoC = runData.HybridStrategyParameters.InitialSoc;
+					if (runData.BatteryData != null) {
+						runData.BatteryData.InitialSoC = runData.HybridStrategyParameters.InitialSoc;
+					}
+
+					if (runData.SuperCapData != null) {
+						runData.SuperCapData.InitialSoC = runData.HybridStrategyParameters.InitialSoc;
+					}
 				}
 
 
