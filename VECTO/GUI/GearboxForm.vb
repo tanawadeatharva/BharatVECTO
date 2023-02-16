@@ -774,7 +774,7 @@ Public Class GearboxForm
 
             If File.Exists(path) Then shiftPolygon = ShiftPolygonReader.ReadFromFile(path)
             
-            if LvGears.SelectedItems.Count > 0 AndAlso LvGears.SelectedIndices(0) > 1 Then
+            if LvGears.SelectedItems.Count > 0 AndAlso LvGears.SelectedIndices(0) > 0 Then
                 lossmap = TransmissionLossMapReader.ReadFromFile(FileRepl(LvGears.SelectedItems(0).SubItems(GearboxTbl.LossMapEfficiency).Text, GetPath(_gbxFile)), 
                                                                           LvGears.SelectedItems(0).SubItems(GearboxTbl.Ratio).Text.ToDouble(),"gear plot")
             End If
