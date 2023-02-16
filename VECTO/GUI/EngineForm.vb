@@ -235,7 +235,7 @@ Public Class EngineForm
 			End Select
 		End If
 
-		Dim basePath As String = Path.GetDirectoryName(file)
+		Dim basePath As String = path.GetDirectoryName(Path.GetFullPath(file))
 		TbName.Text = engine.Model
 		TbDispl.Text = (engine.Displacement.Value() * 1000.0 * 1000).ToGUIFormat()
 		TbInertia.Text = engine.Inertia.ToGUIFormat()
@@ -323,7 +323,7 @@ Public Class EngineForm
 		EngineFileBrowser.UpdateHistory(file)
 		Text = GetFilenameWithoutPath(file, True)
 		LbStatus.Text = ""
-		_engFile = file
+		_engFile = Path.GetFullPath(file)
 		Activate()
 
 		_changed = False
@@ -410,8 +410,9 @@ Public Class EngineForm
 
 		If AutoSendTo Then
 			If VectoJobForm.Visible Then
-				If UCase(FileRepl(VectoJobForm.TbENG.Text, JobDir)) <> UCase(file) Then _
-					VectoJobForm.TbENG.Text = GetFilenameWithoutDirectory(file, JobDir)
+				If UCase(FileRepl(VectoJobForm.TbENG.Text, JobDir)) <> UCase(file) Then 
+					VectoJobForm.TbENG.Text = GetRelativePath(file, JobDir)
+				end if
 				VectoJobForm.UpdatePic()
 			End If
 		End If

@@ -214,7 +214,7 @@ Public Class ElectricMotorForm
         ElectricMotorFileBrowser.UpdateHistory(file)
         Text = GetFilenameWithoutPath(file, True)
         LbStatus.Text = ""
-        _emFile = file
+        _emFile = Path.GetFullPath(file)
         Activate()
 
         _changed = False
