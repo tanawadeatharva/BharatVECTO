@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				IdleSpeed = idleSpeed,
 				Displacement = engineData.Displacement,
 				WHRType = WHRType.None,
-				Inertia = DeclarationData.Engine.EngineInertia(engineData.Displacement, gearbox.Type),
+				Inertia = DeclarationData.Engine.EngineInertia(primaryVehicle.VehicleType, engineData.Displacement, gearbox.Type),
 				EngineStartTime = DeclarationData.Engine.DefaultEngineStartTime,
 				RatedPowerDeclared = engineData.RatedPowerDeclared,
 				RatedSpeedDeclared = engineData.RatedSpeedDeclared,

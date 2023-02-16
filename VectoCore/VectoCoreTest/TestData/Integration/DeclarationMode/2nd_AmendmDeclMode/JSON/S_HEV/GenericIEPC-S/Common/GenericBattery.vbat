@@ -1,18 +1,22 @@
-﻿{
-	"Header": {
-		"CreatedBy": " ()",
-		"Date": "2016-10-13T08:54:28.7387223Z",
-		"AppVersion": "3",
-		"FileVersion": 1
-	},
-	"Body": {
-		"SavedInDeclMode": true,
-	"Model": "Generic Battery",
-	"InternalResistanceCurve": "GenericBattery.vbatr",
-	"SOC_min": 10,
-	"SOC_max": 90,
-		"MaxCurrentMap": "MaxCurrent.vimax",
-		"Capacity": 68,
-		"SoCCurve": "GenericBattery.vbatv"
-	}
+{
+  "Header": {
+    "CreatedBy": "",
+    "Date": "2023-02-16T10:42:11.2828877Z",
+    "AppVersion": "3",
+    "FileVersion": 1
+  },
+  "Body": {
+    "SavedInDeclMode": true,
+    "REESSType": "Battery",
+    "Model": "Generic Battery",
+    "Capacity": 68.0,
+    "SOC_min": 10.0,
+    "SOC_max": 90.0,
+    "MaxCurrentMap": "MaxCurrent.vimax",
+    "InternalResistanceCurve": "GenericBattery.vbatr",
+    "SoCCurve": "GenericBattery.vbatv",
+    "TestingTemperature": 20.0,
+    "JunctionboxIncluded": false,
+    "ConnectorsSubsystemsIncluded": false
+  }
 }

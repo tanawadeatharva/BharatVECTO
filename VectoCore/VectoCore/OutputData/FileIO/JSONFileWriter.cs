@@ -661,7 +661,7 @@ public class JSONFileWriter : IOutputFileWriter
 		var body = GetVehicle(vehicle, airdrag, DeclMode, basePath);
 		body.Add("InitialSoC", vehicle.InitialSOC * 100);
 		body.Add("PowertrainConfiguration", vehicle.VehicleType.ToString());
-		body.Add("IEPC", vehicle.Components.IEPCEngineeringInputData.DataSource.SourceFile);
+		body.Add("IEPC", GetRelativePath(vehicle.Components.IEPCEngineeringInputData.DataSource.SourceFile, basePath));
 		if (electricMotorsOut != null) {
 			body.Add("ElectricMotors", electricMotorsOut);
 		}
@@ -1051,6 +1051,26 @@ public class JSONFileWriter : IOutputFileWriter
 			}
 		}
 		body.Add("Padd_electric", input.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand.Value());
+
+		if (job.SavedInDeclarationMode && job.Vehicle is IVehicleDeclarationInputData declVehicle) {
+			var aux = declVehicle.Components.AuxiliaryInputData;
+			var auxList = new List<object>();
+			foreach (var auxEntry in aux.Auxiliaries) {
+				var auxOut = new Dictionary<string, object>();
+				var engineeringAuxEntry = auxEntry;
+				if (!job.SavedInDeclarationMode) {
+					auxOut.Add("Type", auxEntry.Type.Name());
+					auxOut.Add("Technology", new string[] { });
+				} else {
+					auxOut.Add("ID", auxEntry.Type.Key());
+					auxOut.Add("Type", auxEntry.Type.Name());
+					auxOut.Add("Technology", engineeringAuxEntry.Technology);
+				}
+
+				auxList.Add(auxOut);
+			}
+			body.Add("Aux", auxList);
+		}
 
 		if (!job.SavedInDeclarationMode && job.Vehicle is IVehicleEngineeringInputData engVehicle) {
 			var aux = engVehicle.Components.AuxiliaryInputData;

@@ -313,6 +313,7 @@ Public Class VectoJobForm
         'Thus Veh-file is returned
         EngineForm.JobDir = GetPath(VectoFile)
         EngineForm.AutoSendTo = True
+        EngineForm.JobType = JobType
 
         If Not Trim(f) = "" Then
             If Not File.Exists(f) Then
@@ -1092,7 +1093,7 @@ Public Class VectoJobForm
             Case VectoSimulationJobType.BatteryElectricVehicle
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = True
-                GrAuxMech.Enabled = False
+                GrAuxMech.Enabled = cfg.DeclMode
                 pnShiftParams.Enabled = not Cfg.DeclMode
                 gbEngineStopStart.Enabled = False
             Case VectoSimulationJobType.IHPC
@@ -1111,7 +1112,7 @@ Public Class VectoJobForm
             Case VectoSimulationJobType.IEPC_S
                 pnEngine.Enabled = True
                 pnGearbox.Enabled = True
-                GrAuxMech.Enabled = False
+                GrAuxMech.Enabled = Cfg.DeclMode
                 pnShiftParams.Enabled = not Cfg.DeclMode
                 gbEngineStopStart.Enabled = False
                 pnHybridStrategy.Enabled = not Cfg.DeclMode
@@ -1771,13 +1772,6 @@ Public Class VectoJobForm
         End If
     End Sub
 
-    Private Sub Label5_Click(sender As Object, e As EventArgs) Handles Label5.Click
-
-    End Sub
-
-    Private Sub LvAux_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvAux.SelectedIndexChanged
-
-    End Sub
 End Class
 
 

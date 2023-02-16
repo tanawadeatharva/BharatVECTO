@@ -36,10 +36,10 @@ Public Class EngineForm
     Private SecondFuelTab As TabPage
     private MechanicalWhrTab as TabPage
     private ElectricalWhrTab as TabPage
+    Public JobType As VectoSimulationJobType
 
 
-
-	'Before closing Editor: Check if file was changed and ask to save.
+    'Before closing Editor: Check if file was changed and ask to save.
 	Private Sub F_ENG_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 		If e.CloseReason <> CloseReason.ApplicationExitCall And e.CloseReason <> CloseReason.WindowsShutDown Then
 			e.Cancel = ChangeCheckCancel()
@@ -99,7 +99,7 @@ Public Class EngineForm
 		Dim gbxType as GearboxType = GearboxType.AMT
 
 		Dim jobFile As String = VectoJobForm.VectoFile
-		If Not jobFile Is Nothing AndAlso File.Exists(jobFile) Then
+		If not JobType.IsOneOf(VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_S) andalso Not jobFile Is Nothing AndAlso File.Exists(jobFile) Then
 
 			Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadJsonJob(jobFile, true), 
 																	 IEngineeringInputDataProvider)
@@ -109,7 +109,7 @@ Public Class EngineForm
 			End If
 		End If
 		
-		TbInertia.Text = DeclarationData.Engine.EngineInertia((TbDispl.Text.ToDouble(0.0)/1000.0/1000.0).SI (Of CubicMeter),
+		TbInertia.Text = DeclarationData.Engine.EngineInertia(JobType, TbDispl.Text.ToDouble(0.0).SI(Unit.SI.Cubic.Centi.Meter).Cast(Of CubicMeter),
 															gbxType).ToGUIFormat()
 	End Sub
 
