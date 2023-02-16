@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 
 			if (result.MinSoC >= result.TargetSoC || result.TargetSoC >= 1) {
-				throw new VectoException("Min SOC higher than Target SOC");
+				throw new VectoException("SSupercap: Min SOC higher than Target SOC");
 			}
 		}
 
@@ -143,8 +143,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var min_hs_energy = min_sc_energy + kin_energy;
 			var target_hs_energy = max_sc_energy - kin_energy;
 
-			var u_min = SC_Voltage(min_hs_energy, superCapData.Capacity);
-			var u_target = SC_Voltage(target_hs_energy, superCapData.Capacity);
+
+			var u_min = SC_Voltage(min_hs_energy, superCapData.Capacity); 
+			var u_target = double.MinValue.SI<Volt>();
+			if (target_hs_energy.IsGreaterOrEqual(0)) {
+				u_target = SC_Voltage(target_hs_energy, superCapData.Capacity);
+			}
+
 
 			result.MinSoC = u_min / superCapData.MaxVoltage;
 			result.TargetSoC = u_target / superCapData.MaxVoltage;
@@ -210,6 +215,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 		private static Volt SC_Voltage(WattSecond energy, Farad capacity)
 		{
+			if (energy.IsSmaller(0)) {
+				throw new ArgumentException($"Supercap: nameof(energy) < 0");
+			}
 			return Math.Sqrt((2.0 * energy / capacity).Value()).SI<Volt>();
 		}
 
