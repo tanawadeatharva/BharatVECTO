@@ -88,9 +88,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.Charger.UpdateFrom(maxPowerGenset);
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
 			TestPowertrain.Gearbox?.UpdateFrom(DataBus.GearboxInfo);
-		
+
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
-			
+			TestPowertrain.ElectricMotor.UpdateFrom(DataBus.GetElectricMotors()
+				.Single(e => e.Position == TestPowertrain.ElectricMotor.Position));
+
+
 			var testResponse = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, false);
 			TestPowertrain.HybridController.ApplyStrategySettings(new HybridStrategyResponse {
 				CombustionEngineOn = false,

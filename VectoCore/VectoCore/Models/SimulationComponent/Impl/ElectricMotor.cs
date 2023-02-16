@@ -28,7 +28,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		
 
 		public bool DeRatingActive { get; protected internal set; }
-		public bool EmOff => PreviousState.EMTorque == null || PreviousState.EMTorque.IsEqual(0) ? true : false;
+		public bool EmOff => PreviousState.EMTorque == null /*|| PreviousState.EMTorque.IsEqual(0)*/
+			? true : false;
 
 		public BusAuxiliariesAdapter BusAux { protected get; set; }
 
@@ -603,7 +604,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				ThermalBuffer = e.ThermalBuffer;
 				DeRatingActive = e.DeRatingActive;
 				PreviousState = e.PreviousState.Clone();
-				CurrentState = e.CurrentState.Clone();
+				//CurrentState = e.CurrentState.Clone();
 				return true;
 			}
 
