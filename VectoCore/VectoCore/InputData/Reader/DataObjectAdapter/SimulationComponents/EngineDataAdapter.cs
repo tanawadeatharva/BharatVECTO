@@ -195,7 +195,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					});
 			}
 
-			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement, gearbox?.Type ?? GearboxType.NoGearbox);
+			retVal.Inertia = DeclarationData.Engine.EngineInertia(vehicle.VehicleType, retVal.Displacement, gearbox?.Type ?? GearboxType.NoGearbox);
 			//retVal.Inertia = engine.Inertia +
 			//				(gbx != null && gbx.Type.AutomaticTransmission()
 			//					? (gbx.Type == GearboxType.APTN || gbx.Type == GearboxType.IHPC ? 0.SI<KilogramSquareMeter>() : torqueConverter.Inertia)

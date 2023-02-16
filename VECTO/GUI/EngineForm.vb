@@ -109,7 +109,7 @@ Public Class EngineForm
 			End If
 		End If
 		
-		TbInertia.Text = DeclarationData.Engine.EngineInertia((TbDispl.Text.ToDouble(0.0)/1000.0/1000.0).SI (Of CubicMeter),
+		TbInertia.Text = DeclarationData.Engine.EngineInertia(JobType, TbDispl.Text.ToDouble(0.0).SI(Unit.SI.Cubic.Centi.Meter).Cast(Of CubicMeter),
 															gbxType).ToGUIFormat()
 	End Sub
 
