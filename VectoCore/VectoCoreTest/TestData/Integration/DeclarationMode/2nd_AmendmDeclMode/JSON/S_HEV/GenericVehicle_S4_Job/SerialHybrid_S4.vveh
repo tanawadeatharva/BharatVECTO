@@ -1,7 +1,7 @@
 {
   "Header": {
     "CreatedBy": "",
-    "Date": "2022-02-08T08:23:19.3752854Z",
+    "Date": "2023-02-17T07:43:02.6082253Z",
     "AppVersion": "3",
     "FileVersion": 10
   },
@@ -12,8 +12,8 @@
     "CurbWeight": 12841.5,
     "CurbWeightExtra": 0.0,
     "MassMax": 19.5,
-    "Loading": 5618.16,
-    "rdyn": 465.0,
+    "Loading": 0.0,
+    "rdyn": 0.0,
     "CdCorrMode": "CdofVdecl",
     "CdCorrFile": "",
     "AxleConfig": {
@@ -22,7 +22,7 @@
         {
           "Inertia": 11.9,
           "Wheels": "275/70 R22.5",
-          "AxleWeightShare": 0.375,
+          "AxleWeightShare": 0.0,
           "TwinTyres": false,
           "RRCISO": 0.0034,
           "FzISO": 31300.0,
@@ -31,7 +31,7 @@
         {
           "Inertia": 11.9,
           "Wheels": "275/70 R22.5",
-          "AxleWeightShare": 0.625,
+          "AxleWeightShare": 0.0,
           "TwinTyres": true,
           "RRCISO": 0.004,
           "FzISO": 31300.0,
@@ -50,7 +50,8 @@
       "Ratio": 1.0,
       "File": ""
     },
-    "InitialSoC": 80,
+    "TankSystem": "Compressed",
+    "InitialSoC": 80.0,
     "PowertrainConfiguration": "SerialHybrid",
     "ElectricMotors": [
       {
@@ -62,10 +63,10 @@
       },
       {
         "Count": 1,
-        "Ratio": 1,
+        "Ratio": 1.0,
         "Position": "GEN",
         "MotorFile": "GenericGen.vem",
-        "MechanicalEfficiency": 1
+        "MechanicalEfficiency": 1.0
       }
     ],
     "Batteries": [
@@ -74,6 +75,8 @@
         "BatteryFile": "GenericBattery.vreess",
         "StreamId": 0
       }
-    ]
+    ],
+    "OvcHev": false,
+    "MaxChargingPower": 0.0
   }
 }
