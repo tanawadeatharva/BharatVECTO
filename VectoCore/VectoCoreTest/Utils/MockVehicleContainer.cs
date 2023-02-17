@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 	{
 		// only CycleData Lookup is set / accessed...
 
-		public List<VectoSimulationComponent> Components = new List<VectoSimulationComponent>();
+		protected List<VectoSimulationComponent> MyComponents = new List<VectoSimulationComponent>();
 		private Watt _axlegearLoss = 0.SI<Watt>();
 		private bool _clutchClosed = true;
 
@@ -267,7 +267,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public void AddComponent(VectoSimulationComponent component)
 		{
-			Components.Add(component);
+			MyComponents.Add(component);
 			ModalData?.RegisterComponent(component);
 
 			//WriteSumData?.RegisterComponent(component, RunData);
@@ -280,7 +280,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public void CommitSimulationStep(Second time, Second simulationInterval)
 		{
-			foreach (var entry in Components) {
+			foreach (var entry in MyComponents) {
 				entry.CommitSimulationStep(time, simulationInterval, ModalData);
 			}
 		}
@@ -337,6 +337,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			throw new NotImplementedException();
 		}
+
+		public IReadOnlyList<VectoSimulationComponent> Components => MyComponents;
 
 
 		#region Implementation of IPowertainInfo

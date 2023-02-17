@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using Castle.Components.DictionaryAdapter.Xml;
 using Moq;
 using Ninject;
 using NUnit.Framework;
