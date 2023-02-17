@@ -35,7 +35,6 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using System.Collections.Concurrent;
-using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;

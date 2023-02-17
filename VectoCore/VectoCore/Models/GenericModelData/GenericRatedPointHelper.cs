@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Castle.Core.Internal;
+using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 				var slopeValue = (fullLoadCurveEntries[r].PowerDrive.Value() - fullLoadCurveEntries[r - 1].PowerDrive.Value()) /
 								 (fullLoadCurveEntries[r].MotorSpeed.Value() - fullLoadCurveEntries[r - 1].MotorSpeed.Value());
 
-				var deltaValue = slopeValue / (slopeValueEntries.IsNullOrEmpty() ? slopeValue  : slopeValueEntries[0].Slope ) -1;
+				var deltaValue = slopeValue / (!slopeValueEntries.Any() ? slopeValue  : slopeValueEntries[0].Slope ) -1;
 
 				slopeValueEntries.Add(new SlopeValueEntry(slopeValue, deltaValue));
 			}

@@ -218,12 +218,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					target.UpdateFrom(source);
 				}
 			} else {
+				var realComponents = (realContainer as IVehicleContainer)?.Components;
+				if (realComponents == null) {
+					throw new VectoException("RealContainer has to implement IVehicleContainer interface!");
+				}
 				foreach (var (_, c) in _components) {
 #if DEBUG
 					var found = false;
 #endif
 					if (c is IUpdateable target) {
-						foreach (var (_, source) in (realContainer as VehicleContainer)._components) {
+						foreach (var source in realComponents) {
 							if (target.UpdateFrom(source)) {
 								ComponentUpdateList.Add((target, source));
 #if DEBUG
@@ -242,7 +246,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				
 #if DEBUG
 				var sourceList = ComponentUpdateList.Select(st => st.Item2).ToArray();
-				foreach (var (_, source) in (realContainer as VehicleContainer)._components) {
+				foreach (var source in realComponents) {
 					if (!sourceList.Contains(source)){
 						Console.WriteLine("Real Component is not used for update: " + source.GetType());
 					}
@@ -289,6 +293,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			Preprocessors.Add(simulationPreprocessor);
 		}
+
+		public IReadOnlyList<VectoSimulationComponent> Components => _components.Select(x => x.Item2).ToList();
 
 		public virtual void StartSimulationRun()
 		{
