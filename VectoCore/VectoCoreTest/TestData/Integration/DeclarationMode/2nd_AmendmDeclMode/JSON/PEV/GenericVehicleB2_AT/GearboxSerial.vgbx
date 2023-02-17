@@ -13,41 +13,41 @@
     "Gears": [
       {
         "Ratio": 6.2,
-        "Efficiency": 0.98
+        "LossMap": "Axle_4x2_LH.vtlm"
       },
       {
         "Ratio": 3.4,
-        "Efficiency": 0.98,
+        "LossMap": "Gear_indirect.vtlm",
         "ShiftPolygon": "AT-Shift.vgbs",
         "MaxTorque": ""
       },
       {
         "Ratio": 1.9,
-        "Efficiency": 0.98,
+        "LossMap": "Gear_indirect.vtlm",
         "ShiftPolygon": "AT-Shift.vgbs",
         "MaxTorque": ""
       },
       {
         "Ratio": 1.42,
-        "Efficiency": 0.98,
+        "LossMap": "Gear_indirect.vtlm",
         "ShiftPolygon": "AT-Shift.vgbs",
         "MaxTorque": ""
       },
       {
         "Ratio": 1.0,
-        "Efficiency": 0.98,
+        "LossMap": "Gear_indirect.vtlm",
         "ShiftPolygon": "AT-Shift.vgbs",
         "MaxTorque": ""
       },
       {
         "Ratio": 0.7,
-        "Efficiency": 0.98,
+        "LossMap": "Gear_indirect.vtlm",
         "ShiftPolygon": "AT-Shift.vgbs",
         "MaxTorque": ""
       },
       {
         "Ratio": 0.62,
-        "Efficiency": 0.98,
+           "LossMap": "Gear_indirect.vtlm",
         "ShiftPolygon": "AT-Shift.vgbs",
         "MaxTorque": ""
       }

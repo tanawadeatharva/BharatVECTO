@@ -751,8 +751,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			IEPTO epto = null;
 			if (data.PTO?.PTOCycle != null) {
 				var pevPTOController = GetPEV_SHEVIdleController(data.PTO, container);
-				cycle.IdleController = pevPTOController;
-				var eptoAux = new EPTO(pevPTOController);
+				if (cycle != null) {
+					cycle.IdleController = pevPTOController;
+				}
+				var eptoAux = new EPTO(pevPTOController, container);
+				container.AddComponent(eptoAux);
 				elAux.AddAuxiliary(eptoAux);
 				epto = eptoAux;
 			}
@@ -1612,6 +1615,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Brakes(container));
 
 			var pos = data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
+			AddElectricAuxiliaries(data, container, es, null);
 			switch (pos) {
 				case PowertrainPosition.BatteryElectricE4:
 					//-->Engine E4
@@ -1659,6 +1663,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				default:
 					throw new ArgumentOutOfRangeException(nameof(pos), pos, "Invalid engine powertrain position for simple serial hybrid vehicles.");
+
+
 			}
 		}
 
@@ -1706,6 +1712,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(GetRetarder(RetarderType.AxlegearInputRetarder, data.Retarder, container))
 				.AddComponent(gearbox)
 				.AddComponent(em);
+
+			AddElectricAuxiliaries(data, container, es, null);
 		}
 
 		/// <summary>
@@ -1725,7 +1733,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			
 			GetElectricMachine(PowertrainPosition.GEN, data.ElectricMachinesData, container, es, ctl)
 				.AddComponent(ice);
-
+			//AddElectricAuxiliaries(data, container,es, null);
 			new ATClutchInfo(container);
 			new DummyGearboxInfo(container, new GearshiftPosition(0));
 		}
@@ -1876,6 +1884,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(data.GearboxData is null ? null : GetSimpleGearbox(container, data))
 				.AddComponent(GetElectricMachine(data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1,
 					data.ElectricMachinesData, container, es, new SimpleElectricMotorControl()));
+			AddElectricAuxiliaries(data, container, es, null);
 			if (data.AxleGearData == null) {
 				new DummyAxleGearInfo(container); // necessary for certain IEPC configurations
 			}
@@ -2247,7 +2256,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public PerSecond EngineRatedSpeed { get; }
 		public PerSecond EngineN95hSpeed { get; }
 		public PerSecond EngineN80hSpeed { get; }
-		public bool EngineOn { get; }
+		public bool EngineOn { get; private set; }
 
 		#endregion
 
@@ -2257,7 +2266,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#endregion
 
-		protected override bool DoUpdateFrom(object other) => false;
+		protected override bool DoUpdateFrom(object other)
+		{
+			if (other is IEngineInfo info) {
+				EngineOn = info.EngineOn;
+				return true;
+			} else {
+				return false;
+			}
+
+		}
 	}
 
 	public class SimpleElectricMotorControl : IElectricMotorControl

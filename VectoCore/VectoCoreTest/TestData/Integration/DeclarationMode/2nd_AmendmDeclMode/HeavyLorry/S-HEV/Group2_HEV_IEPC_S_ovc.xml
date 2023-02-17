@@ -25,7 +25,8 @@
 		<SleeperCab>false</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>S-IEPC</ArchitectureID>
-		<OvcHev>false</OvcHev>
+		<OvcHev>true</OvcHev>
+		<MaxChargingPower>5000</MaxChargingPower>
 		<ADAS xsi:type="ADAS_HEV_Type">
 			<EngineStopStart>false</EngineStopStart>
 			<PredictiveCruiseControl>none</PredictiveCruiseControl>

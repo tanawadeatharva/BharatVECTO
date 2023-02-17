@@ -161,6 +161,12 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return si.Abs();
 		}
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static ConvertedSI Abs(ConvertedSI cSi)
+		{
+			return cSi.Abs();
+		}
 
 		/// <summary>
 		/// Returns the minimum of two values.

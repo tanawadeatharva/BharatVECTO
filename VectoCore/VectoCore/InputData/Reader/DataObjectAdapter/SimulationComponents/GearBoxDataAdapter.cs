@@ -295,19 +295,23 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			var retVal = SetCommonGearboxData(gearbox);
 
-            if (adas != null && retVal.Type.AutomaticTransmission() && adas.EcoRoll != EcoRollType.None &&
-                !adas.ATEcoRollReleaseLockupClutch.HasValue)
-            {
-                throw new VectoException("Input parameter ATEcoRollReleaseLockupClutch required for AT transmission");
-            }
+           
 			if ((inputData.VehicleType == VectoSimulationJobType.BatteryElectricVehicle || inputData.VehicleType == VectoSimulationJobType.SerialHybridVehicle) &&
 				gearbox.Type.AutomaticTransmission())
 			{
-				// PEV with APT-S or APT-P transmission are simulated as APT-N
-				retVal.Type = GearboxType.APTN;
-			}
 
-			retVal.ATEcoRollReleaseLockupClutch =
+				// PEV with APT-S or APT-P transmission are simulated as APT-N
+				if (retVal.Type.IsOneOf(GearboxType.ATPowerSplit, GearboxType.ATSerial)) {
+					retVal.Type = GearboxType.APTN;
+				}
+			}
+            if (adas != null && retVal.Type.AutomaticTransmission()  && adas.EcoRoll != EcoRollType.None &&
+                           !adas.ATEcoRollReleaseLockupClutch.HasValue)
+            {
+                throw new VectoException("Input parameter ATEcoRollReleaseLockupClutch required for AT transmission");
+            }
+
+            retVal.ATEcoRollReleaseLockupClutch =
 				adas != null && adas.EcoRoll != EcoRollType.None && retVal.Type.AutomaticTransmission()
 					? (adas.ATEcoRollReleaseLockupClutch.HasValue ? adas.ATEcoRollReleaseLockupClutch.Value : false)
 					: false;

@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override bool? ATEcoRollReleaseLockupClutch => null;
 
-		public override EcoRollType EcoRoll => EcoRollType.WithEngineStop;
+		public override EcoRollType EcoRoll => EcoRollType.None;
 		#endregion
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;

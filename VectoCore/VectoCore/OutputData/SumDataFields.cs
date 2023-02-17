@@ -362,7 +362,20 @@ namespace TUGraz.VectoCore.OutputData
 			{ ROLLING_RESISTANCE_COEFFICIENT_WO_TRAILER, SumFunc((r, m) =>   r.VehicleData?.RollResistanceCoefficientWithoutTrailer)},
 			{ ROLLING_RESISTANCE_COEFFICIENT_W_TRAILER, SumFunc((r, m) =>    r.VehicleData?.TotalRollResistanceCoefficient)},
 			{ R_DYN, SumFunc((r, m) => (ConvertedSI)r.VehicleData?.DynamicTyreRadius)},
-			{ ADAS_TECHNOLOGY_COMBINATION, SumFunc((r, m) => r.VehicleData?.ADAS != null ? DeclarationData.ADASCombinations.Lookup(r.VehicleData.ADAS, r.GearboxData?.Type ?? GearboxType.NoGearbox).ID : "")},
+			{ ADAS_TECHNOLOGY_COMBINATION, SumFunc((r, m) => {
+				string ret = "";
+				if (r.VehicleData?.ADAS == null) {
+					return null;
+				}
+
+				var gbxType = r.InputData?.JobInputData.Vehicle.Components?.GetGearboxType() ??
+							r.InputData?.PrimaryVehicleData?.Vehicle.Components?.GetGearboxType();
+
+				if (gbxType != null) {
+					ret = DeclarationData.ADASCombinations.Lookup(r.VehicleData.ADAS, gbxType.Value).ID;
+				}
+				return ret;
+			})},
 			{ REESS_CAPACITY, SumFunc((r, m) => r.BatteryData?.Capacity != null ? $"{r.BatteryData?.Capacity.AsAmpHour} Ah" : r.SuperCapData?.Capacity != null ?  $"{r.SuperCapData.Capacity} F" : null)},
 			{ TCU_MODEL, SumFunc((r, m) =>  r.ShiftStrategy)},
 			{ PTO_TECHNOLOGY, SumFunc((r, m) => r.PTO?.TransmissionType ?? "")},
@@ -715,5 +728,7 @@ namespace TUGraz.VectoCore.OutputData
 		public static readonly WriteAuxEntry AuxDataValue = (r, m, a) => m.AuxiliaryWork(a).ConvertToKiloWattHour();
 
 	}
+
+
 	
 }

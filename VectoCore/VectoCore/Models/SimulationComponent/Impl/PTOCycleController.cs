@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
     }
 
-	public class EPTOCycleController : IIdleControllerSwitcher
+	public class EPTOCycleController : IIdleControllerSwitcher, IUpdateable
 	{
 		internal readonly IDrivingCycleData Data;
 		protected Second AbsTime { get; private set; }
@@ -139,6 +139,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CycleIterator = new DrivingCycleEnumerator(Data);
 			_ptoActive = false;
 			AbsTime = 0.SI<Second>();
+			
 		}
 
 		public CycleData CycleData
@@ -185,6 +186,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			_ptoActive = false;
 			Reset();
+		}
+
+		#endregion
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other)
+		{
+			if (!DataBus.IsTestPowertrain)
+			{
+				throw new VectoException("Only components in a testpowertrain are allowed to be updated!");
+			}
+			if (other is EPTOCycleController otherPtoCycle) {
+				Reset();
+				while (this.CycleIterator.Current != otherPtoCycle.CycleIterator.Current) {
+					this.CycleIterator.MoveNext();
+				}
+
+				this._ptoActive = otherPtoCycle._ptoActive;
+				
+				return true;
+			} else {
+				return false;
+			}
+
+
 		}
 
 		#endregion

@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 
 namespace TUGraz.VectoCommon.Utils
@@ -73,6 +74,12 @@ namespace TUGraz.VectoCommon.Utils
 			unchecked {
 				return (_value.GetHashCode() * 397) ^ (Units != null ? Units.GetHashCode() : 0);
 			}
+		}
+
+		[DebuggerHidden]
+		public ConvertedSI Abs()
+		{
+			return new ConvertedSI(Math.Abs(Value), Units);
 		}
 
 		public static implicit operator double(ConvertedSI self)
@@ -336,6 +343,8 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return new ConvertedSI(m3pm3m.Value() * CubicMeterToLiter * Kilo, "l/m³-km");
 		}
+
+	
 
 		public static Meter ConvertToMeter(this ConvertedSI mm)
 		{
