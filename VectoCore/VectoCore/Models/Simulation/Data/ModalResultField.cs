@@ -36,6 +36,7 @@ using System.Security.Policy;
 using System.Text.RegularExpressions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
@@ -367,6 +368,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(double))] HybridStrategyScore,
 
 		[ModalResultField(typeof(double))]HybridStrategySolution,
+
+		[ModalResultField(typeof(int), caption: "HybridStrategyState")] HybridStrategyState,
 
 		[ModalResultField(typeof(int), caption: "BusAux_Overrun [bool]")] BusAux_OverrunFlag,
 		

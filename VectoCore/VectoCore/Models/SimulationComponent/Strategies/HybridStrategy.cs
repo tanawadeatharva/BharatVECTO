@@ -2186,7 +2186,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		{
 			container[ModalResultField.HybridStrategyScore] = (CurrentState.Solution?.Score ?? 0) / 1e3;
 			container[ModalResultField.HybridStrategySolution] = CurrentState.Solution?.U ?? -100;
-
 			container[ModalResultField.MaxPropulsionTorqe] = CurrentState.MaxGbxTq ?? 0.SI<NewtonMeter>();
 
 			//if (CurrentState.Evaluations != null) {

@@ -43,8 +43,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.Gearbox?.UpdateFrom(DataBus.GearboxInfo);
 			
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
+			TestPowertrain.ElectricMotor.UpdateFrom(DataBus.GetElectricMotors()
+				.Single(e => e.Position == TestPowertrain.ElectricMotor.Position));
 
-			var testResponse = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, false);
+            var testResponse = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, false);
 			TestPowertrain.HybridController.ApplyStrategySettings(new HybridStrategyResponse {
 				CombustionEngineOn = false, 
 				MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> {
@@ -120,14 +122,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public enum StateMachineState
 		{
 			Undefined,
-			Acc_S0, // GEN = 0
-			Acc_S1, // P_GEN = P_opt, SoC <= SoC_min && P_demand < P_opt || SoC >= SoC_min && SoC <= SoC_target && P_demand <= P_opt
-			Acc_S2, // P_GEN = P_max, SoC <= S
-			Acc_S3, // P_GEN = P_max, P_drive = P_GEN
+			Acc_S0 = 10, // GEN = 0
+			Acc_S1 = 11, // P_GEN = P_opt, SoC <= SoC_min && P_demand < P_opt || SoC >= SoC_min && SoC <= SoC_target && P_demand <= P_opt
+			Acc_S2 = 12, // P_GEN = P_max, SoC <= S
+			Acc_S3 = 13, // P_GEN = P_max, P_drive = P_GEN
 
-			Break_S0,
-			Break_S1,
-			Break_S2,
+			Break_S0 = -10,
+			Break_S1 = -11,
+			Break_S2 = -12,
 		}
 
 		public enum GensetState
@@ -772,7 +774,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public bool AllowEmergencyShift { get; set; }
 		public void WriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
-			//throw new NotImplementedException();
+			container[ModalResultField.HybridStrategyState] = (int)CurrentState.SMState;
 		}
 
 		public void OperatingpointChangedDuringRequest(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
