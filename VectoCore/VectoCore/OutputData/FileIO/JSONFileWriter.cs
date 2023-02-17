@@ -601,8 +601,8 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("PowertrainConfiguration", vehicle.VehicleType == VectoSimulationJobType.SerialHybridVehicle ? "SerialHybrid" : vehicle.VehicleType == VectoSimulationJobType.IHPC ? "IHPC":  "ParallelHybrid");
 		body.Add("ElectricMotors", GetElectricMotors(vehicle, basePath));
 		body.Add("Batteries", GetBattery(vehicle, basePath));
-		body.Add("OvcHev", true);
-		body.Add("MaxChargingPower", vehicle.MaxChargingPower.ConvertToKiloWatt().Value);
+		body.Add("OvcHev", vehicle.OvcHev);
+		body.Add("MaxChargingPower", vehicle.OvcHev ? vehicle.MaxChargingPower.ConvertToKiloWatt().Value : 0);
 		WriteFile(header, body, filename);
 	}
 
@@ -669,7 +669,7 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("Batteries", battery);
 		if (vehicle.VehicleType == VectoSimulationJobType.IEPC_S) {
 			body.Add("OvcHev", vehicle.OvcHev);
-			body.Add("MaxChargingPower", vehicle.MaxChargingPower.ConvertToKiloWatt().Value);
+			body.Add("MaxChargingPower", vehicle.OvcHev ? vehicle.MaxChargingPower.ConvertToKiloWatt().Value : 0);
 		}
 
 		//body.Add("IdlingSpeed", vehicle.EngineIdleSpeed.AsRPM);
@@ -800,6 +800,7 @@ public class JSONFileWriter : IOutputFileWriter
 					auxOut.Add("Type", auxEntry.Type.Name());
 					auxOut.Add("Technology", new string[] { });
 				} else {
+					auxOut.Add("ID", auxEntry.Type.Key());
 					auxOut.Add("Type", auxEntry.Type.Name());
 					auxOut.Add("Technology", engineeringAuxEntry.Technology);
 				}
@@ -911,7 +912,9 @@ public class JSONFileWriter : IOutputFileWriter
 			body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
 		}
 
-		body.Add("HybridStrategyParams", GetRelativePath(input.JobInputData.HybridStrategyParameters.Source, basePath));
+		if (!job.SavedInDeclarationMode) {
+			body.Add("HybridStrategyParams", GetRelativePath(input.JobInputData.HybridStrategyParameters.Source, basePath));
+		}
 
 		var auxList = new List<object>();
 		if (job.SavedInDeclarationMode && job.Vehicle is IVehicleDeclarationInputData declVehicle) {
@@ -923,13 +926,14 @@ public class JSONFileWriter : IOutputFileWriter
 					auxOut.Add("Type", auxEntry.Type.Name());
 					auxOut.Add("Technology", new string[] { });
 				} else {
+					auxOut.Add("ID", auxEntry.Type.Key());
 					auxOut.Add("Type", auxEntry.Type.Name());
 					auxOut.Add("Technology", auxEntry.Technology);
 				}
 
 				auxList.Add(auxOut);
 			}
-			if (declVehicle.Components.BusAuxiliaries != null) {
+			if (!job.SavedInDeclarationMode && declVehicle.Components.BusAuxiliaries != null) {
 				body.Add("BusAux", GetRelativePath(job.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile, basePath));
 			}
 			body.Add("Aux", auxList);
