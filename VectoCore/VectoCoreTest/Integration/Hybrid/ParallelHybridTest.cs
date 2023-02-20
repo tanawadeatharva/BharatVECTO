@@ -1566,6 +1566,15 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			RunHybridJob(jobFile, cycleIdx);
 		}
 
+
+        [TestCase(@"E:\QUAM\tmp\HybridStrategy\P1_Group31aU_ll\P1_CityBusU_ll.vecto"),
+		 TestCase(@"E:\QUAM\tmp\HybridStrategy\P1_Group31aU_rl\P1_CityBusU_rl.vecto"),
+		]
+		public void HybridTestGerard(string jobfile)
+		{
+			RunHybridJob(jobfile, 0);
+		}
+
 		// =================================================
 
 		public static JobContainer CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
