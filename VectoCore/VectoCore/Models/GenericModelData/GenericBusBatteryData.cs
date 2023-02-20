@@ -111,10 +111,10 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 						secIndex = i;
 					}
 
-					var fstSoC = sortedOcvData[fstIndex].ParseDouble(XMLNames.REESS_OCV_SoC);
-					var secSoC = sortedOcvData[secIndex].ParseDouble(XMLNames.REESS_OCV_SoC);
-					var fstOCV = sortedOcvData[fstIndex].ParseDouble(XMLNames.REESS_OCV_OCV);
-					var secOCV = sortedOcvData[secIndex].ParseDouble(XMLNames.REESS_OCV_OCV);
+					var fstSoC = sortedOcvData[fstIndex].ParseDouble(BatterySOCReader.Fields.StateOfCharge);
+					var secSoC = sortedOcvData[secIndex].ParseDouble(BatterySOCReader.Fields.StateOfCharge);
+					var fstOCV = sortedOcvData[fstIndex].ParseDouble(BatterySOCReader.Fields.BatteryVoltage);
+					var secOCV = sortedOcvData[secIndex].ParseDouble(BatterySOCReader.Fields.BatteryVoltage);
 
 					return VectoMath.Interpolate(fstSoC, secSoC, fstOCV, secOCV, 50).SI<Volt>();
 				}

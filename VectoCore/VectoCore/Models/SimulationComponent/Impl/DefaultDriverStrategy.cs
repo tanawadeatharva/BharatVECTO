@@ -621,7 +621,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public MeterPerSecond ApplyOverspeed(MeterPerSecond targetSpeed)
+		public virtual MeterPerSecond ApplyOverspeed(MeterPerSecond targetSpeed)
 		{
 			return (targetSpeed + GetOverspeed()).LimitTo(
 					0.KMPHtoMeterPerSecond(), VehicleCategory.IsBus() ? Constants.BusParameters.MaxBusSpeed : 500.KMPHtoMeterPerSecond());
