@@ -218,6 +218,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					ActualChargeDepletingRange = ranges.ActualChargeDepletingRange;
 					EquivalentAllElectricRange = ranges.EquivalentAllElectricRange;
 					ZeroCO2EmissionsRange = ranges.ZeroCO2EmissionsRange;
+					ElectricEnergyConsumption = ranges.ElectricEnergyConsumption;
 				}
 
 				if (data.HasGearbox) {

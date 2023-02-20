@@ -185,8 +185,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var distanceToSpeedChange = nextSpeedChange - PreviousState.Distance;
 				var estimatedTimeToSpeedChange = distanceToSpeedChange / DataBus.VehicleInfo.VehicleSpeed;
 				if (estimatedTimeToSpeedChange.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval / 2) &&
-					DataBus.VehicleInfo.VehicleSpeed.IsSmaller(Left.VehicleTargetSpeed, 1.KMPHtoMeterPerSecond()) &&
-					DataBus.VehicleInfo.VehicleSpeed.IsSmaller(Right.VehicleTargetSpeed, 1.KMPHtoMeterPerSecond())) {
+					DataBus.VehicleInfo.VehicleSpeed.IsSmaller(DataBus.DriverInfo.ApplyOverspeed(Left.VehicleTargetSpeed), 0.1.KMPHtoMeterPerSecond()) &&
+					DataBus.VehicleInfo.VehicleSpeed.IsSmaller(DataBus.DriverInfo.ApplyOverspeed(Right.VehicleTargetSpeed), 0.1.KMPHtoMeterPerSecond())) {
 					CurrentState.Response = DriveDistance(absTime, ds);
 					return CurrentState.Response;
 				}

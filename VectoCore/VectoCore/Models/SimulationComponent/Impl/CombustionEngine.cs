@@ -494,7 +494,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			
 			var (pWHRelMap, pWHRelCorr) =  GetWHRPower(ModelData.ElectricalWHR, engineSpeed, engineTorque);
 			var (pWHRmechMap, pWHRmechCorr) = GetWHRPower(ModelData.MechanicalWHR, engineSpeed, engineTorque);
-			
+
+			if (DataBus.BatteryInfo != null && Math.Abs(DataBus.BatteryInfo.StateOfCharge - DataBus.BatteryInfo.MaxSoC) < 0.01) {
+				// we are close to the max charge - 'bypass' electric WHR...
+				pWHRelCorr = 0.SI<Watt>();
+			}
+
 			container[ModalResultField.P_WHR_el_map] = pWHRelMap;
 			container[ModalResultField.P_WHR_el_corr] = pWHRelCorr;
 

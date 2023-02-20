@@ -1785,6 +1785,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				default: throw new VectoException("Wrong CycleType for SimplePowertrain");
 			}
 
+			if ((data.SuperCapData != null || data.BatteryData != null) && data.EngineData.WHRType.IsElectrical()) {
+				var dcDcConverterEfficiency = DeclarationData.WHRChargerEfficiency;
+				var whrCharger = new WHRCharger(container, dcDcConverterEfficiency);
+				es.Connect(whrCharger);
+				engine.WHRCharger = whrCharger;
+			}
+
 			vehicle.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ctl)
 				.AddComponent(new Brakes(container))
@@ -1874,7 +1881,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(data.GearboxData is null ? null : GetSimpleGearbox(container, data))
 				.AddComponent(GetElectricMachine(data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1,
-					data.ElectricMachinesData, container, es, new DummyElectricMotorControl()));
+					data.ElectricMachinesData, container, es, new SimpleElectricMotorControl()));
 			if (data.AxleGearData == null) {
 				new DummyAxleGearInfo(container); // necessary for certain IEPC configurations
 			}
@@ -2262,10 +2269,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 	public class SimpleElectricMotorControl : IElectricMotorControl
 	{
+		public bool EmOff { get; set; }
+
 		public NewtonMeter MechanicalAssistPower(Second absTime, Second dt, NewtonMeter outTorque, PerSecond prevOutAngularVelocity,
 			PerSecond currOutAngularVelocity, NewtonMeter maxDriveTorque, NewtonMeter maxRecuperationTorque,
 			PowertrainPosition position, bool dryRun)
 		{
+			if (EmOff) {
+				return null;
+			}
+
+			
 			if (dryRun) {
 				return -outTorque;
 			}
@@ -2294,6 +2308,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		#endregion
 	}
 
+	[Obsolete("Replaced with SimpleElectricMotorControl")]
 	public class DummyElectricMotorControl : IElectricMotorControl
 	{
 		#region Implementation of IElectricMotorControl
@@ -2338,6 +2353,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public MeterPerSquareSecond DriverAcceleration => 0.SI<MeterPerSquareSecond>();
 		public PCCStates PCCState => PCCStates.OutsideSegment;
 		public MeterPerSecond NextBrakeTriggerSpeed => 0.SI<MeterPerSecond>();
+		public MeterPerSecond ApplyOverspeed(MeterPerSecond targetSpeed) => targetSpeed;
 
 		#endregion
 

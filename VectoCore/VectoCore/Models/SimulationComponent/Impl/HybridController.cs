@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (retryCount > 10) {
 					throw new VectoException("HybridStrategy: retry count exceeded! {0}", DebugData);
 				}
-
+				var engaged = DataBus.GearboxInfo.GearEngaged(absTime);
 				retry = false;
 				var strategyResponse = Strategy.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				DebugData.Add($"[HC-R-0-{retryCount}]", strategyResponse);
@@ -162,6 +162,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					SelectedGear = strategySettings.NextGear;
 				}
 
+				
 				CurrentStrategySettings = strategySettings;
 				retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				DebugData.Add($"HC.R-1-{retryCount}", new {
@@ -200,6 +201,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				if (retVal is ResponseDifferentGearEngaged) {
+					retryCount++;
+					retry = true;
+					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun,
+						retVal);
+					continue;
+				}
+
+				if (retVal is ResponseOverload && DataBus.DriverInfo.DrivingAction == DrivingAction.Brake &&
+					engaged != DataBus.GearboxInfo.GearEngaged(absTime)) {
 					retryCount++;
 					retry = true;
 					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun,
@@ -435,9 +445,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			protected virtual GearshiftPosition InitStartGear(Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
-				if (!DataBus.EngineCtl.CombustionEngineOn) {
-					return _nextGear;
-				}
+				//if (!DataBus.EngineCtl.CombustionEngineOn) {
+				//	return _nextGear;
+				//}
 
 				foreach (var gear in GearList.IterateGears(MaxStartGear, GearList.First())) {
 					//for (var gear = MaxStartGear; gear > 1; gear--) {
@@ -450,11 +460,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 					//var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
 					TestPowertrain.UpdateComponents();
+					
 					TestPowertrain.Gearbox.Gear = gear;
 					TestPowertrain.Gearbox._nextGear = gear;
 					if (_controller.CurrentStrategySettings != null) {
 						TestPowertrain.HybridController.ApplyStrategySettings(_controller.CurrentStrategySettings);
 					}
+
+					TestPowertrain.CombustionEngine.CombustionEngineOn = true;
 
 					var response = TestPowertrain.Gearbox.Initialize(outTorque, outAngularVelocity);
 					response = TestPowertrain.Gearbox.Request(absTime,

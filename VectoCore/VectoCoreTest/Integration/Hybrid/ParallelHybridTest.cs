@@ -1526,7 +1526,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			graphWriter.Write(modFilename);
 		}
 
-		public const string Group5_P4_AMT = @"TestData\Hybrids\GenericVehicle_Group5_P3\P3 Group 5.vecto";
+		public const string Group5_P4_AMT = @"TestData\Hybrids\GenericVehicle_Group5_P4\P4 Group 5.vecto";
 
 		[
 			TestCase(Group5_P4_AMT, 0, TestName = "P4 Hybrid DriveCycle LongHaul"),
@@ -1564,6 +1564,15 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		public void P4HybridGroup5_VehilcePropLimit_DriveCycle(string jobFile, int cycleIdx)
 		{
 			RunHybridJob(jobFile, cycleIdx);
+		}
+
+
+        [TestCase(@"E:\QUAM\tmp\HybridStrategy\P1_Group31aU_ll\P1_CityBusU_ll.vecto"),
+		 TestCase(@"E:\QUAM\tmp\HybridStrategy\P1_Group31aU_rl\P1_CityBusU_rl.vecto"),
+		]
+		public void HybridTestGerard(string jobfile)
+		{
+			RunHybridJob(jobfile, 0);
 		}
 
 		// =================================================

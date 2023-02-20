@@ -259,6 +259,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override bool DoUpdateFrom(object other) {
 			if (other is Clutch c) {
 				PreviousState = c.PreviousState.Clone();
+				
 				return true;
 			}
 			return false;

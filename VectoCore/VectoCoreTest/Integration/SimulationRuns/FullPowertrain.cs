@@ -168,6 +168,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var runData = new VectoRunData() {
 				JobName = "Coach_FullPowertrain",
+				Cycle = cycleData,
 				EngineData = engineData,
 				VehicleData = vehicleData,
 				AxleGearData = axleGearData,
@@ -175,8 +176,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				GearshiftParameters = CreateGearshiftData(),
 				AirdragData = airDragData,
 				DriverData = driverData,
+				Retarder = new RetarderData() {Type = RetarderType.None },
 				SimulationType = SimulationType.DistanceCycle,
-				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
+				Aux = new List<VectoRunData.AuxData>()
 			};
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain");
 			var modData = new ModalDataContainer(runData, fileWriter, null);

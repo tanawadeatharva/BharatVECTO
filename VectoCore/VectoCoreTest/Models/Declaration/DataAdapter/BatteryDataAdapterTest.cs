@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
-using Castle.Core.Resource;
 using Moq;
 using NLog.LayoutRenderers;
 using NUnit.Framework;
