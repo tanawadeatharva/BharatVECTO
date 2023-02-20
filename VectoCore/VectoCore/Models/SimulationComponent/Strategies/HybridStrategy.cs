@@ -42,55 +42,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				testContainer, -grad, grad);
 		}
 
-		protected IResponse RequestDryRun_Orig(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition nextGear, HybridStrategyResponse cfg)
-		{
-			TestPowertrain.UpdateComponents();
-
-			TestPowertrain.Gearbox.Gear = DataBus.VehicleInfo.VehicleStopped ? Controller.ShiftStrategy.NextGear : PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear;
-			TestPowertrain.Gearbox.Disengaged = !nextGear.Engaged;
-			TestPowertrain.Gearbox.DisengageGearbox = !nextGear.Engaged;
-			TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
-			TestPowertrain.HybridController.ApplyStrategySettings(cfg);
-			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
-
-			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
-			
-			if (nextGear.Engaged && !nextGear.Equals(TestPowertrain.Gearbox.Gear)) {
-				if (!AllowEmergencyShift && ModelData.GearboxData.Gears[nextGear.Gear].Ratio > ModelData.GearshiftParameters.RatioEarlyUpshiftFC) {
-					return null;
-				}
-
-				if (!AllowEmergencyShift && ModelData.GearboxData.Gears[nextGear.Gear].Ratio >= ModelData.GearshiftParameters.RatioEarlyDownshiftFC) {
-					return null;
-				}
-				var estimatedVelocityPostShift = !VelocityDropData.Valid ? DataBus.VehicleInfo.VehicleSpeed : VelocityDropData.Interpolate(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
-				if (!AllowEmergencyShift && !estimatedVelocityPostShift.IsGreater(DeclarationData.GearboxTCU.MIN_SPEED_AFTER_TRACTION_INTERRUPTION)) {
-					return null;
-				}
-
-				TestPowertrain.Gearbox.Gear = nextGear;
-				var init = TestPowertrain.Container.VehiclePort.Initialize(estimatedVelocityPostShift, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
-				if (!AllowEmergencyShift && init.Engine.EngineSpeed.IsSmaller(ModelData.EngineData.IdleSpeed)) {
-					return null;
-				}
-			}
-
-			TestPowertrain.Gearbox._nextGear = Controller.ShiftStrategy.NextGear;
-			TestPowertrain.Gearbox.Disengaged = !nextGear.Engaged;
-			TestPowertrain.CombustionEngine.UpdateFrom(DataBus.EngineInfo);
-			TestPowertrain.Gearbox.UpdateFrom(DataBus.GearboxInfo);
-			TestPowertrain.Clutch.UpdateFrom(DataBus.ClutchInfo);
-			var pos = ModelData.ElectricMachinesData.FirstOrDefault().Item1;
-			TestPowertrain.ElectricMotor.UpdateFrom(DataBus.ElectricMotorInfo(pos));
-			foreach (var emPos in TestPowertrain.ElectricMotorsUpstreamTransmission.Keys) {
-				TestPowertrain.ElectricMotorsUpstreamTransmission[pos].PreviousState.EMSpeed = DataBus.ElectricMotorInfo(emPos).ElectricMotorSpeed;
-			}
-
-			var retVal = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, true);
-			retVal.HybridController.StrategySettings = cfg;
-			return retVal;
-		}
-
 		protected override IResponse RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque,
 			PerSecond outAngularVelocity, GearshiftPosition nextGear, HybridStrategyResponse cfg)
 		{
