@@ -1553,6 +1553,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && allUnderload) {
+				var emPos = DataBus.PowertrainInfo.ElectricMotorPositions.First(x => x != PowertrainPosition.GEN);
+				if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && DataBus.VehicleInfo.VehicleStopped &&
+					emPos == PowertrainPosition.HybridP1) {
+					best = eval.First(x => double.IsNaN(x.U));
+					return best;
+				}
 				if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
 					var filtered = eval.Where(x => !x.IgnoreReason.InvalidEngineSpeed())
 										.OrderBy(x => Math.Abs(GearList.Distance(currentGear, x.Gear))).ToArray();
@@ -2097,10 +2103,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				tmp.FuelCosts = iceOff ? 0 : double.NaN;
 				tmp.IgnoreReason |= HybridConfigurationIgnoreReason.EngineSpeedTooHigh;
 			}
-			if (resp.Engine.EngineSpeed.IsSmallerOrEqual(ModelData.EngineData.IdleSpeed)) {
-				tmp.FuelCosts = iceOff ? 0 : double.NaN;
-				tmp.IgnoreReason |= HybridConfigurationIgnoreReason.EngineSpeedTooLow;
+
+			if (!ModelData.GearboxData.Type.AutomaticTransmission()) {
+				if (resp.Engine.EngineSpeed.IsSmallerOrEqual(ModelData.EngineData.IdleSpeed)) {
+					tmp.FuelCosts = iceOff ? 0 : double.NaN;
+					tmp.IgnoreReason |= HybridConfigurationIgnoreReason.EngineSpeedTooLow;
+				}
+			} else {
+				if (resp.Engine.EngineSpeed.IsSmaller(ModelData.EngineData.IdleSpeed)) {
+					tmp.FuelCosts = iceOff ? 0 : double.NaN;
+					tmp.IgnoreReason |= HybridConfigurationIgnoreReason.EngineSpeedTooLow;
+				}
 			}
+
 
 			//if (resp.Engine.EngineSpeed != null && resp.Gearbox.Gear.Engaged && GearList.HasSuccessor(resp.Gearbox.Gear) && ModelData.GearboxData.Gears[resp.Gearbox.Gear.Gear].ShiftPolygon.IsAboveUpshiftCurve(resp.Engine.TorqueOutDemand, resp.Engine.EngineSpeed)) {
 			//	//lastShiftTime = absTime;
