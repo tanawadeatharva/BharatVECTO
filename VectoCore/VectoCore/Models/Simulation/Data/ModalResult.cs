@@ -318,7 +318,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public static readonly ModalResultField[] HybridControllerSignals = {
 			ModalResultField.HybridStrategyScore,
 			ModalResultField.HybridStrategySolution,
-			ModalResultField.MaxPropulsionTorqe
+			ModalResultField.MaxPropulsionTorqe,
+			ModalResultField.HybridStrategyState,
 		};
 
 		// ------------------------------------------------------------------------------------

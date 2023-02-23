@@ -182,6 +182,7 @@ public class LorrySimulation
 			ModalResultField.EM_Off_,
 			ModalResultField.HybridStrategyScore, 
 			ModalResultField.HybridStrategySolution,
+			ModalResultField.HybridStrategyState,
 		}.Select(m => m.GetCaption()).Concat(new List<string>() {
 			"DriverAction",
 			"EcoRollConditionsMet",
@@ -821,6 +822,10 @@ public class LorrySimulation
 	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S2_supercap_epto.xml", 8)]
 	public void EPTO(string jobFile, int nrRuns)
 	{
+		//"HeavyLorry\S-HEV\Group2_HEV_S2_supercap_epto.xml"
+		///Charge is 0 in TestPowertrain but 45,9 kW in real powertrain
+		/// SM state of serial hybrid strategy in breaking phase was Break_S1 -> selects Accelerate S1 as new accelerate phase -> GEN is on but supercap is (almost full) 
+
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out var sumDataContainer,
 			true);
 		Assert.IsTrue(runs.Any(run => run.GetContainer().RunData.Mission.MissionType == MissionType.MunicipalUtility));
@@ -976,7 +981,7 @@ public class LorrySimulation
 	}
 
 	[Test, TestCaseSource(nameof(GetJsonJobs))]
-	//[Ignore("Just for comparison")]
+	[Ignore("Just for comparison")]
 	public void JSONEngineering(string path)
 	{
 		RunJsonJob(path, ExecutionMode.Engineering);

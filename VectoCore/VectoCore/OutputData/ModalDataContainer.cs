@@ -751,6 +751,7 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.HybridStrategyScore, 
 					ModalResultField.HybridStrategySolution,
 					ModalResultField.MaxPropulsionTorqe,
+					ModalResultField.HybridStrategyState,
 					// WHR
 					ModalResultField.P_WHR_el_map, 
 					ModalResultField.P_WHR_el_corr, 
@@ -778,6 +779,7 @@ namespace TUGraz.VectoCore.OutputData
 			return dataColumns.Where(x => Data.Columns.Contains(x)).ToArray();
 		}
 
+		[Obsolete]
 		private IList<string> GetOutputColumns()
 		{
 			var dataColumns = new List<string> { ModalResultField.time.GetName() };
@@ -921,7 +923,9 @@ namespace TUGraz.VectoCore.OutputData
 			}
 			if (_runData.HybridStrategyParameters != null) {
 				dataColumns.AddRange(new[] {
-					ModalResultField.HybridStrategyScore, ModalResultField.HybridStrategySolution,
+					ModalResultField.HybridStrategyScore, 
+					ModalResultField.HybridStrategySolution,
+					ModalResultField.HybridStrategyState,
 					ModalResultField.MaxPropulsionTorqe
 				}.Select(x => x.GetName()));
 			}

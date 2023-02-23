@@ -1733,7 +1733,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			
 			GetElectricMachine(PowertrainPosition.GEN, data.ElectricMachinesData, container, es, ctl)
 				.AddComponent(ice);
-			//AddElectricAuxiliaries(data, container,es, null);
+			
 			new ATClutchInfo(container);
 			new DummyGearboxInfo(container, new GearshiftPosition(0));
 		}
