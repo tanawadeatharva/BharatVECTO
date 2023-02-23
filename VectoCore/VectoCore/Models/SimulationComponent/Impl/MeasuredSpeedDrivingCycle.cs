@@ -451,6 +451,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public PCCStates PCCState => PCCStates.OutsideSegment;
 
 		public MeterPerSecond NextBrakeTriggerSpeed => 0.SI<MeterPerSecond>();
+		public MeterPerSecond ApplyOverspeed(MeterPerSecond targetSpeed) => targetSpeed;
 
 		public Meter Distance => CurrentState.Distance;
 	}

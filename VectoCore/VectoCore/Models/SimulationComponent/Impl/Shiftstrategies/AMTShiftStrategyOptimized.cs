@@ -26,6 +26,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			return DeclarationData.Gearbox.ComputeEfficiencyShiftPolygon(
 				i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
+			//return DeclarationData.Gearbox.ComputeManualTransmissionShiftPolygon(
+			//	i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
 		}
 	}
 	public class AMTShiftStrategyOptimized : AMTShiftStrategy
