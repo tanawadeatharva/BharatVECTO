@@ -9,7 +9,7 @@
     "SavedInDeclMode": true,
     "VehicleFile": "HEV_S2_Group5_LH_rl_APTS.vveh",
     "EngineFile": "209kW_7c7l.veng",
-    "GearboxFile": "GearboxPowerSplit.vgbx",
+    "GearboxFile": "GearboxSerial.vgbx",
     "TCU": "GearboxPowerSplit.vgbx",
     "HybridStrategyParams": "Hybrid_Parameters.vhctl",
     "Padd_electric": 0.0,

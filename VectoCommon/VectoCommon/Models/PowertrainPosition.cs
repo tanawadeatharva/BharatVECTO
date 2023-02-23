@@ -121,6 +121,8 @@ namespace TUGraz.VectoCommon.InputData {
 				case PowertrainPosition.BatteryElectricE3:
 				case PowertrainPosition.BatteryElectricE2:
 					return GetPositionWithoutPrefix(pos.ToString());
+				case PowertrainPosition.IHPC:
+					return "IHPC";
 				case PowertrainPosition.GEN:
 					return "GEN";
 				default:

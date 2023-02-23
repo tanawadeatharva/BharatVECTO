@@ -13,7 +13,7 @@
     "Inertia": 5.1498,
     "Fuels": [
       {
-       "WHTC-Urban": 1.0097,
+        "WHTC-Urban": 1.0097,
         "WHTC-Rural": 1.0035,
         "WHTC-Motorway": 1.0035,
         "WHTC-Engineering": 1.0,
@@ -23,9 +23,9 @@
         "FuelType": "DieselCI"
       }
     ],
-    "RatedPower": 0.0,
-    "RatedSpeed": 0.0,
-    "MaxTorque": 0.0,
+    "RatedPower": 250.0,
+    "RatedSpeed": 1400,
+    "MaxTorque": 2134,
     "FullLoadCurve": "325kW.vfld",
     "WHRType": [
       "None"

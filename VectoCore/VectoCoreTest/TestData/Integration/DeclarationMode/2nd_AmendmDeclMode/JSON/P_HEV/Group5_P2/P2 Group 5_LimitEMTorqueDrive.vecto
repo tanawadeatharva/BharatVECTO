@@ -17,7 +17,6 @@
     "AuxiliaryAssembly": "Classic",
     "AuxiliaryVersion": "CLASSIC",
     "AdvancedAuxiliaryFilePath": "",
-    "Aux": [],
     "Padd": 3000.0,
     "Padd_electric": 0.0,
     "VACC": "Vehicle\\Truck.vacc",

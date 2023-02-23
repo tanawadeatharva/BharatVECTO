@@ -13,23 +13,23 @@
     "Gears": [
       {
         "Ratio": 5.8,
-        "Efficiency": 0.98
+        "LossMap": "Axle_4x2_LH.vtlm"
       },
       {
         "Ratio": 1.35,
-        "Efficiency": 0.98,
+        "LossMap": "Gear_4_i=1.vtlm",
         "ShiftPolygon": "",
         "MaxTorque": ""
       },
       {
         "Ratio": 1.0,
-        "Efficiency": 0.98,
+        "LossMap": "Gear_4_i=1.vtlm",
         "ShiftPolygon": "",
         "MaxTorque": ""
       },
       {
         "Ratio": 0.73,
-        "Efficiency": 0.98,
+        "LossMap": "Gear_4_i=1.vtlm",
         "ShiftPolygon": "",
         "MaxTorque": ""
       }
