@@ -125,9 +125,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			Acc_S2, // P_GEN = P_max, SoC <= S
 			Acc_S3, // P_GEN = P_max, P_drive = P_GEN
 
-			Break_S0,
-			Break_S1,
-			Break_S2,
+			Brake_S0,
+			Brake_S1,
+			Brake_S2,
 		}
 
 		public enum GensetState
@@ -325,9 +325,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					}
 					emTorque = GetMechanicalAssistPower(absTime, dt, emTorque, emResponse, emResponse.AngularVelocity /* potentially not correct! */);
 					break;
-				case StateMachineState.Break_S0:
-				case StateMachineState.Break_S1:
-				case StateMachineState.Break_S2:
+				case StateMachineState.Brake_S0:
+				case StateMachineState.Brake_S1:
+				case StateMachineState.Brake_S2:
 					if (DataBus.BatteryInfo.StateOfCharge >= StrategyParameters.TargetSoC) {
 						genSetOperatingPoint = GensetOff;
 						gensetState = GensetState.Off;
@@ -481,6 +481,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				? GenSetCharacteristics.OptimalPointDeRated
 				: GenSetCharacteristics.OptimalPoint;
 			switch (PreviousState.SMState) {
+				case StateMachineState.Brake_S0:
 				case StateMachineState.Acc_S0:
 					if (DataBus.BatteryInfo.StateOfCharge < StrategyParameters.MinSoC) {
 						return -drivetrainDemand.ElectricPowerDemand <
@@ -490,6 +491,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					}
 
 					break;
+				case StateMachineState.Brake_S1:
 				case StateMachineState.Acc_S1:
 					if (/*DataBus.BatteryInfo.StateOfCharge >= StrategyParameters.MinSoC &&*/
 						DataBus.BatteryInfo.StateOfCharge < StrategyParameters.MinSoC
@@ -503,6 +505,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					}
 
 					break;
+				case StateMachineState.Brake_S2:
 				case StateMachineState.Acc_S2:
 					if (DataBus.BatteryInfo.StateOfCharge > StrategyParameters.MinSoC) {
 						return StateMachineState.Acc_S1;
@@ -512,12 +515,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						return StateMachineState.Acc_S1;
 					}
 					break;
-				case StateMachineState.Break_S0:
-					return StateMachineState.Acc_S0;
-				case StateMachineState.Break_S1:
-					return StateMachineState.Acc_S1;
-				case StateMachineState.Break_S2:
-					return StateMachineState.Acc_S2;
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
@@ -529,18 +526,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		{
 			switch (PreviousState.SMState) {
 				case StateMachineState.Acc_S0:
-					return StateMachineState.Break_S0;
+					return StateMachineState.Brake_S0;
 				case StateMachineState.Acc_S1:
-					return StateMachineState.Break_S1;
+					return StateMachineState.Brake_S1;
 				case StateMachineState.Acc_S2:
-					return StateMachineState.Break_S2;
+					return StateMachineState.Brake_S2;
 				case StateMachineState.Acc_S3:
-					return StateMachineState.Break_S2;
-				case StateMachineState.Break_S0:
+					return StateMachineState.Brake_S2;
+				case StateMachineState.Brake_S0:
 					break;
-				case StateMachineState.Break_S1:
+				case StateMachineState.Brake_S1:
 					break;
-				case StateMachineState.Break_S2:
+				case StateMachineState.Brake_S2:
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
