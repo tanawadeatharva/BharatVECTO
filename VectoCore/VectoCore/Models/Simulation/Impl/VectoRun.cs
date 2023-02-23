@@ -186,8 +186,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Container.RunStatus = Status.Success;
 			}
 
-
-
 			var runAgain = _followUpCreator?.RunAgain((data) => {
 					
 					Container.ModalData.Reset(true);

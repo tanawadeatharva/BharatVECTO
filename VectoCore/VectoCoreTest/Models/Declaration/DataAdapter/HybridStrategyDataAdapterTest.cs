@@ -59,13 +59,6 @@ public class HybridStrategyDataAdapterTest
 			}
 		};
 
-
-
-
-
-
-
-
 		HybridStrategyParameters parameters = null;
 		try {
 			parameters = dataAdapter.CreateHybridStrategyParameters(batterySystemData, null, mass,
@@ -76,10 +69,6 @@ public class HybridStrategyDataAdapterTest
 		}
 		Assert.IsTrue(parameters!.TargetSoC.IsEqual(expected_target_soc));
 		Assert.IsTrue(parameters.MinSoC.IsEqual(expected_min_soc));
-
-
-
-
 
 	}
 

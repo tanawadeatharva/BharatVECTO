@@ -211,10 +211,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		//public override Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits =>
 		//	throw new NotImplementedException();
-		public override IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits =>
-			Body["EMTorqueLimits"] == null
-				? null
-				: new Dictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>>() {
+		public override IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits
+		{
+			get
+			{
+				if (Body["EMTorqueLimits"] == null) {
+					return null;
+				}
+
+				if (Body["EMTorqueLimits"].HasValues) {
+					var entries = Body["EMTorqueLimits"].Select(x => Tuple.Create((x as JProperty)?.Name.ToDouble().SI<Volt>(),
+						ReadTableData(
+							Path.Combine(BasePath, (x as JProperty)?.Value.Value<string>() ?? ""),
+							"ElectricMotorTorqueLimits")
+					)).ToList();
+					return new Dictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>>()
+						{{ GetElectricMachines().Entries.First().Position, entries }};
+				}
+
+				return new Dictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>>() {
 					{
 						GetElectricMachines().Entries.First().Position,
 						new List<Tuple<Volt, TableData>>() {
@@ -224,6 +239,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						}
 					}
 				};
+			}
+		}
+		//=>
+			//Body["EMTorqueLimits"] == null
+			//	? null
+			//	: Body["EMTorqueLimits"].HasValues ?
+   //         Body["EMTorqueLimits"].Select(x => Tuple.Create(x.GetEx<double>("Voltage").SI<Volt>(), ReadTableData(Path.Combine(BasePath, x.GetEx<string>("EMTorqueLimits")),
+			//	"ElectricMotorTorqueLimits")))) 
+			//	: new Dictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>>() {
+			//		{
+			//			GetElectricMachines().Entries.First().Position,
+			//			new List<Tuple<Volt, TableData>>() {
+			//				Tuple.Create((Volt)null, ReadTableData(
+			//					Path.Combine(BasePath, Body.GetEx<string>("EMTorqueLimits")),
+			//					"ElectricMotorTorqueLimits"))
+			//			}
+			//		}
+			//	};
 
         public override TableData BoostingLimitations =>
 			Body["MaxPropulsionTorque"] == null
