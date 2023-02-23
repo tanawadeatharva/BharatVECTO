@@ -8,7 +8,7 @@
   "Body": {
     "SavedInDeclMode": true,
     "VehCat": "Tractor",
-    "LegislativeClass": "Unknown",
+    "LegislativeClass": "M3",
     "CurbWeight": 8229.0,
     "CurbWeightExtra": 7500.0,
     "MassMax": 18.0,
@@ -98,12 +98,12 @@
         "Ratio": 1.0,
         "MechanicalEfficiency": 1.0,
         "Position": "P3",
-        "MotorFile": "..\\ElectricMotor\\Inputdaten P3 Group 5\\Electric components\\GenericEMotor_140kW_936Nm.vem"
+        "MotorFile": "..\\ElectricMotor\\Inputdaten P3\\Electric components\\GenericEMotor_140kW_936Nm.vem"
       }
     ],
     "Battery": {
       "NumPacks": 1,
-      "BatteryFile": "..\\ElectricMotor\\Inputdaten P3 Group 5\\Electric components\\GenericBattery_10kWh_658V.vbat"
+      "BatteryFile": "..\\ElectricMotor\\Inputdaten P3\\Electric components\\GenericBattery_10kWh_658V.vbat"
     }
   }
 }

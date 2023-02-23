@@ -8,7 +8,7 @@
   "Body": {
     "SavedInDeclMode": false,
     "VehCat": "Tractor",
-    "LegislativeClass": "Unknown",
+    "LegislativeClass": "M3",
     "CurbWeight": 8229.0,
     "CurbWeightExtra": 7500.0,
     "MassMax": 18.0,
@@ -96,7 +96,7 @@
     "ElectricMotors": [
       {
         "Count": 1,
-        "Ratio":  3.077, 
+        "Ratio": 3.077,
         "Position": "P2.5",
         "MotorFile": "GenericEMotor_140kW_936Nm.vem",
         "MechanicalEfficiency": 1.0,

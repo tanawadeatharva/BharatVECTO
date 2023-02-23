@@ -1,60 +1,28 @@
-﻿{
+{
   "Header": {
     "CreatedBy": "",
-    "Date": "2017-07-13T14:14:29.3226830Z",
+    "Date": "2023-02-17T08:23:54.5137328Z",
     "AppVersion": "3",
     "FileVersion": 10
   },
   "Body": {
     "SavedInDeclMode": true,
     "VehCat": "RigidTruck",
-    "LegislativeClass": "Unknown",
+    "LegislativeClass": "M3",
     "CurbWeight": 4670.0,
-    "CurbWeightExtra": 1900.0,
-    "Loading": 3020.0,
+    "CurbWeightExtra": 0.0,
     "MassMax": 11.99,
-    "rdyn": 421.0,
-    "PowertrainConfiguration": "SerialHybrid",
+    "Loading": 0.0,
+    "rdyn": 0.0,
     "CdCorrMode": "CdofVdecl",
     "CdCorrFile": "",
-    "Retarder": {
-      "Type": "None",
-      "Ratio": 1.0,
-      "File": ""
-    },
-	  "ElectricMotors": [
-        {
-          "Count": 2,
-          "Ratio": 2,
-          "MechanicalEfficiency":  0.97, 
-          "Position": "E2",
-          "MotorFile": "GenericEMotor_125kW_485Nm.vem"
-        },
-      {
-        "Count": 1,
-        "Ratio": 1,
-        "Position": "GEN",
-        "MotorFile": "GenericGen.vem",
-        "MechanicalEfficiency": 1
-      }
-    ],
-    "Batteries": [
-      {
-        "NumPacks": 1,
-        "StreamId": 0,
-        "BatteryFile": "GenericBattery.vreess"
-      }
-    ],
-    "InitialSoC": 80,
-    "TorqueLimits": {},
-    "IdlingSpeed": 0.0,
     "AxleConfig": {
       "Type": "4x2",
       "Axles": [
         {
           "Inertia": 6.5,
           "Wheels": "265/70 R19.5",
-          "AxleWeightShare": 0.2,
+          "AxleWeightShare": 0.0,
           "TwinTyres": false,
           "RRCISO": 0.0065,
           "FzISO": 20850.0,
@@ -63,29 +31,11 @@
         {
           "Inertia": 6.5,
           "Wheels": "265/70 R19.5",
-          "AxleWeightShare": 0.3,
+          "AxleWeightShare": 0.0,
           "TwinTyres": true,
           "RRCISO": 0.0075,
           "FzISO": 20850.0,
           "Type": "VehicleDriven"
-        },
-        {
-          "Inertia": 4.5,
-          "Wheels": "235/75 R17.5",
-          "AxleWeightShare": 0.25,
-          "TwinTyres": false,
-          "RRCISO": 0.0055,
-          "FzISO": 16680.0,
-          "Type": "VehicleNonDriven"
-        },
-        {
-          "Inertia": 4.5,
-          "Wheels": "235/75 R17.5",
-          "AxleWeightShare": 0.25,
-          "TwinTyres": false,
-          "RRCISO": 0.0055,
-          "FzISO": 16680.0,
-          "Type": "VehicleNonDriven"
         }
       ]
     },
@@ -94,6 +44,39 @@
     "PredictiveCruiseControl": "None",
     "ATEcoRollReleaseLockupClutch": false,
     "CdA": 4.83,
-    "VehicleHeight": 3.0
+    "VehicleHeight": 3.0,
+    "Retarder": {
+      "Type": "None",
+      "Ratio": 1.0,
+      "File": ""
+    },
+    "TankSystem": "Compressed",
+    "InitialSoC": 80.0,
+    "PowertrainConfiguration": "SerialHybrid",
+    "ElectricMotors": [
+      {
+        "Count": 2,
+        "Ratio": 2.0,
+        "Position": "E2",
+        "MotorFile": "GenericEMotor_125kW_485Nm.vem",
+        "MechanicalEfficiency": 0.97
+      },
+      {
+        "Count": 1,
+        "Ratio": 1.0,
+        "Position": "GEN",
+        "MotorFile": "GenericGen.vem",
+        "MechanicalEfficiency": 1.0
+      }
+    ],
+    "Batteries": [
+      {
+        "NumPacks": 1,
+        "BatteryFile": "GenericBattery.vreess",
+        "StreamId": 0
+      }
+    ],
+    "OvcHev": false,
+    "MaxChargingPower": 0.0
   }
 }

@@ -8,7 +8,7 @@
   "Body": {
     "SavedInDeclMode": true,
     "VehCat": "Tractor",
-    "LegislativeClass": "Unknown",
+    "LegislativeClass": "M3",
     "CurbWeight": 8229.0,
     "CurbWeightExtra": 7500.0,
     "MassMax": 18.0,
@@ -96,7 +96,7 @@
       {
         "Count": 1,
         "RatioPerGear": [ 3.52, 3.52, 3.52, 3.52, 3.52, 3.52, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8 ],
-        "Ratio":  1.0, 
+        "Ratio": 1.0,
         "MechanicalEfficiency": 1.0,
         "Position": "P2_5",
         "MotorFile": "..\\ElectricMotor\\Inputdaten P2 Group 5\\Electric components\\GenericEMotor_140kW_936Nm.vem"

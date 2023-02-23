@@ -8,7 +8,7 @@
   "Body": {
     "SavedInDeclMode": false,
     "VehCat": "Tractor",
-    "LegislativeClass": "Unknown",
+    "LegislativeClass": "M3",
     "CurbWeight": 8229.0,
     "CurbWeightExtra": 7500.0,
     "Loading": 19300.0,
@@ -37,7 +37,7 @@
           "RRCISO": 0.0065,
           "FzISO": 33350.0,
           "Type": "VehicleDriven",
-		  "Steered" : true
+          "Steered": true
         },
         {
           "Inertia": 19.2,
@@ -68,7 +68,7 @@
         }
       ]
     },
-    "EngineStopStart":  false,
+    "EngineStopStart": false,
     "EcoRoll": "WithoutEngineStop",
     "PredictiveCruiseControl": "None",
     "ATEcoRollReleaseLockupClutch": false,

@@ -8,7 +8,7 @@
   "Body": {
     "SavedInDeclMode": true,
     "VehCat": "Tractor",
-    "LegislativeClass": "Unknown",
+    "LegislativeClass": "M3",
     "CurbWeight": 8229.0,
     "CurbWeightExtra": 7500.0,
     "MassMax": 18.0,
@@ -96,7 +96,7 @@
       {
         "Count": 1,
         "RatioPerGear": [ 1.0259, 0.8125, 1.0259, 0.8125, 1.0259, 0.8125, 1.0259, 0.8125, 1.0259, 0.8125, 1.0259, 0.8125 ],
-        "Ratio":  3.077, 
+        "Ratio": 3.077,
         "MechanicalEfficiency": 0.98,
         "Position": "P2_5",
         "MotorFile": "GenericEMotor_30kW_50Nm.vem"

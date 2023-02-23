@@ -8,7 +8,7 @@
   "Body": {
     "SavedInDeclMode": false,
     "VehCat": "Tractor",
-    "LegislativeClass": "Unknown",
+    "LegislativeClass": "M3",
     "CurbWeight": 8229.0,
     "CurbWeightExtra": 7500.0,
     "MassMax": 18.0,
@@ -89,7 +89,10 @@
       "Cycle": ""
     },
     "TorqueLimits": {},
-    "EMTorqueLimits":  "EM_TorqueLimits.vemp",
+    "EMTorqueLimits": {
+      "400": "EM_TorqueLimits.vemp",
+      "800": "EM_TorqueLimits.vemp"
+    },
     "InitialSoC": 80.0,
     "PowertrainConfiguration": "ParallelHybrid",
     "MaxDrivetrainPower": 500000.0,

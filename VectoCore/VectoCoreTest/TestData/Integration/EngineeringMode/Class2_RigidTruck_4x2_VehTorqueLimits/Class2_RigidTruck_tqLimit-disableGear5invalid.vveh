@@ -8,6 +8,7 @@
   "Body": {
     "SavedInDeclMode": false,
     "VehCat": "RigidTruck",
+    "LegislativeClass": "M3",
     "CurbWeight": 4670.0,
     "CurbWeightExtra": 1900.0,
     "Loading": 3020.0,
@@ -31,9 +32,9 @@
       "LossMap": "",
       "Cycle": ""
     },
-	"TorqueLimits":  {
-		"5": 0
-	},
+    "TorqueLimits": {
+      "5": 0
+    },
     "AxleConfig": {
       "Type": "4x2",
       "Axles": [

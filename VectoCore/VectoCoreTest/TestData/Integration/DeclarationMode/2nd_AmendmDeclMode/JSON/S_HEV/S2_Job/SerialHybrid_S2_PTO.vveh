@@ -8,7 +8,7 @@
   "Body": {
     "SavedInDeclMode": true,
     "VehCat": "RigidTruck",
-    "LegislativeClass": "Unknown",
+    "LegislativeClass": "M3",
     "CurbWeight": 4670.0,
     "CurbWeightExtra": 1900.0,
     "Loading": 3020.0,
@@ -22,14 +22,14 @@
       "Ratio": 1.0,
       "File": ""
     },
-	  "ElectricMotors": [
-        {
-          "Count": 2,
-          "Ratio": 2,
-          "MechanicalEfficiency":  0.97, 
-          "Position": "E2",
-          "MotorFile": "GenericEMotor_125kW_485Nm.vem"
-        },
+    "ElectricMotors": [
+      {
+        "Count": 2,
+        "Ratio": 2,
+        "MechanicalEfficiency": 0.97,
+        "Position": "E2",
+        "MotorFile": "GenericEMotor_125kW_485Nm.vem"
+      },
       {
         "Count": 1,
         "Ratio": 1,
