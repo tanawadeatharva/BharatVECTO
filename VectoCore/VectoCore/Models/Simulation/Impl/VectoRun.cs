@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public virtual double Progress => CyclePort.Progress * (PostProcessingDone ? 1.0 : 0.99) * (WritingResultsDone ? 1.0 : 0.99);
 
-		protected VectoRun(IVehicleContainer container)
+		protected VectoRun(IVehicleContainer container, IFollowUpRunCreator followUpCreator = null)
 		{
 			Container = container;
 			RunIdentifier = Interlocked.Increment(ref _runIdCounter);
@@ -79,11 +79,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			CyclePort = container.GetCycleOutPort();
 			PostProcessingDone = false;
 			WritingResultsDone = false;
-		}
-
-		protected VectoRun(IVehicleContainer container, IFollowUpRunCreator followUpCreator) : this(container)
-		{
-			_followUpCreator = followUpCreator;
+			_followUpCreator = followUpCreator ?? new NoFollowUpRunCreator();
 		}
 
 		public IVehicleContainer GetContainer() => Container;
