@@ -669,6 +669,13 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<Meter>.Create(wattSecond.Val / m.Value());
 		}
+
+		public static implicit operator WattSecond(Joule self)
+		{
+			return Create(self.Value());
+		}
+
+
 	}
 
 	public class WattSecondPerMeter : SIBase<WattSecondPerMeter>
@@ -845,6 +852,11 @@ namespace TUGraz.VectoCommon.Utils
 		public static Joule operator +(Joule joule, WattSecond ws)
 		{
 			return Create(joule.Val + ws.Value());
+		}
+
+		public static Joule operator -(Joule joule, WattSecond ws)
+		{
+			return Create(joule.Val - ws.Value());
 		}
 
 		public static Watt operator /(Joule joule, Second s)

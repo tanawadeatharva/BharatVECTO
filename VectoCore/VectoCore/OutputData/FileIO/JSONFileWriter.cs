@@ -13,6 +13,7 @@ using TUGraz.VectoCore;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
+using TUGraz.VectoCore.Utils;
 
 public class JSONFileWriter : IOutputFileWriter
 {
@@ -66,12 +67,22 @@ public class JSONFileWriter : IOutputFileWriter
 			return filePath;
 		}
 
+		var filePathNormalized = new Uri(Path.GetFullPath(filePath));
+		var basePathNormalized = new Uri(Path.GetFullPath(basePath) + (Path.GetFullPath(basePath).EndsWith(Path.DirectorySeparatorChar.ToString()) ? "" : Path.DirectorySeparatorChar.ToString()));
+		var commonPrefix = PathHelper.GetLongestCommonPrefix(basePathNormalized.AbsolutePath, filePathNormalized.AbsolutePath);
+		if (commonPrefix.Length > 3) {
+			// at least on the same drive...
+			var relative = basePathNormalized.MakeRelativeUri(filePathNormalized);
+			return relative.ToString();
+		}
+
 		if (Path.GetDirectoryName(Path.GetFullPath(filePath)).StartsWith(basePath, StringComparison.OrdinalIgnoreCase)) {
 			return Path.GetFullPath(filePath).Substring(basePath.Length + (basePath.EndsWith(@"\") ? 0 : 1));
 		}
 
 		return filePath;
 	}
+
 
 	public void SaveElectricMotor(IElectricMotorEngineeringInputData electricMachine, string filename, bool declMode)
 	{
@@ -81,7 +92,9 @@ public class JSONFileWriter : IOutputFileWriter
 			{ JsonKeys.SavedInDeclMode, declMode },
 			{ JsonKeys.Component_Model, electricMachine.Model },
 			{ JsonKeys.Engine_Inertia, electricMachine.Inertia.Value() },
-			{ JsonKeys.EM_ThermalOverloadRecoveryFactor, electricMachine.OverloadRecoveryFactor }
+			{ JsonKeys.EM_ElectricMachineType, electricMachine.ElectricMachineType.ToString() },
+			{ JsonKeys.EM_ThermalOverloadRecoveryFactor, electricMachine.OverloadRecoveryFactor },
+			{ JsonKeys.EM_RatedPower, electricMachine.R85RatedPower.ConvertToKiloWatt().Value }
 		};
 
 		var vlevels = GetVoltageLevelEntries(electricMachine.VoltageLevels, filename);
@@ -100,7 +113,9 @@ public class JSONFileWriter : IOutputFileWriter
 			{ JsonKeys.Component_Model, electricMachine.Model },
 			{ JsonKeys.EM_DragCurve,  GetRelativePath(electricMachine.DragCurve.Source, Path.GetDirectoryName(filename))},
 			{ JsonKeys.Engine_Inertia, electricMachine.Inertia.Value() },
-			{ JsonKeys.EM_ThermalOverloadRecoveryFactor, electricMachine.OverloadRecoveryFactor }
+			{ JsonKeys.EM_ThermalOverloadRecoveryFactor, electricMachine.OverloadRecoveryFactor },
+			{ JsonKeys.EM_RatedPower, electricMachine.R85RatedPower.ConvertToKiloWatt().Value }
+
 		};
 		
 		var vlevels = GetVoltageLevelEntries(electricMachine.VoltageLevels, filename);
@@ -116,7 +131,7 @@ public class JSONFileWriter : IOutputFileWriter
 			var vlevel = new Dictionary<string, object> {
 				{ JsonKeys.EM_Voltage, entry.VoltageLevel.Value() },
 				{ JsonKeys.EM_ContinuousTorque, entry.ContinuousTorque.Value() },
-				{ JsonKeys.EM_ContinuousTorqueSpeed, entry.ContinuousTorqueSpeed.AsRPM },
+				{ JsonKeys.EM_ContinuousTorqueSpeed, entry.ContinuousTorqueSpeed.AsRPM.ToGUIFormat() },
 				{ JsonKeys.EM_OverloadTorque, entry.OverloadTorque.Value() },
 				{ JsonKeys.EM_OverloadTorqueSpeed, entry.OverloadTestSpeed.AsRPM },
 				{ JsonKeys.EM_OverloadTime, entry.OverloadTime.Value() },
@@ -143,11 +158,13 @@ public class JSONFileWriter : IOutputFileWriter
 		{
 			{JsonKeys.SavedInDeclMode, declMode},
 			{JsonKeys.Component_Model, iepc.Model},
+			{ JsonKeys.EM_ElectricMachineType, iepc.ElectricMachineType.ToString() },
 			{JsonKeys.IEPC_Inertia, iepc.Inertia.Value()},
 			{JsonKeys.IEPC_DifferentialIncluded, iepc.DifferentialIncluded},
 			{JsonKeys.IEPC_DesignTypeWheelMotor, iepc.DesignTypeWheelMotor},
 			{JsonKeys.IEPC_NrOfDesignTypeWheelMotorMeasured, iepc.NrOfDesignTypeWheelMotorMeasured},
-			{JsonKeys.IEPC_ThermalOverloadRecoveryFactor, iepc.OverloadRecoveryFactor}
+			{JsonKeys.IEPC_ThermalOverloadRecoveryFactor, iepc.OverloadRecoveryFactor},
+			{ JsonKeys.EM_RatedPower, iepc.R85RatedPower.ConvertToKiloWatt().Value }
 		};
 
 		var gears = new List<Dictionary<string, object>>();
@@ -211,7 +228,10 @@ public class JSONFileWriter : IOutputFileWriter
 			{ "SOC_max", battery.MaxSOC * 100.0 },
 			{ "MaxCurrentMap", GetRelativePath(battery.MaxCurrentMap.Source, Path.GetDirectoryName(filename)) },
 			{ "InternalResistanceCurve", GetRelativePath(battery.InternalResistanceCurve.Source, Path.GetDirectoryName(filename)) },
-			{ "SoCCurve", GetRelativePath(battery.VoltageCurve.Source, Path.GetDirectoryName(filename)) }
+			{ "SoCCurve", GetRelativePath(battery.VoltageCurve.Source, Path.GetDirectoryName(filename)) },
+			{ "TestingTemperature", battery.TestingTemperature.AsDegCelsius},
+			{ "JunctionboxIncluded", battery.JunctionboxIncluded },
+			{ "ConnectorsSubsystemsIncluded", battery.ConnectorsSubsystemsIncluded }
 		};
 
 		WriteFile(header, body, filename);
@@ -230,7 +250,8 @@ public class JSONFileWriter : IOutputFileWriter
 			{ "U_min", superCap.MinVoltage.Value() },
 			{ "U_max", superCap.MaxVoltage.Value() },
 			{ "I_maxCharge", superCap.MaxCurrentCharge.Value() },
-			{ "I_maxDischarge", superCap.MaxCurrentDischarge.Value() }
+			{ "I_maxDischarge", superCap.MaxCurrentDischarge.Value() },
+			{ "TestingTemperature", superCap.TestingTemperature.AsDegCelsius },
 		};
 
 		WriteFile(header, body, filename);
@@ -580,7 +601,8 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("PowertrainConfiguration", vehicle.VehicleType == VectoSimulationJobType.SerialHybridVehicle ? "SerialHybrid" : vehicle.VehicleType == VectoSimulationJobType.IHPC ? "IHPC":  "ParallelHybrid");
 		body.Add("ElectricMotors", GetElectricMotors(vehicle, basePath));
 		body.Add("Batteries", GetBattery(vehicle, basePath));
-
+		body.Add("OvcHev", vehicle.OvcHev);
+		body.Add("MaxChargingPower", vehicle.OvcHev ? vehicle.MaxChargingPower.ConvertToKiloWatt().Value : 0);
 		WriteFile(header, body, filename);
 	}
 
@@ -605,6 +627,7 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("PowertrainConfiguration", "BatteryElectric");
 		body.Add("ElectricMotors", electricMotorsOut);
 		body.Add("Batteries", battery);
+		//body.Add("OvcHev", true);
 
 		//body.Add("IdlingSpeed", vehicle.EngineIdleSpeed.AsRPM);
 		if (retarder.Type != RetarderType.None)
@@ -638,15 +661,19 @@ public class JSONFileWriter : IOutputFileWriter
 		var body = GetVehicle(vehicle, airdrag, DeclMode, basePath);
 		body.Add("InitialSoC", vehicle.InitialSOC * 100);
 		body.Add("PowertrainConfiguration", vehicle.VehicleType.ToString());
-		body.Add("IEPC", vehicle.Components.IEPCEngineeringInputData.DataSource.SourceFile);
+		body.Add("IEPC", GetRelativePath(vehicle.Components.IEPCEngineeringInputData.DataSource.SourceFile, basePath));
 		if (electricMotorsOut != null) {
 			body.Add("ElectricMotors", electricMotorsOut);
 		}
 
 		body.Add("Batteries", battery);
+		if (vehicle.VehicleType == VectoSimulationJobType.IEPC_S) {
+			body.Add("OvcHev", vehicle.OvcHev);
+			body.Add("MaxChargingPower", vehicle.OvcHev ? vehicle.MaxChargingPower.ConvertToKiloWatt().Value : 0);
+		}
 
 		//body.Add("IdlingSpeed", vehicle.EngineIdleSpeed.AsRPM);
-		if (retarder.Type != RetarderType.None)
+        if (retarder.Type != RetarderType.None)
 			body.Add("Retarder", retarderOut);
 		//body.Add("Angledrive", angledriveOut);
 		body.Add("PTO", ptoOut);
@@ -773,6 +800,7 @@ public class JSONFileWriter : IOutputFileWriter
 					auxOut.Add("Type", auxEntry.Type.Name());
 					auxOut.Add("Technology", new string[] { });
 				} else {
+					auxOut.Add("ID", auxEntry.Type.Key());
 					auxOut.Add("Type", auxEntry.Type.Name());
 					auxOut.Add("Technology", engineeringAuxEntry.Technology);
 				}
@@ -884,7 +912,9 @@ public class JSONFileWriter : IOutputFileWriter
 			body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
 		}
 
-		body.Add("HybridStrategyParams", GetRelativePath(input.JobInputData.HybridStrategyParameters.Source, basePath));
+		if (!job.SavedInDeclarationMode) {
+			body.Add("HybridStrategyParams", GetRelativePath(input.JobInputData.HybridStrategyParameters.Source, basePath));
+		}
 
 		var auxList = new List<object>();
 		if (job.SavedInDeclarationMode && job.Vehicle is IVehicleDeclarationInputData declVehicle) {
@@ -896,13 +926,14 @@ public class JSONFileWriter : IOutputFileWriter
 					auxOut.Add("Type", auxEntry.Type.Name());
 					auxOut.Add("Technology", new string[] { });
 				} else {
+					auxOut.Add("ID", auxEntry.Type.Key());
 					auxOut.Add("Type", auxEntry.Type.Name());
 					auxOut.Add("Technology", auxEntry.Technology);
 				}
 
 				auxList.Add(auxOut);
 			}
-			if (declVehicle.Components.BusAuxiliaries != null) {
+			if (!job.SavedInDeclarationMode && declVehicle.Components.BusAuxiliaries != null) {
 				body.Add("BusAux", GetRelativePath(job.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile, basePath));
 			}
 			body.Add("Aux", auxList);
@@ -1024,6 +1055,26 @@ public class JSONFileWriter : IOutputFileWriter
 			}
 		}
 		body.Add("Padd_electric", input.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand.Value());
+
+		if (job.SavedInDeclarationMode && job.Vehicle is IVehicleDeclarationInputData declVehicle) {
+			var aux = declVehicle.Components.AuxiliaryInputData;
+			var auxList = new List<object>();
+			foreach (var auxEntry in aux.Auxiliaries) {
+				var auxOut = new Dictionary<string, object>();
+				var engineeringAuxEntry = auxEntry;
+				if (!job.SavedInDeclarationMode) {
+					auxOut.Add("Type", auxEntry.Type.Name());
+					auxOut.Add("Technology", new string[] { });
+				} else {
+					auxOut.Add("ID", auxEntry.Type.Key());
+					auxOut.Add("Type", auxEntry.Type.Name());
+					auxOut.Add("Technology", engineeringAuxEntry.Technology);
+				}
+
+				auxList.Add(auxOut);
+			}
+			body.Add("Aux", auxList);
+		}
 
 		if (!job.SavedInDeclarationMode && job.Vehicle is IVehicleEngineeringInputData engVehicle) {
 			var aux = engVehicle.Components.AuxiliaryInputData;
@@ -1183,7 +1234,27 @@ public class JSONFileWriter : IOutputFileWriter
 						basePath));
 			}
 		}
-		
+
+		if (job.SavedInDeclarationMode && job.Vehicle is IVehicleDeclarationInputData declVehicle) {
+			var aux = declVehicle.Components.AuxiliaryInputData;
+			var auxList = new List<object>();
+			foreach (var auxEntry in aux.Auxiliaries) {
+				var auxOut = new Dictionary<string, object>();
+				var engineeringAuxEntry = auxEntry;
+				if (!job.SavedInDeclarationMode) {
+					auxOut.Add("Type", auxEntry.Type.Name());
+					auxOut.Add("Technology", new string[] { });
+				} else {
+					auxOut.Add("ID", auxEntry.Type.Key());
+					auxOut.Add("Type", auxEntry.Type.Name());
+					auxOut.Add("Technology", engineeringAuxEntry.Technology);
+				}
+
+				auxList.Add(auxOut);
+			}
+			body.Add("Aux", auxList);
+		}
+
 		var driver = input.DriverInputData;
 
 		if (!job.SavedInDeclarationMode) {
@@ -1227,14 +1298,16 @@ public class JSONFileWriter : IOutputFileWriter
 			});
 		}
 
-		// Overspeed / EcoRoll
-		var overspeedDic = new Dictionary<string, object> {
-			{ "Mode", driver.OverSpeedData.Enabled ? "Overspeed" : "Off" },
-			{ "MinSpeed", driver.OverSpeedData.MinSpeed.AsKmph },
-			{ "OverSpeed", driver.OverSpeedData.OverSpeed.AsKmph }
-		};
+		if (!job.SavedInDeclarationMode) {
+			// Overspeed / EcoRoll
+			var overspeedDic = new Dictionary<string, object> {
+				{ "Mode", driver.OverSpeedData.Enabled ? "Overspeed" : "Off" },
+				{ "MinSpeed", driver.OverSpeedData.MinSpeed.AsKmph },
+				{ "OverSpeed", driver.OverSpeedData.OverSpeed.AsKmph }
+			};
 
-		body.Add("OverSpeedEcoRoll", overspeedDic);
+			body.Add("OverSpeedEcoRoll", overspeedDic);
+		}
 
 		// Cycles
 		if (!job.SavedInDeclarationMode)

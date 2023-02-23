@@ -116,9 +116,10 @@ namespace TUGraz.VectoCore.OutputData
 
 		string GetColumnName(IFuelProperties fuelData, ModalResultField mrf);
 
-		string GetColumnName(PowertrainPosition pos, ModalResultField mrf);
 		void Reset(bool clearColumns = false);
 		
+		string GetColumnName(PowertrainPosition pos, ModalResultField mrf);
+
 
 		Second Duration { get; }
 
@@ -180,7 +181,8 @@ namespace TUGraz.VectoCore.OutputData
 		Dictionary<FuelType, IFuelConsumptionCorrection> FuelCorrection { get; }
 		Kilogram CO2Total { get; }
 		Joule FuelEnergyConsumptionTotal { get; }
-		WattSecond ElectricEnergyConsumption { get; }
+		WattSecond ElectricEnergyConsumption { get; set; }
+		WattSecondPerMeter ElectricEnergyConsumptionPerMeter { get; }
 	}
 
 	public interface IFuelConsumptionCorrection
@@ -762,6 +764,16 @@ namespace TUGraz.VectoCore.OutputData
 		public static double REESSEndSoC(this IModalDataContainer data)
 		{
 			return (data.GetValues<SI>(ModalResultField.REESSStateOfCharge).Last()?.Value() ?? 0) * 100;
+		}
+
+		public static double REESSMinSoc(this IModalDataContainer data)
+		{
+			return (data.GetValues<Scalar>(ModalResultField.REESSStateOfCharge).Min()?.Value() ?? 0) * 100;
+		}
+
+		public static double REESSMaxSoc(this IModalDataContainer data)
+		{
+			return (data.GetValues<Scalar>(ModalResultField.REESSStateOfCharge).Max()?.Value() ?? 0) * 100;
 		}
 	}
 }

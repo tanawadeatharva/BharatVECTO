@@ -2034,4 +2034,7 @@
 <data name="Report_Results_Status_Success_Val" xml:space="preserve">
 	<value>success</value>
 </data>
+<data name="VehicleGroupCO2" xml:space="preserve">
+	<value>VehicleGroupCO2</value>
+</data>
 </root>

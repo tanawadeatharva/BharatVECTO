@@ -1082,10 +1082,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get { throw new NotImplementedException(); }
 		}
 
-		public Watt MaxNetPower2
-		{
-			get { throw new NotImplementedException(); }
-		}
+
 
 
 

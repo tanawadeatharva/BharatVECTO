@@ -233,17 +233,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 			}
 		}
 
-		public void Reset(bool clearColumns = false) {}
+
 
 		public string GetColumnName(PowertrainPosition pos, ModalResultField mrf)
 		{
 			return string.Format(mrf.GetCaption(), pos.GetName());
 		}
 
-		public void Reset()
-		{
-			
-		}
+		public void Reset(bool clearColumns = false){}
+
 
 		public Second Duration => null;
 

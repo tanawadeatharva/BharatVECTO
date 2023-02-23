@@ -7,7 +7,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
@@ -96,17 +96,21 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 			
 
-			return new SuperCapData()
+			var r = new SuperCapData()
 			{
 				Capacity = superCaps.First().Count * superCap.Capacity,
 				InternalResistance = superCap.InternalResistance / superCaps.First().Count,
-				MinVoltage = superCap.MinVoltage * DeclarationData.SuperCap.SocMin, //Überschreiben prozent beziehen sich auf max voltage
+				MinVoltage = VectoMath.Max(superCap.MaxVoltage * DeclarationData.SuperCap.SocMin, superCap.MinVoltage),
 				MaxVoltage = superCap.MaxVoltage,
 				MaxCurrentCharge = superCap.MaxCurrentCharge,
 				MaxCurrentDischarge = -superCap.MaxCurrentDischarge,
-				InitialSoC = Math.Sqrt(Math.Pow(superCap.MaxVoltage.Value(), 2) - Math.Pow(superCap.MaxVoltage.Value(), 2)) /
-							superCap.MaxVoltage.Value()
+				
 			};
+
+			r.InitialSoC =
+				Math.Sqrt(Math.Pow(r.MaxVoltage.Value(), 2) - Math.Pow(r.MinVoltage.Value(), 2)) /
+				r.MaxVoltage.Value();
+			return r;
 		}
 
 
@@ -118,8 +122,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		public static Volt CalculateAverageVoltage(this BatterySystemData battery)
 		{
 			if (battery == null) {
-				throw new VectoException("Battery not set");
+				return null;
 			}
+
 			var tmpBattery = new BatterySystem(null, battery);
 			var min = tmpBattery.MinSoC;
 			var max = tmpBattery.MaxSoC;

@@ -78,18 +78,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			gearData.TorqueConverterShiftPolygon = shiftPolygon;
 		}
 
-		protected virtual void CreateATGearData(
-			IGearboxDeclarationInputData gearbox, uint i, GearData gearData,
+		protected virtual void CreateATGearData(GearboxType gearboxType, uint i, GearData gearData,
 			ShiftPolygon tcShiftPolygon, double gearDifferenceRatio, Dictionary<uint, GearData> gears,
 			VehicleCategory vehicleCategory)
 		{
-			if (gearbox.Type == GearboxType.ATPowerSplit && i == 0)
+			if (gearboxType == GearboxType.ATPowerSplit && i == 0)
 			{
 				// powersplit transmission: torque converter already contains ratio and losses
 				CretateTCFirstGearATPowerSplit(gearData, i, tcShiftPolygon);
 			}
 
-			if (gearbox.Type == GearboxType.ATSerial)
+			if (gearboxType == GearboxType.ATSerial)
 			{
 				if (i == 0)
 				{
@@ -296,19 +295,30 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			var retVal = SetCommonGearboxData(gearbox);
 
-			//if (adas != null && retVal.Type.AutomaticTransmission() && adas.EcoRoll != EcoRollType.None &&
-			//	!adas.ATEcoRollReleaseLockupClutch.HasValue) {
-			//	throw new VectoException("Input parameter ATEcoRollReleaseLockupClutch required for AT transmission");
-			//}
+           
+			if ((inputData.VehicleType == VectoSimulationJobType.BatteryElectricVehicle || inputData.VehicleType == VectoSimulationJobType.SerialHybridVehicle) &&
+				gearbox.Type.AutomaticTransmission())
+			{
 
-			retVal.ATEcoRollReleaseLockupClutch =
+				// PEV with APT-S or APT-P transmission are simulated as APT-N
+				if (retVal.Type.IsOneOf(GearboxType.ATPowerSplit, GearboxType.ATSerial)) {
+					retVal.Type = GearboxType.APTN;
+				}
+			}
+            if (adas != null && retVal.Type.AutomaticTransmission()  && adas.EcoRoll != EcoRollType.None &&
+                           !adas.ATEcoRollReleaseLockupClutch.HasValue)
+            {
+                throw new VectoException("Input parameter ATEcoRollReleaseLockupClutch required for AT transmission");
+            }
+
+            retVal.ATEcoRollReleaseLockupClutch =
 				adas != null && adas.EcoRoll != EcoRollType.None && retVal.Type.AutomaticTransmission()
 					? (adas.ATEcoRollReleaseLockupClutch.HasValue ? adas.ATEcoRollReleaseLockupClutch.Value : false)
 					: false;
 
 			if (!supportedGearboxTypes.Contains(gearbox.Type))
 			{
-				throw new VectoSimulationException("Unsupported gearbox type: {0}!", retVal.Type);
+				throw new VectoSimulationException("Unsupported gearbox type: {0}!", gearbox.Type);
 			}
 
 			var gearsInput = FilterDisabledGears(inputData.TorqueLimits, gearbox);  //gearbox.Gears;
@@ -354,7 +364,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					LossMap = lossMap,
 				};
 
-				CreateATGearData(gearbox, i, gearData, tcShiftPolygon, gearDifferenceRatio, gears,
+				CreateATGearData(retVal.Type, i, gearData, tcShiftPolygon, gearDifferenceRatio, gears,
 					runData.VehicleData.VehicleCategory);
 				gears.Add(i + 1, gearData);
 			}
@@ -379,7 +389,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 
 			retVal.Gears = gears;
-			if (retVal.Type.AutomaticTransmission())
+			
+			if (retVal.Type.AutomaticTransmission() && retVal.Type != GearboxType.APTN && retVal.Type != GearboxType.IHPC)
 			{
 				var ratio = double.IsNaN(retVal.Gears[1].Ratio)
 					? 1
@@ -459,11 +470,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		#endregion
 	}
 
+
 	public class IEPCGearboxDataAdapter : GearboxDataAdapterBase
 	{
 		private GearboxData CreateIEPCGearboxData(IVehicleDeclarationInputData vehicle, VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalc)
 		{
-			
+
 
 			var iepc = vehicle.Components.IEPC;
 
@@ -540,6 +552,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 		#endregion
 	}
+
 
 	public class CompletedSpecifigBusGearboxDataAdapter : GenericCompletedBusGearboxDataAdapter
 	{

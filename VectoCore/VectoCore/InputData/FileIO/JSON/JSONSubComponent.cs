@@ -617,10 +617,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			_entries = entries;
 
 		IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> IElectricMachinesDeclarationInputData.Entries =>
-			_entries.Cast<ElectricMachineEntry<IElectricMotorDeclarationInputData>>().ToList();
+			_entries.Select(entry => new ElectricMachineEntry<IElectricMotorDeclarationInputData>() {
+				ElectricMachine = entry.ElectricMachine,
+				ADC = entry.ADC,
+				Count = entry.Count,
+				MechanicalTransmissionEfficiency = entry.MechanicalTransmissionEfficiency,
+				MechanicalTransmissionLossMap = entry.MechanicalTransmissionLossMap,
+				Position = entry.Position,
+				RatioADC = entry.RatioADC,
+				RatioPerGear = entry.RatioPerGear
+			}).ToList();
+		//_entries.Cast<ElectricMachineEntry<IElectricMotorDeclarationInputData>>().ToList();
 
 		public virtual IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> Entries =>
 			_entries;
+
+
 	}
 
 	// ###################################################################

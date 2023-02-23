@@ -192,11 +192,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				? GetDouble(XMLNames.Vehicle_MaxNetPower1).SI<Watt>()
 				: null;
 
-		public virtual Watt MaxNetPower2 =>
-			ElementExists(XMLNames.Vehicle_MaxNetPower2)
-				? GetDouble(XMLNames.Vehicle_MaxNetPower2).SI<Watt>()
-				: null;
-
 		public virtual string ExemptedTechnology => null;
 
 		public virtual RegistrationClass? RegisteredClass => RegistrationClass.unknown;
@@ -292,8 +287,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override bool DualFuelVehicle => false;
 
 		public override Watt MaxNetPower1 => null;
-
-		public override Watt MaxNetPower2 => null;
 
 		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
 		public class ADASDefaultValues : IAdvancedDriverAssistantSystemDeclarationInputData
@@ -404,8 +397,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override bool DualFuelVehicle => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_DualFuelVehicle));
 
 		public override Watt MaxNetPower1 => GetDouble(XMLNames.Vehicle_MaxNetPower1).SI<Watt>();
-
-		public override Watt MaxNetPower2 => GetDouble(XMLNames.Vehicle_MaxNetPower2).SI<Watt>();
 
 		public override IVehicleComponentsDeclaration Components => null;
 
@@ -579,7 +570,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public bool HybridElectricHDV { get; }
 		public bool DualFuelVehicle { get; }
 		public virtual Watt MaxNetPower1 { get; }
-		public Watt MaxNetPower2 { get; }
 		public virtual string ExemptedTechnology { get; }
 		public RegistrationClass? RegisteredClass { get; }
 		public VehicleCode? VehicleCode { get; }

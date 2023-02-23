@@ -40,7 +40,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
 namespace TUGraz.VectoCore.OutputData
@@ -276,7 +276,7 @@ namespace TUGraz.VectoCore.OutputData
 		/// <param name="entry"></param>
 		/// <param name="runData"></param>
 		/// <param name="modData">The mod data.</param>
-		//[MethodImpl(MethodImplOptions.Synchronized)]
+		//[MethodImpl(MethodImplOptions.Synchronized)] //Results are already locked
 		protected abstract void DoStoreResult(T entry, VectoRunData runData, IModalDataContainer modData);
 
 

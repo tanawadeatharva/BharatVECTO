@@ -161,9 +161,10 @@ namespace TUGraz.VectoCommon.InputData
 
         bool DualFuelVehicle { get; }
 
+		/// <summary>
+		/// SumNetPower in 2nd amendment
+		/// </summary>
         Watt MaxNetPower1 { get; }
-
-		Watt MaxNetPower2 { get; }
 
 		string ExemptedTechnology { get; }
 
@@ -250,6 +251,17 @@ namespace TUGraz.VectoCommon.InputData
 		IElectricMachinesDeclarationInputData ElectricMachines { get; }
 
 		IIEPCDeclarationInputData IEPC { get; }
+	}
+
+	public static class ComponentsHelper{
+		/// <summary>
+		/// Returns the gearbox type of Gearbox- or IEPC-Component
+		/// </summary>
+		/// <param name=""></param>
+		public static GearboxType? GetGearboxType(this IVehicleComponentsDeclaration components)
+		{
+			return components?.GearboxInputData?.Type ?? (components?.IEPC != null ? new GearboxType?(GearboxType.IEPC) : null);
+		}
 	}
 
 	public interface IAxlesDeclarationInputData
@@ -768,6 +780,14 @@ namespace TUGraz.VectoCommon.InputData
 		//double OverloadRecoveryFactor { get; }
 	}
 
+	public static class IElectricMotorInputDataHelper
+	{
+		public static bool IsIHPC(this IElectricMotorDeclarationInputData em)
+		{
+			return ((!em.IHPCType.IsNullOrEmpty()) && (em.IHPCType != "None"));
+		}
+	}
+
 	public interface IElectricMotorVoltageLevel
 	{
 		Volt VoltageLevel { get; }
@@ -804,7 +824,27 @@ namespace TUGraz.VectoCommon.InputData
 		IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> Entries { get; }
 	}
 
-	public class ElectricMachineEntry<T> where T : IElectricMotorDeclarationInputData
+	//public interface IElectricMachineEntry<T>
+	//{
+	//	T ElectricMachine { get; set; }
+
+	//	int Count { get; set; }
+
+	//	PowertrainPosition Position { get; set; }
+
+	//	double RatioADC { get; set; }
+
+	//	double[] RatioPerGear { get; set; }
+
+	//	double MechanicalTransmissionEfficiency { get; set; }
+
+	//	TableData MechanicalTransmissionLossMap { get; set; }
+
+	//	IADCDeclarationInputData ADC { get; set; }
+	//}
+
+
+	public class ElectricMachineEntry<T> where T : class, IElectricMotorDeclarationInputData
 	{
 		public T ElectricMachine { get; set; }
 
@@ -812,7 +852,23 @@ namespace TUGraz.VectoCommon.InputData
 
 		public PowertrainPosition Position { get; set; }
 
-		public double RatioADC { get; set; }
+		private double? _ratioADC = null;
+		/// <summary>
+		/// If not overridden RatioADC == ADC?.Ratio ?? 1;
+		/// Can only be overridden when ADC == null;
+		/// </summary>
+		public double RatioADC { 
+			get
+			{
+				//Engineering mode sets RatioADC, decl mode sets ADC
+				if (_ratioADC.HasValue && ADC == null) {
+					return _ratioADC.Value;
+				} else {
+					return ADC?.Ratio ?? 1;
+				}
+			}
+			set => _ratioADC = value;
+		}
 
 		public double[] RatioPerGear { get; set; }
 
@@ -1197,6 +1253,14 @@ namespace TUGraz.VectoCommon.InputData
 		RM
 	}
 
+	public static class ElectricMachineTypeHelper
+	{
+		public static string GetLabel(this ElectricMachineType type)
+		{
+			return type.ToString();
+		}
+	}
+
 	public enum BatteryType
 	{
 		HPBS,
@@ -1215,6 +1279,7 @@ namespace TUGraz.VectoCommon.InputData
 		P2_5,
 		P3,
 		P4,
+		P_IHPC,
 		S2,
 		S3,
 		S4,

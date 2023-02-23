@@ -8,6 +8,7 @@
   "Body": {
     "SavedInDeclMode": false,
     "VehCat": "Tractor",
+    "LegislativeClass": "M3",
     "CurbWeight": 8229.0,
     "CurbWeightExtra": 7500.0,
     "Loading": 19300.0,
@@ -16,9 +17,9 @@
     "rdyn": 492.0,
     "CdCorrMode": "CdofVdecl",
     "CdCorrFile": "",
-    "EngineStopStart":  false,
+    "EngineStopStart": false,
     "EcoRoll": "none",
-    "PredictiveCruiseControl":  "1,2",  
+    "PredictiveCruiseControl": "1,2",
     "Retarder": {
       "Type": "secondary",
       "Ratio": 1.0,
@@ -44,7 +45,7 @@
           "TwinTyres": false,
           "RRCISO": 0.0055,
           "FzISO": 33350.0,
-		  "Steered" : true
+          "Steered": true
         },
         {
           "Inertia": 14.9,

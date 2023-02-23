@@ -404,9 +404,9 @@ namespace TUGraz.VectoCore.Tests.XML
 		private void TestOverloadValues(IElectricMotorVoltageLevel voltageLevel)
 		{
 			Assert.AreEqual(200.00.SI<NewtonMeter>(), voltageLevel.ContinuousTorque);
-			Assert.AreEqual(2000.00.SI<PerSecond>(), voltageLevel.ContinuousTorqueSpeed);//TestSpeedContinuousTorque
+			Assert.AreEqual(2000.00.RPMtoRad(), voltageLevel.ContinuousTorqueSpeed);//TestSpeedContinuousTorque
 			Assert.AreEqual(400.00.SI<NewtonMeter>(), voltageLevel.OverloadTorque);
-			Assert.AreEqual(2000.00.SI<PerSecond>(), voltageLevel.OverloadTestSpeed);//TestSpeedOverloadTorque
+			Assert.AreEqual(2000.00.RPMtoRad(), voltageLevel.OverloadTestSpeed);//TestSpeedOverloadTorque
 			Assert.AreEqual(30.00.SI<Second>(), voltageLevel.OverloadTime);
 		}
 

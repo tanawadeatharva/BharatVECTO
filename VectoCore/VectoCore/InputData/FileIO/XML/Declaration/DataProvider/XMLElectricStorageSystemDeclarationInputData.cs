@@ -44,7 +44,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			if (ElementExists(XMLNames.ElectricEnergyStorage_Capacitor)) {
 				var capacitor = GetNode(XMLNames.ElectricEnergyStorage_Capacitor);
 				electricStorages.Add(new XMLElectricStorageDeclaration {
-							REESSPack = StorageTypeReader.CreateREESSInputData(capacitor, REESSType.SuperCap)
+							REESSPack = StorageTypeReader.CreateREESSInputData(capacitor, REESSType.SuperCap),
+							Count = 1,
+							StringId = 1,
 				});
 			}else if (ElementExists(XMLNames.ElectricEnergyStorage_Battery)) {
 				var batteries = GetNodes(XMLNames.ElectricEnergyStorage_Battery);

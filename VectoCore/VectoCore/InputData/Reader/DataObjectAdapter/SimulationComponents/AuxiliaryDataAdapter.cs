@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 	public class HeavyLorryPEVAuxiliaryDataAdapter : HeavyLorryAuxiliaryDataAdapter
 	{
-		protected override HashSet<AuxiliaryType> AuxiliaryTypes { get; } = new HashSet<AuxiliaryType>() {
+		protected internal override HashSet<AuxiliaryType> AuxiliaryTypes { get; } = new HashSet<AuxiliaryType>() {
 			AuxiliaryType.ElectricSystem,
 			AuxiliaryType.HVAC,
 			AuxiliaryType.PneumaticSystem,
@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 	public class HeavyLorryAuxiliaryDataAdapter : AuxiliaryDataAdapter
 	{
-		protected virtual HashSet<AuxiliaryType> AuxiliaryTypes { get; } = new HashSet<AuxiliaryType>() {
+		protected internal virtual HashSet<AuxiliaryType> AuxiliaryTypes { get; } = new HashSet<AuxiliaryType>() {
 			AuxiliaryType.ElectricSystem,
 			AuxiliaryType.HVAC,
 			AuxiliaryType.PneumaticSystem,

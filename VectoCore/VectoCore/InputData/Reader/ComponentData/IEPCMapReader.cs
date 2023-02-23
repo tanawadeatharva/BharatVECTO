@@ -27,6 +27,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		public static EfficiencyMap Create(DataTable data, int count, double ratio,
 			ElectricMotorFullLoadCurve fullLoadCurve)
 		{
+			if (fullLoadCurve == null) {
+				throw new ArgumentNullException("Provide fullloadcurve for extrapolation");
+			}
 			var headerValid = HeaderIsValid(data.Columns);
 			if (!headerValid) {
 				LoggingObject.Logger<IEPCMapReader>().Warn(

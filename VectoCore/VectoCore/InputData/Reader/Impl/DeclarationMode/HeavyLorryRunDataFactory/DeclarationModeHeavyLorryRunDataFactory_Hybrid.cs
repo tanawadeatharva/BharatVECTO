@@ -4,6 +4,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
@@ -44,7 +45,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					foreach (var mission in _segment.Missions)
 					{
 						if (mission.MissionType.IsEMS() &&
-							engine.RatedPowerDeclared.IsSmaller(DeclarationData.MinEnginePowerForEMS))
+							DeclarationData.GetReferencePropulsionPower(vehicle).IsSmaller(DeclarationData.MinEnginePowerForEMS))
 						{
 							continue;
 						}
@@ -52,6 +53,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						foreach (var loading in mission.Loadings)
 						{
 							if (vehicle.OvcHev) {
+								if (vehicle.MaxChargingPower.IsEqual(0)) {
+									throw new VectoException(
+										"MaxChargingPower has to be greater than 0 if OVC is selected");
+								}
 								yield return CreateVectoRunData(vehicle, mission, loading, modeIdx, VectoRunData.OvcHevMode.ChargeDepleting);
 								yield return CreateVectoRunData(vehicle, mission, loading, modeIdx, VectoRunData.OvcHevMode.ChargeSustaining);
 							} else {
@@ -63,10 +68,25 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			}
 			
 			#endregion
+
+			protected void CheckMaxChargingPowerPresent(IVehicleDeclarationInputData vehicle)
+			{
+				if (vehicle.OvcHev && vehicle.MaxChargingPower == null) {
+					throw new VectoException($"{XMLNames.Vehicle_MaxChargingPower} must be set for OVC Vehicles");
+				}
+			}
 		}
 
 		public class SerialHybrid : Hybrid
 		{
+			#region Overrides of LorryBase
+
+			protected override bool AxleGearRequired()
+			{
+				return InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData != null;
+			}
+
+			#endregion
 
 			public SerialHybrid(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
 				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report,
@@ -84,7 +104,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
 			{
 				_segment = GetSegment(InputDataProvider.JobInputData.Vehicle, false);
-
+				CheckMaxChargingPowerPresent(vehicle);
+				
 				var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 				var engineModes = engine.EngineModes;
 				var engineMode = engineModes[modeIdx.Value];
@@ -118,7 +139,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					iepcData.ForEach(iepc => runData.ElectricMachinesData.Add(iepc));
 				}
 
-				if (vehicle.Components.AxleGearInputData != null) {
+				if (AxleGearRequired()) {
 					runData.AxleGearData = DataAdapter.CreateAxleGearData(vehicle.Components.AxleGearInputData);
 				}
 				
@@ -136,7 +157,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					DataAdapter.CreateHybridStrategy(runData.BatteryData, runData.SuperCapData, runData.VehicleData.TotalVehicleMass, ovcMode, loading.Key, runData.VehicleData.VehicleClass, mission.MissionType);
 
 				if (ovcMode != VectoRunData.OvcHevMode.NotApplicable) {
-					runData.BatteryData.InitialSoC = runData.HybridStrategyParameters.InitialSoc;
+					if (runData.BatteryData != null) {
+						runData.BatteryData.InitialSoC = runData.HybridStrategyParameters.InitialSoc;
+					}
+
+					if (runData.SuperCapData != null) {
+						runData.SuperCapData.InitialSoC = runData.HybridStrategyParameters.InitialSoc;
+					}
 				}
 
 
@@ -164,8 +191,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				return runData;
 			}
 
-			protected virtual void CreateGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle, VectoRunData runData)
+			protected override void CreateGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle, VectoRunData runData)
 			{
+				if (vehicle.ArchitectureID.IsOneOf(ArchitectureID.S2, ArchitectureID.S_IEPC)) {
+					throw new ArgumentException(nameof(vehicle.ArchitectureID));
+				}
 				runData.GearshiftParameters = new ShiftStrategyParameters() {
 					StartSpeed = DeclarationData.GearboxTCU.StartSpeed,
 					StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration
@@ -180,6 +210,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			{
 				_segment = GetSegment(InputDataProvider.JobInputData.Vehicle, false);
 			}
+
+			
 
 			#endregion
 		}
@@ -197,6 +229,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				int? modeIdx = null, VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
 			{
 				_segment = GetSegment(InputDataProvider.JobInputData.Vehicle, false);
+				CheckMaxChargingPowerPresent(vehicle);
 				var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 				var engineModes = engine.EngineModes;
 				var engineMode = engineModes[modeIdx.Value];
@@ -214,9 +247,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				DataAdapter.CreateREESSData(vehicle.Components.ElectricStorage, vehicle.VehicleType, vehicle.OvcHev,
 					((batteryData) => runData.BatteryData = batteryData),
 					((sCdata => runData.SuperCapData = sCdata)));
-				runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
-					vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits,
-					runData.BatteryData.CalculateAverageVoltage());
+			
 
 
 				
@@ -231,25 +262,23 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					VectoSimulationJobType.ParallelHybridVehicle);
 
 		
-				runData.GearshiftParameters =
-					DataAdapter.CreateGearshiftData(
-						runData.AxleGearData?.AxleGear.Ratio ?? 1.0,
-						null,
-						vehicle.Components.GearboxInputData.Type,
-						vehicle.Components.GearboxInputData.Gears.Count
-					);
-				var shiftStrategyName =
-					PowertrainBuilder.GetShiftStrategyName(vehicle.Components.GearboxInputData.Type,
-						vehicle.VehicleType);
-				runData.GearboxData = DataAdapter.CreateGearboxData(vehicle, runData,
-					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+				CreateGearboxAndGearshiftData(vehicle, runData);
+				runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
+					vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits,
+					runData.BatteryData.CalculateAverageVoltage(), runData.GearboxData.GearList);
 
 				runData.HybridStrategyParameters =
 					DataAdapter.CreateHybridStrategy(runData.BatteryData, runData.SuperCapData, runData.VehicleData.TotalVehicleMass, ovcMode, loading.Key, runData.VehicleData.VehicleClass, mission.MissionType);
 
 				if (ovcMode != VectoRunData.OvcHevMode.NotApplicable)
 				{
-					runData.BatteryData.InitialSoC = runData.HybridStrategyParameters.InitialSoc;
+					if (runData.BatteryData?.InitialSoC != null) {
+						runData.BatteryData.InitialSoC = runData.HybridStrategyParameters.InitialSoc;
+					}
+
+					if (runData.SuperCapData?.InitialSoC != null) {
+						runData.SuperCapData.InitialSoC = runData.HybridStrategyParameters.InitialSoc;
+					}
 				}
 
 				if (ovcMode == VectoRunData.OvcHevMode.ChargeDepleting)
@@ -277,7 +306,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				{
 					runData.ModFileSuffix += ovcMode == VectoRunData.OvcHevMode.ChargeSustaining ? "CS" : "CD";
 				}
-
+				runData.OVCMode = ovcMode;
 				return runData;
 			}
 
@@ -288,8 +317,27 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				//throw new NotImplementedException("ParallelHybrid not implemented");
 				_segment = GetSegment(InputDataProvider.JobInputData.Vehicle, false);
 			}
-		
 
+			protected override void CreateGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle, VectoRunData runData)
+			{
+				runData.GearshiftParameters =
+					DataAdapter.CreateGearshiftData(
+						runData.AxleGearData?.AxleGear.Ratio ?? 1.0,
+						null,
+						vehicle.Components.GearboxInputData.Type,
+						vehicle.Components.GearboxInputData.Gears.Count
+					);
+				var shiftStrategyName =
+					PowertrainBuilder.GetShiftStrategyName(vehicle.Components.GearboxInputData.Type,
+						vehicle.VehicleType);
+				runData.GearboxData = DataAdapter.CreateGearboxData(vehicle, runData,
+					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+			}
+
+			protected override bool AxleGearRequired()
+			{
+				return true;
+			}
 			#endregion
 
 			#endregion
@@ -347,18 +395,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			}
 
-			#region Overrides of SerialHybrid
+			#region Overrides of LorryBase
 
-			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
-				int? modeIdx, VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
-			{
-				AxleGearRequired();
-				return base.CreateVectoRunData(vehicle, mission, loading, modeIdx, ovcMode);
-			}
-
-			#endregion
-
-			private bool AxleGearRequired()
+			protected override bool AxleGearRequired()
 			{
 				var vehicle = InputDataProvider.JobInputData.Vehicle;
 				var iepcInput = vehicle.Components.IEPC;
@@ -388,6 +427,19 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 				return axleGearRequired;
 			}
+
+			#endregion
+
+			#region Overrides of SerialHybrid
+
+			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
+				int? modeIdx, VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+			{
+				AxleGearRequired();
+				return base.CreateVectoRunData(vehicle, mission, loading, modeIdx, ovcMode);
+			}
+
+			#endregion
 
 			#region Overrides of SerialHybrid
 
@@ -439,6 +491,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 		{
 			public HEV_P4(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
 				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
+		}
+
+		public class HEV_P_IHPC : HEV_P2
+		{
+
+			public HEV_P_IHPC(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report,
+				declarationDataAdapter)
+			{
+
+			}
 		}
 	}
 }

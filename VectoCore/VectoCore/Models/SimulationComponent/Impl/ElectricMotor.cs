@@ -28,7 +28,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		
 
 		public bool DeRatingActive { get; protected internal set; }
-		public bool EmOff => PreviousState.EMTorque == null ? true : false;
+		public bool EmOff => PreviousState.EMTorque == null /*|| PreviousState.EMTorque.IsEqual(0)*/
+			? true : false;
 
 		public BusAuxiliariesAdapter BusAux { protected get; set; }
 
@@ -154,6 +155,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun, double ratio)
 		{
+			
 			var gear = DataBus.GearboxInfo?.Gear ?? new GearshiftPosition(1);
 			if (gear.Gear == 0) {
 				gear = new GearshiftPosition(1);
@@ -601,6 +603,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (other is ElectricMotor e && Position == e.Position) {
 				ThermalBuffer = e.ThermalBuffer;
 				DeRatingActive = e.DeRatingActive;
+				PreviousState = e.PreviousState.Clone();
+				//CurrentState = e.CurrentState.Clone();
 				return true;
 			}
 

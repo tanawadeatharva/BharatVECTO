@@ -8,7 +8,7 @@
   "Body": {
     "SavedInDeclMode": false,
     "VehCat": "CityBus",
-    "LegislativeClass": "Unknown",
+    "LegislativeClass": "M3",
     "CurbWeight": 11975,
     "CurbWeightExtra": 0.0,
     "MassMax": 19.5,
@@ -74,7 +74,7 @@
         "MotorFile": "GenericEMotor.vem",
         "MechanicalEfficiency": 0.98
       }
-	],
+    ],
     "Batteries": [
       {
         "NumPacks": 1,

@@ -55,7 +55,7 @@ using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
@@ -196,6 +196,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			throw new VectoException("No Group found for vehicle");
 		}
 
+
+
 		public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IVehicleDeclarationInputData vehicleData)
 		{
 			switch (vehicleData.VehicleCategory) {
@@ -203,18 +205,36 @@ namespace TUGraz.VectoCore.Models.Declaration
 				case VehicleCategory.RigidTruck:
 				case VehicleCategory.Tractor:
 					var vehicleGroup = GetVehicleGroupGroup(vehicleData);
-					var propulsionPower = (vehicleData.Components?.EngineInputData?.RatedPowerDeclared ?? 0.SI<Watt>()) +
-										(vehicleData.Components?.ElectricMachines?.Entries
-											.Where(x => x.Position != PowertrainPosition.GEN)
-											.Sum(x => x.ElectricMachine.R85RatedPower * x.Count) ?? 0.SI<Watt>()) +
-										(vehicleData.Components?.IEPC?.R85RatedPower ?? 0.SI<Watt>()) + 
-										(vehicleData.MaxNetPower1 ?? 0.SI<Watt>()); 
+					var propulsionPower = GetReferencePropulsionPower(vehicleData);
 					var co2Group = WeightingGroup.Lookup(vehicleGroup.Item1, vehicleData.SleeperCab ?? false, propulsionPower);
 					return co2Group;
 				default:
 					return Declaration.WeightingGroup.Unknown;
 			}
 			//throw new VectoException("No CO2 Group found for vehicle");
+		}
+
+		public static Watt GetReferencePropulsionPower(IVehicleDeclarationInputData vehicleData)
+		{
+			switch (vehicleData.VehicleType) {
+				case VectoSimulationJobType.ConventionalVehicle:
+				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.EngineOnlySimulation:
+				case VectoSimulationJobType.IHPC:
+					return vehicleData.Components?.EngineInputData?.RatedPowerDeclared ?? 0.SI<Watt>() + vehicleData.MaxNetPower1 ?? 0.SI<Watt>();
+				case VectoSimulationJobType.SerialHybridVehicle:
+				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.IEPC_E:
+				case VectoSimulationJobType.IEPC_S:
+					return (vehicleData.Components?.EngineInputData?.RatedPowerDeclared ?? 0.SI<Watt>()) +
+							(vehicleData.Components?.ElectricMachines?.Entries
+								.Where(x => x.Position != PowertrainPosition.GEN)
+								.Sum(x => x.ElectricMachine.R85RatedPower * x.Count) ?? 0.SI<Watt>()) +
+							(vehicleData.Components?.IEPC?.R85RatedPower ?? 0.SI<Watt>()) +
+							(vehicleData.MaxNetPower1 ?? 0.SI<Watt>());
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
 		}
 
 		public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IMultistepBusInputDataProvider multiStageInputDataProvider)
@@ -598,10 +618,17 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const double TorqueLimitGearboxFactor = 0.9;
 			public const double TorqueLimitVehicleFactor = 0.95;
 
-			public static KilogramSquareMeter EngineInertia(CubicMeter displacement, GearboxType gbxType)
+			public static KilogramSquareMeter EngineInertia(VectoSimulationJobType jobType, CubicMeter displacement, GearboxType gbxType)
 			{
 				// VB Code:    Return 1.3 + 0.41 + 0.27 * (Displ / 1000)
-				return (gbxType.AutomaticTransmission() ? TorqueConverterInertia : ClutchInertia) + EngineBaseInertia +
+				KilogramSquareMeter clutchPlateTc;
+				if (jobType.IsOneOf(VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_S)) {
+					clutchPlateTc = 0.SI<KilogramSquareMeter>();
+				} else {
+					clutchPlateTc = (gbxType.AutomaticTransmission() ? TorqueConverterInertia : ClutchInertia);
+				}
+
+				return clutchPlateTc + EngineBaseInertia +
 						EngineDisplacementInertia * displacement;
 			}
 		}
@@ -1535,7 +1562,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				Distance = entries.Sum(e => e.Distance * e.WeightingFactor),
 				Payload = entries.Sum(e => e.Payload * e.WeightingFactor),
 				CargoVolume = entries.All(e => e.CargoVolume != null) ? entries.Sum(e => e.CargoVolume * e.WeightingFactor) : 0.SI<CubicMeter>(),
-				PassengerCount = entries.All(e => e.PassengerCount != null) ? entries.Sum(e => e.PassengerCount.Value * e.WeightingFactor) : (double?)null,
+				PassengerCount = entries.All(e => e.PassengerCount != null) ? entries.Sum(e => e.PassengerCount.GetValueOrDefault(0) * e.WeightingFactor) : (double?)null,
 				FuelConsumption = fuels.Select(f => Tuple.Create(f,
 						entries.All(e => e.FuelConsumptionFinal(f.FuelType) != null) ? entries.Sum(e =>
 							e.FuelConsumptionFinal(f.FuelType).TotalFuelConsumptionCorrected * e.WeightingFactor) : null))

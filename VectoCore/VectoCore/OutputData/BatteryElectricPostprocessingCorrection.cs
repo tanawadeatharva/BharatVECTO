@@ -1,4 +1,7 @@
-﻿using TUGraz.VectoCore.Models.Simulation.Data;
+﻿using System.Collections.Generic;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.OutputData
 {
@@ -8,7 +11,10 @@ namespace TUGraz.VectoCore.OutputData
 
 		public ICorrectedModalData ApplyCorrection(IModalDataContainer modData, VectoRunData runData)
 		{
-			return new NoCorrectionModalData(modData);
+			
+			return new PEVCorrectedModalData(modData) {
+				ElectricEnergyConsumption = -modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int),
+			};
 		}
 
 		#endregion

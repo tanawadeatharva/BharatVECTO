@@ -8,7 +8,7 @@
   "Body": {
     "SavedInDeclMode": false,
     "VehCat": "RigidTruck",
-    "LegislativeClass": "Unknown",
+    "LegislativeClass": "M3",
     "CurbWeight": 4670.0,
     "CurbWeightExtra": 1900.0,
     "Loading": 3020.0,
@@ -25,17 +25,17 @@
 
     "VehicleHeight": 3.0,
     "ElectricMotors": [
-        {
-          "Count": 2,
-          "Ratio": 8.56,
-          "MechanicalEfficiency":  0.97, 
-          "Position": "B3",
-          "MotorFile": "GenericEMotor_125kW_485Nm.vem"
-        }
+      {
+        "Count": 2,
+        "Ratio": 8.56,
+        "MechanicalEfficiency": 0.97,
+        "Position": "B3",
+        "MotorFile": "GenericEMotor_125kW_485Nm.vem"
+      }
     ],
-    "Battery": { 
-        "NumPacks": 2,
-        "BatteryFile": "GenericBattery_243kWh_750V.vbat"
+    "Battery": {
+      "NumPacks": 2,
+      "BatteryFile": "GenericBattery_243kWh_750V.vbat"
     },
     "InitialSoC": 80,
     "TorqueLimits": {},

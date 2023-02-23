@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
             }
 
             var retVal = new List<IOVCResultEntry>(results.Count / 2);
-            var cdEntries = results.Where(x => x.OVCMode == VectoRunData.OvcHevMode.ChargeSustaining)
+            var cdEntries = results.Where(x => x.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting)
                 .OrderBy(x => x.VehicleClass)
                 .ThenBy(x => x.FuelMode)
                 .ThenBy(x => x.Mission)

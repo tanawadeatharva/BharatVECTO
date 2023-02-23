@@ -46,7 +46,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 
@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				Mission = runData.Mission.MissionType;
 				LoadingType = runData.Loading;
 				FuelMode = runData.EngineData?.FuelMode ?? 0;
-				FuelData = runData.EngineData?.Fuels.Select(x => x.FuelData).ToList();
+				FuelData = runData.EngineData?.Fuels.Select(x => x.FuelData).ToList() ?? new List<IFuelProperties>();
 				Payload = runData.VehicleData.Loading;
 				TotalVehicleMass = runData.VehicleData.TotalVehicleMass;
 				CargoVolume = runData.VehicleData.CargoVolume;
@@ -88,6 +88,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				PassengerCount = runData.VehicleData.PassengerCount;
 				MaxChargingPower = runData.MaxChargingPower;
 				BatteryData = runData.BatteryData;
+				OVCMode = runData.OVCMode;
 			}
 
 			public MissionType Mission { get; set; }
@@ -221,7 +222,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					ElectricEnergyConsumption = ranges.ElectricEnergyConsumption;
 				}
 
-				if (data.HasGearbox) {
+				if (data.HasGearbox && !runData.JobType.IsOneOf(VectoSimulationJobType.IEPC_E, VectoSimulationJobType.IEPC_S)) {
 					var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
 						? ModalResultField.P_retarder_in
 						: (runData.AngledriveData == null ? ModalResultField.P_axle_in : ModalResultField.P_angle_in);

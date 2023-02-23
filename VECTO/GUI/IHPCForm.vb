@@ -26,6 +26,7 @@ Public Class IHPCForm
         tbInertia.Text = ihpcData.Inertia.ToGUIFormat()
         tbThermalOverload.Text = ihpcData.OverloadRecoveryFactor.ToGUIFormat()
         tbDragCurve.Text = GetRelativePath(ihpcData.DragCurve.Source, Path.GetDirectoryName(_ihpcFilePath))
+        tbRatedPower.Text = ihpcData.R85RatedPower.ConvertToKiloWatt().Value.ToGUIFormat()
 
         SetVoltageLevelLow(ihpcData.VoltageLevels.First()) 
         SetVoltageLevelHigh(ihpcData.VoltageLevels.Last())
@@ -291,6 +292,7 @@ Public Class IHPCForm
         Dim ihpcInputData = New IHPCInputData(ihpcFilePath)
 
         ihpcInputData.SetCommonEntries(tbModel.Text, tbInertia.Text, tbDragCurve.Text, tbThermalOverload.Text)
+        ihpcInputData.R85RatedPower = tbRatedPower.Text.ToDouble(0).SI(unit.SI.Kilo.Watt).Cast(of Watt)
         ihpcInputData.SetVoltageLevelEntries(tbVoltage1.Text, tbContinuousTorque1.Text, tbContinuousTorqueSpeed1.Text,
                                              tbOverloadTime1.Text, tbOverloadTorque1.Text, tbOverloadTorqueSpeed1.Text,
                                              tbFLCurve1.Text, lvPowerMap1)
@@ -638,6 +640,10 @@ Public Class IHPCForm
         Else
             MsgBox("File not found!")
         End If
+    End Sub
+
+    Private Sub IHPCForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        pnThermalOverloadRecovery.Enabled = not Cfg.DeclMode
     End Sub
 
 #End Region

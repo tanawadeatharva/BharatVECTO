@@ -8,7 +8,8 @@
   "Body": {
     "SavedInDeclMode": false,
     "VehCat": "Coach",
-    "CurbWeight": 15700.0,
+    "LegislativeClass": "M3",
+        "CurbWeight": 15700.0,
     "CurbWeightExtra": 0.0,
     "Loading": 3300.0,
     "MassMax": 24.0,

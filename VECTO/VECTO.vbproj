@@ -8,9 +8,11 @@
 	<OptionStrict>On</OptionStrict>
 	<UseWindowsForms>true</UseWindowsForms>
 	<MyType>WindowsForms</MyType>
+		<!--<TargetFramework>net6.0-windows</TargetFramework>-->
+		
 		<TargetFrameworks>net45;net48;net6.0-windows</TargetFrameworks>
-	<TargetFrameworks Condition="'$(Configuration)' == 'Release'">net45;net48;net6.0-windows</TargetFrameworks>
-	<TargetFrameworks Condition="'$(Configuration)' == 'Deploy'">net45;net48;net6.0-windows</TargetFrameworks>
+		<TargetFrameworks Condition="'$(Configuration)' == 'Release'">net45;net48;net6.0-windows</TargetFrameworks>
+		<TargetFrameworks Condition="'$(Configuration)' == 'Deploy'">net45;net48;net6.0-windows</TargetFrameworks>
 		<TargetFrameworks Condition="'$(Configuration)' == 'MockupDeploy'">net45;net48;net6.0-windows</TargetFrameworks>
 	<DefineTrace>false</DefineTrace>
 	<DefineConstants />

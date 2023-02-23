@@ -46,7 +46,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -297,19 +297,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				var batteryData = _eletricStorageAdapter.CreateBatteryData(componentsElectricStorage, jobType, ovc);
 				var superCapData = _eletricStorageAdapter.CreateSuperCapData(componentsElectricStorage);
 
-
-				if (batteryData == null)
-				{
-					throw new VectoException("Could not create BatterySystem for PEV");
+				if (batteryData != null) {
+					setBatteryData(batteryData);
 				}
-				setBatteryData(batteryData);
-
-
-				if (superCapData != null)
-				{
-					throw new VectoException("Supercaps are not allowed for PEVs");
+				if (superCapData != null) {
+					setSuperCapData(superCapData);
 				}
 
+				if (batteryData != null && superCapData != null) {
+					throw new VectoException("Either battery or super cap must be provided");
+				}
 			}
 
 			#endregion
@@ -366,8 +363,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			private PTODataAdapterLorry _ptoAdapterLorry = new PTODataAdapterLorry();
 			protected override GearboxType[] SupportedGearboxTypes => new[]
 				{ GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial };
-			//private IGearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(new TorqueConverterDataAdapter());
-			private GearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(null);
+			private IGearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(new TorqueConverterDataAdapter());
+			//private GearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(null);
 
 			//private ElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
 			#region Overrides of LorryBase
@@ -452,7 +449,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			public override GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
 				IShiftPolygonCalculator shiftPolygonCalc)
 			{
-				return _gearboxDataAdapter.CreateGearboxData(inputData, runData, shiftPolygonCalc, new[] { GearboxType.AMT });
+				return _gearboxDataAdapter.CreateGearboxData(inputData, runData, shiftPolygonCalc, SupportedGearboxTypes);
 			}
 
 			public override ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed, GearboxType gearboxType, int gearsCount)

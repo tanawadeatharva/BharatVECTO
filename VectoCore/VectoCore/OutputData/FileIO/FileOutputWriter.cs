@@ -154,7 +154,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		public virtual void WriteReport(ReportType type, XDocument data)
 		{
 			var fileName = GetReportFilename(type);
-
+			
 			if (File.Exists(fileName)) {
 				Log.Warn($"Overwriting file ({fileName})");
 			}
@@ -162,8 +162,10 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 				using (var xmlWriter = new XmlTextWriter(writer, Encoding.UTF8)) {
 					xmlWriter.Formatting = Formatting.Indented;
 					data.WriteTo(xmlWriter);
+					
 					xmlWriter.Flush();
 					xmlWriter.Close();
+					
 				}
 			}
 

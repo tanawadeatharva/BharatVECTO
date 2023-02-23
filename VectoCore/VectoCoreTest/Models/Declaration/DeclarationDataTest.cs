@@ -31,6 +31,9 @@
 
 using NUnit.Framework;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -48,6 +51,7 @@ using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFa
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
@@ -2449,6 +2453,45 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
 			Assert.AreEqual(expectedAnnual * 1000, val.Mileage.AnnualMileage.Value()); //stored in meter
 			Assert.AreEqual(expectedDaily * 1000, val.Mileage.DailyMileage.Value()); //stored in meter
+		}
+
+        [TestCaseSource(nameof(VehicleOperationTestSource))]
+		public void VehicleOperationLookupMileage(VehicleClass hdvClass, MissionType mission)
+		{
+			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+        }
+
+
+		public static IEnumerable<object[]> VehicleOperationTestSource()
+		{
+			VehicleClass hdvClass;
+
+			var missions = EnumHelper.GetValues<MissionType>();
+
+			var segmentTable = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".SegmentTable.csv"));
+			var hdvMissionDict = new Dictionary<VehicleClass, HashSet<MissionType>>();
+
+			foreach (DataRow row in segmentTable.Rows) {
+				if (!row["valid"].ToString().ToBoolean()) {
+					continue;
+				}
+				var hdvGroup = VehicleClassHelper.Parse(row["HDV group"].ToString());
+				hdvMissionDict.TryAdd(hdvGroup, new HashSet<MissionType>());
+				foreach (var missionType in missions.Where(
+							m => m.IsDeclarationMission() && m != MissionType.ExemptedMission &&
+								row.Field<string>(m.GetLabel()) != "-")) {
+					hdvMissionDict[hdvGroup].Add(missionType);
+				}
+			}
+
+			foreach (var hdvCl in 
+					hdvMissionDict
+						.Where(kv => kv.Value.Count > 0)
+						.OrderBy(kv => kv.Key)) {
+				foreach (var mission in hdvCl.Value) {
+					yield return new object[]{hdvCl.Key, mission};
+				}
+			}
 		}
 
 

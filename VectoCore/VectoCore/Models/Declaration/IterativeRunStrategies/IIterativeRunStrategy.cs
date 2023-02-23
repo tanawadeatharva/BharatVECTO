@@ -23,6 +23,12 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 		/// <param name="modData">The results of the finished run</param>
 		/// <param name="runData">modifies runData</param>
 		void UpdateRunData(int iteration, IModalDataContainer modData, VectoRunData runData);
+
+
+		/// <summary>
+		/// Enables or disables the iterative run strategy
+		/// </summary>
+		bool Enabled { get; set; }
 	}
 
 	public interface IIterativeRunResult

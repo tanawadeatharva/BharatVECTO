@@ -15,6 +15,7 @@ Imports System.Linq
 Imports System.Xml
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.BusAuxiliaries
+Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
@@ -233,20 +234,36 @@ Public Class Gearbox
                 End Try
 
                 axlegearData = New AxleGearDataAdapter().CreateAxleGearData(gearbox)
-                gearboxData = New GearboxDataAdapter(New TorqueConverterDataAdapter()).CreateGearboxData(
-                    New MockVehicleInputData() _
-                                                       With {
-                                                       .Components =
-                                                       New MockComponents() _
-                                                       With {.GearboxInputData = gearbox,
-                                                       .TorqueConverterInputData = gearbox}},
-                    New VectoRunData() _
-                                                       With {.AxleGearData = axlegearData, .EngineData = engine,
-                                                       .VehicleData =
-                                                       New VehicleData() _
-                                                       With {.DynamicTyreRadius = rdyn,
-                                                       .VehicleCategory = vehiclecategory}},
-                    Nothing, DeclarationDataAdapterHeavyLorry.Conventional.SupportsGearboxTypes)
+
+                dim supportedGearboxTypes As GearboxType() = New GearboxType(){ GearboxType.AMT, GearboxType.ATSerial, GearboxType.ATPowerSplit, GearboxType.MT, GearboxType.APTN, GearboxType.IEPC, GearboxType.IHPC}
+                'Select Case jobType
+                '    Case VectoSimulationJobType.ConventionalVehicle:
+                '        supportedGearboxTypes = DeclarationDataAdapterHeavyLorry.Conventional.SupportsGearboxTypes
+                '        Case VectoSimulationJobType.ParallelHybridVehicle
+                '            supportedGearboxTypes = DeclarationDataAdapterHeavyLorry.ParallelHybrid.SupportsGearboxTypes
+                'End Select
+
+                if gearbox.Type = GearboxType.IEPC Then
+                    if (gearbox.Gears.Count > 0) then
+                        throw new VectoSimulationException("No gears are allowed for IEPC gearbox.")
+                    End If
+                    gearboxData = new GearboxData() With{ .Inertia = 0.SI(of KilogramSquareMeter), .TractionInterruption = 0.SI(of Second)} 
+                else
+                    gearboxData = New GearboxDataAdapter(New TorqueConverterDataAdapter()).CreateGearboxData(
+                        New MockVehicleInputData() _
+                                                           With {
+                                                           .Components =
+                                                           New MockComponents() _
+                                                           With {.GearboxInputData = gearbox,
+                                                           .TorqueConverterInputData = gearbox}},
+                        New VectoRunData() _
+                                                           With {.AxleGearData = axlegearData, .EngineData = engine,
+                                                           .VehicleData =
+                                                           New VehicleData() _
+                                                           With {.DynamicTyreRadius = rdyn,
+                                                           .VehicleCategory = vehiclecategory}},
+                        Nothing, supportedGearboxTypes)
+                End If
             Else
 
                 Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
@@ -865,7 +882,6 @@ Public Class MockEngineeringVehicle
     Public Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV
     Public Property DualFuelVehicle As Boolean Implements IVehicleDeclarationInputData.DualFuelVehicle
     Public Property MaxNetPower1 As Watt Implements IVehicleDeclarationInputData.MaxNetPower1
-    Public Property MaxNetPower2 As Watt Implements IVehicleDeclarationInputData.MaxNetPower2
     Public ReadOnly Property ExemptedTechnology As String Implements IVehicleDeclarationInputData.ExemptedTechnology
     Public ReadOnly Property RegisteredClass As RegistrationClass? Implements IVehicleDeclarationInputData.RegisteredClass
     Public ReadOnly Property NumberPassengerSeatsUpperDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengerSeatsUpperDeck

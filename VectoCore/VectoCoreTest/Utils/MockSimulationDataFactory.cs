@@ -46,7 +46,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.FileIO;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -282,7 +282,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool HybridElectricHDV { get; }
 		public bool DualFuelVehicle { get; }
 		public Watt MaxNetPower1 { get; }
-		public Watt MaxNetPower2 { get; }
 		public string ExemptedTechnology { get; }
 		public RegistrationClass? RegisteredClass { get; }
 		public int? NumberPassengerSeatsUpperDeck { get; }

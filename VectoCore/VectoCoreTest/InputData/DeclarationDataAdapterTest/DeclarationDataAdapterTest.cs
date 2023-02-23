@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Tests.InputData.DeclarationDataAdapterTest
 			new[] { "Full electric steering gear" },
 			"Vacuum pump + elec. driven",
 			false,
-			TestName = "PEVAuxPass")]
+			TestName = "PHEVAuxPass")]
 		public void HeavyLorryPEVAuxiliaryDataAdapterFailTest(VectoSimulationJobType jobType, string[] spTechnologies, string psTechnology, bool fail, int? steeredAxles = null)
 		{
 			var dataAdapter = new HeavyLorryPEVAuxiliaryDataAdapter();
@@ -96,17 +96,10 @@ namespace TUGraz.VectoCore.Tests.InputData.DeclarationDataAdapterTest
 					throw new Exception("Exception occured", ex);
 				}
 			}
-
-
-
-
-
-
-
 		}
-		
-
 	}
+
+
 
 	public static class AuxiliariesInputMockHelper
 	{

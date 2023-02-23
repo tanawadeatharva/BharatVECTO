@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			Kilogram grossVehicleMassRating, Kilogram curbWeight, bool vocational)
 		{
 			
-			return Lookup(vehicleCategory, axleConfiguration, grossVehicleMassRating, curbWeight, vocational, false, false);
+			return Lookup(vehicleCategory, axleConfiguration, grossVehicleMassRating, curbWeight, vocational, false, false, false, false);
 		}
 
 		public VehicleCategory[] GetVehicleCategories(bool declarationOnly = true)
@@ -82,16 +82,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 								.Select(row => AxleConfigurationHelper.Parse(row.Field<string>("axleconf."))).Distinct();
 		}
 
-		public Segment Lookup(
-			VehicleCategory vehicleCategory, bool isBatteryElectric, AxleConfiguration axleConfiguration,
-			Kilogram grossVehicleMassRating, Kilogram curbWeight, bool vocational)
+		public Segment Lookup(VehicleCategory vehicleCategory, bool isBatteryElectric,
+			AxleConfiguration axleConfiguration,
+			Kilogram grossVehicleMassRating, Kilogram curbWeight, bool vocational, bool hasNgFuel, bool isOvcHev)
 		{
-			return Lookup(vehicleCategory,  axleConfiguration, grossVehicleMassRating, curbWeight, vocational,false, isBatteryElectric);
+			return Lookup(vehicleCategory,  axleConfiguration, grossVehicleMassRating, curbWeight, vocational,false, isBatteryElectric, hasNgFuel, isOvcHev);
 		}
 
-		public Segment Lookup(
-			VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
-			Kilogram grossVehicleMassRating, Kilogram curbWeight, bool vocational, bool considerInvalid, bool isBatteryElectric)
+		public Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
+			Kilogram grossVehicleMassRating, Kilogram curbWeight, bool vocational, bool considerInvalid,
+			bool isBatteryElectric, bool hasNgFuel, bool isOvcHev)
 		{
 			var row = GetSegmentDataRow(vehicleCategory, axleConfiguration, grossVehicleMassRating, vocational, considerInvalid);
 			if (row == null) {
@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					RessourceHelper.ReadStream(
 						DeclarationData.DeclarationDataResourcePrefix + ".VACC." +
 						row.Field<string>(".vaccfile")),
-				Missions = CreateMissions(grossVehicleMassRating, curbWeight, row, vehicleHeight, isBatteryElectric),
+				Missions = CreateMissions(grossVehicleMassRating, curbWeight, row, vehicleHeight, isBatteryElectric, hasNgFuel:hasNgFuel, isOvcHev),
 				DesignSpeed = row.ParseDouble("designspeed").KMPHtoMeterPerSecond(),
 
 				//GrossVehicleMassRating = grossVehicleMassRating,
@@ -188,7 +188,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 		private static Mission[] CreateMissions(Kilogram grossVehicleWeight, Kilogram curbWeight, DataRow row,
-			Meter vehicleHeight, bool isBatteryElectric)
+			Meter vehicleHeight, bool isBatteryElectric, bool hasNgFuel, bool isOvcHev)
 		{
 			var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>();
 			var missions = new List<Mission>();
@@ -198,14 +198,29 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var trailers = GetTrailers(row, missionType);
 
 				Kilogram maxGVW;
+
+
 				if (missionType.IsEMS()) {
-					maxGVW = isBatteryElectric
-						? Constants.SimulationSettings.MaximumGrossVehicleMassEMS_PEV
-						: Constants.SimulationSettings.MaximumGrossVehicleMassEMS;
+					if (isBatteryElectric) {
+						maxGVW = Constants.SimulationSettings.MaximumGrossVehicleMassEMS_PEV;
+					} else if(hasNgFuel || isOvcHev) {
+						maxGVW = Constants.SimulationSettings.MaximumGrossVehicleMassEMS_OVCHev_NaturalGas;
+					} else {
+						maxGVW = Constants.SimulationSettings.MaximumGrossVehicleMassEMS;
+					}
 				} else {
-					maxGVW = isBatteryElectric
-						? Constants.SimulationSettings.MaximumGrossVehicleMassPEV
-						: Constants.SimulationSettings.MaximumGrossVehicleMass;
+					if (isBatteryElectric)
+					{
+						maxGVW = Constants.SimulationSettings.MaximumGrossVehicleMassPEV;
+					}
+					else if (hasNgFuel || isOvcHev)
+					{
+						maxGVW = Constants.SimulationSettings.MaximumGrossVehicleMassOVCHev_NaturalGas;
+					}
+					else
+					{
+						maxGVW = Constants.SimulationSettings.MaximumGrossVehicleMass;
+					}
 				}
 				
 	

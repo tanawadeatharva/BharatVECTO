@@ -124,7 +124,11 @@ namespace TUGraz.VectoCore.OutputData
 		public const string FCFINAL_LiterPer100M3KM = "FC-Final{0} [l/100m³km]";
 		public const string FCFINAL_LiterPer100PassengerKM = "FC-Final{0} [l/100Pkm]";
 
-		public const string ElectricEnergyConsumptionPerKm = "EC_el_final [kWh/km]";
+		public const string EC_el_final = "EC_el_final [kWh]";
+		public const string EC_el_final_KM = "EC_el_final [kWh/km]";
+		public const string EC_el_final_TKM = "EC_el_final [kWh/tkm]";
+		public const string EC_el_final_M3KM = "EC_el_final  [g/m³km]";
+		public const string ElectricEnergyConsumption_PKM = "EC_el_final [g/Pkm]";
 
 		public const string CO2_KM = "CO2 [g/km]";
 		public const string CO2_TKM = "CO2 [g/tkm]";
@@ -281,6 +285,8 @@ namespace TUGraz.VectoCore.OutputData
 		public const string REESS_CAPACITY = "REESS Capacity";
 		public const string REESS_StartSoC = "REESS Start SoC [%]";
 		public const string REESS_EndSoC = "REESS End SoC [%]";
+		public const string REESS_MinSoC = "REESS Min SoC [%]";
+		public const string REESS_MaxSoC = "REESS Max SoC [%]";
 		public const string REESS_DeltaEnergy = "ΔE_REESS [kWh]";
 
 		public const string E_REESS_LOSS = "E_REESS_loss [kWh]";
@@ -298,6 +304,8 @@ namespace TUGraz.VectoCore.OutputData
 		public const string E_IEPC_OFF_Loss_Format = "E_{0}_off_loss [kWh]";
 		public const string E_IEPC_LOSS_FORMAT = "E_{0}_loss [kWh]";
 		public const string E_IEPC_OFF_TIME_SHARE = "{0} off time share [%]";
+
+		public const string f_equiv = "f_equiv";
 
 		public delegate object WriteSumEntry(VectoRunData r, IModalDataContainer m);
 
@@ -354,7 +362,20 @@ namespace TUGraz.VectoCore.OutputData
 			{ ROLLING_RESISTANCE_COEFFICIENT_WO_TRAILER, SumFunc((r, m) =>   r.VehicleData?.RollResistanceCoefficientWithoutTrailer)},
 			{ ROLLING_RESISTANCE_COEFFICIENT_W_TRAILER, SumFunc((r, m) =>    r.VehicleData?.TotalRollResistanceCoefficient)},
 			{ R_DYN, SumFunc((r, m) => (ConvertedSI)r.VehicleData?.DynamicTyreRadius)},
-			{ ADAS_TECHNOLOGY_COMBINATION, SumFunc((r, m) => r.VehicleData?.ADAS != null ? DeclarationData.ADASCombinations.Lookup(r.VehicleData.ADAS, r.GearboxData?.Type ?? GearboxType.NoGearbox).ID : "")},
+			{ ADAS_TECHNOLOGY_COMBINATION, SumFunc((r, m) => {
+				string ret = "";
+				if (r.VehicleData?.ADAS == null) {
+					return null;
+				}
+
+				var gbxType = r.InputData?.JobInputData.Vehicle.Components?.GetGearboxType() ??
+							r.InputData?.PrimaryVehicleData?.Vehicle.Components?.GetGearboxType();
+
+				if (gbxType != null) {
+					ret = DeclarationData.ADASCombinations.Lookup(r.VehicleData.ADAS, gbxType.Value).ID;
+				}
+				return ret;
+			})},
 			{ REESS_CAPACITY, SumFunc((r, m) => r.BatteryData?.Capacity != null ? $"{r.BatteryData?.Capacity.AsAmpHour} Ah" : r.SuperCapData?.Capacity != null ?  $"{r.SuperCapData.Capacity} F" : null)},
 			{ TCU_MODEL, SumFunc((r, m) =>  r.ShiftStrategy)},
 			{ PTO_TECHNOLOGY, SumFunc((r, m) => r.PTO?.TransmissionType ?? "")},
@@ -509,7 +530,12 @@ namespace TUGraz.VectoCore.OutputData
 
 			{ REESS_StartSoC, SumFunc((r, m) => r.BatteryData != null ? r.BatteryData.InitialSoC * 100 : r.SuperCapData != null ? r.SuperCapData.InitialSoC * 100 : double.NaN)},
 			{ REESS_EndSoC, SumFunc((r, m) => m.REESSEndSoC(), ModalResultField.REESSStateOfCharge)},
+			{ REESS_MinSoC, SumFunc((r, m) => m.REESSMinSoc(), ModalResultField.REESSStateOfCharge)},
+			{ REESS_MaxSoC, SumFunc((r, m) => m.REESSMaxSoc(), ModalResultField.REESSStateOfCharge)},
 			{ REESS_DeltaEnergy, SumFunc((r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_reess_int.GetName()).ConvertToKiloWattHour(), ModalResultField.P_reess_int)},
+
+			//P-HEV
+			{ f_equiv, SumFunc((r, m) => r.HybridStrategyParameters.EquivalenceFactor)},
 
 			// performance entries
 			{ ACC, SumFunc((r, m) => (ConvertedSI)m.AccelerationAverage(), ModalResultField.acc)},
@@ -597,14 +623,36 @@ namespace TUGraz.VectoCore.OutputData
 			{ NUM_ICE_STARTS, SumFunc((r, m) => (ConvertedSI)m.NumICEStarts().SI<Scalar>(), ModalResultField.ICEOn) },
 
 			// CO2
-			{ CO2_KM, SumFunc((r, m) => m.CorrectedModalData.KilogramCO2PerMeter.ConvertToGrammPerKiloMeter(), ModalResultField.dist) },
-			{ CO2_TKM, SumFunc((r, m) => r.VehicleData?.Loading == null || r.VehicleData.Loading.IsEqual(0) ? null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.Loading).ConvertToGrammPerTonKilometer(), ModalResultField.dist) },
-			{ CO2_M3KM, SumFunc((r, m) => r.VehicleData?.CargoVolume == null || r.VehicleData.CargoVolume.IsEqual(0) ? null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.CargoVolume).ConvertToGrammPerCubicMeterKiloMeter(), ModalResultField.dist) },
-			{ CO2_PKM, SumFunc((r, m) => r.VehicleData?.PassengerCount == null ? null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.PassengerCount.Value).ConvertToGrammPerKiloMeter(), ModalResultField.dist) },
+			{ CO2_KM, SumFunc((r, m) 
+				=> m.CorrectedModalData.KilogramCO2PerMeter.ConvertToGrammPerKiloMeter(), ModalResultField.dist) },
+			{ CO2_TKM, SumFunc((r, m) 
+				=> r.VehicleData?.Loading == null || r.VehicleData.Loading.IsEqual(0) ?
+					null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.Loading).ConvertToGrammPerTonKilometer(), ModalResultField.dist) },
+			{ CO2_M3KM, SumFunc((r, m)
+				=> r.VehicleData?.CargoVolume == null || r.VehicleData.CargoVolume.IsEqual(0) ?
+					null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.CargoVolume).ConvertToGrammPerCubicMeterKiloMeter(), ModalResultField.dist) },
+			{ CO2_PKM, SumFunc((r, m)
+				=> r.VehicleData?.PassengerCount == null ?
+					null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.PassengerCount.Value).ConvertToGrammPerKiloMeter(), ModalResultField.dist) },
 
 			// electric consumption
-			{ ElectricEnergyConsumptionPerKm, SumFunc((r, m) => (-m.TimeIntegral<WattSecond>(ModalResultField.P_reess_int) / m.Distance).Cast<JoulePerMeter>().ConvertToKiloWattHourPerKiloMeter(), ModalResultField.P_reess_int)},
-
+			{ EC_el_final, SumFunc( (r , m ) 
+				=> (m.CorrectedModalData.ElectricEnergyConsumption?.ConvertToKiloWattHour()))},
+			{ EC_el_final_KM, SumFunc((r, m) 
+				=> (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter)?.ConvertToKiloWattHourPerKiloMeter())},
+			{ EC_el_final_TKM, SumFunc((r, m) 
+				=> r.VehicleData?.Loading == null || 
+					r.VehicleData.Loading.IsEqual(0) || 
+					m.CorrectedModalData.ElectricEnergyConsumption == null 
+					? null : (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter / r.VehicleData.Loading).ConvertToKiloWattHourPerTonKiloMeter())},
+			{ EC_el_final_M3KM, SumFunc((r, m) 
+				=> r.VehicleData.CargoVolume == null ||
+					r.VehicleData.CargoVolume.IsEqual(0)  ||
+					m.CorrectedModalData.ElectricEnergyConsumption == null 
+					? null : (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter / r.VehicleData.CargoVolume).ConvertToKiloWattHourPerCubicMeterKiloMeter())},
+			{ ElectricEnergyConsumption_PKM, SumFunc((r, m)
+				=> r.VehicleData?.PassengerCount == null || m.CorrectedModalData.ElectricEnergyConsumption == null ?
+					null : (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter / r.VehicleData.PassengerCount.Value).ConvertToKiloWattHourPerPassengerKiloMeter())},
 			//			{, SumFunc((r, m) =>)},
 
 		};
@@ -678,6 +726,9 @@ namespace TUGraz.VectoCore.OutputData
 		};
 
 		public static readonly WriteAuxEntry AuxDataValue = (r, m, a) => m.AuxiliaryWork(a).ConvertToKiloWattHour();
+
 	}
+
+
 	
 }
