@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			// var pwrHi = inputProvider.VoltageLevels.Last().EfficiencyMap;
 			Assert.AreEqual("0", pwrHi.Rows[0][ElectricMotorMapReader.Fields.MotorSpeed]);
 			Assert.AreEqual("-800", pwrHi.Rows[0][ElectricMotorMapReader.Fields.Torque]);
-			Assert.AreEqual("8.86041", pwrHi.Rows[0][ElectricMotorMapReader.Fields.PowerElectrical]);
+			Assert.AreEqual("8860.41", pwrHi.Rows[0][ElectricMotorMapReader.Fields.PowerElectrical]);
 
 			var pwrMap = ElectricMotorMapReader.Create(pwrHi, 1);
 			Assert.AreEqual(0, pwrMap.LookupElectricPower(-0.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
@@ -203,7 +203,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			// var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
 			Assert.AreEqual("0", pwr.Rows[0][ElectricMotorMapReader.Fields.MotorSpeed]);
 			Assert.AreEqual("-800", pwr.Rows[0][ElectricMotorMapReader.Fields.Torque]);
-			Assert.AreEqual("9.8449", pwr.Rows[0][ElectricMotorMapReader.Fields.PowerElectrical]);
+			Assert.AreEqual("9844.9", pwr.Rows[0][ElectricMotorMapReader.Fields.PowerElectrical]);
 
 			var pwrMap = ElectricMotorMapReader.Create(pwr, 2);
 			Assert.AreEqual(0, pwrMap.LookupElectricPower(-0.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
