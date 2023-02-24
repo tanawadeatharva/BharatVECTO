@@ -643,15 +643,17 @@ namespace TUGraz.VectoCore.OutputData
 			{ EC_el_final_TKM, SumFunc((r, m) 
 				=> r.VehicleData?.Loading == null || 
 					r.VehicleData.Loading.IsEqual(0) || 
-					m.CorrectedModalData.ElectricEnergyConsumption == null 
+					m.CorrectedModalData.ElectricEnergyConsumption == null ||
+					m.CorrectedModalData.ElectricEnergyConsumptionPerMeter == null
 					? null : (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter / r.VehicleData.Loading).ConvertToKiloWattHourPerTonKiloMeter())},
 			{ EC_el_final_M3KM, SumFunc((r, m) 
 				=> r.VehicleData.CargoVolume == null ||
 					r.VehicleData.CargoVolume.IsEqual(0)  ||
-					m.CorrectedModalData.ElectricEnergyConsumption == null 
+					m.CorrectedModalData.ElectricEnergyConsumption == null ||
+					m.CorrectedModalData.ElectricEnergyConsumptionPerMeter == null
 					? null : (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter / r.VehicleData.CargoVolume).ConvertToKiloWattHourPerCubicMeterKiloMeter())},
 			{ ElectricEnergyConsumption_PKM, SumFunc((r, m)
-				=> r.VehicleData?.PassengerCount == null || m.CorrectedModalData.ElectricEnergyConsumption == null ?
+				=> r.VehicleData?.PassengerCount == null || m.CorrectedModalData.ElectricEnergyConsumption == null || m.CorrectedModalData.ElectricEnergyConsumptionPerMeter == null ?
 					null : (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter / r.VehicleData.PassengerCount.Value).ConvertToKiloWattHourPerPassengerKiloMeter())},
 			//			{, SumFunc((r, m) =>)},
 
