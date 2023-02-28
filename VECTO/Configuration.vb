@@ -123,11 +123,11 @@ Public Class Configuration
 				DeclMode = body.GetEx(Of Boolean)(_declmode)
 				ValidateRunData = IsNothing(body(_validaterundata)) OrElse body.GetEx(Of Boolean)(_validaterundata)
                 OutputFolder = If(body(_outputfolder) Is Nothing, "", body(_outputfolder).Value(of string)())
-				SaveVectoRunData = body.GetEx(Of Boolean)(_saverundata)
+				SaveVectoRunData = If(body(_saverundata) Is Nothing, False, body.GetEx(Of Boolean)(_saverundata))
 
-				InitialSOCOverride = body.GetEx(Of Boolean)(_overrideinitialsoc)
-				InitialSOCOverrideValue = body.GetEx(Of Double)(_overrideinitialsocvalue)
-				ChargeSustainingIterationModeDeActivated = body.GetEx(Of Boolean)(_csItActive)
+				InitialSOCOverride = if(body(_overrideinitialsoc) is nothing, false, body.GetEx(Of Boolean)(_overrideinitialsoc))
+				InitialSOCOverrideValue = if (body(_overrideinitialsoc) Is Nothing, 50, body.GetEx(Of Double)(_overrideinitialsocvalue))
+				ChargeSustainingIterationModeDeActivated = if (body(_csItActive) Is Nothing, true, body.GetEx(Of Boolean)(_csItActive))
 
 
 			End Using
