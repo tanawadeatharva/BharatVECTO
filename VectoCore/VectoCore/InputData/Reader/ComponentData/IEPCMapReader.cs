@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			IList<EfficiencyMap.Entry> entries, ElectricMotorFullLoadCurve fullLoadCurve)
 		{
 			var clusterer = new MeanShiftClustering();
-			var clusterTolerance = 1e-1;
+			var clusterTolerance = 50.RPMtoRad().Value();
 			var extrapolationfactor = Constants.PowerMapSettings.EfficiencyMapExtrapolationFactor;
 
 			//ignore entries where speed is 0, added manually to speed bucket (clustering doesn't work because the distance is too small)
