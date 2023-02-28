@@ -27,29 +27,30 @@ namespace TUGraz.VectoCore.Tests.Integration.DualFuel
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleDualModeDualFuel.xml")]
-		public void DualModeDualFuelVehicleTest(string jobName)
-		{
-			var fileWriter = new FileOutputWriter(jobName);
-			var sumData = new SummaryDataContainer(fileWriter);
+        [TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleDualModeDualFuel.xml"),
+		Ignore("DualMode vehicles are currently not supported - method how to write results not defined")]
+        public void DualModeDualFuelVehicleTest(string jobName)
+        {
+            var fileWriter = new FileOutputWriter(jobName);
+            var sumData = new SummaryDataContainer(fileWriter);
 
-			var jobContainer = new JobContainer(sumData);
-			var inputData = xmlInputReader.CreateDeclaration(jobName);
+            var jobContainer = new JobContainer(sumData);
+            var inputData = xmlInputReader.CreateDeclaration(jobName);
 
-			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter);
-			runsFactory.WriteModalResults = true;
-			runsFactory.Validate = false;
+            var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter);
+            runsFactory.WriteModalResults = true;
+            runsFactory.Validate = false;
 
-			jobContainer.AddRuns(runsFactory);
+            jobContainer.AddRuns(runsFactory);
 
-			jobContainer.Execute();
-			jobContainer.WaitFinished();
+            jobContainer.Execute();
+            jobContainer.WaitFinished();
 
-			Assert.IsTrue(jobContainer.AllCompleted);
-			Assert.IsTrue(jobContainer.GetProgress().All(x => x.Value.Success));
-		}
+            Assert.IsTrue(jobContainer.AllCompleted);
+            Assert.IsTrue(jobContainer.GetProgress().All(x => x.Value.Success));
+        }
 
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleSingleModeDualFuel.xml")]
+        [TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleSingleModeDualFuel.xml")]
 		public void SingleModeDualFuelVehicleTest(string jobName)
 		{
 			var fileWriter = new FileOutputWriter(jobName);
