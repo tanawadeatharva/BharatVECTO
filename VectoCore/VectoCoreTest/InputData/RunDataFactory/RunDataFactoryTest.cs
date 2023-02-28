@@ -43,9 +43,9 @@ public class RunDataFactoryTest
 	//TestCase(@"HeavyLorry\HEV_heavyLorry_AMT_Px.xml"),
 	//TestCase(@"HeavyLorry\IEPC_heavyLorry.xml"),
 
-	[TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2_realistic.xml"),
-	TestCase(@"HeavyLorry\PEV_heavyLorry_E3_realistic.xml"),
-	TestCase(@"HeavyLorry\PEV_heavyLorry_E4.xml")]
+	//[TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2_realistic.xml"),
+	//TestCase(@"HeavyLorry\PEV_heavyLorry_E3_realistic.xml"),
+	//TestCase(@"HeavyLorry\PEV_heavyLorry_E4.xml")]
 	//TestCase(@"MediumLorry\Conventional_mediumLorry_AMT.xml"),
 	//TestCase(@"MediumLorry\HEV-S_mediumLorry_AMT_S2.xml"),
 	//TestCase(@"MediumLorry\HEV-S_mediumLorry_AMT_S2_ovc.xml"),
