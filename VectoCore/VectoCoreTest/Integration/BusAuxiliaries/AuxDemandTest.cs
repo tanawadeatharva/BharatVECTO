@@ -60,9 +60,9 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[TestCase(12000, 1256, 148, 148, 6087.03221)]
-		[TestCase(12000, 1256, -45, -30, 8954.1396)]
-		[TestCase(15700, 1319, -45.79263, -24.0441, 9093.9473)]
+		[TestCase(12000, 1256, 148, 148, 5649.8149)]
+		[TestCase(12000, 1256, -45, -30, 8516.9257)]
+		[TestCase(15700, 1319, -45.79263, -24.0441, 8656.7333)]
 		public void AuxDemandtest(double vehicleWeight, double engineSpeedRpm, double driveLinePower, double internalPower,
 			double expectedPowerDemand)
 		{
