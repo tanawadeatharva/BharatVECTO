@@ -59,7 +59,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			if (modelData.VehicleData.VehicleClass.IsBus())
 			{
-				Input = modelData.InputData.PrimaryVehicleData.Vehicle;
+				switch (modelData.InputData) {
+					case ISingleBusInputDataProvider single:
+						Input = single.PrimaryVehicle;
+						break;
+					case IMultistepBusInputDataProvider multistep:
+						Input = multistep.JobInputData.PrimaryVehicle.Vehicle;
+						break;
+					case IDeclarationInputDataProvider declaration:
+						Input = declaration.JobInputData.Vehicle;
+						break;
+				}
 			}
 			else
 			{

@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
             public IFuelConsumptionCorrection FuelConsumptionFinal(FuelType fuelType)
 			{
-				return CorrectedFinalFuelConsumption[fuelType];
+				return CorrectedFinalFuelConsumption.ContainsKey(fuelType) ?  CorrectedFinalFuelConsumption[fuelType] : null;
 			}
 
 			public WattSecond ElectricEnergyConsumption { get; private set; }
