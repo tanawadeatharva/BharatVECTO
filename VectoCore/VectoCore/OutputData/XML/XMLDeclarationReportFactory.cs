@@ -69,14 +69,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			if (multistageVifInputData.VehicleInputData == null)
 			{
-				var reportCompleted = new XMLDeclarationReportCompletedVehicle_09(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory)
+				var reportCompleted = new XMLDeclarationReportCompletedVehicle(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory)
 				{
 					PrimaryVehicleReportInputData = multistageVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle,
 				};
 				return reportCompleted;
 			}
 			else {
-				var report = new XMLDeclarationReportInterimVehicle_09(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory, _vifInterimFactory);
+				var report = new XMLDeclarationReportInterimVehicle(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory, _vifInterimFactory);
 				return report;
 			}
 		}
@@ -94,12 +94,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 				switch (declarationInputDataProvider.JobInputData.Vehicle.VehicleCategory)
 				{
 					case VehicleCategory.HeavyBusCompletedVehicle:
-						return new XMLDeclarationReportCompletedVehicle_09(outputDataWriter)
+						return new XMLDeclarationReportCompletedVehicle(outputDataWriter,_mrfFactory,_cifFactory,_vifFactory)
 											{
 												PrimaryVehicleReportInputData = declarationInputDataProvider.PrimaryVehicleData,
 											};
 					case VehicleCategory.HeavyBusPrimaryVehicle:
-						return new XMLDeclarationReportPrimaryVehicle_09(outputDataWriter);
+						return new XMLDeclarationReportPrimaryVehicle(outputDataWriter, _mrfFactory, _vifFactory);
 
 					default:
 						break;

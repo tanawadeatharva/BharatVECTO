@@ -12,7 +12,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 	/// <summary>
 	/// Create MRF and VIF for primary bus
 	/// </summary>
-	public class XMLDeclarationReportPrimaryVehicle_09 : XMLDeclarationReport
+	public class XMLDeclarationReportPrimaryVehicle : XMLDeclarationReport
 	{
 		private readonly IVIFReportFactory _vifFactory;
 
@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public override XDocument PrimaryVehicleReport => VehicleInformationFile?.Report;
 
 		
-		public XMLDeclarationReportPrimaryVehicle_09(IReportWriter writer,
+		public XMLDeclarationReportPrimaryVehicle(IReportWriter writer,
 			IManufacturerReportFactory mrfFactory,
 			IVIFReportFactory vifFactory) : base(writer, mrfFactory, null)
 		{

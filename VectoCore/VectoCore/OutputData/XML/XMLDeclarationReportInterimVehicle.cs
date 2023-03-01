@@ -13,14 +13,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 	/// <summary>
 	/// Create VIF of an interim (or the complete(d) step
 	/// </summary>
-	public class XMLDeclarationReportInterimVehicle_09 : XMLDeclarationReport
+	public class XMLDeclarationReportInterimVehicle : XMLDeclarationReport
 	{
 		protected readonly IVIFReportFactory _vifFactory;
 
 		protected IXMLMultistepIntermediateReport MultistepIntermediateBusReport;
 		protected readonly IVIFReportInterimFactory _interimFactory;
 
-		public XMLDeclarationReportInterimVehicle_09(IReportWriter writer,
+		public XMLDeclarationReportInterimVehicle(IReportWriter writer,
 			IManufacturerReportFactory mrfFactory,
 			ICustomerInformationFileFactory cifFactory,
 			IVIFReportFactory vifFactory, IVIFReportInterimFactory interimFactory) : base(writer, mrfFactory, cifFactory)

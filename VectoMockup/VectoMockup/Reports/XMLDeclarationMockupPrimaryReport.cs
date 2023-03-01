@@ -15,7 +15,7 @@ namespace TUGraz.VectoMockup.Reports
 	/// <summary>
 	/// Create MRF and VIF for primary bus
 	/// </summary>
-	public class XMLDeclarationMockupPrimaryReport : XMLDeclarationReportPrimaryVehicle_09
+	public class XMLDeclarationMockupPrimaryReport : XMLDeclarationReportPrimaryVehicle
 	{
 		private readonly bool _exempted;
 
@@ -25,13 +25,12 @@ namespace TUGraz.VectoMockup.Reports
 			IVIFReportFactory vifFactory,
 			bool exempted) : base(writer,
 			mrfFactory,
-			cifFactory,
 			vifFactory)
 		{
 			_exempted = exempted;
 		}
 
-		#region Overrides of XMLDeclarationReportPrimaryVehicle_09
+		#region Overrides of XMLDeclarationReportPrimaryVehicle
 
 		protected override void DoStoreResult(ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
 		{

@@ -10,6 +10,8 @@ using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 {
@@ -21,6 +23,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		private IDeclarationReport _currentStageDeclarationReport;
 		private IVTPReport _currentStageVTPReport;
 		protected readonly IXMLDeclarationReportFactory _xmlDeclarationReportFactory;
+		private IVIFReportFactory _vifFactory;
+		private IManufacturerReportFactory _mrfFactory;
 
 
 		public SimulatorFactoryDeclaration(IInputDataProvider dataProvider, 
@@ -31,13 +35,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			IXMLInputDataReader xmlInputDataReader,
 			ISimulatorFactoryFactory simulatorFactoryFactory,
 			IXMLDeclarationReportFactory xmlDeclarationReportFactory,
-			IVectoRunDataFactoryFactory runDataFactoryFactory
-			) : base(ExecutionMode.Declaration, writer, validate)
+			IVectoRunDataFactoryFactory runDataFactoryFactory, IVIFReportFactory vifFactory, IManufacturerReportFactory mrfFactory) : base(ExecutionMode.Declaration, writer, validate)
 		{
 			_xmlInputDataReader = xmlInputDataReader;
 			_simFactoryFactory = simulatorFactoryFactory;
 			_currentStageInputData = dataProvider;
 			_xmlDeclarationReportFactory = xmlDeclarationReportFactory;
+			_vifFactory = vifFactory;
+			_mrfFactory = mrfFactory;
 
 
 			_currentStageDeclarationReport = declarationReport ?? xmlDeclarationReportFactory.CreateReport(dataProvider, writer);
@@ -84,7 +89,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			IXMLInputDataReader xmlInputDataReader,
 			ISimulatorFactoryFactory simulatorFactoryFactory, 
 			IXMLDeclarationReportFactory xmlDeclarationReportFactory,
-			IVectoRunDataFactoryFactory runDataFactoryFactory) : this(
+			IVectoRunDataFactoryFactory runDataFactoryFactory, IVIFReportFactory vifFactory, IManufacturerReportFactory mrfFactory) : this(
 				dataProvider: dataProvider, 
 				declarationReport: null,
 				writer: writer,
@@ -93,7 +98,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 				xmlInputDataReader: xmlInputDataReader, 
 				simulatorFactoryFactory: simulatorFactoryFactory,
 				xmlDeclarationReportFactory: xmlDeclarationReportFactory,
-				runDataFactoryFactory: runDataFactoryFactory)
+				runDataFactoryFactory: runDataFactoryFactory, vifFactory: vifFactory, mrfFactory: mrfFactory)
 		{
 
 		}
@@ -125,7 +130,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 							multistagePrimaryAndStageInputDataProvider,
 							ReportWriter,
 							currentStageDeclarationReport,
-						_simFactoryFactory, _xmlInputDataReader, Validate);
+						_simFactoryFactory, _xmlInputDataReader, _mrfFactory, _vifFactory, Validate);
 				case IMultistageVIFInputData multistageVifInputData:
 					if (multistageVifInputData.VehicleInputData != null) {
 						return new CompletedAfterInterimPrimaryFactoryCreator(

@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Xml;
 using System.Xml.Linq;
 using NLog.Config;
@@ -55,6 +56,8 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using LogManager = NLog.LogManager;
+
+[assembly: InternalsVisibleTo("VectoCoreTest")]
 
 namespace TUGraz.VectoCore.OutputData.XML
 {

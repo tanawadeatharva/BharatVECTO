@@ -19,11 +19,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 	/// <summary>
 	/// Create MRF and CIF of the complete(d) step
 	/// </summary>
-	public class XMLDeclarationReportCompletedVehicle_09 : XMLDeclarationReport
+	public class XMLDeclarationReportCompletedVehicle : XMLDeclarationReport
 	{
 		#region Constructors
-		//public XMLDeclarationReportCompletedVehicle_09(IReportWriter writer) : base(writer) { }
-		public XMLDeclarationReportCompletedVehicle_09(IReportWriter writer, IManufacturerReportFactory mrfFactory,
+		//public XMLDeclarationReportCompletedVehicle(IReportWriter writer) : base(writer) { }
+		public XMLDeclarationReportCompletedVehicle(IReportWriter writer, IManufacturerReportFactory mrfFactory,
 			ICustomerInformationFileFactory cifFactory,
 			IVIFReportFactory vifFactory) : base(writer, mrfFactory, cifFactory)
 		{

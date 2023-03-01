@@ -21,7 +21,7 @@ namespace TUGraz.VectoMockup.Reports
 	/// <summary>
 	/// Create VIF of an interim (or the complete(d) step
 	/// </summary>
-	public class XMLDeclarationMockupReportInterimVehicle : XMLDeclarationReportInterimVehicle_09
+	public class XMLDeclarationMockupReportInterimVehicle : XMLDeclarationReportInterimVehicle
 	{
 		private readonly bool _exempted;
 
@@ -38,7 +38,7 @@ namespace TUGraz.VectoMockup.Reports
 	/// <summary>
 		/// Create MRF and CIF of the complete(d) step
 		/// </summary>
-	public class XMLDeclarationMockupReportCompletedVehicle : XMLDeclarationReportCompletedVehicle_09
+	public class XMLDeclarationMockupReportCompletedVehicle : XMLDeclarationReportCompletedVehicle
 	{
 		//private readonly IManufacturerReportFactory _mrfFactory;
 		//private readonly ICustomerInformationFileFactory _cifFactory;
