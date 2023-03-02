@@ -164,7 +164,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 		[TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml"),
-		 TestCase(@"TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml")]
+		 //TestCase(@"TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml") // ExemptedVehicles XML Version 1.0 no longer supported
+		]
 		public void TestValidationXMLReports(string jobfile)
 		{
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
