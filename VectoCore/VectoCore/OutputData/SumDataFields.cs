@@ -8,6 +8,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -368,8 +369,16 @@ namespace TUGraz.VectoCore.OutputData
 					return null;
 				}
 
-				var gbxType = r.InputData?.JobInputData.Vehicle.Components?.GetGearboxType() ??
-							r.InputData?.PrimaryVehicleData?.Vehicle.Components?.GetGearboxType();
+				GearboxType? gbxType = null;
+				switch (r.InputData) {
+					case IMultistepBusInputDataProvider multistep:
+						gbxType = multistep.JobInputData?.PrimaryVehicle?.Vehicle?.Components.GetGearboxType();
+						break;
+					default:
+						gbxType = r.InputData?.JobInputData.Vehicle.Components?.GetGearboxType() ??
+									r.InputData?.PrimaryVehicleData?.Vehicle.Components?.GetGearboxType();
+						break;
+				}
 
 				if (gbxType != null) {
 					ret = DeclarationData.ADASCombinations.Lookup(r.VehicleData.ADAS, gbxType.Value).ID;
