@@ -1555,6 +1555,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return null;
 			}
 
+			if (entries.Sum(x => x.WeightingFactor).IsEqual(0)) {
+				return null;
+			}
+
 			var fuels = entries.First().FuelData;
 			return new WeightedResult() {
 				AverageSpeed = null,
