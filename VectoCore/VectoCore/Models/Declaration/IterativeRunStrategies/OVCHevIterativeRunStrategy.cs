@@ -18,6 +18,7 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 		public override void UpdateRunData(int iteration, IModalDataContainer modData, VectoRunData runData)
 		{
 			StoreResults(modData, runData, iteration);
+			runData.Iteration = (iteration + 1);
 			SetEquivalenceFactor(runData, iteration);
 		}
 

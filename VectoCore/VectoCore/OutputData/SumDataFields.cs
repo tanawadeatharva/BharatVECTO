@@ -334,7 +334,7 @@ namespace TUGraz.VectoCore.OutputData
 		public static readonly Dictionary<string, Tuple<ModalResultField[], WriteSumEntry>> SumDataValue = new Dictionary<string, Tuple<ModalResultField[], WriteSumEntry>>() {
 			// common fields
 			{ SORT, SumFunc((r, m) => r.JobNumber * 1000 + r.RunNumber)},
-			{ JOB, SumFunc((r, m) => $"{r.JobNumber}-{r.RunNumber}")},
+			{ JOB, SumFunc((r, m) => $"{r.JobNumber}-{r.RunNumber}-{(r.Iteration != 0 ? r.Iteration.ToString() : "")}")},
 			{ INPUTFILE, SumFunc((r,m) => SummaryDataContainer.ReplaceNotAllowedCharacters(r.JobName)) },
 			{ CYCLE, SumFunc((r, m) => SummaryDataContainer.ReplaceNotAllowedCharacters(r.Cycle.Name + Constants.FileExtensions.CycleFile))},
 			{ STATUS, SumFunc((r, m) => m.RunStatus)},
