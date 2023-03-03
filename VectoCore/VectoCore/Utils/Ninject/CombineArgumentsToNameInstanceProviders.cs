@@ -12,33 +12,49 @@ using TUGraz.VectoCommon.Exceptions;
 
 namespace TUGraz.VectoCore.Utils.Ninject
 {
-    internal class CombineArgumentsToNameInstanceProvider : StandardInstanceProvider
+    public class CombineArgumentsToNameInstanceProvider : StandardInstanceProvider
 	{
+		public class MethodSettings
+		{
+			/// <summary>
+			/// This delegate is used to create a name out of the parameters
+			/// </summary>
+			public CombineToName combineToNameDelegate;
+			/// <summary>
+			/// Specifies the number of arguments that not passed to the constructor
+			/// </summary>
+			public int skipArguments;
+			/// <summary>
+			/// Specifies the number of arguments that are passed to the <see cref="combineToNameDelegate"/>
+			/// </summary>
+			public int takeArguments;
+			/// <summary>
+			/// Sets the methods for which these settings apply, leave empty for default settings
+			/// </summary>
+			public MethodInfo[] methods;
+		}
 
 		public delegate string CombineToName(params object[] arguments);
 
-		private CombineToName _combinationDelegate = null;
-		private readonly int _skipArgumentsNr;
-		private readonly int _numberOfArguments;
-
-		private HashSet<MethodInfo> _methodInfos = new HashSet<MethodInfo>();
+		private Dictionary<MethodInfo, MethodSettings> _methodSettings = new Dictionary<MethodInfo, MethodSettings>();
 		/// <summary>
 		/// Constructor for CombineArgumentsToNameInstanceProvider
 		/// </summary>
-		/// <param name="combinationDelegate">this delegate is to combine numberOfArguments arguments to a name</param>
-		/// <param name="numberOfArguments">the number of arguments that are used to create the name</param>
-		/// <param name="methods">the name is only resolved with the combinationDelegate if one of these methods was called, otherwise the standard instance provider is used</param>
-		/// <param name="skipArgumentsNr">defines the number of arguments that are skipped and not passed to the constructor</param>
-		public CombineArgumentsToNameInstanceProvider(CombineToName combinationDelegate, int numberOfArguments, int skipArgumentsNr, params MethodInfo[] methods)
+		
+		public CombineArgumentsToNameInstanceProvider(params MethodSettings[] settings)
 		{
-			_numberOfArguments = numberOfArguments;
-			_skipArgumentsNr = skipArgumentsNr;
-			_combinationDelegate = combinationDelegate;
+			if (settings != null && settings.Any(s => s.methods == null)) {
+				throw new ArgumentException($"At least one method has to be specified in the MethodSetting");
+			}
 
-			if (methods != null) {
-				foreach (var method in methods) {
-					_methodInfos.Add(method);
+
+			if (settings != null) {
+				foreach (var setting in settings) {
+					foreach (var method in setting.methods) {
+						_methodSettings.Add(method, setting);
+					}
 				}
+				
 			}
 		}
 
@@ -50,29 +66,31 @@ namespace TUGraz.VectoCore.Utils.Ninject
 			{
 				return base.GetInstance(instanceResolver, methodInfo, arguments);
 			}
-			catch (Exception e)
-			{
-				throw new VectoException("failed to create instance for '{1}' via '{0}' version '{2}'", e, methodInfo.Name, methodInfo.ReturnType.Name, arguments[0]);
+			catch (Exception e) {
+				var name = GetName(methodInfo, arguments);
+				throw new VectoException("failed to create instance for '{1}' via '{0}' version '{2}' name'{3}'", e, methodInfo.Name, methodInfo.ReturnType.Name, arguments[0].ToString(), name);
+				
 				//throw e;
 			}
 		}
 
 		protected override string GetName(MethodInfo methodInfo, object[] arguments)
 		{
-			if (!_methodInfos.Contains(methodInfo)) {
+			if (!_methodSettings.TryGetValue(methodInfo, out var methodSettings)) {
 				return base.GetName(methodInfo, arguments);
 			}
 
-			return _combinationDelegate.Invoke(arguments.Take(_numberOfArguments).ToArray());
+			return methodSettings.combineToNameDelegate.Invoke(arguments.Take(methodSettings.takeArguments).ToArray());
 
 		}
 
 		protected override IConstructorArgument[] GetConstructorArguments(MethodInfo methodInfo, object[] arguments)
 		{
-			if (!_methodInfos.Contains(methodInfo)) {
+			if (!_methodSettings.TryGetValue(methodInfo, out var methodSettings)) {
 				return base.GetConstructorArguments(methodInfo, arguments);
 			}
-			return base.GetConstructorArguments(methodInfo, arguments).Skip(_skipArgumentsNr).ToArray();
+
+			return base.GetConstructorArguments(methodInfo, arguments).Skip(methodSettings.skipArguments).ToArray();
 		}
 
 		#endregion

@@ -67,17 +67,17 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 
 			if (data.Report != null)
 			{
-				data.Report.PrepareResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data);
+				data.Report.PrepareResult(data);
 			}
 			return new MockupExemptedRun(new ExemptedRunContainer(data.ExecutionMode) { RunData = data }, modData => {
 				if (data.Report != null)
 				{
-					data.Report.AddResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data, modData);
+					data.Report.AddResult(data, modData);
 				}
 			});
 		}
 
-		protected override IVectoRun GetNonExemptedRun(VectoRunData data, int current, VectoRunData d, ref bool warning1Hz)
+		protected override IVectoRun GetNonExemptedRun(VectoRunData data, int current, VectoRunData d, ref bool warning1Hz, ref bool firstRun)
 		{
 			var addReportResult = PrepareReport(data);
 			return new MockupRun(new VehicleContainer(ExecutionMode.Declaration,
@@ -89,11 +89,11 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 		{
 			if (data.Report != null)
 			{
-				data.Report.PrepareResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data);
+				data.Report.PrepareResult(data);
 			}
 			Action<IModalDataContainer> addReportResult = modData => {
 				if (modData is MockupModalDataContainer && data.Report != null) {
-					data.Report.AddResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data, modData);
+					data.Report.AddResult(data, modData);
 				}
 
 				return;

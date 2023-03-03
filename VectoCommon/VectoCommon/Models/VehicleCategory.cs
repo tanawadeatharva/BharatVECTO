@@ -30,7 +30,7 @@
 */
 
 using System;
-using Microsoft.Win32.SafeHandles;
+using System.Collections.Generic;
 
 namespace TUGraz.VectoCommon.Models
 {
@@ -51,15 +51,30 @@ namespace TUGraz.VectoCommon.Models
 
 	public static class VehicleCategoryHelper
 	{
-		public static string PrimaryBus = "PrimaryBus";
-		public static string Lorry = "Lorry";
-		public static string CompletedBus = "CompletedBus";
-		public static string Van = "Van";
+
+
+		public const string PrimaryBus = "PrimaryBus";
+		public const string Lorry = "Lorry";
+		public const string CompletedBus = "CompletedBus";
+		public const string Van = "Van";
+
+		public static HashSet<string> SuperCategories { get; } = new HashSet<string>() {
+			PrimaryBus,
+			Lorry,
+			CompletedBus,
+			Van
+		};
+		/// <summary>
+		/// Returns the SuperCategory for the VehicleCategory
+		/// </summary>
+		/// <param name="category"></param>
+		/// <returns></returns>
 		public static string GetVehicleType(this VehicleCategory category)
 		{
 			switch (category) {
 				case VehicleCategory.RigidTruck:
 				case VehicleCategory.Tractor:
+				case VehicleCategory.Van:
 					return Lorry;
 					break;
 				case VehicleCategory.HeavyBusPrimaryVehicle:
@@ -68,8 +83,8 @@ namespace TUGraz.VectoCommon.Models
 				case VehicleCategory.HeavyBusCompletedVehicle:
 					return CompletedBus;
 					break;
-				case VehicleCategory.Van:
-					return Van;
+				//case VehicleCategory.Van:
+				//	return Van;
 				default:
 					return category.GetLabel();
 			}

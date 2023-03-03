@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		#region Implementation of IUpdateable
 
-		public bool UpdateFrom(object other) => false;
+		protected override bool DoUpdateFrom(object other) => false;
 
 		#endregion
 	}
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		#endregion
 
 		#region Implementation of IUpdateable
-		public bool UpdateFrom(object other) {
+		protected override bool DoUpdateFrom(object other) {
 			if (other is SimpleBattery b) {
 				PreviousState = b.PreviousState.Clone();
 				SOC = b.SOC;

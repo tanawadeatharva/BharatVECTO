@@ -11,7 +11,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public class ElectricSystem : StatefulVectoSimulationComponent<ElectricSystem.State>, IElectricSystem, IElectricAuxConnecor, 
+	public class ElectricSystem : StatefulVectoSimulationComponent<ElectricSystem.State>, IElectricSystem, IElectricAuxConnector, 
 		IElectricChargerConnector, IBatteryConnector, IUpdateable
 	{
 
@@ -28,8 +28,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		public IElectricSystemResponse Request(Second absTime, Second dt, Watt powerDemand, bool dryRun = false)
 		{
+			powerDemand = powerDemand ?? 0.SI<Watt>();
 			var auxDemand = Consumers.Sum(x => x.PowerDemand(absTime, dt, dryRun)).DefaultIfNull(0);
-			var chargePower = Charger.Count == 0 ? 0.SI<Watt>() : Charger.Sum(x => x.PowerDemand(absTime, dt, powerDemand, auxDemand, dryRun));
+			var chargePower = Charger.Count == 0 ? 0.SI<Watt>() : Charger.Sum(x => x.PowerDemand(absTime, dt, powerDemand, auxDemand, dryRun)); 
 			var totalPowerDemand = powerDemand + chargePower - auxDemand;
 
 			var batResponse = Battery.MainBatteryPort.Request(absTime, dt, totalPowerDemand, dryRun);
@@ -69,7 +70,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		protected override void DoWriteModalResults(Second absTime, Second dt, IModalDataContainer container)
 		{
-			container[ModalResultField.P_aux_el] = CurrentState.AuxPower;
+			container[ModalResultField.P_Aux_el_HV] = CurrentState.AuxPower;
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
@@ -149,7 +150,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		#region Implementation of IUpdateable
 
-		public bool UpdateFrom(object other) {
+		protected override bool DoUpdateFrom(object other) {
 			if (other is ElectricSystem s) {
 				PreviousState = s.PreviousState.Clone();
 				return true;

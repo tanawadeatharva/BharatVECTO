@@ -307,7 +307,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//vehicleContainer.DataWriter = new ModalDataWriter("engine_idle_test.csv");
 			var dataWriter = new MockModalDataContainer();
 			container.ModData = dataWriter;
-			container.ModalData.AddAuxiliary("CONST");
+			container.AddAuxiliary("CONST");
 
 			var torque = 1200.SI<NewtonMeter>();
 			var angularVelocity = 800.RPMtoRad();
@@ -559,7 +559,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//vehicleContainer.DataWriter = new ModalDataWriter("engine_idle_test.csv");
 			var dataWriter = new MockModalDataContainer();
 			container.ModData = dataWriter;
-			container.ModalData.AddAuxiliary("CONST");
+			container.AddAuxiliary("CONST");
 		}
 	}
 }

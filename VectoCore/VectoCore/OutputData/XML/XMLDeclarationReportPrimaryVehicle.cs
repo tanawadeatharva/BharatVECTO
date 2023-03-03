@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
@@ -59,10 +59,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 
 		}
-		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+
+		public override void InitializeReport(VectoRunData modelData)
 		{
-			base.InitializeReport(modelData, fuelModes);
-			VehicleInformationFile.Initialize(modelData, fuelModes);
+			base.InitializeReport(modelData);
+			VehicleInformationFile.Initialize(modelData);
 		}
 		protected override void WriteResult(ResultEntry result)
 		{

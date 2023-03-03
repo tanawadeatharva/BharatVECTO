@@ -44,14 +44,14 @@
 
 		<ItemGroup Condition="'$(Configuration)'=='Deploy'">
 			<!-- All files for net45 -->
-			<Net45VECTO Include="$(SolutionDir)VECTO\bin\Release\net45\*.exe"/>
+			<Net45VECTO Include="$(SolutionDir)VECTO\bin\Release\net45\*.exe*"/>
 			<Net45VECTO Include="$(SolutionDir)VECTO\bin\Release\net45\*.dll*"/>
 			<Net45VECTO Include="$(SolutionDir)VECTO\bin\Release\net45\nlog.config"/>
-			<Net45HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net45\*.exe"/>
+			<Net45HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net45\*.exe*"/>
 			<Net45HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net45\*.dll*"/>
-			<Net45HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net45\*.exe"/>
+			<Net45HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net45\*.exe*"/>
 			<Net45HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net45\*.dll*"/>
-			<Net45VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net45\*.exe"/>
+			<Net45VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net45\*.exe*"/>
 			<Net45VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net45\*.dll*"/>
 		</ItemGroup>
 		<!--MockupDeploy-->
@@ -77,16 +77,16 @@
 
 		<ItemGroup Condition="'$(Configuration)'=='Deploy'">
 			<!-- All files for net48 -->
-			<Net48VECTO Include="$(SolutionDir)VECTO\bin\Release\net48\*.exe"/>
+			<Net48VECTO Include="$(SolutionDir)VECTO\bin\Release\net48\*.exe*"/>
 			<Net48VECTO Include="$(SolutionDir)VECTO\bin\Release\net48\*.dll*"/>
-			<Net48Vecto Include="$(SolutionDir)VECTO\bin\Release\net48\nlog.config"/>
+			<Net48VECTO Include="$(SolutionDir)VECTO\bin\Release\net48\nlog.config"/>
 			<Net48HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net48\*.exe"/>
 			<Net48HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net48\*.dll*"/>
-			<Net48HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net48\*.exe"/>
+			<Net48HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net48\*.exe*"/>
 			<Net48HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net48\*.dll*"/>
 			<Net48VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net48\*.exe"/>
 			<Net48VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net48\*.dll*"/>
-			<Net48VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net48\*.exe"/>
+			<Net48VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net48\*.exe*"/>
 			<Net48VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net48\*.dll*"/>
 		</ItemGroup>
 			
@@ -95,10 +95,10 @@
 			<!-- All files for net48 -->
 			<Net48VECTO Include="$(SolutionDir)VECTO\bin\MockupRelease\net48\*.exe*" />
 			<Net48VECTO Include="$(SolutionDir)VECTO\bin\MockupRelease\net48\*.dll*" />
-			<Net45VECTO Include="$(SolutionDir)VECTO\bin\MockupRelease\net48\nlog.config"/>
+			<Net48VECTO Include="$(SolutionDir)VECTO\bin\MockupRelease\net48\nlog.config"/>
 			<Net48HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net48\*.exe*" />
 			<Net48HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net48\*.dll*" />
-			<Net48HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net48\*.exe"/>
+			<Net48HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net48\*.exe*"/>
 			<Net48HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net48\*.dll*"/>
 			<Net48VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\MockupRelease\net48\*.exe*" />
 			<Net48VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\MockupRelease\net48\*.dll*" />

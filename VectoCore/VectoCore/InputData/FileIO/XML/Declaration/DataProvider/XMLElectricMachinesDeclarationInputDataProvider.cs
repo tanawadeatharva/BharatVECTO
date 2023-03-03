@@ -44,11 +44,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				ElectricMachine = ElectricMachineSystemReader.CreateElectricMachineSystem(GetNode(XMLNames.ElectricMachineSystem)),
 			};
 
-			if (ElementExists("ADC"))
+			if (ElementExists("ADC")) {
 				machineEntry.ADC = ElectricMachineSystemReader.ADCInputData;
+				
+			}
 
-			if(ElementExists(XMLNames.ElectricMachine_P2_5GearRatios))
+			machineEntry.MechanicalTransmissionEfficiency = double.NaN;
+
+
+			if (ElementExists(XMLNames.ElectricMachine_P2_5GearRatios)) {
 				SetGearRatios(machineEntry);
+			}
+			
 			
 			return new List<ElectricMachineEntry<IElectricMotorDeclarationInputData>>{machineEntry};
 		}

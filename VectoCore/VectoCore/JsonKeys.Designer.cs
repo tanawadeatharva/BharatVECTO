@@ -268,6 +268,15 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ElectricMachineType.
+        /// </summary>
+        internal static string EM_ElectricMachineType {
+            get {
+                return ResourceManager.GetString("EM_ElectricMachineType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FullLoadCurve.
         /// </summary>
         internal static string EM_FullLoadCurve {
@@ -300,6 +309,15 @@ namespace TUGraz.VectoCore {
         internal static string EM_OverloadTorqueSpeed {
             get {
                 return ResourceManager.GetString("EM_OverloadTorqueSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to R85RatedPower.
+        /// </summary>
+        internal static string EM_RatedPower {
+            get {
+                return ResourceManager.GetString("EM_RatedPower", resourceCulture);
             }
         }
         
@@ -952,6 +970,15 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Steered.
+        /// </summary>
+        internal static string Vehicle_Axles_Steered {
+            get {
+                return ResourceManager.GetString("Vehicle_Axles_Steered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to TwinTyres.
         /// </summary>
         internal static string Vehicle_Axles_TwinTyres {
@@ -1029,6 +1056,15 @@ namespace TUGraz.VectoCore {
         internal static string Vehicle_EngineFile {
             get {
                 return ResourceManager.GetString("Vehicle_EngineFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CycleEPTO.
+        /// </summary>
+        internal static string Vehicle_EPTO_Cycle {
+            get {
+                return ResourceManager.GetString("Vehicle_EPTO_Cycle", resourceCulture);
             }
         }
         

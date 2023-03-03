@@ -8,13 +8,16 @@
 	<OptionStrict>On</OptionStrict>
 	<UseWindowsForms>true</UseWindowsForms>
 	<MyType>WindowsForms</MyType>
+		<!--<TargetFramework>net6.0-windows</TargetFramework>-->
+		
 		<TargetFrameworks>net45;net48;net6.0-windows</TargetFrameworks>
-	<TargetFrameworks Condition="'$(Configuration)' == 'Release'">net45;net48;net6.0-windows</TargetFrameworks>
-	<TargetFrameworks Condition="'$(Configuration)' == 'Deploy'">net45;net48;net6.0-windows</TargetFrameworks>
+		<TargetFrameworks Condition="'$(Configuration)' == 'Release'">net45;net48;net6.0-windows</TargetFrameworks>
+		<TargetFrameworks Condition="'$(Configuration)' == 'Deploy'">net45;net48;net6.0-windows</TargetFrameworks>
 		<TargetFrameworks Condition="'$(Configuration)' == 'MockupDeploy'">net45;net48;net6.0-windows</TargetFrameworks>
 	<DefineTrace>false</DefineTrace>
 	<DefineConstants />
 		<Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
+		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 	</PropertyGroup>
 	<!--Final Define Constants https://developercommunity.visualstudio.com/t/vbprojuser-defineconstants-dont-affect/865956-->
 	<PropertyGroup Condition="('$(Configuration)' == 'MockupRelease') Or ('$(Configuration)' == 'MockupDebug')">
@@ -41,9 +44,10 @@
 
 	<ItemGroup>
 	<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	<PackageReference Include="Ninject.Extensions.Factory" Version="3.3.3" />
 	<PackageReference Include="NLog" Version="4.7.13" />
-		<PackageReference Include="Ninject" Version="3.3.6">
-	  <PrivateAssets>all</PrivateAssets>
+	<PackageReference Include="Ninject" Version="3.3.6">
+		<PrivateAssets>all</PrivateAssets>
 	</PackageReference>
 	</ItemGroup>
 
@@ -79,6 +83,7 @@
 	</Choose>
 
 	<ItemGroup>
+	<ProjectReference Include="..\HashingTool\HashingTool.csproj" />
 	<ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj" />
 	<ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj" />
 	</ItemGroup>

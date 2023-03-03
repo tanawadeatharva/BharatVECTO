@@ -113,5 +113,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public SpeedChangeEntry LastTargetspeedChange { get; set; }
 
 		public void FinishSimulation() {}
+
+		protected override bool DoUpdateFrom(object other) => false;
+
 	}
 }

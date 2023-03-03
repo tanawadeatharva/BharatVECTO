@@ -6,14 +6,14 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 	public static class BatteryInternalResistanceReader
 	{
-		public static InternalResistanceMap Create(DataTable data, bool inmOhm)
+		public static InternalResistanceMap Create(DataTable data, bool inputInMiliOhm)
 		{
 			if (!(data.Columns.Count == 2 || data.Columns.Count == 4 || data.Columns.Count == 5)) {
 				throw new VectoException(
@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				Tuple.Create(20.SI<Second>(), Fields.InternalResistance_20),
 			};
 			if (data.Columns.Count == col1.Length + 1) {
-				return ReadInternalResistanceMap(data, col1, inmOhm);
+				return ReadInternalResistanceMap(data, col1, inputInMiliOhm);
 			}
 
 			var col2 = new[] { 
@@ -64,14 +64,14 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				Tuple.Create(120.SI<Second>(), Fields.InternalResistance_120)
 			};
 			if (data.Columns.Count == col2.Length + 1) {
-				return ReadInternalResistanceMap(data, col2, inmOhm);
+				return ReadInternalResistanceMap(data, col2, inputInMiliOhm);
 			}
 
 
 			throw new VectoException("Failed to read InternalResistanceMap");
 		}
 
-		private static InternalResistanceMap ReadInternalResistanceMap(DataTable data, Tuple<Second, string>[] col1, bool inmOhm)
+		private static InternalResistanceMap ReadInternalResistanceMap(DataTable data, Tuple<Second, string>[] col1, bool inputInMilliOhm)
 		{
 			if ((!data.Columns.Contains(Fields.StateOfCharge) || !col1.All(x => data.Columns.Contains(x.Item2)))) {
 				for (var i = 0; i < col1.Length; i++) {
@@ -83,10 +83,10 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Join());
 			}
 
-			var factor = inmOhm ? 1000 : 1;
+			var factor = inputInMilliOhm ? 1000 : 1;
 			return new InternalResistanceMap(data.Rows.Cast<DataRow>().Select(row => {
 				var values = col1.Select(x =>
-						row.Table.Columns.Contains(x.Item2) ? Tuple.Create(x.Item1, row.ParseDouble(x.Item2).SI<Ohm>() * factor) : null)
+						row.Table.Columns.Contains(x.Item2) ? Tuple.Create(x.Item1, row.ParseDouble(x.Item2).SI<Ohm>() / factor) : null)
 					.Where(x => x != null).ToList();
 				return new InternalResistanceMap.InternalResistanceMapEntry() {
 					SoC = row.ParseDouble(Fields.StateOfCharge) / 100,
@@ -111,9 +111,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 		}
 
-		public static InternalResistanceMap Create(Stream data, bool inmOhm)
+		public static InternalResistanceMap Create(Stream data, bool inputInMiliOhm)
 		{
-			return Create(VectoCSVFile.ReadStream(data), inmOhm);
+			return Create(VectoCSVFile.ReadStream(data), inputInMiliOhm);
 		}
 	}
 }

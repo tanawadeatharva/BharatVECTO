@@ -192,11 +192,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				? GetDouble(XMLNames.Vehicle_MaxNetPower1).SI<Watt>()
 				: null;
 
-		public virtual Watt MaxNetPower2 =>
-			ElementExists(XMLNames.Vehicle_MaxNetPower2)
-				? GetDouble(XMLNames.Vehicle_MaxNetPower2).SI<Watt>()
-				: null;
-
 		public virtual string ExemptedTechnology => null;
 
 		public virtual RegistrationClass? RegisteredClass => RegistrationClass.unknown;
@@ -229,7 +224,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
-		public virtual Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
+		public virtual IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
 		public virtual TableData BoostingLimitations => null;
 
 
@@ -292,8 +287,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override bool DualFuelVehicle => false;
 
 		public override Watt MaxNetPower1 => null;
-
-		public override Watt MaxNetPower2 => null;
 
 		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
 		public class ADASDefaultValues : IAdvancedDriverAssistantSystemDeclarationInputData
@@ -404,8 +397,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override bool DualFuelVehicle => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_DualFuelVehicle));
 
 		public override Watt MaxNetPower1 => GetDouble(XMLNames.Vehicle_MaxNetPower1).SI<Watt>();
-
-		public override Watt MaxNetPower2 => GetDouble(XMLNames.Vehicle_MaxNetPower2).SI<Watt>();
 
 		public override IVehicleComponentsDeclaration Components => null;
 
@@ -551,7 +542,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
-		public virtual Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		public virtual IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 		public virtual TableData BoostingLimitations { get; }
 		public virtual string VehicleTypeApprovalNumber { get; }
 		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
@@ -579,7 +570,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public bool HybridElectricHDV { get; }
 		public bool DualFuelVehicle { get; }
 		public virtual Watt MaxNetPower1 { get; }
-		public Watt MaxNetPower2 { get; }
 		public virtual string ExemptedTechnology { get; }
 		public RegistrationClass? RegisteredClass { get; }
 		public VehicleCode? VehicleCode { get; }
@@ -808,7 +798,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 
-		public override Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits
+		public override IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits
 			=> ElementExists(XMLNames.ElectricMotorTorqueLimits) ? ReadElectricMotorTorqueLimits() : null;
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV20
@@ -820,10 +810,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 
-		private Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ReadElectricMotorTorqueLimits()
+		private IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ReadElectricMotorTorqueLimits()
 		{
 			var torqueLimitNodes = GetNodes(XMLNames.ElectricMotorTorqueLimits);
-			var motorTorqueLimits = new Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>>();
+			var motorTorqueLimits = new Dictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>>();
 
 			foreach (XmlNode torqueLimitNode in torqueLimitNodes)
 			{

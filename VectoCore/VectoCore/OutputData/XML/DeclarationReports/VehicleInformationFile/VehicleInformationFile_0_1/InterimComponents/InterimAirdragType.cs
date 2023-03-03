@@ -49,8 +49,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		protected XElement GetAirdragElement(XMLDeclarationAirdragDataProviderV20 airdrag)
 		{
-			var retVal = new XElement(v24 + XMLNames.Component_AirDrag, 
-				new XAttribute("xmlns", v20.NamespaceName));
+			var retVal = new XElement(v24 + XMLNames.Component_AirDrag//, 
+				//new XAttribute("xmlns", v20.NamespaceName)
+				);
 			var tmp = XElement.Load(airdrag.XMLSource.CreateNavigator().ReadSubtree());
 			retVal.Add(tmp.Elements());
 			return retVal;

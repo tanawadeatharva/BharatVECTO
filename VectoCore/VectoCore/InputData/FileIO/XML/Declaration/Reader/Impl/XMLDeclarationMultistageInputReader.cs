@@ -502,7 +502,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public VehicleDeclarationType VehicleDeclarationType => _manufacturingStages?.First().Vehicle.VehicleDeclarationType ?? default(VehicleDeclarationType);
 
 
-		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => throw new NotImplementedException();
+		public IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => throw new NotImplementedException();
 		public TableData BoostingLimitations => throw new NotImplementedException();
 
 		#endregion
@@ -624,7 +624,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public PerSecond EngineIdleSpeed => _primaryVehicle.Vehicle.EngineIdleSpeed;
 
 		public Watt MaxNetPower1 => _primaryVehicle.Vehicle.MaxNetPower1;
-		public Watt MaxNetPower2 => _primaryVehicle.Vehicle.MaxNetPower2;
 		public string ExemptedTechnology => _primaryVehicle.Vehicle.ExemptedTechnology;
 
 		public ArchitectureID ArchitectureID => _primaryVehicle.Vehicle.ArchitectureID;

@@ -15,21 +15,26 @@ Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
 Imports System.Xml
+Imports Ninject
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
+Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Impl
 Imports TUGraz.VectoCore.Utils
+Imports TUGraz.VectoCore.Utils.Ninject
+Imports DeclarationDataAdapterHeavyLorry = TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry
 
 <CustomValidation(GetType(Vehicle), "ValidateVehicle")>
 Public Class Vehicle
-	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData, 
+	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData,
 				IAngledriveInputData, IAirdragEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData, IAdvancedDriverAssistantSystemsEngineering,
 				IVehicleComponentsEngineering, IVehicleComponentsDeclaration, IAxlesEngineeringInputData, IAxlesDeclarationInputData
 
@@ -48,7 +53,7 @@ Public Class Vehicle
 	Public RetarderRatio As Double = 0
 	Public ReadOnly RetarderLossMapFile As SubPath
 	Public ReadOnly EmTorqueLimitsFile As SubPath
-	public ReadOnly PropulsionTorqueFile as SubPath
+	Public ReadOnly PropulsionTorqueFile As SubPath
 
 	Public DynamicTyreRadius As Double
 	Public ReadOnly Axles As List(Of AxleInputData)
@@ -67,22 +72,24 @@ Public Class Vehicle
 	Public PtoType As String
 	Public ReadOnly PtoLossMap As SubPath
 	Public ReadOnly PtoCycleStandstill As SubPath
+    Public ReadOnly EPtoCycleStandstill As SubPath
+	
 	Public ReadOnly PtoCycleDriving As SubPath
 	Public torqueLimitsList As List(Of ITorqueLimitInputData)
 	Public VehicleidlingSpeed As PerSecond
 	Public legClass As LegislativeClass
 	Public VehicleHeight As Double
 
-	public EcoRolltype as EcoRollType
-	public PCC as PredictiveCruiseControlType
-	public EngineStop as Boolean
+	Public EcoRolltype As EcoRollType
+	Public PCC As PredictiveCruiseControlType
+	Public EngineStop As Boolean
 
 	Public VehicleTankSystem As TankSystem?
 
 	Public ReadOnly ElectricMotorFile As SubPath
 	Public ReadOnly GenSetEMFile As SubPath
 
-	public ReadOnly ReessPacks As List(Of Tuple(Of String, Integer, Integer))
+	Public ReadOnly ReessPacks As List(Of Tuple(Of String, Integer, Integer))
 
 	Public ElectricMotorPosition As PowertrainPosition
 	Public ElectricMotorCount As Integer
@@ -97,7 +104,7 @@ Public Class Vehicle
 	'Public ElectricMotorMechEff As Double
 	Public GenSetLossMap As SubPath
 
-	public GearDuringPTODrive As UInteger?
+	Public GearDuringPTODrive As UInteger?
 	Public EngineSpeedDuringPTODrive As PerSecond
 	Public ElectricMotorPerGearRatios As Double()
 	Public IEPCFile As SubPath
@@ -109,20 +116,21 @@ Public Class Vehicle
 
 		RetarderLossMapFile = New SubPath
 		AngledriveLossMapFile = New SubPath()
-		EmTorqueLimitsFile = new SubPath()
+		EmTorqueLimitsFile = New SubPath()
 		PropulsionTorqueFile = New SubPath()
-		IEPCFile = new SubPath()
+		IEPCFile = New SubPath()
 
 		Axles = New List(Of AxleInputData)
 		torqueLimitsList = New List(Of ITorqueLimitInputData)
-		ReessPacks = new List(Of Tuple(Of String,Integer,Integer))
+		ReessPacks = New List(Of Tuple(Of String, Integer, Integer))
 		PtoLossMap = New SubPath()
 		PtoCycleStandstill = New SubPath()
-		PtoCycleDriving = new SubPath()
+		EPtoCycleStandstill = New SubPath()
+		PtoCycleDriving = New SubPath()
 		ElectricMotorFile = New SubPath()
-		ElectricMotorMechLossMap = new SubPath()
-		GenSetEMFile = new SubPath()
-		GenSetMechLossMap = new SubPath()
+		ElectricMotorMechLossMap = New SubPath()
+		GenSetEMFile = New SubPath()
+		GenSetMechLossMap = New SubPath()
 
 		SetDefault()
 	End Sub
@@ -148,15 +156,16 @@ Public Class Vehicle
 
 		Try
 			If mode = ExecutionMode.Declaration Then
-				Dim doa As DeclarationDataAdapterHeavyLorry = New DeclarationDataAdapterHeavyLorry()
+
+				'Dim doa As ILorryDeclarationDataAdapter = CType(_kernel.Value.Get(Of IDeclarationDataAdapterFactory).CreateDataAdapter(New VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification(vehicle)), ILorryDeclarationDataAdapter)
 				Dim segment As Segment = DeclarationData.TruckSegments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
 																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis, False)
-				vehicleData = doa.CreateVehicleData(vehicle, segment, segment.Missions.First(),
-													segment.Missions.First().Loadings.First(), true)
-				airdragData = doa.CreateAirdragData(vehicle, segment.Missions.First(), segment)
-				retarderData = doa.CreateRetarderData(vehicle)
-				angledriveData = doa.CreateAngledriveData(vehicle)
-				ptoData = doa.CreatePTOTransmissionData(vehicle)
+				vehicleData = New LorryVehicleDataAdapter().CreateVehicleData(vehicle, segment, segment.Missions.First(),
+													segment.Missions.First().Loadings.First(), True)
+				airdragData = New AirdragDataAdapter().CreateAirdragData(vehicle, segment.Missions.First(), segment)
+				retarderData = New RetarderDataAdapter().CreateRetarderData(vehicle)
+				angledriveData = New AngledriveDataAdapter().CreateAngledriveData(vehicle)
+				ptoData = New PTODataAdapterLorry().CreatePTOTransmissionData(vehicle, vehicle.Components.GearboxInputData)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				vehicleData = doa.CreateVehicleData(vehicle)
@@ -237,6 +246,7 @@ Public Class Vehicle
 		PtoType = PTOTransmission.NoPTO
 		PtoLossMap.Clear()
 		PtoCycleStandstill.Clear()
+		EPtoCycleStandstill.Clear()
 		PtoCycleDriving.Clear()
 
 		Axles.Clear()
@@ -480,7 +490,7 @@ Public Class Vehicle
 	'		Return VectoCSVFile.Read(EmTorqueLimitsFile.FullPath)
 	'	End Get
 	'    End Property
-	Public ReadOnly Property ElectricMotorTorqueLimits As Dictionary(Of PowertrainPosition, List(Of Tuple(Of Volt, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
+	Public ReadOnly Property ElectricMotorTorqueLimits As IDictionary(Of PowertrainPosition, IList(Of Tuple(Of Volt, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
 
 	Public ReadOnly Property BoostingLimitations As TableData Implements IVehicleDeclarationInputData.BoostingLimitations
 		Get
@@ -593,7 +603,16 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property IPTOTransmissionInputData_PTOLossMap As TableData _
+    Public ReadOnly Property EPTOCycleDuringStop As TableData Implements IPTOTransmissionInputData.EPTOCycleDuringStop
+		Get
+			If String.IsNullOrWhiteSpace(EPtoCycleStandstill.FullPath) Then
+				Return Nothing
+			End If
+			Return VectoCSVFile.Read(EPtoCycleStandstill.FullPath)
+		End Get
+	End Property
+
+    Public ReadOnly Property IPTOTransmissionInputData_PTOLossMap As TableData _
 		Implements IPTOTransmissionInputData.PTOLossMap
 		Get
 			If String.IsNullOrWhiteSpace(PtoLossMap.FullPath) Then
@@ -876,13 +895,7 @@ end Property
 		End Get
 	End Property
 
-	Public ReadOnly Property MaxNetPower2 As Watt Implements IVehicleDeclarationInputData.MaxNetPower2
-		Get
-			Return Nothing
-		End Get
-	End Property
-
-	Public ReadOnly Property ExemptedTechnology As String Implements IVehicleDeclarationInputData.ExemptedTechnology
+    Public ReadOnly Property ExemptedTechnology As String Implements IVehicleDeclarationInputData.ExemptedTechnology
 
 	Public ReadOnly Property RegisteredClass As RegistrationClass? Implements IVehicleDeclarationInputData.RegisteredClass
 	Public ReadOnly Property NumberPassengerSeatsUpperDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengerSeatsUpperDeck
@@ -934,8 +947,8 @@ end Property
 	Public ReadOnly Property XMLSource As XmlNode Implements IAdvancedDriverAssistantSystemDeclarationInputData.XMLSource
 	Public ReadOnly Property VehicleTypeApprovalNumber As String Implements IVehicleDeclarationInputData.VehicleTypeApprovalNumber
 	Public ReadOnly Property ArchitectureID As ArchitectureID Implements IVehicleDeclarationInputData.ArchitectureID
-	Public ReadOnly Property OvcHev As Boolean Implements IVehicleDeclarationInputData.OvcHev
-	Public ReadOnly Property MaxChargingPower As Watt Implements IVehicleDeclarationInputData.MaxChargingPower
+	Public Property OvcHev As Boolean Implements IVehicleDeclarationInputData.OvcHev
+	Public Property MaxChargingPower As Watt Implements IVehicleDeclarationInputData.MaxChargingPower
 	Public ReadOnly Property IVehicleDeclarationInputData_VehicleType As VectoSimulationJobType Implements IVehicleDeclarationInputData.VehicleType
 
 	Public ReadOnly Property IAdvancedDriverAssistantSystemsEngineering_DataSource As DataSource Implements IAdvancedDriverAssistantSystemsEngineering.DataSource

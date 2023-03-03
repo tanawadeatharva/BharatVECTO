@@ -39,7 +39,7 @@
 	</PropertyGroup>
 
 	<Choose>
-		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
+		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
 			<ItemGroup>
 				<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
 					<_Parameter1>VectoMockup</_Parameter1>
@@ -53,10 +53,15 @@
 
 	<ItemGroup>
     <None Remove="Resources\Declaration\Buses\DefaultActuationsMap.apac" />
+    <None Remove="Resources\Declaration\Buses\HeatingDistribution.csv" />
+    <None Remove="Resources\Declaration\Buses\HeatingDistributionCases.csv" />
+    <None Remove="Resources\Declaration\Buses\HVACHeatingPowerDriver.csv" />
+    <None Remove="Resources\Declaration\Buses\HVACHeatingPowerPassenger.csv" />
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_1-Cylinder_1-Stage_393ccm.acmp" />
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_1-Stage_650ccm.acmp" />
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_2-Stage_398ccm.acmp" />
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_3-Cylinder_2-Stage_598ccm.acmp" />
+    <None Remove="Resources\Declaration\VehicleOperation\RealWorldUsageFactors.csv" />
     <None Remove="Resources\MockupCIFResults.xml" />
     <None Remove="Resources\MockupMRFResults.xml" />
     <None Remove="Resources\XSD\VectoDeclarationDefinitions.2.2.1.xsd" />
@@ -70,7 +75,7 @@
     <PackageReference Include="Ninject.Extensions.Factory" Version="3.3.3" />
     <PackageReference Include="NLog" Version="4.7.13" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-  </ItemGroup>
+</ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='net45'">
     <Reference Include="Microsoft.VisualBasic" />
@@ -101,12 +106,17 @@
     <InternalsVisibleTo Include="VectoAuxiliariesTests" />
     <InternalsVisibleTo Include="VECTO3" />
     <InternalsVisibleTo Include="VECTOMultistage" />
+    <InternalsVisibleTo Include="VectoMockup" />
     <InternalsVisibleTo Include="Vecto3GUI2020Test" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj" />
-    <ProjectReference Include="..\..\VectoCommon\VectoHashing\VectoHashing.csproj" />
+    <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VectoCommon\VectoHashing\VectoHashing.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -131,5 +141,7 @@
       <LastGenOutput>JSONKeys.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+
+  
 
 </Project>

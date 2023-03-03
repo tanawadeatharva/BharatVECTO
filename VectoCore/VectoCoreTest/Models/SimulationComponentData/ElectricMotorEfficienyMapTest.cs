@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
@@ -50,6 +51,45 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 			Assert.AreEqual(lookup.ElectricalPower.Value(), batPwr, 1e-6);
 			Assert.AreEqual(expectedTq, tq.Value(), 1e-3);
 		}
+
+
+		//[Test]
+		//public void TestMahleEMLookup()
+		//{
+		//	var inputProvider =
+		//		JSONInputDataFactory.ReadElectricMotorData(@"E:\QUAM\Downloads\2022-07-07 Hybrid 40 kW System_sent.7z\2022-07-07 Hybrid 40 kW System_sent\TDS 40kW MTM 48-210x65 V2.04.vem", false);
+
+		//	var pwr = inputProvider.VoltageLevels.Last().PowerMap.First().PowerMap;
+		//	var fld = inputProvider.VoltageLevels.Last().FullLoadCurve;
+		//	var pwrMap = ElectricMotorMapReader.Create(pwr, 1);
+		//	var fldMap = ElectricFullLoadCurveReader.Create(fld, 1);
+
+		//	//var tq = pwrMap.LookupTorque(-45058.6788.SI<Watt>(), 6542.3.RPMtoRad(), -67.0253.SI<NewtonMeter>());
+
+		//	//Assert.AreEqual(-56.72495079, tq.Value(), 1e-6);
+
+		//	var nEm = 4797.89676.RPMtoRad();
+		//	var PEl = 47959.8400.SI<Watt>();
+
+		//	var maxRecupTq = fldMap.FullGenerationTorque(nEm);
+		//	var elPwrRecup = pwrMap.LookupElectricPower(nEm, maxRecupTq);
+
+		//	var recupTq = pwrMap.LookupTorque(PEl, nEm, maxRecupTq);
+
+		//	for (var tq = maxRecupTq - 50.SI<NewtonMeter>();
+		//		tq < maxRecupTq + 50.SI<NewtonMeter>();
+		//		tq += 1.SI<NewtonMeter>()) {
+		//		var pEl = pwrMap.LookupElectricPower(nEm, tq, false);
+		//		if (pEl.ElectricalPower == null) {
+		//			continue;
+		//		}
+		//		Console.WriteLine($"{tq.Value()}, {pEl.ElectricalPower.Value()}, {(pEl.ElectricalPower - PEl).Value()}");
+		//	}
+
+		//	Assert.IsTrue(maxRecupTq > recupTq);
+		//	var elPwr = pwrMap.LookupElectricPower(nEm, recupTq);
+		//	Assert.AreEqual(PEl.Value(), elPwr.ElectricalPower.Value(), Constants.SimulationSettings.InterpolateSearchTolerance);
+		//}
 
 		[TestCase(-1000000, 700), // EM drive has negative torque and thus negative electric power
 		TestCase(1000000, 700)]

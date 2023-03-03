@@ -1079,6 +1079,7 @@ Partial Class GearboxForm
         Me.btnExportXML.TabIndex = 9
         Me.btnExportXML.Text = "Exp. Gearbox as XML"
         Me.btnExportXML.UseVisualStyleBackColor = true
+        Me.btnExportXML.Visible = false
         '
         'btnExportAxlGearXML
         '
@@ -1088,6 +1089,7 @@ Partial Class GearboxForm
         Me.btnExportAxlGearXML.TabIndex = 10
         Me.btnExportAxlGearXML.Text = "Exp. AxlGear as XML"
         Me.btnExportAxlGearXML.UseVisualStyleBackColor = true
+        Me.btnExportAxlGearXML.Visible = false
         '
         'GearboxForm
         '

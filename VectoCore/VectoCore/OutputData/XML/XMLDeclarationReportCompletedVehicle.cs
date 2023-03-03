@@ -59,14 +59,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 				ihpc);
 
 		}
-		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void InitializeReport(VectoRunData modelData)
 		{
 			_weightingFactors = EqualWeighting;
 
 			InstantiateReports(modelData);
 
-			ManufacturerRpt.Initialize(modelData, fuelModes);
-			CustomerRpt.Initialize(modelData, fuelModes);
+			ManufacturerRpt.Initialize(modelData);
+			CustomerRpt.Initialize(modelData);
 		}
 		#endregion
 
@@ -117,8 +117,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 						genericResult.VehicleClass, genericResult.Mission, genericResult.Payload);
 				}
 
-				(ManufacturerRpt as XMLManufacturerReportCompletedBus).WriteResult(genericResult, specificResult, primaryResult);
-				(CustomerRpt as XMLCustomerReportCompletedBus).WriteResult(genericResult, specificResult, primaryResult);
+				(ManufacturerRpt as IXMLManufacturerReportCompletedBus)?.WriteResult(genericResult, specificResult, primaryResult);
+				(CustomerRpt as IXMLCustomerReportCompletedBus)?.WriteResult(genericResult, specificResult, primaryResult);
 			}
 
 			GenerateReports();

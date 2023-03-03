@@ -61,27 +61,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		private readonly IVIFReportFactory _vifFactory;
 
 		public InterimAfterPrimaryFactoryCreator(IMultistagePrimaryAndStageInputDataProvider originalStageInputData,
-			IOutputDataWriter originalReportWriter, 
+			IOutputDataWriter originalReportWriter,
 			IDeclarationReport originalDeclarationReport,
-			ISimulatorFactoryFactory simFactoryFactory, 
-			IXMLInputDataReader inputDataReader,
-			IManufacturerReportFactory mrfFactory,
-			IVIFReportFactory vifFactory,
-			bool validate) : base(simFactoryFactory, validate)
+			ISimulatorFactoryFactory simFactoryFactory,
+			IXMLDeclarationReportFactory xmlDeclarationReportFactory,
+			IXMLInputDataReader inputDataReader, bool validate) : base(simFactoryFactory, validate)
 		{
 
 			_originalStageInputData = originalStageInputData;
 			_inputDataReader = inputDataReader;
 			_originalReportWriter = originalReportWriter;
 			_originalDeclarationReport = originalDeclarationReport;
-			_mrfFactory = mrfFactory;
-			_vifFactory = vifFactory;
-
 			_currentStageOutputDataWriter =
 				new TempFileOutputWriter(originalReportWriter, ReportType.DeclarationReportManufacturerXML)
 				;
 			_currentStageDeclarationReport =
-				new XMLDeclarationReportPrimaryVehicle(_currentStageOutputDataWriter,_mrfFactory, _vifFactory);
+				xmlDeclarationReportFactory.CreateReport(originalStageInputData.PrimaryVehicle, _currentStageOutputDataWriter);
 			_currentStageInputData = originalStageInputData.PrimaryVehicle;
 
 		}

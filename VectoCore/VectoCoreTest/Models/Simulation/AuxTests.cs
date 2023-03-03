@@ -82,11 +82,15 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 						FuelData = FuelData.Diesel,
 						ConsumptionMap = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vmap"),
 					}}.ToList(),
-					IdleSpeed = 600.RPMtoRad()
+					IdleSpeed = 600.RPMtoRad(),
+					RatedPowerDeclared = 300e3.SI<Watt>(),
+					RatedSpeedDeclared = 2000.RPMtoRad(),
+					Displacement = 7.SI(Unit.SI.Cubic.Dezi.Meter).Cast<CubicMeter>()
 				},
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 				Cycle = new DrivingCycleData() {
 					Name = "MockCycle",
+					CycleType = CycleType.DistanceBased
 				},
 				DriverData = new DriverData() {
 					EngineStopStart = new DriverData.EngineStopStartData(),
@@ -95,15 +99,19 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var modData = new ModalDataContainer(runData, fileWriter, null) {
 				WriteModalResults = true,
 			};
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 			modData.AddAuxiliary("FAN");
 			modData.AddAuxiliary("PS");
 			modData.AddAuxiliary("STP");
 			modData.AddAuxiliary("ES");
 			modData.AddAuxiliary("AC");
+			//modData.Data.CreateColumns(ModalResults.DriverSignals);
+			modData.Data.CreateCombustionEngineColumns(runData);
 
 			var sumWriter = new SummaryDataContainer(fileWriter);
+			sumWriter.UpdateTableColumns(runData.EngineData);
 			var container = new VehicleContainer(ExecutionMode.Declaration, modData,
-				(modalData) => sumWriter.Write(modalData, 0, 0, runData));
+				sumWriter) { RunData = runData};
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\LongHaul_short.vdri", CycleType.DistanceBased, false);
 			new MockDrivingCycle(container, data);
 			new ZeroMileageCounter(container);
@@ -119,8 +127,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			aux.AddConstant("PS", DeclarationData.PneumaticSystem.Lookup(mission, "Medium Supply 1-stage").PowerDemand);
 			aux.AddConstant("STP",
 				DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, hdvClass,
-					new[] { "Variable displacement mech. controlled" }));
-			aux.AddConstant("ES", DeclarationData.ElectricSystem.Lookup(mission).PowerDemand);
+					new[] { "Variable displacement mech. controlled" }).mechanicalPumps);
+			aux.AddConstant("ES", DeclarationData.ElectricSystem.Lookup(hdvClass, mission).PowerDemand);
 			aux.AddConstant("AC",
 				DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, "Default", hdvClass).PowerDemand);
 
@@ -200,7 +208,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			new MockEngine(container);
 
 			aux.AddCycle("CYCLE");
-			container.ModalData.AddAuxiliary("CYCLE");
+			container.AddAuxiliary("CYCLE");
 
 			var speed = 2358.RPMtoRad();
 			var torque = 500.SI<NewtonMeter>();

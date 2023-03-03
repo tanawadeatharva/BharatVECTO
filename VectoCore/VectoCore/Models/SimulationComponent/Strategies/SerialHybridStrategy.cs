@@ -43,8 +43,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.Gearbox?.UpdateFrom(DataBus.GearboxInfo);
 			
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
+			TestPowertrain.ElectricMotor.UpdateFrom(DataBus.GetElectricMotors()
+				.Single(e => e.Position == TestPowertrain.ElectricMotor.Position));
 
-			var testResponse = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, false);
+            var testResponse = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, false);
 			TestPowertrain.HybridController.ApplyStrategySettings(new HybridStrategyResponse {
 				CombustionEngineOn = false, 
 				MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> {
@@ -88,9 +90,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.Charger.UpdateFrom(maxPowerGenset);
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
 			TestPowertrain.Gearbox?.UpdateFrom(DataBus.GearboxInfo);
-		
+
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
-			
+			TestPowertrain.ElectricMotor.UpdateFrom(DataBus.GetElectricMotors()
+				.Single(e => e.Position == TestPowertrain.ElectricMotor.Position));
+
+
 			var testResponse = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, false);
 			TestPowertrain.HybridController.ApplyStrategySettings(new HybridStrategyResponse {
 				CombustionEngineOn = false,
@@ -117,14 +122,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public enum StateMachineState
 		{
 			Undefined,
-			Acc_S0, // GEN = 0
-			Acc_S1, // P_GEN = P_opt, SoC <= SoC_min && P_demand < P_opt || SoC >= SoC_min && SoC <= SoC_target && P_demand <= P_opt
-			Acc_S2, // P_GEN = P_max, SoC <= S
-			Acc_S3, // P_GEN = P_max, P_drive = P_GEN
+			Acc_S0 = 10, // GEN = 0
+			Acc_S1 = 11, // P_GEN = P_opt, SoC <= SoC_min && P_demand < P_opt || SoC >= SoC_min && SoC <= SoC_target && P_demand <= P_opt
+			Acc_S2 = 12, // P_GEN = P_max, SoC <= S
+			Acc_S3 = 13, // P_GEN = P_max, P_drive = P_GEN
 
-			Break_S0,
-			Break_S1,
-			Break_S2,
+			Brake_S0 = -10,
+			Brake_S1 = -11,
+			Brake_S2 = -12,
 		}
 
 		public enum GensetState
@@ -193,7 +198,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 
 			container.AddPreprocessor(new GensetPreprocessor(GenSetCharacteristics, TestGenSet, runData.EngineData,
-				runData.ElectricMachinesData.FirstOrDefault(x => x.Item1 == PowertrainPosition.GEN)?.Item2));
+				runData.ElectricMachinesData.FirstOrDefault(x => x.Item1 == PowertrainPosition.GEN)?.Item2, container));
 		}
 
 
@@ -322,9 +327,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					}
 					emTorque = GetMechanicalAssistPower(absTime, dt, emTorque, emResponse, emResponse.AngularVelocity /* potentially not correct! */);
 					break;
-				case StateMachineState.Break_S0:
-				case StateMachineState.Break_S1:
-				case StateMachineState.Break_S2:
+				case StateMachineState.Brake_S0:
+				case StateMachineState.Brake_S1:
+				case StateMachineState.Brake_S2:
 					if (DataBus.BatteryInfo.StateOfCharge >= StrategyParameters.TargetSoC) {
 						genSetOperatingPoint = GensetOff;
 						gensetState = GensetState.Off;
@@ -478,6 +483,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				? GenSetCharacteristics.OptimalPointDeRated
 				: GenSetCharacteristics.OptimalPoint;
 			switch (PreviousState.SMState) {
+				case StateMachineState.Brake_S0:
 				case StateMachineState.Acc_S0:
 					if (DataBus.BatteryInfo.StateOfCharge < StrategyParameters.MinSoC) {
 						return -drivetrainDemand.ElectricPowerDemand <
@@ -487,6 +493,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					}
 
 					break;
+				case StateMachineState.Brake_S1:
 				case StateMachineState.Acc_S1:
 					if (/*DataBus.BatteryInfo.StateOfCharge >= StrategyParameters.MinSoC &&*/
 						DataBus.BatteryInfo.StateOfCharge < StrategyParameters.MinSoC
@@ -500,6 +507,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					}
 
 					break;
+				case StateMachineState.Brake_S2:
 				case StateMachineState.Acc_S2:
 					if (DataBus.BatteryInfo.StateOfCharge > StrategyParameters.MinSoC) {
 						return StateMachineState.Acc_S1;
@@ -509,12 +517,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						return StateMachineState.Acc_S1;
 					}
 					break;
-				case StateMachineState.Break_S0:
-					return StateMachineState.Acc_S0;
-				case StateMachineState.Break_S1:
-					return StateMachineState.Acc_S1;
-				case StateMachineState.Break_S2:
-					return StateMachineState.Acc_S2;
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
@@ -526,18 +528,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		{
 			switch (PreviousState.SMState) {
 				case StateMachineState.Acc_S0:
-					return StateMachineState.Break_S0;
+					return StateMachineState.Brake_S0;
 				case StateMachineState.Acc_S1:
-					return StateMachineState.Break_S1;
+					return StateMachineState.Brake_S1;
 				case StateMachineState.Acc_S2:
-					return StateMachineState.Break_S2;
+					return StateMachineState.Brake_S2;
 				case StateMachineState.Acc_S3:
-					return StateMachineState.Break_S2;
-				case StateMachineState.Break_S0:
+					return StateMachineState.Brake_S2;
+				case StateMachineState.Brake_S0:
 					break;
-				case StateMachineState.Break_S1:
+				case StateMachineState.Brake_S1:
 					break;
-				case StateMachineState.Break_S2:
+				case StateMachineState.Brake_S2:
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
@@ -769,7 +771,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public bool AllowEmergencyShift { get; set; }
 		public void WriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
-			//throw new NotImplementedException();
+			container[ModalResultField.HybridStrategyState] = (int)CurrentState.SMState;
 		}
 
 		public void OperatingpointChangedDuringRequest(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,

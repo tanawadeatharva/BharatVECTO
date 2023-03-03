@@ -53,39 +53,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return response;
 		}
 
-		protected internal override ResponseDryRun Initialize(Second absTime, GearshiftPosition gear,
-			NewtonMeter outTorque, PerSecond outAngularVelocity)
-		{
-			var oldGear = Gear;
-			Gear = gear;
-			var inAngularVelocity = outAngularVelocity * ModelData.Gears[gear.Gear].Ratio;
-			var torqueLossResult = ModelData.Gears[gear.Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
-			CurrentState.TorqueLossResult = torqueLossResult;
-			var inTorque = outTorque / ModelData.Gears[gear.Gear].Ratio + torqueLossResult.Value;
-
-			if (!inAngularVelocity.IsEqual(0)) {
-				var alpha = ModelData.Inertia.IsEqual(0) ? 0.SI<PerSquareSecond>() : outTorque / ModelData.Inertia;
-				var inertiaPowerLoss = Formulas.InertiaPower(inAngularVelocity, alpha, ModelData.Inertia, Constants.SimulationSettings.TargetTimeInterval);
-				inTorque += inertiaPowerLoss / inAngularVelocity;
-			}
-
-			var response = NextComponent.Request(absTime, Constants.SimulationSettings.TargetTimeInterval, inTorque, inAngularVelocity, true);
-
-			var eMotor = DataBus.ElectricMotorInfo(DataBus.PowertrainInfo.ElectricMotorPositions[0]);
-			var fullLoad = -eMotor.MaxPowerDrive(DataBus.BatteryInfo.InternalVoltage, inAngularVelocity, gear);
-
-			Gear = oldGear;
-			return new ResponseDryRun(this, response) {
-				ElectricMotor = { PowerRequest = response.ElectricMotor.PowerRequest },
-				Gearbox = {
-					PowerRequest = outTorque * outAngularVelocity,
-					InputSpeed = inAngularVelocity,
-					InputTorque = inTorque,
-					OutputTorque = outTorque,
-					OutputSpeed = outAngularVelocity,
-				},
-				DeltaFullLoad = response.ElectricMotor.PowerRequest - fullLoad
-			};
-		}
 	}
 }

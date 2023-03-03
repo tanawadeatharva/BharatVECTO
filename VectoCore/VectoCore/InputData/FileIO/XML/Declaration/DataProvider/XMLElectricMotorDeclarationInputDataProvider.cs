@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -37,13 +40,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			GetDouble(XMLNames.ElectricMachine_ContinuousTorque).SI<NewtonMeter>();
 
 		public virtual PerSecond ContinuousTorqueSpeed =>
-			GetDouble(XMLNames.ElectricMachine_TestSpeedContinuousTorque).SI<PerSecond>();
+			GetDouble(XMLNames.ElectricMachine_TestSpeedContinuousTorque).RPMtoRad();
 
 		public virtual NewtonMeter OverloadTorque =>
 			GetDouble(XMLNames.ElectricMachine_OverloadTorque).SI<NewtonMeter>();
 
 		public virtual PerSecond OverloadTestSpeed =>
-			GetDouble(XMLNames.ElectricMachine_TestSpeedOverloadTorque).SI<PerSecond>();
+			GetDouble(XMLNames.ElectricMachine_TestSpeedOverloadTorque).RPMtoRad();
 
 		public virtual Second OverloadTime =>
 			GetDouble(XMLNames.ElectricMachine_OverloadDuration).SI<Second>();
@@ -98,8 +101,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected virtual IList<IElectricMotorVoltageLevel> GetVoltageLevels()
 		{
 			var voltageLevelNodes = GetNodes(XMLNames.ElectricMachine_VoltageLevel, BaseNode);
-			if (voltageLevelNodes is null || voltageLevelNodes.Count == 0)
+			if (voltageLevelNodes is null || voltageLevelNodes.Count == 0) {
 				return null;
+			}
+
 
 			var voltageLevels = new List<IElectricMotorVoltageLevel>();
 
@@ -118,8 +123,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		private IList<IElectricMotorPowerMap> GetPowerMaps()
 		{
 			var powerMapNodes = GetNodes(XMLNames.PowerMap);
-			if (powerMapNodes is null || powerMapNodes.Count == 0)
+			if (powerMapNodes is null || powerMapNodes.Count == 0) {
 				return null;
+			}
+
 
 			var powerMaps = new List<IElectricMotorPowerMap>();
 			foreach (XmlNode powerMapNode in powerMapNodes)
@@ -130,15 +137,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			return powerMaps;
 		}
 
-		
-		public class ElectricMotorPowerMap : AbstractXMLType, IElectricMotorPowerMap
+
+		private class ElectricMotorPowerMap : AbstractXMLType, IElectricMotorPowerMap
 		{
-			private Dictionary<string, string> powerMapMapping = new Dictionary<string, string> {
-				{ XMLNames.PowerMap_OutShaftSpeed, XMLNames.PowerMap_OutShaftSpeed },
-				{ XMLNames.PowerMap_Torque, XMLNames.PowerMap_Torque },
-				{ XMLNames.PowerMap_ElectricPower, XMLNames.PowerMap_ElectricPower }
-			};
-			
+			private static readonly Dictionary<string, string> _powerMapMapping = AttributeMappings.EMPowerMap;
+			private static readonly string _elPowerCol = _powerMapMapping.FirstOrDefault(x => x.Value == XMLNames.PowerMap_ElectricPower).Key;
+
 			public ElectricMotorPowerMap(XmlNode xmlNode) : base(xmlNode) { }
 			
 			#region Implementation of IElectricMotorPowerMap
@@ -149,7 +153,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			private TableData ReadPowerMap()
 			{
 				var powerMapEntryNodes = GetNodes(XMLNames.PowerMap_Entry);
-				return XMLHelper.ReadTableData(powerMapMapping, powerMapEntryNodes);
+				var powerMap = XMLHelper.ReadTableData(_powerMapMapping, powerMapEntryNodes);
+				return powerMap;
 			}
 
 			#endregion
@@ -316,38 +321,48 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 			foreach (var voltageLevel in VoltageLevels) {
 				foreach (var powerMap in voltageLevel.PowerMap) {
-					if(powerMap.Gear <= 0)
+					if (powerMap.Gear <= 0) {
 						continue;
+					}
 
-					if (currentGears.ContainsKey(powerMap.Gear))
+					if (currentGears.ContainsKey(powerMap.Gear)) {
 						currentGears[powerMap.Gear] = true;
-					else
-						throw new ArgumentException("The PowerMaps contains a gear which was not specified under gears");
+					} else {
+						throw new ArgumentException(
+							"The PowerMaps contains a gear which was not specified under gears");
+					}
 				}
-				if(AnyMissingGear(currentGears))
+
+				if (AnyMissingGear(currentGears)) {
 					throw new ArgumentException("The PowerMaps contains a gear which was not specified under gears");
+				}
 			}
 
 			foreach (var dragCurve in DragCurves) {
-				if(dragCurve.Gear == null)
+				if (dragCurve.Gear == null) {
 					continue;
+				}
 
-				if (currentGears.ContainsKey((int)dragCurve.Gear))
+				if (currentGears.ContainsKey((int)dragCurve.Gear)) {
 					currentGears[(int)dragCurve.Gear] = true;
-				else
+				} else {
 					throw new ArgumentException("The DragCurve contains a gear which was not specified under gears");
+				}
 			}
 
-			if (AnyMissingGear(currentGears))
+			if (AnyMissingGear(currentGears)) {
 				throw new ArgumentException("The DragCurve contains a gear which was not specified under gears");
+			}
 		}
 
 		private bool AnyMissingGear(Dictionary<int, bool> foundedGears)
 		{
 			var keys = foundedGears.Keys.ToList();
 			foreach (var key in keys) {
-				if(!foundedGears[key])
+				if (!foundedGears[key]) {
 					return true;
+				}
+
 				foundedGears[key] = false;
 			}
 

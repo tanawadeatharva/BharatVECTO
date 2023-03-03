@@ -23,74 +23,33 @@ using TUGraz.VectoCore.Utils.Ninject;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9
 {
-    internal class MRFNinjectModule : AbstractNinjectModule
+	internal class MRFNinjectModule : AbstractNinjectModule
     {
 
 		//IXMLManufacturerReport GetManufacturerReport(string vehicleType, VectoSimulationJobType jobType,
 		//	ArchitectureID archId, bool exempted, bool iepc, bool ihpc);
-		protected static object[] ToParams(string vehicleType, VectoSimulationJobType jobType, ArchitectureID archId,
-			bool exempted, bool iepc, bool ihpc)
-		{
-			return new[] { (object)vehicleType, jobType, archId, exempted, iepc, ihpc};
-		}
-		protected static CombineArgumentsToNameInstanceProvider.CombineToName nameCombinationMethod = arguments => {
 
-			//may be called with first argument of type string (when defining the bindings) or VehicleCategory when using the factory
-			string vehicleType = arguments[0] as string;
-			if (arguments[0] is VehicleCategory vehicleCategory) {
-				vehicleType = vehicleCategory.GetVehicleType();
-			}
-			
-			
-			
-			VectoSimulationJobType jobType = (VectoSimulationJobType)arguments[1];
-			ArchitectureID archId = (ArchitectureID)arguments[2];
-			bool exempted = (bool)arguments[3];
-			bool iepc = (bool)arguments[4];
-			bool ihpc = (bool)arguments[5];
-
-
-
-			string result = "";
-			if (exempted) {
-				result += exempted + vehicleType;
-			} else {
-				if (vehicleType == VehicleCategoryHelper.Lorry || vehicleType == VehicleCategoryHelper.PrimaryBus || vehicleType == VehicleCategoryHelper.CompletedBus || vehicleType == VehicleCategoryHelper.Van) {
-					if (jobType == VectoSimulationJobType.ParallelHybridVehicle || ihpc) {
-						result += "HEV-Px/IHPC";
-					}else if (jobType == VectoSimulationJobType.SerialHybridVehicle) {
-						result += "HEV-" + archId;
-					}else if (jobType == VectoSimulationJobType.BatteryElectricVehicle) {
-						if (iepc) {
-							result += "PEV-IEPC";
-						} else {
-							result += "PEV" + archId;
-						}
-					}else if (jobType == VectoSimulationJobType.ConventionalVehicle) {
-						result += "Conventional";
-					}
-				}else if (vehicleType == VehicleCategoryHelper.CompletedBus) {
-					result += jobType;
-				}
-
-				result += vehicleType;
-			}
-
-
-			return result;
-		};
+		private static readonly VehicleTypeAndArchitectureStringHelperReport _vehicleTypeAndArchitectureStringHelper = new VehicleTypeAndArchitectureStringHelperReport();
 
 		public override void Load()
 		{
 			LoadModule<ContextPreservationModule>();
-			Bind<IManufacturerReportFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(nameCombinationMethod, 
-				6, 6, typeof(IManufacturerReportFactory).GetMethod(nameof(IManufacturerReportFactory.GetManufacturerReport)))).InSingletonScope();
+			Bind<IManufacturerReportFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(
+				new CombineArgumentsToNameInstanceProvider.MethodSettings() {
+					combineToNameDelegate = VehicleTypeAndArchitectureStringHelper.CreateName,
+					skipArguments = 6,
+					takeArguments = 6,
+					methods = new[] {
+						typeof(IManufacturerReportFactory).GetMethod(
+							nameof(IManufacturerReportFactory.GetManufacturerReport))
+					}
+				})).InSingletonScope();
+
 			Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalLorryManufacturerReport());
 
 			#region LorryMRF
-			Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>().Named(
-				nameCombinationMethod.Invoke(ToParams(
+			Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
 					VehicleCategoryHelper.Lorry,
 					VectoSimulationJobType.ConventionalVehicle, 
 					ArchitectureID.UNKNOWN, 
@@ -98,7 +57,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					false, 
 					false)));
 			Bind<IXMLManufacturerReport>().To<HEV_Px_IHPC_LorryManufacturerReport>()
-				.Named(nameCombinationMethod.Invoke(ToParams(
+				.Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
 					VehicleCategoryHelper.Lorry, 
 					VectoSimulationJobType.ParallelHybridVehicle, 
 					ArchitectureID.UNKNOWN, 
@@ -106,106 +65,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					false, 
 					true)));
 
-			Bind<IXMLManufacturerReport>().To<HEV_S2_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(
-					VehicleCategoryHelper.Lorry,
-					VectoSimulationJobType.SerialHybridVehicle,
-					ArchitectureID.S2,
-					false,
-					false,
-					false)));
-
-
-			Bind<IXMLManufacturerReport>().To<HEV_S3_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(
-					VehicleCategoryHelper.Lorry,
-					VectoSimulationJobType.SerialHybridVehicle,
-					ArchitectureID.S3,
-					false,
-					false,
-					false)));
-
-			Bind<IXMLManufacturerReport>().To<HEV_S4_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(
-					VehicleCategoryHelper.Lorry,
-					VectoSimulationJobType.SerialHybridVehicle,
-					ArchitectureID.S4,
-					false,
-					false,
-					false)));
-
-			Bind<IXMLManufacturerReport>().To<HEV_IEPC_S_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(
-					VehicleCategoryHelper.Lorry,
-					VectoSimulationJobType.SerialHybridVehicle,
-					ArchitectureID.S_IEPC,
-					false,
-					true,
-					false)));
-
-			Bind<IXMLManufacturerReport>().To<PEV_E2_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(
-					VehicleCategoryHelper.Lorry,
-					VectoSimulationJobType.BatteryElectricVehicle,
-					ArchitectureID.E2,
-					false,
-					false,
-					false)));
-
-			Bind<IXMLManufacturerReport>().To<PEV_E3_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(
-					VehicleCategoryHelper.Lorry,
-					VectoSimulationJobType.BatteryElectricVehicle,
-					ArchitectureID.E3,
-					false,
-					false,
-					false)));
-
-			Bind<IXMLManufacturerReport>().To<PEV_E4_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(
-					VehicleCategoryHelper.Lorry,
-					VectoSimulationJobType.BatteryElectricVehicle,
-					ArchitectureID.E4,
-					false,
-					false,
-					false)));
-
-			Bind<IXMLManufacturerReport>().To<PEV_IEPC_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.Lorry,
-					VectoSimulationJobType.BatteryElectricVehicle,
-					ArchitectureID.E_IEPC,
-					false,
-					true,
-					false)));
-
-			Bind<IXMLManufacturerReport>().To<Exempted_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.Lorry,
-					VectoSimulationJobType.ConventionalVehicle,
-					ArchitectureID.UNKNOWN,
-					true,
-					false,
-					false)));
-
-			Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>().Named(
-				nameCombinationMethod.Invoke(ToParams(
-					VehicleCategoryHelper.Van,
-					VectoSimulationJobType.ConventionalVehicle,
-					ArchitectureID.UNKNOWN,
-					false,
-					false,
-					false)));
 			Bind<IXMLManufacturerReport>().To<HEV_Px_IHPC_LorryManufacturerReport>()
-				.Named(nameCombinationMethod.Invoke(ToParams(
-					VehicleCategoryHelper.Van,
-					VectoSimulationJobType.ParallelHybridVehicle,
-					ArchitectureID.UNKNOWN,
+				.Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+					VehicleCategoryHelper.Lorry,
+					VectoSimulationJobType.IHPC,
+					ArchitectureID.P2,
 					false,
 					false,
 					true)));
 
-			Bind<IXMLManufacturerReport>().To<HEV_S2_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(
-					VehicleCategoryHelper.Van,
+			Bind<IXMLManufacturerReport>().To<HEV_S2_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+					VehicleCategoryHelper.Lorry,
 					VectoSimulationJobType.SerialHybridVehicle,
 					ArchitectureID.S2,
 					false,
@@ -213,159 +83,235 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					false)));
 
 
-			Bind<IXMLManufacturerReport>().To<HEV_S3_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(
-					VehicleCategoryHelper.Van,
+			Bind<IXMLManufacturerReport>().To<HEV_S3_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+					VehicleCategoryHelper.Lorry,
 					VectoSimulationJobType.SerialHybridVehicle,
 					ArchitectureID.S3,
 					false,
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<HEV_S4_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(
-					VehicleCategoryHelper.Van,
+			Bind<IXMLManufacturerReport>().To<HEV_S4_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+					VehicleCategoryHelper.Lorry,
 					VectoSimulationJobType.SerialHybridVehicle,
 					ArchitectureID.S4,
 					false,
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<HEV_IEPC_S_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(
-					VehicleCategoryHelper.Van,
-					VectoSimulationJobType.SerialHybridVehicle,
+			Bind<IXMLManufacturerReport>().To<HEV_IEPC_S_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+					VehicleCategoryHelper.Lorry,
+					VectoSimulationJobType.IEPC_S,
 					ArchitectureID.S_IEPC,
 					false,
 					true,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<PEV_E2_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(
-					VehicleCategoryHelper.Van,
+			Bind<IXMLManufacturerReport>().To<PEV_E2_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+					VehicleCategoryHelper.Lorry,
 					VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.E2,
 					false,
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<PEV_E3_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(
-					VehicleCategoryHelper.Van,
+			Bind<IXMLManufacturerReport>().To<PEV_E3_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+					VehicleCategoryHelper.Lorry,
 					VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.E3,
 					false,
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<PEV_E4_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(
-					VehicleCategoryHelper.Van,
+			Bind<IXMLManufacturerReport>().To<PEV_E4_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+					VehicleCategoryHelper.Lorry,
 					VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.E4,
 					false,
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<PEV_IEPC_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(
-					VehicleCategoryHelper.Van,
-					VectoSimulationJobType.BatteryElectricVehicle,
+			Bind<IXMLManufacturerReport>().To<PEV_IEPC_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.Lorry,
+					VectoSimulationJobType.IEPC_E,
 					ArchitectureID.E_IEPC,
 					false,
 					true,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<Exempted_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(
-					VehicleCategoryHelper.Van,
+			Bind<IXMLManufacturerReport>().To<Exempted_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.Lorry,
 					VectoSimulationJobType.ConventionalVehicle,
 					ArchitectureID.UNKNOWN,
 					true,
 					false,
 					false)));
+
+			//Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+			//		VehicleCategoryHelper.Van,
+			//		VectoSimulationJobType.ConventionalVehicle,
+			//		ArchitectureID.UNKNOWN,
+			//		false,
+			//		false,
+			//		false)));
+			//Bind<IXMLManufacturerReport>().To<HEV_Px_IHPC_LorryManufacturerReport>()
+			//	.Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+			//		VehicleCategoryHelper.Van,
+			//		VectoSimulationJobType.ParallelHybridVehicle,
+			//		ArchitectureID.UNKNOWN,
+			//		false,
+			//		false,
+			//		true)));
+
+			//Bind<IXMLManufacturerReport>().To<HEV_Px_IHPC_LorryManufacturerReport>()
+			//	.Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+			//		VehicleCategoryHelper.Van,
+			//		VectoSimulationJobType.IHPC,
+			//		ArchitectureID.P2,
+			//		false,
+			//		false,
+			//		true)));
+
+			//Bind<IXMLManufacturerReport>().To<HEV_S2_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+			//		VehicleCategoryHelper.Van,
+			//		VectoSimulationJobType.SerialHybridVehicle,
+			//		ArchitectureID.S2,
+			//		false,
+			//		false,
+			//		false)));
+
+
+			//Bind<IXMLManufacturerReport>().To<HEV_S3_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+			//		VehicleCategoryHelper.Van,
+			//		VectoSimulationJobType.SerialHybridVehicle,
+			//		ArchitectureID.S3,
+			//		false,
+			//		false,
+			//		false)));
+
+			//Bind<IXMLManufacturerReport>().To<HEV_S4_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+			//		VehicleCategoryHelper.Van,
+			//		VectoSimulationJobType.SerialHybridVehicle,
+			//		ArchitectureID.S4,
+			//		false,
+			//		false,
+			//		false)));
+
+			//Bind<IXMLManufacturerReport>().To<HEV_IEPC_S_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+			//		VehicleCategoryHelper.Van,
+			//		VectoSimulationJobType.IEPC_S,
+			//		ArchitectureID.S_IEPC,
+			//		false,
+			//		true,
+			//		false)));
+
+			//Bind<IXMLManufacturerReport>().To<PEV_E2_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+			//		VehicleCategoryHelper.Van,
+			//		VectoSimulationJobType.BatteryElectricVehicle,
+			//		ArchitectureID.E2,
+			//		false,
+			//		false,
+			//		false)));
+
+			//Bind<IXMLManufacturerReport>().To<PEV_E3_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+			//		VehicleCategoryHelper.Van,
+			//		VectoSimulationJobType.BatteryElectricVehicle,
+			//		ArchitectureID.E3,
+			//		false,
+			//		false,
+			//		false)));
+
+			//Bind<IXMLManufacturerReport>().To<PEV_E4_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+			//		VehicleCategoryHelper.Van,
+			//		VectoSimulationJobType.BatteryElectricVehicle,
+			//		ArchitectureID.E4,
+			//		false,
+			//		false,
+			//		false)));
+
+			//Bind<IXMLManufacturerReport>().To<PEV_IEPC_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+			//		VehicleCategoryHelper.Van,
+			//		VectoSimulationJobType.IEPC_E,
+			//		ArchitectureID.E_IEPC,
+			//		false,
+			//		true,
+			//		false)));
+
+			//Bind<IXMLManufacturerReport>().To<Exempted_LorryManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+			//		VehicleCategoryHelper.Van,
+			//		VectoSimulationJobType.ConventionalVehicle,
+			//		ArchitectureID.UNKNOWN,
+			//		true,
+			//		false,
+			//		false)));
 
 			#endregion
 			#region PrimaryBUSMRF
-			Bind<IXMLManufacturerReport>().To<Conventional_PrimaryBus_ManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.PrimaryBus,
+			Bind<IXMLManufacturerReport>().To<Conventional_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.ConventionalVehicle,
 					ArchitectureID.UNKNOWN,
 					false,
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<HEV_Px_IHPC_PrimaryBus_ManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.PrimaryBus,
+			Bind<IXMLManufacturerReport>().To<HEV_Px_IHPC_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.ParallelHybridVehicle,
 					ArchitectureID.UNKNOWN,
 					false,
 					false,
 					true)));
 
-			Bind<IXMLManufacturerReport>().To<HEV_S2_PrimaryBus_ManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.PrimaryBus,
+			Bind<IXMLManufacturerReport>().To<HEV_S2_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.SerialHybridVehicle,
 					ArchitectureID.S2,
 					false,
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<HEV_S3_PrimaryBus_ManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.PrimaryBus,
+			Bind<IXMLManufacturerReport>().To<HEV_S3_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.SerialHybridVehicle,
 					ArchitectureID.S3,
 					false,
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<HEV_S4_PrimaryBus_ManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.PrimaryBus,
+			Bind<IXMLManufacturerReport>().To<HEV_S4_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.SerialHybridVehicle,
 					ArchitectureID.S4,
 					false,
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<HEV_IEPC_S_PrimaryBus_ManufacturerReport>().Named(
-				nameCombinationMethod.Invoke(
-					ToParams(VehicleCategoryHelper.PrimaryBus,
+			Bind<IXMLManufacturerReport>().To<HEV_IEPC_S_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.PrimaryBus,
 						VectoSimulationJobType.SerialHybridVehicle,
 						ArchitectureID.S_IEPC, false, false, false)));
 
-			Bind<IXMLManufacturerReport>().To<PEV_E2_PrimaryBus_ManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.PrimaryBus,
+			Bind<IXMLManufacturerReport>().To<PEV_E2_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.E2,
 					false,
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<PEV_E3_PrimaryBus_ManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.PrimaryBus,
+			Bind<IXMLManufacturerReport>().To<PEV_E3_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.E3,
 					false,
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<PEV_E4_PrimaryBus_ManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.PrimaryBus,
+			Bind<IXMLManufacturerReport>().To<PEV_E4_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.E4,
 					false,
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<PEV_IEPC_PrimaryBus_ManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.PrimaryBus,
+			Bind<IXMLManufacturerReport>().To<PEV_IEPC_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.E_IEPC,
 					false,
 					true,
 					false)));
-			Bind<IXMLManufacturerReport>().To<Exempted_PrimaryBus_ManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.PrimaryBus,
+			Bind<IXMLManufacturerReport>().To<Exempted_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.UNKNOWN,
 					true,
@@ -376,88 +322,77 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			#endregion
 			#region CompletedBus MRF
 
-			Bind<IXMLManufacturerReport>().To<Conventional_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.CompletedBus,
+			Bind<IXMLManufacturerReport>().To<Conventional_CompletedBusManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.CompletedBus,
 					VectoSimulationJobType.ConventionalVehicle,
 					ArchitectureID.UNKNOWN,
 					false,
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<HEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.CompletedBus,
+			Bind<IXMLManufacturerReport>().To<HEV_CompletedBusManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.CompletedBus,
 					VectoSimulationJobType.ParallelHybridVehicle,
 					ArchitectureID.UNKNOWN,
 					false,
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<HEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.CompletedBus,
+			Bind<IXMLManufacturerReport>().To<HEV_CompletedBusManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.CompletedBus,
 					VectoSimulationJobType.SerialHybridVehicle,
 					ArchitectureID.S2,
 					false,
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<HEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.CompletedBus,
+			Bind<IXMLManufacturerReport>().To<HEV_CompletedBusManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.CompletedBus,
 					VectoSimulationJobType.SerialHybridVehicle,
 					ArchitectureID.S3,
 					false,
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<HEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.CompletedBus,
+			Bind<IXMLManufacturerReport>().To<HEV_CompletedBusManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.CompletedBus,
 					VectoSimulationJobType.SerialHybridVehicle,
 					ArchitectureID.S4,
 					false,
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<HEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.CompletedBus,
+			Bind<IXMLManufacturerReport>().To<HEV_CompletedBusManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.CompletedBus,
 					VectoSimulationJobType.SerialHybridVehicle,
 					ArchitectureID.S_IEPC,
 					false,
 					true,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<PEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.CompletedBus,
+			Bind<IXMLManufacturerReport>().To<PEV_CompletedBusManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.CompletedBus,
 					VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.E2,
 					false,
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<PEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.CompletedBus,
+			Bind<IXMLManufacturerReport>().To<PEV_CompletedBusManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.CompletedBus,
 					VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.E3,
 					false,
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<PEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.CompletedBus,
+			Bind<IXMLManufacturerReport>().To<PEV_CompletedBusManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.CompletedBus,
 					VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.E4,
 					false,
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<PEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.CompletedBus,
+			Bind<IXMLManufacturerReport>().To<PEV_CompletedBusManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.CompletedBus,
 					VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.E_IEPC,
 					false,
 					true,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<Exempted_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.CompletedBus,
+			Bind<IXMLManufacturerReport>().To<Exempted_CompletedBusManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.CompletedBus,
 					VectoSimulationJobType.ConventionalVehicle,
 					ArchitectureID.UNKNOWN,
 					true,
@@ -774,5 +709,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		}
 
 		#endregion
+
+		public static VehicleTypeAndArchitectureStringHelperReport VehicleTypeAndArchitectureStringHelper
+		{
+			get { return _vehicleTypeAndArchitectureStringHelper; }
+		}
 	}
 }

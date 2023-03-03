@@ -2,11 +2,13 @@
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
@@ -42,7 +44,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			if (ElementExists(XMLNames.ElectricEnergyStorage_Capacitor)) {
 				var capacitor = GetNode(XMLNames.ElectricEnergyStorage_Capacitor);
 				electricStorages.Add(new XMLElectricStorageDeclaration {
-							REESSPack = StorageTypeReader.CreateREESSInputData(capacitor, REESSType.SuperCap)
+							REESSPack = StorageTypeReader.CreateREESSInputData(capacitor, REESSType.SuperCap),
+							Count = 1,
+							StringId = 1,
 				});
 			}else if (ElementExists(XMLNames.ElectricEnergyStorage_Battery)) {
 				var batteries = GetNodes(XMLNames.ElectricEnergyStorage_Battery);
@@ -106,10 +110,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Implementation of IBatteryPackDeclarationInputData
 
 		public virtual double? MinSOC  => 
-			ElementExists(XMLNames.Battery_SOCmin) ? GetDouble(XMLNames.Battery_SOCmin) : (double?)null;
+			ElementExists(XMLNames.Battery_SOCmin) ? GetDouble(XMLNames.Battery_SOCmin) / 100 : (double?)null;
 
 		public virtual double? MaxSOC => 
-			ElementExists(XMLNames.Battery_SOCmax) ? GetDouble(XMLNames.Battery_SOCmax) : (double?)null;
+			ElementExists(XMLNames.Battery_SOCmax) ? GetDouble(XMLNames.Battery_SOCmax) / 100 : (double?)null;
 
 		public virtual BatteryType BatteryType => GetString(XMLNames.REESS_BatteryType).ParseEnum<BatteryType>();
 		public virtual AmpereSecond Capacity => GetDouble(XMLNames.REESS_RatedCapacity).SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>();
@@ -121,26 +125,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					? GetDouble(XMLNames.REESS_TestingTemperature).DegCelsiusToKelvin() : null;
 
 		public virtual TableData InternalResistanceCurve => ReadTableData(XMLNames.REESS_InternalResistanceCurve, XMLNames.REESS_MapEntry,
-			new Dictionary<string, string> {
-				{XMLNames.REESS_InternalResistanceCurve_SoC, XMLNames.REESS_InternalResistanceCurve_SoC},
-				{XMLNames.REESS_InternalResistanceCurve_R2, XMLNames.REESS_InternalResistanceCurve_R2},
-				{XMLNames.REESS_InternalResistanceCurve_R10, XMLNames.REESS_InternalResistanceCurve_R10},
-				{XMLNames.REESS_InternalResistanceCurve_R20, XMLNames.REESS_InternalResistanceCurve_R20},
-				{XMLNames.REESS_InternalResistanceCurve_R120, XMLNames.REESS_InternalResistanceCurve_R120}
-			});
+			AttributeMappings.InternalResistanceMap);
 		
 		public virtual TableData VoltageCurve => ReadTableData(XMLNames.REESS_OCV, XMLNames.REESS_MapEntry, 
-			new Dictionary<string, string> {
-				{XMLNames.REESS_OCV_SoC, XMLNames.REESS_OCV_SoC},
-				{XMLNames.REESS_OCV_OCV, XMLNames.REESS_OCV_OCV}
-		});
+			AttributeMappings.VoltageMap);
 		
 		public virtual TableData MaxCurrentMap => ReadTableData(XMLNames.REESS_CurrentLimits, XMLNames.REESS_MapEntry, 
-			new Dictionary<string, string> {
-				{XMLNames.REESS_CurrentLimits_SoC, XMLNames.REESS_CurrentLimits_SoC},
-				{XMLNames.REESS_CurrentLimits_MaxChargingCurrent, XMLNames.REESS_CurrentLimits_MaxChargingCurrent},
-				{XMLNames.REESS_CurrentLimits_MaxDischargingCurrent, XMLNames.REESS_CurrentLimits_MaxDischargingCurrent}
-		});
+			AttributeMappings.MaxCurrentMap);
 
 		#endregion
 

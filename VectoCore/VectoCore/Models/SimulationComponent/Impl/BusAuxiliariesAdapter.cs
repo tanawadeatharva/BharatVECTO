@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public BusAuxiliariesAdapter(
 			IVehicleContainer container, IAuxiliaryConfig auxiliaryConfig, IAuxPort additionalAux = null) : base(container)
 		{
-			container.AddComponent(this);
+			//container.AddComponent(this);
 
 			CurrentState = new BusAuxState();
 			PreviousState = new BusAuxState { AngularSpeed = container.EngineInfo.EngineIdleSpeed };
@@ -101,9 +101,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public ISimpleBattery ElectricStorage { get; set; }
 
-		public virtual Joule AuxHeaterDemandCalculation(Second cycleTime, Joule engineWasteHeatTotal)
+		public virtual HeaterDemandResult AuxHeaterDemandCalculation(Second cycleTime, Joule engineWasteHeatTotal, Joule electricMotorWasteHeatTotal)
 		{
-			return Auxiliaries.AuxHeaterDemandCalculation(cycleTime, engineWasteHeatTotal);}
+			return Auxiliaries.AuxHeaterDemandCalculation(cycleTime, engineWasteHeatTotal, electricMotorWasteHeatTotal);
+		}
 
 		public IAuxPort Port()
 		{
@@ -254,7 +255,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//var newSOC = Auxiliaries.BatterySOC;
 
 			//CurrentState.TotalFuelConsumption = Auxiliaries.TotalFuel;
-			container[ModalResultField.P_aux_mech] = CurrentState.PowerDemand;
+			if (container.HasCombustionEngine) {
+				container[ModalResultField.P_aux_mech] = CurrentState.PowerDemand;
+			}
 
 			container[ModalResultField.P_busAux_ES_HVAC] = /*essUtilityFactor **/ Auxiliaries.HVACElectricalPowerConsumer;
 			container[ModalResultField.P_busAux_ES_other] = /*essUtilityFactor **/ Auxiliaries.ElectricPowerConsumer;
@@ -443,7 +446,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region Implementation of IUpdateable
 
-		public bool UpdateFrom(object other) {
+		protected override bool DoUpdateFrom(object other) {
 			if (other is BusAuxiliariesAdapter b) {
 				PreviousState = b.PreviousState.Clone();
 				return ElectricStorage.UpdateFrom(b.ElectricStorage);

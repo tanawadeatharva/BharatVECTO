@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
@@ -31,10 +30,10 @@ namespace TUGraz.VectoMockup.Reports
         
         #region Implementation of IXMLCustomerReport
 
-        public void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+        public void Initialize(VectoRunData modelData)
         {
             _modelData = modelData;
-            _originalCustomerReport.Initialize(modelData, fuelModes);
+            _originalCustomerReport.Initialize(modelData);
         }
 
         public XDocument Report
@@ -50,7 +49,7 @@ namespace TUGraz.VectoMockup.Reports
             }
         }
 
-        public void WriteResult(XMLDeclarationReport.ResultEntry resultValue)
+        public void WriteResult(IResultEntry resultValue)
         {
             _originalCustomerReport.WriteResult(resultValue);
         }
@@ -73,8 +72,10 @@ namespace TUGraz.VectoMockup.Reports
         {
             Results.AddFirst(new XElement(Cif + "Status", "success"));
             Results.AddFirst(new XComment("Always prints success at the moment"));
-            Results.Add(MockupResultReader.GetCIFMockupResult(_outputDataType, resultValue, Cif + "Summary", _modelData));
-        }
+			if (!_modelData.VehicleData.InputData.VocationalVehicle) {
+				Results.Add(MockupResultReader.GetCIFMockupResult(_outputDataType, resultValue, Cif + "Summary", _modelData));
+            }
+		}
 
 		public void WriteExemptedResults()
 		{

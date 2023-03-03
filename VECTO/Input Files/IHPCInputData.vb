@@ -158,11 +158,7 @@ Public Class IHPCInputData
         End Get
     End Property
 
-    Public ReadOnly Property R85RatedPower As Watt Implements IElectricMotorDeclarationInputData.R85RatedPower
-        Get
-            Return Nothing
-        End Get
-    End Property
+    Public Property R85RatedPower As Watt Implements IElectricMotorDeclarationInputData.R85RatedPower
 
     Public ReadOnly Property Inertia As KilogramSquareMeter Implements IElectricMotorDeclarationInputData.Inertia
         Get

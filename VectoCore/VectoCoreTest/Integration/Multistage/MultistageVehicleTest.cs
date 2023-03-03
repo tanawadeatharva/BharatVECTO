@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		{
 			Assert.AreEqual(2, data.StepCount);
 			TestSignatureData(data.HashPreviousStep, "nI+57QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=",
-				"#PIF-d10aff76c5d149948046");
+				"#VIF-d10aff76c5d149948046");
 
 			Assert.AreEqual("Intermediate Manufacturer 1", data.Vehicle.Manufacturer);
 			Assert.AreEqual("Intermediate Manufacturer Address 1", data.Vehicle.ManufacturerAddress);

@@ -50,6 +50,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected Second AbsTime = 0.SI<Second>();
 		protected Second dt = 1.SI<Second>();
 		private bool _cancelled;
+		private readonly IFollowUpRunCreator _followUpCreator;
 		protected ISimulationOutPort CyclePort { get; set; }
 
 		[Required, ValidateObject]
@@ -58,6 +59,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public bool FinishedWithoutErrors { get; protected set; }
 
 		public int RunIdentifier { get; protected set; }
+
 
 		public virtual string RunName => Container.RunData.JobName;
 
@@ -69,7 +71,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public virtual double Progress => CyclePort.Progress * (PostProcessingDone ? 1.0 : 0.99) * (WritingResultsDone ? 1.0 : 0.99);
 
-		protected VectoRun(IVehicleContainer container)
+		protected VectoRun(IVehicleContainer container, IFollowUpRunCreator followUpCreator = null)
 		{
 			Container = container;
 			RunIdentifier = Interlocked.Increment(ref _runIdCounter);
@@ -77,6 +79,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			CyclePort = container.GetCycleOutPort();
 			PostProcessingDone = false;
 			WritingResultsDone = false;
+			_followUpCreator = followUpCreator ?? new NoFollowUpRunCreator();
 		}
 
 		public IVehicleContainer GetContainer() => Container;
@@ -179,8 +182,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Container.RunStatus = Status.Success;
 			}
 
-			Container.FinishSimulationRun();
-			WritingResultsDone = true;
+			var runAgain = _followUpCreator?.RunAgain((data) => {
+					
+					Container.ModalData.Reset(true);
+					Container = PowertrainBuilder.Build(data, Container.ModalData, Container.SumData);
+					AbsTime = 0.SI<Second>();
+					CyclePort = Container.GetCycleOutPort();
+					Initialize();
+					Run();
+				},
+				this,
+				() => Container.FinishSingleSimulationRun()) ?? false;
+			if (!runAgain) {
+				Container.FinishSimulationRun();
+				WritingResultsDone = true;
+			}
+			
 			if (Progress.IsSmaller(1, 1e-9)) {
 				if (response is ResponseBatteryEmpty) {
 					throw new VectoSimulationException("{3} ({4} {5}) REESS was empty before cycle could be finished. Progress: {6:P1} - absTime: {0:F1}, distance: {1:F1}, dt: {2:F1}",

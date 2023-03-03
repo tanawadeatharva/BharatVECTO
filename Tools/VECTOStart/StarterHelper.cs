@@ -93,6 +93,7 @@ namespace TUGraz.VECTO
 				return output.Contains("Microsoft.WindowsDesktop.App 6");
 			} catch (Exception e) {
 				Console.WriteLine(e);
+				File.AppendAllText("LOG.txt", $"{DateTime.Now} {e.Message}\n");
 			}
 
 			return false;

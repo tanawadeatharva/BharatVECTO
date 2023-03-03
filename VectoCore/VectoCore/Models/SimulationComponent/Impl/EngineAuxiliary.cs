@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public EngineAuxiliary(IVehicleContainer container) : base(container)
 		{
 			EngineStopStartUtilityFactor = 1; // container.RunData?.DriverData?.EngineStopStart?.UtilityFactorStandstill ?? double.NaN;
-			_writePTO = container.RunData?.PTO != null;
+			_writePTO = container.RunData?.PTO?.ConsumerType == PTOConsumerType.mechanical;
 		}
 
 		public IAuxPort Port()
@@ -70,9 +70,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		/// <param name="auxId"></param>
 		/// <param name="powerDemand"></param>
-		public void AddConstant(string auxId, Watt powerDemand)
+		/// <param name="columnName"></param>
+		public void AddConstant(string auxId, Watt powerDemand, string columnName = null)
 		{
-			Add(auxId, (nEng, absTime, dt, dryRun) => powerDemand);
+			Add(auxId, (nEng, absTime, dt, dryRun) => powerDemand, columnName);
 		}
 
 		/// <summary>
@@ -82,22 +83,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public void AddCycle(string auxId)
 		{
 			Add(auxId, (nEng, absTime, dt, dryRun) => DataBus.DrivingCycleInfo.CycleData.LeftSample.AdditionalAuxPowerDemand);
+
 		}
 
-		public void AddCycle(string auxId, Func<DrivingCycleData.DrivingCycleEntry, Watt> powerLossFunc)
+		public void AddCycle(string auxId, Func<DrivingCycleData.DrivingCycleEntry, Watt> powerLossFunc, string columnName = null)
 		{
-			Add(auxId, (nEng, absTime, dt, dryRun) => powerLossFunc(DataBus.DrivingCycleInfo.CycleData.LeftSample));
+			Add(auxId, (nEng, absTime, dt, dryRun) => powerLossFunc(DataBus.DrivingCycleInfo.CycleData.LeftSample), columnName);
 		}
 
-		
+
+
 		/// <summary>
 		/// Adds an auxiliary with a function returning the power demand based on the engine speed.
 		/// </summary>
 		/// <param name="auxId"></param>
 		/// <param name="powerLossFunction"></param>
-		public void Add(string auxId, Func<PerSecond, Second, Second, bool, Watt> powerLossFunction)
+		/// <param name="columnName"></param>
+		public void Add(string auxId, Func<PerSecond, Second, Second, bool, Watt> powerLossFunction, string columnName = null)
 		{
 			Auxiliaries[auxId] = powerLossFunction;
+			(DataBus as IVehicleContainer)?.AddAuxiliary(auxId, columnName);
+			//(DataBus as IVehicleContainer)?.SumData?.AddAuxiliary(auxId);
 		}
 
 		public NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed)
@@ -140,13 +146,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 
 			var auxiliarieIgnoredDuringVehicleStop = new[] {
-				Constants.Auxiliaries.IDs.SteeringPump, Constants.Auxiliaries.IDs.Fan,
-				Constants.Auxiliaries.IDs.PTOConsumer, Constants.Auxiliaries.IDs.PTOTransmission,
-				Constants.Auxiliaries.IDs.ENG_AUX_MECH_FAN, Constants.Auxiliaries.IDs.ENG_AUX_MECH_STP
+				Constants.Auxiliaries.IDs.SteeringPump, 
+				Constants.Auxiliaries.IDs.Fan,
+				Constants.Auxiliaries.IDs.PTOConsumer, 
+				Constants.Auxiliaries.IDs.PTOTransmission,
+				Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_FAN, 
+				Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_STP
 			};
 			var auxiliarieIgnoredDuringDrive = new[] {
 				Constants.Auxiliaries.IDs.Fan,
-				Constants.Auxiliaries.IDs.ENG_AUX_MECH_FAN
+				Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_FAN
 			};
 			var powerDemands = new Dictionary<string, Watt>(Auxiliaries.Count);
 			var engineOffDemand = 0.SI<Watt>();
@@ -220,8 +229,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						}
 					}
 
-					if (container[Constants.Auxiliaries.IDs.PTOConsumer] == null ||
-						container[Constants.Auxiliaries.IDs.PTOConsumer] == DBNull.Value) {
+					if (container.ContainsColumn(Constants.Auxiliaries.IDs.PTOConsumer) && (container[Constants.Auxiliaries.IDs.PTOConsumer] == null ||
+						container[Constants.Auxiliaries.IDs.PTOConsumer] == DBNull.Value)) {
 						container[Constants.Auxiliaries.IDs.PTOConsumer] = ptoConsumer;
 					}
 				}
@@ -250,7 +259,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region Implementation of IUpdateable
 
-		public bool UpdateFrom(object other) {
+		protected override bool DoUpdateFrom(object other) {
 			if (other is EngineAuxiliary a) {
 				PreviousState = a.PreviousState.Clone();
 				return true;

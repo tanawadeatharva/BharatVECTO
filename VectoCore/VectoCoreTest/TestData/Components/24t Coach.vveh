@@ -8,7 +8,8 @@
 	"Body": {
 		"SavedInDeclMode": false,
 		"VehCat": "Coach",
-		"CurbWeight": 15700.0,
+    "LegislativeClass": "M3",
+    		"CurbWeight": 15700.0,
 		"CurbWeightExtra": 0.0,
 		"Loading": 3300.0,
 		"MassMax": 24.0,
@@ -23,7 +24,7 @@
 			"File": "Retarder.vrlm"
 		},
 		"Angledrive": {
-			"Type" : "SeparateAngledrive",
+			"Type": "SeparateAngledrive",
 			"Ratio": 3.5,
 			"LossMap": "AngleGear.vtlm"
 		},

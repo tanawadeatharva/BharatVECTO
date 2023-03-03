@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -11,15 +10,17 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Utils;
+using DeclarationDataAdapterHeavyLorry = TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class GenericBusEngineData
 	{
-		#region Constans
+		#region Constants
 
 		private static string GenericEngineCM_Normed_CI =
 			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EngineConsumptionMap_CI_normalized.vmap";
@@ -55,7 +56,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				IdleSpeed = idleSpeed,
 				Displacement = engineData.Displacement,
 				WHRType = WHRType.None,
-				Inertia = DeclarationData.Engine.EngineInertia(engineData.Displacement, gearbox.Type),
+				Inertia = DeclarationData.Engine.EngineInertia(primaryVehicle.VehicleType, engineData.Displacement, gearbox.Type),
 				EngineStartTime = DeclarationData.Engine.DefaultEngineStartTime,
 				RatedPowerDeclared = engineData.RatedPowerDeclared,
 				RatedSpeedDeclared = engineData.RatedSpeedDeclared,
@@ -63,15 +64,17 @@ namespace TUGraz.VectoCore.Models.Declaration
 			};
 
 			var limits = primaryVehicle.TorqueLimits.ToDictionary(e => e.Gear);
-			var numGears = gearbox.Gears.Count;
+			var gears = GearboxDataAdapterBase.FilterDisabledGears(primaryVehicle.TorqueLimits, gearbox);
+			
+			var numGears = gears.Count;
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
 			fullLoadCurves[0] = FullLoadCurveReader.Create(engineData.EngineModes[modeIdx].FullLoadCurve, true);
 			fullLoadCurves[0].EngineData = engine;
 
-			foreach (var gear in gearbox.Gears) {
+			foreach (var gear in gears) {
 				var maxTorque = VectoMath.Min(
-					DeclarationDataAdapterHeavyLorry.GbxMaxTorque(gear, numGears, fullLoadCurves[0].MaxTorque),
-					DeclarationDataAdapterHeavyLorry.VehMaxTorque(gear, numGears, limits, fullLoadCurves[0].MaxTorque));
+					GearboxDataAdapter.GbxMaxTorque(gear, numGears, fullLoadCurves[0].MaxTorque),
+					VehicleDataAdapter.VehMaxTorque(gear, numGears, limits, fullLoadCurves[0].MaxTorque));
 				fullLoadCurves[(uint)gear.Gear] = AbstractSimulationDataAdapter.IntersectFullLoadCurves(fullLoadCurves[0], maxTorque);
 			}
 
@@ -81,10 +84,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var fuel = GetCombustionEngineFuelData(engineMode.Fuels,
 				VectoMath.Max(engineMode.IdleSpeed, primaryVehicle.EngineIdleSpeed), fullLoadCurves[0], mission);
 			
-			
-
 			engine.Fuels = new List<CombustionEngineFuelData> { fuel };
-
 			
 			return engine;
 		}

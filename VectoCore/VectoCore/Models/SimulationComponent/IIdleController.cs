@@ -37,5 +37,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	{
 		ITnOutPort RequestPort { set; }
 		void Reset();
+
 	}
 }

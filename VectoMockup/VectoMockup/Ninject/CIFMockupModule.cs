@@ -153,6 +153,11 @@ namespace TUGraz.VectoMockup.Ninject
 			return _cifFactory.GetPEV_IEPC_CompletedBusVehicleType();
 		}
 
+		public IXmlTypeWriter GetConventional_SingleBusVehicleType()
+		{
+			return _cifFactory.GetConventional_SingleBusVehicleType();
+		}
+
 
 		public IXmlTypeWriter GetExemptedCompletedBusVehicleType()
 		{
@@ -278,6 +283,16 @@ namespace TUGraz.VectoMockup.Ninject
         {
             return _cifFactory.GetGeneralVehicleSequenceGroupWriterCompletedBus();
         }
+
+		public IReportOutputGroup GetConventionalSingleBusAuxGroup()
+		{
+			return _cifFactory.GetConventionalSingleBusAuxGroup();
+		}
+
+		public IReportOutputGroup GetSingleBusVehicleTypeGroup()
+		{
+			return _cifFactory.GetSingleBusVehicleTypeGroup();
+		}
 
 		public ICIFAdasType GetConventionalADASType()
 		{

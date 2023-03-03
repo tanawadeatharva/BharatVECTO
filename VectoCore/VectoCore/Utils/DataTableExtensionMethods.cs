@@ -35,6 +35,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Utils
@@ -90,7 +91,7 @@ namespace TUGraz.VectoCore.Utils
 		public static double ParseDouble(this DataRow row, DataColumn column)
 		{
 			try {
-				return row.Field<string>(column).ToDouble();
+				return StringExtensionMethods.ToDouble(row.Field<string>(column));
 			} catch (IndexOutOfRangeException e) {
 				throw new VectoException($"Field {column} was not found in DataRow.", e);
 			} catch (NullReferenceException e) {
@@ -110,17 +111,17 @@ namespace TUGraz.VectoCore.Utils
 		public static bool ParseBoolean(this DataRow row, string columnName) =>
 			!row.Table.Columns.Contains(columnName)
 				? throw new KeyNotFoundException($"Column {columnName} was not found in DataRow.")
-				: row.Field<string>(row.Table.Columns[columnName]).ToBoolean();
+				: StringExtensionMethods.ToBoolean(row.Field<string>(row.Table.Columns[columnName]));
 
 		public static bool? ParseBooleanOrGetDefault(this DataRow row, string columnName, bool? defaultValue = null) =>
 			!row.Table.Columns.Contains(columnName)
 				? defaultValue
-				: row.Field<string>(row.Table.Columns[columnName]).ToBoolean();
+				: StringExtensionMethods.ToBoolean(row.Field<string>(row.Table.Columns[columnName]));
 
 		public static IEnumerable<T> Values<T>(this DataColumn column) =>
 			typeof(T).IsEnum
-				? column.Table.Values(r => r[column].ParseEnum<T>())
-				: column.Table.Values(r => r.Field<T>(column));
+				? column.Table.Values<T>(r => r[column].ParseEnum<T>())
+				: column.Table.Values<T>(r => r.Field<T>(column));
 
 		public static IEnumerable<TResult> Values<TResult>(this DataTable self, Func<DataRow, TResult> selector) =>
 			self.Rows.Cast<DataRow>().Select(selector);
@@ -137,6 +138,24 @@ namespace TUGraz.VectoCore.Utils
 			foreach (var kv in entries)
 				table.Rows.Add(kv.Key, kv.Value);
 			return table.DefaultView;
+		}
+
+		/// <summary>
+		/// Multiplies the value in <paramref name="columnName"></paramref> with <paramref name="factor" /> and returns the updated datatable
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="columnName"></param>
+		/// <param name="factor"></param>
+		/// <returns></returns>
+		public static TableData ApplyFactor(this TableData source, string columnName, double factor, int decimals = 2)
+		{
+			foreach (DataRow row in source.Rows)
+			{
+				//Convert input data from W to kW
+				row[columnName] = (Math.Round(row.ParseDouble(columnName) * factor, decimals)).ToString(CultureInfo.InvariantCulture);
+			}
+
+			return source;
 		}
 	}
 }

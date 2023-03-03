@@ -29,16 +29,41 @@ Public Class Configuration
 	Public Co2PerFc As Double
 	Public FirstRun As Boolean
 	Public DeclMode As Boolean
+	Public Multithreaded As Boolean
 
 	Public ValidateRunData As Boolean
+	Public SaveVectoRunData As Boolean
 
     public OutputFolder As String
+
 
 	Public Const DefaultFuelType As FuelType = FuelType.DieselCI
 
 	Private Const FormatVersion As Short = 2
 
-	Public Sub New()
+	'Test Settings 2nd amendment
+	Public InitialSOCOverrideValue As Double
+	Public InitialSOCOverride As Boolean
+	Public ChargeSustainingIterationModeDeActivated As Boolean
+    Private _body as String = "Body"
+    Private _mod1Hz as String = "Mod1Hz"
+    Private _modOut as String = "ModOut"
+    Private _logSize as String = "LogSize"
+    Private _airdensity as String = "AirDensity"
+    Private _fueldensity as String = "FuelDensity"
+    Private _co2Perfc as String = "CO2perFC"
+    Private _openCmd as String = "OpenCmd"
+    Private _opencmdname as String = "OpenCmdName"
+    Private _firstrun as String = "FirstRun"
+    Private _declmode as String = "DeclMode"
+    Private _validaterundata as String = "ValidateRunData"
+    Private _outputfolder as String = "OutputFolder"
+    Private _saverundata as String = "SaveRunData"
+    Private _overrideinitialsoc as String = "OverrideInitialSOC"
+    Private _overrideinitialsocvalue as String = "OverrideInitialSOCValue"
+    Private _csItActive as String = "CS_it_deactivated"
+
+    Public Sub New()
 		SetDefault()
 	End Sub
 
@@ -61,10 +86,18 @@ Public Class Configuration
 		DeclMode = True
 		ValidateRunData = True
         OutputFolder = ""
+		Multithreaded = True
+		SaveVectoRunData = False
+		ChargeSustainingIterationModeDeActivated = False
+		InitialSOCOverride = False
+		InitialSOCOverrideValue = 50
 	End Sub
 
 	Public Sub Load()
 		SetDefault()
+	    If Environment.GetCommandLineArgs().Contains("-st") Then 
+			Multithreaded = False
+	    End If
 
 		If Not File.Exists(FilePath) Then
 			Exit Sub
@@ -74,22 +107,29 @@ Public Class Configuration
 			Using reader As TextReader = File.OpenText(FilePath)
 				Dim content As JToken = JToken.ReadFrom(New JsonTextReader(reader))
 
-				Dim body As JToken = content.GetEx("Body")
+				Dim body As JToken = content.GetEx(_body)
 				Try
-					Mod1Hz = body.GetEx(Of Boolean)("Mod1Hz")
+					Mod1Hz = body.GetEx(Of Boolean)(_mod1Hz)
 				Catch
 				End Try
-				ModOut = body.GetEx(Of Boolean)("ModOut")
-				LogSize = body.GetEx(Of Double)("LogSize")
-				AirDensity = body.GetEx(Of Double)("AirDensity")
-				FuelDens = body.GetEx(Of Double)("FuelDensity")
-				Co2PerFc = body.GetEx(Of Double)("CO2perFC")
-				OpenCmd = body.GetEx(Of String)("OpenCmd")
-				OpenCmdName = body.GetEx(Of String)("OpenCmdName")
-				FirstRun = body.GetEx(Of Boolean)("FirstRun")
-				DeclMode = body.GetEx(Of Boolean)("DeclMode")
-				ValidateRunData = IsNothing(body("ValidateRunData")) OrElse body.GetEx(Of Boolean)("ValidateRunData")
-                OutputFolder = If(body("OutputFolder") Is Nothing, "", body("OutputFolder").Value(of string)())
+				ModOut = body.GetEx(Of Boolean)(_modOut)
+				LogSize = body.GetEx(Of Double)(_logSize)
+				AirDensity = body.GetEx(Of Double)(_airdensity)
+				FuelDens = body.GetEx(Of Double)(_fueldensity)
+				Co2PerFc = body.GetEx(Of Double)(_co2Perfc)
+				OpenCmd = body.GetEx(Of String)(_openCmd)
+				OpenCmdName = body.GetEx(Of String)(_opencmdname)
+				FirstRun = body.GetEx(Of Boolean)(_firstrun)
+				DeclMode = body.GetEx(Of Boolean)(_declmode)
+				ValidateRunData = IsNothing(body(_validaterundata)) OrElse body.GetEx(Of Boolean)(_validaterundata)
+                OutputFolder = If(body(_outputfolder) Is Nothing, "", body(_outputfolder).Value(of string)())
+				SaveVectoRunData = body.GetEx(Of Boolean)(_saverundata)
+
+				InitialSOCOverride = body.GetEx(Of Boolean)(_overrideinitialsoc)
+				InitialSOCOverrideValue = body.GetEx(Of Double)(_overrideinitialsocvalue)
+				ChargeSustainingIterationModeDeActivated = body.GetEx(Of Boolean)(_csItActive)
+
+
 			End Using
 		Catch ex As Exception
 			GUIMsg(MessageType.Err, "Error while loading settings!")
@@ -104,20 +144,27 @@ Public Class Configuration
 		header.Add("FileVersion", FormatVersion)
 
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
-		body.Add("ModOut", ModOut)
-		body.Add("Mod1Hz", Mod1Hz)
-		body.Add("LogSize", LogSize)
-		body.Add("AirDensity", AirDensity)
-		body.Add("FuelDensity", FuelDens)
-		body.Add("CO2perFC", Co2PerFc)
-		body.Add("OpenCmd", OpenCmd)
-		body.Add("OpenCmdName", OpenCmdName)
-		body.Add("FirstRun", FirstRun)
-		body.Add("DeclMode", DeclMode)
-		body.Add("ValidateRunData", ValidateRunData)
-        body.Add("OutputFolder", OutputFolder)
+		body.Add(_modOut, ModOut)
+		body.Add(_mod1Hz, Mod1Hz)
+		body.Add(_logSize, LogSize)
+		body.Add(_airdensity, AirDensity)
+		body.Add(_fueldensity, FuelDens)
+		body.Add(_co2Perfc, Co2PerFc)
+		body.Add(_openCMD, OpenCmd)
+		body.Add(_opencmdname, OpenCmdName)
+		body.Add(_firstrun, FirstRun)
+		body.Add(_declMode, DeclMode)
+		body.Add(_validaterundata, ValidateRunData)
+        body.Add(_outputfolder, OutputFolder)
+		body.Add(_saverundata, SaveVectoRunData)
 
-		JSONFileWriter.WriteFile(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}}, FilePath)
+		body.Add(_overrideinitialsoc, InitialSOCOverride)
+		body.Add(_overrideinitialsocvalue, InitialSOCOverrideValue)
+		body.Add(_csItActive, ChargeSustainingIterationModeDeActivated)
+
+
+
+		JSONFileWriter.WriteFile(New Dictionary(Of String, Object) From {{"Header", header}, {_body, body}}, FilePath)
 	End Sub
 End Class
 

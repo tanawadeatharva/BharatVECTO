@@ -1,4 +1,6 @@
-﻿/*
+﻿
+#define USE_EXTERNAL_DECLARATION_DATA
+/*
 * This file is part of VECTO.
 *
 * Copyright © 2012-2019 European Union
@@ -31,8 +33,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.IO;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -54,26 +58,28 @@ namespace TUGraz.VectoCore.Models.Declaration
 		protected void ReadData()
 		{
 			if (!string.IsNullOrWhiteSpace(ResourceId)) {
-				var table = ReadCsvResource(ResourceId);
+				var table = ReadCsvResource(ResourceId, (s) => System.Diagnostics.Debug.WriteLine(s));
 				NormalizeTable(table);
 				ParseData(table);
 			}
 		}
 
-		protected static DataTable ReadCsvResource(string resourceId)
+		protected static DataTable ReadCsvResource(string resourceId, Action<string> overrideWarning = null)
 		{
 // TODO: MQ 2020-07 Remove in official bus version!
-//#if USE_EXTENAL_DECLARATION_DATA
+#if USE_EXTERNAL_DECLARATION_DATA
 			var tmp = resourceId.Replace(DeclarationData.DeclarationDataResourcePrefix + ".", "");
 			var parts = tmp.Split('.');
-			var fileName = Path.Combine("Declaration", string.Join(".", parts[parts.Length - 2], parts[parts.Length - 1]));
+			var fileName = Path.Combine("Declaration", string.Join(".", parts[parts.Length-2], parts[parts.Length-1]));
 			if (File.Exists(fileName)) {
+				if (overrideWarning != null) {
+					overrideWarning($"{resourceId} overridden by {fileName}");
+				}
 				return VectoCSVFile.Read(fileName);
 			}
-
-			//#else
+#endif
 			return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId), source: resourceId);
-			//#endif
+
 		}
 
 		protected static void NormalizeTable(DataTable table)

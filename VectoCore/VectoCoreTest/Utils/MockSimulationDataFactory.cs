@@ -45,7 +45,8 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.FileIO;
 using TUGraz.VectoCommon.BusAuxiliaries;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -64,7 +65,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var gearboxInput = JSONInputDataFactory.ReadGearbox(gearBoxFile);
 			var engineInput = JSONInputDataFactory.ReadEngine(engineFile);
 			if (declarationMode) {
-				var dao = new DeclarationDataAdapterHeavyLorry();
+				var dao = new DeclarationDataAdapterHeavyLorry.Conventional();
 				var vehicleInput = new MockDeclarationVehicleInputData() {
 					EngineInputData = engineInput,
 					GearboxInputData = gearboxInput
@@ -126,7 +127,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public static AxleGearData CreateAxleGearDataFromFile(string axleGearFile, bool declarationMode = true)
 		{
 			if (declarationMode) {
-				var dao = new DeclarationDataAdapterHeavyLorry();
+				var dao = new DeclarationDataAdapterHeavyLorry.Conventional();
 				var axleGearInput = JSONInputDataFactory.ReadGearbox(axleGearFile);
 				return dao.CreateAxleGearData((IAxleGearInputData)axleGearInput);
 			} else {
@@ -199,19 +200,22 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return dao.CreateDriverData(engineeringJob.DriverInputData);
 		}
 
-		public static List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMotorData(string file, int count,
+		public static IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMotorData(string file, int count,
 			PowertrainPosition pos, double ratio, double efficiency)
 		{
 			var inputData = JSONInputDataFactory.ReadElectricMotorData(file, false);
-			return new EngineeringDataAdapter().CreateElectricMachines(new MockElectricMachinesInputData() {
-				Entries = new[] {
-					new ElectricMachineEntry<IElectricMotorEngineeringInputData>()
-					{
-						Count = count, ElectricMachine = inputData, Position = pos, RatioADC = ratio, MechanicalTransmissionEfficiency = efficiency,
-					}
-				}
-			}, null, null);
-		}
+            
+
+            return new EngineeringDataAdapter().CreateElectricMachines(new MockElectricMachinesInputData()
+            {
+                Entries = new[] {
+                    new ElectricMachineEntry<IElectricMotorEngineeringInputData>()
+                    {
+                        Count = count, ElectricMachine = inputData, Position = pos, RatioADC = ratio, MechanicalTransmissionEfficiency = efficiency,
+                    }
+                }
+            }, null, null);
+        }
 	
 
 		public static BatterySystemData CreateBatteryData(string file, double initialSoC)
@@ -278,7 +282,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool HybridElectricHDV { get; }
 		public bool DualFuelVehicle { get; }
 		public Watt MaxNetPower1 { get; }
-		public Watt MaxNetPower2 { get; }
 		public string ExemptedTechnology { get; }
 		public RegistrationClass? RegisteredClass { get; }
 		public int? NumberPassengerSeatsUpperDeck { get; }
@@ -295,7 +298,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public Meter EntranceHeight { get; }
 		public ConsumerTechnology? DoorDriveTechnology { get; }
 		public VehicleDeclarationType VehicleDeclarationType { get; }
-		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		public IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 		public TableData BoostingLimitations { get; }
 		public string VehicleTypeApprovalNumber { get; }
 		public ArchitectureID ArchitectureID { get; }

@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			//_multistageBusReport = new XMLMultistageBusReport();
 		}
 		
-		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void InitializeReport(VectoRunData modelData)
 		{
 			_multistageBusReport =
 				modelData.Exempted ? new XMLMultistageExemptedBusReport() : new XMLMultistageBusReport();

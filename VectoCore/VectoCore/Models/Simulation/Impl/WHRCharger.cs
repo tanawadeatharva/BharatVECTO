@@ -23,6 +23,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			AdvanceState();
+			if (PreviousState.GeneratedEnergy == null && DataBus.IsTestPowertrain) {
+				// the method GeneratedEnergy is not called because there is no moddata to write and we are in a testpowertrain
+				// make sure the value is not null...
+				PreviousState.GeneratedEnergy = 0.SI<WattSecond>();
+			}
 		}
 
 		#endregion
@@ -77,7 +82,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region Implementation of IUpdateable
 
-		public bool UpdateFrom(object other) {
+		protected override bool DoUpdateFrom(object other) {
 			if (other is WHRCharger c) {
 				PreviousState = c.PreviousState.Clone();
 				return true;

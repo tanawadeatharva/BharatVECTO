@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Utils;
@@ -19,14 +21,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
     {
         public static XNamespace Cif => XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9");
 		
-        protected CustomerInformationFile(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+        protected CustomerInformationFile(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 	}
 
     #region LorryCIF
     public class ConventionalLorry_CIF : CustomerInformationFile
 	{
 		public override string OutputDataType => XMLNames.CIF_OutputDataType_ConventionalLorryOutputType;
-		public ConventionalLorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+		public ConventionalLorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
 
@@ -41,7 +43,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	public class HEV_PxLorry_CIF : CustomerInformationFile
 	{
 		public override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_Px_LorryOutputType;
-		public HEV_PxLorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+		public HEV_PxLorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
 
@@ -55,7 +57,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	public class HEV_S2_Lorry_CIF : CustomerInformationFile
 	{
 		public override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_S2_LorryOutputType;
-		public HEV_S2_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+		public HEV_S2_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
 
@@ -70,7 +72,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	public class HEV_S3_Lorry_CIF : CustomerInformationFile
 	{
 		public override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_S3_LorryOutputType;
-		public HEV_S3_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+		public HEV_S3_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
 
@@ -85,7 +87,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	public class HEV_S4_Lorry_CIF : CustomerInformationFile
 	{
 		public override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_S4_LorryOutputType;
-		public HEV_S4_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+		public HEV_S4_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
 
@@ -100,7 +102,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	public class HEV_IEPC_Lorry_CIF : CustomerInformationFile
 	{
 		public override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_IEPC_S_LorryOutputType;
-		public HEV_IEPC_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+		public HEV_IEPC_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
 
@@ -115,7 +117,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	public class PEV_E2_Lorry_CIF : CustomerInformationFile
 	{
 		public override string OutputDataType => XMLNames.CIF_OutputDataType_PEV_E2_LorryOutputType;
-		public PEV_E2_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+		public PEV_E2_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
 
@@ -130,7 +132,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	public class PEV_E3_Lorry_CIF : CustomerInformationFile
 	{
 		public override string OutputDataType => XMLNames.CIF_OutputDataType_PEV_E3_LorryOutputType;
-		public PEV_E3_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+		public PEV_E3_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
 
@@ -145,7 +147,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	public class PEV_E4_Lorry_CIF : CustomerInformationFile
 	{
 		public override string OutputDataType => XMLNames.CIF_OutputDataType_PEV_E4_LorryOutputType;
-		public PEV_E4_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+		public PEV_E4_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
 
@@ -163,7 +165,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	public class PEV_IEPC_Lorry_CIF : CustomerInformationFile
 	{
 		public override string OutputDataType => XMLNames.CIF_OutputDataType_PEV_IEPC_LorryOutputType;
-		public PEV_IEPC_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+		public PEV_IEPC_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
 
@@ -178,7 +180,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class Exempted_Lorry_CIF : CustomerInformationFile
 	{
-		public Exempted_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+		public Exempted_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
 
@@ -197,25 +199,29 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	#region CompletedBus
 
-	public abstract class CustomerInformationFileCompletedBus : CustomerInformationFile
+	public abstract class CustomerInformationFileCompletedBus : CustomerInformationFile, IXMLCustomerReportCompletedBus
 	{
+		private bool _allSuccess;
+		private int _resultCount;
+
 		protected XElement InputDataIntegrityPrimaryVehicle { get; set; }
 
 		protected XElement ManufacturerReportIntegrityPrimaryVehicle { get; set; }
 
-		protected CustomerInformationFileCompletedBus(ICustomerInformationFileFactory cifFactory) :
-			base(cifFactory) { }
+		protected CustomerInformationFileCompletedBus(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) :
+			base(cifFactory, resultWriterFactory) { }
 
-		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void Initialize(VectoRunData modelData)
 		{
 			InitializeVehicleData(modelData.InputData);
-			_ovc = modelData.VehicleData.Ocv;
+			_ovc = modelData.VehicleData.OffVehicleCharging;
 
 			var inputData = modelData.InputData as IMultistepBusInputDataProvider;
 			if (inputData == null) {
 				throw new VectoException("CompletedBus CustomerInformationFile requires MultistepBusInputData");
 			}
-			Results = new XElement(Cif_0_9 + "Results");
+			Results = _resultFactory.GetCIFResultsWriter(modelData.VehicleData.VehicleCategory.GetVehicleType(),
+				modelData.JobType, modelData.VehicleData.OffVehicleCharging, modelData.Exempted);
 			InputDataIntegrity = new XElement(Cif_0_9 + XMLNames.Report_InputDataSignature,
 				inputData.JobInputData.ConsolidateManufacturingStage.Signature == null
 					? XMLHelper.CreateDummySig(_di)
@@ -235,17 +241,32 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				ManufacturerReportIntegrityPrimaryVehicle,
 				InputDataIntegrity,
 				new XElement(Cif_0_9 + XMLNames.Report_ManufacturerRecord_Signature, resultSignature),
-				Results,
+				Results.GenerateResults(results),
 				XMLHelper.GetApplicationInfo(Cif_0_9)
 			};
 		}
+
+		#region Implementation of IXMLCustomerReportCompletedBus
+
+		public void WriteResult(IResultEntry genericResult, IResultEntry specificResult, IResult primaryResult)
+		{
+			_allSuccess &= genericResult.Status == VectoRun.Status.Success;
+			_allSuccess &= specificResult.Status == VectoRun.Status.Success;
+			_resultCount++;
+			//Results.Add(
+			//	genericResult.Status == VectoRun.Status.Success && specificResult.Status == VectoRun.Status.Success
+			//		? GetSuccessResultEntry(genericResult, specificResult, primaryResult)
+			//		: GetErrorResultEntry(genericResult, specificResult, primaryResult));
+		}
+
+		#endregion
 	}
 
 	public class Conventional_CompletedBusCIF : CustomerInformationFileCompletedBus
 	{
 		public override string OutputDataType => "Conventional_CompletedBusOutputType";
 
-		public Conventional_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+		public Conventional_CompletedBusCIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory)
         {
         }
 
@@ -259,7 +280,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	{
 		public override string OutputDataType => "HEV_CompletedBusOutputType";
 
-		public HEV_Px_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+		public HEV_Px_CompletedBusCIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory)
 		{
 		}
 
@@ -273,7 +294,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	{
         public override string OutputDataType => "HEV_CompletedBusOutputType";
 
-        public HEV_IHPC_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+        public HEV_IHPC_CompletedBusCIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory)
         {
         }
 
@@ -287,7 +308,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	{
 		public override string OutputDataType => "HEV_CompletedBusOutputType";
 
-		public HEV_S2_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+		public HEV_S2_CompletedBusCIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory)
 		{
 		}
 
@@ -301,7 +322,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	{
 		public override string OutputDataType => "HEV_CompletedBusOutputType";
 
-		public HEV_S3_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+		public HEV_S3_CompletedBusCIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory)
 		{
 		}
 
@@ -315,7 +336,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	{
 		public override string OutputDataType => "HEV_CompletedBusOutputType";
 
-		public HEV_S4_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+		public HEV_S4_CompletedBusCIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory)
 		{
 		}
 
@@ -329,7 +350,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	{
 		public override string OutputDataType => "HEV_CompletedBusOutputType";
 
-		public HEV_IEPC_S_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+		public HEV_IEPC_S_CompletedBusCIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory)
 		{
 		}
 
@@ -343,7 +364,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	{
 		public override string OutputDataType => "PEV_CompletedBusOutputType";
 
-		public PEV_E2_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+		public PEV_E2_CompletedBusCIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory)
 		{
 		}
 
@@ -357,7 +378,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	{
 		public override string OutputDataType => "PEV_CompletedBusOutputType";
 
-		public PEV_E3_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+		public PEV_E3_CompletedBusCIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory)
 		{
 		}
 
@@ -371,7 +392,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	{
 		public override string OutputDataType => "PEV_CompletedBusOutputType";
 
-		public PEV_E4_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+		public PEV_E4_CompletedBusCIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory)
 		{
 		}
 
@@ -385,7 +406,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	{
 		public override string OutputDataType => "PEV_CompletedBusOutputType";
 
-		public PEV_IEPC_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+		public PEV_IEPC_CompletedBusCIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory)
 		{
 		}
 
@@ -398,7 +419,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class Exempted_CompletedBusCIF : CustomerInformationFileCompletedBus
 	{
-		public Exempted_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+		public Exempted_CompletedBusCIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
 

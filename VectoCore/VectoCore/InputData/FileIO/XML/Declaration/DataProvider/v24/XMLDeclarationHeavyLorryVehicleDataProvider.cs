@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -80,10 +82,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override TableData BoostingLimitations
 			=> ElementExists(XMLNames.Vehicle_BoostingLimitation)
 				? ReadTableData(XMLNames.Vehicle_BoostingLimitation, XMLNames.BoostingLimitation_Entry,
-					new Dictionary<string, string> {
-						{XMLNames.BoostingLimitation_RotationalSpeed, XMLNames.BoostingLimitation_RotationalSpeed},
-						{XMLNames.BoostingLimitation_BoostingTorque, XMLNames.BoostingLimitation_BoostingTorque}
-					})
+					AttributeMappings.BoostingLimitsMapping)
 				: null;
 
 		#endregion
@@ -92,7 +91,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override VectoSimulationJobType VehicleType
 		{
-			get => VectoSimulationJobType.ParallelHybridVehicle;
+			get => Components.ElectricMachines.Entries.Any(em => em.ElectricMachine.IsIHPC()) ? VectoSimulationJobType.IHPC : VectoSimulationJobType.ParallelHybridVehicle;
 		}
 
 	}
@@ -196,7 +195,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override VectoSimulationJobType VehicleType
 		{
-			get => VectoSimulationJobType.BatteryElectricVehicle;
+			get => VectoSimulationJobType.IEPC_E;
 		}
 	}
 
@@ -232,14 +231,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
-		public override Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
+		public override IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
 		public override TableData BoostingLimitations => null;
 
 		#endregion
 
 		public override VectoSimulationJobType VehicleType
 		{
-			get => VectoSimulationJobType.SerialHybridVehicle;
+			get => VectoSimulationJobType.IEPC_S;
 		}
 
 		public override bool HybridElectricHDV => true;

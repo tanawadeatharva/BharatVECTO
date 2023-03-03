@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public IVehicleDeclarationInputData PrimaryVehicle => PrimaryVehicleRecordFile.Vehicle;
 
-		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void Initialize(VectoRunData modelData)
 		{
 			_tankSystem = modelData.VehicleData.InputData.TankSystem;
 			VehiclePart.Add(
@@ -73,10 +73,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(tns + XMLNames.Bus_VehicleWidth, modelData.VehicleData.InputData.Width.ToXMLFormat(3)),
 				GetADAS(modelData.VehicleData.ADAS),
 				ComponentData(
-					modelData,
-					PrimaryVehicleRecordFile.ResultsInputData.Results
-											.Select(x => x.EnergyConsumption.Keys.Select(f => FuelData.Instance().Lookup(f, modelData.VehicleData.InputData.TankSystem)).ToList()).Distinct()
-											.ToList())
+					modelData
+					// TODO: MQ 20221129: maybe this is necessary?
+					//PrimaryVehicleRecordFile.ResultsInputData.Results
+					//						.Select(x => x.EnergyConsumption.Keys.Select(f => FuelData.Instance().Lookup(f, modelData.VehicleData.InputData.TankSystem)).ToList()).Distinct()
+					//						.ToList()
+					)
 			);
 			
 			InputDataIntegrity = new XElement(tns + XMLNames.Report_InputDataSignature,
@@ -304,7 +306,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
             Report = h.AddHash();
         }
 
-        public override void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
+        public override void WriteResult(IResultEntry resultEntry)
 		{
 			throw new NotSupportedException();
 		}

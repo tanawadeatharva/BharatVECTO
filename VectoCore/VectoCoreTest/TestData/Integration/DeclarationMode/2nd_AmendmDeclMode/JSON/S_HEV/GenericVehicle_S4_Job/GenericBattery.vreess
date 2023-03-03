@@ -1,0 +1,22 @@
+{
+  "Header": {
+    "CreatedBy": "",
+    "Date": "2023-02-16T12:52:53.9081708Z",
+    "AppVersion": "3",
+    "FileVersion": 1
+  },
+  "Body": {
+    "SavedInDeclMode": true,
+    "REESSType": "Battery",
+    "Model": "Generic Battery",
+    "Capacity": 68.75,
+    "SOC_min": 20.0,
+    "SOC_max": 80.0,
+    "MaxCurrentMap": "MaxCurrent.vimax",
+    "InternalResistanceCurve": "GenericBattery.vbatr",
+    "SoCCurve": "REESS_SOC_curve.vbatv",
+    "TestingTemperature": 20.0,
+    "JunctionboxIncluded": false,
+    "ConnectorsSubsystemsIncluded": false
+  }
+}

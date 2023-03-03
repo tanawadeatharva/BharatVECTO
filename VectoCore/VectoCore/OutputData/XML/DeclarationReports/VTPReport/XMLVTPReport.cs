@@ -54,6 +54,7 @@ using TUGraz.VectoHashing;
 using NLog;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using LogManager = NLog.LogManager;
 
@@ -348,7 +349,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return retVal;
 		}
 
-		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void InitializeReport(VectoRunData modelData)
 		{
 			VehicleClass = modelData.VehicleData.VehicleClass;
 			if (VehicleClass.IsBus()) {
@@ -375,7 +376,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XElement(
 						tns + XMLNames.Vehicle_Components,
 						new XAttribute(xsi + XMLNames.XSIType, "ComponentsTruckFWDType"),
-						GetEngineDescription(modelData.EngineData, fuelModes),
+						GetEngineDescription(modelData.EngineData, modelData.InputData.JobInputData.Vehicle.TankSystem),
 						GetGearboxDescription(modelData.GearboxData, modelData.AxleGearData.AxleGear.Ratio),
 						GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
 						GetRetarderDescription(modelData.Retarder),
@@ -389,7 +390,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XElement(
 						tns + XMLNames.Vehicle_Components,
 						new XAttribute(xsi + XMLNames.XSIType, "ComponentsTruckType"),
-						GetEngineDescription(modelData.EngineData, fuelModes),
+						GetEngineDescription(modelData.EngineData, modelData.InputData.JobInputData.Vehicle.TankSystem),
 						GetGearboxDescription(modelData.GearboxData),
 						GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
 						GetRetarderDescription(modelData.Retarder),
@@ -412,7 +413,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var manufacturerReportIntegrity = ManufacturerReportIntegrityChecks(ref allSuccess);
 
 			DataIntegrityPart.Add(
-				new XAttribute("status", allSuccess ? "success" : "failed"),
+				new XAttribute("status", allSuccess ? XMLNames.Report_Results_Status_Success_Val : "failed"),
 				new XElement(
 					tns + "Components",
 					componentChecks.ToArray()
@@ -455,7 +456,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				retVal = new XElement(
 						tns + "Component",
 						new XAttribute("componentName", componentName),
-						new XAttribute("status", status ? "success" : "failed"),
+						new XAttribute("status", status ? XMLNames.Report_Results_Status_Success_Val : "failed"),
 						new XElement(tns + "DigestValueRecomputed", recomputed),
 						new XElement(
 							tns + "DigestValueRead",
@@ -490,7 +491,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				mrStatus = ManufacturerRecordHash.ValidateHash();
 				manufacturerReportIntegrity = new XElement(
 					tns + "ManufacturerReport",
-					new XAttribute("status", mrStatus ? "success" : "failed"),
+					new XAttribute("status", mrStatus ? XMLNames.Report_Results_Status_Success_Val : "failed"),
 					new XElement(tns + "DigestValueRecomputed", mrHashRecomputed),
 					new XElement(
 						tns + "DigestValueRead",
@@ -521,7 +522,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				jobStatus = string.Equals(jobHashRecomputed, jobHashRead);
 				jobIntegrity = new XElement(
 					tns + "JobData",
-					new XAttribute("status", jobStatus ? "success" : "failed"),
+					new XAttribute("status", jobStatus ? XMLNames.Report_Results_Status_Success_Val : "failed"),
 					new XElement(
 						tns + "DigestValueRecomputed",
 						jobHashRecomputed),
@@ -555,8 +556,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 					XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));
 		}
 
-		private XElement GetEngineDescription(CombustionEngineData engineData, List<List<FuelData.Entry>> fuelModes)
+		private XElement GetEngineDescription(CombustionEngineData engineData, TankSystem? tankSystem)
 		{
+			var fuelModes = engineData.InputData.EngineModes.Select(x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, tankSystem)).ToList())
+				.ToList();
 			return new XElement(
 				tns + XMLNames.Component_Engine,
 				GetCommonDescription(engineData),

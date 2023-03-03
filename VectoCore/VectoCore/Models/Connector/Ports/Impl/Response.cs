@@ -41,6 +41,9 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 {
 	public abstract class AbstractResponse : IResponse
 	{
+#if DEBUG
+		private IResponse _subresponse;
+#endif
 		public AbstractResponse(object source)
 		{
 			Source = source;
@@ -61,6 +64,9 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public AbstractResponse(object source, IResponse subResponse)
 		{
+#if DEBUG
+			_subresponse = subResponse;
+#endif
 			Source = source;
 			Driver = subResponse.Driver;
 			Engine = subResponse.Engine;
@@ -140,7 +146,11 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	[DebuggerDisplay("Overload({Delta,nq})")]
 	public class ResponseOverload : AbstractResponse
 	{
-		public Watt Delta { get; set; }
+		public Watt Delta
+		{
+			get;
+			set;
+		}
 		public ResponseOverload(object source) : base(source) { }
 	}
 

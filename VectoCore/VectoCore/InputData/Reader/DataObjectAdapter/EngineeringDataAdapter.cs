@@ -41,6 +41,8 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.InputData.Reader.ShiftStrategy;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
@@ -50,7 +52,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -61,6 +63,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public class EngineeringDataAdapter : AbstractSimulationDataAdapter
 	{
+		private AirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
 		internal VehicleData CreateVehicleData(IVehicleEngineeringInputData data)
 		{
 			if (data.SavedInDeclarationMode) {
@@ -145,7 +148,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 									: 4.SI<Meter>());
 					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
 						airDragArea,
-						DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(
+						_airdragDataAdapter.GetDeclarationAirResistanceCurve(
 							GetAirdragParameterSet(
 								data.VehicleCategory, data.AxleConfiguration, data.Components.AxleWheels.AxlesEngineering.Count, data.GrossVehicleMassRating), airDragArea,
 							height),
@@ -188,7 +191,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var engine = vehicle.Components.EngineInputData;
 			var gbx = vehicle.Components.GearboxInputData;
-			var torqueLimits = vehicle.TorqueLimits;
 			var torqueConverter = vehicle.Components.TorqueConverterInputData;
 			var tankSystem = vehicle.TankSystem;
 			
@@ -213,16 +215,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 								? (gbx.Type == GearboxType.APTN || gbx.Type == GearboxType.IHPC ? 0.SI<KilogramSquareMeter>() : torqueConverter.Inertia)
 								: 0.SI<KilogramSquareMeter>());
 			retVal.EngineStartTime = engine.EngineStartTime ?? DeclarationData.Engine.DefaultEngineStartTime;
-			var limits = torqueLimits.ToDictionary(e => e.Gear);
-			var numGears = gbx?.Gears.Count ?? 0;
-			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
+			var limits = vehicle.TorqueLimits.ToDictionary(e => e.Gear);
+
+			var gears = GearboxDataAdapterBase.FilterDisabledGears(vehicle.TorqueLimits, gbx);
+			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(gears.Count + 1);
 			fullLoadCurves[0] = FullLoadCurveReader.Create(engine.EngineModes.First().FullLoadCurve);
 			fullLoadCurves[0].EngineData = retVal;
-			if (gbx != null) {
-				foreach (var gear in gbx.Gears) {
-					var maxTorque = VectoMath.Min(gear.MaxTorque, limits.GetVECTOValueOrDefault(gear.Gear)?.MaxTorque);
-					fullLoadCurves[(uint)gear.Gear] = IntersectFullLoadCurves(fullLoadCurves[0], maxTorque);
-				}
+			foreach (var gear in gears) {
+				var maxTorque = VectoMath.Min(gear.MaxTorque, limits.GetVECTOValueOrDefault(gear.Gear)?.MaxTorque);
+				fullLoadCurves[(uint)gear.Gear] = IntersectFullLoadCurves(fullLoadCurves[0], maxTorque);
 			}
 
 			retVal.FullLoadCurves = fullLoadCurves;
@@ -326,17 +327,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				return retVal;
 			}
 
-			//var gears = gearbox.Gears;
 			if (gearbox.Gears.Count < 2) {
 				throw new VectoSimulationException("At least two Gear-Entries must be defined in Gearbox!");
 			}
 
+			var gearsInput = GearboxDataAdapterBase.FilterDisabledGears(inputData.JobInputData.Vehicle.TorqueLimits, gearbox);
+			
 			SetEngineeringData(gearbox, gearshiftData, retVal);
 
 			var hasTorqueConverter = retVal.Type.AutomaticTransmission() && retVal.Type != GearboxType.APTN && retVal.Type != GearboxType.IHPC;
 
-			var gearDifferenceRatio = hasTorqueConverter && gearbox.Gears.Count > 2
-				? gearbox.Gears[0].Ratio / gearbox.Gears[1].Ratio
+			var gearDifferenceRatio = hasTorqueConverter && gearsInput.Count > 2
+				? gearsInput[0].Ratio / gearsInput[1].Ratio
 				: 1.0;
 
 			var gears = new Dictionary<uint, GearData>();
@@ -346,8 +348,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					? ShiftPolygonReader.Create(torqueConverter.ShiftPolygon)
 					: DeclarationData.TorqueConverter.ComputeShiftPolygon(engineData.FullLoadCurves[0]);
 			}
-			for (uint i = 0; i < gearbox.Gears.Count; i++) {
-				var gear = gearbox.Gears[(int)i];
+			for (uint i = 0; i < gearsInput.Count; i++) {
+				var gear = gearsInput[(int)i];
 				var lossMap = CreateGearLossMap(gear, i, true, VehicleCategory.Unknown, gearbox.Type);
 
 				ShiftPolygon shiftPolygon;
@@ -355,11 +357,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					shiftPolygon = ShiftPolygonReader.Create(gear.ShiftPolygon);
 				} else if (shiftPolygonCalc != null) {
 					shiftPolygon = shiftPolygonCalc.ComputeDeclarationShiftPolygon(gearbox.Type, (int)i,
-						engineData?.FullLoadCurves[i + 1], gearbox.Gears, engineData, axlegearRatio,
+						engineData?.FullLoadCurves[i + 1], gearsInput, engineData, axlegearRatio,
 						dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2);
 				} else {
 					shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(gearbox.Type, (int)i,
-						engineData?.FullLoadCurves[i + 1], gearbox.Gears, engineData, axlegearRatio,
+						engineData?.FullLoadCurves[i + 1], gearsInput, engineData, axlegearRatio,
 						dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2);
 				}
 
@@ -428,21 +430,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		private static void SetEngineeringData(
-			IGearboxEngineeringInputData gearbox, IGearshiftEngineeringInputData gearshiftData, GearboxData retVal)
-		{
+			IGearboxEngineeringInputData gearbox, IGearshiftEngineeringInputData gearshiftData, GearboxData retVal) {
 			retVal.Inertia = gearbox.Type.ManualTransmission() ? gearbox.Inertia : 0.SI<KilogramSquareMeter>();
 			retVal.TractionInterruption = gearbox.Type == GearboxType.APTN || gearbox.Type == GearboxType.IHPC ? 0.SI<Second>() : gearbox.TractionInterruption;
 		}
 
-		public AxleGearData CreateAxleGearData(IAxleGearInputData data)
-		{
+		public AxleGearData CreateAxleGearData(IAxleGearInputData data) {
 			var retVal = SetCommonAxleGearData(data);
 			retVal.AxleGear.LossMap = ReadAxleLossMap(data, true);
 			return retVal;
 		}
 
-		public AngledriveData CreateAngledriveData(IAngledriveInputData data)
-		{
+		public AngledriveData CreateAngledriveData(IAngledriveInputData data) {
 			return DoCreateAngledriveData(data, true);
 		}
 
@@ -459,16 +458,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var fanDemand = pwrICEOn - pwrICEOffDriving;
 
 			var auxList = new List<VectoRunData.AuxData>() {
-				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_BASE, DemandType = AuxiliaryDemandType.Constant, PowerDemand = baseDemand},
-				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_STP, DemandType = AuxiliaryDemandType.Constant, PowerDemand = stpDemand},
-				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_FAN, DemandType = AuxiliaryDemandType.Constant, PowerDemand = fanDemand},
+				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_BASE, DemandType = AuxiliaryDemandType.Constant, PowerDemandMech = baseDemand},
+				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_STP, DemandType = AuxiliaryDemandType.Constant, PowerDemandMech = stpDemand},
+				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_FAN, DemandType = AuxiliaryDemandType.Constant, PowerDemandMech = fanDemand},
 			};
 
 			return auxList;
 		}
 
-		internal DriverData CreateDriverData(IDriverEngineeringInputData driver)
-		{
+		internal DriverData CreateDriverData(IDriverEngineeringInputData driver) {
 			if (driver.SavedInDeclarationMode) {
 				WarnEngineeringMode("DriverData");
 			}
@@ -544,6 +542,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				};
 				if (pto.PTOCycleDuringStop != null) {
 					ptoData.PTOCycle = DrivingCycleDataReader.ReadFromDataTable(pto.PTOCycleDuringStop, "PTO", false);
+
 				}
 				return ptoData;
 			}
@@ -566,7 +565,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		private IAuxiliaryConfig GetBusAuxiliariesData(VehicleData vehicleData, IBusAuxiliariesEngineeringData busAux)
 		{
-			return new AuxiliaryConfig() {
+			var retVal = new AuxiliaryConfig() {
 				//InputData = auxInputData.BusAuxiliariesData,
 				ElectricalUserInputsConfig = new ElectricsUserInputsConfig() {
 					PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
@@ -622,7 +621,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					ParkBrakeAndDoors = 0,
 					CycleTime = 1.SI<Second>()
 				},
-				SSMInputs = new SSMEngineeringInputs() {
+				SSMInputsCooling = new SSMEngineeringInputs() {
 					MechanicalPower = busAux.HVACData.MechanicalPowerDemand,
 					ElectricPower = busAux.HVACData.ElectricalPowerDemand,
 					AuxHeaterPower = busAux.HVACData.AuxHeaterPower,
@@ -634,11 +633,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				},
 				VehicleData = vehicleData,
 			};
+			retVal.SSMInputsHeating = retVal.SSMInputsCooling;
+			return retVal;
 		}
 
 		private IAuxiliaryConfig GetBatteryElectricBusAuxiliariesData(VehicleData vehicleData, IBusAuxiliariesEngineeringData busAux)
 		{
-			return new AuxiliaryConfig() {
+			var retVal = new AuxiliaryConfig() {
 				//InputData = auxInputData.BusAuxiliariesData,
 				ElectricalUserInputsConfig = new ElectricsUserInputsConfig() {
 					PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
@@ -692,7 +693,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					ParkBrakeAndDoors = 0,
 					CycleTime = 1.SI<Second>()
 				},
-				SSMInputs = new SSMEngineeringInputs() {
+				SSMInputsCooling = new SSMEngineeringInputs() {
 					MechanicalPower = 0.SI<Watt>(),
 					ElectricPower = 0.SI<Watt>(),
 					AuxHeaterPower = 0.SI<Watt>(),
@@ -704,28 +705,30 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				},
 				VehicleData = vehicleData,
 			};
+			retVal.SSMInputsHeating = retVal.SSMInputsCooling;
+			return retVal;
 		}
 
 		
 
-		private Dictionary<string, ElectricConsumerEntry> GetElectricConsumers(IBusAuxElectricSystemEngineeringData busAuxElectricSystem)
+		private Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry> GetElectricConsumers(IBusAuxElectricSystemEngineeringData busAuxElectricSystem)
 		{
-			var retVal = new Dictionary<string, ElectricConsumerEntry>();
+			var retVal = new Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry>();
 
 			var iBase = busAuxElectricSystem.CurrentDemandEngineOffStandstill;
 			var iSP = busAuxElectricSystem.CurrentDemandEngineOffDriving -
 					busAuxElectricSystem.CurrentDemandEngineOffStandstill;
 			var iFan = busAuxElectricSystem.CurrentDemand - busAuxElectricSystem.CurrentDemandEngineOffDriving;
 
-			retVal["BaseLoad"] = new ElectricConsumerEntry() {
+			retVal["BaseLoad"] = new AuxiliaryDataAdapter.ElectricConsumerEntry() {
 				Current = iBase,
 				BaseVehicle = true
 			};
-			retVal[Constants.Auxiliaries.IDs.SteeringPump] = new ElectricConsumerEntry() {
+			retVal[Constants.Auxiliaries.IDs.SteeringPump] = new AuxiliaryDataAdapter.ElectricConsumerEntry() {
 				Current = iSP,
 				ActiveDuringEngineStopStandstill = false,
 			};
-			retVal[Constants.Auxiliaries.IDs.Fan] = new ElectricConsumerEntry() {
+			retVal[Constants.Auxiliaries.IDs.Fan] = new AuxiliaryDataAdapter.ElectricConsumerEntry() {
 				Current = iFan,
 				ActiveDuringEngineStopStandstill = false,
 				ActiveDuringEngineStopDriving = false,
@@ -844,6 +847,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			var retVal = new BatterySystemData();
+			var batteryCount = 0;
 			foreach (var entry in bat) {
 				var b = entry.REESSPack as IBatteryPackDeclarationInputData;
 				if (b == null) {
@@ -859,6 +863,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						InternalResistance =
 							BatteryInternalResistanceReader.Create(b.InternalResistanceCurve, false),
 						SOCMap = BatterySOCReader.Create(b.VoltageCurve),
+						BatteryId = batteryCount++,
 					}));
 				}
 			}
@@ -894,9 +899,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(
+		public IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(
 			IElectricMachinesEngineeringInputData electricMachines,
-			Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage,
+			IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage,
 			GearList gearlist = null)
 		{
 			if (electricMachines == null) {
@@ -920,7 +925,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		private ElectricMotorData CreateElectricMachine(PowertrainPosition powertrainPosition,
 			IElectricMotorEngineeringInputData motorData, int count,
 			double ratio, double[] ratioPerGear, double efficiency, TableData adcLossMap,
-			List<Tuple<Volt, TableData>> torqueLimits, Volt averageVoltage, GearList gearList)
+			IList<Tuple<Volt, TableData>> torqueLimits, Volt averageVoltage, GearList gearList)
 		{
 			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
 
@@ -955,7 +960,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				EfficiencyData = new VoltageLevelData() { VoltageLevels = voltageLevels},
 				EMDragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, count),
 				Inertia = motorData.Inertia * count,
-				OverloadRegenerationFactor = motorData.OverloadRecoveryFactor,
+				OverloadRecoveryFactor = motorData.OverloadRecoveryFactor,
 				RatioADC = ratio,
 				RatioPerGear = ratioPerGear,
 				TransmissionLossMap = lossMap,
@@ -1185,14 +1190,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
 			foreach (var entry in iepc.VoltageLevels.OrderBy(x => x.VoltageLevel)) {
 				var effMap = new Dictionary<uint, EfficiencyMap>();
+				var fldCurve =
+					IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, gearRatioUsedForMeasurement.Ratio);
 				for (var i = 0u; i < entry.PowerMap.Count; i++) {
 					var ratio = iepc.Gears.First(x => x.GearNumber == i + 1).Ratio;
-					effMap.Add(i + 1, IEPCMapReader.Create(entry.PowerMap[(int)i].PowerMap, count, ratio));
+					effMap.Add(i + 1, IEPCMapReader.Create(entry.PowerMap[(int)i].PowerMap, count, ratio, fldCurve));
 					//fullLoadCurves.Add(i + 1, IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, ratio));
 				}
 				voltageLevels.Add(new IEPCVoltageLevelData() {
 					Voltage = entry.VoltageLevel,
-					FullLoadCurve = IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, gearRatioUsedForMeasurement.Ratio),
+					FullLoadCurve = fldCurve,
 					EfficiencyMaps = effMap,
 				});
 			}
@@ -1215,7 +1222,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				EfficiencyData = new VoltageLevelData() { VoltageLevels = voltageLevels },
 				IEPCDragCurves = dragCurves,
 				Inertia = iepc.Inertia * count,
-				OverloadRegenerationFactor = iepc.OverloadRecoveryFactor,
+				OverloadRecoveryFactor = iepc.OverloadRecoveryFactor,
 				RatioADC = 1,
 				RatioPerGear = null,
 				TransmissionLossMap = TransmissionLossMapReader.CreateEmADCLossMap(1.0, 1.0, "EM ADC LossMap Eff"),
@@ -1293,26 +1300,279 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public PTOData CreateBatteryElectricPTOTransmissionData(IPTOTransmissionInputData pto)
 		{
-			if (pto.PTOTransmissionType != "None") {
-				var ptoData = new PTOData() {
-					TransmissionType = pto.PTOTransmissionType,
-					LossMap = pto.PTOLossMap == null
-						? PTOIdleLossMapReader.GetZeroLossMap()
-						: PTOIdleLossMapReader.Create(pto.PTOLossMap)
-				};
-				return ptoData;
+
+
+			var ptoData = new PTOData() {
+				TransmissionType = pto.PTOTransmissionType,
+				LossMap = pto.PTOLossMap == null
+					? PTOIdleLossMapReader.GetZeroLossMap()
+					: PTOIdleLossMapReader.Create(pto.PTOLossMap),
+				PTOCycle = pto.EPTOCycleDuringStop != null
+					? DrivingCycleDataReader.ReadFromDataTable(pto.EPTOCycleDuringStop, "PTO", false)
+					: null,
+			};
+
+			return ptoData;
+		}
+
+		internal VehicleData SetCommonVehicleData(IVehicleDeclarationInputData data)
+		{
+			var retVal = new VehicleData
+			{
+				InputData = data,
+				SavedInDeclarationMode = data.SavedInDeclarationMode,
+				Manufacturer = data.Manufacturer,
+				ModelName = data.Model,
+				Date = data.Date,
+				//CertificationNumber = data.CertificationNumber,
+				DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "",
+				VehicleCategory = data.VehicleCategory,
+				CurbMass = data.CurbMassChassis,
+				GrossVehicleMass = data.GrossVehicleMassRating,
+				AirDensity = Physics.AirDensity,
+			};
+
+			return retVal;
+		}
+
+		internal RetarderData SetCommonRetarderData(IRetarderInputData retarderInputData,
+			PowertrainPosition position = PowertrainPosition.HybridPositionNotSet)
+		{
+			try
+			{
+				var retarder = new RetarderData { Type = retarderInputData.Type };
+
+				switch (retarder.Type)
+				{
+					case RetarderType.TransmissionInputRetarder:
+					case RetarderType.TransmissionOutputRetarder:
+						if (!(position.IsParallelHybrid() || position.IsOneOf(PowertrainPosition.HybridPositionNotSet, PowertrainPosition.BatteryElectricE2)))
+						{
+							throw new ArgumentException("Transmission retarder is only allowed in powertrains that " +
+														"contain a gearbox: Conventional, HEV-P, and PEV-E2.", nameof(retarder));
+						}
+
+						retarder.LossMap = RetarderLossMapReader.Create(retarderInputData.LossMap);
+						retarder.Ratio = retarderInputData.Ratio;
+						break;
+
+					case RetarderType.AxlegearInputRetarder:
+						if (position != PowertrainPosition.BatteryElectricE3)
+							throw new ArgumentException("AxlegearInputRetarder is only allowed for PEV-E3, HEV-S3, S-IEPC, E-IEPC. ", nameof(retarder));
+						retarder.LossMap = RetarderLossMapReader.Create(retarderInputData.LossMap);
+						retarder.Ratio = retarderInputData.Ratio;
+						break;
+
+					case RetarderType.None:
+					case RetarderType.LossesIncludedInTransmission:
+					case RetarderType.EngineRetarder:
+						retarder.Ratio = 1;
+						break;
+
+					default:
+						throw new ArgumentOutOfRangeException(nameof(retarder), retarder.Type, "RetarderType unknown");
+				}
+
+				if (retarder.Type.IsDedicatedComponent())
+				{
+					retarder.SavedInDeclarationMode = retarderInputData.SavedInDeclarationMode;
+					retarder.Manufacturer = retarderInputData.Manufacturer;
+					retarder.ModelName = retarderInputData.Model;
+					retarder.Date = retarderInputData.Date;
+					retarder.CertificationMethod = retarderInputData.CertificationMethod;
+					retarder.CertificationNumber = retarderInputData.CertificationNumber;
+					retarder.DigestValueInput = retarderInputData.DigestValue != null ? retarderInputData.DigestValue.DigestValue : "";
+				}
+
+				return retarder;
+			}
+			catch (Exception e)
+			{
+				throw new VectoException("Error while Reading Retarder Data: {0}", e.Message);
+			}
+		}
+
+		internal static GearboxData SetCommonGearboxData(IGearboxDeclarationInputData data)
+		{
+			return new GearboxData
+			{
+				InputData = data,
+				SavedInDeclarationMode = data.SavedInDeclarationMode,
+				Manufacturer = data.Manufacturer,
+				ModelName = data.Model,
+				Date = data.Date,
+				CertificationMethod = data.CertificationMethod,
+				CertificationNumber = data.CertificationMethod != CertificationMethod.StandardValues ?
+					data.CertificationNumber : "",
+				DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "",
+				Type = data.Type
+			};
+		}
+
+		protected static void CreateTCSecondGearATSerial(GearData gearData,
+			ShiftPolygon shiftPolygon)
+		{
+			gearData.TorqueConverterRatio = gearData.Ratio;
+			gearData.TorqueConverterGearLossMap = gearData.LossMap;
+			gearData.TorqueConverterShiftPolygon = shiftPolygon;
+		}
+
+		protected static void CreateTCFirstGearATSerial(GearData gearData,
+			ShiftPolygon shiftPolygon)
+		{
+			gearData.TorqueConverterRatio = gearData.Ratio;
+			gearData.TorqueConverterGearLossMap = gearData.LossMap;
+			gearData.TorqueConverterShiftPolygon = shiftPolygon;
+		}
+
+		protected virtual void CretateTCFirstGearATPowerSplit(GearData gearData, uint i, ShiftPolygon shiftPolygon)
+		{
+			gearData.TorqueConverterRatio = 1;
+			gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(1, 1, $"TCGear {i + 1}");
+			gearData.TorqueConverterShiftPolygon = shiftPolygon;
+		}
+
+		/// <summary>
+		/// Creates an AngledriveData or returns null if there is no anglegear.
+		/// </summary>
+		/// <param name="data"></param>
+		/// <param name="useEfficiencyFallback">if true, the Efficiency value is used if no LossMap is found.</param>
+		/// <returns></returns>
+		internal AngledriveData DoCreateAngledriveData(IAngledriveInputData data, bool useEfficiencyFallback)
+		{
+			try
+			{
+				var type = data?.Type ?? AngledriveType.None;
+
+				switch (type)
+				{
+					case AngledriveType.LossesIncludedInGearbox:
+					case AngledriveType.None:
+						return null;
+					case AngledriveType.SeparateAngledrive:
+						var angledriveData = new AngledriveData
+						{
+							InputData = data,
+							SavedInDeclarationMode = data.SavedInDeclarationMode,
+							Manufacturer = data.Manufacturer,
+							ModelName = data.Model,
+							Date = data.Date,
+							CertificationMethod = data.CertificationMethod,
+							CertificationNumber = data.CertificationNumber,
+							DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "",
+							Type = type,
+							Angledrive = new TransmissionData { Ratio = data.Ratio }
+						};
+						try
+						{
+							angledriveData.Angledrive.LossMap = TransmissionLossMapReader.Create(data.LossMap,
+								data.Ratio, "Angledrive", true);
+						}
+						catch (VectoException ex)
+						{
+							Log.Info("Angledrive Loss Map not found.");
+							if (useEfficiencyFallback)
+							{
+								Log.Info("Angledrive Trying with Efficiency instead of Loss Map.");
+								angledriveData.Angledrive.LossMap = TransmissionLossMapReader.Create(data.Efficiency,
+									data.Ratio, "Angledrive");
+							}
+							else
+							{
+								throw new VectoException("Angledrive: LossMap not found.", ex);
+							}
+						}
+						return angledriveData;
+					default:
+						throw new ArgumentOutOfRangeException(nameof(data), "Unknown Angledrive Type.");
+				}
+			}
+			catch (Exception e)
+			{
+				throw new VectoException("Error while reading Angledrive data: {0}", e.Message, e);
+			}
+		}
+
+		/// <summary>
+		/// Intersects max torque curve.
+		/// </summary>
+		/// <param name="maxTorqueEntries"></param>
+		/// <param name="maxTorque"></param>
+		/// <returns>A combined EngineFullLoadCurve with the minimum full load torque over all inputs curves.</returns>
+		internal static IList<VehicleMaxPropulsionTorque.FullLoadEntry> IntersectMaxPropulsionTorqueCurve(IList<VehicleMaxPropulsionTorque.FullLoadEntry> maxTorqueEntries, NewtonMeter maxTorque)
+		{
+			if (maxTorque == null)
+			{
+				return maxTorqueEntries;
 			}
 
-			return null;
+			var entries = new List<VehicleMaxPropulsionTorque.FullLoadEntry>();
+			var firstEntry = maxTorqueEntries.First();
+			if (firstEntry.FullDriveTorque < maxTorque)
+			{
+				entries.Add(maxTorqueEntries.First());
+			}
+			else
+			{
+				entries.Add(new VehicleMaxPropulsionTorque.FullLoadEntry
+				{
+					MotorSpeed = firstEntry.MotorSpeed,
+					FullDriveTorque = maxTorque,
+				});
+			}
+			foreach (var entry in maxTorqueEntries.Pairwise(Tuple.Create))
+			{
+				if (entry.Item1.FullDriveTorque <= maxTorque && entry.Item2.FullDriveTorque <= maxTorque)
+				{
+					// segment is below maxTorque line -> use directly
+					entries.Add(entry.Item2);
+				}
+				else if (entry.Item1.FullDriveTorque > maxTorque && entry.Item2.FullDriveTorque > maxTorque)
+				{
+					// segment is above maxTorque line -> add limited entry
+					entries.Add(new VehicleMaxPropulsionTorque.FullLoadEntry
+					{
+						MotorSpeed = entry.Item2.MotorSpeed,
+						FullDriveTorque = maxTorque,
+					});
+				}
+				else
+				{
+					// segment intersects maxTorque line -> add new entry at intersection
+					var edgeFull = Edge.Create(
+						new Point(entry.Item1.MotorSpeed.Value(), entry.Item1.FullDriveTorque.Value()),
+						new Point(entry.Item2.MotorSpeed.Value(), entry.Item2.FullDriveTorque.Value()));
+
+					var intersectionX = (maxTorque.Value() - edgeFull.OffsetXY) / edgeFull.SlopeXY;
+					if (!entries.Any(x => x.MotorSpeed.IsEqual(intersectionX)) && !intersectionX.IsEqual(entry.Item2.MotorSpeed.Value()))
+					{
+						entries.Add(new VehicleMaxPropulsionTorque.FullLoadEntry
+						{
+							MotorSpeed = intersectionX.SI<PerSecond>(),
+							FullDriveTorque = maxTorque,
+						});
+					}
+
+					entries.Add(new VehicleMaxPropulsionTorque.FullLoadEntry
+					{
+						MotorSpeed = entry.Item2.MotorSpeed,
+						FullDriveTorque = entry.Item2.FullDriveTorque > maxTorque ? maxTorque : entry.Item2.FullDriveTorque,
+
+					});
+				}
+			}
+
+
+			return entries;
 		}
 	}
 
 	public class IEPCGearboxInputData : IGearboxDeclarationInputData
 	{
-		protected readonly IIEPCEngineeringInputData _iepc;
+		protected readonly IIEPCDeclarationInputData _iepc;
 		private IList<ITransmissionInputData> _gears;
 
-		public IEPCGearboxInputData(IIEPCEngineeringInputData iepc)
+		public IEPCGearboxInputData(IIEPCDeclarationInputData iepc)
 		{
 			_iepc = iepc;
 		}

@@ -36,7 +36,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 				case IMultistepBusInputDataProvider multistageBusInputDataProvider:
 					break;
 				case ISingleBusInputDataProvider singleBusInputDataProvider:
-					return new XMLDeclarationReport(outputWriter, _mrfFactory, _cifFactory);
+					throw new NotImplementedException();
+					//return new XMLDeclarationReportSingleBus(outputWriter, _mrfFactory, _cifFactory);
 				case IDeclarationInputDataProvider declarationInputDataProvider:
 					return CreateDeclarationReport(declarationInputDataProvider, outputWriter);
 				case IMultiStageTypeInputData multiStageTypeInputData:

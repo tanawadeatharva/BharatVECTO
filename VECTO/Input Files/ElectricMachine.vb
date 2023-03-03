@@ -273,8 +273,8 @@ Public Class ElectricMachine
         End Get
     End Property
 
-    Public ReadOnly Property ElectricMachineType As ElectricMachineType Implements IElectricMotorDeclarationInputData.ElectricMachineType
-    Public ReadOnly Property R85RatedPower As Watt Implements IElectricMotorDeclarationInputData.R85RatedPower
+    Public Property ElectricMachineType As ElectricMachineType Implements IElectricMotorDeclarationInputData.ElectricMachineType
+    Public Property R85RatedPower As Watt Implements IElectricMotorDeclarationInputData.R85RatedPower
 
     Public ReadOnly Property Inertia As KilogramSquareMeter Implements IElectricMotorDeclarationInputData.Inertia
         Get

@@ -274,11 +274,6 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 			set => throw new NotImplementedException();
 		}
 
-		public virtual Watt MaxNetPower2
-		{
-			get => throw new NotImplementedException();
-			set => throw new NotImplementedException();
-		}
 
 		public string ExemptedTechnology { get; }
 
@@ -354,7 +349,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 		ConsumerTechnology? IVehicleDeclarationInputData.DoorDriveTechnology { get; }
 
 		public VehicleDeclarationType VehicleDeclarationType => throw new NotImplementedException();
-		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		public IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 		public TableData BoostingLimitations { get; }
 
 		public string VehicleTypeApprovalNumber => throw new NotImplementedException();
