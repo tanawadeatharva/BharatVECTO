@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NLog.Targets;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -15,13 +18,167 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 {
 
     public abstract class HybridStrategyDataAdapter{
+        protected internal static Dictionary<GearshiftPosition, VehicleMaxPropulsionTorque> CreateMaxPropulsionTorque(
+			ArchitectureID archId, CombustionEngineData engineData, GearboxData gearboxData, TableData boostingLimitations)
+        {
 
-	}
+            // engine data contains full-load curves already cropped with max gearbox torque and max ICE torque (vehicle level)
 
-	public class ParallelHybridStrategyParameterDataAdapter : HybridStrategyDataAdapter
+            var maxBoostingTorque = boostingLimitations;
+            var offset = maxBoostingTorque == null ? null : MaxBoostingTorqueReader.Create(maxBoostingTorque);
+            var belowIdle = offset?.FullLoadEntries.Where(x => x.MotorSpeed < engineData.IdleSpeed).ToList();
+
+            var retVal = new Dictionary<GearshiftPosition, VehicleMaxPropulsionTorque>();
+
+			var isP3OrP4Hybrid = archId.IsOneOf(ArchitectureID.P3, ArchitectureID.P4); 
+			//vehicleInputData.Components.ElectricMachines.Entries.Select(x => x.Position)
+   //             .Any(x => x == PowertrainPosition.HybridP3 || x == PowertrainPosition.HybridP4);
+            foreach (var key in engineData.FullLoadCurves.Keys)
+            {
+                if (key == 0)
+                {
+                    continue;
+                }
+                if (maxBoostingTorque == null)
+                {
+                    if (gearboxData.Gears[key].MaxTorque == null)
+                    {
+                        continue;
+                    }
+                    // don't know what to do...
+                    // idea 1: apply gearbox limit for whole speed range
+                    // idea 2: use em max torque as boosting limitation
+                    var gbxLimit = new[] {
+                        new VehicleMaxPropulsionTorque.FullLoadEntry()
+                            { MotorSpeed = 0.RPMtoRad(), FullDriveTorque = gearboxData.Gears[key].MaxTorque },
+                        new VehicleMaxPropulsionTorque.FullLoadEntry() {
+                            MotorSpeed = engineData.FullLoadCurves[0].N95hSpeed * 1.1,
+                            FullDriveTorque = gearboxData.Gears[key].MaxTorque
+                        }
+                    }.ToList();
+                    retVal[new GearshiftPosition(key, true)] = new VehicleMaxPropulsionTorque(gbxLimit);
+                    continue;
+                }
+
+                // case boosting limit is defined, gearbox limit can be defined or not (handled in Intersect method)
+
+                // entries contains ICE full-load curve with the boosting torque added. handles ICE speeds below idle
+                var entries = belowIdle.Select(fullLoadEntry => new VehicleMaxPropulsionTorque.FullLoadEntry()
+                { MotorSpeed = fullLoadEntry.MotorSpeed, FullDriveTorque = fullLoadEntry.FullDriveTorque })
+                    .Concat(
+                        engineData.FullLoadCurves[key].FullLoadEntries.Where(x => x.EngineSpeed > engineData.IdleSpeed)
+                            .Select(fullLoadCurveEntry =>
+                                new VehicleMaxPropulsionTorque.FullLoadEntry()
+                                {
+                                    MotorSpeed = fullLoadCurveEntry.EngineSpeed,
+                                    FullDriveTorque = fullLoadCurveEntry.TorqueFullLoad +
+                                                    VectoMath.Max(
+                                                        offset?.FullLoadDriveTorque(fullLoadCurveEntry.EngineSpeed),
+                                                        0.SI<NewtonMeter>())
+                                }))
+                    .Concat(
+                        new[] { engineData.IdleSpeed, engineData.IdleSpeed - 0.1.RPMtoRad() }.Select(x =>
+                            new VehicleMaxPropulsionTorque.FullLoadEntry()
+                            {
+                                MotorSpeed = x,
+                                FullDriveTorque = engineData.FullLoadCurves[0].FullLoadStationaryTorque(x) +
+                                                VectoMath.Max(offset?.FullLoadDriveTorque(x),
+                                                    0.SI<NewtonMeter>())
+                            }))
+                    .OrderBy(x => x.MotorSpeed).ToList();
+
+                // if no gearbox limit is defined, MaxTorque is null;
+                // in case of P3 or P4, do not apply gearbox limit to propulsion limit as ICE is already cropped with max torque
+                var gearboxTorqueLimit = isP3OrP4Hybrid ? null : gearboxData.Gears[key].MaxTorque;
+                retVal[new GearshiftPosition(key, true)] = new VehicleMaxPropulsionTorque(IntersectMaxPropulsionTorqueCurve(entries, gearboxTorqueLimit));
+
+            }
+
+            return retVal;
+        }
+        /// <summary>
+        /// Intersects max torque curve.
+        /// </summary>
+        /// <param name="maxTorqueEntries"></param>
+        /// <param name="maxTorque"></param>
+        /// <returns>A combined EngineFullLoadCurve with the minimum full load torque over all inputs curves.</returns>
+        internal static IList<VehicleMaxPropulsionTorque.FullLoadEntry> IntersectMaxPropulsionTorqueCurve(IList<VehicleMaxPropulsionTorque.FullLoadEntry> maxTorqueEntries, NewtonMeter maxTorque)
+        {
+            if (maxTorque == null)
+            {
+                return maxTorqueEntries;
+            }
+
+            var entries = new List<VehicleMaxPropulsionTorque.FullLoadEntry>();
+            var firstEntry = maxTorqueEntries.First();
+            if (firstEntry.FullDriveTorque < maxTorque)
+            {
+                entries.Add(maxTorqueEntries.First());
+            }
+            else
+            {
+                entries.Add(new VehicleMaxPropulsionTorque.FullLoadEntry
+                {
+                    MotorSpeed = firstEntry.MotorSpeed,
+                    FullDriveTorque = maxTorque,
+                });
+            }
+            foreach (var entry in maxTorqueEntries.Pairwise(Tuple.Create))
+            {
+                if (entry.Item1.FullDriveTorque <= maxTorque && entry.Item2.FullDriveTorque <= maxTorque)
+                {
+                    // segment is below maxTorque line -> use directly
+                    entries.Add(entry.Item2);
+                }
+                else if (entry.Item1.FullDriveTorque > maxTorque && entry.Item2.FullDriveTorque > maxTorque)
+                {
+                    // segment is above maxTorque line -> add limited entry
+                    entries.Add(new VehicleMaxPropulsionTorque.FullLoadEntry
+                    {
+                        MotorSpeed = entry.Item2.MotorSpeed,
+                        FullDriveTorque = maxTorque,
+                    });
+                }
+                else
+                {
+                    // segment intersects maxTorque line -> add new entry at intersection
+                    var edgeFull = Edge.Create(
+                        new Point(entry.Item1.MotorSpeed.Value(), entry.Item1.FullDriveTorque.Value()),
+                        new Point(entry.Item2.MotorSpeed.Value(), entry.Item2.FullDriveTorque.Value()));
+
+                    var intersectionX = (maxTorque.Value() - edgeFull.OffsetXY) / edgeFull.SlopeXY;
+                    if (!entries.Any(x => x.MotorSpeed.IsEqual(intersectionX)) && !intersectionX.IsEqual(entry.Item2.MotorSpeed.Value()))
+                    {
+                        entries.Add(new VehicleMaxPropulsionTorque.FullLoadEntry
+                        {
+                            MotorSpeed = intersectionX.SI<PerSecond>(),
+                            FullDriveTorque = maxTorque,
+                        });
+                    }
+
+                    entries.Add(new VehicleMaxPropulsionTorque.FullLoadEntry
+                    {
+                        MotorSpeed = entry.Item2.MotorSpeed,
+                        FullDriveTorque = entry.Item2.FullDriveTorque > maxTorque ? maxTorque : entry.Item2.FullDriveTorque,
+
+                    });
+                }
+            }
+
+
+            return entries;
+        }
+    }
+
+    public class ParallelHybridStrategyParameterDataAdapter : HybridStrategyDataAdapter
 	{
-		public HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData,
-			SuperCapData superCap, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType)
+		public HybridStrategyParameters CreateHybridStrategyParameters(
+			BatterySystemData batterySystemData,
+			SuperCapData superCap, 
+			VectoRunData.OvcHevMode ovcMode, 
+			LoadingType loading, 
+			VehicleClass vehicleClass, 
+			MissionType missionType, ArchitectureID archID, CombustionEngineData engineData, GearboxData gearboxData, TableData boostingLimitations)
 		{
 			if (batterySystemData == null && superCap == null) {
 				return null;
@@ -57,6 +214,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			result.MinICEOnTime = 10.SI<Second>();
 			result.ICEStartPenaltyFactor = 0.1;
 			result.CostFactorSOCExponent = 1;
+			result.MaxPropulsionTorque =
+				CreateMaxPropulsionTorque(archID, engineData, gearboxData, boostingLimitations);
 
 			if (ovcMode == VectoRunData.OvcHevMode.ChargeSustaining) {
 				result.EquivalenceFactor =
@@ -73,7 +232,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			return result;
 		}
-	}
+
+
+
+		
+
+    }
 
 	public class SerialHybridStrategyParameterDataAdapter : HybridStrategyDataAdapter
 	{
