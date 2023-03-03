@@ -170,20 +170,52 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			}
 
 
-			
+			//Don't extrapolate speedbuckets which have a left AND right neighbour with significantly higher torque values
+			//
+
+			var ignoredSpeedBucketsRecuperation = new HashSet<PerSecond>();
+			var ignoredSpeedBucketsDrive = new HashSet<PerSecond>();
+			var ignoreThreshold = 0.8;
+			var orderedBuckets = speedBuckets.OrderBy(x => x.Key).ToList();
+			for (var i = 1; i < speedBuckets.Count - 1; i++) {
+				var current = orderedBuckets[i];
+				var prev = orderedBuckets[i - 1];
+				var next = orderedBuckets[i + 1];
+
+				//Drive
+				if (current.Value.MinBy(x => x.Torque).Torque / prev.Value.MinBy(x => x.Torque).Torque < ignoreThreshold
+					&& 
+					current.Value.MinBy(x => x.Torque).Torque / next.Value.MinBy(x => x.Torque).Torque < ignoreThreshold) {
+					ignoredSpeedBucketsDrive.Add(current.Key);
+				}
+
+                //Recuperation
+				if (current.Value.MaxBy(x => x.Torque).Torque / prev.Value.MaxBy(x => x.Torque).Torque < ignoreThreshold
+					&&
+					current.Value.MaxBy(x => x.Torque).Torque / next.Value.MaxBy(x => x.Torque).Torque < ignoreThreshold)
+				{
+					ignoredSpeedBucketsRecuperation.Add(current.Key);
+				}
+            }
+
+
+
 			var maxTargetTorque = fullLoadCurve.MaxGenerationTorque * extrapolationfactor;
 			var minTargetTorque = fullLoadCurve.MaxDriveTorque * extrapolationfactor;
 			var ratedSpeed = ElectricMotorRatedSpeedHelper.GetRatedSpeed(fullLoadCurve.FullLoadEntries,
 				e => e.MotorSpeed, e => e.FullDriveTorque);
 			PerSecond prevSpeed = null;
-			foreach (var speedBucket in speedBuckets.OrderBy(x => x.Key))
+			foreach (var speedBucket in orderedBuckets)
 			{
+				
+
 				var maxRecuperationEntry = speedBucket.Value.MaxBy(x => x.Torque);
 				var maxDriveEntry = speedBucket.Value.MinBy(x => x.Torque); //drive torque < 0
 				var recuperationFactor = maxTargetTorque / maxRecuperationEntry.Torque;
 				var driveFactor = minTargetTorque / maxDriveEntry.Torque;
 
-				if (!recuperationFactor.IsSmallerOrEqual(1)) {
+				//Recuperation
+				if (!recuperationFactor.IsSmallerOrEqual(1) && !ignoredSpeedBucketsRecuperation.Contains(speedBucket.Key)) {
 					var nrExtrapolationPointsRecuperation = (uint)Math.Ceiling(speedBucket.Value.Count(x => x.Torque.IsGreater(0)) * (recuperationFactor - 1));
 					for (var i = 1; i <= nrExtrapolationPointsRecuperation; i++)
 					{
@@ -193,7 +225,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					}
 				}
 
-				if (!driveFactor.IsSmallerOrEqual(1)) {
+				//Drive
+				if (!driveFactor.IsSmallerOrEqual(1) && !ignoredSpeedBucketsDrive.Contains(speedBucket.Key)) {
+
 					var nrExtrapolationPointsDrive = (uint)Math.Ceiling(speedBucket.Value.Count(x => x.Torque.IsSmaller(0)) * (driveFactor - 1));
 
 					for (var i = 1; i <= nrExtrapolationPointsDrive; i++)

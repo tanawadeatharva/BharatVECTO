@@ -555,17 +555,20 @@ public class LorrySimulation
 	[TestCase(Group5_HEV_P4_OVC, 20)]
 	[TestCase(Group5_HEV_P2_5_OVC, 20)]
 	[TestCase(@"HeavyLorry\P-HEV\Group5_HEV_IHPC.xml", 20)]
-	public void PHEV_ChargeDepleting(string jobFile, int nrRuns)
+	[TestCase(@"HeavyLorry\P-HEV\Group5_HEV_P2_OVC_stefan.xml", 20, MissionType.UrbanDelivery, LoadingType.LowLoading)]
+	[TestCase(@"HeavyLorry\P-HEV\Group5_HEV_P3_OVC_stefan.xml", 20)]
+    public void PHEV_ChargeDepleting(string jobFile, int nrRuns, MissionType? missionType = null, LoadingType? loadingType = null)
 	{
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out var sumDataContainer);
-		
 
+		var mission = missionType ?? MissionType.UrbanDelivery;
+		var loading = loadingType ?? LoadingType.ReferenceLoad;
 		Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.NotApplicable));
 
 		runs = runs.Where(run => {
 			var rd = run.GetContainer().RunData;
 			return rd.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting &&
-					rd.Mission.MissionType == MissionType.UrbanDelivery && rd.Loading == LoadingType.ReferenceLoad;
+					rd.Mission.MissionType == mission && rd.Loading == loading;
 		}).ToList();
 
 		jobContainer.AddRun(runs.Single());
