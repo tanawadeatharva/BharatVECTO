@@ -20,10 +20,15 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter;
 public class HybridStrategyDataAdapterTest
 {
 
-    [TestCase(0.7375, 0.2625, 11273.9176, 778.61, 247500, false, 0.624646591, 0.307641364)]
-	[TestCase(0.6, 0.2, 11000, 778.61, 80000, false, 0.582967134, 0.234065732)]
-	[TestCase(0.6, 0.2, 11000, 778.61, 5000, true, 0.268131464, 0.634065732)]
-	public void SerialHybridStrategyTest(double bat_soc_max, double bat_soc_min, double vehicle_mass, double nominalVoltage, double nominalCapacity, bool exception, double expected_target_soc, double expected_min_soc)
+    [TestCase("SerialHybridStrategyParamsTest A", 0.7375, 0.2625, 11273.9176, 778.61, 247500,VectoRunData.OvcHevMode.ChargeDepleting, false, 0.49, 0.307641364)]
+	[TestCase("SerialHybridStrategyParamsTest B", 0.6, 0.2, 11000, 778.61, 80000,  VectoRunData.OvcHevMode.ChargeDepleting, false, 0.39, 0.234065732)]
+	[TestCase("SerialHybridStrategyParamsTest C", 0.6, 0.2, 11000, 778.61, 2000,  VectoRunData.OvcHevMode.ChargeDepleting, true, 0.39, 0.634065732)]
+	[TestCase("SerialHybridStrategyParamsTest D", 0.7375, 0.2625, 11273.9176, 778.61, 247500,  VectoRunData.OvcHevMode.ChargeSustaining, false, 0.624646591, 0.307641364)]
+	[TestCase("SerialHybridStrategyParamsTest E", 0.6, 0.2, 11000, 778.61, 80000,  VectoRunData.OvcHevMode.ChargeSustaining, false, 0.582967134, 0.234065732)]
+	[TestCase("SerialHybridStrategyParamsTest F", 0.6, 0.2, 11000, 778.61, 2000,  VectoRunData.OvcHevMode.ChargeSustaining, true, 0.268131464, 0.634065732)]
+	public void SerialHybridStrategyTest(string testName, double bat_soc_max, double bat_soc_min, double vehicle_mass,
+		double nominalVoltage, double nominalCapacity, VectoRunData.OvcHevMode mode,
+		bool exception, double expected_target_soc, double expected_min_soc)
 	{
 		var mass = vehicle_mass.SI<Kilogram>();
 		var v_nom = nominalVoltage.SI<Volt>();
@@ -59,16 +64,16 @@ public class HybridStrategyDataAdapterTest
 			}
 		};
 
-		HybridStrategyParameters parameters = null;
-		try {
-			parameters = dataAdapter.CreateHybridStrategyParameters(batterySystemData, null, mass,
-				VectoRunData.OvcHevMode.NotApplicable);
-		} catch (Exception) {
-			Assert.IsTrue(exception);
-			Assert.Pass();
+		if (exception) {
+			AssertHelper.Exception<Exception>(() => dataAdapter.CreateHybridStrategyParameters(batterySystemData, null, mass, mode), messageContains: "Min SOC higher than Target SOC");
+		} else {
+			var parameters = dataAdapter.CreateHybridStrategyParameters(batterySystemData, null, mass,
+				mode);
+			Assert.AreEqual(expected_target_soc, parameters!.TargetSoC, 1e-6, "target soc mismatch");
+			Assert.AreEqual(expected_min_soc, parameters.MinSoC, 1e-6, "min soc mismatch");
 		}
-		Assert.IsTrue(parameters!.TargetSoC.IsEqual(expected_target_soc));
-		Assert.IsTrue(parameters.MinSoC.IsEqual(expected_min_soc));
+
+		
 
 	}
 
