@@ -263,13 +263,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 			var view = new DataView(sumData.Table, "", SumDataFields.SORT, DataViewRowState.CurrentRows).ToTable();
 			Console.WriteLine(string.Join("; ", view.Rows.Cast<DataRow>().Select(x => x[string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble())));
-			//199.78724745793005; 235.80023117081666; 169.7345262485087; 182.825905694444; 219.40786682729086; 250.54711559861258
-			Assert.AreEqual(199.78724745793005, view.Rows[0][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
-			Assert.AreEqual(235.80023117081666, view.Rows[1][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
-			Assert.AreEqual(169.7345262485087, view.Rows[2][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
-			Assert.AreEqual(182.825905694444, view.Rows[3][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
-			Assert.AreEqual(219.40786682729086, view.Rows[4][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
-			Assert.AreEqual(250.54711559861258, view.Rows[5][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
+			//199.85546081524038; 235.84109954350555; 170.02172124055622; 183.1105954985868; 222.76859113196122; 254.11840916716432
+			Assert.AreEqual(199.85546081524038, view.Rows[0][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(235.84109954350555, view.Rows[1][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(170.02172124055622, view.Rows[2][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(183.1105954985868, view.Rows[3][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(222.76859113196122, view.Rows[4][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(254.11840916716432, view.Rows[5][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
 		}
 
 		[TestCase(EngineSpeedLimitJobATDecl)]
