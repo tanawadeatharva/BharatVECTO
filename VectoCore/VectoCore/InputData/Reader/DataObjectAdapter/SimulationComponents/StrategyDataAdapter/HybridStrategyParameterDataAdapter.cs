@@ -344,7 +344,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				result.TargetSoC = reessMaxSoc - 1 * deltaSoc;
 				result.MinSoC = reessMinSoc + 2 * deltaSoc;
 				if (reessMinSoc >= result.TargetSoC) {
-					throw new VectoException("Min SOC higher than Target SOC");
+					throw new VectoException("Min SOC higher than Target SOC - probably the battery capacity is too small");
 				}
 			}
 
@@ -355,7 +355,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					break;
 				case VectoRunData.OvcHevMode.ChargeDepleting:
 					result.InitialSoc = (tmpSystem.MaxSoC + tmpSystem.MinSoC) / 2;
-					result.TargetSoC = result.InitialSoc - 1;
+					result.TargetSoC = result.InitialSoc - 0.01;  // target SoC is 1% below initial SoC
 					break;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(ovcMode), ovcMode, null);
@@ -367,8 +367,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		{
 
 			var v_nom = tmpSystem.NominalVoltage;
-			var c_nom = tmpSystem.Capacity.AsAmpHour;
-			var result = KineticEnergy(vehicleMass, v).ConvertToWattHour()  / v_nom / c_nom;
+			var c_nom = tmpSystem.Capacity;
+			//var result = KineticEnergy(vehicleMass, v).ConvertToWattHour()  / v_nom / c_nom;
+			var result = KineticEnergy(vehicleMass, v) / v_nom / c_nom;
 			return result.Value();
 		}
 
