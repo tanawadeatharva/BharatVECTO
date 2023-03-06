@@ -113,7 +113,7 @@ public class LorrySimulation
 	[TestCase(@"MediumLorry\PEV\Group5_ PEV_E3_ES_Standard.xml")]
 	public void MediumLorrySimulationTest(string jobFile)
 	{
-		RunSimulation(jobFile, true);
+		RunSimulation(jobFile, true, false);
 	}
 
 	[TestCase(@"HeavyLorry\Exempted\exempted_heavy_lorry.xml")]
@@ -234,6 +234,7 @@ public class LorrySimulation
 		}
 	}
 
+#region VSUM_HELPER
 	private void GetEmptySumAndModData(string jobFile, out SummaryDataContainer sumDataContainer, out IVectoRun run,
 		out TableData modData, out TableData sumData)
 	{
@@ -450,7 +451,7 @@ public class LorrySimulation
 			SearchForPattern(sumData,GbxTimeShareFields());
 		}
 	}
-
+	#endregion
 
 	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S4_invalid_pto.xml")]
 	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_E3_pto_transmission_invalid.xml")]
@@ -505,7 +506,8 @@ public class LorrySimulation
 	[TestCase(Group5_HEV_P3_OVC, 20)]
 	[TestCase(Group5_HEV_P4_OVC, 20)]
 	[TestCase(Group5_HEV_P2_5_OVC, 20)]
-	public void PHEV_ChargeSustainingIt(string jobFile, int nrRuns)
+	[TestCase(@"MediumLorry\P-HEV\Group5_HEV_P3_ovc.xml", 8, MissionType.UrbanDelivery, LoadingType.LowLoading)]
+	public void PHEV_ChargeSustainingIt(string jobFile, int nrRuns, MissionType? missionType = MissionType.UrbanDelivery, LoadingType? loadingType = LoadingType.ReferenceLoad)
 	{
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out var sumDataContainer);
 
@@ -514,7 +516,7 @@ public class LorrySimulation
 		runs = runs.Where(run => {
 			var rd = run.GetContainer().RunData;
 			return rd.OVCMode == VectoRunData.OvcHevMode.ChargeSustaining &&
-					rd.Mission.MissionType == MissionType.UrbanDelivery && rd.Loading == LoadingType.ReferenceLoad;
+					rd.Mission.MissionType == MissionType.UrbanDelivery && rd.Loading == loadingType;
 		}).ToList();
 		
 		jobContainer.AddRun(runs.Single());
@@ -557,18 +559,17 @@ public class LorrySimulation
 	[TestCase(@"HeavyLorry\P-HEV\Group5_HEV_IHPC.xml", 20)]
 	[TestCase(@"HeavyLorry\P-HEV\Group5_HEV_P2_OVC_stefan.xml", 20, MissionType.UrbanDelivery, LoadingType.LowLoading)]
 	[TestCase(@"HeavyLorry\P-HEV\Group5_HEV_P3_OVC_stefan.xml", 20)]
-    public void PHEV_ChargeDepleting(string jobFile, int nrRuns, MissionType? missionType = null, LoadingType? loadingType = null)
+    public void PHEV_ChargeDepleting(string jobFile, int nrRuns, MissionType? missionType = MissionType.UrbanDelivery, LoadingType? loadingType = LoadingType.ReferenceLoad)
 	{
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out var sumDataContainer);
 
-		var mission = missionType ?? MissionType.UrbanDelivery;
-		var loading = loadingType ?? LoadingType.ReferenceLoad;
+
 		Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.NotApplicable));
 
 		runs = runs.Where(run => {
 			var rd = run.GetContainer().RunData;
 			return rd.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting &&
-					rd.Mission.MissionType == mission && rd.Loading == loading;
+					rd.Mission.MissionType == missionType && rd.Loading == loadingType;
 		}).ToList();
 
 		jobContainer.AddRun(runs.Single());

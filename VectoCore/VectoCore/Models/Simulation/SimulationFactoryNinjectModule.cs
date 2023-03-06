@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Runtime.CompilerServices;
 using Ninject.Extensions.Factory;
 using Ninject.Modules;
 using TUGraz.VectoCommon.InputData;
@@ -65,7 +66,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 	internal class NullDeclarationReport : IDeclarationReport
 	{
 		#region Implementation of IDeclarationReport
-
+		private int _addedResults = 0;
 		public void InitializeReport(VectoRunData modelData)
 		{
 
@@ -76,9 +77,10 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void AddResult(VectoRunData runData, IModalDataContainer modData)
 		{
-
+			_addedResults++;
 		}
 
 		public IPrimaryVehicleInformationInputDataProvider PrimaryResults { get; set; }

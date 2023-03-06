@@ -185,7 +185,7 @@ namespace TUGraz.VectoCore.OutputData
 	/// <summary>
 	/// Class for creating a declaration report.
 	/// </summary>
-	public abstract class DeclarationReport<T> : IDeclarationReport where T : IResultEntry, new()
+	public abstract class DeclarationReport<T> : IDeclarationReport where T : class, IResultEntry, new()
 	{
 		public class ResultContainer<TEntry>
 		{
@@ -250,8 +250,15 @@ namespace TUGraz.VectoCore.OutputData
 				var entry = new T();
 				entry.Initialize(runData);
 				lock (Results) {
+					var exístingResult = Results.SingleOrDefault(e =>
+						e.Mission == entry.Mission && e.LoadingType == entry.LoadingType && e.OVCMode == entry.OVCMode);
+					if (exístingResult != null) {
+						//We already have a result for this run stored, this can happen with iterative runs, in this case we have to remove the old result
+						Results.Remove(exístingResult);
+					}
+
 					Results.Add(entry);
-                }
+				}
 				
 				DoStoreResult(entry, runData, modData);
 			}
