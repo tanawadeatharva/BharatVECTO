@@ -48,7 +48,9 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
@@ -58,12 +60,16 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected IXMLCustomerReport CustomerRpt;
 
+		protected readonly IManufacturerReportFactory _mrfFactory;
+		protected readonly ICustomerInformationFileFactory _cifFactory;
+		
 
 		protected IDictionary<Tuple<MissionType, LoadingType>, double> _weightingFactors;
 
-		public XMLDeclarationReport(IReportWriter writer) : base(writer)
+		public XMLDeclarationReport(IReportWriter writer, IManufacturerReportFactory mrfFactory, ICustomerInformationFileFactory cifFactory) : base(writer)
 		{
-			throw new NotImplementedException("Use new implementation...");
+			_mrfFactory = mrfFactory;
+			_cifFactory = cifFactory;
 		}
 
 		protected XMLDeclarationReport(IReportWriter writer, bool dummy) : base(writer) { }
@@ -328,12 +334,24 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected virtual void InstantiateReports(VectoRunData modelData)
 		{
-			//if (modelData.Exempted) {
-			//	ManufacturerRpt = new XMLManufacturerReportExemptedTruck();
-			//} else {
-			//	ManufacturerRpt = new XMLManufacturerReportTruck();
-			//}
-			//CustomerRpt = new XMLCustomerReport();
+
+			var vehicleData = modelData.VehicleData.InputData;
+			var iepc = vehicleData.Components?.IEPC != null;
+			var ihpc =
+				vehicleData.Components?.ElectricMachines?.Entries?.Count(e => e.ElectricMachine.IHPCType != "None") > 0;
+
+			ManufacturerRpt = _mrfFactory.GetManufacturerReport(vehicleData.VehicleCategory,
+				vehicleData.VehicleType,
+				vehicleData.ArchitectureID,
+				vehicleData.ExemptedVehicle,
+				iepc,
+				ihpc);
+			CustomerRpt = _cifFactory.GetCustomerReport(vehicleData.VehicleCategory,
+				vehicleData.VehicleType,
+				vehicleData.ArchitectureID,
+				vehicleData.ExemptedVehicle,
+				iepc,
+				ihpc);
 		}
 
 		private static IDictionary<Tuple<MissionType, LoadingType>, double> ZeroWeighting =>

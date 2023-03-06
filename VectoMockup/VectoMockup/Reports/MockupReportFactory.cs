@@ -41,7 +41,7 @@ namespace TUGraz.VectoMockup.Reports
                 case IMultistepBusInputDataProvider multistageBusInputDataProvider:
                     break;
                 case ISingleBusInputDataProvider singleBusInputDataProvider:
-                    return new XMLDeclarationReport(outputWriter);
+                    return new XMLDeclarationReport(outputWriter, _mrfFactory, _cifFactory);
                 case IDeclarationInputDataProvider declarationInputDataProvider:
                     return CreateDeclarationReport(declarationInputDataProvider, outputWriter);
                 case IMultiStageTypeInputData multiStageTypeInputData:
@@ -106,7 +106,8 @@ namespace TUGraz.VectoMockup.Reports
                 {
                     case VehicleCategory.HeavyBusCompletedVehicle:
                         throw new NotImplementedException();
-                        return new XMLDeclarationReportCompletedVehicle(outputDataWriter)
+						return new XMLDeclarationReportCompletedVehicle(outputDataWriter, _mrfFactory, _cifFactory,
+							_vifFactory)
                         {
                             PrimaryVehicleReportInputData = declarationInputDataProvider.PrimaryVehicleData,
                         };
