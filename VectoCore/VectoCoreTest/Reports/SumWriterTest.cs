@@ -99,6 +99,13 @@ namespace TUGraz.VectoCore.Tests.Reports
 				DriverData = new DriverData() {
 					EngineStopStart = new DriverData.EngineStopStartData()
 				},
+				Aux = new List<VectoRunData.AuxData>() {
+					new() {
+						ID = "FAN",
+						PowerDemandMech = 3000.SI<Watt>(),
+						Technology = new List<string>() {"FanTech"}
+					}
+				}
 			};
 			var modData = new ModalDataContainer(rundata, writer, null);
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
@@ -191,6 +198,13 @@ namespace TUGraz.VectoCore.Tests.Reports
 				DriverData = new DriverData() {
 					EngineStopStart = new DriverData.EngineStopStartData()
 				},
+				Aux = new List<VectoRunData.AuxData>() {
+					new() {
+						ID = "FAN",
+						PowerDemandMech = 3000.SI<Watt>(),
+						Technology = new List<string>() {"FanTech"}
+					}
+				}
 			};
 			var modData = new ModalDataContainer(rundata, writer, null);
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
