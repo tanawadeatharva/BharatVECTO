@@ -74,6 +74,8 @@ public class LorrySimulation
 
 	private StandardKernel _kernel;
 	private IXMLInputDataReader _xmlReader;
+	private XmlSchemaSet _cifSchema = XMLValidator.GetXMLSchema(XmlDocumentType.CustomerReport);
+	private XmlSchemaSet _mrfSchema = XMLValidator.GetXMLSchema(XmlDocumentType.ManufacturerReport);
 
 	[OneTimeSetUp]
 	public void OneTimeSetup()
@@ -153,10 +155,8 @@ public class LorrySimulation
 
 		var mrfPath = fileWriter.GetWrittenFiles()[ReportType.DeclarationReportManufacturerXML];
 		var cifPath = fileWriter.GetWrittenFiles()[ReportType.DeclarationReportCustomerXML];
-		var cifSchema = XMLValidator.GetXMLSchema(XmlDocumentType.CustomerReport);
-		var mrfSchema = XMLValidator.GetXMLSchema(XmlDocumentType.ManufacturerReport);
-		XDocument.Load(mrfPath).Validate(mrfSchema, (sender, args) => Assert.Fail(args.Message));
-		XDocument.Load(cifPath).Validate(cifSchema, (sender, args) => Assert.Fail(args.Message));
+		XDocument.Load(mrfPath).Validate(_mrfSchema, (sender, args) => Assert.Fail(args.Message));
+		XDocument.Load(cifPath).Validate(_cifSchema, (sender, args) => Assert.Fail(args.Message));
 
 		VSUM_order_test(fileWriter.SumFileName, jobContainer.Runs.First().Run.GetContainer().RunData);
 	}
@@ -943,7 +943,7 @@ public class LorrySimulation
 		if (report == null) {
 			return; //also used in engineering mode
 		}
-		if (report is XMLDeclarationReport09 rep09) {
+		if (report is XMLDeclarationReport rep09) {
 			
 
 			GetField("_resultCount", rep09.GetType()).SetValue(rep09, count);

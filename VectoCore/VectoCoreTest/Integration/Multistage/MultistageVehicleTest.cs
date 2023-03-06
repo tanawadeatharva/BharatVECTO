@@ -22,6 +22,8 @@ using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
 using TUGraz.VectoCore.Tests.Integration.Declaration;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Utils;
@@ -427,8 +429,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 			var writer = new FileOutputWriter(outputFile);
 
-            var xmlreport = new XMLDeclarationReportPrimaryVehicle(writer);
-            var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			var mrfFactory = _kernel.Get<IManufacturerReportFactory>();
+			var vifFactory = _kernel.Get<IVIFReportFactory>();
+			var xmlreport = new XMLDeclarationReportPrimaryVehicle(writer, mrfFactory, vifFactory);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer, xmlreport);
 			factory.WriteModalResults = true;
 			factory.Validate = false;
 
