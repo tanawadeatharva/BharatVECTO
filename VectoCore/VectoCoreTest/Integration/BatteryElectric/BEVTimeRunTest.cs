@@ -178,8 +178,10 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			Assert.IsTrue(run.FinishedWithoutErrors);
 			
+            
             string distanceSumPath = Path.Combine(Path.GetDirectoryName(jobFile), "distance.vsum");
-            AssertHelper.ReportDeviations(distanceSumPath, distanceCycleIdx, factory, metrics);
+            TestContext.WriteLine($"Comparing with results from {distanceSumPath}");
+			AssertHelper.ReportDeviations(distanceSumPath, distanceCycleIdx, factory, metrics);
             
             AssertHelper.AssertMetrics(factory, metrics);
 
@@ -202,7 +204,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			Assert.IsTrue(run.FinishedWithoutErrors);
 			
             string distanceSumPath = Path.Combine(Path.GetDirectoryName(jobFile), "distance.vsum");
-
+			TestContext.WriteLine($"Comparing with results from {distanceSumPath}");
             const int DISTANCE_RUN_START_POSITION = 3;
 
             AssertHelper.ReadMetricsFromVSum(distanceSumPath, cycleIdx - DISTANCE_RUN_START_POSITION, metrics);
