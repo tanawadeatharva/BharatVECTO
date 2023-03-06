@@ -13,7 +13,7 @@
 		<TechnicalPermissibleMaximumLadenMass>12000</TechnicalPermissibleMaximumLadenMass>
 		<RetarderType>Losses included in Gearbox</RetarderType>
 		<RetarderRatio>2.000</RetarderRatio>
-		<AngledriveType>Separate Angledrive</AngledriveType>
+		<AngledriveType>None</AngledriveType>
 		<PTO xsi:type="PTOType">
 			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
 			<PTOOtherElements>none</PTOOtherElements>
