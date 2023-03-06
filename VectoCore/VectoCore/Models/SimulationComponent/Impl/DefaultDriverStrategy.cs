@@ -1190,7 +1190,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
 			bool prohibitOverspeed = false)
 		{
-			if (DataBus.VehicleInfo.VehicleSpeed.IsSmaller(DriverStrategy.BrakeTrigger.NextTargetSpeed, Constants.SimulationSettings.BrakeTriggerSpeedTolerance)
+            //If we have reached the target speed exactly we stop breaking
+
+            //if (DataBus.VehicleInfo.VehicleSpeed.IsSmaller(DriverStrategy.BrakeTrigger.NextTargetSpeed, Constants.SimulationSettings.BrakeTriggerSpeedTolerance)
+			if (DataBus.VehicleInfo.VehicleSpeed <= DriverStrategy.BrakeTrigger.NextTargetSpeed
 				&& !DataBus.VehicleInfo.VehicleStopped) {
 				var retVal = HandleTargetspeedReached(absTime, ds, targetVelocity, gradient);
 				for (var i = 0; i < 3 && retVal == null; i++) {
