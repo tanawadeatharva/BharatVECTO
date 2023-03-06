@@ -1,40 +1,61 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
 
-namespace TUGraz.VectoCore.OutputData.XML {
+namespace TUGraz.VectoCore.OutputData.XML
+{
+	/// <summary>
+	/// Create MRF and VIF for primary bus
+	/// </summary>
 	public class XMLDeclarationReportPrimaryVehicle : XMLDeclarationReport
 	{
+		private readonly IVIFReportFactory _vifFactory;
+
 		protected IXMLVehicleInformationFile VehicleInformationFile;
 
-
-		public XMLDeclarationReportPrimaryVehicle(IReportWriter writer) : base(writer, true)
-		{
-			throw new NotSupportedException("Use new implementation!");
-		}
 
 		public override XDocument CustomerReport => null;
 
 		public override XDocument PrimaryVehicleReport => VehicleInformationFile?.Report;
 
+		
+		public XMLDeclarationReportPrimaryVehicle(IReportWriter writer,
+			IManufacturerReportFactory mrfFactory,
+			IVIFReportFactory vifFactory) : base(writer, mrfFactory, null)
+		{
+			_vifFactory = vifFactory;
+		}
+		
+
 
 		#region Overrides of XMLDeclarationReport
-
 		protected override void InstantiateReports(VectoRunData modelData)
 		{
-			if (modelData.Exempted) {
-				ManufacturerRpt = new XMLManufacturerReportExeptedPrimaryBus();
-				CustomerRpt = new XMLCustomerReportExemptedPrimaryBus();
-				VehicleInformationFile = new XMLExemptedPrimaryBusVehicleReport();
+			var vehicleData = modelData.VehicleData.InputData;
+			var iepc = vehicleData.Components?.IEPC != null;
+			var ihpc =
+				vehicleData.Components?.ElectricMachines?.Entries?.Count(e => e.ElectricMachine.IHPCType != "None") > 0;
 
-			} else {
-				ManufacturerRpt = new XMLManufacturerReportPrimaryBus();
-				CustomerRpt = new XMLCustomerReport();
-				VehicleInformationFile = new XMLPrimaryBusVehicleReport();
-			}
+			ManufacturerRpt = _mrfFactory.GetManufacturerReport(vehicleData.VehicleCategory,
+				vehicleData.VehicleType,
+				vehicleData.ArchitectureID,
+				vehicleData.ExemptedVehicle,
+				iepc,
+				ihpc);
+
+			VehicleInformationFile = _vifFactory.GetVIFReport(vehicleData.VehicleCategory,
+				vehicleData.VehicleType,
+				vehicleData.ArchitectureID,
+				vehicleData.ExemptedVehicle,
+				iepc,
+				ihpc);
+
+			
 
 
 		}
@@ -44,9 +65,6 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			base.InitializeReport(modelData);
 			VehicleInformationFile.Initialize(modelData);
 		}
-
-
-
 		protected override void WriteResult(ResultEntry result)
 		{
 			base.WriteResult(result);
@@ -61,14 +79,13 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			VehicleInformationFile.GenerateReport(fullReportHash);
 		}
 
-	
+
 
 		protected override void OutputReports()
 		{
 			Writer.WriteReport(ReportType.DeclarationReportManufacturerXML, ManufacturerRpt.Report);
 			Writer.WriteReport(ReportType.DeclarationReportPrimaryVehicleXML, VehicleInformationFile.Report);
 		}
-
 		#endregion
 	}
 }
