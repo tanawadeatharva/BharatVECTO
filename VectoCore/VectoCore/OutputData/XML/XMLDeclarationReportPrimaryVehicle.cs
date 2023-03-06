@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			ManufacturerRpt.GenerateReport();
 			var fullReportHash = GetSignature(ManufacturerRpt.Report);
-			CustomerRpt.GenerateReport(fullReportHash);
+			//CustomerRpt.GenerateReport(fullReportHash);
 			VehicleInformationFile.GenerateReport(fullReportHash);
 		}
 

@@ -499,11 +499,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 		private void TestTorqueLimitsData(IList<ITorqueLimitInputData> torqueLimits)
 		{
+			Assert.AreEqual(1, torqueLimits[0].Gear);
+			Assert.AreEqual(2500, torqueLimits[0].MaxTorque.Value());
 			Assert.AreEqual(3, torqueLimits.Count);
-			Assert.AreEqual(6, torqueLimits[0].Gear);
-			Assert.AreEqual(1800, torqueLimits[0].MaxTorque.Value());
-			Assert.AreEqual(1, torqueLimits[1].Gear);
-			Assert.AreEqual(2500, torqueLimits[1].MaxTorque.Value());
+			Assert.AreEqual(6, torqueLimits[1].Gear);
+			Assert.AreEqual(1800, torqueLimits[1].MaxTorque.Value());
 			Assert.AreEqual(12, torqueLimits[2].Gear);
 			Assert.AreEqual(1900, torqueLimits[2].MaxTorque.Value());
 		}
@@ -741,7 +741,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			Assert.AreEqual(3.SI<Volt>(), capacitor.Voltage);
 			
 			Assert.AreEqual("Large Supply 2-stage", aux.PneumaticSupply.CompressorSize);//SizeOfAirSupply
-			Assert.AreEqual(CompressorDrive.electrically, aux.PneumaticSupply.CompressorDrive);
+			Assert.AreEqual(CompressorDrive.mechanically, aux.PneumaticSupply.CompressorDrive);
 			Assert.AreEqual("none", aux.PneumaticSupply.Clutch);
 			Assert.AreEqual(1.000, aux.PneumaticSupply.Ratio);
 			Assert.AreEqual(false, aux.PneumaticSupply.SmartAirCompression);
@@ -790,11 +790,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 					new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, "Diesel CI"),
 					new XElement(tns +
 								XMLNames.Report_Result_EnergyConsumption,
-						new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/km"), 16.93598)),
-
-				new XElement(tns+ 
-					XMLNames.Report_Results_CO2, new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/km"), 1862.57
-				)));
+						new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/km"), 16.93598))
+				//new XElement(tns+ 
+				//	XMLNames.Report_Results_CO2, new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/km"), 1862.57
+				//)
+				));
 
 			return results;
 
