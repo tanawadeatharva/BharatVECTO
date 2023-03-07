@@ -572,8 +572,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 								dryRunResponse.ElectricMotor.AvgDrivetrainSpeed;
 					var gbxOutTqV = dryRunResponse.Gearbox.OutputTorque - emTq;
 
-					var prevGbxSpeed = (DataBus.GearboxInfo as AbstractGearbox<GearboxState>).PreviousState
-						.OutAngularVelocity;
+					var prevGbxSpeed = GetPrevGbxSpeed();
 					var gbxLoss = ModelData.GearboxData.Gears[gear.Gear].LossMap
 						.GetTorqueLoss((dryRunResponse.Gearbox.OutputSpeed + prevGbxSpeed) / 2.0, gbxOutTqV);
 					gbxInTq = gbxOutTqV / ModelData.GearboxData.Gears[gear.Gear].Ratio + gbxLoss.Value;
@@ -597,8 +596,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						gbxInTorque = anglInTorque;
 					}
 					var gear = dryRunResponse.Gearbox.Gear;
-					var prevGbxSpeed = (DataBus.GearboxInfo as AbstractGearbox<GearboxState>).PreviousState
-						.OutAngularVelocity;
+					var prevGbxSpeed = GetPrevGbxSpeed();
 					var gbxLoss = ModelData.GearboxData.Gears[gear.Gear].LossMap
 						.GetTorqueLoss((dryRunResponse.Gearbox.OutputSpeed + prevGbxSpeed) / 2.0, gbxInTorque);
 					gbxInTq = gbxInTorque / ModelData.GearboxData.Gears[gear.Gear].Ratio + gbxLoss.Value;
@@ -607,6 +605,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			return gbxInTq;
+		}
+
+		private PerSecond GetPrevGbxSpeed()
+		{
+			switch (DataBus.GearboxInfo) {
+				case Gearbox gbx:
+					return gbx.PreviousState.OutAngularVelocity;
+				case ATGearbox atGbx:
+					return atGbx.PreviousState.OutAngularVelocity;
+				default: throw new VectoException("Unsupported gearbox type!");
+			}
 		}
 
 		public void OperatingpointChangedDuringRequest(Second absTime, Second dt, NewtonMeter outTorque,

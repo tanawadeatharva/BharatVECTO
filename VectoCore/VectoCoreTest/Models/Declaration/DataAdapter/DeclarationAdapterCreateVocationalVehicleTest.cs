@@ -11,6 +11,8 @@ using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
@@ -60,7 +62,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 			var xmlReport = _kernel.Get<IXMLDeclarationReportFactory>().CreateReport(dataProvider, writer);
 			var sumData = new SummaryDataContainer(null);
 			var jobContainer = new JobContainer(sumData);
-
 			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, null, xmlReport);
 			runsFactory.WriteModalResults = false;
 			runsFactory.Validate = false;
@@ -69,9 +70,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 			// no need to run the simulation, we only check whether the meta-data is correct, no results are considered
 			//jobContainer.Execute();
 			//jobContainer.WaitFinished();
-			(xmlReport as XMLDeclarationReport09).DoWriteReport();
+			(xmlReport as XMLDeclarationReport).DoWriteReport();
 
-			var manufacturerReport = (xmlReport as XMLDeclarationReport09).FullReport;
+			var manufacturerReport = (xmlReport as XMLDeclarationReport).FullReport;
 
 			Assert.IsFalse(XmlConvert.ToBoolean(manufacturerReport.XPathSelectElement(XMLHelper.QueryLocalName(XMLNames.Vehicle_VocationalVehicle))?.Value ?? ""));
 		}

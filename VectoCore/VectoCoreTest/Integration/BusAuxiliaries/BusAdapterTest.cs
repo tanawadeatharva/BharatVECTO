@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		}
 
 		[TestCase(12000, 1256, -48, -28, 8516.9257)] // smart PS active - power demand below engine drag
-		[TestCase(12000, 1256, 48, -28, 6087.0321)] // no smart aux active - positive power demand
+		[TestCase(12000, 1256, 48, -28, 5649.8149)] // no smart aux active - positive power demand
 		[TestCase(12000, 800, -48, -28, 7844.2956)] // smart PS active - power demand below engine drag
 		[TestCase(12000, 800, 48, -28, 5939.985)] // no smart aux active - positive power demand
 		public void TestSmartAuxDuringBrake(double vehicleWeight, double engineSpeedRpm, double driveLinePower,

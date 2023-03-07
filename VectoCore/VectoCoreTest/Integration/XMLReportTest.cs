@@ -49,6 +49,8 @@ using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Tests.XML;
 using TUGraz.VectoCore.Utils;
@@ -100,9 +102,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 			// no need to run the simulation, we only check whether the meta-data is correct, no results are considered
 			//jobContainer.Execute();
 			//jobContainer.WaitFinished();
-			(xmlReport as XMLDeclarationReport09).DoWriteReport();
+			(xmlReport as XMLDeclarationReport).DoWriteReport();
 
-			var manufacturerReport = (xmlReport as XMLDeclarationReport09).FullReport;
+			var manufacturerReport = (xmlReport as XMLDeclarationReport).FullReport;
 
 			Assert.AreEqual(5, manufacturerReport.XPathSelectElement("//*[local-name()='VehicleGroup']")?.Value.ToInt());
 
@@ -155,9 +157,9 @@ namespace TUGraz.VectoCore.Tests.Integration
             // no need to run the simulation, we only check whether the meta-data is correct, no results are considered
             jobContainer.Execute();
             jobContainer.WaitFinished();
-			(xmlReport as XMLDeclarationReport09).DoWriteReport();
+			(xmlReport as XMLDeclarationReport).DoWriteReport();
 
-			var customerReport = (xmlReport as XMLDeclarationReport09).CustomerReport;
+			var customerReport = (xmlReport as XMLDeclarationReport).CustomerReport;
 
             //check if the customerReport contains the summary XML-Element
 			Assert.AreNotEqual(null,customerReport.XPathSelectElement("//*[local-name()='Summary']"));
@@ -190,10 +192,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
 
-			var mrfValidator = GetValidator((xmlReport as XMLDeclarationReport09).FullReport);
+			var mrfValidator = GetValidator((xmlReport as XMLDeclarationReport).FullReport);
 			mrfValidator.ValidateXML(XmlDocumentType.DeclarationComponentData | XmlDocumentType.DeclarationJobData | XmlDocumentType.CustomerReport | XmlDocumentType.ManufacturerReport);
 
-			var cifValidator = GetValidator((xmlReport as XMLDeclarationReport09).CustomerReport);
+			var cifValidator = GetValidator((xmlReport as XMLDeclarationReport).CustomerReport);
 			cifValidator.ValidateXML(XmlDocumentType.DeclarationComponentData | XmlDocumentType.DeclarationJobData | XmlDocumentType.CustomerReport | XmlDocumentType.ManufacturerReport);
 
 			//var monitoringValidator = GetValidator(xmlReport.MonitoringReport);
@@ -279,9 +281,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 					//};
 					jobContainer.AddRuns(runsFactory);
 
-					(xmlReport as XMLDeclarationReport09).DoWriteReport();
+					(xmlReport as XMLDeclarationReport).DoWriteReport();
 
-					var manufacturerReport = (xmlReport as XMLDeclarationReport09).FullReport;
+					var manufacturerReport = (xmlReport as XMLDeclarationReport).FullReport;
 
 					Assert.AreEqual(
 						ptoGearWheel != "none",
@@ -319,23 +321,23 @@ namespace TUGraz.VectoCore.Tests.Integration
 			// no need to run the simulation, we only check whether the meta-data is correct, no results are considered
 			//jobContainer.Execute();
 			//jobContainer.WaitFinished();
-			(xmlReport as XMLDeclarationReport09).DoWriteReport();
+			(xmlReport as XMLDeclarationReport).DoWriteReport();
 
 			
 			var inputHash = VectoHash.Load(jobfile);
 
-			var mrfDigestData = new DigestData((xmlReport as XMLDeclarationReport09).FullReport.Document.XPathSelectElement("//*[local-name()='InputDataSignature']"));
+			var mrfDigestData = new DigestData((xmlReport as XMLDeclarationReport).FullReport.Document.XPathSelectElement("//*[local-name()='InputDataSignature']"));
 			var mrfInputDigest = inputHash.ComputeHash(mrfDigestData.CanonicalizationMethods, mrfDigestData.DigestMethod);
 
 			Assert.AreEqual(mrfInputDigest, mrfDigestData.DigestValue);
 
-			var cifDigestData = new DigestData((xmlReport as XMLDeclarationReport09).CustomerReport.Document.XPathSelectElement("//*[local-name()='InputDataSignature']"));
+			var cifDigestData = new DigestData((xmlReport as XMLDeclarationReport).CustomerReport.Document.XPathSelectElement("//*[local-name()='InputDataSignature']"));
 			var cifInputDigest = inputHash.ComputeHash(cifDigestData.CanonicalizationMethods, cifDigestData.DigestMethod);
 
 			Assert.AreEqual(cifInputDigest, cifDigestData.DigestValue);
 
 			var mrfHash = VectoHash.Load(writer.XMLFullReportName);
-			var mrfCifDigestData = new DigestData((xmlReport as XMLDeclarationReport09).CustomerReport.Document.XPathSelectElement("//*[local-name()='ManufacturerRecordSignature']"));
+			var mrfCifDigestData = new DigestData((xmlReport as XMLDeclarationReport).CustomerReport.Document.XPathSelectElement("//*[local-name()='ManufacturerRecordSignature']"));
 			var mrfCifDigest = mrfHash.ComputeHash(mrfCifDigestData.CanonicalizationMethods, mrfCifDigestData.DigestMethod);
 
 			Assert.AreEqual(mrfCifDigest, mrfCifDigestData.DigestValue);
@@ -368,7 +370,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			// no need to run the simulation, we only check whether the meta-data is correct, no results are considered
 			//jobContainer.Execute();
 			//jobContainer.WaitFinished();
-			(xmlReport as XMLDeclarationReport09).DoWriteReport();
+			(xmlReport as XMLDeclarationReport).DoWriteReport();
 		}
 	}
 }

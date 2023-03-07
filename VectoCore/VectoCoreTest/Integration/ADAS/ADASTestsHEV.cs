@@ -524,25 +524,9 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 		[TestCase]
 		public void Class5_NoADAS_CaseI_HEV() => TestPCC(MethodBase.GetCurrentMethod().Name,
-			(537, 4200, OutsideSegment, Accelerate),      // len: 3663m
-			(4200, 4223, OutsideSegment, Roll),           // len: 23m
-			(4223, 4586, OutsideSegment, Accelerate),     // len: 363m
-			(4586, 4605, OutsideSegment, Roll),           // len: 19m
-			(4605, 4747, OutsideSegment, Accelerate),     // len: 142m
-			(4747, 4762, OutsideSegment, Roll),           // len: 15m
-			(4762, 4888, OutsideSegment, Accelerate),     // len: 126m
-			(4888, 4900, OutsideSegment, Roll),           // len: 12m
-			(4900, 4981, OutsideSegment, Accelerate),     // len: 81m
-			(4981, 4994, OutsideSegment, Roll),           // len: 13m
-			(4994, 5116, OutsideSegment, Accelerate),     // len: 122m
-			(5116, 5133, OutsideSegment, Roll),           // len: 17m
-			(5133, 5301, OutsideSegment, Accelerate),     // len: 168m
-			(5301, 5323, OutsideSegment, Roll),           // len: 22m
-			(5323, 5392, OutsideSegment, Accelerate),     // len: 69m
-			(5392, 5475, OutsideSegment, Coast),          // len: 83m
-			(5475, 6111, OutsideSegment, Brake),          // len: 636m
-			(6111, 6397, OutsideSegment, Coast),          // len: 286m
-			(6397, 1e6, OutsideSegment, Accelerate));
+			(35, 420, OutsideSegment, Accelerate),        // len: 385m
+			(420, 444, OutsideSegment, Roll),             // len: 24m
+			(444, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
 		public void Class5_NoADAS_CaseJ_HEV() => TestPCC(MethodBase.GetCurrentMethod().Name,

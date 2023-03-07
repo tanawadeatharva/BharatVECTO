@@ -53,6 +53,8 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 
 namespace TUGraz.VectoCore.Tests.Reports
 {
@@ -99,6 +101,13 @@ namespace TUGraz.VectoCore.Tests.Reports
 				DriverData = new DriverData() {
 					EngineStopStart = new DriverData.EngineStopStartData()
 				},
+				Aux = new List<VectoRunData.AuxData>() {
+					new() {
+						ID = "FAN",
+						PowerDemandMech = 3000.SI<Watt>(),
+						Technology = new List<string>() {"FanTech"}
+					}
+				}
 			};
 			var modData = new ModalDataContainer(rundata, writer, null);
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
@@ -191,6 +200,13 @@ namespace TUGraz.VectoCore.Tests.Reports
 				DriverData = new DriverData() {
 					EngineStopStart = new DriverData.EngineStopStartData()
 				},
+				Aux = new List<VectoRunData.AuxData>() {
+					new() {
+						ID = "FAN",
+						PowerDemandMech = 3000.SI<Watt>(),
+						Technology = new List<string>() {"FanTech"}
+					}
+				}
 			};
 			var modData = new ModalDataContainer(rundata, writer, null);
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
