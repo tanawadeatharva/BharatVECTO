@@ -96,9 +96,9 @@ public class LorrySimulation
 	public void HeavyLorrySimulationTest(string jobFile)
     {
 #if singlethreaded
-		RunSimulation(jobFile, false);
+		RunFullSimulation(jobFile, false);
 #else
-        RunSimulation(jobFile, true, false);
+        RunFullSimulation(jobFile, true, false);
 #endif
     }
 
@@ -113,16 +113,16 @@ public class LorrySimulation
 	[TestCase(@"MediumLorry\PEV\Group5_ PEV_E3_ES_Standard.xml")]
 	public void MediumLorrySimulationTest(string jobFile)
 	{
-		RunSimulation(jobFile, true, false);
+		RunFullSimulation(jobFile, true, false);
 	}
 
 	[TestCase(@"HeavyLorry\Exempted\exempted_heavy_lorry.xml")]
 	public void ExemptedTest(string jobFile)
 	{
-		RunSimulation(jobFile, true);
+		RunFullSimulation(jobFile, true);
 	}
 
-    public void RunSimulation(string jobFile, bool multiThreaded = true, bool disableIterativeRuns = false)
+    public void RunFullSimulation(string jobFile, bool multiThreaded = true, bool disableIterativeRuns = false)
     {
         var filePath = Path.Combine(BASE_DIR, jobFile);
         var runsFactory = GetSimulatorFactory(filePath, out var dataProvider, out var fileWriter, out var summaryDataContainer);
@@ -150,6 +150,9 @@ public class LorrySimulation
         Assert.IsTrue(jobContainer.Runs.TrueForAll(runEntry => runEntry.Success));
         PrintRuns(jobContainer, fileWriter);
         PrintFiles(fileWriter);
+
+		Assert.AreEqual(0, GetResultCount(jobContainer.Runs.First().Run.GetContainer().RunData.Report),
+			"_resultCount must be zero after simulation");
 
 		var mrfPath = fileWriter.GetWrittenFiles()[ReportType.DeclarationReportManufacturerXML];
 		var cifPath = fileWriter.GetWrittenFiles()[ReportType.DeclarationReportCustomerXML];
@@ -507,7 +510,7 @@ public class LorrySimulation
 	[TestCase(Group5_HEV_P4_OVC, 20)]
 	[TestCase(Group5_HEV_P2_5_OVC, 20)]
 	[TestCase(@"MediumLorry\P-HEV\Group5_HEV_P3_ovc.xml", 8, MissionType.UrbanDelivery, LoadingType.LowLoading)]
-	public void PHEV_ChargeSustainingIt(string jobFile, int nrRuns, MissionType? missionType = MissionType.UrbanDelivery, LoadingType? loadingType = LoadingType.ReferenceLoad)
+	public void PHEV_ChargeSustainingIt(string jobFile, int nrRuns, MissionType missionType = MissionType.UrbanDelivery, LoadingType loadingType = LoadingType.ReferenceLoad)
 	{
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out var sumDataContainer);
 
@@ -559,7 +562,7 @@ public class LorrySimulation
 	[TestCase(@"HeavyLorry\P-HEV\Group5_HEV_IHPC.xml", 20)]
 	[TestCase(@"HeavyLorry\P-HEV\Group5_HEV_P2_OVC_stefan.xml", 20, MissionType.UrbanDelivery, LoadingType.LowLoading)]
 	[TestCase(@"HeavyLorry\P-HEV\Group5_HEV_P3_OVC_stefan.xml", 20)]
-    public void PHEV_ChargeDepleting(string jobFile, int nrRuns, MissionType? missionType = MissionType.UrbanDelivery, LoadingType? loadingType = LoadingType.ReferenceLoad)
+    public void PHEV_ChargeDepleting(string jobFile, int nrRuns, MissionType missionType = MissionType.UrbanDelivery, LoadingType loadingType = LoadingType.ReferenceLoad)
 	{
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out var sumDataContainer);
 
@@ -952,6 +955,19 @@ public class LorrySimulation
 		}
 		Assert.Fail("Reflection failed");
 
+	}
+
+	private int GetResultCount(IDeclarationReport report)
+	{
+
+		if (report is XMLDeclarationReport09 rep09)
+		{
+
+
+			return (int)GetField("_resultCount", rep09.GetType()).GetValue(rep09);
+			
+		}
+		return int.MinValue;
 	}
 
 	private FieldInfo GetField(string name, Type type)
