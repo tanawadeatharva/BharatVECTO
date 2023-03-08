@@ -55,7 +55,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\VectoCore\VectoCoreTest\VectoCoreTest.csproj" />
     <ProjectReference Include="..\..\VectoCore\VectoCore\VectoCore.csproj" />
-    <ProjectReference Include="..\VectoMockup\VectoMockup.csproj" />
   </ItemGroup>
 
 </Project>

@@ -19,6 +19,11 @@ namespace TUGraz.VectoMockup.Ninject
 
 		public override void Load()
 		{
+			LoadModule<CIFMockupModule>();
+			LoadModule<MRFMockupModule>();
+			LoadModule<SimulatorFactoryModule>();
+			LoadModule<VIFMockupModule>();
+
 			Rebind<IVectoRunDataFactoryFactory>().To<VectoMockUpRunDataFactoryFactory>();
 			Rebind<IXMLDeclarationReportFactory>().To<MockupReportFactory>();
 			Rebind<IXMLInputDataReader>().To<MockupXMLInputDataFactory>();

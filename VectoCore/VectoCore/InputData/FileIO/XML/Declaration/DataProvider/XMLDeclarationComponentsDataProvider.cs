@@ -658,8 +658,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		//public override IRetarderInputData RetarderInputData =>
 		//	ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
 
-		#endregion
-	}
+        #endregion
+    }
 
 	// ---------------------------------------------------------------------------------------
 
@@ -801,11 +801,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override IBusAuxiliariesDeclarationData BusAuxiliaries  => _busAuxiliariesDeclarationInputData ??
 																 	 (_busAuxiliariesDeclarationInputData = ComponentReader.BusAuxiliariesInputData);
 
-        //public override IAngledriveInputData AngledriveInputData =>
-        //    ElementExists(XMLNames.Component_Angledrive) ? base.AngledriveInputData : null;
+		//public override IAngledriveInputData AngledriveInputData =>
+		//	ElementExists(XMLNames.Component_Angledrive) ? base.AngledriveInputData : null;
 
-        //public override IRetarderInputData RetarderInputData =>
-        //	ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
+		//public override IRetarderInputData RetarderInputData =>
+		//	ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
 
         #endregion
     }

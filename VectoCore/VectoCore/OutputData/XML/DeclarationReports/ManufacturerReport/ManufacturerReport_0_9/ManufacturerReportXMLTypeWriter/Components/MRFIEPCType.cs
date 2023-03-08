@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			iepcXElement.Add(
 				new XElement(_mrf + "NrOfGears", iepcData.Gears.Count),
 				new XElement(_mrf + "LowestTotalTransmissionRatio", (iepcData.Gears.OrderByDescending(g => g.GearNumber).First().Ratio
-																	* inputData.JobInputData.Vehicle.Components.AxleGearInputData?.Ratio ?? 1.0d).ToXMLFormat(3)),
+																	* (inputData.JobInputData.Vehicle.Components.AxleGearInputData?.Ratio ?? 1)).ToXMLFormat(3)),
 				new XElement(_mrf + XMLNames.IEPC_DifferentialIncluded, iepcData.DifferentialIncluded),
 				new XElement(_mrf + XMLNames.IEPC_DesignTypeWheelMotor, iepcData.DesignTypeWheelMotor),
 				new XElement(_mrf + XMLNames.Component_CertificationMethod, iepcData.CertificationMethod)

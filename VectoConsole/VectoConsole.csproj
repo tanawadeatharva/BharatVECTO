@@ -42,15 +42,15 @@
     <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj" />
   </ItemGroup>
 
-	<Choose>
+	<!--<Choose>
 		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
 			<ItemGroup>
 				<ProjectReference Include="..\VectoMockup\VectoMockup\VectoMockup.csproj" />
 
 			</ItemGroup>
-			<!--<PropertyGroup>
+			--><!--<PropertyGroup>
 				<DefineConstants>MOCKUP</DefineConstants>
-			</PropertyGroup>-->
+			</PropertyGroup>--><!--
 		</When>
-	</Choose>
+	</Choose>-->
 </Project>
