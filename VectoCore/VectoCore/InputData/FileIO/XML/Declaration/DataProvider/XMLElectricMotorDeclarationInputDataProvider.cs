@@ -11,6 +11,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Utils;
 
@@ -255,7 +256,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			: base(componentNode, sourceFile)
 		{
 			_vehicle = vehicle;
-			SourceType = DataSourceType.XMLEmbedded;
+			//SourceType = DataSourceType.XMLEmbedded;
 			ValidateGearCount();
 		}
 
@@ -350,7 +351,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				}
 			}
 
-			if (DragCurves.Count > 1 && AnyMissingGear(currentGears))
+			if (DragCurves.Count > 1 && AnyMissingGear(currentGears)) {
 				throw new ArgumentException("The DragCurve contains a gear which was not specified under gears");
 			}
 		}
