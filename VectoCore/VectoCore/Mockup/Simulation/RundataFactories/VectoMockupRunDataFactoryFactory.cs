@@ -7,6 +7,10 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Generic;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Specific;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.OutputData;
 
@@ -46,8 +50,9 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 			if (multistageVifInputData.VehicleInputData == null)
 			{
 				return new MockupMultistageCompletedBusRunDataFactory(
-					multistageVifInputData.MultistageJobInputData,
-					report);
+					multistageVifInputData,
+					report, new DeclarationDataAdapterSpecificCompletedBus.Conventional(),
+					new DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.Conventional());
 			}
 			else {
 				return new DeclarationModeMultistageBusVectoRunDataFactory(multistageVifInputData, report);
@@ -59,7 +64,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
             var vehicleCategory = declDataProvider.JobInputData.Vehicle.VehicleCategory;
             if (vehicleCategory.IsLorry())
             {
-                return new MockupLorryVectoRunDataFactory(declDataProvider, report);
+                return new MockupLorryVectoRunDataFactory(declDataProvider, report, new DeclarationDataAdapterHeavyLorry.Conventional());
             }
 
             if (vehicleCategory.IsBus())
@@ -68,9 +73,9 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 {
                     case VehicleCategory.HeavyBusCompletedVehicle:
                         throw new NotImplementedException();
-                        return new DeclarationModeCompletedBusVectoRunDataFactory(declDataProvider, report);
+                        //return new DeclarationModeMultistageBusVectoRunDataFactory(declDataProvider, report);
                     case VehicleCategory.HeavyBusPrimaryVehicle:
-                        return new PrimaryBusMockupRunDataFactory(declDataProvider, report);
+                        return new PrimaryBusMockupRunDataFactory(declDataProvider, report, new DeclarationDataAdapterPrimaryBus.Conventional());
                     default:
                         break;
                 }

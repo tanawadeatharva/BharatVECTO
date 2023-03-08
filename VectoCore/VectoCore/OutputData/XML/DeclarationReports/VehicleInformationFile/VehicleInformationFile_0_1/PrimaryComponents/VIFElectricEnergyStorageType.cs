@@ -7,6 +7,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.Components
@@ -128,8 +129,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			var entries = new List<XElement>();
 
 			foreach (DataRow row in voltageCurve.Rows) {
-				var soc = row[XMLNames.REESS_OCV_SoC];
-				var ocv = row[XMLNames.REESS_OCV_OCV].ToString().ToDouble();
+				var soc = row[BatterySOCReader.Fields.StateOfCharge];
+				var ocv = row[BatterySOCReader.Fields.BatteryVoltage].ToString().ToDouble();
 
 				entries.Add(new XElement(_vif + XMLNames.REESS_MapEntry,
 					new XAttribute(XMLNames.REESS_OCV_SoC, soc),
@@ -144,9 +145,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			foreach (DataRow row in batteryMaxCurrentMap.Rows)
 			{
-				var soc = row[XMLNames.REESS_CurrentLimits_SoC];
-				var maxChargingCurrent = row[XMLNames.REESS_CurrentLimits_MaxChargingCurrent].ToString().ToDouble();
-				var maxDischargingCurrent = row[XMLNames.REESS_CurrentLimits_MaxDischargingCurrent].ToString().ToDouble();
+				var soc = row[BatteryMaxCurrentReader.Fields.StateOfCharge];
+				var maxChargingCurrent = row[BatteryMaxCurrentReader.Fields.MaxChargeCurrent].ToString().ToDouble();
+				var maxDischargingCurrent = row[BatteryMaxCurrentReader.Fields.MaxDischargeCurrent].ToString().ToDouble();
 
 				entries.Add(new XElement(_vif + XMLNames.REESS_MapEntry,
 					new XAttribute(XMLNames.REESS_OCV_SoC, soc),

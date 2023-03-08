@@ -14,6 +14,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Utils;
 
@@ -77,7 +78,7 @@ namespace TUGraz.VectoMockup
 
 			};
 
-			public static string GetResourceName(string xmlName, XMLDeclarationReport.ResultEntry result, ResultType type, VectoRunData runData)
+			public static string GetResourceName(string xmlName, IResultEntry result, ResultType type, VectoRunData runData)
 			{
 				
 				var resNames = Assembly.GetAssembly(typeof(MockupResultReader)).GetManifestResourceNames();
@@ -136,7 +137,7 @@ namespace TUGraz.VectoMockup
 
 		}
         
-		public static XElement GetMRFMockupResult(string xmlName, XMLDeclarationReport.ResultEntry result, XName resultElementName, VectoRunData runData)
+		public static XElement GetMRFMockupResult(string xmlName, IResultEntry result, XName resultElementName, VectoRunData runData)
 		{
 			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.MRF, runData));
 			ReplaceMission(result, resultElement);
@@ -151,7 +152,7 @@ namespace TUGraz.VectoMockup
 
 
 
-		public static XElement GetCIFMockupResult(string xmlName, XMLDeclarationReport.ResultEntry result, XName resultElementName, VectoRunData runData)
+		public static XElement GetCIFMockupResult(string xmlName, IResultEntry result, XName resultElementName, VectoRunData runData)
 		{
 			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.CIF, runData));
 			resultElement.DescendantNodes().OfType<XComment>().Remove();
@@ -161,7 +162,7 @@ namespace TUGraz.VectoMockup
 			return resultElement;
 		}
 
-		public static XElement GetVIFMockupResult(string xmlName, XMLDeclarationReport.ResultEntry result, XName resultElementName, VectoRunData runData)
+		public static XElement GetVIFMockupResult(string xmlName, IResultEntry result, XName resultElementName, VectoRunData runData)
 		{
 			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.VIF, runData));
 			resultElement.DescendantNodes().OfType<XComment>().Remove();
@@ -176,7 +177,7 @@ namespace TUGraz.VectoMockup
 
 
 
-		private static void ReplacePayload(XMLDeclarationReport.ResultEntry result, XElement resultElement)
+		private static void ReplacePayload(IResultEntry result, XElement resultElement)
 		{
 			if (result.Payload == null) {
 				return;
@@ -188,7 +189,7 @@ namespace TUGraz.VectoMockup
 			payload.ForEach(x => x.Value = result.Payload.ToXMLFormat());
 		}
 
-		private static void ReplaceGroup(XMLDeclarationReport.ResultEntry result, XElement resultElement)
+		private static void ReplaceGroup(IResultEntry result, XElement resultElement)
 		{
 			var groupElement = resultElement.XPathSelectElements($"//*[local-name()='{XMLNames.Report_Results_PrimaryVehicleSubgroup}']").ToList();
 			if (!groupElement.Any()) {
@@ -197,7 +198,7 @@ namespace TUGraz.VectoMockup
 			groupElement.ForEach(x => x.Value = result.VehicleClass.GetClassNumber());
 		}
 
-		private static void ReplaceFuelMode(XMLDeclarationReport.ResultEntry result, XElement resultElement)
+		private static void ReplaceFuelMode(IResultEntry result, XElement resultElement)
 		{
 			var fuelMode = resultElement.XPathSelectElements($"//*[local-name()='{XMLNames.Report_Result_FuelMode}']");
 			var fuelModeElement = fuelMode.FirstOrDefault();
@@ -230,7 +231,7 @@ namespace TUGraz.VectoMockup
 		}
 
 
-		private static void ReplaceMission(XMLDeclarationReport.ResultEntry result, XElement resultElement)
+		private static void ReplaceMission(IResultEntry result, XElement resultElement)
 		{
 			var mission = resultElement.Elements()
 				.FirstOrDefault(x => x.Name.LocalName == XMLNames.Report_Result_Mission);
@@ -240,7 +241,7 @@ namespace TUGraz.VectoMockup
 				
 		}
 
-		private static void SetFuels(XMLDeclarationReport.ResultEntry result, XElement resultElement)
+		private static void SetFuels(IResultEntry result, XElement resultElement)
 		{
 			//var tmpResultElement = new XElement(resultElement);
 			var fuelElements = resultElement.XPathSelectElements("//*[local-name()='Fuel']").ToList();
@@ -262,7 +263,7 @@ namespace TUGraz.VectoMockup
 			}
 		}
 
-		private static void ClearGearboxAndAxleGearEntries(XMLDeclarationReport.ResultEntry result,
+		private static void ClearGearboxAndAxleGearEntries(IResultEntry result,
 			XElement resultElement, VectoRunData runData)
 		{
 			var elementsToRemove = new List<XElement>();

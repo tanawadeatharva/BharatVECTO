@@ -63,12 +63,12 @@ namespace TUGraz.VectoMockup.Reports
 
         #region Implementation of IXMLMockupReport
 
-        public void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue)
+        public void WriteMockupResult(IResultEntry resultValue)
         {
             Results.Add(MockupResultReader.GetCIFMockupResult(_outputDataType, resultValue, Cif + "Result", _modelData));
         }
 
-        public void WriteMockupSummary(XMLDeclarationReport.ResultEntry resultValue)
+        public void WriteMockupSummary(IResultEntry resultValue)
         {
             Results.AddFirst(new XElement(Cif + "Status", "success"));
             Results.AddFirst(new XComment("Always prints success at the moment"));

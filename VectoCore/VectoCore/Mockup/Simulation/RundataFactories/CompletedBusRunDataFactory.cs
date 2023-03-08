@@ -7,7 +7,9 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRunDataFactory;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -15,12 +17,14 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoMockup.Simulation.RundataFactories
 {
-	internal class MockupMultistageCompletedBusRunDataFactory
-	{
-        DeclarationModeCompletedMultistageBusVectoRunDataFactory
-		  {
-		public MockupMultistageCompletedBusRunDataFactory(IMultistepBusInputDataProvider dataProvider,
-            IDeclarationReport report) : base(dataProvider, report)
+	internal class MockupMultistageCompletedBusRunDataFactory : DeclarationModeCompletedBusRunDataFactory.CompletedBusBase
+    {
+        //DeclarationModeCompletedMultistageBusVectoRunDataFactory
+		  
+		public MockupMultistageCompletedBusRunDataFactory(IMultistageVIFInputData dataProvider,
+            IDeclarationReport report,
+			ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+			IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric)
         {
 
         }
@@ -28,6 +32,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 
         #region Overrides of DeclarationModeCompletedMultistageBusVectoRunDataFactory
 
+		#endregion
         protected override void Initialize()
         {
 
@@ -36,11 +41,11 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
             //base.Initialize();
         }
 
-        protected override IEnumerable<VectoRunData> VectoRunDataHeavyBusCompleted()
-        {
+        //protected override IEnumerable<VectoRunData> VectoRunDataHeavyBusCompleted()
+        //{
 
-            return base.VectoRunDataHeavyBusCompleted();
-        }
+        //    return base.VectoRunDataHeavyBusCompleted();
+        //}
 
         protected override VectoRunData CreateVectoRunDataSpecific(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int modeIdx)
         {
@@ -60,10 +65,10 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
                 Mission = mission,
                 GearboxData = PrimaryBusMockupRunDataFactory.CreateMockupGearboxData(PrimaryVehicle),
-                InputData = InputDataProvider,
+                InputData = DataProvider.MultistageJobInputData,
                 SimulationType = SimulationType.DistanceCycle,
                 ExecutionMode = ExecutionMode.Declaration,
-                JobName = InputDataProvider.JobInputData.ManufacturingStages.Last().Vehicle.Identifier,
+                JobName = DataProvider.MultistageJobInputData.JobInputData.ManufacturingStages.Last().Vehicle.Identifier,
                 Report = Report,
                 //Aux = PrimaryBusMockupRunDataFactory.CreateMockupBusAux(CompletedVehicle),
 
@@ -114,7 +119,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 
                 },
                 EngineData = PrimaryBusMockupRunDataFactory.CreateMockupEngineData(PrimaryVehicle, modeIdx, CompletedVehicle.TankSystem),
-                JobName = InputDataProvider.JobInputData.ManufacturingStages.Last().Vehicle.Identifier,
+                JobName = DataProvider.MultistageJobInputData.JobInputData.ManufacturingStages.Last().Vehicle.Identifier,
                 ExecutionMode = ExecutionMode.Declaration,
                 SimulationType = SimulationType.DistanceCycle,
                 Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
@@ -127,4 +132,4 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
         //#endregion
     }
 }
-}
+

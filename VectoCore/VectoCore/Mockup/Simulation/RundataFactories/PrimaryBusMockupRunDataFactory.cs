@@ -10,6 +10,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDataFactory;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -19,11 +20,12 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoMockup.Simulation.RundataFactories
 {
-    public class PrimaryBusMockupRunDataFactory : DeclarationModePrimaryBusVectoRunDataFactory
+    public class PrimaryBusMockupRunDataFactory :  DeclarationModePrimaryBusRunDataFactory.Conventional
     {
         public PrimaryBusMockupRunDataFactory(IDeclarationInputDataProvider dataProvider,
-            IDeclarationReport report) :
-            base(dataProvider, report, false)
+            IDeclarationReport report,
+			IPrimaryBusDeclarationDataAdapter declarationDataAdapter) :
+            base(dataProvider, report, declarationDataAdapter)
         { }
 
         #region Overrides of AbstractDeclarationVectoRunDataFactory
@@ -42,13 +44,11 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
             }
 
             VectoRunData powertrainConfig;
-            List<List<FuelData.Entry>> fuels;
             var vehicle = InputDataProvider.JobInputData.Vehicle;
             if (vehicle.ExemptedVehicle)
             {
                 powertrainConfig = CreateVectoRunData(vehicle, 0, null,
                     new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>());
-                fuels = new List<List<FuelData.Entry>>();
             }
             else
             {
@@ -56,15 +56,14 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                         mission => CreateVectoRunData(
                             vehicle, 0, mission, mission.Loadings.First()))
                     .FirstOrDefault(x => x != null);
-                fuels = null;
             }
 
-            Report.InitializeReport(powertrainConfig, fuels);
+            Report.InitializeReport(powertrainConfig);
         }
 
         #region Overrides of DeclarationModePrimaryBusVectoRunDataFactory
 
-        protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx,
+        protected virtual VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx,
             Mission mission,
             KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
         {

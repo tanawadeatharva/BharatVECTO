@@ -1,11 +1,12 @@
-﻿using TUGraz.VectoCore.OutputData.XML;
+﻿using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.XML;
 
 namespace TUGraz.VectoMockup.Reports
 {
 	internal interface IXMLMockupReport
 	{
-		void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue);
-		void WriteMockupSummary(XMLDeclarationReport.ResultEntry resultValue);
+		void WriteMockupResult(IResultEntry resultValue);
+		void WriteMockupSummary(IResultEntry resultValue);
 		void WriteExemptedResults();
 	}
 }

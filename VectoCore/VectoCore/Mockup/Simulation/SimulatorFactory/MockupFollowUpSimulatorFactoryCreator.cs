@@ -4,6 +4,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
@@ -17,15 +18,15 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 			IMultistagePrimaryAndStageInputDataProvider originalStageInputData, IOutputDataWriter originalReportWriter,
 			IDeclarationReport originalDeclarationReport, 
 			ISimulatorFactoryFactory simFactoryFactory,
-			IManufacturerReportFactory mrfFactory, 
-			ICustomerInformationFileFactory cifFactory,
-			IVIFReportFactory vifFactory,
+			//IManufacturerReportFactory mrfFactory, 
+			//ICustomerInformationFileFactory cifFactory,
+			IXMLDeclarationReportFactory xmlDeclarationReportFactory,
 			IXMLInputDataReader inputDataReader, bool validate) :
 			base(originalStageInputData, originalReportWriter, originalDeclarationReport, simFactoryFactory,
-				inputDataReader, validate)
+				xmlDeclarationReportFactory, inputDataReader, validate)
 		{
-			_currentStageDeclarationReport =
-				new XMLDeclarationMockupPrimaryReport(_currentStageOutputDataWriter, mrfFactory, cifFactory, vifFactory, originalStageInputData.StageInputData.ExemptedVehicle);
+			//_currentStageDeclarationReport =
+				//new XMLDeclarationMockupPrimaryReport(_currentStageOutputDataWriter, mrfFactory, cifFactory, vifFactory, originalStageInputData.StageInputData.ExemptedVehicle);
 		}
 
 		#region Overrides of InterimAfterPrimaryFactoryCreator

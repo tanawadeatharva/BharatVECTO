@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
 
@@ -81,12 +82,12 @@ namespace TUGraz.VectoMockup.Reports
 
 		#region Implementation of IXMLMockupReport
 
-		public void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue)
+		public void WriteMockupResult(IResultEntry resultValue)
 		{
 			
 		}
 
-		public void WriteMockupSummary(XMLDeclarationReport.ResultEntry resultValue)
+		public void WriteMockupSummary(IResultEntry resultValue)
 		{
 		}
 
