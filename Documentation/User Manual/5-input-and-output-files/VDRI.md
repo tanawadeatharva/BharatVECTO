@@ -102,6 +102,7 @@ s [m]              , v [km/h]    , stop [s]    , grad [%]    , Padd [kW] |
 ### Engineering Mode: Measured-Speed, Time-Based Cycle
 This driving cycle defines the actual measured speed over time. Vecto tries to simulate the vehicle model using this speed as the actual vehicle speed.
 Due to differences in the real and simulated shift strategies a small difference in speed can occur, but Vecto immediately tries to catch up after the gear is engaged again.
+This type of cycle is now supported for parallel HEVs (P1, P2, P2.5, P3, P4, IHPC), and it was tested with the following input fields: **t**, **v**, *grad*.
 
 Header: **t, v***\[, grad]\[, Padd]\[, vair\_res, vair\_beta\]*
 
@@ -130,8 +131,8 @@ t [s]     v [km/h] , grad [%]    , Padd [kW]
 ### Engineering Mode: Measured-Speed With Gear, Time-Based Cycle
 
 This driving cycle defines the actual measured speed of the vehicle, the gear, and the engine speed over time.
-It overrides the shift strategy of Vecto and also directly sets the engine speed.
-
+It overrides the shift strategy of VECTO and also directly sets the engine speed.
+This type of cycle is now supported for parallel HEVs (P1, P2, P2.5, P3, P4, IHPC), and it was tested with the following input fields: **t**, **v**, **gear**, *grad*.
 
 Header: **t, v, gear***\[, tc\_active, grad]\[, Padd]\[, vair\_res, vair\_beta]\[, Aux\_ID\]*
 
@@ -160,7 +161,7 @@ t [s]              , v [km/h]    , gear [-]    , grad [%]    , Padd [kW]
 ~~~
 
 ### Engineering Mode: Pwheel (SiCo), Time-Based
-This driving cycle defines the power measured at the wheels over time. Vecto tries to simulate the vehicle with this power requirement.
+This driving cycle defines the power measured at the wheels over time. VECTO tries to simulate the vehicle with this power requirement.
 
 Header: **t, Pwheel, gear, n***\[, Padd]*
 

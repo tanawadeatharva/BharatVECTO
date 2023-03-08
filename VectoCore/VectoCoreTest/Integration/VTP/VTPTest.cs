@@ -160,8 +160,6 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			Assert.AreEqual(0.9549, vtpFactor);
 		}
 
-
-
 		[Category("LongRunning")]
 		[Category("Integration")]
 		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\VTP_AT-gbx.vecto")]
@@ -190,8 +188,5 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 
 			Assert.AreEqual(true, jobContainer.AllCompleted);
 		}
-
-		
-
 	}
 }

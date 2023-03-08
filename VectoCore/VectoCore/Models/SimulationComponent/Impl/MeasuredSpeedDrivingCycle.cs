@@ -35,6 +35,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -72,6 +73,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected readonly IDrivingCycleData Data;
 
+		protected readonly VectoRunData RunData;
+
 		protected internal readonly DrivingCycleEnumerator CycleIterator;
 
 		protected Second AbsTime { get; set; }
@@ -91,10 +94,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Distance = 0.SI<Meter>(),
 			};
 			CurrentState = PreviousState.Clone();
+
+			AbsTime = Data.Entries.First().Time;
+
+			RunData = container.RunData;
 		}
 
 		public IResponse Initialize()
 		{
+			if (RunData.JobType == VectoSimulationJobType.ParallelHybridVehicle) {
+				DataBus.HybridControllerCtl.Strategy.GearShiftTriggered -= GearShiftTriggered;
+				DataBus.HybridControllerCtl.Strategy.GearShiftTriggered += GearShiftTriggered;
+			}
+
 			var first = Data.Entries.First();
 
 			AbsTime = first.Time;
@@ -107,6 +119,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			response.AbsTime = AbsTime;
 			return response;
 		}
+
+		private void GearShiftTriggered()
+        {
+			if (DataBus.GearboxInfo.GearboxType == GearboxType.IHPC) {
+				return;
+            }
+
+			/* Set driving action to roll, on gear change trigger, in order to replicate distance-based mode driver signals. */
+
+			if (DrivingAction == DrivingAction.Accelerate) {
+				DriverBehavior = DrivingBehavior.Driving;	
+				DrivingAction = DrivingAction.Roll;
+			}
+        }
 
 		public IResponse Request(Second absTime, Meter ds)
 		{
@@ -164,12 +190,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var acceleration = deltaV / deltaT;
 			var gradient = CycleIterator.LeftSample.RoadGradient;
 			DriverAcceleration = acceleration;
-			DriverBehavior = acceleration < 0
-				? DriverBehavior = DrivingBehavior.Braking
-				: DriverBehavior = DrivingBehavior.Driving;
-			if (DataBus.VehicleInfo.VehicleStopped && acceleration.IsEqual(0)) {
-				DriverBehavior = DrivingBehavior.Halted;
-			}
+			
+			DetermineDriverAction(absTime);    
 
 			IResponse response;
 			var responseCount = 0;
@@ -225,7 +247,144 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.Acceleration = acceleration;
 
 			return response;
+        }
+
+        private void DetermineDriverAction(Second absTime)
+        {
+			if (RunData.JobType == VectoSimulationJobType.ParallelHybridVehicle) {
+				DetermineDriverActionForParallelHEV(absTime);
+			}
+			else {
+				DetermineDriverActionForOther();
+            }	
 		}
+
+        private void DetermineDriverActionWithoutVelocityDropData(Second absTime)
+        { 
+			bool gearShiftStarted = DetectGearShift();
+			var oldAction = DrivingAction;
+
+			if (DataBus.VehicleInfo.VehicleStopped && DriverAcceleration.IsEqual(0)) {
+				DriverBehavior = DrivingBehavior.Halted;
+				DrivingAction = DrivingAction.Halt;
+			}
+			else if ((DriverAcceleration < 0) && (oldAction != DrivingAction.Roll)) {
+				DriverBehavior = (gearShiftStarted && (oldAction != DrivingAction.Brake)) ? DrivingBehavior.Driving : DrivingBehavior.Braking;
+				DrivingAction = (gearShiftStarted && (oldAction != DrivingAction.Brake)) ? DrivingAction.Roll : DrivingAction.Brake;
+            }
+			else {
+				DriverBehavior = DrivingBehavior.Driving;
+				DrivingAction = DataBus.GearboxInfo.GearEngaged(absTime)
+					? (gearShiftStarted 
+						? DrivingAction.Roll 
+						: DrivingAction.Accelerate) 
+					: DrivingAction.Roll;
+			}
+        }
+
+        private void DetermineDriverActionForParallelHEV(Second absTime)
+        { 
+			if (Data.CycleType == CycleType.MeasuredSpeedGear) {
+				DetermineDriverActionWithoutVelocityDropData(absTime);
+            }
+			else if (Data.CycleType == CycleType.MeasuredSpeed) {
+				if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+					DetermineDriverActionForAutomaticHybrid(absTime);	
+				}
+				else {
+					DetermineDriverActionForManualHybrid(absTime);
+				}
+			}
+		}
+
+        private void DetermineDriverActionForAutomaticHybrid(Second absTime)
+        { 
+			if (DataBus.VehicleInfo.VehicleStopped && DriverAcceleration.IsEqual(0)) {
+				DriverBehavior = DrivingBehavior.Halted;
+				DrivingAction = DrivingAction.Halt;
+
+				DataBus.GearboxCtl.DisengageGearbox = false;
+			}
+			else if ((DriverAcceleration < 0) && (DrivingAction != DrivingAction.Roll)) {
+				DriverBehavior = DrivingBehavior.Braking;
+				DrivingAction = DrivingAction.Brake;
+            }
+			else {
+				DriverBehavior = DrivingBehavior.Driving;
+				DrivingAction = DataBus.GearboxInfo.GearEngaged(absTime) || (DataBus.GearboxInfo.GearboxType == GearboxType.IHPC)
+					? DrivingAction.Accelerate 
+					: DrivingAction.Roll;
+
+				DataBus.GearboxCtl.DisengageGearbox = false;
+			}
+        }
+
+		private void DetermineDriverActionForOther()
+		{
+			DriverBehavior = DriverAcceleration < 0
+				? DriverBehavior = DrivingBehavior.Braking
+				: DriverBehavior = DrivingBehavior.Driving;
+
+			if (DataBus.VehicleInfo.VehicleStopped && DriverAcceleration.IsEqual(0)) {
+				DriverBehavior = DrivingBehavior.Halted;
+			}
+        }
+
+        private void DetermineDriverActionForManualHybrid(Second absTime)
+        {
+			if (DataBus.VehicleInfo.VehicleStopped && DriverAcceleration.IsEqual(0)) {
+				DrivingAction =  DrivingAction.Halt;
+				DriverBehavior = DrivingBehavior.Halted;
+				
+				DataBus.GearboxCtl.DisengageGearbox = false;
+            }
+			else {
+				var nextSpeed = CalculateHybridSpeedAtNextStep(absTime);
+				var tolerance = (((DataBus.VehicleInfo.VehicleSpeed + nextSpeed) / 2) * 0.001).Abs();
+
+				if (CycleData.RightSample.VehicleTargetSpeed.IsGreater(nextSpeed, tolerance)) {
+					DrivingAction = DataBus.GearboxInfo.GearEngaged(absTime) || (DataBus.GearboxInfo.GearboxType == GearboxType.IHPC) 
+						? DrivingAction.Accelerate 
+						: DrivingAction.Roll;
+
+					DriverBehavior = (DrivingAction == DrivingAction.Accelerate) ? DrivingBehavior.Accelerating : DrivingBehavior.Driving;
+
+					DataBus.GearboxCtl.DisengageGearbox = false;
+				}
+				else if (CycleData.RightSample.VehicleTargetSpeed.IsSmaller(nextSpeed, tolerance)) {
+					DrivingAction = DrivingAction.Brake;
+					DriverBehavior = DrivingBehavior.Braking;
+				}
+			}
+        }
+
+        private MeterPerSecond CalculateHybridSpeedAtNextStep(Second absTime)
+        {
+			var velocityDropData = DataBus.HybridControllerCtl.Strategy.VelocityDropData;
+
+			var currentSpeed = DataBus.VehicleInfo.VehicleSpeed;
+			var interruptionSpeed = velocityDropData.Interpolate(currentSpeed, RoadGradient ?? 0.SI<Radian>());
+			var nextSpeed = interruptionSpeed;
+
+			var deltaTime = CycleData.RightSample.Time - absTime;
+			
+			if (DataBus.GearboxInfo.TractionInterruption > deltaTime) {
+				//Linear interpolation: currSpeed, interruptionSpeed
+				var interruptionTime = absTime + DataBus.GearboxInfo.TractionInterruption;
+
+				nextSpeed = ((currentSpeed * (interruptionTime - CycleData.RightSample.Time)) + (interruptionSpeed * deltaTime)) 
+							/ (interruptionTime - absTime);
+            }
+
+			return nextSpeed;
+		}
+		
+		private bool DetectGearShift()
+		{
+			return (Data.CycleType == CycleType.MeasuredSpeedGear) 
+				&& (CycleIterator.LeftSample.Gear > 0) 
+				&& (CycleIterator.RightSample.Gear == 0);
+        }
 
 		private IResponse HandleUnderload(Second absTime, Second dt, ResponseUnderload r,
 			Radian gradient, ref MeterPerSquareSecond acceleration)
@@ -260,10 +419,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					searcher: this);
 			}
 
-			var response = NextComponent.Request(absTime, dt, acceleration, gradient, false);
+			var response = HandleEngineStall(absTime, dt, r, gradient, ref acceleration);
+			if (response != null) {
+				return response;
+            }
+						
+			response = NextComponent.Request(absTime, dt, acceleration, gradient, false);
 			return response;
 		}
 
+		private IResponse HandleEngineStall(Second absTime, Second dt, ResponseUnderload r,
+			Radian gradient, ref MeterPerSquareSecond acceleration)
+		{
+			if ((RunData.JobType == VectoSimulationJobType.ParallelHybridVehicle)
+				&& (DrivingAction == DrivingAction.Brake)
+				&& ((r.Engine.EngineSpeed ?? 0.SI<PerSecond>()) < DataBus.EngineInfo.EngineIdleSpeed)
+				&& (DataBus.GearboxInfo.Gear.Gear == 1)) {
+
+				DataBus.GearboxCtl.DisengageGearbox = true;
+
+				return NextComponent.Request(absTime, dt, acceleration, gradient, false);
+            }
+
+			return null;
+        }
+		
 		private IResponse HandleOverload(Second absTime, Second dt, ResponseOverload r, Radian gradient,
 			ref MeterPerSquareSecond acceleration)
 		{
@@ -380,9 +560,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void FinishSimulation() => Data.Finish();
 
-		public DrivingBehavior DriverBehavior { get; internal set; }
+		public DrivingBehavior DriverBehavior { get; internal set; } = DrivingBehavior.Driving;
 
-		public DrivingAction DrivingAction => DrivingAction.Accelerate;
+		public DrivingAction DrivingAction { get; internal set; } = DrivingAction.Accelerate;
 
 		public MeterPerSquareSecond DriverAcceleration { get; protected set; }
 
