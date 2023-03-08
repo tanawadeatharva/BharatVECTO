@@ -509,7 +509,7 @@ public class LorrySimulation
 	[TestCase(Group5_HEV_P3_OVC, 20)]
 	[TestCase(Group5_HEV_P4_OVC, 20)]
 	[TestCase(Group5_HEV_P2_5_OVC, 20)]
-	[TestCase(@"MediumLorry\P-HEV\Group5_HEV_P3_ovc.xml", 8, MissionType.UrbanDelivery, LoadingType.LowLoading)]
+	[TestCase(@"MediumLorry\P-HEV\Group5_HEV_P3_ovc.xml", 8, MissionType.UrbanDelivery, LoadingType.ReferenceLoad)]
 	public void PHEV_ChargeSustainingIt(string jobFile, int nrRuns, MissionType missionType = MissionType.UrbanDelivery, LoadingType loadingType = LoadingType.ReferenceLoad)
 	{
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out var sumDataContainer);
