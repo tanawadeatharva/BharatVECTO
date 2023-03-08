@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
     {
         public abstract class CompletedBusBase : IVectoRunDataFactory
         {
-            private Segment _segmentCompletedBus;
+			protected Segment _segmentCompletedBus;
             private AxleGearData _axlegearData;
             private AngledriveData _angledriveData;
             //private GearboxData _gearboxData;

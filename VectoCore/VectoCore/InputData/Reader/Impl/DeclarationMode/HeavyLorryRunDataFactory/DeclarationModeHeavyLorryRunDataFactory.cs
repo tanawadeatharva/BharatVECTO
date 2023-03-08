@@ -231,7 +231,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 		}
 
-		public sealed class Conventional : LorryBase
+		public class Conventional : LorryBase
 		{
 			public Conventional(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
 				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
