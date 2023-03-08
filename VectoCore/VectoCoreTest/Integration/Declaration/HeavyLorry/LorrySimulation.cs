@@ -960,7 +960,7 @@ public class LorrySimulation
 	private int GetResultCount(IDeclarationReport report)
 	{
 
-		if (report is XMLDeclarationReport09 rep09)
+		if (report is XMLDeclarationReport rep09)
 		{
 
 
