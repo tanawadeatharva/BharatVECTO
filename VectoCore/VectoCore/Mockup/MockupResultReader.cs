@@ -123,11 +123,11 @@ namespace TUGraz.VectoMockup
 					return "Conv";
 				}
 
-				if (jobType.IsOneOf(VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.SerialHybridVehicle)) {
+				if (jobType.IsOneOf(VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.IHPC, VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_S)) {
 					return ovc ? "OVC-HEV" : "non-OVC-HEV";
 				}
 
-				if (jobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle)) {
+				if (jobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E)) {
 					return "PEV";
 				}
 
