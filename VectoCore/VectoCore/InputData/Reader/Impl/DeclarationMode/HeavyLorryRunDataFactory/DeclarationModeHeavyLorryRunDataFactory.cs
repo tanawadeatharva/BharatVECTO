@@ -194,9 +194,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			protected Segment GetSegment(IVehicleDeclarationInputData vehicle, bool batteryElectric = false)
 			{
 				_allowVocational = true;
-				var ng = vehicle.Components.EngineInputData?.EngineModes.Any(e =>
+				var ng = vehicle.ExemptedVehicle ? false : vehicle.Components.EngineInputData?.EngineModes.Any(e =>
 					e.Fuels.Any(f => f.FuelType.IsOneOf(FuelType.LPGPI, FuelType.NGCI, FuelType.NGPI))) ?? false;
-				var ovcHev = vehicle.OvcHev;
+				var ovcHev = vehicle.ExemptedVehicle ? false : vehicle.OvcHev;
 				Segment segment;
 				try
 				{
