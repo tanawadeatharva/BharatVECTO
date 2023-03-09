@@ -150,11 +150,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			return new List<XElement>() {
-				new XElement(_cif + "SteeringPumpTechnology",
-					inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries
-						.Single(aux => aux.Type == AuxiliaryType.SteeringPump).Technology.Join())
-			};
+			return inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries
+				.Single(aux => aux.Type == AuxiliaryType.SteeringPump).Technology.Select(x =>
+					new XElement(_cif + "SteeringPumpTechnology", x)).ToList();
+			//return new List<XElement>() {
+			//	new XElement(_cif + "SteeringPumpTechnology",
+			//		inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries
+			//			.Single(aux => aux.Type == AuxiliaryType.SteeringPump).Technology.Join())
+			//};
 		}
 
 		#endregion

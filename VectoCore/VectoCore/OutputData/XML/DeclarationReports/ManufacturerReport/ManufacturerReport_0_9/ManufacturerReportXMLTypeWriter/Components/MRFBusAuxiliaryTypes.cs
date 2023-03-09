@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new XElement(_mrf + XMLNames.Component_Auxiliaries,
 				new XElement(_mrf + "CoolingFanTechnology",
 					auxData.FanTechnology),
-				new XElement(_mrf + "SteeringPumpTechnology", string.Join("\n", steeringPumpData)),
+				steeringPumpData.Select(x => new XElement(_mrf + "SteeringPumpTechnology", x)),
 
 
 				_mrfFactory.GetPrimaryBusElectricSystemType_Conventional_HEV().GetElement(auxData),
@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new XElement(_mrf + XMLNames.Component_Auxiliaries,
 				new XElement(_mrf + "CoolingFanTechnology",
 					auxData.FanTechnology),
-				new XElement(_mrf + "SteeringPumpTechnology", string.Join("\n", steeringPumpData)),
+				steeringPumpData.Select(x => new XElement(_mrf + "SteeringPumpTechnology", x)),
 				_mrfFactory.GetPrimaryBusElectricSystemType_Conventional_HEV().GetElement(auxData),
 				_mrfFactory.GetPrimaryBusPneumaticSystemType_Conventional_HEV_Px().GetElement(auxData),
 				_mrfFactory.GetPrimaryBusHVACSystemType_Conventional_HEV().GetElement(auxData)
@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new XElement(_mrf + XMLNames.Component_Auxiliaries,
 				new XElement(_mrf + "CoolingFanTechnology",
 					auxData.FanTechnology),
-				new XElement(_mrf + "SteeringPumpTechnology", string.Join("\n", steeringPumpData)),
+				steeringPumpData.Select(x => new XElement(_mrf + "SteeringPumpTechnology", x)),
 				_mrfFactory.GetPrimaryBusElectricSystemType_Conventional_HEV().GetElement(auxData),
 
 				_mrfFactory.GetPrimaryBusPneumaticSystemType_HEV_S().GetElement(auxData),
@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			var steeringPumpData = auxData.SteeringPumpTechnology;
 
 			return new XElement(_mrf + XMLNames.Component_Auxiliaries,
-				new XElement(_mrf + "SteeringPumpTechnology", string.Join("\n", steeringPumpData)),
+				steeringPumpData.Select(x => new XElement(_mrf + "SteeringPumpTechnology", x)),
 				_mrfFactory.GetPrimaryBusElectricSystemType_PEV().GetElement(auxData),
 				_mrfFactory.GetPrimaryBusPneumaticSystemType_PEV_IEPC().GetElement(auxData)
 				//_mrfFactory.GetPrimaryBusHVACSystemType_PEV().GetXmlType(auxData)

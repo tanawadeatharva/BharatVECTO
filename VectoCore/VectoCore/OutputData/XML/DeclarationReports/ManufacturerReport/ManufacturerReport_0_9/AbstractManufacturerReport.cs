@@ -116,10 +116,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			
 			Vehicle.XPathSelectElement($"//*[local-name()='{XMLNames.VehicleGroupCO2}']").Value = DeclarationData
 				.GetVehicleGroupCO2StandardsGroup(Input).ToXMLFormat();
-			
-
-
-
 
 			var stream = new MemoryStream();
 			var writer = new StreamWriter(stream);
