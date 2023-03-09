@@ -54,7 +54,7 @@ namespace VectoMockupTest
 		protected const string ConventionalHeavyLorry_Vocational =
 			BasePath + @"HeavyLorry\Conventional_heavyLorry_AMT_Vocational.xml";
 
-		protected const string HEV_Px_HeavyLorry = BasePath + @"HeavyLorry\HEV_heavyLorry_AMT_Px_IHPC.xml";
+		protected const string HEV_Px_HeavyLorry = BasePath + @"HeavyLorry\HEV_heavyLorry_AMT_Px.xml";
 		protected const string HEV_S2_HeavyLorry = BasePath + @"HeavyLorry\HEV-S_heavyLorry_AMT_S2.xml";
 		protected const string HEV_S2_HeavyLorry_NoRetarder = BasePathMockup + @"HeavyLorry\HEV-S_heavyLorry_AMT_S2_NoRetarder.xml";
 		protected const string HEV_S3_HeavyLorry = BasePath + @"HeavyLorry\HEV-S_heavyLorry_S3.xml";
