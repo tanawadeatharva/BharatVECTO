@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Xml;
 using System.Xml.Linq;
@@ -89,8 +90,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			var result = new XElement(_vif + XMLNames.ElectricEnergyStorage_Battery,
 				new XElement(_vif + XMLNames.Battery_StringID, reess.StringId),
 				new XElement(_vif + "REESS", GetReess(battery)),
-				battery.MinSOC.HasValue ? new XElement(_vif + XMLNames.Battery_SOCmin, battery.MinSOC.Value) : null,
-				battery.MaxSOC.HasValue ? new XElement(_vif + XMLNames.Battery_SOCmax, battery.MaxSOC.Value) : null
+				battery.MinSOC.HasValue ? new XElement(_vif + XMLNames.Battery_SOCmin, Math.Round(battery.MinSOC.Value * 100, MidpointRounding.AwayFromZero)) : null,
+				battery.MaxSOC.HasValue ? new XElement(_vif + XMLNames.Battery_SOCmax, Math.Round(battery.MaxSOC.Value * 100, MidpointRounding.AwayFromZero)) : null
 			);
 			
 			return result;
