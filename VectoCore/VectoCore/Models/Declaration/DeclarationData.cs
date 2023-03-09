@@ -490,6 +490,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					case BusHVACSystemConfiguration.Unknown:
 					case BusHVACSystemConfiguration.Configuration0:
 						throw new VectoException($"Invalid HVAC Configuration {hvacConfigurationInput}");
+
 					case BusHVACSystemConfiguration.Configuration1 when !hasDriverHP && !hasPassengerHP:
 						return BusHVACSystemConfiguration.Configuration1;
 

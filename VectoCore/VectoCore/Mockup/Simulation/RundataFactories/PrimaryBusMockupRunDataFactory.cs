@@ -30,6 +30,75 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 
         #region Overrides of AbstractDeclarationVectoRunDataFactory
 
+		protected override IEnumerable<VectoRunData> GetNextRun()
+		{
+			if (InputDataProvider.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle) {
+				if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle) {
+					yield return CreateVectoRunData(InputDataProvider.JobInputData.Vehicle, null,
+						new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(), 0);
+				} else {
+					foreach (var vectoRunData in VectoRunDataHeavyBusPrimary()) {
+						yield return vectoRunData;
+					}
+				}
+			}
+
+			foreach (var entry in new List<VectoRunData>()) {
+				yield return entry;
+			}
+		}
+
+		private IEnumerable<VectoRunData> VectoRunDataHeavyBusPrimary()
+		{
+			switch (InputDataProvider.JobInputData.JobType) {
+				case VectoSimulationJobType.ConventionalVehicle:
+				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.SerialHybridVehicle:
+					return VectoRunDataConventionalHeavyBusPrimaryNonExempted();
+				case VectoSimulationJobType.BatteryElectricVehicle:
+					return VectoRunDataBatteryElectricHeavyBusPrimaryNonExempted();
+				case VectoSimulationJobType.EngineOnlySimulation:
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+			return VectoRunDataConventionalHeavyBusPrimaryNonExempted();
+		}
+
+		private IEnumerable<VectoRunData> VectoRunDataBatteryElectricHeavyBusPrimaryNonExempted()
+		{
+			var vehicle = InputDataProvider.JobInputData.Vehicle;
+			foreach (var mission in _segment.Missions) {
+				foreach (var loading in mission.Loadings) {
+					var simulationRunData = CreateVectoRunData(vehicle, mission, loading, 0);
+					if (simulationRunData == null) {
+						continue;
+					}
+					yield return simulationRunData;
+				}
+
+			}
+		}
+
+		private IEnumerable<VectoRunData> VectoRunDataConventionalHeavyBusPrimaryNonExempted()
+		{
+			var vehicle = InputDataProvider.JobInputData.Vehicle;
+			var engine = vehicle.Components.EngineInputData;
+			var engineModes = engine.EngineModes;
+
+			for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
+				foreach (var mission in _segment.Missions) {
+					foreach (var loading in mission.Loadings) {
+						var simulationRunData = CreateVectoRunData(vehicle, mission, loading, modeIdx);
+						if (simulationRunData == null) {
+							continue;
+						}
+						yield return simulationRunData;
+					}
+				}
+			}
+		}
+
         protected override void Initialize()
         {
             _segment = GetSegment(InputDataProvider.JobInputData.Vehicle);
@@ -47,14 +116,14 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
             var vehicle = InputDataProvider.JobInputData.Vehicle;
             if (vehicle.ExemptedVehicle)
             {
-                powertrainConfig = CreateVectoRunData(vehicle, 0, null,
-                    new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>());
+                powertrainConfig = CreateVectoRunData(vehicle, null,
+                    new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(), 0);
             }
             else
             {
                 powertrainConfig = _segment.Missions.Select(
                         mission => CreateVectoRunData(
-                            vehicle, 0, mission, mission.Loadings.First()))
+                            vehicle, mission, mission.Loadings.First(), 0))
                     .FirstOrDefault(x => x != null);
             }
 
@@ -63,9 +132,10 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 
         #region Overrides of DeclarationModePrimaryBusVectoRunDataFactory
 
-        protected virtual VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx,
-            Mission mission,
-            KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
+        protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle,
+			Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
+			int? modeIdx,
+			VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
         {
 
             VectoRunData runData;
@@ -233,17 +303,17 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
         }
 
 
-        public static CombustionEngineData CreateMockupEngineData(IVehicleDeclarationInputData vehicleData, int modeIdx, TankSystem? tankSystem = null)
+        public static CombustionEngineData CreateMockupEngineData(IVehicleDeclarationInputData vehicleData, int? modeIdx, TankSystem? tankSystem = null)
 		{
 
 			var engine = vehicleData.Components.EngineInputData;
-            if (engine == null)
+            if (engine == null || modeIdx == null)
             {
                 return null;
             }
 
             var engineModes = engine.EngineModes;
-            var engineMode = engineModes[modeIdx];
+            var engineMode = engineModes[modeIdx.Value];
             var fuels = new List<CombustionEngineFuelData>();
             foreach (var fuel in engineMode.Fuels)
             {
