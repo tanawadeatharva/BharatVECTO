@@ -69,10 +69,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
             protected virtual VectoRunData GetPowertrainConfigForReportInit()
             {
-                return _segmentCompletedBus.Missions.Select(
-                        mission => CreateVectoRunDataSpecific(
-                            mission, mission.Loadings.First(), 0))
-                    .FirstOrDefault(x => x != null);
+				return CompletedVehicle.ExemptedVehicle || PrimaryVehicle.ExemptedVehicle
+					? GetExemptedVectoRunData()
+					: _segmentCompletedBus.Missions.Select(
+							mission => CreateVectoRunDataSpecific(
+								mission, mission.Loadings.First(), 0))
+						.FirstOrDefault(x => x != null);
             }
 
             protected virtual IEnumerable<VectoRunData> GetNextRun()
@@ -90,6 +92,32 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
                         yield return vectoRunData;
                 }
             }
+
+			protected virtual VectoRunData GetExemptedVectoRunData()
+			{
+				return new VectoRunData() {
+					Exempted = true,
+					VehicleData = new VehicleData() {
+						ModelName = CompletedVehicle.Model,
+						Manufacturer = CompletedVehicle.Manufacturer,
+						ManufacturerAddress = CompletedVehicle.ManufacturerAddress,
+						VIN = CompletedVehicle.VIN,
+						LegislativeClass = CompletedVehicle.LegislativeClass,
+						RegisteredClass = CompletedVehicle.RegisteredClass,
+						VehicleCode = CompletedVehicle.VehicleCode,
+						CurbMass = CompletedVehicle.CurbMassChassis,
+						GrossVehicleMass = CompletedVehicle.GrossVehicleMassRating,
+						ZeroEmissionVehicle = PrimaryVehicle.ZeroEmissionVehicle,
+						MaxNetPower1 = PrimaryVehicle.MaxNetPower1,
+						InputData = CompletedVehicle
+					},
+					Report = Report,
+					Mission = new Mission() {
+						MissionType = MissionType.ExemptedMission
+					},
+					InputData = DataProvider.MultistageJobInputData
+				};
+			}
 
             protected virtual VectoRunData CreateVectoRunDataGeneric(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int modeIdx)
             {
