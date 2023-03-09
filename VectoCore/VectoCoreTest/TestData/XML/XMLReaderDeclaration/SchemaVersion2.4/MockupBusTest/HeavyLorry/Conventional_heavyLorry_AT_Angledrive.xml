@@ -28,6 +28,7 @@
 			<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
 			<EcoRollWithEngineStop>true</EcoRollWithEngineStop>
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
+			<APTEcoRollReleaseLockupClutch>false</APTEcoRollReleaseLockupClutch>
 		</ADAS>
 		<TorqueLimits xsi:type="v2.0:TorqueLimitsType"><!-- optional -->
 			<v2.0:Entry gear="9" maxTorque="2000"/>
