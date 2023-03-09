@@ -194,13 +194,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				var tmpBatterySystem = new BatterySystem(null, batterySystemData);
 				result.MinSoC = tmpBatterySystem.MinSoC;
 				result.MaxSoC = tmpBatterySystem.MaxSoC;
-				result.TargetSoC = (result.MaxSoC - result.MinSoC) / 2;
+				result.TargetSoC = (result.MaxSoC + result.MinSoC) / 2    ;
 				result.InitialSoc = batterySystemData.InitialSoC;
 			} else {
 				result.MinSoC = superCap.MinVoltage / superCap.MaxVoltage;
 				result.MaxSoC = 1;// superCap.MaxVoltage / superCap.MaxVoltage;
 				
-				result.TargetSoC = Math.Sqrt(Math.Pow(superCap.MaxVoltage.Value(), 2) - Math.Pow(superCap.MinVoltage.Value(), 2)) /
+				result.TargetSoC = Math.Sqrt(Math.Pow(superCap.MaxVoltage.Value(), 2) + Math.Pow(superCap.MinVoltage.Value(), 2)) /
 									superCap.MaxVoltage.Value();
 				result.InitialSoc = superCap.InitialSoC;
 			}
@@ -223,11 +223,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 						vehicleClass, loading, result.MaxSoC - result.MinSoC);
 			} else {
 				result.EquivalenceFactor = DeclarationData.HEVStrategyParameters.PHEVChargeDepletingEquivalenceFactor;
+
+
 			}
 
 
-			result.EquivalenceFactorCharge = result.EquivalenceFactor * 0.85;
-			result.EquivalenceFactorDischarge = result.EquivalenceFactor / 0.85;
+			var genericEMEfficiency = 0.85;
+			result.EquivalenceFactorCharge = result.EquivalenceFactor * genericEMEfficiency;
+			result.EquivalenceFactorDischarge = result.EquivalenceFactor / genericEMEfficiency;
 			
 
 			return result;
