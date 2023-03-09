@@ -198,7 +198,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public XMLDeclarationIepcMediumLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 
-		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_E;
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
@@ -250,7 +250,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#endregion
 
-		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.SerialHybridVehicle;
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_S;
 
 		public override bool HybridElectricHDV => true;
 
