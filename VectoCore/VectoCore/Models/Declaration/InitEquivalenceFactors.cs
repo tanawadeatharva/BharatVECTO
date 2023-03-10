@@ -50,7 +50,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public double LookupEquivalenceFactor(MissionType mission, VehicleClass hdvClass, LoadingType loading,
 			double socRange)
 		{
-			var a = _socRanges.MinBy((i => Math.Abs(socRange * 100 - i))); //closest
+			if (socRange > 1 || socRange < 0) {
+				throw new ArgumentException($"{nameof(socRange)} must be between 0 and 1 ");
+			}
+
+			socRange *= 100; //Percent from here on
+			var a = _socRanges.MinBy((i => Math.Abs(socRange - i))); //closest
 
 			if (socRange <= _socRanges.Min() || socRange >= _socRanges.Max()) {
 				return _initEquivalenceFactors[a].LookupEquivalenceFactor(mission, hdvClass, loading);
