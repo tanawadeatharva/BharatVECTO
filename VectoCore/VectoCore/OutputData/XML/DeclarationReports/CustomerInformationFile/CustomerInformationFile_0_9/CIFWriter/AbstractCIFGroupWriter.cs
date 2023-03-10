@@ -32,9 +32,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			if (inputData is IMultistepBusInputDataProvider multistep) {
 				return multistep.JobInputData.PrimaryVehicle.Vehicle;
-			} else {
-				return inputData.JobInputData.Vehicle;
 			}
+
+			return inputData.JobInputData.Vehicle;
 		}
 	}
 

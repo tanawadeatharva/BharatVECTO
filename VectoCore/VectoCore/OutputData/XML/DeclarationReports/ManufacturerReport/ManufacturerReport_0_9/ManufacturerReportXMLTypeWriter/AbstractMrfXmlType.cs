@@ -14,5 +14,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			_mrfFactory = mrfFactory;
 		}
 
+		protected virtual IVehicleDeclarationInputData GetVehicle(IDeclarationInputDataProvider inputData)
+		{
+			if (inputData is IMultistepBusInputDataProvider multistep) {
+				return multistep.JobInputData.PrimaryVehicle.Vehicle;
+			}
+
+			return inputData.JobInputData.Vehicle;
+		}
 	}
 }

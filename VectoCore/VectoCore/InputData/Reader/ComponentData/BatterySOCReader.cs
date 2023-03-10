@@ -52,20 +52,4 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 		}
 	}
 
-	public static class BatteryHelper
-	{
-		public static WattSecond TotalUsableCapacityInSimulation(this IBatteryPackDeclarationInputData batteryData)
-		{
-			var tmp = BatterySOCReader.Create(batteryData.VoltageCurve);
-			var voltage = tmp.Lookup(((batteryData.MinSOC ?? 0) + (batteryData.MaxSOC ?? 1)) / 2.0);
-			return batteryData.Capacity * voltage;
-		}
-
-		public static WattSecond TotalStorageCapacity(this IBatteryPackDeclarationInputData batteryData)
-		{
-			var tmp = BatterySOCReader.Create(batteryData.VoltageCurve);
-			var voltage = tmp.Lookup(((batteryData.MinSOC ?? 0) + (batteryData.MaxSOC ?? 1)) / 2.0);
-			return batteryData.Capacity * voltage;
-		}
-	}
 }

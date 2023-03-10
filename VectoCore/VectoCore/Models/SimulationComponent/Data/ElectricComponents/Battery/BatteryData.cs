@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery {
@@ -60,6 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 		public bool ChargeSustainingBattery { get; internal set; }
 
 		public WattSecond UseableStoredEnergy => _useableStoredEnergy ?? (_useableStoredEnergy = CalculateUsableEnergy());
+		public IElectricStorageDeclarationInputData InputData { get; internal set; }
 
 		protected WattSecond CalculateUsableEnergy()
 		{
