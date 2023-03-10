@@ -933,7 +933,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
         {
             get
 			{
-				return _editJobCommand ?? (_editJobCommand = new Util.RelayCommand<IDocumentViewModel>(EditDocumentExecute,
+				return _editJobCommand ?? (_editJobCommand = new RelayCommand<IDocumentViewModel>(EditDocumentExecute,
 					(IDocumentViewModel jobentry) => {
 						var canExecute = jobentry != null && jobentry.EditViewModel != null;
 						return canExecute;
@@ -958,7 +958,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
         {
             get
             {
-                return _viewXMLCommand ?? new Util.RelayCommand<IJobViewModel>(ViewXMLFileExecute,
+                return _viewXMLCommand ?? new RelayCommand<IJobViewModel>(ViewXMLFileExecute,
                     (IJobViewModel jobentry) =>
                     {
                         return (jobentry != null);
@@ -1026,7 +1026,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
         {
             get
             {
-                return _moveJobUpCommand ?? new Util.RelayCommand<IDocumentViewModel>(MoveJobUpExecute, (IDocumentViewModel jobentry) =>
+                return _moveJobUpCommand ?? new RelayCommand<IDocumentViewModel>(MoveJobUpExecute, (IDocumentViewModel jobentry) =>
                 {
                     return (jobentry != null && Jobs.Count > 1 && Jobs.IndexOf(jobentry) != 0);
                 });
@@ -1052,7 +1052,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
         {
             get
             {
-                return _moveJobDownCommand ?? new Util.RelayCommand<IDocumentViewModel>(MoveJobDownExecute, (IDocumentViewModel jobentry) =>
+                return _moveJobDownCommand ?? new RelayCommand<IDocumentViewModel>(MoveJobDownExecute, (IDocumentViewModel jobentry) =>
                 {
                     return (jobentry != null && Jobs.Count > 1 && Jobs.IndexOf(jobentry) != Jobs.Count - 1);
                 });

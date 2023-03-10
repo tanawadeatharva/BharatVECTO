@@ -19,7 +19,6 @@ using VECTO3GUI2020.Util.XML;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
-using RelayCommand = VECTO3GUI2020.Util.RelayCommand;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
@@ -92,7 +91,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get
 			{
 				return _switchComponentViewCommand ??
-						new Util.RelayCommand<string>(SwitchViewExecute, (string s) => SwitchViewCanExecute(s));
+						new RelayCommand<string>(SwitchViewExecute, (string s) => SwitchViewCanExecute(s));
 			}
 		}
 
@@ -117,7 +116,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public IRelayCommand SaveInputDataCommand =>
 			_saveInputDataCommand ??
-			new CommunityToolkit.Mvvm.Input.RelayCommand(() => { SaveInputDataExecute(filename: _vehicleInputDataFilePath); },
+			new RelayCommand(() => { SaveInputDataExecute(filename: _vehicleInputDataFilePath); },
 				() => _vehicleInputDataFilePath != null);
 
 		public ICommand SaveInputDataAsCommand =>
