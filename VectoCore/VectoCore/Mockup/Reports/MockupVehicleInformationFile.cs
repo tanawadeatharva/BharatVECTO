@@ -7,6 +7,7 @@ using System.Xml.XPath;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
@@ -40,12 +41,12 @@ namespace TUGraz.VectoMockup.Reports
 
 		#region Implementation of IXMLMockupReport
 
-		public void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue)
+		public void WriteMockupResult(IResultEntry resultValue)
 		{
 			
 		}
 
-		public void WriteMockupSummary(XMLDeclarationReport.ResultEntry resultValue)
+		public void WriteMockupSummary(IResultEntry resultValue)
 		{
 			
 		}
@@ -92,13 +93,13 @@ namespace TUGraz.VectoMockup.Reports
 
 		#region Implementation of IXMLMockupReport
 
-		public void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue)
+		public void WriteMockupResult(IResultEntry resultValue)
 		{
 			var xElement = MockupResultReader.GetVIFMockupResult(Tns.NamespaceName, resultValue, Tns + "Result", _modelData);
 			Results.Add(xElement);
 		}
 
-		public void WriteMockupSummary(XMLDeclarationReport.ResultEntry resultValue)
+		public void WriteMockupSummary(IResultEntry resultValue)
 		{
 			Results.AddFirst(new XElement(Tns + "Status", "success"));
 			Results.AddFirst(new XComment("Always prints success at the moment"));

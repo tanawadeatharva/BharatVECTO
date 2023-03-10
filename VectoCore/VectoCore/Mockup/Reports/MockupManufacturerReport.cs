@@ -37,7 +37,7 @@ namespace TUGraz.VectoMockup.Reports
 
 		}
 
-		public void WriteMockupSummary(XMLDeclarationReport.ResultEntry resultValue)
+		public void WriteMockupSummary(IResultEntry resultValue)
 		{
 			Results.AddFirst(new XElement(Mrf + "Status", "success"));
 			Results.AddFirst(new XComment("Always prints success at the moment"));
@@ -54,10 +54,10 @@ namespace TUGraz.VectoMockup.Reports
 		#region Implementation of IXMLManufacturerReport
 
 
-		public void InitializeVehicleData(IDeclarationInputDataProvider inputData)
-		{
-			_ixmlManufacturerReportImplementation.InitializeVehicleData(inputData);
-		}
+		//public void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		//{
+		//	_ixmlManufacturerReportImplementation.InitializeVehicleData(inputData);
+		//}
 
 		public void Initialize(VectoRunData modelData)
 		{
@@ -76,10 +76,11 @@ namespace TUGraz.VectoMockup.Reports
 			}
 		}
 
-		public void WriteResult(XMLDeclarationReport.ResultEntry resultValue)
+		public void WriteResult(IResultEntry resultValue)
 		{
 			_ixmlManufacturerReportImplementation.WriteResult(resultValue);
 		}
+
 
 		public void GenerateReport()
 		{

@@ -77,7 +77,7 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 			});
 		}
 
-		protected override IVectoRun GetNonExemptedRun(VectoRunData data, int current, VectoRunData d, ref bool warning1Hz, ref bool firstRun)
+		protected override IVectoRun GetNonExemptedRun(VectoRunData data, int current, ref bool warning1Hz, ref bool firstRun)
 		{
 			var addReportResult = PrepareReport(data);
 			return new MockupRun(new VehicleContainer(ExecutionMode.Declaration,
@@ -119,9 +119,10 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 						ReportWriter,
 						currentStageDeclarationReport,
 						_simFactoryFactory, 
-						((IMockupDeclarationReportFactory)_xmlDeclarationReportFactory).MrfFactory,
-						((IMockupDeclarationReportFactory)_xmlDeclarationReportFactory).CifFactory, 
-						((IMockupDeclarationReportFactory)_xmlDeclarationReportFactory).VifFactory,
+						//((IMockupDeclarationReportFactory)_xmlDeclarationReportFactory).MrfFactory,
+						//((IMockupDeclarationReportFactory)_xmlDeclarationReportFactory).CifFactory, 
+						//((IMockupDeclarationReportFactory)_xmlDeclarationReportFactory).VifFactory,
+						_xmlDeclarationReportFactory,
 						_xmlInputDataReader, 
 						Validate);
 				case IMultistageVIFInputData multistageVifInputData:

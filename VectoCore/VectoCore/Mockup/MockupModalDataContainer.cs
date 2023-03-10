@@ -170,6 +170,11 @@ namespace TUGraz.VectoMockup
 			return _modalDataContainerImplementation.GetColumnName(fuelData, mrf);
 		}
 
+		public void Reset(bool clearColumns = false)
+		{
+			
+		}
+
 		public string GetColumnName(PowertrainPosition pos, ModalResultField mrf)
 		{
 			return _modalDataContainerImplementation.GetColumnName(pos, mrf);
@@ -209,6 +214,8 @@ namespace TUGraz.VectoMockup
 		}
 
 		public bool HasCombustionEngine => _modalDataContainerImplementation.HasCombustionEngine;
+		public bool HasGearbox { get; }
+		public bool HasAxlegear { get; }
 
 		public WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos)
 		{

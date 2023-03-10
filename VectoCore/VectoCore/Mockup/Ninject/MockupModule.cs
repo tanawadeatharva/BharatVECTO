@@ -8,6 +8,7 @@ using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoMockup.Reports;
 using TUGraz.VectoMockup.Simulation.RundataFactories;
 
@@ -19,9 +20,15 @@ namespace TUGraz.VectoMockup.Ninject
 
 		public override void Load()
 		{
+			LoadModule<CIFMockupModule>();
+			LoadModule<MRFMockupModule>();
+			LoadModule<SimulatorFactoryModule>();
+			LoadModule<VIFMockupModule>();
+
 			Rebind<IVectoRunDataFactoryFactory>().To<VectoMockUpRunDataFactoryFactory>();
 			Rebind<IXMLDeclarationReportFactory>().To<MockupReportFactory>();
 			Rebind<IXMLInputDataReader>().To<MockupXMLInputDataFactory>();
+			Rebind<IResultsWriterFactory>().To<MockupReportResultsFactory>().InSingletonScope();
 		}
 
 		#endregion

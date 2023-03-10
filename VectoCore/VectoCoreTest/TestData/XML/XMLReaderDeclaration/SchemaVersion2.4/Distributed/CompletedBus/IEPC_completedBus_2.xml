@@ -61,9 +61,9 @@
 						</LEDLights>
 					</ElectricSystem>
 					<HVAC>
-						<SystemConfiguration>1</SystemConfiguration>
+						<SystemConfiguration>6</SystemConfiguration>
 						<HeatPumpTypeDriverCompartment>
-							<Cooling>non R-744 2-stage</Cooling>
+							<Cooling>none</Cooling>
 							<Heating>none</Heating>
 						</HeatPumpTypeDriverCompartment>
 						<HeatPumpTypePassengerCompartment>

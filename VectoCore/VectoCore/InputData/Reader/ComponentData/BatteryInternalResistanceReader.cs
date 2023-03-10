@@ -15,6 +15,10 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 	{
 		public static InternalResistanceMap Create(DataTable data, bool inputInMiliOhm)
 		{
+			if (data == null) {
+				// may be null in case it is used to create a temp battery system to calc stored energy
+				return null;
+			}
 			if (!(data.Columns.Count == 2 || data.Columns.Count == 4 || data.Columns.Count == 5)) {
 				throw new VectoException(
 					"Internal Resistance Map data must contain either two, four or five columns: {0}, {1}",
