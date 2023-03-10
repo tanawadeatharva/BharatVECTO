@@ -173,7 +173,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 							vehicleData.AxleConfiguration, vehicleData.GrossVehicleMassRating,
 							vehicleData.CurbMassChassis,
 							vehicleData.VocationalVehicle);
-						return Tuple.Create(truckSegment.VehicleClass, (bool?)false);
+						return Tuple.Create(truckSegment.VehicleClass, (bool?)vehicleData.VocationalVehicle);
 					} catch (VectoException) {
 						var truckSegment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory,
 							vehicleData.AxleConfiguration, vehicleData.GrossVehicleMassRating,
