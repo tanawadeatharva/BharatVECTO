@@ -8,6 +8,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -334,7 +335,7 @@ namespace TUGraz.VectoCore.OutputData
 		public static readonly Dictionary<string, Tuple<ModalResultField[], WriteSumEntry>> SumDataValue = new Dictionary<string, Tuple<ModalResultField[], WriteSumEntry>>() {
 			// common fields
 			{ SORT, SumFunc((r, m) => r.JobNumber * 1000 + r.RunNumber)},
-			{ JOB, SumFunc((r, m) => $"{r.JobNumber}-{r.RunNumber}")},
+			{ JOB, SumFunc((r, m) => $"{r.JobNumber}-{r.RunNumber}-{(r.Iteration != 0 ? r.Iteration.ToString() : "")}")},
 			{ INPUTFILE, SumFunc((r,m) => SummaryDataContainer.ReplaceNotAllowedCharacters(r.JobName)) },
 			{ CYCLE, SumFunc((r, m) => SummaryDataContainer.ReplaceNotAllowedCharacters(r.Cycle.Name + Constants.FileExtensions.CycleFile))},
 			{ STATUS, SumFunc((r, m) => m.RunStatus)},
@@ -368,8 +369,16 @@ namespace TUGraz.VectoCore.OutputData
 					return null;
 				}
 
-				var gbxType = r.InputData?.JobInputData.Vehicle.Components?.GetGearboxType() ??
-							r.InputData?.PrimaryVehicleData?.Vehicle.Components?.GetGearboxType();
+				GearboxType? gbxType = null;
+				switch (r.InputData) {
+					case IMultistepBusInputDataProvider multistep:
+						gbxType = multistep.JobInputData?.PrimaryVehicle?.Vehicle?.Components.GetGearboxType();
+						break;
+					default:
+						gbxType = r.InputData?.JobInputData.Vehicle.Components?.GetGearboxType() ??
+									r.InputData?.PrimaryVehicleData?.Vehicle.Components?.GetGearboxType();
+						break;
+				}
 
 				if (gbxType != null) {
 					ret = DeclarationData.ADASCombinations.Lookup(r.VehicleData.ADAS, gbxType.Value).ID;
@@ -643,15 +652,17 @@ namespace TUGraz.VectoCore.OutputData
 			{ EC_el_final_TKM, SumFunc((r, m) 
 				=> r.VehicleData?.Loading == null || 
 					r.VehicleData.Loading.IsEqual(0) || 
-					m.CorrectedModalData.ElectricEnergyConsumption == null 
+					m.CorrectedModalData.ElectricEnergyConsumption == null ||
+					m.CorrectedModalData.ElectricEnergyConsumptionPerMeter == null
 					? null : (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter / r.VehicleData.Loading).ConvertToKiloWattHourPerTonKiloMeter())},
 			{ EC_el_final_M3KM, SumFunc((r, m) 
 				=> r.VehicleData.CargoVolume == null ||
 					r.VehicleData.CargoVolume.IsEqual(0)  ||
-					m.CorrectedModalData.ElectricEnergyConsumption == null 
+					m.CorrectedModalData.ElectricEnergyConsumption == null ||
+					m.CorrectedModalData.ElectricEnergyConsumptionPerMeter == null
 					? null : (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter / r.VehicleData.CargoVolume).ConvertToKiloWattHourPerCubicMeterKiloMeter())},
 			{ ElectricEnergyConsumption_PKM, SumFunc((r, m)
-				=> r.VehicleData?.PassengerCount == null || m.CorrectedModalData.ElectricEnergyConsumption == null ?
+				=> r.VehicleData?.PassengerCount == null || m.CorrectedModalData.ElectricEnergyConsumption == null || m.CorrectedModalData.ElectricEnergyConsumptionPerMeter == null ?
 					null : (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter / r.VehicleData.PassengerCount.Value).ConvertToKiloWattHourPerPassengerKiloMeter())},
 			//			{, SumFunc((r, m) =>)},
 

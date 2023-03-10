@@ -4,6 +4,8 @@ using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 {
@@ -15,6 +17,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		private IDeclarationReport _currentStageDeclarationReport;
 		private IVTPReport _currentStageVTPReport;
 		protected readonly IXMLDeclarationReportFactory _xmlDeclarationReportFactory;
+		private IVIFReportFactory _vifFactory;
+		private IManufacturerReportFactory _mrfFactory;
 
 		
 
@@ -33,7 +37,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			_simFactoryFactory = simulatorFactoryFactory;
 			_currentStageInputData = dataProvider;
 			_xmlDeclarationReportFactory = xmlDeclarationReportFactory;
-
 
 			_currentStageDeclarationReport = declarationReport ?? xmlDeclarationReportFactory.CreateReport(dataProvider, writer);
 			_currentStageVTPReport = vtpReport ?? xmlDeclarationReportFactory.CreateVTPReport(dataProvider, writer);

@@ -173,7 +173,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 							vehicleData.AxleConfiguration, vehicleData.GrossVehicleMassRating,
 							vehicleData.CurbMassChassis,
 							vehicleData.VocationalVehicle);
-						return Tuple.Create(truckSegment.VehicleClass, (bool?)false);
+						return Tuple.Create(truckSegment.VehicleClass, (bool?)vehicleData.VocationalVehicle);
 					} catch (VectoException) {
 						var truckSegment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory,
 							vehicleData.AxleConfiguration, vehicleData.GrossVehicleMassRating,
@@ -490,6 +490,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					case BusHVACSystemConfiguration.Unknown:
 					case BusHVACSystemConfiguration.Configuration0:
 						throw new VectoException($"Invalid HVAC Configuration {hvacConfigurationInput}");
+
 					case BusHVACSystemConfiguration.Configuration1 when !hasDriverHP && !hasPassengerHP:
 						return BusHVACSystemConfiguration.Configuration1;
 
@@ -1552,6 +1553,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static IWeightedResult CalculateWeightedSummary(IList<IResultEntry> entries)
 		{
 			if (entries == null || !entries.Any()) {
+				return null;
+			}
+
+			if (entries.Sum(x => x.WeightingFactor).IsEqual(0)) {
 				return null;
 			}
 

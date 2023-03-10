@@ -123,6 +123,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		[Category("LongRunning")]
 		[TestCase]
+        [Ignore("Engineering Jobs are not supported")]
 		public void TestWriteEngineeringMultipleFilesFull()
 		{
 			var outFile = "EngineeringJobMultipleFilesFull.xml";

@@ -1329,7 +1329,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var retVal = GetDefaultElectricalUserConfig();
 
 			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
-			retVal.AlternatorType = primaryBusAuxiliaries.ElectricSupply.AlternatorTechnology;
+			retVal.AlternatorType = primaryVehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle
+				? AlternatorType.None
+				: primaryBusAuxiliaries.ElectricSupply.AlternatorTechnology;
+			//primaryBusAuxiliaries.ElectricSupply.AlternatorTechnology;
 			retVal.ElectricalConsumers = (Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry>)currentDemand;
 			retVal.AlternatorMap = new SimpleAlternator(
 				_primaryBusDataAdapter.CalculateAlternatorEfficiency(

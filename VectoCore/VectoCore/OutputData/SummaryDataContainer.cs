@@ -1025,6 +1025,12 @@ namespace TUGraz.VectoCore.OutputData
 			foreach (var aux in modData.Auxiliaries) {
 				var colName = GetAuxColName(aux.Key);
 				row[colName] = SumDataFields.AuxDataValue(runData, modData, aux.Value);
+				var auxTechCol = string.Format(SumDataFields.AUX_TECH_FORMAT, aux.Key);
+				if (Table.Columns.Contains(auxTechCol)) {
+					row[auxTechCol] = runData.Aux
+						.First(x => x.ID.Equals(aux.Key, StringComparison.InvariantCultureIgnoreCase))
+						.Technology.Join("; ");
+				}
 			}
 
 			if ((runData.GearboxData?.Gears.Count ?? 0) > 0) {

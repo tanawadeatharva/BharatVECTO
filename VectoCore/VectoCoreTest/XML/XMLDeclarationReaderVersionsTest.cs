@@ -85,7 +85,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			ReadDeclarationJob(jobFile);
 		}
 
-		[TestCase(@"SchemaVersion2.1\vecto_vehicle-exempted-sample.xml")]
+		[TestCase(@"SchemaVersion2.1\vecto_vehicle-exempted-sample.xml"),
+		Ignore("ExemptedVehicles XML Version 1.0 no longer supported")]
 		public void TestReadingJobVersion_V21_Exempted(string jobFile)
 		{
 			ReadDeclarationJob(jobFile);

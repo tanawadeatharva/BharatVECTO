@@ -61,6 +61,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 						InternalResistance =
 							BatteryInternalResistanceReader.Create(b.InternalResistanceCurve, true),
 						SOCMap = BatterySOCReader.Create(b.VoltageCurve),
+						InputData = entry
 					};
 
 					retVal.Batteries.Add(Tuple.Create(entry.StringId, batteryData));

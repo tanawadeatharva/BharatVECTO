@@ -185,6 +185,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		// used to identify job and run in summary container
 		public int JobNumber { get; set; }
 		public int RunNumber { get; set; }
+		public int Iteration { get; set; }
 
 
 		public OvcHevMode OVCMode { get; internal set; }

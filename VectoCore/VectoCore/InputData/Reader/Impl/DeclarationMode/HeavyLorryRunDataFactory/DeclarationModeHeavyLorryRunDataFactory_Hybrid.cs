@@ -268,7 +268,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					runData.BatteryData.CalculateAverageVoltage(), runData.GearboxData.GearList);
 
 				runData.HybridStrategyParameters =
-					DataAdapter.CreateHybridStrategy(runData.BatteryData, runData.SuperCapData, runData.VehicleData.TotalVehicleMass, ovcMode, loading.Key, runData.VehicleData.VehicleClass, mission.MissionType);
+					DataAdapter.CreateHybridStrategy(runData.BatteryData,
+						runData.SuperCapData,
+						runData.VehicleData.TotalVehicleMass,
+						ovcMode, loading.Key,
+						runData.VehicleData.VehicleClass,
+						mission.MissionType, vehicle.BoostingLimitations, runData.GearboxData, runData.EngineData, vehicle.ArchitectureID);
 
 				if (ovcMode != VectoRunData.OvcHevMode.NotApplicable)
 				{

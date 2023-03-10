@@ -349,7 +349,7 @@ namespace TUGraz.VectoCore.OutputData
 		}
 		public abstract WattSecond ElectricEnergyConsumption { get; set; }
 
-		public WattSecondPerMeter ElectricEnergyConsumptionPerMeter => ElectricEnergyConsumption == null
+		public WattSecondPerMeter ElectricEnergyConsumptionPerMeter => ElectricEnergyConsumption == null || _modData.Distance.IsEqual(0)
 			? null
 			: ElectricEnergyConsumption / _modData.Distance;
 	}

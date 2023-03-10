@@ -198,7 +198,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			Bind<IXMLMultistepIntermediateReport>().To<IEPC_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.BatteryElectricVehicle,
-					ArchitectureID.UNKNOWN,
+					ArchitectureID.E_IEPC,
 					false,
 					true,
 					false)));

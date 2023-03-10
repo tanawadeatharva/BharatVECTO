@@ -59,7 +59,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			if (modelData.VehicleData.VehicleClass.IsBus())
 			{
-				Input = modelData.InputData.PrimaryVehicleData.Vehicle;
+				switch (modelData.InputData) {
+					case ISingleBusInputDataProvider single:
+						Input = single.PrimaryVehicle;
+						break;
+					case IMultistepBusInputDataProvider multistep:
+						Input = multistep.JobInputData.PrimaryVehicle.Vehicle;
+						break;
+					case IDeclarationInputDataProvider declaration:
+						Input = declaration.JobInputData.Vehicle;
+						break;
+				}
 			}
 			else
 			{
@@ -106,10 +116,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			
 			Vehicle.XPathSelectElement($"//*[local-name()='{XMLNames.VehicleGroupCO2}']").Value = DeclarationData
 				.GetVehicleGroupCO2StandardsGroup(Input).ToXMLFormat();
-			
-
-
-
 
 			var stream = new MemoryStream();
 			var writer = new StreamWriter(stream);

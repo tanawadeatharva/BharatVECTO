@@ -667,8 +667,8 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		private void TestBoostingLimitationsEntry(string rotationalSpeed, string boostingTorque, DataRow row)
 		{
-			Assert.AreEqual(rotationalSpeed, row[XMLNames.BoostingLimitation_RotationalSpeed]);
-			Assert.AreEqual(boostingTorque, row[XMLNames.BoostingLimitation_BoostingTorque]);
+			Assert.AreEqual(rotationalSpeed, row[MaxBoostingTorqueReader.Fields.MotorSpeed]);
+			Assert.AreEqual(boostingTorque, row[MaxBoostingTorqueReader.Fields.DrivingTorque]);
 		}
 
 		#endregion

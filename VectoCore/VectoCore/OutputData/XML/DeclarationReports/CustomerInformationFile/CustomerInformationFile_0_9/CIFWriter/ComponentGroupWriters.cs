@@ -11,6 +11,9 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
 using TUGraz.VectoCore.Utils;
 
@@ -150,11 +153,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			return new List<XElement>() {
-				new XElement(_cif + "SteeringPumpTechnology",
-					inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries
-						.Single(aux => aux.Type == AuxiliaryType.SteeringPump).Technology.Join())
-			};
+			return inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries
+				.Single(aux => aux.Type == AuxiliaryType.SteeringPump).Technology.Select(x =>
+					new XElement(_cif + "SteeringPumpTechnology", x)).ToList();
+			//return new List<XElement>() {
+			//	new XElement(_cif + "SteeringPumpTechnology",
+			//		inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries
+			//			.Single(aux => aux.Type == AuxiliaryType.SteeringPump).Technology.Join())
+			//};
 		}
 
 		#endregion
@@ -222,18 +228,32 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 			var vehicle = GetVehicle(inputData);
 			var reess = vehicle.Components.ElectricStorage;
-			var batteries = reess.ElectricStorageElements
-				.Where(es => es.REESSPack.StorageType == REESSType.Battery)
-				.Select(es => es.REESSPack as IBatteryPackDeclarationInputData).ToArray();
+			//var batteries = reess.ElectricStorageElements
+			//	.Where(es => es.REESSPack.StorageType == REESSType.Battery)
+			//	.Select(es => es.REESSPack as IBatteryPackDeclarationInputData).ToArray();
+
+			var batTotalCap = 0.SI<WattSecond>();
+			var batUsableCap = 0.SI<WattSecond>();
+			if (reess.ElectricStorageElements.Any(x => x.REESSPack.StorageType == REESSType.Battery)) {
+				var eletricStorageAdapter = new ElectricStorageAdapter();
+				var batData = eletricStorageAdapter.CreateBatteryData(reess, vehicle.VehicleType, vehicle.OvcHev);
+				batUsableCap = GetEnergyStoredInBatterySystem(batData);
+
+				foreach (var entry in batData.Batteries) {
+					entry.Item2.MinSOC = 0;
+					entry.Item2.MaxSOC = 1;
+				}
+
+				batTotalCap = GetEnergyStoredInBatterySystem(batData);
+			}
+
 			var capacitors = reess.ElectricStorageElements.Where(es => es.REESSPack.StorageType == REESSType.SuperCap)
 				.Select(es => es.REESSPack as ISuperCapDeclarationInputData).ToArray();
 
 			var totalStorageCapacity =
-				(batteries.Length > 0 ? batteries.Sum(bp => bp.TotalStorageCapacity()) : 0.SI<WattSecond>()) +
+				batTotalCap +
 				(capacitors.Length > 0 ? capacitors.Sum(cap => GetStorageCapacity(cap)) : 0.SI<WattSecond>());
-			var totalUsableCapacity = (batteries.Length > 0
-										? batteries.Sum(bp => bp.TotalUsableCapacityInSimulation())
-										: 0.SI<WattSecond>()) +
+			var totalUsableCapacity = batUsableCap +
 									(capacitors.Length > 0
 										? capacitors.Sum(cap => GetTotalUsableCapacityInSimulation(cap))
 										: 0.SI<WattSecond>());
@@ -242,6 +262,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + "TotalStorageCapacity", totalUsableCapacity.ValueAsUnit("kWh", 0)),
 				new XElement(_cif + "UsableStorageCapacity", totalStorageCapacity.ValueAsUnit("kWh", 0))
 			};
+		}
+
+		private static WattSecond GetEnergyStoredInBatterySystem(BatterySystemData batData)
+		{
+			var tmpBat = new BatterySystem(null, batData);
+			// set every single battery to its max SoC - initializing the battery system does
+			// not work as individual batteries may have different SoC limits
+			foreach (var battery in tmpBat.Batteries.SelectMany(batteryString => batteryString.Value.Batteries)) {
+				battery.Initialize(battery.MaxSoC);
+			}
+			var energyFull = tmpBat.StoredEnergy;
+			// set every single battery to its min SoC - initializing the battery system does
+			// not work as individual batteries may have different SoC limits
+			foreach (var battery in tmpBat.Batteries.SelectMany(batteryString => batteryString.Value.Batteries)) {
+				battery.Initialize(battery.MinSoC);
+			}
+			var energyEmpty = tmpBat.StoredEnergy;
+			return energyFull - energyEmpty;
 		}
 
 		private WattSecond GetTotalUsableCapacityInSimulation(ISuperCapDeclarationInputData cap)
