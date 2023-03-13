@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -44,12 +45,44 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					data.Columns.Cast<DataColumn>().Select(x => x.ColumnName).Join());
 			}
 
+			var heatpumps = new List<Tuple<string, HeatPumpType>>();
+			var heater = new List<Tuple<string, HeaterType>>();
+			foreach (DataColumn column in data.Columns) {
+				var heatPump = HeatPumpTypeHelper.TryParse(column.ColumnName);
+				if (heatPump != null) {
+					heatpumps.Add(Tuple.Create(column.ColumnName, heatPump.Value));
+				}
+
+				var heaterCol = HeaterTypeHelper.TryParse(column.ColumnName);
+				if (heaterCol != null) {
+					heater.Add(Tuple.Create(column.ColumnName, heaterCol.Value));
+				}
+			}
+
 			foreach (DataRow row in data.Rows) {
+				var cooling = row.Field<string>(Fields.HeatingCooling)
+					.Equals("c", StringComparison.InvariantCultureIgnoreCase);
+				var heatPumpCoP = new Dictionary<HeatPumpType, double>();
+				foreach (var entry in heatpumps) {
+					var val = row.ParseDoubleOrGetDefault(entry.Item1, double.NaN);
+					if (double.IsNaN(val)) { continue; }
+					heatPumpCoP.Add(entry.Item2, val);
+				}
+
+				var heaterEfficiency = new Dictionary<HeaterType, double>();
+				foreach (var entry in heater) {
+					var val = row.ParseDoubleOrGetDefault(entry.Item1, double.NaN);
+					if (double.IsNaN(val)) { continue; }
+					heaterEfficiency.Add(entry.Item2, val);
+				}
 				entries.Add(
 					new EnvironmentalConditionMapEntry(
+						row.Field<string>(Fields.ID).ToInt(),
 						row.ParseDouble(Fields.EnvTemp).DegCelsiusToKelvin(),
 						row.ParseDouble(Fields.Solar).SI<WattPerSquareMeter>(),
-						row.ParseDouble(Fields.WeightingFactor)));
+						row.ParseDouble(Fields.WeightingFactor),
+						heatPumpCoP,
+						heaterEfficiency));
 			}
 
 			var sum = entries.Sum(e => e.Weighting);
@@ -72,6 +105,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			public const string EnvTemp = "EnvTemp";
 			public const string Solar = "Solar";
 			public const string WeightingFactor = "WeightingFactor";
+
+			public const string HeatingCooling = "heating/cooling";
 		}
 	}
 }

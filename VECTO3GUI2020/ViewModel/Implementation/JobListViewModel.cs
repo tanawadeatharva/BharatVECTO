@@ -12,7 +12,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Xml;
 using System.Xml.Linq;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using NLog;
 using NLog.Targets;
@@ -284,7 +284,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			var documentType = XMLHelper.GetDocumentType(xElement?.DocumentElement?.LocalName);
 			if (documentType == XmlDocumentType.MultistepOutputData)
 			{
-				var inputDataProvider = _inputDataReader.Create(fileName) as IMultistageBusInputDataProvider;
+				var inputDataProvider = _inputDataReader.Create(fileName) as IMultistepBusInputDataProvider;
 				return Task.FromResult(_multiStageViewModelFactory.GetMultiStageJobViewModel(inputDataProvider) as IDocumentViewModel);
 			}
 			else if (documentType == XmlDocumentType.DeclarationJobData)
@@ -472,6 +472,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 								case IMultistagePrimaryAndStageInputDataProvider primaryAndStage:
 									mode = ExecutionMode.Declaration;
 									break;
+								case IMultistageVIFInputData vifInputData:
+									mode = ExecutionMode.Declaration;
+									break;
 								default:
 									input = null;
 
@@ -495,7 +498,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 							} else if (XMLNames.VectoOutputMultistep.Equals(rootNode,
 								StringComparison.InvariantCultureIgnoreCase)) {
 								using (var reader = XmlReader.Create(fullFileName)) {
-									input = new XMLDeclarationVIFInputData(xmlReader.Create(fullFileName) as IMultistageBusInputDataProvider, null);
+									input = new XMLDeclarationVIFInputData(xmlReader.Create(fullFileName) as IMultistepBusInputDataProvider, null);
 									FileWriter = new FileOutputVIFWriter(fullFileName,
 										(jobEntry as MultiStageJobViewModel_v0_1).ManufacturingStages?.Count ?? 0);
 								}
@@ -518,7 +521,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					}
 
 					var fileWriter = new FileOutputWriter(GetOutputDirectory(fullFileName));
-					var runsFactory = _simFactoryFactory.Factory(mode, input, fileWriter);
+					var runsFactory = _simFactoryFactory.Factory(mode, input, fileWriter, null, null);
 					//var runsFactory = SimulatorFactory.CreateSimulatorFactory(mode, input, fileWriter);
 					runsFactory.WriteModalResults = Settings.Default.WriteModalResults;
 					runsFactory.ModalResults1Hz = Settings.Default.ModalResults1Hz;
@@ -593,7 +596,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			});
 
 			var start = Stopwatch.StartNew();
-			jobContainer.Execute(true);
+			jobContainer.Execute(true); //TODO HM set back to true
 			
 			while (!jobContainer.AllCompleted)
 			{
@@ -883,7 +886,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		{
 			get
 			{
-				return _newVifCommand ?? (_newVifCommand = new Microsoft.Toolkit.Mvvm.Input.RelayCommand<bool>((b) => {
+				return _newVifCommand ?? (_newVifCommand = new RelayCommand<bool>((b) => {
 					var newVifViewModel = _multiStageViewModelFactory.GetCreateNewVifViewModel(b);
 					lock (_jobsLock) {
 						_jobs.Add(newVifViewModel);

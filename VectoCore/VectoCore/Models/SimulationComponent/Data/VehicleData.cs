@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Xml;
 using System.Xml.Linq;
 using Newtonsoft.Json;
@@ -45,8 +46,11 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
+
+
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
+   
 	[CustomValidation(typeof(AirdragData), "ValidateAirDragData")]
 	public class AirdragData : SimulationComponentData
 	{
@@ -229,10 +233,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public bool HybridElectricHDV { get; internal set; }
 		public bool DualFuelVehicle { get; internal set; }
 		public Watt MaxNetPower1 { get; internal set; }
-		public Watt MaxNetPower2 { get; internal set; }
 		public bool? SleeperCab { get; internal set; }
 		public ADASData ADAS { get; internal set; }
 		public bool VocationalVehicle { get; internal set; }
+
+		public bool OffVehicleCharging { get; internal set; }
 
 		public class ADASData
 		{

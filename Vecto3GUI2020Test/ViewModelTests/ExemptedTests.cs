@@ -146,7 +146,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.AreEqual(2, jobListVm.Jobs.Count);
 			Assert.AreEqual(result, jobListVm.Jobs[1].DataSource.SourceFile);
 
-			var inputDataProvider = _testHelper.GetInputDataProvider(result) as IMultistageBusInputDataProvider;
+			var inputDataProvider = _testHelper.GetInputDataProvider(result) as IMultistepBusInputDataProvider;
 			Assert.NotNull(inputDataProvider);
 
 			//Check added Manufacturing Stage

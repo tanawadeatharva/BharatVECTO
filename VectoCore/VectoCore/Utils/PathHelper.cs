@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -32,6 +33,20 @@ namespace TUGraz.VectoCore.Utils
 
 
 			return Path.Combine(result, pathFileName);
+		}
+
+		public static string GetLongestCommonPrefix(params string[] s)
+		{
+			if (s.Length == 0)
+				return "";
+			var prefix = s[0];
+			for (var i = 1; i < s.Length; i++)
+				while (s[i].IndexOf(prefix) != 0) {
+					prefix = prefix.Substring(0, prefix.Length - 1);
+					if (prefix.IsNullOrEmpty())
+						return "";
+				}
+			return prefix;
 		}
 
 		public static string GetAbsolutePath(string relativeTo, string relativePath)

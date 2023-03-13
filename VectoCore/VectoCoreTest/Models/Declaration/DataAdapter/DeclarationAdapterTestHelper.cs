@@ -30,9 +30,11 @@
 */
 
 using System.Linq;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
@@ -46,7 +48,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 		public static VectoRunData[] CreateVectoRunData(string file)
 		{
 			var inputData = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(file);
-			var dataReader = new DeclarationModeTruckVectoRunDataFactory(inputData, null);
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			//var dataReader = new DeclarationModeTruckVectoRunDataFactory(inputData, null);
+			var dataReader = kernel.Get<IVectoRunDataFactoryFactory>()
+				.CreateDeclarationRunDataFactory(inputData, null, null);
 			var runData = dataReader.NextRun().ToArray();
 			return runData;
 		}

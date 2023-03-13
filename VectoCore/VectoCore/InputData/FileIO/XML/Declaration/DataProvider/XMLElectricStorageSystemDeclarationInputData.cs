@@ -2,16 +2,18 @@
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 {
-	public class XMLElectricStorageSystemDeclarationInputData : AbstractCommonComponentType,
+	public class XMLElectricStorageSystemDeclarationInputDataV24 : AbstractCommonComponentType,
 		IXMLElectricStorageSystemDeclarationInputData
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
@@ -21,7 +23,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		private IList<IElectricStorageDeclarationInputData> _electricStorageElements;
 		private IXMLDeclarationVehicleData _vehicle;
 		
-		public XMLElectricStorageSystemDeclarationInputData(
+		public XMLElectricStorageSystemDeclarationInputDataV24(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
 			: base(componentNode, sourceFile)
 		{
@@ -42,7 +44,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			if (ElementExists(XMLNames.ElectricEnergyStorage_Capacitor)) {
 				var capacitor = GetNode(XMLNames.ElectricEnergyStorage_Capacitor);
 				electricStorages.Add(new XMLElectricStorageDeclaration {
-							REESSPack = StorageTypeReader.CreateREESSInputData(capacitor, REESSType.SuperCap)
+							REESSPack = StorageTypeReader.CreateREESSInputData(capacitor, REESSType.SuperCap),
+							Count = 1,
+							StringId = 1,
 				});
 			}else if (ElementExists(XMLNames.ElectricEnergyStorage_Battery)) {
 				var batteries = GetNodes(XMLNames.ElectricEnergyStorage_Battery);
@@ -84,14 +88,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLBatteryPackDeclarationDeclarationInputData : AbstractCommonComponentType,
+	public class XMLBatteryPackDeclarationDeclarationInputDataV24 : AbstractCommonComponentType,
 		IXMLBatteryPackDeclarationInputData
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public const string XSD_TYPE = "REESSBatteryType";
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLBatteryPackDeclarationDeclarationInputData(XmlNode componentNode, string sourceFile) 
+		public XMLBatteryPackDeclarationDeclarationInputDataV24(XmlNode componentNode, string sourceFile) 
 			: base(componentNode, sourceFile)
 		{
 			SourceType = DataSourceType.XMLEmbedded;
@@ -106,10 +110,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Implementation of IBatteryPackDeclarationInputData
 
 		public virtual double? MinSOC  => 
-			ElementExists(XMLNames.Battery_SOCmin) ? GetDouble(XMLNames.Battery_SOCmin) : (double?)null;
+			ElementExists(XMLNames.Battery_SOCmin) ? GetDouble(XMLNames.Battery_SOCmin) / 100 : (double?)null;
 
 		public virtual double? MaxSOC => 
-			ElementExists(XMLNames.Battery_SOCmax) ? GetDouble(XMLNames.Battery_SOCmax) : (double?)null;
+			ElementExists(XMLNames.Battery_SOCmax) ? GetDouble(XMLNames.Battery_SOCmax) / 100 : (double?)null;
 
 		public virtual BatteryType BatteryType => GetString(XMLNames.REESS_BatteryType).ParseEnum<BatteryType>();
 		public virtual AmpereSecond Capacity => GetDouble(XMLNames.REESS_RatedCapacity).SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>();
@@ -121,26 +125,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					? GetDouble(XMLNames.REESS_TestingTemperature).DegCelsiusToKelvin() : null;
 
 		public virtual TableData InternalResistanceCurve => ReadTableData(XMLNames.REESS_InternalResistanceCurve, XMLNames.REESS_MapEntry,
-			new Dictionary<string, string> {
-				{XMLNames.REESS_InternalResistanceCurve_SoC, XMLNames.REESS_InternalResistanceCurve_SoC},
-				{XMLNames.REESS_InternalResistanceCurve_R2, XMLNames.REESS_InternalResistanceCurve_R2},
-				{XMLNames.REESS_InternalResistanceCurve_R10, XMLNames.REESS_InternalResistanceCurve_R10},
-				{XMLNames.REESS_InternalResistanceCurve_R20, XMLNames.REESS_InternalResistanceCurve_R20},
-				{XMLNames.REESS_InternalResistanceCurve_R120, XMLNames.REESS_InternalResistanceCurve_R120}
-			});
+			AttributeMappings.InternalResistanceMap);
 		
 		public virtual TableData VoltageCurve => ReadTableData(XMLNames.REESS_OCV, XMLNames.REESS_MapEntry, 
-			new Dictionary<string, string> {
-				{XMLNames.REESS_OCV_SoC, XMLNames.REESS_OCV_SoC},
-				{XMLNames.REESS_OCV_OCV, XMLNames.REESS_OCV_OCV}
-		});
+			AttributeMappings.VoltageMap);
 		
 		public virtual TableData MaxCurrentMap => ReadTableData(XMLNames.REESS_CurrentLimits, XMLNames.REESS_MapEntry, 
-			new Dictionary<string, string> {
-				{XMLNames.REESS_CurrentLimits_SoC, XMLNames.REESS_CurrentLimits_SoC},
-				{XMLNames.REESS_CurrentLimits_MaxChargingCurrent, XMLNames.REESS_CurrentLimits_MaxChargingCurrent},
-				{XMLNames.REESS_CurrentLimits_MaxDischargingCurrent, XMLNames.REESS_CurrentLimits_MaxDischargingCurrent}
-		});
+			AttributeMappings.MaxCurrentMap);
 
 		#endregion
 
@@ -151,16 +142,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 	}
-	
+
 	// ---------------------------------------------------------------------------------------
-	
-	public class XMLSuperCapDeclarationInputData : AbstractCommonComponentType, IXMLSuperCapDeclarationInputData
+
+	public class XMLBatteryPackDeclarationDeclarationInputDataV01 : XMLBatteryPackDeclarationDeclarationInputDataV24
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public const string XSD_TYPE = "REESSBatteryType";
+
+		public static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLBatteryPackDeclarationDeclarationInputDataV01(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) { }
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLSuperCapDeclarationInputDataV24 : AbstractCommonComponentType, IXMLSuperCapDeclarationInputData
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public const string XSD_TYPE = "REESSCapacitorType";
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		
-		public XMLSuperCapDeclarationInputData(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile)
+		public XMLSuperCapDeclarationInputDataV24(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile)
 		{
 			SourceType = DataSourceType.XMLEmbedded;
 		}
@@ -174,7 +178,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Implementation of ISuperCapDeclarationInputData
 
 		public Farad Capacity => GetDouble(XMLNames.Capacitor_Capacitance).SI<Farad>();
-		public Ohm InternalResistance => GetDouble(XMLNames.Capacitor_InternalResistance).SI<Ohm>() / 1000;
+		public Ohm InternalResistance => GetDouble(XMLNames.Capacitor_InternalResistance).SI(Unit.SI.Milli.Ohm).Cast<Ohm>();
 		public Volt MinVoltage => GetDouble(XMLNames.Capacitor_MinVoltage).SI<Volt>();
 		public Volt MaxVoltage => GetDouble(XMLNames.Capacitor_MaxVoltage).SI<Volt>();
 		public Ampere MaxCurrentCharge => GetDouble(XMLNames.Capacitor_MaxChargingCurrent).SI<Ampere>();
@@ -192,5 +196,31 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
+	}
+
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLSuperCapDeclarationInputDataV01 : XMLSuperCapDeclarationInputDataV24
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public const string XSD_TYPE = "REESSCapacitorType";
+
+		public static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLSuperCapDeclarationInputDataV01(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) { }
+	}
+
+	//===================
+
+		public class XMLElectricStorageSystemDeclarationInputDataV01 : XMLElectricStorageSystemDeclarationInputDataV24
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public const string XSD_TYPE = "ElectricEnergyStorageType";
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+
+		public XMLElectricStorageSystemDeclarationInputDataV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 	}
 }

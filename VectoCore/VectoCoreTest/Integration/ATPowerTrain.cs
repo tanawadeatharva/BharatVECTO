@@ -44,6 +44,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
@@ -65,15 +66,17 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public const string TorqueConverterPowerSplitFile = @"TestData\Components\AT_GBX\TorqueConverterPowerSplit.vtcc";
 		public const string GearboxShiftPolygonFile = @"TestData\Components\AT_GBX\AT-Shift.vgbs";
 
-		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, GearboxType gbxType, string modFileName,
+		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, GearboxType gbxType,
+			SummaryDataContainer summaryDataContainer, string modFileName,
 			bool overspeed = false, KilogramSquareMeter gearBoxInertia = null)
 		{
-			var container = CreatePowerTrain(cycleData, gbxType, Path.GetFileNameWithoutExtension(modFileName), overspeed,
+			var container = CreatePowerTrain(cycleData, gbxType, summaryDataContainer, Path.GetFileNameWithoutExtension(modFileName), overspeed,
 				gearBoxInertia);
 			return new DistanceRun(container);
 		}
 
-		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, GearboxType gbxType, string modFileName,
+		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, GearboxType gbxType,
+			SummaryDataContainer summaryDataContainer, string modFileName,
 			bool overspeed = false, KilogramSquareMeter gearBoxInertia = null)
 		{
 			var gearboxData = CreateGearboxData(gbxType);
@@ -109,7 +112,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			{
 				WriteModalResults = true,
 			};
-            var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
+            var container = new VehicleContainer(ExecutionMode.Engineering, modData, summaryDataContainer) {
 				RunData = runData,
 			};
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
@@ -125,7 +128,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			var aux = new EngineAuxiliary(container);
 			aux.AddConstant("ZERO", 0.SI<Watt>());
-			container.ModalData.AddAuxiliary("ZERO");
+			container.AddAuxiliary("ZERO");
 
 			engine.Connect(aux.Port());
 

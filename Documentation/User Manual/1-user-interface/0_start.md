@@ -46,6 +46,6 @@ This User Manual consists of 4 Parts:
 - [Input and Output](#input-and-output):
     : Describes the input and output file formats.
 
-This user manual describes verson 3.3.x of Vecto. 
+This user manual describes verson 3.3.x of VECTO. 
 
 

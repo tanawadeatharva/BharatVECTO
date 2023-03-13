@@ -51,5 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		void CommitSimulationStep();
 
 		DrivingBehaviorEntry BrakeTrigger { get; }
+
+		MeterPerSecond ApplyOverspeed(MeterPerSecond targetSpeed);
 	}
 }

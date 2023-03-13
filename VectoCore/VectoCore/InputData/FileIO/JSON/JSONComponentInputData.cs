@@ -261,7 +261,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public VehicleDeclarationType VehicleDeclarationType { get; }
 
-		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => Vehicle.ElectricMotorTorqueLimits;
+		public IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => Vehicle.ElectricMotorTorqueLimits;
 		public TableData BoostingLimitations => Vehicle.BoostingLimitations;
 		
 
@@ -339,8 +339,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public bool DualFuelVehicle => DeclarationData.Vehicle.DualFuelVehicleDefault;
 
 		public Watt MaxNetPower1 => null;
-
-		public Watt MaxNetPower2 => null;
 
 		public string ExemptedTechnology => null;
 

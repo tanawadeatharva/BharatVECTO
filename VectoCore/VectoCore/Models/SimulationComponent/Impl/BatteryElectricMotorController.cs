@@ -9,7 +9,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 	public class BatteryElectricMotorController : IElectricMotorControl
 	{
-		private VehicleContainer DataBus;
+		protected VehicleContainer DataBus;
 		private ElectricSystem ElectricSystem;
 		protected ElectricMotorData ElectricMotorData;
 
@@ -36,15 +36,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 					: Formulas.InertiaPower(currOutAngularVelocity, prevOutAngularVelocity, 
 						ElectricMotorData.Inertia, dt) / avgSpeed;
 				//var dragTorque = ElectricMotorData.DragCurve.Lookup()
-				return (-inertiaTorqueLoss); //.LimitTo(maxDriveTorque, maxRecuperationTorque);
+				//return ((-1)*(inertiaTorqueLoss + outTorque)).LimitTo(maxDriveTorque, maxRecuperationTorque ?? VectoMath.Max(maxDriveTorque, 0.SI<NewtonMeter>())); //.LimitTo(maxDriveTorque, maxRecuperationTorque);
+				return -inertiaTorqueLoss;
 			}
             if (DataBus.DriverInfo.DrivingAction == DrivingAction.Coast ||
                 DataBus.DriverInfo.DrivingAction == DrivingAction.Roll) {
                 return null;
             }
 			
-            if (DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(GearboxModelData?.DisengageWhenHaltingSpeed ?? Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed) 
-				&& outTorque.IsSmaller(0)) {
+            if (CannotProvideRecuperationAtLowSpeed(outTorque)) {
                 return null;
             }
 
@@ -53,8 +53,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			}
 
 			return (-outTorque).LimitTo(maxDriveTorque, maxRecuperationTorque ?? VectoMath.Max(maxDriveTorque, 0.SI<NewtonMeter>()));
+        }
+
+        #endregion
+
+        protected virtual bool CannotProvideRecuperationAtLowSpeed(NewtonMeter outTorque)
+        { 
+			return (DataBus.VehicleInfo.VehicleSpeed ?? 0.SI<MeterPerSecond>()).IsSmallerOrEqual(
+				GearboxModelData?.DisengageWhenHaltingSpeed ?? Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed)
+					&& outTorque.IsSmaller(0);
 		}
 
-		#endregion
-	}
+    }
 }

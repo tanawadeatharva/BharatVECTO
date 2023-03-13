@@ -31,6 +31,7 @@
 
 using System;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
@@ -60,7 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public BusAuxiliariesAdapter(
 			IVehicleContainer container, IAuxiliaryConfig auxiliaryConfig, IAuxPort additionalAux = null) : base(container)
 		{
-			container.AddComponent(this);
+			//container.AddComponent(this);
 
 			CurrentState = new BusAuxState();
 			PreviousState = new BusAuxState { AngularSpeed = container.EngineInfo.EngineIdleSpeed };
@@ -100,9 +101,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public ISimpleBattery ElectricStorage { get; set; }
 
-		public virtual Joule AuxHeaterDemandCalculation(Second cycleTime, Joule engineWasteHeatTotal)
+		public virtual HeaterDemandResult AuxHeaterDemandCalculation(Second cycleTime, Joule engineWasteHeatTotal, Joule electricMotorWasteHeatTotal)
 		{
-			return Auxiliaries.AuxHeaterDemandCalculation(cycleTime, engineWasteHeatTotal);}
+			return Auxiliaries.AuxHeaterDemandCalculation(cycleTime, engineWasteHeatTotal, electricMotorWasteHeatTotal);
+		}
 
 		public IAuxPort Port()
 		{
@@ -253,7 +255,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//var newSOC = Auxiliaries.BatterySOC;
 
 			//CurrentState.TotalFuelConsumption = Auxiliaries.TotalFuel;
-			container[ModalResultField.P_aux_mech] = CurrentState.PowerDemand;
+			if (container.HasCombustionEngine) {
+				container[ModalResultField.P_aux_mech] = CurrentState.PowerDemand;
+			}
 
 			container[ModalResultField.P_busAux_ES_HVAC] = /*essUtilityFactor **/ Auxiliaries.HVACElectricalPowerConsumer;
 			container[ModalResultField.P_busAux_ES_other] = /*essUtilityFactor **/ Auxiliaries.ElectricPowerConsumer;
@@ -378,6 +382,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var missingEnergy = energyDemand - batEnergy;
 
 			if (AuxCfg.ElectricalUserInputsConfig.ConnectESToREESS) {
+				if (DCDCConverter is null) {
+					throw new VectoException("DCDCConverter is missing: The current configuration for the bus auxiliaries " +
+										     "requires a DCDCConverter (ES supply from HEV REESS is activated).");
+				}
 				DCDCConverter.ConsumerEnergy(-missingEnergy, dryRun);
 			} else {
 				if (!dryRun) {
@@ -396,6 +404,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public WattSecond MissingElectricEnergy { get; set; }
 
 			public Watt ExcessiveDragPower = 0.SI<Watt>();
+
+			public BusAuxState Clone() => (BusAuxState)MemberwiseClone();
 		}
 
 		public class ElectricStorageWrapper : ISimpleBatteryInfo
@@ -433,5 +443,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			#endregion
 		}
+
+		#region Implementation of IUpdateable
+
+		protected override bool DoUpdateFrom(object other) {
+			if (other is BusAuxiliariesAdapter b) {
+				PreviousState = b.PreviousState.Clone();
+				return ElectricStorage.UpdateFrom(b.ElectricStorage);
+			}
+
+			return false;
+		}
+
+		#endregion
 	}
 }

@@ -29,8 +29,10 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using TUGraz.VectoCore.InputData;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Simulation
@@ -44,12 +46,18 @@ namespace TUGraz.VectoCore.Models.Simulation
 		bool Validate { get; set; }
 		SummaryDataContainer SumData { get; set; }
 		int JobNumber { get; set; }
-		IVectoRunDataFactory DataReader { get; }
+		IVectoRunDataFactory RunDataFactory { get; }
 		ISimulatorFactory FollowUpSimulatorFactory { get; }
 		IOutputDataWriter ReportWriter { get; }
 		bool SerializeVectoRunData { get; set; }
 
 		bool CreateFollowUpSimulatorFactory { get; set; }
+
+		/// <summary>
+		/// Only for testing purposes
+		/// </summary>
+		Action<VectoRunData> ModifyRunData { get; set; }
+
 
 		/// <summary>
 		/// Creates powertrain and initializes it with the component's data.

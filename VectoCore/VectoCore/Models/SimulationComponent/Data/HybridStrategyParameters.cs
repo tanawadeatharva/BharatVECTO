@@ -6,6 +6,8 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 	public class HybridStrategyParameters 
 	{
+		public double EquivalenceFactor { get; set; }
+
 		public double EquivalenceFactorDischarge { get; set; }
 
 		public double EquivalenceFactorCharge { get; set; }
@@ -32,5 +34,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 		
 		// serial hybrid only: factor applied to the max propulsion power which the genset needs to provide in the optimal operating point
 		public double GensetMinOptPowerFactor { get; set; }
+
+
+		public double InitialSoc { get; set; }
 	}
 }

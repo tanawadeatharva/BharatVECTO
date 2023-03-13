@@ -75,7 +75,7 @@
 							<Cooling>non R-744 3-stage</Cooling>
 							<Heating>none</Heating>
 						</HeatPumpTypePassengerCompartment>
-						<AuxiliaryHeaterPower>50</AuxiliaryHeaterPower>
+						<AuxiliaryHeaterPower>50000</AuxiliaryHeaterPower>
 						<DoubleGlazing>false</DoubleGlazing>
 						<AdjustableAuxiliaryHeater>true</AdjustableAuxiliaryHeater>
 						<SeparateAirDistributionDucts>false</SeparateAirDistributionDucts>

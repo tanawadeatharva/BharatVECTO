@@ -6,7 +6,7 @@ The following picture illustrates the basic idea. If the SoC is above the target
 
 ![](pics/SerialHybrid_SoCBoundaries.png)
 
-The statemachine for the serial hybrid control strategy is depicted here:
+The state machine for the serial hybrid control strategy is depicted here:
 
 ![](pics/SerialHybrid_Statemachine.png)
 
@@ -14,4 +14,4 @@ The statemachine for the serial hybrid control strategy is depicted here:
 
 ### GenSet Pre-Processing
 
-The optimal and maximal GenSet operating points are calculated in a pre-processing step. The fuel consumption and generated electric power is calculated for 400 different operating points: from ICE idle speed up to the maximum speed (minimum of ICE and electric motor), and from 0 mechanical power up to the maximum mechanical power of the ICE. Out of this set of operating points the one with the highest electrical power and the operating point with the best fuel efficiency is selected. This is done for the GenSet operating in de-rating or not. 
+The optimal and maximal GenSet operating points are calculated in a preprocessing step. The fuel consumption and generated electric power is calculated for 400 different operating points: from ICE idle speed up to the maximum speed (minimum of ICE and electric motor), and from 0 mechanical power up to the maximum mechanical power of the ICE. Out of this set of operating points the one with the highest electrical power and the operating point with the best fuel efficiency is selected. This is done for the GenSet operating in de-rating or not. 

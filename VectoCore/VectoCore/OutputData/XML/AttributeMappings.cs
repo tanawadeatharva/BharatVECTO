@@ -30,6 +30,7 @@
 */
 
 using System.Collections.Generic;
+using System.Security;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
@@ -129,5 +130,44 @@ namespace TUGraz.IVT.VectoXML
 			{ DrivingCycleDataReader.Fields.EngineSpeed, XMLNames.Vehicle_PTOCycle_EngineSpeed_Attr },
 			{ DrivingCycleDataReader.Fields.PTOTorque, XMLNames.Vehicle_PTOCycle_Torque_Attr },
 		};
+
+		#region Battery
+
+		public static readonly Dictionary<string, string> InternalResistanceMap = new Dictionary<string, string> {
+			{ BatteryInternalResistanceReader.Fields.StateOfCharge, XMLNames.REESS_InternalResistanceCurve_SoC },
+			{ BatteryInternalResistanceReader.Fields.InternalResistance_2, XMLNames.REESS_InternalResistanceCurve_R2 }, {
+				BatteryInternalResistanceReader.Fields.InternalResistance_10, XMLNames.REESS_InternalResistanceCurve_R10
+			}, {
+				BatteryInternalResistanceReader.Fields.InternalResistance_20, XMLNames.REESS_InternalResistanceCurve_R20
+			}, {
+				BatteryInternalResistanceReader.Fields.InternalResistance_120,
+				XMLNames.REESS_InternalResistanceCurve_R120
+			}
+		};
+
+		public static readonly Dictionary<string, string> VoltageMap = new Dictionary<string, string> {
+			{ BatterySOCReader.Fields.StateOfCharge, XMLNames.REESS_OCV_SoC },
+			{ BatterySOCReader.Fields.BatteryVoltage, XMLNames.REESS_OCV_OCV }
+		};
+
+		public static readonly Dictionary<string, string> MaxCurrentMap = new Dictionary<string, string> {
+			{ BatteryMaxCurrentReader.Fields.StateOfCharge, XMLNames.REESS_CurrentLimits_SoC },
+			{ BatteryMaxCurrentReader.Fields.MaxChargeCurrent, XMLNames.REESS_CurrentLimits_MaxChargingCurrent },
+			{ BatteryMaxCurrentReader.Fields.MaxDischargeCurrent, XMLNames.REESS_CurrentLimits_MaxDischargingCurrent }
+		};
+
+		#endregion
+		public static readonly Dictionary<string, string> EMPowerMap = new Dictionary<string, string> {
+			{ ElectricMotorMapReader.Fields.MotorSpeed, XMLNames.PowerMap_OutShaftSpeed },
+			{ElectricMotorMapReader.Fields.Torque, XMLNames.PowerMap_Torque },
+			{ ElectricMotorMapReader.Fields.PowerElectrical, XMLNames.PowerMap_ElectricPower }
+		};
+
+		public static readonly Dictionary<string, string> BoostingLimitsMapping = new Dictionary<string, string> {
+				{MaxBoostingTorqueReader.Fields.MotorSpeed, XMLNames.BoostingLimitation_RotationalSpeed},
+				{MaxBoostingTorqueReader.Fields.DrivingTorque, XMLNames.BoostingLimitation_BoostingTorque}
+		};
+
+		//ElectricMotorMapReader
 	}
 }

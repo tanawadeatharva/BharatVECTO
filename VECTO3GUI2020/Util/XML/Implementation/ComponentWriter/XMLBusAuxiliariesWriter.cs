@@ -64,7 +64,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 
 		public override void Initialize()
 		{
-			_defaultNamespace = XMLNamespaces.v2_10_2; 
+			_defaultNamespace = XMLNamespaces.V24; 
 			_xElement = new XElement(_defaultNamespace + XMLNames.Component_Auxiliaries);
 		}
 
@@ -93,7 +93,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 
 			if (_inputData.HVACAux != null) {
 				var hvacElement = new XElement(_defaultNamespace + "HVAC");
-				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_SystemConfiguration, _inputData.HVACAux.SystemConfiguration.GetXmlFormat()));
+				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_SystemConfiguration, _inputData.HVACAux.SystemConfiguration.ToXmlFormat()));
 
 				hvacElement.Add(GetHeatPumpGroupElement(
 					xmlNameWrapper:XMLNames.Bus_HeatPumpTypeDriver,
@@ -127,7 +127,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 		{
 
 			var dataElement = new XElement(_defaultNamespace + XMLNames.ComponentDataWrapper,
-				new XAttribute("xmlns" , XMLNamespaces.v2_10_2),
+				new XAttribute("xmlns" , XMLNamespaces.V24),
 				new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type, "AUX_Conventional_CompletedBusType"));
 
 			if (_inputData.ElectricConsumers != null) {

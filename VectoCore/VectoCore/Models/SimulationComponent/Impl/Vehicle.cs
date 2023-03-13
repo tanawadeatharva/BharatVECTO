@@ -47,8 +47,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class Vehicle : StatefulProviderComponent<Vehicle.VehicleState, IDriverDemandOutPort, IFvInPort, IFvOutPort>,
-		IVehicle, IMileageCounter, IFvInPort,
-		IDriverDemandOutPort
+		IVehicle, IMileageCounter, IFvInPort, IDriverDemandOutPort, IUpdateable
 	{
 		internal readonly VehicleData ModelData;
 
@@ -59,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			ModelData = modelData;
 			AirdragData = airdrag;
-			if (AirdragData.CrossWindCorrectionCurve != null) {
+			if (AirdragData?.CrossWindCorrectionCurve != null) {
 				AirdragData.CrossWindCorrectionCurve.SetDataBus(container);
 			}
 			var model = container.RunData;
@@ -143,6 +142,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, MeterPerSquareSecond acceleration, Radian gradient,
 			bool dryRun = false)
 		{
+
 			Log.Debug("Vehicle: acceleration: {0}", acceleration);
 			CurrentState.SimulationInterval = dt;
 			CurrentState.Acceleration = acceleration;
@@ -194,11 +194,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Warn("Distance field is not set!");
 			} else {
 				var distance = (SI)container[ModalResultField.dist];
-				if (!distance.IsEqual(CurrentState.Distance)) {
-					Log.Warn("Vehicle Distance diverges from Cycle by {0} [m]. Distance: {1}",
-						(distance - CurrentState.Distance).Value(), distance);
-				}
-			}
+                if (!distance.IsEqual(CurrentState.Distance))
+                {
+                    Log.Warn("Vehicle Distance diverges from Cycle by {0} [m]. Distance: {1}",
+                        (distance - CurrentState.Distance).Value(), distance);
+                }
+            }
 		}
 
 		public Newton RollingResistance(Radian gradient)
@@ -280,6 +281,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				$"slope_res: {SlopeResistance}, " +
 				$"air_drag: {AirDragResistance}, " +
 				$"traction force: {VehicleTractionForce}";
+
+			public VehicleState Clone() => (VehicleState)MemberwiseClone();
 		}
+
+		#region Implementation of IUpdateable
+
+		protected override bool DoUpdateFrom(object other) {
+			if (other is Vehicle v) {
+				PreviousState = v.PreviousState.Clone();
+				MaxVehicleSpeed = v.MaxVehicleSpeed;
+				return true;
+			}
+			return false;
+		}
+
+		#endregion
 	}
 }

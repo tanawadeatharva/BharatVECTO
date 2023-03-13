@@ -32,6 +32,7 @@
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -62,19 +63,36 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected virtual void InitializeCycleData()
 		{
 			FirstRun = false;
-			var gearRatios = RunData.GearboxData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio);
+			var gearRatios = (RunData.GearboxData != null) 
+				? RunData.GearboxData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio)
+				: new System.Collections.Generic.Dictionary<uint, double>() { { 0, 1 } };
+
 			// just to ensure that null-gear has ratio 1
 			gearRatios[0] = 1;
-			var axleRatio = RunData.AxleGearData.AxleGear.Ratio;
+			var axleRatio = (RunData.AxleGearData != null) ? RunData.AxleGearData.AxleGear.Ratio : 1;
 
+			/* For BEVs, ratioADC must participate in the calculation of the wheel angular velocity. */
+			var emData = (RunData.ElectricMachinesData.Count > 0) ? RunData.ElectricMachinesData.First().Item2 : null;
+			var ratioADC = (RunData.JobType == VectoSimulationJobType.BatteryElectricVehicle) ? emData.RatioADC : 1;
+					
 			foreach (var entry in Data.Entries) {
-				entry.WheelAngularVelocity = entry.AngularVelocity / (axleRatio * gearRatios[entry.Gear]);
-				entry.Torque = entry.PWheel / entry.WheelAngularVelocity;
+				entry.WheelAngularVelocity = entry.AngularVelocity / (axleRatio * gearRatios[entry.Gear] * ratioADC);
+
+				entry.VehicleTargetSpeed = entry.WheelAngularVelocity * RunData.VehicleData.DynamicTyreRadius;
+				
+				entry.Torque = !entry.WheelAngularVelocity.IsEqual(0) 
+					? entry.PWheel / entry.WheelAngularVelocity 
+					: 0.SI<NewtonMeter>();
 			}
 		}
 
 		public override IResponse Initialize()
 		{
+			if ((RunData.JobType == VectoSimulationJobType.BatteryElectricVehicle) && (DataBus.GearboxCtl != null)) {
+				DataBus.GearboxCtl.GearShiftTriggered -= GearShiftTriggered;
+				DataBus.GearboxCtl.GearShiftTriggered += GearShiftTriggered;
+            }
+
 			if (FirstRun) {
 				InitializeCycleData();
 			   
@@ -85,6 +103,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			response.AbsTime = AbsTime;
 			return response;
 		}
+
+		private void GearShiftTriggered()
+        {
+			/* Set driving action to roll, on gear change trigger, in order to replicate distance-based mode driver signals. */
+
+			if (DrivingAction == DrivingAction.Accelerate) {
+				DriverBehavior = DrivingBehavior.Driving;	
+				DrivingAction = DrivingAction.Roll;
+			}
+        }
 
 		public override IResponse Request(Second absTime, Second dt)
 		{
@@ -100,12 +128,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
+			DetermineDriverAction();
+
 			return DoHandleRequest(absTime, dt, CycleIterator.LeftSample.WheelAngularVelocity);
 		}
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			container[ModalResultField.P_wheel_in] = CycleIterator.LeftSample.PWheel;
+			container.SetDataValue("DriverAction", (int) DataBus.DriverInfo.DrivingAction);
 			base.DoWriteModalResults(time, simulationInterval, container);
 		}
 
@@ -142,18 +173,39 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public MeterPerSecond MaxVehicleSpeed => null;
-
-		/// <summary>
-		/// Always Driving.
-		/// </summary>
-		public DrivingBehavior DriverBehavior => DrivingBehavior.Driving;
-
-		public DrivingAction DrivingAction => DrivingAction.Accelerate;
+		
+		public DrivingBehavior DriverBehavior { get; internal set; } = DrivingBehavior.Driving;
+		
+		public DrivingAction DrivingAction { get; private set; } = DrivingAction.Accelerate;
 
 		public MeterPerSquareSecond DriverAcceleration => 0.SI<MeterPerSquareSecond>();
 		public PCCStates PCCState => PCCStates.OutsideSegment;
 		public MeterPerSecond NextBrakeTriggerSpeed => 0.SI<MeterPerSecond>();
+		public MeterPerSecond ApplyOverspeed(MeterPerSecond targetSpeed) => targetSpeed;
 
-		#endregion
-	}
+		private void DetermineDriverAction()
+		{
+			if (RunData.JobType == VectoSimulationJobType.BatteryElectricVehicle) {
+				DetermineDriverActionForBEV();
+            }
+        }
+
+        private void DetermineDriverActionForBEV()
+        {
+			if (VehicleStopped) {
+				DrivingAction = DrivingAction.Halt;
+				DriverBehavior = DrivingBehavior.Halted;
+			}
+			else if ((CycleIterator.LeftSample.PWheel.Value() < 0) && (DrivingAction != DrivingAction.Roll)) {
+				DrivingAction = DrivingAction.Brake;
+				DriverBehavior = DrivingBehavior.Braking;
+			}
+			else {
+				DrivingAction = DataBus.GearboxInfo.GearEngaged(DataBus.AbsTime) ? DrivingAction.Accelerate : DrivingAction.Roll;
+				DriverBehavior = DrivingBehavior.Driving;
+			}
+		}
+
+        #endregion
+    }
 }

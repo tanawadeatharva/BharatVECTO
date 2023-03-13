@@ -1,6 +1,6 @@
 ## Vehicle File (.vveh)
 
-File for the definition of a vehicle in vecto. Can be created with the [Vehicle Editor](#vehicle-editor-general-tab).
+File for the definition of a vehicle in VECTO. Can be created with the [Vehicle Editor](#vehicle-editor-general-tab).
 
 - File format is [JSON](#json).
 - Filetype ending is ".vveh"

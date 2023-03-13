@@ -15,6 +15,7 @@ Imports System.Linq
 Imports System.Xml
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.BusAuxiliaries
+Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
@@ -22,12 +23,14 @@ Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
+Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.Simulation.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.Models.SimulationComponent.Impl
 Imports TUGraz.VectoCore.Utils
+Imports DeclarationDataAdapterHeavyLorry = TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry
 
 <CustomValidation(GetType(Gearbox), "ValidateGearbox")>
 Public Class Gearbox
@@ -197,8 +200,8 @@ Public Class Gearbox
                         VectoValidationModeServiceContainer)
         Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
         Dim emsCycle As Boolean = (modeService IsNot Nothing) AndAlso modeService.IsEMSCycle
-        Dim jobType as VectoSimulationJobType = If(modeService Is Nothing, VectoSimulationJobType.ConventionalVehicle, modeService.JobType)
-        Dim emPos as PowertrainPosition? = If(modeService Is Nothing, PowertrainPosition.HybridPositionNotSet, modeService.EMPowertrainPosition)
+        Dim jobType As VectoSimulationJobType = If(modeService Is Nothing, VectoSimulationJobType.ConventionalVehicle, modeService.JobType)
+        Dim emPos As PowertrainPosition? = If(modeService Is Nothing, PowertrainPosition.HybridPositionNotSet, modeService.EMPowertrainPosition)
 
 
         Dim axlegearData As AxleGearData
@@ -213,37 +216,54 @@ Public Class Gearbox
             'Dim vehicle As IVehicleEngineeringInputData = inputData.VehicleInputData
             Dim engine As CombustionEngineData
             Dim vehiclecategory As VehicleCategory
-            Dim rdyn As Meter = 0.5.SI (Of Meter)()
+            Dim rdyn As Meter = 0.5.SI(Of Meter)()
             Try
                 vehiclecategory = inputData.JobInputData.Vehicle.VehicleCategory
             Catch ex As Exception
-                vehiclecategory = vehiclecategory.RigidTruck
+                vehiclecategory = VehicleCategory.RigidTruck
             End Try
             If mode = ExecutionMode.Declaration Then
                 Dim doa As DeclarationDataAdapterHeavyLorry = New DeclarationDataAdapterHeavyLorry()
 
                 Try
-                    engine = doa.CreateEngineData(inputData.JobInputData.Vehicle,
+                    engine = New CombustionEngineComponentDataAdapter().CreateEngineData(inputData.JobInputData.Vehicle,
                                                   inputData.JobInputData.Vehicle.Components.EngineInputData.EngineModes.
                                                      First(), New Mission() With {.MissionType = MissionType.LongHaul})
                 Catch
                     engine = GetDefaultEngine(gearbox.Gears)
                 End Try
 
-                axlegearData = doa.CreateAxleGearData(gearbox)
-                gearboxData = doa.CreateGearboxData(
-                    new MockVehicleInputData() _
-                                                       With { _
-                                                       .Components =
-                                                       New MockComponents() _
-                                                       With {.GearboxInputData =  gearbox,
-                                                       .TorqueConverterInputData = gearbox }},
-                    New VectoRunData() _
-                                                       With {.AxleGearData = axlegearData, .EngineData = engine,
-                                                       .VehicleData =
-                                                       New VehicleData() _
-                                                       With { .DynamicTyreRadius = rdyn,
-                                                       .VehicleCategory = vehiclecategory}}, Nothing)
+                axlegearData = New AxleGearDataAdapter().CreateAxleGearData(gearbox)
+
+                dim supportedGearboxTypes As GearboxType() = New GearboxType(){ GearboxType.AMT, GearboxType.ATSerial, GearboxType.ATPowerSplit, GearboxType.MT, GearboxType.APTN, GearboxType.IEPC, GearboxType.IHPC}
+                'Select Case jobType
+                '    Case VectoSimulationJobType.ConventionalVehicle:
+                '        supportedGearboxTypes = DeclarationDataAdapterHeavyLorry.Conventional.SupportsGearboxTypes
+                '        Case VectoSimulationJobType.ParallelHybridVehicle
+                '            supportedGearboxTypes = DeclarationDataAdapterHeavyLorry.ParallelHybrid.SupportsGearboxTypes
+                'End Select
+
+                if gearbox.Type = GearboxType.IEPC Then
+                    if (gearbox.Gears.Count > 0) then
+                        throw new VectoSimulationException("No gears are allowed for IEPC gearbox.")
+                    End If
+                    gearboxData = new GearboxData() With{ .Inertia = 0.SI(of KilogramSquareMeter), .TractionInterruption = 0.SI(of Second)} 
+                else
+                    gearboxData = New GearboxDataAdapter(New TorqueConverterDataAdapter()).CreateGearboxData(
+                        New MockVehicleInputData() _
+                                                           With {
+                                                           .Components =
+                                                           New MockComponents() _
+                                                           With {.GearboxInputData = gearbox,
+                                                           .TorqueConverterInputData = gearbox}},
+                        New VectoRunData() _
+                                                           With {.AxleGearData = axlegearData, .EngineData = engine,
+                                                           .VehicleData =
+                                                           New VehicleData() _
+                                                           With {.DynamicTyreRadius = rdyn,
+                                                           .VehicleCategory = vehiclecategory}},
+                        Nothing, supportedGearboxTypes)
+                End If
             Else
 
                 Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
@@ -862,7 +882,6 @@ Public Class MockEngineeringVehicle
     Public Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV
     Public Property DualFuelVehicle As Boolean Implements IVehicleDeclarationInputData.DualFuelVehicle
     Public Property MaxNetPower1 As Watt Implements IVehicleDeclarationInputData.MaxNetPower1
-    Public Property MaxNetPower2 As Watt Implements IVehicleDeclarationInputData.MaxNetPower2
     Public ReadOnly Property ExemptedTechnology As String Implements IVehicleDeclarationInputData.ExemptedTechnology
     Public ReadOnly Property RegisteredClass As RegistrationClass? Implements IVehicleDeclarationInputData.RegisteredClass
     Public ReadOnly Property NumberPassengerSeatsUpperDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengerSeatsUpperDeck
@@ -878,7 +897,7 @@ Public Class MockEngineeringVehicle
     Public Property Loading As Kilogram Implements IVehicleEngineeringInputData.Loading
     Public Property DynamicTyreRadius As Meter Implements IVehicleEngineeringInputData.DynamicTyreRadius
     Public Property Height As Meter Implements IVehicleEngineeringInputData.Height
-    Public ReadOnly Property ElectricMotorTorqueLimits As Dictionary(Of PowertrainPosition, List(Of Tuple(Of Volt, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
+    Public ReadOnly Property ElectricMotorTorqueLimits As IDictionary(Of PowertrainPosition, IList(Of Tuple(Of Volt, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
     Public ReadOnly Property BoostingLimitations As TableData Implements IVehicleDeclarationInputData.BoostingLimitations
     Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
     Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
@@ -893,6 +912,7 @@ Public Class MockEngineeringVehicle
     Public ReadOnly Property ArchitectureID As ArchitectureID Implements IVehicleDeclarationInputData.ArchitectureID
     Public ReadOnly Property OvcHev As Boolean Implements IVehicleDeclarationInputData.OvcHev
     Public ReadOnly Property MaxChargingPower As Watt Implements IVehicleDeclarationInputData.MaxChargingPower
+    Public ReadOnly Property IVehicleDeclarationInputData_VehicleType As VectoSimulationJobType Implements IVehicleDeclarationInputData.VehicleType
 
     Public Property AirdragInputData As IAirdragEngineeringInputData _
         Implements IVehicleComponentsEngineering.AirdragInputData

@@ -1,6 +1,6 @@
 ## Electric Motor Max Torque File (.vemp)
 
-This file contains the electric motor's maximum drive torque and maximum recuperation torque depending on the motor's angluar speed. The file uses the [VECTO CSV format](#csv).
+This file contains the electric motor's maximum drive torque and maximum recuperation torque depending on the motor's angular speed. The file uses the [VECTO CSV format](#csv).
 
 - Filetype: .vemp
 - Header: **n [rpm] , T_drive [Nm] , T_recuperation [Nm]**
@@ -21,7 +21,7 @@ n [rpm] , T_drive [Nm] , T_recuperation [Nm]
 
 ## Electric Motor Drag Curve File (.vemd)
 
-This file contains the electric motor's drag torque (i.e. the eletric motor is not energized) depending on the motor's angluar speed. The file uses the [VECTO CSV format](#csv).
+This file contains the electric motor's drag torque (i.e. the electric motor is not energized) depending on the motor's angular speed. The file uses the [VECTO CSV format](#csv).
 
 - Filetype: .vemd
 - Header: **n [rpm] , T_drag [Nm]**
@@ -38,7 +38,7 @@ n [rpm] , T_drag [Nm]
 
 ## Electric Motor Power Map (.vemo)
 
-This file is used to interpolate the electric power required for a certain mechanical power at the eletric motor's shaft.  The file uses the [VECTO CSV format](#csv).
+This file is used to interpolate the electric power required for a certain mechanical power at the electric motor's shaft.  The file uses the [VECTO CSV format](#csv).
 
 - Filetype: .vemo
 - Header: **n [rpm] , T [Nm] , P_el [kW]**

@@ -13,7 +13,7 @@
 		<TechnicalPermissibleMaximumLadenMass>12000</TechnicalPermissibleMaximumLadenMass>
 		<RetarderType>Losses included in Gearbox</RetarderType>
 		<RetarderRatio>2.000</RetarderRatio>
-		<AngledriveType>Separate Angledrive</AngledriveType>
+		<AngledriveType>None</AngledriveType>
 		<PTO xsi:type="PTOType">
 			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
 			<PTOOtherElements>none</PTOOtherElements>
@@ -24,8 +24,6 @@
 		<SleeperCab>true</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>E2</ArchitectureID>
-		<OvcHev>true</OvcHev>
-		<MaxChargingPower>11</MaxChargingPower>
 		<ADAS xsi:type="ADAS_PEV_Type">
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
@@ -42,7 +40,7 @@
 						<AppVersion>aaaaa</AppVersion>
 						<ElectricMachineType>ASM</ElectricMachineType>
 						<CertificationMethod>Measured</CertificationMethod>
-						<R85RatedPower>1</R85RatedPower>
+						<R85RatedPower>50000</R85RatedPower>
 						<RotationalInertia>0.10</RotationalInertia>
 						<DcDcConverterIncluded>true</DcDcConverterIncluded>
 						<IHPCType>None</IHPCType>

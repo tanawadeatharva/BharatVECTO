@@ -8,7 +8,7 @@
 	"Body": {
 		"SavedInDeclMode": false,
 		"VehCat": "RigidTruck",
-		"LegislativeClass": "Unknown",
+		"LegislativeClass": "M3",
 		"CurbWeight": 4670.0,
 		"CurbWeightExtra": 1900.0,
 		"Loading": 3020.0,
@@ -24,11 +24,11 @@
 				"BatteryFile": "../Common/GenericBattery_243kWh_750V.vbat",
 				"StreamId": 0
 			},
-      {
-        "NumPacks": 1,
-        "BatteryFile": "../Common/GenericBattery_243kWh_750V.vbat",
-        "StreamId": 1
-      }
+			{
+				"NumPacks": 1,
+				"BatteryFile": "../Common/GenericBattery_243kWh_750V.vbat",
+				"StreamId": 1
+			}
 		],
 		"InitialSoC": 80,
 		"TorqueLimits": {},

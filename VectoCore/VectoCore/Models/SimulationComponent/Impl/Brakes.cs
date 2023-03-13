@@ -41,8 +41,7 @@ using TUGraz.VectoCore.OutputData;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class Brakes : StatefulProviderComponent<SimpleComponentState, ITnOutPort, ITnInPort, ITnOutPort>,
-		IPowerTrainComponent, ITnOutPort,
-		ITnInPort, IBrakes
+		IPowerTrainComponent, ITnOutPort, ITnInPort, IBrakes, IUpdateable
 	{
 		public Watt BrakePower { get; set; }
 
@@ -93,5 +92,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			BrakePower = 0.SI<Watt>();
 			base.DoCommitSimulationStep(time, simulationInterval);
 		}
+
+		#region Implementation of IUpdateable
+
+		protected override bool DoUpdateFrom(object other) {
+			if (other is Brakes b) {
+				PreviousState = b.PreviousState.Clone();
+				BrakePower = b.BrakePower;
+				return true;
+			}
+			return false;
+		}
+
+		#endregion
 	}
 }

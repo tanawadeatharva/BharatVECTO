@@ -190,6 +190,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLDeclarationConventionalCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.ConventionalVehicle;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -202,18 +203,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLDeclarationHevCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+		public override VectoSimulationJobType VehicleType => ArchitectureID.ToString().StartsWith("S") ? VectoSimulationJobType.SerialHybridVehicle : VectoSimulationJobType.ParallelHybridVehicle;
+		public override bool HybridElectricHDV => true;
+
 	}
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationPeVompletedBusDataProviderV24 : AbstractXMLDeclarationCompletedBusDataProviderV24
+	public class XMLDeclarationPEVCompletedBusDataProviderV24 : AbstractXMLDeclarationCompletedBusDataProviderV24
 	{
 		public new const string XSD_TYPE = "Vehicle_PEV_CompletedBusDeclarationType";
 
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationPeVompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationPEVCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
+		public override bool OvcHev => true;
+
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -226,6 +233,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLDeclarationIepcCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+
+		public override bool OvcHev => true;
+
+		public override bool HybridElectricHDV => false;
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
 	}
 
 }

@@ -104,7 +104,7 @@ The search algorithm for the next gear is as follows:
 
   $FC_{gear} = min(FC_{gear + i})   \forall i \in \textrm{Allowed gear range}$
 
-Additionally the candidate gear has to fulfil the boundary conditions below for an efficiency upshift.  
+Additionally the candidate gear has to fulfill the boundary conditions below for an efficiency upshift.  
 
   * $i_{gear + axle} \leq  \textrm{RatioEarlyDownshift}$ 
   * Not left to downshift line 
@@ -120,7 +120,7 @@ For an efficiency downshift following conditions are met for the potential gear:
 
 **Shift rules for C -> L shifts (Efficiency shifts):**
 
-The used algorithm can be summarised as follows:
+The used algorithm can be summarized as follows:
 
 Definitions:
 
@@ -136,7 +136,7 @@ In each time-step a target post-shift engine speed from the shift strategy is ca
   * For the current engine load stage and the current slope each a rpm value is interpolated from a parameter table
   * The final value for target post-shift engine speed is interpolated for the current value of a_curr from the results of the previous step
 
-If the estimated engine speed after a C -> L shift is calculated to be equal or higher than the target engine speed as calculated above, the gear shift is initiated. This approach in combination with the proposed parameters as shown below reflects the strategy that shifts from C -> L are performed with absolute priority in order to minimise driveline losses from torque converter operation.
+If the estimated engine speed after a C -> L shift is calculated to be equal or higher than the target engine speed as calculated above, the gear shift is initiated. This approach in combination with the proposed parameters as shown below reflects the strategy that shifts from C -> L are performed with absolute priority in order to minimize driveline losses from torque converter operation.
 
 Boundary values between engine load stages (values for torque ratio in [%]) (relevant for C -> L shifts)
 

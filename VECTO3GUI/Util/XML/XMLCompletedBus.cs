@@ -177,7 +177,7 @@ namespace VECTO3GUI.Util.XML
 								new XElement(_v26 + XMLNames.Bus_Brakelights, auxBus?.BrakelightsLED),
 								new XElement(_v26 + XMLNames.Bus_Interiorlights, auxBus?.InteriorLightsLED))),
 							new XElement(_v26 + "HVAC",
-								new XElement(_v26 + XMLNames.Bus_SystemConfiguration, auxBus?.SystemConfiguration.GetXmlFormat()),
+								new XElement(_v26 + XMLNames.Bus_SystemConfiguration, auxBus?.SystemConfiguration.ToXmlFormat()),
 								new XElement(_v26 + XMLNames.Bus_CompressorType,
 									new XElement(_v26 + XMLNames.Bus_DriverAC, auxBus?.CompressorTypeDriver.GetLabel()),
 									new XElement(_v26 + XMLNames.Bus_PassengerAC, auxBus?.CompressorTypePassenger.GetLabel())),

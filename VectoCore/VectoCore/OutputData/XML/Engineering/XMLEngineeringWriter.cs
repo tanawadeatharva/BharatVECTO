@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering
 				new XElement(
 					v10Inp + XMLNames.VectoComponentEngineering,
 					new XAttribute(
-						xsns + "type", $"{GetNSPrefix(v10Def.NamespaceName)}:VectoComponentEngineeringType"),
+						xsns + XMLNames.XSIType, $"{GetNSPrefix(v10Def.NamespaceName)}:VectoComponentEngineeringType"),
 					GetNamespaceAttributes(),
 					GetSchemaLocations(),
 					new XElement(

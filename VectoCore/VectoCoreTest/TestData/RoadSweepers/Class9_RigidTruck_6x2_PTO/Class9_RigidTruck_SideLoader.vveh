@@ -8,6 +8,7 @@
   "Body": {
     "SavedInDeclMode": false,
     "VehCat": "RigidTruck",
+    "LegislativeClass": "M3",
     "CurbWeight": 9300.0,
     "CurbWeightExtra": 2200.0,
     "Loading": 7100.0,
@@ -17,7 +18,7 @@
     "CdCorrMode": "CdofVdecl",
     "CdCorrFile": "",
     "GearDuringPTODrive": 4,
-    "EngineSpeedDuringPTODrive": 1000, 
+    "EngineSpeedDuringPTODrive": 1000,
     "Retarder": {
       "Type": "secondary",
       "Ratio": 1.0,
@@ -43,7 +44,8 @@
           "AxleWeightShare": 0.35,
           "TwinTyres": false,
           "RRCISO": 0.0055,
-          "FzISO": 33350.0
+          "FzISO": 33350.0,
+          "Steered": true
         },
         {
           "Inertia": 14.9,

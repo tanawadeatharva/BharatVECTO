@@ -8,6 +8,8 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
@@ -55,7 +57,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				ElectricalUserInputsConfig = ec,
 				PneumaticAuxillariesConfig  = pac,
 				PneumaticUserInputsConfig  = puc,
-				SSMInputs = ssm,
+				SSMInputsCooling = ssm,
+				SSMInputsHeating = ssm,
 				Actuations = actuations,
 				VehicleData = vehicleData
 			};
@@ -79,12 +82,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			var averageCurrentDemandWithoutBaseLoad = elData["ElectricalConsumers"]
 				.GetEx<double>("AverageCurrentDemandWithoutBaseLoad").SI<Ampere>();
 
-			electricalUserInputsConfig.ElectricalConsumers = new Dictionary<string, ElectricConsumerEntry>();
-			electricalUserInputsConfig.ElectricalConsumers["BaseLoad"] = new ElectricConsumerEntry() { 
+			electricalUserInputsConfig.ElectricalConsumers = new Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry>();
+			electricalUserInputsConfig.ElectricalConsumers["BaseLoad"] = new AuxiliaryDataAdapter.ElectricConsumerEntry() { 
 				BaseVehicle = true,
 				Current = averageCurrentDemandInclBaseLoad - averageCurrentDemandWithoutBaseLoad };
 
-			electricalUserInputsConfig.ElectricalConsumers["Consumers"] = new ElectricConsumerEntry() {
+			electricalUserInputsConfig.ElectricalConsumers["Consumers"] = new AuxiliaryDataAdapter.ElectricConsumerEntry() {
 				BaseVehicle = false,
 				Current = averageCurrentDemandWithoutBaseLoad
 			};

@@ -9,14 +9,14 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class BatterySystem : StatefulVectoSimulationComponent<BatterySystem.State>, IElectricEnergyStorage, IElectricEnergyStoragePort
+	public class BatterySystem : StatefulVectoSimulationComponent<BatterySystem.State>, IElectricEnergyStorage, IElectricEnergyStoragePort, IUpdateable
 	{
-		public class BatteryString
+		public class BatteryString: IUpdateable
 		{
 			protected readonly List<Battery> _batteries;
 			
@@ -111,6 +111,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					: MaxChargeCurrent(dt);
 				return solutions.Where(x => Math.Sign(sign) == Math.Sign(x) && Math.Abs(x).IsSmallerOrEqual(Math.Abs(maxCurrent.Value()), 1e-3)).Min().SI<Ampere>();
 			}
+
+			#region Implementation of IUpdateable
+
+			public bool UpdateFrom(object other) {
+				if (other is BatteryString bs) {
+					return _batteries.ZipAll(bs._batteries).All(ts => ts.Item1.UpdateFrom(ts.Item2));
+				}
+				return false;
+			}
+
+			#endregion
 		}
 
 		protected internal readonly Dictionary<int, BatteryString> Batteries = new Dictionary<int, BatteryString>();
@@ -121,9 +132,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public BatterySystem(IVehicleContainer dataBus, BatterySystemData batterySystemData) : base(dataBus)
 		{
-			var idx = 0;
 			foreach (var entry in batterySystemData.Batteries) {
-				var bat = new Battery(null, entry.Item2, idx++);
+				var bat = new Battery(null, entry.Item2);
 				if (!Batteries.ContainsKey(entry.Item1)) {
 					Batteries[entry.Item1] = new BatteryString();
 				}
@@ -223,6 +233,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public AmpereSecond Capacity => TotalCapacity;
 
 		public Volt NominalVoltage => Batteries.Values.Select(x => x.NominalVoltage).Average();
+
 		#endregion
 
 		#region Implementation of IElectricEnergyStoragePort
@@ -377,6 +388,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Watt MaxDischargePower;
 			public Watt BatteryLoss;
 			public Second PulseDuration;
+			public State Clone() => (State)MemberwiseClone();
 		}
+
+		#region Implementation of IUpdateable
+
+		protected override bool DoUpdateFrom(object other) {
+			if (other is BatterySystem b) {
+				PreviousState = b.PreviousState.Clone();
+				return Batteries.All(kv => kv.Value.UpdateFrom(b.Batteries[kv.Key]));
+			}
+
+			return false;
+		}
+
+		#endregion
 	}
 }

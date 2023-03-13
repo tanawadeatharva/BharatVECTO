@@ -5,25 +5,21 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Battery : StatefulVectoSimulationComponent<Battery.State>, IElectricEnergyStorage, IElectricEnergyStoragePort
+	public class Battery : StatefulVectoSimulationComponent<Battery.State>, IElectricEnergyStorage, IElectricEnergyStoragePort, IUpdateable
 	{
 		protected readonly BatteryData ModelData;
 
-		public Battery(IVehicleContainer container, BatteryData modelData, int idx = -1) : base(container)
+		public Battery(IVehicleContainer container, BatteryData modelData) : base(container)
 		{
 			ModelData = modelData;
-			if (idx >= 0) {
-				BatteryId = idx;
-			}
 			CurrentState.PulseDuration = 0.SI<Second>();
 			PreviousState.PulseDuration = 0.SI<Second>();
 			PreviousState.PowerDemand = 0.SI<Watt>();
@@ -94,8 +90,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.TotalCurrent = current;
 			CurrentState.BatteryLoss = batteryLoss;
 
-			
-			CurrentState.StateOfCharge = (currentCharge + current * dt) / ModelData.Capacity;
+			var soc = (currentCharge + current * dt) / ModelData.Capacity;
+			if (ModelData.ChargeSustainingBattery) {
+				soc = PreviousState.StateOfCharge.SI<Scalar>();
+			}
+			CurrentState.StateOfCharge = soc;
 			CurrentState.MaxChargePower = maxChargePower;
 			CurrentState.MaxDischargePower = maxDischargePower;
 			return new RESSResponseSuccess(this) {
@@ -105,7 +104,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				MaxDischargePower = maxDischargePower,
 				PowerDemand = powerDemand,
 				LossPower = batteryLoss,
-				StateOfCharge = (currentCharge + current * dt) / ModelData.Capacity
+				StateOfCharge = soc,
 			};
 		}
 
@@ -161,21 +160,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var tPulse = PreviousState.PowerDemand.Sign() == CurrentState.PowerDemand.Sign()
 				? PreviousState.PulseDuration
 				: 0.SI<Second>();
-			container[ModalResultField.U0_reess, BatteryId] = cellVoltage;
-			container[ModalResultField.U_reess_terminal, BatteryId] =
+			container[ModalResultField.U0_reess, ModelData.BatteryId] = cellVoltage;
+			container[ModalResultField.U_reess_terminal, ModelData.BatteryId] =
 				cellVoltage +
 				CurrentState.TotalCurrent *
 				ModelData.InternalResistance.Lookup(PreviousState.StateOfCharge, tPulse); // adding both terms because pos. current charges the battery!
-			container[ModalResultField.I_reess, BatteryId] = CurrentState.TotalCurrent;
-			container[ModalResultField.REESSStateOfCharge, BatteryId] = CurrentState.StateOfCharge.SI();
-			container[ModalResultField.P_reess_terminal, BatteryId] = CurrentState.PowerDemand;
-			container[ModalResultField.P_reess_int, BatteryId] = cellVoltage * CurrentState.TotalCurrent;
-			container[ModalResultField.P_reess_loss, BatteryId] = CurrentState.BatteryLoss;
-			container[ModalResultField.P_reess_charge_max, BatteryId] = CurrentState.MaxChargePower;
-			container[ModalResultField.P_reess_discharge_max, BatteryId] = CurrentState.MaxDischargePower;
+			container[ModalResultField.I_reess, ModelData.BatteryId] = CurrentState.TotalCurrent;
+			container[ModalResultField.REESSStateOfCharge, ModelData.BatteryId] = CurrentState.StateOfCharge.SI();
+			container[ModalResultField.P_reess_terminal, ModelData.BatteryId] = CurrentState.PowerDemand;
+			container[ModalResultField.P_reess_int, ModelData.BatteryId] = cellVoltage * CurrentState.TotalCurrent;
+			container[ModalResultField.P_reess_loss, ModelData.BatteryId] = CurrentState.BatteryLoss;
+			container[ModalResultField.P_reess_charge_max, ModelData.BatteryId] = CurrentState.MaxChargePower;
+			container[ModalResultField.P_reess_discharge_max, ModelData.BatteryId] = CurrentState.MaxDischargePower;
 		}
 
-		public int? BatteryId { get;  }
+
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
@@ -183,6 +182,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? PreviousState.PulseDuration
 				: 0.SI<Second>();
 			CurrentState.PulseDuration = tPulse + simulationInterval;
+			//if (ModelData.ChargeSustainingBattery) {
+			//	CurrentState.StateOfCharge = PreviousState.StateOfCharge;
+			//}
 			AdvanceState();
 		}
 
@@ -190,7 +192,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 		#region Implementation of IRESSInfo
-
+		
 		public Volt InternalVoltage => ModelData.SOCMap.Lookup(PreviousState.StateOfCharge);
 
 
@@ -274,8 +276,37 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Watt MaxDischargePower;
 			public Watt BatteryLoss;
 			public Second PulseDuration;
+			public State Clone() => (State)MemberwiseClone();
 		}
 
 
+		#region Implementation of IUpdateable
+
+		#region Overrides of VectoSimulationComponent
+
+		public override bool UpdateFrom(object other)
+		{
+			if (DataBus == null) {
+				// in case the battery is part of a battery system, the databus is null because we shall not write any data.
+				// allow updating the state, erroneous updates are covered by the batterysystem
+				return DoUpdateFrom(other);
+			}
+			return base.UpdateFrom(other);
+		}
+
+		#endregion
+
+		protected override bool DoUpdateFrom(object other) {
+			if (other is Battery b) {
+				PreviousState = b.PreviousState.Clone();
+				return true;
+			}
+
+			return false;
+		}
+
+		#endregion
 	}
+
+
 }

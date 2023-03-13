@@ -32,9 +32,11 @@
 using System;
 using System.Collections.Concurrent;
 using System.Reflection;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
@@ -110,14 +112,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), name: "P_ice_inertia", caption: "P_ice_inertia [kW]", outputFactor: 1e-3)] P_ice_inertia,
 
 		/// <summary>
-		///     [kW]	Total auxiliary power demand .
+		///     [kW]	Total mechanic auxiliary power demand .
 		/// </summary>
 		[ModalResultField(typeof(SI), caption: "P_aux_mech [kW]", outputFactor: 1e-3)] P_aux_mech,
 
 		/// <summary>
-		///     [kW]	Total auxiliary power demand .
+		///     [kW]	Total electric auxiliary power demand .
 		/// </summary>
 		[ModalResultField(typeof(SI), caption: "P_aux_el [kW]", outputFactor: 1e-3)] P_aux_el,
+
+		/// <summary>
+		///     [kW]	Total auxiliary power demand .
+		/// </summary>
+		[ModalResultField(typeof(SI), caption: "P_aux_el_HV [kW]", outputFactor: 1e-3)] P_Aux_el_HV,
 		
 		/// <summary>
 		/// [g/h] Fuel consumption from FC map..
@@ -181,6 +188,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(uint), caption: "Gear [-]")] Gear,
 
 		[ModalResultField(typeof(SI), caption: "n_gbx_out_avg [1/min]", outputFactor: 60 / (2 * Math.PI))] n_gbx_out_avg,
+		[ModalResultField(typeof(SI), caption: "n_gbx_in_avg [1/min]", outputFactor: 60 / (2 * Math.PI))] n_gbx_in_avg,
 
 		[ModalResultField(typeof(SI), caption: "T_gbx_out [Nm]")] T_gbx_out,
 
@@ -268,6 +276,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		///     [kW]	Power demand of Auxiliary with ID xxx. See also Aux Dialog and Driving Cycle.
 		/// </summary>
 		[ModalResultField(typeof(SI), caption: "P_aux_{0} [kW]", outputFactor: 1e-3)] P_aux_,
+		[ModalResultField(typeof(SI), caption: "P_aux_{0}_el [kW]", outputFactor: 1e-3)] P_aux_el_,
 
 		/// Bus Aux Data
 		[ModalResultField(typeof(SI), caption: "P_busAux_ES_HVAC [kW]", outputFactor: 1e-3)] P_busAux_ES_HVAC,
@@ -360,6 +369,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(double))]HybridStrategySolution,
 
+		[ModalResultField(typeof(int), caption: "HybridStrategyState")] HybridStrategyState,
+
 		[ModalResultField(typeof(int), caption: "BusAux_Overrun [bool]")] BusAux_OverrunFlag,
 		
 		[ModalResultField(typeof(SI), "P_WHR_el [kW]", outputFactor:1e-3)] P_WHR_el_map,
@@ -411,6 +422,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "P_{0}_loss [kW]", outputFactor: 1e-3)] P_IEPC_electricMotorLoss_,
 		[ModalResultField(typeof(SI), caption: "{0}_off")] IEPC_Off_,
 		[ModalResultField(typeof(SI), caption: "{0}_OVL [%]", outputFactor: 100)] IEPC_OvlBuffer_,
+
+
+
+		//[ModalResultField(typeof(ulong), caption: "debug_dcdc_state")] DCDCStateCount_,
+		//[ModalResultField(typeof(SI), caption: "sim_interval_current")] SimIntervalCurrent_,
+		//[ModalResultField(typeof(SI), caption: "sim_interval_prev")] SimIntervalPrev_,
 
 
 
@@ -488,10 +505,21 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			return GetAttribute(field).Name ?? field.ToString();
 		}
 
-		public static string GetCaption(this ModalResultField field)
+
+		public static string GetCaption(this ModalResultField field, string suffix = null)
 		{
 			var attribute = GetAttribute(field);
-			return attribute.Caption ?? attribute.Name ?? field.ToString();
+			if (suffix != null) {
+				var captionNoUnit = field.GetShortCaption();
+				var captionUnit = field.GetCaption();
+				var captionWithSuffix = captionUnit.Replace(captionNoUnit, captionNoUnit + suffix);
+
+				return captionWithSuffix;
+			} else {
+				return attribute.Caption ?? attribute.Name ?? field.ToString();
+			}
+
+			
 		}
 
 		public static string GetShortCaption(this ModalResultField field)
@@ -499,6 +527,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			var caption = GetCaption(field);
 			return Regex.Replace(caption, @"\[.*?\]|\<|\>", "").Trim();
 		}
+
 
 		public static Type GetDataType(this ModalResultField field)
 		{

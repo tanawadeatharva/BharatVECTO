@@ -35,6 +35,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -72,6 +73,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected readonly IDrivingCycleData Data;
 
+		protected readonly VectoRunData RunData;
+
 		protected internal readonly DrivingCycleEnumerator CycleIterator;
 
 		protected Second AbsTime { get; set; }
@@ -91,10 +94,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Distance = 0.SI<Meter>(),
 			};
 			CurrentState = PreviousState.Clone();
+
+			AbsTime = Data.Entries.First().Time;
+
+			RunData = container.RunData;
 		}
 
-		public IResponse Initialize()
+        public IResponse Initialize()
 		{
+			if ((RunData.JobType == VectoSimulationJobType.BatteryElectricVehicle) && (DataBus.GearboxCtl != null)) {
+				DataBus.GearboxCtl.GearShiftTriggered -= GearShiftTriggered;
+				DataBus.GearboxCtl.GearShiftTriggered += GearShiftTriggered;
+            }
+
 			var first = Data.Entries.First();
 
 			AbsTime = first.Time;
@@ -107,6 +119,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			response.AbsTime = AbsTime;
 			return response;
 		}
+
+		private void GearShiftTriggered()
+        {
+			/* Set driving action to roll, on gear change trigger, in order to replicate distance-based mode driver signals. */
+
+			if (DrivingAction == DrivingAction.Accelerate) {
+				DriverBehavior = DrivingBehavior.Driving;	
+				DrivingAction = DrivingAction.Roll;
+			}
+        }
 
 		public IResponse Request(Second absTime, Meter ds)
 		{
@@ -164,12 +186,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var acceleration = deltaV / deltaT;
 			var gradient = CycleIterator.LeftSample.RoadGradient;
 			DriverAcceleration = acceleration;
-			DriverBehavior = acceleration < 0
-				? DriverBehavior = DrivingBehavior.Braking
-				: DriverBehavior = DrivingBehavior.Driving;
-			if (DataBus.VehicleInfo.VehicleStopped && acceleration.IsEqual(0)) {
-				DriverBehavior = DrivingBehavior.Halted;
-			}
+			
+			DetermineDriverAction(absTime);    
 
 			IResponse response;
 			var responseCount = 0;
@@ -225,7 +243,47 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.Acceleration = acceleration;
 
 			return response;
+        }
+
+        private void DetermineDriverAction(Second absTime)
+        {
+			if (RunData.JobType == VectoSimulationJobType.BatteryElectricVehicle) {
+				DetermineDriverActionForBEV(absTime);
+            }
+			else if (RunData.JobType == VectoSimulationJobType.IEPC_E) {
+				DetermineDriverActionForBEV(absTime);
+            }
+			else {
+				DetermineDriverActionForOther();
+            }	
 		}
+
+        private void DetermineDriverActionForBEV(Second absTime)
+        { 
+			if (DataBus.VehicleInfo.VehicleStopped && DriverAcceleration.IsEqual(0)) {
+				DriverBehavior = DrivingBehavior.Halted;
+				DrivingAction = DrivingAction.Halt;
+			}
+			else if ((DriverAcceleration < 0) && (DrivingAction != DrivingAction.Roll)) {
+				DriverBehavior = DrivingBehavior.Braking;
+				DrivingAction = DrivingAction.Brake;
+            }
+			else {
+				DriverBehavior = DrivingBehavior.Driving;
+				DrivingAction = DataBus.GearboxInfo.GearEngaged(absTime) ? DrivingAction.Accelerate : DrivingAction.Roll;
+			}
+        }
+
+		private void DetermineDriverActionForOther()
+		{
+			DriverBehavior = DriverAcceleration < 0
+				? DriverBehavior = DrivingBehavior.Braking
+				: DriverBehavior = DrivingBehavior.Driving;
+
+			if (DataBus.VehicleInfo.VehicleStopped && DriverAcceleration.IsEqual(0)) {
+				DriverBehavior = DrivingBehavior.Halted;
+			}
+        }
 
 		private IResponse HandleUnderload(Second absTime, Second dt, ResponseUnderload r,
 			Radian gradient, ref MeterPerSquareSecond acceleration)
@@ -321,6 +379,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.grad] = CycleIterator.LeftSample.RoadGradientPercent;
 			container[ModalResultField.altitude] = CycleIterator.LeftSample.Altitude;
 			container[ModalResultField.acc] = CurrentState.Acceleration;
+
+			container.SetDataValue("DriverAction", (int) DataBus.DriverInfo.DrivingAction);
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
@@ -330,6 +390,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			AdvanceState();
 		}
+
+		protected override bool DoUpdateFrom(object other) => false;
 
 		public double Progress => AbsTime == null ? 0 : AbsTime.Value() / Data.Entries.Last().Time.Value();
 
@@ -380,15 +442,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void FinishSimulation() => Data.Finish();
 
-		public DrivingBehavior DriverBehavior { get; internal set; }
+		public DrivingBehavior DriverBehavior { get; internal set; } = DrivingBehavior.Driving;
 
-		public DrivingAction DrivingAction => DrivingAction.Accelerate;
+		public DrivingAction DrivingAction { get; internal set; } = DrivingAction.Accelerate;
 
 		public MeterPerSquareSecond DriverAcceleration { get; protected set; }
 
 		public PCCStates PCCState => PCCStates.OutsideSegment;
 
 		public MeterPerSecond NextBrakeTriggerSpeed => 0.SI<MeterPerSecond>();
+		public MeterPerSecond ApplyOverspeed(MeterPerSecond targetSpeed) => targetSpeed;
 
 		public Meter Distance => CurrentState.Distance;
 	}

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.XPath;
 using TUGraz.IVT.VectoXML.Writer;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -42,7 +43,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 
 		public virtual XDocument Report { get; protected set; }
 
-		public abstract void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes);
+
+		public void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		public abstract void Initialize(VectoRunData modelData);
 
 		public virtual void GenerateReport()
 		{
@@ -71,7 +78,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 						$"{mrf} {AbstractXMLWriter.SchemaLocationBaseUrl}/DEV/VectoOutputManufacturer.xsd"),
 					new XElement(
 						mrf + XMLNames.Report_DataWrap,
-						new XAttribute(xsi + "type", "tns:VectoOutputDataType"),
+						new XAttribute(xsi + XMLNames.XSIType, "tns:VectoOutputDataType"),
 						vehicle,
 						results,
 						GetApplicationInfo())
@@ -102,14 +109,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 		}
 
 
-		public virtual void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
+		public virtual void WriteResult(IResultEntry resultEntry)
 		{
 			_allSuccess &= resultEntry.Status == VectoRun.Status.Success;
 			Results.Add(
 				resultEntry.Status == VectoRun.Status.Success ? GetSuccessResult(resultEntry) : GetErrorResult(resultEntry));
+
+
 		}
 
-		protected virtual XElement GetErrorResult( XMLDeclarationReport.ResultEntry resultEntry)
+		protected virtual XElement GetErrorResult(IResultEntry resultEntry)
 		{
 			var content = new object[] {};
 			switch (resultEntry.Status) {
@@ -138,18 +147,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 				tns + XMLNames.Report_Result_Result,
 				new XAttribute(
 					XMLNames.Report_Result_Status_Attr, "error"),
-				new XAttribute(xsi + "type", "ResultErrorType"),
+				new XAttribute(xsi + XMLNames.XSIType, "ResultErrorType"),
 				new XElement(tns + XMLNames.Report_Result_Mission, resultEntry.Mission.ToXMLFormat()),
 				content);
 		}
 
-		protected virtual XElement GetSuccessResult(XMLDeclarationReport.ResultEntry result)
+		protected virtual XElement GetSuccessResult(IResultEntry result)
 		{
 			return new XElement(
 				tns + XMLNames.Report_Result_Result,
 				new XAttribute(
 					XMLNames.Report_Result_Status_Attr, "success"),
-				new XAttribute(xsi + "type", "ResultSuccessType"),
+				new XAttribute(xsi + XMLNames.XSIType, "ResultSuccessType"),
 				new XElement(tns + XMLNames.Report_Result_Mission, result.Mission.ToXMLFormat()), 
 				new XElement(
 					tns + XMLNames.Report_ResultEntry_Distance, new XAttribute(XMLNames.Report_Results_Unit_Attr, XMLNames.Unit_km),
@@ -161,7 +170,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 			);
 		}
 
-		private XElement GetVehiclePerformance(XMLDeclarationReport.ResultEntry result)
+		private XElement GetVehiclePerformance(IResultEntry result)
 		{
 			return new XElement(
 				tns + XMLNames.Report_ResultEntry_VehiclePerformance,
@@ -206,7 +215,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 			);
 		}
 
-		protected virtual XElement GetSimulationParameters(XMLDeclarationReport.ResultEntry result)
+		protected virtual XElement GetSimulationParameters(IResultEntry result)
 		{
 			return new XElement(
 				tns + XMLNames.Report_ResultEntry_SimulationParameters,
@@ -252,7 +261,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 			return new XElement(
 				tns + XMLNames.Vehicle_ADAS,
 				new XAttribute(XNamespace.Xmlns + adasPrefix, ns.NamespaceName),
-				new XAttribute(xsi + "type", $"{adasPrefix}:{type}"),
+				new XAttribute(xsi + XMLNames.XSIType, $"{adasPrefix}:{type}"),
 				XElement.Parse(adasData.InputData.XMLSource.OuterXml).Elements()
 			);
 		}
@@ -266,7 +275,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 			return new XElement(
 				tns + XMLNames.Vehicle_ADAS,
 				new XAttribute(XNamespace.Xmlns + adasPrefix, ns.NamespaceName),
-				new XAttribute(xsi + "type", $"{adasPrefix}:{type}"),
+				new XAttribute(xsi + XMLNames.XSIType, $"{adasPrefix}:{type}"),
 					new XElement(ns + XMLNames.Vehicle_ADAS_EngineStopStart, adasData.EngineStopStart),
 					new XElement(ns + XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop, adasData.EcoRoll.WithoutEngineStop()),
 					new XElement(ns + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, adasData.EcoRoll.WithEngineStop()),
@@ -300,10 +309,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 				: new XElement(tns + XMLNames.Vehicle_TorqueLimits, limits.Cast<object>().ToArray());
 		}
 
-		protected abstract XElement VehicleComponents(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes);
+		protected abstract XElement VehicleComponents(VectoRunData modelData);
 
-		protected virtual XElement GetEngineDescription(CombustionEngineData engineData, List<List<FuelData.Entry>> fuelModes)
+		protected virtual XElement GetEngineDescription(CombustionEngineData engineData, TankSystem? tankSystem)
 		{
+			var fuelModes = engineData.InputData.EngineModes.Select(x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, tankSystem)).ToList())
+				.ToList();
 			return new XElement(
 				tns + XMLNames.Component_Engine,
 				GetCommonDescription(engineData),

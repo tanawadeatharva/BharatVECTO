@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Interface Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.IDeclarationDataAdapter">
+    <Position X="0.5" Y="1.5" Width="13" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAgCAAAAAAAAAAAgAAAAAAAAAAAAAAQAABAAA=</HashCode>
+      <FileName>InputData\Reader\DataObjectAdapter\IDeclarationDataAdapter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.ILorryDeclarationDataAdapter">
+    <Position X="0.5" Y="5.25" Width="13" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAACAgAAAAAAEAAAIAAAAAAAAEAAAAAAAAQAA=</HashCode>
+      <FileName>InputData\Reader\DataObjectAdapter\IDeclarationDataAdapter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.IPrimaryBusDeclarationDataAdapter">
+    <Position X="14" Y="5.25" Width="13" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAgAAAAAAEAAAIAAAAAAAAEAAAAAAAAQAA=</HashCode>
+      <FileName>InputData\Reader\DataObjectAdapter\IDeclarationDataAdapter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.IGenericCompletedBusDeclarationDataAdapter">
+    <Position X="0.5" Y="8.25" Width="13" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAgAACAgAAAAAAEAAgAAAAAAAAAAAAAAAAABQAA=</HashCode>
+      <FileName>InputData\Reader\DataObjectAdapter\IDeclarationDataAdapter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.ISpecificCompletedBusDeclarationDataAdapter">
+    <Position X="14" Y="8.25" Width="10.75" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAQAABQAA=</HashCode>
+      <FileName>InputData\Reader\DataObjectAdapter\IDeclarationDataAdapter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.ISingleBusDeclarationDataAdapter">
+    <Position X="16.5" Y="1" Width="8.25" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAgAACAgAAAAAAEAAgIAAAAAAAAEAAAAQAABQAA=</HashCode>
+      <FileName>InputData\Reader\DataObjectAdapter\IDeclarationDataAdapter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

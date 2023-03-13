@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Utils;
 
@@ -37,13 +41,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			GetDouble(XMLNames.ElectricMachine_ContinuousTorque).SI<NewtonMeter>();
 
 		public virtual PerSecond ContinuousTorqueSpeed =>
-			GetDouble(XMLNames.ElectricMachine_TestSpeedContinuousTorque).SI<PerSecond>();
+			GetDouble(XMLNames.ElectricMachine_TestSpeedContinuousTorque).RPMtoRad();
 
 		public virtual NewtonMeter OverloadTorque =>
 			GetDouble(XMLNames.ElectricMachine_OverloadTorque).SI<NewtonMeter>();
 
 		public virtual PerSecond OverloadTestSpeed =>
-			GetDouble(XMLNames.ElectricMachine_TestSpeedOverloadTorque).SI<PerSecond>();
+			GetDouble(XMLNames.ElectricMachine_TestSpeedOverloadTorque).RPMtoRad();
 
 		public virtual Second OverloadTime =>
 			GetDouble(XMLNames.ElectricMachine_OverloadDuration).SI<Second>();
@@ -98,13 +102,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected virtual IList<IElectricMotorVoltageLevel> GetVoltageLevels()
 		{
 			var voltageLevelNodes = GetNodes(XMLNames.ElectricMachine_VoltageLevel, BaseNode);
-			if (voltageLevelNodes is null || voltageLevelNodes.Count == 0)
+			if (voltageLevelNodes is null || voltageLevelNodes.Count == 0) {
 				return null;
+			}
+
 
 			var voltageLevels = new List<IElectricMotorVoltageLevel>();
 
 			foreach (XmlNode voltageLevelNode in voltageLevelNodes) {
 				voltageLevels.Add(new XMLElectricMotorIEPCIInputDataProviderV23(null, voltageLevelNode, null));
+			}
+
+			if (voltageLevels.Count > 1) {
+				voltageLevels = voltageLevels.OrderBy(x => x.VoltageLevel.Value()).ToList();
 			}
 
 			return voltageLevels;
@@ -114,8 +124,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		private IList<IElectricMotorPowerMap> GetPowerMaps()
 		{
 			var powerMapNodes = GetNodes(XMLNames.PowerMap);
-			if (powerMapNodes is null || powerMapNodes.Count == 0)
+			if (powerMapNodes is null || powerMapNodes.Count == 0) {
 				return null;
+			}
+
 
 			var powerMaps = new List<IElectricMotorPowerMap>();
 			foreach (XmlNode powerMapNode in powerMapNodes)
@@ -126,15 +138,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			return powerMaps;
 		}
 
-		
-		public class ElectricMotorPowerMap : AbstractXMLType, IElectricMotorPowerMap
+
+		private class ElectricMotorPowerMap : AbstractXMLType, IElectricMotorPowerMap
 		{
-			private Dictionary<string, string> powerMapMapping = new Dictionary<string, string> {
-				{ XMLNames.PowerMap_OutShaftSpeed, XMLNames.PowerMap_OutShaftSpeed },
-				{ XMLNames.PowerMap_Torque, XMLNames.PowerMap_Torque },
-				{ XMLNames.PowerMap_ElectricPower, XMLNames.PowerMap_ElectricPower }
-			};
-			
+			private static readonly Dictionary<string, string> _powerMapMapping = AttributeMappings.EMPowerMap;
+			private static readonly string _elPowerCol = _powerMapMapping.FirstOrDefault(x => x.Value == XMLNames.PowerMap_ElectricPower).Key;
+
 			public ElectricMotorPowerMap(XmlNode xmlNode) : base(xmlNode) { }
 			
 			#region Implementation of IElectricMotorPowerMap
@@ -145,7 +154,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			private TableData ReadPowerMap()
 			{
 				var powerMapEntryNodes = GetNodes(XMLNames.PowerMap_Entry);
-				return XMLHelper.ReadTableData(powerMapMapping, powerMapEntryNodes);
+				var powerMap = XMLHelper.ReadTableData(_powerMapMapping, powerMapEntryNodes);
+				return powerMap;
 			}
 
 			#endregion
@@ -186,7 +196,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual TableData Conditioning => ElementExists(XMLNames.Conditioning) 
 			? ReadConditioning() : null;
 		
-		public virtual double OverloadRecoveryFactor { get; }
 
 		#endregion
 
@@ -247,7 +256,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			: base(componentNode, sourceFile)
 		{
 			_vehicle = vehicle;
-			SourceType = DataSourceType.XMLEmbedded;
+			//SourceType = DataSourceType.XMLEmbedded;
 			ValidateGearCount();
 		}
 
@@ -313,39 +322,48 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 			foreach (var voltageLevel in VoltageLevels) {
 				foreach (var powerMap in voltageLevel.PowerMap) {
-					if(powerMap.Gear <= 0)
+					if (powerMap.Gear <= 0) {
 						continue;
+					}
 
-					if (currentGears.ContainsKey(powerMap.Gear))
+					if (currentGears.ContainsKey(powerMap.Gear)) {
 						currentGears[powerMap.Gear] = true;
-					else
-						throw new ArgumentException("The PowerMaps contains a gear which was not specified under gears");
+					} else {
+						throw new ArgumentException(
+							"The PowerMaps contains a gear which was not specified under gears");
+					}
 				}
-				if(AnyMissingGear(currentGears))
+
+				if (AnyMissingGear(currentGears)) {
 					throw new ArgumentException("The PowerMaps contains a gear which was not specified under gears");
+				}
 			}
 
 			foreach (var dragCurve in DragCurves) {
-				if(dragCurve.Gear == null)
+				if (dragCurve.Gear == null) {
 					continue;
+				}
 
-				if (currentGears.ContainsKey((int)dragCurve.Gear))
+				if (currentGears.ContainsKey((int)dragCurve.Gear)) {
 					currentGears[(int)dragCurve.Gear] = true;
-				else
+				} else {
 					throw new ArgumentException("The DragCurve contains a gear which was not specified under gears");
+				}
 			}
 
-			if (AnyMissingGear(currentGears))
+			if (DragCurves.Count > 1 && AnyMissingGear(currentGears)) {
 				throw new ArgumentException("The DragCurve contains a gear which was not specified under gears");
+			}
 		}
 
-		private bool AnyMissingGear(Dictionary<int, bool> foundedGears)
+		private bool AnyMissingGear(Dictionary<int, bool> foundGears)
 		{
-			var keys = foundedGears.Keys.ToList();
+			var keys = foundGears.Keys.ToList();
 			foreach (var key in keys) {
-				if(!foundedGears[key])
+				if(!foundGears[key])
 					return true;
-				foundedGears[key] = false;
+				foundGears[key] = false;
+
 			}
 
 			return false;
@@ -461,6 +479,61 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Overrides of XMLElectricMotorIEPCIInputDataProviderV23
 
 		public override TableData Conditioning => null;
+
+		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLElectricMotorDeclarationInputDataProviderV01 : XMLCommonElectricMotorDeclarationInputData,
+		IXMLElectricMotorDeclarationInputData
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public const string XSD_TYPE = "ElectricMachineSystemDataDeclarationType";
+
+		public static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		private IList<IElectricMotorVoltageLevel> _voltageLevels;
+
+		public XMLElectricMotorDeclarationInputDataProviderV01(
+			XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile)
+		{
+			SourceType = DataSourceType.XMLEmbedded;
+		}
+
+		#region Implementation of IElectricMotorDeclarationInputData
+
+		public bool DcDcConverterIncluded => GetBool(XMLNames.ElectricMachine_DcDcConverterIncluded);
+
+		public string IHPCType => GetString(XMLNames.ElectricMachine_IHPCType);
+
+		public IList<IElectricMotorVoltageLevel> VoltageLevels => 
+			_voltageLevels ?? (_voltageLevels = GetVoltageLevels());
+		public TableData DragCurve => ReadDragCurve();
+		public TableData Conditioning => ElementExists(XMLNames.Conditioning)
+			? ReadConditioning() : null;
+
+		#endregion
+
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+		protected override DataSourceType SourceType { get; }
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLElectricMotorIEPCIInputDataProviderV01 : XMLElectricMotorIEPCIInputDataProviderV23
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public const string XSD_TYPE = "IEPCDataDeclarationType";
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public XMLElectricMotorIEPCIInputDataProviderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+		#region Overrides of XMLElectricMotorIEPCIInputDataProviderV23
+
+		protected override void ValidateGearCount()
+		{
+		}
 
 		#endregion
 	}

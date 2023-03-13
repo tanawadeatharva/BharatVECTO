@@ -11,7 +11,7 @@
     "VehicleFile": "BatteryElectricVehicle.vveh",
     "GearboxFile": "3speedEV.vgbx",
     "TCU": "3speedEV.vgbx",
-    "Padd_electric": 3540.0,
+    "Padd_electric": 0.0,
 
     "VACC": "Truck.vacc",
 

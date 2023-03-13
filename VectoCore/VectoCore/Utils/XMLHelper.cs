@@ -77,7 +77,8 @@ namespace TUGraz.VectoCore.Utils
 				.Replace(versionPrefix, string.Empty);
 		}
 
-		public static object[] ValueAsUnit(Kilogram mass, string unit, uint? decimals = 0)
+
+		public static object[] ValueAsUnit(this Kilogram mass, string unit, uint? decimals = 0)
 		{
 			switch (unit) {
 				case "t": return GetValueAsUnit(mass.ConvertToTon(), unit, decimals);
@@ -87,7 +88,7 @@ namespace TUGraz.VectoCore.Utils
 			throw new NotImplementedException($"unknown unit '{unit}'");
 		}
 
-		public static object[] ValueAsUnit(Watt power, string unit, uint? decimals = 0)
+		public static object[] ValueAsUnit(this Watt power, string unit, uint? decimals = 0)
 		{
 			switch (unit) {
 				case "kW": return GetValueAsUnit(power?.ConvertToKiloWatt(), unit, decimals);
@@ -97,7 +98,32 @@ namespace TUGraz.VectoCore.Utils
 			throw new NotImplementedException($"unknown unit '{unit}'");
 		}
 
-		public static object[] ValueAsUnit(CubicMeter volume, string unit, uint? decimals = 0)
+		public static object[] ValueAsUnit(this WattSecond energy, string unit, uint? decimals = 0)
+		{
+			switch (unit) {
+				case "kWh":
+					return GetValueAsUnit(energy?.ConvertToKiloWattHour(), unit, decimals);
+				case "Wh":
+					return GetValueAsUnit(energy?.ConvertToWattHour(), unit, decimals);
+			}
+
+			throw new NotImplementedException($"unknown unit '{unit}'");
+		}
+
+		public static object[] ValueAsUnit(this AmpereSecond capacity, string unit, uint? decimals = 0)
+		{
+			switch (unit)
+			{
+				case "As": return GetValueAsUnit(capacity.Value(), unit, decimals);
+				case "Ah": return GetValueAsUnit(capacity?.AsAmpHour, unit, decimals);
+			}
+
+			throw new NotImplementedException($"unknown unit '{unit}'");
+		}
+
+
+
+		public static object[] ValueAsUnit(this CubicMeter volume, string unit, uint? decimals = 0)
 		{
 			switch (unit) {
 				case "ltr": return GetValueAsUnit(volume.ConvertToCubicDeziMeter(), unit, decimals);
@@ -108,7 +134,7 @@ namespace TUGraz.VectoCore.Utils
 			throw new NotImplementedException($"unknown unit '{unit}'");
 		}
 
-		public static object[] ValueAsUnit(PerSecond angSpeed, string unit, uint? decimals = 0)
+		public static object[] ValueAsUnit(this PerSecond angSpeed, string unit, uint? decimals = 0)
 		{
 			switch (unit) {
 				case "rpm": return GetValueAsUnit(angSpeed.ConvertToRoundsPerMinute(), unit, decimals);
@@ -118,7 +144,7 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 
-		public static object[] ValueAsUnit(MeterPerSecond speed, string unit, uint? decimals)
+		public static object[] ValueAsUnit(this MeterPerSecond speed, string unit, uint? decimals)
 		{
 			switch (unit) {
 				case "km/h": return GetValueAsUnit(speed.ConvertToKiloMeterPerHour(), unit, decimals);
@@ -127,7 +153,7 @@ namespace TUGraz.VectoCore.Utils
 			throw new NotImplementedException($"unknown unit '{unit}'");
 		}
 
-		public static object[] ValueAsUnit(MeterPerSquareSecond acc, string unit, uint? decimals)
+		public static object[] ValueAsUnit(this MeterPerSquareSecond acc, string unit, uint? decimals)
 		{
 			switch (unit) {
 				case "m/s²": return GetValueAsUnit(acc.Value(), unit, decimals);
@@ -136,7 +162,7 @@ namespace TUGraz.VectoCore.Utils
 			throw new NotImplementedException($"unknown unit '{unit}'");
 		}
 
-		public static object[] ValueAsUnit(Meter m, string unit, uint? decimals)
+		public static object[] ValueAsUnit(this Meter m, string unit, uint? decimals)
 		{
 			switch (unit) {
 				case "m": return GetValueAsUnit(m.Value(), unit, decimals);
@@ -146,7 +172,7 @@ namespace TUGraz.VectoCore.Utils
 			throw new NotImplementedException($"unknown unit '{unit}'");
 		}
 
-		public static object[] ValueAsUnit(double value, string unit, uint? decimals)
+		public static object[] ValueAsUnit(this double value, string unit, uint? decimals)
 		{
 			switch (unit) {
 				case "%": return GetValueAsUnit(value * 100, unit, decimals);
@@ -154,7 +180,16 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
-		private static object[] GetValueAsUnit(double? value, string unit, uint? decimals)
+		public static object[] ValueAsUnit(this ConvertedSI value, uint? significant = null, uint? decimals = null)
+		{
+			//return GetValueAsUnit, value.Units, decimals);
+			return new object[] {
+				new XAttribute(XMLNames.Report_Results_Unit_Attr, value.Units),
+				value.Value.ToMinSignificantDigits(significant, decimals)
+			};
+		}
+
+		private static object[] GetValueAsUnit(this double? value, string unit, uint? decimals)
 		{
 			if (value == null) {
 				return new object[0];
@@ -328,6 +363,31 @@ namespace TUGraz.VectoCore.Utils
 			foreach (var element in xElementsToAdd) {
 				xElement.AddIfContentNotNull(element);
 			}
+		}
+
+		public static XElement WithXName(this XElement xElement, XName xName)
+		{
+			xElement.Name = xName;
+			return xElement;
+		}
+
+		public static XElement GetApplicationInfo(XNamespace ns)
+		{
+			var versionNumber = VectoSimulationCore.VersionNumber;
+#if CERTIFICATION_RELEASE
+			// add nothing to version number
+#else
+			versionNumber += " !!NOT FOR CERTIFICATION!!";
+#endif
+			return new XElement(ns + XMLNames.Report_ApplicationInfo_ApplicationInformation,
+				new XElement(ns + XMLNames.Report_ApplicationInfo_SimulationToolVersion, versionNumber),
+				new XElement(ns + XMLNames.Report_ApplicationInfo_Date,
+					XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));
+		}
+
+		public static string GetGUID()
+		{
+			return Guid.NewGuid().ToString("n").Substring(0, 20);
 		}
 	}
 }

@@ -128,8 +128,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public Watt MaxNetPower1 => null;
 
-		public Watt MaxNetPower2 => null;
-
 		public string ExemptedTechnology { get; }
 
 		public virtual RegistrationClass? RegisteredClass => RegistrationClass.unknown;
@@ -148,7 +146,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
 
-		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
+		public IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
 
 		public TableData BoostingLimitations => null;
 
@@ -248,6 +246,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			XMLHelper.ReadEntriesOrResource(
 				BaseNode, DataSource.SourcePath, XMLNames.Vehicle_PTOCycle, XMLNames.Vehicle_PTOCycle_Entry,
 				AttributeMappings.PTOCycleMap);
+
+		public TableData EPTOCycleDuringStop => throw new NotImplementedException();
 
 		public virtual TableData PTOCycleWhileDriving => null;
 		

@@ -21,9 +21,15 @@ Public Class IEPCForm
 
 	
 	Private Sub IEPCForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+		pnThermalOverloadRecovery.Enabled = not Cfg.DeclMode
 		_powerMapDlg = New IEPCInputDialog(IEPCDialogType.PowerMapDialog)
 		_dragCurveDlg = New IEPCInputDialog(IEPCDialogType.DragCurveDialog)
 		_gearDlg = New IEPCGearInputDialog()
+
+	    cbEmType.ValueMember = "Value"
+	    cbEmType.DisplayMember = "Label"
+	    cbEmType.DataSource = [enum].GetValues(GetType(ElectricMachineType)).Cast(Of ElectricMachineType).Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
 	End Sub
 
 #Region "Set IEPC Data"
@@ -36,7 +42,12 @@ Public Class IEPCForm
 		cbDifferentialIncluded.Checked = inputData.DifferentialIncluded
 		cbDesignTypeWheelMotor.Checked = inputData.DesignTypeWheelMotor
 		tbNumberOfDesignTypeWheelMotor.Text = inputData.NrOfDesignTypeWheelMotorMeasured.Value.ToGUIFormat()
-		tbThermalOverload.Text = inputData.OverloadRecoveryFactor.ToGUIFormat()
+		
+		tbRatedPower.Text = inputData.R85RatedPower.ConvertToKiloWatt().Value.ToGUIFormat()
+		cbEmType.SelectedValue = inputData.ElectricMachineType
+		if Not Cfg.DeclMode Then
+		    tbThermalOverload.Text = inputData.OverloadRecoveryFactor.ToGUIFormat()
+		End If
 
 		Dim voltageLevel = inputData.VoltageLevels.First()
 		SetFirstVoltageLevel(voltageLevel)
@@ -289,8 +300,8 @@ Public Class IEPCForm
 		tbInertia.Text = ""
 		cbDifferentialIncluded.Checked = False
 		cbDesignTypeWheelMotor.Checked = False
-		tbNumberOfDesignTypeWheelMotor.Text = ""
-		tbThermalOverload.Text = ""
+        tbNumberOfDesignTypeWheelMotor.Text = "0"
+        tbThermalOverload.Text = ""
 
 		tbVoltage1.Text = ""
 		tbContinousTorque1.Text = ""
@@ -409,7 +420,9 @@ Public Class IEPCForm
 		iepc.SetCommonEntries(tbModel.Text, tbInertia.Text, cbDesignTypeWheelMotor.Checked, 
 							  tbNumberOfDesignTypeWheelMotor.Text, cbDifferentialIncluded.Checked,
 							  tbThermalOverload.Text)
-		
+		iepc.R85RatedPower = tbRatedPower.Text.ToDouble(0).SI(Unit.SI.Kilo.Watt).Cast(of Watt)
+		iepc.ElectricMachineType =  CType(cbEmType.SelectedValue, ElectricMachineType)
+	    
 		iepc.SetVoltageLevelEntries(tbVoltage1.Text, tbContinousTorque1.Text, tbContinousTorqueSpeed1.Text,
 									tbOverloadTime1.Text, tbOverloadTorque1.Text, tboverloadTorqueSpeed1.Text, 
 									tbFLCurve1.Text, lvPowerMap1)
@@ -511,6 +524,9 @@ Public Class IEPCForm
 	End Function
 
 	Private Function ValidateOverloadRecoveryFactor() As Boolean
+		if cfg.DeclMode Then
+			return true
+		End If
 		If Not ValidDoubleValue(tbThermalOverload.Text) Then
 			ShowErrorMessageBox("Thermal Overload Recovery Factor", tbThermalOverload)
 			Return False
@@ -832,4 +848,7 @@ Public Class IEPCForm
 		End If
 	End Sub
 
+    Private Sub Label2_Click(sender As Object, e As EventArgs) Handles Label2.Click
+
+    End Sub
 End Class

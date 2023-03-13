@@ -18,7 +18,7 @@
     <DataTemplate x:Shared="False" DataType="{x:Type impl:JobListViewModel}">
         <views:JobListView />
     </DataTemplate>
-    <DataTemplate x:Shared="False" DataType="{x:Type viewModel:OutputViewModel}">
+    <DataTemplate x:Shared="False" DataType="{x:Type impl:OutputViewModel}">
         <views:OutputView />
     </DataTemplate>
 

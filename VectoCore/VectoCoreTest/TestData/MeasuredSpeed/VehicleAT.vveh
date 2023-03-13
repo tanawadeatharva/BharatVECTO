@@ -8,6 +8,7 @@
   "Body": {
     "SavedInDeclMode": false,
     "VehCat": "Citybus",
+    "LegislativeClass": "M3",
     "CurbWeight": 17000.0,
     "CurbWeightExtra": 0.0,
     "Loading": 4800.0,

@@ -29,7 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -43,7 +45,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Gearbox : AbstractGearbox<GearboxState>, IHybridControlledGearbox
+	public class Gearbox : AbstractGearbox<GearboxState>, IHybridControlledGearbox, IUpdateable
 	{
 		/// <summary>
 		/// The shift strategy.
@@ -133,58 +135,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override bool TCLocked => true;
 
-		protected internal virtual ResponseDryRun Initialize(Second absTime, GearshiftPosition gear, NewtonMeter outTorque, PerSecond outAngularVelocity)
-		{
-			var oldGear = Gear;
-			Gear = gear;
-			var inAngularVelocity = outAngularVelocity * ModelData.Gears[gear.Gear].Ratio;
-			var torqueLossResult = ModelData.Gears[gear.Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
-			CurrentState.TorqueLossResult = torqueLossResult;
-			var inTorque = outTorque / ModelData.Gears[gear.Gear].Ratio + torqueLossResult.Value;
-
-			if (!inAngularVelocity.IsEqual(0)) {
-				var alpha = ModelData.Inertia.IsEqual(0)
-					? 0.SI<PerSquareSecond>()
-					: outTorque / ModelData.Inertia;
-
-				var inertiaPowerLoss = Formulas.InertiaPower(inAngularVelocity, alpha, ModelData.Inertia,
-					Constants.SimulationSettings.TargetTimeInterval);
-				inTorque += inertiaPowerLoss / inAngularVelocity;
-			}
-
-			var response = NextComponent.Request(absTime, Constants.SimulationSettings.TargetTimeInterval,
-				inTorque, inAngularVelocity, true);
-			//NextComponent.Initialize(inTorque, inAngularVelocity);
-			//response.Switch().
-			//	Case<ResponseSuccess>().
-			//	Case<ResponseOverload>().
-			//	Case<ResponseUnderload>().
-			//	Default(r => { throw new UnexpectedResponseException("Gearbox.Initialize", r); });
-
-			var fullLoad = DataBus.EngineInfo.EngineStationaryFullPower(inAngularVelocity);
-
-			Gear = oldGear;
-			return new ResponseDryRun(this) {
-				Engine = {
-					PowerRequest = response.Engine.PowerRequest,
-					EngineSpeed = response.Engine.EngineSpeed,
-					DynamicFullLoadPower = response.Engine.DynamicFullLoadPower,
-					TorqueOutDemand = response.Engine.TorqueOutDemand,
-					DynamicFullLoadTorque = response.Engine.DynamicFullLoadTorque
-				},
-				Clutch = {
-					PowerRequest = response.Clutch.PowerRequest,
-				},
-				Gearbox = {
-					PowerRequest = outTorque * outAngularVelocity,
-					InputSpeed = inAngularVelocity,
-					InputTorque = inTorque,
-					OutputTorque = outTorque,
-					OutputSpeed = outAngularVelocity,
-				},
-				DeltaFullLoad = response.Engine.PowerRequest - fullLoad
-			};
-		}
 
 		/// <summary>
 		/// Requests the Gearbox to deliver torque and angularVelocity
@@ -370,6 +320,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, false);
 
+			InvokeGearShiftTriggered();
+
 			response.Gearbox.PowerRequest = outTorque * avgAngularVelocity;
 			response.Gearbox.Gear = new GearshiftPosition(0);
 			response.Gearbox.InputSpeed = inAngularVelocity;
@@ -509,6 +461,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_gbx_in] = inPower;
 			container[ModalResultField.n_gbx_out_avg] = (PreviousState.OutAngularVelocity +
 														CurrentState.OutAngularVelocity) / 2.0;
+			container[ModalResultField.n_gbx_in_avg] = avgInAngularSpeed;
+
 			container[ModalResultField.T_gbx_out] = CurrentState.OutTorque;
 			container[ModalResultField.T_gbx_in] = CurrentState.InTorque;
 			_strategy.WriteModalResults(container);
@@ -565,5 +519,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public override Second LastShift => EngageTime;
+
+		#region Implementation of IUpdateable
+
+		protected override bool DoUpdateFrom(object other) {
+			if (other is Gearbox g) {
+				PreviousState = g.PreviousState.Clone();
+				LastShift = g.LastShift;
+				return true;
+			}
+			return false;
+		}
+
+		#endregion
 	}
 }

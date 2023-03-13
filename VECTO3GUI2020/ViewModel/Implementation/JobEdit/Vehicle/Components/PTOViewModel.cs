@@ -49,6 +49,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 
 		public virtual TableData PTOLossMap {get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 		public TableData PTOCycleDuringStop { get; }
+		public TableData EPTOCycleDuringStop { get; }
 		public TableData PTOCycleWhileDriving { get; }
 		public virtual TableData PTOCycle {get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 

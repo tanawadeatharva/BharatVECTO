@@ -54,7 +54,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		internal readonly IDrivingCycleData Data;
 		protected internal readonly DrivingCycleEnumerator CycleIterator;
 
-		protected Second AbsTime { get; set; }
+		protected Second AbsTime
+		{
+			get; 
+			set;
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PowertrainDrivingCycle"/> class.
@@ -67,6 +71,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CycleIterator = new DrivingCycleEnumerator(Data);
 
 			AbsTime = -1.SI<Second>();
+			
 		}
 
 		public virtual IResponse Initialize()
@@ -117,6 +122,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				response = NextComponent.Request(absTime, dt, CycleIterator.LeftSample.Torque, angularVelocity, false);
 				CurrentState.InAngularVelocity = angularVelocity;
 				CurrentState.InTorque = CycleIterator.LeftSample.Torque;
+				
 				debug.Add("PDC.DHR-0", response);
 				switch (response) {
 					case ResponseGearShift _:
@@ -178,8 +184,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			CycleIterator.MoveNext();
+			
 			AdvanceState();
 		}
+
+		protected override bool DoUpdateFrom(object other) => false;
 
 		#endregion
 

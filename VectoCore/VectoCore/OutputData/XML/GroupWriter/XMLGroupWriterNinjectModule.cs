@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.OutputData.XML.GroupWriter
 			Bind<IGroupWriterFactory>().ToFactory(() => new UseFirstTwoArgumentsAsInstanceProvider(1, false)).InSingletonScope();
 
 			///Vehicle V2_10_2
-			var v2102 = XMLDeclarationNamespaces.v2_10_2;
+			var v2102 = XMLDeclarationNamespaces.V24;
 			Bind<IVehicleDeclarationGroupWriter>().To<CompletedBusGeneralParametersWriterV2_10_2>().InSingletonScope().
 				Named(GetName(GroupNames.Vehicle_CompletedBus_GeneralParametersSequenceGroup, v2102));
 			Bind<IVehicleDeclarationGroupWriter>().To<CompletedBusParametersWriterV2_10_2>().InSingletonScope().

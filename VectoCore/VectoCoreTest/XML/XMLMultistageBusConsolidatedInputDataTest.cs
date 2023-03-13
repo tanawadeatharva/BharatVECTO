@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void TestConsolidateMultistageVehicle()
 		{
 			var reader = XmlReader.Create(_consolidatedInputData);
-			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
+			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistepBusInputDataProvider;
 			Assert.AreEqual(true, inputDataProvider.JobInputData.InputComplete);
 			TestConsolidateManufacturingStage(inputDataProvider.JobInputData.ConsolidateManufacturingStage);
 		}
@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void TestPrimaryOnlyConsolidateMultistageVehicle()
 		{ 
 			var reader = XmlReader.Create(_primaryOnlyInputData);
-			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
+			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistepBusInputDataProvider;
 
 			Assert.AreEqual(null, inputDataProvider.JobInputData.ManufacturingStages);
 			//The consolidated ManufacturingStage is now always created, and can hold some values from the primary vehicle (i.e. TPMLM)
@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void TestOneStageConsolidateMultistageVehicle()
 		{
 			var reader = XmlReader.Create(_oneStageInputData);
-			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
+			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistepBusInputDataProvider;
 			Assert.AreEqual(false, inputDataProvider.JobInputData.InputComplete);
 
 			
@@ -161,7 +161,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void TestTwoStagesConsolidateMultistageVehicle()
 		{
 			var reader = XmlReader.Create(_twoStagesInputData);
-			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
+			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistepBusInputDataProvider;
 			Assert.AreEqual(false, inputDataProvider.JobInputData.InputComplete);
 			
 			var vehicle = inputDataProvider.JobInputData.ConsolidateManufacturingStage.Vehicle;
@@ -202,7 +202,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void TestConsolidateMultistageAirdrag()
 		{
 			var reader = XmlReader.Create(_consolidatedInputDataAirdrag);
-			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
+			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistepBusInputDataProvider;
 
 			var hvaux = inputDataProvider.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.BusAuxiliaries.HVACAux;
 			Assert.NotNull(hvaux);
@@ -221,7 +221,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void TestConsolidateMultistageHeatPump()
 		{
 			var reader = XmlReader.Create(_consolidatedInputDataHeatPump);
-			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
+			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistepBusInputDataProvider;
 
 			var hvaux = inputDataProvider.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.BusAuxiliaries.HVACAux;
 			Assert.NotNull(hvaux);
@@ -238,7 +238,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void TestConsolidateMultistageHeatHev()
 		{
 			var reader = XmlReader.Create(_consolidatedInputDataHeatHev);
-			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
+			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistepBusInputDataProvider;
 
 			var hvaux = inputDataProvider.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.BusAuxiliaries.HVACAux;
 			Assert.NotNull(hvaux);
@@ -255,7 +255,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void TestConsolidateMultistageHeatNgTankSystem()
 		{
 			var reader = XmlReader.Create(_consolidatedInputDataHeatNgTank);
-			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
+			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistepBusInputDataProvider;
 
 			var hvaux = inputDataProvider.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.BusAuxiliaries.HVACAux;
 			Assert.NotNull(hvaux);

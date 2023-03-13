@@ -1,15 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Xml.Linq;
-using TUGraz.VectoCore.Models.Declaration;
+﻿using System.Xml.Linq;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 {
 	public interface IXMLManufacturerReport
 	{
-		void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes);
+		//void InitializeVehicleData(IDeclarationInputDataProvider inputData);
+		void Initialize(VectoRunData modelData);
 		XDocument Report { get; }
-		void WriteResult(XMLDeclarationReport.ResultEntry resultValue);
+		void WriteResult(IResultEntry resultValue);
 		void GenerateReport();
+	}
+
+	public interface IXMLManufacturerReportCompletedBus
+	{
+		void WriteResult(XMLDeclarationReport.ResultEntry genericResult,
+			XMLDeclarationReport.ResultEntry specificResult, IResult primaryResult);
 	}
 }

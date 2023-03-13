@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		void Connect(IAuxPort aux);
 	}
 
-	public interface IAuxPort
+	public interface IAuxPort: IUpdateable
 	{
 		NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed);
 

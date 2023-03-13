@@ -49,7 +49,7 @@ Public Class IEPCInputData
         _wheelMotorMeasured = designTypeWheelMotorMeasured
         _nrDesignTypeWheelMotor = nrOfDesignTypeWheelMotorMeasured.ToInt(Nothing)
         _differentialIncluded = differentialIncluded
-        _overloadRecoverFactor = thermalOverloadRecoverFactor.ToDouble()
+        _overloadRecoverFactor = thermalOverloadRecoverFactor.ToDouble(0)
 
     End Sub
     
@@ -189,17 +189,10 @@ Public Class IEPCInputData
         End Get
     End Property
 
-    Public ReadOnly Property ElectricMachineType As ElectricMachineType Implements IIEPCDeclarationInputData.ElectricMachineType
-        Get
-            Return Nothing
-        End Get
-    End Property
+    Public Property ElectricMachineType As ElectricMachineType Implements IIEPCDeclarationInputData.ElectricMachineType
 
-    Public ReadOnly Property R85RatedPower As Watt Implements IIEPCDeclarationInputData.R85RatedPower
-        Get
-            Return Nothing
-        End Get
-    End Property
+    Public Property R85RatedPower As Watt Implements IIEPCDeclarationInputData.R85RatedPower
+       
 
     Public ReadOnly Property Inertia As KilogramSquareMeter Implements IIEPCDeclarationInputData.Inertia
         Get
