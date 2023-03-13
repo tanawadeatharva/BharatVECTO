@@ -135,6 +135,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				System.Windows.Application.Current.Exit += new ExitEventHandler(this.OnApplicationExit);
 				LoadFiles();
 			}
+
+			_jobs.CollectionChanged += (sender, args) => SaveFileNamesToFile();
 		}
 
 
