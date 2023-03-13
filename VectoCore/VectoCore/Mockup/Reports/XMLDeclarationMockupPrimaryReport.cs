@@ -39,8 +39,8 @@ namespace TUGraz.VectoMockup.Reports
 
 		protected override void WriteResult(ResultEntry result)
 		{
-			(ManufacturerRpt as IXMLMockupReport).WriteMockupResult(result);
-			(VehicleInformationFile as IXMLMockupReport).WriteMockupResult(result);
+			ManufacturerRpt.WriteResult(result);
+			VehicleInformationFile.WriteResult(result);
 		}
 
 		#endregion
@@ -48,14 +48,6 @@ namespace TUGraz.VectoMockup.Reports
 		
 		protected override void GenerateReports()
 		{
-			if (!_exempted) {
-				(ManufacturerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
-				(VehicleInformationFile as IXMLMockupReport).WriteMockupSummary(Results.First());
-			} else {
-				(ManufacturerRpt as IXMLMockupReport).WriteExemptedResults();
-				(VehicleInformationFile as IXMLMockupReport).WriteExemptedResults();
-			}
-
 			ManufacturerRpt.GenerateReport();
 			var fullReportHash = GetSignature(ManufacturerRpt.Report);
 			VehicleInformationFile.GenerateReport(fullReportHash);

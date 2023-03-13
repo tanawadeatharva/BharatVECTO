@@ -14,7 +14,7 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
 
 namespace TUGraz.VectoMockup.Reports
 {
-	internal class MockupInterimVehicleInformationFile : IXMLMultistepIntermediateReport, IXMLMockupReport
+	internal class MockupInterimVehicleInformationFile : IXMLMultistepIntermediateReport
 	{
 		private readonly IXMLMultistepIntermediateReport _intermediateVifImplementation;
 
@@ -39,38 +39,18 @@ namespace TUGraz.VectoMockup.Reports
 
 		#endregion
 
-		#region Implementation of IXMLMockupReport
-
-		public void WriteMockupResult(IResultEntry resultValue)
-		{
-			
-		}
-
-		public void WriteMockupSummary(IResultEntry resultValue)
-		{
-			
-		}
-
-		public void WriteExemptedResults()
-		{
-			
-		}
-
-		#endregion
 	}
 
 
-	internal class MockupPrimaryVehicleInformationFile : IXMLVehicleInformationFile, IXMLMockupReport
+	internal class MockupPrimaryVehicleInformationFile : IXMLVehicleInformationFile
     {
 		
 		private readonly IXMLVehicleInformationFile _vehicleInformationFileImplementation;
 		private VectoRunData _modelData;
 
-		private XElement Results;
 		public MockupPrimaryVehicleInformationFile(IXMLVehicleInformationFile vehicleInformationFileImplementation)
 		{
 			_vehicleInformationFileImplementation = vehicleInformationFileImplementation;
-			Results = new XElement(_vehicleInformationFileImplementation.Tns + XMLNames.Report_Results);
 		}
 
 
@@ -82,7 +62,7 @@ namespace TUGraz.VectoMockup.Reports
 			_modelData = modelData;
 		}
 
-		public void WriteResult(XMLDeclarationReport.ResultEntry result)
+		public void WriteResult(IResultEntry result)
 		{
 			_vehicleInformationFileImplementation.WriteResult(result);
 		}
@@ -92,25 +72,6 @@ namespace TUGraz.VectoMockup.Reports
 		#endregion
 
 		#region Implementation of IXMLMockupReport
-
-		public void WriteMockupResult(IResultEntry resultValue)
-		{
-			var xElement = MockupResultReader.GetVIFMockupResult(Tns.NamespaceName, resultValue, Tns + "Result", _modelData);
-			Results.Add(xElement);
-		}
-
-		public void WriteMockupSummary(IResultEntry resultValue)
-		{
-			Results.AddFirst(new XElement(Tns + "Status", "success"));
-			Results.AddFirst(new XComment("Always prints success at the moment"));
-		}
-
-		public void WriteExemptedResults()
-		{
-			Results.Add(new XElement(Tns + "Status", "success"));
-			Results.Add(new XElement(Tns + "ExemptedVehicle"));
-		}
-		
 
 		public void GenerateReport(XElement fullReportHash)
 		{ 
@@ -122,8 +83,6 @@ namespace TUGraz.VectoMockup.Reports
 			get
 			{
 				var report = _vehicleInformationFileImplementation.Report;
-				var resultsElement = report.XPathSelectElements($"//*[local-name()='{XMLNames.Report_Results}']");
-				resultsElement.First().ReplaceWith(Results);
 				return report;
 			}
 		}
