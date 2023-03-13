@@ -74,6 +74,8 @@ namespace TUGraz.VectoCore.OutputData
 	{
 		void Initialize(VectoRunData vectoRunData);
 
+		VectoRunData VectoRunData { get; }
+
 		VectoRun.Status Status { get; }
 
 		VectoRunData.OvcHevMode OVCMode { get; }

@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		}
 
 		
-		public void WriteResult(XMLDeclarationReport.ResultEntry result)
+		public void WriteResult(IResultEntry result)
 		{
 			_results.Add(result);
 		}

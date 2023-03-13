@@ -95,19 +95,22 @@ namespace TUGraz.VectoCore.OutputData.XML
 				MaxChargingPower = runData.MaxChargingPower;
 				BatteryData = runData.BatteryData;
 				OVCMode = runData.OVCMode;
+				VectoRunData = runData;
 			}
 
-			public MissionType Mission { get; set; }
-			public LoadingType LoadingType { get; set; }
-			public int FuelMode { get; set; }
+			public VectoRunData VectoRunData { get; private set; }
+
+			public MissionType Mission { get; private set; }
+			public LoadingType LoadingType { get; private set; }
+			public int FuelMode { get; private set; }
 			public IList<IFuelProperties> FuelData { get; set; }
 
 
 			public Kilogram Payload { get; set; }
 
-			public Kilogram TotalVehicleMass { get; set; }
+			public Kilogram TotalVehicleMass { get; private set; }
 
-			public CubicMeter CargoVolume { get; set; }
+			public CubicMeter CargoVolume { get; private set; }
 
 			public double? PassengerCount { get; set; }
 			public VehicleClass VehicleClass { get; set; }
