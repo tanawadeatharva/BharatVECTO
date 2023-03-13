@@ -203,7 +203,8 @@
 			<ReleaseNotes Include="$(SolutionDir)Documentation\User Manual Source\Release Notes Vecto3.x.pdf"/>
 		</ItemGroup>
 		<Copy SourceFiles="@(GenericVehicles)" DestinationFiles="@(GenericVehicles->'$(DeployPath)Generic Vehicles\%(RecursiveDir)%(Filename)%(Extension)')" />
-		<Copy SourceFiles="@(DeclarationData)" DestinationFolder="$(DeployPath)Declaration" />
+		<!-- <Copy SourceFiles="@(DeclarationData)" DestinationFolder="$(DeployPath)Declaration" /> -->
+		<Copy SourceFiles="@(DeclarationData)" DestinationFiles="@(DeclarationData->'$(DeployPath)Declaration\%(RecursiveDir)%(Filename)%(Extension)')"/>
 		<Copy SourceFiles="@(MissionProfiles)" DestinationFolder="$(DeployPath)Mission Profiles" />
 		<Copy SourceFiles="@(VectoXMLExamples)" DestinationFolder="$(DeployPath)XML\Examples" />
 		<Copy SourceFiles="@(VectoXSD)" DestinationFolder="$(DeployPath)XML\XSD" />
