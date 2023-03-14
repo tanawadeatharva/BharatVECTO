@@ -12,10 +12,10 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			var r = base.ApplyCorrection(modData, runData);
 			
-			var vehicleOperation = DeclarationData.VehicleOperation.LookupVehicleOperation(runData.VehicleData.VehicleClass, runData.Mission.MissionType);
 			var etaChtBatWeighted = 1.0;
 
-			if (runData.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting) {
+			if (runData.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting && runData.Mission != null) {
+				var vehicleOperation = DeclarationData.VehicleOperation.LookupVehicleOperation(runData.VehicleData.VehicleClass, runData.Mission.MissionType);
 				(_, _, etaChtBatWeighted) =
 					DeclarationData.CalculateChargingEfficiencyOVCHEV(runData.MaxChargingPower, vehicleOperation,
 						runData.BatteryData);
