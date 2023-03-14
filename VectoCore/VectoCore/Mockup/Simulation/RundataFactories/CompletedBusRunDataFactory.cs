@@ -131,7 +131,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 ExecutionMode = ExecutionMode.Declaration,
                 JobName = DataProvider.MultistageJobInputData.JobInputData.ManufacturingStages.Last().Vehicle.Identifier,
                 Report = Report,
-                //Aux = PrimaryBusMockupRunDataFactory.CreateMockupBusAux(CompletedVehicle),
+				//Aux = PrimaryBusMockupRunDataFactory.CreateMockupBusAux(CompletedVehicle),
 
                 //            //AirdragData = DataAdapterSpecific.CreateAirdragData(CompletedVehicle, mission),
                 //            //EngineData = DataAdapterSpecific.CreateEngineData(PrimaryVehicle, modeIdx, mission),
@@ -224,7 +224,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 VehicleData = new VehicleData()
                 {
                     Loading = loading.Value.Item1,
-
+                    VehicleClass = primarySegment.VehicleClass,
                 },
                 EngineData = PrimaryBusMockupRunDataFactory.CreateMockupEngineData(PrimaryVehicle, modeIdx, CompletedVehicle.TankSystem),
                 JobName = DataProvider.MultistageJobInputData.JobInputData.ManufacturingStages.Last().Vehicle.Identifier,
@@ -233,6 +233,9 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
                 Report = Report,
                 ModFileSuffix = $"_{_segmentCompletedBus.VehicleClass.GetClassNumber()}-Generic_{loading.Key}",
+				InputData = DataProvider.MultistageJobInputData,
+                GearboxData = PrimaryBusMockupRunDataFactory.CreateMockupGearboxData(PrimaryVehicle),
+                AxleGearData = PrimaryBusMockupRunDataFactory.CreateMockupAxleGearData(PrimaryVehicle)
             };
             return base.CreateVectoRunDataGeneric(mission, loading, primarySegment, modeIdx);
         }

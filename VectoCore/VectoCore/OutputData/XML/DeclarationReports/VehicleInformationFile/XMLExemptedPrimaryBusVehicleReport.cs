@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		}
 
-		public override void WriteResult(XMLDeclarationReport.ResultEntry result)
+		public override void WriteResult(IResultEntry result)
 		{
 			// no results for exempted vehicle
 		}
