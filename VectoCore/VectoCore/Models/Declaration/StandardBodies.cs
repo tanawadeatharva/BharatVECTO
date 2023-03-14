@@ -95,6 +95,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public override StandardBody Lookup(string id)
 		{
+			WarnReadFromFile();
 			return string.IsNullOrWhiteSpace(id) ? Empty : base.Lookup(id);
 		}
 
