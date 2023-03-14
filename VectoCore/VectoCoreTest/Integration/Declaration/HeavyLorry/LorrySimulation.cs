@@ -376,6 +376,7 @@ public class LorrySimulation
 			SumDataFields.CO2_M3KM,
 		};
 		var EC_el = new List<string> {
+			SumDataFields.EC_el_SOC,
 			SumDataFields.EC_el_final,
 			SumDataFields.EC_el_final_KM,
 			SumDataFields.EC_el_final_TKM,
@@ -922,7 +923,7 @@ public class LorrySimulation
 			writeReports ? null : new NullDeclarationReport()); //, writeReports ? null : new NullDeclarationReport());
 		DisableIterativeRuns(runsFactory);
 		runsFactory.WriteModalResults = true;
-		var sumWriter = new MockSumWriter();
+		var sumWriter = new SummaryDataContainer(fileWriter); //new MockSumWriter();
 
 		var jobContainer = new JobContainer(sumWriter);
 		runsFactory.SumData = sumWriter;

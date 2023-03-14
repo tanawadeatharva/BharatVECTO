@@ -352,6 +352,7 @@ namespace TUGraz.VectoCore.OutputData
 		};
 
 		public static readonly Tuple<string, Type>[] ElectricEnergyConsumption = {
+			Tuple.Create(SumDataFields.EC_el_SOC, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.EC_el_final, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.EC_el_final_KM, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.EC_el_final_TKM, typeof(ConvertedSI)),
@@ -663,6 +664,7 @@ namespace TUGraz.VectoCore.OutputData
 			});
 
 			cols.AddRange(new [] {
+				SumDataFields.EC_el_SOC,
 				SumDataFields.EC_el_final,
 				SumDataFields.EC_el_final_KM,
 				SumDataFields.EC_el_final_TKM,

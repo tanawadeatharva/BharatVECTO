@@ -1437,7 +1437,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var D13_realWorldFactorUsageStartSoC = vehicleOperation.RealWorldUsageFactors.StartSoCBeforeMission;
 			var D14_realWorldFactorChargeDuringMission = vehicleOperation.RealWorldUsageFactors.StationaryChargingDuringMission;
 
-			var (etaChgBatDepot, etaChgBatInMission, etaChtBatWeighted) = CalculateChargingEfficiency(cdResult, vehicleOperation, batteryData);
+			var (etaChgBatDepot, etaChgBatInMission, etaChtBatWeighted) = CalculateChargingEfficiencyOVCHEV(cdResult.MaxChargingPower, vehicleOperation, batteryData);
 
 			var D17_maxStatChargingPower = cdResult.MaxChargingPower;
 
@@ -1503,13 +1503,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return retVal;
 		}
 
-		private static (double, double, double) CalculateChargingEfficiency(IResultEntry cdResult,
+		public static (double, double, double) CalculateChargingEfficiencyOVCHEV(Watt maxChargingPwrVeh,
 			VehicleOperationLookup.VehicleOperationData vehicleOperation, BatterySystemData batteryData)
 		{
 			var depotChargingPower =
 				VectoMath.Max(MinDepotChgPwr, batteryData.UseableStoredEnergy / DepotChargingDuration);
 			var inMissionChargingPower = VectoMath.Min(vehicleOperation.StationaryChargingMaxPwrInfrastructure,
-				cdResult.MaxChargingPower);
+				maxChargingPwrVeh);
 
 			var tmpBattery = new BatterySystem(null, batteryData);
 			var centerSoC = (tmpBattery.MinSoC + tmpBattery.MaxSoC) / 2.0;
@@ -1535,7 +1535,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 														totalChargedEnergy);
 		}
 
-		private static double CalculateChargingEfficiency(VectoRunData runData)
+		public static double CalculateChargingEfficiencyPEV(VectoRunData runData)
 		{
 			var batteryData = runData.BatteryData;
 			var tmpBattery = new BatterySystem(null, batteryData);
@@ -1627,9 +1627,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				throw new VectoException("Battery Data is required for PEV range calculation");
 			}
 
-			var D9_chargingEfficiencyBattery = CalculateChargingEfficiency(runData);
+			var D9_chargingEfficiencyBattery = CalculateChargingEfficiencyPEV(runData);
 			var D15_useableBatteryCapacityForR_CDA = batteryData.UseableStoredEnergy;
-			var D13_electricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption;
+			var D13_electricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption_SoC;
 
 			var D16_actualChargeDepletingRange = D15_useableBatteryCapacityForR_CDA / D13_electricEnergyConsumption * data.Distance;
 			var D17_equivalentAllElectricRange = D16_actualChargeDepletingRange;

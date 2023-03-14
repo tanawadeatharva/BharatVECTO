@@ -2,6 +2,7 @@
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.OutputData
@@ -14,9 +15,14 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			var r = base.ApplyCorrection(modData, runData);
 
+			var chgEfficiency = 1.0;
 
-
-			r.ElectricEnergyConsumption = -modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int);
+			if (runData.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting) {
+				chgEfficiency = DeclarationData.CalculateChargingEfficiencyPEV(runData);
+			}
+			r.ElectricEnergyConsumption_SoC = -modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int);
+			r.ElectricEnergyConsumption_Final = -modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int) / chgEfficiency;
+			
 			return r;
 		}
 

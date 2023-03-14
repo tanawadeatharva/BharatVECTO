@@ -181,8 +181,12 @@ namespace TUGraz.VectoCore.OutputData
 		Dictionary<FuelType, IFuelConsumptionCorrection> FuelCorrection { get; }
 		Kilogram CO2Total { get; }
 		Joule FuelEnergyConsumptionTotal { get; }
-		WattSecond ElectricEnergyConsumption { get; set; }
-		WattSecondPerMeter ElectricEnergyConsumptionPerMeter { get; }
+		WattSecond ElectricEnergyConsumption_SoC { get; set; }
+		WattSecondPerMeter ElectricEnergyConsumption_SoC_PerMeter { get; }
+
+		WattSecond ElectricEnergyConsumption_Final { get; set; }
+		WattSecondPerMeter ElectricEnergyConsumption_Final_PerMeter { get; }
+
 	}
 
 	public interface IFuelConsumptionCorrection
