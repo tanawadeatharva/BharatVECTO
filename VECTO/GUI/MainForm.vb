@@ -46,6 +46,7 @@ Imports TUGraz.VectoCommon.Resources
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.InputData.FileIO.XML
+Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 Imports TUGraz.VectoCore.Models.Simulation
 Imports TUGraz.VectoCore.Models.Simulation.Data
 Imports TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
@@ -1060,13 +1061,19 @@ lbFound:
                         
                         Dim initSOC = Double.Parse(tbInitSOCinPercent.Text) / 100
 
+                        
+
                         If(runData.HybridStrategyParameters IsNot Nothing)
                             runData.HybridStrategyParameters.InitialSoc = initSOC
-                            runData.HybridStrategyParameters.TargetSoC = initSOC - 1
+                            runData.HybridStrategyParameters.TargetSoC = initSOC - 0.01
                         End If
 
                         If(runData.BatteryData IsNot Nothing)
                             runData.BatteryData.InitialSoc = initSOC
+                        End If
+
+                        If(runData.SuperCapData IsNot Nothing)
+                            runData.SuperCapData.InitialSoC = initSOC
                         End If
                     End If
 
