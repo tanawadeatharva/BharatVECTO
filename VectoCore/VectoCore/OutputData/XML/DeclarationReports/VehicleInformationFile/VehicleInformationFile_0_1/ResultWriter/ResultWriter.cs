@@ -138,7 +138,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		#region Overrides of VIFOVCCModeWriter
 
-		public override string OVCMode => XMLNames.Results_Report_OVCModeAttr_ChargeDepleting;
+		public override string OVCMode => XMLNames.Results_Report_OVCModeAttr_ChargeSustaining;
 
 		#endregion
 	}
