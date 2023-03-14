@@ -143,7 +143,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		public override XElement GetElement(IResultEntry entry)
 		{
 			return new XElement(TNS + XMLNames.Report_Results_OVCMode,
-				new XAttribute(XMLNames.Results_Report_OVCModeAttr, XMLNames.Results_Report_OVCModeAttr_ChargeDepleting),
+				new XAttribute(XMLNames.Results_Report_OVCModeAttr, XMLNames.Results_Report_OVCModeAttr_ChargeSustaining),
 				_factory.GetVehiclePerformanceLorry(_factory, TNS).GetElement(entry),
 				entry.FuelData.Select(f =>
 					_factory.GetFuelConsumptionLorry(_factory, TNS).GetElement(entry, entry.FuelConsumptionFinal(f.FuelType))),
@@ -257,7 +257,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		public override XElement GetElement(IResultEntry entry)
 		{
 			return new XElement(TNS + XMLNames.Report_Results_OVCMode,
-				new XAttribute(XMLNames.Results_Report_OVCModeAttr, XMLNames.Results_Report_OVCModeAttr_ChargeDepleting),
+				new XAttribute(XMLNames.Results_Report_OVCModeAttr, XMLNames.Results_Report_OVCModeAttr_ChargeSustaining),
 				_factory.GetVehiclePerformanceBus(_factory, TNS).GetElement(entry),
 				//new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed, XMLHelper.ValueAsUnit(entry.AverageSpeed, XMLNames.Unit_kmph, 1)),
 				entry.FuelData.Select(f =>

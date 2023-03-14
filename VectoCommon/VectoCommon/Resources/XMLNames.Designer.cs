@@ -4633,6 +4633,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die charge sustaining ähnelt.
+        /// </summary>
+        public static string Results_Report_OVCModeAttr_ChargeSustaining {
+            get {
+                return ResourceManager.GetString("Results_Report_OVCModeAttr_ChargeSustaining", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die RetarderDataDeclarationType ähnelt.
         /// </summary>
         public static string Retarder_Attr_DataDeclarationType {
