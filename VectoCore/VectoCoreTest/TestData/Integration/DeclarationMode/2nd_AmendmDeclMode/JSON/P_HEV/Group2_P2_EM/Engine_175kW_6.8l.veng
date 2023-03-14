@@ -16,6 +16,6 @@
         "WHTC-Urban": 1.0097,
         "WHTC-Rural": 1.0035,
         "WHTC-Motorway": 1.0035,
-    "ColdHotBalancingFactor": 0.0
+    "ColdHotBalancingFactor": 1.0
   }
 }
