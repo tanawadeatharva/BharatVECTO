@@ -788,7 +788,11 @@ public class JSONFileWriter : IOutputFileWriter
 			body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
 
 		}
-		body.Add("HybridStrategyParams", GetRelativePath(input.JobInputData.HybridStrategyParameters.Source, basePath));
+
+		if (!job.SavedInDeclarationMode) {
+			body.Add("HybridStrategyParams",
+				GetRelativePath(input.JobInputData.HybridStrategyParameters.Source, basePath));
+		}
 
 		var auxList = new List<object>();
 		if (job.SavedInDeclarationMode && job.Vehicle is IVehicleDeclarationInputData declVehicle) {
@@ -808,9 +812,9 @@ public class JSONFileWriter : IOutputFileWriter
 
 				auxList.Add(auxOut);
 			}
-			if (declVehicle.Components.BusAuxiliaries != null) {
-				body.Add("BusAux", GetRelativePath(job.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile, basePath));
-			}
+			//if (declVehicle.Components.BusAuxiliaries != null) {
+			//	body.Add("BusAux", GetRelativePath(job.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile, basePath));
+			//}
 			body.Add("Aux", auxList);
 		}
 
