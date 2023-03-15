@@ -230,7 +230,7 @@
 
 		<PropertyGroup>
 			<NugetDestinationZip>$(SolutionDir)$(CurrentDate)-VECTO-NuGet$(Version).zip</NugetDestinationZip>
-			<NugetDestinationZip Condition="'$(Configuration)'=='MockupDeploy'">$(SolutionDir)$(CurrentDate)-VECTO_MOCKUP-NuGet$(Version).zip</NugetDestinationZip>
+			<NugetDestinationZip Condition="'$(Configuration)'=='MockupDeploy'">$(SolutionDir)$(CurrentDate)-VECTO_MOCKUP-NuGet-$(Version).zip</NugetDestinationZip>
 		</PropertyGroup>
 		<ZipDirectory SourceDirectory="$(NuGetPath)" DestinationFile="$(NugetDestinationZip)" Overwrite="true"/>
 
