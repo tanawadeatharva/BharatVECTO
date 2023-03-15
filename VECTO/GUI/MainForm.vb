@@ -322,7 +322,11 @@ Public Class MainForm
 
     ' ReSharper disable once UnusedMember.Global -- used via Logging Framework! 
     Public Shared Sub LogMethod(level As String, message As String)
-
+        If VectoWorkerV3 Is Nothing Then 
+            Debug.WriteLine("{0}, {1}", level, message)
+            Return
+        End If
+        
         If VectoWorkerV3.IsBusy AndAlso Not VectoWorkerV3.CancellationPending Then
             If level = "Warn" Then
                 VectoWorkerV3.ReportProgress(100,

@@ -54,15 +54,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 #if USE_EXTERNAL_DECLARATION_DATA
 		protected bool _readFromFile = false;
-		private static bool _overrideFileDeleted = false;
 #endif
 		[Conditional("USE_EXTERNAL_DECLARATION_DATA")]
 		protected void WarnReadFromFile()
 		{
 			if (_readFromFile) {
-				//Not displayed in simulation window (don't know why? Just write to file for now)
-				//var tmp = ResourceId?.Replace(DeclarationData.DeclarationDataResourcePrefix + ".", "") ?? "unknown resource";
-				//Log.Warn(string.Format("{0} overridden", tmp));
+				//Not displayed in simulation window(don't know why? Just write to file for now)
+				var tmp = ResourceId?.Replace(DeclarationData.DeclarationDataResourcePrefix + ".", "") ?? "unknown resource";
+				Log.Warn(string.Format("{0} overridden", tmp));
 			}
 
 		}
@@ -93,7 +92,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 #if USE_EXTERNAL_DECLARATION_DATA
 			var tmp = resourceId.Replace(DeclarationData.DeclarationDataResourcePrefix + ".", "");
 			var parts = tmp.Split('.');
-			//one dir up
 			var fileName = Path.GetFullPath(Path.Combine(@"Declaration\Override", string.Join(".", parts[parts.Length-2], parts[parts.Length-1])));
 			Console.WriteLine(fileName);
 			
@@ -103,17 +101,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 
 				_readFromFile = true;
-				var overrideFileName = "override.txt";
-				if (File.Exists(overrideFileName) && !_overrideFileDeleted) {
-					File.Delete(overrideFileName);
-					_overrideFileDeleted = true;
-				}
-				using (StreamWriter w = File.AppendText(overrideFileName))
-				{
-					w.WriteLine(string.Format("{0}: {1}", DateTime.Now, fileName));
-					w.Flush();
-				}
-                return VectoCSVFile.Read(fileName);
+				return VectoCSVFile.Read(fileName);
 			}
 #endif
 			return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId), source: resourceId);
