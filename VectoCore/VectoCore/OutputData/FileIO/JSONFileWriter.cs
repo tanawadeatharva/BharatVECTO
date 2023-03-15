@@ -73,7 +73,7 @@ public class JSONFileWriter : IOutputFileWriter
 		if (commonPrefix.Length > 3) {
 			// at least on the same drive...
 			var relative = basePathNormalized.MakeRelativeUri(filePathNormalized);
-			return relative.ToString();
+			return Uri.UnescapeDataString(relative.ToString());
 		}
 
 		if (Path.GetDirectoryName(Path.GetFullPath(filePath)).StartsWith(basePath, StringComparison.OrdinalIgnoreCase)) {
