@@ -575,7 +575,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var tStar = tStarPrev + PreviousState.dt;
 					dynFullPowerCalculated = stationaryFullLoadPower * (pt1.IsEqual(0) ? 1 : 1 - Math.Exp((-tStar / pt1).Value()));
 				} catch (VectoException e) {
-					Log.Warn("PT1 calculation failed (dryRun: {0}): {1}", dryRun, e.Message);
+					if (dryRun) {
+						Log.Info("PT1 calculation failed (dryRun: {0}): {1}", dryRun, e.Message);
+					} else {
+						Log.Warn("PT1 calculation failed (dryRun: {0}): {1}", dryRun, e.Message);
+					}
+
 					if (dryRun) {
 						dynFullPowerCalculated = stationaryFullLoadPower;
 					} else {
