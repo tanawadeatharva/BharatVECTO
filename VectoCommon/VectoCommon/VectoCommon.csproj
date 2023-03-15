@@ -4,6 +4,7 @@
     <AssemblyName>VectoCommon</AssemblyName>
     <TargetFrameworks>net45;net48;net6.0</TargetFrameworks>
     <DefineConstants />
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

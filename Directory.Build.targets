@@ -37,10 +37,12 @@
 			<CurrentDate>$([System.DateTime]::Now.ToString(yyy_MM_dd))</CurrentDate>
 			<DeployPath>$(SolutionDir)Deploy\$(CurrentDate)-VECTO-$(Version)\</DeployPath>
 			<DeployPath Condition="'$(Configuration)'=='MockupDeploy'">$(SolutionDir)Deploy\$(CurrentDate)-VECTO_MOCKUP-$(Version)\</DeployPath>
+			<NuGetPath> $(SolutionDir)Nuget\</NuGetPath>
 		</PropertyGroup>
   		<RemoveDir Directories="$(SolutionDir)Deploy" Condition="Exists('$(SolutionDir)Deploy')"/>
+		<RemoveDir Directories="$(NuGetPath)" Condition="Exists('$(NuGetPath)')"/>
 		<MakeDir Directories="$(DeployPath)"/>
-
+		<MakeDir Directories="$(NuGetPath)"/>
 
 		<ItemGroup Condition="'$(Configuration)'=='Deploy'">
 			<!-- All files for net45 -->
@@ -214,6 +216,15 @@
 		<Copy SourceFiles="@(VectoConfigurationSample)" DestinationFolder="$(DeployPath)"/>
 		<Copy SourceFiles="$(SolutionDir)\Documentation\User Manual Source\README for Mission Profiles Directory.txt" DestinationFiles="$(DeployPath)Mission Profiles\!! README !!.TXT"/>
 		<Copy SourceFiles="$(SolutionDir)\Documentation\User Manual Source\README for Declaration Directory.txt" DestinationFiles="$(DeployPath)Declaration\!! README !!.TXT"/>
+
+		<!-- NuGet Files-->
+		<ItemGroup Condition="'$(Configuration)'=='Deploy'">
+			<VectoNuget Include ="$(SolutionDir)VectoCore\VectoCore\bin\Release\*.nupkg" />
+			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoCommon\bin\Release\*.nupkg" />
+			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoHashing\bin\Release\*.nupkg" />
+		</ItemGroup>
+
+		<Copy SourceFiles="@(VectoNuget)" DestinationFolder ="$(NuGetPath)"/>
 
 		<PropertyGroup>
 			<DestinationZip>$(SolutionDir)$(CurrentDate)-VECTO-$(Version).zip</DestinationZip>
