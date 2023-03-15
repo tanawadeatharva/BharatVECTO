@@ -93,8 +93,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var tmp = resourceId.Replace(DeclarationData.DeclarationDataResourcePrefix + ".", "");
 			var parts = tmp.Split('.');
 			var fileName = Path.GetFullPath(Path.Combine(@"Declaration\Override", string.Join(".", parts[parts.Length-2], parts[parts.Length-1])));
-			Console.WriteLine(fileName);
-			
+
 			if (File.Exists(fileName)) {
 				if (overrideWarning != null) {
 					overrideWarning($"{resourceId} overridden by {fileName}");
