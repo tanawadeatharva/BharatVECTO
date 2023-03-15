@@ -5781,8 +5781,8 @@
 								<Entry SoC='100' OCV='800.21'/>
 							</OCV>
 							<InternalResistance>
-								<Entry SoC='0' R_2='0.04' R_10='0.04' R_20='0.04'/>
-								<Entry SoC='100' R_2='0.04' R_10='0.04' R_20='0.04'/>
+								<Entry SoC='0' R_2='40.00' R_10='40.00' R_20='40.00'/>
+								<Entry SoC='100' R_2='40.00' R_10='40.00' R_20='40.00'/>
 							</InternalResistance>
 							<CurrentLimits>
 								<Entry SoC='0' maxChargingCurrent='1500.00' maxDischargingCurrent='1500.00'/>
