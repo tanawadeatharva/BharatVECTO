@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob X:\VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"  xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
+<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
 	<v2.0:Vehicle xsi:type="Vehicle_PEV_HeavyLorryDeclarationType" id="Group5_PEV_E4">
 		<Manufacturer>TU Graz</Manufacturer>
 		<ManufacturerAddress>Inffeldgasse 19</ManufacturerAddress>
@@ -13,7 +13,8 @@
 		<TechnicalPermissibleMaximumLadenMass>18000</TechnicalPermissibleMaximumLadenMass>
 		<RetarderType>None</RetarderType>
 		<AngledriveType>None</AngledriveType>
-		<PTO xsi:type="PTOType"> <!-- syntactically allowed, not supported by VECTO - no gearbox! -->
+		<PTO xsi:type="PTOType">
+			<!-- syntactically allowed, not supported by VECTO - no gearbox! -->
 			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
 			<PTOOtherElements>none</PTOOtherElements>
 		</PTO>
@@ -44,9 +45,9 @@
 						<IHPCType>None</IHPCType>
 						<VoltageLevel>
 							<Voltage>100</Voltage>
-							<ContinuousTorque>750.00</ContinuousTorque>
+							<ContinuousTorque>700.00</ContinuousTorque>
 							<TestSpeedContinuousTorque>2069.00</TestSpeedContinuousTorque>
-							<OverloadTorque>800.00</OverloadTorque>
+							<OverloadTorque>750.00</OverloadTorque>
 							<TestSpeedOverloadTorque>2069.00</TestSpeedOverloadTorque>
 							<OverloadDuration>120.00</OverloadDuration>
 							<MaxTorqueCurve>
@@ -1002,9 +1003,9 @@
 						</VoltageLevel>
 						<VoltageLevel>
 							<Voltage>1000</Voltage>
-							<ContinuousTorque>750.00</ContinuousTorque>
+							<ContinuousTorque>700.00</ContinuousTorque>
 							<TestSpeedContinuousTorque>2069.00</TestSpeedContinuousTorque>
-							<OverloadTorque>800.00</OverloadTorque>
+							<OverloadTorque>7500.00</OverloadTorque>
 							<TestSpeedOverloadTorque>2069.00</TestSpeedOverloadTorque>
 							<OverloadDuration>120.00</OverloadDuration>
 							<MaxTorqueCurve>
@@ -2017,11 +2018,11 @@
 					</Data>
 					<v2.3:Signature>
 						<di:Reference>
-							<di:DigestMethod Algorithm=""></di:DigestMethod>
-							<di:DigestValue></di:DigestValue>
+							<di:DigestMethod Algorithm=""/>
+							<di:DigestValue/>
 						</di:Reference>
 					</v2.3:Signature>
-				</ADC>	
+				</ADC>
 			</ElectricMachine>
 			<ElectricEnergyStorage>
 				<Battery>
@@ -2072,8 +2073,8 @@
 							</di:Reference>
 						</Signature>
 					</REESS>
-						<SOCmin>8</SOCmin>
-						<SOCmax>92</SOCmax>
+					<SOCmin>8</SOCmin>
+					<SOCmax>92</SOCmax>
 				</Battery>
 			</ElectricEnergyStorage>
 			<!--<Axlegear>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"  xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
+<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
 	<v2.0:Vehicle xsi:type="Vehicle_Conventional_HeavyLorryDeclarationType" id="Group5_Conv_ES_Standard">
 		<Manufacturer>TU Graz</Manufacturer>
 		<ManufacturerAddress>Inffeldgasse 19</ManufacturerAddress>
@@ -190,7 +190,7 @@
 						<Entry engineSpeed='1800.00' maxTorque='1722.00' dragTorque='-207.31'/>
 						<Entry engineSpeed='2000.00' maxTorque='1253.00' dragTorque='-236.72'/>
 						<Entry engineSpeed='2100.00' maxTorque='1019.00' dragTorque='-248.49'/>
-						<Entry engineSpeed='2200.00' maxTorque='0.00' dragTorque='-274.38'/>  
+						<Entry engineSpeed='2200.00' maxTorque='0.00' dragTorque='-274.38'/>
 					</FullLoadAndDragCurve>
 				</v2.0:Data>
 				<v2.0:Signature>
@@ -407,7 +407,8 @@
 					</di:Reference>
 				</v2.0:Signature>
 			</Gearbox>
-			<Retarder><!-- optional -->
+			<Retarder>
+				<!-- optional -->
 				<v2.0:Data id="RET-Shai9imi" xsi:type="v2.0:RetarderDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Retarder Manufacturer</Manufacturer>
 					<Model>Generic Retarder</Model>
@@ -416,37 +417,37 @@
 					<AppVersion>3.0.1</AppVersion>
 					<CertificationMethod>Standard values</CertificationMethod>
 					<RetarderLossMap>
-						<Entry retarderSpeed="0.00" torqueLoss="10.00" />
-						<Entry retarderSpeed="100.00" torqueLoss="10.00" />
-						<Entry retarderSpeed="200.00" torqueLoss="10.10" />
-						<Entry retarderSpeed="300.00" torqueLoss="10.20" />
-						<Entry retarderSpeed="400.00" torqueLoss="10.30" />
-						<Entry retarderSpeed="500.00" torqueLoss="10.50" />
-						<Entry retarderSpeed="600.00" torqueLoss="10.70" />
-						<Entry retarderSpeed="700.00" torqueLoss="11.00" />
-						<Entry retarderSpeed="800.00" torqueLoss="11.30" />
-						<Entry retarderSpeed="900.00" torqueLoss="11.60" />
-						<Entry retarderSpeed="1000.00" torqueLoss="12.00" />
-						<Entry retarderSpeed="1100.00" torqueLoss="12.40" />
-						<Entry retarderSpeed="1200.00" torqueLoss="12.90" />
-						<Entry retarderSpeed="1300.00" torqueLoss="13.40" />
-						<Entry retarderSpeed="1400.00" torqueLoss="13.90" />
-						<Entry retarderSpeed="1500.00" torqueLoss="14.50" />
-						<Entry retarderSpeed="1600.00" torqueLoss="15.10" />
-						<Entry retarderSpeed="1700.00" torqueLoss="15.80" />
-						<Entry retarderSpeed="1800.00" torqueLoss="16.50" />
-						<Entry retarderSpeed="1900.00" torqueLoss="17.20" />
-						<Entry retarderSpeed="2000.00" torqueLoss="18.00" />
-						<Entry retarderSpeed="2100.00" torqueLoss="18.80" />
-						<Entry retarderSpeed="2200.00" torqueLoss="19.70" />
-						<Entry retarderSpeed="2300.00" torqueLoss="20.60" />
-						<Entry retarderSpeed="2400.00" torqueLoss="21.50" />
-						<Entry retarderSpeed="2500.00" torqueLoss="22.50" />
-						<Entry retarderSpeed="2600.00" torqueLoss="23.50" />
-						<Entry retarderSpeed="2700.00" torqueLoss="24.60" />
-						<Entry retarderSpeed="2800.00" torqueLoss="25.70" />
-						<Entry retarderSpeed="2900.00" torqueLoss="26.80" />
-						<Entry retarderSpeed="3000.00" torqueLoss="28.00" />
+						<Entry retarderSpeed="0.00" torqueLoss="10.00"/>
+						<Entry retarderSpeed="100.00" torqueLoss="10.00"/>
+						<Entry retarderSpeed="200.00" torqueLoss="10.10"/>
+						<Entry retarderSpeed="300.00" torqueLoss="10.20"/>
+						<Entry retarderSpeed="400.00" torqueLoss="10.30"/>
+						<Entry retarderSpeed="500.00" torqueLoss="10.50"/>
+						<Entry retarderSpeed="600.00" torqueLoss="10.70"/>
+						<Entry retarderSpeed="700.00" torqueLoss="11.00"/>
+						<Entry retarderSpeed="800.00" torqueLoss="11.30"/>
+						<Entry retarderSpeed="900.00" torqueLoss="11.60"/>
+						<Entry retarderSpeed="1000.00" torqueLoss="12.00"/>
+						<Entry retarderSpeed="1100.00" torqueLoss="12.40"/>
+						<Entry retarderSpeed="1200.00" torqueLoss="12.90"/>
+						<Entry retarderSpeed="1300.00" torqueLoss="13.40"/>
+						<Entry retarderSpeed="1400.00" torqueLoss="13.90"/>
+						<Entry retarderSpeed="1500.00" torqueLoss="14.50"/>
+						<Entry retarderSpeed="1600.00" torqueLoss="15.10"/>
+						<Entry retarderSpeed="1700.00" torqueLoss="15.80"/>
+						<Entry retarderSpeed="1800.00" torqueLoss="16.50"/>
+						<Entry retarderSpeed="1900.00" torqueLoss="17.20"/>
+						<Entry retarderSpeed="2000.00" torqueLoss="18.00"/>
+						<Entry retarderSpeed="2100.00" torqueLoss="18.80"/>
+						<Entry retarderSpeed="2200.00" torqueLoss="19.70"/>
+						<Entry retarderSpeed="2300.00" torqueLoss="20.60"/>
+						<Entry retarderSpeed="2400.00" torqueLoss="21.50"/>
+						<Entry retarderSpeed="2500.00" torqueLoss="22.50"/>
+						<Entry retarderSpeed="2600.00" torqueLoss="23.50"/>
+						<Entry retarderSpeed="2700.00" torqueLoss="24.60"/>
+						<Entry retarderSpeed="2800.00" torqueLoss="25.70"/>
+						<Entry retarderSpeed="2900.00" torqueLoss="26.80"/>
+						<Entry retarderSpeed="3000.00" torqueLoss="28.00"/>
 					</RetarderLossMap>
 				</v2.0:Data>
 				<v2.0:Signature>
@@ -461,7 +462,7 @@
 				</v2.0:Signature>
 			</Retarder>
 			<Axlegear>
-				<v2.0:Data id="AXL-EC3ohnoh" xsi:type="v2.0:AxlegearDataDeclarationType"  xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+				<v2.0:Data id="AXL-EC3ohnoh" xsi:type="v2.0:AxlegearDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 					<Model>Generic 40t Long Haul Truck AxleGear</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -573,7 +574,8 @@
 					</HVAC>
 				</Data>
 			</Auxiliaries>
-			<AirDrag><!-- optional -->
+			<AirDrag>
+				<!-- optional -->
 				<Data id="CabinX23h" xsi:type="v2.0:AirDragDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Manufacturer</Manufacturer>
 					<Model>Generic Model</Model>

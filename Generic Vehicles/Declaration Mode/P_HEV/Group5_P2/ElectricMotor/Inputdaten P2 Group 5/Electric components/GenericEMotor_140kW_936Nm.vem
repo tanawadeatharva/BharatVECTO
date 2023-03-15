@@ -14,7 +14,7 @@
     "VoltageLevels": [
       {
         "Voltage": 400,
-        "ContinuousTorque": 930,
+        "ContinuousTorque": 900,
         "ContinuousTorqueSpeed": 2000,
         "OverloadTorque": 930,
         "OverloadTorqueSpeed": 2000,
@@ -24,7 +24,7 @@
       },
       {
         "Voltage": 800,
-        "ContinuousTorque": 930,
+        "ContinuousTorque": 900,
         "ContinuousTorqueSpeed": 2000,
         "OverloadTorque": 930,
         "OverloadTorqueSpeed": 2000,
