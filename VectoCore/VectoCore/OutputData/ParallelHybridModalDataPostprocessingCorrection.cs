@@ -13,16 +13,18 @@ namespace TUGraz.VectoCore.OutputData
 			var r = base.ApplyCorrection(modData, runData);
 			
 			var etaChtBatWeighted = 1.0;
+			var electricEnergyConsumption = 0.SI<WattSecond>();
 
 			if (runData.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting && runData.Mission != null) {
 				var vehicleOperation = DeclarationData.VehicleOperation.LookupVehicleOperation(runData.VehicleData.VehicleClass, runData.Mission.MissionType);
 				(_, _, etaChtBatWeighted) =
 					DeclarationData.CalculateChargingEfficiencyOVCHEV(runData.MaxChargingPower, vehicleOperation,
 						runData.BatteryData);
+				electricEnergyConsumption = -modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int);
 			}
 
-			r.ElectricEnergyConsumption_SoC = -modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int);
-			r.ElectricEnergyConsumption_Final = -modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int) / etaChtBatWeighted;
+			r.ElectricEnergyConsumption_SoC = electricEnergyConsumption;
+			r.ElectricEnergyConsumption_Final = electricEnergyConsumption / etaChtBatWeighted;
 			return r;
 		}
 
