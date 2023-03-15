@@ -31,13 +31,16 @@
 	</Target>
 
 	<Target Name="Packaging" AfterTargets="DispatchToInnerBuilds" Condition="('$(Configuration)'=='Deploy') Or ('$(Configuration)' == 'MockupDeploy')">
+
+
 		<Message Text="Packaging in $(Configuration) Configuration" Importance="high" />
 		<Exec Command="cscript &quot;$(SolutionDir)documentation\user manual source\convertpptxtopdf.vbs&quot; &quot;$(SolutionDir)documentation\user manual source\release notes vecto3.x.pptx&quot; &quot;$(SolutionDir)documentation\user manual source\release notes vecto3.x.pdf&quot;"/>
 		<PropertyGroup>
 			<CurrentDate>$([System.DateTime]::Now.ToString(yyy_MM_dd))</CurrentDate>
 			<DeployPath>$(SolutionDir)Deploy\$(CurrentDate)-VECTO-$(Version)\</DeployPath>
+			<NuGetPath>$(SolutionDir)Nuget\$(CurrentDate)-VECTO-NuGet-$(Version)\</NuGetPath>
 			<DeployPath Condition="'$(Configuration)'=='MockupDeploy'">$(SolutionDir)Deploy\$(CurrentDate)-VECTO_MOCKUP-$(Version)\</DeployPath>
-			<NuGetPath> $(SolutionDir)Nuget\</NuGetPath>
+			<NuGetPath Condition="'$(Configuration)'=='MockupDeploy'"> $(SolutionDir)Nuget\$(CurrentDate)-VECTO_MOCKUP-NuGet-$(Version)\</NuGetPath>
 		</PropertyGroup>
   		<RemoveDir Directories="$(SolutionDir)Deploy" Condition="Exists('$(SolutionDir)Deploy')"/>
 		<RemoveDir Directories="$(NuGetPath)" Condition="Exists('$(NuGetPath)')"/>
@@ -223,8 +226,14 @@
 			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoCommon\bin\Release\*.nupkg" />
 			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoHashing\bin\Release\*.nupkg" />
 		</ItemGroup>
-
 		<Copy SourceFiles="@(VectoNuget)" DestinationFolder ="$(NuGetPath)"/>
+
+		<PropertyGroup>
+			<NugetDestinationZip>$(SolutionDir)$(CurrentDate)-VECTO-NuGet$(Version).zip</NugetDestinationZip>
+			<NugetDestinationZip Condition="'$(Configuration)'=='MockupDeploy'">$(SolutionDir)$(CurrentDate)-VECTO_MOCKUP-NuGet$(Version).zip</NugetDestinationZip>
+		</PropertyGroup>
+		<ZipDirectory SourceDirectory="$(NuGetPath)" DestinationFile="$(NugetDestinationZip)" Overwrite="true"/>
+
 
 		<PropertyGroup>
 			<DestinationZip>$(SolutionDir)$(CurrentDate)-VECTO-$(Version).zip</DestinationZip>
