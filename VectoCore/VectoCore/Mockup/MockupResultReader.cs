@@ -24,7 +24,7 @@ namespace TUGraz.VectoMockup
 
     internal static class MockupResultReader
     {
-		private enum ResultType
+		public enum ResultType
 		{
 			CIF,
 			MRF,
@@ -78,14 +78,14 @@ namespace TUGraz.VectoMockup
 
 			};
 
-			public static string GetResourceName(string xmlName, IResultEntry result, ResultType type, VectoRunData runData)
+			public static string GetResourceName(ResultType type, VectoRunData runData)
 			{
 				
 				var resNames = Assembly.GetAssembly(typeof(MockupResultReader)).GetManifestResourceNames();
 				//if (result.Status == VectoRun.Status.Success) {
-					var arch = GetArch(xmlName, runData);
+					var arch = GetArch(runData);
 					var reportType = GetReportType(type);
-					var vehicleType = result.VehicleClass.IsBus() ? "Bus" : "Lorry";
+					var vehicleType = runData.VehicleData.VehicleClass.IsBus() ? "Bus" : "Lorry";
 					return $"{mockupResourcePrefix}.{reportType}_MockupResults_{arch}_{vehicleType}.xml";
 				//}
 
@@ -106,7 +106,7 @@ namespace TUGraz.VectoMockup
 				}
 			}
 
-			private static string GetArch(string xmlName, VectoRunData runData)
+			private static string GetArch(VectoRunData runData)
 			{
 				bool ovc = false;
 				var jobType = VectoSimulationJobType.ConventionalVehicle;
@@ -131,30 +131,27 @@ namespace TUGraz.VectoMockup
 					return "PEV";
 				}
 
-				throw new VectoException($"{xmlName} not mapped to Architecture (Conv/HEV/PEV)");
+				throw new VectoException($"{runData.JobType} not mapped to Architecture (Conv/HEV/PEV)");
 			}
 
-
 		}
-        
-		public static XElement GetMRFMockupResult(string xmlName, IResultEntry result, XName resultElementName, VectoRunData runData)
+		
+		public static XElement GetMRFMockupResult(IResultEntry result, XName resultElementName, VectoRunData runData)
 		{
-			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.MRF, runData));
+			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(ResultType.MRF, runData));
 			ReplaceMission(result, resultElement);
 			ReplaceGroup(result, resultElement);
 			ReplacePayload(result, resultElement);
 			ReplaceFuelMode(result, resultElement);
 			SetFuels(result, resultElement);
 			ClearGearboxAndAxleGearEntries(result, resultElement, runData);
-			
+
 			return resultElement;
 		}
 
-
-
-		public static XElement GetCIFMockupResult(string xmlName, IResultEntry result, XName resultElementName, VectoRunData runData)
+		public static XElement GetCIFMockupResult(IResultEntry result, XName resultElementName, VectoRunData runData)
 		{
-			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.CIF, runData));
+			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(ResultType.CIF, runData));
 			resultElement.DescendantNodes().OfType<XComment>().Remove();
 			ReplaceMission(result, resultElement);
 			SetFuels(result, resultElement);
@@ -162,20 +159,18 @@ namespace TUGraz.VectoMockup
 			return resultElement;
 		}
 
-		public static XElement GetVIFMockupResult(string xmlName, IResultEntry result, XName resultElementName, VectoRunData runData)
+		public static XElement GetVIFMockupResult(IResultEntry result, XName resultElementName, VectoRunData runData)
 		{
-			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.VIF, runData));
+			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(ResultType.VIF, runData));
 			resultElement.DescendantNodes().OfType<XComment>().Remove();
 			ReplaceMission(result, resultElement);
 			ReplaceGroup(result, resultElement);
 			ReplacePayload(result, resultElement);
-			ReplaceFuelMode(result,resultElement);
-            SetFuels(result, resultElement);
+			ReplaceFuelMode(result, resultElement);
+			SetFuels(result, resultElement);
 
-            return resultElement;
+			return resultElement;
 		}
-
-
 
 		private static void ReplacePayload(IResultEntry result, XElement resultElement)
 		{

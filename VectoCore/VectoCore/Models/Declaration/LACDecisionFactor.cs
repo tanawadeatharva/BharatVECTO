@@ -84,6 +84,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public override double Lookup(MeterPerSecond targetVelocity)
 			{
+				WarnReadFromFile();
 				var section = Data.GetSection(kv => kv.Key < targetVelocity);
 				return VectoMath.Interpolate(section.Item1.Key, section.Item2.Key, section.Item1.Value, section.Item2.Value,
 					targetVelocity);
@@ -132,6 +133,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public override double Lookup(MeterPerSecond targetVelocity)
 			{
+				WarnReadFromFile();
 				var section = Data.GetSection(kv => kv.Key < targetVelocity);
 				return VectoMath.Interpolate(section.Item1.Key, section.Item2.Key, section.Item1.Value, section.Item2.Value,
 					targetVelocity);

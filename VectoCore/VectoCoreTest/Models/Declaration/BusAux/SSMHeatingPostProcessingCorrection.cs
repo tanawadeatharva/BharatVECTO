@@ -15,6 +15,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
@@ -501,7 +502,21 @@ public class SSMHeatingPostProcessingCorrection
 			ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>() {
 				Tuple.Create(PowertrainPosition.BatteryElectricE2, emData.Object),
 			},
-			BusAuxiliaries = busAux
+			BusAuxiliaries = busAux,
+			BatteryData = new BatterySystemData() {
+				Batteries = new List<Tuple<int, BatteryData>>() {
+					Tuple.Create(0, new BatteryData() {
+						BatteryId = 0,
+						Capacity = 7.5.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(),
+						ChargeSustainingBattery = false,
+						InternalResistance = BatteryInternalResistanceReader.Create("SoC, Ri\n0,  0.024\n100,  0.024".ToStream(), false),
+						SOCMap = BatterySOCReader.Create("SOC, V\n0, 590\n100, 614".ToStream()),
+						MinSOC = 10,
+						MaxSOC = 90,
+						MaxCurrent = BatteryMaxCurrentReader.Create("SOC, I_charge, I_discharge\n0, 1620, 1620\n100, 1620, 1620".ToStream()),
+					})
+				}
+			}
 		};
 		return runData;
 	}

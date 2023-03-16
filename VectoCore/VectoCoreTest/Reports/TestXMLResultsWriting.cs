@@ -620,7 +620,7 @@ public class TestXMLResultsWriting
 		mc.Setup(x => x.FuelEnergyConsumptionTotal).Returns(1e9.SI<Joule>());
 
 		var elOvcFactor = ovcMode == VectoRunData.OvcHevMode.ChargeSustaining ? 0 : 1.0;
-		mc.Setup(x => x.ElectricEnergyConsumption).Returns(200.SI(Unit.SI.Mega.Joule).Cast<WattSecond>() * elOvcFactor);
+		mc.Setup(x => x.ElectricEnergyConsumption_SoC).Returns(200.SI(Unit.SI.Mega.Joule).Cast<WattSecond>() * elOvcFactor);
 
 		return modData.Object;
 	}

@@ -44,7 +44,7 @@ namespace TUGraz.VectoMockup.Ninject
         public IXMLManufacturerReport GetManufacturerReport(VehicleCategory vehicleType, VectoSimulationJobType jobType,
             ArchitectureID archId, bool exempted, bool iepc, bool ihpc)
         {
-            return new MockupManufacturerReport(_manufacturerReportFactoryImplementation.GetManufacturerReport(vehicleType, jobType, archId, exempted, iepc, ihpc), exempted);
+            return new MockupManufacturerReport(_manufacturerReportFactoryImplementation.GetManufacturerReport(vehicleType, jobType, archId, exempted, iepc, ihpc));
         }
 
         public IXmlTypeWriter GetConventionalLorryVehicleType()

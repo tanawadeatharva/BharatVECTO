@@ -347,11 +347,18 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			_modData = modData;
 		}
-		public abstract WattSecond ElectricEnergyConsumption { get; set; }
+		public abstract WattSecond ElectricEnergyConsumption_SoC { get; set; }
 
-		public WattSecondPerMeter ElectricEnergyConsumptionPerMeter => ElectricEnergyConsumption == null || _modData.Distance.IsEqual(0)
+		public abstract WattSecond ElectricEnergyConsumption_Final { get; set; }
+
+		public WattSecondPerMeter ElectricEnergyConsumption_SoC_PerMeter => ElectricEnergyConsumption_SoC == null || _modData.Distance.IsEqual(0)
 			? null
-			: ElectricEnergyConsumption / _modData.Distance;
+			: ElectricEnergyConsumption_SoC / _modData.Distance;
+
+		public WattSecondPerMeter ElectricEnergyConsumption_Final_PerMeter =>
+			ElectricEnergyConsumption_Final == null || _modData.Distance.IsEqual(0)
+				? null
+				: ElectricEnergyConsumption_Final / _modData.Distance;
 	}
 
 	public class CorrectedModalData : AbstractCorrectedModalData, ICorrectedModalData
@@ -417,9 +424,8 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		public override WattSecond ElectricEnergyConsumption { get; set; }
-
-
+		public override WattSecond ElectricEnergyConsumption_SoC { get; set; }
+		public override WattSecond ElectricEnergyConsumption_Final { get; set; }
 
 		public Second ICEOffTimeStandstill { get; set; }
 		public WattSecond EnergyAuxICEOffStandstill { get; set; }
@@ -582,7 +588,8 @@ namespace TUGraz.VectoCore.OutputData
 		public Dictionary<FuelType, IFuelConsumptionCorrection> FuelCorrection => new Dictionary<FuelType, IFuelConsumptionCorrection>();
 		public Kilogram CO2Total => 0.SI<Kilogram>();
 		public Joule FuelEnergyConsumptionTotal => 0.SI<Joule>();
-		public override WattSecond ElectricEnergyConsumption { get; set; } = 0.SI<WattSecond>();
+		public override WattSecond ElectricEnergyConsumption_SoC { get; set; } = 0.SI<WattSecond>();
+		public override WattSecond ElectricEnergyConsumption_Final { get; set; } = 0.SI<WattSecond>();
 
 		#endregion
 	}

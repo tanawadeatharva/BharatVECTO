@@ -6,6 +6,7 @@
     <DefineConstants />
     <Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
 	<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net45|AnyCPU'">
     <DebugType>full</DebugType>
@@ -133,11 +134,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj">
-      <PrivateAssets>all</PrivateAssets>
-    </ProjectReference>
+	</ProjectReference>
     <ProjectReference Include="..\..\VectoCommon\VectoHashing\VectoHashing.csproj">
-      <PrivateAssets>all</PrivateAssets>
-    </ProjectReference>
+	</ProjectReference>
   </ItemGroup>
 
   <ItemGroup>

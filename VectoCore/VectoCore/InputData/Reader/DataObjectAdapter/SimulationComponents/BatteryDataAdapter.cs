@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 						MaxCurrent = BatteryMaxCurrentReader.Create(b.MaxCurrentMap),
 						Capacity = b.Capacity,
 						InternalResistance =
-							BatteryInternalResistanceReader.Create(b.InternalResistanceCurve, true),
+							BatteryInternalResistanceReader.Create(b.InternalResistanceCurve, entry.REESSPack.DataSource.SourceType.IsOneOf(DataSourceType.XMLFile, DataSourceType.XMLEmbedded)),
 						SOCMap = BatterySOCReader.Create(b.VoltageCurve),
 						InputData = entry
 					};

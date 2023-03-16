@@ -35,24 +35,10 @@ namespace TUGraz.VectoMockup.Reports
 
 		protected override void WriteResult(ResultEntry result)
 		{
-			(ManufacturerRpt as IXMLMockupReport).WriteMockupResult(result);
-			(CustomerRpt as IXMLMockupReport).WriteMockupResult(result);
+			ManufacturerRpt.WriteResult(result);
+			CustomerRpt.WriteResult(result);
 		}
 
-		protected override void GenerateReports()
-		{
-			if (!_exempted) {
-				(ManufacturerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
-				(CustomerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
-			} else {
-				(ManufacturerRpt as IXMLMockupReport).WriteExemptedResults();
-				(CustomerRpt as IXMLMockupReport).WriteExemptedResults();
-			}
-		
-			
-			
-			base.GenerateReports();
-		}
 
 		#endregion
 	}

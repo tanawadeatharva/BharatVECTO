@@ -17,7 +17,7 @@
         "WHTC-Rural": 0.0,
         "WHTC-Motorway": 0.0,
         "WHTC-Engineering": 1.0090832895,
-        "ColdHotBalancingFactor": 0.0,
+        "ColdHotBalancingFactor": 1.0,
         "CFRegPer": 1.0,
         "FuelMap": "209kW_ICE_Map.vmap",
         "FuelType": "DieselCI"
