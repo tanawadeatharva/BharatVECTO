@@ -46,6 +46,7 @@ Imports TUGraz.VectoCommon.Resources
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.InputData.FileIO.XML
+Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 Imports TUGraz.VectoCore.Models.Simulation
 Imports TUGraz.VectoCore.Models.Simulation.Data
 Imports TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
@@ -321,7 +322,11 @@ Public Class MainForm
 
     ' ReSharper disable once UnusedMember.Global -- used via Logging Framework! 
     Public Shared Sub LogMethod(level As String, message As String)
-
+        If VectoWorkerV3 Is Nothing Then 
+            Debug.WriteLine("{0}, {1}", level, message)
+            Return
+        End If
+        
         If VectoWorkerV3.IsBusy AndAlso Not VectoWorkerV3.CancellationPending Then
             If level = "Warn" Then
                 VectoWorkerV3.ReportProgress(100,
@@ -1060,13 +1065,19 @@ lbFound:
                         
                         Dim initSOC = Double.Parse(tbInitSOCinPercent.Text) / 100
 
+                        
+
                         If(runData.HybridStrategyParameters IsNot Nothing)
                             runData.HybridStrategyParameters.InitialSoc = initSOC
-                            runData.HybridStrategyParameters.TargetSoC = initSOC - 1
+                            runData.HybridStrategyParameters.TargetSoC = initSOC - 0.01
                         End If
 
                         If(runData.BatteryData IsNot Nothing)
                             runData.BatteryData.InitialSoc = initSOC
+                        End If
+
+                        If(runData.SuperCapData IsNot Nothing)
+                            runData.SuperCapData.InitialSoC = initSOC
                         End If
                     End If
 

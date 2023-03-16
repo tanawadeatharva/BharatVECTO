@@ -48,6 +48,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public override Entry Lookup(string key)
 		{
+			WarnReadFromFile();
 			return base.Lookup(key.RemoveWhitespace());
 		}
 

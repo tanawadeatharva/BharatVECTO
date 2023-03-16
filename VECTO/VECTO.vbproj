@@ -70,17 +70,17 @@
 		</PackageReference>
 	</ItemGroup>
 
-	<Choose>
+	<!--<Choose>
 		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(FinalDefineConstants), '^(.*,)*MOCKUP(,.*)*$'))">
 			<ItemGroup>
 				<ProjectReference Include="..\VectoMockup\VectoMockup\VectoMockup.csproj" />
 
 			</ItemGroup>
-			<!--<PropertyGroup>
+			--><!--<PropertyGroup>
 				<DefineConstants>MOCKUP</DefineConstants>
-			</PropertyGroup>-->
+			</PropertyGroup>--><!--
 		</When>
-	</Choose>
+	</Choose>-->
 
 	<ItemGroup>
 	<ProjectReference Include="..\HashingTool\HashingTool.csproj" />

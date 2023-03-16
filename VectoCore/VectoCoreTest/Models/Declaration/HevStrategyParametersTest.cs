@@ -52,6 +52,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				40.0)]
 			double socRange)
 		{
+			socRange /= 100;
 			Assert.DoesNotThrow(() => DeclarationData.HEVStrategyParameters.LookupEquivalenceFactor(missionType, vehClass,
 				loadingType, socRange));
 		}
@@ -84,8 +85,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		//[TestCase(MissionType.LongHaul, VehicleClass.Class2, LoadingType.ReferenceLoad, 0.10, 10)]
 
 
-		public void TestHevStrategyLookup(MissionType missionType, VehicleClass vehicleClass, LoadingType loadingType, double expected, int socRange)
+		public void TestHevStrategyLookup(MissionType missionType, VehicleClass vehicleClass, LoadingType loadingType, double expected, double socRange)
 		{
+			socRange /= 100;
 			LookupEquivAndAssert(missionType, vehicleClass, loadingType, expected,socRange);
 		}
 
@@ -96,7 +98,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			LookupSlopeAndAssert(missionType, vehicleClass, loadingType, expected);
 		}
 
-		private void LookupEquivAndAssert(MissionType mission, VehicleClass hdvClass, LoadingType loading, double expected, int socRange)
+		private void LookupEquivAndAssert(MissionType mission, VehicleClass hdvClass, LoadingType loading, double expected, double socRange)
 		{
 			var feq = DeclarationData.HEVStrategyParameters.LookupEquivalenceFactor(mission, hdvClass,
 				loading, socRange);

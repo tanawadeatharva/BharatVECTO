@@ -531,7 +531,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			};
 		}
 
-		public virtual void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
+		public virtual void WriteResult(IResultEntry resultEntry)
 		{
 			_allSuccess &= resultEntry.Status == VectoRun.Status.Success;
 
@@ -566,7 +566,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
                     GetResults(resultEntry)));
         }
 
-		private object[] GetResults(XMLDeclarationReport.ResultEntry resultEntry)
+		private object[] GetResults(IResultEntry resultEntry)
 		{
 			switch (resultEntry.Status) {
 				case VectoRun.Status.Pending:
@@ -582,7 +582,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			}
 		}
 
-		private object[] GetSuccessResultEntry(XMLDeclarationReport.ResultEntry result)
+		private object[] GetSuccessResultEntry(IResultEntry result)
 		{
 			var retVal = new List<XElement>();
 

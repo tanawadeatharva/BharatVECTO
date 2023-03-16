@@ -55,7 +55,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.Gearbox.Disengaged = !useNextGear.Engaged;
 			TestPowertrain.Gearbox.DisengageGearbox = !useNextGear.Engaged;
 			TestPowertrain.Gearbox._nextGear = Controller.ShiftStrategy.NextGear;
-			TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
+			//if (DataBus.GearboxInfo.GearboxType != GearboxType.APTN) {
+				TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed,
+					DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
+			//}
+
 			TestPowertrain.HybridController.ApplyStrategySettings(cfg);
 			
 
@@ -79,7 +83,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 
-			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
+			//if (DataBus.GearboxInfo.GearboxType != GearboxType.APTN) {
+				TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque,
+					Controller.PreviousState.OutAngularVelocity);
+			//}
 
 			if (!PreviousState.GearboxEngaged || (useNextGear.Engaged && useNextGear.Equals(DataBus.GearboxInfo.Gear)) || !nextGear.Engaged) {
 				TestPowertrain.CombustionEngine.UpdateFrom(DataBus.EngineInfo);
@@ -572,8 +579,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 								dryRunResponse.ElectricMotor.AvgDrivetrainSpeed;
 					var gbxOutTqV = dryRunResponse.Gearbox.OutputTorque - emTq;
 
-					var prevGbxSpeed = (DataBus.GearboxInfo as AbstractGearbox<GearboxState>).PreviousState
-						.OutAngularVelocity;
+					var prevGbxSpeed = GetPrevGbxSpeed();
 					var gbxLoss = ModelData.GearboxData.Gears[gear.Gear].LossMap
 						.GetTorqueLoss((dryRunResponse.Gearbox.OutputSpeed + prevGbxSpeed) / 2.0, gbxOutTqV);
 					gbxInTq = gbxOutTqV / ModelData.GearboxData.Gears[gear.Gear].Ratio + gbxLoss.Value;
@@ -597,8 +603,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						gbxInTorque = anglInTorque;
 					}
 					var gear = dryRunResponse.Gearbox.Gear;
-					var prevGbxSpeed = (DataBus.GearboxInfo as AbstractGearbox<GearboxState>).PreviousState
-						.OutAngularVelocity;
+					var prevGbxSpeed = GetPrevGbxSpeed();
 					var gbxLoss = ModelData.GearboxData.Gears[gear.Gear].LossMap
 						.GetTorqueLoss((dryRunResponse.Gearbox.OutputSpeed + prevGbxSpeed) / 2.0, gbxInTorque);
 					gbxInTq = gbxInTorque / ModelData.GearboxData.Gears[gear.Gear].Ratio + gbxLoss.Value;
@@ -607,6 +612,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			return gbxInTq;
+		}
+
+		private PerSecond GetPrevGbxSpeed()
+		{
+			switch (DataBus.GearboxInfo) {
+				case Gearbox gbx:
+					return gbx.PreviousState.OutAngularVelocity;
+				case ATGearbox atGbx:
+					return atGbx.PreviousState.OutAngularVelocity;
+				default: throw new VectoException("Unsupported gearbox type!");
+			}
 		}
 
 		public void OperatingpointChangedDuringRequest(Second absTime, Second dt, NewtonMeter outTorque,
@@ -1527,7 +1543,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 							DataBus.GearboxInfo.GearEngaged(absTime) && (eval.First().Response?.Gearbox.Gear.Engaged ?? true);
 			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && emEngaged) {
 				//var filtered = eval.Where(x => !x.IgnoreReason.InvalidEngineSpeed()).ToArray();
-				var filtered = eval.Where(x => !x.IgnoreReason.EngineSpeedTooLow() && !x.IgnoreReason.EngineSpeedTooHigh()).ToArray();
+				var batOK = eval.Where(x => !x.IgnoreReason.BatteryDemandExceeded()).ToArray();
+				if (!batOK.Any()) {
+					batOK = eval.ToArray();
+				}
+				var filtered = batOK.Where(x => !x.IgnoreReason.EngineSpeedTooLow() && !x.IgnoreReason.EngineSpeedTooHigh()).ToArray();
 				if (filtered.Length == 0) {
 					filtered = eval.Where(x => !x.IgnoreReason.EngineSpeedTooLow() && !x.IgnoreReason.EngineSpeedTooHigh()).ToArray();
 				}

@@ -28,27 +28,31 @@ namespace TUGraz.VectoCore.Tests.InputData
 	[TestFixture]
 	public class IEPCMapReaderTest
 	{
-		public const string basePath = "../../../../../"; //from cwd to repo root
+		public const string repoRoot = "../../../../../"; //from cwd to repo root
+		public const string iepcMapTestFiles = @"TestData\Components\IEPC\IEPCMapReader\";
 
 
 
 
-
-		[OneTimeSetUp]
+        [OneTimeSetUp]
 		public void OneTimeSetup()
 		{
 			
 		}
 
 
-		[TestCase(@$"{basePath}Generic Vehicles/Engineering Mode/GenericIEPC-S/IEPC-S_Gbx3Speed/IEPC_Gbx3_FLD_max.viepcp", @$"{basePath}Generic Vehicles/Engineering Mode/GenericIEPC-S/IEPC-S_Gbx3Speed/IEPC_Gbx3_2.viepco", 4.65f, 2.74f)]
-		[TestCase(@$"{basePath}Generic Vehicles/Engineering Mode/GenericIEPC-S/IEPC-S_Gbx3Speed/IEPC_Gbx3_FLD_max.viepcp", @$"{basePath}Generic Vehicles/Engineering Mode/GenericIEPC-S/IEPC-S_Gbx3Speed/IEPC_Gbx3_1.viepco", 8.31f, 2.74f)]
-		[TestCase(@$"{basePath}Generic Vehicles/Engineering Mode/GenericIEPC-S/IEPC-S_Gbx3Speed/IEPC_Gbx3_FLD_max.viepcp", @$"{basePath}Generic Vehicles/Engineering Mode/GenericIEPC-S/IEPC-S_Gbx3Speed/IEPC_Gbx3_3.viepco", 2.74f, 2.74f)]
+		[TestCase(@$"{repoRoot}Generic Vehicles/Engineering Mode/GenericIEPC-S/IEPC-S_Gbx3Speed/IEPC_Gbx3_FLD_max.viepcp", @$"{repoRoot}Generic Vehicles/Engineering Mode/GenericIEPC-S/IEPC-S_Gbx3Speed/IEPC_Gbx3_2.viepco", 4.65f, 2.74f)]
+		[TestCase(@$"{repoRoot}Generic Vehicles/Engineering Mode/GenericIEPC-S/IEPC-S_Gbx3Speed/IEPC_Gbx3_FLD_max.viepcp", @$"{repoRoot}Generic Vehicles/Engineering Mode/GenericIEPC-S/IEPC-S_Gbx3Speed/IEPC_Gbx3_1.viepco", 8.31f, 2.74f)]
+		[TestCase(@$"{repoRoot}Generic Vehicles/Engineering Mode/GenericIEPC-S/IEPC-S_Gbx3Speed/IEPC_Gbx3_FLD_max.viepcp", @$"{repoRoot}Generic Vehicles/Engineering Mode/GenericIEPC-S/IEPC-S_Gbx3Speed/IEPC_Gbx3_3.viepco", 2.74f, 2.74f)]
 
 
-		[TestCase(@$"{basePath}Generic Vehicles/Engineering Mode/GenericIEPC-S/IEPC-S_Gbx3Speed/IEPC_Gbx3_FLD_max.viepcp", @$"{basePath}VectoCore/VectoCoreTest/TestData/Components/IEPC/IEPCMapReader/IEPC_Gbx3_1_different_number_of_points.viepco", 8.31f, 2.74f)]
-		[TestCase(@$"{basePath}Generic Vehicles/Engineering Mode/GenericIEPC-S/IEPC-S_Gbx3Speed/IEPC_Gbx3_FLD_max.viepcp", @$"{basePath}VectoCore/VectoCoreTest/TestData/Components/IEPC/IEPCMapReader/IEPC_Gbx3_1_following_curve.viepco", 8.31f, 2.74f)]
-		public void ReadIEPCMap(string fullLoadCurvePath, string powerMapPath, double ratio, double fldMeasuredRatio)
+		[TestCase(@$"{repoRoot}Generic Vehicles/Engineering Mode/GenericIEPC-S/IEPC-S_Gbx3Speed/IEPC_Gbx3_FLD_max.viepcp", @$"{repoRoot}VectoCore/VectoCoreTest/TestData/Components/IEPC/IEPCMapReader/IEPC_Gbx3_1_different_number_of_points.viepco", 8.31f, 2.74f)]
+		[TestCase(@$"{repoRoot}Generic Vehicles/Engineering Mode/GenericIEPC-S/IEPC-S_Gbx3Speed/IEPC_Gbx3_FLD_max.viepcp", @$"{repoRoot}VectoCore/VectoCoreTest/TestData/Components/IEPC/IEPCMapReader/IEPC_Gbx3_1_following_curve.viepco", 8.31f, 2.74f)]
+
+
+		[TestCase($"{iepcMapTestFiles}IEPC_Gbx1_FLD_max.viepcp",$"{iepcMapTestFiles}IEPC_Gbx1.viepco", 4.65f, 4.65f)]
+		[TestCase($"{iepcMapTestFiles}IEPC_Gbx1_FLD_max.viepcp", $"{iepcMapTestFiles}IEPC_Gbx1_below_fld_outlierpoints.viepco", 4.65f, 4.65f)]
+        public void ReadIEPCMap(string fullLoadCurvePath, string powerMapPath, double ratio, double fldMeasuredRatio)
 		{
 			Assert.That(File.Exists(fullLoadCurvePath), Path.GetFullPath(fullLoadCurvePath));
 			Assert.That(File.Exists(powerMapPath), Path.GetFullPath(fullLoadCurvePath));
@@ -63,7 +67,6 @@ namespace TUGraz.VectoCore.Tests.InputData
 
 			var fld = IEPCFullLoadCurveReader.Create(fullLoadCurveData, 1, fldMeasuredRatio);
 			var powerMapInput = IEPCMapReader.GetEntries(powerMapData, ratio);
-			//PrintMaps("powerMapInput", powerMapInput, "powerMapInput", x => x.MotorSpeed.AsRPM, y => y.Torque.Value());
 
 
 			var effMap = IEPCMapReader.Create(powerMapData, 1, ratio, fld);
@@ -82,10 +85,6 @@ namespace TUGraz.VectoCore.Tests.InputData
 					entries = fld.FullLoadEntries
 				});
 
-
-
-
-			//PrintMaps("powerMap", effMap.Entries, "powerMap", x => x.MotorSpeed.AsRPM, y => y.Torque.Value());
 
 
 			PrintMaps("FLD_input_powermap.png",
@@ -229,7 +228,7 @@ namespace TUGraz.VectoCore.Tests.InputData
 				
 
 
-				var dirInfo = Directory.CreateDirectory($@"{nameof(IEPCMapReaderTest)}//{String.Join("", TestContext.CurrentContext.Test.Name.Replace(basePath, "").Split(Path.GetInvalidFileNameChars()))}");
+				var dirInfo = Directory.CreateDirectory($@"{nameof(IEPCMapReaderTest)}//{String.Join("", TestContext.CurrentContext.Test.Name.Replace(repoRoot, "").Split(Path.GetInvalidFileNameChars()))}");
 				chart.SaveImage($"{dirInfo.FullName}\\{(fileName.EndsWith(".png") ? fileName : fileName + ".png")}",
 					ChartImageFormat.Png);
 				TestContext.WriteLine($"{dirInfo.FullName}");

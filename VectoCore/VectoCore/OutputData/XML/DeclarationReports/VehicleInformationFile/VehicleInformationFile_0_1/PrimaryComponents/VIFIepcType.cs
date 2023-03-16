@@ -98,9 +98,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 						? null 
 						: new XElement(_vif + XMLNames.VoltageLevel_Voltage, voltageEntry.VoltageLevel.ToXMLFormat(0)),
 					new XElement(_vif + XMLNames.ElectricMachine_ContinuousTorque, voltageEntry.ContinuousTorque.ToXMLFormat(2)),
-					new XElement(_vif + XMLNames.ElectricMachine_TestSpeedContinuousTorque, voltageEntry.ContinuousTorqueSpeed.ToXMLFormat(2)),
+					new XElement(_vif + XMLNames.ElectricMachine_TestSpeedContinuousTorque, voltageEntry.ContinuousTorqueSpeed.AsRPM.ToXMLFormat(2)),
 					new XElement(_vif + XMLNames.ElectricMachine_OverloadTorque, voltageEntry.OverloadTorque.ToXMLFormat(2)),
-					new XElement(_vif + XMLNames.ElectricMachine_TestSpeedOverloadTorque, voltageEntry.OverloadTestSpeed.ToXMLFormat(2)),
+					new XElement(_vif + XMLNames.ElectricMachine_TestSpeedOverloadTorque, voltageEntry.OverloadTestSpeed.AsRPM.ToXMLFormat(2)),
 					new XElement(_vif + XMLNames.ElectricMachine_OverloadDuration, voltageEntry.OverloadTime.ToXMLFormat(2)),
 					GetMaxTorqueCurve(voltageEntry.FullLoadCurve)
 					//GetPowerMap(voltageEntry.PowerMap)

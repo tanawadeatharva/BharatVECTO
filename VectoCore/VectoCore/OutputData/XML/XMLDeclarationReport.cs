@@ -48,7 +48,9 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
@@ -58,12 +60,16 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected IXMLCustomerReport CustomerRpt;
 
+		protected readonly IManufacturerReportFactory _mrfFactory;
+		protected readonly ICustomerInformationFileFactory _cifFactory;
+		
 
 		protected IDictionary<Tuple<MissionType, LoadingType>, double> _weightingFactors;
 
-		public XMLDeclarationReport(IReportWriter writer) : base(writer)
+		public XMLDeclarationReport(IReportWriter writer, IManufacturerReportFactory mrfFactory, ICustomerInformationFileFactory cifFactory) : base(writer)
 		{
-			throw new NotImplementedException("Use new implementation...");
+			_mrfFactory = mrfFactory;
+			_cifFactory = cifFactory;
 		}
 
 		protected XMLDeclarationReport(IReportWriter writer, bool dummy) : base(writer) { }
@@ -89,19 +95,22 @@ namespace TUGraz.VectoCore.OutputData.XML
 				MaxChargingPower = runData.MaxChargingPower;
 				BatteryData = runData.BatteryData;
 				OVCMode = runData.OVCMode;
+				VectoRunData = runData;
 			}
 
-			public MissionType Mission { get; set; }
-			public LoadingType LoadingType { get; set; }
-			public int FuelMode { get; set; }
+			public VectoRunData VectoRunData { get; private set; }
+
+			public MissionType Mission { get; private set; }
+			public LoadingType LoadingType { get; private set; }
+			public int FuelMode { get; private set; }
 			public IList<IFuelProperties> FuelData { get; set; }
 
 
 			public Kilogram Payload { get; set; }
 
-			public Kilogram TotalVehicleMass { get; set; }
+			public Kilogram TotalVehicleMass { get; private set; }
 
-			public CubicMeter CargoVolume { get; set; }
+			public CubicMeter CargoVolume { get; private set; }
 
 			public double? PassengerCount { get; set; }
 			public VehicleClass VehicleClass { get; set; }
@@ -115,7 +124,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
             public IFuelConsumptionCorrection FuelConsumptionFinal(FuelType fuelType)
 			{
-				return CorrectedFinalFuelConsumption[fuelType];
+				return CorrectedFinalFuelConsumption.ContainsKey(fuelType) ?  CorrectedFinalFuelConsumption[fuelType] : null;
 			}
 
 			public WattSecond ElectricEnergyConsumption { get; private set; }
@@ -211,7 +220,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				CorrectedFinalFuelConsumption = data.CorrectedModalData.FuelCorrection;
 				CO2Total = data.CorrectedModalData.CO2Total;
 				EnergyConsumptionTotal = data.CorrectedModalData.FuelEnergyConsumptionTotal;
-				ElectricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption;
+				ElectricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption_SoC;
 
 				if (runData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
 						VectoSimulationJobType.IEPC_E)) {
@@ -328,12 +337,24 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected virtual void InstantiateReports(VectoRunData modelData)
 		{
-			//if (modelData.Exempted) {
-			//	ManufacturerRpt = new XMLManufacturerReportExemptedTruck();
-			//} else {
-			//	ManufacturerRpt = new XMLManufacturerReportTruck();
-			//}
-			//CustomerRpt = new XMLCustomerReport();
+
+			var vehicleData = modelData.VehicleData.InputData;
+			var iepc = vehicleData.Components?.IEPC != null;
+			var ihpc =
+				vehicleData.Components?.ElectricMachines?.Entries?.Count(e => e.ElectricMachine.IHPCType != "None") > 0;
+
+			ManufacturerRpt = _mrfFactory.GetManufacturerReport(vehicleData.VehicleCategory,
+				vehicleData.VehicleType,
+				vehicleData.ArchitectureID,
+				vehicleData.ExemptedVehicle,
+				iepc,
+				ihpc);
+			CustomerRpt = _cifFactory.GetCustomerReport(vehicleData.VehicleCategory,
+				vehicleData.VehicleType,
+				vehicleData.ArchitectureID,
+				vehicleData.ExemptedVehicle,
+				iepc,
+				ihpc);
 		}
 
 		private static IDictionary<Tuple<MissionType, LoadingType>, double> ZeroWeighting =>

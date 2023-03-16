@@ -36,7 +36,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 				case IMultistepBusInputDataProvider multistageBusInputDataProvider:
 					break;
 				case ISingleBusInputDataProvider singleBusInputDataProvider:
-					return new XMLDeclarationReportSingleBus09(outputWriter, _mrfFactory, _cifFactory);
+					throw new NotImplementedException("Single Bus not implemented");
+					//return new XMLDeclarationReportSingleBus(outputWriter, _mrfFactory, _cifFactory);
 				case IDeclarationInputDataProvider declarationInputDataProvider:
 					return CreateDeclarationReport(declarationInputDataProvider, outputWriter);
 				case IMultiStageTypeInputData multiStageTypeInputData:
@@ -69,14 +70,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			if (multistageVifInputData.VehicleInputData == null)
 			{
-				var reportCompleted = new XMLDeclarationReportCompletedVehicle_09(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory)
+				var reportCompleted = new XMLDeclarationReportCompletedVehicle(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory)
 				{
 					PrimaryVehicleReportInputData = multistageVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle,
 				};
 				return reportCompleted;
 			}
 			else {
-				var report = new XMLDeclarationReportInterimVehicle_09(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory, _vifInterimFactory);
+				var report = new XMLDeclarationReportInterimVehicle(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory, _vifInterimFactory);
 				return report;
 			}
 		}
@@ -87,19 +88,19 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var vehicleCategory = declarationInputDataProvider.JobInputData.Vehicle.VehicleCategory;
 			if (vehicleCategory.IsLorry())
 			{
-				return new XMLDeclarationReport09(outputDataWriter, _mrfFactory, _cifFactory);
+				return new XMLDeclarationReport(outputDataWriter, _mrfFactory, _cifFactory);
 			}
 
 			if (vehicleCategory.IsBus())
 				switch (declarationInputDataProvider.JobInputData.Vehicle.VehicleCategory)
 				{
 					case VehicleCategory.HeavyBusCompletedVehicle:
-						return new XMLDeclarationReportCompletedVehicle_09(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory)
+						return new XMLDeclarationReportCompletedVehicle(outputDataWriter,_mrfFactory,_cifFactory,_vifFactory)
 											{
 												PrimaryVehicleReportInputData = declarationInputDataProvider.PrimaryVehicleData,
 											};
 					case VehicleCategory.HeavyBusPrimaryVehicle:
-						return new XMLDeclarationReportPrimaryVehicle_09(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory);
+						return new XMLDeclarationReportPrimaryVehicle(outputDataWriter, _mrfFactory, _vifFactory);
 
 					default:
 						break;

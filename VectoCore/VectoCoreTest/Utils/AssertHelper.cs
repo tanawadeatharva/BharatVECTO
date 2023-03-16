@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 					continue;
 				}
 				if (propertyType.IsPrimitive || propertyType == typeof(string)) {
-					Assert.AreEqual(expectedVal, actualVal);
+					Assert.AreEqual(expectedVal, actualVal, $"Property {prop.Name}, expected: {expectedVal}, actual: {actualVal}");
 				} else if (propertyType == typeof(SI)) {
 					Assert.AreEqual((expectedVal as SI).Value(), (actualVal as SI).Value());
 					Assert.AreEqual((expectedVal as SI).UnitString, (actualVal as SI).UnitString);

@@ -11,6 +11,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
@@ -48,9 +49,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 							: null,
 						new XElement(_mrf + "MaxContinuousPower",
 							(electricMotorVoltageLevel.ContinuousTorque *
-							electricMotorVoltageLevel.ContinuousTorqueSpeed).ConvertToKiloWatt()
-							.ToXMLFormat(0)));
-
+							electricMotorVoltageLevel.ContinuousTorqueSpeed).ConvertToKiloWatt().ToXMLFormat(0)));
 
 					voltageLevels.Add(voltageLevel);
 				}

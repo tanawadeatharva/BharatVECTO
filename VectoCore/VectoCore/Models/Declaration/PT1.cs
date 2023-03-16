@@ -91,6 +91,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public override PT1Result Lookup(PerSecond key)
 		{
+			WarnReadFromFile();
 			var extrapolated = key.IsSmaller(_entries[0].Key) || key.IsGreater(_entries.Last().Key);
 
 			var index = _entries.FindIndex(x => x.Key.IsGreater(key));

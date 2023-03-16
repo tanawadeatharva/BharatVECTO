@@ -1,0 +1,43 @@
+{
+  "Header": {
+    "CreatedBy": "",
+    "Date": "2023-02-15T16:06:35.5695734Z",
+    "AppVersion": "3",
+    "FileVersion": 12
+  },
+  "Body": {
+    "SavedInDeclMode": true,
+    "VehicleFile": "IEPCVehicle_Gbx1Axl.vveh",
+    "Padd_electric": 0.0,
+    "Aux": [
+      {
+        "ID": "STP",
+        "Type": "Steering pump",
+        "Technology": [
+          "Full electric steering gear"
+        ]
+      },
+      {
+        "ID": "AC",
+        "Type": "HVAC",
+        "Technology": [
+          "Default"
+        ]
+      },
+      {
+        "ID": "ES",
+        "Type": "Electric System",
+        "Technology": [
+          "Standard technology"
+        ]
+      },
+      {
+        "ID": "PS",
+        "Type": "Pneumatic System",
+        "Technology": [
+          "Vacuum pump + elec. driven"
+        ]
+      }
+    ]
+  }
+}

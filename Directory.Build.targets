@@ -31,16 +31,21 @@
 	</Target>
 
 	<Target Name="Packaging" AfterTargets="DispatchToInnerBuilds" Condition="('$(Configuration)'=='Deploy') Or ('$(Configuration)' == 'MockupDeploy')">
+
+
 		<Message Text="Packaging in $(Configuration) Configuration" Importance="high" />
 		<Exec Command="cscript &quot;$(SolutionDir)documentation\user manual source\convertpptxtopdf.vbs&quot; &quot;$(SolutionDir)documentation\user manual source\release notes vecto3.x.pptx&quot; &quot;$(SolutionDir)documentation\user manual source\release notes vecto3.x.pdf&quot;"/>
 		<PropertyGroup>
 			<CurrentDate>$([System.DateTime]::Now.ToString(yyy_MM_dd))</CurrentDate>
 			<DeployPath>$(SolutionDir)Deploy\$(CurrentDate)-VECTO-$(Version)\</DeployPath>
+			<NuGetPath>$(SolutionDir)Nuget\$(CurrentDate)-VECTO-NuGet-$(Version)\</NuGetPath>
 			<DeployPath Condition="'$(Configuration)'=='MockupDeploy'">$(SolutionDir)Deploy\$(CurrentDate)-VECTO_MOCKUP-$(Version)\</DeployPath>
+			<NuGetPath Condition="'$(Configuration)'=='MockupDeploy'"> $(SolutionDir)Nuget\$(CurrentDate)-VECTO_MOCKUP-NuGet-$(Version)\</NuGetPath>
 		</PropertyGroup>
   		<RemoveDir Directories="$(SolutionDir)Deploy" Condition="Exists('$(SolutionDir)Deploy')"/>
+		<RemoveDir Directories="$(NuGetPath)" Condition="Exists('$(NuGetPath)')"/>
 		<MakeDir Directories="$(DeployPath)"/>
-
+		<MakeDir Directories="$(NuGetPath)"/>
 
 		<ItemGroup Condition="'$(Configuration)'=='Deploy'">
 			<!-- All files for net45 -->
@@ -185,6 +190,7 @@
 			<GenericVehicles Include="$(SolutionDir)Generic Vehicles\**\*.*" Exclude="$(SolutionDir)**\*.vmod;$(SolutionDir)**\*.vsum;$(SolutionDir)**\*RSLT_*.xml;$(SolutionDir)**\*.pdf"/>
 			<MissionProfiles Include="$(SolutionDir)VectoCore\VectoCore\Resources\Declaration\MissionCycles\**\*.*"/>
 			<DeclarationData Include="$(SolutionDir)VectoCore\VectoCore\Resources\Declaration\**\*.csv" Exclude="$(SolutionDir)**\MissionCycles\**\*.*"/>
+			<DeclarationData Include="$(SolutionDir)VectoCore\VectoCore\Resources\Declaration\**\*.md" Exclude="$(SolutionDir)**\MissionCycles\**\*.*"/>
 			<DeclarationData Include="$(SolutionDir)VectoCore\VectoCore\Resources\Declaration\**\*.vacc" Exclude="$(SolutionDir)**\MissionCycles\**\*.*"/>
 			<DeclarationData Include="$(SolutionDir)VectoCore\VectoCore\Resources\Declaration\**\*.apac" Exclude="$(SolutionDir)**\MissionCycles\**\*.*"/>
 			<DeclarationData Include="$(SolutionDir)VectoCore\VectoCore\Resources\Declaration\**\*.aenv" Exclude="$(SolutionDir)**\MissionCycles\**\*.*"/>
@@ -203,7 +209,8 @@
 			<ReleaseNotes Include="$(SolutionDir)Documentation\User Manual Source\Release Notes Vecto3.x.pdf"/>
 		</ItemGroup>
 		<Copy SourceFiles="@(GenericVehicles)" DestinationFiles="@(GenericVehicles->'$(DeployPath)Generic Vehicles\%(RecursiveDir)%(Filename)%(Extension)')" />
-		<Copy SourceFiles="@(DeclarationData)" DestinationFolder="$(DeployPath)Declaration" />
+		<!-- <Copy SourceFiles="@(DeclarationData)" DestinationFolder="$(DeployPath)Declaration" /> -->
+		<Copy SourceFiles="@(DeclarationData)" DestinationFiles="@(DeclarationData->'$(DeployPath)Declaration\%(RecursiveDir)%(Filename)%(Extension)')"/>
 		<Copy SourceFiles="@(MissionProfiles)" DestinationFolder="$(DeployPath)Mission Profiles" />
 		<Copy SourceFiles="@(VectoXMLExamples)" DestinationFolder="$(DeployPath)XML\Examples" />
 		<Copy SourceFiles="@(VectoXSD)" DestinationFolder="$(DeployPath)XML\XSD" />
@@ -212,6 +219,21 @@
 		<Copy SourceFiles="@(VectoConfigurationSample)" DestinationFolder="$(DeployPath)"/>
 		<Copy SourceFiles="$(SolutionDir)\Documentation\User Manual Source\README for Mission Profiles Directory.txt" DestinationFiles="$(DeployPath)Mission Profiles\!! README !!.TXT"/>
 		<Copy SourceFiles="$(SolutionDir)\Documentation\User Manual Source\README for Declaration Directory.txt" DestinationFiles="$(DeployPath)Declaration\!! README !!.TXT"/>
+
+		<!-- NuGet Files-->
+		<ItemGroup Condition="'$(Configuration)'=='Deploy'">
+			<VectoNuget Include ="$(SolutionDir)VectoCore\VectoCore\bin\Release\*.nupkg" />
+			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoCommon\bin\Release\*.nupkg" />
+			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoHashing\bin\Release\*.nupkg" />
+		</ItemGroup>
+		<Copy SourceFiles="@(VectoNuget)" DestinationFolder ="$(NuGetPath)"/>
+
+		<PropertyGroup>
+			<NugetDestinationZip>$(SolutionDir)$(CurrentDate)-VECTO-NuGet-$(Version).zip</NugetDestinationZip>
+			<NugetDestinationZip Condition="'$(Configuration)'=='MockupDeploy'">$(SolutionDir)$(CurrentDate)-VECTO_MOCKUP-NuGet-$(Version).zip</NugetDestinationZip>
+		</PropertyGroup>
+		<ZipDirectory SourceDirectory="$(NuGetPath)" DestinationFile="$(NugetDestinationZip)" Overwrite="true"/>
+
 
 		<PropertyGroup>
 			<DestinationZip>$(SolutionDir)$(CurrentDate)-VECTO-$(Version).zip</DestinationZip>
