@@ -798,7 +798,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _vehicleDeclarationType, value);
 		}
 
-		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		public IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 		public TableData BoostingLimitations { get; }
 
 		private string _vehicleTypeApprovalNumber;
@@ -812,6 +812,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public ArchitectureID ArchitectureID { get; }
 		public bool OvcHev { get; }
 		public Watt MaxChargingPower { get; }
+		public VectoSimulationJobType VehicleType { get; }
 
 		#endregion
 
@@ -1081,10 +1082,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get { throw new NotImplementedException(); }
 		}
 
-		public Watt MaxNetPower2
-		{
-			get { throw new NotImplementedException(); }
-		}
+
 
 
 

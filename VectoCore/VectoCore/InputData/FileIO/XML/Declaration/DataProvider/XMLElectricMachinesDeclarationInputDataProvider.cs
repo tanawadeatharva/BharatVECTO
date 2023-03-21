@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		public static readonly string QUALIFIED_GEN_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_GEN_TYPE);
 
-		private IXMLDeclarationVehicleData _vehicle;
+		protected IXMLDeclarationVehicleData _vehicle;
 		private IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> _entries;
 
 		public XMLElectricMachinesDeclarationInputDataProvider(
@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 
-		private List<ElectricMachineEntry<IElectricMotorDeclarationInputData>> GetEntries()
+		protected virtual List<ElectricMachineEntry<IElectricMotorDeclarationInputData>> GetEntries()
 		{
 			var machineEntry = new ElectricMachineEntry<IElectricMotorDeclarationInputData> {
 				Position = PowertrainPositionHelper.Parse(((AbstractXMLVehicleDataProviderV24)_vehicle).PowertrainPositionPrefix,
@@ -44,16 +44,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				ElectricMachine = ElectricMachineSystemReader.CreateElectricMachineSystem(GetNode(XMLNames.ElectricMachineSystem)),
 			};
 
-			if (ElementExists("ADC"))
+			if (ElementExists("ADC")) {
 				machineEntry.ADC = ElectricMachineSystemReader.ADCInputData;
+				
+			}
 
-			if(ElementExists(XMLNames.ElectricMachine_P2_5GearRatios))
+			machineEntry.MechanicalTransmissionEfficiency = double.NaN;
+
+
+			if (ElementExists(XMLNames.ElectricMachine_P2_5GearRatios)) {
 				SetGearRatios(machineEntry);
+			}
+			
 			
 			return new List<ElectricMachineEntry<IElectricMotorDeclarationInputData>>{machineEntry};
 		}
 
-		private void SetGearRatios(ElectricMachineEntry<IElectricMotorDeclarationInputData> machineEntry)
+		protected void SetGearRatios(ElectricMachineEntry<IElectricMotorDeclarationInputData> machineEntry)
 		{ 
 			var gearRatios = GetNode(XMLNames.ElectricMachine_P2_5GearRatios, null, false);
 			if (gearRatios != null) {
@@ -134,4 +141,37 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			});
 
 		#endregion
-	} }
+	}
+
+	public class XMLDeclarationElectricMachinesDataProviderV01 : XMLElectricMachinesDeclarationInputDataProvider
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public new const string XSD_TYPE = "ElectricMachineType";
+		public const string XSD_GEN_TYPE = "ElectricMachineGENType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public static readonly string QUALIFIED_GEN_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_GEN_TYPE);
+
+		public XMLDeclarationElectricMachinesDataProviderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+		protected override List<ElectricMachineEntry<IElectricMotorDeclarationInputData>> GetEntries()
+		{
+			var machineEntry = new ElectricMachineEntry<IElectricMotorDeclarationInputData> {
+				Position = PowertrainPositionHelper.Parse(((XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01)_vehicle).PowertrainPositionPrefix,
+														GetString(XMLNames.ElectricMachine_PowertrainPosition)),
+				Count = XmlConvert.ToInt32(GetString(XMLNames.ElectricMachine_Count)),
+				ElectricMachine = ElectricMachineSystemReader.CreateElectricMachineSystem(GetNode(XMLNames.ElectricMachineSystem)),
+			};
+
+			if (ElementExists("ADC"))
+				machineEntry.ADC = ElectricMachineSystemReader.ADCInputData;
+
+			if (ElementExists(XMLNames.ElectricMachine_P2_5GearRatios))
+				SetGearRatios(machineEntry);
+
+			return new List<ElectricMachineEntry<IElectricMotorDeclarationInputData>> { machineEntry };
+		}
+	}
+
+}

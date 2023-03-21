@@ -29,12 +29,30 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using TUGraz.VectoCommon.Utils;
+
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
+	public enum PTOConsumerType
+	{
+		mechanical,
+		electrical
+	}
+
+
+
+
 	public class PTOData : SimulationComponentData
 	{
 		public string TransmissionType;
+		//Transmission powerdemand mechanical
+		public Watt TransmissionPowerDemand;
+
+		//Transmission powerdemand electrical
+		public Watt TransmissionPowerDemandElectrical;
+
 		public ILossMap LossMap;
 		public DrivingCycleData PTOCycle;
+		public PTOConsumerType ConsumerType = PTOConsumerType.mechanical;
 	}
 }

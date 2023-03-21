@@ -35,7 +35,7 @@ namespace TUGraz.VectoCommon.Models {
 		public PerSecond GenSetSpeed { get; set; }
 	}
 
-	[DebuggerDisplay("{U,nq}: {Score,nq} - G{Gear,nq} - {IgnoreReason,nq}")]
+	[DebuggerDisplay("{U.ToString(\"F4\"),nq}: {Score,nq} - G{Gear,nq} - {IgnoreReason,nq}")]
 	public class HybridResultEntry
 	{
 		public Second SimulationInterval;

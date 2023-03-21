@@ -5,9 +5,13 @@
     <AssemblyName>VECTO</AssemblyName>
     <ApplicationIcon>Icon2.ico</ApplicationIcon>
     <RootNamespace>TUGraz.VECTO</RootNamespace>
-    <Configurations>Debug;Release;Deploy</Configurations>
+    <Configurations>Debug;Release;Deploy;MockupDeploy</Configurations>
     <TargetFrameworks>net45</TargetFrameworks>
     <DefineConstants />
   </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
 
 </Project>

@@ -58,5 +58,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			return new ResponseSuccess(this);
 		}
+
+		protected override bool DoUpdateFrom(object other) => false;
+
 	}
 }

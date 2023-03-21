@@ -45,9 +45,10 @@ namespace TUGraz.VectoCommon.Hashing
 		Airdrag,
 		Tyre,
 		Vehicle,
-		VectoOutput,
+		VectoManufacturerReport,
 		VectoCustomerInformation,
 		VectoPrimaryVehicleInformation,
+		VectoInterimVehicleInformation,
 		VectoManufacturingStep, 
 		BatterySystem,
 		CapacitorSystem,
@@ -81,7 +82,7 @@ namespace TUGraz.VectoCommon.Hashing
 					return XMLNames.AxleWheels_Axles_Axle_Tyre;
 				case VectoComponents.Vehicle:
 					return XMLNames.Component_Vehicle;
-				case VectoComponents.VectoOutput:
+				case VectoComponents.VectoManufacturerReport:
 					return "VectoOutput";
 				case VectoComponents.VectoCustomerInformation:
 					return "VectoCustomerInformation";
@@ -103,6 +104,8 @@ namespace TUGraz.VectoCommon.Hashing
 					return XMLNames.Component_CertifiedAeroReduction;
 				case VectoComponents.ElectricEnergyStorage:
 					return XMLNames.REESS;
+				case VectoComponents.VectoInterimVehicleInformation:
+					return "InterimVehicle";
 				default:
 					throw new ArgumentOutOfRangeException("VectoComponents", component, null);
 			}
@@ -127,12 +130,14 @@ namespace TUGraz.VectoCommon.Hashing
 					return "AD-";
 				case VectoComponents.Tyre:
 					return "TYRE-";
-				case VectoComponents.VectoOutput:
-					return "RESULT-";
+				case VectoComponents.VectoManufacturerReport:
+					return "MRF-";
 				case VectoComponents.VectoCustomerInformation:
-					return "COC-";
+					return "CIF-";
 				case VectoComponents.VectoPrimaryVehicleInformation:
-					return "PIF-";
+					return "VIF_P-";
+				case VectoComponents.VectoInterimVehicleInformation:
+					return "VIF_I-";
 				case VectoComponents.Vehicle:
 					return "VEH-";
 				case VectoComponents.VectoManufacturingStep:
@@ -160,7 +165,7 @@ namespace TUGraz.VectoCommon.Hashing
 		{
 			switch (component) {
 				case VectoComponents.VectoCustomerInformation:
-				case VectoComponents.VectoOutput:
+				case VectoComponents.VectoManufacturerReport:
 				case VectoComponents.VectoPrimaryVehicleInformation:
 				case VectoComponents.VectoManufacturingStep:
 					return true;

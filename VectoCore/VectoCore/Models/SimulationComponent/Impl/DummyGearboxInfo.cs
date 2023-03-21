@@ -67,6 +67,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return true;
 		}
 
+		public bool RequestAfterGearshift { get; set; }
+
 		#endregion
+
+		protected override bool DoUpdateFrom(object other) => false;
 	}
 }

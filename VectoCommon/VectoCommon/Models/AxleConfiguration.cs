@@ -31,6 +31,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.Models
@@ -71,6 +72,20 @@ namespace TUGraz.VectoCommon.Models
 					return "Trailer";
 				default:
 					throw new ArgumentOutOfRangeException("self", self, null);
+			}
+		}
+
+		public static string ToXMLFormat(this AxleType self)
+		{
+			switch (self) {
+				case AxleType.VehicleDriven:
+					return "VehicleDriven";
+				case AxleType.VehicleNonDriven:
+					return "VehicleNonDriven";
+				case AxleType.Trailer:
+					return "Trailer";
+				default:
+					throw new ArgumentOutOfRangeException(nameof(self), self, null);
 			}
 		}
 	}

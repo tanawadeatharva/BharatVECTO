@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Markus Quaritsch (Technische Universität Graz) -->
+<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Michael Krisper (Technische Universität Graz) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
 	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
@@ -15,7 +15,10 @@ Changelog:
     12.04.2022: Remove TorqueLimits element on vehicle level for PEV, HEV-S, HEV-IEPC-S
                 Remove BoostingLimitations for HEV-IEPC-S
 	14.04.2022: Added new RetarderTypeType definition to cover AxlegearInputRetarder (used only for E3, S3, S-IEPC, E-IEPC)
--->
+	17.08.2022: Changed datatype of ChassisConfiguration, AxleConfiguration and LegislativeCategory for Vehicle_Exempted_MediumLorryDeclarationType
+	16.11.2022: 	- Removed trailing white spaces from PSTechnologies and SPTechnologies
+				- changed Small + elec. driven + ESS to Small + AMS + elec. driven	
+	-->
 	<xs:complexType name="Abstract_ADAS_ConventionalType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="v2.1:AbstractAdvancedDriverAssistantSystemsType"/>
@@ -405,6 +408,11 @@ Changelog:
 							<xs:sequence>
 								<xs:group ref="v2.4:BusAuxPneumaticSystemGen_Conventional_SequenceGroup"/>
 								<xs:group ref="v2.4:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+								<xs:element name="PneumaticSCRReagentDosing" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P316 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -567,6 +575,11 @@ Changelog:
 							<xs:sequence>
 								<xs:group ref="v2.4:BusAuxPneumaticSystemGen_HEV-Px_SequenceGroup"/>
 								<xs:group ref="v2.4:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+								<xs:element name="PneumaticSCRReagentDosing" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P316 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -728,6 +741,11 @@ Changelog:
 							<xs:sequence>
 								<xs:group ref="v2.4:BusAuxPneumaticSystemGen_HEV-S_SequenceGroup"/>
 								<xs:group ref="v2.4:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+								<xs:element name="PneumaticSCRReagentDosing" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P316 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -764,7 +782,7 @@ Changelog:
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.4:AuxPSTechnology_PEV_LorryType">
+											<xs:extension base="v2.4:AuxSPTechnology_PEV_LorryType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -1791,17 +1809,17 @@ Changelog:
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
 					<xs:group ref="v2.4:Vehicle_GeneralParametersSequenceGroup"/>
-					<xs:element name="LegislativeCategory" type="v2.4:LegislativeCategoryHeavyLorryDeclarationType">
+					<xs:element name="LegislativeCategory" type="v2.4:LegislativeCategoryMediumLorryDeclarationType">
 						<xs:annotation>
 							<xs:documentation>P251 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ChassisConfiguration" type="v2.4:ChassisConfigurationHeavyLorryDeclarationType">
+					<xs:element name="ChassisConfiguration" type="v2.4:ChassisConfigurationMediumLorryDeclarationType">
 						<xs:annotation>
 							<xs:documentation>P036 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="AxleConfiguration" type="v2.4:AxleConfigurationHeavyLorryDeclarationType">
+					<xs:element name="AxleConfiguration" type="v2.4:AxleConfigurationMediumLorryDeclarationType">
 						<xs:annotation>
 							<xs:documentation>P037 - enum</xs:documentation>
 						</xs:annotation>
@@ -1946,7 +1964,7 @@ Changelog:
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_HEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-IEPC-S_LorryDeclarationType"/>
@@ -1970,7 +1988,7 @@ Changelog:
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_HEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-IEPC-S_LorryDeclarationType"/>
@@ -2004,7 +2022,7 @@ Changelog:
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_HEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-IEPC-S_PrimaryBusDeclarationType"/>
@@ -2028,7 +2046,7 @@ Changelog:
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_HEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
@@ -2054,7 +2072,7 @@ Changelog:
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_HEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
@@ -2090,7 +2108,7 @@ Changelog:
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_HEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
@@ -2116,7 +2134,7 @@ Changelog:
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_HEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsSerialHybridDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-Sx_LorryDeclarationType"/>
@@ -2140,7 +2158,7 @@ Changelog:
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_HEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsSerialHybridDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-Sx_LorryDeclarationType"/>
@@ -2174,7 +2192,7 @@ Changelog:
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_HEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsSerialHybridDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-Sx_PrimaryBusDeclarationType"/>
@@ -2235,7 +2253,6 @@ Changelog:
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_IEPCType"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_IEPC_LorryDeclarationType"/>
 				</xs:sequence>
@@ -2253,7 +2270,6 @@ Changelog:
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_IEPCType"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_IEPC_LorryDeclarationType"/>
 				</xs:sequence>
@@ -2281,7 +2297,6 @@ Changelog:
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_IEPCType"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_IEPC_PrimaryBusDeclarationType"/>
 				</xs:sequence>
@@ -2341,7 +2356,6 @@ Changelog:
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_PEVType"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_PEV_LorryDeclarationType"/>
@@ -2360,7 +2374,6 @@ Changelog:
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_PEVType"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_PEV_LorryDeclarationType"/>
@@ -2389,7 +2402,6 @@ Changelog:
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_PEVType"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_PEV_PrimaryBusDeclarationType"/>
@@ -2505,9 +2517,9 @@ Changelog:
 	<xs:simpleType name="AuxPSTechnology_PEV_LorryType">
 		<xs:restriction base="v2.4:AuxPSTechnologyLorryType">
 			<xs:enumeration value="Small + elec. driven"/>
-			<xs:enumeration value="Small + AMS + elec. driven "/>
+			<xs:enumeration value="Small + AMS + elec. driven"/>
 			<xs:enumeration value="Medium Supply 1-stage + elec. driven"/>
-			<xs:enumeration value="Medium Supply 1-stage + AMS + elec. driven "/>
+			<xs:enumeration value="Medium Supply 1-stage + AMS + elec. driven"/>
 			<xs:enumeration value="Medium Supply 2-stage + elec. driven"/>
 			<xs:enumeration value="Medium Supply 2-stage + AMS + elec. driven"/>
 			<xs:enumeration value="Large Supply + elec. driven"/>
@@ -2520,37 +2532,38 @@ Changelog:
 			<xs:enumeration value="Crankshaft mounted - Electronically controlled visco clutch"/>
 			<xs:enumeration value="Small"/>
 			<xs:enumeration value="Small + ESS"/>
-			<xs:enumeration value="Small + visco clutch "/>
+			<xs:enumeration value="Small + visco clutch"/>
 			<xs:enumeration value="Small + mech. clutch"/>
 			<xs:enumeration value="Small + ESS + AMS"/>
 			<xs:enumeration value="Small + visco clutch + AMS"/>
 			<xs:enumeration value="Small + mech. clutch + AMS"/>
 			<xs:enumeration value="Medium Supply 1-stage"/>
 			<xs:enumeration value="Medium Supply 1-stage + ESS"/>
-			<xs:enumeration value="Medium Supply 1-stage + visco clutch "/>
+			<xs:enumeration value="Medium Supply 1-stage + visco clutch"/>
 			<xs:enumeration value="Medium Supply 1-stage + mech. clutch"/>
 			<xs:enumeration value="Medium Supply 1-stage + ESS + AMS"/>
 			<xs:enumeration value="Medium Supply 1-stage + visco clutch + AMS"/>
 			<xs:enumeration value="Medium Supply 1-stage + mech. clutch + AMS"/>
 			<xs:enumeration value="Medium Supply 2-stage"/>
 			<xs:enumeration value="Medium Supply 2-stage + ESS"/>
-			<xs:enumeration value="Medium Supply 2-stage + visco clutch "/>
+			<xs:enumeration value="Medium Supply 2-stage + visco clutch"/>
 			<xs:enumeration value="Medium Supply 2-stage + mech. clutch"/>
 			<xs:enumeration value="Medium Supply 2-stage + ESS + AMS"/>
 			<xs:enumeration value="Medium Supply 2-stage + visco clutch + AMS"/>
 			<xs:enumeration value="Medium Supply 2-stage + mech. clutch + AMS"/>
 			<xs:enumeration value="Large Supply"/>
 			<xs:enumeration value="Large Supply + ESS"/>
-			<xs:enumeration value="Large Supply + visco clutch "/>
+			<xs:enumeration value="Large Supply + visco clutch"/>
 			<xs:enumeration value="Large Supply + mech. clutch"/>
 			<xs:enumeration value="Large Supply + ESS + AMS"/>
 			<xs:enumeration value="Large Supply + visco clutch + AMS"/>
 			<xs:enumeration value="Large Supply + mech. clutch + AMS"/>
 			<xs:enumeration value="Vacuum pump"/>
+			<!--fully electric-->
 			<xs:enumeration value="Small + elec. driven"/>
-			<xs:enumeration value="Small + AMS + elec. driven "/>
+			<xs:enumeration value="Small + AMS + elec. driven"/>
 			<xs:enumeration value="Medium Supply 1-stage + elec. driven"/>
-			<xs:enumeration value="Medium Supply 1-stage + AMS + elec. driven "/>
+			<xs:enumeration value="Medium Supply 1-stage + AMS + elec. driven"/>
 			<xs:enumeration value="Medium Supply 2-stage + elec. driven"/>
 			<xs:enumeration value="Medium Supply 2-stage + AMS + elec. driven"/>
 			<xs:enumeration value="Large Supply + elec. driven"/>
@@ -3202,11 +3215,6 @@ Changelog:
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="PneumaticSCRReagentDosing" type="xs:boolean">
-				<xs:annotation>
-					<xs:documentation>P316 - bool</xs:documentation>
-				</xs:annotation>
-			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="BusAuxPneumaticSystemGen_Conventional_SequenceGroup">
@@ -3802,7 +3810,7 @@ Changelog:
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
-	<xs:group name="Vehicle_xEV-Parameters_SequenceGroup">
+	<xs:group name="Vehicle_HEV-Parameters_SequenceGroup">
 		<xs:sequence>
 			<xs:element name="OvcHev" type="xs:boolean">
 				<xs:annotation>

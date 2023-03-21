@@ -2,20 +2,20 @@
 
 
 VECTO offers three different modes to consider cross wind influence on the drag coefficient. It is configured in the [Vehicle File](#vehicle-file-.vveh).
-The aerodymanic force is calculated according to the following equation:
+The aerodynamic force is calculated according to the following equation:
 
 $F_{aero}=1/2 \rho_{air}(C_{d,v}A(v_{veh})) v_{veh}^2$
 
-The speed dependecy of the $C_dA$ value allows for consideration of average cross widn conditions.
+The speed dependency of the $C_dA$ value allows for consideration of average cross wind conditions.
 
 ### Speed dependent correction (Declaration Mode)
 
 
 This is the mode which is used in [Declaration Mode](#declaration-mode).
 
-The crossind correction is based on the following boundary conditions:
+The crosswind correction is based on the following boundary conditions:
 
-1 Average wind conditions: The typical conditions are defined with 3m/s of wind at a height of 4m above ground level, blowin uniformly distributed from all directions.
+1 Average wind conditions: The typical conditions are defined with 3m/s of wind at a height of 4m above ground level, blowing uniformly distributed from all directions.
 2 Dependency of $C_dA$ value on yaw angle: The dependency of the $CdA$ value on yaw angle is described by generic $3^{rd}$ order polynomial functions of the form: 
 
 $C_dA(\beta) - C_dA(0) = a_1\beta + a_2\beta^2 + a_3\beta^3$ 
@@ -30,7 +30,7 @@ The following table gives the coefficients per vehicle type:
 | bus, coach	         | -0.000794 | 	0.021090 |  -0.001090 |
 
 
-In a pre-processing step VECTO calculates the function for $C_dA$ value as a function of vehicle speed. This is done by integration of all possible directions of the ambient wind from ground level to maximum vehicle height considering the boundary layer effect based on the following formulas: 
+In a preprocessing step VECTO calculates the function for $C_dA$ value as a function of vehicle speed. This is done by integration of all possible directions of the ambient wind from ground level to maximum vehicle height considering the boundary layer effect based on the following formulas: 
 
 $C_{d,v}A(v_{veh}) = \frac{1}{2 \pi v_{veh}^2 h_{veh}}\int_{\alpha = 0^{\circ}}^{\alpha = 360^{\circ}}{\int_{h=0}^{h=h_{veh}}{C_dA(\beta)\cdot v_{air}(h, \alpha)^2} \textit{d}h\ \textit{d}\alpha}$
 
@@ -44,7 +44,7 @@ $\alpha \ldots \text{direction of ambient wind relative to the vehicle x-axis}$
 
 $h \ldots \text{height above ground}$
 
-$h_{ref} \ldots \text{reference heigth, 4m, for 3m/s average ambient wind}$
+$h_{ref} \ldots \text{reference height, 4m, for 3m/s average ambient wind}$
 
 $v_{air} \ldots \text{resulting air flow velocity from vehicle speed and ambient wind}$
 
@@ -66,7 +66,7 @@ $C_dA(v_{veh}) = C_dA * F_C_d(v_{veh})$
 
 ### Correction using Vair & Beta Input
 
-The actual (measured) air speed and direction can be used to correct cross-wid influence if available. A [vcdb-File](#vair-beta-cross-wind-correction-input-file-.vcdb) is needed for this calculation. This file defines a ΔC~d~A value in \[m²\] depending on the wind angle. The [driving cycle](#driving-cycles-.vdri) must include the air speed relative to the vehicle v~air~ (\<vair\_res\>) and the wind yaw angle (\<vair\_beta\>).
+The actual (measured) air speed and direction can be used to correct cross-wind influence if available. A [vcdb-File](#vair-beta-cross-wind-correction-input-file-.vcdb) is needed for this calculation. This file defines a ΔC~d~A value in \[m²\] depending on the wind angle. The [driving cycle](#driving-cycles-.vdri) must include the air speed relative to the vehicle v~air~ (\<vair\_res\>) and the wind yaw angle (\<vair\_beta\>).
 
 The C~d~A value given in the vehicle configuration is corrected depending on the wind speed and wind angle (given in the driving cycle) using the input file as follows:
 

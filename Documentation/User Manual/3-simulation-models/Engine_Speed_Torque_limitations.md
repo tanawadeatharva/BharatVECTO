@@ -5,12 +5,12 @@ The torque and speeds in the powertrain can be limited by different components s
 
 Some additional limits can be defined in the vehicle configuration as described below.
 
-### Combustion engine limitations / Transmission Limiations
+### Combustion engine limitations / Transmission Limitations
 
 The engine's maximum speed and maximum torque may be limited by either the gearbox (due to mechanical constraints) or the vehicle control.
 Engine torque limitations are modeled by limiting the engine full-load curve to the defined maximum torque, i.e., the original engine full-load curve is cropped at the defined maximum torque for a certain gear. Limits regarding the gearbox' maximum input speed are modeled by intersecting (and limiting) the upshift line with the max. input speed. In the last gear, where no upshifts are possible, the engine speed is limited to the gearbox' maximum input speed.
 
-Gear shift polygons are calculated by VECTO based on the overall (i.e. from gearbox and vehicle control) cropped engine fullload curve.
+Gear shift polygons are calculated by VECTO based on the overall (i.e. from gearbox and vehicle control) cropped engine full load curve.
 
 
 <div class="engineering">
@@ -43,9 +43,9 @@ In Declaration Mode, the following rules restrict the limitations of engine torq
 </div>
 
 
-### Electric Motor Limiations
+### Electric Motor Limitations
 
-The electric motor's maximum drive and maximum recuperation curve can be overridden in the vehicle. Therefore, the same map for maximum drive and maximum recuperation needs to be provided. Such a limit directly overrides the eletric motors model parameters.
+The electric motor's maximum drive and maximum recuperation curve can be overridden in the vehicle. Therefore, the same map for maximum drive and maximum recuperation needs to be provided. Such a limit directly overrides the electric motors model parameters.
 
 ### Vehicle Propulsion Limitations
 

@@ -34,7 +34,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 		public MeterPerSquareSecond DriverAcceleration => 0.SI<MeterPerSquareSecond>();
 		public PCCStates PCCState => PCCStates.OutsideSegment;
 		public MeterPerSecond NextBrakeTriggerSpeed => 0.SI<MeterPerSecond>();
+		public MeterPerSecond ApplyOverspeed(MeterPerSecond targetSpeed) => targetSpeed;
 
 		#endregion
+
+		public void UpdateComponents(IDataBus realContainer) => UpdateComponentsInternal(realContainer);
 	}
 }

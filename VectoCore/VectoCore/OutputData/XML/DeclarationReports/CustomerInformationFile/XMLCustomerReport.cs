@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -49,6 +48,7 @@ using TUGraz.VectoHashing;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile
 {
+    
 	public class XMLCustomerReport : IXMLCustomerReport
 	{
 		public const string CURRENT_SCHEMA_VERSION = "0.8";
@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			Results = new XElement(tns + XMLNames.Report_Results);
 		}
 
-		public virtual void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public virtual void Initialize(VectoRunData modelData)
 		{
 			var exempted = modelData.Exempted;
 			VehiclePart.Add(
@@ -99,18 +99,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			);
 
 			if (exempted) {
-				VehiclePart.Add(new XAttribute(xsi + "type", "ExemptedVehicleType"), 
+				VehiclePart.Add(new XAttribute(xsi + XMLNames.XSIType, "ExemptedVehicleType"), 
 					ExemptedData(modelData));
 				Results.Add(new XElement(tns + XMLNames.Report_ExemptedVehicle));
 			} else {
 				VehiclePart.Add(
-					new XAttribute(xsi + "type", "VehicleType"),
+					new XAttribute(xsi + XMLNames.XSIType, "VehicleType"),
 					new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
 					new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
 					new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.VocationalVehicle),
 					new XElement(tns + XMLNames.Vehicle_SleeperCab, modelData.VehicleData.SleeperCab),
 					GetADAS(modelData.VehicleData.ADAS),
-					ComponentData(modelData, fuelModes)
+					ComponentData(modelData)
 					);
 			}
 			InputDataIntegrity = new XElement(tns + XMLNames.Report_InputDataSignature,
@@ -121,7 +121,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 			return new object[] {
 				modelData.VehicleData.HybridElectricHDV ? new XElement(tns + XMLNames.Vehicle_MaxNetPower1, XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower1, XMLNames.Unit_W)) : null,
-				modelData.VehicleData.HybridElectricHDV ? new XElement(tns + XMLNames.Vehicle_MaxNetPower2, XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower2, XMLNames.Unit_W)) : null
+				
 			};
 		}
 
@@ -135,8 +135,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			);
 		}
 
-		protected virtual XElement[] ComponentData(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		protected virtual XElement[] ComponentData(VectoRunData modelData)
 		{
+			var vehicle = modelData.InputData.JobInputData.Vehicle;
+			var fuelModes = vehicle.Components.EngineInputData.EngineModes.Select(x =>
+					x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, vehicle.TankSystem)).ToList())
+				.ToList();
 			return new[] {
 				new XElement(
 					tns + XMLNames.Report_Vehicle_EngineRatedPower,
@@ -172,7 +176,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		
 
-		public virtual void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
+		public virtual void WriteResult(IResultEntry resultEntry)
 		{
 			//foreach (var resultEntry in entry.ResultEntry) {
 			_allSuccess &= resultEntry.Status == VectoRun.Status.Success;
@@ -184,7 +188,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			Results.Add(resultEntry.Status == VectoRun.Status.Success ? GetSuccessResult(resultEntry) : GetErrorResult(resultEntry));
 		}
 
-		private XElement GetErrorResult(XMLDeclarationReport.ResultEntry resultEntry)
+		private XElement GetErrorResult(IResultEntry resultEntry)
 		{
 			var content = new object[] { };
 			switch (resultEntry.Status) {
@@ -204,17 +208,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			return new XElement(tns + XMLNames.Report_Result_Result,
 				new XAttribute(XMLNames.Report_Result_Status_Attr, "error"),
-				new XAttribute(xsi + "type", "ResultErrorType"),
+				new XAttribute(xsi + XMLNames.XSIType, "ResultErrorType"),
 				new XElement(tns + XMLNames.Report_Result_Mission, resultEntry.Mission.ToXMLFormat()),
 				content);
 		}
 
-		private XElement GetSuccessResult(XMLDeclarationReport.ResultEntry result)
+		private XElement GetSuccessResult(IResultEntry result)
 		{
 			return new XElement(
 				tns + XMLNames.Report_Result_Result,
 				new XAttribute(XMLNames.Report_Result_Status_Attr, "success"),
-				new XAttribute(xsi + "type", "ResultSuccessType"),
+				new XAttribute(xsi + XMLNames.XSIType, "ResultSuccessType"),
 				new XElement(tns + XMLNames.Report_Result_Mission, result.Mission.ToXMLFormat()),
 				new XElement(tns + XMLNames.Report_ResultEntry_TotalVehicleMass,
 					XMLHelper.ValueAsUnit(result.TotalVehicleMass, XMLNames.Unit_kg)),
@@ -275,7 +279,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XAttribute(xsi + "schemaLocation",
 					$"{rootNS} {AbstractXMLWriter.SchemaLocationBaseUrl}DEV/VectoOutputCustomer.xsd"),
 				new XElement(rootNS + XMLNames.Report_DataWrap,
-					new XAttribute(xsi + "type", "VectoOutputDataType"),
+					new XAttribute(xsi + XMLNames.XSIType, "VectoOutputDataType"),
 					vehicle,
 					new XElement(tns + XMLNames.Report_ResultData_Signature, resultSignature),
 					results,
@@ -298,13 +302,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	{
 		#region Implementation of IXMLCustomerReport
 
-		public void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public void Initialize(VectoRunData modelData)
 		{
 			// MQ 2021-06-14 TODO: fill with meat
 		}
 
 		public XDocument Report { get; }
-		public void WriteResult(XMLDeclarationReport.ResultEntry resultValue)
+		public void WriteResult(IResultEntry resultValue)
 		{
 			// MQ 2021-06-14 TODO: fill with meat
 		}

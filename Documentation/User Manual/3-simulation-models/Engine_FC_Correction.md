@@ -1,12 +1,12 @@
 ## Engine Fuel Consumption Correction
 
-The final fuel consumption is corrected in a post-processing to reflect systems not directly modeled in VECTO (e.g. electric waste heat recovery sysmtes) or to account for systems not active all the time for different reasons (e.g., engine stop-start).
+The final fuel consumption is corrected in a post-processing to reflect systems not directly modeled in VECTO (e.g. electric waste heat recovery systems) or to account for systems not active all the time for different reasons (e.g., engine stop-start).
 
 ### Engine Stop/Start Correction
 
 As the energy demand of auxiliaries is modeled as an average power demand over the whole simulated cycle, the demand of certain auxiliaries during engine-off periods needs to be compensated during engine-on periods. This is done using the [Engine-Line approach](#engine-line-approach).
 
-When either the driver model (eco-roll, engine stop/start) or the hybrid controller decides to turn off the combustion engine, it is fully off, i.e. the fuel consumption is 0 and no auxiliary power is provided. In this phases the "missing" auxiliary demand is balanced in separate colums for the cases a) the ICE is really off, and b) the ICE would be on. This allows for an accurate correction of the fuel consumption taking into account that ESS is in reality not active in all possible cases due to e.g. auxiliary power demand, environmental conditions, etc.
+When either the driver model (eco-roll, engine stop/start) or the hybrid controller decides to turn off the combustion engine, it is fully off, i.e. the fuel consumption is 0 and no auxiliary power is provided. In this phases the "missing" auxiliary demand is balanced in separate columns for the cases a) the ICE is really off, and b) the ICE would be on. This allows for an accurate correction of the fuel consumption taking into account that ESS is in reality not active in all possible cases due to e.g. auxiliary power demand, environmental conditions, etc.
 
 A general goal is that the actual auxiliary demand matches the target auxiliary demand over the cycle. So in case the ICE is off, some systems still consume electric energy but no electric energy is generated during ICE-off phases. Or in case of bus auxiliaries the total air demand is pre-calculated and thus leading to an average air demand over the cycle. During ICE-off phases, however, no compressed air is generated. This 'missing' compressed air is corrected in the post-processing.
 
@@ -73,7 +73,7 @@ $\textbf{\textrm{FC\_DCDCMissing}} = \textrm{E\_DCDC\_missing\_mech} \cdot k_\te
 
 For the pneumatic system the goal of the post-processing correction is that the correct amount of compressed air is generated, even when the ICE is off. As the average
 air demand is calculated with an estimated cycle driving time, the first step is to correct the air demand using the actual cycle driving time.
-The missing (or excessive) amout of air is transferred into mechanical energy demand using $k_\textrm{Air}$. This value depicts the delta energy demand for a certain delta compressed air.
+The missing (or excessive) amount of air is transferred into mechanical energy demand using $k_\textrm{Air}$. This value depicts the delta energy demand for a certain delta compressed air.
 $k_\textrm{Air}$ is derived from two points. on the one hand the compressor runs in idle mode, applying only the drag load and producing no compressed air and the second point is that the compressor 
 is always on, applying the always-on mechanical power demand and generating the maximum possible amount of compressed air.
 The mechanical energy is then corrected using the [engineline](#engine-fuel-consumption-correction) (below).
@@ -115,7 +115,7 @@ $$
 
 #### Bus Auxiliaries Correction -- Aux Heater
 
-The power demand for an additional fuel-fired heater is calculated in the post-processing. The HVAC steaty state model calculates the heating demand (weighted sum of different climatic conditions) and based on the engine's average waste heat over the cycle the power demand for the aux heater is calculated. The fuel consumption for the aux heater is only added for the primary fuel:
+The power demand for an additional fuel-fired heater is calculated in the post-processing. The HVAC steady state model calculates the heating demand (weighted sum of different climatic conditions) and based on the engine's average waste heat over the cycle the power demand for the aux heater is calculated. The fuel consumption for the aux heater is only added for the primary fuel:
 
 
 $E_\textrm{ice,waste heat} = \sum_\textrm{fuels} FC_\textrm{final,sum}(fuel) * NCV_\textrm{fuel}$
@@ -184,7 +184,7 @@ where $FC_\textrm{gen,optimal}$ and $E_\textrm{gen,el,optimal}$ are the fuel con
 
 ### Corrected Total Fuel Consumption
 
-The final fuel consumption after all corrections are applied is calcualted as follows:
+The final fuel consumption after all corrections are applied is calculated as follows:
 
 $$
 \begin{align*} 

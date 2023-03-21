@@ -13,7 +13,7 @@
 		<TechnicalPermissibleMaximumLadenMass>12000</TechnicalPermissibleMaximumLadenMass>
 		<RetarderType>Losses included in Gearbox</RetarderType>
 		<RetarderRatio>2.000</RetarderRatio>
-		<AngledriveType>Separate Angledrive</AngledriveType>
+		<AngledriveType>None</AngledriveType>
 		<PTO xsi:type="PTOType">
 			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
 			<PTOOtherElements>none</PTOOtherElements>
@@ -23,8 +23,6 @@
 		<SleeperCab>true</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>E-IEPC</ArchitectureID>
-		<OvcHev>true</OvcHev>
-		<MaxChargingPower>11</MaxChargingPower>
 		<ADAS xsi:type="ADAS_IEPC_Type">
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
@@ -38,7 +36,7 @@
 					<AppVersion>aaaaa</AppVersion>
 					<ElectricMachineType>ASM</ElectricMachineType>
 					<CertificationMethod>Measured for complete component</CertificationMethod>
-					<R85RatedPower>1</R85RatedPower>
+					<R85RatedPower>50000</R85RatedPower>
 					<RotationalInertia>0.10</RotationalInertia>
 					<DifferentialIncluded>false</DifferentialIncluded>
 					<DesignTypeWheelMotor>true</DesignTypeWheelMotor>
@@ -257,7 +255,7 @@
 			<Auxiliaries>
 				<Data xsi:type="AUX_IEPC_LorryDataType">
 					<SteeringPump>
-						<Technology axleNumber="1">Medium Supply 2-stage + elec. driven</Technology>
+						<Technology axleNumber="1">Full electric steering gear</Technology>
 					</SteeringPump>
 					<ElectricSystem>
 						<Technology>Standard technology - LED headlights, all</Technology>

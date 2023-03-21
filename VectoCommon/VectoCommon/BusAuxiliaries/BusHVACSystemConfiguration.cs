@@ -44,7 +44,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 	{
 		private const string Prefix = "Configuration";
 
-		public static BusHVACSystemConfiguration? Parse(string text)
+		public static BusHVACSystemConfiguration Parse(string text)
 		{
 			return (Prefix + text).ParseEnum<BusHVACSystemConfiguration>();
 		}
@@ -60,6 +60,14 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 
 		public static string GetName(this BusHVACSystemConfiguration? hvacConfig)
 		{
+			if (hvacConfig == null) {
+				return "not set";
+			}
+
+			return hvacConfig.Value.GetName();
+		}
+		public static string GetName(this BusHVACSystemConfiguration hvacConfig)
+		{
 			if (hvacConfig == BusHVACSystemConfiguration.Unknown) {
 				return "Unknown";
 			}
@@ -67,7 +75,16 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 			return hvacConfig.ToString().Replace(Prefix, "");
 		}
 
-		public static string GetXmlFormat(this BusHVACSystemConfiguration? hvacConfiguration)
+		public static string ToXmlFormat(this BusHVACSystemConfiguration? hvacConfiguration)
+		{
+			if (hvacConfiguration == null) {
+				return "N/A";
+			}
+
+			return hvacConfiguration.Value.ToXmlFormat();
+		}
+
+		public static string ToXmlFormat(this BusHVACSystemConfiguration hvacConfiguration)
 		{
 			if (hvacConfiguration == BusHVACSystemConfiguration.Unknown) {
 				return "0";
@@ -76,15 +93,12 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 			return GetName(hvacConfiguration);
 		}
 
-		public static bool RequiresDriverAC(this BusHVACSystemConfiguration? hvacConfig)
+		public static bool RequiresDriverAC(this BusHVACSystemConfiguration hvacConfig)
 		{
-			if (hvacConfig == null) {
-				return false;
-			}
 			switch (hvacConfig) {
-				case BusHVACSystemConfiguration.Configuration2: 
-				case BusHVACSystemConfiguration.Configuration4: 
-				case BusHVACSystemConfiguration.Configuration7: 
+				case BusHVACSystemConfiguration.Configuration2:
+				case BusHVACSystemConfiguration.Configuration4:
+				case BusHVACSystemConfiguration.Configuration7:
 				case BusHVACSystemConfiguration.Configuration9:
 					return true;
 			}
@@ -92,16 +106,35 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 			return false;
 		}
 
-		public static bool RequiresPassengerAC(this BusHVACSystemConfiguration? hvacConfig)
+		public static bool RequiresDriverAC(this BusHVACSystemConfiguration? hvacConfig)
 		{
-			if (hvacConfig == null) {
-				return false;
-			}
+			return hvacConfig != null && hvacConfig.Value.RequiresDriverAC();
+		}
+
+		public static bool RequiresPassengerAC(this BusHVACSystemConfiguration hvacConfig)
+		{
 			switch (hvacConfig) {
 				case BusHVACSystemConfiguration.Configuration1:
 				case BusHVACSystemConfiguration.Configuration2:
 				case BusHVACSystemConfiguration.Configuration3:
 				case BusHVACSystemConfiguration.Configuration4:
+					return false;
+			}
+
+			return true;
+		}
+
+		public static bool RequiresPassengerAC(this BusHVACSystemConfiguration? hvacConfig)
+		{
+			return hvacConfig != null && hvacConfig.Value.RequiresPassengerAC();
+
+		}
+
+		public static bool HasThermalComfortSystem(this BusHVACSystemConfiguration hvacConfig)
+		{
+			switch (hvacConfig) {
+				case BusHVACSystemConfiguration.Configuration1:
+				case BusHVACSystemConfiguration.Configuration2:
 					return false;
 			}
 

@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var vifDataProvider = xmlInputReader.Create(completedJson.PrimaryInputDataFile);
 			var completeDataProvider = xmlInputReader.CreateDeclaration(completedJson.CompletedInputDataFile);
 			var inputDataAsm = new XMLDeclarationVIFInputData(
-				vifDataProvider as IMultistageBusInputDataProvider, completeDataProvider.JobInputData.Vehicle);
+				vifDataProvider as IMultistepBusInputDataProvider, completeDataProvider.JobInputData.Vehicle);
 
 			var filename = Guid.NewGuid().ToString().Substring(0, 20);
 			var writerAsm = new FileOutputVIFWriter(filename, 0);
@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var completedVif =
 				xmlInputReader.CreateDeclaration(XmlReader.Create(new StringReader(CreateCompletedVifXML(completedJson, xmlInputReader))));
 			
-			return new XMLDeclarationVIFInputData(completedVif as IMultistageBusInputDataProvider, null);
+			return new XMLDeclarationVIFInputData(completedVif as IMultistepBusInputDataProvider, null);
 			}
 	}
 }

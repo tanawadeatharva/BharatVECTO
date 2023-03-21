@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		}
 	}
 
-	public class XMLMultistageBusReport: IXMLMultistageReport 
+	public class XMLMultistageBusReport: IXMLMultistepIntermediateReport 
 	{
 		protected XNamespace tns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1";
 		protected XNamespace di = "http://www.w3.org/2000/09/xmldsig#";
@@ -89,6 +89,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		public XMLMultistageBusReport()
 		{
+			throw new VectoException("do not use anymore!");
 			_manufacturingStages = new List<XElement>();
 			_namespaceAttributes = new List<XAttribute>();
 		}
@@ -217,7 +218,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		private XElement GenerateInputManufacturingStage()
 		{
 			var multistageId = $"{VectoComponents.VectoManufacturingStep.HashIdPrefix()}{GetGUID()}";
-			var vehicleId = $"{VectoComponents.Vehicle.HashIdPrefix()}{GetGUID()}";
+			var vehicleId = $"{VectoComponents.VectoInterimVehicleInformation.HashIdPrefix()}{GetGUID()}";
 
 			var stage = new XElement(tns + XMLNames.ManufacturingStep,
 				new XAttribute(XMLNames.ManufacturingStep_StepCount, GetStageNumber()),
@@ -327,7 +328,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			
 			return new XElement(
 				v24 + XMLNames.Vehicle_ADAS,
-				new XAttribute(xsi + "type", "ADAS_Conventional_Type"),
+				new XAttribute(xsi + XMLNames.XSIType, "ADAS_Conventional_Type"),
 				new XElement(v24 + XMLNames.Vehicle_ADAS_EngineStopStart, adasData.EngineStopStart),
 				new XElement(v24 + XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop, adasData.EcoRoll.WithoutEngineStop()),
 				new XElement(v24 + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, adasData.EcoRoll.WithEngineStop()),
@@ -510,7 +511,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			return new XElement(v24 + XMLNames.BusAux_HVAC,
 				hvac.SystemConfiguration != null
-					? new XElement(v24 + XMLNames.Bus_SystemConfiguration, hvac.SystemConfiguration.GetXmlFormat()) : null,
+					? new XElement(v24 + XMLNames.Bus_SystemConfiguration, hvac.SystemConfiguration.ToXmlFormat()) : null,
 				hvac.HeatPumpTypeCoolingDriverCompartment != null && hvac.HeatPumpTypeHeatingDriverCompartment != null
 					? new XElement(v24 + XMLNames.Bus_HeatPumpTypeDriver, 
 						new XElement(v24 + XMLNames.BusHVACHeatPumpCooling,  hvac.HeatPumpTypeCoolingDriverCompartment.GetLabel()),

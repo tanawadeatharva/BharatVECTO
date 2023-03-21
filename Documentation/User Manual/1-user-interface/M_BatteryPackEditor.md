@@ -26,16 +26,16 @@ Make and Model
 Capacity \[Ah\]
 :   Nominal capacity of the battery
 
-C-Factor \[-\]
-:   Factor defining the battery's maximum current (derived from the capacity)
-
 SoC min \[%\]
 :   Minimum allowed state of charge
 
 SoC max \[%\]
 :   Maximum allowed state of charge
 
-SoC Curve
+Max Current Map
+:	defines the maximum allowed current for a state of charge
+
+OCV Curve
 :   Battery internal voltage depending on the battery's state of charge (see [Battery Internal Voltage File (.vbatv)](#battery-internal-voltage-file-.vbatv))
 
 Internal Resistance Curve
@@ -65,8 +65,14 @@ Min Voltage \[V\]
 Max Voltage \[v\]
 :   Maximum allowed state of charge
 
-Internal Resistance
+Internal Resistance \[Ω\]
 :   Defines the capacitor's internal resistance 
+
+Max Current Chg \[A\]
+:	Maximum allowed current charge
+
+Max Current Dischg \[A\]
+:	Maximum allowed current discharge
 
 
 ### Controls

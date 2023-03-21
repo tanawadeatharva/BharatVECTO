@@ -40,7 +40,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class Wheels : StatefulProviderComponent<Wheels.WheelsState, IFvOutPort, ITnInPort, ITnOutPort>, IWheels,
-		IFvOutPort, ITnInPort
+		IFvOutPort, ITnInPort, IUpdateable
 	{
 		private readonly KilogramSquareMeter _totalWheelsInertia;
 
@@ -49,6 +49,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public PerSecond AngularVelocity;
 			public NewtonMeter TorqueIn;
 			public NewtonMeter InertiaTorqueLoss;
+
+			public WheelsState Clone() => (WheelsState)MemberwiseClone();
 		}
 
 		public Wheels(IVehicleContainer cockpit, Meter rdyn, KilogramSquareMeter totalWheelsInertia)
@@ -96,5 +98,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public Kilogram ReducedMassWheels => (_totalWheelsInertia / DynamicTyreRadius / DynamicTyreRadius).Cast<Kilogram>();
 
 		public Meter DynamicTyreRadius { get; }
+
+		#region Implementation of IUpdateable
+
+		protected override bool DoUpdateFrom(object other) {
+			if (other is Wheels w) {
+				PreviousState = w.PreviousState.Clone();
+				return true;
+			}
+			return false;
+		}
+
+		#endregion
 	}
 }

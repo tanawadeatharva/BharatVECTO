@@ -49,6 +49,8 @@ using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Tests.XML;
 using TUGraz.VectoCore.Utils;
@@ -80,7 +82,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(jobfile));
-			var xmlReport = new XMLDeclarationReport(writer);
+			var xmlReport = _kernel.Get<IXMLDeclarationReportFactory>().CreateReport(dataProvider, writer);
 			var sumData = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumData);
 
@@ -100,15 +102,15 @@ namespace TUGraz.VectoCore.Tests.Integration
 			// no need to run the simulation, we only check whether the meta-data is correct, no results are considered
 			//jobContainer.Execute();
 			//jobContainer.WaitFinished();
-			xmlReport.DoWriteReport();
+			(xmlReport as XMLDeclarationReport).DoWriteReport();
 
-			var manufacturerReport = xmlReport.FullReport;
+			var manufacturerReport = (xmlReport as XMLDeclarationReport).FullReport;
 
 			Assert.AreEqual(5, manufacturerReport.XPathSelectElement("//*[local-name()='VehicleGroup']")?.Value.ToInt());
 
-			Assert.IsFalse(XmlConvert.ToBoolean(manufacturerReport.XPathSelectElement("//*[local-name()='PTO']").Value));
+			Assert.IsFalse(XmlConvert.ToBoolean(manufacturerReport.XPathSelectElement("//*[local-name()='PowerTakeOff']").Value));
 
-			var reportWheels = manufacturerReport.XPathSelectElements("//*[local-name()='TyreCertificationNumber']").ToList();
+			var reportWheels = manufacturerReport.XPathSelectElements("//*[local-name()='Tyre']/*[local-name()='CertificationNumber']").ToList();
 			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.AxleWheels.AxlesDeclaration.Count, reportWheels.Count);
 
 			var i = 0;
@@ -116,7 +118,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				Assert.AreEqual(axleDeclarationInputData.Tyre.CertificationNumber, reportWheels[i++].Value);
 			}
 
-			var digestWheels = manufacturerReport.XPathSelectElements("//*[local-name()='Axle']/*[local-name()='DigestValue']").ToArray();
+			var digestWheels = manufacturerReport.XPathSelectElements("//*[local-name()='Axle']/*[local-name()='Tyre']/*[local-name()='DigestValue']").ToArray();
 			Assert.NotNull(digestWheels);
 			Assert.AreEqual(2, digestWheels.Count());
 			foreach (var digestWheel in digestWheels) {
@@ -129,16 +131,16 @@ namespace TUGraz.VectoCore.Tests.Integration
 		//TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_4x2_vehicle-class-3_EURO6_2018.xml"),
 		//TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_4x2_vehicle-class-4_EURO6_2018.xml"),
 		TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Tractor_4x2_vehicle-class-5_EURO6_2018.xml"),
-		//TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_6x2_vehicle-class-9_EURO6_2018.xml"),
-		//TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Tractor_6x2_vehicle-class-10_EURO6_2018.xml"),
-		//TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_6x4_vehicle-class-11_EURO6_2018.xml"),
-		//TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Tractor_6x4_vehicle-class-12_EURO6_2018.xml"),
-		TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_8x4_vehicle-class-16_EURO6_2018.xml")]
+        TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_6x2_vehicle-class-9_EURO6_2018.xml"),
+        //TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Tractor_6x2_vehicle-class-10_EURO6_2018.xml"),
+        //TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_6x4_vehicle-class-11_EURO6_2018.xml"),
+        //TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Tractor_6x4_vehicle-class-12_EURO6_2018.xml"),
+        TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_8x4_vehicle-class-16_EURO6_2018.xml")]
         public void TestXMLSummaryReportExists(string jobfile)
         {
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
             var writer = new FileOutputWriter(jobfile);
-            var xmlReport = new XMLDeclarationReport(writer);
+			var xmlReport = _kernel.Get<IXMLDeclarationReportFactory>().CreateReport(dataProvider, writer);
             var sumData = new SummaryDataContainer(writer);
             var jobContainer = new JobContainer(sumData);
 
@@ -155,21 +157,22 @@ namespace TUGraz.VectoCore.Tests.Integration
             // no need to run the simulation, we only check whether the meta-data is correct, no results are considered
             jobContainer.Execute();
             jobContainer.WaitFinished();
-            xmlReport.DoWriteReport();
+			(xmlReport as XMLDeclarationReport).DoWriteReport();
 
-			var customerReport = xmlReport.CustomerReport;
+			var customerReport = (xmlReport as XMLDeclarationReport).CustomerReport;
 
             //check if the customerReport contains the summary XML-Element
 			Assert.AreNotEqual(null,customerReport.XPathSelectElement("//*[local-name()='Summary']"));
 		}
 
 		[TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml"),
-		 TestCase(@"TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml")]
+		 //TestCase(@"TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml") // ExemptedVehicles XML Version 1.0 no longer supported
+		]
 		public void TestValidationXMLReports(string jobfile)
 		{
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(jobfile));
-			var xmlReport = new XMLDeclarationReport(writer);
+			var xmlReport = _kernel.Get<IXMLDeclarationReportFactory>().CreateReport(dataProvider, writer);
 			var sumData = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumData);
 
@@ -189,10 +192,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
 
-			var mrfValidator = GetValidator(xmlReport.FullReport);
+			var mrfValidator = GetValidator((xmlReport as XMLDeclarationReport).FullReport);
 			mrfValidator.ValidateXML(XmlDocumentType.DeclarationComponentData | XmlDocumentType.DeclarationJobData | XmlDocumentType.CustomerReport | XmlDocumentType.ManufacturerReport);
 
-			var cifValidator = GetValidator(xmlReport.CustomerReport);
+			var cifValidator = GetValidator((xmlReport as XMLDeclarationReport).CustomerReport);
 			cifValidator.ValidateXML(XmlDocumentType.DeclarationComponentData | XmlDocumentType.DeclarationJobData | XmlDocumentType.CustomerReport | XmlDocumentType.ManufacturerReport);
 
 			//var monitoringValidator = GetValidator(xmlReport.MonitoringReport);
@@ -259,13 +262,15 @@ namespace TUGraz.VectoCore.Tests.Integration
 					ptoOtherNode.SetValue(ptoOther);
 
 					var modified = XmlReader.Create(new StringReader(nav.OuterXml));
+					var dataProvider = xmlInputReader.CreateDeclaration(modified);
 
 					var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(jobfile));
-					var xmlReport = new XMLDeclarationReport(writer);
+					var xmlReport = _kernel.Get<IXMLDeclarationReportFactory>()
+						.CreateReport(dataProvider, writer);
 					var sumData = new SummaryDataContainer(writer);
 					var jobContainer = new JobContainer(sumData);
 
-					var dataProvider = xmlInputReader.CreateDeclaration(modified);
+					
 
 					var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, writer,
 						xmlReport, validate: false);
@@ -276,13 +281,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 					//};
 					jobContainer.AddRuns(runsFactory);
 
-					xmlReport.DoWriteReport();
+					(xmlReport as XMLDeclarationReport).DoWriteReport();
 
-					var manufacturerReport = xmlReport.FullReport;
+					var manufacturerReport = (xmlReport as XMLDeclarationReport).FullReport;
 
 					Assert.AreEqual(
 						ptoGearWheel != "none",
-						XmlConvert.ToBoolean(manufacturerReport.XPathSelectElement("//*[local-name()='PTO']").Value),
+						XmlConvert.ToBoolean(manufacturerReport.XPathSelectElement("//*[local-name()='PowerTakeOff']").Value),
 						"PTO Type: {0} {1}", ptoGearWheel, ptoOther);
 
 				}
@@ -296,7 +301,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(jobfile));
-			var xmlReport = new XMLDeclarationReport(writer);
+			var xmlReport = _kernel.Get<IXMLDeclarationReportFactory>().CreateReport(dataProvider, writer);
 			var sumData = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumData);
 
@@ -316,23 +321,23 @@ namespace TUGraz.VectoCore.Tests.Integration
 			// no need to run the simulation, we only check whether the meta-data is correct, no results are considered
 			//jobContainer.Execute();
 			//jobContainer.WaitFinished();
-			xmlReport.DoWriteReport();
+			(xmlReport as XMLDeclarationReport).DoWriteReport();
 
 			
 			var inputHash = VectoHash.Load(jobfile);
 
-			var mrfDigestData = new DigestData(xmlReport.FullReport.Document.XPathSelectElement("//*[local-name()='InputDataSignature']"));
+			var mrfDigestData = new DigestData((xmlReport as XMLDeclarationReport).FullReport.Document.XPathSelectElement("//*[local-name()='InputDataSignature']"));
 			var mrfInputDigest = inputHash.ComputeHash(mrfDigestData.CanonicalizationMethods, mrfDigestData.DigestMethod);
 
 			Assert.AreEqual(mrfInputDigest, mrfDigestData.DigestValue);
 
-			var cifDigestData = new DigestData(xmlReport.CustomerReport.Document.XPathSelectElement("//*[local-name()='InputDataSignature']"));
+			var cifDigestData = new DigestData((xmlReport as XMLDeclarationReport).CustomerReport.Document.XPathSelectElement("//*[local-name()='InputDataSignature']"));
 			var cifInputDigest = inputHash.ComputeHash(cifDigestData.CanonicalizationMethods, cifDigestData.DigestMethod);
 
 			Assert.AreEqual(cifInputDigest, cifDigestData.DigestValue);
 
 			var mrfHash = VectoHash.Load(writer.XMLFullReportName);
-			var mrfCifDigestData = new DigestData(xmlReport.CustomerReport.Document.XPathSelectElement("//*[local-name()='ResultDataSignature']"));
+			var mrfCifDigestData = new DigestData((xmlReport as XMLDeclarationReport).CustomerReport.Document.XPathSelectElement("//*[local-name()='ManufacturerRecordSignature']"));
 			var mrfCifDigest = mrfHash.ComputeHash(mrfCifDigestData.CanonicalizationMethods, mrfCifDigestData.DigestMethod);
 
 			Assert.AreEqual(mrfCifDigest, mrfCifDigestData.DigestValue);
@@ -345,7 +350,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\SchemaVersion2.4/vecto_vehicle-primary_heavyBus-sample.xml";
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(jobfile);
-			var xmlReport = new XMLDeclarationReport(writer);
+			var xmlReport = _kernel.Get<IXMLDeclarationReportFactory>().CreateReport(dataProvider, writer);
 			var sumData = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumData);
 
@@ -365,7 +370,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			// no need to run the simulation, we only check whether the meta-data is correct, no results are considered
 			//jobContainer.Execute();
 			//jobContainer.WaitFinished();
-			xmlReport.DoWriteReport();
+			(xmlReport as XMLDeclarationReport).DoWriteReport();
 		}
 	}
 }

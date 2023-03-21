@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -71,6 +72,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public XMLDeclarationConventionalMediumLorryVehicleDataProviderV24(
 			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode,
 			sourceFile) { }
+
+		#region Overrides of AbstractXMLVehicleDataProviderV24
+
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.ConventionalVehicle;
+
+		#endregion
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -85,6 +92,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public XMLDeclarationHevPxMediumLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.ParallelHybridVehicle;
+
 		#region Overrides of XMLDeclarationHevPxHeavyLorryDataProviderV24
 
 		public override string PowertrainPositionPrefix => "P";
@@ -92,10 +101,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override TableData BoostingLimitations
 			=> ElementExists(XMLNames.Vehicle_BoostingLimitation)
 				? ReadTableData(XMLNames.Vehicle_BoostingLimitation, XMLNames.BoostingLimitation_Entry,
-					new Dictionary<string, string> {
-						{XMLNames.BoostingLimitation_RotationalSpeed, XMLNames.BoostingLimitation_RotationalSpeed},
-						{XMLNames.BoostingLimitation_BoostingTorque, XMLNames.BoostingLimitation_BoostingTorque}
-					})
+					AttributeMappings.BoostingLimitsMapping)
 				: null;
 
 		#endregion
@@ -107,6 +113,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override XmlElement PTONode => null;
 
 		#endregion
+
+		public override bool HybridElectricHDV => true;
+
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -123,6 +132,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#endregion
 
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.SerialHybridVehicle;
 		public XMLDeclarationHevSxMediumLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 
@@ -134,6 +144,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override XmlElement PTONode => null;
 
 		#endregion
+
+		public override bool HybridElectricHDV => true;
+
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -149,6 +162,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override string PowertrainPositionPrefix => "E";
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
 
 		public XMLDeclarationPevMediumLorryExDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
@@ -166,6 +181,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
+		public override bool OvcHev => true;
+
 		#endregion
 	}
 
@@ -181,6 +198,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public XMLDeclarationIepcMediumLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_E;
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
@@ -194,6 +212,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override Kilogram CurbMassChassis => GetDouble(XMLNames.CorrectedActualMass).SI<Kilogram>();
 
 		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
+
+		public override bool OvcHev => true;
+
 
 		#endregion
 	}
@@ -228,6 +249,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override XmlElement PTONode => null;
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_S;
+
+		public override bool HybridElectricHDV => true;
+
 	}
 
 	// ---------------------------------------------------------------------------------------

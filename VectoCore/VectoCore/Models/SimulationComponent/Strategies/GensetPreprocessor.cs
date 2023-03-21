@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
@@ -21,14 +23,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		private CombustionEngineData IceData;
 		private ElectricMotorData EmData;
 		protected GenSetCharacteristics OptimalPoints;
+		private readonly IVehicleContainer _container;
 
 		public GensetPreprocessor(GenSetCharacteristics optimalPoints, TestGenset testGenSet, CombustionEngineData engineData,
-			ElectricMotorData electricMotorData)
+			ElectricMotorData electricMotorData, IVehicleContainer container)
 		{
 			Genset = testGenSet;
 			IceData = engineData;
 			EmData = electricMotorData;
 			OptimalPoints = optimalPoints;
+			_container = container;
 		}
 
 		#region Implementation of ISimulationPreprocessor
@@ -49,8 +53,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		private void MaxElectricPower(Volt voltage, bool emDerated)
 		{
 			var continuousTq = emDerated ? EmData.Overload.ContinuousTorque : double.MaxValue.SI<NewtonMeter>();
-			var maxSpeed = VectoMath.Min(EmData.EfficiencyData.MaxSpeed,
-				IceData.FullLoadCurves[0].FullLoadEntries.Select(x => x.EngineSpeed).Max());
+			var maxSpeedIce = IceData.FullLoadCurves[0].FullLoadEntries.Select(x => x.EngineSpeed).Max();
+			var maxSpeed = VectoMath.Min(EmData.EfficiencyData.MaxSpeed, maxSpeedIce);
 			var emFldDrivetrain = new ElectricMotorFullLoadCurve(EmData.EfficiencyData.VoltageLevels[0].FullLoadCurve
 				.FullLoadEntries.Select(x =>
 					new ElectricMotorFullLoadCurve.FullLoadEntry() {
@@ -69,19 +73,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					MotorSpeed = maxSpeed
 				});
 			}
+
+			
 			var iceFld = new ElectricMotorFullLoadCurve(IceData.FullLoadCurves[0].FullLoadEntries.Select(x =>
 				new ElectricMotorFullLoadCurve.FullLoadEntry() {
-					FullDriveTorque = -x.TorqueFullLoad,
+					FullDriveTorque = -x.TorqueFullLoad + _container.EngineInfo.EngineAuxDemand(x.EngineSpeed,0.SI<Second>()) / x.EngineSpeed, //reduce torque by engine aux torque demand
 					FullGenerationTorque = 0.SI<NewtonMeter>(),
 					MotorSpeed = x.EngineSpeed
 				}).Where(x => x.MotorSpeed.IsSmallerOrEqual(maxSpeed)).ToList());
 			if (!iceFld.FullLoadEntries.Any(x => x.MotorSpeed.IsEqual(maxSpeed))) {
 				iceFld.FullLoadEntries.Add(new ElectricMotorFullLoadCurve.FullLoadEntry() {
-					FullDriveTorque = -IceData.FullLoadCurves[0].FullLoadStationaryTorque(maxSpeed),
+					FullDriveTorque = -IceData.FullLoadCurves[0].FullLoadStationaryTorque(maxSpeed) + _container.EngineInfo.EngineAuxDemand(maxSpeed, 0.SI<Second>()) / maxSpeed, //reduce torque by engine aux torque demand
 					FullGenerationTorque = 0.SI<NewtonMeter>(),
 					MotorSpeed = maxSpeed
 				});
 			}
+
+
 
 			var combinedFldEntries = AbstractSimulationDataAdapter.IntersectEMFullLoadCurves(iceFld, emFldDrivetrain).FullLoadEntries.Select(x =>
 				new EngineFullLoadCurve.FullLoadCurveEntry() {
@@ -116,6 +124,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					OptimalPoints.MaxPowerDeRated = tmp;
 				} else {
 					OptimalPoints.MaxPower = tmp;
+				}
+			} else {
+				switch (response)
+				{
+					case ResponseOverload ovld:
+
+					default:
+						throw new VectoException(
+							$"Could not determine max {(emDerated ? "derated" : "")} electric genset power! Invalid response [{response.GetType().Name}] from {response.Source.GetType().Name}");
+						break;
 				}
 			}
 		}

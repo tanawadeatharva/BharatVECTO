@@ -36,7 +36,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockBrakes : VectoSimulationComponent, IBrakes
+	public class MockBrakes : VectoSimulationComponent, IBrakes, IUpdateable
 	{
 		public MockBrakes(IVehicleContainer vehicle) : base(vehicle)
 		{
@@ -48,5 +48,19 @@ namespace TUGraz.VectoCore.Tests.Utils
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container) {}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval) {}
+
+		#region Implementation of IUpdateable
+
+		protected override bool DoUpdateFrom(object other)
+		{
+			if (other is IBrakes b) {
+				BrakePower = b.BrakePower;
+				return true;
+			}
+
+			return false;
+		}
+
+		#endregion
 	}
 }

@@ -8,7 +8,7 @@ Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Battery
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery
 Imports TUGraz.VectoCore.Utils
 ' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
@@ -195,6 +195,9 @@ Public Class BatteryForm
             tbMaxCurrentMap.Text = GetRelativePath(battery.MaxCurrentMap.Source, basePath)
             tbSoCCurve.Text = GetRelativePath(battery.VoltageCurve.Source, basePath)
             tbRiCurve.Text = GetRelativePath(battery.InternalResistanceCurve.Source, basePath)
+            tbTestingTempB.Text = battery.TestingTemperature.AsDegCelsius.ToGUIFormat()
+            cbJunctionBoxIncl.Checked = battery.JunctionboxIncluded
+            cbConnectorsIncluded.Checked = battery.ConnectorsSubsystemsIncluded
 
             tbSuperCapCapacity.Text = String.Empty
             tbSuperCapMaxV.Text = string.Empty
@@ -219,6 +222,7 @@ Public Class BatteryForm
             tbSuperCapMaxV.Text = superCap.MaxVoltage.ToGUIFormat()
             tbSuperCapMinV.Text= superCap.MinVoltage.ToGUIFormat()
             tbSuperCapRi.Text= superCap.InternalResistance.ToGUIFormat()
+            tbTestingTempC.Text = superCap.TestingTemperature.AsDegCelsius.ToGUIFormat()
 
             tbSuperCapMaxCurrentCharge.Text = superCap.MaxCurrentCharge.ToGuiFormat()
             tbSuperCapMaxCurrentDischarge.Text = superCap.MaxCurrentDischarge.ToGuiFormat()
@@ -300,12 +304,13 @@ Public Class BatteryForm
         superCap.MinV = _tbSuperCapMinV.Text.ToDouble(0)
         superCap.MaxV = tbSuperCapMaxV.Text.ToDouble(0)
 
-        superCap.MaxChgCurrent = tbSuperCapMaxCurrentCharge.Text.ToDouble()
-        superCap.MaxDischgCurrent = tbSuperCapMaxCurrentDischarge.Text.ToDouble()
+        superCap.MaxChgCurrent = tbSuperCapMaxCurrentCharge.Text.ToDouble(0)
+        superCap.MaxDischgCurrent = tbSuperCapMaxCurrentDischarge.Text.ToDouble(0)
+        superCap.TestingTemperature = tbTestingTempC.Text.ToDouble(20).DegCelsiusToKelvin()
         Return superCap
     End Function
 
-    Private Function FillBattery(file As string) As Battery
+    Private Function FillBattery(file As String) As Battery
         Dim battery As Battery = New Battery
         battery.FilePath = file
 
@@ -321,9 +326,52 @@ Public Class BatteryForm
         battery.BatMaxSoc = tbSoCMax.Text.ToDouble(0)
 
         battery.PathMaxCurrentCurve = tbMaxCurrentMap.Text
+        battery.JunctionboxIncluded = cbJunctionBoxIncl.Checked
+        battery.ConnectorsSubsystemsIncluded = cbConnectorsIncluded.Checked
+        battery.TestingTemperature = tbTestingTempB.Text.ToDouble(20).DegCelsiusToKelvin()
         Return battery
     End Function
+    Private Sub tbCapacity_Leave(sender As Object, e As System.EventArgs) Handles tbCapacity.Leave
 
+        If Not IsNumeric(tbCapacity.Text) Then
+            MsgBox("Invalid capacity value")
+            tbCapacity.Focus()
+            Return
+        End If
+        If Not 0 < Convert.ToInt32(tbCapacity.Text) Then
+            MsgBox("Input has to be positive")
+            tbCapacity.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbSoCMin_Leave(sender As Object, e As System.EventArgs) Handles tbSoCMin.Leave
+
+        If Not IsNumeric(tbSoCMin.Text) Then
+            MsgBox("Invalid SoC Min value")
+            tbSoCMin.Focus()
+            Return
+        End If
+        If Not 0 < Convert.ToInt32(tbSoCMin.Text) Then
+            MsgBox("Input has to be positive")
+            tbSoCMin.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbSoCMax_Leave(sender As Object, e As System.EventArgs) Handles tbSoCMax.Leave
+
+        If Not IsNumeric(tbSoCMax.Text) Then
+            MsgBox("Invalid SoC Max value")
+            tbSoCMax.Focus()
+            Return
+        End If
+        If Not 0 < Convert.ToInt32(tbSoCMax.Text) Then
+            MsgBox("Input has to be positive")
+            tbSoCMax.Focus()
+            Return
+        End If
+    End Sub
 
 #Region "Track changes"
 

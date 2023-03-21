@@ -29,12 +29,11 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -43,10 +42,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 	public class XMLManufacturerReportTruck : AbstractXMLManufacturerReport
 	{
 		
-		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void Initialize(VectoRunData modelData)
 		{
 			VehiclePart.Add(
-				new XAttribute(xsi + "type", "VehicleTruckType"),
+				new XAttribute(xsi + XMLNames.XSIType, "VehicleTruckType"),
 				new XElement(tns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
 				new XElement(tns + XMLNames.Component_Manufacturer, modelData.VehicleData.Manufacturer),
 				new XElement(tns + XMLNames.Component_ManufacturerAddress, modelData.VehicleData.ManufacturerAddress),
@@ -68,20 +67,20 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 						
 				GetADAS(modelData.VehicleData.ADAS),
 				GetTorqueLimits(modelData.EngineData),
-				VehicleComponents(modelData, fuelModes)
+				VehicleComponents(modelData)
 					
 			);
 			
 			InputDataIntegrity = GetInputDataSignature(modelData);
 		}
 
-		protected override XElement VehicleComponents(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		protected override XElement VehicleComponents(VectoRunData modelData)
 		{
 			if (modelData.VehicleData.AxleConfiguration.AxlegearIncludedInGearbox()) {
 				return new XElement(
 					tns + XMLNames.Vehicle_Components,
-					new XAttribute(xsi + "type", "ComponentsTruckFWDType"),
-					GetEngineDescription(modelData.EngineData, fuelModes),
+					new XAttribute(xsi + XMLNames.XSIType, "ComponentsTruckFWDType"),
+					GetEngineDescription(modelData.EngineData, modelData.VehicleData.InputData.TankSystem),
 					GetGearboxDescription(modelData.GearboxData, modelData.AxleGearData),
 					GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
 					GetRetarderDescription(modelData.Retarder),
@@ -93,8 +92,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 			}
 			return new XElement(
 				tns + XMLNames.Vehicle_Components,
-				new XAttribute(xsi + "type", "ComponentsTruckType"),
-				GetEngineDescription(modelData.EngineData, fuelModes),
+				new XAttribute(xsi + XMLNames.XSIType, "ComponentsTruckType"),
+				GetEngineDescription(modelData.EngineData, modelData.VehicleData.InputData.TankSystem),
 				GetGearboxDescription(modelData.GearboxData),
 				GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
 				GetRetarderDescription(modelData.Retarder),
@@ -129,19 +128,5 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 			return auxId + "Technology";
 		}
 
-		
-
-		
-
-		
-
-		
-
-		
-
-		
-		
-
-		
 	}
 }

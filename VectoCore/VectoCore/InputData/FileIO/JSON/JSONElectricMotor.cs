@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
+using System.Reflection;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.Impl;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.InputData.FileIO.JSON 
+namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
-	public class JSONElectricMotorV5 : JSONElectricMotorV4
+    public class JSONElectricMotorV5 : JSONElectricMotorV4
 	{
 		public JSONElectricMotorV5(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
 
@@ -44,15 +44,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				return new List<IElectricMotorPowerMap>() {
 					new JSONElectricMotorPowerMap() {
 						Gear = 0,
-						PowerMap = ReadTableData(entry.GetEx<string>("EfficiencyMap"), "ElectricMotor Map")
+						PowerMap = ReadTableData(entry.GetEx<string>("EfficiencyMap"), "ElectricMotor Map").ApplyFactor(ElectricMotorMapReader.Fields.PowerElectrical, 1000.0)
 					}
 				};
 			}
 
 			return powermap.Select(x => new JSONElectricMotorPowerMap() {
 				Gear = (((JProperty) x).Name).ToInt(),
-				PowerMap = ReadTableData((x as JProperty).Value.Value<string>(), "ElectricMotor Map")
+				PowerMap = ReadTableData((x as JProperty).Value.Value<string>(), "ElectricMotor Map").ApplyFactor(ElectricMotorMapReader.Fields.PowerElectrical, 1000.0)
 			}).Cast<IElectricMotorPowerMap>().ToList();
+
 		}
 
 		#endregion
@@ -63,7 +64,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	public class JSONElectricMotorPowerMap : IElectricMotorPowerMap
 	{
 		#region Implementation of IElectricMotorPowerMap
-
 		public int Gear { get; set; }
 		public TableData PowerMap { get; set; }
 
@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				PowerMap = new List<IElectricMotorPowerMap>() {
 					new JSONElectricMotorPowerMap() {
 						Gear = 0, 
-						PowerMap = ReadTableData(entry.GetEx<string>("EfficiencyMap"), "ElectricMotor Map")
+						PowerMap = ReadTableData(entry.GetEx<string>("EfficiencyMap"), "ElectricMotor Map").ApplyFactor(ElectricMotorMapReader.Fields.PowerElectrical, 1000.0)
 					}
 				},
 				// DragCurve = ReadTableData(entry.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"),
@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					PowerMap = new List<IElectricMotorPowerMap>() {
 						new JSONElectricMotorPowerMap() {
 							Gear = 0,
-							PowerMap = ReadTableData(Body.GetEx<string>("EfficiencyMap"), "ElectricMotor Map")
+							PowerMap = ReadTableData(Body.GetEx<string>("EfficiencyMap"), "ElectricMotor Map").ApplyFactor(ElectricMotorMapReader.Fields.PowerElectrical, 1000.0)
 						}
 					},// DragCurve = ReadTableData(Body.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"),
 					FullLoadCurve = ReadTableData(Body.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve")
@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					PowerMap = new List<IElectricMotorPowerMap>() {
 						new JSONElectricMotorPowerMap() {
 							Gear = 0,
-							PowerMap = ReadTableData(Body.GetEx<string>("EfficiencyMap"), "ElectricMotor Map")
+							PowerMap = ReadTableData(Body.GetEx<string>("EfficiencyMap"), "ElectricMotor Map").ApplyFactor(ElectricMotorMapReader.Fields.PowerElectrical, 1000.0)
 						}
 					},
 					// DragCurve = ReadTableData(Body.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"),
@@ -184,7 +184,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					PowerMap = new List<IElectricMotorPowerMap>() {
 						new JSONElectricMotorPowerMap() {
 							Gear = 0,
-							PowerMap = ReadTableData(Body.GetEx<string>("EfficiencyMap"), "ElectricMotor Map")
+							PowerMap = ReadTableData(Body.GetEx<string>("EfficiencyMap"), "ElectricMotor Map").ApplyFactor(ElectricMotorMapReader.Fields.PowerElectrical, 1000.0)
 						}
 					},
 					// DragCurve = ReadTableData(Body.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"),
@@ -200,7 +200,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					PowerMap = new List<IElectricMotorPowerMap>() {
 						new JSONElectricMotorPowerMap() {
 							Gear = 0,
-							PowerMap = ReadTableData(Body.GetEx<string>("EfficiencyMap"), "ElectricMotor Map")
+							PowerMap = ReadTableData(Body.GetEx<string>("EfficiencyMap"), "ElectricMotor Map").ApplyFactor(ElectricMotorMapReader.Fields.PowerElectrical, 1000.0)
 						}
 					},
 					// DragCurve = ReadTableData(Body.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"),
@@ -219,8 +219,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			ReadTableData(Body.GetEx<string>("Conditioning"), "ElectricMotor Conditioning", false);
 
 
-		public ElectricMachineType ElectricMachineType { get; }
-		public Watt R85RatedPower => null;
+		public ElectricMachineType ElectricMachineType => Body.ContainsKey(JsonKeys.EM_ElectricMachineType)
+			? Body.GetEx<string>(JsonKeys.EM_ElectricMachineType).ParseEnum<ElectricMachineType>()
+			: ElectricMachineType.PSM;
+
+		public Watt R85RatedPower => Body.ContainsKey(JsonKeys.EM_RatedPower) ? Body.GetEx<double>(JsonKeys.EM_RatedPower).SI(Unit.SI.Kilo.Watt).Cast<Watt>() : 0.SI<Watt>();
 		public virtual KilogramSquareMeter Inertia => Body.GetEx<double>("Inertia").SI<KilogramSquareMeter>();
 
 		//public virtual Joule OverloadBuffer => Body.GetValueOrDefault<double>("ThermalOverloadBuffer")?.SI(Unit.SI.Mega.Joule).Cast<Joule>() ?? 1e18.SI<Joule>();

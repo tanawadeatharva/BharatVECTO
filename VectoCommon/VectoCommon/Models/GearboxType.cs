@@ -94,7 +94,7 @@ namespace TUGraz.VectoCommon.Models
 				case GearboxType.ATSerial:     return "APT-S";
 				case GearboxType.ATPowerSplit: return "APT-P";
 				case GearboxType.APTN:         return "APT-N";
-				case GearboxType.IHPC:         return "IHPC";
+				case GearboxType.IHPC:         return "IHPC Type 1";
 				default: throw new ArgumentOutOfRangeException("GearboxType", type, null);
 			}
 		}

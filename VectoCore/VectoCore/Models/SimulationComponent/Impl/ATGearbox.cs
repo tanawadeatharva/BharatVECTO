@@ -40,17 +40,17 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class ATGearbox : AbstractGearbox<ATGearbox.ATGearboxState>, IHybridControlledGearbox
+	public class ATGearbox : AbstractGearbox<ATGearbox.ATGearboxState>, IHybridControlledGearbox, IUpdateable
 	{
 		protected internal readonly IShiftStrategy _strategy;
 		protected internal readonly TorqueConverter TorqueConverter;
 		private IIdleController _idleController;
-		protected internal bool RequestAfterGearshift;
 
 		internal WattSecond _powershiftLossEnergy;
 		protected internal KilogramSquareMeter EngineInertia;
@@ -543,6 +543,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_gbx_in] = CurrentState.InTorque * avgInAngularSpeed;
 			container[ModalResultField.P_gbx_shift_loss] = CurrentState.PowershiftLoss.DefaultIfNull(0) * avgInAngularSpeed;
 			container[ModalResultField.n_gbx_out_avg] = avgOutAngularSpeed;
+			container[ModalResultField.n_gbx_in_avg] = avgInAngularSpeed;
 			container[ModalResultField.T_gbx_out] = CurrentState.OutTorque;
 			container[ModalResultField.T_gbx_in] = CurrentState.InTorque;
 
@@ -581,8 +582,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public bool Disengaged = true;
 			public WattSecond PowershiftLossEnergy;
 			public NewtonMeter PowershiftLoss;
+
+			public new ATGearboxState Clone() => (ATGearboxState)MemberwiseClone();
+
 		}
 
 		public bool SwitchToNeutral { get; set; }
+
+		#region Implementation of IUpdateable
+
+		protected override bool DoUpdateFrom(object other)
+		{
+			if (other is ATGearbox g) {
+				PreviousState = g.PreviousState.Clone();
+				_powershiftLossEnergy = g._powershiftLossEnergy;
+				LastShift = g.LastShift;
+				return true;
+			}
+			
+			return false;
+		}
+
+		#endregion
 	}
 }

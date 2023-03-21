@@ -27,15 +27,15 @@ If the internal resistance is provided for different pulse durations, the actual
 
 ### Modular Battery System
 
-VECTO allows to connect multiple batteries togehter to a single battery system. Therefore, every battery has assigned a stream identifier. All batteries with the same stream identifier are connected in series. All battery strins are then connected in parallel.
+VECTO allows to connect multiple batteries together to a single battery system. Therefore, every battery has assigned a stream identifier. All batteries with the same stream identifier are connected in series. All battery strins are then connected in parallel.
 
 The following picture shows 4 batteries in series (3x Bat A + Bat B) and Bat C parallel to this. So two different streams need to be defined.
 
 ![](pics/BatterySystem.png)
 
-All batteries of a string of the mudular battery system are aggregated to a single "big battery". In the example above, BigBattery1 consists of (Bat A, Bat A, Bat A, Bat B), and BigBattery2 consists of (Bat C). Nevertheless, the state of charge is calculated for each battery module independently.
+All batteries of a string of the modular battery system are aggregated to a single "big battery". In the example above, BigBattery1 consists of (Bat A, Bat A, Bat A, Bat B), and BigBattery2 consists of (Bat C). Nevertheless, the state of charge is calculated for each battery module independently.
 
-The capacity of a BigBattery is the capacity of the smalles of all modules on a string. The maximum current of a BigBattery is also the lowest maximum current of all modules on a string. The open circuit voltage is the sum of all modules on a string and the internal resistancee is also the sum of all modules on a string.
+The capacity of a BigBattery is the capacity of the smallest of all modules on a string. The maximum current of a BigBattery is also the lowest maximum current of all modules on a string. The open circuit voltage is the sum of all modules on a string and the internal resistance is also the sum of all modules on a string.
 
 The maximum charge and discharge power of the whole REESS is the sum of the maximum charge/discharge power of all BigBatteries in the system. The actual power demand is distributed to the BigBatteries as follows:
 

@@ -1,7 +1,7 @@
 ## Driving Cycles (.vdri)
 
-A Driving Cycle defines the parameters of a simulated route in Vecto. It is either time-based or distance-based and has different fields depending on the driving cycle type.
-The basic file format is [Vecto-CSV](#csv) and the file type ending is ".vdri". A Job must have at least one driving cycle (except in Declaration mode, where the driving cycles are predefined).
+A Driving Cycle defines the parameters of a simulated route in VECTO. It is either time-based or distance-based and has different fields depending on the driving cycle type.
+The basic file format is [VECTO-CSV](#csv) and the file type ending is ".vdri". A Job must have at least one driving cycle (except in Declaration mode, where the driving cycles are predefined).
 
 ### Driving Cycle Types
 - **Declaration Mode**: [Target speed, distance-based](#declaration-mode-cycles)
@@ -66,7 +66,7 @@ t [s]              , v [km/h]    , n_eng [rpm] , n_fan [rpm] , tq_left [Nm] , tq
 
 
 ### Engineering Mode: Target-Speed, Distance-Based Cycle
-This driving cycle defines the target speed over distance. Vecto tries to achieve and maintain this target speed.
+This driving cycle defines the target speed over distance. VECTO tries to achieve and maintain this target speed.
 
 Header: **s, v, stop***\[, Padd]\[, grad]\[, PTO]\[, vair\_res, vair\_beta]*
 
@@ -102,7 +102,7 @@ s [m]              , v [km/h]    , stop [s]    , grad [%]    , Padd [kW] |
 ### Engineering Mode: Measured-Speed, Time-Based Cycle
 This driving cycle defines the actual measured speed over time. Vecto tries to simulate the vehicle model using this speed as the actual vehicle speed.
 Due to differences in the real and simulated shift strategies a small difference in speed can occur, but Vecto immediately tries to catch up after the gear is engaged again.
-This type of cycle is now supported for parallel HEVs (P1, P2, P2.5, P3, P4, IHPC), and it was tested with the following input fields: **t**, **v**, *grad*.
+This type of cycle is now supported for BEVs (E2, E3, E4, IEPC) and for parallel HEVs (P1, P2, P2.5, P3, P4, IHPC) also, and it was tested with the following input fields: **t**, **v**, *grad*.
 
 Header: **t, v***\[, grad]\[, Padd]\[, vair\_res, vair\_beta\]*
 
@@ -132,7 +132,7 @@ t [s]     v [km/h] , grad [%]    , Padd [kW]
 
 This driving cycle defines the actual measured speed of the vehicle, the gear, and the engine speed over time.
 It overrides the shift strategy of VECTO and also directly sets the engine speed.
-This type of cycle is now supported for parallel HEVs (P1, P2, P2.5, P3, P4, IHPC), and it was tested with the following input fields: **t**, **v**, **gear**, *grad*.
+This type of cycle is now supported for BEVs (E2, IEPC) and for parallel HEVs (P1, P2, P2.5, P3, P4, IHPC) also, and it was tested with the following input fields: **t**, **v**, **gear**, *grad*.
 
 Header: **t, v, gear***\[, tc\_active, grad]\[, Padd]\[, vair\_res, vair\_beta]\[, Aux\_ID\]*
 
@@ -162,6 +162,7 @@ t [s]              , v [km/h]    , gear [-]    , grad [%]    , Padd [kW]
 
 ### Engineering Mode: Pwheel (SiCo), Time-Based
 This driving cycle defines the power measured at the wheels over time. VECTO tries to simulate the vehicle with this power requirement.
+This type of cycle is now supported for BEVs (E2, E3, E4, IEPC) also, and it was tested with the following input fields: **t**, **Pwheel**, **gear**, **n**.
 
 Header: **t, Pwheel, gear, n***\[, Padd]*
 
@@ -173,7 +174,7 @@ Units are optional and are enclosed in [square-brackets] after the header-column
 | **t**      | [s]   | The absolute time. Must always be increasing.                                                                     |
 | **Pwheel** | [kW]  | Power at the wheels.                                                                                              |
 | **gear**   | [-]   | The current gear. Must be >= 0 (0 is neutral).                                                                    |
-| **n**      | [rpm] | The actual engine speed. Must be >= 0 rpm.                                                                        |
+| **n**      | [rpm] | The actual engine speed for conventionals or the electric motor speed for BEVs. Must be >= 0 rpm.                                                                        |
 | *Padd*     | [kW]  | Additional auxiliary power demand. This power demand will be directly added to the engine power. Must be >= 0 kW. |
 
 **Example:**
@@ -188,7 +189,7 @@ t [s]              , Pwheel [kW] , gear [-]    , n [rpm]     , Padd [kW]
 
 ### Engine Only Mode: Engine Only Driving Cycle
 
-This driving cycle directly defines the engine's power or torque at the output shaft over time. Vecto adds the engine's inertia to the given power demand and simulates the engine.
+This driving cycle directly defines the engine's power or torque at the output shaft over time. VECTO adds the engine's inertia to the given power demand and simulates the engine.
 
 Header: **t, n, (Pe|Me)***\[, Padd]*
 

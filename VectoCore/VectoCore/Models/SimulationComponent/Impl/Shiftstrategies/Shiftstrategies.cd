@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies.ShiftStrategy">
+    <Position X="1.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EEAEAAAIACABAAAAAAAAAAAAAAAAAEAgAAAAAAAAAAE=</HashCode>
+      <FileName>Models\SimulationComponent\Impl\Shiftstrategies\ShiftStrategy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TUGraz.VectoCore.Models.SimulationComponent.Impl.BaseShiftStrategy" Collapsed="true">
+    <Position X="3.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAIAECAIABgAYAmAAAAAgAAEAIAAAACAAAg=</HashCode>
+      <FileName>Models\SimulationComponent\Impl\Shiftstrategies\BaseShiftStrategy.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TUGraz.VectoCore.Models.SimulationComponent.Impl.AMTShiftStrategy">
+    <Position X="1" Y="6.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>KAAAAgAAAAIAAAAAALCgYA0AAAGAAAAAIIAAAAAABAA=</HashCode>
+      <FileName>Models\SimulationComponent\Impl\Shiftstrategies\AMTShiftStrategy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TUGraz.VectoCore.Models.SimulationComponent.Impl.HybridController" Collapsed="true">
+    <Position X="10.75" Y="0.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="TUGraz.VectoCore.Models.SimulationComponent.Impl.HybridController.HybridCtlShiftStrategy" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Models\SimulationComponent\Impl\HybridController.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="TUGraz.VectoCore.Models.SimulationComponent.Impl.HybridController.HybridControllerState" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Models\SimulationComponent\Impl\HybridController.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="TUGraz.VectoCore.Models.SimulationComponent.Impl.HybridController.ElectricMotorController" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Models\SimulationComponent\Impl\HybridController.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+      <Class Name="TUGraz.VectoCore.Models.SimulationComponent.Impl.HybridController.HybridCtlATShiftStrategy" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Models\SimulationComponent\Impl\HybridController.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="TUGraz.VectoCore.Models.SimulationComponent.Impl.HybridController.HybridCtlIHPCShiftStrategy" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Models\SimulationComponent\Impl\HybridController.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>BAAEAAAQAAIAAwgAAIA0ABDAAQCMhAAUBAAAABCAMAA=</HashCode>
+      <FileName>Models\SimulationComponent\Impl\HybridController.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies.ATShiftStrategyOptimized">
+    <Position X="5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAgACDAABAAEAJLgAgAQACAAAABAQAYAAAAAAhQA=</HashCode>
+      <FileName>Models\SimulationComponent\Impl\Shiftstrategies\ATShiftStrategyOptimized.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TUGraz.VectoCore.Models.SimulationComponent.Impl.AMTShiftStrategyOptimized" Collapsed="true">
+    <Position X="0.5" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAgAKAAAAAAEAJJAAAAQACAAACAAAIAAAAAAABQA=</HashCode>
+      <FileName>Models\SimulationComponent\Impl\Shiftstrategies\AMTShiftStrategyOptimized.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies.APTNShiftStrategy" Collapsed="true">
+    <Position X="9.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgACAAAAAAAAAAAgAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\SimulationComponent\Impl\Shiftstrategies\APTNShiftStrategy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies.ATShiftStrategy" Collapsed="true">
+    <Position X="6" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>OAAESgACACIAAAAAABAAcA0ABAAAAIAAAoAABAAAAAE=</HashCode>
+      <FileName>Models\SimulationComponent\Impl\Shiftstrategies\ATShiftStrategy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies.ATShiftStrategyVoith" Collapsed="true">
+    <Position X="7.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAgADQCAEAAYABgEBAUBAAAAgBAMQIAAAAAAgAA=</HashCode>
+      <FileName>Models\SimulationComponent\Impl\Shiftstrategies\ATShiftStrategyVoith.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies.MTShiftStrategy" Collapsed="true">
+    <Position X="2.75" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAQAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Models\SimulationComponent\Impl\Shiftstrategies\MTShiftStrategy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies.PEVAMTShiftStrategy" Collapsed="true">
+    <Position X="9.5" Y="3.75" Width="1.5" />
+    <NestedTypes>
+      <Class Name="TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies.PEVAMTShiftStrategy.PEVInitControl" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Models\SimulationComponent\Impl\Shiftstrategies\PEVAMTShiftStrategy.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>OJCEIgAKACIAECAMJLCgbA2ADABAiEA0AIAAEBBAAAk=</HashCode>
+      <FileName>Models\SimulationComponent\Impl\Shiftstrategies\PEVAMTShiftStrategy.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="TUGraz.VectoCore.Models.SimulationComponent.IShiftStrategy">
+    <Position X="12.5" Y="5.25" Width="1.5" />
+    <InheritanceLine Type="TUGraz.VectoCore.Models.SimulationComponent.IShiftPolygonCalculator" FixedToPoint="true">
+      <Path>
+        <Point X="13.25" Y="3.603" />
+        <Point X="13.25" Y="4.875" />
+        <Point X="13.5" Y="4.875" />
+        <Point X="13.5" Y="5.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAIAECAAAAAAQAgAAAAAgAAEAIAAAAAAAAg=</HashCode>
+      <FileName>Models\SimulationComponent\IShiftStrategy.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TUGraz.VectoCore.Models.SimulationComponent.IShiftPolygonCalculator">
+    <Position X="12.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\SimulationComponent\IShiftStrategy.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

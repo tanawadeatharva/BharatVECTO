@@ -26,11 +26,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 
 		#region Overrides of AbstractXMLManufacturerReport
 
-		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void Initialize(VectoRunData modelData)
 		{
 			_tankSystem = modelData.VehicleData.InputData.TankSystem;
 			VehiclePart.Add(
-				new XAttribute(xsi + "type", "VehicleCompletedBusType"),
+				new XAttribute(xsi + XMLNames.XSIType, "VehicleCompletedBusType"),
 				GetPrimaryVehicleInformation(),
 				new XElement(
 					tns + "CompletedVehicle",
@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 					new XElement(tns + XMLNames.Vehicle_CurbMassChassis, XMLHelper.ValueAsUnit(modelData.VehicleData.CurbMass, XMLNames.Unit_kg)),
 					new XElement(tns + XMLNames.TPMLM,
 								XMLHelper.ValueAsUnit(modelData.VehicleData.GrossVehicleMass, XMLNames.Unit_t, 2)),
-					new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.ZeroEmissionVehicle),
+					//new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.ZeroEmissionVehicle),
 					new XElement(tns + XMLNames.Vehicle_ZeroEmissionVehicle, modelData.VehicleData.ZeroEmissionVehicle),
 					new XElement(tns + XMLNames.Vehicle_HybridElectricHDV, modelData.VehicleData.HybridElectricHDV),
 					new XElement(tns + XMLNames.Vehicle_DualFuelVehicle, modelData.VehicleData.DualFuelVehicle),
@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 					new XElement(tns + XMLNames.Bus_VehicleWidth, modelData.VehicleData.InputData.Width.ToXMLFormat(3)),
 					new XElement(tns + XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology, modelData.VehicleData.InputData.DoorDriveTechnology.ToXMLFormat()),
 					
-					VehicleComponents(modelData, fuelModes),
+					VehicleComponents(modelData),
 					GetInputDataSignature(modelData)
 				)
 			);
@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 			return new XElement(
 				tns + XMLNames.Report_Result_Result,
 				new XAttribute(XMLNames.Report_Result_Status_Attr, "error"),
-				new XAttribute(xsi + "type", "ResultErrorType"),
+				new XAttribute(xsi + XMLNames.XSIType, "ResultErrorType"),
 				new XElement(tns + XMLNames.Report_Result_Mission, genericResult.Mission.ToXMLFormat()),
 				GetSimulationParameters(specificResult),
 				content);
@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 			return new XElement(
 				tns + XMLNames.Report_Result_Result,
 				new XAttribute(XMLNames.Report_Result_Status_Attr, "success"),
-				new XAttribute(xsi + "type", "ResultCompletedVehicleSuccessType"),
+				new XAttribute(xsi + XMLNames.XSIType, "ResultCompletedVehicleSuccessType"),
 				new XElement(tns + XMLNames.Report_Result_Mission, genericResult.Mission.ToXMLFormat()),
 				new XElement(tns + XMLNames.Report_ResultEntry_Distance, XMLHelper.ValueAsUnit(specificResult.Distance, XMLNames.Unit_km, 3)),
 				GetSimulationParametersPrimaryVehicle(primaryResult),
@@ -190,12 +190,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 					tns + XMLNames.Report_ResultEntry_TotalVehicleMass,
 					XMLHelper.ValueAsUnit(primaryResult.SimulationParameter.TotalVehicleMass, XMLNames.Unit_kg)),
 				new XElement(tns + XMLNames.Report_ResultEntry_Payload, XMLHelper.ValueAsUnit(primaryResult.SimulationParameter.Payload, XMLNames.Unit_kg)),
-				new XElement(tns + "PassengerCount", primaryResult.SimulationParameter.PassengerCount.ToMinSignificantDigits(3, 1)),
-				new XElement(tns + XMLNames.Report_Result_FuelMode, primaryResult.SimulationParameter.FuelMode)
+				new XElement(tns + "PassengerCount", primaryResult.SimulationParameter.PassengerCount.ToMinSignificantDigits(3, 1))
+				//new XElement(tns + XMLNames.Report_Result_FuelMode, primaryResult.SimulationParameter.FuelMode)
 			);
 		}
 
-		protected override XElement GetSimulationParameters(XMLDeclarationReport.ResultEntry result)
+		protected override XElement GetSimulationParameters(IResultEntry result)
 		{
 			return new XElement(
 				tns + "SimulationParametersCompletedVehicle",
@@ -337,11 +337,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 			return retVal.ToArray();
 		}
 
-		protected override XElement VehicleComponents(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		protected override XElement VehicleComponents(VectoRunData modelData)
 		{
 			return new XElement(
 				tns + XMLNames.Vehicle_Components,
-				new XAttribute(xsi + "type", "ComponentsCompletedBusType"),
+				new XAttribute(xsi + XMLNames.XSIType, "ComponentsCompletedBusType"),
 				GetAirDragDescription(modelData.AirdragData),
 				GetAuxiliariesDescription(modelData)
 			);
@@ -380,7 +380,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 				return new XElement(
 					tns + XMLNames.Component_Auxiliaries,
 					new XAttribute(XNamespace.Xmlns + auxPrefix, namespaceName),
-					new XAttribute(xsi + "type", $"{auxPrefix}:CompletedVehicleAuxiliaryDataDeclarationType"),
+					new XAttribute(xsi + XMLNames.XSIType, $"{auxPrefix}:CompletedVehicleAuxiliaryDataDeclarationType"),
 					XElement.Parse(busAuxXML.InnerXml).Elements()
 				);
 			}
@@ -389,7 +389,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 			return new XElement(
 				tns + XMLNames.Component_Auxiliaries,
 				new XAttribute(XNamespace.Xmlns + auxPrefix, ns.NamespaceName),
-				new XAttribute(xsi + "type", $"{auxPrefix}:{busAuxXML.FirstChild.SchemaInfo.SchemaType.QualifiedName.Name}"),
+				new XAttribute(xsi + XMLNames.XSIType, $"{auxPrefix}:{busAuxXML.FirstChild.SchemaInfo.SchemaType.QualifiedName.Name}"),
 				XElement.Parse(busAuxXML.InnerXml).Elements()
 			);
 		}
@@ -397,7 +397,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 		
 		#endregion
 
-		public override void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
+		public override void WriteResult(IResultEntry resultEntry)
 		{
 			throw new NotSupportedException();
 		}

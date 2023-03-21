@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
@@ -124,6 +125,10 @@ namespace TUGraz.VectoCommon.InputData
 		///// </summary>
 		//string Rim { get; }  // deprecated
 
+		/// <summary>
+		/// P196, P197  TorqueLimits: Gear [-], MaxTorque [Nm]
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		IList<ITorqueLimitInputData> TorqueLimits { get; }
 
 		/// <summary>
@@ -154,14 +159,16 @@ namespace TUGraz.VectoCommon.InputData
 
 		bool HybridElectricHDV { get; }
 
-		bool DualFuelVehicle { get; }
+        bool DualFuelVehicle { get; }
 
-		Watt MaxNetPower1 { get; }
-
-		Watt MaxNetPower2 { get; }
+		/// <summary>
+		/// SumNetPower in 2nd amendment
+		/// </summary>
+        Watt MaxNetPower1 { get; }
 
 		string ExemptedTechnology { get; }
 
+		// --- end
 
 		RegistrationClass? RegisteredClass { get; }
 
@@ -194,7 +201,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		VehicleDeclarationType VehicleDeclarationType { get; }
 
-		Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 		
 		TableData BoostingLimitations { get; }
 
@@ -210,6 +217,8 @@ namespace TUGraz.VectoCommon.InputData
 		bool OvcHev { get; }
 
 		Watt MaxChargingPower { get; }
+
+		VectoSimulationJobType VehicleType { get; }
 
 	}
 
@@ -242,6 +251,17 @@ namespace TUGraz.VectoCommon.InputData
 		IElectricMachinesDeclarationInputData ElectricMachines { get; }
 
 		IIEPCDeclarationInputData IEPC { get; }
+	}
+
+	public static class ComponentsHelper{
+		/// <summary>
+		/// Returns the gearbox type of Gearbox- or IEPC-Component
+		/// </summary>
+		/// <param name=""></param>
+		public static GearboxType? GetGearboxType(this IVehicleComponentsDeclaration components)
+		{
+			return components?.GearboxInputData?.Type ?? (components?.IEPC != null ? new GearboxType?(GearboxType.IEPC) : null);
+		}
 	}
 
 	public interface IAxlesDeclarationInputData
@@ -399,6 +419,9 @@ namespace TUGraz.VectoCommon.InputData
 		SquareMeter TransferredAirDragArea { get; } // P246
 
 		SquareMeter AirDragArea_0 { get; } // P245
+
+		XmlNode XMLSource { get; }
+
 	}
 
 	public interface IRetarderInputData : IComponentInputData
@@ -757,6 +780,14 @@ namespace TUGraz.VectoCommon.InputData
 		//double OverloadRecoveryFactor { get; }
 	}
 
+	public static class IElectricMotorInputDataHelper
+	{
+		public static bool IsIHPC(this IElectricMotorDeclarationInputData em)
+		{
+			return ((!em.IHPCType.IsNullOrEmpty()) && (em.IHPCType != "None"));
+		}
+	}
+
 	public interface IElectricMotorVoltageLevel
 	{
 		Volt VoltageLevel { get; }
@@ -767,10 +798,14 @@ namespace TUGraz.VectoCommon.InputData
 		NewtonMeter OverloadTorque { get; }
 
 		PerSecond OverloadTestSpeed { get; } //TestSpeedOverloadTorque
-
-		Second OverloadTime { get; } //OverloadDuration
-
-		TableData FullLoadCurve { get; } //MaxTorqueCurve
+		/// <summary>
+		/// OverloadDuration
+		/// </summary>
+		Second OverloadTime { get; }
+		/// <summary>
+		/// MaxTorqueCurve
+		/// </summary>
+		TableData FullLoadCurve { get; }
 
 		IList<IElectricMotorPowerMap> PowerMap { get; }
 	}
@@ -778,7 +813,9 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IElectricMotorPowerMap
 	{
 		int Gear { get; }
-
+		/// <summary>
+		/// P_el must be in W!
+		/// </summary>
 		TableData PowerMap { get; }
 	}
 	
@@ -787,7 +824,27 @@ namespace TUGraz.VectoCommon.InputData
 		IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> Entries { get; }
 	}
 
-	public class ElectricMachineEntry<T> where T : IElectricMotorDeclarationInputData
+	//public interface IElectricMachineEntry<T>
+	//{
+	//	T ElectricMachine { get; set; }
+
+	//	int Count { get; set; }
+
+	//	PowertrainPosition Position { get; set; }
+
+	//	double RatioADC { get; set; }
+
+	//	double[] RatioPerGear { get; set; }
+
+	//	double MechanicalTransmissionEfficiency { get; set; }
+
+	//	TableData MechanicalTransmissionLossMap { get; set; }
+
+	//	IADCDeclarationInputData ADC { get; set; }
+	//}
+
+
+	public class ElectricMachineEntry<T> where T : class, IElectricMotorDeclarationInputData
 	{
 		public T ElectricMachine { get; set; }
 
@@ -795,7 +852,23 @@ namespace TUGraz.VectoCommon.InputData
 
 		public PowertrainPosition Position { get; set; }
 
-		public double RatioADC { get; set; }
+		private double? _ratioADC = null;
+		/// <summary>
+		/// If not overridden RatioADC == ADC?.Ratio ?? 1;
+		/// Can only be overridden when ADC == null;
+		/// </summary>
+		public double RatioADC { 
+			get
+			{
+				//Engineering mode sets RatioADC, decl mode sets ADC
+				if (_ratioADC.HasValue && ADC == null) {
+					return _ratioADC.Value;
+				} else {
+					return ADC?.Ratio ?? 1;
+				}
+			}
+			set => _ratioADC = value;
+		}
 
 		public double[] RatioPerGear { get; set; }
 
@@ -963,6 +1036,15 @@ namespace TUGraz.VectoCommon.InputData
 		IList<IBusAuxElectricStorageDeclarationInputData> ElectricStorage { get; }
 	}
 
+	public static class ElectricSupplyDeclarationDataHelper
+	{
+		public static Watt GetMaxAlternatorPower(this IElectricSupplyDeclarationData electricSupply)
+		{
+			return electricSupply.Alternators?.Select(alt => alt.RatedCurrent * alt.RatedVoltage)?
+				.Max();
+		}
+	}
+
 	public interface IElectricConsumersDeclarationData
 	{
 		bool? InteriorLightsLED { get; }
@@ -1071,7 +1153,7 @@ namespace TUGraz.VectoCommon.InputData
 		Kilogram TotalVehicleMass { get; }
 		Kilogram Payload { get; }
 		double PassengerCount { get; }
-		string FuelMode { get; }
+		//string FuelMode { get; }
 	}
 
 
@@ -1156,7 +1238,7 @@ namespace TUGraz.VectoCommon.InputData
 			switch (type)
 			{
 				case CompressorDrive.electrically: return nameof(CompressorDrive.electrically);
-				case CompressorDrive.mechanically: return nameof(CompressorDrive.electrically);
+				case CompressorDrive.mechanically: return nameof(CompressorDrive.mechanically);
 				default: return null;
 			}
 		}
@@ -1171,6 +1253,14 @@ namespace TUGraz.VectoCommon.InputData
 		RM
 	}
 
+	public static class ElectricMachineTypeHelper
+	{
+		public static string GetLabel(this ElectricMachineType type)
+		{
+			return type.ToString();
+		}
+	}
+
 	public enum BatteryType
 	{
 		HPBS,
@@ -1179,6 +1269,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public enum ArchitectureID
 	{
+		UNKNOWN,
 		E2,
 		E3,
 		E4,
@@ -1188,6 +1279,7 @@ namespace TUGraz.VectoCommon.InputData
 		P2_5,
 		P3,
 		P4,
+		P_IHPC,
 		S2,
 		S3,
 		S4,

@@ -49,7 +49,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class TorqueConverter : StatefulVectoSimulationComponent<TorqueConverter.TorqueConverterComponentState>,
-		ITnInPort, ITnOutPort, ITorqueConverter
+		ITnInPort, ITnOutPort, ITorqueConverter, IUpdateable
 	{
 		protected readonly IGearboxInfo Gearbox;
 		protected readonly IShiftStrategy ShiftStrategy;
@@ -506,6 +506,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			public TorqueConverterOperatingPoint OperatingPoint;
 			public bool IgnitionOn;
+
+			public new TorqueConverterComponentState Clone() => (TorqueConverterComponentState)base.Clone();
 		}
 
 		#region Implementation of ITorqueConverterControl
@@ -519,6 +521,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public TorqueConverterOperatingPoint SetOperatingPoint { get; set; }
 
+
+		#endregion
+
+		#region Implementation of IUpdateable
+
+		protected override bool DoUpdateFrom(object other) {
+			if (other is TorqueConverter tc) {
+				PreviousState = tc.PreviousState.Clone();
+				return true;
+			}
+			return false;
+		}
 
 		#endregion
 	}

@@ -37,7 +37,7 @@ namespace VECTO3GUI2020.Ninject
 			return _multiStageVmFactoryDefaultInstanceProvider.GetNewMultistageJobViewModel();
 		}
 
-		public IMultiStageJobViewModel GetMultiStageJobViewModel(IMultistageBusInputDataProvider inputData)
+		public IMultiStageJobViewModel GetMultiStageJobViewModel(IMultistepBusInputDataProvider inputData)
 		{
 			return _multiStageVmFactoryDefaultInstanceProvider.GetMultiStageJobViewModel(inputData);
 		}

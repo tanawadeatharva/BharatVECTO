@@ -288,7 +288,7 @@ namespace TUGraz.VectoHashing
 				return components.First();
 			}
 			if (Document.DocumentElement.LocalName.Equals("VectoOutput")) {
-				return VectoComponents.VectoOutput;
+				return VectoComponents.VectoManufacturerReport;
 			}
 			if (Document.DocumentElement.LocalName.Equals("VectoCustomerInformation")) {
 				return VectoComponents.VectoCustomerInformation;

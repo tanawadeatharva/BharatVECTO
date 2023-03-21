@@ -26,11 +26,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public IVehicleDeclarationInputData PrimaryVehicle => PrimaryVehicleRecordFile.Vehicle;
 
-		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void Initialize(VectoRunData modelData)
 		{
 			_tankSystem = modelData.VehicleData.InputData.TankSystem;
 			VehiclePart.Add(
-				new XAttribute(xsi + "type", "VehicleCompletedBusType"),
+				new XAttribute(xsi + XMLNames.XSIType, "VehicleCompletedBusType"),
 				new XElement(tns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
 				new XElement(
 					tns + "PrimaryVehicle",
@@ -73,10 +73,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(tns + XMLNames.Bus_VehicleWidth, modelData.VehicleData.InputData.Width.ToXMLFormat(3)),
 				GetADAS(modelData.VehicleData.ADAS),
 				ComponentData(
-					modelData,
-					PrimaryVehicleRecordFile.ResultsInputData.Results
-											.Select(x => x.EnergyConsumption.Keys.Select(f => FuelData.Instance().Lookup(f, modelData.VehicleData.InputData.TankSystem)).ToList()).Distinct()
-											.ToList())
+					modelData
+					// TODO: MQ 20221129: maybe this is necessary?
+					//PrimaryVehicleRecordFile.ResultsInputData.Results
+					//						.Select(x => x.EnergyConsumption.Keys.Select(f => FuelData.Instance().Lookup(f, modelData.VehicleData.InputData.TankSystem)).ToList()).Distinct()
+					//						.ToList()
+					)
 			);
 			
 			InputDataIntegrity = new XElement(tns + XMLNames.Report_InputDataSignature,
@@ -118,7 +120,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			return new XElement(
 				tns + XMLNames.Report_Result_Result,
 				new XAttribute(XMLNames.Report_Result_Status_Attr, "error"),
-				new XAttribute(xsi + "type", "ResultErrorType"),
+				new XAttribute(xsi + XMLNames.XSIType, "ResultErrorType"),
 				new XElement(tns + XMLNames.Report_Result_Mission, genericResult.Mission.ToXMLFormat()),
 				GetSimulationParameters(specificResult, primaryResult),
 				content);
@@ -129,7 +131,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			return new XElement(
 				tns + XMLNames.Report_Result_Result,
 				new XAttribute(XMLNames.Report_Result_Status_Attr, "success"),
-				new XAttribute(xsi + "type", "ResultSuccessType"),
+				new XAttribute(xsi + XMLNames.XSIType, "ResultSuccessType"),
 				new XElement(tns + XMLNames.Report_Result_Mission, genericResult.Mission.ToXMLFormat()),
 				//new XElement(tns + XMLNames.Report_ResultEntry_Distance, XMLHelper.ValueAsUnit(specificResult.Distance, XMLNames.Unit_km, 3)),
 				GetSimulationParameters(specificResult, primaryResult),
@@ -149,7 +151,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 					XMLHelper.ValueAsUnit(result.TotalVehicleMass, XMLNames.Unit_kg)),
                 new XElement(tns + XMLNames.Report_Result_MassPassengers, XMLHelper.ValueAsUnit(result.Payload, XMLNames.Unit_kg)),
                 result.PassengerCount.HasValue && result.PassengerCount.Value > 0 ? new XElement(tns + XMLNames.Report_Result_PassengerCount, result.PassengerCount.Value.ToMinSignificantDigits(3, 1)) : null,
-				new XElement(tns + XMLNames.Report_Result_FuelMode, primaryResult.SimulationParameter.FuelMode)
+				//new XElement(tns + XMLNames.Report_Result_FuelMode, primaryResult.SimulationParameter.FuelMode)
 			};
 		}
 
@@ -288,7 +290,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
                 new XAttribute(xsi + "schemaLocation",
 					$"{rootNS} {AbstractXMLWriter.SchemaLocationBaseUrl}DEV/VectoOutputCustomer.xsd"),
                 new XElement(rootNS + XMLNames.Report_DataWrap,
-                    new XAttribute(xsi + "type", "VectoOutputDataType"),
+                    new XAttribute(xsi + XMLNames.XSIType, "VectoOutputDataType"),
                     vehicle,
                     new XElement(tns + XMLNames.Report_ResultData_Signature, resultSignature),
                     results,
@@ -304,7 +306,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
             Report = h.AddHash();
         }
 
-        public override void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
+        public override void WriteResult(IResultEntry resultEntry)
 		{
 			throw new NotSupportedException();
 		}

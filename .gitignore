@@ -203,6 +203,7 @@ Documentation/VehiclesReleaseComparisonDeclarationMode/*.vsum
 HashingTool/TestData/
 DISTR/
 [0-9][0-9][0-9][0-9]_[0-9][0-9]_[0-9][0-9]-VECTO-*.zip
+[0-9][0-9][0-9][0-9]_[0-9][0-9]_[0-9][0-9]-VECTO_MOCKUP-*.zip
 Documentation/VehiclesReleaseComparisonDeclarationMode/tmp/
 EPTP/
 201*-VECTO-*.zip
@@ -225,3 +226,5 @@ Documentation/VehiclesReleaseComparisonDeclarationMode/**/*.vsum
 
 
 **/*.user
+/Generic Vehicles/Engineering Mode/GenericIHPC/6SpeedGbx/EM_Maps.xlsx
+/Nuget

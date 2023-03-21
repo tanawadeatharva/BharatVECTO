@@ -3,6 +3,7 @@ using Ninject.Extensions.Factory;
 using Ninject.Modules;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using VECTO3GUI2020.Model.Interfaces;
 using VECTO3GUI2020.Ninject.Util;
 using VECTO3GUI2020.Util;

@@ -62,7 +62,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#region Overrides of JSONVehicleDataV10_HEV_BEV
 
 		public override TableData BoostingLimitations => null;
-		
+
+		public override ArchitectureID ArchitectureID { get => VehicleType.GetArchitectureID(PowertrainPosition.IEPC); }
+
+		#region Overrides of JSONVehicleDataV7
+
+		//public override bool OvcHev => true;
+
+		//public override Watt MaxChargingPower => 0.SI<Watt>();
+
+		#endregion
+
 		#endregion
 	}
 
@@ -79,6 +89,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public override double InitialSOC => Body.GetEx<double>("InitialSoC") / 100.0;
 
+		public override bool OvcHev =>
+			VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E) ||
+			Body.ContainsKey("OvcHev") && Body.GetEx<bool>("OvcHev");
+
+		public override Watt MaxChargingPower => OvcHev && Body.ContainsKey("MaxChargingPower") ? Body.GetEx<double>("MaxChargingPower").SI(Unit.SI.Kilo.Watt).Cast<Watt>() : 0.SI<Watt>();
+
 		protected override IRetarderInputData GetRetarder => _retarderInputData ?? (_retarderInputData = new JSONRetarderInputData(this));
 
 		protected override IElectricMachinesEngineeringInputData GetElectricMachines()
@@ -89,6 +105,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected override IElectricStorageSystemEngineeringInputData GetElectricStorage()
 		{
 			return _batteries ?? (_batteries = ReadBatteries());
+		}
+
+		public override ArchitectureID ArchitectureID
+		{
+			get
+			{
+				return VehicleType.GetArchitectureID(GetElectricMachines().Entries
+					.First(e => e.Position != PowertrainPosition.GEN).Position);
+			}
 		}
 
 		public override VectoSimulationJobType VehicleType
@@ -111,27 +136,32 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected virtual JSONElectricMotors ReadMotors()
 		{
 			var retVal = new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>();
-			foreach (var entry in Body["ElectricMotors"]) {
-				var tmp = new ElectricMachineEntry<IElectricMotorEngineeringInputData> {
-					Position = PowertrainPositionHelper.Parse(entry.GetEx<string>("Position")),
-					RatioADC = entry.GetEx<double>("Ratio"),
-					RatioPerGear = entry["RatioPerGear"] != null
-						? entry["RatioPerGear"].Select(x => x.Value<double>()).ToArray()
-						: new double[] { },
-					MechanicalTransmissionEfficiency = entry["MechanicalEfficiency"] != null
-						? entry.GetEx<double>("MechanicalEfficiency")
-						: double.NaN,
-					MechanicalTransmissionLossMap = entry["MechanicalTransmissionLossMap"] != null
-						? ReadTableData(Path.Combine(BasePath, entry.GetEx<string>("MechanicalTransmissionLossMap")),
-							"EM ADC LossMap")
-						: null,
-					Count = entry.GetEx<int>("Count"),
-					ElectricMachine = 
-						JSONInputDataFactory.ReadElectricMotorData(
-							Path.Combine(BasePath, entry.GetEx<string>("MotorFile")), false)
-				};
-				retVal.Add(tmp);
+			if (Body["ElectricMotors"] != null) {
+				foreach (var entry in Body["ElectricMotors"])
+				{
+					var tmp = new ElectricMachineEntry<IElectricMotorEngineeringInputData>
+					{
+						Position = PowertrainPositionHelper.Parse(entry.GetEx<string>("Position")),
+						RatioADC = entry.GetEx<double>("Ratio"),
+						RatioPerGear = entry["RatioPerGear"] != null
+							? entry["RatioPerGear"].Select(x => x.Value<double>()).ToArray()
+							: new double[] { },
+						MechanicalTransmissionEfficiency = entry["MechanicalEfficiency"] != null
+							? entry.GetEx<double>("MechanicalEfficiency")
+							: double.NaN,
+						MechanicalTransmissionLossMap = entry["MechanicalTransmissionLossMap"] != null
+							? ReadTableData(Path.Combine(BasePath, entry.GetEx<string>("MechanicalTransmissionLossMap")),
+								"EM ADC LossMap")
+							: null,
+						Count = entry.GetEx<int>("Count"),
+						ElectricMachine =
+							JSONInputDataFactory.ReadElectricMotorData(
+								Path.Combine(BasePath, entry.GetEx<string>("MotorFile")), false)
+					};
+					retVal.Add(tmp);
+				}
 			}
+			
 
 			return new JSONElectricMotors(retVal);
 		}
@@ -181,10 +211,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		//public override Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits =>
 		//	throw new NotImplementedException();
-		public override Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits =>
-			Body["EMTorqueLimits"] == null
-				? null
-				: new Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>>() {
+		public override IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits
+		{
+			get
+			{
+				if (Body["EMTorqueLimits"] == null) {
+					return null;
+				}
+
+				if (Body["EMTorqueLimits"].HasValues) {
+					var entries = Body["EMTorqueLimits"].Select(x => Tuple.Create((x as JProperty)?.Name.ToDouble().SI<Volt>(),
+						ReadTableData(
+							Path.Combine(BasePath, (x as JProperty)?.Value.Value<string>() ?? ""),
+							"ElectricMotorTorqueLimits")
+					)).ToList();
+					return new Dictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>>()
+						{{ GetElectricMachines().Entries.First().Position, entries }};
+				}
+
+				return new Dictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>>() {
 					{
 						GetElectricMachines().Entries.First().Position,
 						new List<Tuple<Volt, TableData>>() {
@@ -194,6 +239,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						}
 					}
 				};
+			}
+		}
+		//=>
+			//Body["EMTorqueLimits"] == null
+			//	? null
+			//	: Body["EMTorqueLimits"].HasValues ?
+   //         Body["EMTorqueLimits"].Select(x => Tuple.Create(x.GetEx<double>("Voltage").SI<Volt>(), ReadTableData(Path.Combine(BasePath, x.GetEx<string>("EMTorqueLimits")),
+			//	"ElectricMotorTorqueLimits")))) 
+			//	: new Dictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>>() {
+			//		{
+			//			GetElectricMachines().Entries.First().Position,
+			//			new List<Tuple<Volt, TableData>>() {
+			//				Tuple.Create((Volt)null, ReadTableData(
+			//					Path.Combine(BasePath, Body.GetEx<string>("EMTorqueLimits")),
+			//					"ElectricMotorTorqueLimits"))
+			//			}
+			//		}
+			//	};
 
         public override TableData BoostingLimitations =>
 			Body["MaxPropulsionTorque"] == null
@@ -322,7 +385,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual Meter Height => Body["VehicleHeight"] == null ? null : Body.GetEx<double>("VehicleHeight").SI<Meter>();
 		
-		public virtual Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
+		public virtual IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
 		
 		public virtual TableData BoostingLimitations => null;
 		
@@ -339,9 +402,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public int? NumSteeredAxles => null;
 		XmlNode IVehicleDeclarationInputData.XMLSource => null;
 		public virtual string VehicleTypeApprovalNumber { get; }
-		public ArchitectureID ArchitectureID { get; }
-		public bool OvcHev { get; }
-		public Watt MaxChargingPower { get; }
+		public virtual ArchitectureID ArchitectureID { get; }
+		public virtual bool OvcHev { get; }
+		public virtual Watt MaxChargingPower { get; }
 
 		public GearshiftPosition PTO_DriveGear => Body["GearDuringPTODrive"] != null ? new GearshiftPosition(Body["GearDuringPTODrive"].Value<uint>()) : null;
 
@@ -368,7 +431,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual string ManufacturerAddress => Constants.NOT_AVAILABLE;
 
-		public virtual PerSecond EngineIdleSpeed => Body["IdlingSpeed"] != null ? Body.GetEx<double>("IdlingSpeed").RPMtoRad() : null;
+		public virtual PerSecond EngineIdleSpeed
+		{
+			get
+			{
+				if (Body["IdlingSpeed"] != null) {
+					return Body.GetEx<double>("IdlingSpeed").RPMtoRad();
+				} else {
+					return (EngineInputData as IEngineModeDeclarationInputData)?.IdleSpeed;
+				}
+
+				return null;
+			}
+		}
 
 		IList<IAxleDeclarationInputData> IAxlesDeclarationInputData.AxlesDeclaration => AxleWheels().Cast<IAxleDeclarationInputData>().ToList();
 
@@ -378,6 +453,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				Body.GetEx(JsonKeys.Vehicle_AxleConfiguration).GetEx(JsonKeys.Vehicle_AxleConfiguration_Axles).Select(
 					(axle, idx) => new AxleInputData {
 						TwinTyres = axle.GetEx<bool>(JsonKeys.Vehicle_Axles_TwinTyres),
+						Steered = axle[JsonKeys.Vehicle_Axles_Steered] != null && axle.GetEx<bool>(JsonKeys.Vehicle_Axles_Steered),
 						AxleWeightShare = axle.GetEx<double>("AxleWeightShare"),
 						AxleType = axle["Type"] != null
 							? axle.GetEx<string>("Type").ParseEnum<AxleType>()
@@ -420,7 +496,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		IAngledriveInputData IVehicleComponentsEngineering.AngledriveInputData => _angledriveData ?? (_angledriveData = new JSONAngledriveInputData(this));
 
-		public virtual IEngineEngineeringInputData EngineInputData => Job.Engine;
+		public virtual IEngineEngineeringInputData EngineInputData => Job?.Engine;
 
 		IAxleGearInputData IVehicleComponentsDeclaration.AxleGearInputData => Job.AxleGear;
 
@@ -483,8 +559,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual bool DualFuelVehicle => DeclarationData.Vehicle.DualFuelVehicleDefault;
 
 		public virtual Watt MaxNetPower1 => null;
-
-		public virtual Watt MaxNetPower2 => null;
 
 		public virtual string ExemptedTechnology => null;
 

@@ -80,10 +80,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			{
 				return;
 			}
-			IMultistageBusInputDataProvider inputDataProvider = null;
+			IMultistepBusInputDataProvider inputDataProvider = null;
 			try
 			{
-				inputDataProvider = _inputDataReader.Create(fileName) as IMultistageBusInputDataProvider;
+				inputDataProvider = _inputDataReader.Create(fileName) as IMultistepBusInputDataProvider;
 			}
 			catch (Exception e)
 			{

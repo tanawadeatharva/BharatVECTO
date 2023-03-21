@@ -1,15 +1,44 @@
 ﻿using System;
+using System.Linq;
+using Ninject;
+using Ninject.Extensions.Factory;
+using Ninject.Modules;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+using TUGraz.VectoCore.Utils.Ninject;
 
 namespace TUGraz.VectoCore.InputData.Reader
 {
-    public class VectoRunDataFactoryFactory : IVectoRunDataFactoryFactory
+	public interface IInternalRunDataFactoryFactory
 	{
+		IVectoRunDataFactory CreateSingleBusRunDataFactory(VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification vehicleClassification, 
+			ISingleBusInputDataProvider dataProvider, 
+			IDeclarationReport report);
+
+		IVectoRunDataFactory CreateDeclarationRunDataFactory(VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification vehicleClassification,
+			IDeclarationInputDataProvider dataProvider,
+			IDeclarationReport report);
+
+		IVectoRunDataFactory CreateDeclarationCompletedBusRunDataFactory(VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification vehicleClassification,
+			IMultistageVIFInputData dataProvider,
+			IDeclarationReport report);
+
+	}
+
+
+	public class VectoRunDataFactoryFactory : IVectoRunDataFactoryFactory
+	{
+		private readonly IInternalRunDataFactoryFactory _internalFactory;
+
+		public VectoRunDataFactoryFactory(IInternalRunDataFactoryFactory internalFactory)
+		{
+			_internalFactory = internalFactory;
+		}
 		/// <summary>
 		/// Creates a VectoRunDataFactory based on the type of inputDataProvider
 		/// </summary>
@@ -42,9 +71,9 @@ namespace TUGraz.VectoCore.InputData.Reader
 		private IVectoRunDataFactory CreateRunDataReader(IMultistageVIFInputData multistageVifInputData, IDeclarationReport report)
 		{
 			if (multistageVifInputData.VehicleInputData == null) {
-				return new DeclarationModeCompletedMultistageBusVectoRunDataFactory(
-					multistageVifInputData.MultistageJobInputData,
-					report);
+				return _internalFactory.CreateDeclarationCompletedBusRunDataFactory(
+					new VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification(
+						multistageVifInputData), multistageVifInputData, report);
 			}
 			else {
 				return new DeclarationModeMultistageBusVectoRunDataFactory(multistageVifInputData, report);
@@ -53,28 +82,28 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 		private IVectoRunDataFactory CreateRunDataReader(IDeclarationInputDataProvider declDataProvider, IDeclarationReport report)
 		{
-			var vehicleCategory = declDataProvider.JobInputData.Vehicle.VehicleCategory;
-			if (vehicleCategory.IsLorry()) {
-				return new DeclarationModeTruckVectoRunDataFactory(declDataProvider, report);
+			//TODO: encapsulate arguments into object
+			var vehicle = declDataProvider.JobInputData.Vehicle;
+			try {
+				return _internalFactory.CreateDeclarationRunDataFactory(
+					new VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification(vehicle), declDataProvider,
+					report);
+				//var ihpc = (vehicle.Components?.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None")  > 0;
+				//var iepc = (vehicle.Components?.IEPC != null);
+				//return _internalFactory.CreateDeclarationRunDataFactory(declDataProvider.JobInputData.Vehicle.VehicleCategory, 
+				//	declDataProvider.JobInputData.JobType,
+				//	declDataProvider.JobInputData.Vehicle.ArchitectureID,
+				//	declDataProvider.JobInputData.Vehicle.ExemptedVehicle, iepc, ihpc, declDataProvider, report);
+			} catch (Exception ex) {
+				throw new Exception(
+					$"Could not create RunDataFactory for Vehicle Category {declDataProvider.JobInputData.Vehicle.VehicleCategory} {declDataProvider.JobInputData.Vehicle.ArchitectureID} {declDataProvider.JobInputData.JobType}", ex);
 			}
-
-			if (vehicleCategory.IsBus())
-				switch (declDataProvider.JobInputData.Vehicle.VehicleCategory)
-				{
-					case VehicleCategory.HeavyBusCompletedVehicle:
-						return new DeclarationModeCompletedBusVectoRunDataFactory(declDataProvider, report);
-					case VehicleCategory.HeavyBusPrimaryVehicle:
-						return new DeclarationModePrimaryBusVectoRunDataFactory(declDataProvider, report);
-					default:
-						break;
-				}
-
-			throw new Exception(
-				$"Could not create RunDataFactory for Vehicle Category{vehicleCategory}");
+			
 		}
 
 		private IVectoRunDataFactory CreateRunDataReader(IVTPDeclarationInputDataProvider vtpProvider, IDeclarationReport report)
 		{
+			throw new NotImplementedException();
 			var vtpReport = CastReport<IVTPReport>(report);
 
 			if (vtpProvider.JobInputData.Vehicle.VehicleCategory.IsLorry())
@@ -94,7 +123,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 		private IVectoRunDataFactory CreateRunDataReader(ISingleBusInputDataProvider singleBusProvider, IDeclarationReport report)
 		{
-			return new DeclarationModeSingleBusVectoRunDataFactory(singleBusProvider, report);
+
+			return _internalFactory.CreateSingleBusRunDataFactory(new VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification(singleBusProvider), singleBusProvider, report);
 		}
 
 

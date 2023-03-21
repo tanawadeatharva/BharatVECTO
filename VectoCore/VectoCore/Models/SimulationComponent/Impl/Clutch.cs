@@ -43,9 +43,8 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class
-		Clutch : StatefulProviderComponent<Clutch.ClutchState, ITnOutPort, ITnInPort, ITnOutPort>, IClutch,
-		ITnOutPort, ITnInPort
+	public class Clutch : StatefulProviderComponent<Clutch.ClutchState, ITnOutPort, ITnInPort, ITnOutPort>, IClutch, 
+		ITnOutPort, ITnInPort, IUpdateable
 	{
 		protected readonly PerSecond _idleSpeed;
 		protected readonly PerSecond _ratedSpeed;
@@ -252,6 +251,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Watt ClutchLoss { get; set; }
 			public bool ICEOn { get; set; }
 			public PerSecond ICEOnSpeed { get; set; }
+			public new ClutchState Clone() => (ClutchState)base.Clone();
 		}
+
+		#region Implementation of IUpdateable
+
+		protected override bool DoUpdateFrom(object other) {
+			if (other is Clutch c) {
+				PreviousState = c.PreviousState.Clone();
+				
+				return true;
+			}
+			return false;
+		}
+
+		#endregion
 	}
 }

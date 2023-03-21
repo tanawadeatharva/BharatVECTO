@@ -42,6 +42,7 @@ using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -50,6 +51,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Point = TUGraz.VectoCommon.Utils.Point;
@@ -452,7 +454,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				},
 			};
 
-			var dao = new DeclarationDataAdapterHeavyLorry();
+			var dao = new DeclarationDataAdapterHeavyLorry.Conventional();
 			var gearboxData = new JSONGearboxDataV5(JSONInputDataFactory.ReadFile(gearboxFile), gearboxFile);
 			var engineInput = new JSONEngineDataV3(JSONInputDataFactory.ReadFile(engineFile), engineFile);
 			var vehicle = new MockDeclarationVehicleInputData() {
@@ -504,7 +506,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				new Point(123.0457, 2530),
 			};
 
-			var dao = new DeclarationDataAdapterHeavyLorry();
+			var dao = new DeclarationDataAdapterHeavyLorry.Conventional();
 			var gearboxData = new JSONGearboxDataV5(JSONInputDataFactory.ReadFile(gearboxFile), gearboxFile);
 			var engineInput = new JSONEngineDataV3(JSONInputDataFactory.ReadFile(engineFile), engineFile);
 			var vehicle = new MockDeclarationVehicleInputData() {
@@ -621,7 +623,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var gearboxData = job.JobInputData.Vehicle.Components.GearboxInputData;
 			var idlespeed = VectoMath.Max(
 				job.JobInputData.Vehicle.EngineIdleSpeed, job.JobInputData.Vehicle.Components.EngineInputData.EngineModes.First().IdleSpeed);
-			var dao = new DeclarationDataAdapterHeavyLorry();
+			var dao = new DeclarationDataAdapterHeavyLorry.Conventional();
 			var engineData = dao.CreateEngineData(job.JobInputData.Vehicle, job.JobInputData.Vehicle.Components.EngineInputData.EngineModes.First(), new Mission() {MissionType = MissionType.LongHaul});
 			var axlegearRatio = job.JobInputData.Vehicle.Components.AxleGearInputData.Ratio;
 			var rdyn = job.JobInputData.Vehicle.Components.AxleWheels.AxlesDeclaration.Where(x => x.AxleType == AxleType.VehicleDriven)
@@ -875,7 +877,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				Assert.Inconclusive("Confidential File not found. Test cannot run without file.");
 			}
 			var inputData = xmlInputReader.CreateDeclaration(xmlJob);
-			var dao = new DeclarationDataAdapterHeavyLorry();
+			var dao = new DeclarationDataAdapterHeavyLorry.Conventional();
 
 			var gearboxData = inputData.JobInputData.Vehicle.Components.GearboxInputData;
 			var engineData = dao.CreateEngineData(inputData.JobInputData.Vehicle, inputData.JobInputData.Vehicle.Components.EngineInputData.EngineModes.First(), new Mission() {MissionType = MissionType.LongHaul});

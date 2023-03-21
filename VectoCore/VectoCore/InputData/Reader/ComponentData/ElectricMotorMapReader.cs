@@ -4,17 +4,15 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
+namespace TUGraz.VectoCore.InputData.Reader.ComponentData
+{
 
-	public class ElectricMotorMapReader
+    public class ElectricMotorMapReader
 	{
 		public static EfficiencyMap Create(Stream data, int count)
 		{
@@ -67,6 +65,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 			return retVal;
 		}
 
+		
+
 		private static List<EfficiencyMap.Entry> GetEntriesAtZeroRpm(List<EfficiencyMap.Entry> entries)
 		{
 			// find entries at first grid point above 0. em-speed might vary slightly,
@@ -76,6 +76,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 
 			var speeds = new MeanShiftClustering(){ClusterCount = 100}.FindClusters(entries.Select(x => x.MotorSpeed.AsRPM).ToArray(), 10)
 				.Where(x => x > 0).ToList();
+
+			if (speeds.Count <= 2) {
+				throw new VectoException(
+						"Failed to generate electric power map - at least three speed entries > 0 are required!");
+			}
 			var lowerSpeed = speeds.First().RPMtoRad() / 2.0;
 			var upperSpeed = speeds.First().RPMtoRad() + (speeds[1] - speeds.First()).RPMtoRad() / 2.0;
 			
@@ -133,7 +138,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 			return new EfficiencyMap.Entry(
 				speed: row.ParseDouble(Fields.MotorSpeed).RPMtoRad(),
 				torque: row.ParseDouble(Fields.Torque).SI<NewtonMeter>(),
-				powerElectrical: row.ParseDouble(Fields.PowerElectrical).SI(Unit.SI.Kilo.Watt).Cast<Watt>());
+				//powerElectrical: row.ParseDouble(Fields.PowerElectrical).SI(Unit.SI.Kilo.Watt).Cast<Watt>());
+				powerElectrical: row.ParseDouble(Fields.PowerElectrical).SI<Watt>());
 		}
 
 

@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -15,12 +13,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	{
 		#region Implementation of IXMLPrimaryVehicleReport
 
-		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void Initialize(VectoRunData modelData)
 		{
 			VehiclePart.Add(
 				new XAttribute(xsi + XMLNames.Attr_Type, "VehicleExemptedPrimaryBusType"),
 				new XElement(tns + XMLNames.ManufacturerPrimaryVehicle, modelData.VehicleData.Manufacturer),
-				new XElement(tns + XMLNames.ManufacturerAddressPrimaryVehicle, modelData.VehicleData.ManufacturerAddress),
+				new XElement(tns + XMLNames.ManufacturerAddress, modelData.VehicleData.ManufacturerAddress),
 				new XElement(tns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
 				new XElement(tns + XMLNames.Vehicle_VIN, modelData.VehicleData.VIN),
 				new XElement(tns + XMLNames.Component_Date, XmlConvert.ToString(modelData.VehicleData.Date, XmlDateTimeSerializationMode.Utc)),
@@ -45,7 +43,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		}
 
-		public override void WriteResult(XMLDeclarationReport.ResultEntry result)
+		public override void WriteResult(IResultEntry result)
 		{
 			// no results for exempted vehicle
 		}

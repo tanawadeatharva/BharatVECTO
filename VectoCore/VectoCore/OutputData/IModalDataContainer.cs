@@ -37,10 +37,11 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.OutputData
 {
@@ -100,12 +101,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		void SetDataValue(string fieldName, object value);
 
-		void AddAuxiliary(string id, string columnName = null);
+        void AddAuxiliary(string id, string columnName = null);
 
-		/// <summary>
-		/// Finishes the writing of the DataWriter.
-		/// </summary>
-		void Finish(VectoRun.Status runStatus, Exception exception = null);
+        /// <summary>
+        /// Finishes the writing of the DataWriter.
+        /// </summary>
+        void Finish(VectoRun.Status runStatus, Exception exception = null);
 
 		/// <summary>
 		/// clear the modal data after the simulation
@@ -114,19 +115,25 @@ namespace TUGraz.VectoCore.OutputData
 		void FinishSimulation();
 
 		string GetColumnName(IFuelProperties fuelData, ModalResultField mrf);
-		void Reset();
+
+		void Reset(bool clearColumns = false);
+		
+		string GetColumnName(PowertrainPosition pos, ModalResultField mrf);
+
 
 		Second Duration { get; }
 
 		Meter Distance { get; }
 
-		Func<Second, Joule, Joule> AuxHeaterDemandCalc { get; set; }
+		Func<Second, Joule, Joule, HeaterDemandResult> AuxHeaterDemandCalc { get; set; }
 
 		KilogramPerWattSecond EngineLineCorrectionFactor(IFuelProperties fuel);
 		void CalculateAggregateValues();
-		void AddElectricMotor(PowertrainPosition pos);
+		//void AddElectricMotor(PowertrainPosition pos);
 		KilogramPerWattSecond VehicleLineSlope(IFuelProperties fuel);
 		bool HasCombustionEngine { get; }
+		bool HasGearbox { get; }
+		bool HasAxlegear { get; }
 		WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos);
 		WattSecond TotalElectricMotorWorkRecuperate(PowertrainPosition emPos);
 		WattSecond TotalElectricMotorMotWorkDrive(PowertrainPosition emPos);
@@ -140,12 +147,9 @@ namespace TUGraz.VectoCore.OutputData
 		WattSecond ElectricMotorLosses(PowertrainPosition emPos);
 		WattSecond ElectricMotorMotLosses(PowertrainPosition emPos);
 		WattSecond ElectricMotorTransmissionLosses(PowertrainPosition emPos);
-        
-		double REESSStartSoC();
-		double REESSEndSoC();
-		WattSecond REESSLoss();
-
 		ICorrectedModalData CorrectedModalData { get; }
+		void RegisterComponent(VectoSimulationComponent component);
+		bool ContainsColumn(string modalResultField);
 	}
 
 	public interface IModalDataPostProcessor
@@ -162,6 +166,11 @@ namespace TUGraz.VectoCore.OutputData
 		WattSecond WorkWHR { get; }
 		WattSecond WorkBusAuxPSCorr { get; }
 		WattSecond WorkBusAuxESMech { get; }
+		WattSecond WorkBusAuxHeatPumpHeatingElMech { get; }
+		WattSecond WorkBusAuxHeatPumpHeatingMech { get; }
+
+		WattSecond WorkBusAuxElectricHeater { get; }
+
 		WattSecond WorkBusAuxCorr { get; }
 		WattSecond EnergyDCDCMissing { get; }
 		Joule AuxHeaterDemand { get; }
@@ -171,7 +180,13 @@ namespace TUGraz.VectoCore.OutputData
 		KilogramPerMeter KilogramCO2PerMeter { get; }
 		Dictionary<FuelType, IFuelConsumptionCorrection> FuelCorrection { get; }
 		Kilogram CO2Total { get; }
-		Joule EnergyConsumptionTotal { get; }
+		Joule FuelEnergyConsumptionTotal { get; }
+		WattSecond ElectricEnergyConsumption_SoC { get; set; }
+		WattSecondPerMeter ElectricEnergyConsumption_SoC_PerMeter { get; }
+
+		WattSecond ElectricEnergyConsumption_Final { get; set; }
+		WattSecondPerMeter ElectricEnergyConsumption_Final_PerMeter { get; }
+
 	}
 
 	public interface IFuelConsumptionCorrection
@@ -297,23 +312,27 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static MeterPerSquareSecond AccelerationAverage(this IModalDataContainer data)
 		{
+			if (data.Duration == 0.SI<Second>()) {
+				return null;
+			}
 			return data.TimeIntegral<MeterPerSecond>(ModalResultField.acc) / data.Duration;
 		}
 
 		public static Meter AltitudeDelta(this IModalDataContainer data)
 		{
 			var altitudes = data.GetValues<Meter>(ModalResultField.altitude).ToList();
-			var first = altitudes.First();
-			var last = altitudes.Last();
+			var first = altitudes.FirstOrDefault();
+			var last = altitudes.LastOrDefault();
 			return first == null || last == null ? null : last - first;
 		}
 
 		public static WattSecond PowerAccelerations(this IModalDataContainer data)
 		{
-			var paEngine = data.TimeIntegral<WattSecond>(ModalResultField.P_ice_inertia);
-			var paGearbox = data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_inertia);
+			var paEngine = data.TimeIntegral<WattSecond>(ModalResultField.P_ice_inertia) ?? 0.SI<WattSecond>();
+			var paGearbox = data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_inertia) ?? 0.SI<WattSecond>();
 			return paEngine + paGearbox;
 		}
+
 
 		public static WattSecond WorkClutch(this IModalDataContainer data)
 		{
@@ -376,6 +395,11 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_aux_mech);
 		}
 
+		public static WattSecond WorkElectricAuxiliaries(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_aux_el);
+		}
+
 		public static WattSecond WorkRoadGradientResistance(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_slope);
@@ -409,12 +433,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static Watt PowerWheelPositive(this IModalDataContainer data)
 		{
-			return data.WorkWheelsPos() / data.Duration;
+			return (data.WorkWheelsPos() ?? 0.SI<WattSecond>()) / data.Duration;
 		}
 
 		public static Watt PowerWheel(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_wheel_in) / data.Duration;
+			return (data.TimeIntegral<WattSecond>(ModalResultField.P_wheel_in) ?? 0.SI<WattSecond>()) / data.Duration;
 		}
 
 		public static WattSecond WorkREESSChargeTerminal(this IModalDataContainer data)
@@ -598,12 +622,17 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static Scalar ICEMaxLoadTimeShare(this IModalDataContainer data)
 		{
-			var sum = data.GetValues(x => new {
+			if (!data.HasCombustionEngine) {
+				return 0.SI<Scalar>();
+			}
+			var tmp = data.GetValues(x => new {
 				tMax = x.Field<NewtonMeter>(ModalResultField.T_ice_full.GetName()).DefaultIfNull(-1),
 				tEng = x.Field<NewtonMeter>(ModalResultField.T_ice_fcmap.GetName()).DefaultIfNull(0),
 				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName()),
-				iceOn =  !(x[ModalResultField.ICEOn.GetName()] is DBNull) && x.Field<bool>(ModalResultField.ICEOn.GetName())
-			}).Where(x => x.iceOn).Sum(x => x.tMax.IsEqual(x.tEng, 5.SI<NewtonMeter>()) ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
+				iceOn = !(x[ModalResultField.ICEOn.GetName()] is DBNull) &&
+						x.Field<bool>(ModalResultField.ICEOn.GetName())
+			});
+			var sum = tmp.Where(x => x.iceOn).Sum(x => x.tMax.IsEqual(x.tEng, 5.SI<NewtonMeter>()) ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
 			return 100 * sum / data.Duration;
 		}
 
@@ -637,6 +666,9 @@ namespace TUGraz.VectoCore.OutputData
 		/// <returns></returns>
 		public static Scalar GearshiftCount(this IModalDataContainer data)
 		{
+			if (!data.HasGearbox) {
+				return 0.SI<Scalar>();
+			}
 			var prevGear = data.GetValues<uint>(ModalResultField.Gear).First();
 			var lastGear = prevGear;
 			var gearCount = 0;
@@ -665,6 +697,9 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static Scalar CoastingTimeShare(this IModalDataContainer data)
 		{
+			if (data.Duration == 0.SI<Second>()) {
+				return null;
+			}
 			var sum = data.GetValues(x => new {
 				DrivingBehavior = x.Field<DrivingBehavior>(ModalResultField.drivingBehavior.GetName()),
 				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
@@ -690,6 +725,9 @@ namespace TUGraz.VectoCore.OutputData
 				retVal[i] = 0.SI<Scalar>();
 			}
 
+			if (!data.ContainsColumn(ModalResultField.Gear.GetName())) {
+				return retVal;
+			}
 			var gearData = data.GetValues(x => new {
 				Gear = x.Field<uint>(ModalResultField.Gear.GetName()),
 				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
@@ -708,7 +746,38 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static int NumICEStarts(this IModalDataContainer data)
 		{
-			return data.GetValues(x => x.Field<bool>((int)ModalResultField.ICEOn)).Pairwise((x, y) => !x && y ? 1 : 0).Sum();
+			return data.GetValues(x => x.Field<bool>(ModalResultField.ICEOn.GetName())).Pairwise((x, y) => !x && y ? 1 : 0).Sum();
+		}
+
+		public static WattSecond REESSLoss(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_reess_loss);
+		}
+
+		public static double REESSDeltaSoc(this IModalDataContainer data)
+		{
+			return data.REESSEndSoC() - data.REESSStartSoC();
+		}
+
+
+		public static double REESSStartSoC(this IModalDataContainer data)
+		{
+			return (data.GetValues<SI>(ModalResultField.REESSStateOfCharge).First()?.Value() ?? 0) * 100;
+		}
+
+		public static double REESSEndSoC(this IModalDataContainer data)
+		{
+			return (data.GetValues<SI>(ModalResultField.REESSStateOfCharge).Last()?.Value() ?? 0) * 100;
+		}
+
+		public static double REESSMinSoc(this IModalDataContainer data)
+		{
+			return (data.GetValues<Scalar>(ModalResultField.REESSStateOfCharge).Min()?.Value() ?? 0) * 100;
+		}
+
+		public static double REESSMaxSoc(this IModalDataContainer data)
+		{
+			return (data.GetValues<Scalar>(ModalResultField.REESSStateOfCharge).Max()?.Value() ?? 0) * 100;
 		}
 	}
 }

@@ -51,12 +51,12 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		}
 
 
-		[TestCase(12000, 1256, 148, 148, 6087.03221)]
-		[TestCase(12000, 1256, -48, -148, 6087.03221)]
-		[TestCase(12000, 1256, 48, -148, 6087.03221)]
-		[TestCase(12000, 800, 148, 148, 6377.2027)]
-		[TestCase(12000, 800, -48, -148, 6377.2027)]
-		[TestCase(12000, 800, 48, -148, 6377.2027)]
+		[TestCase(12000, 1256, 148, 148, 5649.8149)]
+		[TestCase(12000, 1256, -48, -148, 5649.8149)]
+		[TestCase(12000, 1256, 48, -148, 5649.8149)]
+		[TestCase(12000, 800, 148, 148, 5939.985)]
+		[TestCase(12000, 800, -48, -148, 5939.985)]
+		[TestCase(12000, 800, 48, -148, 5939.985)]
 		public void TestNoSmartAuxDuringDrive(double vehicleWeight, double engineSpeedRpm, double driveLinePower,
 			double internalPower, double expectedPowerDemand)
 		{
@@ -74,16 +74,16 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			Assert.AreEqual(expectedPowerDemand, (torque * engineSpeed).Value(), 1e-2);
 		}
 
-		[TestCase(12000, 1256, 148, 148, 6087.0322)]
-		[TestCase(12000, 1256, -28, -27, 6087.0322)]
-		[TestCase(12000, 1256, -28, -29, 6087.0322)]
-		[TestCase(12000, 1256, -128, -28, 6087.03221)]
-		[TestCase(12000, 1256, 28, -28, 6087.0322)]
-		[TestCase(12000, 800, 148, 148, 6377.2027)]
-		[TestCase(12000, 800, -14, -13, 6377.2027)]
-		[TestCase(12000, 800, -14, -15, 6377.2027)]
-		[TestCase(12000, 800, -35, -14, 6377.2027)]
-		[TestCase(12000, 800, 35, -14, 6377.2027)]
+		[TestCase(12000, 1256, 148, 148, 5649.814)]
+		[TestCase(12000, 1256, -28, -27, 5649.814)]
+		[TestCase(12000, 1256, -28, -29, 5649.814)]
+		[TestCase(12000, 1256, -128, -28, 5649.814)]
+		[TestCase(12000, 1256, 28, -28, 5649.814)]
+		[TestCase(12000, 800, 148, 148, 5939.9854)]
+		[TestCase(12000, 800, -14, -13, 5939.9854)]
+		[TestCase(12000, 800, -14, -15, 5939.9854)]
+		[TestCase(12000, 800, -35, -14, 5939.9854)]
+		[TestCase(12000, 800, 35, -14, 5939.9854)]
 		public void TestNoSmartAuxDuringCoasting(double vehicleWeight, double engineSpeedRpm, double driveLinePower,
 			double internalPower, double expectedPowerDemand)
 		{
@@ -104,10 +104,10 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			Assert.AreEqual(expectedPowerDemand, (torque * engineSpeed).Value(), 1e-2);
 		}
 
-		[TestCase(12000, 1256, -48, -28, 8954.1429)] // smart PS active - power demand below engine drag
-		[TestCase(12000, 1256, 48, -28, 6087.0322)] // no smart aux active - positive power demand
-		[TestCase(12000, 800, -48, -28, 8281.5129)] // smart PS active - power demand below engine drag
-		[TestCase(12000, 800, 48, -28, 6377.2027)] // no smart aux active - positive power demand
+		[TestCase(12000, 1256, -48, -28, 8516.9257)] // smart PS active - power demand below engine drag
+		[TestCase(12000, 1256, 48, -28, 5649.8149)] // no smart aux active - positive power demand
+		[TestCase(12000, 800, -48, -28, 7844.2956)] // smart PS active - power demand below engine drag
+		[TestCase(12000, 800, 48, -28, 5939.985)] // no smart aux active - positive power demand
 		public void TestSmartAuxDuringBrake(double vehicleWeight, double engineSpeedRpm, double driveLinePower,
 			double internalPower, double expectedPowerDemand)
 		{

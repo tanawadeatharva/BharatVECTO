@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
@@ -52,13 +53,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// </summary>
 	public sealed class DistanceBasedDrivingCycle : StatefulProviderComponent
 		<DistanceBasedDrivingCycle.DrivingCycleState, ISimulationOutPort, IDrivingCycleInPort, IDrivingCycleOutPort>,
-		IDrivingCycle, ISimulationOutPort, IDrivingCycleInPort, IDisposable
+		IDrivingCycle, ISimulationOutPort, IDrivingCycleInPort, IDisposable, IUpdateable, IResetableVectoSimulationComponent
 	{
 		private const double LookaheadTimeSafetyMargin = 1.5;
 		internal readonly IDrivingCycleData Data;
-		internal readonly DrivingCycleEnumerator CycleIntervalIterator;
+		internal DrivingCycleEnumerator CycleIntervalIterator;
 		private bool _intervalProlonged;
-		internal IdleControllerSwitcher IdleController;
+		internal IIdleControllerSwitcher IdleController;
 		private Meter CycleEndDistance;
 
 		
@@ -76,6 +77,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CycleStartDistance = Data.Entries.Count > 0 ? Data.Entries.First().Distance : 0.SI<Meter>();
 			CycleEndDistance = Data.Entries.Count > 0 ? Data.Entries.Last().Distance : 0.SI<Meter>();
 
+			InitState(container);
+		}
+
+		#region Overrides of VectoSimulationComponent
+
+		public void Reset(IVehicleContainer vehicleContainer)
+		{
+			CycleIntervalIterator.Reset();
+			
+			InitState(vehicleContainer);
+			if (!(Initialize() is ResponseSuccess)) {
+				throw new VectoException("Initialization failed");
+			}
+
+			;
+		}
+
+		#endregion
+
+		private void InitState(IVehicleContainer container)
+		{
 			var first = Data.Entries.First();
 			PreviousState = new DrivingCycleState {
 				AbsTime = 0.SI<Second>(),
@@ -85,10 +107,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				VehicleTargetSpeed = Data.Entries.First().VehicleTargetSpeed
 			};
 			CurrentState = PreviousState.Clone();
-			
+
 			StartSpeed = container.RunData.GearshiftParameters?.StartSpeed;
 			StartAcceleration = container.RunData.GearshiftParameters?.StartAcceleration;
-			
 		}
 
 		public IResponse Initialize()
@@ -164,8 +185,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var distanceToSpeedChange = nextSpeedChange - PreviousState.Distance;
 				var estimatedTimeToSpeedChange = distanceToSpeedChange / DataBus.VehicleInfo.VehicleSpeed;
 				if (estimatedTimeToSpeedChange.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval / 2) &&
-					DataBus.VehicleInfo.VehicleSpeed.IsSmaller(Left.VehicleTargetSpeed, 1.KMPHtoMeterPerSecond()) &&
-					DataBus.VehicleInfo.VehicleSpeed.IsSmaller(Right.VehicleTargetSpeed, 1.KMPHtoMeterPerSecond())) {
+					DataBus.VehicleInfo.VehicleSpeed.IsSmaller(DataBus.DriverInfo.ApplyOverspeed(Left.VehicleTargetSpeed), 0.1.KMPHtoMeterPerSecond()) &&
+					DataBus.VehicleInfo.VehicleSpeed.IsSmaller(DataBus.DriverInfo.ApplyOverspeed(Right.VehicleTargetSpeed), 0.1.KMPHtoMeterPerSecond())) {
 					CurrentState.Response = DriveDistance(absTime, ds);
 					return CurrentState.Response;
 				}
@@ -288,6 +309,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.WaitTime = PreviousState.WaitTime + dt;
 			CurrentState.Gradient = ComputeGradient(0.SI<Meter>());
 			CurrentState.VehicleTargetSpeed = Left.VehicleTargetSpeed;
+			
 
 			return NextComponent.Request(absTime, dt, Left.VehicleTargetSpeed, CurrentState.Gradient);
 		}
@@ -477,13 +499,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Data.Finish();
 		}
 
-		public CycleData CycleData =>
-			new CycleData {
-				AbsTime = CurrentState.AbsTime,
-				AbsDistance = CurrentState.Distance,
-				LeftSample = Left,
-				RightSample = CycleIntervalIterator.RightSample
-			};
+		public CycleData CycleData {
+			get
+			{
+				return new CycleData
+				{
+					AbsTime = CurrentState.AbsTime,
+					AbsDistance = CurrentState.Distance,
+					LeftSample = Left,
+					RightSample = CycleIntervalIterator.RightSample,
+				};
+			}
+		}
+			
+			
 
 		public bool PTOActive { get; private set; }
 
@@ -579,5 +608,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			CycleIntervalIterator.Dispose();
 		}
+
+		#region Implementation of IUpdateable
+
+		protected override bool DoUpdateFrom(object other) {
+			if (other is DistanceBasedDrivingCycle c) {
+				PreviousState = c.PreviousState.Clone();
+				CycleIntervalIterator = c.CycleIntervalIterator;
+				//TODO MK-20220523 also allow updating from measuredspeeddrivingcycle?
+				return true;
+			}
+
+			return false;
+		}
+
+		#endregion
 	}
 }

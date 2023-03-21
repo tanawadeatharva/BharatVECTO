@@ -2,8 +2,7 @@
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCommon.InputData
-{
+namespace TUGraz.VectoCommon.InputData {
 	public enum PowertrainPosition
 	{
 		HybridPositionNotSet, // this has to be the first entry so that it is used as default for not initialized fields!
@@ -19,7 +18,6 @@ namespace TUGraz.VectoCommon.InputData
 		BatteryElectricE4,
 		BatteryElectricE3,
 		BatteryElectricE2,
-
 		IEPC,
 		IHPC
 	}
@@ -76,8 +74,6 @@ namespace TUGraz.VectoCommon.InputData
 					return pos.ToString().Replace(HybridPrefix, "").Replace("_", ".");
 				case PowertrainPosition.GEN:
 					return nameof(PowertrainPosition.GEN);
-				case PowertrainPosition.HybridPositionNotSet:
-					return "Position not set";
 			}
 			return pos.ToString().Replace(BatteryElectricPrefix, "").Replace("B", "E");
 		}
@@ -110,6 +106,35 @@ namespace TUGraz.VectoCommon.InputData
 			}
 		}
 
+		public static string ToXmlFormat(this PowertrainPosition pos)
+		{
+			switch (pos) {
+				case PowertrainPosition.HybridPositionNotSet:
+					throw new ArgumentException("Hybrid position not set");
+				case PowertrainPosition.HybridP0: 
+				case PowertrainPosition.HybridP1:
+				case PowertrainPosition.HybridP2:
+				case PowertrainPosition.HybridP2_5:
+				case PowertrainPosition.HybridP3:
+				case PowertrainPosition.HybridP4:
+				case PowertrainPosition.BatteryElectricE4:
+				case PowertrainPosition.BatteryElectricE3:
+				case PowertrainPosition.BatteryElectricE2:
+					return GetPositionWithoutPrefix(pos.ToString());
+				case PowertrainPosition.IHPC:
+					return "IHPC";
+				case PowertrainPosition.GEN:
+					return "GEN";
+				default:
+					throw new ArgumentOutOfRangeException(nameof(pos), pos, null);
+			}
+		}
+
+		private static string GetPositionWithoutPrefix(string position)
+		{
+			return position.Replace(BatteryElectricPrefix, "").Replace("E", "").Replace(HybridPrefix, "").Replace("P", "")
+				.Replace("_", ".");
+		}
 		public static bool IsSerialHybrid(this PowertrainPosition pos)
 		{
 			return IsBatteryElectric(pos);

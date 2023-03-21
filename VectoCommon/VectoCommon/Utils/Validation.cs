@@ -32,10 +32,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations;
+using System.Data.SqlTypes;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Xml;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 
@@ -46,6 +52,20 @@ namespace TUGraz.VectoCommon.Utils
 	/// </summary>
 	public static class ValidationHelper
 	{
+
+		//private static List<KeyValuePair<Object, List<ValidationResult>>> _validationHistory = new List<KeyValuePair<Object, List<ValidationResult>>>();
+		private static ConcurrentDictionary<Object, List<ValidationResult>> _validationHistory = new ConcurrentDictionary<Object, List<ValidationResult>>();
+
+		private static ConcurrentDictionary<Object, ValidationAttribute[]> propDictionary = new ConcurrentDictionary<object, ValidationAttribute[]>();
+
+		private static ConcurrentDictionary<Object, ValidationAttribute[]> fieldDictionary = new ConcurrentDictionary<object, ValidationAttribute[]>();
+
+
+
+		public static void ClearValHistory()
+		{
+			_validationHistory.Clear();
+		}
 		/// <summary>
 		/// Validates the specified entity and all its properties recursively. (Extension Method)
 		/// </summary>
@@ -64,10 +84,20 @@ namespace TUGraz.VectoCommon.Utils
 			if (entity == null) {
 				return new[] { new ValidationResult($"null value given for {typeof(T)}") };
 			}
+			
 			var results = new List<ValidationResult>();
 			var context = new ValidationContext(entity);
-
 			context.InitializeServiceProvider(type => new VectoValidationModeServiceContainer(mode, jobType, emPosition, gbxType, emsCycle));
+
+			// Check if Obj is from TUGraz Namespace
+			if (!entity.GetType().ToString().Contains(("TUGraz")))
+				return results;
+
+			if (_validationHistory.ContainsKey(entity)) 
+				return results;
+
+			
+
 
 			Validator.TryValidateObject(entity, context, results, true);
 
@@ -77,27 +107,53 @@ namespace TUGraz.VectoCommon.Utils
 
 			var properties = entity.GetType().GetProperties(flags);
 			foreach (var p in properties) {
-				var attributes = p.GetAttributes<ValidationAttribute>(entity.GetType()).ToArray();
+
+				
+				ValidationAttribute[] attributes = propDictionary.ContainsKey(p) ? propDictionary[p] : p.GetAttributes<ValidationAttribute>(entity.GetType()).ToArray();
+
+				//ValidationAttribute[] attributes = p.GetAttributes<ValidationAttribute>(entity.GetType()).ToArray();
+				
+				if (!propDictionary.ContainsKey(p))
+					propDictionary.TryAdd(p, attributes);
+
 				if (attributes.Any()) {
 					var val = p.GetValue(entity);
+
 					context.DisplayName = p.Name;
 					context.MemberName = p.Name;
+
 					Validator.TryValidateValue(val, context, results, attributes);
 				}
 			}
 
 			var fields = entity.GetType().GetFields(flags);
 			foreach (var f in fields) {
-				var attributes = f.GetAttributes<ValidationAttribute>(entity.GetType()).ToArray();
+				
+				ValidationAttribute[] attributes = fieldDictionary.ContainsKey(f) ? fieldDictionary[f] : f.GetAttributes<ValidationAttribute>(entity.GetType()).ToArray();
+				
+				//ValidationAttribute[] attributes = f.GetAttributes<ValidationAttribute>(entity.GetType()).ToArray();
+
+				if (!fieldDictionary.ContainsKey(f))
+					fieldDictionary.TryAdd(f, attributes);
+
 				if (attributes.Any()) {
 					var val = f.GetValue(entity);
 					context.DisplayName = f.Name;
 					context.MemberName = f.Name;
+					
 					Validator.TryValidateValue(val, context, results, attributes);
 				}
 			}
-
+			
+			_validationHistory.TryAdd(entity, results);
 			return results;
+		}
+
+		private static bool CheckTUGrazNamespace(Object obj)
+		{
+			if(obj.GetType().ToString().Contains("TUGraz"))
+				return true;
+			return false;
 		}
 
 		/// <summary>
@@ -164,6 +220,8 @@ namespace TUGraz.VectoCommon.Utils
 		public PowertrainPosition EMPowertrainPosition { get; protected set; }
 		public GearboxType? GearboxType { get; protected set; }
 		public bool IsEMSCycle { get; protected set; }
+		public List<ValidationHistoryItem> History { get; protected set; }
+
 
 		public VectoValidationModeServiceContainer(ExecutionMode mode, VectoSimulationJobType jobType, PowertrainPosition? emPosition, GearboxType? gbxType, bool isEMSCycle = false)
 		{
@@ -172,6 +230,16 @@ namespace TUGraz.VectoCommon.Utils
 			IsEMSCycle = isEMSCycle;
 			JobType = jobType;
 			EMPowertrainPosition = emPosition ?? PowertrainPosition.HybridPositionNotSet;
+		}
+	}
+
+	public class ValidationHistoryItem
+	{
+		private (Object, List<ValidationResult>) historyItem;
+
+		public ValidationHistoryItem(Object entity, List<ValidationResult> result)
+		{
+			historyItem = (entity, result);
 		}
 	}
 

@@ -34,6 +34,7 @@ using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
@@ -96,6 +97,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			: base(vehicle, componentNode, sourceFile) { }
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+
+		public override bool? ATEcoRollReleaseLockupClutch => false;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -148,7 +151,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override bool? ATEcoRollReleaseLockupClutch => null;
 
-		public override EcoRollType EcoRoll => EcoRollType.WithEngineStop;
+		public override EcoRollType EcoRoll => EcoRollType.None;
 		#endregion
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;

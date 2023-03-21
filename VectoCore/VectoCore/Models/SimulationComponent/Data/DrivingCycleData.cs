@@ -48,6 +48,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		MeasuredSpeed,
 		MeasuredSpeedGear,
 		PTO,
+		EPTO,
 		VTP,
 		None,
 		PTODuringDrive
@@ -145,6 +146,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				EngineSpeed = entry.EngineSpeed;
 				FanSpeed = entry.FanSpeed;
 				PTOPowerDemandDuringDrive = entry.PTOPowerDemandDuringDrive;
+				PTOElectricalPowerDemand = entry.PTOElectricalPowerDemand;
 				Highway = entry.Highway;
 			}
 
@@ -262,6 +264,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			// road sweeper application
 			public Watt PTOPowerDemandDuringDrive;
+
+			// Electrical pto cycle
+			public Watt PTOElectricalPowerDemand;
 		}
 	}
 
