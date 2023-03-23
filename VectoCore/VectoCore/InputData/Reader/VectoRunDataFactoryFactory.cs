@@ -68,15 +68,15 @@ namespace TUGraz.VectoCore.InputData.Reader
 		}
 
 
-		private IVectoRunDataFactory CreateRunDataReader(IMultistageVIFInputData multistageVifInputData, IDeclarationReport report)
+		private IVectoRunDataFactory CreateRunDataReader(IMultistageVIFInputData multiStepVifInputData, IDeclarationReport report)
 		{
-			if (multistageVifInputData.VehicleInputData == null) {
+			if (multiStepVifInputData.VehicleInputData == null) {
 				return _internalFactory.CreateDeclarationCompletedBusRunDataFactory(
 					new VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification(
-						multistageVifInputData), multistageVifInputData, report);
+						multiStepVifInputData), multiStepVifInputData, report);
 			}
 			else {
-				return new DeclarationModeMultistageBusVectoRunDataFactory(multistageVifInputData, report);
+				return new DeclarationModeMultistageBusVectoRunDataFactory(multiStepVifInputData, report);
 			}
 		}
 

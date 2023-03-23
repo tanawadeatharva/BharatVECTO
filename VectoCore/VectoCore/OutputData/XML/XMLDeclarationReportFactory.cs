@@ -66,13 +66,13 @@ namespace TUGraz.VectoCore.OutputData.XML
 				: null;
 		}
 
-		private IDeclarationReport CreateDeclarationReport(IMultistageVIFInputData multistageVifInputData, IOutputDataWriter outputDataWriter)
+		private IDeclarationReport CreateDeclarationReport(IMultistageVIFInputData multiStepVifInputData, IOutputDataWriter outputDataWriter)
 		{
-			if (multistageVifInputData.VehicleInputData == null)
+			if (multiStepVifInputData.VehicleInputData == null)
 			{
 				var reportCompleted = new XMLDeclarationReportCompletedVehicle(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory)
 				{
-					PrimaryVehicleReportInputData = multistageVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle,
+					PrimaryVehicleReportInputData = multiStepVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle,
 				};
 				return reportCompleted;
 			}

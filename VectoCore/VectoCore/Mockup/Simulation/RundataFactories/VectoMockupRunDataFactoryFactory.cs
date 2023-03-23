@@ -45,17 +45,17 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
             throw new VectoException("Unknown InputData for Declaration Mode!");
         }
 
-        private IVectoRunDataFactory CreateRunDataReader(IMultistageVIFInputData multistageVifInputData, IDeclarationReport report)
+        private IVectoRunDataFactory CreateRunDataReader(IMultistageVIFInputData multiStepVifInputData, IDeclarationReport report)
         {
-			if (multistageVifInputData.VehicleInputData == null)
+			if (multiStepVifInputData.VehicleInputData == null)
 			{
 				return new MockupMultistageCompletedBusRunDataFactory(
-					multistageVifInputData,
+					multiStepVifInputData,
 					report, new DeclarationDataAdapterSpecificCompletedBus.Conventional(),
 					new DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.Conventional());
 			}
 			else {
-				return new DeclarationModeMultistageBusVectoRunDataFactory(multistageVifInputData, report);
+				return new DeclarationModeMultistageBusVectoRunDataFactory(multiStepVifInputData, report);
 			}
 		}
 
