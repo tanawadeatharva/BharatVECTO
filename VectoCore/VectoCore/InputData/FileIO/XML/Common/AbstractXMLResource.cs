@@ -33,6 +33,7 @@ using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Common {
 	public abstract class AbstractXMLResource : AbstractXMLType, IXMLResource
@@ -44,13 +45,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Common {
 			SourceFile = source;
 		}
 
-		public virtual DataSource DataSource => new DataSource() { SourceFile = SourceFile, SourceVersion = SourceVersion, SourceType = SourceType };
+		public virtual DataSource DataSource => new DataSource() { 
+			Type = SchemaType,
+			SourceFile = SourceFile, 
+			SourceVersion = SourceVersion,
+			SourceType = SourceType,
+		};
 
+		public string SourceTypeVersion { get; }
 
-		protected string SourceVersion => XMLHelper.GetVersionFromNamespaceUri(SchemaNamespace);
+		protected string SourceVersion => SchemaNamespace.GetVersionFromNamespaceUri();
 
 		protected abstract XNamespace SchemaNamespace { get; }
 
+		
 		protected abstract DataSourceType SourceType { get; }
 	}
 }
