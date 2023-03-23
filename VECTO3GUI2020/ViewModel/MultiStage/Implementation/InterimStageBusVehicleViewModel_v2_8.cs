@@ -15,7 +15,6 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
-using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 using EnumHelper = VECTO3GUI2020.Helper.EnumHelper;
@@ -56,16 +55,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					return null;
 			}
 		}
-	}
-
-	public interface IMultistageVehicleViewModel : IVehicleViewModel, INotifyPropertyChanged
-	{
-		bool HasErrors { get; }
-		Dictionary<string, string> Errors { get; }
-		IMultistageAirdragViewModel MultistageAirdragViewModel { get; set; }
-		IMultistageAuxiliariesViewModel MultistageAuxiliariesViewModel { get; set; }
-		bool PrimaryVehicleHybridElectric { get; set; }
-		void SetVehicleInputData(IVehicleDeclarationInputData vehicleInputData);
 	}
 
 
