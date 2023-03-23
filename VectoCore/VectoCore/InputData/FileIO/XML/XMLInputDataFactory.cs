@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 				throw new VectoException("empty xml document!");
 			}
 
-			var documentType = XMLHelper.GetDocumentType(xmlDoc.DocumentElement.LocalName);
+			var documentType = XMLHelper.GetDocumentTypeFromRootElement(xmlDoc.DocumentElement.LocalName);
 			if (documentType == null) {
 				throw new VectoException("unknown xml file! {0}", xmlDoc.DocumentElement.LocalName);
 			}
