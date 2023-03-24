@@ -41,22 +41,32 @@ namespace TUGraz.VectoCore.Utils.Ninject
 		/// Constructor for CombineArgumentsToNameInstanceProvider
 		/// </summary>
 		
-		public CombineArgumentsToNameInstanceProvider(params MethodSettings[] settings)
+		public CombineArgumentsToNameInstanceProvider(params MethodSettings[] settings) : this(false, settings)
 		{
-			if (settings != null && settings.Any(s => s.methods == null)) {
+			
+		}
+
+		public CombineArgumentsToNameInstanceProvider(bool fallback, params MethodSettings[] settings)
+		{
+			Fallback = fallback;
+			if (settings != null && settings.Any(s => s.methods == null))
+			{
 				throw new ArgumentException($"At least one method has to be specified in the MethodSetting");
 			}
 
 
-			if (settings != null) {
-				foreach (var setting in settings) {
-					foreach (var method in setting.methods) {
+			if (settings != null)
+			{
+				foreach (var setting in settings)
+				{
+					foreach (var method in setting.methods)
+					{
 						_methodSettings.Add(method, setting);
 					}
 				}
-				
+
 			}
-		}
+        }
 
 		#region Overrides of StandardInstanceProvider
 
