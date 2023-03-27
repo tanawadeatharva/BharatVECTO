@@ -81,16 +81,53 @@ Public Class GearboxForm
         CbGStype.ValueMember = "Value"
         CbGStype.DisplayMember = "Label"
 
-        CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
-            .Cast(Of GearboxType)() _
-            .Where(Function(type) type.ManualTransmission() OrElse type.AutomaticTransmission() OrElse type = GearboxType.IHPC OrElse type = GearboxType.IEPC) _
-            .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+       ' CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
+       '     .Cast(Of GearboxType)() _
+       '     .Where(Function(type) type.ManualTransmission() OrElse type.AutomaticTransmission() OrElse type = GearboxType.IHPC OrElse type = GearboxType.IEPC) _
+       '     .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
         
+        SetupTransmissionTypes()
         DeclInit()
 
         _changed = False
         NewGbx()
     End Sub
+
+    private sub SetupTransmissionTypes()
+        Select case VectoJobForm.JobType
+            Case VectoSimulationJobType.ConventionalVehicle 
+                CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
+                .Cast(Of GearboxType)() _
+                .Where(Function(type) Not type = GearboxType.APTN And (type.ManualTransmission() OrElse type = GearboxType.ATSerial)) _
+                .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
+            Case VectoSimulationJobType.IHPC
+                CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
+                    .Cast(Of GearboxType)() _
+                    .Where(Function(type)  type = GearboxType.IHPC ) _
+                    .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
+            Case VectoSimulationJobType.IEPC_E,VectoSimulationJobType.IEPC_S
+                CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
+                    .Cast(Of GearboxType)() _
+                    .Where(Function(type)  type = GearboxType.IEPC) _
+                    .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
+            Case VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.SerialHybridVehicle
+                CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
+                    .Cast(Of GearboxType)() _
+                    .Where(Function(type) type.ManualTransmission() OrElse type.AutomaticTransmission() and not type = GearboxType.IHPC ) _
+                    .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
+            Case Else
+                 CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
+                     .Cast(Of GearboxType)() _
+                     .Where(Function(type) type.ManualTransmission() OrElse type.AutomaticTransmission() OrElse type = GearboxType.IHPC OrElse type = GearboxType.IEPC) _
+                     .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
+        End Select
+
+    End sub
 
     'Set generic values for Declaration mode.
     Private Sub DeclInit()
