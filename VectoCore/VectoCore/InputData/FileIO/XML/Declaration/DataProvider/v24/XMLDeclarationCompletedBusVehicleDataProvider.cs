@@ -237,7 +237,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override bool OvcHev => true;
 
 		public override bool HybridElectricHDV => false;
-		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_E;
 	}
 
 }

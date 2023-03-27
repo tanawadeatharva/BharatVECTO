@@ -95,16 +95,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				Action<SuperCapData> setSuperCapData);
 
 
-			public virtual BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData componentsElectricStorage, VectoSimulationJobType jobType, bool ovc)
-			{
-				throw new NotImplementedException();
-			}
-
-			public virtual SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData componentsElectricStorage)
-			{
-				throw new NotImplementedException();
-			}
-
 			public virtual HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData, SuperCapData runDataSuperCapData,
 				Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType)
 			{
@@ -180,10 +170,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				IGearboxDeclarationInputData gbx);
 
 
-			public abstract IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
+			public virtual IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
 				IBusAuxiliariesDeclarationData busAuxData,
 				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
-				VectoSimulationJobType jobType);
+				VectoSimulationJobType jobType)
+			{
+				return AuxDataAdapter.CreateAuxiliaryData(auxData, null, missionType, vehicleClass, vehicleLength, numSteeredAxles,
+					jobType);
+			}
 
 			public AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData)
 			{
@@ -191,6 +185,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			}
 
 			#endregion
+
+			protected abstract IAuxiliaryDataAdapter AuxDataAdapter { get; }
 
 			public virtual List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(
 				IIEPCDeclarationInputData iepc, Volt averageVoltage)
@@ -242,19 +238,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _gearboxDataAdapter.CreateGearshiftData(axleRatio, engineIdlingSpeed, gearboxType, gearsCount);
 			}
 
+			protected override IAuxiliaryDataAdapter AuxDataAdapter => _auxAdapter;
+
 			#endregion
 
-
-
-
-			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(
-				IAuxiliariesDeclarationInputData auxInputData,
-				IBusAuxiliariesDeclarationData busAuxData, MissionType mission, VehicleClass hvdClass,
-				Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType)
-			{
-				return _auxAdapter.CreateAuxiliaryData(auxInputData, busAuxData, mission, hvdClass, vehicleLength,
-					numSteeredAxles, jobType);
-			}
+			//public override IList<VectoRunData.AuxData> CreateAuxiliaryData(
+			//	IAuxiliariesDeclarationInputData auxInputData,
+			//	IBusAuxiliariesDeclarationData busAuxData, MissionType mission, VehicleClass hvdClass,
+			//	Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType)
+			//{
+			//	return _auxAdapter.CreateAuxiliaryData(auxInputData, busAuxData, mission, hvdClass, vehicleLength,
+			//		numSteeredAxles, jobType);
+			//}
 
 			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData,
@@ -270,6 +265,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			private ElectricMachinesDataAdapter _electricMachinesDataAdapter = new ElectricMachinesDataAdapter();
 			private ElectricStorageAdapter _eletricStorageAdapter = new ElectricStorageAdapter();
 			protected IAuxiliaryDataAdapter _auxAdapter = new HeavyLorryAuxiliaryDataAdapter();
+
 			public override CombustionEngineData CreateEngineData(
 				IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData mode, Mission mission)
 			{
@@ -287,24 +283,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 					gears);
 			}
 
-			public override BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData batteryInputData, VectoSimulationJobType jobType, bool ovc)
-			{
-				return _eletricStorageAdapter.CreateBatteryData(batteryInputData, jobType, ovc);
-			}
 
-			public override SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData reessInputData)
-			{
-				return _eletricStorageAdapter.CreateSuperCapData(reessInputData);
-			}
+			//public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
+			//	IBusAuxiliariesDeclarationData busAuxData,
+			//	MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
+			//	VectoSimulationJobType jobType)
+			//{
+			//	return _auxAdapter.CreateAuxiliaryData(auxData, busAuxData, missionType, vehicleClass, vehicleLength,
+			//		numSteeredAxles, jobType);
+			//}
 
-			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
-				IBusAuxiliariesDeclarationData busAuxData,
-				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
-				VectoSimulationJobType jobType)
-			{
-				return _auxAdapter.CreateAuxiliaryData(auxData, busAuxData, missionType, vehicleClass, vehicleLength,
-					numSteeredAxles, jobType);
-			}
+			protected override IAuxiliaryDataAdapter AuxDataAdapter => _auxAdapter;
 
 			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
@@ -390,36 +379,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _gearboxDataAdapter.CreateGearshiftData(axleRatio, engineIdlingSpeed, type, gearsCount);
 			}
 
-			#region Overrides of AbstractSimulationDataAdapter
-
-			protected override TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback,
-				VehicleCategory vehicleCategory, GearboxType gearboxType)
-			{
-				return base.CreateGearLossMap(gear, i, useEfficiencyFallback, vehicleCategory, gearboxType);
-			}
-
-			#endregion
-
 			public override GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
 				IShiftPolygonCalculator shiftPolygonCalc)
 			{
 				return _gearboxDataAdapter.CreateGearboxData(inputData, runData, shiftPolygonCalc, SupportedGearboxTypes);
-			}
-
-			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
-				IBusAuxiliariesDeclarationData busAuxData,
-				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
-				VectoSimulationJobType jobType)
-			{
-				return base.CreateAuxiliaryData(auxData, busAuxData, missionType, vehicleClass, vehicleLength,
-					numSteeredAxles, jobType);
-			}
-
-			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
-				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
-			{
-				base.CreateREESSData(componentsElectricStorage, jobType, ovc, setBatteryData, setSuperCapData);
-				
 			}
 
 			public override HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
@@ -481,15 +444,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _gearboxDataAdapter.CreateGearshiftData(axleRatio, null, gearboxType, gearsCount);
 			}
 
-			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
-				IBusAuxiliariesDeclarationData busAuxData,
-				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
-				VectoSimulationJobType jobType)
-			{
-				return _auxDataAdapter.CreateAuxiliaryData(auxData, null, missionType, vehicleClass, vehicleLength, numSteeredAxles,
-					jobType);
-			}
+			//public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
+			//	IBusAuxiliariesDeclarationData busAuxData,
+			//	MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
+			//	VectoSimulationJobType jobType)
+			//{
+			//	return _auxDataAdapter.CreateAuxiliaryData(auxData, null, missionType, vehicleClass, vehicleLength, numSteeredAxles,
+			//		jobType);
+			//}
 
+			protected override IAuxiliaryDataAdapter AuxDataAdapter => _auxDataAdapter;
+			
 			public override IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits,
 				Volt averageVoltage, GearList gears = null)
 			{
@@ -512,19 +477,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				if (superCapData != null) {
 					throw new VectoException("Supercaps are not allowed for PEVs");
 				}
-				
 
 			}
 
-			public override BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData componentsElectricStorage, VectoSimulationJobType jobType, bool ovc)
-			{
-				return _electricStorageAdapter.CreateBatteryData(batteryInputData: componentsElectricStorage, jobType: jobType, ovc: ovc);
-			}
+			//public override BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData componentsElectricStorage, VectoSimulationJobType jobType, bool ovc)
+			//{
+			//	return _electricStorageAdapter.CreateBatteryData(batteryInputData: componentsElectricStorage, jobType: jobType, ovc: ovc);
+			//}
 
-			public override SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData componentsElectricStorage)
-			{
-				return _electricStorageAdapter.CreateSuperCapData(componentsElectricStorage);
-			}
+			//public override SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData componentsElectricStorage)
+			//{
+			//	return _electricStorageAdapter.CreateSuperCapData(componentsElectricStorage);
+			//}
 
 			public override PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto)
 			{
@@ -696,6 +660,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			{
 				throw new NotImplementedException();
 			}
+
+			protected override IAuxiliaryDataAdapter AuxDataAdapter { get; }
 
 			#endregion
 		}

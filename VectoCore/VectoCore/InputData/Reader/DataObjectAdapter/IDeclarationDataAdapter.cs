@@ -74,10 +74,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 			VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData,
 			Action<SuperCapData> setSuperCapData);
-		BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
-			VectoSimulationJobType jobType,
-			bool ovc);
-		SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData componentsElectricStorage);
+
+		//BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
+		//	VectoSimulationJobType jobType,
+		//	bool ovc);
+		//SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData componentsElectricStorage);
+		
 		HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
 			SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType);
 
@@ -126,6 +128,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType);
 
 		AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment);
+
+		IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage, GearList gears = null);
+
+		void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
+			VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData,
+			Action<SuperCapData> setSuperCapData);
 	}
 
 	public interface IGenericCompletedBusDeclarationDataAdapter : IDeclarationDataAdapter

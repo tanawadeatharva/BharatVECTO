@@ -124,6 +124,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					throw new VectoException("Super caps AND batteries are not supported");
 				}
 			}
+
 			protected override void Initialize()
 			{
 				var vehicle = InputDataProvider.JobInputData.Vehicle;
@@ -395,18 +396,18 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					}
 				}
 			}
+
 			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle,
 				Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 				int? modeIdx = null,
 				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
 			{
-				_segment = GetSegment(vehicle);
+				//_segment = GetSegment(vehicle);
 				var result = CreateCommonRunData(vehicle, mission, loading, _segment);
 				result.AirdragData =
 					DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData, mission, _segment);
 				result.DriverData = DataAdapter.CreateDriverData(_segment);
-
 
 				DataAdapter.CreateREESSData(
 					componentsElectricStorage: vehicle.Components.ElectricStorage,
@@ -414,29 +415,18 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					true,
 					(bs) => result.BatteryData = bs,
 					(sc) => result.SuperCapData = sc);
-				// result.BatteryData = DataAdapter.CreateBatteryData(componentsElectricStorage: vehicle.Components.ElectricStorage, vehicle.VehicleType, true);
-				// result.SuperCapData = DataAdapter.CreateSuperCapData(componentsElectricStorage: vehicle.Components.ElectricStorage);
 				
-				
-
 				result.ElectricMachinesData = DataAdapter.CreateElectricMachines(vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits, result.BatteryData.CalculateAverageVoltage(), null);
-				if (vehicle.VehicleType == VectoSimulationJobType.IEPC_E)
-				{
-					
+				if (vehicle.VehicleType == VectoSimulationJobType.IEPC_E) {
 					result.ElectricMachinesData = DataAdapter.CreateIEPCElectricMachines(vehicle.Components.IEPC,
 						result.BatteryData.CalculateAverageVoltage());
-					
 				}
-
-
-
 
 				result.AngledriveData = DataAdapter.CreateAngledriveData(vehicle.Components.AngledriveInputData);
 				if (AxleGearRequired() || vehicle.Components.AxleGearInputData != null) {
 					result.AxleGearData = DataAdapter.CreateAxleGearData(vehicle.Components.AxleGearInputData);
 				}
-				
-				
+
 				result.VehicleData =
 					DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading, _allowVocational);
 
@@ -445,9 +435,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						result.ElectricMachinesData.First(e => e.Item1 != PowertrainPosition.GEN).Item1);
 				}
 
-
 				CreateGearboxAndGearshiftData(vehicle, result);
-
 
 				result.Aux = DataAdapter.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData, null,
 					mission.MissionType, _segment.VehicleClass, vehicle.Length,
@@ -461,12 +449,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				result.PTO = mission.MissionType == MissionType.MunicipalUtility
 					? municipalPtoTransmissionData
 					: ptoTransmissionData;
-
-
-
-
-
-
 
 				return result;
 			}

@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				int? modeIdx,
 				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
 			{
-				_segment = GetSegment(InputDataProvider.JobInputData.Vehicle, false);
+				//_segment = GetSegment(InputDataProvider.JobInputData.Vehicle, false);
 				CheckMaxChargingPowerPresent(vehicle);
 				
 				var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
@@ -228,7 +228,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 				int? modeIdx = null, VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
 			{
-				_segment = GetSegment(InputDataProvider.JobInputData.Vehicle, false);
+				//_segment = GetSegment(InputDataProvider.JobInputData.Vehicle, false);
 				CheckMaxChargingPowerPresent(vehicle);
 				var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 				var engineModes = engine.EngineModes;
