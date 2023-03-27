@@ -77,6 +77,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected IElectricStorageSystemDeclarationInputData _electricStorageSystemInputData;
 		protected IIEPCDeclarationInputData _iepcDeclarationInputData;
 
+
+
 		[Inject]
 		public IDeclarationInjectFactory Factory { protected get; set; }
 
