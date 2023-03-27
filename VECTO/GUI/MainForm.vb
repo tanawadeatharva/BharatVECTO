@@ -1003,7 +1003,7 @@ lbFound:
 
         Dim sumFileWriter As FileOutputWriter = New FileOutputWriter(GetOutputDirectory(JobFileList(0)))
         Dim sumWriter As SummaryDataContainer = New SummaryDataContainer(sumFileWriter)
-        Dim jobContainer As JobContainer = New JobContainer(sumWriter)
+        Dim jobContainer As JobContainer = New JobContainer(sumWriter, New JobArchiveBuilder())
 
         Dim mode As ExecutionMode
         If Cfg.DeclMode Then

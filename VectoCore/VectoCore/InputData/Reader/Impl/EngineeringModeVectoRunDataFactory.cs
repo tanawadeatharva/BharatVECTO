@@ -91,6 +91,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			}
 		}
 
+		public IInputDataProvider DataProvider => InputDataProvider;
+
 		private IEnumerable<VectoRunData> GetSerialHybridRunData()
 		{
 			var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
