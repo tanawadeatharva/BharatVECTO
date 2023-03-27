@@ -727,7 +727,7 @@ Partial Class ElectricMotorForm
         'lblVoltageHiUnit
         '
         Me.lblVoltageHiUnit.AutoSize = true
-        Me.lblVoltageHiUnit.Location = New System.Drawing.Point(219, 12)
+        Me.lblVoltageHiUnit.Location = New System.Drawing.Point(219, 11)
         Me.lblVoltageHiUnit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblVoltageHiUnit.Name = "lblVoltageHiUnit"
         Me.lblVoltageHiUnit.Size = New System.Drawing.Size(22, 15)
@@ -755,7 +755,7 @@ Partial Class ElectricMotorForm
         'lblVoltageLowUnit
         '
         Me.lblVoltageLowUnit.AutoSize = true
-        Me.lblVoltageLowUnit.Location = New System.Drawing.Point(219, 10)
+        Me.lblVoltageLowUnit.Location = New System.Drawing.Point(219, 11)
         Me.lblVoltageLowUnit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblVoltageLowUnit.Name = "lblVoltageLowUnit"
         Me.lblVoltageLowUnit.Size = New System.Drawing.Size(22, 15)
