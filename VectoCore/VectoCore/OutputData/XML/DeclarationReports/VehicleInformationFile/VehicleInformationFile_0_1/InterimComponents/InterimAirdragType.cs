@@ -6,6 +6,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Utils;
 
@@ -65,6 +66,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			return retVal;
 		}
 
+		protected XElement GetAirdragElement(IAirdragDeclarationInputData inputData, string version)
+		{
+			var retVal = new XElement(v24 + XMLNames.Component_AirDrag);
+			var tmp = XElement.Load(inputData.XMLSource.CreateNavigator().ReadSubtree());
+			retVal.Add(tmp.Elements());
+			return retVal;
+        }
+
         protected XElement GetAirdragElement(IAirdragDeclarationInputData airdrag)
         {
 			switch (airdrag) {
@@ -75,6 +84,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				case XMLDeclarationAirdragDataProviderV10 av10:
 					return GetAirdragElement(av10);
 			}
+
+
+			var sourceVersion = airdrag.DataSource.SourceVersion;
+			if (sourceVersion.IsOneOf(v10.GetVersionFromNamespaceUri(), v20.GetVersionFromNamespaceUri(),
+					v24.GetVersionFromNamespaceUri())) {
+				return GetAirdragElement(airdrag, "");
+            }
+
+	
+
             throw new VectoException(
                 $"Specific implementation for Airdrag Data (Interim Stage) missing {airdrag.GetType().Name}");
 

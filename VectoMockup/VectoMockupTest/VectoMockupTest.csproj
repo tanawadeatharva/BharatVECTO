@@ -2,7 +2,7 @@
 
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
 	<Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
@@ -31,9 +31,10 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<Content Include="..\..\VectoCore\VectoCoreTest\TestData\**\*.*">
 
-			<Link>TestData\%(RecursiveDir)%(FileName).%(Extension)</Link>
+		<Content Include="..\..\VectoCore\VectoCoreTest\TestData\**\*.*"  Exclude="..\..\VectoCore\VectoCoreTest\TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\JSON\**\*.*">
+            
+			<Link>TestData\%(RecursiveDir)%(FileName)%(Extension)</Link>
 
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 
@@ -42,6 +43,7 @@
 
 	<ItemGroup>
 	  <Content Remove="..\..\VectoCore\VectoCoreTest\TestData\Components\**" />
+		<Content Remove="..\..\VectoCore\VectoCoreTest\TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\JSON\**\*.*" />
 	</ItemGroup>
 
   <ItemGroup>

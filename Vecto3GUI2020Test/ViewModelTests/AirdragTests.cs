@@ -85,7 +85,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var multistageJobViewModel = vm.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
 			var outputName = "AidragLoadedInFirstStage";
 			multistageJobViewModel.SaveVif(Path.GetFullPath($"{outputName}.xml"));
-
+			_mockDialogHelper.AssertNoErrorDialogs();
 			var resultFile = $"{outputName}.VIF_Report_2.xml";
 			AssertHelper.FileExists(resultFile);
 			var secondstageVm = LoadFileFromPath(resultFile);

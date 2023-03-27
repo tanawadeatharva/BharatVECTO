@@ -153,7 +153,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 
 		public override void SetProperties()
 		{
-			throw new NotImplementedException();
+			_airDragArea = _inputData.AirDragArea;
+			_airDragArea = _inputData.AirDragArea_0;
+			_transferredAirDragArea = _inputData.TransferredAirDragArea;
 		}
 	}
 

@@ -16,7 +16,7 @@ namespace VECTO3GUI2020.Ninject
 		IDialogHelper DialogHelper { get; }
 		IDeclarationInjectFactory InjectFactory { get; }
 		IComponentViewModelFactory ComponentViewModelFactory { get; }
-
+		IXMLComponentInputReader ComponentInputReader { get; }
 		IXMLWriterFactory XMLWriterFactory { get;  }
 	}
 }
