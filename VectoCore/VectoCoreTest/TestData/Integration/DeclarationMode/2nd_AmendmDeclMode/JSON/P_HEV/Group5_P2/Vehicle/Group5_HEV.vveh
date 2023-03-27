@@ -98,12 +98,12 @@
         "Ratio": 1.0,
         "MechanicalEfficiency": 1.0,
         "Position": "P2",
-        "MotorFile": "..\\ElectricMotor\\Inputdaten P2 Group 5\\Electric components\\GenericEMotor_140kW_936Nm.vem"
+        "MotorFile": "..\\ElectricMotor\\Electric components\\GenericEMotor_140kW_936Nm.vem"
       }
     ],
     "Battery": {
       "NumPacks": 1,
-      "BatteryFile": "..\\ElectricMotor\\Inputdaten P2 Group 5\\Electric components\\GenericBattery_10kWh_658V.vbat"
+      "BatteryFile": "..\\ElectricMotor\\Electric components\\GenericBattery_10kWh_658V.vbat"
     }
   }
 }

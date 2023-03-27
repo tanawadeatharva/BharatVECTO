@@ -33,9 +33,9 @@ namespace VectoMockupTest
     public class MockUpVectoTest
 	{
 
-		private const string BasePath = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\";
+		private const string BasePath = @"TestDataMockup\SchemaVersion2.4\Distributed\";
 
-		private const string BasePathMockup = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\MockupBusTest\";
+		private const string BasePathMockup = @"TestDataMockup\SchemaVersion2.4\MockupBusTest\";
 
 		private const string XsdPath = @".. /../../../../VectoCore/VectoCore/Resources/XSD";
 

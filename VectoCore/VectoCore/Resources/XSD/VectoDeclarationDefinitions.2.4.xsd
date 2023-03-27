@@ -2877,7 +2877,7 @@ Changelog:
 			<xs:enumeration value="drive shaft and/or up to 2 gear wheels"/>
 			<xs:enumeration value="drive shaft and/or more than 2 gear wheels"/>
 			<xs:enumeration value="only one engaged gearwheel above oil level"/>
-			<xs:enumeration value="PTO which includes 1 or mmore additional gearmesh(es), without disconnect clutch"/>
+			<xs:enumeration value="PTO which includes 1 or more additional gearmesh(es), without disconnect clutch"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="RegisteredClassType">
