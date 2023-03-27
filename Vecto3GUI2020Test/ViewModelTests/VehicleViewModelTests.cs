@@ -11,7 +11,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public void restoreValuesWhenEditingAgain()
 		{
-			var vm = LoadFileFromTestDirectory(primary_vehicle_only);
+			var vm = LoadFileFromPath(TestData.primary_vehicle_only);
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
 					InterimStageBusVehicleViewModel_v2_8;
@@ -63,7 +63,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		public void SIDummyCreation()
 		{
 
-			var vm = LoadFileFromTestDirectory(primary_vehicle_only);
+			var vm = LoadFileFromPath(TestData.primary_vehicle_only);
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
 					InterimStageBusVehicleViewModel_v2_8;
@@ -83,12 +83,12 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public void NoErrorAfterDataLoading()
 		{
-			var vm = LoadFileFromTestDirectory(primary_vehicle_only);
+			var vm = LoadFileFromPath(TestData.primary_vehicle_only);
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
 					InterimStageBusVehicleViewModel_v2_8;
 			var vmConc = vm.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
-			vmConc.ManufacturingStageViewModel.LoadStageInputData(stageInputFullSample);
+			vmConc.ManufacturingStageViewModel.LoadStageInputData(TestData.stageInputFullSample);
 			Assert.IsFalse(vmConc.ManufacturingStageViewModel.VehicleViewModel.HasErrors);
 			
 		}
@@ -99,7 +99,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public void LoadPrimaryAndEdit()
 		{
-			var vm = LoadFileFromTestDirectory(primary_vehicle_only);
+			var vm = LoadFileFromPath(TestData.primary_vehicle_only);
 			Assert.NotNull(vm);
 
 			var vehicleViewModel =
@@ -126,7 +126,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		public void ConsolidatedADASandTPMLMFromPrimaryVehicle()
 		{
 
-			var vm = LoadFileFromTestDirectory(primary_vehicle_only);
+			var vm = LoadFileFromPath(TestData.primary_vehicle_only);
 			Assert.NotNull(vm);
 
 			var vehicleViewModel =

@@ -32,9 +32,12 @@ public class MockDialogHelper : IDialogHelper
 
 	
 	private readonly IList<Dialog> _dialogs = new List<Dialog>();
+	private readonly Mock<IDialogHelper> _dialogHelperMock;
+
 	public MockDialogHelper()
 	{
-		
+		_dialogHelperMock = new Mock<IDialogHelper>();
+		_dialogHelperImplementation = _dialogHelperMock.Object;
 	}
 
 	public IReadOnlyList<Dialog> Dialogs => _dialogs.ToList();

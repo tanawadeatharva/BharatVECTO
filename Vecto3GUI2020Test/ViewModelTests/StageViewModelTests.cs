@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Runtime.InteropServices;
+using Moq;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -13,13 +14,22 @@ using VECTO3GUI2020.ViewModel.Interfaces.Document;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
+using Vecto3GUI2020Test.Utils;
 
 namespace Vecto3GUI2020Test.ViewModelTests
 {
 	[TestFixture]
-	public class StageViewModelTests : ViewModelTestBase
+	public class StageViewModelTests
 	{
+		private IKernel _kernel;
+		private MockWindowHelper _windowHelper;
+		private MockDialogHelper _dialogHelper;
 
+		[SetUp]
+		public void Setup()
+		{
+			_kernel = TestHelper.GetKernel(out _dialogHelper, out _windowHelper);
+		}
 
 		[TestCase(true, TestName="Exempted")]
 		[TestCase(false, TestName="NotExempted")]
@@ -27,16 +37,17 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		{
 			IMultiStageViewModelFactory vmFactory = _kernel.Get<IMultiStageViewModelFactory>();
 
-			var StageInput = vmFactory.GetStageInputViewModel(exempted) as StageInputViewModel;
+			var StageInput = vmFactory.GetCreateNewStepInputViewModel(exempted) as StageInputViewModel;
 			var vehicleVm = StageInput.VehicleViewModel as InterimStageBusVehicleViewModel_v2_8;
 			vehicleVm.Manufacturer = "adsf";
 			vehicleVm.ManufacturerAddress = "asdf 123";
 			vehicleVm.VIN = "1234567890";
 
 			var fileName = TestHelper.GetMethodName() + ".xml";
-			StageInput.SaveInputDataExecute(GetFullPath(fileName));
-			Assert.True(checkFileNameExists(fileName));
-			Assert.AreEqual(GetFullPath(fileName), StageInput.VehicleInputDataFilePath);
+			var fullPath = Path.GetFullPath(fileName);
+			StageInput.SaveInputDataExecute(fullPath);
+			AssertHelper.FileExists(fullPath);
+			Assert.AreEqual(fullPath, StageInput.VehicleInputDataFilePath);
 
 			//Check if title is updated
 			StringAssert.Contains(fileName, StageInput.Title);
@@ -44,7 +55,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			//Check datasource
 			Assert.NotNull(StageInput.DataSource);
 
-			File.Delete(GetFullPath(fileName));
+			File.Delete(fullPath);
 		}
 
 		[Test]
@@ -52,7 +63,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		{
 			IMultiStageViewModelFactory vmFactory = _kernel.Get<IMultiStageViewModelFactory>();
 
-			var StageInput = vmFactory.GetStageInputViewModel(false) as StageInputViewModel;
+			var StageInput = vmFactory.GetCreateNewStepInputViewModel(false) as StageInputViewModel;
 			var vehicleVm = StageInput.VehicleViewModel as InterimStageBusVehicleViewModel_v2_8;
 			vehicleVm.Manufacturer = "adsf";
 			vehicleVm.ManufacturerAddress = "asdf 123";
@@ -98,12 +109,12 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			auxVm.SeparateAirDistributionDucts = false;
 
 
-
-
 			var fileName = TestHelper.GetMethodName() + ".xml";
-			StageInput.SaveInputDataExecute(GetFullPath(fileName));
-			Assert.True(checkFileNameExists(fileName));
-			Assert.AreEqual(GetFullPath(fileName), StageInput.VehicleInputDataFilePath);
+			var fullPath = Path.GetFullPath(fileName);
+			StageInput.SaveInputDataExecute(fullPath);
+			
+            AssertHelper.FileExists(fileName);
+			Assert.AreEqual(fullPath, StageInput.VehicleInputDataFilePath);
 
 			//Check if title is updated
 			StringAssert.Contains(fileName, StageInput.Title);
@@ -111,7 +122,10 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			//Check datasource
 			Assert.NotNull(StageInput.DataSource);
 
-			File.Delete(GetFullPath(fileName));
+			File.Delete(fullPath);
+
+			_dialogHelper.AssertNoErrorDialogs();
+			
 		}
 
 

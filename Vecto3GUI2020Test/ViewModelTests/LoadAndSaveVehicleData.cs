@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Moq;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -8,6 +9,8 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
+using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
+using Vecto3GUI2020Test.Utils;
 
 namespace Vecto3GUI2020Test
 {
@@ -17,7 +20,7 @@ namespace Vecto3GUI2020Test
 		[Test]
 		public void LoadInputFileMultipleStage()
 		{
-			Assert.NotNull(LoadFileFromTestDirectory(consolidated_multiple_stages));
+			Assert.NotNull(LoadFileFromPath(TestData.consolidated_multiple_stages));
 		}
 
 
@@ -26,7 +29,7 @@ namespace Vecto3GUI2020Test
 		public void LoadPrimaryAndSaveVehicleData()
 		{
 			//Load Primary Vehicle VIF
-			var newMultiStageJob = LoadFileFromTestDirectory(primary_vehicle_only);
+			var newMultiStageJob = LoadFileFromPath(TestData.primary_vehicle_only);
 			var vehicle = newMultiStageJob.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
 			Assert.NotNull(vehicle);
 			vehicle.Manufacturer = "test1";
@@ -41,17 +44,17 @@ namespace Vecto3GUI2020Test
 			Assert.NotNull(multistageJobViewModel);
 
 
-			var fileName = primary_vehicle_only.Replace(".xml", "") + "_output.xml";
+			var fileName = TestData.primary_vehicle_only.Replace(".xml", "") + "_output.xml";
 
-			multistageJobViewModel.ManufacturingStageViewModel.SaveInputDataExecute(GetFullPath(fileName));
-			Assert.True(checkFileNameExists(fileName));
+			multistageJobViewModel.ManufacturingStageViewModel.SaveInputDataExecute(Path.GetFullPath(fileName));
+			AssertHelper.FileExists(fileName);
 		}
 
 		[Test]
 		public void LoadPrimaryAndSaveAsVif()
 		{
 			//load file
-			var newMultiStageJob = LoadFileFromTestDirectory(primary_vehicle_only);
+			var newMultiStageJob = LoadFileFromPath(TestData.primary_vehicle_only);
 			var vehicle = newMultiStageJob.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
 
 		}
@@ -61,7 +64,7 @@ namespace Vecto3GUI2020Test
 		[Test]
 		public void ReloadInputFile()
 		{
-			var newMultistageJobViewModel = LoadFileFromTestDirectory(consolidated_multiple_stages_airdrag) as NewMultiStageJobViewModel;
+			var newMultistageJobViewModel = LoadFileFromPath(TestData.consolidated_multiple_stages_airdrag) as NewMultiStageJobViewModel;
 
 			var vehicle = newMultistageJobViewModel.MultiStageJobViewModel.VehicleInputData as
 				InterimStageBusVehicleViewModel_v2_8;
@@ -71,8 +74,8 @@ namespace Vecto3GUI2020Test
 
 			Assert.True(vehicle.AirdragModifiedMultistepEditingEnabled);
 
-			newMultistageJobViewModel.AddVifFile(GetTestDataPath(consolidated_multiple_stages_hev));
-			Assert.AreEqual(GetTestDataPath(consolidated_multiple_stages_hev), newMultistageJobViewModel.VifPath);
+			newMultistageJobViewModel.AddVifFile(Path.GetFullPath(TestData.consolidated_multiple_stages_hev));
+			Assert.AreEqual(Path.GetFullPath(TestData.consolidated_multiple_stages_hev), newMultistageJobViewModel.VifPath);
 			vehicle = newMultistageJobViewModel.MultiStageJobViewModel.VehicleInputData as InterimStageBusVehicleViewModel_v2_8;
 			Assert.IsFalse(vehicle.AirdragModifiedMultistepEditingEnabled);
 
@@ -82,20 +85,19 @@ namespace Vecto3GUI2020Test
 		[Test]
 		public void LoadInputFileMultipleStageAirdrag()
 		{
-			LoadFileFromTestDirectory(consolidated_multiple_stages_airdrag);
+			LoadFileFromPath(TestData.consolidated_multiple_stages_airdrag);
 		}
 
 		[Ignore("incomplete")]
 		[Test]
 		public void LoadAndSaveFullInputDataSample()
 		{
-			var vm = LoadFileFromTestDirectory(primary_vehicle_only);
+			var vm = LoadFileFromPath(TestData.primary_vehicle_only);
 			var multiStageJobViewModel = vm.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
 
 
 			var fileToSave = "loadAndSaveFullInputDataTest.xml";
-			var mockDialogHelper = SetMockDialogHelper(stageInputFullSample, fileToSave);
-			multiStageJobViewModel.ManufacturingStageViewModel.LoadStageInputData(GetFullPath(stageInputFullSample));
+			multiStageJobViewModel.ManufacturingStageViewModel.LoadStageInputData(Path.GetFullPath(TestData.stageInputFullSample));
 
 
 			var manufacturingStageViewModel =
@@ -113,7 +115,7 @@ namespace Vecto3GUI2020Test
 		[Test]
 		public void loadVehicleInputDataOnly()
 		{
-			string inputPath = GetTestDataPath(stageInputFullSample);
+			string inputPath = Path.GetFullPath(TestData.stageInputFullSample);
 			var inputDataReader = _kernel.Get<IXMLInputDataReader>();
 			var inputData = (IDeclarationInputDataProvider)inputDataReader.Create(inputPath);
 			var vehicleInputData = inputData.JobInputData.Vehicle;
@@ -126,13 +128,13 @@ namespace Vecto3GUI2020Test
 		[Test]
 		public void loadInputFileConsolidatedOneStage()
 		{
-			LoadFileFromTestDirectory(consolidated_one_stage);
+			LoadFileFromPath(TestData.consolidated_one_stage);
 		}
 
 		[Test]
 		public void loadInputFilePrimaryOnly()
 		{
-			var vm = LoadFileFromTestDirectory(primary_vehicle_only);
+			var vm = LoadFileFromPath(TestData.primary_vehicle_only);
 			Assert.AreEqual(2, vm.MultiStageJobViewModel.ManufacturingStageViewModel.StepCount);
 
 			var primaryVehicle = vm.MultiStageJobViewModel.PrimaryVehicle;
@@ -186,20 +188,20 @@ namespace Vecto3GUI2020Test
 
 
 
-		[TestCase(consolidated_multiple_stages_airdrag, true, TestName="LoadAirdragComponentConsolidatedMultipleStages")]
-		[TestCase(consolidated_multiple_stages, null, TestName="LoadAirdragConsolidatedMultipleStage")]
-		[TestCase(consolidated_one_stage, null, TestName="LoadAirdragOneStage")]
-		[TestCase(primary_vehicle_only, null, TestName= "LoadAirdragPrimaryVehicle")]
+		[TestCase(TestData.consolidated_multiple_stages_airdrag, true, TestName="LoadAirdragComponentConsolidatedMultipleStages")]
+		[TestCase(TestData.consolidated_multiple_stages, null, TestName="LoadAirdragConsolidatedMultipleStage")]
+		[TestCase(TestData.consolidated_one_stage, null, TestName="LoadAirdragOneStage")]
+		[TestCase(TestData.primary_vehicle_only, null, TestName= "LoadAirdragPrimaryVehicle")]
 		public void LoadAirdragComponentAndSaveVehicleData(string fileName, object expectedAirdragModifiedValue)
 		{
-			var vm = LoadFileFromTestDirectory(fileName);
+			var vm = LoadFileFromPath(fileName);
 
 			var vehicleVm =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as
 					InterimStageBusVehicleViewModel_v2_8;
 
 
-			var airdragLoadResult = vehicleVm.MultistageAirdragViewModel.LoadAirdragFile(GetTestDataPath(airdragLoadTestFile));
+			var airdragLoadResult = vehicleVm.MultistageAirdragViewModel.LoadAirdragFile(Path.GetFullPath(TestData.airdragLoadTestFile));
 			Assert.IsTrue(airdragLoadResult, "Airdrag file not loaded");
 
 
@@ -212,11 +214,10 @@ namespace Vecto3GUI2020Test
 			
 			var fileToSave = "stageInput.xml";
 
-			var mockDialogHelper = SetMockDialogHelper(null, fileToSave: fileToSave);
 
 			TestContext.Write("Saving file with loaded Airdrag Component ... ");
 			var multistageJobViewModel = vm.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
-			var savePath = GetFullPath($"{TestContext.CurrentContext.Test.Name}.xml");
+			var savePath = Path.GetFullPath($"{TestContext.CurrentContext.Test.Name}.xml");
 			multistageJobViewModel.ManufacturingStageViewModel.SaveInputDataExecute(savePath);
 
 			Assert.IsTrue(File.Exists(savePath));
@@ -241,9 +242,9 @@ namespace Vecto3GUI2020Test
 		{
 			
 			
-			TestContext.WriteLine($"Loading {consolidated_multiple_stages}");
+			TestContext.WriteLine($"Loading {TestData.consolidated_multiple_stages}");
 			//New Manufacturing Stage
-			var newMultistageJobViewModel = LoadFileFromTestDirectory(consolidated_multiple_stages);
+			var newMultistageJobViewModel = LoadFileFromPath(TestData.consolidated_multiple_stages);
 			Assert.NotNull(newMultistageJobViewModel.MultiStageJobViewModel);
 			var manstageVehicleViewModel = newMultistageJobViewModel.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as IMultistageVehicleViewModel;
 			Assert.NotNull(manstageVehicleViewModel);
@@ -257,10 +258,17 @@ namespace Vecto3GUI2020Test
 
 
 			//Load Stage InputData
-			var vehicleInputDataFilePath = GetTestDataPath(stageInputFullSample);
-			TestContext.WriteLine($"Loading {vehicleInputDataFilePath}");
-			Assert.IsTrue(File.Exists(vehicleInputDataFilePath));
-			manStageViewModel.LoadStageInputData(vehicleInputDataFilePath);
+			//var vehicleInputDataFilePath = GetTestDataPath(stageInputFullSample);
+			//TestContext.WriteLine($"Loading {vehicleInputDataFilePath}");
+			//Assert.IsTrue(File.Exists(vehicleInputDataFilePath), $"File {vehicleInputDataFilePath} not found");
+			var stepInputData = InputMock.GetMockVehicle(out var mockStepInput, true);
+			manStageViewModel.SetInputData(
+				stepInputData
+				);
+
+			var airDragMock = Mock.Get(stepInputData.Components.AirdragInputData);
+
+			//manStageViewModel.LoadStageInputData(vehicleInputDataFilePath);
 
 			var vehicleViewModel = manStageViewModel.VehicleViewModel as InterimStageBusVehicleViewModel_v2_8;
 			Assert.NotNull(vehicleViewModel);
@@ -268,13 +276,13 @@ namespace Vecto3GUI2020Test
 
 			Assert.AreEqual("VEH-1234567890", vehicleViewModel.Identifier);
 			Assert.AreEqual("Some Manufacturer", vehicleViewModel.Manufacturer);
-			Assert.AreEqual("Some Manufacturer Address", vehicleViewModel.ManufacturerAddress);
+			Assert.AreEqual("Baker Street 221b", vehicleViewModel.ManufacturerAddress);
 			Assert.AreEqual("VEH-1234567890", vehicleViewModel.VIN);
 			Assert.AreEqual(DateTime.Today, vehicleViewModel.Date);
-			Assert.AreEqual("Sample Bus Model", vehicleViewModel.Model);
+			Assert.AreEqual("Fillmore", vehicleViewModel.Model);
 			Assert.AreEqual(LegislativeClass.M3, vehicleViewModel.LegislativeClass);
-			Assert.AreEqual(500, vehicleViewModel.CurbMassChassis.Value());//CorrectedActualMass
-			Assert.AreEqual(3500, vehicleViewModel.GrossVehicleMassRating.Value());//TechnicalPermissibleMaximumLadenMass
+			Assert.AreEqual(12000, vehicleViewModel.CurbMassChassis.Value());//CorrectedActualMass
+			Assert.AreEqual(15000, vehicleViewModel.GrossVehicleMassRating.Value());//TechnicalPermissibleMaximumLadenMass
 			Assert.AreEqual(true, vehicleViewModel.AirdragModifiedMultistep);
 			Assert.AreEqual(AIRDRAGMODIFIED.TRUE, vehicleViewModel.AirdragModifiedEnum);
 			Assert.AreEqual(AIRDRAGMODIFIED.TRUE, vehicleViewModel.ParameterViewModels[nameof(vehicleViewModel.AirdragModifiedEnum)].CurrentContent);
@@ -293,9 +301,9 @@ namespace Vecto3GUI2020Test
 			Assert.AreEqual(2500, (vehicleViewModel.ParameterViewModels[nameof(vehicleViewModel.HeightInMm)].CurrentContent as ConvertedSI).Value);
 			Assert.AreEqual(9500, (vehicleViewModel.ParameterViewModels[nameof(vehicleViewModel.LengthInMm)].CurrentContent as ConvertedSI).Value);
 			Assert.AreEqual(2500, (vehicleViewModel.ParameterViewModels[nameof(vehicleViewModel.WidthInMm)].CurrentContent as ConvertedSI).Value);
-			
-
-			Assert.AreEqual(2, vehicleViewModel.EntranceHeight.Value());
+			Assert.AreEqual(150, (vehicleViewModel.ParameterViewModels[nameof(vehicleViewModel.EntranceHeightInMm)].CurrentContent as ConvertedSI).Value);
+			Assert.AreEqual(false, vehicleViewModel.LowEntry);
+			Assert.AreEqual(0.15, vehicleViewModel.EntranceHeight.Value());
 			Assert.AreEqual(ConsumerTechnology.Electrically, vehicleViewModel.DoorDriveTechnology);
 			Assert.AreEqual(VehicleDeclarationType.interim, vehicleViewModel.VehicleDeclarationType);
 			Assert.AreEqual("1234567890", vehicleViewModel.VehicleTypeApprovalNumber);
