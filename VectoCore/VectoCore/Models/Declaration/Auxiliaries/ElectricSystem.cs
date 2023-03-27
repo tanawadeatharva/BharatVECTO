@@ -38,60 +38,104 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 {
-	public sealed class ElectricSystem : LookupData<MissionType, string, AuxDemandEntry>, IDeclarationAuxiliaryTable
+
+
+
+
+
+    public sealed class ElectricSystem : IDeclarationAuxiliaryTable
+    {
+        //private readonly Alternator _alternator = new Alternator();
+		private readonly ElectricSystemHeavyLorry _heavyLorry = new ElectricSystemHeavyLorry();
+		private readonly ElectricSystemMediumLorry _mediumLorry = new ElectricSystemMediumLorry();
+
+		
+
+		public AuxDemandEntry Lookup(VehicleClass vehicleClass, MissionType missionType, string technology = null)
+		{
+			if (string.IsNullOrWhiteSpace(technology))
+			{
+				technology = "Standard technology";
+			}
+
+			if (vehicleClass.IsMediumLorry()) {
+				return _mediumLorry.Lookup(missionType, technology);
+			} else {
+				return _heavyLorry.Lookup(missionType, technology);
+			}
+        }
+
+		internal sealed class Alternator : LookupData<MissionType, string, double>
+        {
+            protected override string ResourceId =>
+                DeclarationData.DeclarationDataResourcePrefix + ".VAUX.ALT-Tech.csv";
+
+            protected override string ErrorMessage =>
+                "Auxiliary Lookup Error: No value found for Alternator. Mission: '{0}', Technology: '{1}'";
+
+            protected override void ParseData(DataTable table)
+            {
+                foreach (DataRow row in table.Rows)
+                {
+                    var name = row.Field<string>("technology");
+                    foreach (DataColumn col in table.Columns)
+                    {
+                        if (col.Caption != "technology")
+                        {
+                            Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name)] = row.ParseDouble(col);
+                        }
+                    }
+                }
+            }
+
+            public override double Lookup(MissionType missionType, string technology = null)
+            {
+                if (string.IsNullOrWhiteSpace(technology))
+                {
+                    technology = "Standard alternator efficiency";
+                }
+
+                return base.Lookup(missionType, technology);
+            }
+        }
+
+
+		#region Implementation of IDeclarationAuxiliaryTable
+
+		public string[] GetTechnologies()
+		{
+			return _heavyLorry.GetTechnologies();
+		}
+
+		#endregion
+	}
+
+
+    internal abstract class ElectricSystemLookup : LookupData<MissionType, string, AuxDemandEntry>
 	{
-		private readonly Alternator _alternator = new Alternator();
+		
 
-		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.ES-Tech.csv";
-
-		protected override string ErrorMessage => "Auxiliary Lookup Error: No value found for Electric System. Mission: '{0}', Technology: '{1}'";
+		protected override string ErrorMessage =>
+			"Auxiliary Lookup Error: No value found for Electric System. Mission: '{0}', Technology: '{1}'";
 
 		protected override void ParseData(DataTable table)
 		{
-			foreach (DataRow row in table.Rows) {
+			foreach (DataRow row in table.Rows)
+			{
 				var name = row.Field<string>("technology");
-				foreach (DataColumn col in table.Columns) {
-					if (col.Caption != "technology") {
-						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name)] =
-							new AuxDemandEntry() { PowerDemand = row.ParseDouble(col).SI<Watt>() };
-					}
-				}
-			}
-		}
-
-		public override AuxDemandEntry Lookup(MissionType missionType, string technology = null)
-		{
-			if (string.IsNullOrWhiteSpace(technology)) {
-				technology = "Standard technology";
-			}
-			var value = base.Lookup(missionType, technology);
-			return new AuxDemandEntry() { PowerDemand = value.PowerDemand };
-		}
-
-		internal sealed class Alternator : LookupData<MissionType, string, double>
-		{
-			protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.ALT-Tech.csv";
-
-			protected override string ErrorMessage => "Auxiliary Lookup Error: No value found for Alternator. Mission: '{0}', Technology: '{1}'";
-
-			protected override void ParseData(DataTable table)
-			{
-				foreach (DataRow row in table.Rows) {
-					var name = row.Field<string>("technology");
-					foreach (DataColumn col in table.Columns) {
-						if (col.Caption != "technology") {
-							Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name)] = row.ParseDouble(col);
+				foreach (DataColumn col in table.Columns)
+				{
+					if (col.Caption != "technology")
+					{
+						if (row[col].ToString() == "---") {
+							continue;
 						}
+						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name)] =
+							new AuxDemandEntry() {
+								PowerDemand = row.ParseDouble(col).SI<Watt>()
+							};
 					}
 				}
-			}
-
-			public override double Lookup(MissionType missionType, string technology = null)
-			{
-				if (string.IsNullOrWhiteSpace(technology)) {
-					technology = "Standard alternator efficiency";
-				}
-				return base.Lookup(missionType, technology);
 			}
 		}
 
@@ -99,5 +143,18 @@ namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 		{
 			return Data.Keys.Select(x => x.Item2).Distinct().ToArray();
 		}
-	}
+
+    }
+
+
+    internal class ElectricSystemHeavyLorry : ElectricSystemLookup
+	{
+		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.ES-Tech.csv";
+
+    }
+
+	internal class ElectricSystemMediumLorry : ElectricSystemLookup
+	{
+		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.ES-Tech_Medium.csv";
+    }
 }

@@ -1,4 +1,6 @@
-﻿/*
+﻿
+#define USE_EXTERNAL_DECLARATION_DATA
+/*
 * This file is part of VECTO.
 *
 * Copyright © 2012-2019 European Union
@@ -31,8 +33,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -46,6 +52,21 @@ namespace TUGraz.VectoCore.Models.Declaration
 		protected abstract string ErrorMessage { get; }
 		protected abstract void ParseData(DataTable table);
 
+#if USE_EXTERNAL_DECLARATION_DATA
+		protected bool _readFromFile = false;
+#endif
+		[Conditional("USE_EXTERNAL_DECLARATION_DATA")]
+		protected void WarnReadFromFile()
+		{
+			if (_readFromFile) {
+				//Not displayed in simulation window(don't know why? Just write to file for now)
+				var tmp = ResourceId?.Replace(DeclarationData.DeclarationDataResourcePrefix + ".", "") ?? "unknown resource";
+				Log.Warn(string.Format("{0} overridden", tmp));
+			}
+
+		}
+
+
 		protected LookupData()
 		{
 			ReadData();
@@ -54,26 +75,36 @@ namespace TUGraz.VectoCore.Models.Declaration
 		protected void ReadData()
 		{
 			if (!string.IsNullOrWhiteSpace(ResourceId)) {
-				var table = ReadCsvResource(ResourceId);
+				var table = ReadCsvResource(ResourceId, (s) => {
+					System.Diagnostics.Debug.WriteLine(s);
+					Log.Warn(s);
+				});
 				NormalizeTable(table);
 				ParseData(table);
 			}
 		}
-
-		protected static DataTable ReadCsvResource(string resourceId)
+#if USE_EXTERNAL_DECLARATION_DATA
+		[MethodImpl(MethodImplOptions.Synchronized)]
+#endif
+		protected DataTable ReadCsvResource(string resourceId, Action<string> overrideWarning = null)
 		{
 // TODO: MQ 2020-07 Remove in official bus version!
-//#if USE_EXTENAL_DECLARATION_DATA
+#if USE_EXTERNAL_DECLARATION_DATA
 			var tmp = resourceId.Replace(DeclarationData.DeclarationDataResourcePrefix + ".", "");
 			var parts = tmp.Split('.');
-			var fileName = Path.Combine("Declaration", string.Join(".", parts[parts.Length - 2], parts[parts.Length - 1]));
+			var fileName = Path.GetFullPath(Path.Combine(@"Declaration\Override", string.Join(".", parts[parts.Length-2], parts[parts.Length-1])));
+
 			if (File.Exists(fileName)) {
+				if (overrideWarning != null) {
+					overrideWarning($"{resourceId} overridden by {fileName}");
+				}
+
+				_readFromFile = true;
 				return VectoCSVFile.Read(fileName);
 			}
-
-			//#else
+#endif
 			return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId), source: resourceId);
-			//#endif
+
 		}
 
 		protected static void NormalizeTable(DataTable table)
@@ -92,6 +123,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public virtual TValue Lookup(TKey key)
 		{
+			WarnReadFromFile();
 			try {
 				return Data[key];
 			} catch (KeyNotFoundException) {
@@ -108,7 +140,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public virtual TValue Lookup(TKey1 key1, TKey2 key2)
 		{
-			try {
+			WarnReadFromFile();
+            try {
 				return Data[Tuple.Create(key1, key2)];
 			} catch (KeyNotFoundException) {
 				throw new VectoException(string.Format(ErrorMessage, key1, key2));
@@ -123,7 +156,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public virtual TValue Lookup(TKey1 key1, TKey2 key2, TKey3 key3)
 		{
-			try {
+			WarnReadFromFile();
+            try {
 				return Data[Tuple.Create(key1, key2, key3)];
 			} catch (KeyNotFoundException) {
 				throw new VectoException(string.Format(ErrorMessage, key1, key2, key3));

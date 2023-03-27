@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
@@ -31,8 +32,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				foreach (DataRow row in boostingLimitations.Rows)
 				{
 					boostingLimitationsXElement.Add(new XElement(_mrf + XMLNames.BoostingLimitation_Entry,
-						new XAttribute(XMLNames.BoostingLimitation_BoostingTorque, row[XMLNames.BoostingLimitation_BoostingTorque]),
-						new XAttribute(XMLNames.BoostingLimitation_RotationalSpeed, row[XMLNames.BoostingLimitation_RotationalSpeed])));
+						new XAttribute(XMLNames.BoostingLimitation_RotationalSpeed, row[MaxBoostingTorqueReader.Fields.MotorSpeed]),
+						new XAttribute(XMLNames.BoostingLimitation_BoostingTorque, row[MaxBoostingTorqueReader.Fields.DrivingTorque])
+						));
 				}
 
 

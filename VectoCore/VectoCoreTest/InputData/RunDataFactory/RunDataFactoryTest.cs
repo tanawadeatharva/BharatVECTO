@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory;
 [TestFixture]
 public class RunDataFactoryTest
 {
-	private const string BASE_DIR = @"TestData\Integration\DeclarationMode\V24_DeclarationMode\";
+	private const string BASE_DIR = @"TestData\Integration\DeclarationMode\2nd_AmendDeclMode\";
 	private const string HEAVY_LORRY_DIR = BASE_DIR + @"HeavyLorry\";
 	protected IXMLInputDataReader xmlInputReader;
 	private IKernel _kernel;
@@ -43,9 +43,9 @@ public class RunDataFactoryTest
 	//TestCase(@"HeavyLorry\HEV_heavyLorry_AMT_Px.xml"),
 	//TestCase(@"HeavyLorry\IEPC_heavyLorry.xml"),
 
-	[TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2_realistic.xml"),
-	TestCase(@"HeavyLorry\PEV_heavyLorry_E3_realistic.xml"),
-	TestCase(@"HeavyLorry\PEV_heavyLorry_E4.xml")]
+	//[TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2_realistic.xml"),
+	//TestCase(@"HeavyLorry\PEV_heavyLorry_E3_realistic.xml"),
+	//TestCase(@"HeavyLorry\PEV_heavyLorry_E4.xml")]
 	//TestCase(@"MediumLorry\Conventional_mediumLorry_AMT.xml"),
 	//TestCase(@"MediumLorry\HEV-S_mediumLorry_AMT_S2.xml"),
 	//TestCase(@"MediumLorry\HEV-S_mediumLorry_AMT_S2_ovc.xml"),

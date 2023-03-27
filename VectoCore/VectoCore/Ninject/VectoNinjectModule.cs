@@ -42,10 +42,13 @@ using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 using TUGraz.VectoCore.OutputData.XML.ComponentWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
 using TUGraz.VectoCore.OutputData.XML.Engineering;
 
 using TUGraz.VectoCore.OutputData.XML.GroupWriter;
+using TUGraz.VectoMockup.Ninject;
+
 namespace TUGraz.VectoCore
 {
 	public abstract class AbstractNinjectModule : NinjectModule
@@ -95,30 +98,23 @@ namespace TUGraz.VectoCore
 
 			LoadModule<SimulatorFactoryNinjectModule>();
 
+			LoadModule<ResultsNinjectModule>();
+
 			LoadModule<MRFNinjectModule>();
 
+			LoadModule<MRFResultsNinjectModule>();
+
 			LoadModule<CIFNinjectModule>();
+
+			LoadModule<CIFResultsNinjectModule>();
 			
 			LoadModule<VIFNinjectModule>();
-			
 
-#if (MOCKUP)  
-			var compiledModuleLoaderPlugin = new CompiledModuleLoaderPlugin(Kernel, new AssemblyNameRetriever());
-			var assembly = Assembly.LoadFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"VectoMockup.dll"));
-			//var assembly = Assembly.LoadFile("VectoMockup.dll");
-			Kernel.Load(new Assembly[]{assembly});
-#endif
-
-
-
-
-
+			LoadModule<VIFResultsNinjectModule>();
+			#if (MOCKUP)  //TODO: add second constant for release
+				LoadModule<MockupModule>();
+			#endif
 		}
-
-		
-
-#endregion
-
-		
+		#endregion
 	}
 }

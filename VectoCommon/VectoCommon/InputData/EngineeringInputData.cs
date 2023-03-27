@@ -29,7 +29,10 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -63,6 +66,127 @@ namespace TUGraz.VectoCommon.InputData
 		IEPC_S,
 		IHPC
 	}
+
+	public static class VectoSimulationJobTypeHelper
+	{
+		public const string Conventional = "Conventional";
+		public const string Hybrid = "Hybrid";
+		public const string PureElectric = "PureElectric";
+
+		public static string GetPowertrainArchitectureType(this VectoSimulationJobType jobType)
+		{
+			switch (jobType) {
+				case VectoSimulationJobType.EngineOnlySimulation:
+				case VectoSimulationJobType.ConventionalVehicle:
+					return Conventional;
+				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.SerialHybridVehicle:
+				case VectoSimulationJobType.IHPC:
+				case VectoSimulationJobType.IEPC_S:
+					return Hybrid;
+				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.IEPC_E:
+					return PureElectric;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
+			}
+		}
+
+		public static ArchitectureID GetArchitectureID(this VectoSimulationJobType jobType, PowertrainPosition em)
+		{
+			switch (jobType) {
+				case VectoSimulationJobType.ConventionalVehicle:
+				case VectoSimulationJobType.EngineOnlySimulation:
+					return ArchitectureID.UNKNOWN;
+				case VectoSimulationJobType.ParallelHybridVehicle:
+					return GetPHEVArchitectureId(em);
+
+				case VectoSimulationJobType.SerialHybridVehicle:
+					return GetSHEVArchitecureID(em);
+
+				case VectoSimulationJobType.BatteryElectricVehicle:
+					return GetPEVArchId(emPos: em);
+
+				case VectoSimulationJobType.IEPC_E:
+				case VectoSimulationJobType.IEPC_S:
+					return GetIepcArchitectureId(jobType, em);
+
+				case VectoSimulationJobType.IHPC:
+					return ArchitectureID.P2;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
+			}
+
+
+
+
+			return ArchitectureID.UNKNOWN;
+		}
+
+		private static ArchitectureID GetIepcArchitectureId(VectoSimulationJobType jobType, PowertrainPosition em)
+		{
+			if (em != PowertrainPosition.IEPC) {
+				throw new ArgumentException(nameof(em));
+			}
+
+			switch (jobType) {
+				case VectoSimulationJobType.IEPC_E:
+					return ArchitectureID.E_IEPC;
+				case VectoSimulationJobType.IEPC_S:
+					return ArchitectureID.S_IEPC;
+				default:
+					throw new ArgumentException(nameof(jobType));
+			}
+		}
+
+		private static ArchitectureID GetPHEVArchitectureId(PowertrainPosition emPos)
+		{
+			switch (emPos) {
+				case PowertrainPosition.HybridP1:
+					return ArchitectureID.P1;
+				case PowertrainPosition.HybridP2:
+					return ArchitectureID.P2;
+				case PowertrainPosition.HybridP2_5:
+					return ArchitectureID.P2_5;
+				case PowertrainPosition.HybridP3:
+					return ArchitectureID.P3;
+				case PowertrainPosition.HybridP4:
+					return ArchitectureID.P4;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(emPos));
+			}
+		}
+
+		private static ArchitectureID GetSHEVArchitecureID(PowertrainPosition emPos)
+		{
+			switch (emPos) {
+				case PowertrainPosition.BatteryElectricE4:
+					return ArchitectureID.S4;
+				case PowertrainPosition.BatteryElectricE3:
+					return ArchitectureID.S3;
+				case PowertrainPosition.BatteryElectricE2:
+					return ArchitectureID.S2;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(emPos));
+			}
+		}
+
+		private static ArchitectureID GetPEVArchId(PowertrainPosition emPos)
+		{
+			switch (emPos) {
+				case PowertrainPosition.BatteryElectricE4:
+					return ArchitectureID.E4;
+				case PowertrainPosition.BatteryElectricE3:
+					return ArchitectureID.E3;
+				case PowertrainPosition.BatteryElectricE2:
+					return ArchitectureID.E2;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(emPos));
+			}
+		}
+	}
+	
 
 	public interface IHybridStrategyParameters
 	{

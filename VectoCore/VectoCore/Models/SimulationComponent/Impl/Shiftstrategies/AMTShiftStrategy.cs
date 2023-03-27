@@ -40,10 +40,12 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
+using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -67,6 +69,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected GearshiftPosition _nextGear;
 		private GearshiftPosition DesiredGearRoadsweeping;
 		private readonly IShiftPolygonCalculator _shiftPolygonCalculator;
+
+		protected TestPowertrain<Gearbox> TestPowertrain;
 
 		public AMTShiftStrategy(IVehicleContainer dataBus) : base(dataBus)
 		{
@@ -95,6 +99,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					break;
 				}
 			}
+
+			// create testcontainer
+			var testContainer = new SimplePowertrainContainer(runData);
+			PowertrainBuilder.BuildSimplePowertrain(runData, testContainer);
+
+			TestPowertrain = new TestPowertrain<Gearbox>(testContainer, DataBus);
 		}
 
 		private bool SpeedTooLowForEngine(GearshiftPosition gear, PerSecond outAngularSpeed)
@@ -143,10 +153,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			foreach (var gear in Gears.Reverse()) {
 				var selected = gear;
-				var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
+				//var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
+
+				TestPowertrain.UpdateComponents();
+				TestPowertrain.Gearbox.Gear = gear;
+				TestPowertrain.Gearbox._nextGear = gear;
+				
+				var response = TestPowertrain.Gearbox.Initialize(outTorque, outAngularVelocity);
+				response = TestPowertrain.Gearbox.Request(absTime,
+					Constants.SimulationSettings.MeasuredSpeedTargetTimeInterval, outTorque, outAngularVelocity,
+					true);
 
 				var inAngularSpeed = outAngularVelocity * GearboxModelData.Gears[gear.Gear].Ratio;
-				var fullLoadPower = response.Engine.PowerRequest - response.DeltaFullLoad;
+				var fullLoadPower = TestPowertrain.CombustionEngine.EngineStationaryFullPower(response.Engine.EngineSpeed);
 				var reserve = 1 - response.Engine.PowerRequest / fullLoadPower;
 				var inTorque = response.Clutch.PowerRequest / inAngularSpeed;
 
@@ -184,7 +203,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
-				var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
+				//var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
+				TestPowertrain.UpdateComponents();
+				TestPowertrain.Gearbox.Gear = gear;
+				TestPowertrain.Gearbox._nextGear = gear;
+
+				var response = TestPowertrain.Gearbox.Initialize(outTorque, outAngularVelocity);
+				response = TestPowertrain.Gearbox.Request(absTime,
+					Constants.SimulationSettings.MeasuredSpeedTargetTimeInterval, outTorque, outAngularVelocity,
+					true);
 
 				var fullLoadPower = response.Engine.DynamicFullLoadPower; //EnginePowerRequest - response.DeltaFullLoad;
 				var reserve = 1 - response.Engine.PowerRequest / fullLoadPower;

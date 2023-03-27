@@ -119,11 +119,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 		TestCase(@"TestData\Components\ElectricMotor\vem_P_inverter_DC_std.vemo", 0, 1)]
 		public void TestInterpolationMethod_PowerMap(string filename, double etaMin, double etaMax)
 		{
-			EfficiencyMap emMap;
-			using (var fs = File.OpenRead(filename)) {
-				emMap = ElectricMotorMapReader.Create(fs, 1);
-			}
-
+			var data = VectoCSVFile.Read(filename).ApplyFactor(ElectricMotorMapReader.Fields.PowerElectrical, 1000.0);
+			var emMap = ElectricMotorMapReader.Create(data, 1);
+			
 			var efficiencies = new List<double>();
 			for (var n = 10.RPMtoRad(); n < 4000.RPMtoRad(); n += 10.RPMtoRad()) {
 				for (var tq = -2800.SI<NewtonMeter>(); tq <= 2800.SI<NewtonMeter>(); tq += 100.SI<NewtonMeter>()) {

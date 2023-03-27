@@ -663,7 +663,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var siVal = val.SI<VolumePerMeterVolume>();
 			var siConv = siVal.ConvertToLiterPerCubicMeter100KiloMeter();
 			Assert.AreEqual(converted, siConv, 1e-6);
-			Assert.AreEqual("l/100m^3km", siConv.Units);
+			Assert.AreEqual("l/100m³-km", siConv.Units);
 		}
 
 		[TestCase(1,3.6e6),
@@ -696,7 +696,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var siVal = val.SI<CubicMeter>();
 			var siConv = siVal.ConvertToCubicCentiMeter();
 			Assert.AreEqual(converted, siConv, 1e-6);
-			Assert.AreEqual("cm^3", siConv.Units);
+			Assert.AreEqual("cm³", siConv.Units);
 		}
 
 		[TestCase(1, 1e6),
@@ -707,7 +707,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var siVal = val.SI<KilogramPerMeterCubicMeter>();
 			var siConv = siVal.ConvertToGrammPerCubicMeterKiloMeter();
 			Assert.AreEqual(converted, siConv, 1e-12);
-			Assert.AreEqual("g/m^3km", siConv.Units);
+			Assert.AreEqual("g/m³-km", siConv.Units);
 		}
 
 		[TestCase(1, 1e9),
@@ -718,7 +718,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var siVal = val.SI<KilogramPerMeterMass>();
 			var siConv = siVal.ConvertToGrammPerTonKilometer();
 			Assert.AreEqual(converted, siConv, 1e-12);
-			Assert.AreEqual("g/tkm", siConv.Units);
+			Assert.AreEqual("g/t-km", siConv.Units);
 		}
 
 		[TestCase(1, 0.277777777777e-6),

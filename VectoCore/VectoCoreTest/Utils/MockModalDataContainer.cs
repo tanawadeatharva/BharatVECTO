@@ -233,15 +233,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 			}
 		}
 
+
+
 		public string GetColumnName(PowertrainPosition pos, ModalResultField mrf)
 		{
 			return string.Format(mrf.GetCaption(), pos.GetName());
 		}
 
-		public void Reset()
-		{
+		public void Reset(bool clearColumns = false){}
 
-		}
 
 		public Second Duration => null;
 
@@ -270,6 +270,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public bool HasCombustionEngine { get; set; }
+		public bool HasGearbox { get; set; }
+
 		public WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos)
 		{
 			throw new NotImplementedException();
@@ -336,6 +338,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public ICorrectedModalData CorrectedModalData { get; }
+		public bool HasAxlegear { get; set; }
+
 		public void RegisterComponent(VectoSimulationComponent component)
 		{
 			

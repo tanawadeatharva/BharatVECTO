@@ -1217,7 +1217,7 @@
 	</xs:group>
 	<xs:group name="LorryAuxGroup">
 		<xs:sequence>
-			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyLorryType"/>
+			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyLorryType" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="ConventionalCompletedBusAuxGroup">

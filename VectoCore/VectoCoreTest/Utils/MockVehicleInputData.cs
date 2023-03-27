@@ -68,7 +68,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public Watt MaxNetPower1 { get; set; }
 
-		public Watt MaxNetPower2 { get; set; }
 
 		public string ExemptedTechnology { get; }
 

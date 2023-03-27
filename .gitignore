@@ -224,3 +224,5 @@ Documentation/VehiclesReleaseComparisonDeclarationMode/**/*.vsum
 /VectoCommon/VectoCommon/InputData/BusInputData.cd
 /.idea/.idea.VECTO/.idea
 
+/Generic Vehicles/Engineering Mode/GenericIHPC/6SpeedGbx/EM_Maps.xlsx
+/Nuget

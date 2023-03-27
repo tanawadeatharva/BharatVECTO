@@ -46,10 +46,12 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
@@ -156,6 +158,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public VTPData VTPData { get; internal set; }
 
 		public ShiftStrategyParameters GearshiftParameters { get; internal set; }
+
 		public bool Exempted { get; internal set; }
 
 		public bool MultistageRun { get; internal set; }
@@ -182,6 +185,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		// used to identify job and run in summary container
 		public int JobNumber { get; set; }
 		public int RunNumber { get; set; }
+		public int Iteration { get; set; }
+
+
+		public OvcHevMode OVCMode { get; internal set; }
+
+		public Watt MaxChargingPower { get; internal set; }
+
+		[JsonIgnore]
+		public IIterativeRunStrategy IterativeRunStrategy { get; internal set; } = new DefaultIterativeStrategy();
 
 		public class AuxData
 		{

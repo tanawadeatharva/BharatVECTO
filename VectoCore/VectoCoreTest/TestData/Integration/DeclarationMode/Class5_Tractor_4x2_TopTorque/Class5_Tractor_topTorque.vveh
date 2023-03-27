@@ -8,6 +8,7 @@
   "Body": {
     "SavedInDeclMode": true,
     "VehCat": "Tractor",
+    "LegislativeClass": "M3",
     "CurbWeight": 8229.0,
     "CurbWeightExtra": 0.0,
     "Loading": 0.0,
@@ -31,19 +32,19 @@
       "LossMap": "",
       "Cycle": ""
     },
-	"TorqueLimits": {
-		"1": 1950,
-		"2": 1950,
-		"3": 1950,
-		"4": 1950,
-		"5": 1950,
-		"6": 1950,
-		"7": 1950,
-		"8": 1950,
-		"9": 1950,
-		"10": 1950,
-		"11": 1950		
-	},
+    "TorqueLimits": {
+      "1": 1950,
+      "2": 1950,
+      "3": 1950,
+      "4": 1950,
+      "5": 1950,
+      "6": 1950,
+      "7": 1950,
+      "8": 1950,
+      "9": 1950,
+      "10": 1950,
+      "11": 1950
+    },
     "AxleConfig": {
       "Type": "4x2",
       "Axles": [
@@ -54,7 +55,7 @@
           "TwinTyres": false,
           "RRCISO": 0.0055,
           "FzISO": 33350.0,
-		  "Steered" : true
+          "Steered": true
         },
         {
           "Inertia": 14.9,

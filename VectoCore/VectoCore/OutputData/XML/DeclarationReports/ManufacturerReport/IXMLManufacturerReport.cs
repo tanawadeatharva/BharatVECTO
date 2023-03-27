@@ -9,7 +9,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 		//void InitializeVehicleData(IDeclarationInputDataProvider inputData);
 		void Initialize(VectoRunData modelData);
 		XDocument Report { get; }
-		void WriteResult(XMLDeclarationReport.ResultEntry resultValue);
+		void WriteResult(IResultEntry resultValue);
 		void GenerateReport();
 	}
 

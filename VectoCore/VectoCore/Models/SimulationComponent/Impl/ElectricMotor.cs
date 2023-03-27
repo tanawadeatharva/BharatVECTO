@@ -28,7 +28,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		
 
 		public bool DeRatingActive { get; protected internal set; }
-		public bool EmOff => PreviousState.EMTorque == null ? true : false;
+		public bool EmOff => PreviousState.EMTorque == null /*|| PreviousState.EMTorque.IsEqual(0)*/
+			? true : false;
 
 		public BusAuxiliariesAdapter BusAux { protected get; set; }
 
@@ -154,6 +155,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun, double ratio)
 		{
+			
 			var gear = DataBus.GearboxInfo?.Gear ?? new GearshiftPosition(1);
 			if (gear.Gear == 0) {
 				gear = new GearshiftPosition(1);
@@ -206,7 +208,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// check if provided EM torque (drivetrain) is valid)
 				if ((!avgDtSpeed.IsEqual(DataBus.HybridControllerInfo.ElectricMotorSpeed(Position) / ModelData.RatioADC) ||
 															!dt.IsEqual(DataBus.HybridControllerInfo.SimulationInterval))) {
-					return new ResponseInvalidOperatingPoint(this);
+					return new ResponseInvalidOperatingPoint(this) {
+						ElectricMotor = {
+							MaxDriveTorque = maxDriveTorqueDt,
+							MaxRecuperationTorque = maxRecuperationTorqueDt,
+							AngularVelocity = avgDtSpeed, // avgemspeed??
+							AvgDrivetrainSpeed = avgDtSpeed,
+							PowerRequest = outTorque * avgDtSpeed,
+							DeRatingActive = DeRatingActive,
+						}
+					};
 				}
 				throw new VectoException(
 					"Invalid operating point provided by strategy! EM Torque: {0}, max Drive Torque: {1}, min Recup Torque: {2}",
@@ -225,7 +236,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								MaxRecuperationTorque = maxRecuperationTorqueDt,
 								AngularVelocity = avgDtSpeed, // avgemspeed??
 								AvgDrivetrainSpeed = avgDtSpeed,
-								PowerRequest = outTorque * avgDtSpeed
+								PowerRequest = outTorque * avgDtSpeed,
+								DeRatingActive = DeRatingActive
 							}
 						};
 					}
@@ -286,7 +298,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//}
 			if (NextComponent != null && !dryRun && !DataBus.IsTestPowertrain && !emOff && !(electricSupplyResponse is ElectricSystemResponseSuccess)) {
 				if ( !avgEmSpeed.IsEqual(DataBus.HybridControllerInfo.ElectricMotorSpeed(Position) / ModelData.RatioADC)) {
-					return new ResponseInvalidOperatingPoint(this);
+					return new ResponseInvalidOperatingPoint(this) {
+						ElectricMotor = {
+							MaxDriveTorque = maxDriveTorqueDt,
+							MaxRecuperationTorque = maxRecuperationTorqueDt,
+							AngularVelocity = avgDtSpeed, // avgemspeed??
+							AvgDrivetrainSpeed = avgDtSpeed,
+							PowerRequest = outTorque * avgDtSpeed,
+							DeRatingActive = DeRatingActive,
+						}
+							};
 				}
 				throw new VectoException(
 					"Invalid operating point provided by strategy! EM Torque: {0}, req. electric Power: {1}, battery demand motor: {3}, max Power from Battery: {2}",
@@ -536,6 +557,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			if (ModelData.Overload.OverloadBuffer.Value() != 0) { // mk2021-08-03 overloadbuffer was 0 in Test Case: "ADASTestPEV.TestPCCEngineeringSampleCases G5Eng PCC12 Case A"
 				container[ModalResultField.ElectricMotor_OvlBuffer_, Position] = VectoMath.Max(0, (ThermalBuffer + contribution) / ModelData.Overload.OverloadBuffer);
+			} else {
+				container[ModalResultField.ElectricMotor_OvlBuffer_, Position] = 0.SI<Scalar>();
 			}
 				
 			if (NextComponent == null && BusAux != null) {
@@ -595,10 +618,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region Implementation of IUpdateable
 
-		public bool UpdateFrom(object other) {
+		protected override bool DoUpdateFrom(object other) {
 			if (other is ElectricMotor e && Position == e.Position) {
 				ThermalBuffer = e.ThermalBuffer;
 				DeRatingActive = e.DeRatingActive;
+				PreviousState = e.PreviousState.Clone();
+				//CurrentState = e.CurrentState.Clone();
 				return true;
 			}
 

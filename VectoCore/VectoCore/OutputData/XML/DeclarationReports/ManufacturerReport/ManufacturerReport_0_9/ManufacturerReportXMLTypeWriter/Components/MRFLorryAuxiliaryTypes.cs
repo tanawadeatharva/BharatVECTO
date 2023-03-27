@@ -21,10 +21,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			var pneumaticSystemData = auxData.Auxiliaries.Single(aux => aux.Type == AuxiliaryType.PneumaticSystem);
 
 			return new XElement(_mrf + XMLNames.Component_Auxiliaries,
-				new XElement(_mrf + "CoolingFanTechnology",
-					string.Join("\n", fanData.Technology)),
-				new XElement(_mrf + "SteeringPumpTechnology", string.Join("\n", steeringPumpData.Technology)),
-				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem, new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, string.Join("\n", pneumaticSystemData.Technology))),
+				new XElement(_mrf + "CoolingFanTechnology", fanData.Technology.Single()),
+				steeringPumpData.Technology.Select(x => new XElement(_mrf + "SteeringPumpTechnology", x)),
+				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem, new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, pneumaticSystemData.Technology.Single())),
 				new XElement(_mrf + XMLNames.BusAux_ElectricSystem, new XElement(_mrf + "LEDHeadLights", electricSystemData.Technology.Contains("Standard technology - LED headlights, all"))));
 		}
 	}
@@ -50,8 +49,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			var pneumaticSystemData = auxData.Auxiliaries.Single(aux => aux.Type == AuxiliaryType.PneumaticSystem);
 
 			return new XElement(_mrf + XMLNames.Component_Auxiliaries,
-				new XElement(_mrf + "SteeringPumpTechnology", string.Join("\n", steeringPumpData.Technology)),
-				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem, new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, string.Join("\n", pneumaticSystemData.Technology))),
+				steeringPumpData.Technology.Select(x => new XElement(_mrf + "SteeringPumpTechnology", x)),
+				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem, new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, pneumaticSystemData.Technology.Single())),
 				new XElement(_mrf + XMLNames.BusAux_ElectricSystem, new XElement(_mrf + "LEDHeadLights", electricSystemData.Technology.Contains("Standard technology - LED headlights, all"))));
 		}
 

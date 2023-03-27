@@ -83,5 +83,9 @@ namespace TUGraz.VectoCore.Models.Simulation
 		IEnumerable<ISimulationPreprocessor> GetPreprocessingRuns { get; }
 		ISumData SumData { get; }
 		void AddPreprocessor(ISimulationPreprocessor simulationPreprocessor);
+		void ResetComponents();
+		void FinishSingleSimulationRun(Exception e = null);
+
+		IReadOnlyList<VectoSimulationComponent> Components { get; }
 	}
 }

@@ -128,8 +128,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public Watt MaxNetPower1 => null;
 
-		public Watt MaxNetPower2 => null;
-
 		public string ExemptedTechnology { get; }
 
 		public virtual RegistrationClass? RegisteredClass => RegistrationClass.unknown;

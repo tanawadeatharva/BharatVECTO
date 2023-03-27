@@ -8,8 +8,11 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
@@ -27,11 +30,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 
 		protected readonly IManufacturerReportFactory _mRFReportFactory;
+		protected readonly IResultsWriterFactory _resultFactory;
 
 		protected bool _ovc = false;
 
-		protected XElement Results { get; set; }
 		protected XElement Vehicle { get; set; }
+
+		protected IVehicleDeclarationInputData Input { get; set; }
+		protected IResultsWriter Results { get; set; }
 
 		protected XElement InputDataIntegrity { get; set; }
 
@@ -39,14 +45,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public abstract string OutputDataType { get; } //also used as name for the mockup result element
 
-		protected AbstractManufacturerReport(IManufacturerReportFactory MRFReportFactory)
+		protected AbstractManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory)
 		{
 			_mRFReportFactory = MRFReportFactory;
-
-			// TODO MQ: write dummy result element for testcases (2022-07-13), remove once result writing is implemented
-			Results = new XElement(Mrf_0_9 + "Results",
-				new XElement(Mrf_0_9 + "Status", "success"),
-				new XElement(Mrf_0_9 + "ExemptedVehicle"));
+			_resultFactory = resultFactory;
 		}
 
 		#region Implementation of IXMLManufacturerReport
@@ -55,21 +57,40 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public virtual void Initialize(VectoRunData modelData)
 		{
+			if (modelData.VehicleData.VehicleClass.IsBus())
+			{
+				switch (modelData.InputData) {
+					case ISingleBusInputDataProvider single:
+						Input = single.PrimaryVehicle;
+						break;
+					case IMultistepBusInputDataProvider multistep:
+						Input = multistep.JobInputData.PrimaryVehicle.Vehicle;
+						break;
+					case IDeclarationInputDataProvider declaration:
+						Input = declaration.JobInputData.Vehicle;
+						break;
+				}
+			}
+			else
+			{
+				Input = modelData.InputData.JobInputData.Vehicle;
+			}
 			InitializeVehicleData(modelData.InputData);
 			_ovc = modelData.VehicleData.OffVehicleCharging;
 			
-			//Results = new XElement(Mrf_0_9 + XMLNames.Report_Results);
+			Results = _resultFactory.GetMRFResultsWriter(modelData.VehicleData.VehicleCategory.GetVehicleType(),
+				modelData.JobType, modelData.VehicleData.OffVehicleCharging, modelData.Exempted);
 			InputDataIntegrity = new XElement(Mrf_0_9 + XMLNames.Report_InputDataSignature,
 				modelData.InputData.XMLHash == null ? XMLHelper.CreateDummySig(_di) : new XElement(modelData.InputData.XMLHash));
 		}
 
 		public XDocument Report { get; protected set; }
 
-		private List<XMLDeclarationReport.ResultEntry> results = new List<XMLDeclarationReport.ResultEntry>();
+		private List<IResultEntry> results = new List<IResultEntry>();
 
-		public void WriteResult(XMLDeclarationReport.ResultEntry resultValue)
+		public void WriteResult(IResultEntry resultValue)
 		{
-			
+			results.Add(resultValue);
 
 		}
 
@@ -91,6 +112,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				)
 			);
 
+			//var lh = results.SingleOrDefault(res => res.Mission == MissionType.LongHaul && res.LoadingType == LoadingType.ReferenceLoad);
+			
+			Vehicle.XPathSelectElement($"//*[local-name()='{XMLNames.VehicleGroupCO2}']").Value = DeclarationData
+				.GetVehicleGroupCO2StandardsGroup(Input).ToXMLFormat();
+
 			var stream = new MemoryStream();
 			var writer = new StreamWriter(stream);
 			writer.Write(retVal);
@@ -105,7 +131,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new[] {
 				Vehicle,
 				InputDataIntegrity,
-				Results,
+				Results.GenerateResults(results),
 				XMLHelper.GetApplicationInfo(Mrf_0_9)
 			};
 		}

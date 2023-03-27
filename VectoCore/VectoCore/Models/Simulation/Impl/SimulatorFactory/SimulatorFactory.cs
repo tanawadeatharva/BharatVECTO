@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 		private static object _kernelLock = new object();
 		private static IKernel _kernel; //Kernel is only used when the SimulatorFactory is created with the Factory Method.
-
+        
 		protected IFollowUpSimulatorFactoryCreator _followUpSimulatorFactoryCreator = null;
 
 		protected bool _simulate = true;
@@ -82,8 +82,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		public bool CreateFollowUpSimulatorFactory { get; set; } = false;
 		protected readonly ExecutionMode _mode;
 
-
-#region Constructors and Factory Methods to instantiate Instances of SimulatorFactory without NInject (should only be used in Testcases that are not updated yet)
+		#region Constructors and Factory Methods to instantiate Instances of SimulatorFactory without NInject (should only be used in Testcases that are not updated yet)
 
 		[Obsolete("Creation of new SimulatorFactories should be done with SimulatorFactoryFactory NInject Factory", false)]
 		public static ISimulatorFactory CreateSimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer, IDeclarationReport declarationReport = null, IVTPReport vtpReport=null, bool validate = true)
@@ -139,6 +138,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 		public bool SerializeVectoRunData { get; set; }
 
+
+		/// <summary>
+		/// Only for testing purposes
+		/// </summary>
+		public Action<VectoRunData> ModifyRunData { get; set; }
+
+
 		/// <summary>
 		/// Creates powertrain and initializes it with the component's data.
 		/// </summary>
@@ -153,9 +159,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			}
 			foreach (var data in RunDataFactory.NextRun()) {
 				var current = i++;
-				var d = data;
 				data.JobRunId = current;
-				yield return (data.Exempted || data.MultistageRun) ? GetExemptedRun(data) : GetNonExemptedRun(data, current, d, ref warning1Hz, ref firstRun);
+
+
+
+				if (ModifyRunData != null) {
+					ModifyRunData(data);
+
+				}
+
+
+				yield return (data.Exempted || data.MultistageRun) ? GetExemptedRun(data) : GetNonExemptedRun(data, current, ref warning1Hz, ref firstRun);
 			}
 		}
 
@@ -163,16 +177,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		protected virtual IVectoRun GetExemptedRun(VectoRunData data)
 		{
 			if (data.Report != null) {
-				data.Report.PrepareResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data);
+				data.Report.PrepareResult(data);
 			}
 			return new ExemptedRun(new ExemptedRunContainer(data.ExecutionMode) { RunData = data }, modData => {
 				if (data.Report != null) {
-					data.Report.AddResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data, modData);
+					data.Report.AddResult(data, modData);
 				}
 			});
 		}
 
-		protected virtual IVectoRun GetNonExemptedRun(VectoRunData data, int current, VectoRunData d, ref bool warning1Hz, ref bool firstRun)
+		protected virtual IVectoRun GetNonExemptedRun(VectoRunData data, int current, ref bool warning1Hz, ref bool firstRun)
 		{
 			var addReportResult = PrepareReport(data);
 			if (!data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz && !warning1Hz) {
@@ -185,7 +199,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 					data, ReportWriter,
 					(_mode == ExecutionMode.Declaration) ? addReportResult : null,
 					GetModDataFilter(data)) {
-					WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults,
+						WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults,
 				};
 
 
@@ -196,7 +210,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 						(ReportWriter as FileOutputWriter)?.BasePath ?? "", $"{data.JobName}_{data.Cycle.Name}{data.ModFileSuffix}.json"),
 					JsonConvert.SerializeObject(data, Formatting.Indented));
 			}
-
 			data.JobNumber = JobNumber;
 			data.RunNumber = current;
 			var run = GetVectoRun(data, modContainer, SumData);
@@ -234,16 +247,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 										$"{validationErrors.Select(r => r.ErrorMessage + r.MemberNames.Join("; ")).Join("\n")}");
 			}
 		}
-
+		
 		private static VectoRun GetVectoRun(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
 		{
 			VectoRun run;
+			
 			switch (data.Cycle.CycleType) {
 				case CycleType.DistanceBased:
 					if ((data.SimulationType & SimulationType.DistanceCycle) == 0) {
 						throw new VectoException("Distance-based cycle can not be simulated in {0} mode", data.SimulationType);
 					}
-					run = new DistanceRun(PowertrainBuilder.Build(data, modData, sumWriter));
+
+					var container = PowertrainBuilder.Build(data, modData, sumWriter);
+					
+					run = new DistanceRun(container, new FollowUpRunCreator(data.IterativeRunStrategy)); 
 					break;
 				case CycleType.EngineOnly:
 					if ((data.SimulationType & SimulationType.EngineOnly) == 0) {
@@ -277,11 +294,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		protected static Action<ModalDataContainer> PrepareReport(VectoRunData data)
 		{
 			if (data.Report != null) {
-				data.Report.PrepareResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data);
+				data.Report.PrepareResult(data);
 			}
 			Action<ModalDataContainer> addReportResult = modData => {
 				if (data.Report != null) {
-					data.Report.AddResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data, modData);
+					data.Report.AddResult(data, modData);
 				}
 			};
 			

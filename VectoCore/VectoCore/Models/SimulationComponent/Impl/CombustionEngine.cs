@@ -494,7 +494,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			
 			var (pWHRelMap, pWHRelCorr) =  GetWHRPower(ModelData.ElectricalWHR, engineSpeed, engineTorque);
 			var (pWHRmechMap, pWHRmechCorr) = GetWHRPower(ModelData.MechanicalWHR, engineSpeed, engineTorque);
-			
+
+			if (DataBus.BatteryInfo != null && Math.Abs(DataBus.BatteryInfo.StateOfCharge - DataBus.BatteryInfo.MaxSoC) < 0.01) {
+				// we are close to the max charge - 'bypass' electric WHR...
+				pWHRelCorr = 0.SI<Watt>();
+			}
+
 			container[ModalResultField.P_WHR_el_map] = pWHRelMap;
 			container[ModalResultField.P_WHR_el_corr] = pWHRelCorr;
 
@@ -540,6 +545,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
+		protected override bool DoUpdateFrom(object other) => false;
+
 		#endregion
 
 		/// <summary>
@@ -568,7 +575,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var tStar = tStarPrev + PreviousState.dt;
 					dynFullPowerCalculated = stationaryFullLoadPower * (pt1.IsEqual(0) ? 1 : 1 - Math.Exp((-tStar / pt1).Value()));
 				} catch (VectoException e) {
-					Log.Warn("PT1 calculation failed (dryRun: {0}): {1}", dryRun, e.Message);
+					if (dryRun) {
+						Log.Info("PT1 calculation failed (dryRun: {0}): {1}", dryRun, e.Message);
+					} else {
+						Log.Warn("PT1 calculation failed (dryRun: {0}): {1}", dryRun, e.Message);
+					}
+
 					if (dryRun) {
 						dynFullPowerCalculated = stationaryFullLoadPower;
 					} else {

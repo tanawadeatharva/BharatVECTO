@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 					new XElement(tns + XMLNames.Vehicle_CurbMassChassis, XMLHelper.ValueAsUnit(modelData.VehicleData.CurbMass, XMLNames.Unit_kg)),
 					new XElement(tns + XMLNames.TPMLM,
 								XMLHelper.ValueAsUnit(modelData.VehicleData.GrossVehicleMass, XMLNames.Unit_t, 2)),
-					new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.ZeroEmissionVehicle),
+					//new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.ZeroEmissionVehicle),
 					new XElement(tns + XMLNames.Vehicle_ZeroEmissionVehicle, modelData.VehicleData.ZeroEmissionVehicle),
 					new XElement(tns + XMLNames.Vehicle_HybridElectricHDV, modelData.VehicleData.HybridElectricHDV),
 					new XElement(tns + XMLNames.Vehicle_DualFuelVehicle, modelData.VehicleData.DualFuelVehicle),
@@ -195,7 +195,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 			);
 		}
 
-		protected override XElement GetSimulationParameters(XMLDeclarationReport.ResultEntry result)
+		protected override XElement GetSimulationParameters(IResultEntry result)
 		{
 			return new XElement(
 				tns + "SimulationParametersCompletedVehicle",
@@ -397,7 +397,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 		
 		#endregion
 
-		public override void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
+		public override void WriteResult(IResultEntry resultEntry)
 		{
 			throw new NotSupportedException();
 		}

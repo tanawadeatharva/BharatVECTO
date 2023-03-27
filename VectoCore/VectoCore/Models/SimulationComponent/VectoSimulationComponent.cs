@@ -30,6 +30,7 @@
 */
 
 using System;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
@@ -38,10 +39,15 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
+	public interface IResetableVectoSimulationComponent
+	{
+		void Reset(IVehicleContainer vehicleContainer);
+	}
+
 	/// <summary>
 	/// Base class for all vecto simulation components.
 	/// </summary>
-	public abstract class VectoSimulationComponent : LoggingObject
+	public abstract class VectoSimulationComponent : LoggingObject, IUpdateable
 	{
 		[NonSerialized] protected IDataBus DataBus;
 
@@ -78,7 +84,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// <param name="time"></param>
 		/// <param name="simulationInterval"></param>
 		protected abstract void DoCommitSimulationStep(Second time, Second simulationInterval);
+
+		public virtual bool UpdateFrom(object other)
+		{
+			if (!DataBus.IsTestPowertrain) {
+				throw new VectoException("Only components in a testpowertrain are allowed to be updated!");
+			}
+
+			return DoUpdateFrom(other);
+		}
+
+		protected abstract bool DoUpdateFrom(object other);
+
 	}
+
+
 
 	public abstract class StatefulVectoSimulationComponent<TStateType> : VectoSimulationComponent where TStateType : new()
 	{

@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			ModalResultField.TorqueConverterTorqueRatio
 		};
 
-		// ------------------------------------------------------------------------------------
+		// ------------------------------------------------------------------------------------t
 		public static readonly ModalResultField[] RetarderSignals = {
 			ModalResultField.P_retarder_in,
 			ModalResultField.P_ret_loss
@@ -318,7 +318,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public static readonly ModalResultField[] HybridControllerSignals = {
 			ModalResultField.HybridStrategyScore,
 			ModalResultField.HybridStrategySolution,
-			ModalResultField.MaxPropulsionTorqe
+			ModalResultField.MaxPropulsionTorqe,
+			ModalResultField.HybridStrategyState,
 		};
 
 		// ------------------------------------------------------------------------------------
@@ -442,7 +443,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				var entry = BatteryColumns.GetOrAdd(idx, _ => new Dictionary<ModalResultField, DataColumn>());
 				foreach (var key in BatterySignals) {
 					entry.GetOrAdd(key, _ => {
-						var c = Columns.Add($"{key.GetName()}_{idx}", typeof(SI));
+						var c = Columns.Add($"{key.GetName()}_{idx}", 
+							typeof(SI));
+						c.Caption = key.GetCaption("_" + idx.ToString());
 						c.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] = key.GetAttribute().Decimals;
 						c.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
 							key.GetAttribute().OutputFactor;
@@ -502,6 +505,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 					Columns.Add(col);
 				}
 			}
+		}
+
+		public void Reset()
+		{
+			FuelColumns.Clear();
+			ElectricMotors.Clear();
+			BatteryColumns.Clear();
 		}
 	}
 }

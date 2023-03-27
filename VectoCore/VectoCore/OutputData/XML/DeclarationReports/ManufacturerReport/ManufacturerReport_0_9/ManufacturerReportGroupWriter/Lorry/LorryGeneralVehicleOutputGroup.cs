@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Utils;
 
@@ -18,6 +19,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
 			var vehicle = inputData.JobInputData.Vehicle;
+			var vehicleGoup = DeclarationData.GetVehicleGroupGroup(vehicle);
 			var elements = new List<XElement>();
             elements.AddRange(new List<XElement>() {
                 new XElement(_mrf + XMLNames.Component_Manufacturer, vehicle.Manufacturer),
@@ -27,7 +29,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
             elements.AddRange(new List<XElement>() {
 				// new XElement(mrf + "CO2StandardGroup", vehicle.) //CO2 Standardgroup
 				new XElement(_mrf + XMLNames.CorrectedActualMass, vehicle.CurbMassChassis.ToXMLFormat(0)),
-                new XElement(_mrf + XMLNames.Vehicle_VocationalVehicle, vehicle.VocationalVehicle),
+                new XElement(_mrf + XMLNames.Vehicle_VocationalVehicle, vehicleGoup.Item2),
                 new XElement(_mrf + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle),
                 new XElement(_mrf + XMLNames.Vehicle_HybridElectricHDV, vehicle.HybridElectricHDV),
             });

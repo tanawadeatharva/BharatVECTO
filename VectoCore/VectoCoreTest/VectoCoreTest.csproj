@@ -4,15 +4,24 @@
     <AssemblyName>VectoCoreTest</AssemblyName>
     <TargetFrameworks>net6.0</TargetFrameworks>
     <DefineConstants />
+	<!--uncomment to add windows forms an enable plotting of diagrams in some testcases-->
+	<!--<DefineConstants>$(DefineConstants);TRACE</DefineConstants>-->
+	<!--<UseWindowsForms>true</UseWindowsForms>-->
     <Configurations>Debug;Release;MockupDebug</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net6.0|AnyCPU'">
     <DebugType>full</DebugType>
   </PropertyGroup>
+	<!--uncomment to add windows forms an enable plotting of diagrams in some testcases-->
+	<PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA; $(DefineConstants), '^(.*;)*TRACE(;.*)*$'))">
+		<TargetFrameworks>net6.0-windows</TargetFrameworks>
+		<UseWindowsForms>true</UseWindowsForms>
+	</PropertyGroup>
 	<PropertyGroup Condition="('$(Configuration)' == 'MockupRelease') Or ('$(Configuration)' == 'MockupDebug')">
 		<DefineConstants>$(DefineConstants);MOCKUP</DefineConstants>
 	</PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="HIC.System.Windows.Forms.DataVisualization" Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA; $(DefineConstants), '^(.*;)*TRACE(;.*)*$'))" Version="1.0.1" />
     <PackageReference Include="Moq" Version="4.18.2" />
     <PackageReference Include="NUnit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
@@ -33,19 +42,27 @@
   </ItemGroup>
 
 	<ItemGroup>
-    <None Update="TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b.vecto">
+		<None Update="TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b.vecto">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+  <ItemGroup>
+    <None Update="TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\HeavyLorry\Group5_HEV_P3_ovc.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\HeavyLorry\HEV_heavy_lorry_S4_ovc.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\Integration\DeclarationMode\V24_DeclarationMode\HeavyLorry\PEV_heavyLorry_AMT_E2_realistic.xml">
+    <None Update="TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\HeavyLorry\PEV_heavyLorry_AMT_E2_realistic.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\Integration\DeclarationMode\V24_DeclarationMode\HeavyLorry\PEV_heavyLorry_E3_realistic.xml">
+    <None Update="TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\HeavyLorry\PEV_heavyLorry_E3_realistic.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\Integration\DeclarationMode\V24_DeclarationMode\HeavyLorry\PEV_heavyLorry_E3_realistic_municipal.xml">
+    <None Update="TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\HeavyLorry\PEV_heavyLorry_E3_realistic_municipal.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\Integration\DeclarationMode\V24_DeclarationMode\HeavyLorry\PEV_heavyLorry_E3_realistic_TorqueLimits.xml">
+    <None Update="TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\HeavyLorry\PEV_heavyLorry_E3_realistic_TorqueLimits.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\HEV-S_heavyLorry_S3_ovc.xml">
@@ -59,17 +76,21 @@
   <ItemGroup>
     <Folder Include="InputData\DeclarationDataAdapterTest\" />
     <Folder Include="Models\Declaration\BusAux\" />
-    <Folder Include="Integration\Declaration\HeavyLorry\" />
+    <Folder Include="TestUtils\" />
   </ItemGroup>
-	<Choose>
+
+  <ItemGroup>
+    <Folder Include="TestData\XML\XMLVIFBusReport\" />
+  </ItemGroup>
+	<!--<Choose>
 		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
 			<ItemGroup>
 				<ProjectReference Include="$(SolutionDir)\VectoMockup\VectoMockup\VectoMockup.csproj" />
 
 			</ItemGroup>
-			<!--<PropertyGroup>
+			--><!--<PropertyGroup>
 				<DefineConstants>MOCKUP</DefineConstants>
-			</PropertyGroup>-->
+			</PropertyGroup>--><!--
 		</When>
-	</Choose>
+	</Choose>-->
 </Project>

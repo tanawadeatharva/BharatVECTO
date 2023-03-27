@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Linq;
-using System.Data.Common;
-using System.Diagnostics;
-using System.Threading;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.CIFWriter;
+using TUGraz.VectoCommon.Utils;
+
 
 namespace TUGraz.VectoCore.Utils.Ninject
 {
@@ -24,6 +21,7 @@ namespace TUGraz.VectoCore.Utils.Ninject
 
 	public class VehicleTypeAndArchitectureStringHelperReport : IVehicleTypeAndArchitectureStringHelperReport
 	{
+		
 		public  CombineArgumentsToNameInstanceProvider.CombineToName CreateName { get; } = (arguments => {
 
 			//may be called with first argument of type string (when defining the bindings) or VehicleCategory when using the factory
@@ -36,11 +34,17 @@ namespace TUGraz.VectoCore.Utils.Ninject
 			
 			VectoSimulationJobType jobType = (VectoSimulationJobType)arguments[1];
 			ArchitectureID archId = (ArchitectureID)arguments[2];
+			if (jobType == VectoSimulationJobType.ParallelHybridVehicle){
+				archId = ArchitectureID.P1; //same report for all p-hevs
+			}
+
 			bool exempted = (bool)arguments[3];
 			bool iepc = (bool)arguments[4];
 			bool ihpc = (bool)arguments[5];
-
-
+			var classification =
+				new VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification(jobType, archId, vehicleType,
+					exempted, iepc, ihpc);
+			return classification.ToString();
 
 			string result = "";
 			if (exempted) {
@@ -127,56 +131,28 @@ namespace TUGraz.VectoCore.Utils.Ninject
 		#endregion
 		public struct VehicleClassification
 		{
+			private const string _singlebus = "SingleBus";
+
 			private readonly VectoSimulationJobType _jobType;
-
-			private VectoSimulationJobType JobType
-			{
-				get
-				{
-					if (Exempted) {
-						return VectoSimulationJobType.ConventionalVehicle; //ignored for exempted vehicles
-					}
-					return _jobType;
-				}
-			}
-
+			private readonly bool _exempted;
 			private readonly ArchitectureID _archId;
-
-			private ArchitectureID ArchId
-			{
-				get
-				{
-					if (Exempted) {
-						return ArchitectureID.UNKNOWN; //ignored for exempted vehicles
-                    }
-					return _archId;
-				}
-			}
-
 			private readonly string _vehicleType;
+			private readonly bool _iepc;
+			private readonly bool _ihpc;
+			private readonly bool _isSingleBus;
 
+			private VectoSimulationJobType JobType => Exempted ? VectoSimulationJobType.ConventionalVehicle : _jobType; //ignored for exempted vehicles
+
+			private ArchitectureID ArchId => Exempted ? ArchitectureID.UNKNOWN : _archId;//ignored for exempted vehicles
+			
 			private string VehicleType => _vehicleType;
 
-			private readonly bool _exempted;
-
-			private bool Exempted
-			{
-				get
-				{
-					return _exempted;
-				}
-			}
-
-			private readonly bool _iepc;
+			private bool Exempted => _exempted;
 
 			private bool Iepc => _iepc;
 
-			private readonly bool _ihpc;
-
 			private bool Ihpc => _ihpc;
 
-			private readonly bool _isSingleBus;
-			private const string _singlebus = "SingleBus";
 			private bool IsSingleBus => _isSingleBus;
 
 			public VehicleClassification(VectoSimulationJobType jobType, ArchitectureID archId, string vehicleType, bool exempted, bool iepc, bool ihpc, bool singleBus = false)
@@ -259,6 +235,93 @@ namespace TUGraz.VectoCore.Utils.Ninject
 			}
 
 			#endregion
+		}
+
+	}
+
+	public class VehicleTypeAndArchitectureStringHelperResults
+	{
+		public CombineArgumentsToNameInstanceProvider.CombineToName CreateName { get; } = arguments => {
+			if (arguments[0] is ResultsVehicleClassification classification) {
+				return GetName(classification);
+			} else {
+				throw new ArgumentException($"{nameof(arguments)}[0] must be of type {typeof(ResultsVehicleClassification)}");
+			}
+		};
+
+		private static string GetName(ResultsVehicleClassification classification)
+		{
+			return classification.GetHashCode().ToString();
+		}
+
+		public string GetName(XmlDocumentType type, string vehicleCategory, string jobType, bool ovc,
+			bool exempted = false)
+		{
+			return GetName(new ResultsVehicleClassification(type, vehicleCategory, jobType, ovc, exempted));
+		}
+
+		public string GetName(XmlDocumentType type, string vehicleType, bool exempted)
+		{
+			return GetName(type, vehicleType, VectoSimulationJobTypeHelper.Conventional, false, exempted: exempted);
+		}
+
+		public struct ResultsVehicleClassification
+		{
+			private readonly string _vehicleCategory;
+			private readonly string _powertrainCategory;
+			private readonly bool _ovc;
+			private readonly bool _exempted;
+
+			public ResultsVehicleClassification(XmlDocumentType type, string vehicleCategory, string powertrainCategory, bool ovc, bool exempted)
+			{
+				_vehicleCategory = vehicleCategory;
+				_powertrainCategory = powertrainCategory;
+				_ovc = ovc;
+				_exempted = exempted;
+				DocumentType = type;
+			}
+
+			public XmlDocumentType DocumentType { get; }
+
+			public bool Exempted => _exempted;
+			public string JobType => Exempted ? VectoSimulationJobTypeHelper.Conventional : _powertrainCategory;
+
+			public string VehicleCategory => _vehicleCategory;
+			public bool OVC => Exempted ? false : _ovc;
+
+			#region Overrides of ValueType
+
+			public override bool Equals(object obj)
+			{
+				return obj is ResultsVehicleClassification other && Equals(other);
+			}
+
+			public bool Equals(ResultsVehicleClassification other)
+			{
+				return VehicleCategory == other.VehicleCategory 
+					&& JobType == other.JobType
+					&& OVC == other.OVC
+					&& Exempted == other.Exempted;
+			}
+
+			public override int GetHashCode()
+			{
+				unchecked {
+					var hashCode = (VehicleCategory != null ? VehicleCategory.GetHashCode() : 0);
+					hashCode = (hashCode * 397) ^ (JobType != null ? JobType.GetHashCode() : 0);
+					hashCode = (hashCode * 397) ^ OVC.GetHashCode();
+					hashCode = (hashCode * 397) ^ Exempted.GetHashCode();
+					hashCode = (hashCode * 397) ^ DocumentType.GetHashCode();
+					return hashCode;
+				}
+			}
+
+			#endregion
+
+			public override string ToString()
+			{
+				return string.Join("|", VehicleCategory, JobType, OVC ? "OVC" : "Non-OVC", Exempted ? "Exempted" : "Non Exempted");
+			}
 		}
 	}
 }

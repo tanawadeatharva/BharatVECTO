@@ -85,7 +85,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			ReadDeclarationJob(jobFile);
 		}
 
-		[TestCase(@"SchemaVersion2.1\vecto_vehicle-exempted-sample.xml")]
+		[TestCase(@"SchemaVersion2.1\vecto_vehicle-exempted-sample.xml"),
+		Ignore("ExemptedVehicles XML Version 1.0 no longer supported")]
 		public void TestReadingJobVersion_V21_Exempted(string jobFile)
 		{
 			ReadDeclarationJob(jobFile);
@@ -99,6 +100,12 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		[TestCase(@"SchemaVersion2.1\vecto_vehicle-components_2.0.xml")]
 		public void TestReadingJobVersion_V21_ComponentsV20(string jobFile)
+		{
+			ReadDeclarationJob(jobFile);
+		}
+
+		[TestCase(@"SchemaVersion2.1\vecto_vehicle-tyre25.xml")]
+		public void TestReadingJobVersion_V21_Tyre25(string jobFile)
 		{
 			ReadDeclarationJob(jobFile);
 		}
@@ -147,7 +154,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			xml.Load(writer.XMLCustomerReportName);
 			var volumeResults =
 				xml.SelectNodes(
-					".//*[local-name()='Result']/*[local-name()='Fuel']/*[local-name()='FuelConsumption' and @unit='l/m³-km']");
+					".//*[local-name()='Result']/*[local-name()='Total']/*[local-name()='Fuel']/*[local-name()='FuelConsumption' and @unit='l/m³-km']");
 			Assert.IsTrue(volumeResults.Count > 0);
 		}
 

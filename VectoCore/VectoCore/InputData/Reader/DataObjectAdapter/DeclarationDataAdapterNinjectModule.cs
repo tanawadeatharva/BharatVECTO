@@ -53,6 +53,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			Bind<ILorryDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.HEV_P4>()
 				.WhenInjectedExactlyInto<DeclarationModeHeavyLorryRunDataFactory.HEV_P4>();
 
+			Bind<ILorryDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.HEV_P2>()
+				.WhenInjectedExactlyInto<DeclarationModeHeavyLorryRunDataFactory.HEV_P_IHPC>();
+
 			Bind<ILorryDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.PEV_E2>()
 				.WhenInjectedExactlyInto<DeclarationModeHeavyLorryRunDataFactory.PEV_E2>();
 

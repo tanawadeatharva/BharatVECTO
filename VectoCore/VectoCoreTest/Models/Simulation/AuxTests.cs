@@ -51,6 +51,7 @@ using TUGraz.VectoCore.Tests.Models.SimulationComponent;
 using TUGraz.VectoCore.Tests.Utils;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
@@ -72,8 +73,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 		[TestCase]
 		public void AuxWriteModFileSumFile()
-
 		{
+			var hdvClass = VehicleClass.Class5;
+			var mission = MissionType.LongHaul;
+
 			var fileWriter = new FileOutputWriter("AuxWriteModFileSumFile");
 			var runData = new VectoRunData() {
 				JobName = "AuxWriteModFileSumFile",
@@ -94,18 +97,41 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				},
 				DriverData = new DriverData() {
 					EngineStopStart = new DriverData.EngineStopStartData(),
+				},
+				Aux = new List<VectoRunData.AuxData>() {
+					new() {
+						ID = Constants.Auxiliaries.IDs.Fan,
+						Technology = new[] {"Hydraulic driven - Constant displacement pump"}.ToList(),
+						PowerDemandMech = DeclarationData.Fan.LookupPowerDemand(hdvClass,MissionType.LongHaul, "Hydraulic driven - Constant displacement pump")
+					},
+					new() {
+						ID= Constants.Auxiliaries.IDs.PneumaticSystem,
+						Technology = new[] {"Medium Supply 1-stage"}.ToList(),
+						PowerDemandMech = DeclarationData.PneumaticSystem.Lookup(mission, "Medium Supply 1-stage").PowerDemand
+					},
+					new() {
+						ID = Constants.Auxiliaries.IDs.SteeringPump,
+						Technology = new[] {"Variable displacement mech. controlled"}.ToList(),
+						PowerDemandMech = DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, hdvClass,
+							new[] { "Variable displacement mech. controlled" }).mechanicalPumps
+					},
+					new() {
+						ID = Constants.Auxiliaries.IDs.ElectricSystem,
+						Technology = new[] {"Hydraulic driven - Constant displacement pump"}.ToList(),
+						PowerDemandMech = DeclarationData.ElectricSystem.Lookup(hdvClass, mission).PowerDemand
+					},
+					new() {
+						ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition,
+						Technology = new[] {"Default"}.ToList(),
+						PowerDemandMech = DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, "Default", hdvClass).PowerDemand
+					},
 				}
         };
 			var modData = new ModalDataContainer(runData, fileWriter, null) {
 				WriteModalResults = true,
 			};
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
-			modData.AddAuxiliary("FAN");
-			modData.AddAuxiliary("PS");
-			modData.AddAuxiliary("STP");
-			modData.AddAuxiliary("ES");
-			modData.AddAuxiliary("AC");
-			//modData.Data.CreateColumns(ModalResults.DriverSignals);
+			
 			modData.Data.CreateCombustionEngineColumns(runData);
 
 			var sumWriter = new SummaryDataContainer(fileWriter);
@@ -119,18 +145,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var aux = new EngineAuxiliary(container);
 			new MockEngine(container);
 
-			var hdvClass = VehicleClass.Class5;
-			var mission = MissionType.LongHaul;
-
-			aux.AddConstant("FAN",
-				DeclarationData.Fan.LookupPowerDemand(hdvClass,MissionType.LongHaul, "Hydraulic driven - Constant displacement pump"));
-			aux.AddConstant("PS", DeclarationData.PneumaticSystem.Lookup(mission, "Medium Supply 1-stage").PowerDemand);
-			aux.AddConstant("STP",
-				DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, hdvClass,
-					new[] { "Variable displacement mech. controlled" }).mechanicalPumps);
-			aux.AddConstant("ES", DeclarationData.ElectricSystem.Lookup(mission).PowerDemand);
-			aux.AddConstant("AC",
-				DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, "Default", hdvClass).PowerDemand);
+			foreach (var auxData in runData.Aux) {
+				modData.AddAuxiliary(auxData.ID);
+				aux.AddConstant(auxData.ID, auxData.PowerDemandMech);
+			}
 
 			var speed = 1400.RPMtoRad();
 			var torque = 500.SI<NewtonMeter>();

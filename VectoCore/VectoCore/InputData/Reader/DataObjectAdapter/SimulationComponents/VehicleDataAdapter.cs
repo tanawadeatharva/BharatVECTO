@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				CurbMass = data.CurbMassChassis,
 				GrossVehicleMass = data.GrossVehicleMassRating,
 				AirDensity = Physics.AirDensity,
-				
+				OffVehicleCharging = data.OvcHev
 			};
 
 			return retVal;
@@ -216,7 +216,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			exempted.HybridElectricHDV = data.HybridElectricHDV;
 			exempted.DualFuelVehicle = data.DualFuelVehicle;
 			exempted.MaxNetPower1 = data.MaxNetPower1;
-			exempted.MaxNetPower2 = data.MaxNetPower2;
 			return exempted;
 		}
 	}
@@ -264,7 +263,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			exempted.HybridElectricHDV = data.HybridElectricHDV;
 			exempted.DualFuelVehicle = data.DualFuelVehicle;
 			exempted.MaxNetPower1 = data.MaxNetPower1;
-			exempted.MaxNetPower2 = data.MaxNetPower2;
 			exempted.AxleConfiguration = data.AxleConfiguration;
 			return exempted;
 		}

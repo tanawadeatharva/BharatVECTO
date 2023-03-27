@@ -46,7 +46,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			exempted.HybridElectricHDV = data.HybridElectricHDV;
 			exempted.DualFuelVehicle = data.DualFuelVehicle;// true;
 			exempted.MaxNetPower1 = data.MaxNetPower1;
-			exempted.MaxNetPower2 = data.MaxNetPower2;
 
 			return exempted;
 		}

@@ -52,7 +52,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -373,7 +373,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					LossMap = lossMap,
 				};
 
-				CreateATGearData(retVal.Type, i, gearData, tcShiftPolygon, gearDifferenceRatio, gears, vehicleCategory);
+				CreateATGearData(retVal.Type, i, gearData, tcShiftPolygon, gearDifferenceRatio, gears, vehicleCategory, runData.Cycle);
 				gears.Add(i + 1, gearData);
 			}
 
@@ -406,7 +406,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		protected virtual void CreateATGearData(
 			GearboxType gearboxType, uint i, GearData gearData,
 			ShiftPolygon tcShiftPolygon, double gearDifferenceRatio, Dictionary<uint, GearData> gears,
-			VehicleCategory vehicleCategory)
+			VehicleCategory vehicleCategory, IDrivingCycleData cycle)
 		{
 			if (gearboxType == GearboxType.ATPowerSplit && i == 0) {
 				// powersplit transmission: torque converter already contains ratio and losses
@@ -417,14 +417,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					// torqueconverter is active in first gear - duplicate ratio and lossmap for torque converter mode
 					CreateTCFirstGearATSerial(gearData, tcShiftPolygon);
 				}
-				if (i == 1 && gearDifferenceRatio >= DeclarationData.Gearbox.TorqueConverterSecondGearThreshold(vehicleCategory)) {
-					// ratio between first and second gear is above threshold, torqueconverter is active in second gear as well
-					// -> duplicate ratio and lossmap for torque converter mode, remove locked transmission for previous gear
-					CreateTCSecondGearATSerial(gearData, tcShiftPolygon);
+				if (i == 1) {
+					if ((cycle != null) && ((cycle.CycleType == CycleType.MeasuredSpeedGear) || (cycle.CycleType == CycleType.VTP))) {
+						CreateTCSecondGearATSerial(gearData, tcShiftPolygon);
+					}	
+					else if (gearDifferenceRatio >= DeclarationData.Gearbox.TorqueConverterSecondGearThreshold(vehicleCategory)) {
+						// ratio between first and second gear is above threshold, torqueconverter is active in second gear as well
+						// -> duplicate ratio and lossmap for torque converter mode, remove locked transmission for previous gear
+						CreateTCSecondGearATSerial(gearData, tcShiftPolygon);
 
-					// NOTE: the lower gear in 'gears' dictionary has index i !!
-					gears[i].Ratio = double.NaN;
-					gears[i].LossMap = null;
+						// NOTE: the lower gear in 'gears' dictionary has index i !!
+						gears[i].Ratio = double.NaN;
+						gears[i].LossMap = null;
+					}
+				}
+				else {
+					if ((cycle != null) && ((cycle.CycleType == CycleType.MeasuredSpeedGear) || (cycle.CycleType == CycleType.VTP))) {
+						CreateTCSecondGearATSerial(gearData, tcShiftPolygon);
+					}
 				}
 			}
 		}
@@ -1190,14 +1200,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
 			foreach (var entry in iepc.VoltageLevels.OrderBy(x => x.VoltageLevel)) {
 				var effMap = new Dictionary<uint, EfficiencyMap>();
+				var fldCurve =
+					IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, gearRatioUsedForMeasurement.Ratio);
 				for (var i = 0u; i < entry.PowerMap.Count; i++) {
 					var ratio = iepc.Gears.First(x => x.GearNumber == i + 1).Ratio;
-					effMap.Add(i + 1, IEPCMapReader.Create(entry.PowerMap[(int)i].PowerMap, count, ratio));
+					effMap.Add(i + 1, IEPCMapReader.Create(entry.PowerMap[(int)i].PowerMap, count, ratio, fldCurve));
 					//fullLoadCurves.Add(i + 1, IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, ratio));
 				}
 				voltageLevels.Add(new IEPCVoltageLevelData() {
 					Voltage = entry.VoltageLevel,
-					FullLoadCurve = IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, gearRatioUsedForMeasurement.Ratio),
+					FullLoadCurve = fldCurve,
 					EfficiencyMaps = effMap,
 				});
 			}
@@ -1567,10 +1579,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 	public class IEPCGearboxInputData : IGearboxDeclarationInputData
 	{
-		protected readonly IIEPCEngineeringInputData _iepc;
+		protected readonly IIEPCDeclarationInputData _iepc;
 		private IList<ITransmissionInputData> _gears;
 
-		public IEPCGearboxInputData(IIEPCEngineeringInputData iepc)
+		public IEPCGearboxInputData(IIEPCDeclarationInputData iepc)
 		{
 			_iepc = iepc;
 		}

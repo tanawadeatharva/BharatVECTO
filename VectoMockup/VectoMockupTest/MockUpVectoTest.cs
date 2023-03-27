@@ -33,9 +33,9 @@ namespace VectoMockupTest
     public class MockUpVectoTest
 	{
 
-		private const string BasePath = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\";
+		private const string BasePath = @"TestDataMockup\SchemaVersion2.4\Distributed\";
 
-		private const string BasePathMockup = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\MockupBusTest\";
+		private const string BasePathMockup = @"TestDataMockup\SchemaVersion2.4\MockupBusTest\";
 
 		private const string XsdPath = @".. /../../../../VectoCore/VectoCore/Resources/XSD";
 
@@ -48,23 +48,40 @@ namespace VectoMockupTest
 		protected const string ConventionalHeavyLorry = BasePath + @"HeavyLorry\Conventional_heavyLorry_AMT.xml";
 		protected const string ConventionalHeavyLorry_DifferentTyres = BasePathMockup + @"HeavyLorry\Conventional_heavyLorry_AMT_DifferentTyres.xml";
 		protected const string ConventionalHeavyLorry_AT_Angledrive = BasePathMockup + @"HeavyLorry\Conventional_heavyLorry_AT_Angledrive.xml";
+		protected const string ConventionalHeavyLorry_NoRetarder = BasePathMockup + @"HeavyLorry\Conventional_heavyLorry_AMT_NoRetarder.xml";
+		protected const string ConventionalHeavyLorry_NoAirdrag = BasePathMockup + @"HeavyLorry\Conventional_heavyLorry_AMT_NoAirdrag.xml";
 
 		protected const string ConventionalHeavyLorry_Vocational =
 			BasePath + @"HeavyLorry\Conventional_heavyLorry_AMT_Vocational.xml";
 
-		protected const string HEV_Px_HeavyLorry = BasePath + @"HeavyLorry\HEV_heavyLorry_AMT_Px_IHPC.xml";
+		protected const string HEV_Px_HeavyLorry = BasePath + @"HeavyLorry\HEV_heavyLorry_AMT_Px.xml";
 		protected const string HEV_S2_HeavyLorry = BasePath + @"HeavyLorry\HEV-S_heavyLorry_AMT_S2.xml";
+		protected const string HEV_S2_HeavyLorry_NoRetarder = BasePathMockup + @"HeavyLorry\HEV-S_heavyLorry_AMT_S2_NoRetarder.xml";
 		protected const string HEV_S3_HeavyLorry = BasePath + @"HeavyLorry\HEV-S_heavyLorry_S3.xml";
 		protected const string HEV_S3_HeavyLorry_ovc = BasePath + @"HeavyLorry\HEV-S_heavyLorry_S3_ovc.xml";
 		protected const string HEV_S4_HeavyLorry = BasePath + @"HeavyLorry\HEV-S_heavyLorry_S4.xml";
 		protected const string HEV_IEPC_S_HeavyLorry = BasePath + @"HeavyLorry\HEV-S_heavyLorry_IEPC-S.xml";
 		protected const string PEV_E2_HeavyLorry = BasePath + @"HeavyLorry\PEV_heavyLorry_AMT_E2.xml";
+		protected const string PEV_E2_HeavyLorry_NoRetarder = BasePathMockup + @"HeavyLorry\PEV_heavyLorry_AMT_E2_NoRetarder.xml";
+		protected const string PEV_E2_HeavyLorry_NoAirdrag = BasePathMockup + @"HeavyLorry\PEV_heavyLorry_AMT_E2_NoAirdrag.xml";
 		protected const string PEV_E2_HeavyLorry_Vocational = BasePath + @"HeavyLorry\PEV_heavyLorry_AMT_E2_Vocational.xml";
 		protected const string PEV_E3_HeavyLorry = BasePath + @"HeavyLorry\PEV_heavyLorry_E3.xml";
 		protected const string PEV_E4_HeavyLorry = BasePath + @"HeavyLorry\PEV_heavyLorry_E4.xml";
 		protected const string PEV_IEPC_HeavyLorry = BasePath + @"HeavyLorry\IEPC_heavyLorry.xml";
 
+		protected const string PEV_IEPC_HeavyLorry_Gbx1 = BasePathMockup + @"HeavyLorry\PEV_heavyLorry_IEPC_Gbx1.xml";
+		protected const string PEV_IEPC_HeavyLorry_Gbx1Axl = BasePathMockup + @"HeavyLorry\PEV_heavyLorry_IEPC_Gbx1Axl.xml";
+		protected const string PEV_IEPC_HeavyLorry_Gbx1Whl = BasePathMockup + @"HeavyLorry\PEV_heavyLorry_IEPC_Gbx1Axl.xml";
+
+		protected const string PEV_IEPC_HeavyLorry_Gbx2 = BasePathMockup + @"HeavyLorry\PEV_heavyLorry_IEPC_Gbx3.xml";
+		protected const string PEV_IEPC_HeavyLorry_Gbx2_drag = BasePathMockup + @"HeavyLorry\PEV_heavyLorry_IEPC_Gbx3_drag.xml";
+		protected const string PEV_IEPC_HeavyLorry_Gbx2Axl = BasePathMockup + @"HeavyLorry\PEV_heavyLorry_IEPC_Gbx3Axl.xml";
+		protected const string PEV_IEPC_HeavyLorry_Gbx2Axl_drag = BasePathMockup + @"HeavyLorry\PEV_heavyLorry_IEPC_Gbx3Axl_drag.xml";
+		protected const string PEV_IEPC_HeavyLorry_Gbx2Whl = BasePathMockup + @"HeavyLorry\PEV_heavyLorry_IEPC_Gbx3Axl.xml";
+
 		protected const string HEV_IHPC_HeavyLorry = BasePathMockup + @"HeavyLorry\HEV_heavyLorry_IHPC.xml";
+		protected const string HEV_Px_HeavyLorry_NoRetarder = BasePathMockup + @"HeavyLorry\HEV_heavyLorry_AMT_Px_NoRetarder.xml";
+		protected const string HEV_Px_HeavyLorry_NoAirDrag = BasePathMockup + @"HeavyLorry\HEV_heavyLorry_AMT_Px_NoAirdrag.xml";
 		protected const string HEV_Px_HeavyLorry_ADC = BasePathMockup + @"HeavyLorry\HEV_heavyLorry_Px_ADC.xml";
 		protected const string HEV_S3_HeavyLorry_ADC = BasePathMockup + @"HeavyLorry\HEV-S_heavyLorry_S3_ADC_GenSetADC.xml";
 		protected const string HEV_Px_HeavyLorry_SuperCap = BasePathMockup + @"HeavyLorry\HEV_heavyLorry_Px_SuperCap.xml";
@@ -97,9 +114,11 @@ namespace VectoMockupTest
 
 		protected const string Conventional_PrimaryBus = BasePath + @"PrimaryBus\Conventional_primaryBus_AMT.xml";
 		protected const string Conventional_PrimaryBus_AT_Angledrive = BasePathMockup + @"PrimaryBus\Conventional_primaryBus_AT_Angledrive.xml";
+		protected const string Conventional_PrimaryBus_NoRetarder = BasePathMockup + @"PrimaryBus\Conventional_primaryBus_AT_NoRetarder.xml";
 		protected const string Conventional_PrimaryBus_Tyres = BasePath + @"PrimaryBus\Conventional_primaryBus_AMT_DifferentTyres.xml";
 		protected const string HEV_Px_PrimaryBus = BasePath + @"PrimaryBus\HEV_primaryBus_AMT_Px.xml";
 		protected const string HEV_IHPC_PrimaryBus = BasePathMockup + @"PrimaryBus\HEV_primaryBus_AMT_IHPC.xml";
+		protected const string HEV_IHPC_PrimaryBus_NoRetarder = BasePathMockup + @"PrimaryBus\HEV_primaryBus_AMT_IHPC_NoRetarder.xml";
 		protected const string HEV_Px_PrimaryBus_SuperCap = BasePathMockup + @"PrimaryBus\HEV_primaryBus_AMT_Px_SuperCap.xml";
 		protected const string HEV_S2_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_AMT_S2.xml";
 		protected const string HEV_S2_PrimaryBus_GenSetADC = BasePathMockup + @"PrimaryBus\HEV-S_primaryBus_AMT_S2_GenSetADC.xml";
@@ -111,6 +130,15 @@ namespace VectoMockupTest
 		protected const string PEV_E3_PrimaryBus = BasePath + @"PrimaryBus\PEV_primaryBus_E3.xml";
 		protected const string PEV_E4_PrimaryBus = BasePath + @"PrimaryBus\PEV_primaryBus_E4.xml";
 		protected const string PEV_IEPC_PrimaryBus = BasePath + @"PrimaryBus\IEPC_primaryBus.xml";
+		protected const string PEV_IEPC_PrimaryBus_Gbx1 = BasePathMockup + @"PrimaryBus\IEPC_primaryBus_Gbx1.xml";
+		protected const string PEV_IEPC_PrimaryBus_Gbx1Axl = BasePathMockup + @"PrimaryBus\IEPC_primaryBus_Gbx1Axl.xml";
+		protected const string PEV_IEPC_PrimaryBus_Gbx1Whl = BasePathMockup + @"PrimaryBus\IEPC_primaryBus_Gbx1Whl.xml";
+		protected const string PEV_IEPC_PrimaryBus_Gbx2 = BasePathMockup + @"PrimaryBus\IEPC_primaryBus_Gbx2.xml";
+		protected const string PEV_IEPC_PrimaryBus_Gbx2_drag = BasePathMockup + @"PrimaryBus\IEPC_primaryBus_Gbx2_drag.xml";
+		protected const string PEV_IEPC_PrimaryBus_Gbx2Axl = BasePathMockup + @"PrimaryBus\IEPC_primaryBus_Gbx2Axl.xml";
+		protected const string PEV_IEPC_PrimaryBus_Gbx2Axl_drag = BasePathMockup + @"PrimaryBus\IEPC_primaryBus_Gbx2Axl_drag.xml";
+		protected const string PEV_IEPC_PrimaryBus_Gbx2Whl = BasePathMockup + @"PrimaryBus\IEPC_primaryBus_Gbx2Whl.xml";
+
 		protected const string PEV_IEPC_std_PrimaryBus = BasePathMockup + @"PrimaryBus\IEPC_primaryBus_StdValues.xml";
 
 		protected const string PEV_E2_PrimaryBus_StdEM = BasePathMockup + @"PrimaryBus\PEV_primaryBus_AMT_E2_EMStd.xml";
@@ -248,24 +276,40 @@ namespace VectoMockupTest
 
 
 		[TestCase(ConventionalHeavyLorry, TestName = "ConventionalHeavyLorry")]
+		[TestCase(ConventionalHeavyLorry_NoRetarder, TestName = "ConventionalHeavyLorry_NoRetarder")]
+		[TestCase(ConventionalHeavyLorry_NoAirdrag, TestName = "ConventionalHeavyLorry_NoAirdrag")]
 		[TestCase(ConventionalHeavyLorry_DifferentTyres, TestName = "ConventionalHeavyLorry_DifferentTyres")]
 		[TestCase(ConventionalHeavyLorry_AT_Angledrive, TestName = "ConventionalHeavyLorry_AT_Angledrive")]
 		[TestCase(ConventionalHeavyLorry_Vocational, TestName = "ConventionalHeavyLorry_Vocational")]
 		//[TestCase(ConventionalHeavyLorry, false, TestName = "ConventionalHeavyLorryNoMockup")]
 		[TestCase(HEV_S2_HeavyLorry, TestName = "HEV_S2_HeavyLorry")]
+		[TestCase(HEV_S2_HeavyLorry_NoRetarder, TestName = "HEV_S2_HeavyLorry_NoRetarder")]
 		[TestCase(HEV_S3_HeavyLorry, TestName = "HEV_S3_HeavyLorry")]
 		[TestCase(HEV_S3_HeavyLorry_ovc, TestName = "HEV_S3_HeavyLorry_ovc")]
 		[TestCase(HEV_S4_HeavyLorry, TestName = "HEV_S4_HeavyLorry")]
 		[TestCase(HEV_Px_HeavyLorry, TestName = "HEV_Px_HeavyLorry")]
 		[TestCase(PEV_E2_HeavyLorry, TestName = "PEV_E2_HeavyLorry")]
+		[TestCase(PEV_E2_HeavyLorry_NoRetarder, TestName = "PEV_E2_HeavyLorry_NoRetarder")]
+		[TestCase(PEV_E2_HeavyLorry_NoAirdrag, TestName = "PEV_E2_HeavyLorry_NoAirdrag")]
 		[TestCase(PEV_E2_HeavyLorry_Vocational, TestName = "PEV_E2_HeavyLorry_Vocational")]
 		//[TestCase(PEV_E2_HeavyLorry, false, TestName = "PEV_E2_HeavyLorryNoMockup")]
 		[TestCase(PEV_E3_HeavyLorry, TestName = "PEV_E3_HeavyLorry")]
 		[TestCase(PEV_E4_HeavyLorry, TestName = "PEV_E4_HeavyLorry")]
 		[TestCase(PEV_IEPC_HeavyLorry, TestName = "PEV_IEPC_HeavyLorry")]
+		[TestCase(PEV_IEPC_HeavyLorry_Gbx1, TestName = "PEV_IEPC_HeavyLorry_Gbx1")]
+		[TestCase(PEV_IEPC_HeavyLorry_Gbx1Axl, TestName = "PEV_IEPC_HeavyLorry_Gbx1Axl")]
+		[TestCase(PEV_IEPC_HeavyLorry_Gbx1Whl, TestName = "PEV_IEPC_HeavyLorry_Gbx1Whl")]
+		[TestCase(PEV_IEPC_HeavyLorry_Gbx2, TestName = "PEV_IEPC_HeavyLorry_Gbx2")]
+		[TestCase(PEV_IEPC_HeavyLorry_Gbx2_drag, TestName = "PEV_IEPC_HeavyLorry_Gbx2_drag")]
+		[TestCase(PEV_IEPC_HeavyLorry_Gbx2Axl, TestName = "PEV_IEPC_HeavyLorry_Gbx2Axl")]
+		[TestCase(PEV_IEPC_HeavyLorry_Gbx2Axl_drag, TestName = "PEV_IEPC_HeavyLorry_Gbx2Axl_drag")]
+		[TestCase(PEV_IEPC_HeavyLorry_Gbx2Whl, TestName = "PEV_IEPC_HeavyLorry_Gbx2Whl")]
+
 		[TestCase(HEV_IEPC_S_HeavyLorry, TestName = "HEV_IEPC_S_HeavyLorry")]
         [TestCase(HEV_IHPC_HeavyLorry, TestName = "HEV_IHPC_HeavyLorry")]
 		[TestCase(HEV_Px_HeavyLorry_ADC, TestName = "HEV_Px_HeavyLorry_ADC")]
+		[TestCase(HEV_Px_HeavyLorry_NoRetarder, TestName = "HEV_Px_HeavyLorry_NoRetarder")]
+		[TestCase(HEV_Px_HeavyLorry_NoAirDrag, TestName = "HEV_Px_HeavyLorry_NoAirDrag")]
 		[TestCase(HEV_S3_HeavyLorry_ADC, TestName = "HEV_S3_HeavyLorry_ADC")]
 		[TestCase(HEV_Px_HeavyLorry_SuperCap, TestName = "HEV_Px_HeavyLorry_SuperCap")]
 
@@ -321,11 +365,13 @@ namespace VectoMockupTest
 
 
 		[TestCase(Conventional_PrimaryBus, TestName = "ConventionalPrimaryBus")]
+		[TestCase(Conventional_PrimaryBus_NoRetarder, TestName = "ConventionalPrimaryBus_NoRetarder")]
 		[TestCase(Conventional_PrimaryBus_AT_Angledrive, TestName = "ConventionalPrimaryBus_AT_Angledrive")]
 		[TestCase(Conventional_PrimaryBus_Tyres, TestName = "ConventionalPrimaryBus Tyres")]
         [TestCase(HEV_IEPC_S_PrimaryBus, TestName="HEV_IEPC_S_PrimaryBus")]
         [TestCase(HEV_Px_PrimaryBus, TestName="HEV_Px_PrimaryBus")]
 		[TestCase(HEV_IHPC_PrimaryBus, TestName = "HEV_IHPC_PrimaryBus")]
+		[TestCase(HEV_IHPC_PrimaryBus_NoRetarder, TestName = "HEV_IHPC_PrimaryBus_NoRetarder")]
 		[TestCase(HEV_Px_PrimaryBus_SuperCap, TestName = "HEV_Px_PrimaryBus_SuperCap")]
         [TestCase(HEV_S2_PrimaryBus, TestName="HEV_S2_PrimaryBus")]
 		[TestCase(HEV_S2_PrimaryBus_GenSetADC, TestName = "HEV_S2_PrimaryBus_GenSetADC")]
@@ -336,6 +382,14 @@ namespace VectoMockupTest
 		[TestCase(PEV_E3_PrimaryBus, TestName = "PEV_E3_PrimaryBus")]
 		[TestCase(PEV_E4_PrimaryBus, TestName = "PEV_E4_PrimaryBus")]
         [TestCase(PEV_IEPC_PrimaryBus, TestName="PEV_IEPC_PrimaryBus")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1, TestName = "PEV_IEPC_PrimaryBus_Gbx2")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Axl, TestName = "PEV_IEPC_PrimaryBus_Gbx1Axl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Whl, TestName = "PEV_IEPC_PrimaryBus_Gbx1Whl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2, TestName = "PEV_IEPC_PrimaryBus_Gbx2")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2_drag, TestName = "PEV_IEPC_PrimaryBus_Gbx2_drag")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl, TestName = "PEV_IEPC_PrimaryBus_Gbx2Axl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl_drag, TestName = "PEV_IEPC_PrimaryBus_Gbx2Axl_drag")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Whl, TestName = "PEV_IEPC_PrimaryBus_Gbx2Whl")]
 		[TestCase(PEV_IEPC_std_PrimaryBus, TestName = "PEV_IEPC-std_PrimaryBus")]
 		[TestCase(PEV_E2_PrimaryBus_StdEM, TestName = "PEV_E2_PrimaryBus_EM-Std")]
 		[TestCase(PEV_E2_PrimaryBus_StdBat, TestName = "PEV_E2_PrimaryBus_Battery-Std")]
@@ -363,6 +417,7 @@ namespace VectoMockupTest
 		
 
 		[TestCase(Conventional_PrimaryBus_Tyres, Conventional_InterimBusInput, "Conventional", TestName = "Interim_Conventional_Bus_DifferentTyres")]
+		[TestCase(Conventional_PrimaryBus_NoRetarder, Conventional_InterimBusInput, "Conventional", TestName = "Interim_ConventionalPrimaryBus_NoRetarder")]
 		[TestCase(Conventional_PrimaryBus_AT_Angledrive, Conventional_InterimBusInput, "Conventional", TestName = "Interim_Conventional_Bus_AT_Angledrive")]
 		[TestCase(Conventional_PrimaryBus, Conventional_InterimBusInput_AirdragV10, "Conventional", TestName = "InterimConventionalBusAirdrag_v1_0")]
 		[TestCase(Conventional_PrimaryBus, Conventional_InterimBusInput_AirdragV20, "Conventional", TestName = "InterimConventionalBusAirdrag_v2_0")]
@@ -370,6 +425,7 @@ namespace VectoMockupTest
 		[TestCase(HEV_IEPC_S_PrimaryBus, HEV_InterimBusInput, "IEPC-S", "HEV", TestName = "Interim HEV_IEPC_S_Bus")]
 		[TestCase(HEV_Px_PrimaryBus, HEV_InterimBusInput, "Px", "HEV", TestName = "Interim HEV_Px_Bus")]
 		[TestCase(HEV_IHPC_PrimaryBus, HEV_InterimBusInput, "Px", "HEV", TestName = "Interim HEV_IHPC_Bus")]
+		[TestCase(HEV_IHPC_PrimaryBus_NoRetarder, HEV_InterimBusInput, "Px", "HEV", TestName = "Interim HEV_IHPC_Bus_NoRetarder")]
 		[TestCase(HEV_S2_PrimaryBus, HEV_InterimBusInput, "Sx", "HEV", TestName = "Interim HEV_S2_Bus")]
 		[TestCase(HEV_S3_PrimaryBus, HEV_InterimBusInput, "Sx", "HEV", TestName = "Interim HEV_S3_Bus")]
 		[TestCase(HEV_S4_PrimaryBus, HEV_InterimBusInput, "Sx", "HEV", TestName = "Interim HEV_S4_Bus")]
@@ -377,6 +433,15 @@ namespace VectoMockupTest
 		[TestCase(PEV_E3_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "Interim PEV_E3_Bus")]
 		[TestCase(PEV_E4_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "Interim PEV_E4_Bus")]
 		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_Bus")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx2")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Axl, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx1Axl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Whl, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx1Whl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx2")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2_drag, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx2_drag")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx2Axl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl_drag, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx2Axl_drag")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Whl, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx2Whl")]
+
 		[TestCase(PEV_IEPC_std_PrimaryBus, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC-std_Bus")]
 		[TestCase(PEV_E2_PrimaryBus_StdEM, PEV_InterimBusInput, "Ex", "PEV", TestName = "Interim PEV_E2_Bus_EM-Std")]
 		public void InterimTest(string primaryBusInput, string interimBusInput, params string[] expectedType)
@@ -432,11 +497,13 @@ namespace VectoMockupTest
 		}
 
 		[TestCase(Conventional_PrimaryBus_Tyres, Conventional_InterimBusInput, "Conventional", TestName = "PrimaryAndInterim Conventional Bus Different Tyres")]
+		[TestCase(Conventional_PrimaryBus_NoRetarder, Conventional_InterimBusInput, "Conventional", TestName = "PrimaryAndInterim_ConventionalPrimaryBus_NoRetarder")]
 		[TestCase(Conventional_PrimaryBus_DF, Conventional_InterimBusInput, "Conventional", TestName = "PrimaryAndInterim ConventionalPrimaryBus_DualFuel")]
 		[TestCase(Conventional_PrimaryBus_AT_Angledrive, Conventional_InterimBusInput, "Conventional", TestName = "PrimaryAndInterim ConventionalPrimaryBus_AT_Angledrive")]
 		[TestCase(HEV_IEPC_S_PrimaryBus, HEV_InterimBusInput, "IEPC-S", "HEV", TestName = "PrimaryAndInterim HEV_IEPC_S_PrimaryBus")]
 		[TestCase(HEV_Px_PrimaryBus, HEV_InterimBusInput, "Px", "HEV", TestName = "PrimaryAndInterim HEV_Px_PrimaryBus")]
 		[TestCase(HEV_IHPC_PrimaryBus, HEV_InterimBusInput, "Px", "HEV", TestName = "PrimaryAndInterim HEV_IHPC_PrimaryBus")]
+		[TestCase(HEV_IHPC_PrimaryBus_NoRetarder, HEV_InterimBusInput, "Px", "HEV", TestName = "PrimaryAndInterim HEV_IHPC_PrimaryBus_NoRetarder")]
 		[TestCase(HEV_S2_PrimaryBus, HEV_InterimBusInput, "Sx", "HEV", TestName = "PrimaryAndInterim HEV_S2_PrimaryBus")]
 		[TestCase(HEV_S3_PrimaryBus, HEV_InterimBusInput, "Sx", "HEV", TestName = "PrimaryAndInterim HEV_S3_PrimaryBus")]
 		[TestCase(HEV_S4_PrimaryBus, HEV_InterimBusInput, "Sx", "HEV", TestName = "PrimaryAndInterim HEV_S4_PrimaryBus")]
@@ -444,6 +511,14 @@ namespace VectoMockupTest
 		[TestCase(PEV_E3_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "PrimaryAndInterim PEV_E3_PrimaryBus")]
 		[TestCase(PEV_E4_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "PrimaryAndInterim PEV_E4_PrimaryBus")]
 		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterim PEV_IEPC_PrimaryBus")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx1")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Axl, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx1Axl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Whl, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx1Whl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx2")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2_drag, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx2_drag")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx2Axl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl_drag, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx2Axl_drag")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Whl, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx2Whl")]
 		[TestCase(PEV_IEPC_std_PrimaryBus, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterim PEV_IEPC-std_PrimaryBus")]
 		[TestCase(PEV_E2_PrimaryBus_StdEM, PEV_InterimBusInput, "Ex", "PEV", TestName = "PrimaryAndInterim PEV_E2_PrimaryBus_EM-Std")]
 		public void PrimaryWithInterimTest(string primaryBusInput, string interimInput, params string[] expectedType)
@@ -478,12 +553,14 @@ namespace VectoMockupTest
 		
 
 		[TestCase(Conventional_PrimaryBus_Tyres, Conventional_CompletedBusInput, "Conventional", TestName = "Complete Conventional Bus Different Tyres")]
+		[TestCase(Conventional_PrimaryBus_NoRetarder, Conventional_CompletedBusInput, "Conventional", TestName = "Complete_ConventionalPrimaryBus_NoRetarder")]
 		[TestCase(Conventional_PrimaryBus_DF, Conventional_CompletedBusInput, "Conventional", TestName = "Complete ConventionalPrimaryBus_DualFuel")]
 		[TestCase(Conventional_PrimaryBus_AT_Angledrive, Conventional_CompletedBusInput, "Conventional", TestName = "Complete ConventionalPrimaryBus_AT_Angledrive")]
 		[TestCase(Conventional_PrimaryBus, Conventional_CompletedBusInput_TypeApproval, "Conventional", TestName = "Complete Conventional Bus Type Approval")]
         [TestCase(HEV_IEPC_S_PrimaryBus, HEV_CompletedBusInput, "IEPC-S", "HEV", TestName = "Complete HEV_IEPC_S_PrimaryBus")]
 		[TestCase(HEV_Px_PrimaryBus, HEV_CompletedBusInput, "Px", "HEV", TestName = "Complete HEV_Px_PrimaryBus")]
 		[TestCase(HEV_IHPC_PrimaryBus, HEV_CompletedBusInput, "Px", "HEV", TestName = "Complete HEV_IHPC_PrimaryBus")]
+		[TestCase(HEV_IHPC_PrimaryBus_NoRetarder, HEV_CompletedBusInput, "Px", "HEV", TestName = "Complete HEV_IHPC_PrimaryBus_NoRetarder")]
 		[TestCase(HEV_S2_PrimaryBus, HEV_CompletedBusInput, "S2", "HEV", TestName = "Complete HEV_S2_PrimaryBus")]
 		[TestCase(HEV_S3_PrimaryBus, HEV_CompletedBusInput, "S3", "HEV", TestName = "Complete HEV_S3_PrimaryBus")]
 		[TestCase(HEV_S4_PrimaryBus, HEV_CompletedBusInput, "S4", "HEV", TestName = "Complete HEV_S4_PrimaryBus")]
@@ -491,6 +568,14 @@ namespace VectoMockupTest
 		[TestCase(PEV_E3_PrimaryBus, PEV_CompletedBusInput, "E3", "PEV", TestName = "Complete PEV_E3_PrimaryBus")]
 		[TestCase(PEV_E4_PrimaryBus, PEV_CompletedBusInput, "E4", "PEV", TestName = "Complete PEV_E4_PrimaryBus")]
 		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx2")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Axl, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx1Axl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Whl, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx1Whl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx2")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2_drag, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx2_drag")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx2Axl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl_drag, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx2Axl_drag")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Whl, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx2Whl")]
 		[TestCase(PEV_IEPC_std_PrimaryBus, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC-std_PrimaryBus")]
 		[TestCase(PEV_E2_PrimaryBus_StdEM, PEV_CompletedBusInput, "E2", "PEV", TestName = "Complete PEV_E2_PrimaryBus_EM-Std")]
 		public void CompleteTest(string primaryBusInput, string completeBusInput, params string[] expectedType)
@@ -538,6 +623,7 @@ namespace VectoMockupTest
 		[TestCase(HEV_IEPC_S_PrimaryBus, HEV_CompletedBusInput, "IEPC-S", "HEV", TestName = "Completed HEV_IEPC_S_PrimaryBus")]
 		[TestCase(HEV_Px_PrimaryBus, HEV_CompletedBusInput, "Px", "HEV", TestName = "Completed HEV_Px_PrimaryBus")]
 		[TestCase(HEV_IHPC_PrimaryBus, HEV_CompletedBusInput, "Px", "HEV", TestName = "Completed HEV_IHPC_PrimaryBus")]
+		[TestCase(HEV_IHPC_PrimaryBus_NoRetarder, HEV_CompletedBusInput, "Px", "HEV", TestName = "Completed HEV_IHPC_PrimaryBus_NoRetarder")]
 		[TestCase(HEV_S2_PrimaryBus, HEV_CompletedBusInput, "Sx", "HEV", TestName = "Completed HEV_S2_PrimaryBus")]
 		[TestCase(HEV_S3_PrimaryBus, HEV_CompletedBusInput, "Sx", "HEV", TestName = "Completed HEV_S3_PrimaryBus")]
 		[TestCase(HEV_S4_PrimaryBus, HEV_CompletedBusInput, "Sx", "HEV", TestName = "Completed HEV_S4_PrimaryBus")]
@@ -545,6 +631,14 @@ namespace VectoMockupTest
 		[TestCase(PEV_E3_PrimaryBus, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E3_PrimaryBus")]
 		[TestCase(PEV_E4_PrimaryBus, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E4_PrimaryBus")]
 		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Axl, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx1Axl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Whl, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx1Whl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2_drag, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2_drag")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2Axl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl_drag, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2Axl_drag")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Whl, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2Whl")]
 		[TestCase(PEV_IEPC_std_PrimaryBus, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC-std_PrimaryBus")]
 		[TestCase(PEV_E2_PrimaryBus_StdEM, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E2_PrimaryBus_EM-Std")]
 		public void CompletedTest(string primaryBusInput, string completeBusInput, params string[] expectedType)

@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public EngineAuxiliary(IVehicleContainer container) : base(container)
 		{
 			EngineStopStartUtilityFactor = 1; // container.RunData?.DriverData?.EngineStopStart?.UtilityFactorStandstill ?? double.NaN;
-			_writePTO = container.RunData?.PTO != null;
+			_writePTO = container.RunData?.PTO?.ConsumerType == PTOConsumerType.mechanical;
 		}
 
 		public IAuxPort Port()
@@ -259,7 +259,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region Implementation of IUpdateable
 
-		public bool UpdateFrom(object other) {
+		protected override bool DoUpdateFrom(object other) {
 			if (other is EngineAuxiliary a) {
 				PreviousState = a.PreviousState.Clone();
 				return true;

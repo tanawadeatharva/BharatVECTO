@@ -10,7 +10,9 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
@@ -23,26 +25,39 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var reessElements = inputData.JobInputData.Vehicle.Components.ElectricStorage.ElectricStorageElements;
+			var vehicle = GetVehicle(inputData);
+			var reess = inputData.JobInputData.Vehicle.Components.ElectricStorage;
+			var reessElements = reess.ElectricStorageElements;
 
 			var result = new XElement(_mrf + "REESSSpecifications");
 
-			foreach (var electricStorage in reessElements.OrderBy((element) => element.StringId)) {
-				if (electricStorage.REESSPack.StorageType == REESSType.Battery &&
-					electricStorage.REESSPack is IBatteryPackDeclarationInputData battery) {
+			if (reessElements.Any(x => x.REESSPack.StorageType == REESSType.Battery)) {
+				var eletricStorageAdapter = new ElectricStorageAdapter();
+				var batData = eletricStorageAdapter.CreateBatteryData(reess, vehicle.VehicleType, vehicle.OvcHev);
+				foreach (var entry in batData.Batteries.OrderBy(x => x.Item1)) {
+					var batteryPackInput = entry.Item2.InputData;
+					var battery = batteryPackInput.REESSPack as IBatteryPackDeclarationInputData;
+					var batUsableCap = GetEnergyStoredInBattery(entry);
+					entry.Item2.MaxSOC = 1;
+					entry.Item2.MinSOC = 0;
+					var batTotalCap = GetEnergyStoredInBattery(entry);
+
 					result.Add(new XElement(_mrf + XMLNames.ElectricEnergyStorage_Battery,
-						new XAttribute("stringId", electricStorage.StringId),
-						new XElement(_mrf + XMLNames.Component_Model, battery.Model),
-						new XElement(_mrf + XMLNames.Component_CertificationNumber, battery.CertificationNumber),
-						new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, battery.DigestValue?.DigestValue ?? ""),
-						new XElement(_mrf + XMLNames.BusAux_ElectricSystem_NominalVoltage, BatterySOCReader.Create(battery.VoltageCurve).Lookup(0.5).ToXMLFormat(0)),
-						new XElement(_mrf + "TotalStorageCapacity", battery.TotalStorageCapacity().ValueAsUnit("kWh", 0)),
-						new XElement(_mrf + "TotalUsableCapacityInSimulation", battery.TotalUsableCapacityInSimulation().ValueAsUnit("kWh"), 0),
-						new XElement(_mrf + XMLNames.Component_CertificationMethod, battery.CertificationMethod.ToXMLFormat())
+							new XAttribute("stringId", entry.Item1),
+							new XElement(_mrf + XMLNames.Component_Model, battery.Model),
+							new XElement(_mrf + XMLNames.Component_CertificationNumber, battery.CertificationNumber),
+							new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, battery.DigestValue?.DigestValue ?? ""),
+							new XElement(_mrf + XMLNames.BusAux_ElectricSystem_NominalVoltage, BatterySOCReader.Create(battery.VoltageCurve).Lookup(0.5).ToXMLFormat(0)),
+							new XElement(_mrf + "TotalStorageCapacity", batTotalCap.ValueAsUnit("kWh", 0)),
+							new XElement(_mrf + "TotalUsableCapacityInSimulation", batUsableCap.ValueAsUnit("kWh", 0)),
+							new XElement(_mrf + XMLNames.Component_CertificationMethod, battery.CertificationMethod.ToXMLFormat())
 						)
 					);
-				} else if (electricStorage.REESSPack.StorageType == REESSType.SuperCap &&
-						electricStorage.REESSPack is ISuperCapDeclarationInputData superCap) {
+				}
+
+			} else {
+				foreach (var electricStorage in reessElements.Where(x => x.REESSPack.StorageType == REESSType.SuperCap)) {
+					var superCap = electricStorage.REESSPack as ISuperCapDeclarationInputData;
 					result.Add(new XElement(_mrf + XMLNames.ElectricEnergyStorage_Capacitor,
 							new XElement(_mrf + XMLNames.Component_Model, superCap.Model),
 							new XElement(_mrf + XMLNames.Component_CertificationNumber, superCap.CertificationNumber),
@@ -53,11 +68,19 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 							new XElement(_mrf + XMLNames.Capacitor_MaxVoltage, superCap.MaxVoltage.ToXMLFormat(2))
 						)
 					);
-				} else {
-					throw new VectoException("Invalid REESS type");
 				}
 			}
 			return result;
+		}
+
+		private static WattSecond GetEnergyStoredInBattery(Tuple<int, BatteryData> entry)
+		{
+			var tmpBattery = new Battery(null, entry.Item2);
+			tmpBattery.Initialize(tmpBattery.MaxSoC);
+			var energyFull = tmpBattery.StoredEnergy;
+			tmpBattery.Initialize(tmpBattery.MinSoC);
+			var energyEmpty = tmpBattery.StoredEnergy;
+			return energyFull - energyEmpty;
 		}
 
 		#endregion

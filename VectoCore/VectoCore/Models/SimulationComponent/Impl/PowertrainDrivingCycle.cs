@@ -188,6 +188,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AdvanceState();
 		}
 
+		protected override bool DoUpdateFrom(object other) => false;
+
 		#endregion
 
 		public CycleData CycleData =>

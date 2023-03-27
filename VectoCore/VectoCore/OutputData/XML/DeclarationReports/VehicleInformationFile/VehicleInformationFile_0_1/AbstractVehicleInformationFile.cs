@@ -8,9 +8,11 @@ using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 
@@ -21,7 +23,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		protected XNamespace _tns;
 
 		protected readonly IVIFReportFactory _vifFactory;
-
+		protected readonly IResultsWriterFactory _resultFactory;
 
 		public static XNamespace VIF => XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1");
 
@@ -36,14 +38,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public abstract string OutputDataType { get; }
 
 		protected XElement Vehicle { get; set; }
-		protected XElement Results { get; set; }
+		protected IResultsWriter Results { get; set; }
 
-		protected  List<XMLDeclarationReport.ResultEntry> _results = new List<XMLDeclarationReport.ResultEntry>();
+		protected  List<IResultEntry> _results = new List<IResultEntry>();
 		protected XElement InputDataIntegrity;
 
-		protected AbstractVehicleInformationFile(IVIFReportFactory vifFactory)
+		protected AbstractVehicleInformationFile(IVIFReportFactory vifFactory, IResultsWriterFactory resultFactory)
 		{
 			_vifFactory = vifFactory;
+			_resultFactory = resultFactory;
 		}
 
 		protected abstract void InitializeVehicleData(IDeclarationInputDataProvider inputData);
@@ -53,17 +56,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public void Initialize(VectoRunData modelData)
 		{
 			InitializeVehicleData(modelData.InputData);
-			// TODO MQ: write dummy result element for testcases (2022-12-02), remove once result writing is implemented
-			Results = new XElement(VIF + XMLNames.Report_Results,
-				new XElement(VIF + "Status", "success"),
-				new XElement(VIF + "ExemptedVehicle"));
+			Results = _resultFactory.GetVIFResultsWriter(modelData.VehicleData.VehicleCategory.GetVehicleType(),
+				modelData.JobType, modelData.VehicleData.OffVehicleCharging, modelData.Exempted);
 			InputDataIntegrity = new XElement(VIF + XMLNames.Report_InputDataSignature,
 				modelData.InputDataHash == null ? XMLHelper.CreateDummySig(_di) : new XElement(modelData.InputDataHash));
 
 		}
 
 		
-		public void WriteResult(XMLDeclarationReport.ResultEntry result)
+		public void WriteResult(IResultEntry result)
 		{
 			_results.Add(result);
 		}
@@ -96,10 +97,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		protected virtual XElement GeneratePrimaryVehicle(XElement resultSignature)
 		{
-			var allSuccess = _results.All(x => x.Status == VectoRun.Status.Success);
-
-			var results = new XElement(Results);
-			results.AddFirst(new XElement(VIF + XMLNames.Report_Result_Status, allSuccess ? "success" : "error"));
 			var vehicleId = $"{VectoComponents.VectoPrimaryVehicleInformation.HashIdPrefix()}{XMLHelper.GetGUID()}";
 
 			var primaryVehicle = new XElement(VIF + XMLNames.Bus_PrimaryVehicle,
@@ -109,7 +106,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					Vehicle,
 					InputDataIntegrity,
 					new XElement(VIF + "ManufacturerRecordSignature", resultSignature),
-					Results,
+					Results.GenerateResults(_results),
 					XMLHelper.GetApplicationInfo(VIF)
 				)
 			);

@@ -624,7 +624,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public PerSecond EngineIdleSpeed => _primaryVehicle.Vehicle.EngineIdleSpeed;
 
 		public Watt MaxNetPower1 => _primaryVehicle.Vehicle.MaxNetPower1;
-		public Watt MaxNetPower2 => _primaryVehicle.Vehicle.MaxNetPower2;
 		public string ExemptedTechnology => _primaryVehicle.Vehicle.ExemptedTechnology;
 
 		public ArchitectureID ArchitectureID => _primaryVehicle.Vehicle.ArchitectureID;

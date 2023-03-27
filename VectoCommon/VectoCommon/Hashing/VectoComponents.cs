@@ -104,6 +104,8 @@ namespace TUGraz.VectoCommon.Hashing
 					return XMLNames.Component_CertifiedAeroReduction;
 				case VectoComponents.ElectricEnergyStorage:
 					return XMLNames.REESS;
+				case VectoComponents.VectoInterimVehicleInformation:
+					return "InterimVehicle";
 				default:
 					throw new ArgumentOutOfRangeException("VectoComponents", component, null);
 			}

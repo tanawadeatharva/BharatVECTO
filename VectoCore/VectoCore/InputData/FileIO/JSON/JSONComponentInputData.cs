@@ -340,8 +340,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public Watt MaxNetPower1 => null;
 
-		public Watt MaxNetPower2 => null;
-
 		public string ExemptedTechnology => null;
 
 		public RegistrationClass? RegisteredClass => RegistrationClass.unknown;

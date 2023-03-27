@@ -121,7 +121,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 			return new object[] {
 				modelData.VehicleData.HybridElectricHDV ? new XElement(tns + XMLNames.Vehicle_MaxNetPower1, XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower1, XMLNames.Unit_W)) : null,
-				modelData.VehicleData.HybridElectricHDV ? new XElement(tns + XMLNames.Vehicle_MaxNetPower2, XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower2, XMLNames.Unit_W)) : null
+				
 			};
 		}
 
@@ -176,7 +176,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		
 
-		public virtual void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
+		public virtual void WriteResult(IResultEntry resultEntry)
 		{
 			//foreach (var resultEntry in entry.ResultEntry) {
 			_allSuccess &= resultEntry.Status == VectoRun.Status.Success;
@@ -188,7 +188,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			Results.Add(resultEntry.Status == VectoRun.Status.Success ? GetSuccessResult(resultEntry) : GetErrorResult(resultEntry));
 		}
 
-		private XElement GetErrorResult(XMLDeclarationReport.ResultEntry resultEntry)
+		private XElement GetErrorResult(IResultEntry resultEntry)
 		{
 			var content = new object[] { };
 			switch (resultEntry.Status) {
@@ -213,7 +213,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				content);
 		}
 
-		private XElement GetSuccessResult(XMLDeclarationReport.ResultEntry result)
+		private XElement GetSuccessResult(IResultEntry result)
 		{
 			return new XElement(
 				tns + XMLNames.Report_Result_Result,
@@ -308,7 +308,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		}
 
 		public XDocument Report { get; }
-		public void WriteResult(XMLDeclarationReport.ResultEntry resultValue)
+		public void WriteResult(IResultEntry resultValue)
 		{
 			// MQ 2021-06-14 TODO: fill with meat
 		}

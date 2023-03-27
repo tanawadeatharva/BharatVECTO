@@ -20,6 +20,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRunDataFactory;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDataFactory;
+using TUGraz.VectoCore.Tests.Integration.Hybrid;
 
 namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 {
@@ -184,6 +185,20 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 		}
 
 		[TestCase()]
+		//[TestCase(typeof(DeclarationDataAdapterHeavyLorry.HEV_))]
+		public void HEV_P_IHPC_HeavyLorryTest(Type expectedDataAdapter = null)
+		{
+			var input = new Mock<IDeclarationInputDataProvider>()
+				.HEV(ArchitectureID.P_IHPC)
+				.Lorry();
+			CreateRunDataFactory(input, typeof(DeclarationModeHeavyLorryRunDataFactory.HEV_P_IHPC), expectedDataAdapter);
+		}
+
+
+
+
+
+		[TestCase()]
 		[TestCase(typeof(DeclarationDataAdapterHeavyLorry.PEV_E2))]
 		public void PEV_E2_HeavyLorryTest(Type expectedDataAdapter = null)
 		{
@@ -218,7 +233,6 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 				.PEV(ArchitectureID.E_IEPC)
 				.Lorry();
 			CreateRunDataFactory(input, typeof(DeclarationModeHeavyLorryRunDataFactory.PEV_E_IEPC), expectedDataAdapter);
-
 		}
 
 		[Test]
@@ -634,9 +648,32 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 
 		internal static Mock<IDeclarationInputDataProvider> HEV(this Mock<IDeclarationInputDataProvider> mock, ArchitectureID arch)
 		{
-			var type = arch.ToString().StartsWith("P")
-				? VectoSimulationJobType.ParallelHybridVehicle
-				: VectoSimulationJobType.SerialHybridVehicle;
+
+			VectoSimulationJobType type;
+			switch (arch) {
+				case ArchitectureID.P1:
+				case ArchitectureID.P2:
+				case ArchitectureID.P2_5:
+				case ArchitectureID.P3:
+				case ArchitectureID.P4:
+					type = VectoSimulationJobType.ParallelHybridVehicle;
+					break;
+				case ArchitectureID.P_IHPC:
+					type = VectoSimulationJobType.IHPC;
+					break;
+				case ArchitectureID.S2:
+				case ArchitectureID.S3:
+				case ArchitectureID.S4:
+					type = VectoSimulationJobType.SerialHybridVehicle;
+					break;
+				case ArchitectureID.S_IEPC:
+					type = VectoSimulationJobType.IEPC_S;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(arch), arch, null);
+			}
+
+			arch = arch == ArchitectureID.P_IHPC ? ArchitectureID.P2 : arch; 
 			mock.Setup(p => p.JobInputData.Vehicle.ArchitectureID).
 				Returns(arch);
 			mock.Setup(p => p.JobInputData.JobType).
@@ -648,6 +685,11 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 
 		internal static Mock<IDeclarationInputDataProvider> PEV(this Mock<IDeclarationInputDataProvider> mock, ArchitectureID arch)
 		{
+			var type = VectoSimulationJobType.BatteryElectricVehicle;
+			if (arch == ArchitectureID.E_IEPC) {
+				type = VectoSimulationJobType.IEPC_E;
+			}
+
 			mock.Setup(p => p.JobInputData.Vehicle.ArchitectureID).
 				Returns(arch);
 			mock.Setup(p => p.JobInputData.JobType).
@@ -655,7 +697,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 				VectoSimulationJobType.BatteryElectricVehicle);
 			mock.Setup(p => p.JobInputData.Vehicle.VehicleType).
 				Returns(
-				VectoSimulationJobType.BatteryElectricVehicle);
+				type);
 			return mock;
 		}
 		internal static Mock<IDeclarationInputDataProvider> Lorry(this Mock<IDeclarationInputDataProvider> mock)

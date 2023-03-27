@@ -2,6 +2,7 @@
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Utils;
 
@@ -10,7 +11,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 	internal abstract class PrimaryBus_ManufacturerReportBase : AbstractManufacturerReport
 	{
 		protected XNamespace _mrf = XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9");
-		protected PrimaryBus_ManufacturerReportBase(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		protected PrimaryBus_ManufacturerReportBase(IManufacturerReportFactory mrfFactory, IResultsWriterFactory resultFactory) : base(mrfFactory, resultFactory) { }
 
 		protected void GenerateReport(string outputDataType)
 		{
@@ -25,7 +26,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	internal class Conventional_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
     {
-		public Conventional_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+		public Conventional_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
 
 		#region Overrides of AbstractManufacturerReport
 
@@ -42,7 +43,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	internal class HEV_Px_IHPC_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
 	{
-		public HEV_Px_IHPC_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+		public HEV_Px_IHPC_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
 
 		#region Overrides of AbstractManufacturerReport
 
@@ -59,7 +60,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	internal class HEV_S2_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
 	{
-		public HEV_S2_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+		public HEV_S2_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
 
 		#region Overrides of AbstractManufacturerReport
 
@@ -75,7 +76,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	internal class HEV_S3_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
 	{
-		public HEV_S3_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+		public HEV_S3_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
 
 		#region Overrides of AbstractManufacturerReport
 
@@ -91,7 +92,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	internal class HEV_S4_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
 	{
-		public HEV_S4_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+		public HEV_S4_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
 
 		#region Overrides of AbstractManufacturerReport
 
@@ -109,7 +110,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	internal class HEV_IEPC_S_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
 	{
-		public HEV_IEPC_S_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+		public HEV_IEPC_S_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
 
 		#region Overrides of AbstractManufacturerReport
 
@@ -125,7 +126,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	internal class PEV_E2_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
 	{
-		public PEV_E2_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+		public PEV_E2_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
 
 		#region Overrides of AbstractManufacturerReport
 
@@ -142,7 +143,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	internal class PEV_E3_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
 	{
-		public PEV_E3_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+		public PEV_E3_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
 
 		#region Overrides of AbstractManufacturerReport
 
@@ -159,8 +160,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	internal class PEV_E4_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
 	{
-		public PEV_E4_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(
-			MRFReportFactory)
+		public PEV_E4_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(
+			MRFReportFactory, resultFactory)
 		{
 
 		}
@@ -179,7 +180,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	internal class PEV_IEPC_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
 	{
-		public PEV_IEPC_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+		public PEV_IEPC_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
 
 		#region Overrides of AbstractManufacturerReport
 
@@ -195,7 +196,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	internal class Exempted_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
 	{
-		public Exempted_PrimaryBus_ManufacturerReport(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public Exempted_PrimaryBus_ManufacturerReport(IManufacturerReportFactory mrfFactory, IResultsWriterFactory resultFactory) : base(mrfFactory, resultFactory) { }
 
 		#region Overrides of AbstractManufacturerReport
 

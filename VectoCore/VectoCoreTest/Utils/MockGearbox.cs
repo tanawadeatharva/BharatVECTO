@@ -158,6 +158,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			throw new NotImplementedException();
 		}
+
+		protected override bool DoUpdateFrom(object other) => false;
+
 	}
 
 	public class MockAxlegear : VectoSimulationComponent, IAxlegear
@@ -194,5 +197,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			
 		}
+
+		protected override bool DoUpdateFrom(object other) => false;
+
 	}
 }

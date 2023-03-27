@@ -116,6 +116,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 										DataProvider.CompletedVehicle.TankSystem))
 								.ToList())
 						.ToList();
+					// set vehicle category to completed for single bus simulations to instantiate correct reports (MRF/CIF)
+					//powertrainConfig.VehicleData.InputData = DataProvider.CompletedVehicle;
 				}
 				Report.InitializeReport(powertrainConfig);
 			}
@@ -208,6 +210,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 					SimulationType = SimulationType.DistanceCycle,
 					GearshiftParameters = _gearshiftData,
 					VehicleDesignSpeed = _segment.DesignSpeed,
+					MaxChargingPower = primaryVehicle.MaxChargingPower,
 					//ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy
 				};
 				simulationRunData.EngineData.FuelMode = modeIdx;

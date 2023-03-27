@@ -334,8 +334,10 @@ namespace TUGraz.VectoCore.Configuration
 			public static readonly Meter GearboxLookaheadForAccelerationEstimation = 100.SI<Meter>();
 
 			public static readonly Kilogram MaximumGrossVehicleMass = 40000.SI<Kilogram>();
+			public static readonly Kilogram MaximumGrossVehicleMassOVCHev_NaturalGas = 41000.SI<Kilogram>();
 			public static readonly Kilogram MaximumGrossVehicleMassPEV = 42000.SI<Kilogram>();
 			public static readonly Kilogram MaximumGrossVehicleMassEMS = 60000.SI<Kilogram>();
+			public static readonly Kilogram MaximumGrossVehicleMassEMS_OVCHev_NaturalGas = 61000.SI<Kilogram>();
 			public static readonly Kilogram MaximumGrossVehicleMassEMS_PEV = 62000.SI<Kilogram>();
 
 			public static readonly MeterPerSecond HighwaySpeedThreshold = 70.KMPHtoMeterPerSecond();
@@ -399,6 +401,16 @@ namespace TUGraz.VectoCore.Configuration
 			public const double FactorAngleDrive = 0.75;
 
 			public const double RetarderGenericFactor = 1;
+		}
+
+		public static class PowerMapSettings
+		{
+			public const double EfficiencyMapExtrapolationFactor = 1.2f;
+		}
+
+		public static class EMFullLoadCurveSettings
+		{
+			public const double RatedSpeedGradientDelta = 0.2f;
 		}
 	}
 }

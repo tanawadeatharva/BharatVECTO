@@ -5,11 +5,10 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -91,8 +90,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.TotalCurrent = current;
 			CurrentState.BatteryLoss = batteryLoss;
 
-			
-			CurrentState.StateOfCharge = (currentCharge + current * dt) / ModelData.Capacity;
+			var soc = (currentCharge + current * dt) / ModelData.Capacity;
+			if (ModelData.ChargeSustainingBattery) {
+				soc = PreviousState.StateOfCharge.SI<Scalar>();
+			}
+			CurrentState.StateOfCharge = soc;
 			CurrentState.MaxChargePower = maxChargePower;
 			CurrentState.MaxDischargePower = maxDischargePower;
 			return new RESSResponseSuccess(this) {
@@ -102,7 +104,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				MaxDischargePower = maxDischargePower,
 				PowerDemand = powerDemand,
 				LossPower = batteryLoss,
-				StateOfCharge = (currentCharge + current * dt) / ModelData.Capacity
+				StateOfCharge = soc,
 			};
 		}
 
@@ -180,9 +182,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? PreviousState.PulseDuration
 				: 0.SI<Second>();
 			CurrentState.PulseDuration = tPulse + simulationInterval;
-			if (ModelData.ChargeSustainingBattery) {
-				CurrentState.StateOfCharge = PreviousState.StateOfCharge;
-			}
+			//if (ModelData.ChargeSustainingBattery) {
+			//	CurrentState.StateOfCharge = PreviousState.StateOfCharge;
+			//}
 			AdvanceState();
 		}
 
@@ -190,7 +192,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 		#region Implementation of IRESSInfo
-
+		
 		public Volt InternalVoltage => ModelData.SOCMap.Lookup(PreviousState.StateOfCharge);
 
 
@@ -280,7 +282,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region Implementation of IUpdateable
 
-		public bool UpdateFrom(object other) {
+		#region Overrides of VectoSimulationComponent
+
+		public override bool UpdateFrom(object other)
+		{
+			if (DataBus == null) {
+				// in case the battery is part of a battery system, the databus is null because we shall not write any data.
+				// allow updating the state, erroneous updates are covered by the batterysystem
+				return DoUpdateFrom(other);
+			}
+			return base.UpdateFrom(other);
+		}
+
+		#endregion
+
+		protected override bool DoUpdateFrom(object other) {
 			if (other is Battery b) {
 				PreviousState = b.PreviousState.Clone();
 				return true;

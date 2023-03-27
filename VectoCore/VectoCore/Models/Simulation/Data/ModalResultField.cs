@@ -32,9 +32,11 @@
 using System;
 using System.Collections.Concurrent;
 using System.Reflection;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
@@ -274,6 +276,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		///     [kW]	Power demand of Auxiliary with ID xxx. See also Aux Dialog and Driving Cycle.
 		/// </summary>
 		[ModalResultField(typeof(SI), caption: "P_aux_{0} [kW]", outputFactor: 1e-3)] P_aux_,
+		[ModalResultField(typeof(SI), caption: "P_aux_{0}_el [kW]", outputFactor: 1e-3)] P_aux_el_,
 
 		/// Bus Aux Data
 		[ModalResultField(typeof(SI), caption: "P_busAux_ES_HVAC [kW]", outputFactor: 1e-3)] P_busAux_ES_HVAC,
@@ -365,6 +368,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(double))] HybridStrategyScore,
 
 		[ModalResultField(typeof(double))]HybridStrategySolution,
+
+		[ModalResultField(typeof(int), caption: "HybridStrategyState")] HybridStrategyState,
 
 		[ModalResultField(typeof(int), caption: "BusAux_Overrun [bool]")] BusAux_OverrunFlag,
 		
@@ -500,10 +505,21 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			return GetAttribute(field).Name ?? field.ToString();
 		}
 
-		public static string GetCaption(this ModalResultField field)
+
+		public static string GetCaption(this ModalResultField field, string suffix = null)
 		{
 			var attribute = GetAttribute(field);
-			return attribute.Caption ?? attribute.Name ?? field.ToString();
+			if (suffix != null) {
+				var captionNoUnit = field.GetShortCaption();
+				var captionUnit = field.GetCaption();
+				var captionWithSuffix = captionUnit.Replace(captionNoUnit, captionNoUnit + suffix);
+
+				return captionWithSuffix;
+			} else {
+				return attribute.Caption ?? attribute.Name ?? field.ToString();
+			}
+
+			
 		}
 
 		public static string GetShortCaption(this ModalResultField field)
@@ -511,6 +527,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			var caption = GetCaption(field);
 			return Regex.Replace(caption, @"\[.*?\]|\<|\>", "").Trim();
 		}
+
 
 		public static Type GetDataType(this ModalResultField field)
 		{

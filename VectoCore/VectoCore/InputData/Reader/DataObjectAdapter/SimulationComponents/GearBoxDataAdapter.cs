@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.ShiftStrategy;
 using TUGraz.VectoCore.Models.Declaration;
@@ -75,18 +78,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			gearData.TorqueConverterShiftPolygon = shiftPolygon;
 		}
 
-		protected virtual void CreateATGearData(
-			IGearboxDeclarationInputData gearbox, uint i, GearData gearData,
+		protected virtual void CreateATGearData(GearboxType gearboxType, uint i, GearData gearData,
 			ShiftPolygon tcShiftPolygon, double gearDifferenceRatio, Dictionary<uint, GearData> gears,
 			VehicleCategory vehicleCategory)
 		{
-			if (gearbox.Type == GearboxType.ATPowerSplit && i == 0)
+			if (gearboxType == GearboxType.ATPowerSplit && i == 0)
 			{
 				// powersplit transmission: torque converter already contains ratio and losses
 				CretateTCFirstGearATPowerSplit(gearData, i, tcShiftPolygon);
 			}
 
-			if (gearbox.Type == GearboxType.ATSerial)
+			if (gearboxType == GearboxType.ATSerial)
 			{
 				if (i == 0)
 				{
@@ -293,19 +295,30 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			var retVal = SetCommonGearboxData(gearbox);
 
-			//if (adas != null && retVal.Type.AutomaticTransmission() && adas.EcoRoll != EcoRollType.None &&
-			//	!adas.ATEcoRollReleaseLockupClutch.HasValue) {
-			//	throw new VectoException("Input parameter ATEcoRollReleaseLockupClutch required for AT transmission");
-			//}
+           
+			if ((inputData.VehicleType == VectoSimulationJobType.BatteryElectricVehicle || inputData.VehicleType == VectoSimulationJobType.SerialHybridVehicle) &&
+				gearbox.Type.AutomaticTransmission())
+			{
 
-			retVal.ATEcoRollReleaseLockupClutch =
+				// PEV with APT-S or APT-P transmission are simulated as APT-N
+				if (retVal.Type.IsOneOf(GearboxType.ATPowerSplit, GearboxType.ATSerial)) {
+					retVal.Type = GearboxType.APTN;
+				}
+			}
+            if (adas != null && retVal.Type.AutomaticTransmission()  && adas.EcoRoll != EcoRollType.None &&
+                           !adas.ATEcoRollReleaseLockupClutch.HasValue)
+            {
+                throw new VectoException("Input parameter ATEcoRollReleaseLockupClutch required for AT transmission");
+            }
+
+            retVal.ATEcoRollReleaseLockupClutch =
 				adas != null && adas.EcoRoll != EcoRollType.None && retVal.Type.AutomaticTransmission()
 					? (adas.ATEcoRollReleaseLockupClutch.HasValue ? adas.ATEcoRollReleaseLockupClutch.Value : false)
 					: false;
 
 			if (!supportedGearboxTypes.Contains(gearbox.Type))
 			{
-				throw new VectoSimulationException("Unsupported gearbox type: {0}!", retVal.Type);
+				throw new VectoSimulationException("Unsupported gearbox type: {0}!", gearbox.Type);
 			}
 
 			var gearsInput = FilterDisabledGears(inputData.TorqueLimits, gearbox);  //gearbox.Gears;
@@ -351,7 +364,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					LossMap = lossMap,
 				};
 
-				CreateATGearData(gearbox, i, gearData, tcShiftPolygon, gearDifferenceRatio, gears,
+				CreateATGearData(retVal.Type, i, gearData, tcShiftPolygon, gearDifferenceRatio, gears,
 					runData.VehicleData.VehicleCategory);
 				gears.Add(i + 1, gearData);
 			}
@@ -376,7 +389,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 
 			retVal.Gears = gears;
-			if (retVal.Type.AutomaticTransmission())
+			
+			if (retVal.Type.AutomaticTransmission() && retVal.Type != GearboxType.APTN && retVal.Type != GearboxType.IHPC)
 			{
 				var ratio = double.IsNaN(retVal.Gears[1].Ratio)
 					? 1
@@ -455,6 +469,90 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 		#endregion
 	}
+
+
+	public class IEPCGearboxDataAdapter : GearboxDataAdapterBase
+	{
+		private GearboxData CreateIEPCGearboxData(IVehicleDeclarationInputData vehicle, VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalc)
+		{
+
+
+			var iepc = vehicle.Components.IEPC;
+
+			var axlegearRatio = runData.AxleGearData?.AxleGear.Ratio ?? 1.0;
+			var dynamicTyreRadius = runData.VehicleData.DynamicTyreRadius;
+
+
+			var retVal = new GearboxData()
+			{
+				Type = GearboxType.APTN,
+				Inertia = 0.SI<KilogramSquareMeter>(),
+				TractionInterruption = 0.SI<Second>(),
+				InputData = new IEPCGearboxInputData(iepc),
+			};
+
+
+			var gearInput = iepc.Gears.Select((x, idx) => new TransmissionInputData() { Gear = idx + 1, Ratio = x.Ratio }).Cast<ITransmissionInputData>().ToList();
+			var gears = new Dictionary<uint, GearData>();
+			for (uint i = 0; i < iepc.Gears.Count; i++)
+			{
+				var gear = iepc.Gears[(int)i];
+				var lossMap = TransmissionLossMapReader.Create(1, gear.Ratio, $"Gear{i + 1}");
+
+				ShiftPolygon shiftPolygon = null;
+				if (iepc.Gears.Count > 1)
+				{
+					if (shiftPolygonCalc != null)
+					{
+						shiftPolygon = shiftPolygonCalc.ComputeDeclarationShiftPolygon(GearboxType.APTN, (int)i,
+							null, gearInput, null, axlegearRatio,
+							dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2);
+					}
+					else
+					{
+						shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(GearboxType.APTN, (int)i,
+							null, gearInput, null, axlegearRatio,
+							dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2);
+					}
+				}
+				var gearData = new GearData
+				{
+					ShiftPolygon = shiftPolygon,
+					MaxSpeed = gear.MaxOutputShaftSpeed == null ? null : gear.MaxOutputShaftSpeed * gear.Ratio,
+					MaxTorque = gear.MaxOutputShaftTorque == null ? null : gear.MaxOutputShaftTorque / gear.Ratio,
+					Ratio = gear.Ratio,
+					LossMap = lossMap,
+				};
+
+				gears.Add(i + 1, gearData);
+			}
+
+			retVal.Gears = gears;
+
+			// update disengageWhenHaltingSpeed
+			var firstGear = retVal.GearList.First(x => x.IsLockedGear());
+			if (iepc.Gears.Count > 1 && retVal.Gears[firstGear.Gear].ShiftPolygon.Downshift.Any())
+			{
+				var downshiftSpeedInc = retVal.Gears[firstGear.Gear].ShiftPolygon
+					.InterpolateDownshiftSpeed(0.SI<NewtonMeter>()) * 1.05;
+				var vehicleSpeedDisengage = downshiftSpeedInc / axlegearRatio / retVal.Gears[firstGear.Gear].Ratio *
+											dynamicTyreRadius;
+				retVal.DisengageWhenHaltingSpeed = vehicleSpeedDisengage;
+			}
+
+			return retVal;
+		}
+
+		#region Overrides of GearboxDataAdapterBase
+
+		protected override GearboxData DoCreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
+			IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes)
+		{
+			return CreateIEPCGearboxData(inputData, runData, shiftPolygonCalculator);
+		}
+		#endregion
+	}
+
 
 	public class CompletedSpecifigBusGearboxDataAdapter : GenericCompletedBusGearboxDataAdapter
 	{

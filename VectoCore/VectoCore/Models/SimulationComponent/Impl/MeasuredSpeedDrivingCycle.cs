@@ -391,6 +391,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AdvanceState();
 		}
 
+		protected override bool DoUpdateFrom(object other) => false;
+
 		public double Progress => AbsTime == null ? 0 : AbsTime.Value() / Data.Entries.Last().Time.Value();
 
 		public CycleData CycleData =>
@@ -449,6 +451,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public PCCStates PCCState => PCCStates.OutsideSegment;
 
 		public MeterPerSecond NextBrakeTriggerSpeed => 0.SI<MeterPerSecond>();
+		public MeterPerSecond ApplyOverspeed(MeterPerSecond targetSpeed) => targetSpeed;
 
 		public Meter Distance => CurrentState.Distance;
 	}

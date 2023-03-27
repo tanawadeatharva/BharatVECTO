@@ -46,8 +46,11 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
@@ -57,12 +60,16 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected IXMLCustomerReport CustomerRpt;
 
+		protected readonly IManufacturerReportFactory _mrfFactory;
+		protected readonly ICustomerInformationFileFactory _cifFactory;
+		
 
 		protected IDictionary<Tuple<MissionType, LoadingType>, double> _weightingFactors;
 
-		public XMLDeclarationReport(IReportWriter writer) : base(writer)
+		public XMLDeclarationReport(IReportWriter writer, IManufacturerReportFactory mrfFactory, ICustomerInformationFileFactory cifFactory) : base(writer)
 		{
-			throw new NotImplementedException("Use new implementation...");
+			_mrfFactory = mrfFactory;
+			_cifFactory = cifFactory;
 		}
 
 		protected XMLDeclarationReport(IReportWriter writer, bool dummy) : base(writer) { }
@@ -74,20 +81,40 @@ namespace TUGraz.VectoCore.OutputData.XML
 				Distance = double.MaxValue.SI<Meter>();
 			}
 
-			public MissionType Mission { get; set; }
-			public LoadingType LoadingType { get; set; }
-			public int FuelMode { get; set; }
+			public void Initialize(VectoRunData runData)
+			{
+				Mission = runData.Mission.MissionType;
+				LoadingType = runData.Loading;
+				FuelMode = runData.EngineData?.FuelMode ?? 0;
+				FuelData = runData.EngineData?.Fuels.Select(x => x.FuelData).ToList() ?? new List<IFuelProperties>();
+				Payload = runData.VehicleData.Loading;
+				TotalVehicleMass = runData.VehicleData.TotalVehicleMass;
+				CargoVolume = runData.VehicleData.CargoVolume;
+				VehicleClass = runData.Mission?.BusParameter?.BusGroup ?? runData.VehicleData.VehicleClass;
+				PassengerCount = runData.VehicleData.PassengerCount;
+				MaxChargingPower = runData.MaxChargingPower;
+				BatteryData = runData.BatteryData;
+				OVCMode = runData.OVCMode;
+				VectoRunData = runData;
+			}
+
+			public VectoRunData VectoRunData { get; private set; }
+
+			public MissionType Mission { get; private set; }
+			public LoadingType LoadingType { get; private set; }
+			public int FuelMode { get; private set; }
 			public IList<IFuelProperties> FuelData { get; set; }
 
 
 			public Kilogram Payload { get; set; }
 
-			public Kilogram TotalVehicleMass { get; set; }
+			public Kilogram TotalVehicleMass { get; private set; }
 
-			public CubicMeter CargoVolume { get; set; }
+			public CubicMeter CargoVolume { get; private set; }
 
 			public double? PassengerCount { get; set; }
 			public VehicleClass VehicleClass { get; set; }
+			public Watt MaxChargingPower { get; set; }
 
 			public MeterPerSecond AverageSpeed { get; private set; }
 
@@ -95,9 +122,16 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public Joule EnergyConsumptionTotal { get; private set; }
 
+            public IFuelConsumptionCorrection FuelConsumptionFinal(FuelType fuelType)
+			{
+				return CorrectedFinalFuelConsumption.ContainsKey(fuelType) ?  CorrectedFinalFuelConsumption[fuelType] : null;
+			}
+
+			public WattSecond ElectricEnergyConsumption { get; private set; }
+
 			public Kilogram CO2Total { get; private set; }
 
-			public Dictionary<FuelType, IFuelConsumptionCorrection> FuelConsumptionFinal { get; private set; }
+			public Dictionary<FuelType, IFuelConsumptionCorrection> CorrectedFinalFuelConsumption { get; private set; }
 
 			public Meter Distance { get; private set; }
 
@@ -115,9 +149,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public string Error { get; private set; }
 
+
 			public VectoRun.Status Status { get; private set; }
 
 			public string StackTrace { get; private set; }
+			public BatterySystemData BatteryData { get; private set; }
 
 			public PerSecond EngineSpeedDrivingMin { get; private set; }
 			public PerSecond EngineSpeedDrivingAvg { get; private set; }
@@ -128,6 +164,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 			public double AverageAxlegearEfficiency { get; private set; }
 
 			public double WeightingFactor { get; set; }
+			public Meter ActualChargeDepletingRange { get; set; }
+			public Meter EquivalentAllElectricRange { get; set; }
+			public Meter ZeroCO2EmissionsRange { get; set; }
+			public IFuelProperties AuxHeaterFuel { get; set; }
+			public Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
+			public Kilogram ZEV_CO2 { get; set; }
+
+			public VectoRunData.OvcHevMode OVCMode { get; set; }
 
 			// used for factor method
 			public IResult PrimaryResult { get; set; }
@@ -135,6 +179,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public virtual void SetResultData(VectoRunData runData, IModalDataContainer data, double weightingFactor)
 			{
+				OVCMode = runData.OVCMode;
 				Status = data.RunStatus;
 				Error = data.Error;
 				StackTrace = data.StackTrace;
@@ -147,34 +192,63 @@ namespace TUGraz.VectoCore.OutputData.XML
 				FullLoadPercentage = data.ICEMaxLoadTimeShare();
 				GearshiftCount = data.GearshiftCount();
 
-				var entriesDriving = data.GetValues(
-					r => new {
-						dt = r.Field<Second>(ModalResultField.simulationInterval.GetName()),
-						v = r.Field<MeterPerSecond>(ModalResultField.v_act.GetName()),
-						nEng = r.Field<PerSecond>(ModalResultField.n_ice_avg.GetName())
-					}).Where(x => x.v.IsGreater(0)).ToArray();
-				var drivingTime = entriesDriving.Sum(x => x.dt);
+				var entriesDriving = data.HasCombustionEngine
+					? data.GetValues(
+						r => new {
+							dt = r.Field<Second>(ModalResultField.simulationInterval.GetName()),
+							v = r.Field<MeterPerSecond>(ModalResultField.v_act.GetName()),
+							nEng = r.Field<PerSecond>(ModalResultField.n_ice_avg.GetName())
+						}).Where(x => x.v.IsGreater(0)).ToArray()
+					: null;
+				if (entriesDriving?.Length > 0) {
+					var drivingTime = entriesDriving.Sum(x => x.dt);
 
-				AverageDrivingSpeed = entriesDriving.Sum(x => x.v * x.dt) / drivingTime;
-				EngineSpeedDrivingAvg = (entriesDriving.Sum(x => (x.nEng * x.dt).Value()) / drivingTime.Value()).SI<PerSecond>();
-				EngineSpeedDrivingMin = entriesDriving.Min(x => x.nEng);
-				EngineSpeedDrivingMax = entriesDriving.Max(x => x.nEng);
+					AverageDrivingSpeed = entriesDriving.Sum(x => x.v * x.dt) / drivingTime;
+					EngineSpeedDrivingAvg = (entriesDriving.Sum(x => (x.nEng * x.dt).Value()) / drivingTime.Value())
+						.SI<PerSecond>();
+					EngineSpeedDrivingMin = entriesDriving.Min(x => x.nEng);
+					EngineSpeedDrivingMax = entriesDriving.Max(x => x.nEng);
+				} else {
+					AverageDrivingSpeed = 0.KMPHtoMeterPerSecond();
+					EngineSpeedDrivingAvg = 0.RPMtoRad();
+					EngineSpeedDrivingMax = 0.RPMtoRad();
+					EngineSpeedDrivingMin = 0.RPMtoRad();
+				}
+
 				Distance = data.Distance;
 
-				FuelConsumptionFinal = data.CorrectedModalData.FuelCorrection;
+				CorrectedFinalFuelConsumption = data.CorrectedModalData.FuelCorrection;
 				CO2Total = data.CorrectedModalData.CO2Total;
-				EnergyConsumptionTotal = data.CorrectedModalData.EnergyConsumptionTotal;
+				EnergyConsumptionTotal = data.CorrectedModalData.FuelEnergyConsumptionTotal;
+				ElectricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption_SoC;
 
-				var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
-					? ModalResultField.P_retarder_in
-					: (runData.AngledriveData == null ? ModalResultField.P_axle_in : ModalResultField.P_angle_in);
-				var eGbxIn = data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_in, x => x > 0);
-				var eGbxOut = data.TimeIntegral<WattSecond>(gbxOutSignal, x => x > 0);
-				AverageGearboxEfficiency = eGbxOut / eGbxIn;
+				if (runData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
+						VectoSimulationJobType.IEPC_E)) {
+					var ranges = DeclarationData.CalculateElectricRangesPEV(runData, data);
+					ActualChargeDepletingRange = ranges.ActualChargeDepletingRange;
+					EquivalentAllElectricRange = ranges.EquivalentAllElectricRange;
+					ZeroCO2EmissionsRange = ranges.ZeroCO2EmissionsRange;
+					ElectricEnergyConsumption = ranges.ElectricEnergyConsumption;
+				}
 
-				var eAxlIn = data.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, x => x > 0);
-				var eAxlOut = data.TimeIntegral<WattSecond>(ModalResultField.P_brake_in, x => x > 0);
-				AverageAxlegearEfficiency = eAxlOut == null || eAxlIn == null ? double.NaN : eAxlOut / eAxlIn;
+				if (data.HasGearbox && !runData.JobType.IsOneOf(VectoSimulationJobType.IEPC_E, VectoSimulationJobType.IEPC_S)) {
+					var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
+						? ModalResultField.P_retarder_in
+						: (runData.AngledriveData == null ? ModalResultField.P_axle_in : ModalResultField.P_angle_in);
+					var eGbxIn = data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_in, x => x > 0);
+					var eGbxOut = data.TimeIntegral<WattSecond>(gbxOutSignal, x => x > 0);
+					AverageGearboxEfficiency = eGbxOut / eGbxIn;
+				} else {
+					AverageGearboxEfficiency = double.NaN;
+				}
+
+				if (data.HasAxlegear) {
+					var eAxlIn = data.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, x => x > 0);
+					var eAxlOut = data.TimeIntegral<WattSecond>(ModalResultField.P_brake_in, x => x > 0);
+					AverageAxlegearEfficiency = eAxlOut == null || eAxlIn == null ? double.NaN : eAxlOut / eAxlIn;
+				} else {
+					AverageAxlegearEfficiency = double.NaN;
+				}
 
 				WeightingFactor = weightingFactor;
 
@@ -188,7 +262,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public virtual XDocument FullReport => ManufacturerRpt.Report;
 
-		public virtual XDocument CustomerReport => CustomerRpt.Report;
+		public virtual XDocument CustomerReport => CustomerRpt?.Report;
 
 		public virtual XDocument PrimaryVehicleReport => null;
 
@@ -207,20 +281,23 @@ namespace TUGraz.VectoCore.OutputData.XML
 			}
 
 			ManufacturerRpt.WriteResult(result);
-			CustomerRpt.WriteResult(result);
+			CustomerRpt?.WriteResult(result);
 		}
 
 		protected override void GenerateReports()
 		{
 			ManufacturerRpt.GenerateReport();
 			var fullReportHash = GetSignature(ManufacturerRpt.Report);
-			CustomerRpt.GenerateReport(fullReportHash);
+			CustomerRpt?.GenerateReport(fullReportHash);
 		}
 
 
 		protected override void OutputReports()
 		{
-			Writer.WriteReport(ReportType.DeclarationReportCustomerXML, CustomerRpt.Report);
+			if (CustomerReport != null) {
+				Writer.WriteReport(ReportType.DeclarationReportCustomerXML, CustomerRpt.Report);
+			}
+
 			Writer.WriteReport(ReportType.DeclarationReportManufacturerXML, ManufacturerRpt.Report);
 		}
 
@@ -260,12 +337,24 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected virtual void InstantiateReports(VectoRunData modelData)
 		{
-			//if (modelData.Exempted) {
-			//	ManufacturerRpt = new XMLManufacturerReportExemptedTruck();
-			//} else {
-			//	ManufacturerRpt = new XMLManufacturerReportTruck();
-			//}
-			//CustomerRpt = new XMLCustomerReport();
+
+			var vehicleData = modelData.VehicleData.InputData;
+			var iepc = vehicleData.Components?.IEPC != null;
+			var ihpc =
+				vehicleData.Components?.ElectricMachines?.Entries?.Count(e => e.ElectricMachine.IHPCType != "None") > 0;
+
+			ManufacturerRpt = _mrfFactory.GetManufacturerReport(vehicleData.VehicleCategory,
+				vehicleData.VehicleType,
+				vehicleData.ArchitectureID,
+				vehicleData.ExemptedVehicle,
+				iepc,
+				ihpc);
+			CustomerRpt = _cifFactory.GetCustomerReport(vehicleData.VehicleCategory,
+				vehicleData.VehicleType,
+				vehicleData.ArchitectureID,
+				vehicleData.ExemptedVehicle,
+				iepc,
+				ihpc);
 		}
 
 		private static IDictionary<Tuple<MissionType, LoadingType>, double> ZeroWeighting =>
@@ -298,13 +387,13 @@ namespace TUGraz.VectoCore.OutputData.XML
 				});
 
 
-		public static IEnumerable<XElement> GetResults(ResultEntry result, XNamespace tns, bool fullOutput)
+		public static IEnumerable<XElement> GetResults(IResultEntry result, XNamespace tns, bool fullOutput)
 		{
 			//var fuel = result.FuelData;
 			var retVal = new List<XElement>();
 
 			foreach (var fuel in result.FuelData) {
-				var entry = result.FuelConsumptionFinal[fuel.FuelType];
+				var entry = result.FuelConsumptionFinal(fuel.FuelType);
 				var fcResult = new XElement(tns + XMLNames.Report_Results_Fuel, new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fuel.FuelType.ToXMLFormat()));
 				fcResult.Add(
 					new XElement(
