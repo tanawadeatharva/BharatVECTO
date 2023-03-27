@@ -80,16 +80,16 @@ namespace TUGraz.VectoCommon.InputData
 
 		public string SourceFile { get; set; }
 
+		/// <summary>
+		/// returns the version of the namespace uri
+		/// </summary>
 		public string SourceVersion { get; set; }
 
 		/// <summary>
 		/// In case of components loaded from XML files, this is the name of the XSD Type
 		/// </summary>
 		public string Type { get; set; }
-
-		public string SourceTypeVersion { get; set; }
-
-
+		
 
 		public string SourcePath => SourceFile != null ? Path.GetDirectoryName(Path.GetFullPath(SourceFile)) : null;
 	}
