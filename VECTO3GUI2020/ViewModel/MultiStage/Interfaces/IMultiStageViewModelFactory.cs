@@ -16,31 +16,21 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 {
 
 	public interface IMultiStageViewModelFactory : 
-		IMultiStageViewModelFactoryDefaultInstanceProvider, 
-		IMultiStageViewModelFactoryTypeAsNameInstanceProvider, 
-		IMultistageViewModelFactoryFirstParameterAsNameInstanceProvider
-	{
+		IMultiStageViewModelFactoryDefaultInstanceProvider,		IDocumentViewModelFactory,
+IMultistageViewModelFactoryFirstParameterAsNameInstanceProvider
+    {
 		
 	}
 
 
-	public interface IMultiStageViewModelFactoryTypeAsNameInstanceProvider
-	{
-		IDocumentViewModel CreateDocumentViewModel(IDeclarationInputDataProvider inputData);
-		IDocumentViewModel CreateDocumentViewModel(IInputDataProvider inputData);
-		IVehicleViewModel CreateStageInputVehicleViewModel(IVehicleDeclarationInputData inputData);
-	}
 
 	public interface IMultistageViewModelFactoryFirstParameterAsNameInstanceProvider
 	{
 		IVehicleViewModel CreateStageInputVehicleViewModel(string inputProviderType);
 	}
 
-
-
     public interface IMultiStageViewModelFactoryDefaultInstanceProvider
 	{
-		IDocumentViewModel GetStageInputViewModel(bool exemptedVehicle);
 		IViewModelBase GetNewMultistageJobViewModel();
 
 		IMultiStageJobViewModel GetMultiStageJobViewModel(IMultistepBusInputDataProvider inputData);
@@ -58,20 +48,5 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 		IMultistageAuxiliariesViewModel GetAuxiliariesViewModel();
 		IMultistageAuxiliariesViewModel GetAuxiliariesViewModel(
 			IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData);
-
-		ICreateVifViewModel GetCreateNewVifViewModel(bool completed);
-		ICreateVifViewModel GetCreateNewVifViewModel();
-
-		//IViewModelBase CreateNewMultiStageJobViewModel();
-
-		//IMultiStageJobViewModel CreateMultiStageJobViewModel(string inputProviderType, IMultistageBusInputDataProvider inputData);
-
-		//IVehicleViewModel CreateInterimStageVehicleViewModel(string inputProviderType);
-
-		//IVehicleViewModel CreateInterimStageVehicleViewModel(string inputProviderType, IVehicleDeclarationInputData prevStageInputData);
-
-		//IManufacturingStageViewModel CreateManufacturingStageViewModel(string inputProviderType, IManufacturingStageInputData consolidatedManufacturingStageInputData);
-
-		//IMultistageAirdragViewModel CreateMultistageAirdragViewModel();
 	}
 }

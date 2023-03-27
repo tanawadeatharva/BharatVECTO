@@ -36,14 +36,14 @@ namespace VECTO3GUI2020.Ninject
 
 			Bind<IMultistageDependencies>().To<MultistageLazyDependencies>();
 
-			Bind<ICreateVifViewModel>().To<CreateVifViewModel>().
-				NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetCreateNewVifViewModel());
+			//Bind<ICreateVifViewModel>().To<CreateVifViewModel>().
+			//	NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetCreateNewVifViewModel());
 
-			Bind<IDocumentViewModel>().To<StageInputViewModel>()
-				.Named(typeof(XMLDeclarationInputDataProviderV20).ToString());
+			//Bind<IDocumentViewModel>().To<StageInputViewModel>()
+			//	.Named(typeof(XMLDeclarationInputDataProviderV20).ToString());
 
-			Bind<IDocumentViewModel>().To<StageInputViewModel>()
-				.NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetStageInputViewModel(default(bool)));
+			//Bind<IDocumentViewModel>().To<StageInputViewModel>()
+			//	.NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetStageInputViewModel(default(bool)));
 
 			Bind<IAdditionalJobInfoViewModel>().To<AdditionalJobInfoViewModelMultiStage>()
 				.WhenInjectedInto(typeof(IMultiStageJobViewModel));

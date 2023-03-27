@@ -20,10 +20,12 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -75,7 +77,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		private IDialogHelper _dialogHelper;
         private IWindowHelper _windowHelper;
-        private IDocumentViewModelFactory _documentViewModelFactory;
+        //private IDocumentViewModelFactory _documentViewModelFactory;
 
 		private IMultiStageViewModelFactory _multiStageViewModelFactory;
 		private readonly IXMLInputDataReader _inputDataReader;
@@ -99,7 +101,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		}
 
 
-        public JobListViewModel(IDocumentViewModelFactory documentViewModelFactory,
+        public JobListViewModel(
             IXMLInputDataReader inputDataReader,
             IDialogHelper dialogHelper,
             IWindowHelper windowHelper,
@@ -107,8 +109,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			ISimulatorFactoryFactory simulatorFactoryFactory,
 			IOutputViewModel outputViewModel) : this()
         {
-            _documentViewModelFactory = documentViewModelFactory;
-            _dialogHelper = dialogHelper;
+			_dialogHelper = dialogHelper;
             _windowHelper = windowHelper;
 			_inputDataReader = inputDataReader;
 			_multiStageViewModelFactory = multiStageViewModelFactory;
@@ -280,41 +281,43 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		private Task<IDocumentViewModel> LoadXMLFile([NotNull] string fileName)
 		{
-			var xElement = new System.Xml.XmlDocument();
-			xElement.Load(fileName);
-
-			var documentType = XMLHelper.GetDocumentType(xElement?.DocumentElement?.LocalName);
-			if (documentType == XmlDocumentType.MultistepOutputData)
+			var documentType = XMLHelper.GetDocumentTypeFromFile(fileName);
+			if (!documentType.IsOneOf(XmlDocumentType.MultistepOutputData, XmlDocumentType.DeclarationJobData))
 			{
-				var inputDataProvider = _inputDataReader.Create(fileName) as IMultistepBusInputDataProvider;
-				return Task.FromResult(_multiStageViewModelFactory.GetMultiStageJobViewModel(inputDataProvider) as IDocumentViewModel);
-			}
-			else if (documentType == XmlDocumentType.DeclarationJobData)
-			{
-				//Remove
-				var inputDataProvider = _inputDataReader.CreateDeclaration(fileName);
-				IDocumentViewModel result;
-				try
-				{
-					result = _multiStageViewModelFactory.CreateDocumentViewModel(inputDataProvider);
-				}
-				catch (Exception ex)
-				{
-					Debug.WriteLine(ex.GetInnerExceptionMessages());
-					result = new SimulationOnlyDeclarationJob(inputDataProvider.DataSource, inputDataProvider.JobInputData.JobName, XmlDocumentType.DeclarationJobData) as IDocumentViewModel;
-				}
-				return Task.FromResult(result);
-			}
-			else {
 				return Task.FromException<IDocumentViewModel>(
 					new VectoXMLException($"{documentType.ToString()} not supported"));
-				//throw new VectoXMLException($"{documentType.ToString()} not supported");
 			}
 
-			return null;
+            var inputDataProvider = _inputDataReader.CreateDeclaration(fileName);
+			var vm = _multiStageViewModelFactory.CreateDocumentViewModel(inputDataProvider);
+			return Task.FromResult(vm);
 
-
-
+            //if (documentType == XmlDocumentType.MultistepOutputData)
+            //{
+            //	var inputDataProvider = _inputDataReader.Create(fileName) as IMultistepBusInputDataProvider;
+            //	return Task.FromResult(_multiStageViewModelFactory.GetMultiStageJobViewModel(inputDataProvider) as IDocumentViewModel);
+            //}
+            //else if (documentType == XmlDocumentType.DeclarationJobData)
+            //{
+            //	//Remove
+            //	var inputDataProvider = _inputDataReader.CreateDeclaration(fileName);
+            //	IDocumentViewModel result;
+            //	try
+            //	{
+            //		result = _multiStageViewModelFactory.CreateDocumentViewModel(inputDataProvider);
+            //	}
+            //	catch (Exception ex)
+            //	{
+            //		Debug.WriteLine(ex.GetInnerExceptionMessages());
+            //		result = new SimulationOnlyDeclarationJob(inputDataProvider.DataSource, inputDataProvider.JobInputData.JobName, XmlDocumentType.DeclarationJobData) as IDocumentViewModel;
+            //	}
+            //	return Task.FromResult(result);
+            //}
+            //else {
+            //	return Task.FromException<IDocumentViewModel>(
+            //		new VectoXMLException($"{documentType.ToString()} not supported"));
+            //	//throw new VectoXMLException($"{documentType.ToString()} not supported");
+            //}
 		}
 
 		#endregion
@@ -867,7 +870,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		private void NewCompletedInputCommandExecute(bool exempted)
 		{
-			var stageInputVm = _multiStageViewModelFactory.GetStageInputViewModel(exempted);
+			var stageInputVm = _multiStageViewModelFactory.GetCreateNewStepInputViewModel(exempted);
 
 			AddJob(stageInputVm);
 
@@ -890,7 +893,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			{
 				return _newVifCommand ?? (_newVifCommand = new RelayCommand<bool>((b) => {
 					var newVifViewModel = _multiStageViewModelFactory.GetCreateNewVifViewModel(b);
-					lock (_jobsLock) {
+					//var newVifViewModel = _multiStageViewModelFactory.GetCreateNewVifViewModel(b);
+					lock (_jobsLock)
+					{
 						_jobs.Add(newVifViewModel);
 					}
 					_windowHelper.ShowWindow(newVifViewModel);

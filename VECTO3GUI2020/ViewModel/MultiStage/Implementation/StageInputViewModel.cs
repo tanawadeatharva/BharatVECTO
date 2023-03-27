@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Properties;
@@ -45,15 +46,17 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public StageInputViewModel(IDeclarationInputDataProvider inputData, IMultiStageViewModelFactory multiStageViewModelFactory, IAdditionalJobInfoViewModel additionalJobInfoViewModel) : this(multiStageViewModelFactory,additionalJobInfoViewModel)
 		{
 			_documentName = inputData.JobInputData.JobName;
-			_vehicleViewModel =
-				_viewModelFactory.CreateStageInputVehicleViewModel(inputData.JobInputData.Vehicle) as IMultistageVehicleViewModel;
-			(_vehicleViewModel as InterimStageBusVehicleViewModel_v2_8).ShowConsolidatedData = false;
+
+			//_vehicleViewModel =
+			//	_viewModelFactory.CreateStageInputVehicleViewModel(inputData.JobInputData.Vehicle) as IMultistageVehicleViewModel;
+			//(_vehicleViewModel as InterimStageBusVehicleViewModel_v2_8).ShowConsolidatedData = false;
 
 			_dataSource = inputData.DataSource;
 			VehicleInputDataFilePath = _dataSource.SourceFile;
 
 			Title = $"{GUILabels.Edit_step_input} - {Path.GetFileName(_dataSource.SourceFile)}";
-			Init();
+			return;
+            Init();
 		}
 
 		#region Overrides of StageViewModelBase

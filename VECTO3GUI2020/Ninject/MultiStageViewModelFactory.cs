@@ -1,5 +1,14 @@
-﻿using TUGraz.VectoCommon.InputData;
+﻿using Ninject;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
+using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.ViewModel.Implementation;
+using VECTO3GUI2020.ViewModel.Implementation.Common;
+using VECTO3GUI2020.ViewModel.Implementation.Document;
+using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
@@ -11,26 +20,25 @@ namespace VECTO3GUI2020.Ninject
 	public class MultiStageViewModelFactory : IMultiStageViewModelFactory	
 	{
 		private IMultiStageViewModelFactoryDefaultInstanceProvider _multiStageVmFactoryDefaultInstanceProvider;
-		private IMultiStageViewModelFactoryTypeAsNameInstanceProvider _multiStageViewModelFactoryTypeAsNameInstanceProvider;
 
 		private IMultistageViewModelFactoryFirstParameterAsNameInstanceProvider
 			_multistageViewModelFactoryFirstParameterAsNameInstanceProvider;
 
+		private readonly IDocumentViewModelFactory _documentViewModelFactory;
 
-		public MultiStageViewModelFactory(IMultiStageViewModelFactoryDefaultInstanceProvider multiStageVmFactoryDefaultInstanceProvider, 
-			IMultiStageViewModelFactoryTypeAsNameInstanceProvider multiStageViewModelFactoryTypeAsNameInstanceProvider, IMultistageViewModelFactoryFirstParameterAsNameInstanceProvider multistageViewModelFactoryFirstParameterAsNameInstanceProvider)
+
+		public MultiStageViewModelFactory(
+			IMultiStageViewModelFactoryDefaultInstanceProvider multiStageVmFactoryDefaultInstanceProvider,
+			IMultistageViewModelFactoryFirstParameterAsNameInstanceProvider multistageViewModelFactoryFirstParameterAsNameInstanceProvider,
+			IDocumentViewModelFactory documentViewModelFactory)
 		{
 			_multiStageVmFactoryDefaultInstanceProvider = multiStageVmFactoryDefaultInstanceProvider;
-			_multiStageViewModelFactoryTypeAsNameInstanceProvider = multiStageViewModelFactoryTypeAsNameInstanceProvider;
 			_multistageViewModelFactoryFirstParameterAsNameInstanceProvider = multistageViewModelFactoryFirstParameterAsNameInstanceProvider;
+
+			_documentViewModelFactory = documentViewModelFactory;
 		}
 
 		#region Implementation of IMultiStageViewModelFactoryDefaultInstanceProvider
-
-		public IDocumentViewModel GetStageInputViewModel(bool exemptedVehicle)
-		{
-			return _multiStageVmFactoryDefaultInstanceProvider.GetStageInputViewModel(exemptedVehicle);
-		}
 
 		public IViewModelBase GetNewMultistageJobViewModel()
 		{
@@ -79,36 +87,20 @@ namespace VECTO3GUI2020.Ninject
 			return _multiStageVmFactoryDefaultInstanceProvider.GetAuxiliariesViewModel(consolidatedAuxiliariesInputData);
 		}
 
-		public ICreateVifViewModel GetCreateNewVifViewModel(bool completed)
-		{
-			return _multiStageVmFactoryDefaultInstanceProvider.GetCreateNewVifViewModel(completed);
-		}
+		//public ICreateVifViewModel GetCreateNewVifViewModel(bool completed)
+		//{
+		//	return _multiStageVmFactoryDefaultInstanceProvider.GetCreateNewVifViewModel(completed);
+		//}
 
-		public ICreateVifViewModel GetCreateNewVifViewModel()
-		{
-			return _multiStageVmFactoryDefaultInstanceProvider.GetCreateNewVifViewModel();
-		}
-
-		#endregion
-
-		#region Implementation of IMultiStageViewModelFactoryTypeAsNameInstanceProvider
-
-		public IDocumentViewModel CreateDocumentViewModel(IDeclarationInputDataProvider inputData)
-		{
-			return _multiStageViewModelFactoryTypeAsNameInstanceProvider.CreateDocumentViewModel(inputData);
-		}
-
-		public IDocumentViewModel CreateDocumentViewModel(IInputDataProvider inputData)
-		{
-			return _multiStageViewModelFactoryTypeAsNameInstanceProvider.CreateDocumentViewModel(inputData);
-		}
-
-		public IVehicleViewModel CreateStageInputVehicleViewModel(IVehicleDeclarationInputData inputData)
-		{
-			return _multiStageViewModelFactoryTypeAsNameInstanceProvider.CreateStageInputVehicleViewModel(inputData);
-		}
+		//public ICreateVifViewModel GetCreateNewVifViewModel()
+		//{
+		//	return _multiStageVmFactoryDefaultInstanceProvider.GetCreateNewVifViewModel();
+		//}
 
 		#endregion
+
+		
+
 
 
 		#region Implementation of IMultistageViewModelFactoryFirstParameterAsNameInstanceProvider
@@ -119,5 +111,25 @@ namespace VECTO3GUI2020.Ninject
 		}
 
 		#endregion
+
+		#region Implementation of IDocumentViewModelFactory
+
+		public IDocumentViewModel CreateDocumentViewModel(IInputDataProvider declarationInput)
+		{
+			return _documentViewModelFactory.CreateDocumentViewModel(declarationInput);
+		}
+
+		public IDocumentViewModel GetCreateNewStepInputViewModel(bool exemptedVehicle)
+		{
+			return _documentViewModelFactory.GetCreateNewStepInputViewModel(exemptedVehicle);
+		}
+
+		public IDocumentViewModel GetCreateNewVifViewModel(bool completed)
+		{
+			return _documentViewModelFactory.GetCreateNewVifViewModel(completed);
+		}
+
+		#endregion
+
 	}
 }

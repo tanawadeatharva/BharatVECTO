@@ -1,37 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using Ninject.Extensions.Factory;
-using Ninject.Extensions.NamedScope;
 using Ninject.Modules;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
-using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Utils.Ninject;
 using VECTO3GUI2020.Helper;
-using VECTO3GUI2020.Ninject.Util;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Implementation.Document;
-using VECTO3GUI2020.ViewModel.Implementation.JobEdit;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
-using VECTO3GUI2020.ViewModel.Interfaces.JobEdit;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 
 namespace VECTO3GUI2020.Ninject
 {
-
-
-
 	public class DocumentViewModelFactoryModule : NinjectModule
 	{
 		#region Overrides of NinjectModule
@@ -47,7 +30,7 @@ namespace VECTO3GUI2020.Ninject
 
         public override void Load()
 		{
-			Bind<IDocumentViewModelFactory>().To<DocumentViewModelFactory>().DefinesNamedScope(DocumentViewModelFactoryScope);
+			Bind<IDocumentViewModelFactory>().To<DocumentViewModelFactory>().Named(DocumentViewModelFactoryScope);
 
 			#region MultistepViewModel
 
@@ -57,7 +40,7 @@ namespace VECTO3GUI2020.Ninject
 			
 			#region DeclarationInputData
 			
-			Bind<IDeclarationInputViewModelFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(
+			Bind<IDeclarationInputViewModelFactory>().ToFactory( () => new CombineArgumentsToNameInstanceProvider(true,
 				new [] {
 					new CombineArgumentsToNameInstanceProvider.MethodSettings() {
 						methods = new []{typeof(IDeclarationInputViewModelFactory).GetMethod(nameof(IDeclarationInputViewModelFactory.CreateDeclarationViewModel))},
@@ -120,11 +103,7 @@ namespace VECTO3GUI2020.Ninject
 
 			Bind<IPrimaryAndStageInputViewModelFactory>().ToFactory().Named(PrimaryAndStageInputScope);
 			Bind<IDocumentViewModel>().To<CreateVifViewModel>().WhenParentNamed(PrimaryAndStageInputScope);
-
-
 		}
-
-
 		#endregion
 	}
 }
