@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 		/// 	<value></value>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		double PulleyGearRatio { get; set; }
+		double PulleyGearRatio { get; }
 
 		/// <summary>
 		/// 	Efficiency of the Pulley or Gear used to drive the compressor
@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 		/// 	<value></value>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		double PulleyGearEfficiency { get; set; }
+		double PulleyGearEfficiency { get; }
 
 		
 		/// <summary>

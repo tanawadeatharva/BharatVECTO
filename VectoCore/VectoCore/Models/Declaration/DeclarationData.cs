@@ -293,9 +293,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				if (pneumaticSupply.CompressorDrive == CompressorDrive.electrically) {
 					return null;
-					//var size = GetCompressorResourceForSize("Small");
-					//return CompressorMapReader.ReadStream(
-					//	RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".VAUXBus." + size), 1, $"{compressorSize} - {clutchType}");
+					//var size = GetCompressorResourceForSize("electrically");
+					//               return CompressorMapReader.ReadStream(
+					//                   RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".VAUXBus." + size), 1, $"{compressorSize} - {clutchType}");
 				}
 
 				var resource = GetCompressorResourceForSize(compressorSize);
@@ -322,6 +322,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					case "Medium Supply 2-stage": return "DEFAULT_2-Cylinder_1-Stage_650ccm.acmp";
 					case "Large Supply 1-stage": return "DEFAULT_2-Cylinder_2-Stage_398ccm.acmp";
 					case "Large Supply 2-stage": return "DEFAULT_3-Cylinder_2-Stage_598ccm.acmp";
+					//case "electrically": return "DEFAULT_electrically.acmp";
 					default: throw new ArgumentException($"unknown compressor size {compressorSize}", compressorSize);
 				}
 			}

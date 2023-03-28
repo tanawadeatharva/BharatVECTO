@@ -535,7 +535,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			{
 				KneelingHeight = VectoMath.Max(0.SI<Meter>(), mission.BusParameter.EntranceHeight - Constants.BusParameters.EntranceHeight),
 				CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
-				CompressorGearRatio = busAux.PneumaticSupply.Ratio,
+				CompressorGearRatio = busAux.PneumaticSupply.CompressorDrive == CompressorDrive.electrically ? 0.0 : busAux.PneumaticSupply.Ratio,
 				CompressorMap = DeclarationData.BusAuxiliaries.GetCompressorMap(busAux.PneumaticSupply),
 				SmartAirCompression = busAux.PneumaticSupply.SmartAirCompression,
 				SmartRegeneration = busAux.PneumaticSupply.SmartRegeneration,

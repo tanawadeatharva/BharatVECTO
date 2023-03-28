@@ -74,9 +74,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 
 			M3 = new M03Impl(auxConfig, compressorMap, auxCfg.Actuations, Signals);
 
-			M4 = new M04Impl(
-				compressorMap, auxConfig.PneumaticUserInputsConfig.CompressorGearRatio,
-				auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, Signals);
+			M4 = compressorMap == null
+				? (IM4_AirCompressor)new M04Impl_NoMechanicalCompressor()
+				: new M04Impl(
+					compressorMap, auxConfig.PneumaticUserInputsConfig.CompressorGearRatio,
+					auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, Signals);
 
 			M5 = new M05Impl_P0(M0, M1, M2, ElectricStorage, electricUserInputConfigNoAlternator, Signals);
 			M6 = new M06Impl(electricUserInputConfigNoAlternator, M1, M2, M3, M4, M5, Signals);
@@ -204,9 +206,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 
 			M3 = new M03Impl(auxConfig, compressorMap, auxCfg.Actuations, Signals);
 
-			M4 = new M04Impl(
-				compressorMap, auxConfig.PneumaticUserInputsConfig.CompressorGearRatio,
-				auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, Signals);
+			M4 = compressorMap == null
+				? (IM4_AirCompressor)new M04Impl_NoMechanicalCompressor()
+				: new M04Impl(
+					compressorMap, auxConfig.PneumaticUserInputsConfig.CompressorGearRatio,
+					auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, Signals);
 
 			//M5 = new M05Impl(
 			//	M0_5, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage,
