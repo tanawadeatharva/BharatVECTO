@@ -263,14 +263,16 @@ namespace Vecto3GUI2020Test
 			//var vehicleInputDataFilePath = GetTestDataPath(stageInputFullSample);
 			//TestContext.WriteLine($"Loading {vehicleInputDataFilePath}");
 			//Assert.IsTrue(File.Exists(vehicleInputDataFilePath), $"File {vehicleInputDataFilePath} not found");
-			//var stepInputData = InputMock.GetMockVehicle(out var mockStepInput, true);
-			var stepInputData = InputMock.GetMockVehicle()
-				.AddAirdragComponent(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20);
-			manStageViewModel.SetInputData(
-				stepInputData
-				);
+			//var stepInputData = MockDocument.GetMockVehicle(out var mockStepInput, true);
 
-			var airDragMock = Mock.Get(stepInputData.Components.AirdragInputData);
+			Assert.Fail();
+			//var stepInputData = MockDocument.GetMockVehicle()
+			//	.AddAirdragComponent(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20);
+			//manStageViewModel.SetInputData(
+			//	stepInputData
+			//	);
+
+			//var airDragMock = Mock.Get(stepInputData.Components.AirdragInputData);
 
 			//manStageViewModel.LoadStageInputData(vehicleInputDataFilePath);
 

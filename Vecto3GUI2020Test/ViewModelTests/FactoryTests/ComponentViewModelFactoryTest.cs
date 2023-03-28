@@ -5,6 +5,7 @@ using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Ninject.Factories;
 using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
+using Vecto3GUI2020Test.MockInput;
 using Vecto3GUI2020Test.Utils;
 
 namespace Vecto3GUI2020Test.ViewModelTests.FactoryTests;
@@ -30,8 +31,8 @@ public class ComponentViewModelFactoryTest
 	public void CreateAirdragViewModel(string version)
 	{
 		XNamespace ns = version;
-		var airdragData = InputMock.GetMockVehicle().AddAirdragComponent(ns).Components.AirdragInputData;
-		
+		var airdragData = MockComponent.GetAirdragComponentData(ns);
+
 		Assert.NotNull(airdragData);
 		Assert.AreEqual(version, airdragData.DataSource.TypeVersion);
 
@@ -57,7 +58,7 @@ public class ComponentViewModelFactoryTest
 				Assert.Fail($"Unexpected type {airdragVm.GetType()}");
 				break;
 		}
-		
-
 	}
+
+
 }

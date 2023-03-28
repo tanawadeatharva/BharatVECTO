@@ -1,4 +1,5 @@
 ﻿using System;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
 using TUGraz.VectoCore.Utils;
@@ -74,7 +75,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
         /// <returns></returns>
         private IDocumentViewModel CreateVifViewModel(IMultistageVIFInputData createVif)
 		{
-			throw new NotImplementedException();
+			throw new VectoException($"No viewmodel for {nameof(IMultistageVIFInputData)}");
 		}
 
 		public IDocumentViewModel GetCreateNewStepInputViewModel(bool exemptedVehicle)

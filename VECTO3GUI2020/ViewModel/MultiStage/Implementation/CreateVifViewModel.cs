@@ -156,7 +156,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private void SetInputData(IInputDataProvider inputData)
 		{
-			var inputDataProvider = inputData as JSONInputDataV10_PrimaryAndStageInputBus;
+			var inputDataProvider = inputData as IMultistagePrimaryAndStageInputDataProvider;
 			Debug.Assert(inputDataProvider != null);
 
 			try {

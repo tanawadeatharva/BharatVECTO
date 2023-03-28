@@ -7,6 +7,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Ninject;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
+using Vecto3GUI2020Test.MockInput;
 
 namespace Vecto3GUI2020Test.XML.XMLInput;
 
@@ -31,7 +32,7 @@ public class ViewModelFactoryTest
 		XNamespace nameSpace = ns;
 		TestContext.WriteLine(nameSpace.NamespaceName + nameSpace.GetVersionFromNamespaceUri());
 
-		var input = InputMock.GetDeclarationInputDataProvider(out var mock, VectoSimulationJobType.ConventionalVehicle, nameSpace);
+		var input = MockDocument.GetDeclarationInputDataProvider(out var mock, VectoSimulationJobType.ConventionalVehicle, nameSpace);
 
 		var vm = _vmFactory.CreateDocumentViewModel(input);
 
