@@ -1,28 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
-using TUGraz.VectoCore.Models.BusAuxiliaries;
-using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
-using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
-using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 {
-	public abstract class DeclarationDataAdapterPrimaryBus
+    public abstract class DeclarationDataAdapterPrimaryBus
 	{
 		public abstract class PrimaryBusBase : IPrimaryBusDeclarationDataAdapter
 		{
@@ -37,7 +31,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			protected readonly IRetarderDataAdapter _retarderDataAdapter = new RetarderDataAdapter();
 			protected readonly IAirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
 			private readonly IAngledriveDataAdapter _angledriveDataAdapter = new AngledriveDataAdapter();
-			private readonly IEngineDataAdapter _engineDataAdapter = new CombustionEngineComponentDataAdapter();
+
+			protected abstract IEngineDataAdapter EngineDataAdapter { get; }
+
+			protected abstract IGearboxDataAdapter GearboxDataAdapter { get; }
+
+			protected virtual IElectricMachinesDataAdapter ElectricMachinesDataAdapter => throw new NotImplementedException();
 
 			public DriverData CreateDriverData(Segment segment)
 			{
@@ -56,12 +55,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 				return _airdragDataAdapter.CreateAirdragData(airdragData, mission, segment);
 			}
 
-			public virtual IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits,
-				Volt averageVoltage, GearList gears = null)
-			{
-				throw new NotImplementedException();
-			}
-
 			public abstract void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData);
 
@@ -78,18 +71,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			public virtual CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData engineMode,
 				Mission mission)
 			{
-				throw new NotImplementedException();
+				return EngineDataAdapter.CreateEngineData(vehicle, engineMode, mission);
 			}
 
 			public virtual GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
 				IShiftPolygonCalculator shiftPolygonCalc)
 			{
-				throw new NotImplementedException();
+				return GearboxDataAdapter.CreateGearboxData(inputData, runData, shiftPolygonCalc, SupportedGearboxTypes);
 			}
 
-			public virtual ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed)
+			public virtual ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed,
+				GearboxType gearboxType, int gearsCount)
 			{
-				throw new NotImplementedException();
+				return GearboxDataAdapter.CreateGearshiftData(axleRatio, engineIdlingSpeed, gearboxType, gearsCount);
 			}
 
 
@@ -98,9 +92,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 				return _retarderDataAdapter.CreateRetarderData(retarderData, position);
 			}
 
+
+			public virtual IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits,
+				Volt averageVoltage, GearList gears = null)
+			{
+				return ElectricMachinesDataAdapter.CreateElectricMachines(electricMachines, torqueLimits, averageVoltage, gears);
+			}
+
 			public virtual List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(IIEPCDeclarationInputData iepc, Volt averageVoltage)
 			{
-				throw new NotImplementedException();
+				return ElectricMachinesDataAdapter.CreateIEPCElectricMachines(iepc, averageVoltage);
 			}
 
 			public virtual IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
@@ -134,65 +135,36 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 		public class Conventional : PrimaryBusBase
 		{
-			protected IEngineDataAdapter _engineDataAdapter = new CombustionEngineComponentDataAdapter();
-			protected IGearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(new TorqueConverterDataAdapter());
-			protected readonly IPrimaryBusAuxiliaryDataAdapter _auxDataAdapter = new PrimaryBusAuxiliaryDataAdapter();
-
-
 			#region Overrides of PrimaryBusBase
 
+			protected override IEngineDataAdapter EngineDataAdapter { get; } = new CombustionEngineComponentDataAdapter();
+
+			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new GearboxDataAdapter(new TorqueConverterDataAdapter());
+
+			protected override IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter { get; } = new PrimaryBusAuxiliaryDataAdapter();
 			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
 			{
 				throw new NotImplementedException();
 			}
 
-			public override CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData engineMode,
-				Mission mission)
-			{
-				return _engineDataAdapter.CreateEngineData(vehicle, engineMode, mission);
-			}
-
-			public override GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
-				IShiftPolygonCalculator shiftPolygonCalc)
-			{
-				return _gearboxDataAdapter.CreateGearboxData(inputData, runData, shiftPolygonCalc, SupportedGearboxTypes);
-			}
-
-			public override ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed)
-			{
-				return _gearboxDataAdapter.CreateGearshiftData(axleRatio, engineIdlingSpeed, gbx.Type, gbx.Gears.Count);
-			}
-
-			protected override IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter => _auxDataAdapter;
-
+			
 			#endregion
 		}
 
 		public abstract class Hybrid : PrimaryBusBase
 		{
 			private CombustionEngineComponentDataAdapter _engineDataAdapter = new CombustionEngineComponentDataAdapter();
-			private ElectricMachinesDataAdapter _electricMachinesDataAdapter = new ElectricMachinesDataAdapter();
 			private ElectricStorageAdapter _eletricStorageAdapter = new ElectricStorageAdapter();
 
 			protected readonly IPrimaryBusAuxiliaryDataAdapter _auxDataAdapter = new PrimaryBusAuxiliaryDataAdapter();
 
 			#region Overrides of PrimaryBusBase
 
-			public override CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData engineMode,
-				Mission mission)
-			{
-				return _engineDataAdapter.CreateEngineData(vehicle, engineMode, mission);
-			}
+			protected override IEngineDataAdapter EngineDataAdapter { get; } = new CombustionEngineComponentDataAdapter();
 
-			public override IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(
-				IElectricMachinesDeclarationInputData electricMachines,
-				IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage,
-				GearList gears = null)
-			{
-				return _electricMachinesDataAdapter.CreateElectricMachines(electricMachines, torqueLimits, averageVoltage,
-					gears);
-			}
+			protected override IElectricMachinesDataAdapter ElectricMachinesDataAdapter { get; } = new ElectricMachinesDataAdapter();
+
 
 			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
@@ -223,11 +195,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 		public abstract class SerialHybrid : Hybrid
 		{
+			protected override IGearboxDataAdapter GearboxDataAdapter => throw new NotImplementedException();
 
 		}
 
 		public class HEV_S2 : SerialHybrid
 		{
+			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new GearboxDataAdapter(new TorqueConverterDataAdapter());
 
 		}
 
@@ -243,24 +217,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 		public class HEV_S_IEPC : SerialHybrid
 		{
+			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new IEPCGearboxDataAdapter();
 
 		}
 
 		public abstract class ParallelHybrid : Hybrid
 		{
-			private GearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(new TorqueConverterDataAdapter());
-			public override GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
-				IShiftPolygonCalculator shiftPolygonCalc)
-			{
-				return _gearboxDataAdapter.CreateGearboxData(inputData, runData, shiftPolygonCalc,
-					supportedGearboxTypes: SupportedGearboxTypes);
-			}
+			#region Overrides of PrimaryBusBase
 
-			public override ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed)
-			{
-				throw new NotImplementedException();
-				//return _gearboxDataAdapter.CreateGearshiftData(gbx, axleRatio, engineIdlingSpeed, gbx.Type, gbx.Gears.Count);
-			}
+			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new GearboxDataAdapter(new TorqueConverterDataAdapter());
+
+			#endregion
+
+			
 		}
 
 		public class HEV_P1 : ParallelHybrid
@@ -290,17 +259,22 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 		public abstract class BatteryElectric : PrimaryBusBase
 		{
-			private readonly GearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(null);
 			private readonly ElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
-			private readonly ElectricMachinesDataAdapter _electricMachineAdapter = new ElectricMachinesDataAdapter();
 
 			protected readonly IPrimaryBusAuxiliaryDataAdapter _auxDataAdapter = new PrimaryBusPEVAuxiliaryDataAdapter();
 
-			public override IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits,
-				Volt averageVoltage, GearList gears = null)
-			{
-				return _electricMachineAdapter.CreateElectricMachines(electricMachines, torqueLimits, averageVoltage, gears);
-			}
+			#region Overrides of PrimaryBusBase
+
+			protected override IEngineDataAdapter EngineDataAdapter => throw new NotImplementedException();
+
+			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new GearboxDataAdapter(null);
+		
+			protected override IElectricMachinesDataAdapter ElectricMachinesDataAdapter { get; } = new ElectricMachinesDataAdapter();
+
+			protected override IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter => _auxDataAdapter;
+
+			#endregion
+
 
 			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
@@ -318,14 +292,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 				if (superCapData != null) {
 					throw new VectoException("Supercaps are not allowed for PEVs");
 				}
-
 			}
-
-			#region Overrides of PrimaryBusBase
-
-			protected override IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter => _auxDataAdapter;
-
-			#endregion
+			
 		}
 
 
@@ -356,6 +324,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 		{
 			#region Overrides of PrimaryBusBase
 
+			protected override IEngineDataAdapter EngineDataAdapter => throw new NotImplementedException();
+
 			public override VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
 			{
@@ -368,7 +338,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 				throw new NotImplementedException();
 			}
 
-			protected override IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter { get; }
+			protected override IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter => throw new NotImplementedException();
+
+			protected override IGearboxDataAdapter GearboxDataAdapter => throw new NotImplementedException();
 
 			#endregion
 		}

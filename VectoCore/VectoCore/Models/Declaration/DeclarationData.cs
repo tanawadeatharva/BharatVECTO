@@ -285,8 +285,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 			//	}
 			//}
 
-			public static ICompressorMap GetCompressorMap(string compressorSize, string clutchType)
+			public static ICompressorMap GetCompressorMap(
+				IPneumaticSupplyDeclarationData pneumaticSupply)
 			{
+				var compressorSize = pneumaticSupply.CompressorSize;
+				var clutchType = pneumaticSupply.Clutch;
+
+				if (pneumaticSupply.CompressorDrive == CompressorDrive.electrically) {
+					return null;
+					//var size = GetCompressorResourceForSize("Small");
+					//return CompressorMapReader.ReadStream(
+					//	RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".VAUXBus." + size), 1, $"{compressorSize} - {clutchType}");
+				}
+
 				var resource = GetCompressorResourceForSize(compressorSize);
 
 				var dragCurveFactorClutch = 1.0;

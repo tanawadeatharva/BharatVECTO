@@ -94,7 +94,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			GearboxData gearboxData,
 			CombustionEngineData engineData,
 			ArchitectureID archId);
-		ShiftStrategyParameters CreateDummyGearshiftStrategy();
 	}
 
 	public interface IPrimaryBusDeclarationDataAdapter : IDeclarationDataAdapter
@@ -115,7 +114,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		//RetarderData CreateRetarderData(IRetarderInputData retarderData);
 		//PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData);
 
-		ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed);
+		ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed,
+			GearboxType gearboxType, int gearsCount);
 
 		//VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
 		//    KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational);

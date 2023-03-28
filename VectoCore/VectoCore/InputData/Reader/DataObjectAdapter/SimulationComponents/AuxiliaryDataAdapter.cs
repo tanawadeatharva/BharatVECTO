@@ -9,6 +9,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
@@ -22,27 +23,9 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 {
-	public interface IAuxiliaryDataAdapter
-	{
-		IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData,
-			IBusAuxiliariesDeclarationData busAuxData, MissionType mission, VehicleClass hvdClass, Meter vehicleLength,
-			int? numSteeredAxles, VectoSimulationJobType jobType);
-	}
-
-	public interface ICompletedBusAuxiliaryDataAdapter : IPrimaryBusAuxiliaryDataAdapter
-	{
-		IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle,
-			IVehicleDeclarationInputData completedVehicle, VectoRunData runData);
-	}
-
-	public interface IPrimaryBusAuxiliaryDataAdapter : IAuxiliaryDataAdapter
-	{
-		AuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle, VectoRunData runData);
-		
-	}
 
 
-	public abstract class AuxiliaryDataAdapter : ComponentDataAdapterBase, IAuxiliaryDataAdapter
+    public abstract class AuxiliaryDataAdapter : ComponentDataAdapterBase, IAuxiliaryDataAdapter
 	{
 		public class ElectricConsumerEntry
 		{
@@ -553,7 +536,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				KneelingHeight = VectoMath.Max(0.SI<Meter>(), mission.BusParameter.EntranceHeight - Constants.BusParameters.EntranceHeight),
 				CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
 				CompressorGearRatio = busAux.PneumaticSupply.Ratio,
-				CompressorMap = DeclarationData.BusAuxiliaries.GetCompressorMap(busAux.PneumaticSupply.CompressorSize, busAux.PneumaticSupply.Clutch),
+				CompressorMap = DeclarationData.BusAuxiliaries.GetCompressorMap(busAux.PneumaticSupply),
 				SmartAirCompression = busAux.PneumaticSupply.SmartAirCompression,
 				SmartRegeneration = busAux.PneumaticSupply.SmartRegeneration,
 				AdBlueDosing = busAux.PneumaticConsumers.AdBlueDosing,
@@ -821,10 +804,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			ssmHeating.ElectricHeater = GetElectricHeater(mission, runData);
 			ssmHeating.HeatingDistributions = DeclarationData.BusAuxiliaries.HeatingDistributionCases;
 
+			var electricUserInputs =
+				GetElectricalUserConfig(mission, primaryVehicle, actuations, runData.VehicleData.VehicleClass);
+			electricUserInputs.ConnectESToREESS = true;
+
 			var retVal = new AuxiliaryConfig
 			{
 				InputData = primaryVehicle.Components.BusAuxiliaries,
-				ElectricalUserInputsConfig = GetElectricalUserConfig(mission, primaryVehicle, actuations, runData.VehicleData.VehicleClass),
+				ElectricalUserInputsConfig = electricUserInputs,
 				PneumaticUserInputsConfig = GetPneumaticUserConfig(primaryVehicle, mission),
 				PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type),
 				Actuations = actuations,
@@ -1102,11 +1089,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		{
 			return new PneumaticUserInputsConfig
 			{
-				CompressorMap = completedVehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle
-					? null
-					: DeclarationData.BusAuxiliaries.GetCompressorMap(
-						primaryBusAuxiliaries.PneumaticSupply.CompressorSize,
-						primaryBusAuxiliaries.PneumaticSupply.Clutch),
+				CompressorMap = DeclarationData.BusAuxiliaries.GetCompressorMap(primaryBusAuxiliaries.PneumaticSupply),
 				CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
 				CompressorGearRatio = completedVehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle
 					? 0 : primaryBusAuxiliaries.PneumaticSupply.Ratio,

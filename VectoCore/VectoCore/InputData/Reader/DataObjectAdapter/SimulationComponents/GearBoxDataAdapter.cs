@@ -9,6 +9,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.InputData.Reader.ShiftStrategy;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -19,16 +20,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 {
-	public interface IGearboxDataAdapter
-	{
-		GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
-			IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes);
-
-		ShiftStrategyParameters CreateGearshiftData(double axleRatio,
-			PerSecond engineIdlingSpeed, GearboxType gearboxType, int gearsCount);
-	}
-
-	public abstract class GearboxDataAdapterBase : ComponentDataAdapterBase, IGearboxDataAdapter
+    public abstract class GearboxDataAdapterBase : ComponentDataAdapterBase, IGearboxDataAdapter
 	{
 		#region Helper
 		protected internal static NewtonMeter GbxMaxTorque(

@@ -4,19 +4,14 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.Models.GenericModelData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 {
-	public interface IAngledriveDataAdapter
-	{
-		AngledriveData CreateAngledriveData(IAngledriveInputData data, bool useEfficiencyFallback);
-		AngledriveData CreateAngledriveData(IAngledriveInputData data);
-	}
-
-	public class AngledriveDataAdapter : IAngledriveDataAdapter
+    public class AngledriveDataAdapter : IAngledriveDataAdapter
 	{
 		public AngledriveData CreateAngledriveData(IAngledriveInputData data, bool useEfficiencyFallback)
 		{

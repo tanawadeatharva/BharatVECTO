@@ -4,6 +4,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Moq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
@@ -2826,9 +2827,14 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 		protected PneumaticUserInputsConfig CreatePneumaticUserInputsConfig(bool smartCompressor)
 		{
+			var mock = new Mock<IPneumaticSupplyDeclarationData>();
+			mock.Setup(x => x.CompressorDrive).Returns(CompressorDrive.mechanically);
+			mock.Setup(x => x.CompressorSize).Returns("Medium Supply 2-stage");
+			mock.Setup(x => x.Clutch).Returns("visco");
+
 			return new PneumaticUserInputsConfig() {
 				CompressorMap =
-					DeclarationData.BusAuxiliaries.GetCompressorMap("Medium Supply 2-stage", "visco"),
+					DeclarationData.BusAuxiliaries.GetCompressorMap(mock.Object),
 				CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
 				CompressorGearRatio = 1.0,
 				SmartAirCompression = smartCompressor,

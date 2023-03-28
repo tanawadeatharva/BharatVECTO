@@ -8,22 +8,14 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 {
-	public interface IAirdragDataAdapter
-	{
-		AirdragData CreateAirdragData(
-			IAirdragDeclarationInputData airdragInputData, Mission mission,
-			Segment segment);
-
-		AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission);
-	}
-
-	public static class AirdragDataAdapterHelper
+    public static class AirdragDataAdapterHelper
 	{
 		public static List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> GetDeclarationAirResistanceCurve(
 			string crosswindCorrectionParameters, SquareMeter aerodynamicDragAera, Meter vehicleHeight)

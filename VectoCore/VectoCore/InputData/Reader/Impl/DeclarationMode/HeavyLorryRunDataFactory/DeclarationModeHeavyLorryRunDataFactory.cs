@@ -95,6 +95,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					InputDataHash = InputDataProvider.XMLHash,
 					MaxChargingPower = InputDataProvider.JobInputData.Vehicle.MaxChargingPower,
 				};
+
 				return simulationRunData;
 			}
 
@@ -295,12 +296,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						mission); // _engineData.Copy(), // a copy is necessary because every run has a different correction factor!
 
 				simulationRunData.ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>();
-		
-
-				CreateGearboxAndGearshiftData(vehicle, simulationRunData);
 
 
-				simulationRunData.AngledriveData = _angledriveData;
+                CreateGearboxAndGearshiftData(vehicle, simulationRunData);
+
+
+                simulationRunData.AngledriveData = _angledriveData;
 				simulationRunData.Aux = DataAdapter.CreateAuxiliaryData(
 					vehicle.Components.AuxiliaryInputData,
 					vehicle.Components.BusAuxiliaries, mission.MissionType,
