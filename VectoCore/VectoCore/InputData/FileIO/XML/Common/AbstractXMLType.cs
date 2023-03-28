@@ -44,11 +44,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Common {
 	{
 		protected readonly XmlNode BaseNode;
 		protected readonly string SchemaType;
-
+		protected readonly XmlQualifiedName QualifiedName;
 		protected AbstractXMLType(XmlNode node)
 		{
 			SchemaType = node.SchemaInfo?.SchemaType?.Name ;
-			
+			QualifiedName = node.SchemaInfo?.SchemaType.QualifiedName;
 			BaseNode = node;
 		}
 

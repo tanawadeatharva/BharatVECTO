@@ -15,6 +15,7 @@ public class MockDialogHelper : IDialogHelper
 	{
 		public enum DialogType
 		{
+			Info,
 			Error
 		}
 
@@ -106,6 +107,7 @@ public class MockDialogHelper : IDialogHelper
 		lock (_dialogs) {
 			_dialogs.Add(new Dialog() {
 				Message = $"[{caption}] {messageBoxText}",
+				Type = Dialog.DialogType.Info,
 			});
 		}
 

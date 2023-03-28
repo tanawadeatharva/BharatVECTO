@@ -47,6 +47,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Common {
 
 		public virtual DataSource DataSource => new DataSource() { 
 			Type = SchemaType,
+			TypeVersion = QualifiedName.Namespace,
 			SourceFile = SourceFile, 
 			SourceVersion = SourceVersion,
 			SourceType = SourceType,

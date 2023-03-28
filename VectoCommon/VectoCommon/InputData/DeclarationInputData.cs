@@ -90,6 +90,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		public string Type { get; set; }
 		
+		public string TypeVersion { get; set; }
 
 		public string SourcePath => SourceFile != null ? Path.GetDirectoryName(Path.GetFullPath(SourceFile)) : null;
 	}

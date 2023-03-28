@@ -62,7 +62,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 			foreach (var auxiliary in _inputData.Auxiliaries)
 			{
 				Debug.Assert(auxiliary.Technology.Count == 1);
-				var componentViewModel = _componentViewModelFactory.CreateComponentViewModel(auxiliary as IXMLAuxiliaryDeclarationInputData);
+				var componentViewModel = _componentViewModelFactory.CreateComponentViewModel(auxiliary);
 				AuxiliaryViewModels.Add(componentViewModel as IAuxiliaryViewModel);
 			}
         }

@@ -13,6 +13,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Utils;
 
@@ -20,7 +21,7 @@ namespace Vecto3GUI2020Test;
 
 public static class InputMock
 {
-	public static IVehicleDeclarationInputData GetMockVehicle(out Mock<IVehicleDeclarationInputData> mock, bool createAirdrag = false)
+	public static IVehicleDeclarationInputData GetMockVehicle(out Mock<IVehicleDeclarationInputData> mock)
 	{
 		mock = new Mock<IVehicleDeclarationInputData>();
 
@@ -50,20 +51,7 @@ public static class InputMock
         mock.SetupGet(v => v.DoorDriveTechnology).Returns(ConsumerTechnology.Electrically);
         mock.SetupGet(v => v.VehicleDeclarationType).Returns(VehicleDeclarationType.interim);
         mock.SetupGet(v => v.VehicleTypeApprovalNumber).Returns("1234567890");
-		mock.SetupGet(v => v.Components).Returns(() => {
-				var exp =
-					new List<Tuple<Expression<Func<IVehicleComponentsDeclaration, IAirdragDeclarationInputData>>,
-						IAirdragDeclarationInputData>>();
-				if (createAirdrag) {
-					exp.Add(new Tuple<Expression<Func<IVehicleComponentsDeclaration, IAirdragDeclarationInputData>>, IAirdragDeclarationInputData>(
-						e => e.AirdragInputData,
-						CreateAirdragComponentData(out _)));
-				}
-
-
-				return GetMockComponent(out _, exp.ToArray());
-			}				
-			);
+		mock.SetupGet(v => v.Components).Returns(GetComponentsMock());
 
 		var obj = mock.Object;
 		
@@ -72,29 +60,18 @@ public static class InputMock
 		return mock.Object;
 	}
 
-	public static IVehicleDeclarationInputData GetMockVehicle()
+	private static IVehicleComponentsDeclaration GetComponentsMock()
 	{
-		return GetMockVehicle(out _, false);
-	}
-
-	public static IVehicleDeclarationInputData GetMockVehicle(bool createAirdrag)
-	{
-		return GetMockVehicle(out _, createAirdrag);
-	}
-
-	public static IAirdragDeclarationInputData CreateAirdragComponentData(out Mock<IAirdragDeclarationInputData> mock)
-	{
-		mock = new Mock<IAirdragDeclarationInputData>();
-		mock.SetupGet(a => a.Manufacturer).Returns("Manufacturer");
-		mock.SetupGet(a => a.Model).Returns("Model");
-		mock.SetupGet(a => a.Date).Returns(DateTime.Today);
-		mock.SetupGet(a => a.AppVersion).Returns("APPVERSION");
-		mock.SetupGet(a => a.SavedInDeclarationMode).Returns(true);
-        mock.SetupGet(a => a.AirDragArea).Returns(6.66.SI<SquareMeter>());
-		mock.SetupGet(a => a.AirDragArea_0).Returns(7.77.SI<SquareMeter>());
-		mock.SetupGet(a => a.TransferredAirDragArea).Returns(8.88.SI<SquareMeter>());
+		var mock = new Mock<IVehicleComponentsDeclaration>();
 		return mock.Object;
 	}
+
+	public static IVehicleDeclarationInputData GetMockVehicle()
+	{
+		return GetMockVehicle(out _);
+	}
+
+
 
 	public static IDeclarationJobInputData GetDeclarationJobInputData(out Mock<IDeclarationJobInputData> mock, VectoSimulationJobType jobType)
 	{
@@ -144,26 +121,40 @@ public static class InputMock
 		return mock.Object;
 	}
 
-
-
-
-	public static IVehicleComponentsDeclaration GetMockComponent(out Mock<IVehicleComponentsDeclaration> mock,
-		params Tuple<Expression<Func<IVehicleComponentsDeclaration, IAirdragDeclarationInputData>>, IAirdragDeclarationInputData>[] expressions)
-	{
-		mock = new Mock<IVehicleComponentsDeclaration>();
-		foreach (var expression in expressions) {
-			mock.Setup(expression.Item1).Returns(expression.Item2);
-		}
-		return mock.Object;
-	}
-	
 	// Syntax GetMockVehicle().AddAirdragComponent().SetAirdragVersion(). and so on ...
-	public static IVehicleDeclarationInputData AddAirdragComponent(this IVehicleDeclarationInputData mocked)
+	public static IVehicleDeclarationInputData AddAirdragComponent(this IVehicleDeclarationInputData mocked, XNamespace version)
 	{
-		throw new NotFiniteNumberException();
-		
+		Mock.Get(mocked.Components).SetupGet(c => c.AirdragInputData).Returns(CreateAirdragComponentData(out _, version));
 		return mocked;
 	}
+
+	private static IAirdragDeclarationInputData CreateAirdragComponentData(out Mock<IAirdragDeclarationInputData> mock, XNamespace version)
+	{
+		mock = new Mock<IAirdragDeclarationInputData>();
+		mock.SetupGet(a => a.Manufacturer).Returns("Manufacturer");
+		mock.SetupGet(a => a.Model).Returns("Model");
+		mock.SetupGet(a => a.Date).Returns(DateTime.Today);
+		mock.SetupGet(a => a.AppVersion).Returns("APPVERSION");
+		mock.SetupGet(a => a.SavedInDeclarationMode).Returns(true);
+		mock.SetupGet(a => a.AirDragArea).Returns(6.66.SI<SquareMeter>());
+		mock.SetupGet(a => a.AirDragArea_0).Returns(7.77.SI<SquareMeter>());
+		mock.SetupGet(a => a.TransferredAirDragArea).Returns(8.88.SI<SquareMeter>());
+
+		if (version == XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24) {
+			mock.SetupGet(a => a.DataSource).Returns(
+				GetMockDataSource(XMLDeclarationAirdragDataProviderV24.XSD_TYPE, version));
+		} else {
+			mock.SetupGet(a => a.DataSource).Returns(
+				GetMockDataSource(XMLDeclarationAirdragDataProviderV20.XSD_TYPE, version));
+        }
+
+
+		//mock.SetupGet(a => a.DataSource.SourceVersion).Returns(version.GetVersionFromNamespaceUri);
+		//mock.SetupGet(a => a.DataSource.Type).Returns(XMLDeclarationAirdragDataProviderV20.XSD_TYPE);
+		//mock.SetupGet(a => a.DataSource.TypeVersion).Returns(version.NamespaceName);
+		return mock.Object;
+	}
+
 	public static IVehicleDeclarationInputData SetAirdragVersion(this IVehicleDeclarationInputData mocked, XNamespace version)
 	{
 		if (mocked.Components.AirdragInputData == null) {
@@ -180,5 +171,16 @@ public static class InputMock
 
 
 		return mocked;
+	}
+
+	private static DataSource GetMockDataSource(string typeName, XNamespace version)
+	{
+		return new DataSource() {
+			SourceFile = "Mocked",
+			SourceType = DataSourceType.Missing,
+			Type = typeName,
+			TypeVersion = version.NamespaceName,
+			SourceVersion = version.GetVersionFromNamespaceUri(),
+		};
 	}
 }

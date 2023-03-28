@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.Utils.Ninject
 			/// </summary>
 			public CombineToName combineToNameDelegate;
 			/// <summary>
-			/// Specifies the number of arguments that not passed to the constructor
+			/// Specifies the number of arguments that are NOT passed to the constructor
 			/// </summary>
 			public int skipArguments;
 			/// <summary>

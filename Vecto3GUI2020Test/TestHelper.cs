@@ -7,6 +7,7 @@ using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Ninject;
+using VECTO3GUI2020.Ninject.Factories;
 using VECTO3GUI2020.Ninject.Vehicle;
 using Vecto3GUI2020Test.Utils;
 

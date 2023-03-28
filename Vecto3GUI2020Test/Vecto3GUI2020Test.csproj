@@ -34,6 +34,7 @@
     <Folder Include="HelperTests\" />
     <Folder Include="TestData\bugreports\" />
     <Folder Include="TestData\output\" />
+    <Folder Include="ViewModelTests\FactoryTests\" />
     <Folder Include="XML\XMLInput\" />
     <Folder Include="XML\XMLWritingTest\TestDataCreator\" />
   </ItemGroup>

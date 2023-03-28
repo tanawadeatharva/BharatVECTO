@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -69,8 +70,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		protected XElement GetAirdragElement(IAirdragDeclarationInputData inputData, string version)
 		{
 			var retVal = new XElement(v24 + XMLNames.Component_AirDrag);
-			var tmp = XElement.Load(inputData.XMLSource.CreateNavigator().ReadSubtree());
-			retVal.Add(tmp.Elements());
+				
+			var tmp = XElement.Load(inputData.XMLSource.ParentNode.CreateNavigator().ReadSubtree());
+			var dataElement = tmp.Elements().First(e => e.Name.LocalName == XMLNames.ComponentDataWrapper);
+			dataElement.Name =
+				v20 + XMLNames.ComponentDataWrapper;
+			dataElement.Add(new XAttribute("xmlns", inputData.DataSource.TypeVersion));
+
+			var signatureElement = tmp.Elements().First(e => e.Name.LocalName == XMLNames.DI_Signature);
+			signatureElement.Name = v20 + XMLNames.DI_Signature;
+			
+
+            retVal.Add(tmp.Elements());
 			return retVal;
         }
 

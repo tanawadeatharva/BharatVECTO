@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Xml.Linq;
 using Moq;
 using Ninject;
 using NUnit.Framework;
@@ -8,6 +9,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 using Vecto3GUI2020Test.Utils;
@@ -261,7 +263,9 @@ namespace Vecto3GUI2020Test
 			//var vehicleInputDataFilePath = GetTestDataPath(stageInputFullSample);
 			//TestContext.WriteLine($"Loading {vehicleInputDataFilePath}");
 			//Assert.IsTrue(File.Exists(vehicleInputDataFilePath), $"File {vehicleInputDataFilePath} not found");
-			var stepInputData = InputMock.GetMockVehicle(out var mockStepInput, true);
+			//var stepInputData = InputMock.GetMockVehicle(out var mockStepInput, true);
+			var stepInputData = InputMock.GetMockVehicle()
+				.AddAirdragComponent(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20);
 			manStageViewModel.SetInputData(
 				stepInputData
 				);
