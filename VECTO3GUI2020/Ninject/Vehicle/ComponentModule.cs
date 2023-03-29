@@ -1,4 +1,5 @@
 ﻿
+using System;
 using Ninject.Extensions.Factory;
 using Ninject.Modules;
 using TUGraz.VectoCommon.Models;
@@ -16,11 +17,12 @@ using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
 namespace VECTO3GUI2020.Ninject.Vehicle
 {
+    [Obsolete]
     public class ComponentModule : NinjectModule
     {
         public override void Load()
-        {
-
+		{
+			throw new NotImplementedException("Will be replaced to get rid of type dependencies");
 			#region IComponentViewModelFactory
 
 

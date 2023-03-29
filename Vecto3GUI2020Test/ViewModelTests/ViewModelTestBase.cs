@@ -12,6 +12,7 @@ using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Ninject;
 using VECTO3GUI2020.Ninject.Vehicle;
 using VECTO3GUI2020.ViewModel.Interfaces;
+using VECTO3GUI2020.ViewModel.Interfaces.Document;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 using Vecto3GUI2020Test.Utils;
@@ -36,9 +37,11 @@ namespace Vecto3GUI2020Test
 		public virtual NewMultiStageJobViewModel LoadFileFromPath(string filePath)
 		{
 			AssertHelper.FileExists(filePath);
+			var documentFactory = _kernel.Get<IDocumentViewModelFactory>();
+			
 			var newMultistageJobViewModel = _kernel.Get<NewMultiStageJobViewModel>();
 
-			TestContext.WriteLine("Loading" + filePath);
+			TestContext.WriteLine("Loading " + filePath);
 			newMultistageJobViewModel.AddVifFile(filePath);
 
 

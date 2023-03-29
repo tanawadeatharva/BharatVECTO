@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Utils.Ninject
 			}
 			catch (Exception e) {
 				var name = GetName(methodInfo, arguments);
-				throw new VectoException("failed to create instance for '{1}' via '{0}' version '{2}' name'{3}'", e, methodInfo.Name, methodInfo.ReturnType.Name, arguments[0].ToString(), name);
+				throw new VectoException("failed to create instance for '{1}' via '{0}' version '{2}' name'{3}'", e, methodInfo, methodInfo.ReturnType.Name, arguments[0].ToString(), name);
 				
 				//throw e;
 			}

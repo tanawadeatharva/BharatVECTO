@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		private IPrimaryVehicleInformationInputDataProvider _primaryVehicle;
 		private IList<IManufacturingStageInputData> _manufacturingStages;
-		private IManufacturingStageInputData _concolidateManfacturingStage;
+		private IManufacturingStageInputData _consolidatedManufacturingStage;
 
 
 		public XMLDeclarationMultistageJobInputDataV01(XmlNode node, IXMLMultistageInputDataProvider inputProvider,
@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public IList<IManufacturingStageInputData> ManufacturingStages => _manufacturingStages ?? (_manufacturingStages = Reader.ManufacturingStages);
 
-		public IManufacturingStageInputData ConsolidateManufacturingStage => _concolidateManfacturingStage ?? (_concolidateManfacturingStage = Reader.ConsolidateManufacturingStage);
+		public IManufacturingStageInputData ConsolidateManufacturingStage => _consolidatedManufacturingStage ?? (_consolidatedManufacturingStage = Reader.ConsolidateManufacturingStage);
 
 		public VectoSimulationJobType JobType => ConsolidateManufacturingStage.Vehicle.VehicleType;
 

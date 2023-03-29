@@ -141,7 +141,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
-		public InterimStageBusVehicleViewModel_v2_8(string inputProviderType, IMultiStageViewModelFactory multiStageViewModelFactory)
+		private InterimStageBusVehicleViewModel_v2_8(string inputProviderType, IMultiStageViewModelFactory multiStageViewModelFactory)
 		{
 			if (inputProviderType == VERSION_EXEMPTED)
 			{
@@ -150,30 +150,45 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 			_multiStageViewModelFactory = multiStageViewModelFactory;
 
-			if (!_exemptedVehicle)
-			{
-				MultistageAirdragViewModel = _multiStageViewModelFactory.GetMultistageAirdragViewModel();
-				MultistageAuxiliariesViewModel = _multiStageViewModelFactory.GetAuxiliariesViewModel();
+			
+		}
+
+		public InterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData consolidatedVehicleData, IVehicleDeclarationInputData vehicleInput, IMultiStageViewModelFactory multistepViewModelFactory)
+		{
+			_multiStageViewModelFactory = multistepViewModelFactory;
+			var vehicleData = consolidatedVehicleData ?? vehicleInput;
+			_exemptedVehicle = vehicleData.ExemptedVehicle;
+
+            if (consolidatedVehicleData != null && vehicleInput == null) {
+				InitEmpty(consolidatedVehicleData);
+
+
+
+
+				return;
 			}
 
-			CreateParameterViewModels();
-			ShowConsolidatedData = false;
-		}
-		public InterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData inputData, IMultiStageViewModelFactory multiStageViewModelFactory) : 
-			this(inputData.GetType().ToString(), multiStageViewModelFactory)
-		{
-			SetVehicleInputData(inputData);
+			if (vehicleInput != null && consolidatedVehicleData == null) {
+				InitVehicleData(consolidatedVehicleData);
+
+
+
+				return;
+			}
+
+
+			throw new ArgumentException($"Either {nameof(consolidatedVehicleData)} OR {vehicleInput} must be specified");
+
 		}
 
-		public InterimStageBusVehicleViewModel_v2_8(IVehicleDeclarationInputData consolidatedVehicleData,
-			IMultiStageViewModelFactory multistageViewModelFactory, bool exempted)
+		private void InitEmpty(IVehicleDeclarationInputData consolidatedVehicleData)
 		{
 			ConsolidatedVehicleData = consolidatedVehicleData;
-			_exemptedVehicle = exempted;
-			_multiStageViewModelFactory = multistageViewModelFactory;
 
 
-			if (!exempted) {
+
+			if (!_exemptedVehicle)
+			{
 				MultistageAirdragViewModel = _multiStageViewModelFactory.GetMultistageAirdragViewModel(consolidatedVehicleData?.Components?.AirdragInputData);
 
 				MultistageAirdragViewModel.AirdragViewModelChanged += ((sender, args) => {
@@ -209,7 +224,20 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				AirdragModifiedMultistepMandatory = true;
 				AirdragModifiedMultistepEditingEnabled = true;
 			}
-		}
+        }
+
+		private void InitVehicleData(IVehicleDeclarationInputData vehicleInput)
+		{
+			if (!_exemptedVehicle)
+			{
+				MultistageAirdragViewModel = _multiStageViewModelFactory.GetMultistageAirdragViewModel();
+				MultistageAuxiliariesViewModel = _multiStageViewModelFactory.GetAuxiliariesViewModel();
+			}
+
+			CreateParameterViewModels();
+			ShowConsolidatedData = false;
+            SetVehicleInputData(vehicleInput);
+        }
 
 		private void CreateParameterViewModels()
 		{

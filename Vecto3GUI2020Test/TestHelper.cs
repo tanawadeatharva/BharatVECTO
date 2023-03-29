@@ -22,7 +22,6 @@ namespace Vecto3GUI2020Test
 			var kernel = new StandardKernel(
 				new VectoNinjectModule(),
 				new JobEditModule(),
-				new ComponentModule(),
 				new DocumentModule(),
 				new XMLWriterFactoryModule(),
 				new FactoryModule(),

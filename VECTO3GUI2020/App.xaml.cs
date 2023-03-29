@@ -33,7 +33,6 @@ namespace VECTO3GUI2020
             container = new StandardKernel(
                 new VectoNinjectModule(),
                 new JobEditModule(),
-                new ComponentModule(),
 				new DocumentModule(),
 				new XMLWriterFactoryModule(),
                 new FactoryModule(),

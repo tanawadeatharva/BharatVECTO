@@ -12,6 +12,7 @@ using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
+using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 
@@ -25,17 +26,20 @@ namespace VECTO3GUI2020.Ninject.Factories
             _multistageViewModelFactoryFirstParameterAsNameInstanceProvider;
 
         private readonly IDocumentViewModelFactory _documentViewModelFactory;
+		private readonly IVehicleViewModelFactory _vehicleViewModelFactory;
 
-
-        public MultiStageViewModelFactory(
+		public MultiStageViewModelFactory(
             IMultiStageViewModelFactoryDefaultInstanceProvider multiStageVmFactoryDefaultInstanceProvider,
             IMultistageViewModelFactoryFirstParameterAsNameInstanceProvider multistageViewModelFactoryFirstParameterAsNameInstanceProvider,
-            IDocumentViewModelFactory documentViewModelFactory)
+            IDocumentViewModelFactory documentViewModelFactory,
+            IVehicleViewModelFactory vehicleViewModelFactory)
         {
             _multiStageVmFactoryDefaultInstanceProvider = multiStageVmFactoryDefaultInstanceProvider;
             _multistageViewModelFactoryFirstParameterAsNameInstanceProvider = multistageViewModelFactoryFirstParameterAsNameInstanceProvider;
 
+
             _documentViewModelFactory = documentViewModelFactory;
+            _vehicleViewModelFactory = vehicleViewModelFactory;
         }
 
         #region Implementation of IMultiStageViewModelFactoryDefaultInstanceProvider
@@ -47,7 +51,7 @@ namespace VECTO3GUI2020.Ninject.Factories
 
         public IMultiStageJobViewModel GetMultiStageJobViewModel(IMultistepBusInputDataProvider inputData)
         {
-            return _multiStageVmFactoryDefaultInstanceProvider.GetMultiStageJobViewModel(inputData);
+            return _documentViewModelFactory.CreateDocumentViewModel(inputData) as IMultiStageJobViewModel;
         }
 
         public IVehicleViewModel GetInterimStageVehicleViewModel()
@@ -56,9 +60,9 @@ namespace VECTO3GUI2020.Ninject.Factories
         }
 
         public IVehicleViewModel GetInterimStageVehicleViewModel(IVehicleDeclarationInputData consolidatedVehicleData, bool exempted)
-        {
-            return _multiStageVmFactoryDefaultInstanceProvider.GetInterimStageVehicleViewModel(consolidatedVehicleData, exempted);
-        }
+		{
+			return _vehicleViewModelFactory.CreateVehicleViewModel(consolidatedVehicleData, null);
+		}
 
         public IManufacturingStageViewModel GetManufacturingStageViewModel(
             IManufacturingStageInputData consolidatedManufacturingStageInputData, bool exempted)
