@@ -806,7 +806,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			var electricUserInputs =
 				GetElectricalUserConfig(mission, primaryVehicle, actuations, runData.VehicleData.VehicleClass);
-			electricUserInputs.ConnectESToREESS = true;
+			if (primaryVehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
+					VectoSimulationJobType.IEPC_E)) {
+				electricUserInputs.ConnectESToREESS = true;
+			}
 
 			var retVal = new AuxiliaryConfig
 			{

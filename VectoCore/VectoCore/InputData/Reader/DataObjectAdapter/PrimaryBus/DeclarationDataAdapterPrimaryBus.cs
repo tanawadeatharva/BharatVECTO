@@ -316,6 +316,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 		public class PEV_E_IEPC : BatteryElectric
 		{
+			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new IEPCGearboxDataAdapter();
 
 		}
 
