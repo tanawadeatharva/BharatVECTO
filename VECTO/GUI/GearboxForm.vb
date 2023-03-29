@@ -98,7 +98,7 @@ Public Class GearboxForm
             Case VectoSimulationJobType.ConventionalVehicle 
                 CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
                 .Cast(Of GearboxType)() _
-                .Where(Function(type) Not type = GearboxType.APTN And (type.ManualTransmission() OrElse type = GearboxType.ATSerial)) _
+                .Where(Function(type) Not type = GearboxType.APTN And (type.ManualTransmission() OrElse type = GearboxType.ATSerial OrElse type = GearboxType.ATPowerSplit)) _
                 .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 
             Case VectoSimulationJobType.IHPC
@@ -113,10 +113,22 @@ Public Class GearboxForm
                     .Where(Function(type)  type = GearboxType.IEPC) _
                     .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 
-            Case VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.SerialHybridVehicle
+            Case VectoSimulationJobType.ParallelHybridVehicle
                 CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
                     .Cast(Of GearboxType)() _
-                    .Where(Function(type) type.ManualTransmission() OrElse type.AutomaticTransmission() and not type = GearboxType.IHPC ) _
+                    .Where(Function(type) type = GearboxType.AMT OrElse (type.AutomaticTransmission() and not type = GearboxType.IHPC And Not type = GearboxType.APTN)) _
+                    .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
+            Case  VectoSimulationJobType.SerialHybridVehicle
+                CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
+                    .Cast(Of GearboxType)() _
+                    .Where(Function(type) type = GearboxType.AMT OrElse type.AutomaticTransmission() and not type = GearboxType.IHPC ) _
+                    .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
+            Case VectoSimulationJobType.BatteryElectricVehicle
+                CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
+                    .Cast(Of GearboxType)() _
+                    .Where(Function(type)  type = GearboxType.AMT OrElse type.AutomaticTransmission() and not type = GearboxType.IHPC  ) _
                     .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 
             Case Else
