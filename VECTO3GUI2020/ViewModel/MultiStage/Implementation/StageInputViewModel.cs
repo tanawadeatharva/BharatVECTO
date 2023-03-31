@@ -66,7 +66,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
             var newVm = _viewModelFactory.GetInterimStageVehicleViewModel(Architecture);
             newVm.SetVehicleInputData(oldVm,false);
             VehicleViewModel = newVm;
-        }
+			UpdateViewModelsAndTitle();
+		}
 
 
         private StageInputViewModel(IMultiStageViewModelFactory multistageViewModelFactory,
@@ -93,7 +94,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
             _documentName = $"New {(exemptedVehicle ? "exempted " : "")}step input {++_newDocumentCounter}";
 
-            Init();
+            UpdateViewModelsAndTitle();
             return;
         }
 
@@ -109,7 +110,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
             VehicleInputDataFilePath = _dataSource.SourceFile;
 
             Title = $"{GUILabels.Edit_step_input} - {Path.GetFileName(_dataSource.SourceFile)}";
-            Init();
+            UpdateViewModelsAndTitle();
             return;
         }
 
@@ -130,18 +131,27 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
         private void UpdateTitle()
         {
-            Title = GUILabels.Edit_step_input + " - " + ((_dataSource?.SourceFile != null)
+            Title = GUILabels.Edit_step_input + $" - {Architecture} - " + ((_dataSource?.SourceFile != null)
                 ? Path.GetFileName(_dataSource.SourceFile)
-                : "New file");
+                : $"New file");
         }
 
-        private void Init()
+        private void UpdateViewModelsAndTitle()
         {
             UpdateTitle();
+			var prevKey = Components.FirstOrDefault(kv => kv.Value == CurrentView).Key;
             Components["vehicle"] = VehicleViewModel as IViewModelBase;
             Components["auxiliaries"] = VehicleViewModel.MultistageAuxiliariesViewModel as IViewModelBase;
             Components["airdrag"] = VehicleViewModel.MultistageAirdragViewModel as IViewModelBase;
-            CurrentView = VehicleViewModel as IViewModelBase;
+
+			
+			if (prevKey != null) {
+				CurrentView = Components[prevKey];
+			} else {
+				CurrentView = VehicleViewModel as IViewModelBase;
+            }
+            
+
 
             ShowSaveAndCloseButtons = true;
         }

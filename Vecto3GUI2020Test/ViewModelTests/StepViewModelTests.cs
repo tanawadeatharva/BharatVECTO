@@ -150,13 +150,13 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.NotNull(stepInput.VehicleViewModel);
 
 			var oldVm = stepInput.VehicleViewModel;
-
 			if (arch == stepInput.Architecture) {
 				Assert.Pass("Nothing to see here ...");
             }
 			stepInput.Architecture = arch;
 			Assert.NotNull(stepInput.VehicleViewModel);
 			Assert.AreNotSame(oldVm, stepInput.VehicleViewModel);
+			Assert.That(stepInput.Title.Contains(arch.ToString()));
 		}
 
 		[Test]
@@ -180,7 +180,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var newVm = stepInput.VehicleViewModel;
 			Assert.NotNull(newVm);
 			Assert.AreNotSame(oldVm, newVm);
-
+			Assert.That(stepInput.Title.Contains(to.ToString()));
         }
 
 

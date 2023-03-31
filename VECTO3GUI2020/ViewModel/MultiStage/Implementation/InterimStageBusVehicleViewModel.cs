@@ -228,6 +228,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
             }
 
 			CreateParameterViewModels();
+			ShowConsolidatedData = false;
 		}
 
 		private void InitConsolidated(IVehicleDeclarationInputData consolidatedVehicleData)
