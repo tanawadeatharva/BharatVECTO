@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;
+using VECTO3GUI2020.Ninject.Factories;
 using VECTO3GUI2020.ViewModel.Implementation;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
@@ -16,10 +17,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 {
 
 	public interface IMultiStageViewModelFactory : 
-		IMultiStageViewModelFactoryDefaultInstanceProvider,		IDocumentViewModelFactory,
+		IMultiStageViewModelFactoryDefaultInstanceProvider,		IDocumentViewModelFactory, 
 IMultistageViewModelFactoryFirstParameterAsNameInstanceProvider
     {
-		
+		//IVehicleViewModel GetInterimStageVehicleViewModel(StageInputViewModel.CompletedBusArchitecture arch);
+		IMultistageVehicleViewModel GetInterimStageVehicleViewModel(StageInputViewModel.CompletedBusArchitecture arch);
 	}
 
 
@@ -35,7 +37,7 @@ IMultistageViewModelFactoryFirstParameterAsNameInstanceProvider
 
 		IMultiStageJobViewModel GetMultiStageJobViewModel(IMultistepBusInputDataProvider inputData);
 
-		IVehicleViewModel GetInterimStageVehicleViewModel();
+		//IVehicleViewModel GetInterimStageVehicleViewModel();
 
 		IVehicleViewModel GetInterimStageVehicleViewModel(IVehicleDeclarationInputData consolidatedVehicleData, bool exempted);
 

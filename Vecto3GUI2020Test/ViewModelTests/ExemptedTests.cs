@@ -32,7 +32,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			var vehicleVm =
 				multistageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as
-					InterimStageBusVehicleViewModel_v2_8;
+					InterimStageBusVehicleViewModel;
 
 			Assert.IsTrue(vehicleVm.ExemptedVehicle);
 
@@ -98,7 +98,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			var vehicleVm =
 				multistageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as
-					InterimStageBusVehicleViewModel_v2_8;
+					InterimStageBusVehicleViewModel;
 
 			Assert.IsTrue(vehicleVm.ExemptedVehicle);
 

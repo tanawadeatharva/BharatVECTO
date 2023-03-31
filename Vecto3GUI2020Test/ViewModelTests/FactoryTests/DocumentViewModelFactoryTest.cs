@@ -50,6 +50,14 @@ namespace Vecto3GUI2020Test.ViewModelTests.FactoryTests
 			Assert.NotNull(stepInputViewModel);
 		}
 
+		[TestCase]
+		public void NewStepInput()
+		{
+			var exempted = false;
+			var document = _documentViewModelFactory.GetCreateNewStepInputViewModel(exempted);
+
+		}
+
 
 		[TestCase(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE)]
 		[TestCase(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE)]

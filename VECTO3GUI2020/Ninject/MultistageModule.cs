@@ -22,8 +22,8 @@ namespace VECTO3GUI2020.Ninject
 			Bind<IMultiStageJobViewModel>().To<MultiStageJobViewModel_v0_1>().
 				NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetMultiStageJobViewModel(null));
 
-			Bind<IVehicleViewModel>().To<InterimStageBusVehicleViewModel_v2_8>().
-				NamedLikeFactoryMethod((IMultiStageViewModelFactory f)=>f.GetInterimStageVehicleViewModel());
+			//Bind<IVehicleViewModel>().To<InterimStageBusVehicleViewModel>().
+			//	NamedLikeFactoryMethod((IMultiStageViewModelFactory f)=>f.GetInterimStageVehicleViewModel());
 
 			Bind<IManufacturingStageViewModel>().To<ManufacturingStageViewModel_v0_1>().
 				NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetManufacturingStageViewModel(null, false));

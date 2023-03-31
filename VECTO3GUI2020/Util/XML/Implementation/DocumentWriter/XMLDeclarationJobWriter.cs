@@ -46,6 +46,8 @@ namespace VECTO3GUI2020.Util.XML.Implementation.DocumentWriter
 
     public class XMLDeclarationJobWriter_v1_0 : XMLDeclarationJobWriter
 	{
+		
+
 		public static readonly string[] SUPPORTED_VERSIONS = {
 			typeof(XMLDeclarationJobInputDataProviderV10).ToString()
 		};

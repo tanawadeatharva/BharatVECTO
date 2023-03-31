@@ -32,8 +32,8 @@ namespace VECTO3GUI2020.Ninject.Vehicle
 
 
 	        
-			Bind<IVehicleViewModel>().To<InterimStageBusVehicleViewModel_v2_8>().Named(InterimStageBusVehicleViewModel_v2_8.VERSION);
-			Bind<IVehicleViewModel>().To<InterimStageBusVehicleViewModel_v2_8>().Named(InterimStageBusVehicleViewModel_v2_8.VERSION_EXEMPTED);
+			Bind<IVehicleViewModel>().To<InterimStageBusVehicleViewModel>().Named(InterimStageBusVehicleViewModel.VERSION);
+			Bind<IVehicleViewModel>().To<InterimStageBusVehicleViewModel>().Named(InterimStageBusVehicleViewModel.VERSION_EXEMPTED);
 
 
             Bind<IComponentViewModel>().To<EngineViewModel_v1_0>().Named(EngineViewModel_v1_0.VERSION);

@@ -28,10 +28,15 @@ namespace TUGraz.VectoCore.Utils.Ninject
 			/// Specifies the number of arguments that are passed to the <see cref="combineToNameDelegate"/>
 			/// </summary>
 			public int takeArguments;
-			/// <summary>
-			/// Sets the methods for which these settings apply, leave empty for default settings
-			/// </summary>
-			public MethodInfo[] methods;
+
+            //TODO: use expressions instead of method info 
+			// Expression<Func<int, string>> expression = i => i.ToString();
+			// MethodInfo method = ((MethodCallExpression)expression.Body).Method;
+
+            /// <summary>
+            /// Sets the methods for which these settings apply, leave empty for default settings
+            /// </summary>
+            public MethodInfo[] methods;
 		}
 
 		public delegate string CombineToName(params object[] arguments);

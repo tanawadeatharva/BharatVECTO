@@ -205,9 +205,6 @@
         <multistageviews:ManufacturingStageView></multistageviews:ManufacturingStageView>
     </DataTemplate>
 
-    <DataTemplate x:Shared="False" DataType="{x:Type multistageimpl:InterimStageBusVehicleViewModel_v2_8}">
-        <multistageviews:VehicleView_v2_8/>
-    </DataTemplate>
 
     <DataTemplate x:Shared="False" DataType="{x:Type multistageimpl:MultiStageJobViewModel_v0_1}">
         <multistageviews:MultiStageView/>

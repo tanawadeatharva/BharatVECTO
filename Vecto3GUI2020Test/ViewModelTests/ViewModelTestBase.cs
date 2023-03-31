@@ -47,7 +47,7 @@ namespace Vecto3GUI2020Test
 
 			Assert.NotNull(newMultistageJobViewModel.MultiStageJobViewModel);
 
-			var manstageVehicleViewModel = newMultistageJobViewModel.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
+			var manstageVehicleViewModel = newMultistageJobViewModel.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel;
 			Assert.NotNull(manstageVehicleViewModel);
 
 			//Assert.AreEqual(GetTestDataPath(fileName), newMultistageJobViewModel.VifPath);
@@ -57,7 +57,7 @@ namespace Vecto3GUI2020Test
 				var auxiliariesViewModel = manstageVehicleViewModel.MultistageAuxiliariesViewModel;
 				Assert.NotNull(auxiliariesViewModel);
 
-				var airdragViewModel = (manstageVehicleViewModel as InterimStageBusVehicleViewModel_v2_8)?.MultistageAirdragViewModel;
+				var airdragViewModel = (manstageVehicleViewModel as InterimStageBusVehicleViewModel)?.MultistageAirdragViewModel;
 				Assert.NotNull(airdragViewModel);
 			}
 			return newMultistageJobViewModel;

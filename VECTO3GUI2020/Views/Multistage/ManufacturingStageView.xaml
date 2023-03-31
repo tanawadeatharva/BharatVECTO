@@ -8,21 +8,23 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:properties="clr-namespace:VECTO3GUI2020.Properties"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance implementation:ManufacturingStageViewModel_v0_1 }">
+             d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance implementation:StageInputViewModel}">
+
+    <!--d:DataContext="{d:DesignInstance implementation:ManufacturingStageViewModel_v0_1 }"-->
     <Grid>
-        <DockPanel>
+        <DockPanel d:Background="LightPink">
 
        
-        <DockPanel DockPanel.Dock="Top" LastChildFill="False">
+        <DockPanel DockPanel.Dock="Top" LastChildFill="False" d:Background="Aqua">
             <UniformGrid DockPanel.Dock="Left" Width="350" Rows="1" HorizontalAlignment="Left">
                 <Button Style="{DynamicResource MultiStageButtonStyle1}" 
-                        Margin="4" Command="{Binding SwitchComponentViewCommand}" CommandParameter="Vehicle">Vehicle</Button>
+                        Margin="4" Command="{Binding SwitchComponentViewCommand}" CommandParameter="Vehicle" x:Name="TopButton">Vehicle</Button>
                 <Button Style="{DynamicResource MultiStageButtonStyle1}" 
                         Margin="4" Command="{Binding SwitchComponentViewCommand}" CommandParameter="Airdrag">Airdrag</Button>
                 <Button Style="{DynamicResource MultiStageButtonStyle1}" 
                         Margin="4" Command="{Binding SwitchComponentViewCommand}" CommandParameter="Auxiliaries">Auxiliaries</Button>
             </UniformGrid>
-                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="0 10 20 10" >
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="0 10 20 10" d:Visibility="Visible" d:Background="Green">
                     <StackPanel.Visibility>
                         <PriorityBinding>
                             <Binding Path="StepCount" Converter="{StaticResource AlwaysVisibleConverter}"/>
@@ -43,6 +45,17 @@
                     </Label>
                 </StackPanel>
 
+                <StackPanel d:Background="Red"
+                            DockPanel.Dock="Right" 
+                            Orientation="Horizontal" 
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Center" 
+                            Margin="0 10 20 10">
+                    <Label Padding="4">Architecture</Label>
+                    <ComboBox MinWidth="150" ItemsSource="{Binding ArchitectureItems, UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding Architecture, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                    </ComboBox>
+                </StackPanel>
+
             
         </DockPanel>
             <UniformGrid Rows="1" Width="350" DockPanel.Dock="Bottom" HorizontalAlignment="Right" 
@@ -54,7 +67,7 @@
                         Command="{Binding CloseWindowCommand}" 
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}">Close</Button>
             </UniformGrid>
-            <ContentControl DockPanel.Dock="Top" ContentTemplateSelector="{StaticResource MultistageVehicleDataTemplateSelector}"   Content="{Binding CurrentView}"/>
+            <ContentControl DockPanel.Dock="Top" ContentTemplateSelector="{StaticResource MultistageVehicleDataTemplateSelector}" Content="{Binding CurrentView}" d:Background="Beige"/>
         </DockPanel>
     </Grid>
 </UserControl>

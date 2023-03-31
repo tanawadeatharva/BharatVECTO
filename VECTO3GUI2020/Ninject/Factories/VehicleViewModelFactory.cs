@@ -25,6 +25,8 @@ namespace VECTO3GUI2020.Ninject.Factories
 		/// <param name="exempted"></param>
 		/// <returns></returns>
 		IVehicleViewModel CreateVehicleViewModel(IVehicleDeclarationInputData consolidatedVehicleData, IVehicleDeclarationInputData vehicleInput);
+
+		IVehicleViewModel CreateNewVehicleViewModel(StageInputViewModel.CompletedBusArchitecture arch);
 	}
 
 	public class VehicleViewModelFactoryModule : AbstractNinjectModule
@@ -39,10 +41,12 @@ namespace VECTO3GUI2020.Ninject.Factories
 				new CombineArgumentsToNameInstanceProvider.MethodSettings() {
 					combineToNameDelegate = (args) => {
 						if (args.Length >= 2) {
+							//Step inputviewmodel with consolidate vehicle data from previous steps
 							if (args[0] is IVehicleDeclarationInputData consolidatedVehicle) {
-								return DefaultName(consolidatedVehicle.ExemptedVehicle);
+								return ArchName(consolidatedVehicle.VehicleType, consolidatedVehicle.ExemptedVehicle).ToString();
 							}
 
+							//Standalone step input
 							if (args[1] is IVehicleDeclarationInputData vehicle) {
 								return CombineToName(vehicle.DataSource.TypeVersion, vehicle.DataSource.Type);
 							}
@@ -53,20 +57,40 @@ namespace VECTO3GUI2020.Ninject.Factories
 					takeArguments = 2,
 					skipArguments = 0,
 				},
+				new CombineArgumentsToNameInstanceProvider.MethodSettings() {
+					methods = new[]{typeof(IVehicleViewModelFactory).GetMethod(nameof(IVehicleViewModelFactory.CreateNewVehicleViewModel))},
+					combineToNameDelegate = (args) => {
+						if (args.Length >= 1 && args[0] is StageInputViewModel.CompletedBusArchitecture arch) {
+							return arch.ToString();
+						}
+						throw new ArgumentException($"arg[0] must be {nameof(StageInputViewModel.CompletedBusArchitecture)}");
+                    },
+					skipArguments = 1,
+					takeArguments = 1
+				}
 			})).Named(scopeName);
 
-			///Empty vehicle view models
-			AddVehicleViewModelBinding<InterimStageBusVehicleViewModel_v2_8>(false);
-			AddVehicleViewModelBinding<InterimStageBusVehicleViewModel_v2_8>(true);
+            ///Empty vehicle view models //Create depending on jobtype
+			AddVehicleViewModelBinding<InterimStageConventionalBusVehicleViewModel>(VectoSimulationJobType.ConventionalVehicle);
+			//One for hev is enough map to same name
+			AddVehicleViewModelBinding<InterimStageHevBusVehicleViewModel>(         VectoSimulationJobType.ParallelHybridVehicle);
 
-			///Vehicle Viewmodels for existing files
-			AddVehicleViewModelBinding<InterimStageBusVehicleViewModel_v2_8>(XMLDeclarationConventionalCompletedBusDataProviderV24.NAMESPACE_URI, XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE);
-			AddVehicleViewModelBinding<InterimStageBusVehicleViewModel_v2_8>(XMLDeclarationHevCompletedBusDataProviderV24.NAMESPACE_URI, XMLDeclarationHevCompletedBusDataProviderV24.XSD_TYPE);
+			AddVehicleViewModelBinding<InterimStagePevBusVehicleViewModel>(         VectoSimulationJobType.BatteryElectricVehicle);
+
+			AddVehicleViewModelBinding<InterimStageIEPCBusVehicleViewModel>(VectoSimulationJobType.IEPC_E);
+
+			AddVehicleViewModelBinding<InterimStageExemptedBusVehicleViewModel>(VectoSimulationJobType.EngineOnlySimulation, true);
+
 			
-			AddVehicleViewModelBinding<InterimStageBusVehicleViewModel_v2_8>(XMLDeclarationPEVCompletedBusDataProviderV24.NAMESPACE_URI, XMLDeclarationPEVCompletedBusDataProviderV24.XSD_TYPE);
-			AddVehicleViewModelBinding<InterimStageBusVehicleViewModel_v2_8>(XMLDeclarationIepcCompletedBusDataProviderV24.NAMESPACE_URI, XMLDeclarationIepcCompletedBusDataProviderV24.XSD_TYPE);
 
-            AddVehicleViewModelBinding<InterimStageBusVehicleViewModel_v2_8>(XMLDeclarationExemptedCompletedBusDataProviderV24.NAMESPACE_URI, XMLDeclarationExemptedCompletedBusDataProviderV24.XSD_TYPE); 
+            ///Vehicle Viewmodels for existing files
+            AddVehicleViewModelBinding<InterimStageConventionalBusVehicleViewModel>(XMLDeclarationConventionalCompletedBusDataProviderV24.NAMESPACE_URI, XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE);
+			AddVehicleViewModelBinding<InterimStageHevBusVehicleViewModel>(XMLDeclarationHevCompletedBusDataProviderV24.NAMESPACE_URI, XMLDeclarationHevCompletedBusDataProviderV24.XSD_TYPE);
+			
+			AddVehicleViewModelBinding<InterimStagePevBusVehicleViewModel>(XMLDeclarationPEVCompletedBusDataProviderV24.NAMESPACE_URI, XMLDeclarationPEVCompletedBusDataProviderV24.XSD_TYPE);
+			AddVehicleViewModelBinding<InterimStageIEPCBusVehicleViewModel>(XMLDeclarationIepcCompletedBusDataProviderV24.NAMESPACE_URI, XMLDeclarationIepcCompletedBusDataProviderV24.XSD_TYPE);
+
+            AddVehicleViewModelBinding<InterimStageExemptedBusVehicleViewModel>(XMLDeclarationExemptedCompletedBusDataProviderV24.NAMESPACE_URI, XMLDeclarationExemptedCompletedBusDataProviderV24.XSD_TYPE); 
 
         }
 
@@ -76,15 +100,32 @@ namespace VECTO3GUI2020.Ninject.Factories
 			Bind<IVehicleViewModel>().To<TConcrete>().WhenAnyAncestorNamed(scopeName).Named(CombineToName(ns, type));
 		}
 
-		private void AddVehicleViewModelBinding<TConcrete>(bool exempted) where TConcrete : IVehicleViewModel
+		private void AddVehicleViewModelBinding<TConcrete>(VectoSimulationJobType jobType, bool exempted = false) where TConcrete : IVehicleViewModel
 		{
-			Bind<IVehicleViewModel>().To<TConcrete>().WhenAnyAncestorNamed(scopeName).Named(DefaultName(exempted));
+			Bind<IVehicleViewModel>().To<TConcrete>().WhenAnyAncestorNamed(scopeName).Named(ArchName(jobType, exempted).ToString());
 		}
 
 
-		public static string DefaultName(bool exempted)
+		public static StageInputViewModel.CompletedBusArchitecture ArchName(VectoSimulationJobType jobType, bool exempted = false)
 		{
-			return exempted ? "exempted" : "default";
+			if (exempted) {
+				return StageInputViewModel.CompletedBusArchitecture.Exempted;
+			}
+			switch(jobType){
+				case VectoSimulationJobType.ConventionalVehicle:
+					return StageInputViewModel.CompletedBusArchitecture.Conventional;
+				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.SerialHybridVehicle:
+				case VectoSimulationJobType.IHPC:
+                    return StageInputViewModel.CompletedBusArchitecture.HEV;
+				case VectoSimulationJobType.BatteryElectricVehicle:
+					return StageInputViewModel.CompletedBusArchitecture.PEV;
+				case VectoSimulationJobType.IEPC_E:
+				case VectoSimulationJobType.IEPC_S:
+					return StageInputViewModel.CompletedBusArchitecture.IEPC;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
+			}
 		}
         public static string CombineToName(XNamespace ns, string type)
 		{

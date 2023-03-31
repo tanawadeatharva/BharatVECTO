@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Properties;
@@ -14,12 +18,55 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
 	public class StageInputViewModel : StageViewModelBase, IDocumentViewModel, IJobEditViewModel
 	{
+		public enum CompletedBusArchitecture
+		{
+			Conventional,
+			HEV,
+			PEV,
+			IEPC,
+			Exempted
+		}
+
 		private bool _canBeEdited;
 		private DataSource _dataSource;
 		private readonly XmlDocumentType _documentType;
 		private string _documentName;
 		private bool _selected;
 		private static uint _newDocumentCounter = 0;
+
+
+		private CompletedBusArchitecture _architecture;
+		private ObservableCollection<CompletedBusArchitecture> _architectureItems =
+			new ObservableCollection<CompletedBusArchitecture>(Enum.GetValues(typeof(CompletedBusArchitecture)).Cast<CompletedBusArchitecture>());
+
+		public ObservableCollection<CompletedBusArchitecture> ArchitectureItems
+		{
+			get => _architectureItems;
+			set => SetProperty(ref _architectureItems, value);
+		}
+
+		public CompletedBusArchitecture Architecture
+		{
+			get => _architecture;
+			set
+			{
+				if (SetProperty(ref _architecture, value)) {
+					UpdateVehicleViewModel();
+				}
+			}
+		}
+
+		private void UpdateVehicleViewModel()
+		{
+			if (VehicleViewModel.ShowConsolidatedData) {
+				throw new VectoException("This is only intended on \"standalone\" step inputs");
+			}
+			var oldVm = _vehicleViewModel;
+			var newVm = _viewModelFactory.GetInterimStageVehicleViewModel(Architecture);
+			newVm.SetVehicleInputData(oldVm);
+			VehicleViewModel = newVm;
+		}
+
 
 		private StageInputViewModel(IMultiStageViewModelFactory multistageViewModelFactory,
 			IAdditionalJobInfoViewModel additionalJobInfoViewModel) : base(multistageViewModelFactory)
@@ -32,16 +79,22 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public StageInputViewModel(bool exemptedVehicle, IMultiStageViewModelFactory multiStageViewModelFactory, IAdditionalJobInfoViewModel additionalJobInfoViewModel) : this(multiStageViewModelFactory, additionalJobInfoViewModel)
 		{
-			_vehicleViewModel = _viewModelFactory.CreateStageInputVehicleViewModel(
-				exemptedVehicle
-				? InterimStageBusVehicleViewModel_v2_8.VERSION_EXEMPTED
-				: InterimStageBusVehicleViewModel_v2_8.VERSION) as IMultistageVehicleViewModel;
+			Architecture = exemptedVehicle
+				? CompletedBusArchitecture.Exempted
+				: CompletedBusArchitecture.Conventional;
+
+
+			_vehicleViewModel = multiStageViewModelFactory.GetInterimStageVehicleViewModel(Architecture);
+
+			
 
 			Title = $"{GUILabels.Edit_step_input} - New file";
 
 			_documentName = $"New {(exemptedVehicle ? "exempted " : "")}step input {++_newDocumentCounter}";
+			
 			Init();
-		}
+			return;
+        }
 
 		public StageInputViewModel(IDeclarationInputDataProvider inputData, IMultiStageViewModelFactory multiStageViewModelFactory, IAdditionalJobInfoViewModel additionalJobInfoViewModel) : this(multiStageViewModelFactory,additionalJobInfoViewModel)
 		{
@@ -49,14 +102,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 			//_vehicleViewModel =
 			//	_viewModelFactory.CreateStageInputVehicleViewModel(inputData.JobInputData.Vehicle) as IMultistageVehicleViewModel;
-			//(_vehicleViewModel as InterimStageBusVehicleViewModel_v2_8).ShowConsolidatedData = false;
+			//	(_vehicleViewModel as InterimStageBusVehicleViewModel).ShowConsolidatedData = false;
 
 			_dataSource = inputData.DataSource;
 			VehicleInputDataFilePath = _dataSource.SourceFile;
 
 			Title = $"{GUILabels.Edit_step_input} - {Path.GetFileName(_dataSource.SourceFile)}";
-			return;
-            Init();
+			Init();
+            return;
 		}
 
 		#region Overrides of StageViewModelBase
@@ -84,9 +137,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private void Init()
 		{
 			UpdateTitle();
-			Components.Add("vehicle", VehicleViewModel as IViewModelBase);
-			Components.Add("auxiliaries", VehicleViewModel.MultistageAuxiliariesViewModel as IViewModelBase);
-			Components.Add("airdrag", VehicleViewModel.MultistageAirdragViewModel as IViewModelBase);
+			Components["vehicle"] = VehicleViewModel as IViewModelBase;
+			Components["auxiliaries"] = VehicleViewModel.MultistageAuxiliariesViewModel as IViewModelBase;
+			Components["airdrag"] = VehicleViewModel.MultistageAirdragViewModel as IViewModelBase;
 			CurrentView = VehicleViewModel as IViewModelBase;
 
 			ShowSaveAndCloseButtons = true;

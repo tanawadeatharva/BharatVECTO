@@ -40,7 +40,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			//Set Mandatory Fields
 			var vehicle =
-				multistagevm.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
+				multistagevm.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel;
 			vehicle.ManufacturerAddress = "Address";
 			vehicle.Manufacturer = "Manufacturer";
 			vehicle.VIN = "VIN12345678";
@@ -69,7 +69,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			//Set Necessary Fields
 			var vehicleVm =
-				multistagevm.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
+				multistagevm.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel;
 
 			vehicleVm.Manufacturer = "adsf";
 			vehicleVm.ManufacturerAddress = "asdf 123";
@@ -131,7 +131,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			var multistagevm = LoadFileFromPath(_finalVif);
 
-			var VehicleViewModel = multistagevm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as InterimStageBusVehicleViewModel_v2_8;
+			var VehicleViewModel = multistagevm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as InterimStageBusVehicleViewModel;
 
 			VehicleViewModel.Manufacturer = "Manufacturer";
             VehicleViewModel.ManufacturerAddress = "Manufacturer Address";
@@ -169,7 +169,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var jobListVm = _kernel.Get<IJobListViewModel>();
 
 			var vehicleVm =
-				multistagevm.ManufacturingStageViewModel.VehicleViewModel as InterimStageBusVehicleViewModel_v2_8;
+				multistagevm.ManufacturingStageViewModel.VehicleViewModel as InterimStageBusVehicleViewModel;
 
 			Assert.IsTrue(vehicleVm.ExemptedVehicle);
 			vehicleVm.Manufacturer = "Test Manufacturer 1";
@@ -210,7 +210,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var jobListVm = _kernel.Get<IJobListViewModel>();
 
 			var vehicleVm =
-				multistagevm.ManufacturingStageViewModel.VehicleViewModel as InterimStageBusVehicleViewModel_v2_8;
+				multistagevm.ManufacturingStageViewModel.VehicleViewModel as InterimStageBusVehicleViewModel;
 
 			Assert.IsTrue(vehicleVm.ExemptedVehicle);
 			vehicleVm.Manufacturer = "Test Manufacturer 1";
@@ -264,7 +264,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			multiStageViewModel.ManufacturingStageViewModel.LoadStageInputData(Path.GetFullPath(TestData.stageInputFullSample));
 			
 			var vehicle =
-				multiStageViewModel.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
+				multiStageViewModel.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel;
 			vehicle.ManufacturerAddress = "Address";
 			vehicle.Manufacturer = "Manufacturer";
 			vehicle.VIN = "VIN12345678";

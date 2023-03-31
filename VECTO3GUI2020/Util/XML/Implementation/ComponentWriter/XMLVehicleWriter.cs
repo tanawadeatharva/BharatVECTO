@@ -8,6 +8,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
 using TUGraz.VectoCore.OutputData.XML.ComponentWriter;
 using TUGraz.VectoCore.OutputData.XML.GroupWriter;
 using TUGraz.VectoCore.Utils;
@@ -194,9 +195,11 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 	public class XMLVehicleWriter_v2_10 : XMLVehicleWriter
 	{
 		private readonly bool _exempted;
-		public static readonly string[] SUPPORTEDVERSIONS = {
-			typeof(InterimStageBusVehicleViewModel_v2_8).ToString(),
-			typeof(StageInputViewModel).ToString()
+		public static readonly (XNamespace version, string type)[] SUPPORTEDVERSIONS = {
+			(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE)
+
+			//typeof(InterimStageBusVehicleViewModel).ToString(),
+			//typeof(StageInputViewModel).ToString()
 		};
 
 		private readonly IGroupWriterFactory _groupWriterFactory;
@@ -209,7 +212,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 			IComponentWriterFactory componentWriterFactory) : base(inputData, xmlWriterFactory)
 		{
 			
-			//TODO: CHECK ALL POSSIBIBILITIES FOR VEHICLES
+			
 			_exempted = inputData.ExemptedVehicle;
 
 			_conventional = !_exempted;

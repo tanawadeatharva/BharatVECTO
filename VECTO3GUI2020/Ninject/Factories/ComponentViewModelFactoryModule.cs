@@ -21,6 +21,8 @@ namespace VECTO3GUI2020.Ninject.Factories
 	{
 		IComponentViewModel CreateComponentViewModel(DataSource source, object inputData);
 		ICommonComponentViewModel CreateCommonComponentViewModel(object inputData);
+
+
 	}
 
 

@@ -1,4 +1,5 @@
 ﻿using Ninject;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
@@ -27,8 +28,9 @@ namespace VECTO3GUI2020.Ninject.Factories
 
         private readonly IDocumentViewModelFactory _documentViewModelFactory;
 		private readonly IVehicleViewModelFactory _vehicleViewModelFactory;
+        private readonly IComponentViewModelFactory _componentViewModelFactory;
 
-		public MultiStageViewModelFactory(
+        public MultiStageViewModelFactory(
             IMultiStageViewModelFactoryDefaultInstanceProvider multiStageVmFactoryDefaultInstanceProvider,
             IMultistageViewModelFactoryFirstParameterAsNameInstanceProvider multistageViewModelFactoryFirstParameterAsNameInstanceProvider,
             IDocumentViewModelFactory documentViewModelFactory,
@@ -54,10 +56,14 @@ namespace VECTO3GUI2020.Ninject.Factories
             return _documentViewModelFactory.CreateDocumentViewModel(inputData) as IMultiStageJobViewModel;
         }
 
-        public IVehicleViewModel GetInterimStageVehicleViewModel()
+        public IMultistageVehicleViewModel GetInterimStageVehicleViewModel(StageInputViewModel.CompletedBusArchitecture arch)
         {
-            return _multiStageVmFactoryDefaultInstanceProvider.GetInterimStageVehicleViewModel();
-        }
+
+			if (_vehicleViewModelFactory.CreateNewVehicleViewModel(arch) is IMultistageVehicleViewModel veh) {
+				return veh;
+			};
+			throw new VectoException($"Could not create viewmodel for {arch} completed bus!");
+		}
 
         public IVehicleViewModel GetInterimStageVehicleViewModel(IVehicleDeclarationInputData consolidatedVehicleData, bool exempted)
 		{

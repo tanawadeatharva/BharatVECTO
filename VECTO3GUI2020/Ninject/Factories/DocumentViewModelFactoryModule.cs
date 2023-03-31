@@ -30,11 +30,11 @@ namespace VECTO3GUI2020.Ninject.Factories
 
         public override void Load()
         {
-            Bind<IDocumentViewModelFactory>().To<DocumentViewModelFactory>().Named(DocumentViewModelFactoryScope);
+            Bind<IDocumentViewModelFactory>().To<DocumentViewModelFactory>().InSingletonScope().Named(DocumentViewModelFactoryScope);
 
             #region MultistepViewModel
 
-            Bind<IMultiStepInputViewModelFactory>().ToFactory().Named(MultistepInputScope);
+            Bind<IMultiStepInputViewModelFactory>().ToFactory().InSingletonScope().Named(MultistepInputScope);
             Bind<IDocumentViewModel>().To<MultiStageJobViewModel_v0_1>().WhenParentNamed(MultistepInputScope);
             #endregion
 

@@ -22,8 +22,9 @@ namespace VECTO3GUI2020.Ninject.Factories
             LoadModule<DocumentViewModelFactoryModule>();
             LoadModule<ComponentViewModelFactoryModule>();
             LoadModule<VehicleViewModelFactoryModule>();
+            LoadModule<XMLWriterFactoryModule>();
 
-            Bind<IXMLWriterFactory>().ToFactory(() => new UseFirstArgumentTypeAsNameInstanceProvider(fallback: true));
+            //Bind<IXMLWriterFactory>().ToFactory(() => new UseFirstArgumentTypeAsNameInstanceProvider(fallback: true));
             //Bind<IMultiStageViewModelFactory>().ToFactory(() => new UseFirstArgumentAsNameInstanceProvider(skipFirstArgument: true, fallback: true));
 
             Bind<IJobEditViewModelFactory>().ToFactory(() => new UseFirstArgumentTypeAsNameInstanceProvider());

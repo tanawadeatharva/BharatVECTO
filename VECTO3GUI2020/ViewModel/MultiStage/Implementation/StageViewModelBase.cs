@@ -106,7 +106,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private bool SwitchViewCanExecute(string viewToShow)
 		{
-			return Components[viewToShow] != null;
+			var found = Components.TryGetValue(viewToShow, out var vm);
+			return found && vm != null;
 		}
 
 		private IRelayCommand _saveInputDataCommand;

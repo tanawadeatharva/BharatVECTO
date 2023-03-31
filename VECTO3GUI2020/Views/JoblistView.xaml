@@ -14,7 +14,7 @@
              d:DesignHeight="450" d:DesignWidth="1000">
 
 
-    <Grid>
+    <Grid d:Background="Pink">
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="5"/>

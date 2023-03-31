@@ -19,7 +19,7 @@ using Vecto3GUI2020Test.Utils;
 namespace Vecto3GUI2020Test.ViewModelTests
 {
 	[TestFixture]
-	public class StageViewModelTests
+	public class StepViewModelTests
 	{
 		private IKernel _kernel;
 		private MockWindowHelper _windowHelper;
@@ -38,7 +38,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			IMultiStageViewModelFactory vmFactory = _kernel.Get<IMultiStageViewModelFactory>();
 
 			var StageInput = vmFactory.GetCreateNewStepInputViewModel(exempted) as StageInputViewModel;
-			var vehicleVm = StageInput.VehicleViewModel as InterimStageBusVehicleViewModel_v2_8;
+			var vehicleVm = StageInput.VehicleViewModel as InterimStageBusVehicleViewModel;
 			vehicleVm.Manufacturer = "adsf";
 			vehicleVm.ManufacturerAddress = "asdf 123";
 			vehicleVm.VIN = "1234567890";
@@ -64,7 +64,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			IMultiStageViewModelFactory vmFactory = _kernel.Get<IMultiStageViewModelFactory>();
 
 			var StageInput = vmFactory.GetCreateNewStepInputViewModel(false) as StageInputViewModel;
-			var vehicleVm = StageInput.VehicleViewModel as InterimStageBusVehicleViewModel_v2_8;
+			var vehicleVm = StageInput.VehicleViewModel as InterimStageBusVehicleViewModel;
 			vehicleVm.Manufacturer = "adsf";
 			vehicleVm.ManufacturerAddress = "asdf 123";
 			vehicleVm.VIN = "1234567890";
@@ -129,6 +129,14 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		}
 
 
+
+		[Test]
+		public void CreateStepInput()
+		{
+
+
+
+		}
 
 
 

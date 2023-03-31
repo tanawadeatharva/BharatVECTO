@@ -16,7 +16,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var vm = LoadFileFromPath(TestData.primary_vehicle_only);
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-					InterimStageBusVehicleViewModel_v2_8;
+					InterimStageBusVehicleViewModel;
 			var enteredString = "test";
 			var modelParam = vehicleVM.ParameterViewModels[nameof(vehicleVM.Model)];
 			//Null after loading
@@ -68,7 +68,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var vm = LoadFileFromPath(TestData.primary_vehicle_only);
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-					InterimStageBusVehicleViewModel_v2_8;
+					InterimStageBusVehicleViewModel;
 
 			Assert.IsNull(vehicleVM.CurbMassChassis?.Value());
 			var curbMassParameter = vehicleVM.ParameterViewModels[nameof(vehicleVM.CurbMassChassis)];
@@ -88,7 +88,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var vm = LoadFileFromPath(TestData.primary_vehicle_only);
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-					InterimStageBusVehicleViewModel_v2_8;
+					InterimStageBusVehicleViewModel;
 			var vmConc = vm.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
 			vmConc.ManufacturingStageViewModel.LoadStageInputData(TestData.stageInputFullSample);
 			Assert.IsFalse(vmConc.ManufacturingStageViewModel.VehicleViewModel.HasErrors);
@@ -106,7 +106,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			var vehicleViewModel =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
-					InterimStageBusVehicleViewModel_v2_8;
+					InterimStageBusVehicleViewModel;
 
 			var vehicleData = vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle;
 
@@ -133,7 +133,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.NotNull(vm);
 
 			var vehicleViewModel =
-				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
+				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel;
 
 			//Assert.NotNull(vm.MultiStageJobViewModel.ManufacturingStages);
 			//Assert.IsNotEmpty(vm.MultiStageJobViewModel.ManufacturingStages);
