@@ -47,7 +47,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public DigestData Signature => throw new NotImplementedException();
 		public void SetInputData(IVehicleDeclarationInputData vehicleInputData)
 		{
-			VehicleViewModel.SetVehicleInputData(vehicleInputData);
+			VehicleViewModel.SetVehicleInputData(vehicleInputData, true);
 
 			OnPropertyChanged(nameof(CurrentView));
 

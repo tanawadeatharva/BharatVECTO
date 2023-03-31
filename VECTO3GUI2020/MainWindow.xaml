@@ -39,7 +39,7 @@
                             </MenuItem>
                             <Separator></Separator>
                             <MenuItem Header="{x:Static resx:GUILabels.CreateInterimCompletedInput}" Command="{Binding JobListVm.NewCompletedInputCommand}" />
-                            <MenuItem Header="{x:Static resx:GUILabels.CreateExemptedInterimCompletedInput}" Command="{Binding JobListVm.NewExemptedCompletedInputCommand}" />
+                            <!--<MenuItem Header="{x:Static resx:GUILabels.CreateExemptedInterimCompletedInput}" Command="{Binding JobListVm.NewExemptedCompletedInputCommand}" />-->
                         </MenuItem>
                         <MenuItem  Header="Load File" Command="{Binding JobListVm.AddJobAsyncCommand}"/>
                         <MenuItem Header="Settings" Command="{Binding OpenSettings}"/>

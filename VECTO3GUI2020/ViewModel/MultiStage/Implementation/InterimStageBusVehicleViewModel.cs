@@ -278,7 +278,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 			CreateParameterViewModels();
 			ShowConsolidatedData = false;
-            SetVehicleInputData(vehicleInput);
+            SetVehicleInputData(vehicleInput, checkExempted:true);
         }
 
 		private void CreateParameterViewModels() {
@@ -439,9 +439,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set { SetProperty(ref _consolidatedVehicleData, value); }
 		}
 
-		public void SetVehicleInputData(IVehicleDeclarationInputData vehicleInputData)
+		public void SetVehicleInputData(IVehicleDeclarationInputData vehicleInputData, bool checkExempted)
 		{
-			if (vehicleInputData.ExemptedVehicle != ExemptedVehicle) {
+			if (checkExempted && vehicleInputData.ExemptedVehicle != ExemptedVehicle) {
 				throw new VectoException(ExemptedVehicle ? "Only exempted stage inputs are allowed" : "Exempted Vehicle not allowed");
 			}
 
@@ -497,7 +497,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private void SetExemptedVehicleInputData(IVehicleDeclarationInputData vehicleInputData)
 		{
-			Debug.Assert(vehicleInputData.ExemptedVehicle);
 			Manufacturer = vehicleInputData.Manufacturer;
 			Identifier = vehicleInputData.Identifier;
 			ManufacturerAddress = vehicleInputData.ManufacturerAddress;

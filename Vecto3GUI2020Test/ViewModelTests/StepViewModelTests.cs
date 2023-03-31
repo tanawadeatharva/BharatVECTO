@@ -24,11 +24,13 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		private IKernel _kernel;
 		private MockWindowHelper _windowHelper;
 		private MockDialogHelper _dialogHelper;
+		private IMultiStageViewModelFactory _viewModelFactory;
 
 		[SetUp]
 		public void Setup()
 		{
 			_kernel = TestHelper.GetKernel(out _dialogHelper, out _windowHelper);
+			_viewModelFactory = _kernel.Get<IMultiStageViewModelFactory>();
 		}
 
 		[TestCase(true, TestName="Exempted")]
@@ -133,10 +135,54 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public void CreateStepInput()
 		{
-
-
-
+			var stepInput = _viewModelFactory.GetCreateNewStepInputViewModel(false) as StageInputViewModel;
+			Assert.NotNull(stepInput.VehicleViewModel);
+			Assert.NotNull(stepInput.VehicleViewModel.MultistageAirdragViewModel);
+			Assert.NotNull(stepInput.VehicleViewModel.MultistageAuxiliariesViewModel);
+			Assert.NotNull(stepInput.Architecture == StageInputViewModel.CompletedBusArchitecture.Conventional);
 		}
+
+		[Test]
+		public void CreateStepInputForAllArchitectures([Values] StageInputViewModel.CompletedBusArchitecture arch)
+		{
+
+			var stepInput = _viewModelFactory.GetCreateNewStepInputViewModel(false) as StageInputViewModel;
+			Assert.NotNull(stepInput.VehicleViewModel);
+
+			var oldVm = stepInput.VehicleViewModel;
+
+			if (arch == stepInput.Architecture) {
+				Assert.Pass("Nothing to see here ...");
+            }
+			stepInput.Architecture = arch;
+			Assert.NotNull(stepInput.VehicleViewModel);
+			Assert.AreNotSame(oldVm, stepInput.VehicleViewModel);
+		}
+
+		[Test]
+		public void SwitchArchitectures([Values] StageInputViewModel.CompletedBusArchitecture from,
+			[Values] StageInputViewModel.CompletedBusArchitecture to)
+		{
+
+			if (from == to) {
+				Assert.Pass("Nothing to see here ...");
+			}
+			var stepInput = _viewModelFactory.GetCreateNewStepInputViewModel(false) as StageInputViewModel;
+			Assert.NotNull(stepInput.VehicleViewModel);
+
+			
+			stepInput.Architecture = from;
+			var oldVm = stepInput.VehicleViewModel;
+			Assert.NotNull(stepInput.VehicleViewModel);
+
+
+			stepInput.Architecture = to;
+			var newVm = stepInput.VehicleViewModel;
+			Assert.NotNull(newVm);
+			Assert.AreNotSame(oldVm, newVm);
+
+        }
+
 
 
 

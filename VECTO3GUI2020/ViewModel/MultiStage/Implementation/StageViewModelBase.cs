@@ -230,7 +230,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			{
 				var inputData = (IDeclarationInputDataProvider)_inputDataReader.Create(fileName);
 				var vehicleInputData = inputData.JobInputData.Vehicle;
-				VehicleViewModel.SetVehicleInputData(vehicleInputData);
+				VehicleViewModel.SetVehicleInputData(vehicleInputData, true);
 				VehicleInputDataFilePath = inputData.DataSource.SourceFile;
 				LoadStageInputDataFollowUp(inputData);
 
