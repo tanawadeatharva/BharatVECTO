@@ -51,6 +51,16 @@
                             HorizontalAlignment="Center" 
                             VerticalAlignment="Center" 
                             Margin="0 10 20 10">
+                    <StackPanel.Visibility>
+                        <PriorityBinding>
+                            <Binding Path="Architecture" Converter="{StaticResource AlwaysVisibleConverter}"/>
+                            <Binding>
+                                <Binding.Source>
+                                    <Visibility>Collapsed</Visibility>
+                                </Binding.Source>
+                            </Binding>
+                        </PriorityBinding>
+                    </StackPanel.Visibility>
                     <Label Padding="4">Architecture</Label>
                     <ComboBox MinWidth="150" ItemsSource="{Binding ArchitectureItems, UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding Architecture, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
                     </ComboBox>
