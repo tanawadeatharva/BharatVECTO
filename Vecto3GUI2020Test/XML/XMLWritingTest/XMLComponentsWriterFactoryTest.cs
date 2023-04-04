@@ -42,7 +42,9 @@ public class XMLComponentsWriterFactoryTest
 	}
 
 	[TestCase(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20, XMLTypes.AirDragDataDeclarationType, typeof(XMLAirDragWriter_v2_0))]
-	public void CreateAirdragComponentWriter(string version, string type, Type expectedType)
+	[TestCase(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10, XMLTypes.AirDragDataDeclarationType, typeof(XMLAirDragWriter_v1_0))]
+	[TestCase(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLTypes.AirDragModifiedUseStandardValueType, typeof(XMLAirDragWriter_v2_4))]
+    public void CreateAirdragComponentWriter(string version, string type, Type expectedType)
 	{
 
 		XNamespace ns = version;

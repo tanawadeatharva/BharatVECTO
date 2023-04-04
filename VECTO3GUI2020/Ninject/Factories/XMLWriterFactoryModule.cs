@@ -60,11 +60,13 @@ namespace VECTO3GUI2020.Ninject.Factories
 
             #region Airdrag
             AddComponentWriterBinding<XMLAirDragWriter_v2_0>(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20, XMLTypes.AirDragDataDeclarationType);
+			AddComponentWriterBinding<XMLAirDragWriter_v1_0>(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10, XMLTypes.AirDragDataDeclarationType);
+			AddComponentWriterBinding<XMLAirDragWriter_v2_4>(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLTypes.AirDragModifiedUseStandardValueType);
 
             #endregion
 
             #region BusAux
-			AddBusAuxWriterBinding<XMLCompletedBusAuxiliariesWriterConventional>(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLTypes.AUX_Conventional_CompletedBusType);
+            AddBusAuxWriterBinding<XMLCompletedBusAuxiliariesWriterConventional>(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLTypes.AUX_Conventional_CompletedBusType);
             AddBusAuxWriterBinding<XMLCompletedBusAuxiliariesWriter_xEV>(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLTypes.AUX_xEV_CompletedBusType);
 			#endregion
 

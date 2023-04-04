@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
@@ -12,17 +14,16 @@ namespace VECTO3GUI2020.Util.XML.Components
     public abstract class XMLAirDragWriter : IXMLComponentWriter
     {
         protected IAirdragDeclarationInputData _inputData;
-        protected XNamespace _defaultNamespace;
-        protected XElement _xElement;
+		protected abstract XNamespace DefaultNamespace { get; }
+		protected XElement _xElement;
         protected string _uri = "ToDO-Add-id";
 
         public XMLAirDragWriter()
         {
            
-            if (_uri == null)
-            {
-                _uri = "AirdragComponent" + Guid.NewGuid().ToString("n").Substring(0, 20);
-            }
+            if (_uri == null) {
+				_uri = "AirdragComponent" + XMLHelper.GetGUID();
+			}
         }
 
         public XElement GetElement()
@@ -33,7 +34,7 @@ namespace VECTO3GUI2020.Util.XML.Components
 
                 Initialize();
                 CreateDataElements();
-                var signatureElemnet = this.CreateSignatureElement(_defaultNamespace, _uri, _inputData.DigestValue);
+                var signatureElemnet = this.CreateSignatureElement(XMLNamespaces.V20, _uri, _inputData.DigestValue);
                 _xElement.Add(signatureElemnet);
             }
 
@@ -61,36 +62,94 @@ namespace VECTO3GUI2020.Util.XML.Components
 
     public class XMLAirDragWriter_v2_0 : XMLAirDragWriter
     {
-        public static readonly string[] SUPPORTED_VERSIONS = {
-            typeof(AirDragViewModel_v2_0).ToString(),
-            typeof(MultistageAirdragViewModel).ToString()
-        };
-        public XMLAirDragWriter_v2_0() : base() { }
+		public XMLAirDragWriter_v2_0() : base() { }
         protected override void CreateDataElements()
         {
-            var dataElement = new XElement(_defaultNamespace + XMLNames.ComponentDataWrapper);
+            var dataElement = new XElement(DefaultNamespace + XMLNames.ComponentDataWrapper);
             _xElement.Add(dataElement);
 
-            dataElement.Add(new XAttribute(XMLNames.Component_ID_Attr, _uri), new XAttribute(XMLNamespaces.Xsi + XMLNames.Component_Type_Attr, "v2.0:" +
-             XMLNames.AirDrag_Data_Type_Attr));
+            dataElement.Add(new XAttribute(XMLNames.Component_ID_Attr, _uri), new XAttribute(XMLNamespaces.Xsi + XMLNames.Component_Type_Attr, XMLNames.AirDrag_Data_Type_Attr), new XAttribute("xmlns", DefaultNamespace));
 
-            dataElement.Add(new XElement(_defaultNamespace + XMLNames.Component_Manufacturer, _inputData.Manufacturer));
-            dataElement.Add(new XElement(_defaultNamespace + XMLNames.Component_Model, _inputData.Model));
-            dataElement.Add(new XElement(_defaultNamespace + XMLNames.Component_CertificationNumber, _inputData.CertificationNumber));
-            dataElement.Add(new XElement(_defaultNamespace + XMLNames.Component_Date, _inputData.Date));
-            dataElement.Add(new XElement(_defaultNamespace + XMLNames.Component_AppVersion, _inputData.AppVersion));
-            dataElement.Add(new XElement(_defaultNamespace + XMLNames.AirDrag_CdxA_0, _inputData.AirDragArea_0.ToXMLFormat(2)));
-            dataElement.Add(new XElement(_defaultNamespace + XMLNames.AirDrag_TransferredCDxA, _inputData.TransferredAirDragArea.ToXMLFormat(2)));
-            dataElement.Add(new XElement(_defaultNamespace + XMLNames.AirDrag_DeclaredCdxA, _inputData.AirDragArea.ToXMLFormat(2)));
+            dataElement.Add(new XElement(DefaultNamespace + XMLNames.Component_Manufacturer, _inputData.Manufacturer));
+            dataElement.Add(new XElement(DefaultNamespace + XMLNames.Component_Model, _inputData.Model));
+            dataElement.Add(new XElement(DefaultNamespace + XMLNames.Component_CertificationNumber, _inputData.CertificationNumber));
+            dataElement.Add(new XElement(DefaultNamespace + XMLNames.Component_Date, _inputData.Date));
+            dataElement.Add(new XElement(DefaultNamespace + XMLNames.Component_AppVersion, _inputData.AppVersion));
+            dataElement.Add(new XElement(DefaultNamespace + XMLNames.AirDrag_CdxA_0, _inputData.AirDragArea_0.ToXMLFormat(2)));
+            dataElement.Add(new XElement(DefaultNamespace + XMLNames.AirDrag_TransferredCDxA, _inputData.TransferredAirDragArea.ToXMLFormat(2)));
+            dataElement.Add(new XElement(DefaultNamespace + XMLNames.AirDrag_DeclaredCdxA, _inputData.AirDragArea.ToXMLFormat(2)));
 
 
             dataElement.DescendantsAndSelf().Where(e => string.IsNullOrEmpty(e.Value)).Remove();
         }
 
-        protected override void Initialize()
+		protected override XNamespace DefaultNamespace => XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+		protected override void Initialize()
         {
-            _defaultNamespace = XMLNamespaces.V20;
-            _xElement = new XElement(XMLNames.Component_AirDrag);
+			_xElement = new XElement(XMLNames.Component_AirDrag);
         }
     }
+
+	public class XMLAirDragWriter_v2_4 : XMLAirDragWriter
+	{
+		protected override XNamespace DefaultNamespace => XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
+        public XMLAirDragWriter_v2_4() : base() { }
+		protected override void CreateDataElements()
+		{
+			var dataElement = new XElement(XMLNamespaces.V20 + XMLNames.ComponentDataWrapper);
+			_xElement.Add(dataElement);
+
+			dataElement.Add(new XAttribute(XMLNames.Component_ID_Attr, "std"), new XAttribute(XMLNamespaces.Xsi + XMLNames.Component_Type_Attr,
+                "AirDragModifiedUseStandardValueType"), new XAttribute("xmlns", DefaultNamespace));
+
+			//dataElement.Add(new XElement(DefaultNamespace + XMLNames.Component_Manufacturer, _inputData.Manufacturer));
+			//dataElement.Add(new XElement(DefaultNamespace + XMLNames.Component_Model, _inputData.Model));
+			//dataElement.Add(new XElement(DefaultNamespace + XMLNames.Component_CertificationNumber, _inputData.CertificationNumber));
+			//dataElement.Add(new XElement(DefaultNamespace + XMLNames.Component_Date, _inputData.Date));
+			//dataElement.Add(new XElement(DefaultNamespace + XMLNames.Component_AppVersion, _inputData.AppVersion));
+			//dataElement.Add(new XElement(DefaultNamespace + XMLNames.AirDrag_CdxA_0, _inputData.AirDragArea_0.ToXMLFormat(2)));
+			//dataElement.Add(new XElement(DefaultNamespace + XMLNames.AirDrag_TransferredCDxA, _inputData.TransferredAirDragArea.ToXMLFormat(2)));
+			//dataElement.Add(new XElement(DefaultNamespace + XMLNames.AirDrag_DeclaredCdxA, _inputData.AirDragArea.ToXMLFormat(2)));
+
+
+			//dataElement.DescendantsAndSelf().Where(e => string.IsNullOrEmpty(e.Value)).Remove();
+		}
+
+		protected override void Initialize()
+		{
+			_xElement = new XElement(XMLNames.Component_AirDrag);
+		}
+	}
+
+	public class XMLAirDragWriter_v1_0 : XMLAirDragWriter
+	{
+		protected override XNamespace DefaultNamespace => XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
+        public XMLAirDragWriter_v1_0() : base() { }
+		protected override void CreateDataElements()
+		{
+			var dataElement = new XElement(XMLNamespaces.V20 + XMLNames.ComponentDataWrapper);
+			_xElement.Add(dataElement);
+
+			dataElement.Add(new XAttribute(XMLNames.Component_ID_Attr, _uri), new XAttribute(XMLNamespaces.Xsi + XMLNames.Component_Type_Attr, XMLNames.AirDrag_Data_Type_Attr), new XAttribute("xmlns", DefaultNamespace));
+
+			dataElement.Add(new XElement(DefaultNamespace + XMLNames.Component_Manufacturer, _inputData.Manufacturer));
+			dataElement.Add(new XElement(DefaultNamespace + XMLNames.Component_Model, _inputData.Model));
+			dataElement.Add(new XElement(DefaultNamespace + XMLNames.Component_CertificationNumber, _inputData.CertificationNumber));
+			dataElement.Add(new XElement(DefaultNamespace + XMLNames.Component_Date, _inputData.Date));
+			dataElement.Add(new XElement(DefaultNamespace + XMLNames.Component_AppVersion, _inputData.AppVersion));
+			dataElement.Add(new XElement(DefaultNamespace + XMLNames.AirDrag_CdxA_0, _inputData.AirDragArea_0.ToXMLFormat(2)));
+			dataElement.Add(new XElement(DefaultNamespace + XMLNames.AirDrag_TransferredCDxA, _inputData.TransferredAirDragArea.ToXMLFormat(2)));
+			dataElement.Add(new XElement(DefaultNamespace + XMLNames.AirDrag_DeclaredCdxA, _inputData.AirDragArea.ToXMLFormat(2)));
+
+
+			dataElement.DescendantsAndSelf().Where(e => string.IsNullOrEmpty(e.Value)).Remove();
+		}
+
+		protected override void Initialize()
+		{
+			_xElement = new XElement(XMLNames.Component_AirDrag);
+		}
+	}
+
 }

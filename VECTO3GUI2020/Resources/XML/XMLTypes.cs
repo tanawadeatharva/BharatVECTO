@@ -12,14 +12,14 @@
 
 		#region Airdrag
 		public const string AirDragDataDeclarationType = "AirDragDataDeclarationType";
+		public const string AirDragModifiedUseStandardValueType = "AirDragModifiedUseStandardValueType";
+
+        #endregion
 
 
-		#endregion
+        #region BusAux
 
-
-		#region BusAux
-
-		public const string AUX_Conventional_CompletedBusType = "AUX_Conventional_CompletedBusType";
+        public const string AUX_Conventional_CompletedBusType = "AUX_Conventional_CompletedBusType";
 		public const string AUX_xEV_CompletedBusType = "AUX_xEV_CompletedBusType";
 
         #endregion
