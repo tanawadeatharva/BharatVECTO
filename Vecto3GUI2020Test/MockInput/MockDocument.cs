@@ -25,7 +25,7 @@ public static class MockDocument
 
     public static IDeclarationInputDataProvider GetDeclarationJob()
     {
-        var mock = new Mock<IDeclarationInputDataProvider>();
+        var mock = new Mock<IDeclarationInputDataProvider>(MockBehavior.Strict);
         mock.SetupGet(i => i.DataSource).Returns(MockInput.GetMockDataSource("VectoInputDeclaration",
             XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20));
 		mock.SetupGet(i => i.JobInputData).Returns(GetDeclarationJobInputData());
@@ -36,7 +36,8 @@ public static class MockDocument
 
 	public static IMultistepBusInputDataProvider GetMultistepInput(XNamespace stepInputVersion, string stepInputType, int nrOfStages)
 	{
-		var mock = new Mock<IMultistepBusInputDataProvider>();
+		
+		var mock = new Mock<IMultistepBusInputDataProvider>(MockBehavior.Strict);
 		mock.SetupGet(m => m.JobInputData).Returns(GetMultistageJobInputData(version:stepInputVersion, type:stepInputType, nrOfStages:nrOfStages));
 		mock.SetupGet(m => m.DataSource).Returns(MockInput.GetMockDataSource(XMLDeclarationInputDataProviderMultistageV01.XSD_TYPE, XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1));
         

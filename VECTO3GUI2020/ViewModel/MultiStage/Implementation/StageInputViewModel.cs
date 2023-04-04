@@ -52,6 +52,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
                 if (SetProperty(ref _architecture, value))
                 {
                     UpdateVehicleViewModel();
+                    OnPropertyChanged(nameof(SwitchComponentViewCommand));
                 }
             }
         }
@@ -101,11 +102,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
         public StageInputViewModel(IDeclarationInputDataProvider inputData, IMultiStageViewModelFactory multiStageViewModelFactory, IAdditionalJobInfoViewModel additionalJobInfoViewModel) : this(multiStageViewModelFactory, additionalJobInfoViewModel)
         {
             _documentName = inputData.JobInputData.JobName;
-
+            
+			_vehicleViewModel = _viewModelFactory.GetInterimStageVehicleViewModel(inputData.JobInputData.Vehicle);
             //_vehicleViewModel =
             //	_viewModelFactory.CreateStageInputVehicleViewModel(inputData.JobInputData.Vehicle) as IMultistageVehicleViewModel;
             //	(_vehicleViewModel as InterimStageBusVehicleViewModel).ShowConsolidatedData = false;
-
+			_architecture = _vehicleViewModel.Architecture;
             _dataSource = inputData.DataSource;
             VehicleInputDataFilePath = _dataSource.SourceFile;
 
@@ -144,12 +146,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
             Components["auxiliaries"] = VehicleViewModel.MultistageAuxiliariesViewModel as IViewModelBase;
             Components["airdrag"] = VehicleViewModel.MultistageAirdragViewModel as IViewModelBase;
 
-			
+
+			CurrentView = null;
 			if (prevKey != null) {
 				CurrentView = Components[prevKey];
-			} else {
-				CurrentView = VehicleViewModel as IViewModelBase;
-            }
+			}
+			CurrentView = CurrentView ?? VehicleViewModel as IViewModelBase;
+            
             
 
 

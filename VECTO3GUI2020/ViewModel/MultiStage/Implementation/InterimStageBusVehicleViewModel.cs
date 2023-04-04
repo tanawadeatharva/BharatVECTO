@@ -68,6 +68,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public static string VERSION = INPUTPROVIDERTYPE.ToString();
 		public static string VERSION_EXEMPTED = INPUTPROVIDERTYPEEXEMPTED.ToString();
 
+		public abstract StageInputViewModel.CompletedBusArchitecture Architecture { get; }
 
 		private readonly IMultiStageViewModelFactory _multiStageViewModelFactory;
 
@@ -239,12 +240,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				MultistageAirdragViewModel = _multiStageViewModelFactory.GetMultistageAirdragViewModel(consolidatedVehicleData?.Components?.AirdragInputData);
 
 				MultistageAirdragViewModel.AirdragViewModelChanged += ((sender, args) => {
-					if (sender is IMultistageAirdragViewModel vm)
-					{
-						if (AirdragModifiedMultistepMandatory)
-						{
-							if (vm.AirDragViewModel != null)
-							{
+					if (sender is IMultistageAirdragViewModel vm) {
+						if (AirdragModifiedMultistepMandatory) {
+							if (vm.AirDragViewModel != null) {
 								AirdragModifiedMultistep = true;
 							}
 						}
@@ -1299,7 +1297,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		}
 		public InterimStageConventionalBusVehicleViewModel(IMultiStageViewModelFactory multiStageViewModelFactory) : base(multiStageViewModelFactory) { }
-    }
+
+		#region Overrides of InterimStageBusVehicleViewModel
+
+		public override StageInputViewModel.CompletedBusArchitecture Architecture =>
+			StageInputViewModel.CompletedBusArchitecture.Conventional;
+
+		#endregion
+	}
 	
 
     public class InterimStageExemptedBusVehicleViewModel : InterimStageBusVehicleViewModel
@@ -1316,6 +1321,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			
 		}
 
+
+		#region Overrides of InterimStageBusVehicleViewModel
+
+		public override StageInputViewModel.CompletedBusArchitecture Architecture =>
+			StageInputViewModel.CompletedBusArchitecture.Exempted;
+
+		#endregion
 	}
 
 	public class InterimStageHevBusVehicleViewModel : InterimStageBusVehicleViewModel
@@ -1328,6 +1340,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
 		public InterimStageHevBusVehicleViewModel(IMultiStageViewModelFactory multiStageViewModelFactory) : base(multiStageViewModelFactory) { }
+
+		public override StageInputViewModel.CompletedBusArchitecture Architecture
+		{
+			get => StageInputViewModel.CompletedBusArchitecture.HEV;
+		}
 	}
 
 	public class InterimStagePevBusVehicleViewModel : InterimStageBusVehicleViewModel
@@ -1339,7 +1356,16 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		}
 		public InterimStagePevBusVehicleViewModel(IMultiStageViewModelFactory multiStageViewModelFactory) : base(multiStageViewModelFactory) { }
-    }
+
+		#region Overrides of InterimStageBusVehicleViewModel
+
+		public override StageInputViewModel.CompletedBusArchitecture Architecture
+		{
+			get { return StageInputViewModel.CompletedBusArchitecture.PEV; }
+		}
+
+		#endregion
+	}
 
 	public class InterimStageIEPCBusVehicleViewModel : InterimStageBusVehicleViewModel
 	{
@@ -1350,6 +1376,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		}
 		public InterimStageIEPCBusVehicleViewModel(IMultiStageViewModelFactory multiStageViewModelFactory) : base(multiStageViewModelFactory) { }
-    }
+
+		#region Overrides of InterimStageBusVehicleViewModel
+
+		public override StageInputViewModel.CompletedBusArchitecture Architecture =>
+			StageInputViewModel.CompletedBusArchitecture.IEPC;
+
+		#endregion
+	}
 
 }

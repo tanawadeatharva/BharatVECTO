@@ -47,8 +47,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Common {
 		protected readonly XmlQualifiedName QualifiedName;
 		protected AbstractXMLType(XmlNode node)
 		{
-			SchemaType = node.SchemaInfo?.SchemaType?.Name ;
-			QualifiedName = node.SchemaInfo?.SchemaType.QualifiedName;
+			var schemaType = XMLHelper.GetSchemaType(node);
+
+			SchemaType = schemaType?.Name;
+
+
+			QualifiedName = schemaType?.QualifiedName;
 			BaseNode = node;
 		}
 

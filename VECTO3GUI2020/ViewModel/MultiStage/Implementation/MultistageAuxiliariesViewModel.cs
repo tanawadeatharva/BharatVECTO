@@ -536,6 +536,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#region Implementation of interfaces (unused Properties);
 
+		public DataSource DataSource { get; }
 		public XmlNode XMLSource => throw new NotImplementedException();
 
 		public string FanTechnology => throw new NotImplementedException();

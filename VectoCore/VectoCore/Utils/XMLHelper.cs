@@ -398,5 +398,18 @@ namespace TUGraz.VectoCore.Utils
 		{
 			return Guid.NewGuid().ToString("n").Substring(0, 20);
 		}
+
+
+		public static XmlSchemaType GetSchemaType(XmlNode componentNode)
+		{
+			var dataNode =
+				componentNode?.SelectSingleNode($"./*[local-name()='{XMLNames.ComponentDataWrapper}']");
+			
+			var type = (dataNode ?? componentNode)?.SchemaInfo.SchemaType;
+			return type;
+        }
+		
+
+
 	}
 }

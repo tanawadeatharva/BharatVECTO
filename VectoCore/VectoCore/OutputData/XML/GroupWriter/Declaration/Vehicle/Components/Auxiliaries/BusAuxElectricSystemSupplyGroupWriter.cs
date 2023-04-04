@@ -4,9 +4,9 @@ using TUGraz.VectoCommon.InputData;
 
 namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.Components.Auxiliaries
 {
-    class BusAuxElectricSystemSupplyGroupWriter_v2_10_2 : GroupWriter, IBusAuxiliariesDeclarationGroupWriter
+    class BusAuxElectricSystemSupplyGroupWriter_v2_4 : GroupWriter, IBusAuxiliariesDeclarationGroupWriter
     {
-		public BusAuxElectricSystemSupplyGroupWriter_v2_10_2(XNamespace writerNamespace) : base(writerNamespace) { }
+		public BusAuxElectricSystemSupplyGroupWriter_v2_4(XNamespace writerNamespace) : base(writerNamespace) { }
 
 		#region Implementation of IBusAuxiliariesDeclarationGroupWriter
 

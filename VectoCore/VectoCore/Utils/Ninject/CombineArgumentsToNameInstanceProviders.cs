@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.Utils.Ninject
 
 		protected override string GetName(MethodInfo methodInfo, object[] arguments)
 		{
-			if (!_methodSettings.TryGetValue(methodInfo, out var methodSettings)) {
+			if (!GetMethodSettings(methodInfo, arguments, out var methodSettings)) {
 				return base.GetName(methodInfo, arguments);
 			}
 
@@ -99,9 +99,26 @@ namespace TUGraz.VectoCore.Utils.Ninject
 
 		}
 
+		bool GetMethodSettings(MethodInfo methodInfo, object[] arguments, out MethodSettings methodSettings)
+		{
+			if (!_methodSettings.TryGetValue(methodInfo, out methodSettings)) {
+				//Fall back to name
+				var methodInfos = _methodSettings.Keys.Where(method => method.Name == methodInfo.Name);
+				var methodInfoByName = methodInfos.FirstOrDefault();
+				if (methodInfoByName != null) {
+					methodSettings = _methodSettings[methodInfoByName];
+				} else {
+					return false;
+				}
+			}
+
+			return true;
+		}
+
 		protected override IConstructorArgument[] GetConstructorArguments(MethodInfo methodInfo, object[] arguments)
 		{
-			if (!_methodSettings.TryGetValue(methodInfo, out var methodSettings)) {
+			
+			if (!GetMethodSettings(methodInfo, arguments, out var methodSettings)) {
 				return base.GetConstructorArguments(methodInfo, arguments);
 			}
 

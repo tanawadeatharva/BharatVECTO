@@ -70,6 +70,11 @@ namespace VECTO3GUI2020.Ninject.Factories
 			return _vehicleViewModelFactory.CreateVehicleViewModel(consolidatedVehicleData, null);
 		}
 
+		public IMultistageVehicleViewModel GetInterimStageVehicleViewModel(IVehicleDeclarationInputData inputData)
+		{
+			return _vehicleViewModelFactory.CreateVehicleViewModel(null, vehicleInput: inputData) as IMultistageVehicleViewModel;
+		}
+
         public IManufacturingStageViewModel GetManufacturingStageViewModel(
             IManufacturingStageInputData consolidatedManufacturingStageInputData, bool exempted)
         {

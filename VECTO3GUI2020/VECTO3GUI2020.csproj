@@ -113,6 +113,10 @@
     </Page>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Util\XML\Implementation\DocumentWriter\" />
+  </ItemGroup>
+
 
     <!--Workauround for build error-->
 	<!--https://github.com/dotnet/wpf/pull/6680-->

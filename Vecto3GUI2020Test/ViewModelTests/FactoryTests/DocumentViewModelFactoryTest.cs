@@ -35,10 +35,10 @@ namespace Vecto3GUI2020Test.ViewModelTests.FactoryTests
 		}
 
 		[TestCase( XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE)]
-		[TestCase( XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE)]
-		[TestCase( XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE)]
-		[TestCase( XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE)]
-		[TestCase( XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE)]
+		[TestCase( XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationHevCompletedBusDataProviderV24.XSD_TYPE)]
+		[TestCase( XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationPEVCompletedBusDataProviderV24.XSD_TYPE)]
+		[TestCase( XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationExemptedCompletedBusDataProviderV24.XSD_TYPE)]
+		[TestCase( XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationIepcCompletedBusDataProviderV24.XSD_TYPE)]
         public void StepInputDocument(string version, string type)
 		{
 			XNamespace ns = version;
@@ -47,7 +47,32 @@ namespace Vecto3GUI2020Test.ViewModelTests.FactoryTests
 				version);
 			var document = _documentViewModelFactory.CreateDocumentViewModel(vehicleInput);
 			var stepInputViewModel = document as StageInputViewModel;
-			Assert.NotNull(stepInputViewModel);
+
+			var arch = stepInputViewModel.Architecture;
+			if (type == XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE) {
+				Assert.AreEqual(arch, StageInputViewModel.CompletedBusArchitecture.Conventional);
+			}
+
+			if (type == XMLDeclarationPEVCompletedBusDataProviderV24.XSD_TYPE) {
+				Assert.AreEqual(arch, StageInputViewModel.CompletedBusArchitecture.PEV);
+			}
+
+			if (type == XMLDeclarationHevCompletedBusDataProviderV24.XSD_TYPE)
+			{
+				Assert.AreEqual(arch, StageInputViewModel.CompletedBusArchitecture.HEV);
+			}
+
+			if (type == XMLDeclarationIepcCompletedBusDataProviderV24.XSD_TYPE)
+			{
+				Assert.AreEqual(arch, StageInputViewModel.CompletedBusArchitecture.IEPC);
+			}
+
+			if (type == XMLDeclarationExemptedCompletedBusDataProviderV24.XSD_TYPE)
+			{
+				Assert.AreEqual(arch, StageInputViewModel.CompletedBusArchitecture.Exempted);
+			}
+
+            Assert.NotNull(stepInputViewModel);
 		}
 
 		[TestCase]
@@ -59,15 +84,20 @@ namespace Vecto3GUI2020Test.ViewModelTests.FactoryTests
 		}
 
 
-		[TestCase(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE)]
-		[TestCase(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE)]
-		[TestCase(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE)]
-		[TestCase(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE)]
-		[TestCase(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE)]
-        public void MultistepInput(string version, string type)
+		[TestCase(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE, VectoSimulationJobType.ConventionalVehicle)]
+		[TestCase(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationHevCompletedBusDataProviderV24.XSD_TYPE, VectoSimulationJobType.SerialHybridVehicle)]
+		[TestCase(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationHevCompletedBusDataProviderV24.XSD_TYPE, VectoSimulationJobType.ParallelHybridVehicle)]
+        [TestCase(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationPEVCompletedBusDataProviderV24.XSD_TYPE, VectoSimulationJobType.BatteryElectricVehicle)]
+		[TestCase(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationIepcCompletedBusDataProviderV24.XSD_TYPE, VectoSimulationJobType.IEPC_E)]
+		[TestCase(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationExemptedCompletedBusDataProviderV24.XSD_TYPE, VectoSimulationJobType.EngineOnlySimulation)]
+        public void MultistepInput(string version, string type, VectoSimulationJobType jobType)
 		{
 			var ns = version;
 			IMultistepBusInputDataProvider multistepInput = MockDocument.GetMultistepInput(ns, type, 3);
+			var mock = Mock.Get(multistepInput);
+			mock.SetupGet(c => c.JobInputData.ConsolidateManufacturingStage.Vehicle.VehicleType).Returns(jobType);
+			mock.SetupGet(c => c.JobInputData.ConsolidateManufacturingStage.Vehicle.ExemptedVehicle)
+				.Returns(type == XMLDeclarationExemptedCompletedBusDataProviderV24.XSD_TYPE);
 			var doc = _documentViewModelFactory.CreateDocumentViewModel(multistepInput);
 			Assert.NotNull(doc);
 			var multistepViewModel = doc as MultiStageJobViewModel_v0_1;

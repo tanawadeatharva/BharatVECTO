@@ -22,6 +22,7 @@ IMultistageViewModelFactoryFirstParameterAsNameInstanceProvider
     {
 		//IVehicleViewModel GetInterimStageVehicleViewModel(StageInputViewModel.CompletedBusArchitecture arch);
 		IMultistageVehicleViewModel GetInterimStageVehicleViewModel(StageInputViewModel.CompletedBusArchitecture arch);
+		IMultistageVehicleViewModel GetInterimStageVehicleViewModel(IVehicleDeclarationInputData inputData);
 	}
 
 

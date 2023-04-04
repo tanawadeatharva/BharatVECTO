@@ -6,12 +6,12 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Util.XML;
-using VECTO3GUI2020.Util.XML.Interfaces;
+using VECTO3GUI2020.Util.XML.Components;
 
 
 namespace VECTO3GUI2020.Helper
 {
-	public static class XMLExtension
+    public static class XMLExtension
 	{
 		
 		public static XElement CreateSignatureElement(this IXMLComponentWriter componentWriter, XNamespace nameSpace, string uri, DigestData digestData, bool hash = false)

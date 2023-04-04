@@ -1018,6 +1018,8 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IBusAuxiliariesDeclarationData
 	{
+		DataSource DataSource { get; }
+
 		XmlNode XMLSource { get; }
 
 		string FanTechnology { get; }

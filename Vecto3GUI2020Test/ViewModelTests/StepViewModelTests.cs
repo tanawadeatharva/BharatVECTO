@@ -175,7 +175,6 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var oldVm = stepInput.VehicleViewModel;
 			Assert.NotNull(stepInput.VehicleViewModel);
 
-
 			stepInput.Architecture = to;
 			var newVm = stepInput.VehicleViewModel;
 			Assert.NotNull(newVm);
