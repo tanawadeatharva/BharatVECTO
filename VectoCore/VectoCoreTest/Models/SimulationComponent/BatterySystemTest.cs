@@ -353,8 +353,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public double? MaxSOC => 0.8;
 		public BatteryType BatteryType { get; }
 		public AmpereSecond Capacity { get; }
-		public bool ConnectorsSubsystemsIncluded { get; }
-		public bool JunctionboxIncluded { get; }
+		public bool? ConnectorsSubsystemsIncluded { get; }
+		public bool? JunctionboxIncluded { get; }
 		public Kelvin TestingTemperature => null;
 
 		public TableData InternalResistanceCurve => VectoCSVFile.ReadStream(

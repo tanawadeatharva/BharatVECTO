@@ -968,9 +968,9 @@ namespace TUGraz.VectoCommon.InputData
 
 		AmpereSecond Capacity { get; }
 
-		bool ConnectorsSubsystemsIncluded { get; }
+		bool? ConnectorsSubsystemsIncluded { get; }
 
-		bool JunctionboxIncluded { get; }
+		bool? JunctionboxIncluded { get; }
 
 		Kelvin TestingTemperature { get; }
 

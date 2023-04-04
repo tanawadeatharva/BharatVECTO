@@ -4,6 +4,7 @@ using System.Xml;
 using System.Xml.Linq;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
@@ -117,12 +118,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual BatteryType BatteryType => GetString(XMLNames.REESS_BatteryType).ParseEnum<BatteryType>();
 		public virtual AmpereSecond Capacity => GetDouble(XMLNames.REESS_RatedCapacity).SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>();
-		public virtual bool ConnectorsSubsystemsIncluded => GetBool(XMLNames.REESS_ConnectorsSubsystemsIncluded);
-		public virtual bool JunctionboxIncluded => GetBool(XMLNames.REESS_JunctionboxIncluded);
 
-		public virtual Kelvin TestingTemperature =>
-				ElementExists(XMLNames.REESS_TestingTemperature)
-					? GetDouble(XMLNames.REESS_TestingTemperature).DegCelsiusToKelvin() : null;
+		public virtual bool? ConnectorsSubsystemsIncluded => CertificationMethod == CertificationMethod.StandardValues
+			? (bool?)null
+			: GetBool(XMLNames.REESS_ConnectorsSubsystemsIncluded);
+
+		public virtual bool? JunctionboxIncluded => CertificationMethod == CertificationMethod.StandardValues
+			? (bool?)null
+			: GetBool(XMLNames.REESS_JunctionboxIncluded);
+
+		public virtual Kelvin TestingTemperature => CertificationMethod != CertificationMethod.StandardValues
+			? GetDouble(XMLNames.REESS_TestingTemperature).DegCelsiusToKelvin()
+			: null;
 
 		public virtual TableData InternalResistanceCurve => ReadTableData(XMLNames.REESS_InternalResistanceCurve, XMLNames.REESS_MapEntry,
 			AttributeMappings.InternalResistanceMap);
