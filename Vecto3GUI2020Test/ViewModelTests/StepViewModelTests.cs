@@ -139,11 +139,11 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.NotNull(stepInput.VehicleViewModel);
 			Assert.NotNull(stepInput.VehicleViewModel.MultistageAirdragViewModel);
 			Assert.NotNull(stepInput.VehicleViewModel.MultistageAuxiliariesViewModel);
-			Assert.NotNull(stepInput.Architecture == StageInputViewModel.CompletedBusArchitecture.Conventional);
+			Assert.NotNull(stepInput.Architecture == CompletedBusArchitecture.Conventional);
 		}
 
 		[Test]
-		public void CreateStepInputForAllArchitectures([Values] StageInputViewModel.CompletedBusArchitecture arch)
+		public void CreateStepInputForAllArchitectures([Values] CompletedBusArchitecture arch)
 		{
 
 			var stepInput = _viewModelFactory.GetCreateNewStepInputViewModel(false) as StageInputViewModel;
@@ -160,8 +160,8 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		}
 
 		[Test]
-		public void SwitchArchitectures([Values] StageInputViewModel.CompletedBusArchitecture from,
-			[Values] StageInputViewModel.CompletedBusArchitecture to)
+		public void SwitchArchitectures([Values] CompletedBusArchitecture from,
+			[Values] CompletedBusArchitecture to)
 		{
 
 			if (from == to) {
@@ -184,7 +184,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 
 		[Test]
-		public void CreateAndSaveMinimalInput([Values] StageInputViewModel.CompletedBusArchitecture arch, [Values] bool addAuxInput, [Values] bool loadAirdrag)
+		public void CreateAndSaveMinimalInput([Values] CompletedBusArchitecture arch, [Values] bool addAuxInput, [Values] bool loadAirdrag, [Values(TestData.airdragLoadTestFile, TestData.airdragLoadTestFilev2)] string airdragFile)
 		{
 			var stepInput = _viewModelFactory.GetCreateNewStepInputViewModel(false) as StageInputViewModel;
 			Assert.NotNull(stepInput.VehicleViewModel);
@@ -199,14 +199,15 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			vehicleVm.Manufacturer	= $"A {arch}_manufacturer";
 
 
-			if (addAuxInput && arch != StageInputViewModel.CompletedBusArchitecture.Exempted) {
+			if (addAuxInput && arch != CompletedBusArchitecture.Exempted) {
 				var auxVm = vehicleVm.MultistageAuxiliariesViewModel as MultistageAuxiliariesViewModel;
 				auxVm.BrakelightsLED = true;
 			}
 
-			if (loadAirdrag && arch != StageInputViewModel.CompletedBusArchitecture.Exempted) {
-				Assert.Ignore();
-				Assert.Fail();
+			if (loadAirdrag && arch != CompletedBusArchitecture.Exempted) {
+				var airdragVm = vehicleVm.MultistageAirdragViewModel as MultistageAirdragViewModel;
+				airdragVm.LoadAirdragFile(Path.GetFullPath(airdragFile));
+
 			}
 			
 			stepInput.SaveInputDataExecute($"{arch}_step_input.xml");

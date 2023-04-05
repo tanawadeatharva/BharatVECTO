@@ -22,9 +22,9 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			_kernel = TestHelper.GetKernel();
 			_viewModelFactory = _kernel.Get<IMultiStageViewModelFactory>();
 		}
-		[TestCase(StageInputViewModel.CompletedBusArchitecture.Conventional)]
-		[TestCase(StageInputViewModel.CompletedBusArchitecture.HEV)]
-        public void TestAllowedValuesHeatPumpTypeDriver(StageInputViewModel.CompletedBusArchitecture arch)
+		[TestCase(CompletedBusArchitecture.Conventional)]
+		[TestCase(CompletedBusArchitecture.HEV)]
+        public void TestAllowedValuesHeatPumpTypeDriver(CompletedBusArchitecture arch)
 		{
 			var auxVm = _viewModelFactory.GetAuxiliariesViewModel(
 				arch) as MultistageAuxiliariesViewModel; 
@@ -45,9 +45,9 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		}
 
 
-		[TestCase(StageInputViewModel.CompletedBusArchitecture.Conventional)]
-		[TestCase(StageInputViewModel.CompletedBusArchitecture.HEV)]
-        public void TestEnumParameters(StageInputViewModel.CompletedBusArchitecture arch)
+		[TestCase(CompletedBusArchitecture.Conventional)]
+		[TestCase(CompletedBusArchitecture.HEV)]
+        public void TestEnumParameters(CompletedBusArchitecture arch)
         {
 			var auxVm = _viewModelFactory.GetAuxiliariesViewModel(
 				arch) as MultistageAuxiliariesViewModel;

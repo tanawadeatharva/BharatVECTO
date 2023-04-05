@@ -56,7 +56,7 @@ namespace VECTO3GUI2020.Ninject.Factories
             return _documentViewModelFactory.CreateDocumentViewModel(inputData) as IMultiStageJobViewModel;
         }
 
-        public IMultistageVehicleViewModel GetInterimStageVehicleViewModel(StageInputViewModel.CompletedBusArchitecture arch)
+        public IMultistageVehicleViewModel GetInterimStageVehicleViewModel(CompletedBusArchitecture arch)
         {
 
 			if (_vehicleViewModelFactory.CreateNewVehicleViewModel(arch) is IMultistageVehicleViewModel veh) {
@@ -92,13 +92,13 @@ namespace VECTO3GUI2020.Ninject.Factories
         }
 
         public IMultistageAuxiliariesViewModel GetAuxiliariesViewModel(
-			StageInputViewModel.CompletedBusArchitecture arch)
+			CompletedBusArchitecture arch)
         {
             return _multistepComponentViewModelFactory.CreateNewMultistepBusAuxViewModel(arch);
         }
 
         public IMultistageAuxiliariesViewModel
-			GetAuxiliariesViewModel(StageInputViewModel.CompletedBusArchitecture arch,
+			GetAuxiliariesViewModel(CompletedBusArchitecture arch,
 				IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData)
         {
             return _multistepComponentViewModelFactory.CreateNewMultistepBusAuxViewModel(arch);

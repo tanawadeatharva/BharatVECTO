@@ -50,26 +50,26 @@ namespace Vecto3GUI2020Test.ViewModelTests.FactoryTests
 
 			var arch = stepInputViewModel.Architecture;
 			if (type == XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE) {
-				Assert.AreEqual(arch, StageInputViewModel.CompletedBusArchitecture.Conventional);
+				Assert.AreEqual(arch, CompletedBusArchitecture.Conventional);
 			}
 
 			if (type == XMLDeclarationPEVCompletedBusDataProviderV24.XSD_TYPE) {
-				Assert.AreEqual(arch, StageInputViewModel.CompletedBusArchitecture.PEV);
+				Assert.AreEqual(arch, CompletedBusArchitecture.PEV);
 			}
 
 			if (type == XMLDeclarationHevCompletedBusDataProviderV24.XSD_TYPE)
 			{
-				Assert.AreEqual(arch, StageInputViewModel.CompletedBusArchitecture.HEV);
+				Assert.AreEqual(arch, CompletedBusArchitecture.HEV);
 			}
 
 			if (type == XMLDeclarationIepcCompletedBusDataProviderV24.XSD_TYPE)
 			{
-				Assert.AreEqual(arch, StageInputViewModel.CompletedBusArchitecture.IEPC);
+				Assert.AreEqual(arch, CompletedBusArchitecture.IEPC);
 			}
 
 			if (type == XMLDeclarationExemptedCompletedBusDataProviderV24.XSD_TYPE)
 			{
-				Assert.AreEqual(arch, StageInputViewModel.CompletedBusArchitecture.Exempted);
+				Assert.AreEqual(arch, CompletedBusArchitecture.Exempted);
 			}
 
             Assert.NotNull(stepInputViewModel);

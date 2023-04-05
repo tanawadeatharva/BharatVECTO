@@ -17,16 +17,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
     public class StageInputViewModel : StageViewModelBase, IDocumentViewModel, IJobEditViewModel
     {
-        public enum CompletedBusArchitecture
-        {
-            Conventional,
-            HEV,
-            PEV,
-            IEPC,
-            Exempted
-        }
-
-        private bool _canBeEdited;
+		private bool _canBeEdited;
         private DataSource _dataSource;
         private readonly XmlDocumentType _documentType;
         private string _documentName;
@@ -209,4 +200,41 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
         #endregion
     }
+
+	public enum CompletedBusArchitecture
+	{
+		Conventional,
+		HEV,
+		PEV,
+		IEPC,
+		Exempted
+	}
+
+	public static class CompleteBusArchitectureHelper
+	{
+		public static CompletedBusArchitecture GetCompletedBusArchitecture(this VectoSimulationJobType jobType,
+			bool exempted = false)
+		{
+			if (exempted)
+			{
+				return CompletedBusArchitecture.Exempted;
+			}
+			switch (jobType)
+			{
+				case VectoSimulationJobType.ConventionalVehicle:
+					return CompletedBusArchitecture.Conventional;
+				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.SerialHybridVehicle:
+				case VectoSimulationJobType.IHPC:
+					return CompletedBusArchitecture.HEV;
+				case VectoSimulationJobType.BatteryElectricVehicle:
+					return CompletedBusArchitecture.PEV;
+				case VectoSimulationJobType.IEPC_E:
+				case VectoSimulationJobType.IEPC_S:
+					return CompletedBusArchitecture.IEPC;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
+			}
+        }
+	}
 }

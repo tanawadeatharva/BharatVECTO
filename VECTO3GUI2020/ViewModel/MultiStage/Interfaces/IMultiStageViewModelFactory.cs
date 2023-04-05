@@ -21,7 +21,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 IMultistageViewModelFactoryFirstParameterAsNameInstanceProvider
     {
 		//IVehicleViewModel GetInterimStageVehicleViewModel(StageInputViewModel.CompletedBusArchitecture arch);
-		IMultistageVehicleViewModel GetInterimStageVehicleViewModel(StageInputViewModel.CompletedBusArchitecture arch);
+		IMultistageVehicleViewModel GetInterimStageVehicleViewModel(CompletedBusArchitecture arch);
 		IMultistageVehicleViewModel GetInterimStageVehicleViewModel(IVehicleDeclarationInputData inputData);
 	}
 
@@ -48,8 +48,8 @@ IMultistageViewModelFactoryFirstParameterAsNameInstanceProvider
 		IMultistageAirdragViewModel GetMultistageAirdragViewModel(
 			IAirdragDeclarationInputData consolidatedAirdragInputData);
 
-		IMultistageAuxiliariesViewModel GetAuxiliariesViewModel(StageInputViewModel.CompletedBusArchitecture arch);
-		IMultistageAuxiliariesViewModel GetAuxiliariesViewModel(StageInputViewModel.CompletedBusArchitecture arch,
+		IMultistageAuxiliariesViewModel GetAuxiliariesViewModel(CompletedBusArchitecture arch);
+		IMultistageAuxiliariesViewModel GetAuxiliariesViewModel(CompletedBusArchitecture arch,
 			IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData);
 	}
 }

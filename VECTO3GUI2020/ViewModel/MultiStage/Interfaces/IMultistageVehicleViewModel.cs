@@ -14,7 +14,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 		IMultistageAuxiliariesViewModel MultistageAuxiliariesViewModel { get; set; }
 		bool PrimaryVehicleHybridElectric { get; set; }
 		bool ShowConsolidatedData { get; set; }
-		StageInputViewModel.CompletedBusArchitecture Architecture { get; }
+		CompletedBusArchitecture Architecture { get; }
 		void SetVehicleInputData(IVehicleDeclarationInputData vehicleInputData, bool checkExempted);
 	}
 }

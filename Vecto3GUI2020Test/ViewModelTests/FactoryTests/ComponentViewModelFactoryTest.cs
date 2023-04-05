@@ -62,9 +62,9 @@ public class ComponentViewModelFactoryTest
 	}
 
 	[Test]
-	public void CreateMultistepAuxiliaryViewModel([Values] StageInputViewModel.CompletedBusArchitecture arch)
+	public void CreateMultistepAuxiliaryViewModel([Values] CompletedBusArchitecture arch)
 	{
-		if (arch == StageInputViewModel.CompletedBusArchitecture.Exempted) {
+		if (arch == CompletedBusArchitecture.Exempted) {
 			return;
 		}
 		var multistepComponentFactory = _kernel.Get<IMultistepComponentViewModelFactory>();

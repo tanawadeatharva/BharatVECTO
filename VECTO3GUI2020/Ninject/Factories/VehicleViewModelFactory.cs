@@ -26,7 +26,7 @@ namespace VECTO3GUI2020.Ninject.Factories
 		/// <returns></returns>
 		IVehicleViewModel CreateVehicleViewModel(IVehicleDeclarationInputData consolidatedVehicleData, IVehicleDeclarationInputData vehicleInput);
 
-		IVehicleViewModel CreateNewVehicleViewModel(StageInputViewModel.CompletedBusArchitecture arch);
+		IVehicleViewModel CreateNewVehicleViewModel(CompletedBusArchitecture arch);
 	}
 
 	public class VehicleViewModelFactoryModule : AbstractNinjectModule
@@ -60,10 +60,10 @@ namespace VECTO3GUI2020.Ninject.Factories
 				new CombineArgumentsToNameInstanceProvider.MethodSettings() {
 					methods = new[]{typeof(IVehicleViewModelFactory).GetMethod(nameof(IVehicleViewModelFactory.CreateNewVehicleViewModel))},
 					combineToNameDelegate = (args) => {
-						if (args.Length >= 1 && args[0] is StageInputViewModel.CompletedBusArchitecture arch) {
+						if (args.Length >= 1 && args[0] is CompletedBusArchitecture arch) {
 							return arch.ToString();
 						}
-						throw new ArgumentException($"arg[0] must be {nameof(StageInputViewModel.CompletedBusArchitecture)}");
+						throw new ArgumentException($"arg[0] must be {nameof(CompletedBusArchitecture)}");
                     },
 					skipArguments = 1,
 					takeArguments = 1
@@ -106,23 +106,23 @@ namespace VECTO3GUI2020.Ninject.Factories
 		}
 
 
-		public static StageInputViewModel.CompletedBusArchitecture ArchName(VectoSimulationJobType jobType, bool exempted = false)
+		public static CompletedBusArchitecture ArchName(VectoSimulationJobType jobType, bool exempted = false)
 		{
 			if (exempted) {
-				return StageInputViewModel.CompletedBusArchitecture.Exempted;
+				return CompletedBusArchitecture.Exempted;
 			}
 			switch(jobType){
 				case VectoSimulationJobType.ConventionalVehicle:
-					return StageInputViewModel.CompletedBusArchitecture.Conventional;
+					return CompletedBusArchitecture.Conventional;
 				case VectoSimulationJobType.ParallelHybridVehicle:
 				case VectoSimulationJobType.SerialHybridVehicle:
 				case VectoSimulationJobType.IHPC:
-                    return StageInputViewModel.CompletedBusArchitecture.HEV;
+                    return CompletedBusArchitecture.HEV;
 				case VectoSimulationJobType.BatteryElectricVehicle:
-					return StageInputViewModel.CompletedBusArchitecture.PEV;
+					return CompletedBusArchitecture.PEV;
 				case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.IEPC_S:
-					return StageInputViewModel.CompletedBusArchitecture.IEPC;
+					return CompletedBusArchitecture.IEPC;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
 			}

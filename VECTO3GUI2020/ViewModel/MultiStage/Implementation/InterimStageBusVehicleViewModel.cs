@@ -70,7 +70,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public static string VERSION = INPUTPROVIDERTYPE.ToString();
 		public static string VERSION_EXEMPTED = INPUTPROVIDERTYPEEXEMPTED.ToString();
 
-		public abstract StageInputViewModel.CompletedBusArchitecture Architecture { get; }
+		public abstract CompletedBusArchitecture Architecture { get; }
 
 		private readonly IMultiStageViewModelFactory _multiStageViewModelFactory;
 
@@ -1274,8 +1274,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#region Overrides of InterimStageBusVehicleViewModel
 
-		public override StageInputViewModel.CompletedBusArchitecture Architecture =>
-			StageInputViewModel.CompletedBusArchitecture.Conventional;
+		public override CompletedBusArchitecture Architecture =>
+			CompletedBusArchitecture.Conventional;
 
 		public override string XMLType => XMLTypes.Vehicle_Conventional_CompletedBusDeclarationType;
 
@@ -1299,8 +1299,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
         #region Overrides of InterimStageBusVehicleViewModel
 
-        public override StageInputViewModel.CompletedBusArchitecture Architecture =>
-			StageInputViewModel.CompletedBusArchitecture.Exempted;
+        public override CompletedBusArchitecture Architecture =>
+			CompletedBusArchitecture.Exempted;
 
 		#endregion
 	}
@@ -1316,9 +1316,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public InterimStageHevBusVehicleViewModel(IMultiStageViewModelFactory multiStageViewModelFactory) : base(multiStageViewModelFactory) { }
 
-		public override StageInputViewModel.CompletedBusArchitecture Architecture
+		public override CompletedBusArchitecture Architecture
 		{
-			get => StageInputViewModel.CompletedBusArchitecture.HEV;
+			get => CompletedBusArchitecture.HEV;
 		}
 
 		public override string XMLType => XMLTypes.Vehicle_Hev_CompletedBusDeclarationType;
@@ -1336,9 +1336,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#region Overrides of InterimStageBusVehicleViewModel
 
-		public override StageInputViewModel.CompletedBusArchitecture Architecture
+		public override CompletedBusArchitecture Architecture
 		{
-			get { return StageInputViewModel.CompletedBusArchitecture.PEV; }
+			get { return CompletedBusArchitecture.PEV; }
 		}
 		public override string XMLType => XMLTypes.Vehicle_Pev_CompletedBusDeclarationType;
         #endregion
@@ -1356,8 +1356,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#region Overrides of InterimStageBusVehicleViewModel
 
-		public override StageInputViewModel.CompletedBusArchitecture Architecture =>
-			StageInputViewModel.CompletedBusArchitecture.IEPC;
+		public override CompletedBusArchitecture Architecture =>
+			CompletedBusArchitecture.IEPC;
 		public override string XMLType => XMLTypes.Vehicle_Iepc_CompletedBusDeclarationType;
         #endregion
     }

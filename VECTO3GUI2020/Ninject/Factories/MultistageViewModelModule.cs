@@ -20,8 +20,8 @@ namespace VECTO3GUI2020.Ninject.Factories
 {
 	public interface IMultistepComponentViewModelFactory
 	{
-		IMultistageAuxiliariesViewModel CreateMultistepBusAuxViewModel(StageInputViewModel.CompletedBusArchitecture arch, IBusAuxiliariesDeclarationData consolidatedInputData);
-		IMultistageAuxiliariesViewModel CreateNewMultistepBusAuxViewModel(StageInputViewModel.CompletedBusArchitecture arch);
+		IMultistageAuxiliariesViewModel CreateMultistepBusAuxViewModel(CompletedBusArchitecture arch, IBusAuxiliariesDeclarationData consolidatedInputData);
+		IMultistageAuxiliariesViewModel CreateNewMultistepBusAuxViewModel(CompletedBusArchitecture arch);
 	}
 
 
@@ -39,30 +39,30 @@ namespace VECTO3GUI2020.Ninject.Factories
 						typeof(IMultistepComponentViewModelFactory).GetMethod(nameof(IMultistepComponentViewModelFactory.CreateMultistepBusAuxViewModel))
 					},
 					combineToNameDelegate = (args) => {
-						if (args.Length >= 1 && args[0] is StageInputViewModel.CompletedBusArchitecture arch) {
+						if (args.Length >= 1 && args[0] is CompletedBusArchitecture arch) {
 							return arch.ToString();
 						}
-						throw new ArgumentException($"arg[0] must be {nameof(StageInputViewModel.CompletedBusArchitecture)}");
+						throw new ArgumentException($"arg[0] must be {nameof(CompletedBusArchitecture)}");
 					},
 					skipArguments = 1,
 					takeArguments = 1
 				}
 			})).Named(scopeName);
-			AddBinding<IMultistageAuxiliariesViewModel, MultistageAuxiliariesViewModel_Conventional>(StageInputViewModel.CompletedBusArchitecture.Conventional);
-			AddBinding<IMultistageAuxiliariesViewModel, MultistageAuxiliariesViewModel_xEV>(StageInputViewModel.CompletedBusArchitecture.HEV);
-			AddBinding<IMultistageAuxiliariesViewModel, MultistageAuxiliariesViewModel_xEV>(StageInputViewModel.CompletedBusArchitecture.PEV);
-			AddBinding<IMultistageAuxiliariesViewModel, MultistageAuxiliariesViewModel_xEV>(StageInputViewModel.CompletedBusArchitecture.IEPC);
+			AddBinding<IMultistageAuxiliariesViewModel, MultistageAuxiliariesViewModel_Conventional>(CompletedBusArchitecture.Conventional);
+			AddBinding<IMultistageAuxiliariesViewModel, MultistageAuxiliariesViewModel_xEV>(CompletedBusArchitecture.HEV);
+			AddBinding<IMultistageAuxiliariesViewModel, MultistageAuxiliariesViewModel_xEV>(CompletedBusArchitecture.PEV);
+			AddBinding<IMultistageAuxiliariesViewModel, MultistageAuxiliariesViewModel_xEV>(CompletedBusArchitecture.IEPC);
 		}
 
 		[DebuggerStepThrough]
-		public string GetName(StageInputViewModel.CompletedBusArchitecture arch)
+		public string GetName(CompletedBusArchitecture arch)
 		{
 			return arch.ToString();
 		}
 		#endregion
 
 
-		public void AddBinding<TInterface, TConcrete>(StageInputViewModel.CompletedBusArchitecture arch)
+		public void AddBinding<TInterface, TConcrete>(CompletedBusArchitecture arch)
 			where TConcrete : class, TInterface
 		{
 			Bind<TInterface>().To<TConcrete>().WhenParentNamed(scopeName).Named(GetName(arch));

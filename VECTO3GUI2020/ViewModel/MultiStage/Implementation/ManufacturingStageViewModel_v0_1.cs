@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Mime;
 using System.Security.RightsManagement;
@@ -52,13 +53,33 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			OnPropertyChanged(nameof(CurrentView));
 
 		}
+		private ObservableCollection<CompletedBusArchitecture> _architectureItems =
+			new ObservableCollection<CompletedBusArchitecture>(Enum.GetValues(typeof(CompletedBusArchitecture)).Cast<CompletedBusArchitecture>());
+
+		public ObservableCollection<CompletedBusArchitecture> ArchitectureItems
+		{
+			get => _architectureItems;
+			set => SetProperty(ref _architectureItems, value);
+		}
+
+        public CompletedBusArchitecture Architecture
+		{
+			get => _architecture;
+			set
+			{
+				SetProperty(ref _architecture, value);
+				_architectureItems = new ObservableCollection<CompletedBusArchitecture>() { Architecture };
+			}
+		}
 
 
 		public ManufacturingStageViewModel_v0_1(IManufacturingStageInputData consolidatedManufacturingStageInputData, bool exempted,
 			IMultiStageViewModelFactory viewModelFactory) : base(viewModelFactory)
 		{
 			Title = "Edit Manufacturing Stage";
-			
+			Architecture =
+				consolidatedManufacturingStageInputData.Vehicle.VehicleType.GetCompletedBusArchitecture(
+					consolidatedManufacturingStageInputData.Vehicle.ExemptedVehicle);
 			
 			_stepCount = consolidatedManufacturingStageInputData?.StepCount + 1 ?? 2;
 
@@ -79,6 +100,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private int _stepCount;
 		private DigestData _hashPreviousStep;
 		private IManufacturingStageInputData _consolidatedManufacturingStageInputData;
+		private CompletedBusArchitecture _architecture;
 
 
 		private class ApplicationInformationMultistage : IApplicationInformation
