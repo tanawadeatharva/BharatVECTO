@@ -216,15 +216,15 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var simulationTask = _jobListViewModel.RunSimulationExecute();
 			//Wait until simulation reached 2%
 			Assert.IsTrue(_jobListViewModel.SimulationRunning);
-			while (outputVm.Progress < 2 && (!outputVm.StatusMessage?.Contains("finished") ?? false)) {
+			while (outputVm.Progress < 4 && (!outputVm.StatusMessage?.Contains("finished") ?? false)) {
 				//DO nothing
 			}
-			
-			
-			// Assert.That(() => outputVm.Progress, Is.GreaterThanOrEqualTo(25).After(1 * 60 * 1000, 1),
-			// 	() => $"Simulation reached {outputVm.Progress}%");
 
-			TestContext.Write("Canceling Simulation ... ");
+
+            // Assert.That(() => outputVm.Progress, Is.GreaterThanOrEqualTo(25).After(1 * 60 * 1000, 1),
+            // 	() => $"Simulation reached {outputVm.Progress}%");
+			//_dialogHelper.AssertNoErrorDialogs();
+            TestContext.Write("Canceling Simulation ... ");
 			Assert.IsTrue(_jobListViewModel.SimulationRunning);
 			_jobListViewModel.CancelSimulation.Execute(null);
 			Assert.That(() => _jobListViewModel.SimulationRunning, Is.False.After(20*1000, 50) );

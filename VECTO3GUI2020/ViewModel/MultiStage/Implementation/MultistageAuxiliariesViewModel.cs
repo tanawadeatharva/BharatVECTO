@@ -73,10 +73,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 				nameof(AuxHeaterPower),
 				nameof(DoubleGlazing),
-				nameof(AirElectricHeater),
+			
 				nameof(AdjustableAuxiliaryHeater),
 				nameof(SeparateAirDistributionDucts),
-				nameof(OtherHeatingTechnology),
+
+				//xEV
+				nameof(AirElectricHeater),
+                nameof(OtherHeatingTechnology),
 				nameof(WaterElectricHeater)
 			};
 
@@ -321,6 +324,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get => _separateAirDistributionDucts;
 			set => SetProperty(ref _separateAirDistributionDucts, value);
 		}
+
+		public abstract bool ShowxEVProperties { get; }
 
 		public bool? WaterElectricHeater
 		{
@@ -711,9 +716,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		#region Overrides of MultistageAuxiliariesViewModel
 
 		protected override string XSDType =>  XMLTypes.AUX_Conventional_CompletedBusType;
+		public override bool ShowxEVProperties => false;
 
-        #endregion
-    }
+		#endregion
+	}
 
 	public class MultistageAuxiliariesViewModel_xEV : MultistageAuxiliariesViewModel
 	{
@@ -728,6 +734,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		#region Overrides of MultistageAuxiliariesViewModel
 
 		protected override string XSDType => XMLTypes.AUX_xEV_CompletedBusType;
+		public override bool ShowxEVProperties => true;
 
 		#endregion
 	}
