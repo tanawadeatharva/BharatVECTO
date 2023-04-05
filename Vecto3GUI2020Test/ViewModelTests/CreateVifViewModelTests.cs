@@ -46,6 +46,8 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[TestCase(vecto_vehicle_exempted_input_only_certain_entries, TestName="InvalidPrimaryFile_ExemptedStageInput")]
 		public void LoadInvalidPrimaryFile(string fileName)
 		{
+
+			//TODO detect if primary bus is loaded
 			var filePath = Path.GetFullPath(fileName);
 	
 			Assert.IsFalse(_createVifViewModel.LoadPrimaryInput(filePath));

@@ -381,7 +381,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			try
 			{
 				inputData = _inputDataReader.Create(fileName) as IDeclarationInputDataProvider;
-				valid = inputData != null && inputData.JobInputData.Vehicle.VehicleCategory.IsBus();
+
+				valid = inputData != null && inputData.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle;
 			}
 			catch (Exception ex)
 			{
