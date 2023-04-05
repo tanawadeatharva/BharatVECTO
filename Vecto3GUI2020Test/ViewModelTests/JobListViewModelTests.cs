@@ -133,6 +133,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		}
 
 		[Test, Description("File -> Create Exempted Interim/Completed Input")]
+		[Ignore("Command removed")]
 		public void CreateExemptedStepInput()
 		{
 			_jobListViewModel.NewExemptedCompletedInputCommand.Execute(null);
@@ -186,18 +187,9 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		}
 
 		[TestCase(true, TestName = "Exempted")]
-		[TestCase(false, TestName = "NotExempted")]
 		public void addNewFilesToJobList(bool exempted)
 		{
-			if (exempted)
-			{
-				_jobListViewModel.NewExemptedCompletedInputCommand.Execute(null);
-			}
-			else
-			{
-				_jobListViewModel.NewCompletedInputCommand.Execute(null);
-			}
-
+			_jobListViewModel.NewCompletedInputCommand.Execute(null);
 			Assert.AreEqual(1, _jobListViewModel.Jobs.Count);
 		}
 

@@ -34,15 +34,15 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 	}
 
 
-	public class MultistageAuxiliariesViewModel : ViewModelBase, IMultistageAuxiliariesViewModel, IDataErrorInfo
+	public abstract class MultistageAuxiliariesViewModel : ViewModelBase, IMultistageAuxiliariesViewModel, IDataErrorInfo
 	{
 
-		public MultistageAuxiliariesViewModel()
+		protected MultistageAuxiliariesViewModel()
 		{
 			CreateParameterViewModels();
 		}
 
-		public MultistageAuxiliariesViewModel(IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData)
+		protected MultistageAuxiliariesViewModel(IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData)
 		{
 			ConsolidatedInputData = consolidatedAuxiliariesInputData;
 
@@ -681,5 +681,30 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
 		#endregion
+	}
+
+
+	public class MultistageAuxiliariesViewModel_Conventional : MultistageAuxiliariesViewModel
+	{
+		public MultistageAuxiliariesViewModel_Conventional() : base()
+		{
+
+		}
+
+		protected MultistageAuxiliariesViewModel_Conventional(IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData) : base(consolidatedAuxiliariesInputData)
+		{
+		
+		}
+    }
+
+	public class MultistageAuxiliariesViewModel_xEV : MultistageAuxiliariesViewModel
+	{
+		public MultistageAuxiliariesViewModel_xEV() : base()
+		{
+			
+		}
+
+		protected MultistageAuxiliariesViewModel_xEV(IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData) : base(consolidatedAuxiliariesInputData)
+		{ }
 	}
 }

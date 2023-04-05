@@ -48,8 +48,8 @@ IMultistageViewModelFactoryFirstParameterAsNameInstanceProvider
 		IMultistageAirdragViewModel GetMultistageAirdragViewModel(
 			IAirdragDeclarationInputData consolidatedAirdragInputData);
 
-		IMultistageAuxiliariesViewModel GetAuxiliariesViewModel();
-		IMultistageAuxiliariesViewModel GetAuxiliariesViewModel(
+		IMultistageAuxiliariesViewModel GetAuxiliariesViewModel(StageInputViewModel.CompletedBusArchitecture arch);
+		IMultistageAuxiliariesViewModel GetAuxiliariesViewModel(StageInputViewModel.CompletedBusArchitecture arch,
 			IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData);
 	}
 }

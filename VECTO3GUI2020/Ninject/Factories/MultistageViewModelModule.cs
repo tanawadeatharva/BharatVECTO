@@ -1,6 +1,13 @@
-﻿using Ninject.Extensions.Factory;
+﻿using System;
+using System.Diagnostics;
+using System.Xml.Linq;
+using Ninject.Extensions.Factory;
 using Ninject.Modules;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
+using TUGraz.VectoCore.Utils;
+using TUGraz.VectoCore.Utils.Ninject;
 using VECTO3GUI2020.Model.Multistage;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
@@ -11,50 +18,56 @@ using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 
 namespace VECTO3GUI2020.Ninject.Factories
 {
-    //   public class MultistageViewModelModule : NinjectModule
-    //   {
-    //	public override void Load()
-    //	{
+	public interface IMultistepComponentViewModelFactory
+	{
+		IMultistageAuxiliariesViewModel CreateMultistepBusAuxViewModel(StageInputViewModel.CompletedBusArchitecture arch, IBusAuxiliariesDeclarationData consolidatedInputData);
+		IMultistageAuxiliariesViewModel CreateNewMultistepBusAuxViewModel(StageInputViewModel.CompletedBusArchitecture arch);
+	}
 
-    //		Bind<IViewModelBase>().To<NewMultiStageJobViewModel>().
-    //			NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetNewMultistageJobViewModel());
 
-    //		Bind<IMultiStageJobViewModel>().To<MultiStageJobViewModel_v0_1>().
-    //			NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetMultiStageJobViewModel(null));
+	public class MultistepComponentViewModelFactory : AbstractNinjectModule
+	{
+		private string scopeName = "MultistepComponent";
+		#region Overrides of NinjectModule
 
-    //		Bind<IVehicleViewModel>().To<InterimStageBusVehicleViewModel>().
-    //			NamedLikeFactoryMethod((IMultiStageViewModelFactory f)=>f.GetInterimStageVehicleViewModel());
+		public override void Load()
+		{
+			Bind<IMultistepComponentViewModelFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(new[] {
+				new CombineArgumentsToNameInstanceProvider.MethodSettings() {
+					methods = new[] {
+						typeof(IMultistepComponentViewModelFactory).GetMethod(nameof(IMultistepComponentViewModelFactory.CreateNewMultistepBusAuxViewModel)),
+						typeof(IMultistepComponentViewModelFactory).GetMethod(nameof(IMultistepComponentViewModelFactory.CreateMultistepBusAuxViewModel))
+					},
+					combineToNameDelegate = (args) => {
+						if (args.Length >= 1 && args[0] is StageInputViewModel.CompletedBusArchitecture arch) {
+							return arch.ToString();
+						}
+						throw new ArgumentException($"arg[0] must be {nameof(StageInputViewModel.CompletedBusArchitecture)}");
+					},
+					skipArguments = 1,
+					takeArguments = 1
+				}
+			})).Named(scopeName);
+			AddBinding<IMultistageAuxiliariesViewModel, MultistageAuxiliariesViewModel_Conventional>(StageInputViewModel.CompletedBusArchitecture.Conventional);
+			AddBinding<IMultistageAuxiliariesViewModel, MultistageAuxiliariesViewModel_xEV>(StageInputViewModel.CompletedBusArchitecture.HEV);
+			AddBinding<IMultistageAuxiliariesViewModel, MultistageAuxiliariesViewModel_xEV>(StageInputViewModel.CompletedBusArchitecture.PEV);
+			AddBinding<IMultistageAuxiliariesViewModel, MultistageAuxiliariesViewModel_xEV>(StageInputViewModel.CompletedBusArchitecture.IEPC);
+		}
 
-    //		Bind<IManufacturingStageViewModel>().To<ManufacturingStageViewModel_v0_1>().
-    //			NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetManufacturingStageViewModel(null, false));
+		[DebuggerStepThrough]
+		public string GetName(StageInputViewModel.CompletedBusArchitecture arch)
+		{
+			return arch.ToString();
+		}
+		#endregion
 
-    //		Bind<IMultistageAirdragViewModel>().To<MultistageAirdragViewModel>().
-    //			NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetMultistageAirdragViewModel());
 
-    //		Bind<IMultistageAuxiliariesViewModel>().To<MultistageAuxiliariesViewModel>().
-    //			NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetAuxiliariesViewModel(null));
+		public void AddBinding<TInterface, TConcrete>(StageInputViewModel.CompletedBusArchitecture arch)
+			where TConcrete : class, TInterface
+		{
+			Bind<TInterface>().To<TConcrete>().WhenParentNamed(scopeName).Named(GetName(arch));
+		}
 
-    //		Bind<IMultistageDependencies>().To<MultistageLazyDependencies>();
+	}
 
-    //		Bind<ICreateVifViewModel>().To<CreateVifViewModel>().
-    //			NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetCreateNewVifViewModel());
-
-    //		Bind<IDocumentViewModel>().To<StageInputViewModel>()
-    //			.Named(typeof(XMLDeclarationInputDataProviderV20).ToString());
-
-    //		Bind<IDocumentViewModel>().To<StageInputViewModel>()
-    //			.NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetStageInputViewModel(default(bool)));
-
-    //		Bind<IAdditionalJobInfoViewModel>().To<AdditionalJobInfoViewModelMultiStage>()
-    //			.WhenInjectedInto(typeof(IMultiStageJobViewModel));
-
-    //		Bind<IAdditionalJobInfoViewModel>().To<AdditionalJobInfoViewModelNewVif>()
-    //			.WhenInjectedInto(typeof(ICreateVifViewModel));
-
-    //		Bind<IAdditionalJobInfoViewModel>().To<AdditionalJobInfoViewModelStageInput>()
-    //			.WhenInjectedInto(typeof(IStageViewModelBase));
-
-    //		Bind<JSONJob>().ToSelf();
-    //	}
-    //}
 }

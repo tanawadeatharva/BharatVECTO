@@ -183,6 +183,35 @@ namespace Vecto3GUI2020Test.ViewModelTests
         }
 
 
+		[Test]
+		public void CreateAndSaveMinimalInput([Values] StageInputViewModel.CompletedBusArchitecture arch, [Values] bool addAuxInput, [Values] bool loadAirdrag)
+		{
+			var stepInput = _viewModelFactory.GetCreateNewStepInputViewModel(false) as StageInputViewModel;
+			Assert.NotNull(stepInput.VehicleViewModel);
+
+			var oldVm = stepInput.VehicleViewModel;
+			stepInput.Architecture = arch;
+			Assert.NotNull(stepInput.VehicleViewModel);
+			Assert.AreNotSame(oldVm, stepInput.VehicleViewModel);
+			Assert.That(stepInput.Title.Contains(arch.ToString()));
+
+
+			var vehicleVm = stepInput.VehicleViewModel as InterimStageBusVehicleViewModel;
+			vehicleVm.Manufacturer	= $"A {arch}_manufacturer";
+
+
+			if (addAuxInput && arch != StageInputViewModel.CompletedBusArchitecture.Exempted) {
+				var auxVm = vehicleVm.MultistageAuxiliariesViewModel as MultistageAuxiliariesViewModel;
+				auxVm.BrakelightsLED = true;
+			}
+
+			if (loadAirdrag && arch != StageInputViewModel.CompletedBusArchitecture.Exempted) {
+				Assert.Fail();
+			}
+			
+			stepInput.SaveInputDataExecute($"{arch}_step_input.xml");
+			_dialogHelper.AssertNoErrorDialogs();
+		}
 
 
 	}

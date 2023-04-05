@@ -1,11 +1,28 @@
-﻿namespace VECTO3GUI2020.Resources.XML
+﻿using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
+
+namespace VECTO3GUI2020.Resources.XML
 {
 	public static class XMLTypes
 	{
-		
+		#region Vehicle
 
-		#region Components
-		public const string Components_xEV_CompletedBusType = "Components_xEV_CompletedBusType";
+		public const string Vehicle_Conventional_CompletedBusDeclarationType =
+			XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE;
+		public const string Vehicle_Hev_CompletedBusDeclarationType =
+			XMLDeclarationHevCompletedBusDataProviderV24.XSD_TYPE;
+		public const string Vehicle_Pev_CompletedBusDeclarationType =
+			XMLDeclarationPEVCompletedBusDataProviderV24.XSD_TYPE;
+		public const string Vehicle_Iepc_CompletedBusDeclarationType =
+			XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE;
+
+		public const string Vehicle_Exempted_CompletedBusDeclarationType =
+			XMLDeclarationExemptedCompletedBusDataProviderV24.XSD_TYPE;
+
+
+        #endregion
+
+        #region Components
+        public const string Components_xEV_CompletedBusType = "Components_xEV_CompletedBusType";
 		public const string Components_Conventional_CompletedBusType = "Components_Conventional_CompletedBusType";
 		#endregion 
 

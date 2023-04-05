@@ -22,28 +22,14 @@ namespace VECTO3GUI2020.Ninject
 			Bind<IMultiStageJobViewModel>().To<MultiStageJobViewModel_v0_1>().
 				NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetMultiStageJobViewModel(null));
 
-			//Bind<IVehicleViewModel>().To<InterimStageBusVehicleViewModel>().
-			//	NamedLikeFactoryMethod((IMultiStageViewModelFactory f)=>f.GetInterimStageVehicleViewModel());
-
 			Bind<IManufacturingStageViewModel>().To<ManufacturingStageViewModel_v0_1>().
 				NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetManufacturingStageViewModel(null, false));
 
 			Bind<IMultistageAirdragViewModel>().To<MultistageAirdragViewModel>().
 				NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetMultistageAirdragViewModel());
 
-			Bind<IMultistageAuxiliariesViewModel>().To<MultistageAuxiliariesViewModel>().
-				NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetAuxiliariesViewModel(null));
 
 			Bind<IMultistageDependencies>().To<MultistageLazyDependencies>();
-
-			//Bind<ICreateVifViewModel>().To<CreateVifViewModel>().
-			//	NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetCreateNewVifViewModel());
-
-			//Bind<IDocumentViewModel>().To<StageInputViewModel>()
-			//	.Named(typeof(XMLDeclarationInputDataProviderV20).ToString());
-
-			//Bind<IDocumentViewModel>().To<StageInputViewModel>()
-			//	.NamedLikeFactoryMethod((IMultiStageViewModelFactory f) => f.GetStageInputViewModel(default(bool)));
 
 			Bind<IAdditionalJobInfoViewModel>().To<AdditionalJobInfoViewModelMultiStage>()
 				.WhenInjectedInto(typeof(IMultiStageJobViewModel));

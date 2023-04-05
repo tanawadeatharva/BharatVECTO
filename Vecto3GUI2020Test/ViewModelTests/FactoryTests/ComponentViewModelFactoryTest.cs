@@ -5,6 +5,7 @@ using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Ninject.Factories;
 using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
+using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 using Vecto3GUI2020Test.MockInput;
 using Vecto3GUI2020Test.Utils;
 
@@ -58,6 +59,17 @@ public class ComponentViewModelFactoryTest
 				Assert.Fail($"Unexpected type {airdragVm.GetType()}");
 				break;
 		}
+	}
+
+	[Test]
+	public void CreateMultistepAuxiliaryViewModel([Values] StageInputViewModel.CompletedBusArchitecture arch)
+	{
+		if (arch == StageInputViewModel.CompletedBusArchitecture.Exempted) {
+			return;
+		}
+		var multistepComponentFactory = _kernel.Get<IMultistepComponentViewModelFactory>();
+
+		var auxVm = multistepComponentFactory.CreateNewMultistepBusAuxViewModel(arch);
 	}
 
 

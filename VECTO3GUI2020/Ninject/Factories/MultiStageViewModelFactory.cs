@@ -28,18 +28,18 @@ namespace VECTO3GUI2020.Ninject.Factories
 
         private readonly IDocumentViewModelFactory _documentViewModelFactory;
 		private readonly IVehicleViewModelFactory _vehicleViewModelFactory;
-        private readonly IComponentViewModelFactory _componentViewModelFactory;
+        private readonly IMultistepComponentViewModelFactory _multistepComponentViewModelFactory;
 
         public MultiStageViewModelFactory(
             IMultiStageViewModelFactoryDefaultInstanceProvider multiStageVmFactoryDefaultInstanceProvider,
             IMultistageViewModelFactoryFirstParameterAsNameInstanceProvider multistageViewModelFactoryFirstParameterAsNameInstanceProvider,
             IDocumentViewModelFactory documentViewModelFactory,
-            IVehicleViewModelFactory vehicleViewModelFactory)
+            IVehicleViewModelFactory vehicleViewModelFactory, IMultistepComponentViewModelFactory multistepComponentViewModelFactory)
         {
             _multiStageVmFactoryDefaultInstanceProvider = multiStageVmFactoryDefaultInstanceProvider;
             _multistageViewModelFactoryFirstParameterAsNameInstanceProvider = multistageViewModelFactoryFirstParameterAsNameInstanceProvider;
 
-
+			_multistepComponentViewModelFactory = multistepComponentViewModelFactory;
             _documentViewModelFactory = documentViewModelFactory;
             _vehicleViewModelFactory = vehicleViewModelFactory;
         }
@@ -91,26 +91,18 @@ namespace VECTO3GUI2020.Ninject.Factories
             return _multiStageVmFactoryDefaultInstanceProvider.GetMultistageAirdragViewModel(consolidatedAirdragInputData);
         }
 
-        public IMultistageAuxiliariesViewModel GetAuxiliariesViewModel()
+        public IMultistageAuxiliariesViewModel GetAuxiliariesViewModel(
+			StageInputViewModel.CompletedBusArchitecture arch)
         {
-            return _multiStageVmFactoryDefaultInstanceProvider.GetAuxiliariesViewModel();
+            return _multistepComponentViewModelFactory.CreateNewMultistepBusAuxViewModel(arch);
         }
 
         public IMultistageAuxiliariesViewModel
-            GetAuxiliariesViewModel(IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData)
+			GetAuxiliariesViewModel(StageInputViewModel.CompletedBusArchitecture arch,
+				IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData)
         {
-            return _multiStageVmFactoryDefaultInstanceProvider.GetAuxiliariesViewModel(consolidatedAuxiliariesInputData);
+            return _multistepComponentViewModelFactory.CreateNewMultistepBusAuxViewModel(arch);
         }
-
-        //public ICreateVifViewModel GetCreateNewVifViewModel(bool completed)
-        //{
-        //	return _multiStageVmFactoryDefaultInstanceProvider.GetCreateNewVifViewModel(completed);
-        //}
-
-        //public ICreateVifViewModel GetCreateNewVifViewModel()
-        //{
-        //	return _multiStageVmFactoryDefaultInstanceProvider.GetCreateNewVifViewModel();
-        //}
 
         #endregion
 
