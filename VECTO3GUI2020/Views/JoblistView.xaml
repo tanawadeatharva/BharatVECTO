@@ -154,9 +154,9 @@
 
                         <DataGrid.InputBindings>
                             <MouseBinding
-                        MouseAction="LeftDoubleClick"
-                        Command="{Binding EditDocument}"
-                        CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}"></MouseBinding>
+                                MouseAction="LeftDoubleClick"
+                                Command="{Binding EditDocument}"
+                                CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}"></MouseBinding>
                         </DataGrid.InputBindings>
                     </DataGrid>
                     <!--<Label x:Name="label" Content="Loading . . ." Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"/>-->
