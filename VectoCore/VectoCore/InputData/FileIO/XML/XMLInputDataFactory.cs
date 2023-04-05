@@ -279,9 +279,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 
 
 			bool valid = new XMLValidator(xmlDoc, null, XMLValidator.CallBackExceptionOnError).ValidateXML(documentType);
-			var xNode = xmlDoc.DocumentElement?.FirstChild?.FirstChild;
+			var xNode = xmlDoc.DocumentElement?.FirstChild;
 			//Document -> Component -> ComponentData
-			var versionNumber = XMLHelper.GetXsdType(xNode?.SchemaInfo.SchemaType);
+			var versionNumber = XMLHelper.GetXsdType(xNode?.FirstChild?.SchemaInfo.SchemaType);
 			try
 			{
 				var input = _declarationFactory.CreateComponentData(versionNumber, xNode, fileName);

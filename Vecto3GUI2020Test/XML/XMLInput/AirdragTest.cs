@@ -40,6 +40,7 @@ public class AirdragTest
 		Assert.NotNull(airdragData);
 		Assert.NotNull(airdragData.DataSource);
 		Assert.AreEqual("AirDragDataDeclarationType",airdragData.DataSource.Type);
+		Assert.NotNull(airdragData.DigestValue.Reference);
 		Assert.AreEqual(expVersion, airdragData.DataSource.SourceVersion);
 	}
 }

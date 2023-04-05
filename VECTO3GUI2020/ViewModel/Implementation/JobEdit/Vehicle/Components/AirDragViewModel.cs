@@ -48,7 +48,6 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 			SetProperties();
 		}
 
-		public abstract void SetProperties();
 
         public string Name { get { return _name; } }
 		private bool _isPresent;
@@ -115,21 +114,25 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 
 		public virtual SquareMeter AirDragArea
 		{
-			get => throw new NotImplementedException();
-			set => throw new NotImplementedException();
-		}
-		public virtual SquareMeter TransferredAirDragArea { 
-			get => throw new NotImplementedException();
-			set => throw new NotImplementedException();
-		}
-		public virtual SquareMeter AirDragArea_0 { 
-			get => throw new NotImplementedException();
-			set => throw new NotImplementedException();
+			get => _airDragArea;
+			set => SetProperty(ref _airDragArea, value);
 		}
 
-		#endregion
+		public virtual SquareMeter TransferredAirDragArea
+		{
+			get => _transferredAirDragArea;
+			set => SetProperty(ref _transferredAirDragArea, value);
+		}
 
-		public bool LabelVisible
+		public virtual SquareMeter AirDragArea_0
+		{
+			get => _airDragArea_0;
+			set => SetProperty(ref _airDragArea_0, value);
+		}
+
+        #endregion
+
+        public bool LabelVisible
 		{
 			get => _labelVisible;
 			set => SetProperty(ref _labelVisible, value);
@@ -140,6 +143,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 			get => _isReadOnly;
 			set => SetProperty(ref _isReadOnly, value);
 		}
+
+		public abstract void SetProperties();
 	}
 
 
@@ -154,7 +159,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 		public override void SetProperties()
 		{
 			_airDragArea = _inputData.AirDragArea;
-			_airDragArea = _inputData.AirDragArea_0;
+			_airDragArea_0 = _inputData.AirDragArea_0;
 			_transferredAirDragArea = _inputData.TransferredAirDragArea;
 		}
 	}

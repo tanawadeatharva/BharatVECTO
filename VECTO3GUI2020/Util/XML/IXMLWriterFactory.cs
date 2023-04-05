@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using VECTO3GUI2020.Util.XML.Components;
 using VECTO3GUI2020.Util.XML.Documents;
@@ -104,6 +105,9 @@ namespace VECTO3GUI2020.Util.XML
 
 		public IXMLBusAuxiliariesWriter CreateComponentWriter(IBusAuxiliariesDeclarationData inputData)
 		{
+			if (inputData.DataSource == null) {
+				throw new VectoException("No version specified in datasource");
+			}
 			return _internalFactory.CreateComponentWriter<IXMLBusAuxiliariesWriter>(inputData.DataSource).Init(inputData);
 		}
 

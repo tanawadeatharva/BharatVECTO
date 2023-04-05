@@ -190,11 +190,15 @@ namespace Vecto3GUI2020Test
 
 
 
-		[TestCase(TestData.consolidated_multiple_stages_airdrag, true, TestName="LoadAirdragComponentConsolidatedMultipleStages")]
-		[TestCase(TestData.consolidated_multiple_stages, null, TestName="LoadAirdragConsolidatedMultipleStage")]
-		[TestCase(TestData.consolidated_one_stage, null, TestName="LoadAirdragOneStage")]
-		[TestCase(TestData.primary_vehicle_only, null, TestName= "LoadAirdragPrimaryVehicle")]
-		public void LoadAirdragComponentAndSaveVehicleData(string fileName, object expectedAirdragModifiedValue)
+		[TestCase(TestData.consolidated_multiple_stages_airdrag, true, TestData.airdragLoadTestFile, TestName ="LoadAirdragComponentConsolidatedMultipleStages")]
+		[TestCase(TestData.consolidated_multiple_stages, null, TestData.airdragLoadTestFile, TestName ="LoadAirdragConsolidatedMultipleStage")]
+		[TestCase(TestData.consolidated_one_stage, null, TestData.airdragLoadTestFile, TestName ="LoadAirdragOneStage")]
+		[TestCase(TestData.primary_vehicle_only, null, TestData.airdragLoadTestFile, TestName = "LoadAirdragPrimaryVehicle")]
+		[TestCase(TestData.consolidated_multiple_stages_airdrag, true, TestData.airdragLoadTestFilev2, TestName = "LoadAirdragComponentConsolidatedMultipleStages")]
+		[TestCase(TestData.consolidated_multiple_stages, null, TestData.airdragLoadTestFilev2, TestName = "LoadAirdragConsolidatedMultipleStage")]
+		[TestCase(TestData.consolidated_one_stage, null, TestData.airdragLoadTestFilev2, TestName = "LoadAirdragOneStage")]
+		[TestCase(TestData.primary_vehicle_only, null, TestData.airdragLoadTestFilev2, TestName = "LoadAirdragPrimaryVehicle")]
+        public void LoadAirdragComponentAndSaveVehicleData(string fileName, object expectedAirdragModifiedValue, string airdragFile)
 		{
 			var vm = LoadFileFromPath(fileName);
 
@@ -203,7 +207,7 @@ namespace Vecto3GUI2020Test
 					InterimStageBusVehicleViewModel;
 
 
-			var airdragLoadResult = vehicleVm.MultistageAirdragViewModel.LoadAirdragFile(Path.GetFullPath(TestData.airdragLoadTestFile));
+			var airdragLoadResult = vehicleVm.MultistageAirdragViewModel.LoadAirdragFile(Path.GetFullPath(airdragFile));
 			Assert.IsTrue(airdragLoadResult, "Airdrag file not loaded");
 
 

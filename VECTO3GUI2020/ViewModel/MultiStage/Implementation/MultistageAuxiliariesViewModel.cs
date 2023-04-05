@@ -6,12 +6,16 @@ using System.Diagnostics;
 using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Xml;
+using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Properties;
+using VECTO3GUI2020.Resources.XML;
+using VECTO3GUI2020.Util.XML;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using EnumHelper = VECTO3GUI2020.Helper.EnumHelper;
 
@@ -36,8 +40,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 	public abstract class MultistageAuxiliariesViewModel : ViewModelBase, IMultistageAuxiliariesViewModel, IDataErrorInfo
 	{
-
-		protected MultistageAuxiliariesViewModel()
+		protected XNamespace Version => XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
+		protected abstract string XSDType { get; }
+        protected MultistageAuxiliariesViewModel()
 		{
 			CreateParameterViewModels();
 		}
@@ -536,7 +541,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#region Implementation of interfaces (unused Properties);
 
-		public DataSource DataSource { get; }
+		public DataSource DataSource
+		{
+			get => new DataSource () {
+				Type = XSDType,
+				TypeVersion = Version.ToString(),
+			};
+		}
 		public XmlNode XMLSource => throw new NotImplementedException();
 
 		public string FanTechnology => throw new NotImplementedException();
@@ -686,6 +697,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 	public class MultistageAuxiliariesViewModel_Conventional : MultistageAuxiliariesViewModel
 	{
+		
 		public MultistageAuxiliariesViewModel_Conventional() : base()
 		{
 
@@ -695,6 +707,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 		
 		}
+
+		#region Overrides of MultistageAuxiliariesViewModel
+
+		protected override string XSDType =>  XMLTypes.AUX_Conventional_CompletedBusType;
+
+        #endregion
     }
 
 	public class MultistageAuxiliariesViewModel_xEV : MultistageAuxiliariesViewModel
@@ -706,5 +724,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		protected MultistageAuxiliariesViewModel_xEV(IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData) : base(consolidatedAuxiliariesInputData)
 		{ }
+
+		#region Overrides of MultistageAuxiliariesViewModel
+
+		protected override string XSDType => XMLTypes.AUX_xEV_CompletedBusType;
+
+		#endregion
 	}
 }

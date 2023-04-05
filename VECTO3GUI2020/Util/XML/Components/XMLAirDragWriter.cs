@@ -16,9 +16,9 @@ namespace VECTO3GUI2020.Util.XML.Components
         protected IAirdragDeclarationInputData _inputData;
 		protected abstract XNamespace DefaultNamespace { get; }
 		protected XElement _xElement;
-        protected string _uri = "ToDO-Add-id";
+		protected string _uri = null;
 
-        public XMLAirDragWriter()
+        protected XMLAirDragWriter()
         {
            
             if (_uri == null) {
