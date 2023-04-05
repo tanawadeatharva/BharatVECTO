@@ -13,7 +13,7 @@ namespace VECTO3GUI2020.Resources.XML
 		public const string Vehicle_Pev_CompletedBusDeclarationType =
 			XMLDeclarationPEVCompletedBusDataProviderV24.XSD_TYPE;
 		public const string Vehicle_Iepc_CompletedBusDeclarationType =
-			XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE;
+			XMLDeclarationIepcCompletedBusDataProviderV24.XSD_TYPE;
 
 		public const string Vehicle_Exempted_CompletedBusDeclarationType =
 			XMLDeclarationExemptedCompletedBusDataProviderV24.XSD_TYPE;
@@ -39,7 +39,18 @@ namespace VECTO3GUI2020.Resources.XML
         public const string AUX_Conventional_CompletedBusType = "AUX_Conventional_CompletedBusType";
 		public const string AUX_xEV_CompletedBusType = "AUX_xEV_CompletedBusType";
 
-        #endregion
-    }
+		#endregion
+
+
+		#region ADAS
+
+		public const string ADAS_Conventional_Type = "ADAS_Conventional_Type";
+		public const string ADAS_HEV_Type = "ADAS_HEV_Type";
+		public const string ADAS_PEV_Type = "ADAS_PEV_Type";
+		public const string ADAS_IEPC_Type = "ADAS_IEPC_Type";
+
+
+		#endregion
+	}
 }
 

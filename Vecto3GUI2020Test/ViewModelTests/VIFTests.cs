@@ -27,16 +27,16 @@ namespace Vecto3GUI2020Test.ViewModelTests
 	public class VIFTests : ViewModelTestBase
 	{
 
-		public const string _finalVif = "vecto_multistage_conventional_final_vif.VIF_Report_1.xml";
-		public const string _vectoMultistageOneStage = "vecto_multistage_consolidated_one_stage.xml";
+
 
 		[Test]
 		public void loadPrimaryVehicleOnlyAndCreateNewVIF()
 		{
+			
 			var multistagevm = LoadFileFromPath(TestData.primary_vehicle_only).MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
 			var stage = multistagevm.ManufacturingStageViewModel.StepCount;
 
-			Assert.AreEqual(2, stage);
+			Assert.AreEqual(2, stage, "Should the first manufacturing stage be labeled as \"1\" or \"2\"");
 
 			//Set Mandatory Fields
 			var vehicle =
@@ -49,7 +49,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			
 			File.Delete(writer.XMLMultistageReportFileName);
 
-			multistagevm.SaveVif(multistagevm, writer);
+			multistagevm.SaveVif(multistagevm, writer, _mockDialogHelper);
 
 			Assert.IsTrue(File.Exists(writer.XMLMultistageReportFileName));
 
@@ -129,7 +129,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		public void CreateCompletedFinalVIFWithAirdrag(bool loadAirdrag, int airdragVersion)
 		{
 
-			var multistagevm = LoadFileFromPath(_finalVif);
+			var multistagevm = LoadFileFromPath(TestData.FinalVif);
 
 			var VehicleViewModel = multistagevm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as InterimStageBusVehicleViewModel;
 
@@ -154,9 +154,9 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		
 			var resultFile = multistagevm.MultiStageJobViewModel.SaveVif(Path.GetFullPath(
 				"completed_final" + ".xml"));
+			_mockDialogHelper.AssertNoErrorDialogs();
 
-			
-			var jobListVm = _kernel.Get<IJobListViewModel>();
+            var jobListVm = _kernel.Get<IJobListViewModel>();
 			Assert.That(() => jobListVm.Jobs.Count, Is.EqualTo(2));
 
 			Assert.IsTrue(jobListVm.Jobs[1].CanBeSimulated, String.Join("\n",((AdditionalJobInfoViewModelMultiStage) jobListVm.Jobs[1].AdditionalJobInfoVm).InvalidEntries));
@@ -275,7 +275,8 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			
 			File.Delete(writer.XMLMultistageReportFileName);
 
-			multiStageViewModel.SaveVif(multiStageViewModel, writer);
+			multiStageViewModel.SaveVif(multiStageViewModel, writer, _mockDialogHelper);
+			_mockDialogHelper.AssertNoErrorDialogs();
 			
 			var validator = new XMLValidator(XmlReader.Create(writer.XMLMultistageReportFileName));
 			Assert.True(validator.ValidateXML(TUGraz.VectoCore.Utils.XmlDocumentType.MultistepOutputData));
@@ -290,6 +291,5 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var currentStageCount = multistageViewModel.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? 0;
 			return  new FileOutputVIFWriter(outputFilePath, currentStageCount);
 		}
-
 	}
 }

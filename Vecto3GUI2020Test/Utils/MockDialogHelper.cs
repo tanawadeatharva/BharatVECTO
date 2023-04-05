@@ -107,7 +107,7 @@ public class MockDialogHelper : IDialogHelper
 		lock (_dialogs) {
 			_dialogs.Add(new Dialog() {
 				Message = $"[{caption}] {messageBoxText}",
-				Type = Dialog.DialogType.Info,
+				Type = icon == MessageBoxImage.Error ? Dialog.DialogType.Error : Dialog.DialogType.Info,
 			});
 		}
 

@@ -50,6 +50,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
         private void UpdateVehicleViewModel()
         {
+			if (VehicleViewModel == null) {
+				return;
+			}
             if (VehicleViewModel.ShowConsolidatedData)
             {
                 throw new VectoException("This is only intended on \"standalone\" step inputs");

@@ -197,6 +197,8 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			var vehicleVm = stepInput.VehicleViewModel as InterimStageBusVehicleViewModel;
 			vehicleVm.Manufacturer	= $"A {arch}_manufacturer";
+			vehicleVm.VIN = "1234567890";
+			vehicleVm.Manufacturer = $"{arch}-avenue 42";
 
 
 			if (addAuxInput && arch != CompletedBusArchitecture.Exempted) {

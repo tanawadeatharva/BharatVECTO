@@ -25,13 +25,18 @@ namespace Vecto3GUI2020Test
 		public const string primaryDecimalTestFile = $"{TestDataBasePath}/bugreports/PrimaryDecimal/primary_heavyBus group41_nonSmart_rounded_decimals.xml";
 		public const string consolidated_multiple_stages = SchemaVersionMultistep + "vecto_multistage_consolidated_multiple_stages.xml";
 		public const string consolidated_multiple_stages_airdrag = SchemaVersionMultistep + "vecto_multistage_consolidated_multiple_stages_airdrag.xml";
-		public const string consolidated_multiple_stages_hev = "vecto_multistage_consolidated_multiple_stages_hev.xml";
+		public const string consolidated_multiple_stages_hev = SchemaVersionMultistep + "vecto_multistage_consolidated_multiple_stages_hev.xml";
 		public const string consolidated_one_stage = SchemaVersionMultistep + "vecto_multistage_consolidated_one_stage.xml";
 		public const string primary_vehicle_only = SchemaVersionMultistep + "vecto_multistage_primary_vehicle_only.xml";
 
-		public const string exempted_primary_vif = SchemaVersion2_4 + "exempted_primary_heavyBus.VIF.xml";
+		public const string exempted_primary_vif = SchemaVersionMultistep + "exempted_primary_heavyBus.VIF.xml";
 		public const string stageInputFullSample = XMLBasePath + "vecto_vehicle-stage_input_full-sample.xml";
 		public const string airdragLoadTestFile = SchemaVersionMultistep + "AirdragLoadTestFile.xml";
 		public const string airdragLoadTestFilev2 = SchemaVersionMultistep + "AirdragLoadTestFilev2.xml";
+
+		public const string exemptedCompleted = SchemaVersionMultistep + "exempted_completed.VIF_Report_2.xml";
+
+
+		public const string _finalVif = "vecto_multistage_conventional_final_vif.VIF_Report_1.xml";
 	}
 }

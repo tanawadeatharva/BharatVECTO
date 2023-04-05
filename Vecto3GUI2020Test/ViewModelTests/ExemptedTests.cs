@@ -10,6 +10,7 @@ using TUGraz.VectoCommon.Utils;
 using VECTO3GUI2020.ViewModel.Implementation;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
+using Vecto3GUI2020Test.Utils;
 
 namespace Vecto3GUI2020Test.ViewModelTests
 {
@@ -17,12 +18,12 @@ namespace Vecto3GUI2020Test.ViewModelTests
 	public class ExemptedTests : ViewModelTestBase
 	{
 
-		public const string _exemptedCompleted = "exempted_completed.VIF_Report_2.xml";
+		
 
 		[Test]
 		public void LoadAndSaveExemptedPrimary()
 		{
-			var newMultiStageJob = LoadFileFromPath(TestData.exempted_primary_vif);
+			var newMultiStageJob = LoadFileFromPath(Path.GetFullPath(TestData.exempted_primary_vif));
 			Assert.IsTrue(newMultiStageJob.MultiStageJobViewModel.Exempted);
 
 
@@ -175,13 +176,13 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			TestContext.Write("Done!");
 		}
 
-		[Ignore("Simulation not working")]
 		[Test]
 		public async Task SimulateMinimalExemptedVif()
 		{
 			//Setup
 			var jobListViewModel = _kernel.Get<IJobListViewModel>() as JobListViewModel;
-			await jobListViewModel.AddJobAsync(Path.GetFullPath(_exemptedCompleted));
+			await jobListViewModel.AddJobAsync(Path.GetFullPath(TestData.exemptedCompleted));
+			_mockDialogHelper.AssertNoErrorDialogs();
 			Assert.AreEqual(1, jobListViewModel.Jobs.Count);
 
 			jobListViewModel.Jobs[0].Selected = true;
