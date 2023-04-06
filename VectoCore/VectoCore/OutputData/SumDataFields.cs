@@ -125,7 +125,8 @@ namespace TUGraz.VectoCore.OutputData
 		public const string FCFINAL_LiterPer100M3KM = "FC-Final{0} [l/100m³km]";
 		public const string FCFINAL_LiterPer100PassengerKM = "FC-Final{0} [l/100Pkm]";
 
-		public const string EC_el_SOC = "EC_el_SoC [kWh";
+		public const string EC_el_SOC = "EC_el_SoC [kWh]";
+		public const string EC_el_SOC_corr = "EC_el_SoC_corr [kWh]";
 
 		public const string EC_el_final = "EC_el_final [kWh]";
 		public const string EC_el_final_KM = "EC_el_final [kWh/km]";
@@ -159,6 +160,7 @@ namespace TUGraz.VectoCore.OutputData
 		public const string E_WHR_MECH = "E_WHR_mech [kWh]";
 
 		public const string E_BusAux_PS_corr = "E_BusAux_PS_corr [kWh]";
+		public const string E_BusAux_el_PS_corr = "E_BusAux_el_PS_corr [kWh]";
 		public const string E_BusAux_ES_mech_corr = "E_BusAux_ES_mech_corr [kWh]";
 		public const string E_BusAux_AuxHeater = "E_BusAux_AuxHeater [kWh]";
 
@@ -492,6 +494,7 @@ namespace TUGraz.VectoCore.OutputData
 			{ E_WHR_EL, SumFunc((r, m) => m.CorrectedModalData.WorkWHREl.ConvertToKiloWattHour())},
 			{ E_WHR_MECH, SumFunc((r, m) => m.CorrectedModalData.WorkWHRMech.ConvertToKiloWattHour())},
 			{ E_BusAux_PS_corr, SumFunc((r, m) => m.CorrectedModalData.WorkBusAuxPSCorr.ConvertToKiloWattHour())},
+			{ E_BusAux_el_PS_corr, SumFunc((r, m) => m.CorrectedModalData.WorkBusAux_elPS_SoC_ElRange.ConvertToKiloWattHour())},
 			{ E_BusAux_ES_mech_corr, SumFunc((r, m) => m.CorrectedModalData.WorkBusAuxESMech.ConvertToKiloWattHour())},
 			{ E_BusAux_AuxHeater, SumFunc((r, m) => m.CorrectedModalData.AuxHeaterDemand.Cast<WattSecond>().ConvertToKiloWattHour())},
 
@@ -649,6 +652,8 @@ namespace TUGraz.VectoCore.OutputData
 			// electric consumption
 			{ EC_el_SOC, SumFunc( (r, m) => 
 				m.CorrectedModalData.ElectricEnergyConsumption_SoC?.ConvertToKiloWattHour()) },
+			{ EC_el_SOC_corr, SumFunc( (r, m) =>
+				m.CorrectedModalData.ElectricEnergyConsumption_SoC_Corr?.ConvertToKiloWattHour()) },
 			{ EC_el_final, SumFunc( (r , m ) 
 				=> (m.CorrectedModalData.ElectricEnergyConsumption_Final?.ConvertToKiloWattHour()))},
 			{ EC_el_final_KM, SumFunc((r, m) 

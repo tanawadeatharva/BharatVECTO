@@ -465,7 +465,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			return retVal;
 		}
-		protected virtual Dictionary<string, ElectricConsumerEntry> GetElectricAuxConsumers(Mission mission, IVehicleDeclarationInputData vehicleData, VehicleClass vehicleClass, IBusAuxiliariesDeclarationData busAux)
+		protected virtual Dictionary<string, ElectricConsumerEntry> GetElectricAuxConsumers(Mission mission,
+			IVehicleDeclarationInputData vehicleData, VehicleClass vehicleClass, IBusAuxiliariesDeclarationData busAux)
 		{
 			var retVal = new Dictionary<string, ElectricConsumerEntry>();
 			var spPower = DeclarationData.SteeringPumpBus.LookupElectricalPowerDemand(
@@ -811,12 +812,31 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				electricUserInputs.ConnectESToREESS = true;
 			}
 
+			var pneumaticUserInputsConfig = GetPneumaticUserConfig(primaryVehicle, mission);
+			var pneumaticAuxillariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type);
+			if (primaryVehicle.Components.BusAuxiliaries.PneumaticSupply.CompressorDrive == CompressorDrive.electrically) {
+				//var busAux = vehicleData.Components.BusAuxiliaries;
+				var auxConfig = new AuxiliaryConfig {
+					VehicleData = runData.VehicleData,
+					PneumaticAuxillariesConfig = pneumaticAuxillariesConfig,
+					PneumaticUserInputsConfig = pneumaticUserInputsConfig
+				};
+				var airDemand = M03Impl.TotalAirDemandCalculation(auxConfig, actuations) / actuations.CycleTime;
+				electricUserInputs.ElectricalConsumers[Constants.Auxiliaries.IDs.PneumaticSystem] =
+					new ElectricConsumerEntry() {
+						Current = DeclarationData.BusAuxiliaries.PneumaticSystemElectricDemandPerAirGenerated * airDemand / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
+						ActiveDuringEngineStopDriving = true,
+						ActiveDuringEngineStopStandstill = true,
+						BaseVehicle = false
+					};
+			}
+
 			var retVal = new AuxiliaryConfig
 			{
 				InputData = primaryVehicle.Components.BusAuxiliaries,
 				ElectricalUserInputsConfig = electricUserInputs,
-				PneumaticUserInputsConfig = GetPneumaticUserConfig(primaryVehicle, mission),
-				PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type),
+				PneumaticUserInputsConfig = pneumaticUserInputsConfig,
+				PneumaticAuxillariesConfig = pneumaticAuxillariesConfig,
 				Actuations = actuations,
 				SSMInputsCooling = ssmCooling,
 				SSMInputsHeating = ssmHeating,
@@ -866,23 +886,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 			var retVal = new List<VectoRunData.AuxData>();
 
-			//if (!new HashSet<AuxiliaryType>(busAuxData..Auxiliaries.Select(aux => aux.Type)).SetEquals(AuxiliaryTypes)) {
-			//	var error = string.Format(
-			//		"In Declaration Mode exactly {0} Auxiliaries must be defined for {2} vehicles: {1}",
-			//		AuxiliaryTypes.Count, string.Join(", ", AuxiliaryTypes.Select(aux => aux.ToString())), errorStringVehicleType);
-			//	Log.Error(error);
-			//	throw new VectoException(
-			//		error);
-			//}
-
 			var alternatorEfficiency = DeclarationData.AlternatorEfficiency;
 
 			foreach (var auxType in AuxiliaryTypes) {
-				//var auxData = busAuxData.Auxiliaries.FirstOrDefault(a => a.Type == auxType);
-				//if (auxData == null) {
-				//	throw new VectoException("Auxiliary {0} not found.", auxType);
-				//}
-
+				
 				var aux = new VectoRunData.AuxData {
 					DemandType = AuxiliaryDemandType.Constant,
 					//Technology = auxData.Technology,
@@ -1348,7 +1355,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return _primaryBusDataAdapter.SelectBenefitForFloorType(completedVehicle.VehicleCode.GetFloorType(), onVehicle);
 		}
 
-		protected override Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry> GetElectricAuxConsumers(Mission mission, IVehicleDeclarationInputData vehicleData, VehicleClass vehicleClass, IBusAuxiliariesDeclarationData busAux)
+		protected override Dictionary<string, ElectricConsumerEntry> GetElectricAuxConsumers(Mission mission,
+			IVehicleDeclarationInputData vehicleData, VehicleClass vehicleClass, IBusAuxiliariesDeclarationData busAux)
 		{
 			return new Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry>();
 		}

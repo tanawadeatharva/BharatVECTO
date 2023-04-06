@@ -47,6 +47,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
@@ -54,7 +55,7 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
-	public class XMLDeclarationReport : DeclarationReport<XMLDeclarationReport.ResultEntry>
+    public class XMLDeclarationReport : DeclarationReport<XMLDeclarationReport.ResultEntry>
 	{
 		protected IXMLManufacturerReport ManufacturerRpt;
 

@@ -44,15 +44,16 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 using TUGraz.VectoCore.Utils;
 
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	/// <summary>
-	/// Fake Data Writer Class for Tests.
-	/// </summary>
-	internal class MockModalDataContainer : IModalDataContainer
+    /// <summary>
+    /// Fake Data Writer Class for Tests.
+    /// </summary>
+    internal class MockModalDataContainer : IModalDataContainer
 	{
 		protected Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>> FuelColumns =
 			new Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>>();

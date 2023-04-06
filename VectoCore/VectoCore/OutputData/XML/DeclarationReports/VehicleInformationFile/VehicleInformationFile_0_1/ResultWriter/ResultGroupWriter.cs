@@ -7,12 +7,13 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.ResultWriter
 {
-	public class VIFErrorResultWriter : ErrorResultWriter
+    public class VIFErrorResultWriter : ErrorResultWriter
 	{
 		public VIFErrorResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 

@@ -9,39 +9,40 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 
 namespace TUGraz.VectoMockup
 {
 
-	//public void Run()
-	//{
-	//	if (!FoundPreviousResults)
-	//	{
-	//		(GetContainer().ModalData as ModalDataContainer).ModalDataContainerFinished += DummyRun_ModalDataContainerFinished;
-	//		_run.Run();
-	//	}
-	//	else
-	//	{
-	//		//TODO HM 
-	//		Log.Warn($"[DEV ONLY!] Using mod data: {_dummyFilePath}");
+    //public void Run()
+    //{
+    //	if (!FoundPreviousResults)
+    //	{
+    //		(GetContainer().ModalData as ModalDataContainer).ModalDataContainerFinished += DummyRun_ModalDataContainerFinished;
+    //		_run.Run();
+    //	}
+    //	else
+    //	{
+    //		//TODO HM 
+    //		Log.Warn($"[DEV ONLY!] Using mod data: {_dummyFilePath}");
 
-	//		var modDataContainer = GetContainer().ModalData as ModalDataContainer;
-	//		modDataContainer.ReadDataFromXml(_dummyFilePath);
-	//		modDataContainer.Finish(VectoRun.Status.Success);
-	//	}
+    //		var modDataContainer = GetContainer().ModalData as ModalDataContainer;
+    //		modDataContainer.ReadDataFromXml(_dummyFilePath);
+    //		modDataContainer.Finish(VectoRun.Status.Success);
+    //	}
 
 
-	//}
+    //}
 
-	//private void DummyRun_ModalDataContainerFinished(object sender, ModalDataContainer.ModalDataContainerFinishedEventArgs e)
-	//{
-	//	if (FinishedWithoutErrors)
-	//	{
-	//		e.DataOnFinish.WriteXml(_dummyFilePath, false);
-	//		Log.Warn($"[DEV ONLY!] Data written to {_dummyFilePath}:");
-	//	}
-	//}
-	internal class MockupModalDataContainer : IModalDataContainer
+    //private void DummyRun_ModalDataContainerFinished(object sender, ModalDataContainer.ModalDataContainerFinishedEventArgs e)
+    //{
+    //	if (FinishedWithoutErrors)
+    //	{
+    //		e.DataOnFinish.WriteXml(_dummyFilePath, false);
+    //		Log.Warn($"[DEV ONLY!] Data written to {_dummyFilePath}:");
+    //	}
+    //}
+    internal class MockupModalDataContainer : IModalDataContainer
     {
 		private IModalDataContainer _modalDataContainerImplementation;
 		private readonly Action<IModalDataContainer> _addReportResult;

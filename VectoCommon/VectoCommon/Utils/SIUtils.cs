@@ -418,5 +418,15 @@ namespace TUGraz.VectoCommon.Utils
 				return this;
 			}
 		}
+
+		public UnitInstance NormLiter {
+			get {
+				var reciprocAndExponent = _reciproc * _exponent;
+				_units[1] += 3 * reciprocAndExponent;
+				Factor /= Math.Pow(1000, reciprocAndExponent);
+
+				return this;
+			}
+		}
 	}
 }

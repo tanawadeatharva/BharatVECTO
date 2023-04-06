@@ -264,26 +264,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static class BusAuxiliaries
 		{
-			//private static ISSMInputs ssmInputs = null;
-
+			
 			private static IEnvironmentalConditionsMap envMap;
 
-			//private static AuxiliaryConfig busAuxConfig = null;
 			private static ElectricalConsumerList elUserConfig;
 
 			private static IActuationsMap actuationsMap;
-			//private static PneumaticsAuxilliariesConfig pneumaticAuxConfig;
 			private static List<SSMTechnology> ssmTechnologies;
 
-
-			//public static ISSMInputs SSMDefaultValues
-			//{
-			//	get {
-			//		return ssmInputs ?? (ssmInputs = SSMInputData.ReadStream(
-			//					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.SSMDefaults.AHSM"),
-			//					DefaultEnvironmentalConditions));
-			//	}
-			//}
+			public static readonly JoulePerNormLiter PneumaticSystemElectricDemandPerAirGenerated =
+				5600.SI<Watt>() / 325.SI(Unit.SI.NormLiter.Per.Minute).Cast<NormLiterPerSecond>();
 
 			public static ICompressorMap GetCompressorMap(
 				IPneumaticSupplyDeclarationData pneumaticSupply)
@@ -293,9 +283,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				if (pneumaticSupply.CompressorDrive == CompressorDrive.electrically) {
 					return null;
-					//var size = GetCompressorResourceForSize("electrically");
-					//               return CompressorMapReader.ReadStream(
-					//                   RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".VAUXBus." + size), 1, $"{compressorSize} - {clutchType}");
 				}
 
 				var resource = GetCompressorResourceForSize(compressorSize);
@@ -1641,7 +1628,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var D9_chargingEfficiencyBattery = CalculateChargingEfficiencyPEV(runData);
 			var D15_useableBatteryCapacityForR_CDA = batteryData.UseableStoredEnergy;
-			var D13_electricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption_SoC;
+			var D13_electricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption_SoC_Corr;
 
 			var D16_actualChargeDepletingRange = D15_useableBatteryCapacityForR_CDA / D13_electricEnergyConsumption * data.Distance;
 			var D17_equivalentAllElectricRange = D16_actualChargeDepletingRange;

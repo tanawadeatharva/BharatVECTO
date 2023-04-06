@@ -397,6 +397,12 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<NormLiterPerSecond>.Create(nl.Val / s.Value());
 		}
+
+		public static WattSecond operator *(NormLiter nl, JoulePerNormLiter jpnl)
+		{
+			return SIBase<WattSecond>.Create(nl.Val * jpnl.Value());
+		}
+
 	}
 
 	public class NormLiterPerKilogram : SIBase<NormLiterPerKilogram>

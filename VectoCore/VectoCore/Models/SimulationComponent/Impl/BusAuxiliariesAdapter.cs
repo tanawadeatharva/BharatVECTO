@@ -295,9 +295,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
-			container[ModalResultField.Nl_busAux_PS_consumer] = Auxiliaries.PSDemandConsumer;
-			container[ModalResultField.Nl_busAux_PS_generated] = essUtilityFactor * Auxiliaries.PSAirGenerated;
-			container[ModalResultField.Nl_busAux_PS_generated_alwaysOn] = essUtilityFactor * Auxiliaries.PSAirGeneratedAlwaysOn;
+			if (AuxCfg.PneumaticUserInputsConfig.CompressorMap != null) {
+				container[ModalResultField.Nl_busAux_PS_consumer] = Auxiliaries.PSDemandConsumer;
+				container[ModalResultField.Nl_busAux_PS_generated] = essUtilityFactor * Auxiliaries.PSAirGenerated;
+				container[ModalResultField.Nl_busAux_PS_generated_alwaysOn] = essUtilityFactor * Auxiliaries.PSAirGeneratedAlwaysOn;
+			} else {
+				// electric compressor
+				container[ModalResultField.Nl_busAux_PS_consumer] = Auxiliaries.PSDemandConsumer;
+				container[ModalResultField.Nl_busAux_PS_generated] = Auxiliaries.PSAirGenerated;
+				container[ModalResultField.Nl_busAux_PS_generated_alwaysOn] = Auxiliaries.PSAirGeneratedAlwaysOn;
+			}
+
 			//container[ModalResultField.Nl_busAux_PS_generated_dragOnly] = Auxiliaries.PSAirGeneratedDrag;
 			container[ModalResultField.P_busAux_PS_generated] = essUtilityFactor * Auxiliaries.PSPowerDemandAirGenerated;
 			container[ModalResultField.P_busAux_PS_generated_alwaysOn] = essUtilityFactor * Auxiliaries.PSPowerCompressorAlwaysOn;

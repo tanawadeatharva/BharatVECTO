@@ -48,11 +48,13 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData
 {
-	public class ModalDataContainer : IModalDataContainer
+    public class ModalDataContainer : IModalDataContainer
 	{
 		//private readonly bool _writeEngineOnly;
 		private readonly IModalDataFilter[] _filters;
@@ -119,6 +121,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		protected IModalDataPostProcessor GetModDataPostprocessor(VectoRunData runData)
 		{
+			// todo: MQ 6.4.2023 refactor to dependency injection
 			switch (runData.JobType) {
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
@@ -131,8 +134,10 @@ namespace TUGraz.VectoCore.OutputData
 					return new ParallelHybridModalDataPostprocessingCorrection();
 				case VectoSimulationJobType.EngineOnlySimulation:
 					return new EngineOnlyPostprocessingCorrection();
+				case VectoSimulationJobType.ConventionalVehicle:
+					return new ConventionalModalDataPostprocessingCorrection();
 				default:
-					return new ModalDataPostprocessingCorrection();
+					throw new ArgumentOutOfRangeException($"no post-processing defined for job type {runData.JobType}");
 			}
 		}
 
