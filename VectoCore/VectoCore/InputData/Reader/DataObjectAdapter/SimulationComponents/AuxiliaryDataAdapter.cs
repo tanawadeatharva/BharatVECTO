@@ -491,6 +491,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				};
 			}
 
+
 			return retVal;
 		}
 		public double CalculateAlternatorEfficiency(IList<IAlternatorDeclarationInputData> alternators)
@@ -524,6 +525,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			retVal.MaxAlternatorPower = busAux.ElectricSupply.Alternators.Sum(x => x.RatedVoltage * x.RatedCurrent);
 			retVal.ElectricStorageCapacity = busAux.ElectricSupply.ElectricStorage.Sum(x => x.ElectricStorageCapacity) ?? 0.SI<WattSecond>();
+
+			if (vehicleData.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
+					VectoSimulationJobType.IEPC_E)) {
+				retVal.ConnectESToREESS = true;
+			} else if (vehicleData.VehicleType.IsOneOf(VectoSimulationJobType.ParallelHybridVehicle,
+							VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_S,
+							VectoSimulationJobType.IHPC)) {
+				retVal.ConnectESToREESS =
+					vehicleData.Components.BusAuxiliaries.ElectricSupply.ESSupplyFromHEVREESS;
+			}
+			retVal.DCDCEfficiency = DeclarationData.DCDCEfficiency;
+
 
 			return retVal;
 		}
@@ -807,11 +820,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			var electricUserInputs =
 				GetElectricalUserConfig(mission, primaryVehicle, actuations, runData.VehicleData.VehicleClass);
-			if (primaryVehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
-					VectoSimulationJobType.IEPC_E)) {
-				electricUserInputs.ConnectESToREESS = true;
-			}
-
+			
 			var pneumaticUserInputsConfig = GetPneumaticUserConfig(primaryVehicle, mission);
 			var pneumaticAuxillariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type);
 			if (primaryVehicle.Components.BusAuxiliaries.PneumaticSupply.CompressorDrive == CompressorDrive.electrically) {
@@ -1422,6 +1431,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			retVal.MaxAlternatorPower = primaryBusAuxiliaries.ElectricSupply.Alternators.Sum(x => x.RatedVoltage * x.RatedCurrent);
 			retVal.ElectricStorageCapacity = primaryBusAuxiliaries.ElectricSupply.ElectricStorage.Sum(x => x.ElectricStorageCapacity) ?? 0.SI<WattSecond>();
+
+			if (primaryVehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
+					VectoSimulationJobType.IEPC_E)) {
+				retVal.ConnectESToREESS = true;
+			} else if (primaryVehicle.VehicleType.IsOneOf(VectoSimulationJobType.ParallelHybridVehicle,
+							VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_S,
+							VectoSimulationJobType.IHPC)) {
+				retVal.ConnectESToREESS =
+					primaryVehicle.Components.BusAuxiliaries.ElectricSupply.ESSupplyFromHEVREESS;
+			}
+
+			retVal.DCDCEfficiency = DeclarationData.DCDCEfficiency;
 
 			return retVal;
 		}

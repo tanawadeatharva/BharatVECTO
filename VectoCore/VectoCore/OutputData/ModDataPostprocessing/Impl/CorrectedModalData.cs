@@ -43,11 +43,11 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
         public virtual WattSecond EnergyDCDCMissing { get; set; } = 0.SI<WattSecond>();
         public virtual Joule AuxHeaterDemand { get; set; } = 0.SI<WattSecond>();
 		public virtual KilogramPerMeter KilogramCO2PerMeter { get; set; } = 0.SI<KilogramPerMeter>();
-        public virtual Dictionary<FuelType, IFuelConsumptionCorrection> FuelCorrection => new Dictionary<FuelType, IFuelConsumptionCorrection>();
+        public virtual Dictionary<FuelType, IFuelConsumptionCorrection> FuelCorrection { get; protected set; } = new Dictionary<FuelType, IFuelConsumptionCorrection>();
         public virtual Kilogram CO2Total { get; set; } = 0.SI<Kilogram>();
         public virtual Joule FuelEnergyConsumptionTotal => 0.SI<Joule>();
         public virtual WattSecond ElectricEnergyConsumption_SoC { get; set; } = 0.SI<WattSecond>();
-		public virtual WattSecond ElectricEnergyConsumption_SoC_Corr => ElectricEnergyConsumption_SoC - WorkBusAux_elPS_SoC_ElRange;
+		public virtual WattSecond ElectricEnergyConsumption_SoC_Corr => ElectricEnergyConsumption_SoC + WorkBusAux_elPS_SoC_ElRange;
         public virtual WattSecond ElectricEnergyConsumption_Final { get; set; } = 0.SI<WattSecond>();
 
 
@@ -72,8 +72,8 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
     public class CorrectedModalData : AbstractCorrectedModalData
     {
         public SI kAir { get; set; }
-        public Dictionary<FuelType, IFuelConsumptionCorrection> FuelCorrection { get; }
-        #region Implementation of ICorrectedModalData
+
+		#region Implementation of ICorrectedModalData
 
         public CorrectedModalData(IModalDataContainer modData) : base(modData)
         {
@@ -90,40 +90,38 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
             return FuelCorrection[fuel.FuelType];
         }
 
-        public  Second ICEOffTimeStandstill { get; set; }
-        public WattSecond EnergyAuxICEOffStandstill { get; set; }
-        public WattSecond EnergyAuxICEOffStandstill_UF {
+        public virtual Second ICEOffTimeStandstill { get; set; }
+        public virtual WattSecond EnergyAuxICEOffStandstill { get; set; }
+        public virtual WattSecond EnergyAuxICEOffStandstill_UF {
             get {
                 return EnergyAuxICEOffStandstill * UtilityFactorStandstill;
             }
         }
 
-        public double UtilityFactorStandstill { get; set; }
+        public virtual double UtilityFactorStandstill { get; set; }
 
-        public WattSecond EnergyAuxICEOnStandstill { get; set; }
-        public WattSecond EnergyAuxICEOnStandstill_UF {
+        public virtual WattSecond EnergyAuxICEOnStandstill { get; set; }
+        public virtual WattSecond EnergyAuxICEOnStandstill_UF {
             get { return EnergyAuxICEOnStandstill * (1 - UtilityFactorStandstill); }
         }
-        public Watt AvgAuxPowerICEOnStandstill => ICEOffTimeStandstill.IsEqual(0) ? 0.SI<Watt>() : EnergyAuxICEOnStandstill / ICEOffTimeStandstill;
+        public virtual Watt AvgAuxPowerICEOnStandstill => ICEOffTimeStandstill.IsEqual(0) ? 0.SI<Watt>() : EnergyAuxICEOnStandstill / ICEOffTimeStandstill;
 
 
-        public Second ICEOffTimeDriving { get; set; }
-        public WattSecond EnergyAuxICEOffDriving { get; set; }
-        public WattSecond EnergyAuxICEOffDriving_UF { get { return EnergyAuxICEOffDriving * UtilityFactorDriving; } }
-        public double UtilityFactorDriving { get; set; }
+        public virtual Second ICEOffTimeDriving { get; set; }
+        public virtual WattSecond EnergyAuxICEOffDriving { get; set; }
+        public virtual WattSecond EnergyAuxICEOffDriving_UF { get { return EnergyAuxICEOffDriving * UtilityFactorDriving; } }
+        public virtual double UtilityFactorDriving { get; set; }
 
-        public WattSecond EnergyAuxICEOnDriving { get; set; }
-        public WattSecond EnergyAuxICEOnDriving_UF {
+        public virtual WattSecond EnergyAuxICEOnDriving { get; set; }
+        public virtual WattSecond EnergyAuxICEOnDriving_UF {
             get {
                 return EnergyAuxICEOnDriving * (1 - UtilityFactorDriving);
             }
         }
-        public Watt AvgAuxPowerICEOnDriving => ICEOffTimeDriving.IsEqual(0) ? 0.SI<Watt>() : EnergyAuxICEOnDriving / ICEOffTimeDriving;
+        public virtual Watt AvgAuxPowerICEOnDriving => ICEOffTimeDriving.IsEqual(0) ? 0.SI<Watt>() : EnergyAuxICEOnDriving / ICEOffTimeDriving;
 
-        public WattSecond EnergyDCDCMissing { get; set; }
-        public NormLiter CorrectedAirDemand { get; set; }
-        public NormLiter DeltaAir { get; set; }
-        public WattSecond DeltaEReessMech { get; set; }
+        //public virtual WattSecond EnergyDCDCMissing { get; set; }
+        public virtual WattSecond DeltaEReessMech { get; set; }
 
         #endregion
     }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Moq;
+using NLog.LayoutRenderers.Wrappers;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -27,7 +28,7 @@ static internal class SSMBusAuxModelParameters
 		BusHVACSystemConfiguration hvacConfig, bool doubleGlazing, bool adjustableAuxHeater,
 		bool separateAirdistributionDicts, bool adjustableCoolantThermostat, bool engineWasteGasHeatExchanger,
 		string[] steeringpumps, string fanTech, AlternatorType alternatorTech, Meter entranceHeight,
-		LoadingType loading = LoadingType.ReferenceLoad)
+		LoadingType loading = LoadingType.ReferenceLoad, bool essSupplyfromHVREESS = false)
 	{
 		var dao = new SpecificCompletedBusAuxiliaryDataAdapter(new PrimaryBusAuxiliaryDataAdapter());
 
@@ -63,7 +64,18 @@ static internal class SSMBusAuxModelParameters
 
 		primaryBusAuxES.Setup(p => p.AlternatorTechnology).Returns(alternatorTech);
 		primaryBusAuxES.Setup(p => p.Alternators).Returns(new[] { new AlternatorInputData(28.3.SI<Volt>(), 50.SI<Ampere>()) }.Cast<IAlternatorDeclarationInputData>().ToList());
-		primaryBusAuxES.Setup(p => p.ElectricStorage).Returns(new List<IBusAuxElectricStorageDeclarationInputData>());
+		if (alternatorTech == AlternatorType.Smart) {
+			var battery = new Mock<IBusAuxElectricStorageDeclarationInputData>();
+			battery.Setup(b => b.ElectricStorageCapacity).Returns(20.SI(Unit.SI.Kilo.Watt.Hour).Cast<WattSecond>());
+			//battery.Setup(b => b.)
+			primaryBusAuxES.Setup(p => p.ElectricStorage).Returns(new List<IBusAuxElectricStorageDeclarationInputData>()
+				{ battery.Object });
+		} else {
+			primaryBusAuxES.Setup(p => p.ElectricStorage)
+				.Returns(new List<IBusAuxElectricStorageDeclarationInputData>());
+		}
+
+		primaryBusAuxES.Setup(p => p.ESSupplyFromHEVREESS).Returns(essSupplyfromHVREESS);
 
 		primaryBusAuxPS_C.Setup(p => p.AdBlueDosing).Returns(ConsumerTechnology.Mechanically);
 		primaryBusAuxPS_C.Setup(p => p.AirsuspensionControl).Returns(ConsumerTechnology.Electrically);

@@ -36,6 +36,7 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml;
+using Ninject;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -101,7 +102,9 @@ namespace TUGraz.VectoCore.OutputData
 			Data = new ModalResults();
 			CurrentRow = Data.NewRow();
 
-			PostProcessingCorrection = GetModDataPostprocessor(runData);
+			// todo: MQ 6.4.2023 - inject!
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			PostProcessingCorrection = kernel.Get<IModalDataPostProcessorFactory>().GetPostProcessor(runData.JobType);
 			
 			if (runData.EngineData != null) {
 				
@@ -119,27 +122,7 @@ namespace TUGraz.VectoCore.OutputData
 			return Data.Columns.Contains(modalResultField);
 		}
 
-		protected IModalDataPostProcessor GetModDataPostprocessor(VectoRunData runData)
-		{
-			// todo: MQ 6.4.2023 refactor to dependency injection
-			switch (runData.JobType) {
-				case VectoSimulationJobType.BatteryElectricVehicle:
-				case VectoSimulationJobType.IEPC_E:
-					return new BatteryElectricPostprocessingCorrection();
-				case VectoSimulationJobType.IEPC_S:
-				case VectoSimulationJobType.SerialHybridVehicle:
-					return new SerialHybridModalDataPostprocessingCorrection();
-				case VectoSimulationJobType.IHPC:
-				case VectoSimulationJobType.ParallelHybridVehicle:
-					return new ParallelHybridModalDataPostprocessingCorrection();
-				case VectoSimulationJobType.EngineOnlySimulation:
-					return new EngineOnlyPostprocessingCorrection();
-				case VectoSimulationJobType.ConventionalVehicle:
-					return new ConventionalModalDataPostprocessingCorrection();
-				default:
-					throw new ArgumentOutOfRangeException($"no post-processing defined for job type {runData.JobType}");
-			}
-		}
+		
 
 		public int JobRunId => _runData.JobRunId;
 

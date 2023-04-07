@@ -221,7 +221,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				CorrectedFinalFuelConsumption = data.CorrectedModalData.FuelCorrection;
 				CO2Total = data.CorrectedModalData.CO2Total;
 				EnergyConsumptionTotal = data.CorrectedModalData.FuelEnergyConsumptionTotal;
-				ElectricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption_SoC;
+				ElectricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption_SoC_Corr;
 
 				if (runData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
 						VectoSimulationJobType.IEPC_E)) {

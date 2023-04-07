@@ -12,9 +12,20 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing
         WattSecond WorkWHRElMech { get; }
         WattSecond WorkWHRMech { get; }
         WattSecond WorkWHR { get; }
+
+        // mechanical compressor work applied when correcting fuel consumption
         WattSecond WorkBusAuxPSCorr { get; }
-		WattSecond WorkBusAux_elPS_SoC_ElRange { get; }
-		WattSecond WorkBusAuxESMech { get; }
+
+		// electric compressor work applied to REESS when calculating electric range (HEV CD, PEV) 
+        WattSecond WorkBusAux_elPS_SoC_ElRange { get; }
+
+		// electric compressor work applied to REESS correcting deltaSoC (and consequently deltaFC)
+        WattSecond WorkBusAux_elPS_SoC_Corr { get; }
+
+		// electric compressor work applied as fuel consumption
+        WattSecond WorkBusAux_elPS_el_Corr { get; }
+
+        WattSecond WorkBusAuxESMech { get; }
         WattSecond WorkBusAuxHeatPumpHeatingElMech { get; }
         WattSecond WorkBusAuxHeatPumpHeatingMech { get; }
 
@@ -24,7 +35,9 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing
         WattSecond EnergyDCDCMissing { get; }
         Joule AuxHeaterDemand { get; }
 
-        IFuelConsumptionCorrection FuelConsumptionCorrection(IFuelProperties fuel);
+		NormLiter CorrectedAirDemand { get; }
+		NormLiter DeltaAir { get; }
+		IFuelConsumptionCorrection FuelConsumptionCorrection(IFuelProperties fuel);
 
         KilogramPerMeter KilogramCO2PerMeter { get; }
         Dictionary<FuelType, IFuelConsumptionCorrection> FuelCorrection { get; }

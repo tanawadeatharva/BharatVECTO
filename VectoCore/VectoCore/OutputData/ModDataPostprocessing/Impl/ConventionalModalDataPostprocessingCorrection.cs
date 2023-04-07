@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
             var em = runData.ElectricMachinesData?.FirstOrDefault(x => x.Item1 != PowertrainPosition.GEN);
 
             if (em != null) {
-                var deltaEReess = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int) + r.WorkBusAux_elPS_SoC_Corr;
+                var deltaEReess = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int) - r.WorkBusAux_elPS_SoC_Corr;
                 var startSoc = modData.REESSStartSoC();
                 var endSoc = modData.REESSEndSoC();
                 var emEff = 0.0;
@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 
             var engLine = modData.EngineLineCorrectionFactor(fuel);
             var comp =
-                runData.BusAuxiliaries?.PneumaticUserInputsConfig.CompressorMap
+                runData.BusAuxiliaries?.PneumaticUserInputsConfig.CompressorMap?
                     .Interpolate(runData.EngineData.IdleSpeed);
 
             var f = new FuelConsumptionCorrection {
