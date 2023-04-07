@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 
 		public T Lookup(VehicleClass hdvClass, MissionType mission)
 		{
-			return ConvertValue(Lookup(hdvClass.GetClassNumber(), mission.GetNonEMSMissionType()));
+			return ConvertValue(Lookup(hdvClass.GetClassNumberWithoutSubSuffix(), mission.GetNonEMSMissionType()));
 		}
 
 		protected abstract T ConvertValue(double val);

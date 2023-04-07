@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 
 		public Entry Lookup(VehicleClass hdvClass)
 		{
-			return Lookup(hdvClass.GetClassNumber());
+			return Lookup(hdvClass.GetClassNumberWithoutSubSuffix());
 		}
 
 		public struct Entry

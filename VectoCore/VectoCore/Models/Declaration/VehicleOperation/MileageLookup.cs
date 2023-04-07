@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 
 		public MileageEntry Lookup(VehicleClass hdvClass, MissionType mission)
 		{
-			return Lookup(hdvClass.GetClassNumber(), mission.GetNonEMSMissionType());
+			return Lookup(hdvClass.GetClassNumberWithoutSubSuffix(), mission.GetNonEMSMissionType());
 		}
 
 
