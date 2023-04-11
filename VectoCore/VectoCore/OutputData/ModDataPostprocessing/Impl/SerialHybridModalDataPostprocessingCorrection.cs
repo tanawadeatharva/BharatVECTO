@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
         protected override void SetReesCorrectionDemand(IModalDataContainer modData, VectoRunData runData,
             CorrectedModalData r)
         {
-            var deltaEReess = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int.GetName());
+            var deltaEReess = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int);
             var startSoc = modData.REESSStartSoC();
             var endSoc = modData.REESSEndSoC();
             var emEff = 0.0;
@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
                 : (fcGenCharging / elPowerGenerated).Cast<KilogramPerWattSecond>();
             var engLine = modData.EngineLineCorrectionFactor(fuel);
             var comp =
-                runData.BusAuxiliaries?.PneumaticUserInputsConfig.CompressorMap
+                runData.BusAuxiliaries?.PneumaticUserInputsConfig.CompressorMap?
                     .Interpolate(runData.EngineData.IdleSpeed);
 
             var f = new FuelConsumptionCorrection {
@@ -109,6 +109,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
                 FcHeatPumpHeatingEl = engLine * r.WorkBusAuxHeatPumpHeatingElMech,
                 FcHeatPumpHeatingMech = engLine * r.WorkBusAuxHeatPumpHeatingMech,
                 FcBusAuxEletcricHeater = engLine * r.WorkBusAuxElectricHeater,
+				FcBusAuxElPS = engLine * r.WorkBusAux_elPS_Corr_mech,
                 FcWHR = engLine * r.WorkWHR,
                 FcAuxHtr = 0.SI<Kilogram>()
             };

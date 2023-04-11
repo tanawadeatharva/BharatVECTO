@@ -40,6 +40,9 @@ namespace TUGraz.VectoCore.Tests.Reports
 		private const VectoRunData.OvcHevMode CS_Mode = VectoRunData.OvcHevMode.ChargeSustaining;
 		private const VectoRunData.OvcHevMode NonOvc = VectoRunData.OvcHevMode.NotApplicable;
 
+		private const VectoSimulationJobType P_HEV = VectoSimulationJobType.ParallelHybridVehicle;
+		private const VectoSimulationJobType S_HEV = VectoSimulationJobType.SerialHybridVehicle;
+
 		private const AlternatorType NoAlternator = AlternatorType.None;
 		private const AlternatorType ConvAlternator = AlternatorType.Conventional;
 		private const AlternatorType SmartAlternator = AlternatorType.Smart;
@@ -69,12 +72,12 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 		[
 			TestCase(NonOvc, ConvAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, NaN, false, TestName = "Test Busaux ElectricPS Conventional correction, conv. alt, Case A - 1 no correction"),
-			TestCase(NonOvc, ConvAlternator, 6000, 4021.5180, -4499.1925, -1.2921, 0.0000, 0.0000000, 0.0000000, -0.0193811, 0.0000000,  NaN, false, TestName = "Test Busaux ElectricPS Conventional correction, conv. alt, Case A - 2 correction under-consumption"),
-			TestCase(NonOvc, ConvAlternator, 18000, 11776.5180, 3255.8075, 0.9350, 0.0000, 0.0000000, 0.0000000, 0.0140250, 0.0000000, NaN, false, TestName = "Test Busaux ElectricPS Conventional correction, conv. alt, Case A - 3 correction over-consumption"),
+			TestCase(NonOvc, ConvAlternator, 6000, 4021.5180, -4499.1925, -1.8458, 0.0000, 0.0000000, 0.0000000, -0.0276873, 0.0000000, NaN, false, TestName = "Test Busaux ElectricPS Conventional correction, conv. alt, Case A - 2 correction under-consumption"),
+			TestCase(NonOvc, ConvAlternator, 18000, 11776.5180, 3255.8075, 1.3357, 0.0000, 0.0000000, 0.0000000, 0.0200357, 0.0000000, NaN, false, TestName = "Test Busaux ElectricPS Conventional correction, conv. alt, Case A - 3 correction over-consumption"),
 
 			TestCase(NonOvc, SmartAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, NaN, false, TestName = "Test Busaux ElectricPS Conventional correction, smart alt, Case B - 1 no correction"),
-			TestCase(NonOvc, SmartAlternator, 6000, 4021.5180, -4499.1925, -1.2921, 0.0000, 0.0000000, 0.0000000, -0.0193811, 0.0000000, NaN, false, TestName = "Test Busaux ElectricPS Conventional correction, smart alt, Case B - 2 correction under-consumption"),
-			TestCase(NonOvc, SmartAlternator, 18000, 11776.5180, 3255.8075, 0.9350, 0.0000, 0.0000000, 0.0000000, 0.0140250, 0.0000000, NaN, false, TestName = "Test Busaux ElectricPS Conventional correction, smart alt, Case B - 3 correction over-consumption"),
+			TestCase(NonOvc, SmartAlternator, 6000, 4021.5180, -4499.1925, -1.8458, 0.0000, 0.0000000, 0.0000000, -0.0276873, 0.0000000, NaN, false, TestName = "Test Busaux ElectricPS Conventional correction, smart alt, Case B - 2 correction under-consumption"),
+			TestCase(NonOvc, SmartAlternator, 18000, 11776.5180, 3255.8075, 1.3357, 0.0000, 0.0000000, 0.0000000, 0.0200357, 0.0000000, NaN, false, TestName = "Test Busaux ElectricPS Conventional correction, smart alt, Case B - 3 correction over-consumption"),
 		]
 		public void TestBusAuxElectricCompressorPostProcessing_Conventional(
 			VectoRunData.OvcHevMode ovcMode,
@@ -119,7 +122,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 							$"{corrected.CorrectedAirDemand.Value():F4}, " +
 							$"{corrected.DeltaAir.Value():F4}, " +
 
-							$"{corrected.WorkBusAux_elPS_el_Corr.ConvertToKiloWattHour().Value:F4}, " +
+							$"{corrected.WorkBusAux_elPS_Corr_mech.ConvertToKiloWattHour().Value:F4}, " +
 							$"{corrected.WorkBusAux_elPS_SoC_Corr.ConvertToKiloWattHour().Value:F4}, " +
 							$"{corrected.WorkBusAux_elPS_SoC_ElRange.ConvertToKiloWattHour().Value:F7}, " +
 
@@ -137,7 +140,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 
 			Assert.AreEqual(0, corrected.WorkBusAuxPSCorr.ConvertToKiloWattHour().Value, 1e-3);
-			Assert.AreEqual(expPSEnergyDemand_elCorr_kWh, corrected.WorkBusAux_elPS_el_Corr.ConvertToKiloWattHour().Value, 1e-3);
+			Assert.AreEqual(expPSEnergyDemand_elCorr_kWh, corrected.WorkBusAux_elPS_Corr_mech.ConvertToKiloWattHour().Value, 1e-3);
 			Assert.AreEqual(expPSEnergyDemand_SoCCorr_kWh, corrected.WorkBusAux_elPS_SoC_Corr.ConvertToKiloWattHour().Value, 1e-3);
 			Assert.AreEqual(expPSEnergyDemand_SocRange_kWh, corrected.WorkBusAux_elPS_SoC_ElRange.ConvertToKiloWattHour().Value, 1e-6);
 
@@ -159,45 +162,87 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 
 		[
-			TestCase(CS_Mode, NoAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, NaN, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C1, no alt, CS Mode - 1 no correction"),
-			TestCase(CS_Mode, NoAlternator, 6000, 4021.5180, -4499.1925, 0.0000, -1.2921, 0.0000000, 0.0000000, 0.0000000, -0.0221752, NaN, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C1, no alt, CS Mode - 2 correction under-consumption"),
-			TestCase(CS_Mode, NoAlternator, 18000, 11776.5180, 3255.8075, 0.0000, 0.9350, 0.0000000, 0.0000000, 0.0000000, 0.0160469, NaN, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C1, no alt, CS Mode - 3 correction over-consumption"),
+			TestCase(CS_Mode, NoAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, NaN, P_HEV, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C1, no alt, CS Mode - 1 no correction"),
+			TestCase(CS_Mode, NoAlternator, 6000, 4021.5180, -4499.1925, 0.0000, -1.2921, 0.0000000, 0.0000000, 0.0000000, -0.0221752, NaN, P_HEV, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C1, no alt, CS Mode - 2 correction under-consumption"),
+			TestCase(CS_Mode, NoAlternator, 18000, 11776.5180, 3255.8075, 0.0000, 0.9350, 0.0000000, 0.0000000, 0.0000000, 0.0160469, NaN, P_HEV, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C1, no alt, CS Mode - 3 correction over-consumption"),
 
-			TestCase(CD_Mode, NoAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 180.0000000, 0.0000000, 3.0892449, 2006.6667, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C1, no alt, CD Mode - 1 no correction"),
-			TestCase(CD_Mode, NoAlternator, 6000, 4021.5180, -4499.1925, 0.0000, 0.0000, -1.2920758, 180.0000000, 0.0000000, 3.0892449, 2021.1751, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C1, no alt, CD Mode - 2 correction under-consumption"),
-			TestCase(CD_Mode, NoAlternator, 18000, 11776.5180, 3255.8075, 0.0000, 0.0000, 0.9350011, 180.0000000, 0.0000000, 3.0892449, 1996.2970, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C1, no alt, CD Mode - 3 correction over-consumption"),
+			TestCase(CD_Mode, NoAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 180.0000000, 0.0000000, 3.0892449, 2006.6667, P_HEV, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C1, no alt, CD Mode - 1 no correction"),
+			TestCase(CD_Mode, NoAlternator, 6000, 4021.5180, -4499.1925, 0.0000, 0.0000, -1.2920758, 180.0000000, 0.0000000, 3.0892449, 2021.1751, P_HEV, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C1, no alt, CD Mode - 2 correction under-consumption"),
+			TestCase(CD_Mode, NoAlternator, 18000, 11776.5180, 3255.8075, 0.0000, 0.0000, 0.9350011, 180.0000000, 0.0000000, 3.0892449, 1996.2970, P_HEV, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C1, no alt, CD Mode - 3 correction over-consumption"),
 
-			TestCase(CS_Mode, ConvAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, NaN, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2a, conv alt, CS Mode - 1 no correction"),
-			TestCase(CS_Mode, ConvAlternator, 6000, 4021.5180, -4499.1925, 0.0000, -1.2921, 0.0000000, 0.0000000, 0.0000000, -0.0221752, NaN, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2a, conv alt, CS Mode - 2 correction under-consumption"),
-			TestCase(CS_Mode, ConvAlternator, 18000, 11776.5180, 3255.8075, 0.0000, 0.9350, 0.0000000, 0.0000000, 0.0000000, 0.0160469, NaN, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2a, conv alt, CS Mode - 3 correction over-consumption"),
+			TestCase(CS_Mode, ConvAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, NaN, P_HEV, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2a, conv alt, CS Mode - 1 no correction"),
+			TestCase(CS_Mode, ConvAlternator, 6000, 4021.5180, -4499.1925, 0.0000, -1.2921, 0.0000000, 0.0000000, 0.0000000, -0.0221752, NaN, P_HEV, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2a, conv alt, CS Mode - 2 correction under-consumption"),
+			TestCase(CS_Mode, ConvAlternator, 18000, 11776.5180, 3255.8075, 0.0000, 0.9350, 0.0000000, 0.0000000, 0.0000000, 0.0160469, NaN, P_HEV, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2a, conv alt, CS Mode - 3 correction over-consumption"),
 
-			TestCase(CD_Mode, ConvAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 180.0000000, 0.0000000, 3.0892449, 2006.6667, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2a, conv alt, CD Mode - 1 no correction"),
-			TestCase(CD_Mode, ConvAlternator, 6000, 4021.5180, -4499.1925, 0.0000, 0.0000, -1.2920758, 180.0000000, 0.0000000, 3.0892449, 2021.1751, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2a, conv alt, CD Mode - 2 correction under-consumption"),
-			TestCase(CD_Mode, ConvAlternator, 18000, 11776.5180, 3255.8075, 0.0000, 0.0000, 0.9350011, 180.0000000, 0.0000000, 3.0892449, 1996.2970, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2a, conv alt, CD Mode - 3 correction over-consumption"),
+			TestCase(CD_Mode, ConvAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 180.0000000, 0.0000000, 3.0892449, 2006.6667, P_HEV, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2a, conv alt, CD Mode - 1 no correction"),
+			TestCase(CD_Mode, ConvAlternator, 6000, 4021.5180, -4499.1925, 0.0000, 0.0000, -1.2920758, 180.0000000, 0.0000000, 3.0892449, 2021.1751, P_HEV, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2a, conv alt, CD Mode - 2 correction under-consumption"),
+			TestCase(CD_Mode, ConvAlternator, 18000, 11776.5180, 3255.8075, 0.0000, 0.0000, 0.9350011, 180.0000000, 0.0000000, 3.0892449, 1996.2970, P_HEV, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2a, conv alt, CD Mode - 3 correction over-consumption"),
 
-			TestCase(CS_Mode, ConvAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, NaN, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2b, conv alt, CS Mode - 1 no correction"),
-			TestCase(CS_Mode, ConvAlternator, 6000, 4021.5180, -4499.1925, -1.2921, 0.0000, 0.0000000, 0.0000000, -0.0193811, 0.0000000, NaN, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2b, conv alt, CS Mode - 2 correction under-consumption"),
-			TestCase(CS_Mode, ConvAlternator, 18000, 11776.5180, 3255.8075, 0.9350, 0.0000, 0.0000000, 0.0000000, 0.0140250, 0.0000000, NaN, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2b, conv alt, CS Mode - 3 correction over-consumption"),
+			TestCase(CS_Mode, ConvAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, NaN, P_HEV, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2b, conv alt, CS Mode - 1 no correction"),
+			TestCase(CS_Mode, ConvAlternator, 6000, 4021.5180, -4499.1925, -1.8458, 0.0000, 0.0000000, 0.0000000, -0.0276873, 0.0000000, NaN, P_HEV, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2b, conv alt, CS Mode - 2 correction under-consumption"),
+			TestCase(CS_Mode, ConvAlternator, 18000, 11776.5180, 3255.8075, 1.3357, 0.0000, 0.0000000, 0.0000000, 0.0200357, 0.0000000, NaN, P_HEV, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2b, conv alt, CS Mode - 3 correction over-consumption"),
 
-			TestCase(CD_Mode, ConvAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 180.0000000, 0.0000000, 3.0892449, 2006.6667, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2b, conv alt, CD Mode - 1 no correction"),
-			TestCase(CD_Mode, ConvAlternator, 6000, 4021.5180, -4499.1925, -1.2921, 0.0000, 0.0000000, 180.0000000, -0.0193811, 3.0892449, 2006.6667, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2b, conv alt, CD Mode - 2 correction under-consumption"),
-			TestCase(CD_Mode, ConvAlternator, 18000, 11776.5180, 3255.8075, 0.9350, 0.0000, 0.0000000, 180.0000000, 0.0140250, 3.0892449, 2006.6667, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2b, conv alt, CD Mode - 3 correction over-consumption"),
+			TestCase(CD_Mode, ConvAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 180.0000000, 0.0000000, 3.0892449, 2006.6667, P_HEV, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2b, conv alt, CD Mode - 1 no correction"),
+			TestCase(CD_Mode, ConvAlternator, 6000, 4021.5180, -4499.1925, -1.8458, 0.0000, 0.0000000, 180.0000000, -0.0276873, 3.0892449, 2006.6667, P_HEV, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2b, conv alt, CD Mode - 2 correction under-consumption"),
+			TestCase(CD_Mode, ConvAlternator, 18000, 11776.5180, 3255.8075, 1.3357, 0.0000, 0.0000000, 180.0000000, 0.0200357, 3.0892449, 2006.6667, P_HEV, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C2b, conv alt, CD Mode - 3 correction over-consumption"),
 
-			TestCase(CS_Mode, SmartAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, NaN, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3a, smart alt, CS Mode - 1 no correction"),
-			TestCase(CS_Mode, SmartAlternator, 6000, 4021.5180, -4499.1925, -1.2921, 0.0000, 0.0000000, 0.0000000, -0.0193811, 0.0000000, NaN, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3a, smart alt, CS Mode - 2 correction under-consumption"),
-			TestCase(CS_Mode, SmartAlternator, 18000, 11776.5180, 3255.8075, 0.9350, 0.0000, 0.0000000, 0.0000000, 0.0140250, 0.0000000, NaN, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3a, smart alt, CS Mode - 3 correction over-consumption"),
+			TestCase(CS_Mode, SmartAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, NaN, P_HEV, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3a, smart alt, CS Mode - 1 no correction"),
+			TestCase(CS_Mode, SmartAlternator, 6000, 4021.5180, -4499.1925, -1.8458, 0.0000, 0.0000000, 0.0000000, -0.0276873, 0.0000000, NaN, P_HEV, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3a, smart alt, CS Mode - 2 correction under-consumption"),
+			TestCase(CS_Mode, SmartAlternator, 18000, 11776.5180, 3255.8075, 1.3357, 0.0000, 0.0000000, 0.0000000, 0.0200357, 0.0000000, NaN, P_HEV, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3a, smart alt, CS Mode - 3 correction over-consumption"),
 
-			TestCase(CD_Mode, SmartAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 180.0000000, 0.0000000, 3.0892449, 2006.6667, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3a, smart alt, CD Mode - 1 no correction"),
-			TestCase(CD_Mode, SmartAlternator, 6000, 4021.5180, -4499.1925, -1.2921, 0.0000, 0.0000000, 180.0000000, -0.0193811, 3.0892449, 2006.6667, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3a, smart alt, CD Mode - 2 correction under-consumption"),
-			TestCase(CD_Mode, SmartAlternator, 18000, 11776.5180, 3255.8075, 0.9350, 0.0000, 0.0000000, 180.0000000, 0.0140250, 3.0892449, 2006.6667, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3a, smart alt, CD Mode - 3 correction over-consumption"),
+			TestCase(CD_Mode, SmartAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 180.0000000, 0.0000000, 3.0892449, 2006.6667, P_HEV, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3a, smart alt, CD Mode - 1 no correction"),
+			TestCase(CD_Mode, SmartAlternator, 6000, 4021.5180, -4499.1925, -1.8458, 0.0000, 0.0000000, 180.0000000, -0.0276873, 3.0892449, 2006.6667, P_HEV, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3a, smart alt, CD Mode - 2 correction under-consumption"),
+			TestCase(CD_Mode, SmartAlternator, 18000, 11776.5180, 3255.8075, 1.3357, 0.0000, 0.0000000, 180.0000000, 0.0200357, 3.0892449, 2006.6667, P_HEV, true, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3a, smart alt, CD Mode - 3 correction over-consumption"),
 
-			TestCase(CS_Mode, SmartAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, NaN, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3b, smart alt, CS Mode - 1 no correction"),
-			TestCase(CS_Mode, SmartAlternator, 6000, 4021.5180, -4499.1925, -1.2921, 0.0000, 0.0000000, 0.0000000, -0.0193811, 0.0000000, NaN, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3b, smart alt, CS Mode - 2 correction under-consumption"),
-			TestCase(CS_Mode, SmartAlternator, 18000, 11776.5180, 3255.8075, 0.9350, 0.0000, 0.0000000, 0.0000000, 0.0140250, 0.0000000, NaN, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3b, smart alt, CS Mode - 3 correction over-consumption"),
+			TestCase(CS_Mode, SmartAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, NaN, P_HEV, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3b, smart alt, CS Mode - 1 no correction"),
+			TestCase(CS_Mode, SmartAlternator, 6000, 4021.5180, -4499.1925, -1.8458, 0.0000, 0.0000000, 0.0000000, -0.0276873, 0.0000000, NaN, P_HEV, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3b, smart alt, CS Mode - 2 correction under-consumption"),
+			TestCase(CS_Mode, SmartAlternator, 18000, 11776.5180, 3255.8075, 1.3357, 0.0000, 0.0000000, 0.0000000, 0.0200357, 0.0000000, NaN, P_HEV, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3b, smart alt, CS Mode - 3 correction over-consumption"),
 
-			TestCase(CD_Mode, SmartAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 180.0000000, 0.0000000, 3.0892449, 2006.6667, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3b, smart alt, CD Mode - 1 no correction"),
-			TestCase(CD_Mode, SmartAlternator, 6000, 4021.5180, -4499.1925, -1.2921, 0.0000, 0.0000000, 180.0000000, -0.0193811, 3.0892449, 2006.6667, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3b, smart alt, CD Mode - 2 correction under-consumption"),
-			TestCase(CD_Mode, SmartAlternator, 18000, 11776.5180, 3255.8075, 0.9350, 0.0000, 0.0000000, 180.0000000, 0.0140250, 3.0892449, 2006.6667, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3b, smart alt, CD Mode - 3 correction over-consumption"),
+			TestCase(CD_Mode, SmartAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 180.0000000, 0.0000000, 3.0892449, 2006.6667, P_HEV, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3b, smart alt, CD Mode - 1 no correction"),
+			TestCase(CD_Mode, SmartAlternator, 6000, 4021.5180, -4499.1925, -1.8458, 0.0000, 0.0000000, 180.0000000, -0.0276873, 3.0892449, 2006.6667, P_HEV, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3b, smart alt, CD Mode - 2 correction under-consumption"),
+			TestCase(CD_Mode, SmartAlternator, 18000, 11776.5180, 3255.8075, 1.3357, 0.0000, 0.0000000, 180.0000000, 0.0200357, 3.0892449, 2006.6667, P_HEV, false, TestName = "Test Busaux ElectricPS P-HEV correction, Case C3b, smart alt, CD Mode - 3 correction over-consumption"),
+
+			// ----
+			TestCase(CS_Mode, NoAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, NaN, S_HEV, true, TestName = "Test Busaux ElectricPS S-HEV correction, Case C1, no alt, CS Mode - 1 no correction"),
+			TestCase(CS_Mode, NoAlternator, 6000, 4021.5180, -4499.1925, 0.0000, -1.2921, 0.0000000, 0.0000000, 0.0000000, -0.0221752, NaN, S_HEV, true, TestName = "Test Busaux ElectricPS S-HEV correction, Case C1, no alt, CS Mode - 2 correction under-consumption"),
+			TestCase(CS_Mode, NoAlternator, 18000, 11776.5180, 3255.8075, 0.0000, 0.9350, 0.0000000, 0.0000000, 0.0000000, 0.0160469, NaN, S_HEV, true, TestName = "Test Busaux ElectricPS S-HEV correction, Case C1, no alt, CS Mode - 3 correction over-consumption"),
+
+			TestCase(CD_Mode, NoAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 180.0000000, 0.0000000, 3.0892449, 2006.6667, S_HEV, true, TestName = "Test Busaux ElectricPS S-HEV correction, Case C1, no alt, CD Mode - 1 no correction"),
+			TestCase(CD_Mode, NoAlternator, 6000, 4021.5180, -4499.1925, 0.0000, 0.0000, -1.2920758, 180.0000000, 0.0000000, 3.0892449, 2021.1751, S_HEV, true, TestName = "Test Busaux ElectricPS S-HEV correction, Case C1, no alt, CD Mode - 2 correction under-consumption"),
+			TestCase(CD_Mode, NoAlternator, 18000, 11776.5180, 3255.8075, 0.0000, 0.0000, 0.9350011, 180.0000000, 0.0000000, 3.0892449, 1996.2970, S_HEV, true, TestName = "Test Busaux ElectricPS S-HEV correction, Case C1, no alt, CD Mode - 3 correction over-consumption"),
+
+			TestCase(CS_Mode, ConvAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, NaN, S_HEV, true, TestName = "Test Busaux ElectricPS S-HEV correction, Case C2a, conv alt, CS Mode - 1 no correction"),
+			TestCase(CS_Mode, ConvAlternator, 6000, 4021.5180, -4499.1925, 0.0000, -1.2921, 0.0000000, 0.0000000, 0.0000000, -0.0221752, NaN, S_HEV, true, TestName = "Test Busaux ElectricPS S-HEV correction, Case C2a, conv alt, CS Mode - 2 correction under-consumption"),
+			TestCase(CS_Mode, ConvAlternator, 18000, 11776.5180, 3255.8075, 0.0000, 0.9350, 0.0000000, 0.0000000, 0.0000000, 0.0160469, NaN, S_HEV, true, TestName = "Test Busaux ElectricPS S-HEV correction, Case C2a, conv alt, CS Mode - 3 correction over-consumption"),
+
+			TestCase(CD_Mode, ConvAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 180.0000000, 0.0000000, 3.0892449, 2006.6667, S_HEV, true, TestName = "Test Busaux ElectricPS S-HEV correction, Case C2a, conv alt, CD Mode - 1 no correction"),
+			TestCase(CD_Mode, ConvAlternator, 6000, 4021.5180, -4499.1925, 0.0000, 0.0000, -1.2920758, 180.0000000, 0.0000000, 3.0892449, 2021.1751, S_HEV, true, TestName = "Test Busaux ElectricPS S-HEV correction, Case C2a, conv alt, CD Mode - 2 correction under-consumption"),
+			TestCase(CD_Mode, ConvAlternator, 18000, 11776.5180, 3255.8075, 0.0000, 0.0000, 0.9350011, 180.0000000, 0.0000000, 3.0892449, 1996.2970, S_HEV, true, TestName = "Test Busaux ElectricPS S-HEV correction, Case C2a, conv alt, CD Mode - 3 correction over-consumption"),
+
+			TestCase(CS_Mode, ConvAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, NaN, S_HEV, false, TestName = "Test Busaux ElectricPS S-HEV correction, Case C2b, conv alt, CS Mode - 1 no correction"),
+			TestCase(CS_Mode, ConvAlternator, 6000, 4021.5180, -4499.1925, -1.8458, 0.0000, 0.0000000, 0.0000000, -0.0276873, 0.0000000, NaN, S_HEV, false, TestName = "Test Busaux ElectricPS S-HEV correction, Case C2b, conv alt, CS Mode - 2 correction under-consumption"),
+			TestCase(CS_Mode, ConvAlternator, 18000, 11776.5180, 3255.8075, 1.3357, 0.0000, 0.0000000, 0.0000000, 0.0200357, 0.0000000, NaN, S_HEV, false, TestName = "Test Busaux ElectricPS S-HEV correction, Case C2b, conv alt, CS Mode - 3 correction over-consumption"),
+
+			TestCase(CD_Mode, ConvAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 180.0000000, 0.0000000, 3.0892449, 2006.6667, S_HEV, false, TestName = "Test Busaux ElectricPS S-HEV correction, Case C2b, conv alt, CD Mode - 1 no correction"),
+			TestCase(CD_Mode, ConvAlternator, 6000, 4021.5180, -4499.1925, -1.8458, 0.0000, 0.0000000, 180.0000000, -0.0276873, 3.0892449, 2006.6667, S_HEV, false, TestName = "Test Busaux ElectricPS S-HEV correction, Case C2b, conv alt, CD Mode - 2 correction under-consumption"),
+			TestCase(CD_Mode, ConvAlternator, 18000, 11776.5180, 3255.8075, 1.3357, 0.0000, 0.0000000, 180.0000000, 0.0200357, 3.0892449, 2006.6667, S_HEV, false, TestName = "Test Busaux ElectricPS S-HEV correction, Case C2b, conv alt, CD Mode - 3 correction over-consumption"),
+
+			TestCase(CS_Mode, SmartAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, NaN, S_HEV, true, TestName = "Test Busaux ElectricPS S-HEV correction, Case C3a, smart alt, CS Mode - 1 no correction"),
+			TestCase(CS_Mode, SmartAlternator, 6000, 4021.5180, -4499.1925, -1.8458, 0.0000, 0.0000000, 0.0000000, -0.0276873, 0.0000000, NaN, S_HEV, true, TestName = "Test Busaux ElectricPS S-HEV correction, Case C3a, smart alt, CS Mode - 2 correction under-consumption"),
+			TestCase(CS_Mode, SmartAlternator, 18000, 11776.5180, 3255.8075, 1.3357, 0.0000, 0.0000000, 0.0000000, 0.0200357, 0.0000000, NaN, S_HEV, true, TestName = "Test Busaux ElectricPS S-HEV correction, Case C3a, smart alt, CS Mode - 3 correction over-consumption"),
+
+			TestCase(CD_Mode, SmartAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 180.0000000, 0.0000000, 3.0892449, 2006.6667, S_HEV, true, TestName = "Test Busaux ElectricPS S-HEV correction, Case C3a, smart alt, CD Mode - 1 no correction"),
+			TestCase(CD_Mode, SmartAlternator, 6000, 4021.5180, -4499.1925, -1.8458, 0.0000, 0.0000000, 180.0000000, -0.0276873, 3.0892449, 2006.6667, S_HEV, true, TestName = "Test Busaux ElectricPS S-HEV correction, Case C3a, smart alt, CD Mode - 2 correction under-consumption"),
+			TestCase(CD_Mode, SmartAlternator, 18000, 11776.5180, 3255.8075, 1.3357, 0.0000, 0.0000000, 180.0000000, 0.0200357, 3.0892449, 2006.6667, S_HEV, true, TestName = "Test Busaux ElectricPS S-HEV correction, Case C3a, smart alt, CD Mode - 3 correction over-consumption"),
+
+			TestCase(CS_Mode, SmartAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, NaN, S_HEV, false, TestName = "Test Busaux ElectricPS S-HEV correction, Case C3b, smart alt, CS Mode - 1 no correction"),
+			TestCase(CS_Mode, SmartAlternator, 6000, 4021.5180, -4499.1925, -1.8458, 0.0000, 0.0000000, 0.0000000, -0.0276873, 0.0000000, NaN, S_HEV, false, TestName = "Test Busaux ElectricPS S-HEV correction, Case C3b, smart alt, CS Mode - 2 correction under-consumption"),
+			TestCase(CS_Mode, SmartAlternator, 18000, 11776.5180, 3255.8075, 1.3357, 0.0000, 0.0000000, 0.0000000, 0.0200357, 0.0000000, NaN, S_HEV, false, TestName = "Test Busaux ElectricPS S-HEV correction, Case C3b, smart alt, CS Mode - 3 correction over-consumption"),
+
+			TestCase(CD_Mode, SmartAlternator, 12962, 8520.7105, 0.0000, 0.0000, 0.0000, 0.0000000, 180.0000000, 0.0000000, 3.0892449, 2006.6667, S_HEV, false, TestName = "Test Busaux ElectricPS S-HEV correction, Case C3b, smart alt, CD Mode - 1 no correction"),
+			TestCase(CD_Mode, SmartAlternator, 6000, 4021.5180, -4499.1925, -1.8458, 0.0000, 0.0000000, 180.0000000, -0.0276873, 3.0892449, 2006.6667, S_HEV, false, TestName = "Test Busaux ElectricPS S-HEV correction, Case C3b, smart alt, CD Mode - 2 correction under-consumption"),
+			TestCase(CD_Mode, SmartAlternator, 18000, 11776.5180, 3255.8075, 1.3357, 0.0000, 0.0000000, 180.0000000, 0.0200357, 3.0892449, 2006.6667, S_HEV, false, TestName = "Test Busaux ElectricPS S-HEV correction, Case C3b, smart alt, CD Mode - 3 correction over-consumption"),
+
 
 		]
 		public void TestBusAuxElectricCompressorPostProcessing_Hybrid(
@@ -218,13 +263,14 @@ namespace TUGraz.VectoCore.Tests.Reports
 			double expDeltaFC_REESSSoC_kg,
 
 			double expElectricRange_m,
+			VectoSimulationJobType jobType,
 			bool essSupplyHVREESS
 			)
 		{
 			var assumedFuelConsumption = 32.SI<Kilogram>();
 
-			var busAux = GetBusAuxParams(BusHVACSystemConfiguration.Configuration1, VectoSimulationJobType.ParallelHybridVehicle, alternatorType: alternatorType, essSupplyfromHVREESS: essSupplyHVREESS);
-			var runData = GetVectoRunDataParallelHybrid(busAux, ovcMode);
+			var busAux = GetBusAuxParams(BusHVACSystemConfiguration.Configuration1, jobType, alternatorType: alternatorType, essSupplyfromHVREESS: essSupplyHVREESS);
+			var runData = GetVectoRunDataHybrid(busAux, jobType, ovcMode);
 			var mockModData = GetMockModData(runData, cycleDuration: cycleDuration.SI<Second>(), totalFuelConsumption: assumedFuelConsumption);
 
 			var postProcessor = _kernel.Get<IModalDataPostProcessorFactory>()
@@ -252,7 +298,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 							$"{corrected.CorrectedAirDemand.Value():F4}, " +
 							$"{corrected.DeltaAir.Value():F4}, " +
 
-							$"{corrected.WorkBusAux_elPS_el_Corr.ConvertToKiloWattHour().Value:F4}, " +
+							$"{corrected.WorkBusAux_elPS_Corr_mech.ConvertToKiloWattHour().Value:F4}, " +
 							$"{corrected.WorkBusAux_elPS_SoC_Corr.ConvertToKiloWattHour().Value:F4}, " +
 							$"{corrected.WorkBusAux_elPS_SoC_ElRange.ConvertToKiloWattHour().Value:F7}, " +
 							
@@ -270,7 +316,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			
 			Assert.AreEqual(0, corrected.WorkBusAuxPSCorr.ConvertToKiloWattHour().Value, 1e-3);
-			Assert.AreEqual(expPSEnergyDemand_elCorr_kWh, corrected.WorkBusAux_elPS_el_Corr.ConvertToKiloWattHour().Value, 1e-3);
+			Assert.AreEqual(expPSEnergyDemand_elCorr_kWh, corrected.WorkBusAux_elPS_Corr_mech.ConvertToKiloWattHour().Value, 1e-3);
 			Assert.AreEqual(expPSEnergyDemand_SoCCorr_kWh, corrected.WorkBusAux_elPS_SoC_Corr.ConvertToKiloWattHour().Value, 1e-3);
 			Assert.AreEqual(expPSEnergyDemand_SocRange_kWh, corrected.WorkBusAux_elPS_SoC_ElRange.ConvertToKiloWattHour().Value, 1e-6);
 
@@ -337,7 +383,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 							$"{corrected.CorrectedAirDemand.Value():F4}, " +
 							$"{corrected.DeltaAir.Value():F4}, " +
 
-							$"{corrected.WorkBusAux_elPS_el_Corr.ConvertToKiloWattHour().Value:F4}, " +
+							$"{corrected.WorkBusAux_elPS_Corr_mech.ConvertToKiloWattHour().Value:F4}, " +
 							$"{corrected.WorkBusAux_elPS_SoC_Corr.ConvertToKiloWattHour().Value:F4}, " +
 							$"{corrected.WorkBusAux_elPS_SoC_ElRange.ConvertToKiloWattHour().Value:F7}, " +
 
@@ -355,7 +401,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 
 			Assert.AreEqual(0, corrected.WorkBusAuxPSCorr.ConvertToKiloWattHour().Value, 1e-3);
-			Assert.AreEqual(expPSEnergyDemand_elCorr_kWh, corrected.WorkBusAux_elPS_el_Corr.ConvertToKiloWattHour().Value, 1e-3);
+			Assert.AreEqual(expPSEnergyDemand_elCorr_kWh, corrected.WorkBusAux_elPS_Corr_mech.ConvertToKiloWattHour().Value, 1e-3);
 			Assert.AreEqual(expPSEnergyDemand_SoCCorr_kWh, corrected.WorkBusAux_elPS_SoC_Corr.ConvertToKiloWattHour().Value, 1e-3);
 			Assert.AreEqual(expPSEnergyDemand_SocRange_kWh, corrected.WorkBusAux_elPS_SoC_ElRange.ConvertToKiloWattHour().Value, 1e-6);
 
@@ -406,7 +452,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 			return runData;
 		}
 
-		protected VectoRunData GetVectoRunDataParallelHybrid(IAuxiliaryConfig busAux, VectoRunData.OvcHevMode ovcMode)
+		protected VectoRunData GetVectoRunDataHybrid(IAuxiliaryConfig busAux,
+			VectoSimulationJobType jobType, VectoRunData.OvcHevMode ovcMode)
 		{
 			var emData = new Mock<ElectricMotorData>();
 
@@ -416,7 +463,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				OVCMode = ovcMode,
 				Exempted = false,
 				MaxChargingPower = 50000.SI<Watt>(),
-				JobType = VectoSimulationJobType.ParallelHybridVehicle,
+				JobType = jobType,
 				Mission = new Mission() {
 					MissionType = MissionType.Urban
 				},
@@ -461,6 +508,9 @@ namespace TUGraz.VectoCore.Tests.Reports
 				},
 				BusAuxiliaries = busAux
 			};
+			if (jobType == VectoSimulationJobType.SerialHybridVehicle) {
+				runData.ElectricMachinesData.Add(Tuple.Create(PowertrainPosition.GEN, emData.Object));
+			}
 			return runData;
 		}
 
@@ -584,6 +634,14 @@ namespace TUGraz.VectoCore.Tests.Reports
 					.Returns<IFuelProperties, ModalResultField>((f, m) => f.GetLabel());
 				m.Setup(x => x.EngineLineCorrectionFactor(It.IsIn(Fuel)))
 					.Returns(15.SI(Unit.SI.Gramm.Per.Kilo.Watt.Hour).Cast<KilogramPerWattSecond>());
+			}
+
+			if (runData.JobType == VectoSimulationJobType.SerialHybridVehicle) {
+				var genField = string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(),
+					PowertrainPosition.GEN);
+				m.Setup(x =>
+					x.TimeIntegral<WattSecond>(genField, null)).Returns(5.SI(Unit.SI.Kilo.Watt.Hour).Cast<WattSecond>());
+				//m.Setup(x => x.TimeIntegral<Kilogram>())
 			}
 
 			var airDemand = M03Impl.TotalAirDemandCalculation(runData.BusAuxiliaries, runData.BusAuxiliaries.Actuations);
