@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 		public virtual WattSecond WorkBusAux_elPS_SoC_Corr { get; set; } = 0.SI<WattSecond>();
 
         // electric compressor work applied as fuel consumption
-        public virtual WattSecond WorkBusAux_elPS_el_Corr { get; set; } = 0.SI<WattSecond>();
+        public virtual WattSecond WorkBusAux_elPS_Corr_mech { get; set; } = 0.SI<WattSecond>();
 
 
         public virtual WattSecond WorkBusAuxCorr => WorkBusAuxPSCorr + WorkBusAuxESMech;

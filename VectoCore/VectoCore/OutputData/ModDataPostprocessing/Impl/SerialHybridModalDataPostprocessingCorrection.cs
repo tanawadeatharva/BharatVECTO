@@ -27,15 +27,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
                 electricEnergyConsumption = -modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int);
             }
 
-			//if (runData.BusAuxiliaries != null &&
-   //             runData.BusAuxiliaries.PneumaticUserInputsConfig.CompressorMap == null) {
-   //             // bus aux but without mechanical compressor
-			//	r.WorkBusAux_elPS_SoC_Corr = r.DeltaAir *
-			//				DeclarationData.BusAuxiliaries.PneumaticSystemElectricDemandPerAirGenerated /
-			//				runData.DCDCData.DCDCEfficiency;
-   //         }
-
-            r.ElectricEnergyConsumption_SoC = electricEnergyConsumption;
+			r.ElectricEnergyConsumption_SoC = electricEnergyConsumption;
 			//r.ElectricEnergyConsumption_SoC_Corr = electricEnergyConsumption - r.WorkBusAux_elPS_SoC_Corr;
             r.ElectricEnergyConsumption_Final = electricEnergyConsumption / etaChtBatWeighted;
             return r;

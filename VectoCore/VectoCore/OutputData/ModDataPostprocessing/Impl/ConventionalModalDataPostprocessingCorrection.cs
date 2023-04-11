@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
                 FcHeatPumpHeatingEl = engLine * r.WorkBusAuxHeatPumpHeatingElMech,
                 FcHeatPumpHeatingMech = engLine * r.WorkBusAuxHeatPumpHeatingMech,
                 FcBusAuxEletcricHeater = engLine * r.WorkBusAuxElectricHeater,
-                FcBusAuxElPS = engLine * r.WorkBusAux_elPS_el_Corr,
+                FcBusAuxElPS = engLine * r.WorkBusAux_elPS_Corr_mech,
                 FcWHR = engLine * r.WorkWHR,
                 FcAuxHtr = 0.SI<Kilogram>()
             };
@@ -327,8 +327,11 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 		{
             // case A, B
 			// case C2b, C3a, C3b
-			r.WorkBusAux_elPS_el_Corr =
-				r.DeltaAir * DeclarationData.BusAuxiliaries.PneumaticSystemElectricDemandPerAirGenerated;
+			r.WorkBusAux_elPS_Corr_mech =
+				r.DeltaAir * DeclarationData.BusAuxiliaries.PneumaticSystemElectricDemandPerAirGenerated / 
+				runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>()) /
+				runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorGearEfficiency;
+			
 		}
 
 		protected virtual void SetMissingEnergyICEOFf(IModalDataContainer modData, CorrectedModalData r)

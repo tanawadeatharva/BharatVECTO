@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing
         WattSecond WorkBusAux_elPS_SoC_Corr { get; }
 
 		// electric compressor work applied as fuel consumption
-        WattSecond WorkBusAux_elPS_el_Corr { get; }
+        WattSecond WorkBusAux_elPS_Corr_mech { get; }
 
         WattSecond WorkBusAuxESMech { get; }
         WattSecond WorkBusAuxHeatPumpHeatingElMech { get; }
