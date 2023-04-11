@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
         {
             var em = runData.ElectricMachinesData?.FirstOrDefault(x => x.Item1 != PowertrainPosition.GEN);
 
-            if (em != null) {
+            if (em != null && runData.OVCMode != VectoRunData.OvcHevMode.ChargeDepleting) {
                 var deltaEReess = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int) - r.WorkBusAux_elPS_SoC_Corr;
                 var startSoc = modData.REESSStartSoC();
                 var endSoc = modData.REESSEndSoC();
@@ -294,13 +294,11 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 				ApplyElectricPS_FuelCorrection(modData, runData, r);
 			} else {
                 // parallel or serial hybrid
-				if (busAux.ElectricalUserInputsConfig.ConnectESToREESS &&
-					busAux.ElectricalUserInputsConfig.AlternatorType.IsOneOf(AlternatorType.None,
-						AlternatorType.Conventional)) {
-                    // case C1, C2a
+				if (busAux.ElectricalUserInputsConfig.ConnectESToREESS) {
+                    // case C1, C2a, C3a
 					ApplyElectricPS_Electric(modData, runData, r);
                 } else {
-                    // case C2b, C3a, C3b
+                    // case C2b, C3b
 					ApplyElectricPS_FuelCorrection(modData, runData, r);
 
 				}

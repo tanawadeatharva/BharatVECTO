@@ -38,21 +38,28 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
         protected override void SetReesCorrectionDemand(IModalDataContainer modData, VectoRunData runData,
             CorrectedModalData r)
         {
-            var deltaEReess = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int);
-            var startSoc = modData.REESSStartSoC();
-            var endSoc = modData.REESSEndSoC();
-            var emEff = 0.0;
-            if (endSoc < startSoc) {
-                var etaReessChg = modData.WorkREESSChargeInternal().Value() / modData.WorkREESSChargeTerminal().Value();
-                emEff = 1.0 / etaReessChg;
-            }
-            if (endSoc > startSoc) {
-                var etaReessDischg = modData.WorkREESSDischargeTerminal().Value() / modData.WorkREESSDischargeInternal().Value();
-                emEff = etaReessDischg;
-            }
+			if (runData.OVCMode != VectoRunData.OvcHevMode.ChargeDepleting) {
+				var deltaEReess = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int) - r.WorkBusAux_elPS_SoC_Corr;
+				var startSoc = modData.REESSStartSoC();
+				var endSoc = modData.REESSEndSoC();
+				var emEff = 0.0;
+				if (endSoc < startSoc) {
+					var etaReessChg = modData.WorkREESSChargeInternal().Value() /
+									modData.WorkREESSChargeTerminal().Value();
+					emEff = 1.0 / etaReessChg;
+				}
 
-            r.DeltaEReessMech = double.IsNaN(emEff) ? 0.SI<WattSecond>() : -deltaEReess * emEff;
-        }
+				if (endSoc > startSoc) {
+					var etaReessDischg = modData.WorkREESSDischargeTerminal().Value() /
+										modData.WorkREESSDischargeInternal().Value();
+					emEff = etaReessDischg;
+				}
+
+				r.DeltaEReessMech = double.IsNaN(emEff) ? 0.SI<WattSecond>() : -deltaEReess * emEff;
+			} else {
+				r.DeltaEReessMech = 0.SI<WattSecond>();
+			}
+		}
 
         protected override FuelConsumptionCorrection SetFuelConsumptionCorrection(IModalDataContainer modData, VectoRunData runData,
             CorrectedModalData r, IFuelProperties fuel)
