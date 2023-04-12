@@ -116,9 +116,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="VectoAPI" />
-    <InternalsVisibleTo Include="VectoEngineeringAPI" />
-    <InternalsVisibleTo Include="VectoXML" />
+	<InternalsVisibleTo Include="VectoXML" />
     <InternalsVisibleTo Include="XMLTest" />
     <InternalsVisibleTo Include="VECTO" />
     <InternalsVisibleTo Include="VectoCoreTest" />
