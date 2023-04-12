@@ -40,7 +40,6 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
                 DeltaAir = deltaAir,
                 WorkBusAux_elPS_SoC_ElRange = deltaEPSel,
                 ElectricEnergyConsumption_SoC = -modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int),
-                //ElectricEnergyConsumption_SoC_Corr = -modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int) - deltaEPSel,
                 ElectricEnergyConsumption_Final = (-modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int) + deltaEPSel) / chgEfficiency,
             };
         }

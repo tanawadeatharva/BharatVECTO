@@ -28,7 +28,6 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
             }
 
 			r.ElectricEnergyConsumption_SoC = electricEnergyConsumption;
-			//r.ElectricEnergyConsumption_SoC_Corr = electricEnergyConsumption - r.WorkBusAux_elPS_SoC_Corr;
             r.ElectricEnergyConsumption_Final = electricEnergyConsumption / etaChtBatWeighted;
             return r;
         }
