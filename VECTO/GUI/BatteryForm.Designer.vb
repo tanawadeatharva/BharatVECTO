@@ -80,11 +80,25 @@ Partial Class BatteryForm
         Me.tbSoCMax = New System.Windows.Forms.TextBox()
         Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
         Me.pnBattery = New System.Windows.Forms.Panel()
+        Me.Panel6 = New System.Windows.Forms.Panel()
+        Me.lblJunctionBoxIncl = New System.Windows.Forms.Label()
+        Me.cbJunctionBoxIncl = New System.Windows.Forms.CheckBox()
+        Me.Panel5 = New System.Windows.Forms.Panel()
+        Me.lblConnectorsIncl = New System.Windows.Forms.Label()
+        Me.cbConnectorsIncluded = New System.Windows.Forms.CheckBox()
+        Me.pnTestingTempB = New System.Windows.Forms.Panel()
+        Me.lblTestingTempB = New System.Windows.Forms.Label()
+        Me.lblTestingTempUnitB = New System.Windows.Forms.Label()
+        Me.tbTestingTempB = New System.Windows.Forms.TextBox()
         Me.tbMaxCurrentMap = New System.Windows.Forms.TextBox()
         Me.lblMaxCurrentMap = New System.Windows.Forms.Label()
         Me.btnBrowseMaxCurrentMap = New System.Windows.Forms.Button()
         Me.btnMaxCurrentMapOpen = New System.Windows.Forms.Button()
         Me.pnSuperCap = New System.Windows.Forms.Panel()
+        Me.pnTestingTempC = New System.Windows.Forms.Panel()
+        Me.lblTestingTempC = New System.Windows.Forms.Label()
+        Me.lblTestingTempUnitC = New System.Windows.Forms.Label()
+        Me.tbTestingTempC = New System.Windows.Forms.TextBox()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.lblMaxCurrentDischarge = New System.Windows.Forms.Label()
         Me.lblMaxCurrentDischargeUnit = New System.Windows.Forms.Label()
@@ -111,20 +125,6 @@ Partial Class BatteryForm
         Me.tbSuperCapCapacity = New System.Windows.Forms.TextBox()
         Me.cbRESSType = New System.Windows.Forms.ComboBox()
         Me.lblRessType = New System.Windows.Forms.Label()
-        Me.pnTestingTempB = New System.Windows.Forms.Panel()
-        Me.lblTestingTempB = New System.Windows.Forms.Label()
-        Me.lblTestingTempUnitB = New System.Windows.Forms.Label()
-        Me.tbTestingTempB = New System.Windows.Forms.TextBox()
-        Me.pnTestingTempC = New System.Windows.Forms.Panel()
-        Me.lblTestingTempC = New System.Windows.Forms.Label()
-        Me.lblTestingTempUnitC = New System.Windows.Forms.Label()
-        Me.tbTestingTempC = New System.Windows.Forms.TextBox()
-        Me.Panel5 = New System.Windows.Forms.Panel()
-        Me.cbConnectorsIncluded = New System.Windows.Forms.CheckBox()
-        Me.lblConnectorsIncl = New System.Windows.Forms.Label()
-        Me.Panel6 = New System.Windows.Forms.Panel()
-        Me.lblJunctionBoxIncl = New System.Windows.Forms.Label()
-        Me.cbJunctionBoxIncl = New System.Windows.Forms.CheckBox()
         Me.ToolStrip1.SuspendLayout
         Me.StatusStrip1.SuspendLayout
         CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).BeginInit
@@ -135,17 +135,17 @@ Partial Class BatteryForm
         Me.Panel2.SuspendLayout
         Me.FlowLayoutPanel1.SuspendLayout
         Me.pnBattery.SuspendLayout
+        Me.Panel6.SuspendLayout
+        Me.Panel5.SuspendLayout
+        Me.pnTestingTempB.SuspendLayout
         Me.pnSuperCap.SuspendLayout
+        Me.pnTestingTempC.SuspendLayout
         Me.Panel4.SuspendLayout
         Me.Panel3.SuspendLayout
         Me.pnSuperCapMaxV.SuspendLayout
         Me.pnSuperCapMinV.SuspendLayout
         Me.pnSuperCapResistance.SuspendLayout
         Me.pnSuperCapCapacity.SuspendLayout
-        Me.pnTestingTempB.SuspendLayout
-        Me.pnTestingTempC.SuspendLayout
-        Me.Panel5.SuspendLayout
-        Me.Panel6.SuspendLayout
         Me.SuspendLayout
         '
         'tbCapacity
@@ -438,7 +438,7 @@ Partial Class BatteryForm
         Me.lblTitle.AutoSize = true
         Me.lblTitle.BackColor = System.Drawing.Color.White
         Me.lblTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 18!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.lblTitle.Location = New System.Drawing.Point(134, 39)
+        Me.lblTitle.Location = New System.Drawing.Point(116, 38)
         Me.lblTitle.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblTitle.Name = "lblTitle"
         Me.lblTitle.Size = New System.Drawing.Size(266, 29)
@@ -570,6 +570,103 @@ Partial Class BatteryForm
         Me.pnBattery.Size = New System.Drawing.Size(570, 237)
         Me.pnBattery.TabIndex = 0
         '
+        'Panel6
+        '
+        Me.Panel6.Controls.Add(Me.lblJunctionBoxIncl)
+        Me.Panel6.Controls.Add(Me.cbJunctionBoxIncl)
+        Me.Panel6.Location = New System.Drawing.Point(262, 67)
+        Me.Panel6.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.Panel6.Name = "Panel6"
+        Me.Panel6.Size = New System.Drawing.Size(247, 30)
+        Me.Panel6.TabIndex = 27
+        '
+        'lblJunctionBoxIncl
+        '
+        Me.lblJunctionBoxIncl.AutoSize = true
+        Me.lblJunctionBoxIncl.Location = New System.Drawing.Point(5, 4)
+        Me.lblJunctionBoxIncl.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblJunctionBoxIncl.Name = "lblJunctionBoxIncl"
+        Me.lblJunctionBoxIncl.Size = New System.Drawing.Size(121, 15)
+        Me.lblJunctionBoxIncl.TabIndex = 2
+        Me.lblJunctionBoxIncl.Text = "Junctionbox Included"
+        '
+        'cbJunctionBoxIncl
+        '
+        Me.cbJunctionBoxIncl.AutoSize = true
+        Me.cbJunctionBoxIncl.Location = New System.Drawing.Point(156, 5)
+        Me.cbJunctionBoxIncl.Name = "cbJunctionBoxIncl"
+        Me.cbJunctionBoxIncl.Size = New System.Drawing.Size(15, 14)
+        Me.cbJunctionBoxIncl.TabIndex = 1
+        Me.cbJunctionBoxIncl.UseVisualStyleBackColor = true
+        '
+        'Panel5
+        '
+        Me.Panel5.Controls.Add(Me.lblConnectorsIncl)
+        Me.Panel5.Controls.Add(Me.cbConnectorsIncluded)
+        Me.Panel5.Location = New System.Drawing.Point(4, 67)
+        Me.Panel5.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.Panel5.Name = "Panel5"
+        Me.Panel5.Size = New System.Drawing.Size(247, 30)
+        Me.Panel5.TabIndex = 26
+        '
+        'lblConnectorsIncl
+        '
+        Me.lblConnectorsIncl.AutoSize = true
+        Me.lblConnectorsIncl.Location = New System.Drawing.Point(5, 4)
+        Me.lblConnectorsIncl.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblConnectorsIncl.Name = "lblConnectorsIncl"
+        Me.lblConnectorsIncl.Size = New System.Drawing.Size(182, 15)
+        Me.lblConnectorsIncl.TabIndex = 2
+        Me.lblConnectorsIncl.Text = "Connectors Subsystems Included"
+        '
+        'cbConnectorsIncluded
+        '
+        Me.cbConnectorsIncluded.AutoSize = true
+        Me.cbConnectorsIncluded.Location = New System.Drawing.Point(194, 5)
+        Me.cbConnectorsIncluded.Name = "cbConnectorsIncluded"
+        Me.cbConnectorsIncluded.Size = New System.Drawing.Size(15, 14)
+        Me.cbConnectorsIncluded.TabIndex = 1
+        Me.cbConnectorsIncluded.UseVisualStyleBackColor = true
+        '
+        'pnTestingTempB
+        '
+        Me.pnTestingTempB.Controls.Add(Me.lblTestingTempB)
+        Me.pnTestingTempB.Controls.Add(Me.lblTestingTempUnitB)
+        Me.pnTestingTempB.Controls.Add(Me.tbTestingTempB)
+        Me.pnTestingTempB.Location = New System.Drawing.Point(4, 35)
+        Me.pnTestingTempB.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.pnTestingTempB.Name = "pnTestingTempB"
+        Me.pnTestingTempB.Size = New System.Drawing.Size(247, 30)
+        Me.pnTestingTempB.TabIndex = 25
+        '
+        'lblTestingTempB
+        '
+        Me.lblTestingTempB.AutoSize = true
+        Me.lblTestingTempB.Location = New System.Drawing.Point(4, 6)
+        Me.lblTestingTempB.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblTestingTempB.Name = "lblTestingTempB"
+        Me.lblTestingTempB.Size = New System.Drawing.Size(79, 15)
+        Me.lblTestingTempB.TabIndex = 0
+        Me.lblTestingTempB.Text = "Testing Temp."
+        '
+        'lblTestingTempUnitB
+        '
+        Me.lblTestingTempUnitB.AutoSize = true
+        Me.lblTestingTempUnitB.Location = New System.Drawing.Point(178, 6)
+        Me.lblTestingTempUnitB.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblTestingTempUnitB.Name = "lblTestingTempUnitB"
+        Me.lblTestingTempUnitB.Size = New System.Drawing.Size(28, 15)
+        Me.lblTestingTempUnitB.TabIndex = 24
+        Me.lblTestingTempUnitB.Text = "[°C]"
+        '
+        'tbTestingTempB
+        '
+        Me.tbTestingTempB.Location = New System.Drawing.Point(105, 3)
+        Me.tbTestingTempB.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.tbTestingTempB.Name = "tbTestingTempB"
+        Me.tbTestingTempB.Size = New System.Drawing.Size(66, 23)
+        Me.tbTestingTempB.TabIndex = 0
+        '
         'tbMaxCurrentMap
         '
         Me.tbMaxCurrentMap.Location = New System.Drawing.Point(5, 119)
@@ -622,6 +719,45 @@ Partial Class BatteryForm
         Me.pnSuperCap.Name = "pnSuperCap"
         Me.pnSuperCap.Size = New System.Drawing.Size(570, 203)
         Me.pnSuperCap.TabIndex = 1
+        '
+        'pnTestingTempC
+        '
+        Me.pnTestingTempC.Controls.Add(Me.lblTestingTempC)
+        Me.pnTestingTempC.Controls.Add(Me.lblTestingTempUnitC)
+        Me.pnTestingTempC.Controls.Add(Me.tbTestingTempC)
+        Me.pnTestingTempC.Location = New System.Drawing.Point(5, 127)
+        Me.pnTestingTempC.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.pnTestingTempC.Name = "pnTestingTempC"
+        Me.pnTestingTempC.Size = New System.Drawing.Size(247, 30)
+        Me.pnTestingTempC.TabIndex = 26
+        '
+        'lblTestingTempC
+        '
+        Me.lblTestingTempC.AutoSize = true
+        Me.lblTestingTempC.Location = New System.Drawing.Point(4, 6)
+        Me.lblTestingTempC.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblTestingTempC.Name = "lblTestingTempC"
+        Me.lblTestingTempC.Size = New System.Drawing.Size(79, 15)
+        Me.lblTestingTempC.TabIndex = 0
+        Me.lblTestingTempC.Text = "Testing Temp."
+        '
+        'lblTestingTempUnitC
+        '
+        Me.lblTestingTempUnitC.AutoSize = true
+        Me.lblTestingTempUnitC.Location = New System.Drawing.Point(178, 6)
+        Me.lblTestingTempUnitC.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblTestingTempUnitC.Name = "lblTestingTempUnitC"
+        Me.lblTestingTempUnitC.Size = New System.Drawing.Size(28, 15)
+        Me.lblTestingTempUnitC.TabIndex = 24
+        Me.lblTestingTempUnitC.Text = "[°C]"
+        '
+        'tbTestingTempC
+        '
+        Me.tbTestingTempC.Location = New System.Drawing.Point(105, 3)
+        Me.tbTestingTempC.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.tbTestingTempC.Name = "tbTestingTempC"
+        Me.tbTestingTempC.Size = New System.Drawing.Size(66, 23)
+        Me.tbTestingTempC.TabIndex = 0
         '
         'Panel4
         '
@@ -876,142 +1012,6 @@ Partial Class BatteryForm
         Me.lblRessType.TabIndex = 52
         Me.lblRessType.Text = "REESS Type"
         '
-        'pnTestingTempB
-        '
-        Me.pnTestingTempB.Controls.Add(Me.lblTestingTempB)
-        Me.pnTestingTempB.Controls.Add(Me.lblTestingTempUnitB)
-        Me.pnTestingTempB.Controls.Add(Me.tbTestingTempB)
-        Me.pnTestingTempB.Location = New System.Drawing.Point(4, 35)
-        Me.pnTestingTempB.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.pnTestingTempB.Name = "pnTestingTempB"
-        Me.pnTestingTempB.Size = New System.Drawing.Size(247, 30)
-        Me.pnTestingTempB.TabIndex = 25
-        '
-        'lblTestingTempB
-        '
-        Me.lblTestingTempB.AutoSize = true
-        Me.lblTestingTempB.Location = New System.Drawing.Point(4, 6)
-        Me.lblTestingTempB.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblTestingTempB.Name = "lblTestingTempB"
-        Me.lblTestingTempB.Size = New System.Drawing.Size(79, 15)
-        Me.lblTestingTempB.TabIndex = 0
-        Me.lblTestingTempB.Text = "Testing Temp."
-        '
-        'lblTestingTempUnitB
-        '
-        Me.lblTestingTempUnitB.AutoSize = true
-        Me.lblTestingTempUnitB.Location = New System.Drawing.Point(178, 6)
-        Me.lblTestingTempUnitB.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblTestingTempUnitB.Name = "lblTestingTempUnitB"
-        Me.lblTestingTempUnitB.Size = New System.Drawing.Size(28, 15)
-        Me.lblTestingTempUnitB.TabIndex = 24
-        Me.lblTestingTempUnitB.Text = "[°C]"
-        '
-        'tbTestingTempB
-        '
-        Me.tbTestingTempB.Location = New System.Drawing.Point(105, 3)
-        Me.tbTestingTempB.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.tbTestingTempB.Name = "tbTestingTempB"
-        Me.tbTestingTempB.Size = New System.Drawing.Size(66, 23)
-        Me.tbTestingTempB.TabIndex = 0
-        '
-        'pnTestingTempC
-        '
-        Me.pnTestingTempC.Controls.Add(Me.lblTestingTempC)
-        Me.pnTestingTempC.Controls.Add(Me.lblTestingTempUnitC)
-        Me.pnTestingTempC.Controls.Add(Me.tbTestingTempC)
-        Me.pnTestingTempC.Location = New System.Drawing.Point(5, 127)
-        Me.pnTestingTempC.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.pnTestingTempC.Name = "pnTestingTempC"
-        Me.pnTestingTempC.Size = New System.Drawing.Size(247, 30)
-        Me.pnTestingTempC.TabIndex = 26
-        '
-        'lblTestingTempC
-        '
-        Me.lblTestingTempC.AutoSize = true
-        Me.lblTestingTempC.Location = New System.Drawing.Point(4, 6)
-        Me.lblTestingTempC.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblTestingTempC.Name = "lblTestingTempC"
-        Me.lblTestingTempC.Size = New System.Drawing.Size(79, 15)
-        Me.lblTestingTempC.TabIndex = 0
-        Me.lblTestingTempC.Text = "Testing Temp."
-        '
-        'lblTestingTempUnitC
-        '
-        Me.lblTestingTempUnitC.AutoSize = true
-        Me.lblTestingTempUnitC.Location = New System.Drawing.Point(178, 6)
-        Me.lblTestingTempUnitC.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblTestingTempUnitC.Name = "lblTestingTempUnitC"
-        Me.lblTestingTempUnitC.Size = New System.Drawing.Size(28, 15)
-        Me.lblTestingTempUnitC.TabIndex = 24
-        Me.lblTestingTempUnitC.Text = "[°C]"
-        '
-        'tbTestingTempC
-        '
-        Me.tbTestingTempC.Location = New System.Drawing.Point(105, 3)
-        Me.tbTestingTempC.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.tbTestingTempC.Name = "tbTestingTempC"
-        Me.tbTestingTempC.Size = New System.Drawing.Size(66, 23)
-        Me.tbTestingTempC.TabIndex = 0
-        '
-        'Panel5
-        '
-        Me.Panel5.Controls.Add(Me.lblConnectorsIncl)
-        Me.Panel5.Controls.Add(Me.cbConnectorsIncluded)
-        Me.Panel5.Location = New System.Drawing.Point(4, 67)
-        Me.Panel5.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(247, 30)
-        Me.Panel5.TabIndex = 26
-        '
-        'cbConnectorsIncluded
-        '
-        Me.cbConnectorsIncluded.AutoSize = true
-        Me.cbConnectorsIncluded.Location = New System.Drawing.Point(194, 5)
-        Me.cbConnectorsIncluded.Name = "cbConnectorsIncluded"
-        Me.cbConnectorsIncluded.Size = New System.Drawing.Size(15, 14)
-        Me.cbConnectorsIncluded.TabIndex = 1
-        Me.cbConnectorsIncluded.UseVisualStyleBackColor = true
-        '
-        'lblConnectorsIncl
-        '
-        Me.lblConnectorsIncl.AutoSize = true
-        Me.lblConnectorsIncl.Location = New System.Drawing.Point(5, 4)
-        Me.lblConnectorsIncl.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblConnectorsIncl.Name = "lblConnectorsIncl"
-        Me.lblConnectorsIncl.Size = New System.Drawing.Size(182, 15)
-        Me.lblConnectorsIncl.TabIndex = 2
-        Me.lblConnectorsIncl.Text = "Connectors Subsystems Included"
-        '
-        'Panel6
-        '
-        Me.Panel6.Controls.Add(Me.lblJunctionBoxIncl)
-        Me.Panel6.Controls.Add(Me.cbJunctionBoxIncl)
-        Me.Panel6.Location = New System.Drawing.Point(262, 67)
-        Me.Panel6.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.Panel6.Name = "Panel6"
-        Me.Panel6.Size = New System.Drawing.Size(247, 30)
-        Me.Panel6.TabIndex = 27
-        '
-        'lblJunctionBoxIncl
-        '
-        Me.lblJunctionBoxIncl.AutoSize = true
-        Me.lblJunctionBoxIncl.Location = New System.Drawing.Point(5, 4)
-        Me.lblJunctionBoxIncl.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblJunctionBoxIncl.Name = "lblJunctionBoxIncl"
-        Me.lblJunctionBoxIncl.Size = New System.Drawing.Size(121, 15)
-        Me.lblJunctionBoxIncl.TabIndex = 2
-        Me.lblJunctionBoxIncl.Text = "Junctionbox Included"
-        '
-        'cbJunctionBoxIncl
-        '
-        Me.cbJunctionBoxIncl.AutoSize = true
-        Me.cbJunctionBoxIncl.Location = New System.Drawing.Point(156, 5)
-        Me.cbJunctionBoxIncl.Name = "cbJunctionBoxIncl"
-        Me.cbJunctionBoxIncl.Size = New System.Drawing.Size(15, 14)
-        Me.cbJunctionBoxIncl.TabIndex = 1
-        Me.cbJunctionBoxIncl.UseVisualStyleBackColor = true
-        '
         'BatteryForm
         '
         Me.AcceptButton = Me.ButOK
@@ -1055,7 +1055,15 @@ Partial Class BatteryForm
         Me.FlowLayoutPanel1.ResumeLayout(false)
         Me.pnBattery.ResumeLayout(false)
         Me.pnBattery.PerformLayout
+        Me.Panel6.ResumeLayout(false)
+        Me.Panel6.PerformLayout
+        Me.Panel5.ResumeLayout(false)
+        Me.Panel5.PerformLayout
+        Me.pnTestingTempB.ResumeLayout(false)
+        Me.pnTestingTempB.PerformLayout
         Me.pnSuperCap.ResumeLayout(false)
+        Me.pnTestingTempC.ResumeLayout(false)
+        Me.pnTestingTempC.PerformLayout
         Me.Panel4.ResumeLayout(false)
         Me.Panel4.PerformLayout
         Me.Panel3.ResumeLayout(false)
@@ -1068,14 +1076,6 @@ Partial Class BatteryForm
         Me.pnSuperCapResistance.PerformLayout
         Me.pnSuperCapCapacity.ResumeLayout(false)
         Me.pnSuperCapCapacity.PerformLayout
-        Me.pnTestingTempB.ResumeLayout(false)
-        Me.pnTestingTempB.PerformLayout
-        Me.pnTestingTempC.ResumeLayout(false)
-        Me.pnTestingTempC.PerformLayout
-        Me.Panel5.ResumeLayout(false)
-        Me.Panel5.PerformLayout
-        Me.Panel6.ResumeLayout(false)
-        Me.Panel6.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 

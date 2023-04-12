@@ -506,11 +506,11 @@ Partial Class IHPCForm
         Me.TableLayoutPanel1.ColumnCount = 7
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 163!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 72!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 35!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 149!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 37!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 147!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 72!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 35!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 69!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 37!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 67!))
         Me.TableLayoutPanel1.Controls.Add(Me.Label11, 2, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.Label4, 2, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Label13, 5, 0)
@@ -543,7 +543,7 @@ Partial Class IHPCForm
         '
         Me.Label11.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label11.AutoSize = true
-        Me.Label11.Location = New System.Drawing.Point(235, 39)
+        Me.Label11.Location = New System.Drawing.Point(236, 39)
         Me.Label11.Margin = New System.Windows.Forms.Padding(0)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(35, 15)
@@ -554,7 +554,7 @@ Partial Class IHPCForm
         '
         Me.Label4.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label4.AutoSize = true
-        Me.Label4.Location = New System.Drawing.Point(241, 8)
+        Me.Label4.Location = New System.Drawing.Point(242, 8)
         Me.Label4.Margin = New System.Windows.Forms.Padding(0)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(22, 15)
@@ -565,7 +565,7 @@ Partial Class IHPCForm
         '
         Me.Label13.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label13.AutoSize = true
-        Me.Label13.Location = New System.Drawing.Point(498, 8)
+        Me.Label13.Location = New System.Drawing.Point(499, 8)
         Me.Label13.Margin = New System.Windows.Forms.Padding(0)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(20, 15)
@@ -656,10 +656,10 @@ Partial Class IHPCForm
         '
         Me.Label15.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label15.AutoSize = true
-        Me.Label15.Location = New System.Drawing.Point(236, 63)
+        Me.Label15.Location = New System.Drawing.Point(235, 71)
         Me.Label15.Margin = New System.Windows.Forms.Padding(0)
         Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(33, 30)
+        Me.Label15.Size = New System.Drawing.Size(37, 15)
         Me.Label15.TabIndex = 67
         Me.Label15.Text = "[rpm]"
         '
@@ -678,10 +678,10 @@ Partial Class IHPCForm
         '
         Me.Label14.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label14.AutoSize = true
-        Me.Label14.Location = New System.Drawing.Point(492, 63)
+        Me.Label14.Location = New System.Drawing.Point(491, 71)
         Me.Label14.Margin = New System.Windows.Forms.Padding(0)
         Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(33, 30)
+        Me.Label14.Size = New System.Drawing.Size(37, 15)
         Me.Label14.TabIndex = 66
         Me.Label14.Text = "[rpm]"
         '
@@ -718,7 +718,7 @@ Partial Class IHPCForm
         '
         Me.Label12.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label12.AutoSize = true
-        Me.Label12.Location = New System.Drawing.Point(491, 39)
+        Me.Label12.Location = New System.Drawing.Point(492, 39)
         Me.Label12.Margin = New System.Windows.Forms.Padding(0)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(35, 15)
@@ -900,11 +900,11 @@ Partial Class IHPCForm
         Me.TableLayoutPanel4.ColumnCount = 7
         Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 163!))
         Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 72!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 35!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 149!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 37!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 147!))
         Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 72!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 35!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 69!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 37!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 67!))
         Me.TableLayoutPanel4.Controls.Add(Me.Label17, 2, 1)
         Me.TableLayoutPanel4.Controls.Add(Me.Label18, 2, 0)
         Me.TableLayoutPanel4.Controls.Add(Me.Label26, 5, 0)
@@ -937,7 +937,7 @@ Partial Class IHPCForm
         '
         Me.Label17.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label17.AutoSize = true
-        Me.Label17.Location = New System.Drawing.Point(235, 39)
+        Me.Label17.Location = New System.Drawing.Point(236, 39)
         Me.Label17.Margin = New System.Windows.Forms.Padding(0)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(35, 15)
@@ -948,7 +948,7 @@ Partial Class IHPCForm
         '
         Me.Label18.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label18.AutoSize = true
-        Me.Label18.Location = New System.Drawing.Point(241, 8)
+        Me.Label18.Location = New System.Drawing.Point(242, 8)
         Me.Label18.Margin = New System.Windows.Forms.Padding(0)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(22, 15)
@@ -959,7 +959,7 @@ Partial Class IHPCForm
         '
         Me.Label26.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label26.AutoSize = true
-        Me.Label26.Location = New System.Drawing.Point(498, 8)
+        Me.Label26.Location = New System.Drawing.Point(499, 8)
         Me.Label26.Margin = New System.Windows.Forms.Padding(0)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(20, 15)
@@ -1050,10 +1050,10 @@ Partial Class IHPCForm
         '
         Me.Label27.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label27.AutoSize = true
-        Me.Label27.Location = New System.Drawing.Point(236, 63)
+        Me.Label27.Location = New System.Drawing.Point(235, 71)
         Me.Label27.Margin = New System.Windows.Forms.Padding(0)
         Me.Label27.Name = "Label27"
-        Me.Label27.Size = New System.Drawing.Size(33, 30)
+        Me.Label27.Size = New System.Drawing.Size(37, 15)
         Me.Label27.TabIndex = 67
         Me.Label27.Text = "[rpm]"
         '
@@ -1081,10 +1081,10 @@ Partial Class IHPCForm
         '
         Me.Label25.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label25.AutoSize = true
-        Me.Label25.Location = New System.Drawing.Point(492, 63)
+        Me.Label25.Location = New System.Drawing.Point(491, 71)
         Me.Label25.Margin = New System.Windows.Forms.Padding(0)
         Me.Label25.Name = "Label25"
-        Me.Label25.Size = New System.Drawing.Size(33, 30)
+        Me.Label25.Size = New System.Drawing.Size(37, 15)
         Me.Label25.TabIndex = 66
         Me.Label25.Text = "[rpm]"
         '
@@ -1112,7 +1112,7 @@ Partial Class IHPCForm
         '
         Me.Label16.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label16.AutoSize = true
-        Me.Label16.Location = New System.Drawing.Point(491, 39)
+        Me.Label16.Location = New System.Drawing.Point(492, 39)
         Me.Label16.Margin = New System.Windows.Forms.Padding(0)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(35, 15)
