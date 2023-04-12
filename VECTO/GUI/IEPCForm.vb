@@ -300,6 +300,7 @@ Public Class IEPCForm
 		tbInertia.Text = ""
 		cbDifferentialIncluded.Checked = False
 		cbDesignTypeWheelMotor.Checked = False
+	    FlowLayoutPanel5.Enabled = False
         tbNumberOfDesignTypeWheelMotor.Text = "0"
         tbThermalOverload.Text = ""
 
@@ -725,6 +726,7 @@ Public Class IEPCForm
 
 	Private Sub cbDesignTypeWheelMotor_CheckedChanged(sender As Object, e As EventArgs) Handles cbDesignTypeWheelMotor.CheckedChanged
 		tbNumberOfDesignTypeWheelMotor.Enabled = cbDesignTypeWheelMotor.Checked
+		FlowLayoutPanel5.Enabled =  cbDesignTypeWheelMotor.Checked
 		cbDifferentialIncluded.Enabled = Not cbDesignTypeWheelMotor.Checked
 		if (cbDesignTypeWheelMotor.Checked) then
 		    cbDifferentialIncluded.Checked = False
@@ -847,8 +849,4 @@ Public Class IEPCForm
 			MsgBox("File not found!")
 		End If
 	End Sub
-
-    Private Sub Label2_Click(sender As Object, e As EventArgs) Handles Label2.Click
-
-    End Sub
 End Class
