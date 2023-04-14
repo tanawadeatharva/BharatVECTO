@@ -42,6 +42,8 @@ public class PrimaryBusSimulation
 
 	TestCase(@"PrimaryBus/exempted/exempted_primary_heavyBus.xml", 0, TestName = "2nd Amendment PrimaryBus Exempted"),
 
+	TestCase(@"PrimaryBus/exempted/exempted_primary_heavyBus.xml", 0, TestName = "2nd Amendment PrimaryBus Exempted"),
+
 	]
 	public void PrimaryBusSimulationTest(string jobFile, int runIdx)
 	{

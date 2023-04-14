@@ -128,6 +128,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 			VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData,
 			Action<SuperCapData> setSuperCapData);
+
+		HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
+			SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode,
+			LoadingType loading, VehicleClass vehicleClass, MissionType missionType, TableData boostingLimitations,
+			GearboxData gearboxData, CombustionEngineData engineData, ArchitectureID architectureId);
 	}
 
 	public interface IGenericCompletedBusDeclarationDataAdapter : IDeclarationDataAdapter

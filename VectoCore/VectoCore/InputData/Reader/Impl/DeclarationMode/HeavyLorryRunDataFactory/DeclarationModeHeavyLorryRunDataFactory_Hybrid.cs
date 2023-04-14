@@ -202,6 +202,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				CheckMaxChargingPowerPresent(vehicle);
 				var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 				var engineModes = engine.EngineModes;
+				if (!modeIdx.HasValue) {
+					throw new VectoException("Engine mode has to be specified for parallel hybrid vehicle");
+				}
 				var engineMode = engineModes[modeIdx.Value];
 				var runData = CreateCommonRunData(vehicle, mission, loading, _segment, engineModes, modeIdx.Value);
 
@@ -211,15 +214,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData, mission, _segment);
 				runData.VehicleData = DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading, _allowVocational);
 
-
 				runData.EngineData = DataAdapter.CreateEngineData(vehicle, engineMode, mission);
 				DataAdapter.CreateREESSData(vehicle.Components.ElectricStorage, vehicle.VehicleType, vehicle.OvcHev,
 					((batteryData) => runData.BatteryData = batteryData),
 					((sCdata => runData.SuperCapData = sCdata)));
-			
 
-
-				
 				if (vehicle.Components.AxleGearInputData != null)
 				{
 					runData.AxleGearData = DataAdapter.CreateAxleGearData(vehicle.Components.AxleGearInputData);
@@ -244,8 +243,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						runData.VehicleData.VehicleClass,
 						mission.MissionType, vehicle.BoostingLimitations, runData.GearboxData, runData.EngineData, vehicle.ArchitectureID);
 
-				if (ovcMode != VectoRunData.OvcHevMode.NotApplicable)
-				{
+				if (ovcMode != VectoRunData.OvcHevMode.NotApplicable) {
 					if (runData.BatteryData?.InitialSoC != null) {
 						runData.BatteryData.InitialSoC = runData.HybridStrategyParameters.InitialSoc;
 					}
@@ -255,8 +253,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					}
 				}
 
-				if (ovcMode == VectoRunData.OvcHevMode.ChargeDepleting)
-				{
+				if (ovcMode == VectoRunData.OvcHevMode.ChargeDepleting) {
 					runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
 				}
 
