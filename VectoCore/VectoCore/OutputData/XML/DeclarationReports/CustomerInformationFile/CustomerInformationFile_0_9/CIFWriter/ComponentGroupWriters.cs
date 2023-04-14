@@ -253,14 +253,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			var totalStorageCapacity =
 				batTotalCap +
 				(capacitors.Length > 0 ? capacitors.Sum(cap => GetStorageCapacity(cap)) : 0.SI<WattSecond>());
-			var totalUsableCapacity = batUsableCap +
+			var usableCapacity = batUsableCap +
 									(capacitors.Length > 0
 										? capacitors.Sum(cap => GetTotalUsableCapacityInSimulation(cap))
 										: 0.SI<WattSecond>());
 
 			return new List<XElement>() {
-				new XElement(_cif + "TotalStorageCapacity", totalUsableCapacity.ValueAsUnit("kWh", 0)),
-				new XElement(_cif + "UsableStorageCapacity", totalStorageCapacity.ValueAsUnit("kWh", 0))
+				new XElement(_cif + "TotalStorageCapacity", totalStorageCapacity.ValueAsUnit("kWh", 0)),
+				new XElement(_cif + "UsableStorageCapacity", usableCapacity.ValueAsUnit("kWh", 0))
 			};
 		}
 
