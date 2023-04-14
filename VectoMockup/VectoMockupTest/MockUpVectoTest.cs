@@ -119,6 +119,7 @@ namespace VectoMockupTest
 		protected const string Conventional_PrimaryBus = BasePath + @"PrimaryBus\Conventional_primaryBus_AMT.xml";
 		protected const string Conventional_PrimaryBus_AT_Angledrive = BasePathMockup + @"PrimaryBus\Conventional_primaryBus_AT_Angledrive.xml";
 		protected const string Conventional_PrimaryBus_NoRetarder = BasePathMockup + @"PrimaryBus\Conventional_primaryBus_AT_NoRetarder.xml";
+		protected const string Conventional_PrimaryBus_RetarderMeasured = BasePathMockup + @"PrimaryBus\Conventional_primaryBus_AMT_RetarderMeasured.xml";
 		protected const string Conventional_PrimaryBus_Tyres = BasePath + @"PrimaryBus\Conventional_primaryBus_AMT_DifferentTyres.xml";
 		protected const string HEV_Px_PrimaryBus = BasePath + @"PrimaryBus\HEV_primaryBus_AMT_Px.xml";
 		protected const string HEV_Px_PrimaryBus_BatteryStd = BasePathMockup + @"PrimaryBus\HEV_primaryBus_AMT_Px_BatteryStd.xml";
@@ -376,6 +377,7 @@ namespace VectoMockupTest
 
 		[TestCase(Conventional_PrimaryBus, TestName = "ConventionalPrimaryBus")]
 		[TestCase(Conventional_PrimaryBus_NoRetarder, TestName = "ConventionalPrimaryBus_NoRetarder")]
+		[TestCase(Conventional_PrimaryBus_RetarderMeasured, TestName = "ConventionalPrimaryBus_RetarderMeasured")]
 		[TestCase(Conventional_PrimaryBus_AT_Angledrive, TestName = "ConventionalPrimaryBus_AT_Angledrive")]
 		[TestCase(Conventional_PrimaryBus_Tyres, TestName = "ConventionalPrimaryBus Tyres")]
         [TestCase(HEV_IEPC_S_PrimaryBus, TestName="HEV_IEPC_S_PrimaryBus")]
