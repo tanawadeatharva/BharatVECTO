@@ -295,7 +295,7 @@
 							<xs:documentation>P221</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="CertificationMethod" type="v1.0:AngledriveCertificationOptionType">
+					<xs:element name="CertificationMethod" type="v1.0:RetarderCertificationOptionType">
 						<xs:annotation>
 							<xs:documentation>P258 - [-]</xs:documentation>
 						</xs:annotation>
