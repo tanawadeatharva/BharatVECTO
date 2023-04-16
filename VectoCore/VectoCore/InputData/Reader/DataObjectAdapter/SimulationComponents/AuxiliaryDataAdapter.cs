@@ -267,8 +267,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			aux.ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition;
 			aux.PowerDemandElectric = aux.PowerDemandMech * efficiency;
 
-			aux.ConnectToREESS = (vectoSimulationJobType == VectoSimulationJobType.BatteryElectricVehicle ||
-								vectoSimulationJobType == VectoSimulationJobType.SerialHybridVehicle);
+			aux.ConnectToREESS = vectoSimulationJobType.IsOneOf(
+				VectoSimulationJobType.BatteryElectricVehicle,
+				VectoSimulationJobType.SerialHybridVehicle,
+				VectoSimulationJobType.IEPC_S,
+				VectoSimulationJobType.IEPC_E);
 			auxDataList.Add(aux);
 			return;
 		}
