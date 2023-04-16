@@ -31,6 +31,7 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Threading;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -81,7 +82,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			WritingResultsDone = false;
 			_followUpCreator = followUpCreator ?? new NoFollowUpRunCreator();
 		}
-
+		[DebuggerStepThrough]
 		public IVehicleContainer GetContainer() => Container;
 
 		public virtual bool CalculateAggregateValues()
