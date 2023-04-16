@@ -719,7 +719,7 @@ public class LorrySimulation
 	public void PEV(string jobFile, int? nrRuns)
 	{
 		SummaryDataContainer sumDataContainer;
-		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out sumDataContainer);
+		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out sumDataContainer, out var inputProvider);
 
 		Assert.IsTrue(runs.All(run => run.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.NotApplicable));
 		//Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.NotApplicable));
@@ -737,11 +737,11 @@ public class LorrySimulation
 		});
 		jobContainer.AddRun(run);
 
-	
+		AssertPevAUXConnectToREESS(run.GetContainer().RunData);
+		CheckPEVHVACInRunData(run.GetContainer().RunData, inputProvider.JobInputData.Vehicle);
 
 
-
-		Assert.AreEqual(1, jobContainer.Runs.Count);
+        Assert.AreEqual(1, jobContainer.Runs.Count);
 
 		var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
 		jobContainer.Execute(false);
@@ -765,6 +765,54 @@ public class LorrySimulation
 		//}
 
 		Assert.IsTrue(modData.Rows.Count > 0);
+		CheckPEVHVACInModData(run.GetContainer().RunData, modData);
+		
+	}
+
+	private void CheckPEVHVACInRunData(VectoRunData rd, IVehicleDeclarationInputData vehicle)
+	{
+		var hvacInput = vehicle.Components.AuxiliaryInputData.Auxiliaries
+			.First(a => a.Type == AuxiliaryType.HVAC);
+		var ignoredTechnology = "None";
+		var technologies = DeclarationData.HeatingVentilationAirConditioning.GetTechnologies();
+		Assert.That(technologies.Contains(ignoredTechnology));
+		
+		if (hvacInput.Technology.Contains(ignoredTechnology)) {
+			//assert no hvac power 
+			Assert.Fail("Create testfiles");
+		} else {
+			//assert hvac power
+			var hvacAux = rd.Aux.First(a => a.ID == Constants.Auxiliaries.IDs.HeatingVentilationAirCondition);
+			Assert.IsTrue(hvacAux.ConnectToREESS);
+			Assert.AreNotEqual(0.SI<Watt>(),hvacAux.PowerDemandElectric);
+		}
+	}
+
+	private void AssertPevAUXConnectToREESS(VectoRunData rd)
+	{
+		foreach (var aux in rd.Aux) {
+			Assert.IsTrue(aux.ConnectToREESS);
+		}
+	}
+
+	private void CheckPEVHVACInModData(VectoRunData rd, ModalResults modalResults)
+	{
+		foreach (DataRow row in modalResults.Rows) {
+			foreach (var auxData in rd.Aux)
+			{
+				switch (auxData.ID) {
+					case Constants.Auxiliaries.IDs.HeatingVentilationAirCondition:
+						var hvac = row[string.Format(ModalResultField.P_aux_el_.GetCaption(), auxData.ID)] as Watt;
+						Assert.AreEqual(auxData.PowerDemandElectric, hvac);
+						break;
+					default:
+						break;
+				}
+				
+			}
+        }
+
+		
 	}
 
 	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S2_pto_transmission.xml", @"HeavyLorry\S-HEV\Group2_HEV_S2.xml")]
@@ -1128,43 +1176,55 @@ public class LorrySimulation
 		PrintFiles(fileWriter);
 	}
 
-	[MethodImpl(MethodImplOptions.Synchronized)]
+	
 	private JobContainer GetJobContainer(string jobFile, int? nrRuns, out FileOutputWriter fileWriter,
 		out List<IVectoRun> runs, out SummaryDataContainer sumDataContainer, bool writeReports = true)
+	{
+		return GetJobContainer(jobFile, nrRuns, out fileWriter, out runs, out sumDataContainer, out _, writeReports);
+	}
+
+	[MethodImpl(MethodImplOptions.Synchronized)]
+    private JobContainer GetJobContainer(string jobFile, int? nrRuns, out FileOutputWriter fileWriter,
+		out List<IVectoRun> runs, out SummaryDataContainer sumDataContainer, out IDeclarationInputDataProvider inputData,
+		bool writeReports = true)
 	{
 		var filePath = Path.Combine(BASE_DIR, jobFile);
 		Assert.IsTrue(File.Exists(filePath), "Testfile not found: " + filePath);
 		var dataProvider = _xmlReader.CreateDeclaration(filePath);
+		inputData = dataProvider;
 		fileWriter = new FileOutputWriter(filePath);
 		var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter, writeReports ? null : new NullDeclarationReport());
 		//runsFactory.ActualModalData = true;
 		runsFactory.SerializeVectoRunData = true;
 		runsFactory.WriteModalResults = true;
 		var sumWriter = new SummaryDataContainer(fileWriter);
-		
+
 		var jobContainer = new JobContainer(sumWriter);
 		runsFactory.SumData = sumWriter;
 		sumDataContainer = sumWriter;
 		runs = runsFactory.SimulationRuns().ToList();
 
-		if (nrRuns.HasValue) {
-			Assert.AreEqual(nrRuns, runs.Count, "Cycles: \n"  + string.Join("\n", runs.Select(run => run.CycleName + "_" +  run.RunSuffix)));
+		if (nrRuns.HasValue)
+		{
+			Assert.AreEqual(nrRuns, runs.Count, "Cycles: \n" + string.Join("\n", runs.Select(run => run.CycleName + "_" + run.RunSuffix)));
 		}
 		TestContext.WriteLine(string.Join("\n", runs.Select(r => r.CycleName + "_" + r.RunSuffix)));
 
-		if (dataProvider.JobInputData.Vehicle.OvcHev) {
+		if (dataProvider.JobInputData.Vehicle.OvcHev)
+		{
 			Assert.AreEqual(runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting),
 				runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.ChargeSustaining));
 		}
 
 		return jobContainer;
-	}
+    }
 
 
 
 
 
-	private void PrintRuns(JobContainer jobContainer, FileOutputWriter fileWriter = null)
+
+    private void PrintRuns(JobContainer jobContainer, FileOutputWriter fileWriter = null)
 	{
 		foreach (var keyValuePair in jobContainer.GetProgress()) {
 			TestContext.WriteLine($"{keyValuePair.Key}: {keyValuePair.Value.CycleName} {keyValuePair.Value.RunName} {keyValuePair.Value.Error?.Message}" );
