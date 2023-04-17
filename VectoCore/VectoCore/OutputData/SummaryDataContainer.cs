@@ -397,6 +397,7 @@ namespace TUGraz.VectoCore.OutputData
 		protected IList<string> FcCols = new List<string>();
 		protected IList<string> GearColumns = new List<string>();
 		protected IList<string> AuxColumns = new List<string>();
+		protected IList<string> EmColumns = new List<string>();
 
 
 		/// <summary>
@@ -525,10 +526,17 @@ namespace TUGraz.VectoCore.OutputData
 		private void CreateElectricMotorColumns(IElectricMotor em, VectoRunData runData, Tuple<string, Type>[] cols)
 		{
 			lock (Table) {
+				var emColNames = cols.Select(x => string.Format(x.Item1, em.Position.GetName()));
 				Table.Columns.AddRange(cols
 					.Select(x => Tuple.Create(string.Format(x.Item1, em.Position.GetName()), x.Item2))
 					.Where(x => !Table.Columns.Contains(x.Item1)).Select(x => new DataColumn(x.Item1, x.Item2))
 					.ToArray());
+				foreach (var emColName in emColNames) {
+					if(EmColumns.Contains(emColName)) {
+						continue;
+					}
+					EmColumns.Add(emColName);
+				}
 			}
 		}
 
@@ -675,7 +683,12 @@ namespace TUGraz.VectoCore.OutputData
 				SumDataFields.f_equiv,
 			});
 
-			cols.AddRange(new[] {
+			cols.AddRange(EmColumns);
+
+
+
+
+        cols.AddRange(new[] {
 				SumDataFields.REESS_StartSoC,
 				SumDataFields.REESS_EndSoC,
 				SumDataFields.REESS_DeltaEnergy,
