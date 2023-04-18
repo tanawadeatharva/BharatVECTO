@@ -22,8 +22,10 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 						continue;
 					}
 
-					double val = tableRow.ParseDouble(col);
-					Data.Add(Tuple.Create<string, MissionType>(group, mission), val);
+					var val = tableRow.ParseDouble(col);
+					foreach (var g in group.Split('/')) {
+						Data.Add(Tuple.Create<string, MissionType>(g.RemoveWhitespace(), mission), val);
+					}
 				}
 			}
 		}

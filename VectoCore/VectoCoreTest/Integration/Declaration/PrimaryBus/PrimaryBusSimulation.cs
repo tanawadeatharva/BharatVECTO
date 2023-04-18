@@ -35,6 +35,7 @@ public class PrimaryBusSimulation
 	TestCase(@"PrimaryBus/PEV/PrimaryCityBus_IEPC_Base.xml", 0, TestName = "2nd Amendment PrimaryBus CityBus PEV IEPC Base"),
 
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_Base_AMT.xml", 0, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 Base AMT"),
+	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_OVC.xml", 0, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 AMT OVC"),
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCityBus_P1_HEV_Base_AT.xml", 0, TestName = "2nd Amendment PrimaryBus CityBus P-HEV P1 Base AT"),
 
 	TestCase(@"PrimaryBus/S-HEV/PrimaryCoach_S2_Base_AMT.xml", 0, TestName = "2nd Amendment PrimaryBus Coach S-HEV S2 Base"),
@@ -66,6 +67,10 @@ public class PrimaryBusSimulation
 		} else {
 			var run = runsFactory.SimulationRuns().Skip(runIdx).First();
 			jobContainer.AddRun(run);
+			if (dataProvider.JobInputData.Vehicle.OvcHev) {
+				var run2 = runsFactory.SimulationRuns().Skip(runIdx + 1).First();
+				jobContainer.AddRun(run2);
+			}
 		}
 
 		PrintRuns(jobContainer, null);

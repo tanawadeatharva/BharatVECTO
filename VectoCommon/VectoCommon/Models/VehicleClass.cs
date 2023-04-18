@@ -182,7 +182,7 @@ namespace TUGraz.VectoCommon.Models
 			}
 
 			if (hdvClass.IsPrimaryBus()) {
-				throw new NotImplementedException();
+				return hdvClass.GetClassNumber();
 			}
 			if (hdvClass.IsCompletedBus()) {
 				return hdvClass.GetClassNumber().Substring(0, 2);

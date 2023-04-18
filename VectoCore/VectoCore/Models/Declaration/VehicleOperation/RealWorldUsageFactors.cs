@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
@@ -16,11 +17,12 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 				var group = tableRow.Field<string>("vehiclegroup");
 				var startSoCBeforeMission = tableRow.ParseDouble("startsocbeforemission");
 				var stationaryChargingDuringMission = tableRow.ParseDouble("stationarychargingduringmission");
-				Data.Add(group, new Entry() {
-					StartSoCBeforeMission = startSoCBeforeMission,
-					StationaryChargingDuringMission = stationaryChargingDuringMission,
-				});
-				
+				foreach (var g in group.Split('/')) {
+					Data.Add(g.RemoveWhitespace(), new Entry() {
+						StartSoCBeforeMission = startSoCBeforeMission,
+						StationaryChargingDuringMission = stationaryChargingDuringMission,
+					});
+				}
 			}
 		}
 

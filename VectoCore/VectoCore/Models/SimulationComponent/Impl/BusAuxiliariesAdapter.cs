@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var electricStorage =
 				AuxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart &&
 				AuxCfg.ElectricalUserInputsConfig.ConnectESToREESS
-					// in case of smat alternator with Px hybrid take electric power from P0 REESS first, then from HEV REESS.
+					// in case of smart alternator with Px hybrid take electric power from P0 REESS first, then from HEV REESS.
 					// do not use alternator to generate demanded power if P0 REESS is empty. so trick busaux that there is always
 					// energy in the battery.
 					? (ISimpleBatteryInfo)new InfinityBattery(AuxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity, new ElectricStorageWrapper(this)) 
