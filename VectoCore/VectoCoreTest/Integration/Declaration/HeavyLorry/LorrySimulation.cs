@@ -18,6 +18,7 @@ using System.Xml.Schema;
 using Moq;
 using Ninject;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -261,7 +262,23 @@ public class LorrySimulation
 		modData = VectoCSVFile.Read(modFileName, false, true);
 	}
 
-
+	public void AssertVSUMElectricMotorFields(string vsumFileName, VectoRunData runData)
+	{
+		var sumData = VectoCSVFile.Read(vsumFileName, false, true);
+        var em_positions = runData.ElectricMachinesData.Select(em => em.Item1);
+		foreach (var em_pos in runData.ElectricMachinesData.Select(e => e.Item1)) {
+			Tuple<string, Type>[] columns;
+			if (em_pos == PowertrainPosition.IEPC) {
+				columns = SummaryDataContainer.IEPCColumns;
+			} else {
+				columns = SummaryDataContainer.ElectricMotorColumns;
+			}
+			foreach (var (s, type) in columns) {
+				var colName = string.Format(s, em_pos.GetLabel());
+				Assert.IsTrue(sumData.Columns.Contains(colName), $"{colName} missing in sum file");
+			}
+		}
+	}
 
 	public void VSUM_order_test(string fileName, VectoRunData runData)
 	{
@@ -553,6 +570,8 @@ public class LorrySimulation
 
 		jobContainer.Execute(false);
 		WaitAndAssertSuccess(jobContainer, fileWriter);
+		AssertVSUMElectricMotorFields(fileWriter.SumFileName, runs.First().GetContainer().RunData);
+
 	}
 
 
@@ -580,8 +599,8 @@ public class LorrySimulation
 		var modData = ((ModalDataContainer)((VehicleContainer)runs.Single().GetContainer()).ModData).Data;
 		jobContainer.Execute(false);
 		WaitAndAssertSuccess(jobContainer, fileWriter);
-
-	}
+		AssertVSUMElectricMotorFields(fileWriter.SumFileName, runs.First().GetContainer().RunData);
+    }
 
 	[TestCase(Group5_HEV_S2_OVC, 12)]
 	[TestCase(Group5_HEV_S3_OVC, 12)]
@@ -620,6 +639,7 @@ public class LorrySimulation
 			AssertSHEV_PEV_Conditioning(modDataRow, runs.Single());
 		}
 		Assert.IsTrue(modData.Rows.Count > 0);
+		AssertVSUMElectricMotorFields(fileWriter.SumFileName, runs.First().GetContainer().RunData);
 	}
 
 	[TestCase(Group5_HEV_S2_OVC, 12)]
@@ -758,6 +778,8 @@ public class LorrySimulation
 			}
 		}
 
+		AssertVSUMElectricMotorFields(fileWriter.SumFileName, runs.First().GetContainer().RunData);
+        Assert.IsTrue(modData.Rows.Count > 0);
 		//foreach (var vectoRun in runs.Where(r => r != run))
 		//{
 		//	var rd = vectoRun.GetContainer().RunData;
