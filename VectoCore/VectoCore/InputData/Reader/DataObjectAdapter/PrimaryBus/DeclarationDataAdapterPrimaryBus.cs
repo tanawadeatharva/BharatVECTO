@@ -61,7 +61,21 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			public abstract void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData);
 
-			public virtual HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData, SuperCapData runDataSuperCapData,
+			// serial hybrids
+			public virtual HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
+				SuperCapData runDataSuperCapData,
+				Kilogram vehicleMass,
+				VectoRunData.OvcHevMode ovcMode,
+				LoadingType loading,
+				VehicleClass vehicleClass,
+				MissionType missionType)
+			{
+				return HybridStrategyDataAdapter.CreateHybridStrategyParameters(runDataBatteryData,
+					runDataSuperCapData, vehicleMass, ovcMode);
+			}
+
+			// parallel hybrids
+            public virtual HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData, SuperCapData runDataSuperCapData,
 				Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType,
 				TableData boostingLimitations, GearboxData gearboxData, CombustionEngineData engineData,
 				ArchitectureID architectureId)

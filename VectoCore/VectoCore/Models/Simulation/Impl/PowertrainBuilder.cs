@@ -613,8 +613,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// </summary>
 		private static IVehicleContainer BuildFullPowertrainSerialHybrid(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
 		{
-			if (sumWriter == null)
-				throw new ArgumentNullException(nameof(sumWriter));
+			//if (sumWriter == null)
+			//	throw new ArgumentNullException(nameof(sumWriter));
 			if (data.Cycle.CycleType != CycleType.DistanceBased) {
 				throw new VectoException("CycleType must be DistanceBased");
 			}
@@ -706,7 +706,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					throw new ArgumentOutOfRangeException(nameof(pos), pos, "Invalid engine powertrain position for serial hybrid vehicle.");
 			}
 
-			if (data.BusAuxiliaries != null) {
+			ctl.GenSet.AddComponent(GetElectricMachine(PowertrainPosition.GEN, data.ElectricMachinesData, container, es,
+					ctl))
+				.AddComponent(engine, idleController)
+				.AddAuxiliariesSerialHybrid(container, data);
+
+            if (data.BusAuxiliaries != null) {
 				if (container.BusAux is BusAuxiliariesAdapter busAux) {
 					var auxCfg = data.BusAuxiliaries;
 					var electricStorage = auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
@@ -719,6 +724,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						busAux.DCDCConverter = dcdc;
 						es.Connect(dcdc);
 					}
+
+					//new DummyVehicleInfo(container);
 				} else {
 					throw new VectoException("BusAux data set but no BusAux component found!");
 				}
@@ -726,10 +733,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				AddElectricAuxiliaries(data, container, es, cycle);
 			}
 
-			ctl.GenSet.AddComponent(GetElectricMachine(PowertrainPosition.GEN, data.ElectricMachinesData, container, es,
-					ctl))
-				.AddComponent(engine, idleController)
-				.AddAuxiliariesSerialHybrid(container, data);
+			
 
 			return container;
 		}
@@ -1736,6 +1740,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			
 			new ATClutchInfo(container);
 			new DummyGearboxInfo(container, new GearshiftPosition(0));
+			new DummyVehicleInfo(container);
 		}
 
 		/// <summary>
@@ -2502,7 +2507,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public MeterPerSecond VehicleSpeed => 0.SI<MeterPerSecond>();
 
-		public bool VehicleStopped => throw new NotImplementedException();
+		public bool VehicleStopped => false;
 
 		public Kilogram VehicleMass => throw new NotImplementedException();
 

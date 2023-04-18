@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
             var deltaEPSel = 0.SI<WattSecond>();
             var airDemandCorr = 0.SI<NormLiter>();
             var deltaAir = 0.SI<NormLiter>();
-            if (runData.BusAuxiliaries.PneumaticUserInputsConfig.CompressorMap == null) {
+            if (runData.BusAuxiliaries != null && runData.BusAuxiliaries.PneumaticUserInputsConfig.CompressorMap == null) {
                 // no compressor map - electric compressor
                 var actuations = new Actuations() {
                     Braking = runData.BusAuxiliaries.Actuations.Braking,

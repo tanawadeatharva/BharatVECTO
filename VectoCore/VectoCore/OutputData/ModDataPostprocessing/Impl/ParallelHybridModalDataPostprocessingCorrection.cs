@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
             var electricEnergyConsumption = 0.SI<WattSecond>();
 
             if (runData.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting && runData.Mission != null) {
-                var vehicleOperation = DeclarationData.VehicleOperation.LookupVehicleOperation(runData.VehicleData.VehicleClass, runData.Mission.MissionType);
+                var vehicleOperation = DeclarationData.VehicleOperation.LookupVehicleOperation(runData.Mission.BusParameter?.BusGroup ?? runData.VehicleData.VehicleClass, runData.Mission.MissionType);
                 (_, _, etaChtBatWeighted) =
                     DeclarationData.CalculateChargingEfficiencyOVCHEV(runData.MaxChargingPower, vehicleOperation,
                         runData.BatteryData);
