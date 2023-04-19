@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Michael Krisper (Technische Universität Graz) -->
+<!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" xmlns:dd="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<!-- Imports_______________________________________________ -->
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
@@ -15,19 +15,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Conventional-LorryVehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>II.2.5</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>II.2.5</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -43,19 +50,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-Px_IHPC-LorryVehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -71,19 +85,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S2-LorryVehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -99,19 +120,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S3-LorryVehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -127,19 +155,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S4-LorryVehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -155,19 +190,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-IEPC-S-LorryVehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -183,19 +225,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E2-LorryVehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -211,19 +260,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E3-LorryVehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -239,19 +295,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E4-LorryVehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -267,19 +330,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-IEPC-LorryVehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -295,19 +365,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Conventional-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -323,19 +400,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-Px_IHPC-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -351,19 +435,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S2-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -379,19 +470,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S3-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.1.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -407,19 +505,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S4-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -435,19 +540,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-IEPC-S-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -463,19 +575,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E2-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -491,19 +610,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E3-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -519,19 +645,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E4-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -547,19 +680,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-IEPC-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -575,19 +715,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Conventional-CompletedBusVehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -603,19 +750,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-CompletedBusVehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -631,19 +785,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-CompletedBusVehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -659,19 +820,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Exempted-LorryVehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -687,19 +855,26 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Exempted-PrimaryBusVehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="SimulationToolVersion" type="xs:string">
 									<xs:annotation>
-										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+										<xs:documentation>I.3.1.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 									<xs:annotation>
-										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+										<xs:documentation>I.3.2.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -715,7 +890,11 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Exempted-CompletedBusVehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -743,34 +922,42 @@
 		<xs:sequence>
 			<xs:element name="Model" type="v1.0:ModelType">
 				<xs:annotation>
-					<xs:documentation>1.1.2. Vehicle model/Commercial Name</xs:documentation>
+					<xs:documentation>P236 / I.1.1.2.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="VIN" type="v1.0:VINType">
 				<xs:annotation>
-					<xs:documentation>1.1.3. Vehicle identification number (VIN)</xs:documentation>
+					<xs:documentation>P238 / I.1.1.3. </xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="VehicleTypeApprovalNumber" type="v2.4:VehicleTypeApprovalNumberType" minOccurs="0"/>
-			<xs:element name="VehicleCategory" type="mrf:LegislativeCategoryType"/>
+			<xs:element name="VehicleTypeApprovalNumber" type="v2.4:VehicleTypeApprovalNumberType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P352</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VehicleCategory" type="mrf:LegislativeCategoryType">
+				<xs:annotation>
+					<xs:documentation>P251 / I.1.1.4</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="AxleConfiguration" type="v1.0:VehicleAxleConfigurationDeclarationType">
 				<xs:annotation>
-					<xs:documentation>1.1.5 Axle configuration</xs:documentation>
+					<xs:documentation>P037 / I.1.1.5</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="TechnicalPermissibleMaximumLadenMass" type="v1.0:VehicleGrossVehicleMassType">
 				<xs:annotation>
-					<xs:documentation>1.1.6. Technical Permissible Maximum Laden Mass [t]</xs:documentation>
+					<xs:documentation>P041 / I.1.1.6.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="VehicleGroup" type="xs:string">
 				<xs:annotation>
-					<xs:documentation>1.1.7.Vehicle group (Annex 1)</xs:documentation>
+					<xs:documentation>/ I.1.1.7.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="VehicleGroupCO2">
 				<xs:annotation>
-					<xs:documentation>1.1.7a (Sub)group for CO2 standards</xs:documentation>
+					<xs:documentation>I.1.1.7a</xs:documentation>
 				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
@@ -785,8 +972,15 @@
 			<xs:documentation>			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="OffVehicleChargingCapability" type="xs:boolean"/>
+			<xs:element name="OffVehicleChargingCapability" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.1.16.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="OffVehicleChargingMaxPower" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.1.18.</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:simpleContent>
 						<xs:extension base="xs:double">
@@ -799,12 +993,19 @@
 	</xs:group>
 	<xs:group name="ManufacturerGroup">
 		<xs:annotation>
-			<xs:documentation>1.1.1. Name and address of manufacturer (s)
-			</xs:documentation>
+			<xs:documentation> </xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="Manufacturer" type="v1.0:ManufacturerType"/>
-			<xs:element name="ManufacturerAddress" type="v1.0:ManufacturerAddressType"/>
+			<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+				<xs:annotation>
+					<xs:documentation>P235 /  I.1.1.1</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ManufacturerAddress" type="v1.0:ManufacturerAddressType">
+				<xs:annotation>
+					<xs:documentation>P252 / I.1.1.1</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="CompletedBusGeneralVehicleOutputGroup">
@@ -831,22 +1032,22 @@
 			<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
 			<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType">
 				<xs:annotation>
-					<xs:documentation>1.1.8 Corrected actual mass [kg]</xs:documentation>
+					<xs:documentation>P038 / I.1.1.8 </xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="VocationalVehicle" type="v1.0:VocationalVehicleType">
 				<xs:annotation>
-					<xs:documentation>1.1.9. Vocational Vehicle</xs:documentation>
+					<xs:documentation>I.1.1.9.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="ZeroEmissionVehicle" type="v1.0:ZeroEmissionVehicleType">
 				<xs:annotation>
-					<xs:documentation>1.1.10. Zero emission heavy-duty vehicle</xs:documentation>
+					<xs:documentation>I.1.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="HybridElectricHDV" type="v1.0:HybridElectricHDVType">
 				<xs:annotation>
-					<xs:documentation>1.1.11 Hyprid electric heavy-duty vehicle</xs:documentation>
+					<xs:documentation>I.1.1.11</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
@@ -855,16 +1056,20 @@
 		<xs:sequence>
 			<xs:element name="DualFuelVehicle" type="v1.0:DualFuelType">
 				<xs:annotation>
-					<xs:documentation>1.1.12. Dual-fuel vehicle</xs:documentation>
+					<xs:documentation>I.1.1.12. </xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:group ref="mrf:HEVVehicleSequenceGroup"/>
 			<xs:element name="SleeperCab" type="v1.0:SleeperCabType">
 				<xs:annotation>
-					<xs:documentation>1.1.13 Sleeper cab</xs:documentation>
+					<xs:documentation>I.1.1.13.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType"/>
+			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType">
+				<xs:annotation>
+					<xs:documentation>I.1.1.29</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="PEV-LorryVehicleOutputTypeSequenceGroup">
@@ -880,17 +1085,37 @@
 	</xs:group>
 	<xs:group name="HEVVehicleSequenceGroup">
 		<xs:sequence>
-			<xs:element name="HEVArchitecture" type="xs:string"/>
+			<xs:element name="HEVArchitecture" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>I.1.1.14.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:group ref="mrf:OffVehicleChargingGroup"/>
-			<xs:element name="ADAS" type="mrf:HEVADASType"/>
+			<xs:element name="ADAS" type="mrf:HEVADASType">
+				<xs:annotation>
+					<xs:documentation>I.1.12.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="BoostingLimitations" type="mrf:BoostingLimitationsType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="PEVVehicleSequenceGroup">
 		<xs:sequence>
-			<xs:element name="PEVArchitecture" type="v2.4:ArchitectureIDType"/>
-			<xs:element name="OffVehicleChargingCapability" type="xs:boolean"/>
-			<xs:element name="ADAS" type="mrf:PEVADASType"/>
+			<xs:element name="PEVArchitecture" type="v2.4:ArchitectureIDType">
+				<xs:annotation>
+					<xs:documentation>I.1.1.15.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OffVehicleChargingCapability" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.1.16.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ADAS" type="mrf:PEVADASType">
+				<xs:annotation>
+					<xs:documentation>I.1.12.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="BoostingLimitations" type="mrf:BoostingLimitationsType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:group>
@@ -906,27 +1131,75 @@
 	</xs:complexType>
 	<xs:group name="CompletedBusSequenceGroup">
 		<xs:sequence>
-			<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType"/>
-			<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
-			<xs:element name="HybridElectricHDV" type="xs:boolean"/>
-			<xs:element name="ClassBus" type="v2.4:RegisteredClassType"/>
-			<xs:element name="NumberPassengersUpperDeck" type="xs:int"/>
-			<xs:element name="NumberPassengersLowerDeck" type="xs:int"/>
-			<xs:element name="BodyworkCode" type="v2.4:VehicleCodeType"/>
-			<xs:element name="LowEntry" type="xs:boolean"/>
+			<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType">
+				<xs:annotation>
+					<xs:documentation>I.1.1.8.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HybridElectricHDV" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.1.11.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ClassBus" type="v2.4:RegisteredClassType">
+				<xs:annotation>
+					<xs:documentation>I.1.1.20.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumberPassengersUpperDeck" type="xs:int">
+				<xs:annotation>
+					<xs:documentation>I.1.1.21</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumberPassengersLowerDeck" type="xs:int">
+				<xs:annotation>
+					<xs:documentation>I.1.1.22.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BodyworkCode" type="v2.4:VehicleCodeType">
+				<xs:annotation>
+					<xs:documentation>I.1.1.23.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LowEntry" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.1.24</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="CompletedBusVehicleDimensionSequenceGroup">
 		<xs:sequence>
-			<xs:element name="HeightIntegratedBody" type="v2.4:VehicleDimensionType"/>
-			<xs:element name="VehicleLength" type="v2.4:VehicleDimensionType"/>
-			<xs:element name="VehicleWidth" type="v2.4:VehicleDimensionType"/>
+			<xs:element name="HeightIntegratedBody" type="v2.4:VehicleDimensionType">
+				<xs:annotation>
+					<xs:documentation>I.1.1.25.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VehicleLength" type="v2.4:VehicleDimensionType">
+				<xs:annotation>
+					<xs:documentation>I.1.1.26.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VehicleWidth" type="v2.4:VehicleDimensionType">
+				<xs:annotation>
+					<xs:documentation>I.1.1.27.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:complexType name="Conventional-LorryVehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:Conventional-LorryVehicleOutputTypeGroup"/>
-			<xs:element name="EngineTorqueLimitations" type="mrf:EngineTorqueLimitsType" minOccurs="0"/>
+			<xs:element name="EngineTorqueLimitations" type="mrf:EngineTorqueLimitsType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.11.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="Components" type="mrf:ConventionalLorryComponentsType"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -988,14 +1261,22 @@
 	<xs:complexType name="Conventional-PrimaryBus-VehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:Conventional-PrimaryBus-VehicleOutputTypeGroup"/>
-			<xs:element name="EngineTorqueLimitations" type="mrf:EngineTorqueLimitsType" minOccurs="0"/>
+			<xs:element name="EngineTorqueLimitations" type="mrf:EngineTorqueLimitsType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.11</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="Components" type="mrf:Conventional-PrimaryBusComponentsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-Px_IHPC-PrimaryBus-VehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:HEV-PrimaryBus-VehicleOutputTypeGroup"/>
-			<xs:element name="EngineTorqueLimitations" type="mrf:EngineTorqueLimitsType" minOccurs="0"/>
+			<xs:element name="EngineTorqueLimitations" type="mrf:EngineTorqueLimitsType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.11.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="Components" type="mrf:HEV-Px_IHPC-PrimaryBusComponentsType"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -1050,12 +1331,24 @@
 	<xs:complexType name="Conventional-CompletedBusVehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:Conventional-CompletedBusVehicleOutputTypeGroup"/>
-			<xs:element name="ADAS" type="mrf:ConventionalADASType"/>
+			<xs:element name="ADAS" type="mrf:ConventionalADASType">
+				<xs:annotation>
+					<xs:documentation>I.1.12.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="Components">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
-						<xs:element name="Auxiliaries" type="mrf:ConventionalCompletedBusAuxOutputType"/>
+						<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>I.1.8.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="Auxiliaries" type="mrf:ConventionalCompletedBusAuxOutputType">
+							<xs:annotation>
+								<xs:documentation>I.1.10.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
@@ -1068,8 +1361,16 @@
 			<xs:element name="Components">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="AirDrag" type="mrf:AirdragType"/>
-						<xs:element name="Auxiliaries" type="mrf:HEVCompletedBusAuxOutputType"/>
+						<xs:element name="AirDrag" type="mrf:AirdragType">
+							<xs:annotation>
+								<xs:documentation>I.1.8.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="Auxiliaries" type="mrf:HEVCompletedBusAuxOutputType">
+							<xs:annotation>
+								<xs:documentation>I.1.10.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
@@ -1078,12 +1379,24 @@
 	<xs:complexType name="PEV-CompletedBusVehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:PEV-CompletedBusVehicleOutputTypeGroup"/>
-			<xs:element name="ADAS" type="mrf:PEVADASType"/>
+			<xs:element name="ADAS" type="mrf:PEVADASType">
+				<xs:annotation>
+					<xs:documentation>I.1.12.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="Components">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="AirDrag" type="mrf:AirdragType"/>
-						<xs:element name="Auxiliaries" type="mrf:PEVCompletedBusAuxOutputType"/>
+						<xs:element name="AirDrag" type="mrf:AirdragType">
+							<xs:annotation>
+								<xs:documentation>I.1.8.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="Auxiliaries" type="mrf:PEVCompletedBusAuxOutputType">
+							<xs:annotation>
+								<xs:documentation>I.1.10.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
@@ -1095,17 +1408,28 @@
 			<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
 			<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType">
 				<xs:annotation>
-					<xs:documentation>1.1.8 Corrected actual mass [kg]</xs:documentation>
+					<xs:documentation>I.1.1.8</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="SleeperCab" type="v1.0:SleeperCabType"/>
+			<xs:element name="SleeperCab" type="v1.0:SleeperCabType">
+				<xs:annotation>
+					<xs:documentation>I.1.1.13.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="ZeroEmissionVehicle" type="v1.0:ZeroEmissionVehicleType">
 				<xs:annotation>
-					<xs:documentation>1.1.10. Zero emission heavy-duty vehicle</xs:documentation>
+					<xs:documentation>I.1.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="VehicleTechnologyExempted"/>
+			<xs:element name="VehicleTechnologyExempted">
+				<xs:annotation>
+					<xs:documentation>I.1.1.19.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="SumNetPower">
+				<xs:annotation>
+					<xs:documentation>I.1.1.30.</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:simpleContent>
 						<xs:extension base="xs:int">
@@ -1119,8 +1443,15 @@
 	<xs:complexType name="Exempted-PrimaryBusVehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:ExemptedPrimaryBusGeneralVehicleOutputGroup"/>
-			<xs:element name="VehicleTechnologyExempted" type="xs:string"/>
+			<xs:element name="VehicleTechnologyExempted" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>I.1.1.19.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="SumNetPower">
+				<xs:annotation>
+					<xs:documentation>I.1.1.30.</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:simpleContent>
 						<xs:extension base="xs:int">
@@ -1148,13 +1479,41 @@
 				</xs:element>
 				<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
 				<xs:sequence>
-					<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType"/>
-					<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
-					<xs:element name="ClassBus" type="v2.4:RegisteredClassType"/>
-					<xs:element name="NumberPassengersUpperDeck" type="xs:int"/>
-					<xs:element name="NumberPassengersLowerDeck" type="xs:int"/>
-					<xs:element name="BodyworkCode" type="v2.4:VehicleCodeType"/>
-					<xs:element name="LowEntry" type="xs:boolean"/>
+					<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType">
+						<xs:annotation>
+							<xs:documentation>I.1.1.8.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>I.1.1.10.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ClassBus" type="v2.4:RegisteredClassType">
+						<xs:annotation>
+							<xs:documentation>I.1.1.20.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="NumberPassengersUpperDeck" type="xs:int">
+						<xs:annotation>
+							<xs:documentation>I.1.1.21.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="NumberPassengersLowerDeck" type="xs:int">
+						<xs:annotation>
+							<xs:documentation>I.1.1.22.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="BodyworkCode" type="v2.4:VehicleCodeType">
+						<xs:annotation>
+							<xs:documentation>I.1.1.23.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="LowEntry" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>I.1.1.24.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 			</xs:sequence>
 		</xs:sequence>
@@ -1162,236 +1521,772 @@
 	<!--Components-->
 	<xs:complexType name="ConventionalLorryComponentsType">
 		<xs:sequence>
-			<xs:element name="Engine" type="mrf:EngineOutputType"/>
-			<xs:element name="Transmission" type="mrf:TransmissionType"/>
-			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
-			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
-			<xs:element name="Retarder" type="mrf:RetarderType"/>
-			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:ConventionalLorryAuxOutputType"/>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="Engine" type="mrf:EngineOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Transmission" type="mrf:TransmissionType">
+				<xs:annotation>
+					<xs:documentation>I.1.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.6.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Retarder" type="mrf:RetarderType">
+				<xs:annotation>
+					<xs:documentation>I.1.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Axlegear" type="mrf:AxleGearType">
+				<xs:annotation>
+					<xs:documentation>I.1.7.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Auxiliaries" type="mrf:ConventionalLorryAuxOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.8.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-Px_IHPC-LorryComponentsType">
 		<xs:sequence>
-			<xs:element name="Engine" type="mrf:EngineOutputType"/>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="Engine" type="mrf:EngineOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType">
+				<xs:annotation>
+					<xs:documentation>I.1.13.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="Transmission" type="mrf:TransmissionType"/>
-			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
-			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
-			<xs:element name="Retarder" type="mrf:RetarderType"/>
-			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType"/>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="Transmission" type="mrf:TransmissionType">
+				<xs:annotation>
+					<xs:documentation>I.1.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.6.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Retarder" type="mrf:RetarderType">
+				<xs:annotation>
+					<xs:documentation>I.1.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Axlegear" type="mrf:AxleGearType">
+				<xs:annotation>
+					<xs:documentation>I.1.7.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.8.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S2-LorryComponentsType">
 		<xs:sequence>
-			<xs:element name="Engine" type="mrf:EngineOutputType"/>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="Engine" type="mrf:EngineOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType">
+				<xs:annotation>
+					<xs:documentation>I.1.12.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="Transmission" type="mrf:TransmissionType"/>
-			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
-			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
-			<xs:element name="Retarder" type="mrf:RetarderType"/>
-			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType"/>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="Transmission" type="mrf:TransmissionType">
+				<xs:annotation>
+					<xs:documentation>I.1.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.6.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Retarder" type="mrf:RetarderType">
+				<xs:annotation>
+					<xs:documentation>I.1.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Axlegear" type="mrf:AxleGearType">
+				<xs:annotation>
+					<xs:documentation>I.1.7.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.8.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S3-LorryComponentsType">
 		<xs:sequence>
-			<xs:element name="Engine" type="mrf:EngineOutputType"/>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="Engine" type="mrf:EngineOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType">
+				<xs:annotation>
+					<xs:documentation>I.1.13.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="Retarder" type="mrf:RetarderType"/>
-			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType"/>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="Retarder" type="mrf:RetarderType">
+				<xs:annotation>
+					<xs:documentation>I.1.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Axlegear" type="mrf:AxleGearType">
+				<xs:annotation>
+					<xs:documentation>I.1.7.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.8.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S4-LorryComponentsType">
 		<xs:sequence>
-			<xs:element name="Engine" type="mrf:EngineOutputType"/>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="Engine" type="mrf:EngineOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType">
+				<xs:annotation>
+					<xs:documentation>I.1.13.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType"/>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.8.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-IEPC-S-LorryComponentsType">
 		<xs:sequence>
-			<xs:element name="Engine" type="mrf:EngineOutputType"/>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="Engine" type="mrf:EngineOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType">
+				<xs:annotation>
+					<xs:documentation>I.1.13.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
-			<xs:element name="Axlegear" type="mrf:AxleGearType" minOccurs="0"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType"/>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type">
+				<xs:annotation>
+					<xs:documentation>I.1.14.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Axlegear" type="mrf:AxleGearType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.7.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.8.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E2-LorryComponentsType">
 		<xs:sequence>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
-			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="Transmission" type="mrf:TransmissionType"/>
-			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
-			<xs:element name="Retarder" type="mrf:RetarderType"/>
-			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType"/>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType">
+				<xs:annotation>
+					<xs:documentation>I.1.13.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType">
+				<xs:annotation>
+					<xs:documentation>I.1.15.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Transmission" type="mrf:TransmissionType">
+				<xs:annotation>
+					<xs:documentation>I.1.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Retarder" type="mrf:RetarderType">
+				<xs:annotation>
+					<xs:documentation>I.1.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Axlegear" type="mrf:AxleGearType">
+				<xs:annotation>
+					<xs:documentation>I.1.7.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+				<xs:annotation>
+					<xs:documentation>I.1.9</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.8.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E3-LorryComponentsType">
 		<xs:sequence>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType">
+				<xs:annotation>
+					<xs:documentation>I.1.13.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="Retarder" type="mrf:RetarderType"/>
-			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType"/>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="Retarder" type="mrf:RetarderType">
+				<xs:annotation>
+					<xs:documentation>I.1.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Axlegear" type="mrf:AxleGearType">
+				<xs:annotation>
+					<xs:documentation>I.1.7.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.8.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E4-LorryComponentsType">
 		<xs:sequence>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType">
+				<xs:annotation>
+					<xs:documentation>I.1.13.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType"/>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.8.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-IEPC-LorryComponentsType">
 		<xs:sequence>
 			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
-			<xs:element name="Axlegear" type="mrf:AxleGearType" minOccurs="0"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType"/>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Axlegear" type="mrf:AxleGearType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.6.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.8.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="Conventional-PrimaryBusComponentsType">
 		<xs:sequence>
-			<xs:element name="Engine" type="mrf:EngineOutputType"/>
-			<xs:element name="Transmission" type="mrf:TransmissionType"/>
-			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
-			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
+			<xs:element name="Engine" type="mrf:EngineOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Transmission" type="mrf:TransmissionType">
+				<xs:annotation>
+					<xs:documentation>I.1.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.6.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:Conventional_HEV_Px_PrimaryBusAuxOutputType"/>
+			<xs:element name="Auxiliaries" type="mrf:Conventional_HEV_Px_PrimaryBusAuxOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-Px_IHPC-PrimaryBusComponentsType">
 		<xs:sequence>
-			<xs:element name="Engine" type="mrf:EngineOutputType"/>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="Engine" type="mrf:EngineOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType">
+				<xs:annotation>
+					<xs:documentation>I.1.13.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="Transmission" type="mrf:TransmissionType"/>
-			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
-			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
-			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:Conventional_HEV_Px_PrimaryBusAuxOutputType"/>
+			<xs:element name="Transmission" type="mrf:TransmissionType">
+				<xs:annotation>
+					<xs:documentation>I.1.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.6.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Axlegear" type="mrf:AxleGearType">
+				<xs:annotation>
+					<xs:documentation>I.1.7.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Auxiliaries" type="mrf:Conventional_HEV_Px_PrimaryBusAuxOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S2-PrimaryBusComponentsType">
 		<xs:sequence>
-			<xs:element name="Engine" type="mrf:EngineOutputType"/>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="Engine" type="mrf:EngineOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType">
+				<xs:annotation>
+					<xs:documentation>I.1.13.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="Transmission" type="mrf:TransmissionType"/>
-			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
-			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
-			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType"/>
+			<xs:element name="Transmission" type="mrf:TransmissionType">
+				<xs:annotation>
+					<xs:documentation>I.1.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.6.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Axlegear" type="mrf:AxleGearType">
+				<xs:annotation>
+					<xs:documentation>I.1.7.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S3-PrimaryBusComponentsType">
 		<xs:sequence>
-			<xs:element name="Engine" type="mrf:EngineOutputType"/>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="Engine" type="mrf:EngineOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType">
+				<xs:annotation>
+					<xs:documentation>I.1.13.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
-			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType"/>
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Axlegear" type="mrf:AxleGearType">
+				<xs:annotation>
+					<xs:documentation>I.1.7.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S4-PrimaryBusComponentsType">
 		<xs:sequence>
-			<xs:element name="Engine" type="mrf:EngineOutputType"/>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="Engine" type="mrf:EngineOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType">
+				<xs:annotation>
+					<xs:documentation>I.1.13.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType"/>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-IEPC-S-PrimaryBusComponentsType">
 		<xs:sequence>
-			<xs:element name="Engine" type="mrf:EngineOutputType"/>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="Engine" type="mrf:EngineOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType">
+				<xs:annotation>
+					<xs:documentation>I.1.13.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
-			<xs:element name="Axlegear" type="mrf:AxleGearType" minOccurs="0"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType"/>
+			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type">
+				<xs:annotation>
+					<xs:documentation>I.1.14.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Axlegear" type="mrf:AxleGearType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.7.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E2-PrimaryBusComponentsType">
 		<xs:sequence>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType">
+				<xs:annotation>
+					<xs:documentation>I.1.13.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="Transmission" type="mrf:TransmissionType"/>
-			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
-			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType"/>
+			<xs:element name="Transmission" type="mrf:TransmissionType">
+				<xs:annotation>
+					<xs:documentation>I.1.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Axlegear" type="mrf:AxleGearType">
+				<xs:annotation>
+					<xs:documentation>I.1.7.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E3-PrimaryBusComponentsType">
 		<xs:sequence>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType">
+				<xs:annotation>
+					<xs:documentation>I.1.13.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
-			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType"/>
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Axlegear" type="mrf:AxleGearType">
+				<xs:annotation>
+					<xs:documentation>I.1.7.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E4-PrimaryBusComponentsType">
 		<xs:sequence>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType">
+				<xs:annotation>
+					<xs:documentation>I.1.13.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType"/>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-IEPC-PrimaryBusComponentsType">
 		<xs:sequence>
-			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type"/>
+			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type">
+				<xs:annotation>
+					<xs:documentation>I.1.14.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
-			<xs:element name="Axlegear" type="mrf:AxleGearType" minOccurs="0"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType"/>
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Axlegear" type="mrf:AxleGearType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.7.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<!--ElectricMachine, IEPC, REESS-->
@@ -1416,7 +2311,11 @@
 		<xs:sequence>
 			<xs:choice>
 				<xs:sequence maxOccurs="unbounded">
-					<xs:element name="Battery" type="mrf:BatteryType"/>
+					<xs:element name="Battery" type="mrf:BatteryType">
+						<xs:annotation>
+							<xs:documentation>I.1.15.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 				<xs:sequence>
 					<xs:element name="Capacitor" type="mrf:CapacitorType"/>
@@ -1449,8 +2348,15 @@
 	<xs:group name="REESSGroup">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="NominalVoltage" type="xs:int"/>
+			<xs:element name="NominalVoltage" type="xs:int">
+				<xs:annotation>
+					<xs:documentation>I.1.15.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="TotalStorageCapacity">
+				<xs:annotation>
+					<xs:documentation>I.1.15.4.</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:simpleContent>
 						<xs:extension base="xs:int">
@@ -1460,6 +2366,9 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="TotalUsableCapacityInSimulation">
+				<xs:annotation>
+					<xs:documentation>I.1.15.5.</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:simpleContent>
 						<xs:extension base="xs:int">
@@ -1468,49 +2377,136 @@
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="CertificationMethod" type="xs:string"/>
+			<xs:element name="CertificationMethod" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>I.1.15.6</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<!--Auxiliaries-->
 	<xs:complexType name="ConventionalLorryAuxOutputType">
 		<xs:sequence>
-			<xs:element name="CoolingFanTechnology" type="v2.4:AuxFanTechnologyLorryType"/>
-			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyLorryType"/>
-			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_1"/>
-			<xs:element name="ElectricSystem" type="mrf:LorryElectricSystemType"/>
+			<xs:element name="CoolingFanTechnology" type="v2.4:AuxFanTechnologyLorryType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.1.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyLorryType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_1">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricSystem" type="mrf:LorryElectricSystemType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEVLorryAuxOutputType">
 		<xs:sequence>
-			<xs:element name="CoolingFanTechnology" type="v2.4:AuxFanTechnologyLorryType"/>
-			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyLorryType"/>
-			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_1"/>
-			<xs:element name="ElectricSystem" type="mrf:LorryElectricSystemType"/>
+			<xs:element name="CoolingFanTechnology" type="v2.4:AuxFanTechnologyLorryType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.1.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyLorryType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_1">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricSystem" type="mrf:LorryElectricSystemType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEVLorryAuxOutputType">
 		<xs:sequence>
-			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyLorryType"/>
-			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_1"/>
-			<xs:element name="ElectricSystem" type="mrf:LorryElectricSystemType"/>
+			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyLorryType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_1">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricSystem" type="mrf:LorryElectricSystemType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="Conventional_HEV_Px_PrimaryBusAuxOutputType">
 		<xs:sequence>
-			<xs:element name="CoolingFanTechnology" type="v2.4:AuxFanTechnologyPrimaryBusType"/>
-			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyPrimaryBusType"/>
-			<xs:element name="ElectricSystem" type="mrf:PrimaryBusElectricSystemType_Conventional_HEV"/>
-			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_PrimaryBus_Conventional_HEV_P"/>
-			<xs:element name="HVACSystem" type="mrf:HVACSystemType"/>
+			<xs:element name="CoolingFanTechnology" type="v2.4:AuxFanTechnologyPrimaryBusType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.1.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyPrimaryBusType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricSystem" type="mrf:PrimaryBusElectricSystemType_Conventional_HEV">
+				<xs:annotation>
+					<xs:documentation>I.1.10.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_PrimaryBus_Conventional_HEV_P">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HVACSystem" type="mrf:HVACSystemType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEVPrimaryBusAuxOutputType">
 		<xs:sequence>
-			<xs:element name="CoolingFanTechnology" type="v2.4:AuxFanTechnologyPrimaryBusType"/>
-			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyPrimaryBusType"/>
-			<xs:element name="ElectricSystem" type="mrf:PrimaryBusElectricSystemType_Conventional_HEV"/>
-			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_PrimaryBus_HEV_S"/>
+			<xs:element name="CoolingFanTechnology" type="v2.4:AuxFanTechnologyPrimaryBusType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.1.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyPrimaryBusType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricSystem" type="mrf:PrimaryBusElectricSystemType_Conventional_HEV">
+				<xs:annotation>
+					<xs:documentation>I.1.10.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_PrimaryBus_HEV_S">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="HVACSystem">
+				<xs:annotation>
+					<xs:documentation>I.1.10.5.</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:group ref="mrf:PrimaryBusHVACGroup"/>
 				</xs:complexType>
@@ -1519,58 +2515,150 @@
 	</xs:complexType>
 	<xs:complexType name="PEVPrimaryBusAuxOutputType">
 		<xs:sequence>
-			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyPrimaryBusType"/>
-			<xs:element name="ElectricSystem" type="mrf:PrimaryBusElectricSystemType_PEV"/>
-			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_PrimaryBus_PEV_IEPC"/>
+			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyPrimaryBusType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricSystem" type="mrf:PrimaryBusElectricSystemType_PEV">
+				<xs:annotation>
+					<xs:documentation>I.1.10.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_PrimaryBus_PEV_IEPC">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ConventionalCompletedBusAuxOutputType">
 		<xs:sequence>
-			<xs:element name="ElectricSystem" type="mrf:CompletedBusElectricSystemType"/>
-			<xs:element name="HVACSystem" type="mrf:ConventionalCompletedBusHVACSystemType"/>
+			<xs:element name="ElectricSystem" type="mrf:CompletedBusElectricSystemType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HVACSystem" type="mrf:ConventionalCompletedBusHVACSystemType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEVCompletedBusAuxOutputType">
 		<xs:sequence>
-			<xs:element name="ElectricSystem" type="mrf:CompletedBusElectricSystemType"/>
-			<xs:element name="HVACSystem" type="mrf:xEV_CompletedBusHVACSystemType"/>
+			<xs:element name="ElectricSystem" type="mrf:CompletedBusElectricSystemType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HVACSystem" type="mrf:xEV_CompletedBusHVACSystemType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEVCompletedBusAuxOutputType">
 		<xs:sequence>
-			<xs:element name="ElectricSystem" type="mrf:CompletedBusElectricSystemType"/>
-			<xs:element name="HVACSystem" type="mrf:xEV_CompletedBusHVACSystemType"/>
+			<xs:element name="ElectricSystem" type="mrf:CompletedBusElectricSystemType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HVACSystem" type="mrf:xEV_CompletedBusHVACSystemType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:group name="CompletedBusElectricSystemGroup">
 		<xs:sequence>
-			<xs:element name="DayRunningLightsLED" type="xs:boolean"/>
-			<xs:element name="HeadLightsLED" type="xs:boolean"/>
-			<xs:element name="PositionLightsLED" type="xs:boolean"/>
-			<xs:element name="BrakeLightsLED" type="xs:boolean"/>
-			<xs:element name="InteriorLightsLED" type="xs:boolean"/>
+			<xs:element name="DayRunningLightsLED" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P305 / I.1.10.3.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HeadLightsLED" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P308 / I.1.10.3.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PositionLightsLED" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P306 / I.1.10.3.6.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BrakeLightsLED" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P307 / I.1.10.3.7.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="InteriorLightsLED" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P304 / I.1.10.3.8.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="CompletedBus_xEVHVACGroup">
 		<xs:sequence>
-			<xs:element name="WaterElectricHeater" type="xs:boolean"/>
-			<xs:element name="AirElectricHeater" type="xs:boolean"/>
-			<xs:element name="OtherHeatingTechnology" type="xs:boolean"/>
+			<xs:element name="WaterElectricHeater" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P328 / I.1.10.5.12.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AirElectricHeater" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P329 / I.1.10.5.13.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OtherHeatingTechnology" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P330 / I.1.10.5.14.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="CompletedBus_HVACSystemGroup">
 		<xs:sequence>
 			<xs:group ref="mrf:BusAuxHVACHeatPumpSequenceGroup"/>
-			<xs:element name="DoubleGlazing" type="xs:boolean"/>
-			<xs:element name="AdjustableAuxiliaryHeater" type="xs:boolean"/>
-			<xs:element name="SeparateAirDistributionDucts" type="xs:boolean"/>
-			<xs:element name="AuxiliaryHeaterPower" type="xs:int"/>
+			<xs:element name="DoubleGlazing" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P323 / I.1.10.5.7.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AdjustableAuxiliaryHeater" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P325 / I.1.10.5.9.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SeparateAirDistributionDucts" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P327 / I.1.10.5.11.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AuxiliaryHeaterPower" type="xs:int">
+				<xs:annotation>
+					<xs:documentation>P322 / I.1.10.5.6.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="PrimaryBusHVACGroup">
 		<xs:sequence>
-			<xs:element name="AdjustableCoolantThermostat" type="xs:boolean"/>
-			<xs:element name="EngineWasteGasHeatExchanger" type="xs:boolean"/>
+			<xs:element name="AdjustableCoolantThermostat" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.10.5.8.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EngineWasteGasHeatExchanger" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.10.5.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:complexType name="ConventionalADASType">
@@ -1591,41 +2679,85 @@
 	<!--ADAS-->
 	<xs:group name="ConventionalADASGroup">
 		<xs:sequence>
-			<xs:element name="EngineStopStart" type="xs:boolean"/>
-			<xs:element name="EcoRollWithoutEngineStopStart" type="xs:boolean"/>
-			<xs:element name="EcoRollWithEngineStopStart" type="xs:boolean"/>
-			<xs:element name="PredictiveCruiseControl" type="xs:boolean"/>
+			<xs:element name="EngineStopStart" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.12.1.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EcoRollWithoutEngineStopStart" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.12.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EcoRollWithEngineStopStart" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.12.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PredictiveCruiseControl" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.12.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="HEVADASGroup">
 		<xs:sequence>
-			<xs:element name="EngineStopStart" type="xs:boolean"/>
-			<xs:element name="PredictiveCruiseControl" type="xs:boolean"/>
+			<xs:element name="EngineStopStart" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.12.1.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PredictiveCruiseControl" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.12.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="PEVADASGroup">
 		<xs:sequence>
-			<xs:element name="PredictiveCruiseControl" type="xs:boolean"/>
+			<xs:element name="PredictiveCruiseControl" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.12.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<!--ElectricMachine_IEPC-->
 	<xs:group name="ElectricMachineGroup">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="ElectricMachineType" type="xs:string"/>
-			<xs:element name="CertificationMethod" type="xs:string"/>
+			<xs:element name="ElectricMachineType" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>I.1.13.3</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CertificationMethod" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>I.1.13.9</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="ElectricMachinePowerGroup">
 		<xs:sequence>
-			<xs:element name="RatedPower" type="mrf:RatedPowerType"/>
+			<xs:element name="RatedPower" type="mrf:RatedPowerType">
+				<xs:annotation>
+					<xs:documentation>I.1.13.7.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="VoltageLevels">
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="VoltageLevel" maxOccurs="unbounded">
 							<xs:complexType>
 								<xs:sequence>
-									<xs:element name="MaxContinuousPower" type="mrf:RatedPowerType"/>
+									<xs:element name="MaxContinuousPower" type="mrf:RatedPowerType">
+										<xs:annotation>
+											<xs:documentation>I.1.13.8.</xs:documentation>
+										</xs:annotation>
+									</xs:element>
 								</xs:sequence>
 								<xs:attribute name="voltage"/>
 							</xs:complexType>
@@ -1639,20 +2771,48 @@
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
 			<xs:group ref="mrf:ElectricMachinePowerGroup"/>
-			<xs:element name="NrOfGears" type="xs:int"/>
-			<xs:element name="LowestTotalTransmissionRatio" type="v1.0:Double3"/>
-			<xs:element name="DifferentialIncluded" type="xs:boolean"/>
+			<xs:element name="NrOfGears" type="xs:int">
+				<xs:annotation>
+					<xs:documentation>I.1.14.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LowestTotalTransmissionRatio" type="v1.0:Double3">
+				<xs:annotation>
+					<xs:documentation>I.1.14.6.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DifferentialIncluded" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.14.7.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="DesignTypeWheelMotor" type="xs:boolean"/>
-			<xs:element name="CertificationMethod" type="xs:string"/>
+			<xs:element name="CertificationMethod" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>I.1.14.8.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<!--Axles-->
 	<xs:complexType name="AxleGearType">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="CertificationMethod" type="v1.0:AxlegearCertificationOptionType"/>
-			<xs:element name="AxleType" type="v1.0:AxlegearLineTypeType"/>
-			<xs:element name="Ratio" type="v1.0:AxlegearRatioType"/>
+			<xs:element name="CertificationMethod" type="v1.0:AxlegearCertificationOptionType">
+				<xs:annotation>
+					<xs:documentation>I.1.7.3</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AxleType" type="v1.0:AxlegearLineTypeType">
+				<xs:annotation>
+					<xs:documentation>I.1.7.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Ratio" type="v1.0:AxlegearRatioType">
+				<xs:annotation>
+					<xs:documentation>I.1.7.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="TyresOutputType">
@@ -1662,10 +2822,26 @@
 	</xs:complexType>
 	<xs:group name="TyreGroup">
 		<xs:sequence>
-			<xs:element name="TyreDimension" type="v2.3:TyreDimensionType"/>
-			<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType"/>
-			<xs:element name="SpecificRRC" type="v1.0:TyreRRCISOType"/>
-			<xs:element name="DigestValue" type="xs:token"/>
+			<xs:element name="TyreDimension" type="v2.3:TyreDimensionType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.1, I.1.9.1.4, I.1.9.8, I.1.9.12.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.2, I.1.9.6, I.1.9.10, I.1.9.14</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SpecificRRC" type="v1.0:TyreRRCISOType">
+				<xs:annotation>
+					<xs:documentation>I.1.9.3, I.1.9.7, I.1.9.11, I.1.9.15.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DigestValue" type="xs:token">
+				<xs:annotation>
+					<xs:documentation>I.1.9.3a, I.1.9.7a, I.1.9.11a, I.1.9.16.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:complexType name="AxleWheelsType">
@@ -1680,25 +2856,57 @@
 	</xs:complexType>
 	<xs:complexType name="AxleType">
 		<xs:sequence>
-			<xs:element name="TwinTyres" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="TwinTyres" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.9.5, I.1.9.9, I.1.9.13</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="Tyre" type="mrf:TyreType"/>
 		</xs:sequence>
 		<xs:attribute name="axleNumber" type="xs:int" use="required"/>
 	</xs:complexType>
 	<xs:complexType name="AirdragType">
 		<xs:sequence>
-			<xs:element name="Model" type="v1.0:ModelType"/>
-			<xs:element name="CertificationMethod"/>
-			<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType" minOccurs="0"/>
-			<xs:element name="CdxA" type="v1.0:AirdragCdxAType"/>
-			<xs:element name="DigestValue" type="xs:token"/>
+			<xs:element name="Model" type="v1.0:ModelType">
+				<xs:annotation>
+					<xs:documentation>I.1.8.1.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CertificationMethod">
+				<xs:annotation>
+					<xs:documentation>I.1.8.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.8.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CdxA" type="v1.0:AirdragCdxAType">
+				<xs:annotation>
+					<xs:documentation>I.1.8.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DigestValue" type="xs:token">
+				<xs:annotation>
+					<xs:documentation>I.1.8.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AngledriveType">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="CertificationMethod" type="v1.0:AngledriveCertificationOptionType"/>
-			<xs:element name="AngledriveRatio" type="v1.0:AngledriveRatioType"/>
+			<xs:element name="CertificationMethod" type="v1.0:AngledriveCertificationOptionType">
+				<xs:annotation>
+					<xs:documentation>I.1.6.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AngledriveRatio" type="v1.0:AngledriveRatioType">
+				<xs:annotation>
+					<xs:documentation>I.1.6.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:group name="PrimaryBusGeneralVehicleOutputGroup">
@@ -1706,8 +2914,16 @@
 			<xs:group ref="mrf:ManufacturerGroup"/>
 			<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
 			<xs:sequence>
-				<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
-				<xs:element name="HybridElectricHDV" type="xs:boolean"/>
+				<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+					<xs:annotation>
+						<xs:documentation>I.1.1.10.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="HybridElectricHDV" type="xs:boolean">
+					<xs:annotation>
+						<xs:documentation>I.1.1.11.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
 			</xs:sequence>
 		</xs:sequence>
 	</xs:group>
@@ -1715,35 +2931,70 @@
 		<xs:sequence>
 			<xs:group ref="mrf:ManufacturerGroup"/>
 			<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
-			<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
+			<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:complexType name="TorqueConverterType">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="CertificationMethod" type="xs:string"/>
+			<xs:element name="CertificationMethod" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>I.1.5.3</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="RetarderType">
 		<xs:sequence>
 			<xs:element name="RetarderType" type="xs:string"/>
 			<xs:group ref="mrf:ComponentCommonOutputGroup" minOccurs="0"/>
-			<xs:element name="CertificationMethod" type="xs:string" minOccurs="0"/>
+			<xs:element name="CertificationMethod" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.5.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="TransmissionType">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="CertificationMethod" type="xs:string"/>
-			<xs:element name="Type" type="v2.3:GearboxTransmissionTypeType"/>
-			<xs:element name="NrOfGears" type="xs:int"/>
-			<xs:element name="FinalGearRatio" type="v1.0:GearboxGearRatioType"/>
-			<xs:element name="PowerTakeOff" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="CertificationMethod" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>I.1.3.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Type" type="v2.3:GearboxTransmissionTypeType">
+				<xs:annotation>
+					<xs:documentation>I.1.3.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NrOfGears" type="xs:int">
+				<xs:annotation>
+					<xs:documentation>I.1.3.5</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FinalGearRatio" type="v1.0:GearboxGearRatioType">
+				<xs:annotation>
+					<xs:documentation>I.1.3.6.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PowerTakeOff" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.3.8</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="EngineTorqueLimitsType">
 		<xs:sequence>
 			<xs:element name="EngineTorqueLimit" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>I.1.11.1 - I.1.11.4.</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:simpleContent>
 						<xs:extension base="xs:int">
@@ -1758,19 +3009,46 @@
 	<xs:complexType name="EngineOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="RatedPower" type="v1.0:EngineRatedPower"/>
-			<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType"/>
-			<xs:element name="RatedSpeed" type="v1.0:EngineDeclaredSpeedType"/>
-			<xs:element name="Capacity" type="mrf:EngineCapacityType"/>
+			<xs:element name="RatedPower" type="v1.0:EngineRatedPower">
+				<xs:annotation>
+					<xs:documentation>I.1.2.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
+				<xs:annotation>
+					<xs:documentation>I.1.2.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RatedSpeed" type="v1.0:EngineDeclaredSpeedType">
+				<xs:annotation>
+					<xs:documentation>I.1.2.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Capacity" type="mrf:EngineCapacityType">
+				<xs:annotation>
+					<xs:documentation>I.1.2.6.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="FuelTypes">
+				<xs:annotation>
+					<xs:documentation>I.1.2.7.</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="FuelType" type="v1.0:FuelTypeType" maxOccurs="unbounded"/>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="WasteHeatRecoverySystem" type="xs:boolean"/>
-			<xs:element name="WasteHeatRecoverySystemType" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="WasteHeatRecoverySystem" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.2.9.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="WasteHeatRecoverySystemType" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>I.1.2.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:group name="ComponentCommonOutputGroup">
@@ -1797,16 +3075,24 @@
 			<xs:group ref="mrf:LorryGeneralVehicleOutputGroup"/>
 			<xs:element name="DualFuelVehicle" type="v1.0:DualFuelType">
 				<xs:annotation>
-					<xs:documentation>1.1.12. Dual-fuel vehicle</xs:documentation>
+					<xs:documentation>I.1.1.12. </xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="SleeperCab" type="v1.0:SleeperCabType">
 				<xs:annotation>
-					<xs:documentation>1.1.13 Sleeper cab</xs:documentation>
+					<xs:documentation>I.1.1.13.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType" minOccurs="0"/>
-			<xs:element name="ADAS" type="mrf:ConventionalADASType"/>
+			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.1.29.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ADAS" type="mrf:ConventionalADASType">
+				<xs:annotation>
+					<xs:documentation>I.1.12.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="HEV-LorryVehicleOutputTypeGroup">
@@ -1829,14 +3115,26 @@
 	<xs:group name="Conventional-PrimaryBus-VehicleOutputTypeGroup">
 		<xs:sequence>
 			<xs:group ref="mrf:PrimaryBusGeneralVehicleOutputGroup"/>
-			<xs:element name="DualFuelVehicle" type="xs:boolean"/>
-			<xs:element name="ADAS" type="mrf:ConventionalADASType"/>
+			<xs:element name="DualFuelVehicle" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.1.12.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ADAS" type="mrf:ConventionalADASType">
+				<xs:annotation>
+					<xs:documentation>I.1.12.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="HEV-PrimaryBus-VehicleOutputTypeGroup">
 		<xs:sequence>
 			<xs:group ref="mrf:PrimaryBusGeneralVehicleOutputGroup"/>
-			<xs:element name="DualFuelVehicle" type="xs:boolean"/>
+			<xs:element name="DualFuelVehicle" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.1.12.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:group ref="mrf:HEVVehicleSequenceGroup"/>
 		</xs:sequence>
 	</xs:group>
@@ -1850,23 +3148,43 @@
 		<xs:sequence>
 			<xs:group ref="mrf:CompletedBusGeneralVehicleOutputGroup"/>
 			<xs:group ref="mrf:CompletedBusVehicleDimensionSequenceGroup"/>
-			<xs:element name="DoorDriveTechnology" type="v2.4:DoorDriveTechnologyType"/>
-			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType"/>
+			<xs:element name="DoorDriveTechnology" type="v2.4:DoorDriveTechnologyType">
+				<xs:annotation>
+					<xs:documentation>I.1.1.28.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType">
+				<xs:annotation>
+					<xs:documentation>I.1.1.29.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="HEV-CompletedBusVehicleOutputTypeGroup">
 		<xs:sequence>
 			<xs:group ref="mrf:CompletedBusGeneralVehicleOutputGroup"/>
 			<xs:group ref="mrf:CompletedBusVehicleDimensionSequenceGroup"/>
-			<xs:element name="DoorDriveTechnology" type="v2.4:DoorDriveTechnologyType"/>
-			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType"/>
+			<xs:element name="DoorDriveTechnology" type="v2.4:DoorDriveTechnologyType">
+				<xs:annotation>
+					<xs:documentation>I.1.1.28.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType">
+				<xs:annotation>
+					<xs:documentation>I.1.1.29</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="PEV-CompletedBusVehicleOutputTypeGroup">
 		<xs:sequence>
 			<xs:group ref="mrf:CompletedBusGeneralVehicleOutputGroup"/>
 			<xs:group ref="mrf:CompletedBusVehicleDimensionSequenceGroup"/>
-			<xs:element name="DoorDriveTechnology" type="v2.4:DoorDriveTechnologyType"/>
+			<xs:element name="DoorDriveTechnology" type="v2.4:DoorDriveTechnologyType">
+				<xs:annotation>
+					<xs:documentation>I.1.1.28.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:complexType name="TyreType">
@@ -1876,41 +3194,113 @@
 	</xs:complexType>
 	<xs:complexType name="PrimaryBusElectricSystemType_Conventional_HEV">
 		<xs:sequence>
-			<xs:element name="AlternatorTechnology" type="v2.4:AlternatorTechnologyType"/>
-			<xs:element name="MaxAlternatorPower" type="mrf:PowerType" minOccurs="0"/>
-			<xs:element name="ElectricStorageCapacity" type="mrf:StorageCapacityType" minOccurs="0"/>
+			<xs:element name="AlternatorTechnology" type="v2.4:AlternatorTechnologyType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.3.1.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MaxAlternatorPower" type="mrf:PowerType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.10.3.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricStorageCapacity" type="mrf:StorageCapacityType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.10.3.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PrimaryBusElectricSystemType_PEV">
 		<xs:sequence>
-			<xs:element name="ElectricStorageCapacity" type="mrf:StorageCapacityType" minOccurs="0"/>
+			<xs:element name="ElectricStorageCapacity" type="mrf:StorageCapacityType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.10.3.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PneumaticSystemType_PrimaryBus_Conventional_HEV_P">
 		<xs:sequence>
-			<xs:element name="Technology" type="xs:string"/>
-			<xs:element name="CompressorRatio" type="v1.0:Double3"/>
-			<xs:element name="SmartCompressionSystem" type="xs:boolean"/>
-			<xs:element name="SmartRegenerationSystem" type="xs:boolean"/>
-			<xs:element name="AirsuspensionControl" type="mrf:AirsuspensionControlType"/>
-			<xs:element name="ReagentDosing" type="xs:boolean"/>
+			<xs:element name="Technology" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4.1.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompressorRatio" type="v1.0:Double3">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SmartCompressionSystem" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SmartRegenerationSystem" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AirsuspensionControl" type="mrf:AirsuspensionControlType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ReagentDosing" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4.6.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PneumaticSystemType_PrimaryBus_HEV_S">
 		<xs:sequence>
-			<xs:element name="Technology" type="xs:string"/>
-			<xs:element name="CompressorRatio" type="v1.0:Double3"/>
-			<xs:element name="SmartRegenerationSystem" type="xs:boolean"/>
-			<xs:element name="AirsuspensionControl" type="mrf:AirsuspensionControlType"/>
-			<xs:element name="ReagentDosing" type="xs:boolean"/>
+			<xs:element name="Technology" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4.1.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompressorRatio" type="v1.0:Double3">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4.2.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SmartRegenerationSystem" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AirsuspensionControl" type="mrf:AirsuspensionControlType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ReagentDosing" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4.6.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PneumaticSystemType_PrimaryBus_PEV_IEPC">
 		<xs:sequence>
-			<xs:element name="Technology" type="xs:string"/>
+			<xs:element name="Technology" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4.1.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<!-- <xs:element name="CompressorRatio" type="v1.0:Double3"/> -->
-			<xs:element name="SmartRegenerationSystem" type="xs:boolean"/>
-			<xs:element name="AirsuspensionControl" type="mrf:AirsuspensionControlType"/>
+			<xs:element name="SmartRegenerationSystem" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AirsuspensionControl" type="mrf:AirsuspensionControlType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HVACSystemType">
@@ -1918,12 +3308,20 @@
 	</xs:complexType>
 	<xs:complexType name="LorryElectricSystemType">
 		<xs:sequence>
-			<xs:element name="LEDHeadLights" type="xs:boolean"/>
+			<xs:element name="LEDHeadLights" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.10.3.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PneumaticSystemType_1">
 		<xs:sequence>
-			<xs:element name="Technology" type="v2.4:AuxPSTechnologyLorryType"/>
+			<xs:element name="Technology" type="v2.4:AuxPSTechnologyLorryType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.4.1.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="CompletedBusElectricSystemType">
@@ -1955,18 +3353,38 @@
 	<xs:complexType name="ADCType">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="CertificationMethod" type="xs:string"/>
-			<xs:element name="Ratio" type="v1.0:AngledriveRatioType"/>
+			<xs:element name="CertificationMethod" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>I.1.13.13</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Ratio" type="v1.0:AngledriveRatioType">
+				<xs:annotation>
+					<xs:documentation>I.1.13.14</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ElectricMachineType">
 		<xs:sequence>
 			<xs:sequence>
 				<!--xs:element name="CoupledAxleNumber" type="xs:int"/-->
-				<xs:element name="Position" type="v2.4:PowertrainPositionType"/>
-				<xs:element name="CountAtPosition" type="xs:int"/>
+				<xs:element name="Position" type="v2.4:PowertrainPositionType">
+					<xs:annotation>
+						<xs:documentation>I.1.13.4</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="CountAtPosition" type="xs:int">
+					<xs:annotation>
+						<xs:documentation>I.1.13.6.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
 			</xs:sequence>
-			<xs:element name="ElectricMachineSystem" type="mrf:ElectricMachineSystemType"/>
+			<xs:element name="ElectricMachineSystem" type="mrf:ElectricMachineSystemType">
+				<xs:annotation>
+					<xs:documentation>I.1.13.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="ADC" type="mrf:ADCType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -1974,7 +3392,7 @@
 		<xs:sequence>
 			<xs:element name="SystemConfiguration">
 				<xs:annotation>
-					<xs:documentation>P317 - [-]</xs:documentation>
+					<xs:documentation>P317 / I.1.10.5.1.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="HeatPumpTypeDriverCompartment">
@@ -1982,12 +3400,12 @@
 					<xs:sequence>
 						<xs:element name="Cooling" type="v2.4:HeatPumpTypeDriverCompartmentType">
 							<xs:annotation>
-								<xs:documentation>P318 - enum</xs:documentation>
+								<xs:documentation>P318 / I.1.10.5.2.</xs:documentation>
 							</xs:annotation>
 						</xs:element>
 						<xs:element name="Heating" type="v2.4:HeatPumpTypeDriverCompartmentType">
 							<xs:annotation>
-								<xs:documentation>P319 - enum</xs:documentation>
+								<xs:documentation>P319 / I.1.10.5.3.</xs:documentation>
 							</xs:annotation>
 						</xs:element>
 					</xs:sequence>
@@ -1998,12 +3416,12 @@
 					<xs:sequence>
 						<xs:element name="Cooling" type="v2.4:HeatPumpTypePassengerCompartmentType">
 							<xs:annotation>
-								<xs:documentation>P320 - enum</xs:documentation>
+								<xs:documentation>P320 / I.1.10.5.4.</xs:documentation>
 							</xs:annotation>
 						</xs:element>
 						<xs:element name="Heating" type="v2.4:HeatPumpTypePassengerCompartmentType">
 							<xs:annotation>
-								<xs:documentation>P321 - enum</xs:documentation>
+								<xs:documentation>P321 / I.1.10.5.5.</xs:documentation>
 							</xs:annotation>
 						</xs:element>
 					</xs:sequence>
@@ -2076,9 +3494,16 @@
 				<xs:sequence>
 					<xs:group ref="mrf:ResultSuccessSimulationParametersGroup"/>
 					<xs:element name="OVCMode" minOccurs="2" maxOccurs="2">
+						<xs:annotation>
+							<xs:documentation>I.2.1.4.</xs:documentation>
+						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="VehiclePerformance" type="mrf:VehiclePerformanceType"/>
+								<xs:element name="VehiclePerformance" type="mrf:VehiclePerformanceType">
+									<xs:annotation>
+										<xs:documentation>I.2.2.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
 								<xs:element name="Fuel" maxOccurs="unbounded">
 									<xs:complexType>
 										<xs:sequence>
@@ -2111,7 +3536,11 @@
 					<xs:element name="Total">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="VehiclePerformance" type="mrf:VehiclePerformanceOVCTotalType"/>
+								<xs:element name="VehiclePerformance" type="mrf:VehiclePerformanceOVCTotalType">
+									<xs:annotation>
+										<xs:documentation>I.1.2.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
 								<xs:element name="Fuel" maxOccurs="unbounded">
 									<xs:complexType>
 										<xs:sequence>
@@ -2190,7 +3619,11 @@
 					<xs:element name="Total">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="VehiclePerformance" type="mrf:VehiclePerformanceType"/>
+								<xs:element name="VehiclePerformance" type="mrf:VehiclePerformanceType">
+									<xs:annotation>
+										<xs:documentation>I.2.2.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
 								<xs:element name="Fuel" maxOccurs="unbounded">
 									<xs:complexType>
 										<xs:sequence>
@@ -2241,7 +3674,7 @@
 		<xs:sequence>
 			<xs:element name="TotalVehicleMass">
 				<xs:annotation>
-					<xs:documentation>I.2.1.4 / #59</xs:documentation>
+					<xs:documentation>I.2.1.3.</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
 					<xs:simpleContent>
@@ -2253,7 +3686,7 @@
 			</xs:element>
 			<xs:element name="Payload">
 				<xs:annotation>
-					<xs:documentation>I.2.1.2 / #57</xs:documentation>
+					<xs:documentation>I.2.1.2.</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
 					<xs:simpleContent>
@@ -2263,7 +3696,11 @@
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="PassengerCount" type="xs:double" minOccurs="0"/>
+			<xs:element name="PassengerCount" type="xs:double" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.2.1.2a.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:simpleType name="CO2UnitType">
@@ -2636,10 +4073,14 @@
 	</xs:complexType>
 	<xs:group name="ResultSuccessSimulationParametersGroup">
 		<xs:sequence>
-			<xs:element name="Mission" type="mrf:MissionTypeType"/>
+			<xs:element name="Mission" type="mrf:MissionTypeType">
+				<xs:annotation>
+					<xs:documentation>I.2.1.1.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="Distance">
 				<xs:annotation>
-					<xs:documentation>I.2.2.8 / #67</xs:documentation>
+					<xs:documentation>I.2.2.8.</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
 					<xs:simpleContent>
@@ -2649,7 +4090,11 @@
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="SimulationParameters" type="mrf:SimulationParametersType"/>
+			<xs:element name="SimulationParameters" type="mrf:SimulationParametersType">
+				<xs:annotation>
+					<xs:documentation>I.2.1.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="PrimaryVehicleSubgroup" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
 	</xs:group>
@@ -2669,6 +4114,9 @@
 	<xs:group name="ElectricRangeSequenceGroup">
 		<xs:sequence>
 			<xs:element name="ActualChargeDepletingRange">
+				<xs:annotation>
+					<xs:documentation>I.2.4.1.</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:simpleContent>
 						<xs:extension base="xs:double">
@@ -2678,6 +4126,9 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="EquivalentAllElectricRange">
+				<xs:annotation>
+					<xs:documentation>I.2.4.2.</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:simpleContent>
 						<xs:extension base="xs:double">
@@ -2687,6 +4138,9 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="ZeroCO2EmissionsRange">
+				<xs:annotation>
+					<xs:documentation>I.2.4.3.</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:simpleContent>
 						<xs:extension base="xs:double">
