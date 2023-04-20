@@ -223,7 +223,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#region Overrides of AbstractXMLVehicleDataProviderV24
 
-		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.SerialHybridVehicle;
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_S;
 
 		#endregion
 

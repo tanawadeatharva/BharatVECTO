@@ -1452,8 +1452,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// </summary>
 		private static IVehicleContainer BuildFullPowertrainIEPCSerial(VectoRunData data, IModalDataContainer modData, ISumData _sumWriter)
 		{
-			if (_sumWriter == null)
-				throw new ArgumentNullException(nameof(_sumWriter));
+			//if (_sumWriter == null)
+			//	throw new ArgumentNullException(nameof(_sumWriter));
 			if (data.Cycle.CycleType != CycleType.DistanceBased) {
 				throw new VectoException("CycleType must be DistanceBased");
 			}
@@ -1509,30 +1509,30 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				new DummyAxleGearInfo(container);
 			}
 
-			if (data.BusAuxiliaries != null) {
-				if (!data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
-					throw new VectoException("BusAux must be supplied from REESS!");
-				}
-
-				var auxCfg = data.BusAuxiliaries;
-				var busAux = new BusAuxiliariesAdapter(container, auxCfg);
-				var electricStorage = new NoBattery(container);
-				busAux.ElectricStorage = electricStorage;
-				var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
-				busAux.DCDCConverter = dcdc;
-				es.Connect(dcdc);
-				em.BusAux = busAux;
-			} else {
-				AddElectricAuxiliaries(data, container, es, cycle);
-			}
-
 			ctl.GenSet.AddComponent(GetElectricMachine(PowertrainPosition.GEN, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
 
+            if (data.BusAuxiliaries != null) {
+				if (container.BusAux is BusAuxiliariesAdapter busAux) {
+					if (!data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
+						throw new VectoException("BusAux must be supplied from REESS!");
+					}
+
+					var auxCfg = data.BusAuxiliaries;
+					var electricStorage = new NoBattery(container);
+					busAux.ElectricStorage = electricStorage;
+					var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+					busAux.DCDCConverter = dcdc;
+					es.Connect(dcdc);
+					em.BusAux = busAux;
+				}
+			} else {
+				AddElectricAuxiliaries(data, container, es, cycle);
+			}
+
 			
-
-
+			
 			return container;
 		}
 
