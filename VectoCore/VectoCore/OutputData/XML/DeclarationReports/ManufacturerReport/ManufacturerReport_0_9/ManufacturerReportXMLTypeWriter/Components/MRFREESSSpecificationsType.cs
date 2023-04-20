@@ -37,11 +37,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				foreach (var entry in batData.Batteries.OrderBy(x => x.Item1)) {
 					var batteryPackInput = entry.Item2.InputData;
 					var battery = batteryPackInput.REESSPack as IBatteryPackDeclarationInputData;
-					var batUsableCap = GetEnergyStoredInBattery(entry);
+					var batUsableCap = entry.Item2.UseableStoredEnergy;
 					entry.Item2.MaxSOC = 1;
 					entry.Item2.MinSOC = 0;
-					var batTotalCap = GetEnergyStoredInBattery(entry);
-
+					var batTotalCap = entry.Item2.TotalStoredEnergy;
+					
 					result.Add(new XElement(_mrf + XMLNames.ElectricEnergyStorage_Battery,
 							new XAttribute("stringId", entry.Item1),
 							new XElement(_mrf + XMLNames.Component_Model, battery.Model),
@@ -71,16 +71,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				}
 			}
 			return result;
-		}
-
-		private static WattSecond GetEnergyStoredInBattery(Tuple<int, BatteryData> entry)
-		{
-			var tmpBattery = new Battery(null, entry.Item2);
-			tmpBattery.Initialize(tmpBattery.MaxSoC);
-			var energyFull = tmpBattery.StoredEnergy;
-			tmpBattery.Initialize(tmpBattery.MinSoC);
-			var energyEmpty = tmpBattery.StoredEnergy;
-			return energyFull - energyEmpty;
 		}
 
 		#endregion
