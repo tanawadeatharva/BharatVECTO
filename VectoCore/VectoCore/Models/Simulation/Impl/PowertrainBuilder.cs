@@ -712,7 +712,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddAuxiliariesSerialHybrid(container, data);
 
             if (data.BusAuxiliaries != null) {
-				if (container.BusAux is BusAuxiliariesAdapter busAux) {
+				if (!data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
+					throw new VectoException("BusAux must be supplied from REESS!");
+				}
+                if (container.BusAux is BusAuxiliariesAdapter busAux) {
 					var auxCfg = data.BusAuxiliaries;
 					var electricStorage = auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
 						? new SimpleBattery(container, auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity, auxCfg.ElectricalUserInputsConfig.StoredEnergyEfficiency)
@@ -1525,7 +1528,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
 					busAux.DCDCConverter = dcdc;
 					es.Connect(dcdc);
-					em.BusAux = busAux;
+					//em.BusAux = busAux;
 				}
 			} else {
 				AddElectricAuxiliaries(data, container, es, cycle);
@@ -1741,7 +1744,24 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			new ATClutchInfo(container);
 			new DummyGearboxInfo(container, new GearshiftPosition(0));
 			new DummyVehicleInfo(container);
-		}
+
+			if (data.BusAuxiliaries != null) {
+				if (!(container.BusAux is BusAuxiliariesAdapter busAux)) {
+					throw new VectoException("BusAux data set but no BusAux component found!");
+				}
+
+				var auxCfg = data.BusAuxiliaries;
+				var electricStorage = auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
+					? new SimpleBattery(container, auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity, auxCfg.ElectricalUserInputsConfig.StoredEnergyEfficiency)
+					: (ISimpleBattery)new NoBattery(container);
+				busAux.ElectricStorage = electricStorage;
+				if (data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
+					var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+					busAux.DCDCConverter = dcdc;
+					es.Connect(dcdc);
+				}
+			}
+        }
 
 		/// <summary>
 		/// Builds a simple hybrid powertrain.
