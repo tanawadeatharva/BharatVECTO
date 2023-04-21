@@ -23,23 +23,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		protected readonly IDeclarationInputDataProvider InputDataProvider;
 
 		protected IDeclarationReport Report;
-		//protected abstract IDeclarationDataAdapter DataAdapter { get; }
-
+		
 		protected Segment _segment;
 
-		protected bool _allowVocational;
+        protected bool _allowVocational;
 
-		protected DriverData _driverdata;
-		protected AirdragData _airdragData;
-		protected AxleGearData _axlegearData;
-		protected AngledriveData _angledriveData;
-		protected GearboxData _gearboxData;
-		protected RetarderData _retarderData;
-		protected PTOData _ptoTransmissionData;
-		protected PTOData _municipalPtoTransmissionData;
-		//protected Exception InitException;
-		protected ShiftStrategyParameters _gearshiftData;
-
+        private DriverData _driverdata;
+		
 		protected AbstractDeclarationVectoRunDataFactory(
 			IDeclarationInputDataProvider dataProvider, IDeclarationReport report, bool checkJobType = true)
 		{
@@ -55,15 +45,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
             Report = report;
 
 			_allowVocational = true;
-			//try {
-			//	Initialize();
-			//	if (Report != null) {
-			//		InitializeReport();
-			//	}
-			//} catch (Exception e) {
-			//	InitException = e;
-			//}
 		}
+
+		protected DriverData DriverData => _driverdata ?? (_driverdata = CreateDriverData(_segment));
+		protected abstract DriverData CreateDriverData(Segment segment);
 
 		public virtual IEnumerable<VectoRunData> NextRun()
 		{
@@ -93,15 +78,5 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		protected abstract VectoRunData GetPowertrainConfigForReportInit();
 
-		//protected virtual PTOData CreateDefaultPTOData()
-		//{
-		//	return new PTOData() {
-		//		TransmissionType = DeclarationData.PTO.DefaultPTOTechnology,
-		//		LossMap = PTOIdleLossMapReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.PTO.DefaultPTOIdleLosses)),
-		//		PTOCycle =
-		//			DrivingCycleDataReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.PTO.DefaultPTOActivationCycle),
-		//												CycleType.PTO, "PTO", false)
-		//	};
-		//}
 	}
 }

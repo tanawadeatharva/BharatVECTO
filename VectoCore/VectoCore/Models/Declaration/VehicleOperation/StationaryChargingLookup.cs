@@ -22,15 +22,17 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 						continue;
 					}
 
-					double val = tableRow.ParseDouble(col);
-					Data.Add(Tuple.Create<string, MissionType>(group, mission), val);
+					var val = tableRow.ParseDouble(col);
+					foreach (var g in group.Split('/')) {
+						Data.Add(Tuple.Create<string, MissionType>(g.RemoveWhitespace(), mission), val);
+					}
 				}
 			}
 		}
 
 		public T Lookup(VehicleClass hdvClass, MissionType mission)
 		{
-			return ConvertValue(Lookup(hdvClass.GetClassNumber(), mission.GetNonEMSMissionType()));
+			return ConvertValue(Lookup(hdvClass.GetClassNumberWithoutSubSuffix(), mission.GetNonEMSMissionType()));
 		}
 
 		protected abstract T ConvertValue(double val);

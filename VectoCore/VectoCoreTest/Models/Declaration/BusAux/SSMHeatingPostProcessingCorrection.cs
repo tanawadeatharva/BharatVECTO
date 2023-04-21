@@ -18,6 +18,8 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration.BusAux;
 
@@ -89,7 +91,7 @@ public class SSMHeatingPostProcessingCorrection
 		TestModDataPostprocessing(cfg, driverHpHeating, passengerHpHeating, NoElHtr, fuelConsumptionKg, auxhHeaterPwr,
 			expectedHpHeatingElPwrMechW, expectedFcHPHeatingElKg, expectedHpHeatingMechPwrW, expectedFcHPHeatingMechKg, 
 			expectedElectricHeaterPwrW, expectedFcElectricHeaterKg, expectedAuxHeatingDemandJ, expectedFcAuxHeaterKg, 
-			new ModalDataPostprocessingCorrection());
+			new ConventionalModalDataPostprocessingCorrection());
 	}
 
 	// =========================================

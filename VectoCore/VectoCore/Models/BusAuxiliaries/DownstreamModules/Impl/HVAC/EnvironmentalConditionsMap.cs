@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 {
@@ -17,6 +20,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public IReadOnlyList<IEnvironmentalConditionsMapEntry> GetEnvironmentalConditions()
 		{
 			return _map;
+		}
+
+		public string[] SerializedEnvironmentalConditions
+		{
+			get { return _map.Select(e => $"{e.ID}: {e.Temperature.AsDegCelsius}, {e.Solar.SerializedValue}, {e.Weighting:F5}").ToArray(); }
 		}
 	}
 }

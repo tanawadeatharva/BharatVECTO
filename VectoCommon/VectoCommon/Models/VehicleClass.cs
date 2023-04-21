@@ -29,6 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.Models
@@ -171,6 +173,21 @@ namespace TUGraz.VectoCommon.Models
 		public static string GetClassNumber(this VehicleClass hdvClass)
 		{
 			return hdvClass == VehicleClass.Unknown ? "-" : hdvClass.ToString().Substring(Prefix.Length).Replace('_', '/');
+		}
+
+		public static string GetClassNumberWithoutSubSuffix(this VehicleClass hdvClass)
+		{
+			if (hdvClass == VehicleClass.Unknown) {
+				return "-";
+			}
+
+			if (hdvClass.IsPrimaryBus()) {
+				return hdvClass.GetClassNumber();
+			}
+			if (hdvClass.IsCompletedBus()) {
+				return hdvClass.GetClassNumber().Substring(0, 2);
+			}
+			return hdvClass.GetClassNumber();
 		}
 
 		public static string ToXML(this VehicleClass hdvClass)

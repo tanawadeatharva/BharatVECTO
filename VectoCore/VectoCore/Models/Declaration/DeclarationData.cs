@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
 
-		public static readonly HEVStrategyParameters HEVStrategyParameters = new HEVStrategyParametersLorry();
+		public static readonly HEVStrategyParameters HEVStrategyParameters = new HEVStrategyParameters();
 		//public static readonly HEVStrategyParameters InitEquivalenceFactorsBus = new HEVStrategyParametersBus();
 
 		public static readonly VehicleOperationLookup VehicleOperation = new VehicleOperationLookup();
@@ -264,29 +264,27 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static class BusAuxiliaries
 		{
-			//private static ISSMInputs ssmInputs = null;
-
+			
 			private static IEnvironmentalConditionsMap envMap;
 
-			//private static AuxiliaryConfig busAuxConfig = null;
 			private static ElectricalConsumerList elUserConfig;
 
 			private static IActuationsMap actuationsMap;
-			//private static PneumaticsAuxilliariesConfig pneumaticAuxConfig;
 			private static List<SSMTechnology> ssmTechnologies;
 
+			public static readonly JoulePerNormLiter PneumaticSystemElectricDemandPerAirGenerated =
+				5600.SI<Watt>() / 325.SI(Unit.SI.NormLiter.Per.Minute).Cast<NormLiterPerSecond>();
 
-			//public static ISSMInputs SSMDefaultValues
-			//{
-			//	get {
-			//		return ssmInputs ?? (ssmInputs = SSMInputData.ReadStream(
-			//					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.SSMDefaults.AHSM"),
-			//					DefaultEnvironmentalConditions));
-			//	}
-			//}
-
-			public static ICompressorMap GetCompressorMap(string compressorSize, string clutchType)
+			public static ICompressorMap GetCompressorMap(
+				IPneumaticSupplyDeclarationData pneumaticSupply)
 			{
+				var compressorSize = pneumaticSupply.CompressorSize;
+				var clutchType = pneumaticSupply.Clutch;
+
+				if (pneumaticSupply.CompressorDrive == CompressorDrive.electrically) {
+					return null;
+				}
+
 				var resource = GetCompressorResourceForSize(compressorSize);
 
 				var dragCurveFactorClutch = 1.0;
@@ -311,6 +309,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					case "Medium Supply 2-stage": return "DEFAULT_2-Cylinder_1-Stage_650ccm.acmp";
 					case "Large Supply 1-stage": return "DEFAULT_2-Cylinder_2-Stage_398ccm.acmp";
 					case "Large Supply 2-stage": return "DEFAULT_3-Cylinder_2-Stage_598ccm.acmp";
+					//case "electrically": return "DEFAULT_electrically.acmp";
 					default: throw new ArgumentException($"unknown compressor size {compressorSize}", compressorSize);
 				}
 			}
@@ -1629,7 +1628,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var D9_chargingEfficiencyBattery = CalculateChargingEfficiencyPEV(runData);
 			var D15_useableBatteryCapacityForR_CDA = batteryData.UseableStoredEnergy;
-			var D13_electricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption_SoC;
+			var D13_electricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption_SoC_Corr;
 
 			var D16_actualChargeDepletingRange = D15_useableBatteryCapacityForR_CDA / D13_electricEnergyConsumption * data.Distance;
 			var D17_equivalentAllElectricRange = D16_actualChargeDepletingRange;

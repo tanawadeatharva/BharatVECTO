@@ -10,10 +10,10 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 
-namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
+namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces
 {
     public class IEPCDataAdapter
     {
-		
-	}
+
+    }
 }

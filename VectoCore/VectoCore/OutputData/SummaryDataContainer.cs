@@ -353,6 +353,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static readonly Tuple<string, Type>[] ElectricEnergyConsumption = {
 			Tuple.Create(SumDataFields.EC_el_SOC, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.EC_el_SOC_corr, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.EC_el_final, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.EC_el_final_KM, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.EC_el_final_TKM, typeof(ConvertedSI)),
@@ -375,6 +376,7 @@ namespace TUGraz.VectoCore.OutputData
 			Tuple.Create(SumDataFields.E_BusAux_HVAC_El, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.E_BusAux_HVAC_Mech, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.E_BusAux_PS_corr, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.E_BusAux_el_PS_corr, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.E_PS_CompressorOff, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.E_PS_CompressorOn, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.Delta_E_BusAux_Battery, typeof(ConvertedSI)),
@@ -673,6 +675,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			cols.AddRange(new [] {
 				SumDataFields.EC_el_SOC,
+				SumDataFields.EC_el_SOC_corr,
 				SumDataFields.EC_el_final,
 				SumDataFields.EC_el_final_KM,
 				SumDataFields.EC_el_final_TKM,
@@ -725,7 +728,8 @@ namespace TUGraz.VectoCore.OutputData
 				SumDataFields.E_BusAux_ES_consumed, 
 				SumDataFields.E_BusAux_ES_generated, 
 				SumDataFields.Delta_E_BusAux_Battery,
-				SumDataFields.E_BusAux_PS_corr, 
+				SumDataFields.E_BusAux_PS_corr,
+				SumDataFields.E_BusAux_el_PS_corr,
 				SumDataFields.E_BusAux_ES_mech_corr,
 				SumDataFields.E_BusAux_HVAC_Mech, 
 				SumDataFields.E_BusAux_HVAC_El,

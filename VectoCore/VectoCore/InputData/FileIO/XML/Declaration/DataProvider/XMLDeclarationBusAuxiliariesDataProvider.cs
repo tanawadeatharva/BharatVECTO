@@ -296,6 +296,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override ConsumerTechnology AdBlueDosing => ConsumerTechnology.Unknown;
 
+		public override bool EngineWasteGasHeatExchanger => false;
+
 		#endregion
 	}
 
@@ -325,6 +327,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override ConsumerTechnology AdBlueDosing => ConsumerTechnology.Unknown;
 
+		public override bool EngineWasteGasHeatExchanger => false;
 	}
 
 	// ---------------------------------------------------------------------------------------

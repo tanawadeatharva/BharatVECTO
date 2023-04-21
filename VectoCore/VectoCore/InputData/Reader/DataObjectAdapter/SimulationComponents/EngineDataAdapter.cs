@@ -6,6 +6,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -13,14 +14,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 {
-	public interface IEngineDataAdapter
-	{
-		CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle,
-			IEngineModeDeclarationInputData mode, Mission mission);
-
-		CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx, Mission mission);
-	}
-	public abstract class EngineComponentDataAdapter : ComponentDataAdapterBase, IEngineDataAdapter
+    public abstract class EngineComponentDataAdapter : ComponentDataAdapterBase, IEngineDataAdapter
 	{
 		internal static EngineFullLoadCurve IntersectFullLoadCurves(EngineFullLoadCurve engineCurve, NewtonMeter maxTorque)
 		{

@@ -28,12 +28,14 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 						continue;
 					}
 					var annualMileage = tableRow.ParseDouble(col).SI(Unit.SI.Kilo.Meter).Cast<Meter>();
-					Data.Add(Tuple.Create<string, MissionType>(group, mission),
-						new MileageEntry() {
-							AnnualMileage = annualMileage,
-							WorkingDaysPerYear = workingDays,
-							DailyMileage = annualMileage / workingDays,
-						});
+					foreach (var g in group.Split('/')) {
+						Data.Add(Tuple.Create<string, MissionType>(g.RemoveWhitespace(), mission),
+							new MileageEntry() {
+								AnnualMileage = annualMileage,
+								WorkingDaysPerYear = workingDays,
+								DailyMileage = annualMileage / workingDays,
+							});
+					}
 				}
 			}
 		}
@@ -41,7 +43,7 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 
 		public MileageEntry Lookup(VehicleClass hdvClass, MissionType mission)
 		{
-			return Lookup(hdvClass.GetClassNumber(), mission.GetNonEMSMissionType());
+			return Lookup(hdvClass.GetClassNumberWithoutSubSuffix(), mission.GetNonEMSMissionType());
 		}
 
 

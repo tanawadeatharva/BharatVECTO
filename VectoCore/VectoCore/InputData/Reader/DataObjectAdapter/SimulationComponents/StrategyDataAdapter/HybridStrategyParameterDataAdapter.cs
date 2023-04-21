@@ -16,8 +16,8 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.StrategyDataAdapter
 {
-
-    public abstract class HybridStrategyDataAdapter{
+	public abstract class HybridStrategyDataAdapter : IHybridStrategyDataAdapter
+	{
         protected internal static Dictionary<GearshiftPosition, VehicleMaxPropulsionTorque> CreateMaxPropulsionTorque(
 			ArchitectureID archId, CombustionEngineData engineData, GearboxData gearboxData, TableData boostingLimitations)
         {
@@ -168,11 +168,22 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
             return entries;
         }
-    }
+
+		#region Implementation of IHybridStrategyDataAdapter
+
+		public abstract HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData, SuperCapData superCap,
+			VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType, ArchitectureID archID,
+			CombustionEngineData engineData, GearboxData gearboxData, TableData boostingLimitations);
+
+		public abstract HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData, SuperCapData superCapData,
+			Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode);
+
+		#endregion
+	}
 
     public class ParallelHybridStrategyParameterDataAdapter : HybridStrategyDataAdapter
 	{
-		public HybridStrategyParameters CreateHybridStrategyParameters(
+		public override HybridStrategyParameters CreateHybridStrategyParameters(
 			BatterySystemData batterySystemData,
 			SuperCapData superCap, 
 			VectoRunData.OvcHevMode ovcMode, 
@@ -236,15 +247,23 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return result;
 		}
 
-
-
-		
-
-    }
+		public override HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData, SuperCapData superCapData,
+			Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode)
+		{
+			throw new NotImplementedException("Not supported for parallel hybrid strategy");
+		}
+	}
 
 	public class SerialHybridStrategyParameterDataAdapter : HybridStrategyDataAdapter
 	{
-		public HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData,
+		public override HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData, SuperCapData superCap,
+			VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType, ArchitectureID archID,
+			CombustionEngineData engineData, GearboxData gearboxData, TableData boostingLimitations)
+		{
+			throw new NotImplementedException("Not supported for serial hybrid strategy");
+		}
+
+		public override HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData,
 			SuperCapData superCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode)
 		{
 			if (batterySystemData == null && superCapData == null) {

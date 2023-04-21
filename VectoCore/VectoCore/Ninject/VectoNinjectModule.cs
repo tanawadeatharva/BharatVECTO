@@ -38,6 +38,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
@@ -111,6 +112,10 @@ namespace TUGraz.VectoCore
 			LoadModule<VIFNinjectModule>();
 
 			LoadModule<VIFResultsNinjectModule>();
+
+			LoadModule<PostProcessingNinjectModule>();
+
+
 			#if (MOCKUP)  //TODO: add second constant for release
 				LoadModule<MockupModule>();
 			#endif

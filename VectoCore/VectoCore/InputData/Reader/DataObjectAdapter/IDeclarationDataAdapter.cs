@@ -74,10 +74,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 			VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData,
 			Action<SuperCapData> setSuperCapData);
-		BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
-			VectoSimulationJobType jobType,
-			bool ovc);
-		SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData componentsElectricStorage);
+
+		//BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
+		//	VectoSimulationJobType jobType,
+		//	bool ovc);
+		//SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData componentsElectricStorage);
+		
 		HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
 			SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType);
 
@@ -92,7 +94,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			GearboxData gearboxData,
 			CombustionEngineData engineData,
 			ArchitectureID archId);
-		ShiftStrategyParameters CreateDummyGearshiftStrategy();
 	}
 
 	public interface IPrimaryBusDeclarationDataAdapter : IDeclarationDataAdapter
@@ -110,13 +111,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			VectoRunData runData,
 			IShiftPolygonCalculator shiftPolygonCalc);
 
-		//RetarderData CreateRetarderData(IRetarderInputData retarderData);
-		//PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData);
-
-		ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed);
-
-		//VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
-		//    KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational);
+		ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed,
+			GearboxType gearboxType, int gearsCount);
 
 		CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle,
 			IEngineModeDeclarationInputData engineMode, Mission mission);
@@ -126,12 +122,25 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType);
 
 		AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment);
+
+		IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage, GearList gears = null);
+
+		void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
+			VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData,
+			Action<SuperCapData> setSuperCapData);
+
+		HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
+			SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType);
+
+
+        HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
+			SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode,
+			LoadingType loading, VehicleClass vehicleClass, MissionType missionType, TableData boostingLimitations,
+			GearboxData gearboxData, CombustionEngineData engineData, ArchitectureID architectureId);
 	}
 
 	public interface IGenericCompletedBusDeclarationDataAdapter : IDeclarationDataAdapter
 	{
-        //VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
-        //    KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational);
 
         AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment);
 
@@ -151,8 +160,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			IShiftPolygonCalculator shiftPolygonCalc);
 
 		ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed);
-
-		//RetarderData CreateRetarderData(IRetarderInputData retarderData);
 
 		DriverData CreateDriverData(Segment segment);
 
