@@ -384,6 +384,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			
 			if (retVal.Type.AutomaticTransmission() && retVal.Type != GearboxType.APTN && retVal.Type != GearboxType.IHPC)
 			{
+				if (torqueConverter == null) {
+					throw new VectoException("Torque converter data is required for automatic transmission!");
+				}
 				var ratio = double.IsNaN(retVal.Gears[1].Ratio)
 					? 1
 					: retVal.Gears[1].TorqueConverterRatio / retVal.Gears[1].Ratio;
@@ -392,16 +395,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				retVal.TorqueConverterData =
 					_torqueConverterDataAdapter.CreateTorqueConverterData(gearbox.Type, torqueConverter, ratio, engine);
 
-				if (torqueConverter != null)
-				{
-					retVal.TorqueConverterData.Manufacturer = torqueConverter.Manufacturer;
-					retVal.TorqueConverterData.ModelName = torqueConverter.Model;
-					retVal.TorqueConverterData.DigestValueInput = torqueConverter.DigestValue?.DigestValue;
-					retVal.TorqueConverterData.CertificationMethod = torqueConverter.CertificationMethod;
-					retVal.TorqueConverterData.CertificationNumber = torqueConverter.CertificationNumber;
-					retVal.TorqueConverterData.Date = torqueConverter.Date;
-					retVal.TorqueConverterData.AppVersion = torqueConverter.AppVersion;
-				}
+				retVal.TorqueConverterData.Manufacturer = torqueConverter.Manufacturer;
+				retVal.TorqueConverterData.ModelName = torqueConverter.Model;
+				retVal.TorqueConverterData.DigestValueInput = torqueConverter.DigestValue?.DigestValue;
+				retVal.TorqueConverterData.CertificationMethod = torqueConverter.CertificationMethod;
+				retVal.TorqueConverterData.CertificationNumber = torqueConverter.CertificationNumber;
+				retVal.TorqueConverterData.Date = torqueConverter.Date;
+				retVal.TorqueConverterData.AppVersion = torqueConverter.AppVersion;
 			}
 
 			// update disengageWhenHaltingSpeed
