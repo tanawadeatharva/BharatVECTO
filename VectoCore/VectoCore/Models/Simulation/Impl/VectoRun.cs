@@ -187,7 +187,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					Container.ModalData.Reset(true);
 					Container = PowertrainBuilder.Build(data, Container.ModalData, Container.SumData);
 					AbsTime = 0.SI<Second>();
-					CyclePort = Container.GetCycleOutPort();
+					Container.AbsTime = AbsTime;
+                CyclePort = Container.GetCycleOutPort();
 					Initialize();
 					Run();
 				},
