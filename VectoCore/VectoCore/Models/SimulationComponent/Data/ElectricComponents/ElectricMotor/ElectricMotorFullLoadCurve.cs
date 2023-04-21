@@ -92,9 +92,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor {
 			public NewtonMeter FullGenerationTorque { get; set; }
 		}
 
-		public string[] SerializedEntries
+		public string[] SerializedEntriesFullLoad
 		{
-			get { return FullLoadEntries.Select(x => $"{x.MotorSpeed.AsRPM} {x.FullDriveTorque} {x.FullGenerationTorque}").ToArray(); }
+			get { return FullLoadEntries.Select(x => $"{x.MotorSpeed.AsRPM} [rpm] {x.FullDriveTorque} {x.FullGenerationTorque}").ToArray(); }
 		}
 
 		public PerSecond NP80low => _nP80Low ?? (_nP80Low = ComputeNP80LowSpeed());
