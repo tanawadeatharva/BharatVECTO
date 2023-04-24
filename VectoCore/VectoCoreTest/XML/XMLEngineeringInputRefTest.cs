@@ -294,7 +294,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var jobContainer = new JobContainer(sumData);
 			var dataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
 
-			var runsFactory = _kernel.Get<ISimulatorFactoryFactory>().Factory(ExecutionMode.Engineering, dataProvider, fileWriter);
+			var runsFactory = _kernel.Get<ISimulatorFactoryFactory>().Factory(ExecutionMode.Engineering, dataProvider, fileWriter, null, null);
 			runsFactory.WriteModalResults = true;
 
 			Assert.That(() => jobContainer.AddRuns(runsFactory),
