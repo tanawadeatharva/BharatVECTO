@@ -2025,7 +2025,7 @@
 							<xs:sequence>
 								<xs:element name="Entry" type="vif:IEPCSystemDragTorqueEntryType" minOccurs="2" maxOccurs="unbounded"/>
 							</xs:sequence>
-							<xs:attribute name="gear" use="required">
+							<xs:attribute name="gear">
 								<xs:simpleType>
 									<xs:restriction base="xs:int">
 										<xs:minInclusive value="1"/>
