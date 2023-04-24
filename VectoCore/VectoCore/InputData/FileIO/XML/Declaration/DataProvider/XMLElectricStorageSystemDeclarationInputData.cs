@@ -220,11 +220,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				}
 			}
 
-
-
-
-
-
 			return corrected;
 		}
 
@@ -307,6 +302,37 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLBatteryPackDeclarationDeclarationInputDataV01(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) { }
+
+	}
+
+	public class XMLBatteryPackDeclarationInputDataMeasuredV01 : AbstractBatteryPackDeclarationInputDataProvider
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public const string XSD_TYPE = "BatterySystemDataType";
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLBatteryPackDeclarationInputDataMeasuredV01(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) { }
+
+		#region Overrides of AbstractBatteryPackDeclarationInputDataProvider
+
+		protected override XNamespace NamespaceURI => NAMESPACE_URI;
+
+		#endregion
+	}
+
+	public class XMLBatteryPackDeclarationInputDataStandardV01 : AbstractBatteryPackDeclarationInputDataProvider
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public const string XSD_TYPE = "BatterySystemStandardValuesDataType";
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLBatteryPackDeclarationInputDataStandardV01(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) { }
+
+		#region Overrides of AbstractBatteryPackDeclarationInputDataProvider
+
+		protected override XNamespace NamespaceURI => NAMESPACE_URI;
+
+		#endregion
 	}
 
 	// ---------------------------------------------------------------------------------------
