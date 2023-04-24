@@ -65,13 +65,9 @@
 							<Entry outShaftSpeed="5000.00" torque="-5000.00" electricPower="-25000.00"/>
 						</PowerMap>
 					</VoltageLevel>
-					<DragCurve gear="1">
+					<DragCurve>
 						<Entry outShaftSpeed="0.00" dragTorque="10.00"/>
 						<Entry outShaftSpeed="4000.00" dragTorque="30.00"/>
-					</DragCurve>
-					<DragCurve gear="2">
-						<Entry outShaftSpeed="0.00" dragTorque="15.00"/>
-						<Entry outShaftSpeed="4500.00" dragTorque="35.00"/>
 					</DragCurve>
 				</v2.3:Data>
 				<v2.3:Signature>
