@@ -38,8 +38,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					var batteryPackInput = entry.Item2.InputData;
 					var battery = batteryPackInput.REESSPack as IBatteryPackDeclarationInputData;
 					var batUsableCap = entry.Item2.UseableStoredEnergy;
-					entry.Item2.MaxSOC = 1;
-					entry.Item2.MinSOC = 0;
 					var batTotalCap = entry.Item2.TotalStoredEnergy;
 					
 					result.Add(new XElement(_mrf + XMLNames.ElectricEnergyStorage_Battery,
