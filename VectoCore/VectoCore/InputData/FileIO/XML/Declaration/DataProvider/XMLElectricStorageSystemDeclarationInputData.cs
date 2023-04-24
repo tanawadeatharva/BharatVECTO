@@ -188,7 +188,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of AbstractBatteryPackDeclarationInputDataProvider
 
-		protected override XNamespace NamespaceURI => NamespaceURI;
+		protected override XNamespace NamespaceURI => NAMESPACE_URI;
+
 		protected override TableData GetInternalResistanceCurve()
 		{
 			var corrected = base.GetInternalResistanceCurve();
@@ -335,9 +336,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
-	// ---------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------
 
-	public class XMLSuperCapDeclarationInputDataV24 : AbstractCommonComponentType, IXMLSuperCapDeclarationInputData
+    public class XMLSuperCapDeclarationInputDataV24 : AbstractCommonComponentType, IXMLSuperCapDeclarationInputData
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public const string XSD_TYPE = "REESSCapacitorType";
