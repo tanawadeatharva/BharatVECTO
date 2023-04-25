@@ -486,7 +486,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var jobContainer = new JobContainer(sumData);
 			var dataProvider = XMLInputReader.CreateEngineering(EngineeringSampleFile);
 
-			var runsFactory = _kernel.Get<ISimulatorFactoryFactory>().Factory(ExecutionMode.Engineering, dataProvider, fileWriter);
+			var runsFactory = _kernel.Get<ISimulatorFactoryFactory>().Factory(ExecutionMode.Engineering, dataProvider, fileWriter, null, null);
 			runsFactory.WriteModalResults = true;
 
 			Assert.That(() => jobContainer.AddRuns(runsFactory),
@@ -757,7 +757,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var inputDataProvider = XMLInputReader.CreateEngineering(stream);
 
-			var factory = _kernel.Get<ISimulatorFactoryFactory>().Factory(ExecutionMode.Engineering, inputDataProvider, new FileOutputWriter("dummy"));
+			var factory = _kernel.Get<ISimulatorFactoryFactory>().Factory(ExecutionMode.Engineering, inputDataProvider, new FileOutputWriter("dummy"), null, null);
 
 			var jobContainer = new JobContainer(null);
 			Assert.That(() => jobContainer.AddRuns(factory),
