@@ -1269,17 +1269,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Driver.DriverBehavior = DrivingBehavior.Braking;
 
 			if (DataBus.VehicleInfo.VehicleSpeed.IsEqual(0) && DriverStrategy.BrakeTrigger.NextTargetSpeed.IsEqual(0)) {
-				if (ds.IsEqual(targetDistance - currentDistance)) {
+				if (ds.IsEqual(targetDistance - currentDistance, 1e-4.SI<Meter>())) {
 					return new ResponseDrivingCycleDistanceExceeded(this) {
 						MaxDistance = ds / 2
 					};
 				}
-
-				response = Driver.DrivingActionAccelerate(absTime, ds, 1.KMPHtoMeterPerSecond(), gradient);
+				var tmpTargetVelocity = Math.Max(0.001.KMPHtoMeterPerSecond().Value(),
+					Math.Min(
+						1.KMPHtoMeterPerSecond().Value(),
+						(ds / 0.1).Value()
+					)
+				).SI<MeterPerSecond>();
+				//var tmpTargetVelocity = 1.KMPHtoMeterPerSecond();
+				response = Driver.DrivingActionAccelerate(absTime, ds, tmpTargetVelocity, gradient);
 				debug.Add("[DMB-DB-1] Accelerate", response);
 
 				if (response is ResponseUnderload) {
-					response = Driver.DrivingActionBrake(absTime, ds, 1.KMPHtoMeterPerSecond(), gradient, response,
+					response = Driver.DrivingActionBrake(absTime, ds, tmpTargetVelocity, gradient, response,
 						overrideAction: DrivingAction.Accelerate);
 					debug.Add("[DMB-DB-2] Brake", response);
 				}
