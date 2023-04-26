@@ -41,7 +41,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 			protected abstract IHybridStrategyDataAdapter HybridStrategyDataAdapter { get; }
 
-			public DriverData CreateDriverData(Segment segment)
+			protected abstract IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter { get; }
+
+            public virtual DriverData CreateDriverData(Segment segment)
 			{
 				return _driverDataAdapter.CreateDriverData(segment);
 			}
@@ -53,7 +55,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 					loading.Value.Item2, allowVocational);
 			}
 
-			public AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment)
+			public virtual AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment)
 			{
 				return _airdragDataAdapter.CreateAirdragData(airdragData, mission, segment);
 			}
@@ -89,12 +91,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 					missionType: missionType, architectureId, engineData, gearboxData, boostingLimitations);
 			}
 
-			public AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData)
+			public virtual AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData)
 			{
 				return _axleGearDataAdapter.CreateAxleGearData(axlegearData);
 			}
 
-			public AngledriveData CreateAngledriveData(IAngledriveInputData angledriveData)
+			public virtual AngledriveData CreateAngledriveData(IAngledriveInputData angledriveData)
 			{
 				return _angledriveDataAdapter.CreateAngledriveData(angledriveData);
 			}
@@ -118,7 +120,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			}
 
 
-			public RetarderData CreateRetarderData(IRetarderInputData retarderData, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet)
+			public virtual RetarderData CreateRetarderData(IRetarderInputData retarderData, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet)
 			{
 				return _retarderDataAdapter.CreateRetarderData(retarderData, position);
 			}
@@ -161,7 +163,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 			#endregion
 
-			protected abstract IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter { get; }
 		}
 
 		public class Conventional : PrimaryBusBase
@@ -176,6 +177,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 				throw new NotImplementedException();
 
 			protected override IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter { get; } = new PrimaryBusAuxiliaryDataAdapter();
+			
 			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
 			{
@@ -188,10 +190,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 		public abstract class Hybrid : PrimaryBusBase
 		{
-			private CombustionEngineComponentDataAdapter _engineDataAdapter = new CombustionEngineComponentDataAdapter();
 			private ElectricStorageAdapter _eletricStorageAdapter = new ElectricStorageAdapter();
-
-			protected readonly IPrimaryBusAuxiliaryDataAdapter _auxDataAdapter = new PrimaryBusAuxiliaryDataAdapter();
 
 			#region Overrides of PrimaryBusBase
 
@@ -199,8 +198,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 			protected override IElectricMachinesDataAdapter ElectricMachinesDataAdapter { get; } = new ElectricMachinesDataAdapter();
 
+			protected override IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter { get; } = new PrimaryBusAuxiliaryDataAdapter();
 
-			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
+            public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
 			{
 				var batteryData = _eletricStorageAdapter.CreateBatteryData(componentsElectricStorage, jobType, ovc);
@@ -217,12 +217,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 					throw new VectoException("Either battery or super cap must be provided");
 				}
 			}
-
-			#endregion
-
-			#region Overrides of PrimaryBusBase
-
-			protected override IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter => _auxDataAdapter;
 
 			#endregion
 		}
@@ -299,19 +293,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 		{
 			private readonly ElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
 
-			protected readonly IPrimaryBusAuxiliaryDataAdapter _auxDataAdapter = new PrimaryBusPEVAuxiliaryDataAdapter();
-
 			#region Overrides of PrimaryBusBase
 
 			protected override IEngineDataAdapter EngineDataAdapter => throw new NotImplementedException();
 
-			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new GearboxDataAdapter(null);
+			protected override IGearboxDataAdapter GearboxDataAdapter
+			{
+				get { throw new NotImplementedException(); }
+			}
 		
 			protected override IElectricMachinesDataAdapter ElectricMachinesDataAdapter { get; } = new ElectricMachinesDataAdapter();
 
-			protected override IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter => _auxDataAdapter;
+			protected override IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter { get; } = new PrimaryBusPEVAuxiliaryDataAdapter();
 
-			protected override IHybridStrategyDataAdapter HybridStrategyDataAdapter => throw new NotImplementedException();
+            protected override IHybridStrategyDataAdapter HybridStrategyDataAdapter => throw new NotImplementedException();
 
 			#endregion
 
@@ -339,8 +334,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 		public class PEV_E2 : BatteryElectric
 		{
-
-		}
+			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new GearboxDataAdapter(null);
+        }
 
 		public class PEV_E3 : BatteryElectric
 		{

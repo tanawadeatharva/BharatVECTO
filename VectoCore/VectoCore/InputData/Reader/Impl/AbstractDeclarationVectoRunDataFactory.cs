@@ -70,6 +70,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			int? modeIdx = null,
 			VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable);
 
+
 		protected virtual void InitializeReport()
 		{
 			var powertrainConfig = GetPowertrainConfigForReportInit();

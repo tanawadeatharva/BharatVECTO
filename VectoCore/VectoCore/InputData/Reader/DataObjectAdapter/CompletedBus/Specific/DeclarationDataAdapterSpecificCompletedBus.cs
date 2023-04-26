@@ -34,34 +34,32 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Speci
 
 			#region Implementation of ISpecificCompletedBusDeclarationDataAdapter
 
-			public IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle,
+			public virtual IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle,
 				IVehicleDeclarationInputData completedVehicle, VectoRunData runData)
 			{
-                //throw new NotImplementedException();
                 return _auxDataAdapter.CreateBusAuxiliariesData(mission, primaryVehicle, completedVehicle, runData);
             }
 
-			public VehicleData CreateVehicleData(IVehicleDeclarationInputData primaryVehicle,
+			public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData primaryVehicle,
 				IVehicleDeclarationInputData completedVehicle, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 			{
 				return _vehicleDataAdapter.CreateVehicleData(primaryVehicle, completedVehicle, segment, mission,
 					loading);
 			}
 
-			public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData,
+			public virtual IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData,
 				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType)
 			{
-				//throw new NotImplementedException();
 				return _auxDataAdapter.CreateAuxiliaryData(auxData, busAuxData, missionType, vehicleClass,
 					vehicleLength, numSteeredAxles, jobType);
 			}
 
-			public AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission)
+			public virtual AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission)
 			{
 				return _airdragDataAdapter.CreateAirdragData(completedVehicle, mission);
 			}
 
-			public CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx, Mission mission)
+			public virtual CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx, Mission mission)
 			{
 				return _engineDataAdapter.CreateEngineData(primaryVehicle, modeIdx, mission);
 			}
@@ -90,10 +88,22 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Speci
         public class HEV_P2_5 : CompletedBusDeclarationBase { }
         public class HEV_P3 : CompletedBusDeclarationBase { }
         public class HEV_P4 : CompletedBusDeclarationBase { }
-        public class PEV_E2 : CompletedBusDeclarationBase { }
-        public class PEV_E3 : CompletedBusDeclarationBase { }
-        public class PEV_E4 : CompletedBusDeclarationBase { }
-        public class PEV_E_IEPC : CompletedBusDeclarationBase { }
-		public class Exempted : CompletedBusDeclarationBase { }
+
+		public abstract class PEV_Base : CompletedBusDeclarationBase
+		{
+			#region Overrides of CompletedBusDeclarationBase
+
+			public override CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx, Mission mission)
+			{
+				return null;
+			}
+
+			#endregion
+		}
+        public class PEV_E2 : PEV_Base { }
+        public class PEV_E3 : PEV_Base { }
+        public class PEV_E4 : PEV_Base { }
+        public class PEV_E_IEPC : PEV_Base { }
+		public class Exempted : PEV_Base { }
 	}
 }

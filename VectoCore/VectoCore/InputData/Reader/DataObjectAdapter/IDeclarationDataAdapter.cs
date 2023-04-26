@@ -166,7 +166,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		IAuxiliaryConfig CreateBusAuxiliariesData(
 			Mission mission, IVehicleDeclarationInputData vehicleData, VectoRunData runData);
 
-	}
+		void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
+			VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData,
+			Action<SuperCapData> setSuperCapData);
+
+		HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
+			SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType);
+
+
+		HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
+			SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode,
+			LoadingType loading, VehicleClass vehicleClass, MissionType missionType, TableData boostingLimitations,
+			GearboxData gearboxData, CombustionEngineData engineData, ArchitectureID architectureId);
+
+    }
 
 	public interface ISpecificCompletedBusDeclarationDataAdapter
 	{
@@ -185,6 +198,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx,
 			Mission mission);
+
+
 	}
 
 	public interface ISingleBusDeclarationDataAdapter
