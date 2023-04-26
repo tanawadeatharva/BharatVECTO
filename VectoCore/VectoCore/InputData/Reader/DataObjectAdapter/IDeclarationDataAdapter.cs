@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		DriverData CreateDriverData(Segment segment);
 
 		IAuxiliaryConfig CreateBusAuxiliariesData(
-			Mission mission, IVehicleDeclarationInputData vehicleData, VectoRunData runData);
+			Mission mission, IVehicleDeclarationInputData primaryVehicle, IVehicleDeclarationInputData completedVehicle, VectoRunData runData);
 
 		void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 			VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData,
@@ -196,8 +196,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission);
 
-		CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx,
-			Mission mission);
+		//CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx,
+			//Mission mission);
 
 
 	}

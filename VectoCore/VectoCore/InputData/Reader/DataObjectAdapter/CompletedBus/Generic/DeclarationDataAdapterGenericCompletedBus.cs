@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 
 			protected abstract IHybridStrategyDataAdapter HybridStrategyDataAdapter { get; }
 
-			protected abstract IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter { get; }
+			protected virtual ICompletedBusAuxiliaryDataAdapter AuxDataAdapter { get; } = new GenericCompletedBusAuxiliaryDataAdapter();
 
             #region Implementation of IGenericCompletedBusDeclarationDataAdapter
             public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
@@ -145,10 +145,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 				return _driverDataAdapter.CreateDriverData(segment);
 			}
 
-			public IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData vehicleData,
-				VectoRunData runData)
+			public IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle, IVehicleDeclarationInputData completedVehicle,
+                VectoRunData runData)
 			{
-				return AuxDataAdapter.CreateBusAuxiliariesData(mission, vehicleData, runData);
+				return AuxDataAdapter.CreateBusAuxiliariesData(mission, primaryVehicle, completedVehicle, runData);
 			}
 			#endregion
 		}
@@ -163,9 +163,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 			
 			protected override IHybridStrategyDataAdapter HybridStrategyDataAdapter =>
 				throw new NotImplementedException();
-            
-			protected override IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter { get; } = new PrimaryBusAuxiliaryDataAdapter();
-
+			
 			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
 			{
@@ -182,11 +180,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
             #region Overrides of CompletedBusDeclarationBase
 
             protected override IEngineDataAdapter EngineDataAdapter { get; } = new GenericCombustionEngineComponentDataAdapter();
-			
-			protected override IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter { get; } =
-				new GenericCompletedBusAuxiliaryDataAdapter();
 
-            public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
+			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
 			{
 				var batteryData = _eletricStorageAdapter.CreateBatteryData(componentsElectricStorage, jobType, ovc);
@@ -255,8 +250,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 
 			protected override IElectricMachinesDataAdapter ElectricMachinesDataAdapter => throw new NotImplementedException();
 
-            protected override IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter { get; } = new GenericCompletedBusAuxiliaryDataAdapter();
-
 			protected override IHybridStrategyDataAdapter HybridStrategyDataAdapter => throw new NotImplementedException();
 
             public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
@@ -299,7 +292,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 			protected override IEngineDataAdapter EngineDataAdapter => throw new NotImplementedException();
 			protected override IGearboxDataAdapter GearboxDataAdapter => throw new NotImplementedException();
             protected override IHybridStrategyDataAdapter HybridStrategyDataAdapter => throw new NotImplementedException();
-            protected override IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter => throw new NotImplementedException();
+            protected override ICompletedBusAuxiliaryDataAdapter AuxDataAdapter => throw new NotImplementedException();
 
             public override VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)

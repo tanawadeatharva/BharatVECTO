@@ -297,11 +297,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 			protected override IEngineDataAdapter EngineDataAdapter => throw new NotImplementedException();
 
-			protected override IGearboxDataAdapter GearboxDataAdapter
-			{
-				get { throw new NotImplementedException(); }
-			}
-		
+			protected override IGearboxDataAdapter GearboxDataAdapter => throw new NotImplementedException();
+
 			protected override IElectricMachinesDataAdapter ElectricMachinesDataAdapter { get; } = new ElectricMachinesDataAdapter();
 
 			protected override IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter { get; } = new PrimaryBusPEVAuxiliaryDataAdapter();

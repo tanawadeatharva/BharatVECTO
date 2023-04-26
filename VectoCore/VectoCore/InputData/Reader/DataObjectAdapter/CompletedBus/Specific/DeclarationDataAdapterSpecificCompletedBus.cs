@@ -10,6 +10,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.StrategyDataAdapter;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
@@ -24,20 +25,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Speci
 	{
 		public abstract class CompletedBusDeclarationBase : AbstractSimulationDataAdapter, ISpecificCompletedBusDeclarationDataAdapter
         {
-			private readonly IDriverDataAdapter _driverDataAdapter = new CompletedBusSpecificDriverDataAdapter();
 			protected readonly IVehicleDataAdapter _vehicleDataAdapter = new CompletedBusSpecificVehicleDataAdapter();
 			protected readonly IAirdragDataAdapter _airdragDataAdapter = new CompletedBusSpecificAirdragDataAdapter();
-			private readonly IEngineDataAdapter _engineDataAdapter = new GenericCombustionEngineComponentDataAdapter();
-			
-			private readonly ICompletedBusAuxiliaryDataAdapter _auxDataAdapter =
-				new SpecificCompletedBusAuxiliaryDataAdapter(new PrimaryBusAuxiliaryDataAdapter());
 
-			#region Implementation of ISpecificCompletedBusDeclarationDataAdapter
 
-			public virtual IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle,
+			protected virtual ICompletedBusAuxiliaryDataAdapter AuxDataAdapter { get; } =
+				new SpecificCompletedBusAuxiliaryDataAdapter();
+
+            #region Implementation of ISpecificCompletedBusDeclarationDataAdapter
+
+            public virtual IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle,
 				IVehicleDeclarationInputData completedVehicle, VectoRunData runData)
 			{
-                return _auxDataAdapter.CreateBusAuxiliariesData(mission, primaryVehicle, completedVehicle, runData);
+                return AuxDataAdapter.CreateBusAuxiliariesData(mission, primaryVehicle, completedVehicle, runData);
             }
 
 			public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData primaryVehicle,
@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Speci
 			public virtual IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData,
 				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType)
 			{
-				return _auxDataAdapter.CreateAuxiliaryData(auxData, busAuxData, missionType, vehicleClass,
+				return AuxDataAdapter.CreateAuxiliaryData(auxData, busAuxData, missionType, vehicleClass,
 					vehicleLength, numSteeredAxles, jobType);
 			}
 
@@ -59,26 +59,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Speci
 				return _airdragDataAdapter.CreateAirdragData(completedVehicle, mission);
 			}
 
-			public virtual CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx, Mission mission)
-			{
-				return _engineDataAdapter.CreateEngineData(primaryVehicle, modeIdx, mission);
-			}
-
-			#endregion
-
-			#region Implementation of IDeclarationDataAdapter
-
-			public VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
-				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
-			{
-				throw new NotImplementedException();
-			}
-
+			
 			#endregion
 		}
 
 
-        public class Conventional : CompletedBusDeclarationBase { }
+        public class Conventional : CompletedBusDeclarationBase
+		{
+			#region Overrides of CompletedBusDeclarationBase
+
+			protected override ICompletedBusAuxiliaryDataAdapter AuxDataAdapter { get; }
+
+			#endregion
+		}
         public class HEV_S2 : CompletedBusDeclarationBase { }
         public class HEV_S3 : CompletedBusDeclarationBase { }
         public class HEV_S4 : CompletedBusDeclarationBase { }
@@ -91,14 +84,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Speci
 
 		public abstract class PEV_Base : CompletedBusDeclarationBase
 		{
-			#region Overrides of CompletedBusDeclarationBase
-
-			public override CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx, Mission mission)
-			{
-				return null;
-			}
-
-			#endregion
 		}
         public class PEV_E2 : PEV_Base { }
         public class PEV_E3 : PEV_Base { }

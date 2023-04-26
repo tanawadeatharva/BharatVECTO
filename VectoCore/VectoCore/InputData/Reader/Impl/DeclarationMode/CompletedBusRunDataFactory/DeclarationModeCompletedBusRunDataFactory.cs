@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				simulationRunData.EngineData.FuelMode = 0;
 				simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
 				simulationRunData.BusAuxiliaries =
-					DataAdapterGeneric.CreateBusAuxiliariesData(mission, PrimaryVehicle, simulationRunData);
+					DataAdapterGeneric.CreateBusAuxiliariesData(mission, PrimaryVehicle, CompletedVehicle, simulationRunData);
 				var shiftStrategyName =
 					PowertrainBuilder.GetShiftStrategyName(PrimaryVehicle.Components.GearboxInputData.Type,
 						PrimaryVehicle.VehicleType);
@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, _segment,
 						mission, loading),
 					AirdragData = DataAdapterSpecific.CreateAirdragData(CompletedVehicle, mission),
-					EngineData = DataAdapterSpecific.CreateEngineData(PrimaryVehicle, modeIdx, mission),
+					EngineData = DataAdapterGeneric.CreateEngineData(PrimaryVehicle, modeIdx, mission),
 					ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 					//GearboxData = _gearboxData,
 					AxleGearData = DataAdapterGeneric.CreateAxleGearData(PrimaryVehicle.Components.AxleGearInputData),

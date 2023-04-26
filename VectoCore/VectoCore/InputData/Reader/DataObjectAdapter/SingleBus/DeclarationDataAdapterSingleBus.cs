@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 			private IGearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(new TorqueConverterDataAdapter());
 
 			private ICompletedBusAuxiliaryDataAdapter _busAuxiliaryDataAdapter =
-				new SpecificCompletedBusAuxiliaryDataAdapter(new PrimaryBusAuxiliaryDataAdapter());
+				new SpecificCompletedBusAuxiliaryDataAdapter();
 
 			private SingleBusVehicleDataAdapter _vehicleDataAdapter = new SingleBusVehicleDataAdapter();
 			private IAxleGearDataAdapter _axleGearDataAdapter = new AxleGearDataAdapter();

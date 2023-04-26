@@ -340,7 +340,64 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 	public class PrimaryBusAuxiliaryDataAdapter : AuxiliaryDataAdapter, IPrimaryBusAuxiliaryDataAdapter
 	{
-		protected internal virtual HashSet<AuxiliaryType> AuxiliaryTypes { get; } = new HashSet<AuxiliaryType>() {
+        public override AuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle, VectoRunData runData)
+        {
+            var actuations = DeclarationData.BusAuxiliaries.ActuationsMap.Lookup(runData.Mission.MissionType);
+
+            var hvacParams = GetHVACParams(primaryVehicle.VehicleType, mission.BusParameter);
+
+            var applicableHVACConfigCooling = DeclarationData.BusAuxiliaries.GetHVACConfig(hvacParams.HVACConfiguration,
+                HeatPumpType.none, hvacParams.HeatPumpTypePassengerCompartmentCooling);
+            var applicableHVACConfigHeating = DeclarationData.BusAuxiliaries.GetHVACConfig(hvacParams.HVACConfiguration,
+                HeatPumpType.none, hvacParams.HeatPumpTypePassengerCompartmentHeating);
+
+            var ssmCooling = CreateSSMModelParameters(primaryVehicle.Components.BusAuxiliaries, mission,
+                runData.Loading, applicableHVACConfigCooling, HeatPumpType.none,
+                hvacParams.HeatPumpTypePassengerCompartmentCooling, hvacParams.HVACAuxHeaterPower, FuelData.Diesel, true);
+            var ssmHeating = CreateSSMModelParameters(primaryVehicle.Components.BusAuxiliaries, mission,
+                runData.Loading, applicableHVACConfigHeating, HeatPumpType.none,
+                hvacParams.HeatPumpTypePassengerCompartmentHeating, hvacParams.HVACAuxHeaterPower, FuelData.Diesel,
+                false);
+            ssmHeating.ElectricHeater = GetElectricHeater(mission, runData);
+            ssmHeating.HeatingDistributions = DeclarationData.BusAuxiliaries.HeatingDistributionCases;
+
+            var electricUserInputs =
+                GetElectricalUserConfig(mission, primaryVehicle, actuations, runData.VehicleData.VehicleClass);
+
+            var pneumaticUserInputsConfig = GetPneumaticUserConfig(primaryVehicle, mission);
+            var pneumaticAuxillariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type);
+            if (primaryVehicle.Components.BusAuxiliaries.PneumaticSupply.CompressorDrive == CompressorDrive.electrically) {
+                //var busAux = vehicleData.Components.BusAuxiliaries;
+                var auxConfig = new AuxiliaryConfig {
+                    VehicleData = runData.VehicleData,
+                    PneumaticAuxillariesConfig = pneumaticAuxillariesConfig,
+                    PneumaticUserInputsConfig = pneumaticUserInputsConfig
+                };
+                var airDemand = M03Impl.TotalAirDemandCalculation(auxConfig, actuations) / actuations.CycleTime;
+                electricUserInputs.ElectricalConsumers[Constants.Auxiliaries.IDs.PneumaticSystem] =
+                    new ElectricConsumerEntry() {
+                        Current = DeclarationData.BusAuxiliaries.PneumaticSystemElectricDemandPerAirGenerated * airDemand / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
+                        ActiveDuringEngineStopDriving = true,
+                        ActiveDuringEngineStopStandstill = true,
+                        BaseVehicle = false
+                    };
+            }
+
+            var retVal = new AuxiliaryConfig {
+                InputData = primaryVehicle.Components.BusAuxiliaries,
+                ElectricalUserInputsConfig = electricUserInputs,
+                PneumaticUserInputsConfig = pneumaticUserInputsConfig,
+                PneumaticAuxillariesConfig = pneumaticAuxillariesConfig,
+                Actuations = actuations,
+                SSMInputsCooling = ssmCooling,
+                SSMInputsHeating = ssmHeating,
+                VehicleData = runData.VehicleData,
+            };
+
+            return retVal;
+        }
+
+        protected internal virtual HashSet<AuxiliaryType> AuxiliaryTypes { get; } = new HashSet<AuxiliaryType>() {
 			AuxiliaryType.Fan,
 			AuxiliaryType.SteeringPump
 		};
@@ -800,63 +857,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 		#region Overrides of AuxiliaryDataAdapter
 
-		public override AuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle, VectoRunData runData)
-		{
-			var actuations = DeclarationData.BusAuxiliaries.ActuationsMap.Lookup(runData.Mission.MissionType);
-
-			var hvacParams = GetHVACParams(primaryVehicle.VehicleType, mission.BusParameter);
-			
-			var applicableHVACConfigCooling = DeclarationData.BusAuxiliaries.GetHVACConfig(hvacParams.HVACConfiguration,
-				HeatPumpType.none, hvacParams.HeatPumpTypePassengerCompartmentCooling);
-			var applicableHVACConfigHeating = DeclarationData.BusAuxiliaries.GetHVACConfig(hvacParams.HVACConfiguration,
-				HeatPumpType.none, hvacParams.HeatPumpTypePassengerCompartmentHeating);
-
-			var ssmCooling = CreateSSMModelParameters(primaryVehicle.Components.BusAuxiliaries, mission,
-				runData.Loading, applicableHVACConfigCooling, HeatPumpType.none,
-				hvacParams.HeatPumpTypePassengerCompartmentCooling, hvacParams.HVACAuxHeaterPower, FuelData.Diesel, true);
-			var ssmHeating = CreateSSMModelParameters(primaryVehicle.Components.BusAuxiliaries, mission,
-				runData.Loading, applicableHVACConfigHeating, HeatPumpType.none,
-				hvacParams.HeatPumpTypePassengerCompartmentHeating, hvacParams.HVACAuxHeaterPower, FuelData.Diesel,
-				false);
-			ssmHeating.ElectricHeater = GetElectricHeater(mission, runData);
-			ssmHeating.HeatingDistributions = DeclarationData.BusAuxiliaries.HeatingDistributionCases;
-
-			var electricUserInputs =
-				GetElectricalUserConfig(mission, primaryVehicle, actuations, runData.VehicleData.VehicleClass);
-			
-			var pneumaticUserInputsConfig = GetPneumaticUserConfig(primaryVehicle, mission);
-			var pneumaticAuxillariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type);
-			if (primaryVehicle.Components.BusAuxiliaries.PneumaticSupply.CompressorDrive == CompressorDrive.electrically) {
-				//var busAux = vehicleData.Components.BusAuxiliaries;
-				var auxConfig = new AuxiliaryConfig {
-					VehicleData = runData.VehicleData,
-					PneumaticAuxillariesConfig = pneumaticAuxillariesConfig,
-					PneumaticUserInputsConfig = pneumaticUserInputsConfig
-				};
-				var airDemand = M03Impl.TotalAirDemandCalculation(auxConfig, actuations) / actuations.CycleTime;
-				electricUserInputs.ElectricalConsumers[Constants.Auxiliaries.IDs.PneumaticSystem] =
-					new ElectricConsumerEntry() {
-						Current = DeclarationData.BusAuxiliaries.PneumaticSystemElectricDemandPerAirGenerated * airDemand / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
-						ActiveDuringEngineStopDriving = true,
-						ActiveDuringEngineStopStandstill = true,
-						BaseVehicle = false
-					};
-			}
-
-			var retVal = new AuxiliaryConfig
-			{
-				InputData = primaryVehicle.Components.BusAuxiliaries,
-				ElectricalUserInputsConfig = electricUserInputs,
-				PneumaticUserInputsConfig = pneumaticUserInputsConfig,
-				PneumaticAuxillariesConfig = pneumaticAuxillariesConfig,
-				Actuations = actuations,
-				SSMInputsCooling = ssmCooling,
-				SSMInputsHeating = ssmHeating,
-				VehicleData = runData.VehicleData,
-			};
-
-			return retVal;
-		}
+		
 
 		private HeaterType GetElectricHeater(Mission mission, VectoRunData runData)
 		{
@@ -1009,16 +1010,34 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 	public class SpecificCompletedBusAuxiliaryDataAdapter : PrimaryBusAuxiliaryDataAdapter, ICompletedBusAuxiliaryDataAdapter
 	{
-		private readonly PrimaryBusAuxiliaryDataAdapter _primaryBusDataAdapter;
-
-		public SpecificCompletedBusAuxiliaryDataAdapter(IPrimaryBusAuxiliaryDataAdapter primaryBusDataAdapter)
-		{
-			_primaryBusDataAdapter = primaryBusDataAdapter as PrimaryBusAuxiliaryDataAdapter;
-		}
 		
-		#region Avarage Current Demand Calculation
 
-		protected override bool VehicleHasElectricalConsumer(string consumerName, IBusAuxiliariesDeclarationData busAux)
+		public IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle,
+			IVehicleDeclarationInputData completedVehicle, VectoRunData runData)
+		{
+			var actuations = DeclarationData.BusAuxiliaries.ActuationsMap.Lookup(runData.Mission.MissionType);
+			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
+
+			var (ssmCooling, ssmHeating) =
+				GetCompletedSSMInput(mission, completedVehicle, primaryVehicle, runData.Loading);
+
+			return new AuxiliaryConfig {
+				InputData = completedVehicle.Components.BusAuxiliaries,
+				ElectricalUserInputsConfig = CreateElectricsUserInputsConfig(
+					primaryVehicle, completedVehicle, mission, actuations, runData.VehicleData.VehicleClass),
+				PneumaticUserInputsConfig = CreatePneumaticUserInputsConfig(
+					primaryBusAuxiliaries, completedVehicle),
+				PneumaticAuxillariesConfig = base.CreatePneumaticAuxConfig(runData.Retarder.Type),
+				Actuations = actuations,
+				SSMInputsCooling = ssmCooling,
+				SSMInputsHeating = ssmHeating,
+				VehicleData = runData.VehicleData
+			};
+		}
+
+        #region Avarage Current Demand Calculation
+
+        protected override bool VehicleHasElectricalConsumer(string consumerName, IBusAuxiliariesDeclarationData busAux)
 		{
 			if (consumerName == "Day running lights LED bonus" && (bool)busAux.ElectricConsumers.DayrunninglightsLED)
 				return true;
@@ -1270,7 +1289,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			var coolingPower = CalculateMaxCoolingPower(completedVehicle, primaryVehicle, mission, hvacConfiguration);
 			var heatingPower = CalculateMaxHeatingPower(completedVehicle, primaryVehicle, mission, hvacConfiguration);
-			var ssmInputs = _primaryBusDataAdapter.GetDefaulSSMInputs(FuelData.Diesel);
+			var ssmInputs = GetDefaulSSMInputs(FuelData.Diesel);
 
 			ssmInputs.BusFloorType = completedVehicle.VehicleCode.GetFloorType();
 			ssmInputs.Technologies = CreateTechnologyBenefits(completedVehicle, primaryVehicle.Components.BusAuxiliaries);
@@ -1364,7 +1383,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				}
 			}
 
-			return _primaryBusDataAdapter.SelectBenefitForFloorType(completedVehicle.VehicleCode.GetFloorType(), onVehicle);
+			return SelectBenefitForFloorType(completedVehicle.VehicleCode.GetFloorType(), onVehicle);
 		}
 
 		protected override Dictionary<string, ElectricConsumerEntry> GetElectricAuxConsumers(Mission mission,
@@ -1420,7 +1439,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			//primaryBusAuxiliaries.ElectricSupply.AlternatorTechnology;
 			retVal.ElectricalConsumers = (Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry>)currentDemand;
 			retVal.AlternatorMap = new SimpleAlternator(
-				_primaryBusDataAdapter.CalculateAlternatorEfficiency(
+				CalculateAlternatorEfficiency(
 					primaryBusAuxiliaries.ElectricSupply.Alternators
 						.Concat(completedVehicle.Components.BusAuxiliaries.ElectricSupply?.Alternators ??
 								new List<IAlternatorDeclarationInputData>()).ToList()));
@@ -1451,29 +1470,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 		#region Implementation of ICompletedBusAuxiliaryDataAdapter
 
-		public IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle,
-			IVehicleDeclarationInputData completedVehicle, VectoRunData runData)
-		{
-			var actuations = DeclarationData.BusAuxiliaries.ActuationsMap.Lookup(runData.Mission.MissionType);
-			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
-
-			var (ssmCooling, ssmHeating) =
-				GetCompletedSSMInput(mission, completedVehicle, primaryVehicle, runData.Loading);
-
-			return new AuxiliaryConfig
-			{
-				InputData = completedVehicle.Components.BusAuxiliaries,
-				ElectricalUserInputsConfig = CreateElectricsUserInputsConfig(
-					primaryVehicle, completedVehicle, mission, actuations, runData.VehicleData.VehicleClass),
-				PneumaticUserInputsConfig = CreatePneumaticUserInputsConfig(
-					primaryBusAuxiliaries, completedVehicle),
-				PneumaticAuxillariesConfig = _primaryBusDataAdapter.CreatePneumaticAuxConfig(runData.Retarder.Type),
-				Actuations = actuations,
-				SSMInputsCooling = ssmCooling,
-				SSMInputsHeating = ssmHeating,
-				VehicleData = runData.VehicleData
-			};
-		}
 
 		#endregion
 	}

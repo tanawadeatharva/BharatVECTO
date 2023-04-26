@@ -30,7 +30,7 @@ static internal class SSMBusAuxModelParameters
 		string[] steeringpumps, string fanTech, AlternatorType alternatorTech, Meter entranceHeight,
 		LoadingType loading = LoadingType.ReferenceLoad, bool essSupplyfromHVREESS = false)
 	{
-		var dao = new SpecificCompletedBusAuxiliaryDataAdapter(new PrimaryBusAuxiliaryDataAdapter());
+		var dao = new SpecificCompletedBusAuxiliaryDataAdapter();
 
 		var segment = DeclarationData.CompletedBusSegments.Lookup(axleconfiguration.NumAxles(),
 			vehicleCode, registrationClass, numPassengersLowerdeck, height, lowEntry);
