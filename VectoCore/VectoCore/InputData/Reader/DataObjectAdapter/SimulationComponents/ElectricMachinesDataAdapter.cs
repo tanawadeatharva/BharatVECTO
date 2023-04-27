@@ -9,6 +9,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.GenericModelData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -23,19 +24,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			IElectricMachinesDeclarationInputData electricMachines,
 			IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage, GearList gearlist = null)
 		{
-
-
 			if (electricMachines == null) {
 				return null;
 			}
 
-
 			if (electricMachines.Entries.Select(x => x.Position).Where(x => x != PowertrainPosition.GEN).Distinct().Count() > 1) {
 				throw new VectoException("multiple electric propulsion motors are not supported at the moment");
 			}
-
-
-
 
 			CheckTorqueLimitVoltageLevels(electricMachines, torqueLimits);
 
@@ -130,7 +125,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return retVal;
 		}
 
-		private static ElectricMotorFullLoadCurve IntersectEMFullLoadCurves(ElectricMotorFullLoadCurve fullLoadCurve,
+		protected internal static ElectricMotorFullLoadCurve IntersectEMFullLoadCurves(ElectricMotorFullLoadCurve fullLoadCurve,
 			ElectricMotorFullLoadCurve maxTorqueCurve)
 		{
 			if (maxTorqueCurve == null) {
@@ -599,6 +594,57 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 	}
 
+	public class GenericElectricMachinesDataAdapter : IElectricMachinesDataAdapter
+	{
+		private GenericBusElectricMotorData GenercicEMotorData = new GenericBusElectricMotorData();
 
+		#region Implementation of IElectricMachinesDataAdapter
+
+		public IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits,
+			Volt averageVoltage, GearList gearlist = null)
+		{
+			if (electricMachines == null) {
+				return null;
+			}
+
+			if (electricMachines.Entries.Select(x => x.Position).Where(x => x != PowertrainPosition.GEN).Distinct().Count() > 1) {
+				throw new VectoException("multiple electric propulsion motors are not supported at the moment");
+			}
+
+			CheckTorqueLimitVoltageLevels(electricMachines, torqueLimits);
+
+			return electricMachines.Entries.Select(m =>
+				Tuple.Create(m.Position, GenercicEMotorData.CreateGenericElectricMotorData(m, torqueLimits?.FirstOrDefault(t => t.Key == m.Position).Value))).ToList();
+
+		}
+
+		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(IIEPCDeclarationInputData iepc, Volt averageVoltage)
+		{
+			throw new NotImplementedException();
+		}
+
+        #endregion
+
+		private void CheckTorqueLimitVoltageLevels(IElectricMachinesDeclarationInputData electricMachines,
+			IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits)
+		{
+			if (torqueLimits == null) {
+				return;
+			}
+
+			foreach (var torqueLimit in torqueLimits.OrderBy(x => x.Key)) {
+
+				//E-machines at position
+				foreach (var eMachine in electricMachines.Entries.Where(e => e.Position == torqueLimit.Key).Select(x => x.ElectricMachine)) {
+					foreach (var torqueLimitVoltageLevel in torqueLimit.Value.Select(tl => tl.Item1)) {
+						if (eMachine.VoltageLevels.All(vl => vl.VoltageLevel != torqueLimitVoltageLevel)) {
+							throw new VectoException(
+								$"EM Torque Limit: Voltage level {torqueLimitVoltageLevel} not found for EM at position {torqueLimit.Key}");
+						}
+					}
+				}
+			}
+		}
+    }
 
 }

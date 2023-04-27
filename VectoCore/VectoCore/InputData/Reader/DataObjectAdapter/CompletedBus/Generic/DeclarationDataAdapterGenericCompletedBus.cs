@@ -248,11 +248,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 
 			protected override IGearboxDataAdapter GearboxDataAdapter => throw new NotImplementedException();
 
-			protected override IElectricMachinesDataAdapter ElectricMachinesDataAdapter => throw new NotImplementedException();
+			protected override IElectricMachinesDataAdapter ElectricMachinesDataAdapter { get; } =
+				new GenericElectricMachinesDataAdapter();
 
 			protected override IHybridStrategyDataAdapter HybridStrategyDataAdapter => throw new NotImplementedException();
 
-            public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
+			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
 			{
 				var batteryData = _electricStorageAdapter.CreateBatteryData(componentsElectricStorage, jobType, ovc);

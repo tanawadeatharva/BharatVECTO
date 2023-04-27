@@ -90,7 +90,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Speci
         
 		public class HEV_P4 : ParallelHybrid { }
 
-		public abstract class BatteryElectric : CompletedBusDeclarationBase { }
+		public abstract class BatteryElectric : CompletedBusDeclarationBase
+		{
+
+			protected override ICompletedBusAuxiliaryDataAdapter AuxDataAdapter { get; } =
+				new SpecificCompletedPEVBusAuxiliaryDataAdapter();
+
+		}
         
 		public class PEV_E2 : BatteryElectric { }
         

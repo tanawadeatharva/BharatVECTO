@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var em = multistepBusInputData.JobInputData.PrimaryVehicle.Vehicle.Components.ElectricMachines;
 
 			var genericElectricMotor = new GenericBusElectricMotorData();
-			var electricMotorData = genericElectricMotor.CreateGenericElectricMotorData(em.Entries[0]);
+			var electricMotorData = genericElectricMotor.CreateGenericElectricMotorData(em.Entries[0], null);
 
 			Assert.AreEqual(2, electricMotorData.EfficiencyData.VoltageLevels.Count);
 		}

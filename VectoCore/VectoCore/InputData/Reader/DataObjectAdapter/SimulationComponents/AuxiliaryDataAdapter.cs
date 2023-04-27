@@ -1474,4 +1474,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		#endregion
 	}
 
+
+	public class SpecificCompletedPEVBusAuxiliaryDataAdapter : SpecificCompletedBusAuxiliaryDataAdapter
+	{
+		protected internal override HashSet<AuxiliaryType> AuxiliaryTypes { get; } = new HashSet<AuxiliaryType>() {
+			//AuxiliaryType.Fan,
+			AuxiliaryType.SteeringPump
+		};
+    }
 }

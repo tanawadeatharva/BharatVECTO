@@ -490,7 +490,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				result.Retarder = DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData);
 				result.MaxChargingPower = PrimaryVehicle.MaxChargingPower;
                    
-				result.EngineData.FuelMode = 0;
+				//result.EngineData.FuelMode = 0;
 				result.VehicleData.VehicleClass = _segment.VehicleClass;
 				result.BusAuxiliaries =
                     DataAdapterSpecific.CreateBusAuxiliariesData(mission, PrimaryVehicle, CompletedVehicle,
@@ -503,7 +503,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 			
 			protected virtual bool AxleGearRequired()
 			{
-				return InputDataProvider.JobInputData.Vehicle.ArchitectureID != ArchitectureID.E4;
+				return PrimaryVehicle.ArchitectureID != ArchitectureID.E4;
 			}
 
 			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
@@ -521,6 +521,27 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
         public class PEV_E2 : BatteryElectric
         {
             public PEV_E2(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric) { }
+
+			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
+			{
+				if (PrimaryVehicle.ArchitectureID != ArchitectureID.E2) {
+					throw new ArgumentException(nameof(PrimaryVehicle));
+				}
+				runData.GearshiftParameters =
+					DataAdapterGeneric.CreateGearshiftData(
+						runData.GearboxData,
+						(runData.AxleGearData?.AxleGear.Ratio ?? 1.0) *
+						(runData.AngledriveData?.Angledrive.Ratio ?? 1.0),
+						null
+					);
+
+                var shiftStrategyName =
+					PowertrainBuilder.GetShiftStrategyName(PrimaryVehicle.Components.GearboxInputData.Type,
+						PrimaryVehicle.VehicleType);
+				runData.GearboxData = DataAdapterGeneric.CreateGearboxData(PrimaryVehicle, runData,
+					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+				
+            }
         }
         public class PEV_E3 : BatteryElectric
         {
