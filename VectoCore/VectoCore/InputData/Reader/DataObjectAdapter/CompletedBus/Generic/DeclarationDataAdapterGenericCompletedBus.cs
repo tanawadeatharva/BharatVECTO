@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 
 		public abstract class Hybrid : CompletedBusDeclarationBase
 		{
-			private ElectricStorageAdapter _eletricStorageAdapter = new ElectricStorageAdapter();
+			private IElectricStorageAdapter _eletricStorageAdapter = new ElectricStorageAdapter();
 
             #region Overrides of CompletedBusDeclarationBase
 
@@ -242,7 +242,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 
 		public abstract class BatteryElectric : CompletedBusDeclarationBase
 		{
-			private readonly ElectricStorageAdapter _electricStorageAdapter = null;
+			private readonly IElectricStorageAdapter _electricStorageAdapter = new GenericElectricStorageDataAdapter();
 
             protected override IEngineDataAdapter EngineDataAdapter => throw new NotImplementedException();
 

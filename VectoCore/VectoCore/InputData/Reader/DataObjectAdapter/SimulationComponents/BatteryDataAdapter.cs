@@ -5,28 +5,28 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.GenericModelData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 {
-	public class ElectricStorageAdapter
+    public class ElectricStorageAdapter : IElectricStorageAdapter
 	{
 		public BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData batteryInputData,
 			VectoSimulationJobType jobType,
 			bool ovc)
 		{
-			if (batteryInputData == null)
-			{
+			if (batteryInputData == null) {
 				return null;
 			}
 
 			var batteries = batteryInputData.ElectricStorageElements.Where(x => x.REESSPack.StorageType == REESSType.Battery).ToArray();
 
-			if (batteries.Length == 0)
-			{
+			if (batteries.Length == 0) {
 				return null;
 			}
 
@@ -115,7 +115,41 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 
 
-		
+	}
+
+	public class GenericElectricStorageDataAdapter : IElectricStorageAdapter
+	{
+		protected GenericBusBatteryData busBattery = new GenericBusBatteryData();
+		protected GenericBusSuperCapData busSuperCap = new GenericBusSuperCapData();
+
+		#region Implementation of IElectricStorageAdapter
+
+		public BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData batteryInputData,
+			VectoSimulationJobType jobType, bool ovc)
+		{
+			if (batteryInputData == null) {
+				return null;
+			}
+            return busBattery.CreateBatteryData(batteryInputData, jobType, ovc);
+		}
+
+		public SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData reessInputData)
+		{
+			if (reessInputData == null) {
+				return null;
+			}
+			var superCaps = reessInputData.ElectricStorageElements.Where(x => x.REESSPack.StorageType == REESSType.SuperCap).ToArray();
+
+			var superCap = superCaps.FirstOrDefault()?.REESSPack as ISuperCapDeclarationInputData;
+
+			if (superCap == null) {
+				return null;
+			}
+
+			return busSuperCap.CreateGenericSuperCapData(superCap);
+		}
+
+		#endregion
 	}
 
 	public static class BatterySystemHelper

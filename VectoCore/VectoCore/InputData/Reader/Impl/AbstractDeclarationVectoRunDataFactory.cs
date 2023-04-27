@@ -79,5 +79,31 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		protected abstract VectoRunData GetPowertrainConfigForReportInit();
 
-	}
+		/// <summary>
+		/// Super caps are not allowed for ovc hevs or pevs
+		/// </summary>
+		protected void CheckSuperCap(IVehicleDeclarationInputData vehicle)
+		{
+			if (vehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle || vehicle.OvcHev) {
+				if (vehicle.Components.ElectricStorage.ElectricStorageElements.Any(e =>
+						e.REESSPack.StorageType == REESSType.SuperCap)) {
+					throw new VectoException("Super caps are not allowed for OVC-HEVs or PEVs");
+				}
+			}
+
+			if (vehicle.Components.ElectricStorage?.ElectricStorageElements == null) {
+				return;
+			}
+
+			var hasSuperCap = vehicle.Components.ElectricStorage.ElectricStorageElements.Any(e =>
+				e.REESSPack.StorageType == REESSType.SuperCap);
+			var hasBattery = vehicle.Components.ElectricStorage.ElectricStorageElements.Any(e =>
+				e.REESSPack.StorageType == REESSType.Battery);
+
+			if (hasSuperCap && hasBattery) {
+				//Already handled by XML Schema
+				throw new VectoException("Super caps AND batteries are not supported");
+			}
+		}
+    }
 }

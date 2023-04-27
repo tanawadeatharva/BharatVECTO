@@ -167,7 +167,12 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
             //return base.CreateVectoRunDataSpecific(mission, loading, modeIdx);
         }
 
-        private IEnumerable<VectoRunData> CreateVectoRunDataForMissions(int modeIdx, string fuelMode)
+		protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
+		{
+			throw new NotImplementedException();
+		}
+
+		private IEnumerable<VectoRunData> CreateVectoRunDataForMissions(int modeIdx, string fuelMode)
         {
 			var InputDataProvider = DataProvider.MultistageJobInputData;
             foreach (var mission in _segment.Missions) {
@@ -237,7 +242,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 GearboxData = PrimaryBusMockupRunDataFactory.CreateMockupGearboxData(PrimaryVehicle),
                 AxleGearData = PrimaryBusMockupRunDataFactory.CreateMockupAxleGearData(PrimaryVehicle)
             };
-            return base.CreateVectoRunDataGeneric(mission, loading, primarySegment, modeIdx);
+            //return base.CreateVectoRunDataGeneric(mission, loading, primarySegment, modeIdx);
         }
 
         //#endregion

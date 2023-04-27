@@ -243,7 +243,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 		public abstract class Hybrid : LorryBase
 		{
-			private ElectricStorageAdapter _eletricStorageAdapter = new ElectricStorageAdapter();
+			private IElectricStorageAdapter _eletricStorageAdapter = new ElectricStorageAdapter();
 			protected IAuxiliaryDataAdapter _auxAdapter = new HeavyLorryAuxiliaryDataAdapter();
 
 			protected override IEngineDataAdapter EngineDataAdapter { get; } = new CombustionEngineComponentDataAdapter();
@@ -310,7 +310,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			protected override GearboxType[] SupportedGearboxTypes { get; }
 
 			//private readonly GearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(null);
-			private readonly ElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
+			private readonly IElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
 			private readonly ElectricMachinesDataAdapter _electricMachineAdapter = new ElectricMachinesDataAdapter();
 			
 			private readonly HeavyLorryPEVAuxiliaryDataAdapter

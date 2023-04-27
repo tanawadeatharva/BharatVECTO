@@ -151,21 +151,21 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(2, ihpcData.EfficiencyData.VoltageLevels.Count);
 		}
 
-		[TestCase(@"TestData\XML\XMLVIFBusReport\IEPC_completedBus_2.VIF_Report_2.xml", 0.1)]
+		[TestCase(@"TestData\XML\XMLVIFBusReport\IEPC_completedBus_2.VIF_Report_2.xml", 0.5)]
 		public void TestGenericBatteryData(string vifFilePath, double initialSoC)
 		{
 			var multistepBusInputData = xmlInputReader.Create(vifFilePath) as IMultistepBusInputDataProvider;
 			var electricStorage = multistepBusInputData.JobInputData.PrimaryVehicle.Vehicle.Components.ElectricStorage;
 			
 			var genericBusBatteryData = new GenericBusBatteryData();
-			var batterySystemData = genericBusBatteryData.CreateBatteryData(electricStorage, initialSoC);
+			var batterySystemData = genericBusBatteryData.CreateBatteryData(electricStorage, VectoSimulationJobType.BatteryElectricVehicle, true);
 
 			Assert.AreEqual(initialSoC, batterySystemData.InitialSoC);
 			Assert.AreEqual(2, batterySystemData.Batteries.Count);
 
 			var battery0 = batterySystemData.Batteries[0];
-			Assert.AreEqual(0.80, battery0.Item2.MaxSOC, 1e-6);
-			Assert.AreEqual(0.20, battery0.Item2.MinSOC, 1e-6);
+			Assert.AreEqual(0.9275, battery0.Item2.MaxSOC, 1e-6);
+			Assert.AreEqual(0.0725, battery0.Item2.MinSOC, 1e-6);
 			Assert.AreEqual(72, battery0.Item2.Capacity.AsAmpHour);
 			Assert.AreEqual(2, battery0.Item2.InternalResistance.Entries.Length);
 			
@@ -183,8 +183,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(resistance, battery0.Item2.InternalResistance.Entries[1].Resistance[2].Item2.Value());
 
 			var battery1 = batterySystemData.Batteries[1];
-			Assert.AreEqual(0.80, battery1.Item2.MaxSOC, 1e-6);
-			Assert.AreEqual(0.20, battery1.Item2.MinSOC, 1e-6);
+			Assert.AreEqual(0.9275, battery1.Item2.MaxSOC, 1e-6);
+			Assert.AreEqual(0.0725, battery1.Item2.MinSOC, 1e-6);
 			Assert.AreEqual(72, battery1.Item2.Capacity.AsAmpHour);
 			Assert.AreEqual(2, battery1.Item2.InternalResistance.Entries.Length);
 			
@@ -203,12 +203,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		
-		[TestCase(@"TestData\Hybrids\Hyb_P2_Group2SuperCapOvl\SuperCap.vreess", 0.1)]
+		[TestCase(@"TestData\Hybrids\Hyb_P2_Group2SuperCapOvl\SuperCap.vreess", 1)]
 		public void TestGenericSuperCapData(string superCapFilePath, double initialSoC)
 		{
 			var superCap = JSONInputDataFactory.ReadREESSData(superCapFilePath, false) as ISuperCapDeclarationInputData; 
 			var genericBusSuperCapData = new GenericBusSuperCapData();
-			var superCapData = genericBusSuperCapData.CreateGenericSuperCapData(superCap, initialSoC);
+			var superCapData = genericBusSuperCapData.CreateGenericSuperCapData(superCap);
 
 			Assert.AreEqual(37.0, superCapData.Capacity.Value());
 			Assert.AreEqual(0, superCapData.MinVoltage.Value());

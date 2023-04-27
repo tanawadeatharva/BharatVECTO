@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 		public abstract class Hybrid : PrimaryBusBase
 		{
-			private ElectricStorageAdapter _eletricStorageAdapter = new ElectricStorageAdapter();
+			private IElectricStorageAdapter _eletricStorageAdapter = new ElectricStorageAdapter();
 
 			#region Overrides of PrimaryBusBase
 
@@ -291,7 +291,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 		public abstract class BatteryElectric : PrimaryBusBase
 		{
-			private readonly ElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
+			private readonly IElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
 
 			#region Overrides of PrimaryBusBase
 
