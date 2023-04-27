@@ -28,6 +28,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
         //PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData);
         //IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData, MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles);
         //AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData);
+		
 		VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission first, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> keyValuePair, bool allowVocational);
 		RetarderData CreateRetarderData(IRetarderInputData retarderData, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet);
 
@@ -51,8 +52,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData, IGearboxDeclarationInputData gbx);
 		PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto);
-
-
 
 		ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed, GearboxType gearboxType, int gearsCount);
 
@@ -141,8 +140,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 	public interface IGenericCompletedBusDeclarationDataAdapter : IDeclarationDataAdapter
 	{
-
-        AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment);
+		AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment);
 
 		CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx,
 			Mission mission);

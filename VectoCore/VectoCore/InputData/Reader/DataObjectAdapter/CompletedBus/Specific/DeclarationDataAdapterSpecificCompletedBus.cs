@@ -64,31 +64,50 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Speci
 		}
 
 
-        public class Conventional : CompletedBusDeclarationBase
+        public class Conventional : CompletedBusDeclarationBase { }
+
+		public abstract class Hybrid : CompletedBusDeclarationBase { }
+
+		public abstract class SerialHybrid : Hybrid {}
+
+		public class HEV_S2 : SerialHybrid { }
+        
+		public class HEV_S3 : SerialHybrid { }
+        
+		public class HEV_S4 : SerialHybrid { }
+        
+		public class HEV_S_IEPC : SerialHybrid { }
+
+		public abstract class ParallelHybrid : Hybrid { }
+        
+		public class HEV_P1 : ParallelHybrid { }
+        
+		public class HEV_P2 : ParallelHybrid { }
+        
+		public class HEV_P2_5 : ParallelHybrid { }
+        
+		public class HEV_P3 : ParallelHybrid { }
+        
+		public class HEV_P4 : ParallelHybrid { }
+
+		public abstract class BatteryElectric : CompletedBusDeclarationBase { }
+        
+		public class PEV_E2 : BatteryElectric { }
+        
+		public class PEV_E3 : BatteryElectric { }
+        
+		public class PEV_E4 : BatteryElectric { }
+        
+		public class PEV_E_IEPC : BatteryElectric { }
+
+		public class Exempted : CompletedBusDeclarationBase
 		{
-			#region Overrides of CompletedBusDeclarationBase
+			public override VehicleData CreateVehicleData(IVehicleDeclarationInputData primaryVehicle,
+				IVehicleDeclarationInputData completedVehicle, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
+			{
+				return _vehicleDataAdapter.CreateExemptedVehicleData(primaryVehicle, completedVehicle);
+			}
 
-			protected override ICompletedBusAuxiliaryDataAdapter AuxDataAdapter { get; }
-
-			#endregion
-		}
-        public class HEV_S2 : CompletedBusDeclarationBase { }
-        public class HEV_S3 : CompletedBusDeclarationBase { }
-        public class HEV_S4 : CompletedBusDeclarationBase { }
-        public class HEV_S_IEPC : CompletedBusDeclarationBase { }
-        public class HEV_P1 : CompletedBusDeclarationBase { }
-        public class HEV_P2 : CompletedBusDeclarationBase { }
-        public class HEV_P2_5 : CompletedBusDeclarationBase { }
-        public class HEV_P3 : CompletedBusDeclarationBase { }
-        public class HEV_P4 : CompletedBusDeclarationBase { }
-
-		public abstract class PEV_Base : CompletedBusDeclarationBase
-		{
-		}
-        public class PEV_E2 : PEV_Base { }
-        public class PEV_E3 : PEV_Base { }
-        public class PEV_E4 : PEV_Base { }
-        public class PEV_E_IEPC : PEV_Base { }
-		public class Exempted : PEV_Base { }
+        }
 	}
 }

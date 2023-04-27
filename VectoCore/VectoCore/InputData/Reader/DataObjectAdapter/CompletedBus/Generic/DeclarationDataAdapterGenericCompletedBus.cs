@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 			public IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle, IVehicleDeclarationInputData completedVehicle,
                 VectoRunData runData)
 			{
-				return AuxDataAdapter.CreateBusAuxiliariesData(mission, primaryVehicle, completedVehicle, runData);
+				return AuxDataAdapter.CreateBusAuxiliariesData(mission, primaryVehicle, null, runData);
 			}
 			#endregion
 		}
@@ -297,8 +297,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
             public override VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
 			{
-				return _vehicleDataAdapter.CreateExemptedVehicleData(vehicle);
-			}
+				throw new NotImplementedException();
+            }
 
 			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)

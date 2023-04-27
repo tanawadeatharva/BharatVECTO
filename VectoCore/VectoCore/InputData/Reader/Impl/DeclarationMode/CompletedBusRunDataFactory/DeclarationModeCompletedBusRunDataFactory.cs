@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 
 			protected virtual VectoRunData CreateVectoRunDataGeneric(Mission mission,
-				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int modeIdx)
+				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int? modeIdx)
 			{
 				var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType,
 					_ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					VehicleData =
 						DataAdapterGeneric.CreateVehicleData(PrimaryVehicle, primarySegment, mission, loading, false),
 					AirdragData = DataAdapterGeneric.CreateAirdragData(null, mission, new Segment()),
-					EngineData = DataAdapterGeneric.CreateEngineData(PrimaryVehicle, modeIdx, mission),
+					EngineData = DataAdapterGeneric.CreateEngineData(PrimaryVehicle, modeIdx.Value, mission),
 					ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 					//GearboxData = _gearboxData,
 					AxleGearData = DataAdapterGeneric.CreateAxleGearData(PrimaryVehicle.Components.AxleGearInputData),
@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 			}
 
 			protected virtual VectoRunData CreateVectoRunDataSpecific(Mission mission,
-				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int modeIdx)
+				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int? modeIdx)
 			{
 				var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType,
 					_ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, _segment,
 						mission, loading),
 					AirdragData = DataAdapterSpecific.CreateAirdragData(CompletedVehicle, mission),
-					EngineData = DataAdapterGeneric.CreateEngineData(PrimaryVehicle, modeIdx, mission),
+					EngineData = DataAdapterGeneric.CreateEngineData(PrimaryVehicle, modeIdx.Value, mission),
 					ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 					//GearboxData = _gearboxData,
 					AxleGearData = DataAdapterGeneric.CreateAxleGearData(PrimaryVehicle.Components.AxleGearInputData),
@@ -193,7 +193,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
 			{
 				// create specific run data
-				var simulationRunData = CreateVectoRunDataSpecific(mission, loading, modeIdx.Value);
+				var simulationRunData = CreateVectoRunDataSpecific(mission, loading, modeIdx);
 				if (simulationRunData != null) {
 					yield return simulationRunData;
 				}
@@ -211,7 +211,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					primaryMission,
 					new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(loading.Key,
 						primaryMission.Loadings[loading.Key]),
-					primarySegment, modeIdx.Value);
+					primarySegment, modeIdx);
 				simulationRunData.PrimaryResult = GetPrimaryResult(fuelMode, simulationRunData);
 
 				yield return simulationRunData;
@@ -315,6 +315,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 					foreach (var mission in _segment.Missions) {
 						foreach (var loading in mission.Loadings) {
+							// TODO: charge sustaining / charge depleting
 							foreach (var run in CreateVectoRunData(mission, loading, modeIdx, fuelMode)) {
 								yield return run;
 							}
@@ -400,7 +401,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 			protected override IEnumerable<VectoRunData> GetNextRun()
 			{
-
 				foreach (var mission in _segment.Missions) {
 					foreach (var loading in mission.Loadings) {
 						foreach (var run in CreateVectoRunData(mission, loading)) {
@@ -436,45 +436,27 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
             protected override IEnumerable<VectoRunData> GetNextRun()
             {
-                return new[] { GetPowertrainConfigForReportInit() };
+
+				return CreateVectoRunData(null,
+					new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(),
+					0);
+
             }
 
-			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle,
-				Mission mission,
-				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
-				int? modeIdx,
+			protected override IEnumerable <VectoRunData> CreateVectoRunData(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
+				int? modeIdx = null, string fuelMode = null,
 				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
 			{
-                return new VectoRunData() {
+                yield return new VectoRunData() {
                     Exempted = true,
-                    //VehicleData = new VehicleData() {
-                    //    ModelName = CompletedVehicle.Model,
-                    //    Manufacturer = CompletedVehicle.Manufacturer,
-                    //    ManufacturerAddress = CompletedVehicle.ManufacturerAddress,
-                    //    VIN = CompletedVehicle.VIN,
-                    //    LegislativeClass = CompletedVehicle.LegislativeClass,
-                    //    RegisteredClass = CompletedVehicle.RegisteredClass,
-                    //    VehicleCode = CompletedVehicle.VehicleCode,
-                    //    VehicleCategory = VehicleCategory.HeavyBusCompletedVehicle,
-                    //    CurbMass = CompletedVehicle.CurbMassChassis,
-                    //    GrossVehicleMass = CompletedVehicle.GrossVehicleMassRating,
-                    //    ZeroEmissionVehicle = PrimaryVehicle.ZeroEmissionVehicle,
-                    //    MaxNetPower1 = PrimaryVehicle.MaxNetPower1,
-                    //    InputData = CompletedVehicle
-                    //},
-					VehicleData = DataAdapterGeneric.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, new Segment(),
-						null,
-						new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.ReferenceLoad,
-							Tuple.Create<Kilogram, double?>(0.SI<Kilogram>(), null)), _allowVocational),
-                    Report = Report,
+					VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, new Segment(), null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>()),
+					Report = Report,
                     Mission = new Mission() {
                         MissionType = MissionType.ExemptedMission
                     },
                     InputData = DataProvider.MultistageJobInputData
                 };
-
-
-            }
+			}
         }
     }
 }

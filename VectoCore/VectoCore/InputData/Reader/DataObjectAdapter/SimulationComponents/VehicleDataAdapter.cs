@@ -95,6 +95,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			throw new NotImplementedException("Method only applicable for completed specific bus!");
 		}
 
+		public VehicleData CreateExemptedVehicleData(IVehicleDeclarationInputData primaryVehicle,
+			IVehicleDeclarationInputData completedVehicle)
+		{
+			throw new NotImplementedException("Method only applicable for completed specific bus!");
+        }
+
+		//protected abstract VehicleData DoCreateExemptedVehicleData(IVehicleDeclarationInputData primaryVehicle, IVehicleDeclarationInputData completedVehicle);
+
 		protected abstract VehicleData DoCreateExemptedVehicleData(IVehicleDeclarationInputData data);
 
 		protected static VehicleData GetVehicleData(IVehicleDeclarationInputData data,
@@ -353,9 +361,28 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
             return vehicleData;
         }
 
+		public VehicleData CreateExemptedVehicleData(IVehicleDeclarationInputData primaryVehicle,
+			IVehicleDeclarationInputData completedVehicle)
+		{
+			return new VehicleData() {
+				ModelName = completedVehicle.Model,
+				Manufacturer = completedVehicle.Manufacturer,
+				ManufacturerAddress = completedVehicle.ManufacturerAddress,
+				VIN = completedVehicle.VIN,
+				LegislativeClass = completedVehicle.LegislativeClass,
+				RegisteredClass = completedVehicle.RegisteredClass,
+				VehicleCode = completedVehicle.VehicleCode,
+				VehicleCategory = VehicleCategory.HeavyBusCompletedVehicle,
+				CurbMass = completedVehicle.CurbMassChassis,
+				GrossVehicleMass = completedVehicle.GrossVehicleMassRating,
+				ZeroEmissionVehicle = primaryVehicle.ZeroEmissionVehicle,
+				MaxNetPower1 = primaryVehicle.MaxNetPower1,
+				InputData = completedVehicle
+			};
+		}
 
-		#endregion
-	}
+        #endregion
+    }
 
 	internal class SingleBusVehicleDataAdapter : VehicleDataAdapter
 	{
