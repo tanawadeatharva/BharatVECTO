@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			: base(componentNode, sourceFile)
 		{
 			_vehicle = vehicle;
-			SourceType = DataSourceType.XMLEmbedded;
+			//SourceType = DataSourceType.XMLEmbedded;
 		}
 
 		#region Implementation of IElectricStorageSystemDeclarationInputData
@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Implementation of IXMLResource
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
-		protected override DataSourceType SourceType { get; }
+		protected override DataSourceType SourceType => DataSourceType.XMLEmbedded;
 
 		#endregion
 		
@@ -157,10 +157,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
         #region Overrides of AbstractXMLResource
 
         protected override XNamespace SchemaNamespace => NamespaceURI;
-		protected override DataSourceType SourceType { get; }
+		protected override DataSourceType SourceType => DataSourceType.XMLFile;
 
 		#endregion
-    }
+	}
 
 
     public class XMLBatteryPackDeclarationInputDataMeasuredV23 : AbstractBatteryPackDeclarationInputDataProvider
@@ -241,7 +241,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			: base(componentNode, sourceFile)
 		{
 			throw new NotImplementedException("Replaced with v2.3 dataprovider");
-			SourceType = DataSourceType.XMLEmbedded;
+			//SourceType = DataSourceType.XMLEmbedded;
 		}
 		
 		#region Implementation of IREESSPackInputData
@@ -287,10 +287,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Overrides of AbstractXMLResource
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
-		protected override DataSourceType SourceType { get; }
+		protected override DataSourceType SourceType => DataSourceType.XMLFile;
 
 		#endregion
-    }
+	}
 
     // ---------------------------------------------------------------------------------------
 
@@ -346,7 +346,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		public XMLSuperCapDeclarationInputDataV24(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile)
 		{
-			SourceType = DataSourceType.XMLEmbedded;
+			//SourceType = DataSourceType.XMLEmbedded;
 		}
 		
 		#region Implementation of IREESSPackInputData
@@ -373,7 +373,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Overrides of AbstractXMLResource
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
-		protected override DataSourceType SourceType { get; }
+		protected override DataSourceType SourceType => DataSourceType.XMLEmbedded;
 
 		#endregion
 	}

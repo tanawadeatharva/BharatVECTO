@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Policy;
 using TUGraz.VectoCommon.Exceptions;
@@ -59,12 +60,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 						MaxCurrent = BatteryMaxCurrentReader.Create(b.MaxCurrentMap),
 						Capacity = b.Capacity,
 						InternalResistance =
-							BatteryInternalResistanceReader.Create(b.InternalResistanceCurve, entry.REESSPack.DataSource.SourceType.IsOneOf(DataSourceType.XMLFile, DataSourceType.XMLEmbedded)),
+							BatteryInternalResistanceReader.Create(b.InternalResistanceCurve, entry.REESSPack.DataSource.SourceType != DataSourceType.JSONFile),
 						SOCMap = BatterySOCReader.Create(b.VoltageCurve),
 						InputData = entry
 					};
 
-					retVal.Batteries.Add(Tuple.Create(entry.StringId, batteryData));
+#if DEBUG
+				if (!entry.REESSPack.DataSource.SourceType.IsOneOf(DataSourceType.JSONFile, DataSourceType.XMLFile,
+						DataSourceType.XMLEmbedded)) {
+					throw new VectoException(
+						$"Expected Datasource type to be JSONFile, XMLFile or XMLEmbedded but was {entry.REESSPack.DataSource.SourceType}");
+				};
+#endif
+
+				retVal.Batteries.Add(Tuple.Create(entry.StringId, batteryData));
 				//}
 			}
 
