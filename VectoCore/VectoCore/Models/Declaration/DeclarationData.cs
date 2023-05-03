@@ -285,6 +285,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 					return null;
 				}
 
+				if (compressorSize == "not applicable") {
+					throw new VectoException($"SizeOfAirSupply: '{compressorSize}' invalid for compressor drive: '{pneumaticSupply.CompressorDrive}'");
+				}
+				
+
+
+				
+
 				var resource = GetCompressorResourceForSize(compressorSize);
 
 				var dragCurveFactorClutch = 1.0;

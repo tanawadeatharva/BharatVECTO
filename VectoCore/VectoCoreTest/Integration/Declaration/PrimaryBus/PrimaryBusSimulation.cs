@@ -47,7 +47,7 @@ public class PrimaryBusSimulation
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_BD_BCVC_stefan.xml", 0, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 stpr"),
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_NoAlt.xml", 0, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 no_alt stpr"),
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_Notappl.xml", 0, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 notAppl stpr"),
-
+	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_CM_BCVC.xml", 7, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 AMT_CM_BCVC stpr, InterUrban_Ref_Load"),
 
 
     TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_Base_AMT.xml", 0, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 Base AMT"),
@@ -120,7 +120,7 @@ public class PrimaryBusSimulation
 		var fileWriter = new FileOutputWriter(filePath);
 		var simFactory = _kernel.Get<ISimulatorFactoryFactory>();
 		var runsFactory = simFactory.Factory(ExecutionMode.Declaration, dataProvider, fileWriter, null, null);
-		//runsFactory.WriteModalResults = true;
+		runsFactory.WriteModalResults = true;
 		//runsFactory.SerializeVectoRunData = true;
 		var jobContainer = new JobContainer(new SummaryDataContainer(fileWriter)) { };
 		//var jobContainer = new JobContainer(new MockSumWriter()) { };
@@ -130,10 +130,16 @@ public class PrimaryBusSimulation
 		} else {
 			var run = runsFactory.SimulationRuns().Skip(runIdx).First();
 			jobContainer.AddRun(run);
-			if (dataProvider.JobInputData.Vehicle.OvcHev) {
+			TestContext.Progress.WriteLine($"{run.CycleName} - {run.RunSuffix}");
+
+            if (dataProvider.JobInputData.Vehicle.OvcHev) {
 				var run2 = runsFactory.SimulationRuns().Skip(runIdx + 1).First();
 				jobContainer.AddRun(run2);
+				TestContext.Progress.WriteLine($"{run2.CycleName} - {run2.RunSuffix}");
+				Assert.AreEqual(run.CycleName, run2.CycleName);
 			}
+			
+
 		}
 
 		PrintRuns(jobContainer, null);

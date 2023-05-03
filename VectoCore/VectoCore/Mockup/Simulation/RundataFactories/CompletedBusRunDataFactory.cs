@@ -108,7 +108,9 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 		}
 
 
-        protected override VectoRunData CreateVectoRunDataSpecific(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int? modeIdx)
+        protected override VectoRunData CreateVectoRunDataSpecific(Mission mission,
+			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int? modeIdx,
+			VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
         {
             var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
 
@@ -193,7 +195,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                     simulationRunData = CreateVectoRunDataGeneric(
                         primaryMission,
                         new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(loading.Key,
-                            primaryMission.Loadings[loading.Key]),
+							primaryMission.Loadings[loading.Key]),
                         primarySegment, modeIdx);
 
                     var primaryResult = InputDataProvider.JobInputData.PrimaryVehicle.GetResult(
@@ -219,7 +221,9 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 }
             }
         }
-        protected override VectoRunData CreateVectoRunDataGeneric(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int? modeIdx)
+        protected override VectoRunData CreateVectoRunDataGeneric(Mission mission,
+			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int? modeIdx,
+			VectoRunData.OvcHevMode ovcHevMode = VectoRunData.OvcHevMode.NotApplicable)
         {
             var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
             return new VectoRunData()
