@@ -3,6 +3,7 @@ using System.Linq;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.GenericModelData;
@@ -117,7 +118,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var em = multistepBusInputData.JobInputData.PrimaryVehicle.Vehicle.Components.ElectricMachines;
 
 			var genericElectricMotor = new GenericBusElectricMotorData();
-			var electricMotorData = genericElectricMotor.CreateGenericElectricMotorData(em.Entries[0], null);
+			var electricMotorData = genericElectricMotor.CreateGenericElectricMotorData(em.Entries[0], null,
+				em.Entries[0].ElectricMachine.VoltageLevels.Average(v => v.VoltageLevel.Value()).SI<Volt>());
 
 			Assert.AreEqual(2, electricMotorData.EfficiencyData.VoltageLevels.Count);
 		}
