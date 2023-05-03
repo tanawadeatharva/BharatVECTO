@@ -61,9 +61,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get
 			{
-				return GetString(new[]
-						{ XMLNames.BusAux_ElectricSystem, XMLNames.BusAux_ElectricSystem_AlternatorTechnology })
-					.ParseEnum<AlternatorType>();
+				return AlternatorTypeHelper.Parse(GetString(new[]
+					{ XMLNames.BusAux_ElectricSystem, XMLNames.BusAux_ElectricSystem_AlternatorTechnology }));
+				//.ParseEnum<AlternatorType>();
 			}
 		}
 
