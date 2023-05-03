@@ -36,8 +36,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			return electricMachines.Entries
 				.Select(m => Tuple.Create(m.Position,
-					CreateElectricMachine(m.Position, m.ElectricMachine, m.Count, m.RatioADC, m.RatioPerGear,
-						m.MechanicalTransmissionLossMap, torqueLimits?.FirstOrDefault(t => t.Key == m.Position).Value, averageVoltage, gearlist))).ToList();
+					CreateElectricMachine(
+						powertrainPosition: m.Position,
+						motorData: m.ElectricMachine,
+						count: m.Count, 
+						adcRatio: m.RatioADC, 
+						ratioPerGear: m.RatioPerGear,
+						adcLossMap: m.MechanicalTransmissionLossMap,
+						torqueLimits: torqueLimits?.FirstOrDefault(t => t.Key == m.Position).Value, averageVoltage, gearlist))).ToList();
 
 		}
 
@@ -614,7 +620,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			CheckTorqueLimitVoltageLevels(electricMachines, torqueLimits);
 
 			return electricMachines.Entries.Select(m =>
-				Tuple.Create(m.Position, GenercicEMotorData.CreateGenericElectricMotorData(m, torqueLimits?.FirstOrDefault(t => t.Key == m.Position).Value))).ToList();
+				Tuple.Create(m.Position, GenercicEMotorData.CreateGenericElectricMotorData(m, torqueLimits?.FirstOrDefault(t => t.Key == m.Position).Value, averageVoltage))).ToList();
 
 		}
 

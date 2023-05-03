@@ -9,6 +9,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.GenericModelData
@@ -26,27 +27,127 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 
 		public ElectricMotorData CreateGenericElectricMotorData(
 			ElectricMachineEntry<IElectricMotorDeclarationInputData> electricMachineEntry,
-			IList<Tuple<Volt, TableData>> torqueLimits)
+			IList<Tuple<Volt, TableData>> torqueLimits, Volt averageVoltage)
 		{
 			var electricMachineType = electricMachineEntry.ElectricMachine.ElectricMachineType;
-			
-			var electricMotorData = new ElectricMotorData {
+			var efficiencyData = GetVoltageLevels(electricMachineEntry, electricMachineType, torqueLimits);
+			var powertrainPosition = electricMachineEntry.Position;
+			var adcLossMap = electricMachineEntry.MechanicalTransmissionLossMap;
+			var adcRatio = electricMachineEntry.RatioADC;
+			var lossMap = powertrainPosition == PowertrainPosition.IHPC
+				? TransmissionLossMapReader.CreateEmADCLossMap(1.0, 1.0, "EM ADC IHPC LossMap Eff")
+				: adcLossMap != null
+					? TransmissionLossMapReader.CreateEmADCLossMap(adcLossMap, adcRatio, "EM ADC LossMap")
+					: TransmissionLossMapReader.CreateEmADCLossMap(DeclarationData.ElectricMachineDefaultMechanicalTransmissionEfficiency, adcRatio, "EM ADC LossMap Eff");
+
+
+            var electricMotorData = new ElectricMotorData {
 				RatioPerGear = electricMachineEntry.RatioPerGear,
 				EMDragCurve = ElectricMotorDragCurveReader.Create(electricMachineEntry.ElectricMachine.DragCurve,
 					electricMachineEntry.Count),
-				EfficiencyData = GetVoltageLevels(electricMachineEntry, electricMachineType, torqueLimits),
+				EfficiencyData = efficiencyData,
 				Inertia = electricMachineEntry.ElectricMachine.Inertia * electricMachineEntry.Count,//??
-				RatioADC = electricMachineEntry.RatioADC
-				//electricMotorData.OverloadRegenerationFactor
-				//electricMotorData.Overload
-				//electricMotorData.TransmissionLossMap
+				RatioADC = electricMachineEntry.RatioADC,
+				Overload = CalculateOverloadData(electricMachineEntry.ElectricMachine, electricMachineEntry.Count, efficiencyData, averageVoltage ),
+				TransmissionLossMap = lossMap,
+				OverloadRecoveryFactor = DeclarationData.OverloadRecoveryFactor,
 			};
 
 			return electricMotorData;
 		}
 
 
-		private VoltageLevelData GetVoltageLevels(
+
+
+        private OverloadData CalculateOverloadData(IIEPCDeclarationInputData iepc, int count,
+            VoltageLevelData voltageLevel, Volt averageVoltage, Tuple<uint, double> gearRatioUsedForMeasurement)
+        {
+
+            // if average voltage is outside of the voltage-level range, do not extrapolate but take the min voltage entry, or max voltage entry
+            if (averageVoltage < iepc.VoltageLevels.Min(x => x.VoltageLevel))
+            {
+                return CalculateOverloadBuffer(iepc.VoltageLevels.First(), count, voltageLevel, gearRatioUsedForMeasurement);
+            }
+            if (averageVoltage > iepc.VoltageLevels.Max(x => x.VoltageLevel))
+            {
+                return CalculateOverloadBuffer(iepc.VoltageLevels.Last(), count, voltageLevel, gearRatioUsedForMeasurement);
+            }
+
+            var (vLow, vHigh) = iepc.VoltageLevels.OrderBy(x => x.VoltageLevel).GetSection(x => x.VoltageLevel < averageVoltage);
+            var ovlLo = CalculateOverloadBuffer(vLow, count, voltageLevel, gearRatioUsedForMeasurement);
+            var ovlHi = CalculateOverloadBuffer(vHigh, count, voltageLevel, gearRatioUsedForMeasurement);
+
+            var retVal = new OverloadData()
+            {
+                OverloadBuffer = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.OverloadBuffer, ovlHi.OverloadBuffer, averageVoltage),
+                ContinuousTorque = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.ContinuousTorque, ovlHi.ContinuousTorque, averageVoltage),
+                ContinuousPowerLoss = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.ContinuousPowerLoss, ovlHi.ContinuousPowerLoss, averageVoltage)
+            };
+            return retVal;
+        }
+
+
+        private OverloadData CalculateOverloadData(IElectricMotorDeclarationInputData motorData, int count, VoltageLevelData voltageLevel, Volt averageVoltage)
+        {
+
+            // if average voltage is outside of the voltage-level range, do not extrapolate but take the min voltage entry, or max voltage entry
+            if (averageVoltage < motorData.VoltageLevels.Min(x => x.VoltageLevel))
+            {
+                return CalculateOverloadBuffer(motorData.VoltageLevels.First(), count, voltageLevel);
+            }
+            if (averageVoltage > motorData.VoltageLevels.Max(x => x.VoltageLevel))
+            {
+                return CalculateOverloadBuffer(motorData.VoltageLevels.Last(), count, voltageLevel);
+            }
+
+            var (vLow, vHigh) = motorData.VoltageLevels.OrderBy(x => x.VoltageLevel).GetSection(x => x.VoltageLevel < averageVoltage);
+            var ovlLo = CalculateOverloadBuffer(vLow, count, voltageLevel);
+            var ovlHi = CalculateOverloadBuffer(vHigh, count, voltageLevel);
+
+            var retVal = new OverloadData()
+            {
+                OverloadBuffer = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.OverloadBuffer, ovlHi.OverloadBuffer, averageVoltage),
+                ContinuousTorque = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.ContinuousTorque, ovlHi.ContinuousTorque, averageVoltage),
+                ContinuousPowerLoss = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.ContinuousPowerLoss, ovlHi.ContinuousPowerLoss, averageVoltage)
+            };
+            return retVal;
+        }
+
+        private OverloadData CalculateOverloadBuffer(IElectricMotorVoltageLevel voltageEntry,
+            int count, VoltageLevelData voltageLevel, Tuple<uint, double> gearUsedForMeasurement = null)
+        {
+            var gearRatioUsedForMeasurement = gearUsedForMeasurement?.Item2 ?? 1.0;
+            var gear = new GearshiftPosition(gearUsedForMeasurement?.Item1 ?? 1);
+            var continuousTorque = voltageEntry.ContinuousTorque * count / gearRatioUsedForMeasurement;
+            var continuousTorqueSpeed = voltageEntry.ContinuousTorqueSpeed * gearRatioUsedForMeasurement;
+            var overloadTorque = (voltageEntry.OverloadTorque ?? 0.SI<NewtonMeter>()) * count / gearRatioUsedForMeasurement;
+            var overloadTestSpeed = (voltageEntry.OverloadTestSpeed ?? 0.RPMtoRad()) * gearRatioUsedForMeasurement;
+
+
+            var peakElPwr = voltageLevel.LookupElectricPower(voltageEntry.VoltageLevel,
+                    overloadTestSpeed,
+                    -overloadTorque,
+                    gear,
+                    true)
+                    .ElectricalPower;
+            var peakPwrLoss = -peakElPwr - overloadTorque * overloadTestSpeed; // losses need to be positive
+
+            var contElPwr = voltageLevel.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
+                                -continuousTorque, gear).ElectricalPower ??
+                            voltageLevel.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
+                                voltageLevel.FullLoadDriveTorque(voltageEntry.VoltageLevel, continuousTorqueSpeed),
+                                gear, true).ElectricalPower;
+            var continuousPowerLoss = -contElPwr - continuousTorque * continuousTorqueSpeed; // loss needs to be positive
+            var overloadBuffer = (peakPwrLoss - continuousPowerLoss) * voltageEntry.OverloadTime;
+            return new OverloadData()
+            {
+                OverloadBuffer = overloadBuffer,
+                ContinuousTorque = continuousTorque,
+                ContinuousPowerLoss = continuousPowerLoss
+            };
+        }
+
+        private VoltageLevelData GetVoltageLevels(
 			ElectricMachineEntry<IElectricMotorDeclarationInputData> electricMachineEntry,
 			ElectricMachineType electricMachineType, IList<Tuple<Volt, TableData>> torqueLimits)
 		{
