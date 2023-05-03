@@ -140,8 +140,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				
 			}
 
-			protected abstract void CreateGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle,
-				VectoRunData runData);
+			protected abstract void CreateGearboxAndGearshiftData(VectoRunData runData);
 
 			#region Implementation of IVectoRunDataFactory
 
@@ -226,7 +225,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						}
 
 						foreach (var loading in mission.Loadings) {
-							var simulationRunData = CreateVectoRunData(vehicle, mission, loading, modeIdx);
+							var simulationRunData = CreateVectoRunData(mission, loading, modeIdx);
 							
 							yield return simulationRunData;
 						}
@@ -235,8 +234,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			}
 
 
-			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle,
-				Mission mission,
+			protected override VectoRunData CreateVectoRunData(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 				int? modeIdx,
 				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
@@ -248,13 +246,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				}
 				var engineMode = engineModes[modeIdx.Value];
 
-				var simulationRunData = CreateCommonRunData(vehicle, mission, loading, _segment, engineModes, modeIdx.Value);
+				var simulationRunData = CreateCommonRunData(Vehicle, mission, loading, _segment, engineModes, modeIdx.Value);
 
 				simulationRunData.VehicleData =
-				DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading, _allowVocational);
+				DataAdapter.CreateVehicleData(Vehicle, _segment, mission, loading, _allowVocational);
 
 				simulationRunData.AirdragData =
-					DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData, mission, _segment);
+					DataAdapter.CreateAirdragData(Vehicle.Components.AirdragInputData, mission, _segment);
 
 				simulationRunData.EngineData =
 					DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode,
@@ -262,24 +260,24 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 				simulationRunData.ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>();
 
-                CreateGearboxAndGearshiftData(vehicle, simulationRunData);
+                CreateGearboxAndGearshiftData(simulationRunData);
 
-                simulationRunData.AngledriveData = DataAdapter.CreateAngledriveData(vehicle.Components.AngledriveInputData);
+                simulationRunData.AngledriveData = DataAdapter.CreateAngledriveData(Vehicle.Components.AngledriveInputData);
 				simulationRunData.Aux = DataAdapter.CreateAuxiliaryData(
-					vehicle.Components.AuxiliaryInputData,
-					vehicle.Components.BusAuxiliaries, mission.MissionType,
-					_segment.VehicleClass, vehicle.Length,
-					vehicle.Components.AxleWheels.NumSteeredAxles, vehicle.VehicleType);
+					Vehicle.Components.AuxiliaryInputData,
+					Vehicle.Components.BusAuxiliaries, mission.MissionType,
+					_segment.VehicleClass, Vehicle.Length,
+					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType);
 
-				simulationRunData.Retarder = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData);
+				simulationRunData.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData);
 				simulationRunData.DriverData = DriverData;
 				simulationRunData.PTO = mission.MissionType == MissionType.MunicipalUtility
-					? DataAdapter.CreatePTOCycleData(vehicle.Components.GearboxInputData, vehicle.Components.PTOTransmissionInputData)
-					: DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData, vehicle.Components.GearboxInputData);
+					? DataAdapter.CreatePTOCycleData(Vehicle.Components.GearboxInputData, Vehicle.Components.PTOTransmissionInputData)
+					: DataAdapter.CreatePTOTransmissionData(Vehicle.Components.PTOTransmissionInputData, Vehicle.Components.GearboxInputData);
 
 				simulationRunData.EngineData.FuelMode = modeIdx.Value;
 				simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
-				simulationRunData.VehicleData.InputData = vehicle;
+				simulationRunData.VehicleData.InputData = Vehicle;
 				return simulationRunData;
 			}
 
@@ -289,26 +287,26 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			#region Overrides of LorryBase
 
-			protected override void CreateGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle, VectoRunData runData)
+			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
 			{
 				runData.GearshiftParameters =
 					DataAdapter.CreateGearshiftData(
 						runData.AxleGearData?.AxleGear.Ratio ?? 1.0,
-						vehicle.EngineIdleSpeed,
-						vehicle.Components.GearboxInputData.Type,
-						vehicle.Components.GearboxInputData.Gears.Count
+						Vehicle.EngineIdleSpeed,
+						Vehicle.Components.GearboxInputData.Type,
+						Vehicle.Components.GearboxInputData.Gears.Count
 					);
 
 
 				var shiftStrategyName =
-					PowertrainBuilder.GetShiftStrategyName(vehicle.Components.GearboxInputData.Type,
-						vehicle.VehicleType);
+					PowertrainBuilder.GetShiftStrategyName(Vehicle.Components.GearboxInputData.Type,
+						Vehicle.VehicleType);
                 if (InputDataProvider.JobInputData.Vehicle.AxleConfiguration.AxlegearIncludedInGearbox()) {
 					runData.AxleGearData = DataAdapter.CreateDummyAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.GearboxInputData);
                 } else {
 					runData.AxleGearData = DataAdapter.CreateAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData);
                 }
-				runData.GearboxData = DataAdapter.CreateGearboxData(vehicle, runData,
+				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
 			}
 
@@ -356,60 +354,59 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
                     foreach (var loading in mission.Loadings)
 					{
-						var simulationRunData = CreateVectoRunData(vehicle, mission, loading);
+						var simulationRunData = CreateVectoRunData(mission, loading);
 						simulationRunData.BatteryData.Batteries.ForEach(t => t.Item2.ChargeSustainingBattery = true);
 						yield return simulationRunData;
 					}
 				}
 			}
 
-			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle,
-				Mission mission,
+			protected override VectoRunData CreateVectoRunData(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 				int? modeIdx = null,
 				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
 			{
-				var result = CreateCommonRunData(vehicle, mission, loading, _segment);
+				var result = CreateCommonRunData(Vehicle, mission, loading, _segment);
 				result.AirdragData =
-					DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData, mission, _segment);
+					DataAdapter.CreateAirdragData(Vehicle.Components.AirdragInputData, mission, _segment);
 				result.DriverData = DriverData;
 
 				DataAdapter.CreateREESSData(
-					componentsElectricStorage: vehicle.Components.ElectricStorage,
-					vehicle.VehicleType,
+					componentsElectricStorage: Vehicle.Components.ElectricStorage,
+					Vehicle.VehicleType,
 					true,
 					(bs) => result.BatteryData = bs,
 					(sc) => result.SuperCapData = sc);
 				
-				result.ElectricMachinesData = DataAdapter.CreateElectricMachines(vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits, result.BatteryData.CalculateAverageVoltage(), null);
-				if (vehicle.VehicleType == VectoSimulationJobType.IEPC_E) {
-					result.ElectricMachinesData = DataAdapter.CreateIEPCElectricMachines(vehicle.Components.IEPC,
+				result.ElectricMachinesData = DataAdapter.CreateElectricMachines(Vehicle.Components.ElectricMachines, Vehicle.ElectricMotorTorqueLimits, result.BatteryData.CalculateAverageVoltage(), null);
+				if (Vehicle.VehicleType == VectoSimulationJobType.IEPC_E) {
+					result.ElectricMachinesData = DataAdapter.CreateIEPCElectricMachines(Vehicle.Components.IEPC,
 						result.BatteryData.CalculateAverageVoltage());
 				}
 
-				result.AngledriveData = DataAdapter.CreateAngledriveData(vehicle.Components.AngledriveInputData);
-				if (AxleGearRequired() || vehicle.Components.AxleGearInputData != null) {
-					result.AxleGearData = DataAdapter.CreateAxleGearData(vehicle.Components.AxleGearInputData);
+				result.AngledriveData = DataAdapter.CreateAngledriveData(Vehicle.Components.AngledriveInputData);
+				if (AxleGearRequired() || Vehicle.Components.AxleGearInputData != null) {
+					result.AxleGearData = DataAdapter.CreateAxleGearData(Vehicle.Components.AxleGearInputData);
 				}
 
 				result.VehicleData =
-					DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading, _allowVocational);
+					DataAdapter.CreateVehicleData(Vehicle, _segment, mission, loading, _allowVocational);
 
-				if (vehicle.Components.RetarderInputData != null) {
-					result.Retarder = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData,
+				if (Vehicle.Components.RetarderInputData != null) {
+					result.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData,
 						result.ElectricMachinesData.First(e => e.Item1 != PowertrainPosition.GEN).Item1);
 				}
 
-				CreateGearboxAndGearshiftData(vehicle, result);
+				CreateGearboxAndGearshiftData(result);
 
-				result.Aux = DataAdapter.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData, null,
-					mission.MissionType, _segment.VehicleClass, vehicle.Length,
-					vehicle.Components.AxleWheels.NumSteeredAxles, vehicle.VehicleType);
+				result.Aux = DataAdapter.CreateAuxiliaryData(Vehicle.Components.AuxiliaryInputData, null,
+					mission.MissionType, _segment.VehicleClass, Vehicle.Length,
+					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType);
 
 
-				var ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData, vehicle.Components.GearboxInputData);
+				var ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(Vehicle.Components.PTOTransmissionInputData, Vehicle.Components.GearboxInputData);
 
-				var municipalPtoTransmissionData = DataAdapter.CreatePTOCycleData(vehicle.Components.GearboxInputData, vehicle.Components.PTOTransmissionInputData);
+				var municipalPtoTransmissionData = DataAdapter.CreatePTOCycleData(Vehicle.Components.GearboxInputData, Vehicle.Components.PTOTransmissionInputData);
 
 				result.PTO = mission.MissionType == MissionType.MunicipalUtility
 					? municipalPtoTransmissionData
@@ -420,9 +417,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			#region Overrides of LorryBase
 
-			protected override void CreateGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle, VectoRunData runData)
+			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
 			{
-				if (vehicle.ArchitectureID == ArchitectureID.E2) {
+				if (Vehicle.ArchitectureID == ArchitectureID.E2) {
 					throw new ArgumentException();
 				}
 				runData.GearshiftParameters = new ShiftStrategyParameters()
@@ -459,25 +456,25 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			#region Overrides of BatteryElectric
 
-			protected override void CreateGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle, VectoRunData runData)
+			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
 			{
-				if (vehicle.ArchitectureID != ArchitectureID.E2) {
-					throw new ArgumentException(nameof(vehicle));
+				if (Vehicle.ArchitectureID != ArchitectureID.E2) {
+					throw new ArgumentException(nameof(Vehicle));
 				}
 
 				runData.GearshiftParameters =
 					DataAdapter.CreateGearshiftData(
 						runData.AxleGearData?.AxleGear.Ratio ?? 1.0,
 						null,
-						vehicle.Components.GearboxInputData.Type,
-						vehicle.Components.GearboxInputData.Gears.Count
+						Vehicle.Components.GearboxInputData.Type,
+						Vehicle.Components.GearboxInputData.Gears.Count
 					);
 
 
 				var shiftStrategyName =
-					PowertrainBuilder.GetShiftStrategyName(vehicle.Components.GearboxInputData.Type,
-						vehicle.VehicleType);
-				runData.GearboxData = DataAdapter.CreateGearboxData(vehicle, runData,
+					PowertrainBuilder.GetShiftStrategyName(Vehicle.Components.GearboxInputData.Type,
+						Vehicle.VehicleType);
+				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
 
 			}
@@ -540,19 +537,19 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			#region Overrides of BatteryElectric
 
-			protected override void CreateGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle, VectoRunData runData)
+			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
 			{
 				runData.GearshiftParameters =
 					DataAdapter.CreateGearshiftData(
 						runData.AxleGearData?.AxleGear.Ratio ?? 1.0,
 						null,
 						GearboxType.APTN,
-						vehicle.Components.IEPC.Gears.Count
+						Vehicle.Components.IEPC.Gears.Count
 					);
 				var shiftStrategyName =
 					PowertrainBuilder.GetShiftStrategyName(GearboxType.APTN,
-						vehicle.VehicleType);
-				runData.GearboxData = DataAdapter.CreateGearboxData(vehicle, runData,
+						Vehicle.VehicleType);
+				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
 
 			}
@@ -573,8 +570,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				var vehicle = InputDataProvider.JobInputData.Vehicle;
 
 
-				var simulationRunData = CreateVectoRunData(vehicle,
-					null, 
+				var simulationRunData = CreateVectoRunData(null, 
 					new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(), 
 					0);
 
@@ -586,18 +582,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			protected override VectoRunData GetPowertrainConfigForReportInit()
 			{
 				var vehicle = InputDataProvider.JobInputData.Vehicle;
-				return CreateVectoRunData(vehicle, null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(), 0);
+				return CreateVectoRunData(null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(), 0);
 			}
 
-			protected override void CreateGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle, VectoRunData runData)
+			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
 			{
 				throw new NotImplementedException();
 			}
 
 			#endregion
 
-			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle,
-				Mission mission,
+			protected override VectoRunData CreateVectoRunData(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 				int? modeIdx,
 				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
@@ -611,7 +606,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					VehicleData = DataAdapter.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, new Segment(), null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.ReferenceLoad, Tuple.Create<Kilogram, double?>(0.SI<Kilogram>(), null)), _allowVocational),
 					InputDataHash = InputDataProvider.XMLHash
 				};
-				runData.VehicleData.InputData = vehicle;
+				runData.VehicleData.InputData = Vehicle;
 				return runData;
 			}
 

@@ -20,8 +20,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 {
 	internal class MockupMultistageCompletedBusRunDataFactory : DeclarationModeCompletedBusRunDataFactory.CompletedBusBase
     {
-        //DeclarationModeCompletedMultistageBusVectoRunDataFactory
-		  
+		
 		public MockupMultistageCompletedBusRunDataFactory(IMultistageVIFInputData dataProvider,
             IDeclarationReport report,
 			ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
@@ -30,23 +29,10 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 
         }
 
-
-        #region Overrides of DeclarationModeCompletedMultistageBusVectoRunDataFactory
-
-		#endregion
         protected override void Initialize()
         {
-
-            _segment = GetCompletedSegment(CompletedVehicle, PrimaryVehicle.AxleConfiguration);
-
-            //base.Initialize();
-        }
-
-        //protected override IEnumerable<VectoRunData> VectoRunDataHeavyBusCompleted()
-        //{
-
-        //    return base.VectoRunDataHeavyBusCompleted();
-        //}
+			_segment = GetCompletedSegment();
+		}
 
 		protected override IEnumerable<VectoRunData> GetNextRun()
 		{
@@ -86,13 +72,12 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 
         protected virtual IEnumerable<VectoRunData> VectoRunDataHeavyBusCompleted()
 		{
-			var InputDataProvider = DataProvider.MultistageJobInputData;
-            if (InputDataProvider.JobInputData.PrimaryVehicle.Vehicle.VehicleType ==
+            if (PrimaryVehicle.VehicleType ==
 				VectoSimulationJobType.BatteryElectricVehicle) {
 				foreach (var vectoRunData in CreateVectoRunDataForMissions(0, ""))
 					yield return vectoRunData;
 			} else {
-				var engineModes = InputDataProvider.JobInputData.PrimaryVehicle.Vehicle.Components.EngineInputData
+				var engineModes = PrimaryVehicle.Components.EngineInputData
 					?.EngineModes;
 
 				for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
@@ -184,7 +169,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                         yield return simulationRunData;
                     }
 
-                    var primarySegment = GetPrimarySegment(PrimaryVehicle);
+                    var primarySegment = GetPrimarySegment();
                     var primaryMission = primarySegment.Missions.Where(
                         m => {
                             return m.BusParameter.DoubleDecker ==

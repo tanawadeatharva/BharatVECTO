@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
-using System.Runtime.InteropServices;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
 
@@ -33,11 +29,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 			protected IMultistageVIFInputData DataProvider { get; }
 
 			//protected IDeclarationReport Report { get; set; }
-			protected IVehicleDeclarationInputData PrimaryVehicle =>
+			protected virtual IVehicleDeclarationInputData PrimaryVehicle =>
 				DataProvider.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle;
 
-			protected IVehicleDeclarationInputData CompletedVehicle => DataProvider.MultistageJobInputData.JobInputData
+			protected virtual  IVehicleDeclarationInputData CompletedVehicle => DataProvider.MultistageJobInputData.JobInputData
 				.ConsolidateManufacturingStage.Vehicle;
+
+			protected override IVehicleDeclarationInputData Vehicle => throw new NotImplementedException();
 
 			public CompletedBusBase(IMultistageVIFInputData dataProvider, IDeclarationReport report,
 				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
@@ -56,7 +54,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					return;
 				}
 
-				_segment = GetCompletedSegment(CompletedVehicle, PrimaryVehicle.AxleConfiguration);
+				_segment = GetCompletedSegment();
 			}
 
 			protected override DriverData CreateDriverData(Segment segment)
@@ -106,10 +104,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 			}
 
 
-            protected virtual Segment GetPrimarySegment(IVehicleDeclarationInputData primaryVehicle)
+            protected virtual Segment GetPrimarySegment()
 			{
 				var primarySegment = DeclarationData.PrimaryBusSegments.Lookup(
-					primaryVehicle.VehicleCategory, primaryVehicle.AxleConfiguration, primaryVehicle.Articulated);
+					PrimaryVehicle.VehicleCategory, PrimaryVehicle.AxleConfiguration, PrimaryVehicle.Articulated);
 
 				return primarySegment;
 			}
@@ -126,7 +124,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				}
 
 				// create generic run data
-				var primarySegment = GetPrimarySegment(PrimaryVehicle);
+				var primarySegment = GetPrimarySegment();
 				var primaryMission = primarySegment.Missions.Where(
 					m => {
 						return m.BusParameter.DoubleDecker ==
@@ -145,7 +143,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 			}
 
 
-			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
+			protected override VectoRunData CreateVectoRunData(Mission mission,
+				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 				int? modeIdx = null, VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
 			{
 				throw new NotImplementedException("Not applicable for completed buses");
@@ -173,17 +172,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				return primaryResult;
 			}
 
-			protected virtual Segment GetCompletedSegment(IVehicleDeclarationInputData vehicle, AxleConfiguration axleConfiguration)
+			protected virtual Segment GetCompletedSegment()
             {
                 var segment = DeclarationData.CompletedBusSegments.Lookup(
-                    axleConfiguration.NumAxles(), vehicle.VehicleCode, vehicle.RegisteredClass, vehicle.NumberPassengerSeatsLowerDeck,
-                    vehicle.Height, vehicle.LowEntry);
+                    PrimaryVehicle.AxleConfiguration.NumAxles(), CompletedVehicle.VehicleCode, CompletedVehicle.RegisteredClass, CompletedVehicle.NumberPassengerSeatsLowerDeck,
+					CompletedVehicle.Height, CompletedVehicle.LowEntry);
                 if (!segment.Found) {
                     throw new VectoException(
                         "no segment found for vehicle configruation: vehicle category: {0}, axle configuration: {1}, articulated: {2}, vehicle code: {3}, registered class: {4}, passengersLowerDeck: {5}, height: {6}, lowEntry: {7}. completed",
-                        vehicle.VehicleCategory, axleConfiguration,
-                        vehicle.Articulated, vehicle.VehicleCode, vehicle.RegisteredClass.GetLabel(), vehicle.NumberPassengerSeatsLowerDeck,
-                        vehicle.Height, vehicle.LowEntry);
+						CompletedVehicle.VehicleCategory, PrimaryVehicle.AxleConfiguration,
+						CompletedVehicle.Articulated, CompletedVehicle.VehicleCode, CompletedVehicle.RegisteredClass.GetLabel(), CompletedVehicle.NumberPassengerSeatsLowerDeck,
+						CompletedVehicle.Height, CompletedVehicle.LowEntry);
                 }
 
                 return segment;
