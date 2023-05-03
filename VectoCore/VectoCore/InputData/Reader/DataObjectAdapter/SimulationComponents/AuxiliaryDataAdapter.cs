@@ -1008,6 +1008,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		#endregion
 	}
 
+	public class GenericCompletedPEVBusAuxiliaryDataAdapter : PrimaryBusPEVAuxiliaryDataAdapter,
+		ICompletedBusAuxiliaryDataAdapter
+	{
+		#region Implementation of ICompletedBusAuxiliaryDataAdapter
+
+		public IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle,
+			IVehicleDeclarationInputData completedVehicle, VectoRunData runData)
+		{
+			if (completedVehicle != null)
+			{
+				throw new ArgumentException("Completed Vehicle must not be provided");
+			}
+			return CreateBusAuxiliariesData(mission, primaryVehicle, runData);
+        }
+
+		#endregion
+	}
+
 	public class SpecificCompletedBusAuxiliaryDataAdapter : PrimaryBusAuxiliaryDataAdapter, ICompletedBusAuxiliaryDataAdapter
 	{
 		
