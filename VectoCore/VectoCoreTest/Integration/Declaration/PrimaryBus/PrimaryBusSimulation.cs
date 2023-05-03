@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Newtonsoft.Json;
 using Ninject;
@@ -15,6 +16,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Tests.Integration.CompletedBus;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 
 namespace TUGraz.VectoCore.Tests.Integration.Declaration.PrimaryBus;
@@ -52,9 +54,6 @@ public class PrimaryBusSimulation
 	TestCase(@"PrimaryBus/S-HEV/PrimaryCityBus_IEPC-S_Base.xml", 0, TestName = "2nd Amendment PrimaryBus CityBus S-HEV IEPC Base"),
 
 	TestCase(@"PrimaryBus/exempted/exempted_primary_heavyBus.xml", 0, TestName = "2nd Amendment PrimaryBus Exempted"),
-
-	TestCase(@"PrimaryBus/exempted/exempted_primary_heavyBus.xml", 0, TestName = "2nd Amendment PrimaryBus Exempted"),
-
 	]
 	public void PrimaryBusSimulationTest(string jobFile, int runIdx)
 	{
@@ -80,6 +79,87 @@ public class PrimaryBusSimulation
 		var finalVif = CreateCompletedVIF(completedJob);
 
 		//RunSimulationPrimary(finalVif, runIdx);
+    }
+
+	[
+		TestCase(@"PrimaryBus/Conventional/primary_heavyBus group41_nonSmart.xml", @"Conventional_completedBus_2.xml", 0, TestName = "2nd Amendment SingleBus Conventional"),
+		TestCase(@"PrimaryBus/PEV/PEV_primaryBus_AMT_E2.xml", @"PEV_completedBus_2.xml", 0, TestName = "2nd Amendment SingleBus PEV E2"),
+
+		TestCase(@"PrimaryBus/PEV/PrimaryCoach_E2_Base_AMT.xml", @"PEV_completedBus_2.xml", 0, TestName = "2nd Amendment SingleBus Coach PEV E2 Base"),
+		TestCase(@"PrimaryBus/PEV/PrimaryCityBus_IEPC_Base.xml", @"PEV_completedBus_2.xml", 0, TestName = "2nd Amendment SingleBus CityBus PEV IEPC Base"),
+
+		TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_Base_AMT.xml", @"HEV_completedBus_2.xml", 0, TestName = "2nd Amendment SingleBus Coach P-HEV P2 Base AMT"),
+		TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_OVC.xml", @"HEV_completedBus_2.xml", 0, TestName = "2nd Amendment SingleBus Coach P-HEV P2 AMT OVC"),
+		TestCase(@"PrimaryBus/P-HEV/PrimaryCityBus_P1_HEV_Base_AT.xml", @"HEV_completedBus_2.xml", 0, TestName = "2nd Amendment SingleBus CityBus P-HEV P1 Base AT"),
+
+		TestCase(@"PrimaryBus/S-HEV/PrimaryCoach_S2_Base_AMT.xml", @"HEV_completedBus_2.xml", 0, TestName = "2nd Amendment SingleBus Coach S-HEV S2 Base"),
+		TestCase(@"PrimaryBus/S-HEV/PrimaryCityBus_IEPC-S_Base.xml", @"HEV_completedBus_2.xml", 0, TestName = "2nd Amendment SingleBus CityBus S-HEV IEPC Base"),
+
+		//TestCase(@"PrimaryBus/exempted/exempted_primary_heavyBus.xml", @"exempted_completedBus_input_full.xml", 0, TestName = "2nd Amendment SingleBus Exempted"), // exempted single run not supported!
+
+	]
+	public void SingleBusSimulationTest(string jobFile, string completed, int runIdx)
+	{
+		RunSimulationSingle(jobFile, completed, runIdx);
+	}
+
+	private void RunSimulationSingle(string jobFile, string completed, int runIdx)
+	{
+		var completedJob = GenerateJsonJobSingleBus(Path.Combine(BASE_DIR, jobFile), Path.Combine(BASE_DIR_COMPLETED, completed));
+        //var filePath = Path.Combine(BASE_DIR, jobFile);
+		var dataProvider = JSONInputDataFactory.ReadJsonJob(completedJob);
+		var fileWriter = new FileOutputWriter(completedJob);
+		var simFactory = _kernel.Get<ISimulatorFactoryFactory>();
+
+        var runsFactory = simFactory.Factory(ExecutionMode.Declaration, dataProvider, fileWriter, null, null);
+		//runsFactory.WriteModalResults = true;
+		runsFactory.SerializeVectoRunData = true;
+		var jobContainer = new JobContainer(new SummaryDataContainer(fileWriter)) { };
+
+		if (runIdx < 0) {
+			jobContainer.AddRuns(runsFactory);
+		} else {
+			var run = runsFactory.SimulationRuns().Skip(runIdx).First();
+			jobContainer.AddRun(run);
+			//if (dataProvider.JobInputData.Vehicle.OvcHev) {
+			//	var run2 = runsFactory.SimulationRuns().Skip(runIdx + 1).First();
+			//	jobContainer.AddRun(run2);
+			//}
+		}
+
+		PrintRuns(jobContainer, null);
+
+		jobContainer.Execute();
+		jobContainer.WaitFinished();
+		Assert.IsTrue(jobContainer.AllCompleted);
+		Assert.IsTrue(jobContainer.Runs.TrueForAll(runEntry => runEntry.Success));
+
+		PrintRuns(jobContainer, fileWriter);
+		PrintFiles(fileWriter);
+    }
+
+	private string GenerateJsonJobSingleBus(string primary, string completed)
+	{
+		var subDirectory = Path.GetDirectoryName(primary);
+
+		var header = new Dictionary<string, object>() {
+			{ "FileVersion", 6 }
+		};
+		var body = new Dictionary<string, object>() {
+			{ "PrimaryVehicle", Path.GetRelativePath(subDirectory, Path.GetFullPath(primary)) },
+			{ "CompletedVehicle", Path.GetRelativePath(subDirectory, Path.GetFullPath(completed)) },
+			//{ "RunSimulation", true}
+		};
+		var json = new Dictionary<string, object>() {
+			{"Header", header},
+			{"Body", body}
+		};
+
+		Directory.CreateDirectory(Path.GetFullPath(subDirectory));
+		var path = Path.Combine(Path.Combine(Path.GetFullPath(subDirectory)), "Single_" + Path.GetFileNameWithoutExtension(primary) + ".vecto");
+		var str = JsonConvert.SerializeObject(json, Newtonsoft.Json.Formatting.Indented);
+		File.WriteAllText(path, str);
+		return path;
     }
 
 	public string CreateCompletedVIF(string jobFile)

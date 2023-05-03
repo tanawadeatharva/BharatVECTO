@@ -239,7 +239,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
                 simulationRunData.Retarder =
                     DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData);
 
-                simulationRunData.EngineData.FuelMode = 0;
+                simulationRunData.EngineData.FuelMode = modeIdx.Value;
                 simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
                 simulationRunData.BusAuxiliaries =
                     DataAdapterGeneric.CreateBusAuxiliariesData(mission, PrimaryVehicle, CompletedVehicle, simulationRunData);
@@ -277,7 +277,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
                     PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
                     CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
                 simulationRunData.Retarder = DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData);
-                simulationRunData.EngineData.FuelMode = 0;
+                simulationRunData.EngineData.FuelMode = modeIdx.Value;
                 simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
                 simulationRunData.BusAuxiliaries =
                     DataAdapterSpecific.CreateBusAuxiliariesData(mission, PrimaryVehicle, CompletedVehicle,
@@ -527,20 +527,21 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				if (PrimaryVehicle.ArchitectureID != ArchitectureID.E2) {
 					throw new ArgumentException(nameof(PrimaryVehicle));
 				}
-				runData.GearshiftParameters =
-					DataAdapterGeneric.CreateGearshiftData(
-						runData.GearboxData,
-						(runData.AxleGearData?.AxleGear.Ratio ?? 1.0) *
-						(runData.AngledriveData?.Angledrive.Ratio ?? 1.0),
-						null
-					);
+				
 
                 var shiftStrategyName =
 					PowertrainBuilder.GetShiftStrategyName(PrimaryVehicle.Components.GearboxInputData.Type,
 						PrimaryVehicle.VehicleType);
 				runData.GearboxData = DataAdapterGeneric.CreateGearboxData(PrimaryVehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
-				
+
+                runData.GearshiftParameters =
+                    DataAdapterGeneric.CreateGearshiftData(
+                        runData.GearboxData,
+                        (runData.AxleGearData?.AxleGear.Ratio ?? 1.0) *
+                        (runData.AngledriveData?.Angledrive.Ratio ?? 1.0),
+                        null
+                    );
             }
         }
         public class PEV_E3 : BatteryElectric

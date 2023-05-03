@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 		public abstract class Hybrid : PrimaryBusBase
 		{
-			private IElectricStorageAdapter _eletricStorageAdapter = new ElectricStorageAdapter();
+			private IElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
 
 			#region Overrides of PrimaryBusBase
 
@@ -203,8 +203,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
             public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
 			{
-				var batteryData = _eletricStorageAdapter.CreateBatteryData(componentsElectricStorage, jobType, ovc);
-				var superCapData = _eletricStorageAdapter.CreateSuperCapData(componentsElectricStorage);
+				var batteryData = _electricStorageAdapter.CreateBatteryData(componentsElectricStorage, jobType, ovc);
+				var superCapData = _electricStorageAdapter.CreateSuperCapData(componentsElectricStorage);
 
 				if (batteryData != null) {
 					setBatteryData(batteryData);

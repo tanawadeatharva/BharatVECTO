@@ -279,9 +279,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				.WhenInjectedExactlyInto<DeclarationModeSingleBusRunDataFactory.PEV_E4>();
 			Bind<ISingleBusDeclarationDataAdapter>().To<DeclarationDataAdapterSingleBus.PEV_E_IEPC>()
 				.WhenInjectedExactlyInto<DeclarationModeSingleBusRunDataFactory.PEV_E_IEPC>();
-			#endregion
 
-		}
+			Bind<ISingleBusDeclarationDataAdapter>().To<DeclarationDataAdapterSingleBus.Exempted>()
+				.WhenInjectedExactlyInto<DeclarationModeSingleBusRunDataFactory.Exempted>();
+            #endregion
+
+        }
 
 		#endregion
 	}
