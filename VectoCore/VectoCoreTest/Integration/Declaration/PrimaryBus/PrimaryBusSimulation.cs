@@ -89,8 +89,8 @@ public class PrimaryBusSimulation
 
 	[
 		TestCase(@"PrimaryBus/Conventional/primary_heavyBus group41_nonSmart.xml", @"Conventional_completedBus_2.xml", 0, TestName = "2nd Amendment SingleBus Conventional"),
+		
 		TestCase(@"PrimaryBus/PEV/PEV_primaryBus_AMT_E2.xml", @"PEV_completedBus_2.xml", 0, TestName = "2nd Amendment SingleBus PEV E2"),
-
 		TestCase(@"PrimaryBus/PEV/PrimaryCoach_E2_Base_AMT.xml", @"PEV_completedBus_2.xml", 0, TestName = "2nd Amendment SingleBus Coach PEV E2 Base"),
 		TestCase(@"PrimaryBus/PEV/PrimaryCityBus_IEPC_Base.xml", @"PEV_completedBus_2.xml", 0, TestName = "2nd Amendment SingleBus CityBus PEV IEPC Base"),
 

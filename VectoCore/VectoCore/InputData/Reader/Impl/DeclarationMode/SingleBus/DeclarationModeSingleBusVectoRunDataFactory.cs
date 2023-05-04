@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 					return;
 				}
 
-				_segment = GetSegment(SingleBusDataProvider);
+				_segment = GetSegment();
 				
 			}
 
@@ -74,6 +74,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 					ExecutionMode = ExecutionMode.Declaration,
 					JobName = SingleBusDataProvider.JobInputData.Vehicle
 						.Identifier, //?!? Jobname
+					JobType = PrimaryVehicle.VehicleType,
 					ModFileSuffix = $"_{_segment.VehicleClass.GetClassNumber()}_{loading.Key}",
 					Report = Report,
 					Mission = mission,
@@ -87,27 +88,23 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
             }
 
 			#endregion
-			protected Segment GetSegment(ISingleBusInputDataProvider singleBus)
+			protected Segment GetSegment()
 			{
-				var vehicle = singleBus.JobInputData.Vehicle;
-				var completedVehicle = singleBus.CompletedVehicle;
-				var primaryVehicle = singleBus.PrimaryVehicle;
-
 				var segment = DeclarationData.CompletedBusSegments.Lookup(
-					primaryVehicle.AxleConfiguration.NumAxles(), completedVehicle.VehicleCode, completedVehicle.RegisteredClass, completedVehicle.NumberPassengerSeatsLowerDeck,
-					completedVehicle.Height, completedVehicle.LowEntry);
+					PrimaryVehicle.AxleConfiguration.NumAxles(), CompletedVehicle.VehicleCode, CompletedVehicle.RegisteredClass, CompletedVehicle.NumberPassengerSeatsLowerDeck,
+					CompletedVehicle.Height, CompletedVehicle.LowEntry);
 				if (!segment.Found)
 				{
 					throw new VectoException(
 						"no segment found for vehicle configruation: vehicle category: {0}, axle configuration: {1}, articulated: {2}, vehicle code: {3}, registered class: {4}, passengersLowerDeck: {5}, height: {6}, lowfloor: {7}. completed",
-						vehicle.VehicleCategory, primaryVehicle.AxleConfiguration,
-						vehicle.Articulated, completedVehicle.VehicleCode, completedVehicle.RegisteredClass.GetLabel(), completedVehicle.NumberPassengerSeatsLowerDeck,
-						completedVehicle.Height, completedVehicle.LowEntry);
+						PrimaryVehicle.VehicleCategory, PrimaryVehicle.AxleConfiguration,
+						PrimaryVehicle.Articulated, CompletedVehicle.VehicleCode, CompletedVehicle.RegisteredClass.GetLabel(), CompletedVehicle.NumberPassengerSeatsLowerDeck,
+						CompletedVehicle.Height, CompletedVehicle.LowEntry);
 				}
 				foreach (var mission in segment.Missions)
 				{
-					mission.VehicleHeight = completedVehicle.Height + mission.BusParameter.DeltaHeight;
-					mission.BusParameter.VehicleLength = completedVehicle.Length;
+					mission.VehicleHeight = CompletedVehicle.Height + mission.BusParameter.DeltaHeight;
+					mission.BusParameter.VehicleLength = CompletedVehicle.Length;
 				}
 				return segment;
 			}
@@ -185,12 +182,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 						primaryVehicle.VehicleType);
 				runData.GearboxData = DataAdapter.CreateGearboxData(primaryVehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+				var gbxInput = primaryVehicle.Components.GearboxInputData;
 				runData.GearshiftParameters =
 					DataAdapter.CreateGearshiftData(
-						runData.GearboxData,
 						(runData.AxleGearData?.AxleGear.Ratio ?? 1.0) *
 						(runData.AngledriveData?.Angledrive.Ratio ?? 1.0),
-						primaryVehicle.EngineIdleSpeed
+						primaryVehicle.EngineIdleSpeed,
+						gbxInput.Type,
+						gbxInput.Gears.Count
 					);
 			}
 
@@ -369,12 +368,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 						primaryVehicle.VehicleType);
 				runData.GearboxData = DataAdapter.CreateGearboxData(primaryVehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+				var gbxInput = primaryVehicle.Components.GearboxInputData;
 				runData.GearshiftParameters =
 					DataAdapter.CreateGearshiftData(
-						runData.GearboxData,
 						(runData.AxleGearData?.AxleGear.Ratio ?? 1.0) *
 						(runData.AngledriveData?.Angledrive.Ratio ?? 1.0),
-						primaryVehicle.EngineIdleSpeed
+						primaryVehicle.EngineIdleSpeed,
+						gbxInput.Type,
+						gbxInput.Gears.Count
 					);
 			}
         }
@@ -487,12 +488,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 						PrimaryVehicle.VehicleType);
 				runData.GearboxData = DataAdapter.CreateGearboxData(PrimaryVehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+				var gbxInput = PrimaryVehicle.Components.GearboxInputData;
 				runData.GearshiftParameters =
 					DataAdapter.CreateGearshiftData(
-						runData.GearboxData,
 						(runData.AxleGearData?.AxleGear.Ratio ?? 1.0) *
 						(runData.AngledriveData?.Angledrive.Ratio ?? 1.0),
-						PrimaryVehicle.EngineIdleSpeed
+						PrimaryVehicle.EngineIdleSpeed,
+						gbxInput.Type,
+						gbxInput.Gears.Count
 					);
 			}
 
@@ -566,7 +569,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                         vehicle.ElectricMotorTorqueLimits, result.BatteryData.CalculateAverageVoltage(), null);
                 }
 
-                result.VehicleData = DataAdapter.CreateVehicleData(null, _segment, mission, loading, _allowVocational);
+                result.VehicleData = DataAdapter.CreateVehicleData(SingleBusDataProvider, _segment, mission, loading, _allowVocational);
                 result.AirdragData = DataAdapter.CreateAirdragData(SingleBusDataProvider.CompletedVehicle, mission);
                 if (AxleGearRequired() || vehicle.Components.AxleGearInputData != null) {
                     result.AxleGearData = DataAdapter.CreateAxleGearData(vehicle.Components.AxleGearInputData);
@@ -615,19 +618,21 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 					throw new ArgumentException(nameof(SingleBusDataProvider.PrimaryVehicle));
 				}
 
-				var primaryVehicle = SingleBusDataProvider.PrimaryVehicle;
-				var shiftStrategyName =
-					PowertrainBuilder.GetShiftStrategyName(primaryVehicle.Components.GearboxInputData.Type,
-						primaryVehicle.VehicleType);
-				runData.GearboxData = DataAdapter.CreateGearboxData(primaryVehicle, runData,
-					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+				var gbxInput = PrimaryVehicle.Components.GearboxInputData;
 				runData.GearshiftParameters =
 					DataAdapter.CreateGearshiftData(
-						runData.GearboxData,
 						(runData.AxleGearData?.AxleGear.Ratio ?? 1.0) *
 						(runData.AngledriveData?.Angledrive.Ratio ?? 1.0),
-						primaryVehicle.EngineIdleSpeed
+						null,
+						gbxInput.Type,
+						gbxInput.Gears.Count
 					);
+				var shiftStrategyName =
+					PowertrainBuilder.GetShiftStrategyName(PrimaryVehicle.Components.GearboxInputData.Type,
+						PrimaryVehicle.VehicleType);
+				runData.GearboxData = DataAdapter.CreateGearboxData(PrimaryVehicle, runData,
+					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+				
 			}
         }
 

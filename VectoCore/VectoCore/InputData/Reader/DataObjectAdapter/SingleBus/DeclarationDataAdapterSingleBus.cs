@@ -94,10 +94,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 				return _driverDataAdapter.CreateDriverData(segment);
 			}
 
-			public virtual AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gearboxInputData)
-			{
-				return _axleGearDataAdapter.CreateDummyAxleGearData(gearboxInputData);
-			}
+			//public virtual AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gearboxInputData)
+			//{
+			//	return _axleGearDataAdapter.CreateDummyAxleGearData(gearboxInputData);
+			//}
 
 			public virtual AxleGearData CreateAxleGearData(IAxleGearInputData axleGearInputData)
 			{
@@ -126,10 +126,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 				throw new VectoException("PTO is not allowed for buses!");
 			}
 
-			public virtual ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio,
-				PerSecond engineIdlingSpeed)
+			public virtual ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed, GearboxType gbxType, int gearsCount)
 			{
-				return GearboxDataAdapter.CreateGearshiftData(axleRatio, engineIdlingSpeed, gbx.Type, gbx.Gears.Count);
+				return GearboxDataAdapter.CreateGearshiftData(axleRatio, engineIdlingSpeed, gbxType, gearsCount);
 			}
 
 			public virtual IEnumerable<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData,
@@ -271,7 +270,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 
 			protected override IHybridStrategyDataAdapter HybridStrategyDataAdapter => throw new NotImplementedException();
 
-			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
+			protected override ICompletedBusAuxiliaryDataAdapter AuxDataAdapter { get; } =
+				new SpecificCompletedPEVBusAuxiliaryDataAdapter();
+
+            public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
 			{
 				var batteryData = _electricStorageAdapter.CreateBatteryData(componentsElectricStorage, jobType, ovc);
