@@ -9,6 +9,7 @@
     <TargetFrameworks>net45;net48;net6.0</TargetFrameworks>
     <DefineConstants />
     <Configurations>Debug;Release;MockupRelease</Configurations>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net45'">

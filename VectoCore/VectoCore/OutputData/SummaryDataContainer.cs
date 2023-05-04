@@ -352,6 +352,7 @@ namespace TUGraz.VectoCore.OutputData
 		};
 
 		public static readonly Tuple<string, Type>[] ElectricEnergyConsumption = {
+			Tuple.Create(SumDataFields.EC_el_SOC, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.EC_el_final, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.EC_el_final_KM, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.EC_el_final_TKM, typeof(ConvertedSI)),
@@ -663,6 +664,7 @@ namespace TUGraz.VectoCore.OutputData
 			});
 
 			cols.AddRange(new [] {
+				SumDataFields.EC_el_SOC,
 				SumDataFields.EC_el_final,
 				SumDataFields.EC_el_final_KM,
 				SumDataFields.EC_el_final_TKM,
@@ -1025,6 +1027,12 @@ namespace TUGraz.VectoCore.OutputData
 			foreach (var aux in modData.Auxiliaries) {
 				var colName = GetAuxColName(aux.Key);
 				row[colName] = SumDataFields.AuxDataValue(runData, modData, aux.Value);
+				var auxTechCol = string.Format(SumDataFields.AUX_TECH_FORMAT, aux.Key);
+				if (Table.Columns.Contains(auxTechCol)) {
+					row[auxTechCol] = runData.Aux
+						.First(x => x.ID.Equals(aux.Key, StringComparison.InvariantCultureIgnoreCase))
+						.Technology.Join("; ");
+				}
 			}
 
 			if ((runData.GearboxData?.Gears.Count ?? 0) > 0) {

@@ -217,6 +217,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			_ovc = modelData.VehicleData.OffVehicleCharging;
 
 			var inputData = modelData.InputData as IMultistepBusInputDataProvider;
+			Input = inputData.JobInputData.PrimaryVehicle.Vehicle;
 			if (inputData == null) {
 				throw new VectoException("CompletedBus CustomerInformationFile requires MultistepBusInputData");
 			}

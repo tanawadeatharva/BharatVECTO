@@ -8,6 +8,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -123,6 +124,8 @@ namespace TUGraz.VectoCore.OutputData
 		public const string FCFINAL_LITERPER100TKM = "FC-Final{0} [l/100tkm]";
 		public const string FCFINAL_LiterPer100M3KM = "FC-Final{0} [l/100m³km]";
 		public const string FCFINAL_LiterPer100PassengerKM = "FC-Final{0} [l/100Pkm]";
+
+		public const string EC_el_SOC = "EC_el_SoC [kWh";
 
 		public const string EC_el_final = "EC_el_final [kWh]";
 		public const string EC_el_final_KM = "EC_el_final [kWh/km]";
@@ -334,7 +337,7 @@ namespace TUGraz.VectoCore.OutputData
 		public static readonly Dictionary<string, Tuple<ModalResultField[], WriteSumEntry>> SumDataValue = new Dictionary<string, Tuple<ModalResultField[], WriteSumEntry>>() {
 			// common fields
 			{ SORT, SumFunc((r, m) => r.JobNumber * 1000 + r.RunNumber)},
-			{ JOB, SumFunc((r, m) => $"{r.JobNumber}-{r.RunNumber}")},
+			{ JOB, SumFunc((r, m) => $"{r.JobNumber}-{r.RunNumber}-{(r.Iteration != 0 ? r.Iteration.ToString() : "")}")},
 			{ INPUTFILE, SumFunc((r,m) => SummaryDataContainer.ReplaceNotAllowedCharacters(r.JobName)) },
 			{ CYCLE, SumFunc((r, m) => SummaryDataContainer.ReplaceNotAllowedCharacters(r.Cycle.Name + Constants.FileExtensions.CycleFile))},
 			{ STATUS, SumFunc((r, m) => m.RunStatus)},
@@ -368,8 +371,16 @@ namespace TUGraz.VectoCore.OutputData
 					return null;
 				}
 
-				var gbxType = r.InputData?.JobInputData.Vehicle.Components?.GetGearboxType() ??
-							r.InputData?.PrimaryVehicleData?.Vehicle.Components?.GetGearboxType();
+				GearboxType? gbxType = null;
+				switch (r.InputData) {
+					case IMultistepBusInputDataProvider multistep:
+						gbxType = multistep.JobInputData?.PrimaryVehicle?.Vehicle?.Components.GetGearboxType();
+						break;
+					default:
+						gbxType = r.InputData?.JobInputData.Vehicle.Components?.GetGearboxType() ??
+									r.InputData?.PrimaryVehicleData?.Vehicle.Components?.GetGearboxType();
+						break;
+				}
 
 				if (gbxType != null) {
 					ret = DeclarationData.ADASCombinations.Lookup(r.VehicleData.ADAS, gbxType.Value).ID;
@@ -636,23 +647,26 @@ namespace TUGraz.VectoCore.OutputData
 					null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.PassengerCount.Value).ConvertToGrammPerKiloMeter(), ModalResultField.dist) },
 
 			// electric consumption
+			{ EC_el_SOC, SumFunc( (r, m) => 
+				m.CorrectedModalData.ElectricEnergyConsumption_SoC?.ConvertToKiloWattHour()) },
 			{ EC_el_final, SumFunc( (r , m ) 
-				=> (m.CorrectedModalData.ElectricEnergyConsumption?.ConvertToKiloWattHour()))},
+				=> (m.CorrectedModalData.ElectricEnergyConsumption_Final?.ConvertToKiloWattHour()))},
 			{ EC_el_final_KM, SumFunc((r, m) 
-				=> (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter)?.ConvertToKiloWattHourPerKiloMeter())},
+				=> (m.CorrectedModalData.ElectricEnergyConsumption_Final_PerMeter)?.ConvertToKiloWattHourPerKiloMeter())},
 			{ EC_el_final_TKM, SumFunc((r, m) 
 				=> r.VehicleData?.Loading == null || 
 					r.VehicleData.Loading.IsEqual(0) || 
-					m.CorrectedModalData.ElectricEnergyConsumption == null 
-					? null : (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter / r.VehicleData.Loading).ConvertToKiloWattHourPerTonKiloMeter())},
+					m.CorrectedModalData.ElectricEnergyConsumption_Final_PerMeter == null
+					? null : (m.CorrectedModalData.ElectricEnergyConsumption_Final_PerMeter / r.VehicleData.Loading).ConvertToKiloWattHourPerTonKiloMeter())},
 			{ EC_el_final_M3KM, SumFunc((r, m) 
 				=> r.VehicleData.CargoVolume == null ||
 					r.VehicleData.CargoVolume.IsEqual(0)  ||
-					m.CorrectedModalData.ElectricEnergyConsumption == null 
-					? null : (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter / r.VehicleData.CargoVolume).ConvertToKiloWattHourPerCubicMeterKiloMeter())},
+					m.CorrectedModalData.ElectricEnergyConsumption_Final_PerMeter == null
+					? null : (m.CorrectedModalData.ElectricEnergyConsumption_Final_PerMeter / r.VehicleData.CargoVolume).ConvertToKiloWattHourPerCubicMeterKiloMeter())},
 			{ ElectricEnergyConsumption_PKM, SumFunc((r, m)
-				=> r.VehicleData?.PassengerCount == null || m.CorrectedModalData.ElectricEnergyConsumption == null ?
-					null : (m.CorrectedModalData.ElectricEnergyConsumptionPerMeter / r.VehicleData.PassengerCount.Value).ConvertToKiloWattHourPerPassengerKiloMeter())},
+				=> r.VehicleData?.PassengerCount == null || 
+					m.CorrectedModalData.ElectricEnergyConsumption_Final_PerMeter == null 
+					? null : (m.CorrectedModalData.ElectricEnergyConsumption_Final_PerMeter / r.VehicleData.PassengerCount.Value).ConvertToKiloWattHourPerPassengerKiloMeter())},
 			//			{, SumFunc((r, m) =>)},
 
 		};

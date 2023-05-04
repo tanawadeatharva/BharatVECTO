@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -100,10 +101,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override TableData BoostingLimitations
 			=> ElementExists(XMLNames.Vehicle_BoostingLimitation)
 				? ReadTableData(XMLNames.Vehicle_BoostingLimitation, XMLNames.BoostingLimitation_Entry,
-					new Dictionary<string, string> {
-						{XMLNames.BoostingLimitation_RotationalSpeed, XMLNames.BoostingLimitation_RotationalSpeed},
-						{XMLNames.BoostingLimitation_BoostingTorque, XMLNames.BoostingLimitation_BoostingTorque}
-					})
+					AttributeMappings.BoostingLimitsMapping)
 				: null;
 
 		#endregion
@@ -200,7 +198,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public XMLDeclarationIepcMediumLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 
-		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_E;
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
@@ -252,7 +250,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#endregion
 
-		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.SerialHybridVehicle;
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_S;
 
 		public override bool HybridElectricHDV => true;
 

@@ -18,6 +18,7 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 		public override void UpdateRunData(int iteration, IModalDataContainer modData, VectoRunData runData)
 		{
 			StoreResults(modData, runData, iteration);
+			runData.Iteration = (iteration + 1);
 			SetEquivalenceFactor(runData, iteration);
 		}
 
@@ -61,7 +62,7 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 
 					f_equiv_1 = _results[iteration].f_equiv;
 					d_soc_1 = _results[iteration].d_soc;
-					f_equiv_2 = f_equiv_1 - (d_soc_1 / k);
+					f_equiv_2 = f_equiv_1 - (d_soc_1/100 / k);
 
 					runData.HybridStrategyParameters.EquivalenceFactor = f_equiv_2;
 					runData.HybridStrategyParameters.EquivalenceFactorCharge = f_equiv_2 * factorCharge;
@@ -69,8 +70,8 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 					break;
 				case 1:
 
-					d_soc_1 = _results[0].d_soc;
-					d_soc_2 = _results[1].d_soc;
+					d_soc_1 = _results[0].d_soc / 100;
+					d_soc_2 = _results[1].d_soc / 100;
 					f_equiv_1 = _results[0].f_equiv;
 					f_equiv_2 = _results[1].f_equiv;
 

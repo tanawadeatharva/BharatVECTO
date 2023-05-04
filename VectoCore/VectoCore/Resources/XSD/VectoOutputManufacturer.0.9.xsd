@@ -2392,7 +2392,7 @@
 					<xs:documentation>I.1.10.1.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyLorryType">
+			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyLorryType" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation>I.1.10.2.</xs:documentation>
 				</xs:annotation>
@@ -2416,7 +2416,7 @@
 					<xs:documentation>I.1.10.1.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyLorryType">
+			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyLorryType" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation>I.1.10.2.</xs:documentation>
 				</xs:annotation>
@@ -2435,7 +2435,7 @@
 	</xs:complexType>
 	<xs:complexType name="PEVLorryAuxOutputType">
 		<xs:sequence>
-			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyLorryType">
+			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyLorryType" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation>I.1.10.2.</xs:documentation>
 				</xs:annotation>
@@ -2459,7 +2459,7 @@
 					<xs:documentation>I.1.10.1.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyPrimaryBusType">
+			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyPrimaryBusType" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation>I.1.10.2.</xs:documentation>
 				</xs:annotation>
@@ -2488,7 +2488,7 @@
 					<xs:documentation>I.1.10.1.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyPrimaryBusType">
+			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyPrimaryBusType" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation>I.1.10.2.</xs:documentation>
 				</xs:annotation>
@@ -2515,7 +2515,7 @@
 	</xs:complexType>
 	<xs:complexType name="PEVPrimaryBusAuxOutputType">
 		<xs:sequence>
-			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyPrimaryBusType">
+			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyPrimaryBusType" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation>I.1.10.2.</xs:documentation>
 				</xs:annotation>

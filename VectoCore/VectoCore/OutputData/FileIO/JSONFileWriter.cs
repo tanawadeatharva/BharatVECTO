@@ -73,7 +73,7 @@ public class JSONFileWriter : IOutputFileWriter
 		if (commonPrefix.Length > 3) {
 			// at least on the same drive...
 			var relative = basePathNormalized.MakeRelativeUri(filePathNormalized);
-			return relative.ToString();
+			return Uri.UnescapeDataString(relative.ToString());
 		}
 
 		if (Path.GetDirectoryName(Path.GetFullPath(filePath)).StartsWith(basePath, StringComparison.OrdinalIgnoreCase)) {
@@ -481,7 +481,8 @@ public class JSONFileWriter : IOutputFileWriter
 							{ "TwinTyres", axle.TwinTyres },
 							{ "RRCISO", axle.Tyre.RollResistanceCoefficient },
 							{ "FzISO", axle.Tyre.TyreTestLoad.Value() },
-							{ "Type", axle.AxleType.ToString() }
+							{ "Type", axle.AxleType.ToString() },
+							{ "Steered", axle.Steered }
 						}
 					}
 				}
@@ -787,7 +788,11 @@ public class JSONFileWriter : IOutputFileWriter
 			body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
 
 		}
-		body.Add("HybridStrategyParams", GetRelativePath(input.JobInputData.HybridStrategyParameters.Source, basePath));
+
+		if (!job.SavedInDeclarationMode) {
+			body.Add("HybridStrategyParams",
+				GetRelativePath(input.JobInputData.HybridStrategyParameters.Source, basePath));
+		}
 
 		var auxList = new List<object>();
 		if (job.SavedInDeclarationMode && job.Vehicle is IVehicleDeclarationInputData declVehicle) {
@@ -807,9 +812,9 @@ public class JSONFileWriter : IOutputFileWriter
 
 				auxList.Add(auxOut);
 			}
-			if (declVehicle.Components.BusAuxiliaries != null) {
-				body.Add("BusAux", GetRelativePath(job.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile, basePath));
-			}
+			//if (declVehicle.Components.BusAuxiliaries != null) {
+			//	body.Add("BusAux", GetRelativePath(job.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile, basePath));
+			//}
 			body.Add("Aux", auxList);
 		}
 

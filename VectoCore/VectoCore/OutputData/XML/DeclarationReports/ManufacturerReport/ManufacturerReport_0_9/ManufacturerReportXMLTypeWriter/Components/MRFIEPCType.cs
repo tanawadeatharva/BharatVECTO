@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
@@ -38,7 +39,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 						: new XAttribute("voltage", electricMotorVoltageLevel.VoltageLevel.ToXMLFormat(0)),
 					new XElement(_mrf + "MaxContinuousPower",
 						(electricMotorVoltageLevel.ContinuousTorque * electricMotorVoltageLevel.ContinuousTorqueSpeed)
-						.ToXMLFormat(0)));
+						.ConvertToKiloWatt().ToXMLFormat(0)));
 
 
 				voltageLevels.Add(voltageLevel);
@@ -47,7 +48,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			iepcXElement.Add(
 				new XElement(_mrf + "NrOfGears", iepcData.Gears.Count),
 				new XElement(_mrf + "LowestTotalTransmissionRatio", (iepcData.Gears.OrderByDescending(g => g.GearNumber).First().Ratio
-																	* inputData.JobInputData.Vehicle.Components.AxleGearInputData?.Ratio ?? 1.0d).ToXMLFormat(3)),
+																	* (inputData.JobInputData.Vehicle.Components.AxleGearInputData?.Ratio ?? 1)).ToXMLFormat(3)),
 				new XElement(_mrf + XMLNames.IEPC_DifferentialIncluded, iepcData.DifferentialIncluded),
 				new XElement(_mrf + XMLNames.IEPC_DesignTypeWheelMotor, iepcData.DesignTypeWheelMotor),
 				new XElement(_mrf + XMLNames.Component_CertificationMethod, iepcData.CertificationMethod)

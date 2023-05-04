@@ -105,8 +105,23 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				throw new NotImplementedException();
 			}
 
+			public virtual HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData, SuperCapData runDataSuperCapData,
+				Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType)
+			{
+				throw new NotImplementedException();
+			}
+
 			public virtual HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
-				SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType)
+				SuperCapData runDataSuperCapData,
+				Kilogram vehicleMass,
+				VectoRunData.OvcHevMode ovcMode,
+				LoadingType loading,
+				VehicleClass vehicleClass,
+				MissionType missionType,
+				TableData boostingLimitations, 
+				GearboxData gearboxData, 
+				CombustionEngineData engineData, 
+				ArchitectureID archId)
 			{
 				throw new NotImplementedException();
 			}
@@ -408,9 +423,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			}
 
 			public override HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
-				SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType)
+				SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode,
+				LoadingType loading, VehicleClass vehicleClass, MissionType missionType, TableData boostingLimitations,
+				GearboxData gearboxData, CombustionEngineData engineData, ArchitectureID archID)
 			{
-				return _hybridStrategyDataAdapter.CreateHybridStrategyParameters(runDataBatteryData, runDataSuperCapData, ovcMode, loading, vehicleClass, missionType);
+				return _hybridStrategyDataAdapter.CreateHybridStrategyParameters(
+					batterySystemData: runDataBatteryData, 
+					superCap: runDataSuperCapData, 
+					ovcMode: ovcMode, 
+					loading: loading, 
+					vehicleClass: vehicleClass, 
+					missionType: missionType, archID, engineData, gearboxData, boostingLimitations);
 			}
 
 			#endregion

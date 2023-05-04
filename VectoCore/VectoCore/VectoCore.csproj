@@ -6,6 +6,7 @@
     <DefineConstants />
     <Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
 	<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net45|AnyCPU'">
     <DebugType>full</DebugType>
@@ -29,29 +30,50 @@
 	  <DebugType>none</DebugType>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupRelease|net45|AnyCPU'">
-	  <DebugType>full</DebugType>
+	  <!--<DebugType>full</DebugType>-->
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupRelease|net48|AnyCPU'">
-	  <DebugType>full</DebugType>
+	  <!--<DebugType>full</DebugType>-->
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupRelease|net6.0|AnyCPU'">
-	  <DebugType>full</DebugType>
+	  <!--<DebugType>full</DebugType>-->
 	</PropertyGroup>
 
-	<Choose>
+	<!--<Choose>
 		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
 			<ItemGroup>
 				<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
 					<_Parameter1>VectoMockup</_Parameter1>
 				</AssemblyAttribute>
 			</ItemGroup>
-			<!--<PropertyGroup>
+			--><!--<PropertyGroup>
 				<DefineConstants>MOCKUP</DefineConstants>
-			</PropertyGroup>-->
+			</PropertyGroup>--><!--
 		</When>
-	</Choose>
+	</Choose>-->
 
 	<ItemGroup>
+    <None Remove="Mockup\MockupResults\CIF_MockupResults_Conv_Bus.xml" />
+    <None Remove="Mockup\MockupResults\CIF_MockupResults_Conv_Lorry.xml" />
+    <None Remove="Mockup\MockupResults\CIF_MockupResults_non-OVC-HEV_Bus.xml" />
+    <None Remove="Mockup\MockupResults\CIF_MockupResults_non-OVC-HEV_Lorry.xml" />
+    <None Remove="Mockup\MockupResults\CIF_MockupResults_OVC-HEV_Bus.xml" />
+    <None Remove="Mockup\MockupResults\CIF_MockupResults_OVC-HEV_Lorry.xml" />
+    <None Remove="Mockup\MockupResults\CIF_MockupResults_PEV_Bus.xml" />
+    <None Remove="Mockup\MockupResults\CIF_MockupResults_PEV_Lorry.xml" />
+    <None Remove="Mockup\MockupResults\MRF_MockupResults_Conv_Bus.xml" />
+    <None Remove="Mockup\MockupResults\MRF_MockupResults_Conv_Lorry.xml" />
+    <None Remove="Mockup\MockupResults\MRF_MockupResults_Error.xml" />
+    <None Remove="Mockup\MockupResults\MRF_MockupResults_non-OVC-HEV_Bus.xml" />
+    <None Remove="Mockup\MockupResults\MRF_MockupResults_non-OVC-HEV_Lorry.xml" />
+    <None Remove="Mockup\MockupResults\MRF_MockupResults_OVC-HEV_Bus.xml" />
+    <None Remove="Mockup\MockupResults\MRF_MockupResults_OVC-HEV_Lorry.xml" />
+    <None Remove="Mockup\MockupResults\MRF_MockupResults_PEV_Bus.xml" />
+    <None Remove="Mockup\MockupResults\MRF_MockupResults_PEV_Lorry.xml" />
+    <None Remove="Mockup\MockupResults\VIF_MockupResults_Conv_Bus.xml" />
+    <None Remove="Mockup\MockupResults\VIF_MockupResults_non-OVC-HEV_Bus.xml" />
+    <None Remove="Mockup\MockupResults\VIF_MockupResults_OVC-HEV_Bus.xml" />
+    <None Remove="Mockup\MockupResults\VIF_MockupResults_PEV_Bus.xml" />
     <None Remove="Resources\Declaration\Buses\DefaultActuationsMap.apac" />
     <None Remove="Resources\Declaration\Buses\HeatingDistribution.csv" />
     <None Remove="Resources\Declaration\Buses\HeatingDistributionCases.csv" />
@@ -112,11 +134,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj">
-      <PrivateAssets>all</PrivateAssets>
-    </ProjectReference>
+	</ProjectReference>
     <ProjectReference Include="..\..\VectoCommon\VectoHashing\VectoHashing.csproj">
-      <PrivateAssets>all</PrivateAssets>
-    </ProjectReference>
+	</ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -131,6 +151,33 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!--<EmbeddedResource Include="Mockup\MockupResults">
+        <LogicalName>TUGraz.VectoMockup.MockupResults</LogicalName>
+	</EmbeddedResource>-->
+	<EmbeddedResource Include="Mockup\MockupResults\CIF_MockupResults_Conv_Bus.xml" />
+    <EmbeddedResource Include="Mockup\MockupResults\CIF_MockupResults_Conv_Lorry.xml" />
+    <EmbeddedResource Include="Mockup\MockupResults\CIF_MockupResults_non-OVC-HEV_Bus.xml" />
+    <EmbeddedResource Include="Mockup\MockupResults\CIF_MockupResults_non-OVC-HEV_Lorry.xml" />
+    <EmbeddedResource Include="Mockup\MockupResults\CIF_MockupResults_OVC-HEV_Bus.xml" />
+    <EmbeddedResource Include="Mockup\MockupResults\CIF_MockupResults_OVC-HEV_Lorry.xml" />
+    <EmbeddedResource Include="Mockup\MockupResults\CIF_MockupResults_PEV_Bus.xml" />
+    <EmbeddedResource Include="Mockup\MockupResults\CIF_MockupResults_PEV_Lorry.xml" />
+    <EmbeddedResource Include="Mockup\MockupResults\MRF_MockupResults_Conv_Bus.xml" />
+    <EmbeddedResource Include="Mockup\MockupResults\MRF_MockupResults_Conv_Lorry.xml" />
+    <EmbeddedResource Include="Mockup\MockupResults\MRF_MockupResults_Error.xml" />
+    <EmbeddedResource Include="Mockup\MockupResults\MRF_MockupResults_non-OVC-HEV_Bus.xml" />
+    <EmbeddedResource Include="Mockup\MockupResults\MRF_MockupResults_non-OVC-HEV_Lorry.xml" />
+    <EmbeddedResource Include="Mockup\MockupResults\MRF_MockupResults_OVC-HEV_Bus.xml" />
+    <EmbeddedResource Include="Mockup\MockupResults\MRF_MockupResults_OVC-HEV_Lorry.xml" />
+    <EmbeddedResource Include="Mockup\MockupResults\MRF_MockupResults_PEV_Bus.xml" />
+    <EmbeddedResource Include="Mockup\MockupResults\MRF_MockupResults_PEV_Lorry.xml" />
+    <EmbeddedResource Include="Mockup\MockupResults\VIF_MockupResults_Conv_Bus.xml" />
+    <EmbeddedResource Include="Mockup\MockupResults\VIF_MockupResults_non-OVC-HEV_Bus.xml" />
+    <EmbeddedResource Include="Mockup\MockupResults\VIF_MockupResults_OVC-HEV_Bus.xml" />
+    <EmbeddedResource Include="Mockup\MockupResults\VIF_MockupResults_PEV_Bus.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="JSONKeys.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -140,6 +187,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>JSONKeys.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Conidition="('$(Configuration)' == 'MockupRelease') Or ('$(Configuration)' == 'MockupDebug')" Include="Mockup\" />
   </ItemGroup>
 
   

@@ -84,11 +84,11 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 		{
 			var result = new List<ElectricMotorVoltageLevelData>();
 			foreach (var entry in voltageLevels.OrderBy(x => x.VoltageLevel)) {
-
+				var fld = GetElectricMotorFullLoadCurve(entry, count);
 				var iepcVoltageLevel = new IEPCVoltageLevelData {
-					EfficiencyMaps = GetEfficiencyMaps(entry, count, electricMachineType),
+					EfficiencyMaps = GetEfficiencyMaps(entry, count, electricMachineType, fld),
 					Voltage = entry.VoltageLevel,
-					FullLoadCurve = GetElectricMotorFullLoadCurve(entry, count)
+					FullLoadCurve = fld
 				};
 				result.Add(iepcVoltageLevel);
 			}
@@ -103,7 +103,8 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 		}
 
 		
-		private Dictionary<uint, EfficiencyMap> GetEfficiencyMaps(IElectricMotorVoltageLevel voltageLevel, int count, ElectricMachineType electricMachineType)
+		private Dictionary<uint, EfficiencyMap> GetEfficiencyMaps(IElectricMotorVoltageLevel voltageLevel, int count,
+			ElectricMachineType electricMachineType, ElectricMotorFullLoadCurve fullLoadCurve)
 		{
 			var result = new Dictionary<uint, EfficiencyMap>();
 
@@ -115,7 +116,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 					axleRatio, gearRatioAtMeasurement.Value, GearEfficiency, axleEfficiency);
 				
 				var deNormalizedMap = DeNormalizeData(GetNormalizedEfficiencyMap(electricMachineType), ratedPoint, gearRatio);
-				result.Add((uint) gearEntry.Key, IEPCMapReader.Create(deNormalizedMap, count, gearRatio, null));
+				result.Add((uint) gearEntry.Key, IEPCMapReader.Create(deNormalizedMap, count, gearRatio, fullLoadCurve));
 			}
 
 			return result;

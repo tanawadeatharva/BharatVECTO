@@ -208,7 +208,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// check if provided EM torque (drivetrain) is valid)
 				if ((!avgDtSpeed.IsEqual(DataBus.HybridControllerInfo.ElectricMotorSpeed(Position) / ModelData.RatioADC) ||
 															!dt.IsEqual(DataBus.HybridControllerInfo.SimulationInterval))) {
-					return new ResponseInvalidOperatingPoint(this);
+					return new ResponseInvalidOperatingPoint(this) {
+						ElectricMotor = {
+							MaxDriveTorque = maxDriveTorqueDt,
+							MaxRecuperationTorque = maxRecuperationTorqueDt,
+							AngularVelocity = avgDtSpeed, // avgemspeed??
+							AvgDrivetrainSpeed = avgDtSpeed,
+							PowerRequest = outTorque * avgDtSpeed,
+							DeRatingActive = DeRatingActive,
+						}
+					};
 				}
 				throw new VectoException(
 					"Invalid operating point provided by strategy! EM Torque: {0}, max Drive Torque: {1}, min Recup Torque: {2}",
@@ -227,7 +236,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								MaxRecuperationTorque = maxRecuperationTorqueDt,
 								AngularVelocity = avgDtSpeed, // avgemspeed??
 								AvgDrivetrainSpeed = avgDtSpeed,
-								PowerRequest = outTorque * avgDtSpeed
+								PowerRequest = outTorque * avgDtSpeed,
+								DeRatingActive = DeRatingActive
 							}
 						};
 					}
@@ -288,7 +298,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//}
 			if (NextComponent != null && !dryRun && !DataBus.IsTestPowertrain && !emOff && !(electricSupplyResponse is ElectricSystemResponseSuccess)) {
 				if ( !avgEmSpeed.IsEqual(DataBus.HybridControllerInfo.ElectricMotorSpeed(Position) / ModelData.RatioADC)) {
-					return new ResponseInvalidOperatingPoint(this);
+					return new ResponseInvalidOperatingPoint(this) {
+						ElectricMotor = {
+							MaxDriveTorque = maxDriveTorqueDt,
+							MaxRecuperationTorque = maxRecuperationTorqueDt,
+							AngularVelocity = avgDtSpeed, // avgemspeed??
+							AvgDrivetrainSpeed = avgDtSpeed,
+							PowerRequest = outTorque * avgDtSpeed,
+							DeRatingActive = DeRatingActive,
+						}
+							};
 				}
 				throw new VectoException(
 					"Invalid operating point provided by strategy! EM Torque: {0}, req. electric Power: {1}, battery demand motor: {3}, max Power from Battery: {2}",
