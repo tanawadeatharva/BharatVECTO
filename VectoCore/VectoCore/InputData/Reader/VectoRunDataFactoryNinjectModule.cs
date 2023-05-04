@@ -267,7 +267,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.E4));
 			Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.PEV_E_IEPC>().Named(
-				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.BatteryElectricVehicle,
+				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.IEPC_E,
 					ArchitectureID.E_IEPC));
 
 			Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.Exempted>().Named(

@@ -1451,7 +1451,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var retVal = GetDefaultElectricalUserConfig();
 
 			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
-			retVal.AlternatorType = primaryVehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle
+			retVal.AlternatorType = primaryVehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E)
 				? AlternatorType.None
 				: primaryBusAuxiliaries.ElectricSupply.AlternatorTechnology;
 			//primaryBusAuxiliaries.ElectricSupply.AlternatorTechnology;

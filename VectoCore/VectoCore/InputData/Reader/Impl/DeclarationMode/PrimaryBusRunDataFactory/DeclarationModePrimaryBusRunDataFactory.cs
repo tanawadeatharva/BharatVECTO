@@ -707,12 +707,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 			protected override bool AxleGearRequired()
 			{
-				var vehicle = InputDataProvider.JobInputData.Vehicle;
-				var iepcInput = vehicle.Components.IEPC;
+				var iepcInput = Vehicle.Components.IEPC;
 				var axleGearRequired = !iepcInput.DifferentialIncluded && !iepcInput.DesignTypeWheelMotor;
-				if (axleGearRequired && vehicle.Components.AxleGearInputData == null) {
+				if (axleGearRequired && Vehicle.Components.AxleGearInputData == null) {
 					throw new VectoException(
-						$"Axlegear reqhired for selected type of IEPC! DifferentialIncluded: {iepcInput.DifferentialIncluded}, DesignTypeWheelMotor: {iepcInput.DesignTypeWheelMotor}");
+						$"Axlegear required for selected type of IEPC! DifferentialIncluded: {iepcInput.DifferentialIncluded}, DesignTypeWheelMotor: {iepcInput.DesignTypeWheelMotor}");
 				}
 
 				var numGearsPowermap =
@@ -730,7 +729,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 						$"Number of gears drag curve does not match gear count! DragCurve {numGearsDrag}; Gear count: {gearCount}");
 				}
 
-				return axleGearRequired || vehicle.Components.AxleGearInputData != null;
+				return axleGearRequired || Vehicle.Components.AxleGearInputData != null;
 
 			}
 
