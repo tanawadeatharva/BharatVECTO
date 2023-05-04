@@ -24,10 +24,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 		{
 			#region Implementation of IVectoRunDataFactory
 
-			public IPrimaryBusDeclarationDataAdapter DataAdapter { get; }
-			public IDeclarationInputDataProvider DataProvider { get; }
+			protected IPrimaryBusDeclarationDataAdapter DataAdapter { get; }
+			protected IDeclarationInputDataProvider DataProvider { get; }
 
-			public IDeclarationReport Report { get; }
+			//public IDeclarationReport Report { get; }
 	   
 			protected PrimaryBusBase(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
 				IPrimaryBusDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, false)

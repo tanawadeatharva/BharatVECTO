@@ -200,7 +200,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 
 			protected override IEngineDataAdapter EngineDataAdapter { get; } = new CombustionEngineComponentDataAdapter();
 
-			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
+			protected override IElectricMachinesDataAdapter ElectricMachinesDataAdapter { get; } = new ElectricMachinesDataAdapter();
+
+			
+            public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
 			{
 				var batteryData = _electricStorageAdapter.CreateBatteryData(componentsElectricStorage, jobType, ovc);
@@ -223,7 +226,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 		{
 			protected override IGearboxDataAdapter GearboxDataAdapter => throw new NotImplementedException();
 
-			protected override IHybridStrategyDataAdapter HybridStrategyDataAdapter { get; } = new
+            protected override IHybridStrategyDataAdapter HybridStrategyDataAdapter { get; } = new
 				SerialHybridStrategyParameterDataAdapter();
         }
 
@@ -237,7 +240,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 
 		public class HEV_S4 : SerialHybrid { }
 
-		public class HEV_S_IEPC : SerialHybrid { }
+		public class HEV_S_IEPC : SerialHybrid
+		{
+			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new IEPCGearboxDataAdapter();
+        }
 
 		public class ParallelHybrid : Hybrid
 		{

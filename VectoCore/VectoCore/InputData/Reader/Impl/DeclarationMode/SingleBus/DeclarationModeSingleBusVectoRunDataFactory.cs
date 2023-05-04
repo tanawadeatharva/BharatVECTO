@@ -354,7 +354,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
         }
 		public  class HEV_S2 : SerialHybrid
 		{
-			protected HEV_S2(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter) : base(dataProvider, report, dataAdapter) { }
+			public HEV_S2(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter) : base(dataProvider, report, dataAdapter) { }
 
 			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
 			{
@@ -366,8 +366,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 				var shiftStrategyName =
 					PowertrainBuilder.GetShiftStrategyName(primaryVehicle.Components.GearboxInputData.Type,
 						primaryVehicle.VehicleType);
-				runData.GearboxData = DataAdapter.CreateGearboxData(primaryVehicle, runData,
-					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
 				var gbxInput = primaryVehicle.Components.GearboxInputData;
 				runData.GearshiftParameters =
 					DataAdapter.CreateGearshiftData(
@@ -377,28 +375,85 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 						gbxInput.Type,
 						gbxInput.Gears.Count
 					);
+				runData.GearboxData = DataAdapter.CreateGearboxData(primaryVehicle, runData,
+					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+				
 			}
         }
         
 		public class HEV_S3 : SerialHybrid
 		{
-			protected HEV_S3(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter) : base(dataProvider, report, dataAdapter) { }
+			public HEV_S3(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter) : base(dataProvider, report, dataAdapter) { }
 		}
 
 		public class HEV_S4 : SerialHybrid
 		{
-			protected HEV_S4(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter) : base(dataProvider, report, dataAdapter) { }
+			public HEV_S4(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter) : base(dataProvider, report, dataAdapter) { }
 		}
 
 
 		public class HEV_S_IEPC : SerialHybrid
 		{
-			protected HEV_S_IEPC(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter) : base(dataProvider, report, dataAdapter) { }
-		}
+			public HEV_S_IEPC(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter) : base(dataProvider, report, dataAdapter) { }
+
+            protected override VectoRunData CreateVectoRunData(Mission mission,
+                KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
+                int? modeIdx, VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+            {
+                AxleGearRequired();
+                return base.CreateVectoRunData(mission, loading, modeIdx, ovcMode);
+            }
+
+            protected override bool AxleGearRequired()
+            {
+                //var vehicle = InputDataProvider.JobInputData.Vehicle;
+                var iepcInput = PrimaryVehicle.Components.IEPC;
+                var axleGearRequired = !iepcInput.DifferentialIncluded && !iepcInput.DesignTypeWheelMotor;
+                if (axleGearRequired && PrimaryVehicle.Components.AxleGearInputData == null) {
+                    throw new VectoException(
+                        $"Axlegear reqhired for selected type of IEPC! DifferentialIncluded: {iepcInput.DifferentialIncluded}, DesignTypeWheelMotor: {iepcInput.DesignTypeWheelMotor}");
+                }
+
+                var numGearsPowermap =
+                    iepcInput.VoltageLevels.Select(x => Tuple.Create(x.VoltageLevel, x.PowerMap.Count)).ToArray();
+                var gearCount = iepcInput.Gears.Count;
+                var numGearsDrag = iepcInput.DragCurves.Count;
+
+                if (numGearsPowermap.Any(x => x.Item2 != gearCount)) {
+                    throw new VectoException(
+                        $"Number of gears for voltage levels does not match! PowerMaps: {numGearsPowermap.Select(x => $"{x.Item1}: {x.Item2}").Join()}; Gear count: {gearCount}");
+                }
+
+                if (numGearsDrag > 1 && numGearsDrag != gearCount) {
+                    throw new VectoException(
+                        $"Number of gears drag curve does not match gear count! DragCurve {numGearsDrag}; Gear count: {gearCount}");
+                }
+
+                return axleGearRequired;
+            }
+
+            protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
+            {
+                runData.GearshiftParameters =
+                    DataAdapter.CreateGearshiftData(
+                        (runData.AxleGearData?.AxleGear.Ratio ?? 1.0) * (runData.AngledriveData?.Angledrive.Ratio ?? 1.0),
+                        null,
+                        GearboxType.APTN,
+						PrimaryVehicle.Components.IEPC.Gears.Count);
+
+
+                var shiftStrategyName =
+                    PowertrainBuilder.GetShiftStrategyName(GearboxType.APTN,
+						PrimaryVehicle.VehicleType);
+                runData.GearboxData = DataAdapter.CreateGearboxData(PrimaryVehicle, runData,
+                    ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+
+            }
+        }
 
         public abstract class ParallelHybrid : Hybrid
 		{
-			public ParallelHybrid(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter) : base(dataProvider, report, dataAdapter) { }
+			protected ParallelHybrid(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter) : base(dataProvider, report, dataAdapter) { }
 
 			protected override VectoRunData CreateVectoRunData(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
@@ -532,7 +587,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 
 		public abstract class BatteryElectric : SingleBusBase
 		{
-			public BatteryElectric(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter) : base(dataProvider, report, dataAdapter) { }
+			protected BatteryElectric(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter) : base(dataProvider, report, dataAdapter) { }
 
 			protected override IEnumerable<VectoRunData> GetNextRun()
 			{
@@ -674,7 +729,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 						$"Number of gears drag curve does not match gear count! DragCurve {numGearsDrag}; Gear count: {gearCount}");
 				}
 
-				return axleGearRequired || PrimaryVehicle.Components.AxleGearInputData != null;
+				return axleGearRequired; // || PrimaryVehicle.Components.AxleGearInputData != null;
 
 			}
 
