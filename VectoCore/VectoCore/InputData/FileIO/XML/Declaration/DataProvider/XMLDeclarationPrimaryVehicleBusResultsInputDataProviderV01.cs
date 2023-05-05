@@ -106,9 +106,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					x.SelectSingleNode(
 							$".//*[local-name()='{XMLNames.Report_Result_EnergyConsumption}' and @unit='MJ/km']")?.InnerText
 						.ToDouble().SI(Unit.SI.Mega.Joule.Per.Kilo.Meter).Cast<JoulePerMeter>())).ToDictionary(x => x.Key, x => x.Value);
-			electricEnergyConsumption = GetNode(XMLNames.Report_ResultEntry_VIF_ElectricEnergyConsumption, xmlNode)
+			electricEnergyConsumption = GetNode(XMLNames.Report_ResultEntry_VIF_ElectricEnergyConsumption, xmlNode, required:false)?
 				.SelectSingleNode(
-					$".//*[local-name()='{XMLNames.Report_Result_EnergyConsumption}' and @unit='MJ/km']")?.InnerText
+					$".//*[local-name()='{XMLNames.Report_Result_EnergyConsumption}' and @unit='MJ/km']")?.InnerText?
 				.ToDouble().SI(Unit.SI.Mega.Joule.Per.Kilo.Meter).Cast<JoulePerMeter>();
 
 		}
