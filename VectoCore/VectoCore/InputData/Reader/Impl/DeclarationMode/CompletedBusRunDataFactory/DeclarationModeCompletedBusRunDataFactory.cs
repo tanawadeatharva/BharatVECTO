@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -443,20 +444,32 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
                 rd.VehicleData.VehicleClass = _segment.VehicleClass;
                 rd.BusAuxiliaries =
                     DataAdapterGeneric.CreateBusAuxiliariesData(mission, PrimaryVehicle, CompletedVehicle, rd);
-                var shiftStrategyName =
-                    PowertrainBuilder.GetShiftStrategyName(PrimaryVehicle.Components.GearboxInputData.Type,
-                        PrimaryVehicle.VehicleType);
+                
 
-				var gbx = PrimaryVehicle.Components.GearboxInputData;
+				CreateGearboxAndGearshiftData(rd);
 
-				rd.GearshiftParameters =
-					DataAdapterGeneric.CreateGearshiftData((rd.AxleGearData?.AxleGear.Ratio ?? 1.0) *
-															(rd.AngledriveData?.Angledrive.Ratio ?? 1.0),
-						PrimaryVehicle.EngineIdleSpeed, gbx.Type, gbx.Gears.Count);
-                rd.GearboxData = DataAdapterGeneric.CreateGearboxData(PrimaryVehicle, rd,
-                    ShiftPolygonCalculator.Create(shiftStrategyName, rd.GearshiftParameters));
-               
-               
+                rd.HybridStrategyParameters =
+					DataAdapterGeneric.CreateHybridStrategy(rd.BatteryData, rd.SuperCapData, rd.VehicleData.TotalVehicleMass,
+						ovcHevMode, loading.Key, rd.VehicleData.VehicleClass, mission.MissionType);
+
+				if (ovcHevMode != OvcHevMode.NotApplicable) {
+					if (rd.BatteryData != null) {
+						rd.BatteryData.InitialSoC = rd.HybridStrategyParameters.InitialSoc;
+					}
+
+					if (rd.SuperCapData != null) {
+						rd.SuperCapData.InitialSoC = rd.HybridStrategyParameters.InitialSoc;
+					}
+				}
+
+				if (ovcHevMode != OvcHevMode.NotApplicable && PrimaryVehicle.OvcHev) {
+					rd.ModFileSuffix += ovcHevMode == OvcHevMode.ChargeSustaining ? "CS" : "CD";
+				}
+
+				if (ovcHevMode == OvcHevMode.ChargeDepleting) {
+					rd.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
+				}
+
                 return rd;
 			}
 
@@ -473,20 +486,16 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					(bs) => rd.BatteryData = bs,
 					(sc) => rd.SuperCapData = sc);
 
-				if (PrimaryVehicle.VehicleType == VectoSimulationJobType.IEPC_S)
-				{
+				if (PrimaryVehicle.VehicleType == VectoSimulationJobType.IEPC_S) {
 					rd.ElectricMachinesData = DataAdapterGeneric.CreateIEPCElectricMachines(PrimaryVehicle.Components.IEPC,
 						rd.BatteryData.CalculateAverageVoltage());
+				} else {
+					rd.ElectricMachinesData = DataAdapterGeneric.CreateElectricMachines(
+							PrimaryVehicle.Components.ElectricMachines,
+							PrimaryVehicle.ElectricMotorTorqueLimits, rd.BatteryData.CalculateAverageVoltage(), null);
 				}
-				else
-				{
-					rd.ElectricMachinesData = DataAdapterGeneric.CreateElectricMachines(PrimaryVehicle.Components.ElectricMachines,
-						PrimaryVehicle.ElectricMotorTorqueLimits, rd.BatteryData.CalculateAverageVoltage(), null);
-				}
 
-
-
-                rd.VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle,
+				rd.VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle,
 					CompletedVehicle, _segment, mission, loading);
 				rd.AirdragData = DataAdapterSpecific.CreateAirdragData(CompletedVehicle, mission);
 				rd.EngineData =
@@ -499,7 +508,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					rd.Loading,
 					rd.VehicleData.VehicleClass,
 					rd.Mission.MissionType);
-
 
 				rd.AxleGearData =
 					DataAdapterGeneric.CreateAxleGearData(PrimaryVehicle.Components.AxleGearInputData);
@@ -516,9 +524,27 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					DataAdapterSpecific.CreateBusAuxiliariesData(mission, PrimaryVehicle, CompletedVehicle,
 						rd);
 
-
 				CreateGearboxAndGearshiftData(rd);
-				return rd;
+
+				if (ovcMode != OvcHevMode.NotApplicable) {
+					if (rd.BatteryData != null) {
+						rd.BatteryData.InitialSoC = rd.HybridStrategyParameters.InitialSoc;
+					}
+
+					if (rd.SuperCapData != null) {
+						rd.SuperCapData.InitialSoC = rd.HybridStrategyParameters.InitialSoc;
+					}
+				}
+
+				if (ovcMode != OvcHevMode.NotApplicable && PrimaryVehicle.OvcHev) {
+					rd.ModFileSuffix += ovcMode == OvcHevMode.ChargeSustaining ? "CS" : "CD";
+				}
+
+				if (ovcMode == OvcHevMode.ChargeDepleting) {
+					rd.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
+				}
+
+                return rd;
             }
 
 
