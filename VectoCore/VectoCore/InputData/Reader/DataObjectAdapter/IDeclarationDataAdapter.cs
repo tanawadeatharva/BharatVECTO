@@ -59,12 +59,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType);
 		
 		HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
-			SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType);
+			SuperCapData runDataSuperCapData, Kilogram vehicleMass, OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType);
 
 		HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
 			SuperCapData runDataSuperCapData,
 			Kilogram vehicleMass,
-			VectoRunData.OvcHevMode ovcMode,
+			OvcHevMode ovcMode,
 			LoadingType loading,
 			VehicleClass vehicleClass,
 			MissionType missionType,
@@ -92,11 +92,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		// serial hybrid strategy
 		HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
-			SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType);
+			SuperCapData runDataSuperCapData, Kilogram vehicleMass, OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType);
 
 		// paralllel hybrid strategy
         HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
-			SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode,
+			SuperCapData runDataSuperCapData, Kilogram vehicleMass, OvcHevMode ovcMode,
 			LoadingType loading, VehicleClass vehicleClass, MissionType missionType, TableData boostingLimitations,
 			GearboxData gearboxData, CombustionEngineData engineData, ArchitectureID architectureId);
 	}
@@ -117,11 +117,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		// serial hybrid strategy
         HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
-			SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType);
+			SuperCapData runDataSuperCapData, Kilogram vehicleMass, OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType);
 
 		// paralllel hybrid strategy
         HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
-			SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode,
+			SuperCapData runDataSuperCapData, Kilogram vehicleMass, OvcHevMode ovcMode,
 			LoadingType loading, VehicleClass vehicleClass, MissionType missionType, TableData boostingLimitations,
 			GearboxData gearboxData, CombustionEngineData engineData, ArchitectureID architectureId);
 
@@ -161,11 +161,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		// serial hybrid strategy
 		HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
-			SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType);
+			SuperCapData runDataSuperCapData, Kilogram vehicleMass, OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType);
 
 		// parallel hybrid strategy
         HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
-			SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode,
+			SuperCapData runDataSuperCapData, Kilogram vehicleMass, OvcHevMode ovcMode,
 			LoadingType loading, VehicleClass vehicleClass, MissionType missionType, TableData boostingLimitations,
 			GearboxData gearboxData, CombustionEngineData engineData, ArchitectureID architectureId);
     }

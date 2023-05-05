@@ -95,7 +95,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 
         protected override VectoRunData CreateVectoRunDataSpecific(Mission mission,
 			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int? modeIdx,
-			VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+			OvcHevMode ovcMode = OvcHevMode.NotApplicable)
         {
             var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
 
@@ -185,7 +185,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 
                     var primaryResult = InputDataProvider.JobInputData.PrimaryVehicle.GetResult(
                         simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
-                        simulationRunData.VehicleData.Loading);
+                        simulationRunData.VehicleData.Loading, OvcHevMode.NotApplicable);
                     if (primaryResult == null || !primaryResult.ResultStatus.Equals("success")) {
                         throw new VectoException(
                             "Failed to find results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3}. Make sure PIF and completed vehicle data match!",
@@ -208,7 +208,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
         }
         protected override VectoRunData CreateVectoRunDataGeneric(Mission mission,
 			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int? modeIdx,
-			VectoRunData.OvcHevMode ovcHevMode = VectoRunData.OvcHevMode.NotApplicable)
+			OvcHevMode ovcHevMode = OvcHevMode.NotApplicable)
         {
             var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
             return new VectoRunData()

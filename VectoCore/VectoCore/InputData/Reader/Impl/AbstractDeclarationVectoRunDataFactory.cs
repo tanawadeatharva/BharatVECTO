@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		protected abstract VectoRunData CreateVectoRunData(Mission mission,
 			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 			int? modeIdx = null,
-			VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable);
+			OvcHevMode ovcMode = OvcHevMode.NotApplicable);
 
 
 		protected virtual void InitializeReport()

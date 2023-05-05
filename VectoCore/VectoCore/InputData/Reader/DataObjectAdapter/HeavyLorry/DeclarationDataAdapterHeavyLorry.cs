@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			public virtual HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData, 
 				SuperCapData runDataSuperCapData,
 				Kilogram vehicleMass, 
-				VectoRunData.OvcHevMode ovcMode, 
+				OvcHevMode ovcMode, 
 				LoadingType loading, 
 				VehicleClass vehicleClass, 
 				MissionType missionType)
@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			public virtual HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
 				SuperCapData runDataSuperCapData,
 				Kilogram vehicleMass,
-				VectoRunData.OvcHevMode ovcMode,
+				OvcHevMode ovcMode,
 				LoadingType loading,
 				VehicleClass vehicleClass,
 				MissionType missionType,

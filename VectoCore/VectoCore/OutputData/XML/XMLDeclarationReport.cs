@@ -172,7 +172,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			public Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
 			public Kilogram ZEV_CO2 { get; set; }
 
-			public VectoRunData.OvcHevMode OVCMode { get; set; }
+			public OvcHevMode OVCMode { get; set; }
 
 			// used for factor method
 			public IResult PrimaryResult { get; set; }

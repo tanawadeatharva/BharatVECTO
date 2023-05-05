@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
@@ -51,13 +52,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         protected virtual List<IOVCResultEntry> GetOrderedResultsOVC(List<IResultEntry> results)
         {
-            if (!results.All(x => x.OVCMode.IsOneOf(VectoRunData.OvcHevMode.ChargeSustaining, VectoRunData.OvcHevMode.ChargeDepleting))) {
+            if (!results.All(x => x.OVCMode.IsOneOf(OvcHevMode.ChargeSustaining, OvcHevMode.ChargeDepleting))) {
                 throw new VectoException(
                     "Simulation runs for OVC vehicles must be either Charge Sustaining or Charge Depleting!");
             }
 
             var retVal = new List<IOVCResultEntry>(results.Count / 2);
-            var cdEntries = results.Where(x => x.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting)
+            var cdEntries = results.Where(x => x.OVCMode == OvcHevMode.ChargeDepleting)
                 .OrderBy(x => x.VehicleClass)
                 .ThenBy(x => x.FuelMode)
                 .ThenBy(x => x.Mission)

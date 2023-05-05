@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 			protected override VectoRunData CreateVectoRunData(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 				int? modeIdx,
-				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				var engine = Vehicle.Components.EngineInputData;
 				var engineModes = engine.EngineModes;
@@ -229,10 +229,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 									throw new VectoException(
 										"MaxChargingPower is required and has to be greater than 0 if OVC is selected");
 								}
-								yield return CreateVectoRunData(mission, loading, modeIdx, VectoRunData.OvcHevMode.ChargeDepleting);
-								yield return CreateVectoRunData(mission, loading, modeIdx, VectoRunData.OvcHevMode.ChargeSustaining);
+								yield return CreateVectoRunData(mission, loading, modeIdx, OvcHevMode.ChargeDepleting);
+								yield return CreateVectoRunData(mission, loading, modeIdx, OvcHevMode.ChargeSustaining);
 							} else {
-								yield return CreateVectoRunData(mission, loading, modeIdx, VectoRunData.OvcHevMode.ChargeSustaining);
+								yield return CreateVectoRunData(mission, loading, modeIdx, OvcHevMode.ChargeSustaining);
 							}
 						}
 					}
@@ -251,7 +251,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 			protected override VectoRunData CreateVectoRunData(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
-				int? modeIdx = null, VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+				int? modeIdx = null, OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				//CheckMaxChargingPowerPresent(vehicle);
 				var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
@@ -301,7 +301,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					DataAdapter.CreateHybridStrategy(runData.BatteryData, runData.SuperCapData, runData.VehicleData.TotalVehicleMass, 
 						ovcMode, loading.Key, runData.VehicleData.VehicleClass, mission.MissionType);
 
-				if (ovcMode != VectoRunData.OvcHevMode.NotApplicable) {
+				if (ovcMode != OvcHevMode.NotApplicable) {
 					if (runData.BatteryData != null) {
 						runData.BatteryData.InitialSoC = runData.HybridStrategyParameters.InitialSoc;
 					}
@@ -311,11 +311,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					}
 				}
 
-				if (ovcMode != VectoRunData.OvcHevMode.NotApplicable && runData.InputData.JobInputData.Vehicle.OvcHev) {
-					runData.ModFileSuffix += ovcMode == VectoRunData.OvcHevMode.ChargeSustaining ? "CS" : "CD";
+				if (ovcMode != OvcHevMode.NotApplicable && runData.InputData.JobInputData.Vehicle.OvcHev) {
+					runData.ModFileSuffix += ovcMode == OvcHevMode.ChargeSustaining ? "CS" : "CD";
 				}
 
-				if (ovcMode == VectoRunData.OvcHevMode.ChargeDepleting) {
+				if (ovcMode == OvcHevMode.ChargeDepleting) {
 					runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
 				}
 
@@ -389,7 +389,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 			protected override VectoRunData CreateVectoRunData(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
-				int? modeIdx, VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+				int? modeIdx, OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				AxleGearRequired();
 				return base.CreateVectoRunData(mission, loading, modeIdx, ovcMode);
@@ -448,7 +448,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 			protected override VectoRunData CreateVectoRunData(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
-				int? modeIdx = null, VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+				int? modeIdx = null, OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				var engine = Vehicle.Components.EngineInputData;
 				var engineModes = engine.EngineModes;
@@ -497,7 +497,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 						mission.BusParameter.BusGroup,
 						mission.MissionType, Vehicle.BoostingLimitations, runData.GearboxData, runData.EngineData, Vehicle.ArchitectureID);
 
-				if (ovcMode != VectoRunData.OvcHevMode.NotApplicable) {
+				if (ovcMode != OvcHevMode.NotApplicable) {
 					if (runData.BatteryData?.InitialSoC != null) {
 						runData.BatteryData.InitialSoC = runData.HybridStrategyParameters.InitialSoc;
 					}
@@ -507,15 +507,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					}
 				}
 
-				if (ovcMode == VectoRunData.OvcHevMode.ChargeDepleting) {
+				if (ovcMode == OvcHevMode.ChargeDepleting) {
 					runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
 				}
 
-				if (ovcMode == VectoRunData.OvcHevMode.ChargeSustaining) {
+				if (ovcMode == OvcHevMode.ChargeSustaining) {
 					runData.IterativeRunStrategy = new OVCHevIterativeRunStrategy();
 				}
-				if (ovcMode != VectoRunData.OvcHevMode.NotApplicable && runData.InputData.JobInputData.Vehicle.OvcHev) {
-					runData.ModFileSuffix += ovcMode == VectoRunData.OvcHevMode.ChargeSustaining ? "CS" : "CD";
+				if (ovcMode != OvcHevMode.NotApplicable && runData.InputData.JobInputData.Vehicle.OvcHev) {
+					runData.ModFileSuffix += ovcMode == OvcHevMode.ChargeSustaining ? "CS" : "CD";
 				}
 				runData.OVCMode = ovcMode;
 				return runData;
@@ -597,7 +597,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 			protected override VectoRunData CreateVectoRunData(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
-				int? modeIdx = null, VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+				int? modeIdx = null, OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				var result = CreateCommonRunData(mission, loading, _segment);
 
@@ -784,7 +784,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 			protected override VectoRunData CreateVectoRunData(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 				int? modeIdx,
-				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				var runData = new VectoRunData {
 					InputData = DataProvider,

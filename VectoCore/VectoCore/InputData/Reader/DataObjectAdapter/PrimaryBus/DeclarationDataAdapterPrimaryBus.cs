@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			public virtual HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
 				SuperCapData runDataSuperCapData,
 				Kilogram vehicleMass,
-				VectoRunData.OvcHevMode ovcMode,
+				OvcHevMode ovcMode,
 				LoadingType loading,
 				VehicleClass vehicleClass,
 				MissionType missionType)
@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 			// parallel hybrids
             public virtual HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData, SuperCapData runDataSuperCapData,
-				Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType,
+				Kilogram vehicleMass, OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType,
 				TableData boostingLimitations, GearboxData gearboxData, CombustionEngineData engineData,
 				ArchitectureID architectureId)
 			{

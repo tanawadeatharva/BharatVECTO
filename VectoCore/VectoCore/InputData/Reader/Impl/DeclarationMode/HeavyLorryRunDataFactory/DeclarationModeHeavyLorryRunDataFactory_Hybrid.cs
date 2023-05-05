@@ -55,10 +55,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 									throw new VectoException(
 										"MaxChargingPower has to be greater than 0 if OVC is selected");
 								}
-								yield return CreateVectoRunData(mission, loading, modeIdx, VectoRunData.OvcHevMode.ChargeDepleting);
-								yield return CreateVectoRunData(mission, loading, modeIdx, VectoRunData.OvcHevMode.ChargeSustaining);
+								yield return CreateVectoRunData(mission, loading, modeIdx, OvcHevMode.ChargeDepleting);
+								yield return CreateVectoRunData(mission, loading, modeIdx, OvcHevMode.ChargeSustaining);
 							} else {
-								yield return CreateVectoRunData(mission, loading, modeIdx, VectoRunData.OvcHevMode.ChargeSustaining);
+								yield return CreateVectoRunData(mission, loading, modeIdx, OvcHevMode.ChargeSustaining);
 							}
 						}
 					}
@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			protected override VectoRunData CreateVectoRunData(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 				int? modeIdx,
-				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				CheckMaxChargingPowerPresent(Vehicle);
 				
@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				runData.HybridStrategyParameters =
 					DataAdapter.CreateHybridStrategy(runData.BatteryData, runData.SuperCapData, runData.VehicleData.TotalVehicleMass, ovcMode, loading.Key, runData.VehicleData.VehicleClass, mission.MissionType);
 
-				if (ovcMode != VectoRunData.OvcHevMode.NotApplicable) {
+				if (ovcMode != OvcHevMode.NotApplicable) {
 					if (runData.BatteryData != null) {
 						runData.BatteryData.InitialSoC = runData.HybridStrategyParameters.InitialSoc;
 					}
@@ -160,11 +160,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					: DataAdapter.CreatePTOTransmissionData(Vehicle.Components.PTOTransmissionInputData, Vehicle.Components.GearboxInputData);
 
 
-				if (ovcMode != VectoRunData.OvcHevMode.NotApplicable && runData.InputData.JobInputData.Vehicle.OvcHev) {
-					runData.ModFileSuffix += ovcMode == VectoRunData.OvcHevMode.ChargeSustaining ? "CS" : "CD";
+				if (ovcMode != OvcHevMode.NotApplicable && runData.InputData.JobInputData.Vehicle.OvcHev) {
+					runData.ModFileSuffix += ovcMode == OvcHevMode.ChargeSustaining ? "CS" : "CD";
 				}
 
-				if (ovcMode == VectoRunData.OvcHevMode.ChargeDepleting) {
+				if (ovcMode == OvcHevMode.ChargeDepleting) {
 					runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
 				}
 
@@ -197,7 +197,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			protected override VectoRunData CreateVectoRunData(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
-				int? modeIdx = null, VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+				int? modeIdx = null, OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				CheckMaxChargingPowerPresent(Vehicle);
 				var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
@@ -243,7 +243,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						runData.VehicleData.VehicleClass,
 						mission.MissionType, Vehicle.BoostingLimitations, runData.GearboxData, runData.EngineData, Vehicle.ArchitectureID);
 
-				if (ovcMode != VectoRunData.OvcHevMode.NotApplicable) {
+				if (ovcMode != OvcHevMode.NotApplicable) {
 					if (runData.BatteryData?.InitialSoC != null) {
 						runData.BatteryData.InitialSoC = runData.HybridStrategyParameters.InitialSoc;
 					}
@@ -253,11 +253,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					}
 				}
 
-				if (ovcMode == VectoRunData.OvcHevMode.ChargeDepleting) {
+				if (ovcMode == OvcHevMode.ChargeDepleting) {
 					runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
 				}
 
-				if (ovcMode == VectoRunData.OvcHevMode.ChargeSustaining) {
+				if (ovcMode == OvcHevMode.ChargeSustaining) {
 					runData.IterativeRunStrategy = new OVCHevIterativeRunStrategy();
 				}
 
@@ -266,9 +266,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					: DataAdapter.CreatePTOTransmissionData(Vehicle.Components.PTOTransmissionInputData, Vehicle.Components.GearboxInputData);
 
 
-				if (ovcMode != VectoRunData.OvcHevMode.NotApplicable && runData.InputData.JobInputData.Vehicle.OvcHev)
+				if (ovcMode != OvcHevMode.NotApplicable && runData.InputData.JobInputData.Vehicle.OvcHev)
 				{
-					runData.ModFileSuffix += ovcMode == VectoRunData.OvcHevMode.ChargeSustaining ? "CS" : "CD";
+					runData.ModFileSuffix += ovcMode == OvcHevMode.ChargeSustaining ? "CS" : "CD";
 				}
 				runData.OVCMode = ovcMode;
 				return runData;
@@ -391,7 +391,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			protected override VectoRunData CreateVectoRunData(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
-				int? modeIdx, VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+				int? modeIdx, OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				AxleGearRequired();
 				return base.CreateVectoRunData(mission, loading, modeIdx, ovcMode);

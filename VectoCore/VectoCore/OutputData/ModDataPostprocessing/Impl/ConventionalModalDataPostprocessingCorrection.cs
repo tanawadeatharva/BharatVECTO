@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
         {
             var em = runData.ElectricMachinesData?.FirstOrDefault(x => x.Item1 != PowertrainPosition.GEN);
 
-            if (em != null && runData.OVCMode != VectoRunData.OvcHevMode.ChargeDepleting) {
+            if (em != null && runData.OVCMode != OvcHevMode.ChargeDepleting) {
                 var deltaEReess = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int) - r.WorkBusAux_elPS_SoC_Corr;
                 var startSoc = modData.REESSStartSoC();
                 var endSoc = modData.REESSEndSoC();
@@ -308,7 +308,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 		private void ApplyElectricPS_Electric(IModalDataContainer modData, VectoRunData runData, CorrectedModalData r)
         {
 			// case C1, C2a
-			if (runData.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting) {
+			if (runData.OVCMode == OvcHevMode.ChargeDepleting) {
                 r.WorkBusAux_elPS_SoC_ElRange = r.DeltaAir *
                             DeclarationData.BusAuxiliaries.PneumaticSystemElectricDemandPerAirGenerated /
                             runData.DCDCData.DCDCEfficiency;

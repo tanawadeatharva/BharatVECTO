@@ -136,7 +136,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
         protected override VectoRunData CreateVectoRunData(Mission mission,
 			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 			int? modeIdx,
-			VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+			OvcHevMode ovcMode = OvcHevMode.NotApplicable)
         {
 
             VectoRunData runData;

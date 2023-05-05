@@ -70,11 +70,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 			protected abstract VectoRunData CreateVectoRunDataGeneric(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int? modeIdx,
-				VectoRunData.OvcHevMode ovcHevMode);
+				OvcHevMode ovcHevMode);
 
 			protected abstract VectoRunData CreateVectoRunDataSpecific(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int? modeIdx,
-				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable);
+				OvcHevMode ovcMode = OvcHevMode.NotApplicable);
 
 			protected virtual VectoRunData CreateCommonRunData(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, string modSuffix)
 			{
@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 			protected virtual IEnumerable<VectoRunData> CreateVectoRunData(
 				Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 				int? modeIdx = null, string fuelMode = null,
-				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				// create specific run data
 				var simulationRunData = CreateVectoRunDataSpecific(mission, loading, modeIdx, ovcMode);
@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(loading.Key,
 						primaryMission.Loadings[loading.Key]),
 					primarySegment, modeIdx, ovcMode);
-				simulationRunData.PrimaryResult = GetPrimaryResult(fuelMode, simulationRunData);
+				simulationRunData.PrimaryResult = GetPrimaryResult(fuelMode, simulationRunData, ovcMode);
 
 				yield return simulationRunData;
 			}
@@ -145,16 +145,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 			protected override VectoRunData CreateVectoRunData(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
-				int? modeIdx = null, VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+				int? modeIdx = null, OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				throw new NotImplementedException("Not applicable for completed buses");
 			}
 
-            protected virtual IResult GetPrimaryResult(string fuelMode, VectoRunData simulationRunData)
+            protected virtual IResult GetPrimaryResult(string fuelMode, VectoRunData simulationRunData,
+				OvcHevMode ovcHevMode)
 			{
 				var primaryResult = DataProvider.MultistageJobInputData.JobInputData.PrimaryVehicle.GetResult(
 					simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
-					simulationRunData.VehicleData.Loading);
+					simulationRunData.VehicleData.Loading, ovcHevMode);
 				if (primaryResult == null || !primaryResult.ResultStatus.Equals("success")) {
 					throw new VectoException(
 						"Failed to find results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3}. Make sure PIF and completed vehicle data match!",
@@ -223,7 +224,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
             protected override VectoRunData CreateVectoRunDataGeneric(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int? modeIdx,
-				VectoRunData.OvcHevMode ovcHevMode)
+				OvcHevMode ovcHevMode)
             {
                 var simulationRunData = CreateCommonRunData(mission, loading, _modSuffixGeneric);
 
@@ -265,7 +266,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
             protected override VectoRunData CreateVectoRunDataSpecific(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int? modeIdx,
-				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
             {
                 var simulationRunData = CreateCommonRunData(mission, loading, _modSuffixSpecific);
 
@@ -338,11 +339,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 										$"{nameof(PrimaryVehicle.MaxChargingPower)} must be provided for OVC HEVs");
 								}
 								foreach (var run in CreateVectoRunData(mission, loading, modeIdx, fuelMode,
-											VectoRunData.OvcHevMode.ChargeSustaining)) {
+											OvcHevMode.ChargeSustaining)) {
 									yield return run;
 								}
 								foreach (var run in CreateVectoRunData(mission, loading, modeIdx, fuelMode,
-											VectoRunData.OvcHevMode.ChargeDepleting)) {
+											OvcHevMode.ChargeDepleting)) {
 									yield return run;
 								}
 							}
@@ -361,14 +362,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 			protected override VectoRunData CreateVectoRunDataGeneric(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int? modeIdx,
-				VectoRunData.OvcHevMode ovcHevMode)
+				OvcHevMode ovcHevMode)
 			{
 				throw new NotImplementedException("dummy implementation");
 			}
 
 			protected override VectoRunData CreateVectoRunDataSpecific(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int? modeIdx,
-				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				throw new NotImplementedException("dummy implementation");
 			}
@@ -395,7 +396,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 			protected override VectoRunData CreateVectoRunDataGeneric(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int? modeIdx,
-				VectoRunData.OvcHevMode ovcHevMode)
+				OvcHevMode ovcHevMode)
 			{
 				var rd = CreateCommonRunData(mission, loading, _modSuffixSpecific);
 
@@ -427,7 +428,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
                 rd.AirdragData = DataAdapterGeneric.CreateAirdragData(null, mission, new Segment());
                 rd.EngineData =
                     DataAdapterGeneric.CreateEngineData(PrimaryVehicle, modeIdx.Value, mission);
-                rd.ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>();
+                //rd.ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>();
                 rd.AxleGearData =
                     DataAdapterGeneric.CreateAxleGearData(PrimaryVehicle.Components.AxleGearInputData);
                 rd.AngledriveData =
@@ -461,7 +462,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 			protected override VectoRunData CreateVectoRunDataSpecific(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int? modeIdx,
-				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				var rd = CreateCommonRunData(mission, loading, _modSuffixSpecific);
 
@@ -659,7 +660,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 			protected override VectoRunData CreateVectoRunDataGeneric(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int? modeIdx,
-				VectoRunData.OvcHevMode ovcHevMode)
+				OvcHevMode ovcHevMode)
 			{
                 var result = CreateCommonRunData(mission, loading, _modSuffixGeneric);
 
@@ -714,7 +715,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
             protected override VectoRunData CreateVectoRunDataSpecific(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int? modeIdx,
-				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
             {
                 var result = CreateCommonRunData(mission, loading, _modSuffixSpecific);
 
@@ -841,7 +842,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 			protected override IEnumerable <VectoRunData> CreateVectoRunData(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 				int? modeIdx = null, string fuelMode = null,
-				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
                 yield return new VectoRunData() {
                     Exempted = true,
@@ -856,14 +857,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 			protected override VectoRunData CreateVectoRunDataGeneric(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int? modeIdx,
-				VectoRunData.OvcHevMode ovcHevMode)
+				OvcHevMode ovcHevMode)
 			{
 				throw new NotImplementedException();
 			}
 
 			protected override VectoRunData CreateVectoRunDataSpecific(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int? modeIdx,
-				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				throw new NotImplementedException();
 			}

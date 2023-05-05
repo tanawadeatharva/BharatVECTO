@@ -237,7 +237,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			protected override VectoRunData CreateVectoRunData(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 				int? modeIdx,
-				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 				var engineModes = engine.EngineModes;
@@ -364,7 +364,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			protected override VectoRunData CreateVectoRunData(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 				int? modeIdx = null,
-				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				var result = CreateCommonRunData(Vehicle, mission, loading, _segment);
 				result.AirdragData =
@@ -595,7 +595,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			protected override VectoRunData CreateVectoRunData(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 				int? modeIdx,
-				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				var runData = new VectoRunData
 				{

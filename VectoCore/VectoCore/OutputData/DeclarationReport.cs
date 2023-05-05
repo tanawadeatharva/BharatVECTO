@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		VectoRun.Status Status { get; }
 
-		VectoRunData.OvcHevMode OVCMode { get; }
+		OvcHevMode OVCMode { get; }
 		MissionType Mission { get; }
 
 		LoadingType LoadingType { get; }

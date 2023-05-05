@@ -1612,7 +1612,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="val">The value.</param>
 		/// <param name="unitFactor"></param>
 		/// <param name="units">The units.</param>
-		[DebuggerHidden]
+		//[DebuggerHidden]
 		protected SI(double val, double unitFactor, int[] units)
 		{
 			Val = val;

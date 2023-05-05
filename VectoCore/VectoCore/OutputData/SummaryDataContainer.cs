@@ -481,7 +481,7 @@ namespace TUGraz.VectoCore.OutputData
 						CreateColumns(PHEVColumns);
 					}
 
-					if (runData.OVCMode != VectoRunData.OvcHevMode.NotApplicable) {
+					if (runData.OVCMode != OvcHevMode.NotApplicable) {
 						CreateColumns(OVCModeColumns);
 					}
 					break;

@@ -1061,7 +1061,7 @@ lbFound:
                
                 runsFactory.ModifyRunData = Sub(data) 
                     Dim runData = data
-                    If(cbInitialSOC.Checked And (runData.OVCMode = VectoRunData.OvcHevMode.ChargeDepleting))
+                    If(cbInitialSOC.Checked And (runData.OVCMode = OvcHevMode.ChargeDepleting))
                         
                         Dim initSOC = Double.Parse(tbInitSOCinPercent.Text) / 100
 
