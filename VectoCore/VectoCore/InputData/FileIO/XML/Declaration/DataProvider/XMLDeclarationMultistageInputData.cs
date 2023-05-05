@@ -156,8 +156,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			return ResultsInputData.Results.FirstOrDefault(
 				x => x.VehicleGroup == vehicleClass &&
 					(x.SimulationParameter.Payload - payload).IsEqual(0, 1) && x.Mission == mission 
-					// && x.SimulationParameter.FuelMode.Equals(fuelMode, StringComparison.InvariantCultureIgnoreCase)
-					);
+					&& x.OvcMode == ovcHevMode
+				// && x.SimulationParameter.FuelMode.Equals(fuelMode, StringComparison.InvariantCultureIgnoreCase)
+			);
 		}
 
 		public XmlNode ResultsNode => GetNode(XMLNames.Report_Results);

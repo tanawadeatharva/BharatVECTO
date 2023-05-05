@@ -1146,6 +1146,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		Dictionary<FuelType, JoulePerMeter> EnergyConsumption { get; }
 		Dictionary<string, double> CO2 { get; }
+
+		OvcHevMode OvcMode { get; }
 	}
 
 	public interface ISimulationParameter

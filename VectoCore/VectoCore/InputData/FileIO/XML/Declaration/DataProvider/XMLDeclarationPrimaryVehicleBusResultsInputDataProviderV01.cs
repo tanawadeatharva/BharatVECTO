@@ -43,13 +43,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			foreach (XmlNode resultNode in _resultsNode.ChildNodes)
 			{
 				if (resultNode.LocalName == XMLNames.Report_Result_Result)
-					results.Add(GetResult(resultNode));
+					results.AddRange(GetResult(resultNode));
 			}
 
 			return results;
 		}
 
-		private IResult GetResult(XmlNode xmlNode)
+		private IList<IResult> GetResult(XmlNode xmlNode)
 		{
 			var resultStatus = GetAttribute(xmlNode, XMLNames.Result_Status);
 			var vehicleGroup = GetString(XMLNames.Report_Results_PrimaryVehicleSubgroup, xmlNode);
@@ -57,22 +57,49 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			var simulationNode = GetNode(XMLNames.Report_ResultEntry_SimulationParameters, xmlNode);
 			var simulationParams = GetSimulationParameter(simulationNode);
 
+			var ovcModes = GetNodes(XMLNames.Report_Results_OVCMode, xmlNode);
+
+			if (ovcModes != null && ovcModes.Count > 0) {
+				var retVal = new List<IResult>();
+				foreach (XmlNode node in ovcModes) {
+					var ovcMode = GetAttribute(node, XMLNames.Results_Report_OVCModeAttr).ParseEnum<OvcHevMode>();
+					var ovcEnergyConsumption = GetNodes(XMLNames.Report_Results_Fuel, node)
+						.Cast<XmlNode>().Select(x => new KeyValuePair<FuelType, JoulePerMeter>(
+							GetAttribute(x, XMLNames.Report_Results_Fuel_Type_Attr).ParseEnum<FuelType>(),
+							x.SelectSingleNode(
+									$".//*[local-name()='{XMLNames.Report_Result_EnergyConsumption}' and @unit='MJ/km']")?.InnerText
+								.ToDouble().SI(Unit.SI.Mega.Joule.Per.Kilo.Meter).Cast<JoulePerMeter>())).ToDictionary(x => x.Key, x => x.Value);
+                    retVal.Add(new Result {
+						ResultStatus = resultStatus,
+						Mission = mission,
+						VehicleGroup = VehicleClassHelper.Parse(vehicleGroup),
+						SimulationParameter = simulationParams,
+						EnergyConsumption = ovcEnergyConsumption,
+						CO2 = new Dictionary<string, double>(),
+						OvcMode = ovcMode
+					});
+				}
+				return retVal;
+			}
+
+
 			var energyConsumption = GetNodes(XMLNames.Report_Results_Fuel, xmlNode)
 				.Cast<XmlNode>().Select(x => new KeyValuePair<FuelType, JoulePerMeter>(
-											GetAttribute(x, XMLNames.Report_Results_Fuel_Type_Attr).ParseEnum<FuelType>(),
-											x.SelectSingleNode(
-													$".//*[local-name()='{XMLNames.Report_Result_EnergyConsumption}' and @unit='MJ/km']")?.InnerText
-													.ToDouble().SI(Unit.SI.Mega.Joule.Per.Kilo.Meter).Cast<JoulePerMeter>())).ToDictionary(x => x.Key, x => x.Value);
+					GetAttribute(x, XMLNames.Report_Results_Fuel_Type_Attr).ParseEnum<FuelType>(),
+					x.SelectSingleNode(
+							$".//*[local-name()='{XMLNames.Report_Result_EnergyConsumption}' and @unit='MJ/km']")?.InnerText
+						.ToDouble().SI(Unit.SI.Mega.Joule.Per.Kilo.Meter).Cast<JoulePerMeter>())).ToDictionary(x => x.Key, x => x.Value);
 
-
-			return new Result
-			{
-				ResultStatus = resultStatus,
-				Mission = mission,
-				VehicleGroup = VehicleClassHelper.Parse(vehicleGroup),
-				SimulationParameter = simulationParams,
-				EnergyConsumption = energyConsumption,
-				CO2 = new Dictionary<string, double>()
+            return new List<IResult>() {
+				new Result {
+					ResultStatus = resultStatus,
+					Mission = mission,
+					VehicleGroup = VehicleClassHelper.Parse(vehicleGroup),
+					SimulationParameter = simulationParams,
+					EnergyConsumption = energyConsumption,
+					CO2 = new Dictionary<string, double>(),
+					OvcMode = OvcHevMode.NotApplicable
+				}
 			};
 		}
 
