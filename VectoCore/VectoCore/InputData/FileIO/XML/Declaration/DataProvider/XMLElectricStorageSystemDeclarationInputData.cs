@@ -111,11 +111,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IBatteryPackDeclarationInputData
 
-        public virtual double? MinSOC =>
-			ElementExists(XMLNames.Battery_SOCmin) ? GetDouble(XMLNames.Battery_SOCmin) / 100 : (double?)null;
+        public virtual double? MinSOC
+		{
+			get
+			{
+				// ancestor-or-self::*[local-name()='Battery']/*[local-name()='SOCmin']
+				var node = BaseNode.SelectSingleNode($"ancestor-or-self::*[local-name()='{XMLNames.ElectricEnergyStorage_Battery}']/*[local-name()='{XMLNames.Battery_SOCmin}']");
+				return node != null
+					? node.InnerText.ToDouble() / 100
+					: (double?)null;
+			}
+		}
 
-		public virtual double? MaxSOC =>
-			ElementExists(XMLNames.Battery_SOCmax) ? GetDouble(XMLNames.Battery_SOCmax) / 100 : (double?)null;
+		public virtual double? MaxSOC
+		{
+			get
+			{
+				// ancestor-or-self::*[local-name()='Battery']/*[local-name()='SOCmin']
+				var node = BaseNode.SelectSingleNode($"ancestor-or-self::*[local-name()='{XMLNames.ElectricEnergyStorage_Battery}']/*[local-name()='{XMLNames.Battery_SOCmax}']");
+				return node != null
+					? node.InnerText.ToDouble() / 100
+					: (double?)null;
+            }
+		}
 
 		public virtual BatteryType BatteryType => GetString(XMLNames.REESS_BatteryType).ParseEnum<BatteryType>();
 		public virtual AmpereSecond Capacity => GetDouble(XMLNames.REESS_RatedCapacity).SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>();
