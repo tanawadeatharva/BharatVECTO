@@ -220,7 +220,7 @@ namespace TUGraz.VectoCore.Models.Declaration
             {
                 foreach (DataRow row in table.Rows)
                 {
-                    var vehicleClass = row.Field<string>("vehiclegroup");
+                    var vehicleGroups = row.Field<string>("vehiclegroup");
 
                     foreach (DataColumn col in table.Columns)
                     {
@@ -229,10 +229,12 @@ namespace TUGraz.VectoCore.Models.Declaration
                             continue;
                         }
 
-                        var values = SplitStringToDoubleTuple(row.Field<string>(col));
-                        Data[Tuple.Create(vehicleClass, col.Caption, LoadingType.LowLoading)] = values.Item1;
-                        Data[Tuple.Create(vehicleClass, col.Caption, LoadingType.ReferenceLoad)] = values.Item2;
-                    }
+						foreach (var vehicleGroup in vehicleGroups.Split('/')) {
+							var values = SplitStringToDoubleTuple(row.Field<string>(col));
+							Data[Tuple.Create(vehicleGroup.Trim(), col.Caption, LoadingType.LowLoading)] = values.Item1;
+							Data[Tuple.Create(vehicleGroup.Trim(), col.Caption, LoadingType.ReferenceLoad)] = values.Item2;
+						}
+					}
                 }
             }
 
