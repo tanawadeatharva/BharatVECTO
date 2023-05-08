@@ -911,7 +911,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			var endSpeed = DataBus.VehicleInfo.VehicleSpeed +
 							DataBus.DriverInfo.DriverAcceleration * ModelData.GearboxData.TractionInterruption;
-			if (EngineSpeedTooLow(response)
+			if (EngineSpeedTooLow(response) && DataBus.EngineInfo.EngineOn
 				&& (DataBus.GearboxInfo.GearboxType.ManualTransmission() ||
 					DataBus.GearboxInfo.GearboxType == GearboxType.IHPC)
 				&& endSpeed.IsSmallerOrEqual(disengageSpeedThreshold, 0.1.KMPHtoMeterPerSecond())) {
