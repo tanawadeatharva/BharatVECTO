@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public virtual double LookupSlope(MissionType mission, VehicleClass hdvClass, LoadingType loading)
 		{
-			return _slope.Lookup( hdvClass.GetClassNumber(), mission.GetNonEMSMissionType().GetName().ToLowerInvariant(),
+			return _slope.Lookup( hdvClass.GetClassNumberWithoutSubSuffix(), mission.GetNonEMSMissionType().GetName().ToLowerInvariant(),
                 loading);
 		}
 
@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Models.Declaration
             }
             public double LookupEquivalenceFactor(MissionType mission, VehicleClass hdvClass, LoadingType loading)
             {
-                var entry = Lookup(hdvClass.GetClassNumber()).cycleDict[mission.GetNonEMSMissionType()];
+                var entry = Lookup(hdvClass.GetClassNumberWithoutSubSuffix()).cycleDict[mission.GetNonEMSMissionType()];
 
                 switch (loading)
                 {
@@ -157,7 +157,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					foreach (string vehClass in vehicleGroups.Split('/')) {
                         var newEntry = new Entry
                         {
-                            VehicleGroup = vehClass,
+                            VehicleGroup = vehClass.Trim(),
                             cycleDict = new Dictionary<MissionType, Tuple<double, double>>()
                         };
 
