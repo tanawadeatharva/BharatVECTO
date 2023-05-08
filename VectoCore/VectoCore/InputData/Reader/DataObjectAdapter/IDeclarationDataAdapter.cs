@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
         HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
 			SuperCapData runDataSuperCapData, Kilogram vehicleMass, OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType);
 
-		// paralllel hybrid strategy
+		// parallel hybrid strategy
         HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
 			SuperCapData runDataSuperCapData, Kilogram vehicleMass, OvcHevMode ovcMode,
 			LoadingType loading, VehicleClass vehicleClass, MissionType missionType, TableData boostingLimitations,

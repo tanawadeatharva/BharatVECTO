@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -34,6 +35,35 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Look up the hdv group based on the supergroup
+		/// </summary>
+		public VehicleClass Lookup(VehicleClass hdvSuperGroup, VehicleCode vehicleCode)
+		{
+			var doubleDecker = vehicleCode.IsDoubleDeckerBus();
+			var floorTyoe = vehicleCode.GetFloorType();
+
+			var row = _segmentTable.AsEnumerable().Where(r => {
+				bool doubleDeckerLookedup = r.Field<string>("doubledecker") == "1" ? true : false;
+				string floor = r.Field<string>("floortype");
+				var floorMatches = false;
+                switch (floor) {
+					case "high floor":
+						floorMatches = floorTyoe == FloorType.HighFloor; break;
+					case "low floor":
+						floorMatches = floorTyoe == FloorType.LowFloor; break;
+					default:
+						throw new VectoException($"Unexpected value in column floor type {floor}");
+				}
+
+				VehicleClass hdvSuperGroupLookedUp = VehicleClassHelper.Parse(r.Field<string>("hdvsupergroup"));
+				return floorMatches && doubleDecker == doubleDeckerLookedup &&
+						hdvSuperGroupLookedUp == hdvSuperGroup;
+			}).Single();
+			return VehicleClassHelper.Parse(row.Field<string>("hdvgroup"));
+        }
+
 
 		private Segment LookupPrimaryVehicle(
 			VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration, bool articulated)

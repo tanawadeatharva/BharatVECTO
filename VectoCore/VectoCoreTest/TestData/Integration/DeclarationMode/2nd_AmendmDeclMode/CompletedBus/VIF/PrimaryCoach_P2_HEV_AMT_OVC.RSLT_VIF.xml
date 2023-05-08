@@ -20,6 +20,7 @@
         <ZeroEmissionVehicle>false</ZeroEmissionVehicle>
         <ArchitectureID>P2</ArchitectureID>
         <OvcHev>true</OvcHev>
+        <MaxChargingPower>4000</MaxChargingPower>
         <vif:ADAS xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xsi:type="ADAS_HEV_Type">
           <EngineStopStart>true</EngineStopStart>
           <PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>

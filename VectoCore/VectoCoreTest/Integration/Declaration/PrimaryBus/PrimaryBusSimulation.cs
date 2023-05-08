@@ -174,7 +174,9 @@ public class PrimaryBusSimulation
 		var dataProvider = JSONInputDataFactory.ReadJsonJob(filePath);
 		var fileWriter = new FileOutputWriter(filePath);
 		var simFactory = _kernel.Get<ISimulatorFactoryFactory>();
+		
 		var runsFactory = simFactory.Factory(ExecutionMode.Declaration, dataProvider, fileWriter, null, null);
+		
 		//runsFactory.WriteModalResults = true;
 		runsFactory.SerializeVectoRunData = true;
 		var jobContainer = new JobContainer(new SummaryDataContainer(fileWriter)) { };
@@ -183,7 +185,7 @@ public class PrimaryBusSimulation
 		jobContainer.AddRuns(runsFactory);
 		//PrintRuns(jobContainer, null);
 
-		jobContainer.Execute();
+		jobContainer.Execute(multithreaded:true);
 		jobContainer.WaitFinished();
 		Assert.IsTrue(jobContainer.AllCompleted);
 		Assert.IsTrue(jobContainer.Runs.TrueForAll(runEntry => runEntry.Success));
