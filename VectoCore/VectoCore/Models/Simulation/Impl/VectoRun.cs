@@ -195,7 +195,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				},
 				this,
 				() => {
-					Container.RunData.Report.PrepareResult(null); //<- increase number of expected results;
+					Container.RunData.Report?.PrepareResult(null); //<- increase number of expected results;
                     Container.FinishSingleSimulationRun();
 				}) ?? false;
 			if (!runAgain) {
