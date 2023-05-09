@@ -48,7 +48,7 @@ public class PrimaryBusSimulation
 
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_BD_BCVC_stefan.xml", 0, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 stpr"),
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_NoAlt.xml", 0, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 no_alt stpr"),
-	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_Notappl.xml", 0, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 notAppl stpr"),
+	//TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_Notappl.xml", 0, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 notAppl stpr"), // invalid input for PS
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_CM_BCVC.xml", 7, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 AMT_CM_BCVC stpr, InterUrban_Ref_Load"),
 
 
