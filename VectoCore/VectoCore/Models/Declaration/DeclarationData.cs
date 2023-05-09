@@ -33,8 +33,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json.Linq;
-using System.Collections.Concurrent;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -126,11 +124,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static readonly Watt MinDepotChgPwr = 10.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
 		public static readonly Second DepotChargingDuration = 6.SI(Unit.SI.Hour).Cast<Second>();
-
-		public static readonly ConcurrentDictionary<MissionType, DrivingCycleData> CyclesCache =
-			new ConcurrentDictionary<MissionType, DrivingCycleData>();
-
-
 
 		/// <summary>
 		/// Formula for calculating the payload for a given gross vehicle weight.

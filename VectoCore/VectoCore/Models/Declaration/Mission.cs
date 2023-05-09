@@ -58,29 +58,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public Kilogram BodyCurbWeight { get; internal set; }
 
-		private Stream _cycleFile;
-		private object _cycleLock = new object();
-		[JsonIgnore]
-		public Stream CycleFile
-		{
-			get
-			{
-				lock (_cycleLock) {
-					var memoryStream = new MemoryStream();
-					_cycleFile.CopyTo(memoryStream);
-					memoryStream.Position = 0;
-					_cycleFile.Seek(0, SeekOrigin.Begin);
-					return memoryStream;
-				}
-			}
-			internal set
-			{
-				lock (_cycleLock) {
-					_cycleFile = value;
-				}
-			}
-		}
-
 		public IList<MissionTrailer> Trailer { get; internal set; }
 
 		public Kilogram MinLoad { get; internal set; }

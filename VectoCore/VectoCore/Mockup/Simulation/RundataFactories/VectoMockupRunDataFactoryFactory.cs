@@ -52,7 +52,8 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 				return new MockupMultistageCompletedBusRunDataFactory(
 					multistageVifInputData,
 					report, new DeclarationDataAdapterSpecificCompletedBus.Conventional(),
-					new DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.Conventional());
+					new DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.Conventional(),
+					null);
 			}
 			else {
 				return new DeclarationModeMultistageBusVectoRunDataFactory(multistageVifInputData, report);
@@ -64,7 +65,8 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
             var vehicleCategory = declDataProvider.JobInputData.Vehicle.VehicleCategory;
             if (vehicleCategory.IsLorry())
             {
-                return new MockupLorryVectoRunDataFactory(declDataProvider, report, new DeclarationDataAdapterHeavyLorry.Conventional());
+                return new MockupLorryVectoRunDataFactory(declDataProvider, report, new DeclarationDataAdapterHeavyLorry.Conventional(), 
+					null);
             }
 
             if (vehicleCategory.IsBus())
@@ -75,7 +77,8 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                         throw new NotImplementedException();
                         //return new DeclarationModeMultistageBusVectoRunDataFactory(declDataProvider, report);
                     case VehicleCategory.HeavyBusPrimaryVehicle:
-                        return new PrimaryBusMockupRunDataFactory(declDataProvider, report, new DeclarationDataAdapterPrimaryBus.Conventional());
+                        return new PrimaryBusMockupRunDataFactory(declDataProvider, report, new DeclarationDataAdapterPrimaryBus.Conventional(),
+							null);
                     default:
                         break;
                 }

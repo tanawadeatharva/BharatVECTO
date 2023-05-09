@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 			public CompletedBusBase(IMultistageVIFInputData dataProvider, IDeclarationReport report,
 				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
-				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(null, report, false)
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(null, report, cycleFactory, false)
 			{
 				DataAdapterSpecific = dataAdapterSpecific;
 				DataAdapterGeneric = dataAdapterGeneric;
@@ -79,10 +79,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 			protected virtual VectoRunData CreateCommonRunData(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, string modSuffix)
 			{
-				var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType,
-					_ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
+				var cycle = CycleFactory.GetDeclarationCycle(mission);
 
-				CheckSuperCap(PrimaryVehicle);
+                CheckSuperCap(PrimaryVehicle);
 				var simulationRunData = new VectoRunData {
 					JobType = PrimaryVehicle.VehicleType,
 					InputData = DataProvider.MultistageJobInputData,
@@ -205,8 +204,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
         {
             public Conventional(IMultistageVIFInputData dataProvider, IDeclarationReport report,
                 ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
-                IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report, dataAdapterSpecific,
-                dataAdapterGeneric)
+                IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapterSpecific,
+                dataAdapterGeneric, cycleFactory)
             { }
 
 			protected override IEnumerable<VectoRunData> GetNextRun()
@@ -324,8 +323,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 		{
 			protected Hybrid(IMultistageVIFInputData dataProvider, IDeclarationReport report,
 				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
-				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report,
-				dataAdapterSpecific, dataAdapterGeneric) { }
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report,
+				dataAdapterSpecific, dataAdapterGeneric, cycleFactory) { }
 
 			protected override IEnumerable<VectoRunData> GetNextRun()
 			{
@@ -418,8 +417,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 			protected SerialHybrid(IMultistageVIFInputData dataProvider, IDeclarationReport report,
 				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
-				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report,
-				dataAdapterSpecific, dataAdapterGeneric) { }
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report,
+				dataAdapterSpecific, dataAdapterGeneric, cycleFactory) { }
 
 			#region Overrides of Hybrid
 
@@ -576,8 +575,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
         {
 			public HEV_S2(IMultistageVIFInputData dataProvider, IDeclarationReport report,
 				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
-				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report,
-				dataAdapterSpecific, dataAdapterGeneric) { }
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report,
+				dataAdapterSpecific, dataAdapterGeneric, cycleFactory) { }
 
 			#region Overrides of SerialHybrid
 
@@ -606,17 +605,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
        
 		public class HEV_S3 : SerialHybrid
         {
-            public HEV_S3(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric) { }
+            public HEV_S3(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory) { }
         }
         
 		public class HEV_S4 : SerialHybrid
         {
-            public HEV_S4(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric) { }
+            public HEV_S4(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory) { }
         }
         
 		public class HEV_S_IEPC : SerialHybrid
         {
-            public HEV_S_IEPC(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric) { }
+            public HEV_S_IEPC(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory) { }
 
 			#region Overrides of SerialHybrid
 
@@ -647,8 +646,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 		{
 			protected ParallelHybrid(IMultistageVIFInputData dataProvider, IDeclarationReport report,
 				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
-				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report,
-				dataAdapterSpecific, dataAdapterGeneric) { }
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report,
+				dataAdapterSpecific, dataAdapterGeneric, cycleFactory) { }
 
 			#region Overrides of Hybrid
 
@@ -792,27 +791,27 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
         public class HEV_P1 : ParallelHybrid
         {
-            public HEV_P1(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric) { }
+            public HEV_P1(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory) { }
         }
         
 		public class HEV_P2 : ParallelHybrid
         {
-            public HEV_P2(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric) { }
+            public HEV_P2(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory) { }
         }
         
 		public class HEV_P2_5 : ParallelHybrid
         {
-            public HEV_P2_5(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric) { }
+            public HEV_P2_5(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory) { }
         }
         
 		public class HEV_P3 : ParallelHybrid
         {
-            public HEV_P3(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric) { }
+            public HEV_P3(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory) { }
         }
         
 		public class HEV_P4 : ParallelHybrid
         {
-            public HEV_P4(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric) { }
+            public HEV_P4(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory) { }
         }
 
         #endregion ParallelHybrid
@@ -824,8 +823,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 		{
 			public BatteryElectric(IMultistageVIFInputData dataProvider, IDeclarationReport report,
 				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
-				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report,
-				dataAdapterSpecific, dataAdapterGeneric) { }
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report,
+				dataAdapterSpecific, dataAdapterGeneric, cycleFactory) { }
 
 			protected override IEnumerable<VectoRunData> GetNextRun()
 			{
@@ -962,7 +961,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 	
         public class PEV_E2 : BatteryElectric
         {
-            public PEV_E2(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric) { }
+            public PEV_E2(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory) { }
 
 			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
 			{
@@ -986,15 +985,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
         }
         public class PEV_E3 : BatteryElectric
         {
-            public PEV_E3(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric) { }
+            public PEV_E3(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory) { }
         }
         public class PEV_E4 : BatteryElectric
         {
-            public PEV_E4(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric) { }
+            public PEV_E4(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory) { }
         }
         public class PEV_E_IEPC : BatteryElectric
         {
-            public PEV_E_IEPC(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric) { }
+            public PEV_E_IEPC(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory) { }
 
 
 			#region Overrides of BatteryElectric
@@ -1010,7 +1009,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 		public class Exempted : CompletedBusBase
         {
-            public Exempted(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric) { }
+            public Exempted(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory) { }
 
             protected override IEnumerable<VectoRunData> GetNextRun()
             {

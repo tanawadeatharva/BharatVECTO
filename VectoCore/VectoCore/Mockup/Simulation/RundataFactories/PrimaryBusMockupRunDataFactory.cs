@@ -24,8 +24,8 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
     {
         public PrimaryBusMockupRunDataFactory(IDeclarationInputDataProvider dataProvider,
             IDeclarationReport report,
-			IPrimaryBusDeclarationDataAdapter declarationDataAdapter) :
-            base(dataProvider, report, declarationDataAdapter)
+			IPrimaryBusDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory) :
+            base(dataProvider, report, declarationDataAdapter, cycleFactory)
         { }
 
         #region Overrides of AbstractDeclarationVectoRunDataFactory
@@ -154,13 +154,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
             }
             else
             {
-                var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType,
-                    _ =>
-                    {
-                        return DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "",
-                            false);
-                    });
-
+				var cycle = CycleFactory.GetDeclarationCycle(mission);
 
                 runData = new VectoRunData()
                 {

@@ -24,7 +24,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 		public MockupMultistageCompletedBusRunDataFactory(IMultistageVIFInputData dataProvider,
             IDeclarationReport report,
 			ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
-			IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric)
+			IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory)
         {
 
         }
@@ -96,8 +96,8 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
         protected override VectoRunData CreateVectoRunDataSpecific(Mission mission,
 			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int? modeIdx,
 			OvcHevMode ovcMode = OvcHevMode.NotApplicable)
-        {
-            var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
+		{
+			var cycle = CycleFactory.GetDeclarationCycle(mission);
 
             var simulationRunData = new VectoRunData
             {
@@ -209,8 +209,9 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
         protected override VectoRunData CreateVectoRunDataGeneric(Mission mission,
 			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int? modeIdx,
 			OvcHevMode ovcHevMode = OvcHevMode.NotApplicable)
-        {
-            var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
+		{
+			var cycle = CycleFactory.GetDeclarationCycle(mission);
+
             return new VectoRunData()
             {
                 Mission = mission,
@@ -231,7 +232,6 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 GearboxData = PrimaryBusMockupRunDataFactory.CreateMockupGearboxData(PrimaryVehicle),
                 AxleGearData = PrimaryBusMockupRunDataFactory.CreateMockupAxleGearData(PrimaryVehicle)
             };
-            //return base.CreateVectoRunDataGeneric(mission, loading, primarySegment, modeIdx);
         }
 
         //#endregion

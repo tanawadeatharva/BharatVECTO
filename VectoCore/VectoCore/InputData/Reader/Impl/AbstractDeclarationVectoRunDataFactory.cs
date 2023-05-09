@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -30,11 +31,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
         private DriverData _driverdata;
 
+		
+		protected IDeclarationCycleFactory CycleFactory { get; }
+
 		protected virtual IVehicleDeclarationInputData Vehicle => InputDataProvider.JobInputData.Vehicle;
 
         protected AbstractDeclarationVectoRunDataFactory(
-			IDeclarationInputDataProvider dataProvider, IDeclarationReport report, bool checkJobType = true)
+			IDeclarationInputDataProvider dataProvider, IDeclarationReport report, IDeclarationCycleFactory cycleFactory, bool checkJobType = true)
 		{
+			CycleFactory = cycleFactory;
 			InputDataProvider = dataProvider;
 
 			if (checkJobType) {

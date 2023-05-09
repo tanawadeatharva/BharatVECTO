@@ -32,6 +32,7 @@
 using NUnit.Framework;
 using System.IO;
 using System.Linq;
+using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -50,6 +51,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 	[Parallelizable(ParallelScope.All)]
 	public class SimulationDataReaderTest
 	{
+		private StandardKernel _kernel;
 		protected const string DeclarationJob = @"TestData\Jobs\12t Delivery Truck.vecto";
 		protected const double Tolerance = 0.0001;
 
@@ -57,6 +59,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+			_kernel = new StandardKernel(new VectoNinjectModule());
 		}
 
 		[Category("LongRunning")]
@@ -70,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			}
 
 			var dataAdapter = new DeclarationDataAdapterHeavyLorry.Conventional();
-			var reader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(declarationProvider, null, dataAdapter);
+			var reader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(declarationProvider, null, dataAdapter, _kernel.Get<IDeclarationCycleFactory>());
 			//reader.SetJobFile(DeclarationJob);
 
 			var runData = reader.NextRun().First();

@@ -1335,5 +1335,50 @@ namespace TUGraz.VectoCommon.InputData
 					return type.ToString();
 			}
 		}
+
+		public static bool IsBatteryElectricVehicle(this ArchitectureID type)
+		{
+			switch (type) {
+				case ArchitectureID.E2:
+				case ArchitectureID.E3:
+				case ArchitectureID.E4:
+				case ArchitectureID.E_IEPC:
+					return true;
+				default: return false;
+			}
+		}
+
+		public static bool IsHybridVehicle(this ArchitectureID type)
+		{
+			return IsSerialHybridVehicle(type) || IsParallelHybridVehicle(type);
+		}
+
+		public static bool IsParallelHybridVehicle(this ArchitectureID type)
+		{
+			switch (type) {
+				case ArchitectureID.P1:
+				case ArchitectureID.P2:
+				case ArchitectureID.P2_5:
+				case ArchitectureID.P3:
+				case ArchitectureID.P4:
+				//case ArchitectureID.P_IHPC:
+					return true;
+				default:
+					return false;
+			}
+		}
+
+		public static bool IsSerialHybridVehicle(this ArchitectureID type)
+		{
+			switch (type) {
+				case ArchitectureID.S2:
+				case ArchitectureID.S3:
+				case ArchitectureID.S4:
+				case ArchitectureID.S_IEPC:
+					return true;
+				default:
+					return false;
+			}
+		}
 	}
 }

@@ -22,7 +22,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
     {
         public MockupLorryVectoRunDataFactory(IDeclarationInputDataProvider dataProvider,
             IDeclarationReport report,
-			ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter)
+			ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, declarationDataAdapter, cycleFactory)
         {
 
         }
@@ -140,12 +140,8 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 			}
             else
             {
+				var cycle = CycleFactory.GetDeclarationCycle(mission);
 
-                var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ =>
-                {
-                    return DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "",
-                            false);
-                });
                 runData = new VectoRunData()
                 {
                     Loading = loading.Key,

@@ -37,6 +37,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -69,10 +70,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			MissionType.Construction,
 		};
 
+		private StandardKernel _kernel;
+
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+			_kernel = new StandardKernel(new VectoNinjectModule());
 		}
 
 
@@ -2075,8 +2079,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             CollectionAssert.AreEqual(trailerCurbWeight, m.Trailer.Select(t => t.TrailerCurbWeight.Value()));
             CollectionAssert.AreEqual(trailerType, m.Trailer.Select(t => t.TrailerType));
             CollectionAssert.AreEqual(trailerAxleCount, m.Trailer.Select(t => t.TrailerWheels.Count));
-            Assert.IsNotNull(m.CycleFile);
-            Assert.IsTrue(!string.IsNullOrEmpty(new StreamReader(m.CycleFile).ReadLine()));
+            //Assert.IsNotNull(m.CycleFile);
+            //Assert.IsTrue(!string.IsNullOrEmpty(new StreamReader(m.CycleFile).ReadLine()));
             Assert.AreEqual(null, m.MinLoad);
             AssertHelper.AreRelativeEqual(lowLoad, m.LowLoad);
             AssertHelper.AreRelativeEqual(refLoad, m.RefLoad);
@@ -2128,7 +2132,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         {
             var dataProvider =
                 JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\12t Delivery Truck.vecto") as IDeclarationInputDataProvider;
-			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional());
+			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>());
 
             var runs = dataReader.NextRun().ToList();
             Assert.AreEqual(6, runs.Count);
@@ -2152,7 +2156,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             var dataProvider =
                 JSONInputDataFactory.ReadJsonJob(
                     @"TestData\Jobs\Class4_40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
-			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional());
+			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>());
 
             var runs = dataReader.NextRun().ToList();
             Assert.AreEqual(8, runs.Count);
@@ -2176,7 +2180,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         {
             var dataProvider =
                 JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
-			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional());
+			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>());
 
             var runs = dataReader.NextRun().ToList();
 
