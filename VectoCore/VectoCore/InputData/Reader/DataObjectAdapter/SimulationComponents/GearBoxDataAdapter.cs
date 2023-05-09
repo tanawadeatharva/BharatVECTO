@@ -465,6 +465,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 	public class IEPCGearboxDataAdapter : GearboxDataAdapterBase
 	{
+
 		private GearboxData CreateIEPCGearboxData(IVehicleDeclarationInputData vehicle, VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalc)
 		{
 
@@ -545,9 +546,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		#endregion
 	}
 
-
-	public class CompletedSpecifigBusGearboxDataAdapter : GenericCompletedBusGearboxDataAdapter
+	public class GenericCompletedBusIEPCGearboxDataAdapter : IEPCGearboxDataAdapter
 	{
-		public CompletedSpecifigBusGearboxDataAdapter(ITorqueConverterDataAdapter torqueConverterDataAdapter) : base(torqueConverterDataAdapter) { }
+
+	}
+
+
+	public class CompletedSpecificBusGearboxDataAdapter : GenericCompletedBusGearboxDataAdapter
+	{
+		public CompletedSpecificBusGearboxDataAdapter(ITorqueConverterDataAdapter torqueConverterDataAdapter) : base(torqueConverterDataAdapter) { }
 	}
 }

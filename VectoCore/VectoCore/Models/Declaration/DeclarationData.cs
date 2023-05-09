@@ -626,14 +626,17 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const double TorqueLimitGearboxFactor = 0.9;
 			public const double TorqueLimitVehicleFactor = 0.95;
 
-			public static KilogramSquareMeter EngineInertia(VectoSimulationJobType jobType, CubicMeter displacement, GearboxType gbxType)
+			public static KilogramSquareMeter EngineInertia(VectoSimulationJobType jobType, CubicMeter displacement, GearboxType? gbxType)
 			{
 				// VB Code:    Return 1.3 + 0.41 + 0.27 * (Displ / 1000)
 				KilogramSquareMeter clutchPlateTc;
 				if (jobType.IsOneOf(VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_S)) {
 					clutchPlateTc = 0.SI<KilogramSquareMeter>();
 				} else {
-					clutchPlateTc = (gbxType.AutomaticTransmission() ? TorqueConverterInertia : ClutchInertia);
+					if (!gbxType.HasValue) {
+						throw new VectoException("Gearbox type must be provided!");
+					}
+					clutchPlateTc = (gbxType.Value.AutomaticTransmission() ? TorqueConverterInertia : ClutchInertia);
 				}
 
 				return clutchPlateTc + EngineBaseInertia +
