@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Newtonsoft.Json;
 using Ninject;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation;
@@ -16,6 +19,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Tests.Integration.CompletedBus;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 
@@ -51,10 +55,11 @@ public class PrimaryBusSimulation
 	//TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_Notappl.xml", 0, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 notAppl stpr"), // invalid input for PS
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_CM_BCVC.xml", 7, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 AMT_CM_BCVC stpr, InterUrban_Ref_Load"),
 
-
+	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_Conv.xml", 0, TestName="2nd Amendment PrimaryBus Coach P-HEV P2 AMT"),
     TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_Base_AMT.xml", 0, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 Base AMT"),
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_OVC.xml", 0, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 AMT OVC"),
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCityBus_P1_HEV_Base_AT.xml", 0, TestName = "2nd Amendment PrimaryBus CityBus P-HEV P1 Base AT"),
+	TestCase(@"PrimaryBus/P-HEV/PrimaryCityBus_P1_HEV_AT_BD_BCVC.xml", 0, TestName= "2nd Amendment PrimaryBus CityBus P-HEV P1 Base AT - no TC"),
 
 	TestCase(@"PrimaryBus/S-HEV/PrimaryCoach_S2_Base_AMT.xml", 0, TestName = "2nd Amendment PrimaryBus Coach S-HEV S2 Base"),
 	TestCase(@"PrimaryBus/S-HEV/PrimaryCityBus_IEPC-S_Base.xml", 0, TestName = "2nd Amendment PrimaryBus CityBus S-HEV IEPC Base"),
@@ -212,16 +217,21 @@ public class PrimaryBusSimulation
 		} else {
 			var run = runsFactory.SimulationRuns().Skip(runIdx).First();
 			jobContainer.AddRun(run);
-			TestContext.Progress.WriteLine($"{run.CycleName} - {run.RunSuffix}");
-
-            if (dataProvider.JobInputData.Vehicle.OvcHev) {
+            TestContext.Progress.WriteLine($"{run.CycleName} - {run.RunSuffix}");
+			var expectedResults = 1;
+            if (dataProvider.JobInputData.Vehicle.OvcHev && !dataProvider.JobInputData.Vehicle.VehicleType.IsOneOf(
+					VectoSimulationJobType.BatteryElectricVehicle, 
+					VectoSimulationJobType.IEPC_E)) {
 				var run2 = runsFactory.SimulationRuns().Skip(runIdx + 1).First();
+
 				jobContainer.AddRun(run2);
 				TestContext.Progress.WriteLine($"{run2.CycleName} - {run2.RunSuffix}");
-				Assert.AreEqual(run.CycleName, run2.CycleName);
+
+				CompareStrings(run.CycleName + run.RunSuffix, run2.CycleName + run2.RunSuffix, 2);
+				expectedResults++;
 			}
 			
-
+			SetResultCountInReport(expectedResults, run.GetContainer().RunData.Report);
 		}
 
 		PrintRuns(jobContainer, null);
@@ -235,8 +245,59 @@ public class PrimaryBusSimulation
 		PrintFiles(fileWriter);
 	}
 
+	private void CompareStrings(string expected, string actual, int ignoreEnd)
+	{
+		var len = expected.Length - ignoreEnd;
 
-	private string GenerateJsonJobCompletedBus(string vif, string completeBusInput)
+        var expectedWithoutSuffix = expected.Substring(0, len);
+		var actualWithoutSuffix = actual.Substring(0, len);
+		Assert.AreEqual(expectedWithoutSuffix, actualWithoutSuffix);
+	}
+
+	private void SetResultCountInReport(int count, IDeclarationReport report)
+	{
+		if (report == null)
+		{
+			return; //also used in engineering mode
+		}
+		if (report is XMLDeclarationReport rep09)
+		{
+			GetField("_resultCount", rep09.GetType()).SetValue(rep09, count);
+			return;
+		}
+		Assert.Fail("Reflection failed");
+
+	}
+
+	private FieldInfo GetField(string name, Type type)
+	{
+		bool found = false;
+		while (!found)
+		{
+			FieldInfo[] fields = type.GetFields(
+				BindingFlags.NonPublic |
+				BindingFlags.Instance);
+			var field = fields.FirstOrDefault(f => f.Name == name);
+			if (field == null)
+			{
+				type = type.BaseType;
+				if (type == null)
+				{
+					Assert.Fail("Field not found");
+				}
+			}
+			else
+			{
+				return field;
+			}
+		}
+
+		return null;
+
+	}
+
+
+    private string GenerateJsonJobCompletedBus(string vif, string completeBusInput)
 	{
 		var subDirectory = Path.GetDirectoryName(completeBusInput);
 

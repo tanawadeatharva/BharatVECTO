@@ -673,7 +673,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationMultistage_HEV_IEPC_S_PrimaryVehicleBusDataProviderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile) : base(busJobData, xmlNode, sourceFile) { }
 
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.SerialHybridVehicle; }
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.IEPC_S; }
 
 		public override string PowertrainPositionPrefix => "S";
 	}

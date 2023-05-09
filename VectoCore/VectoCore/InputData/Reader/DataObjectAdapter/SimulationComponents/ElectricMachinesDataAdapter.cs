@@ -413,192 +413,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 	}
 
-	internal abstract class StandardValuesInputData
-	{
-		/// <summary>
-		/// Wraps the standard value input data and overrides the voltage level
-		/// </summary>
-		internal class StandardValueVoltageLevelInputData : IElectricMotorVoltageLevel
-		{
-			
-			public StandardValueVoltageLevelInputData(IElectricMotorVoltageLevel inputData, Volt voltageLevel)
-			{
-				_electricMotorVoltageLevelImplementation = inputData;
-				_voltageLevel = voltageLevel;
-			}
-			private IElectricMotorVoltageLevel _electricMotorVoltageLevelImplementation;
-			private Volt _voltageLevel;
-
-			public Volt VoltageLevel => _voltageLevel;
-
-
-			#region Implementation of IElectricMotorVoltageLevel
-
-
-
-			public NewtonMeter ContinuousTorque => _electricMotorVoltageLevelImplementation.ContinuousTorque;
-
-			public PerSecond ContinuousTorqueSpeed => _electricMotorVoltageLevelImplementation.ContinuousTorqueSpeed;
-
-			public NewtonMeter OverloadTorque => _electricMotorVoltageLevelImplementation.OverloadTorque;
-
-			public PerSecond OverloadTestSpeed => _electricMotorVoltageLevelImplementation.OverloadTestSpeed;
-
-			public Second OverloadTime => _electricMotorVoltageLevelImplementation.OverloadTime;
-
-			public TableData FullLoadCurve => _electricMotorVoltageLevelImplementation.FullLoadCurve;
-
-			public IList<IElectricMotorPowerMap> PowerMap => _electricMotorVoltageLevelImplementation.PowerMap;
-
-			#endregion
-		}
-
-		internal class StandardValueIEPCInputData : IIEPCDeclarationInputData
-		{
-			private IIEPCDeclarationInputData _iiepcDeclarationInputDataImplementation;
-			private IList<IElectricMotorVoltageLevel> _voltageLevels = new List<IElectricMotorVoltageLevel>();
-
-			/// <summary>
-			/// Wraps the inputData and creates new voltage levels based on the voltage level provided in the input data
-			/// </summary>
-			/// <param name="inputData"></param>
-			/// <param name="voltageLevels"></param>
-			/// <exception cref="ArgumentException"></exception>
-			public StandardValueIEPCInputData(IIEPCDeclarationInputData inputData, params Volt[] voltageLevels)
-			{
-				_iiepcDeclarationInputDataImplementation = inputData;
-				if (inputData.CertificationMethod != CertificationMethod.StandardValues) {
-					throw new ArgumentException("Only for standard value certification");
-				}
-
-				foreach (var voltageLevel in voltageLevels) {
-					_voltageLevels.Add(new StandardValueVoltageLevelInputData(inputData.VoltageLevels.First(), voltageLevel));
-				}
-
-			}
-
-			public IList<IElectricMotorVoltageLevel> VoltageLevels => _voltageLevels;
-
-			#region Implementation of IComponentInputData
-
-			public DataSource DataSource => _iiepcDeclarationInputDataImplementation.DataSource;
-
-			public bool SavedInDeclarationMode => _iiepcDeclarationInputDataImplementation.SavedInDeclarationMode;
-
-			public string Manufacturer => _iiepcDeclarationInputDataImplementation.Manufacturer;
-
-			public string Model => _iiepcDeclarationInputDataImplementation.Model;
-
-			public DateTime Date => _iiepcDeclarationInputDataImplementation.Date;
-
-			public string AppVersion => _iiepcDeclarationInputDataImplementation.AppVersion;
-
-			public CertificationMethod CertificationMethod => _iiepcDeclarationInputDataImplementation.CertificationMethod;
-
-			public string CertificationNumber => _iiepcDeclarationInputDataImplementation.CertificationNumber;
-
-			public DigestData DigestValue => _iiepcDeclarationInputDataImplementation.DigestValue;
-
-			#endregion
-
-			#region Implementation of IIEPCDeclarationInputData
-
-			public ElectricMachineType ElectricMachineType => _iiepcDeclarationInputDataImplementation.ElectricMachineType;
-
-			public Watt R85RatedPower => _iiepcDeclarationInputDataImplementation.R85RatedPower;
-
-			public KilogramSquareMeter Inertia => _iiepcDeclarationInputDataImplementation.Inertia;
-
-			public bool DifferentialIncluded => _iiepcDeclarationInputDataImplementation.DifferentialIncluded;
-
-			public bool DesignTypeWheelMotor => _iiepcDeclarationInputDataImplementation.DesignTypeWheelMotor;
-
-			public int? NrOfDesignTypeWheelMotorMeasured => _iiepcDeclarationInputDataImplementation.NrOfDesignTypeWheelMotorMeasured;
-
-			public IList<IGearEntry> Gears => _iiepcDeclarationInputDataImplementation.Gears;
-
 	
-
-			public IList<IDragCurve> DragCurves => _iiepcDeclarationInputDataImplementation.DragCurves;
-
-			public TableData Conditioning => _iiepcDeclarationInputDataImplementation.Conditioning;
-
-			#endregion
-		}
-
-		internal class StandardValuesEmInputData : IElectricMotorDeclarationInputData
-		{
-			private IElectricMotorDeclarationInputData _electricMotorDeclarationInputDataImplementation;
-
-			private IList<IElectricMotorVoltageLevel> _voltageLevels = new List<IElectricMotorVoltageLevel>();
-
-			/// <summary>
-			/// Wraps the inputData and creates new voltage levels based on the voltage level provided in the input data
-			/// </summary>
-			/// <param name="inputData"></param>
-			/// <param name="voltageLevels"></param>
-			/// <exception cref="ArgumentException"></exception>
-			public StandardValuesEmInputData(IElectricMotorDeclarationInputData inputData, params Volt[] voltageLevels)
-			{
-				_electricMotorDeclarationInputDataImplementation = inputData;
-				if (inputData.CertificationMethod != CertificationMethod.StandardValues)
-				{
-					throw new ArgumentException("Only for standard value certification");
-				}
-
-				foreach (var voltageLevel in voltageLevels)
-				{
-					_voltageLevels.Add(new StandardValueVoltageLevelInputData(inputData.VoltageLevels.First(), voltageLevel));
-				}
-
-			}
-
-			public IList<IElectricMotorVoltageLevel> VoltageLevels => _voltageLevels;
-
-
-			#region Implementation of IComponentInputData
-
-			public DataSource DataSource => _electricMotorDeclarationInputDataImplementation.DataSource;
-
-			public bool SavedInDeclarationMode => _electricMotorDeclarationInputDataImplementation.SavedInDeclarationMode;
-
-			public string Manufacturer => _electricMotorDeclarationInputDataImplementation.Manufacturer;
-
-			public string Model => _electricMotorDeclarationInputDataImplementation.Model;
-
-			public DateTime Date => _electricMotorDeclarationInputDataImplementation.Date;
-
-			public string AppVersion => _electricMotorDeclarationInputDataImplementation.AppVersion;
-
-			public CertificationMethod CertificationMethod => _electricMotorDeclarationInputDataImplementation.CertificationMethod;
-
-			public string CertificationNumber => _electricMotorDeclarationInputDataImplementation.CertificationNumber;
-
-			public DigestData DigestValue => _electricMotorDeclarationInputDataImplementation.DigestValue;
-
-			#endregion
-
-			#region Implementation of IElectricMotorDeclarationInputData
-
-			public ElectricMachineType ElectricMachineType => _electricMotorDeclarationInputDataImplementation.ElectricMachineType;
-
-			public Watt R85RatedPower => _electricMotorDeclarationInputDataImplementation.R85RatedPower;
-
-			public KilogramSquareMeter Inertia => _electricMotorDeclarationInputDataImplementation.Inertia;
-
-			public bool DcDcConverterIncluded => _electricMotorDeclarationInputDataImplementation.DcDcConverterIncluded;
-
-			public string IHPCType => _electricMotorDeclarationInputDataImplementation.IHPCType;
-
-		
-
-			public TableData DragCurve => _electricMotorDeclarationInputDataImplementation.DragCurve;
-
-			public TableData Conditioning => _electricMotorDeclarationInputDataImplementation.Conditioning;
-
-			#endregion
-		}
-	}
 
 	public class GenericElectricMachinesDataAdapter : IElectricMachinesDataAdapter
 	{
@@ -613,20 +428,23 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				return null;
 			}
 
-			if (electricMachines.Entries.Select(x => x.Position).Where(x => x != PowertrainPosition.GEN).Distinct().Count() > 1) {
+			if (electricMachines.Entries.Select(x => x.Position)
+					.Where(x => x != PowertrainPosition.GEN).Distinct().Count() > 1) {
 				throw new VectoException("multiple electric propulsion motors are not supported at the moment");
 			}
 
 			CheckTorqueLimitVoltageLevels(electricMachines, torqueLimits);
 
 			return electricMachines.Entries.Select(m =>
-				Tuple.Create(m.Position, GenercicEMotorData.CreateGenericElectricMotorData(m, torqueLimits?.FirstOrDefault(t => t.Key == m.Position).Value, averageVoltage))).ToList();
+				Tuple.Create(m.Position, GenercicEMotorData.CreateGenericElectricMotorData(m, torqueLimits?.FirstOrDefault(t => t.Key == m.Position).Value,
+					averageVoltage))).ToList();
 
 		}
 
 		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(IIEPCDeclarationInputData iepc, Volt averageVoltage)
 		{
 			throw new NotImplementedException();
+
 		}
 
         #endregion
@@ -653,4 +471,192 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
     }
 
+    internal abstract class StandardValuesInputData
+    {
+        /// <summary>
+        /// Wraps the standard value input data and overrides the voltage level
+        /// </summary>
+        internal class StandardValueVoltageLevelInputData : IElectricMotorVoltageLevel
+        {
+
+            public StandardValueVoltageLevelInputData(IElectricMotorVoltageLevel inputData, Volt voltageLevel)
+            {
+                _electricMotorVoltageLevelImplementation = inputData;
+                _voltageLevel = voltageLevel;
+            }
+            private IElectricMotorVoltageLevel _electricMotorVoltageLevelImplementation;
+            private Volt _voltageLevel;
+
+            public Volt VoltageLevel => _voltageLevel;
+
+
+            #region Implementation of IElectricMotorVoltageLevel
+
+
+
+            public NewtonMeter ContinuousTorque => _electricMotorVoltageLevelImplementation.ContinuousTorque;
+
+            public PerSecond ContinuousTorqueSpeed => _electricMotorVoltageLevelImplementation.ContinuousTorqueSpeed;
+
+            public NewtonMeter OverloadTorque => _electricMotorVoltageLevelImplementation.OverloadTorque;
+
+            public PerSecond OverloadTestSpeed => _electricMotorVoltageLevelImplementation.OverloadTestSpeed;
+
+            public Second OverloadTime => _electricMotorVoltageLevelImplementation.OverloadTime;
+
+            public TableData FullLoadCurve => _electricMotorVoltageLevelImplementation.FullLoadCurve;
+
+            public IList<IElectricMotorPowerMap> PowerMap => _electricMotorVoltageLevelImplementation.PowerMap;
+
+            #endregion
+        }
+
+        internal class StandardValueIEPCInputData : IIEPCDeclarationInputData
+        {
+            private IIEPCDeclarationInputData _iiepcDeclarationInputDataImplementation;
+            private IList<IElectricMotorVoltageLevel> _voltageLevels = new List<IElectricMotorVoltageLevel>();
+
+            /// <summary>
+            /// Wraps the inputData and creates new voltage levels based on the voltage level provided in the input data
+            /// </summary>
+            /// <param name="inputData"></param>
+            /// <param name="voltageLevels"></param>
+            /// <exception cref="ArgumentException"></exception>
+            public StandardValueIEPCInputData(IIEPCDeclarationInputData inputData, params Volt[] voltageLevels)
+            {
+                _iiepcDeclarationInputDataImplementation = inputData;
+                if (inputData.CertificationMethod != CertificationMethod.StandardValues)
+                {
+                    throw new ArgumentException("Only for standard value certification");
+                }
+
+                foreach (var voltageLevel in voltageLevels)
+                {
+                    _voltageLevels.Add(new StandardValueVoltageLevelInputData(inputData.VoltageLevels.First(), voltageLevel));
+                }
+
+            }
+
+            public IList<IElectricMotorVoltageLevel> VoltageLevels => _voltageLevels;
+
+            #region Implementation of IComponentInputData
+
+            public DataSource DataSource => _iiepcDeclarationInputDataImplementation.DataSource;
+
+            public bool SavedInDeclarationMode => _iiepcDeclarationInputDataImplementation.SavedInDeclarationMode;
+
+            public string Manufacturer => _iiepcDeclarationInputDataImplementation.Manufacturer;
+
+            public string Model => _iiepcDeclarationInputDataImplementation.Model;
+
+            public DateTime Date => _iiepcDeclarationInputDataImplementation.Date;
+
+            public string AppVersion => _iiepcDeclarationInputDataImplementation.AppVersion;
+
+            public CertificationMethod CertificationMethod => _iiepcDeclarationInputDataImplementation.CertificationMethod;
+
+            public string CertificationNumber => _iiepcDeclarationInputDataImplementation.CertificationNumber;
+
+            public DigestData DigestValue => _iiepcDeclarationInputDataImplementation.DigestValue;
+
+            #endregion
+
+            #region Implementation of IIEPCDeclarationInputData
+
+            public ElectricMachineType ElectricMachineType => _iiepcDeclarationInputDataImplementation.ElectricMachineType;
+
+            public Watt R85RatedPower => _iiepcDeclarationInputDataImplementation.R85RatedPower;
+
+            public KilogramSquareMeter Inertia => _iiepcDeclarationInputDataImplementation.Inertia;
+
+            public bool DifferentialIncluded => _iiepcDeclarationInputDataImplementation.DifferentialIncluded;
+
+            public bool DesignTypeWheelMotor => _iiepcDeclarationInputDataImplementation.DesignTypeWheelMotor;
+
+            public int? NrOfDesignTypeWheelMotorMeasured => _iiepcDeclarationInputDataImplementation.NrOfDesignTypeWheelMotorMeasured;
+
+            public IList<IGearEntry> Gears => _iiepcDeclarationInputDataImplementation.Gears;
+
+
+
+            public IList<IDragCurve> DragCurves => _iiepcDeclarationInputDataImplementation.DragCurves;
+
+            public TableData Conditioning => _iiepcDeclarationInputDataImplementation.Conditioning;
+
+            #endregion
+        }
+
+        internal class StandardValuesEmInputData : IElectricMotorDeclarationInputData
+        {
+            private IElectricMotorDeclarationInputData _electricMotorDeclarationInputDataImplementation;
+
+            private IList<IElectricMotorVoltageLevel> _voltageLevels = new List<IElectricMotorVoltageLevel>();
+
+            /// <summary>
+            /// Wraps the inputData and creates new voltage levels based on the voltage level provided in the input data
+            /// </summary>
+            /// <param name="inputData"></param>
+            /// <param name="voltageLevels"></param>
+            /// <exception cref="ArgumentException"></exception>
+            public StandardValuesEmInputData(IElectricMotorDeclarationInputData inputData, params Volt[] voltageLevels)
+            {
+                _electricMotorDeclarationInputDataImplementation = inputData;
+                if (inputData.CertificationMethod != CertificationMethod.StandardValues)
+                {
+                    throw new ArgumentException("Only for standard value certification");
+                }
+
+                foreach (var voltageLevel in voltageLevels)
+                {
+                    _voltageLevels.Add(new StandardValueVoltageLevelInputData(inputData.VoltageLevels.First(), voltageLevel));
+                }
+
+            }
+
+            public IList<IElectricMotorVoltageLevel> VoltageLevels => _voltageLevels;
+
+
+            #region Implementation of IComponentInputData
+
+            public DataSource DataSource => _electricMotorDeclarationInputDataImplementation.DataSource;
+
+            public bool SavedInDeclarationMode => _electricMotorDeclarationInputDataImplementation.SavedInDeclarationMode;
+
+            public string Manufacturer => _electricMotorDeclarationInputDataImplementation.Manufacturer;
+
+            public string Model => _electricMotorDeclarationInputDataImplementation.Model;
+
+            public DateTime Date => _electricMotorDeclarationInputDataImplementation.Date;
+
+            public string AppVersion => _electricMotorDeclarationInputDataImplementation.AppVersion;
+
+            public CertificationMethod CertificationMethod => _electricMotorDeclarationInputDataImplementation.CertificationMethod;
+
+            public string CertificationNumber => _electricMotorDeclarationInputDataImplementation.CertificationNumber;
+
+            public DigestData DigestValue => _electricMotorDeclarationInputDataImplementation.DigestValue;
+
+            #endregion
+
+            #region Implementation of IElectricMotorDeclarationInputData
+
+            public ElectricMachineType ElectricMachineType => _electricMotorDeclarationInputDataImplementation.ElectricMachineType;
+
+            public Watt R85RatedPower => _electricMotorDeclarationInputDataImplementation.R85RatedPower;
+
+            public KilogramSquareMeter Inertia => _electricMotorDeclarationInputDataImplementation.Inertia;
+
+            public bool DcDcConverterIncluded => _electricMotorDeclarationInputDataImplementation.DcDcConverterIncluded;
+
+            public string IHPCType => _electricMotorDeclarationInputDataImplementation.IHPCType;
+
+
+
+            public TableData DragCurve => _electricMotorDeclarationInputDataImplementation.DragCurve;
+
+            public TableData Conditioning => _electricMotorDeclarationInputDataImplementation.Conditioning;
+
+            #endregion
+        }
+    }
 }

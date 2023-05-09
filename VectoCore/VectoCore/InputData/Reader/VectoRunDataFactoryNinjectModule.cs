@@ -209,6 +209,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 			Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.HEV_P4>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.CompletedBus, VectoSimulationJobType.ParallelHybridVehicle,
 					ArchitectureID.P4));
+
 			Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.PEV_E2>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.CompletedBus, VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.E2));

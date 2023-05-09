@@ -258,8 +258,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
         public class HEV_S3 : SerialHybrid { }
 		
 		public class HEV_S4 : SerialHybrid { }
-		
-		public class HEV_S_IEPC : SerialHybrid { }
+
+		public class HEV_S_IEPC : SerialHybrid
+		{
+			#region Overrides of SerialHybrid
+
+			protected override IGearboxDataAdapter GearboxDataAdapter { get; } =
+				new GenericCompletedBusIEPCGearboxDataAdapter();
+
+			#endregion
+		}
 
 		public abstract class ParallelHybrid : Hybrid
 		{
