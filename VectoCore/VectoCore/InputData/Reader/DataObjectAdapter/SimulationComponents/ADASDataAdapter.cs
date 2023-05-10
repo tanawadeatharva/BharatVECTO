@@ -1,13 +1,10 @@
 ﻿using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 {
-	public interface IADASDataAdapter
-	{
-		VehicleData.ADASData CreateADAS(IAdvancedDriverAssistantSystemDeclarationInputData adas);
-	}
-	public class ADASDataAdapter : IADASDataAdapter
+    public class ADASDataAdapter : IADASDataAdapter
 	{
 
 		public VehicleData.ADASData CreateADAS(IAdvancedDriverAssistantSystemDeclarationInputData adas)

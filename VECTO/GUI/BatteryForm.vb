@@ -196,8 +196,8 @@ Public Class BatteryForm
             tbSoCCurve.Text = GetRelativePath(battery.VoltageCurve.Source, basePath)
             tbRiCurve.Text = GetRelativePath(battery.InternalResistanceCurve.Source, basePath)
             tbTestingTempB.Text = battery.TestingTemperature.AsDegCelsius.ToGUIFormat()
-            cbJunctionBoxIncl.Checked = battery.JunctionboxIncluded
-            cbConnectorsIncluded.Checked = battery.ConnectorsSubsystemsIncluded
+            cbJunctionBoxIncl.Checked = battery.JunctionboxIncluded.Value
+            cbConnectorsIncluded.Checked = battery.ConnectorsSubsystemsIncluded.Value
 
             tbSuperCapCapacity.Text = String.Empty
             tbSuperCapMaxV.Text = string.Empty

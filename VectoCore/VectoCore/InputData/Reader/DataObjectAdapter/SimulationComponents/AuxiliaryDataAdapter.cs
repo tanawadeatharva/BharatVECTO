@@ -9,6 +9,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
@@ -22,38 +23,9 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 {
-	public interface IAuxiliaryDataAdapter
-	{
-		IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData,
-			IBusAuxiliariesDeclarationData busAuxData, MissionType mission, VehicleClass hvdClass, Meter vehicleLength,
-			int? numSteeredAxles, VectoSimulationJobType jobType);
-	}
-
-	public interface ICompletedBusAuxiliaryDataAdapter : IPrimaryBusAuxiliaryDataAdapter
-	{
-		IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle,
-			IVehicleDeclarationInputData completedVehicle, VectoRunData runData);
-	}
-
-	public interface IPrimaryBusAuxiliaryDataAdapter : IAuxiliaryDataAdapter
-	{
-		AuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle, VectoRunData runData);
-		
-		//IDictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry> GetElectricConsumers(Mission mission, IVehicleDeclarationInputData completedVehicle, IActuations actuations, VehicleClass vehicleClass);
-		
-		//ElectricsUserInputsConfig GetDefaultElectricalUserConfig();
-		
-		//double CalculateAlternatorEfficiency(IList<IAlternatorDeclarationInputData> alternators);
-		
-		//IPneumaticsConsumersDemand CreatePneumaticAuxConfig(RetarderType retarderType);
-		
-		//SSMInputs GetDefaulSSMInputs(IFuelProperties heatingFuel);
-		
-		//TechnologyBenefits SelectBenefitForFloorType(FloorType floorType, List<SSMTechnology> onVehicle);
-	}
 
 
-	public abstract class AuxiliaryDataAdapter : ComponentDataAdapterBase, IAuxiliaryDataAdapter
+    public abstract class AuxiliaryDataAdapter : ComponentDataAdapterBase, IAuxiliaryDataAdapter
 	{
 		public class ElectricConsumerEntry
 		{
@@ -197,8 +169,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 		private static void AddConditioning(MissionType mission, VectoSimulationJobType jobType, List<VectoRunData.AuxData> auxDataList, VehicleClass hdv)
 		{
-
-
 			var aux = new VectoRunData.AuxData()
 			{
 				IsFullyElectric = true,
@@ -267,8 +237,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			aux.ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition;
 			aux.PowerDemandElectric = aux.PowerDemandMech * efficiency;
 
-			aux.ConnectToREESS = (vectoSimulationJobType == VectoSimulationJobType.BatteryElectricVehicle ||
-								vectoSimulationJobType == VectoSimulationJobType.SerialHybridVehicle);
+			aux.ConnectToREESS = vectoSimulationJobType.IsOneOf(
+				VectoSimulationJobType.BatteryElectricVehicle,
+				VectoSimulationJobType.SerialHybridVehicle,
+				VectoSimulationJobType.IEPC_S,
+				VectoSimulationJobType.IEPC_E);
 			auxDataList.Add(aux);
 			return;
 		}
@@ -354,10 +327,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					$"Fan technology '{auxData.Technology.FirstOrDefault()}' is not applicable for '{jobType}'");
 			}
 
-
-
-
-
 			aux.PowerDemandMech = DeclarationData.Fan.LookupPowerDemand(hdvClass, mission, auxData.Technology.FirstOrDefault());
 			aux.ID = Constants.Auxiliaries.IDs.Fan;
 			aux.IsFullyElectric = DeclarationData.Fan.IsFullyElectric(hdvClass, auxData.Technology.FirstOrDefault());
@@ -371,6 +340,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 	public class PrimaryBusAuxiliaryDataAdapter : AuxiliaryDataAdapter, IPrimaryBusAuxiliaryDataAdapter
 	{
+		protected internal virtual HashSet<AuxiliaryType> AuxiliaryTypes { get; } = new HashSet<AuxiliaryType>() {
+			AuxiliaryType.Fan,
+			AuxiliaryType.SteeringPump
+		};
+		protected virtual string errorStringVehicleType => "conventional/hybrid";
+
 		public ElectricsUserInputsConfig GetDefaultElectricalUserConfig()
 		{
 			return new ElectricsUserInputsConfig()
@@ -493,7 +468,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			return retVal;
 		}
-		protected virtual Dictionary<string, ElectricConsumerEntry> GetElectricAuxConsumers(Mission mission, IVehicleDeclarationInputData vehicleData, VehicleClass vehicleClass, IBusAuxiliariesDeclarationData busAux)
+		protected virtual Dictionary<string, ElectricConsumerEntry> GetElectricAuxConsumers(Mission mission,
+			IVehicleDeclarationInputData vehicleData, VehicleClass vehicleClass, IBusAuxiliariesDeclarationData busAux)
 		{
 			var retVal = new Dictionary<string, ElectricConsumerEntry>();
 			var spPower = DeclarationData.SteeringPumpBus.LookupElectricalPowerDemand(
@@ -506,15 +482,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				Current = spPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage
 			};
 
-			var fanPower = DeclarationData.Fan.LookupElectricalPowerDemand(
-				vehicleClass, mission.MissionType, busAux.FanTechnology);
-			retVal[Constants.Auxiliaries.IDs.Fan] = new ElectricConsumerEntry
-			{
-				ActiveDuringEngineStopStandstill = false,
-				ActiveDuringEngineStopDriving = false,
-				BaseVehicle = false,
-				Current = fanPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage
-			};
+			if (!vehicleData.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
+					VectoSimulationJobType.IEPC_E)) {
+				var fanPower = DeclarationData.Fan.LookupElectricalPowerDemand(
+					vehicleClass, mission.MissionType, busAux.FanTechnology);
+				retVal[Constants.Auxiliaries.IDs.Fan] = new ElectricConsumerEntry {
+					ActiveDuringEngineStopStandstill = false,
+					ActiveDuringEngineStopDriving = false,
+					BaseVehicle = false,
+					Current = fanPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage
+				};
+			}
+
+
 			return retVal;
 		}
 		public double CalculateAlternatorEfficiency(IList<IAlternatorDeclarationInputData> alternators)
@@ -530,7 +510,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			var retVal = GetDefaultElectricalUserConfig();
 
-			retVal.AlternatorType = busAux.ElectricSupply.AlternatorTechnology;
+			retVal.AlternatorType =
+				vehicleData.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
+					VectoSimulationJobType.IEPC_E)
+					? AlternatorType.None
+					: busAux.ElectricSupply.AlternatorTechnology;
 			retVal.ElectricalConsumers = currentDemand;
 			retVal.AlternatorMap = new SimpleAlternator(CalculateAlternatorEfficiency(busAux.ElectricSupply.Alternators));
 
@@ -545,6 +529,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			retVal.MaxAlternatorPower = busAux.ElectricSupply.Alternators.Sum(x => x.RatedVoltage * x.RatedCurrent);
 			retVal.ElectricStorageCapacity = busAux.ElectricSupply.ElectricStorage.Sum(x => x.ElectricStorageCapacity) ?? 0.SI<WattSecond>();
 
+			if (vehicleData.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
+					VectoSimulationJobType.IEPC_E)) {
+				retVal.ConnectESToREESS = true;
+			} else if (vehicleData.VehicleType.IsOneOf(VectoSimulationJobType.ParallelHybridVehicle,
+							VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_S,
+							VectoSimulationJobType.IHPC)) {
+				retVal.ConnectESToREESS =
+					vehicleData.Components.BusAuxiliaries.ElectricSupply.ESSupplyFromHEVREESS;
+			}
+			retVal.DCDCEfficiency = DeclarationData.DCDCEfficiency;
+
+
 			return retVal;
 		}
 		protected virtual PneumaticUserInputsConfig GetPneumaticUserConfig(IVehicleDeclarationInputData vehicleData, Mission mission)
@@ -556,8 +552,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			{
 				KneelingHeight = VectoMath.Max(0.SI<Meter>(), mission.BusParameter.EntranceHeight - Constants.BusParameters.EntranceHeight),
 				CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
-				CompressorGearRatio = busAux.PneumaticSupply.Ratio,
-				CompressorMap = DeclarationData.BusAuxiliaries.GetCompressorMap(busAux.PneumaticSupply.CompressorSize, busAux.PneumaticSupply.Clutch),
+				CompressorGearRatio = busAux.PneumaticSupply.CompressorDrive == CompressorDrive.electrically ? 0.0 : busAux.PneumaticSupply.Ratio,
+				CompressorMap = DeclarationData.BusAuxiliaries.GetCompressorMap(busAux.PneumaticSupply),
 				SmartAirCompression = busAux.PneumaticSupply.SmartAirCompression,
 				SmartRegeneration = busAux.PneumaticSupply.SmartRegeneration,
 				AdBlueDosing = busAux.PneumaticConsumers.AdBlueDosing,
@@ -825,12 +821,34 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			ssmHeating.ElectricHeater = GetElectricHeater(mission, runData);
 			ssmHeating.HeatingDistributions = DeclarationData.BusAuxiliaries.HeatingDistributionCases;
 
+			var electricUserInputs =
+				GetElectricalUserConfig(mission, primaryVehicle, actuations, runData.VehicleData.VehicleClass);
+			
+			var pneumaticUserInputsConfig = GetPneumaticUserConfig(primaryVehicle, mission);
+			var pneumaticAuxillariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type);
+			if (primaryVehicle.Components.BusAuxiliaries.PneumaticSupply.CompressorDrive == CompressorDrive.electrically) {
+				//var busAux = vehicleData.Components.BusAuxiliaries;
+				var auxConfig = new AuxiliaryConfig {
+					VehicleData = runData.VehicleData,
+					PneumaticAuxillariesConfig = pneumaticAuxillariesConfig,
+					PneumaticUserInputsConfig = pneumaticUserInputsConfig
+				};
+				var airDemand = M03Impl.TotalAirDemandCalculation(auxConfig, actuations) / actuations.CycleTime;
+				electricUserInputs.ElectricalConsumers[Constants.Auxiliaries.IDs.PneumaticSystem] =
+					new ElectricConsumerEntry() {
+						Current = DeclarationData.BusAuxiliaries.PneumaticSystemElectricDemandPerAirGenerated * airDemand / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
+						ActiveDuringEngineStopDriving = true,
+						ActiveDuringEngineStopStandstill = true,
+						BaseVehicle = false
+					};
+			}
+
 			var retVal = new AuxiliaryConfig
 			{
 				InputData = primaryVehicle.Components.BusAuxiliaries,
-				ElectricalUserInputsConfig = GetElectricalUserConfig(mission, primaryVehicle, actuations, runData.VehicleData.VehicleClass),
-				PneumaticUserInputsConfig = GetPneumaticUserConfig(primaryVehicle, mission),
-				PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type),
+				ElectricalUserInputsConfig = electricUserInputs,
+				PneumaticUserInputsConfig = pneumaticUserInputsConfig,
+				PneumaticAuxillariesConfig = pneumaticAuxillariesConfig,
 				Actuations = actuations,
 				SSMInputsCooling = ssmCooling,
 				SSMInputsHeating = ssmHeating,
@@ -880,27 +898,97 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 			var retVal = new List<VectoRunData.AuxData>();
 
-			retVal.Add(
-				new VectoRunData.AuxData()
-				{
+			var alternatorEfficiency = DeclarationData.AlternatorEfficiency;
+
+			foreach (var auxType in AuxiliaryTypes) {
+				
+				var aux = new VectoRunData.AuxData {
 					DemandType = AuxiliaryDemandType.Constant,
-					Technology = new List<string>() { busAuxData.FanTechnology },
-					ID = Constants.Auxiliaries.IDs.Fan,
-					PowerDemandMech = DeclarationData.Fan.LookupMechanicalPowerDemand(hdvClass, mission, busAuxData.FanTechnology)
-				});
-			retVal.Add(
-				new VectoRunData.AuxData()
-				{
-					DemandType = AuxiliaryDemandType.Constant,
-					Technology = busAuxData.SteeringPumpTechnology,
-					ID = Constants.Auxiliaries.IDs.SteeringPump,
-					PowerDemandMech = DeclarationData.SteeringPumpBus.LookupMechanicalPowerDemand(
-						mission, busAuxData.SteeringPumpTechnology, vehicleLength)
-				});
+					//Technology = auxData.Technology,
+					MissionType = mission,
+				};
+
+				switch (auxType) {
+					case AuxiliaryType.Fan:
+						AddFan(mission, hdvClass, jobType, busAuxData, aux, alternatorEfficiency, retVal);
+						break;
+					case AuxiliaryType.SteeringPump:
+						AddSteeringPumps(mission, busAuxData.SteeringPumpTechnology, vehicleLength, retVal);
+						break;
+				}
+			}
+
+			if (CreateConditioningAux(jobType)) {
+				AddConditioning(mission, jobType, retVal, hdvClass);
+			}
+
+			
 			return retVal;
 		}
 
+		private static void AddConditioning(MissionType mission, VectoSimulationJobType jobType, List<VectoRunData.AuxData> auxDataList, VehicleClass hdv)
+		{
+			var aux = new VectoRunData.AuxData() {
+				IsFullyElectric = true,
+				MissionType = mission,
+				DemandType = AuxiliaryDemandType.Dynamic,
+				ID = Constants.Auxiliaries.IDs.Cond,
+				ConnectToREESS = true,
+				PowerDemandElectric = DeclarationData.Conditioning.LookupPowerDemand(hdv, mission),
+			};
+
+			auxDataList.Add(aux);
+		}
+
+		private static void AddFan(MissionType mission, VehicleClass hdvClass, VectoSimulationJobType jobType,
+			IBusAuxiliariesDeclarationData auxData, VectoRunData.AuxData aux, double alternatorEfficiency,
+			List<VectoRunData.AuxData> auxDataList)
+		{
+			if (!DeclarationData.Fan.IsApplicable(hdvClass, jobType, auxData.FanTechnology)) {
+				throw new VectoException(
+					$"Fan technology '{auxData.FanTechnology}' is not applicable for '{jobType}'");
+			}
+
+			aux.PowerDemandMech = DeclarationData.Fan.LookupPowerDemand(hdvClass, mission, auxData.FanTechnology);
+			aux.ID = Constants.Auxiliaries.IDs.Fan;
+			aux.IsFullyElectric = DeclarationData.Fan.IsFullyElectric(hdvClass, auxData.FanTechnology);
+			aux.PowerDemandElectric = aux.PowerDemandMech * alternatorEfficiency;
+			aux.ConnectToREESS = aux.IsFullyElectric && (!jobType.IsOneOf(VectoSimulationJobType.ConventionalVehicle,
+				VectoSimulationJobType.EngineOnlySimulation));
+			aux.Technology = new[] { auxData.FanTechnology }.ToList();
+			auxDataList.Add(aux);
+		}
+
+		private static void AddSteeringPumps(MissionType mission, IList<string> technologies, Meter lenght,
+			List<VectoRunData.AuxData> auxDataList)
+		{
+			var powerDemand = DeclarationData.SteeringPumpBus.LookupMechanicalPowerDemand(mission, technologies, lenght);
+			var spMech = new VectoRunData.AuxData {
+				DemandType = AuxiliaryDemandType.Constant,
+				Technology = technologies,
+				IsFullyElectric = false,
+				ID = Constants.Auxiliaries.IDs.SteeringPump,
+				PowerDemandMech = powerDemand,
+				MissionType = mission,
+			};
+
+			if (spMech.PowerDemandMech.IsGreater(0)) {
+				auxDataList.Add(spMech);
+			}
+
+		}
+
 		#endregion
+	}
+
+
+	public class PrimaryBusPEVAuxiliaryDataAdapter : PrimaryBusAuxiliaryDataAdapter
+	{
+		protected internal override HashSet<AuxiliaryType> AuxiliaryTypes { get; } = new HashSet<AuxiliaryType>() {
+			//AuxiliaryType.Fan,
+			AuxiliaryType.SteeringPump
+		};
+
 	}
 
 	public class GenericCompletedBusAuxiliaryDataAdapter : PrimaryBusAuxiliaryDataAdapter, ICompletedBusAuxiliaryDataAdapter
@@ -1023,11 +1111,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		{
 			return new PneumaticUserInputsConfig
 			{
-				CompressorMap = completedVehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle
-					? null
-					: DeclarationData.BusAuxiliaries.GetCompressorMap(
-						primaryBusAuxiliaries.PneumaticSupply.CompressorSize,
-						primaryBusAuxiliaries.PneumaticSupply.Clutch),
+				CompressorMap = DeclarationData.BusAuxiliaries.GetCompressorMap(primaryBusAuxiliaries.PneumaticSupply),
 				CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
 				CompressorGearRatio = completedVehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle
 					? 0 : primaryBusAuxiliaries.PneumaticSupply.Ratio,
@@ -1283,7 +1367,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return _primaryBusDataAdapter.SelectBenefitForFloorType(completedVehicle.VehicleCode.GetFloorType(), onVehicle);
 		}
 
-		protected override Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry> GetElectricAuxConsumers(Mission mission, IVehicleDeclarationInputData vehicleData, VehicleClass vehicleClass, IBusAuxiliariesDeclarationData busAux)
+		protected override Dictionary<string, ElectricConsumerEntry> GetElectricAuxConsumers(Mission mission,
+			IVehicleDeclarationInputData vehicleData, VehicleClass vehicleClass, IBusAuxiliariesDeclarationData busAux)
 		{
 			return new Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry>();
 		}
@@ -1349,6 +1434,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			retVal.MaxAlternatorPower = primaryBusAuxiliaries.ElectricSupply.Alternators.Sum(x => x.RatedVoltage * x.RatedCurrent);
 			retVal.ElectricStorageCapacity = primaryBusAuxiliaries.ElectricSupply.ElectricStorage.Sum(x => x.ElectricStorageCapacity) ?? 0.SI<WattSecond>();
+
+			if (primaryVehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
+					VectoSimulationJobType.IEPC_E)) {
+				retVal.ConnectESToREESS = true;
+			} else if (primaryVehicle.VehicleType.IsOneOf(VectoSimulationJobType.ParallelHybridVehicle,
+							VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_S,
+							VectoSimulationJobType.IHPC)) {
+				retVal.ConnectESToREESS =
+					primaryVehicle.Components.BusAuxiliaries.ElectricSupply.ESSupplyFromHEVREESS;
+			}
+
+			retVal.DCDCEfficiency = DeclarationData.DCDCEfficiency;
 
 			return retVal;
 		}

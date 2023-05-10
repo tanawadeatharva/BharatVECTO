@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 				case 0:
 					///1. iteration
 					var k_0_4 = DeclarationData.HEVStrategyParameters.LookupSlope(runData.Mission.MissionType,
-						runData.VehicleData.VehicleClass, runData.Loading);
+						runData.Mission.BusParameter?.BusGroup ?? runData.VehicleData.VehicleClass, runData.Loading);
 					var soc_usable = runData.HybridStrategyParameters.MaxSoC - runData.HybridStrategyParameters.MinSoC;
 
 					var k = k_0_4 + 0.2 * (soc_usable - 0.4); //soc usable < 0.4?

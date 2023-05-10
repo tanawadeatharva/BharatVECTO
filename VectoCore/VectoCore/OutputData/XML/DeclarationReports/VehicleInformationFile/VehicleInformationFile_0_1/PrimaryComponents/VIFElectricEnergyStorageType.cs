@@ -100,8 +100,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		private XElement GetReess(IBatteryPackDeclarationInputData battery)
 		{
+			var stdValues = battery.CertificationMethod == CertificationMethod.StandardValues;
 			return new XElement(_vif + XMLNames.ComponentDataWrapper,
-				new XAttribute(_xsi + XMLNames.XSIType, "BatterySystemDataType"),
+				new XAttribute(_xsi + XMLNames.XSIType, stdValues ? "BatterySystemStandardValuesDataType" : "BatterySystemDataType"),
 				new XElement(_vif + XMLNames.Component_Manufacturer, battery.Manufacturer),
 				new XElement(_vif + XMLNames.Component_Model, battery.Model),
 				new XElement(_vif + XMLNames.Component_CertificationMethod, battery.CertificationMethod.ToXMLFormat()),
@@ -113,11 +114,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XElement(_vif + XMLNames.Component_AppVersion, battery.AppVersion),
 				new XElement(_vif + XMLNames.REESS_BatteryType, battery.BatteryType.ToString()),
 				new XElement(_vif + XMLNames.REESS_RatedCapacity, battery.Capacity.AsAmpHour.ToXMLFormat(2)),
-				new XElement(_vif + XMLNames.REESS_ConnectorsSubsystemsIncluded, battery.ConnectorsSubsystemsIncluded),
-				new XElement(_vif + XMLNames.REESS_JunctionboxIncluded, battery.JunctionboxIncluded),
-				battery.TestingTemperature == null
-					? null
-					: new XElement(_vif + XMLNames.REESS_TestingTemperature, battery.TestingTemperature.AsDegCelsius.ToXMLFormat(0)),
+				stdValues ? null : new XElement(_vif + XMLNames.REESS_ConnectorsSubsystemsIncluded, battery.ConnectorsSubsystemsIncluded),
+				stdValues ? null : new XElement(_vif + XMLNames.REESS_JunctionboxIncluded, battery.JunctionboxIncluded),
+				stdValues ? null : new XElement(_vif + XMLNames.REESS_TestingTemperature, battery.TestingTemperature.AsDegCelsius.ToXMLFormat(0)),
 				GetOcv(battery.VoltageCurve),
 				GetCurrentLimits(battery.MaxCurrentMap)
 			);

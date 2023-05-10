@@ -132,6 +132,7 @@ Partial Class IEPCForm
         Me.ButOK = New System.Windows.Forms.Button()
         Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
         Me.FlowLayoutPanel4 = New System.Windows.Forms.Panel()
+        Me.Label3 = New System.Windows.Forms.Label()
         Me.FlowLayoutPanel5 = New System.Windows.Forms.Panel()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.pnInertia = New System.Windows.Forms.Panel()
@@ -151,7 +152,6 @@ Partial Class IEPCForm
         Me.pnElectricMachineType = New System.Windows.Forms.Panel()
         Me.cbEmType = New System.Windows.Forms.ComboBox()
         Me.lblEmType = New System.Windows.Forms.Label()
-        Me.Label3 = New System.Windows.Forms.Label()
         Me.tcVoltageLevels.SuspendLayout
         Me.tpFirstVoltageLevel.SuspendLayout
         Me.FlowLayoutPanel9.SuspendLayout
@@ -342,13 +342,13 @@ Partial Class IEPCForm
         'TableLayoutPanel1
         '
         Me.TableLayoutPanel1.ColumnCount = 7
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 163!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 41!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 143!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 72!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 35!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 149!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 72!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 35!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 69!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 37!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 67!))
         Me.TableLayoutPanel1.Controls.Add(Me.Label11, 2, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.Label4, 2, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Label13, 5, 0)
@@ -381,7 +381,7 @@ Partial Class IEPCForm
         '
         Me.Label11.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label11.AutoSize = true
-        Me.Label11.Location = New System.Drawing.Point(235, 39)
+        Me.Label11.Location = New System.Drawing.Point(238, 39)
         Me.Label11.Margin = New System.Windows.Forms.Padding(0)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(35, 15)
@@ -392,7 +392,7 @@ Partial Class IEPCForm
         '
         Me.Label4.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label4.AutoSize = true
-        Me.Label4.Location = New System.Drawing.Point(241, 8)
+        Me.Label4.Location = New System.Drawing.Point(244, 8)
         Me.Label4.Margin = New System.Windows.Forms.Padding(0)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(22, 15)
@@ -403,7 +403,7 @@ Partial Class IEPCForm
         '
         Me.Label13.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label13.AutoSize = true
-        Me.Label13.Location = New System.Drawing.Point(498, 8)
+        Me.Label13.Location = New System.Drawing.Point(499, 8)
         Me.Label13.Margin = New System.Windows.Forms.Padding(0)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(20, 15)
@@ -425,7 +425,7 @@ Partial Class IEPCForm
         '
         Me.Label37.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label37.AutoSize = true
-        Me.Label37.Location = New System.Drawing.Point(113, 8)
+        Me.Label37.Location = New System.Drawing.Point(110, 8)
         Me.Label37.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label37.Name = "Label37"
         Me.Label37.Size = New System.Drawing.Size(46, 15)
@@ -444,7 +444,7 @@ Partial Class IEPCForm
         'tbVoltage1
         '
         Me.tbVoltage1.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbVoltage1.Location = New System.Drawing.Point(166, 4)
+        Me.tbVoltage1.Location = New System.Drawing.Point(165, 4)
         Me.tbVoltage1.Margin = New System.Windows.Forms.Padding(0)
         Me.tbVoltage1.Name = "tbVoltage1"
         Me.tbVoltage1.Size = New System.Drawing.Size(65, 23)
@@ -454,7 +454,7 @@ Partial Class IEPCForm
         '
         Me.Label39.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label39.AutoSize = true
-        Me.Label39.Location = New System.Drawing.Point(51, 39)
+        Me.Label39.Location = New System.Drawing.Point(48, 39)
         Me.Label39.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label39.Name = "Label39"
         Me.Label39.Size = New System.Drawing.Size(108, 15)
@@ -465,7 +465,7 @@ Partial Class IEPCForm
         '
         Me.Label1.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label1.AutoSize = true
-        Me.Label1.Location = New System.Drawing.Point(16, 71)
+        Me.Label1.Location = New System.Drawing.Point(13, 71)
         Me.Label1.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(143, 15)
@@ -475,7 +475,7 @@ Partial Class IEPCForm
         'tbContinousTorque1
         '
         Me.tbContinousTorque1.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbContinousTorque1.Location = New System.Drawing.Point(166, 35)
+        Me.tbContinousTorque1.Location = New System.Drawing.Point(165, 35)
         Me.tbContinousTorque1.Margin = New System.Windows.Forms.Padding(0)
         Me.tbContinousTorque1.Name = "tbContinousTorque1"
         Me.tbContinousTorque1.Size = New System.Drawing.Size(65, 23)
@@ -484,7 +484,7 @@ Partial Class IEPCForm
         'tbContinousTorqueSpeed1
         '
         Me.tbContinousTorqueSpeed1.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbContinousTorqueSpeed1.Location = New System.Drawing.Point(166, 67)
+        Me.tbContinousTorqueSpeed1.Location = New System.Drawing.Point(165, 67)
         Me.tbContinousTorqueSpeed1.Margin = New System.Windows.Forms.Padding(0)
         Me.tbContinousTorqueSpeed1.Name = "tbContinousTorqueSpeed1"
         Me.tbContinousTorqueSpeed1.Size = New System.Drawing.Size(65, 23)
@@ -494,10 +494,10 @@ Partial Class IEPCForm
         '
         Me.Label15.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label15.AutoSize = true
-        Me.Label15.Location = New System.Drawing.Point(236, 63)
+        Me.Label15.Location = New System.Drawing.Point(237, 71)
         Me.Label15.Margin = New System.Windows.Forms.Padding(0)
         Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(33, 30)
+        Me.Label15.Size = New System.Drawing.Size(37, 15)
         Me.Label15.TabIndex = 67
         Me.Label15.Text = "[rpm]"
         '
@@ -516,10 +516,10 @@ Partial Class IEPCForm
         '
         Me.Label14.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label14.AutoSize = true
-        Me.Label14.Location = New System.Drawing.Point(492, 63)
+        Me.Label14.Location = New System.Drawing.Point(491, 71)
         Me.Label14.Margin = New System.Windows.Forms.Padding(0)
         Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(33, 30)
+        Me.Label14.Size = New System.Drawing.Size(37, 15)
         Me.Label14.TabIndex = 66
         Me.Label14.Text = "[rpm]"
         '
@@ -556,7 +556,7 @@ Partial Class IEPCForm
         '
         Me.Label12.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label12.AutoSize = true
-        Me.Label12.Location = New System.Drawing.Point(491, 39)
+        Me.Label12.Location = New System.Drawing.Point(492, 39)
         Me.Label12.Margin = New System.Windows.Forms.Padding(0)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(35, 15)
@@ -777,13 +777,13 @@ Partial Class IEPCForm
         '
         Me.TableLayoutPanel4.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.TableLayoutPanel4.ColumnCount = 7
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 163!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 41!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 143!))
         Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 72!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 35!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 149!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 72!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 35!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 69!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 37!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 67!))
         Me.TableLayoutPanel4.Controls.Add(Me.Label17, 2, 1)
         Me.TableLayoutPanel4.Controls.Add(Me.Label18, 2, 0)
         Me.TableLayoutPanel4.Controls.Add(Me.Label26, 5, 0)
@@ -816,7 +816,7 @@ Partial Class IEPCForm
         '
         Me.Label17.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label17.AutoSize = true
-        Me.Label17.Location = New System.Drawing.Point(235, 39)
+        Me.Label17.Location = New System.Drawing.Point(238, 39)
         Me.Label17.Margin = New System.Windows.Forms.Padding(0)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(35, 15)
@@ -827,7 +827,7 @@ Partial Class IEPCForm
         '
         Me.Label18.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label18.AutoSize = true
-        Me.Label18.Location = New System.Drawing.Point(241, 8)
+        Me.Label18.Location = New System.Drawing.Point(244, 8)
         Me.Label18.Margin = New System.Windows.Forms.Padding(0)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(22, 15)
@@ -838,7 +838,7 @@ Partial Class IEPCForm
         '
         Me.Label26.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label26.AutoSize = true
-        Me.Label26.Location = New System.Drawing.Point(498, 8)
+        Me.Label26.Location = New System.Drawing.Point(499, 8)
         Me.Label26.Margin = New System.Windows.Forms.Padding(0)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(20, 15)
@@ -849,7 +849,7 @@ Partial Class IEPCForm
         '
         Me.Label19.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label19.AutoSize = true
-        Me.Label19.Location = New System.Drawing.Point(113, 8)
+        Me.Label19.Location = New System.Drawing.Point(110, 8)
         Me.Label19.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(46, 15)
@@ -879,7 +879,7 @@ Partial Class IEPCForm
         'tbVoltage2
         '
         Me.tbVoltage2.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbVoltage2.Location = New System.Drawing.Point(167, 4)
+        Me.tbVoltage2.Location = New System.Drawing.Point(165, 4)
         Me.tbVoltage2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.tbVoltage2.Name = "tbVoltage2"
         Me.tbVoltage2.Size = New System.Drawing.Size(64, 23)
@@ -889,7 +889,7 @@ Partial Class IEPCForm
         '
         Me.Label20.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label20.AutoSize = true
-        Me.Label20.Location = New System.Drawing.Point(51, 39)
+        Me.Label20.Location = New System.Drawing.Point(48, 39)
         Me.Label20.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(108, 15)
@@ -900,7 +900,7 @@ Partial Class IEPCForm
         '
         Me.Label21.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label21.AutoSize = true
-        Me.Label21.Location = New System.Drawing.Point(16, 71)
+        Me.Label21.Location = New System.Drawing.Point(13, 71)
         Me.Label21.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label21.Name = "Label21"
         Me.Label21.Size = New System.Drawing.Size(143, 15)
@@ -910,7 +910,7 @@ Partial Class IEPCForm
         'tbContinousTorque2
         '
         Me.tbContinousTorque2.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbContinousTorque2.Location = New System.Drawing.Point(167, 35)
+        Me.tbContinousTorque2.Location = New System.Drawing.Point(165, 35)
         Me.tbContinousTorque2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.tbContinousTorque2.Name = "tbContinousTorque2"
         Me.tbContinousTorque2.Size = New System.Drawing.Size(64, 23)
@@ -919,7 +919,7 @@ Partial Class IEPCForm
         'tbContinousTorqueSpeed2
         '
         Me.tbContinousTorqueSpeed2.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbContinousTorqueSpeed2.Location = New System.Drawing.Point(167, 67)
+        Me.tbContinousTorqueSpeed2.Location = New System.Drawing.Point(165, 67)
         Me.tbContinousTorqueSpeed2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.tbContinousTorqueSpeed2.Name = "tbContinousTorqueSpeed2"
         Me.tbContinousTorqueSpeed2.Size = New System.Drawing.Size(64, 23)
@@ -929,10 +929,10 @@ Partial Class IEPCForm
         '
         Me.Label27.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label27.AutoSize = true
-        Me.Label27.Location = New System.Drawing.Point(236, 63)
+        Me.Label27.Location = New System.Drawing.Point(237, 71)
         Me.Label27.Margin = New System.Windows.Forms.Padding(0)
         Me.Label27.Name = "Label27"
-        Me.Label27.Size = New System.Drawing.Size(33, 30)
+        Me.Label27.Size = New System.Drawing.Size(37, 15)
         Me.Label27.TabIndex = 67
         Me.Label27.Text = "[rpm]"
         '
@@ -960,10 +960,10 @@ Partial Class IEPCForm
         '
         Me.Label25.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label25.AutoSize = true
-        Me.Label25.Location = New System.Drawing.Point(492, 63)
+        Me.Label25.Location = New System.Drawing.Point(491, 71)
         Me.Label25.Margin = New System.Windows.Forms.Padding(0)
         Me.Label25.Name = "Label25"
-        Me.Label25.Size = New System.Drawing.Size(33, 30)
+        Me.Label25.Size = New System.Drawing.Size(37, 15)
         Me.Label25.TabIndex = 66
         Me.Label25.Text = "[rpm]"
         '
@@ -991,7 +991,7 @@ Partial Class IEPCForm
         '
         Me.Label16.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label16.AutoSize = true
-        Me.Label16.Location = New System.Drawing.Point(491, 39)
+        Me.Label16.Location = New System.Drawing.Point(492, 39)
         Me.Label16.Margin = New System.Windows.Forms.Padding(0)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(35, 15)
@@ -1384,6 +1384,16 @@ Partial Class IEPCForm
         Me.FlowLayoutPanel4.Size = New System.Drawing.Size(245, 28)
         Me.FlowLayoutPanel4.TabIndex = 104
         '
+        'Label3
+        '
+        Me.Label3.AutoSize = true
+        Me.Label3.Location = New System.Drawing.Point(5, 5)
+        Me.Label3.Margin = New System.Windows.Forms.Padding(4, 7, 7, 7)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(142, 15)
+        Me.Label3.TabIndex = 55
+        Me.Label3.Text = "Design Type Wheel Motor"
+        '
         'FlowLayoutPanel5
         '
         Me.FlowLayoutPanel5.Controls.Add(Me.Label48)
@@ -1559,16 +1569,6 @@ Partial Class IEPCForm
         Me.lblEmType.Size = New System.Drawing.Size(51, 15)
         Me.lblEmType.TabIndex = 25
         Me.lblEmType.Text = "EM Type"
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = true
-        Me.Label3.Location = New System.Drawing.Point(5, 5)
-        Me.Label3.Margin = New System.Windows.Forms.Padding(4, 7, 7, 7)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(142, 15)
-        Me.Label3.TabIndex = 55
-        Me.Label3.Text = "Design Type Wheel Motor"
         '
         'IEPCForm
         '

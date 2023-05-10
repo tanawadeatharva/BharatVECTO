@@ -75,6 +75,7 @@
 
   <ItemGroup>
     <Folder Include="InputData\DeclarationDataAdapterTest\" />
+    <Folder Include="Integration\Declaration\PrimaryBus\" />
     <Folder Include="Models\Declaration\BusAux\" />
     <Folder Include="TestUtils\" />
   </ItemGroup>

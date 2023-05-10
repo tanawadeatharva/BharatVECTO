@@ -1,15 +1,11 @@
 ﻿using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 {
-
-	public interface IDriverDataAdapter
-	{
-		DriverData CreateDriverData(Segment segment);
-	}
-	internal abstract class DriverDataAdapter : IDriverDataAdapter
+    internal abstract class DriverDataAdapter : IDriverDataAdapter
 	{
 		protected DriverDataAdapter() { }
 

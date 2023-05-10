@@ -27,18 +27,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			public IDeclarationInputDataProvider InputDataProvider { get; }
 			public IDeclarationReport Report { get; }
 
-			protected DriverData _driverdata;
-			protected AirdragData _airdragData;
-			protected AxleGearData _axlegearData;
-			protected AngledriveData _angledriveData;
-			protected GearboxData _gearboxData;
-			protected RetarderData _retarderData;
-			protected PTOData _ptoTransmissionData;
-			protected PTOData _municipalPtoTransmissionData;
-			protected ShiftStrategyParameters _gearshiftData;
-			private bool _allowVocational;
-
-
 			protected LorryBase(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
 				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, false)
 			{
@@ -46,6 +34,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				InputDataProvider = dataProvider;
 				Report = report;
 			}
+
+			#region Overrides of AbstractDeclarationVectoRunDataFactory
+
+			protected override DriverData CreateDriverData(Segment segment)
+			{
+				return DataAdapter.CreateDriverData(segment);
+			}
+
+			#endregion
 
 			/// <summary>
 			/// Sets <see cref="VectoRunData.Loading"/>
@@ -95,6 +92,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					InputDataHash = InputDataProvider.XMLHash,
 					MaxChargingPower = InputDataProvider.JobInputData.Vehicle.MaxChargingPower,
 				};
+
 				return simulationRunData;
 			}
 
@@ -124,6 +122,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					throw new VectoException("Super caps AND batteries are not supported");
 				}
 			}
+
 			protected override void Initialize()
 			{
 				var vehicle = InputDataProvider.JobInputData.Vehicle;
@@ -138,27 +137,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				}
 
 				_segment = GetSegment(vehicle);
-				_driverdata = DataAdapter.CreateDriverData(_segment);
-
-				_airdragData = DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData,
-													_segment.Missions.First(), _segment);
-				if (InputDataProvider.JobInputData.Vehicle.AxleConfiguration.AxlegearIncludedInGearbox())
-				{
-					_axlegearData = DataAdapter.CreateDummyAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.GearboxInputData);
-				}
-				else
-				{
-					_axlegearData = DataAdapter.CreateAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData);
-				}
-				_angledriveData = DataAdapter.CreateAngledriveData(InputDataProvider.JobInputData.Vehicle.Components.AngledriveInputData);
 				
-				_retarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData);
-
-				_ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData, vehicle.Components.GearboxInputData);
-
-				_municipalPtoTransmissionData = DataAdapter.CreatePTOCycleData(vehicle.Components.GearboxInputData, vehicle.Components.PTOTransmissionInputData);
-
-
 			}
 
 			protected abstract void CreateGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle,
@@ -181,12 +160,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			protected override VectoRunData GetPowertrainConfigForReportInit()
 			{
-				var vehicle = InputDataProvider.JobInputData.Vehicle;
 				return GetNextRun().First(x => x != null);
-				//return _segment.Missions.Select(
-				//		mission => CreateVectoRunData(
-				//			vehicle, mission, mission.Loadings.First(), 0))
-				//	.FirstOrDefault(x => x != null);
 			}
 
 			#endregion
@@ -236,11 +210,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			public Conventional(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
 				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
 
-			protected override void Initialize()
-			{
-				base.Initialize();
-			}
-
 			#region Overrides of LorryBase
 			protected override IEnumerable<VectoRunData> GetNextRun()
 			{
@@ -281,8 +250,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 				var simulationRunData = CreateCommonRunData(vehicle, mission, loading, _segment, engineModes, modeIdx.Value);
 
-
-
 				simulationRunData.VehicleData =
 				DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading, _allowVocational);
 
@@ -294,26 +261,22 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						mission); // _engineData.Copy(), // a copy is necessary because every run has a different correction factor!
 
 				simulationRunData.ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>();
-		
 
-				CreateGearboxAndGearshiftData(vehicle, simulationRunData);
+                CreateGearboxAndGearshiftData(vehicle, simulationRunData);
 
-
-				simulationRunData.AngledriveData = _angledriveData;
+                simulationRunData.AngledriveData = DataAdapter.CreateAngledriveData(vehicle.Components.AngledriveInputData);
 				simulationRunData.Aux = DataAdapter.CreateAuxiliaryData(
 					vehicle.Components.AuxiliaryInputData,
 					vehicle.Components.BusAuxiliaries, mission.MissionType,
 					_segment.VehicleClass, vehicle.Length,
 					vehicle.Components.AxleWheels.NumSteeredAxles, vehicle.VehicleType);
 
-				simulationRunData.Retarder = _retarderData;
-				simulationRunData.DriverData = _driverdata;
+				simulationRunData.Retarder = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData);
+				simulationRunData.DriverData = DriverData;
 				simulationRunData.PTO = mission.MissionType == MissionType.MunicipalUtility
-					? _municipalPtoTransmissionData
-					: _ptoTransmissionData;
-				
-				
-			
+					? DataAdapter.CreatePTOCycleData(vehicle.Components.GearboxInputData, vehicle.Components.PTOTransmissionInputData)
+					: DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData, vehicle.Components.GearboxInputData);
+
 				simulationRunData.EngineData.FuelMode = modeIdx.Value;
 				simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
 				simulationRunData.VehicleData.InputData = vehicle;
@@ -340,7 +303,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				var shiftStrategyName =
 					PowertrainBuilder.GetShiftStrategyName(vehicle.Components.GearboxInputData.Type,
 						vehicle.VehicleType);
-				runData.AxleGearData = _axlegearData;
+                if (InputDataProvider.JobInputData.Vehicle.AxleConfiguration.AxlegearIncludedInGearbox()) {
+					runData.AxleGearData = DataAdapter.CreateDummyAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.GearboxInputData);
+                } else {
+					runData.AxleGearData = DataAdapter.CreateAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData);
+                }
 				runData.GearboxData = DataAdapter.CreateGearboxData(vehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
 			}
@@ -395,18 +362,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					}
 				}
 			}
+
 			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle,
 				Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 				int? modeIdx = null,
 				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
 			{
-				_segment = GetSegment(vehicle);
 				var result = CreateCommonRunData(vehicle, mission, loading, _segment);
 				result.AirdragData =
 					DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData, mission, _segment);
-				result.DriverData = DataAdapter.CreateDriverData(_segment);
-
+				result.DriverData = DriverData;
 
 				DataAdapter.CreateREESSData(
 					componentsElectricStorage: vehicle.Components.ElectricStorage,
@@ -414,29 +380,18 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					true,
 					(bs) => result.BatteryData = bs,
 					(sc) => result.SuperCapData = sc);
-				// result.BatteryData = DataAdapter.CreateBatteryData(componentsElectricStorage: vehicle.Components.ElectricStorage, vehicle.VehicleType, true);
-				// result.SuperCapData = DataAdapter.CreateSuperCapData(componentsElectricStorage: vehicle.Components.ElectricStorage);
 				
-				
-
 				result.ElectricMachinesData = DataAdapter.CreateElectricMachines(vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits, result.BatteryData.CalculateAverageVoltage(), null);
-				if (vehicle.VehicleType == VectoSimulationJobType.IEPC_E)
-				{
-					
+				if (vehicle.VehicleType == VectoSimulationJobType.IEPC_E) {
 					result.ElectricMachinesData = DataAdapter.CreateIEPCElectricMachines(vehicle.Components.IEPC,
 						result.BatteryData.CalculateAverageVoltage());
-					
 				}
-
-
-
 
 				result.AngledriveData = DataAdapter.CreateAngledriveData(vehicle.Components.AngledriveInputData);
 				if (AxleGearRequired() || vehicle.Components.AxleGearInputData != null) {
 					result.AxleGearData = DataAdapter.CreateAxleGearData(vehicle.Components.AxleGearInputData);
 				}
-				
-				
+
 				result.VehicleData =
 					DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading, _allowVocational);
 
@@ -445,9 +400,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						result.ElectricMachinesData.First(e => e.Item1 != PowertrainPosition.GEN).Item1);
 				}
 
-
 				CreateGearboxAndGearshiftData(vehicle, result);
-
 
 				result.Aux = DataAdapter.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData, null,
 					mission.MissionType, _segment.VehicleClass, vehicle.Length,
@@ -461,12 +414,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				result.PTO = mission.MissionType == MissionType.MunicipalUtility
 					? municipalPtoTransmissionData
 					: ptoTransmissionData;
-
-
-
-
-
-
 
 				return result;
 			}
@@ -495,7 +442,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						InputDataProvider.JobInputData.Vehicle.LegislativeClass.ToString());
 				}
 				_segment = GetSegment(InputDataProvider.JobInputData.Vehicle, true);
-
 			}
 
 			#endregion

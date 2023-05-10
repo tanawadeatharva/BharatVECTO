@@ -14,7 +14,9 @@ namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 
 		public Watt LookupPowerDemand(VehicleClass hdvClass, MissionType mission)
 		{
-			return hdvClass.IsBus() ? _busConditioning.Lookup(mission).PowerDemand : _lorryConditioning.Lookup(mission).PowerDemand;
+			return hdvClass.IsBus()
+				? _busConditioning.Lookup(mission).PowerDemand
+				: _lorryConditioning.Lookup(mission).PowerDemand;
 		}
 
 

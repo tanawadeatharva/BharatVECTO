@@ -1911,7 +1911,7 @@
   <data name="Component_CertifiedAeroReduction" xml:space="preserve">
     <value>CertifiedAeroReduction</value>
   </data>
-  <data name="REESS" xml:space="preserve">
+  <data name="ElectricEnergyStorage" xml:space="preserve">
     <value>ElectricEnergyStorage</value>
   </data>
   <data name="MRF_OutputDataType_ConventionalLorryManufacturerOutputDataType" xml:space="preserve">
@@ -2040,4 +2040,7 @@
   <data name="Results_Report_OVCModeAttr_ChargeSustaining" xml:space="preserve">
     <value>charge sustaining</value>
   </data>
+<data name="REESS" xml:space="preserve">
+	<value>REESS</value>
+</data>
 </root>

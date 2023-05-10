@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Interface Name="TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces.IXMLSuperCapDeclarationInputData" Collapsed="true">
+    <Position X="5.5" Y="7.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>InputData\FileIO\XML\Declaration\Interfaces\IXMLSuperCapDeclarationInputData.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TUGraz.VectoCommon.InputData.ISuperCapDeclarationInputData" Collapsed="true">
+    <Position X="5.5" Y="6.25" Width="2.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="TUGraz.VectoCommon.InputData.IREESSPackInputData">
+    <Position X="7.5" Y="4.25" Width="2" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces.IXMLBatteryPackDeclarationInputData" Collapsed="true">
+    <Position X="9" Y="7.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>InputData\FileIO\XML\Declaration\Interfaces\IXMLBatteryPackDeclarationInputData.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TUGraz.VectoCommon.InputData.IBatteryPackDeclarationInputData" Collapsed="true">
+    <Position X="9" Y="6.25" Width="2.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="TUGraz.VectoCommon.InputData.IElectricStorageSystemDeclarationInputData">
+    <Position X="7" Y="0.5" Width="3.25" />
+    <TypeIdentifier />
+    <ShowAsCollectionAssociation>
+      <Property Name="ElectricStorageElements" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="TUGraz.VectoCommon.InputData.IElectricStorageDeclarationInputData">
+    <Position X="7.25" Y="2.25" Width="2.75" />
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="REESSPack" />
+    </ShowAsAssociation>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

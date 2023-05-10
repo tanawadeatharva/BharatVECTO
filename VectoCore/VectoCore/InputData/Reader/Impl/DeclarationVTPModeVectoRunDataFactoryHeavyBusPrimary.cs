@@ -77,7 +77,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             //    DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
 
             GearshiftData = DataAdapter.CreateGearshiftData(
-                GearboxData, AxlegearData.AxleGear.Ratio * (AngledriveData?.Angledrive.Ratio ?? 1.0), EngineData.IdleSpeed);
+				AxlegearData.AxleGear.Ratio * (AngledriveData?.Angledrive.Ratio ?? 1.0), 
+				EngineData.IdleSpeed, 
+				vehicle.Components.GearboxInputData.Type,
+				vehicle.Components.GearboxInputData.Gears.Count);
 
             AuxVTP = CreateVTPAuxData(vehicle);
         }
@@ -157,7 +160,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             });
 
             var busAux = vehicle.Components.BusAuxiliaries;
-            var psCompressor = DeclarationData.BusAuxiliaries.GetCompressorMap(busAux.PneumaticSupply.CompressorSize, busAux.PneumaticSupply.Clutch);
+            var psCompressor = DeclarationData.BusAuxiliaries.GetCompressorMap(busAux.PneumaticSupply);
             retVal.Add(new VectoRunData.AuxData()
             {
                 DemandType = AuxiliaryDemandType.Direct,

@@ -192,7 +192,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override bool Articulated => GetBool(XMLNames.Vehicle_Articulated);
 
-		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_E;
 
 		#endregion
 
@@ -223,7 +223,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#region Overrides of AbstractXMLVehicleDataProviderV24
 
-		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.SerialHybridVehicle;
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_S;
 
 		#endregion
 

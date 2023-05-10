@@ -74,6 +74,7 @@
 		<Folder FolderName="Schema 2.4_Components">
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ComponentData\ADC.xml"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ComponentData\BatterySystem_1.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ComponentData\BatterySystem_StdValues.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ComponentData\CapacitorSystem_1.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ComponentData\ElectricMachineSystem-IHPC_1.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ComponentData\ElectricMachineSystem_1.xml" HomeFolder="Yes"/>

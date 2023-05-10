@@ -41,6 +41,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 
 		private readonly IList<CompressorMapValues> Entries;
 
+		private PerSecond _maxSpeed;
+		private PerSecond _minSpeed;
+
 		// Returns the AveragePowerDemand  per unit flow rate in seconds.
 		public JoulePerNormLiter GetAveragePowerDemandPerCompressorUnitFlowRate()
 		{
@@ -76,12 +79,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 
 		public string Source { get; }
 
+		protected PerSecond MinSpeed => _minSpeed ?? (_minSpeed = Entries.Min(x => x.CompressorSpeed));
+		protected PerSecond MaxSpeed => _maxSpeed ?? (_maxSpeed = Entries.Max(x => x.CompressorSpeed));
 
 		public CompressorResult Interpolate(PerSecond rpm)
 		{
 			var retVal = new CompressorResult();
-			var min = Entries.Min(x => x.CompressorSpeed);
-			var max = Entries.Max(x => x.CompressorSpeed);
+			var min = MinSpeed;
+			var max = MaxSpeed;
 			if (rpm < min || rpm > max) {
 				retVal.BoundariesExceeded = true;
 				rpm = rpm.LimitTo(min, max);

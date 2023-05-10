@@ -51,4 +51,8 @@
     <DebugSymbols>false</DebugSymbols>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='MockupDeploy'">
+    <VersionSuffix>Mockup</VersionSuffix>
+  </PropertyGroup>
 </Project>

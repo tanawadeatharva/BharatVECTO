@@ -84,6 +84,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 
 		public Watt GetAveragePowerDemandAtCrankFromPneumatics()
 		{
+			if (_pneumaticsCompressorFlowRateMap == null) {
+				return 0.SI<Watt>();
+			}
 			var cmp = _pneumaticsCompressorFlowRateMap.Interpolate(
 				_signals.EngineSpeed * _compressorGearRatio);
 

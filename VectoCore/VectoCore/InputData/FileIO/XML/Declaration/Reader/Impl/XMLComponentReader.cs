@@ -38,6 +38,7 @@ using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
@@ -606,7 +607,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLREESSReaderV24 : AbstractComponentReader, IXMLREESSReader
+	public class XMLREESSReaderV24 : AbstractXMLType, IXMLREESSReader
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public const string XSD_TYPE = "ElectricEnergyStorageType";
@@ -615,7 +616,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		[Inject] public virtual IDeclarationInjectFactory Factory { protected get; set; }
 
 		public XMLREESSReaderV24(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
-			string sourceFile) : base(vehicle, componentNode) { }
+			string sourceFile) : base( componentNode) { }
 
 		#region Implementation of IXMLREESSReader
 
@@ -639,7 +640,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected virtual IBatteryPackDeclarationInputData BatteryPackCreator(string version,
 			XmlNode componentNode, string sourcefile)
 		{
-			return Factory.CreateBatteryPackDeclarationInputData(version, componentNode, sourcefile);
+			var node = GetNode(XMLNames.REESS, componentNode);
+			var dataNode = GetNode(XMLNames.ComponentDataWrapper, node);
+			version = XMLHelper.GetXsdType(dataNode.SchemaInfo.SchemaType);
+			return Factory.CreateBatteryPackDeclarationInputData(version, dataNode, sourcefile);
 		}
 
 		protected virtual ISuperCapDeclarationInputData SuperCapCreator(string version,

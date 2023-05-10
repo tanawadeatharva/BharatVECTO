@@ -7,6 +7,7 @@
     <Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
 	<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	  <VersionSuffix Condition="('$(Configuration)' == 'MockupRelease') Or ('$(Configuration)' == 'MockupDebug')">Mockup</VersionSuffix>
   </PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net45|AnyCPU'">
     <DebugType>full</DebugType>
@@ -115,9 +116,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="VectoAPI" />
-    <InternalsVisibleTo Include="VectoEngineeringAPI" />
-    <InternalsVisibleTo Include="VectoXML" />
+	<InternalsVisibleTo Include="VectoXML" />
     <InternalsVisibleTo Include="XMLTest" />
     <InternalsVisibleTo Include="VECTO" />
     <InternalsVisibleTo Include="VectoCoreTest" />

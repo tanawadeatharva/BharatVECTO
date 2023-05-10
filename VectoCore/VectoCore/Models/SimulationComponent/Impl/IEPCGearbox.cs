@@ -7,7 +7,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class IEPCGearbox : APTNGearbox
 	{
-		public IEPCGearbox(IVehicleContainer container, IShiftStrategy strategy) : base(container, strategy) { }
+		public IEPCGearbox(IVehicleContainer container, IShiftStrategy strategy) : base(container, strategy)
+		{
+			_gear = new GearshiftPosition(0);
+		}
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval,
 			IModalDataContainer container)

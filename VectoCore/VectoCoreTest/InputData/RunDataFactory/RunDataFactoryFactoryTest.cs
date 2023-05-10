@@ -754,7 +754,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 
 		internal static Mock<IMultistageVIFInputData> PEV(this Mock<IMultistageVIFInputData> mock, ArchitectureID arch)
 		{
-			var type = VectoSimulationJobType.BatteryElectricVehicle;
+			var type = arch == ArchitectureID.E_IEPC ? VectoSimulationJobType.IEPC_E : VectoSimulationJobType.BatteryElectricVehicle;
 			mock.Setup(p => p.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID).
 				Returns(arch);
 			mock.Setup(p => p.MultistageJobInputData.JobInputData.JobType).

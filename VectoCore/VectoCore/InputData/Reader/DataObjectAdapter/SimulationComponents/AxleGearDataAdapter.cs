@@ -1,19 +1,14 @@
 ﻿using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.Models.GenericModelData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 {
-	public interface IAxleGearDataAdapter
-	{
-		AxleGearData CreateAxleGearData(IAxleGearInputData data);
-		AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData);
-	}
-
-	public class AxleGearDataAdapter : IAxleGearDataAdapter
+    public class AxleGearDataAdapter : IAxleGearDataAdapter
 	{
 		public AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData)
 		{

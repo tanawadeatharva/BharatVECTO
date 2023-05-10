@@ -6,24 +6,14 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 {
-	public interface IVehicleDataAdapter
-	{
-		VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission,
-			Kilogram loading, double? passengerCount, bool allowVocational);
-		VehicleData CreateExemptedVehicleData(IVehicleDeclarationInputData data);
-
-		VehicleData CreateVehicleData(IVehicleDeclarationInputData primaryVehicle,
-			IVehicleDeclarationInputData completedVehicle, Segment segment, Mission mission,
-			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading);
-
-	}
-	internal abstract class VehicleDataAdapter : ComponentDataAdapterBase, IVehicleDataAdapter
+    internal abstract class VehicleDataAdapter : ComponentDataAdapterBase, IVehicleDataAdapter
 	{
 		public static NewtonMeter VehMaxTorque(
 			ITransmissionInputData gear, int numGears,

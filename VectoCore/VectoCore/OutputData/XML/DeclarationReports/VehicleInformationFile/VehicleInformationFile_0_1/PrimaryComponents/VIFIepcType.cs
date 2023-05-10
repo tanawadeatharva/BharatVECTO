@@ -182,7 +182,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				}
 
 				result.Add(new  XElement(_vif + XMLNames.DragCurve, 
-					new XAttribute(XMLNames.DragCurve_Gear, dragCurve.Gear.Value),
+					dragCurves.Count == 1 && !dragCurve.Gear.HasValue ? null : new XAttribute(XMLNames.DragCurve_Gear, dragCurve.Gear.Value),
 					entries));
 			}
 

@@ -296,6 +296,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override ConsumerTechnology AdBlueDosing => ConsumerTechnology.Unknown;
 
+		public override bool EngineWasteGasHeatExchanger => false;
+
 		#endregion
 	}
 
@@ -325,6 +327,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override ConsumerTechnology AdBlueDosing => ConsumerTechnology.Unknown;
 
+		public override bool EngineWasteGasHeatExchanger => false;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -412,8 +415,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override bool EngineWasteGasHeatExchanger => false;
 
-		#endregion
-	}
+		public override string CompressorSize => null;
+
+		public override string Clutch => null;
+
+        #endregion
+    }
 
 	// ---------------------------------------------------------------------------------------
 
@@ -440,8 +447,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override bool EngineWasteGasHeatExchanger => false;
 
-		#endregion
-	}
+		public override string CompressorSize => null;
+
+		public override string Clutch => null;
+
+        #endregion
+    }
 
 	// ---------------------------------------------------------------------------------------
 
