@@ -945,7 +945,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 			
 			protected virtual bool AxleGearRequired()
 			{
-				return PrimaryVehicle.ArchitectureID != ArchitectureID.E4;
+				var req = PrimaryVehicle.ArchitectureID != ArchitectureID.E4;
+				if (req && PrimaryVehicle.Components.AxleGearInputData == null) {
+					throw new VectoException("Axlegear required");
+				}
+				return req;
 			}
 
 			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
