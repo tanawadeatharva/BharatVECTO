@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var axleGear = multistepBusInputData.JobInputData.PrimaryVehicle.Vehicle.Components.AxleGearInputData;
 
 			var genericIEPCData = new GenericBusIEPCData();
-			var iepcMotorData = genericIEPCData.CreateIEPCElectricMotorData(iepcData, axleGear);
+			var iepcMotorData = genericIEPCData.CreateIEPCElectricMotorData(iepcData);
 
 			Assert.AreEqual(1, iepcMotorData.EfficiencyData.VoltageLevels.Count);
 		}

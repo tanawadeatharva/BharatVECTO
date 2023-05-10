@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 {
 	public class ElectricMachinesDataAdapter : IElectricMachinesDataAdapter
 	{
-		public IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(
+		public virtual IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(
 			IElectricMachinesDeclarationInputData electricMachines,
 			IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage, GearList gearlist = null)
 		{
@@ -255,7 +255,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 
 
-		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(IIEPCDeclarationInputData iepc, Volt averageVoltage)
+		public virtual List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(IIEPCDeclarationInputData iepc, Volt averageVoltage)
 		{
 			if (iepc == null) {
 				return null;
@@ -331,7 +331,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return new List<Tuple<PowertrainPosition, ElectricMotorData>>() { Tuple.Create<PowertrainPosition, ElectricMotorData>(pos, retVal) };
 		}
 
-		private OverloadData CalculateOverloadData(IIEPCDeclarationInputData iepc, int count,
+		protected OverloadData CalculateOverloadData(IIEPCDeclarationInputData iepc, int count,
 			VoltageLevelData voltageLevel, Volt averageVoltage, Tuple<uint, double> gearRatioUsedForMeasurement)
 		{
 
@@ -356,7 +356,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 
 
-		private OverloadData CalculateOverloadData(IElectricMotorDeclarationInputData motorData, int count, VoltageLevelData voltageLevel, Volt averageVoltage)
+		protected OverloadData CalculateOverloadData(IElectricMotorDeclarationInputData motorData, int count, VoltageLevelData voltageLevel, Volt averageVoltage)
 		{
 
 			// if average voltage is outside of the voltage-level range, do not extrapolate but take the min voltage entry, or max voltage entry
@@ -415,13 +415,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 	
 
-	public class GenericElectricMachinesDataAdapter : IElectricMachinesDataAdapter
+	public class GenericElectricMachinesDataAdapter : ElectricMachinesDataAdapter
 	{
-		private GenericBusElectricMotorData GenercicEMotorData = new GenericBusElectricMotorData();
+		private readonly GenericBusElectricMotorData _genericEMotorData = new GenericBusElectricMotorData();
+		private GenericBusIEPCData _genericIepcData = new GenericBusIEPCData();
 
 		#region Implementation of IElectricMachinesDataAdapter
 
-		public IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits,
+		public override IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits,
 			Volt averageVoltage, GearList gearlist = null)
 		{
 			if (electricMachines == null) {
@@ -436,20 +437,43 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			CheckTorqueLimitVoltageLevels(electricMachines, torqueLimits);
 
 			return electricMachines.Entries.Select(m =>
-				Tuple.Create(m.Position, GenercicEMotorData.CreateGenericElectricMotorData(m, torqueLimits?.FirstOrDefault(t => t.Key == m.Position).Value,
+				Tuple.Create(m.Position, _genericEMotorData.CreateGenericElectricMotorData(m, torqueLimits?.FirstOrDefault(t => t.Key == m.Position).Value,
 					averageVoltage))).ToList();
 
 		}
 
-		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(IIEPCDeclarationInputData iepc, Volt averageVoltage)
+		public override List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(IIEPCDeclarationInputData iepc, Volt averageVoltage)
 		{
-			throw new NotImplementedException();
+			if (iepc == null) {
+				return null;
+			}
 
-		}
+			var pos = PowertrainPosition.IEPC;
+			var count = iepc.DesignTypeWheelMotor && iepc.NrOfDesignTypeWheelMotorMeasured == 1 ? 2 : 1;
+            var gearRatioUsedForMeasurement = iepc.Gears
+				.Select(x => new { x.GearNumber, x.Ratio, Diff = Math.Round(Math.Abs(x.Ratio - 1), 6) }).GroupBy(x => x.Diff)
+				.OrderBy(x => x.Key).First().OrderBy(x => x.Ratio).Reverse().First();
+			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
+			var genericIEPCData = _genericIepcData.CreateIEPCElectricMotorData(iepc);
+			genericIEPCData.OverloadRecoveryFactor = DeclarationData.OverloadRecoveryFactor;
+			genericIEPCData.TransmissionLossMap =
+				TransmissionLossMapReader.CreateEmADCLossMap(1.0, 1.0, "EM ADC LossMap Eff");
+			genericIEPCData.RatioADC = 1;
+			genericIEPCData.Overload = CalculateOverloadData(iepc, count, genericIEPCData.EfficiencyData, averageVoltage,
+				Tuple.Create((uint)gearRatioUsedForMeasurement.GearNumber, gearRatioUsedForMeasurement.Ratio));
+
+
+            return new List<Tuple<PowertrainPosition, ElectricMotorData>>() {
+				Tuple.Create<PowertrainPosition, ElectricMotorData>(pos, genericIEPCData)
+			};
+
+
+
+        }
 
         #endregion
 
-		private void CheckTorqueLimitVoltageLevels(IElectricMachinesDeclarationInputData electricMachines,
+        private void CheckTorqueLimitVoltageLevels(IElectricMachinesDeclarationInputData electricMachines,
 			IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits)
 		{
 			if (torqueLimits == null) {

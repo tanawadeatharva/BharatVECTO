@@ -63,55 +63,13 @@ namespace TUGraz.VectoCore.Models.GenericModelData
             VoltageLevelData voltageLevel, Volt averageVoltage, Tuple<uint, double> gearRatioUsedForMeasurement)
 		{
 			return CalculateOverloadData(count, voltageLevel, averageVoltage, iepc.VoltageLevels, gearRatioUsedForMeasurement);
-            //// if average voltage is outside of the voltage-level range, do not extrapolate but take the min voltage entry, or max voltage entry
-            //if (averageVoltage < iepc.VoltageLevels.Min(x => x.VoltageLevel))
-            //{
-            //    return CalculateOverloadBuffer(iepc.VoltageLevels.First(), count, voltageLevel, gearRatioUsedForMeasurement);
-            //}
-            //if (averageVoltage > iepc.VoltageLevels.Max(x => x.VoltageLevel))
-            //{
-            //    return CalculateOverloadBuffer(iepc.VoltageLevels.Last(), count, voltageLevel, gearRatioUsedForMeasurement);
-            //}
-
-            //var (vLow, vHigh) = iepc.VoltageLevels.OrderBy(x => x.VoltageLevel).GetSection(x => x.VoltageLevel < averageVoltage);
-            //var ovlLo = CalculateOverloadBuffer(vLow, count, voltageLevel, gearRatioUsedForMeasurement);
-            //var ovlHi = CalculateOverloadBuffer(vHigh, count, voltageLevel, gearRatioUsedForMeasurement);
-
-            //var retVal = new OverloadData()
-            //{
-            //    OverloadBuffer = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.OverloadBuffer, ovlHi.OverloadBuffer, averageVoltage),
-            //    ContinuousTorque = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.ContinuousTorque, ovlHi.ContinuousTorque, averageVoltage),
-            //    ContinuousPowerLoss = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.ContinuousPowerLoss, ovlHi.ContinuousPowerLoss, averageVoltage)
-            //};
-            //return retVal;
-        }
+		}
 
 
         private OverloadData CalculateOverloadData(IElectricMotorDeclarationInputData motorData, int count, VoltageLevelData voltageLevel, Volt averageVoltage)
 		{
 			return CalculateOverloadData(count, voltageLevel, averageVoltage, motorData.VoltageLevels);
-            //// if average voltage is outside of the voltage-level range, do not extrapolate but take the min voltage entry, or max voltage entry
-            //if (averageVoltage < motorData.VoltageLevels.Min(x => x.VoltageLevel))
-            //{
-            //    return CalculateOverloadBuffer(motorData.VoltageLevels.First(), count, voltageLevel);
-            //}
-            //if (averageVoltage > motorData.VoltageLevels.Max(x => x.VoltageLevel))
-            //{
-            //    return CalculateOverloadBuffer(motorData.VoltageLevels.Last(), count, voltageLevel);
-            //}
-
-            //var (vLow, vHigh) = motorData.VoltageLevels.OrderBy(x => x.VoltageLevel).GetSection(x => x.VoltageLevel < averageVoltage);
-            //var ovlLo = CalculateOverloadBuffer(vLow, count, voltageLevel);
-            //var ovlHi = CalculateOverloadBuffer(vHigh, count, voltageLevel);
-
-            //var retVal = new OverloadData()
-            //{
-            //    OverloadBuffer = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.OverloadBuffer, ovlHi.OverloadBuffer, averageVoltage),
-            //    ContinuousTorque = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.ContinuousTorque, ovlHi.ContinuousTorque, averageVoltage),
-            //    ContinuousPowerLoss = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.ContinuousPowerLoss, ovlHi.ContinuousPowerLoss, averageVoltage)
-            //};
-            //return retVal;
-        }
+		}
 		private OverloadData CalculateOverloadData(int count, VoltageLevelData voltageLevel, Volt averageVoltage, IList<IElectricMotorVoltageLevel> electricMotorVoltageLevels, Tuple<uint, double> gearUsedForMeasurement = null)
 		{
 

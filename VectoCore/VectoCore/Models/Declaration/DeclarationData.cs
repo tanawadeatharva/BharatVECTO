@@ -51,6 +51,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
+using TUGraz.VectoCore.Models.GenericModelData;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
@@ -60,7 +61,8 @@ using TUGraz.VectoCore.OutputData.XML;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public static class DeclarationData
+	public static class 
+		DeclarationData
 	{
 		/// <summary>
 		/// The standard acceleration for gravity on earth.
@@ -87,6 +89,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static readonly HeatingVentilationAirConditioning HeatingVentilationAirConditioning =
 			new HeatingVentilationAirConditioning();
+
 
 		public static readonly PneumaticSystem PneumaticSystem = new PneumaticSystem();
 		public static readonly SteeringPump SteeringPump = new SteeringPump();

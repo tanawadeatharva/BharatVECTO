@@ -435,15 +435,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					(bs) => rd.BatteryData = bs,
 					(sc) => rd.SuperCapData = sc);
 
+				rd.ElectricMachinesData = DataAdapterGeneric.CreateElectricMachines(PrimaryVehicle.Components.ElectricMachines,
+					PrimaryVehicle.ElectricMotorTorqueLimits, rd.BatteryData.CalculateAverageVoltage(), null);
+
+
 				if (PrimaryVehicle.VehicleType == VectoSimulationJobType.IEPC_S)
 				{
-					rd.ElectricMachinesData = DataAdapterGeneric.CreateIEPCElectricMachines(PrimaryVehicle.Components.IEPC,
+					var iepcData = DataAdapterGeneric.CreateIEPCElectricMachines(PrimaryVehicle.Components.IEPC,
 						rd.BatteryData.CalculateAverageVoltage());
-				}
-				else
-				{
-					rd.ElectricMachinesData = DataAdapterGeneric.CreateElectricMachines(PrimaryVehicle.Components.ElectricMachines,
-						PrimaryVehicle.ElectricMotorTorqueLimits, rd.BatteryData.CalculateAverageVoltage(), null);
+					iepcData.ForEach(iepc => rd.ElectricMachinesData.Add(iepc));
 				}
 
 
@@ -498,15 +498,16 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					(sc) => rd.SuperCapData = sc);
 
 
+				
+				rd.ElectricMachinesData = DataAdapterGeneric.CreateElectricMachines(PrimaryVehicle.Components.ElectricMachines,
+						PrimaryVehicle.ElectricMotorTorqueLimits, rd.BatteryData.CalculateAverageVoltage(), null);
+				
+
 				if (PrimaryVehicle.VehicleType == VectoSimulationJobType.IEPC_S)
 				{
-					rd.ElectricMachinesData = DataAdapterGeneric.CreateIEPCElectricMachines(PrimaryVehicle.Components.IEPC,
+					var iepcData = DataAdapterGeneric.CreateIEPCElectricMachines(PrimaryVehicle.Components.IEPC,
 						rd.BatteryData.CalculateAverageVoltage());
-				}
-				else
-				{
-					rd.ElectricMachinesData = DataAdapterGeneric.CreateElectricMachines(PrimaryVehicle.Components.ElectricMachines,
-						PrimaryVehicle.ElectricMotorTorqueLimits, rd.BatteryData.CalculateAverageVoltage(), null);
+					iepcData.ForEach(iepc => rd.ElectricMachinesData.Add(iepc));
 				}
 
                 rd.VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle,
