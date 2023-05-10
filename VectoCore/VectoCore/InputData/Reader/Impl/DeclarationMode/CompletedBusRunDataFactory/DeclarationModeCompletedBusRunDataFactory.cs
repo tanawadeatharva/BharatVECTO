@@ -1008,8 +1008,40 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				throw new NotImplementedException();
 			}
 
-			#endregion
-		}
+            #endregion
+
+			protected override bool AxleGearRequired()
+			{
+				var vehicle = PrimaryVehicle;
+				var iepcInput = vehicle.Components.IEPC;
+				var axleGearRequired = !iepcInput.DifferentialIncluded && !iepcInput.DesignTypeWheelMotor;
+				if (axleGearRequired && vehicle.Components.AxleGearInputData == null)
+				{
+					throw new VectoException(
+						$"Axlegear required for selected type of IEPC! DifferentialIncluded: {iepcInput.DifferentialIncluded}, DesignTypeWheelMotor: {iepcInput.DesignTypeWheelMotor}");
+				}
+
+				//var numGearsPowermap =
+				//	iepcInput.VoltageLevels.Select(x => Tuple.Create(x.VoltageLevel, x.PowerMap.Count)).ToArray();
+				//var gearCount = iepcInput.Gears.Count;
+				//var numGearsDrag = iepcInput.DragCurves.Count;
+
+				//if (numGearsPowermap.Any(x => x.Item2 != gearCount))
+				//{
+				//	throw new VectoException(
+				//		$"Number of gears for voltage levels does not match! PowerMaps: {numGearsPowermap.Select(x => $"{x.Item1}: {x.Item2}").Join()}; Gear count: {gearCount}");
+				//}
+
+				//if (numGearsDrag > 1 && numGearsDrag != gearCount)
+				//{
+				//	throw new VectoException(
+				//		$"Number of gears drag curve does not match gear count! DragCurve {numGearsDrag}; Gear count: {gearCount}");
+				//}
+
+				return axleGearRequired || vehicle.Components.AxleGearInputData != null;
+
+			}
+        }
 		#endregion BatteryElectric
 
 		public class Exempted : CompletedBusBase
