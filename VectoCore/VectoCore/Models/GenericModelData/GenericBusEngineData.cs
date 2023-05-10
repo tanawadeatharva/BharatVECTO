@@ -77,8 +77,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 					VehicleDataAdapter.VehMaxTorque(gear, numGears, limits, fullLoadCurves[0].MaxTorque));
 				fullLoadCurves[(uint)gear.Gear] = AbstractSimulationDataAdapter.IntersectFullLoadCurves(fullLoadCurves[0], maxTorque);
 			}
+			if (primaryVehicle.Components.IEPC?.Gears != null)
+				foreach (var gear in primaryVehicle.Components.IEPC.Gears)
+				{
+					fullLoadCurves[(uint)gear.GearNumber] = fullLoadCurves[0];
+				}
 
-			engine.FullLoadCurves = fullLoadCurves;
+
+            engine.FullLoadCurves = fullLoadCurves;
 
 			var engineMode = primaryVehicle.Components.EngineInputData.EngineModes[modeIdx];
 			var fuel = GetCombustionEngineFuelData(engineMode.Fuels,
