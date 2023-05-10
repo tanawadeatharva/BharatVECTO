@@ -39,6 +39,7 @@
 
   <ItemGroup>
     <None Include="TestData\**" CopyToOutputDirectory="PreserveNewest" />
+	<None Include="Resources\**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 	<ItemGroup>
