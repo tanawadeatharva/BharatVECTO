@@ -1044,7 +1044,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				ElectricalUserInputsConfig = CreateElectricsUserInputsConfig(
 					primaryVehicle, completedVehicle, mission, actuations, runData.VehicleData.VehicleClass),
 				PneumaticUserInputsConfig = CreatePneumaticUserInputsConfig(
-					primaryBusAuxiliaries, completedVehicle),
+					primaryVehicle, completedVehicle),
 				PneumaticAuxillariesConfig = base.CreatePneumaticAuxConfig(runData.Retarder.Type),
 				Actuations = actuations,
 				SSMInputsCooling = ssmCooling,
@@ -1143,14 +1143,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 
 
-		private PneumaticUserInputsConfig CreatePneumaticUserInputsConfig(IBusAuxiliariesDeclarationData primaryBusAuxiliaries,
-			IVehicleDeclarationInputData completedVehicle)
+		private PneumaticUserInputsConfig CreatePneumaticUserInputsConfig(IVehicleDeclarationInputData primaryVehicle, IVehicleDeclarationInputData completedVehicle)
 		{
-			return new PneumaticUserInputsConfig
+			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
+
+            return new PneumaticUserInputsConfig
 			{
 				CompressorMap = DeclarationData.BusAuxiliaries.GetCompressorMap(primaryBusAuxiliaries.PneumaticSupply),
 				CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
-				CompressorGearRatio = completedVehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle
+				CompressorGearRatio = primaryVehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle
 					? 0 : primaryBusAuxiliaries.PneumaticSupply.Ratio,
 				SmartAirCompression = primaryBusAuxiliaries.PneumaticSupply.SmartAirCompression,
 				SmartRegeneration = primaryBusAuxiliaries.PneumaticSupply.SmartRegeneration,
@@ -1410,12 +1411,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return new Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry>();
 		}
 
-		protected virtual Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry> GetElectricAuxConsumersPrimary(Mission mission, IVehicleDeclarationInputData vehicleData, VehicleClass vehicleClass, IBusAuxiliariesDeclarationData busAuxPrimary)
+		protected virtual Dictionary<string, ElectricConsumerEntry> GetElectricAuxConsumersPrimary(Mission mission,
+			IVehicleDeclarationInputData primaryVehicle, IVehicleDeclarationInputData completedVehicle,
+			VehicleClass vehicleClass)
 		{
-			var retVal = new Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry>();
+			var busAuxPrimary = primaryVehicle.Components.BusAuxiliaries;
+
+            var retVal = new Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry>();
 			var spPower = DeclarationData.SteeringPumpBus.LookupElectricalPowerDemand(
 				mission.MissionType, busAuxPrimary.SteeringPumpTechnology,
-				vehicleData.Length ?? mission.BusParameter.VehicleLength);
+				completedVehicle.Length ?? mission.BusParameter.VehicleLength);
 			retVal[Constants.Auxiliaries.IDs.SteeringPump] = new AuxiliaryDataAdapter.ElectricConsumerEntry
 			{
 				ActiveDuringEngineStopStandstill = false,
@@ -1423,7 +1428,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				Current = spPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage
 			};
 
-			var fanPower = vehicleData.ArchitectureID.IsBatteryElectricVehicle()
+			var fanPower = primaryVehicle.ArchitectureID.IsBatteryElectricVehicle()
 				? 0.SI<Watt>()
 				: DeclarationData.Fan.LookupElectricalPowerDemand(
 					vehicleClass, mission.MissionType, busAuxPrimary.FanTechnology);
@@ -1443,7 +1448,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var currentDemand = GetElectricConsumers(mission, completedVehicle, actuations, vehicleClass);
 
 			// add electrical steering pump or electric fan defined in primary vehicle
-			foreach (var entry in GetElectricAuxConsumersPrimary(mission, completedVehicle, vehicleClass, primaryVehicle.Components.BusAuxiliaries))
+			foreach (var entry in GetElectricAuxConsumersPrimary(mission, primaryVehicle, completedVehicle, vehicleClass))
 			{
 				currentDemand[entry.Key] = entry.Value;
 			}

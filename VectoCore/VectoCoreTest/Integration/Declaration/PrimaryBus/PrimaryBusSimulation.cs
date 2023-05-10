@@ -34,7 +34,7 @@ public class PrimaryBusSimulation
 
 	private const string BASE_DIR_COMPLETED = @"TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\CompletedBus";
 	private const string BASE_DIR_VIF = @"TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\CompletedBus\VIF";
-    private StandardKernel _kernel;
+	private StandardKernel _kernel;
 	private IXMLInputDataReader _xmlReader;
 
 	[OneTimeSetUp]
@@ -49,7 +49,7 @@ public class PrimaryBusSimulation
 	}
 
 
-    [
+	[
 	TestCase(@"PrimaryBus/Conventional/primary_heavyBus group41_nonSmart.xml", 0, TestName = "2nd Amendment PrimaryBus Conventional"),
 	TestCase(@"PrimaryBus/PEV/PEV_primaryBus_AMT_E2.xml", 0, TestName = "2nd Amendment PrimaryBus PEV E2"),
 
@@ -62,7 +62,7 @@ public class PrimaryBusSimulation
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_CM_BCVC.xml", 7, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 AMT_CM_BCVC stpr, InterUrban_Ref_Load"),
 
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_Conv.xml", 0, TestName="2nd Amendment PrimaryBus Coach P-HEV P2 AMT"),
-    TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_Base_AMT.xml", 0, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 Base AMT"),
+	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_Base_AMT.xml", 0, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 Base AMT"),
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_OVC.xml", 0, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 AMT OVC"),
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCityBus_P1_HEV_Base_AT.xml", 0, TestName = "2nd Amendment PrimaryBus CityBus P-HEV P1 Base AT"),
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCityBus_P1_HEV_AT_BD_BCVC.xml", 0, TestName= "2nd Amendment PrimaryBus CityBus P-HEV P1 Base AT - no TC"),
@@ -89,14 +89,14 @@ public class PrimaryBusSimulation
 	TestCase(@"PrimaryCityBus_IEPC-S_Base.RSLT_VIF.xml", @"HEV_completedBus_2.xml", 1,                 TestName = "2nd Amendment CompletedBus CityBus HEV IEPC-S"),
 	TestCase(@"exempted_primary_heavyBus.RSLT_VIF.xml", @"exempted_completedBus_input_full.xml", 1,    TestName = "2nd Amendment CompletedBus Exempted"),
 	]
-    public void CompletedBusSimulationTest(string vifFile, string completed, int runIdx)
+	public void CompletedBusSimulationTest(string vifFile, string completed, int runIdx)
 	{
 		var completedJob = GenerateJsonJobCompletedBus(Path.Combine(BASE_DIR_VIF, vifFile), Path.Combine(BASE_DIR_COMPLETED, completed));
 
 		var finalVif = CreateCompletedVIF(completedJob);
 
 		//RunSimulationPrimary(finalVif, runIdx);
-    }
+	}
 
 	[
 		TestCase(@"PrimaryBus/Conventional/primary_heavyBus group41_nonSmart.xml", @"Conventional_completedBus_2.xml", 0, TestName = "2nd Amendment SingleBus Conventional"),
@@ -123,12 +123,12 @@ public class PrimaryBusSimulation
 	private void RunSimulationSingle(string jobFile, string completed, int runIdx)
 	{
 		var completedJob = GenerateJsonJobSingleBus(Path.Combine(BASE_DIR, jobFile), Path.Combine(BASE_DIR_COMPLETED, completed));
-        //var filePath = Path.Combine(BASE_DIR, jobFile);
+		//var filePath = Path.Combine(BASE_DIR, jobFile);
 		var dataProvider = JSONInputDataFactory.ReadJsonJob(completedJob);
 		var fileWriter = new FileOutputWriter(completedJob);
 		var simFactory = _kernel.Get<ISimulatorFactoryFactory>();
 
-        var runsFactory = simFactory.Factory(ExecutionMode.Declaration, dataProvider, fileWriter, null, null);
+		var runsFactory = simFactory.Factory(ExecutionMode.Declaration, dataProvider, fileWriter, null, null);
 		//runsFactory.WriteModalResults = true;
 		runsFactory.SerializeVectoRunData = true;
 		var jobContainer = new JobContainer(new SummaryDataContainer(fileWriter)) { };
@@ -153,7 +153,7 @@ public class PrimaryBusSimulation
 
 		PrintRuns(jobContainer, fileWriter);
 		PrintFiles(fileWriter);
-    }
+	}
 
 	private string GenerateJsonJobSingleBus(string primary, string completed)
 	{
@@ -177,7 +177,7 @@ public class PrimaryBusSimulation
 		var str = JsonConvert.SerializeObject(json, Newtonsoft.Json.Formatting.Indented);
 		File.WriteAllText(path, str);
 		return path;
-    }
+	}
 
 	public string CreateCompletedVIF(string jobFile)
 	{
@@ -204,9 +204,9 @@ public class PrimaryBusSimulation
 		//PrintRuns(jobContainer, fileWriter);
 		PrintFiles(fileWriter);
 		return fileWriter.GetWrittenFiles()[ReportType.DeclarationReportMultistageVehicleXML];
-    }
+	}
 
-    public void RunSimulationPrimary(string jobFile, int runIdx)
+	public void RunSimulationPrimary(string jobFile, int runIdx)
 	{
 		var filePath = Path.Combine(BASE_DIR, jobFile);
 		var dataProvider = _xmlReader.CreateDeclaration(filePath);
@@ -223,9 +223,9 @@ public class PrimaryBusSimulation
 		} else {
 			var run = runsFactory.SimulationRuns().Skip(runIdx).First();
 			jobContainer.AddRun(run);
-            TestContext.Progress.WriteLine($"{run.CycleName} - {run.RunSuffix}");
+			TestContext.Progress.WriteLine($"{run.CycleName} - {run.RunSuffix}");
 			var expectedResults = 1;
-            if (dataProvider.JobInputData.Vehicle.OvcHev && !dataProvider.JobInputData.Vehicle.VehicleType.IsOneOf(
+			if (dataProvider.JobInputData.Vehicle.OvcHev && !dataProvider.JobInputData.Vehicle.VehicleType.IsOneOf(
 					VectoSimulationJobType.BatteryElectricVehicle, 
 					VectoSimulationJobType.IEPC_E)) {
 				var run2 = runsFactory.SimulationRuns().Skip(runIdx + 1).First();
@@ -255,7 +255,7 @@ public class PrimaryBusSimulation
 	{
 		var len = expected.Length - ignoreEnd;
 
-        var expectedWithoutSuffix = expected.Substring(0, len);
+		var expectedWithoutSuffix = expected.Substring(0, len);
 		var actualWithoutSuffix = actual.Substring(0, len);
 		Assert.AreEqual(expectedWithoutSuffix, actualWithoutSuffix);
 	}
@@ -303,7 +303,7 @@ public class PrimaryBusSimulation
 	}
 
 
-    private string GenerateJsonJobCompletedBus(string vif, string completeBusInput)
+	private string GenerateJsonJobCompletedBus(string vif, string completeBusInput)
 	{
 		var subDirectory = Path.GetDirectoryName(completeBusInput);
 
@@ -327,7 +327,7 @@ public class PrimaryBusSimulation
 		return path;
 	}
 
-    private void PrintRuns(JobContainer jobContainer, FileOutputWriter fileWriter = null)
+	private void PrintRuns(JobContainer jobContainer, FileOutputWriter fileWriter = null)
 	{
 		foreach (var keyValuePair in jobContainer.GetProgress()) {
 			TestContext.WriteLine($"{keyValuePair.Key}: {keyValuePair.Value.CycleName} {keyValuePair.Value.RunName} {keyValuePair.Value.Error?.Message}");
