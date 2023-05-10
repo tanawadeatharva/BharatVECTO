@@ -1423,7 +1423,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				Current = spPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage
 			};
 
-			var fanPower = vehicleData.VehicleType == VectoSimulationJobType.BatteryElectricVehicle
+			var fanPower = vehicleData.ArchitectureID.IsBatteryElectricVehicle()
 				? 0.SI<Watt>()
 				: DeclarationData.Fan.LookupElectricalPowerDemand(
 					vehicleClass, mission.MissionType, busAuxPrimary.FanTechnology);
