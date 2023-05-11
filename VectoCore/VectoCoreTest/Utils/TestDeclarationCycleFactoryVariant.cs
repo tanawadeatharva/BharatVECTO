@@ -42,6 +42,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 	public class TestDeclarationCycleFactoryStartPoint : DeclarationCycleFactory
 	{
+		private bool _shortMissing = false;
 		private readonly Dictionary<MissionType, (Meter start, Meter distance)> _startPointDict = new Dictionary<MissionType, (Meter start, Meter distance)>();
 		#region Implementation of IDeclarationCycleFactory
 		/// <summary>
@@ -49,10 +50,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 		/// </summary>
 		/// <param name="missionType"></param>
 		/// <param name="startPoint"></param>
+		/// <param name="shortMissing">if set to true, the last section of all cycle that are not specified is simulated</param>
 		/// <param name="distance"></param>
-		public void SetStartPoint(MissionType missionType, Meter startPoint, Meter distance = null)
+		public void SetStartPoint(MissionType missionType, Meter startPoint, bool shortMissing, Meter distance = null)
 		{
 			_startPointDict[missionType] = (start: startPoint, distance: distance);
+			_shortMissing = shortMissing;
 		}
 		/// <summary>
 		/// Sets start point for all missions
@@ -71,9 +74,21 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var cycle = base.GetDeclarationCycle(mission);
 			if (_startPointDict.TryGetValue(mission.MissionType, out var entry)) {
 				RestrictCycle(cycle, entry);
+			} else if(_shortMissing) {
+				LastSection(cycle);
 			}
 			return cycle;
 		}
+
+		private void LastSection(DrivingCycleData cycle)
+		{
+			var entries = cycle.Entries;
+			var stop = entries.Last();
+			var start = entries.Last(e => e.VehicleTargetSpeed.IsEqual(0) 
+										&& !e.Distance.IsEqual(stop.Distance));
+			entries.RemoveAll(e =>
+				e.Distance.IsSmaller(start.Distance) || e.Distance.IsGreater(stop.Distance));
+        }
 
 		private void RestrictCycle(DrivingCycleData cycle, (Meter start, Meter distance) startPoint)
 		{
@@ -86,7 +101,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				.Where(e => e.Distance.IsSmallerOrEqual(startPoint.start) &&
 							e.VehicleTargetSpeed.IsEqual(0)) //Select all points before startpoint
 				.MinBy(e => startPoint.start - e.Distance) ?? startEntry; //select the nearest one;
-		
+			
 			//remove entries before selected start point
 			//var startIdx = entries.FindIndex(e => e.Distance.IsEqual(startEntry.Distance));
 			//entries.RemoveRange(0, startIdx);
