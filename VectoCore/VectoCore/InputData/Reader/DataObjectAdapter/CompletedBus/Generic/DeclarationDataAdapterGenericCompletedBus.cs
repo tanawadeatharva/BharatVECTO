@@ -330,8 +330,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
         public class PEV_E3 : BatteryElectric { }
 		
 		public class PEV_E4 : BatteryElectric { }
-		
-		public class PEV_E_IEPC : BatteryElectric { }
+
+		public class PEV_E_IEPC : BatteryElectric
+		{
+			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new GenericCompletedBusIEPCGearboxDataAdapter();
+        }
 
 
 		
