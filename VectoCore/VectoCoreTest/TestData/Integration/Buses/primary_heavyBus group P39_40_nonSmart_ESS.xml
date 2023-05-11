@@ -718,11 +718,10 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCor
 					<AppVersion>TC CalcApp 123</AppVersion>
 					<CertificationMethod>Standard values</CertificationMethod>
 					<Characteristics>
-						<Entry speedRatio='0.0000' torqueRatio='2.45' inputTorqueRef='809.58'/>
-						<Entry speedRatio='0.4409' torqueRatio='1.40' inputTorqueRef='647.66'/>
-						<Entry speedRatio='0.4859' torqueRatio='1.29' inputTorqueRef='404.79'/>
-						<Entry speedRatio='0.7348' torqueRatio='1.29' inputTorqueRef='0.00'/>
-						<Entry speedRatio='3.6738' torqueRatio='1.22' inputTorqueRef='-3238.32'/>
+						<Entry speedRatio='0.0000' torqueRatio='5.17' inputTorqueRef='809.58'/>
+						<Entry speedRatio='0.4410' torqueRatio='1.79' inputTorqueRef='404.79'/>
+						<Entry speedRatio='0.6610' torqueRatio='1.03' inputTorqueRef='121.44'/>
+						<Entry speedRatio='0.7350' torqueRatio='0.88' inputTorqueRef='0.00'/>
 					</Characteristics>
 				</Data>
 				<v2.0:Signature>
