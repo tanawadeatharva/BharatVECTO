@@ -88,6 +88,7 @@ public class PrimaryBusSimulation
 	TestCase(@"PrimaryCoach_S2_Base_AMT.RSLT_VIF.xml", @"HEV_completedBus_2.xml", 1,                   TestName = "2nd Amendment CompletedBus Coach HEV S2"),
 	TestCase(@"PrimaryCityBus_IEPC-S_Base.RSLT_VIF.xml", @"HEV_completedBus_2.xml", 1,                 TestName = "2nd Amendment CompletedBus CityBus HEV IEPC-S"),
 	TestCase(@"exempted_primary_heavyBus.RSLT_VIF.xml", @"exempted_completedBus_input_full.xml", 1,    TestName = "2nd Amendment CompletedBus Exempted"),
+	TestCase(@"IHPC", @"IHPC_completed", 1, TestName="2nd Amendment Completed Bus IHPC")
 	]
     public void CompletedBusSimulationTest(string vifFile, string completed, int runIdx)
 	{

@@ -1005,8 +1005,19 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
 			{
-				throw new NotImplementedException();
-			}
+				runData.GearshiftParameters =
+					DataAdapterGeneric.CreateGearshiftData(
+						runData.AxleGearData?.AxleGear.Ratio ?? 1.0,
+						null,
+						GearboxType.APTN,
+						PrimaryVehicle.Components.IEPC.Gears.Count
+					);
+				var shiftStrategyName =
+					PowertrainBuilder.GetShiftStrategyName(GearboxType.APTN,
+						PrimaryVehicle.VehicleType);
+				runData.GearboxData = DataAdapterGeneric.CreateGearboxData(PrimaryVehicle, runData,
+					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+            }
 
             #endregion
 
