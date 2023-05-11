@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -217,10 +216,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			_ovc = modelData.VehicleData.OffVehicleCharging;
 
 			var inputData = modelData.InputData as IMultistepBusInputDataProvider;
-			Input = inputData.JobInputData.PrimaryVehicle.Vehicle;
 			if (inputData == null) {
 				throw new VectoException("CompletedBus CustomerInformationFile requires MultistepBusInputData");
 			}
+			Input = inputData.JobInputData.PrimaryVehicle.Vehicle;
 			Results = _resultFactory.GetCIFResultsWriter(modelData.VehicleData.VehicleCategory.GetVehicleType(),
 				modelData.JobType, modelData.VehicleData.OffVehicleCharging, modelData.Exempted);
 			InputDataIntegrity = new XElement(Cif_0_9 + XMLNames.Report_InputDataSignature,

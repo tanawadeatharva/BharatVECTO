@@ -54,10 +54,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 				vehicleData.ExemptedVehicle,
 				iepc,
 				ihpc);
-
-			
-
-
 		}
 
 		public override void InitializeReport(VectoRunData modelData)
