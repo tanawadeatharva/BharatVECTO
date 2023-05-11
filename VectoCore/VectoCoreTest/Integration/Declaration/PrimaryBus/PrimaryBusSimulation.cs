@@ -43,8 +43,8 @@ public class PrimaryBusSimulation
 		_kernel = new StandardKernel(new VectoNinjectModule());
 		_xmlReader = _kernel.Get<IXMLInputDataReader>();
 
-		_kernel.Rebind<IDeclarationCycleFactory>().To<TestDeclarationCycleFactory>().InSingletonScope();
-		var cycleFactory = _kernel.Get<IDeclarationCycleFactory>() as TestDeclarationCycleFactory;
+		_kernel.Rebind<IDeclarationCycleFactory>().To<TestDeclarationCycleFactoryVariant>().InSingletonScope();
+		var cycleFactory = _kernel.Get<IDeclarationCycleFactory>() as TestDeclarationCycleFactoryVariant;
 		cycleFactory.Variant = "Short_10";
 	}
 
