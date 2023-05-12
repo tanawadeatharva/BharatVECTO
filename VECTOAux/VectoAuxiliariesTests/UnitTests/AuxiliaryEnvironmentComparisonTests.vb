@@ -485,7 +485,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).AdBlueInjection += 1.SI(Of NormLiterPerSecond)
+			CType (auxNow.PneumaticAuxiliariesConfig, PneumaticsConsumersDemand).AdBlueInjection += 1.SI(Of NormLiterPerSecond)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -501,7 +501,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).AirControlledSuspension += 1.SI(of NormLiterPerSecond)
+			CType (auxNow.PneumaticAuxiliariesConfig, PneumaticsConsumersDemand).AirControlledSuspension += 1.SI(of NormLiterPerSecond)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -517,7 +517,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).Braking += 1.SI(of NormLiterPerKilogram)
+			CType (auxNow.PneumaticAuxiliariesConfig, PneumaticsConsumersDemand).Braking += 1.SI(of NormLiterPerKilogram)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -549,7 +549,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).BreakingWithKneeling += 1.SI(Of NormLiterPerKilogramMeter)
+			CType (auxNow.PneumaticAuxiliariesConfig, PneumaticsConsumersDemand).BreakingWithKneeling += 1.SI(Of NormLiterPerKilogramMeter)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -565,7 +565,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).DeadVolBlowOuts += 1.SI(Of PerSecond)
+			CType (auxNow.PneumaticAuxiliariesConfig, PneumaticsConsumersDemand).DeadVolBlowOuts += 1.SI(Of PerSecond)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -581,7 +581,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).DeadVolume += 1.SI(of NormLiter)
+			CType (auxNow.PneumaticAuxiliariesConfig, PneumaticsConsumersDemand).DeadVolume += 1.SI(of NormLiter)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -597,7 +597,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).NonSmartRegenFractionTotalAirDemand += 1
+			CType (auxNow.PneumaticAuxiliariesConfig, PneumaticsConsumersDemand).NonSmartRegenFractionTotalAirDemand += 1
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -613,7 +613,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).OverrunUtilisationForCompressionFraction += 1
+			CType (auxNow.PneumaticAuxiliariesConfig, PneumaticsConsumersDemand).OverrunUtilisationForCompressionFraction += 1
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -629,7 +629,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).DoorOpening += 1.SI(Of NormLiter)
+			CType (auxNow.PneumaticAuxiliariesConfig, PneumaticsConsumersDemand).DoorOpening += 1.SI(Of NormLiter)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -645,7 +645,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).StopBrakeActuation += 1.SI(of NormLiterPerKilogram)
+			CType (auxNow.PneumaticAuxiliariesConfig, PneumaticsConsumersDemand).StopBrakeActuation += 1.SI(of NormLiterPerKilogram)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -661,7 +661,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).SmartRegenFractionTotalAirDemand += 1
+			CType (auxNow.PneumaticAuxiliariesConfig, PneumaticsConsumersDemand).SmartRegenFractionTotalAirDemand += 1
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)

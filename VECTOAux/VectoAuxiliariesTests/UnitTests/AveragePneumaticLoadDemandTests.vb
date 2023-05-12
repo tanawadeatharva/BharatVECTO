@@ -352,7 +352,7 @@ Namespace UnitTests
         Private Function GetAuxConfig(psAuxConfig As IPneumaticsConsumersDemand) As IAuxiliaryConfig
 
             Return New AuxiliaryConfig() with {
-                .PneumaticAuxillariesConfig = psAuxConfig,
+                .PneumaticAuxiliariesConfig = psAuxConfig,
                 .PneumaticUserInputsConfig = _defaultInputConfig,
                 .VehicleData = New VehicleData() with {
                     .CurbMass = _vehicleMassKG.SI(of Kilogram)

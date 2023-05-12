@@ -95,7 +95,7 @@ Namespace UnitTests
             Dim auxInput as IBusAuxiliariesDeclarationData = Nothing
 
             Dim dao = New GenericCompletedBusAuxiliaryDataAdapter()
-            Dim target As ISSMDeclarationInputs = dao.CreateSSMModelParameters(auxInput, mission, LoadingType.ReferenceLoad, mission.BusParameter.HVACConventional.HVACConfiguration,
+            Dim target As ISSMDeclarationInputs = dao.CreatePrimarySSMModelParameters(auxInput, mission, LoadingType.ReferenceLoad, mission.BusParameter.HVACConventional.HVACConfiguration,
                                                                                HeatPumpType.none, mission.BusParameter.HVACConventional.HeatPumpTypePassengerCompartmentCooling, mission.BusParameter.HVACConventional.HVACAuxHeaterPower, FuelData.Diesel, true)
 
             If section = "BusParameterisation" Then
@@ -605,7 +605,7 @@ Namespace UnitTests
             Dim auxInput as IBusAuxiliariesDeclarationData = Nothing
 
             Dim dao = New GenericCompletedBusAuxiliaryDataAdapter()
-            Dim params as ISSMDeclarationInputs = dao.CreateSSMModelParameters(auxInput, mission, LoadingType.ReferenceLoad, mission.BusParameter.HVACConventional.HVACConfiguration,
+            Dim params as ISSMDeclarationInputs = dao.CreatePrimarySSMModelParameters(auxInput, mission, LoadingType.ReferenceLoad, mission.BusParameter.HVACConventional.HVACConfiguration,
                                                                                              HeatPumpType.none, mission.BusParameter.HVACConventional.HeatPumpTypePassengerCompartmentCooling, mission.BusParameter.HVACConventional.HVACAuxHeaterPower, FuelData.Diesel, true)
 
             Dim target As SSMTOOL = New SSMTOOL(params)
