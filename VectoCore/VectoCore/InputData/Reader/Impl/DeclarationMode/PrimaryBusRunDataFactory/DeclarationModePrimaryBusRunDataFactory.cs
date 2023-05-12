@@ -470,7 +470,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					Vehicle.Components.AuxiliaryInputData,
 					Vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					Vehicle.Length ?? mission.BusParameter.VehicleLength,
-					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType);
+					Vehicle.Components.AxleWheels.NumSteeredAxles,
+					VectoSimulationJobType.ParallelHybridVehicle);//Hardcode to override IHPC
 				runData.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData);
 				runData.DriverData = DriverData;
 
@@ -571,6 +572,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 		{
 			public HEV_P4(IDeclarationInputDataProvider dataProvider, IDeclarationReport report, IPrimaryBusDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
 
+		}
+
+		public class HEV_P_IHPC : HEV_P2
+		{
+			public HEV_P_IHPC(IDeclarationInputDataProvider dataProvider,
+				IDeclarationReport report,
+				IPrimaryBusDeclarationDataAdapter declarationDataAdapter, 
+				IDeclarationCycleFactory cycleFactory, 
+				IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
 		}
 
 		public abstract class BatteryElectric : PrimaryBusBase
