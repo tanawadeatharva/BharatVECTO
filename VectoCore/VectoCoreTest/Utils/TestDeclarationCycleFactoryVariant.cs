@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -12,6 +13,31 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
+	public class TestMissionFilter : IMissionFilter
+	{
+		private HashSet<(MissionType m, LoadingType l)> _missionsToRun = new HashSet<(MissionType m, LoadingType l)>();
+
+		#region Implementation of IMissionFilter
+
+		public bool Run(MissionType missionType, LoadingType loadingType)
+		{
+			var run = _missionsToRun.Contains((missionType, loadingType));
+			if(!run){
+				TestContext.Progress.WriteLine($"[{nameof(TestMissionFilter)}] skipping {missionType} - {loadingType}");
+			}
+			return run;
+		}
+
+		internal void SetMissions(params (MissionType m, LoadingType loadingType)[] missionLoadingPairs)
+		{
+			foreach (var missionLoadingPair in missionLoadingPairs) {
+				_missionsToRun.Add((missionLoadingPair.m, missionLoadingPair.loadingType));
+			}
+		}
+
+		#endregion
+	}
+
 
 	public class TestDeclarationCycleFactoryVariant : IDeclarationCycleFactory
 	{

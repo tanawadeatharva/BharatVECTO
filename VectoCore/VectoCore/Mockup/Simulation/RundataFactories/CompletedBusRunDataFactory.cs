@@ -24,7 +24,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 		public MockupMultistageCompletedBusRunDataFactory(IMultistageVIFInputData dataProvider,
             IDeclarationReport report,
 			ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
-			IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory)
+			IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter)
         {
 
         }
@@ -163,7 +163,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
         {
 			var InputDataProvider = DataProvider.MultistageJobInputData;
             foreach (var mission in _segment.Missions) {
-                foreach (var loading in mission.Loadings) {
+                foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
                     var simulationRunData = CreateVectoRunDataSpecific(mission, loading, modeIdx);
                     if (simulationRunData != null) {
                         yield return simulationRunData;

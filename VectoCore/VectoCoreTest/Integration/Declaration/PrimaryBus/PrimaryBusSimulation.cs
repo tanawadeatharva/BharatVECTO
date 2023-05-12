@@ -113,7 +113,9 @@ public class PrimaryBusSimulation
 		_kernel.Rebind<IDeclarationCycleFactory>().To<TestDeclarationCycleFactoryStartPoint>().InSingletonScope();
 		var cycleFactory = _kernel.Get<IDeclarationCycleFactory>() as TestDeclarationCycleFactoryStartPoint;
 
-
+		_kernel.Rebind<IMissionFilter>().To<TestMissionFilter>().InSingletonScope();
+		var missionFilter = _kernel.Get<IMissionFilter>() as TestMissionFilter;
+		missionFilter!.SetMissions((MissionType.Interurban, LoadingType.ReferenceLoad));
 		cycleFactory!.SetStartPoint(MissionType.Interurban, start.SI<Meter>(), true, distance?.SI<Meter>());
 		var completedJob = GenerateJsonJobCompletedBus(Path.Combine(BASE_DIR_VIF, vifFile),
 			Path.Combine(BASE_DIR_COMPLETED, completed));

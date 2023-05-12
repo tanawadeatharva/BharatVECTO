@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			}
 
 			var dataAdapter = new DeclarationDataAdapterHeavyLorry.Conventional();
-			var reader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(declarationProvider, null, dataAdapter, _kernel.Get<IDeclarationCycleFactory>());
+			var reader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(declarationProvider, null, dataAdapter, _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>());
 			//reader.SetJobFile(DeclarationJob);
 
 			var runData = reader.NextRun().First();

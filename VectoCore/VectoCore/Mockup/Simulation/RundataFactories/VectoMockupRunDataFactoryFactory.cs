@@ -12,6 +12,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Specific;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
 using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.OutputData;
 
 
@@ -23,8 +24,9 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 
 
 
-        public IVectoRunDataFactory CreateDeclarationRunDataFactory(IInputDataProvider inputDataProvider, IDeclarationReport report,
-            IVTPReport vtpReport)
+        public IVectoRunDataFactory CreateDeclarationRunDataFactory(IInputDataProvider inputDataProvider,
+			IDeclarationReport report,
+			IVTPReport vtpReport)
         {
             if (inputDataProvider == null)
                 throw new ArgumentNullException(nameof(inputDataProvider));
@@ -53,20 +55,21 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 					multistageVifInputData,
 					report, new DeclarationDataAdapterSpecificCompletedBus.Conventional(),
 					new DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.Conventional(),
-					null);
+					null, null);
 			}
 			else {
 				return new DeclarationModeMultistageBusVectoRunDataFactory(multistageVifInputData, report);
 			}
 		}
 
-        private IVectoRunDataFactory CreateRunDataReader(IDeclarationInputDataProvider declDataProvider, IDeclarationReport report)
+        private IVectoRunDataFactory CreateRunDataReader(IDeclarationInputDataProvider declDataProvider,
+			IDeclarationReport report)
         {
             var vehicleCategory = declDataProvider.JobInputData.Vehicle.VehicleCategory;
             if (vehicleCategory.IsLorry())
             {
                 return new MockupLorryVectoRunDataFactory(declDataProvider, report, new DeclarationDataAdapterHeavyLorry.Conventional(), 
-					null);
+					null, null);
             }
 
             if (vehicleCategory.IsBus())
@@ -78,7 +81,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                         //return new DeclarationModeMultistageBusVectoRunDataFactory(declDataProvider, report);
                     case VehicleCategory.HeavyBusPrimaryVehicle:
                         return new PrimaryBusMockupRunDataFactory(declDataProvider, report, new DeclarationDataAdapterPrimaryBus.Conventional(),
-							null);
+							null, null);
                     default:
                         break;
                 }
