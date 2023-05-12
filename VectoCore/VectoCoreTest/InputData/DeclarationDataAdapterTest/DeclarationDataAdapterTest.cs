@@ -11,6 +11,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.AuxiliaryDataAdapter;
 using TUGraz.VectoCore.Utils.Ninject;
 
 namespace TUGraz.VectoCore.Tests.InputData.DeclarationDataAdapterTest

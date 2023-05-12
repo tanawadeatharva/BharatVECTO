@@ -821,7 +821,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 			protected override IEnumerable<VectoRunData> GetNextRun()
 			{
 				foreach (var mission in _segment.Missions) {
-					foreach (var loading in mission.Loadings) {
+					foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
 						foreach (var run in CreateVectoRunData(mission, loading)) {
 							run.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
 							yield return run;

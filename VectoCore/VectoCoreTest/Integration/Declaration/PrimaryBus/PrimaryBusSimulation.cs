@@ -82,7 +82,7 @@ public class PrimaryBusSimulation
 	
 	[
 	TestCase(@"primary_heavyBus group41_nonSmart.RSLT_VIF.xml", @"Conventional_completedBus_2.xml", 1, TestName = "2nd Amendment CompletedBus Conventional"),
-	TestCase(@"PEV_primaryBus_AMT_E2.RSLT_VIF.xml", @"PEV_completedBus_2.xml", 1,                      TestName = "2nd Amendment CompletedBus PEV E2"),
+	TestCase(@"PEV_primaryBus_AMT_E2.RSLT_VIF.xml", @"PEV_completedBus_2.xml", -1,                      TestName = "2nd Amendment CompletedBus PEV E2"),
 	TestCase(@"PrimaryCoach_E2_Base_AMT.RSLT_VIF.xml", @"PEV_completedBus_2.xml", 1,                   TestName = "2nd Amendment CompletedBus Coach PEV E2"),
 	TestCase(@"PrimaryCityBus_IEPC_Base.RSLT_VIF.xml", @"PEV_completedBus_2.xml", 1,                   TestName = "2nd Amendment CompletedBus CityBus PEV IEPC"),
 	TestCase(@"PrimaryCoach_P2_HEV_Base_AMT.RSLT_VIF.xml", @"HEV_completedBus_2.xml", 1,               TestName = "2nd Amendment CompletedBus Coach HEV P2"),
@@ -100,7 +100,11 @@ public class PrimaryBusSimulation
         }
 		var completedJob = GenerateJsonJobCompletedBus(Path.Combine(BASE_DIR_VIF, vifFile), Path.Combine(BASE_DIR_COMPLETED, completed));
 
-		var finalVif = CreateCompletedVIF(completedJob);
+		_kernel.Rebind<IMissionFilter>().To<TestMissionFilter>().InSingletonScope();
+		var missionFilter = _kernel.Get<IMissionFilter>() as TestMissionFilter;
+		missionFilter!.SetMissions((MissionType.Coach, LoadingType.ReferenceLoad));
+
+        var finalVif = CreateCompletedVIF(completedJob);
 
 		//RunSimulationPrimary(finalVif, runIdx);
 	}
@@ -240,7 +244,7 @@ public class PrimaryBusSimulation
 		var simFactory = _kernel.Get<ISimulatorFactoryFactory>();
 		var runsFactory = simFactory.Factory(ExecutionMode.Declaration, dataProvider, fileWriter, null, null);
 		runsFactory.WriteModalResults = true;
-		//runsFactory.SerializeVectoRunData = true;
+		runsFactory.SerializeVectoRunData = true;
 		var jobContainer = new JobContainer(new SummaryDataContainer(fileWriter)) { };
 		//var jobContainer = new JobContainer(new MockSumWriter()) { };
 

@@ -43,6 +43,7 @@ using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.AuxiliaryDataAdapter;
 using TUGraz.VectoCore.InputData.Reader.ShiftStrategy;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
@@ -721,24 +722,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		
 
-		private Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry> GetElectricConsumers(IBusAuxElectricSystemEngineeringData busAuxElectricSystem)
+		private Dictionary<string, ElectricConsumerEntry> GetElectricConsumers(IBusAuxElectricSystemEngineeringData busAuxElectricSystem)
 		{
-			var retVal = new Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry>();
+			var retVal = new Dictionary<string, ElectricConsumerEntry>();
 
 			var iBase = busAuxElectricSystem.CurrentDemandEngineOffStandstill;
 			var iSP = busAuxElectricSystem.CurrentDemandEngineOffDriving -
 					busAuxElectricSystem.CurrentDemandEngineOffStandstill;
 			var iFan = busAuxElectricSystem.CurrentDemand - busAuxElectricSystem.CurrentDemandEngineOffDriving;
 
-			retVal["BaseLoad"] = new AuxiliaryDataAdapter.ElectricConsumerEntry() {
+			retVal["BaseLoad"] = new ElectricConsumerEntry() {
 				Current = iBase,
 				BaseVehicle = true
 			};
-			retVal[Constants.Auxiliaries.IDs.SteeringPump] = new AuxiliaryDataAdapter.ElectricConsumerEntry() {
+			retVal[Constants.Auxiliaries.IDs.SteeringPump] = new ElectricConsumerEntry() {
 				Current = iSP,
 				ActiveDuringEngineStopStandstill = false,
 			};
-			retVal[Constants.Auxiliaries.IDs.Fan] = new AuxiliaryDataAdapter.ElectricConsumerEntry() {
+			retVal[Constants.Auxiliaries.IDs.Fan] = new ElectricConsumerEntry() {
 				Current = iFan,
 				ActiveDuringEngineStopStandstill = false,
 				ActiveDuringEngineStopDriving = false,

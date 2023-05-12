@@ -7,6 +7,7 @@ Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
+Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.AuxiliaryDataAdapter
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 Imports TUGraz.VectoCore.Models.Declaration
