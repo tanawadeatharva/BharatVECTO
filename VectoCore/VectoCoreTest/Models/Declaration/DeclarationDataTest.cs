@@ -2132,7 +2132,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         {
             var dataProvider =
                 JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\12t Delivery Truck.vecto") as IDeclarationInputDataProvider;
-			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>());
+			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>());
 
             var runs = dataReader.NextRun().ToList();
             Assert.AreEqual(6, runs.Count);
@@ -2156,7 +2156,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             var dataProvider =
                 JSONInputDataFactory.ReadJsonJob(
                     @"TestData\Jobs\Class4_40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
-			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>());
+			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>());
 
             var runs = dataReader.NextRun().ToList();
             Assert.AreEqual(8, runs.Count);
@@ -2180,7 +2180,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         {
             var dataProvider =
                 JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
-			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>());
+			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>());
 
             var runs = dataReader.NextRun().ToList();
 

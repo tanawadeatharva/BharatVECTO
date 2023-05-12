@@ -22,7 +22,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
     {
         public MockupLorryVectoRunDataFactory(IDeclarationInputDataProvider dataProvider,
             IDeclarationReport report,
-			ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, declarationDataAdapter, cycleFactory)
+			ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter)
         {
 
         }

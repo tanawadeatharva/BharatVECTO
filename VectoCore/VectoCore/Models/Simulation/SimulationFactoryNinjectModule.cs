@@ -57,7 +57,11 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 			// ToDo: MQ 2023-05-09: REMOVE CLASS IN PRODUCTION!!!
             Bind<IDeclarationCycleFactory>().To<DeclarationCycleFromFilesystemFactory>().InSingletonScope();
+			Bind<IMissionFilter>().To<DefaultMissionFilter>();
+
             //Bind<IDeclarationCycleFactory>().To<DeclarationCycleFactory>().InSingletonScope();
+			//Bind<IMissionFilter>().ToMethod((context => null));
+
 
             Bind<IDeclarationReport>().To<NullDeclarationReport>();
 			Bind<IVTPReport>().To<NullVTPReport>();

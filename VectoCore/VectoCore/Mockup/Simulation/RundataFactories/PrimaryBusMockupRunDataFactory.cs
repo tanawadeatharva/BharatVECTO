@@ -23,9 +23,10 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
     public class PrimaryBusMockupRunDataFactory :  DeclarationModePrimaryBusRunDataFactory.Conventional
     {
         public PrimaryBusMockupRunDataFactory(IDeclarationInputDataProvider dataProvider,
-            IDeclarationReport report,
-			IPrimaryBusDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory) :
-            base(dataProvider, report, declarationDataAdapter, cycleFactory)
+			IDeclarationReport report,
+			IPrimaryBusDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+			IMissionFilter missionFilter) :
+            base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter)
         { }
 
         #region Overrides of AbstractDeclarationVectoRunDataFactory

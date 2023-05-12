@@ -69,11 +69,11 @@ public class PrimaryBusSimulation
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCityBus_P1_HEV_Base_AT.xml", 0, TestName = "2nd Amendment PrimaryBus CityBus P-HEV P1 Base AT"),
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCityBus_P1_HEV_Base_AT.xml", 7, TestName = "2nd Amendment PrimaryBus CityBus P-HEV P1 Base AT - Interurban"),
     TestCase(@"PrimaryBus/P-HEV/PrimaryCityBus_P1_HEV_AT_BD_BCVC.xml", 0, TestName= "2nd Amendment PrimaryBus CityBus P-HEV P1 Base AT - no TC"),
-
-	TestCase(@"PrimaryBus/S-HEV/PrimaryCoach_S2_Base_AMT.xml", 0, TestName = "2nd Amendment PrimaryBus Coach S-HEV S2 Base"),
+	TestCase(@"PrimaryBus/P-HEV/PrimaryCityBus_IHPC.xml", -1, TestName = "2nd Amendment PrimaryBus CityBus P-HEV IHPC Base"),
+    TestCase(@"PrimaryBus/S-HEV/PrimaryCoach_S2_Base_AMT.xml", 0, TestName = "2nd Amendment PrimaryBus Coach S-HEV S2 Base"),
 	TestCase(@"PrimaryBus/S-HEV/PrimaryCityBus_IEPC-S_Base.xml", 0, TestName = "2nd Amendment PrimaryBus CityBus S-HEV IEPC Base"),
 
-	TestCase(@"PrimaryBus/exempted/exempted_primary_heavyBus.xml", 0, TestName = "2nd Amendment PrimaryBus Exempted"),
+    TestCase(@"PrimaryBus/exempted/exempted_primary_heavyBus.xml", 0, TestName = "2nd Amendment PrimaryBus Exempted"),
 	]
 	public void PrimaryBusSimulationTest(string jobFile, int runIdx)
 	{
@@ -113,7 +113,9 @@ public class PrimaryBusSimulation
 		_kernel.Rebind<IDeclarationCycleFactory>().To<TestDeclarationCycleFactoryStartPoint>().InSingletonScope();
 		var cycleFactory = _kernel.Get<IDeclarationCycleFactory>() as TestDeclarationCycleFactoryStartPoint;
 
-
+		_kernel.Rebind<IMissionFilter>().To<TestMissionFilter>().InSingletonScope();
+		var missionFilter = _kernel.Get<IMissionFilter>() as TestMissionFilter;
+		missionFilter!.SetMissions((MissionType.Interurban, LoadingType.ReferenceLoad));
 		cycleFactory!.SetStartPoint(MissionType.Interurban, start.SI<Meter>(), true, distance?.SI<Meter>());
 		var completedJob = GenerateJsonJobCompletedBus(Path.Combine(BASE_DIR_VIF, vifFile),
 			Path.Combine(BASE_DIR_COMPLETED, completed));

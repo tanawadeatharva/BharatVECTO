@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			public IDeclarationReport Report { get; }
 
 			protected LorryBase(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, cycleFactory, false)
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, cycleFactory, missionFilter, false)
 			{
 				DataAdapter = declarationDataAdapter;
 				InputDataProvider = dataProvider;
@@ -206,7 +206,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 		public class Conventional : LorryBase
 		{
 			public Conventional(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, declarationDataAdapter, cycleFactory) { }
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
 
 			#region Overrides of LorryBase
 			protected override IEnumerable<VectoRunData> GetNextRun()
@@ -333,8 +333,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			#endregion
 
 			public BatteryElectric(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report,
-				declarationDataAdapter, cycleFactory)
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report,
+				declarationDataAdapter, cycleFactory, missionFilter)
 			{
 
 			}
@@ -446,8 +446,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 		public class PEV_E2 : BatteryElectric
 		{
 			public PEV_E2(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report,
-				declarationDataAdapter, cycleFactory)
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report,
+				declarationDataAdapter, cycleFactory, missionFilter)
 			{
 
 			}
@@ -484,20 +484,23 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 		public class PEV_E3 : BatteryElectric
 		{
 			public PEV_E3(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, declarationDataAdapter, cycleFactory) { }
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
 		}
 
 		public class PEV_E4 : BatteryElectric
 		{
 			public PEV_E4(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, declarationDataAdapter, cycleFactory) { }
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
 		}
 
 		public class PEV_E_IEPC : BatteryElectric
 		{
 			public PEV_E_IEPC(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report,
-				declarationDataAdapter, cycleFactory)
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report,
+				declarationDataAdapter, cycleFactory, missionFilter:missionFilter)
 			{
 
 			}
@@ -559,7 +562,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 		public class Exempted : LorryBase
 		{
 			public Exempted(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, declarationDataAdapter, cycleFactory) { }
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
 
 			#region Overrides of AbstractDeclarationVectoRunDataFactory
 

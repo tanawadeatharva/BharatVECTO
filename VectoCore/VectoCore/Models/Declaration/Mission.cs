@@ -49,6 +49,23 @@ namespace TUGraz.VectoCore.Models.Declaration
 		FullLoading,
 	}
 
+	public interface IMissionFilter
+	{
+		bool Run(MissionType missionType, LoadingType loadingType);
+	}
+
+	public class DefaultMissionFilter : IMissionFilter
+	{
+		#region Implementation of IMissionFilter
+
+		public bool Run(MissionType missionType, LoadingType loadingType)
+		{
+			return true;
+		}
+
+		#endregion
+	}
+
 	public class Mission
 	{
 		public Kilogram CurbMass { get; internal set; }

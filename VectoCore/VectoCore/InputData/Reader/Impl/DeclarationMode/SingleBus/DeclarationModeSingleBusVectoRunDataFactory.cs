@@ -38,7 +38,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 			protected override IVehicleDeclarationInputData Vehicle => throw new NotImplementedException();
 
 			protected SingleBusBase(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
-				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, cycleFactory)
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, cycleFactory, missionFilter)
 			{
 				DataAdapter = dataAdapter;
 				Report = report;
@@ -128,7 +129,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 		public class Conventional : SingleBusBase
 		{
 			public Conventional(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
-				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapter, cycleFactory)
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter)
 			{
 
 			}
@@ -222,7 +224,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 
         public abstract class Hybrid : SingleBusBase
 		{
-			protected Hybrid(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapter, cycleFactory) { }
+			protected Hybrid(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter) { }
 
 			protected override IEnumerable<VectoRunData> GetNextRun()
 			{
@@ -258,7 +262,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 
 		public abstract class SerialHybrid : Hybrid
 		{
-			protected SerialHybrid(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapter, cycleFactory) { }
+			protected SerialHybrid(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter) { }
 
             protected override VectoRunData CreateVectoRunData(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
@@ -353,7 +359,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
         }
 		public  class HEV_S2 : SerialHybrid
 		{
-			public HEV_S2(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapter, cycleFactory) { }
+			public HEV_S2(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter) { }
 
 			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
 			{
@@ -382,18 +390,24 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
         
 		public class HEV_S3 : SerialHybrid
 		{
-			public HEV_S3(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapter, cycleFactory) { }
+			public HEV_S3(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter) { }
 		}
 
 		public class HEV_S4 : SerialHybrid
 		{
-			public HEV_S4(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapter, cycleFactory) { }
+			public HEV_S4(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter) { }
 		}
 
 
 		public class HEV_S_IEPC : SerialHybrid
 		{
-			public HEV_S_IEPC(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapter, cycleFactory) { }
+			public HEV_S_IEPC(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter) { }
 
             protected override VectoRunData CreateVectoRunData(Mission mission,
                 KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
@@ -452,7 +466,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 
         public abstract class ParallelHybrid : Hybrid
 		{
-			protected ParallelHybrid(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapter, cycleFactory) { }
+			protected ParallelHybrid(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter) { }
 
 			protected override VectoRunData CreateVectoRunData(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
@@ -561,32 +577,44 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 
 		public class HEV_P1 : ParallelHybrid
 		{
-			public HEV_P1(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapter, cycleFactory) { }
+			public HEV_P1(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter) { }
 		}
 
 		public class HEV_P2 : ParallelHybrid
 		{
-			public HEV_P2(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapter, cycleFactory) { }
+			public HEV_P2(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter) { }
 		}
 
 		public class HEV_P2_5 : ParallelHybrid
 		{
-			public HEV_P2_5(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapter, cycleFactory) { }
+			public HEV_P2_5(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter) { }
 		}
 
 		public class HEV_P3 : ParallelHybrid
 		{
-			public HEV_P3(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapter, cycleFactory) { }
+			public HEV_P3(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter) { }
 		}
 
 		public class HEV_P4 : ParallelHybrid
 		{
-			public HEV_P4(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapter, cycleFactory) { }
+			public HEV_P4(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter) { }
 		}
 
 		public abstract class BatteryElectric : SingleBusBase
 		{
-			protected BatteryElectric(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapter, cycleFactory) { }
+			protected BatteryElectric(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter) { }
 
 			protected override IEnumerable<VectoRunData> GetNextRun()
 			{
@@ -664,7 +692,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 
 		public class PEV_E2 : BatteryElectric
 		{
-			public PEV_E2(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapter, cycleFactory) { }
+			public PEV_E2(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter) { }
 
 			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
 			{
@@ -692,17 +722,23 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 
 		public class PEV_E3 : BatteryElectric
 		{
-			public PEV_E3(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapter, cycleFactory) { }
+			public PEV_E3(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter) { }
 		}
 
 		public class PEV_E4 : BatteryElectric
 		{
-			public PEV_E4(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapter, cycleFactory) { }
+			public PEV_E4(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter) { }
 		}
 
 		public class PEV_E_IEPC : BatteryElectric
 		{
-			public PEV_E_IEPC(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapter, cycleFactory) { }
+			public PEV_E_IEPC(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter) { }
 
 			protected override bool AxleGearRequired()
 			{
@@ -753,7 +789,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 
 		public class Exempted : SingleBusBase
 		{
-			public Exempted(ISingleBusInputDataProvider dataProvider, IDeclarationReport report, ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory) : base(dataProvider, report, dataAdapter, cycleFactory) { }
+			public Exempted(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter) { }
 
 			#region Overrides of SingleBusBase
 

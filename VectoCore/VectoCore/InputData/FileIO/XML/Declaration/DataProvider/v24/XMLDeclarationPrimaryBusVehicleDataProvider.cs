@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.IVT.VectoXML;
@@ -113,7 +114,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public XMLDeclarationHevPxPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 
-		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.ParallelHybridVehicle;
+
+
+		public override VectoSimulationJobType VehicleType
+		{
+			get => Components.ElectricMachines.Entries.Any(em => em.ElectricMachine.IsIHPC()) ? VectoSimulationJobType.IHPC : VectoSimulationJobType.ParallelHybridVehicle;
+		}
+    
+		
 
 		public override bool HybridElectricHDV => true;
 

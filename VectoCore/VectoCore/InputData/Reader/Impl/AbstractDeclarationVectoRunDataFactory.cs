@@ -36,12 +36,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		protected virtual IVehicleDeclarationInputData Vehicle => InputDataProvider.JobInputData.Vehicle;
 
-        protected AbstractDeclarationVectoRunDataFactory(
-			IDeclarationInputDataProvider dataProvider, IDeclarationReport report, IDeclarationCycleFactory cycleFactory, bool checkJobType = true)
+        protected AbstractDeclarationVectoRunDataFactory(IDeclarationInputDataProvider dataProvider,
+			IDeclarationReport report, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter,
+			bool checkJobType = true)
 		{
 			CycleFactory = cycleFactory;
 			InputDataProvider = dataProvider;
-
+			MissionFilter = missionFilter;
 			if (checkJobType) {
 				if (dataProvider.JobInputData.JobType.IsOneOf(BatteryElectricVehicle, ParallelHybridVehicle, SerialHybridVehicle))
 				{
@@ -53,6 +54,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 			_allowVocational = true;
 		}
+
+		protected IMissionFilter MissionFilter { get; }
 
 		protected DriverData DriverData => _driverdata ?? (_driverdata = CreateDriverData(_segment));
 		protected abstract DriverData CreateDriverData(Segment segment);
