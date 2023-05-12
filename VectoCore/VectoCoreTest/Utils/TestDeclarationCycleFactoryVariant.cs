@@ -103,6 +103,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			} else if(_shortMissing) {
 				LastSection(cycle);
 			}
+
+			TestContext.Progress.WriteLine($"[{nameof(TestDeclarationCycleFactoryStartPoint)}] Cycle {mission.MissionType} restricted to \n \t" +
+								$" start: [{cycle.Entries.First().Distance} - {cycle.Entries.First().VehicleTargetSpeed}] \n \t" +
+								$" end: [{cycle.Entries.Last().Distance} - {cycle.Entries.Last().VehicleTargetSpeed}]");
+	
 			return cycle;
 		}
 
