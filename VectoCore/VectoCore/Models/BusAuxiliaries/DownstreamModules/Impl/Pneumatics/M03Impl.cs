@@ -31,7 +31,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 		public static NormLiter TotalAirDemandCalculation(IAuxiliaryConfig auxConfig, IActuations actuations)
 		{
 			var psUserConfig = auxConfig.PneumaticUserInputsConfig;
-			var psAuxconfig = auxConfig.PneumaticAuxillariesConfig;
+			var psAuxconfig = auxConfig.PneumaticAuxiliariesConfig;
 			var vehicleMass = auxConfig.VehicleData.TotalVehicleMass;
 
 			//'* * Breaks * *

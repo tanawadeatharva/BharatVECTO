@@ -1004,7 +1004,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 					StoredEnergyEfficiency = BatteryEfficiency,
 					ElectricalConsumers = GetElectricConsumers(I_Base.SI<Ampere>(), I_ICEOff_dr.SI<Ampere>(), I_ICEOff_stop.SI<Ampere>()),
 				},
-				PneumaticAuxillariesConfig = new PneumaticsConsumersDemand() {
+				PneumaticAuxiliariesConfig = new PneumaticsConsumersDemand() {
 					AdBlueInjection = 0.SI<NormLiterPerSecond>(),
 					AirControlledSuspension = AverageAirDemand,
 					Braking = 0.SI<NormLiterPerKilogram>(),

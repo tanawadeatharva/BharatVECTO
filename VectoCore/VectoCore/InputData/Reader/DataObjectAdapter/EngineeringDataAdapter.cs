@@ -599,7 +599,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					StoredEnergyEfficiency = busAux.ElectricSystem.ElectricStorageEfficiency,
 					ElectricalConsumers = GetElectricConsumers(busAux.ElectricSystem)
 				},
-				PneumaticAuxillariesConfig = new PneumaticsConsumersDemand() {
+				PneumaticAuxiliariesConfig = new PneumaticsConsumersDemand() {
 					AdBlueInjection = 0.SI<NormLiterPerSecond>(),
 					AirControlledSuspension = busAux.PneumaticSystem.AverageAirConsumed,
 					Braking = 0.SI<NormLiterPerKilogram>(),
@@ -669,7 +669,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					StoredEnergyEfficiency = 1,
 					ElectricalConsumers = GetElectricConsumers(busAux.ElectricSystem)
 				},
-				PneumaticAuxillariesConfig = new PneumaticsConsumersDemand() {
+				PneumaticAuxiliariesConfig = new PneumaticsConsumersDemand() {
 					AdBlueInjection = 0.SI<NormLiterPerSecond>(),
 					AirControlledSuspension = 0.SI<NormLiterPerSecond>(),
 					Braking = 0.SI<NormLiterPerKilogram>(),

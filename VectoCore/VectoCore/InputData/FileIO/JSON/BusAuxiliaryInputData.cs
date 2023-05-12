@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				Path.Combine(baseDir, data["SSMFilePath"].ToString()), vehicleData, env);
 			return new AuxiliaryConfig( ) {
 				ElectricalUserInputsConfig = ec,
-				PneumaticAuxillariesConfig  = pac,
+				PneumaticAuxiliariesConfig  = pac,
 				PneumaticUserInputsConfig  = puc,
 				SSMInputsCooling = ssm,
 				SSMInputsHeating = ssm,

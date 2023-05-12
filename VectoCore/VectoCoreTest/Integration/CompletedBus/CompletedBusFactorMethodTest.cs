@@ -621,8 +621,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertPneumaticConsumerDemand(RelatedRun relatedRun)
 		{
-			var genericConsumer = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.PneumaticAuxillariesConfig;
-			var specificConsumer = relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.PneumaticAuxillariesConfig;
+			var genericConsumer = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.PneumaticAuxiliariesConfig;
+			var specificConsumer = relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.PneumaticAuxiliariesConfig;
 			
 			Assert.AreEqual(Constants.BusAuxiliaries.PneumaticConsumersDemands.AdBlueInjection, genericConsumer.AdBlueInjection);
 			Assert.AreEqual( genericConsumer.AdBlueInjection, specificConsumer.AdBlueInjection);

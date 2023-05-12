@@ -1926,7 +1926,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			
 			// fake that the actual air deman is different than initially assumed
 			var NlConsumedCorrected = nlConsumedCorrected.SI<NormLiterPerSecond>();
-			(runData.BusAuxiliaries.PneumaticAuxillariesConfig as PneumaticsConsumersDemand).AirControlledSuspension = NlConsumedCorrected;
+			(runData.BusAuxiliaries.PneumaticAuxiliariesConfig as PneumaticsConsumersDemand).AirControlledSuspension = NlConsumedCorrected;
 
 			var corr = modData.CorrectedModalData as CorrectedModalData;
 
@@ -2788,7 +2788,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 						AlternatorGearEfficiency = 1,
 						DCDCEfficiency = dcdc_efficiency,
 					},
-					PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(0.7.SI<NormLiterPerSecond>()),
+					PneumaticAuxiliariesConfig = CreatePneumaticAuxConfig(0.7.SI<NormLiterPerSecond>()),
 					PneumaticUserInputsConfig = CreatePneumaticUserInputsConfig(smartCompressor),
 					Actuations = new Actuations() {
 						Braking = 0,
