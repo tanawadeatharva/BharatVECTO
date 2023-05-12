@@ -256,6 +256,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 		{
 			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new IEPCGearboxDataAdapter();
 
+			#region Overrides of PrimaryBusBase
+
+			// ReSharper disable once UseArrayEmptyMethod //not supported in net45
+			public override GearboxType[] SupportedGearboxTypes => new GearboxType[0];
+
+			#endregion
 		}
 
 		public abstract class ParallelHybrid : Hybrid
