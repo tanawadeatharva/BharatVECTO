@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 				for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
 					foreach (var mission in _segment.Missions) {
-						foreach (var loading in mission.Loadings) {
+						foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
 							var simulationRunData = CreateVectoRunData(mission, loading, modeIdx);
 							if (simulationRunData == null) {
 								continue;
@@ -224,7 +224,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 				for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
 					foreach (var mission in _segment.Missions) {
-						foreach (var loading in mission.Loadings) {
+						foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
 
 							if (vehicle.OvcHev) {
 								if (vehicle.MaxChargingPower == null || vehicle.MaxChargingPower.IsEqual(0)) {
@@ -593,7 +593,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 			{
 				var vehicle = InputDataProvider.JobInputData.Vehicle;
 				foreach (var mission in _segment.Missions) {
-					foreach (var loading in mission.Loadings) {
+					foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
 						var simulationRunData = CreateVectoRunData(mission, loading);
 						simulationRunData.BatteryData.Batteries.ForEach(t => t.Item2.ChargeSustainingBattery = true);
 						yield return simulationRunData;

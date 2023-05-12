@@ -223,7 +223,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 							continue;
 						}
 
-						foreach (var loading in mission.Loadings) {
+						foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
 							var simulationRunData = CreateVectoRunData(mission, loading, modeIdx);
 							
 							yield return simulationRunData;
@@ -351,7 +351,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
                         continue;
                     }
 
-                    foreach (var loading in mission.Loadings)
+                    foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true))
 					{
 						var simulationRunData = CreateVectoRunData(mission, loading);
 						simulationRunData.BatteryData.Batteries.ForEach(t => t.Item2.ChargeSustainingBattery = true);

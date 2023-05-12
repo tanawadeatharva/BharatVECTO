@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 							continue;
 						}
 
-						foreach (var loading in mission.Loadings)
+						foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true))
 						{
 							if (vehicle.OvcHev) {
 								if (vehicle.MaxChargingPower.IsEqual(0)) {

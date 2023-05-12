@@ -220,7 +220,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					}
 
 					foreach (var mission in _segment.Missions) {
-						foreach (var loading in mission.Loadings) {
+						foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
 							foreach (var run in CreateVectoRunData(mission, loading, modeIdx, fuelMode)) {
 								yield return run;
 							}
