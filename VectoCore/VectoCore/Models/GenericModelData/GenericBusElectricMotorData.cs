@@ -32,11 +32,12 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 			var electricMachineType = electricMachineEntry.ElectricMachine.ElectricMachineType;
 			var efficiencyData = GetVoltageLevels(electricMachineEntry, electricMachineType, torqueLimits);
 			var powertrainPosition = electricMachineEntry.Position;
-			var adcLossMap = electricMachineEntry.MechanicalTransmissionLossMap;
+            //var adcLossMap = electricMachineEntry.MechanicalTransmissionLossMap;
 			var adcRatio = electricMachineEntry.RatioADC;
+			var adcLossMap = adcRatio.IsEqual(1) ? 0.98 : 0.96;
 			var lossMap = powertrainPosition == PowertrainPosition.IHPC
 				? TransmissionLossMapReader.CreateEmADCLossMap(1.0, 1.0, "EM ADC IHPC LossMap Eff")
-				: adcLossMap != null
+				: electricMachineEntry.ADC != null
 					? TransmissionLossMapReader.CreateEmADCLossMap(adcLossMap, adcRatio, "EM ADC LossMap")
 					: TransmissionLossMapReader.CreateEmADCLossMap(DeclarationData.ElectricMachineDefaultMechanicalTransmissionEfficiency, adcRatio, "EM ADC LossMap Eff");
 

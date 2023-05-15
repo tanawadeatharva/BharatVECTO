@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public double Ratio => GetDouble(XMLNames.ADC_Ratio);
 
-		public TableData LossMap => ReadTableData(XMLNames.ADC_TorqueLossMap, XMLNames.ADC_TorqueLossMap_Entry,
+		public virtual TableData LossMap => ReadTableData(XMLNames.ADC_TorqueLossMap, XMLNames.ADC_TorqueLossMap_Entry,
 			new Dictionary<string, string> {
 				{ XMLNames.ADC_TorqueLossMap_InputSpeed, XMLNames.ADC_TorqueLossMap_InputSpeed },
 				{ XMLNames.ADC_TorqueLossMap_InputTorque, XMLNames.ADC_TorqueLossMap_InputTorque },
@@ -182,6 +182,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		public XMLADCDeclarationInputDataV01(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) { }
 
-    }
+
+		public override TableData LossMap => null;
+	}
 
 }
