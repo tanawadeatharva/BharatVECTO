@@ -853,6 +853,9 @@ namespace TUGraz.VectoCommon.InputData
 		public PowertrainPosition Position { get; set; }
 
 		private double? _ratioADC = null;
+
+		private TableData _lossMapADC = null;
+
 		/// <summary>
 		/// If not overridden RatioADC == ADC?.Ratio ?? 1;
 		/// Can only be overridden when ADC == null;
@@ -874,7 +877,21 @@ namespace TUGraz.VectoCommon.InputData
 
 		public double MechanicalTransmissionEfficiency { get; set; }
 
-		public TableData MechanicalTransmissionLossMap { get; set; }
+		public TableData MechanicalTransmissionLossMap
+		{
+			get
+			{
+				if (_lossMapADC != null && ADC == null) {
+					return _lossMapADC;
+				} else {
+					return ADC?.LossMap;
+				}
+			}
+			set
+			{
+				_lossMapADC = value;
+			}
+		}
 
 		public IADCDeclarationInputData ADC {get; set; }
 	}
