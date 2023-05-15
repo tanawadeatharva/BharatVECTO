@@ -43,7 +43,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 	{
 		private const string BASE_PATH = "Resources/Missions/";
 
-		public TestDeclarationCycleFactoryVariant() { }
+		public TestDeclarationCycleFactoryVariant()
+		{
+
+		}
 
 		public string Variant { get; set; } = "Short_10";
 

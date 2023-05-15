@@ -42,6 +42,7 @@ public class PrimaryBusSimulation
 	private ThreadLocal<StandardKernel> _kernel;
 
 	private StandardKernel Kernel => _kernel.Value;
+	
 	private IXMLInputDataReader _xmlReader;
 
 	[OneTimeSetUp]
@@ -50,10 +51,17 @@ public class PrimaryBusSimulation
 		_kernel = new ThreadLocal<StandardKernel>(() => new StandardKernel(new VectoNinjectModule()));
 		_xmlReader = Kernel.Get<IXMLInputDataReader>();
 
+		
+		
+	}
+
+	[SetUp]
+	public void Setup()
+	{
 		Kernel.Rebind<IDeclarationCycleFactory>().To<TestDeclarationCycleFactoryVariant>().InSingletonScope();
 		var cycleFactory = Kernel.Get<IDeclarationCycleFactory>() as TestDeclarationCycleFactoryVariant;
 		cycleFactory.Variant = "Short_10";
-	}
+    }
 
 
 	[
