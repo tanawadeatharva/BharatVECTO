@@ -14,7 +14,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 {
 	public class GenericBusIHPCData : GenericBusEMBase
 	{
-		public const double GenericGearEfficiency = 0.925;
+		// public const double GenericGearEfficiency = 0.925; //Considered in gearbox
 
 		public GenericBusIHPCData()
 		{

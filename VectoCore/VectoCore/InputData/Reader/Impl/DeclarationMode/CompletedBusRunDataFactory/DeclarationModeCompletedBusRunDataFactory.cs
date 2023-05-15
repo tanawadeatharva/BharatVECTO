@@ -806,6 +806,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
             public HEV_P4(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
         }
 
+		public class HEV_P_IHPC : HEV_P2
+		{
+			public HEV_P_IHPC(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
+		}
+
         #endregion ParallelHybrid
 		#endregion Hybrid
 

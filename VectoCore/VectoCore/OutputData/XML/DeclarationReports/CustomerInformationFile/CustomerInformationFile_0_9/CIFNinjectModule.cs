@@ -181,7 +181,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 					false,
 					false)));
 
-			Bind<IXMLCustomerReport>().To<HEV_S2_CompletedBusCIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.CompletedBus,
+			Bind<IXMLCustomerReport>().To<HEV_Px_CompletedBusCIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.CompletedBus,
+				VectoSimulationJobType.IHPC,
+				ArchitectureID.P2,
+				false,
+				false,
+				false)));
+
+            Bind<IXMLCustomerReport>().To<HEV_S2_CompletedBusCIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.CompletedBus,
 					VectoSimulationJobType.SerialHybridVehicle,
 					ArchitectureID.S2,
 					false,

@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -633,8 +634,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLDeclarationMultistage_HEV_Px_PrimaryVehicleBusDataProviderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile) : base(busJobData, xmlNode, sourceFile) { }
-		
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ParallelHybridVehicle; }
+
+		public override VectoSimulationJobType VehicleType =>
+			Components.ElectricMachines.Entries.Any(em => em.ElectricMachine.IsIHPC())
+				? VectoSimulationJobType.IHPC
+				: VectoSimulationJobType.ParallelHybridVehicle;
 
 		public override string PowertrainPositionPrefix => "P";
 
