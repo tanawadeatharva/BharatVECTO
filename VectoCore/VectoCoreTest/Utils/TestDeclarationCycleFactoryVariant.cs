@@ -57,7 +57,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var cycleFile = Path.Combine(BASE_PATH, Variant,
 				missionType.ToString().Replace("EMS", "") + ".vdri");
 			if (File.Exists(cycleFile)) {
-				var cycle = File.OpenRead(cycleFile);
+				TestContext.Progress.WriteLine($"[{nameof(TestDeclarationCycleFactoryVariant)}] - Using {cycleFile}");
+                var cycle = File.OpenRead(cycleFile);
 				return DrivingCycleDataReader.ReadFromStream(cycle, CycleType.DistanceBased, "", false);
 			}
 
