@@ -155,7 +155,8 @@ public class PrimaryBusSimulation
 	private const LoadingType RefL = LoadingType.ReferenceLoad;
 	private const MissionType CycleCO = MissionType.Coach;
 
-	[TestCase(@"PrimaryBus/Conventional/primary_heavyBus group41_nonSmart.xml", @"Conventional_completedBus_2.xml", @"primary_heavyBus group41_nonSmart.RSLT_VIF.xml", CycleCO, RefL, TestName = "2nd Amendment FactorMethodRunData Conventional CO RL"),
+	[TestCase(@"PrimaryBus/Conventional/primary_heavyBus group41_nonSmart.xml", @"Conventional_completedBus_2.xml", @"primary_heavyBus group41_nonSmart.RSLT_VIF.xml", CycleCO, RefL, 
+			TestName = "2nd Amendment FactorMethodRunData Conventional CO RL"),
 	]
 	public void TestFactorMethodRunData(string primary, string completed, string vifFile, MissionType mission, LoadingType loading)
 	{
