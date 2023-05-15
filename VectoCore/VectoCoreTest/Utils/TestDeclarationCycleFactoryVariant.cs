@@ -43,7 +43,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 	{
 		private const string BASE_PATH = "Resources/Missions/";
 
-		public TestDeclarationCycleFactoryVariant() { }
+		public TestDeclarationCycleFactoryVariant()
+		{
+
+		}
 
 		public string Variant { get; set; } = "Short_10";
 
@@ -57,7 +60,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var cycleFile = Path.Combine(BASE_PATH, Variant,
 				missionType.ToString().Replace("EMS", "") + ".vdri");
 			if (File.Exists(cycleFile)) {
-				var cycle = File.OpenRead(cycleFile);
+				TestContext.Progress.WriteLine($"[{nameof(TestDeclarationCycleFactoryVariant)}] - Using {cycleFile}");
+                var cycle = File.OpenRead(cycleFile);
 				return DrivingCycleDataReader.ReadFromStream(cycle, CycleType.DistanceBased, "", false);
 			}
 
