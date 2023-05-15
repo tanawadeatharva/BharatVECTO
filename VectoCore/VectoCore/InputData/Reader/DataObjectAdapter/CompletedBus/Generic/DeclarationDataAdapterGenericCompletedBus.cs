@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 	{
 		public abstract class CompletedBusDeclarationBase : IGenericCompletedBusDeclarationDataAdapter
 		{
-			private static readonly GearboxType[] SupportedGearboxTypes =
+			protected virtual GearboxType[] SupportedGearboxTypes => new []
 				{ GearboxType.MT, GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial };
 
             #region ComponentDataAdapter
@@ -279,10 +279,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
         }
 		
 		public class HEV_P1 : ParallelHybrid { }
-		
-		public class HEV_P2 : ParallelHybrid { }
-		
-		public class HEV_P2_5 : ParallelHybrid { }
+
+		public class HEV_P2 : ParallelHybrid
+		{
+			#region Overrides of ParallelHybrid
+
+			protected override GearboxType[] SupportedGearboxTypes => new[] { GearboxType.AMT, GearboxType.IHPC };
+
+			#endregion
+        }
+
+        public class HEV_P2_5 : ParallelHybrid { }
 		
 		public class HEV_P3 : ParallelHybrid { }
 		

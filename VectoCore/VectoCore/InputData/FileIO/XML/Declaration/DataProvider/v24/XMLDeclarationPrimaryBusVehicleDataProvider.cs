@@ -118,7 +118,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override VectoSimulationJobType VehicleType
 		{
-			get => Components.ElectricMachines.Entries.Any(em => em.ElectricMachine.IsIHPC()) ? VectoSimulationJobType.IHPC : VectoSimulationJobType.ParallelHybridVehicle;
+			get => Components.ElectricMachines.Entries.Any(em => em.ElectricMachine.IsIHPC())
+				? VectoSimulationJobType.IHPC
+				: VectoSimulationJobType.ParallelHybridVehicle;
 		}
     
 		
