@@ -654,10 +654,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					(bs) => rd.BatteryData = bs,
 					(sc) => rd.SuperCapData = sc);
 
+				var averageVoltage = rd.BatteryData != null
+					? rd.BatteryData.CalculateAverageVoltage()
+					: (rd.SuperCapData.MaxVoltage - rd.SuperCapData.MinVoltage) / 2.0;
 
-
-				rd.ElectricMachinesData = DataAdapterGeneric.CreateElectricMachines(PrimaryVehicle.Components.ElectricMachines,
-					PrimaryVehicle.ElectricMotorTorqueLimits, rd.BatteryData.CalculateAverageVoltage(), null);
+                rd.ElectricMachinesData = DataAdapterGeneric.CreateElectricMachines(PrimaryVehicle.Components.ElectricMachines,
+					PrimaryVehicle.ElectricMotorTorqueLimits, averageVoltage, null);
 			
 
 
@@ -722,8 +724,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					(bs) => rd.BatteryData = bs,
 					(sc) => rd.SuperCapData = sc);
 
+				var averageVoltage = rd.BatteryData != null
+					? rd.BatteryData.CalculateAverageVoltage()
+					: (rd.SuperCapData.MaxVoltage - rd.SuperCapData.MinVoltage) / 2.0;
+
 				rd.ElectricMachinesData = DataAdapterGeneric.CreateElectricMachines(PrimaryVehicle.Components.ElectricMachines,
-					PrimaryVehicle.ElectricMotorTorqueLimits, rd.BatteryData.CalculateAverageVoltage(), null);
+					PrimaryVehicle.ElectricMotorTorqueLimits, averageVoltage, null);
 
                 rd.VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle,
 					CompletedVehicle, _segment, mission, loading);
