@@ -375,14 +375,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of ISuperCapDeclarationInputData
 
-		public Farad Capacity => GetDouble(XMLNames.Capacitor_Capacitance).SI<Farad>();
-		public Ohm InternalResistance => GetDouble(XMLNames.Capacitor_InternalResistance).SI(Unit.SI.Milli.Ohm).Cast<Ohm>();
-		public Volt MinVoltage => GetDouble(XMLNames.Capacitor_MinVoltage).SI<Volt>();
-		public Volt MaxVoltage => GetDouble(XMLNames.Capacitor_MaxVoltage).SI<Volt>();
-		public Ampere MaxCurrentCharge => GetDouble(XMLNames.Capacitor_MaxChargingCurrent).SI<Ampere>();
-		public Ampere MaxCurrentDischarge => GetDouble(XMLNames.Capacitor_MaxDischargingCurrent).SI<Ampere>();
+		public virtual Farad Capacity => GetDouble(XMLNames.Capacitor_Capacitance).SI<Farad>();
+		public virtual Ohm InternalResistance => GetDouble(XMLNames.Capacitor_InternalResistance).SI(Unit.SI.Milli.Ohm).Cast<Ohm>();
+		public virtual Volt MinVoltage => GetDouble(XMLNames.Capacitor_MinVoltage).SI<Volt>();
+		public virtual Volt MaxVoltage => GetDouble(XMLNames.Capacitor_MaxVoltage).SI<Volt>();
+		public virtual Ampere MaxCurrentCharge => GetDouble(XMLNames.Capacitor_MaxChargingCurrent).SI<Ampere>();
+		public virtual Ampere MaxCurrentDischarge => GetDouble(XMLNames.Capacitor_MaxDischargingCurrent).SI<Ampere>();
 
-		public Kelvin TestingTemperature => 
+		public virtual Kelvin TestingTemperature => 
 			ElementExists(XMLNames.REESS_TestingTemperature)
 				? GetDouble(XMLNames.REESS_TestingTemperature).DegCelsiusToKelvin() : null;
 		
@@ -408,6 +408,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLSuperCapDeclarationInputDataV01(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) { }
+
+		#region Overrides of XMLSuperCapDeclarationInputDataV24
+
+		public override Ohm InternalResistance => null;
+
+		#endregion
 	}
 
 	//===================

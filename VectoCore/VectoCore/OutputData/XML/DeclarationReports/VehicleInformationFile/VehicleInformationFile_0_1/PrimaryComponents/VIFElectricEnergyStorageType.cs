@@ -65,7 +65,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					new XElement(_vif + XMLNames.Component_Date, XmlConvert.ToString(supercap.Date, XmlDateTimeSerializationMode.Utc)),
 					new XElement(_vif + XMLNames.Component_AppVersion, supercap.AppVersion),
 					new XElement(_vif + XMLNames.Capacitor_Capacitance, supercap.Capacity.ToXMLFormat(2)),
-					new XElement(_vif + XMLNames.Capacitor_InternalResistance, supercap.InternalResistance.AsMilliOhm.ToXMLFormat(2)),
 					new XElement(_vif + XMLNames.Capacitor_MinVoltage, supercap.MinVoltage.ToXMLFormat(2)),
 					new XElement(_vif + XMLNames.Capacitor_MaxVoltage, supercap.MaxVoltage.ToXMLFormat(2)),
 					new XElement(_vif + XMLNames.Capacitor_MaxChargingCurrent, supercap.MaxCurrentCharge.ToXMLFormat(2)),

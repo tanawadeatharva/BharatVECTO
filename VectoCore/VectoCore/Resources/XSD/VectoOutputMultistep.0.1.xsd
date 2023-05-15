@@ -1418,17 +1418,6 @@
 							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="InternalResistance" type="v2.3:InternalResistanceType">
-						<xs:annotation>
-							<xs:documentation>P539 - [mOhm]</xs:documentation>
-							<xs:appinfo>
-								<!-- <vectoParam:description>
-									<vectoParam:parameterId component="CapacitorSystem">539</vectoParam:parameterId>
-									<vectoParam:unit>mOhm</vectoParam:unit>
-								</vectoParam:description> -->
-							</xs:appinfo>
-						</xs:annotation>
-					</xs:element>
 					<xs:element name="MinVoltage" type="v2.3:CapacitorVoltageType">
 						<xs:annotation>
 							<xs:documentation>P540 - [V]</xs:documentation>
