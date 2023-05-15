@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Threading;
 using System.Xml;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Newtonsoft.Json;
@@ -38,17 +39,19 @@ public class PrimaryBusSimulation
 
 	private const string BASE_DIR_COMPLETED = @"TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\CompletedBus";
 	private const string BASE_DIR_VIF = @"TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\CompletedBus\VIF";
-	private StandardKernel _kernel;
+	private ThreadLocal<StandardKernel> _kernel;
+
+	private StandardKernel Kernel => _kernel.Value;
 	private IXMLInputDataReader _xmlReader;
 
 	[OneTimeSetUp]
 	public void OneTimeSetup()
 	{
-		_kernel = new StandardKernel(new VectoNinjectModule());
-		_xmlReader = _kernel.Get<IXMLInputDataReader>();
+		_kernel = new ThreadLocal<StandardKernel>(() => new StandardKernel(new VectoNinjectModule()));
+		_xmlReader = Kernel.Get<IXMLInputDataReader>();
 
-		_kernel.Rebind<IDeclarationCycleFactory>().To<TestDeclarationCycleFactoryVariant>().InSingletonScope();
-		var cycleFactory = _kernel.Get<IDeclarationCycleFactory>() as TestDeclarationCycleFactoryVariant;
+		Kernel.Rebind<IDeclarationCycleFactory>().To<TestDeclarationCycleFactoryVariant>().InSingletonScope();
+		var cycleFactory = Kernel.Get<IDeclarationCycleFactory>() as TestDeclarationCycleFactoryVariant;
 		cycleFactory.Variant = "Short_10";
 	}
 
@@ -98,12 +101,12 @@ public class PrimaryBusSimulation
     public void CompletedBusSimulationTest(string vifFile, string completed, int runIdx, bool full_sim = false)
 	{
 		if (full_sim) {
-			_kernel.Rebind<IDeclarationCycleFactory>().To<DeclarationCycleFactory>().InSingletonScope();
+			Kernel.Rebind<IDeclarationCycleFactory>().To<DeclarationCycleFactory>().InSingletonScope();
         }
 		var completedJob = GenerateJsonJobCompletedBus(Path.Combine(BASE_DIR_VIF, vifFile), Path.Combine(BASE_DIR_COMPLETED, completed));
 
-		_kernel.Rebind<IMissionFilter>().To<TestMissionFilter>().InSingletonScope();
-		var missionFilter = _kernel.Get<IMissionFilter>() as TestMissionFilter;
+		Kernel.Rebind<IMissionFilter>().To<TestMissionFilter>().InSingletonScope();
+		var missionFilter = Kernel.Get<IMissionFilter>() as TestMissionFilter;
 		missionFilter!.SetMissions((MissionType.Coach, LoadingType.ReferenceLoad));
 
         var finalVif = CreateCompletedVIF(completedJob);
@@ -116,11 +119,11 @@ public class PrimaryBusSimulation
 	public void CompletedBusCycleSection(string vifFile, string completed, double start,
 		double? distance = null)
 	{
-		_kernel.Rebind<IDeclarationCycleFactory>().To<TestDeclarationCycleFactoryStartPoint>().InSingletonScope();
-		var cycleFactory = _kernel.Get<IDeclarationCycleFactory>() as TestDeclarationCycleFactoryStartPoint;
+		Kernel.Rebind<IDeclarationCycleFactory>().To<TestDeclarationCycleFactoryStartPoint>().InSingletonScope();
+		var cycleFactory = Kernel.Get<IDeclarationCycleFactory>() as TestDeclarationCycleFactoryStartPoint;
 
-		_kernel.Rebind<IMissionFilter>().To<TestMissionFilter>().InSingletonScope();
-		var missionFilter = _kernel.Get<IMissionFilter>() as TestMissionFilter;
+		Kernel.Rebind<IMissionFilter>().To<TestMissionFilter>().InSingletonScope();
+		var missionFilter = Kernel.Get<IMissionFilter>() as TestMissionFilter;
 		missionFilter!.SetMissions((MissionType.Interurban, LoadingType.ReferenceLoad));
 		cycleFactory!.SetStartPoint(MissionType.Interurban, start.SI<Meter>(), true, distance?.SI<Meter>());
 		var completedJob = GenerateJsonJobCompletedBus(Path.Combine(BASE_DIR_VIF, vifFile),
@@ -160,8 +163,8 @@ public class PrimaryBusSimulation
 	]
 	public void TestFactorMethodRunData(string primary, string completed, string vifFile, MissionType mission, LoadingType loading)
 	{
-		_kernel.Rebind<IMissionFilter>().To<TestMissionFilter>().InSingletonScope();
-		var missionFilter = _kernel.Get<IMissionFilter>() as TestMissionFilter;
+		Kernel.Rebind<IMissionFilter>().To<TestMissionFilter>().InSingletonScope();
+		var missionFilter = Kernel.Get<IMissionFilter>() as TestMissionFilter;
 		missionFilter!.SetMissions((mission, loading));
 
 		var outputPath = Path.Combine("FactorMethod_xEV", TestContext.CurrentContext.Test.Name.Split(' ').Skip(3).Join("_"));
@@ -172,7 +175,7 @@ public class PrimaryBusSimulation
 		var singleJob = GenerateJsonJobSingleBus(Path.Combine(BASE_DIR, primary), Path.Combine(BASE_DIR_COMPLETED, completed));
 		var dataProviderSingle = JSONInputDataFactory.ReadJsonJob(singleJob);
 		var fileWriterSingle = new FileOutputWriter(singleJob);
-		var simFactorySingle = _kernel.Get<ISimulatorFactoryFactory>();
+		var simFactorySingle = Kernel.Get<ISimulatorFactoryFactory>();
 		var runsFactorySingle = simFactorySingle.Factory(ExecutionMode.Declaration, dataProviderSingle, fileWriterSingle, null, null);
 
 		SerializeRunData(runsFactorySingle, outputPath);
@@ -181,7 +184,7 @@ public class PrimaryBusSimulation
 		var filePathPrim = Path.Combine(BASE_DIR, primary);
 		var dataProviderPrim = _xmlReader.CreateDeclaration(filePathPrim);
 		var fileWriterPrim = new FileOutputWriter(filePathPrim);
-		var simFactoryPrim = _kernel.Get<ISimulatorFactoryFactory>();
+		var simFactoryPrim = Kernel.Get<ISimulatorFactoryFactory>();
 		var runsFactoryPrim = simFactoryPrim.Factory(ExecutionMode.Declaration, dataProviderPrim, fileWriterPrim, null, null);
 
 		SerializeRunData(runsFactoryPrim, outputPath);
@@ -191,7 +194,7 @@ public class PrimaryBusSimulation
 
 		var dataProviderComleted = JSONInputDataFactory.ReadJsonJob(completedJob);
 		var fileWriterCompleted = new FileOutputWriter(singleJob);
-		var simFactoryCompleted = _kernel.Get<ISimulatorFactoryFactory>();
+		var simFactoryCompleted = Kernel.Get<ISimulatorFactoryFactory>();
 		var runsFactoryCompleted = simFactoryCompleted.Factory(ExecutionMode.Declaration, dataProviderComleted, fileWriterCompleted, null, null);
 		var jobContainer = new JobContainer(new SummaryDataContainer(fileWriterCompleted)) { };
 		jobContainer.AddRuns(runsFactoryCompleted);
@@ -204,7 +207,7 @@ public class PrimaryBusSimulation
 		var dataProviderVif = _xmlReader.CreateDeclaration(vif.Value) as IMultistepBusInputDataProvider;
 		var dataProviderFinal = new XMLDeclarationVIFInputData(dataProviderVif, null, true);
         var fileWriterFinal = new FileOutputWriter(filePathPrim);
-		var simFactoryFinal = _kernel.Get<ISimulatorFactoryFactory>();
+		var simFactoryFinal = Kernel.Get<ISimulatorFactoryFactory>();
 		var runsFactoryFinal = simFactoryFinal.Factory(ExecutionMode.Declaration, dataProviderFinal, fileWriterFinal, null, null);
 
 		SerializeRunData(runsFactoryFinal, outputPath);
@@ -229,7 +232,7 @@ public class PrimaryBusSimulation
 		var singleJob = GenerateJsonJobSingleBus(Path.Combine(BASE_DIR, jobFile), Path.Combine(BASE_DIR_COMPLETED, completed));
 		var dataProvider = JSONInputDataFactory.ReadJsonJob(singleJob);
 		var fileWriter = new FileOutputWriter(singleJob);
-		var simFactory = _kernel.Get<ISimulatorFactoryFactory>();
+		var simFactory = Kernel.Get<ISimulatorFactoryFactory>();
 
 		var runsFactory = simFactory.Factory(ExecutionMode.Declaration, dataProvider, fileWriter, null, null);
 		//runsFactory.WriteModalResults = true;
@@ -287,7 +290,7 @@ public class PrimaryBusSimulation
 		var filePath = Path.Combine(BASE_DIR, jobFile);
 		var dataProvider = JSONInputDataFactory.ReadJsonJob(filePath);
 		var fileWriter = new FileOutputWriter(filePath);
-		var simFactory = _kernel.Get<ISimulatorFactoryFactory>();
+		var simFactory = Kernel.Get<ISimulatorFactoryFactory>();
 		
 		var runsFactory = simFactory.Factory(ExecutionMode.Declaration, dataProvider, fileWriter, null, null);
 		
@@ -314,7 +317,7 @@ public class PrimaryBusSimulation
 		var filePath = Path.Combine(BASE_DIR, jobFile);
 		var dataProvider = _xmlReader.CreateDeclaration(filePath);
 		var fileWriter = new FileOutputWriter(filePath);
-		var simFactory = _kernel.Get<ISimulatorFactoryFactory>();
+		var simFactory = Kernel.Get<ISimulatorFactoryFactory>();
 		var runsFactory = simFactory.Factory(ExecutionMode.Declaration, dataProvider, fileWriter, null, null);
 		runsFactory.WriteModalResults = true;
 		runsFactory.SerializeVectoRunData = true;
