@@ -77,7 +77,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int? modeIdx,
 				OvcHevMode ovcMode = OvcHevMode.NotApplicable);
 
-			protected virtual VectoRunData CreateCommonRunData(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, string modSuffix)
+			protected virtual VectoRunData CreateCommonRunData(Mission mission,
+				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, string modSuffix, OvcHevMode ovcMode)
 			{
 				var cycle = CycleFactory.GetDeclarationCycle(mission);
 
@@ -98,6 +99,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					SimulationType = SimulationType.DistanceCycle,
 					VehicleDesignSpeed = _segment.DesignSpeed,
 					MaxChargingPower = PrimaryVehicle.MaxChargingPower,
+					OVCMode = ovcMode,
 				};
 
 				return simulationRunData;
@@ -233,7 +235,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int? modeIdx,
 				OvcHevMode ovcHevMode)
             {
-                var simulationRunData = CreateCommonRunData(mission, loading, _modSuffixGeneric);
+                var simulationRunData = CreateCommonRunData(mission, loading, _modSuffixGeneric, ovcHevMode);
 
                 var primaryBusAuxiliaries = PrimaryVehicle.Components.BusAuxiliaries;
 
@@ -275,7 +277,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int? modeIdx,
 				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
             {
-				var simulationRunData = CreateCommonRunData(mission, loading, _modSuffixSpecific);
+				var simulationRunData = CreateCommonRunData(mission, loading, _modSuffixSpecific, ovcMode);
 
 				simulationRunData.VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle,
 					CompletedVehicle, _segment, mission, loading);
@@ -423,7 +425,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int? modeIdx,
 				OvcHevMode ovcHevMode)
 			{
-				var rd = CreateCommonRunData(mission, loading, _modSuffixSpecific);
+				var rd = CreateCommonRunData(mission, loading, _modSuffixSpecific, ovcHevMode);
 
 				DataAdapterGeneric.CreateREESSData(
 					componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,
@@ -485,7 +487,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int? modeIdx,
 				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
-				var rd = CreateCommonRunData(mission, loading, _modSuffixSpecific);
+				var rd = CreateCommonRunData(mission, loading, _modSuffixSpecific, ovcMode);
 
 				DataAdapterGeneric.CreateREESSData(
 					componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,
@@ -646,7 +648,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 			protected override VectoRunData CreateVectoRunDataGeneric(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int? modeIdx,
 				OvcHevMode ovcHevMode)
 			{
-                var rd = CreateCommonRunData(mission, loading, _modSuffixGeneric);
+                var rd = CreateCommonRunData(mission, loading, _modSuffixGeneric, ovcHevMode);
 				DataAdapterGeneric.CreateREESSData(
 					componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,
 					PrimaryVehicle.VehicleType,
@@ -716,7 +718,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 			protected override VectoRunData CreateVectoRunDataSpecific(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int? modeIdx,
 				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
-				var rd = CreateCommonRunData(mission, loading, _modSuffixSpecific);
+				var rd = CreateCommonRunData(mission, loading, _modSuffixSpecific, ovcMode);
 				DataAdapterGeneric.CreateREESSData(
 					componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,
 					PrimaryVehicle.VehicleType,
@@ -845,7 +847,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int? modeIdx,
 				OvcHevMode ovcHevMode)
 			{
-                var result = CreateCommonRunData(mission, loading, _modSuffixGeneric);
+                var result = CreateCommonRunData(mission, loading, _modSuffixGeneric, ovcHevMode);
 
                 DataAdapterGeneric.CreateREESSData(
                     componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,
@@ -900,7 +902,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int? modeIdx,
 				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
             {
-                var result = CreateCommonRunData(mission, loading, _modSuffixSpecific);
+                var result = CreateCommonRunData(mission, loading, _modSuffixSpecific, ovcMode);
 
 				DataAdapterGeneric.CreateREESSData(
 					componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,

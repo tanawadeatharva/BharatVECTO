@@ -86,11 +86,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public XDocument Report { get; protected set; }
 
-		private List<IResultEntry> results = new List<IResultEntry>();
+		protected List<IResultEntry> _results = new List<IResultEntry>();
 
 		public void WriteResult(IResultEntry resultValue)
 		{
-			results.Add(resultValue);
+			_results.Add(resultValue);
 
 		}
 
@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				)
 			);
 
-			//var lh = results.SingleOrDefault(res => res.Mission == MissionType.LongHaul && res.LoadingType == LoadingType.ReferenceLoad);
+			//var lh = _results.SingleOrDefault(res => res.Mission == MissionType.LongHaul && res.LoadingType == LoadingType.ReferenceLoad);
 			
 			Vehicle.XPathSelectElement($"//*[local-name()='{XMLNames.VehicleGroupCO2}']").Value = DeclarationData
 				.GetVehicleGroupCO2StandardsGroup(Input).ToXMLFormat();
@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new[] {
 				Vehicle,
 				InputDataIntegrity,
-				Results.GenerateResults(results),
+				Results.GenerateResults(_results),
 				XMLHelper.GetApplicationInfo(Mrf_0_9)
 			};
 		}
