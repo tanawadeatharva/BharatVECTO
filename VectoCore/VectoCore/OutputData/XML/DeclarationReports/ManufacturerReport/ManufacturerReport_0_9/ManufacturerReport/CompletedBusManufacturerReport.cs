@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
@@ -88,8 +89,64 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 			#endregion
 		}
+		private class CompletedBusFuelConsumption : IFuelConsumptionCorrection
+		{
+			#region Implementation of IFuelConsumptionCorrection
 
+			public IFuelProperties Fuel { get; set; }
 
+			public KilogramPerWattSecond EngineLineCorrectionFactor => throw new NotImplementedException();
+
+			public KilogramPerWattSecond VehicleLine => throw new NotImplementedException();
+
+			public KilogramPerSecond FC_ESS_H => throw new NotImplementedException();
+
+			public KilogramPerSecond FC_ESS_CORR_H => throw new NotImplementedException();
+
+			public KilogramPerSecond FC_BusAux_PS_CORR_H => throw new NotImplementedException();
+
+			public KilogramPerSecond FC_BusAux_ES_CORR_H => throw new NotImplementedException();
+
+			public KilogramPerSecond FC_WHR_CORR_H => throw new NotImplementedException();
+
+			public KilogramPerSecond FC_AUXHTR_H => throw new NotImplementedException();
+
+			public KilogramPerSecond FC_AUXHTR_H_CORR => throw new NotImplementedException();
+
+			public KilogramPerSecond FC_REESS_SOC_H => throw new NotImplementedException();
+
+			public KilogramPerSecond FC_REESS_SOC_CORR_H => throw new NotImplementedException();
+
+			public KilogramPerSecond FC_FINAL_H => throw new NotImplementedException();
+
+			public KilogramPerMeter FC_WHR_CORR_KM => throw new NotImplementedException();
+
+			public KilogramPerMeter FC_BusAux_PS_CORR_KM => throw new NotImplementedException();
+
+			public KilogramPerMeter FC_BusAux_ES_CORR_KM => throw new NotImplementedException();
+
+			public KilogramPerMeter FC_AUXHTR_KM => throw new NotImplementedException();
+
+			public KilogramPerMeter FC_AUXHTR_KM_CORR => throw new NotImplementedException();
+
+			public KilogramPerMeter FC_REESS_SOC_KM => throw new NotImplementedException();
+
+			public KilogramPerMeter FC_REESS_SOC_CORR_KM => throw new NotImplementedException();
+
+			public KilogramPerMeter FC_ESS_KM => throw new NotImplementedException();
+
+			public KilogramPerMeter FC_ESS_CORR_KM => throw new NotImplementedException();
+
+			public KilogramPerMeter FC_FINAL_KM => throw new NotImplementedException();
+
+			public VolumePerMeter FuelVolumePerMeter => throw new NotImplementedException();
+
+			public Kilogram TotalFuelConsumptionCorrected => EnergyDemand / Fuel.LowerHeatingValueVecto;
+
+			public Joule EnergyDemand { get; set; }
+
+			#endregion
+		}
 
 
 		protected XNamespace _mrf = XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9");
@@ -116,11 +173,29 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Implementation of IXMLManufacturerReportCompletedBus
 
+		public double CalculateFactor<T>(
+			(XMLDeclarationReport.ResultEntry genericResult,
+				XMLDeclarationReport.ResultEntry specificResult) results,
+			Func<XMLDeclarationReport.ResultEntry, T> access)
+		{
+			dynamic spec = access(results.specificResult);
+			dynamic gen = access(results.genericResult);
+			dynamic factor = spec / gen;
+			if (factor is Scalar sc) {
+				return sc.Value();
+			}
+			return (double)factor;
+		}
+
+
+
 		public virtual void WriteResult(XMLDeclarationReport.ResultEntry genericResult,
 			XMLDeclarationReport.ResultEntry specificResult, IResult primaryResult)
 		{
 			_allSuccess &= genericResult.Status == VectoRun.Status.Success;
 			_allSuccess &= specificResult.Status == VectoRun.Status.Success;
+			
+
 
 			var result = new CompletedBusResult {
 				Status = VectoRun.Status.Success,
@@ -131,7 +206,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			if (genericResult.OVCMode != specificResult.OVCMode) {
 				throw new VectoException($"generic OVC Mode must be equal to specific OVC Mode! but was gen_ovc = {genericResult.OVCMode} != {specificResult.OVCMode} = spec_ovc");
 			}
-
 			result.BatteryData = genericResult.BatteryData;
 			result.Mission = genericResult.Mission;
 			result.Distance = genericResult.Distance;
@@ -141,36 +215,54 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			result.VehicleClass = primaryResult.VehicleGroup;
 
 
+			///Factor for each fuel
+			/// Factor for electric Energy Consumption
+
 			//TODO: Add primary bus group to writer 
 
 
 			//TODO: 
-			result.AverageSpeed = 42.KMPHtoMeterPerSecond();
-			result.AverageDrivingSpeed = 42.KMPHtoMeterPerSecond();
-			result.MinSpeed = 42.KMPHtoMeterPerSecond();
-			result.MaxSpeed = 42.KMPHtoMeterPerSecond();
-			result.MaxDeceleration = 9.SI<MeterPerSquareSecond>();
-			result.MaxAcceleration = 3.SI<MeterPerSquareSecond>();
-			result.FullLoadPercentage = 2.SI<Scalar>();
-			result.GearshiftCount = 42.SI<Scalar>();
-			result.EngineSpeedDrivingAvg = 900.RPMtoRad();
-			result.EngineSpeedDrivingMin = 600.RPMtoRad();
-			result.EngineSpeedDrivingMax = 1200.RPMtoRad();
-			result.AverageGearboxEfficiency = 80;
-			result.AverageAxlegearEfficiency = 70;
+			var combinedResults = (genericResult, specificResult);
+			//var speedFactor = CalculateFactor(combinedResults, r => r.AverageSpeed);
+			//result.AverageSpeed = primaryResult.
+	
+			//Info not available in Primary Results -> no factor method
+			result.AverageSpeed = specificResult.AverageSpeed;
+			result.AverageDrivingSpeed = specificResult.AverageDrivingSpeed;
+			result.MinSpeed = specificResult.MinSpeed;
+			result.MaxSpeed = specificResult.MaxSpeed;
+
+
+
+			result.MaxDeceleration = specificResult.MaxDeceleration;
+			result.MaxAcceleration = specificResult.MaxAcceleration;
+			result.FullLoadPercentage = specificResult.FullLoadPercentage;
+			result.GearshiftCount = specificResult.GearshiftCount;
+			result.EngineSpeedDrivingAvg = specificResult.EngineSpeedDrivingAvg;
+			result.EngineSpeedDrivingMin = specificResult.EngineSpeedDrivingMin;
+			result.EngineSpeedDrivingMax = specificResult.EngineSpeedDrivingMax;
+			result.AverageGearboxEfficiency = specificResult.AverageGearboxEfficiency;
+			result.AverageAxlegearEfficiency = specificResult.AverageAxlegearEfficiency;
 
 
 
 			//Fuels
 			result.FuelData = specificResult.FuelData;
+			var co2Sum = 0.SI<Kilogram>();
 			foreach (var fuel in specificResult.CorrectedFinalFuelConsumption.Keys) {
-				
-				var genFuel = genericResult.FuelConsumptionFinal(fuel);
-				var specFuel = genericResult.FuelConsumptionFinal(fuel);
-				result.CorrectedFinalFuelConsumption.Add(fuel, genFuel);
+				var fuelFactor = CalculateFactor(combinedResults, r => r.FuelConsumptionFinal(fuel).TotalFuelConsumptionCorrected);
+				var completedFuelConsumption =
+					fuelFactor * (primaryResult.EnergyConsumption[fuel] * specificResult.Distance );
+                var fuelConsumption = new CompletedBusFuelConsumption() {
+					Fuel = specificResult.FuelData.Single(f => f.FuelType == fuel),
+					EnergyDemand = completedFuelConsumption,
+				};
+				co2Sum += fuelConsumption.TotalFuelConsumptionCorrected * fuelConsumption.Fuel.CO2PerFuelWeight;
+				result.CorrectedFinalFuelConsumption.Add(fuel, fuelConsumption);
 			}
 
-			result.CO2Total = 6.SI<Kilogram>();
+			//primaryResult.CO2.
+			result.CO2Total = co2Sum;
 
 
 

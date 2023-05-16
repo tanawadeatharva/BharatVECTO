@@ -958,6 +958,11 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<JoulePerKilogramMeter>.Create(jpm.Val / kg.Value());
 		}
+
+		public static Joule operator *(JoulePerMeter jpm, Meter m)
+		{
+			return SIBase<Joule>.Create(jpm.Val * m.Value());
+		}
 	}
 
 	public class JoulePerCubicMeterMeter : SIBase<JoulePerCubicMeterMeter>
