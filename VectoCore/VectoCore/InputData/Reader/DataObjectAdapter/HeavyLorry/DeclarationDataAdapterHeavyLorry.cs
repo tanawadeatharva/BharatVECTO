@@ -62,13 +62,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 		{
             
             private readonly IDriverDataAdapter _driverDataAdapter = new LorryDriverDataAdapter();
-            protected readonly IVehicleDataAdapter _vehicleDataAdapter = new LorryVehicleDataAdapter();
+            //protected readonly IVehicleDataAdapter _vehicleDataAdapter = new LorryVehicleDataAdapter();
 			private readonly IAxleGearDataAdapter _axleGearDataAdapter = new AxleGearDataAdapter();
 			private readonly IRetarderDataAdapter _retarderDataAdapter = new RetarderDataAdapter();
 			private readonly IAirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
 
 			private IAngledriveDataAdapter _angleDriveDataAdapter = new AngledriveDataAdapter();
 
+			protected virtual IVehicleDataAdapter VehicleDataAdapter { get; } = new LorryVehicleDataAdapter();
 			protected abstract IEngineDataAdapter EngineDataAdapter { get; }
 			protected abstract IGearboxDataAdapter GearboxDataAdapter { get; }
 			protected abstract IAuxiliaryDataAdapter AuxDataAdapter { get; }
@@ -90,7 +91,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
 			{
-				return _vehicleDataAdapter.CreateVehicleData(vehicle, segment, mission, loading.Value.Item1,
+				return VehicleDataAdapter.CreateVehicleData(vehicle, segment, mission, loading.Value.Item1,
 					loading.Value.Item2, allowVocational);
 			}
 
@@ -423,11 +424,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			protected override GearboxType[] SupportedGearboxTypes { get; }
 
-			public override VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
-				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
-			{
-				return _vehicleDataAdapter.CreateExemptedVehicleData(vehicle);
-			}
+			protected override IVehicleDataAdapter VehicleDataAdapter { get; } = new ExemptedLorryVehicleDataAdapter();
+
+			//public override VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
+			//	KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
+			//{
+			//	return _vehicleDataAdapter.CreateExemptedVehicleData(vehicle);
+			//}
 
 			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)

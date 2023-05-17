@@ -521,7 +521,27 @@ namespace TUGraz.VectoCommon.Utils
 			var solY2 = QuadraticEquationSolver(1, Math.Sqrt(u), -q / (2.0 * Math.Sqrt(u)) + p + z);
 			return solY1.Select(s => s - a / 4.0).Concat(solY2.Select(s => s - a / 4.0)).ToArray();
 		}
-	}
+
+		public static T Round<T>(T value) where T : SIBase<T>
+		{
+			return Math.Round(value.Value()).SI<T>();
+		}
+
+		public static T Round<T>(T value, int decimals) where T : SIBase<T>
+		{
+			return Math.Round(value.Value(), decimals).SI<T>();
+		}
+
+		public static T Round<T>(T value, MidpointRounding rounding) where T : SIBase<T>
+		{
+			return Math.Round(value.Value(), rounding).SI<T>();
+		}
+
+        public static T Round<T>(T value, int decimals, MidpointRounding rounding) where T : SIBase<T>
+		{
+			return Math.Round(value.Value(), decimals, rounding).SI<T>();
+		}
+    }
 
 	[DebuggerDisplay("(X:{X}, Y:{Y}, Z:{Z})")]
 	public class Point : IEquatable<Point>

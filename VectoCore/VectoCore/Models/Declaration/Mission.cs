@@ -112,6 +112,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 		
 		public BusParameters BusParameter { get; internal set; }
+		public Kilogram GenericMassICE { get; internal set; }
 	}
 
 	public class BusParameters

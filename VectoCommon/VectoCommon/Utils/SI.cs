@@ -363,6 +363,11 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<CubicMeter>.Create(kilogram.Value() / kilogramPerCubicMeter.Value());
 		}
+
+		public static KilogramPerCubicMeter operator /(Kilogram kg, CubicMeter m3)
+		{
+			return SIBase<KilogramPerCubicMeter>.Create(kg.Val / m3.Value());
+		}
 	}
 
 	public class Liter : SIBase<Liter>
@@ -617,6 +622,17 @@ namespace TUGraz.VectoCommon.Utils
 
 	}
 
+	public class KilogramPerWatt : SIBase<KilogramPerWatt>
+	{
+		private static readonly int[] Units = { 0, -2, 3, 0, 0, 0, 0 };
+
+		[DebuggerHidden]
+		private KilogramPerWatt(double value) : base(value, Units) { }
+
+		public override string UnitString => "kg/W";
+
+    }
+
 	/// <summary>
 	/// SI Class for Kilogramm per watt second [kg/Ws].
 	/// W = kgm^2/s^3
@@ -834,6 +850,11 @@ namespace TUGraz.VectoCommon.Utils
 		public static JoulePerNormLiter operator /(Watt watt, NormLiterPerSecond nlps)
 		{
 			return SIBase<JoulePerNormLiter>.Create(watt.Val / nlps.Value());
+		}
+
+		public static Kilogram operator *(Watt w, KilogramPerWatt kpw)
+		{
+			return SIBase<Kilogram>.Create(w.Val * kpw.Value());
 		}
 	}
 

@@ -26,13 +26,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			public virtual GearboxType[] SupportedGearboxTypes => throw new NotImplementedException();
 
 			private readonly IDriverDataAdapter _driverDataAdapter = new PrimaryBusDriverDataAdapter();
-			protected readonly IVehicleDataAdapter _vehicleDataAdapter = new PrimaryBusVehicleDataAdapter();
+			//protected readonly IVehicleDataAdapter _vehicleDataAdapter = new PrimaryBusVehicleDataAdapter();
 			protected readonly IAxleGearDataAdapter _axleGearDataAdapter = new AxleGearDataAdapter();
 			//protected readonly IPrimaryBusAuxiliaryDataAdapter _auxDataAdapter = new PrimaryBusAuxiliaryDataAdapter();
 			protected readonly IRetarderDataAdapter _retarderDataAdapter = new RetarderDataAdapter();
 			protected readonly IAirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
 			private readonly IAngledriveDataAdapter _angledriveDataAdapter = new AngledriveDataAdapter();
 
+			protected virtual IVehicleDataAdapter VehicleDataAdapter { get; } = new PrimaryBusVehicleDataAdapter();
 			protected abstract IEngineDataAdapter EngineDataAdapter { get; }
 
 			protected abstract IGearboxDataAdapter GearboxDataAdapter { get; }
@@ -51,7 +52,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
 			{
-				return _vehicleDataAdapter.CreateVehicleData(vehicle, segment, mission, loading.Value.Item1,
+				return VehicleDataAdapter.CreateVehicleData(vehicle, segment, mission, loading.Value.Item1,
 					loading.Value.Item2, allowVocational);
 			}
 
@@ -194,9 +195,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 		{
 			private IElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
 
-			#region Overrides of PrimaryBusBase
 
-			protected override IEngineDataAdapter EngineDataAdapter { get; } = new CombustionEngineComponentDataAdapter();
+            #region Overrides of PrimaryBusBase
+			protected override IVehicleDataAdapter VehicleDataAdapter { get; } = new PrimaryBusVehicleDataAdapter_HEV();
+
+            protected override IEngineDataAdapter EngineDataAdapter { get; } = new CombustionEngineComponentDataAdapter();
 
 			protected override IElectricMachinesDataAdapter ElectricMachinesDataAdapter { get; } = new ElectricMachinesDataAdapter();
 
@@ -319,6 +322,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
             #region Overrides of PrimaryBusBase
 
+			protected override IVehicleDataAdapter VehicleDataAdapter { get; } = new PrimaryBusVehicleDataAdapter_PEV();
+
             protected override IEngineDataAdapter EngineDataAdapter => throw new NotImplementedException();
 
 			protected override IGearboxDataAdapter GearboxDataAdapter => throw new NotImplementedException();
@@ -381,13 +386,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 		{
 			#region Overrides of PrimaryBusBase
 
+			protected override IVehicleDataAdapter VehicleDataAdapter { get; } = new ExemptedPrimaryBusVehicleDataAdapter();
 			protected override IEngineDataAdapter EngineDataAdapter => throw new NotImplementedException();
-
-			public override VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
-				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
-			{
-				return _vehicleDataAdapter.CreateExemptedVehicleData(vehicle);
-			}
 
 			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)

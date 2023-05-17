@@ -27,12 +27,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 
             #region ComponentDataAdapter
 			private readonly IDriverDataAdapter _driverDataAdapter = new CompletedBusGenericDriverDataAdapter();
-			protected readonly IVehicleDataAdapter _vehicleDataAdapter = new CompletedBusGenericVehicleDataAdapter();
+			//protected readonly IVehicleDataAdapter _vehicleDataAdapter = new CompletedBusGenericVehicleDataAdapter();
 			private readonly IAxleGearDataAdapter _axleGearDataAdapter = new GenericCompletedBusAxleGearDataAdapter();
 			private readonly IRetarderDataAdapter _retarderDataAdapter = new GenericRetarderDataAdapter();
 			private readonly IAirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
 			private readonly IAngledriveDataAdapter _angledriveDataAdapter = new GenericAngledriveDataAdapter();
             #endregion
+
+			protected virtual IVehicleDataAdapter VehicleDataAdapter { get; } =
+				new CompletedBusGenericVehicleDataAdapter();
 
 			protected abstract IEngineDataAdapter EngineDataAdapter { get; }
 
@@ -49,7 +52,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
             public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
 			{
-				return _vehicleDataAdapter.CreateVehicleData(vehicle, segment, mission, loading.Value.Item1,
+				return VehicleDataAdapter.CreateVehicleData(vehicle, segment, mission, loading.Value.Item1,
 					loading.Value.Item2, allowVocational);
 			}
 
@@ -205,9 +208,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 
 		public abstract class Hybrid : CompletedBusDeclarationBase
 		{
-			#region Overrides of CompletedBusDeclarationBase
+            #region Overrides of CompletedBusDeclarationBase
 
-			protected override IElectricStorageAdapter ElectricStorageAdapter => new GenericElectricStorageDataAdapter();
+			protected override IVehicleDataAdapter VehicleDataAdapter { get; } =
+				new CompletedBusGenericVehicleDataAdapter_HEV();
+
+            protected override IElectricStorageAdapter ElectricStorageAdapter => new GenericElectricStorageDataAdapter();
 
             #endregion
 
@@ -297,7 +303,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 
 		public abstract class BatteryElectric : CompletedBusDeclarationBase
 		{
-			protected override ICompletedBusAuxiliaryDataAdapter AuxDataAdapter { get; } = new GenericCompletedPEVBusAuxiliaryDataAdapter();
+			protected override IVehicleDataAdapter VehicleDataAdapter { get; } =
+				new CompletedBusGenericVehicleDataAdapter_PEV();
+
+            protected override ICompletedBusAuxiliaryDataAdapter AuxDataAdapter { get; } = new GenericCompletedPEVBusAuxiliaryDataAdapter();
 
             protected override IEngineDataAdapter EngineDataAdapter => throw new NotImplementedException();
 

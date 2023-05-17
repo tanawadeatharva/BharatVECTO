@@ -11,15 +11,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
     {
         VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission,
             Kilogram loading, double? passengerCount, bool allowVocational);
-        
-		VehicleData CreateExemptedVehicleData(IVehicleDeclarationInputData data);
 
-        VehicleData CreateVehicleData(IVehicleDeclarationInputData primaryVehicle,
+		VehicleData CreateVehicleData(IVehicleDeclarationInputData primaryVehicle,
             IVehicleDeclarationInputData completedVehicle, Segment segment, Mission mission,
             KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading);
 
-
-        VehicleData CreateExemptedVehicleData(IVehicleDeclarationInputData primaryVehicle,
-            IVehicleDeclarationInputData completedVehicle);
     }
 }

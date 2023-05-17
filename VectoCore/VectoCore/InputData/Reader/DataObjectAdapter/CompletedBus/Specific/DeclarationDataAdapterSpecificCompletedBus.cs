@@ -1,23 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
 using TUGraz.VectoCommon.BusAuxiliaries;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.AuxiliaryDataAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.StrategyDataAdapter;
-using TUGraz.VectoCore.Models.BusAuxiliaries;
-using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
-using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Specific
@@ -26,9 +17,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Speci
 	{
 		public abstract class CompletedBusDeclarationBase : AbstractSimulationDataAdapter, ISpecificCompletedBusDeclarationDataAdapter
         {
-			protected readonly IVehicleDataAdapter _vehicleDataAdapter = new CompletedBusSpecificVehicleDataAdapter();
 			protected readonly IAirdragDataAdapter _airdragDataAdapter = new CompletedBusSpecificAirdragDataAdapter();
 
+			protected virtual IVehicleDataAdapter VehicleDataAdapter { get; } = new CompletedBusSpecificVehicleDataAdapter();
 
 			protected virtual ICompletedBusAuxiliaryDataAdapter AuxDataAdapter { get; } =
 				new SpecificCompletedBusAuxiliaryDataAdapter();
@@ -44,7 +35,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Speci
 			public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData primaryVehicle,
 				IVehicleDeclarationInputData completedVehicle, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 			{
-				return _vehicleDataAdapter.CreateVehicleData(primaryVehicle, completedVehicle, segment, mission,
+				return VehicleDataAdapter.CreateVehicleData(primaryVehicle, completedVehicle, segment, mission,
 					loading);
 			}
 
@@ -109,12 +100,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Speci
 
 		public class Exempted : CompletedBusDeclarationBase
 		{
-			public override VehicleData CreateVehicleData(IVehicleDeclarationInputData primaryVehicle,
-				IVehicleDeclarationInputData completedVehicle, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
-			{
-				return _vehicleDataAdapter.CreateExemptedVehicleData(primaryVehicle, completedVehicle);
-			}
+			protected override IVehicleDataAdapter VehicleDataAdapter { get; } =
+				new ExemptedCompletedBusSpecificVehicleDataAdapter();
 
-        }
+		}
 	}
 }

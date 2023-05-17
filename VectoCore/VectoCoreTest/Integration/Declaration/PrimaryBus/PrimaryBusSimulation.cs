@@ -169,7 +169,7 @@ public class PrimaryBusSimulation
 	private const LoadingType RefL = LoadingType.ReferenceLoad;
 	private const MissionType CycleCO = MissionType.Coach;
 
-	[TestCase(@"PrimaryBus/Conventional/primary_heavyBus group41_nonSmart.xml", @"Conventional_completedBus_2.xml", @"primary_heavyBus group41_nonSmart.RSLT_VIF.xml", CycleCO, RefL, 
+	[TestCase(@"PrimaryBus/Conventional/primary_heavyBus group41_nonSmart.xml", @"Conventional_completedBus_2.xml", @"primary_heavyBus group41_nonSmart.RSLT_VIF.xml", CycleCO, LowL, 
 			TestName = "2nd Amendment FactorMethodRunData Conventional CO RL"),
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_Base_AMT.xml",  @"HEV_completedBus_2.xml", @"PrimaryCoach_P2_HEV_Base_AMT.RSLT_VIF.xml", CycleCO, LowL,
 		TestName = "2nd Amendment FactorMethodRunData Coach HEV P2 CO LL"),

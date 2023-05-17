@@ -127,6 +127,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static readonly Watt MinDepotChgPwr = 10.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
 		public static readonly Second DepotChargingDuration = 6.SI(Unit.SI.Hour).Cast<Second>();
+		public static readonly KilogramPerCubicMeter ICE_MassPerDisplacement = 770.SI<Kilogram>() / 7.7.SI<Liter>().Cast<CubicMeter>();
+		public static readonly KilogramPerWatt EM_MassPerPower = 1.3.SI(Unit.SI.Kilo.Gramm.Per.Kilo.Watt).Cast<KilogramPerWatt>();
+		public static readonly Kilogram EM_MassElectronics = 0.SI<Kilogram>();
+		public static readonly Kilogram EM_MassInverter = 100.SI<Kilogram>();
+		public static readonly KilogramPerWattSecond Battery_MassPerCapacity = 6.7.SI(Unit.SI.Kilo.Gramm.Per.Kilo.Watt.Hour).Cast<KilogramPerWattSecond>();
+
 
 		/// <summary>
 		/// Formula for calculating the payload for a given gross vehicle weight.

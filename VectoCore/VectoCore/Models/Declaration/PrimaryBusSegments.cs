@@ -123,6 +123,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 					var passengerCountLow = busFloorArea * passengerDensityLow; // weight of driver is included in curb mass
 					var passengerCountRef = busFloorArea * passengerDensityRef; // weight of driver is included in curb mass
 																				//var refLoad = passengerCountRef * missionType.GetAveragePassengerMass();
+																				
+					var iceDisplacement = row.ParseDouble("icedisplacement")
+																						.SI(Unit.SI.Liter)
+																						.Cast<CubicMeter>();
+					var fuelCapacity = row.ParseDouble("fuelcapacity").SI<Liter>();
+
+					var genericMassICEAndFuelTank = iceDisplacement * DeclarationData.ICE_MassPerDisplacement +
+													fuelCapacity / 2.0 * FuelData.Diesel.FuelDensity;
 
 					var mission = new Mission {
 						MissionType = missionType,
@@ -139,6 +147,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 						PassengersRefLoad = passengerCountRef,
 						PassengersLowLoad = passengerCountLow * missionType.GetLowLoadFactorBus(),
 						TotalCargoVolume = 0.SI<CubicMeter>(),
+						GenericMassICE = VectoMath.Round(genericMassICEAndFuelTank, MidpointRounding.AwayFromZero),
 						DefaultCDxA = row.ParseDouble("cdxastandard").SI<SquareMeter>(),
 						BusParameter = new BusParameters() {
 							BusGroup = VehicleClassHelper.Parse(row.Field<string>("hdvgroup")),
