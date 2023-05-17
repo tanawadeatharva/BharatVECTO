@@ -53,4 +53,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 
 		IDeclarationInputDataProvider CreateDeclaration(XmlReader inputData);
 	}
+
+	/// <summary>
+	/// Create a single Component from an XMLSource
+	/// </summary>
+	public interface IXMLComponentInputReader
+	{
+		IAirdragDeclarationInputData CreateAirdrag(string filename);
+		IAirdragDeclarationInputData CreateAirdrag(Stream inputData);
+		IAirdragDeclarationInputData CreateAirdrag(XmlReader inputData);
+	}
 }

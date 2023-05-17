@@ -1113,6 +1113,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public ConsolidatedBusAuxiliariesData(IEnumerable<IManufacturingStageInputData> manufacturingStages)
 			: base(manufacturingStages) { }
 
+		public DataSource DataSource
+		{
+			get => _manufacturingStages.Select(s => s.Vehicle.Components.BusAuxiliaries.DataSource).FirstOrDefault();
+		}
 		public XmlNode XMLSource => _xmlNode ?? (_xmlNode = GetBusAuxXMLSource());
 
 		public string FanTechnology => null;

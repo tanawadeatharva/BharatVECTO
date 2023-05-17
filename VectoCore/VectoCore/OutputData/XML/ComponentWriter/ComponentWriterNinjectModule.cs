@@ -1,6 +1,7 @@
 ﻿using System.Xml.Linq;
 using Ninject.Extensions.Factory;
 using TUGraz.VectoCore.OutputData.XML.GroupWriter;
+using TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration;
 using TUGraz.VectoCore.Utils.Ninject;
 
 namespace TUGraz.VectoCore.OutputData.XML.ComponentWriter
@@ -20,13 +21,21 @@ namespace TUGraz.VectoCore.OutputData.XML.ComponentWriter
 
 
 			//ADASTypes
-			var v2102 = XMLDeclarationNamespaces.V24;
+			var v24 = XMLDeclarationNamespaces.V24;
 			Bind<IDeclarationAdasWriter>().To<AdasConventionalWriter>().
-				Named(GetName(GroupNames.ADAS_Conventional_Type, v2102));
+				Named(GetName(GroupNames.ADAS_Conventional_Type, v24));
+			Bind<IDeclarationAdasWriter>().To<AdasHEVWriter>().
+				Named(GetName(GroupNames.ADAS_HEV_Type, v24));
+			Bind<IDeclarationAdasWriter>().To<AdasPEVWriter>().
+				Named(GetName(GroupNames.ADAS_PEV_Type, v24));
+			Bind<IDeclarationAdasWriter>().To<AdasIEPCWriter>().
+				Named(GetName(GroupNames.ADAS_IEPC_Type, v24));
 
 
 
-		}
+
+
+        }
 
 		#endregion
 	}

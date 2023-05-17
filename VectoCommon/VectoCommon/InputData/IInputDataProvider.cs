@@ -103,6 +103,7 @@ namespace TUGraz.VectoCommon.InputData
 		IVehicleDeclarationInputData StageInputData { get; }
 
 		bool SimulateResultingVIF { get; }
+		bool? Completed { get; }
 	}
 
 

@@ -9,7 +9,7 @@
     <ApplicationIcon>Resources\Icons\Icon2.ico</ApplicationIcon>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
-    <PublishTrimmed >false</PublishTrimmed >
+    <PublishTrimmed>false</PublishTrimmed>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
     <DefineConstants />
@@ -105,6 +105,16 @@
     <Resource Include="Resources\Icons\Trash_16x.ico" />
     <Resource Include="Resources\Images\JRC-About.png" />
     <Resource Include="Resources\Images\VECTO-About.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="MainWindow.xaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Util\XML\Implementation\DocumentWriter\" />
   </ItemGroup>
 
 

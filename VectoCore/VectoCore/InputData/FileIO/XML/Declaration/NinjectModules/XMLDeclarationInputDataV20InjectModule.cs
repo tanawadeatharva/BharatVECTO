@@ -29,7 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Xml;
 using Ninject.Modules;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
@@ -57,6 +59,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLAirdragDeclarationInputData>().To<XMLDeclarationAirdragDataProviderV20>().Named(
 				XMLDeclarationAirdragDataProviderV20.QUALIFIED_XSD_TYPE);
+			Bind<IComponentInputData>().ToConstructor<XMLDeclarationAirdragDataProviderV20>((args) => 
+				new XMLDeclarationAirdragDataProviderV20(null, args.Inject<XmlNode>(), args.Inject<string>())
+			).Named(XMLDeclarationAirdragDataProviderV20.QUALIFIED_XSD_TYPE);
+
 
 			Bind<IXMLAngledriveInputData>().To<XMLDeclarationAngledriveDataProviderV20>().Named(
 				XMLDeclarationAngledriveDataProviderV20.QUALIFIED_XSD_TYPE);

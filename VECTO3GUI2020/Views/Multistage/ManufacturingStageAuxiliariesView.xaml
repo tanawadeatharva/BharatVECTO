@@ -58,6 +58,12 @@
                     <ContentControl Content="{Binding ParameterViewModels[DoubleGlazing]}"/>
                     <ContentControl Content="{Binding ParameterViewModels[AdjustableAuxiliaryHeater]}"/>
                     <ContentControl Content="{Binding ParameterViewModels[SeparateAirDistributionDucts]}"/>
+
+                    <StackPanel Orientation="Vertical" Visibility="{Binding ShowxEVProperties, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <ContentControl Content="{Binding ParameterViewModels[WaterElectricHeater]}"/>
+                    <ContentControl Content="{Binding ParameterViewModels[AirElectricHeater]}"/>
+                    <ContentControl Content="{Binding ParameterViewModels[OtherHeatingTechnology]}"/>
+                    </StackPanel>
                 </StackPanel>
             </DockPanel>
         </ScrollViewer>

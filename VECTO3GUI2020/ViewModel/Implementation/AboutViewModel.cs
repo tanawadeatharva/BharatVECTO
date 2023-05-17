@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Windows.Input;
-using VECTO3GUI2020.Util;
+using CommunityToolkit.Mvvm.Input;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces;
 

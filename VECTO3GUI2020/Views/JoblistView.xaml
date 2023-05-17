@@ -14,7 +14,7 @@
              d:DesignHeight="450" d:DesignWidth="1000">
 
 
-    <Grid>
+    <Grid d:Background="Pink">
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="5"/>
@@ -110,16 +110,53 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn IsReadOnly="True" Header="Name" Binding="{Binding DocumentName}"></DataGridTextColumn>
-                            <DataGridTextColumn IsReadOnly ="True" Header="Type" Binding="{Binding DocumentTypeName}"></DataGridTextColumn>
-                            <DataGridTextColumn IsReadOnly ="True" Header="File" Binding="{Binding DataSource.SourceFile}"></DataGridTextColumn>
+                            <DataGridTemplateColumn Header="Name" Width="0.5*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Margin="2 2 2 2"  Text="{Binding DocumentName}" TextAlignment="Left" VerticalAlignment="Center">
+                                            <TextBlock.ToolTip>
+                                                <Binding Path="DocumentName"></Binding>
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+            
+                            <!--<DataGridTextColumn IsReadOnly="True" Header="Name" Binding="{Binding DocumentName}" Width="*">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="ToolTip" Value="{Binding DocumentName}" />
+                                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>-->
+                            <DataGridTextColumn IsReadOnly ="True" Header="Type" Binding="{Binding DocumentTypeName}"  Width="0.1*" MinWidth="150"></DataGridTextColumn>
+                            <!--<DataGridTextColumn IsReadOnly ="True" Header="File" Binding="{Binding DataSource.SourceFile}"  Width="*">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="ToolTip" Value="{Binding DataSource.SourceFile}" />
+                                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>-->
+                            <DataGridTemplateColumn Header="File" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Margin="2 2 2 2" Text="{Binding DataSource.SourceFile}" TextAlignment="Left" VerticalAlignment="Center">
+                                            <TextBlock.ToolTip>
+                                                <Binding Path="DataSource.SourceFile"></Binding>
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                         </DataGrid.Columns>
 
                         <DataGrid.InputBindings>
                             <MouseBinding
-                        MouseAction="LeftDoubleClick"
-                        Command="{Binding EditDocument}"
-                        CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}"></MouseBinding>
+                                MouseAction="LeftDoubleClick"
+                                Command="{Binding EditDocument}"
+                                CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}"></MouseBinding>
                         </DataGrid.InputBindings>
                     </DataGrid>
                     <!--<Label x:Name="label" Content="Loading . . ." Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"/>-->

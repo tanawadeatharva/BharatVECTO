@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Utils
 {
 	public static class XMLHelper
 	{
-		public static XmlDocumentType? GetDocumentType(string rootElement)
+		public static XmlDocumentType? GetDocumentTypeFromRootElement(string rootElement)
 		{
 			switch (rootElement) {
 				case "VectoInputDeclaration": return XmlDocumentType.DeclarationJobData;
@@ -60,17 +60,26 @@ namespace TUGraz.VectoCore.Utils
 			return null;
 		}
 
-		//internal static string GetSchemaVersion(XmlSchemaType type)
-		//{
-		//	return GetVersionFromNamespaceUri(type.QualifiedName.Namespace);
-		//}
+		public static XmlDocumentType? GetDocumentTypeFromFile(string filePath)
+		{
+			var xElement = new System.Xml.XmlDocument();
+			xElement.Load(filePath);
+			return XMLHelper.GetDocumentTypeFromRootElement(xElement?.DocumentElement?.LocalName);
 
-		//public static string GetSchemaVersion(XmlElement node)
-		//{
-		//	return GetVersionFromNamespaceUri(node.NamespaceURI);
-		//}
+        }
 
-		public static string GetVersionFromNamespaceUri(XNamespace namespaceUri)
+
+        //internal static string GetSchemaVersion(XmlSchemaType type)
+        //{
+        //	return GetVersionFromNamespaceUri(type.QualifiedName.Namespace);
+        //}
+
+        //public static string GetSchemaVersion(XmlElement node)
+        //{
+        //	return GetVersionFromNamespaceUri(node.NamespaceURI);
+        //}
+
+        public static string GetVersionFromNamespaceUri(this XNamespace namespaceUri)
 		{
 			const string versionPrefix = "v";
 			return namespaceUri.NamespaceName.Split(':').Last(x => x.StartsWith(versionPrefix))
@@ -389,5 +398,18 @@ namespace TUGraz.VectoCore.Utils
 		{
 			return Guid.NewGuid().ToString("n").Substring(0, 20);
 		}
+
+
+		public static XmlSchemaType GetSchemaType(XmlNode componentNode)
+		{
+			var dataNode =
+				componentNode?.SelectSingleNode($"./*[local-name()='{XMLNames.ComponentDataWrapper}']");
+			
+			var type = (dataNode ?? componentNode)?.SchemaInfo.SchemaType;
+			return type;
+        }
+		
+
+
 	}
 }

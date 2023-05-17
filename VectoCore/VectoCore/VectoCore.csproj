@@ -97,6 +97,7 @@
     <PackageReference Include="Ninject.Extensions.ContextPreservation" Version="3.3.1" />
     <PackageReference Include="Ninject.Extensions.Factory" Version="3.3.3" />
     <PackageReference Include="NLog" Version="4.7.13" />
+    <PackageReference Include="System.Collections" Version="4.3.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
 </ItemGroup>
 
@@ -182,9 +183,18 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>JSONKeys.resx</DependentUpon>
     </Compile>
+    <Compile Update="OutputData\XML\GroupWriter\Declaration\GroupNames.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GroupNames.resx</DependentUpon>
+    </Compile>
     <EmbeddedResource Update="JSONKeys.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>JSONKeys.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="OutputData\XML\GroupWriter\Declaration\GroupNames.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GroupNames.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
