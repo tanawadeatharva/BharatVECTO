@@ -5,9 +5,9 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.CompletedBus
 {
-    class CompletedBusPassengerCountWriter_V2_10_2 : GroupWriter, IVehicleDeclarationGroupWriter
+    class CompletedBusPassengerCountWriter_V2_4 : GroupWriter, IVehicleDeclarationGroupWriter
 	{
-		public CompletedBusPassengerCountWriter_V2_10_2(XNamespace writerNamespace) : base(writerNamespace) { }
+		public CompletedBusPassengerCountWriter_V2_4(XNamespace writerNamespace) : base(writerNamespace) { }
 
 
 

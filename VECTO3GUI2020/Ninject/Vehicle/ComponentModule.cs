@@ -1,4 +1,5 @@
 ﻿
+using System;
 using Ninject.Extensions.Factory;
 using Ninject.Modules;
 using TUGraz.VectoCommon.Models;
@@ -16,11 +17,12 @@ using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
 namespace VECTO3GUI2020.Ninject.Vehicle
 {
+    [Obsolete]
     public class ComponentModule : NinjectModule
     {
         public override void Load()
-        {
-
+		{
+			throw new NotImplementedException("Will be replaced to get rid of type dependencies");
 			#region IComponentViewModelFactory
 
 
@@ -30,8 +32,8 @@ namespace VECTO3GUI2020.Ninject.Vehicle
 
 
 	        
-			Bind<IVehicleViewModel>().To<InterimStageBusVehicleViewModel_v2_8>().Named(InterimStageBusVehicleViewModel_v2_8.VERSION);
-			Bind<IVehicleViewModel>().To<InterimStageBusVehicleViewModel_v2_8>().Named(InterimStageBusVehicleViewModel_v2_8.VERSION_EXEMPTED);
+			Bind<IVehicleViewModel>().To<InterimStageBusVehicleViewModel>().Named(InterimStageBusVehicleViewModel.VERSION);
+			Bind<IVehicleViewModel>().To<InterimStageBusVehicleViewModel>().Named(InterimStageBusVehicleViewModel.VERSION_EXEMPTED);
 
 
             Bind<IComponentViewModel>().To<EngineViewModel_v1_0>().Named(EngineViewModel_v1_0.VERSION);

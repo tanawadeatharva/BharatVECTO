@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Ninject.Modules;
+using TUGraz.VectoCore;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Model.Implementation;
 using VECTO3GUI2020.Model.Interfaces;
@@ -9,12 +10,15 @@ using VECTO3GUI2020.ViewModel.Interfaces;
 
 namespace VECTO3GUI2020.Ninject
 {
-	public class Vecto3GUI2020Module : NinjectModule
+	public class Vecto3GUI2020Module : AbstractNinjectModule
 	{
 		#region Overrides of NinjectModule
 
 		public override void Load()
 		{
+			LoadModule<MultistageModule>();
+
+
 
 			Bind<IJobListViewModel>().To<JobListViewModel>().InSingletonScope();
 			Bind<IMainWindowViewModel>().To<MainWindowViewModel>();

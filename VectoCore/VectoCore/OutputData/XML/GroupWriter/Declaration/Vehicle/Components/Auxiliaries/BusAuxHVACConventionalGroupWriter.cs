@@ -1,34 +1,66 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.Components.Auxiliaries
 {
-    public class BusAuxHVACConventionalGroupWriter_v2_10_2 : GroupWriter, IBusAuxiliariesDeclarationGroupWriter
-    {
-		private readonly IGroupWriterFactory _groupWriterFactory;
+	public abstract class BuxAuxHVACGroupWriter_v2_4 : GroupWriter, IBusAuxiliariesDeclarationGroupWriter
+	{
+		protected readonly IGroupWriterFactory _groupWriterFactory;
 
-		public BusAuxHVACConventionalGroupWriter_v2_10_2(XNamespace writerNamespace,
-			IGroupWriterFactory groupWriterFactory) : base(writerNamespace)
+		protected BuxAuxHVACGroupWriter_v2_4(XNamespace writerNamespace, IGroupWriterFactory groupWriterFactory) : base(writerNamespace)
 		{
 			_groupWriterFactory = groupWriterFactory;
+        }
+
+		#region Implementation of IBusAuxiliariesDeclarationGroupWriter
+
+		public abstract XElement[] GetGroupElements(IBusAuxiliariesDeclarationData aux);
+
+		#endregion
+	}
+
+    public class BusAuxHVACConventionalGroupWriter_v2_4 : BuxAuxHVACGroupWriter_v2_4
+    {
+		public BusAuxHVACConventionalGroupWriter_v2_4(XNamespace writerNamespace,
+			IGroupWriterFactory groupWriterFactory) : base(writerNamespace, groupWriterFactory)
+		{
+
 		}
 
 		#region Implementation of IBusAuxiliariesDeclarationGroupWriter
 
-		public XElement[] GetGroupElements(IBusAuxiliariesDeclarationData aux)
+		public override XElement[] GetGroupElements(IBusAuxiliariesDeclarationData aux)
 		{
 			var elements = new List<XElement>();
 
-			elements.Add(new XElement(_writerNamespace + XMLNames.Bus_SystemConfiguration, 
-				aux.HVACAux.SystemConfiguration.ToXmlFormat()));
+			//if (aux.HVACAux?.SystemConfiguration != null) {
+			//	elements.Add(new XElement(_writerNamespace + XMLNames.Bus_SystemConfiguration,
+			//		aux.HVACAux.SystemConfiguration.ToXmlFormat()));
 
-			elements.AddRange(_groupWriterFactory
+   //         }
+
+            var groupElements = _groupWriterFactory
 				.GetBusAuxiliariesDeclarationGroupWriter(GroupNames.BusAuxHVACHeatPumpSequenceGroup, _writerNamespace)
-				.GetGroupElements(aux));
-			elements.Add(new XElement(_writerNamespace + XMLNames.Bus_AuxiliaryHeaterPower,
+				.GetGroupElements(aux);
+
+#if NET45
+			foreach (var e in groupElements) {
+				elements.Add(e);
+			}
+#else
+			elements.AddRange(groupElements);
+
+#endif
+
+
+
+
+            elements.Add(new XElement(_writerNamespace + XMLNames.Bus_AuxiliaryHeaterPower,
 				aux.HVACAux.AuxHeaterPower?.ToXMLFormat(0)));
 			elements.Add(new XElement(_writerNamespace + XMLNames.Bus_DoubleGlazing, aux.HVACAux.DoubleGlazing));
 			elements.Add(new XElement(_writerNamespace + XMLNames.Bus_AdjustableAuxiliaryHeater,
@@ -36,7 +68,27 @@ namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.Compon
 			elements.Add(new XElement(_writerNamespace + XMLNames.Bus_SeparateAirDistributionDucts,
 				aux.HVACAux.SeparateAirDistributionDucts));
 
-			return elements.ToArray();
+			return elements.Where(xEl => !xEl.Value.IsNullOrEmpty()).ToArray();
+		}
+
+#endregion
+	}
+
+	public class BusAuxHVACxEVGroupWriter_v2_4 : BuxAuxHVACGroupWriter_v2_4
+    {
+		public BusAuxHVACxEVGroupWriter_v2_4(XNamespace writerNamespace, IGroupWriterFactory groupWriterFactory) : base(writerNamespace, groupWriterFactory) { }
+
+		#region Overrides of BuxAuxHVACGroupWriter_v2_4
+
+		public override XElement[] GetGroupElements(IBusAuxiliariesDeclarationData aux)
+		{
+			var elements = new List<XElement>() {
+				new XElement(_writerNamespace + XMLNames.Bus_WaterElectricHeater, aux.HVACAux.WaterElectricHeater),
+				new XElement(_writerNamespace + XMLNames.Bus_AirElectricHeater, aux.HVACAux.AirElectricHeater),
+				new XElement(_writerNamespace + XMLNames.Bus_OtherHeatingTechnology, aux.HVACAux.OtherHeatingTechnology)
+			};
+
+			return elements.Where(xEl => !xEl.Value.IsNullOrEmpty()).ToArray();
 		}
 
 		#endregion

@@ -34,7 +34,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 
 
 
-        public AirDragViewModel(IXMLAirdragDeclarationInputData inputData, IComponentViewModelFactory vmFactory)
+        public AirDragViewModel(IAirdragDeclarationInputData inputData, IComponentViewModelFactory vmFactory)
 		{
 			LabelVisible = true;
 			IsReadOnly = false;
@@ -48,7 +48,6 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 			SetProperties();
 		}
 
-		public abstract void SetProperties();
 
         public string Name { get { return _name; } }
 		private bool _isPresent;
@@ -115,21 +114,25 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 
 		public virtual SquareMeter AirDragArea
 		{
-			get => throw new NotImplementedException();
-			set => throw new NotImplementedException();
-		}
-		public virtual SquareMeter TransferredAirDragArea { 
-			get => throw new NotImplementedException();
-			set => throw new NotImplementedException();
-		}
-		public virtual SquareMeter AirDragArea_0 { 
-			get => throw new NotImplementedException();
-			set => throw new NotImplementedException();
+			get => _airDragArea;
+			set => SetProperty(ref _airDragArea, value);
 		}
 
-		#endregion
+		public virtual SquareMeter TransferredAirDragArea
+		{
+			get => _transferredAirDragArea;
+			set => SetProperty(ref _transferredAirDragArea, value);
+		}
 
-		public bool LabelVisible
+		public virtual SquareMeter AirDragArea_0
+		{
+			get => _airDragArea_0;
+			set => SetProperty(ref _airDragArea_0, value);
+		}
+
+        #endregion
+
+        public bool LabelVisible
 		{
 			get => _labelVisible;
 			set => SetProperty(ref _labelVisible, value);
@@ -140,20 +143,24 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 			get => _isReadOnly;
 			set => SetProperty(ref _isReadOnly, value);
 		}
+
+		public abstract void SetProperties();
 	}
 
 
     public class AirDragViewModel_v1_0 : AirDragViewModel
     {
         public static readonly string VERSION = typeof(XMLDeclarationAirdragDataProviderV10).FullName;
-        public AirDragViewModel_v1_0(IXMLAirdragDeclarationInputData inputData, IComponentViewModelFactory vmFactory) : base(inputData, vmFactory)
+        public AirDragViewModel_v1_0(IAirdragDeclarationInputData inputData, IComponentViewModelFactory vmFactory) : base(inputData, vmFactory)
         {
 
         }
 
 		public override void SetProperties()
 		{
-			throw new NotImplementedException();
+			_airDragArea = _inputData.AirDragArea;
+			_airDragArea_0 = _inputData.AirDragArea_0;
+			_transferredAirDragArea = _inputData.TransferredAirDragArea;
 		}
 	}
 
@@ -161,7 +168,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
     {
         public static new readonly string VERSION = typeof(XMLDeclarationAirdragDataProviderV20).FullName;
 
-		public AirDragViewModel_v2_0(IXMLAirdragDeclarationInputData inputData, IComponentViewModelFactory vmFactory) : base(inputData, vmFactory)
+		public AirDragViewModel_v2_0(IAirdragDeclarationInputData inputData, IComponentViewModelFactory vmFactory) : base(inputData, vmFactory)
         {
 
         }
@@ -195,7 +202,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 	{
 		public new static readonly string VERSION = typeof(XMLDeclarationAirdragDataProviderV24).FullName;
 
-		public AirDragViewModel_v2_4(IXMLAirdragDeclarationInputData inputData, IComponentViewModelFactory vmFactory) : base(inputData, vmFactory)
+		public AirDragViewModel_v2_4(IAirdragDeclarationInputData inputData, IComponentViewModelFactory vmFactory) : base(inputData, vmFactory)
 		{
 			LabelVisible = false;
 			IsReadOnly = true;

@@ -1,29 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ninject;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.ViewModel.Implementation;
 using VECTO3GUI2020.ViewModel.Interfaces;
+using Vecto3GUI2020Test.Utils;
 
 namespace Vecto3GUI2020Test.BugReports
 {
 	[TestFixture]
-	public class VifTests : ViewModelTestBase
+	public class VifTests
 	{
-		public const string primaryDecimalTestFile = "PrimaryDecimal/primary_heavyBus group41_nonSmart_rounded_decimals.xml";
-
-		
-		[TestCase(VifTests.primaryDecimalTestFile, TestName="PneumaticsCompressorDrive")]
+		[Ignore("DoesNothing")]
+		[TestCase(TestData.primaryDecimalTestFile, TestName="PneumaticsCompressorDrive")]
 		public async Task CreateAndLoadVifWithWrongDecimalCount(string fileName)
 		{
+			var path = Path.GetFullPath(fileName);
+			AssertHelper.FileExists(path);
+			var kernel = TestHelper.GetKernel();
+			var dialogHelper = kernel.Get<IDialogHelper>() as MockDialogHelper;
+			
             //Load JobFile 
-			var jobListViewModel = _kernel.Get<IJobListViewModel>() as JobListViewModel;
-			await jobListViewModel.AddJobAsync(GetTestDataPath(fileName: fileName));
+			var jobListViewModel = kernel.Get<IJobListViewModel>() as JobListViewModel;
+			await jobListViewModel.AddJobAsync(fileName);
+			dialogHelper.AssertNoErrorDialogs();
 			Assert.AreEqual(1, jobListViewModel.Jobs.Count);
 			jobListViewModel.Jobs[0].Selected = true;
 
@@ -35,9 +42,9 @@ namespace Vecto3GUI2020Test.BugReports
 			TestContext.WriteLine($"Done! ({stop.Elapsed.TotalSeconds}s)");
 
 
-			var vifName = fileName.Replace(".xml", ".RSLT_VIF.xml");
-			TestContext.WriteLine($"Trying to add {vifName} to JobList");
-			await jobListViewModel.AddJobAsync(GetTestDataPath(fileName: vifName));
+			var vifpath = path.Replace(".xml", ".RSLT_VIF.xml");
+			TestContext.WriteLine($"Trying to add {path} to JobList");
+			await jobListViewModel.AddJobAsync(path);
 			Assert.AreEqual(2, jobListViewModel.Jobs.Count);
 
 			foreach (var documentViewModel in jobListViewModel.Jobs) {

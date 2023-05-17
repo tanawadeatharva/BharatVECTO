@@ -39,7 +39,7 @@
                             </MenuItem>
                             <Separator></Separator>
                             <MenuItem Header="{x:Static resx:GUILabels.CreateInterimCompletedInput}" Command="{Binding JobListVm.NewCompletedInputCommand}" />
-                            <MenuItem Header="{x:Static resx:GUILabels.CreateExemptedInterimCompletedInput}" Command="{Binding JobListVm.NewExemptedCompletedInputCommand}" />
+                            <!--<MenuItem Header="{x:Static resx:GUILabels.CreateExemptedInterimCompletedInput}" Command="{Binding JobListVm.NewExemptedCompletedInputCommand}" />-->
                         </MenuItem>
                         <MenuItem  Header="Load File" Command="{Binding JobListVm.AddJobAsyncCommand}"/>
                         <MenuItem Header="Settings" Command="{Binding OpenSettings}"/>
@@ -47,7 +47,7 @@
                     <MenuItem Header="Edit" VerticalAlignment="Stretch">
                         <MenuItem Header="Edit Job" ToolTip="Edit selected Job" Command="{Binding JobListVm.EditDocument}"/>
                         <MenuItem Header="Source File">
-                            <MenuItem Header="Show in Explorer" Command="{Binding JobListVm.ShowSourceFileCommand}"/>
+                            <MenuItem Header="Reveal in File Explorer" Command="{Binding JobListVm.ShowSourceFileCommand}"/>
                             <MenuItem Header="Open in Editor" Command="{Binding JobListVm.OpenSourceFileCommand}"/>
                         </MenuItem>
                         <!--<MenuItem Header="Simulate Job" ToolTip="Simulates the selected Job"/>-->

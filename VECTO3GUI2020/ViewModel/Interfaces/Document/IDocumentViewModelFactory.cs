@@ -1,8 +1,10 @@
-﻿using TUGraz.VectoCore.Utils;
+﻿using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Utils;
+using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
 namespace VECTO3GUI2020.ViewModel.Interfaces.Document
 {
-    public interface IDocumentViewModelFactory
+    public interface IDocumentViewModelFactory : INewDocumentViewModelFactory
     {
 		/*
 	public enum XmlDocumentType
@@ -20,8 +22,36 @@ namespace VECTO3GUI2020.ViewModel.Interfaces.Document
 	}
 
 		*/
-		IDocumentViewModel CreateDocumentViewModel(XmlDocumentType xmlDocumentType, string sourcefile);
+		IDocumentViewModel CreateDocumentViewModel(IInputDataProvider declarationInput);
+	}
 
+
+	public interface IMultiStepInputViewModelFactory
+	{
+		IDocumentViewModel CreateMultistepViewModel(IMultistepBusInputDataProvider inputData);
+	}
+
+	public interface ICreateVifViewModelFactory
+	{
+		IDocumentViewModel CreateVifViewModel(IMultistageVIFInputData multistep);
+	}
+
+	public interface IDeclarationInputViewModelFactory
+	{
+		IDocumentViewModel CreateDeclarationViewModel(IDeclarationInputDataProvider inputData);
+	}
+
+	public interface IPrimaryAndStageInputViewModelFactory
+	{
+		IDocumentViewModel CreateDeclarationViewModel(IMultistagePrimaryAndStageInputDataProvider inputData);
+	}
+
+	public interface INewDocumentViewModelFactory
+	{
+		IDocumentViewModel GetCreateNewStepInputViewModel(bool exemptedVehicle);
+		IDocumentViewModel GetCreateNewVifViewModel(bool completed);
+		//IDocumentViewModel GetCreateNewVifViewModel();
+		
 
     }
 }

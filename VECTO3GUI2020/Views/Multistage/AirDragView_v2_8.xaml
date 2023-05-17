@@ -24,12 +24,6 @@
         <customControls:LabledTextBoxMultistage 
             Content="{Binding AirDragArea}" 
             ReadOnly="{Binding IsReadOnly}"/>
-        <customControls:LabledTextBoxMultistage 
-            Content="{Binding AirDragArea_0}" 
-            ReadOnly="{Binding IsReadOnly}"/>
-        <customControls:LabledTextBoxMultistage 
-            Content="{Binding TransferredAirDragArea}" 
-            ReadOnly="{Binding IsReadOnly}"/>
         </StackPanel>
     </Grid>
 </UserControl>
