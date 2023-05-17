@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -71,11 +72,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		{
 			get
 			{
-			
+				var factory = _followUpSimulatorFactoryCreator?.GetNextFactory();
+				if (factory != null) {
+					factory.WriteModalResults = this.WriteModalResults;
+					//factory.SerializeVectoRunData = this.SerializeVectoRunData;
+                }
 
-				return _followUpSimulatorFactoryCreator?.GetNextFactory();
 
 
+
+                return factory;
 			}
 		}
 
