@@ -8,6 +8,7 @@ Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Generic
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
+Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.AuxiliaryDataAdapter
 Imports TUGraz.VectoCore.Models.BusAuxiliaries
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
@@ -351,7 +352,7 @@ Namespace UnitTests
         Private Function GetAuxConfig(psAuxConfig As IPneumaticsConsumersDemand) As IAuxiliaryConfig
 
             Return New AuxiliaryConfig() with {
-                .PneumaticAuxillariesConfig = psAuxConfig,
+                .PneumaticAuxiliariesConfig = psAuxConfig,
                 .PneumaticUserInputsConfig = _defaultInputConfig,
                 .VehicleData = New VehicleData() with {
                     .CurbMass = _vehicleMassKG.SI(of Kilogram)

@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var electricStorage =
 				AuxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart &&
 				AuxCfg.ElectricalUserInputsConfig.ConnectESToREESS
-					// in case of smat alternator with Px hybrid take electric power from P0 REESS first, then from HEV REESS.
+					// in case of smart alternator with Px hybrid take electric power from P0 REESS first, then from HEV REESS.
 					// do not use alternator to generate demanded power if P0 REESS is empty. so trick busaux that there is always
 					// energy in the battery.
 					? (ISimpleBatteryInfo)new InfinityBattery(AuxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity, new ElectricStorageWrapper(this)) 
@@ -295,9 +295,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
-			container[ModalResultField.Nl_busAux_PS_consumer] = Auxiliaries.PSDemandConsumer;
-			container[ModalResultField.Nl_busAux_PS_generated] = essUtilityFactor * Auxiliaries.PSAirGenerated;
-			container[ModalResultField.Nl_busAux_PS_generated_alwaysOn] = essUtilityFactor * Auxiliaries.PSAirGeneratedAlwaysOn;
+			if (AuxCfg.PneumaticUserInputsConfig.CompressorMap != null) {
+				container[ModalResultField.Nl_busAux_PS_consumer] = Auxiliaries.PSDemandConsumer;
+				container[ModalResultField.Nl_busAux_PS_generated] = essUtilityFactor * Auxiliaries.PSAirGenerated;
+				container[ModalResultField.Nl_busAux_PS_generated_alwaysOn] = essUtilityFactor * Auxiliaries.PSAirGeneratedAlwaysOn;
+			} else {
+				// electric compressor
+				container[ModalResultField.Nl_busAux_PS_consumer] = Auxiliaries.PSDemandConsumer;
+				container[ModalResultField.Nl_busAux_PS_generated] = Auxiliaries.PSAirGenerated;
+				container[ModalResultField.Nl_busAux_PS_generated_alwaysOn] = Auxiliaries.PSAirGeneratedAlwaysOn;
+			}
+
 			//container[ModalResultField.Nl_busAux_PS_generated_dragOnly] = Auxiliaries.PSAirGeneratedDrag;
 			container[ModalResultField.P_busAux_PS_generated] = essUtilityFactor * Auxiliaries.PSPowerDemandAirGenerated;
 			container[ModalResultField.P_busAux_PS_generated_alwaysOn] = essUtilityFactor * Auxiliaries.PSPowerCompressorAlwaysOn;

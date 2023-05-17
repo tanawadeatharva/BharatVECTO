@@ -68,9 +68,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get
 			{
-				return GetString(new[]
-						{ XMLNames.BusAux_ElectricSystem, XMLNames.BusAux_ElectricSystem_AlternatorTechnology })
-					.ParseEnum<AlternatorType>();
+				return AlternatorTypeHelper.Parse(GetString(new[]
+					{ XMLNames.BusAux_ElectricSystem, XMLNames.BusAux_ElectricSystem_AlternatorTechnology }));
+				//.ParseEnum<AlternatorType>();
 			}
 		}
 
@@ -306,6 +306,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override ConsumerTechnology AdBlueDosing => ConsumerTechnology.Unknown;
 
+		public override bool EngineWasteGasHeatExchanger => false;
+
 		#endregion
 	}
 
@@ -335,6 +337,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override ConsumerTechnology AdBlueDosing => ConsumerTechnology.Unknown;
 
+		public override bool EngineWasteGasHeatExchanger => false;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -422,8 +425,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override bool EngineWasteGasHeatExchanger => false;
 
-		#endregion
-	}
+		public override string CompressorSize => null;
+
+		public override string Clutch => null;
+
+        #endregion
+    }
 
 	// ---------------------------------------------------------------------------------------
 
@@ -450,8 +457,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override bool EngineWasteGasHeatExchanger => false;
 
-		#endregion
-	}
+		public override string CompressorSize => null;
+
+		public override string Clutch => null;
+
+        #endregion
+    }
 
 	// ---------------------------------------------------------------------------------------
 

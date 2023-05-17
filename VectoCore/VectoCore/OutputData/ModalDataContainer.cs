@@ -36,6 +36,7 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml;
+using Ninject;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -48,11 +49,13 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData
 {
-	public class ModalDataContainer : IModalDataContainer
+    public class ModalDataContainer : IModalDataContainer
 	{
 		//private readonly bool _writeEngineOnly;
 		private readonly IModalDataFilter[] _filters;
@@ -99,7 +102,9 @@ namespace TUGraz.VectoCore.OutputData
 			Data = new ModalResults();
 			CurrentRow = Data.NewRow();
 
-			PostProcessingCorrection = GetModDataPostprocessor(runData);
+			// todo: MQ 6.4.2023 - inject!
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			PostProcessingCorrection = kernel.Get<IModalDataPostProcessorFactory>().GetPostProcessor(runData.JobType);
 			
 			if (runData.EngineData != null) {
 				
@@ -117,24 +122,7 @@ namespace TUGraz.VectoCore.OutputData
 			return Data.Columns.Contains(modalResultField);
 		}
 
-		protected IModalDataPostProcessor GetModDataPostprocessor(VectoRunData runData)
-		{
-			switch (runData.JobType) {
-				case VectoSimulationJobType.BatteryElectricVehicle:
-				case VectoSimulationJobType.IEPC_E:
-					return new BatteryElectricPostprocessingCorrection();
-				case VectoSimulationJobType.IEPC_S:
-				case VectoSimulationJobType.SerialHybridVehicle:
-					return new SerialHybridModalDataPostprocessingCorrection();
-				case VectoSimulationJobType.IHPC:
-				case VectoSimulationJobType.ParallelHybridVehicle:
-					return new ParallelHybridModalDataPostprocessingCorrection();
-				case VectoSimulationJobType.EngineOnlySimulation:
-					return new EngineOnlyPostprocessingCorrection();
-				default:
-					return new ModalDataPostprocessingCorrection();
-			}
-		}
+		
 
 		public int JobRunId => _runData.JobRunId;
 

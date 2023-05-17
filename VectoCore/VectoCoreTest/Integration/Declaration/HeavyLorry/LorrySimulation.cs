@@ -18,6 +18,7 @@ using System.Xml.Schema;
 using Moq;
 using Ninject;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -261,7 +262,23 @@ public class LorrySimulation
 		modData = VectoCSVFile.Read(modFileName, false, true);
 	}
 
-
+	public void AssertVSUMElectricMotorFields(string vsumFileName, VectoRunData runData)
+	{
+		var sumData = VectoCSVFile.Read(vsumFileName, false, true);
+        var em_positions = runData.ElectricMachinesData.Select(em => em.Item1);
+		foreach (var em_pos in runData.ElectricMachinesData.Select(e => e.Item1)) {
+			Tuple<string, Type>[] columns;
+			if (em_pos == PowertrainPosition.IEPC) {
+				columns = SummaryDataContainer.IEPCColumns;
+			} else {
+				columns = SummaryDataContainer.ElectricMotorColumns;
+			}
+			foreach (var (s, type) in columns) {
+				var colName = string.Format(s, em_pos.GetLabel());
+				Assert.IsTrue(sumData.Columns.Contains(colName), $"{colName} missing in sum file");
+			}
+		}
+	}
 
 	public void VSUM_order_test(string fileName, VectoRunData runData)
 	{
@@ -473,7 +490,7 @@ public class LorrySimulation
 	{
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out var sumDataContainer);
 		Assert.AreEqual(0, runs.Count(r => 
-			r.GetContainer().RunData.OVCMode is VectoRunData.OvcHevMode.ChargeDepleting or VectoRunData.OvcHevMode.NotApplicable));
+			r.GetContainer().RunData.OVCMode is OvcHevMode.ChargeDepleting or OvcHevMode.NotApplicable));
 
 		var run = runs.First(r => {
 			var rd = r.GetContainer().RunData;
@@ -493,7 +510,7 @@ public class LorrySimulation
 	{
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out var sumDataContainer);
 		Assert.AreEqual(0, runs.Count(r =>
-			r.GetContainer().RunData.OVCMode is VectoRunData.OvcHevMode.ChargeDepleting or VectoRunData.OvcHevMode.NotApplicable));
+			r.GetContainer().RunData.OVCMode is OvcHevMode.ChargeDepleting or OvcHevMode.NotApplicable));
 
 		var run = runs.First(r => {
 			var rd = r.GetContainer().RunData;
@@ -515,11 +532,11 @@ public class LorrySimulation
 	{
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out var sumDataContainer);
 
-		Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.NotApplicable));
+		Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == OvcHevMode.NotApplicable));
 
 		runs = runs.Where(run => {
 			var rd = run.GetContainer().RunData;
-			return rd.OVCMode == VectoRunData.OvcHevMode.ChargeSustaining &&
+			return rd.OVCMode == OvcHevMode.ChargeSustaining &&
 					rd.Mission.MissionType == MissionType.UrbanDelivery && rd.Loading == loadingType;
 		}).ToList();
 		
@@ -535,11 +552,11 @@ public class LorrySimulation
 	{
 		var jobContainer = GetJobContainer(jobFile, null, out var fileWriter, out var runs, out var sumDataContainer);
 
-		Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.NotApplicable));
+		Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == OvcHevMode.NotApplicable));
 
 		runs = runs.Where(run => {
 			var rd = run.GetContainer().RunData;
-			return rd.OVCMode is VectoRunData.OvcHevMode.ChargeSustaining or VectoRunData.OvcHevMode.ChargeDepleting &&
+			return rd.OVCMode is OvcHevMode.ChargeSustaining or OvcHevMode.ChargeDepleting &&
 					rd.Mission.MissionType == MissionType.RegionalDelivery && rd.Loading == LoadingType.ReferenceLoad;
 		}).ToList();
 
@@ -553,6 +570,8 @@ public class LorrySimulation
 
 		jobContainer.Execute(false);
 		WaitAndAssertSuccess(jobContainer, fileWriter);
+		AssertVSUMElectricMotorFields(fileWriter.SumFileName, runs.First().GetContainer().RunData);
+
 	}
 
 
@@ -568,11 +587,11 @@ public class LorrySimulation
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out var sumDataContainer);
 
 
-		Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.NotApplicable));
+		Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == OvcHevMode.NotApplicable));
 
 		runs = runs.Where(run => {
 			var rd = run.GetContainer().RunData;
-			return rd.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting &&
+			return rd.OVCMode == OvcHevMode.ChargeDepleting &&
 					rd.Mission.MissionType == missionType && rd.Loading == loadingType;
 		}).ToList();
 
@@ -580,8 +599,8 @@ public class LorrySimulation
 		var modData = ((ModalDataContainer)((VehicleContainer)runs.Single().GetContainer()).ModData).Data;
 		jobContainer.Execute(false);
 		WaitAndAssertSuccess(jobContainer, fileWriter);
-
-	}
+		AssertVSUMElectricMotorFields(fileWriter.SumFileName, runs.First().GetContainer().RunData);
+    }
 
 	[TestCase(Group5_HEV_S2_OVC, 12)]
 	[TestCase(Group5_HEV_S3_OVC, 12)]
@@ -593,14 +612,14 @@ public class LorrySimulation
 		SummaryDataContainer sumDataContainer;
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out sumDataContainer);
 
-		Assert.AreEqual(runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting), 
-			runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.ChargeSustaining));
-		Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.NotApplicable));
+		Assert.AreEqual(runs.Count(r => r.GetContainer().RunData.OVCMode == OvcHevMode.ChargeDepleting), 
+			runs.Count(r => r.GetContainer().RunData.OVCMode == OvcHevMode.ChargeSustaining));
+		Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == OvcHevMode.NotApplicable));
 
 
 		runs = runs.Where(run => { 
 			var rd = run.GetContainer().RunData;
-			return rd.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting &&
+			return rd.OVCMode == OvcHevMode.ChargeDepleting &&
 					rd.Mission.MissionType == MissionType.UrbanDelivery && rd.Loading == LoadingType.ReferenceLoad;
 		}).ToList();
 
@@ -620,6 +639,7 @@ public class LorrySimulation
 			AssertSHEV_PEV_Conditioning(modDataRow, runs.Single());
 		}
 		Assert.IsTrue(modData.Rows.Count > 0);
+		AssertVSUMElectricMotorFields(fileWriter.SumFileName, runs.First().GetContainer().RunData);
 	}
 
 	[TestCase(Group5_HEV_S2_OVC, 12)]
@@ -634,15 +654,15 @@ public class LorrySimulation
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out sumDataContainer);
 
 		if (runs.First().GetContainer().RunData.VehicleData.OffVehicleCharging) {
-			Assert.AreEqual(runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting),
-				runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.ChargeSustaining));
+			Assert.AreEqual(runs.Count(r => r.GetContainer().RunData.OVCMode == OvcHevMode.ChargeDepleting),
+				runs.Count(r => r.GetContainer().RunData.OVCMode == OvcHevMode.ChargeSustaining));
 		}
 		
-		Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.NotApplicable));
+		Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == OvcHevMode.NotApplicable));
 
 		runs = runs.Where(run => {
 			var rd = run.GetContainer().RunData;
-			return rd.OVCMode == VectoRunData.OvcHevMode.ChargeSustaining &&
+			return rd.OVCMode == OvcHevMode.ChargeSustaining &&
 					rd.Mission.MissionType == MissionType.UrbanDelivery && rd.Loading == LoadingType.ReferenceLoad;
 		}).ToList();
 
@@ -669,9 +689,9 @@ public class LorrySimulation
 		SummaryDataContainer sumDataContainer;
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out sumDataContainer);
 
-		Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.NotApplicable));
-		Assert.AreEqual(6, runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.ChargeSustaining));
-		Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting));
+		Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == OvcHevMode.NotApplicable));
+		Assert.AreEqual(6, runs.Count(r => r.GetContainer().RunData.OVCMode == OvcHevMode.ChargeSustaining));
+		Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == OvcHevMode.ChargeDepleting));
 
 		runs = runs.Where(run => {
 			var rd = run.GetContainer().RunData;
@@ -719,10 +739,10 @@ public class LorrySimulation
 	public void PEV(string jobFile, int? nrRuns)
 	{
 		SummaryDataContainer sumDataContainer;
-		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out sumDataContainer);
+		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out sumDataContainer, out var inputProvider);
 
-		Assert.IsTrue(runs.All(run => run.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.NotApplicable));
-		//Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.NotApplicable));
+		Assert.IsTrue(runs.All(run => run.GetContainer().RunData.OVCMode == OvcHevMode.NotApplicable));
+		//Assert.AreEqual(0, runs.Count(r => r.GetContainer().RunData.OVCMode == OvcHevMode.NotApplicable));
 
 		Assert.That(runs.All(run => {
 			var rd = run.GetContainer().RunData;
@@ -737,11 +757,11 @@ public class LorrySimulation
 		});
 		jobContainer.AddRun(run);
 
-	
+		AssertPevAUXConnectToREESS(run.GetContainer().RunData);
+		CheckPEVHVACInRunData(run.GetContainer().RunData, inputProvider.JobInputData.Vehicle);
 
 
-
-		Assert.AreEqual(1, jobContainer.Runs.Count);
+        Assert.AreEqual(1, jobContainer.Runs.Count);
 
 		var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
 		jobContainer.Execute(false);
@@ -758,6 +778,8 @@ public class LorrySimulation
 			}
 		}
 
+		AssertVSUMElectricMotorFields(fileWriter.SumFileName, runs.First().GetContainer().RunData);
+        Assert.IsTrue(modData.Rows.Count > 0);
 		//foreach (var vectoRun in runs.Where(r => r != run))
 		//{
 		//	var rd = vectoRun.GetContainer().RunData;
@@ -765,6 +787,54 @@ public class LorrySimulation
 		//}
 
 		Assert.IsTrue(modData.Rows.Count > 0);
+		CheckPEVHVACInModData(run.GetContainer().RunData, modData);
+		
+	}
+
+	private void CheckPEVHVACInRunData(VectoRunData rd, IVehicleDeclarationInputData vehicle)
+	{
+		var hvacInput = vehicle.Components.AuxiliaryInputData.Auxiliaries
+			.First(a => a.Type == AuxiliaryType.HVAC);
+		var ignoredTechnology = "None";
+		var technologies = DeclarationData.HeatingVentilationAirConditioning.GetTechnologies();
+		Assert.That(technologies.Contains(ignoredTechnology));
+		
+		if (hvacInput.Technology.Contains(ignoredTechnology)) {
+			//assert no hvac power 
+			Assert.Fail("Create testfiles");
+		} else {
+			//assert hvac power
+			var hvacAux = rd.Aux.First(a => a.ID == Constants.Auxiliaries.IDs.HeatingVentilationAirCondition);
+			Assert.IsTrue(hvacAux.ConnectToREESS);
+			Assert.AreNotEqual(0.SI<Watt>(),hvacAux.PowerDemandElectric);
+		}
+	}
+
+	private void AssertPevAUXConnectToREESS(VectoRunData rd)
+	{
+		foreach (var aux in rd.Aux) {
+			Assert.IsTrue(aux.ConnectToREESS);
+		}
+	}
+
+	private void CheckPEVHVACInModData(VectoRunData rd, ModalResults modalResults)
+	{
+		foreach (DataRow row in modalResults.Rows) {
+			foreach (var auxData in rd.Aux)
+			{
+				switch (auxData.ID) {
+					case Constants.Auxiliaries.IDs.HeatingVentilationAirCondition:
+						var hvac = row[string.Format(ModalResultField.P_aux_el_.GetCaption(), auxData.ID)] as Watt;
+						Assert.AreEqual(auxData.PowerDemandElectric, hvac);
+						break;
+					default:
+						break;
+				}
+				
+			}
+        }
+
+		
 	}
 
 	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S2_pto_transmission.xml", @"HeavyLorry\S-HEV\Group2_HEV_S2.xml")]
@@ -1128,43 +1198,55 @@ public class LorrySimulation
 		PrintFiles(fileWriter);
 	}
 
-	[MethodImpl(MethodImplOptions.Synchronized)]
+	
 	private JobContainer GetJobContainer(string jobFile, int? nrRuns, out FileOutputWriter fileWriter,
 		out List<IVectoRun> runs, out SummaryDataContainer sumDataContainer, bool writeReports = true)
+	{
+		return GetJobContainer(jobFile, nrRuns, out fileWriter, out runs, out sumDataContainer, out _, writeReports);
+	}
+
+	[MethodImpl(MethodImplOptions.Synchronized)]
+    private JobContainer GetJobContainer(string jobFile, int? nrRuns, out FileOutputWriter fileWriter,
+		out List<IVectoRun> runs, out SummaryDataContainer sumDataContainer, out IDeclarationInputDataProvider inputData,
+		bool writeReports = true)
 	{
 		var filePath = Path.Combine(BASE_DIR, jobFile);
 		Assert.IsTrue(File.Exists(filePath), "Testfile not found: " + filePath);
 		var dataProvider = _xmlReader.CreateDeclaration(filePath);
+		inputData = dataProvider;
 		fileWriter = new FileOutputWriter(filePath);
 		var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter, writeReports ? null : new NullDeclarationReport());
 		//runsFactory.ActualModalData = true;
 		runsFactory.SerializeVectoRunData = true;
 		runsFactory.WriteModalResults = true;
 		var sumWriter = new SummaryDataContainer(fileWriter);
-		
+
 		var jobContainer = new JobContainer(sumWriter);
 		runsFactory.SumData = sumWriter;
 		sumDataContainer = sumWriter;
 		runs = runsFactory.SimulationRuns().ToList();
 
-		if (nrRuns.HasValue) {
-			Assert.AreEqual(nrRuns, runs.Count, "Cycles: \n"  + string.Join("\n", runs.Select(run => run.CycleName + "_" +  run.RunSuffix)));
+		if (nrRuns.HasValue)
+		{
+			Assert.AreEqual(nrRuns, runs.Count, "Cycles: \n" + string.Join("\n", runs.Select(run => run.CycleName + "_" + run.RunSuffix)));
 		}
 		TestContext.WriteLine(string.Join("\n", runs.Select(r => r.CycleName + "_" + r.RunSuffix)));
 
-		if (dataProvider.JobInputData.Vehicle.OvcHev) {
-			Assert.AreEqual(runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.ChargeDepleting),
-				runs.Count(r => r.GetContainer().RunData.OVCMode == VectoRunData.OvcHevMode.ChargeSustaining));
+		if (dataProvider.JobInputData.Vehicle.OvcHev)
+		{
+			Assert.AreEqual(runs.Count(r => r.GetContainer().RunData.OVCMode == OvcHevMode.ChargeDepleting),
+				runs.Count(r => r.GetContainer().RunData.OVCMode == OvcHevMode.ChargeSustaining));
 		}
 
 		return jobContainer;
-	}
+    }
 
 
 
 
 
-	private void PrintRuns(JobContainer jobContainer, FileOutputWriter fileWriter = null)
+
+    private void PrintRuns(JobContainer jobContainer, FileOutputWriter fileWriter = null)
 	{
 		foreach (var keyValuePair in jobContainer.GetProgress()) {
 			TestContext.WriteLine($"{keyValuePair.Key}: {keyValuePair.Value.CycleName} {keyValuePair.Value.RunName} {keyValuePair.Value.Error?.Message}" );

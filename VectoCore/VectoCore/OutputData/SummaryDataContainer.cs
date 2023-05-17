@@ -353,6 +353,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static readonly Tuple<string, Type>[] ElectricEnergyConsumption = {
 			Tuple.Create(SumDataFields.EC_el_SOC, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.EC_el_SOC_corr, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.EC_el_final, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.EC_el_final_KM, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.EC_el_final_TKM, typeof(ConvertedSI)),
@@ -375,6 +376,7 @@ namespace TUGraz.VectoCore.OutputData
 			Tuple.Create(SumDataFields.E_BusAux_HVAC_El, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.E_BusAux_HVAC_Mech, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.E_BusAux_PS_corr, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.E_BusAux_el_PS_corr, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.E_PS_CompressorOff, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.E_PS_CompressorOn, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.Delta_E_BusAux_Battery, typeof(ConvertedSI)),
@@ -397,6 +399,7 @@ namespace TUGraz.VectoCore.OutputData
 		protected IList<string> FcCols = new List<string>();
 		protected IList<string> GearColumns = new List<string>();
 		protected IList<string> AuxColumns = new List<string>();
+		protected IList<string> EmColumns = new List<string>();
 
 
 		/// <summary>
@@ -478,7 +481,7 @@ namespace TUGraz.VectoCore.OutputData
 						CreateColumns(PHEVColumns);
 					}
 
-					if (runData.OVCMode != VectoRunData.OvcHevMode.NotApplicable) {
+					if (runData.OVCMode != OvcHevMode.NotApplicable) {
 						CreateColumns(OVCModeColumns);
 					}
 					break;
@@ -525,10 +528,17 @@ namespace TUGraz.VectoCore.OutputData
 		private void CreateElectricMotorColumns(IElectricMotor em, VectoRunData runData, Tuple<string, Type>[] cols)
 		{
 			lock (Table) {
+				var emColNames = cols.Select(x => string.Format(x.Item1, em.Position.GetName()));
 				Table.Columns.AddRange(cols
 					.Select(x => Tuple.Create(string.Format(x.Item1, em.Position.GetName()), x.Item2))
 					.Where(x => !Table.Columns.Contains(x.Item1)).Select(x => new DataColumn(x.Item1, x.Item2))
 					.ToArray());
+				foreach (var emColName in emColNames) {
+					if(EmColumns.Contains(emColName)) {
+						continue;
+					}
+					EmColumns.Add(emColName);
+				}
 			}
 		}
 
@@ -665,6 +675,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			cols.AddRange(new [] {
 				SumDataFields.EC_el_SOC,
+				SumDataFields.EC_el_SOC_corr,
 				SumDataFields.EC_el_final,
 				SumDataFields.EC_el_final_KM,
 				SumDataFields.EC_el_final_TKM,
@@ -675,7 +686,12 @@ namespace TUGraz.VectoCore.OutputData
 				SumDataFields.f_equiv,
 			});
 
-			cols.AddRange(new[] {
+			cols.AddRange(EmColumns);
+
+
+
+
+        cols.AddRange(new[] {
 				SumDataFields.REESS_StartSoC,
 				SumDataFields.REESS_EndSoC,
 				SumDataFields.REESS_DeltaEnergy,
@@ -712,7 +728,8 @@ namespace TUGraz.VectoCore.OutputData
 				SumDataFields.E_BusAux_ES_consumed, 
 				SumDataFields.E_BusAux_ES_generated, 
 				SumDataFields.Delta_E_BusAux_Battery,
-				SumDataFields.E_BusAux_PS_corr, 
+				SumDataFields.E_BusAux_PS_corr,
+				SumDataFields.E_BusAux_el_PS_corr,
 				SumDataFields.E_BusAux_ES_mech_corr,
 				SumDataFields.E_BusAux_HVAC_Mech, 
 				SumDataFields.E_BusAux_HVAC_El,

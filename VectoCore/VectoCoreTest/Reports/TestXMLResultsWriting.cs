@@ -20,6 +20,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
@@ -101,7 +102,7 @@ public class TestXMLResultsWriting
 	public void Test_CIF_ReportResult_WritingResults_Lorry(VectoSimulationJobType jobType, bool ovc, bool exempted, bool success, params FuelType[] fuels)
 	{
 		var vehicleCategory = VehicleCategory.RigidTruck;
-		var ovcmode = ovc ? VectoRunData.OvcHevMode.ChargeDepleting : VectoRunData.OvcHevMode.NotApplicable;
+		var ovcmode = ovc ? OvcHevMode.ChargeDepleting : OvcHevMode.NotApplicable;
 		var runData = GetMockRunData(vehicleCategory, jobType, ovc, exempted, ovcmode, fuels);
 		var modData = GetMockModData(success ? VectoRun.Status.Success : VectoRun.Status.Aborted, fuels);
 
@@ -112,7 +113,7 @@ public class TestXMLResultsWriting
 		resultEntries.Add(resultEntry);
 
 		if (ovc && jobType.GetPowertrainArchitectureType() == VectoSimulationJobTypeHelper.Hybrid) {
-			var run2 = GetMockRunData(vehicleCategory, jobType, true, exempted, VectoRunData.OvcHevMode.ChargeSustaining, fuels);
+			var run2 = GetMockRunData(vehicleCategory, jobType, true, exempted, OvcHevMode.ChargeSustaining, fuels);
 			var res2 = GetResultEntry(run2);
 			res2.SetResultData(run2, modData, 1);
 			resultEntries.Add(res2);
@@ -159,7 +160,7 @@ public class TestXMLResultsWriting
 	public void TestReportResult_WritingResults_CompletedBus(VectoSimulationJobType jobType, bool ovc, bool exempted, bool success, params FuelType[] fuels)
 	{
 		var vehicleCategory = VehicleCategory.HeavyBusCompletedVehicle;
-		var ovcmode = ovc ? VectoRunData.OvcHevMode.ChargeDepleting : VectoRunData.OvcHevMode.NotApplicable;
+		var ovcmode = ovc ? OvcHevMode.ChargeDepleting : OvcHevMode.NotApplicable;
 		var runData = GetMockRunData(vehicleCategory, jobType, ovc, exempted, ovcmode, fuels);
 		var modData = GetMockModData(success ? VectoRun.Status.Success : VectoRun.Status.Aborted, fuels);
 
@@ -176,7 +177,7 @@ public class TestXMLResultsWriting
 		}
 
 		if (ovc && jobType.GetPowertrainArchitectureType() == VectoSimulationJobTypeHelper.Hybrid) {
-			var run2 = GetMockRunData(vehicleCategory, jobType, true, exempted, VectoRunData.OvcHevMode.ChargeSustaining, fuels);
+			var run2 = GetMockRunData(vehicleCategory, jobType, true, exempted, OvcHevMode.ChargeSustaining, fuels);
 			var res2 = GetResultEntry(run2);
 			res2.SetResultData(run2, modData, 1);
 			resultEntries.Add(res2);
@@ -250,7 +251,7 @@ public class TestXMLResultsWriting
 	public void Test_MRF_ReportResult_WritingResults_Lorry(VectoSimulationJobType jobType, bool ovc, bool exempted, bool success, params FuelType[] fuels)
 	{
 		var vehicleCategory = VehicleCategory.RigidTruck;
-		var ovcmode = ovc ? VectoRunData.OvcHevMode.ChargeDepleting : VectoRunData.OvcHevMode.NotApplicable;
+		var ovcmode = ovc ? OvcHevMode.ChargeDepleting : OvcHevMode.NotApplicable;
 		var runData = GetMockRunData(vehicleCategory, jobType, ovc, exempted, ovcmode, fuels);
 		var modData = GetMockModData(success ? VectoRun.Status.Success : VectoRun.Status.Aborted, fuels);
 
@@ -262,7 +263,7 @@ public class TestXMLResultsWriting
 		resultEntries.Add(resultEntry);
 
 		if (ovc && jobType.GetPowertrainArchitectureType() == VectoSimulationJobTypeHelper.Hybrid) {
-			var run2 = GetMockRunData(vehicleCategory, jobType, true, exempted, VectoRunData.OvcHevMode.ChargeSustaining, fuels);
+			var run2 = GetMockRunData(vehicleCategory, jobType, true, exempted, OvcHevMode.ChargeSustaining, fuels);
 			var res2 = GetResultEntry(run2);
 			res2.SetResultData(run2, modData, 1);
 			resultEntries.Add(res2);
@@ -309,7 +310,7 @@ public class TestXMLResultsWriting
 	public void Test_MRF_ReportResult_WritingResults_Bus(VectoSimulationJobType jobType, bool ovc, bool exempted, bool success, params FuelType[] fuels)
 	{
 		var vehicleCategory = VehicleCategory.HeavyBusCompletedVehicle;
-		var ovcmode = ovc ? VectoRunData.OvcHevMode.ChargeDepleting : VectoRunData.OvcHevMode.NotApplicable;
+		var ovcmode = ovc ? OvcHevMode.ChargeDepleting : OvcHevMode.NotApplicable;
 		var runData = GetMockRunData(vehicleCategory, jobType, ovc, exempted, ovcmode, fuels);
 		var modData = GetMockModData(success ? VectoRun.Status.Success : VectoRun.Status.Aborted, fuels);
 
@@ -321,7 +322,7 @@ public class TestXMLResultsWriting
 		resultEntries.Add(resultEntry);
 
 		if (ovc && jobType.GetPowertrainArchitectureType() == VectoSimulationJobTypeHelper.Hybrid) {
-			var run2 = GetMockRunData(vehicleCategory, jobType, true, exempted, VectoRunData.OvcHevMode.ChargeSustaining, fuels);
+			var run2 = GetMockRunData(vehicleCategory, jobType, true, exempted, OvcHevMode.ChargeSustaining, fuels);
 			var res2 = GetResultEntry(run2);
 			res2.SetResultData(run2, modData, 1);
 			resultEntries.Add(res2);
@@ -386,7 +387,7 @@ public class TestXMLResultsWriting
 	public void Test_VIF_ReportResult_WritingResults_Bus(VectoSimulationJobType jobType, bool ovc, bool exempted, bool success, params FuelType[] fuels)
 	{
 		var vehicleCategory = VehicleCategory.HeavyBusPrimaryVehicle;
-		var ovcmode = ovc ? VectoRunData.OvcHevMode.ChargeDepleting : VectoRunData.OvcHevMode.NotApplicable;
+		var ovcmode = ovc ? OvcHevMode.ChargeDepleting : OvcHevMode.NotApplicable;
 		var runData = GetMockRunData(vehicleCategory, jobType, ovc, exempted, ovcmode, fuels);
 		var modData = GetMockModData(success ? VectoRun.Status.Success : VectoRun.Status.Aborted, fuels);
 
@@ -398,7 +399,7 @@ public class TestXMLResultsWriting
 		resultEntries.Add(resultEntry);
 
 		if (ovc && jobType.GetPowertrainArchitectureType() == VectoSimulationJobTypeHelper.Hybrid) {
-			var run2 = GetMockRunData(vehicleCategory, jobType, true, exempted, VectoRunData.OvcHevMode.ChargeSustaining, fuels);
+			var run2 = GetMockRunData(vehicleCategory, jobType, true, exempted, OvcHevMode.ChargeSustaining, fuels);
 			var res2 = GetResultEntry(run2);
 			res2.SetResultData(run2, modData, 1);
 			resultEntries.Add(res2);
@@ -429,15 +430,15 @@ public class TestXMLResultsWriting
 	{
 		var jobType = VectoSimulationJobType.ParallelHybridVehicle;
 		var vehicleCategory = VehicleCategory.RigidTruck;
-		var ovcmode = VectoRunData.OvcHevMode.ChargeDepleting;
+		var ovcmode = OvcHevMode.ChargeDepleting;
 		var runData = GetMockRunData(vehicleCategory, jobType, true, false, ovcmode, fuels);
 		var modData = GetMockModData(VectoRun.Status.Success, fuels, ovcmode);
 
 		var cdResult = GetResultEntry(runData);
 		cdResult.SetResultData(runData, modData, 1);
 
-		var run2 = GetMockRunData(vehicleCategory, jobType, true, false, VectoRunData.OvcHevMode.ChargeSustaining, fuels);
-		var modData2 = GetMockModData(VectoRun.Status.Success, fuels, VectoRunData.OvcHevMode.ChargeSustaining);
+		var run2 = GetMockRunData(vehicleCategory, jobType, true, false, OvcHevMode.ChargeSustaining, fuels);
+		var modData2 = GetMockModData(VectoRun.Status.Success, fuels, OvcHevMode.ChargeSustaining);
 		var csResult = GetResultEntry(run2);
 		csResult.SetResultData(run2, modData2, 1);
 
@@ -465,7 +466,7 @@ public class TestXMLResultsWriting
 	{
 		var jobType = VectoSimulationJobType.ParallelHybridVehicle;
 		var vehicleCategory = VehicleCategory.RigidTruck;
-		var ovcmode = VectoRunData.OvcHevMode.ChargeDepleting;
+		var ovcmode = OvcHevMode.ChargeDepleting;
 		var runData = GetMockRunData(vehicleCategory, jobType, true, false, ovcmode, fuels);
 		var modData = GetMockModData(VectoRun.Status.Success, fuels, ovcmode);
 
@@ -577,7 +578,7 @@ public class TestXMLResultsWriting
 		return doc;
 	}
 
-	private IModalDataContainer GetMockModData(VectoRun.Status runStatus, FuelType[] fuelTypes, VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+	private IModalDataContainer GetMockModData(VectoRun.Status runStatus, FuelType[] fuelTypes, OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 	{
 		var fuels = fuelTypes == null || fuelTypes.Length == 0 ? new[] { FuelType.DieselCI } : fuelTypes;
 
@@ -605,7 +606,7 @@ public class TestXMLResultsWriting
 		modData.Setup(x => x.CorrectedModalData).Returns(mc.Object);
 
 		var fcCorrected = new Dictionary<FuelType, IFuelConsumptionCorrection>();
-		var ovcFactor = ovcMode == VectoRunData.OvcHevMode.ChargeDepleting ? 0.1 : 1.0;
+		var ovcFactor = ovcMode == OvcHevMode.ChargeDepleting ? 0.1 : 1.0;
 		foreach (var fuelType in fuels) {
 			var factor = fcCorrected.Count == 0 ? 1 : 0.1;
 			var fc = new Mock<IFuelConsumptionCorrection>();
@@ -619,14 +620,14 @@ public class TestXMLResultsWriting
 		mc.Setup(x => x.CO2Total).Returns(20.SI<Kilogram>());
 		mc.Setup(x => x.FuelEnergyConsumptionTotal).Returns(1e9.SI<Joule>());
 
-		var elOvcFactor = ovcMode == VectoRunData.OvcHevMode.ChargeSustaining ? 0 : 1.0;
+		var elOvcFactor = ovcMode == OvcHevMode.ChargeSustaining ? 0 : 1.0;
 		mc.Setup(x => x.ElectricEnergyConsumption_SoC).Returns(200.SI(Unit.SI.Mega.Joule).Cast<WattSecond>() * elOvcFactor);
 
 		return modData.Object;
 	}
 
 	private VectoRunData GetMockRunData(VehicleCategory vehicleCategory, VectoSimulationJobType jobType,
-		bool offVehicleCharging, bool exempted, VectoRunData.OvcHevMode ovcMode, FuelType[] fuelTypes)
+		bool offVehicleCharging, bool exempted, OvcHevMode ovcMode, FuelType[] fuelTypes)
 	{
 		var fuels = fuelTypes == null || fuelTypes.Length == 0 ? new [] { FuelType.DieselCI } : fuelTypes;
 		return new VectoRunData() {

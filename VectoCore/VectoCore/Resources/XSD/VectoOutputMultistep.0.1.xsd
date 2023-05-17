@@ -295,7 +295,7 @@
 							<xs:documentation>P221</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="CertificationMethod" type="v1.0:AngledriveCertificationOptionType">
+					<xs:element name="CertificationMethod" type="v1.0:RetarderCertificationOptionType">
 						<xs:annotation>
 							<xs:documentation>P258 - [-]</xs:documentation>
 						</xs:annotation>
@@ -936,10 +936,15 @@
 							</xs:appinfo>
 						</xs:annotation> -->
 					</xs:element>
-					<xs:element name="CertificationMethod" type="v2.3:CertificationMethodType">
+					<xs:element name="CertificationMethod">
 						<xs:annotation>
 							<xs:documentation>P516 - enum</xs:documentation>
 						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="v2.3:CertificationMethodType">
+								<xs:enumeration value="Measured"/>
+							</xs:restriction>
+						</xs:simpleType>
 					</xs:element>
 					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType" minOccurs="0">
 						<xs:annotation>
@@ -1017,7 +1022,7 @@
 							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="TestingTemperature" type="xs:int" minOccurs="0">
+					<xs:element name="TestingTemperature" type="xs:int">
 						<xs:annotation>
 							<xs:documentation>P521 - [°C]</xs:documentation>
 							<xs:appinfo>
@@ -1027,6 +1032,114 @@
 								</vectoParam:description> -->
 							</xs:appinfo>
 						</xs:annotation>
+					</xs:element>
+					<xs:element name="OCV">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Entry" type="vif:BatterySystemOCVEntryType" minOccurs="2" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="CurrentLimits">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Entry" type="vif:BatterySystemCurrentLimitsEntryType" minOccurs="2" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="BatterySystemStandardValuesDataType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractBatterySystemDataType">
+				<xs:sequence>
+					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+						<!-- <xs:annotation>
+							<xs:documentation>P511 - [-]</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="BatterySystem">511</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
+						</xs:annotation> -->
+					</xs:element>
+					<xs:element name="Model" type="v1.0:ModelType">
+						<!-- <xs:annotation>
+							<xs:documentation>P512 - [-]</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="BatterySystem">512</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
+						</xs:annotation> -->
+					</xs:element>
+					<xs:element name="CertificationMethod">
+						<xs:annotation>
+							<xs:documentation>P516 - enum</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="v2.3:CertificationMethodType">
+								<xs:enumeration value="Standard values"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P513 - [-]</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="BatterySystem">513</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+						<xs:annotation>
+							<xs:documentation>P514 - [-]</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="BatterySystem">514</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AppVersion" type="v1.0:AppVersionType">
+						<xs:annotation>
+							<xs:documentation>P515 - [-]</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="BatterySystem">515</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="BatteryType" type="v2.3:BatteryTypeType">
+						<xs:annotation>
+							<xs:documentation>P517 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="RatedCapacity">
+						<xs:annotation>
+							<xs:documentation>P518 - [Ah]</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="BatterySystem">518</vectoParam:parameterId>
+									<vectoParam:unit>Ah</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double2">
+								<xs:minExclusive value="0.00"/>
+							</xs:restriction>
+						</xs:simpleType>
 					</xs:element>
 					<xs:element name="OCV">
 						<xs:complexType>
@@ -1301,17 +1414,6 @@
 								<!-- <vectoParam:description>
 									<vectoParam:parameterId component="CapacitorSystem">538</vectoParam:parameterId>
 									<vectoParam:unit>F</vectoParam:unit>
-								</vectoParam:description> -->
-							</xs:appinfo>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="InternalResistance" type="v2.3:InternalResistanceType">
-						<xs:annotation>
-							<xs:documentation>P539 - [mOhm]</xs:documentation>
-							<xs:appinfo>
-								<!-- <vectoParam:description>
-									<vectoParam:parameterId component="CapacitorSystem">539</vectoParam:parameterId>
-									<vectoParam:unit>mOhm</vectoParam:unit>
 								</vectoParam:description> -->
 							</xs:appinfo>
 						</xs:annotation>
@@ -1912,7 +2014,7 @@
 							<xs:sequence>
 								<xs:element name="Entry" type="vif:IEPCSystemDragTorqueEntryType" minOccurs="2" maxOccurs="unbounded"/>
 							</xs:sequence>
-							<xs:attribute name="gear" use="required">
+							<xs:attribute name="gear">
 								<xs:simpleType>
 									<xs:restriction base="xs:int">
 										<xs:minInclusive value="1"/>

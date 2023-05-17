@@ -33,8 +33,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json.Linq;
-using System.Collections.Concurrent;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -53,6 +51,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
+using TUGraz.VectoCore.Models.GenericModelData;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
@@ -62,7 +61,8 @@ using TUGraz.VectoCore.OutputData.XML;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public static class DeclarationData
+	public static class 
+		DeclarationData
 	{
 		/// <summary>
 		/// The standard acceleration for gravity on earth.
@@ -90,6 +90,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly HeatingVentilationAirConditioning HeatingVentilationAirConditioning =
 			new HeatingVentilationAirConditioning();
 
+
 		public static readonly PneumaticSystem PneumaticSystem = new PneumaticSystem();
 		public static readonly SteeringPump SteeringPump = new SteeringPump();
 		public static readonly SteeringPumpBus SteeringPumpBus = new SteeringPumpBus();
@@ -101,7 +102,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
 
-		public static readonly HEVStrategyParameters HEVStrategyParameters = new HEVStrategyParametersLorry();
+		public static readonly HEVStrategyParameters HEVStrategyParameters = new HEVStrategyParameters();
 		//public static readonly HEVStrategyParameters InitEquivalenceFactorsBus = new HEVStrategyParametersBus();
 
 		public static readonly VehicleOperationLookup VehicleOperation = new VehicleOperationLookup();
@@ -126,10 +127,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static readonly Watt MinDepotChgPwr = 10.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
 		public static readonly Second DepotChargingDuration = 6.SI(Unit.SI.Hour).Cast<Second>();
-
-		public static readonly ConcurrentDictionary<MissionType, DrivingCycleData> CyclesCache =
-			new ConcurrentDictionary<MissionType, DrivingCycleData>();
-
+		public static readonly KilogramPerCubicMeter ICE_MassPerDisplacement = 770.SI<Kilogram>() / 7.7.SI<Liter>().Cast<CubicMeter>();
+		public static readonly KilogramPerWatt EM_MassPerPower = 1.3.SI(Unit.SI.Kilo.Gramm.Per.Kilo.Watt).Cast<KilogramPerWatt>();
+		public static readonly Kilogram EM_MassElectronics = 0.SI<Kilogram>();
+		public static readonly Kilogram EM_MassInverter = 100.SI<Kilogram>();
+		public static readonly KilogramPerWattSecond Battery_MassPerCapacity = 6.7.SI(Unit.SI.Kilo.Gramm.Per.Kilo.Watt.Hour).Cast<KilogramPerWattSecond>();
 
 
 		/// <summary>
@@ -264,29 +266,35 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static class BusAuxiliaries
 		{
-			//private static ISSMInputs ssmInputs = null;
-
+			
 			private static IEnvironmentalConditionsMap envMap;
 
-			//private static AuxiliaryConfig busAuxConfig = null;
 			private static ElectricalConsumerList elUserConfig;
 
 			private static IActuationsMap actuationsMap;
-			//private static PneumaticsAuxilliariesConfig pneumaticAuxConfig;
 			private static List<SSMTechnology> ssmTechnologies;
 
+			public static readonly JoulePerNormLiter PneumaticSystemElectricDemandPerAirGenerated =
+				5600.SI<Watt>() / 325.SI(Unit.SI.NormLiter.Per.Minute).Cast<NormLiterPerSecond>();
 
-			//public static ISSMInputs SSMDefaultValues
-			//{
-			//	get {
-			//		return ssmInputs ?? (ssmInputs = SSMInputData.ReadStream(
-			//					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.SSMDefaults.AHSM"),
-			//					DefaultEnvironmentalConditions));
-			//	}
-			//}
-
-			public static ICompressorMap GetCompressorMap(string compressorSize, string clutchType)
+			public static ICompressorMap GetCompressorMap(
+				IPneumaticSupplyDeclarationData pneumaticSupply)
 			{
+				var compressorSize = pneumaticSupply.CompressorSize;
+				var clutchType = pneumaticSupply.Clutch;
+
+				if (pneumaticSupply.CompressorDrive == CompressorDrive.electrically) {
+					return null;
+				}
+
+				if (compressorSize == "not applicable") {
+					throw new VectoException($"SizeOfAirSupply: '{compressorSize}' invalid for compressor drive: '{pneumaticSupply.CompressorDrive}'");
+				}
+				
+
+
+				
+
 				var resource = GetCompressorResourceForSize(compressorSize);
 
 				var dragCurveFactorClutch = 1.0;
@@ -311,6 +319,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					case "Medium Supply 2-stage": return "DEFAULT_2-Cylinder_1-Stage_650ccm.acmp";
 					case "Large Supply 1-stage": return "DEFAULT_2-Cylinder_2-Stage_398ccm.acmp";
 					case "Large Supply 2-stage": return "DEFAULT_3-Cylinder_2-Stage_598ccm.acmp";
+					//case "electrically": return "DEFAULT_electrically.acmp";
 					default: throw new ArgumentException($"unknown compressor size {compressorSize}", compressorSize);
 				}
 			}
@@ -619,14 +628,17 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const double TorqueLimitGearboxFactor = 0.9;
 			public const double TorqueLimitVehicleFactor = 0.95;
 
-			public static KilogramSquareMeter EngineInertia(VectoSimulationJobType jobType, CubicMeter displacement, GearboxType gbxType)
+			public static KilogramSquareMeter EngineInertia(VectoSimulationJobType jobType, CubicMeter displacement, GearboxType? gbxType)
 			{
 				// VB Code:    Return 1.3 + 0.41 + 0.27 * (Displ / 1000)
 				KilogramSquareMeter clutchPlateTc;
 				if (jobType.IsOneOf(VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_S)) {
 					clutchPlateTc = 0.SI<KilogramSquareMeter>();
 				} else {
-					clutchPlateTc = (gbxType.AutomaticTransmission() ? TorqueConverterInertia : ClutchInertia);
+					if (!gbxType.HasValue) {
+						throw new VectoException("Gearbox type must be provided!");
+					}
+					clutchPlateTc = (gbxType.Value.AutomaticTransmission() ? TorqueConverterInertia : ClutchInertia);
 				}
 
 				return clutchPlateTc + EngineBaseInertia +
@@ -1629,7 +1641,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var D9_chargingEfficiencyBattery = CalculateChargingEfficiencyPEV(runData);
 			var D15_useableBatteryCapacityForR_CDA = batteryData.UseableStoredEnergy;
-			var D13_electricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption_SoC;
+			var D13_electricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption_SoC_Corr;
 
 			var D16_actualChargeDepletingRange = D15_useableBatteryCapacityForR_CDA / D13_electricEnergyConsumption * data.Distance;
 			var D17_equivalentAllElectricRange = D16_actualChargeDepletingRange;

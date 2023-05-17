@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			{
 
 				var genericResult = Results.First(x => x.VehicleClass.IsPrimaryBus() && x.FuelMode == specificResult.FuelMode &&
-														x.Mission == specificResult.Mission && x.LoadingType == specificResult.LoadingType);
+														x.Mission == specificResult.Mission && x.LoadingType == specificResult.LoadingType && x.OVCMode == specificResult.OVCMode);
 				var primaryResult = genericResult.PrimaryResult ?? specificResult.PrimaryResult;
 				if (primaryResult == null)
 				{

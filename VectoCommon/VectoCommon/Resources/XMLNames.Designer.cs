@@ -2383,6 +2383,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die ElectricEnergyStorage ähnelt.
+        /// </summary>
+        public static string ElectricEnergyStorage {
+            get {
+                return ResourceManager.GetString("ElectricEnergyStorage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Battery ähnelt.
         /// </summary>
         public static string ElectricEnergyStorage_Battery {
@@ -3643,7 +3652,7 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die ElectricEnergyStorage ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die REESS ähnelt.
         /// </summary>
         public static string REESS {
             get {

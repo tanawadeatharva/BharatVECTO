@@ -121,7 +121,7 @@
 				<Battery>
 					<StringID>0</StringID>
 					<REESS>
-						<v2.4:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xsi:type="BatterySystemDataType">
+						<v2.4:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xsi:type="BatterySystemStandardValuesDataType">
 							<Manufacturer>a</Manufacturer>
 							<Model>a</Model>
 							<CertificationNumber>token</CertificationNumber>
@@ -130,8 +130,6 @@
 							<CertificationMethod>Standard values</CertificationMethod>
 							<BatteryType>HPBS</BatteryType>
 							<RatedCapacity>72.00</RatedCapacity>
-							<ConnectorsSubsystemsIncluded>true</ConnectorsSubsystemsIncluded>
-							<JunctionboxIncluded>true</JunctionboxIncluded>
 							<OCV>
 								<Entry SoC="0" OCV="620.00"/>
 								<Entry SoC="100" OCV="640.00"/>

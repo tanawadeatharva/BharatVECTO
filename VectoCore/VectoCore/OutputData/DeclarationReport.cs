@@ -42,10 +42,11 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 
 namespace TUGraz.VectoCore.OutputData
 {
-	public interface IDeclarationReport
+    public interface IDeclarationReport
 	{
 		/**
 		 * allow to initialize the report
@@ -78,7 +79,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		VectoRun.Status Status { get; }
 
-		VectoRunData.OvcHevMode OVCMode { get; }
+		OvcHevMode OVCMode { get; }
 		MissionType Mission { get; }
 
 		LoadingType LoadingType { get; }

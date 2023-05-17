@@ -363,6 +363,11 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<CubicMeter>.Create(kilogram.Value() / kilogramPerCubicMeter.Value());
 		}
+
+		public static KilogramPerCubicMeter operator /(Kilogram kg, CubicMeter m3)
+		{
+			return SIBase<KilogramPerCubicMeter>.Create(kg.Val / m3.Value());
+		}
 	}
 
 	public class Liter : SIBase<Liter>
@@ -397,6 +402,12 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<NormLiterPerSecond>.Create(nl.Val / s.Value());
 		}
+
+		public static WattSecond operator *(NormLiter nl, JoulePerNormLiter jpnl)
+		{
+			return SIBase<WattSecond>.Create(nl.Val * jpnl.Value());
+		}
+
 	}
 
 	public class NormLiterPerKilogram : SIBase<NormLiterPerKilogram>
@@ -610,6 +621,17 @@ namespace TUGraz.VectoCommon.Utils
 		}
 
 	}
+
+	public class KilogramPerWatt : SIBase<KilogramPerWatt>
+	{
+		private static readonly int[] Units = { 0, -2, 3, 0, 0, 0, 0 };
+
+		[DebuggerHidden]
+		private KilogramPerWatt(double value) : base(value, Units) { }
+
+		public override string UnitString => "kg/W";
+
+    }
 
 	/// <summary>
 	/// SI Class for Kilogramm per watt second [kg/Ws].
@@ -829,6 +851,11 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<JoulePerNormLiter>.Create(watt.Val / nlps.Value());
 		}
+
+		public static Kilogram operator *(Watt w, KilogramPerWatt kpw)
+		{
+			return SIBase<Kilogram>.Create(w.Val * kpw.Value());
+		}
 	}
 
 	/// <summary>
@@ -951,6 +978,11 @@ namespace TUGraz.VectoCommon.Utils
 		public static JoulePerKilogramMeter operator /(JoulePerMeter jpm, Kilogram kg)
 		{
 			return SIBase<JoulePerKilogramMeter>.Create(jpm.Val / kg.Value());
+		}
+
+		public static Joule operator *(JoulePerMeter jpm, Meter m)
+		{
+			return SIBase<Joule>.Create(jpm.Val * m.Value());
 		}
 	}
 
@@ -1606,7 +1638,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="val">The value.</param>
 		/// <param name="unitFactor"></param>
 		/// <param name="units">The units.</param>
-		[DebuggerHidden]
+		//[DebuggerHidden]
 		protected SI(double val, double unitFactor, int[] units)
 		{
 			Val = val;

@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.SerialHybridVehicle,
 					ArchitectureID.S4));
 			Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.HEV_S_IEPC>().Named(
-				_vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.SerialHybridVehicle,
+				_vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.IEPC_S,
 					ArchitectureID.S_IEPC));
 
 			Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.HEV_P1>().Named(
@@ -158,6 +158,10 @@ namespace TUGraz.VectoCore.InputData.Reader
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.ParallelHybridVehicle,
 					ArchitectureID.P4));
 
+			Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.HEV_P_IHPC>().Named(
+				_vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.IHPC,
+					ArchitectureID.P2));
+
 			Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.PEV_E2>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.E2));
@@ -169,7 +173,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					ArchitectureID.E4));
 
 			Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.PEV_E_IEPC>().Named(
-				_vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.BatteryElectricVehicle,
+				_vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.IEPC_E,
 					ArchitectureID.E_IEPC));
 
 			Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.Exempted>().Named(
@@ -209,7 +213,12 @@ namespace TUGraz.VectoCore.InputData.Reader
 			Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.HEV_P4>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.CompletedBus, VectoSimulationJobType.ParallelHybridVehicle,
 					ArchitectureID.P4));
-			Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.PEV_E2>().Named(
+
+			Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.HEV_P_IHPC>().Named(
+				_vehicleStringHelper.GetName(VehicleCategoryHelper.CompletedBus, VectoSimulationJobType.IHPC,
+					ArchitectureID.P2));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.PEV_E2>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.CompletedBus, VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.E2));
 			Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.PEV_E3>().Named(
@@ -239,7 +248,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.SerialHybridVehicle,
 					ArchitectureID.S4));
 			Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.HEV_S_IEPC>().Named(
-				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.SerialHybridVehicle,
+				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.IEPC_S,
 					ArchitectureID.S_IEPC));
 			Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.HEV_P1>().Named(
 				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.ParallelHybridVehicle,
@@ -267,10 +276,14 @@ namespace TUGraz.VectoCore.InputData.Reader
 				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.E4));
 			Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.PEV_E_IEPC>().Named(
-				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.BatteryElectricVehicle,
+				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.IEPC_E,
 					ArchitectureID.E_IEPC));
-			#endregion
-		}
+
+			Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.Exempted>().Named(
+				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.ConventionalVehicle,
+					ArchitectureID.UNKNOWN, true));
+            #endregion
+        }
 		#endregion
 
 

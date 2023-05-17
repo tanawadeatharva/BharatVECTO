@@ -39,6 +39,7 @@
 
   <ItemGroup>
     <None Include="TestData\**" CopyToOutputDirectory="PreserveNewest" />
+	<None Include="Resources\**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 	<ItemGroup>
@@ -75,7 +76,9 @@
 
   <ItemGroup>
     <Folder Include="InputData\DeclarationDataAdapterTest\" />
+    <Folder Include="Integration\Declaration\PrimaryBus\" />
     <Folder Include="Models\Declaration\BusAux\" />
+    <Folder Include="TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\CompletedBus\VIF\" />
     <Folder Include="TestUtils\" />
   </ItemGroup>
 

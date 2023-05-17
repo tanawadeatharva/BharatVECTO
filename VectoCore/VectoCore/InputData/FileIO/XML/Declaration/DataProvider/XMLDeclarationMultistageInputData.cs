@@ -10,6 +10,7 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 
@@ -149,13 +150,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public IResultsInputData ResultsInputData => _resultsInputData ?? (_resultsInputData = Reader.ResultsInputData);
 
-		public IResult GetResult(VehicleClass vehicleClass, MissionType mission, string fuelMode, Kilogram payload)
+		public IResult GetResult(VehicleClass vehicleClass, MissionType mission, string fuelMode, Kilogram payload,
+			OvcHevMode ovcHevMode)
 		{
 			return ResultsInputData.Results.FirstOrDefault(
 				x => x.VehicleGroup == vehicleClass &&
 					(x.SimulationParameter.Payload - payload).IsEqual(0, 1) && x.Mission == mission 
-					// && x.SimulationParameter.FuelMode.Equals(fuelMode, StringComparison.InvariantCultureIgnoreCase)
-					);
+					&& x.OvcMode == ovcHevMode
+				// && x.SimulationParameter.FuelMode.Equals(fuelMode, StringComparison.InvariantCultureIgnoreCase)
+			);
 		}
 
 		public XmlNode ResultsNode => GetNode(XMLNames.Report_Results);

@@ -14,6 +14,8 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 {
 	public class GenericBusIHPCData : GenericBusEMBase
 	{
+		// public const double GenericGearEfficiency = 0.925; //Considered in gearbox
+
 		public GenericBusIHPCData()
 		{
 			GenericEfficiencyMap_ASM =
@@ -113,7 +115,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 			result.Columns.Add(ElectricMotorMapReader.Fields.MotorSpeed);
 			result.Columns.Add(ElectricMotorMapReader.Fields.Torque);
 			result.Columns.Add(ElectricMotorMapReader.Fields.PowerElectrical);
-
+			throw new Exception("Consider IHPC GenericGearEfficiency");
 			foreach (DataRow row in normalizedMap.Rows)
 			{
 				var motorSpeed = row.ParseDouble(MotorSpeedNorm) * ratedPoint.NRated;

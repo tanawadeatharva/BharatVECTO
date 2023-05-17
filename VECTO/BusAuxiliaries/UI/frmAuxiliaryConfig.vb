@@ -1395,26 +1395,26 @@ Public Class frmAuxiliaryConfig
 
 
         'Pneumatic Auxillaries Binding
-        txtAdBlueNIperMinute.DataBindings.Add("Text", auxConfig.PneumaticAuxillariesConfig, "AdBlueNIperMinute")
+        txtAdBlueNIperMinute.DataBindings.Add("Text", auxConfig.PneumaticAuxiliariesConfig, "AdBlueNIperMinute")
 
-        txtOverrunUtilisationForCompressionFraction.DataBindings.Add("Text", auxConfig.PneumaticAuxillariesConfig,
+        txtOverrunUtilisationForCompressionFraction.DataBindings.Add("Text", auxConfig.PneumaticAuxiliariesConfig,
                                                                     "OverrunUtilisationForCompressionFraction")
-        txtBrakingWithRetarderNIperKG.DataBindings.Add("Text", auxConfig.PneumaticAuxillariesConfig,
+        txtBrakingWithRetarderNIperKG.DataBindings.Add("Text", auxConfig.PneumaticAuxiliariesConfig,
                                                         "BrakingWithRetarderNIperKG")
-        txtBrakingNoRetarderNIperKG.DataBindings.Add("Text", auxConfig.PneumaticAuxillariesConfig, "BrakingNoRetarderNIperKG")
-        txtBreakingPerKneelingNIperKGinMM.DataBindings.Add("Text", auxConfig.PneumaticAuxillariesConfig,
+        txtBrakingNoRetarderNIperKG.DataBindings.Add("Text", auxConfig.PneumaticAuxiliariesConfig, "BrakingNoRetarderNIperKG")
+        txtBreakingPerKneelingNIperKGinMM.DataBindings.Add("Text", auxConfig.PneumaticAuxiliariesConfig,
                                                             "BreakingPerKneelingNIperKGinMM", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "0.########")
-        txtPerDoorOpeningNI.DataBindings.Add("Text", auxConfig.PneumaticAuxillariesConfig, "PerDoorOpeningNI")
-        txtPerStopBrakeActuationNIperKG.DataBindings.Add("Text", auxConfig.PneumaticAuxillariesConfig,
+        txtPerDoorOpeningNI.DataBindings.Add("Text", auxConfig.PneumaticAuxiliariesConfig, "PerDoorOpeningNI")
+        txtPerStopBrakeActuationNIperKG.DataBindings.Add("Text", auxConfig.PneumaticAuxiliariesConfig,
                                                         "PerStopBrakeActuationNIperKG")
-        txtAirControlledSuspensionNIperMinute.DataBindings.Add("Text", auxConfig.PneumaticAuxillariesConfig,
+        txtAirControlledSuspensionNIperMinute.DataBindings.Add("Text", auxConfig.PneumaticAuxiliariesConfig,
                                                                 "AirControlledSuspensionNIperMinute")
-        txtNonSmartRegenFractionTotalAirDemand.DataBindings.Add("Text", auxConfig.PneumaticAuxillariesConfig,
+        txtNonSmartRegenFractionTotalAirDemand.DataBindings.Add("Text", auxConfig.PneumaticAuxiliariesConfig,
                                                                 "NonSmartRegenFractionTotalAirDemand")
-        txtSmartRegenFractionTotalAirDemand.DataBindings.Add("Text", auxConfig.PneumaticAuxillariesConfig,
+        txtSmartRegenFractionTotalAirDemand.DataBindings.Add("Text", auxConfig.PneumaticAuxiliariesConfig,
                                                             "SmartRegenFractionTotalAirDemand")
-        txtDeadVolumeLitres.DataBindings.Add("Text", auxConfig.PneumaticAuxillariesConfig, "DeadVolumeLitres")
-        txtDeadVolBlowOutsPerLitresperHour.DataBindings.Add("Text", auxConfig.PneumaticAuxillariesConfig,
+        txtDeadVolumeLitres.DataBindings.Add("Text", auxConfig.PneumaticAuxiliariesConfig, "DeadVolumeLitres")
+        txtDeadVolBlowOutsPerLitresperHour.DataBindings.Add("Text", auxConfig.PneumaticAuxiliariesConfig,
                                                             "DeadVolBlowOutsPerLitresperHour")
 
         'Pneumatic UserInputsConfig Binding    

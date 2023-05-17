@@ -65,13 +65,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 	[CustomValidation(typeof(VectoRunData), "ValidateRunData")]
 	public class VectoRunData : SimulationComponentData
 	{
-		public enum OvcHevMode
-		{
-			NotApplicable,
-			ChargeSustaining,
-			ChargeDepleting,
-		}
-
 		public VectoRunData()
 		{
 			Exempted = false;

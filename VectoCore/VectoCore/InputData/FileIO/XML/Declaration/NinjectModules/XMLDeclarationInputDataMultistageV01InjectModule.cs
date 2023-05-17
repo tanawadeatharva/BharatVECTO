@@ -1,4 +1,5 @@
 ﻿using Ninject.Modules;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
@@ -156,10 +157,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLREESSReader>().To<XMLREESSReaderV01>().Named(XMLREESSReaderV01.QUALIFIED_XSD_TYPE);
 
-			Bind<IXMLBatteryPackDeclarationInputData>().To<XMLBatteryPackDeclarationDeclarationInputDataV01>()
-				.Named(XMLBatteryPackDeclarationDeclarationInputDataV01.QUALIFIED_XSD_TYPE);
+			//Bind<IXMLBatteryPackDeclarationInputData>().To<XMLBatteryPackDeclarationDeclarationInputDataV01>()
+			//	.Named(XMLBatteryPackDeclarationDeclarationInputDataV01.QUALIFIED_XSD_TYPE);
 
-			Bind<IXMLSuperCapDeclarationInputData>().To<XMLSuperCapDeclarationInputDataV01>()
+			Bind<IXMLBatteryPackDeclarationInputData>().To<XMLBatteryPackDeclarationInputDataMeasuredV01>()
+				.Named(XMLBatteryPackDeclarationInputDataMeasuredV01.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLBatteryPackDeclarationInputData>().To<XMLBatteryPackDeclarationInputDataStandardV01>()
+				.Named(XMLBatteryPackDeclarationInputDataStandardV01.QUALIFIED_XSD_TYPE);
+
+            Bind<IXMLSuperCapDeclarationInputData>().To<XMLSuperCapDeclarationInputDataV01>()
 				.Named(XMLSuperCapDeclarationInputDataV01.QUALIFIED_XSD_TYPE);
 
 			//Bind<IXMLADCDeclarationInputData>().To<XMLADCDeclarationInputDataV23>()
@@ -249,9 +256,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLIEPCInputData>().To<XMLElectricMotorIEPCIInputDataProviderV01>()
 				.Named(XMLElectricMotorIEPCIInputDataProviderV01.QUALIFIED_XSD_TYPE);
 
-			// -----------------------------------
+			Bind<IXMLADCDeclarationInputData>().To<XMLADCDeclarationInputDataV01>()
+				.Named(XMLADCDeclarationInputDataV01.QUALIFIED_XSD_TYPE);
 
-			Bind<IXMLMultistageEntryInputDataProvider>().To<XMLDeclarationMultistageTypeInputDataV01>()
+
+
+            // -----------------------------------
+
+            Bind<IXMLMultistageEntryInputDataProvider>().To<XMLDeclarationMultistageTypeInputDataV01>()
 				.Named(XMLDeclarationMultistageTypeInputDataV01.QUALIFIED_XSD_TYPE);
 
 

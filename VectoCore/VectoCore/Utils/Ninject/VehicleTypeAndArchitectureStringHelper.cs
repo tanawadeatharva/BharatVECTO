@@ -200,6 +200,7 @@ namespace TUGraz.VectoCore.Utils.Ninject
 				_vehicleType = _singlebus;
 				_archId = singleBus.PrimaryVehicle.ArchitectureID;
 				_jobType = singleBus.PrimaryVehicle.VehicleType;
+				_exempted = singleBus.PrimaryVehicle.ExemptedVehicle;
 			}
 
 			public bool Equals(VehicleClassification other)

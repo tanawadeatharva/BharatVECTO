@@ -144,6 +144,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 		IXMLElectricStorageSystemDeclarationInputData CreateElectricStorageSystemData(string version,
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
+		IXMLBatteryPackDeclarationInputData CreateBatteryPackDeclarationInputData(string version,
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
+
 		IXMLREESSReader CreateStorageTypeReader(string version,
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 

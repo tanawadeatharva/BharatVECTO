@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Newtonsoft.Json;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
@@ -28,7 +29,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 			}
 		}
 
-		public WattSecond UseableStoredEnergy
+		public WattSecond TotalStoredEnergy {
+			get {
+				return Batteries.Select(x => x.Item1).Distinct().OrderBy(x => x).Aggregate(0.SI<WattSecond>(),
+					(current, s) => current + Batteries.Where(x => x.Item1 == s).Min(x => x.Item2.TotalStoredEnergy));
+			}
+		}
+
+        public WattSecond UseableStoredEnergy
 		{
 			get
 			{
@@ -40,6 +48,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 
 	public class BatteryData
 	{
+		private WattSecond _totaltoredEnergy;
 		private WattSecond _useableStoredEnergy;
 
 		[ValidateObject]
@@ -60,23 +69,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 		public int BatteryId { get; internal set; }
 		public bool ChargeSustainingBattery { get; internal set; }
 
-		public WattSecond UseableStoredEnergy => _useableStoredEnergy ?? (_useableStoredEnergy = CalculateUsableEnergy());
+		public WattSecond TotalStoredEnergy => _totaltoredEnergy ?? (_totaltoredEnergy = CalculateBatteryEnergy(0, 1));
+
+        public WattSecond UseableStoredEnergy => _useableStoredEnergy ?? (_useableStoredEnergy = CalculateBatteryEnergy(MinSOC, MaxSOC));
+
+		[JsonIgnore]
 		public IElectricStorageDeclarationInputData InputData { get; internal set; }
 
-		protected WattSecond CalculateUsableEnergy()
+		protected WattSecond CalculateBatteryEnergy(double minSoc, double maxSoc)
 		{
 			var retVal = 0.SI<WattSecond>();
 			foreach (var (low, high) in SOCMap.Entries.Pairwise()) {
-				if (low.SOC.IsSmaller(MinSOC) && high.SOC.IsSmaller(MinSOC)) {
+				if (low.SOC.IsSmaller(minSoc) && high.SOC.IsSmaller(minSoc)) {
 					continue;
 				}
 
-				if (low.SOC.IsGreater(MaxSOC) && high.SOC.IsGreater(MaxSOC)) {
+				if (low.SOC.IsGreater(maxSoc) && high.SOC.IsGreater(maxSoc)) {
 					continue;
 				}
 
-				var min = VectoMath.Max(MinSOC, low.SOC);
-				var max = VectoMath.Min(MaxSOC, high.SOC);
+				var min = VectoMath.Max(minSoc, low.SOC);
+				var max = VectoMath.Min(maxSoc, high.SOC);
 				var voltage = SOCMap.Lookup((min + max) / 2.0);
 				retVal += (max - min) * Capacity * voltage;
 			}
@@ -106,6 +119,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 		public SOCMap(SOCMapEntry[] entries)
 		{
 			Entries = entries;
+		}
+
+		public string[] SerializedEntries
+		{
+			get
+			{
+				return Entries.Select(x => $"{x.SOC} - {x.BatteryVolts}").ToArray();
+			}
 		}
 
 		public Volt Lookup(double soc)
@@ -151,6 +172,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 		public InternalResistanceMap(InternalResistanceMapEntry[] entries)
 		{
 			Entries = entries;
+		}
+
+		public string[] SerializedEntries
+		{
+			get
+			{
+				return Entries.Select(x =>
+					$"{x.SoC}: " + x.Resistance.OrderBy(r => r.Item1.Value()).Select(r => $"{r.Item1}: {r.Item2}")
+						.Join(";")).ToArray();
+			}
 		}
 
 		public Ohm Lookup(double SoC, Second tPulse)
@@ -230,6 +261,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 		public MaxCurrentMap(MaxCurrentEntry[] entries)
 		{
 			Entries = entries;
+		}
+
+		public string[] SerializedEntries
+		{
+			get
+			{
+				return Entries.Select(x => $"{x.SoC}: {x.MaxChargeCurrent} / {x.MaxDischargeCurrent}").ToArray();
+			}
 		}
 
 		public Ampere LookupMaxChargeCurrent(double soc)

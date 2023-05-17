@@ -49,6 +49,23 @@ namespace TUGraz.VectoCore.Models.Declaration
 		FullLoading,
 	}
 
+	public interface IMissionFilter
+	{
+		bool Run(MissionType missionType, LoadingType loadingType);
+	}
+
+	public class DefaultMissionFilter : IMissionFilter
+	{
+		#region Implementation of IMissionFilter
+
+		public bool Run(MissionType missionType, LoadingType loadingType)
+		{
+			return true;
+		}
+
+		#endregion
+	}
+
 	public class Mission
 	{
 		public Kilogram CurbMass { get; internal set; }
@@ -57,29 +74,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public double[] AxleWeightDistribution { get; internal set; }
 
 		public Kilogram BodyCurbWeight { get; internal set; }
-
-		private Stream _cycleFile;
-		private object _cycleLock = new object();
-		[JsonIgnore]
-		public Stream CycleFile
-		{
-			get
-			{
-				lock (_cycleLock) {
-					var memoryStream = new MemoryStream();
-					_cycleFile.CopyTo(memoryStream);
-					memoryStream.Position = 0;
-					_cycleFile.Seek(0, SeekOrigin.Begin);
-					return memoryStream;
-				}
-			}
-			internal set
-			{
-				lock (_cycleLock) {
-					_cycleFile = value;
-				}
-			}
-		}
 
 		public IList<MissionTrailer> Trailer { get; internal set; }
 
@@ -118,6 +112,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 		
 		public BusParameters BusParameter { get; internal set; }
+		public Kilogram GenericMassICE { get; internal set; }
 	}
 
 	public class BusParameters

@@ -107,7 +107,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					}
 
 					followUpSimulatorFactoryFetched = true;
-					return _simulatorFactory.FollowUpSimulatorFactory;
+					var factory = _simulatorFactory.FollowUpSimulatorFactory;
+					if (factory != null) {
+						factory.SerializeVectoRunData = _simulatorFactory.SerializeVectoRunData;
+					}
+					return factory;
 				} catch (Exception e){
 					LogManager.GetLogger(typeof(JobContainer).FullName).Error(e);
 					throw;

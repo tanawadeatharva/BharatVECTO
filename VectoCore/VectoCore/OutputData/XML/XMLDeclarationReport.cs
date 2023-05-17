@@ -47,6 +47,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
@@ -54,7 +55,7 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
-	public class XMLDeclarationReport : DeclarationReport<XMLDeclarationReport.ResultEntry>
+    public class XMLDeclarationReport : DeclarationReport<XMLDeclarationReport.ResultEntry>
 	{
 		protected IXMLManufacturerReport ManufacturerRpt;
 
@@ -171,7 +172,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			public Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
 			public Kilogram ZEV_CO2 { get; set; }
 
-			public VectoRunData.OvcHevMode OVCMode { get; set; }
+			public OvcHevMode OVCMode { get; set; }
 
 			// used for factor method
 			public IResult PrimaryResult { get; set; }
@@ -220,7 +221,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				CorrectedFinalFuelConsumption = data.CorrectedModalData.FuelCorrection;
 				CO2Total = data.CorrectedModalData.CO2Total;
 				EnergyConsumptionTotal = data.CorrectedModalData.FuelEnergyConsumptionTotal;
-				ElectricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption_SoC;
+				ElectricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption_SoC_Corr;
 
 				if (runData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
 						VectoSimulationJobType.IEPC_E)) {

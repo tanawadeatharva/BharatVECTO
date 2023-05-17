@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.IVT.VectoXML;
@@ -113,7 +114,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public XMLDeclarationHevPxPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 
-		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.ParallelHybridVehicle;
+
+
+		public override VectoSimulationJobType VehicleType
+		{
+			get => Components.ElectricMachines.Entries.Any(em => em.ElectricMachine.IsIHPC())
+				? VectoSimulationJobType.IHPC
+				: VectoSimulationJobType.ParallelHybridVehicle;
+		}
+    
+		
 
 		public override bool HybridElectricHDV => true;
 
@@ -192,7 +202,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override bool Articulated => GetBool(XMLNames.Vehicle_Articulated);
 
-		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_E;
 
 		#endregion
 
@@ -223,7 +233,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#region Overrides of AbstractXMLVehicleDataProviderV24
 
-		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.SerialHybridVehicle;
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_S;
 
 		#endregion
 

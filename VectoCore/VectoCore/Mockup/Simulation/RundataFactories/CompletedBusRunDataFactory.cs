@@ -20,33 +20,19 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 {
 	internal class MockupMultistageCompletedBusRunDataFactory : DeclarationModeCompletedBusRunDataFactory.CompletedBusBase
     {
-        //DeclarationModeCompletedMultistageBusVectoRunDataFactory
-		  
+		
 		public MockupMultistageCompletedBusRunDataFactory(IMultistageVIFInputData dataProvider,
             IDeclarationReport report,
 			ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
-			IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric)
+			IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter)
         {
 
         }
 
-
-        #region Overrides of DeclarationModeCompletedMultistageBusVectoRunDataFactory
-
-		#endregion
         protected override void Initialize()
         {
-
-            _segmentCompletedBus = GetCompletedSegment(CompletedVehicle, PrimaryVehicle.AxleConfiguration);
-
-            //base.Initialize();
-        }
-
-        //protected override IEnumerable<VectoRunData> VectoRunDataHeavyBusCompleted()
-        //{
-
-        //    return base.VectoRunDataHeavyBusCompleted();
-        //}
+			_segment = GetCompletedSegment();
+		}
 
 		protected override IEnumerable<VectoRunData> GetNextRun()
 		{
@@ -86,13 +72,12 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 
         protected virtual IEnumerable<VectoRunData> VectoRunDataHeavyBusCompleted()
 		{
-			var InputDataProvider = DataProvider.MultistageJobInputData;
-            if (InputDataProvider.JobInputData.PrimaryVehicle.Vehicle.VehicleType ==
+            if (PrimaryVehicle.VehicleType ==
 				VectoSimulationJobType.BatteryElectricVehicle) {
 				foreach (var vectoRunData in CreateVectoRunDataForMissions(0, ""))
 					yield return vectoRunData;
 			} else {
-				var engineModes = InputDataProvider.JobInputData.PrimaryVehicle.Vehicle.Components.EngineInputData
+				var engineModes = PrimaryVehicle.Components.EngineInputData
 					?.EngineModes;
 
 				for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
@@ -108,14 +93,16 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 		}
 
 
-        protected override VectoRunData CreateVectoRunDataSpecific(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int modeIdx)
-        {
-            var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
+        protected override VectoRunData CreateVectoRunDataSpecific(Mission mission,
+			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int? modeIdx,
+			OvcHevMode ovcMode = OvcHevMode.NotApplicable)
+		{
+			var cycle = CycleFactory.GetDeclarationCycle(mission);
 
             var simulationRunData = new VectoRunData
             {
                 Loading = loading.Key,
-                VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, _segmentCompletedBus,
+                VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, _segment,
                     mission, loading),
                 Retarder = PrimaryBusMockupRunDataFactory.CreateMockupRetarder(PrimaryVehicle),
                 AirdragData = PrimaryBusMockupRunDataFactory.CreateMockupAirdragData(CompletedVehicle),
@@ -147,7 +134,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 ////DriverData = _driverData,
                 //ExecutionMode = ExecutionMode.Declaration,
                 //JobName = InputDataProvider.JobInputData.ManufacturingStages.Last().Vehicle.Identifier,//?!? Jobname
-                ModFileSuffix = $"_{_segmentCompletedBus.VehicleClass.GetClassNumber()}-Specific_{loading.Key}",
+                ModFileSuffix = $"_{_segment.VehicleClass.GetClassNumber()}-Specific_{loading.Key}",
                 //Report = Report,
                 //Mission = mission,
                 //InputDataHash = InputDataProvider.XMLHash,// right hash?!?
@@ -159,7 +146,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
             {
                 simulationRunData.EngineData.FuelMode = 0;
             }
-            simulationRunData.VehicleData.VehicleClass = _segmentCompletedBus.VehicleClass;
+            simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
             simulationRunData.BusAuxiliaries = DataAdapterSpecific.CreateBusAuxiliariesData(mission, PrimaryVehicle, CompletedVehicle, simulationRunData);
 
             return simulationRunData;
@@ -167,17 +154,22 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
             //return base.CreateVectoRunDataSpecific(mission, loading, modeIdx);
         }
 
-        private IEnumerable<VectoRunData> CreateVectoRunDataForMissions(int modeIdx, string fuelMode)
+		protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
+		{
+			throw new NotImplementedException();
+		}
+
+		private IEnumerable<VectoRunData> CreateVectoRunDataForMissions(int modeIdx, string fuelMode)
         {
 			var InputDataProvider = DataProvider.MultistageJobInputData;
-            foreach (var mission in _segmentCompletedBus.Missions) {
-                foreach (var loading in mission.Loadings) {
+            foreach (var mission in _segment.Missions) {
+                foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
                     var simulationRunData = CreateVectoRunDataSpecific(mission, loading, modeIdx);
                     if (simulationRunData != null) {
                         yield return simulationRunData;
                     }
 
-                    var primarySegment = GetPrimarySegment(PrimaryVehicle);
+                    var primarySegment = GetPrimarySegment();
                     var primaryMission = primarySegment.Missions.Where(
                         m => {
                             return m.BusParameter.DoubleDecker ==
@@ -188,12 +180,12 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                     simulationRunData = CreateVectoRunDataGeneric(
                         primaryMission,
                         new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(loading.Key,
-                            primaryMission.Loadings[loading.Key]),
+							primaryMission.Loadings[loading.Key]),
                         primarySegment, modeIdx);
 
                     var primaryResult = InputDataProvider.JobInputData.PrimaryVehicle.GetResult(
                         simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
-                        simulationRunData.VehicleData.Loading);
+                        simulationRunData.VehicleData.Loading, OvcHevMode.NotApplicable);
                     if (primaryResult == null || !primaryResult.ResultStatus.Equals("success")) {
                         throw new VectoException(
                             "Failed to find results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3}. Make sure PIF and completed vehicle data match!",
@@ -214,9 +206,12 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 }
             }
         }
-        protected override VectoRunData CreateVectoRunDataGeneric(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int modeIdx)
-        {
-            var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
+        protected override VectoRunData CreateVectoRunDataGeneric(Mission mission,
+			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int? modeIdx,
+			OvcHevMode ovcHevMode = OvcHevMode.NotApplicable)
+		{
+			var cycle = CycleFactory.GetDeclarationCycle(mission);
+
             return new VectoRunData()
             {
                 Mission = mission,
@@ -232,12 +227,11 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 SimulationType = SimulationType.DistanceCycle,
                 Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
                 Report = Report,
-                ModFileSuffix = $"_{_segmentCompletedBus.VehicleClass.GetClassNumber()}-Generic_{loading.Key}",
+                ModFileSuffix = $"_{_segment.VehicleClass.GetClassNumber()}-Generic_{loading.Key}",
 				InputData = DataProvider.MultistageJobInputData,
                 GearboxData = PrimaryBusMockupRunDataFactory.CreateMockupGearboxData(PrimaryVehicle),
                 AxleGearData = PrimaryBusMockupRunDataFactory.CreateMockupAxleGearData(PrimaryVehicle)
             };
-            return base.CreateVectoRunDataGeneric(mission, loading, primarySegment, modeIdx);
         }
 
         //#endregion

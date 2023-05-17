@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 				var body = new Dictionary<string, object>();
 				var basePath = Path.GetDirectoryName(Path.GetFullPath(auxFile));
 				body["ElectricalUserInputsConfig"] = SaveElectricalConfig(auxCfg.ElectricalUserInputsConfig, basePath);
-				body["PneumaticAuxillariesConfig"] = SavePneumaticAuxconfig(auxCfg.PneumaticAuxillariesConfig);
+				body["PneumaticAuxillariesConfig"] = SavePneumaticAuxconfig(auxCfg.PneumaticAuxiliariesConfig);
 				body["PneumaticUserInputsConfig"] = SavePneumaticUserConfig(auxCfg.PneumaticUserInputsConfig, basePath);
 				//body["HvacUserInputsConfig"] = SaveHVACUserConfig();
 

@@ -2,6 +2,7 @@
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -9,13 +10,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 {
-	public interface IPTODataAdapter
-	{
-		PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto, IGearboxDeclarationInputData gbx);
-		PTOData CreateDefaultPTOData(IPTOTransmissionInputData pto, IGearboxDeclarationInputData gbx);
-	}
-
-	public class PTODataAdapterLorry : IPTODataAdapter
+    public class PTODataAdapterLorry : IPTODataAdapter
 	{
 
         public virtual PTOData CreateDefaultPTOData(IPTOTransmissionInputData pto, IGearboxDeclarationInputData gbx)

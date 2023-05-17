@@ -8,26 +8,51 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class HEVStrategyParametersLorry : HEVStrategyParameters
+
+	public class HEVStrategyParameters
 	{
+		public double PHEVChargeDepletingEquivalenceFactor => 0.01;
+
+        protected AbstractHEVStrategyParameters Lorry = new HEVStrategyParametersLorry();
+		protected AbstractHEVStrategyParameters Bus = new HEVStrategyParametersBus();
+
+        public virtual double LookupEquivalenceFactor(MissionType mission, VehicleClass hdvClass,
+			LoadingType loading,
+			double socRange)
+		{
+			return hdvClass.IsHeavyLorry() || hdvClass.IsMediumLorry()
+				? Lorry.LookupEquivalenceFactor(mission, hdvClass, loading, socRange)
+				: Bus.LookupEquivalenceFactor(mission, hdvClass, loading, socRange);
+		}
+
+		public virtual double LookupSlope(MissionType mission, VehicleClass hdvClass, LoadingType loading)
+		{
+			return hdvClass.IsHeavyLorry() || hdvClass.IsMediumLorry()
+				? Lorry.LookupSlope(mission, hdvClass, loading)
+				: Bus.LookupSlope(mission, hdvClass, loading);
+		}
+    }
+
+
+    public class HEVStrategyParametersLorry : AbstractHEVStrategyParameters
+    {
 		public HEVStrategyParametersLorry() : base("Lorry") { }
 	}
 
-	public class HEVStrategyParametersBus : HEVStrategyParameters
-	{
+	public class HEVStrategyParametersBus : AbstractHEVStrategyParameters
+    {
 		public HEVStrategyParametersBus() : base("Bus") { }
 	}
 
-	public abstract class HEVStrategyParameters
+	public abstract class AbstractHEVStrategyParameters
 	{
 		private Dictionary<int, InitEquivalenceFactors> _initEquivalenceFactors =
 			new Dictionary<int, InitEquivalenceFactors>(3);
 
 		private readonly IList<int> _socRanges = new List<int>{ 10, 20, 40 };
-		public double PHEVChargeDepletingEquivalenceFactor => 0.01;
         private readonly Slope _slope;
 
-        protected HEVStrategyParameters(string vehicle)
+        protected AbstractHEVStrategyParameters(string vehicle)
 		{
 			foreach(var range in _socRanges)
 			{
@@ -47,7 +72,7 @@ namespace TUGraz.VectoCore.Models.Declaration
         /// <param name="loading"></param>
         /// <param name="socRange">If the SOC range of the vehicle to be simulated differs from the given SOC ranges, use the values from the given SCOC ranges that are closest to the SOC range of the vehicle </param>
         /// <returns></returns>
-		public double LookupEquivalenceFactor(MissionType mission, VehicleClass hdvClass, LoadingType loading,
+		public virtual double LookupEquivalenceFactor(MissionType mission, VehicleClass hdvClass, LoadingType loading,
 			double socRange)
 		{
 			if (socRange > 1 || socRange < 0) {
@@ -67,9 +92,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				_initEquivalenceFactors[b].LookupEquivalenceFactor(mission, hdvClass, loading), socRange);
 		}
 
-		public double LookupSlope(MissionType mission, VehicleClass hdvClass, LoadingType loading)
+		public virtual double LookupSlope(MissionType mission, VehicleClass hdvClass, LoadingType loading)
 		{
-			return _slope.Lookup( hdvClass.GetClassNumber(), mission.GetNonEMSMissionType().GetName().ToLowerInvariant(),
+			return _slope.Lookup( hdvClass.GetClassNumberWithoutSubSuffix(), mission.GetNonEMSMissionType().GetName().ToLowerInvariant(),
                 loading);
 		}
 
@@ -92,7 +117,7 @@ namespace TUGraz.VectoCore.Models.Declaration
             }
             public double LookupEquivalenceFactor(MissionType mission, VehicleClass hdvClass, LoadingType loading)
             {
-                var entry = Lookup(hdvClass.GetClassNumber()).cycleDict[mission.GetNonEMSMissionType()];
+                var entry = Lookup(hdvClass.GetClassNumberWithoutSubSuffix()).cycleDict[mission.GetNonEMSMissionType()];
 
                 switch (loading)
                 {
@@ -112,33 +137,39 @@ namespace TUGraz.VectoCore.Models.Declaration
 
             protected override void ParseData(DataTable table)
             {
-                var vehicleClasses = table.Rows.Cast<DataRow>().Select(row => row.Field<string>("vehiclegroup"));
+                //var vehicleClasses = table.Rows.Cast<DataRow>().Select(row => row.Field<string>("vehiclegroup"));
 
-				var cycleEntries = table.Rows.Cast<DataRow>().Select(row => new CycleEntry
-                {
-                    VehicleGroup = row.Field<string>("vehiclegroup").RemoveWhitespace(),
-                    LongHaul = SplitStringToDoubleTuple(row.Field<string>("longhaul")),
-                    RegionalDelivery = SplitStringToDoubleTuple(row.Field<string>("regionaldelivery")),
-                    UrbanDelivery = SplitStringToDoubleTuple(row.Field<string>("urbandelivery")),
-                    MunicipalUtility = SplitStringToDoubleTuple(row.Field<string>("municipalutility")),
-                    Construction = SplitStringToDoubleTuple(row.Field<string>("construction"))
-                });
+				var cycles = EnumHelper.GetValues<MissionType>().Where(x => table.Columns.Contains(x.ToString())).ToArray();
 
-				foreach (var cycleEntry in cycleEntries)
-                {
-                    foreach (string vehClass in cycleEntry.VehicleGroup.Split('/'))
-                    {
+				//var cycleEntries = table.Rows.Cast<DataRow>().Select(row => new CycleEntry
+    //            {
+    //                VehicleGroup = row.Field<string>("vehiclegroup").RemoveWhitespace(),
+    //                LongHaul = SplitStringToDoubleTuple(row.Field<string>("longhaul")),
+    //                RegionalDelivery = SplitStringToDoubleTuple(row.Field<string>("regionaldelivery")),
+    //                UrbanDelivery = SplitStringToDoubleTuple(row.Field<string>("urbandelivery")),
+    //                MunicipalUtility = SplitStringToDoubleTuple(row.Field<string>("municipalutility")),
+    //                Construction = SplitStringToDoubleTuple(row.Field<string>("construction"))
+    //            });
+
+				//foreach (var cycleEntry in cycleEntries) {
+				foreach (DataRow row in table.Rows) {
+					var vehicleGroups = row.Field<string>("vehiclegroup");
+					foreach (string vehClass in vehicleGroups.Split('/')) {
                         var newEntry = new Entry
                         {
-                            VehicleGroup = vehClass,
+                            VehicleGroup = vehClass.Trim(),
                             cycleDict = new Dictionary<MissionType, Tuple<double, double>>()
                         };
 
-                        newEntry.cycleDict.Add(MissionType.LongHaul, cycleEntry.LongHaul);
-                        newEntry.cycleDict.Add(MissionType.RegionalDelivery, cycleEntry.RegionalDelivery);
-                        newEntry.cycleDict.Add(MissionType.UrbanDelivery, cycleEntry.UrbanDelivery);
-                        newEntry.cycleDict.Add(MissionType.MunicipalUtility, cycleEntry.MunicipalUtility);
-                        newEntry.cycleDict.Add(MissionType.Construction, cycleEntry.Construction);
+						foreach (var cycle in cycles) {
+							newEntry.cycleDict.Add(cycle,SplitStringToDoubleTuple(row.Field<string>(cycle.ToString())));
+						}
+
+                        //newEntry.cycleDict.Add(MissionType.LongHaul, cycleEntry.LongHaul);
+                        //newEntry.cycleDict.Add(MissionType.RegionalDelivery, cycleEntry.RegionalDelivery);
+                        //newEntry.cycleDict.Add(MissionType.UrbanDelivery, cycleEntry.UrbanDelivery);
+                        //newEntry.cycleDict.Add(MissionType.MunicipalUtility, cycleEntry.MunicipalUtility);
+                        //newEntry.cycleDict.Add(MissionType.Construction, cycleEntry.Construction);
 
                         Data.Add(newEntry.VehicleGroup, newEntry);
                     }
@@ -189,7 +220,7 @@ namespace TUGraz.VectoCore.Models.Declaration
             {
                 foreach (DataRow row in table.Rows)
                 {
-                    var vehicleClass = row.Field<string>("vehiclegroup");
+                    var vehicleGroups = row.Field<string>("vehiclegroup");
 
                     foreach (DataColumn col in table.Columns)
                     {
@@ -198,10 +229,12 @@ namespace TUGraz.VectoCore.Models.Declaration
                             continue;
                         }
 
-                        var values = SplitStringToDoubleTuple(row.Field<string>(col));
-                        Data[Tuple.Create(vehicleClass, col.Caption, LoadingType.LowLoading)] = values.Item1;
-                        Data[Tuple.Create(vehicleClass, col.Caption, LoadingType.ReferenceLoad)] = values.Item2;
-                    }
+						foreach (var vehicleGroup in vehicleGroups.Split('/')) {
+							var values = SplitStringToDoubleTuple(row.Field<string>(col));
+							Data[Tuple.Create(vehicleGroup.Trim(), col.Caption, LoadingType.LowLoading)] = values.Item1;
+							Data[Tuple.Create(vehicleGroup.Trim(), col.Caption, LoadingType.ReferenceLoad)] = values.Item2;
+						}
+					}
                 }
             }
 

@@ -4,6 +4,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Moq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
@@ -22,11 +23,12 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Reports
 {
-	[TestFixture]
+    [TestFixture]
 	[Parallelizable(ParallelScope.All)]
 	public class ModDataPostprocessingTest
 	{
@@ -1924,7 +1926,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			
 			// fake that the actual air deman is different than initially assumed
 			var NlConsumedCorrected = nlConsumedCorrected.SI<NormLiterPerSecond>();
-			(runData.BusAuxiliaries.PneumaticAuxillariesConfig as PneumaticsConsumersDemand).AirControlledSuspension = NlConsumedCorrected;
+			(runData.BusAuxiliaries.PneumaticAuxiliariesConfig as PneumaticsConsumersDemand).AirControlledSuspension = NlConsumedCorrected;
 
 			var corr = modData.CorrectedModalData as CorrectedModalData;
 
@@ -2786,7 +2788,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 						AlternatorGearEfficiency = 1,
 						DCDCEfficiency = dcdc_efficiency,
 					},
-					PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(0.7.SI<NormLiterPerSecond>()),
+					PneumaticAuxiliariesConfig = CreatePneumaticAuxConfig(0.7.SI<NormLiterPerSecond>()),
 					PneumaticUserInputsConfig = CreatePneumaticUserInputsConfig(smartCompressor),
 					Actuations = new Actuations() {
 						Braking = 0,
@@ -2826,9 +2828,14 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 		protected PneumaticUserInputsConfig CreatePneumaticUserInputsConfig(bool smartCompressor)
 		{
+			var mock = new Mock<IPneumaticSupplyDeclarationData>();
+			mock.Setup(x => x.CompressorDrive).Returns(CompressorDrive.mechanically);
+			mock.Setup(x => x.CompressorSize).Returns("Medium Supply 2-stage");
+			mock.Setup(x => x.Clutch).Returns("visco");
+
 			return new PneumaticUserInputsConfig() {
 				CompressorMap =
-					DeclarationData.BusAuxiliaries.GetCompressorMap("Medium Supply 2-stage", "visco"),
+					DeclarationData.BusAuxiliaries.GetCompressorMap(mock.Object),
 				CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
 				CompressorGearRatio = 1.0,
 				SmartAirCompression = smartCompressor,

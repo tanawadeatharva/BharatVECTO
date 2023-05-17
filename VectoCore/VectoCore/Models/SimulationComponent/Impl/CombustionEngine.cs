@@ -562,8 +562,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var stationaryFullLoadPower = stationaryFullLoadTorque * avgAngularVelocity;
 			Watt dynFullPowerCalculated;
 
-			
-
 			// disable pt1 behaviour if PT1Disabled is true, or if the previous enginepower is greater than the current stationary fullload power (in this case the pt1 calculation fails)
 			if (PT1Disabled || PreviousState.EnginePower.IsGreaterOrEqual(stationaryFullLoadPower)) {
 				dynFullPowerCalculated = stationaryFullLoadPower;
@@ -571,9 +569,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				try {
 					var pt1 = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].PT1(avgAngularVelocity).Value.Value();
 					var powerRatio = (PreviousState.EnginePower / stationaryFullLoadPower).Value();
-					var tStarPrev = pt1 * Math.Log(1.0 / (1 - powerRatio), Math.E).SI<Second>();
-					var tStar = tStarPrev + PreviousState.dt;
-					dynFullPowerCalculated = stationaryFullLoadPower * (pt1.IsEqual(0) ? 1 : 1 - Math.Exp((-tStar / pt1).Value()));
+					var tStarPrev = pt1 * Math.Log(1.0 / (1 - powerRatio), Math.E);
+					if (!double.IsNaN(tStarPrev)) {
+						var tStar = tStarPrev.SI<Second>() + PreviousState.dt;
+						dynFullPowerCalculated = stationaryFullLoadPower * (pt1.IsEqual(0) ? 1 : 1 - Math.Exp((-tStar / pt1).Value()));
+					} else {
+						if (dryRun) {
+							Log.Info("PT1 calculation failed (dryRun: {0})", dryRun);
+							dynFullPowerCalculated = stationaryFullLoadPower;
+                        } else {
+							Log.Warn("PT1 calculation failed (dryRun: {0})", dryRun);
+							throw new VectoException("PT1 calculation failed!");
+                        }
+					}
 				} catch (VectoException e) {
 					if (dryRun) {
 						Log.Info("PT1 calculation failed (dryRun: {0}): {1}", dryRun, e.Message);

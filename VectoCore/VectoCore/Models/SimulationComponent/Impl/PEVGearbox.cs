@@ -9,7 +9,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class PEVGearbox : Gearbox
 	{
-		public PEVGearbox(IVehicleContainer container, IShiftStrategy strategy) : base(container, strategy) { }
+		public PEVGearbox(IVehicleContainer container, IShiftStrategy strategy) : base(container, strategy)
+		{
+			_gear = new GearshiftPosition(0);
+		}
 
 	}
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -23,28 +24,25 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		protected readonly IDeclarationInputDataProvider InputDataProvider;
 
 		protected IDeclarationReport Report;
-		//protected abstract IDeclarationDataAdapter DataAdapter { get; }
-
+		
 		protected Segment _segment;
 
-		protected bool _allowVocational;
+        protected bool _allowVocational;
 
-		protected DriverData _driverdata;
-		protected AirdragData _airdragData;
-		protected AxleGearData _axlegearData;
-		protected AngledriveData _angledriveData;
-		protected GearboxData _gearboxData;
-		protected RetarderData _retarderData;
-		protected PTOData _ptoTransmissionData;
-		protected PTOData _municipalPtoTransmissionData;
-		//protected Exception InitException;
-		protected ShiftStrategyParameters _gearshiftData;
+        private DriverData _driverdata;
 
-		protected AbstractDeclarationVectoRunDataFactory(
-			IDeclarationInputDataProvider dataProvider, IDeclarationReport report, bool checkJobType = true)
+		
+		protected IDeclarationCycleFactory CycleFactory { get; }
+
+		protected virtual IVehicleDeclarationInputData Vehicle => InputDataProvider.JobInputData.Vehicle;
+
+        protected AbstractDeclarationVectoRunDataFactory(IDeclarationInputDataProvider dataProvider,
+			IDeclarationReport report, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter,
+			bool checkJobType = true)
 		{
+			CycleFactory = cycleFactory;
 			InputDataProvider = dataProvider;
-
+			MissionFilter = missionFilter;
 			if (checkJobType) {
 				if (dataProvider.JobInputData.JobType.IsOneOf(BatteryElectricVehicle, ParallelHybridVehicle, SerialHybridVehicle))
 				{
@@ -55,15 +53,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
             Report = report;
 
 			_allowVocational = true;
-			//try {
-			//	Initialize();
-			//	if (Report != null) {
-			//		InitializeReport();
-			//	}
-			//} catch (Exception e) {
-			//	InitException = e;
-			//}
 		}
+
+		protected IMissionFilter MissionFilter { get; }
+
+		protected DriverData DriverData => _driverdata ?? (_driverdata = CreateDriverData(_segment));
+		protected abstract DriverData CreateDriverData(Segment segment);
 
 		public virtual IEnumerable<VectoRunData> NextRun()
 		{
@@ -80,10 +75,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		protected abstract void Initialize();
 
-		protected abstract VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle,
-			Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
+		protected abstract VectoRunData CreateVectoRunData(Mission mission,
+			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 			int? modeIdx = null,
-			VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable);
+			OvcHevMode ovcMode = OvcHevMode.NotApplicable);
+
 
 		protected virtual void InitializeReport()
 		{
@@ -93,15 +89,31 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		protected abstract VectoRunData GetPowertrainConfigForReportInit();
 
-		//protected virtual PTOData CreateDefaultPTOData()
-		//{
-		//	return new PTOData() {
-		//		TransmissionType = DeclarationData.PTO.DefaultPTOTechnology,
-		//		LossMap = PTOIdleLossMapReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.PTO.DefaultPTOIdleLosses)),
-		//		PTOCycle =
-		//			DrivingCycleDataReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.PTO.DefaultPTOActivationCycle),
-		//												CycleType.PTO, "PTO", false)
-		//	};
-		//}
-	}
+		/// <summary>
+		/// Super caps are not allowed for ovc hevs or pevs
+		/// </summary>
+		protected void CheckSuperCap(IVehicleDeclarationInputData vehicle)
+		{
+			if (vehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle || vehicle.OvcHev) {
+				if (vehicle.Components.ElectricStorage.ElectricStorageElements.Any(e =>
+						e.REESSPack.StorageType == REESSType.SuperCap)) {
+					throw new VectoException("Super caps are not allowed for OVC-HEVs or PEVs");
+				}
+			}
+
+			if (vehicle.Components.ElectricStorage?.ElectricStorageElements == null) {
+				return;
+			}
+
+			var hasSuperCap = vehicle.Components.ElectricStorage.ElectricStorageElements.Any(e =>
+				e.REESSPack.StorageType == REESSType.SuperCap);
+			var hasBattery = vehicle.Components.ElectricStorage.ElectricStorageElements.Any(e =>
+				e.REESSPack.StorageType == REESSType.Battery);
+
+			if (hasSuperCap && hasBattery) {
+				//Already handled by XML Schema
+				throw new VectoException("Super caps AND batteries are not supported");
+			}
+		}
+    }
 }

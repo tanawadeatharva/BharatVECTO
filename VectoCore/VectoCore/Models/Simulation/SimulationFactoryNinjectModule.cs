@@ -34,6 +34,7 @@ using Ninject.Extensions.Factory;
 using Ninject.Modules;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
@@ -54,8 +55,15 @@ namespace TUGraz.VectoCore.Models.Simulation
 			Bind<ISimulatorFactory>().To<SimulatorFactoryDeclaration>().Named(ExecutionMode.Declaration.ToString());
 			Bind<ISimulatorFactory>().To<SimulatorFactoryEngineering>().Named(ExecutionMode.Engineering.ToString());
 
+			// ToDo: MQ 2023-05-09: REMOVE CLASS IN PRODUCTION!!!
+            Bind<IDeclarationCycleFactory>().To<DeclarationCycleFromFilesystemFactory>().InSingletonScope();
+			Bind<IMissionFilter>().To<DefaultMissionFilter>();
 
-			Bind<IDeclarationReport>().To<NullDeclarationReport>();
+            //Bind<IDeclarationCycleFactory>().To<DeclarationCycleFactory>().InSingletonScope();
+			//Bind<IMissionFilter>().ToMethod((context => null));
+
+
+            Bind<IDeclarationReport>().To<NullDeclarationReport>();
 			Bind<IVTPReport>().To<NullVTPReport>();
 
 		}

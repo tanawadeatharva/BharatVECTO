@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 		// Pneumatics
 		public IPneumaticUserInputsConfig PneumaticUserInputsConfig { get; internal set; }
 
-		public IPneumaticsConsumersDemand PneumaticAuxillariesConfig { get; internal set; }
+		public IPneumaticsConsumersDemand PneumaticAuxiliariesConfig { get; internal set; }
 
 		public ISSMInputs SSMInputsCooling { get; internal set; }
 
@@ -119,14 +119,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 
 		private bool ComparePneumaticAuxiliariesConfig(IAuxiliaryConfig other)
 		{
-			if (PneumaticAuxillariesConfig.AdBlueInjection != other.PneumaticAuxillariesConfig.AdBlueInjection) {
+			if (PneumaticAuxiliariesConfig.AdBlueInjection != other.PneumaticAuxiliariesConfig.AdBlueInjection) {
 				return false;
 			}
-			if (PneumaticAuxillariesConfig.AirControlledSuspension !=
-				other.PneumaticAuxillariesConfig.AirControlledSuspension) {
+			if (PneumaticAuxiliariesConfig.AirControlledSuspension !=
+				other.PneumaticAuxiliariesConfig.AirControlledSuspension) {
 				return false;
 			}
-			if (PneumaticAuxillariesConfig.Braking != other.PneumaticAuxillariesConfig.Braking) {
+			if (PneumaticAuxiliariesConfig.Braking != other.PneumaticAuxiliariesConfig.Braking) {
 				return false;
 			}
 
@@ -134,34 +134,34 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			//	other.PneumaticAuxillariesConfig.BrakingWithRetarderNIperKG) {
 			//	return false;
 			//}
-			if (PneumaticAuxillariesConfig.BreakingWithKneeling !=
-				other.PneumaticAuxillariesConfig.BreakingWithKneeling) {
+			if (PneumaticAuxiliariesConfig.BreakingWithKneeling !=
+				other.PneumaticAuxiliariesConfig.BreakingWithKneeling) {
 				return false;
 			}
-			if (PneumaticAuxillariesConfig.DeadVolBlowOuts !=
-				other.PneumaticAuxillariesConfig.DeadVolBlowOuts) {
+			if (PneumaticAuxiliariesConfig.DeadVolBlowOuts !=
+				other.PneumaticAuxiliariesConfig.DeadVolBlowOuts) {
 				return false;
 			}
-			if (PneumaticAuxillariesConfig.DeadVolume != other.PneumaticAuxillariesConfig.DeadVolume) {
+			if (PneumaticAuxiliariesConfig.DeadVolume != other.PneumaticAuxiliariesConfig.DeadVolume) {
 				return false;
 			}
-			if (PneumaticAuxillariesConfig.NonSmartRegenFractionTotalAirDemand !=
-				other.PneumaticAuxillariesConfig.NonSmartRegenFractionTotalAirDemand) {
+			if (PneumaticAuxiliariesConfig.NonSmartRegenFractionTotalAirDemand !=
+				other.PneumaticAuxiliariesConfig.NonSmartRegenFractionTotalAirDemand) {
 				return false;
 			}
-			if (PneumaticAuxillariesConfig.DoorOpening != other.PneumaticAuxillariesConfig.DoorOpening) {
+			if (PneumaticAuxiliariesConfig.DoorOpening != other.PneumaticAuxiliariesConfig.DoorOpening) {
 				return false;
 			}
-			if (PneumaticAuxillariesConfig.StopBrakeActuation !=
-				other.PneumaticAuxillariesConfig.StopBrakeActuation) {
+			if (PneumaticAuxiliariesConfig.StopBrakeActuation !=
+				other.PneumaticAuxiliariesConfig.StopBrakeActuation) {
 				return false;
 			}
-			if (PneumaticAuxillariesConfig.SmartRegenFractionTotalAirDemand !=
-				other.PneumaticAuxillariesConfig.SmartRegenFractionTotalAirDemand) {
+			if (PneumaticAuxiliariesConfig.SmartRegenFractionTotalAirDemand !=
+				other.PneumaticAuxiliariesConfig.SmartRegenFractionTotalAirDemand) {
 				return false;
 			}
-			if (PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction !=
-				other.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction) {
+			if (PneumaticAuxiliariesConfig.OverrunUtilisationForCompressionFraction !=
+				other.PneumaticAuxiliariesConfig.OverrunUtilisationForCompressionFraction) {
 				return false;
 			}
 

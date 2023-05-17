@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 
 		private Watt GetPRated()
 		{
-			return (NRated.Value() * TRated.Value() * Math.PI / 30000).SI<Watt>();
+			return NRated * TRated;
 		}
 	}
 
@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 		public static RatedPoint GetRatedPointOfFullLoadCurveAtEM(TableData fullLoadCurve)
 		{
             var n = ElectricMotorRatedSpeedHelper.GetRatedSpeed(fullLoadCurve.AsEnumerable(),
-                row => row.ParseDouble(MotorSpeedColumn).SI<PerSecond>(), row => row.ParseDouble(TorqueDriveColumn).SI<NewtonMeter>());
+                row => row.ParseDouble(MotorSpeedColumn).RPMtoRad(), row => row.ParseDouble(TorqueDriveColumn).SI<NewtonMeter>());
 
             var tDrive = fullLoadCurve.AsEnumerable()
                 .Max(row => row.ParseDouble(TorqueDriveColumn).SI<NewtonMeter>());

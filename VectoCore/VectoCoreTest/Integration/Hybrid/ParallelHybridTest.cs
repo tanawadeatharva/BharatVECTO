@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
@@ -53,12 +55,16 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		public const bool PlotGraphs = true;
 
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
+
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 
-
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 			//InitGraphWriter();
 		}
 
@@ -1024,12 +1030,14 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		{ RunHybridJob(jobFile, cycleIdx); }
 
 
-		public void RunHybridJob(string jobFile, int cycleIdx, int? startDistance = null)
+		public void RunHybridJob(string jobFile, int cycleIdx, int? startDistance = null, ExecutionMode mode = ExecutionMode.Engineering)
 		{
-			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var inputProvider = Path.GetExtension(jobFile) == ".xml"
+				? xmlInputReader.CreateDeclaration(jobFile)
+				: JSONInputDataFactory.ReadJsonJob(jobFile);
 			
 			var writer = new FileOutputWriter(jobFile);
-			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
+			var factory = SimulatorFactory.CreateSimulatorFactory(mode, inputProvider, writer);
 			factory.Validate = false;
 			factory.WriteModalResults = true;
 

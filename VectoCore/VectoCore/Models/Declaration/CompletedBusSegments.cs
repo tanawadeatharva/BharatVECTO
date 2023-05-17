@@ -113,28 +113,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 						continue;
 					}
 
-					// TODO: MQ 2021-11-30: REMOVE IN PRODUCTION
-					Stream cycle;
-					var cycleFile = Path.Combine("DeclarationMissions",
-						missionType.ToString().Replace("EMS", "") + ".vdri");
-					if (File.Exists(cycleFile)) {
-						cycle = File.OpenRead(cycleFile);
-					} else {
-						cycle = RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix +
-															".MissionCycles." +
-															missionType.ToString().Replace("EMS", "") +
-															Constants.FileExtensions.CycleFile);
-					}
-
 					var mission = new Mission {
 						MissionType = missionType,
 						CrossWindCorrectionParameters = row.Field<string>("crosswindcorrection"),
-						CycleFile = cycle,
-						//CycleFile =
-						//	RessourceHelper.ReadStream(
-						//		DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
-						//		missionType.ToString().Replace("EMS", "") +
-						//		Constants.FileExtensions.CycleFile),
 						AxleWeightDistribution = GetAxleWeightDistribution(row),
 						BodyCurbWeight = 0.SI<Kilogram>(),
 						Trailer = new List<MissionTrailer>(),
