@@ -1163,6 +1163,10 @@ namespace TUGraz.VectoCommon.InputData
 
 		Dictionary<FuelType, JoulePerMeter> EnergyConsumption { get; }
 		JoulePerMeter ElectricEnergyConsumption { get; }
+
+		/// <summary>
+		/// Dictionary <string unit, double value>
+		/// </summary>
         Dictionary<string, double> CO2 { get; }
 
 		OvcHevMode OvcMode { get; }
