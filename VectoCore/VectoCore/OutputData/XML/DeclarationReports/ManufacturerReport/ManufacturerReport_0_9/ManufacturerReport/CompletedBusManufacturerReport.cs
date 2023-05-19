@@ -270,7 +270,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 			result.ElectricEnergyConsumption = null;
 			
-			if (primaryResult.ElectricEnergyConsumption != null){
+			if (!(primaryResult.ElectricEnergyConsumption?.IsEqual(0) ?? true)){
 				var electricEnergyFactor = CalculateFactor(combinedResults,
 					r => r.ElectricEnergyConsumption);
 				result.ElectricEnergyConsumption =
