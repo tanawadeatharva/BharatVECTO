@@ -1311,7 +1311,7 @@ namespace TUGraz.VectoCommon.InputData
 		E4,
 		E_IEPC,
 		P1,
-		P2,
+		P2,P,
 		P2_5,
 		P3,
 		P4,

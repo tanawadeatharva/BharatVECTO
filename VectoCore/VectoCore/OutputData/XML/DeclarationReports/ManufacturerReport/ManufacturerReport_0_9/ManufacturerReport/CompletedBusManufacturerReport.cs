@@ -83,12 +83,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				throw new NotImplementedException();
 			}
 
-			public string Error { get; }
-			public string StackTrace { get; }
-			public BatterySystemData BatteryData { get; set; }
+			public string Error => throw new NotImplementedException();
+			public string StackTrace => throw new NotImplementedException();
+			public BatterySystemData BatteryData
+			{
+				get;
+				set;
+			}
 
-			#endregion
-		}
+            #endregion
+        }
 		private class CompletedBusFuelConsumption : IFuelConsumptionCorrection
 		{
 			#region Implementation of IFuelConsumptionCorrection
@@ -206,7 +210,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			if (genericResult.OVCMode != specificResult.OVCMode) {
 				throw new VectoException($"generic OVC Mode must be equal to specific OVC Mode! but was gen_ovc = {genericResult.OVCMode} != {specificResult.OVCMode} = spec_ovc");
 			}
-			result.BatteryData = genericResult.BatteryData;
+			result.BatteryData = specificResult.BatteryData;
 			result.Mission = genericResult.Mission;
 			result.Distance = genericResult.Distance;
 			result.TotalVehicleMass = specificResult.TotalVehicleMass;
@@ -250,6 +254,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			result.FuelData = specificResult.FuelData;
 			var co2Sum = 0.SI<Kilogram>();
 			foreach (var fuel in specificResult.CorrectedFinalFuelConsumption.Keys) {
+				
 				var fuelFactor = CalculateFactor(combinedResults, r => r.FuelConsumptionFinal(fuel).TotalFuelConsumptionCorrected);
 				var completedFuelConsumption =
 					fuelFactor * (primaryResult.EnergyConsumption[fuel] * specificResult.Distance );
@@ -260,32 +265,36 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				co2Sum += fuelConsumption.TotalFuelConsumptionCorrected * fuelConsumption.Fuel.CO2PerFuelWeight;
 				result.CorrectedFinalFuelConsumption.Add(fuel, fuelConsumption);
 			}
-
-			//primaryResult.CO2.
 			result.CO2Total = co2Sum;
 
 
+			result.ElectricEnergyConsumption = null;
+			
+			if (primaryResult.ElectricEnergyConsumption != null){
+				var electricEnergyFactor = CalculateFactor(combinedResults,
+					r => r.ElectricEnergyConsumption);
+				result.ElectricEnergyConsumption =
+					electricEnergyFactor * primaryResult.ElectricEnergyConsumption * specificResult.Distance;
+            }
 
-			result.ElectricEnergyConsumption = 42.SI<WattSecond>();
-			result.ZEV_FuelConsumption_AuxHtr = 42.SI<Kilogram>();
+			
 
-			result.ActualChargeDepletingRange = 3.SI<Meter>();
-			result.EquivalentAllElectricRange = 300.SI<Meter>();
-			result.ZeroCO2EmissionsRange = 400.SI<Meter>();
 
-			_results.Add(result);
+			result.ZEV_FuelConsumption_AuxHtr = -777.SI<Kilogram>();
+
+			if (genericResult.VectoRunData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
+					VectoSimulationJobType.IEPC_E)) {
+				var elRanges = DeclarationData.CalculateElectricRangesPEVCompletedBus(batteryData: result.BatteryData,
+					result.ElectricEnergyConsumption, result.Distance);
+
+				result.EquivalentAllElectricRange = elRanges.EquivalentAllElectricRange;
+				result.ActualChargeDepletingRange = elRanges.ActualChargeDepletingRange;
+				result.ZeroCO2EmissionsRange = elRanges.ZeroCO2EmissionsRange;
+			} 
+
+
+            _results.Add(result);
         }
-
-
-
-
-		private double CalculateEnergyFactor(XMLDeclarationReport.ResultEntry specific,
-			XMLDeclarationReport.ResultEntry generic)
-		{
-			return specific.EnergyConsumptionTotal.Value() / generic.EnergyConsumptionTotal.Value();
-		}
-
-
 		#endregion
 	}
 

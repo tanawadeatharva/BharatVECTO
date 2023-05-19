@@ -103,12 +103,15 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected internal override void DoWriteReport()
 		{
-			foreach (var specificResult in Results.Where(x => VehicleClassHelper.IsCompletedBus(x.VehicleClass)).OrderBy(x => x.VehicleClass)
+			foreach (var specificResult in Results.Where(x => x.VehicleClass.IsCompletedBus()).OrderBy(x => x.VehicleClass)
 						.ThenBy(x => x.FuelMode).ThenBy(x => x.Mission))
 			{
 
-				var genericResult = Results.First(x => x.VehicleClass.IsPrimaryBus() && x.FuelMode == specificResult.FuelMode &&
-														x.Mission == specificResult.Mission && x.LoadingType == specificResult.LoadingType && x.OVCMode == specificResult.OVCMode);
+				var genericResult = Results.First(x => x.VehicleClass.IsPrimaryBus() 
+														&& x.FuelMode == specificResult.FuelMode 
+														&& x.Mission == specificResult.Mission 
+														&& x.LoadingType == specificResult.LoadingType 
+														&& x.OVCMode == specificResult.OVCMode);
 				var primaryResult = genericResult.PrimaryResult ?? specificResult.PrimaryResult;
 				if (primaryResult == null)
 				{

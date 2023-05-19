@@ -75,15 +75,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
                         $"no matching result for {cdEntry.Mission}, {cdEntry.LoadingType}, {cdEntry.FuelMode} found!");
                 }
 
-                var combined = new OvcResultEntry() {
-                    ChargeSustainingResult = csEntry,
-                    ChargeDepletingResult = cdEntry,
-                    Weighted = DeclarationData.CalculateWeightedResult(cdEntry, csEntry)
-                };
-                retVal.Add(combined);
+				
+				var weightedResult = cdEntry.VehicleClass.IsCompletedBus() ? 
+					DeclarationData.CalculateWeightedResultCompletedBus(cdEntry, csEntry) :
+					DeclarationData.CalculateWeightedResult(cdEntry, csEntry);
+
+				var combined = new OvcResultEntry()
+				{
+					ChargeSustainingResult = csEntry,
+					ChargeDepletingResult = cdEntry,
+					Weighted = weightedResult
+				};
+				retVal.Add(combined);
             }
             return retVal;
         }
 
-    }
+
+		
+		
+	}
 }
