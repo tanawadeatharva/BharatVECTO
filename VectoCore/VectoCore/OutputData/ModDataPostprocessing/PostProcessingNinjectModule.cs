@@ -12,7 +12,6 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing
 
 		public override void Load()
 		{
-
 			Bind<IModalDataPostProcessorFactory>().ToFactory(() => new UseFirstArgumentAsInstanceProvider());
 
 			Bind<IModalDataPostProcessor>().To<BatteryElectricPostprocessingCorrection>()
@@ -35,7 +34,6 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing
 
 			Bind<IModalDataPostProcessor>().To<ConventionalModalDataPostprocessingCorrection>()
 				.Named(VectoSimulationJobType.ConventionalVehicle.ToString());
-
 		}
 
 		#endregion

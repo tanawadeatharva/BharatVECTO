@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Diagnostics;
+using System.Xml.Linq;
 using Ninject.Activation;
 using Ninject.Extensions.Factory;
 using Ninject.Modules;
@@ -170,7 +171,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetErrorDetailsWriter(null, XNamespace.None));
 
 		}
-
+		[DebuggerStepThrough]
 		private bool AccessedViaCIFResultsWriterFactory(IRequest request)
 		{
 			if (request.ParentRequest == null) {

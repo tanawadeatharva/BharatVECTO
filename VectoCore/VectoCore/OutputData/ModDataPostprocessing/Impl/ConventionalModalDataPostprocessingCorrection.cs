@@ -14,12 +14,62 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 {
-    public class ConventionalModalDataPostprocessingCorrection : IModalDataPostProcessor
+	public abstract class ModalDataPostProcessingCorrectionBase : IModalDataPostProcessor
+	{
+		#region Implementation of IModalDataPostProcessor
+
+		public abstract ICorrectedModalData ApplyCorrection(IModalDataContainer modData, VectoRunData runData);
+
+        protected virtual void SetAuxHeaterDemand(IModalDataContainer modData, VectoRunData runData, AbstractCorrectedModalData r)
+        {
+
+            if (modData.AuxHeaterDemandCalc == null)
+            {
+                r.AuxHeaterDemand = 0.SI<Joule>();
+                r.WorkBusAuxHeatPumpHeatingMech = 0.SI<WattSecond>();
+                r.WorkBusAuxHeatPumpHeatingElMech = 0.SI<WattSecond>();
+                r.WorkBusAuxElectricHeater = 0.SI<WattSecond>();
+                return;
+            }
+            var duration = modData.Duration;
+            var engineWasteheatSum = modData.FuelData.Aggregate(
+                0.SI<Joule>(),
+                (current, fuel) => current + modData.TotalFuelConsumption(ModalResultField.FCFinal, fuel) *
+                    fuel.LowerHeatingValueVecto);
+            var emLossEnergy = 0.SI<Joule>();
+            //if (runData.ElectricMachinesData.Count > 0) {
+            foreach (var em in runData.ElectricMachinesData)
+            {
+                var emPos = em.Item1; //runData.ElectricMachinesData.First().Item1;
+                var colName = modData.GetColumnName(emPos, ModalResultField.P_EM_electricMotorLoss_);
+                if (emPos == PowertrainPosition.IEPC)
+                {
+                    colName = modData.GetColumnName(emPos, ModalResultField.P_IEPC_electricMotorLoss_);
+                }
+                emLossEnergy += modData.TimeIntegral<WattSecond>(colName).Cast<Joule>();
+            }
+
+            //r.WorkBusAuxHeatPumpHeatingElMech = workBusAuxES /
+            //                              runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>()) /
+            //                             runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorGearEfficiency;
+            var heatingDemand = modData.AuxHeaterDemandCalc(duration, engineWasteheatSum, emLossEnergy);
+
+            r.WorkBusAuxHeatPumpHeatingMech = heatingDemand.HeatPumpMechanicalEnergy;
+            r.WorkBusAuxHeatPumpHeatingElMech = heatingDemand.HeatPumpElectricEnergy /
+                                                runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>()) /
+                                                runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorGearEfficiency;
+            r.AuxHeaterDemand = heatingDemand.AuxHeater;
+            r.WorkBusAuxElectricHeater = heatingDemand.ElectricHeaterEnergy;
+        }
+        #endregion
+    }
+
+    public class ConventionalModalDataPostprocessingCorrection : ModalDataPostProcessingCorrectionBase
     {
 
         #region Implementation of IModalDataPostProcessor
 
-		public virtual ICorrectedModalData ApplyCorrection(IModalDataContainer modData, VectoRunData runData)
+		public override ICorrectedModalData ApplyCorrection(IModalDataContainer modData, VectoRunData runData)
 		{
 			return DoApplyCorrection(modData, runData);
 		}
@@ -173,44 +223,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
             return f;
         }
 
-        protected virtual void SetAuxHeaterDemand(IModalDataContainer modData, VectoRunData runData, CorrectedModalData r)
-        {
 
-            if (modData.AuxHeaterDemandCalc == null) {
-                r.AuxHeaterDemand = 0.SI<Joule>();
-                r.WorkBusAuxHeatPumpHeatingMech = 0.SI<WattSecond>();
-                r.WorkBusAuxHeatPumpHeatingElMech = 0.SI<WattSecond>();
-                r.WorkBusAuxElectricHeater = 0.SI<WattSecond>();
-                return;
-            }
-            var duration = modData.Duration;
-            var engineWasteheatSum = modData.FuelData.Aggregate(
-                0.SI<Joule>(),
-                (current, fuel) => current + modData.TotalFuelConsumption(ModalResultField.FCFinal, fuel) *
-                    fuel.LowerHeatingValueVecto);
-            var emLossEnergy = 0.SI<Joule>();
-            //if (runData.ElectricMachinesData.Count > 0) {
-            foreach (var em in runData.ElectricMachinesData) {
-                var emPos = em.Item1; //runData.ElectricMachinesData.First().Item1;
-                var colName = modData.GetColumnName(emPos, ModalResultField.P_EM_electricMotorLoss_);
-                if (emPos == PowertrainPosition.IEPC) {
-                    colName = modData.GetColumnName(emPos, ModalResultField.P_IEPC_electricMotorLoss_);
-                }
-                emLossEnergy += modData.TimeIntegral<WattSecond>(colName).Cast<Joule>();
-            }
-
-            //r.WorkBusAuxHeatPumpHeatingElMech = workBusAuxES /
-            //                              runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>()) /
-            //                             runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorGearEfficiency;
-            var heatingDemand = modData.AuxHeaterDemandCalc(duration, engineWasteheatSum, emLossEnergy);
-
-            r.WorkBusAuxHeatPumpHeatingMech = heatingDemand.HeatPumpMechanicalEnergy;
-            r.WorkBusAuxHeatPumpHeatingElMech = heatingDemand.HeatPumpElectricEnergy /
-                                                runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>()) /
-                                                runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorGearEfficiency;
-            r.AuxHeaterDemand = heatingDemand.AuxHeater;
-            r.WorkBusAuxElectricHeater = heatingDemand.ElectricHeaterEnergy;
-        }
 
         protected virtual void SetMissingDCDCEnergy(IModalDataContainer modData, VectoRunData runData, CorrectedModalData r)
         {

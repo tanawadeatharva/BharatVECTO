@@ -20,18 +20,20 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         public XElement GetElement(IResultEntry entry, IFuelConsumptionCorrection fc)
         {
-            return new XElement(TNS + XMLNames.Report_Results_Fuel,
-                new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fc.Fuel.FuelType.ToXMLFormat()),
-                GetFuelConsumptionEntries(fc.TotalFuelConsumptionCorrected, fc.Fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount).Select(x => new XElement(TNS + XMLNames.Report_Results_FuelConsumption, x.ValueAsUnit(3, 1)))
-            );
+			return GetElement(fc.TotalFuelConsumptionCorrected, fc.Fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount);
         }
 
         public XElement GetElement(IWeightedResult entry, IFuelProperties fuel, Kilogram consumption)
-        {
-            return new XElement(TNS + XMLNames.Report_Results_Fuel,
-                new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fuel.FuelType.ToXMLFormat()),
-                GetFuelConsumptionEntries(consumption, fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount).Select(x => new XElement(TNS + XMLNames.Report_Results_FuelConsumption, x.ValueAsUnit(3, 1)))
-            );
+		{
+			return GetElement(consumption, fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount);
+		}
+
+		protected virtual XElement GetElement(Kilogram consumption, IFuelProperties fuel, Meter distance, Kilogram payLoad, CubicMeter cargoVolume, double? passengerCount)
+		{
+			return new XElement(TNS + XMLNames.Report_Results_Fuel,
+				new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fuel.FuelType.ToXMLFormat()),
+				GetFuelConsumptionEntries(consumption, fuel, distance, payLoad, cargoVolume, passengerCount).Select(x => new XElement(TNS + XMLNames.Report_Results_FuelConsumption, x.ValueAsUnit(3, 1)))
+			);
         }
 
         #endregion
@@ -114,5 +116,4 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         #endregion
 
     }
-
 }

@@ -1,5 +1,6 @@
 ﻿using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 {
@@ -124,6 +125,87 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 		public VolumePerMeter FuelVolumePerMeter { get; }
 		public Kilogram TotalFuelConsumptionCorrected { get; }
 		public Joule EnergyDemand { get; }
+
+		#endregion
+	}
+
+
+    /// <summary>
+    /// Used for aux heaters
+    /// </summary>
+    public class PEVFuelConsumptionCorrection : IFuelConsumptionCorrection
+	{
+		private readonly Second _duration;
+		private readonly Meter _distance;
+		private readonly Kilogram _fcAuxHeater;
+		private readonly IFuelProperties _fuel;
+
+		public PEVFuelConsumptionCorrection(
+			IFuelProperties fuel,
+			Second duration,
+			Meter distance,
+			Kilogram fcAuxHeater
+			)
+		{
+			_fuel = fuel;
+			_duration = duration;
+			_distance = distance;
+			_fcAuxHeater = fcAuxHeater;
+		}
+
+		#region Implementation of IFuelConsumptionCorrection
+
+		public IFuelProperties Fuel => _fuel;
+
+		public KilogramPerWattSecond EngineLineCorrectionFactor => throw new System.NotImplementedException();
+
+		public KilogramPerWattSecond VehicleLine => throw new System.NotImplementedException();
+
+		public KilogramPerSecond FC_ESS_H => throw new System.NotImplementedException();
+
+		public KilogramPerSecond FC_ESS_CORR_H => throw new System.NotImplementedException();
+
+		public KilogramPerSecond FC_BusAux_PS_CORR_H => throw new System.NotImplementedException();
+
+		public KilogramPerSecond FC_BusAux_ES_CORR_H => throw new System.NotImplementedException();
+
+		public KilogramPerSecond FC_WHR_CORR_H => throw new System.NotImplementedException();
+
+		public KilogramPerSecond FC_AUXHTR_H => _fcAuxHeater / _duration;
+
+		public KilogramPerSecond FC_AUXHTR_H_CORR => FC_AUXHTR_H;
+
+		public KilogramPerSecond FC_REESS_SOC_H => throw new System.NotImplementedException();
+
+		public KilogramPerSecond FC_REESS_SOC_CORR_H => throw new System.NotImplementedException();
+
+		public KilogramPerSecond FC_FINAL_H => throw new System.NotImplementedException();
+
+		public KilogramPerMeter FC_WHR_CORR_KM => throw new System.NotImplementedException();
+
+		public KilogramPerMeter FC_BusAux_PS_CORR_KM => throw new System.NotImplementedException();
+
+		public KilogramPerMeter FC_BusAux_ES_CORR_KM => throw new System.NotImplementedException();
+
+		public KilogramPerMeter FC_AUXHTR_KM => _fcAuxHeater / _distance;
+
+		public KilogramPerMeter FC_AUXHTR_KM_CORR => FC_AUXHTR_KM;
+
+		public KilogramPerMeter FC_REESS_SOC_KM => throw new System.NotImplementedException();
+
+		public KilogramPerMeter FC_REESS_SOC_CORR_KM => throw new System.NotImplementedException();
+
+		public KilogramPerMeter FC_ESS_KM => throw new System.NotImplementedException();
+
+		public KilogramPerMeter FC_ESS_CORR_KM => throw new System.NotImplementedException();
+
+		public KilogramPerMeter FC_FINAL_KM => throw new System.NotImplementedException();
+
+		public VolumePerMeter FuelVolumePerMeter => throw new System.NotImplementedException();
+
+		public Kilogram TotalFuelConsumptionCorrected => FC_AUXHTR_KM_CORR * _distance;
+
+		public Joule EnergyDemand => throw new System.NotImplementedException();
 
 		#endregion
 	}
