@@ -228,12 +228,26 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		{
 			var additionalMass = new List<Tuple<String, Kilogram>>();
 
-			foreach (var emData in data.Components.ElectricMachines.Entries) {
-				var emVoltage = emData.ElectricMachine.VoltageLevels.OrderBy(x => x.VoltageLevel).Last();
-				var emContPwr = emVoltage.ContinuousTorque * emVoltage.ContinuousTorqueSpeed;
-				var massEM = emContPwr * DeclarationData.EM_MassPerPower + DeclarationData.EM_MassElectronics + DeclarationData.EM_MassInverter;
-				additionalMass.Add(Tuple.Create(emData.Position.GetName(), VectoMath.Round(massEM, MidpointRounding.AwayFromZero)));
+			if (data.Components.ElectricMachines != null) {
+				foreach (var emData in data.Components.ElectricMachines.Entries) {
+					var emVoltage = emData.ElectricMachine.VoltageLevels.OrderBy(x => x.VoltageLevel).Last();
+					var emContPwr = emVoltage.ContinuousTorque * emVoltage.ContinuousTorqueSpeed;
+					var massEM = emContPwr * DeclarationData.EM_MassPerPower + DeclarationData.EM_MassElectronics +
+								DeclarationData.EM_MassInverter;
+					additionalMass.Add(Tuple.Create(emData.Position.GetName(),
+						VectoMath.Round(massEM, MidpointRounding.AwayFromZero)));
+				}
 			}
+
+			if (data.Components.IEPC != null) {
+				var iepc = data.Components.IEPC;
+				var emVoltage = iepc.VoltageLevels.OrderBy(x => x.VoltageLevel).Last();
+				var emContPwr = emVoltage.ContinuousTorque * emVoltage.ContinuousTorqueSpeed;
+				var massEM = emContPwr * DeclarationData.EM_MassPerPower + DeclarationData.EM_MassElectronics +
+							DeclarationData.EM_MassInverter;
+				additionalMass.Add(Tuple.Create("IEPC",
+					VectoMath.Round(massEM, MidpointRounding.AwayFromZero)));
+            }
 
 			var count = 0;
 			foreach (var reess in data.Components.ElectricStorage.ElectricStorageElements) {
