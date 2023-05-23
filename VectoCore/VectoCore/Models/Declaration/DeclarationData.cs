@@ -492,7 +492,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static BusHVACSystemConfiguration GetHVACConfig(BusHVACSystemConfiguration hvacConfigurationInput, HeatPumpType heatPumpDriver, HeatPumpType heatPumpPassenger)
 			{
-				var hasDriverHP = heatPumpDriver != HeatPumpType.none;
+				var hasDriverHP = !heatPumpDriver.IsOneOf(HeatPumpType.none, HeatPumpType.not_applicable);
 				var hasPassengerHP = heatPumpPassenger != HeatPumpType.none;
 
 				switch (hvacConfigurationInput) {

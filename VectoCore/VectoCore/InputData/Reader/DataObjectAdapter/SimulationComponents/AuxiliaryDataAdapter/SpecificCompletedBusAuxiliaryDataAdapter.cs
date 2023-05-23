@@ -181,17 +181,31 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
             var hvacConfiguration = completedVehicle.Components.BusAuxiliaries.HVACAux.SystemConfiguration;
 			var busAux = completedVehicle.Components.BusAuxiliaries.HVACAux;
 
-			var applicableSystemConfigCooling = DeclarationData.BusAuxiliaries.GetHVACConfig(hvacConfiguration.Value,
-				busAux.HeatPumpTypeCoolingDriverCompartment.Value, busAux.HeatPumpTypeCoolingPassengerCompartment.Value);
+			var hpDriverCooling =
+				busAux.HeatPumpTypeCoolingDriverCompartment == HeatPumpType.not_applicable &&
+				busAux.SystemConfiguration.IsOneOf(BusHVACSystemConfiguration.Configuration6,
+					BusHVACSystemConfiguration.Configuration10) //&& busAux.HeatPumpTypeCoolingPassengerCompartment == HeatPumpType.none
+					? HeatPumpType.none
+					: busAux.HeatPumpTypeCoolingDriverCompartment;
+			var hpDriverHeating =
+				busAux.HeatPumpTypeHeatingDriverCompartment == HeatPumpType.not_applicable &&
+				busAux.SystemConfiguration.IsOneOf(BusHVACSystemConfiguration.Configuration6,
+					BusHVACSystemConfiguration.Configuration10) //&& busAux.HeatPumpTypeHeatingPassengerCompartment == HeatPumpType.none
+					? HeatPumpType.none
+					: busAux.HeatPumpTypeHeatingDriverCompartment;
+
+            var applicableSystemConfigCooling = DeclarationData.BusAuxiliaries.GetHVACConfig(hvacConfiguration.Value,
+				hpDriverCooling.Value, busAux.HeatPumpTypeCoolingPassengerCompartment.Value);
 			var applicableSystemConfigHeating = DeclarationData.BusAuxiliaries.GetHVACConfig(hvacConfiguration.Value,
-				busAux.HeatPumpTypeHeatingDriverCompartment.Value, busAux.HeatPumpTypeHeatingPassengerCompartment.Value);
+				hpDriverHeating.Value, busAux.HeatPumpTypeHeatingPassengerCompartment.Value);
+
 
 			var ssmCooling = CreateSpecificSSMModelParameters(mission, completedVehicle, primaryVehicle, loadingType,
-				applicableSystemConfigCooling, busAux.HeatPumpTypeCoolingDriverCompartment.Value,
+				applicableSystemConfigCooling, hpDriverCooling.Value,
 				busAux.HeatPumpTypeCoolingPassengerCompartment.Value, true);
 			ssmCooling.ElectricHeater = HeaterType.None;
 			var ssmHeating = CreateSpecificSSMModelParameters(mission, completedVehicle, primaryVehicle, loadingType,
-				applicableSystemConfigHeating, busAux.HeatPumpTypeHeatingDriverCompartment.Value,
+				applicableSystemConfigHeating, hpDriverHeating.Value,
 				busAux.HeatPumpTypeHeatingPassengerCompartment.Value, false);
 			ssmHeating.ElectricHeater = GetElectricHeater(busAux);
 			ssmHeating.HeatingDistributions = DeclarationData.BusAuxiliaries.HeatingDistributionCases;
@@ -258,14 +272,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 
 			var xEVBus = primaryVehicle.ArchitectureID.IsHybridVehicle() || primaryVehicle.ArchitectureID.IsBatteryElectricVehicle();
+			if (xEVBus && busAux.WaterElectricHeater == null) {
+				throw new VectoException("WaterElectricHeater input parameter is required for xEV vehicles");
+			}
 			if (xEVBus && busAux.AirElectricHeater == null) {
 				throw new VectoException("AirElectricHeater input parameter is required for xEV vehicles");
 			}
-			if (xEVBus && busAux.WaterElectricHeater == null) {
-				throw new VectoException("AirElectricHeater input parameter is required for xEV vehicles");
-			}
 			if (xEVBus && busAux.OtherHeatingTechnology == null) {
-				throw new VectoException("AirElectricHeater input parameter is required for xEV vehicles");
+				throw new VectoException("OtherElectricHeater input parameter is required for xEV vehicles");
 			}
         }
 
