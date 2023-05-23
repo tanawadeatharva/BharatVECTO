@@ -610,6 +610,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter) { }
 		}
 
+		public class HEV_P_IHPC : ParallelHybrid
+		{
+			public HEV_P_IHPC(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
+				ISingleBusDeclarationDataAdapter dataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter) : base(dataProvider, report, dataAdapter, cycleFactory, missionFilter) { }
+		}
+
 		public abstract class BatteryElectric : SingleBusBase
 		{
 			protected BatteryElectric(ISingleBusInputDataProvider dataProvider, IDeclarationReport report,
