@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
@@ -19,6 +21,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		}
 
 		protected XNamespace TNS { get; }
+
+
+		protected XElement GetPrimaryBusSubGroupElement(IResultEntry entry)
+		{
+			if (entry.VehicleClass.IsBus())
+			{
+				//busSubGroup 
+				var primarySubGroup = entry.VehicleClass;
+				if (!primarySubGroup.IsPrimaryBus())
+				{
+					throw new VectoException($"Expected Primary Bus but was {primarySubGroup}");
+				}
+
+				return new XElement(TNS + XMLNames.Report_Results_PrimaryVehicleSubgroup, primarySubGroup.ToXML());
+			}
+
+			return null;
+		}
 	}
 
 
@@ -30,11 +50,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 		public override XElement GetElement(IResultEntry entry)
 		{
-			return new XElement(TNS + XMLNames.Report_Result_Result,
+			
+			
+
+            return new XElement(TNS + XMLNames.Report_Result_Result,
 				new XAttribute(XMLNames.Report_Result_Status_Attr, XMLNames.Report_Results_Status_Success_Val),
 				new XAttribute(xsi + XMLNames.XSIType, ResultXMLType),
 				_factory.GetSuccessMissionWriter(_factory, TNS).GetElement(entry),
 				SimulationParameterWriter.GetElement(entry),
+				GetPrimaryBusSubGroupElement(entry),
 				ResultTotalWriter.GetElement(entry)
 			);
 		}
@@ -212,11 +236,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 		public override XElement GetElement(IOVCResultEntry entry)
 		{
+			var primarySubGroup = entry.ChargeDepletingResult.VehicleClass;
+			
 			return new XElement(TNS + XMLNames.Report_Result_Result,
 				new XAttribute(XMLNames.Report_Result_Status_Attr, XMLNames.Report_Results_Status_Success_Val),
 				new XAttribute(xsi + XMLNames.XSIType, ResultXMLType),
 				_factory.GetSuccessMissionWriter(_factory, TNS).GetElement(entry.ChargeDepletingResult),
 				_factory.GetBusSimulationParameterWriter(_factory, TNS).GetElement(entry.ChargeDepletingResult),
+				GetPrimaryBusSubGroupElement(entry.ChargeSustainingResult),
 				_factory.GetBusHEVOVCResultWriterChargeDepleting(_factory, TNS).GetElement(entry.ChargeDepletingResult),
 				_factory.GetBusHEVOVCResultWriterChargeSustaining(_factory, TNS).GetElement(entry.ChargeSustainingResult),
 				_factory.GetBusHEVOVCTotalWriter(_factory, TNS).GetElement(entry)

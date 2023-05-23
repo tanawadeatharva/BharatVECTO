@@ -177,7 +177,9 @@ namespace TUGraz.VectoCore.OutputData.XML
             result.Payload = specific.Payload;
             result.PassengerCount = specific.PassengerCount;
             result.VehicleClass = primary.VehicleGroup;
-
+			result.WeightingFactor = specific.WeightingFactor;
+			result.FuelMode = specific.FuelMode;
+			result.LoadingType = specific.LoadingType;
 
             ///Factor for each fuel
             /// Factor for electric Energy Consumption
@@ -248,11 +250,8 @@ namespace TUGraz.VectoCore.OutputData.XML
             {
                 result.ZEV_FuelConsumption_AuxHtr = specific.ZEV_FuelConsumption_AuxHtr;
                 var auxHeaterFuel = specific.AuxHeaterFuel;
-
                 result.AuxHeaterFuel = auxHeaterFuel;
-                result.FuelData.Add(auxHeaterFuel);
-
-                result.ZEV_CO2 = result.ZEV_FuelConsumption_AuxHtr * auxHeaterFuel.CO2PerFuelWeight;
+				result.ZEV_CO2 = result.ZEV_FuelConsumption_AuxHtr * auxHeaterFuel.CO2PerFuelWeight;
             }
 
 
@@ -284,13 +283,15 @@ namespace TUGraz.VectoCore.OutputData.XML
                 throw new NotImplementedException();
             }
 
-            public VectoRunData VectoRunData { get; }
+			public VectoRunData VectoRunData => throw new NotImplementedException();
             public VectoRun.Status Status { get; set; }
             public OvcHevMode OVCMode { get; set; }
             public MissionType Mission { get; set; }
-            public LoadingType LoadingType { get; }
-            public int FuelMode { get; }
-            public IList<IFuelProperties> FuelData { get; set; }
+			public LoadingType LoadingType { get; set; }
+
+			public int FuelMode { get; set; }
+
+			public IList<IFuelProperties> FuelData { get; set; }
             public MeterPerSecond AverageSpeed { get; set; }
             public MeterPerSecond AverageDrivingSpeed { get; set; }
             public MeterPerSecond MaxSpeed { get; set; }
@@ -322,7 +323,7 @@ namespace TUGraz.VectoCore.OutputData.XML
             public double? PassengerCount { get; set; }
             public VehicleClass VehicleClass { get; set; }
             public Watt MaxChargingPower { get; }
-            public double WeightingFactor { get; }
+            public double WeightingFactor { get; set; }
             public Meter ActualChargeDepletingRange { get; set; }
             public Meter EquivalentAllElectricRange { get; set; }
             public Meter ZeroCO2EmissionsRange { get; set; }
