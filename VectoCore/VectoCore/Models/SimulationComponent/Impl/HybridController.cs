@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected readonly HybridCtlShiftStrategy _shiftStrategy;
 		protected readonly IHybridControlStrategy _hybridStrategy;
 
-		private Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> _electricMotorTorque =
+		protected Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> _electricMotorTorque =
 			new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>();
 
 		private HybridStrategyResponse CurrentStrategySettings;
@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_electricMotorCtl[pos] = new ElectricMotorController(this, motorData);
 		}
 
-		private void ApplyStrategySettings(HybridStrategyResponse strategySettings)
+		protected virtual void ApplyStrategySettings(HybridStrategyResponse strategySettings)
 		{
 			Gearbox.SwitchToNeutral = strategySettings.GearboxInNeutral;
 			Engine.CombustionEngineOn = strategySettings.CombustionEngineOn;
@@ -148,18 +148,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					CurrentState.StrategyResponse = strategySettings;
 				}
 
-				//SelectedGear = new GearInfo(strategySettings.NextGear, true);
-				if (!dryRun && /*!DataBus.EngineInfo.EngineOn &&*/ strategySettings.ShiftRequired) {
-					DataBus.GearboxCtl.TriggerGearshift(absTime, dt);
-					_shiftStrategy.SetNextGear(strategySettings.NextGear);
-					SelectedGear = strategySettings.NextGear;
-					if (!DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
-						return new ResponseGearShift(this);
-					}
-				}
+				var gearShiftResponse = ShiftGear(strategySettings, dryRun, absTime, dt);
+				if (gearShiftResponse != null) {
+					return gearShiftResponse; 
+                }
 
 				if (!dryRun /*&& DataBus.VehicleInfo.VehicleStopped*/) {
-					SelectedGear = strategySettings.NextGear;
+					SelectedGear = GetNextGear(strategySettings);
 				}
 
 				
@@ -181,16 +176,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
-				var gear = DataBus.GearboxInfo.Gear;
-				var maxSpeed = VectoMath.Min(DataBus.GearboxInfo.GetGearData(gear.Gear).MaxSpeed,
-					DataBus.EngineInfo.EngineN95hSpeed);
-				if (!dryRun && retVal is ResponseSuccess && DataBus.GearboxInfo.GearEngaged(absTime) && retVal.Gearbox.InputSpeed.IsGreater(maxSpeed)) {
-					Strategy.AllowEmergencyShift = true;
+				if (AdjustStrategyWhenExceedingGearMaxSpeed(dryRun, retVal, absTime, dt, outTorque, outAngularVelocity)) {
 					retryCount++;
 					retry = true;
-					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, false, retVal);
 					continue;
-				}
+                }
 
 				if (!dryRun && strategySettings.CombustionEngineOn && retVal is ResponseEngineSpeedTooHigh && !strategySettings.ProhibitGearshift) {
 					retryCount++;
@@ -236,7 +226,49 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var modifiedResponse = Strategy.AmendResponse(retVal, absTime, dt, outTorque, outAngularVelocity, dryRun);
 
 			return modifiedResponse;
+        }
+
+        protected virtual AbstractResponse ShiftGear(HybridStrategyResponse strategySettings, bool dryRun, Second absTime, Second dt)
+        {
+			if (!dryRun && strategySettings.ShiftRequired) {
+				DataBus.GearboxCtl.TriggerGearshift(absTime, dt);
+
+				_shiftStrategy.SetNextGear(strategySettings.NextGear);
+				SelectedGear = strategySettings.NextGear;
+
+				if (!DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+					return new ResponseGearShift(this);
+				}
+			}
+
+			return null;
+        }
+
+        protected virtual GearshiftPosition GetNextGear(HybridStrategyResponse strategySettings)
+        {
+			return strategySettings.NextGear;
 		}
+
+		protected virtual bool AdjustStrategyWhenExceedingGearMaxSpeed(bool dryRun, IResponse retVal, Second absTime, Second dt, 
+			NewtonMeter outTorque, PerSecond outAngularVelocity)
+		{
+			var gear = DataBus.GearboxInfo.Gear;
+			var maxSpeed = VectoMath.Min(DataBus.GearboxInfo.GetGearData(gear.Gear).MaxSpeed, DataBus.EngineInfo.EngineN95hSpeed);
+
+			if (!dryRun 
+				&& retVal is ResponseSuccess 
+				&& DataBus.GearboxInfo.GearEngaged(absTime) 
+				&& (retVal.Gearbox.InputSpeed != null) 
+				&& retVal.Gearbox.InputSpeed.IsGreater(maxSpeed)) {
+				
+				Strategy.AllowEmergencyShift = true;
+				Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, false, retVal);
+				
+				return true;
+			}
+
+			return false;
+        }
 
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
@@ -353,8 +385,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				// create testcontainer
 				var testContainer = new SimplePowertrainContainer(_runData);
-				PowertrainBuilder.BuildSimpleHybridPowertrain(_runData, testContainer);
-
+				if (_runData.Cycle.CycleType == CycleType.MeasuredSpeedGear) {
+					PowertrainBuilder.BuildSimpleHybridPowertrainGear(_runData, testContainer);
+				}
+				else {
+					PowertrainBuilder.BuildSimpleHybridPowertrain(_runData, testContainer);
+				}
+	
 				TestPowertrain = new TestPowertrain<Gearbox>(testContainer, DataBus);
 			}
 

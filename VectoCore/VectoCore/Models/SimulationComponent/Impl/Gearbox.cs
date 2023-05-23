@@ -63,10 +63,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal bool Disengaged { get; set; }
 
 		protected internal GearshiftPosition _nextGear;
-		private Second _overrideDisengage;
+		protected Second _overrideDisengage;
 		private bool postponeEngage;
 
-		private bool ICEAvailable;
+		protected bool ICEAvailable;
 
 		public override Second LastUpshift { get; protected internal set; }
 
@@ -164,6 +164,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				EngageTime = absTime + dt;
 			}
 
+			DoNotEngageWhenBraking(outTorque, absTime, dt, outAngularVelocity);
+
 			postponeEngage = false;
 			var reEngaging = false;
 			if (GearEngaged(absTime) && Disengaged && !outAngularVelocity.IsEqual(0)) {
@@ -245,19 +247,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		/// <summary>
-		/// Requests the Gearbox in Disengaged mode
-		/// </summary>
-		/// <returns>
-		/// <list type="bullet">
-		/// <item><term>ResponseDryRun</term><description>if dryRun, immediate return!</description></item>
-		/// <item><term>ResponseFailTimeInterval</term><description>if shiftTime would be exceeded by current step</description></item>
-		/// <item><term>ResponseOverload</term><description>if torque &gt; 0</description></item>
-		/// <item><term>ResponseUnderload</term><description>if torque &lt; 0</description></item>
-		/// <item><term>else</term><description>Response from NextComponent</description></item>
-		/// </list>
-		/// </returns>
-		private IResponse RequestGearDisengaged(Second absTime, Second dt, NewtonMeter outTorque,
+        protected virtual void DoNotEngageWhenBraking(NewtonMeter outTorque, Second absTime, Second dt, PerSecond outAngularVelocity)
+        { }
+
+        /// <summary>
+        /// Requests the Gearbox in Disengaged mode
+        /// </summary>
+        /// <returns>
+        /// <list type="bullet">
+        /// <item><term>ResponseDryRun</term><description>if dryRun, immediate return!</description></item>
+        /// <item><term>ResponseFailTimeInterval</term><description>if shiftTime would be exceeded by current step</description></item>
+        /// <item><term>ResponseOverload</term><description>if torque &gt; 0</description></item>
+        /// <item><term>ResponseUnderload</term><description>if torque &lt; 0</description></item>
+        /// <item><term>else</term><description>Response from NextComponent</description></item>
+        /// </list>
+        /// </returns>
+        private IResponse RequestGearDisengaged(Second absTime, Second dt, NewtonMeter outTorque,
 			PerSecond outAngularVelocity, NewtonMeter inTorque, bool dryRun)
 		{
 			Disengaged = true;

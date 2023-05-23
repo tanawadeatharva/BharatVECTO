@@ -247,7 +247,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 										$"{validationErrors.Select(r => r.ErrorMessage + r.MemberNames.Join("; ")).Join("\n")}");
 			}
 		}
-		
+
 		private static VectoRun GetVectoRun(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
 		{
 			VectoRun run;

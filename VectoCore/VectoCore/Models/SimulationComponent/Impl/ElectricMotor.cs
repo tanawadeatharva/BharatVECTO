@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="outAngularVelocity"></param>
 		/// <param name="dryRun"></param>
 		/// <returns></returns>
-		public IResponse Request(
+		public virtual IResponse Request(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun = false)
 		{
 
