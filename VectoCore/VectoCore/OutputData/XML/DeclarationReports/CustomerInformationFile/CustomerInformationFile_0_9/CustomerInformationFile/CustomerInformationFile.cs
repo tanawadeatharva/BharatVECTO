@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Utils;
@@ -241,18 +243,20 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				ManufacturerReportIntegrityPrimaryVehicle,
 				InputDataIntegrity,
 				new XElement(Cif_0_9 + XMLNames.Report_ManufacturerRecord_Signature, resultSignature),
-				Results.GenerateResults(results),
+				Results.GenerateResults(_results),
 				XMLHelper.GetApplicationInfo(Cif_0_9)
 			};
 		}
 
 		#region Implementation of IXMLCustomerReportCompletedBus
 
-		public void WriteResult(IResultEntry genericResult, IResultEntry specificResult, IResult primaryResult)
+		public void WriteResult(IResultEntry genericResult, IResultEntry specificResult, IResult primaryResult, Func<IResultEntry, IResultEntry, IResult, IResultEntry> getCompletedResult)
 		{
 			_allSuccess &= genericResult.Status == VectoRun.Status.Success;
 			_allSuccess &= specificResult.Status == VectoRun.Status.Success;
 			_resultCount++;
+
+			_results.Add(getCompletedResult(genericResult, specificResult, primaryResult));
 			//Results.Add(
 			//	genericResult.Status == VectoRun.Status.Success && specificResult.Status == VectoRun.Status.Success
 			//		? GetSuccessResultEntry(genericResult, specificResult, primaryResult)
