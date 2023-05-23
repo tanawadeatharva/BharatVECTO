@@ -34,7 +34,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -230,6 +229,13 @@ namespace TUGraz.VectoCore.OutputData.XML
 					EquivalentAllElectricRange = ranges.EquivalentAllElectricRange;
 					ZeroCO2EmissionsRange = ranges.ZeroCO2EmissionsRange;
 					ElectricEnergyConsumption = ranges.ElectricEnergyConsumption;
+			
+					var fc = data.CorrectedModalData.FuelCorrection.Values.FirstOrDefault();
+					if (fc != null) {
+						ZEV_FuelConsumption_AuxHtr = fc.FC_AUXHTR_KM * Distance;
+						AuxHeaterFuel = fc.Fuel;
+
+					}
 				}
 
 				if (data.HasGearbox && !runData.JobType.IsOneOf(VectoSimulationJobType.IEPC_E, VectoSimulationJobType.IEPC_S)) {

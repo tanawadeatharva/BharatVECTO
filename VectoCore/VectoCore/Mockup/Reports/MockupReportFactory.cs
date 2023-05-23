@@ -72,21 +72,21 @@ namespace TUGraz.VectoMockup.Reports
                 : null;
         }
 
-        private IDeclarationReport CreateDeclarationReport(IMultistageVIFInputData multistageVifInputData, IOutputDataWriter outputDataWriter)
+        private IDeclarationReport CreateDeclarationReport(IMultistageVIFInputData multiStepVifInputData, IOutputDataWriter outputDataWriter)
         {
-			if (multistageVifInputData.VehicleInputData == null)
+			if (multiStepVifInputData.VehicleInputData == null)
             {
                 var reportCompleted = new XMLDeclarationMockupReportCompletedVehicle(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory,
-					multistageVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle.ExemptedVehicle)
+					multiStepVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle.ExemptedVehicle)
                 {
-                    PrimaryVehicleReportInputData = multistageVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle,
+                    PrimaryVehicleReportInputData = multiStepVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle,
                 };
                 return reportCompleted;
             }
             else {
 				
                 var report = new XMLDeclarationMockupReportInterimVehicle(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory, _interimFactory,
-					multistageVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle.ExemptedVehicle);
+					multiStepVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle.ExemptedVehicle);
                 return report;
             }
         }

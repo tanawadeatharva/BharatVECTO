@@ -75,7 +75,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         IResultGroupWriter GetBusSimulationParameterWriter(ICommonResultsWriterFactory factory, XNamespace ns);
 
         IFuelConsumptionWriter GetFuelConsumptionBus(ICommonResultsWriterFactory factory, XNamespace ns);
-        IElectricEnergyConsumptionWriter GetElectricEnergyConsumptionBus(ICommonResultsWriterFactory factory, XNamespace ns);
+
+		IElectricEnergyConsumptionWriter GetElectricEnergyConsumptionBus(ICommonResultsWriterFactory factory, XNamespace ns);
         ICO2Writer GetCO2ResultBus(ICommonResultsWriterFactory factory, XNamespace ns);
         ICO2Writer GetCO2ResultPEVBus(ICommonResultsWriterFactory factory, XNamespace ns);
 

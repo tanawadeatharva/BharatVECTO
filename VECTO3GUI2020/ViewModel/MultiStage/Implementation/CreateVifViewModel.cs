@@ -156,7 +156,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private void SetInputData(IInputDataProvider inputData)
 		{
-			var inputDataProvider = inputData as JSONInputDataV10_PrimaryAndStageInputBus;
+			var inputDataProvider = inputData as IMultistagePrimaryAndStageInputDataProvider;
 			Debug.Assert(inputDataProvider != null);
 
 			try {
@@ -381,7 +381,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			try
 			{
 				inputData = _inputDataReader.Create(fileName) as IDeclarationInputDataProvider;
-				valid = inputData != null && inputData.JobInputData.Vehicle.VehicleCategory.IsBus();
+
+				valid = inputData != null && inputData.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle;
 			}
 			catch (Exception ex)
 			{

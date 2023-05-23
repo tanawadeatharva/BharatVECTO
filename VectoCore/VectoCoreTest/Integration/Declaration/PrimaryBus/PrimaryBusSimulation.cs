@@ -38,7 +38,9 @@ public class PrimaryBusSimulation
 	private const string BASE_DIR = @"TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\";
 
 	private const string BASE_DIR_COMPLETED = @"TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\CompletedBus";
-	private const string BASE_DIR_VIF = @"TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\CompletedBus\VIF";
+
+	private const string BASE_DIR_FACTOR_METHOD_MODEL_DATA = @"TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\CompletedBus\FactorMethod";
+    private const string BASE_DIR_VIF = @"TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\CompletedBus\VIF";
 	private ThreadLocal<StandardKernel> _kernel;
 
 	private StandardKernel Kernel => _kernel.Value;
@@ -268,6 +270,7 @@ public class PrimaryBusSimulation
 		TestName = "2nd Amendment FactorMethodRunData P-HEV P2 SmartES_elFan_elSteer spez_Dim_HVAC"),
 
 
+
     ]
     public void TestFactorMethodRunData(string primary, string completed, string vifFile, MissionType mission, LoadingType loading)
 	{
@@ -320,6 +323,31 @@ public class PrimaryBusSimulation
 
 		SerializeRunData(runsFactoryFinal, outputPath);
     }
+	
+
+
+	[TestCase()]
+	public void TestFactorMethodRunDataFromDedicatedFolder(string subfolder, string primary, string completed, MissionType mission, LoadingType loading, string testName)
+	{
+
+		bool createVif = true;
+
+		string vif = "";
+		var testMissionFilter = GetTestMissionFilter();
+		testMissionFilter.SetMissions((mission, loading));
+
+
+		RunSimulationPrimary(primary, -1, out vif);
+
+
+		TestFactorMethodRunData(primary, completed, vif, mission, loading);
+	}
+
+	public TestMissionFilter GetTestMissionFilter()
+	{
+		Kernel.Rebind<IMissionFilter>().To<TestMissionFilter>();
+		return Kernel.Get<TestMissionFilter>();
+	}
 
     private static void SerializeRunData(ISimulatorFactory runsFactorySingle, string outputPath)
 	{
@@ -402,7 +430,7 @@ public class PrimaryBusSimulation
 		
 		var runsFactory = simFactory.Factory(ExecutionMode.Declaration, dataProvider, fileWriter, null, null);
 		
-		//runsFactory.WriteModalResults = true;
+		runsFactory.WriteModalResults = true;
 		//runsFactory.SerializeVectoRunData = true;
 		var jobContainer = new JobContainer(new SummaryDataContainer(fileWriter)) { };
         //var jobContainer = new JobContainer(new MockSumWriter()) { };
@@ -421,6 +449,10 @@ public class PrimaryBusSimulation
 	}
 
 	public void RunSimulationPrimary(string jobFile, int runIdx)
+	{
+		RunSimulationPrimary(jobFile, runIdx, out var _);
+	}
+	public void RunSimulationPrimary(string jobFile, int runIdx, out string vifFile)
 	{
 		var filePath = Path.Combine(BASE_DIR, jobFile);
 		var dataProvider = _xmlReader.CreateDeclaration(filePath);
@@ -460,7 +492,7 @@ public class PrimaryBusSimulation
 		jobContainer.WaitFinished();
 		Assert.IsTrue(jobContainer.AllCompleted);
 		Assert.IsTrue(jobContainer.Runs.TrueForAll(runEntry => runEntry.Success));
-
+		vifFile = fileWriter.XMLMultistageReportFileName;
 		PrintRuns(jobContainer, fileWriter);
 		PrintFiles(fileWriter);
 	}

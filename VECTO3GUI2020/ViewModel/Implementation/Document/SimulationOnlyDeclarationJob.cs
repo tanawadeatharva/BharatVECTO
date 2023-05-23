@@ -65,6 +65,13 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
 			_documentName = name;
 		}
 
+		public SimulationOnlyDeclarationJob(IDeclarationInputDataProvider inputData)
+		{
+			_documentType = XmlDocumentType.DeclarationJobData;
+			_dataSource = inputData.DataSource;
+			_documentName = inputData.JobInputData.JobName;
+		}
+
 	}
 
 }

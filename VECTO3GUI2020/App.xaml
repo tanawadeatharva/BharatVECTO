@@ -8,7 +8,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
             <!-- Add new ResourceDictionaries here-->
-                <ResourceDictionary Source="Resources/ViewModelBindings.xaml"/>
+                <ResourceDictionary Source="/Resources/ViewModelBindings/ViewModelBindings.xaml"/>
+                <ResourceDictionary Source="/Resources/ViewModelBindings/VehicleViewModelBinding.xaml"/>
                 <ResourceDictionary Source="Resources/Converter.xaml"/>
                 <ResourceDictionary Source="Resources/MultistageParameterDataTemplates.xaml"/>
                 <ResourceDictionary Source="Resources\Styles\ButtonStyles.xaml"/>

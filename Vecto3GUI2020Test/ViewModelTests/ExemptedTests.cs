@@ -10,6 +10,7 @@ using TUGraz.VectoCommon.Utils;
 using VECTO3GUI2020.ViewModel.Implementation;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
+using Vecto3GUI2020Test.Utils;
 
 namespace Vecto3GUI2020Test.ViewModelTests
 {
@@ -17,22 +18,22 @@ namespace Vecto3GUI2020Test.ViewModelTests
 	public class ExemptedTests : ViewModelTestBase
 	{
 
-		public const string _exemptedCompleted = "exempted_completed.VIF_Report_2.xml";
+		
 
 		[Test]
 		public void LoadAndSaveExemptedPrimary()
 		{
-			var newMultiStageJob = LoadFileFromTestDirectory(exempted_primary_vif);
+			var newMultiStageJob = LoadFileFromPath(Path.GetFullPath(TestData.exempted_primary_vif));
 			Assert.IsTrue(newMultiStageJob.MultiStageJobViewModel.Exempted);
 
 
 			var multistageJobViewModel = newMultiStageJob.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
 
-			var outputPath = GetFullPath("test1.xml");
+			var outputPath = Path.GetFullPath("test1.xml");
 
 			var vehicleVm =
 				multistageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as
-					InterimStageBusVehicleViewModel_v2_8;
+					InterimStageBusVehicleViewModel;
 
 			Assert.IsTrue(vehicleVm.ExemptedVehicle);
 
@@ -88,17 +89,17 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public async Task SaveAsNewVifAndSimulate()
 		{
-			var newMultiStageJob = LoadFileFromTestDirectory(exempted_primary_vif);
+			var newMultiStageJob = LoadFileFromPath(TestData.exempted_primary_vif);
 			Assert.IsTrue(newMultiStageJob.MultiStageJobViewModel.Exempted);
 
 
 			var multistageJobViewModel = newMultiStageJob.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
 
-			var outputFile = GetFullPath("exemptedNewVif/test1.xml");
+			var outputFile = Path.GetFullPath("exemptedNewVif/test1.xml");
 
 			var vehicleVm =
 				multistageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as
-					InterimStageBusVehicleViewModel_v2_8;
+					InterimStageBusVehicleViewModel;
 
 			Assert.IsTrue(vehicleVm.ExemptedVehicle);
 
@@ -134,7 +135,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			try {
 				Directory.Delete(Path.GetDirectoryName(outputFile), true);
 			} catch (Exception e) {
-				WriteLine(e.Message);
+				TestContext.WriteLine(e.Message);
 			}
 			var result = multistageJobViewModel.SaveVif(outputFile);
 
@@ -167,12 +168,12 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.AreEqual(PassengerSeatsLowerDeck, lastManStage.Vehicle.NumberPassengerSeatsLowerDeck);
 
 
-			Write("Starting simulation ...");
+			TestContext.Write("Starting simulation ...");
 			jobListVm.Jobs[1].Selected = true;
 			await jobListVm.RunSimulationExecute();
 
 
-			Write("Done!");
+			TestContext.Write("Done!");
 		}
 
 		[Test]
@@ -180,7 +181,8 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		{
 			//Setup
 			var jobListViewModel = _kernel.Get<IJobListViewModel>() as JobListViewModel;
-			await jobListViewModel.AddJobAsync(GetTestDataPath(_exemptedCompleted));
+			await jobListViewModel.AddJobAsync(Path.GetFullPath(TestData.exemptedCompleted));
+			_mockDialogHelper.AssertNoErrorDialogs();
 			Assert.AreEqual(1, jobListViewModel.Jobs.Count);
 
 			jobListViewModel.Jobs[0].Selected = true;

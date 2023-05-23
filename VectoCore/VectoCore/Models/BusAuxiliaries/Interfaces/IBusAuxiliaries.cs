@@ -161,6 +161,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 
 	public class HeaterDemandResult
 	{
+		/// <summary>
+		/// Fuel heater (Diesel)
+		/// </summary>
 		public Joule AuxHeater => HeaterPower.AuxHeaterPower * CycleTime;
 
 		public WattSecond HeatPumpElectricEnergy => HeaterPower.HeatPumpPowerEl * CycleTime;

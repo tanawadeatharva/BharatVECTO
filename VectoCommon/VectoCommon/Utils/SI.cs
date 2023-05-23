@@ -220,7 +220,12 @@ namespace TUGraz.VectoCommon.Utils
 			return SIBase<Second>.Create(second.Val / meterPerSecond.Value());
 		}
 
-		public static SquareMeter operator *(Meter m1, Meter m2)
+		public static Kilogram operator *(KilogramPerMeter kilogramPerMeter, Meter meter)
+		{
+			return SIBase<Kilogram>.Create(kilogramPerMeter.Value() * meter.Value());
+		}
+
+        public static SquareMeter operator *(Meter m1, Meter m2)
 		{
 			return SIBase<SquareMeter>.Create(m1.Val * m2.Val);
 		}
@@ -363,6 +368,9 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<CubicMeter>.Create(kilogram.Value() / kilogramPerCubicMeter.Value());
 		}
+
+		
+
 
 		public static KilogramPerCubicMeter operator /(Kilogram kg, CubicMeter m3)
 		{

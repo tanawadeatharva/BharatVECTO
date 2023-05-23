@@ -1,19 +1,24 @@
-﻿using System.Xml.Linq;
+﻿using System.Linq;
+using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.Components.Auxiliaries
 {
-    class BusAuxHVACHeatPumpWriter_v2_10_2 : GroupWriter, IBusAuxiliariesDeclarationGroupWriter
+    class BusAuxHVACHeatPumpWriter_v2_4 : GroupWriter, IBusAuxiliariesDeclarationGroupWriter
     {
-		public BusAuxHVACHeatPumpWriter_v2_10_2(XNamespace writerNamespace) : base(writerNamespace) { }
+		public BusAuxHVACHeatPumpWriter_v2_4(XNamespace writerNamespace) : base(writerNamespace) { }
 
 		#region Implementation of IBusAuxiliariesDeclarationGroupWriter
 
 		public XElement[] GetGroupElements(IBusAuxiliariesDeclarationData aux)
 		{
-			return new XElement[] {
+			var elements = new XElement[] {
+				new XElement(_writerNamespace + XMLNames.Bus_SystemConfiguration, aux.HVACAux.SystemConfiguration?.ToXmlFormat()),
+
+
 				GetHeatPumpGroupElement(
 					xmlNameWrapper: XMLNames.Bus_HeatPumpTypeDriver,
 					xmlNameFirstComponent: XMLNames.BusHVACHeatPumpCooling,
@@ -28,6 +33,7 @@ namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.Compon
 					xmlNameSecondComponent: XMLNames.BusHVACHeatPumpHeating,
 					secondValue: aux.HVACAux.HeatPumpTypeHeatingPassengerCompartment.GetLabel())
 			};
+			return elements.Where(xEl => !xEl.Value.IsNullOrEmpty()).ToArray();
 
 		}
 

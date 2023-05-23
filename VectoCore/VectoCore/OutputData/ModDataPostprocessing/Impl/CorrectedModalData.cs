@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
         public CorrectedModalData(IModalDataContainer modData) : base(modData)
         {
 
-            FuelCorrection = new Dictionary<FuelType, IFuelConsumptionCorrection>();
+            //FuelCorrection = new Dictionary<FuelType, IFuelConsumptionCorrection>();
         }
 
         public override IFuelConsumptionCorrection FuelConsumptionCorrection(IFuelProperties fuel)

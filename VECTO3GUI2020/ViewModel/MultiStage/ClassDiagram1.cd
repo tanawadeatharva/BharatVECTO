@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="VECTO3GUI2020.ViewModel.MultiStage.Implementation.StageInputViewModel">
+    <Position X="8" Y="3.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAABAQAAgAAEEAAAAQAAIAABIEAAAAGQACABkI=</HashCode>
+      <FileName>ViewModel\MultiStage\Implementation\StageInputViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="VECTO3GUI2020.ViewModel.MultiStage.Implementation.MultiStageJobViewModel_v0_1">
+    <Position X="1.75" Y="5.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>GAAAFAAIBEQBAgQCBMgCAhQQEIAAAEGAEABAmYGgBgY=</HashCode>
+      <FileName>ViewModel\MultiStage\Implementation\MultistageJobViewModel_v0_1.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="VECTO3GUI2020.ViewModel.MultiStage.Implementation.NullSumWriter" Collapsed="true">
+    <Position X="4.5" Y="5.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAg=</HashCode>
+      <FileName>ViewModel\MultiStage\Implementation\MultistageJobViewModel_v0_1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VECTO3GUI2020.ViewModel.MultiStage.Implementation.InterimStageBusVehicleViewModel_v2_8" BaseTypeListCollapsed="true">
+    <Position X="14.5" Y="5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>GoqtjOJsdkIQU7J5C/N3qMfFnRmkC4GNAjrL18uimxo=</HashCode>
+      <FileName>ViewModel\MultiStage\Implementation\InterimStageBusVehicleViewModel_v2_8.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="VECTO3GUI2020.ViewModel.MultiStage.Implementation.CreateVifViewModel">
+    <Position X="11.75" Y="5.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>BQABhAEChEQAggYAhEiAGAVQgBBAgEEAOAIgRAGEBgo=</HashCode>
+      <FileName>ViewModel\MultiStage\Implementation\CreateVifViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="VECTO3GUI2020.ViewModel.Interfaces.Document.IDocumentViewModel" Collapsed="true">
+    <Position X="1.25" Y="0.75" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAABAQAAgAAAAAAAAAAAAAAAAAAAAAAAACABgI=</HashCode>
+      <FileName>ViewModel\Interfaces\Document\IDocumentViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="VECTO3GUI2020.ViewModel.Interfaces.Document.IJobViewModel" Collapsed="true">
+    <Position X="1.75" Y="2" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModel\Interfaces\Document\IJobViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="VECTO3GUI2020.ViewModel.MultiStage.Implementation.ICreateVifViewModel" Collapsed="true">
+    <Position X="5" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACgAAAAAAAAAgAEAAAAAAAAEAACAAARAEAAAA=</HashCode>
+      <FileName>ViewModel\MultiStage\Implementation\CreateVifViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="VECTO3GUI2020.ViewModel.MultiStage.Implementation.IMultiStageJobViewModel" Collapsed="true">
+    <Position X="1.5" Y="3.5" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIgAAAAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModel\MultiStage\Implementation\MultistageJobViewModel_v0_1.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="VECTO3GUI2020.ViewModel.MultiStage.Implementation.IMultistageVehicleViewModel" Collapsed="true">
+    <Position X="12" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAIAAAAAAQAAAAAAAAEAAAAAAAAIAAAAAgAAAAA=</HashCode>
+      <FileName>ViewModel\MultiStage\Implementation\InterimStageBusVehicleViewModel_v2_8.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="VECTO3GUI2020.ViewModel.MultiStage.Implementation.AIRDRAGMODIFIED" Collapsed="true">
+    <Position X="15" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABIAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>ViewModel\MultiStage\Implementation\InterimStageBusVehicleViewModel_v2_8.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -1433,6 +1433,24 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static IWeightedResult CalculateWeightedResult(IResultEntry cdResult, IResultEntry csResult)
 		{
+			var vehicleOperation = VehicleOperation.LookupVehicleOperation(cdResult.VehicleClass, cdResult.Mission);
+			var chgEfficiency = CalculateChargingEfficiencyOVCHEV(cdResult.MaxChargingPower, vehicleOperation, cdResult.BatteryData);
+            CalculateChargingEfficiencyOVCHEV(cdResult.MaxChargingPower, vehicleOperation, cdResult.BatteryData);
+            return CalculateWeightedResult(cdResult, csResult, vehicleOperation, chgEfficiency);
+		}
+
+		public static IWeightedResult CalculateWeightedResultCompletedBus(IResultEntry cdResult, IResultEntry csResult)
+		{
+			var vehicleOperation = VehicleOperation.LookupVehicleOperation(cdResult.VehicleClass, cdResult.Mission);
+			return CalculateWeightedResult(cdResult, csResult, vehicleOperation, (1, 1, 1));
+		}
+
+
+		private static IWeightedResult CalculateWeightedResult(IResultEntry cdResult, 
+																IResultEntry csResult, 
+																VehicleOperationLookup.VehicleOperationData vehicleOperation,
+																(double etaChgBatDepot, double etaChgBatInMission, double etaChtBatWeighted) chargingEfficiency)
+		{
 			if (cdResult.Status != VectoRun.Status.Success || csResult.Status != VectoRun.Status.Success) {
 				return null;
 			}
@@ -1440,7 +1458,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			if (batteryData == null) {
 				throw new VectoException("Battery Data is required for OVC post-processing");
 			}
-			var vehicleOperation = VehicleOperation.LookupVehicleOperation(cdResult.VehicleClass, cdResult.Mission);
 
 			var D9_dailySpecificMileage = vehicleOperation.Mileage.DailyMileage;
 			var D10_stationarychargingDuringMissionMaxPwrInfastructure = vehicleOperation.StationaryChargingMaxPwrInfrastructure;
@@ -1449,7 +1466,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var D13_realWorldFactorUsageStartSoC = vehicleOperation.RealWorldUsageFactors.StartSoCBeforeMission;
 			var D14_realWorldFactorChargeDuringMission = vehicleOperation.RealWorldUsageFactors.StationaryChargingDuringMission;
 
-			var (etaChgBatDepot, etaChgBatInMission, etaChtBatWeighted) = CalculateChargingEfficiencyOVCHEV(cdResult.MaxChargingPower, vehicleOperation, batteryData);
+			var (etaChgBatDepot, etaChgBatInMission, etaChtBatWeighted) = chargingEfficiency;
+            //var (etaChgBatDepot, etaChgBatInMission, etaChtBatWeighted) = CalculateChargingEfficiencyOVCHEV(cdResult.MaxChargingPower, vehicleOperation, batteryData);
 
 			var D17_maxStatChargingPower = cdResult.MaxChargingPower;
 
@@ -1515,6 +1533,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return retVal;
 		}
 
+
 		public static (double, double, double) CalculateChargingEfficiencyOVCHEV(Watt maxChargingPwrVeh,
 			VehicleOperationLookup.VehicleOperationData vehicleOperation, BatterySystemData batteryData)
 		{
@@ -1546,6 +1565,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 														etaChgBatInMission * chargedEnergyInMission /
 														totalChargedEnergy);
 		}
+
 
 		public static double CalculateChargingEfficiencyPEV(VectoRunData runData)
 		{
@@ -1632,18 +1652,32 @@ namespace TUGraz.VectoCore.Models.Declaration
 			};
 		}
 
+
 		public static ElectricRangesPEV CalculateElectricRangesPEV(VectoRunData runData, IModalDataContainer data)
 		{
-			var batteryData = runData.BatteryData;
+			return DoCalculateElectricRangesPEV(data.CorrectedModalData.ElectricEnergyConsumption_SoC_Corr, 
+				data.Distance, CalculateChargingEfficiencyPEV(runData), runData.BatteryData);
+		}
+
+		public static ElectricRangesPEV CalculateElectricRangesPEVCompletedBus(BatterySystemData batteryData,
+			WattSecond ElectricEnergyConsumptionSoc, Meter distance)
+		{
+			return DoCalculateElectricRangesPEV(electricEnergyConsumptionSoCCorr: ElectricEnergyConsumptionSoc,
+				distance: distance, chargingEfficiencyBattery: 1, batteryData);
+		}
+
+		private static ElectricRangesPEV DoCalculateElectricRangesPEV(WattSecond electricEnergyConsumptionSoCCorr, Meter distance, double chargingEfficiencyBattery, BatterySystemData runDataBatteryData)
+		{
+			var batteryData = runDataBatteryData;
 			if (batteryData == null) {
 				throw new VectoException("Battery Data is required for PEV range calculation");
 			}
 
-			var D9_chargingEfficiencyBattery = CalculateChargingEfficiencyPEV(runData);
+			var D9_chargingEfficiencyBattery = chargingEfficiencyBattery;
 			var D15_useableBatteryCapacityForR_CDA = batteryData.UseableStoredEnergy;
-			var D13_electricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption_SoC_Corr;
+			var D13_electricEnergyConsumption = electricEnergyConsumptionSoCCorr;
 
-			var D16_actualChargeDepletingRange = D15_useableBatteryCapacityForR_CDA / D13_electricEnergyConsumption * data.Distance;
+			var D16_actualChargeDepletingRange = D15_useableBatteryCapacityForR_CDA / D13_electricEnergyConsumption * distance;
 			var D17_equivalentAllElectricRange = D16_actualChargeDepletingRange;
 			var D18_zeroCO2EmissionsRange = D17_equivalentAllElectricRange;
 

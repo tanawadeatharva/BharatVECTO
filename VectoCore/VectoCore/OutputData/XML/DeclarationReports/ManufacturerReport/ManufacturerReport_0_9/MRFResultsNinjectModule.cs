@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Xml.Linq;
 using Ninject.Activation;
 using Ninject.Extensions.Factory;
@@ -156,7 +157,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
             Bind<IFuelConsumptionWriter>().To<BusFuelConsumptionWriter>().When(AccessedViaMRFResultsWriterFactory)
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetFuelConsumptionBus(null, XNamespace.None));
-            Bind<IElectricEnergyConsumptionWriter>().To<BusElectricEnergyConsumptionWriter>().When(AccessedViaMRFResultsWriterFactory)
+
+
+			Bind<IElectricEnergyConsumptionWriter>().To<BusElectricEnergyConsumptionWriter>().When(AccessedViaMRFResultsWriterFactory)
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetElectricEnergyConsumptionBus(null, XNamespace.None));
             Bind<ICO2Writer>().To<BusCO2Writer>().When(AccessedViaMRFResultsWriterFactory)
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetCO2ResultBus(null, XNamespace.None));
@@ -178,6 +181,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetErrorDetailsWriter(null, XNamespace.None));
         }
 
+        [DebuggerStepThrough]
 		private bool AccessedViaMRFResultsWriterFactory(IRequest request)
 		{
 			if (request.ParentRequest == null) {
