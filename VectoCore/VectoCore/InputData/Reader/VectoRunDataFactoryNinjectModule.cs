@@ -250,6 +250,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 			Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.HEV_S_IEPC>().Named(
 				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.IEPC_S,
 					ArchitectureID.S_IEPC));
+			
 			Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.HEV_P1>().Named(
 				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.ParallelHybridVehicle,
 					ArchitectureID.P1));
@@ -259,14 +260,17 @@ namespace TUGraz.VectoCore.InputData.Reader
 			Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.HEV_P2_5>().Named(
 				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.ParallelHybridVehicle,
 					ArchitectureID.P2_5));
-
 			Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.HEV_P3>().Named(
 				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.ParallelHybridVehicle,
 					ArchitectureID.P3));
 			Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.HEV_P4>().Named(
 				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.ParallelHybridVehicle,
 					ArchitectureID.P4));
-			Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.PEV_E2>().Named(
+			Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.HEV_P_IHPC>().Named(
+				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.IHPC,
+					ArchitectureID.P2));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.PEV_E2>().Named(
 				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.E2));
 			Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.PEV_E3>().Named(

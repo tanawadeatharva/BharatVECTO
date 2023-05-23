@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 		public abstract class PrimaryBusBase : IPrimaryBusDeclarationDataAdapter
 		{
 
-			public virtual GearboxType[] SupportedGearboxTypes => throw new NotImplementedException();
+			public abstract GearboxType[] SupportedGearboxTypes { get; }
 
 			private readonly IDriverDataAdapter _driverDataAdapter = new PrimaryBusDriverDataAdapter();
 			//protected readonly IVehicleDataAdapter _vehicleDataAdapter = new PrimaryBusVehicleDataAdapter();
@@ -172,6 +172,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			{
 				GearboxType.MT, GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial
 			};
+
 			protected override IEngineDataAdapter EngineDataAdapter { get; } = new CombustionEngineComponentDataAdapter();
 
 			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new GearboxDataAdapter(new TorqueConverterDataAdapter());
@@ -228,7 +229,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 		public abstract class SerialHybrid : Hybrid
 		{
-			protected override IGearboxDataAdapter GearboxDataAdapter => throw new NotImplementedException();
+			public override GearboxType[] SupportedGearboxTypes => new GearboxType[] { };
+
+
+            protected override IGearboxDataAdapter GearboxDataAdapter => throw new NotImplementedException();
 
 			protected override IHybridStrategyDataAdapter HybridStrategyDataAdapter { get; } = new
 				SerialHybridStrategyParameterDataAdapter();
@@ -317,8 +321,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 		{
 			private readonly IElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
 
-			public override GearboxType[] SupportedGearboxTypes => new[]
-				{ GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.APTN, GearboxType.ATSerial };
+			public override GearboxType[] SupportedGearboxTypes => new GearboxType[] {  };
 
             #region Overrides of PrimaryBusBase
 
@@ -360,7 +363,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 		public class PEV_E2 : BatteryElectric
 		{
-			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new GearboxDataAdapter(null);
+			public override GearboxType[] SupportedGearboxTypes => new[]
+				{ GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.APTN, GearboxType.ATSerial };
+
+            protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new GearboxDataAdapter(null);
         }
 
 		public class PEV_E3 : BatteryElectric
@@ -385,6 +391,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 		public class Exempted : PrimaryBusBase
 		{
 			#region Overrides of PrimaryBusBase
+
+			public override GearboxType[] SupportedGearboxTypes => new GearboxType[]{};
 
 			protected override IVehicleDataAdapter VehicleDataAdapter { get; } = new ExemptedPrimaryBusVehicleDataAdapter();
 			protected override IEngineDataAdapter EngineDataAdapter => throw new NotImplementedException();
