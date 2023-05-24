@@ -471,6 +471,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_BASE, DemandType = AuxiliaryDemandType.Constant, PowerDemandMech = baseDemand},
 				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_STP, DemandType = AuxiliaryDemandType.Constant, PowerDemandMech = stpDemand},
 				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_FAN, DemandType = AuxiliaryDemandType.Constant, PowerDemandMech = fanDemand},
+				new VectoRunData.AuxData { ID = DrivingCycleDataReader.Fields.AdditionalAuxPowerDemand, DemandType = AuxiliaryDemandType.Direct }
 			};
 
 			return auxList;
