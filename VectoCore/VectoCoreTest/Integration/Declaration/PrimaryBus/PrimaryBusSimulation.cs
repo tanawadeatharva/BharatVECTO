@@ -126,18 +126,18 @@ public class PrimaryBusSimulation
 	}
 	
 	[
-	TestCase(@"primary_heavyBus group41_nonSmart.RSLT_VIF.xml", @"Conventional_completedBus_2.xml", 1, TestName = "2nd Amendment CompletedBus Conventional"),
-	TestCase(@"PEV_primaryBus_AMT_E2.RSLT_VIF.xml", @"PEV_completedBus_2.xml", -1,                      TestName = "2nd Amendment CompletedBus PEV E2"),
-	TestCase(@"PrimaryCoach_E2_Base_AMT.RSLT_VIF.xml", @"PEV_completedBus_2.xml", 1,                   TestName = "2nd Amendment CompletedBus Coach PEV E2"),
-	TestCase(@"PrimaryCityBus_IEPC_Base.RSLT_VIF.xml", @"PEV_completedBus_2.xml", 1,                   TestName = "2nd Amendment CompletedBus CityBus PEV IEPC"),
-	TestCase(@"PrimaryCoach_P2_HEV_Base_AMT.RSLT_VIF.xml", @"HEV_completedBus_2.xml", 1,               TestName = "2nd Amendment CompletedBus Coach HEV P2"),
-	TestCase(@"PrimaryCoach_P2_HEV_AMT_OVC.RSLT_VIF.xml", @"HEV_completedBus_2.xml", 1,                TestName = "2nd Amendment CompletedBus Coach HEV P2 OVC"),
-	TestCase(@"PrimaryCityBus_P1_HEV_Base_AT.RSLT_VIF.xml", @"HEV_completedBus_2.xml", 1,true, TestName = "2nd Amendment CompletedBus CityBus HEV P1 - fails on complete cycle"),
-	TestCase(@"PrimaryCityBus_P1_HEV_Supercap.RSLT_VIF.xml", @"HEV_completedBus_2.xml", 1, true, TestName = "2nd Amendment CompletedBus CityBus HEV P1 SuperCap"),
-	TestCase(@"PrimaryCoach_S2_Base_AMT.RSLT_VIF.xml", @"HEV_completedBus_2.xml", 1,                   TestName = "2nd Amendment CompletedBus Coach HEV S2 OVC"),
-	TestCase(@"PrimaryCityBus_IEPC-S_Base.RSLT_VIF.xml", @"HEV_completedBus_2.xml", 1,                 TestName = "2nd Amendment CompletedBus CityBus HEV IEPC-S"),
-	TestCase(@"exempted_primary_heavyBus.RSLT_VIF.xml", @"exempted_completedBus_input_full.xml", 1,    TestName = "2nd Amendment CompletedBus Exempted"),
-	TestCase(@"PrimaryCityBus_IHPC.RSLT_VIF.xml", @"HEV_completedBus_2.xml", -1, TestName="2nd Amendment Completed Bus IHPC"),
+	TestCase(@"CompletedBus\VIF\primary_heavyBus group41_nonSmart.RSLT_VIF.xml", @"CompletedBus\Conventional_completedBus_2.xml", 1,   TestName = "2nd Amendment CompletedBus Conventional"),
+	TestCase(@"CompletedBus\VIF\PEV_primaryBus_AMT_E2.RSLT_VIF.xml",             @"CompletedBus\PEV_completedBus_2.xml", -1,           TestName = "2nd Amendment CompletedBus PEV E2"),
+	TestCase(@"CompletedBus\VIF\PrimaryCoach_E2_Base_AMT.RSLT_VIF.xml",          @"CompletedBus\PEV_completedBus_2.xml", 1,                     TestName = "2nd Amendment CompletedBus Coach PEV E2"),
+	TestCase(@"CompletedBus\VIF\PrimaryCityBus_IEPC_Base.RSLT_VIF.xml",          @"CompletedBus\PEV_completedBus_2.xml", 1,                     TestName = "2nd Amendment CompletedBus CityBus PEV IEPC"),
+	TestCase(@"CompletedBus\VIF\PrimaryCoach_P2_HEV_Base_AMT.RSLT_VIF.xml",      @"CompletedBus\HEV_completedBus_2.xml", 1,                 TestName = "2nd Amendment CompletedBus Coach HEV P2"),
+	TestCase(@"CompletedBus\VIF\PrimaryCoach_P2_HEV_AMT_OVC.RSLT_VIF.xml",       @"CompletedBus\HEV_completedBus_2.xml", 1,                  TestName = "2nd Amendment CompletedBus Coach HEV P2 OVC"),
+	TestCase(@"CompletedBus\VIF\PrimaryCityBus_P1_HEV_Base_AT.RSLT_VIF.xml",     @"CompletedBus\HEV_completedBus_2.xml", 1,true,   TestName = "2nd Amendment CompletedBus CityBus HEV P1 - fails on complete cycle"),
+	TestCase(@"CompletedBus\VIF\PrimaryCityBus_P1_HEV_Supercap.RSLT_VIF.xml",    @"CompletedBus\HEV_completedBus_2.xml", 1, true, TestName = "2nd Amendment CompletedBus CityBus HEV P1 SuperCap"),
+	TestCase(@"CompletedBus\VIF\PrimaryCoach_S2_Base_AMT.RSLT_VIF.xml",          @"CompletedBus\HEV_completedBus_2.xml", 1,                     TestName = "2nd Amendment CompletedBus Coach HEV S2 OVC"),
+	TestCase(@"CompletedBus\VIF\PrimaryCityBus_IEPC-S_Base.RSLT_VIF.xml",        @"CompletedBus\HEV_completedBus_2.xml", 1,                   TestName = "2nd Amendment CompletedBus CityBus HEV IEPC-S"),
+	TestCase(@"CompletedBus\VIF\exempted_primary_heavyBus.RSLT_VIF.xml",         @"CompletedBus\exempted_completedBus_input_full.xml", 1,      TestName = "2nd Amendment CompletedBus Exempted"),
+	TestCase(@"CompletedBus\VIF\PrimaryCityBus_IHPC.RSLT_VIF.xml",               @"CompletedBus\HEV_completedBus_2.xml", -1,                         TestName="2nd Amendment Completed Bus IHPC"),
 
 	TestCase(@"FactorMethod\VIF\P31_32_nonSmartES_elecFan_elecSteer.RSLT_VIF.xml", @"FactorMethod\Conventional\Conventional_32e_prim_Dim_HVAC.xml", 0,
 		TestName = "2nd Amendment CompletedBus Conventional nonSmartES_elFan_elSteer 32e_prim_Dim_HVAC"),
@@ -160,7 +160,7 @@ public class PrimaryBusSimulation
 		missionFilter!.SetMissions((MissionType.Coach, LoadingType.ReferenceLoad));
 
         var finalVif = CreateCompletedVIF(completedJob);
-
+		
 		//RunSimulationPrimary(finalVif, runIdx);
 	}
 
