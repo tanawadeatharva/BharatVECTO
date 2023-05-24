@@ -133,7 +133,7 @@ public class PrimaryBusSimulation
 	TestCase(@"CompletedBus\VIF\PrimaryCoach_P2_HEV_Base_AMT.RSLT_VIF.xml",      @"CompletedBus\HEV_completedBus_2.xml", 1,                 TestName = "2nd Amendment CompletedBus Coach HEV P2"),
 	TestCase(@"CompletedBus\VIF\PrimaryCoach_P2_HEV_AMT_OVC.RSLT_VIF.xml",       @"CompletedBus\HEV_completedBus_2.xml", 1,                  TestName = "2nd Amendment CompletedBus Coach HEV P2 OVC"),
 	TestCase(@"CompletedBus\VIF\PrimaryCityBus_P1_HEV_Base_AT.RSLT_VIF.xml",     @"CompletedBus\HEV_completedBus_2.xml", 1,true,   TestName = "2nd Amendment CompletedBus CityBus HEV P1 - fails on complete cycle"),
-	TestCase(@"CompletedBus\VIF\PrimaryCityBus_P1_HEV_Supercap.RSLT_VIF.xml",    @"CompletedBus\HEV_completedBus_2.xml", 1, true, TestName = "2nd Amendment CompletedBus CityBus HEV P1 SuperCap"),
+	TestCase(@"CompletedBus\VIF\PrimaryCityBus_P1_HEV_Supercap.RSLT_VIF.xml",    @"CompletedBus\HEV_completedBus_2.xml", 1, false, TestName = "2nd Amendment CompletedBus CityBus HEV P1 SuperCap"),
 	TestCase(@"CompletedBus\VIF\PrimaryCoach_S2_Base_AMT.RSLT_VIF.xml",          @"CompletedBus\HEV_completedBus_2.xml", 1,                     TestName = "2nd Amendment CompletedBus Coach HEV S2 OVC"),
 	TestCase(@"CompletedBus\VIF\PrimaryCityBus_IEPC-S_Base.RSLT_VIF.xml",        @"CompletedBus\HEV_completedBus_2.xml", 1,                   TestName = "2nd Amendment CompletedBus CityBus HEV IEPC-S"),
 	TestCase(@"CompletedBus\VIF\exempted_primary_heavyBus.RSLT_VIF.xml",         @"CompletedBus\exempted_completedBus_input_full.xml", 1,      TestName = "2nd Amendment CompletedBus Exempted"),
@@ -323,25 +323,7 @@ public class PrimaryBusSimulation
 
 		SerializeRunData(runsFactoryFinal, outputPath);
     }
-	
 
-
-	[TestCase()]
-	public void TestFactorMethodRunDataFromDedicatedFolder(string subfolder, string primary, string completed, MissionType mission, LoadingType loading, string testName)
-	{
-
-		bool createVif = true;
-
-		string vif = "";
-		var testMissionFilter = GetTestMissionFilter();
-		testMissionFilter.SetMissions((mission, loading));
-
-
-		RunSimulationPrimary(primary, -1, out vif);
-
-
-		TestFactorMethodRunData(primary, completed, vif, mission, loading);
-	}
 
 	public TestMissionFilter GetTestMissionFilter()
 	{
