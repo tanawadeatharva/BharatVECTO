@@ -231,7 +231,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			foreach (var gear in gearList) {
 				effMap.Add(gear.Gear, ElectricMotorMapReader.Create(entry.PowerMap[(int)gear.Gear - 1].PowerMap, count));
 			}
-			return new IEPCVoltageLevelData() {
+			return new IHPCVoltageLevelData() {
 				Voltage = entry.VoltageLevel,
 				FullLoadCurve = fullLoadCurveCombined,
 				EfficiencyMaps = effMap,
