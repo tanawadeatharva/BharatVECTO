@@ -15,7 +15,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
     <PackageReference Include="System.Security.Cryptography.Xml">
-      <Version>6.0.0</Version>
+      <Version>7.0.1</Version>
     </PackageReference>
   </ItemGroup>
 
