@@ -6,7 +6,7 @@
     <AssemblyName>vectocmd</AssemblyName>
     <ApplicationIcon>Icon2.ico</ApplicationIcon>
     <RootNamespace>TUGraz.VECTO</RootNamespace>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
 	<DefineConstants />
     <StartupObject></StartupObject>
   </PropertyGroup>

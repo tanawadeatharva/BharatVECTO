@@ -10,10 +10,10 @@
 	<MyType>WindowsForms</MyType>
 		<!--<TargetFramework>net6.0-windows</TargetFramework>-->
 		
-		<TargetFrameworks>net45;net48;net6.0-windows</TargetFrameworks>
-		<TargetFrameworks Condition="'$(Configuration)' == 'Release'">net45;net48;net6.0-windows</TargetFrameworks>
-		<TargetFrameworks Condition="'$(Configuration)' == 'Deploy'">net45;net48;net6.0-windows</TargetFrameworks>
-		<TargetFrameworks Condition="'$(Configuration)' == 'MockupDeploy'">net45;net48;net6.0-windows</TargetFrameworks>
+		<TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
+		<TargetFrameworks Condition="'$(Configuration)' == 'Release'">net48;net6.0-windows</TargetFrameworks>
+		<TargetFrameworks Condition="'$(Configuration)' == 'Deploy'">net48;net6.0-windows</TargetFrameworks>
+		<TargetFrameworks Condition="'$(Configuration)' == 'MockupDeploy'">net48;net6.0-windows</TargetFrameworks>
 	<DefineTrace>false</DefineTrace>
 	<DefineConstants />
 		<Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
@@ -23,9 +23,6 @@
 	<PropertyGroup Condition="('$(Configuration)' == 'MockupRelease') Or ('$(Configuration)' == 'MockupDebug')">
 		<FinalDefineConstants>$(FinalDefineConstants),MOCKUP</FinalDefineConstants>
 		<DefineConstants>$(DefineConstants),MOCKUP</DefineConstants>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net45|AnyCPU'">
-	  <DebugType>full</DebugType>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net48|AnyCPU'">
 	  <DebugType>full</DebugType>
@@ -50,12 +47,7 @@
 		<PrivateAssets>all</PrivateAssets>
 	</PackageReference>
 	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net45'">
-	<Reference Include="System.ComponentModel.DataAnnotations" />
-	<Reference Include="System.Windows.Forms.DataVisualization" />
-	</ItemGroup>
-
+	
 	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
 	<Reference Include="System.ComponentModel.DataAnnotations" />
 	<Reference Include="System.Windows.Forms.DataVisualization" />

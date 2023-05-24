@@ -6,15 +6,11 @@
 
     <RootNamespace>TUGraz.VectoHashing</RootNamespace>
     <AssemblyName>VectoHashing</AssemblyName>
-    <TargetFrameworks>net45;net48;net6.0</TargetFrameworks>
+    <TargetFrameworks>net48;net6.0</TargetFrameworks>
     <DefineConstants />
     <Configurations>Debug;Release;MockupRelease</Configurations>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
-    <Reference Include="System.Security" />
-  </ItemGroup>
 
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net48'">

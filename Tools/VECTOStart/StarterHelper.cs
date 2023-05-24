@@ -20,7 +20,7 @@ namespace TUGraz.VECTO
 			var path = "No path found.";
 			string version = "No version found.";
 			if (validVersions is null || validVersions.Length == 0) {
-				validVersions = new[] { "net45", "net48", "net60" };
+				validVersions = new[] { "net48", "net60" };
 			}
 
 			//var versionArgument = cmdArguments.FirstOrDefault(arg => arg.StartsWith("net"));
@@ -71,11 +71,12 @@ namespace TUGraz.VECTO
 				return "net60";
 			}
 
-			if (SupportsNet48()) {
-				return "net48";
-			}
+			return "net48";
+			//if (SupportsNet48()) {
+			//	return "net48";
+			//}
 
-			return "net45";
+			//return "net48";
 		}
 
 		private static bool SupportsNet60()

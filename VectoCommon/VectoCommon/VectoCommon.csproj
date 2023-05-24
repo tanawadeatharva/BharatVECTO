@@ -2,7 +2,7 @@
   <PropertyGroup>
     <RootNamespace>TUGraz.VectoCommon</RootNamespace>
     <AssemblyName>VectoCommon</AssemblyName>
-    <TargetFrameworks>net45;net48;net6.0</TargetFrameworks>
+    <TargetFrameworks>net48;net6.0</TargetFrameworks>
     <DefineConstants />
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
@@ -15,10 +15,6 @@
     <PackageReference Include="NLog" Version="4.7.13" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'=='net45'">
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-  </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='net48'">
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />

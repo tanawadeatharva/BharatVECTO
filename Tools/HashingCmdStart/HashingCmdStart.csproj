@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>hashingcmd</AssemblyName>
     <RootNamespace>TUGraz.VECTO</RootNamespace>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <DefineConstants />
   </PropertyGroup>
 
