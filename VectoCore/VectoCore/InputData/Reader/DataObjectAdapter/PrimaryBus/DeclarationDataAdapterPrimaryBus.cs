@@ -266,8 +266,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 			#region Overrides of PrimaryBusBase
 
-			// ReSharper disable once UseArrayEmptyMethod //not supported in net45
-			public override GearboxType[] SupportedGearboxTypes => new GearboxType[0];
+			public override GearboxType[] SupportedGearboxTypes => Array.Empty<GearboxType>();
 
 			#endregion
 		}

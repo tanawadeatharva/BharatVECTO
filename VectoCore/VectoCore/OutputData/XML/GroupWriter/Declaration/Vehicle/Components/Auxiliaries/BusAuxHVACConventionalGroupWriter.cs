@@ -48,19 +48,9 @@ namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.Compon
 				.GetBusAuxiliariesDeclarationGroupWriter(GroupNames.BusAuxHVACHeatPumpSequenceGroup, _writerNamespace)
 				.GetGroupElements(aux);
 
-#if NET45
-			foreach (var e in groupElements) {
-				elements.Add(e);
-			}
-#else
 			elements.AddRange(groupElements);
 
-#endif
-
-
-
-
-            elements.Add(new XElement(_writerNamespace + XMLNames.Bus_AuxiliaryHeaterPower,
+			elements.Add(new XElement(_writerNamespace + XMLNames.Bus_AuxiliaryHeaterPower,
 				aux.HVACAux.AuxHeaterPower?.ToXMLFormat(0)));
 			elements.Add(new XElement(_writerNamespace + XMLNames.Bus_DoubleGlazing, aux.HVACAux.DoubleGlazing));
 			elements.Add(new XElement(_writerNamespace + XMLNames.Bus_AdjustableAuxiliaryHeater,
