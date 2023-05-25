@@ -1098,7 +1098,6 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		string Technology { get; }
 
-		WattSecond ElectricStorageCapacity { get; }
 	}
 
 
