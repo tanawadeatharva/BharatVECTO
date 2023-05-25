@@ -40,6 +40,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
@@ -357,7 +358,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static HVACCoolingPower HVACMaxCoolingPower => hvacMaxCoolingPower ?? (hvacMaxCoolingPower = new HVACCoolingPower());
 
 			public static HVACHeatingPower HVACMaxHeatingPower => hvacMaxHeatingPower ?? (hvacMaxHeatingPower = new HVACHeatingPower());
-
+			public static BatteryLimits BatteryLimits { get; } = new BatteryLimits();
+			
+			public const double SuperCapUsableCapacity = 0.84;
 			public static PerSecond VentilationRate(BusHVACSystemConfiguration? hvacSystemConfig, bool heating)
 			{
 
@@ -557,6 +560,35 @@ namespace TUGraz.VectoCore.Models.Declaration
 				throw new VectoException($"Invalid HVAC combination! System Configuration: {hvacConfigurationInput.GetName()}, Driver HeatPump: {heatPumpDriver.GetLabel()}, Passenger HeatPump: {heatPumpPassenger.GetLabel()}");
 			}
 
+			public static WattSecond CalculateBatteryCapacity(IList<IBusAuxElectricStorageDeclarationInputData> electricStorage)
+			{
+				if (electricStorage == null) {
+					return null;
+				}
+
+				var batteries = electricStorage.Where(x => x is BusAuxBatteryInputData)
+					.Cast<BusAuxBatteryInputData>().ToArray();
+				var supercaps = electricStorage.Where(x => x is BusAuxCapacitorInputData)
+					.Cast<BusAuxCapacitorInputData>().ToArray();
+
+				var batteryCapacity = 0.SI<WattSecond>();
+				var capacitorCapacity = 0.SI<WattSecond>();
+				if (batteries.Any()) {
+					var sumU = batteries.Sum(b => b.Voltage);
+					var minCap = batteries.Min(b =>
+						b.Capacity * DeclarationData.BusAuxiliaries.BatteryLimits.Lookup(b.Technology).SoC_Range);
+					batteryCapacity = minCap * sumU;
+				}
+
+				if (supercaps.Any()) {
+					var minCap = supercaps.MinBy(c => c.Capacity);
+					var sumCap = supercaps.Sum(c => minCap.Capacity / c.Capacity);
+					capacitorCapacity = minCap.Capacity * minCap.Voltage * minCap.Voltage * 0.5 * sumCap *
+										DeclarationData.BusAuxiliaries.SuperCapUsableCapacity;
+				}
+
+				return batteryCapacity + capacitorCapacity;
+            }
 		}
 
 		public static class Driver

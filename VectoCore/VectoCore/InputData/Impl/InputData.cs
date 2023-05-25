@@ -233,8 +233,6 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public string Technology { get; }
 
-		public WattSecond ElectricStorageCapacity => Capacity * Voltage;
-
 		#endregion
 	}
 
@@ -254,7 +252,6 @@ namespace TUGraz.VectoCore.InputData.Impl
 		#region Implementation of IBusAuxElectricStorageDeclarationInputData
 
 		public string Technology { get; }
-		public WattSecond ElectricStorageCapacity => Capacity * Voltage * Voltage / 2.0;
 
 		#endregion
 	}

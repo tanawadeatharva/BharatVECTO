@@ -498,9 +498,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 
 			retVal.MaxAlternatorPower = primaryBusAuxiliaries.ElectricSupply.Alternators.Sum(x => x.RatedVoltage * x.RatedCurrent);
-			retVal.ElectricStorageCapacity = primaryBusAuxiliaries.ElectricSupply.ElectricStorage.Sum(x => x.ElectricStorageCapacity) ?? 0.SI<WattSecond>();
+			retVal.ElectricStorageCapacity = CalculateBatteryCapacity(primaryBusAuxiliaries.ElectricSupply.ElectricStorage);
 
-			if (primaryVehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
+            if (primaryVehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
 					VectoSimulationJobType.IEPC_E))
 			{
 				retVal.ConnectESToREESS = true;

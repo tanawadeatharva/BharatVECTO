@@ -12,6 +12,7 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
@@ -314,8 +315,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			if (primaryBusAux.ElectricSupply.AlternatorTechnology == AlternatorType.Smart) {
 				retVal.Add(new XElement(_cif + "MaxAlternatorPower",
 					primaryBusAux.ElectricSupply.Alternators.Sum(x => x.RatedCurrent * x.RatedVoltage).ValueAsUnit("kW", 0)));
-				retVal.Add(new XElement(_cif + "ElectricStorageCapacity",
-					primaryBusAux.ElectricSupply.ElectricStorage.Sum(x => x.ElectricStorageCapacity).ValueAsUnit("kWh", 0)));
+				retVal.Add(new XElement(_cif + "ElectricStorageCapacity", 
+					DeclarationData.BusAuxiliaries.CalculateBatteryCapacity(primaryBusAux.ElectricSupply.ElectricStorage).ValueAsUnit("kWh", 0)));
 			}
 
 			return retVal;
@@ -458,7 +459,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				retVal.Add(new XElement(_cif + "MaxAlternatorPower",
 					primaryBusAux.ElectricSupply.Alternators.Sum(x => x.RatedCurrent * x.RatedVoltage).ValueAsUnit("kW", 0)));
 				retVal.Add(new XElement(_cif + "ElectricStorageCapacity",
-					primaryBusAux.ElectricSupply.ElectricStorage.Sum(x => x.ElectricStorageCapacity).ValueAsUnit("kWh", 0)));
+					DeclarationData.BusAuxiliaries.CalculateBatteryCapacity(primaryBusAux.ElectricSupply.ElectricStorage).ValueAsUnit("kWh", 0)));
 			}
 
 			return retVal;
