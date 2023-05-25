@@ -69,7 +69,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 		}
 		public override void InitializeReport(VectoRunData modelData)
 		{
-			_weightingFactors = EqualWeighting;
+			if (modelData.Exempted) {
+				WeightingGroup = WeightingGroup.Unknown;
+			} else {
+				WeightingGroup = DeclarationData.WeightingGroup.Lookup(modelData.VehicleData.VehicleClass,
+					false, 0.SI<Watt>());
+				_weightingFactors =
+					DeclarationData.WeightingFactors.Lookup(WeightingGroup);
+			}
 
 			InstantiateReports(modelData);
 
@@ -78,36 +85,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 		}
 		#endregion
 
-
-
-		private static IDictionary<Tuple<MissionType, LoadingType>, double> EqualWeighting =>
-			new ReadOnlyDictionary<Tuple<MissionType, LoadingType>, double>(
-				new Dictionary<Tuple<MissionType, LoadingType>, double>() {
-					{ Tuple.Create(MissionType.LongHaul, LoadingType.LowLoading), 1 },
-					{ Tuple.Create(MissionType.LongHaul, LoadingType.ReferenceLoad), 1 },
-					{ Tuple.Create(MissionType.RegionalDelivery, LoadingType.LowLoading), 1 },
-					{ Tuple.Create(MissionType.RegionalDelivery, LoadingType.ReferenceLoad), 1 },
-					{ Tuple.Create(MissionType.UrbanDelivery, LoadingType.LowLoading), 1 },
-					{ Tuple.Create(MissionType.UrbanDelivery, LoadingType.ReferenceLoad), 1 },
-					{ Tuple.Create(MissionType.LongHaulEMS, LoadingType.LowLoading), 1 },
-					{ Tuple.Create(MissionType.LongHaulEMS, LoadingType.ReferenceLoad), 1 },
-					{ Tuple.Create(MissionType.RegionalDeliveryEMS, LoadingType.LowLoading), 1 },
-					{ Tuple.Create(MissionType.RegionalDeliveryEMS, LoadingType.ReferenceLoad), 1 },
-					{ Tuple.Create(MissionType.MunicipalUtility, LoadingType.LowLoading), 1 },
-					{ Tuple.Create(MissionType.MunicipalUtility, LoadingType.ReferenceLoad), 1 },
-					{ Tuple.Create(MissionType.Construction, LoadingType.LowLoading), 1 },
-					{ Tuple.Create(MissionType.Construction, LoadingType.ReferenceLoad), 1 },
-					{ Tuple.Create(MissionType.HeavyUrban, LoadingType.LowLoading), 1 },
-					{ Tuple.Create(MissionType.HeavyUrban, LoadingType.ReferenceLoad), 1 },
-					{ Tuple.Create(MissionType.Urban, LoadingType.LowLoading), 1 },
-					{ Tuple.Create(MissionType.Urban, LoadingType.ReferenceLoad), 1 },
-					{ Tuple.Create(MissionType.Suburban, LoadingType.LowLoading), 1 },
-					{ Tuple.Create(MissionType.Suburban, LoadingType.ReferenceLoad), 1 },
-					{ Tuple.Create(MissionType.Interurban, LoadingType.LowLoading), 1 },
-					{ Tuple.Create(MissionType.Interurban, LoadingType.ReferenceLoad), 1 },
-					{ Tuple.Create(MissionType.Coach, LoadingType.LowLoading), 1 },
-					{ Tuple.Create(MissionType.Coach, LoadingType.ReferenceLoad), 1 },
-				});
 
 		protected internal override void DoWriteReport()
 		{
