@@ -64,7 +64,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var loadingTypes = new[] { LoadingType.LowLoading, LoadingType.ReferenceLoad };
 			var missions = new[] {
 				MissionType.LongHaul, MissionType.LongHaulEMS, MissionType.RegionalDelivery, MissionType.RegionalDeliveryEMS,
-				MissionType.UrbanDelivery, MissionType.MunicipalUtility, MissionType.Construction
+				MissionType.UrbanDelivery, MissionType.MunicipalUtility, MissionType.Construction, MissionType.HeavyUrban,
+				MissionType.Urban, MissionType.Suburban, MissionType.Interurban, MissionType.Coach
 			};
 			foreach (DataRow row in table.Rows) {
 				var weightingGroup = WeightingGroupHelper.Parse(row.Field<string>("weightinggroup"));
