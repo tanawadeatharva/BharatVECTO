@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 				InternalResistance = GetInternalResistance(superCapData),
 				MaxVoltage = superCapData.MaxVoltage,
 				MinVoltage = superCapData.MinVoltage,
-				MaxCurrentDischarge = superCapData.MaxCurrentDischarge,
+				MaxCurrentDischarge = -superCapData.MaxCurrentDischarge,
 				MaxCurrentCharge = superCapData.MaxCurrentCharge,
 				Capacity = superCapData.Capacity,
 				//InitialSoC = initialSoc
