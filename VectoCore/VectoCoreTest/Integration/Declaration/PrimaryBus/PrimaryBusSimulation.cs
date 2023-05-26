@@ -1,4 +1,10 @@
-﻿using System;
+﻿
+
+#define FULL_SIMULATIONS
+
+
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -32,6 +38,9 @@ using Formatting = Newtonsoft.Json.Formatting;
 
 namespace TUGraz.VectoCore.Tests.Integration.Declaration.PrimaryBus;
 
+
+
+
 public class PrimaryBusSimulation
 {
 
@@ -60,13 +69,29 @@ public class PrimaryBusSimulation
 	[SetUp]
 	public void Setup()
 	{
+#if !FULL_SIMULATIONS
 		Kernel.Rebind<IDeclarationCycleFactory>().To<TestDeclarationCycleFactoryVariant>().InSingletonScope();
 		var cycleFactory = Kernel.Get<IDeclarationCycleFactory>() as TestDeclarationCycleFactoryVariant;
 		cycleFactory.Variant = "Short_10";
+#endif
     }
 
+	private TestMissionFilter TestMissionFilter()
+	{
+#if !FULL_SIMULATIONS
+		Kernel.Rebind<IMissionFilter>().To<TestMissionFilter>().InSingletonScope();
+#endif
+		var missionFilter = Kernel.Get<IMissionFilter>() as TestMissionFilter;
+#if FULL_SIMULATIONS
+		Assert.Null(missionFilter);
+#else
+		Assert.NotNull(missionFilter);
+#endif 
+		return missionFilter;
+	}
 
-	[
+
+    [
 	TestCase(@"PrimaryBus/Conventional/primary_heavyBus group41_nonSmart.xml", 0, TestName = "2nd Amendment PrimaryBus Conventional"),
 	TestCase(@"PrimaryBus/PEV/PEV_primaryBus_AMT_E2.xml", 0, TestName = "2nd Amendment PrimaryBus PEV E2"),
 
@@ -155,14 +180,15 @@ public class PrimaryBusSimulation
         }
 		var completedJob = GenerateJsonJobCompletedBus(Path.Combine(BASE_DIR, vifFile), Path.Combine(BASE_DIR, completed));
 
-		Kernel.Rebind<IMissionFilter>().To<TestMissionFilter>().InSingletonScope();
-		var missionFilter = Kernel.Get<IMissionFilter>() as TestMissionFilter;
-		missionFilter!.SetMissions((MissionType.Coach, LoadingType.ReferenceLoad));
+		var missionFilter = TestMissionFilter();
+		missionFilter?.SetMissions((MissionType.Coach, LoadingType.ReferenceLoad));
 
         var finalVif = CreateCompletedVIF(completedJob);
 		
 		//RunSimulationPrimary(finalVif, runIdx);
 	}
+
+
 
 	[TestCase(@"PrimaryCityBus_P1_HEV_Base_AT.RSLT_VIF.xml", @"HEV_completedBus_2.xml", 53804,
 		TestName = "2nd Amendment CompletedBus CityBus HEV P1 - failing cycle section")]
@@ -172,9 +198,8 @@ public class PrimaryBusSimulation
 		Kernel.Rebind<IDeclarationCycleFactory>().To<TestDeclarationCycleFactoryStartPoint>().InSingletonScope();
 		var cycleFactory = Kernel.Get<IDeclarationCycleFactory>() as TestDeclarationCycleFactoryStartPoint;
 
-		Kernel.Rebind<IMissionFilter>().To<TestMissionFilter>().InSingletonScope();
-		var missionFilter = Kernel.Get<IMissionFilter>() as TestMissionFilter;
-		missionFilter!.SetMissions((MissionType.Interurban, LoadingType.ReferenceLoad));
+		var missionFilter = TestMissionFilter();
+		missionFilter?.SetMissions((MissionType.Interurban, LoadingType.ReferenceLoad));
 		cycleFactory!.SetStartPoint(MissionType.Interurban, start.SI<Meter>(), true, distance?.SI<Meter>());
 		var completedJob = GenerateJsonJobCompletedBus(Path.Combine(BASE_DIR_VIF, vifFile),
 			Path.Combine(BASE_DIR_COMPLETED, completed));
@@ -274,9 +299,9 @@ public class PrimaryBusSimulation
     ]
     public void TestFactorMethodRunData(string primary, string completed, string vifFile, MissionType mission, LoadingType loading)
 	{
-		Kernel.Rebind<IMissionFilter>().To<TestMissionFilter>().InSingletonScope();
-		var missionFilter = Kernel.Get<IMissionFilter>() as TestMissionFilter;
-		missionFilter!.SetMissions((mission, loading));
+
+		var missionFilter = TestMissionFilter();
+		missionFilter?.SetMissions((mission, loading));
 
 		var outputPath = Path.Combine("FactorMethod_xEV", TestContext.CurrentContext.Test.Name.Split(' ').Skip(3).Join("_"));
 		if (!Directory.Exists(outputPath)) {
@@ -325,11 +350,6 @@ public class PrimaryBusSimulation
     }
 
 
-	public TestMissionFilter GetTestMissionFilter()
-	{
-		Kernel.Rebind<IMissionFilter>().To<TestMissionFilter>();
-		return Kernel.Get<TestMissionFilter>();
-	}
 
     private static void SerializeRunData(ISimulatorFactory runsFactorySingle, string outputPath)
 	{
