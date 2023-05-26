@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <VectoOutputMultistep xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1">
   <PrimaryVehicle>
-    <Data id="VIF_P-f53c24230ecb48108e49" xsi:type="PrimaryVehicleDataType">
+    <Data id="VIF_P-da395e0890b046da84f0" xsi:type="PrimaryVehicleDataType">
       <Vehicle xsi:type="HEV-Px_VehicleVIFType">
         <Manufacturer>Generic Truck Manufacturer</Manufacturer>
         <ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
@@ -441,7 +441,7 @@
                 <CertificationNumber>CertNbr1234</CertificationNumber>
                 <Date>2022-01-01T00:00:00Z</Date>
                 <AppVersion>SuperCap Preprocessing App 1.0</AppVersion>
-                <Capacitance>850.00</Capacitance>
+                <Capacitance>4000.00</Capacitance>
                 <MinVoltage>12.00</MinVoltage>
                 <MaxVoltage>22.00</MaxVoltage>
                 <MaxChargingCurrent>600.00</MaxChargingCurrent>
@@ -587,22 +587,22 @@
             <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
           </di:Transforms>
           <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-          <di:DigestValue>BAjhjLKpwE2bzpTYpsuSdVwD+0AJKa5GpP3Xa2Z9/6A=</di:DigestValue>
+          <di:DigestValue>6cLhWNbrjzBUhDpE/zLFTFRxRTd0oJaLphLRT3F1SNk=</di:DigestValue>
         </di:Reference>
       </InputDataSignature>
       <ManufacturerRecordSignature>
-        <di:Reference URI="#MRF-45f472ebdfe44157b738">
+        <di:Reference URI="#MRF-ee8107b405a84464afce">
           <di:Transforms>
             <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
             <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
           </di:Transforms>
           <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-          <di:DigestValue>L6K+JgvqLmPNPWHRKi/rFuCcTBpbuPSWCg/0jm+6tb8=</di:DigestValue>
+          <di:DigestValue>i9wKthG0vSFSjqZ336Lr/wi6QMhKfXLOuMF2CR+ZSlI=</di:DigestValue>
         </di:Reference>
       </ManufacturerRecordSignature>
       <Results>
-        <Status>error</Status>
-        <Result status="error">
+        <Status>success</Status>
+        <Result status="success">
           <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
           <Mission>Heavy Urban</Mission>
           <SimulationParameters>
@@ -610,49 +610,342 @@
             <Payload unit="kg">1124</Payload>
             <PassengerCount>16.52</PassengerCount>
           </SimulationParameters>
-          <Error>1 (HeavyUrban _P31SD_LowLoading) - absTime: 886.3677 [s], distance: 3852.7132 [m], dt: 0.4856 [s], v: 8.0102 [m/s], Gear: 2L | Failed to find operating point! points: { x = 170.11860012595528, y = -13.731918468371077 }, { x = 180.11860012595528, y = 97.72982795133976, delta = 97.72982795133976, result = 13045.5394 [W] }, { x = 175.11860012595528, y = 51.6968953628093, delta = 51.6968953628093, result = 12999.5065 [W] }, { x = 172.61860012595528, y = 49.40375728625986, delta = 49.40375728625986, result = 12997.2134 [W] }, { x = 171.36860012595528, y = 48.25718824797514, delta = 48.25718824797514, result = 12996.0668 [W] }, { x = 170.74360012595528, y = 43.374057052698845, delta = 43.374057052698845, result = 12991.1837 [W] }, { x = 170.43110012595528, y = 28.55298776053678, delta = 28.55298776053678, result = 12976.3626 [W] }, { x = 170.27485012595528, y = 21.14245311445302, delta = 21.14245311445302, result = 12968.9521 [W] }, { x = 170.19672512595528, y = 17.43718579141023, delta = 17.43718579141023, result = 12965.2468 [W] }, { x = 170.15766262595528, y = 15.584552129894291, delta = 15.584552129894291, result = 12963.3942 [W] }, { x = 170.13813137595528, y = 14.658235299137232, delta = 14.658235299137232, result = 12962.4678 [W] }, { x = 170.12836575095528, y = 14.195076883750517, delta = 14.195076883750517, result = 12962.0047 [W] }, { x = 170.12348293845528, y = 13.963497676062616, delta = 13.963497676062616, result = 12961.7731 [W] }, { x = 170.12104153220528, y = 13.847708072213209, delta = 13.847708072213209, result = 12961.6573 [W] }, { x = 170.11982082908028, y = 13.789813270290324, delta = 13.789813270290324, result = 12961.5994 [W] }, { x = 170.11921047751778, y = 13.760865869324334, delta = 13.760865869324334, result = 12961.5705 [W] }, { x = 170.11890530173653, y = 13.746392168846796, delta = 13.746392168846796, result = 12961.5560 [W] }, { x = 170.1187527138459, y = 13.739155318606208, delta = 13.739155318606208, result = 12961.5488 [W] }, { x = 170.1186764199006, y = 13.735536893484095, delta = 13.735536893484095, result = 12961.5451 [W] }, { x = 170.11863827292794, y = 13.733727680926677, delta = 13.733727680926677, result = 12961.5433 [W] }, { x = 170.1186191994416, y = 13.732823074653425, delta = 13.732823074653425, result = 12961.5424 [W] }, { x = 170.11860966269845, y = 13.73237077151316, delta = 13.73237077151316, result = 12961.5420 [W] }, { x = 170.11860489432686, y = 13.732144619936662, delta = 13.732144619936662, result = 12961.5417 [W] }, { x = 170.11860251014107, y = 13.732031544157508, delta = 13.732031544157508, result = 12961.5416 [W] }, { x = 170.11860131804818, y = 13.731975006263383, delta = 13.731975006263383, result = 12961.5416 [W] }, { x = 170.11860072200173, y = 13.731946737314502, delta = 13.731946737314502, result = 12961.5416 [W] }, { x = 170.1186004239785, y = 13.73193260284279, delta = 13.73193260284279, result = 12961.5415 [W] }, { x = 170.1186002749669, y = 13.731925535608752, delta = 13.731925535608752, result = 12961.5415 [W] }, { x = 170.1186002004611, y = 13.731922001989005, delta = 13.731922001989005, result = 12961.5415 [W] }, { x = 170.11860016320819, y = 13.73192023518277, delta = 13.73192023518277, result = 12961.5415 [W] }, { x = 170.11860014458173, y = 13.73191935178329, delta = 13.73191935178329, result = 12961.5415 [W] }, { x = 170.1186001352685, y = 13.731918910072636, delta = 13.731918910072636, result = 12961.5415 [W] }, { x = 170.1186001306119, y = 13.731918689227314, delta = 13.731918689227314, result = 12961.5415 [W] }, { x = 170.1186001282836, y = 13.731918578800105, delta = 13.731918578800105, result = 12961.5415 [W] }, { x = 170.11860012711944, y = 13.731918523582863, delta = 13.731918523582863, result = 12961.5415 [W] }, { x = 170.11860012653736, y = 13.731918495972423, delta = 13.731918495972423, result = 12961.5415 [W] }, { x = 170.11860012624632, y = 13.731918482177207, delta = 13.731918482177207, result = 12961.5415 [W] }, { x = 170.1186001261008, y = 13.731918475275961, delta = 13.731918475275961, result = 12961.5415 [W] }, { x = 170.11860012602804, y = 13.731918471814424, delta = 13.731918471814424, result = 12961.5415 [W] }, { x = 170.11860012599166, y = 13.73191847009366, delta = 13.73191847009366, result = 12961.5415 [W] }, { x = 170.11860012597347, y = 13.73191846922964, delta = 13.73191846922964, result = 12961.5415 [W] }, { x = 170.11860012596438, y = 13.731918468803997, delta = 13.731918468803997, result = 12961.5415 [W] }, { x = 170.11860012595983, y = 13.731918468591175, delta = 13.731918468591175, result = 12961.5415 [W] }, { x = 170.11860012595756, y = 13.731918468480217, delta = 13.731918468480217, result = 12961.5415 [W] }, { x = 170.11860012595642, y = 13.73191846842019, delta = 13.73191846842019, result = 12961.5415 [W] }, { x = 170.11860012595585, y = 13.731918468396543, delta = 13.731918468396543, result = 12961.5415 [W] }, { x = 170.11860012595557, y = 13.731918468374715, delta = 13.731918468374715, result = 12961.5415 [W] }, { x = 170.11860012595542, y = 13.731918468378353, delta = 13.731918468378353, result = 12961.5415 [W] }, { x = 170.11860012595537, y = 13.731918468378353, delta = 13.731918468378353, result = 12961.5415 [W] }, { x = 170.11860012595534, y = 13.731918468374715, delta = 13.731918468374715, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }, { x = 170.1186001259553, y = 13.731918468371077, delta = 13.731918468371077, result = 12961.5415 [W] }</Error>
-          <ErrorDetails>   at TUGraz.VectoCore.Utils.SearchAlgorithm.LineSearch[T](T xStart, SI yStart, T intervalStart, Func`2 getYValue, Func`2 evaluateFunction, Func`2 criterion, Func`3 abortCriterion, Int32&amp; iterationCount, Object searcher) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Utils\SearchAlgorithm.cs:line 183
-   at TUGraz.VectoCore.Utils.SearchAlgorithm.Search[T](T x, SI y, T interval, Func`2 getYValue, Func`2 evaluateFunction, Func`2 criterion, Func`3 abortCriterion, Int32&amp; iterationCount, Boolean forceLineSearch, Object searcher) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Utils\SearchAlgorithm.cs:line 110
-   at TUGraz.VectoCore.Utils.SearchAlgorithm.Search[T](T x, SI y, T interval, Func`2 getYValue, Func`2 evaluateFunction, Func`2 criterion, Boolean forceLineSearch, Object searcher) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Utils\SearchAlgorithm.cs:line 61
-   at TUGraz.VectoCore.Models.SimulationComponent.Data.VoltageLevelData.EfficiencyMapLookupTorque(Volt voltage, Watt electricPower, PerSecond avgSpeed, NewtonMeter maxEmTorque, GearshiftPosition gear) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Data\ElectricComponents\ElectricMotor\ElectricMotorData.cs:line 105
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.ElectricMotor.GetMaxRecuperationTorque(Volt volt, Second dt, PerSecond avgSpeed, GearshiftPosition gear) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\ElectricMotor.cs:line 436
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.ElectricMotor.DoHandleRequest(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, Boolean dryRun, Double ratio) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\ElectricMotor.cs:line 180
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.ElectricMotor.Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, Boolean dryRun) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\ElectricMotor.cs:line 144
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.ATGearbox.RequestEngaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, Boolean dryRun) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\ATGearbox.cs:line 381
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.ATGearbox.Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, Boolean dryRun) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\ATGearbox.cs:line 268
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.TransmissionComponent.Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, Boolean dryRun) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\TransmissionComponent.cs:line 94
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.AxleGear.Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, Boolean dryRun) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\AxleGear.cs:line 61
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.Brakes.Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, Boolean dryRun) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\Brakes.cs:line 78
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.HybridController.Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, Boolean dryRun) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\HybridController.cs:line 167
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels.Request(Second absTime, Second dt, Newton force, MeterPerSecond velocity, Boolean dryRun) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\Wheels.cs:line 83
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.Vehicle.Request(Second absTime, Second dt, MeterPerSquareSecond acceleration, Radian gradient, Boolean dryRun) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\Vehicle.cs:line 174
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.Driver.DrivingActionAccelerate(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient, IResponse previousResponse) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\Driver.cs:line 167
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.DriverModeDrive.FirstAccelerateOrCoast(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient, Boolean prohibitOverspeed, MeterPerSecond velocityWithOverspeed, DebugData debug) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\DefaultDriverStrategy.cs:line 1118
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.DriverModeDrive.HandleRequestEngaged(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient, Boolean prohibitOverspeed, MeterPerSecond velocityWithOverspeed, DebugData debug) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\DefaultDriverStrategy.cs:line 959
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.DriverModeDrive.DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient, Boolean prohibitOverspeed) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\DefaultDriverStrategy.cs:line 899
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.AbstractDriverMode.Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\DefaultDriverStrategy.cs:line 817
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.DefaultDriverStrategy.DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\DefaultDriverStrategy.cs:line 292
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.DefaultDriverStrategy.Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\DefaultDriverStrategy.cs:line 150
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.Driver.Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\Driver.cs:line 117
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.DistanceBasedDrivingCycle.DriveDistance(Second absTime, Meter ds) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\DistanceBasedDrivingCycle.cs:line 335
-   at TUGraz.VectoCore.Models.SimulationComponent.Impl.DistanceBasedDrivingCycle.Request(Second absTime, Meter ds) in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\SimulationComponent\Impl\DistanceBasedDrivingCycle.cs:line 165
-   at TUGraz.VectoCore.Models.Simulation.Impl.DistanceRun.DoSimulationStep() in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\Simulation\Impl\DistanceRun.cs:line 64
-   at TUGraz.VectoCore.Models.Simulation.Impl.VectoRun.Run() in E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Models\Simulation\Impl\VectoRun.cs:line 116</ErrorDetails>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">17.5</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Heavy Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">17593</TotalVehicleMass>
+            <Payload unit="kg">5618</Payload>
+            <PassengerCount>82.62</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">13.6</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">13099</TotalVehicleMass>
+            <Payload unit="kg">1124</Payload>
+            <PassengerCount>16.52</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">13.6</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">17593</TotalVehicleMass>
+            <Payload unit="kg">5618</Payload>
+            <PassengerCount>82.62</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">13.6</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Suburban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">13099</TotalVehicleMass>
+            <Payload unit="kg">1124</Payload>
+            <PassengerCount>16.52</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">10.4</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Suburban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">17593</TotalVehicleMass>
+            <Payload unit="kg">5618</Payload>
+            <PassengerCount>82.62</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">13.9</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Interurban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">13050</TotalVehicleMass>
+            <Payload unit="kg">1075</Payload>
+            <PassengerCount>15.15</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">13.9</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Interurban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">15495</TotalVehicleMass>
+            <Payload unit="kg">3520</Payload>
+            <PassengerCount>49.57</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">13.9</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
+          <Mission>Heavy Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">13543</TotalVehicleMass>
+            <Payload unit="kg">1193</Payload>
+            <PassengerCount>17.55</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">18.8</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
+          <Mission>Heavy Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">18317</TotalVehicleMass>
+            <Payload unit="kg">5967</Payload>
+            <PassengerCount>87.75</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">18.8</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
+          <Mission>Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">13543</TotalVehicleMass>
+            <Payload unit="kg">1193</Payload>
+            <PassengerCount>17.55</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">14.6</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
+          <Mission>Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">18317</TotalVehicleMass>
+            <Payload unit="kg">5967</Payload>
+            <PassengerCount>87.75</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">14.6</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
+          <Mission>Suburban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">13543</TotalVehicleMass>
+            <Payload unit="kg">1193</Payload>
+            <PassengerCount>17.55</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">11.1</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
+          <Mission>Suburban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">18317</TotalVehicleMass>
+            <Payload unit="kg">5967</Payload>
+            <PassengerCount>87.75</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">15.2</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32SD</PrimaryVehicleSubgroup>
+          <Mission>Interurban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">14225</TotalVehicleMass>
+            <Payload unit="kg">1075</Payload>
+            <PassengerCount>15.15</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">15.2</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32SD</PrimaryVehicleSubgroup>
+          <Mission>Interurban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">16670</TotalVehicleMass>
+            <Payload unit="kg">3520</Payload>
+            <PassengerCount>49.57</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">15.2</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32SD</PrimaryVehicleSubgroup>
+          <Mission>Coach</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">14245</TotalVehicleMass>
+            <Payload unit="kg">1095</Payload>
+            <PassengerCount>15.42</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">7.04</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32SD</PrimaryVehicleSubgroup>
+          <Mission>Coach</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">15887</TotalVehicleMass>
+            <Payload unit="kg">2737</Payload>
+            <PassengerCount>38.56</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">7.44</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32DD</PrimaryVehicleSubgroup>
+          <Mission>Interurban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">14663</TotalVehicleMass>
+            <Payload unit="kg">1263</Payload>
+            <PassengerCount>17.79</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">7.44</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32DD</PrimaryVehicleSubgroup>
+          <Mission>Interurban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">17609</TotalVehicleMass>
+            <Payload unit="kg">4209</Payload>
+            <PassengerCount>59.29</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">7.44</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32DD</PrimaryVehicleSubgroup>
+          <Mission>Coach</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">14747</TotalVehicleMass>
+            <Payload unit="kg">1347</Payload>
+            <PassengerCount>18.97</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">7.42</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32DD</PrimaryVehicleSubgroup>
+          <Mission>Coach</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">16768</TotalVehicleMass>
+            <Payload unit="kg">3368</Payload>
+            <PassengerCount>47.43</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">7.44</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
         </Result>
       </Results>
       <ApplicationInformation>
-        <SimulationToolVersion>0.7.10.3056-DEV !!NOT FOR CERTIFICATION!!</SimulationToolVersion>
-        <Date>2023-05-15T16:29:03.1845991Z</Date>
+        <SimulationToolVersion>0.7.10.3066-DEV !!NOT FOR CERTIFICATION!!</SimulationToolVersion>
+        <Date>2023-05-25T09:23:55.9862856Z</Date>
       </ApplicationInformation>
     </Data>
     <Signature>
-      <di:Reference URI="#VIF_P-f53c24230ecb48108e49">
+      <di:Reference URI="#VIF_P-da395e0890b046da84f0">
         <di:Transforms>
           <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
           <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
         </di:Transforms>
         <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-        <di:DigestValue>YY5v7cqHT6/q+kVkVBLxGBbVAHkpfMZ2yWmO0rZ072E=</di:DigestValue>
+        <di:DigestValue>UGMHhb818Lp/pqpvkHRgo8o1WdVJzYXT8tfjlbPxn+U=</di:DigestValue>
       </di:Reference>
     </Signature>
   </PrimaryVehicle>

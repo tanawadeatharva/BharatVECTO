@@ -332,7 +332,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 				WeightingGroup = DeclarationData.WeightingGroup.Lookup(
 						modelData.VehicleData.VehicleClass, modelData.VehicleData.SleeperCab.Value,
-						modelData.EngineData?.RatedPowerDeclared ?? Watt.Create(0));
+						modelData.EngineData?.RatedPowerDeclared ?? 0.SI<Watt>());
 			}
 
 			_weightingFactors = WeightingGroup == WeightingGroup.Unknown

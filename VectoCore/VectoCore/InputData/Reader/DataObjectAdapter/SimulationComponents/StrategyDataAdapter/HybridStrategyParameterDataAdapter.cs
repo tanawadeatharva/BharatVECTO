@@ -211,7 +211,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				result.MinSoC = superCap.MinVoltage / superCap.MaxVoltage;
 				result.MaxSoC = 1;// superCap.MaxVoltage / superCap.MaxVoltage;
 				
-				result.TargetSoC = Math.Sqrt(Math.Pow(superCap.MaxVoltage.Value(), 2) + Math.Pow(superCap.MinVoltage.Value(), 2)) /
+				result.TargetSoC = Math.Sqrt((Math.Pow(superCap.MaxVoltage.Value(), 2) + Math.Pow(superCap.MinVoltage.Value(), 2)) / 2) /
 									superCap.MaxVoltage.Value();
 				result.InitialSoc = superCap.InitialSoC;
 			}

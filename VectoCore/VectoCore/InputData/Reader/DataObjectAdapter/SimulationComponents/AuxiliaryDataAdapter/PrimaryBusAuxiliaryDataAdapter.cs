@@ -7,6 +7,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
@@ -275,7 +276,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 
 			retVal.MaxAlternatorPower = busAux.ElectricSupply.Alternators.Sum(x => x.RatedVoltage * x.RatedCurrent);
-			retVal.ElectricStorageCapacity = busAux.ElectricSupply.ElectricStorage.Sum(x => x.ElectricStorageCapacity) ?? 0.SI<WattSecond>();
+			
+			retVal.ElectricStorageCapacity = CalculateBatteryCapacity(busAux.ElectricSupply.ElectricStorage);
+			
 
 			if (vehicleData.ArchitectureID.IsBatteryElectricVehicle())
 			{
@@ -288,9 +291,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 			retVal.DCDCEfficiency = DeclarationData.DCDCEfficiency;
 
-
 			return retVal;
 		}
+
+		protected virtual WattSecond CalculateBatteryCapacity(
+			IList<IBusAuxElectricStorageDeclarationInputData> electricStorage)
+		{
+			return DeclarationData.BusAuxiliaries.CalculateBatteryCapacity(electricStorage);
+		}
+
 		protected virtual PneumaticUserInputsConfig GetPneumaticUserConfig(IVehicleDeclarationInputData vehicleData, Mission mission)
 		{
 			var busAux = vehicleData.Components.BusAuxiliaries;
