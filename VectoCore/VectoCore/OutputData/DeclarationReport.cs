@@ -116,6 +116,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		double? PassengerCount { get; }
 		VehicleClass VehicleClass { get; }
+		VehicleClass? PrimaryVehicleClass { get; }
 
 		Watt MaxChargingPower { get; }
 
