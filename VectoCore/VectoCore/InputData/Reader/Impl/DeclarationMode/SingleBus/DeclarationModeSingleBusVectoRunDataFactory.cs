@@ -111,7 +111,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 
 			protected override DriverData CreateDriverData(Segment segment)
 			{
-				return DataAdapter.CreateDriverData(segment);
+				
+				return DataAdapter.CreateBusDriverData(segment, 
+					jobType: PrimaryVehicle.VehicleType, 
+					arch: PrimaryVehicle.ArchitectureID, 
+					compressorDrive: PrimaryVehicle.Components.BusAuxiliaries.PneumaticSupply.CompressorDrive);
 			}
 
 			protected override VectoRunData GetPowertrainConfigForReportInit()

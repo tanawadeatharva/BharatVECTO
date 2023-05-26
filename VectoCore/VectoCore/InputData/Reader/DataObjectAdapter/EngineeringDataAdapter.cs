@@ -514,10 +514,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				OverSpeed = overspeedData,
 				EngineStopStart = new DriverData.EngineStopStartData() {
 					EngineOffStandStillActivationDelay =
-						driver.EngineStopStartData?.ActivationDelay ?? DeclarationData.Driver.EngineStopStart.ActivationDelay,
-					MaxEngineOffTimespan = driver.EngineStopStartData?.MaxEngineOffTimespan ?? DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
-					UtilityFactorStandstill = driver.EngineStopStartData?.UtilityFactorStandstill ?? DeclarationData.Driver.EngineStopStart.UtilityFactor,
-					UtilityFactorDriving = driver.EngineStopStartData?.UtilityFactorDriving ?? DeclarationData.Driver.EngineStopStart.UtilityFactor,
+						driver.EngineStopStartData?.ActivationDelay ?? DeclarationData.Driver.GetEngineStopStartLorry().ActivationDelay,
+					MaxEngineOffTimespan = driver.EngineStopStartData?.MaxEngineOffTimespan ?? DeclarationData.Driver.GetEngineStopStartLorry().MaxEngineOffTimespan,
+					UtilityFactorStandstill = driver.EngineStopStartData?.UtilityFactorStandstill ?? DeclarationData.Driver.GetEngineStopStartLorry().UtilityFactor,
+					UtilityFactorDriving = driver.EngineStopStartData?.UtilityFactorDriving ?? DeclarationData.Driver.GetEngineStopStartLorry().UtilityFactor,
 				},
 				EcoRoll = new DriverData.EcoRollData() {
 					UnderspeedThreshold = driver.EcoRollData?.UnderspeedThreshold ?? DeclarationData.Driver.EcoRoll.UnderspeedThreshold,

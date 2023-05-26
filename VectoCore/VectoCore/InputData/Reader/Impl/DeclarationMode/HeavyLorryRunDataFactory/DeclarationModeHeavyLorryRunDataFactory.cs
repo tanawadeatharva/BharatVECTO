@@ -37,6 +37,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			#region Overrides of AbstractDeclarationVectoRunDataFactory
 
+
 			protected override DriverData CreateDriverData(Segment segment)
 			{
 				return DataAdapter.CreateDriverData(segment);

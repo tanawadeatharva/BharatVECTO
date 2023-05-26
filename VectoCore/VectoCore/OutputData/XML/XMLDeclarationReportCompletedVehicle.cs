@@ -199,12 +199,12 @@ namespace TUGraz.VectoCore.OutputData.XML
             {
 
                 var fuelFactor = CalculateFactor(combinedResults, r => r.FuelConsumptionFinal(fuel).TotalFuelConsumptionCorrected);
-                var completedFuelConsumption =
+                var energyDemand =
                     fuelFactor * (primary.EnergyConsumption[fuel] * specific.Distance);
                 var fuelConsumption = new CompletedBusFuelConsumption()
                 {
                     Fuel = specific.FuelData.Single(f => f.FuelType == fuel),
-                    EnergyDemand = completedFuelConsumption,
+                    EnergyDemand = energyDemand,
                 };
                 co2Sum += fuelConsumption.TotalFuelConsumptionCorrected * fuelConsumption.Fuel.CO2PerFuelWeight;
                 result.CorrectedFinalFuelConsumption.Add(fuel, fuelConsumption);

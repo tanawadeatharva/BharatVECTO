@@ -6,7 +6,6 @@ using Moq;
 using Ninject;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
-using OpenQA.Selenium;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.ViewModel;
 using VECTO3GUI2020.ViewModel.Implementation;

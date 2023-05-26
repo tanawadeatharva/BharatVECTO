@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 			public abstract GearboxType[] SupportedGearboxTypes { get; }
 
-			private readonly IDriverDataAdapter _driverDataAdapter = new PrimaryBusDriverDataAdapter();
+			private readonly IDriverDataAdapterBus _driverDataAdapter = new PrimaryBusDriverDataAdapter();
 			//protected readonly IVehicleDataAdapter _vehicleDataAdapter = new PrimaryBusVehicleDataAdapter();
 			protected readonly IAxleGearDataAdapter _axleGearDataAdapter = new AxleGearDataAdapter();
 			//protected readonly IPrimaryBusAuxiliaryDataAdapter _auxDataAdapter = new PrimaryBusAuxiliaryDataAdapter();
@@ -44,12 +44,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 			protected abstract IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter { get; }
 
-            public virtual DriverData CreateDriverData(Segment segment)
+
+			public DriverData CreateBusDriverData(Segment segment, VectoSimulationJobType jobType, ArchitectureID arch,
+				CompressorDrive compressorDrive)
 			{
-				return _driverDataAdapter.CreateDriverData(segment);
+				return _driverDataAdapter.CreateBusDriverData(segment, jobType, arch, compressorDrive);
 			}
 
-			public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
+
+            public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
 			{
 				return VehicleDataAdapter.CreateVehicleData(vehicle, segment, mission, loading.Value.Item1,
@@ -148,6 +151,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 						numSteeredAxles, jobType);
 				}
 			}
+
 
 
 			public AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData)

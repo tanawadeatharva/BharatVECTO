@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 				{ GearboxType.MT, GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial };
 
             #region ComponentDataAdapter
-			private readonly IDriverDataAdapter _driverDataAdapter = new CompletedBusGenericDriverDataAdapter();
+			private readonly IDriverDataAdapterBus _driverDataAdapter = new CompletedBusGenericDriverDataAdapter();
 			//protected readonly IVehicleDataAdapter _vehicleDataAdapter = new CompletedBusGenericVehicleDataAdapter();
 			private readonly IAxleGearDataAdapter _axleGearDataAdapter = new GenericCompletedBusAxleGearDataAdapter();
 			private readonly IRetarderDataAdapter _retarderDataAdapter = new GenericRetarderDataAdapter();
@@ -59,6 +59,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 			public AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment)
 			{
 				return _airdragDataAdapter.CreateAirdragData(airdragData, mission, segment);
+			}
+
+			public DriverData CreateBusDriverData(Segment segment, VectoSimulationJobType jobType, ArchitectureID arch,
+				CompressorDrive compressorDrive)
+			{
+				return _driverDataAdapter.CreateBusDriverData(segment, jobType, arch, compressorDrive);
 			}
 
 			public CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx, Mission mission)
@@ -170,10 +176,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
             }
 
 
-			public DriverData CreateDriverData(Segment segment)
-			{
-				return _driverDataAdapter.CreateDriverData(segment);
-			}
+	
 
 			public IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle, IVehicleDeclarationInputData completedVehicle,
                 VectoRunData runData)

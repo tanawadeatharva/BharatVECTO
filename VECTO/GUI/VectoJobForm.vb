@@ -604,10 +604,10 @@ Public Class VectoJobForm
                                             GetRelativePath(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source, _basePath))
         End If
 
-        tbEngineStopStartActivationDelay.Text = If(driver.EngineStopStartData?.ActivationDelay?.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.ActivationDelay.ToGUIFormat())
-        tbMaxEngineOffTimespan.Text = If(driver.EngineStopStartData?.MaxEngineOffTimespan?.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan.ToGUIFormat())
-        tbEssUtility.Text = If(driver.EngineStopStartData?.UtilityFactorStandstill.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.UtilityFactor.ToGUIFormat())
-        tbESSUtilityFactorDriving.Text = If(driver.EngineStopStartData?.UtilityFactorDriving.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.UtilityFactor.ToGUIFormat())
+        tbEngineStopStartActivationDelay.Text = If(driver.EngineStopStartData?.ActivationDelay?.ToGUIFormat(), DeclarationData.Driver.GetEngineStopStartLorry().ActivationDelay.ToGUIFormat())
+        tbMaxEngineOffTimespan.Text = If(driver.EngineStopStartData?.MaxEngineOffTimespan?.ToGUIFormat(), DeclarationData.Driver.GetEngineStopStartLorry().MaxEngineOffTimespan.ToGUIFormat())
+        tbEssUtility.Text = If(driver.EngineStopStartData?.UtilityFactorStandstill.ToGUIFormat(), DeclarationData.Driver.GetEngineStopStartLorry().UtilityFactor.ToGUIFormat())
+        tbESSUtilityFactorDriving.Text = If(driver.EngineStopStartData?.UtilityFactorDriving.ToGUIFormat(), DeclarationData.Driver.GetEngineStopStartLorry().UtilityFactor.ToGUIFormat())
 
         tbEcoRollActivationDelay.Text = If(driver.EcoRollData?.ActivationDelay?.ToGUIFormat(), DeclarationData.Driver.EcoRoll.ActivationDelay.ToGUIFormat())
         tbEcoRollMinSpeed.Text = If(driver.EcoRollData?.MinSpeed?.AsKmph().ToGUIFormat(), DeclarationData.Driver.EcoRoll.MinSpeed.AsKmph().ToGUIFormat())
