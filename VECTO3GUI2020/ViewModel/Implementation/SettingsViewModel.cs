@@ -131,16 +131,24 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		public bool ActualModalData
 		{
-			get => _actualModalData;
-			set
-			{
-				if (SetProperty(ref _actualModalData, value)) {
-					_settings.ActualModalData = value;
-					_settings.Save();
+			get => false;
+			set{
 
-				}
 			}
 		}
+
+		//public bool ActualModalData
+		//{
+		//	get => _actualModalData;
+		//	set
+		//	{
+		//		if (SetProperty(ref _actualModalData, value)) {
+		//			_settings.ActualModalData = value;
+		//			_settings.Save();
+
+		//		}
+		//	}
+		//}
 
 		public bool Validate
 		{
