@@ -617,7 +617,9 @@ namespace TUGraz.VectoCore.Tests.Reports
 					.Returns<IFuelProperties, ModalResultField>((f, m) => f.GetLabel());
 				m.Setup(x => x.EngineLineCorrectionFactor(It.IsIn(Fuel)))
 					.Returns(15.SI(Unit.SI.Gramm.Per.Kilo.Watt.Hour).Cast<KilogramPerWattSecond>());
-			}
+			} else {
+				m.Setup(x => x.FuelData).Returns(new IFuelProperties[] { });
+            }
 
 			if (runData.JobType == VectoSimulationJobType.SerialHybridVehicle) {
 				var genField = string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(),

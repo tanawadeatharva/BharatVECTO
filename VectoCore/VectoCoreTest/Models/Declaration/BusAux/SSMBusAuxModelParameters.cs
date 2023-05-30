@@ -66,13 +66,9 @@ static internal class SSMBusAuxModelParameters
 		primaryBusAuxES.Setup(p => p.AlternatorTechnology).Returns(alternatorTech);
 		primaryBusAuxES.Setup(p => p.Alternators).Returns(new[] { new AlternatorInputData(28.3.SI<Volt>(), 50.SI<Ampere>()) }.Cast<IAlternatorDeclarationInputData>().ToList());
 		if (alternatorTech == AlternatorType.Smart) {
-			var battery = new Mock<BusAuxBatteryInputData>();
-			battery.Setup(b => b.Technology).Returns("li-ion battery - high energy");
-			battery.Setup(b => b.Voltage).Returns(12.SI<Volt>());
-			battery.Setup(b => b.Capacity).Returns((20 / 12.0).SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>());
-			//battery.Setup(b => b.)
+			var battery = new BusAuxBatteryInputData("li-ion battery - high energy", 12.SI<Volt>(), (20 / 12.0).SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>());
 			primaryBusAuxES.Setup(p => p.ElectricStorage).Returns(new List<IBusAuxElectricStorageDeclarationInputData>()
-				{ battery.Object });
+				{ battery });
 		} else {
 			primaryBusAuxES.Setup(p => p.ElectricStorage)
 				.Returns(new List<IBusAuxElectricStorageDeclarationInputData>());
