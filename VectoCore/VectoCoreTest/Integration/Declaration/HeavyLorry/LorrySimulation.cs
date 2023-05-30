@@ -394,6 +394,7 @@ public class LorrySimulation
 		};
 		var EC_el = new List<string> {
 			SumDataFields.EC_el_SOC,
+			SumDataFields.EC_el_SOC_corr,
 			SumDataFields.EC_el_final,
 			SumDataFields.EC_el_final_KM,
 			SumDataFields.EC_el_final_TKM,
@@ -440,7 +441,8 @@ public class LorrySimulation
 			AssertColumnNotPresent(sumData, CO2fields);
 			AssertColumnNotPresent(sumData, fcFields);
 
-			SearchForPattern(sumData, new List<string>(EC_el.Concat(REESS_fields)));
+			SearchForPattern(sumData, EC_el);
+			SearchForPattern(sumData, REESS_fields);
 			SearchForPattern(sumData, GbxTimeShareFields());
 		}
 
