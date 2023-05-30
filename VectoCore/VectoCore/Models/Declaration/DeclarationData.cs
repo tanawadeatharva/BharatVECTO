@@ -1491,46 +1491,48 @@ namespace TUGraz.VectoCore.Models.Declaration
 				throw new VectoException("Battery Data is required for OVC post-processing");
 			}
 
-			var D9_dailySpecificMileage = vehicleOperation.Mileage.DailyMileage;
-			var D10_stationarychargingDuringMissionMaxPwrInfastructure = vehicleOperation.StationaryChargingMaxPwrInfrastructure;
-			var D11_stationaryChargingDuringMission_AvgDurationPerEvent = vehicleOperation.StationaryChargingDuringMission_AvgDurationPerEvent;
-			var D12_stationaryChargingDuringMission_NbrEvents = vehicleOperation.StationaryChargingDuringMission_NbrEvents;
-			var D13_realWorldFactorUsageStartSoC = vehicleOperation.RealWorldUsageFactors.StartSoCBeforeMission;
-			var D14_realWorldFactorChargeDuringMission = vehicleOperation.RealWorldUsageFactors.StationaryChargingDuringMission;
+			var D19_dailySpecificMileage = vehicleOperation.Mileage.DailyMileage;
+			var D20_stationarychargingDuringMissionMaxPwrInfastructure = vehicleOperation.StationaryChargingMaxPwrInfrastructure;
+			var D21_stationaryChargingDuringMission_AvgDurationPerEvent = vehicleOperation.StationaryChargingDuringMission_AvgDurationPerEvent;
+			var D22_stationaryChargingDuringMission_NbrEvents = vehicleOperation.StationaryChargingDuringMission_NbrEvents;
+			var D23_realWorldFactorUsageStartSoC = vehicleOperation.RealWorldUsageFactors.StartSoCBeforeMission;
+			var D24_realWorldFactorChargeDuringMission = vehicleOperation.RealWorldUsageFactors.StationaryChargingDuringMission;
 
 			var (etaChgBatDepot, etaChgBatInMission, etaChtBatWeighted) = chargingEfficiency;
-            //var (etaChgBatDepot, etaChgBatInMission, etaChtBatWeighted) = CalculateChargingEfficiencyOVCHEV(cdResult.MaxChargingPower, vehicleOperation, batteryData);
+            
+			var D9_maxStatChargingPower = cdResult.MaxChargingPower;
 
-			var D17_maxStatChargingPower = cdResult.MaxChargingPower;
+			var D11_energyConsumptionCdMode = cdResult.ElectricEnergyConsumption / cdResult.Distance;
+			var D12_fuelConsumptionCdMode = cdResult.FuelData.Sum(x =>
+				cdResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected * x.LowerHeatingValueVecto);
+			var D13_fuelConsumptionCsMode = csResult.FuelData.Sum(x =>
+				csResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected * x.LowerHeatingValueVecto);
 
-			var D19_energyConsumptionCdMode = cdResult.ElectricEnergyConsumption / cdResult.Distance;
-			var D20_fuelConsumptionCdMode = cdResult.FuelData.Sum(x => cdResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected * x.LowerHeatingValueVecto);
-			var D21_fuelConsumptionCsMode = csResult.FuelData.Sum(x => csResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected * x.LowerHeatingValueVecto);
+			var D10_useableBatteryCapForR_CDA = cdResult.BatteryData.UseableStoredEnergy;
+			var D15_actualChargeDepletingRange = D10_useableBatteryCapForR_CDA / D11_energyConsumptionCdMode;
+			var D16_equivalentAllElectricRange = D15_actualChargeDepletingRange *
+												((D13_fuelConsumptionCsMode - D12_fuelConsumptionCdMode) /
+												D13_fuelConsumptionCsMode);
+			var D17_zeroCO2EmissionsRange = D16_equivalentAllElectricRange;
 
-			var D23_useableBatteryCapForR_CDA = cdResult.BatteryData.UseableStoredEnergy;
-			var D24_actualChargeDepletingRange = D23_useableBatteryCapForR_CDA / D19_energyConsumptionCdMode;
-			var D25_equivalentAllElectricRange = D24_actualChargeDepletingRange * ((D21_fuelConsumptionCsMode - D20_fuelConsumptionCdMode) / D21_fuelConsumptionCsMode);
-			var D26_zeroCO2EmissionsRange = D25_equivalentAllElectricRange;
-
-			var D28_elRangefromStartSoC_ChargingAtDepot = D24_actualChargeDepletingRange * D13_realWorldFactorUsageStartSoC;
-			var D29_chargingEffBattInMission = etaChgBatInMission;
-			var D30_electricEnergyChargedDuringMissionStatInfrastructure =
+			var D27_elRangefromStartSoC_ChargingAtDepot = D15_actualChargeDepletingRange * D23_realWorldFactorUsageStartSoC;
+			var D28_chargingEffBattInMission = etaChgBatInMission;
+			var D29_electricEnergyChargedDuringMissionStatInfrastructure =
 				VectoMath.Min(
-					VectoMath.Min(D17_maxStatChargingPower, D10_stationarychargingDuringMissionMaxPwrInfastructure) *
-					D11_stationaryChargingDuringMission_AvgDurationPerEvent * D29_chargingEffBattInMission,
-					D23_useableBatteryCapForR_CDA) * D12_stationaryChargingDuringMission_NbrEvents * D14_realWorldFactorChargeDuringMission;
-			var D31_elRangeStatChargingDuringMission = D30_electricEnergyChargedDuringMissionStatInfrastructure / D19_energyConsumptionCdMode;
+					VectoMath.Min(D9_maxStatChargingPower, D20_stationarychargingDuringMissionMaxPwrInfastructure) *
+					D21_stationaryChargingDuringMission_AvgDurationPerEvent * D28_chargingEffBattInMission,
+					D10_useableBatteryCapForR_CDA) * D22_stationaryChargingDuringMission_NbrEvents * D24_realWorldFactorChargeDuringMission;
+			var D30_elRangeStatChargingDuringMission = D29_electricEnergyChargedDuringMissionStatInfrastructure / D11_energyConsumptionCdMode;
 
-			var D33_utilityFactor = Math.Min(1, (D28_elRangefromStartSoC_ChargingAtDepot + D31_elRangeStatChargingDuringMission) / D9_dailySpecificMileage);
+			var D32_utilityFactor = Math.Min(1, (D27_elRangefromStartSoC_ChargingAtDepot + D30_elRangeStatChargingDuringMission) / D19_dailySpecificMileage);
 
-			var D35_chargingEffBatt = etaChtBatWeighted;
-			var D36_correctionFactorEC_SoC_TerminalCD = 1 / D35_chargingEffBatt;
-			var D37_electricEnergyCdModeTerminal = cdResult.ElectricEnergyConsumption * D36_correctionFactorEC_SoC_TerminalCD;
+			var D25_chargingEffBattWeighted = etaChtBatWeighted;
+			var D34_electricEnergyCdModeTerminal = cdResult.ElectricEnergyConsumption / D25_chargingEffBattWeighted;
 
-			var D39_electricEnergyConsumptionWeighted = D33_utilityFactor * D37_electricEnergyCdModeTerminal;
-			var D40_fuelConsumptionWeighted = cdResult.FuelData.Select(x => Tuple.Create(x,
-					D33_utilityFactor * cdResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected +
-					(1 - D33_utilityFactor) * csResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected))
+			var D36_electricEnergyConsumptionWeighted = D32_utilityFactor * D34_electricEnergyCdModeTerminal;
+			var D37_fuelConsumptionWeighted = cdResult.FuelData.Select(x => Tuple.Create(x,
+					D32_utilityFactor * cdResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected +
+					(1 - D32_utilityFactor) * csResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected))
 				.ToDictionary(x => x.Item1, x => x.Item2);
 
 			var retVal = new WeightedResult() {
@@ -1540,25 +1542,25 @@ namespace TUGraz.VectoCore.Models.Declaration
 				PassengerCount = cdResult.PassengerCount,
 				AverageSpeed = cdResult.AverageSpeed,
 				AverageDrivingSpeed = cdResult.AverageDrivingSpeed,
-				ActualChargeDepletingRange = D24_actualChargeDepletingRange,
-				EquivalentAllElectricRange = D25_equivalentAllElectricRange,
-				ZeroCO2EmissionsRange = D26_zeroCO2EmissionsRange,
-				UtilityFactor = D33_utilityFactor,
-				ElectricEnergyConsumption = D39_electricEnergyConsumptionWeighted,
-				FuelConsumption = D40_fuelConsumptionWeighted,
-				CO2Total = D33_utilityFactor * cdResult.CO2Total + (1 - D33_utilityFactor) * csResult.CO2Total,
+				ActualChargeDepletingRange = D15_actualChargeDepletingRange,
+				EquivalentAllElectricRange = D16_equivalentAllElectricRange,
+				ZeroCO2EmissionsRange = D17_zeroCO2EmissionsRange,
+				UtilityFactor = D32_utilityFactor,
+				ElectricEnergyConsumption = D36_electricEnergyConsumptionWeighted,
+				FuelConsumption = D37_fuelConsumptionWeighted,
+				CO2Total = D32_utilityFactor * cdResult.CO2Total + (1 - D32_utilityFactor) * csResult.CO2Total,
 
 				AuxHeaterFuel = cdResult.AuxHeaterFuel,
 				ZEV_CO2 =
 					cdResult.AuxHeaterFuel != null && cdResult.ZEV_CO2 != null &&
 					csResult.ZEV_FuelConsumption_AuxHtr != null
-						? D33_utilityFactor * cdResult.ZEV_CO2 + (1 - D33_utilityFactor) * csResult.ZEV_CO2
+						? D32_utilityFactor * cdResult.ZEV_CO2 + (1 - D32_utilityFactor) * csResult.ZEV_CO2
 						: null,
 				ZEV_FuelConsumption_AuxHtr =
 					cdResult.AuxHeaterFuel != null && cdResult.ZEV_FuelConsumption_AuxHtr != null &&
 					csResult.ZEV_FuelConsumption_AuxHtr != null
-						? D33_utilityFactor * cdResult.ZEV_FuelConsumption_AuxHtr +
-						(1 - D33_utilityFactor) * csResult.ZEV_FuelConsumption_AuxHtr
+						? D32_utilityFactor * cdResult.ZEV_FuelConsumption_AuxHtr +
+						(1 - D32_utilityFactor) * csResult.ZEV_FuelConsumption_AuxHtr
 						: null,
 			};
 
