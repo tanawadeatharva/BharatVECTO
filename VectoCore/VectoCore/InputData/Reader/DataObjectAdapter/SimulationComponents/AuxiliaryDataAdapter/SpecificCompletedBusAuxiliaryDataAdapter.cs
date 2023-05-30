@@ -497,7 +497,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					throw new VectoException("at least one electric storage (battery or capacitor) is required when specifying smart electrics!");
 			}
 
-			retVal.MaxAlternatorPower = primaryBusAuxiliaries.ElectricSupply.Alternators.Sum(x => x.RatedVoltage * x.RatedCurrent);
+			retVal.MaxAlternatorPower = CalculateMaxAlternatorPower(primaryBusAuxiliaries);
 			retVal.ElectricStorageCapacity = CalculateBatteryCapacity(primaryBusAuxiliaries.ElectricSupply.ElectricStorage);
 
             if (primaryVehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,

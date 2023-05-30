@@ -93,11 +93,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 		#region Overrides of DriverDataAdapter
 
-		protected override DriverData DoCreateDriverData(Segment segment)
-		{
-			return base.CreateDriverData(segment:segment);
-		}
-
 		protected override DriverData.EngineStopStartData GetEngineStopStartData(VectoSimulationJobType? jobType,
 			ArchitectureID? arch, CompressorDrive? compressorDrive)
 		{
