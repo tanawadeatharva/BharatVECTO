@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VectoOutputMultistep xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1">
   <PrimaryVehicle>
-    <Data id="VIF_P-5c3f323d619044739282" xsi:type="PrimaryVehicleDataType">
+    <Data id="VIF_P-5e4094b6660e4568b2f3" xsi:type="PrimaryVehicleDataType">
       <Vehicle xsi:type="PEV_Ex_VehicleVIFType">
         <Manufacturer>Generic Truck Manufacturer</Manufacturer>
         <ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
@@ -292,13 +292,13 @@
         </di:Reference>
       </InputDataSignature>
       <ManufacturerRecordSignature>
-        <di:Reference URI="#MRF-6cd3738eac25456da027">
+        <di:Reference URI="#MRF-3118ecc70da04d22bd5e">
           <di:Transforms>
             <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
             <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
           </di:Transforms>
           <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-          <di:DigestValue>0yD5qJoNf4xDHLViyMAIb5rXdjCVtg0HBX2yYmSxO3w=</di:DigestValue>
+          <di:DigestValue>VSAaKMGP8JHUYmRAxoYRqvwTIsSLkAv2dKTfDynnx2U=</di:DigestValue>
         </di:Reference>
       </ManufacturerRecordSignature>
       <Results>
@@ -312,23 +312,275 @@
             <PassengerCount>16.52</PassengerCount>
           </SimulationParameters>
           <ElectricEnergyConsumption>
-            <EnergyConsumption unit="MJ/km">3.48</EnergyConsumption>
+            <EnergyConsumption unit="MJ/km">3.80</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Heavy Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">20252</TotalVehicleMass>
+            <Payload unit="kg">5618</Payload>
+            <PassengerCount>82.62</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">4.81</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">15758</TotalVehicleMass>
+            <Payload unit="kg">1124</Payload>
+            <PassengerCount>16.52</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">3.18</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">20252</TotalVehicleMass>
+            <Payload unit="kg">5618</Payload>
+            <PassengerCount>82.62</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">3.97</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Suburban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">15758</TotalVehicleMass>
+            <Payload unit="kg">1124</Payload>
+            <PassengerCount>16.52</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">2.78</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Suburban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">20252</TotalVehicleMass>
+            <Payload unit="kg">5618</Payload>
+            <PassengerCount>82.62</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">3.38</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Interurban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">15709</TotalVehicleMass>
+            <Payload unit="kg">1075</Payload>
+            <PassengerCount>15.15</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">2.80</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Interurban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">18154</TotalVehicleMass>
+            <Payload unit="kg">3520</Payload>
+            <PassengerCount>49.57</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">3.07</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
+          <Mission>Heavy Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">16202</TotalVehicleMass>
+            <Payload unit="kg">1193</Payload>
+            <PassengerCount>17.55</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">4.12</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
+          <Mission>Heavy Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">20976</TotalVehicleMass>
+            <Payload unit="kg">5967</Payload>
+            <PassengerCount>87.75</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">5.43</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
+          <Mission>Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">16202</TotalVehicleMass>
+            <Payload unit="kg">1193</Payload>
+            <PassengerCount>17.55</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">3.45</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
+          <Mission>Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">20976</TotalVehicleMass>
+            <Payload unit="kg">5967</Payload>
+            <PassengerCount>87.75</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">4.48</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
+          <Mission>Suburban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">16202</TotalVehicleMass>
+            <Payload unit="kg">1193</Payload>
+            <PassengerCount>17.55</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">3.03</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
+          <Mission>Suburban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">20976</TotalVehicleMass>
+            <Payload unit="kg">5967</Payload>
+            <PassengerCount>87.75</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">3.78</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32SD</PrimaryVehicleSubgroup>
+          <Mission>Interurban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">16522</TotalVehicleMass>
+            <Payload unit="kg">1075</Payload>
+            <PassengerCount>15.15</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">2.65</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32SD</PrimaryVehicleSubgroup>
+          <Mission>Interurban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">18967</TotalVehicleMass>
+            <Payload unit="kg">3520</Payload>
+            <PassengerCount>49.57</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">2.93</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32SD</PrimaryVehicleSubgroup>
+          <Mission>Coach</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">16542</TotalVehicleMass>
+            <Payload unit="kg">1095</Payload>
+            <PassengerCount>15.42</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">2.99</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32SD</PrimaryVehicleSubgroup>
+          <Mission>Coach</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">18184</TotalVehicleMass>
+            <Payload unit="kg">2737</Payload>
+            <PassengerCount>38.56</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">3.12</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32DD</PrimaryVehicleSubgroup>
+          <Mission>Interurban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">16960</TotalVehicleMass>
+            <Payload unit="kg">1263</Payload>
+            <PassengerCount>17.79</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">2.79</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32DD</PrimaryVehicleSubgroup>
+          <Mission>Interurban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">19906</TotalVehicleMass>
+            <Payload unit="kg">4209</Payload>
+            <PassengerCount>59.29</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">3.15</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32DD</PrimaryVehicleSubgroup>
+          <Mission>Coach</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">17044</TotalVehicleMass>
+            <Payload unit="kg">1347</Payload>
+            <PassengerCount>18.97</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">3.21</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32DD</PrimaryVehicleSubgroup>
+          <Mission>Coach</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">19065</TotalVehicleMass>
+            <Payload unit="kg">3368</Payload>
+            <PassengerCount>47.43</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">3.37</EnergyConsumption>
           </ElectricEnergyConsumption>
         </Result>
       </Results>
       <ApplicationInformation>
-        <SimulationToolVersion>0.7.10.3058-DEV !!NOT FOR CERTIFICATION!!</SimulationToolVersion>
-        <Date>2023-05-17T17:58:27.0903965Z</Date>
+        <SimulationToolVersion>0.7.10.3071-DEV !!NOT FOR CERTIFICATION!!</SimulationToolVersion>
+        <Date>2023-05-30T09:36:24.9080962Z</Date>
       </ApplicationInformation>
     </Data>
     <Signature>
-      <di:Reference URI="#VIF_P-5c3f323d619044739282">
+      <di:Reference URI="#VIF_P-5e4094b6660e4568b2f3">
         <di:Transforms>
           <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
           <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
         </di:Transforms>
         <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-        <di:DigestValue>DGewYjFuzs5Ivtk/EbRkRApKhK3T95F/Xjz7L+sASNc=</di:DigestValue>
+        <di:DigestValue>bIsnvafQaa/zZmCWG5RuHQ6cJ3HeZSylD/mD9PLFIro=</di:DigestValue>
       </di:Reference>
     </Signature>
   </PrimaryVehicle>

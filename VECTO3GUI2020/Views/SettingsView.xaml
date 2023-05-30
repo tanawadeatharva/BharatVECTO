@@ -76,14 +76,14 @@
                     <Label Grid.Row="1" Grid.Column="2">Write Modal Results</Label>
                     <CheckBox Grid.Row="1" Grid.Column="3" IsChecked="{Binding WriteModalResults}"></CheckBox>
 
-                    <Label Grid.Row="2" Grid.Column="0">Validate</Label>
-                    <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding Validate}"></CheckBox>
+                    <Label Grid.Row="1" Grid.Column="0">Validate</Label>
+                    <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding Validate}"></CheckBox>
 
-                    <Label Grid.Row="0" Grid.Column="2">Actual Modal Data</Label>
-                    <CheckBox Grid.Row="0" Grid.Column="3" IsChecked="{Binding ActualModalData}"></CheckBox>
+                    <!--<Label Grid.Row="0" Grid.Column="2">Actual Modal Data</Label>
+                    <CheckBox Grid.Row="0" Grid.Column="3" IsChecked="{Binding ActualModalData}"></CheckBox>-->
 
-                    <Label Grid.Row="1" Grid.Column="0">ModalResults1Hz</Label>
-                    <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding ModalResults1Hz}"></CheckBox>
+                    <Label Grid.Row="0" Grid.Column="2">ModalResults1Hz</Label>
+                    <CheckBox Grid.Row="0" Grid.Column="3" IsChecked="{Binding ModalResults1Hz}"></CheckBox>
 
 
 
