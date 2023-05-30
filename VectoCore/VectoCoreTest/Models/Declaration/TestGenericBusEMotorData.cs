@@ -99,15 +99,15 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var emResult = GenericRatedPointHelper.GetRatedPointOfFullLoadCurveAtEM(fullLoadCurve);
 			Assert.IsNotNull(emResult); 
-			Assert.AreEqual(755.11 , emResult.NRated.Value(), 1e-2, "Wrong speed");
+			Assert.AreEqual(755.11 , emResult.NRated.AsRPM, 1e-2, "Wrong speed");
 			Assert.AreEqual(4027.8000, emResult.TRated.Value(), 1e-4, "Wrong torque");
-			Assert.AreEqual(318.4980 , emResult.PRated.Value(), 1e-4 , "Wrong power");
+			Assert.AreEqual(318498.02032 , emResult.PRated.Value(), 1e-4 , "Wrong power");
 
 			var iepcResult = GenericRatedPointHelper.GetRatedPointOfFullLoadCurveAtIEPC(fullLoadCurve, 1, 1, 0.95, 1);
 			Assert.IsNotNull(iepcResult);
-			Assert.AreEqual(755.11, iepcResult.NRated.Value(), 1e-2);
+			Assert.AreEqual(755.11, iepcResult.NRated.AsRPM, 1e-2);
 			Assert.AreEqual(4239.7894, iepcResult.TRated.Value(), 1e-4);
-			Assert.AreEqual(335.26, iepcResult.PRated.Value(), 1e-2);
+			Assert.AreEqual(335261.0740, iepcResult.PRated.Value(), 1e-2);
 		}
 
 
