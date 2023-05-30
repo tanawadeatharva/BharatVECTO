@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 		{
 
 			var n = ElectricMotorRatedSpeedHelper.GetRatedSpeed(fullLoadCurve.AsEnumerable(),
-				row => row.ParseDouble(MotorSpeedColumn).SI<PerSecond>(), row => row.ParseDouble(TorqueDriveColumn).SI<NewtonMeter>());
+				row => row.ParseDouble(MotorSpeedColumn).RPMtoRad(), row => row.ParseDouble(TorqueDriveColumn).SI<NewtonMeter>());
 			var tDrive = fullLoadCurve.AsEnumerable().Max(row => row.ParseDouble(TorqueDriveColumn).SI<NewtonMeter>());
 			//SetCurveValues(fullLoadCurve);
 			//var ratedIndex = FindRowOfRatedPoint();
