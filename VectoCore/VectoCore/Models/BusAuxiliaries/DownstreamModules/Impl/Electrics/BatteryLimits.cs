@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
@@ -16,14 +17,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		{
 			Data = table.Rows.Cast<DataRow>()
 				.Select(r => Tuple.Create(r.Field<string>("technology"), r.ParseDouble("socrange") / 100, r.ParseDouble("c-rate")))
-				.ToDictionary(e => e.Item1, e => new BatteryLimit(e.Item1, e.Item2, e.Item3));
+				.ToDictionary(e => e.Item1, e => new BatteryLimit(e.Item1, e.Item2, e.Item3.SI(Unit.SI.Per.Hour).Cast<PerSecond>()));
 		}
 
 		#endregion
 
         public struct BatteryLimit
 		{
-			public BatteryLimit(string technology, double socRange, double cRate)
+			public BatteryLimit(string technology, double socRange, PerSecond cRate)
 			{
 				Technology = technology;
 				SoC_Range = socRange;
@@ -34,7 +35,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 			public double SoC_Range { get; }
 
-			public double C_Rate { get;  }
+			public PerSecond C_Rate { get;  }
 		}
 
 		

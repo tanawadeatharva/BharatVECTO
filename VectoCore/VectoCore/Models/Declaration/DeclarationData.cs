@@ -267,7 +267,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static class BusAuxiliaries
 		{
-			
+
 			private static IEnvironmentalConditionsMap envMap;
 
 			private static ElectricalConsumerList elUserConfig;
@@ -289,12 +289,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 
 				if (compressorSize == "not applicable") {
-					throw new VectoException($"SizeOfAirSupply: '{compressorSize}' invalid for compressor drive: '{pneumaticSupply.CompressorDrive}'");
+					throw new VectoException(
+						$"SizeOfAirSupply: '{compressorSize}' invalid for compressor drive: '{pneumaticSupply.CompressorDrive}'");
 				}
-				
 
 
-				
+
+
 
 				var resource = GetCompressorResourceForSize(compressorSize);
 
@@ -304,12 +305,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 						dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.ViscoClutchDragCurveFactor;
 						break;
 					case "mechanically":
-						dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.MechanicClutchDragCurveFactor;
+						dragCurveFactorClutch =
+							Constants.BusAuxiliaries.PneumaticUserConfig.MechanicClutchDragCurveFactor;
 						break;
 				}
 
 				return CompressorMapReader.ReadStream(
-					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".VAUXBus." + resource), dragCurveFactorClutch, $"{compressorSize} - {clutchType}");
+					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".VAUXBus." + resource),
+					dragCurveFactorClutch, $"{compressorSize} - {clutchType}");
 			}
 
 			private static string GetCompressorResourceForSize(string compressorSize)
@@ -340,8 +343,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.DefaultClimatic.aenv")));
 
 			public static HeatingDistributionCasesMap HeatingDistributionCases =>
-				heatingDistributionCasesMap ?? (heatingDistributionCasesMap = HeatingDistributionCasesMapReader.ReadStream(
-					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.HeatingDistributionCases.csv")));
+				heatingDistributionCasesMap ?? (heatingDistributionCasesMap =
+					HeatingDistributionCasesMapReader.ReadStream(
+						RessourceHelper.ReadStream(
+							DeclarationDataResourcePrefix + ".Buses.HeatingDistributionCases.csv")));
+
 			public static HeatingDistributionMap HeatingDistribution =>
 				heatingDistributionMap ?? (heatingDistributionMap = HeatingDistributionMapReader.ReadStream(
 					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.HeatingDistribution.csv")));
@@ -355,12 +361,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 				actuationsMap ?? (actuationsMap = ActuationsMapReader.ReadStream(
 					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.DefaultActuationsMap.apac")));
 
-			public static HVACCoolingPower HVACMaxCoolingPower => hvacMaxCoolingPower ?? (hvacMaxCoolingPower = new HVACCoolingPower());
+			public static HVACCoolingPower HVACMaxCoolingPower =>
+				hvacMaxCoolingPower ?? (hvacMaxCoolingPower = new HVACCoolingPower());
 
-			public static HVACHeatingPower HVACMaxHeatingPower => hvacMaxHeatingPower ?? (hvacMaxHeatingPower = new HVACHeatingPower());
+			public static HVACHeatingPower HVACMaxHeatingPower =>
+				hvacMaxHeatingPower ?? (hvacMaxHeatingPower = new HVACHeatingPower());
+
 			public static BatteryLimits BatteryLimits { get; } = new BatteryLimits();
-			
+
 			public const double SuperCapUsableCapacity = 0.84;
+
 			public static PerSecond VentilationRate(BusHVACSystemConfiguration? hvacSystemConfig, bool heating)
 			{
 
@@ -393,13 +403,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static Meter CorrectedBusWidth(Meter busWidth)
 			{
-				return busWidth.IsBetween(Constants.BusParameters.VehicleWidthLow, Constants.BusParameters.VehicleWidthHigh)
+				return busWidth.IsBetween(Constants.BusParameters.VehicleWidthLow,
+					Constants.BusParameters.VehicleWidthHigh)
 					? Constants.BusParameters.VehicleWidthHigh
 					: busWidth;
 			}
 
 
-			public static Meter CalculateInternalLength(Meter vehicleLength, VehicleCode? vehicleCode, double numPassSeatsLowerDeck)
+			public static Meter CalculateInternalLength(Meter vehicleLength, VehicleCode? vehicleCode,
+				double numPassSeatsLowerDeck)
 			{
 				if (vehicleCode.GetFloorType() == FloorType.LowFloor) {
 					return vehicleCode.IsDoubleDeckerBus() ? 2 * vehicleLength : vehicleLength;
@@ -412,7 +424,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 					return vehicleLength;
 				}
-				throw new VectoException("Internal Length for floorType {0} {1} not defined", vehicleCode.GetFloorType().ToString(), vehicleCode.IsDoubleDeckerBus() ? "DD" : "SD");
+
+				throw new VectoException("Internal Length for floorType {0} {1} not defined",
+					vehicleCode.GetFloorType().ToString(), vehicleCode.IsDoubleDeckerBus() ? "DD" : "SD");
 			}
 
 			public static Meter CalculateLengthInteriorLights(
@@ -421,7 +435,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return CalculateInternalLength(vehicleLength, vehicleCode, numPassLowFloor);
 			}
 
-			public static Meter CalculateInternalHeight(VehicleCode? vehicleCode, RegistrationClass? registrationClass, Meter bodyHeight)
+			public static Meter CalculateInternalHeight(VehicleCode? vehicleCode, RegistrationClass? registrationClass,
+				Meter bodyHeight)
 			{
 				if (vehicleCode.IsDoubleDeckerBus()) {
 					return Constants.BusParameters.InternalHeightDoubleDecker;
@@ -435,10 +450,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 							registrationClass == RegistrationClass.III || registrationClass == RegistrationClass.B) {
 							return Constants.BusParameters.InternalHeightDoubleDecker;
 						}
+
 						return bodyHeight - Constants.BusParameters.HeightLuggageCompartment;
 				}
 
-				throw new VectoException("Internal height for vehicle floor type '{0}' {1} not defined", vehicleCode.GetFloorType().ToString(), vehicleCode.IsDoubleDeckerBus() ? "double decker" : "single decker");
+				throw new VectoException("Internal height for vehicle floor type '{0}' {1} not defined",
+					vehicleCode.GetFloorType().ToString(),
+					vehicleCode.IsDoubleDeckerBus() ? "double decker" : "single decker");
 			}
 
 			public static Meter WindowHeight(bool doubleDecker)
@@ -468,19 +486,23 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-			public static double CalculateCOP(Watt coolingPwrDriver, double copDriver, Watt coolingPwrPass, double copPass)
+			public static double CalculateCOP(Watt coolingPwrDriver, double copDriver, Watt coolingPwrPass,
+				double copPass)
 			{
 				if (coolingPwrDriver.IsGreater(0) && copDriver.IsEqual(0)) {
 					copDriver = copPass;
 				}
+
 				if (coolingPwrDriver.IsEqual(0) && coolingPwrPass.IsEqual(0)) {
 					return 1.0;
 				}
+
 				return (coolingPwrDriver * copDriver + coolingPwrPass * copPass) /
 						(coolingPwrDriver + coolingPwrPass);
 			}
 
-			public static Meter CorrectionLengthDrivetrainVolume(VehicleCode? vehicleCode, bool? lowEntry, int numAxles, bool articulated)
+			public static Meter CorrectionLengthDrivetrainVolume(VehicleCode? vehicleCode, bool? lowEntry, int numAxles,
+				bool articulated)
 			{
 				if ((vehicleCode == VehicleCode.CE || vehicleCode == VehicleCode.CG) && (bool)lowEntry) {
 					switch (numAxles) {
@@ -490,10 +512,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 						default: throw new VectoException("invalid number of axles {0}", numAxles);
 					}
 				}
+
 				return 0.SI<Meter>();
 			}
 
-			public static BusHVACSystemConfiguration GetHVACConfig(BusHVACSystemConfiguration hvacConfigurationInput, HeatPumpType heatPumpDriver, HeatPumpType heatPumpPassenger)
+			public static BusHVACSystemConfiguration GetHVACConfig(BusHVACSystemConfiguration hvacConfigurationInput,
+				HeatPumpType heatPumpDriver, HeatPumpType heatPumpPassenger)
 			{
 				var hasDriverHP = !heatPumpDriver.IsOneOf(HeatPumpType.none, HeatPumpType.not_applicable);
 				var hasPassengerHP = heatPumpPassenger != HeatPumpType.none;
@@ -557,10 +581,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 					case BusHVACSystemConfiguration.Configuration10 when !hasDriverHP && hasPassengerHP:
 						return BusHVACSystemConfiguration.Configuration10;
 				}
-				throw new VectoException($"Invalid HVAC combination! System Configuration: {hvacConfigurationInput.GetName()}, Driver HeatPump: {heatPumpDriver.GetLabel()}, Passenger HeatPump: {heatPumpPassenger.GetLabel()}");
+
+				throw new VectoException(
+					$"Invalid HVAC combination! System Configuration: {hvacConfigurationInput.GetName()}, Driver HeatPump: {heatPumpDriver.GetLabel()}, Passenger HeatPump: {heatPumpPassenger.GetLabel()}");
 			}
 
-			public static WattSecond CalculateBatteryCapacity(IList<IBusAuxElectricStorageDeclarationInputData> electricStorage)
+			public static WattSecond CalculateBatteryCapacity(
+				IList<IBusAuxElectricStorageDeclarationInputData> electricStorage)
 			{
 				if (electricStorage == null) {
 					return null;
@@ -588,7 +615,27 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 
 				return batteryCapacity + capacitorCapacity;
-            }
+			}
+
+
+
+
+			public static Watt CalculateMaxAlternatorPower(IElectricSupplyDeclarationData electricSupply)
+			{
+				var maxElectricPower = electricSupply.ElectricStorage.Where(x => x is BusAuxBatteryInputData)
+					.Cast<BusAuxBatteryInputData>()
+					.Sum(b => b.Capacity * DeclarationData.BusAuxiliaries.BatteryLimits.Lookup(b.Technology).C_Rate *
+							b.Voltage);
+				if (electricSupply.ElectricStorage.Any(x => x is BusAuxCapacitorInputData)) {
+					maxElectricPower = null;
+				}
+
+				var maxAlternatorPower =
+					VectoMath.Min(electricSupply.Alternators.Sum(x => x.RatedVoltage * x.RatedCurrent),
+						maxElectricPower);
+				return maxAlternatorPower;
+			}
+
 		}
 
 		public static class Driver

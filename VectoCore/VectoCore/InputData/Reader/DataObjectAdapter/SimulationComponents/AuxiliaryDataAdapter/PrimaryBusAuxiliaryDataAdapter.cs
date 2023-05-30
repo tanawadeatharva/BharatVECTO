@@ -275,10 +275,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					throw new VectoException("at least one electric storage (battery or capacitor) is required when specifying smart electrics!");
 			}
 
-			retVal.MaxAlternatorPower = busAux.ElectricSupply.Alternators.Sum(x => x.RatedVoltage * x.RatedCurrent);
-			
 			retVal.ElectricStorageCapacity = CalculateBatteryCapacity(busAux.ElectricSupply.ElectricStorage);
-			
+			retVal.MaxAlternatorPower = CalculateMaxAlternatorPower(busAux);
 
 			if (vehicleData.ArchitectureID.IsBatteryElectricVehicle())
 			{
@@ -292,6 +290,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			retVal.DCDCEfficiency = DeclarationData.DCDCEfficiency;
 
 			return retVal;
+		}
+
+		protected virtual Watt CalculateMaxAlternatorPower(IBusAuxiliariesDeclarationData busAux)
+		{
+			return DeclarationData.BusAuxiliaries.CalculateMaxAlternatorPower(busAux.ElectricSupply);
 		}
 
 		protected virtual WattSecond CalculateBatteryCapacity(
