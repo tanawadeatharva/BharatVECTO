@@ -153,7 +153,9 @@ namespace TUGraz.VectoCore.OutputData.XML
             result.TotalVehicleMass = specific.TotalVehicleMass;
             result.Payload = specific.Payload;
             result.PassengerCount = specific.PassengerCount;
-            result.VehicleClass = primary.VehicleGroup;
+			result.VehicleClass = specific.VehicleClass;
+			result.PrimaryVehicleClass = primary.VehicleGroup;
+            
 			result.WeightingFactor = specific.WeightingFactor;
 			result.FuelMode = specific.FuelMode;
 			result.LoadingType = specific.LoadingType;
@@ -176,7 +178,7 @@ namespace TUGraz.VectoCore.OutputData.XML
             result.MaxSpeed = specific.MaxSpeed;
 
 
-
+			result.MaxChargingPower = specific.MaxChargingPower;
             result.MaxDeceleration = specific.MaxDeceleration;
             result.MaxAcceleration = specific.MaxAcceleration;
             result.FullLoadPercentage = specific.FullLoadPercentage;
@@ -197,12 +199,12 @@ namespace TUGraz.VectoCore.OutputData.XML
             {
 
                 var fuelFactor = CalculateFactor(combinedResults, r => r.FuelConsumptionFinal(fuel).TotalFuelConsumptionCorrected);
-                var completedFuelConsumption =
+                var energyDemand =
                     fuelFactor * (primary.EnergyConsumption[fuel] * specific.Distance);
                 var fuelConsumption = new CompletedBusFuelConsumption()
                 {
                     Fuel = specific.FuelData.Single(f => f.FuelType == fuel),
-                    EnergyDemand = completedFuelConsumption,
+                    EnergyDemand = energyDemand,
                 };
                 co2Sum += fuelConsumption.TotalFuelConsumptionCorrected * fuelConsumption.Fuel.CO2PerFuelWeight;
                 result.CorrectedFinalFuelConsumption.Add(fuel, fuelConsumption);
@@ -299,8 +301,11 @@ namespace TUGraz.VectoCore.OutputData.XML
             public CubicMeter CargoVolume { get; }
             public double? PassengerCount { get; set; }
             public VehicleClass VehicleClass { get; set; }
-            public Watt MaxChargingPower { get; }
-            public double WeightingFactor { get; set; }
+
+			public VehicleClass? PrimaryVehicleClass { get; set; }
+
+			public Watt MaxChargingPower { get; set; }
+			public double WeightingFactor { get; set; }
             public Meter ActualChargeDepletingRange { get; set; }
             public Meter EquivalentAllElectricRange { get; set; }
             public Meter ZeroCO2EmissionsRange { get; set; }

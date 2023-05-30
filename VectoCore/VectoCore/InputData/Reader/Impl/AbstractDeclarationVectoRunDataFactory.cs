@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		protected IMissionFilter MissionFilter { get; }
 
-		protected DriverData DriverData => _driverdata ?? (_driverdata = CreateDriverData(_segment));
+		protected DriverData DriverData => _driverdata ??(_driverdata= CreateDriverData(_segment));
 		protected abstract DriverData CreateDriverData(Segment segment);
 
 		public virtual IEnumerable<VectoRunData> NextRun()

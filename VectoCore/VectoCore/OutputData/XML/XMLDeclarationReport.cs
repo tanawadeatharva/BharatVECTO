@@ -96,6 +96,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 				BatteryData = runData.BatteryData;
 				OVCMode = runData.OVCMode;
 				VectoRunData = runData;
+
+			
+				//VehicleCode = runData.VehicleData.VehicleCode;
 			}
 
 			public VectoRunData VectoRunData { get; private set; }
@@ -114,6 +117,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public double? PassengerCount { get; set; }
 			public VehicleClass VehicleClass { get; set; }
+
+			public VehicleClass? PrimaryVehicleClass => throw new NotImplementedException();
+
 			public Watt MaxChargingPower { get; set; }
 
 			public MeterPerSecond AverageSpeed { get; private set; }

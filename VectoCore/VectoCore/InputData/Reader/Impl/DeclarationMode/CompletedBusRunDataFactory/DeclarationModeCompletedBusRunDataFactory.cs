@@ -60,7 +60,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 			protected override DriverData CreateDriverData(Segment segment)
 			{
-				return DataAdapterGeneric.CreateDriverData(segment);
+				CompressorDrive compressorDrive =
+					PrimaryVehicle.Components.BusAuxiliaries.PneumaticSupply.CompressorDrive;
+				ArchitectureID arch = PrimaryVehicle.ArchitectureID;
+				VectoSimulationJobType jobType = PrimaryVehicle.VehicleType;
+				return DataAdapterGeneric.CreateBusDriverData(segment, jobType, arch, compressorDrive);
 			}
 
             protected override VectoRunData GetPowertrainConfigForReportInit()

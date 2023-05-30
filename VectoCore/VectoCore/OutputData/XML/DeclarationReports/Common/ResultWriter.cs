@@ -25,15 +25,19 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 		protected XElement GetPrimaryBusSubGroupElement(IResultEntry entry)
 		{
-			if (entry.VehicleClass.IsBus())
+			if (entry.VehicleClass.IsCompletedBus())
 			{
-				//busSubGroup 
-				var primarySubGroup = entry.VehicleClass;
-				if (!primarySubGroup.IsPrimaryBus())
+                //busSubGroup 
+
+				if (!entry.PrimaryVehicleClass.HasValue || !entry.PrimaryVehicleClass.Value.IsPrimaryBus())
 				{
-					throw new VectoException($"Expected Primary Bus but was {primarySubGroup}");
+					throw new VectoException($"Expected Primary Bus Class");
 				}
 
+
+
+                var primarySubGroup = entry.PrimaryVehicleClass.Value;
+			
 				return new XElement(TNS + XMLNames.Report_Results_PrimaryVehicleSubgroup, primarySubGroup.ToXML());
 			}
 

@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -59,6 +60,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Batter
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
+using Point = TUGraz.VectoCommon.Utils.Point;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
@@ -656,11 +658,83 @@ namespace TUGraz.VectoCore.Models.Declaration
 				public static readonly MeterPerSecond AllowedOverSpeed = 2.5.KMPHtoMeterPerSecond();
 			}
 
-			public static class EngineStopStart
+			public interface IEngineStopStart {
+				Second ActivationDelay { get; }
+				Second MaxEngineOffTimespan { get; }
+				double UtilityFactor   { get; } 
+			}
+			private class EngineStopStartLorry : IEngineStopStart
 			{
-				public static readonly Second ActivationDelay = 2.SI<Second>();
-				public static readonly Second MaxEngineOffTimespan = 120.SI<Second>();
-				public const double UtilityFactor = 0.8;
+				public Second ActivationDelay => 2.SI<Second>();
+				public Second MaxEngineOffTimespan => 120.SI<Second>();
+				public double UtilityFactor => 0.8;
+			}
+
+			private class EngineStopStartBus : IEngineStopStart
+			{
+				private const double ConventionalUF = 0.35;
+				private const double HybridElectrifiedCompressorUF = 0.65;
+				private const double HybridUF = 0.55;
+
+				public EngineStopStartBus(VectoSimulationJobType simType, CompressorDrive compressorDrive, ArchitectureID arch)
+				{
+					if (simType == VectoSimulationJobType.ConventionalVehicle) {
+						arch = ArchitectureID.UNKNOWN;
+					}
+
+					_jobType = simType;
+					_compressorDrive = compressorDrive;
+					_arch = arch;
+
+					if (_jobType == VectoSimulationJobType.ConventionalVehicle)
+					{
+						// P0 ???
+						UtilityFactor = ConventionalUF;
+					}
+
+
+					if (_compressorDrive == CompressorDrive.electrically) {
+						UtilityFactor = HybridElectrifiedCompressorUF;
+					}
+
+					UtilityFactor = HybridUF;
+				}
+				private CompressorDrive _compressorDrive;
+				private ArchitectureID _arch;
+				private readonly VectoSimulationJobType _jobType;
+				public Second ActivationDelay => 2.SI<Second>();
+				public Second MaxEngineOffTimespan => 12.SI<Second>();
+				public double UtilityFactor { get; }
+			}
+
+
+			public static IEngineStopStart GetEngineStopStartLorry()
+			{
+				return new EngineStopStartLorry();
+			}
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="hdvClass"></param>
+            /// <param name="jobType">only used for buses</param>
+			/// <param name="arch">only used for buses</param>
+            /// <param name="compressorDrive">only used for buses</param>
+            /// <returns></returns>
+            public static IEngineStopStart GetEngineStopStart(VehicleClass hdvClass, VectoSimulationJobType? jobType = null,  ArchitectureID? arch = null,
+				CompressorDrive? compressorDrive = null)
+			{
+
+				if (hdvClass.IsBus()) {
+					return GetEngineStopStartBus(jobType.Value, arch.Value, compressorDrive.Value);
+				} else {
+					return new EngineStopStartLorry();
+				}
+			}
+
+			public static IEngineStopStart GetEngineStopStartBus(VectoSimulationJobType jobType, ArchitectureID arch, CompressorDrive compressorDrive)
+			{
+				return new EngineStopStartBus(jobType, compressorDrive, arch);
 			}
 
 			public static class EcoRoll
