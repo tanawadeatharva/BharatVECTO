@@ -216,7 +216,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(0, superCapData.MinVoltage.Value());
 			Assert.AreEqual(330.0, superCapData.MaxVoltage.Value());
 			Assert.AreEqual(100, superCapData.MaxCurrentCharge.Value());
-			Assert.AreEqual(100, superCapData.MaxCurrentDischarge.Value());
+			Assert.AreEqual(-100, superCapData.MaxCurrentDischarge.Value());
 			Assert.AreEqual(initialSoC , superCapData.InitialSoC);
 			Assert.AreEqual(270.2703, superCapData.InternalResistance.Value(), 1e-4);
 		}
