@@ -318,8 +318,14 @@ public class TestXMLResultsWriting
 
 		var resultEntry = GetResultEntry(runData);
 		resultEntry.SetResultData(runData, modData, 1);
+		
+		if (jobType.GetPowertrainArchitectureType() == VectoSimulationJobTypeHelper.PureElectric) {
+			resultEntry.AuxHeaterFuel = FuelData.Diesel;
+			resultEntry.ZEV_FuelConsumption_AuxHtr = 1.SI<Kilogram>();
+			resultEntry.ZEV_CO2 = resultEntry.ZEV_FuelConsumption_AuxHtr * resultEntry.AuxHeaterFuel.CO2PerFuelWeight;
+		}
 
-		resultEntries.Add(resultEntry);
+        resultEntries.Add(resultEntry);
 
 		if (ovc && jobType.GetPowertrainArchitectureType() == VectoSimulationJobTypeHelper.Hybrid) {
 			var run2 = GetMockRunData(vehicleCategory, jobType, true, exempted, OvcHevMode.ChargeSustaining, fuels);
@@ -613,6 +619,7 @@ public class TestXMLResultsWriting
 			fc.Setup(x => x.Fuel).Returns(DeclarationData.FuelData.Lookup(fuelType, TankSystem.Liquefied));
 			fc.Setup(x => x.TotalFuelConsumptionCorrected).Returns(31.SI<Kilogram>() * factor * ovcFactor);
 			fc.Setup(x => x.EnergyDemand).Returns(31.SI<Kilogram>() * factor * ovcFactor * FuelData.Diesel.LowerHeatingValueVecto);
+			fc.Setup(x => x.FC_AUXHTR_KM).Returns(0.SI<KilogramPerMeter>());
 			fcCorrected.Add(fuelType, fc.Object);
 		}
 		mc.Setup(x => x.FuelCorrection).Returns(fcCorrected);
@@ -622,8 +629,9 @@ public class TestXMLResultsWriting
 
 		var elOvcFactor = ovcMode == OvcHevMode.ChargeSustaining ? 0 : 1.0;
 		mc.Setup(x => x.ElectricEnergyConsumption_SoC).Returns(200.SI(Unit.SI.Mega.Joule).Cast<WattSecond>() * elOvcFactor);
+		mc.Setup(x => x.ElectricEnergyConsumption_SoC_Corr).Returns(200.SI(Unit.SI.Mega.Joule).Cast<WattSecond>() * elOvcFactor);
 
-		return modData.Object;
+        return modData.Object;
 	}
 
 	private VectoRunData GetMockRunData(VehicleCategory vehicleCategory, VectoSimulationJobType jobType,
