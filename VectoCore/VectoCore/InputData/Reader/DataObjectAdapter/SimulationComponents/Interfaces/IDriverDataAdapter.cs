@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCore.Models.Declaration;
+﻿using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces
@@ -6,5 +7,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
     public interface IDriverDataAdapter
     {
         DriverData CreateDriverData(Segment segment);
-    }
+	}
+
+	public interface IDriverDataAdapterBus
+	{
+		DriverData CreateBusDriverData(Segment segment, VectoSimulationJobType jobType, ArchitectureID arch, CompressorDrive compressorDrive);
+	}
 }

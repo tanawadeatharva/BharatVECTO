@@ -4,6 +4,7 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -15,7 +16,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public interface IDeclarationDataAdapter
 	{
-		DriverData CreateDriverData(Segment segment);
+		
 
 		VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission first, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> keyValuePair, bool allowVocational);
 		
@@ -43,8 +44,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
     public interface ILorryDeclarationDataAdapter : IDeclarationDataAdapter
 	{
+		DriverData CreateDriverData(Segment segment);
 
-		AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData);
+        AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData);
 
 		PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData, IGearboxDeclarationInputData gbx);
 		PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto);
@@ -79,7 +81,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		IAuxiliaryConfig CreateBusAuxiliariesData(
 			Mission mission, IVehicleDeclarationInputData vehicleData, VectoRunData runData);
 
-		AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData);
+		DriverData CreateBusDriverData(Segment segment, VectoSimulationJobType jobType, ArchitectureID arch, CompressorDrive compressorDrive);
+
+
+        AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData);
 		
 		CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle,
 			IEngineModeDeclarationInputData engineMode, Mission mission);
@@ -104,8 +109,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 	public interface IGenericCompletedBusDeclarationDataAdapter : IDeclarationDataAdapter
 	{
 		AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment);
-
-		CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx,
+		DriverData CreateBusDriverData(Segment segment, VectoSimulationJobType jobType, ArchitectureID arch, CompressorDrive compressorDrive);
+        CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx,
 			Mission mission);
 
 		IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
@@ -131,7 +136,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 	{
 		IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle,
 			IVehicleDeclarationInputData completedVehicle, VectoRunData runData);
-
 		VehicleData CreateVehicleData(IVehicleDeclarationInputData primaryVehicle,
 			IVehicleDeclarationInputData completedVehicle, Segment segment, Mission mission,
 			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading);
@@ -149,9 +153,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission);
 		CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle, 
 			IEngineModeDeclarationInputData engineMode, Mission mission);
-		
-		
-		IEnumerable<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData,
+		DriverData CreateBusDriverData(Segment segment, VectoSimulationJobType jobType, ArchitectureID arch, CompressorDrive compressorDrive);
+
+        IEnumerable<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData,
 			IBusAuxiliariesDeclarationData busAuxInput, MissionType mission, VehicleClass segment, Meter vehicleLength,
 			int? numSteeredAxles, VectoSimulationJobType jobType);
 		IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle, IVehicleDeclarationInputData completedVehicle, VectoRunData simulationRunData);

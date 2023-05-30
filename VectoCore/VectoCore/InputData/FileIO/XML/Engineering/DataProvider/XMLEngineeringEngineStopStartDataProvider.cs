@@ -17,13 +17,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider {
 
 		public XMLEngineeringEngineStopStartDataProviderV10(IXMLEngineeringDriverData driverData, XmlNode node) : base(node) { }
 
-		public virtual Second ActivationDelay => GetDouble("ActivationDelay", DeclarationData.Driver.EngineStopStart.ActivationDelay.Value()).SI<Second>();
+		public virtual Second ActivationDelay => GetDouble("ActivationDelay", DeclarationData.Driver.GetEngineStopStartLorry().ActivationDelay.Value()).SI<Second>();
 
-		public virtual Second MaxEngineOffTimespan => GetDouble("MaxEngineOffTime", DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan.Value()).SI<Second>();
+		public virtual Second MaxEngineOffTimespan => GetDouble("MaxEngineOffTime", DeclarationData.Driver.GetEngineStopStartLorry().MaxEngineOffTimespan.Value()).SI<Second>();
 
-		public virtual double UtilityFactorStandstill => GetDouble("UtilityFactor", DeclarationData.Driver.EngineStopStart.UtilityFactor);
+		public virtual double UtilityFactorStandstill => GetDouble("UtilityFactor", DeclarationData.Driver.GetEngineStopStartLorry().UtilityFactor);
 
-		public double UtilityFactorDriving => GetDouble("UtilityFactorDriving", DeclarationData.Driver.EngineStopStart.UtilityFactor);
+		public double UtilityFactorDriving => GetDouble("UtilityFactorDriving", DeclarationData.Driver.GetEngineStopStartLorry().UtilityFactor);
 
 		protected XNamespace SchemaNamespace => NAMESPACE_URI;
 	}

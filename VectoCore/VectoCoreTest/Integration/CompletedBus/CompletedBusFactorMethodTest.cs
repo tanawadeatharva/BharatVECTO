@@ -900,9 +900,9 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertStopStartData(DriverData.EngineStopStartData engineStopStart)
 		{
-			Assert.AreEqual(DeclarationData.Driver.EngineStopStart.ActivationDelay, engineStopStart.EngineOffStandStillActivationDelay);
-			Assert.AreEqual(DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan, engineStopStart.MaxEngineOffTimespan);
-			Assert.AreEqual(DeclarationData.Driver.EngineStopStart.UtilityFactor, engineStopStart.UtilityFactorStandstill);
+			Assert.AreEqual(DeclarationData.Driver.GetEngineStopStartLorry().ActivationDelay, engineStopStart.EngineOffStandStillActivationDelay);
+			Assert.AreEqual(DeclarationData.Driver.GetEngineStopStartLorry().MaxEngineOffTimespan, engineStopStart.MaxEngineOffTimespan);
+			Assert.AreEqual(DeclarationData.Driver.GetEngineStopStartLorry().UtilityFactor, engineStopStart.UtilityFactorStandstill);
 		}
 
 		private void AssertEcoRoll(DriverData.EcoRollData ecoRoll)

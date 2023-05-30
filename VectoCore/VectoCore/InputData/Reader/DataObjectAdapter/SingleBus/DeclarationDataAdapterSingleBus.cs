@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 		{
 			public abstract GearboxType[] SupportedGearboxTypes { get; }
 
-			private IDriverDataAdapter _driverDataAdapter = new PrimaryBusDriverDataAdapter();
+			private IDriverDataAdapterBus _driverDataAdapter = new PrimaryBusDriverDataAdapter();
 			private SingleBusVehicleDataAdapter _vehicleDataAdapter = new SingleBusVehicleDataAdapter();
 			private IAxleGearDataAdapter _axleGearDataAdapter = new AxleGearDataAdapter();
 			private IRetarderDataAdapter _retarderDataAdapter = new RetarderDataAdapter();
@@ -89,10 +89,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 				return EngineDataAdapter.CreateEngineData(vehicle, engineMode, mission);
 			}
 
-			public virtual DriverData CreateDriverData(Segment segment)
+			public DriverData CreateBusDriverData(Segment segment, VectoSimulationJobType jobType, ArchitectureID arch,
+				CompressorDrive compressorDrive)
 			{
-				return _driverDataAdapter.CreateDriverData(segment);
+				return _driverDataAdapter.CreateBusDriverData(segment, jobType, arch, compressorDrive);
 			}
+
 
 			//public virtual AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gearboxInputData)
 			//{
