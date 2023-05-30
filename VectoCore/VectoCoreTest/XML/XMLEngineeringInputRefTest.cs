@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputEngineeringReferencedFileAsStream()
 		{
 			AssertHelper.Exception<VectoException>(() => {
@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			});
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputEngReferencedFile()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var fldMap = FullLoadCurveReader.Create(fldTable, true);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputGbxReferencedFile()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			//var fldMap = FullLoadCurveReader.Create(gears.First().FullLoadCurve, true);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputGbxTCReferencedFile()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("0.9", tcInputDataProvider.TCData.Rows[2][2]);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputAngledriveReferencedFile()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var lossMap = TransmissionLossMapReader.Create(lossMapData, angledriveInputData.Ratio, "Angledrive");
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputAxlGReferencedFile()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
@@ -192,7 +192,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var lossMap = TransmissionLossMapReader.Create(lossMapData, axlegearDataProvider.Ratio, "AxleGear");
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputRetarderReferencedFile()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
@@ -210,7 +210,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var lossMap = RetarderLossMapReader.Create(lossMapData);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputAxleWheelsReferencedFile()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
@@ -232,7 +232,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(0.488822, vehicleDataProvider.DynamicTyreRadius.Value(), 1e-6);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputAuxiliariesReferencedFile()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
@@ -253,7 +253,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			//Assert.AreEqual(3190, aux2.DemandMap.Rows[113].ParseDouble(AuxiliaryDataReader.Fields.SupplyPower));
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputADASReferencedFile()
 		{
 			//var reader = XmlReader.Create(EngineeringSampleFile);
@@ -265,7 +265,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsTrue(adas.OverSpeedData.Enabled);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestVehicleInputReferencedFile()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
@@ -305,7 +305,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMEngineering_DriverModelLACExt()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
@@ -319,7 +319,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("lac_velocityDrop.csv", Path.GetFileName(lac.CoastingDecisionFactorVelocityDropLookup.Source));
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMEngineering_PTO()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
