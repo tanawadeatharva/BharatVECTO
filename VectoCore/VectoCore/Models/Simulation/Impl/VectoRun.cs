@@ -141,18 +141,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Log.Error("SIMULATION RUN ABORTED! ========================");
 				Log.Error(vse);
 				Container.RunStatus = Status.Aborted;
-				var ex = new VectoSimulationException("{6} ({7} {8}) - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}",
+				var ex = new VectoSimulationException("{6} ({7} {8}) - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}, f_equiv:{9}",
 					vse, AbsTime, Container.MileageCounter.Distance, dt, Container.VehicleInfo.VehicleSpeed, 
-					TryCatch(() => Container.GearboxInfo.Gear), vse.Message, RunIdentifier, CycleName, RunSuffix);
+					TryCatch(() => Container.GearboxInfo.Gear), vse.Message, RunIdentifier, CycleName, RunSuffix, TryCatch(() => Container.RunData.HybridStrategyParameters.EquivalenceFactor));
 				Container.FinishSimulationRun(ex);
 				throw ex;
 			} catch (VectoException ve) {
 				Log.Error("SIMULATION RUN ABORTED! ========================");
 				Log.Error(ve);
 				Container.RunStatus = Status.Aborted;
-				var ex = new VectoSimulationException("{6} ({7} {8}) - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}",
+				var ex = new VectoSimulationException("{6} ({7} {8}) - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}, f_equiv:{9}",
 					ve, AbsTime, Container.MileageCounter.Distance, dt, Container.VehicleInfo.VehicleSpeed, 
-					TryCatch(() => Container.GearboxInfo.Gear), ve.Message, RunIdentifier, CycleName, RunSuffix);
+					TryCatch(() => Container.GearboxInfo.Gear), ve.Message, RunIdentifier, CycleName, RunSuffix, TryCatch(() => Container.RunData.HybridStrategyParameters.EquivalenceFactor));
 				try {
 					Container.FinishSimulationRun(ex);
 				} catch (Exception ve2) {
@@ -166,9 +166,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Log.Error(e);
 				Container.RunStatus = Status.Aborted;
 
-				var ex = new VectoSimulationException("{6} ({7} {8}) - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}",
+				var ex = new VectoSimulationException("{6} ({7} {8}) - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}, f_equiv:{9}",
 					e, AbsTime, Container.MileageCounter.Distance, dt, Container.VehicleInfo.VehicleSpeed, 
-					TryCatch(() => Container.GearboxInfo.Gear), e.Message, RunIdentifier, CycleName, RunSuffix);
+					TryCatch(() => Container.GearboxInfo.Gear), e.Message, RunIdentifier, CycleName, RunSuffix, TryCatch(() => Container.RunData.HybridStrategyParameters.EquivalenceFactor));
 				Container.FinishSimulationRun(ex);
 				throw ex;
 			}
@@ -209,9 +209,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						AbsTime, Container.MileageCounter.Distance, dt, RunIdentifier, CycleName, RunSuffix, Progress);
 
 				} else {
-					throw new VectoSimulationException("{5} ({6} {7}) Driving Cycle could not be finished. Progress: {8:P1} - absTime: {0:F1}, distance: {1:F1}, dt: {2:F1}, v: {3:F1}, Gear: {4}",
+					throw new VectoSimulationException("{5} ({6} {7}) Driving Cycle could not be finished. Progress: {8:P1} - absTime: {0:F1}, distance: {1:F1}, dt: {2:F1}, v: {3:F1}, Gear: {4}, f_equiv:{9}",
 						AbsTime, Container.MileageCounter.Distance, dt, Container.VehicleInfo.VehicleSpeed,
-						TryCatch(() => Container.GearboxInfo.Gear), RunIdentifier, CycleName, RunSuffix, Progress);
+						TryCatch(() => Container.GearboxInfo.Gear), RunIdentifier, CycleName, RunSuffix, Progress, TryCatch(() => Container.RunData.HybridStrategyParameters.EquivalenceFactor));
 				}
 			}
 			IterationStatistics.FinishSimulation(RunName + CycleName + RunSuffix + RunIdentifier);
