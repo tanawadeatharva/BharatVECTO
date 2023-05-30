@@ -28,7 +28,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public virtual DrivingCycleData GetDeclarationCycle(Mission mission)
 		{
-			return CyclesCache.GetOrAdd(mission.MissionType, ReadDeclarationCycle);
+			return ReadDeclarationCycle(mission.MissionType);
+
+			//return CyclesCache.GetOrAdd(mission.MissionType, ReadDeclarationCycle);
+
 		}
 
 		protected virtual DrivingCycleData ReadDeclarationCycle(MissionType missionType)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -42,8 +43,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 	public class TestDeclarationCycleFactoryVariant : IDeclarationCycleFactory
 	{
 		private const string BASE_PATH = "Resources/Missions/";
+		public static readonly ConcurrentDictionary<MissionType, DrivingCycleData> CyclesCache =
+			new ConcurrentDictionary<MissionType, DrivingCycleData>();
 
-		public TestDeclarationCycleFactoryVariant()
+
+        public TestDeclarationCycleFactoryVariant()
 		{
 
 		}
@@ -52,6 +56,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public virtual DrivingCycleData GetDeclarationCycle(Mission mission)
 		{
+			//return CyclesCache.GetOrAdd(mission.MissionType, ReadDeclarationCycle);
+            
+			
+			
 			return ReadDeclarationCycle(mission.MissionType);
 		}
 
