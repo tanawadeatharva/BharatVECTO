@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 
             SetReesCorrectionDemand(modData, runData, r);
 
-            var kilogramCO2PerMeter = 0.SI<KilogramPerMeter>();
+            var kilogramCO2 = 0.SI<Kilogram>();
 
             var firstFuel = true;
             foreach (var fuel in modData.FuelData) {
@@ -127,14 +127,13 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
                     f.FcAuxHtr = r.AuxHeaterDemand / fuel.LowerHeatingValueVecto;
                 }
 
-                kilogramCO2PerMeter += distance == null || distance.IsEqual(0)
-                    ? 0.SI<KilogramPerMeter>()
-                    : f.FcFinal * fuel.CO2PerFuelWeight / distance;
+                kilogramCO2 += f.FcFinal * fuel.CO2PerFuelWeight;
 
                 r.FuelCorrection[fuel.FuelType] = f;
             }
 
-            r.KilogramCO2PerMeter = kilogramCO2PerMeter;
+            r.CO2Total = kilogramCO2;
+            r.KilogramCO2PerMeter = distance == null || distance.IsEqual(0) ? null : kilogramCO2 / distance;
             return r;
         }
 
