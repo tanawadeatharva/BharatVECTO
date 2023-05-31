@@ -209,12 +209,14 @@ public class PrimaryBusSimulation
 	public void CompletedBusCycleSection(string vifFile, string completed, double start,
 		double? distance = null)
 	{
-		Kernel.Rebind<IDeclarationCycleFactory>().To<TestDeclarationCycleFactoryStartPoint>().InSingletonScope();
-		var cycleFactory = Kernel.Get<IDeclarationCycleFactory>() as TestDeclarationCycleFactoryStartPoint;
+#if FULL_SIMULATIONS
+		Assert.Ignore();
+#endif
+		var cycleFactory = StartPointCycleFactory();
 
 		var missionFilter = TestMissionFilter();
 		missionFilter?.SetMissions((MissionType.Interurban, LoadingType.ReferenceLoad));
-		cycleFactory!.SetStartPoint(MissionType.Interurban, start.SI<Meter>(), true, distance?.SI<Meter>());
+		cycleFactory?.SetStartPoint(MissionType.Interurban, start.SI<Meter>(), true, distance?.SI<Meter>());
 		var completedJob = GenerateJsonJobCompletedBus(Path.Combine(BASE_DIR_VIF, vifFile),
 			Path.Combine(BASE_DIR_COMPLETED, completed));
 
@@ -470,6 +472,10 @@ public class PrimaryBusSimulation
 	}
 	public void RunSimulationPrimary(string jobFile, int runIdx, out string vifFile, params Action<VectoRunData>[] runDataModifier)
 	{
+#if FULL_SIMULATIONS
+		runIdx = -1;
+#endif
+
 		var filePath = Path.Combine(BASE_DIR, jobFile);
 		var dataProvider = _xmlReader.CreateDeclaration(filePath);
 		var fileWriter = new FileOutputWriter(filePath);
@@ -630,7 +636,7 @@ public class PrimaryBusSimulation
 	{
 
 #if FULL_SIMULATIONS
-		Assert.Ignore();
+		Assert.Ignore($"");
 #endif
 
         var missionFilter = TestMissionFilter();

@@ -233,7 +233,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			try {
 				return action();
-			} catch (VectoException e) {
+			} catch (Exception e) {
 				LogManager.GetLogger(typeof(VectoRun).FullName).Info(e);
 				return null;
 			}
