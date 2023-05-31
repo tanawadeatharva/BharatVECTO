@@ -458,7 +458,11 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 			Assert.IsNotNull(genericAxlegearData.AxleGear.LossMap);
 			AssertAxlegearLossMap(genericAxlegearData.AxleGear.LossMap);
-			Assert.AreEqual(genericAxlegearData.AxleGear.LossMap, specificAxlegearData.AxleGear.LossMap);
+			var zipped =
+				genericAxlegearData.AxleGear.LossMap.LossMapSerialized.Zip(specificAxlegearData.AxleGear.LossMap
+					.LossMapSerialized);
+			Assert.IsTrue(zipped.All(x => x.First.Equals(x.Second, StringComparison.InvariantCultureIgnoreCase)));
+			//Assert(genericAxlegearData.AxleGear.LossMap.LossMapSerialized, specificAxlegearData.AxleGear.LossMap.LossMapSerialized);
 		}
 
 		private void AssertAxlegearLossMap(TransmissionLossMap lossMap)
@@ -861,7 +865,9 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(RetarderType.TransmissionOutputRetarder, genericRetarder.Type);
 			Assert.AreEqual(genericRetarder.Type, specificRetarder.Type);
 
-			Assert.AreEqual(genericRetarder.LossMap, specificRetarder.LossMap);
+			var zipped = genericRetarder.LossMap.LossMapSerialized.Zip(specificRetarder.LossMap.LossMapSerialized);
+			Assert.IsTrue(zipped.All(x => x.First.Equals(x.Second, StringComparison.InvariantCultureIgnoreCase)));
+			//Assert.AreEqual(genericRetarder.LossMap, specificRetarder.LossMap);
 		}
 
 		#endregion
@@ -900,9 +906,12 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertStopStartData(DriverData.EngineStopStartData engineStopStart)
 		{
-			Assert.AreEqual(DeclarationData.Driver.GetEngineStopStartLorry().ActivationDelay, engineStopStart.EngineOffStandStillActivationDelay);
-			Assert.AreEqual(DeclarationData.Driver.GetEngineStopStartLorry().MaxEngineOffTimespan, engineStopStart.MaxEngineOffTimespan);
-			Assert.AreEqual(DeclarationData.Driver.GetEngineStopStartLorry().UtilityFactor, engineStopStart.UtilityFactorStandstill);
+			var declarationValues = DeclarationData.Driver.GetEngineStopStartBus(
+				VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, CompressorDrive.mechanically);
+
+            Assert.AreEqual(declarationValues.ActivationDelay, engineStopStart.EngineOffStandStillActivationDelay);
+			Assert.AreEqual(declarationValues.MaxEngineOffTimespan, engineStopStart.MaxEngineOffTimespan);
+			Assert.AreEqual(declarationValues.UtilityFactor, engineStopStart.UtilityFactorStandstill);
 		}
 
 		private void AssertEcoRoll(DriverData.EcoRollData ecoRoll)
