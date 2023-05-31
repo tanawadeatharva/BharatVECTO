@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			public virtual ShiftStrategyParameters CreateGearshiftData(double axleRatio,
 				PerSecond engineIdlingSpeed, GearboxType gearboxType, int gearsCount)
 			{
-				return GearboxDataAdapter.CreateGearshiftData(axleRatio, null, gearboxType, gearsCount);
+				return GearboxDataAdapter.CreateGearshiftData(axleRatio, engineIdlingSpeed, gearboxType, gearsCount);
 			}
 
 			public RetarderData CreateRetarderData(IRetarderInputData retarderData, PowertrainPosition position)
