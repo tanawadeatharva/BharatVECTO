@@ -166,8 +166,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(2, batterySystemData.Batteries.Count);
 
 			var battery0 = batterySystemData.Batteries[0];
-			Assert.AreEqual(0.9275, battery0.Item2.MaxSOC, 1e-6);
-			Assert.AreEqual(0.0725, battery0.Item2.MinSOC, 1e-6);
+			Assert.AreEqual(0.785, battery0.Item2.MaxSOC, 1e-6);
+			Assert.AreEqual(0.215, battery0.Item2.MinSOC, 1e-6);
 			Assert.AreEqual(72, battery0.Item2.Capacity.AsAmpHour);
 			Assert.AreEqual(2, battery0.Item2.InternalResistance.Entries.Length);
 			
@@ -185,8 +185,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(resistance, battery0.Item2.InternalResistance.Entries[1].Resistance[2].Item2.Value());
 
 			var battery1 = batterySystemData.Batteries[1];
-			Assert.AreEqual(0.9275, battery1.Item2.MaxSOC, 1e-6);
-			Assert.AreEqual(0.0725, battery1.Item2.MinSOC, 1e-6);
+			Assert.AreEqual(0.785, battery1.Item2.MaxSOC, 1e-6);
+			Assert.AreEqual(0.215, battery1.Item2.MinSOC, 1e-6);
 			Assert.AreEqual(72, battery1.Item2.Capacity.AsAmpHour);
 			Assert.AreEqual(2, battery1.Item2.InternalResistance.Entries.Length);
 			
