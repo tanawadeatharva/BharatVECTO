@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<VectoOutputMultistep xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" 
-xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
- xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
- xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3"   
- xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4"   
- xmlns:vif0.1="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" 
- xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 ./../../../../../VectoCore/Resources/XSD/VectoOutputMultistep.0.1.xsd">
+<VectoOutputMultistep xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:vif0.1="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 v:\vectocore/VectoCore/Resources/XSD/VectoOutputMultistep.0.1.xsd">
 	<PrimaryVehicle>
 		<Data xsi:type="PrimaryVehicleDataType" id="VIF-04fd187f166a4d89aa84">
 			<Vehicle xsi:type="ConventionalVehicleVIFType">
@@ -100,6 +92,15 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 							</Gears>
 						</Data>
 					</Transmission>
+					<TorqueConverter>
+						<Data xsi:type="vif0.1:TorqueConverterDataVIFType">
+							<Manufacturer>some manufacturer</Manufacturer>
+							<Model>some model</Model>
+							<CertificationMethod>Standard values</CertificationMethod>
+							<Date>2017-02-15T11:00:00Z</Date>
+							<AppVersion>app 1.0</AppVersion>
+						</Data>
+					</TorqueConverter>
 					<Axlegear>
 						<Data xsi:type="AxlegearDataVIFType">
 							<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
@@ -235,7 +236,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">22.31983</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
@@ -249,7 +249,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">26.95463</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
@@ -263,7 +262,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">17.92708</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
@@ -277,7 +275,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">21.70502</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
@@ -291,7 +288,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">15.43924</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
@@ -305,7 +301,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">18.60503</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
@@ -319,7 +314,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">13.13927</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
@@ -333,7 +327,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">14.79162</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
@@ -347,7 +340,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">23.49056</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
@@ -361,7 +353,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">28.74258</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
@@ -375,7 +366,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">18.83855</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
@@ -389,7 +379,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">23.12983</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
@@ -403,7 +392,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">16.15304</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
@@ -417,7 +405,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">19.66023</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P32SD</PrimaryVehicleSubgroup>
@@ -431,7 +418,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">13.51319</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P32SD</PrimaryVehicleSubgroup>
@@ -445,7 +431,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">15.04580</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P32SD</PrimaryVehicleSubgroup>
@@ -459,7 +444,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">11.27604</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P32SD</PrimaryVehicleSubgroup>
@@ -473,7 +457,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">11.75632</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P32DD</PrimaryVehicleSubgroup>
@@ -487,7 +470,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">14.03138</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P32DD</PrimaryVehicleSubgroup>
@@ -501,7 +483,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">15.76592</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P32DD</PrimaryVehicleSubgroup>
@@ -515,7 +496,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">11.77104</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P32DD</PrimaryVehicleSubgroup>
@@ -529,7 +509,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">12.34058</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 			</Results>
 			<ApplicationInformation>
