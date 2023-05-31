@@ -1,4 +1,4 @@
-﻿// #define FULL_SIMULATIONS
+﻿#define FULL_SIMULATIONS
 
 
 
@@ -628,7 +628,12 @@ public class PrimaryBusSimulation
 	public void PrimaryBusCycleSection(string primaryFile, MissionType cycle, LoadingType loading,
 		double startDistance_m, double f_equiv)
 	{
-		var missionFilter = TestMissionFilter();
+
+#if FULL_SIMULATIONS
+		Assert.Ignore();
+#endif
+
+        var missionFilter = TestMissionFilter();
 		missionFilter.SetMissions((cycle, loading));
 
 		var cycleFactory = StartPointCycleFactory();
