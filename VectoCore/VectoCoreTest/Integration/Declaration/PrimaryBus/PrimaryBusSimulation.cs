@@ -1,6 +1,4 @@
-﻿
-
-#define FULL_SIMULATIONS
+﻿// #define FULL_SIMULATIONS
 
 
 
@@ -90,6 +88,22 @@ public class PrimaryBusSimulation
 		return missionFilter;
 	}
 
+	private TestDeclarationCycleFactoryStartPoint StartPointCycleFactory()
+	{
+#if !FULL_SIMULATIONS
+		Kernel.Rebind<IDeclarationCycleFactory>().To<TestDeclarationCycleFactoryStartPoint>().InSingletonScope();
+#endif
+        var missionFilter = Kernel.Get<IDeclarationCycleFactory>() as TestDeclarationCycleFactoryStartPoint;
+#if FULL_SIMULATIONS
+		Assert.Null(missionFilter);
+		TestContext.Progress.WriteLine("Running full cycle");
+#else
+		Assert.NotNull(missionFilter);
+		
+#endif
+		return missionFilter;
+    }
+
 
     [
 	TestCase(@"PrimaryBus/Conventional/primary_heavyBus group41_nonSmart.xml", 0, TestName = "2nd Amendment PrimaryBus Conventional"),
@@ -134,7 +148,7 @@ public class PrimaryBusSimulation
 	TestCase(@"FactorMethod\PEV\P31_32_E2_AMT_FESG.xml", 0, TestName = "2nd Amendment PrimaryBus FM PEV E2 FESG"),
 
 	TestCase(@"FactorMethod\P-HEV\P1-HEV\P31_32_P1_HEV_AT_nonSmart_ES_elec_SP_elec_PS.xml", 0, TestName = "2nd Amendment PrimaryBus FM P-HEV P1 nonSmartES_elFan_elPS"),
-	TestCase(@"FactorMethod\P-HEV\P1-HEV\P31_32_P1_HEV_AT_nonSmart_ES_mech_Aux.xml", 0, TestName = "2nd Amendment PrimaryBus FM P-HEV P1 nonSmartES_mechAux"),
+	TestCase(@"FactorMethod\P-HEV\P1-HEV\P31_32_P1_HEV_AT_nonSmart_ES_mech_Aux.xml", -1, TestName = "2nd Amendment PrimaryBus FM P-HEV P1 nonSmartES_mechAux"),
 	TestCase(@"FactorMethod\P-HEV\P1-HEV\P31_32_P1_HEV_AT_Smart_ES_elec_SP_elec_PS.xml", 0, TestName = "2nd Amendment PrimaryBus FM P-HEV P1 SmartES_elPS_elSteer"),
 	
 	TestCase(@"FactorMethod\P-HEV\P2-HEV\P31_32_P2_HEV_nonSmartES_elec_SP_elec_Fan.xml", 0, TestName = "2nd Amendment PrimaryBus FM P-HEV P2 nonSmartES_elFan_elSteer"),
@@ -151,18 +165,18 @@ public class PrimaryBusSimulation
 	}
 	
 	[
-	TestCase(@"CompletedBus\VIF\primary_heavyBus group41_nonSmart.RSLT_VIF.xml", @"CompletedBus\Conventional_completedBus_2.xml", 1,   TestName = "2nd Amendment CompletedBus Conventional"),
-	TestCase(@"CompletedBus\VIF\PEV_primaryBus_AMT_E2.RSLT_VIF.xml",             @"CompletedBus\PEV_completedBus_2.xml", -1,           TestName = "2nd Amendment CompletedBus PEV E2"),
-	TestCase(@"CompletedBus\VIF\PrimaryCoach_E2_Base_AMT.RSLT_VIF.xml",          @"CompletedBus\PEV_completedBus_2.xml", 1,                     TestName = "2nd Amendment CompletedBus Coach PEV E2"),
-	TestCase(@"CompletedBus\VIF\PrimaryCityBus_IEPC_Base.RSLT_VIF.xml",          @"CompletedBus\PEV_completedBus_2.xml", 1,                     TestName = "2nd Amendment CompletedBus CityBus PEV IEPC"),
-	TestCase(@"CompletedBus\VIF\PrimaryCoach_P2_HEV_Base_AMT.RSLT_VIF.xml",      @"CompletedBus\HEV_completedBus_2.xml", 1,                 TestName = "2nd Amendment CompletedBus Coach HEV P2"),
-	TestCase(@"CompletedBus\VIF\PrimaryCoach_P2_HEV_AMT_OVC.RSLT_VIF.xml",       @"CompletedBus\HEV_completedBus_2.xml", 1,                  TestName = "2nd Amendment CompletedBus Coach HEV P2 OVC"),
-	TestCase(@"CompletedBus\VIF\PrimaryCityBus_P1_HEV_Base_AT.RSLT_VIF.xml",     @"CompletedBus\HEV_completedBus_2.xml", 1,true,   TestName = "2nd Amendment CompletedBus CityBus HEV P1 - fails on complete cycle"),
-	TestCase(@"CompletedBus\VIF\PrimaryCityBus_P1_HEV_Supercap.RSLT_VIF.xml",    @"CompletedBus\HEV_completedBus_2.xml", 1, false, TestName = "2nd Amendment CompletedBus CityBus HEV P1 SuperCap"),
-	TestCase(@"CompletedBus\VIF\PrimaryCoach_S2_Base_AMT.RSLT_VIF.xml",          @"CompletedBus\HEV_completedBus_2.xml", 1,                     TestName = "2nd Amendment CompletedBus Coach HEV S2 OVC"),
-	TestCase(@"CompletedBus\VIF\PrimaryCityBus_IEPC-S_Base.RSLT_VIF.xml",        @"CompletedBus\HEV_completedBus_2.xml", 1,                   TestName = "2nd Amendment CompletedBus CityBus HEV IEPC-S"),
-	TestCase(@"CompletedBus\VIF\exempted_primary_heavyBus.RSLT_VIF.xml",         @"CompletedBus\exempted_completedBus_input_full.xml", 1,      TestName = "2nd Amendment CompletedBus Exempted"),
-	TestCase(@"CompletedBus\VIF\PrimaryCityBus_IHPC.RSLT_VIF.xml",               @"CompletedBus\HEV_completedBus_2.xml", -1,                         TestName="2nd Amendment Completed Bus IHPC"),
+	TestCase(@"CompletedBus\VIF\primary_heavyBus group41_nonSmart.RSLT_VIF.xml", @"CompletedBus\Conventional_completedBus_2.xml",                1,                 TestName = "2nd Amendment CompletedBus Conventional"),
+	TestCase(@"CompletedBus\VIF\PEV_primaryBus_AMT_E2.RSLT_VIF.xml",             @"CompletedBus\PEV_completedBus_2.xml",                        -1,                 TestName = "2nd Amendment CompletedBus PEV E2"),
+	TestCase(@"CompletedBus\VIF\PrimaryCoach_E2_Base_AMT.RSLT_VIF.xml",          @"CompletedBus\PEV_completedBus_2.xml",                         1,                 TestName = "2nd Amendment CompletedBus Coach PEV E2"),
+	TestCase(@"CompletedBus\VIF\PrimaryCityBus_IEPC_Base.RSLT_VIF.xml",          @"CompletedBus\PEV_completedBus_2.xml",                         1,                 TestName = "2nd Amendment CompletedBus CityBus PEV IEPC"),
+	TestCase(@"CompletedBus\VIF\PrimaryCoach_P2_HEV_Base_AMT.RSLT_VIF.xml",      @"CompletedBus\HEV_completedBus_2.xml",                         1,                 TestName = "2nd Amendment CompletedBus Coach HEV P2"),
+	TestCase(@"CompletedBus\VIF\PrimaryCoach_P2_HEV_AMT_OVC.RSLT_VIF.xml",       @"CompletedBus\HEV_completedBus_2.xml",                         1,                 TestName = "2nd Amendment CompletedBus Coach HEV P2 OVC"),
+	TestCase(@"CompletedBus\VIF\PrimaryCityBus_P1_HEV_Base_AT.RSLT_VIF.xml",     @"CompletedBus\HEV_completedBus_2.xml",                         1,true,    TestName = "2nd Amendment CompletedBus CityBus HEV P1 - fails on complete cycle"),
+	TestCase(@"CompletedBus\VIF\PrimaryCityBus_P1_HEV_Supercap.RSLT_VIF.xml",    @"CompletedBus\HEV_completedBus_2.xml",                         1,false,   TestName = "2nd Amendment CompletedBus CityBus HEV P1 SuperCap"),
+	TestCase(@"CompletedBus\VIF\PrimaryCoach_S2_Base_AMT.RSLT_VIF.xml",          @"CompletedBus\HEV_completedBus_2.xml",                         1,                 TestName = "2nd Amendment CompletedBus Coach HEV S2 OVC"),
+	TestCase(@"CompletedBus\VIF\PrimaryCityBus_IEPC-S_Base.RSLT_VIF.xml",        @"CompletedBus\HEV_completedBus_2.xml",                         1,                 TestName = "2nd Amendment CompletedBus CityBus HEV IEPC-S"),
+	TestCase(@"CompletedBus\VIF\exempted_primary_heavyBus.RSLT_VIF.xml",         @"CompletedBus\exempted_completedBus_input_full.xml",           1,                 TestName = "2nd Amendment CompletedBus Exempted"),
+	TestCase(@"CompletedBus\VIF\PrimaryCityBus_IHPC.RSLT_VIF.xml",               @"CompletedBus\HEV_completedBus_2.xml",                        -1,                 TestName="2nd Amendment Completed Bus IHPC"),
 
 	TestCase(@"FactorMethod\VIF\P31_32_nonSmartES_elecFan_elecSteer.RSLT_VIF.xml", @"FactorMethod\Conventional\Conventional_32e_prim_Dim_HVAC.xml", 0,
 		TestName = "2nd Amendment CompletedBus Conventional nonSmartES_elFan_elSteer 32e_prim_Dim_HVAC"),
@@ -450,11 +464,11 @@ public class PrimaryBusSimulation
 		return fileWriter.GetWrittenFiles()[ReportType.DeclarationReportMultistageVehicleXML];
 	}
 
-	public void RunSimulationPrimary(string jobFile, int runIdx)
+	public void RunSimulationPrimary(string jobFile, int runIdx, params Action<VectoRunData>[] runDataModifier)
 	{
 		RunSimulationPrimary(jobFile, runIdx, out var _);
 	}
-	public void RunSimulationPrimary(string jobFile, int runIdx, out string vifFile)
+	public void RunSimulationPrimary(string jobFile, int runIdx, out string vifFile, params Action<VectoRunData>[] runDataModifier)
 	{
 		var filePath = Path.Combine(BASE_DIR, jobFile);
 		var dataProvider = _xmlReader.CreateDeclaration(filePath);
@@ -462,14 +476,22 @@ public class PrimaryBusSimulation
 		var simFactory = Kernel.Get<ISimulatorFactoryFactory>();
 		var runsFactory = simFactory.Factory(ExecutionMode.Declaration, dataProvider, fileWriter, null, null);
 		runsFactory.WriteModalResults = true;
-		runsFactory.SerializeVectoRunData = true;
+		//runsFactory.SerializeVectoRunData = true;
 		var jobContainer = new JobContainer(new SummaryDataContainer(fileWriter)) { };
 		//var jobContainer = new JobContainer(new MockSumWriter()) { };
-
+		var runs = runsFactory.SimulationRuns();
+		foreach (var vectoRun in runs) {
+			foreach (var action in runDataModifier) {
+				action(vectoRun.GetContainer().RunData);
+			}
+		}
 		if (runIdx < 0) {
-			jobContainer.AddRuns(runsFactory);
+			foreach (var run in runs) {
+				jobContainer.AddRun(run);
+			}
+			//jobContainer.AddRuns(runsFactory);
 		} else {
-			var run = runsFactory.SimulationRuns().Skip(runIdx).First();
+			var run = runs.Skip(runIdx).First();
 			jobContainer.AddRun(run);
 			TestContext.Progress.WriteLine($"{run.CycleName} - {run.RunSuffix}");
 			var expectedResults = 1;
@@ -596,4 +618,36 @@ public class PrimaryBusSimulation
 			TestContext.AddTestAttachment(keyValuePair.Value, keyValuePair.Key.ToString());
 		}
 	}
+
+	[TestCase(@"PrimaryBus/P-HEV/PrimaryCityBus_P1_HEV_Base_AT.xml",
+		MissionType.Interurban,
+		LoadingType.ReferenceLoad,
+		53800,
+		0.1,
+		TestName = "2nd Amendment PrimaryBus P-HEV P1, Interurban selected section")]
+	public void PrimaryBusCycleSection(string primaryFile, MissionType cycle, LoadingType loading,
+		double startDistance_m, double f_equiv)
+	{
+		var missionFilter = TestMissionFilter();
+		missionFilter.SetMissions((cycle, loading));
+
+		var cycleFactory = StartPointCycleFactory();
+		cycleFactory.SetStartPoint(startDistance_m.SI<Meter>());
+
+
+
+		RunSimulationPrimary(primaryFile, -1, runData => {
+			if (runData.HybridStrategyParameters != null) {
+				var factorCharge = runData.HybridStrategyParameters.EquivalenceFactorCharge /
+									runData.HybridStrategyParameters.EquivalenceFactor;
+				var factorDischarge = runData.HybridStrategyParameters.EquivalenceFactorDischarge /
+									runData.HybridStrategyParameters.EquivalenceFactor;
+				runData.HybridStrategyParameters.EquivalenceFactor = f_equiv;
+				runData.HybridStrategyParameters.EquivalenceFactorDischarge = f_equiv * factorDischarge;
+				runData.HybridStrategyParameters.EquivalenceFactorCharge = f_equiv * factorCharge;
+            }
+		});
+
+
+    }
 }
