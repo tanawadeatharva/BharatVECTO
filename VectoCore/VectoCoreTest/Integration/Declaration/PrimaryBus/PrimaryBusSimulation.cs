@@ -123,7 +123,7 @@ public class PrimaryBusSimulation
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCityBus_P1_HEV_Base_AT.xml", 0, TestName = "2nd Amendment PrimaryBus CityBus P-HEV P1 Base AT"),
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCityBus_P1_HEV_Supercap.xml", 0, TestName = "2nd Amendment PrimaryBus CityBus P-HEV P1 Supercap"),
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCityBus_P1_HEV_Base_AT.xml", 7, TestName = "2nd Amendment PrimaryBus CityBus P-HEV P1 Base AT - Interurban"),
-    TestCase(@"PrimaryBus/P-HEV/PrimaryCityBus_P1_HEV_AT_BD_BCVC.xml", 0, TestName= "2nd Amendment PrimaryBus CityBus P-HEV P1 Base AT - no TC"),
+    //TestCase(@"PrimaryBus/P-HEV/PrimaryCityBus_P1_HEV_AT_BD_BCVC.xml", 0, TestName= "2nd Amendment PrimaryBus CityBus P-HEV P1 Base AT - no TC"), // Px has to have a TC (in case of APT)
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCityBus_IHPC.xml", -1, TestName = "2nd Amendment PrimaryBus CityBus P-HEV IHPC Base"),
     TestCase(@"PrimaryBus/S-HEV/PrimaryCoach_S2_Base_AMT.xml", 0, TestName = "2nd Amendment PrimaryBus Coach S-HEV S2 Base"),
 	TestCase(@"PrimaryBus/S-HEV/PrimaryCityBus_IEPC-S_Base.xml", 0, TestName = "2nd Amendment PrimaryBus CityBus S-HEV IEPC Base"),
