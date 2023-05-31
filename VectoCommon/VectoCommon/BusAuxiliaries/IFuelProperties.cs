@@ -18,6 +18,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 		JoulePerKilogramm LowerHeatingValueVectoEngine { get; }
 
 		double HeatingValueCorrection { get; }
+		double CO2PerFuelWeightVTP { get; }
 
 		string GetLabel();
 	}

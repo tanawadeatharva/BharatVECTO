@@ -192,22 +192,23 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 
             //Fuels
-            result.FuelData = specific.FuelData;
+			result.FuelData = primary.EnergyConsumption.Keys.Select(x =>
+				DeclarationData.FuelData.Lookup(x, specific.VectoRunData.VehicleData.InputData.TankSystem)).ToList(); //specific.FuelData;
             var co2Sum = 0.SI<Kilogram>();
 
-            foreach (var fuel in generic.FuelData.Select(f => f.FuelType))
-            {
+			var fuel = specific.FuelData.First();
+			var fuelFactor = CalculateFactor(combinedResults, r => r.FuelConsumptionFinal(fuel.FuelType).TotalFuelConsumptionCorrected);
 
-                var fuelFactor = CalculateFactor(combinedResults, r => r.FuelConsumptionFinal(fuel).TotalFuelConsumptionCorrected);
-                var energyDemand =
-                    fuelFactor * (primary.EnergyConsumption[fuel] * specific.Distance);
+            foreach (var entry in primary.EnergyConsumption)//generic.FuelData.Select(f => f.FuelType))
+            {
+				var energyDemand = fuelFactor * (entry.Value * specific.Distance);
                 var fuelConsumption = new CompletedBusFuelConsumption()
                 {
-                    Fuel = specific.FuelData.Single(f => f.FuelType == fuel),
+                    Fuel = DeclarationData.FuelData.Lookup(entry.Key, specific.VectoRunData.VehicleData.InputData.TankSystem), // specific.FuelData.Single(f => f.FuelType == fuel),
                     EnergyDemand = energyDemand,
                 };
                 co2Sum += fuelConsumption.TotalFuelConsumptionCorrected * fuelConsumption.Fuel.CO2PerFuelWeight;
-                result.CorrectedFinalFuelConsumption.Add(fuel, fuelConsumption);
+                result.CorrectedFinalFuelConsumption.Add(entry.Key, fuelConsumption);
             }
             result.CO2Total = co2Sum;
 

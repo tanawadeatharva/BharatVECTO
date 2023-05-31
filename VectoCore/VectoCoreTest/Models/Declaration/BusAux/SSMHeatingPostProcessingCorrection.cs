@@ -58,7 +58,7 @@ public class SSMHeatingPostProcessingCorrection
 										"2500,0,3800\n" +
 										"2500,1000,32000\n";
 
-	protected static readonly FuelData.Entry Fuel = FuelData.Diesel;
+	protected static readonly IFuelProperties Fuel = FuelData.Diesel;
 
 
 

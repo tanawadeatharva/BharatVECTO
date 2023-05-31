@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		IList<IFuelProperties> IModalDataContainer.FuelData => FuelColumns.Keys.ToList();
 
-		public FuelData.Entry FuelData => VectoCore.Models.Declaration.FuelData.Diesel;
+		public IFuelProperties FuelData => VectoCore.Models.Declaration.FuelData.Diesel;
 
 		public VectoRun.Status RunStatus => VectoRun.Status.Success;
 
