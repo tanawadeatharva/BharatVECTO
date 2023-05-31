@@ -529,9 +529,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					var runsFactory = _simFactoryFactory.Factory(mode, input, fileWriter, null, null);
 					//var runsFactory = SimulatorFactory.CreateSimulatorFactory(mode, input, fileWriter);
 					runsFactory.WriteModalResults = Settings.Default.WriteModalResults;
-					runsFactory.ModalResults1Hz = Settings.Default.ModalResults1Hz;
+					runsFactory.ModalResults1Hz = false; //Settings.Default.ModalResults1Hz;
 					runsFactory.Validate = Settings.Default.Validate;
-					runsFactory.ActualModalData = Settings.Default.ActualModalData;
+					runsFactory.ActualModalData = false; //Settings.Default.ActualModalData;
 					runsFactory.SerializeVectoRunData = Settings.Default.SerializeVectoRunData;
 
 					var stopwatch = new Stopwatch();

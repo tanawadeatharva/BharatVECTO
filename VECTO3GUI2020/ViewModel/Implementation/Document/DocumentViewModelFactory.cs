@@ -15,18 +15,21 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
 		private readonly IDeclarationInputViewModelFactory _declarationInputViewModelFactory;
 		private readonly INewDocumentViewModelFactory _newDocumentViewModelFactory;
 		private readonly IPrimaryAndStageInputViewModelFactory _primaryAndStageViewModelFactory;
+		private readonly ICreateVifViewModelFactory _createVifViewModelFactory;
 
 
-        public DocumentViewModelFactory(
+		public DocumentViewModelFactory(
 			IMultiStepInputViewModelFactory multiStepInputFactory, 
 			IDeclarationInputViewModelFactory declarationInputViewModelFactory, 
 			INewDocumentViewModelFactory newDocumentViewModelFactory,
-			IPrimaryAndStageInputViewModelFactory primaryAndStageFactory)
+			IPrimaryAndStageInputViewModelFactory primaryAndStageFactory,
+			ICreateVifViewModelFactory createVifViewModelFactory)
 		{
 			_multistepInputFactory = multiStepInputFactory;
 			_declarationInputViewModelFactory = declarationInputViewModelFactory;
 			_newDocumentViewModelFactory = newDocumentViewModelFactory;
 			_primaryAndStageViewModelFactory = primaryAndStageFactory;
+			_createVifViewModelFactory = createVifViewModelFactory;
 		}
 
 
@@ -75,7 +78,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
         /// <returns></returns>
         private IDocumentViewModel CreateVifViewModel(IMultistageVIFInputData createVif)
 		{
-			throw new VectoException($"No viewmodel for {nameof(IMultistageVIFInputData)}");
+			return _createVifViewModelFactory.CreateVifViewModel(createVif);
 		}
 
 		public IDocumentViewModel GetCreateNewStepInputViewModel(bool exemptedVehicle)

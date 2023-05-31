@@ -4,15 +4,19 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
+using System.Windows.Forms.Design;
 using System.Windows.Input;
 using System.Xml.Linq;
 using CommunityToolkit.Mvvm.Input;
+using Newtonsoft.Json;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
+using VECTO3GUI2020.Model.Multistage;
 using VECTO3GUI2020.Ninject;
 using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.Util.XML;
@@ -78,6 +82,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private bool _showSaveAndCloseButtons = false;
 
+
+
 		public bool ShowSaveAndCloseButtons
 		{
 			get => _showSaveAndCloseButtons;
@@ -124,8 +130,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_saveInputDataAsCommand ?? new RelayCommand(() => { SaveInputDataExecute(filename: null); }, () => true);
 
 
-		private ICommand _loadVehicleDataCommand;
+
+
+
+        private ICommand _loadVehicleDataCommand;
 		private string _vehicleInputDataFilePath;
+
+
 
 
 		public ICommand LoadVehicleDataCommand
@@ -260,9 +271,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
+
+		
+
 		#endregion
 
-	}
+    }
 
 
 }

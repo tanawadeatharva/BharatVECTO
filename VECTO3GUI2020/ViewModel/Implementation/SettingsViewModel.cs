@@ -166,7 +166,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		public bool ModalResults1Hz
 		{
-			get => _modalResults1Hz;
+			get => false;
 			set
 			{
 				if (SetProperty(ref _modalResults1Hz, value))

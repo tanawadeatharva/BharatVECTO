@@ -292,30 +292,35 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			if (path == null) {
 				return null;
 			}
-			
-			
-			var jsonJob = new JSONJob() {
-				Header = new JSONJobHeader() {
-					AppVersion = "Vecto3GUI2020",
-					CreatedBy = Environment.UserName,
-					Date = DateTime.Today,
-					FileVersion = JSONJobHeader.PrimaryAndInterimVersion
-				},
-				Body = new JSONJobBody() {
-					PrimaryVehicle = PathHelper.GetRelativePath(path, PrimaryInputPath),
-					InterimStep = PathHelper.GetRelativePath(path, StageInputPath),
-					Completed = Completed,
-					RunSimulation = RunSimulation,
-				}
-			};
 
-			string jsonString = JsonConvert.SerializeObject(jsonJob, Formatting.Indented);
+			try {
 
-			
-			Debug.WriteLine(jsonString);
-			File.WriteAllText(path, jsonString);
-			SetInputData(JSONInputDataFactory.ReadJsonJob(path));
-			_backingStorage.SaveChanges();
+				var jsonJob = new JSONJob() {
+					Header = new JSONJobHeader() {
+						AppVersion = "Vecto3GUI2020",
+						CreatedBy = Environment.UserName,
+						Date = DateTime.Today,
+						FileVersion = JSONJobHeader.PrimaryAndInterimVersion
+					},
+					Body = new JSONJobBody() {
+						PrimaryVehicle = PathHelper.GetRelativePath(path, PrimaryInputPath),
+						InterimStep = PathHelper.GetRelativePath(path, StageInputPath),
+						Completed = Completed,
+						RunSimulation = RunSimulation,
+					}
+				};
+
+				string jsonString = JsonConvert.SerializeObject(jsonJob, Formatting.Indented);
+
+
+				Debug.WriteLine(jsonString);
+				File.WriteAllText(path, jsonString);
+				SetInputData(JSONInputDataFactory.ReadJsonJob(path));
+				_backingStorage.SaveChanges();
+			} catch (Exception ex) {
+				_dialogHelper.ShowErrorMessage(ex.Message);
+			}
+
 			return path;
 		}
 

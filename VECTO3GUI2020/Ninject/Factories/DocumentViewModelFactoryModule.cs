@@ -27,8 +27,9 @@ namespace VECTO3GUI2020.Ninject.Factories
 
 
         public const string PrimaryAndStageInputScope = nameof(IPrimaryAndStageInputViewModelFactory);
+		private const string CompletedBusScope = nameof(ICreateVifViewModelFactory);
 
-        public override void Load()
+		public override void Load()
         {
             Bind<IDocumentViewModelFactory>().To<DocumentViewModelFactory>().InSingletonScope().Named(DocumentViewModelFactoryScope);
 
@@ -103,8 +104,12 @@ namespace VECTO3GUI2020.Ninject.Factories
             #endregion
 
             Bind<IPrimaryAndStageInputViewModelFactory>().ToFactory().Named(PrimaryAndStageInputScope);
+
             Bind<IDocumentViewModel>().To<CreateVifViewModel>().WhenParentNamed(PrimaryAndStageInputScope);
-        }
+
+			Bind<ICreateVifViewModelFactory>().ToFactory().Named(CompletedBusScope);
+			Bind<IDocumentViewModel>().To<CompletedBusV7ViewModel>().WhenParentNamed(CompletedBusScope);
+		}
         #endregion
     }
 }

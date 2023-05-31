@@ -46,6 +46,8 @@ namespace VECTO3GUI2020.ViewModel.Interfaces.Document
 		IDocumentViewModel CreateDeclarationViewModel(IMultistagePrimaryAndStageInputDataProvider inputData);
 	}
 
+
+
 	public interface INewDocumentViewModelFactory
 	{
 		IDocumentViewModel GetCreateNewStepInputViewModel(bool exemptedVehicle);

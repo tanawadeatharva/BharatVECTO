@@ -123,8 +123,9 @@ namespace VECTO3GUI2020.Ninject.Factories
 
         public IDocumentViewModel CreateDocumentViewModel(IInputDataProvider declarationInput)
         {
-            return _documentViewModelFactory.CreateDocumentViewModel(declarationInput);
+			return _documentViewModelFactory.CreateDocumentViewModel(declarationInput);
         }
+
 
         public IDocumentViewModel GetCreateNewStepInputViewModel(bool exemptedVehicle)
         {
