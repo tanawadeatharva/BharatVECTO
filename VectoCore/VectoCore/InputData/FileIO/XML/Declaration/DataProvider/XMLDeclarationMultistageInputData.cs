@@ -153,12 +153,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public IResult GetResult(VehicleClass vehicleClass, MissionType mission, string fuelMode, Kilogram payload,
 			OvcHevMode ovcHevMode)
 		{
-			return ResultsInputData.Results.FirstOrDefault(
+			var matches = ResultsInputData.Results.Where(
 				x => x.VehicleGroup == vehicleClass &&
 					(x.SimulationParameter.Payload - payload).IsEqual(0, 1) && x.Mission == mission 
-					&& x.OvcMode == ovcHevMode
-				// && x.SimulationParameter.FuelMode.Equals(fuelMode, StringComparison.InvariantCultureIgnoreCase)
-			);
+			).ToArray();
+			if (matches.Length == 1) {
+				return matches.First();
+			}
+
+			return matches.First(x => x.OvcMode == ovcHevMode);
 		}
 
 		public XmlNode ResultsNode => GetNode(XMLNames.Report_Results);
