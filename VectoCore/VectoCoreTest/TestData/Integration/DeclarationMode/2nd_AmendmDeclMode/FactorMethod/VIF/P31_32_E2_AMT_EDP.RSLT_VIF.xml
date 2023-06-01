@@ -272,7 +272,6 @@
                 <CompressorDrive>electrically</CompressorDrive>
                 <SmartRegenerationSystem>false</SmartRegenerationSystem>
                 <AirsuspensionControl>electronically</AirsuspensionControl>
-                <PneumaticSCRReagentDosing>false</PneumaticSCRReagentDosing>
               </PneumaticSystem>
               <HVAC>
                 <AdjustableCoolantThermostat>true</AdjustableCoolantThermostat>

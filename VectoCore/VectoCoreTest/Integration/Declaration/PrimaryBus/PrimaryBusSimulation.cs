@@ -1,4 +1,4 @@
-﻿#define FULL_SIMULATIONS
+﻿//#define FULL_SIMULATIONS
 
 
 
