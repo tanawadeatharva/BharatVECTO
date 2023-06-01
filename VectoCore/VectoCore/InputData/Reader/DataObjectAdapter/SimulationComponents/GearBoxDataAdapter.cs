@@ -143,6 +143,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes)
 		{
 			CheckDeclarationMode(inputData.Components.GearboxInputData, "Gearbox");
+			CheckGearNumbers(inputData.Components?.GearboxInputData);
 			return DoCreateGearboxData(inputData, runData, shiftPolygonCalculator, supportedGearboxTypes);
 		}
 
@@ -225,6 +226,27 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			return retVal;
 		}
+
+
+		protected void CheckGearNumbers(IGearboxDeclarationInputData gbxInputData)
+		{
+			if (gbxInputData == null) {
+				return;
+			}
+			var numGears = gbxInputData.Gears.Count;
+			var gearNumbers = gbxInputData.Gears.Select(g => g.Gear);
+
+			if (gearNumbers.Distinct().Count() != numGears) {
+				throw new VectoException("Duplicate gear number");
+			}
+
+			if (gearNumbers.Min() < 0 || gearNumbers.Max() > numGears) {
+				throw new VectoException("Gear numbers out of range");
+			}
+		}
+
+
+
 
 		/// <summary>
 		/// Filters the gears based on disabling rule: Disable either the last 1 or 2 gears by setting their vehicle-level torque limit to 0.
