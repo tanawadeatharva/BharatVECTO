@@ -1,4 +1,4 @@
-﻿#define FULL_SIMULATIONS
+﻿//#define FULL_SIMULATIONS
 
 
 
@@ -156,7 +156,8 @@ public class PrimaryBusSimulation
 	TestCase(@"FactorMethod\P-HEV\P2-HEV\P31_32_P2_HEV_nonSmartES_mechAux.xml", 0, TestName = "2nd Amendment PrimaryBus FM P-HEV P2 nonSmartES_mechAux"),
 	TestCase(@"FactorMethod\P-HEV\P2-HEV\P31_32_P2_HEV_SmartES_elec_SP_elec_Fan.xml", 0, TestName = "2nd Amendment PrimaryBus FM P-HEV P2 SmartES_elFan_elSteer"),
 
-    ]
+	TestCase(@"FactorMethod\S-HEV\S2-HEV\P31_32_S2_HEV_nonSmartES_elecSP_mechFan.xml", 0, TestName = "2nd Amendment PrimaryBus FM S-HEV S2 nonSmartES_elecSP_mechFan"),
+	]
 
 
     public void PrimaryBusSimulationTest(string jobFile, int runIdx)
@@ -186,6 +187,7 @@ public class PrimaryBusSimulation
 		TestName = "2nd Amendment CompletedBus Conventional SmartES_elFan_elSteer 32e_prim_Dim_HVAC"),
 	TestCase(@"FactorMethod\VIF\P31_32_SmartES_mechFan_mechSteer.RSLT_VIF.xml", @"FactorMethod\Conventional\Conventional_32e_spez_Dim_HVAC.xml",  0,
 		TestName = "2nd Amendment CompletedBus Conventional SmartES_mechFan_mechSteer 32e_spez_Dim_HVAC"),
+
     ]
     public void CompletedBusSimulationTest(string vifFile, string completed, int runIdx, bool full_sim = false)
 	{
