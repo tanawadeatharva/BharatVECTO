@@ -746,9 +746,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
 			{
+				var iepcInput = Vehicle.Components.IEPC;
+				var axleGearRequired = !iepcInput.DifferentialIncluded && !iepcInput.DesignTypeWheelMotor;
+                var axleGearRatio = axleGearRequired ? runData.AxleGearData.AxleGear.Ratio : 1.0;
 				runData.GearshiftParameters =
 					DataAdapter.CreateGearshiftData(
-						runData.AxleGearData?.AxleGear.Ratio ?? 1.0,
+						axleGearRatio,
 						null,
 						GearboxType.APTN,
 						Vehicle.Components.IEPC.Gears.Count
