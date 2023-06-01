@@ -118,7 +118,9 @@ namespace Vecto3GUI2020Test.ViewModelTests.FactoryTests
 
 			IMultistageVIFInputData vifInputData = MockDocument.GetMultistepVIFInputData(vifNs, vifType, stages, stepType, stepNs);
 
-			Assert.Throws<VectoException>(() => _documentViewModelFactory.CreateDocumentViewModel(vifInputData));
+
+			var doc = _documentViewModelFactory.CreateDocumentViewModel(vifInputData);
+			Assert.NotNull(doc);
 		}
 
 		[TestCase(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationConventionalPrimaryBusVehicleDataProviderV24.XSD_TYPE, XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE)]

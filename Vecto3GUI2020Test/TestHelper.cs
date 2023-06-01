@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Runtime.CompilerServices;
+using System.Security.RightsManagement;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore;
@@ -59,5 +60,22 @@ namespace Vecto3GUI2020Test
 			}
 			return name;
 		}
+	}
+
+	public static class IKernelHelperTest
+	{
+		public static MockDialogHelper GetMockDialogHelper(this IKernel k)
+		{
+			var mockDialogHelper = k.Get<IDialogHelper>() as MockDialogHelper;
+            return mockDialogHelper;
+		}
+
+		public static MockWindowHelper GetMockWindowHelper(this IKernel k)
+		{
+			var mockWindowHelper = k.Get<IWindowHelper>() as MockWindowHelper;
+			return mockWindowHelper;
+			
+		}
+
 	}
 }

@@ -47,6 +47,11 @@
 		<!--<TargetPath>TestData\Integration\Multistage</TargetPath>-->
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</Content>
+	<Content Include="..\VectoCore\VectoCoreTest\TestData\Integration\Buses\FactorMethod\**\*.*">
+		<Link>TestData\Integration\Multistage\FactorMethod\%(RecursiveDir)%(FileName)%(Extension)</Link>
+		<!--<TargetPath>TestData\Integration\Multistage</TargetPath>-->
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
 	  <!--<Content Remove="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifCompletedConventional.vecto" />
 	  <Content Remove="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifExempted.vecto" />
 	  <Content Remove="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifExemptedIncomplete.vecto" />

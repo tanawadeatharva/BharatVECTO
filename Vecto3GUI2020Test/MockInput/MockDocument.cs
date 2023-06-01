@@ -118,7 +118,7 @@ public static class MockDocument
 		var mock = new Mock<IMultistageVIFInputData>();
 		mock.SetupGet(m => m.MultistageJobInputData).Returns(GetMultistepInput(vifVersion, vifType, stages));
 		mock.SetupGet(m => m.VehicleInputData).Returns(GetStepInput(stepType, stepVersion).Vehicle);
-
+		mock.SetupGet(m => m.DataSource.SourceFile).Returns("mocked.vecto");
 
 
 		return mock.Object;

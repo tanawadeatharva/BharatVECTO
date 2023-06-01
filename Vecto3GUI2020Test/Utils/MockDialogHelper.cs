@@ -44,7 +44,8 @@ public class MockDialogHelper : IDialogHelper
 	public IReadOnlyList<Dialog> Dialogs => _dialogs.ToList();
 
 	public int NrErrors => _dialogs.Count(d => d.Type == Dialog.DialogType.Error);
-	
+
+	private Stack<string> _fileNames = new Stack<string>();
 	#region Implementation of IDialogHelper
 
 	public string OpenFileDialog(string filter = "All files (*.*)|*.*", string initialDirectory = null)
@@ -89,7 +90,7 @@ public class MockDialogHelper : IDialogHelper
 
 	public string SaveToXMLDialog(string initialDirectory = null)
 	{
-		throw new System.NotImplementedException();
+		return _fileNames.Pop();
 	}
 
 	public string SaveToVectoJobDialog(string initialDirectory = null)
@@ -134,6 +135,11 @@ public class MockDialogHelper : IDialogHelper
 	public MessageBoxResult ShowErrorMessage(string errorMessage)
 	{
 		return ShowErrorMessage(errorMessage, "-");
+	}
+
+	public void PushFileName(string fileName)
+	{
+		_fileNames.Push(fileName);
 	}
 
 	#endregion
