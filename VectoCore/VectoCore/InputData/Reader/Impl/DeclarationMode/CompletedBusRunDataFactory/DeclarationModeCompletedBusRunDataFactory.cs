@@ -362,7 +362,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 							}
 							else
 							{
-								foreach (var run in CreateVectoRunData(mission, loading, modeIdx, fuelMode)) {
+								foreach (var run in CreateVectoRunData(mission, loading, modeIdx, fuelMode, OvcHevMode.ChargeSustaining)) {
 									yield return run;
 								}
 							}
