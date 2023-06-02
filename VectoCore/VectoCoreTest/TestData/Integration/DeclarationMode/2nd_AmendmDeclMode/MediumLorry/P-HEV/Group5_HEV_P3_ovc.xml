@@ -2266,9 +2266,11 @@
 						<v2.3:CertificationMethod>Standard values</v2.3:CertificationMethod>
 						<TorqueLossMap xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">
 							<Entry inputSpeed="0.00" inputTorque="0.00" torqueLoss="0.00"/>
-							<Entry inputSpeed="0.00" inputTorque="500.00" torqueLoss="5.00"/>
-							<Entry inputSpeed="1000.00" inputTorque="0.00" torqueLoss="0.00"/>
-							<Entry inputSpeed="1000.00" inputTorque="500.00" torqueLoss="5.00"/>
+							<Entry inputSpeed="0.00" inputTorque="-5000.00" torqueLoss="50.00"/>
+							<Entry inputSpeed="0.00" inputTorque="5000.00" torqueLoss="50.00"/>
+							<Entry inputSpeed="30000.00" inputTorque="0.00" torqueLoss="0.00"/>
+							<Entry inputSpeed="30000.00" inputTorque="5000.00" torqueLoss="50.00"/>
+							<Entry inputSpeed="30000.00" inputTorque="5000.00" torqueLoss="50.00"/>
 						</TorqueLossMap>
 					</v2.3:Data>
 					<v2.3:Signature>

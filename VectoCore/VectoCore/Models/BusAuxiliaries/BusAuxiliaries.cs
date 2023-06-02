@@ -280,7 +280,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 					!Signals.InNeutral) {
 					if (M8.CompressorFlag) {
 						return M4.GetFlowRate() *
-								auxConfig.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction
+								auxConfig.PneumaticAuxiliariesConfig.OverrunUtilisationForCompressionFraction
 								* Signals.SimulationInterval;
 					}
 

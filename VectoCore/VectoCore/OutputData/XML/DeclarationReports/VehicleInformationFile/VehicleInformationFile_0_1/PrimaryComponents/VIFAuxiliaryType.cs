@@ -328,8 +328,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			return new XElement(_vif + XMLNames.BusAux_PneumaticSystem,
 				new XElement(_vif + XMLNames.CompressorDrive, pSupply.CompressorDrive.GetLabel()),
 				new XElement(_vif + XMLNames.Bus_SmartRegenerationSystem, pSupply.SmartRegeneration),
-				new XElement(_vif + XMLNames.Bus_AirsuspensionControl, GetXMLAirsuspensionControl(pConsumer.AirsuspensionControl)),
-				new XElement(_vif + XMLNames.BusAux_PneumaticSystem_SCRReagentDosing, pConsumer.AdBlueDosing == ConsumerTechnology.Pneumatically)
+				new XElement(_vif + XMLNames.Bus_AirsuspensionControl, GetXMLAirsuspensionControl(pConsumer.AirsuspensionControl))
 			);
 		}
 

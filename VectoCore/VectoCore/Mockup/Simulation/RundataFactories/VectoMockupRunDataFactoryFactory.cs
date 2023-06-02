@@ -12,6 +12,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Specific;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
 using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.OutputData;
 
 
@@ -23,8 +24,9 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 
 
 
-        public IVectoRunDataFactory CreateDeclarationRunDataFactory(IInputDataProvider inputDataProvider, IDeclarationReport report,
-            IVTPReport vtpReport)
+        public IVectoRunDataFactory CreateDeclarationRunDataFactory(IInputDataProvider inputDataProvider,
+			IDeclarationReport report,
+			IVTPReport vtpReport)
         {
             if (inputDataProvider == null)
                 throw new ArgumentNullException(nameof(inputDataProvider));
@@ -45,26 +47,29 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
             throw new VectoException("Unknown InputData for Declaration Mode!");
         }
 
-        private IVectoRunDataFactory CreateRunDataReader(IMultistageVIFInputData multistageVifInputData, IDeclarationReport report)
+        private IVectoRunDataFactory CreateRunDataReader(IMultistageVIFInputData multiStepVifInputData, IDeclarationReport report)
         {
-			if (multistageVifInputData.VehicleInputData == null)
+			if (multiStepVifInputData.VehicleInputData == null)
 			{
 				return new MockupMultistageCompletedBusRunDataFactory(
-					multistageVifInputData,
+					multiStepVifInputData,
 					report, new DeclarationDataAdapterSpecificCompletedBus.Conventional(),
-					new DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.Conventional());
+					new DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.Conventional(),
+					null, null);
 			}
 			else {
-				return new DeclarationModeMultistageBusVectoRunDataFactory(multistageVifInputData, report);
+				return new DeclarationModeMultistageBusVectoRunDataFactory(multiStepVifInputData, report);
 			}
 		}
 
-        private IVectoRunDataFactory CreateRunDataReader(IDeclarationInputDataProvider declDataProvider, IDeclarationReport report)
+        private IVectoRunDataFactory CreateRunDataReader(IDeclarationInputDataProvider declDataProvider,
+			IDeclarationReport report)
         {
             var vehicleCategory = declDataProvider.JobInputData.Vehicle.VehicleCategory;
             if (vehicleCategory.IsLorry())
             {
-                return new MockupLorryVectoRunDataFactory(declDataProvider, report, new DeclarationDataAdapterHeavyLorry.Conventional());
+                return new MockupLorryVectoRunDataFactory(declDataProvider, report, new DeclarationDataAdapterHeavyLorry.Conventional(), 
+					null, null);
             }
 
             if (vehicleCategory.IsBus())
@@ -75,7 +80,8 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                         throw new NotImplementedException();
                         //return new DeclarationModeMultistageBusVectoRunDataFactory(declDataProvider, report);
                     case VehicleCategory.HeavyBusPrimaryVehicle:
-                        return new PrimaryBusMockupRunDataFactory(declDataProvider, report, new DeclarationDataAdapterPrimaryBus.Conventional());
+                        return new PrimaryBusMockupRunDataFactory(declDataProvider, report, new DeclarationDataAdapterPrimaryBus.Conventional(),
+							null, null);
                     default:
                         break;
                 }

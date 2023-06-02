@@ -34,7 +34,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -97,6 +96,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 				BatteryData = runData.BatteryData;
 				OVCMode = runData.OVCMode;
 				VectoRunData = runData;
+
+			
+				//VehicleCode = runData.VehicleData.VehicleCode;
 			}
 
 			public VectoRunData VectoRunData { get; private set; }
@@ -115,6 +117,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public double? PassengerCount { get; set; }
 			public VehicleClass VehicleClass { get; set; }
+
+			public VehicleClass? PrimaryVehicleClass => throw new NotImplementedException();
+
 			public Watt MaxChargingPower { get; set; }
 
 			public MeterPerSecond AverageSpeed { get; private set; }
@@ -172,7 +177,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			public Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
 			public Kilogram ZEV_CO2 { get; set; }
 
-			public VectoRunData.OvcHevMode OVCMode { get; set; }
+			public OvcHevMode OVCMode { get; set; }
 
 			// used for factor method
 			public IResult PrimaryResult { get; set; }
@@ -230,6 +235,13 @@ namespace TUGraz.VectoCore.OutputData.XML
 					EquivalentAllElectricRange = ranges.EquivalentAllElectricRange;
 					ZeroCO2EmissionsRange = ranges.ZeroCO2EmissionsRange;
 					ElectricEnergyConsumption = ranges.ElectricEnergyConsumption;
+			
+					var fc = data.CorrectedModalData.FuelCorrection.Values.FirstOrDefault();
+					if (fc != null) {
+						ZEV_FuelConsumption_AuxHtr = fc.FC_AUXHTR_KM * Distance;
+						AuxHeaterFuel = fc.Fuel;
+
+					}
 				}
 
 				if (data.HasGearbox && !runData.JobType.IsOneOf(VectoSimulationJobType.IEPC_E, VectoSimulationJobType.IEPC_S)) {
@@ -320,7 +332,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 				WeightingGroup = DeclarationData.WeightingGroup.Lookup(
 						modelData.VehicleData.VehicleClass, modelData.VehicleData.SleeperCab.Value,
-						modelData.EngineData?.RatedPowerDeclared ?? Watt.Create(0));
+						modelData.EngineData?.RatedPowerDeclared ?? 0.SI<Watt>());
 			}
 
 			_weightingFactors = WeightingGroup == WeightingGroup.Unknown

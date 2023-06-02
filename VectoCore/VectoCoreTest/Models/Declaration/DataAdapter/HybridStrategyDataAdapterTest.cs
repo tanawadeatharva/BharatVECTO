@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.StrategyDataAdapter;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -20,14 +21,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter;
 public class HybridStrategyDataAdapterTest
 {
 
-    [TestCase("SerialHybridStrategyParamsTest A", 0.7375, 0.2625, 11273.9176, 778.61, 247500,VectoRunData.OvcHevMode.ChargeDepleting, false, 0.49, 0.307641364)]
-	[TestCase("SerialHybridStrategyParamsTest B", 0.6, 0.2, 11000, 778.61, 80000,  VectoRunData.OvcHevMode.ChargeDepleting, false, 0.39, 0.234065732)]
-	[TestCase("SerialHybridStrategyParamsTest C", 0.6, 0.2, 11000, 778.61, 2000,  VectoRunData.OvcHevMode.ChargeDepleting, true, 0.39, 0.634065732)]
-	[TestCase("SerialHybridStrategyParamsTest D", 0.7375, 0.2625, 11273.9176, 778.61, 247500,  VectoRunData.OvcHevMode.ChargeSustaining, false, 0.624646591, 0.307641364)]
-	[TestCase("SerialHybridStrategyParamsTest E", 0.6, 0.2, 11000, 778.61, 80000,  VectoRunData.OvcHevMode.ChargeSustaining, false, 0.582967134, 0.234065732)]
-	[TestCase("SerialHybridStrategyParamsTest F", 0.6, 0.2, 11000, 778.61, 2000,  VectoRunData.OvcHevMode.ChargeSustaining, true, 0.268131464, 0.634065732)]
+    [TestCase("SerialHybridStrategyParamsTest A", 0.7375, 0.2625, 11273.9176, 778.61, 247500,OvcHevMode.ChargeDepleting, false, 0.49, 0.307641364)]
+	[TestCase("SerialHybridStrategyParamsTest B", 0.6, 0.2, 11000, 778.61, 80000,  OvcHevMode.ChargeDepleting, false, 0.39, 0.234065732)]
+	[TestCase("SerialHybridStrategyParamsTest C", 0.6, 0.2, 11000, 778.61, 2000,  OvcHevMode.ChargeDepleting, true, 0.39, 0.634065732)]
+	[TestCase("SerialHybridStrategyParamsTest D", 0.7375, 0.2625, 11273.9176, 778.61, 247500,  OvcHevMode.ChargeSustaining, false, 0.624646591, 0.307641364)]
+	[TestCase("SerialHybridStrategyParamsTest E", 0.6, 0.2, 11000, 778.61, 80000,  OvcHevMode.ChargeSustaining, false, 0.582967134, 0.234065732)]
+	[TestCase("SerialHybridStrategyParamsTest F", 0.6, 0.2, 11000, 778.61, 2000,  OvcHevMode.ChargeSustaining, true, 0.268131464, 0.634065732)]
 	public void SerialHybridStrategyTest(string testName, double bat_soc_max, double bat_soc_min, double vehicle_mass,
-		double nominalVoltage, double nominalCapacity, VectoRunData.OvcHevMode mode,
+		double nominalVoltage, double nominalCapacity, OvcHevMode mode,
 		bool exception, double expected_target_soc, double expected_min_soc)
 	{
 		var mass = vehicle_mass.SI<Kilogram>();
@@ -100,10 +101,10 @@ public class HybridStrategyDataAdapterTest
 		if (exception) {
 			Assert.Throws<VectoException>(() =>
 				dataAdapter.CreateHybridStrategyParameters(null, scData, mass,
-					VectoRunData.OvcHevMode.ChargeSustaining));
+					OvcHevMode.ChargeSustaining));
 			Assert.Pass();
 		}
-		var parameter = dataAdapter.CreateHybridStrategyParameters(null, scData, mass, VectoRunData.OvcHevMode.ChargeSustaining);
+		var parameter = dataAdapter.CreateHybridStrategyParameters(null, scData, mass, OvcHevMode.ChargeSustaining);
 
 		Assert.AreEqual(exp_soc_target, parameter.TargetSoC, 1E-3);
 		Assert.AreEqual(exp_soc_min, parameter.MinSoC, 1E-3);

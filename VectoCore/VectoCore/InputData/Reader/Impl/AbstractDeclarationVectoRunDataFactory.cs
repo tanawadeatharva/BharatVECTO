@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -29,12 +30,19 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
         protected bool _allowVocational;
 
         private DriverData _driverdata;
-		
-		protected AbstractDeclarationVectoRunDataFactory(
-			IDeclarationInputDataProvider dataProvider, IDeclarationReport report, bool checkJobType = true)
-		{
-			InputDataProvider = dataProvider;
 
+		
+		protected IDeclarationCycleFactory CycleFactory { get; }
+
+		protected virtual IVehicleDeclarationInputData Vehicle => InputDataProvider.JobInputData.Vehicle;
+
+        protected AbstractDeclarationVectoRunDataFactory(IDeclarationInputDataProvider dataProvider,
+			IDeclarationReport report, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter,
+			bool checkJobType = true)
+		{
+			CycleFactory = cycleFactory;
+			InputDataProvider = dataProvider;
+			MissionFilter = missionFilter;
 			if (checkJobType) {
 				if (dataProvider.JobInputData.JobType.IsOneOf(BatteryElectricVehicle, ParallelHybridVehicle, SerialHybridVehicle))
 				{
@@ -47,7 +55,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			_allowVocational = true;
 		}
 
-		protected DriverData DriverData => _driverdata ?? (_driverdata = CreateDriverData(_segment));
+		protected IMissionFilter MissionFilter { get; }
+
+		protected DriverData DriverData => _driverdata ??(_driverdata= CreateDriverData(_segment));
 		protected abstract DriverData CreateDriverData(Segment segment);
 
 		public virtual IEnumerable<VectoRunData> NextRun()
@@ -65,10 +75,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		protected abstract void Initialize();
 
-		protected abstract VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle,
-			Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
+		protected abstract VectoRunData CreateVectoRunData(Mission mission,
+			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 			int? modeIdx = null,
-			VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable);
+			OvcHevMode ovcMode = OvcHevMode.NotApplicable);
+
 
 		protected virtual void InitializeReport()
 		{
@@ -78,5 +89,31 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		protected abstract VectoRunData GetPowertrainConfigForReportInit();
 
-	}
+		/// <summary>
+		/// Super caps are not allowed for ovc hevs or pevs
+		/// </summary>
+		protected void CheckSuperCap(IVehicleDeclarationInputData vehicle)
+		{
+			if (vehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle || vehicle.OvcHev) {
+				if (vehicle.Components.ElectricStorage.ElectricStorageElements.Any(e =>
+						e.REESSPack.StorageType == REESSType.SuperCap)) {
+					throw new VectoException("Super caps are not allowed for OVC-HEVs or PEVs");
+				}
+			}
+
+			if (vehicle.Components.ElectricStorage?.ElectricStorageElements == null) {
+				return;
+			}
+
+			var hasSuperCap = vehicle.Components.ElectricStorage.ElectricStorageElements.Any(e =>
+				e.REESSPack.StorageType == REESSType.SuperCap);
+			var hasBattery = vehicle.Components.ElectricStorage.ElectricStorageElements.Any(e =>
+				e.REESSPack.StorageType == REESSType.Battery);
+
+			if (hasSuperCap && hasBattery) {
+				//Already handled by XML Schema
+				throw new VectoException("Super caps AND batteries are not supported");
+			}
+		}
+    }
 }

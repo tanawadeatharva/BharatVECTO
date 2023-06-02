@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}).Where(x => x.MotorSpeed.IsSmallerOrEqual(maxSpeed)).ToList());
 			if (!iceFld.FullLoadEntries.Any(x => x.MotorSpeed.IsEqual(maxSpeed))) {
 				iceFld.FullLoadEntries.Add(new ElectricMotorFullLoadCurve.FullLoadEntry() {
-					FullDriveTorque = -IceData.FullLoadCurves[0].FullLoadStationaryTorque(maxSpeed) + _container.EngineInfo.EngineAuxDemand(maxSpeed, 0.SI<Second>()) / maxSpeed, //reduce torque by engine aux torque demand
+					FullDriveTorque = -IceData.FullLoadCurves[0].FullLoadStationaryTorque(maxSpeed) + _container.EngineInfo.EngineAuxDemand(maxSpeed, 0.25.SI<Second>()) / maxSpeed, //reduce torque by engine aux torque demand
 					FullGenerationTorque = 0.SI<NewtonMeter>(),
 					MotorSpeed = maxSpeed
 				});

@@ -172,11 +172,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		#region Implementation of IHybridStrategyDataAdapter
 
 		public abstract HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData, SuperCapData superCap,
-			VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType, ArchitectureID archID,
+			OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType, ArchitectureID archID,
 			CombustionEngineData engineData, GearboxData gearboxData, TableData boostingLimitations);
 
 		public abstract HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData, SuperCapData superCapData,
-			Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode);
+			Kilogram vehicleMass, OvcHevMode ovcMode);
 
 		#endregion
 	}
@@ -186,7 +186,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		public override HybridStrategyParameters CreateHybridStrategyParameters(
 			BatterySystemData batterySystemData,
 			SuperCapData superCap, 
-			VectoRunData.OvcHevMode ovcMode, 
+			OvcHevMode ovcMode, 
 			LoadingType loading, 
 			VehicleClass vehicleClass, 
 			MissionType missionType, ArchitectureID archID, CombustionEngineData engineData, GearboxData gearboxData, TableData boostingLimitations)
@@ -211,7 +211,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				result.MinSoC = superCap.MinVoltage / superCap.MaxVoltage;
 				result.MaxSoC = 1;// superCap.MaxVoltage / superCap.MaxVoltage;
 				
-				result.TargetSoC = Math.Sqrt(Math.Pow(superCap.MaxVoltage.Value(), 2) + Math.Pow(superCap.MinVoltage.Value(), 2)) /
+				result.TargetSoC = Math.Sqrt((Math.Pow(superCap.MaxVoltage.Value(), 2) + Math.Pow(superCap.MinVoltage.Value(), 2)) / 2) /
 									superCap.MaxVoltage.Value();
 				result.InitialSoc = superCap.InitialSoC;
 			}
@@ -228,7 +228,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			result.MaxPropulsionTorque =
 				CreateMaxPropulsionTorque(archID, engineData, gearboxData, boostingLimitations);
 
-			if (ovcMode == VectoRunData.OvcHevMode.ChargeSustaining) {
+			if (ovcMode == OvcHevMode.ChargeSustaining) {
 				result.EquivalenceFactor =
 					DeclarationData.HEVStrategyParameters.LookupEquivalenceFactor(missionType,
 						vehicleClass, loading, result.MaxSoC - result.MinSoC);
@@ -248,7 +248,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 
 		public override HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData, SuperCapData superCapData,
-			Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode)
+			Kilogram vehicleMass, OvcHevMode ovcMode)
 		{
 			throw new NotImplementedException("Not supported for parallel hybrid strategy");
 		}
@@ -257,14 +257,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 	public class SerialHybridStrategyParameterDataAdapter : HybridStrategyDataAdapter
 	{
 		public override HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData, SuperCapData superCap,
-			VectoRunData.OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType, ArchitectureID archID,
+			OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType, ArchitectureID archID,
 			CombustionEngineData engineData, GearboxData gearboxData, TableData boostingLimitations)
 		{
 			throw new NotImplementedException("Not supported for serial hybrid strategy");
 		}
 
 		public override HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData,
-			SuperCapData superCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode)
+			SuperCapData superCapData, Kilogram vehicleMass, OvcHevMode ovcMode)
 		{
 			if (batterySystemData == null && superCapData == null) {
 				throw new VectoException("Either Battery or SuperCap must be set");
@@ -297,7 +297,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return result;
 		}
 
-		private void SetGenericParameters(ref HybridStrategyParameters result, SuperCapData superCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode)
+		private void SetGenericParameters(ref HybridStrategyParameters result, SuperCapData superCapData, Kilogram vehicleMass, OvcHevMode ovcMode)
 		{
 
 			
@@ -348,7 +348,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		private void SetGenericParameters(ref HybridStrategyParameters result,
 			BatterySystemData batterySystemData, 
 			Kilogram vehicleMass,
-			VectoRunData.OvcHevMode ovcMode)
+			OvcHevMode ovcMode)
 		{
 			var tmpSystem = new BatterySystem(null, batterySystemData);
 			var deltaSoc = CalculateDeltaSocSHev(vehicleMass, tmpSystem, 100.KMPHtoMeterPerSecond());
@@ -372,10 +372,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			switch (ovcMode)
 			{
-				case VectoRunData.OvcHevMode.ChargeSustaining:
+				case OvcHevMode.ChargeSustaining:
 					result.InitialSoc = result.MinSoC + deltaSoc;
 					break;
-				case VectoRunData.OvcHevMode.ChargeDepleting:
+				case OvcHevMode.ChargeDepleting:
 					result.InitialSoc = (tmpSystem.MaxSoC + tmpSystem.MinSoC) / 2;
 					result.TargetSoC = result.InitialSoc - 0.01;  // target SoC is 1% below initial SoC
 					break;

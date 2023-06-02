@@ -110,7 +110,7 @@ Public Class Utils
                 .PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
                 .AlternatorType = AlternatorType.Conventional
                 },
-                .PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(retarder),
+                .PneumaticAuxiliariesConfig = CreatePneumaticAuxConfig(retarder),
                 .PneumaticUserInputsConfig = New PneumaticUserInputsConfig() With {
                 .CompressorGearRatio = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearRatio,
                 .CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,

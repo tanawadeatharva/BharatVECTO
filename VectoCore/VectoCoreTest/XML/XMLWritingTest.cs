@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Engineering XML currently not supported")]
 		public void TestWriteEngineOnlySingleFile()
 		{
 			var outFile = "EngineOnlyJobSingleFile.xml";
@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		[Category("LongRunning")]
-		[TestCase]
+		[TestCase, Ignore("Engineering XML currently not supported")]
 		public void TestWriteEngineeringSingleFile()
 		{
 			var outFile = "EngineeringJobSingleFile.xml";
@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		[Category("LongRunning")]
-		[TestCase]
+		[TestCase, Ignore("Engineering XML currently not supported")]
 		public void TestWriteEngineeringSingleFileFull()
 		{
 			var outFile = "EngineeringJobSingleFileFull.xml";

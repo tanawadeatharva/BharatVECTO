@@ -220,7 +220,12 @@ namespace TUGraz.VectoCommon.Utils
 			return SIBase<Second>.Create(second.Val / meterPerSecond.Value());
 		}
 
-		public static SquareMeter operator *(Meter m1, Meter m2)
+		public static Kilogram operator *(KilogramPerMeter kilogramPerMeter, Meter meter)
+		{
+			return SIBase<Kilogram>.Create(kilogramPerMeter.Value() * meter.Value());
+		}
+
+        public static SquareMeter operator *(Meter m1, Meter m2)
 		{
 			return SIBase<SquareMeter>.Create(m1.Val * m2.Val);
 		}
@@ -362,6 +367,14 @@ namespace TUGraz.VectoCommon.Utils
 		public static CubicMeter operator /(Kilogram kilogram, KilogramPerCubicMeter kilogramPerCubicMeter)
 		{
 			return SIBase<CubicMeter>.Create(kilogram.Value() / kilogramPerCubicMeter.Value());
+		}
+
+		
+
+
+		public static KilogramPerCubicMeter operator /(Kilogram kg, CubicMeter m3)
+		{
+			return SIBase<KilogramPerCubicMeter>.Create(kg.Val / m3.Value());
 		}
 	}
 
@@ -617,6 +630,17 @@ namespace TUGraz.VectoCommon.Utils
 
 	}
 
+	public class KilogramPerWatt : SIBase<KilogramPerWatt>
+	{
+		private static readonly int[] Units = { 0, -2, 3, 0, 0, 0, 0 };
+
+		[DebuggerHidden]
+		private KilogramPerWatt(double value) : base(value, Units) { }
+
+		public override string UnitString => "kg/W";
+
+    }
+
 	/// <summary>
 	/// SI Class for Kilogramm per watt second [kg/Ws].
 	/// W = kgm^2/s^3
@@ -835,6 +859,11 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<JoulePerNormLiter>.Create(watt.Val / nlps.Value());
 		}
+
+		public static Kilogram operator *(Watt w, KilogramPerWatt kpw)
+		{
+			return SIBase<Kilogram>.Create(w.Val * kpw.Value());
+		}
 	}
 
 	/// <summary>
@@ -957,6 +986,11 @@ namespace TUGraz.VectoCommon.Utils
 		public static JoulePerKilogramMeter operator /(JoulePerMeter jpm, Kilogram kg)
 		{
 			return SIBase<JoulePerKilogramMeter>.Create(jpm.Val / kg.Value());
+		}
+
+		public static Joule operator *(JoulePerMeter jpm, Meter m)
+		{
+			return SIBase<Joule>.Create(jpm.Val * m.Value());
 		}
 	}
 
@@ -1612,7 +1646,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="val">The value.</param>
 		/// <param name="unitFactor"></param>
 		/// <param name="units">The units.</param>
-		[DebuggerHidden]
+		//[DebuggerHidden]
 		protected SI(double val, double unitFactor, int[] units)
 		{
 			Val = val;

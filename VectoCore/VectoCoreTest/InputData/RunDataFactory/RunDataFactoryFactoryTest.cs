@@ -743,6 +743,13 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 			var type = arch.ToString().StartsWith("P")
 				? VectoSimulationJobType.ParallelHybridVehicle
 				: VectoSimulationJobType.SerialHybridVehicle;
+			if (arch == ArchitectureID.S_IEPC) {
+				type = VectoSimulationJobType.IEPC_S;
+			}
+
+			if (arch == ArchitectureID.E_IEPC) {
+				type = VectoSimulationJobType.IEPC_E;
+			}
 			mock.Setup(p => p.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID).
 				Returns(arch);
 			mock.Setup(p => p.MultistageJobInputData.JobInputData.JobType).

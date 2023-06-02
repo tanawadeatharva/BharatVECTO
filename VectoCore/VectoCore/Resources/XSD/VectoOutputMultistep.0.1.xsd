@@ -745,7 +745,7 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:group ref="vif:BusAuxPneumaticSystemGen_IEPC_SequenceGroup"/>
-								<xs:group ref="vif:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+								<xs:group ref="vif:BusAuxPneumaticSystemConsumerPEVSequenceGroup"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -797,7 +797,7 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:group ref="vif:BusAuxPneumaticSystemGen_PEV_SequenceGroup"/>
-								<xs:group ref="vif:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+								<xs:group ref="vif:BusAuxPneumaticSystemConsumerPEVSequenceGroup"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -1234,6 +1234,26 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
+	<xs:group name="BusAuxPneumaticSystemConsumerPEVSequenceGroup">
+		<xs:sequence>
+			<xs:element name="SmartRegenerationSystem" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P312 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AirsuspensionControl">
+				<xs:annotation>
+					<xs:documentation>P315 - enum</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="mechanically"/>
+						<xs:enumeration value="electronically"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
 	<xs:group name="BusAuxPneumaticSystemGen_HEV-Px_SequenceGroup">
 		<xs:sequence>
 			<xs:element name="SizeOfAirSupply" type="v2.4:PneumaticSystemTechnologyType">
@@ -1414,17 +1434,6 @@
 								<!-- <vectoParam:description>
 									<vectoParam:parameterId component="CapacitorSystem">538</vectoParam:parameterId>
 									<vectoParam:unit>F</vectoParam:unit>
-								</vectoParam:description> -->
-							</xs:appinfo>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="InternalResistance" type="v2.3:InternalResistanceType">
-						<xs:annotation>
-							<xs:documentation>P539 - [mOhm]</xs:documentation>
-							<xs:appinfo>
-								<!-- <vectoParam:description>
-									<vectoParam:parameterId component="CapacitorSystem">539</vectoParam:parameterId>
-									<vectoParam:unit>mOhm</vectoParam:unit>
 								</vectoParam:description> -->
 							</xs:appinfo>
 						</xs:annotation>

@@ -23,9 +23,10 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
     public class PrimaryBusMockupRunDataFactory :  DeclarationModePrimaryBusRunDataFactory.Conventional
     {
         public PrimaryBusMockupRunDataFactory(IDeclarationInputDataProvider dataProvider,
-            IDeclarationReport report,
-			IPrimaryBusDeclarationDataAdapter declarationDataAdapter) :
-            base(dataProvider, report, declarationDataAdapter)
+			IDeclarationReport report,
+			IPrimaryBusDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+			IMissionFilter missionFilter) :
+            base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter)
         { }
 
         #region Overrides of AbstractDeclarationVectoRunDataFactory
@@ -34,7 +35,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 		{
 			if (InputDataProvider.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle) {
 				if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle) {
-					yield return CreateVectoRunData(InputDataProvider.JobInputData.Vehicle, null,
+					yield return CreateVectoRunData(null,
 						new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(), 0);
 				} else {
 					foreach (var vectoRunData in VectoRunDataHeavyBusPrimary()) {
@@ -72,7 +73,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 			var vehicle = InputDataProvider.JobInputData.Vehicle;
 			foreach (var mission in _segment.Missions) {
 				foreach (var loading in mission.Loadings) {
-					var simulationRunData = CreateVectoRunData(vehicle, mission, loading, 0);
+					var simulationRunData = CreateVectoRunData(mission, loading, 0);
 					if (simulationRunData == null) {
 						continue;
 					}
@@ -91,7 +92,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 			for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
 				foreach (var mission in _segment.Missions) {
 					foreach (var loading in mission.Loadings) {
-						var simulationRunData = CreateVectoRunData(vehicle, mission, loading, modeIdx);
+						var simulationRunData = CreateVectoRunData(mission, loading, modeIdx);
 						if (simulationRunData == null) {
 							continue;
 						}
@@ -103,7 +104,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 
         protected override void Initialize()
         {
-            _segment = GetSegment(InputDataProvider.JobInputData.Vehicle);
+            _segment = GetSegment();
         }
 
         protected override void InitializeReport()
@@ -118,14 +119,13 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
             var vehicle = InputDataProvider.JobInputData.Vehicle;
             if (vehicle.ExemptedVehicle)
             {
-                powertrainConfig = CreateVectoRunData(vehicle, null,
+                powertrainConfig = CreateVectoRunData(null,
                     new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(), 0);
             }
             else
             {
                 powertrainConfig = _segment.Missions.Select(
-                        mission => CreateVectoRunData(
-                            vehicle, mission, mission.Loadings.First(), 0))
+                        mission => CreateVectoRunData(mission, mission.Loadings.First(), 0))
                     .FirstOrDefault(x => x != null);
             }
 
@@ -134,10 +134,10 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 
         #region Overrides of DeclarationModePrimaryBusVectoRunDataFactory
 
-        protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle,
-			Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
+        protected override VectoRunData CreateVectoRunData(Mission mission,
+			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 			int? modeIdx,
-			VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
+			OvcHevMode ovcMode = OvcHevMode.NotApplicable)
         {
 
             VectoRunData runData;
@@ -148,20 +148,14 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 					Exempted = true,
 					Report = Report,
 					Mission = new Mission() { MissionType = MissionType.ExemptedMission },
-					VehicleData = CreateExemptedMockupVehicleData(vehicle, _segment),
+					VehicleData = CreateExemptedMockupVehicleData(Vehicle, _segment),
 					InputDataHash = InputDataProvider.XMLHash
 				};
-				runData.VehicleData.InputData = vehicle;
+				runData.VehicleData.InputData = Vehicle;
             }
             else
             {
-                var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType,
-                    _ =>
-                    {
-                        return DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "",
-                            false);
-                    });
-
+				var cycle = CycleFactory.GetDeclarationCycle(mission);
 
                 runData = new VectoRunData()
                 {
@@ -171,13 +165,13 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                     Report = Report,
 					Mission = mission,
                     SimulationType = SimulationType.DistanceCycle,
-                    VehicleData = CreateMockupVehicleData(vehicle, _segment, loading),
-                    Retarder = CreateMockupRetarder(vehicle),
-                    AxleGearData = CreateMockupAxleGearData(vehicle),
-                    GearboxData = CreateMockupGearboxData(vehicle),
-                    AngledriveData = CreateMockupAngleDriveData(vehicle),
-					EngineData = CreateMockupEngineData(vehicle, modeIdx),
-                    BusAuxiliaries = CreateMockupBusAux(vehicle),
+                    VehicleData = CreateMockupVehicleData(Vehicle, _segment, loading),
+                    Retarder = CreateMockupRetarder(Vehicle),
+                    AxleGearData = CreateMockupAxleGearData(Vehicle),
+                    GearboxData = CreateMockupGearboxData(Vehicle),
+                    AngledriveData = CreateMockupAngleDriveData(Vehicle),
+					EngineData = CreateMockupEngineData(Vehicle, modeIdx),
+                    BusAuxiliaries = CreateMockupBusAux(Vehicle),
 					InputDataHash = InputDataProvider.XMLHash,
                 };
             }

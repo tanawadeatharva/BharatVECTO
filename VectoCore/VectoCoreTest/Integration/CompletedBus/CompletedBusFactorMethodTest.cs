@@ -458,7 +458,11 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 			Assert.IsNotNull(genericAxlegearData.AxleGear.LossMap);
 			AssertAxlegearLossMap(genericAxlegearData.AxleGear.LossMap);
-			Assert.AreEqual(genericAxlegearData.AxleGear.LossMap, specificAxlegearData.AxleGear.LossMap);
+			var zipped =
+				genericAxlegearData.AxleGear.LossMap.LossMapSerialized.Zip(specificAxlegearData.AxleGear.LossMap
+					.LossMapSerialized);
+			Assert.IsTrue(zipped.All(x => x.First.Equals(x.Second, StringComparison.InvariantCultureIgnoreCase)));
+			//Assert(genericAxlegearData.AxleGear.LossMap.LossMapSerialized, specificAxlegearData.AxleGear.LossMap.LossMapSerialized);
 		}
 
 		private void AssertAxlegearLossMap(TransmissionLossMap lossMap)
@@ -621,8 +625,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertPneumaticConsumerDemand(RelatedRun relatedRun)
 		{
-			var genericConsumer = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.PneumaticAuxillariesConfig;
-			var specificConsumer = relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.PneumaticAuxillariesConfig;
+			var genericConsumer = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.PneumaticAuxiliariesConfig;
+			var specificConsumer = relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.PneumaticAuxiliariesConfig;
 			
 			Assert.AreEqual(Constants.BusAuxiliaries.PneumaticConsumersDemands.AdBlueInjection, genericConsumer.AdBlueInjection);
 			Assert.AreEqual( genericConsumer.AdBlueInjection, specificConsumer.AdBlueInjection);
@@ -861,7 +865,9 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(RetarderType.TransmissionOutputRetarder, genericRetarder.Type);
 			Assert.AreEqual(genericRetarder.Type, specificRetarder.Type);
 
-			Assert.AreEqual(genericRetarder.LossMap, specificRetarder.LossMap);
+			var zipped = genericRetarder.LossMap.LossMapSerialized.Zip(specificRetarder.LossMap.LossMapSerialized);
+			Assert.IsTrue(zipped.All(x => x.First.Equals(x.Second, StringComparison.InvariantCultureIgnoreCase)));
+			//Assert.AreEqual(genericRetarder.LossMap, specificRetarder.LossMap);
 		}
 
 		#endregion
@@ -900,9 +906,12 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertStopStartData(DriverData.EngineStopStartData engineStopStart)
 		{
-			Assert.AreEqual(DeclarationData.Driver.EngineStopStart.ActivationDelay, engineStopStart.EngineOffStandStillActivationDelay);
-			Assert.AreEqual(DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan, engineStopStart.MaxEngineOffTimespan);
-			Assert.AreEqual(DeclarationData.Driver.EngineStopStart.UtilityFactor, engineStopStart.UtilityFactorStandstill);
+			var declarationValues = DeclarationData.Driver.GetEngineStopStartBus(
+				VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, CompressorDrive.mechanically);
+
+            Assert.AreEqual(declarationValues.ActivationDelay, engineStopStart.EngineOffStandStillActivationDelay);
+			Assert.AreEqual(declarationValues.MaxEngineOffTimespan, engineStopStart.MaxEngineOffTimespan);
+			Assert.AreEqual(declarationValues.UtilityFactor, engineStopStart.UtilityFactorStandstill);
 		}
 
 		private void AssertEcoRoll(DriverData.EcoRollData ecoRoll)
@@ -1168,10 +1177,10 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		TestCase(@"TestData\Integration\Buses\FactorMethod\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 17, TestName = "RunBusSimulation electric STP/Fan ESS CO/RL"),
 
 		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 3, TestName = "RunBusSimulation Grp 39/40 P39SD U/RL"),
-		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 7, TestName = "RunBusSimulation Grp 39/40 P39DD HU/RL"),
-		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 9, TestName = "RunBusSimulation Grp 39/40 P39DD U/RL"),
-		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 19, TestName = "RunBusSimulation Grp 39/40 P40DD CO/RL"), // fails! is intended/known
-		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 18, TestName = "RunBusSimulation Grp 39/40 P40DD CO/LL"),  // fails! is intended/known
+		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 7, TestName = "RunBusSimulation Grp 39/40 P39SD IU/RL"),
+		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 9, TestName = "RunBusSimulation Grp 39/40 P39DD HU/RL"),
+		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 19, TestName = "RunBusSimulation Grp 39/40 P40DD IU/RL"), // fails! is intended/known
+		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 18, TestName = "RunBusSimulation Grp 39/40 P40DD IU/LL"),  // fails! is intended/known
 
 		//TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ConvAux_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ConvAux SmartPS"),
 		//TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ES Aux SmartPS"),

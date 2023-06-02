@@ -8,6 +8,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.AuxiliaryDataAdapter;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -30,7 +31,7 @@ static internal class SSMBusAuxModelParameters
 		string[] steeringpumps, string fanTech, AlternatorType alternatorTech, Meter entranceHeight,
 		LoadingType loading = LoadingType.ReferenceLoad, bool essSupplyfromHVREESS = false)
 	{
-		var dao = new SpecificCompletedBusAuxiliaryDataAdapter(new PrimaryBusAuxiliaryDataAdapter());
+		var dao = new SpecificCompletedBusAuxiliaryDataAdapter();
 
 		var segment = DeclarationData.CompletedBusSegments.Lookup(axleconfiguration.NumAxles(),
 			vehicleCode, registrationClass, numPassengersLowerdeck, height, lowEntry);
@@ -65,11 +66,9 @@ static internal class SSMBusAuxModelParameters
 		primaryBusAuxES.Setup(p => p.AlternatorTechnology).Returns(alternatorTech);
 		primaryBusAuxES.Setup(p => p.Alternators).Returns(new[] { new AlternatorInputData(28.3.SI<Volt>(), 50.SI<Ampere>()) }.Cast<IAlternatorDeclarationInputData>().ToList());
 		if (alternatorTech == AlternatorType.Smart) {
-			var battery = new Mock<IBusAuxElectricStorageDeclarationInputData>();
-			battery.Setup(b => b.ElectricStorageCapacity).Returns(20.SI(Unit.SI.Kilo.Watt.Hour).Cast<WattSecond>());
-			//battery.Setup(b => b.)
+			var battery = new BusAuxBatteryInputData("li-ion battery - high energy", 12.SI<Volt>(), (20 / 12.0).SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>());
 			primaryBusAuxES.Setup(p => p.ElectricStorage).Returns(new List<IBusAuxElectricStorageDeclarationInputData>()
-				{ battery.Object });
+				{ battery });
 		} else {
 			primaryBusAuxES.Setup(p => p.ElectricStorage)
 				.Returns(new List<IBusAuxElectricStorageDeclarationInputData>());

@@ -10,6 +10,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
@@ -312,8 +313,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 
 			var maxAlternatorPower = auxData.ElectricSupply.GetMaxAlternatorPower();
-			var electricStorageCapacity =
-				auxData.ElectricSupply.ElectricStorage?.Sum(electricStorage => electricStorage.ElectricStorageCapacity) ?? 0.SI<WattSecond>();
+			var electricStorageCapacity = DeclarationData.BusAuxiliaries.CalculateBatteryCapacity(
+				auxData.ElectricSupply.ElectricStorage) ?? 0.SI<WattSecond>();
 			return new XElement(_mrf + XMLNames.BusAux_ElectricSystem,
 				new XElement(_mrf + XMLNames.BusAux_ElectricSystem_AlternatorTechnology,
 					auxData.ElectricSupply.AlternatorTechnology.ToXMLFormat()),
@@ -339,7 +340,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			var electricStorageCapacity =
-				auxData.ElectricSupply.ElectricStorage?.Sum(electricStorage => electricStorage.ElectricStorageCapacity);
+				DeclarationData.BusAuxiliaries.CalculateBatteryCapacity(auxData.ElectricSupply.ElectricStorage);
 			return new XElement(_mrf + XMLNames.BusAux_ElectricSystem,
 				auxData.ElectricSupply.ElectricStorage == null || electricStorageCapacity == null ? null :  new XElement(_mrf + "ElectricStorageCapacity", electricStorageCapacity.ToXMLFormat()));
 		}

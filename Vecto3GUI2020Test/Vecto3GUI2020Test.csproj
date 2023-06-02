@@ -6,13 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Appium.WebDriver" Version="4.3.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
-    <PackageReference Include="Moq" Version="4.18.2" />
+    <PackageReference Include="AutoBogus.Moq" Version="2.13.1" />
+    <PackageReference Include="Bogus" Version="34.0.2" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
+    <PackageReference Include="Moq" Version="4.18.4" />
     <PackageReference Include="Ninject" Version="3.3.6" />
-    <PackageReference Include="NUnit" Version="3.13.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,11 +31,34 @@
 
   <ItemGroup>
     <Folder Include="HelperTests\" />
-    <Folder Include="Testdata\bugreports\" />
+    <Folder Include="TestData\bugreports\" />
     <Folder Include="TestData\output\" />
+    <Folder Include="XML\XMLInput\" />
+    <Folder Include="XML\XMLWritingTest\TestDataCreator\" />
   </ItemGroup>
 
   <ItemGroup>
+	<Content Include="..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\**\*.*">
+		<Link>TestData\XML\%(RecursiveDir)%(FileName)%(Extension)</Link>
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+	  <Content Include="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\**\*.*">
+		  <Link>TestData\Integration\Multistage\%(RecursiveDir)%(FileName)%(Extension)</Link>
+		<!--<TargetPath>TestData\Integration\Multistage</TargetPath>-->
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+	<Content Include="..\VectoCore\VectoCoreTest\TestData\Integration\Buses\FactorMethod\**\*.*">
+		<Link>TestData\Integration\Multistage\FactorMethod\%(RecursiveDir)%(FileName)%(Extension)</Link>
+		<!--<TargetPath>TestData\Integration\Multistage</TargetPath>-->
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+	  <!--<Content Remove="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifCompletedConventional.vecto" />
+	  <Content Remove="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifExempted.vecto" />
+	  <Content Remove="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifExemptedIncomplete.vecto" />
+	  <Content Remove="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifInterimDiesel.vecto" />-->
+    
+    
+    
     <Content Include="..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\AidragComponent.xml" Link="Testdata\AidragComponent.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -95,6 +119,36 @@
     <None Update="TestData\bugreports\PrimaryDecimal\primary_heavyBus group41_nonSmart_rounded_decimals.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\Case1\newVifExemptedIncomplete.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Case1\newVifInterimDiesel.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Case1\special_case_1.vecto">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Case1\vecto_vehicle-primary_heavyBus-sample.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Case1\vecto_vehicle-stage_input_only_certain_entries01-sample.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Case2\newVifCompletedConventional-noADAS.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Case2\newVifCompletedConventional.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Case2\newVifExempted.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Case2\special_case_2.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Case2\vecto_vehicle-stage_input_full-sample.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\exempted_primary_heavyBus.VIF.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -107,22 +161,7 @@
     <None Update="TestData\interim2.VIF_Report_3.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\vecto_multistage_conventional_final_vif.VIF_Report_1.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="TestData\vecto_vehicle-completed_heavyBus_31b.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifCompletedConventional.vecto" Link="TestData\newVifCompletedConventional.vecto">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifExempted.vecto" Link="TestData\newVifExempted.vecto">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifExemptedIncomplete.vecto" Link="TestData\newVifExemptedIncomplete.vecto">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifInterimDiesel.vecto" Link="TestData\newVifInterimDiesel.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

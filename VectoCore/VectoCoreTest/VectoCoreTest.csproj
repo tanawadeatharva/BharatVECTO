@@ -22,11 +22,11 @@
 	</PropertyGroup>
   <ItemGroup>
     <PackageReference Include="HIC.System.Windows.Forms.DataVisualization" Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA; $(DefineConstants), '^(.*;)*TRACE(;.*)*$'))" Version="1.0.1" />
-    <PackageReference Include="Moq" Version="4.18.2" />
-    <PackageReference Include="NUnit" Version="3.13.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Moq" Version="4.18.4" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Ninject" Version="3.3.6" />
     <PackageReference Include="NLog" Version="4.7.13" />
   </ItemGroup>
@@ -39,6 +39,7 @@
 
   <ItemGroup>
     <None Include="TestData\**" CopyToOutputDirectory="PreserveNewest" />
+	<None Include="Resources\**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 	<ItemGroup>
@@ -77,6 +78,7 @@
     <Folder Include="InputData\DeclarationDataAdapterTest\" />
     <Folder Include="Integration\Declaration\PrimaryBus\" />
     <Folder Include="Models\Declaration\BusAux\" />
+    <Folder Include="TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\CompletedBus\VIF\" />
     <Folder Include="TestUtils\" />
   </ItemGroup>
 

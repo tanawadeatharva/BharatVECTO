@@ -3,6 +3,7 @@ using System.Linq;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.GenericModelData;
@@ -98,15 +99,15 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var emResult = GenericRatedPointHelper.GetRatedPointOfFullLoadCurveAtEM(fullLoadCurve);
 			Assert.IsNotNull(emResult); 
-			Assert.AreEqual(755.11 , emResult.NRated.Value(), 1e-2, "Wrong speed");
+			Assert.AreEqual(755.11 , emResult.NRated.AsRPM, 1e-2, "Wrong speed");
 			Assert.AreEqual(4027.8000, emResult.TRated.Value(), 1e-4, "Wrong torque");
-			Assert.AreEqual(318.4980 , emResult.PRated.Value(), 1e-4 , "Wrong power");
+			Assert.AreEqual(318498.02032 , emResult.PRated.Value(), 1e-4 , "Wrong power");
 
 			var iepcResult = GenericRatedPointHelper.GetRatedPointOfFullLoadCurveAtIEPC(fullLoadCurve, 1, 1, 0.95, 1);
 			Assert.IsNotNull(iepcResult);
-			Assert.AreEqual(755.11, iepcResult.NRated.Value(), 1e-2);
+			Assert.AreEqual(755.11, iepcResult.NRated.AsRPM, 1e-2);
 			Assert.AreEqual(4239.7894, iepcResult.TRated.Value(), 1e-4);
-			Assert.AreEqual(335.26, iepcResult.PRated.Value(), 1e-2);
+			Assert.AreEqual(335261.0740, iepcResult.PRated.Value(), 1e-2);
 		}
 
 
@@ -117,7 +118,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var em = multistepBusInputData.JobInputData.PrimaryVehicle.Vehicle.Components.ElectricMachines;
 
 			var genericElectricMotor = new GenericBusElectricMotorData();
-			var electricMotorData = genericElectricMotor.CreateGenericElectricMotorData(em.Entries[0]);
+			var electricMotorData = genericElectricMotor.CreateGenericElectricMotorData(em.Entries[0], null,
+				em.Entries[0].ElectricMachine.VoltageLevels.Average(v => v.VoltageLevel.Value()).SI<Volt>());
 
 			Assert.AreEqual(2, electricMotorData.EfficiencyData.VoltageLevels.Count);
 		}
@@ -131,7 +133,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var axleGear = multistepBusInputData.JobInputData.PrimaryVehicle.Vehicle.Components.AxleGearInputData;
 
 			var genericIEPCData = new GenericBusIEPCData();
-			var iepcMotorData = genericIEPCData.CreateIEPCElectricMotorData(iepcData, axleGear);
+			var iepcMotorData = genericIEPCData.CreateIEPCElectricMotorData(iepcData);
 
 			Assert.AreEqual(1, iepcMotorData.EfficiencyData.VoltageLevels.Count);
 		}
@@ -151,21 +153,21 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(2, ihpcData.EfficiencyData.VoltageLevels.Count);
 		}
 
-		[TestCase(@"TestData\XML\XMLVIFBusReport\IEPC_completedBus_2.VIF_Report_2.xml", 0.1)]
+		[TestCase(@"TestData\XML\XMLVIFBusReport\IEPC_completedBus_2.VIF_Report_2.xml", 0.5)]
 		public void TestGenericBatteryData(string vifFilePath, double initialSoC)
 		{
 			var multistepBusInputData = xmlInputReader.Create(vifFilePath) as IMultistepBusInputDataProvider;
 			var electricStorage = multistepBusInputData.JobInputData.PrimaryVehicle.Vehicle.Components.ElectricStorage;
 			
 			var genericBusBatteryData = new GenericBusBatteryData();
-			var batterySystemData = genericBusBatteryData.CreateBatteryData(electricStorage, initialSoC);
+			var batterySystemData = genericBusBatteryData.CreateBatteryData(electricStorage, VectoSimulationJobType.BatteryElectricVehicle, true);
 
 			Assert.AreEqual(initialSoC, batterySystemData.InitialSoC);
 			Assert.AreEqual(2, batterySystemData.Batteries.Count);
 
 			var battery0 = batterySystemData.Batteries[0];
-			Assert.AreEqual(0.80, battery0.Item2.MaxSOC, 1e-6);
-			Assert.AreEqual(0.20, battery0.Item2.MinSOC, 1e-6);
+			Assert.AreEqual(0.785, battery0.Item2.MaxSOC, 1e-6);
+			Assert.AreEqual(0.215, battery0.Item2.MinSOC, 1e-6);
 			Assert.AreEqual(72, battery0.Item2.Capacity.AsAmpHour);
 			Assert.AreEqual(2, battery0.Item2.InternalResistance.Entries.Length);
 			
@@ -183,8 +185,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(resistance, battery0.Item2.InternalResistance.Entries[1].Resistance[2].Item2.Value());
 
 			var battery1 = batterySystemData.Batteries[1];
-			Assert.AreEqual(0.80, battery1.Item2.MaxSOC, 1e-6);
-			Assert.AreEqual(0.20, battery1.Item2.MinSOC, 1e-6);
+			Assert.AreEqual(0.785, battery1.Item2.MaxSOC, 1e-6);
+			Assert.AreEqual(0.215, battery1.Item2.MinSOC, 1e-6);
 			Assert.AreEqual(72, battery1.Item2.Capacity.AsAmpHour);
 			Assert.AreEqual(2, battery1.Item2.InternalResistance.Entries.Length);
 			
@@ -203,18 +205,18 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		
-		[TestCase(@"TestData\Hybrids\Hyb_P2_Group2SuperCapOvl\SuperCap.vreess", 0.1)]
+		[TestCase(@"TestData\Hybrids\Hyb_P2_Group2SuperCapOvl\SuperCap.vreess", 1)]
 		public void TestGenericSuperCapData(string superCapFilePath, double initialSoC)
 		{
 			var superCap = JSONInputDataFactory.ReadREESSData(superCapFilePath, false) as ISuperCapDeclarationInputData; 
 			var genericBusSuperCapData = new GenericBusSuperCapData();
-			var superCapData = genericBusSuperCapData.CreateGenericSuperCapData(superCap, initialSoC);
+			var superCapData = genericBusSuperCapData.CreateGenericSuperCapData(superCap);
 
 			Assert.AreEqual(37.0, superCapData.Capacity.Value());
 			Assert.AreEqual(0, superCapData.MinVoltage.Value());
 			Assert.AreEqual(330.0, superCapData.MaxVoltage.Value());
 			Assert.AreEqual(100, superCapData.MaxCurrentCharge.Value());
-			Assert.AreEqual(100, superCapData.MaxCurrentDischarge.Value());
+			Assert.AreEqual(-100, superCapData.MaxCurrentDischarge.Value());
 			Assert.AreEqual(initialSoC , superCapData.InitialSoC);
 			Assert.AreEqual(270.2703, superCapData.InternalResistance.Value(), 1e-4);
 		}

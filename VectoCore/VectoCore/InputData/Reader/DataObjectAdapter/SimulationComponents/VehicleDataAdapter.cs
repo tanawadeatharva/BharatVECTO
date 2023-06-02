@@ -6,6 +6,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -83,19 +84,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			double? passengerCount,
 			bool allowVocational);
 
-		public VehicleData CreateExemptedVehicleData(IVehicleDeclarationInputData data)
-		{
-			CheckDeclarationMode(data, "Vehicle");
-			return DoCreateExemptedVehicleData(data);
-		}
-
 		public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData primaryVehicle,
 			IVehicleDeclarationInputData completedVehicle, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 		{
 			throw new NotImplementedException("Method only applicable for completed specific bus!");
 		}
-
-		protected abstract VehicleData DoCreateExemptedVehicleData(IVehicleDeclarationInputData data);
 
 		protected static VehicleData GetVehicleData(IVehicleDeclarationInputData data,
 			Segment segment, Mission mission, Kilogram loading, double? passengerCount, bool allowVocational)
@@ -196,7 +189,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return GetVehicleData(data, segment, mission, loading, passengerCount, allowVocational);
 		}
 
-		protected override VehicleData DoCreateExemptedVehicleData(IVehicleDeclarationInputData data)
+	}
+
+	internal class ExemptedLorryVehicleDataAdapter : LorryVehicleDataAdapter
+	{
+		protected override VehicleData DoCreateVehicleData(IVehicleDeclarationInputData data,
+			Segment segment, Mission mission, Kilogram loading, double? passengerCount, bool allowVocational)
 		{
 			var exempted = SetCommonVehicleData(data);
 			exempted.VIN = data.VIN;
@@ -207,8 +205,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			exempted.DualFuelVehicle = data.DualFuelVehicle;
 			exempted.MaxNetPower1 = data.MaxNetPower1;
 			return exempted;
-		}
-	}
+        }
+    }
 
 	internal class PrimaryBusVehicleDataAdapter : LorryVehicleDataAdapter
 	{
@@ -218,22 +216,60 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			double? passengerCount, bool allowVocational)
 		{
 			var retVal = base.DoCreateVehicleData(data, segment, mission, loading, passengerCount, allowVocational);
-			if (data.ExemptedVehicle)
-			{ 
-				System.Diagnostics.Debug.Assert( false, "CreateExemptedVehicleData should be used");
-				return retVal;
-			}
+			
 			retVal.CurbMass = mission.CurbMass;
 			retVal.GrossVehicleMass = 40000.SI<Kilogram>();
 			return retVal;
 		}
 
-		#endregion
+        #endregion
 
-		protected override VehicleData DoCreateExemptedVehicleData(IVehicleDeclarationInputData data)
+		protected virtual SIBase<Kilogram> CalculateElectricComponentMass(IVehicleDeclarationInputData data)
 		{
-			var exempted = new VehicleData
-			{
+			var additionalMass = new List<Tuple<String, Kilogram>>();
+
+			if (data.Components.ElectricMachines != null) {
+				foreach (var emData in data.Components.ElectricMachines.Entries) {
+					var emVoltage = emData.ElectricMachine.VoltageLevels.OrderBy(x => x.VoltageLevel).Last();
+					var emContPwr = emVoltage.ContinuousTorque * emVoltage.ContinuousTorqueSpeed;
+					var massEM = emContPwr * DeclarationData.EM_MassPerPower + DeclarationData.EM_MassElectronics +
+								DeclarationData.EM_MassInverter;
+					additionalMass.Add(Tuple.Create(emData.Position.GetName(),
+						VectoMath.Round(massEM, MidpointRounding.AwayFromZero)));
+				}
+			}
+
+			if (data.Components.IEPC != null) {
+				var iepc = data.Components.IEPC;
+				var emVoltage = iepc.VoltageLevels.OrderBy(x => x.VoltageLevel).Last();
+				var emContPwr = emVoltage.ContinuousTorque * emVoltage.ContinuousTorqueSpeed;
+				var massEM = emContPwr * DeclarationData.EM_MassPerPower + DeclarationData.EM_MassElectronics +
+							DeclarationData.EM_MassInverter;
+				additionalMass.Add(Tuple.Create("IEPC",
+					VectoMath.Round(massEM, MidpointRounding.AwayFromZero)));
+            }
+
+			var count = 0;
+			foreach (var reess in data.Components.ElectricStorage.ElectricStorageElements) {
+				if (reess.REESSPack is IBatteryPackDeclarationInputData battery) {
+					var ocvMap = BatterySOCReader.Create(battery.VoltageCurve);
+					var capacity = battery.Capacity * ocvMap.Lookup(0.5);
+					var batteryMass = VectoMath.Round(capacity * DeclarationData.Battery_MassPerCapacity, MidpointRounding.AwayFromZero);
+					additionalMass.Add(Tuple.Create($"bat_{count}", batteryMass));
+					count += 1;
+				}
+			}
+
+			return additionalMass.Sum(x => x.Item2);
+		}
+    }
+
+	internal class ExemptedPrimaryBusVehicleDataAdapter : PrimaryBusVehicleDataAdapter
+	{
+		protected override VehicleData DoCreateVehicleData(IVehicleDeclarationInputData data, Segment segment,
+			Mission mission, Kilogram loading,
+			double? passengerCount, bool allowVocational) {
+			var exempted = new VehicleData {
 				InputData = data,
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				Manufacturer = data.Manufacturer,
@@ -256,10 +292,45 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			exempted.AxleConfiguration = data.AxleConfiguration;
 			return exempted;
 		}
-
 	}
 
-	internal class CompletedBusGenericVehicleDataAdapter : PrimaryBusVehicleDataAdapter
+	internal class PrimaryBusVehicleDataAdapter_HEV : PrimaryBusVehicleDataAdapter
+	{
+		#region Overrides of PrimaryBusVehicleDataAdapter
+
+		protected override VehicleData DoCreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, Kilogram loading,
+			double? passengerCount, bool allowVocational)
+		{
+			var retVal =  base.DoCreateVehicleData(data, segment, mission, loading, passengerCount, allowVocational);
+
+			retVal.CurbMass = mission.CurbMass + CalculateElectricComponentMass(data);
+
+			return retVal;
+		}
+
+        #endregion
+
+    }
+
+	internal class PrimaryBusVehicleDataAdapter_PEV : PrimaryBusVehicleDataAdapter
+	{
+		#region Overrides of PrimaryBusVehicleDataAdapter
+
+		protected override VehicleData DoCreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, Kilogram loading,
+			double? passengerCount, bool allowVocational)
+		{
+			var retVal = base.DoCreateVehicleData(data, segment, mission, loading, passengerCount, allowVocational);
+
+			retVal.CurbMass = mission.CurbMass - mission.GenericMassICE + CalculateElectricComponentMass(data);
+
+			return retVal;
+		}
+
+		#endregion
+    }
+
+
+    internal class CompletedBusGenericVehicleDataAdapter : PrimaryBusVehicleDataAdapter
 	{
 		#region Overrides of PrimaryBusVehicleDataAdapter
 
@@ -275,38 +346,33 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return retVal;
 		}
 
-		protected override VehicleData DoCreateExemptedVehicleData(IVehicleDeclarationInputData data)
-		{
-			var retVal = base.DoCreateExemptedVehicleData(data);
-			retVal.GrossVehicleMass = data.GrossVehicleMassRating;
-			if (retVal.TotalVehicleMass.IsGreater(retVal.GrossVehicleMass))
-			{
-				throw new VectoException("Total Vehicle Mass exceeds Gross Vehicle Mass for completed bus generic ({0}/{1})", retVal.TotalVehicleMass, retVal.GrossVehicleMass);
-			}
-			return retVal;
-		}
-
 		#endregion
 	}
 
-	internal class CompletedBusSpecificVehicleDataAdapter : IVehicleDataAdapter
+	internal class CompletedBusGenericVehicleDataAdapter_HEV : PrimaryBusVehicleDataAdapter_HEV
+	{
+
+	}
+
+	internal class CompletedBusGenericVehicleDataAdapter_PEV : PrimaryBusVehicleDataAdapter_PEV
+	{
+
+	}
+
+
+    internal class CompletedBusSpecificVehicleDataAdapter : IVehicleDataAdapter
 	{
 		protected IVehicleDataAdapter completedBusGenericDataAdapter = new CompletedBusGenericVehicleDataAdapter();
 
 		#region Overrides of IVehicleDataAdapter
 
-		public VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, Kilogram loading,
+		public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, Kilogram loading,
 			double? passengerCount, bool allowVocational)
 		{
 			throw new NotImplementedException();
 		}
 
-		public VehicleData CreateExemptedVehicleData(IVehicleDeclarationInputData data)
-		{
-			throw new NotImplementedException();
-		}
-
-		public VehicleData CreateVehicleData(IVehicleDeclarationInputData primaryVehicle,
+		public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData primaryVehicle,
             IVehicleDeclarationInputData completedVehicle, Segment segment, Mission mission,
             KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
         {
@@ -353,11 +419,35 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
             return vehicleData;
         }
 
+        #endregion
+    }
 
-		#endregion
+	internal class ExemptedCompletedBusSpecificVehicleDataAdapter : CompletedBusSpecificVehicleDataAdapter
+	{
+		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData primaryVehicle,
+			IVehicleDeclarationInputData completedVehicle, Segment segment, Mission mission,
+			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
+		{
+			return new VehicleData() {
+				ModelName = completedVehicle.Model,
+				Manufacturer = completedVehicle.Manufacturer,
+				ManufacturerAddress = completedVehicle.ManufacturerAddress,
+				VIN = completedVehicle.VIN,
+				LegislativeClass = completedVehicle.LegislativeClass,
+				RegisteredClass = completedVehicle.RegisteredClass,
+				VehicleCode = completedVehicle.VehicleCode,
+				VehicleCategory = VehicleCategory.HeavyBusCompletedVehicle,
+				CurbMass = completedVehicle.CurbMassChassis,
+				GrossVehicleMass = completedVehicle.GrossVehicleMassRating,
+				ZeroEmissionVehicle = primaryVehicle.ZeroEmissionVehicle,
+				MaxNetPower1 = primaryVehicle.MaxNetPower1,
+				InputData = completedVehicle
+			};
+        }
 	}
 
-	internal class SingleBusVehicleDataAdapter : VehicleDataAdapter
+
+    internal class SingleBusVehicleDataAdapter : VehicleDataAdapter
 	{
 		#region Overrides of VehicleDataAdapter
 
@@ -397,13 +487,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		protected override VehicleData DoCreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, Kilogram loading,
 			double? passengerCount, bool allowVocational)
 		{
-			return VehicleDataAdapter.GetVehicleData(data, segment, mission, loading, passengerCount, allowVocational);
+			return GetVehicleData(data, segment, mission, loading, passengerCount, allowVocational);
 		}
 
-		protected override VehicleData DoCreateExemptedVehicleData(IVehicleDeclarationInputData data)
-		{
-			throw new NotImplementedException();
-		}
 
 		#endregion
 	}

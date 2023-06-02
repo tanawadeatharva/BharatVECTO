@@ -80,7 +80,17 @@ namespace TUGraz.VectoCommon.InputData
 
 		public string SourceFile { get; set; }
 
+		/// <summary>
+		/// returns the version of the namespace uri
+		/// </summary>
 		public string SourceVersion { get; set; }
+
+		/// <summary>
+		/// In case of components loaded from XML files, this is the name of the XSD Type
+		/// </summary>
+		public string Type { get; set; }
+		
+		public string TypeVersion { get; set; }
 
 		public string SourcePath => SourceFile != null ? Path.GetDirectoryName(Path.GetFullPath(SourceFile)) : null;
 	}
@@ -853,6 +863,9 @@ namespace TUGraz.VectoCommon.InputData
 		public PowertrainPosition Position { get; set; }
 
 		private double? _ratioADC = null;
+
+		private TableData _lossMapADC = null;
+
 		/// <summary>
 		/// If not overridden RatioADC == ADC?.Ratio ?? 1;
 		/// Can only be overridden when ADC == null;
@@ -874,7 +887,21 @@ namespace TUGraz.VectoCommon.InputData
 
 		public double MechanicalTransmissionEfficiency { get; set; }
 
-		public TableData MechanicalTransmissionLossMap { get; set; }
+		public TableData MechanicalTransmissionLossMap
+		{
+			get
+			{
+				if (_lossMapADC != null && ADC == null) {
+					return _lossMapADC;
+				} else {
+					return ADC?.LossMap;
+				}
+			}
+			set
+			{
+				_lossMapADC = value;
+			}
+		}
 
 		public IADCDeclarationInputData ADC {get; set; }
 	}
@@ -1008,6 +1035,8 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IBusAuxiliariesDeclarationData
 	{
+		DataSource DataSource { get; }
+
 		XmlNode XMLSource { get; }
 
 		string FanTechnology { get; }
@@ -1069,7 +1098,6 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		string Technology { get; }
 
-		WattSecond ElectricStorageCapacity { get; }
 	}
 
 
@@ -1145,7 +1173,14 @@ namespace TUGraz.VectoCommon.InputData
 		ISimulationParameter SimulationParameter { get; }
 
 		Dictionary<FuelType, JoulePerMeter> EnergyConsumption { get; }
-		Dictionary<string, double> CO2 { get; }
+		JoulePerMeter ElectricEnergyConsumption { get; }
+
+		/// <summary>
+		/// Dictionary <string unit, double value>
+		/// </summary>
+        Dictionary<string, double> CO2 { get; }
+
+		OvcHevMode OvcMode { get; }
 	}
 
 	public interface ISimulationParameter
@@ -1275,7 +1310,7 @@ namespace TUGraz.VectoCommon.InputData
 		E4,
 		E_IEPC,
 		P1,
-		P2,
+		P2,P,
 		P2_5,
 		P3,
 		P4,
@@ -1330,6 +1365,51 @@ namespace TUGraz.VectoCommon.InputData
 					return S_IEPC_ID;
 				default:
 					return type.ToString();
+			}
+		}
+
+		public static bool IsBatteryElectricVehicle(this ArchitectureID type)
+		{
+			switch (type) {
+				case ArchitectureID.E2:
+				case ArchitectureID.E3:
+				case ArchitectureID.E4:
+				case ArchitectureID.E_IEPC:
+					return true;
+				default: return false;
+			}
+		}
+
+		public static bool IsHybridVehicle(this ArchitectureID type)
+		{
+			return IsSerialHybridVehicle(type) || IsParallelHybridVehicle(type);
+		}
+
+		public static bool IsParallelHybridVehicle(this ArchitectureID type)
+		{
+			switch (type) {
+				case ArchitectureID.P1:
+				case ArchitectureID.P2:
+				case ArchitectureID.P2_5:
+				case ArchitectureID.P3:
+				case ArchitectureID.P4:
+				//case ArchitectureID.P_IHPC:
+					return true;
+				default:
+					return false;
+			}
+		}
+
+		public static bool IsSerialHybridVehicle(this ArchitectureID type)
+		{
+			switch (type) {
+				case ArchitectureID.S2:
+				case ArchitectureID.S3:
+				case ArchitectureID.S4:
+				case ArchitectureID.S_IEPC:
+					return true;
+				default:
+					return false;
 			}
 		}
 	}

@@ -58,7 +58,7 @@ public class SSMHeatingPostProcessingCorrection
 										"2500,0,3800\n" +
 										"2500,1000,32000\n";
 
-	protected static readonly FuelData.Entry Fuel = FuelData.Diesel;
+	protected static readonly IFuelProperties Fuel = FuelData.Diesel;
 
 
 
@@ -100,26 +100,26 @@ public class SSMHeatingPostProcessingCorrection
 	// TODO MQ 2022-11-24: Extend Test and assert electric consumption / range
 	[
 		TestCase("a", CFG1, HeatPumpNone, HeatPumpNone,NoElHtr, 0.0, AuxHtrPwr0, 0, 0, 0, 0, 0, 0, 0, 0),
-		TestCase("b", CFG1, HeatPumpNone, HeatPumpNone,AirElHtr, 0.0, AuxHtrPwr30, 0.000, 0.0, 0.000, 0.0, 0.000, 0.0, 0.0, 0.0),
-		TestCase("c", CFG1, HeatPumpNone, HeatPumpNone,WaterElHtr, 4.0, AuxHtrPwr30, 0.000, 0.0, 0.000, 0.0, 0.000, 0.0, 0.0, 0.0),
-		TestCase("d", CFG1, HeatPumpNone, HeatPumpNone, OthrElHtr, 10.0, AuxHtrPwr30, 0, 0, 0, 0, 0, 0, 0, 0),
+		TestCase("b", CFG1, HeatPumpNone, HeatPumpNone,AirElHtr, 0.0, AuxHtrPwr30, 0.000, 0.0, 0.000, 0.0, 16.776, 0.0, 9345644.6, 0.0),
+		TestCase("c", CFG1, HeatPumpNone, HeatPumpNone,WaterElHtr, 4.0, AuxHtrPwr30, 0.000, 0.0, 0.000, 0.0, 13.698, 0.0, 3879017.3, 0.0),
+		TestCase("d", CFG1, HeatPumpNone, HeatPumpNone, OthrElHtr, 10.0, AuxHtrPwr30, 0.000, 0.0, 0.000, 0.0, 9.082, 0.0, 804228.6, 0.0),
 
-		TestCase("e", CFG2, HeatPumpCont, HeatPumpNone, AirElHtr, 0.0, AuxHtrPwr0, 0.000, 0.0, 0.000, 0.0, 0.000, 0.0, 0.0, 0.0),
-		TestCase("f", CFG2, HeatPumpCont, HeatPumpNone, WaterElHtr, 0.0, AuxHtrPwr30, 0.000, 0.0, 0.000, 0.0, 0.000, 0.0, 0.0, 0.0),
-		TestCase("g", CFG2, HeatPumpCont, HeatPumpNone, OthrElHtr, 4.0,  AuxHtrPwr0, 0.000, 0.0, 0.000, 0.0, 0.000, 0.0, 0.0, 0.0),
-		TestCase("h", CFG2, HeatPumpCont, HeatPumpNone, OthrElHtr, 4.0, AuxHtrPwr30, 0.000, 0.0, 0.000, 0.0, 0.000, 0.0, 0.0, 0.0),
+		TestCase("e", CFG2, HeatPumpCont, HeatPumpNone, AirElHtr, 0.0, AuxHtrPwr0, 126.798, 0.0, 0.000, 0.0, 2033.302, 0.0, 0.0, 0.0),
+		TestCase("f", CFG2, HeatPumpCont, HeatPumpNone, WaterElHtr, 0.0, AuxHtrPwr30, 103.891, 0.0, 0.000, 0.0, 16.776, 0.0, 8575911.3, 0.0),
+		TestCase("g", CFG2, HeatPumpCont, HeatPumpNone, OthrElHtr, 4.0,  AuxHtrPwr0, 58.417, 0.0, 0.000, 0.0, 853.375, 0.0, 0.0, 0.0),
+		TestCase("h", CFG2, HeatPumpCont, HeatPumpNone, OthrElHtr, 4.0, AuxHtrPwr30, 43.749, 0.0, 0.000, 0.0, 13.698, 0.0, 3600615.7, 0.0),
 
-		TestCase("i", CFG6, HeatPumpNone, HeatPumpCont, NoElHtr, 0.0, AuxHtrPwr0, 0.000, 0.0, 0.000, 0.0, 0.000, 0.0, 0.0, 0.0),
-		TestCase("j", CFG6, HeatPumpNone, HeatPumpCont, AirElHtr, 0.0, AuxHtrPwr30, 0.000, 0.0, 0.000, 0.0, 0.000, 0.0, 0.0, 0.0),
-		TestCase("k", CFG6, HeatPumpNone, HeatPumpCont, WaterElHtr, 4.0, AuxHtrPwr30, 0.000, 0.0, 0.000, 0.0, 0.000, 0.0, 0.0, 0.0),
-		TestCase("l", CFG6, HeatPumpNone, HeatPumpCont, WaterElHtr, 4.0, AuxHtrPwr0, 0.000, 0.0, 0.000, 0.0, 0.000, 0.0, 0.0, 0.0),
+		TestCase("i", CFG6, HeatPumpNone, HeatPumpCont, NoElHtr, 0.0, AuxHtrPwr0, 1267.984, 0.0, 0.000, 0.0, 0.000, 0.0, 0.0, 0.0),
+		TestCase("j", CFG6, HeatPumpNone, HeatPumpCont, AirElHtr, 0.0, AuxHtrPwr30, 1038.910, 0.0, 0.000, 0.0, 16.776, 0.0, 1648312.3, 0.0),
+		TestCase("k", CFG6, HeatPumpNone, HeatPumpCont, WaterElHtr, 4.0, AuxHtrPwr30, 437.492, 0.0, 0.000, 0.0, 13.698, 0.0, 1095001.3, 0.0),
+		TestCase("l", CFG6, HeatPumpNone, HeatPumpCont, WaterElHtr, 4.0, AuxHtrPwr0, 584.167, 0.0, 0.000, 0.0, 68.490, 0.0, 0.0, 0.0),
 
-		TestCase("o", CFG7, HeatPumpR744, HeatPumpCont, NoElHtr, 0.0, AuxHtrPwr0 , 0.000, 0.0, 0.000, 0.0, 0.000, 0.0, 0.0, 0.0),
-		TestCase("p", CFG7, HeatPumpR744, HeatPumpCont, AirElHtr, 0.0, AuxHtrPwr30, 0.000, 0.0, 0.000, 0.0, 0.000, 0.0, 0.0, 0.0),
-		TestCase("q", CFG7, HeatPumpR744, HeatPumpCont, WaterElHtr, 4.0, AuxHtrPwr0, 0.000, 0.0, 0.000, 0.0, 0.000, 0.0, 0.0, 0.0),
-		TestCase("r", CFG7, HeatPumpR744, HeatPumpCont, WaterElHtr, 4.0, AuxHtrPwr30, 0.000, 0.0, 0.000, 0.0, 0.000, 0.0, 0.0, 0.0),
-		TestCase("s", CFG7, HeatPumpCont, HeatPumpCont, OthrElHtr, 4.0, AuxHtrPwr0, 0.000, 0.0, 0.000, 0.0, 0.000, 0.0, 0.0, 0.0),
-		TestCase("t", CFG7, HeatPumpCont, HeatPumpCont, OthrElHtr, 4.0, AuxHtrPwr30, 0.000, 0.0, 0.000, 0.0, 0.000, 0.0, 0.0, 0.0),
+		TestCase("o", CFG7, HeatPumpR744, HeatPumpCont, NoElHtr, 0.0, AuxHtrPwr0 , 1263.261, 0.0, 0.000, 0.0, 0.000, 0.0, 0.0, 0.0),
+		TestCase("p", CFG7, HeatPumpR744, HeatPumpCont, AirElHtr, 0.0, AuxHtrPwr30, 1033.300, 0.0, 0.000, 0.0, 16.776, 0.0, 1634271.2, 0.0),
+		TestCase("q", CFG7, HeatPumpR744, HeatPumpCont, WaterElHtr, 4.0, AuxHtrPwr0, 579.983, 0.0, 0.000, 0.0, 65.066, 0.0, 0.0, 0.0),
+		TestCase("r", CFG7, HeatPumpR744, HeatPumpCont, WaterElHtr, 4.0, AuxHtrPwr30, 434.624, 0.0, 0.000, 0.0, 13.698, 0.0, 1083536.0, 0.0),
+		TestCase("s", CFG7, HeatPumpCont, HeatPumpCont, OthrElHtr, 4.0, AuxHtrPwr0, 584.167, 0.0, 0.000, 0.0, 68.490, 0.0, 0.0, 0.0),
+		TestCase("t", CFG7, HeatPumpCont, HeatPumpCont, OthrElHtr, 4.0, AuxHtrPwr30, 437.492, 0.0, 0.000, 0.0, 13.698, 0.0, 1095001.3, 0.0),
 	]
 	public void TestModDataPostprocessing_PEV(string sort, BusHVACSystemConfiguration cfg, HeatPumpType driverHpHeating,
 		HeatPumpType passengerHpHeating, HeaterType heater, double emLossKwH, double auxhHeaterPwr,
@@ -553,7 +553,9 @@ public class SSMHeatingPostProcessingCorrection
 				.Returns<IFuelProperties, ModalResultField>((f, m) => f.GetLabel());
 			m.Setup(x => x.EngineLineCorrectionFactor(It.IsIn(Fuel)))
 				.Returns(15.SI(Unit.SI.Gramm.Per.Kilo.Watt.Hour).Cast<KilogramPerWattSecond>());
-		}
+		} else {
+			m.Setup(x => x.FuelData).Returns(new IFuelProperties[] {});
+        }
 		m.Setup(x => x.TimeIntegral<WattSecond>(ModalResultField.P_busAux_ES_consumer_sum, null))
 			.Returns(0.SI<WattSecond>());
 		m.Setup(x => x.TimeIntegral<WattSecond>(ModalResultField.P_busAux_ES_generated, null))

@@ -6,6 +6,8 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Utils;
 
@@ -13,7 +15,8 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 {
 	public class GenericBusBatteryData
 	{
-		public BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData batteryData, double initialSOC)
+		public BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData batteryData, VectoSimulationJobType jobType,
+			bool ovc)
 		{
 			var currentBatteryData = batteryData.ElectricStorageElements
 				.Where(x => x.REESSPack.StorageType == REESSType.Battery).ToList();
@@ -21,32 +24,47 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 			if (currentBatteryData.Count == 0)
 				return null;
 
-			return new BatterySystemData
-			{
-				InitialSoC = initialSOC,
-				Batteries = GetBatteries(currentBatteryData)
+			var retVal = new BatterySystemData {
+				Batteries = GetBatteries(currentBatteryData, jobType, ovc)
 			};
+			var limits = retVal.GetSocLimits();
+			retVal.InitialSoC = (limits.MaxSoc + limits.MinSoc) / 2;
+			return retVal;
 		}
 
-		private List<Tuple<int, BatteryData>> GetBatteries(List<IElectricStorageDeclarationInputData> currentBatteries)
+		private List<Tuple<int, BatteryData>> GetBatteries(List<IElectricStorageDeclarationInputData> currentBatteries, VectoSimulationJobType jobType,
+			bool ovc)
 		{
 			var result = new List<Tuple<int, BatteryData>>();
 
 			foreach (var currentBattery in currentBatteries) {
 				var entry = new Tuple<int, BatteryData>(currentBattery.StringId,
-					GetBatteryData(currentBattery.REESSPack as IBatteryPackDeclarationInputData));
+					GetBatteryData(currentBattery.REESSPack as IBatteryPackDeclarationInputData, jobType, ovc));
 				result.Add(entry);
 			}
 			
 			return result;
 		}
 		
-		private BatteryData GetBatteryData(IBatteryPackDeclarationInputData battery)
+		private BatteryData GetBatteryData(IBatteryPackDeclarationInputData battery, VectoSimulationJobType jobType,
+			bool ovc)
 		{
-			return new BatteryData {
-				MinSOC = battery.MinSOC ?? double.NaN,
-				MaxSOC = battery.MaxSOC ?? double.NaN,
-				MaxCurrent = BatteryMaxCurrentReader.Create(battery.MaxCurrentMap),
+			var genericSOC = DeclarationData.Battery.GenericSOC.Lookup(jobType, ovc);
+            var minSoc = genericSOC.SOCMin;
+			if (battery.MinSOC != null && battery.MinSOC > minSoc) {
+				minSoc = battery.MinSOC.Value;
+			}
+
+			var maxSoc = genericSOC.SOCMax;
+			if (battery.MaxSOC != null && battery.MaxSOC < maxSoc && battery.MaxSOC > battery.MinSOC) {
+				maxSoc = battery.MaxSOC.Value;
+			}
+            return new BatteryData {
+				MinSOC = maxSoc * ((1d / 2) * DeclarationData.Battery.GenericDeterioration)
+						+ minSoc * (1 - (1d / 2) * DeclarationData.Battery.GenericDeterioration),
+				MaxSOC = (maxSoc * (1 - (1d / 2) * DeclarationData.Battery.GenericDeterioration)
+						+ minSoc * ((1d / 2) * DeclarationData.Battery.GenericDeterioration)),
+                MaxCurrent = BatteryMaxCurrentReader.Create(battery.MaxCurrentMap),
 				Capacity = battery.Capacity,
 				InternalResistance = GetGenericInternalResistanceMap(battery),
 				SOCMap = BatterySOCReader.Create(battery.VoltageCurve)

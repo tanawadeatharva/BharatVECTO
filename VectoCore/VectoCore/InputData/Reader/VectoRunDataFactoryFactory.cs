@@ -7,6 +7,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
@@ -39,11 +40,14 @@ namespace TUGraz.VectoCore.InputData.Reader
 		{
 			_internalFactory = internalFactory;
 		}
+
 		/// <summary>
 		/// Creates a VectoRunDataFactory based on the type of inputDataProvider
 		/// </summary>
 		/// <param name="inputDataProvider"></param>
 		/// <param name="report"></param>
+		/// <param name="vtpReport"></param>
+		/// <param name="missionFilter"></param>
 		/// <returns></returns>
 		public IVectoRunDataFactory CreateDeclarationRunDataFactory(IInputDataProvider inputDataProvider,
 			IDeclarationReport report, IVTPReport vtpReport)
@@ -68,15 +72,15 @@ namespace TUGraz.VectoCore.InputData.Reader
 		}
 
 
-		private IVectoRunDataFactory CreateRunDataReader(IMultistageVIFInputData multistageVifInputData, IDeclarationReport report)
+		private IVectoRunDataFactory CreateRunDataReader(IMultistageVIFInputData multiStepVifInputData, IDeclarationReport report)
 		{
-			if (multistageVifInputData.VehicleInputData == null) {
+			if (multiStepVifInputData.VehicleInputData == null) {
 				return _internalFactory.CreateDeclarationCompletedBusRunDataFactory(
 					new VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification(
-						multistageVifInputData), multistageVifInputData, report);
+						multiStepVifInputData), multiStepVifInputData, report);
 			}
 			else {
-				return new DeclarationModeMultistageBusVectoRunDataFactory(multistageVifInputData, report);
+				return new DeclarationModeMultistageBusVectoRunDataFactory(multiStepVifInputData, report);
 			}
 		}
 

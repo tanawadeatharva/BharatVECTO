@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -34,6 +35,35 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Look up the hdv group based on the supergroup
+		/// </summary>
+		public VehicleClass Lookup(VehicleClass hdvSuperGroup, VehicleCode vehicleCode)
+		{
+			var doubleDecker = vehicleCode.IsDoubleDeckerBus();
+			var floorTyoe = vehicleCode.GetFloorType();
+
+			var row = _segmentTable.AsEnumerable().Where(r => {
+				bool doubleDeckerLookedup = r.Field<string>("doubledecker") == "1" ? true : false;
+				string floor = r.Field<string>("floortype");
+				var floorMatches = false;
+                switch (floor) {
+					case "high floor":
+						floorMatches = floorTyoe == FloorType.HighFloor; break;
+					case "low floor":
+						floorMatches = floorTyoe == FloorType.LowFloor; break;
+					default:
+						throw new VectoException($"Unexpected value in column floor type {floor}");
+				}
+
+				VehicleClass hdvSuperGroupLookedUp = VehicleClassHelper.Parse(r.Field<string>("hdvsupergroup"));
+				return floorMatches && doubleDecker == doubleDeckerLookedup &&
+						hdvSuperGroupLookedUp == hdvSuperGroup;
+			}).Single();
+			return VehicleClassHelper.Parse(row.Field<string>("hdvgroup"));
+        }
+
 
 		private Segment LookupPrimaryVehicle(
 			VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration, bool articulated)
@@ -93,27 +123,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 					var passengerCountLow = busFloorArea * passengerDensityLow; // weight of driver is included in curb mass
 					var passengerCountRef = busFloorArea * passengerDensityRef; // weight of driver is included in curb mass
 																				//var refLoad = passengerCountRef * missionType.GetAveragePassengerMass();
+																				
+					var iceDisplacement = row.ParseDouble("icedisplacement")
+																						.SI(Unit.SI.Liter)
+																						.Cast<CubicMeter>();
+					var fuelCapacity = row.ParseDouble("fuelcapacity").SI<Liter>();
 
-					// TODO: MQ 2021-11-30: REMOVE IN PRODUCTION
-					Stream cycle;
-					var cycleFile = Path.Combine("DeclarationMissions",
-						missionType.ToString().Replace("EMS", "") + ".vdri");
-					if (File.Exists(cycleFile)) {
-						cycle = File.OpenRead(cycleFile);
-					} else {
-						cycle = RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix +
-							".MissionCycles." +
-							missionType.ToString().Replace("EMS", "") +
-							Constants.FileExtensions.CycleFile);
-					}
+					var genericMassICEAndFuelTank = iceDisplacement * DeclarationData.ICE_MassPerDisplacement +
+													fuelCapacity / 2.0 * FuelData.Diesel.FuelDensity;
+
 					var mission = new Mission {
 						MissionType = missionType,
 						CrossWindCorrectionParameters = row.Field<string>("crosswindcorrection"),
-						CycleFile = cycle,
-						//CycleFile = RessourceHelper.ReadStream(
-						//		DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
-						//		missionType.ToString().Replace("EMS", "") +
-						//		Constants.FileExtensions.CycleFile),
 						AxleWeightDistribution = GetAxleWeightDistribution(row),
 						CurbMass = row.ParseDouble("curbmass").SI<Kilogram>(),
 						BodyCurbWeight = 0.SI<Kilogram>(),
@@ -126,6 +147,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 						PassengersRefLoad = passengerCountRef,
 						PassengersLowLoad = passengerCountLow * missionType.GetLowLoadFactorBus(),
 						TotalCargoVolume = 0.SI<CubicMeter>(),
+						GenericMassICE = VectoMath.Round(genericMassICEAndFuelTank, MidpointRounding.AwayFromZero),
 						DefaultCDxA = row.ParseDouble("cdxastandard").SI<SquareMeter>(),
 						BusParameter = new BusParameters() {
 							BusGroup = VehicleClassHelper.Parse(row.Field<string>("hdvgroup")),

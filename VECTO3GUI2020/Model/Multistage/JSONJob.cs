@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 
@@ -25,12 +26,17 @@ namespace VECTO3GUI2020.Model.Multistage
 		}
 	}
 
+	public class JSONCompletedBusJob
+	{
+		public JSONJobHeader Header { get; set; }
 
+		public JSONJobBodyCompletedBus Body { get; set; }
+	}
 
 	public class JSONJobHeader : ObservableObject
 	{
 		public static int PrimaryAndInterimVersion = 10;
-			//public const int CompletedBusFileVersion = 7;
+		public static int CompletedBusFileVersion = 7;
 
 		private string _createdBy;
 		private DateTime _dateTime;
@@ -98,5 +104,14 @@ namespace VECTO3GUI2020.Model.Multistage
 			get => _runSimulation;
 			set => SetProperty(ref _runSimulation, value);
 		}
+	}
+
+
+
+	public class JSONJobBodyCompletedBus
+	{
+		public string CompletedVehicle { get; set; }
+		public string PrimaryVehicleResults { get; set; }
+		public bool RunSimulation { get; set; }
 	}
 }

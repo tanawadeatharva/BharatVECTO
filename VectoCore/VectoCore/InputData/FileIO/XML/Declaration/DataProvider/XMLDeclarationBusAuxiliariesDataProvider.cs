@@ -22,10 +22,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
 		public AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24(
-			 XmlNode componentNode) : base(componentNode) { }
+			XmlNode componentNode) : base(componentNode)
+		{
+
+		}
 
 		#region Implementation of IBusAuxiliariesDeclarationData
 
+		public DataSource DataSource => new DataSource() {
+			Type = SchemaType,
+			TypeVersion = QualifiedName.Namespace
+		};
 		public virtual XmlNode XMLSource => BaseNode;
 
 		public virtual string FanTechnology
@@ -61,9 +68,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get
 			{
-				return GetString(new[]
-						{ XMLNames.BusAux_ElectricSystem, XMLNames.BusAux_ElectricSystem_AlternatorTechnology })
-					.ParseEnum<AlternatorType>();
+				return AlternatorTypeHelper.Parse(GetString(new[]
+					{ XMLNames.BusAux_ElectricSystem, XMLNames.BusAux_ElectricSystem_AlternatorTechnology }));
+				//.ParseEnum<AlternatorType>();
 			}
 		}
 
@@ -227,9 +234,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		
+
 		public XMLDeclarationPrimaryBusAuxiliariesConventionalDataProviderV24(
-			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode) { }
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode)
+		{
+
+		}
 
 		public override bool ESSupplyFromHEVREESS => false;
 	}
@@ -419,8 +429,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override string Clutch => null;
 
-        #endregion
-    }
+		public override ConsumerTechnology AdBlueDosing => ConsumerTechnology.Unknown;
+
+		#endregion
+	}
 
 	// ---------------------------------------------------------------------------------------
 
@@ -451,8 +463,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override string Clutch => null;
 
-        #endregion
-    }
+		public override ConsumerTechnology AdBlueDosing => ConsumerTechnology.Unknown;
+
+		#endregion
+	}
 
 	// ---------------------------------------------------------------------------------------
 

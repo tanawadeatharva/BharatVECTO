@@ -65,13 +65,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 	[CustomValidation(typeof(VectoRunData), "ValidateRunData")]
 	public class VectoRunData : SimulationComponentData
 	{
-		public enum OvcHevMode
-		{
-			NotApplicable,
-			ChargeSustaining,
-			ChargeDepleting,
-		}
-
 		public VectoRunData()
 		{
 			Exempted = false;
@@ -175,7 +168,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public Watt ElectricAuxDemand { get; internal set; }
 
 		[JsonIgnore]
-		public IMultistageVIFInputData MultistageVIFInputData { get; internal set; }
+		public IMultistageVIFInputData MultistageVifInputData { get; internal set; }
 
 		// container to pass genset data from powertrain to post-processing, not filled by dataadapter/rundatafactory
 		public GenSetData GenSet { get; set; }

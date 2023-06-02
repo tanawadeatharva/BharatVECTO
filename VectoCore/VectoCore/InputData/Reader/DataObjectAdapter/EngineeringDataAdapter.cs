@@ -43,6 +43,7 @@ using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.AuxiliaryDataAdapter;
 using TUGraz.VectoCore.InputData.Reader.ShiftStrategy;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
@@ -514,10 +515,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				OverSpeed = overspeedData,
 				EngineStopStart = new DriverData.EngineStopStartData() {
 					EngineOffStandStillActivationDelay =
-						driver.EngineStopStartData?.ActivationDelay ?? DeclarationData.Driver.EngineStopStart.ActivationDelay,
-					MaxEngineOffTimespan = driver.EngineStopStartData?.MaxEngineOffTimespan ?? DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
-					UtilityFactorStandstill = driver.EngineStopStartData?.UtilityFactorStandstill ?? DeclarationData.Driver.EngineStopStart.UtilityFactor,
-					UtilityFactorDriving = driver.EngineStopStartData?.UtilityFactorDriving ?? DeclarationData.Driver.EngineStopStart.UtilityFactor,
+						driver.EngineStopStartData?.ActivationDelay ?? DeclarationData.Driver.GetEngineStopStartLorry().ActivationDelay,
+					MaxEngineOffTimespan = driver.EngineStopStartData?.MaxEngineOffTimespan ?? DeclarationData.Driver.GetEngineStopStartLorry().MaxEngineOffTimespan,
+					UtilityFactorStandstill = driver.EngineStopStartData?.UtilityFactorStandstill ?? DeclarationData.Driver.GetEngineStopStartLorry().UtilityFactor,
+					UtilityFactorDriving = driver.EngineStopStartData?.UtilityFactorDriving ?? DeclarationData.Driver.GetEngineStopStartLorry().UtilityFactor,
 				},
 				EcoRoll = new DriverData.EcoRollData() {
 					UnderspeedThreshold = driver.EcoRollData?.UnderspeedThreshold ?? DeclarationData.Driver.EcoRoll.UnderspeedThreshold,
@@ -599,7 +600,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					StoredEnergyEfficiency = busAux.ElectricSystem.ElectricStorageEfficiency,
 					ElectricalConsumers = GetElectricConsumers(busAux.ElectricSystem)
 				},
-				PneumaticAuxillariesConfig = new PneumaticsConsumersDemand() {
+				PneumaticAuxiliariesConfig = new PneumaticsConsumersDemand() {
 					AdBlueInjection = 0.SI<NormLiterPerSecond>(),
 					AirControlledSuspension = busAux.PneumaticSystem.AverageAirConsumed,
 					Braking = 0.SI<NormLiterPerKilogram>(),
@@ -669,7 +670,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					StoredEnergyEfficiency = 1,
 					ElectricalConsumers = GetElectricConsumers(busAux.ElectricSystem)
 				},
-				PneumaticAuxillariesConfig = new PneumaticsConsumersDemand() {
+				PneumaticAuxiliariesConfig = new PneumaticsConsumersDemand() {
 					AdBlueInjection = 0.SI<NormLiterPerSecond>(),
 					AirControlledSuspension = 0.SI<NormLiterPerSecond>(),
 					Braking = 0.SI<NormLiterPerKilogram>(),
@@ -722,24 +723,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		
 
-		private Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry> GetElectricConsumers(IBusAuxElectricSystemEngineeringData busAuxElectricSystem)
+		private Dictionary<string, ElectricConsumerEntry> GetElectricConsumers(IBusAuxElectricSystemEngineeringData busAuxElectricSystem)
 		{
-			var retVal = new Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry>();
+			var retVal = new Dictionary<string, ElectricConsumerEntry>();
 
 			var iBase = busAuxElectricSystem.CurrentDemandEngineOffStandstill;
 			var iSP = busAuxElectricSystem.CurrentDemandEngineOffDriving -
 					busAuxElectricSystem.CurrentDemandEngineOffStandstill;
 			var iFan = busAuxElectricSystem.CurrentDemand - busAuxElectricSystem.CurrentDemandEngineOffDriving;
 
-			retVal["BaseLoad"] = new AuxiliaryDataAdapter.ElectricConsumerEntry() {
+			retVal["BaseLoad"] = new ElectricConsumerEntry() {
 				Current = iBase,
 				BaseVehicle = true
 			};
-			retVal[Constants.Auxiliaries.IDs.SteeringPump] = new AuxiliaryDataAdapter.ElectricConsumerEntry() {
+			retVal[Constants.Auxiliaries.IDs.SteeringPump] = new ElectricConsumerEntry() {
 				Current = iSP,
 				ActiveDuringEngineStopStandstill = false,
 			};
-			retVal[Constants.Auxiliaries.IDs.Fan] = new AuxiliaryDataAdapter.ElectricConsumerEntry() {
+			retVal[Constants.Auxiliaries.IDs.Fan] = new ElectricConsumerEntry() {
 				Current = iFan,
 				ActiveDuringEngineStopStandstill = false,
 				ActiveDuringEngineStopDriving = false,

@@ -49,22 +49,32 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 
 		public virtual string Model => GetString(XMLNames.Component_Model);
 
-		public virtual DateTime Date => XmlConvert.ToDateTime(GetString(XMLNames.Component_Date), XmlDateTimeSerializationMode.Utc);
+		public virtual DateTime Date =>
+			XmlConvert.ToDateTime(GetString(XMLNames.Component_Date), XmlDateTimeSerializationMode.Utc);
 
 		public virtual string AppVersion => GetString(XMLNames.Component_AppVersion);
 
 		public virtual CertificationMethod CertificationMethod
 		{
-			get {
-				var certMethod = GetString(XMLNames.Component_Gearbox_CertificationMethod, required:false) ?? GetString(XMLNames.Component_CertificationMethod, required:false);
-				return certMethod != null ? EnumHelper.ParseEnum<CertificationMethod>(certMethod) : CertificationMethod.Measured;
+			get
+			{
+				var certMethod = GetString(XMLNames.Component_Gearbox_CertificationMethod, required: false) ??
+								GetString(XMLNames.Component_CertificationMethod, required: false);
+				return certMethod != null
+					? EnumHelper.ParseEnum<CertificationMethod>(certMethod)
+					: CertificationMethod.Measured;
 			}
 		}
 
 		public virtual string CertificationNumber => GetString(XMLNames.Component_CertificationNumber);
 
-		public virtual DigestData DigestValue => new DigestData(GetNode(XMLNames.DI_Signature, required:false));
+		public virtual DigestData DigestValue {
+			get
+			{
+				return new DigestData(GetNode(XMLNames.DI_Signature, required: false));
+            }
+		}
 
-		public virtual XmlNode XMLSource => BaseNode;
+	public virtual XmlNode XMLSource => BaseNode;
 	}
 }

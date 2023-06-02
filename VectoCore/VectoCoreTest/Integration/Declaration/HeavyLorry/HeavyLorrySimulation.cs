@@ -26,7 +26,7 @@ public class HeavyLorrySimulation
 {
 
 
-	private const string BASE_DIR = @"TestData\Integration\DeclarationMode\V24_DeclarationMode\";
+	private const string BASE_DIR = @"TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\";
 	private StandardKernel _kernel;
 	private IXMLInputDataReader _xmlReader;
 
@@ -37,15 +37,16 @@ public class HeavyLorrySimulation
 		_xmlReader = _kernel.Get<IXMLInputDataReader>();
 	}
 
-	[TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2_realistic.xml"),
-	TestCase(@"HeavyLorry\Conventional_heavyLorry_AMT.xml"),
-	TestCase(@"HeavyLorry\PEV_heavyLorry_E3_realistic.xml"),
-	TestCase(@"HeavyLorry\PEV_heavyLorry_E3_realistic_TorqueLimits.xml"),
-	TestCase(@"HeavyLorry\PEV_heavyLorry_E3_realistic_municipal.xml"),
-	TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2_pto_transm.xml"),
-	TestCase(@"HeavyLorry\PEV_heavyLorry_E4.xml"),
-	TestCase(@"HeavyLorry\Group2_HEV_S2.xml"),
-	TestCase(@"HeavyLorry\Group5_HEV_P2_.xml"),
+	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_AMT_E2_realistic.xml"),
+	TestCase(@"HeavyLorry\Conventional\Conventional_heavyLorry_AMT.xml"),
+	TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_E3_realistic.xml"),
+	TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_E3_realistic_TorqueLimits.xml"),
+	TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_E3_realistic_municipal.xml"),
+	TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_AMT_E2_pto_transm.xml"),
+	TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_E4.xml"),
+	TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S2.xml"),
+	TestCase(@"HeavyLorry\S-HEV\Group5_HEV_P2_.xml"),
+		Ignore("Testdata not intended for simulation - mostly dummy data")
 	]
 	public void HeavyLorrySimulationTest(string jobFile)
 	{

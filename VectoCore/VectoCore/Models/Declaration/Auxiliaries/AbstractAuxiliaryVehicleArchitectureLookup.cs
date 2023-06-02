@@ -18,6 +18,7 @@ namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 				{VectoSimulationJobType.BatteryElectricVehicle, "pev"},
 				{VectoSimulationJobType.SerialHybridVehicle, "s-hev"},
 				{VectoSimulationJobType.ParallelHybridVehicle, "p-hev"},
+				{VectoSimulationJobType.IHPC,"p-hev" },
 				{VectoSimulationJobType.ConventionalVehicle, "conventional"},
 				{VectoSimulationJobType.IEPC_S, "s-hev"},
 				{VectoSimulationJobType.IEPC_E, "pev"},

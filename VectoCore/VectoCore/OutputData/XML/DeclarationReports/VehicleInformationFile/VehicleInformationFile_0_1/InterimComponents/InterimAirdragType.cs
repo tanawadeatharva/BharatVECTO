@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -6,6 +7,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Utils;
 
@@ -65,6 +67,27 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			return retVal;
 		}
 
+		protected XElement GetAirdragElement(IAirdragDeclarationInputData inputData, string version)
+		{
+			var retVal = new XElement(v24 + XMLNames.Component_AirDrag);
+			
+
+
+			var tmp = XElement.Load(inputData.XMLSource.CreateNavigator().ReadSubtree());
+			var dataElement = tmp.Descendants().Where(e => e.Name.LocalName == XMLNames.ComponentDataWrapper).First();
+			dataElement.Name =
+				v20 + XMLNames.ComponentDataWrapper;
+			dataElement.SetAttributeValue("xmlns", inputData.DataSource.TypeVersion);
+			//dataElement.Add(new XAttribute("xmlns", inputData.DataSource.TypeVersion));
+
+			var signatureElement = tmp.Descendants().Where(e => e.Name.LocalName == XMLNames.DI_Signature).First();
+            signatureElement.Name = v20 + XMLNames.DI_Signature;
+
+			
+            retVal.Add(dataElement, signatureElement);
+			return retVal;
+        }
+
         protected XElement GetAirdragElement(IAirdragDeclarationInputData airdrag)
         {
 			switch (airdrag) {
@@ -75,6 +98,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				case XMLDeclarationAirdragDataProviderV10 av10:
 					return GetAirdragElement(av10);
 			}
+
+
+			var sourceVersion = airdrag.DataSource.SourceVersion;
+			if (sourceVersion.IsOneOf(v10.GetVersionFromNamespaceUri(), v20.GetVersionFromNamespaceUri(),
+					v24.GetVersionFromNamespaceUri())) {
+				return GetAirdragElement(airdrag, "");
+            }
+
+	
+
             throw new VectoException(
                 $"Specific implementation for Airdrag Data (Interim Stage) missing {airdrag.GetType().Name}");
 

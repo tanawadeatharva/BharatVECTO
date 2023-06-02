@@ -1,19 +1,41 @@
-﻿using TUGraz.VectoCore.InputData.Reader.ComponentData;
+﻿using System;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 {
-    internal abstract class DriverDataAdapter : IDriverDataAdapter
+    internal abstract class DriverDataAdapter : IDriverDataAdapter, IDriverDataAdapterBus
 	{
 		protected DriverDataAdapter() { }
 
 		#region Implementation of IDriverDataAdapter
 
-		
+		public DriverData CreateDriverData(Segment segment)
+		{
+			var data = DoCreateDriverData(segment);
+			data.EngineStopStart = GetEngineStopStartData(null, null, null);
+			return data;
+		}
 
-		public virtual DriverData CreateDriverData(Segment segment)
+		#endregion
+
+		#region Implementation of IDriverDataAdapterBus
+
+		public DriverData CreateBusDriverData(Segment segment, VectoSimulationJobType jobType, ArchitectureID arch, CompressorDrive compressorDrive)
+		{
+			var data = DoCreateDriverData(segment);
+			data.EngineStopStart = GetEngineStopStartData(jobType, arch, compressorDrive);
+			return data;
+		}
+
+		#endregion
+
+		protected virtual DriverData DoCreateDriverData(Segment segment)
 		{
             var lookAheadData = new DriverData.LACData
             {
@@ -35,13 +57,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
             {
                 LookAheadCoasting = lookAheadData,
                 OverSpeed = overspeedData,
-                EngineStopStart = new DriverData.EngineStopStartData()
-                {
-                    EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
-                    MaxEngineOffTimespan = DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
-                    UtilityFactorStandstill = DeclarationData.Driver.EngineStopStart.UtilityFactor,
-                    UtilityFactorDriving = DeclarationData.Driver.EngineStopStart.UtilityFactor,
-                },
+               
                 EcoRoll = new DriverData.EcoRollData()
                 {
                     UnderspeedThreshold = DeclarationData.Driver.EcoRoll.UnderspeedThreshold,
@@ -64,30 +80,73 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
             retVal.AccelerationCurve = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
             return retVal;
         }
-        #endregion
 
-    }
+		protected abstract DriverData.EngineStopStartData GetEngineStopStartData(VectoSimulationJobType? jobType,
+			ArchitectureID? arch, CompressorDrive? compressorDrive);
+
+
+
+	}
 
 	internal sealed class LorryDriverDataAdapter : DriverDataAdapter
 	{
 
 		#region Overrides of DriverDataAdapter
 
-		public override DriverData CreateDriverData(Segment segment)
+		protected override DriverData.EngineStopStartData GetEngineStopStartData(VectoSimulationJobType? jobType,
+			ArchitectureID? arch, CompressorDrive? compressorDrive)
 		{
-			return base.CreateDriverData(segment:segment);
+			var engineStopStartLorry = DeclarationData.Driver.GetEngineStopStartLorry();
+			
+			
+			return new DriverData.EngineStopStartData()
+			{
+				EngineOffStandStillActivationDelay = engineStopStartLorry.ActivationDelay,
+				MaxEngineOffTimespan = engineStopStartLorry.MaxEngineOffTimespan,
+				UtilityFactorStandstill = engineStopStartLorry.UtilityFactor,
+				UtilityFactorDriving = engineStopStartLorry.UtilityFactor,
+			};
+		}
+
+        #endregion
+	}
+
+    internal abstract class BusDriverDataAdapter : DriverDataAdapter
+	{
+		#region Overrides of DriverDataAdapter
+
+		protected override DriverData.EngineStopStartData GetEngineStopStartData(VectoSimulationJobType? jobType,
+			ArchitectureID? arch, CompressorDrive? compressorDrive)
+		{
+			DeclarationData.Driver.IEngineStopStart busEngineStartStop;
+			try {
+				busEngineStartStop =
+					DeclarationData.Driver.GetEngineStopStartBus(jobType.Value, arch.Value, compressorDrive.Value);
+			} catch (InvalidOperationException ioe) {
+				throw new VectoException("JobType, Architecture and Compressor Drive must be provided for Buses", ioe);
+			}
+	
+
+			return new DriverData.EngineStopStartData() {
+				EngineOffStandStillActivationDelay = busEngineStartStop.ActivationDelay,
+				MaxEngineOffTimespan = busEngineStartStop.MaxEngineOffTimespan,
+				UtilityFactorStandstill = busEngineStartStop.UtilityFactor,
+				UtilityFactorDriving = busEngineStartStop.UtilityFactor,
+			};
 		}
 
 		#endregion
 	}
 
-    internal sealed class PrimaryBusDriverDataAdapter : DriverDataAdapter
+
+
+    internal sealed class PrimaryBusDriverDataAdapter : BusDriverDataAdapter
 	{
 		#region Overrides of DriverDataAdapter
 
-		public override DriverData CreateDriverData(Segment segment)
+		protected override DriverData DoCreateDriverData(Segment segment)
 		{
-			var retVal = base.CreateDriverData(segment);
+			var retVal = base.DoCreateDriverData(segment);
 			retVal.LookAheadCoasting.Enabled = true;
 			return retVal;
         }
@@ -95,22 +154,22 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		#endregion
 	}
 
-	internal sealed class CompletedBusGenericDriverDataAdapter : DriverDataAdapter
+	internal sealed class CompletedBusGenericDriverDataAdapter : BusDriverDataAdapter
 	{
-		public override DriverData CreateDriverData(Segment segment)
+		protected override DriverData DoCreateDriverData(Segment segment)
 		{
-			var retVal = base.CreateDriverData(segment);
+			var retVal = base.DoCreateDriverData(segment);
 			retVal.LookAheadCoasting.Enabled = false;
 			retVal.OverSpeed.Enabled = false;
 			return retVal;
 		}
     }
 
-	internal sealed class CompletedBusSpecificDriverDataAdapter : DriverDataAdapter
+	internal sealed class CompletedBusSpecificDriverDataAdapter : BusDriverDataAdapter
 	{
-		public override DriverData CreateDriverData(Segment segment)
+		protected override DriverData DoCreateDriverData(Segment segment)
 		{
-			var retVal = base.CreateDriverData(segment);
+			var retVal = base.DoCreateDriverData(segment);
 			retVal.LookAheadCoasting.Enabled = false;
 			retVal.OverSpeed.Enabled = false;
 			return retVal;

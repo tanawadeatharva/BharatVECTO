@@ -49,38 +49,6 @@
 		<MakeDir Directories="$(DeployPath)"/>
 		<MakeDir Directories="$(NuGetPath)"/>
 
-		<ItemGroup Condition="'$(Configuration)'=='Deploy'">
-			<!-- All files for net45 -->
-			<Net45VECTO Include="$(SolutionDir)VECTO\bin\Release\net45\*.exe*"/>
-			<Net45VECTO Include="$(SolutionDir)VECTO\bin\Release\net45\*.dll*"/>
-			<Net45VECTO Include="$(SolutionDir)VECTO\bin\Release\net45\nlog.config"/>
-			<Net45HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net45\*.exe*"/>
-			<Net45HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net45\*.dll*"/>
-			<Net45HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net45\*.exe*"/>
-			<Net45HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net45\*.dll*"/>
-			<Net45VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net45\*.exe*"/>
-			<Net45VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net45\*.dll*"/>
-		</ItemGroup>
-		<!--MockupDeploy-->
-
-		<ItemGroup Condition="'$(Configuration)'=='MockupDeploy'">
-			<!-- All files for net45 -->
-			<Net45VECTO Include="$(SolutionDir)VECTO\bin\MockupRelease\net45\*.exe*"/>
-			<Net45VECTO Include="$(SolutionDir)VECTO\bin\MockupRelease\net45\*.dll*"/>
-			<Net45VECTO Include="$(SolutionDir)VECTO\bin\MockupRelease\net45\nlog.config"/>
-			<Net45HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net45\*.exe*"/>
-			<Net45HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net45\*.dll*"/>
-			<Net45HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net45\*.exe*"/>
-			<Net45HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net45\*.dll*"/>
-			<Net45VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\MockupRelease\net45\*.exe*"/>
-			<Net45VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\MockupRelease\net45\*.dll*"/>
-		</ItemGroup>
-
-		
-		<Copy SourceFiles="@(Net45VectoCommandLine)" DestinationFolder="$(DeployPath)net45"/>
-		<Copy SourceFiles="@(Net45HashingTool)" DestinationFolder="$(DeployPath)net45"/>
-		<Copy SourceFiles="@(Net45VECTO)" DestinationFolder="$(DeployPath)net45"/>
-
 
 		<ItemGroup Condition="'$(Configuration)'=='Deploy'">
 			<!-- All files for net48 -->
@@ -170,19 +138,19 @@
 
 		<ItemGroup Condition="'$(Configuration)'=='Deploy'">
 			<!-- All files for the VECTO starters -->
-			<VectoStart Include="$(SolutionDir)Tools\VECTOStart\bin\Deploy\net45\VECTO.exe" />
-			<VectoStart Include="$(SolutionDir)Tools\VECTOMultistageStart\bin\Release\net45\VECTOMultistage.exe" />
-			<VectoStart Include="$(SolutionDir)Tools\HashingCmdStart\bin\Release\net45\hashingcmd.exe" />
-			<VectoStart Include="$(SolutionDir)Tools\HashingToolStart\bin\Release\net45\HashingTool.exe" />
-			<VectoStart Include="$(SolutionDir)Tools\VECTOConsoleStart\bin\Release\net45\vectocmd.exe" />
+			<VectoStart Include="$(SolutionDir)Tools\VECTOStart\bin\Deploy\net48\VECTO.exe" />
+			<VectoStart Include="$(SolutionDir)Tools\VECTOMultistageStart\bin\Release\net48\VECTOMultistage.exe" />
+			<VectoStart Include="$(SolutionDir)Tools\HashingCmdStart\bin\Release\net48\hashingcmd.exe" />
+			<VectoStart Include="$(SolutionDir)Tools\HashingToolStart\bin\Release\net48\HashingTool.exe" />
+			<VectoStart Include="$(SolutionDir)Tools\VECTOConsoleStart\bin\Release\net48\vectocmd.exe" />
 		</ItemGroup>
 		<ItemGroup Condition="'$(Configuration)'=='MockupDeploy'">
 			<!-- All files for the VECTO starters -->
-			<VectoStart Include="$(SolutionDir)Tools\VECTOStart\bin\MockupDeploy\net45\VECTO.exe" />
-			<VectoStart Include="$(SolutionDir)Tools\VECTOMultistageStart\bin\Release\net45\VECTOMultistage.exe" />
-			<VectoStart Include="$(SolutionDir)Tools\HashingCmdStart\bin\Release\net45\hashingcmd.exe" />
-			<VectoStart Include="$(SolutionDir)Tools\HashingToolStart\bin\Release\net45\HashingTool.exe" />
-			<VectoStart Include="$(SolutionDir)Tools\VECTOConsoleStart\bin\Release\net45\vectocmd.exe" />
+			<VectoStart Include="$(SolutionDir)Tools\VECTOStart\bin\MockupDeploy\net48\VECTO.exe" />
+			<VectoStart Include="$(SolutionDir)Tools\VECTOMultistageStart\bin\Release\net48\VECTOMultistage.exe" />
+			<VectoStart Include="$(SolutionDir)Tools\HashingCmdStart\bin\Release\net48\hashingcmd.exe" />
+			<VectoStart Include="$(SolutionDir)Tools\HashingToolStart\bin\Release\net48\HashingTool.exe" />
+			<VectoStart Include="$(SolutionDir)Tools\VECTOConsoleStart\bin\Release\net48\vectocmd.exe" />
 		</ItemGroup>
 		<Copy SourceFiles="@(VectoStart)" DestinationFolder="$(DeployPath)"/>
 
@@ -204,10 +172,15 @@
 			<VectoXMLExamples Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\*-sample.xml"/>
 			<UserManual Include="$(SolutionDir)Documentation\User Manual\help.html"/>
 			<UserManual Include="$(SolutionDir)Documentation\VectoHashingTool\HashingToolHelp.html"/>
+			<!-- <ParameterDocu Include="$(SolutionDir)Documentation\ParameterDocumentation\VectoParameterDocumentation.html"/> -->
+
 			<UserManual Include="$(SolutionDir)Documentation\XML\*.png"/>
-			<UserManual Include="$(SolutionDir)Documentation\XML\VectoParameters.html"/>
+			<!-- <UserManual Include="$(SolutionDir)Documentation\XML\VectoParameters.html"/> -->
 			<UserManual Include="$(SolutionDir)Documentation\User Manual Source\JIRA Quick Start Guide.pdf"/>
 			<UserManual Include="$(SolutionDir)Documentation\Cdv_Generator_VECTO3.2.xlsx"/>
+			<UserManual Include="$(SolutionDir)Documentation\XML\Documentation_OfficialResults_2ndAmendment_20230425.xlsx"/>
+			<ParameterDocu Include="$(SolutionDir)Documentation\XML\ParameterDocumentation\*.*"/>
+			<ParameterDocuStyle Include="$(SolutionDir)Documentation\XML\ParameterDocumentation\HTML\css\*.*"/>
 			<ReleaseNotes Include="$(SolutionDir)Documentation\User Manual Source\Release Notes Vecto3.x.pdf"/>
 		</ItemGroup>
 		<Copy SourceFiles="@(GenericVehicles)" DestinationFiles="@(GenericVehicles->'$(DeployPath)Generic Vehicles\%(RecursiveDir)%(Filename)%(Extension)')" />
@@ -221,7 +194,13 @@
 		<Copy SourceFiles="@(VectoConfigurationSample)" DestinationFolder="$(DeployPath)"/>
 		<Copy SourceFiles="$(SolutionDir)\Documentation\User Manual Source\README for Mission Profiles Directory.txt" DestinationFiles="$(DeployPath)Mission Profiles\!! README !!.TXT"/>
 		<Copy SourceFiles="$(SolutionDir)\Documentation\User Manual Source\README for Declaration Directory.txt" DestinationFiles="$(DeployPath)Declaration\!! README !!.TXT"/>
+		
+		<Copy SourceFiles="@(ParameterDocu)" DestinationFolder="$(DeployPath)User Manual\ParameterDocumentation"/>
+		<Copy SourceFiles="@(ParameterDocuStyle)" DestinationFolder="$(DeployPath)User Manual\ParameterDocumentation\HTML\css"/>
+		
 
+
+		<!-- <Copy SourceFiles="$(ParameterDocuStyle)" DestinationFolder="$(DeployPath)User Manual\Parameter Documentation\HTML\css"/> -->
 		<!-- NuGet Files-->
 		<ItemGroup Condition="'$(Configuration)'=='Deploy'">
 			<VectoNuget Include ="$(SolutionDir)VectoCore\VectoCore\bin\Release\*.nupkg" />

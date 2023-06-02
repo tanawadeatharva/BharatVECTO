@@ -42,7 +42,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 			return - ((entry.PowerElectrical - entry.MotorSpeed * entry.Torque) /
 						(entry.MotorSpeed)).Value();
 		}
-	}
+
+		public override string[] SerializedEntries {
+			get {
+				return _efficiencyMapMech2El.Entries.Select(
+						entry => $"{entry.Y.SI<PerSecond>().AsRPM} [rpm], {entry.X.SI<NewtonMeter>()}, {(entry.Z * entry.Y + entry.Y * entry.X).SI<Watt>()}")
+					.ToArray();
+			}
+		}
+    }
 
 	public class EfficiencyMap : LoggingObject
 	{
@@ -75,7 +83,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 			return result;
 		}
 
-		public string[] SerializedEntries
+		public virtual string[] SerializedEntries
 		{
 			get { return _efficiencyMapMech2El.Entries.Select(
 												entry => $"{entry.Y.SI<PerSecond>().AsRPM} [rpm], {entry.X.SI<NewtonMeter>()}, {entry.Z.SI<Watt>()}")

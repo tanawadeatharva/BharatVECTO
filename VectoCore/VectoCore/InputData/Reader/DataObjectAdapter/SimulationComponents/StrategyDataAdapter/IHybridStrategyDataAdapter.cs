@@ -14,7 +14,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		HybridStrategyParameters CreateHybridStrategyParameters(
 			BatterySystemData batterySystemData,
 			SuperCapData superCap,
-			VectoRunData.OvcHevMode ovcMode,
+			OvcHevMode ovcMode,
 			LoadingType loading,
 			VehicleClass vehicleClass,
 			MissionType missionType, ArchitectureID archID, CombustionEngineData engineData, GearboxData gearboxData,
@@ -22,6 +22,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 		// serial hybrid params
 		HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData,
-			SuperCapData superCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode);
+			SuperCapData superCapData, Kilogram vehicleMass, OvcHevMode ovcMode);
 	}
 }

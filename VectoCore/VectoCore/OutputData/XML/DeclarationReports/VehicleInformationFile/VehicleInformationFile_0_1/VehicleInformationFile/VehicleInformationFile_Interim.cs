@@ -47,14 +47,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		public void Initialize(VectoRunData modelData)
 		{
-			//InitializeVehicleData(modelData.MultistageVIFInputData);
+			//InitializeVehicleData(modelData.MultistageVifInputData);
 
-			_primaryVehicleInputData = modelData.MultistageVIFInputData.MultistageJobInputData.JobInputData.PrimaryVehicle;
-			_manufacturingStageInputData = modelData.MultistageVIFInputData.MultistageJobInputData.JobInputData.ManufacturingStages;
-			_consolidatedInputData = modelData.MultistageVIFInputData.MultistageJobInputData.JobInputData.ConsolidateManufacturingStage;
-			_vehicleInputData = modelData.MultistageVIFInputData.VehicleInputData;
+			_primaryVehicleInputData = modelData.MultistageVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle;
+			_manufacturingStageInputData = modelData.MultistageVifInputData.MultistageJobInputData.JobInputData.ManufacturingStages;
+			_consolidatedInputData = modelData.MultistageVifInputData.MultistageJobInputData.JobInputData.ConsolidateManufacturingStage;
+			_vehicleInputData = modelData.MultistageVifInputData.VehicleInputData;
 
-			_inputData = modelData.MultistageVIFInputData;
+			_inputData = modelData.MultistageVifInputData;
 
 			SetInputXMLData(_primaryVehicleInputData.Vehicle.XMLSource);
 		}

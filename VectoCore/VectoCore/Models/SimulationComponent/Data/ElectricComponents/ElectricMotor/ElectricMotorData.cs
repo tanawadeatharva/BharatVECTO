@@ -192,13 +192,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[ValidateObject]
 		public ElectricMotorFullLoadCurve FullLoadCurve { get; protected internal set; }
 
-#if DEBUG
+
 		[ValidateObject]
 		public EfficiencyMap EfficiencyMap { get; set; }
-#else
-		[ValidateObject]
-		protected internal EfficiencyMap EfficiencyMap { protected get; set; }
-#endif
+
 		public virtual PerSecond MaxSpeed => _maxSpeed ?? (_maxSpeed = VectoMath.Min(EfficiencyMap.MaxSpeed, FullLoadCurve.MaxSpeed));
 
 		public virtual EfficiencyMap.EfficiencyResult LookupElectricPower(PerSecond avgSpeed, NewtonMeter torque, uint gear, bool allowExtrapolation)
@@ -225,7 +222,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	public class IEPCVoltageLevelData : ElectricMotorVoltageLevelData
 	{
 		[ValidateObject]
-		protected internal Dictionary<uint, EfficiencyMap> EfficiencyMaps { protected get; set; }
+		public Dictionary<uint, EfficiencyMap> EfficiencyMaps {  get; set; }
 
 
 		public override PerSecond MaxSpeed => _maxSpeed ?? (_maxSpeed = VectoMath.Min(FullLoadCurve.MaxSpeed, EfficiencyMaps.Values.Min(x => x.MaxSpeed)));

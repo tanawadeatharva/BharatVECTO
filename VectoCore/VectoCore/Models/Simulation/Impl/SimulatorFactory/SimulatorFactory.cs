@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -71,11 +72,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		{
 			get
 			{
-			
+				var factory = _followUpSimulatorFactoryCreator?.GetNextFactory();
+				if (factory != null) {
+					factory.WriteModalResults = this.WriteModalResults;
+					//factory.SerializeVectoRunData = this.SerializeVectoRunData;
+                }
 
-				return _followUpSimulatorFactoryCreator?.GetNextFactory();
 
 
+
+                return factory;
 			}
 		}
 
@@ -205,10 +211,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 			// TODO: MQ 20200410 - Remove for official release!
 			if (SerializeVectoRunData) {
-				File.WriteAllText(
+				var jsonSerializerSettings = new JsonSerializerSettings();
+				jsonSerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+                File.WriteAllText(
 					Path.Combine(
 						(ReportWriter as FileOutputWriter)?.BasePath ?? "", $"{data.JobName}_{data.Cycle.Name}{data.ModFileSuffix}.json"),
-					JsonConvert.SerializeObject(data, Formatting.Indented));
+					JsonConvert.SerializeObject(data, Formatting.Indented, jsonSerializerSettings));
 			}
 			data.JobNumber = JobNumber;
 			data.RunNumber = current;

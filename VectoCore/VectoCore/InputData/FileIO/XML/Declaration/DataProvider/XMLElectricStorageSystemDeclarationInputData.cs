@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			: base(componentNode, sourceFile)
 		{
 			_vehicle = vehicle;
-			SourceType = DataSourceType.XMLEmbedded;
+			//SourceType = DataSourceType.XMLEmbedded;
 		}
 
 		#region Implementation of IElectricStorageSystemDeclarationInputData
@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Implementation of IXMLResource
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
-		protected override DataSourceType SourceType { get; }
+		protected override DataSourceType SourceType => DataSourceType.XMLEmbedded;
 
 		#endregion
 		
@@ -111,11 +111,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IBatteryPackDeclarationInputData
 
-        public virtual double? MinSOC =>
-			ElementExists(XMLNames.Battery_SOCmin) ? GetDouble(XMLNames.Battery_SOCmin) / 100 : (double?)null;
+        public virtual double? MinSOC
+		{
+			get
+			{
+				// ancestor-or-self::*[local-name()='Battery']/*[local-name()='SOCmin']
+				var node = BaseNode.SelectSingleNode($"ancestor-or-self::*[local-name()='{XMLNames.ElectricEnergyStorage_Battery}']/*[local-name()='{XMLNames.Battery_SOCmin}']");
+				return node != null
+					? node.InnerText.ToDouble() / 100
+					: (double?)null;
+			}
+		}
 
-		public virtual double? MaxSOC =>
-			ElementExists(XMLNames.Battery_SOCmax) ? GetDouble(XMLNames.Battery_SOCmax) / 100 : (double?)null;
+		public virtual double? MaxSOC
+		{
+			get
+			{
+				// ancestor-or-self::*[local-name()='Battery']/*[local-name()='SOCmin']
+				var node = BaseNode.SelectSingleNode($"ancestor-or-self::*[local-name()='{XMLNames.ElectricEnergyStorage_Battery}']/*[local-name()='{XMLNames.Battery_SOCmax}']");
+				return node != null
+					? node.InnerText.ToDouble() / 100
+					: (double?)null;
+            }
+		}
 
 		public virtual BatteryType BatteryType => GetString(XMLNames.REESS_BatteryType).ParseEnum<BatteryType>();
 		public virtual AmpereSecond Capacity => GetDouble(XMLNames.REESS_RatedCapacity).SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>();
@@ -157,10 +175,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
         #region Overrides of AbstractXMLResource
 
         protected override XNamespace SchemaNamespace => NamespaceURI;
-		protected override DataSourceType SourceType { get; }
+		protected override DataSourceType SourceType => DataSourceType.XMLFile;
 
 		#endregion
-    }
+	}
 
 
     public class XMLBatteryPackDeclarationInputDataMeasuredV23 : AbstractBatteryPackDeclarationInputDataProvider
@@ -241,7 +259,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			: base(componentNode, sourceFile)
 		{
 			throw new NotImplementedException("Replaced with v2.3 dataprovider");
-			SourceType = DataSourceType.XMLEmbedded;
+			//SourceType = DataSourceType.XMLEmbedded;
 		}
 		
 		#region Implementation of IREESSPackInputData
@@ -287,10 +305,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Overrides of AbstractXMLResource
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
-		protected override DataSourceType SourceType { get; }
+		protected override DataSourceType SourceType => DataSourceType.XMLFile;
 
 		#endregion
-    }
+	}
 
     // ---------------------------------------------------------------------------------------
 
@@ -346,7 +364,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		public XMLSuperCapDeclarationInputDataV24(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile)
 		{
-			SourceType = DataSourceType.XMLEmbedded;
+			//SourceType = DataSourceType.XMLEmbedded;
 		}
 		
 		#region Implementation of IREESSPackInputData
@@ -357,14 +375,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of ISuperCapDeclarationInputData
 
-		public Farad Capacity => GetDouble(XMLNames.Capacitor_Capacitance).SI<Farad>();
-		public Ohm InternalResistance => GetDouble(XMLNames.Capacitor_InternalResistance).SI(Unit.SI.Milli.Ohm).Cast<Ohm>();
-		public Volt MinVoltage => GetDouble(XMLNames.Capacitor_MinVoltage).SI<Volt>();
-		public Volt MaxVoltage => GetDouble(XMLNames.Capacitor_MaxVoltage).SI<Volt>();
-		public Ampere MaxCurrentCharge => GetDouble(XMLNames.Capacitor_MaxChargingCurrent).SI<Ampere>();
-		public Ampere MaxCurrentDischarge => GetDouble(XMLNames.Capacitor_MaxDischargingCurrent).SI<Ampere>();
+		public virtual Farad Capacity => GetDouble(XMLNames.Capacitor_Capacitance).SI<Farad>();
+		public virtual Ohm InternalResistance => GetDouble(XMLNames.Capacitor_InternalResistance).SI(Unit.SI.Milli.Ohm).Cast<Ohm>();
+		public virtual Volt MinVoltage => GetDouble(XMLNames.Capacitor_MinVoltage).SI<Volt>();
+		public virtual Volt MaxVoltage => GetDouble(XMLNames.Capacitor_MaxVoltage).SI<Volt>();
+		public virtual Ampere MaxCurrentCharge => GetDouble(XMLNames.Capacitor_MaxChargingCurrent).SI<Ampere>();
+		public virtual Ampere MaxCurrentDischarge => GetDouble(XMLNames.Capacitor_MaxDischargingCurrent).SI<Ampere>();
 
-		public Kelvin TestingTemperature => 
+		public virtual Kelvin TestingTemperature => 
 			ElementExists(XMLNames.REESS_TestingTemperature)
 				? GetDouble(XMLNames.REESS_TestingTemperature).DegCelsiusToKelvin() : null;
 		
@@ -373,7 +391,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Overrides of AbstractXMLResource
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
-		protected override DataSourceType SourceType { get; }
+		protected override DataSourceType SourceType => DataSourceType.XMLEmbedded;
 
 		#endregion
 	}
@@ -390,6 +408,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLSuperCapDeclarationInputDataV01(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) { }
+
+		#region Overrides of XMLSuperCapDeclarationInputDataV24
+
+		public override Ohm InternalResistance => null;
+
+		#endregion
 	}
 
 	//===================

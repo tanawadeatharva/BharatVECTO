@@ -75,7 +75,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		//DigestData ManufacturerHash { get; }
 
-		IResult GetResult(VehicleClass vehicleClass, MissionType mission, string fuelMode, Kilogram payload);
+		IResult GetResult(VehicleClass vehicleClass, MissionType mission, string fuelMode, Kilogram payload,
+			OvcHevMode ovcHevMode);
 
 		XElement XMLHash { get; }
 	}
@@ -102,6 +103,7 @@ namespace TUGraz.VectoCommon.InputData
 		IVehicleDeclarationInputData StageInputData { get; }
 
 		bool SimulateResultingVIF { get; }
+		bool? Completed { get; }
 	}
 
 

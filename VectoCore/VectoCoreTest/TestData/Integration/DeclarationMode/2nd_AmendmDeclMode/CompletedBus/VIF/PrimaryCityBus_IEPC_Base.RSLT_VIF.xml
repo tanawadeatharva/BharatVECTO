@@ -1,0 +1,621 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VectoOutputMultistep xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1">
+  <PrimaryVehicle>
+    <Data id="VIF_P-eed1f0ed412b4130bda1" xsi:type="PrimaryVehicleDataType">
+      <Vehicle xsi:type="IEPC_VehicleVIFType">
+        <Manufacturer>Generic Truck Manufacturer</Manufacturer>
+        <ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
+        <Model>Generic Model</Model>
+        <VIN>VEH-1234567890</VIN>
+        <Date>2017-02-15T11:00:00Z</Date>
+        <LegislativeCategory>M3</LegislativeCategory>
+        <ChassisConfiguration>Bus</ChassisConfiguration>
+        <AxleConfiguration>4x2</AxleConfiguration>
+        <Articulated>false</Articulated>
+        <TechnicalPermissibleMaximumLadenMass>20000</TechnicalPermissibleMaximumLadenMass>
+        <RetarderType>None</RetarderType>
+        <AngledriveType>None</AngledriveType>
+        <ZeroEmissionVehicle>true</ZeroEmissionVehicle>
+        <ArchitectureID>E-IEPC</ArchitectureID>
+        <OvcHev>true</OvcHev>
+        <vif:ADAS xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xsi:type="ADAS_IEPC_Type">
+          <PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
+        </vif:ADAS>
+        <Components xsi:type="Vehicle_PEV-IEPC_ComponentsVIFType">
+          <IEPC>
+            <Data xsi:type="IEPCDataDeclarationType">
+              <Manufacturer>a</Manufacturer>
+              <Model>a</Model>
+              <CertificationNumber>token</CertificationNumber>
+              <Date>2017-01-01T00:00:00Z</Date>
+              <AppVersion>aaaaa</AppVersion>
+              <ElectricMachineType>PSM</ElectricMachineType>
+              <CertificationMethod>Measured for complete component</CertificationMethod>
+              <R85RatedPower>325000</R85RatedPower>
+              <RotationalInertia>0.86</RotationalInertia>
+              <DifferentialIncluded>true</DifferentialIncluded>
+              <DesignTypeWheelMotor>false</DesignTypeWheelMotor>
+              <Gears xsi:type="IEPCGearsDeclarationType">
+                <Gear number="1">
+                  <Ratio>8.310</Ratio>
+                </Gear>
+                <Gear number="2">
+                  <Ratio>4.650</Ratio>
+                </Gear>
+                <Gear number="3">
+                  <Ratio>2.750</Ratio>
+                </Gear>
+              </Gears>
+              <VoltageLevel>
+                <Voltage>100</Voltage>
+                <ContinuousTorque>1000.00</ContinuousTorque>
+                <TestSpeedContinuousTorque>2069.00</TestSpeedContinuousTorque>
+                <OverloadTorque>1500.00</OverloadTorque>
+                <TestSpeedOverloadTorque>2069.00</TestSpeedOverloadTorque>
+                <OverloadDuration>120.00</OverloadDuration>
+                <MaxTorqueCurve>
+                  <v2.3:Entry outShaftSpeed="0.00" maxTorque="10036.22" minTorque="-10036.22" />
+                  <v2.3:Entry outShaftSpeed="5.65" maxTorque="10036.22" minTorque="-10036.22" />
+                  <v2.3:Entry outShaftSpeed="57.02" maxTorque="10036.22" minTorque="-10036.22" />
+                  <v2.3:Entry outShaftSpeed="114.05" maxTorque="10036.22" minTorque="-10036.22" />
+                  <v2.3:Entry outShaftSpeed="170.94" maxTorque="10036.22" minTorque="-10036.22" />
+                  <v2.3:Entry outShaftSpeed="227.96" maxTorque="10036.22" minTorque="-10036.22" />
+                  <v2.3:Entry outShaftSpeed="284.99" maxTorque="10036.22" minTorque="-10036.22" />
+                  <v2.3:Entry outShaftSpeed="342.01" maxTorque="8363.52" minTorque="-8363.52" />
+                  <v2.3:Entry outShaftSpeed="399.04" maxTorque="7168.74" minTorque="-7168.74" />
+                  <v2.3:Entry outShaftSpeed="455.92" maxTorque="6272.64" minTorque="-6272.64" />
+                  <v2.3:Entry outShaftSpeed="512.95" maxTorque="5575.66" minTorque="-5575.66" />
+                  <v2.3:Entry outShaftSpeed="569.97" maxTorque="5018.11" minTorque="-5018.11" />
+                  <v2.3:Entry outShaftSpeed="627.00" maxTorque="4561.93" minTorque="-4561.93" />
+                  <v2.3:Entry outShaftSpeed="684.02" maxTorque="4181.76" minTorque="-4181.76" />
+                  <v2.3:Entry outShaftSpeed="740.91" maxTorque="3860.07" minTorque="-3860.07" />
+                  <v2.3:Entry outShaftSpeed="797.93" maxTorque="3584.34" minTorque="-3584.34" />
+                  <v2.3:Entry outShaftSpeed="854.96" maxTorque="3345.41" minTorque="-3345.41" />
+                  <v2.3:Entry outShaftSpeed="911.98" maxTorque="3136.32" minTorque="-3136.32" />
+                  <v2.3:Entry outShaftSpeed="969.01" maxTorque="2951.85" minTorque="-2951.85" />
+                  <v2.3:Entry outShaftSpeed="1025.90" maxTorque="2787.86" minTorque="-2787.86" />
+                  <v2.3:Entry outShaftSpeed="1082.92" maxTorque="2641.13" minTorque="-2641.13" />
+                  <v2.3:Entry outShaftSpeed="1139.94" maxTorque="2509.06" minTorque="-2509.06" />
+                </MaxTorqueCurve>
+              </VoltageLevel>
+              <VoltageLevel>
+                <Voltage>1000</Voltage>
+                <ContinuousTorque>1000.00</ContinuousTorque>
+                <TestSpeedContinuousTorque>2069.00</TestSpeedContinuousTorque>
+                <OverloadTorque>1500.00</OverloadTorque>
+                <TestSpeedOverloadTorque>2069.00</TestSpeedOverloadTorque>
+                <OverloadDuration>120.00</OverloadDuration>
+                <MaxTorqueCurve>
+                  <v2.3:Entry outShaftSpeed="0.00" maxTorque="10036.22" minTorque="-10036.22" />
+                  <v2.3:Entry outShaftSpeed="5.65" maxTorque="10036.22" minTorque="-10036.22" />
+                  <v2.3:Entry outShaftSpeed="57.02" maxTorque="10036.22" minTorque="-10036.22" />
+                  <v2.3:Entry outShaftSpeed="114.05" maxTorque="10036.22" minTorque="-10036.22" />
+                  <v2.3:Entry outShaftSpeed="170.94" maxTorque="10036.22" minTorque="-10036.22" />
+                  <v2.3:Entry outShaftSpeed="227.96" maxTorque="10036.22" minTorque="-10036.22" />
+                  <v2.3:Entry outShaftSpeed="284.99" maxTorque="10036.22" minTorque="-10036.22" />
+                  <v2.3:Entry outShaftSpeed="342.01" maxTorque="8363.52" minTorque="-8363.52" />
+                  <v2.3:Entry outShaftSpeed="399.04" maxTorque="7168.74" minTorque="-7168.74" />
+                  <v2.3:Entry outShaftSpeed="455.92" maxTorque="6272.64" minTorque="-6272.64" />
+                  <v2.3:Entry outShaftSpeed="512.95" maxTorque="5575.66" minTorque="-5575.66" />
+                  <v2.3:Entry outShaftSpeed="569.97" maxTorque="5018.11" minTorque="-5018.11" />
+                  <v2.3:Entry outShaftSpeed="627.00" maxTorque="4561.93" minTorque="-4561.93" />
+                  <v2.3:Entry outShaftSpeed="684.02" maxTorque="4181.76" minTorque="-4181.76" />
+                  <v2.3:Entry outShaftSpeed="740.91" maxTorque="3860.07" minTorque="-3860.07" />
+                  <v2.3:Entry outShaftSpeed="797.93" maxTorque="3584.34" minTorque="-3584.34" />
+                  <v2.3:Entry outShaftSpeed="854.96" maxTorque="3345.41" minTorque="-3345.41" />
+                  <v2.3:Entry outShaftSpeed="911.98" maxTorque="3136.32" minTorque="-3136.32" />
+                  <v2.3:Entry outShaftSpeed="969.01" maxTorque="2951.85" minTorque="-2951.85" />
+                  <v2.3:Entry outShaftSpeed="1025.90" maxTorque="2787.86" minTorque="-2787.86" />
+                  <v2.3:Entry outShaftSpeed="1082.92" maxTorque="2641.13" minTorque="-2641.13" />
+                  <v2.3:Entry outShaftSpeed="1139.94" maxTorque="2509.06" minTorque="-2509.06" />
+                </MaxTorqueCurve>
+              </VoltageLevel>
+              <DragCurve gear="1">
+                <Entry outShaftSpeed="0.00" dragTorque="-68.32" />
+                <Entry outShaftSpeed="1.89" dragTorque="-70.46" />
+                <Entry outShaftSpeed="18.86" dragTorque="-90.46" />
+                <Entry outShaftSpeed="37.72" dragTorque="-112.60" />
+                <Entry outShaftSpeed="56.59" dragTorque="-134.73" />
+                <Entry outShaftSpeed="75.45" dragTorque="-157.11" />
+                <Entry outShaftSpeed="94.31" dragTorque="-179.25" />
+                <Entry outShaftSpeed="113.17" dragTorque="-201.39" />
+                <Entry outShaftSpeed="132.03" dragTorque="-223.53" />
+                <Entry outShaftSpeed="150.90" dragTorque="-245.66" />
+                <Entry outShaftSpeed="169.76" dragTorque="-268.04" />
+                <Entry outShaftSpeed="188.62" dragTorque="-290.18" />
+                <Entry outShaftSpeed="207.48" dragTorque="-312.32" />
+                <Entry outShaftSpeed="226.34" dragTorque="-334.46" />
+                <Entry outShaftSpeed="245.21" dragTorque="-356.59" />
+                <Entry outShaftSpeed="264.07" dragTorque="-378.97" />
+                <Entry outShaftSpeed="282.93" dragTorque="-401.11" />
+                <Entry outShaftSpeed="301.79" dragTorque="-423.25" />
+                <Entry outShaftSpeed="320.65" dragTorque="-445.39" />
+                <Entry outShaftSpeed="339.52" dragTorque="-467.52" />
+                <Entry outShaftSpeed="358.38" dragTorque="-489.90" />
+                <Entry outShaftSpeed="377.24" dragTorque="-512.04" />
+              </DragCurve>
+              <DragCurve gear="2">
+                <Entry outShaftSpeed="0.00" dragTorque="-38.23" />
+                <Entry outShaftSpeed="3.37" dragTorque="-39.43" />
+                <Entry outShaftSpeed="33.71" dragTorque="-50.62" />
+                <Entry outShaftSpeed="67.42" dragTorque="-63.01" />
+                <Entry outShaftSpeed="101.12" dragTorque="-75.39" />
+                <Entry outShaftSpeed="134.83" dragTorque="-87.91" />
+                <Entry outShaftSpeed="168.54" dragTorque="-100.30" />
+                <Entry outShaftSpeed="202.25" dragTorque="-112.69" />
+                <Entry outShaftSpeed="235.96" dragTorque="-125.08" />
+                <Entry outShaftSpeed="269.67" dragTorque="-137.47" />
+                <Entry outShaftSpeed="303.37" dragTorque="-149.99" />
+                <Entry outShaftSpeed="337.08" dragTorque="-162.37" />
+                <Entry outShaftSpeed="370.79" dragTorque="-174.76" />
+                <Entry outShaftSpeed="404.50" dragTorque="-187.15" />
+                <Entry outShaftSpeed="438.21" dragTorque="-199.54" />
+                <Entry outShaftSpeed="471.92" dragTorque="-212.06" />
+                <Entry outShaftSpeed="505.62" dragTorque="-224.45" />
+                <Entry outShaftSpeed="539.33" dragTorque="-236.84" />
+                <Entry outShaftSpeed="573.04" dragTorque="-249.22" />
+                <Entry outShaftSpeed="606.75" dragTorque="-261.61" />
+                <Entry outShaftSpeed="640.46" dragTorque="-274.13" />
+                <Entry outShaftSpeed="674.17" dragTorque="-286.52" />
+              </DragCurve>
+              <DragCurve gear="3">
+                <Entry outShaftSpeed="0.00" dragTorque="-22.61" />
+                <Entry outShaftSpeed="5.70" dragTorque="-23.32" />
+                <Entry outShaftSpeed="57.00" dragTorque="-29.93" />
+                <Entry outShaftSpeed="114.00" dragTorque="-37.26" />
+                <Entry outShaftSpeed="170.99" dragTorque="-44.59" />
+                <Entry outShaftSpeed="227.99" dragTorque="-51.99" />
+                <Entry outShaftSpeed="284.99" dragTorque="-59.32" />
+                <Entry outShaftSpeed="341.99" dragTorque="-66.64" />
+                <Entry outShaftSpeed="398.98" dragTorque="-73.97" />
+                <Entry outShaftSpeed="455.98" dragTorque="-81.30" />
+                <Entry outShaftSpeed="512.98" dragTorque="-88.70" />
+                <Entry outShaftSpeed="569.98" dragTorque="-96.03" />
+                <Entry outShaftSpeed="626.97" dragTorque="-103.35" />
+                <Entry outShaftSpeed="683.97" dragTorque="-110.68" />
+                <Entry outShaftSpeed="740.97" dragTorque="-118.01" />
+                <Entry outShaftSpeed="797.97" dragTorque="-125.41" />
+                <Entry outShaftSpeed="854.96" dragTorque="-132.74" />
+                <Entry outShaftSpeed="911.96" dragTorque="-140.06" />
+                <Entry outShaftSpeed="968.96" dragTorque="-147.39" />
+                <Entry outShaftSpeed="1025.96" dragTorque="-154.72" />
+                <Entry outShaftSpeed="1082.96" dragTorque="-162.12" />
+                <Entry outShaftSpeed="1139.95" dragTorque="-169.45" />
+              </DragCurve>
+              <Conditioning>
+                <Entry coolantTempInlet="30" coolingPower="5000" />
+              </Conditioning>
+            </Data>
+          </IEPC>
+          <ElectricEnergyStorage>
+            <Battery>
+              <StringID>0</StringID>
+              <REESS>
+                <Data xsi:type="BatterySystemDataType">
+                  <Manufacturer>a</Manufacturer>
+                  <Model>a</Model>
+                  <CertificationMethod>Measured</CertificationMethod>
+                  <CertificationNumber>token</CertificationNumber>
+                  <Date>2017-01-01T00:00:00Z</Date>
+                  <AppVersion>aaaaa</AppVersion>
+                  <BatteryType>HPBS</BatteryType>
+                  <RatedCapacity>72.00</RatedCapacity>
+                  <ConnectorsSubsystemsIncluded>true</ConnectorsSubsystemsIncluded>
+                  <JunctionboxIncluded>true</JunctionboxIncluded>
+                  <TestingTemperature>20</TestingTemperature>
+                  <OCV>
+                    <Entry SoC="0" OCV="718.42" />
+                    <Entry SoC="10" OCV="746.84" />
+                    <Entry SoC="20" OCV="763.14" />
+                    <Entry SoC="30" OCV="771.85" />
+                    <Entry SoC="40" OCV="776.26" />
+                    <Entry SoC="50" OCV="778.61" />
+                    <Entry SoC="60" OCV="780.43" />
+                    <Entry SoC="70" OCV="782.70" />
+                    <Entry SoC="80" OCV="786.19" />
+                    <Entry SoC="90" OCV="791.68" />
+                    <Entry SoC="100" OCV="800.21" />
+                  </OCV>
+                  <CurrentLimits>
+                    <Entry SoC="0" maxChargingCurrent="1620.00" maxDischargingCurrent="1620.00" />
+                    <Entry SoC="100" maxChargingCurrent="1620.00" maxDischargingCurrent="1620.00" />
+                  </CurrentLimits>
+                </Data>
+              </REESS>
+              <SOCmin>8</SOCmin>
+              <SOCmax>92</SOCmax>
+            </Battery>
+          </ElectricEnergyStorage>
+          <Axlegear>
+            <Data xsi:type="AxlegearDataVIFType">
+              <Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
+              <Model>Generic 40t Long Haul Truck AxleGear</Model>
+              <CertificationMethod>Standard values</CertificationMethod>
+              <Date>2017-01-11T11:00:00Z</Date>
+              <AppVersion>3.0.1</AppVersion>
+              <LineType>Single portal axle</LineType>
+              <Ratio>2.640</Ratio>
+            </Data>
+          </Axlegear>
+          <AxleWheels>
+            <Data xsi:type="AxleWheelsDataVIFType">
+              <Axles>
+                <vif:Axle axleNumber="1" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="AxleDataDeclarationType">
+                  <AxleType>VehicleNonDriven</AxleType>
+                  <TwinTyres>false</TwinTyres>
+                  <Steered>true</Steered>
+                  <Tyre>
+                    <Data id="WHL-5432198760-315-70-R22.5" xsi:type="TyreDataDeclarationType">
+                      <Manufacturer>Generic Wheels Manufacturer</Manufacturer>
+                      <Model>Generic Wheel</Model>
+                      <CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
+                      <Date>2017-01-11T14:00:00Z</Date>
+                      <AppVersion>Tyre Generation App 1.0</AppVersion>
+                      <Dimension>275/70 R22.5</Dimension>
+                      <RRCDeclared>0.0050</RRCDeclared>
+                      <FzISO>31300</FzISO>
+                    </Data>
+                    <Signature>
+                      <di:Reference URI="#WHL-5432198760-315-70-R22.5">
+                        <di:Transforms>
+                          <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+                          <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                        </di:Transforms>
+                        <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+                        <di:DigestValue>A/sq1ng4cqeOyauDUqUEnonRSPch3VCqZDX9Pf3tW1Q=</di:DigestValue>
+                      </di:Reference>
+                    </Signature>
+                  </Tyre>
+                </vif:Axle>
+                <vif:Axle axleNumber="2" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="AxleDataDeclarationType">
+                  <AxleType>VehicleDriven</AxleType>
+                  <TwinTyres>true</TwinTyres>
+                  <Steered>false</Steered>
+                  <Tyre>
+                    <Data id="WHL-5432198760-315-70-R22.5" xsi:type="TyreDataDeclarationType">
+                      <Manufacturer>Generic Wheels Manufacturer</Manufacturer>
+                      <Model>Generic Wheel</Model>
+                      <CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
+                      <Date>2017-01-11T14:00:00Z</Date>
+                      <AppVersion>Tyre Generation App 1.0</AppVersion>
+                      <Dimension>275/70 R22.5</Dimension>
+                      <RRCDeclared>0.0056</RRCDeclared>
+                      <FzISO>31300</FzISO>
+                    </Data>
+                    <Signature>
+                      <di:Reference URI="#WHL-5432198760-315-70-R22.5">
+                        <di:Transforms>
+                          <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+                          <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                        </di:Transforms>
+                        <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+                        <di:DigestValue>z+KDXmc5MIezM6RVgfYax5J9Efi0ghciG2/wLLmWaBk=</di:DigestValue>
+                      </di:Reference>
+                    </Signature>
+                  </Tyre>
+                </vif:Axle>
+              </Axles>
+            </Data>
+          </AxleWheels>
+          <Auxiliaries>
+            <Data xsi:type="AUX_IEPC_PrimaryBusType">
+              <SteeringPump>
+                <Technology axleNumber="1">Electric driven pump</Technology>
+              </SteeringPump>
+              <PneumaticSystem>
+                <CompressorDrive>electrically</CompressorDrive>
+                <SmartRegenerationSystem>false</SmartRegenerationSystem>
+                <AirsuspensionControl>electronically</AirsuspensionControl>
+                <PneumaticSCRReagentDosing>false</PneumaticSCRReagentDosing>
+              </PneumaticSystem>
+              <HVAC>
+                <AdjustableCoolantThermostat>true</AdjustableCoolantThermostat>
+              </HVAC>
+            </Data>
+          </Auxiliaries>
+        </Components>
+      </Vehicle>
+      <InputDataSignature>
+        <di:Reference URI="#PrimaryCityBus_IEPC">
+          <di:Transforms>
+            <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+            <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+          </di:Transforms>
+          <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+          <di:DigestValue>WtM2yohjVN1IisUkImDqaHAW7EPlbtsc8TzHpZL55aQ=</di:DigestValue>
+        </di:Reference>
+      </InputDataSignature>
+      <ManufacturerRecordSignature>
+        <di:Reference URI="#MRF-e6cd327fb0064e6cbb31">
+          <di:Transforms>
+            <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+            <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+          </di:Transforms>
+          <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+          <di:DigestValue>oNq0DG3+l4iTvTSzDq4YzGS3gJ46QDV9PTYNUwOtE9E=</di:DigestValue>
+        </di:Reference>
+      </ManufacturerRecordSignature>
+      <Results>
+        <Status>success</Status>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Heavy Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">13099</TotalVehicleMass>
+            <Payload unit="kg">1124</Payload>
+            <PassengerCount>16.52</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">4.58</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Heavy Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">17593</TotalVehicleMass>
+            <Payload unit="kg">5618</Payload>
+            <PassengerCount>82.62</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">5.56</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">13099</TotalVehicleMass>
+            <Payload unit="kg">1124</Payload>
+            <PassengerCount>16.52</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">4.21</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">17593</TotalVehicleMass>
+            <Payload unit="kg">5618</Payload>
+            <PassengerCount>82.62</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">5.00</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Suburban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">13099</TotalVehicleMass>
+            <Payload unit="kg">1124</Payload>
+            <PassengerCount>16.52</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">4.23</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Suburban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">17593</TotalVehicleMass>
+            <Payload unit="kg">5618</Payload>
+            <PassengerCount>82.62</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">4.92</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Interurban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">13050</TotalVehicleMass>
+            <Payload unit="kg">1075</Payload>
+            <PassengerCount>15.15</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">4.84</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Interurban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">15495</TotalVehicleMass>
+            <Payload unit="kg">3520</Payload>
+            <PassengerCount>49.57</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">5.19</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
+          <Mission>Heavy Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">13543</TotalVehicleMass>
+            <Payload unit="kg">1193</Payload>
+            <PassengerCount>17.55</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">4.91</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
+          <Mission>Heavy Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">18317</TotalVehicleMass>
+            <Payload unit="kg">5967</Payload>
+            <PassengerCount>87.75</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">6.17</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
+          <Mission>Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">13543</TotalVehicleMass>
+            <Payload unit="kg">1193</Payload>
+            <PassengerCount>17.55</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">4.50</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
+          <Mission>Urban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">18317</TotalVehicleMass>
+            <Payload unit="kg">5967</Payload>
+            <PassengerCount>87.75</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">5.50</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
+          <Mission>Suburban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">13543</TotalVehicleMass>
+            <Payload unit="kg">1193</Payload>
+            <PassengerCount>17.55</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">4.49</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
+          <Mission>Suburban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">18317</TotalVehicleMass>
+            <Payload unit="kg">5967</Payload>
+            <PassengerCount>87.75</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">5.34</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32SD</PrimaryVehicleSubgroup>
+          <Mission>Interurban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">14225</TotalVehicleMass>
+            <Payload unit="kg">1075</Payload>
+            <PassengerCount>15.15</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">4.72</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32SD</PrimaryVehicleSubgroup>
+          <Mission>Interurban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">16670</TotalVehicleMass>
+            <Payload unit="kg">3520</Payload>
+            <PassengerCount>49.57</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">5.09</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32SD</PrimaryVehicleSubgroup>
+          <Mission>Coach</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">14245</TotalVehicleMass>
+            <Payload unit="kg">1095</Payload>
+            <PassengerCount>15.42</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">5.49</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32SD</PrimaryVehicleSubgroup>
+          <Mission>Coach</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">15887</TotalVehicleMass>
+            <Payload unit="kg">2737</Payload>
+            <PassengerCount>38.56</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">5.66</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32DD</PrimaryVehicleSubgroup>
+          <Mission>Interurban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">14663</TotalVehicleMass>
+            <Payload unit="kg">1263</Payload>
+            <PassengerCount>17.79</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">4.89</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32DD</PrimaryVehicleSubgroup>
+          <Mission>Interurban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">17609</TotalVehicleMass>
+            <Payload unit="kg">4209</Payload>
+            <PassengerCount>59.29</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">5.34</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32DD</PrimaryVehicleSubgroup>
+          <Mission>Coach</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">14747</TotalVehicleMass>
+            <Payload unit="kg">1347</Payload>
+            <PassengerCount>18.97</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">5.69</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P32DD</PrimaryVehicleSubgroup>
+          <Mission>Coach</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">16768</TotalVehicleMass>
+            <Payload unit="kg">3368</Payload>
+            <PassengerCount>47.43</PassengerCount>
+          </SimulationParameters>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">5.90</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+      </Results>
+      <ApplicationInformation>
+        <SimulationToolVersion>0.7.10.3035-DEV !!NOT FOR CERTIFICATION!!</SimulationToolVersion>
+        <Date>2023-04-24T09:35:08.2648886Z</Date>
+      </ApplicationInformation>
+    </Data>
+    <Signature>
+      <di:Reference URI="#VIF_P-eed1f0ed412b4130bda1">
+        <di:Transforms>
+          <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+          <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+        </di:Transforms>
+        <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+        <di:DigestValue>Ls7Ie+B5tox14f2JSdfAdLYKtpITD+IACaEiOVn/Etw=</di:DigestValue>
+      </di:Reference>
+    </Signature>
+  </PrimaryVehicle>
+</VectoOutputMultistep>

@@ -11,6 +11,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.AuxiliaryDataAdapter;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
@@ -19,24 +20,24 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter;
 public class AuxiliaryDataAdapterTest
 {
 	[TestCase("Small", false, false, TestName = "S_HEV Pass 1")]
-    [TestCase("Small + AMS + elec. driven", true, false, TestName = "S_HEV Pass 1")]
-    [TestCase("Small", false, false, TestName = "S_HEV Pass 1")]
-    public void SHEVPneumaticSystemTest(string psTechnology, bool fullyElectric, bool fail)
-    {
-        var dataAdapter = new HeavyLorryAuxiliaryDataAdapter();
+	[TestCase("Small + AMS + elec. driven", true, false, TestName = "S_HEV Pass 1")]
+	[TestCase("Small", false, false, TestName = "S_HEV Pass 1")]
+	public void SHEVPneumaticSystemTest(string psTechnology, bool fullyElectric, bool fail)
+	{
+		var dataAdapter = new HeavyLorryAuxiliaryDataAdapter();
 
-        var auxInput = CreateAuxInput(psTechnology, "Default", "Standard technology", "Crankshaft mounted - Electronically controlled visco clutch", "Electric driven pump");
+		var auxInput = CreateAuxInput(psTechnology, "Default", "Standard technology", "Crankshaft mounted - Electronically controlled visco clutch", "Electric driven pump");
 
-        var auxData = dataAdapter.CreateAuxiliaryData(auxInput.Object, null, MissionType.LongHaul, VehicleClass.Class2,
-            8.SI<Meter>(), 1, VectoSimulationJobType.SerialHybridVehicle);
+		var auxData = dataAdapter.CreateAuxiliaryData(auxInput.Object, null, MissionType.LongHaul, VehicleClass.Class2,
+			8.SI<Meter>(), 1, VectoSimulationJobType.SerialHybridVehicle);
 
-        var ps = auxData.Single(data => data.ID == Constants.Auxiliaries.IDs.PneumaticSystem);
+		var ps = auxData.Single(data => data.ID == Constants.Auxiliaries.IDs.PneumaticSystem);
 
-        Assert.That(ps.ConnectToREESS == fullyElectric);
-        Assert.That(ps.IsFullyElectric == fullyElectric);
+		Assert.That(ps.ConnectToREESS == fullyElectric);
+		Assert.That(ps.IsFullyElectric == fullyElectric);
 	}
 
-    [TestCase("Small + AMS", "", true, 0.0f, true, TestName = "PEV Fail 2")]
+	[TestCase("Small + AMS", "", true, 0.0f, true, TestName = "PEV Fail 2")]
 	[TestCase("Small + ESS", "", true, 0.0f, true, TestName = "PEV Fail 3")]
 	[TestCase("Small + AMS + elec. driven", "Electrically driven - Electronically controlled", true, 0.0f, true, TestName = "PEV Fail 1")]
 	[TestCase("Small + AMS + elec. driven", "", true, 675, false, TestName = "PEV Pass 1")]
@@ -95,24 +96,24 @@ public class AuxiliaryDataAdapterTest
 		Assert.That(fan.PowerDemandMechCycleFunc == null);
 	}
 
-    [TestCase("Electrically driven - Electronically controlled", true, false, TestName = "Conv Pass 1")]
-    [TestCase("Crankshaft mounted - On/off clutch", false, false, TestName = "Conv Pass 2")]
-    public void ConventionalCoolingFanTest(string fanTech, bool isFullyElectric, bool fail)
-    {
-        var dataAdapter = new HeavyLorryAuxiliaryDataAdapter();
-        var auxInputData = CreateAuxInput("Small + ESS", "Default", "Standard technology",
-            fanTech, "Electric driven pump");
-        var auxData = GetAuxData(fail, dataAdapter, auxInputData, VectoSimulationJobType.ConventionalVehicle, 1,
-            8.SI<Meter>(), VehicleClass.Class2, MissionType.LongHaul);
+	[TestCase("Electrically driven - Electronically controlled", true, false, TestName = "Conv Pass 1")]
+	[TestCase("Crankshaft mounted - On/off clutch", false, false, TestName = "Conv Pass 2")]
+	public void ConventionalCoolingFanTest(string fanTech, bool isFullyElectric, bool fail)
+	{
+		var dataAdapter = new HeavyLorryAuxiliaryDataAdapter();
+		var auxInputData = CreateAuxInput("Small + ESS", "Default", "Standard technology",
+			fanTech, "Electric driven pump");
+		var auxData = GetAuxData(fail, dataAdapter, auxInputData, VectoSimulationJobType.ConventionalVehicle, 1,
+			8.SI<Meter>(), VehicleClass.Class2, MissionType.LongHaul);
 
-        var fan = auxData.Single(data => data.ID == Constants.Auxiliaries.IDs.Fan);
+		var fan = auxData.Single(data => data.ID == Constants.Auxiliaries.IDs.Fan);
 
-        Assert.That(isFullyElectric == fan.IsFullyElectric);
-        Assert.IsFalse(fan.ConnectToREESS);
-        Assert.That(fan.PowerDemandElectric == fan.PowerDemandMech * DeclarationData.AlternatorEfficiency);
-        Assert.IsNull(fan.PowerDemandDataBusFunc);
-        Assert.IsNull(fan.PowerDemandMechCycleFunc);
-    }
+		Assert.That(isFullyElectric == fan.IsFullyElectric);
+		Assert.IsFalse(fan.ConnectToREESS);
+		Assert.That(fan.PowerDemandElectric == fan.PowerDemandMech * DeclarationData.AlternatorEfficiency);
+		Assert.IsNull(fan.PowerDemandDataBusFunc);
+		Assert.IsNull(fan.PowerDemandMechCycleFunc);
+	}
 
 	[TestCase("Standard technology", false)]
 	[TestCase("asdf", true)]

@@ -1,4 +1,6 @@
-﻿using TUGraz.VectoCommon.BusAuxiliaries;
+﻿using System;
+using Ninject.Planning.Bindings.Resolvers;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.Models {
@@ -41,6 +43,12 @@ namespace TUGraz.VectoCommon.Models {
 			return self.ToString();
 		}
 
+		public static bool IsDoubleDeckerBus(this VehicleCode self)
+		{
+			VehicleCode? selfNullable = self;
+			return selfNullable.IsDoubleDeckerBus();
+		}
+
 		public static bool IsDoubleDeckerBus(this VehicleCode? self)
 		{
 			switch (self) {
@@ -60,6 +68,13 @@ namespace TUGraz.VectoCommon.Models {
 					return false;
 			}
 		}
+
+		public static FloorType GetFloorType(this VehicleCode self)
+		{
+			VehicleCode? selfNullable = self;
+			return selfNullable.GetFloorType();
+		}
+
 
 		public static FloorType GetFloorType(this VehicleCode? vehicleCode)
 		{

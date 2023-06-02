@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Xml;
+using System.Xml.Schema;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -42,9 +43,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Common {
 	public abstract class AbstractXMLType : LoggingObject
 	{
 		protected readonly XmlNode BaseNode;
-
+		protected readonly string SchemaType;
+		protected readonly XmlQualifiedName QualifiedName;
 		protected AbstractXMLType(XmlNode node)
 		{
+			var schemaType = XMLHelper.GetSchemaType(node);
+
+			SchemaType = schemaType?.Name;
+
+
+			QualifiedName = schemaType?.QualifiedName;
 			BaseNode = node;
 		}
 

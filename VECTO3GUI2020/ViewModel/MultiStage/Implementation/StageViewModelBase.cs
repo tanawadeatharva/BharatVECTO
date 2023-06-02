@@ -4,22 +4,25 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
+using System.Windows.Forms.Design;
 using System.Windows.Input;
 using System.Xml.Linq;
 using CommunityToolkit.Mvvm.Input;
+using Newtonsoft.Json;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
+using VECTO3GUI2020.Model.Multistage;
 using VECTO3GUI2020.Ninject;
 using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.Util.XML;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
-using RelayCommand = VECTO3GUI2020.Util.RelayCommand;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
@@ -79,6 +82,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private bool _showSaveAndCloseButtons = false;
 
+
+
 		public bool ShowSaveAndCloseButtons
 		{
 			get => _showSaveAndCloseButtons;
@@ -92,7 +97,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get
 			{
 				return _switchComponentViewCommand ??
-						new Util.RelayCommand<string>(SwitchViewExecute, (string s) => SwitchViewCanExecute(s));
+						new RelayCommand<string>(SwitchViewExecute, (string s) => SwitchViewCanExecute(s));
 			}
 		}
 
@@ -107,7 +112,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private bool SwitchViewCanExecute(string viewToShow)
 		{
-			return Components[viewToShow] != null;
+			var found = Components.TryGetValue(viewToShow, out var vm);
+			return found && vm != null;
 		}
 
 		private IRelayCommand _saveInputDataCommand;
@@ -117,15 +123,20 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public IRelayCommand SaveInputDataCommand =>
 			_saveInputDataCommand ??
-			new CommunityToolkit.Mvvm.Input.RelayCommand(() => { SaveInputDataExecute(filename: _vehicleInputDataFilePath); },
+			new RelayCommand(() => { SaveInputDataExecute(filename: _vehicleInputDataFilePath); },
 				() => _vehicleInputDataFilePath != null);
 
 		public ICommand SaveInputDataAsCommand =>
 			_saveInputDataAsCommand ?? new RelayCommand(() => { SaveInputDataExecute(filename: null); }, () => true);
 
 
-		private ICommand _loadVehicleDataCommand;
+
+
+
+        private ICommand _loadVehicleDataCommand;
 		private string _vehicleInputDataFilePath;
+
+
 
 
 		public ICommand LoadVehicleDataCommand
@@ -230,7 +241,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			{
 				var inputData = (IDeclarationInputDataProvider)_inputDataReader.Create(fileName);
 				var vehicleInputData = inputData.JobInputData.Vehicle;
-				VehicleViewModel.SetVehicleInputData(vehicleInputData);
+				VehicleViewModel.SetVehicleInputData(vehicleInputData, true);
 				VehicleInputDataFilePath = inputData.DataSource.SourceFile;
 				LoadStageInputDataFollowUp(inputData);
 
@@ -260,9 +271,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
+
+		
+
 		#endregion
 
-	}
+    }
 
 
 }

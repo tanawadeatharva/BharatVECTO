@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Newtonsoft.Json;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
@@ -71,6 +72,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 		public WattSecond TotalStoredEnergy => _totaltoredEnergy ?? (_totaltoredEnergy = CalculateBatteryEnergy(0, 1));
 
         public WattSecond UseableStoredEnergy => _useableStoredEnergy ?? (_useableStoredEnergy = CalculateBatteryEnergy(MinSOC, MaxSOC));
+
+		[JsonIgnore]
 		public IElectricStorageDeclarationInputData InputData { get; internal set; }
 
 		protected WattSecond CalculateBatteryEnergy(double minSoc, double maxSoc)
@@ -118,6 +121,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 			Entries = entries;
 		}
 
+		public string[] SerializedEntries
+		{
+			get
+			{
+				return Entries.Select(x => $"{x.SOC} - {x.BatteryVolts}").ToArray();
+			}
+		}
+
 		public Volt Lookup(double soc)
 		{
 			var idx = FindIndex(soc);
@@ -161,6 +172,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 		public InternalResistanceMap(InternalResistanceMapEntry[] entries)
 		{
 			Entries = entries;
+		}
+
+		public string[] SerializedEntries
+		{
+			get
+			{
+				return Entries.Select(x =>
+					$"{x.SoC}: " + x.Resistance.OrderBy(r => r.Item1.Value()).Select(r => $"{r.Item1}: {r.Item2}")
+						.Join(";")).ToArray();
+			}
 		}
 
 		public Ohm Lookup(double SoC, Second tPulse)
@@ -240,6 +261,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 		public MaxCurrentMap(MaxCurrentEntry[] entries)
 		{
 			Entries = entries;
+		}
+
+		public string[] SerializedEntries
+		{
+			get
+			{
+				return Entries.Select(x => $"{x.SoC}: {x.MaxChargeCurrent} / {x.MaxDischargeCurrent}").ToArray();
+			}
 		}
 
 		public Ampere LookupMaxChargeCurrent(double soc)

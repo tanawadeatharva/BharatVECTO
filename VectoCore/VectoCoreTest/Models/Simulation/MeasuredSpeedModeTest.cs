@@ -268,9 +268,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				Retarder = new RetarderData(),
 				DriverData = new DriverData() {
 					EngineStopStart = new DriverData.EngineStopStartData() {
-						UtilityFactorStandstill = DeclarationData.Driver.EngineStopStart.UtilityFactor,
-						EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
-						MaxEngineOffTimespan =  DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan
+						UtilityFactorStandstill = DeclarationData.Driver.GetEngineStopStartLorry().UtilityFactor,
+						EngineOffStandStillActivationDelay = DeclarationData.Driver.GetEngineStopStartLorry().ActivationDelay,
+						MaxEngineOffTimespan =  DeclarationData.Driver.GetEngineStopStartLorry().MaxEngineOffTimespan
 					}
 				},
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
@@ -353,9 +353,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				Retarder = new RetarderData(),
 				DriverData = new DriverData() {
 					EngineStopStart = new DriverData.EngineStopStartData() {
-						EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
-						UtilityFactorStandstill = DeclarationData.Driver.EngineStopStart.UtilityFactor,
-						MaxEngineOffTimespan = DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
+						EngineOffStandStillActivationDelay = DeclarationData.Driver.GetEngineStopStartLorry().ActivationDelay,
+						UtilityFactorStandstill = DeclarationData.Driver.GetEngineStopStartLorry().UtilityFactor,
+						MaxEngineOffTimespan = DeclarationData.Driver.GetEngineStopStartLorry().MaxEngineOffTimespan,
 					}
 				},
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()

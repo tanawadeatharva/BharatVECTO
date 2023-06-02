@@ -4,57 +4,72 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Ninject;
 using NUnit.Framework;
+using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.ViewModel.Implementation;
 using VECTO3GUI2020.ViewModel.Interfaces;
+using VECTO3GUI2020.ViewModel.Interfaces.Document;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
+using Vecto3GUI2020Test.Utils;
 
 namespace Vecto3GUI2020Test.ViewModelTests
 {
 	[TestFixture]
-	public class CreateVifViewModelTests : ViewModelTestBase
+	public class CreateVifViewModelTests// : ViewModelTestBase
 	{
 		private ICreateVifViewModel _createVifViewModel;
+		private IKernel _kernel;
+		private MockDialogHelper _dialogHelper;
 
-		private const string testdata_2_4 = "XML\\XMLReaderDeclaration\\SchemaVersion2.4\\";
+		private const string testdata_2_4 = "TestData\\XML\\SchemaVersion2.4\\";
 		//private const string testdata_2_10 = "XML\\XMLReaderDeclaration\\SchemaVersion2.10\\";
 
 		private const string vecto_vehicle_primary_heavyBusSample =
 			testdata_2_4 + "vecto_vehicle-primary_heavyBus-sample.xml";
 
 		private const string vecto_vehicle_exempted_input_only_certain_entries =
-			"vecto_vehicle-exempted_input_only_certain_entries01-sample.xml";
+			testdata_2_4 + "vecto_vehicle-exempted_input_only_certain_entries01-sample.xml";
 
 		private const string vecto_vehicle_primary_heavyBusExempted = testdata_2_4 + "exempted_primary_heavyBus.xml";
 
 		[SetUp]
 		public void SetUpCreateVif()
 		{
-			_createVifViewModel = _kernel.Get<ICreateVifViewModel>();
+			_kernel = TestHelper.GetKernel();
+			_createVifViewModel = _kernel.Get<INewDocumentViewModelFactory>().GetCreateNewVifViewModel(true) as ICreateVifViewModel;
+			_dialogHelper = _kernel.Get<IDialogHelper>() as MockDialogHelper;
+			Assert.NotNull(_createVifViewModel);
 		}
 
-		[TestCase(stageInputFullSample, TestName="InvalidPrimaryFile_StageInput")]
-		[TestCase(airdragLoadTestFile, TestName="InvalidPrimaryFile_Airdrag")]
-		[TestCase(consolidated_multiple_stages_airdrag, TestName = "InvalidPrimaryFile_VIF")]
+		[TestCase(TestData.stageInputFullSample, TestName="InvalidPrimaryFile_StageInput")]
+		[TestCase(TestData.airdragLoadTestFile, TestName="InvalidPrimaryFile_Airdrag")]
+		[TestCase(TestData.consolidated_multiple_stages_airdrag, TestName = "InvalidPrimaryFile_VIF")]
 		[TestCase(vecto_vehicle_exempted_input_only_certain_entries, TestName="InvalidPrimaryFile_ExemptedStageInput")]
 		public void LoadInvalidPrimaryFile(string fileName)
 		{
-			var filePath = GetTestDataPath(fileName);
+
+			//TODO detect if primary bus is loaded
+			var filePath = Path.GetFullPath(fileName);
+	
 			Assert.IsFalse(_createVifViewModel.LoadPrimaryInput(filePath));
 			Assert.IsNull(_createVifViewModel.PrimaryInputPath);
 			Assert.IsNull(_createVifViewModel.IsPrimaryExempted);
-		}
+
+			_dialogHelper.AssertErrorMessage("Invalid File");
+        }
 
 
 		[TestCase(vecto_vehicle_primary_heavyBusSample, TestName = "InvalidStageInput_Primary")]
-		[TestCase(airdragLoadTestFile, TestName = "InvalidStageInput_Airdrag")]
-		[TestCase(consolidated_multiple_stages_airdrag, TestName = "InvalidStageFile_VIF")]
+		[TestCase(TestData.airdragLoadTestFile, TestName = "InvalidStageInput_Airdrag")]
+		[TestCase(TestData.consolidated_multiple_stages_airdrag, TestName = "InvalidStageFile_VIF")]
 		public void LoadInvalidCompletedFile(string fileName)
 		{
-			var filePath = GetTestDataPath(fileName);
+			var filePath = Path.GetFullPath(fileName);
+			
 			Assert.IsFalse(_createVifViewModel.LoadStageInput(filePath));
 			Assert.IsNull(_createVifViewModel.IsStageInputExempted);
 			Assert.IsNull(_createVifViewModel.StageInputPath);
-		}
+			_dialogHelper.AssertErrorMessage("Invalid File");
+        }
 
 
 		[Test]
@@ -62,7 +77,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		{
 			LoadValidNonExemptedFiles();
 			var outputFile = "test.json";
-			var outputPath = GetFullPath(outputFile);
+			var outputPath = Path.GetFullPath(outputFile);
 			_createVifViewModel.SaveJob(outputPath);
 
 			FileAssert.Exists(outputPath);
@@ -75,8 +90,8 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public void LoadNonExemptedCompletedAndExemptedPrimary()
 		{
-			var exemptedPrimaryPath = GetTestDataPath(vecto_vehicle_primary_heavyBusExempted);
-			var stageInputPath = GetTestDataPath(stageInputFullSample);
+			var exemptedPrimaryPath = Path.GetFullPath(vecto_vehicle_primary_heavyBusExempted);
+			var stageInputPath = Path.GetFullPath(TestData.stageInputFullSample);
 
 			Assert.IsTrue(_createVifViewModel.LoadPrimaryInput(exemptedPrimaryPath));
 			Assert.IsFalse(_createVifViewModel.LoadStageInput(stageInputPath));
@@ -87,16 +102,16 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public void LoadValidPrimaryFile()
 		{
-			var filePath = GetTestDataPath(vecto_vehicle_primary_heavyBusSample);
+			var filePath = Path.GetFullPath(vecto_vehicle_primary_heavyBusSample);
 			Assert.IsTrue(_createVifViewModel.LoadPrimaryInput(filePath));
 			Assert.AreEqual(filePath, _createVifViewModel.PrimaryInputPath);
 		}
 
-		[TestCase(stageInputFullSample, TestName = "ValidStageInput_fullStageInput")]
+		[TestCase(TestData.stageInputFullSample, TestName = "ValidStageInput_fullStageInput")]
 		[TestCase(vecto_vehicle_exempted_input_only_certain_entries, TestName = "ValidStageInput_exemptedStageInput")]
 		public void LoadValidStageInputFile(string fileName)
 		{
-			var filePath = GetTestDataPath(fileName);
+			var filePath = Path.GetFullPath(fileName);
 			Assert.IsTrue(_createVifViewModel.LoadStageInput(filePath));
 			Assert.AreEqual(filePath, _createVifViewModel.StageInputPath);
 		}
@@ -110,9 +125,10 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 		public void LoadValidNonExemptedFiles()
 		{
-			var primaryPath = GetTestDataPath(vecto_vehicle_primary_heavyBusSample);
-			var stageInputPath = GetTestDataPath(stageInputFullSample);
-
+			var primaryPath = Path.GetFullPath(vecto_vehicle_primary_heavyBusSample);
+			var stageInputPath = Path.GetFullPath(TestData.stageInputFullSample);
+			AssertHelper.FileExists(primaryPath);
+			AssertHelper.FileExists(stageInputPath);
 			Assert.IsTrue(_createVifViewModel.LoadPrimaryInput(primaryPath));
 			Assert.IsTrue(_createVifViewModel.LoadStageInput(stageInputPath));
 		}
@@ -120,8 +136,9 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public void LoadValidExemptedFiles()
 		{
-			var primaryPath = GetTestDataPath(vecto_vehicle_primary_heavyBusExempted);
-			var stageInputPath = GetTestDataPath(vecto_vehicle_exempted_input_only_certain_entries);
+			var primaryPath = Path.GetFullPath(vecto_vehicle_primary_heavyBusExempted);
+			var stageInputPath = Path.GetFullPath(vecto_vehicle_exempted_input_only_certain_entries);
+			AssertHelper.FilesExist(primaryPath, stageInputPath);
 			Assert.IsTrue(_createVifViewModel.LoadPrimaryInput(primaryPath));
 			Assert.IsTrue(_createVifViewModel.LoadStageInput(stageInputPath));
 
@@ -175,8 +192,8 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var stagePath = _createVifViewModel.StageInputPath;
 			
 
-			var savedToPath = _createVifViewModel.SaveJob(GetFullPath("non_exempted.vecto"));
-			WriteLine($"Saved to: {savedToPath}");
+			var savedToPath = _createVifViewModel.SaveJob(Path.GetFullPath("non_exempted.vecto"));
+			TestContext.WriteLine($"Saved to: {savedToPath}");
 
 			Assert.AreEqual(primaryPath, _createVifViewModel.PrimaryInputPath);
 			Assert.AreEqual(stagePath, _createVifViewModel.StageInputPath);

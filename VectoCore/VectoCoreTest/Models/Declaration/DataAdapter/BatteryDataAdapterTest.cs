@@ -131,7 +131,7 @@ public class BatteryDataAdapterTest
 				new[]{"0.0", "0.0"},
 				new[]{"0.0", "0.0"}
 			}));
-
+		ressPack.Setup(m => m.DataSource).Returns(new DataSource() {SourceType = DataSourceType.XMLEmbedded});
 		elStorage.Setup(m => m.REESSPack).Returns(() => ressPack.Object);
 		return elStorage;
 	}

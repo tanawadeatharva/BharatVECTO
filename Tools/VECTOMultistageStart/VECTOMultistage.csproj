@@ -5,7 +5,7 @@
     <AssemblyName>VECTOMultistage</AssemblyName>
     <ApplicationIcon>Icon2.ico</ApplicationIcon>
     <RootNamespace>TUGraz.VECTO</RootNamespace>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <DefineConstants />
     <Configurations>Debug;Release;MockupDebug</Configurations>
   </PropertyGroup>

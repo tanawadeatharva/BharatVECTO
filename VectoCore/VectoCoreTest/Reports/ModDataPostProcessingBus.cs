@@ -36,9 +36,9 @@ namespace TUGraz.VectoCore.Tests.Reports
 	[TestFixture]
 	public class ModDataPostProcessingBus
 	{
-		private const VectoRunData.OvcHevMode CD_Mode = VectoRunData.OvcHevMode.ChargeDepleting;
-		private const VectoRunData.OvcHevMode CS_Mode = VectoRunData.OvcHevMode.ChargeSustaining;
-		private const VectoRunData.OvcHevMode NonOvc = VectoRunData.OvcHevMode.NotApplicable;
+		private const OvcHevMode CD_Mode = OvcHevMode.ChargeDepleting;
+		private const OvcHevMode CS_Mode = OvcHevMode.ChargeSustaining;
+		private const OvcHevMode NonOvc = OvcHevMode.NotApplicable;
 
 		private const VectoSimulationJobType P_HEV = VectoSimulationJobType.ParallelHybridVehicle;
 		private const VectoSimulationJobType S_HEV = VectoSimulationJobType.SerialHybridVehicle;
@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 										"2500,0,3800\n" +
 										"2500,1000,32000\n";
 
-		protected static readonly FuelData.Entry Fuel = FuelData.Diesel;
+		protected static readonly IFuelProperties Fuel = FuelData.Diesel;
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			TestCase(NonOvc, SmartAlternator, 18000, 11776.5180, 3255.8075, 1.3357, 0.0000, 0.0000000, 0.0000000, 0.0200357, 0.0000000, NaN, false, TestName = "Test Busaux ElectricPS Conventional correction, smart alt, Case B - 3 correction over-consumption"),
 		]
 		public void TestBusAuxElectricCompressorPostProcessing_Conventional(
-			VectoRunData.OvcHevMode ovcMode,
+			OvcHevMode ovcMode,
 			AlternatorType alternatorType,
 			double cycleDuration,
 
@@ -229,7 +229,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 		]
 		public void TestBusAuxElectricCompressorPostProcessing_Hybrid(
-			VectoRunData.OvcHevMode ovcMode,
+			OvcHevMode ovcMode,
 			AlternatorType alternatorType,
 			double cycleDuration,
 
@@ -265,7 +265,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			//var range = DeclarationData.CalculateElectricRangesPEV(runData, mockModData);
 			IWeightedResult weighted = null;
-			if (ovcMode == VectoRunData.OvcHevMode.ChargeDepleting) {
+			if (ovcMode == OvcHevMode.ChargeDepleting) {
 				var cdResult = new XMLDeclarationReport.ResultEntry();
 				cdResult.Initialize(runData);
 				cdResult.SetResultData(runData, mockModData, 1.0);
@@ -327,7 +327,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			TestCase(CD_Mode, NoAlternator, 6000, 4021.5180, -4499.1925, 0.0000, 0.0000, -1.2920758, 180.0000000, NaN, NaN, 2021.1751, true, TestName = "Test Busaux ElectricPS PEV correction - 2 correction under-consumption"),
 			TestCase(CD_Mode, NoAlternator, 18000, 11776.5180, 3255.8075, 0.0000, 0.0000, 0.9350011, 180.0000000, NaN, NaN, 1996.2970, true, TestName = "Test Busaux ElectricPS PEV correction - 3 correction over-consumption"),
 		]
-		public void TestBusAuxElectricCompressorPostProcessing_BatteryElectric(VectoRunData.OvcHevMode ovcMode,
+		public void TestBusAuxElectricCompressorPostProcessing_BatteryElectric(OvcHevMode ovcMode,
 			AlternatorType alternatorType,
 			double cycleDuration,
 
@@ -436,7 +436,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		}
 
 		protected VectoRunData GetVectoRunDataHybrid(IAuxiliaryConfig busAux,
-			VectoSimulationJobType jobType, VectoRunData.OvcHevMode ovcMode)
+			VectoSimulationJobType jobType, OvcHevMode ovcMode)
 		{
 			var emData = new Mock<ElectricMotorData>();
 
@@ -538,7 +538,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var runData = new VectoRunData() {
 				SimulationType = SimulationType.DistanceCycle,
 				ExecutionMode = ExecutionMode.Declaration,
-				OVCMode = VectoRunData.OvcHevMode.ChargeDepleting,
+				OVCMode = OvcHevMode.ChargeDepleting,
 				Exempted = false,
 				JobType = VectoSimulationJobType.BatteryElectricVehicle,
 				DriverData = new DriverData() {
@@ -617,7 +617,9 @@ namespace TUGraz.VectoCore.Tests.Reports
 					.Returns<IFuelProperties, ModalResultField>((f, m) => f.GetLabel());
 				m.Setup(x => x.EngineLineCorrectionFactor(It.IsIn(Fuel)))
 					.Returns(15.SI(Unit.SI.Gramm.Per.Kilo.Watt.Hour).Cast<KilogramPerWattSecond>());
-			}
+			} else {
+				m.Setup(x => x.FuelData).Returns(new IFuelProperties[] { });
+            }
 
 			if (runData.JobType == VectoSimulationJobType.SerialHybridVehicle) {
 				var genField = string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(),
@@ -683,7 +685,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		}
 
 		private static void SetupMockEMotorValues(WattSecond emLoss, Mock<IModalDataContainer> m,
-			PowertrainPosition emPos, VectoRunData.OvcHevMode ovcMode)
+			PowertrainPosition emPos, OvcHevMode ovcMode)
 		{
 			var colName = m.Object.GetColumnName(emPos, ModalResultField.P_EM_electricMotorLoss_);
 			if (emPos == PowertrainPosition.IEPC) {
@@ -697,12 +699,12 @@ namespace TUGraz.VectoCore.Tests.Reports
 			SetupMockBatteryValues(m, ovcMode);
 		}
 
-		private static void SetupMockBatteryValues(Mock<IModalDataContainer> m, VectoRunData.OvcHevMode ovcMode)
+		private static void SetupMockBatteryValues(Mock<IModalDataContainer> m, OvcHevMode ovcMode)
 		{
 			var batChgEff = 0.95;
 			var batDischgEff = 0.93;
 			var batEnergy = 200.SI(Unit.SI.Kilo.Watt.Hour).Cast<WattSecond>();
-			var factorChg = ovcMode.IsOneOf(VectoRunData.OvcHevMode.ChargeSustaining, VectoRunData.OvcHevMode.NotApplicable) ? 1 : 0.1;
+			var factorChg = ovcMode.IsOneOf(OvcHevMode.ChargeSustaining, OvcHevMode.NotApplicable) ? 1 : 0.1;
 			var batteryEntries = new[] {
 				// internal , terminal
 				Tuple.Create(batEnergy * factorChg, batEnergy * factorChg / batChgEff),

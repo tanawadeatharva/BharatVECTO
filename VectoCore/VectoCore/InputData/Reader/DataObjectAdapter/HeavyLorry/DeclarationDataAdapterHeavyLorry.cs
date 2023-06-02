@@ -40,6 +40,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.AuxiliaryDataAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.StrategyDataAdapter;
 using TUGraz.VectoCore.InputData.Reader.ShiftStrategy;
@@ -61,13 +62,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 		{
             
             private readonly IDriverDataAdapter _driverDataAdapter = new LorryDriverDataAdapter();
-            protected readonly IVehicleDataAdapter _vehicleDataAdapter = new LorryVehicleDataAdapter();
+            //protected readonly IVehicleDataAdapter _vehicleDataAdapter = new LorryVehicleDataAdapter();
 			private readonly IAxleGearDataAdapter _axleGearDataAdapter = new AxleGearDataAdapter();
 			private readonly IRetarderDataAdapter _retarderDataAdapter = new RetarderDataAdapter();
 			private readonly IAirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
 
 			private IAngledriveDataAdapter _angleDriveDataAdapter = new AngledriveDataAdapter();
 
+			protected virtual IVehicleDataAdapter VehicleDataAdapter { get; } = new LorryVehicleDataAdapter();
 			protected abstract IEngineDataAdapter EngineDataAdapter { get; }
 			protected abstract IGearboxDataAdapter GearboxDataAdapter { get; }
 			protected abstract IAuxiliaryDataAdapter AuxDataAdapter { get; }
@@ -89,7 +91,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
 			{
-				return _vehicleDataAdapter.CreateVehicleData(vehicle, segment, mission, loading.Value.Item1,
+				return VehicleDataAdapter.CreateVehicleData(vehicle, segment, mission, loading.Value.Item1,
 					loading.Value.Item2, allowVocational);
 			}
 
@@ -102,7 +104,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			public virtual HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData, 
 				SuperCapData runDataSuperCapData,
 				Kilogram vehicleMass, 
-				VectoRunData.OvcHevMode ovcMode, 
+				OvcHevMode ovcMode, 
 				LoadingType loading, 
 				VehicleClass vehicleClass, 
 				MissionType missionType)
@@ -115,7 +117,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			public virtual HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
 				SuperCapData runDataSuperCapData,
 				Kilogram vehicleMass,
-				VectoRunData.OvcHevMode ovcMode,
+				OvcHevMode ovcMode,
 				LoadingType loading,
 				VehicleClass vehicleClass,
 				MissionType missionType,
@@ -167,7 +169,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			public virtual ShiftStrategyParameters CreateGearshiftData(double axleRatio,
 				PerSecond engineIdlingSpeed, GearboxType gearboxType, int gearsCount)
 			{
-				return GearboxDataAdapter.CreateGearshiftData(axleRatio, null, gearboxType, gearsCount);
+				return GearboxDataAdapter.CreateGearshiftData(axleRatio, engineIdlingSpeed, gearboxType, gearsCount);
 			}
 
 			public RetarderData CreateRetarderData(IRetarderInputData retarderData, PowertrainPosition position)
@@ -243,7 +245,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 		public abstract class Hybrid : LorryBase
 		{
-			private ElectricStorageAdapter _eletricStorageAdapter = new ElectricStorageAdapter();
+			private IElectricStorageAdapter _eletricStorageAdapter = new ElectricStorageAdapter();
 			protected IAuxiliaryDataAdapter _auxAdapter = new HeavyLorryAuxiliaryDataAdapter();
 
 			protected override IEngineDataAdapter EngineDataAdapter { get; } = new CombustionEngineComponentDataAdapter();
@@ -310,7 +312,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			protected override GearboxType[] SupportedGearboxTypes { get; }
 
 			//private readonly GearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(null);
-			private readonly ElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
+			private readonly IElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
 			private readonly ElectricMachinesDataAdapter _electricMachineAdapter = new ElectricMachinesDataAdapter();
 			
 			private readonly HeavyLorryPEVAuxiliaryDataAdapter
@@ -422,11 +424,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			protected override GearboxType[] SupportedGearboxTypes { get; }
 
-			public override VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
-				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
-			{
-				return _vehicleDataAdapter.CreateExemptedVehicleData(vehicle);
-			}
+			protected override IVehicleDataAdapter VehicleDataAdapter { get; } = new ExemptedLorryVehicleDataAdapter();
+
+			//public override VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
+			//	KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
+			//{
+			//	return _vehicleDataAdapter.CreateExemptedVehicleData(vehicle);
+			//}
 
 			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)

@@ -16,12 +16,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         public override XElement GetElement(IResultEntry entry)
 		{
-			var fcWrtier = FuelConsumptionWriter;
+			var fcWriter = FuelConsumptionWriter;
 			return new XElement(TNS + XMLNames.Report_ResultEntry_Total,
 				VehiclePerformanceWriter.GetElement(entry),
-				fcWrtier != null
+				fcWriter != null
 					? entry.FuelData.Select(f =>
-						fcWrtier.GetElement(entry, entry.FuelConsumptionFinal(f.FuelType)))
+						fcWriter.GetElement(entry, entry.FuelConsumptionFinal(f.FuelType)))
 					: null,
 				ElectricEnergyConsumptionWriter?.GetElement(entry),
 				CO2Writer?.GetElements(entry),
@@ -92,7 +92,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         protected override IResultGroupWriter VehiclePerformanceWriter => _factory.GetVehiclePerformancePEVLorry(_factory, TNS);
 
-        protected override IFuelConsumptionWriter FuelConsumptionWriter => null;
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => null;
+	
 
         protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _factory.GetElectricEnergyConsumptionLorry(_factory, TNS);
 
@@ -180,7 +181,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         #endregion
     }
-
+    
     public class BusHEVNonOVCTotalWriter : NonOVCTotalWriterBase
     {
         public BusHEVNonOVCTotalWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
@@ -203,8 +204,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         #region Overrides of NonOVCTotalWriterBase
 
         protected override IResultGroupWriter VehiclePerformanceWriter => _factory.GetVehiclePerformancePEVBus(_factory, TNS);
-        protected override IFuelConsumptionWriter FuelConsumptionWriter => null;
-
+		//protected override IFuelConsumptionWriter FuelConsumptionWriter => _factory.GetZEVFuelConsumptionBus(_factory, TNS);
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => null;
         protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _factory.GetElectricEnergyConsumptionBus(_factory, TNS);
         protected override ICO2Writer CO2Writer => _factory.GetCO2ResultPEVBus(_factory, TNS);
         protected override IElectricRangeWriter ElectricRangeWriter => _factory.GetElectricRangeWriter(_factory, TNS);
