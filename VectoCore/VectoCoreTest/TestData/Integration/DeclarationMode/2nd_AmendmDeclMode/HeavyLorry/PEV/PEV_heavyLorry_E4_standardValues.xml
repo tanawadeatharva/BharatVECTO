@@ -2185,9 +2185,11 @@
 						<CertificationMethod>Option 2</CertificationMethod>
 						<TorqueLossMap>
 							<Entry inputSpeed="0.00" inputTorque="0.00" torqueLoss="0.00"/>
-							<Entry inputSpeed="0.00" inputTorque="500.00" torqueLoss="5.00"/>
-							<Entry inputSpeed="1000.00" inputTorque="0.00" torqueLoss="0.00"/>
-							<Entry inputSpeed="1000.00" inputTorque="500.00" torqueLoss="5.00"/>
+							<Entry inputSpeed="0.00" inputTorque="-5000.00" torqueLoss="50.00"/>
+							<Entry inputSpeed="0.00" inputTorque="5000.00" torqueLoss="50.00"/>
+							<Entry inputSpeed="30000.00" inputTorque="0.00" torqueLoss="0.00"/>
+							<Entry inputSpeed="30000.00" inputTorque="5000.00" torqueLoss="50.00"/>
+							<Entry inputSpeed="30000.00" inputTorque="5000.00" torqueLoss="50.00"/>
 						</TorqueLossMap>
 					</Data>
 					<v2.3:Signature>
