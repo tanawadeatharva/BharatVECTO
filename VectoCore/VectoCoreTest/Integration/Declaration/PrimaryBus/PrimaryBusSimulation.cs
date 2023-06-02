@@ -156,7 +156,9 @@ public class PrimaryBusSimulation
 	TestCase(@"FactorMethod\P-HEV\P2-HEV\P31_32_P2_HEV_nonSmartES_mechAux.xml", 0, TestName = "2nd Amendment PrimaryBus FM P-HEV P2 nonSmartES_mechAux"),
 	TestCase(@"FactorMethod\P-HEV\P2-HEV\P31_32_P2_HEV_SmartES_elec_SP_elec_Fan.xml", 0, TestName = "2nd Amendment PrimaryBus FM P-HEV P2 SmartES_elFan_elSteer"),
 
-	TestCase(@"FactorMethod\S-HEV\S2-HEV\P31_32_S2_HEV_nonSmartES_elecSP_mechFan.xml", 0, TestName = "2nd Amendment PrimaryBus FM S-HEV S2 nonSmartES_elecSP_mechFan"),
+    // Fails on almost every cycle except suburban
+	TestCase(@"FactorMethod\S-HEV\S2-HEV\P31_32_S2_HEV_nonSmartES_elecSP_mechFan.xml", 0, TestName = "2nd Amendment PrimaryBus FM S-HEV S2 nonSmartES_elecSP_mechFan 0"),
+    TestCase(@"FactorMethod\S-HEV\S2-HEV\P31_32_S2_HEV_nonSmartES_elecSP_mechFan.xml", 4, TestName = "2nd Amendment PrimaryBus FM S-HEV S2 nonSmartES_elecSP_mechFan 4"),
 	]
 
 
@@ -309,11 +311,15 @@ public class PrimaryBusSimulation
 		TestName = "2nd Amendment FactorMethodRunData P-HEV P2 nonSmartES_mechFan_elSP spez_Dim_HVAC"),
 	TestCase(@"FactorMethod\P-HEV\P2-HEV\P31_32_P2_HEV_nonSmartES_mechAux.xml", @"FactorMethod\P-HEV\P2-HEV\P2_HEV_32e_prim_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_P2_HEV_nonSmartES_mechAux.RSLT_VIF.xml", CycleCO, LowL,
 		TestName = "2nd Amendment FactorMethodRunData P-HEV P2 nonSmartES_mechAux prim_Dim_HVAC"),
+
 	TestCase(@"FactorMethod\P-HEV\P2-HEV\P31_32_P2_HEV_SmartES_elec_SP_elec_Fan.xml", @"FactorMethod\P-HEV\P2-HEV\P2_HEV_32e_spez_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_P2_HEV_SmartES_elec_SP_elec_Fan.RSLT_VIF.xml", CycleCO, LowL, 
 		TestName = "2nd Amendment FactorMethodRunData P-HEV P2 SmartES_elFan_elSteer spez_Dim_HVAC"),
 
+	TestCase(@"FactorMethod\P-HEV\P2-HEV\P31_32_P2_HEV_SmartES_elec_SP_elec_Fan.xml", @"FactorMethod\P-HEV\P2-HEV\P2_HEV_32e_spez_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_P2_HEV_SmartES_elec_SP_elec_Fan.RSLT_VIF.xml", CycleCO, LowL,
+		TestName = "2nd Amendment FactorMethodRunData P-HEV P2 SmartES_elFan_elSteer spez_Dim_HVAC"),
 
-
+	TestCase(@"FactorMethod\S-HEV\S2-HEV\P31_32_S2_HEV_nonSmartES_elecSP_mechFan.xml", @"FactorMethod\S-HEV\S2-HEV\S2_HEV_32e_spec_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_S2_HEV_nonSmartES_elecSP_mechFan.RSLT_VIF.xml", MissionType.Suburban, LowL,
+		TestName= "2nd Amendment FactorMethodRunData S-HEV S2 nonSmartES_elecSP_mechFan"),
     ]
     public void TestFactorMethodRunData(string primary, string completed, string vifFile, MissionType mission, LoadingType loading)
 	{
@@ -487,7 +493,7 @@ public class PrimaryBusSimulation
 		//runsFactory.SerializeVectoRunData = true;
 		var jobContainer = new JobContainer(new SummaryDataContainer(fileWriter)) { };
 		//var jobContainer = new JobContainer(new MockSumWriter()) { };
-		var runs = runsFactory.SimulationRuns();
+		var runs = runsFactory.SimulationRuns().ToList();
 		foreach (var vectoRun in runs) {
 			foreach (var action in runDataModifier) {
 				action(vectoRun.GetContainer().RunData);
