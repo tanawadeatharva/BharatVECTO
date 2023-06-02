@@ -61,6 +61,10 @@ In this column the input data of the current step is displayed, and can be edite
 In case a mandatory input field is empty, or the value provided by the user is invalid the input element is highlighted with a red border. To remove an entry from the current step uncheck the corresponding checkbox.
 
 ### 8 Save and Close
+- **Save as JSON ...**:\
+    Saves the input data as completed bus job (JSON v7).
+    Not the created files consist of the paths of the VIF and the completed input, to update edited fields the input has to be saved additionaly.
+
 - **Save Input As ...**:\
     Saves the input of the current step to a new file.
 - **Save Input**: \
@@ -70,6 +74,9 @@ In case a mandatory input field is empty, or the value provided by the user is i
 - **Close**:\
     Closes the window. Note: As long as VECTO is open and the job is not removed from the job list, unsaved changes remain in the job for further editing.
 
+### 9 Architecture
+- Shows the powertrain architecture of the vehicle. In case a vif is loaded this field is automatically set according to the primary vehicle.
+  If the step input is created without a vif, the architecture has to be selected manually.
 
 ## New Primary Job with Interim Input - Special Case I
 If the manufacturer of the primary vehicle also adds certain components of the completed step (e.g., HVAC compressor), it is required that the VIF created at the primary step already contains the provided input parameters of the completed step. Therefore, at the primary step the input consists on the one hand of the input XML for the primary vehicle and on the other hand the XML with parts of the completed vehicle.
