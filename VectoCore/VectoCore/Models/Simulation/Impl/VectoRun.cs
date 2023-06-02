@@ -152,7 +152,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Container.RunStatus = Status.Aborted;
 				var ex = new VectoSimulationException("{6} ({7} {8}) - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}, f_equiv:{9}",
 					ve, AbsTime, Container.MileageCounter.Distance, dt, Container.VehicleInfo.VehicleSpeed, 
-					TryCatch(() => Container.GearboxInfo.Gear), ve.Message, RunIdentifier, CycleName, RunSuffix, TryCatch(() => Container.RunData.HybridStrategyParameters.EquivalenceFactor));
+					TryCatch(() => Container.GearboxInfo.Gear), ve.Message, RunIdentifier, CycleName, RunSuffix, TryCatch(() => Container.RunData.HybridStrategyParameters?.EquivalenceFactor));
 				try {
 					Container.FinishSimulationRun(ex);
 				} catch (Exception ve2) {

@@ -429,8 +429,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override string Clutch => null;
 
-        #endregion
-    }
+		public override ConsumerTechnology AdBlueDosing => ConsumerTechnology.Unknown;
+
+		#endregion
+	}
 
 	// ---------------------------------------------------------------------------------------
 
@@ -461,8 +463,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override string Clutch => null;
 
-        #endregion
-    }
+		public override ConsumerTechnology AdBlueDosing => ConsumerTechnology.Unknown;
+
+		#endregion
+	}
 
 	// ---------------------------------------------------------------------------------------
 

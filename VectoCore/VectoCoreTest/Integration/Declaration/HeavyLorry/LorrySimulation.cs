@@ -455,7 +455,8 @@ public class LorrySimulation
 				SearchForPattern(sumData, new List<string>(fcFields.Select(fc => string.Format(fc, "")).Concat(CO2fields)));
 			}
 
-			SearchForPattern(sumData, new List<string>(EC_el.Concat(REESS_fields)));
+			SearchForPattern(sumData, EC_el);
+			SearchForPattern(sumData, REESS_fields);
 			SearchForPattern(sumData, GbxTimeShareFields());
 		}
 
@@ -470,7 +471,9 @@ public class LorrySimulation
 				SearchForPattern(sumData, new List<string>(fcFields.Select(fc => string.Format(fc, "")).Concat(CO2fields)));
 			}
 
-			SearchForPattern(sumData, new List<string>(EC_el.Concat(p_hev_fields).Concat(REESS_fields)));
+			SearchForPattern(sumData, EC_el);
+			SearchForPattern(sumData, p_hev_fields);
+			SearchForPattern(sumData, REESS_fields);
 			SearchForPattern(sumData,GbxTimeShareFields());
 		}
 	}

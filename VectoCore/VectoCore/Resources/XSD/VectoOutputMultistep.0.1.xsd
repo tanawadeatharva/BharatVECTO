@@ -745,7 +745,7 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:group ref="vif:BusAuxPneumaticSystemGen_IEPC_SequenceGroup"/>
-								<xs:group ref="vif:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+								<xs:group ref="vif:BusAuxPneumaticSystemConsumerPEVSequenceGroup"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -797,7 +797,7 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:group ref="vif:BusAuxPneumaticSystemGen_PEV_SequenceGroup"/>
-								<xs:group ref="vif:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+								<xs:group ref="vif:BusAuxPneumaticSystemConsumerPEVSequenceGroup"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -1231,6 +1231,26 @@
 				<xs:annotation>
 					<xs:documentation>P316 - bool</xs:documentation>
 				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="BusAuxPneumaticSystemConsumerPEVSequenceGroup">
+		<xs:sequence>
+			<xs:element name="SmartRegenerationSystem" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P312 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AirsuspensionControl">
+				<xs:annotation>
+					<xs:documentation>P315 - enum</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="mechanically"/>
+						<xs:enumeration value="electronically"/>
+					</xs:restriction>
+				</xs:simpleType>
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
