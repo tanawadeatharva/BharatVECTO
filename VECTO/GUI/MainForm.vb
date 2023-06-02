@@ -46,6 +46,7 @@ Imports TUGraz.VectoCommon.Resources
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.InputData.FileIO.XML
+Imports TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 Imports TUGraz.VectoCore.Models.Simulation
 Imports TUGraz.VectoCore.Models.Simulation.Data
@@ -1026,6 +1027,8 @@ lbFound:
 
                 Dim extension As String = Path.GetExtension(jobFile)
                 Dim input As IInputDataProvider = Nothing
+                Dim outFile As String = GetOutputDirectory(jobFile)
+                Dim fileWriter As FileOutputWriter = New FileOutputWriter(outFile)
                 Select Case extension
                     Case VectoCore.Configuration.Constants.FileExtensions.VectoJobFile
                         input = JSONInputDataFactory.ReadJsonJob(jobFile)
@@ -1038,9 +1041,27 @@ lbFound:
                             Case XMLNames.VectoInputEngineering
                                 input = xmlInputReader.CreateEngineering(jobFile)
                             Case XMLNames.VectoInputDeclaration
+                            
                                 Using reader As XmlReader = XmlReader.Create(jobFile)
                                     input = xmlInputReader.CreateDeclaration(reader)
                                 End Using
+                            Case XMLNames.VectoOutputMultistep
+                                Using reader As XmlReader = XmlReader.Create(jobFile)
+                                    Dim vifInput = DirectCast(xmlInputReader.Create(reader), IMultistepBusInputDataProvider)
+                                    Dim declarationVif = new XMLDeclarationVIFInputData(vifInput, Nothing)
+                                    input = declarationVif
+                                    Dim count As Integer = 0
+                                    If(declarationVif.MultistageJobInputData.JobInputData.ManufacturingStages IsNot Nothing)
+                                        count = declarationVif.MultistageJobInputData.JobInputData.ManufacturingStages.Count
+                                    End If
+                                    fileWriter = new FileOutputVIFWriter(outFile, count)
+
+
+                                End Using
+                                
+                             
+                        
+         
                         End Select
                 End Select
 
@@ -1052,8 +1073,8 @@ lbFound:
                     Continue For
                 End If
 
-                Dim outFile As String = GetOutputDirectory(jobFile)
-                Dim fileWriter As FileOutputWriter = New FileOutputWriter(outFile)
+
+                
 
                 Dim runsFactory As ISimulatorFactory = SimulatorFactory.CreateSimulatorFactory(mode, input, fileWriter)
                 'Remove
