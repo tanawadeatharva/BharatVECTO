@@ -10,12 +10,12 @@
 		<CorrectedActualMass>11737</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>19000</TechnicalPermissibleMaximumLadenMass>
 		<AirdragModifiedMultistep>true</AirdragModifiedMultistep>
-		<ClassBus>II+III</ClassBus>
+		<ClassBus>II</ClassBus>
 		<NumberPassengerSeatsLowerDeck>49</NumberPassengerSeatsLowerDeck>
 		<NumberPassengersStandingLowerDeck>0</NumberPassengersStandingLowerDeck>
 		<NumberPassengerSeatsUpperDeck>0</NumberPassengerSeatsUpperDeck>
 		<NumberPassengersStandingUpperDeck>0</NumberPassengersStandingUpperDeck>
-		<BodyworkCode>CA</BodyworkCode>
+		<BodyworkCode>CE</BodyworkCode>
 		<LowEntry>false</LowEntry>
 		<HeightIntegratedBody>3050</HeightIntegratedBody>
 		<VehicleLength>12300</VehicleLength>
