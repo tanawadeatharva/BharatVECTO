@@ -166,6 +166,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
             protected virtual IResult GetPrimaryResult(string fuelMode, VectoRunData simulationRunData,
 				OvcHevMode ovcHevMode)
 			{
+				ovcHevMode = simulationRunData.VehicleData.InputData.OvcHev ? ovcHevMode : OvcHevMode.NotApplicable; //Results are store with OvcHevMode NotApplicable for non OVC hevs
 				var primaryResult = DataProvider.MultistageJobInputData.JobInputData.PrimaryVehicle.GetResult(
 					simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
 					simulationRunData.VehicleData.Loading, ovcHevMode);
@@ -429,7 +430,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int? modeIdx,
 				OvcHevMode ovcHevMode)
 			{
-				var rd = CreateCommonRunData(mission, loading, _modSuffixSpecific, ovcHevMode);
+				var rd = CreateCommonRunData(mission, loading, _modSuffixGeneric, ovcHevMode);
 
 				DataAdapterGeneric.CreateREESSData(
 					componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,
