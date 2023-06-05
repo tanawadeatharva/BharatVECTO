@@ -72,8 +72,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 
         protected virtual IEnumerable<VectoRunData> VectoRunDataHeavyBusCompleted()
 		{
-            if (PrimaryVehicle.VehicleType ==
-				VectoSimulationJobType.BatteryElectricVehicle) {
+            if (PrimaryVehicle.VehicleType.IsOneOf(VectoSimulationJobType.IEPC_E, VectoSimulationJobType.BatteryElectricVehicle)) {
 				foreach (var vectoRunData in CreateVectoRunDataForMissions(0, ""))
 					yield return vectoRunData;
 			} else {
