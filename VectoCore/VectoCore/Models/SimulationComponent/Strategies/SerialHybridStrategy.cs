@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				var g = DataBus.GearboxInfo as Gearbox ?? throw new VectoException("AMT Gearbox Required!");
 				TestPowertrain.Gearbox.Disengaged = g.Disengaged;
 				TestPowertrain.Gearbox.DisengageGearbox = g.DisengageGearbox;
-				TestPowertrain.Gearbox.Gear = DataBus.VehicleInfo.VehicleStopped ? g.NextGear : DataBus.GearboxInfo.Gear;
+				TestPowertrain.Gearbox.Gear = DataBus.VehicleInfo.VehicleStopped || g.Disengaged ? g.NextGear : DataBus.GearboxInfo.Gear;
 				TestPowertrain.Gearbox._nextGear = g.NextGear;
 			}
 
