@@ -4,6 +4,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Ninject;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -157,6 +158,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				x => x.VehicleGroup == vehicleClass &&
 					(x.SimulationParameter.Payload - payload).IsEqual(0, 1) && x.Mission == mission 
 			).ToArray();
+			if (!matches.Any()) {
+				throw new VectoException($"No primary result found for {vehicleClass}, {mission}, {payload}");
+			}
 			if (matches.Length == 1) {
 				return matches.First();
 			}
