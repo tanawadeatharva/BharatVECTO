@@ -22,7 +22,12 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
     {
         #region Implementation of IVectoRunDataFactoryFactory
 
+		private IDeclarationCycleFactory _cycleFactory;
 
+		public VectoMockUpRunDataFactoryFactory(IDeclarationCycleFactory cycleFactory)
+		{
+			_cycleFactory = cycleFactory;
+		}
 
         public IVectoRunDataFactory CreateDeclarationRunDataFactory(IInputDataProvider inputDataProvider,
 			IDeclarationReport report,
@@ -30,6 +35,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
         {
             if (inputDataProvider == null)
                 throw new ArgumentNullException(nameof(inputDataProvider));
+		
 
             switch (inputDataProvider)
             {
@@ -55,7 +61,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 					multiStepVifInputData,
 					report, new DeclarationDataAdapterSpecificCompletedBus.Conventional(),
 					new DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.Conventional(),
-					null, null);
+					_cycleFactory, null);
 			}
 			else {
 				return new DeclarationModeMultistageBusVectoRunDataFactory(multiStepVifInputData, report);
@@ -69,7 +75,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
             if (vehicleCategory.IsLorry())
             {
                 return new MockupLorryVectoRunDataFactory(declDataProvider, report, new DeclarationDataAdapterHeavyLorry.Conventional(), 
-					null, null);
+					_cycleFactory, null);
             }
 
             if (vehicleCategory.IsBus())
@@ -81,7 +87,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                         //return new DeclarationModeMultistageBusVectoRunDataFactory(declDataProvider, report);
                     case VehicleCategory.HeavyBusPrimaryVehicle:
                         return new PrimaryBusMockupRunDataFactory(declDataProvider, report, new DeclarationDataAdapterPrimaryBus.Conventional(),
-							null, null);
+							_cycleFactory, null);
                     default:
                         break;
                 }

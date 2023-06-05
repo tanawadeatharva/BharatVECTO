@@ -63,7 +63,8 @@ In case a mandatory input field is empty, or the value provided by the user is i
 ### 8 Save and Close
 - **Save as JSON ...**:\
     Saves the input data as completed bus job (JSON v7).
-    Not the created files consist of the paths of the VIF and the completed input, to update edited fields the input has to be saved additionaly.
+    Note: The created file consists of the paths of the VIF and the completed input relative to the created JSON (.vecto) file, to update edited fields the input has to be saved additionaly.
+    This option is only available if a step input was loaded, or the current input was already saved.
 
 - **Save Input As ...**:\
     Saves the input of the current step to a new file.

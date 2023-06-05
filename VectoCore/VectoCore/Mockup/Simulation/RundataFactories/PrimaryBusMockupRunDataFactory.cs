@@ -55,6 +55,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 				case VectoSimulationJobType.ConventionalVehicle:
 				case VectoSimulationJobType.ParallelHybridVehicle:
 				case VectoSimulationJobType.SerialHybridVehicle:
+                case VectoSimulationJobType.IHPC:
                 case VectoSimulationJobType.IEPC_S:
 					return VectoRunDataConventionalHeavyBusPrimaryNonExempted();
                 case VectoSimulationJobType.IEPC_E:
