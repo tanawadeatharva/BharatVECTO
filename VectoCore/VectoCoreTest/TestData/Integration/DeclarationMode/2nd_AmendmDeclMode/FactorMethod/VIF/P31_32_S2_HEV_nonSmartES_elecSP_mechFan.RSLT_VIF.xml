@@ -1,0 +1,492 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VectoOutputMultistep xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1">
+  <PrimaryVehicle>
+    <Data id="VIF_P-9cb01cdc80a849ae8518" xsi:type="PrimaryVehicleDataType">
+      <Vehicle xsi:type="HEV-Sx_VehicleVIFType">
+        <Manufacturer>Generic Truck Manufacturer</Manufacturer>
+        <ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
+        <Model>Generic Model</Model>
+        <VIN>VEH-1234567890</VIN>
+        <Date>2017-02-15T11:00:00Z</Date>
+        <LegislativeCategory>M3</LegislativeCategory>
+        <ChassisConfiguration>Bus</ChassisConfiguration>
+        <AxleConfiguration>4x2</AxleConfiguration>
+        <Articulated>false</Articulated>
+        <TechnicalPermissibleMaximumLadenMass>25000</TechnicalPermissibleMaximumLadenMass>
+        <IdlingSpeed>600</IdlingSpeed>
+        <RetarderType>None</RetarderType>
+        <AngledriveType>None</AngledriveType>
+        <ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+        <ArchitectureID>S2</ArchitectureID>
+        <OvcHev>false</OvcHev>
+        <vif:ADAS xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xsi:type="ADAS_HEV_Type">
+          <EngineStopStart>false</EngineStopStart>
+          <PredictiveCruiseControl>none</PredictiveCruiseControl>
+        </vif:ADAS>
+        <Components xsi:type="Vehicle_HEV-S2_ComponentsVIFType">
+          <Engine>
+            <Data xsi:type="EngineDataVIFType">
+              <Manufacturer>Generic Engine Manufacturer</Manufacturer>
+              <Model>Generic 40t Long Haul Truck Engine</Model>
+              <CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
+              <Date>2017-02-15T11:00:00Z</Date>
+              <AppVersion>VectoEngine x.y</AppVersion>
+              <Displacement>7700</Displacement>
+              <RatedSpeed>2550</RatedSpeed>
+              <RatedPower>209000</RatedPower>
+              <MaxEngineTorque>1100</MaxEngineTorque>
+              <WHRType>
+                <MechanicalOutputICE>false</MechanicalOutputICE>
+                <MechanicalOutputDrivetrain>false</MechanicalOutputDrivetrain>
+                <ElectricalOutput>false</ElectricalOutput>
+              </WHRType>
+              <Mode>
+                <IdlingSpeed>600</IdlingSpeed>
+                <FullLoadAndDragCurve>
+                  <Entry engineSpeed="600.00" maxTorque="385.00" dragTorque="-55.85" />
+                  <Entry engineSpeed="1321.50" maxTorque="1000.00" dragTorque="-61.07" />
+                  <Entry engineSpeed="1867.50" maxTorque="1000.00" dragTorque="-75.13" />
+                  <Entry engineSpeed="2550.00" maxTorque="782.67" dragTorque="-97.07" />
+                  <Entry engineSpeed="3291.00" maxTorque="0.00" dragTorque="-144.23" />
+                </FullLoadAndDragCurve>
+                <Fuels>
+                  <FuelType>Diesel CI</FuelType>
+                </Fuels>
+              </Mode>
+            </Data>
+          </Engine>
+          <ElectricMachineGEN>
+            <PowertrainPosition>GEN</PowertrainPosition>
+            <Count>1</Count>
+            <ElectricMachineSystem>
+              <Data xsi:type="ElectricMachineSystemDataDeclarationType">
+                <Manufacturer>a</Manufacturer>
+                <Model>a</Model>
+                <CertificationMethod>Measured</CertificationMethod>
+                <CertificationNumber>token</CertificationNumber>
+                <Date>2017-01-01T00:00:00Z</Date>
+                <AppVersion>aaaaa</AppVersion>
+                <ElectricMachineType>ASM</ElectricMachineType>
+                <R85RatedPower>93000</R85RatedPower>
+                <RotationalInertia>0.10</RotationalInertia>
+                <DcDcConverterIncluded>true</DcDcConverterIncluded>
+                <IHPCType>None</IHPCType>
+                <VoltageLevel>
+                  <Voltage>500</Voltage>
+                  <ContinuousTorque>481.77</ContinuousTorque>
+                  <TestSpeedContinuousTorque>1850.00</TestSpeedContinuousTorque>
+                  <OverloadTorque>722.65</OverloadTorque>
+                  <TestSpeedOverloadTorque>1850.00</TestSpeedOverloadTorque>
+                  <OverloadDuration>120.00</OverloadDuration>
+                  <MaxTorqueCurve>
+                    <Entry outShaftSpeed="0.00" maxTorque="722.65" minTorque="-722.65" />
+                    <Entry outShaftSpeed="37.00" maxTorque="722.65" minTorque="-722.65" />
+                    <Entry outShaftSpeed="370.00" maxTorque="722.65" minTorque="-722.65" />
+                    <Entry outShaftSpeed="740.00" maxTorque="722.65" minTorque="-722.65" />
+                    <Entry outShaftSpeed="1110.00" maxTorque="722.65" minTorque="-722.65" />
+                    <Entry outShaftSpeed="1480.00" maxTorque="722.65" minTorque="-722.65" />
+                    <Entry outShaftSpeed="1850.00" maxTorque="722.65" minTorque="-722.65" />
+                    <Entry outShaftSpeed="2220.00" maxTorque="602.21" minTorque="-602.21" />
+                    <Entry outShaftSpeed="2590.00" maxTorque="516.18" minTorque="-516.18" />
+                    <Entry outShaftSpeed="2960.00" maxTorque="451.66" minTorque="-451.66" />
+                    <Entry outShaftSpeed="3330.00" maxTorque="401.47" minTorque="-401.47" />
+                    <Entry outShaftSpeed="3700.00" maxTorque="361.32" minTorque="-361.32" />
+                    <Entry outShaftSpeed="4070.00" maxTorque="328.48" minTorque="-328.48" />
+                    <Entry outShaftSpeed="4440.00" maxTorque="301.10" minTorque="-301.10" />
+                    <Entry outShaftSpeed="4810.00" maxTorque="277.94" minTorque="-277.94" />
+                    <Entry outShaftSpeed="5180.00" maxTorque="258.09" minTorque="-258.09" />
+                    <Entry outShaftSpeed="5550.00" maxTorque="240.88" minTorque="-240.88" />
+                    <Entry outShaftSpeed="5920.00" maxTorque="225.83" minTorque="-225.83" />
+                    <Entry outShaftSpeed="6290.00" maxTorque="212.54" minTorque="-212.54" />
+                    <Entry outShaftSpeed="6660.00" maxTorque="200.74" minTorque="-200.74" />
+                    <Entry outShaftSpeed="7030.00" maxTorque="190.17" minTorque="-190.17" />
+                    <Entry outShaftSpeed="7400.00" maxTorque="180.66" minTorque="-180.66" />
+                  </MaxTorqueCurve>
+                </VoltageLevel>
+                <VoltageLevel>
+                  <Voltage>800</Voltage>
+                  <ContinuousTorque>481.77</ContinuousTorque>
+                  <TestSpeedContinuousTorque>1850.00</TestSpeedContinuousTorque>
+                  <OverloadTorque>722.65</OverloadTorque>
+                  <TestSpeedOverloadTorque>1850.00</TestSpeedOverloadTorque>
+                  <OverloadDuration>120.00</OverloadDuration>
+                  <MaxTorqueCurve>
+                    <Entry outShaftSpeed="0.00" maxTorque="722.65" minTorque="-722.65" />
+                    <Entry outShaftSpeed="37.00" maxTorque="722.65" minTorque="-722.65" />
+                    <Entry outShaftSpeed="370.00" maxTorque="722.65" minTorque="-722.65" />
+                    <Entry outShaftSpeed="740.00" maxTorque="722.65" minTorque="-722.65" />
+                    <Entry outShaftSpeed="1110.00" maxTorque="722.65" minTorque="-722.65" />
+                    <Entry outShaftSpeed="1480.00" maxTorque="722.65" minTorque="-722.65" />
+                    <Entry outShaftSpeed="1850.00" maxTorque="722.65" minTorque="-722.65" />
+                    <Entry outShaftSpeed="2220.00" maxTorque="602.21" minTorque="-602.21" />
+                    <Entry outShaftSpeed="2590.00" maxTorque="516.18" minTorque="-516.18" />
+                    <Entry outShaftSpeed="2960.00" maxTorque="451.66" minTorque="-451.66" />
+                    <Entry outShaftSpeed="3330.00" maxTorque="401.47" minTorque="-401.47" />
+                    <Entry outShaftSpeed="3700.00" maxTorque="361.32" minTorque="-361.32" />
+                    <Entry outShaftSpeed="4070.00" maxTorque="328.48" minTorque="-328.48" />
+                    <Entry outShaftSpeed="4440.00" maxTorque="301.10" minTorque="-301.10" />
+                    <Entry outShaftSpeed="4810.00" maxTorque="277.94" minTorque="-277.94" />
+                    <Entry outShaftSpeed="5180.00" maxTorque="258.09" minTorque="-258.09" />
+                    <Entry outShaftSpeed="5550.00" maxTorque="240.88" minTorque="-240.88" />
+                    <Entry outShaftSpeed="5920.00" maxTorque="225.83" minTorque="-225.83" />
+                    <Entry outShaftSpeed="6290.00" maxTorque="212.54" minTorque="-212.54" />
+                    <Entry outShaftSpeed="6660.00" maxTorque="200.74" minTorque="-200.74" />
+                    <Entry outShaftSpeed="7030.00" maxTorque="190.17" minTorque="-190.17" />
+                    <Entry outShaftSpeed="7400.00" maxTorque="180.66" minTorque="-180.66" />
+                  </MaxTorqueCurve>
+                </VoltageLevel>
+                <DragCurve>
+                  <Entry outShaftSpeed="0.00" dragTorque="-1.71" />
+                  <Entry outShaftSpeed="37.00" dragTorque="-1.80" />
+                  <Entry outShaftSpeed="370.00" dragTorque="-2.62" />
+                  <Entry outShaftSpeed="740.00" dragTorque="-3.53" />
+                  <Entry outShaftSpeed="1110.00" dragTorque="-4.44" />
+                  <Entry outShaftSpeed="1480.00" dragTorque="-5.35" />
+                  <Entry outShaftSpeed="1850.00" dragTorque="-6.26" />
+                  <Entry outShaftSpeed="2220.00" dragTorque="-7.18" />
+                  <Entry outShaftSpeed="2590.00" dragTorque="-8.09" />
+                  <Entry outShaftSpeed="2960.00" dragTorque="-9.00" />
+                  <Entry outShaftSpeed="3330.00" dragTorque="-9.91" />
+                  <Entry outShaftSpeed="3700.00" dragTorque="-10.82" />
+                  <Entry outShaftSpeed="4070.00" dragTorque="-11.73" />
+                  <Entry outShaftSpeed="4440.00" dragTorque="-12.65" />
+                  <Entry outShaftSpeed="4810.00" dragTorque="-13.56" />
+                  <Entry outShaftSpeed="5180.00" dragTorque="-14.47" />
+                  <Entry outShaftSpeed="5550.00" dragTorque="-15.38" />
+                  <Entry outShaftSpeed="5920.00" dragTorque="-16.29" />
+                  <Entry outShaftSpeed="6290.00" dragTorque="-17.20" />
+                  <Entry outShaftSpeed="6660.00" dragTorque="-18.12" />
+                  <Entry outShaftSpeed="7030.00" dragTorque="-19.03" />
+                  <Entry outShaftSpeed="7400.00" dragTorque="-19.94" />
+                </DragCurve>
+                <Conditioning>
+                  <Entry coolantTempInlet="30" coolingPower="5000" />
+                </Conditioning>
+              </Data>
+            </ElectricMachineSystem>
+          </ElectricMachineGEN>
+          <ElectricEnergyStorage>
+            <Battery>
+              <StringID>0</StringID>
+              <REESS>
+                <Data xsi:type="BatterySystemDataType">
+                  <Manufacturer>a</Manufacturer>
+                  <Model>a</Model>
+                  <CertificationMethod>Measured</CertificationMethod>
+                  <CertificationNumber>token</CertificationNumber>
+                  <Date>2017-01-01T00:00:00Z</Date>
+                  <AppVersion>aaaaa</AppVersion>
+                  <BatteryType>HPBS</BatteryType>
+                  <RatedCapacity>68.75</RatedCapacity>
+                  <ConnectorsSubsystemsIncluded>true</ConnectorsSubsystemsIncluded>
+                  <JunctionboxIncluded>true</JunctionboxIncluded>
+                  <TestingTemperature>20</TestingTemperature>
+                  <OCV>
+                    <Entry SoC="0" OCV="718.42" />
+                    <Entry SoC="10" OCV="746.84" />
+                    <Entry SoC="20" OCV="763.14" />
+                    <Entry SoC="30" OCV="771.85" />
+                    <Entry SoC="40" OCV="776.25" />
+                    <Entry SoC="50" OCV="778.61" />
+                    <Entry SoC="60" OCV="780.43" />
+                    <Entry SoC="70" OCV="782.70" />
+                    <Entry SoC="80" OCV="786.19" />
+                    <Entry SoC="90" OCV="791.68" />
+                    <Entry SoC="100" OCV="800.21" />
+                  </OCV>
+                  <CurrentLimits>
+                    <Entry SoC="0" maxChargingCurrent="1620.00" maxDischargingCurrent="1620.00" />
+                    <Entry SoC="100" maxChargingCurrent="1620.00" maxDischargingCurrent="1620.00" />
+                  </CurrentLimits>
+                </Data>
+              </REESS>
+              <SOCmin>20</SOCmin>
+              <SOCmax>80</SOCmax>
+            </Battery>
+          </ElectricEnergyStorage>
+          <ElectricMachine>
+            <PowertrainPosition>2</PowertrainPosition>
+            <Count>1</Count>
+            <ElectricMachineSystem>
+              <Data xsi:type="ElectricMachineSystemDataDeclarationType">
+                <Manufacturer>a</Manufacturer>
+                <Model>a</Model>
+                <CertificationMethod>Measured</CertificationMethod>
+                <CertificationNumber>token</CertificationNumber>
+                <Date>2017-01-01T00:00:00Z</Date>
+                <AppVersion>aaaaa</AppVersion>
+                <ElectricMachineType>ASM</ElectricMachineType>
+                <R85RatedPower>83000</R85RatedPower>
+                <RotationalInertia>0.10</RotationalInertia>
+                <DcDcConverterIncluded>true</DcDcConverterIncluded>
+                <IHPCType>None</IHPCType>
+                <VoltageLevel>
+                  <Voltage>500</Voltage>
+                  <ContinuousTorque>397.89</ContinuousTorque>
+                  <TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
+                  <OverloadTorque>800.00</OverloadTorque>
+                  <TestSpeedOverloadTorque>2000.00</TestSpeedOverloadTorque>
+                  <OverloadDuration>120.00</OverloadDuration>
+                  <MaxTorqueCurve>
+                    <Entry outShaftSpeed="0.00" maxTorque="596.83" minTorque="-596.83" />
+                    <Entry outShaftSpeed="40.00" maxTorque="596.83" minTorque="-596.83" />
+                    <Entry outShaftSpeed="400.00" maxTorque="596.83" minTorque="-596.83" />
+                    <Entry outShaftSpeed="800.00" maxTorque="596.83" minTorque="-596.83" />
+                    <Entry outShaftSpeed="1200.00" maxTorque="596.83" minTorque="-596.83" />
+                    <Entry outShaftSpeed="1600.00" maxTorque="596.83" minTorque="-596.83" />
+                    <Entry outShaftSpeed="2000.00" maxTorque="596.83" minTorque="-596.83" />
+                    <Entry outShaftSpeed="2400.00" maxTorque="497.36" minTorque="-497.36" />
+                    <Entry outShaftSpeed="2800.00" maxTorque="426.31" minTorque="-426.31" />
+                    <Entry outShaftSpeed="3200.00" maxTorque="373.02" minTorque="-373.02" />
+                    <Entry outShaftSpeed="3600.00" maxTorque="331.57" minTorque="-331.57" />
+                    <Entry outShaftSpeed="4000.00" maxTorque="298.42" minTorque="-298.42" />
+                    <Entry outShaftSpeed="4400.00" maxTorque="271.29" minTorque="-271.29" />
+                    <Entry outShaftSpeed="4800.00" maxTorque="248.68" minTorque="-248.68" />
+                    <Entry outShaftSpeed="5200.00" maxTorque="229.55" minTorque="-229.55" />
+                    <Entry outShaftSpeed="5600.00" maxTorque="213.15" minTorque="-213.15" />
+                    <Entry outShaftSpeed="6000.00" maxTorque="198.94" minTorque="-198.94" />
+                    <Entry outShaftSpeed="6400.00" maxTorque="186.51" minTorque="-186.51" />
+                    <Entry outShaftSpeed="6800.00" maxTorque="175.54" minTorque="-175.54" />
+                    <Entry outShaftSpeed="7200.00" maxTorque="165.79" minTorque="-165.79" />
+                    <Entry outShaftSpeed="7600.00" maxTorque="157.06" minTorque="-157.06" />
+                    <Entry outShaftSpeed="8000.00" maxTorque="149.21" minTorque="-149.21" />
+                  </MaxTorqueCurve>
+                </VoltageLevel>
+                <VoltageLevel>
+                  <Voltage>800</Voltage>
+                  <ContinuousTorque>397.89</ContinuousTorque>
+                  <TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
+                  <OverloadTorque>800.00</OverloadTorque>
+                  <TestSpeedOverloadTorque>2000.00</TestSpeedOverloadTorque>
+                  <OverloadDuration>120.00</OverloadDuration>
+                  <MaxTorqueCurve>
+                    <Entry outShaftSpeed="0.00" maxTorque="596.83" minTorque="-596.83" />
+                    <Entry outShaftSpeed="40.00" maxTorque="596.83" minTorque="-596.83" />
+                    <Entry outShaftSpeed="400.00" maxTorque="596.83" minTorque="-596.83" />
+                    <Entry outShaftSpeed="800.00" maxTorque="596.83" minTorque="-596.83" />
+                    <Entry outShaftSpeed="1200.00" maxTorque="596.83" minTorque="-596.83" />
+                    <Entry outShaftSpeed="1600.00" maxTorque="596.83" minTorque="-596.83" />
+                    <Entry outShaftSpeed="2000.00" maxTorque="596.83" minTorque="-596.83" />
+                    <Entry outShaftSpeed="2400.00" maxTorque="497.36" minTorque="-497.36" />
+                    <Entry outShaftSpeed="2800.00" maxTorque="426.31" minTorque="-426.31" />
+                    <Entry outShaftSpeed="3200.00" maxTorque="373.02" minTorque="-373.02" />
+                    <Entry outShaftSpeed="3600.00" maxTorque="331.57" minTorque="-331.57" />
+                    <Entry outShaftSpeed="4000.00" maxTorque="298.42" minTorque="-298.42" />
+                    <Entry outShaftSpeed="4400.00" maxTorque="271.29" minTorque="-271.29" />
+                    <Entry outShaftSpeed="4800.00" maxTorque="248.68" minTorque="-248.68" />
+                    <Entry outShaftSpeed="5200.00" maxTorque="229.55" minTorque="-229.55" />
+                    <Entry outShaftSpeed="5600.00" maxTorque="213.15" minTorque="-213.15" />
+                    <Entry outShaftSpeed="6000.00" maxTorque="198.94" minTorque="-198.94" />
+                    <Entry outShaftSpeed="6400.00" maxTorque="186.51" minTorque="-186.51" />
+                    <Entry outShaftSpeed="6800.00" maxTorque="175.54" minTorque="-175.54" />
+                    <Entry outShaftSpeed="7200.00" maxTorque="165.79" minTorque="-165.79" />
+                    <Entry outShaftSpeed="7600.00" maxTorque="157.06" minTorque="-157.06" />
+                    <Entry outShaftSpeed="8000.00" maxTorque="149.21" minTorque="-149.21" />
+                  </MaxTorqueCurve>
+                </VoltageLevel>
+                <DragCurve>
+                  <Entry outShaftSpeed="0.00" dragTorque="-1.41" />
+                  <Entry outShaftSpeed="40.00" dragTorque="-1.48" />
+                  <Entry outShaftSpeed="400.00" dragTorque="-2.16" />
+                  <Entry outShaftSpeed="800.00" dragTorque="-2.91" />
+                  <Entry outShaftSpeed="1200.00" dragTorque="-3.67" />
+                  <Entry outShaftSpeed="1600.00" dragTorque="-4.42" />
+                  <Entry outShaftSpeed="2000.00" dragTorque="-5.17" />
+                  <Entry outShaftSpeed="2400.00" dragTorque="-5.93" />
+                  <Entry outShaftSpeed="2800.00" dragTorque="-6.68" />
+                  <Entry outShaftSpeed="3200.00" dragTorque="-7.43" />
+                  <Entry outShaftSpeed="3600.00" dragTorque="-8.19" />
+                  <Entry outShaftSpeed="4000.00" dragTorque="-8.94" />
+                  <Entry outShaftSpeed="4400.00" dragTorque="-9.69" />
+                  <Entry outShaftSpeed="4800.00" dragTorque="-10.44" />
+                  <Entry outShaftSpeed="5200.00" dragTorque="-11.20" />
+                  <Entry outShaftSpeed="5600.00" dragTorque="-11.95" />
+                  <Entry outShaftSpeed="6000.00" dragTorque="-12.70" />
+                  <Entry outShaftSpeed="6400.00" dragTorque="-13.46" />
+                  <Entry outShaftSpeed="6800.00" dragTorque="-14.21" />
+                  <Entry outShaftSpeed="7200.00" dragTorque="-14.96" />
+                  <Entry outShaftSpeed="7600.00" dragTorque="-15.71" />
+                  <Entry outShaftSpeed="8000.00" dragTorque="-16.47" />
+                </DragCurve>
+                <Conditioning>
+                  <Entry coolantTempInlet="30" coolingPower="5000" />
+                </Conditioning>
+              </Data>
+            </ElectricMachineSystem>
+          </ElectricMachine>
+          <Transmission>
+            <Data xsi:type="TransmissionDataVIFType">
+              <Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
+              <Model>Generic 40t Long Haul Truck Gearbox</Model>
+              <MainCertificationMethod>Standard values</MainCertificationMethod>
+              <Date>2017-01-11T11:00:00Z</Date>
+              <AppVersion>3.0.1</AppVersion>
+              <TransmissionType>AMT</TransmissionType>
+              <Gears xsi:type="TransmissionGearsVIFType">
+                <Gear number="1">
+                  <Ratio>17.500</Ratio>
+                </Gear>
+                <Gear number="2">
+                  <Ratio>6.490</Ratio>
+                </Gear>
+                <Gear number="3">
+                  <Ratio>2.480</Ratio>
+                </Gear>
+              </Gears>
+            </Data>
+          </Transmission>
+          <Axlegear>
+            <Data xsi:type="AxlegearDataVIFType">
+              <Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
+              <Model>Generic 40t Long Haul Truck AxleGear</Model>
+              <CertificationMethod>Standard values</CertificationMethod>
+              <Date>2017-01-11T11:00:00Z</Date>
+              <AppVersion>3.0.1</AppVersion>
+              <LineType>Single portal axle</LineType>
+              <Ratio>2.640</Ratio>
+            </Data>
+          </Axlegear>
+          <AxleWheels>
+            <Data xsi:type="AxleWheelsDataVIFType">
+              <Axles>
+                <vif:Axle axleNumber="1" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="AxleDataDeclarationType">
+                  <AxleType>VehicleNonDriven</AxleType>
+                  <TwinTyres>false</TwinTyres>
+                  <Steered>true</Steered>
+                  <Tyre>
+                    <Data id="WHL-5432198760-315-70-R22.5" xsi:type="TyreDataDeclarationType">
+                      <Manufacturer>Generic Wheels Manufacturer</Manufacturer>
+                      <Model>Generic Wheel</Model>
+                      <CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
+                      <Date>2017-01-11T14:00:00Z</Date>
+                      <AppVersion>Tyre Generation App 1.0</AppVersion>
+                      <Dimension>315/70 R22.5</Dimension>
+                      <RRCDeclared>0.0055</RRCDeclared>
+                      <FzISO>31300</FzISO>
+                    </Data>
+                    <Signature>
+                      <di:Reference URI="#WHL-5432198760-315-70-R22.5">
+                        <di:Transforms>
+                          <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+                          <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                        </di:Transforms>
+                        <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+                        <di:DigestValue>A/sq1ng4cqeOyauDUqUEnonRSPch3VCqZDX9Pf3tW1Q=</di:DigestValue>
+                      </di:Reference>
+                    </Signature>
+                  </Tyre>
+                </vif:Axle>
+                <vif:Axle axleNumber="2" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="AxleDataDeclarationType">
+                  <AxleType>VehicleDriven</AxleType>
+                  <TwinTyres>true</TwinTyres>
+                  <Steered>false</Steered>
+                  <Tyre>
+                    <Data id="WHL-5432198760-315-70-R22.5" xsi:type="TyreDataDeclarationType">
+                      <Manufacturer>Generic Wheels Manufacturer</Manufacturer>
+                      <Model>Generic Wheel</Model>
+                      <CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
+                      <Date>2017-01-11T14:00:00Z</Date>
+                      <AppVersion>Tyre Generation App 1.0</AppVersion>
+                      <Dimension>315/70 R22.5</Dimension>
+                      <RRCDeclared>0.0063</RRCDeclared>
+                      <FzISO>31300</FzISO>
+                    </Data>
+                    <Signature>
+                      <di:Reference URI="#WHL-5432198760-315-70-R22.5">
+                        <di:Transforms>
+                          <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+                          <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                        </di:Transforms>
+                        <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+                        <di:DigestValue>z+KDXmc5MIezM6RVgfYax5J9Efi0ghciG2/wLLmWaBk=</di:DigestValue>
+                      </di:Reference>
+                    </Signature>
+                  </Tyre>
+                </vif:Axle>
+              </Axles>
+            </Data>
+          </AxleWheels>
+          <Auxiliaries>
+            <Data xsi:type="AUX_HEV-S_PrimaryBusType">
+              <Fan>
+                <Technology>Hydraulic driven - Constant displacement pump</Technology>
+              </Fan>
+              <SteeringPump>
+                <Technology axleNumber="1">Full electric steering gear</Technology>
+              </SteeringPump>
+              <ElectricSystem>
+                <AlternatorTechnology>conventional</AlternatorTechnology>
+                <SupplyFromHEVPossible>true</SupplyFromHEVPossible>
+              </ElectricSystem>
+              <PneumaticSystem>
+                <SizeOfAirSupply>Large Supply 2-stage</SizeOfAirSupply>
+                <CompressorDrive>mechanically</CompressorDrive>
+                <Clutch>none</Clutch>
+                <CompressorRatio>1.000</CompressorRatio>
+                <SmartRegenerationSystem>false</SmartRegenerationSystem>
+                <AirsuspensionControl>electronically</AirsuspensionControl>
+                <PneumaticSCRReagentDosing>true</PneumaticSCRReagentDosing>
+              </PneumaticSystem>
+              <HVAC>
+                <AdjustableCoolantThermostat>true</AdjustableCoolantThermostat>
+                <EngineWasteGasHeatExchanger>true</EngineWasteGasHeatExchanger>
+              </HVAC>
+            </Data>
+          </Auxiliaries>
+        </Components>
+      </Vehicle>
+      <InputDataSignature>
+        <di:Reference URI="#VEH-1234567890">
+          <di:Transforms>
+            <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+            <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+          </di:Transforms>
+          <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+          <di:DigestValue>3P/e7lcdCVI+rlw00c6VVGKfEA/3c1itluvxwH+penU=</di:DigestValue>
+        </di:Reference>
+      </InputDataSignature>
+      <ManufacturerRecordSignature>
+        <di:Reference URI="#MRF-84542caa166c476782d3">
+          <di:Transforms>
+            <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+            <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+          </di:Transforms>
+          <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+          <di:DigestValue>LjjGuDZDOWjRfXcNSmjLiX7wUHns4vXmxOCj5j7/tSA=</di:DigestValue>
+        </di:Reference>
+      </ManufacturerRecordSignature>
+      <Results>
+        <Status>success</Status>
+        <Result status="success">
+          <PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
+          <Mission>Suburban</Mission>
+          <SimulationParameters>
+            <TotalVehicleMass unit="kg">13887</TotalVehicleMass>
+            <Payload unit="kg">1124</Payload>
+            <PassengerCount>16.52</PassengerCount>
+          </SimulationParameters>
+          <Fuel type="Diesel CI">
+            <EnergyConsumption unit="MJ/km">8.43</EnergyConsumption>
+          </Fuel>
+          <ElectricEnergyConsumption>
+            <EnergyConsumption unit="MJ/km">0.0</EnergyConsumption>
+          </ElectricEnergyConsumption>
+        </Result>
+      </Results>
+      <ApplicationInformation>
+        <SimulationToolVersion>0.7.10.3073-DEV !!NOT FOR CERTIFICATION!!</SimulationToolVersion>
+        <Date>2023-06-01T13:33:12.6595824Z</Date>
+      </ApplicationInformation>
+    </Data>
+    <Signature>
+      <di:Reference URI="#VIF_P-9cb01cdc80a849ae8518">
+        <di:Transforms>
+          <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+          <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+        </di:Transforms>
+        <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+        <di:DigestValue>F4nDyrT6+C6/mG9kwEFfzxODXUF9xAZZsCR8Zs7i6HI=</di:DigestValue>
+      </di:Reference>
+    </Signature>
+  </PrimaryVehicle>
+</VectoOutputMultistep>
