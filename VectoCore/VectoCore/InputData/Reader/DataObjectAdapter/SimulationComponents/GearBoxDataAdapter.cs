@@ -228,7 +228,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 
 
-		protected void CheckGearNumbers(IGearboxDeclarationInputData gbxInputData)
+		protected virtual void CheckGearNumbers(IGearboxDeclarationInputData gbxInputData)
 		{
 			if (gbxInputData == null) {
 				return;
@@ -565,6 +565,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		{
 			return CreateIEPCGearboxData(inputData, runData, shiftPolygonCalculator);
 		}
+
+		protected override void CheckGearNumbers(IGearboxDeclarationInputData gbxInputData)
+		{
+			// TODO?
+		}
+
 		#endregion
 	}
 
