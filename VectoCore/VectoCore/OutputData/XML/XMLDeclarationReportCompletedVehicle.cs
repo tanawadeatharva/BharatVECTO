@@ -196,21 +196,26 @@ namespace TUGraz.VectoCore.OutputData.XML
 				DeclarationData.FuelData.Lookup(x, specific.VectoRunData.VehicleData.InputData.TankSystem)).ToList(); //specific.FuelData;
             var co2Sum = 0.SI<Kilogram>();
 
-			var fuel = specific.FuelData.First();
-			var fuelFactor = CalculateFactor(combinedResults, r => r.FuelConsumptionFinal(fuel.FuelType).TotalFuelConsumptionCorrected);
+			if (primary.EnergyConsumption != null && primary.EnergyConsumption.Any()) {
+				var fuel = specific.FuelData.First();
+				var fuelFactor = CalculateFactor(combinedResults,
+					r => r.FuelConsumptionFinal(fuel.FuelType).TotalFuelConsumptionCorrected);
 
-            foreach (var entry in primary.EnergyConsumption)//generic.FuelData.Select(f => f.FuelType))
-            {
-				var energyDemand = fuelFactor * (entry.Value * specific.Distance);
-                var fuelConsumption = new CompletedBusFuelConsumption()
-                {
-                    Fuel = DeclarationData.FuelData.Lookup(entry.Key, specific.VectoRunData.VehicleData.InputData.TankSystem), // specific.FuelData.Single(f => f.FuelType == fuel),
-                    EnergyDemand = energyDemand,
-                };
-                co2Sum += fuelConsumption.TotalFuelConsumptionCorrected * fuelConsumption.Fuel.CO2PerFuelWeight;
-                result.CorrectedFinalFuelConsumption.Add(entry.Key, fuelConsumption);
-            }
-            result.CO2Total = co2Sum;
+				foreach (var entry in primary.EnergyConsumption) //generic.FuelData.Select(f => f.FuelType))
+				{
+					var energyDemand = fuelFactor * (entry.Value * specific.Distance);
+					var fuelConsumption = new CompletedBusFuelConsumption() {
+						Fuel = DeclarationData.FuelData.Lookup(entry.Key,
+							specific.VectoRunData.VehicleData.InputData
+								.TankSystem), // specific.FuelData.Single(f => f.FuelType == fuel),
+						EnergyDemand = energyDemand,
+					};
+					co2Sum += fuelConsumption.TotalFuelConsumptionCorrected * fuelConsumption.Fuel.CO2PerFuelWeight;
+					result.CorrectedFinalFuelConsumption.Add(entry.Key, fuelConsumption);
+				}
+			}
+
+			result.CO2Total = co2Sum;
 
 
             result.ElectricEnergyConsumption = null;

@@ -12,11 +12,14 @@ cd documentation
 declare -a FILES
 mapfile -t FILES < files.txt
 cat files.txt
+
+echo "\n"
 echo "Running pandoc with these input files"
-echo "${FILES[@]}"
+echo "${FILES[@]}\n"
+
 
 OUTPUTFILE="MultiStepToolHelp.html"
-
+echo "Start conversion"
 #pandoc --verbose  -f markdown+raw_html %LIST% -s -S --toc --toc-depth=2 --self-contained --email-obfuscation=none --section-divs --webtex -c includes/style.css -c includes/print.css -B includes/header.html -A includes/footer.html -o HashingToolHelp.html  -H includes/jquery.js -H includes/jquery-ui.js -H includes/include.js
 pandoc --verbose -f markdown+raw_html ${FILES[@]} -s -S --toc --toc-depth=2 --self-contained --email-obfuscation=none --section-divs --webtex -c includes/style.css -c includes/print.css -B includes/header.html -A includes/footer.html -o $OUTPUTFILE  -H includes/jquery.js -H includes/jquery-ui.js -H includes/include.js
 

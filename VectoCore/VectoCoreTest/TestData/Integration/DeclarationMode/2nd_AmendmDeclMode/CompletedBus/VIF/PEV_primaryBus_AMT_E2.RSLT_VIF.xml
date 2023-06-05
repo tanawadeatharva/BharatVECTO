@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <VectoOutputMultistep xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1">
   <PrimaryVehicle>
     <Data id="VIF_P-c15b1005764d4741ae98" xsi:type="PrimaryVehicleDataType">
@@ -429,7 +429,6 @@
                 <CompressorDrive>electrically</CompressorDrive>
                 <SmartRegenerationSystem>false</SmartRegenerationSystem>
                 <AirsuspensionControl>electronically</AirsuspensionControl>
-                <PneumaticSCRReagentDosing>false</PneumaticSCRReagentDosing>
               </PneumaticSystem>
               <HVAC>
                 <AdjustableCoolantThermostat>true</AdjustableCoolantThermostat>
