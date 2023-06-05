@@ -696,6 +696,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				var tmp = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), iceSpeed, true) as ResponseDryRun;
 				delta = tmp.DeltaFullLoad;
 			}
+
+			var origIceSpeed = iceSpeed;
 			iceSpeed = SearchAlgorithm.Search(iceSpeed, delta, iceSpeed * 0.01,
 				getYValue: r => {
 					var dryRun = r as ResponseDryRun;
@@ -713,6 +715,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					return searchFullLoad ? dryRun.DeltaFullLoad.Value() : dryRun.DeltaDragLoad.Value();
 				},
 				searcher: this);
+			if (!iceSpeed.IsBetween(DataBus.EngineInfo.EngineIdleSpeed, DataBus.EngineInfo.EngineN95hSpeed)) {
+				iceSpeed = SearchAlgorithm.Search(origIceSpeed, delta, origIceSpeed * 0.01,
+					getYValue: r => {
+						var dryRun = r as ResponseDryRun;
+						return searchFullLoad ? dryRun.DeltaFullLoad : dryRun.DeltaDragLoad;
+					},
+					evaluateFunction: x => {
+						var tmp = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), x, true);
+						tmpEmTqDt = tqDt?.LimitTo(tmp.ElectricMotor.MaxDriveTorque ?? 0.SI<NewtonMeter>(),
+							tmp.ElectricMotor.MaxRecuperationTorque ?? 0.SI<NewtonMeter>());
+						TestGenSet.ElectricMotorCtl.EMTorque = tmpEmTqDt;
+						return TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), x, true);
+					},
+					criterion: r => {
+						var dryRun = r as ResponseDryRun;
+						return searchFullLoad ? dryRun.DeltaFullLoad.Value() : dryRun.DeltaDragLoad.Value();
+					},
+					searcher: this, forceLineSearch: true);
+            }
+			if (!iceSpeed.IsBetween(DataBus.EngineInfo.EngineIdleSpeed, DataBus.EngineInfo.EngineN95hSpeed)) {
+				throw new VectoException("failed to find ICE speed for GenSet");
+			}
 			emTqDt = tmpEmTqDt;
 			TestGenSet.ElectricMotorCtl.EMTorque = emTqDt;
 			var r1 = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), iceSpeed);
