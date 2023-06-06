@@ -249,9 +249,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			}
 
 			if (runData.Cycle != null && runData.Cycle.Entries.Any(e => e.PTOActive == PTOActivity.PTOActivityDuringStop)) {
-				if (jobType == VectoSimulationJobType.BatteryElectricVehicle) {
-					// TODO: MQ 20201020 - validate depending on EM position!?
-				}
 
 				if (runData.PTO == null || runData.PTO.PTOCycle == null) {
 					return new ValidationResult("PTOCycle is used in DrivingCycle, but is not defined in Vehicle-Data.");
