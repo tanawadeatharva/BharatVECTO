@@ -468,9 +468,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			var crossWindRequired = vehicle.Components.AirdragInputData.CrossWindCorrectionMode ==
 									CrossWindCorrectionMode.VAirBetaLookupTable;
-			//var ptoTransmissionData = dao.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
+            //var ptoTransmissionData = dao.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
+			var ptoTransmissionData = dao.CreateBatteryElectricPTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
 
-			var drivingCycle = GetDrivingCycle(cycle, crossWindRequired);
+            var drivingCycle = GetDrivingCycle(cycle, crossWindRequired);
 
 			var vehicleData = dao.CreateVehicleData(vehicle);
 			return new VectoRunData {
@@ -486,7 +487,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				BusAuxiliaries = dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData, vehicleData,
 					VectoSimulationJobType.BatteryElectricVehicle),
 				Retarder = retarderData,
-				//PTO = ptoTransmissionData,
+				PTO = ptoTransmissionData,
 				Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
 				ExecutionMode = ExecutionMode.Engineering,
 				ElectricMachinesData = electricMachinesData,
