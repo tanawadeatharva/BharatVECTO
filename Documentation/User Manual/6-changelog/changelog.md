@@ -1,5 +1,28 @@
 # Changelog
 
+**VECTO-4.0.0**
+
+***Build 3078 (2023-06-06) RELEASE CANDIDATE***
+
+- First fully functional tool version according to the provisions of the 2nd amendment of Regulation (EU) 2017/2400.   
+- Changes
+   - Dropped support for .Net Framework 4.5 (EOL 04/2022)
+   - Multi-target build. Supported .Net versions: .Net Framework 4.8, .Net 6.0
+   - Implementation of Declaration-Mode for xEV-Lorries (see release notes)
+   - Implementation of Declaration-Mode for xEV-Buses (see release notes)
+   - New generic vehicles (XML)
+- Known issues
+   - Elements not yet implemented
+       - Battery connectors / junction box not included define and implement generic additional resistances (i.e. loss factors) 
+       - Technical elements as resulting from the revision of the CO2 Standards to be added
+          - Sub-group allocation for the for the newly covered vehicle groups 
+          - Generation of weighted results for vocational vehicles
+          - Anything related to ZEV definition?
+   - Elements still under discussion
+      - Medium lorries mission profile and payload weighting factors (equally weighted, only preliminary)
+      - Multiple SOC level(s) for VECTO PEV simulation and respective weighting of results (?)
+
+
 **VECTO-3.3.10**
 
 ***Build 2401 (2021-07-29) OFFICIAL RELEASE***
