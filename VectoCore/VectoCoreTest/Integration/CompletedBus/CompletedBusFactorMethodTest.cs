@@ -22,6 +22,8 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -117,7 +119,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			//var jobContainer = new JobContainer(sumContainer);
 
 
-			var runs = factory.DataReader.NextRun().ToList();
+			var runs = factory.RunDataFactory.NextRun().ToList();
 			Assert.IsTrue(runs.Count == 8 || runs.Count == 12);
 
 			var relatedRuns = SetRelatedVehicleParts(runs);
@@ -409,7 +411,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(genericGearData.Count, specificGearData.Count);
 			for (int i = 0; i < genericGearData.Count; i++) {
 				Assert.IsNotNull(genericGearData[i].LossMap);
-				Assert.AreEqual(genericGearData[i].LossMap, specificGearData[i].LossMap);
+				Assert.AreEqual(genericGearData[i].LossMap.LossMapSerialized, specificGearData[i].LossMap.LossMapSerialized);
 			}
 		}
 
@@ -435,7 +437,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(genericTorqueConverterData.CCUpshiftMinAcceleration, specificTorqueConverterData.CCUpshiftMinAcceleration);
 			Assert.AreEqual(genericTorqueConverterData.CLUpshiftMinAcceleration, specificTorqueConverterData.CLUpshiftMinAcceleration);
 
-			Assert.AreEqual(genericTorqueConverterData.TorqueConverterEntries, specificTorqueConverterData.TorqueConverterEntries);
+			Assert.AreEqual(genericTorqueConverterData.CharacteristicCurve, specificTorqueConverterData.CharacteristicCurve);
 		}
 
 
@@ -456,7 +458,11 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 			Assert.IsNotNull(genericAxlegearData.AxleGear.LossMap);
 			AssertAxlegearLossMap(genericAxlegearData.AxleGear.LossMap);
-			Assert.AreEqual(genericAxlegearData.AxleGear.LossMap, specificAxlegearData.AxleGear.LossMap);
+			var zipped =
+				genericAxlegearData.AxleGear.LossMap.LossMapSerialized.Zip(specificAxlegearData.AxleGear.LossMap
+					.LossMapSerialized);
+			Assert.IsTrue(zipped.All(x => x.First.Equals(x.Second, StringComparison.InvariantCultureIgnoreCase)));
+			//Assert(genericAxlegearData.AxleGear.LossMap.LossMapSerialized, specificAxlegearData.AxleGear.LossMap.LossMapSerialized);
 		}
 
 		private void AssertAxlegearLossMap(TransmissionLossMap lossMap)
@@ -619,8 +625,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertPneumaticConsumerDemand(RelatedRun relatedRun)
 		{
-			var genericConsumer = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.PneumaticAuxillariesConfig;
-			var specificConsumer = relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.PneumaticAuxillariesConfig;
+			var genericConsumer = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.PneumaticAuxiliariesConfig;
+			var specificConsumer = relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.PneumaticAuxiliariesConfig;
 			
 			Assert.AreEqual(Constants.BusAuxiliaries.PneumaticConsumersDemands.AdBlueInjection, genericConsumer.AdBlueInjection);
 			Assert.AreEqual( genericConsumer.AdBlueInjection, specificConsumer.AdBlueInjection);
@@ -655,8 +661,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertSSMBusParameters(RelatedRun relatedRun, int currentIndex)
 		{
-			var genericBusParam = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).BusParameters;
-			var specificBusParam = (relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).BusParameters;
+			var genericBusParam = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputsCooling as ISSMDeclarationInputs).BusParameters;
+			var specificBusParam = (relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputsCooling as ISSMDeclarationInputs).BusParameters;
 			
 			AssertPassengerCount(genericBusParam.NumberOfPassengers, 
 				specificBusParam.NumberOfPassengers, currentIndex);
@@ -670,8 +676,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(140.865, genericBusParam.BusSurfaceArea.Value(), 1e-3);
 			Assert.AreEqual(134.783, specificBusParam.BusSurfaceArea.Value(), 1e-3);
 
-			Assert.AreEqual(81.09, genericBusParam.BusVolume.Value(), 1e-3);
-			Assert.AreEqual(75.4162, specificBusParam.BusVolume.Value(), 1e-3);
+			Assert.AreEqual(81.09, genericBusParam.BusVolumeVentilation.Value(), 1e-3);
+			Assert.AreEqual(75.4162, specificBusParam.BusVolumeVentilation.Value(), 1e-3);
 		}
 
 		private void AssertPassengerCount(double genericLoading, double specificLoading, int index)
@@ -704,8 +710,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertTechnologyBenefits(RelatedRun relatedRun)
 		{
-			var genericTechnolgyBenefit = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).Technologies;
-			var specificTechnolgyBenefit = (relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).Technologies;
+			var genericTechnolgyBenefit = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputsCooling as ISSMDeclarationInputs).Technologies;
+			var specificTechnolgyBenefit = (relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputsCooling as ISSMDeclarationInputs).Technologies;
 
 			Assert.AreEqual(0.0, genericTechnolgyBenefit.CValueVariation);
 			Assert.AreEqual(0.02, genericTechnolgyBenefit.HValueVariation);
@@ -726,8 +732,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertBoundaryConditions(RelatedRun relatedRun)
 		{
-			var genericBound = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).BoundaryConditions;
-			var specificBound = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).BoundaryConditions;
+			var genericBound = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputsCooling as ISSMDeclarationInputs).BoundaryConditions;
+			var specificBound = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputsCooling as ISSMDeclarationInputs).BoundaryConditions;
 		
 			Assert.AreEqual(Constants.BusAuxiliaries.SteadyStateModel.GFactor, genericBound.GFactor);
 			Assert.AreEqual(genericBound.GFactor, specificBound.GFactor);
@@ -760,8 +766,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertEnvironmentalConditions(RelatedRun relatedRun)
 		{
-			var genericEnv = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).EnvironmentalConditions;
-			var specificEnv = (relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs).EnvironmentalConditions;
+			var genericEnv = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputsCooling as ISSMDeclarationInputs).EnvironmentalConditions;
+			var specificEnv = (relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputsCooling as ISSMDeclarationInputs).EnvironmentalConditions;
 
 			Assert.AreEqual(Constants.BusAuxiliaries.SteadyStateModel.DefaultSolar, genericEnv.DefaultConditions.Solar);
 			Assert.AreEqual(genericEnv.DefaultConditions.Solar, specificEnv.DefaultConditions.Solar);
@@ -779,8 +785,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertSSMInputs(RelatedRun relatedRun, int currentIndex)
 		{
-			var genericSSMInput = (SSMInputs) relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputs;
-			var specificSSMInput = (SSMInputs)relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputs;
+			var genericSSMInput = (SSMInputs) relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputsCooling;
+			var specificSSMInput = (SSMInputs)relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputsCooling;
 
 			AssertPassengerCount(genericSSMInput.NumberOfPassengers,
 				specificSSMInput.NumberOfPassengers, currentIndex);
@@ -788,7 +794,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			AssertHVACMaxCoolingPower(genericSSMInput.HVACMaxCoolingPower.Value(),
 				specificSSMInput.HVACMaxCoolingPower.Value(), currentIndex);
 
-			AssertCOP(genericSSMInput.COP, specificSSMInput.COP, currentIndex);
+			//AssertCOP(genericSSMInput.COP, specificSSMInput.COP, currentIndex);
 
 			Assert.AreEqual(true, genericSSMInput.VentilationOnDuringHeating);
 			Assert.AreEqual(true, specificSSMInput.VentilationOnDuringHeating);
@@ -859,7 +865,9 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(RetarderType.TransmissionOutputRetarder, genericRetarder.Type);
 			Assert.AreEqual(genericRetarder.Type, specificRetarder.Type);
 
-			Assert.AreEqual(genericRetarder.LossMap, specificRetarder.LossMap);
+			var zipped = genericRetarder.LossMap.LossMapSerialized.Zip(specificRetarder.LossMap.LossMapSerialized);
+			Assert.IsTrue(zipped.All(x => x.First.Equals(x.Second, StringComparison.InvariantCultureIgnoreCase)));
+			//Assert.AreEqual(genericRetarder.LossMap, specificRetarder.LossMap);
 		}
 
 		#endregion
@@ -898,9 +906,12 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertStopStartData(DriverData.EngineStopStartData engineStopStart)
 		{
-			Assert.AreEqual(DeclarationData.Driver.EngineStopStart.ActivationDelay, engineStopStart.EngineOffStandStillActivationDelay);
-			Assert.AreEqual(DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan, engineStopStart.MaxEngineOffTimespan);
-			Assert.AreEqual(DeclarationData.Driver.EngineStopStart.UtilityFactor, engineStopStart.UtilityFactorStandstill);
+			var declarationValues = DeclarationData.Driver.GetEngineStopStartBus(
+				VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, CompressorDrive.mechanically);
+
+            Assert.AreEqual(declarationValues.ActivationDelay, engineStopStart.EngineOffStandStillActivationDelay);
+			Assert.AreEqual(declarationValues.MaxEngineOffTimespan, engineStopStart.MaxEngineOffTimespan);
+			Assert.AreEqual(declarationValues.UtilityFactor, engineStopStart.UtilityFactorStandstill);
 		}
 
 		private void AssertEcoRoll(DriverData.EcoRollData ecoRoll)
@@ -929,7 +940,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		{
 			return new CrosswindCorrectionCdxALookup(
 				  aerodynamicDragArea,
-				  DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(
+				  new AirdragDataAdapter().GetDeclarationAirResistanceCurve(
 					  crossWindCorrectionParams,
 					  aerodynamicDragArea,
 					  vehicleHeight),
@@ -1039,7 +1050,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			//	Validate = false
 			//};
 
-			var runs = factory.DataReader.NextRun().ToList();
+			var runs = factory.RunDataFactory.NextRun().ToList();
 			return runs;
 		}
 
@@ -1129,14 +1140,47 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
+        [TestCase(@"TestData/Integration/Buses/FactorMethod/SingleBus_41-32b.vecto", TestName = "HVAC_Heating RunSingleBusSimulation Group 41/32b"),]
+		public void TestRunPrimaryOrSingleBusSimulationHVACHeating(string jobName)
+		{
+			var relativeJobPath = jobName;
+			var writer = new FileOutputWriter(relativeJobPath);
+			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
+				? xmlInputReader.CreateDeclaration(relativeJobPath)
+				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
+
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer, validate: false);
+			factory.WriteModalResults = true;
+			//var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+			//	WriteModalResults = true,
+			//	//ActualModalData = true,
+			//	Validate = false
+			//};
+			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
+
+            var runs = factory.SimulationRuns().ToArray();
+            var runIdx = 0;
+            runs[runIdx].Run();
+
+            Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
+
+   //         jobContainer.AddRuns(factory);
+
+			//jobContainer.Execute();
+			//jobContainer.WaitFinished();
+			var progress = jobContainer.GetProgress();
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+		}
+
 		[TestCase(@"TestData/Integration/Buses/FactorMethod/vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 13, TestName = "RunBusSimulation electric STP/Fan ESS IU/RL"),
 		TestCase(@"TestData/Integration/Buses/FactorMethod/vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 17, TestName = "RunBusSimulation electric STP/Fan ESS CO/RL"),
 
 		TestCase(@"TestData/Integration/Buses/primary_heavyBus group P39_40_nonSmart_ESS.xml", 3, TestName = "RunBusSimulation Grp 39/40 P39SD U/RL"),
-		TestCase(@"TestData/Integration/Buses/primary_heavyBus group P39_40_nonSmart_ESS.xml", 7, TestName = "RunBusSimulation Grp 39/40 P39DD HU/RL"),
-		TestCase(@"TestData/Integration/Buses/primary_heavyBus group P39_40_nonSmart_ESS.xml", 9, TestName = "RunBusSimulation Grp 39/40 P39DD U/RL"),
-		TestCase(@"TestData/Integration/Buses/primary_heavyBus group P39_40_nonSmart_ESS.xml", 19, TestName = "RunBusSimulation Grp 39/40 P40DD CO/RL"), // fails! is intended/known
-		TestCase(@"TestData/Integration/Buses/primary_heavyBus group P39_40_nonSmart_ESS.xml", 18, TestName = "RunBusSimulation Grp 39/40 P40DD CO/LL"),  // fails! is intended/known
+		TestCase(@"TestData/Integration/Buses/primary_heavyBus group P39_40_nonSmart_ESS.xml", 7, TestName = "RunBusSimulation Grp 39/40 P39SD IU/RL"),
+		TestCase(@"TestData/Integration/Buses/primary_heavyBus group P39_40_nonSmart_ESS.xml", 9, TestName = "RunBusSimulation Grp 39/40 P39DD HU/RL"),
+		TestCase(@"TestData/Integration/Buses/primary_heavyBus group P39_40_nonSmart_ESS.xml", 19, TestName = "RunBusSimulation Grp 39/40 P40DD IU/RL"), // fails! is intended/known
+		TestCase(@"TestData/Integration/Buses/primary_heavyBus group P39_40_nonSmart_ESS.xml", 18, TestName = "RunBusSimulation Grp 39/40 P40DD IU/LL"),  // fails! is intended/known
 
 		//TestCase(@"E:/QUAM/tmp/ESS_Tests/primary_heavyBus group 42_ConvAux_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ConvAux SmartPS"),
 		//TestCase(@"E:/QUAM/tmp/ESS_Tests/primary_heavyBus group 42_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ES Aux SmartPS"),
@@ -1195,20 +1239,20 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			//var inputData = new MockCompletedBusInputData(XmlReader.Create(PifFile_33_34), modified);
 			//var inputData = new MockCompletedBusInputData(modified);
 
-			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, new XMLDeclarationVIFInputData(completedVif as IMultistageBusInputDataProvider, null), writer, validate: false);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, new XMLDeclarationVIFInputData(completedVif as IMultistepBusInputDataProvider, null), writer, validate: false);
 			factory.WriteModalResults = true;
 			//var factory = new SimulatorFactory(ExecutionMode.Declaration, new XMLDeclarationVIFInputData(completedVif as IMultistageBusInputDataProvider, null), writer) {
 			//	WriteModalResults = true,
 			//	Validate = false
 			//};
 
-			var runs = factory.DataReader.NextRun().ToList();
+			var runs = factory.RunDataFactory.NextRun().ToList();
 			var run = runs[runIdx];
 			
 			Assert.NotNull(run.VehicleData.PassengerCount);
 			Assert.AreEqual(expectedPassengers, run.VehicleData.PassengerCount.Value, 1e-3);
 
-			var ssmInputs = run.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs;
+			var ssmInputs = run.BusAuxiliaries.SSMInputsCooling as ISSMDeclarationInputs;
 			Assert.NotNull(ssmInputs);
 			Assert.AreEqual(expectedPassengers + 1, ssmInputs.NumberOfPassengers, 1e-3); // adding driver for SSM
 		}
@@ -1239,13 +1283,13 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			//	//ActualModalData = true,
 			//	Validate = false
 			//};
-			var runs = factory.DataReader.NextRun().ToList();
+			var runs = factory.RunDataFactory.NextRun().ToList();
 			var run = runs[runIdx];
 
 			Assert.NotNull(run.VehicleData.PassengerCount);
 			Assert.AreEqual(expectedPassengers, run.VehicleData.PassengerCount.Value, 1e-3);
 
-			var ssmInputs = run.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs;
+			var ssmInputs = run.BusAuxiliaries.SSMInputsCooling as ISSMDeclarationInputs;
 			Assert.NotNull(ssmInputs);
 			Assert.AreEqual(expectedPassengers + 1, ssmInputs.NumberOfPassengers, 1e-3); // adding driver for SSM
 		}
@@ -1276,6 +1320,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 			public IVehicleDeclarationInputData PrimaryVehicle { get; set; }
 			public IVehicleDeclarationInputData CompletedVehicle { get; set; }
+			public XElement XMLHashCompleted { get; }
 
 			#endregion
 

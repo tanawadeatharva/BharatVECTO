@@ -74,6 +74,7 @@
 		<Folder FolderName="Schema 2.4_Components">
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ComponentData\ADC.xml"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ComponentData\BatterySystem_1.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ComponentData\BatterySystem_StdValues.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ComponentData\CapacitorSystem_1.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ComponentData\ElectricMachineSystem-IHPC_1.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ComponentData\ElectricMachineSystem_1.xml" HomeFolder="Yes"/>
@@ -153,6 +154,29 @@
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_primary_vehicle_stage_2_3.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_primary_vehicle_stage_2_full.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_primary_vehicle_stage_2_mandatory.xml" HomeFolder="Yes"/>
+		</Folder>
+		<Folder FolderName="MockupResults">
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\CIF_MockupResults_Conv_Bus.xml" HomeFolder="Yes"/>
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\CIF_MockupResults_Conv_Lorry.xml" HomeFolder="Yes"/>
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\CIF_MockupResults_non-OVC-HEV_Bus.xml" HomeFolder="Yes"/>
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\CIF_MockupResults_non-OVC-HEV_Lorry.xml" HomeFolder="Yes"/>
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\CIF_MockupResults_OVC-HEV_Bus.xml" HomeFolder="Yes"/>
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\CIF_MockupResults_OVC-HEV_Lorry.xml" HomeFolder="Yes"/>
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\CIF_MockupResults_PEV_Bus.xml" HomeFolder="Yes"/>
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\CIF_MockupResults_PEV_Lorry.xml" HomeFolder="Yes"/>
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\MRF_MockupResults_Conv_Bus.xml" HomeFolder="Yes"/>
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\MRF_MockupResults_Conv_Lorry.xml" HomeFolder="Yes"/>
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\MRF_MockupResults_Error.xml" HomeFolder="Yes"/>
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\MRF_MockupResults_non-OVC-HEV_Bus.xml" HomeFolder="Yes"/>
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\MRF_MockupResults_non-OVC-HEV_Lorry.xml" HomeFolder="Yes"/>
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\MRF_MockupResults_OVC-HEV_Bus.xml" HomeFolder="Yes"/>
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\MRF_MockupResults_OVC-HEV_Lorry.xml" HomeFolder="Yes"/>
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\MRF_MockupResults_PEV_Bus.xml" HomeFolder="Yes"/>
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\MRF_MockupResults_PEV_Lorry.xml" HomeFolder="Yes"/>
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\VIF_MockupResults_Conv_Bus.xml" HomeFolder="Yes"/>
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\VIF_MockupResults_non-OVC-HEV_Bus.xml" HomeFolder="Yes"/>
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\VIF_MockupResults_OVC-HEV_Bus.xml" HomeFolder="Yes"/>
+			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\VIF_MockupResults_PEV_Bus.xml" HomeFolder="Yes"/>
 		</Folder>
 	</Folder>
 	<Folder FolderName="XML Files Vecto Testcases">
@@ -551,6 +575,7 @@
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputCustomer.0.7.1.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputCustomer.0.7.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputCustomer.0.8.xsd" HomeFolder="Yes"/>
+			<File FilePath="VectoCore\Resources\XSD\VectoOutputCustomer.0.9.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputCustomer.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputDefinitions.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.0.5.xsd" HomeFolder="Yes"/>
@@ -558,6 +583,7 @@
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.0.7.1.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.0.7.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.0.8.xsd" HomeFolder="Yes"/>
+			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.0.9.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputMultistep.0.1.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VTPReport.0.1.xsd" HomeFolder="Yes"/>

@@ -78,7 +78,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 		[TestCase(ExemptedVehicle, 1),
 		TestCase(ExemptedVehicleNoHEV, 1),
 		TestCase(ExemptedVehicleV2, 1),
-		TestCase(ExemptedVehicleV2NoHEV, 1)
+		TestCase(ExemptedVehicleV2NoHEV, 1),
+			Ignore("ExemptedVehicles XML Version 1.0/2.0 no longer supported")
 		]
 		public void TestSimulationExemptedVehicle(string filename, int numRuns)
 		{
@@ -127,7 +128,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 		[TestCase(ExemptedVehicle, true, true, true, "Invalid input: ZE-HDV and DualFuelVehicle are mutually exclusive!"),
 			TestCase(ExemptedVehicle, true, false, true, "Invalid input: ZE-HDV and DualFuelVehicle are mutually exclusive!"),
-			TestCase(ExemptedVehicle, false, false, false, "Invalid input: at least one option of ZE-HDV, He-HDV, and DualFuelVehicle has to be set for an exempted vehicle!")]
+			TestCase(ExemptedVehicle, false, false, false, "Invalid input: at least one option of ZE-HDV, He-HDV, and DualFuelVehicle has to be set for an exempted vehicle!"),
+		 Ignore("ExemptedVehicles XML Version 1.0 no longer supported")
+		]
 		public void TestInvalidExemptedCombination(string filename, bool zeroEmission, bool hybrid, bool dualFuel, string exMsg)
 		{
 			var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(filename));
@@ -179,7 +182,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 		[TestCase(ExemptedVehicle, null, 10000),
 		TestCase(ExemptedVehicle, 100000, null),
-		TestCase(ExemptedVehicle, null, null)]
+		TestCase(ExemptedVehicle, null, null),
+		Ignore("ExemptedVehicles XML Version 1.0 no longer supported")]
 		public void TestHybridExemptedRequiresMaxNetPower(string filename, double? maxNetPower1, double? maxNetPower2)
 		{
 			var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(filename));

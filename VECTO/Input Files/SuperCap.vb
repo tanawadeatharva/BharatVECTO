@@ -122,7 +122,7 @@ Public Class SuperCap
         End Get
     End Property
 
-    Public ReadOnly Property TestingTemperature As Kelvin Implements ISuperCapDeclarationInputData.TestingTemperature
+    Public Property TestingTemperature As Kelvin Implements ISuperCapDeclarationInputData.TestingTemperature
 
     Public Property FilePath() As String
         Get

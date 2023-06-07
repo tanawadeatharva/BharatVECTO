@@ -42,6 +42,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -165,11 +166,16 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
 			((JObject)json["Body"]).Property("OverSpeedEcoRoll").Remove();
 
-			AssertHelper.Exception<VectoException>(
-				() => {
-					var tmp = ((IEngineeringInputDataProvider)new JSONInputDataV2(json, TestJobFile)).DriverInputData.OverSpeedData;
-				},
-				"Key OverSpeedEcoRoll not found");
+			//AssertHelper.Exception<VectoException>(
+			//	() => {
+			//		var tmp = ((IEngineeringInputDataProvider)new JSONInputDataV2(json, TestJobFile)).DriverInputData.OverSpeedData;
+			//	},
+			//	"Key OverSpeedEcoRoll not found");
+
+			var tmp = ((IEngineeringInputDataProvider)new JSONInputDataV2(json, TestJobFile)).DriverInputData.OverSpeedData;
+			Assert.AreEqual(true, tmp.Enabled);
+			Assert.AreEqual(DeclarationData.Driver.OverSpeed.MinSpeed.AsKmph, tmp.MinSpeed.AsKmph);
+			Assert.AreEqual(DeclarationData.Driver.OverSpeed.AllowedOverSpeed.AsKmph, tmp.OverSpeed.AsKmph);
 		}
 
 		[TestCase]

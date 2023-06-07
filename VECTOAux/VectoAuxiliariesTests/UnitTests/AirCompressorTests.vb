@@ -43,9 +43,9 @@ Namespace UnitTests
 			Return New CompressorMapMock(True)
 		End Function
 
-		Private Function GetGoodCompressor() As IM4_AirCompressor
+		Private Function GetGoodCompressor() As M04Impl
 			Dim map As ICompressorMap = GetNonFailingCompressorMapMock()
-			Dim target As IM4_AirCompressor = New M04Impl(map, GoodRatio, GoodEfficiency, _signals)
+			Dim target As M04Impl = New M04Impl(map, GoodRatio, GoodEfficiency, _signals)
 			Return target
 		End Function
 
@@ -94,7 +94,7 @@ Namespace UnitTests
 
 		<TestCase()>
 		Public Sub SetEfficiencyTest()
-			Dim comp As IM4_AirCompressor = GetGoodCompressor()
+			Dim comp = GetGoodCompressor()
 			Dim target As Double = 0.3
 			comp.PulleyGearEfficiency = target
 			Dim actual As Double = comp.PulleyGearEfficiency
@@ -104,7 +104,7 @@ Namespace UnitTests
 		<TestCase(TooLowEfficiency)>
         <TestCase(TooHighEfficiency)>
         Public Sub SetEfficiencyOutOfRangeTest(ByVal efficiency As Single)
-            Dim comp As IM4_AirCompressor = GetGoodCompressor()
+            Dim comp = GetGoodCompressor()
 
             Assert.That(Sub() comp.PulleyGearEfficiency = efficiency, Throws.InstanceOf(Of ArgumentException))
         End Sub
@@ -119,7 +119,7 @@ Namespace UnitTests
 
 		<TestCase()>
 		Public Sub SetRatioTest()
-			Dim comp As IM4_AirCompressor = GetGoodCompressor()
+			Dim comp = GetGoodCompressor()
 			Dim target As Double = 3
 			comp.PulleyGearRatio = target
 			Dim actual As Double = comp.PulleyGearRatio
@@ -129,7 +129,7 @@ Namespace UnitTests
 		<TestCase(TooLowRatio)>
         <TestCase(TooHighRatio)>
         Public Sub SetRatioOutOfRangeTest(ByVal ratio As Single)
-            Dim comp As IM4_AirCompressor = GetGoodCompressor()
+            Dim comp = GetGoodCompressor()
 
             Assert.That(Sub() comp.PulleyGearRatio = ratio, Throws.InstanceOf(Of ArgumentException))
         End Sub

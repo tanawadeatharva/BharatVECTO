@@ -494,7 +494,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			
 			var (pWHRelMap, pWHRelCorr) =  GetWHRPower(ModelData.ElectricalWHR, engineSpeed, engineTorque);
 			var (pWHRmechMap, pWHRmechCorr) = GetWHRPower(ModelData.MechanicalWHR, engineSpeed, engineTorque);
-			
+
+			if (DataBus.BatteryInfo != null && Math.Abs(DataBus.BatteryInfo.StateOfCharge - DataBus.BatteryInfo.MaxSoC) < 0.01) {
+				// we are close to the max charge - 'bypass' electric WHR...
+				pWHRelCorr = 0.SI<Watt>();
+			}
+
 			container[ModalResultField.P_WHR_el_map] = pWHRelMap;
 			container[ModalResultField.P_WHR_el_corr] = pWHRelCorr;
 
@@ -540,6 +545,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
+		protected override bool DoUpdateFrom(object other) => false;
+
 		#endregion
 
 		/// <summary>
@@ -555,8 +562,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var stationaryFullLoadPower = stationaryFullLoadTorque * avgAngularVelocity;
 			Watt dynFullPowerCalculated;
 
-			
-
 			// disable pt1 behaviour if PT1Disabled is true, or if the previous enginepower is greater than the current stationary fullload power (in this case the pt1 calculation fails)
 			if (PT1Disabled || PreviousState.EnginePower.IsGreaterOrEqual(stationaryFullLoadPower)) {
 				dynFullPowerCalculated = stationaryFullLoadPower;
@@ -564,11 +569,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				try {
 					var pt1 = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].PT1(avgAngularVelocity).Value.Value();
 					var powerRatio = (PreviousState.EnginePower / stationaryFullLoadPower).Value();
-					var tStarPrev = pt1 * Math.Log(1.0 / (1 - powerRatio), Math.E).SI<Second>();
-					var tStar = tStarPrev + PreviousState.dt;
-					dynFullPowerCalculated = stationaryFullLoadPower * (pt1.IsEqual(0) ? 1 : 1 - Math.Exp((-tStar / pt1).Value()));
+					var tStarPrev = pt1 * Math.Log(1.0 / (1 - powerRatio), Math.E);
+					if (!double.IsNaN(tStarPrev)) {
+						var tStar = tStarPrev.SI<Second>() + PreviousState.dt;
+						dynFullPowerCalculated = stationaryFullLoadPower * (pt1.IsEqual(0) ? 1 : 1 - Math.Exp((-tStar / pt1).Value()));
+					} else {
+						if (dryRun) {
+							Log.Info("PT1 calculation failed (dryRun: {0})", dryRun);
+							dynFullPowerCalculated = stationaryFullLoadPower;
+                        } else {
+							Log.Warn("PT1 calculation failed (dryRun: {0})", dryRun);
+							throw new VectoException("PT1 calculation failed!");
+                        }
+					}
 				} catch (VectoException e) {
-					Log.Warn("PT1 calculation failed (dryRun: {0}): {1}", dryRun, e.Message);
+					if (dryRun) {
+						Log.Info("PT1 calculation failed (dryRun: {0}): {1}", dryRun, e.Message);
+					} else {
+						Log.Warn("PT1 calculation failed (dryRun: {0}): {1}", dryRun, e.Message);
+					}
+
 					if (dryRun) {
 						dynFullPowerCalculated = stationaryFullLoadPower;
 					} else {

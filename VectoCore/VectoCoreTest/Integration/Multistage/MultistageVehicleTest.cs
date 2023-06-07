@@ -16,11 +16,14 @@ using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
 using TUGraz.VectoCore.Tests.Integration.Declaration;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Utils;
@@ -57,11 +60,12 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		const string PrimaryBusAdasV23 = PrimaryInputDirPath + "vecto_vehicle-primary_heavyBusSmartES_invalid_testdata.xml";
 
 
-		protected IXMLInputDataReader xmlInputReader;
-		protected IXMLInputDataReader xmlVIFInputReader;
+		protected IXMLInputDataReader _xmlInputReader;
+		protected IXMLInputDataReader _xmlVIFInputReader;
 
 		private IKernel _kernel;
 		private string _generatedVIFFilepath;
+		private ISimulatorFactoryFactory _simFactoryFactory;
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
@@ -69,28 +73,29 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 
 			_kernel = new StandardKernel(new VectoNinjectModule());
-			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
-			xmlVIFInputReader = _kernel.Get<IXMLInputDataReader>();
+			_xmlInputReader = _kernel.Get<IXMLInputDataReader>();
+			_xmlVIFInputReader = _kernel.Get<IXMLInputDataReader>();
+			_simFactoryFactory = _kernel.Get<ISimulatorFactoryFactory>();
 		}
 
 		[TestCase(VIFInputFile, InputFilePath, 1)]
-		public void TestSimulationMultistageVehicle(string vifFilename, string inputFilename, int numRuns)
+		public void TestSimulationMultistageVehicle(string vifFilename, string stepInput, int numRuns)
 		{
 			//Input files
-			var inputReader = XmlReader.Create(inputFilename);
-			var inputDataProvider = xmlInputReader.CreateDeclaration(inputReader);
-			var vehicle = inputDataProvider.JobInputData.Vehicle;
+			var _stepInputData = _xmlInputReader.CreateDeclaration(stepInput);
+			var vehicle = _stepInputData.JobInputData.Vehicle;
 
 			var vifReader = XmlReader.Create(vifFilename);
-			var vifDataProvider = xmlInputReader.Create(vifReader) as IMultistageBusInputDataProvider;
+			var vifDataProvider = _xmlInputReader.Create(vifReader) as IMultistepBusInputDataProvider;
 
 			var numberOfManufacturingStages = vifDataProvider?.JobInputData.ManufacturingStages?.Count ?? 0;
 			var writer = new FileOutputVIFWriter(vifResult, numberOfManufacturingStages);
 			_generatedVIFFilepath = writer.XMLMultistageReportFileName;
 			
 			var inputData = new XMLDeclarationVIFInputData(vifDataProvider, vehicle);
-			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
-			
+			//var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			var factory =
+				_simFactoryFactory.Factory(ExecutionMode.Declaration, inputData, writer, null, null, true);
 			var jobContainer = new JobContainer(new MockSumWriter());
 
 			var runs = factory.SimulationRuns().ToList();
@@ -118,11 +123,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		{
 			//Input files
 			var inputReader = XmlReader.Create(inputFilename);
-			var inputDataProvider = xmlInputReader.CreateDeclaration(inputReader);
+			var inputDataProvider = _xmlInputReader.CreateDeclaration(inputReader);
 			var vehicle = inputDataProvider.JobInputData.Vehicle;
 
 			var vifReader = XmlReader.Create(vifFilename);
-			var vifDataProvider = xmlInputReader.Create(vifReader) as IMultistageBusInputDataProvider;
+			var vifDataProvider = _xmlInputReader.Create(vifReader) as IMultistepBusInputDataProvider;
 
 			var numberOfManufacturingStages = vifDataProvider?.JobInputData.ManufacturingStages?.Count ?? 0;
 			var writer = new FileOutputVIFWriter(vifResult, numberOfManufacturingStages);
@@ -158,7 +163,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		private void TestNewVifData(string filePath)
 		{
 			var vifReader = XmlReader.Create(filePath);
-			var vifDataProvider = xmlInputReader.Create(vifReader) as IMultistageBusInputDataProvider;
+			var vifDataProvider = _xmlInputReader.Create(vifReader) as IMultistepBusInputDataProvider;
 
 			Assert.AreEqual(3, vifDataProvider.JobInputData.ManufacturingStages.Count());
 			TestVifStage2Data(vifDataProvider.JobInputData.ManufacturingStages[0]);
@@ -170,7 +175,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		{
 			Assert.AreEqual(2, data.StepCount);
 			TestSignatureData(data.HashPreviousStep, "nI+57QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=",
-				"#PIF-d10aff76c5d149948046");
+				"#VIF-d10aff76c5d149948046");
 
 			Assert.AreEqual("Intermediate Manufacturer 1", data.Vehicle.Manufacturer);
 			Assert.AreEqual("Intermediate Manufacturer Address 1", data.Vehicle.ManufacturerAddress);
@@ -326,7 +331,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			TestSimulationMultistageVehicle(VIFInputFileGroup41, InputFilePathGroup41, 1);
 			
 			var vifReader = XmlReader.Create(_generatedVIFFilepath);
-			var vifDataProvider = xmlInputReader.Create(vifReader) as IMultistageBusInputDataProvider;
+			var vifDataProvider = _xmlInputReader.Create(vifReader) as IMultistepBusInputDataProvider;
 
 			var inputData = new XMLDeclarationVIFInputData(vifDataProvider, null);
 			var writer = new MockDeclarationWriter("vif_vehicle-sample_test.xml");
@@ -352,7 +357,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			TestSimulationMultistageVehicle(VIFExemptedPrimaryBus, ExepmtedCompletedBusInput, 1);
 
 			var vifReader = XmlReader.Create(_generatedVIFFilepath);
-			var vifDataProvider = xmlInputReader.Create(vifReader) as IMultistageBusInputDataProvider;
+			var vifDataProvider = _xmlInputReader.Create(vifReader) as IMultistepBusInputDataProvider;
 
 			var inputData = new XMLDeclarationVIFInputData(vifDataProvider, null);
 			var writer = new FileOutputWriter("vif_vehicle-sample_test.xml");
@@ -378,20 +383,20 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		TestCase(PrimaryBus_SmartES, TestName = "Multistage Write VIF Primary SmartES")]
 		public void TestMultistageWritingVif(string primaryFile)
 		{
-			var inputData = xmlInputReader.Create(primaryFile);
+			var inputData = _xmlInputReader.Create(primaryFile);
 
 			var writer = new MockDeclarationWriter("vif_writing_test.xml");
 			
 			//var xmlreport = new XMLDeclarationReportMultistageBusVehicle(writer);
-			var xmlreport = new XMLDeclarationReportPrimaryVehicle(writer);
-			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer, xmlreport);
+			//var xmlreport = new XMLDeclarationReportPrimaryVehicle(writer);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer, null, null, true);
 			factory.WriteModalResults = true; //ActualModalData = true,
 			factory.Validate = false;
 
 			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
 			jobContainer.AddRuns(factory);
 
-			xmlreport.DoWriteReport();
+			//xmlreport.DoWriteReport();
 		}
 
 
@@ -399,7 +404,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		TestCase(PrimaryBus_SmartES, "vif_primary_bus_smart_writing_test.xml",  TestName = "Multistage Write VIF Primary SmartES With Simulation")]
 		public void TestMultistageWritingVifWithSimulation(string primaryFile, string outputFile)
 		{
-			var inputData = xmlInputReader.Create(primaryFile);
+			var inputData = _xmlInputReader.Create(primaryFile);
 
 			var writer = new MockDeclarationWriter(outputFile);
 			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
@@ -420,11 +425,13 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		[TestCase(PrimaryBusAdasV23, "vif_primary_bus_writing_test_adasv2.3.xml", TestName = "Multistage Write VIF Primary With ADAS v 2.3")]
 		public void TestPrimaryWritingVIF(string primaryFile, string outputFile)
 		{
-			var inputData = xmlInputReader.Create(primaryFile);
+			var inputData = _xmlInputReader.Create(primaryFile);
 
 			var writer = new FileOutputWriter(outputFile);
 
-			var xmlreport = new XMLDeclarationReportPrimaryVehicle(writer);
+			var mrfFactory = _kernel.Get<IManufacturerReportFactory>();
+			var vifFactory = _kernel.Get<IVIFReportFactory>();
+			var xmlreport = new XMLDeclarationReportPrimaryVehicle(writer, mrfFactory, vifFactory);
 			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer, xmlreport);
 			factory.WriteModalResults = true;
 			factory.Validate = false;
@@ -451,7 +458,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		private void ValidateVIFData(string vifFilePath)
 		{
 			var vifReader = XmlReader.Create(vifFilePath);
-			var vifDataProvider = xmlInputReader.Create(vifReader) as IMultistageBusInputDataProvider;
+			var vifDataProvider = _xmlInputReader.Create(vifReader) as IMultistepBusInputDataProvider;
 
 			var res = vifDataProvider.JobInputData.PrimaryVehicle;
 			TestVehicleData(res.Vehicle);
@@ -492,11 +499,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 		private void TestTorqueLimitsData(IList<ITorqueLimitInputData> torqueLimits)
 		{
+			Assert.AreEqual(1, torqueLimits[0].Gear);
+			Assert.AreEqual(2500, torqueLimits[0].MaxTorque.Value());
 			Assert.AreEqual(3, torqueLimits.Count);
-			Assert.AreEqual(6, torqueLimits[0].Gear);
-			Assert.AreEqual(1800, torqueLimits[0].MaxTorque.Value());
-			Assert.AreEqual(1, torqueLimits[1].Gear);
-			Assert.AreEqual(2500, torqueLimits[1].MaxTorque.Value());
+			Assert.AreEqual(6, torqueLimits[1].Gear);
+			Assert.AreEqual(1800, torqueLimits[1].MaxTorque.Value());
 			Assert.AreEqual(12, torqueLimits[2].Gear);
 			Assert.AreEqual(1900, torqueLimits[2].MaxTorque.Value());
 		}
@@ -734,7 +741,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			Assert.AreEqual(3.SI<Volt>(), capacitor.Voltage);
 			
 			Assert.AreEqual("Large Supply 2-stage", aux.PneumaticSupply.CompressorSize);//SizeOfAirSupply
-			Assert.AreEqual(CompressorDrive.electrically, aux.PneumaticSupply.CompressorDrive);
+			Assert.AreEqual(CompressorDrive.mechanically, aux.PneumaticSupply.CompressorDrive);
 			Assert.AreEqual("none", aux.PneumaticSupply.Clutch);
 			Assert.AreEqual(1.000, aux.PneumaticSupply.Ratio);
 			Assert.AreEqual(false, aux.PneumaticSupply.SmartAirCompression);
@@ -767,7 +774,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 			results.Add(new XElement(tns + XMLNames.Report_Result_Result,
 				new XAttribute(XMLNames.Report_Result_Status_Attr, "success"),
-				new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, "P31SD"),
+				new XElement(tns + XMLNames.Report_Results_PrimaryVehicleSubgroup, "P31SD"),
 				new XElement(tns + XMLNames.Report_Result_Mission, "Heavy Urban"),
 				new XElement(tns +
 							XMLNames.Report_ResultEntry_SimulationParameters,
@@ -783,11 +790,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 					new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, "Diesel CI"),
 					new XElement(tns +
 								XMLNames.Report_Result_EnergyConsumption,
-						new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/km"), 16.93598)),
-
-				new XElement(tns+ 
-					XMLNames.Report_Results_CO2, new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/km"), 1862.57
-				)));
+						new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/km"), 16.93598))
+				//new XElement(tns+ 
+				//	XMLNames.Report_Results_CO2, new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/km"), 1862.57
+				//)
+				));
 
 			return results;
 

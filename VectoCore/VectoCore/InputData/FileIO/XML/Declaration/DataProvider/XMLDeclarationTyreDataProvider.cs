@@ -75,7 +75,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual Newton TyreTestLoad => _fzIso ?? (_fzIso = GetDouble(XMLNames.AxleWheels_Axles_Axle_FzISO).SI<Newton>());
 
-		public virtual string FuelEfficiencyClass => DeclarationData.Wheels.TyreClass.Lookup(RollResistanceCoefficient);
+		public virtual string FuelEfficiencyClass => null;// DeclarationData.Wheels.TyreClass.Lookup(RollResistanceCoefficient);
+
+		#endregion
+
+		#region Implementation of IXMLTyreDeclarationInputData
+
+		public XmlNode GetXmlNode => BaseNode;
 
 		#endregion
 	}
@@ -116,7 +122,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLDeclarationTyreDataProviderV23 : XMLDeclarationTyreDataProviderV10
 	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V23;
 
 		//public new const string XSD_TYPE = "TyreComponentDeclarationType";
 
@@ -128,5 +134,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		public override string FuelEfficiencyClass => GetString("FuelEfficiencyClass");
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationTyreDataProviderV25 : XMLDeclarationTyreDataProviderV23
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V25;
+
+		//public new const string XSD_TYPE = "TyreComponentDeclarationType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationTyreDataProviderV25(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+			: base(vehicle, componentNode, sourceFile) { }
+
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+
 	}
 }

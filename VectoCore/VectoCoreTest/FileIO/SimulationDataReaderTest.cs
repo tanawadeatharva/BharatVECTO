@@ -32,13 +32,16 @@
 using NUnit.Framework;
 using System.IO;
 using System.Linq;
+using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Tests.Utils;
 
@@ -49,12 +52,14 @@ namespace TUGraz.VectoCore.Tests.FileIO
 	public class SimulationDataReaderTest
 	{
 		protected const string DeclarationJob = @"TestData/Jobs/12t Delivery Truck.vecto";
+		private StandardKernel _kernel;
 		protected const double Tolerance = 0.0001;
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+			_kernel = new StandardKernel(new VectoNinjectModule());
 		}
 
 		[Category("LongRunning")]
@@ -66,7 +71,9 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			if (declarationProvider == null) {
 				throw new VectoException("Failed to cas to Engineering InputDataProvider");
 			}
-			var reader = new DeclarationModeTruckVectoRunDataFactory(declarationProvider, null);
+
+			var dataAdapter = new DeclarationDataAdapterHeavyLorry.Conventional();
+			var reader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(declarationProvider, null, dataAdapter, _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>());
 			//reader.SetJobFile(DeclarationJob);
 
 			var runData = reader.NextRun().First();

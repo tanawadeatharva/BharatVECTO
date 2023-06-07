@@ -4,9 +4,9 @@ using System.IO;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Properties;
-using VECTO3GUI2020.Util;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces;
 
@@ -131,16 +131,24 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		public bool ActualModalData
 		{
-			get => _actualModalData;
-			set
-			{
-				if (SetProperty(ref _actualModalData, value)) {
-					_settings.ActualModalData = value;
-					_settings.Save();
+			get => false;
+			set{
 
-				}
 			}
 		}
+
+		//public bool ActualModalData
+		//{
+		//	get => _actualModalData;
+		//	set
+		//	{
+		//		if (SetProperty(ref _actualModalData, value)) {
+		//			_settings.ActualModalData = value;
+		//			_settings.Save();
+
+		//		}
+		//	}
+		//}
 
 		public bool Validate
 		{
@@ -158,7 +166,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		public bool ModalResults1Hz
 		{
-			get => _modalResults1Hz;
+			get => false;
 			set
 			{
 				if (SetProperty(ref _modalResults1Hz, value))

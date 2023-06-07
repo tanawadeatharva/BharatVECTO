@@ -1,0 +1,43 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
+
+namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
+{
+    public class HeatingDistributionCasesMap
+    {
+        private List<Entry> Map;
+
+        public HeatingDistributionCasesMap(List<Entry> map)
+        {
+            Map = map;
+        }
+
+        public HeatingDistributionCase GetHeatingDistributionCase(HeatPumpType heatPump, HeaterType electricHeater,
+            bool fuelHeater)
+        {
+            var matching = Map.Where(x => x.IsEqual(heatPump, electricHeater, fuelHeater)).ToList();
+            if (matching.Count != 1) {
+                throw new VectoException($"Zero or more than one matching entry! {matching.Count}");
+            }
+
+            return matching.First().HeatingDistributionCase;
+        }
+
+        public class Entry
+        {
+            public HeatingDistributionCase HeatingDistributionCase;
+            public HeatPumpType HeatPumpType;
+            public bool ElectricHeater;
+            public bool FuelHeater;
+
+            public bool IsEqual(HeatPumpType heatPump, HeaterType electricHeater, bool fuelHeater)
+            {
+                var hasElectricHeater = electricHeater != HeaterType.None;
+                var otherHeater = ElectricHeater == hasElectricHeater;
+                return HeatPumpType == heatPump && otherHeater && FuelHeater == fuelHeater;
+            }
+        }
+    }
+}

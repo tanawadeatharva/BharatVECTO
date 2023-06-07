@@ -23,6 +23,7 @@
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <Label Style="{DynamicResource LabelStyle1}">Select Primary Input</Label>
 
@@ -45,6 +46,11 @@
                     <Button DockPanel.Dock="Right" Command="{Binding RemoveStageInputCommand}" ContentTemplate="{StaticResource TrashIcon}" Width="30" Padding="4" Margin="4"/>
                     <customControls:FilePicker DockPanel.Dock="Left" Text="{Binding StageInputPath}" Command="{Binding SelectCompletedInputFileCommand}" />
                 </DockPanel>
+                <Label Grid.Row="4" DockPanel.Dock="Left" Style="{DynamicResource LabelStyle1}" Visibility="{Binding Completed, Converter={StaticResource BooleanToVisibilityConverter}}">Simulate Resulting VIF</Label>
+                <CheckBox Grid.Row="4" HorizontalAlignment="Right" IsChecked="{Binding RunSimulation, Mode=TwoWay}" IsEnabled="True" IsThreeState="False" Visibility="{Binding Completed, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Padding="4"></CheckBox>
+
+
+
             </Grid>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Width="100" Style="{StaticResource MultiStageButtonStyle1}" Command="{Binding SaveJobAsCommand}">Save Job as ...</Button>

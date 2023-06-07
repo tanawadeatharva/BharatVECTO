@@ -32,9 +32,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public BatteryType BatteryType { get; }
 
 		AmpereSecond IBatteryPackDeclarationInputData.Capacity => Body.GetEx<double>("Capacity").SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>();
-		public bool ConnectorsSubsystemsIncluded { get; }
-		public bool JunctionboxIncluded { get; }
-		public Kelvin TestingTemperature => null;
+		public bool? ConnectorsSubsystemsIncluded => Body.ContainsKey("ConnectorsSubsystemsIncluded") && Body.GetEx<bool>("ConnectorsSubsystemsIncluded");
+		public bool? JunctionboxIncluded => Body.ContainsKey("JunctionboxIncluded") && Body.GetEx<bool>("JunctionboxIncluded");
+
+		public Kelvin TestingTemperature => Body.ContainsKey("TestingTemperature")
+			? Body.GetEx<double>("TestingTemperature").DegCelsiusToKelvin()
+			: 20.DegCelsiusToKelvin();
 
 		Farad ISuperCapDeclarationInputData.Capacity => Body.GetEx<double>("Capacity").SI<Farad>();
 

@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Models;
@@ -156,15 +157,17 @@ namespace TUGraz.VectoCommon.Utils
 				}
 			}
 		}
-
+		[DebuggerStepThrough]
 		public static T Sum<T>(this IEnumerable<T> values) where T : SIBase<T> =>
 			values.Sum(x => x);
 
-		public static TResult Sum<TU, TResult>(this IEnumerable<TU> values, Func<TU, TResult> selector)
+		[DebuggerStepThrough]
+        public static TResult Sum<TU, TResult>(this IEnumerable<TU> values, Func<TU, TResult> selector)
 			where TResult : SIBase<TResult> =>
 			values.Select(selector).DefaultIfEmpty().Aggregate((sum, current) => sum + current);
 
-		public static T Average<T>(this IEnumerable<T> values) where T : SIBase<T> =>
+		[DebuggerStepThrough]
+        public static T Average<T>(this IEnumerable<T> values) where T : SIBase<T> =>
 			values.Average(v => v.Value()).SI<T>();
 
 		/// <summary>

@@ -41,6 +41,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 		public override void Load()
 		{
 			Bind<IXMLInputDataReader>().To<XMLInputDataFactory>();
+			Bind<IXMLComponentInputReader>().To<XMLComponentInputDataFactory>();
 
 			LoadModule<XMLDeclarationReaderInjectModule>();
 

@@ -7,7 +7,7 @@
 ### Description
 
 
-The Graph Window allows to visualise [modal results files (.vmod)](#modal-results-.vmod). Multiple windows can be open at the same time to display different files.
+The Graph Window allows to visualize [modal results files (.vmod)](#modal-results-.vmod). Multiple windows can be open at the same time to display different files.
 
 Note that the graph does **not** update automatically if the results file has changed.
 

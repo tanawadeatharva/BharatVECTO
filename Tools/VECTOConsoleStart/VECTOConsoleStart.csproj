@@ -1,12 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>exe</OutputType>
+    
     <AssemblyName>vectocmd</AssemblyName>
     <ApplicationIcon>Icon2.ico</ApplicationIcon>
     <RootNamespace>TUGraz.VECTO</RootNamespace>
-    <TargetFrameworks>net45</TargetFrameworks>
-    <DefineConstants />
+    <TargetFrameworks>net48</TargetFrameworks>
+	<DefineConstants />
+    <StartupObject></StartupObject>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\VECTOStart\StarterHelper.cs" Link="StarterHelper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
 
 </Project>

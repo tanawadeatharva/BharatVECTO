@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			XMLInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputEngSingleFile()
 		{
 			var reader = File.OpenRead(EngineeringSampleFile);
@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var fldMap = FullLoadCurveReader.Create(fldTable, true);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputGbxSingleFile()
 		{
 			var reader = File.OpenRead(EngineeringSampleFile);
@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputAxlGSingleFile()
 		{
 			var reader = File.OpenRead(EngineeringSampleFile);
@@ -163,7 +163,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var lossMap = TransmissionLossMapReader.Create(lossMapData, axlegearDataProvider.Ratio, "AxleGear");
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputAxlGSingleFileEfficiency()
 		{
 			var reader = XmlReader.Create(EngineeringSampleFile);
@@ -193,7 +193,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(0.9123, axleGear.Efficiency);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputRetarderSingleFile()
 		{
 			var reader = File.OpenRead(EngineeringSampleFile);
@@ -213,7 +213,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var lossMap = RetarderLossMapReader.Create(lossMapData);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputAxleWheelsSingleFile()
 		{
 			var reader = File.OpenRead(EngineeringSampleFile);
@@ -237,7 +237,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(0.488822, vehicleDataProvider.DynamicTyreRadius.Value(), 1e-6);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputAxleWheelsDuplicates()
 		{
 			var reader = XmlReader.Create(EngineeringSampleFile);
@@ -271,7 +271,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			AssertHelper.Exception<VectoException>(() => { var axles = vehicleDataProvider.Components.AxleWheels.AxlesEngineering; });
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputAxleWheelsAxleNumTooLow()
 		{
 			var reader = XmlReader.Create(EngineeringSampleFile);
@@ -304,7 +304,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				});
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputAxleWheelsAxleNumTooHigh()
 		{
 			var reader = XmlReader.Create(EngineeringSampleFile);
@@ -338,7 +338,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				});
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputAuxiliariesSingleFile()
 		{
 			var reader = File.OpenRead(EngineeringSampleFile);
@@ -359,7 +359,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			//Assert.AreEqual("FAN", aux2.ID);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputADASSingleFile()
 		{
 			var reader = File.OpenRead(EngineeringSampleFile);
@@ -371,7 +371,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsTrue(adas.OverSpeedData.Enabled);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestVehicleInputSingleFile()
 		{
 			var inputDataProvider = XMLInputReader.CreateEngineering(EngineeringSampleFile);
@@ -391,7 +391,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1.0, inputDataProvider.JobInputData.Vehicle.Components.RetarderInputData.Ratio);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMEngineering_DriverModel()
 		{
 			var reader = File.OpenRead(EngineeringSampleFile);
@@ -445,7 +445,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				tcShiftStrategy.CLUpshiftMinAcceleration);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMEngineering_DriverModelNoAcc()
 		{
 			var reader = XmlReader.Create(EngineeringSampleFile);
@@ -486,7 +486,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var jobContainer = new JobContainer(sumData);
 			var dataProvider = XMLInputReader.CreateEngineering(EngineeringSampleFile);
 
-			var runsFactory = _kernel.Get<ISimulatorFactoryFactory>().Factory(ExecutionMode.Engineering, dataProvider, fileWriter);
+			var runsFactory = _kernel.Get<ISimulatorFactoryFactory>().Factory(ExecutionMode.Engineering, dataProvider, fileWriter, null, null);
 			runsFactory.WriteModalResults = true;
 
 			Assert.That(() => jobContainer.AddRuns(runsFactory),
@@ -500,7 +500,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(6, jobContainer.Runs.Count);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestFullFeaturedXMEngineering_TorqueConverter()
 		{
 			var reader = File.OpenRead(EngineeringSampleFileFull);
@@ -523,7 +523,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1700, tcDataProvider.MaxInputSpeed.AsRPM, 1e-6);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestFullFeaturedXMEngineering_AngleDrive()
 		{
 			var reader = File.OpenRead(EngineeringSampleFileFull);
@@ -538,7 +538,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("100.00", angledriveDataProvider.LossMap.Rows[4][2]);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestFullFeaturedXMEngineering_DriverModel()
 		{
 			var reader = File.OpenRead(EngineeringSampleFileFull);
@@ -590,7 +590,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(0.133, tcShiftStrategy.CLUpshiftMinAcceleration.Value(), 1e-6);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestFullFeaturedXMEngineering_CrosswindCorrection()
 		{
 			var reader = File.OpenRead(EngineeringSampleFileFull);
@@ -604,7 +604,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("1.8", airdragData.CrosswindCorrectionMap.Rows[1][1]);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestFullFeaturedXMEngineering_PTO()
 		{
 			var reader = File.OpenRead(EngineeringSampleFileFull);
@@ -625,7 +625,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputAngledriveGSingleFile()
 		{
 			var reader = File.OpenRead(EngineeringSampleFileFull);
@@ -644,7 +644,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var lossMap = TransmissionLossMapReader.Create(lossMapData, angledriveInputData.Ratio, "Angledrive");
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputAngledriveSingleFileEfficiency()
 		{
 			var reader = XmlReader.Create(EngineeringSampleFileFull);
@@ -675,7 +675,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(0.9124, angledrive.Efficiency);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputConstantAuxSingleFile()
 		{
 			var reader = XmlReader.Create(EngineeringSampleFileFull);
@@ -692,7 +692,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			//angledrivelosses.ReplaceSelf(new XElement(XMLNames.AngleDrive_Efficiency, "0.9124").ToString());
 			aux.InnerXml =
 				new XElement(XMLNames.Auxiliaries_Auxiliary, new XAttribute(XMLNames.Auxiliaries_Auxiliary_ID_Attr, "const"),
-					new XAttribute(XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance") + "type", "AuxiliaryEntryEngineeringType"),
+					new XAttribute(XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance") + XMLNames.XSIType, "AuxiliaryEntryEngineeringType"),
 					new XElement(XMLNames.Auxiliaries_Auxiliary_ConstantAuxLoad, "5000")).ToString();
 
 			//var modified = XmlReader.Create(new StringReader(nav.OuterXml));
@@ -711,7 +711,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			//Assert.AreEqual(5000, auxInput[0].ConstantPowerDemand.Value(), 1e-6);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestRetarderTypeNone()
 		{
 			var reader = XmlReader.Create(EngineeringSampleFile);
@@ -757,7 +757,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var inputDataProvider = XMLInputReader.CreateEngineering(stream);
 
-			var factory = _kernel.Get<ISimulatorFactoryFactory>().Factory(ExecutionMode.Engineering, inputDataProvider, new FileOutputWriter("dummy"));
+			var factory = _kernel.Get<ISimulatorFactoryFactory>().Factory(ExecutionMode.Engineering, inputDataProvider, new FileOutputWriter("dummy"), null, null);
 
 			var jobContainer = new JobContainer(null);
 			Assert.That(() => jobContainer.AddRuns(factory),
@@ -767,7 +767,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			jobContainer.Execute();
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputInvalidXML()
 		{
 			var reader = XmlReader.Create(EngineeringSampleFileFull);
@@ -792,7 +792,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputInvalidCycle()
 		{
 			var reader = XmlReader.Create(EngineeringSampleFileFull);
@@ -824,7 +824,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				});
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputInvalidDriverAcceleration()
 		{
 			var reader = XmlReader.Create(EngineeringSampleFileFull);
@@ -855,7 +855,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(accelerationCurve.AccelerationCurve);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputExtResourceMissingTag()
 		{
 			var reader = XmlReader.Create(EngineeringSampleFileFull);
@@ -888,7 +888,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputEngineeringVersion1_0()
 		{
 			var inputDataProvider = XMLInputReader.CreateEngineering(EngineeringSampleFile_10_Full);
@@ -901,7 +901,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputEngineeringVersion1_0_DriverModelParameters()
 		{
 			var inputDataProvider = XMLInputReader.CreateEngineering(EngineeringSampleFile_10_Full);
@@ -928,7 +928,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase]
+		[TestCase, Ignore("Egnineering XML not supported")]
 		public void TestXMLInputEngineeringVersion1_0TestExtensions()
 		{
 			// load overrides of test xml types

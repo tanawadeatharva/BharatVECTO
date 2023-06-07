@@ -107,7 +107,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					}
 
 					followUpSimulatorFactoryFetched = true;
-					return _simulatorFactory.FollowUpSimulatorFactory;
+					var factory = _simulatorFactory.FollowUpSimulatorFactory;
+					if (factory != null) {
+						factory.SerializeVectoRunData = _simulatorFactory.SerializeVectoRunData;
+					}
+					return factory;
 				} catch (Exception e){
 					LogManager.GetLogger(typeof(JobContainer).FullName).Error(e);
 					throw;
@@ -266,7 +270,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						foreach (var run in Runs) {
 							var r = run;
 							task = task.ContinueWith(t => r.RunWorkerAsync().Wait(),
-								TaskContinuationOptions.OnlyOnRanToCompletion);
+								TaskContinuationOptions.NotOnCanceled);
+							
 						}
 
 						first.Start();
@@ -362,13 +367,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			try {
 				_runContainerMap.TryGetValue(runContainerId, out var runContainer);
 				var additionalSimulatorFactory = runContainer?.GetFollowUpSimulatorFactory();
-				if (additionalSimulatorFactory == null)
+				if (additionalSimulatorFactory == null) {
 					return;
+				}
+					
 
 				AddRuns(additionalSimulatorFactory);
 				Execute(_multithreaded);
 			} catch (Exception ex) {
+				
 				Log.Error(ex.Message);
+				throw;
 			}
 			
 		}

@@ -6,13 +6,13 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Properties;
-using VECTO3GUI2020.Util;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
@@ -80,10 +80,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			{
 				return;
 			}
-			IMultistageBusInputDataProvider inputDataProvider = null;
+			IMultistepBusInputDataProvider inputDataProvider = null;
 			try
 			{
-				inputDataProvider = _inputDataReader.Create(fileName) as IMultistageBusInputDataProvider;
+				inputDataProvider = _inputDataReader.Create(fileName) as IMultistepBusInputDataProvider;
 			}
 			catch (Exception e)
 			{

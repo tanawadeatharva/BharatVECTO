@@ -81,22 +81,65 @@ Public Class GearboxForm
         CbGStype.ValueMember = "Value"
         CbGStype.DisplayMember = "Label"
 
-        If (Cfg.DeclMode) Then
-            CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
-                .Cast(Of GearboxType)() _
-                .Where(Function(type) Not type = GearboxType.APTN And (type.ManualTransmission() OrElse type = GearboxType.ATSerial)) _
-                .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
-        Else
-            CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
-                .Cast(Of GearboxType)() _
-                .Where(Function(type) type.ManualTransmission() OrElse type.AutomaticTransmission() OrElse type = GearboxType.IHPC OrElse type = GearboxType.IEPC) _
-                .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
-        End If
+       ' CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
+       '     .Cast(Of GearboxType)() _
+       '     .Where(Function(type) type.ManualTransmission() OrElse type.AutomaticTransmission() OrElse type = GearboxType.IHPC OrElse type = GearboxType.IEPC) _
+       '     .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+        
+        SetupTransmissionTypes()
         DeclInit()
 
         _changed = False
         NewGbx()
     End Sub
+
+    private sub SetupTransmissionTypes()
+        Select case VectoJobForm.JobType
+            Case VectoSimulationJobType.ConventionalVehicle 
+                CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
+                .Cast(Of GearboxType)() _
+                .Where(Function(type) Not type = GearboxType.APTN And (type.ManualTransmission() OrElse type = GearboxType.ATSerial OrElse type = GearboxType.ATPowerSplit)) _
+                .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
+            Case VectoSimulationJobType.IHPC
+                CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
+                    .Cast(Of GearboxType)() _
+                    .Where(Function(type)  type = GearboxType.IHPC ) _
+                    .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
+            Case VectoSimulationJobType.IEPC_E,VectoSimulationJobType.IEPC_S
+                CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
+                    .Cast(Of GearboxType)() _
+                    .Where(Function(type)  type = GearboxType.IEPC) _
+                    .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
+            Case VectoSimulationJobType.ParallelHybridVehicle
+                CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
+                    .Cast(Of GearboxType)() _
+                    .Where(Function(type) type = GearboxType.AMT OrElse (type.AutomaticTransmission() and not type = GearboxType.IHPC And Not type = GearboxType.APTN)) _
+                    .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
+            Case  VectoSimulationJobType.SerialHybridVehicle
+                CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
+                    .Cast(Of GearboxType)() _
+                    .Where(Function(type) type = GearboxType.AMT OrElse type.AutomaticTransmission() and not type = GearboxType.IHPC ) _
+                    .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
+            Case VectoSimulationJobType.BatteryElectricVehicle
+                CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
+                    .Cast(Of GearboxType)() _
+                    .Where(Function(type)  type = GearboxType.AMT OrElse type.AutomaticTransmission() and not type = GearboxType.IHPC  ) _
+                    .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
+            Case Else
+                 CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
+                     .Cast(Of GearboxType)() _
+                     .Where(Function(type) type.ManualTransmission() OrElse type.AutomaticTransmission() OrElse type = GearboxType.IHPC OrElse type = GearboxType.IEPC) _
+                     .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
+        End Select
+
+    End sub
 
     'Set generic values for Declaration mode.
     Private Sub DeclInit()
@@ -768,6 +811,7 @@ Public Class GearboxForm
 
         If LvGears.Items.Count <= 1 Then Exit Sub
 
+        dim lossmap As TransmissionLossMap = Nothing
         Try
             If LvGears.SelectedItems.Count > 0 AndAlso LvGears.SelectedIndices(0) > 0 Then
                 path = FileRepl(LvGears.SelectedItems(0).SubItems(GearboxTbl.ShiftPolygons).Text, GetPath(_gbxFile))
@@ -778,6 +822,11 @@ Public Class GearboxForm
             End If
 
             If File.Exists(path) Then shiftPolygon = ShiftPolygonReader.ReadFromFile(path)
+            
+            if LvGears.SelectedItems.Count > 0 AndAlso LvGears.SelectedIndices(0) > 0 Then
+                lossmap = TransmissionLossMapReader.ReadFromFile(FileRepl(LvGears.SelectedItems(0).SubItems(GearboxTbl.LossMapEfficiency).Text, GetPath(_gbxFile)), 
+                                                                          LvGears.SelectedItems(0).SubItems(GearboxTbl.Ratio).Text.ToDouble(),"gear plot")
+            End If
 
         Catch ex As Exception
 
@@ -788,6 +837,16 @@ Public Class GearboxForm
         chart.Height = PicBox.Height
 
         a = New ChartArea
+
+        if Not lossmap Is Nothing Then
+            s = new Series()
+            s.Points.DataBindXY(lossmap._entries.Select(Function(x) x.InputSpeed.AsRPM).ToArray(),
+                                lossmap._entries.Select(function(y) y.InputTorque.Value()).ToArray())
+            s.ChartType = SeriesChartType.FastPoint
+            s.Color = color.ForestGreen
+            s.Name = "LossMap Entries"
+            chart.Series.Add(s)
+        End If
 
         'Shiftpolygons from file
 

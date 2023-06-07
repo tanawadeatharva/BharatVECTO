@@ -286,6 +286,21 @@ namespace TUGraz.VectoCommon.Utils
 		}
 
 		/// <summary>
+		/// [m]
+		/// </summary>
+		public UnitInstance Ohm {
+			get {
+				var reciprocAndExponent = _reciproc * _exponent;
+				_units[0] += 1 * reciprocAndExponent;
+				_units[1] += 2 * reciprocAndExponent;
+				_units[2] -= 3 * reciprocAndExponent;
+				_units[3] -= 2 * reciprocAndExponent;
+
+				return this;
+			}
+		}
+
+		/// <summary>
 		/// Defines the denominator by the terms following after the Per.
 		/// </summary>
 		public UnitInstance Per
@@ -396,6 +411,16 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			get
 			{
+				var reciprocAndExponent = _reciproc * _exponent;
+				_units[1] += 3 * reciprocAndExponent;
+				Factor /= Math.Pow(1000, reciprocAndExponent);
+
+				return this;
+			}
+		}
+
+		public UnitInstance NormLiter {
+			get {
 				var reciprocAndExponent = _reciproc * _exponent;
 				_units[1] += 3 * reciprocAndExponent;
 				Factor /= Math.Pow(1000, reciprocAndExponent);

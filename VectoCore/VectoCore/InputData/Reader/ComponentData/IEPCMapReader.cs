@@ -1,25 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 	public class IEPCMapReader
 	{
-		public static EfficiencyMap Create(Stream data, int count, double ratio)
+		public static EfficiencyMap Create(Stream data, int count, double ratio,
+			ElectricMotorFullLoadCurve fullLoadCurve)
 		{
-			return Create(VectoCSVFile.ReadStream(data), count, ratio);
+			return Create(VectoCSVFile.ReadStream(data), count, ratio, fullLoadCurve);
 		}
 
-		public static EfficiencyMap Create(DataTable data, int count, double ratio)
+		public static EfficiencyMap Create(DataTable data, int count, double ratio,
+			ElectricMotorFullLoadCurve fullLoadCurve)
 		{
+			if (fullLoadCurve == null) {
+				throw new ArgumentNullException("Provide fullloadcurve for extrapolation");
+			}
 			var headerValid = HeaderIsValid(data.Columns);
 			if (!headerValid) {
 				LoggingObject.Logger<IEPCMapReader>().Warn(
@@ -33,7 +43,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				data.Columns[2].ColumnName = Fields.PowerElectrical;
 			}
 
-			var entries = (from DataRow row in data.Rows select CreateEntry(row, ratio)).ToList();
+			var entries = GetEntries(data, ratio);
+			entries = ExtendEfficiencyMap(entries, fullLoadCurve);
 			var entriesZero = GetEntriesAtZeroRpm(entries);
 
 			var delaunayMap = new DelaunayMap("ElectricMotorEfficiencyMap Mechanical to Electric");
@@ -64,7 +75,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			return retVal;
 		}
 
-		private static List<EfficiencyMap.Entry> GetEntriesAtZeroRpm(List<EfficiencyMap.Entry> entries)
+		private static List<EfficiencyMap.Entry> GetEntriesAtZeroRpm(IList<EfficiencyMap.Entry> entries)
 		{
 			// find entries at first grid point above 0. em-speed might vary slightly,
 			// so apply clustering, and use distance between first clusters to select all entries at lowest speed grid point
@@ -125,14 +136,144 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			return entriesZero;
 		}
 
+		private static IList<EfficiencyMap.Entry> ExtendEfficiencyMap(
+			IList<EfficiencyMap.Entry> entries, ElectricMotorFullLoadCurve fullLoadCurve)
+		{
+			var clusterer = new MeanShiftClustering();
+			var clusterTolerance = 50.RPMtoRad().Value();
+			var extrapolationfactor = Constants.PowerMapSettings.EfficiencyMapExtrapolationFactor;
+
+			//ignore entries where speed is 0, added manually to speed bucket (clustering doesn't work because the distance is too small)
+			var cluster = clusterer.FindClusters(entries.Where(x => x.MotorSpeed.IsGreater(0)).Select(x => x.MotorSpeed.Value()).ToArray(), clusterTolerance);
+			var minDistance = cluster.Pairwise((x, y) => Math.Abs(y - x)).Min();
+
+			var speedBuckets = new Dictionary<PerSecond, List<EfficiencyMap.Entry>>(cluster.Length + 1);
+			
+			foreach (var c in cluster)
+			{
+				speedBuckets.Add(c.SI<PerSecond>(), new List<EfficiencyMap.Entry>());
+			}
+			foreach (var entry in entries.Where(x => x.MotorSpeed.IsGreater(0)))
+			{
+				foreach (var speed in speedBuckets.Keys.ToDouble())
+				{
+					if (Math.Abs(speed - entry.MotorSpeed.Value()) < minDistance / 2.0) {
+						speedBuckets[speed.SI<PerSecond>()].Add(entry);
+					}
+				}
+			}
+
+			//Add zero rpm entries
+			speedBuckets.Add(0.SI<PerSecond>(), new List<EfficiencyMap.Entry>());
+			foreach (var entry in entries.Where(x => x.MotorSpeed.IsEqual(0))) {
+				speedBuckets[0.SI<PerSecond>()].Add(entry);
+			}
+
+
+			//Don't extrapolate speedbuckets which have a left AND right neighbour with significantly higher torque values
+			//
+
+			var ignoredSpeedBucketsRecuperation = new HashSet<PerSecond>();
+			var ignoredSpeedBucketsDrive = new HashSet<PerSecond>();
+			var ignoreThreshold = 0.8;
+			var orderedBuckets = speedBuckets.OrderBy(x => x.Key).ToList();
+			for (var i = 1; i < speedBuckets.Count - 1; i++) {
+				var current = orderedBuckets[i];
+				var prev = orderedBuckets[i - 1];
+				var next = orderedBuckets[i + 1];
+
+				//Drive
+				if (current.Value.MinBy(x => x.Torque).Torque / prev.Value.MinBy(x => x.Torque).Torque < ignoreThreshold
+					&& 
+					current.Value.MinBy(x => x.Torque).Torque / next.Value.MinBy(x => x.Torque).Torque < ignoreThreshold) {
+					ignoredSpeedBucketsDrive.Add(current.Key);
+				}
+
+                //Recuperation
+				if (current.Value.MaxBy(x => x.Torque).Torque / prev.Value.MaxBy(x => x.Torque).Torque < ignoreThreshold
+					&&
+					current.Value.MaxBy(x => x.Torque).Torque / next.Value.MaxBy(x => x.Torque).Torque < ignoreThreshold)
+				{
+					ignoredSpeedBucketsRecuperation.Add(current.Key);
+				}
+            }
+
+
+
+			var maxTargetTorque = fullLoadCurve.MaxGenerationTorque * extrapolationfactor;
+			var minTargetTorque = fullLoadCurve.MaxDriveTorque * extrapolationfactor;
+			var ratedSpeed = ElectricMotorRatedSpeedHelper.GetRatedSpeed(fullLoadCurve.FullLoadEntries,
+				e => e.MotorSpeed, e => e.FullDriveTorque);
+			PerSecond prevSpeed = null;
+			foreach (var speedBucket in orderedBuckets)
+			{
+				
+
+				var maxRecuperationEntry = speedBucket.Value.MaxBy(x => x.Torque);
+				var maxDriveEntry = speedBucket.Value.MinBy(x => x.Torque); //drive torque < 0
+				var recuperationFactor = maxTargetTorque / maxRecuperationEntry.Torque;
+				var driveFactor = minTargetTorque / maxDriveEntry.Torque;
+
+				//Recuperation
+				if (!recuperationFactor.IsSmallerOrEqual(1) && !ignoredSpeedBucketsRecuperation.Contains(speedBucket.Key)) {
+					var nrExtrapolationPointsRecuperation = (uint)Math.Ceiling(speedBucket.Value.Count(x => x.Torque.IsGreater(0)) * (recuperationFactor - 1));
+					for (var i = 1; i <= nrExtrapolationPointsRecuperation; i++)
+					{
+						var factor = CalculateExtrapolationFactor(recuperationFactor, i, nrExtrapolationPointsRecuperation);
+
+						entries.Add(new EfficiencyMap.Entry(speedBucket.Key, maxRecuperationEntry.Torque * factor, maxRecuperationEntry.PowerElectrical * factor));
+					}
+				}
+
+				//Drive
+				if (!driveFactor.IsSmallerOrEqual(1) && !ignoredSpeedBucketsDrive.Contains(speedBucket.Key)) {
+
+					var nrExtrapolationPointsDrive = (uint)Math.Ceiling(speedBucket.Value.Count(x => x.Torque.IsSmaller(0)) * (driveFactor - 1));
+
+					for (var i = 1; i <= nrExtrapolationPointsDrive; i++)
+					{
+						var factor = CalculateExtrapolationFactor(driveFactor, i, nrExtrapolationPointsDrive);
+
+						entries.Add(new EfficiencyMap.Entry(speedBucket.Key, maxDriveEntry.Torque * factor, maxDriveEntry.PowerElectrical * factor));
+					}
+				}
+
+
+				if (prevSpeed != null && prevSpeed.IsGreaterOrEqual(ratedSpeed))
+				{
+					//update target values for next speed entry, 1 entry after rated speed should still be extrapolated to maxtorque * 1.2
+					maxTargetTorque = fullLoadCurve.FullGenerationTorque(speedBucket.Key) * extrapolationfactor;
+					minTargetTorque = fullLoadCurve.FullLoadDriveTorque(speedBucket.Key) * extrapolationfactor;
+				}
+				prevSpeed = speedBucket.Key;
+			}
+
+			return entries;
+		}
+
+		private static Scalar CalculateExtrapolationFactor(Scalar targetFactor, int currentStep,
+			uint nrOfSteps)
+		{
+			if (currentStep < 1) {
+				throw new ArgumentException($"{nameof(currentStep)} must be >= 1");
+			}
+			var factor = 1 + ((targetFactor - 1)) * (currentStep / (double)nrOfSteps);
+			return factor;
+		}
+
+
 		private static EfficiencyMap.Entry CreateEntry(DataRow row, double ratio)
 		{
 			return new EfficiencyMap.Entry(
 				speed: row.ParseDouble(Fields.MotorSpeed).RPMtoRad() * ratio,
 				torque: row.ParseDouble(Fields.Torque).SI<NewtonMeter>() / ratio,
-				powerElectrical: row.ParseDouble(Fields.PowerElectrical).SI(Unit.SI.Kilo.Watt).Cast<Watt>());
+				powerElectrical: row.ParseDouble(Fields.PowerElectrical).SI<Watt>());
 		}
 
+		internal static IList<EfficiencyMap.Entry> GetEntries(DataTable data, double ratio)
+		{
+			return (from DataRow row in data.Rows select CreateEntry(row, ratio)).ToList();
+		}
 
 		private static bool HeaderIsValid(DataColumnCollection columns)
 		{
@@ -142,8 +283,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 		public static class Fields
 		{
-			public const string MotorSpeed = "n_out";
-			public const string Torque = "T_out";
+			public const string MotorSpeed = "n";// = "n_out";
+			public const string Torque = "T";// "_out";
 			public const string PowerElectrical = "P_el";
 		}
 

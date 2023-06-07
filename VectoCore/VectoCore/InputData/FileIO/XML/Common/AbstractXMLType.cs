@@ -29,8 +29,10 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Xml;
+using System.Xml.Schema;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -41,9 +43,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Common {
 	public abstract class AbstractXMLType : LoggingObject
 	{
 		protected readonly XmlNode BaseNode;
-
+		protected readonly string SchemaType;
+		protected readonly XmlQualifiedName QualifiedName;
 		protected AbstractXMLType(XmlNode node)
 		{
+			var schemaType = XMLHelper.GetSchemaType(node);
+
+			SchemaType = schemaType?.Name;
+
+
+			QualifiedName = schemaType?.QualifiedName;
 			BaseNode = node;
 		}
 
@@ -136,12 +145,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Common {
 
 		protected virtual TableData ReadTableData(string baseElement, string entryElement, Dictionary<string, string> mapping)
 		{
-			var entries = BaseNode.SelectNodes(
-				XMLHelper.QueryLocalName(baseElement, entryElement));
-			if (entries != null && entries.Count > 0) {
-				return XMLHelper.ReadTableData(mapping, entries);
+			try {
+				var entries = BaseNode.SelectNodes(XMLHelper.QueryLocalName(baseElement, entryElement));
+				if (entries != null && entries.Count > 0) {
+					return XMLHelper.ReadTableData(mapping, entries);
+				}
+			} catch (NullReferenceException) {
+				throw new VectoException($"Could not find element: {baseElement} {entryElement}");
 			}
-
 			return null;
 		}
 	}

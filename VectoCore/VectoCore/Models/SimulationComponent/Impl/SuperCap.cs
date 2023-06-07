@@ -8,12 +8,12 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class SuperCap : StatefulVectoSimulationComponent<SuperCap.State>, IElectricEnergyStorage, IElectricEnergyStoragePort
+	public class SuperCap : StatefulVectoSimulationComponent<SuperCap.State>, IElectricEnergyStorage, IElectricEnergyStoragePort, IUpdateable
 	{
 		private SuperCapData ModelData;
 
@@ -56,7 +56,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public double MinSoC => ModelData.MinVoltage / ModelData.MaxVoltage;
 
 		public double MaxSoC => 1;
+
+		/// <summary>
+		/// [Warning("Not implemented in super cap, returns null")]
+		/// </summary>
 		public AmpereSecond Capacity => null;
+		/// <summary>
+		/// [Warning("Not implemented in super cap, returns null")]
+		/// </summary>
 		public Volt NominalVoltage => null;
 
 		public void Initialize(double initialSoC)
@@ -199,6 +206,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Watt MaxChargePower;
 			public Watt MaxDischargePower;
 			public Watt InternalLoss;
+
+			public State Clone() => (State)MemberwiseClone();
 		}
+
+		#region Implementation of IUpdateable
+
+		protected override bool DoUpdateFrom(object other) {
+			if (other is SuperCap o) {
+				PreviousState = o.PreviousState.Clone();
+				return true;
+			}
+
+			return false;
+		}
+
+		#endregion
 	}
 }

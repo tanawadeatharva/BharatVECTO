@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -66,6 +66,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _completed, value);
 		}
 
+		private bool _runSimulation;
+
+		public bool RunSimulation
+		{
+			get => _runSimulation;
+			set => SetProperty(ref _runSimulation, value);
+		}
+
 		#region Labeling
 
 		private  string _vifType;
@@ -96,7 +104,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_additionalJobInfo = additionalJobInfo;
 			SetupBackingStorage();
 			additionalJobInfo.SetParent(this);
-
+			
 
 			UpdateTitleAndDocumentName();
 			(this as INotifyPropertyChanged).PropertyChanged += CreateVifViewModel_PropertyChanged;
@@ -106,7 +114,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			_backingStorage = new BackingStorage<CreateVifViewModel>(this,
 				nameof(this.PrimaryInputPath),
-				nameof(this.StageInputPath));
+				nameof(this.StageInputPath), nameof(RunSimulation));
 			_backingStorage.PropertyChanged += (object s, PropertyChangedEventArgs e) => {
 				OnPropertyChanged(nameof(UnsavedChanges));
 			};
@@ -141,12 +149,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			IAdditionalJobInfoViewModel additionalJobInfo) : this(dialogHelper, inputDataReader, additionalJobInfo)
 		{
 			_completed = completed;
-		}
+			_runSimulation = completed;
+			UpdateTitleAndDocumentName();
+        }
 
 
 		private void SetInputData(IInputDataProvider inputData)
 		{
-			var inputDataProvider = inputData as JSONInputDataV10_PrimaryAndStageInputBus;
+			var inputDataProvider = inputData as IMultistagePrimaryAndStageInputDataProvider;
 			Debug.Assert(inputDataProvider != null);
 
 			try {
@@ -163,7 +173,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 			
 
-			Completed = inputDataProvider.Completed ?? false;
+			Completed = inputDataProvider?.Completed ?? false;
+			RunSimulation = inputDataProvider?.SimulateResultingVIF ?? false;
 
 			DataSource = inputData.DataSource;
 			UpdateTitleAndDocumentName();
@@ -281,28 +292,35 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			if (path == null) {
 				return null;
 			}
-			
-			
-			var jsonJob = new JSONJob() {
-				Header = new JSONJobHeader() {
-					AppVersion = "Vecto3GUI2020",
-					CreatedBy = Environment.UserName,
-					Date = DateTime.Today,
-					FileVersion = JSONJobHeader.PrimaryAndInterimVersion
-				},
-				Body = new JSONJobBody() {
-					PrimaryVehicle = PathHelper.GetRelativePath(path, PrimaryInputPath),
-					InterimStep = PathHelper.GetRelativePath(path, StageInputPath)
-				}
-			};
 
-			string jsonString = JsonConvert.SerializeObject(jsonJob, Formatting.Indented);
+			try {
 
-			
-			Debug.WriteLine(jsonString);
-			File.WriteAllText(path, jsonString);
-			SetInputData(JSONInputDataFactory.ReadJsonJob(path));
-			_backingStorage.SaveChanges();
+				var jsonJob = new JSONJob() {
+					Header = new JSONJobHeader() {
+						AppVersion = "Vecto3GUI2020",
+						CreatedBy = Environment.UserName,
+						Date = DateTime.Today,
+						FileVersion = JSONJobHeader.PrimaryAndInterimVersion
+					},
+					Body = new JSONJobBody() {
+						PrimaryVehicle = PathHelper.GetRelativePath(path, PrimaryInputPath),
+						InterimStep = PathHelper.GetRelativePath(path, StageInputPath),
+						Completed = Completed,
+						RunSimulation = RunSimulation,
+					}
+				};
+
+				string jsonString = JsonConvert.SerializeObject(jsonJob, Formatting.Indented);
+
+
+				Debug.WriteLine(jsonString);
+				File.WriteAllText(path, jsonString);
+				SetInputData(JSONInputDataFactory.ReadJsonJob(path));
+				_backingStorage.SaveChanges();
+			} catch (Exception ex) {
+				_dialogHelper.ShowErrorMessage(ex.Message);
+			}
+
 			return path;
 		}
 
@@ -331,7 +349,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			{
 				var inputData = _inputDataReader.Create(fileName) as IDeclarationInputDataProvider;
 				vehicleInputData = inputData.JobInputData.Vehicle;
-				valid = (inputData != null) && (vehicleInputData is XMLDeclarationConventionalCompletedBusDataProviderV24) || (vehicleInputData is XMLDeclarationExemptedCompletedBusDataProviderV24);
+				valid = (inputData != null) && (vehicleInputData is AbstractXMLDeclarationCompletedBusDataProviderV24) || (vehicleInputData is XMLDeclarationExemptedCompletedBusDataProviderV24);
 			}
 			catch (Exception e)
 			{
@@ -368,7 +386,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			try
 			{
 				inputData = _inputDataReader.Create(fileName) as IDeclarationInputDataProvider;
-				valid = inputData != null && inputData.JobInputData.Vehicle.VehicleCategory.IsBus();
+
+				valid = inputData != null && inputData.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle;
 			}
 			catch (Exception ex)
 			{

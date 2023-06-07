@@ -29,6 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.Models
@@ -170,7 +172,27 @@ namespace TUGraz.VectoCommon.Models
 
 		public static string GetClassNumber(this VehicleClass hdvClass)
 		{
-			return hdvClass == VehicleClass.Unknown ? "-" : hdvClass.ToString().Substring(Prefix.Length);
+			return hdvClass == VehicleClass.Unknown ? "-" : hdvClass.ToString().Substring(Prefix.Length).Replace('_', '/');
+		}
+
+		public static string GetClassNumberWithoutSubSuffix(this VehicleClass hdvClass)
+		{
+			if (hdvClass == VehicleClass.Unknown) {
+				return "-";
+			}
+
+			if (hdvClass.IsPrimaryBus()) {
+				return hdvClass.GetClassNumber();
+			}
+			if (hdvClass.IsCompletedBus()) {
+				return hdvClass.GetClassNumber().Substring(0, 2);
+			}
+			return hdvClass.GetClassNumber();
+		}
+
+		public static string ToXML(this VehicleClass hdvClass)
+		{
+			return hdvClass.GetClassNumber();
 		}
 
 		public static bool IsMediumLorry(this VehicleClass vehicleClass)
@@ -298,6 +320,34 @@ namespace TUGraz.VectoCommon.Models
 					case VehicleClass.Class40e:
 				case VehicleClass.Class40f: return true;
 				default: return false;
+			}
+		}
+
+		public static bool IsHeavyLorry(this VehicleClass vehicleClass)
+		{
+			switch (vehicleClass) {
+					case VehicleClass.Class1s:
+					case VehicleClass.Class0:
+					case VehicleClass.Class1:
+					case VehicleClass.Class2:
+					case VehicleClass.Class3:
+					case VehicleClass.Class4:
+					case VehicleClass.Class5:
+					case VehicleClass.Class6:
+					case VehicleClass.Class7:
+					case VehicleClass.Class8:
+					case VehicleClass.Class9:
+					case VehicleClass.Class10:
+					case VehicleClass.Class11:
+					case VehicleClass.Class12:
+					case VehicleClass.Class13:
+					case VehicleClass.Class14:
+					case VehicleClass.Class15:
+					case VehicleClass.Class16:
+					case VehicleClass.Class17:
+						return true;
+					default:
+						return false;
 			}
 		}
 	}

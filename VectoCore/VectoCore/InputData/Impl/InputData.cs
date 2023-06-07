@@ -233,8 +233,6 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public string Technology { get; }
 
-		public WattSecond ElectricStorageCapacity => Capacity * Voltage;
-
 		#endregion
 	}
 
@@ -254,7 +252,6 @@ namespace TUGraz.VectoCore.InputData.Impl
 		#region Implementation of IBusAuxElectricStorageDeclarationInputData
 
 		public string Technology { get; }
-		public WattSecond ElectricStorageCapacity => Capacity * Voltage * Voltage / 2.0;
 
 		#endregion
 	}
@@ -268,7 +265,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public IList<IResult> Results { get; internal set; }
 	}
 	
-	[DebuggerDisplay("{ResultStatus} | {VehicleGroup} {Mission}")]
+	[DebuggerDisplay("{ResultStatus} | {VehicleGroup} {Mission} {OvcMode}")]
 	public class Result : IResult
 	{
 		public string ResultStatus { get; internal set; }
@@ -276,7 +273,9 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public MissionType Mission { get; internal set; }
 		public ISimulationParameter SimulationParameter { get; internal set; }
 		public Dictionary<FuelType, JoulePerMeter> EnergyConsumption { get; set; }
+		public JoulePerMeter ElectricEnergyConsumption { get; set; }
 		public Dictionary<string, double> CO2 { get; set; }
+		public OvcHevMode OvcMode { get; set; }
 	}
 
 	public class SimulationParameter : ISimulationParameter
@@ -284,7 +283,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public Kilogram TotalVehicleMass { get; internal set; }
 		public Kilogram Payload { get; internal set; }
 		public double PassengerCount { get; internal set; }
-		public string FuelMode { get; internal set; }
+		//public string FuelMode { get; internal set; }
 	}
 
 	public class ApplicationInformation : IApplicationInformation

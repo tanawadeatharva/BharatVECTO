@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Factory;
+using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Utils;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
@@ -131,7 +132,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 				throw new VectoException("empty xml document!");
 			}
 
-			var documentType = XMLHelper.GetDocumentType(xmlDoc.DocumentElement.LocalName);
+			var documentType = XMLHelper.GetDocumentTypeFromRootElement(xmlDoc.DocumentElement.LocalName);
 			if (documentType == null) {
 				throw new VectoException("unknown xml file! {0}", xmlDoc.DocumentElement.LocalName);
 			}
@@ -155,7 +156,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 			}
 		}
 
-		private IMultistageBusInputDataProvider ReadMultistageDeclarationJob(XmlDocument xmlDoc, string source)
+		protected virtual IMultistepBusInputDataProvider ReadMultistageDeclarationJob(XmlDocument xmlDoc, string source)
 		{
 			var versionNumber = XMLHelper.GetXsdType(xmlDoc.DocumentElement?.SchemaInfo.SchemaType);
 			try {
@@ -167,7 +168,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 			}
 		}
 
-		private IEngineeringInputDataProvider ReadEngineeringJob(XmlDocument xmlDoc, string source)
+		protected virtual IEngineeringInputDataProvider ReadEngineeringJob(XmlDocument xmlDoc, string source)
 		{
 			var versionNumber = XMLHelper.GetXsdType(xmlDoc.DocumentElement?.SchemaInfo.SchemaType);
 
@@ -176,7 +177,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 			return input;
 		}
 
-		private IDeclarationInputDataProvider ReadDeclarationJob(XmlDocument xmlDoc, string source)
+		protected virtual IDeclarationInputDataProvider ReadDeclarationJob(XmlDocument xmlDoc, string source)
 		{
 			var versionNumber = XMLHelper.GetXsdType(xmlDoc.DocumentElement?.SchemaInfo.SchemaType);
 			try {
@@ -201,6 +202,103 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 			}
 		}
 
+
+	}
+
+	public class XMLComponentInputDataFactory : IXMLComponentInputReader
+	{
+		private readonly IDeclarationInjectFactory _declarationFactory;
+
+		public XMLComponentInputDataFactory(IDeclarationInjectFactory declFactory)
+		{
+			_declarationFactory = declFactory;
+		}
+		#region Implementation of IXMLComponentInputReader
+
+		public IAirdragDeclarationInputData CreateAirdrag(string filename)
+		{
+			return CreateFromFile<IAirdragDeclarationInputData>(filename);
+		}
+
+		private TOut CreateFromFile<TOut>(string filename) where TOut : class
+		{
+			using (var reader = XmlReader.Create(filename)) {
+				return CreateFromXmlReader<TOut>(reader, filename);
+			}
+		}
+
+		private TOut CreateFromStream<TOut>(Stream inputData) where TOut : class
+		{
+			using (var reader = XmlReader.Create(inputData)) {
+				return CreateFromXmlReader<TOut>(reader, null);
+			}
+		}
+
+		private TOut CreateFromXmlReader<TOut>(XmlReader reader, string filename) where TOut : class
+		{
+			var result = ReadXMLDoc(reader, filename);
+			var typedResult = result as TOut;
+			if (typedResult is null)
+			{
+				throw new VectoException("Error creating XMLComponentInput {0}", filename);
+			}
+
+			return typedResult;
+        }
+
+		public IAirdragDeclarationInputData CreateAirdrag(Stream inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		public IAirdragDeclarationInputData CreateAirdrag(XmlReader inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+
+		private IComponentInputData ReadXMLDoc(XmlReader inputData, string fileName)
+		{
+			var xmlDoc = new XmlDocument();
+			xmlDoc.Load(inputData);
+			if (xmlDoc.DocumentElement == null)
+			{
+				throw new VectoException("empty xml document!");
+			}
+
+			var documentType = XmlDocumentType.DeclarationComponentData; //<- TODO HM 27.03.23: remove hardcoding
+
+			//Cannot handle Declaration Component
+			//var documentType = XMLHelper.GetDocumentTypeFromRootElement(xmlDoc.DocumentElement.LocalName);
+			//if (documentType == null)
+			//{
+			//	throw new VectoException("unknown xml file! {0}", xmlDoc.DocumentElement.LocalName);
+			//}
+
+
+
+			bool valid = new XMLValidator(xmlDoc, null, XMLValidator.CallBackExceptionOnError).ValidateXML(documentType);
+			var xNode = xmlDoc.DocumentElement?.FirstChild;
+			//Document -> Component -> ComponentData
+			var versionNumber = XMLHelper.GetXsdType(xNode?.FirstChild?.SchemaInfo.SchemaType);
+			try
+			{
+				var input = _declarationFactory.CreateComponentData(versionNumber, xNode, fileName);
+				//input.Reader = _declarationFactory.CreateInputReader(versionNumber, input, xmlDoc.FirstChild);
+				return input;
+			}
+			catch (Exception e)
+			{
+				throw new VectoException("Failed to read Declaration job version {0}", e, versionNumber);
+			}
+
+
+
+
+
+            return null;
+		}
 
 	}
 }

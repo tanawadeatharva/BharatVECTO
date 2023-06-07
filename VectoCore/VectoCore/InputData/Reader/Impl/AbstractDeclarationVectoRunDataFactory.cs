@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
+using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -22,45 +24,43 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		protected readonly IDeclarationInputDataProvider InputDataProvider;
 
 		protected IDeclarationReport Report;
-		protected abstract IDeclarationDataAdapter DataAdapter { get; }
-
+		
 		protected Segment _segment;
 
-		protected bool _allowVocational;
+        protected bool _allowVocational;
 
-		protected DriverData _driverdata;
-		protected AirdragData _airdragData;
-		protected AxleGearData _axlegearData;
-		protected AngledriveData _angledriveData;
-		protected GearboxData _gearboxData;
-		protected RetarderData _retarderData;
-		protected PTOData _ptoTransmissionData;
-		protected PTOData _municipalPtoTransmissionData;
-		//protected Exception InitException;
-		protected ShiftStrategyParameters _gearshiftData;
+        private DriverData _driverdata;
 
-		protected AbstractDeclarationVectoRunDataFactory(
-			IDeclarationInputDataProvider dataProvider, IDeclarationReport report)
+		
+		protected IDeclarationCycleFactory CycleFactory { get; }
+
+		protected virtual IVehicleDeclarationInputData Vehicle => InputDataProvider.JobInputData.Vehicle;
+
+        protected AbstractDeclarationVectoRunDataFactory(IDeclarationInputDataProvider dataProvider,
+			IDeclarationReport report, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter,
+			bool checkJobType = true)
 		{
+			CycleFactory = cycleFactory;
 			InputDataProvider = dataProvider;
-			
-			if (dataProvider.JobInputData.JobType.IsOneOf(BatteryElectricVehicle, ParallelHybridVehicle, SerialHybridVehicle)){
-				throw new VectoSimulationException("Electric and Hybrid Vehicles are not supported in Declaration Mode. Aborting Simulation.");
+			MissionFilter = missionFilter;
+			if (checkJobType) {
+				if (dataProvider.JobInputData.JobType.IsOneOf(BatteryElectricVehicle, ParallelHybridVehicle, SerialHybridVehicle))
+				{
+					throw new VectoSimulationException("Electric and Hybrid Vehicles are not supported in Declaration Mode. Aborting Simulation.");
+				}
 			}
-			Report = report;
+           
+            Report = report;
 
 			_allowVocational = true;
-			//try {
-			//	Initialize();
-			//	if (Report != null) {
-			//		InitializeReport();
-			//	}
-			//} catch (Exception e) {
-			//	InitException = e;
-			//}
 		}
 
-		public IEnumerable<VectoRunData> NextRun()
+		protected IMissionFilter MissionFilter { get; }
+
+		protected DriverData DriverData => _driverdata ??(_driverdata= CreateDriverData(_segment));
+		protected abstract DriverData CreateDriverData(Segment segment);
+
+		public virtual IEnumerable<VectoRunData> NextRun()
 		{
 		
 			Initialize();
@@ -73,80 +73,47 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		protected abstract IEnumerable<VectoRunData> GetNextRun();
 
-		protected virtual void Initialize()
-		{
-			var vehicle = InputDataProvider.JobInputData.Vehicle;
-			if (vehicle.ExemptedVehicle) {
-				return;
-			}
+		protected abstract void Initialize();
 
-			_segment = GetSegment(vehicle);
-			_driverdata = DataAdapter.CreateDriverData();
-			_driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segment.AccelerationFile);
-			var tempVehicle = DataAdapter.CreateVehicleData(vehicle, _segment, _segment.Missions.First(),
-													_segment.Missions.First().Loadings.First(), _allowVocational);
-			_airdragData = DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData,
-												_segment.Missions.First(), _segment);
-			if (InputDataProvider.JobInputData.Vehicle.AxleConfiguration.AxlegearIncludedInGearbox()) {
-				_axlegearData = DataAdapter.CreateDummyAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.GearboxInputData);
-			} else { 
-				_axlegearData = DataAdapter.CreateAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData);
-			} 
-			_angledriveData = DataAdapter.CreateAngledriveData(InputDataProvider.JobInputData.Vehicle.Components.AngledriveInputData);
-			var tmpRunData = new VectoRunData() {
-				GearboxData =  new GearboxData() {
-					Type = vehicle.Components.GearboxInputData.Type,
-				}
-			};
-			var tmpStrategy = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData));
-			var tmpEngine = DataAdapter.CreateEngineData(
-				vehicle, vehicle.Components.EngineInputData.EngineModes[0], _segment.Missions.First());
-			_gearboxData = DataAdapter.CreateGearboxData(
-				vehicle, new VectoRunData() { EngineData = tmpEngine, AxleGearData = _axlegearData, VehicleData = tempVehicle },
-				tmpStrategy);
-				
-			_retarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData);
+		protected abstract VectoRunData CreateVectoRunData(Mission mission,
+			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
+			int? modeIdx = null,
+			OvcHevMode ovcMode = OvcHevMode.NotApplicable);
 
-			_ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
-
-			_municipalPtoTransmissionData = CreateDefaultPTOData();
-			_gearshiftData = DataAdapter.CreateGearshiftData(
-				_gearboxData, _axlegearData.AxleGear.Ratio * (_angledriveData?.Angledrive.Ratio ?? 1.0), tmpEngine.IdleSpeed);
-
-		}
-
-		protected abstract Segment GetSegment(IVehicleDeclarationInputData vehicle);
-
-		protected abstract VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading);
 
 		protected virtual void InitializeReport()
 		{
-			VectoRunData powertrainConfig;
-			List<List<FuelData.Entry>> fuels;
-			var vehicle = InputDataProvider.JobInputData.Vehicle;
-			if (vehicle.ExemptedVehicle) {
-				powertrainConfig = CreateVectoRunData(vehicle, 0, null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>());
-				fuels = new List<List<FuelData.Entry>>();
-			} else {
-				powertrainConfig = _segment.Missions.Select(
-												mission => CreateVectoRunData(
-													vehicle, 0, mission, mission.Loadings.First()))
-											.FirstOrDefault(x => x != null);
-				fuels = vehicle.Components.EngineInputData.EngineModes.Select(x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, vehicle.TankSystem)).ToList())
-								.ToList();
-			}
-			Report.InitializeReport(powertrainConfig, fuels);
+			var powertrainConfig = GetPowertrainConfigForReportInit();
+			Report.InitializeReport(powertrainConfig);
 		}
 
-		protected virtual PTOData CreateDefaultPTOData()
+		protected abstract VectoRunData GetPowertrainConfigForReportInit();
+
+		/// <summary>
+		/// Super caps are not allowed for ovc hevs or pevs
+		/// </summary>
+		protected void CheckSuperCap(IVehicleDeclarationInputData vehicle)
 		{
-			return new PTOData() {
-				TransmissionType = DeclarationData.PTO.DefaultPTOTechnology,
-				LossMap = PTOIdleLossMapReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.PTO.DefaultPTOIdleLosses)),
-				PTOCycle =
-					DrivingCycleDataReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.PTO.DefaultPTOActivationCycle),
-														CycleType.PTO, "PTO", false)
-			};
+			if (vehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle || vehicle.OvcHev) {
+				if (vehicle.Components.ElectricStorage.ElectricStorageElements.Any(e =>
+						e.REESSPack.StorageType == REESSType.SuperCap)) {
+					throw new VectoException("Super caps are not allowed for OVC-HEVs or PEVs");
+				}
+			}
+
+			if (vehicle.Components.ElectricStorage?.ElectricStorageElements == null) {
+				return;
+			}
+
+			var hasSuperCap = vehicle.Components.ElectricStorage.ElectricStorageElements.Any(e =>
+				e.REESSPack.StorageType == REESSType.SuperCap);
+			var hasBattery = vehicle.Components.ElectricStorage.ElectricStorageElements.Any(e =>
+				e.REESSPack.StorageType == REESSType.Battery);
+
+			if (hasSuperCap && hasBattery) {
+				//Already handled by XML Schema
+				throw new VectoException("Super caps AND batteries are not supported");
+			}
 		}
-	}
+    }
 }

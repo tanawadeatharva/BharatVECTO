@@ -49,6 +49,23 @@ namespace TUGraz.VectoCore.Models.Declaration
 		FullLoading,
 	}
 
+	public interface IMissionFilter
+	{
+		bool Run(MissionType missionType, LoadingType loadingType);
+	}
+
+	public class DefaultMissionFilter : IMissionFilter
+	{
+		#region Implementation of IMissionFilter
+
+		public bool Run(MissionType missionType, LoadingType loadingType)
+		{
+			return true;
+		}
+
+		#endregion
+	}
+
 	public class Mission
 	{
 		public Kilogram CurbMass { get; internal set; }
@@ -57,9 +74,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public double[] AxleWeightDistribution { get; internal set; }
 
 		public Kilogram BodyCurbWeight { get; internal set; }
-
-		[JsonIgnore]
-		public Stream CycleFile { get; internal set; }
 
 		public IList<MissionTrailer> Trailer { get; internal set; }
 
@@ -98,6 +112,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 		
 		public BusParameters BusParameter { get; internal set; }
+		public Kilogram GenericMassICE { get; internal set; }
 	}
 
 	public class BusParameters
@@ -117,21 +132,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public bool? LowEntry { get; internal set; }
 
-		// #### HVAC Model Parameters
+		public HVACParameters HVACConventional { get; internal set; }
 
-		public BusHVACSystemConfiguration? HVACConfiguration { get; internal set; }
+		public HVACParameters HVACHEV { get; internal set; }
 
-		public Watt HVACAuxHeaterPower { get; internal set; }
-
-		public HeatPumpType HVACCompressorType { get; internal set; }
-
-		public bool HVACDoubleGlasing { get; internal set; }
-
-		public bool HVACHeatpump { get; internal set; }
-		public bool HVACAdjustableAuxHeater { get; internal set; }
-
-		// used for primary bus only
-		public bool HVACSeparateAirDistributionDucts { get; internal set; }
+		public HVACParameters HVACPEV { get; internal set; }
 
 		public PerSquareMeter PassengerDensityLow { get;  internal set; }
 		public PerSquareMeter PassengerDensityRef { get; internal set; }
@@ -157,7 +162,28 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public Meter EntranceHeight { get; set; }
 		public VehicleCode? VehicleCode { get; set; }
 		public FloorType FloorType { get; set; }
-		public IList<BusHVACSystemConfiguration?> SeparateAirDistributionDuctsHVACCfg { get; set; }
+		public IList<BusHVACSystemConfiguration> SeparateAirDistributionDuctsHVACCfg { get; set; }
+	}
+
+	public class HVACParameters
+	{
+        // #### HVAC Model Parameters
+
+        public BusHVACSystemConfiguration HVACConfiguration { get; internal set; }
+
+        public Watt HVACAuxHeaterPower { get; internal set; }
+
+		public HeatPumpType HeatPumpTypePassengerCompartmentCooling { get; internal set; }
+
+		public HeatPumpType HeatPumpTypePassengerCompartmentHeating { get; internal set; }
+
+		public bool HVACDoubleGlasing { get; internal set; }
+
+		public bool WaterElectricHeater { get; internal set; }
+		public bool HVACAdjustableAuxHeater { get; internal set; }
+
+		// used for primary bus only
+		public bool HVACSeparateAirDistributionDucts { get; internal set; }
 	}
 
 	

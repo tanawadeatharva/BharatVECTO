@@ -2,13 +2,12 @@
 using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using VECTO3GUI2020.Helper;
-using VECTO3GUI2020.Util;
-using VECTO3GUI2020.ViewModel.Implementation;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces;
 
-namespace VECTO3GUI2020.ViewModel
+namespace VECTO3GUI2020.ViewModel.Implementation
 {
 
 	public class OutputViewModel : ViewModelBase, IOutputViewModel

@@ -82,6 +82,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual TableData PTOLossMap => null;
 
 		public virtual TableData PTOCycleDuringStop => null;
+		public TableData EPTOCycleDuringStop => null;
 
 		public TableData PTOCycleWhileDriving => null;
 		

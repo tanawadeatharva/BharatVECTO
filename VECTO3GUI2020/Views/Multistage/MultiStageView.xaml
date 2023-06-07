@@ -36,6 +36,11 @@
                         Width="100"
                         Style="{DynamicResource MultiStageButtonStyle1}" 
                         Command="{Binding ManufacturingStageViewModel.SaveInputDataAsCommand}">Save Input As ... </Button>
+                    <Button
+                        DockPanel.Dock="Right"
+                        Width="100"
+                        Style="{DynamicResource MultiStageButtonStyle1}"
+                        Command="{Binding SaveAsJSONCommand}">Save as JSON ... </Button>
                 </DockPanel>
             </Border>
             <ContentControl DockPanel.Dock="Top" Content="{Binding ManufacturingStageViewModel}"/>

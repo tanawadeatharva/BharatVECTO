@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
+	<PropertyGroup>
 	<OutputType>WinExe</OutputType>
 	<StartupObject>Sub Main</StartupObject>
 	<RootNamespace>TUGraz.VECTO</RootNamespace>
@@ -8,46 +8,80 @@
 	<OptionStrict>On</OptionStrict>
 	<UseWindowsForms>true</UseWindowsForms>
 	<MyType>WindowsForms</MyType>
-	<TargetFrameworks>net48</TargetFrameworks>
-	<TargetFrameworks Condition="'$(Configuration)' == 'Release'">net45;net48;net6.0-windows</TargetFrameworks>
-	<TargetFrameworks Condition="'$(Configuration)' == 'Deploy'">net45;net48;net6.0-windows</TargetFrameworks>
+		<!--<TargetFramework>net6.0-windows</TargetFramework>-->
+		
+		<TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
+		<TargetFrameworks Condition="'$(Configuration)' == 'Release'">net48;net6.0-windows</TargetFrameworks>
+		<TargetFrameworks Condition="'$(Configuration)' == 'Deploy'">net48;net6.0-windows</TargetFrameworks>
+		<TargetFrameworks Condition="'$(Configuration)' == 'MockupDeploy'">net48;net6.0-windows</TargetFrameworks>
 	<DefineTrace>false</DefineTrace>
 	<DefineConstants />
-  </PropertyGroup>
- 
+		<Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
+		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+	</PropertyGroup>
+	<!--Final Define Constants https://developercommunity.visualstudio.com/t/vbprojuser-defineconstants-dont-affect/865956-->
+	<PropertyGroup Condition="('$(Configuration)' == 'MockupRelease') Or ('$(Configuration)' == 'MockupDebug')">
+		<FinalDefineConstants>$(FinalDefineConstants),MOCKUP</FinalDefineConstants>
+		<DefineConstants>$(DefineConstants),MOCKUP</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net48|AnyCPU'">
+	  <DebugType>full</DebugType>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net6.0-windows|AnyCPU'">
+	  <DebugType>full</DebugType>
+	</PropertyGroup>
   <ItemGroup>
-	<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <None Remove="nlog.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="nlog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+	<ItemGroup>
+	<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	<PackageReference Include="Ninject.Extensions.Factory" Version="3.3.3" />
 	<PackageReference Include="NLog" Version="4.7.13" />
-	<PackageReference Include="Ninject" Version="3.3.3">
-	  <PrivateAssets>all</PrivateAssets>
+	<PackageReference Include="Ninject" Version="3.3.6">
+		<PrivateAssets>all</PrivateAssets>
 	</PackageReference>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+	<PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+	</ItemGroup>
+	
+	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
 	<Reference Include="System.ComponentModel.DataAnnotations" />
 	<Reference Include="System.Windows.Forms.DataVisualization" />
-  </ItemGroup>
+	</ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
-	<Reference Include="System.ComponentModel.DataAnnotations" />
-	<Reference Include="System.Windows.Forms.DataVisualization" />
-  </ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0-windows'">
+		<PackageReference Include="System.Data.SqlClient">
+		  <Version>4.8.3</Version>
+		</PackageReference>
+		<PackageReference Include="System.Windows.Forms.DataVisualization">
+		  <Version>1.0.0-prerelease.20110.1</Version>
+		</PackageReference>
+	</ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-windows'">
-	<PackageReference Include="System.Data.SqlClient">
-	  <Version>4.8.3</Version>
-	</PackageReference>
-	<PackageReference Include="System.Windows.Forms.DataVisualization">
-	  <Version>1.0.0-prerelease.20110.1</Version>
-	</PackageReference>
-  </ItemGroup>
+	<!--<Choose>
+		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(FinalDefineConstants), '^(.*,)*MOCKUP(,.*)*$'))">
+			<ItemGroup>
+				<ProjectReference Include="..\VectoMockup\VectoMockup\VectoMockup.csproj" />
 
-  <ItemGroup>
+			</ItemGroup>
+			--><!--<PropertyGroup>
+				<DefineConstants>MOCKUP</DefineConstants>
+			</PropertyGroup>--><!--
+		</When>
+	</Choose>-->
+
+	<ItemGroup>
+	<ProjectReference Include="..\HashingTool\HashingTool.csproj" />
 	<ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj" />
 	<ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj" />
-  </ItemGroup>
-  
-  <ItemGroup>
+	</ItemGroup>
+
+	<ItemGroup>
 	<Import Include="Microsoft.VisualBasic" />
 	<Import Include="System" />
 	<Import Include="System.Collections" />
@@ -55,9 +89,9 @@
 	<Import Include="System.Drawing" />
 	<Import Include="System.Diagnostics" />
 	<Import Include="System.Windows.Forms" />
-  </ItemGroup>
+	</ItemGroup>
 
-  <ItemGroup>
+	<ItemGroup>
 	<Compile Update="My Project\Application.Designer.vb">
 	  <DesignTime>True</DesignTime>
 	  <AutoGen>True</AutoGen>
@@ -87,9 +121,9 @@
 	  <Generator>SettingsSingleFileGenerator</Generator>
 	  <LastGenOutput>Settings.Designer.vb</LastGenOutput>
 	</None>
-  </ItemGroup>
+	</ItemGroup>
 
-  <ItemGroup>
+	<ItemGroup>
 	<EmbeddedResource Update="Resources\4x2r.png" />
 	<EmbeddedResource Update="Resources\4x2rt.png" />
 	<EmbeddedResource Update="Resources\4x2tt.png" />
@@ -97,7 +131,7 @@
 	<EmbeddedResource Update="Resources\6x2rt.png" />
 	<EmbeddedResource Update="Resources\6x2tt.png" />
 	<EmbeddedResource Update="Resources\Undef.png" />
-  </ItemGroup>
+	</ItemGroup>
 
-  
+
 </Project>

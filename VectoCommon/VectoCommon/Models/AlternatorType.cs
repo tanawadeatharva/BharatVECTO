@@ -11,6 +11,20 @@ namespace TUGraz.VectoCommon.Models
 
 	public static class AlternatorTypeHelper
 	{
+		public static AlternatorType Parse(string xmlFormat)
+		{
+			switch (xmlFormat) {
+				case "conventional":
+					return AlternatorType.Conventional;
+				case "smart":
+					return AlternatorType.Smart;
+				case "no alternator":
+					return AlternatorType.None;
+				default:
+					throw new ArgumentException();
+			}
+		}
+
 
 		public static string ToXMLFormat(this AlternatorType type)
 		{

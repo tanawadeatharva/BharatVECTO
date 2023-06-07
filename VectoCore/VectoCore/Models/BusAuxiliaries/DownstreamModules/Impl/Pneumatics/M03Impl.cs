@@ -31,7 +31,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 		public static NormLiter TotalAirDemandCalculation(IAuxiliaryConfig auxConfig, IActuations actuations)
 		{
 			var psUserConfig = auxConfig.PneumaticUserInputsConfig;
-			var psAuxconfig = auxConfig.PneumaticAuxillariesConfig;
+			var psAuxconfig = auxConfig.PneumaticAuxiliariesConfig;
 			var vehicleMass = auxConfig.VehicleData.TotalVehicleMass;
 
 			//'* * Breaks * *
@@ -84,6 +84,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 
 		public Watt GetAveragePowerDemandAtCrankFromPneumatics()
 		{
+			if (_pneumaticsCompressorFlowRateMap == null) {
+				return 0.SI<Watt>();
+			}
 			var cmp = _pneumaticsCompressorFlowRateMap.Interpolate(
 				_signals.EngineSpeed * _compressorGearRatio);
 

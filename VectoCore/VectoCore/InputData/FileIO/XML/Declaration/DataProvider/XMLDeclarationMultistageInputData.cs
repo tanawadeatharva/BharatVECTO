@@ -4,12 +4,14 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Ninject;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 
@@ -68,7 +70,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		private IPrimaryVehicleInformationInputDataProvider _primaryVehicle;
 		private IList<IManufacturingStageInputData> _manufacturingStages;
-		private IManufacturingStageInputData _concolidateManfacturingStage;
+		private IManufacturingStageInputData _consolidatedManufacturingStage;
 
 
 		public XMLDeclarationMultistageJobInputDataV01(XmlNode node, IXMLMultistageInputDataProvider inputProvider,
@@ -82,9 +84,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public IList<IManufacturingStageInputData> ManufacturingStages => _manufacturingStages ?? (_manufacturingStages = Reader.ManufacturingStages);
 
-		public IManufacturingStageInputData ConsolidateManufacturingStage => _concolidateManfacturingStage ?? (_concolidateManfacturingStage = Reader.ConsolidateManufacturingStage);
+		public IManufacturingStageInputData ConsolidateManufacturingStage => _consolidatedManufacturingStage ?? (_consolidatedManufacturingStage = Reader.ConsolidateManufacturingStage);
 
-		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
+		public VectoSimulationJobType JobType => ConsolidateManufacturingStage.Vehicle.VehicleType;
 
 		public bool InputComplete => Reader.InputComplete;
 
@@ -149,12 +151,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public IResultsInputData ResultsInputData => _resultsInputData ?? (_resultsInputData = Reader.ResultsInputData);
 
-		public IResult GetResult(VehicleClass vehicleClass, MissionType mission, string fuelMode, Kilogram payload)
+		public IResult GetResult(VehicleClass vehicleClass, MissionType mission, string fuelMode, Kilogram payload,
+			OvcHevMode ovcHevMode)
 		{
-			return ResultsInputData.Results.FirstOrDefault(
+			var matches = ResultsInputData.Results.Where(
 				x => x.VehicleGroup == vehicleClass &&
-					(x.SimulationParameter.Payload - payload).IsEqual(0, 1) && x.Mission == mission &&
-					x.SimulationParameter.FuelMode.Equals(fuelMode, StringComparison.InvariantCultureIgnoreCase));
+					(x.SimulationParameter.Payload - payload).IsEqual(0, 1) && x.Mission == mission 
+			).ToArray();
+			if (!matches.Any()) {
+				throw new VectoException($"No primary result found for {vehicleClass}, {mission}, {payload}");
+			}
+			if (matches.Length == 1) {
+				return matches.First();
+			}
+
+			return matches.First(x => x.OvcMode == ovcHevMode);
 		}
 
 		public XmlNode ResultsNode => GetNode(XMLNames.Report_Results);
@@ -217,19 +228,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLDeclarationVIFInputData : IMultistageVIFInputData
 	{
-		private readonly IMultistageBusInputDataProvider _multistageJobInputData;
+		private readonly IMultistepBusInputDataProvider _multistageJobInputData;
 		private readonly IVehicleDeclarationInputData _vehicleInput;
 
-		public XMLDeclarationVIFInputData(IMultistageBusInputDataProvider multistageJobInputData,
-			IVehicleDeclarationInputData vehicleInput)
+		public XMLDeclarationVIFInputData(IMultistepBusInputDataProvider multistageJobInputData,
+			IVehicleDeclarationInputData vehicleInput) : this(multistageJobInputData, vehicleInput, false) { }
+
+		public XMLDeclarationVIFInputData(IMultistepBusInputDataProvider multistageJobInputData,
+		IVehicleDeclarationInputData vehicleInput, bool runSimulation)
 		{
 			_multistageJobInputData = multistageJobInputData;
 			_vehicleInput = vehicleInput;
+			_simulateResultingVif = runSimulation;
 		}
 
 		public IVehicleDeclarationInputData VehicleInputData => _vehicleInput;
 
-		public IMultistageBusInputDataProvider MultistageJobInputData => _multistageJobInputData;
+		public IMultistepBusInputDataProvider MultistageJobInputData => _multistageJobInputData;
+
+		private readonly bool _simulateResultingVif;
+		bool IMultistageVIFInputData.SimulateResultingVIF => _simulateResultingVif;
 
 		public DataSource DataSource { get; }
 	}

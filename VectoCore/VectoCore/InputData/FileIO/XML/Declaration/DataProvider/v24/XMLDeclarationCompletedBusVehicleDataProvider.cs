@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -190,6 +192,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLDeclarationConventionalCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.ConventionalVehicle;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -202,18 +205,67 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLDeclarationHevCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+
+		private VectoSimulationJobType? _vehicleType = null;
+		public override VectoSimulationJobType VehicleType
+		{
+			get
+			{
+				if (_vehicleType.HasValue) {
+					return _vehicleType.Value;
+				}
+
+				switch (ArchitectureID) {
+					case ArchitectureID.UNKNOWN:
+					case ArchitectureID.E2:
+					case ArchitectureID.E3:
+					case ArchitectureID.E4:
+					case ArchitectureID.E_IEPC:
+						throw new VectoException($"Invalid {ArchitectureID} for hybrid vehicle");
+					case ArchitectureID.P1:
+					case ArchitectureID.P2:
+					case ArchitectureID.P2_5:
+					case ArchitectureID.P3:
+					case ArchitectureID.P4:
+						_vehicleType = VectoSimulationJobType.ParallelHybridVehicle;
+						break;
+					case ArchitectureID.P_IHPC:
+						_vehicleType = VectoSimulationJobType.IHPC;
+						break;
+					case ArchitectureID.S2:
+					case ArchitectureID.S3:
+					case ArchitectureID.S4:
+						_vehicleType = VectoSimulationJobType.SerialHybridVehicle;
+						break;
+					case ArchitectureID.S_IEPC:
+						_vehicleType = VectoSimulationJobType.IEPC_S;
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+
+				return _vehicleType.Value;
+			}
+		}
+
+		//ArchitectureID.ToString().StartsWith("S") ? VectoSimulationJobType.SerialHybridVehicle : VectoSimulationJobType.ParallelHybridVehicle;
+		public override bool HybridElectricHDV => true;
+
 	}
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationPeVompletedBusDataProviderV24 : AbstractXMLDeclarationCompletedBusDataProviderV24
+	public class XMLDeclarationPEVCompletedBusDataProviderV24 : AbstractXMLDeclarationCompletedBusDataProviderV24
 	{
 		public new const string XSD_TYPE = "Vehicle_PEV_CompletedBusDeclarationType";
 
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationPeVompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationPEVCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
+		public override bool OvcHev => true;
+
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -226,6 +278,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLDeclarationIepcCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+
+		public override bool OvcHev => true;
+
+		public override bool HybridElectricHDV => false;
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_E;
 	}
 
 }

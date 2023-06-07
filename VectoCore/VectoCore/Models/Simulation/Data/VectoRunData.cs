@@ -42,10 +42,16 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
@@ -54,14 +60,18 @@ using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
+
+
 	[CustomValidation(typeof(VectoRunData), "ValidateRunData")]
 	public class VectoRunData : SimulationComponentData
 	{
-
 		public VectoRunData()
 		{
 			Exempted = false;
 			JobType = VectoSimulationJobType.ConventionalVehicle;
+			DCDCData = new DCDCData() {
+				DCDCEfficiency = DeclarationData.DCDCEfficiency,
+			};
 		}
 
 		public VectoSimulationJobType JobType { get; internal set; }
@@ -128,18 +138,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public AuxFanData FanDataVTP { get; internal set; }
 
-		public List<Tuple<PowertrainPosition, ElectricMotorData>> ElectricMachinesData { get; internal set; }
+		public IList<Tuple<PowertrainPosition, ElectricMotorData>> ElectricMachinesData { get; internal set; }
 
 		public BatterySystemData BatteryData { get; internal set; }
 
 		public SuperCapData SuperCapData { get; internal set; }
 
+		public DCDCData DCDCData { get; internal set; }
 
 		public SimulationType SimulationType { get; internal set; }
 
 		public VTPData VTPData { get; internal set; }
 
 		public ShiftStrategyParameters GearshiftParameters { get; internal set; }
+
 		public bool Exempted { get; internal set; }
 
 		public bool MultistageRun { get; internal set; }
@@ -156,27 +168,54 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public Watt ElectricAuxDemand { get; internal set; }
 
 		[JsonIgnore]
-		public IMultistageVIFInputData MultistageVIFInputData { get; internal set; }
+		public IMultistageVIFInputData MultistageVifInputData { get; internal set; }
 
 		// container to pass genset data from powertrain to post-processing, not filled by dataadapter/rundatafactory
 		public GenSetData GenSet { get; set; }
+		[JsonIgnore]
+		public IDeclarationInputDataProvider InputData { get; internal set; }
+
+		// used to identify job and run in summary container
+		public int JobNumber { get; set; }
+		public int RunNumber { get; set; }
+		public int Iteration { get; set; }
+
+
+		public OvcHevMode OVCMode { get; internal set; }
+
+		public Watt MaxChargingPower { get; internal set; }
+
+		[JsonIgnore]
+		public IIterativeRunStrategy IterativeRunStrategy { get; internal set; } = new DefaultIterativeStrategy();
 
 		public class AuxData
 		{
+			public delegate Watt PowerDemandFunc(IDataBus dataBus, bool mechPower = true);
 			// ReSharper disable once InconsistentNaming
 			public string ID;
 
 			public IList<string> Technology;
 
-			[SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemand;
+			[SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemandMech;
+			[SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemandElectric;
 
 			[JsonIgnore]
-			public Func<DrivingCycleData.DrivingCycleEntry, Watt> PowerDemandFunc;
+			public Func<DrivingCycleData.DrivingCycleEntry, Watt> PowerDemandMechCycleFunc;
+
+			[JsonIgnore] public PowerDemandFunc PowerDemandDataBusFunc;
+
+
 
 			[Required] public AuxiliaryDemandType DemandType;
 
+			[Required] public bool ConnectToREESS;
+
+			[Required] public bool IsFullyElectric;
 
 			public MissionType? MissionType;
+
+
+
 		}
 
 		// container to pass genset data from powertrain to post-processing, not filled by dataadapter/rundatafactory
@@ -210,9 +249,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			}
 
 			if (runData.Cycle != null && runData.Cycle.Entries.Any(e => e.PTOActive == PTOActivity.PTOActivityDuringStop)) {
-				if (jobType == VectoSimulationJobType.BatteryElectricVehicle) {
-					// TODO: MQ 20201020 - validate depending on EM position!?
-				}
 
 				if (runData.PTO == null || runData.PTO.PTOCycle == null) {
 					return new ValidationResult("PTOCycle is used in DrivingCycle, but is not defined in Vehicle-Data.");
@@ -252,7 +288,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			return ValidationResult.Success;
 		}
 
-		private static ValidationResult CheckPowertrainLossMapsSizeConventionalPT(VectoRunData runData, GearboxData gearboxData,
+		private static ValidationResult CheckPowertrainLossMapsSizeConventionalPT(VectoRunData runData, GearboxData gearboxData, 
 			CombustionEngineData engineData)
 		{
 			
@@ -270,14 +306,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 								angledriveRatio * dynamicTyreRadius;
 			var maxSpeed = VectoMath.Min(vehicleMaxSpeed, (runData.VehicleDesignSpeed ?? 90.KMPHtoMeterPerSecond()) + (runData.DriverData?.OverSpeed?.OverSpeed ?? 0.KMPHtoMeterPerSecond()));
 
-			if (gearboxData.Gears.Count + 1 != engineData.FullLoadCurves.Count) {
+			var gearsInput = GearboxDataAdapterBase.FilterDisabledGears(runData.VehicleData.InputData.TorqueLimits, gearboxData.InputData);
+			var gears = gearboxData.Gears.Where(f => gearsInput.Any(g => f.Key == g.Gear)).ToList();
+			
+			if (gears.Count + 1 != engineData.FullLoadCurves.Count) {
 				return
 					new ValidationResult(
 						$"number of full-load curves in engine does not match gear count. " +
-						$"engine fld: {engineData.FullLoadCurves.Count}, gears: {gearboxData.Gears.Count}");
+						$"engine fld: {engineData.FullLoadCurves.Count}, gears: {gears.Count}");
 			}
 
-			foreach (var gear in gearboxData.Gears) {
+			foreach (var gear in gears) {
 				var maxEngineSpeed = VectoMath.Min(engineData.FullLoadCurves[gear.Key].RatedSpeed, gear.Value.MaxSpeed);
 				for (var angularVelocity = engineData.IdleSpeed;
 					angularVelocity < maxEngineSpeed;
@@ -348,6 +387,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			}
 			return null;
 		}
+
 	}
 
 	public class VTPData
@@ -361,4 +401,5 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public Meter FanDiameter;
 	}
+
 }

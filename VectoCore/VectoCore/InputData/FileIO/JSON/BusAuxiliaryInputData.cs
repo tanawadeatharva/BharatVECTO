@@ -8,6 +8,9 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.AuxiliaryDataAdapter;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
@@ -53,9 +56,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				Path.Combine(baseDir, data["SSMFilePath"].ToString()), vehicleData, env);
 			return new AuxiliaryConfig( ) {
 				ElectricalUserInputsConfig = ec,
-				PneumaticAuxillariesConfig  = pac,
+				PneumaticAuxiliariesConfig  = pac,
 				PneumaticUserInputsConfig  = puc,
-				SSMInputs = ssm,
+				SSMInputsCooling = ssm,
+				SSMInputsHeating = ssm,
 				Actuations = actuations,
 				VehicleData = vehicleData
 			};

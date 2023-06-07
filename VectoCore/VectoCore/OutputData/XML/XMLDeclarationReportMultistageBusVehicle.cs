@@ -3,23 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
+	/// <summary>
+	/// Create VIF of an interim (or the complete(d) step
+	/// </summary>
 	public class XMLDeclarationReportMultistageBusVehicle : XMLDeclarationReport
 	{
-		private IXMLMultistageReport _multistageBusReport;
+		protected IXMLMultistepIntermediateReport _multistageBusReport;
 
 		public XMLDeclarationReportMultistageBusVehicle(IReportWriter writer)
-			: base(writer)
+			: base(writer, null,null)
 		{
+			throw new NotImplementedException();
+			//throw new VectoException("Used here");
 			//_multistageBusReport = new XMLMultistageBusReport();
 		}
 		
-		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void InitializeReport(VectoRunData modelData)
 		{
 			_multistageBusReport =
 				modelData.Exempted ? new XMLMultistageExemptedBusReport() : new XMLMultistageBusReport();

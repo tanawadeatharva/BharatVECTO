@@ -38,6 +38,7 @@ using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
@@ -76,6 +77,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected IElectricMachinesDeclarationInputData _electricMachinesInputData;
 		protected IElectricStorageSystemDeclarationInputData _electricStorageSystemInputData;
 		protected IIEPCDeclarationInputData _iepcDeclarationInputData;
+
+
 
 		[Inject]
 		public IDeclarationInjectFactory Factory { protected get; set; }
@@ -120,7 +123,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			(_electricStorageSystemInputData  = GetElectricEnergyStorageEntries());
 
 		public virtual IIEPCDeclarationInputData IEPCInputData => _iepcDeclarationInputData ?? 
-														(_iepcDeclarationInputData = CreateComponent( XMLNames.IEPC_Component, IEPCCreator));
+														(_iepcDeclarationInputData = GetComponentNode(XMLNames.IEPC_Component) != null ? CreateComponent( XMLNames.IEPC_Component, IEPCCreator) : null);
 
 		public virtual ITransmissionInputData CreateGear(XmlNode gearNode)
 		{
@@ -558,16 +561,64 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLREESSReaderV24 : AbstractComponentReader, IXMLREESSReader
+	public class XMLElectricMachineSystemReaderV01 : AbstractComponentReader, IXMLElectricMachineSystemReader
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public const string XSD_TYPE = "ElectricMachineType";
+		public const string XSD_GEN_TYPE = "ElectricMachineGENType";
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public static readonly string QUALIFIED_GEN_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_GEN_TYPE);
+
+		[Inject]
+		public IDeclarationInjectFactory Factory { protected get; set; }
+
+		public XMLElectricMachineSystemReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
+			string sourceFile) : base(vehicle, componentNode)
+		{
+
+		}
+
+		#region Implementation of IXMLElectricMotorReader
+
+		public virtual IElectricMotorDeclarationInputData CreateElectricMachineSystem(XmlNode electricMachineSystem)
+		{
+			return CreateComponent(XMLNames.ElectricMachineSystem, ElectricMachinesCreator);
+		}
+
+		public virtual IADCDeclarationInputData ADCInputData {
+			get {
+				return CreateComponent("ADC", ADCCreator);
+			}
+		}
+
+
+		protected virtual IADCDeclarationInputData ADCCreator(string version,
+			XmlNode componentNode, string sourcefile)
+		{
+			return Factory.CreateADCDeclarationInputData(version, componentNode, sourcefile);
+		}
+
+		protected virtual IElectricMotorDeclarationInputData ElectricMachinesCreator(string version,
+			XmlNode componentNode, string sourcefile)
+		{
+			return Factory.CreateElectricMotorDeclarationInputData(version, componentNode, sourcefile);
+		}
+
+		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLREESSReaderV24 : AbstractXMLType, IXMLREESSReader
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public const string XSD_TYPE = "ElectricEnergyStorageType";
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		[Inject] public IDeclarationInjectFactory Factory { protected get; set; }
+		[Inject] public virtual IDeclarationInjectFactory Factory { protected get; set; }
 
 		public XMLREESSReaderV24(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
-			string sourceFile) : base(vehicle, componentNode) { }
+			string sourceFile) : base( componentNode) { }
 
 		#region Implementation of IXMLREESSReader
 
@@ -591,7 +642,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected virtual IBatteryPackDeclarationInputData BatteryPackCreator(string version,
 			XmlNode componentNode, string sourcefile)
 		{
-			return Factory.CreateBatteryPackDeclarationInputData(version, componentNode, sourcefile);
+			var node = GetNode(XMLNames.REESS, componentNode);
+			var dataNode = GetNode(XMLNames.ComponentDataWrapper, node);
+			version = XMLHelper.GetXsdType(dataNode.SchemaInfo.SchemaType);
+			return Factory.CreateBatteryPackDeclarationInputData(version, dataNode, sourcefile);
 		}
 
 		protected virtual ISuperCapDeclarationInputData SuperCapCreator(string version,
@@ -604,14 +658,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	}
 
 	// ---------------------------------------------------------------------------------------
+	public class XMLREESSReaderV01 : XMLREESSReaderV24
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public const string XSD_TYPE = "ElectricEnergyStorageType";
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-	public class XMLMultistagePrimaryVehicleBusComponentReaderV01 : XMLComponentReaderV20
+		
+		public XMLREESSReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
+			string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLMultistagePrimaryVehicleBus_Conventional_ComponentReaderV01 : XMLComponentReaderV20
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public new const string XSD_TYPE = "VehicleComponentsPIFType";
-		public new const string GEARBOX_READER_TYPE = "TransmissionDataPIFType";
-		public new const string AXLES_READER_TYPE = "AxleWheelsDataPIFType";
+		public new const string XSD_TYPE = "Vehicle_Conventional_ComponentsVIFType";
+		public new const string GEARBOX_READER_TYPE = "TransmissionDataVIFType";
+		public new const string AXLES_READER_TYPE = "AxleWheelsDataVIFType";
 		
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		public new static readonly string GEARBOX_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, GEARBOX_READER_TYPE);
@@ -619,7 +686,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		protected IBusAuxiliariesDeclarationData _busAuxInputData;
 
-		public XMLMultistagePrimaryVehicleBusComponentReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode)
+		public XMLMultistagePrimaryVehicleBus_Conventional_ComponentReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode)
 			: base(vehicle, componentsNode) { }
 
 		public override IGearboxDeclarationInputData GearboxInputData => _gearboxInputData ?? (_gearboxInputData = CreateComponent(XMLNames.Component_Transmission, GearboxCreator));
@@ -636,6 +703,190 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			return Factory.CreateBusAuxiliaires(version, Vehicle, componentNode, sourceFile);
 		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+	public class XMLMultistagePrimaryVehicleBus_HEV_Px_ComponentReaderV01 : XMLMultistagePrimaryVehicleBus_Conventional_ComponentReaderV01
+	{
+		public new static readonly XNamespace NAMESPACE_URI =
+			XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public new const string XSD_TYPE = "Vehicle_HEV-Px_ComponentsVIFType";
+		//public new const string GEARBOX_READER_TYPE = "TransmissionDataVIFType";
+		//public new const string AXLES_READER_TYPE = "AxleWheelsDataVIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		//public new static readonly string GEARBOX_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, GEARBOX_READER_TYPE);
+
+		//public new static readonly string AXLES_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AXLES_READER_TYPE);
+
+		public XMLMultistagePrimaryVehicleBus_HEV_Px_ComponentReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base (vehicle, componentsNode) {}
+	}
+
+	// ---------------------------------------------------------------------------------------
+	public class XMLMultistagePrimaryVehicleBus_HEV_S2_ComponentReaderV01 : XMLMultistagePrimaryVehicleBus_Conventional_ComponentReaderV01
+	{
+		public new static readonly XNamespace NAMESPACE_URI =
+			XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public new const string XSD_TYPE = "Vehicle_HEV-S2_ComponentsVIFType";
+		//public new const string GEARBOX_READER_TYPE = "TransmissionDataVIFType";
+		//public new const string AXLES_READER_TYPE = "AxleWheelsDataVIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		//public new static readonly string GEARBOX_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, GEARBOX_READER_TYPE);
+
+		//public new static readonly string AXLES_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AXLES_READER_TYPE);
+
+		public XMLMultistagePrimaryVehicleBus_HEV_S2_ComponentReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(vehicle, componentsNode) { }
+
+	}
+
+	// ---------------------------------------------------------------------------------------
+	public class XMLMultistagePrimaryVehicleBus_HEV_S3_ComponentReaderV01 : XMLMultistagePrimaryVehicleBus_Conventional_ComponentReaderV01
+	{
+		public new static readonly XNamespace NAMESPACE_URI =
+			XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public new const string XSD_TYPE = "Vehicle_HEV-S3_ComponentsVIFType";
+		//public new const string GEARBOX_READER_TYPE = "TransmissionDataVIFType";
+		//public new const string AXLES_READER_TYPE = "AxleWheelsDataVIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		//public new static readonly string GEARBOX_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, GEARBOX_READER_TYPE);
+
+		//public new static readonly string AXLES_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AXLES_READER_TYPE);
+
+		public XMLMultistagePrimaryVehicleBus_HEV_S3_ComponentReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(vehicle, componentsNode) { }
+	}
+
+	// ---------------------------------------------------------------------------------------
+	public class XMLMultistagePrimaryVehicleBus_HEV_S4_ComponentReaderV01 : XMLMultistagePrimaryVehicleBus_Conventional_ComponentReaderV01
+	{
+		public new static readonly XNamespace NAMESPACE_URI =
+			XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public new const string XSD_TYPE = "Vehicle_HEV-S4_ComponentsVIFType";
+		//public new const string GEARBOX_READER_TYPE = "TransmissionDataVIFType";
+		//public new const string AXLES_READER_TYPE = "AxleWheelsDataVIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		//public new static readonly string GEARBOX_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, GEARBOX_READER_TYPE);
+
+		//public new static readonly string AXLES_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AXLES_READER_TYPE);
+
+		public XMLMultistagePrimaryVehicleBus_HEV_S4_ComponentReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(vehicle, componentsNode) { }
+
+		#region Overrides of XMLComponentReaderV10
+
+		public override IAxleGearInputData AxleGearInputData => null;
+
+		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+	public class XMLMultistagePrimaryVehicleBus_HEV_IEPC_S_ComponentReaderV01 : XMLMultistagePrimaryVehicleBus_Conventional_ComponentReaderV01
+	{
+		public new static readonly XNamespace NAMESPACE_URI =
+			XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public new const string XSD_TYPE = "Vehicle_HEV-IEPC-S_ComponentsVIFType";
+		//public new const string GEARBOX_READER_TYPE = "TransmissionDataVIFType";
+		//public new const string AXLES_READER_TYPE = "AxleWheelsDataVIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		//public new static readonly string GEARBOX_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, GEARBOX_READER_TYPE);
+
+		//public new static readonly string AXLES_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AXLES_READER_TYPE);
+
+		public XMLMultistagePrimaryVehicleBus_HEV_IEPC_S_ComponentReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(vehicle, componentsNode) { }
+
+		#region Overrides of XMLMultistagePrimaryVehicleBus_Conventional_ComponentReaderV01
+
+		public override IGearboxDeclarationInputData GearboxInputData => null;
+
+		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+	public class XMLMultistagePrimaryVehicleBus_PEV_E2_ComponentReaderV01 : XMLMultistagePrimaryVehicleBus_Conventional_ComponentReaderV01
+	{
+		public new static readonly XNamespace NAMESPACE_URI =
+			XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public new const string XSD_TYPE = "Vehicle_PEV-E2_ComponentsVIFType";
+		//public new const string GEARBOX_READER_TYPE = "TransmissionDataVIFType";
+		//public new const string AXLES_READER_TYPE = "AxleWheelsDataVIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		//public new static readonly string GEARBOX_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, GEARBOX_READER_TYPE);
+
+		//public new static readonly string AXLES_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AXLES_READER_TYPE);
+
+		public XMLMultistagePrimaryVehicleBus_PEV_E2_ComponentReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(vehicle, componentsNode) { }
+	}
+
+	// ---------------------------------------------------------------------------------------
+	public class XMLMultistagePrimaryVehicleBus_PEV_E3_ComponentReaderV01 : XMLMultistagePrimaryVehicleBus_Conventional_ComponentReaderV01
+	{
+		public new static readonly XNamespace NAMESPACE_URI =
+			XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public new const string XSD_TYPE = "Vehicle_PEV-E3_ComponentsVIFType";
+		//public new const string GEARBOX_READER_TYPE = "TransmissionDataVIFType";
+		//public new const string AXLES_READER_TYPE = "AxleWheelsDataVIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		//public new static readonly string GEARBOX_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, GEARBOX_READER_TYPE);
+
+		//public new static readonly string AXLES_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AXLES_READER_TYPE);
+
+		public XMLMultistagePrimaryVehicleBus_PEV_E3_ComponentReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(vehicle, componentsNode) { }
+	}
+
+	// ---------------------------------------------------------------------------------------
+	public class XMLMultistagePrimaryVehicleBus_PEV_E4_ComponentReaderV01 : XMLMultistagePrimaryVehicleBus_Conventional_ComponentReaderV01
+	{
+		public new static readonly XNamespace NAMESPACE_URI =
+			XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public new const string XSD_TYPE = "Vehicle_PEV-E4_ComponentsVIFType";
+		//public new const string GEARBOX_READER_TYPE = "TransmissionDataVIFType";
+		//public new const string AXLES_READER_TYPE = "AxleWheelsDataVIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		//public new static readonly string GEARBOX_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, GEARBOX_READER_TYPE);
+
+		//public new static readonly string AXLES_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AXLES_READER_TYPE);
+
+		public XMLMultistagePrimaryVehicleBus_PEV_E4_ComponentReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(vehicle, componentsNode) { }
+	}
+
+	// ---------------------------------------------------------------------------------------
+	public class XMLMultistagePrimaryVehicleBus_PEV_IEPC_ComponentReaderV01 : XMLMultistagePrimaryVehicleBus_Conventional_ComponentReaderV01
+	{
+		public new static readonly XNamespace NAMESPACE_URI =
+			XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public new const string XSD_TYPE = "Vehicle_PEV-IEPC_ComponentsVIFType";
+		//public new const string GEARBOX_READER_TYPE = "TransmissionDataVIFType";
+		//public new const string AXLES_READER_TYPE = "AxleWheelsDataVIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		//public new static readonly string GEARBOX_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, GEARBOX_READER_TYPE);
+
+		//public new static readonly string AXLES_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AXLES_READER_TYPE);
+
+		public XMLMultistagePrimaryVehicleBus_PEV_IEPC_ComponentReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(vehicle, componentsNode) { }
 	}
 
 	// ---------------------------------------------------------------------------------------

@@ -43,9 +43,8 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class
-		Clutch : StatefulProviderComponent<Clutch.ClutchState, ITnOutPort, ITnInPort, ITnOutPort>, IClutch,
-		ITnOutPort, ITnInPort
+	public class Clutch : StatefulProviderComponent<Clutch.ClutchState, ITnOutPort, ITnInPort, ITnOutPort>, IClutch, 
+		ITnOutPort, ITnInPort, IUpdateable
 	{
 		protected readonly PerSecond _idleSpeed;
 		protected readonly PerSecond _ratedSpeed;
@@ -170,7 +169,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var startClutch = DataBus.VehicleInfo.VehicleStopped || !PreviousState.ClutchLoss.IsEqual(0, 1e-3) || (outAngularVelocity.IsSmaller(DataBus.EngineInfo.EngineSpeed, 1e-3) && !DataBus.EngineInfo.EngineOn); // || (PreviousState.ClutchLoss.IsEqual(0) && outAngularVelocity.IsSmaller(DataBus.EngineInfo.EngineIdleSpeed));
 			var slippingClutchWhenDriving = (DataBus.GearboxInfo.Gear.Gear <= 2 && DataBus.DriverInfo.DriverBehavior != DrivingBehavior.Braking);
-			var slippingClutchDuringBraking = DataBus.GearboxInfo.Gear.Gear == 1 && DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Braking && outTorque > 0 && DataBus.Brakes.BrakePower.IsEqual(0);
+			var slippingClutchDuringBraking = DataBus.GearboxInfo.Gear.Gear == 1 && DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Braking && outTorque > 0 && DataBus.Brakes?.BrakePower == 0.SI<Watt>();
 			//var slippingClutchWhenDriving = (DataBus.Gear == 1 && outTorque > 0);
 			AddClutchLoss(outTorque, outAngularVelocity,
 				slippingClutchWhenDriving || slippingClutchDuringBraking || startClutch || outAngularVelocity.IsEqual(0),
@@ -252,6 +251,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Watt ClutchLoss { get; set; }
 			public bool ICEOn { get; set; }
 			public PerSecond ICEOnSpeed { get; set; }
+			public new ClutchState Clone() => (ClutchState)base.Clone();
 		}
+
+		#region Implementation of IUpdateable
+
+		protected override bool DoUpdateFrom(object other) {
+			if (other is Clutch c) {
+				PreviousState = c.PreviousState.Clone();
+				
+				return true;
+			}
+			return false;
+		}
+
+		#endregion
 	}
 }

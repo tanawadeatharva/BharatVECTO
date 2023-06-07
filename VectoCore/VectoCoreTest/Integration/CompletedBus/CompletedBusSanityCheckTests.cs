@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		public const string CompletedFile32 = @"TestData/Integration/Buses/FactorMethod/vecto_vehicle-completed_heavyBus_41.xml";
 		//public const string CompletedFile33b1 = @"TestData/Integration/Buses/FactorMethod/CompletedHeavyBus_33b1.RSLT_VIF.xml";
         public const string CompletedFile33b1 = @"TestData/Integration/Buses/FactorMethod/vecto_vehicle-completed_heavyBus_42.xml";
-        public const string  PifFile_33_34 = @"TestData/Integration/Buses/FactorMethod/primary_heavyBus group42_SmartPS.RSLT_VIF.xml";
+        public const string  PifFile_33_34 = @"TestData/Integration/Buses/FactorMethod/VIF/primary_heavyBus group42_SmartPS.RSLT_VIF.xml";
 
         [OneTimeSetUp]
 		public void RunBeforeAnyTests()
@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			factory.Validate = false;
 
 			AssertHelper.Exception<VectoException>(() => {
-				var runs = factory.DataReader.NextRun().ToList();}, messageContains: "Input parameter 'separate air distribution ducts' has to be set to 'true' for vehicle group ");
+				var runs = factory.RunDataFactory.NextRun().ToList();}, messageContains: "Input parameter 'separate air distribution ducts' has to be set to 'true' for vehicle group ");
         }
 
         [
@@ -119,11 +119,11 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			factory.Validate = false;
 
 			//AssertHelper.Exception<VectoException>(() => {
-                var runs = factory.DataReader.NextRun().ToList();
+                var runs = factory.RunDataFactory.NextRun().ToList();
             //}, messageContains: "Input parameter 'separate air distribution ducts' has to be set to 'true' for vehicle group ");
         }
 
-        private IMultistageBusInputDataProvider GetModifiedXML(string vifPrimary, string completedJob, BusHVACSystemConfiguration? hvacConfig, bool separateDucts)
+        private IMultistepBusInputDataProvider GetModifiedXML(string vifPrimary, string completedJob, BusHVACSystemConfiguration? hvacConfig, bool separateDucts)
 		{
 			var vifDataProvider = _xmlInputReader.Create(XmlReader.Create(vifPrimary));
 			//var completeDataProvider = _xmlInputReader.CreateDeclaration(comple);
@@ -132,7 +132,17 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			completedXML.Load(completedJob);
 
 			var hvacCfgNode = completedXML.SelectSingleNode("//*[local-name()='SystemConfiguration']");
-			hvacCfgNode.InnerText = hvacConfig.GetXmlFormat();
+			hvacCfgNode.InnerText = hvacConfig.ToXmlFormat();
+
+			var (hpDriver, hpPassenger) = GetHeatpumps(hvacConfig);
+			var hpDriverCoolingNode =
+				completedXML.SelectSingleNode(
+					"//*[local-name()='HeatPumpTypeDriverCompartment']/*[local-name()='Cooling']");
+			hpDriverCoolingNode.InnerText = hpDriver.ToXML();
+			var hpPassengerCoolingNode =
+				completedXML.SelectSingleNode(
+					"//*[local-name()='HeatPumpTypePassengerCompartment']/*[local-name()='Cooling']");
+			hpPassengerCoolingNode.InnerText = hpPassenger.ToXML();
 
 			var airDuctsNode = completedXML.SelectSingleNode("//*[local-name()='SeparateAirDistributionDucts']");
 			airDuctsNode.InnerText = XmlConvert.ToString(separateDucts);
@@ -140,7 +150,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 			var completeDataProvider = _xmlInputReader.CreateDeclaration(modified);
 
-			var inputData = new XMLDeclarationVIFInputData(vifDataProvider as IMultistageBusInputDataProvider, completeDataProvider.JobInputData.Vehicle);
+			var inputData = new XMLDeclarationVIFInputData(vifDataProvider as IMultistepBusInputDataProvider, completeDataProvider.JobInputData.Vehicle);
 
 			var filename = Guid.NewGuid().ToString().Substring(0, 20);
 			var writer = new FileOutputVIFWriter(filename, 0);
@@ -157,13 +167,34 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var completedVif = _xmlInputReader.CreateDeclaration(XmlReader.Create(new StringReader(completedVifXML.OuterXml)));
 			File.Delete(writer.XMLMultistageReportFileName);
 
-			return completedVif as IMultistageBusInputDataProvider;
+			return completedVif as IMultistepBusInputDataProvider;
+		}
+
+		private (HeatPumpType, HeatPumpType) GetHeatpumps(BusHVACSystemConfiguration? hvacConfig)
+		{
+			var mapping = new Dictionary<BusHVACSystemConfiguration, Tuple<HeatPumpType, HeatPumpType>>() {
+				{ BusHVACSystemConfiguration.Configuration1, Tuple.Create(HeatPumpType.none, HeatPumpType.none) },
+				{ BusHVACSystemConfiguration.Configuration2, Tuple.Create(HeatPumpType.non_R_744_2_stage, HeatPumpType.none) },
+				{ BusHVACSystemConfiguration.Configuration3, Tuple.Create(HeatPumpType.none, HeatPumpType.none) },
+				{ BusHVACSystemConfiguration.Configuration4, Tuple.Create(HeatPumpType.non_R_744_2_stage, HeatPumpType.none) },
+				{ BusHVACSystemConfiguration.Configuration5, Tuple.Create(HeatPumpType.none, HeatPumpType.non_R_744_3_stage) },
+				{ BusHVACSystemConfiguration.Configuration6, Tuple.Create(HeatPumpType.none, HeatPumpType.non_R_744_3_stage) },
+				{ BusHVACSystemConfiguration.Configuration7, Tuple.Create(HeatPumpType.non_R_744_2_stage, HeatPumpType.non_R_744_3_stage) },
+				{ BusHVACSystemConfiguration.Configuration8, Tuple.Create(HeatPumpType.none, HeatPumpType.non_R_744_3_stage) },
+				{ BusHVACSystemConfiguration.Configuration9, Tuple.Create(HeatPumpType.non_R_744_2_stage, HeatPumpType.non_R_744_3_stage) },
+				{ BusHVACSystemConfiguration.Configuration10, Tuple.Create(HeatPumpType.none, HeatPumpType.non_R_744_3_stage) },
+			};
+			if (!hvacConfig.HasValue || !mapping.ContainsKey(hvacConfig.Value)) {
+				throw new VectoException("invalid hvac configuration");
+			}
+			var entry = mapping[hvacConfig.Value];
+			return (entry.Item1, entry.Item2);
 		}
 	}
 
-	public class MockCompletedBusInputData : IInputDataProvider, IMultistageBusInputDataProvider
+	public class MockCompletedBusInputData : IInputDataProvider, IMultistepBusInputDataProvider
 	{
-		private IMultistageBusInputDataProvider input;
+		private IMultistepBusInputDataProvider input;
 	
 		public MockCompletedBusInputData(XmlReader vif)
 		{
@@ -171,7 +202,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var _xmlInputReader = kernel.Get<IXMLInputDataReader>();
 
 
-			input = _xmlInputReader.CreateDeclaration(vif) as IMultistageBusInputDataProvider;
+			input = _xmlInputReader.CreateDeclaration(vif) as IMultistepBusInputDataProvider;
 			
 			//JobName = Vehicle.VIN;
 		}

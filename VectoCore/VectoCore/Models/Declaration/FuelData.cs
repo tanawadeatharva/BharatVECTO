@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override string ErrorMessage => "FuelType {0} {1} not found!";
 
-		public Entry Lookup(FuelType fuelType, TankSystem? tankSystem = null)
+		public IFuelProperties Lookup(FuelType fuelType, TankSystem? tankSystem = null)
 		{
 			var entries = _data.FindAll(x => x.FuelType == fuelType);
 			if (entries.Count == 0) {
@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return entries.First();
 		}
 
-		public static Entry Diesel => Instance().Lookup(FuelType.DieselCI);
+		public static IFuelProperties Diesel => Instance().Lookup(FuelType.DieselCI);
 
 		protected override void ParseData(DataTable table)
 		{

@@ -83,6 +83,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 		IXMLAirdragDeclarationInputData CreateAirdragData(
 			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
+		IComponentInputData CreateComponentData(string version, XmlNode componentNode, string sourceFile);
+
 		IXMLGearboxDeclarationInputData CreateGearboxData(
 			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
@@ -140,6 +142,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
 		IXMLElectricStorageSystemDeclarationInputData CreateElectricStorageSystemData(string version,
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
+
+		IXMLBatteryPackDeclarationInputData CreateBatteryPackDeclarationInputData(string version,
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
 		IXMLREESSReader CreateStorageTypeReader(string version,

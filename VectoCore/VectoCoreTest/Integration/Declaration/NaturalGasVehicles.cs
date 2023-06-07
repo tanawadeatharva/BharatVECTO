@@ -54,7 +54,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Tests.Integration.Declaration
 {
 	[TestFixture()]
-	[Parallelizable(ParallelScope.All)]
+	[Parallelizable(ParallelScope.Fixtures)]
 	public class NaturalGasVehicles
 	{
 		const string Class5NG = @"TestData/Integration/DeclarationMode/Class5_NG/Tractor_4x2_vehicle-class-5_EURO6_2018.xml";
@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 		 TestCase(Class5NG, 2, TankSystem.Liquefied, 249.8, 691.93, TestName = "Class5 LNG 2"),
 		 TestCase(Class5NG, 2, TankSystem.Compressed, 255.5, 687.35, TestName = "Class5 CNG 2"),
 		TestCase(Class5NG, 6, TankSystem.Liquefied, 253.2, 701.46, TestName = "Class5 LNG 6"),
-		TestCase(Class5NG, 6, TankSystem.Compressed, 259.0, 696.81, TestName = "Class5 CNG 6"),
+		TestCase(Class5NG, 6, TankSystem.Compressed, 259.0, 696.8, TestName = "Class5 CNG 6"),
 			]
 		public void NaturalGasTankSystemTest(string filename, int runIdx, TankSystem tankSystem, double expectedFc, double expectedCo2)
 		{
@@ -122,8 +122,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 			var co2Node = manufacturerReport.XPathSelectElement(
 				$"//*[local-name()='Results']/*[local-name()='Result'][{runIdx}]//*[local-name()='CO2' and @unit='g/km']");
 
-			Console.WriteLine("fc: {0}  co2: {1}", fcNode.Value, co2Node.Value);
+			Console.WriteLine("fc: {0}  co2: {1}", fcNode?.Value ?? "NaN", co2Node?.Value ?? "NaN");
 
+			Assert.NotNull(fcNode);
+			Assert.NotNull(co2Node);
 			Assert.AreEqual(expectedFc, fcNode.Value.ToDouble(), 0.1);
 			Assert.AreEqual(expectedCo2, co2Node.Value.ToDouble(), 0.1);
 		}

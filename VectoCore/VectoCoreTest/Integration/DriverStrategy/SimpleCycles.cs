@@ -616,7 +616,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		public void AT_Gearbox_Special(string cycleData, string modFileName)
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
-			var run = ATPowerTrain.CreateEngineeringRun(cycle, GearboxType.ATSerial, modFileName);
+			var run = ATPowerTrain.CreateEngineeringRun(cycle, GearboxType.ATSerial,null, modFileName);
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);

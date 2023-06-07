@@ -36,13 +36,13 @@ namespace VECTO3GUI2020.Helper
 		}
 
 		public static bool ValidateXDocument(XDocument xDocument, Action<bool> resultAction = null,
-			Action<XmlSeverityType, ValidationEvent> validationErrorAction = null)
+			Action<XmlSeverityType, ValidationEvent, string> validationErrorAction = null)
 		{
 			var xmlDocument = xDocument.ToXmlDocument();
 			if (xmlDocument == null)
 				return false;
 
-			var documentType = XMLHelper.GetDocumentType(xmlDocument.DocumentElement.LocalName);
+			var documentType = XMLHelper.GetDocumentTypeFromRootElement(xmlDocument.DocumentElement.LocalName);
 			if (documentType == null)
 			{
 				throw new VectoException("unknown xml file! {0}", xmlDocument.DocumentElement.LocalName);

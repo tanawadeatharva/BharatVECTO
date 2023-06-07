@@ -54,5 +54,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		PCCStates PCCState { get; }
 
 		MeterPerSecond NextBrakeTriggerSpeed { get; }
+
+		MeterPerSecond ApplyOverspeed(MeterPerSecond targetSpeed);
 	}
 }

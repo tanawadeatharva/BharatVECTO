@@ -11,9 +11,9 @@ xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1"
 xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 v:/VectoCore/VectoCore/Resources/XSD/VectoOutputMultistep.0.1.xsd">
 	<PrimaryVehicle>
 		<Data id="text" xsi:type="PrimaryVehicleDataType">
-			<Vehicle xsi:type="VehiclePIFType">
-				<ManufacturerPrimaryVehicle>Generic Truck Manufacturer</ManufacturerPrimaryVehicle>
-				<ManufacturerAddressPrimaryVehicle>Street, ZIP City</ManufacturerAddressPrimaryVehicle>
+			<Vehicle xsi:type="ConventionalVehicleVIFType">
+				<Manufacturer>Generic Truck Manufacturer</Manufacturer>
+				<ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
 				<Model>Generic Model</Model>
 				<VIN>VEH-1234567890_nonSmart-ESS</VIN>
 				<Date>2017-02-15T11:00:00Z</Date>
@@ -39,9 +39,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<tcl:Entry gear="1" maxTorque="2500"/>
 					<tcl:Entry gear="12" maxTorque="1900"/>
 				</TorqueLimits>
-				<Components xsi:type="VehicleComponentsPIFType">
+				<Components xsi:type="Vehicle_Conventional_ComponentsVIFType">
 					<Engine>
-						<Data xsi:type="EngineDataPIFType">
+						<Data xsi:type="EngineDataVIFType">
 							<Manufacturer>Generic Engine Manufacturer</Manufacturer>
 							<Model>Bus 6x2</Model>
 							<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -52,9 +52,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 							<RatedPower>325032</RatedPower>
 							<MaxEngineTorque>2134</MaxEngineTorque>
 							<WHRType>
-								<v2.3:MechanicalOutputICE>false</v2.3:MechanicalOutputICE>
-								<v2.3:MechanicalOutputDrivetrain>false</v2.3:MechanicalOutputDrivetrain>
-								<v2.3:ElectricalOutput>true</v2.3:ElectricalOutput>
+								<MechanicalOutputICE>false</MechanicalOutputICE>
+								<MechanicalOutputDrivetrain>false</MechanicalOutputDrivetrain>
+								<ElectricalOutput>true</ElectricalOutput>
 							</WHRType>
 							<Mode>
 								<IdlingSpeed>600</IdlingSpeed>
@@ -77,7 +77,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 						</Data>
 					</Engine>
 					<Transmission>
-						<Data xsi:type="TransmissionDataPIFType">
+						<Data xsi:type="TransmissionDataVIFType">
 							<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 							<Model>Generic 40t Long Haul Truck Gearbox</Model>
 							<MainCertificationMethod>Standard values</MainCertificationMethod>
@@ -85,7 +85,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 							<Date>2017-01-11T11:00:00Z</Date>
 							<AppVersion>3.0.1</AppVersion>
 							<TransmissionType>AMT</TransmissionType>
-							<Gears xsi:type="TransmissionGearsPIFType">
+							<Gears xsi:type="TransmissionGearsVIFType">
 								<Gear number="1">
 									<Ratio>14.930</Ratio>
 									<MaxTorque>1900</MaxTorque>
@@ -139,7 +139,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 						</Data>
 					</Transmission>
 					<TorqueConverter>
-						<Data xsi:type="TorqueConverterDataPIFType">
+						<Data xsi:type="TorqueConverterDataVIFType">
 							<Manufacturer>Generic Torque Converter</Manufacturer>
 							<Model>Generic Torque Converter Model</Model>
 							<CertificationMethod>Standard values</CertificationMethod>
@@ -154,7 +154,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 						</Data>
 					</TorqueConverter>
 					<Angledrive>
-						<Data xsi:type="AngledriveDataPIFType">
+						<Data xsi:type="AngledriveDataVIFType">
 							<Manufacturer>Generic Angledrive</Manufacturer>
 							<Model>Generic Angledrive Model</Model>
 							<CertificationMethod>Standard values</CertificationMethod>
@@ -165,7 +165,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 						</Data>
 					</Angledrive>
 					<Axlegear>
-						<Data xsi:type="AxlegearDataPIFType">
+						<Data xsi:type="AxlegearDataVIFType">
 							<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 							<Model>Generic 40t Long Haul Truck AxleGear</Model>
 							<CertificationMethod>Standard values</CertificationMethod>
@@ -177,7 +177,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 						</Data>
 					</Axlegear>
 					<AxleWheels>
-						<Data xsi:type="AxleWheelsDataPIFType">
+						<Data xsi:type="AxleWheelsDataVIFType">
 							<Axles>
 								<Axle axleNumber="1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.0:AxleDataDeclarationType">
 									<v2.0:AxleType>VehicleNonDriven</v2.0:AxleType>
@@ -264,7 +264,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 						</Data>
 					</AxleWheels>
 					<Auxiliaries>
-						<Data xsi:type="AuxiliaryDataPIFType">
+						<Data xsi:type="AUX_Conventional_PrimaryBusType">
 							<Fan>
 								<Technology>Hydraulic driven - Constant displacement pump</Technology>
 							</Fan>
@@ -316,7 +316,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 			<Results>
 				<Status>success</Status>
 				<Result status="success">
-					<VehicleGroup>P33SD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P33SD</PrimaryVehicleSubgroup>
 					<Mission>Heavy Urban</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">15527.52</TotalVehicleMass>
@@ -327,10 +327,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">21.22359</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">1555.73</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P33SD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P33SD</PrimaryVehicleSubgroup>
 					<Mission>Heavy Urban</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">20937.60</TotalVehicleMass>
@@ -341,10 +340,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">25.40945</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">1862.57</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P33SD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P33SD</PrimaryVehicleSubgroup>
 					<Mission>Urban</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">15527.52</TotalVehicleMass>
@@ -355,10 +353,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">16.74101</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">1227.15</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P33SD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P33SD</PrimaryVehicleSubgroup>
 					<Mission>Urban</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">20937.60</TotalVehicleMass>
@@ -369,10 +366,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">20.24221</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">1483.80</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P33SD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P33SD</PrimaryVehicleSubgroup>
 					<Mission>Suburban</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">15527.52</TotalVehicleMass>
@@ -383,10 +379,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">14.34578</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">1051.58</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P33SD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P33SD</PrimaryVehicleSubgroup>
 					<Mission>Suburban</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">20937.60</TotalVehicleMass>
@@ -397,10 +392,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">17.60016</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">1290.13</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P33SD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P33SD</PrimaryVehicleSubgroup>
 					<Mission>Interurban</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">15469.51</TotalVehicleMass>
@@ -411,10 +405,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">11.82313</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">866.66</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P33SD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P33SD</PrimaryVehicleSubgroup>
 					<Mission>Interurban</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">18411.57</TotalVehicleMass>
@@ -425,10 +418,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">13.24283</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">970.73</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P33DD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P33DD</PrimaryVehicleSubgroup>
 					<Mission>Heavy Urban</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">16303.29</TotalVehicleMass>
@@ -439,10 +431,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">22.72091</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">1665.49</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P33DD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P33DD</PrimaryVehicleSubgroup>
 					<Mission>Heavy Urban</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">22616.43</TotalVehicleMass>
@@ -453,10 +444,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">27.95930</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">2049.48</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P33DD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P33DD</PrimaryVehicleSubgroup>
 					<Mission>Urban</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">16303.29</TotalVehicleMass>
@@ -467,10 +457,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">17.90756</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">1312.66</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P33DD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P33DD</PrimaryVehicleSubgroup>
 					<Mission>Urban</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">22616.43</TotalVehicleMass>
@@ -481,10 +470,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">22.23796</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">1630.09</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P33DD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P33DD</PrimaryVehicleSubgroup>
 					<Mission>Suburban</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">16303.29</TotalVehicleMass>
@@ -495,10 +483,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">15.28035</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">1120.08</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P33DD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P33DD</PrimaryVehicleSubgroup>
 					<Mission>Suburban</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">22616.43</TotalVehicleMass>
@@ -509,10 +496,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">19.26201</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">1411.95</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P34SD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P34SD</PrimaryVehicleSubgroup>
 					<Mission>Interurban</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">16467.68</TotalVehicleMass>
@@ -523,10 +509,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">11.93701</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">875.01</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P34SD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P34SD</PrimaryVehicleSubgroup>
 					<Mission>Interurban</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">19319.21</TotalVehicleMass>
@@ -537,10 +522,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">13.32341</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">976.63</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P34SD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P34SD</PrimaryVehicleSubgroup>
 					<Mission>Coach</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">16490.49</TotalVehicleMass>
@@ -551,10 +535,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">8.71847</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">639.08</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P34SD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P34SD</PrimaryVehicleSubgroup>
 					<Mission>Coach</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">18406.72</TotalVehicleMass>
@@ -565,10 +548,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">9.20255</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">674.57</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P34DD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P34DD</PrimaryVehicleSubgroup>
 					<Mission>Interurban</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">19588.08</TotalVehicleMass>
@@ -579,10 +561,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">13.58335</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">995.69</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P34DD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P34DD</PrimaryVehicleSubgroup>
 					<Mission>Interurban</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">23643.60</TotalVehicleMass>
@@ -593,10 +574,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">15.56740</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">1141.12</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P34DD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P34DD</PrimaryVehicleSubgroup>
 					<Mission>Coach</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">19703.95</TotalVehicleMass>
@@ -607,10 +587,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">9.82937</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">720.51</CO2>
 				</Result>
 				<Result status="success">
-					<VehicleGroup>P34DD</VehicleGroup>
+					<PrimaryVehicleSubgroup>P34DD</PrimaryVehicleSubgroup>
 					<Mission>Coach</Mission>
 					<SimulationParameters>
 						<TotalVehicleMass unit="kg">22484.88</TotalVehicleMass>
@@ -621,7 +600,6 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					<Fuel type="Diesel CI">
 						<EnergyConsumption unit="MJ/km">10.56728</EnergyConsumption>
 					</Fuel>
-					<CO2 unit="g/km">774.60</CO2>
 				</Result>
 			</Results>
 			<ApplicationInformation>
@@ -630,7 +608,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 			</ApplicationInformation>
 		</Data>
 		<Signature>
-			<di:Reference URI="#PIF-d10aff76c5d149948046">
+			<di:Reference URI="#VIF-d10aff76c5d149948046">
 				<di:Transforms>
 					<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 					<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
@@ -643,7 +621,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 	<ManufacturingStep stepCount="2">
 		<Data xsi:type="BusManufacturingStepDataType" id="MSTG-1">
 			<HashPreviousStep>
-			<di:Reference URI="#PIF-d11aff76c5d149948046">
+			<di:Reference URI="#VIF-d11aff76c5d149948046">
 				<di:Transforms>
 					<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 					<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>

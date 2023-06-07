@@ -29,7 +29,7 @@ namespace VECTO3GUI2020.Helper.TemplateSelector
 				Type type = null;
 
 				switch (vm) {
-					case InterimStageBusVehicleViewModel_v2_8 declvm:
+					case InterimStageBusVehicleViewModel declvm:
 						if (declvm.ExemptedVehicle) {
 							type = typeof(VehicleView_v2_8_exempted);
 						} else {

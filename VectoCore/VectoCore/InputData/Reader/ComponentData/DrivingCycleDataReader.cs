@@ -63,6 +63,10 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				return CycleType.PTO;
 			}
 
+			if (EPTOCycleDataParser.ValidateHeader(cols, false)) {
+				return CycleType.EPTO;
+			}
+
 			if (PTODuringDriveCycleParser.ValidateHeader(cols, false)) {
 				return CycleType.PTODuringDrive;
 			}
@@ -94,6 +98,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				case CycleType.MeasuredSpeedGear: return new MeasuredSpeedGearDataParser();
 				case CycleType.MeasuredSpeed: return new MeasuredSpeedDataParser();
 				case CycleType.PTO: return new PTOCycleDataParser();
+				case CycleType.EPTO: return new EPTOCycleDataParser();
 				case CycleType.VTP: return new VTPCycleDataParser();
 				case CycleType.PTODuringDrive: return new PTODuringDriveCycleParser();
 				default: throw new ArgumentOutOfRangeException("Cycle Type", type.ToString());
@@ -335,7 +340,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		public static class Fields
 		{
 			public const string PTOPowerDemand = "P_PTO";
+			public const string PTOElectricalPowerDemand = "P_PTO_el";
 			public const string PTOTorque = "PTO Torque";
+
 			public const string EngineSpeedFull = "Engine speed";
 			public const string PWheel = "Pwheel";
 			public const string Distance = "s";
@@ -593,10 +600,10 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					row => new DrivingCycleData.DrivingCycleEntry {
 						Time = row.ParseDouble(Fields.Time).SI<Second>(),
 						PWheel = row.ParseDouble(Fields.PWheel).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
-						Gear = (uint)row.ParseDouble(Fields.Gear),
+						Gear = (uint)row.ParseDoubleOrGetDefault(Fields.Gear),
 						AngularVelocity = row.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
 						AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI(Unit.SI.Kilo.Watt)
-													.Cast<Watt>(),
+													.Cast<Watt>()
 					}).ToArray();
 
 				return entries;
@@ -607,7 +614,6 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				var requiredCols = new[] {
 					Fields.Time,
 					Fields.PWheel,
-					Fields.Gear,
 					Fields.EngineSpeed
 				};
 				var allowedCols = new[] {
@@ -728,6 +734,48 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 						CheckComboColumns(header, new[] { Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle }, throwExceptions);
 			}
 		}
+
+		/// <summary>
+		/// Parser for PTO Cycles.
+		/// </summary>
+		// <t> [s], <PTO Power Demand> [kW]
+		private class EPTOCycleDataParser : AbstractCycleDataParser
+		{
+			#region Overrides of AbstractCycleDataParser
+
+			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table, bool crossWindRequired)
+			{
+				ValidateHeader(table.Columns);
+
+				var entries = table.Rows.Cast<DataRow>().Select(
+					row => new DrivingCycleData.DrivingCycleEntry {
+						Time = row.ParseDouble(Fields.Time).SI<Second>(),
+						PTOElectricalPowerDemand = (row.ParseDouble(Fields.PTOElectricalPowerDemand) * 1000).SI<Watt>(),
+					}).ToArray();
+
+				return entries;
+			}
+
+			#endregion
+
+			public static bool ValidateHeader(DataColumnCollection header, bool throwExceptions = true)
+			{
+				var requiredCols = new[] {
+					Fields.Time,
+					Fields.PTOElectricalPowerDemand
+				};
+				var allowedCols = new[] {
+					Fields.Time,
+					Fields.PTOElectricalPowerDemand
+				};
+
+				const bool allowAux = false;
+
+				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux);
+			}
+		}
+
+
 
 		/// <summary>
 		/// Parser for PTO Cycles.

@@ -5,7 +5,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	public class WHRCharger : StatefulVectoSimulationComponent<WHRCharger.State>, IElectricChargerPort
+	public class WHRCharger : StatefulVectoSimulationComponent<WHRCharger.State>, IElectricChargerPort, IUpdateable
 	{
 		public double Efficiency { get; }
 
@@ -23,6 +23,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			AdvanceState();
+			if (PreviousState.GeneratedEnergy == null && DataBus.IsTestPowertrain) {
+				// the method GeneratedEnergy is not called because there is no moddata to write and we are in a testpowertrain
+				// make sure the value is not null...
+				PreviousState.GeneratedEnergy = 0.SI<WattSecond>();
+			}
 		}
 
 		#endregion
@@ -71,7 +76,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			public WattSecond GeneratedEnergy { get; set; }
 
 			public WattSecond ExcessiveEnergy { get; set; }
+
+			public State Clone() => (State)MemberwiseClone();
 		}
 
+		#region Implementation of IUpdateable
+
+		protected override bool DoUpdateFrom(object other) {
+			if (other is WHRCharger c) {
+				PreviousState = c.PreviousState.Clone();
+				return true;
+			}
+			return false;
+		}
+
+		#endregion
 	}
 }

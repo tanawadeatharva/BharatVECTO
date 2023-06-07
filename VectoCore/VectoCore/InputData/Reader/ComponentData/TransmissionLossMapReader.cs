@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 			if (data.Rows.Count < 4) {
 				throw new VectoException(
-					"TransmissionLossMap for {0} must consist of at least four lines with numeric values (below file header", gearName);
+					"TransmissionLossMap for {0} must consist of at least four lines with numeric values (below file header)", gearName);
 			}
 
 			List<TransmissionLossMap.GearLossMapEntry> entries;
@@ -197,10 +197,10 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				new TransmissionLossMap.GearLossMapEntry(0.RPMtoRad(), -1e5.SI<NewtonMeter>(),
 					(1 - efficiency) * 1e5.SI<NewtonMeter>()),
 				new TransmissionLossMap.GearLossMapEntry(0.RPMtoRad(), 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>()),
-				new TransmissionLossMap.GearLossMapEntry(10000.RPMtoRad(), 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>()),
-				new TransmissionLossMap.GearLossMapEntry(10000.RPMtoRad(), -1e5.SI<NewtonMeter>(),
+				new TransmissionLossMap.GearLossMapEntry(100000.RPMtoRad(), 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>()),
+				new TransmissionLossMap.GearLossMapEntry(100000.RPMtoRad(), -1e5.SI<NewtonMeter>(),
 					(1 - efficiency) * 1e5.SI<NewtonMeter>()),
-				new TransmissionLossMap.GearLossMapEntry(10000.RPMtoRad(), 1e5.SI<NewtonMeter>(),
+				new TransmissionLossMap.GearLossMapEntry(100000.RPMtoRad(), 1e5.SI<NewtonMeter>(),
 					(1 - efficiency) * 1e5.SI<NewtonMeter>()),
 			};
 			return new TransmissionLossMap(entries, gearRatio, gearName);

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -83,6 +85,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
+		public override VectoSimulationJobType VehicleType
+		{
+			get => VectoSimulationJobType.ConventionalVehicle;
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -99,17 +105,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override TableData BoostingLimitations
 			=> ElementExists(XMLNames.Vehicle_BoostingLimitation)
-				? ReadTableData(XMLNames.Vehicle_BoostingLimitation, XMLNames.BoostingLimitation_Entry,
-					new Dictionary<string, string> {
-						{XMLNames.BoostingLimitation_RotationalSpeed, XMLNames.BoostingLimitation_RotationalSpeed},
-						{XMLNames.BoostingLimitation_BoostingTorque, XMLNames.BoostingLimitation_BoostingTorque}
-					})
+				? ReadTableData(XMLNames.Vehicle_BoostingLimitation, XMLNames.BoostingLimitation_Entry, 
+					AttributeMappings.BoostingLimitsMapping)
 				: null;
 
 		#endregion
 
 		public XMLDeclarationHevPxPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
+
+
+
+		public override VectoSimulationJobType VehicleType
+		{
+			get => Components.ElectricMachines.Entries.Any(em => em.ElectricMachine.IsIHPC())
+				? VectoSimulationJobType.IHPC
+				: VectoSimulationJobType.ParallelHybridVehicle;
+		}
+    
+		
+
+		public override bool HybridElectricHDV => true;
+
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -130,6 +147,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 			: base(jobData, xmlNode, sourceFile) { }
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
+
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.SerialHybridVehicle;
+
+		public override bool HybridElectricHDV => true;
+
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -154,6 +176,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
 		#endregion
+
+		public override bool OvcHev => true;
+
+
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
 	}
 
 
@@ -175,7 +202,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override bool Articulated => GetBool(XMLNames.Vehicle_Articulated);
 
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_E;
+
 		#endregion
+
+		public override bool OvcHev => true;
+
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -199,8 +231,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
+		#region Overrides of AbstractXMLVehicleDataProviderV24
+
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_S;
 
 		#endregion
+
+		#endregion
+
+		public override bool HybridElectricHDV => true;
+
 	}
 
 

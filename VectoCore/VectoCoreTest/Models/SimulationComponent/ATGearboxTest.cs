@@ -40,6 +40,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -47,6 +48,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Integration;
@@ -124,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 							   200,  0, 0,    2";
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 			var run = ATPowerTrain.CreateEngineeringRun(
-				cycle, gbxType,
+				cycle, gbxType, null,
 				$"AT_Vehicle_Drive-TC-{(gbxType == GearboxType.ATSerial ? "ser" : "ps")}.vmod");
 
 			run.Run();
@@ -140,7 +142,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 							  500, 40, 0,    0";
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 			var run = ATPowerTrain.CreateEngineeringRun(
-				cycle, gbxType,
+				cycle, gbxType, null,
 				$"AT_Vehicle_Drive-TC_shiftup-{(gbxType == GearboxType.ATSerial ? "ser" : "ps")}.vmod");
 
 			run.Run();
@@ -156,7 +158,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 							  500,  0, 0,    2";
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 			var run = ATPowerTrain.CreateEngineeringRun(
-				cycle, gbxType,
+				cycle, gbxType, null,
 				$"AT_Vehicle_Drive-TC_shiftdown-{(gbxType == GearboxType.ATSerial ? "ser" : "ps")}.vmod");
 
 			run.Run();
@@ -179,16 +181,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			Assert.IsTrue(gbxType.AutomaticTransmission());
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle(cycleName);
-			var run = ATPowerTrain.CreateEngineeringRun(
-				cycle, gbxType,
-				$"AT_Vehicle_Drive-TC_{cycleName}-{(gbxType == GearboxType.ATSerial ? "ser" : "ps")}.vmod");
-
 			var sumWriter =
 				new SummaryDataContainer(
 					new FileOutputWriter(
 						$"AT_Vehicle_Drive-TC_{cycleName}-{(gbxType == GearboxType.ATSerial ? "ser" : "ps")}"));
-			((VehicleContainer)run.GetContainer()).WriteSumData = (modData) =>
-				sumWriter.Write(run.GetContainer().ModalData, 0, 0, run.GetContainer().RunData);
+			var run = ATPowerTrain.CreateEngineeringRun(
+				cycle, gbxType, sumWriter,
+				$"AT_Vehicle_Drive-TC_{cycleName}-{(gbxType == GearboxType.ATSerial ? "ser" : "ps")}.vmod");
+
 			run.Run();
 			sumWriter.Finish();
 			Assert.IsTrue(run.FinishedWithoutErrors);
@@ -255,8 +255,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				
 			};
 
-			var gbx = GetATGearbox(GearboxData8SpdFile, limits);
-			Assert.AreEqual(8, gbx.Gears.Count);
+			AssertHelper.Exception<VectoException>(() => GetATGearbox(GearboxData8SpdFile, limits), messageContains: "Only the last 1 or 2 gears can be disabled.");
+			//Assert.AreEqual(8, gbx.Gears.Count);
 		}
 
 		public GearboxData GetATGearbox(string gbxFile, IList<ITorqueLimitInputData> torqueLimits)
@@ -264,7 +264,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var gearboxInput = JSONInputDataFactory.ReadGearbox(gbxFile);
 			var engineInput = JSONInputDataFactory.ReadEngine(EngineDataFile);
 
-			var dao = new DeclarationDataAdapterHeavyLorry();
+			var dao = new DeclarationDataAdapterHeavyLorry.Conventional();
 			var vehicleInput = new MockDeclarationVehicleInputData() {
 				EngineInputData = engineInput,
 				GearboxInputData = gearboxInput

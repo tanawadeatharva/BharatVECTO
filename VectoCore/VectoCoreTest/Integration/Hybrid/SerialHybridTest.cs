@@ -5,6 +5,7 @@ using System.Linq;
 using NUnit.Framework;
 using System.Data;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -567,10 +568,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			Assert.IsTrue(run.FinishedWithoutErrors);
 			Assert.IsTrue(modData.Rows.Count > 0);
-			Assert.That(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
-			Assert.That(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
-			Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()) is null));
-			Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()) is null));
+			Assert.IsFalse(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
+			Assert.IsFalse(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
+			//Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()) is null));
+			//Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()) is null));
 		}
 
 		[TestCase]
@@ -589,11 +590,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		{
 			var modData = RunHybridJob(@"TestData/Components/Retarder/S3/S3WithoutAxlegearInputRetarder.vecto", 0);
 			Assert.IsTrue(modData.Rows.Count > 0);
-			Assert.That(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
-			Assert.That(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
-			Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()) is null));
-			Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()) is null));
-		}
+            Assert.IsFalse(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
+            Assert.IsFalse(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
+            //Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()) is null));
+            //Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()) is null));
+        }
 
 
 
@@ -612,12 +613,12 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			jobContainer.AddRun(run);
 			return jobContainer;
 		}
-
 		public static VehicleContainer CreateSerialHybridPowerTrain(DrivingCycleData cycleData, string modFileName,
 			double initialBatCharge, SummaryDataContainer sumData, double pAuxEl,
 			PowertrainPosition pos, double ratio, Kilogram payload = null, Watt maxDriveTrainPower = null, 
 			GearboxType gearboxType = GearboxType.NoGearbox, RetarderType retarderType = RetarderType.None)
 		{
+			
 			var gearboxData = CreateGearboxData(gearboxType);
 			var axleGearData = CreateAxleGearData(gearboxType);
 			
@@ -632,8 +633,13 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var electricMotorData = MockSimulationDataFactory.CreateElectricMotorData(emFile, 2, pos, correctedRatio, 1);
 
 			var genFile = GeneratorFile;
-			electricMotorData.AddRange(
-				MockSimulationDataFactory.CreateElectricMotorData(genFile, 1, PowertrainPosition.GEN, 2.6, 1));
+
+			foreach (var md in MockSimulationDataFactory.CreateElectricMotorData(genFile, 1,
+						PowertrainPosition.GEN, 2.6, 1)) {
+				electricMotorData.Add(md);
+			}
+			//electricMotorData.AddRange(
+			//	MockSimulationDataFactory.CreateElectricMotorData(genFile, 1, PowertrainPosition.GEN, 2.6, 1));
 
 			var batFile = BatFile;
 			var batteryData = MockSimulationDataFactory.CreateBatteryData(batFile, initialBatCharge);
@@ -660,6 +666,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				//PowertrainConfiguration = PowertrainConfiguration.ParallelHybrid,
 				JobRunId = 0,
 				JobType = VectoSimulationJobType.SerialHybridVehicle,
+				SimulationType = SimulationType.DistanceCycle,
 				DriverData = driverData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
@@ -682,7 +689,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				WriteModalResults = true,
 			};
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData, 
-				x => { sumData?.Write(x, 1, 1, runData); }) { RunData = runData };
+				sumData) { RunData = runData };
 
 			var strategy = new SerialHybridStrategy(runData, container);
 			var es = new ElectricSystem(container);
@@ -703,7 +710,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 
-			var aux = new ElectricAuxiliary(container);
+			var aux = new HighVoltageElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", pAuxEl.SI<Watt>());
 			es.Connect(aux);
 
@@ -843,7 +850,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				return null;
 			}
 
-			container.ModData.AddElectricMotor(pos);
+			//container.ModData.AddElectricMotor(pos);
 			ctl.AddElectricMotor(pos, motorData.Item2);
 			var motor = new ElectricMotor(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos);
 			if (pos == PowertrainPosition.GEN) {
@@ -973,9 +980,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 					OverSpeed = 5.KMPHtoMeterPerSecond()
 				},
 				EngineStopStart = new DriverData.EngineStopStartData() {
-					EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
-					MaxEngineOffTimespan = DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
-					UtilityFactorStandstill = DeclarationData.Driver.EngineStopStart.UtilityFactor
+					EngineOffStandStillActivationDelay = DeclarationData.Driver.GetEngineStopStartLorry().ActivationDelay,
+					MaxEngineOffTimespan = DeclarationData.Driver.GetEngineStopStartLorry().MaxEngineOffTimespan,
+					UtilityFactorStandstill = DeclarationData.Driver.GetEngineStopStartLorry().UtilityFactor
 				}
 			};
 		}

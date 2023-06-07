@@ -130,5 +130,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public Meter Distance => 0.SI<Meter>();
+
+		protected override bool DoUpdateFrom(object other) => false;
+
 	}
 }

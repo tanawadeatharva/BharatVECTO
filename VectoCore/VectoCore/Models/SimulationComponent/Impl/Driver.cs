@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 	public class Driver :
 		StatefulProviderComponent<Driver.DriverState, IDrivingCycleOutPort, IDriverDemandInPort, IDriverDemandOutPort>,
-		IDriver, IDrivingCycleOutPort, IDriverDemandInPort, IDriverActions, IDriverInfo
+		IDriver, IDrivingCycleOutPort, IDriverDemandInPort, IDriverActions, IDriverInfo, IResetableVectoSimulationComponent
 	{
 		public DriverData DriverData { get; protected set; }
 
@@ -93,6 +93,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return retVal;
 		}
+
+		#region Implementation of IResetableVectoSimulationComponent
+
+		public void Reset(IVehicleContainer vehicleContainer)
+		{
+			CurrentState = new DriverState();
+			PreviousState = new DriverState();
+			DriverAcceleration = 0.SI<MeterPerSquareSecond>();
+		}
+
+		#endregion
 
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
@@ -1460,5 +1471,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public PCCStates PCCState => DriverStrategy.PCCState;
 
 		public MeterPerSecond NextBrakeTriggerSpeed => DriverStrategy.BrakeTrigger?.NextTargetSpeed;
+		public MeterPerSecond ApplyOverspeed(MeterPerSecond targetSpeed) => DriverStrategy.ApplyOverspeed(targetSpeed);
+
+		protected override bool DoUpdateFrom(object other) => false;
 	}
 }

@@ -38,19 +38,22 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 using TUGraz.VectoCore.Utils;
 
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	/// <summary>
-	/// Fake Data Writer Class for Tests.
-	/// </summary>
-	internal class MockModalDataContainer : IModalDataContainer
+    /// <summary>
+    /// Fake Data Writer Class for Tests.
+    /// </summary>
+    internal class MockModalDataContainer : IModalDataContainer
 	{
 		protected Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>> FuelColumns =
 			new Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>>();
@@ -63,7 +66,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Data = new ModalResults();
 
 			foreach (var value in EnumHelper.GetValues<ModalResultField>()) {
-				if (ModalDataContainer.FuelConsumptionSignals.Contains(value)) {
+				if (ModalResults.FuelConsumptionSignals.Contains(value) || Data.Columns.Contains(value.GetName())) {
 					continue;
 				}
 
@@ -88,7 +91,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				}
 
 				FuelColumns[entry] = new Dictionary<ModalResultField, DataColumn>();
-				foreach (var fcCol in ModalDataContainer.FuelConsumptionSignals) {
+				foreach (var fcCol in ModalResults.FuelConsumptionSignals) {
 					var col = Data.Columns.Add(
 						fuels.Count == 1 ? fcCol.GetName() : $"{fcCol.GetName()}_{entry.FuelType.GetLabel()}",
 						typeof(SI));
@@ -171,7 +174,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		IList<IFuelProperties> IModalDataContainer.FuelData => FuelColumns.Keys.ToList();
 
-		public FuelData.Entry FuelData => VectoCore.Models.Declaration.FuelData.Diesel;
+		public IFuelProperties FuelData => VectoCore.Models.Declaration.FuelData.Diesel;
 
 		public VectoRun.Status RunStatus => VectoRun.Status.Success;
 
@@ -231,16 +234,21 @@ namespace TUGraz.VectoCore.Tests.Utils
 			}
 		}
 
-		public void Reset()
-		{
 
+
+		public string GetColumnName(PowertrainPosition pos, ModalResultField mrf)
+		{
+			return string.Format(mrf.GetCaption(), pos.GetName());
 		}
+
+		public void Reset(bool clearColumns = false){}
+
 
 		public Second Duration => null;
 
 		public Meter Distance => null;
 
-		public Func<Second, Joule, Joule> AuxHeaterDemandCalc { get; set; }
+		public Func<Second, Joule, Joule, HeaterDemandResult> AuxHeaterDemandCalc { get; set; }
 
 		public KilogramPerWattSecond EngineLineCorrectionFactor(IFuelProperties fuel)
 		{
@@ -263,6 +271,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public bool HasCombustionEngine { get; set; }
+		public bool HasGearbox { get; set; }
+
 		public WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos)
 		{
 			throw new NotImplementedException();
@@ -328,22 +338,18 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
-		public double REESSStartSoC()
-		{
-			throw new NotImplementedException();
-		}
-
-		public double REESSEndSoC()
-		{
-			throw new NotImplementedException();
-		}
-
-		public WattSecond REESSLoss()
-		{
-			throw new NotImplementedException();
-		}
-
 		public ICorrectedModalData CorrectedModalData { get; }
+		public bool HasAxlegear { get; set; }
+
+		public void RegisterComponent(VectoSimulationComponent component)
+		{
+			
+		}
+
+		public bool ContainsColumn(string modalResultField)
+		{
+			return true;
+		}
 
 		public WattSecond REESSEnergyEnd()
 		{

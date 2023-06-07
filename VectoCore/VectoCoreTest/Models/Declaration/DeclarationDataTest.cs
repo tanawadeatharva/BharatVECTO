@@ -31,9 +31,13 @@
 
 using NUnit.Framework;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -41,296 +45,319 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
-    [TestFixture]
+	[TestFixture]
 	[Parallelizable(ParallelScope.All)]
-    public class DeclarationDataTest
-    {
-        private const double Tolerance = 0.0001;
+	public class DeclarationDataTest
+	{
+		private const double Tolerance = 0.0001;
 
-        private readonly MissionType[] _missions = {
-            MissionType.LongHaul,
-            MissionType.RegionalDelivery,
-            MissionType.UrbanDelivery,
-            MissionType.MunicipalUtility,
-            MissionType.Construction,
-        };
+		private readonly MissionType[] _missions = {
+			MissionType.LongHaul,
+			MissionType.RegionalDelivery,
+			MissionType.UrbanDelivery,
+			MissionType.MunicipalUtility,
+			MissionType.Construction,
+		};
 
-        [OneTimeSetUp]
-        public void RunBeforeAnyTests()
-        {
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-        }
+		private StandardKernel _kernel;
+
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+			_kernel = new StandardKernel(new VectoNinjectModule());
+		}
 
 
-        [TestCase("285/60 R22.5", 10.6, 0.914, 3.03, 0.440766),
-        TestCase("285/70 R19.5", 7.9, 0.895, 3.05, 0.434453),
-        TestCase("395/85 R20", 27.9, 1.18, 3.05, 0.572798)]
-        public void WheelDataTest(string wheels, double inertia, double wheelsDiameter, double circumferenceFactor,
-            double expectedDynamicRadius)
-        {
-            var tmp = DeclarationData.Wheels.Lookup(wheels);
+		[TestCase("285/60 R22.5", 10.6, 0.914, 3.03, 0.440766),
+		TestCase("285/70 R19.5", 7.9, 0.895, 3.05, 0.434453),
+		TestCase("395/85 R20", 27.9, 1.18, 3.05, 0.572798)]
+		public void WheelDataTest(string wheels, double inertia, double wheelsDiameter, double circumferenceFactor,
+			double expectedDynamicRadius)
+		{
+			var tmp = DeclarationData.Wheels.Lookup(wheels);
 
-            AssertHelper.AreRelativeEqual(inertia, tmp.Inertia);
-            AssertHelper.AreRelativeEqual(wheelsDiameter, tmp.WheelsDiameter);
-            AssertHelper.AreRelativeEqual(circumferenceFactor, tmp.CircumferenceFactor);
-            Assert.AreEqual(expectedDynamicRadius, tmp.DynamicTyreRadius.Value(), 1e-6);
-        }
+			AssertHelper.AreRelativeEqual(inertia, tmp.Inertia);
+			AssertHelper.AreRelativeEqual(wheelsDiameter, tmp.WheelsDiameter);
+			AssertHelper.AreRelativeEqual(circumferenceFactor, tmp.CircumferenceFactor);
+			Assert.AreEqual(expectedDynamicRadius, tmp.DynamicTyreRadius.Value(), 1e-6);
+		}
 
-        [
-            // fixed points
-            TestCase(400, 0),
-            TestCase(800, 0.47),
-            TestCase(1000, 0.58),
-            TestCase(1200, 0.53),
-            TestCase(1400, 0.46),
-            TestCase(1500, 0.43),
-            TestCase(1750, 0.22),
-            TestCase(1800, 0.2),
-            TestCase(2000, 0.11),
-            TestCase(2500, 0.11),
-            // interpolate
-            TestCase(600, 0.235),
-            TestCase(900, 0.525),
-            TestCase(1100, 0.555),
-            TestCase(1300, 0.495),
-            TestCase(1450, 0.445),
-            TestCase(1625, 0.325),
-            TestCase(1775, 0.21),
-            TestCase(1900, 0.155),
-            TestCase(2250, 0.11),
-        ]
-        public void PT1Test(double rpm, double expectedPt1)
-        {
-            var pt1 = DeclarationData.PT1.Lookup(rpm.RPMtoRad());
-            Assert.AreEqual(expectedPt1, pt1.Value.Value(), Tolerance);
-            Assert.IsFalse(pt1.Extrapolated);
-        }
+		[
+			// fixed points
+			TestCase(400, 0),
+			TestCase(800, 0.47),
+			TestCase(1000, 0.58),
+			TestCase(1200, 0.53),
+			TestCase(1400, 0.46),
+			TestCase(1500, 0.43),
+			TestCase(1750, 0.22),
+			TestCase(1800, 0.2),
+			TestCase(2000, 0.11),
+			TestCase(2500, 0.11),
+			// interpolate
+			TestCase(600, 0.235),
+			TestCase(900, 0.525),
+			TestCase(1100, 0.555),
+			TestCase(1300, 0.495),
+			TestCase(1450, 0.445),
+			TestCase(1625, 0.325),
+			TestCase(1775, 0.21),
+			TestCase(1900, 0.155),
+			TestCase(2250, 0.11),
+		]
+		public void PT1Test(double rpm, double expectedPt1)
+		{
+			var pt1 = DeclarationData.PT1.Lookup(rpm.RPMtoRad());
+			Assert.AreEqual(expectedPt1, pt1.Value.Value(), Tolerance);
+			Assert.IsFalse(pt1.Extrapolated);
+		}
 
-        [TestCase(200),
-        TestCase(0),
-        TestCase(13000),]
-        public void PT1ExceptionsTest(double rpm)
-        {
-            // EXTRAPOLATE 
-            var tmp = DeclarationData.PT1.Lookup(rpm.RPMtoRad());
-            Assert.IsTrue(tmp.Extrapolated);
-        }
+		[TestCase(200),
+		TestCase(0),
+		TestCase(13000),]
+		public void PT1ExceptionsTest(double rpm)
+		{
+			// EXTRAPOLATE 
+			var tmp = DeclarationData.PT1.Lookup(rpm.RPMtoRad());
+			Assert.IsTrue(tmp.Extrapolated);
+		}
 
-        [TestCase]
-        public void WHTCTest()
-        {
-            var whtc = DeclarationData.WHTCCorrection;
+		[TestCase]
+		public void WHTCTest()
+		{
+			var whtc = DeclarationData.WHTCCorrection;
 
-            var factors = new
-            {
-                urban = new[] { 0.0, 0.17, 0.69, 0.98, 0.62, 1.0, 1.0, 1.0, 0.45, 0.0 },
-                rural = new[] { 0.0, 0.3, 0.27, 0.0, 0.32, 0.0, 0.0, 0.0, 0.36, 0.22 },
-                motorway = new[] { 1.0, 0.53, 0.04, 0.02, 0.06, 0.0, 0.0, 0.0, 0.19, 0.78 }
-            };
+			var factors = new {
+				urban = new[] { 0.0, 0.17, 0.69, 0.98, 0.62, 1.0, 1.0, 1.0, 0.45, 0.0 },
+				rural = new[] { 0.0, 0.3, 0.27, 0.0, 0.32, 0.0, 0.0, 0.0, 0.36, 0.22 },
+				motorway = new[] { 1.0, 0.53, 0.04, 0.02, 0.06, 0.0, 0.0, 0.0, 0.19, 0.78 }
+			};
 
-            var r = new Random();
-            for (var i = 0; i < _missions.Length; i++)
-            {
-                var urban = r.NextDouble() * 2;
-                var rural = r.NextDouble() * 2;
-                var motorway = r.NextDouble() * 2;
-                var whtcValue = whtc.Lookup(_missions[i], rural: rural, urban: urban, motorway: motorway);
-                Assert.AreEqual(urban * factors.urban[i] + rural * factors.rural[i] + motorway * factors.motorway[i],
-                    whtcValue);
-            }
-        }
+			var r = new Random();
+			for (var i = 0; i < _missions.Length; i++) {
+				var urban = r.NextDouble() * 2;
+				var rural = r.NextDouble() * 2;
+				var motorway = r.NextDouble() * 2;
+				var whtcValue = whtc.Lookup(_missions[i], rural: rural, urban: urban, motorway: motorway);
+				Assert.AreEqual(urban * factors.urban[i] + rural * factors.rural[i] + motorway * factors.motorway[i],
+					whtcValue);
+			}
+		}
 
-        [TestCase]
-        public void WHTCLookupTestLongHaul()
-        {
-            var expected = 1.0057;
+		[TestCase]
+		public void WHTCLookupTestLongHaul()
+		{
+			var expected = 1.0057;
 
-            var rural = 1.0265;
-            var urban = 1.0948;
-            var motorway = 1.0057;
+			var rural = 1.0265;
+			var urban = 1.0948;
+			var motorway = 1.0057;
 
-            var lookup = DeclarationData.WHTCCorrection.Lookup(MissionType.LongHaul, rural: rural, urban: urban,
-                motorway: motorway);
-            Assert.AreEqual(expected, lookup, 1e-8);
-        }
+			var lookup = DeclarationData.WHTCCorrection.Lookup(MissionType.LongHaul, rural: rural, urban: urban,
+				motorway: motorway);
+			Assert.AreEqual(expected, lookup, 1e-8);
+		}
 
-        [TestCase]
-        public void WHTCLookupTestRegionalDelivery()
-        {
-            var expected = 1.02708700;
+		[TestCase]
+		public void WHTCLookupTestRegionalDelivery()
+		{
+			var expected = 1.02708700;
 
-            var rural = 1.0265;
-            var urban = 1.0948;
-            var motorway = 1.0057;
+			var rural = 1.0265;
+			var urban = 1.0948;
+			var motorway = 1.0057;
 
-            var lookup = DeclarationData.WHTCCorrection.Lookup(MissionType.RegionalDelivery, rural: rural, urban: urban,
-                motorway: motorway);
-            Assert.AreEqual(expected, lookup, 1e-8);
-        }
+			var lookup = DeclarationData.WHTCCorrection.Lookup(MissionType.RegionalDelivery, rural: rural, urban: urban,
+				motorway: motorway);
+			Assert.AreEqual(expected, lookup, 1e-8);
+		}
 
-        [
-        //TestCase("MediumLorryVan",),   
-        //TestCase("MediumLorryRigid"),
-        TestCase("RigidSolo", 0.013526, 0.017746, -0.000666),
-        TestCase("RigidTrailer", 0.017125, 0.072275, -0.004148),
-        TestCase("TractorSemitrailer", 0.030042, 0.040817, -0.00213),
-        TestCase("CoachBus", -0.000794, 0.02109, -0.00109),
-        TestCase("MediumLorriesRigid",-0.0015 ,0.0086, -0.00029),
-		TestCase("MediumLorriesVan", 0.0032, 0.00532, -0.00028)]
+		[
+			//TestCase("MediumLorryVan",),   
+			//TestCase("MediumLorryRigid"),
+			TestCase("RigidSolo", 0.013526, 0.017746, -0.000666),
+			TestCase("RigidTrailer", 0.017125, 0.072275, -0.004148),
+			TestCase("TractorSemitrailer", 0.030042, 0.040817, -0.00213),
+			TestCase("CoachBus", -0.000794, 0.02109, -0.00109),
+			TestCase("MediumLorriesRigid", -0.0015, 0.0086, -0.00029),
+			TestCase("MediumLorriesVan", 0.0032, 0.00532, -0.00028)]
 
-        public void AirDrag_WithStringKey(string key, double a1, double a2, double a3)
-        {
-            var value = DeclarationData.AirDrag.Lookup(key);
-            AssertHelper.AreRelativeEqual(a1, value.A1);
-            AssertHelper.AreRelativeEqual(a2, value.A2);
-            AssertHelper.AreRelativeEqual(a3, value.A3);
-        }
+		public void AirDrag_WithStringKey(string key, double a1, double a2, double a3)
+		{
+			var value = DeclarationData.AirDrag.Lookup(key);
+			AssertHelper.AreRelativeEqual(a1, value.A1);
+			AssertHelper.AreRelativeEqual(a2, value.A2);
+			AssertHelper.AreRelativeEqual(a3, value.A3);
+		}
 
-        [
-        //TestCase("MediumLorryVan",),   
-        //TestCase("MediumLorryRigid"),
-        TestCase("RigidSolo", 0.013526, 0.017746, -0.000666),
-        TestCase("TractorSemitrailer", 0.030042, 0.040817, -0.00213),
-        TestCase("RigidTrailer", 0.017125, 0.072275, -0.004148),
-        TestCase("CoachBus", -0.000794, 0.02109, -0.00109),
-		TestCase("MediumLorriesRigid", -0.0015, 0.0086, -0.00029),
-		TestCase("MediumLorriesVan", 0.0032, 0.00532, -0.00028)]
-        public void AirDrag_WithVehicleCategory(string parameterSet, double a1, double a2, double a3)
-        {
-            var value = DeclarationData.AirDrag.Lookup(parameterSet);
-            AssertHelper.AreRelativeEqual(a1, value.A1);
-            AssertHelper.AreRelativeEqual(a2, value.A2);
-            AssertHelper.AreRelativeEqual(a3, value.A3);
-        }
+		[
+			//TestCase("MediumLorryVan",),   
+			//TestCase("MediumLorryRigid"),
+			TestCase("RigidSolo", 0.013526, 0.017746, -0.000666),
+			TestCase("TractorSemitrailer", 0.030042, 0.040817, -0.00213),
+			TestCase("RigidTrailer", 0.017125, 0.072275, -0.004148),
+			TestCase("CoachBus", -0.000794, 0.02109, -0.00109),
+			TestCase("MediumLorriesRigid", -0.0015, 0.0086, -0.00029),
+			TestCase("MediumLorriesVan", 0.0032, 0.00532, -0.00028)]
+		public void AirDrag_WithVehicleCategory(string parameterSet, double a1, double a2, double a3)
+		{
+			var value = DeclarationData.AirDrag.Lookup(parameterSet);
+			AssertHelper.AreRelativeEqual(a1, value.A1);
+			AssertHelper.AreRelativeEqual(a2, value.A2);
+			AssertHelper.AreRelativeEqual(a3, value.A3);
+		}
 
-        [TestCase("TractorSemitrailer", 6.46, 0, 4.0, 7.71712257),
-        TestCase("TractorSemitrailer", 6.46, 60, 4.0, 7.71712257),
-        TestCase("TractorSemitrailer", 6.46, 75, 3.75, 7.35129203),
-        TestCase("TractorSemitrailer", 6.46, 100, 4.0, 7.03986404),
-        TestCase("TractorSemitrailer", 6.46, 62.1234, 4.0, 7.65751048),
-        TestCase("TractorSemitrailer", 6.46, 73.5432, 3.75, 7.37814098),
-        TestCase("TractorSemitrailer", 6.46, 92.8765, 4.0, 7.11234364),
-        TestCase("TractorSemitrailer", 6.46, 100.449, 4.0, 7.03571556),
-        TestCase("TractorSemitrailer", 6.46, 103, 3.6, 6.99454230),
-        TestCase("TractorSemitrailer", 6.46, 105, 3.9, 6.99177143),
-        TestCase("TractorSemitrailer", 6.46, 115, 4.0, 6.92267778),
-        TestCase("TractorSemitrailer", 6.46, 130, 4.0, 6.83867361),]
-        public void CrossWindCorrectionTest(string parameterSet, double crossSectionArea, double kmph, double height,
-            double expected)
-        {
-            var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
-				DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>(),
-                    height.SI<Meter>()),
-                CrossWindCorrectionMode.DeclarationModeCorrection);
+		[TestCase("TractorSemitrailer", 6.46, 0, 4.0, 7.71712257),
+		TestCase("TractorSemitrailer", 6.46, 60, 4.0, 7.71712257),
+		TestCase("TractorSemitrailer", 6.46, 75, 3.75, 7.35129203),
+		TestCase("TractorSemitrailer", 6.46, 100, 4.0, 7.03986404),
+		TestCase("TractorSemitrailer", 6.46, 62.1234, 4.0, 7.65751048),
+		TestCase("TractorSemitrailer", 6.46, 73.5432, 3.75, 7.37814098),
+		TestCase("TractorSemitrailer", 6.46, 92.8765, 4.0, 7.11234364),
+		TestCase("TractorSemitrailer", 6.46, 100.449, 4.0, 7.03571556),
+		TestCase("TractorSemitrailer", 6.46, 103, 3.6, 6.99454230),
+		TestCase("TractorSemitrailer", 6.46, 105, 3.9, 6.99177143),
+		TestCase("TractorSemitrailer", 6.46, 115, 4.0, 6.92267778),
+		TestCase("TractorSemitrailer", 6.46, 130, 4.0, 6.83867361),]
+		public void CrossWindCorrectionTest(string parameterSet, double crossSectionArea, double kmph, double height,
+			double expected)
+		{
+			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
+				new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet,
+					crossSectionArea.SI<SquareMeter>(),
+					height.SI<Meter>()),
+				CrossWindCorrectionMode.DeclarationModeCorrection);
 
-            var tmp = crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond());
-            AssertHelper.AreRelativeEqual(expected, tmp.Value(), toleranceFactor: 1e-3);
-        }
+			var tmp = crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond());
+			AssertHelper.AreRelativeEqual(expected, tmp.Value(), toleranceFactor: 1e-3);
+		}
 
-        [TestCase("TractorSemitrailer", 5.8, 4.0)]
-        public void CrossWindGetDeclarationAirResistance(string parameterSet, double cdxa0, double height)
-        {
-            var curve =
-				DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(parameterSet, cdxa0.SI<SquareMeter>(), height.SI<Meter>());
+		[TestCase("TractorSemitrailer", 5.8, 4.0)]
+		public void CrossWindGetDeclarationAirResistance(string parameterSet, double cdxa0, double height)
+		{
+			var curve =
+				new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet, cdxa0.SI<SquareMeter>(),
+					height.SI<Meter>());
 
-            AssertHelper.AreRelativeEqual(60.KMPHtoMeterPerSecond(), curve[1].Velocity);
-            AssertHelper.AreRelativeEqual(7.0418009.SI<SquareMeter>(), curve[1].EffectiveCrossSectionArea);
+			AssertHelper.AreRelativeEqual(60.KMPHtoMeterPerSecond(), curve[1].Velocity);
+			AssertHelper.AreRelativeEqual(7.0418009.SI<SquareMeter>(), curve[1].EffectiveCrossSectionArea);
 
-            AssertHelper.AreRelativeEqual(65.KMPHtoMeterPerSecond(), curve[2].Velocity);
-            AssertHelper.AreRelativeEqual(6.90971991.SI<SquareMeter>(), curve[2].EffectiveCrossSectionArea);
+			AssertHelper.AreRelativeEqual(65.KMPHtoMeterPerSecond(), curve[2].Velocity);
+			AssertHelper.AreRelativeEqual(6.90971991.SI<SquareMeter>(), curve[2].EffectiveCrossSectionArea);
 
-            AssertHelper.AreRelativeEqual(85.KMPHtoMeterPerSecond(), curve[6].Velocity);
-            AssertHelper.AreRelativeEqual(6.54224222.SI<SquareMeter>(), curve[6].EffectiveCrossSectionArea);
+			AssertHelper.AreRelativeEqual(85.KMPHtoMeterPerSecond(), curve[6].Velocity);
+			AssertHelper.AreRelativeEqual(6.54224222.SI<SquareMeter>(), curve[6].EffectiveCrossSectionArea);
 
-            AssertHelper.AreRelativeEqual(100.KMPHtoMeterPerSecond(), curve[9].Velocity);
-            AssertHelper.AreRelativeEqual(6.37434824.SI<SquareMeter>(), curve[9].EffectiveCrossSectionArea);
+			AssertHelper.AreRelativeEqual(100.KMPHtoMeterPerSecond(), curve[9].Velocity);
+			AssertHelper.AreRelativeEqual(6.37434824.SI<SquareMeter>(), curve[9].EffectiveCrossSectionArea);
 
-            AssertHelper.AreRelativeEqual(105.KMPHtoMeterPerSecond(), curve[10].Velocity);
-            AssertHelper.AreRelativeEqual(6.33112792.SI<SquareMeter>(), curve[10].EffectiveCrossSectionArea);
+			AssertHelper.AreRelativeEqual(105.KMPHtoMeterPerSecond(), curve[10].Velocity);
+			AssertHelper.AreRelativeEqual(6.33112792.SI<SquareMeter>(), curve[10].EffectiveCrossSectionArea);
 
 
 			Assert.AreEqual(16, curve.Count);
-        }
+		}
 
-        [
-            TestCase("TractorSemitrailer", 6.46, -0.1, 3.0),
+		[
+			TestCase("TractorSemitrailer", 6.46, -0.1, 3.0),
 			TestCase("TractorSemitrailer", 6.46, 200.1, 3.0),
-        ]
-        public void CrossWindCorrectionExceptionTest(string parameterSet, double crossSectionArea, double kmph, double height)
+		]
+		public void CrossWindCorrectionExceptionTest(string parameterSet, double crossSectionArea, double kmph,
+			double height)
+		{
+			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
+				new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet,
+					crossSectionArea.SI<SquareMeter>(),
+					height.SI<Meter>()),
+				CrossWindCorrectionMode.DeclarationModeCorrection);
+
+			AssertHelper.Exception<VectoException>(() =>
+				crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond()));
+		}
+
+		[TestCase]
+		public void CrossWindAreaCdxANotSet_DeclarationMode()
+		{
+			var airDrag = new AirdragData() {
+				CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection,
+				CrossWindCorrectionCurve =
+					new CrosswindCorrectionCdxALookup(null, null, CrossWindCorrectionMode.DeclarationModeCorrection)
+			};
+
+			Assert.IsTrue(airDrag.IsValid(),
+				"In Speed Dependent (Declaration Mode) Crosswind Correction the CdxA Value can be empty.");
+		}
+
+		[TestCase]
+		public void CrossWindAreaCdxANotSet_Other()
+		{
+			foreach (var correctionMode in EnumHelper.GetValues<CrossWindCorrectionMode>()) {
+				if (correctionMode == CrossWindCorrectionMode.DeclarationModeCorrection) {
+					continue;
+				}
+
+				var airDrag = new AirdragData {
+					CrossWindCorrectionMode = correctionMode,
+					CrossWindCorrectionCurve =
+						new CrosswindCorrectionCdxALookup(null, null, correctionMode)
+				};
+
+				Assert.IsFalse(airDrag.IsValid(),
+					"Only in Speed Dependent (Declaration Mode) Crosswind Correction the CdxA Value can be empty.");
+			}
+		}
+
+		//Heavy Lorry
+		[TestCase(VehicleClass.Class6, MissionType.LongHaul, "Standard technology", 1200, 0.7),
+		TestCase(VehicleClass.Class6, MissionType.RegionalDelivery, "Standard technology", 1000, 0.7),
+		TestCase(VehicleClass.Class6, MissionType.UrbanDelivery, "Standard technology", 1000, 0.7),
+		TestCase(VehicleClass.Class6, MissionType.MunicipalUtility, "Standard technology", 1000, 0.7),
+		TestCase(VehicleClass.Class6, MissionType.Construction, "Standard technology", 1000, 0.7),
+		TestCase(VehicleClass.Class6, MissionType.LongHaul, "Standard technology - LED headlights, all", 1150, 0.7),
+		TestCase(VehicleClass.Class6, MissionType.RegionalDelivery, "Standard technology - LED headlights, all", 950,
+			0.7),
+		TestCase(VehicleClass.Class6, MissionType.UrbanDelivery, "Standard technology - LED headlights, all", 950, 0.7),
+		TestCase(VehicleClass.Class6, MissionType.MunicipalUtility, "Standard technology - LED headlights, all", 950,
+			0.7),
+		TestCase(VehicleClass.Class6, MissionType.Construction, "Standard technology - LED headlights, all", 950, 0.7),]
+
+		//Medium Lorry
+		[TestCase(VehicleClass.Class51, MissionType.RegionalDelivery, "Standard technology", 600, 0.7),
+		TestCase(VehicleClass.Class52, MissionType.UrbanDelivery, "Standard technology", 600, 0.7),
+		TestCase(VehicleClass.Class53, MissionType.RegionalDelivery, "Standard technology - LED headlights, all", 550,
+			0.7),
+		TestCase(VehicleClass.Class55, MissionType.UrbanDelivery, "Standard technology - LED headlights, all", 550,
+			0.7)]
+		public void AuxElectricSystemTest(VehicleClass hdvClass, MissionType mission, string technology, double value,
+			double efficiency)
+		{
+			AssertHelper.AreRelativeEqual(value / efficiency,
+				DeclarationData.ElectricSystem.Lookup(hdvClass, mission, technology).PowerDemand.Value());
+		}
+
+		//Heavy Lorry
+		[TestCase(VehicleClass.Class6, MissionType.Interurban, "Standard technology"),
+		TestCase(VehicleClass.Class6, MissionType.LongHaul, "Standard technology - Flux-Compensator")]
+		//Medium Lorry
+		[TestCase(VehicleClass.Class55, MissionType.LongHaul, "Standard technology"),
+		TestCase(VehicleClass.Class55, MissionType.UrbanDelivery, "Standard technology - Flux-Compensator"),
+		TestCase(VehicleClass.Class55, MissionType.LongHaul, "Standard technology - LED headlights, all")]
+
+		public void AuxElectricSystem_NotExistingError(VehicleClass hdvClass, MissionType mission, string technology)
         {
-            var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
-				DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>(),
-                    height.SI<Meter>()),
-                CrossWindCorrectionMode.DeclarationModeCorrection);
-
-            AssertHelper.Exception<VectoException>(() =>
-                crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond()));
-        }
-
-        [TestCase]
-        public void CrossWindAreaCdxANotSet_DeclarationMode()
-        {
-            var airDrag = new AirdragData()
-            {
-                CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection,
-                CrossWindCorrectionCurve =
-                    new CrosswindCorrectionCdxALookup(null, null, CrossWindCorrectionMode.DeclarationModeCorrection)
-            };
-
-            Assert.IsTrue(airDrag.IsValid(),
-                "In Speed Dependent (Declaration Mode) Crosswind Correction the CdxA Value can be empty.");
-        }
-
-        [TestCase]
-        public void CrossWindAreaCdxANotSet_Other()
-        {
-            foreach (var correctionMode in EnumHelper.GetValues<CrossWindCorrectionMode>())
-            {
-                if (correctionMode == CrossWindCorrectionMode.DeclarationModeCorrection)
-                {
-                    continue;
-                }
-
-                var airDrag = new AirdragData
-                {
-                    CrossWindCorrectionMode = correctionMode,
-                    CrossWindCorrectionCurve =
-                        new CrosswindCorrectionCdxALookup(null, null, correctionMode)
-                };
-
-                Assert.IsFalse(airDrag.IsValid(),
-                    "Only in Speed Dependent (Declaration Mode) Crosswind Correction the CdxA Value can be empty.");
-            }
-        }
-
-        [TestCase(MissionType.LongHaul, "Standard technology", 1200, 0.7),
-        TestCase(MissionType.RegionalDelivery, "Standard technology", 1000, 0.7),
-        TestCase(MissionType.UrbanDelivery, "Standard technology", 1000, 0.7),
-        TestCase(MissionType.MunicipalUtility, "Standard technology", 1000, 0.7),
-        TestCase(MissionType.Construction, "Standard technology", 1000, 0.7),
-        TestCase(MissionType.LongHaul, "Standard technology - LED headlights, all", 1150, 0.7),
-        TestCase(MissionType.RegionalDelivery, "Standard technology - LED headlights, all", 950, 0.7),
-        TestCase(MissionType.UrbanDelivery, "Standard technology - LED headlights, all", 950, 0.7),
-        TestCase(MissionType.MunicipalUtility, "Standard technology - LED headlights, all", 950, 0.7),
-        TestCase(MissionType.Construction, "Standard technology - LED headlights, all", 950, 0.7),]
-        public void AuxElectricSystemTest(MissionType mission, string technology, double value, double efficiency)
-        {
-            AssertHelper.AreRelativeEqual(value / efficiency,
-                DeclarationData.ElectricSystem.Lookup(mission, technology).PowerDemand.Value());
-        }
-
-        [TestCase(MissionType.Interurban, "Standard technology"),
-        TestCase(MissionType.LongHaul, "Standard technology - Flux-Compensator")]
-        public void AuxElectricSystem_NotExistingError(MissionType mission, string technology)
-        {
-            AssertHelper.Exception<VectoException>(() => { DeclarationData.ElectricSystem.Lookup(mission, technology); });
+            AssertHelper.Exception<VectoException>(() => { DeclarationData.ElectricSystem.Lookup(hdvClass, mission, technology); });
         }
 
         [TestCase("only the drive shaft of the PTO - shift claw, synchronizer, sliding gearwheel", 50),
@@ -520,60 +547,81 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         }
 
         [
-            TestCase(MissionType.LongHaul, VehicleClass.Class2, 370, "Fixed displacement", null, null, null),
-            TestCase(MissionType.LongHaul, VehicleClass.Class4, 610, "Fixed displacement", null, null, null),
-            TestCase(MissionType.LongHaul, VehicleClass.Class5, 720, "Fixed displacement", null, null, null),
-            TestCase(MissionType.LongHaul, VehicleClass.Class9, 720, "Fixed displacement", null, null, null),
-            TestCase(MissionType.LongHaul, VehicleClass.Class10, 570, "Fixed displacement", null, null, null),
-            TestCase(MissionType.LongHaul, VehicleClass.Class11, 720, "Fixed displacement", null, null, null),
-            TestCase(MissionType.LongHaul, VehicleClass.Class12, 570, "Fixed displacement", null, null, null),
-            TestCase(MissionType.RegionalDelivery, VehicleClass.Class1s, 280, "Fixed displacement", null, null, null),
-			TestCase(MissionType.RegionalDelivery, VehicleClass.Class1, 280, "Fixed displacement", null, null, null),
-            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 340, "Fixed displacement", null, null, null),
-            TestCase(MissionType.RegionalDelivery, VehicleClass.Class3, 370, "Fixed displacement", null, null, null),
-            TestCase(MissionType.RegionalDelivery, VehicleClass.Class4, 570, "Fixed displacement", null, null, null),
-            TestCase(MissionType.RegionalDelivery, VehicleClass.Class5, 670, "Fixed displacement", null, null, null),
-            TestCase(MissionType.RegionalDelivery, VehicleClass.Class9, 590, "Fixed displacement", null, null, null),
-            TestCase(MissionType.RegionalDelivery, VehicleClass.Class10, 570, "Fixed displacement", null, null, null),
-            TestCase(MissionType.RegionalDelivery, VehicleClass.Class11, 590, "Fixed displacement", null, null, null),
-            TestCase(MissionType.RegionalDelivery, VehicleClass.Class12, 570, "Fixed displacement", null, null, null),
-			TestCase(MissionType.UrbanDelivery, VehicleClass.Class1s, 270, "Fixed displacement", null, null, null),
-            TestCase(MissionType.UrbanDelivery, VehicleClass.Class1, 270, "Fixed displacement", null, null, null),
-            TestCase(MissionType.UrbanDelivery, VehicleClass.Class2, 310, "Fixed displacement", null, null, null),
-            TestCase(MissionType.UrbanDelivery, VehicleClass.Class3, 350, "Fixed displacement", null, null, null),
-            TestCase(MissionType.UrbanDelivery, VehicleClass.Class5, 620, "Fixed displacement", null, null, null),
-            TestCase(MissionType.MunicipalUtility, VehicleClass.Class4, 510, "Fixed displacement", null, null, null),
-            TestCase(MissionType.MunicipalUtility, VehicleClass.Class9, 510, "Fixed displacement", null, null, null),
-            TestCase(MissionType.MunicipalUtility, VehicleClass.Class11, 510, "Fixed displacement", null, null, null),
-            TestCase(MissionType.Construction, VehicleClass.Class11, 770, "Fixed displacement", null, null, null),
-            TestCase(MissionType.Construction, VehicleClass.Class12, 770, "Fixed displacement", null, null, null),
-            TestCase(MissionType.Construction, VehicleClass.Class16, 770, "Fixed displacement", null, null, null),
-            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 325.5, "Fixed displacement with elec. control", null,
+            TestCase(MissionType.LongHaul, VehicleClass.Class2, 370, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.LongHaul, VehicleClass.Class4, 610, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.LongHaul, VehicleClass.Class5, 720, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.LongHaul, VehicleClass.Class9, 720, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.LongHaul, VehicleClass.Class10, 570, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.LongHaul, VehicleClass.Class11, 720, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.LongHaul, VehicleClass.Class12, 570, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.RegionalDelivery, VehicleClass.Class1s, 280, 0, "Fixed displacement", null, null, null),
+			TestCase(MissionType.RegionalDelivery, VehicleClass.Class1, 280, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 340, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.RegionalDelivery, VehicleClass.Class3, 370, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.RegionalDelivery, VehicleClass.Class4, 570, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.RegionalDelivery, VehicleClass.Class5, 670, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.RegionalDelivery, VehicleClass.Class9, 590, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.RegionalDelivery, VehicleClass.Class10, 570, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.RegionalDelivery, VehicleClass.Class11, 590, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.RegionalDelivery, VehicleClass.Class12, 570, 0, "Fixed displacement", null, null, null),
+			TestCase(MissionType.UrbanDelivery, VehicleClass.Class1s, 270, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.UrbanDelivery, VehicleClass.Class1, 270, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.UrbanDelivery, VehicleClass.Class2, 310, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.UrbanDelivery, VehicleClass.Class3, 350, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.UrbanDelivery, VehicleClass.Class5, 620, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.MunicipalUtility, VehicleClass.Class4, 510, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.MunicipalUtility, VehicleClass.Class9, 510, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.MunicipalUtility, VehicleClass.Class11, 510, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.Construction, VehicleClass.Class11, 770, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.Construction, VehicleClass.Class12, 770, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.Construction, VehicleClass.Class16, 770, 0, "Fixed displacement", null, null, null),
+            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 325.5, 0, "Fixed displacement with elec. control", null,
                 null,
                 null),
-            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 289, "Dual displacement", null, null, null),
-            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 255, "Variable displacement mech. controlled", null,
+            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 289, 0, "Dual displacement", null, null, null),
+            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 255, 0, "Variable displacement mech. controlled", null,
                 null,
                 null),
-            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 204, "Variable displacement elec. controlled", null,
+            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 204, 0, "Variable displacement elec. controlled", null,
                 null,
                 null),
-            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 92.87, "Electric", null, null, null),
-            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 665, "Fixed displacement", "Fixed displacement", null,
+            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 92.87, 0, "Electric", null, null, null),
+            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 665, 0, "Fixed displacement", "Fixed displacement", null,
                 null),
-            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 1295, "Fixed displacement", "Fixed displacement",
+            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 1295, 0, "Fixed displacement", "Fixed displacement",
                 "Fixed displacement", "Fixed displacement"),
-            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 1021.5, "Dual displacement",
-                "Variable displacement mech. controlled", "Fixed displacement with elec. control",
+            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 1021.5, 0, 
+				"Dual displacement",
+                "Variable displacement mech. controlled", 
+				"Fixed displacement with elec. control",
                 "Variable displacement elec. controlled"),
+
+            //Electric and Mechanic
+			TestCase(MissionType.UrbanDelivery, 
+				VehicleClass.Class5, 
+				852.048, 
+				768.72,
+                "Fixed displacement",
+				"Dual displacement",
+                "Electric driven pump",
+                "Full electric steering gear"),
+			TestCase(MissionType.UrbanDelivery, 
+				VehicleClass.Class5, 
+				0, 
+				262.386,
+                "Full electric steering gear",
+				"Full electric steering gear",
+				"Full electric steering gear",
+				"Full electric steering gear"),
         ]
-        public void Aux_SteeringPumpLookupValues(MissionType mission, VehicleClass hdvClass, double expected, string axle1,
+        public void Aux_SteeringPumpLookupValues(MissionType mission, VehicleClass hdvClass, double expectedMech, double expectedElectric, string axle1,
             string axle2, string axle3, string axle4)
-        {
-            AssertHelper.AreRelativeEqual(expected,
-                DeclarationData.SteeringPump.Lookup(mission, hdvClass,
-                    new[] { axle1, axle2, axle3, axle4 }.TakeWhile(a => a != null).ToArray()));
-        }
+		{
+			var result = DeclarationData.SteeringPump.Lookup(mission, hdvClass,
+				new[] { axle1, axle2, axle3, axle4 }.TakeWhile(a => a != null).ToArray());
+            AssertHelper.AreRelativeEqual(expectedMech, result.mechanicalPumps);
+            AssertHelper.AreRelativeEqual(expectedElectric, result.electricPumps);
+		}
 
         [TestCase]
         public void Aux_SteeringpumpMultipleLookups()
@@ -583,7 +631,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             const MissionType mission = MissionType.LongHaul;
             const VehicleClass hdvClass = VehicleClass.Class5;
             var first = DeclarationData.SteeringPump.Lookup(mission, hdvClass,
-                new[] { axle1 }.TakeWhile(a => a != null).ToArray());
+                new[] { axle1 }.TakeWhile(a => a != null).ToArray()).mechanicalPumps;
 
             for (var i = 0; i < 10; i++)
             {
@@ -592,7 +640,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             }
 
             var last = DeclarationData.SteeringPump.Lookup(mission, hdvClass,
-                new[] { axle1 }.TakeWhile(a => a != null).ToArray());
+                new[] { axle1 }.TakeWhile(a => a != null).ToArray()).mechanicalPumps;
 
             Assert.AreEqual(first.Value(), last.Value(), 1e-3);
         }
@@ -657,14 +705,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         }
         
         [Test,
-        TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2F, 5000.01, 0, false, VehicleClass.Class51),
-        TestCase(VehicleCategory.Van, AxleConfiguration.AxleConfig_4x2F, 5000.01, 0, false, VehicleClass.Class52),
+        //TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2F, 5000.01, 0, false, VehicleClass.Class51),
+        //TestCase(VehicleCategory.Van, AxleConfiguration.AxleConfig_4x2F, 5000.01, 0, false, VehicleClass.Class52),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 5000.01, 0, false, VehicleClass.Class53),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 5000.01, 0, false, VehicleClass.Class53),
         TestCase(VehicleCategory.Van, AxleConfiguration.AxleConfig_4x2, 5000.01, 0, false, VehicleClass.Class54),
-        TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x4, 5000.01, 0, false, VehicleClass.Class55),
-        TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x4, 5000.01, 0, false, VehicleClass.Class55),
-        TestCase(VehicleCategory.Van, AxleConfiguration.AxleConfig_4x4, 5000.01, 0, false, VehicleClass.Class56),
+        //TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x4, 5000.01, 0, false, VehicleClass.Class55),
+        //TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x4, 5000.01, 0, false, VehicleClass.Class55),
+        //TestCase(VehicleCategory.Van, AxleConfiguration.AxleConfig_4x4, 5000.01, 0, false, VehicleClass.Class56),
 
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7400.01, 0, false, VehicleClass.Class1s),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 7400.01, 0, false, VehicleClass.Class1s),
@@ -734,12 +782,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         }
 
         [
-        TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2F, 5001, 0, false, VehicleClass.Class51, 85),
-        TestCase(VehicleCategory.Van, AxleConfiguration.AxleConfig_4x2F, 5001, 0, false, VehicleClass.Class52, 85),
+        //TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2F, 5001, 0, false, VehicleClass.Class51, 85),
+        //TestCase(VehicleCategory.Van, AxleConfiguration.AxleConfig_4x2F, 5001, 0, false, VehicleClass.Class52, 85),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 5001, 0, false, VehicleClass.Class53, 85),
         TestCase(VehicleCategory.Van, AxleConfiguration.AxleConfig_4x2, 5001, 0, false, VehicleClass.Class54, 85),
-        TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x4, 5001, 0, false, VehicleClass.Class55, 85),
-        TestCase(VehicleCategory.Van, AxleConfiguration.AxleConfig_4x4, 5001, 0, false, VehicleClass.Class56, 85),
+        //TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x4, 5001, 0, false, VehicleClass.Class55, 85),
+        //TestCase(VehicleCategory.Van, AxleConfiguration.AxleConfig_4x4, 5001, 0, false, VehicleClass.Class56, 85),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7401, 0, false, VehicleClass.Class1s, 85),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7501, 0, false, VehicleClass.Class1, 85),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10001, 0, false, VehicleClass.Class2, 85),
@@ -766,24 +814,24 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         }
 
         [Test,
-        TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2F, 7400, 0, false, VehicleClass.Class51, 800, null,
-            TestName = "SegmentLookupBodyWeight Class51 Rigid"),
-        TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2F, 7400, 0, false, VehicleClass.Class51, 800, null,
-            TestName = "SegmentLookupBodyWeight Class51 Tractor"),
-        TestCase(VehicleCategory.Van, AxleConfiguration.AxleConfig_4x2F, 7400, 0, false, VehicleClass.Class52, 0, null,
-            TestName = "SegmentLookupBodyWeight Class52 Van"),
+        //TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2F, 7400, 0, false, VehicleClass.Class51, 800, null,
+        //    TestName = "SegmentLookupBodyWeight Class51 Rigid"),
+        //TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2F, 7400, 0, false, VehicleClass.Class51, 800, null,
+        //    TestName = "SegmentLookupBodyWeight Class51 Tractor"),
+        //TestCase(VehicleCategory.Van, AxleConfiguration.AxleConfig_4x2F, 7400, 0, false, VehicleClass.Class52, 0, null,
+        //    TestName = "SegmentLookupBodyWeight Class52 Van"),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7400, 0, false, VehicleClass.Class53, 800, null,
             TestName = "SegmentLookupBodyWeight Class53 Rigid"),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 7400, 0, false, VehicleClass.Class53, 800, null,
             TestName = "SegmentLookupBodyWeight Class53 Tractor"),
         TestCase(VehicleCategory.Van, AxleConfiguration.AxleConfig_4x2, 7400, 0, false, VehicleClass.Class54, 0, null,
             TestName = "SegmentLookupBodyWeight Class54 Van"),
-        TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x4, 7400, 0, false, VehicleClass.Class55, 800, null,
-            TestName = "SegmentLookupBodyWeight Class55 Rigid"),
-        TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x4, 7400, 0, false, VehicleClass.Class55, 800, null,
-            TestName = "SegmentLookupBodyWeight Class55 Tractor"),
-        TestCase(VehicleCategory.Van, AxleConfiguration.AxleConfig_4x4, 7400, 0, false, VehicleClass.Class56, 0, null,
-            TestName = "SegmentLookupBodyWeight ClassML4rvan Van"),
+        //TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x4, 7400, 0, false, VehicleClass.Class55, 800, null,
+        //    TestName = "SegmentLookupBodyWeight Class55 Rigid"),
+        //TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x4, 7400, 0, false, VehicleClass.Class55, 800, null,
+        //    TestName = "SegmentLookupBodyWeight Class55 Tractor"),
+        //TestCase(VehicleCategory.Van, AxleConfiguration.AxleConfig_4x4, 7400, 0, false, VehicleClass.Class56, 0, null,
+        //    TestName = "SegmentLookupBodyWeight ClassML4rvan Van"),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7500, 0, false, VehicleClass.Class1s, 1600, null,
 			TestName = "SegmentLookupBodyWeight Class1s Rigid"),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 7500, 0, false, VehicleClass.Class1s, 1600, null,
@@ -836,12 +884,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         }
 
         [Test,
-        TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2F, 7400, 0, false, VehicleClass.Class51, 3.5,
-            TestName = "SegmentLookupHeight Class51 Rigid"),
-        TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2F, 7400, 0, false, VehicleClass.Class51, 3.5,
-            TestName = "SegmentLookupHeight Class51 Tractor"),
-        TestCase(VehicleCategory.Van, AxleConfiguration.AxleConfig_4x2F, 7400, 0, false, VehicleClass.Class52, 2.9,
-            TestName = "SegmentLookupHeight Class52 Van"),
+        //TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2F, 7400, 0, false, VehicleClass.Class51, 3.5,
+        //    TestName = "SegmentLookupHeight Class51 Rigid"),
+        //TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2F, 7400, 0, false, VehicleClass.Class51, 3.5,
+        //    TestName = "SegmentLookupHeight Class51 Tractor"),
+        //TestCase(VehicleCategory.Van, AxleConfiguration.AxleConfig_4x2F, 7400, 0, false, VehicleClass.Class52, 2.9,
+        //    TestName = "SegmentLookupHeight Class52 Van"),
 
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7400, 0, false, VehicleClass.Class53, 3.5,
             TestName = "SegmentLookupHeight Class53 Rigid"),
@@ -850,12 +898,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         TestCase(VehicleCategory.Van, AxleConfiguration.AxleConfig_4x2, 7400, 0, false, VehicleClass.Class54, 2.9,
             TestName = "SegmentLookupHeight Class54 Van"),
 
-        TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x4, 7400, 0, false, VehicleClass.Class55, 3.5,
-            TestName = "SegmentLookupHeight Class55 Rigid"),
-        TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x4, 7400, 0, false, VehicleClass.Class55, 3.5,
-            TestName = "SegmentLookupHeight Class55 Tractor"),
-        TestCase(VehicleCategory.Van, AxleConfiguration.AxleConfig_4x4, 7400, 0, false, VehicleClass.Class56, 2.9,
-            TestName = "SegmentLookupHeight Class56 Van"),
+        //TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x4, 7400, 0, false, VehicleClass.Class55, 3.5,
+        //    TestName = "SegmentLookupHeight Class55 Rigid"),
+        //TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x4, 7400, 0, false, VehicleClass.Class55, 3.5,
+        //    TestName = "SegmentLookupHeight Class55 Tractor"),
+        //TestCase(VehicleCategory.Van, AxleConfiguration.AxleConfig_4x4, 7400, 0, false, VehicleClass.Class56, 2.9,
+        //    TestName = "SegmentLookupHeight Class56 Van"),
 
 
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7500, 0, false, VehicleClass.Class1s, 3.6,
@@ -2031,8 +2079,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             CollectionAssert.AreEqual(trailerCurbWeight, m.Trailer.Select(t => t.TrailerCurbWeight.Value()));
             CollectionAssert.AreEqual(trailerType, m.Trailer.Select(t => t.TrailerType));
             CollectionAssert.AreEqual(trailerAxleCount, m.Trailer.Select(t => t.TrailerWheels.Count));
-            Assert.IsNotNull(m.CycleFile);
-            Assert.IsTrue(!string.IsNullOrEmpty(new StreamReader(m.CycleFile).ReadLine()));
+            //Assert.IsNotNull(m.CycleFile);
+            //Assert.IsTrue(!string.IsNullOrEmpty(new StreamReader(m.CycleFile).ReadLine()));
             Assert.AreEqual(null, m.MinLoad);
             AssertHelper.AreRelativeEqual(lowLoad, m.LowLoad);
             AssertHelper.AreRelativeEqual(refLoad, m.RefLoad);
@@ -2084,7 +2132,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         {
             var dataProvider =
                 JSONInputDataFactory.ReadJsonJob(@"TestData/Jobs/12t Delivery Truck.vecto") as IDeclarationInputDataProvider;
-			var dataReader = new DeclarationModeTruckVectoRunDataFactory(dataProvider, null);
+			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>());
 
             var runs = dataReader.NextRun().ToList();
             Assert.AreEqual(6, runs.Count);
@@ -2108,7 +2156,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             var dataProvider =
                 JSONInputDataFactory.ReadJsonJob(
                     @"TestData/Jobs/Class4_40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
-			var dataReader = new DeclarationModeTruckVectoRunDataFactory(dataProvider, null);
+			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>());
 
             var runs = dataReader.NextRun().ToList();
             Assert.AreEqual(8, runs.Count);
@@ -2132,7 +2180,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         {
             var dataProvider =
                 JSONInputDataFactory.ReadJsonJob(@"TestData/Jobs/40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
-			var dataReader = new DeclarationModeTruckVectoRunDataFactory(dataProvider, null);
+			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>());
 
             var runs = dataReader.NextRun().ToList();
 
@@ -2368,5 +2416,220 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             //Assert.IsTrue(expectedClass.Equals(tyreClass, StringComparison.InvariantCultureIgnoreCase));
             Assert.AreEqual(expectedClass, tyreClass);
         }
+
+
+        [TestCase(VehicleClass.Class1s, MissionType.RegionalDelivery, 2)]
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 2)]
+		[TestCase(VehicleClass.Class16, MissionType.Construction, 2)]
+		[TestCase(VehicleClass.Class53, MissionType.UrbanDelivery, 4)]
+        public void VehicleOperationLookupChargingEventsLorry(VehicleClass hdvClass, MissionType mission, double expected)
+		{
+			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+			Assert.AreEqual(expected, val.StationaryChargingDuringMission_NbrEvents);
+		}
+
+		[TestCase(VehicleClass.Class1s, MissionType.RegionalDelivery, 0.5)]
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 0.5)]
+		[TestCase(VehicleClass.Class16, MissionType.Construction, 0.5)]
+		[TestCase(VehicleClass.Class53, MissionType.UrbanDelivery, 0.5)]
+		public void VehicleOperationLookupChargingDurationLorry(VehicleClass hdvClass, MissionType mission, double expected)
+		{
+			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+			Assert.AreEqual(expected * 3600, val.StationaryChargingDuringMission_AvgDurationPerEvent.Value()); //stored in seconds
+		}
+
+		[TestCase(VehicleClass.Class1s, MissionType.RegionalDelivery, 250)]
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 250)]
+		[TestCase(VehicleClass.Class16, MissionType.Construction, 100)]
+		[TestCase(VehicleClass.Class53, MissionType.UrbanDelivery, 250)]
+		public void VehicleOperationLookupMaxChargingPowerLorry(VehicleClass hdvClass, MissionType mission, double expected)
+		{
+			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+			Assert.AreEqual(expected * 1000, val.StationaryChargingMaxPwrInfrastructure.Value()); //stored in watt
+		}
+
+		[TestCase(VehicleClass.Class1s, MissionType.RegionalDelivery, 80000, 320)]
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 80000, 320)]
+		[TestCase(VehicleClass.Class16, MissionType.Construction, 60000, 240)]
+		[TestCase(VehicleClass.Class53, MissionType.UrbanDelivery, 60000, 240)]
+		public void VehicleOperationLookupMileageLorry(VehicleClass hdvClass, MissionType mission, double expectedAnnual, double expectedDaily)
+		{
+			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+			Assert.AreEqual(expectedAnnual * 1000, val.Mileage.AnnualMileage.Value()); //stored in meter
+			Assert.AreEqual(expectedDaily * 1000, val.Mileage.DailyMileage.Value()); //stored in meter
+		}
+
+        [TestCaseSource(nameof(VehicleOperationTestSourceLorry))]
+		public void VehicleOperationLookupMileage(VehicleClass hdvClass, MissionType mission)
+		{
+			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+        }
+
+
+		public static IEnumerable<object[]> VehicleOperationTestSourceLorry()
+		{
+			var missions = EnumHelper.GetValues<MissionType>();
+
+			var segmentTable = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".SegmentTable.csv"));
+			var hdvMissionDict = new Dictionary<VehicleClass, HashSet<MissionType>>();
+
+			foreach (DataRow row in segmentTable.Rows) {
+				if (!row["valid"].ToString().ToBoolean()) {
+					continue;
+				}
+				var hdvGroup = VehicleClassHelper.Parse(row["HDV group"].ToString());
+				hdvMissionDict.TryAdd(hdvGroup, new HashSet<MissionType>());
+				foreach (var missionType in missions.Where(
+							m => m.IsDeclarationMission() && m != MissionType.ExemptedMission &&
+								row.Field<string>(m.GetLabel()) != "-")) {
+					hdvMissionDict[hdvGroup].Add(missionType);
+				}
+			}
+
+			foreach (var hdvCl in 
+					hdvMissionDict
+						.Where(kv => kv.Value.Count > 0)
+						.OrderBy(kv => kv.Key)) {
+				foreach (var mission in hdvCl.Value) {
+					yield return new object[]{hdvCl.Key, mission};
+				}
+			}
+		}
+
+
+        [TestCase(VehicleClass.Class53, MissionType.LongHaul)]
+		[TestCase(VehicleClass.Class16, MissionType.UrbanDelivery)]
+		[TestCase(VehicleClass.Class1s, MissionType.Coach)]
+        public void VehicleOperationHeavyLorryFail(VehicleClass hdvClass, MissionType mission)
+		{
+			Assert.Throws<VectoException>(() => {
+				DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+			});
+
+        }
+
+        // =======================================================
+
+        [TestCase(VehicleClass.ClassP31SD, MissionType.HeavyUrban, 10)]
+        [TestCase(VehicleClass.ClassP31DD, MissionType.HeavyUrban, 10)]
+        [TestCase(VehicleClass.ClassP32SD, MissionType.Interurban, 5)]
+        [TestCase(VehicleClass.ClassP32DD, MissionType.Interurban, 5)]
+		[TestCase(VehicleClass.Class31a, MissionType.Urban, 10)]
+		[TestCase(VehicleClass.Class31e, MissionType.Suburban, 10)]
+		[TestCase(VehicleClass.Class32a, MissionType.Coach, 2)]
+		[TestCase(VehicleClass.Class32b, MissionType.Interurban, 5)]
+        public void VehicleOperationLookupChargingEventsBus(VehicleClass hdvClass, MissionType mission, double expected)
+        {
+            var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+            Assert.AreEqual(expected, val.StationaryChargingDuringMission_NbrEvents);
+        }
+
+		[TestCase(VehicleClass.ClassP31SD, MissionType.HeavyUrban, 0.17)]
+		[TestCase(VehicleClass.ClassP31DD, MissionType.HeavyUrban, 0.17)]
+		[TestCase(VehicleClass.ClassP32SD, MissionType.Interurban, 0.17)]
+		[TestCase(VehicleClass.ClassP32DD, MissionType.Interurban, 0.17)]
+		[TestCase(VehicleClass.Class31a, MissionType.Urban, 0.17)]
+		[TestCase(VehicleClass.Class31e, MissionType.Suburban, 0.17)]
+		[TestCase(VehicleClass.Class32a, MissionType.Coach, 0.75)]
+		[TestCase(VehicleClass.Class32b, MissionType.Interurban, 0.17)]
+        public void VehicleOperationLookupChargingDurationBus(VehicleClass hdvClass, MissionType mission, double expected)
+        {
+            var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+            Assert.AreEqual(expected * 3600, val.StationaryChargingDuringMission_AvgDurationPerEvent.Value()); //stored in seconds
+        }
+
+		[TestCase(VehicleClass.ClassP31SD, MissionType.HeavyUrban, 450)]
+		[TestCase(VehicleClass.ClassP31DD, MissionType.HeavyUrban, 450)]
+		[TestCase(VehicleClass.ClassP32SD, MissionType.Interurban, 300)]
+		[TestCase(VehicleClass.ClassP32DD, MissionType.Interurban, 300)]
+		[TestCase(VehicleClass.Class31a, MissionType.Urban, 450)]
+		[TestCase(VehicleClass.Class31e, MissionType.Suburban, 450)]
+		[TestCase(VehicleClass.Class32a, MissionType.Coach, 300)]
+		[TestCase(VehicleClass.Class32b, MissionType.Interurban, 300)]
+        public void VehicleOperationLookupMaxChargingPowerBus(VehicleClass hdvClass, MissionType mission, double expected)
+        {
+            var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+            Assert.AreEqual(expected * 1000, val.StationaryChargingMaxPwrInfrastructure.Value()); //stored in watt
+        }
+
+		[TestCase(VehicleClass.ClassP31SD, MissionType.HeavyUrban, 60000, 240)]
+		[TestCase(VehicleClass.ClassP31DD, MissionType.HeavyUrban, 60000, 240)]
+		[TestCase(VehicleClass.ClassP32SD, MissionType.Interurban, 80000, 320)]
+		[TestCase(VehicleClass.ClassP32DD, MissionType.Interurban, 80000, 320)]
+		[TestCase(VehicleClass.Class31a, MissionType.Urban, 60000, 240)]
+		[TestCase(VehicleClass.Class31e, MissionType.Suburban, 60000, 240)]
+		[TestCase(VehicleClass.Class32a, MissionType.Coach, 100000, 400)]
+		[TestCase(VehicleClass.Class32b, MissionType.Interurban, 80000, 320)]
+        public void VehicleOperationLookupMileageBus(VehicleClass hdvClass, MissionType mission, double expectedAnnual, double expectedDaily)
+        {
+            var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+            Assert.AreEqual(expectedAnnual * 1000, val.Mileage.AnnualMileage.Value()); //stored in meter
+            Assert.AreEqual(expectedDaily * 1000, val.Mileage.DailyMileage.Value()); //stored in meter
+        }
+
+		[TestCaseSource(nameof(VehicleOperationTestSourcePrimaryBus))]
+        [TestCaseSource(nameof(VehicleOperationTestSourceCompletedBus))]
+        public void VehicleOperationLookupMileageBus(VehicleClass hdvClass, MissionType mission)
+		{
+			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+		}
+
+
+		public static IEnumerable<object[]> VehicleOperationTestSourcePrimaryBus()
+		{
+			var missions = EnumHelper.GetValues<MissionType>();
+
+			var segmentTable = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".PrimaryBusSegmentationTable.csv"));
+			var hdvMissionDict = new Dictionary<VehicleClass, HashSet<MissionType>>();
+
+			foreach (DataRow row in segmentTable.Rows) {
+				var hdvGroup = VehicleClassHelper.Parse(row["HDV group"].ToString());
+				hdvMissionDict.TryAdd(hdvGroup, new HashSet<MissionType>());
+				foreach (var missionType in missions.Where(
+							m => m.IsDeclarationMission() && m != MissionType.ExemptedMission &&
+                                segmentTable.Columns.Contains(m.GetLabel()) &&
+								!row.Field<string>(m.GetLabel()).IsNullOrWhiteSpace())) {
+					hdvMissionDict[hdvGroup].Add(missionType);
+				}
+			}
+
+			foreach (var hdvCl in
+					hdvMissionDict
+						.Where(kv => kv.Value.Count > 0)
+						.OrderBy(kv => kv.Key)) {
+				foreach (var mission in hdvCl.Value) {
+					yield return new object[] { hdvCl.Key, mission };
+				}
+			}
+		}
+
+		public static IEnumerable<object[]> VehicleOperationTestSourceCompletedBus()
+		{
+			var missions = EnumHelper.GetValues<MissionType>();
+
+			var segmentTable = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".CompletedBusSegmentationTable.csv"));
+			var hdvMissionDict = new Dictionary<VehicleClass, HashSet<MissionType>>();
+
+			foreach (DataRow row in segmentTable.Rows) {
+				var hdvGroup = VehicleClassHelper.Parse(row["HDV group"].ToString());
+				hdvMissionDict.TryAdd(hdvGroup, new HashSet<MissionType>());
+				foreach (var missionType in missions.Where(
+							m => m.IsDeclarationMission() && m != MissionType.ExemptedMission &&
+								segmentTable.Columns.Contains(m.GetLabel()) &&
+                                !row.Field<string>(m.GetLabel()).IsNullOrWhiteSpace())) {
+					hdvMissionDict[hdvGroup].Add(missionType);
+				}
+			}
+
+			foreach (var hdvCl in
+					hdvMissionDict
+						.Where(kv => kv.Value.Count > 0)
+						.OrderBy(kv => kv.Key)) {
+				foreach (var mission in hdvCl.Value) {
+					yield return new object[] { hdvCl.Key, mission };
+				}
+			}
+		}
+
     }
 }

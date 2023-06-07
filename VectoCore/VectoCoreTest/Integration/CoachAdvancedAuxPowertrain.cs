@@ -99,6 +99,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 				SimulationType = SimulationType.DistanceCycle,
 				Cycle = cycleData, 
 				DriverData = driverData,
+				Retarder = new RetarderData() { Type = RetarderType.None },
+				Aux = new List<VectoRunData.AuxData>(),
 				BusAuxiliaries = BusAuxiliaryInputData.ReadBusAuxiliaries(AdvancedAuxFile, vehicleData)
 			};
 			var fileWriter = new FileOutputWriter(modFileName);

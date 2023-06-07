@@ -40,7 +40,7 @@ Namespace UnitTests
 
             Dim auxConfig = Utils.GetAuxTestConfig()
 		    
-			Dim ssm As ISSMTOOL = New SSMTOOL(auxConfig.SSMInputs)
+			Dim ssm As ISSMTOOL = New SSMTOOL(auxConfig.SSMInputsCooling)
                 'New SSMTOOL(SSMInputData.ReadFile(_SSMMAP, DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions, DeclarationData.BusAuxiliaries.SSMTechnologyList)) ', New HVACConstants())
 
 		    
@@ -65,7 +65,7 @@ Namespace UnitTests
 		    CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap = alternatoMap
 
             Dim m0 As New M00Impl(auxConfig.ElectricalUserInputsConfig, _signals,
-                                New SSMTOOL(auxConfig.SSMInputs).ElectricalWAdjusted)
+                                New SSMTOOL(auxConfig.SSMInputsCooling).ElectricalWAdjusted)
 
 			'Results Cards
 			Dim readings = New List(Of SmartResult)

@@ -56,6 +56,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		}
 
 		#endregion
+
+		#region Implementation of IUpdateable
+
+		protected override bool DoUpdateFrom(object other) => false;
+
+		#endregion
 	}
 
 	// ########################################
@@ -114,6 +120,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 				ConsumedEnergy = 0.SI<WattSecond>();
 			}
 			public WattSecond ConsumedEnergy { get; set; }
+
+			public State Clone() => (State)MemberwiseClone();
 		}
 
 		#region Overrides of VectoSimulationComponent
@@ -136,7 +144,17 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			}
 			AdvanceState();
 		}
+		#endregion
 
+		#region Implementation of IUpdateable
+		protected override bool DoUpdateFrom(object other) {
+			if (other is SimpleBattery b) {
+				PreviousState = b.PreviousState.Clone();
+				SOC = b.SOC;
+				return true;
+			}
+			return false;
+		}
 		#endregion
 	}
 }

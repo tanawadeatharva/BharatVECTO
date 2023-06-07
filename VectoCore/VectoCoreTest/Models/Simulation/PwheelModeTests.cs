@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.IO;
 using System.Text;
 using System.Data;
@@ -47,6 +48,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
@@ -80,13 +82,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 					}
 				},
 				VehicleData = new VehicleData {
-					//DynamicTyreRadius = 
+                    DynamicTyreRadius = 0.5.SI<Meter>()
 				},
 				AxleGearData = new AxleGearData {
 					AxleGear = new TransmissionData {
 						Ratio = 2.3
 					}
-				}
+				},
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
 
 			var container = new VehicleContainer(ExecutionMode.Engineering);
@@ -165,21 +168,26 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 						IdleSpeed = 560.RPMtoRad(),
 						Inertia = 1.SI<KilogramSquareMeter>(),
 						EngineStartTime = DeclarationData.Engine.DefaultEngineStartTime,
-						FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, fullLoadCurve }, { 1, fullLoadCurve } }
+						FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, fullLoadCurve }, { 1, fullLoadCurve } },
+						Fuels = new List<CombustionEngineFuelData>() {
+							new CombustionEngineFuelData() {
+								FuelData = FuelData.Diesel
+							}
+						}
 					},
 				GearboxData = new GearboxData { Gears = new Dictionary<uint, GearData> { { 2, new GearData { Ratio = 3.5 } } } },
 				Retarder = new RetarderData(),
 				DriverData = new DriverData() {
 					EngineStopStart = new DriverData.EngineStopStartData() {
-						UtilityFactorStandstill = DeclarationData.Driver.EngineStopStart.UtilityFactor,
-						EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
-						MaxEngineOffTimespan = DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan
+						UtilityFactorStandstill = DeclarationData.Driver.GetEngineStopStartLorry().UtilityFactor,
+						EngineOffStandStillActivationDelay = DeclarationData.Driver.GetEngineStopStartLorry().ActivationDelay,
+						MaxEngineOffTimespan = DeclarationData.Driver.GetEngineStopStartLorry().MaxEngineOffTimespan
 					}
 				}
 			};
 
 			// call builder (actual test)
-			var jobContainer = PowertrainBuilder.Build(data, new MockModalDataContainer(), container => {});
+			var jobContainer = PowertrainBuilder.Build(data, new MockModalDataContainer(), new MockSumWriter());
 		}
 
 		/// <summary>

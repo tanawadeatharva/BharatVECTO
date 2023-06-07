@@ -17,7 +17,7 @@ In this mode the given list of job files is simulated with the respective drivin
 
 
 ### Options
-The Driving Cycle determines the simulation method in engineering mode. The option depends directly on the driving cycle input and cannot be set explicitely. For more information about the formats see [Driving Cycles](#driving-cycles-.vdri).
+The Driving Cycle determines the simulation method in engineering mode. The option depends directly on the driving cycle input and cannot be set explicitly. For more information about the formats see [Driving Cycles](#driving-cycles-.vdri).
 
 * [Target speed, distance-based](#engineering-mode-target-speed-distance-based-cycle)
 :   This option is the a target vehicle speed distance based cycle (like in Declaration Mode). With this option experiments can be made by the manufacturer.
@@ -28,4 +28,4 @@ The Driving Cycle determines the simulation method in engineering mode. The opti
 * [Pwheel (SiCo) Mode, time-based](#engineering-mode-pwheel-sico-time-based)
 :   In Pwheel mode the measured power at the wheels is given, and the simulation takes that as input.
 
-**Note:** Time-based driving cycles support arbitrary time steps. However, certain actions are simulated within a single simulation interval (e.g. closing the clutch after a gear switch) and may thus result in artefacts during the simulation due to engine inertia, gearbox inertia, etc. Thus **the suggested minimum time interval for time-based cycles is 0.5s!**
+**Note:** Time-based driving cycles support arbitrary time steps. However, certain actions are simulated within a single simulation interval (e.g. closing the clutch after a gear switch) and may thus result in artifacts during the simulation due to engine inertia, gearbox inertia, etc. Thus **the suggested minimum time interval for time-based cycles is 0.5s!**

@@ -43,6 +43,14 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
+	public interface IPTOCycleController
+	{
+		void CommitSimulationStep(Second time, Second simulationInterval, IModalDataContainer container);
+		Second GetNextCycleTime();
+		Second Duration { get; }
+		CycleData CycleData { get; }
+	}
+
 	public class PTOCycleController : PowertrainDrivingCycle, IIdleController
 	{
 		public ITnOutPort RequestPort
@@ -76,6 +84,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				PreviousState.InAngularVelocity = DataBus.EngineInfo.EngineSpeed;
 			}
 			return base.Request(absTime - IdleStart, dt);
+			
 		}
 
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
@@ -100,10 +109,113 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
-			base.DoWriteModalResults(time, simulationInterval, container);
-			container[Constants.Auxiliaries.IDs.PTOConsumer] = CurrentState.InTorque *
-																(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2;
-			container[ModalResultField.P_ice_out] = 0.SI<Watt>();
+
+            base.DoWriteModalResults(time, simulationInterval, container);
+            container[Constants.Auxiliaries.IDs.PTOConsumer] = CurrentState.InTorque *
+                                                                (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2;
+            container[ModalResultField.P_ice_out] = 0.SI<Watt>();
+        }
+
+
+    }
+
+	public class EPTOCycleController : IIdleControllerSwitcher, IUpdateable
+	{
+		internal readonly IDrivingCycleData Data;
+		protected Second AbsTime { get; private set; }
+		protected DrivingCycleEnumerator CycleIterator { get; }
+		private bool _ptoActive;
+		protected IVehicleContainer DataBus { get; set; }
+
+		public Second Duration { get; private set; }
+
+
+		public EPTOCycleController(IVehicleContainer container, IDrivingCycleData cycle)
+		{
+			DataBus = container;
+			Data = cycle;
+			Duration = Data.Entries.Last().Time - Data.Entries.First().Time;
+		
+			CycleIterator = new DrivingCycleEnumerator(Data);
+			_ptoActive = false;
+			AbsTime = 0.SI<Second>();
+			
 		}
+
+		public CycleData CycleData
+		{
+			get => new CycleData() {
+				LeftSample = _ptoActive ? CycleIterator.LeftSample : new DrivingCycleData.DrivingCycleEntry(),
+			};
+		} 
+
+
+		public void CommitSimulationStep(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+			if (_ptoActive) {
+				CycleIterator.MoveNext();
+				AbsTime += simulationInterval;
+			}
+		}
+
+		public Second GetNextCycleTime()
+		{
+            if (CycleIterator.LastEntry && AbsTime.IsEqual(Duration))
+            {
+                return null;
+            }
+
+            return CycleIterator.RightSample.Time - CycleIterator.LeftSample.Time;
+		}
+
+
+		private void Reset()
+		{
+			CycleIterator.Reset();
+			AbsTime = 0.SI<Second>();
+		}
+
+		#region Implementation of IIdleControllerSwitcher
+
+		public void ActivatePTO()
+		{
+			_ptoActive = true;
+		}
+
+		public void ActivateIdle()
+		{
+			_ptoActive = false;
+			Reset();
+		}
+
+		#endregion
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other)
+		{
+			if (!DataBus.IsTestPowertrain)
+			{
+				throw new VectoException("Only components in a testpowertrain are allowed to be updated!");
+			}
+			if (other is EPTOCycleController otherPtoCycle) {
+				Reset();
+				while (this.CycleIterator.Current != otherPtoCycle.CycleIterator.Current) {
+					this.CycleIterator.MoveNext();
+				}
+
+				this._ptoActive = otherPtoCycle._ptoActive;
+				
+				return true;
+			} else {
+				return false;
+			}
+
+
+		}
+
+		#endregion
 	}
+
+
 }

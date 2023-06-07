@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -11,10 +9,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 {
 	public class XMLCustomerReportExemptedCompletedBus : XMLCustomerReportCompletedBus
 	{
-		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void Initialize(VectoRunData modelData)
 		{
 			VehiclePart.Add(
-				new XAttribute(xsi + "type", "VehicleCompletedExemptedBusType"),
+				new XAttribute(xsi + XMLNames.XSIType, "VehicleCompletedExemptedBusType"),
 				new XElement(tns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
 				new XElement(
 					tns + "PrimaryVehicle",

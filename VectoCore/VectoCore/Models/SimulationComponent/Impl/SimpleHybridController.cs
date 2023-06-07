@@ -41,6 +41,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			// nothing to write - this is only used in test-container
 		}
 
+		protected override bool DoUpdateFrom(object other) => false;
+
 		#endregion
 
 		#region Implementation of ITnInProvider
@@ -80,6 +82,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 			_electricMotorCtl[pos] = new ElectricMotorController(this, motorData);
 		}
+
+		public IHybridControlStrategy Strategy => null;
 
 		//public ResponseDryRun RequestDryRun(
 		//	Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,

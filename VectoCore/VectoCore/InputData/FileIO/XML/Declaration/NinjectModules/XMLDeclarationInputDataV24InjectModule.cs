@@ -19,11 +19,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationConventionalCompletedBusDataProviderV24>()
 				.Named(XMLDeclarationConventionalCompletedBusDataProviderV24.QUALIFIED_XSD_TYPE);
-			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationConventionalCompletedBusDataProviderV24>()
+			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationHevCompletedBusDataProviderV24>()
 				.Named(XMLDeclarationHevCompletedBusDataProviderV24.QUALIFIED_XSD_TYPE);
-			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationConventionalCompletedBusDataProviderV24>()
-				.Named(XMLDeclarationPeVompletedBusDataProviderV24.QUALIFIED_XSD_TYPE);
-			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationConventionalCompletedBusDataProviderV24>()
+			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationPEVCompletedBusDataProviderV24>()
+				.Named(XMLDeclarationPEVCompletedBusDataProviderV24.QUALIFIED_XSD_TYPE);
+			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationIepcCompletedBusDataProviderV24>()
 				.Named(XMLDeclarationIepcCompletedBusDataProviderV24.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationExemptedCompletedBusDataProviderV24>()
@@ -315,14 +315,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLIEPCInputData>().To<XMLElectricMotorIepciStandardInputDataProviderV23>()
 				.Named(XMLElectricMotorIepciStandardInputDataProviderV23.QUALIFIED_XSD_TYPE);
 			
-			Bind<IXMLElectricStorageSystemDeclarationInputData>().To<XMLElectricStorageSystemDeclarationInputData>()
-				.Named(XMLElectricStorageSystemDeclarationInputData.QUALIFIED_XSD_TYPE);
+			Bind<IXMLElectricStorageSystemDeclarationInputData>().To<XMLElectricStorageSystemDeclarationInputDataV24>()
+				.Named(XMLElectricStorageSystemDeclarationInputDataV24.QUALIFIED_XSD_TYPE);
 			
-			Bind<IXMLBatteryPackDeclarationInputData>().To<XMLBatteryPackDeclarationDeclarationInputData>()
-				.Named(XMLBatteryPackDeclarationDeclarationInputData.QUALIFIED_XSD_TYPE);
+			//Bind<IXMLBatteryPackDeclarationInputData>().To<XMLBatteryPackDeclarationDeclarationInputDataV24>()
+			//	.Named(XMLBatteryPackDeclarationDeclarationInputDataV24.QUALIFIED_XSD_TYPE);
 
-			Bind<IXMLSuperCapDeclarationInputData>().To<XMLSuperCapDeclarationInputData>()
-				.Named(XMLSuperCapDeclarationInputData.QUALIFIED_XSD_TYPE);
+			Bind<IXMLBatteryPackDeclarationInputData>().To<XMLBatteryPackDeclarationInputDataMeasuredV23>()
+				.Named(XMLBatteryPackDeclarationInputDataMeasuredV23.QUALIFIED_XSD_TYPE);
+			Bind<IXMLBatteryPackDeclarationInputData>().To<XMLBatteryPackDeclarationInputDataStandardV23>()
+				.Named(XMLBatteryPackDeclarationInputDataStandardV23.QUALIFIED_XSD_TYPE);
+
+            Bind<IXMLSuperCapDeclarationInputData>().To<XMLSuperCapDeclarationInputDataV24>()
+				.Named(XMLSuperCapDeclarationInputDataV24.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLADCDeclarationInputData>().To<XMLADCDeclarationInputDataV23>()
 				.Named(XMLADCDeclarationInputDataV23.QUALIFIED_XSD_TYPE);

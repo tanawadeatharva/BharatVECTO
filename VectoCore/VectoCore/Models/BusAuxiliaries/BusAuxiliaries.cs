@@ -47,9 +47,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			// SSM HVAC
 			//var ssmPath = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.SSMFilePath);
 			//var BusDatabase = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.BusDatabasePath);
-			ssmTool = auxConfig.SSMInputs is ISSMEngineeringInputs ?
-				new SimpleSSMTool(auxConfig.SSMInputs)
-				: (ISSMPowerDemand)new SSMTOOL(auxConfig.SSMInputs);
+			ssmTool = auxConfig.SSMInputsCooling is ISSMEngineeringInputs ?
+				new SimpleSSMTool(auxConfig.SSMInputsCooling)
+				: (ISSMPowerDemand)new SSMTOOL(auxConfig.SSMInputsCooling);
 
 
 			var electricUserInputConfigNoAlternator = new ElectricsUserInputsConfig() {
@@ -74,9 +74,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 
 			M3 = new M03Impl(auxConfig, compressorMap, auxCfg.Actuations, Signals);
 
-			M4 = new M04Impl(
-				compressorMap, auxConfig.PneumaticUserInputsConfig.CompressorGearRatio,
-				auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, Signals);
+			M4 = compressorMap == null
+				? (IM4_AirCompressor)new M04Impl_NoMechanicalCompressor()
+				: new M04Impl(
+					compressorMap, auxConfig.PneumaticUserInputsConfig.CompressorGearRatio,
+					auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, Signals);
 
 			M5 = new M05Impl_P0(M0, M1, M2, ElectricStorage, electricUserInputConfigNoAlternator, Signals);
 			M6 = new M06Impl(electricUserInputConfigNoAlternator, M1, M2, M3, M4, M5, Signals);
@@ -160,19 +162,19 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			ElectricStorage = battery;
 		}
 
-		public virtual Joule AuxHeaterDemandCalculation(Second cycleTime, Joule engineWasteHeatTotal)
+		public virtual HeaterDemandResult AuxHeaterDemandCalculation(Second cycleTime, Joule engineWasteHeatTotal, Joule electricMotorWasteHeatTotal)
 		{
 			if (auxConfig == null) {
 				throw new VectoException("Auxiliary configuration missing!");
 			}
 
-			if (auxConfig.SSMInputs is ISSMEngineeringInputs ssmEngineeringInputs) {
+			if (auxConfig.SSMInputsHeating is ISSMEngineeringInputs ssmEngineeringInputs) {
 				var M14eng = new M14bImpl(ssmEngineeringInputs);
-				return M14eng.AuxHeaterDemand(cycleTime, engineWasteHeatTotal);
+				return M14eng.AuxHeaterDemand(cycleTime, engineWasteHeatTotal, electricMotorWasteHeatTotal);
 			}
 
-			var M14 = new M14aImpl(new SSMTOOL(auxConfig.SSMInputs));
-			return M14.AuxHeaterDemand(cycleTime, engineWasteHeatTotal);
+			var M14 = new M14aImpl(new SSMTOOL(auxConfig.SSMInputsHeating));
+			return M14.AuxHeaterDemand(cycleTime, engineWasteHeatTotal, electricMotorWasteHeatTotal);
 		}
 
 		public virtual void Initialise(IAuxiliaryConfig auxCfg)
@@ -185,9 +187,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			// SSM HVAC
 			//var ssmPath = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.SSMFilePath);
 			//var BusDatabase = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.BusDatabasePath);
-			var ssmTool = auxConfig.SSMInputs is ISSMEngineeringInputs ?
-				new SimpleSSMTool(auxConfig.SSMInputs)
-				: (ISSMPowerDemand)new SSMTOOL(auxConfig.SSMInputs);
+			var ssmTool = auxConfig.SSMInputsCooling is ISSMEngineeringInputs ?
+				new SimpleSSMTool(auxConfig.SSMInputsCooling)
+				: (ISSMPowerDemand)new SSMTOOL(auxConfig.SSMInputsCooling);
 
 
 			M0 = new M00Impl(auxConfig.ElectricalUserInputsConfig, Signals, ssmTool.ElectricalWAdjusted);
@@ -204,9 +206,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 
 			M3 = new M03Impl(auxConfig, compressorMap, auxCfg.Actuations, Signals);
 
-			M4 = new M04Impl(
-				compressorMap, auxConfig.PneumaticUserInputsConfig.CompressorGearRatio,
-				auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, Signals);
+			M4 = compressorMap == null
+				? (IM4_AirCompressor)new M04Impl_NoMechanicalCompressor()
+				: new M04Impl(
+					compressorMap, auxConfig.PneumaticUserInputsConfig.CompressorGearRatio,
+					auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, Signals);
 
 			//M5 = new M05Impl(
 			//	M0_5, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage,
@@ -276,7 +280,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 					!Signals.InNeutral) {
 					if (M8.CompressorFlag) {
 						return M4.GetFlowRate() *
-								auxConfig.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction
+								auxConfig.PneumaticAuxiliariesConfig.OverrunUtilisationForCompressionFraction
 								* Signals.SimulationInterval;
 					}
 

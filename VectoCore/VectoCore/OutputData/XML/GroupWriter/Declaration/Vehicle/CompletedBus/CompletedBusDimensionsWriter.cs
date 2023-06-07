@@ -6,9 +6,9 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.CompletedBus
 {
-    class CompletedBusDimensionsWriter_V2_10_2 : GroupWriter, IVehicleDeclarationGroupWriter
+    class CompletedBusDimensionsWriter_V2_4 : GroupWriter, IVehicleDeclarationGroupWriter
     {
-		public CompletedBusDimensionsWriter_V2_10_2(XNamespace writerNamespace) : base(writerNamespace) { }
+		public CompletedBusDimensionsWriter_V2_4(XNamespace writerNamespace) : base(writerNamespace) { }
 
 		public static XElement[] GetGroupElements(IVehicleDeclarationInputData vehicle, XNamespace writerNamespace)
 		{
@@ -18,10 +18,10 @@ namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.Comple
 			return new XElement[] {
 				new XElement(writerNamespace + XMLNames.Bus_HeightIntegratedBody,
 					vehicle.Height.ConvertToMilliMeter()),
-				new XElement(writerNamespace + XMLNames.Bus_VehicleLength, vehicle.Length.ConvertToMilliMeter()),
-				new XElement(writerNamespace + XMLNames.Bus_VehicleWidth, vehicle.Width.ConvertToMilliMeter()),
+				new XElement(writerNamespace + XMLNames.Bus_VehicleLength, vehicle.Length.ConvertToMilliMeter().ToXMLFormat(0)),
+				new XElement(writerNamespace + XMLNames.Bus_VehicleWidth, vehicle.Width.ConvertToMilliMeter().ToXMLFormat(0)),
 				new XElement(writerNamespace + XMLNames.Bus_EntranceHeight,
-					vehicle.EntranceHeight.ConvertToMilliMeter())
+					vehicle.EntranceHeight.ConvertToMilliMeter().ToXMLFormat(0))
 			};
 		}
 

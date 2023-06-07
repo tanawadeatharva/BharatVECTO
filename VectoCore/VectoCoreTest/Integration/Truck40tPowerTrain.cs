@@ -45,6 +45,7 @@ using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
@@ -101,6 +102,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 				AirdragData = airdragData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
+				Retarder = new RetarderData() { Type = RetarderType.None},
+				Aux = new List<VectoRunData.AuxData>(),
 				GearshiftParameters = CreateGearshiftData(),
 				SimulationType = SimulationType.DistanceCycle,
 				Cycle = cycleData,
@@ -142,7 +145,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var aux = new EngineAuxiliary(container);
 			aux.AddConstant("ZERO", 0.SI<Watt>());
 			engine.Connect(aux.Port());
-			container.ModalData.AddAuxiliary("ZERO");
+			container.AddAuxiliary("ZERO");
 
 			return container;
 		}
@@ -266,9 +269,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 					LookAheadDecisionFactor = new LACDecisionFactor()
 				},
 				EngineStopStart = new DriverData.EngineStopStartData() {
-					EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
-					MaxEngineOffTimespan = DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
-					UtilityFactorStandstill = DeclarationData.Driver.EngineStopStart.UtilityFactor,
+					EngineOffStandStillActivationDelay = DeclarationData.Driver.GetEngineStopStartLorry().ActivationDelay,
+					MaxEngineOffTimespan = DeclarationData.Driver.GetEngineStopStartLorry().MaxEngineOffTimespan,
+					UtilityFactorStandstill = DeclarationData.Driver.GetEngineStopStartLorry().UtilityFactor,
 				},
 				OverSpeed = new DriverData.OverSpeedData() {
 						Enabled = overspeed,

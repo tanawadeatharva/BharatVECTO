@@ -47,7 +47,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool HybridElectricHDV { get; }
 		public bool DualFuelVehicle { get; }
 		public Watt MaxNetPower1 { get; }
-		public Watt MaxNetPower2 { get; }
 		public string ExemptedTechnology { get; }
 		public RegistrationClass? RegisteredClass { get; set; }
 		public int? NumberPassengerSeatsUpperDeck { get; set; }
@@ -64,7 +63,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public Meter EntranceHeight { get; }
 		public ConsumerTechnology? DoorDriveTechnology { get; }
 		public VehicleDeclarationType VehicleDeclarationType { get; }
-		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		public IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 		public TableData BoostingLimitations { get; }
 		public IVehicleComponentsDeclaration Components => this;
 		public XmlNode XMLSource { get; }
@@ -72,6 +71,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public ArchitectureID ArchitectureID { get; }
 		public bool OvcHev { get; }
 		public Watt MaxChargingPower { get; }
+		public VectoSimulationJobType VehicleType { get; }
 
 		#endregion
 
@@ -126,7 +126,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public ConsumerTechnology? DoorDriveTechnology { get; }
 		public VehicleDeclarationType VehicleDeclarationType { get; }
 
-		public Watt MaxNetPower2 { get; }
 		public string ExemptedTechnology { get; }
 		public RegistrationClass? RegisteredClass { get; set; }
 		public int? NumberPassengerSeatsUpperDeck { get; set; }
@@ -193,7 +192,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IElectricMachinesEngineeringInputData ElectricMachines { get; set; }
 		public IIEPCEngineeringInputData IEPCEngineeringInputData { get; }
 
-		Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> IVehicleDeclarationInputData.ElectricMotorTorqueLimits => throw new NotImplementedException();
+		IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> IVehicleDeclarationInputData.ElectricMotorTorqueLimits => throw new NotImplementedException();
 
 		#endregion
 	}

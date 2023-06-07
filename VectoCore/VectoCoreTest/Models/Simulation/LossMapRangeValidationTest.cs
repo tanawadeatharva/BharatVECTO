@@ -35,11 +35,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using Moq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -82,6 +84,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var axleGearData = CreateAxleGearData(AxleGearLossMap);
+			var mockVehicleInputData = new Mock<IVehicleDeclarationInputData>();
 			var vehicleData = new VehicleData {
 				DynamicTyreRadius = 0.85.SI<Meter>(),
 				Loading = 0.SI<Kilogram>(),
@@ -94,7 +97,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 							TyreTestLoad = 50000.SI<Newton>(),
 							Inertia = 10.SI<KilogramSquareMeter>()
 						}
-					}
+					},
+				InputData = mockVehicleInputData.Object,
 			};
 
 			var runData = new VectoRunData {
@@ -133,19 +137,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var gearboxData = CreateGearboxData(GearboxLimited, GearboxLimited);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var axleGearData = CreateAxleGearData(AxleGearLossMap);
-			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, AxleGearData = axleGearData };
-			var result = VectoRunData.ValidateRunData(runData, new ValidationContext(runData));
-			Assert.IsFalse(ValidationResult.Success == result);
-		}
-
-		/// <summary>
-		/// VECTO-173
-		/// </summary>
-		[TestCase]
-		public void LossMapAxleLossMapMissing()
-		{
-			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
+			var mockVehicleInputData = new Mock<IVehicleDeclarationInputData>();
 			var vehicleData = new VehicleData {
 				DynamicTyreRadius = 0.85.SI<Meter>(),
 				Loading = 0.SI<Kilogram>(),
@@ -158,7 +150,37 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 							TyreTestLoad = 50000.SI<Newton>(),
 							Inertia = 10.SI<KilogramSquareMeter>()
 						}
-					}
+					},
+				InputData = mockVehicleInputData.Object
+			};
+			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, AxleGearData = axleGearData, VehicleData = vehicleData};
+			var result = VectoRunData.ValidateRunData(runData, new ValidationContext(runData));
+			Assert.IsFalse(ValidationResult.Success == result);
+		}
+
+		/// <summary>
+		/// VECTO-173
+		/// </summary>
+		[TestCase]
+		public void LossMapAxleLossMapMissing()
+		{
+			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
+			var mockVehicleInputData = new Mock<IVehicleDeclarationInputData>();
+			var vehicleData = new VehicleData {
+				DynamicTyreRadius = 0.85.SI<Meter>(),
+				Loading = 0.SI<Kilogram>(),
+				CurbMass = 2000.SI<Kilogram>(),
+				AxleData =
+					new List<Axle> {
+						new Axle {
+							TwinTyres = false,
+							AxleWeightShare = 1,
+							TyreTestLoad = 50000.SI<Newton>(),
+							Inertia = 10.SI<KilogramSquareMeter>()
+						}
+					},
+				InputData = mockVehicleInputData.Object
 			};
 			var runData = new VectoRunData {
 				GearboxData = gearboxData,
@@ -198,6 +220,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		private static GearboxData CreateGearboxData(string directlossMap, string indirectLossMap)
 		{
 			var ratios = new[] { 14.93, 11.64, 9.02, 7.04, 5.64, 4.4, 3.39, 2.65, 2.05, 1.6, 1.28, 1.0 };
+			var gearboxInput = new Mock<IGearboxDeclarationInputData>();
+			var gears = new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }
+				.Select(x => new TransmissionInputData() { Gear = x }).Cast<ITransmissionInputData>().ToList();
+			gearboxInput.Setup(g => g.Gears).Returns(gears);
 			return new GearboxData {
 				Gears = ratios.Select((ratio, i) =>
 					Tuple.Create((uint)i,
@@ -208,7 +234,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(ShiftPolygonFile)
 						}))
-					.ToDictionary(k => k.Item1 + 1, v => v.Item2)
+					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
+				InputData = gearboxInput.Object
 			};
 		}
 

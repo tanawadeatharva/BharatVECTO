@@ -8,7 +8,7 @@
   "Body": {
     "SavedInDeclMode": false,
     "VehCat": "Tractor",
-    "LegislativeClass": "Unknown",
+    "LegislativeClass": "M3",
     "CurbWeight": 8229.0,
     "CurbWeightExtra": 7500.0,
     "MassMax": 18.0,
@@ -97,7 +97,7 @@
       "11": 1900
 
     },
-	"MaxPropulsionTorque": "VehicleMaxPropulsionTorque_2.vtqp",
+    "MaxPropulsionTorque": "VehicleMaxPropulsionTorque_2.vtqp",
     "InitialSoC": 80.0,
     "PowertrainConfiguration": "ParallelHybrid",
     "MaxDrivetrainPower": 500000.0,

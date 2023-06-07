@@ -32,6 +32,7 @@
 using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.Reports
@@ -44,9 +45,12 @@ namespace TUGraz.VectoCore.Tests.Reports
 		public void TestGearshiftCountTractionInterruptionShiftup()
 		{
 			var rundata = new VectoRunData() {
-				JobName = "GearshiftRun"
+				JobName = "GearshiftRun",
+				GearboxData = new GearboxData()
             };
 			var modData = new ModalDataContainer(rundata, null, null);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
+			modData.Data.CreateColumns(ModalResults.GearboxSignals);
 
 			var entries = new[] {
 				new DummyEntry { v = 34, gear = 4u },
@@ -70,9 +74,12 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			var rundata = new VectoRunData()
 			{
-				JobName = "GearshiftRun"
+				JobName = "GearshiftRun",
+				GearboxData = new GearboxData()
 			};
 			var modData = new ModalDataContainer(rundata, null, null);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
+			modData.Data.CreateColumns(ModalResults.GearboxSignals);
 
             var entries = new[] {
 				new DummyEntry { v = 34, gear = 4u },
@@ -96,11 +103,14 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			var rundata = new VectoRunData()
 			{
-				JobName = "GearshiftRun"
+				JobName = "GearshiftRun",
+				GearboxData = new GearboxData()
 			};
 			var modData = new ModalDataContainer(rundata, null, null);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
+			modData.Data.CreateColumns(ModalResults.GearboxSignals);
 
-            var entries = new[] {
+			var entries = new[] {
 				new DummyEntry { v = 34, gear = 4u },
 				new DummyEntry { v = 34.5, gear = 4u },
 				new DummyEntry { v = 33.3, gear = 0 },
@@ -123,11 +133,14 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			var rundata = new VectoRunData()
 			{
-				JobName = "GearshiftRun"
+				JobName = "GearshiftRun",
+				GearboxData = new GearboxData()
 			};
 			var modData = new ModalDataContainer(rundata, null, null);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
+			modData.Data.CreateColumns(ModalResults.GearboxSignals);
 
-            var entries = new[] {
+			var entries = new[] {
 				new DummyEntry { v = 4, gear = 4u },
 				new DummyEntry { v = 3.5, gear = 4u },
 				new DummyEntry { v = 0, gear = 0 },
@@ -149,11 +162,14 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			var rundata = new VectoRunData()
 			{
-				JobName = "GearshiftRun"
+				JobName = "GearshiftRun",
+				GearboxData = new GearboxData()
 			};
 			var modData = new ModalDataContainer(rundata, null, null);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
+			modData.Data.CreateColumns(ModalResults.GearboxSignals);
 
-            var entries = new[] {
+			var entries = new[] {
 				new DummyEntry { v = 4, gear = 4u },
 				new DummyEntry { v = 3.5, gear = 4u },
 				new DummyEntry { v = 0, gear = 0 },
@@ -177,11 +193,14 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			var rundata = new VectoRunData()
 			{
-				JobName = "GearshiftRun"
+				JobName = "GearshiftRun",
+				GearboxData = new GearboxData()
 			};
 			var modData = new ModalDataContainer(rundata, null, null);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
+			modData.Data.CreateColumns(ModalResults.GearboxSignals);
 
-            var entries = new[] {
+			var entries = new[] {
 				new DummyEntry { v = 34, gear = 4u },
 				new DummyEntry { v = 34.5, gear = 4u },
 				new DummyEntry { v = 33.3, gear = 5 },
@@ -204,11 +223,14 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			var rundata = new VectoRunData()
 			{
-				JobName = "GearshiftRun"
+				JobName = "GearshiftRun",
+				GearboxData = new GearboxData()
 			};
 			var modData = new ModalDataContainer(rundata, null, null);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
+			modData.Data.CreateColumns(ModalResults.GearboxSignals);
 
-            var entries = new[] {
+			var entries = new[] {
 				new DummyEntry { v = 34, gear = 4u },
 				new DummyEntry { v = 34.5, gear = 4u },
 				new DummyEntry { v = 33.3, gear = 4 },

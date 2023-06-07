@@ -7,7 +7,7 @@ The electric motor is modeled by basically 4 map files:
  - Electric power map ($P_\textrm{map,el}$) for two different voltage levels
  - Drag curve (i.e., the motor is not energized) over motor speed
  - Continuous torque ($T_\textrm{cont}$)
- - Engine speed for continuous torqe ($n_\textrm{T,cont}$)
+ - Engine speed for continuous torque ($n_\textrm{T,cont}$)
  - Overload torque ($T_\textrm{ovl}$)
  - Engine speed for overload torque  ($n_\textrm{T,ovl}$)
  - Maximum overload time ($t_\textrm{ovl}$)
@@ -20,7 +20,7 @@ The drag curve is used to add additional drag to the powertrain in case the elec
 
 The convention for all input files is that positive torque values drive the vehicle while negative torque values apply additional drag and generate electric power.
 
-The follwing picture shows the signals used in VECTO and provided in the .vmod file. The VECTO convention is that positive torque adds additional drag to the drivetrain. Thus, if the electric motor propells the vehicle it applies negative torque.
+The follwing picture shows the signals used in VECTO and provided in the .vmod file. The VECTO convention is that positive torque adds additional drag to the drivetrain. Thus, if the electric motor propels the vehicle it applies negative torque.
 
 ![](pics/electric_motor_map.png)
 

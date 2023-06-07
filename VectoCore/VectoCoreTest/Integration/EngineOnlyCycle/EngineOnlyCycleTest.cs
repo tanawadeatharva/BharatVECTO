@@ -112,6 +112,8 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var fileWriter = new FileOutputWriter(modFile);
 			var modData = new ModalDataContainer(runData, fileWriter, null) { WriteModalResults = true };
 			modData.AddAuxiliary(Constants.Auxiliaries.Cycle);
+			modData.Data.CreateColumns(ModalResults.TimeCycleSignals);
+			modData.Data.CreateCombustionEngineColumns(runData);
 			port.Initialize(data.Entries.First().Torque, data.Entries.First().AngularVelocity);
 			foreach (var cycleEntry in data.Entries) {
 				// ReSharper disable once UnusedVariable

@@ -1,6 +1,6 @@
 ## Driver: Overspeed
 
-Overspeed controls the vehicle's behaviour on uneven road sections (slope ≠ 0) and can be configured in the [Job File](#job-file)'s Driver Assist Tab. Overspeed is designed to model an average driver's behaviour without the aid of driver assistance systems. Eco-Roll  represents an optional driver assistance feature. For this reason vehicles without Eco-Roll should always have the Overspeed function enabled.
+Overspeed controls the vehicle's behavior on uneven road sections (slope ≠ 0) and can be configured in the [Job File](#job-file)'s Driver Assist Tab. Overspeed is designed to model an average driver's behavior without the aid of driver assistance systems. Eco-Roll  represents an optional driver assistance feature. For this reason vehicles without Eco-Roll should always have the Overspeed function enabled.
 
 Overspeed activates as soon as the total power demand at the wheels (Pwheel) falls below zero, i.e. the vehicle accelerates on a negative slope. The clutch remains closed, engine in motoring operation, and the vehicle accelerates beyond the cycle's target speed. When the speed limit (target speed plus **Max. Overspeed**) is reached the mechanical brakes are engaged to prevent further acceleration.
 
@@ -19,13 +19,18 @@ Parameters in [Job File](#job-file):
 
 ### Description
 
-If engine stop/start is enabled in the Vehicle, the engine is turned off during vehicle stops to reduce the fuel consumption. During vehicle stops the energy demand for certain auxiliaires and for starting the engine is accumulated. In a post-processing step the final [fuel consumption is corrected](#engine-fuel-consumption-correction) to consider the energy demand for the auxiliaries and engine start.
+If engine stop/start is enabled in the Vehicle, the engine is turned off during vehicle stops to reduce the fuel consumption. During vehicle stops the energy demand for certain auxiliaries and for starting the engine is accumulated. In a post-processing step the final [fuel consumption is corrected](#engine-fuel-consumption-correction) to consider the energy demand for the auxiliaries and engine start.
 
 ### Model Parameters
 
-   - **Delay engine-off:** if the vehicle stops, the engine is switched off after this timespan
-   - **Max engine-off timespan:** if the enine is switched off at a vehicle stand, the engine is turned on again after this timespan. This basically limits the max. time the engine is switched off at a single engine-off event.
-   - **Engine stop/start utility factor:** In practice, the engine is not switched off at every vehicle stop. This is considered with this utility factor (0...1). Further details are provided below.
+Delay engine-off \[s\]
+:   if the vehicle stops, the engine is switched off after this timespan
+
+Max engine-off timespan \[s\]
+:   if the engine is switched off at a vehicle halt, the engine is turned on again after this timespan. This basically limits the max. time the engine is switched off at a single engine-off event.
+
+Engine stop/start utility factor \[s\]
+:   In practice, the engine is not switched off at every vehicle stop. This is considered with this utility factor (0...1). Further details are provided below.
 
 <div class="declaration">
    - delay engine-off: 2 s
@@ -98,10 +103,14 @@ can be specified. When the ICE is on, the auxiliary energy demand is directly ap
 
 ### Model Parameters
 
-  - **Minimum speed:** minimum vehicle speed to allow eco-roll to be activated
-  - **Activation delay:** delay between the point in time when all conditions for an eco-roll event are fulfilled until eco-roll is activated
-  - **Underspeed threshold:** Threshold below the target speed to disable eco-roll 
-  - **AT EcoRoll Release Lockup Clutch:** Required only for AT transmissions. If set to true, the lockup clutch is released during eco-roll events and the gear is engaged. If set to false, the gearbox switches to neutral.
+Minimum speed  \[km/h\]
+:  minimum vehicle speed to allow eco-roll to be activated
+
+Activation delay \[s\]
+:	delay between the point in time when all conditions for an eco-roll event are fulfilled until eco-roll is activated
+
+Upper Acceleration Limit \[m/s^2\]
+
 
 <div class="declaration">
   - Minimum speed: 60 km/h
@@ -111,7 +120,7 @@ can be specified. When the ICE is on, the auxiliary energy demand is directly ap
 
 ### Eco-Roll Model
 
-**Calulations during simulation**
+**Calculations during simulation**
 
 $a_{veh,est} = \frac{F_{grad}(x) + F_{roll}(x) + F_{aero}(v_{veh})}{m_{veh}}$
 
@@ -125,7 +134,7 @@ The following state diagram depicts when eco-roll is activated during the simula
 
 ### Description
 
-Predictive cruise control (PCC): systems which optimise the usage of potential energy during a driving cycle based on an available preview of road gradient data and the use of a GPS system. A PCC system declared in the input to the simulation tool shall have a gradient preview distance longer than 1000 meters and cover all following use cases:
+Predictive cruise control (PCC): systems which optimize the usage of potential energy during a driving cycle based on an available preview of road gradient data and the use of a GPS system. A PCC system declared in the input to the simulation tool shall have a gradient preview distance longer than 1000 meters and cover all following use cases:
 
 **Use Case 1: Crest Coasting**
 
@@ -141,7 +150,7 @@ During downhill driving when the vehicle is braking at the overspeed velocity, P
 
 In VECTO a vehicle may either support use cases 1 and 2 or all three use cases.
 
-Predictive cruise control is only considered on highway sections of the simulated driving cycle (see [sistance-based driving cycle](#engineering-mode-target-speed-distance-based-cycle).
+Predictive cruise control is only considered on highway sections of the simulated driving cycle (see [distance-based driving cycle](#engineering-mode-target-speed-distance-based-cycle).
 
 <div class="declaration">
 In declaration mode, the whole long-haul cycle is considered as highway. Moreover, the section from 29760m to 96753m of the regional delivery cycle is considered as highway.
@@ -150,7 +159,7 @@ In declaration mode, the whole long-haul cycle is considered as highway. Moreove
 ### Model Parameters
 
    - **Allowed underspeed:** Threshold below the target speed the vehicle's velocity may be reduced to during a PCC event (use-case 1 & 2, $v_{neg}$)
-   - **Allowed overspeed:** Threshold above the target speed the vehicle's velocity may reach during a PCC event (use-cae 3)
+   - **Allowed overspeed:** Threshold above the target speed the vehicle's velocity may reach during a PCC event (use-case 3)
    - **PCC enabling velocity:** Only highway sections of the driving cycle with a target velocity greater than or equal to the enabling velocity are considered for PCC events.
    - **Minimum speed:** Minimum vehicle speed for allowing PCC use-case 2
    - **Preview distance use case 1:** Preview distance for use-case 1 PCC events. After this distance (estimated) after starting the PCC event the vehicle shall reach the target speed again.
@@ -177,7 +186,7 @@ In declaration mode, the whole long-haul cycle is considered as highway. Moreove
 $E(x_{v_{low}}) = m \cdot g \cdot h(x_{v{low}}) + \frac{m \cdot (v_{target}(x_{v_{low}}) - v_{neg})^2}{2}$
 $E(x_{end, max}) = m \cdot g \cdot h(x_{end, max}) + \frac{m \cdot v_{target}(x_{end, max})^2}{2}$
 
-**Calulations during simulation**
+**Calculations during simulation**
 
 If the vehicle enters a potential PCC section, the following calculations are performed to decide on starting a PCC event:
 

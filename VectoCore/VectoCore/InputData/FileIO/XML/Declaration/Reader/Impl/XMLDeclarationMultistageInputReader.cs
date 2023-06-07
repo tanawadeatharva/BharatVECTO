@@ -487,6 +487,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			_primaryVehicle = primaryVehicle;
 		}
+		public VectoSimulationJobType VehicleType { get => _primaryVehicle.Vehicle.VehicleType; }
 
 		#region ManufacturingStage mandatory properties
 
@@ -501,7 +502,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public VehicleDeclarationType VehicleDeclarationType => _manufacturingStages?.First().Vehicle.VehicleDeclarationType ?? default(VehicleDeclarationType);
 
 
-		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => throw new NotImplementedException();
+		public IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => throw new NotImplementedException();
 		public TableData BoostingLimitations => throw new NotImplementedException();
 
 		#endregion
@@ -591,27 +592,60 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 				////return _manufacturingStages.Any(x => x.Vehicle.ExemptedVehicle);
 			}
 		}
-		public VehicleCategory VehicleCategory { get; }
-		public AxleConfiguration AxleConfiguration { get; }
+		public VehicleCategory VehicleCategory
+		{
+			get
+			{
+				if (ExemptedVehicle) {
+					return IsInputDataCompleteExempted(VectoSimulationJobType.ConventionalVehicle, false) 
+						? VehicleCategory.HeavyBusCompletedVehicle
+						: VehicleCategory.HeavyBusInterimVehicle;
+				}
+				return VehicleDeclarationType == VehicleDeclarationType.final
+					? VehicleCategory.HeavyBusCompletedVehicle
+					: VehicleCategory.HeavyBusInterimVehicle;
+			}
+		}
+
+		#region Properties taken from primary vehicle
+		public AxleConfiguration AxleConfiguration => _primaryVehicle.Vehicle.AxleConfiguration;
 		public IList<ITorqueLimitInputData> TorqueLimits { get; }
+		public bool HybridElectricHDV => _primaryVehicle.Vehicle.HybridElectricHDV;
 
-		public PerSecond EngineIdleSpeed { get; }
-		public bool VocationalVehicle { get; }
-		public bool? SleeperCab { get; }
-		public bool ZeroEmissionVehicle { get; }
-		public bool HybridElectricHDV { get; }
-		public bool DualFuelVehicle { get; }
-		public Watt MaxNetPower1 { get; }
-		public Watt MaxNetPower2 { get; }
-		public string ExemptedTechnology { get; }
+		public bool ZeroEmissionVehicle => _primaryVehicle.Vehicle.ZeroEmissionVehicle;
 
-		public CubicMeter CargoVolume { get; }
+		public bool VocationalVehicle => _primaryVehicle.Vehicle.VocationalVehicle;
+		public bool? SleeperCab => _primaryVehicle.Vehicle.SleeperCab;
+
+		public bool DualFuelVehicle => _primaryVehicle.Vehicle.DualFuelVehicle;
+
+		public bool OvcHev => _primaryVehicle.Vehicle.OvcHev;
+
+		public PerSecond EngineIdleSpeed => _primaryVehicle.Vehicle.EngineIdleSpeed;
+
+		public Watt MaxNetPower1 => _primaryVehicle.Vehicle.MaxNetPower1;
+		public string ExemptedTechnology => _primaryVehicle.Vehicle.ExemptedTechnology;
+
+		public ArchitectureID ArchitectureID => _primaryVehicle.Vehicle.ArchitectureID;
+
+		public Watt MaxChargingPower => _primaryVehicle.Vehicle.MaxChargingPower;
+
+        #endregion
+
+
+
+
+
+
+
+
+        public CubicMeter CargoVolume { get; }
 		public bool Articulated { get; }
 
 		public XmlNode XMLSource { get; }
-		public ArchitectureID ArchitectureID { get; }
-		public bool OvcHev { get; }
-		public Watt MaxChargingPower { get; }
+		
+
+
 
 		#endregion
 
@@ -868,7 +902,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		private bool PrimaryGearboxIsAT()
 		{
-			switch (_primaryVehicleData.Components.GearboxInputData.Type) {
+			switch (_primaryVehicleData.Components.GearboxInputData?.Type) {
 				case GearboxType.ATPowerSplit:
 				case GearboxType.ATSerial:
 					return true;
@@ -1028,6 +1062,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public SquareMeter TransferredAirDragArea => AirdragEntry?.TransferredAirDragArea;
 
 		public SquareMeter AirDragArea_0 => AirdragEntry.AirDragArea_0;
+		
+		public XmlNode XMLSource => AirdragEntry.XMLSource;
 
 		public DataSource DataSource => AirdragEntry?.DataSource;
 		public bool SavedInDeclarationMode { get; }
@@ -1071,11 +1107,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		private ConsolidateElectricConsumerData _consolidateElectricConsumerData;
 		private ConsolidatedHVACBusAuxiliariesData _consolidatedHVACBusAuxiliariesData;
 		private XmlNode _xmlNode;
+		private IList<string> _consolidateSteeringPumpData;
 
 
 		public ConsolidatedBusAuxiliariesData(IEnumerable<IManufacturingStageInputData> manufacturingStages)
 			: base(manufacturingStages) { }
 
+		public DataSource DataSource
+		{
+			get => _manufacturingStages.Select(s => s.Vehicle.Components.BusAuxiliaries.DataSource).FirstOrDefault();
+		}
 		public XmlNode XMLSource => _xmlNode ?? (_xmlNode = GetBusAuxXMLSource());
 
 		public string FanTechnology => null;
@@ -1180,10 +1221,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 
 	}
+	
 
 	// ---------------------------------------------------------------------------------------
 
-	public class ConsolidateElectricConsumerData : ConsolidatedDataBase, IElectricConsumersDeclarationData
+		public class ConsolidateElectricConsumerData : ConsolidatedDataBase, IElectricConsumersDeclarationData
 	{
 		public ConsolidateElectricConsumerData(IEnumerable<IManufacturingStageInputData> manufacturingStages)
 			: base(manufacturingStages) { }
@@ -1303,6 +1345,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 				case VectoSimulationJobType.ParallelHybridVehicle:
 				case VectoSimulationJobType.SerialHybridVehicle:
 				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.IEPC_S:
+				case VectoSimulationJobType.IEPC_E:
+				case VectoSimulationJobType.IHPC:
 					return WaterElectricHeater != null && AirElectricHeater != null && OtherHeatingTechnology != null;
 				default:
 					return false;

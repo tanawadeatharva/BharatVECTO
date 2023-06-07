@@ -1,0 +1,686 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.GenericModelData;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Utils.Ninject;
+
+
+namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
+{
+	public class ElectricMachinesDataAdapter : IElectricMachinesDataAdapter
+	{
+		public virtual IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(
+			IElectricMachinesDeclarationInputData electricMachines,
+			IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage, GearList gearlist = null)
+		{
+			if (electricMachines == null) {
+				return null;
+			}
+
+			if (electricMachines.Entries.Select(x => x.Position).Where(x => x != PowertrainPosition.GEN).Distinct().Count() > 1) {
+				throw new VectoException("multiple electric propulsion motors are not supported at the moment");
+			}
+
+			CheckTorqueLimitVoltageLevels(electricMachines, torqueLimits);
+
+			return electricMachines.Entries
+				.Select(m => Tuple.Create(m.Position,
+					CreateElectricMachine(
+						powertrainPosition: m.Position,
+						motorData: m.ElectricMachine,
+						count: m.Count, 
+						adcRatio: m.RatioADC, 
+						ratioPerGear: m.RatioPerGear,
+						adcLossMap: m.MechanicalTransmissionLossMap,
+						torqueLimits: torqueLimits?.FirstOrDefault(t => t.Key == m.Position).Value, averageVoltage, gearlist))).ToList();
+
+		}
+
+		private void CheckTorqueLimitVoltageLevels(IElectricMachinesDeclarationInputData electricMachines,
+			IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits)
+		{
+			if (torqueLimits == null) {
+				return;
+			}
+
+			foreach (var torqueLimit in torqueLimits.OrderBy(x => x.Key)) {
+
+				//E-machines at position
+				foreach (var eMachine in electricMachines.Entries.Where(e => e.Position == torqueLimit.Key).Select(x => x.ElectricMachine)) {
+					foreach (var torqueLimitVoltageLevel in torqueLimit.Value.Select(tl => tl.Item1)) {
+						if (eMachine.VoltageLevels.All(vl => vl.VoltageLevel != torqueLimitVoltageLevel)) {
+							throw new VectoException(
+								$"EM Torque Limit: Voltage level {torqueLimitVoltageLevel} not found for EM at position {torqueLimit.Key}");
+						}
+					}
+				}
+			}
+		}
+
+		private ElectricMotorData CreateElectricMachine(PowertrainPosition powertrainPosition,
+			IElectricMotorDeclarationInputData motorData,
+			int count,
+			double adcRatio,
+			double[] ratioPerGear,
+			TableData adcLossMap,
+			IList<Tuple<Volt, TableData>> torqueLimits,
+			Volt averageVoltage,
+			GearList gearList)
+		{
+			if (motorData.CertificationMethod == CertificationMethod.StandardValues) {
+				//Fake one very low voltage level and one very high for standard values
+				motorData = new StandardValuesInputData.StandardValuesEmInputData(motorData, 1.SI<Volt>(), 10E9.SI<Volt>());
+			}
+			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
+
+			foreach (var entry in motorData.VoltageLevels.OrderBy(x => x.VoltageLevel)) {
+				var fullLoadCurve = ElectricFullLoadCurveReader.Create(entry.FullLoadCurve, count);
+				var maxTorqueCurve = torqueLimits == null
+					? null
+					: ElectricFullLoadCurveReader.Create(
+						torqueLimits.FirstOrDefault(x => x.Item1 == null || x.Item1.IsEqual(entry.VoltageLevel))?.Item2, count);
+
+				var fullLoadCurveCombined = IntersectEMFullLoadCurves(fullLoadCurve, maxTorqueCurve);
+
+				try {
+					var vLevelData = motorData.IsIHPC()
+						? CreateIHPCVoltageLevelData(count, entry, fullLoadCurveCombined, gearList)
+						: CreateEmVoltageLevelData(count, entry, fullLoadCurveCombined);
+					voltageLevels.Add(vLevelData);
+				} catch (Exception ex) {
+					throw new VectoException(
+						$"Could not create Voltage Level data for {entry.VoltageLevel} at position {powertrainPosition}!\n" +
+						$"{ex.Message}",
+						ex);
+				}
+			}
+
+			if (averageVoltage == null) {
+				// if no average voltage is provided (e.g. for supercap) use mean value of measured voltage maps
+				averageVoltage = (voltageLevels.Min(x => x.Voltage) + voltageLevels.Max(x => x.Voltage)) / 2.0;
+			}
+
+			var lossMap = powertrainPosition == PowertrainPosition.IHPC
+				? TransmissionLossMapReader.CreateEmADCLossMap(1.0, 1.0, "EM ADC IHPC LossMap Eff")
+				: adcLossMap != null
+					? TransmissionLossMapReader.CreateEmADCLossMap(adcLossMap, adcRatio, "EM ADC LossMap")
+					: TransmissionLossMapReader.CreateEmADCLossMap(DeclarationData.ElectricMachineDefaultMechanicalTransmissionEfficiency, adcRatio, "EM ADC LossMap Eff");
+
+
+			var retVal = new ElectricMotorData() {
+				EfficiencyData = new VoltageLevelData() { VoltageLevels = voltageLevels },
+				EMDragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, count),
+				Inertia = motorData.Inertia * count,
+				OverloadRecoveryFactor = DeclarationData.OverloadRecoveryFactor,
+				RatioADC = adcRatio,
+				RatioPerGear = ratioPerGear,
+				TransmissionLossMap = lossMap,
+			};
+			retVal.Overload = CalculateOverloadData(motorData, count, retVal.EfficiencyData, averageVoltage);
+			return retVal;
+		}
+
+		protected internal static ElectricMotorFullLoadCurve IntersectEMFullLoadCurves(ElectricMotorFullLoadCurve fullLoadCurve,
+			ElectricMotorFullLoadCurve maxTorqueCurve)
+		{
+			if (maxTorqueCurve == null) {
+				return fullLoadCurve;
+			}
+
+			if (maxTorqueCurve.MaxSpeed.IsSmaller(fullLoadCurve.MaxSpeed)) {
+				throw new VectoException("EM Torque limitation has to cover the whole speed range");
+			}
+
+			var motorSpeeds = fullLoadCurve.FullLoadEntries.Select(x => x.MotorSpeed)
+				.Concat(maxTorqueCurve.FullLoadEntries.Select(x => x.MotorSpeed)).ToList();
+			// iterate over all segments in the full-load curve
+			foreach (var fldTuple in fullLoadCurve.FullLoadEntries.Pairwise()) {
+				// find all grid points of max torque curve within the current segment of fld
+				var maxPtsWithinSegment = maxTorqueCurve.FullLoadEntries.Where(x =>
+					x.MotorSpeed.IsGreaterOrEqual(fldTuple.Item1.MotorSpeed) &&
+					x.MotorSpeed.IsSmallerOrEqual(fldTuple.Item2.MotorSpeed)).OrderBy(x => x.MotorSpeed).ToList();
+				if (maxPtsWithinSegment.Count == 0) {
+					// if grid pint is within, take the 'surrounding' segment
+					var segment =
+						maxTorqueCurve.FullLoadEntries.GetSection(x => x.MotorSpeed < fldTuple.Item1.MotorSpeed);
+					maxPtsWithinSegment = new[] { segment.Item1, segment.Item2 }.ToList();
+				} else {
+					// add the point just before and just after the current list of points 
+					if (maxPtsWithinSegment.Min(x => x.MotorSpeed).IsGreater(fldTuple.Item1.MotorSpeed)) {
+						maxPtsWithinSegment.Add(maxTorqueCurve.FullLoadEntries.Last(x =>
+							x.MotorSpeed.IsSmaller(fldTuple.Item1.MotorSpeed)));
+					}
+
+					if (maxPtsWithinSegment.Max(x => x.MotorSpeed).IsSmaller(fldTuple.Item2.MotorSpeed)) {
+						maxPtsWithinSegment.Add(maxTorqueCurve.FullLoadEntries.First(x => x.MotorSpeed.IsGreater(fldTuple.Item2.MotorSpeed)));
+					}
+
+					maxPtsWithinSegment = maxPtsWithinSegment.OrderBy(x => x.MotorSpeed).ToList();
+				}
+
+				var fldEdgeDrive =
+					Edge.Create(new Point(fldTuple.Item1.MotorSpeed.Value(), fldTuple.Item1.FullDriveTorque.Value()),
+						new Point(fldTuple.Item2.MotorSpeed.Value(), fldTuple.Item2.FullDriveTorque.Value()));
+				var fldEdgeGenerate =
+					Edge.Create(new Point(fldTuple.Item1.MotorSpeed.Value(), fldTuple.Item1.FullGenerationTorque.Value()),
+						new Point(fldTuple.Item2.MotorSpeed.Value(), fldTuple.Item2.FullGenerationTorque.Value()));
+				foreach (var maxTuple in maxPtsWithinSegment.Pairwise()) {
+					var maxEdgeDrive =
+						Edge.Create(new Point(maxTuple.Item1.MotorSpeed.Value(), maxTuple.Item1.FullDriveTorque.Value()),
+							new Point(maxTuple.Item2.MotorSpeed.Value(), maxTuple.Item2.FullDriveTorque.Value()));
+					if (!(maxEdgeDrive.SlopeXY - fldEdgeDrive.SlopeXY).IsEqual(0, 1e-12)) {
+						// lines are not parallel
+						var nIntersectDrive =
+							((fldEdgeDrive.OffsetXY - maxEdgeDrive.OffsetXY) /
+							(maxEdgeDrive.SlopeXY - fldEdgeDrive.SlopeXY)).SI<PerSecond>();
+						if (nIntersectDrive.IsBetween(fldTuple.Item1.MotorSpeed, fldTuple.Item2.MotorSpeed)) {
+							motorSpeeds.Add(nIntersectDrive);
+						}
+					}
+
+					var maxEdgeGenerate =
+						Edge.Create(new Point(maxTuple.Item1.MotorSpeed.Value(), maxTuple.Item1.FullGenerationTorque.Value()),
+							new Point(maxTuple.Item2.MotorSpeed.Value(), maxTuple.Item2.FullGenerationTorque.Value()));
+					if (!((maxEdgeGenerate.SlopeXY - fldEdgeGenerate.SlopeXY).IsEqual(0, 1e-12))) {
+						// lines are not parallel
+						var nIntersectGenerate =
+							((fldEdgeGenerate.OffsetXY - maxEdgeGenerate.OffsetXY) /
+							(maxEdgeGenerate.SlopeXY - fldEdgeGenerate.SlopeXY)).SI<PerSecond>();
+
+
+						if (nIntersectGenerate.IsBetween(fldTuple.Item1.MotorSpeed, fldTuple.Item2.MotorSpeed)) {
+							motorSpeeds.Add(nIntersectGenerate);
+						}
+					}
+				}
+			}
+
+			// create new full-load curve with values closest to zero.
+			return new ElectricMotorFullLoadCurve(motorSpeeds.OrderBy(x => x.Value()).Distinct().Select(x =>
+				new ElectricMotorFullLoadCurve.FullLoadEntry() {
+					MotorSpeed = x,
+					FullDriveTorque = VectoMath.Max(fullLoadCurve.FullLoadDriveTorque(x),
+						maxTorqueCurve.FullLoadDriveTorque(x)),
+					FullGenerationTorque = VectoMath.Min(fullLoadCurve.FullGenerationTorque(x),
+						maxTorqueCurve.FullGenerationTorque(x)),
+				}).ToList());
+		}
+
+		private ElectricMotorVoltageLevelData CreateIHPCVoltageLevelData(int count, IElectricMotorVoltageLevel entry, ElectricMotorFullLoadCurve fullLoadCurveCombined, GearList gearList)
+		{
+			if (gearList == null) {
+				throw new VectoException("no gears provided for IHPC EM");
+			}
+
+			if (gearList.Count() != entry.PowerMap.Count) {
+				throw new VectoException(
+					$"number of gears in transmission does not match gears in electric motor (IHPC) - {gearList.Count()}/{entry.PowerMap.Count}");
+			}
+			var effMap = new Dictionary<uint, EfficiencyMap>();
+			foreach (var gear in gearList) {
+				effMap.Add(gear.Gear, ElectricMotorMapReader.Create(entry.PowerMap[(int)gear.Gear - 1].PowerMap, count));
+			}
+			return new IHPCVoltageLevelData() {
+				Voltage = entry.VoltageLevel,
+				FullLoadCurve = fullLoadCurveCombined,
+				EfficiencyMaps = effMap,
+			};
+		}
+
+		private static ElectricMotorVoltageLevelData CreateEmVoltageLevelData(int count,
+			IElectricMotorVoltageLevel entry, ElectricMotorFullLoadCurve fullLoadCurveCombined)
+		{
+			try {
+				return new ElectricMotorVoltageLevelData() {
+					Voltage = entry.VoltageLevel,
+
+					FullLoadCurve = fullLoadCurveCombined,
+					// DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
+					EfficiencyMap = ElectricMotorMapReader.Create(entry.PowerMap.First().PowerMap, count), //PowerMap
+				};
+			} catch (Exception ex) {
+				throw new VectoException($"Invalid efficiency map at voltage level {entry.VoltageLevel}", ex);
+			}
+		}
+
+
+		public virtual List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(IIEPCDeclarationInputData iepc, Volt averageVoltage)
+		{
+			if (iepc == null) {
+				return null;
+			}
+			if (iepc.CertificationMethod == CertificationMethod.StandardValues) {
+				//Fake one very low voltage level and one very high for standard values
+				iepc = new StandardValuesInputData.StandardValueIEPCInputData(iepc, 1.SI<Volt>(), 10E9.SI<Volt>());
+			}
+
+
+
+
+			var pos = PowertrainPosition.IEPC;
+			var count = iepc.DesignTypeWheelMotor && iepc.NrOfDesignTypeWheelMotorMeasured == 1 ? 2 : 1;
+
+			// the full-load curve is measured in the gear with the ratio closest to 1,
+			// in case two gears have the same difference, the higher one is used
+			var gearRatioUsedForMeasurement = iepc.Gears
+				.Select(x => new { x.GearNumber, x.Ratio, Diff = Math.Round(Math.Abs(x.Ratio - 1), 6) }).GroupBy(x => x.Diff)
+				.OrderBy(x => x.Key).First().OrderBy(x => x.Ratio).Reverse().First();
+
+
+			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
+
+			foreach (var entry in iepc.VoltageLevels.OrderBy(x => x.VoltageLevel).AsEnumerable()) {
+				var effMap = new Dictionary<uint, EfficiencyMap>();
+				var fldCurve =
+					IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, gearRatioUsedForMeasurement.Ratio);
+				for (var i = 0u; i < entry.PowerMap.Count; i++) {
+					var ratio = iepc.Gears.First(x => x.GearNumber == i + 1).Ratio;
+					effMap.Add(i + 1, IEPCMapReader.Create(entry.PowerMap[(int)i].PowerMap, count, ratio, fldCurve));
+					//fullLoadCurves.Add(i + 1, IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, ratio));
+				}
+				voltageLevels.Add(new IEPCVoltageLevelData() {
+
+					Voltage = iepc.CertificationMethod != CertificationMethod.StandardValues ? entry.VoltageLevel : null, //No voltagelevel is provided for standard values
+					FullLoadCurve = fldCurve,
+					EfficiencyMaps = effMap,
+				});
+			}
+
+			voltageLevels.First().Voltage = 1.SI<Volt>();
+			voltageLevels.Last().Voltage = 10E9.SI<Volt>();
+
+
+			var dragCurves = new Dictionary<uint, DragCurve>();
+			if (iepc.DragCurves.Count > 1) {
+				for (var i = 0u; i < iepc.DragCurves.Count; i++) {
+					var ratio = iepc.Gears.First(x => x.GearNumber == i + 1).Ratio;
+					dragCurves.Add(i + 1, IEPCDragCurveReader.Create(iepc.DragCurves[(int)i].DragCurve, count, ratio));
+				}
+			} else {
+				var dragCurve = iepc.DragCurves.First().DragCurve;
+				for (var i = 0u; i < iepc.Gears.Count; i++) {
+					var ratio = iepc.Gears.First(x => x.GearNumber == i + 1).Ratio;
+					dragCurves.Add(i + 1, IEPCDragCurveReader.Create(dragCurve, count, ratio));
+				}
+			}
+
+			var retVal = new IEPCElectricMotorData() {
+				EfficiencyData = new VoltageLevelData() { VoltageLevels = voltageLevels },
+				IEPCDragCurves = dragCurves,
+				Inertia = iepc.Inertia * count,
+				OverloadRecoveryFactor = DeclarationData.OverloadRecoveryFactor,
+				RatioADC = 1,
+				RatioPerGear = null,
+				TransmissionLossMap = TransmissionLossMapReader.CreateEmADCLossMap(1.0, 1.0, "EM ADC LossMap Eff"),
+
+			};
+			retVal.Overload = CalculateOverloadData(iepc, count, retVal.EfficiencyData, averageVoltage,
+				Tuple.Create((uint)gearRatioUsedForMeasurement.GearNumber, gearRatioUsedForMeasurement.Ratio));
+			;
+			return new List<Tuple<PowertrainPosition, ElectricMotorData>>() { Tuple.Create<PowertrainPosition, ElectricMotorData>(pos, retVal) };
+		}
+
+		protected OverloadData CalculateOverloadData(IIEPCDeclarationInputData iepc, int count,
+			VoltageLevelData voltageLevel, Volt averageVoltage, Tuple<uint, double> gearRatioUsedForMeasurement)
+		{
+
+			// if average voltage is outside of the voltage-level range, do not extrapolate but take the min voltage entry, or max voltage entry
+			if (averageVoltage < iepc.VoltageLevels.Min(x => x.VoltageLevel)) {
+				return CalculateOverloadBuffer(iepc.VoltageLevels.First(), count, voltageLevel, gearRatioUsedForMeasurement);
+			}
+			if (averageVoltage > iepc.VoltageLevels.Max(x => x.VoltageLevel)) {
+				return CalculateOverloadBuffer(iepc.VoltageLevels.Last(), count, voltageLevel, gearRatioUsedForMeasurement);
+			}
+
+			var (vLow, vHigh) = iepc.VoltageLevels.OrderBy(x => x.VoltageLevel).GetSection(x => x.VoltageLevel < averageVoltage);
+			var ovlLo = CalculateOverloadBuffer(vLow, count, voltageLevel, gearRatioUsedForMeasurement);
+			var ovlHi = CalculateOverloadBuffer(vHigh, count, voltageLevel, gearRatioUsedForMeasurement);
+
+			var retVal = new OverloadData() {
+				OverloadBuffer = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.OverloadBuffer, ovlHi.OverloadBuffer, averageVoltage),
+				ContinuousTorque = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.ContinuousTorque, ovlHi.ContinuousTorque, averageVoltage),
+				ContinuousPowerLoss = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.ContinuousPowerLoss, ovlHi.ContinuousPowerLoss, averageVoltage)
+			};
+			return retVal;
+		}
+
+
+		protected OverloadData CalculateOverloadData(IElectricMotorDeclarationInputData motorData, int count, VoltageLevelData voltageLevel, Volt averageVoltage)
+		{
+
+			// if average voltage is outside of the voltage-level range, do not extrapolate but take the min voltage entry, or max voltage entry
+			if (averageVoltage < motorData.VoltageLevels.Min(x => x.VoltageLevel)) {
+				return CalculateOverloadBuffer(motorData.VoltageLevels.First(), count, voltageLevel);
+			}
+			if (averageVoltage > motorData.VoltageLevels.Max(x => x.VoltageLevel)) {
+				return CalculateOverloadBuffer(motorData.VoltageLevels.Last(), count, voltageLevel);
+			}
+
+			var (vLow, vHigh) = motorData.VoltageLevels.OrderBy(x => x.VoltageLevel).GetSection(x => x.VoltageLevel < averageVoltage);
+			var ovlLo = CalculateOverloadBuffer(vLow, count, voltageLevel);
+			var ovlHi = CalculateOverloadBuffer(vHigh, count, voltageLevel);
+
+			var retVal = new OverloadData() {
+				OverloadBuffer = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.OverloadBuffer, ovlHi.OverloadBuffer, averageVoltage),
+				ContinuousTorque = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.ContinuousTorque, ovlHi.ContinuousTorque, averageVoltage),
+				ContinuousPowerLoss = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.ContinuousPowerLoss, ovlHi.ContinuousPowerLoss, averageVoltage)
+			};
+			return retVal;
+		}
+
+		private OverloadData CalculateOverloadBuffer(IElectricMotorVoltageLevel voltageEntry,
+			int count, VoltageLevelData voltageLevel, Tuple<uint, double> gearUsedForMeasurement = null)
+		{
+			var gearRatioUsedForMeasurement = gearUsedForMeasurement?.Item2 ?? 1.0;
+			var gear = new GearshiftPosition(gearUsedForMeasurement?.Item1 ?? 1);
+			var continuousTorque = voltageEntry.ContinuousTorque * count / gearRatioUsedForMeasurement;
+			var continuousTorqueSpeed = voltageEntry.ContinuousTorqueSpeed * gearRatioUsedForMeasurement;
+			var overloadTorque = (voltageEntry.OverloadTorque ?? 0.SI<NewtonMeter>()) * count / gearRatioUsedForMeasurement;
+			var overloadTestSpeed = (voltageEntry.OverloadTestSpeed ?? 0.RPMtoRad()) * gearRatioUsedForMeasurement;
+
+
+			var peakElPwr = voltageLevel.LookupElectricPower(voltageEntry.VoltageLevel,
+					overloadTestSpeed,
+					-overloadTorque,
+					gear,
+					true)
+					.ElectricalPower;
+			var peakPwrLoss = -peakElPwr - overloadTorque * overloadTestSpeed; // losses need to be positive
+
+			var contElPwr = voltageLevel.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
+								-continuousTorque, gear).ElectricalPower ??
+							voltageLevel.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
+								voltageLevel.FullLoadDriveTorque(voltageEntry.VoltageLevel, continuousTorqueSpeed),
+								gear, true).ElectricalPower;
+			var continuousPowerLoss = -contElPwr - continuousTorque * continuousTorqueSpeed; // loss needs to be positive
+			var overloadBuffer = (peakPwrLoss - continuousPowerLoss) * voltageEntry.OverloadTime;
+			return new OverloadData() {
+				OverloadBuffer = overloadBuffer,
+				ContinuousTorque = continuousTorque,
+				ContinuousPowerLoss = continuousPowerLoss
+			};
+		}
+	}
+
+	
+
+	public class GenericElectricMachinesDataAdapter : ElectricMachinesDataAdapter
+	{
+		private readonly GenericBusElectricMotorData _genericEMotorData = new GenericBusElectricMotorData();
+		private GenericBusIEPCData _genericIepcData = new GenericBusIEPCData();
+
+		#region Implementation of IElectricMachinesDataAdapter
+
+		public override IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits,
+			Volt averageVoltage, GearList gearlist = null)
+		{
+			if (electricMachines == null) {
+				return null;
+			}
+
+			if (electricMachines.Entries.Select(x => x.Position)
+					.Where(x => x != PowertrainPosition.GEN).Distinct().Count() > 1) {
+				throw new VectoException("multiple electric propulsion motors are not supported at the moment");
+			}
+
+			CheckTorqueLimitVoltageLevels(electricMachines, torqueLimits);
+
+			return electricMachines.Entries.Select(m =>
+				Tuple.Create(m.Position, _genericEMotorData.CreateGenericElectricMotorData(m, torqueLimits?.FirstOrDefault(t => t.Key == m.Position).Value,
+					averageVoltage))).ToList();
+
+		}
+
+		public override List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(IIEPCDeclarationInputData iepc, Volt averageVoltage)
+		{
+			if (iepc == null) {
+				return null;
+			}
+
+			var pos = PowertrainPosition.IEPC;
+			var count = iepc.DesignTypeWheelMotor && iepc.NrOfDesignTypeWheelMotorMeasured == 1 ? 2 : 1;
+            var gearRatioUsedForMeasurement = iepc.Gears
+				.Select(x => new { x.GearNumber, x.Ratio, Diff = Math.Round(Math.Abs(x.Ratio - 1), 6) }).GroupBy(x => x.Diff)
+				.OrderBy(x => x.Key).First().OrderBy(x => x.Ratio).Reverse().First();
+			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
+			var genericIEPCData = _genericIepcData.CreateIEPCElectricMotorData(iepc);
+			genericIEPCData.OverloadRecoveryFactor = DeclarationData.OverloadRecoveryFactor;
+			genericIEPCData.TransmissionLossMap =
+				TransmissionLossMapReader.CreateEmADCLossMap(1.0, 1.0, "EM ADC LossMap Eff");
+			genericIEPCData.RatioADC = 1;
+			genericIEPCData.Overload = CalculateOverloadData(iepc, count, genericIEPCData.EfficiencyData, averageVoltage,
+				Tuple.Create((uint)gearRatioUsedForMeasurement.GearNumber, gearRatioUsedForMeasurement.Ratio));
+
+
+            return new List<Tuple<PowertrainPosition, ElectricMotorData>>() {
+				Tuple.Create<PowertrainPosition, ElectricMotorData>(pos, genericIEPCData)
+			};
+
+
+
+        }
+
+        #endregion
+
+        private void CheckTorqueLimitVoltageLevels(IElectricMachinesDeclarationInputData electricMachines,
+			IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits)
+		{
+			if (torqueLimits == null) {
+				return;
+			}
+
+			foreach (var torqueLimit in torqueLimits.OrderBy(x => x.Key)) {
+
+				//E-machines at position
+				foreach (var eMachine in electricMachines.Entries.Where(e => e.Position == torqueLimit.Key).Select(x => x.ElectricMachine)) {
+					foreach (var torqueLimitVoltageLevel in torqueLimit.Value.Select(tl => tl.Item1)) {
+						if (eMachine.VoltageLevels.All(vl => vl.VoltageLevel != torqueLimitVoltageLevel)) {
+							throw new VectoException(
+								$"EM Torque Limit: Voltage level {torqueLimitVoltageLevel} not found for EM at position {torqueLimit.Key}");
+						}
+					}
+				}
+			}
+		}
+    }
+
+    internal abstract class StandardValuesInputData
+    {
+        /// <summary>
+        /// Wraps the standard value input data and overrides the voltage level
+        /// </summary>
+        internal class StandardValueVoltageLevelInputData : IElectricMotorVoltageLevel
+        {
+
+            public StandardValueVoltageLevelInputData(IElectricMotorVoltageLevel inputData, Volt voltageLevel)
+            {
+                _electricMotorVoltageLevelImplementation = inputData;
+                _voltageLevel = voltageLevel;
+            }
+            private IElectricMotorVoltageLevel _electricMotorVoltageLevelImplementation;
+            private Volt _voltageLevel;
+
+            public Volt VoltageLevel => _voltageLevel;
+
+
+            #region Implementation of IElectricMotorVoltageLevel
+
+
+
+            public NewtonMeter ContinuousTorque => _electricMotorVoltageLevelImplementation.ContinuousTorque;
+
+            public PerSecond ContinuousTorqueSpeed => _electricMotorVoltageLevelImplementation.ContinuousTorqueSpeed;
+
+            public NewtonMeter OverloadTorque => _electricMotorVoltageLevelImplementation.OverloadTorque;
+
+            public PerSecond OverloadTestSpeed => _electricMotorVoltageLevelImplementation.OverloadTestSpeed;
+
+            public Second OverloadTime => _electricMotorVoltageLevelImplementation.OverloadTime;
+
+            public TableData FullLoadCurve => _electricMotorVoltageLevelImplementation.FullLoadCurve;
+
+            public IList<IElectricMotorPowerMap> PowerMap => _electricMotorVoltageLevelImplementation.PowerMap;
+
+            #endregion
+        }
+
+        internal class StandardValueIEPCInputData : IIEPCDeclarationInputData
+        {
+            private IIEPCDeclarationInputData _iiepcDeclarationInputDataImplementation;
+            private IList<IElectricMotorVoltageLevel> _voltageLevels = new List<IElectricMotorVoltageLevel>();
+
+            /// <summary>
+            /// Wraps the inputData and creates new voltage levels based on the voltage level provided in the input data
+            /// </summary>
+            /// <param name="inputData"></param>
+            /// <param name="voltageLevels"></param>
+            /// <exception cref="ArgumentException"></exception>
+            public StandardValueIEPCInputData(IIEPCDeclarationInputData inputData, params Volt[] voltageLevels)
+            {
+                _iiepcDeclarationInputDataImplementation = inputData;
+                if (inputData.CertificationMethod != CertificationMethod.StandardValues)
+                {
+                    throw new ArgumentException("Only for standard value certification");
+                }
+
+                foreach (var voltageLevel in voltageLevels)
+                {
+                    _voltageLevels.Add(new StandardValueVoltageLevelInputData(inputData.VoltageLevels.First(), voltageLevel));
+                }
+
+            }
+
+            public IList<IElectricMotorVoltageLevel> VoltageLevels => _voltageLevels;
+
+            #region Implementation of IComponentInputData
+
+            public DataSource DataSource => _iiepcDeclarationInputDataImplementation.DataSource;
+
+            public bool SavedInDeclarationMode => _iiepcDeclarationInputDataImplementation.SavedInDeclarationMode;
+
+            public string Manufacturer => _iiepcDeclarationInputDataImplementation.Manufacturer;
+
+            public string Model => _iiepcDeclarationInputDataImplementation.Model;
+
+            public DateTime Date => _iiepcDeclarationInputDataImplementation.Date;
+
+            public string AppVersion => _iiepcDeclarationInputDataImplementation.AppVersion;
+
+            public CertificationMethod CertificationMethod => _iiepcDeclarationInputDataImplementation.CertificationMethod;
+
+            public string CertificationNumber => _iiepcDeclarationInputDataImplementation.CertificationNumber;
+
+            public DigestData DigestValue => _iiepcDeclarationInputDataImplementation.DigestValue;
+
+            #endregion
+
+            #region Implementation of IIEPCDeclarationInputData
+
+            public ElectricMachineType ElectricMachineType => _iiepcDeclarationInputDataImplementation.ElectricMachineType;
+
+            public Watt R85RatedPower => _iiepcDeclarationInputDataImplementation.R85RatedPower;
+
+            public KilogramSquareMeter Inertia => _iiepcDeclarationInputDataImplementation.Inertia;
+
+            public bool DifferentialIncluded => _iiepcDeclarationInputDataImplementation.DifferentialIncluded;
+
+            public bool DesignTypeWheelMotor => _iiepcDeclarationInputDataImplementation.DesignTypeWheelMotor;
+
+            public int? NrOfDesignTypeWheelMotorMeasured => _iiepcDeclarationInputDataImplementation.NrOfDesignTypeWheelMotorMeasured;
+
+            public IList<IGearEntry> Gears => _iiepcDeclarationInputDataImplementation.Gears;
+
+
+
+            public IList<IDragCurve> DragCurves => _iiepcDeclarationInputDataImplementation.DragCurves;
+
+            public TableData Conditioning => _iiepcDeclarationInputDataImplementation.Conditioning;
+
+            #endregion
+        }
+
+        internal class StandardValuesEmInputData : IElectricMotorDeclarationInputData
+        {
+            private IElectricMotorDeclarationInputData _electricMotorDeclarationInputDataImplementation;
+
+            private IList<IElectricMotorVoltageLevel> _voltageLevels = new List<IElectricMotorVoltageLevel>();
+
+            /// <summary>
+            /// Wraps the inputData and creates new voltage levels based on the voltage level provided in the input data
+            /// </summary>
+            /// <param name="inputData"></param>
+            /// <param name="voltageLevels"></param>
+            /// <exception cref="ArgumentException"></exception>
+            public StandardValuesEmInputData(IElectricMotorDeclarationInputData inputData, params Volt[] voltageLevels)
+            {
+                _electricMotorDeclarationInputDataImplementation = inputData;
+                if (inputData.CertificationMethod != CertificationMethod.StandardValues)
+                {
+                    throw new ArgumentException("Only for standard value certification");
+                }
+
+                foreach (var voltageLevel in voltageLevels)
+                {
+                    _voltageLevels.Add(new StandardValueVoltageLevelInputData(inputData.VoltageLevels.First(), voltageLevel));
+                }
+
+            }
+
+            public IList<IElectricMotorVoltageLevel> VoltageLevels => _voltageLevels;
+
+
+            #region Implementation of IComponentInputData
+
+            public DataSource DataSource => _electricMotorDeclarationInputDataImplementation.DataSource;
+
+            public bool SavedInDeclarationMode => _electricMotorDeclarationInputDataImplementation.SavedInDeclarationMode;
+
+            public string Manufacturer => _electricMotorDeclarationInputDataImplementation.Manufacturer;
+
+            public string Model => _electricMotorDeclarationInputDataImplementation.Model;
+
+            public DateTime Date => _electricMotorDeclarationInputDataImplementation.Date;
+
+            public string AppVersion => _electricMotorDeclarationInputDataImplementation.AppVersion;
+
+            public CertificationMethod CertificationMethod => _electricMotorDeclarationInputDataImplementation.CertificationMethod;
+
+            public string CertificationNumber => _electricMotorDeclarationInputDataImplementation.CertificationNumber;
+
+            public DigestData DigestValue => _electricMotorDeclarationInputDataImplementation.DigestValue;
+
+            #endregion
+
+            #region Implementation of IElectricMotorDeclarationInputData
+
+            public ElectricMachineType ElectricMachineType => _electricMotorDeclarationInputDataImplementation.ElectricMachineType;
+
+            public Watt R85RatedPower => _electricMotorDeclarationInputDataImplementation.R85RatedPower;
+
+            public KilogramSquareMeter Inertia => _electricMotorDeclarationInputDataImplementation.Inertia;
+
+            public bool DcDcConverterIncluded => _electricMotorDeclarationInputDataImplementation.DcDcConverterIncluded;
+
+            public string IHPCType => _electricMotorDeclarationInputDataImplementation.IHPCType;
+
+
+
+            public TableData DragCurve => _electricMotorDeclarationInputDataImplementation.DragCurve;
+
+            public TableData Conditioning => _electricMotorDeclarationInputDataImplementation.Conditioning;
+
+            #endregion
+        }
+    }
+}

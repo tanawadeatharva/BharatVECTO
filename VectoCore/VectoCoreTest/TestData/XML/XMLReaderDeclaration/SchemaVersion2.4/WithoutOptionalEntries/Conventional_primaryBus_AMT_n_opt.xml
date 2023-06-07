@@ -14,7 +14,7 @@
 		<IdlingSpeed>600</IdlingSpeed>
 		<RetarderType>Losses included in Gearbox</RetarderType>
 		<RetarderRatio>2.000</RetarderRatio>
-		<AngledriveType>Separate Angledrive</AngledriveType>
+		<AngledriveType>None</AngledriveType>
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<ADAS xsi:type="ADAS_Conventional_Type">
 			<EngineStopStart>false</EngineStopStart>

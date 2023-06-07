@@ -5,7 +5,15 @@
     <AssemblyName>HashingTool</AssemblyName>
     <ApplicationIcon>HashingIcon.ico</ApplicationIcon>
     <RootNamespace>TUGraz.VECTO</RootNamespace>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <DefineConstants />
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\VECTOStart\StarterHelper.cs" Link="StarterHelper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
 </Project>

@@ -13,7 +13,7 @@ This section describes the gearshift rules for manual transmission models. When 
 #### 3. Exception 1: Margin to Max-Torque line (Downshift)
 ![](pics/shiftlines_3.PNG)
 
-Note: Line L1 is shiftet parallel so that it satisfies the max-torque margin condition, not intersected.
+Note: Line L1 is shifted parallel so that it satisfies the max-torque margin condition, not intersected.
 
 #### 4. Exception 2: Minimal Distance between Downshift and Upshift Lines
 ![](pics/shiftlines_4.PNG)
@@ -49,7 +49,7 @@ and limited to the gear's maximum input speed.
 - Gearshift lines
 - Engine idle speed
 - Gearbox max. input speed
-- Engien n_{95h} speed
+- Engine n_{95h} speed
 - Min. time between two consecutive gearshifts.
 - Min. time for upshift after a downshift
 - Min. time for downshift after an upshift

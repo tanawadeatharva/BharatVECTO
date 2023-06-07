@@ -1,4 +1,5 @@
 ﻿using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.InputData
@@ -12,6 +13,7 @@ namespace TUGraz.VectoCore.InputData
 		/// </summary>
 		/// <param name="inputDataProvider"></param>
 		/// <param name="report"></param>
+		/// <param name="vtpReport"></param>
 		/// <returns></returns>
 		IVectoRunDataFactory CreateDeclarationRunDataFactory(IInputDataProvider inputDataProvider,
 			IDeclarationReport report, IVTPReport vtpReport);

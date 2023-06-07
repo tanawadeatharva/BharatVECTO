@@ -50,12 +50,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			ParentComponent = parent;
 		}
 
-		protected virtual T CreateComponent<T>(
-			string component, Func<string, XmlNode, string, T> componentCreator, bool createDummy = false)
+		protected virtual XmlNode GetComponentNode(string component)
 		{
 			var componentNode = BaseNode.LocalName == component
 				? BaseNode
 				: BaseNode.SelectSingleNode(XMLHelper.QueryLocalName(component));
+
+			return componentNode;
+		}
+
+		protected virtual T CreateComponent<T>(
+			string component, Func<string, XmlNode, string, T> componentCreator, bool createDummy = false)
+		{
+			var componentNode = GetComponentNode(component);
 			var dataNode =
 				componentNode?.SelectSingleNode($"./*[local-name()='{XMLNames.ComponentDataWrapper}']");
 			if (componentNode != null) {
@@ -67,6 +74,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 				return componentCreator(version, componentNode, ParentComponent.DataSource.SourceFile);
 			}
 
+
+
 			if (createDummy) {
 				try {
 					return componentCreator(null, null, null);
@@ -74,6 +83,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					throw new VectoException("failed to create dummy instance for component {0}", e, component);
 				}
 			}
+
+
 
 			throw new VectoException("Component {0} not found!", component);
 		}

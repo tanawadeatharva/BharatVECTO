@@ -7,6 +7,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
+using CommunityToolkit.Mvvm.Input;
+using Newtonsoft.Json;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.XML;
@@ -18,10 +20,11 @@ using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
+using VECTO3GUI2020.Model.Multistage;
 using VECTO3GUI2020.Ninject;
 using VECTO3GUI2020.Properties;
-using VECTO3GUI2020.Util;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
+using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
@@ -31,7 +34,7 @@ using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
 
-	public interface IMultiStageJobViewModel : IDeclarationMultistageJobInputData, IMultistageVIFInputData, IMultistageBusInputDataProvider, IJobViewModel, IEditViewModel
+	public interface IMultiStageJobViewModel : IDeclarationMultistageJobInputData, IMultistageVIFInputData, IMultistepBusInputDataProvider, IJobViewModel, IEditViewModel
 	{
 		IManufacturingStageViewModel ManufacturingStageViewModel { get; }
 		bool Exempted { get; }
@@ -66,7 +69,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _manufacturingStageViewModel, value);
 		}
 
-		public MultiStageJobViewModel_v0_1(IMultistageBusInputDataProvider inputData, 
+		public MultiStageJobViewModel_v0_1(IMultistepBusInputDataProvider inputData, 
 			IMultiStageViewModelFactory vmFactory, 
 			IMultistageDependencies multistageDependencies,
 			IXMLInputDataReader inputDataReader, 
@@ -200,14 +203,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					writer = new FileOutputVIFWriter(outputFile, numberOfManufacturingStages);
 				}
 
-				var inputData = new XMLDeclarationVIFInputData(vifData.MultistageJobInputData, vifData.VehicleInputData);
+				var inputData = new XMLDeclarationVIFInputData(vifData.MultistageJobInputData, vifData.VehicleInputData, false);
 
 
-				var factory = _simFactoryFactory.Factory(ExecutionMode.Declaration, inputData, writer);
+				var factory = _simFactoryFactory.Factory(ExecutionMode.Declaration, inputData, writer, null, null);
 				//var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
 					FileHelper.CreateDirectory(outputFile);
 
-					var jobContainer = new JobContainer(new NullSumWriter());
+					var jobContainer = new JobContainer(new NullSumWriter(writer));
 
 					jobContainer.AddRuns(factory);
 					jobContainer.Execute();
@@ -233,90 +236,83 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			return null;
 		}
 
-  //      private bool WriteTempVIFAndValidate(XMLDeclarationVIFInputData inputData, FileOutputVIFWriter writer, IDialogHelper dialogHelper)
-  //      {
-		//	var tempWriter = new TempFileOutputWriter(writer);
-		//	var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, tempWriter);
 
-		//	var jobContainer = new JobContainer(new NullSumWriter());
+		public ICommand SaveAsJSONCommand => _saveAsJsonCommand ?? new RelayCommand(
+			() => { SaveAsJSONExecute(null); },
+			() => VehicleInputDataFilePath != null
+		);
 
-		//	jobContainer.AddRuns(factory);
-		//	jobContainer.Execute();
-		//	jobContainer.WaitFinished();
-
-		//	var resultXDoc = tempWriter.GetDocument(ReportType.DeclarationReportMultistageVehicleXML);
-
-
-		//	using (var reader = resultXDoc.Root.CreateReader())
-		//	{
-		//		var validator = new XMLValidator(reader);
-		//		var valid = validator.ValidateXML(XmlDocumentType.MultistepOutputData);
-		//		if (!valid)
-		//		{
-		//			dialogHelper?.ShowMessageBox($"Error writing VIF {validator.ValidationError}", "Error",
-		//				MessageBoxButton.OK, MessageBoxImage.Error);
-		//			Debug.WriteLine("Invalid Outputfile");
-		//			return false;
-		//		}
-		//	}
-		//	using (var reader = resultXDoc.Root.CreateReader())
-  //          {
-
-		//		if (inputData.VehicleInputData.VehicleDeclarationType == VehicleDeclarationType.final)
-		//		{
-		//			var inputDataProvider = _inputDataReader.Create(reader) as IMultistageBusInputDataProvider;
-		//			if (!inputDataProvider.JobInputData.InputComplete)
-		//			{
-		//				var errorCaption = "Step marked as final with incomplete/invalid input";
-		//				var errorStringBuilder = new StringBuilder();
-		//				errorStringBuilder.AppendLine("The following parameters are invalid:\n");
-		//				var converter = new PropertyNameToLabelTextConverter();
-		//				var resourceManagers = new List<ResourceManager>()
-		//				{
-		//					GUILabels.ResourceManager,
-		//					BusStrings.ResourceManager,
-		//					Strings.ResourceManager
-		//				};
-		//				foreach (var invalidEntry in inputDataProvider.JobInputData.InvalidEntries)
-		//				{
-		//					string name;
-		//					var conversionResult = converter.Convert(invalidEntry,
-		//						typeof(string),
-		//						resourceManagers,
-		//						System.Globalization.CultureInfo.CurrentCulture);
-		//					if (conversionResult is string convString)
-		//					{
-		//						name = convString;
-		//					}
-		//					else
-		//					{
-		//						name = invalidEntry;
-		//					}
-		//					errorStringBuilder.AppendLine(name);
-		//				}
-		//				dialogHelper?.ShowErrorMessage(errorStringBuilder.ToString(), errorCaption);
-		//				return false;
-		//			}
-				
-		//		}
-		//	}
-
-			
+		private void SaveAsJSONExecute(string fileName)
+		{
+			if (fileName == null)
+			{
+				var dialogHelper = _multistageDependencies.DialogHelper;
+				var targetFile = dialogHelper.SaveToVectoJobDialog();
+				if (targetFile == null)
+				{
+					return;
+				}
+				SaveAsJSON(targetFile);
 
 
 
-		//	return true;
-		//}
+
+
+			}
+
+
+
+
+		}
+
+		private void SaveAsJSON(string fileName)
+		{
+			if (fileName == null || VehicleInputDataFilePath == null)
+			{
+				return;
+			}
+
+			try {
+				var jsonJob = new JSONCompletedBusJob() {
+					Header = new JSONJobHeader() {
+						AppVersion = "Vecto3GUI2020",
+						CreatedBy = Environment.UserName,
+						Date = DateTime.Today,
+						FileVersion = JSONJobHeader.CompletedBusFileVersion,
+					},
+					Body = new JSONJobBodyCompletedBus() {
+
+						PrimaryVehicleResults = PathHelper.GetRelativePath(fileName,
+							this.MultistageJobInputData.PrimaryVehicleData.DataSource.SourceFile),
+						CompletedVehicle = PathHelper.GetRelativePath(fileName, this.VehicleInputDataFilePath),
+
+						RunSimulation = VehicleInputData.VehicleDeclarationType == VehicleDeclarationType.final,
+					}
+				};
+
+				string jsonString = JsonConvert.SerializeObject(jsonJob, Formatting.Indented);
+
+
+				Debug.WriteLine(jsonString);
+				File.WriteAllText(fileName, jsonString);
+			} catch (Exception ex) {
+				_dialogHelper.Value.ShowErrorMessage(ex.Message, "Error");
+			}
+
+		}
+
+
 
         private readonly Lazy<IDialogHelper> _dialogHelper;
 		private readonly IMultistageDependencies _multistageDependencies;
 		private readonly DataSource _dataSource;
-		private readonly IMultistageBusInputDataProvider _inputData;
+		private readonly IMultistepBusInputDataProvider _inputData;
 		private bool _selected;
 		private readonly bool _exempted;
 		private readonly IJobListViewModel _jobListViewModel;
 		private readonly IList<string> _invalidEntries;
 		private readonly ISimulatorFactoryFactory _simFactoryFactory;
+		private IRelayCommand _saveAsJsonCommand;
 
 
 		public string VehicleInputDataFilePath
@@ -325,6 +321,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set
 			{
 				ManufacturingStageViewModel.VehicleInputDataFilePath = value;
+				_saveAsJsonCommand?.NotifyCanExecuteChanged();
 				OnPropertyChanged();
 			}
 		}
@@ -363,8 +360,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public IVehicleDeclarationInputData VehicleInputData => _manufacturingStageViewModel.Vehicle;
 
-		public IMultistageBusInputDataProvider MultistageJobInputData => this;
+		public IMultistepBusInputDataProvider MultistageJobInputData => this;
 
+		public bool SimulateResultingVIF => throw new NotImplementedException();
 
 		#endregion
 
@@ -430,8 +428,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 	public class NullSumWriter : SummaryDataContainer
 	{
-		public override void Write(IModalDataContainer modData, int jobNr, int runNr, VectoRunData runData) { }
+		public override void Write(IModalDataContainer modData, VectoRunData runData) { }
 
 		public override void Finish() { }
+		public NullSumWriter(ISummaryWriter writer) : base(writer) { }
 	}
 }

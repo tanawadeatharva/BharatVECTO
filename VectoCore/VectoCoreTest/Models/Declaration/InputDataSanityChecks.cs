@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			factory.WriteModalResults = true;
 			factory.Validate = false;
 
-			var runs = factory.DataReader.NextRun().ToList();
+			var runs = factory.RunDataFactory.NextRun().ToList();
 			
 			Assert.IsTrue(runs.Count > 0);
 		}
@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			factory.Validate = false;
 
 			AssertHelper.Exception<VectoException>(() => {
-				var runs = factory.DataReader.NextRun().ToList();
+				var runs = factory.RunDataFactory.NextRun().ToList();
 			}, messageContains: $"Number of steering pump technologies does not match number of steered axles ({numStreeredAxles}, {steeringPumpTechnologies.Length})");
 
 		}

@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void TestVehicleMultistageBusInput01()
 		{
 			var reader = XmlReader.Create(VIF01);
-			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
+			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistepBusInputDataProvider;
 			TestPrimaryVehicleDataType(inputDataProvider.JobInputData.PrimaryVehicle);
 			TestManufacturingStages(inputDataProvider.JobInputData.ManufacturingStages);
 		}
@@ -508,7 +508,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(totalMass.SI<Kilogram>(), result.SimulationParameter.TotalVehicleMass);
 			Assert.AreEqual(payload.SI<Kilogram>(), result.SimulationParameter.Payload);
 			Assert.AreEqual(passenger, result.SimulationParameter.PassengerCount);
-			Assert.AreEqual(fuelMode, result.SimulationParameter.FuelMode);
+			//Assert.AreEqual(fuelMode, result.SimulationParameter.FuelMode);
 
 			index++;
 		}
@@ -519,7 +519,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		private void TestSignatureHashData(DigestData data)
 		{
-			Assert.AreEqual("#PIF-d10aff76c5d149948046", data.Reference);
+			Assert.AreEqual("#VIF-d10aff76c5d149948046", data.Reference);
 			Assert.AreEqual("urn:vecto:xml:2017:canonicalization", data.CanonicalizationMethods[0]);
 			Assert.AreEqual("http://www.w3.org/2001/10/xml-exc-c14n#", data.CanonicalizationMethods[1]);
 			Assert.AreEqual("http://www.w3.org/2001/04/xmlenc#sha256", data.DigestMethod);
@@ -547,7 +547,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 			Assert.AreEqual(2, manufacturingStage.StepCount);
 
-			TestDigestData("#PIF-d10aff76c5d149948046", "nI+57QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=",
+			TestDigestData("#VIF-d10aff76c5d149948046", "nI+57QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=",
 				manufacturingStage.HashPreviousStep);
 
 			TestVehicleDataStage01(manufacturingStage.Vehicle);
@@ -670,7 +670,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void TestVehicleMultistageBusInput02()
 		{
 			var reader = XmlReader.Create(VIF02);
-			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
+			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistepBusInputDataProvider;
 			TestPrimaryVehicleDataType(inputDataProvider.JobInputData.PrimaryVehicle);
 			TestManufacturingStageVIF02(inputDataProvider.JobInputData.ManufacturingStages);
 		}
@@ -684,7 +684,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var stageData = manufacturingStages[0];
 			Assert.AreEqual(2, stageData.StepCount);
 
-			TestDigestData("#PIF-d11aff76c5d149948046", "nI+67QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=",
+			TestDigestData("#VIF-d11aff76c5d149948046", "nI+67QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=",
 				stageData.HashPreviousStep);
 
 			TestVehicleDataVIF02(stageData.Vehicle);

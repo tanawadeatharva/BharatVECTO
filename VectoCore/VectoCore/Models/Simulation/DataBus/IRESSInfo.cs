@@ -8,6 +8,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 
 		double StateOfCharge { get; }
 
+		// only a rough estimate! do not use for reports etc.
 		WattSecond StoredEnergy { get; }
 
 		//Ampere MaxCurrent { get; }
@@ -21,5 +22,6 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		double MaxSoC { get; }
 		AmpereSecond Capacity { get; }
 		Volt NominalVoltage { get; }
+
 	}
 }

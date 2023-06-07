@@ -2,7 +2,6 @@
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -10,10 +9,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 {
 	public class XMLManufacturerReportExemptedTruck : AbstractXMLManufacturerReport
 	{
-		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void Initialize(VectoRunData modelData)
 		{
 			VehiclePart.Add(
-				new XAttribute(xsi + "type", "VehicleExemptedTruckType"),
+				new XAttribute(xsi + XMLNames.XSIType, "VehicleExemptedTruckType"),
 				new XElement(tns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
 				new XElement(tns + XMLNames.Component_Manufacturer, modelData.VehicleData.Manufacturer),
 				new XElement(tns + XMLNames.Component_ManufacturerAddress, modelData.VehicleData.ManufacturerAddress),
@@ -34,7 +33,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 			InputDataIntegrity = GetInputDataSignature(modelData);
 		}
 
-		protected override XElement VehicleComponents(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		protected override XElement VehicleComponents(VectoRunData modelData)
 		{
 			return null;
 		}
@@ -56,10 +55,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 			if (modelData.VehicleData.MaxNetPower1 != null)
 				retVal.Add(new XElement(tns + XMLNames.Vehicle_MaxNetPower1,
 					XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower1, XMLNames.Unit_W)));
-			if (modelData.VehicleData.MaxNetPower2 != null) {
-				retVal.Add(new XElement(tns + XMLNames.Vehicle_MaxNetPower2,
-					XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower2, XMLNames.Unit_W)));
-			}
 
 			return retVal.ToArray();
 		}

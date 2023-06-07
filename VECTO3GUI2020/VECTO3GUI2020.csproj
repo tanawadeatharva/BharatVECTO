@@ -9,15 +9,32 @@
     <ApplicationIcon>Resources\Icons\Icon2.ico</ApplicationIcon>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
+    <PublishTrimmed>false</PublishTrimmed>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
     <DefineConstants />
+    <Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
+</PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net48|AnyCPU'">
+    <DebugType>full</DebugType>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net6.0-windows|AnyCPU'">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+	<PropertyGroup Condition="('$(Configuration)' == 'MockupRelease') Or ('$(Configuration)' == 'MockupDebug')">
+		<DefineConstants>$(DefineConstants);MOCKUP</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net6.0-windows|AnyCPU'">
+	  <DebugType>full</DebugType>
+	</PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
     <PackageReference Include="InteractiveDataDisplay.WPF" Version="1.0.0" NoWarn="NU1701" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" NoWarn="NU1701" />
+    <PackageReference Include="Ninject" Version="3.3.6" />
+    <PackageReference Include="Ninject.Extensions.ContextPreservation" Version="3.3.1" />
+    <PackageReference Include="Ninject.Extensions.Factory" Version="3.3.3" />
     <PackageReference Include="PresentationFramework.Aero2" Version="1.0.1" NoWarn="NU1701" />
   </ItemGroup>
 
@@ -26,12 +43,23 @@
     <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj" />
   </ItemGroup>
 
+	<!--<Choose>
+		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
+			<ItemGroup>
+				<ProjectReference Include="..\VectoMockup\VectoMockup\VectoMockup.csproj" />
+			</ItemGroup>
+		</When>
+	</Choose>-->
+
+
+
   <ItemGroup>
     <InternalsVisibleTo Include="Vecto3GUI2020Test" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Properties\GUILabels.Designer.cs">
+
+	  <Compile Update="Properties\GUILabels.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>GUILabels.resx</DependentUpon>
@@ -78,4 +106,32 @@
     <Resource Include="Resources\Images\JRC-About.png" />
     <Resource Include="Resources\Images\VECTO-About.png" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="MainWindow.xaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Util\XML\Implementation\DocumentWriter\" />
+  </ItemGroup>
+
+
+    <!--Workauround for build error-->
+	<!--https://github.com/dotnet/wpf/pull/6680-->
+    <!--https://github.com/dotnet/wpf/pull/6680#issuecomment-1183455941-->
+	<Target Name="RemoveDuplicateAnalyzers" BeforeTargets="CoreCompile">
+
+		<RemoveDuplicates Inputs="@(Analyzer)">
+			<Output TaskParameter="Filtered" ItemName="FilteredAnalyzer" />
+		</RemoveDuplicates>
+
+		<ItemGroup>
+			<Analyzer Remove="@(Analyzer)" />
+			<Analyzer Include="@(FilteredAnalyzer)" />
+		</ItemGroup>
+	</Target>
+
+    <!--END-->
 </Project>

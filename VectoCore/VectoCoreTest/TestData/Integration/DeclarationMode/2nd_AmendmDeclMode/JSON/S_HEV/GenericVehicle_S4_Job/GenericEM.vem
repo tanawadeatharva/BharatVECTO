@@ -1,0 +1,43 @@
+{
+  "Header": {
+    "CreatedBy": "",
+    "Date": "2023-02-17T07:43:01.3002618Z",
+    "AppVersion": "3",
+    "FileVersion": 5
+  },
+  "Body": {
+    "SavedInDeclMode": true,
+    "Model": "Generic Electric Motor",
+    "Inertia": 0.134,
+    "ElectricMachineType": "ESM",
+    "ThermalOverloadRecoveryFactor": 0.9,
+    "R85RatedPower": 18.32,
+    "DragCurve": "EM_drag.vemd",
+    "VoltageLevels": [
+      {
+        "Voltage": 0.0,
+        "ContinuousTorque": 437.0,
+        "ContinuousTorqueSpeed": "3500",
+        "OverloadTorque": 500.0,
+        "OverloadTorqueSpeed": 3500.0,
+        "OverloadTime": 120.0,
+        "FullLoadCurve": "EM_fld.vemp",
+        "EfficiencyMap": {
+          "0": "EM_Map.vemo"
+        }
+      },
+      {
+        "Voltage": 1000.0,
+        "ContinuousTorque": 437.0,
+        "ContinuousTorqueSpeed": "3500",
+        "OverloadTorque": 500.0,
+        "OverloadTorqueSpeed": 3500.0,
+        "OverloadTime": 120.0,
+        "FullLoadCurve": "EM_fld.vemp",
+        "EfficiencyMap": {
+          "0": "EM_Map.vemo"
+        }
+      }
+    ]
+  }
+}

@@ -14,7 +14,7 @@
 		<IdlingSpeed>650</IdlingSpeed>
 		<RetarderType>Losses included in Gearbox</RetarderType>
 		<RetarderRatio>2.000</RetarderRatio>
-		<AngledriveType>Separate Angledrive</AngledriveType>
+		<AngledriveType>None</AngledriveType>
 		<PTO xsi:type="PTOType">
 			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
 			<PTOOtherElements>none</PTOOtherElements>
@@ -101,7 +101,7 @@
 						<AppVersion>aaaaa</AppVersion>
 						<ElectricMachineType>ASM</ElectricMachineType>
 						<CertificationMethod>Measured</CertificationMethod>
-						<R85RatedPower>1</R85RatedPower>
+						<R85RatedPower>50000</R85RatedPower>
 						<RotationalInertia>0.10</RotationalInertia>
 						<DcDcConverterIncluded>true</DcDcConverterIncluded>
 						<IHPCType>None</IHPCType>
@@ -242,7 +242,7 @@
 					<AppVersion>aaaaa</AppVersion>
 					<ElectricMachineType>ASM</ElectricMachineType>
 					<CertificationMethod>Measured for complete component</CertificationMethod>
-					<R85RatedPower>1</R85RatedPower>
+					<R85RatedPower>50000</R85RatedPower>
 					<RotationalInertia>0.10</RotationalInertia>
 					<DifferentialIncluded>false</DifferentialIncluded>
 					<DesignTypeWheelMotor>false</DesignTypeWheelMotor>

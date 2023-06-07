@@ -8,6 +8,7 @@
   "Body": {
     "SavedInDeclMode": false,
     "VehCat": "RigidTruck",
+    "LegislativeClass": "M3",
     "CurbWeight": 4670.0,
     "CurbWeightExtra": 1900.0,
     "Loading": 3020.0,
@@ -40,7 +41,8 @@
           "AxleWeightShare": 0.2,
           "TwinTyres": false,
           "RRCISO": 0.0065,
-          "FzISO": 20850.0
+          "FzISO": 20850.0,
+          "Steered": true
         },
         {
           "Inertia": 6.5,

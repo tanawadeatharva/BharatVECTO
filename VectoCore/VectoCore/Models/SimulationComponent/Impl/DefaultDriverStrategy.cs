@@ -328,10 +328,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					switch (ADAS.EcoRoll) {
 						case EcoRollType.None: break;
 						case EcoRollType.WithoutEngineStop:
-							DataBus.GearboxCtl.DisengageGearbox = true;
+							if (DataBus.GearboxCtl != null) {
+								DataBus.GearboxCtl.DisengageGearbox = true;
+							}
+						
 							break;
 						case EcoRollType.WithEngineStop:
-							DataBus.GearboxCtl.DisengageGearbox = true;
+							if (DataBus.GearboxCtl != null) {
+								DataBus.GearboxCtl.DisengageGearbox = true;
+							}
 							if (DataBus.EngineCtl != null) {
 								DataBus.EngineCtl.CombustionEngineOn = false;
 							}
@@ -515,13 +520,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			switch (EcoRollState.State) {
 				case EcoRollStates.EcoRollOn:
-					dBus.GearboxCtl.DisengageGearbox = true;
+					if (dBus.GearboxCtl != null) {
+						dBus.GearboxCtl.DisengageGearbox = true;
+					}
+			
 					if (ADAS.EcoRoll == EcoRollType.WithEngineStop) {
 						dBus.EngineCtl.CombustionEngineOn = false;
 					}
 					return;
 				case EcoRollStates.EcoRollOff:
-					dBus.GearboxCtl.DisengageGearbox = false;
+					if (dBus.GearboxCtl != null) {
+						dBus.GearboxCtl.DisengageGearbox = false;
+					} 
+					
 					if (ADAS.EcoRoll == EcoRollType.WithEngineStop) {
 						dBus.EngineCtl.CombustionEngineOn = true;
 					}
@@ -615,7 +626,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public MeterPerSecond ApplyOverspeed(MeterPerSecond targetSpeed)
+		public virtual MeterPerSecond ApplyOverspeed(MeterPerSecond targetSpeed)
 		{
 			return (targetSpeed + GetOverspeed()).LimitTo(
 					0.KMPHtoMeterPerSecond(), VehicleCategory.IsBus() ? Constants.BusParameters.MaxBusSpeed : 500.KMPHtoMeterPerSecond());
@@ -1058,6 +1069,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private IResponse FirstAccelerateOrCoast(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
 			bool prohibitOverspeed, MeterPerSecond velocityWithOverspeed, DebugData debug)
 		{
+			
 			if (DriverStrategy.pccState == PCCStates.UseCase1 || DriverStrategy.pccState == PCCStates.UseCase2) {
 				var response = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
 				debug.Add("[DMD.FAOC-0] Coast", response);
@@ -1178,7 +1190,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
 			bool prohibitOverspeed = false)
 		{
-			if (DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(DriverStrategy.BrakeTrigger.NextTargetSpeed) && !DataBus.VehicleInfo.VehicleStopped) {
+            //If we have reached the target speed exactly we stop breaking
+
+            //if (DataBus.VehicleInfo.VehicleSpeed.IsSmaller(DriverStrategy.BrakeTrigger.NextTargetSpeed, Constants.SimulationSettings.BrakeTriggerSpeedTolerance)
+			if (DataBus.VehicleInfo.VehicleSpeed <= DriverStrategy.BrakeTrigger.NextTargetSpeed
+				&& !DataBus.VehicleInfo.VehicleStopped) {
 				var retVal = HandleTargetspeedReached(absTime, ds, targetVelocity, gradient);
 				for (var i = 0; i < 3 && retVal == null; i++) {
 					retVal = HandleTargetspeedReached(absTime, ds, targetVelocity, gradient);

@@ -20,11 +20,11 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 				var body = new Dictionary<string, object>();
 				var basePath = Path.GetDirectoryName(Path.GetFullPath(auxFile));
 				body["ElectricalUserInputsConfig"] = SaveElectricalConfig(auxCfg.ElectricalUserInputsConfig, basePath);
-				body["PneumaticAuxillariesConfig"] = SavePneumaticAuxconfig(auxCfg.PneumaticAuxillariesConfig);
+				body["PneumaticAuxillariesConfig"] = SavePneumaticAuxconfig(auxCfg.PneumaticAuxiliariesConfig);
 				body["PneumaticUserInputsConfig"] = SavePneumaticUserConfig(auxCfg.PneumaticUserInputsConfig, basePath);
 				//body["HvacUserInputsConfig"] = SaveHVACUserConfig();
 
-				if (auxCfg.SSMInputs is ISSMDeclarationInputs ssmInputs) {
+				if (auxCfg.SSMInputsCooling is ISSMDeclarationInputs ssmInputs) {
 					body["SSMFilePath"] = string.IsNullOrWhiteSpace(ssmInputs.Source)
 						? ""
 						: JSONFileWriter.GetRelativePath(ssmInputs.Source, basePath);
@@ -200,14 +200,14 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			retVal["BP_FloorType"] = ssmInputs.BusParameters.BusFloorType.ToString();
 			retVal["BP_BusSurfaceArea"] = ssmInputs.BusParameters.BusSurfaceArea.Value();
 			retVal["BP_BusWindowSurfaceArea"] = ssmInputs.BusParameters.BusWindowSurface.Value();
-			retVal["BP_BusVolume"] = ssmInputs.BusParameters.BusVolume.Value();
+			retVal["BP_BusVolume"] = ssmInputs.BusParameters.BusVolumeVentilation.Value();
 			retVal["BP_PassengerCount"] = ssmInputs.BusParameters.NumberOfPassengers;
 
 			retVal["EC_EnviromentalTemperature"] = ssmInputs.EnvironmentalConditions.DefaultConditions.Temperature.AsDegCelsius;
 			retVal["EC_Solar"] = ssmInputs.EnvironmentalConditions.DefaultConditions.Solar.Value();
-			retVal["AC_CompressorType"] = ssmInputs.ACSystem.HVACCompressorType.ToString();
+			//retVal["AC_CompressorType"] = ssmInputs.ACSystem.HVACCompressorType.ToString();
 			retVal["AC_CompressorCapacitykW"] = ssmInputs.ACSystem.HVACMaxCoolingPower.ConvertToKiloWatt().Value;
-			retVal["AC_COP"] = ssmInputs.ACSystem.COP;
+			//retVal["AC_COP"] = ssmInputs.ACSystem.COP;
 			retVal["VEN_VentilationOnDuringHeating"] = ssmInputs.Ventilation.VentilationOnDuringHeating;
 			retVal["VEN_VentilationWhenBothHeatingAndACInactive"] = ssmInputs.Ventilation.VentilationWhenBothHeatingAndACInactive;
 			retVal["VEN_VentilationDuringAC"] = ssmInputs.Ventilation.VentilationDuringAC;

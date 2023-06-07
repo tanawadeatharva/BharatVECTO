@@ -54,11 +54,8 @@ Module MainModule
 
         Select Case hdVclass
             Case VehicleClass.Class51,
-                 VehicleClass.Class52,
                  VehicleClass.Class53,
-                 VehicleClass.Class54,
                  VehicleClass.Class55,
-                 VehicleClass.Class56,
                  VehicleClass.Class1s
                 Return My.Resources.Undef
 
@@ -83,21 +80,73 @@ Module MainModule
                  VehicleClass.Class12,
                  VehicleClass.Class14
                 Return My.Resources._6x2tt
+
+            Case VehicleClass.Class16
+                Return My.Resources.rigid8x4
+
+            Case VehicleClass.Class52,
+                 VehicleClass.Class54,
+                 VehicleClass.Class56
+                Return My.Resources.van
+
+            Case VehicleClass.Class31a,
+                 VehicleClass.Class31b1,
+                 VehicleClass.Class31b2,
+                 VehicleClass.Class31c,
+                 VehicleClass.Class31d,
+                 VehicleClass.Class31e,
+                 VehicleClass.Class32a,
+                 VehicleClass.Class32b,
+                 VehicleClass.Class32c,
+                 VehicleClass.Class32d,
+                 VehicleClass.Class32e,
+                 VehicleClass.Class32f
+                Return My.Resources.bus4x2
+
+            Case VehicleClass.Class33a,
+                 VehicleClass.Class33b1,
+                 VehicleClass.Class33b2,
+                 VehicleClass.Class33c,
+                 VehicleClass.Class33d,
+                 VehicleClass.Class33e,
+                 VehicleClass.Class34a,
+                 VehicleClass.Class34b,
+                 VehicleClass.Class34c,
+                 VehicleClass.Class34d,
+                 VehicleClass.Class34e,
+                 VehicleClass.Class34f
+                Return My.Resources.bus6x2
+
+            Case VehicleClass.Class37a,
+                 VehicleClass.Class37b1,
+                 VehicleClass.Class37b2,
+                 VehicleClass.Class37c,
+                 VehicleClass.Class37d,
+                 VehicleClass.Class37e,
+                 VehicleClass.Class38a,
+                 VehicleClass.Class38b,
+                 VehicleClass.Class38c,
+                 VehicleClass.Class38d,
+                 VehicleClass.Class38e,
+                 VehicleClass.Class38f
+                Return My.Resources.bus8x2
+
             Case Else
                 Return My.Resources.Undef
         End Select
     End Function
 
     Public Function GetRelativePath(filePath As String, basePath As String) As String
-		If (String.IsNullOrEmpty(filePath)) then
-			Return ""
-		End If
-        If (string.isnullOrempty(basePath)) Then
-            Return filePath
-        End If
-		If (Path.GetDirectoryName(Path.GetFullPath(filePath)).StartsWith(basePath, StringComparison.OrdinalIgnoreCase)) Then
-			Return Path.GetFullPath(filePath).Substring(basePath.Length + If(basePath.EndsWith("\"), 0, 1))
-		End If
-		Return filePath
+        Return JSONFileWriter.GetRelativePath(filePath, basePath)
+		'If (String.IsNullOrEmpty(filePath)) then
+		'	Return ""
+		'End If
+  '      If (string.isnullOrempty(basePath)) Then
+  '          Return filePath
+  '      End If
+		'If (Path.GetDirectoryName(Path.GetFullPath(filePath)).StartsWith(basePath, StringComparison.OrdinalIgnoreCase)) Then
+		'	Return Path.GetFullPath(filePath).Substring(basePath.Length + If(basePath.EndsWith("\"), 0, 1))
+		'End If
+		'Return filePath
 	End Function
 End Module

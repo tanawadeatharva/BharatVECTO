@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 
 namespace TUGraz.VectoCommon.Models
 {
@@ -50,6 +51,46 @@ namespace TUGraz.VectoCommon.Models
 
 	public static class VehicleCategoryHelper
 	{
+
+
+		public const string PrimaryBus = "PrimaryBus";
+		public const string Lorry = "Lorry";
+		public const string CompletedBus = "CompletedBus";
+		public const string Van = "Van";
+
+		public static HashSet<string> SuperCategories { get; } = new HashSet<string>() {
+			PrimaryBus,
+			Lorry,
+			CompletedBus,
+			Van
+		};
+		/// <summary>
+		/// Returns the SuperCategory for the VehicleCategory
+		/// </summary>
+		/// <param name="category"></param>
+		/// <returns></returns>
+		public static string GetVehicleType(this VehicleCategory category)
+		{
+			switch (category) {
+				case VehicleCategory.RigidTruck:
+				case VehicleCategory.Tractor:
+				case VehicleCategory.Van:
+					return Lorry;
+					break;
+				case VehicleCategory.HeavyBusPrimaryVehicle:
+					return PrimaryBus;
+					break;
+				case VehicleCategory.HeavyBusCompletedVehicle:
+					return CompletedBus;
+					break;
+				//case VehicleCategory.Van:
+				//	return Van;
+				default:
+					return category.GetLabel();
+			}
+		}
+
+
 		public static string GetLabel(this VehicleCategory category)
 		{
 			switch (category) {
@@ -114,6 +155,8 @@ namespace TUGraz.VectoCommon.Models
 					return "Bus";
 				case VehicleCategory.HeavyBusCompletedVehicle:
 					return "Bus";
+				case VehicleCategory.Van:
+					return Van;
 				default:
 					throw new ArgumentOutOfRangeException("vehicleCategory", vehicleCategory, null);
 			}

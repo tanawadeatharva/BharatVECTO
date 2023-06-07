@@ -43,6 +43,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 	public class TestPowertrain<T> where T: class, IHybridControlledGearbox, IGearbox
 	{
 		public SimplePowertrainContainer Container;
+		public IDataBus RealContainer;
+
 		public T Gearbox;
 		
 		public SimpleHybridController HybridController;
@@ -63,6 +65,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public TestPowertrain(SimplePowertrainContainer container, IDataBus realContainer)
 		{
 			Container = container;
+			RealContainer = realContainer;
+
 			Gearbox = Container.GearboxCtl as T;
 			
 			HybridController = Container.HybridController as SimpleHybridController;
@@ -88,9 +92,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 
-			if (HybridController == null) {
-				throw new VectoException("Unknown HybridController in TestContainer: {0}", Container.HybridController?.GetType().FullName);
-			}
+			//if (HybridController == null) {
+			//	throw new VectoException("Unknown HybridController in TestContainer: {0}", Container.HybridController?.GetType().FullName);
+			//}
 
 			var busAux = container.RunData.BusAuxiliaries;
 			if (busAux != null && busAux.ElectricalUserInputsConfig.ConnectESToREESS) {
@@ -110,34 +114,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 			//Brakes = new MockBrakes(container);
 		}
-	}
 
-	public class MockBrakes : VectoSimulationComponent, IBrakes
-	{
-		public MockBrakes(IVehicleContainer container) : base(container)
-		{
-			BrakePower = 0.SI<Watt>();
-		}
-
-		#region Overrides of VectoSimulationComponent
-
-		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
-		{
-
-		}
-
-		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
-		{
-
-		}
-
-		#endregion
-
-		#region Implementation of IBrakes
-
-		public Watt BrakePower { get; set; }
-
-		#endregion
+		public void UpdateComponents() => Container.UpdateComponents(RealContainer);
 	}
 
 	public class MockDrivingCycle : VectoSimulationComponent, IDrivingCycleInfo
@@ -200,6 +178,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		}
 
+		protected override bool DoUpdateFrom(object other) => false;
+
 		#endregion
 	}
 
@@ -222,6 +202,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public PCCStates PCCState => PCCStates.OutsideSegment;
 
 		public MeterPerSecond NextBrakeTriggerSpeed => 0.SI<MeterPerSecond>();
+		public MeterPerSecond ApplyOverspeed(MeterPerSecond targetSpeed) => targetSpeed;
+
 		#endregion
 
 		#region Overrides of VectoSimulationComponent
@@ -235,6 +217,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		{
 
 		}
+
+		protected override bool DoUpdateFrom(object other) => false;
 
 		#endregion
 	}

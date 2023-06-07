@@ -8,7 +8,7 @@ using VECTO3GUI2020.ViewModel.Interfaces.Document;
 
 namespace VECTO3GUI2020.ViewModel.Implementation.Document
 {
-	public class SimulationOnlyDeclarationJob : ViewModelBase, IDocumentViewModel, IJobViewModel
+	public class SimulationOnlyDeclarationJob : ViewModelBase, IJobViewModel
 	{
 		#region Implementation of IDocumentViewModel
 
@@ -63,6 +63,13 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
 			_documentType = documentType;
 			_dataSource = dataSource;
 			_documentName = name;
+		}
+
+		public SimulationOnlyDeclarationJob(IDeclarationInputDataProvider inputData)
+		{
+			_documentType = XmlDocumentType.DeclarationJobData;
+			_dataSource = inputData.DataSource;
+			_documentName = inputData.JobInputData.JobName;
 		}
 
 	}

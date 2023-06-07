@@ -1020,6 +1020,9 @@
   <data name="Report_ResultData_Signature" xml:space="preserve">
     <value>ResultDataSignature</value>
   </data>
+  <data name="Report_ManufacturerRecord_Signature" xml:space="preserve">
+    <value>ManufacturerRecordSignature</value>
+  </data>
   <data name="Report_Result_Payload" xml:space="preserve">
     <value>Payload</value>
   </data>
@@ -1149,8 +1152,8 @@
   <data name="Engine_WHRCorrectionFactors_Electrical" xml:space="preserve">
     <value>Electrical</value>
   </data>
-  <data name="ManufacturerAddressPrimaryVehicle" xml:space="preserve">
-    <value>ManufacturerAddressPrimaryVehicle</value>
+  <data name="ManufacturerAddress" xml:space="preserve">
+    <value>ManufacturerAddress</value>
   </data>
   <data name="Engine_WHRCorrectionFactors_Mechanical" xml:space="preserve">
     <value>Mechanical</value>
@@ -1908,7 +1911,136 @@
   <data name="Component_CertifiedAeroReduction" xml:space="preserve">
     <value>CertifiedAeroReduction</value>
   </data>
-  <data name="REESS" xml:space="preserve">
+  <data name="ElectricEnergyStorage" xml:space="preserve">
     <value>ElectricEnergyStorage</value>
   </data>
+  <data name="MRF_OutputDataType_ConventionalLorryManufacturerOutputDataType" xml:space="preserve">
+    <value>ConventionalLorryManufacturerOutputDataType</value>
+  </data>
+  <data name="MRF_OutputDataType_ConventionalPrimaryBusManufacturerOutputDataType" xml:space="preserve">
+    <value>ConventionalPrimaryBusManufacturerOutputDataType</value>
+  </data>
+  <data name="CIF_OutputDataType_ConventionalLorryOutputType" xml:space="preserve">
+    <value>ConventionalLorryOutputType</value>
+  </data>
+  <data name="MRF_OutputDataType_HEV_Px_IHPCLorryManufacturerOutputDataType" xml:space="preserve">
+    <value>HEV-Px_IHPCLorryManufacturerOutputDataType</value>
+  </data>
+  <data name="MRF_OutputDataType_HEV_S2_LorryManufacturerOutputDataType" xml:space="preserve">
+    <value>HEV-S2_LorryManufacturerOutputDataType</value>
+  </data>
+  <data name="CIF_OutputDataType_HEV_S2_LorryOutputType" xml:space="preserve">
+    <value>HEV_S2_LorryOutputType</value>
+  </data>
+  <data name="CIF_OutputDataType_HEV_S3_LorryOutputType" xml:space="preserve">
+    <value>HEV_S3_LorryOutputType</value>
+  </data>
+  <data name="CIF_OutputDataType_HEV_S4_LorryOutputType" xml:space="preserve">
+    <value>HEV_S4_LorryOutputType</value>
+  </data>
+  <data name="CIF_OutputDataType_HEV_IEPC_S_LorryOutputType" xml:space="preserve">
+    <value>HEV_IEPC_S_LorryOutputType</value>
+  </data>
+  <data name="MRF_OutputDataType_HEV_S3_LorryManufacturerOutputDataType" xml:space="preserve">
+    <value>HEV-S3_LorryManufacturerOutputDataType</value>
+  </data>
+  <data name="MRF_OutputDataType_HEV_S4_LorryManufacturerOutputDataType" xml:space="preserve">
+    <value>HEV-S4_LorryManufacturerOutputDataType</value>
+  </data>
+  <data name="MRF_OutputDataType_HEV_IEPC_S_LorryManufacturerOutputDataType" xml:space="preserve">
+    <value>HEV-IEPC-S_LorryManufacturerOutputDataType</value>
+  </data>
+  <data name="CIF_OutputDataType_HEV_Px_LorryOutputType" xml:space="preserve">
+    <value>HEV_Px_LorryOutputType</value>
+  </data>
+  <data name="MRF_OutputDataType_PEV_E2_LorryManufacturerOutputDataType" xml:space="preserve">
+    <value>PEV-E2_LorryManufacturerOutputDataType</value>
+  </data>
+  <data name="MRF_OutputDataType_PEV_E3_LorryManufacturerOutputDataType" xml:space="preserve">
+    <value>PEV-E3_LorryManufacturerOutputDataType</value>
+  </data>
+  <data name="MRF_OutputDataType_PEV_E4_LorryManufacturerOutputDataType" xml:space="preserve">
+    <value>PEV-E4_LorryManufacturerOutputDataType</value>
+  </data>
+  <data name="MRF_OutputDataType_PEV_IEPC_LorryManufacturerOutputDataType" xml:space="preserve">
+    <value>PEV-IEPC_LorryManufacturerOutputDataType</value>
+  </data>
+  <data name="CIF_OutputDataType_PEV_E2_LorryOutputType" xml:space="preserve">
+    <value>PEV_E2_LorryOutputType</value>
+  </data>
+  <data name="CIF_OutputDataType_PEV_E3_LorryOutputType" xml:space="preserve">
+    <value>PEV_E3_LorryOutputType</value>
+  </data>
+  <data name="CIF_OutputDataType_PEV_E4_LorryOutputType" xml:space="preserve">
+    <value>PEV_E4_LorryOutputType</value>
+  </data>
+  <data name="CIF_OutputDataType_PEV_IEPC_LorryOutputType" xml:space="preserve">
+    <value>PEV_IEPC_LorryOutputType</value>
+  </data>
+  <data name="CIF_OutputDataType_Exempted_LorryOutputType" xml:space="preserve">
+    <value>Exempted_LorryOutputType</value>
+  </data>
+  <data name="CIF_OutputDataType_Exempted_CompletedBusOutputType" xml:space="preserve">
+    <value>Exempted_CompletedBusOutputType</value>
+  </data>
+  <data name="BusAux_Clutch" xml:space="preserve">
+    <value>Clutch</value>
+  </data>
+  <data name="ElectricMachine_P2_5GearRatios_Gear_Attr" xml:space="preserve">
+    <value>gear</value>
+  </data>
+  <data name="XSIType" xml:space="preserve">
+    <value>type</value>
+  </data>
+  <data name="Report_Results_PrimaryVehicleSubgroup" xml:space="preserve">
+    <value>PrimaryVehicleSubgroup</value>
+  </data>
+  <data name="Results_Report_OVCModeAttr_ChargeDepleting" xml:space="preserve">
+    <value>charge depleting</value>
+  </data>
+  <data name="Results_Report_OVCModeAttr" xml:space="preserve">
+    <value>type</value>
+  </data>
+  <data name="Report_Results_OVCMode" xml:space="preserve">
+    <value>OVCMode</value>
+  </data>
+  <data name="Report_ResultEntry_ActualChargeDepletingRange" xml:space="preserve">
+    <value>ActualChargeDepletingRange</value>
+  </data>
+  <data name="Report_ResultEntry_EquivalentAllElectricRange" xml:space="preserve">
+    <value>EquivalentAllElectricRange</value>
+  </data>
+  <data name="Report_ResultEntry_ZeroCO2EmissionsRange" xml:space="preserve">
+    <value>ZeroCO2EmissionsRange</value>
+  </data>
+  <data name="Report_ResultEntry_Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Report_ResultEntry_FCZEVAuxHeater" xml:space="preserve">
+    <value>FC_ZEV_AuxHeater</value>
+  </data>
+  <data name="Report_ResultEntry_CO2ZEVAuxHeater" xml:space="preserve">
+    <value>CO2_ZEV_AuxHeater</value>
+  </data>
+  <data name="Report_ResultEntry_ElectricEnergyConsumption" xml:space="preserve">
+    <value>ElectricEnergy</value>
+  </data>
+  <data name="Report_ResultEntry_VIF_ElectricEnergyConsumption" xml:space="preserve">
+    <value>ElectricEnergyConsumption</value>
+  </data>
+  <data name="Report_Results_Status_Error_Val" xml:space="preserve">
+    <value>error</value>
+  </data>
+  <data name="Report_Results_Status_Success_Val" xml:space="preserve">
+    <value>success</value>
+  </data>
+  <data name="VehicleGroupCO2" xml:space="preserve">
+    <value>VehicleGroupCO2</value>
+  </data>
+  <data name="Results_Report_OVCModeAttr_ChargeSustaining" xml:space="preserve">
+    <value>charge sustaining</value>
+  </data>
+<data name="REESS" xml:space="preserve">
+	<value>REESS</value>
+</data>
 </root>

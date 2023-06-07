@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using System.Windows.Input;
 using System.Reflection;
+using CommunityToolkit.Mvvm.Input;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
-using VECTO3GUI2020.Util;
 
 namespace VECTO3GUI2020.ViewModel.Implementation
 {
@@ -22,15 +22,14 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		private IMainViewModel _currentViewModelTop;
 		#endregion
 
-		public MainWindowViewModel(IWindowHelper windowHelper, ISettingsViewModel settingsViewModel, IJobListViewModel jobListViewModel, IOutputViewModel outputViewModel, AboutViewModel aboutVm)
+		public MainWindowViewModel(IWindowHelper windowHelper, ISettingsViewModel settingsViewModel, IJobListViewModel jobListViewModel, AboutViewModel aboutVm)
 		{
 			_windowHelper = windowHelper;
 			_settingsViewModel = settingsViewModel;
 			_jobListVm = jobListViewModel;
 			_aboutViewModel = aboutVm;
 			_currentViewModelTop = _jobListVm;
-			_bottomView = outputViewModel;
-			
+
 			//_bottomView = new TestViewModel();
             _viewModels.Add("Jobs", _jobListVm);
             _viewModels.Add("Settings", _settingsViewModel);
@@ -63,20 +62,21 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				}
 			}
 		}
-
-        public IMainViewModel CurrentViewModelBottom
-        {
-            get { return _bottomView; }
-            set { _bottomView = value; }
-        }
-
 		public IJobListViewModel JobListVm
 		{
 			get => _jobListVm;
 			set => SetProperty(ref _jobListVm, value);
 		}
 
+
+
+#if MOCKUP
+		
+		public string Version => "[MOCKUP] VECTO Multistep " + Assembly.GetExecutingAssembly().GetName().Version + " (For Testing and Feedback)";
+#else
 		public string Version => "VECTO Multistep " + Assembly.GetExecutingAssembly().GetName().Version + " (For Testing and Feedback)";
+
+#endif
 
 		#endregion
 
@@ -110,7 +110,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 
 
-		#endregion
+#endregion
 
 	}
 }

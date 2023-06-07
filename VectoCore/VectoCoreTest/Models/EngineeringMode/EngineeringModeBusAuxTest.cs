@@ -15,6 +15,9 @@ using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.AuxiliaryDataAdapter;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
@@ -30,7 +33,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -934,13 +937,13 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 
 				switch (auxData.DemandType) {
 					case AuxiliaryDemandType.Constant:
-						aux.AddConstant(id, auxData.PowerDemand);
+						aux.AddConstant(id, auxData.PowerDemandMech);
 						break;
 					default:
 						throw new ArgumentOutOfRangeException("AuxiliaryDemandType", auxData.DemandType.ToString());
 				}
 
-				container.ModalData?.AddAuxiliary(id);
+				container.AddAuxiliary(id);
 			}
 
 			return aux;
@@ -953,9 +956,9 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			var fanDemand = pwrICEOn - pwrICEOffDriving;
 
 			var auxList = new List<VectoRunData.AuxData>() {
-				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_BASE, DemandType = AuxiliaryDemandType.Constant, PowerDemand = baseDemand},
-				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_STP, DemandType = AuxiliaryDemandType.Constant, PowerDemand = stpDemand},
-				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_FAN, DemandType = AuxiliaryDemandType.Constant, PowerDemand = fanDemand},
+				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_BASE, DemandType = AuxiliaryDemandType.Constant, PowerDemandMech = baseDemand},
+				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_STP, DemandType = AuxiliaryDemandType.Constant, PowerDemandMech = stpDemand},
+				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_FAN, DemandType = AuxiliaryDemandType.Constant, PowerDemandMech = fanDemand},
 			};
 
 			return auxList;
@@ -1001,7 +1004,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 					StoredEnergyEfficiency = BatteryEfficiency,
 					ElectricalConsumers = GetElectricConsumers(I_Base.SI<Ampere>(), I_ICEOff_dr.SI<Ampere>(), I_ICEOff_stop.SI<Ampere>()),
 				},
-				PneumaticAuxillariesConfig = new PneumaticsConsumersDemand() {
+				PneumaticAuxiliariesConfig = new PneumaticsConsumersDemand() {
 					AdBlueInjection = 0.SI<NormLiterPerSecond>(),
 					AirControlledSuspension = AverageAirDemand,
 					Braking = 0.SI<NormLiterPerKilogram>(),
@@ -1034,7 +1037,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 					ParkBrakeAndDoors = 0,
 					CycleTime = 1.SI<Second>()
 				},
-				SSMInputs = new SSMEngineeringInputs() {
+				SSMInputsCooling = new SSMEngineeringInputs() {
 					MechanicalPower = MechanicalPowerDemand,
 					ElectricPower = ElectricPowerDemand,
 					AuxHeaterPower = AuxHeaterPower,
@@ -1046,11 +1049,11 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 				},
 				VehicleData = vehicleData,
 			};
-
+			retVal.SSMInputsHeating = retVal.SSMInputsCooling;
 			return retVal;
 		}
 
-		private static Dictionary<string, ElectricConsumerEntry> GetElectricConsumers(Ampere currentDemand, Ampere currentDemandEngineOffDriving, Ampere currentDemandEngineOffStandstill)
+		private static IDictionary<string, ElectricConsumerEntry> GetElectricConsumers(Ampere currentDemand, Ampere currentDemandEngineOffDriving, Ampere currentDemandEngineOffStandstill)
 		{
 			var retVal = new Dictionary<string, ElectricConsumerEntry>();
 

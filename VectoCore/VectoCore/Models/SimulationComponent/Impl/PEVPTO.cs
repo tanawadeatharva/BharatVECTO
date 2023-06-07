@@ -11,7 +11,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class PEVPTO : StatefulProviderComponent<PEVPTO.State, ITnOutPort, ITnInPort, ITnOutPort>,
+	public class PEVPtoTransm : StatefulProviderComponent<PEVPtoTransm.State, ITnOutPort, ITnInPort, ITnOutPort>,
 		IPowerTrainComponent, ITnInPort, ITnOutPort
 	{
 		public class State
@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected readonly Dictionary<string, Func<PerSecond, Second, Second, bool, NewtonMeter>> Auxiliaries =
 			new Dictionary<string, Func<PerSecond, Second, Second, bool, NewtonMeter>>();
 
-		public PEVPTO(IVehicleContainer container) : base(container)
+		public PEVPtoTransm(IVehicleContainer container) : base(container)
 		{
 			
 		}
@@ -58,21 +58,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				: outAngularVelocity;
 
 			var torqueLoss = 0.SI<NewtonMeter>();
-			if (!DataBus.GearboxInfo.GearEngaged(absTime)) {
-				var powerDemands = new Dictionary<string, NewtonMeter>(Auxiliaries.Count);
-				foreach (var aux in Auxiliaries) {
-					powerDemands[aux.Key] = 0.SI<NewtonMeter>();
-				}
-				if (!dryRun) {
-					CurrentState.PowerDemands = powerDemands;
-				}
-			} else {
-				if (outAngularVelocity != null && !avgAngularSpeed.IsEqual(0)) {
-					torqueLoss = ComputeTorqueLoss(absTime, dt, avgAngularSpeed, dryRun);
-				}
-			}
+			var alwaysConsiderPTOTransmLoss = false; //<---- debugging only //TODO: REMOVE
+			var gearEngaged = !DataBus.GearboxInfo.GearEngaged(absTime);
+			////Always consider PTO_Transm_loss
 
-			if (!dryRun) {
+			if (!DataBus.GearboxInfo.GearEngaged(absTime) && !alwaysConsiderPTOTransmLoss)
+            {
+                SetZeroPowerDemand(dryRun);
+            }
+            else
+            {
+                if (outAngularVelocity != null && !avgAngularSpeed.IsEqual(0))
+                {
+                    torqueLoss = ComputeTorqueLoss(absTime, dt, avgAngularSpeed, dryRun);
+                }
+                else
+                {
+                    SetZeroPowerDemand(dryRun);
+                }
+            }
+
+            if (!dryRun) {
 				CurrentState.OutAngularVelocity = outAngularVelocity;
 			}
 			
@@ -82,6 +88,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
+		private void SetZeroPowerDemand(bool dryRun)
+		{
+			var powerDemands = new Dictionary<string, NewtonMeter>(Auxiliaries.Count);
+			foreach (var aux in Auxiliaries)
+			{
+				powerDemands[aux.Key] = 0.SI<NewtonMeter>();
+			}
+			if (!dryRun)
+			{
+				CurrentState.PowerDemands = powerDemands;
+			}
+		}
+		
 		private NewtonMeter ComputeTorqueLoss(Second absTime, Second dt, PerSecond avgAngularSpeed, bool dryRun)
 		{
 			var powerDemands = new Dictionary<string, NewtonMeter>(Auxiliaries.Count);
@@ -110,6 +129,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				container[kv.Key] = kv.Value * avgAngularSpeed;
 			}
 		}
+
+		protected override bool DoUpdateFrom(object other) => false;
 
 		#endregion
 	}

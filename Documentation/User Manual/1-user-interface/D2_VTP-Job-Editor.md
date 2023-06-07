@@ -29,7 +29,7 @@ In declaration mode the manufacturer's record file needs to be provided. Further
 
 ### Relative File Paths
 
-It is recommended to use relative filepaths. This way the Job File and all input files can be moved without having to update the paths. Example: "Vehicles\\Vehicle1.xml" points to the "Vehicles" subdirectory of the Job File's directoy.
+It is recommended to use relative filepaths. This way the Job File and all input files can be moved without having to update the paths. Example: "Vehicles\\Vehicle1.xml" points to the "Vehicles" subdirectory of the Job File's directory.
 
 VECTO automatically uses relative paths if the input file (e.g. Vehicle File) is in the same directory as the Job File. (*Note:* The Job File must be saved before browsing for input files.)
 
