@@ -2,14 +2,14 @@
   <PropertyGroup>
     <DefineConstants />
     <!-- For a Release-Candidate uncomment the following line: -->
-    <!--<DefineConstants>RELEASE_CANDIDATE</DefineConstants>-->
+    <DefineConstants>RELEASE_CANDIDATE</DefineConstants>
 
     <!-- For a Release uncomment the following line: -->
     <!--<DefineConstants>CERTIFICATION_RELEASE</DefineConstants>-->
 
     <!-- Global VECTO Version -->
-    <MainProductVersion>0.7.10</MainProductVersion>
-    <VersionSuffix>DEV</VersionSuffix>
+    <MainProductVersion>4.0.0</MainProductVersion>
+    <VersionSuffix>RC</VersionSuffix>
 
     <!-- The following settings are used as default values for ALL projects -->
     <VersionPrefix>$(MainProductVersion).$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</VersionPrefix>
