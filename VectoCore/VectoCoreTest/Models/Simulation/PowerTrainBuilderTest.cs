@@ -58,9 +58,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public const string JobFileDeclNoAngular = @"TestData/Jobs/40t_Long_Haul_Truck_NoAng.vecto";
 		public const string JobFileDeclAngEfficiency = @"TestData/Jobs/40t_Long_Haul_Truck with AngleEfficiency.vecto";
 
-		public const string JobFileBEVE2 = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG.vecto";
-		public const string JobFileBEVE3 = @"TestData\BatteryElectric\GenericVehicleB3\BEV_ENG.vecto";
-		public const string JobFileBEVE4 = @"TestData\BatteryElectric\GenericVehicleB4\BEV_ENG.vecto";
+		public const string JobFileBEVE2 = @"TestData/BatteryElectric/GenericVehicleB2/BEV_ENG.vecto";
+		public const string JobFileBEVE3 = @"TestData/BatteryElectric/GenericVehicleB3/BEV_ENG.vecto";
+		public const string JobFileBEVE4 = @"TestData/BatteryElectric/GenericVehicleB4/BEV_ENG.vecto";
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()

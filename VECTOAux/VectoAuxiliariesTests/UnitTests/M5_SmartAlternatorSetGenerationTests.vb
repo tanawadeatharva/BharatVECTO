@@ -16,8 +16,8 @@ Namespace UnitTests
 	Public Class M5_SmartAlternatorSetGenerationTests
 		'Constants
 		Private Shared ReadOnly _powerNetVoltage As Volt = 26.3.SI(of Volt)
-		Private Const _hvacMap As String = "testFiles/TestHvacMap.csv"
-		Private Const _altMap As String = "testFiles/testAlternatormap.aalt"
+		Private Const _hvacMap As String = "TestFiles/TestHvacMap.csv"
+		Private Const _altMap As String = "TestFiles/testAlternatorMap.aalt"
 		Private Const _rpm As Integer = 2000
 		Private Const _altGearPullyEfficiency As Single = 0.8
 

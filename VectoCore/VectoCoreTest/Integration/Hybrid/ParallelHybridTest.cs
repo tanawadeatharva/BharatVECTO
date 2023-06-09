@@ -309,10 +309,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			//Assert.IsTrue(jobContainer.GetProgress().All(x => x.Value.Success));
 		}
 
-		private const string BASE_PATH = @"E:\QUAM\Workspace\VECTO-Bugreports_DEV\Bugreport Jobs\2022\";
-        [TestCase(BASE_PATH + @"VECTO-1660_2022_11_02_VectoDaten_Iveco_CrosswayLE_MH\IVECO_CRW_LE_C9D_360hp_DNXT_7G_MH.vecto", 4),
-        TestCase(BASE_PATH + @"VECTO-1660_2022_11_02_VectoDaten_Iveco_CrosswayLE_MH\IVECO_CRW_LE_C9D_360hp_DNXT_7G_MH.vecto", 3),
-		TestCase(BASE_PATH + @"VECTO-1660_2022_11_02_VectoDaten_Iveco_CrosswayLE_MH\IVECO_CRW_LE_C9D_360hp_DNXT_7G_MH.vecto", 6),
+		private const string BASE_PATH = @"E:/QUAM/Workspace/VECTO-Bugreports_DEV/Bugreport Jobs/2022/";
+        [TestCase(BASE_PATH + @"VECTO-1660_2022_11_02_VectoDaten_Iveco_CrosswayLE_MH/IVECO_CRW_LE_C9D_360hp_DNXT_7G_MH.vecto", 4),
+        TestCase(BASE_PATH + @"VECTO-1660_2022_11_02_VectoDaten_Iveco_CrosswayLE_MH/IVECO_CRW_LE_C9D_360hp_DNXT_7G_MH.vecto", 3),
+		TestCase(BASE_PATH + @"VECTO-1660_2022_11_02_VectoDaten_Iveco_CrosswayLE_MH/IVECO_CRW_LE_C9D_360hp_DNXT_7G_MH.vecto", 6),
         ]
 		public void Vecto1660_BusAux_SmartPS_with_Hybrid(string jobFile, int cycleIdx)
 		{
@@ -1575,8 +1575,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		}
 
 
-        [TestCase(@"E:\QUAM\tmp\HybridStrategy\P1_Group31aU_ll\P1_CityBusU_ll.vecto"),
-		 TestCase(@"E:\QUAM\tmp\HybridStrategy\P1_Group31aU_rl\P1_CityBusU_rl.vecto"),
+        [TestCase(@"E:/QUAM/tmp/HybridStrategy/P1_Group31aU_ll/P1_CityBusU_ll.vecto"),
+		 TestCase(@"E:/QUAM/tmp/HybridStrategy/P1_Group31aU_rl/P1_CityBusU_rl.vecto"),
 		]
 		public void HybridTestGerard(string jobfile)
 		{

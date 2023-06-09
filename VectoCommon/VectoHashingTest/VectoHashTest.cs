@@ -661,7 +661,7 @@ namespace VectoHashingTest
 
 		}
 
-		private const string WheelsFileToHash25 = @"Testdata\XML\ToHash\Tyre_v25.xml";
+		private const string WheelsFileToHash25 = @"Testdata/XML/ToHash/Tyre_v25.xml";
 
         [TestCase(WheelsFileToHash25)]
 		public void TestTyreValidDimension(string file)

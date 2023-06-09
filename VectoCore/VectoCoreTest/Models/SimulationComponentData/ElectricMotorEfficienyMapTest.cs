@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 		//public void TestMahleEMLookup()
 		//{
 		//	var inputProvider =
-		//		JSONInputDataFactory.ReadElectricMotorData(@"E:\QUAM\Downloads\2022-07-07 Hybrid 40 kW System_sent.7z\2022-07-07 Hybrid 40 kW System_sent\TDS 40kW MTM 48-210x65 V2.04.vem", false);
+		//		JSONInputDataFactory.ReadElectricMotorData(@"E:/QUAM/Downloads/2022-07-07 Hybrid 40 kW System_sent.7z/2022-07-07 Hybrid 40 kW System_sent/TDS 40kW MTM 48-210x65 V2.04.vem", false);
 
 		//	var pwr = inputProvider.VoltageLevels.Last().PowerMap.First().PowerMap;
 		//	var fld = inputProvider.VoltageLevels.Last().FullLoadCurve;

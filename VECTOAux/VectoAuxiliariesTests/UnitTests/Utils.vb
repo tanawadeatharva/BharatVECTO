@@ -105,7 +105,7 @@ Public Class Utils
                 .ResultCardIdle = New DummyResultCard(), ' New ResultCard(New List(Of SmartResult)()),
                 .ResultCardTraction = New DummyResultCard(), 'New ResultCard(New List(Of SmartResult)()),
                 .ResultCardOverrun = New DummyResultCard(), 'New ResultCard(New List(Of SmartResult)()),
-                .AlternatorMap = AlternatorReader.ReadMap("TestFiles/testAlternatormap.aalt"),
+                .AlternatorMap = AlternatorReader.ReadMap("TestFiles/testAlternatorMap.aalt"),
                 .DoorActuationTimeSecond = Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond,
                 .PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
                 .AlternatorType = AlternatorType.Conventional
@@ -117,28 +117,28 @@ Public Class Utils
                 .AdBlueDosing = ConsumerTechnology.Pneumatically,
                 .AirSuspensionControl = ConsumerTechnology.Mechanically,
                 .Doors = ConsumerTechnology.Pneumatically,
-                .KneelingHeight = 70.SI(Unit.SI.Milli.Meter).Cast (Of Meter), 
+                .KneelingHeight = 70.SI(Unit.SI.Milli.Meter).Cast(Of Meter),
                 .SmartAirCompression = False,
-                .SmartRegeneration = False 
+                .SmartRegeneration = False
                 },
                 .SSMInputsCooling = New SSMInputs(Nothing, heatingFuel) With {
                 .Technologies = techBenefits,
                 .BusFloorType = FloorType.HighFloor,
                 .BusSurfaceArea = 0.SI(Of SquareMeter),
                 .BusVolumeVentilation = 0.SI(Of CubicMeter),
-                .BusWindowSurface = 0.SI(of SquareMeter),
+                .BusWindowSurface = 0.SI(Of SquareMeter),
                 .UValue = 3.SI(Of WattPerKelvinSquareMeter),
-                .VentilationRate = 20.SI(Unit.SI.Per.Hour).Cast (Of PerSecond),
-                .VentilationRateHeating = 20.SI(Unit.SI.Per.Hour).Cast (Of PerSecond),
+                .VentilationRate = 20.SI(Unit.SI.Per.Hour).Cast(Of PerSecond),
+                .VentilationRateHeating = 20.SI(Unit.SI.Per.Hour).Cast(Of PerSecond),
                 .DefaultConditions =
-                New EnvironmentalConditionMapEntry(25.0.DegCelsiusToKelvin(), 400.SI (Of WattPerSquareMeter), 1.0),
+                New EnvironmentalConditionMapEntry(25.0.DegCelsiusToKelvin(), 400.SI(Of WattPerSquareMeter), 1.0),
                 .EnvironmentalConditionsMap = DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions,
                 .HeatingBoundaryTemperature = 18.0.DegCelsiusToKelvin(),
                 .CoolingBoundaryTemperature = 23.0.DegCelsiusToKelvin(),
-                .SpecificVentilationPower = 0.56.SI(Unit.SI.Watt.Hour.Per.Cubic.Meter).Cast (Of JoulePerCubicMeter),
-                .HVACMaxCoolingPowerPassenger = 18.si(Unit.SI.kilo.watt).Cast (of Watt),
-                .AuxHeaterEfficiency =  0.84,
-                .FuelFiredHeaterPower = 30.SI(Unit.SI.kilo.watt).Cast (Of Watt),
+                .SpecificVentilationPower = 0.56.SI(Unit.SI.Watt.Hour.Per.Cubic.Meter).Cast(Of JoulePerCubicMeter),
+                .HVACMaxCoolingPowerPassenger = 18.SI(Unit.SI.Kilo.Watt).Cast(Of Watt),
+                .AuxHeaterEfficiency = 0.84,
+                .FuelFiredHeaterPower = 30.SI(Unit.SI.Kilo.Watt).Cast(Of Watt),
                 .FuelEnergyToHeatToCoolant = Constants.BusAuxiliaries.Heater.FuelEnergyToHeatToCoolant,
                 .CoolantHeatTransferredToAirCabinHeater =
                 Constants.BusAuxiliaries.Heater.CoolantHeatTransferredToAirCabinHeater,
@@ -150,7 +150,7 @@ Public Class Utils
                     .Braking = 153,
                     .ParkBrakeAndDoors = 24,
                     .Kneeling = 25,
-                    .CycleTime = 1000.SI(of Second)()
+                    .CycleTime = 1000.SI(Of Second)()
                  }
                 }
         Return retVal

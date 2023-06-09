@@ -315,8 +315,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 		[Category("LongRunning"),
-		TestCase(@"Testdata\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Class2_RigidTruck_vehTqLimit-disableGear6.vecto"),
-		TestCase(@"Testdata\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Class2_RigidTruck_vehTqLimit-disableGear6and5.vecto")]
+		TestCase(@"TestData/Integration/DeclarationMode/Class2_RigidTruck_4x2_VehTorqueLimits/Class2_RigidTruck_vehTqLimit-disableGear6.vecto"),
+		TestCase(@"TestData/Integration/DeclarationMode/Class2_RigidTruck_4x2_VehTorqueLimits/Class2_RigidTruck_vehTqLimit-disableGear6and5.vecto")]
 		public void TestRunDisableGearsWithTorqueLimitSimulations(string file)
 		{
 			var fileWriter = new FileOutputWriter(file);
@@ -330,10 +330,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
-		[TestCase(@"Testdata\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Class2_RigidTruck_vehTqLimit-disableGear5invalid.vecto"),
-		 TestCase(@"Testdata\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Class2_RigidTruck_vehTqLimit-disableGear4invalid.vecto"),
-		 TestCase(@"Testdata\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Class2_RigidTruck_vehTqLimit-disableGear6and4invalid.vecto"),
-		 TestCase(@"Testdata\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Class2_RigidTruck_vehTqLimit-disableGear1invalid.vecto")]
+		[TestCase(@"TestData/Integration/DeclarationMode/Class2_RigidTruck_4x2_VehTorqueLimits/Class2_RigidTruck_vehTqLimit-disableGear5invalid.vecto"),
+		 TestCase(@"TestData/Integration/DeclarationMode/Class2_RigidTruck_4x2_VehTorqueLimits/Class2_RigidTruck_vehTqLimit-disableGear4invalid.vecto"),
+		 TestCase(@"TestData/Integration/DeclarationMode/Class2_RigidTruck_4x2_VehTorqueLimits/Class2_RigidTruck_vehTqLimit-disableGear6and4invalid.vecto"),
+		 TestCase(@"TestData/Integration/DeclarationMode/Class2_RigidTruck_4x2_VehTorqueLimits/Class2_RigidTruck_vehTqLimit-disableGear1invalid.vecto")]
 		public void TestRunDisableGearsInvalid(string file)
 		{
 			var fileWriter = new FileOutputWriter(file);
@@ -345,8 +345,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 		[Category("LongRunning"),
-		TestCase(@"Testdata\Integration\EngineeringMode\Class2_RigidTruck_4x2_VehTorqueLimits\Class2_RigidTruck_vehTqLimit-disableGear6.vecto"),
-		TestCase(@"Testdata\Integration\EngineeringMode\Class2_RigidTruck_4x2_VehTorqueLimits\Class2_RigidTruck_vehTqLimit-disableGear6and5.vecto")]
+		TestCase(@"TestData/Integration/EngineeringMode/Class2_RigidTruck_4x2_VehTorqueLimits/Class2_RigidTruck_vehTqLimit-disableGear6.vecto"),
+		TestCase(@"TestData/Integration/EngineeringMode/Class2_RigidTruck_4x2_VehTorqueLimits/Class2_RigidTruck_vehTqLimit-disableGear6and5.vecto")]
 		public void TestRunDisableGearsWithTorqueLimitSimulationsEngineering(string file)
 		{
 			var fileWriter = new FileOutputWriter(file);
@@ -360,10 +360,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
-		[TestCase(@"Testdata\Integration\EngineeringMode\Class2_RigidTruck_4x2_VehTorqueLimits\Class2_RigidTruck_vehTqLimit-disableGear5invalid.vecto"),
-		 TestCase(@"Testdata\Integration\EngineeringMode\Class2_RigidTruck_4x2_VehTorqueLimits\Class2_RigidTruck_vehTqLimit-disableGear4invalid.vecto"),
-		 TestCase(@"Testdata\Integration\EngineeringMode\Class2_RigidTruck_4x2_VehTorqueLimits\Class2_RigidTruck_vehTqLimit-disableGear6and4invalid.vecto"),
-		 TestCase(@"Testdata\Integration\EngineeringMode\Class2_RigidTruck_4x2_VehTorqueLimits\Class2_RigidTruck_vehTqLimit-disableGear1invalid.vecto")]
+		[TestCase(@"TestData/Integration/EngineeringMode/Class2_RigidTruck_4x2_VehTorqueLimits/Class2_RigidTruck_vehTqLimit-disableGear5invalid.vecto"),
+		 TestCase(@"TestData/Integration/EngineeringMode/Class2_RigidTruck_4x2_VehTorqueLimits/Class2_RigidTruck_vehTqLimit-disableGear4invalid.vecto"),
+		 TestCase(@"TestData/Integration/EngineeringMode/Class2_RigidTruck_4x2_VehTorqueLimits/Class2_RigidTruck_vehTqLimit-disableGear6and4invalid.vecto"),
+		 TestCase(@"TestData/Integration/EngineeringMode/Class2_RigidTruck_4x2_VehTorqueLimits/Class2_RigidTruck_vehTqLimit-disableGear1invalid.vecto")]
 		public void TestRunDisableGearsInvalidEngineering(string file)
 		{
 			var fileWriter = new FileOutputWriter(file);

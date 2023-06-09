@@ -714,7 +714,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 		}
 
-		public const string SampleTyreXML = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.5\TyreSample.xml";
+		public const string SampleTyreXML = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.5/TyreSample.xml";
 
 		[TestCase()]
 		public void TestWheelsSupportedInXML()

@@ -38,7 +38,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
 	[TestFixture]
-	[Parallelizable(ParallelScope.All)]
+	[NonParallelizable]
 	public class AccelerationCurveTest
 	{
 		public const double Tolerance = 0.0001;
