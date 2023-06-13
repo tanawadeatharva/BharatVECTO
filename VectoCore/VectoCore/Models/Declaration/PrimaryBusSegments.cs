@@ -166,6 +166,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 							HVACConventional = new HVACParameters() {
 								HVACConfiguration = BusHVACSystemConfigurationHelper.Parse(row.Field<string>("hvacsystemconfiguration")),
 								HVACAuxHeaterPower = row.ParseDouble("hvacauxheaterconventional").SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
+								HeatPumpTypeDriverCompartmentCooling = HeatPumpType.none,
+								HeatPumpTypeDriverCompartmentHeating = HeatPumpType.none,
 								HeatPumpTypePassengerCompartmentCooling = HeatPumpTypeHelper.Parse(row.Field<string>("heatpumpcoolingpassengerconventional")),
 								HeatPumpTypePassengerCompartmentHeating = HeatPumpTypeHelper.Parse(row.Field<string>("heatpumpcoolingpassengerconventional")),
 								HVACDoubleGlasing = row.ParseBoolean("hvacdoubleglasing"),
@@ -176,6 +178,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 							HVACHEV = new HVACParameters() {
 								HVACConfiguration = BusHVACSystemConfigurationHelper.Parse(row.Field<string>("hvacsystemconfiguration")),
 								HVACAuxHeaterPower = row.ParseDouble("hvacauxheaterhev").SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
+								HeatPumpTypeDriverCompartmentCooling = HeatPumpType.none,
+								HeatPumpTypeDriverCompartmentHeating = HeatPumpType.none,
 								HeatPumpTypePassengerCompartmentCooling = HeatPumpTypeHelper.Parse(row.Field<string>("heatpumpcoolingpassengerhev")),
 								HeatPumpTypePassengerCompartmentHeating = HeatPumpTypeHelper.Parse(row.Field<string>("heatpumpheatingpassengerhev")),
 								HVACDoubleGlasing = row.ParseBoolean("hvacdoubleglasing"),
@@ -186,6 +190,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 							HVACPEV = new HVACParameters() {
 								HVACConfiguration = BusHVACSystemConfigurationHelper.Parse(row.Field<string>("hvacsystemconfiguration")),
 								HVACAuxHeaterPower = row.ParseDouble("hvacauxheaterpev").SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
+								HeatPumpTypeDriverCompartmentCooling = HeatPumpType.none,
+								HeatPumpTypeDriverCompartmentHeating = HeatPumpType.none,
 								HeatPumpTypePassengerCompartmentCooling = HeatPumpTypeHelper.Parse(row.Field<string>("heatpumpcoolingpassengerpev")),
 								HeatPumpTypePassengerCompartmentHeating = HeatPumpTypeHelper.Parse(row.Field<string>("heatpumpheatingpassengerpev")),
 								HVACDoubleGlasing = row.ParseBoolean("hvacdoubleglasing"),
