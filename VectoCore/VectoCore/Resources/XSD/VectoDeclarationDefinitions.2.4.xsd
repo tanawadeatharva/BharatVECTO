@@ -3006,7 +3006,7 @@ Changelog:
 								<xs:documentation>P295 - [A]</xs:documentation>
 							</xs:annotation>
 							<xs:simpleType>
-								<xs:restriction base="xs:integer">
+								<xs:restriction base="xs:int">
 									<xs:minExclusive value="0"/>
 								</xs:restriction>
 							</xs:simpleType>
@@ -3043,7 +3043,7 @@ Changelog:
 								</xs:restriction>
 							</xs:simpleType>
 						</xs:element>
-						<xs:element name="RatedCapacity" type="xs:integer">
+						<xs:element name="RatedCapacity" type="xs:int">
 							<xs:annotation>
 								<xs:documentation>P299 - [Ah]</xs:documentation>
 							</xs:annotation>
@@ -3081,7 +3081,7 @@ Changelog:
 								<xs:documentation>P301 - [F]</xs:documentation>
 							</xs:annotation>
 							<xs:simpleType>
-								<xs:restriction base="xs:integer">
+								<xs:restriction base="xs:int">
 									<xs:minExclusive value="0"/>
 								</xs:restriction>
 							</xs:simpleType>
@@ -3091,7 +3091,7 @@ Changelog:
 								<xs:documentation>P302 - [V]</xs:documentation>
 							</xs:annotation>
 							<xs:simpleType>
-								<xs:restriction base="xs:integer">
+								<xs:restriction base="xs:int">
 									<xs:minExclusive value="0"/>
 								</xs:restriction>
 							</xs:simpleType>
