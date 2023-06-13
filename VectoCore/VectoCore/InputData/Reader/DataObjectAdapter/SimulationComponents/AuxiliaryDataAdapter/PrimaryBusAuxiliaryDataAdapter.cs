@@ -550,7 +550,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				busParams.VehicleLength, busParams.VehicleCode,
 				busParams.NumberPassengersLowerDeck);
 			var height = DeclarationData.BusAuxiliaries.CalculateInternalHeight(busParams.VehicleCode, RegistrationClass.II, busParams.BodyHeight);
-			var volume = length * height * busParams.VehicleWidth;
+			var volume = (length - Constants.BusParameters.DriverCompartmentLength) * height * busParams.VehicleWidth;
 
 			var driver = DeclarationData.BusAuxiliaries.HVACMaxCoolingPower.DriverMaxCoolingPower(
 				hvacConfiguration, mission.MissionType);
@@ -568,7 +568,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				busParams.VehicleLength, busParams.VehicleCode,
 				busParams.NumberPassengersLowerDeck);
 			var height = DeclarationData.BusAuxiliaries.CalculateInternalHeight(busParams.VehicleCode, RegistrationClass.II, busParams.BodyHeight);
-			var volume = length * height * busParams.VehicleWidth;
+			var volume = (length - Constants.BusParameters.DriverCompartmentLength) * height * busParams.VehicleWidth;
 
 			var driver = DeclarationData.BusAuxiliaries.HVACMaxHeatingPower.DriverMaxHeatingPower(
 				hvacConfiguration, mission.MissionType);
