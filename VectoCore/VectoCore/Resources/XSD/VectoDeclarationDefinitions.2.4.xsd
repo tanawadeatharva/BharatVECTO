@@ -17,7 +17,8 @@ Changelog:
 	14.04.2022: Added new RetarderTypeType definition to cover AxlegearInputRetarder (used only for E3, S3, S-IEPC, E-IEPC)
 	17.08.2022: Changed datatype of ChassisConfiguration, AxleConfiguration and LegislativeCategory for Vehicle_Exempted_MediumLorryDeclarationType
 	16.11.2022: 	- Removed trailing white spaces from PSTechnologies and SPTechnologies
-				- changed Small + elec. driven + ESS to Small + AMS + elec. driven	
+				- changed Small + elec. driven + ESS to Small + AMS + elec. driven
+    13.06.2023: Changed rated current, rated voltage, rated capacity (bus aux smart electrics) from datatype xs:integer to xs:int 	
 	-->
 	<xs:complexType name="Abstract_ADAS_ConventionalType" abstract="true">
 		<xs:complexContent>
