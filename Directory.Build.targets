@@ -12,9 +12,14 @@
 	</Target>-->
 	<!-- msbuild VECTO.sln -target:CustomClean -->
 	<!-- BeforeTargets="BeforeBuild" -->
-	<Target Name="CustomClean" Condition="('$(Configuration)'=='Deploy') Or ('$(Configuration)' == 'MockupDeploy')">
-		<Message Text="Removing old files" Importance="high" />
-		<RemoveDir Directories="$(SolutionDir)VECTO\bin\"                       Condition="Exists('$(SolutionDir)VECTO\bin\')"                      />                                    
+	
+		<Target Name="CustomClean">
+		 <!-- Condition="('$(Configuration)'=='Deploy') Or ('$(Configuration)' == 'MockupDeploy')"> -->
+		<Message Text="Removing old files $(ProjectDir)bin\" Importance="high" />
+		<Message Text="Removing old files $(ProjectDir)obj\" Importance="high" />
+		<RemoveDir Directories="$(ProjectDir)bin\"/>
+		<RemoveDir Directories="$(ProjectDir)obj\"/>
+		<!-- <RemoveDir Directories="$(SolutionDir)VECTO\bin\"                       Condition="Exists('$(SolutionDir)VECTO\bin\')"                      />                                    
 		<RemoveDir Directories="$(SolutionDir)HashingTool\bin\"                 Condition="Exists('$(SolutionDir)HashingTool\bin\')"                />                                 
 		<RemoveDir Directories="$(SolutionDir)HashingCmd\bin\"                  Condition="Exists('$(SolutionDir)HashingCmd\bin\')"                 />                                  
 		<RemoveDir Directories="$(SolutionDir)VectoConsole\bin\"                Condition="Exists('$(SolutionDir)VectoConsole\bin\')"               />                              
@@ -28,7 +33,7 @@
 		<RemoveDir Directories="$(SolutionDir)VectoCore\VectoCore\bin\"         Condition="Exists('$(SolutionDir)VectoCore\VectoCore\bin\')"        />                              
 		<RemoveDir Directories="$(SolutionDir)VectoCommon\VectoCommon\bin\"     Condition="Exists('$(SolutionDir)VectoCommon\VectoCommon\bin\')"    />                                      
 		<RemoveDir Directories="$(SolutionDir)VectoCommon\VectoHashing\bin\"    Condition="Exists('$(SolutionDir)VectoCommon\VectoHashing\bin\')"   />                            
-		<RemoveDir Directories="$(SolutionDir)VectoMockup\VectoMockup\bin\"     Condition="Exists('$(SolutionDir)VectoMockup\VectoMockup\bin\')"    />                                               
+		<RemoveDir Directories="$(SolutionDir)VectoMockup\VectoMockup\bin\"     Condition="Exists('$(SolutionDir)VectoMockup\VectoMockup\bin\')"    />                                                -->
 	</Target>
 
 	<Target Name="Packaging" AfterTargets="DispatchToInnerBuilds" Condition="('$(Configuration)'=='Deploy') Or ('$(Configuration)' == 'MockupDeploy')">
@@ -59,7 +64,7 @@
 			<Net48HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net48\*.dll*"/>
 			<Net48HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net48\*.exe*"/>
 			<Net48HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net48\*.dll*"/>
-			<Net48VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net48\*.exe"/>
+			<Net48VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net48\*.exe*"/>
 			<Net48VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net48\*.dll*"/>
 			<Net48VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net48\*.exe*"/>
 			<Net48VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net48\*.dll*"/>

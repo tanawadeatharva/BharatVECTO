@@ -78,6 +78,7 @@ Namespace UnitTests
             Dim mission As New Mission With {
                 .BusParameter = New BusParameters() With {
                     .HVACConventional = New HVACParameters  With {
+                    .HeatPumpTypeDriverCompartmentCooling = HeatPumpType.none,
                     .HeatPumpTypePassengerCompartmentCooling = HeatPumpType.non_R_744_2_stage,
                     .HVACAuxHeaterPower = 30000.0.SI(Of Watt),
                     .HVACConfiguration = BusHVACSystemConfiguration.Configuration6
@@ -589,6 +590,7 @@ Namespace UnitTests
                 .MissionType = MissionType.HeavyUrban,
                 .BusParameter = New BusParameters() With {
                     .HVACConventional = New HVACParameters() With {
+                        .HeatPumpTypeDriverCompartmentCooling = HeatPumpType.none,
                         .HeatPumpTypePassengerCompartmentCooling = HeatPumpType.non_R_744_2_stage,
                         .HVACAuxHeaterPower = 18000.0.SI(Of Watt),
                         .HVACConfiguration = BusHVACSystemConfiguration.Configuration6

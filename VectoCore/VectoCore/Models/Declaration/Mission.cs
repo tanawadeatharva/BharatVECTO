@@ -173,7 +173,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 
         public Watt HVACAuxHeaterPower { get; internal set; }
 
-		public HeatPumpType HeatPumpTypePassengerCompartmentCooling { get; internal set; }
+		public HeatPumpType HeatPumpTypeDriverCompartmentCooling { get; internal set; }
+
+		public HeatPumpType HeatPumpTypeDriverCompartmentHeating { get; internal set; }
+
+        public HeatPumpType HeatPumpTypePassengerCompartmentCooling { get; internal set; }
 
 		public HeatPumpType HeatPumpTypePassengerCompartmentHeating { get; internal set; }
 
