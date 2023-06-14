@@ -1,39 +1,9 @@
-<Project DefaultTargets = "Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" >
-	
-	<!-- 
-<Target Name="GenerateHelpHTML" BeforeTargets="AfterBuild"  Condition="$(Configuration) == 'Deploy'">
-	<Message Text="Generating Help"/>
-	<Exec Command="&quot;$(solutiondir)documentation\user manual\convert.bat&quot;" WorkingDirectory="$(solutiondir)documentation\user manual"/>  
-	<Exec Command="&quot;$(solutiondir)documentation\VectoHashingTool\convert.bat&quot;" WorkingDirectory="$(solutiondir)documentation\VectoHashingTool"/>  
- </Target>   
- -->
-	<!--<Target Name="BeforeBuild">
-		<Message Text="Compiling the program in $(Configuration) Configuration" Importance="high" />
-	</Target>-->
-	<!-- msbuild VECTO.sln -target:CustomClean -->
-	<!-- BeforeTargets="BeforeBuild" -->
-	
-		<Target Name="CustomClean">
-		 <!-- Condition="('$(Configuration)'=='Deploy') Or ('$(Configuration)' == 'MockupDeploy')"> -->
+<Project DefaultTargets = "Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" >	
+	<Target Name="CustomClean">
 		<Message Text="Removing old files $(ProjectDir)bin\" Importance="high" />
 		<Message Text="Removing old files $(ProjectDir)obj\" Importance="high" />
 		<RemoveDir Directories="$(ProjectDir)bin\"/>
 		<RemoveDir Directories="$(ProjectDir)obj\"/>
-		<!-- <RemoveDir Directories="$(SolutionDir)VECTO\bin\"                       Condition="Exists('$(SolutionDir)VECTO\bin\')"                      />                                    
-		<RemoveDir Directories="$(SolutionDir)HashingTool\bin\"                 Condition="Exists('$(SolutionDir)HashingTool\bin\')"                />                                 
-		<RemoveDir Directories="$(SolutionDir)HashingCmd\bin\"                  Condition="Exists('$(SolutionDir)HashingCmd\bin\')"                 />                                  
-		<RemoveDir Directories="$(SolutionDir)VectoConsole\bin\"                Condition="Exists('$(SolutionDir)VectoConsole\bin\')"               />                              
-		<RemoveDir Directories="$(SolutionDir)VECTO\bin\"                       Condition="Exists('$(SolutionDir)VECTO\bin\')"                      />                                 
-		<RemoveDir Directories="$(SolutionDir)VECTO3GUI2020\bin\"               Condition="Exists('$(SolutionDir)VECTO3GUI2020\bin\')"              />                               
-		<RemoveDir Directories="$(SolutionDir)VECTO3GUI2020\bin\"               Condition="Exists('$(SolutionDir)VECTO3GUI2020\bin\')"              />                              
- 
-		<RemoveDir Directories="$(SolutionDir)Tools\VECTOConsoleStart\bin\"     Condition="Exists('$(SolutionDir)Tools\VECTOConsoleStart\bin\')"    />                           
-		<RemoveDir Directories="$(SolutionDir)Tools\VECTOMultistageStart\bin\"  Condition="Exists('$(SolutionDir)Tools\VECTOMultistageStart\bin\')" />                           
-		<RemoveDir Directories="$(SolutionDir)Tools\VECTOStart\bin\"            Condition="Exists('$(SolutionDir)Tools\VECTOStart\bin\')"           />                               
-		<RemoveDir Directories="$(SolutionDir)VectoCore\VectoCore\bin\"         Condition="Exists('$(SolutionDir)VectoCore\VectoCore\bin\')"        />                              
-		<RemoveDir Directories="$(SolutionDir)VectoCommon\VectoCommon\bin\"     Condition="Exists('$(SolutionDir)VectoCommon\VectoCommon\bin\')"    />                                      
-		<RemoveDir Directories="$(SolutionDir)VectoCommon\VectoHashing\bin\"    Condition="Exists('$(SolutionDir)VectoCommon\VectoHashing\bin\')"   />                            
-		<RemoveDir Directories="$(SolutionDir)VectoMockup\VectoMockup\bin\"     Condition="Exists('$(SolutionDir)VectoMockup\VectoMockup\bin\')"    />                                                -->
 	</Target>
 
 	<Target Name="Packaging" AfterTargets="DispatchToInnerBuilds" Condition="('$(Configuration)'=='Deploy') Or ('$(Configuration)' == 'MockupDeploy')">
@@ -45,8 +15,6 @@
 			<CurrentDate>$([System.DateTime]::Now.ToString(yyy_MM_dd))</CurrentDate>
 			<DeployPath>$(SolutionDir)Deploy\$(CurrentDate)-VECTO-$(Version)\</DeployPath>
 			<NuGetPath>$(SolutionDir)Nuget\$(CurrentDate)-VECTO-NuGet-$(Version)\</NuGetPath>
-			<!-- <DeployPath Condition="'$(Configuration)'=='MockupDeploy'">$(SolutionDir)Deploy\$(CurrentDate)-VECTO_MOCKUP-$(Version)\</DeployPath>
-			<NuGetPath Condition="'$(Configuration)'=='MockupDeploy'"> $(SolutionDir)Nuget\$(CurrentDate)-VECTO_MOCKUP-NuGet-$(Version)\</NuGetPath> -->
 		</PropertyGroup>
   		<RemoveDir Directories="$(SolutionDir)Deploy" Condition="Exists('$(SolutionDir)Deploy')"/>
 		<RemoveDir Directories="$(SolutionDir)Nuget" Condition="Exists('$(SolutionDir)Nuget')"/>
@@ -219,6 +187,8 @@
 		</ItemGroup>
 
 		<Copy SourceFiles="@(VectoNuget)" DestinationFolder ="$(NuGetPath)"/>
+
+		<Copy SourceFiles="@(VectoNuget)" DestinationFolder ="$(DeployPath)NuGet"/>
 
 		<PropertyGroup>
 			<NugetDestinationZip>$(SolutionDir)$(CurrentDate)-VECTO-NuGet-$(Version).zip</NugetDestinationZip>
