@@ -162,8 +162,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			// 1) _ -> 0: disengage before halting
 			var braking = DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Braking;
 			var torqueNegative = outTorque.IsSmaller(0);
+			var vehicleSpeed = DataBus.VehicleInfo.VehicleSpeed + DataBus.DriverInfo.DriverAcceleration * dt;
 			var slowerThanDisengageSpeed =
-				DataBus.VehicleInfo.VehicleSpeed.IsSmaller(GearboxModelData.DisengageWhenHaltingSpeed);
+				vehicleSpeed.IsSmaller(GearboxModelData.DisengageWhenHaltingSpeed);
 			var disengageBeforeHalting = braking && torqueNegative && slowerThanDisengageSpeed;
 
 			// 2) L -> 0: disengage if inAngularVelocity == 0
