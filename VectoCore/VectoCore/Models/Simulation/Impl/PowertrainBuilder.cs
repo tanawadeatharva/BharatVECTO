@@ -946,6 +946,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(engine, idleController)
 				.AddAuxiliariesSerialHybrid(container, data);
 
+
+
+
+			var dcdc = new DCDCConverter(container,
+				data.DCDCData.DCDCEfficiency);
             if (data.BusAuxiliaries != null) {
 				if (!data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
 					throw new VectoException("BusAux must be supplied from REESS!");
@@ -957,8 +962,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						: (ISimpleBattery)new NoBattery(container);
 					busAux.ElectricStorage = electricStorage;
 					if (data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
-						var dcdc = new DCDCConverter(container,
-							data.DCDCData.DCDCEfficiency);
 						busAux.DCDCConverter = dcdc;
 						es.Connect(dcdc);
 					}
@@ -967,9 +970,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				} else {
 					throw new VectoException("BusAux data set but no BusAux component found!");
 				}
-			} else {
-				AddElectricAuxiliaries(data, container, es, cycle);
 			}
+
+			AddElectricAuxiliaries(data, container, es, cycle, dcdc);
+			
 
 			
 
@@ -982,11 +986,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// <param name="container"></param>
 		/// <param name="es"></param>
 		/// <param name="cycle"></param>
+		/// <param name="cycle"></param>
 		private static void AddElectricAuxiliaries(VectoRunData data, VehicleContainer container, ElectricSystem es,
-			DistanceBasedDrivingCycle cycle)
+			DistanceBasedDrivingCycle cycle, DCDCConverter dcdc)
 		{
-			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
-
+			//var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+			
 			es.Connect(dcdc);
 			var elAux = new ElectricAuxiliaries(container);
 
@@ -1109,8 +1114,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			new DummyEngineInfo(container);
 
-		
-			if (data.BusAuxiliaries != null) {
+			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+            if (data.BusAuxiliaries != null) {
 				if (!data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
 					throw new VectoException("BusAux must be supplied from REESS!");
 				}
@@ -1119,38 +1124,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var busAux = new BusAuxiliariesAdapter(container, auxCfg);
 				var electricStorage = new NoBattery(container);
 				busAux.ElectricStorage = electricStorage;
-				var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+	
 				busAux.DCDCConverter = dcdc;
 				es.Connect(dcdc);
 				em.BusAux = busAux;
-			} else {
-				AddElectricAuxiliaries(data, container, es, cycle);
-				//var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+			} 
 
-				//            es.Connect(dcdc);
-				//var elAux = new ElectricAuxiliaries(container);
+			AddElectricAuxiliaries(data, container, es, cycle, dcdc);
 
-				//IEPTO epto = null;
-				//if (data.PTO?.PTOCycle != null)
-				//{
-				//	var pevPTOController = GetPEV_SHEVIdleController(data.PTO, container);
-				//	cycle.IdleController = pevPTOController;
-				//	var eptoAux = new EPTO(pevPTOController);
-				//	elAux.AddAuxiliary(eptoAux);
-				//	epto = eptoAux;
-				//}
 
-				//elAux.AddAuxiliaries(data.Aux.Where(x => x.ConnectToREESS && x.ID != Constants.Auxiliaries.IDs.Cond));
-				//if (data.Aux.Any(aux => aux.ID == Constants.Auxiliaries.IDs.Cond)) {
-				//	elAux.AddAuxiliary(new Conditioning(data.Aux.FirstOrDefault(aux => aux.ID == Constants.Auxiliaries.IDs.Cond), epto));
-				//}
-
-				//dcdc.Connect(elAux);
-				//dcdc.Initialize();
-
-			}
-
-			return container;
+            return container;
 
 		}
 		
@@ -1167,12 +1150,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var position = data.ElectricMachinesData.First().Item1;
 			
 			IElectricMotor em = _PWheelBEVBuilders[position].Invoke(data, container, es, powertrain);
-			
-			if (data.BusAuxiliaries != null) {
-				AddBEVBusAuxiliaries(data, container, es, em);
+
+			var dcdc = new DCDCConverter(container, data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+            if (data.BusAuxiliaries != null) {
+				AddBEVBusAuxiliaries(data, container, es, em,dcdc);
 			}
 			else {
-				AddElectricAuxiliaries(data, container, es, null);
+				AddElectricAuxiliaries(data, container, es, null,dcdc);
 			}
 
 			return container;
@@ -1327,11 +1311,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			
 			IElectricMotor em = _MeasuredSpeedBEVBuilders[position].Invoke(data, container, es, powertrain);
 
-			if (data.BusAuxiliaries != null) {
-				AddBEVBusAuxiliaries(data, container, es, em);
+			var dcdc = new DCDCConverter(container, data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+            if (data.BusAuxiliaries != null) {
+				AddBEVBusAuxiliaries(data, container, es, em, dcdc);
 			}
 			else {
-				AddElectricAuxiliaries(data, container, es, null);
+				AddElectricAuxiliaries(data, container, es, null, dcdc);
 			}
 
 			return container;
@@ -1426,7 +1411,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			es.Connect(aux);
         }
 
-        private static void AddBEVBusAuxiliaries(VectoRunData data, VehicleContainer container, ElectricSystem es, IElectricMotor em)
+        private static void AddBEVBusAuxiliaries(VectoRunData data, VehicleContainer container, ElectricSystem es, IElectricMotor em, DCDCConverter dcdc)
         {
 			if (data.BusAuxiliaries == null) {
 				return;
@@ -1437,7 +1422,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var busAux = new BusAuxiliariesAdapter(container, data.BusAuxiliaries);			
-			var dcdc = new DCDCConverter(container, data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+
 
 			busAux.DCDCConverter = dcdc;
 			busAux.ElectricStorage = new NoBattery(container);
@@ -1479,12 +1464,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			new ATClutchInfo(container);
 			new DummyEngineInfo(container);
-			
-			if (data.BusAuxiliaries != null) {
-				AddBEVBusAuxiliaries(data, container, es, em);
+
+			var dcdc = new DCDCConverter(container, data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+            if (data.BusAuxiliaries != null) {
+				AddBEVBusAuxiliaries(data, container, es, em, dcdc);
 			}
 			else {
-				AddElectricAuxiliaries(data, container, es, null);
+				AddElectricAuxiliaries(data, container, es, null, dcdc);
 			}
 
 			return container;
@@ -1524,12 +1510,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.AxleGearData == null) {
 				new DummyAxleGearInfo(container);
 			}
-			
-			if (data.BusAuxiliaries != null) {
-				AddBEVBusAuxiliaries(data, container, es, em);
+
+			var dcdc = new DCDCConverter(container, data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+            if (data.BusAuxiliaries != null) {
+				AddBEVBusAuxiliaries(data, container, es, em, dcdc);
 			}
 			else {
-				AddElectricAuxiliaries(data, container, es, null);
+				AddElectricAuxiliaries(data, container, es, null,dcdc);
 			}
 
 			return container;
@@ -1668,6 +1655,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 			new DummyEngineInfo(container);
 
+			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
 			if (data.BusAuxiliaries != null) {
 				if (!data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
 					throw new VectoException("BusAux must be supplied from REESS!");
@@ -1677,15 +1665,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var busAux = new BusAuxiliariesAdapter(container, auxCfg);
 				var electricStorage = new NoBattery(container);
 				busAux.ElectricStorage = electricStorage;
-				var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+
 				busAux.DCDCConverter = dcdc;
 				es.Connect(dcdc);
 				em.BusAux = busAux;
-			} else {
-				AddElectricAuxiliaries(data, container, es, cycle);
 			}
 
-			return container;
+			AddElectricAuxiliaries(data, container, es, cycle, dcdc);
+
+            return container;
 		}
 
 		/// <summary>
@@ -1767,6 +1755,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
 
+			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
             if (data.BusAuxiliaries != null) {
 				if (container.BusAux is BusAuxiliariesAdapter busAux) {
 					if (!data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
@@ -1776,13 +1765,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					var auxCfg = data.BusAuxiliaries;
 					var electricStorage = new NoBattery(container);
 					busAux.ElectricStorage = electricStorage;
-					var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
 					busAux.DCDCConverter = dcdc;
 					es.Connect(dcdc);
 					//em.BusAux = busAux;
 				}
 			} else {
-				AddElectricAuxiliaries(data, container, es, cycle);
+
+                AddElectricAuxiliaries(data, container, es, cycle,dcdc);
 			}
 
 			
@@ -1904,7 +1893,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Brakes(container));
 
 			var pos = data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
-			AddElectricAuxiliaries(data, container, es, null);
+			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+            AddElectricAuxiliaries(data, container, es, null,dcdc);
 			switch (pos) {
 				case PowertrainPosition.BatteryElectricE4:
 					//-->Engine E4
@@ -2001,8 +1991,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(GetRetarder(RetarderType.AxlegearInputRetarder, data.Retarder, container))
 				.AddComponent(gearbox)
 				.AddComponent(em);
-
-			AddElectricAuxiliaries(data, container, es, null);
+			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+            AddElectricAuxiliaries(data, container, es, null, dcdc);
 		}
 
 		/// <summary>
@@ -2198,7 +2188,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(data.GearboxData is null ? null : GetSimpleGearbox(container, data))
 				.AddComponent(GetElectricMachine(data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1,
 					data.ElectricMachinesData, container, es, new SimpleElectricMotorControl()));
-			AddElectricAuxiliaries(data, container, es, null);
+			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+            AddElectricAuxiliaries(data, container, es, null,dcdc);
 			if (data.AxleGearData == null) {
 				new DummyAxleGearInfo(container); // necessary for certain IEPC configurations
 			}
