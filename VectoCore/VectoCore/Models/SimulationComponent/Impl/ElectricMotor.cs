@@ -72,16 +72,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public NewtonMeter GetTorqueForElectricPower(Volt volt, Watt electricPower, PerSecond avgEmSpeed, Second dt, GearshiftPosition gear, bool allowExtrapolation)
 		{
+			if (avgEmSpeed.Abs().IsGreater(ModelData.EfficiencyData.MaxSpeed)) {
+				return null;
+			}
+
+
+
 			var maxTorque = electricPower > 0
 				? GetMaxRecuperationTorque(volt, dt, avgEmSpeed, gear)
 				: GetMaxDriveTorque(volt, dt, avgEmSpeed, gear);
 			var tqEmMap = ModelData.EfficiencyData.EfficiencyMapLookupTorque(volt, electricPower, avgEmSpeed, maxTorque, gear);
+			
 			if (tqEmMap == null) {
 				return null;
 			}
 
 			var emSpeed = avgEmSpeed * 2 - PreviousState.EMSpeed;
-
+			
 			var tqInertia = Formulas.InertiaPower(emSpeed, PreviousState.EMSpeed, ModelData.Inertia, dt) / avgEmSpeed;
 			var tqEm = tqEmMap + tqInertia;
 			var tqDt = ConvertEmTorqueToDrivetrain(avgEmSpeed, tqEm, allowExtrapolation);
