@@ -18,8 +18,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		{
 			switch (dataProvider) {
 				case IVTPEngineeringInputDataProvider vtpProvider when vtpProvider.JobInputData.Vehicle.VehicleCategory.IsLorry():
-					throw new NotImplementedException();
-					//RunDataFactory = new EngineeringVTPModeVectoRunDataFactoryLorries(vtpProvider);
+					RunDataFactory = new EngineeringVTPModeVectoRunDataFactoryLorries(vtpProvider);
 					return;
 				case IVTPEngineeringInputDataProvider vtpProvider when vtpProvider.JobInputData.Vehicle.VehicleCategory.IsBus():
 					throw new NotImplementedException();
