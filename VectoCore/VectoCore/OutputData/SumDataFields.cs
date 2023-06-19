@@ -640,13 +640,13 @@ namespace TUGraz.VectoCore.OutputData
 			{ CO2_KM, SumFunc((r, m) 
 				=> m.CorrectedModalData.KilogramCO2PerMeter.ConvertToGrammPerKiloMeter(), ModalResultField.dist) },
 			{ CO2_TKM, SumFunc((r, m) 
-				=> r.VehicleData?.Loading == null || r.VehicleData.Loading.IsEqual(0) ?
+				=> r.VehicleData ?.Loading == null || r.VehicleData.Loading.IsEqual(0) || m.Distance.IsEqual(0) ?
 					null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.Loading).ConvertToGrammPerTonKilometer(), ModalResultField.dist) },
 			{ CO2_M3KM, SumFunc((r, m)
-				=> r.VehicleData?.CargoVolume == null || r.VehicleData.CargoVolume.IsEqual(0) ?
+				=> r.VehicleData?.CargoVolume == null || r.VehicleData.CargoVolume.IsEqual(0) || m.Distance.IsEqual(0) ?
 					null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.CargoVolume).ConvertToGrammPerCubicMeterKiloMeter(), ModalResultField.dist) },
 			{ CO2_PKM, SumFunc((r, m)
-				=> r.VehicleData?.PassengerCount == null ?
+				=> r.VehicleData?.PassengerCount == null || m.Distance.IsEqual(0) ?
 					null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.PassengerCount.Value).ConvertToGrammPerKiloMeter(), ModalResultField.dist) },
 
 			// electric consumption

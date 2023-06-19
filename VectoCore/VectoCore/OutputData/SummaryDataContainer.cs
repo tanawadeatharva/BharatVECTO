@@ -1047,7 +1047,7 @@ namespace TUGraz.VectoCore.OutputData
 				var auxTechCol = string.Format(SumDataFields.AUX_TECH_FORMAT, aux.Key);
 				if (Table.Columns.Contains(auxTechCol)) {
 					row[auxTechCol] = runData.Aux
-						.First(x => x.ID.Equals(aux.Key, StringComparison.InvariantCultureIgnoreCase))
+						.FirstOrDefault(x => x.ID.Equals(aux.Key, StringComparison.InvariantCultureIgnoreCase))?
 						.Technology.Join("; ");
 				}
 			}
