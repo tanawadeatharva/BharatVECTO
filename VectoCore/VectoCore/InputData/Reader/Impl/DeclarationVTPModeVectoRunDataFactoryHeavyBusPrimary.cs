@@ -47,7 +47,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                 vehicle.VehicleCategory, vehicle.AxleConfiguration, vehicle.Articulated);
 
             Driverdata = DataAdapter.CreateBusDriverData(Segment, vehicle.VehicleType, vehicle.ArchitectureID, vehicle.Components.BusAuxiliaries.PneumaticSupply.CompressorDrive);
-            Driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(Segment.AccelerationFile);
             var tempVehicle = DataAdapter.CreateVehicleData(
                 vehicle, Segment, Segment.Missions.First(),
                 Segment.Missions.First().Loadings.First(), _allowVocational);
