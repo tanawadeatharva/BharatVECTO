@@ -18,14 +18,14 @@ namespace TUGraz.VectoCore.Tests.XML
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
 		
-		const string DirPath = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\";
+		const string DirPath = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/";
 		const string VehicleInterimStageInput = DirPath + "vecto_vehicle-stage_input_full-sample.xml";
 		const string VehicleExemptedInterimStageInput = DirPath + "vecto_vehicle-exempted_input_full-sample.xml";
 		const string VehicleExemptedMandatoryOnly = DirPath + "vecto_vehicle-exempted_input_only_mandatory_entries.xml";
 		const string VehicleComponentsEntriesNullable = DirPath + "vecto_vehicle-stage_input_only_component_nullable_entries.xml";
 		const string VehicleAirdragStandardValue = DirPath + "vecto_vehicle-stage_input_only_mandatory_standard_value_airdrag.xml";
 
-		const string ValdiationDirPath = @"TestData\XML\XMLReaderDeclaration\";
+		const string ValdiationDirPath = @"TestData/XML/XMLReaderDeclaration/";
 		const string ExemptedInputFullSample = ValdiationDirPath + "vecto_vehicle-exempted_input_full-sample.xml";
 		const string ExemptedOnlyCertainEntries01 = ValdiationDirPath + "vecto_vehicle-exempted_input_only_certain_entries01-sample.xml";
 		const string ExemptedOnlyCertainEntries02 = ValdiationDirPath + "vecto_vehicle-exempted_input_only_certain_entries02-sample.xml";

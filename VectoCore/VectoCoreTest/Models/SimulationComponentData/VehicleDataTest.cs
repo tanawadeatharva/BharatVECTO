@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 	[Parallelizable(ParallelScope.All)]
 	public class VehicleDataTest
 	{
-		private const string VehicleDataFile = @"TestData\Components\24t Coach.vveh";
+		private const string VehicleDataFile = @"TestData/Components/24t Coach.vveh";
 
 		[TestCase]
 		public void ReadVehicleFileTest()

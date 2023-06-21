@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 
 		private const string Optional_TESTS_DIR =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\WithoutOptionalEntries";
+			@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/WithoutOptionalEntries";
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()

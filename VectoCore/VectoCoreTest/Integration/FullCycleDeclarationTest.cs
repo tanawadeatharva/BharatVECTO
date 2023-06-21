@@ -51,19 +51,19 @@ namespace TUGraz.VectoCore.Tests.Integration
 	public class FullCycleDeclarationTest
 	{
 		public const string LongHaulTruckDeclarationJob =
-			@"TestData\Integration\DeclarationMode\40t Truck\40t_Long_Haul_Truck.vecto";
+			@"TestData/Integration/DeclarationMode/40t Truck/40t_Long_Haul_Truck.vecto";
 
 		public const string DeliveryTruckDeclarationJob =
-			@"TestData\Integration\DeclarationMode\12t Truck\12t Delivery Truck.vecto";
+			@"TestData/Integration/DeclarationMode/12t Truck/12t Delivery Truck.vecto";
 
 		public const string DeliveryTruck8GearDeclarationJob =
-			@"TestData\Integration\DeclarationMode\12t Truck\12t Delivery Truck_8gear.vecto";
+			@"TestData/Integration/DeclarationMode/12t Truck/12t Delivery Truck_8gear.vecto";
 
 		public const string Class9RigidTruckPTOJob =
-			@"TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Class9_RigidTruck_DECL.vecto";
+			@"TestData/Integration/DeclarationMode/Class9_RigidTruck_6x2/Class9_RigidTruck_DECL.vecto";
 
 		public const string Class5TractorDeclPrimaryRetarder =
-			@"TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Class5_Tractor_DECL_primRet.vecto";
+			@"TestData/Integration/DeclarationMode/Class5_Tractor_4x2/Class5_Tractor_DECL_primRet.vecto";
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()

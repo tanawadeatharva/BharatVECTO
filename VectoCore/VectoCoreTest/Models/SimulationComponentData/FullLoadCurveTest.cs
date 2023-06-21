@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 	[Parallelizable(ParallelScope.All)]
 	public class FullLoadCurveTest
 	{
-		private const string CoachEngineFLD = @"TestData\Components\24t Coach.vfld";
+		private const string CoachEngineFLD = @"TestData/Components/24t Coach.vfld";
 		private const double Tolerance = 0.0001;
 
 		public static List<string> LogList = new List<string>();
@@ -272,7 +272,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public void Test_FileRead_WrongFileFormat_InsufficientColumns()
 		{
 			AssertHelper.Exception<VectoException>(
-				() => FullLoadCurveReader.ReadFromFile(@"TestData\Components\FullLoadCurve insufficient columns.vfld"),
+				() => FullLoadCurveReader.ReadFromFile(@"TestData/Components/FullLoadCurve insufficient columns.vfld"),
 				"ERROR while reading FullLoadCurve File: Engine FullLoadCurve Data File must consist of at least 3 columns.");
 		}
 
@@ -290,10 +290,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			target.Parameters.Add(new MethodCallParameter("${level}"));
 			target.Parameters.Add(new MethodCallParameter("${message}"));
 			SimpleConfigurator.ConfigureForTargetLogging(target, LogLevel.Warn);
-			FullLoadCurveReader.ReadFromFile(@"TestData\Components\FullLoadCurve wrong header.vfld");
+			FullLoadCurveReader.ReadFromFile(@"TestData/Components/FullLoadCurve wrong header.vfld");
 			Assert.IsTrue(
 				LogList.Contains(
-					"FullLoadCurve: Header Line is not valid. Expected: \'engine speed, full load torque, motoring torque\', Got: \'n, Mfull, Mdrag, PT1\'. Falling back to column index."),
+					"FullLoadCurve: Header Line is not valid. Expected: 'engine speed, full load torque, motoring torque', Got: 'n, Mfull, Mdrag, PT1'. Falling back to column index."),
 				string.Join("\n", LogList));
 			LogList.Clear();
 		}
@@ -309,7 +309,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestCase]
 		public void Test_FileRead_NoHeader()
 		{
-			var curve = FullLoadCurveReader.ReadFromFile(@"TestData\Components\FullLoadCurve no header.vfld");
+			var curve = FullLoadCurveReader.ReadFromFile(@"TestData/Components/FullLoadCurve no header.vfld");
 			var result = curve.FullLoadStationaryTorque(1.SI<PerSecond>());
 			Assert.AreNotEqual(result.Value(), 0.0);
 		}
@@ -321,7 +321,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public void Test_FileRead_InsufficientEntries()
 		{
 			AssertHelper.Exception<VectoException>(
-				() => FullLoadCurveReader.ReadFromFile(@"TestData\Components\FullLoadCurve insufficient entries.vfld"),
+				() => FullLoadCurveReader.ReadFromFile(@"TestData/Components/FullLoadCurve insufficient entries.vfld"),
 				"ERROR while reading FullLoadCurve File: FullLoadCurve must consist of at least two lines with numeric values (below file header)");
 		}
 
@@ -331,22 +331,22 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var engineData = new CombustionEngineData {
 				FullLoadCurves =
 					new Dictionary<uint, EngineFullLoadCurve>() {
-						{ 0, FullLoadCurveReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") },
-						{ 1, FullLoadCurveReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") }
+						{ 0, FullLoadCurveReader.ReadFromFile(@"TestData/Components/12t Delivery Truck.vfld") },
+						{ 1, FullLoadCurveReader.ReadFromFile(@"TestData/Components/12t Delivery Truck.vfld") }
 					},
 				IdleSpeed = 560.RPMtoRad()
 			};
 
 			var gearboxData = new GearboxData();
 			gearboxData.Gears[1] = new GearData {
-				LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
+				LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData/Components/limited.vtlm", 1, "1"),
 				Ratio = 1
 			};
 
 			var axleGearData = new AxleGearData() {
 				AxleGear = new GearData {
 					Ratio = 1,
-					LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
+					LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData/Components/limited.vtlm", 1, "1"),
 				}
 			};
 

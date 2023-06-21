@@ -42,12 +42,12 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration.PrimaryBus;
 public class PrimaryBusSimulation
 {
 
-	private const string BASE_DIR = @"TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\";
+	private const string BASE_DIR = @"TestData/Integration/DeclarationMode/2nd_AmendmDeclMode/";
 
-	private const string BASE_DIR_COMPLETED = @"TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\CompletedBus";
+	private const string BASE_DIR_COMPLETED = @"TestData/Integration/DeclarationMode/2nd_AmendmDeclMode/CompletedBus";
 
-	private const string BASE_DIR_FACTOR_METHOD_MODEL_DATA = @"TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\CompletedBus\FactorMethod";
-    private const string BASE_DIR_VIF = @"TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\CompletedBus\VIF";
+	private const string BASE_DIR_FACTOR_METHOD_MODEL_DATA = @"TestData/Integration/DeclarationMode/2nd_AmendmDeclMode/CompletedBus/FactorMethod";
+    private const string BASE_DIR_VIF = @"TestData/Integration/DeclarationMode/2nd_AmendmDeclMode/CompletedBus/VIF";
 	private ThreadLocal<StandardKernel> _kernel;
 
 	private StandardKernel Kernel => _kernel.Value;
@@ -128,37 +128,37 @@ public class PrimaryBusSimulation
     TestCase(@"PrimaryBus/S-HEV/PrimaryCoach_S2_Base_AMT.xml", 0, TestName = "2nd Amendment PrimaryBus Coach S-HEV S2 Base"),
 	TestCase(@"PrimaryBus/S-HEV/PrimaryCityBus_IEPC-S_Base.xml", 0, TestName = "2nd Amendment PrimaryBus CityBus S-HEV IEPC Base"),
 
-    TestCase(@"PrimaryBus/exempted/exempted_primary_heavyBus.xml", 0, TestName = "2nd Amendment PrimaryBus Exempted"),
+    TestCase(@"PrimaryBus/Exempted/exempted_primary_heavyBus.xml", 0, TestName = "2nd Amendment PrimaryBus Exempted"),
 
-	TestCase(@"FactorMethod\Conventional\P31_32_nonSmartES_elecFan_elecSteer.xml", 0, TestName = "2nd Amendment PrimaryBus FM Conventional nonSmartES_elFan_elSteer"),
-	TestCase(@"FactorMethod\Conventional\P31_32_nonSmartES_mechFan_mechSteer.xml", 0, TestName = "2nd Amendment PrimaryBus FM Conventional nonSmartES_mechFan_mechSteer"),
-	TestCase(@"FactorMethod\Conventional\P31_32_SmartES_elecFan_elecSteer.xml", 0, TestName = "2nd Amendment PrimaryBus FM Conventional SmartES_elFan_elSteer"),
-	TestCase(@"FactorMethod\Conventional\P31_32_SmartES_mechFan_mechSteer.xml", 0, TestName = "2nd Amendment PrimaryBus FM Conventional SmartES_mechFan_mechSteer"),
+	TestCase(@"FactorMethod/Conventional/P31_32_nonSmartES_elecFan_elecSteer.xml", 0, TestName = "2nd Amendment PrimaryBus FM Conventional nonSmartES_elFan_elSteer"),
+	TestCase(@"FactorMethod/Conventional/P31_32_nonSmartES_mechFan_mechSteer.xml", 0, TestName = "2nd Amendment PrimaryBus FM Conventional nonSmartES_mechFan_mechSteer"),
+	TestCase(@"FactorMethod/Conventional/P31_32_SmartES_elecFan_elecSteer.xml", 0, TestName = "2nd Amendment PrimaryBus FM Conventional SmartES_elFan_elSteer"),
+	TestCase(@"FactorMethod/Conventional/P31_32_SmartES_mechFan_mechSteer.xml", 0, TestName = "2nd Amendment PrimaryBus FM Conventional SmartES_mechFan_mechSteer"),
 
 
-	TestCase(@"FactorMethod\IEPC\P31_32_IEPC_EDP.xml", 0, TestName = "2nd Amendment PrimaryBus FM IEPC EDP"),
-	TestCase(@"FactorMethod\IEPC\P31_32_IEPC_FESG.xml", 0, TestName = "2nd Amendment PrimaryBus FM IEPC FESG"),
+	TestCase(@"FactorMethod/IEPC/P31_32_IEPC_EDP.xml", 0, TestName = "2nd Amendment PrimaryBus FM IEPC EDP"),
+	TestCase(@"FactorMethod/IEPC/P31_32_IEPC_FESG.xml", 0, TestName = "2nd Amendment PrimaryBus FM IEPC FESG"),
 
-	TestCase(@"FactorMethod\IHPC\P31_32_IHPC_nonSmartES_elec_SP_elec_Fan.xml", 0, TestName = "2nd Amendment PrimaryBus FM IHPC nonSmartES_elFan_elSteer"),
-	TestCase(@"FactorMethod\IHPC\P31_32_IHPC_nonSmartES_elec_SP_mech_Fan.xml", 0, TestName = "2nd Amendment PrimaryBus FM IHPC nonSmartES_mechFan_elSteer"),
-	TestCase(@"FactorMethod\IHPC\P31_32_IHPC_nonSmartES_mechAux.xml", 0, TestName = "2nd Amendment PrimaryBus FM IHPC nonSmartES_mechAux"),
-	TestCase(@"FactorMethod\IHPC\P31_32_IHPC_SmartES_elec_SP_elec_Fan.xml", 0, TestName = "2nd Amendment PrimaryBus FM IHPC SmartES_elFan_ElSteer"),
+	TestCase(@"FactorMethod/IHPC/P31_32_IHPC_nonSmartES_elec_SP_elec_Fan.xml", 0, TestName = "2nd Amendment PrimaryBus FM IHPC nonSmartES_elFan_elSteer"),
+	TestCase(@"FactorMethod/IHPC/P31_32_IHPC_nonSmartES_elec_SP_mech_Fan.xml", 0, TestName = "2nd Amendment PrimaryBus FM IHPC nonSmartES_mechFan_elSteer"),
+	TestCase(@"FactorMethod/IHPC/P31_32_IHPC_nonSmartES_mechAux.xml", 0, TestName = "2nd Amendment PrimaryBus FM IHPC nonSmartES_mechAux"),
+	TestCase(@"FactorMethod/IHPC/P31_32_IHPC_SmartES_elec_SP_elec_Fan.xml", 0, TestName = "2nd Amendment PrimaryBus FM IHPC SmartES_elFan_ElSteer"),
 
-	TestCase(@"FactorMethod\PEV\P31_32_E2_AMT_EDP.xml", 0, TestName = "2nd Amendment PrimaryBus FM PEV E2 EDP"),
-	TestCase(@"FactorMethod\PEV\P31_32_E2_AMT_FESG.xml", 0, TestName = "2nd Amendment PrimaryBus FM PEV E2 FESG"),
+	TestCase(@"FactorMethod/PEV/P31_32_E2_AMT_EDP.xml", 0, TestName = "2nd Amendment PrimaryBus FM PEV E2 EDP"),
+	TestCase(@"FactorMethod/PEV/P31_32_E2_AMT_FESG.xml", 0, TestName = "2nd Amendment PrimaryBus FM PEV E2 FESG"),
 
-	TestCase(@"FactorMethod\P-HEV\P1-HEV\P31_32_P1_HEV_AT_nonSmart_ES_elec_SP_elec_PS.xml", 0, TestName = "2nd Amendment PrimaryBus FM P-HEV P1 nonSmartES_elFan_elPS"),
-	TestCase(@"FactorMethod\P-HEV\P1-HEV\P31_32_P1_HEV_AT_nonSmart_ES_mech_Aux.xml", -1, TestName = "2nd Amendment PrimaryBus FM P-HEV P1 nonSmartES_mechAux"),
-	TestCase(@"FactorMethod\P-HEV\P1-HEV\P31_32_P1_HEV_AT_Smart_ES_elec_SP_elec_PS.xml", 0, TestName = "2nd Amendment PrimaryBus FM P-HEV P1 SmartES_elPS_elSteer"),
+	TestCase(@"FactorMethod/P-HEV/P1-HEV/P31_32_P1_HEV_AT_nonSmart_ES_elec_SP_elec_PS.xml", 0, TestName = "2nd Amendment PrimaryBus FM P-HEV P1 nonSmartES_elFan_elPS"),
+	TestCase(@"FactorMethod/P-HEV/P1-HEV/P31_32_P1_HEV_AT_nonSmart_ES_mech_Aux.xml", -1, TestName = "2nd Amendment PrimaryBus FM P-HEV P1 nonSmartES_mechAux"),
+	TestCase(@"FactorMethod/P-HEV/P1-HEV/P31_32_P1_HEV_AT_Smart_ES_elec_SP_elec_PS.xml", 0, TestName = "2nd Amendment PrimaryBus FM P-HEV P1 SmartES_elPS_elSteer"),
 	
-	TestCase(@"FactorMethod\P-HEV\P2-HEV\P31_32_P2_HEV_nonSmartES_elec_SP_elec_Fan.xml", 0, TestName = "2nd Amendment PrimaryBus FM P-HEV P2 nonSmartES_elFan_elSteer"),
-	TestCase(@"FactorMethod\P-HEV\P2-HEV\P31_32_P2_HEV_nonSmartES_elec_SP_mech_Fan.xml", 0, TestName = "2nd Amendment PrimaryBus FM P-HEV P2 nonSmartES_mechFan_elSP"),
-	TestCase(@"FactorMethod\P-HEV\P2-HEV\P31_32_P2_HEV_nonSmartES_mechAux.xml", 0, TestName = "2nd Amendment PrimaryBus FM P-HEV P2 nonSmartES_mechAux"),
-	TestCase(@"FactorMethod\P-HEV\P2-HEV\P31_32_P2_HEV_SmartES_elec_SP_elec_Fan.xml", 0, TestName = "2nd Amendment PrimaryBus FM P-HEV P2 SmartES_elFan_elSteer"),
+	TestCase(@"FactorMethod/P-HEV/P2-HEV/P31_32_P2_HEV_nonSmartES_elec_SP_elec_Fan.xml", 0, TestName = "2nd Amendment PrimaryBus FM P-HEV P2 nonSmartES_elFan_elSteer"),
+	TestCase(@"FactorMethod/P-HEV/P2-HEV/P31_32_P2_HEV_nonSmartES_elec_SP_mech_Fan.xml", 0, TestName = "2nd Amendment PrimaryBus FM P-HEV P2 nonSmartES_mechFan_elSP"),
+	TestCase(@"FactorMethod/P-HEV/P2-HEV/P31_32_P2_HEV_nonSmartES_mechAux.xml", 0, TestName = "2nd Amendment PrimaryBus FM P-HEV P2 nonSmartES_mechAux"),
+	TestCase(@"FactorMethod/P-HEV/P2-HEV/P31_32_P2_HEV_SmartES_elec_SP_elec_Fan.xml", 0, TestName = "2nd Amendment PrimaryBus FM P-HEV P2 SmartES_elFan_elSteer"),
 
     // Fails on almost every cycle except suburban
-	TestCase(@"FactorMethod\S-HEV\S2-HEV\P31_32_S2_HEV_nonSmartES_elecSP_mechFan.xml", 0, TestName = "2nd Amendment PrimaryBus FM S-HEV S2 nonSmartES_elecSP_mechFan 0"),
-    TestCase(@"FactorMethod\S-HEV\S2-HEV\P31_32_S2_HEV_nonSmartES_elecSP_mechFan.xml", 4, TestName = "2nd Amendment PrimaryBus FM S-HEV S2 nonSmartES_elecSP_mechFan 4"),
+	TestCase(@"FactorMethod/S-HEV/S2-HEV/P31_32_S2_HEV_nonSmartES_elecSP_mechFan.xml", 0, TestName = "2nd Amendment PrimaryBus FM S-HEV S2 nonSmartES_elecSP_mechFan 0"),
+    TestCase(@"FactorMethod/S-HEV/S2-HEV/P31_32_S2_HEV_nonSmartES_elecSP_mechFan.xml", 4, TestName = "2nd Amendment PrimaryBus FM S-HEV S2 nonSmartES_elecSP_mechFan 4"),
 	]
 
 
@@ -168,26 +168,26 @@ public class PrimaryBusSimulation
 	}
 	
 	[
-	TestCase(@"CompletedBus\VIF\primary_heavyBus group41_nonSmart.RSLT_VIF.xml", @"CompletedBus\Conventional_completedBus_2.xml",                1,                 TestName = "2nd Amendment CompletedBus Conventional"),
-	TestCase(@"CompletedBus\VIF\PEV_primaryBus_AMT_E2.RSLT_VIF.xml",             @"CompletedBus\PEV_completedBus_2.xml",                        -1,                 TestName = "2nd Amendment CompletedBus PEV E2"),
-	TestCase(@"CompletedBus\VIF\PrimaryCoach_E2_Base_AMT.RSLT_VIF.xml",          @"CompletedBus\PEV_completedBus_2.xml",                         1,                 TestName = "2nd Amendment CompletedBus Coach PEV E2"),
-	TestCase(@"CompletedBus\VIF\PrimaryCityBus_IEPC_Base.RSLT_VIF.xml",          @"CompletedBus\PEV_completedBus_2.xml",                         1,                 TestName = "2nd Amendment CompletedBus CityBus PEV IEPC"),
-	TestCase(@"CompletedBus\VIF\PrimaryCoach_P2_HEV_Base_AMT.RSLT_VIF.xml",      @"CompletedBus\HEV_completedBus_2.xml",                         1,                 TestName = "2nd Amendment CompletedBus Coach HEV P2"),
-	TestCase(@"CompletedBus\VIF\PrimaryCoach_P2_HEV_AMT_OVC.RSLT_VIF.xml",       @"CompletedBus\HEV_completedBus_2.xml",                         1,                 TestName = "2nd Amendment CompletedBus Coach HEV P2 OVC"),
-	TestCase(@"CompletedBus\VIF\PrimaryCityBus_P1_HEV_Base_AT.RSLT_VIF.xml",     @"CompletedBus\HEV_completedBus_2.xml",                         1,true,    TestName = "2nd Amendment CompletedBus CityBus HEV P1 - fails on complete cycle"),
-	TestCase(@"CompletedBus\VIF\PrimaryCityBus_P1_HEV_Supercap.RSLT_VIF.xml",    @"CompletedBus\HEV_completedBus_2.xml",                         1,false,   TestName = "2nd Amendment CompletedBus CityBus HEV P1 SuperCap"),
-	TestCase(@"CompletedBus\VIF\PrimaryCoach_S2_Base_AMT.RSLT_VIF.xml",          @"CompletedBus\HEV_completedBus_2.xml",                         1,                 TestName = "2nd Amendment CompletedBus Coach HEV S2 OVC"),
-	TestCase(@"CompletedBus\VIF\PrimaryCityBus_IEPC-S_Base.RSLT_VIF.xml",        @"CompletedBus\HEV_completedBus_2.xml",                         1,                 TestName = "2nd Amendment CompletedBus CityBus HEV IEPC-S"),
-	TestCase(@"CompletedBus\VIF\exempted_primary_heavyBus.RSLT_VIF.xml",         @"CompletedBus\exempted_completedBus_input_full.xml",           1,                 TestName = "2nd Amendment CompletedBus Exempted"),
-	TestCase(@"CompletedBus\VIF\PrimaryCityBus_IHPC.RSLT_VIF.xml",               @"CompletedBus\HEV_completedBus_2.xml",                        -1,                 TestName="2nd Amendment Completed Bus IHPC"),
+	TestCase(@"CompletedBus/VIF/primary_heavyBus group41_nonSmart.RSLT_VIF.xml", @"CompletedBus/Conventional_completedBus_2.xml",                1,                 TestName = "2nd Amendment CompletedBus Conventional"),
+	TestCase(@"CompletedBus/VIF/PEV_primaryBus_AMT_E2.RSLT_VIF.xml",             @"CompletedBus/PEV_completedBus_2.xml",                        -1,                 TestName = "2nd Amendment CompletedBus PEV E2"),
+	TestCase(@"CompletedBus/VIF/PrimaryCoach_E2_Base_AMT.RSLT_VIF.xml",          @"CompletedBus/PEV_completedBus_2.xml",                         1,                 TestName = "2nd Amendment CompletedBus Coach PEV E2"),
+	TestCase(@"CompletedBus/VIF/PrimaryCityBus_IEPC_Base.RSLT_VIF.xml",          @"CompletedBus/PEV_completedBus_2.xml",                         1,                 TestName = "2nd Amendment CompletedBus CityBus PEV IEPC"),
+	TestCase(@"CompletedBus/VIF/PrimaryCoach_P2_HEV_Base_AMT.RSLT_VIF.xml",      @"CompletedBus/HEV_completedBus_2.xml",                         1,                 TestName = "2nd Amendment CompletedBus Coach HEV P2"),
+	TestCase(@"CompletedBus/VIF/PrimaryCoach_P2_HEV_AMT_OVC.RSLT_VIF.xml",       @"CompletedBus/HEV_completedBus_2.xml",                         1,                 TestName = "2nd Amendment CompletedBus Coach HEV P2 OVC"),
+	TestCase(@"CompletedBus/VIF/PrimaryCityBus_P1_HEV_Base_AT.RSLT_VIF.xml",     @"CompletedBus/HEV_completedBus_2.xml",                         1,true,    TestName = "2nd Amendment CompletedBus CityBus HEV P1 - fails on complete cycle"),
+	TestCase(@"CompletedBus/VIF/PrimaryCityBus_P1_HEV_Supercap.RSLT_VIF.xml",    @"CompletedBus/HEV_completedBus_2.xml",                         1,false,   TestName = "2nd Amendment CompletedBus CityBus HEV P1 SuperCap"),
+	TestCase(@"CompletedBus/VIF/PrimaryCoach_S2_Base_AMT.RSLT_VIF.xml",          @"CompletedBus/HEV_completedBus_2.xml",                         1,                 TestName = "2nd Amendment CompletedBus Coach HEV S2 OVC"),
+	TestCase(@"CompletedBus/VIF/PrimaryCityBus_IEPC-S_Base.RSLT_VIF.xml",        @"CompletedBus/HEV_completedBus_2.xml",                         1,                 TestName = "2nd Amendment CompletedBus CityBus HEV IEPC-S"),
+	TestCase(@"CompletedBus/VIF/exempted_primary_heavyBus.RSLT_VIF.xml",         @"CompletedBus/exempted_completedBus_input_full.xml",           1,                 TestName = "2nd Amendment CompletedBus Exempted"),
+	TestCase(@"CompletedBus/VIF/PrimaryCityBus_IHPC.RSLT_VIF.xml",               @"CompletedBus/HEV_completedBus_2.xml",                        -1,                 TestName="2nd Amendment Completed Bus IHPC"),
 
-	TestCase(@"FactorMethod\VIF\P31_32_nonSmartES_elecFan_elecSteer.RSLT_VIF.xml", @"FactorMethod\Conventional\Conventional_32e_prim_Dim_HVAC.xml", 0,
+	TestCase(@"FactorMethod/VIF/P31_32_nonSmartES_elecFan_elecSteer.RSLT_VIF.xml", @"FactorMethod/Conventional/Conventional_32e_prim_Dim_HVAC.xml", 0,
 		TestName = "2nd Amendment CompletedBus Conventional nonSmartES_elFan_elSteer 32e_prim_Dim_HVAC"),
-	TestCase(@"FactorMethod\VIF\P31_32_nonSmartES_mechFan_mechSteer.RSLT_VIF.xml", @"FactorMethod\Conventional\Conventional_32e_spez_Dim_HVAC.xml",  0,
+	TestCase(@"FactorMethod/VIF/P31_32_nonSmartES_mechFan_mechSteer.RSLT_VIF.xml", @"FactorMethod/Conventional/Conventional_32e_spez_Dim_HVAC.xml",  0,
 		TestName = "2nd Amendment CompletedBus Conventional nonSmartES_mechFan_mechSteer 32e_spez_Dim_HVAC.xml"),
-	TestCase(@"FactorMethod\VIF\P31_32_SmartES_elecFan_elecSteer.RSLT_VIF.xml", @"FactorMethod\Conventional\Conventional_32e_prim_Dim_HVAC.xml",0,
+	TestCase(@"FactorMethod/VIF/P31_32_SmartES_elecFan_elecSteer.RSLT_VIF.xml", @"FactorMethod/Conventional/Conventional_32e_prim_Dim_HVAC.xml",0,
 		TestName = "2nd Amendment CompletedBus Conventional SmartES_elFan_elSteer 32e_prim_Dim_HVAC"),
-	TestCase(@"FactorMethod\VIF\P31_32_SmartES_mechFan_mechSteer.RSLT_VIF.xml", @"FactorMethod\Conventional\Conventional_32e_spez_Dim_HVAC.xml",  0,
+	TestCase(@"FactorMethod/VIF/P31_32_SmartES_mechFan_mechSteer.RSLT_VIF.xml", @"FactorMethod/Conventional/Conventional_32e_spez_Dim_HVAC.xml",  0,
 		TestName = "2nd Amendment CompletedBus Conventional SmartES_mechFan_mechSteer 32e_spez_Dim_HVAC"),
 
     ]
@@ -245,7 +245,7 @@ public class PrimaryBusSimulation
         TestCase(@"PrimaryBus/S-HEV/PrimaryCoach_S2_Base_AMT.xml", @"HEV_completedBus_2.xml", 0, TestName = "2nd Amendment SingleBus Coach S-HEV S2 Base"),
 		TestCase(@"PrimaryBus/S-HEV/PrimaryCityBus_IEPC-S_Base.xml", @"HEV_completedBus_2.xml", 0, TestName = "2nd Amendment SingleBus CityBus S-HEV IEPC Base"),
 
-		//TestCase(@"PrimaryBus/exempted/exempted_primary_heavyBus.xml", @"exempted_completedBus_input_full.xml", 0, TestName = "2nd Amendment SingleBus Exempted"), // exempted single run not supported!
+		//TestCase(@"PrimaryBus/Exempted/exempted_primary_heavyBus.xml", @"exempted_completedBus_input_full.xml", 0, TestName = "2nd Amendment SingleBus Exempted"), // exempted single run not supported!
 
 	]
 	public void SingleBusSimulationTest(string jobFile, string completed, int runIdx)
@@ -269,56 +269,56 @@ public class PrimaryBusSimulation
 	//	TestName = "2nd Amendment FactorMethodRunData CityBus HEV P1 SuperCap"),
 
 
-	TestCase(@"FactorMethod\Conventional\P31_32_nonSmartES_elecFan_elecSteer.xml", @"FactorMethod\Conventional\Conventional_32e_prim_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_nonSmartES_elecFan_elecSteer.RSLT_VIF.xml", CycleCO, LowL, 
+	TestCase(@"FactorMethod/Conventional/P31_32_nonSmartES_elecFan_elecSteer.xml", @"FactorMethod/Conventional/Conventional_32e_prim_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_nonSmartES_elecFan_elecSteer.RSLT_VIF.xml", CycleCO, LowL, 
 		TestName = "2nd Amendment FactorMethodRunData Conventional nonSmartES_elFan_elSteer 32e_prim_Dim_HVAC"),
-	TestCase(@"FactorMethod\Conventional\P31_32_nonSmartES_mechFan_mechSteer.xml", @"FactorMethod\Conventional\Conventional_32e_spez_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_nonSmartES_mechFan_mechSteer.RSLT_VIF.xml", CycleCO, LowL, 
+	TestCase(@"FactorMethod/Conventional/P31_32_nonSmartES_mechFan_mechSteer.xml", @"FactorMethod/Conventional/Conventional_32e_spez_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_nonSmartES_mechFan_mechSteer.RSLT_VIF.xml", CycleCO, LowL, 
 		TestName = "2nd Amendment FactorMethodRunData Conventional nonSmartES_mechFan_mechSteer 32e_spez_Dim_HVAC.xml"),
-	TestCase(@"FactorMethod\Conventional\P31_32_SmartES_elecFan_elecSteer.xml", @"FactorMethod\Conventional\Conventional_32e_prim_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_SmartES_elecFan_elecSteer.RSLT_VIF.xml", CycleCO, RefL,
+	TestCase(@"FactorMethod/Conventional/P31_32_SmartES_elecFan_elecSteer.xml", @"FactorMethod/Conventional/Conventional_32e_prim_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_SmartES_elecFan_elecSteer.RSLT_VIF.xml", CycleCO, RefL,
 		TestName = "2nd Amendment FactorMethodRunData Conventional SmartES_elFan_elSteer 32e_prim_Dim_HVAC"),
-	TestCase(@"FactorMethod\Conventional\P31_32_SmartES_mechFan_mechSteer.xml", @"FactorMethod\Conventional\Conventional_32e_spez_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_SmartES_mechFan_mechSteer.RSLT_VIF.xml", CycleCO, RefL, 
+	TestCase(@"FactorMethod/Conventional/P31_32_SmartES_mechFan_mechSteer.xml", @"FactorMethod/Conventional/Conventional_32e_spez_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_SmartES_mechFan_mechSteer.RSLT_VIF.xml", CycleCO, RefL, 
 		TestName = "2nd Amendment FactorMethodRunData Conventional SmartES_mechFan_mechSteer 32e_spez_Dim_HVAC"),
 
 
-	TestCase(@"FactorMethod\IEPC\P31_32_IEPC_EDP.xml", @"FactorMethod\IEPC\IEPC_31a_completed_prim_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_IEPC_EDP.RSLT_VIF.xml", CycleHU, LowL, 
+	TestCase(@"FactorMethod/IEPC/P31_32_IEPC_EDP.xml", @"FactorMethod/IEPC/IEPC_31a_completed_prim_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_IEPC_EDP.RSLT_VIF.xml", CycleHU, LowL, 
 		TestName = "2nd Amendment FactorMethodRunData IEPC EDP prim_Dim_HVAC"),
-	TestCase(@"FactorMethod\IEPC\P31_32_IEPC_FESG.xml", @"FactorMethod\IEPC\IEPC_31a_completed_spez_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_IEPC_FESG.RSLT_VIF.xml", CycleHU, RefL, 
+	TestCase(@"FactorMethod/IEPC/P31_32_IEPC_FESG.xml", @"FactorMethod/IEPC/IEPC_31a_completed_spez_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_IEPC_FESG.RSLT_VIF.xml", CycleHU, RefL, 
 		TestName = "2nd Amendment FactorMethodRunData IEPC FESG spez_Dim_HVAC"),
 
-	TestCase(@"FactorMethod\IHPC\P31_32_IHPC_nonSmartES_elec_SP_elec_Fan.xml", @"FactorMethod\IHPC\IHPC_32e_prim_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_IHPC_nonSmartES_elec_SP_elec_Fan.RSLT_VIF.xml", CycleCO, LowL, 
+	TestCase(@"FactorMethod/IHPC/P31_32_IHPC_nonSmartES_elec_SP_elec_Fan.xml", @"FactorMethod/IHPC/IHPC_32e_prim_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_IHPC_nonSmartES_elec_SP_elec_Fan.RSLT_VIF.xml", CycleCO, LowL, 
 		TestName = "2nd Amendment FactorMethodRunData IHPC nonSmartES_elFan_elSteer prim_Dim_HVAC"),
-	TestCase(@"FactorMethod\IHPC\P31_32_IHPC_nonSmartES_elec_SP_mech_Fan.xml", @"FactorMethod\IHPC\IHPC_32e_spez_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_IHPC_nonSmartES_elec_SP_mech_Fan.RSLT_VIF.xml", CycleCO, LowL, 
+	TestCase(@"FactorMethod/IHPC/P31_32_IHPC_nonSmartES_elec_SP_mech_Fan.xml", @"FactorMethod/IHPC/IHPC_32e_spez_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_IHPC_nonSmartES_elec_SP_mech_Fan.RSLT_VIF.xml", CycleCO, LowL, 
 		TestName = "2nd Amendment FactorMethodRunData IHPC nonSmartES_mechFan_elSteer spez_Dim_HVAC"),
-	TestCase(@"FactorMethod\IHPC\P31_32_IHPC_nonSmartES_mechAux.xml", @"FactorMethod\IHPC\IHPC_32e_prim_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_IHPC_nonSmartES_mechAux.RSLT_VIF.xml", CycleCO, LowL,
+	TestCase(@"FactorMethod/IHPC/P31_32_IHPC_nonSmartES_mechAux.xml", @"FactorMethod/IHPC/IHPC_32e_prim_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_IHPC_nonSmartES_mechAux.RSLT_VIF.xml", CycleCO, LowL,
 		TestName = "2nd Amendment FactorMethodRunData IHPC nonSmartES_mechAux prim_Dim_HVAC"),
-	TestCase(@"FactorMethod\IHPC\P31_32_IHPC_SmartES_elec_SP_elec_Fan.xml", @"FactorMethod\IHPC\IHPC_32e_spez_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_IHPC_SmartES_elec_SP_elec_Fan.RSLT_VIF.xml", CycleCO, LowL,
+	TestCase(@"FactorMethod/IHPC/P31_32_IHPC_SmartES_elec_SP_elec_Fan.xml", @"FactorMethod/IHPC/IHPC_32e_spez_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_IHPC_SmartES_elec_SP_elec_Fan.RSLT_VIF.xml", CycleCO, LowL,
 		TestName = "2nd Amendment FactorMethodRunData IHPC SmartES_elFan_ElSteer spez_Dim_HVAC"),
 
-	TestCase(@"FactorMethod\PEV\P31_32_E2_AMT_EDP.xml", @"FactorMethod\PEV\E2_31a_completed_prim_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_E2_AMT_EDP.RSLT_VIF.xml", CycleHU, LowL, 
+	TestCase(@"FactorMethod/PEV/P31_32_E2_AMT_EDP.xml", @"FactorMethod/PEV/E2_31a_completed_prim_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_E2_AMT_EDP.RSLT_VIF.xml", CycleHU, LowL, 
 		TestName = "2nd Amendment FactorMethodRunData PEV E2 EDP prim_Dim_HVAC"),
-	TestCase(@"FactorMethod\PEV\P31_32_E2_AMT_FESG.xml", @"FactorMethod\PEV\E2_31a_completed_spez_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_E2_AMT_FESG.RSLT_VIF.xml", CycleHU, LowL, 
+	TestCase(@"FactorMethod/PEV/P31_32_E2_AMT_FESG.xml", @"FactorMethod/PEV/E2_31a_completed_spez_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_E2_AMT_FESG.RSLT_VIF.xml", CycleHU, LowL, 
 		TestName = "2nd Amendment FactorMethodRunData PEV E2 FESG spez_Dim_HVAC"),
 
-	TestCase(@"FactorMethod\P-HEV\P1-HEV\P31_32_P1_HEV_AT_nonSmart_ES_elec_SP_elec_PS.xml", @"FactorMethod\P-HEV\P1-HEV\P1_HEV_32e_prim_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_P1_HEV_AT_nonSmart_ES_elec_SP_elec_PS.RSLT_VIF.xml", CycleCO, LowL, 
+	TestCase(@"FactorMethod/P-HEV/P1-HEV/P31_32_P1_HEV_AT_nonSmart_ES_elec_SP_elec_PS.xml", @"FactorMethod/P-HEV/P1-HEV/P1_HEV_32e_prim_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_P1_HEV_AT_nonSmart_ES_elec_SP_elec_PS.RSLT_VIF.xml", CycleCO, LowL, 
 		TestName = "2nd Amendment FactorMethodRunData P-HEV P1 nonSmartES_elFan_elPS prim_Dim_HVAC"),
-	TestCase(@"FactorMethod\P-HEV\P1-HEV\P31_32_P1_HEV_AT_nonSmart_ES_mech_Aux.xml", @"FactorMethod\P-HEV\P1-HEV\P1_HEV_32e_spez_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_P1_HEV_AT_nonSmart_ES_mech_Aux.RSLT_VIF.xml", CycleCO, LowL, 
+	TestCase(@"FactorMethod/P-HEV/P1-HEV/P31_32_P1_HEV_AT_nonSmart_ES_mech_Aux.xml", @"FactorMethod/P-HEV/P1-HEV/P1_HEV_32e_spez_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_P1_HEV_AT_nonSmart_ES_mech_Aux.RSLT_VIF.xml", CycleCO, LowL, 
 		TestName = "2nd Amendment FactorMethodRunData P-HEV P1 nonSmartES_mechAux spez_Dim_HVAC"),
-	TestCase(@"FactorMethod\P-HEV\P1-HEV\P31_32_P1_HEV_AT_Smart_ES_elec_SP_elec_PS.xml", @"FactorMethod\P-HEV\P1-HEV\P1_HEV_32e_prim_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_P1_HEV_AT_Smart_ES_elec_SP_elec_PS.RSLT_VIF.xml", CycleCO, LowL, 
+	TestCase(@"FactorMethod/P-HEV/P1-HEV/P31_32_P1_HEV_AT_Smart_ES_elec_SP_elec_PS.xml", @"FactorMethod/P-HEV/P1-HEV/P1_HEV_32e_prim_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_P1_HEV_AT_Smart_ES_elec_SP_elec_PS.RSLT_VIF.xml", CycleCO, LowL, 
 		TestName = "2nd Amendment FactorMethodRunData P-HEV P1 SmartES_elPS_elSteer prim_Dim_HVAC"),
 
-	TestCase(@"FactorMethod\P-HEV\P2-HEV\P31_32_P2_HEV_nonSmartES_elec_SP_elec_Fan.xml", @"FactorMethod\P-HEV\P2-HEV\P2_HEV_32e_prim_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_P2_HEV_nonSmartES_elec_SP_elec_Fan.RSLT_VIF.xml", CycleCO, LowL, 
+	TestCase(@"FactorMethod/P-HEV/P2-HEV/P31_32_P2_HEV_nonSmartES_elec_SP_elec_Fan.xml", @"FactorMethod/P-HEV/P2-HEV/P2_HEV_32e_prim_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_P2_HEV_nonSmartES_elec_SP_elec_Fan.RSLT_VIF.xml", CycleCO, LowL, 
 		TestName = "2nd Amendment FactorMethodRunData P-HEV P2 nonSmartES_elFan_elSteer prim_Dim_HVAC"),
-	TestCase(@"FactorMethod\P-HEV\P2-HEV\P31_32_P2_HEV_nonSmartES_elec_SP_mech_Fan.xml", @"FactorMethod\P-HEV\P2-HEV\P2_HEV_32e_spez_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_P2_HEV_nonSmartES_elec_SP_mech_Fan.RSLT_VIF.xml", CycleCO, LowL, 
+	TestCase(@"FactorMethod/P-HEV/P2-HEV/P31_32_P2_HEV_nonSmartES_elec_SP_mech_Fan.xml", @"FactorMethod/P-HEV/P2-HEV/P2_HEV_32e_spez_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_P2_HEV_nonSmartES_elec_SP_mech_Fan.RSLT_VIF.xml", CycleCO, LowL, 
 		TestName = "2nd Amendment FactorMethodRunData P-HEV P2 nonSmartES_mechFan_elSP spez_Dim_HVAC"),
-	TestCase(@"FactorMethod\P-HEV\P2-HEV\P31_32_P2_HEV_nonSmartES_mechAux.xml", @"FactorMethod\P-HEV\P2-HEV\P2_HEV_32e_prim_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_P2_HEV_nonSmartES_mechAux.RSLT_VIF.xml", CycleCO, LowL,
+	TestCase(@"FactorMethod/P-HEV/P2-HEV/P31_32_P2_HEV_nonSmartES_mechAux.xml", @"FactorMethod/P-HEV/P2-HEV/P2_HEV_32e_prim_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_P2_HEV_nonSmartES_mechAux.RSLT_VIF.xml", CycleCO, LowL,
 		TestName = "2nd Amendment FactorMethodRunData P-HEV P2 nonSmartES_mechAux prim_Dim_HVAC"),
 
-	TestCase(@"FactorMethod\P-HEV\P2-HEV\P31_32_P2_HEV_SmartES_elec_SP_elec_Fan.xml", @"FactorMethod\P-HEV\P2-HEV\P2_HEV_32e_spez_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_P2_HEV_SmartES_elec_SP_elec_Fan.RSLT_VIF.xml", CycleCO, LowL, 
+	TestCase(@"FactorMethod/P-HEV/P2-HEV/P31_32_P2_HEV_SmartES_elec_SP_elec_Fan.xml", @"FactorMethod/P-HEV/P2-HEV/P2_HEV_32e_spez_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_P2_HEV_SmartES_elec_SP_elec_Fan.RSLT_VIF.xml", CycleCO, LowL, 
 		TestName = "2nd Amendment FactorMethodRunData P-HEV P2 SmartES_elFan_elSteer spez_Dim_HVAC"),
 
-	TestCase(@"FactorMethod\P-HEV\P2-HEV\P31_32_P2_HEV_SmartES_elec_SP_elec_Fan.xml", @"FactorMethod\P-HEV\P2-HEV\P2_HEV_32e_spez_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_P2_HEV_SmartES_elec_SP_elec_Fan.RSLT_VIF.xml", CycleCO, LowL,
+	TestCase(@"FactorMethod/P-HEV/P2-HEV/P31_32_P2_HEV_SmartES_elec_SP_elec_Fan.xml", @"FactorMethod/P-HEV/P2-HEV/P2_HEV_32e_spez_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_P2_HEV_SmartES_elec_SP_elec_Fan.RSLT_VIF.xml", CycleCO, LowL,
 		TestName = "2nd Amendment FactorMethodRunData P-HEV P2 SmartES_elFan_elSteer spez_Dim_HVAC"),
 
-	TestCase(@"FactorMethod\S-HEV\S2-HEV\P31_32_S2_HEV_nonSmartES_elecSP_mechFan.xml", @"FactorMethod\S-HEV\S2-HEV\S2_HEV_32e_spec_Dim_HVAC.xml", @"FactorMethod\VIF\P31_32_S2_HEV_nonSmartES_elecSP_mechFan.RSLT_VIF.xml", MissionType.Suburban, LowL,
+	TestCase(@"FactorMethod/S-HEV/S2-HEV/P31_32_S2_HEV_nonSmartES_elecSP_mechFan.xml", @"FactorMethod/S-HEV/S2-HEV/S2_HEV_32e_spec_Dim_HVAC.xml", @"FactorMethod/VIF/P31_32_S2_HEV_nonSmartES_elecSP_mechFan.RSLT_VIF.xml", MissionType.Suburban, LowL,
 		TestName= "2nd Amendment FactorMethodRunData S-HEV S2 nonSmartES_elecSP_mechFan"),
     ]
     public void TestFactorMethodRunData(string primary, string completed, string vifFile, MissionType mission, LoadingType loading)

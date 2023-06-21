@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				EngineData = new CombustionEngineData() {
 					Fuels = new[] {new CombustionEngineFuelData {
 						FuelData = FuelData.Diesel,
-						ConsumptionMap = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vmap"),
+						ConsumptionMap = FuelConsumptionMapReader.ReadFromFile(@"TestData/Components/12t Delivery Truck.vmap"),
 					}}.ToList(),
 					IdleSpeed = 600.RPMtoRad(),
 					RatedPowerDeclared = 300e3.SI<Watt>(),
@@ -138,7 +138,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			sumWriter.UpdateTableColumns(runData.EngineData);
 			var container = new VehicleContainer(ExecutionMode.Declaration, modData,
 				sumWriter) { RunData = runData};
-			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\LongHaul_short.vdri", CycleType.DistanceBased, false);
+			var data = DrivingCycleDataReader.ReadFromFile(@"TestData/Cycles/LongHaul_short.vdri", CycleType.DistanceBased, false);
 			new MockDrivingCycle(container, data);
 			new ZeroMileageCounter(container);
 			new DummyDriverInfo(container);
@@ -174,9 +174,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var testColumns = new[] { "P_aux_FAN", "P_aux_STP", "P_aux_AC", "P_aux_ES", "P_aux_PS", "P_aux_mech" };
 
-			ResultFileHelper.TestModFile(@"TestData\Results\EngineOnlyCycles\AuxWriteModFileSumFile.vmod",
+			ResultFileHelper.TestModFile(@"TestData/Results/EngineOnlyCycles/AuxWriteModFileSumFile.vmod",
 				@"AuxWriteModFileSumFile_MockCycle.vmod", testColumns);
-			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\AuxWriteModFileSumFile.vsum",
+			ResultFileHelper.TestSumFile(@"TestData/Results/EngineOnlyCycles/AuxWriteModFileSumFile.vsum",
 				@"AuxWriteModFileSumFile.vsum");
 		}
 
@@ -218,7 +218,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var dataWriter = new MockModalDataContainer();
 			var container = new VehicleContainer(ExecutionMode.Engineering, dataWriter);
-			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
+			var data = DrivingCycleDataReader.ReadFromFile(@"TestData/Cycles/Coach time based short.vdri",
 				CycleType.MeasuredSpeed, false);
 			var cycle = new MockDrivingCycle(container, data);
 
@@ -250,7 +250,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			dataWriter.AddAuxiliary("CONSTANT");
 
 			var container = new VehicleContainer(ExecutionMode.Engineering, dataWriter);
-			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
+			var data = DrivingCycleDataReader.ReadFromFile(@"TestData/Cycles/Coach time based short.vdri",
 				CycleType.MeasuredSpeed, false);
 			// cycle ALT1 is set to values to equal the first few fixed points in the auxiliary file.
 			// ALT1.aux file: nAuxiliary speed 2358: 0, 0.38, 0.49, 0.64, ...
@@ -306,7 +306,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var jobContainer = new JobContainer(sumData);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(
-				@"TestData\Generic Vehicles\Declaration Mode\40t Long Haul Truck\40t_Long_Haul_Truck.vecto");
+				@"TestData/Generic Vehicles/Declaration Mode/40t Long Haul Truck/40t_Long_Haul_Truck.vecto");
 			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
@@ -321,7 +321,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var jobContainer = new JobContainer(sumData);
 
 			var inputData =
-				JSONInputDataFactory.ReadJsonJob(@"TestData\Generic Vehicles\Engineering Mode\24t Coach\24t Coach.vecto");
+				JSONInputDataFactory.ReadJsonJob(@"TestData/Generic Vehicles/Engineering Mode/24t Coach/24t Coach.vecto");
 			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
@@ -334,7 +334,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
 
-			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck_wrong_AUX.vecto");
+			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData/Jobs/40t_Long_Haul_Truck_wrong_AUX.vecto");
 			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter);
 
 			AssertHelper.Exception<VectoException>(() => jobContainer.AddRuns(runsFactory));

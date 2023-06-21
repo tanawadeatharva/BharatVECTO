@@ -26,8 +26,8 @@ namespace VectoHashingTest
 {
     public class VectoResultHashSort
     {
-		private const string UnsortedJobPath = @"TestData\XML\Sort\Results\Unsorted\";
-		private const string SortedJobPath = @"TestData\XML\Sort\Results\Sorted\"; 
+		private const string UnsortedJobPath = @"TestData/XML/Sort/Results/Unsorted/";
+		private const string SortedJobPath = @"TestData/XML/Sort/Results/Sorted/"; 
 
 		public void RunBeforeAnyTests()
 		{

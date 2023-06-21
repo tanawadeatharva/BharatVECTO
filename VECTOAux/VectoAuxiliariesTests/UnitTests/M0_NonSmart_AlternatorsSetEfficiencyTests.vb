@@ -12,9 +12,9 @@ Imports Signals = TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.Signals
 Namespace UnitTests
     <TestFixture()>
     Public Class M0_NonSmart_AlternatorsSetEfficiencyTests
-        Private Const cstrAlternatorsEfficiencyMapLocation As String = "tests\testAlternatorMap.aalt"
-        Private Const cstrHVACMapLocation As String = "TestFiles\TestHvacMap.csv"
-        Private Const cstrAlternatorMap As String = "TestFiles\testAlternatorMap.aalt"
+        Private Const cstrAlternatorsEfficiencyMapLocation As String = "tests/testAlternatorMap.aalt"
+        Private Const cstrHVACMapLocation As String = "TestFiles/TestHvacMap.csv"
+        Private Const cstrAlternatorMap As String = "TestFiles/testAlternatorMap.aalt"
 
         'Private elecConsumers As IElectricalConsumerList
 
@@ -24,7 +24,7 @@ Namespace UnitTests
 
         Private Function GetSSM() As ISSMTOOL
 
-            Const _SSMMAP As String = "TestFiles\ssm.Ahsm"
+            Const _SSMMAP As String = "TestFiles/ssm.Ahsm"
 
             Dim auxconfig = Utils.GetAuxTestConfig()
 

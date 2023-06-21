@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 	public class DeclarationDataAdapterTest_Class5
 	{
 		public const string Class5TractorPTOJob =
-			@"TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Class5_Tractor_DECL.vecto";
+			@"TestData/Integration/DeclarationMode/Class5_Tractor_4x2/Class5_Tractor_DECL.vecto";
 
 		public const int CurbWeight = 8229;
 

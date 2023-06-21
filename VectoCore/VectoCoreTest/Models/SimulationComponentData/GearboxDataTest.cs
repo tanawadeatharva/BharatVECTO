@@ -48,9 +48,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 	[Parallelizable(ParallelScope.All)]
 	public class GearboxDataTest
 	{
-		protected const string GearboxFile = @"Testdata\Components\24t Coach.vgbx";
+		protected const string GearboxFile = @"TestData/Components/24t Coach.vgbx";
 
-		protected const string EngineFile = @"TestData\Components\24t Coach.veng";
+		protected const string EngineFile = @"TestData/Components/24t Coach.veng";
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
@@ -81,15 +81,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(13.072, gbxData.Gears[1].LossMap[35].TorqueLoss.Value(), 0.0001);
 		}
 
-		[TestCase("Test1", @"TestData\Components\24t Coach.vgbx", 520, 20.320, "A", 279698.4, 9401.44062)]
-		[TestCase("Test2", @"TestData\Components\24t Coach.vgbx", 520, 0.5858335, "A", 17173.5, 409.773677587509)]
-		[TestCase("Test3", @"TestData\Components\24t Coach.vgbx", 520, 0.3996113, "A", 292.5253, 118.282541632652)]
-		[TestCase("Test4", @"TestData\Components\24t Coach.vgbx", 520, 5.327739, "A", 57431.12, 2222.78785705566)]
-		[TestCase("Test5", @"TestData\Components\24t Coach.vgbx", 520, 5.661779, "A", 73563.93, 2553.00283432007)]
-		[TestCase("Test6", @"TestData\Components\24t Coach.vgbx", 520, 14.15156, "A", 212829.5, 6822.16882705688)]
-		[TestCase("Test7", @"TestData\Components\24t Coach.vgbx", 520, 14.55574, "A", 15225.52, 4308.41207504272)]
-		[TestCase("Test8", @"TestData\Components\24t Coach.vgbx", 520, 4.601774, "A", -1240.225, 1362.09738254547)]
-		[TestCase("Test9", @"TestData\Components\24t Coach.vgbx", 520, 3.934339, "A", -698.5989, 1164.5405292511)]
+		[TestCase("Test1", @"TestData/Components/24t Coach.vgbx", 520, 20.320, "A", 279698.4, 9401.44062)]
+		[TestCase("Test2", @"TestData/Components/24t Coach.vgbx", 520, 0.5858335, "A", 17173.5, 409.773677587509)]
+		[TestCase("Test3", @"TestData/Components/24t Coach.vgbx", 520, 0.3996113, "A", 292.5253, 118.282541632652)]
+		[TestCase("Test4", @"TestData/Components/24t Coach.vgbx", 520, 5.327739, "A", 57431.12, 2222.78785705566)]
+		[TestCase("Test5", @"TestData/Components/24t Coach.vgbx", 520, 5.661779, "A", 73563.93, 2553.00283432007)]
+		[TestCase("Test6", @"TestData/Components/24t Coach.vgbx", 520, 14.15156, "A", 212829.5, 6822.16882705688)]
+		[TestCase("Test7", @"TestData/Components/24t Coach.vgbx", 520, 14.55574, "A", 15225.52, 4308.41207504272)]
+		[TestCase("Test8", @"TestData/Components/24t Coach.vgbx", 520, 4.601774, "A", -1240.225, 1362.09738254547)]
+		[TestCase("Test9", @"TestData/Components/24t Coach.vgbx", 520, 3.934339, "A", -698.5989, 1164.5405292511)]
 		public void TestInterpolation(string testName, string gearboxDataFile, double rDyn, double v, string gear,
 			double powerGbxOut, double gbxPowerLoss)
 		{
@@ -345,7 +345,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestCase()]
 		public void TestLossMapExtension()
 		{
-			var gbxFile = @"TestData\Components\Indirect Gear.vtlm";
+			var gbxFile = @"TestData/Components/Indirect Gear.vtlm";
 			
 			var lossMapOrig = TransmissionLossMapReader.ReadFromFile(gbxFile, 1.0, "origLossMap");
 			var extendedMap = TransmissionLossMapReader.ReadFromFile(gbxFile, 1.0, "origLossMap", true);
@@ -373,7 +373,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestCase()]
 		public void TestAxlegearLossMapExtension()
 		{
-			var lossMapFile = @"TestData\Components\Axle.vtlm";
+			var lossMapFile = @"TestData/Components/Axle.vtlm";
 
 			var origLossMap = TransmissionLossMapReader.ReadFromFile(lossMapFile, 3.240355, "AxleOrig");
 			var extendedLossMap = TransmissionLossMapReader.ReadFromFile(lossMapFile, 3.240355, "AxleExtended", true);

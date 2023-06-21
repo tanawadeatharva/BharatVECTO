@@ -8,7 +8,7 @@ xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"
 xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" 
 xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" 
 xmlns:vif0.1="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" 
-xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd">
+xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 V:/VectoCore/VectoCore/Resources/XSD/VectoOutputMultistep.0.1.xsd">
   <vif0.1:PrimaryVehicle>
     <vif0.1:Data xsi:type="PrimaryVehicleDataType" id="PIF-4121ae4751874cefa376">
       <vif0.1:Vehicle xsi:type="VehiclePIFType">

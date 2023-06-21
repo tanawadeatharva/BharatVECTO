@@ -31,9 +31,9 @@ namespace TUGraz.VectoCore.Tests.XML.XMLComponentInputTest
     {
 		private StandardKernel _kernel;
 
-		private string BASEDIRComponent = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ComponentData";
+		private string BASEDIRComponent = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/ComponentData";
 
-		private string BASEDIRVehicle = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry";
+		private string BASEDIRVehicle = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/HeavyLorry";
 
         private IDeclarationInjectFactory _declarationFactory;
 		private IXMLInputDataReader _inputDataFactory;

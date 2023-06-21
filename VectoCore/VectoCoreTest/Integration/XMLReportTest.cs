@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		[TestCase]
 		public void TestXMLReportMetaInformation()
 		{
-			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
+			var jobfile = @"TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(jobfile));
 			var xmlReport = _kernel.Get<IXMLDeclarationReportFactory>().CreateReport(dataProvider, writer);
@@ -126,16 +126,16 @@ namespace TUGraz.VectoCore.Tests.Integration
 			}
 		}
 
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_4x2_vehicle-class-1_EURO6_2018.xml"),
-		//TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml"),
-		//TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_4x2_vehicle-class-3_EURO6_2018.xml"),
-		//TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_4x2_vehicle-class-4_EURO6_2018.xml"),
-		TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Tractor_4x2_vehicle-class-5_EURO6_2018.xml"),
-        TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_6x2_vehicle-class-9_EURO6_2018.xml"),
-        //TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Tractor_6x2_vehicle-class-10_EURO6_2018.xml"),
-        //TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_6x4_vehicle-class-11_EURO6_2018.xml"),
-        //TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Tractor_6x4_vehicle-class-12_EURO6_2018.xml"),
-        TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_8x4_vehicle-class-16_EURO6_2018.xml")]
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/GroupTest/Rigid Truck_4x2_vehicle-class-1_EURO6_2018.xml"),
+		//TestCase(@"TestData/XML/XMLReaderDeclaration/GroupTest/Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml"),
+		//TestCase(@"TestData/XML/XMLReaderDeclaration/GroupTest/Rigid Truck_4x2_vehicle-class-3_EURO6_2018.xml"),
+		//TestCase(@"TestData/XML/XMLReaderDeclaration/GroupTest/Rigid Truck_4x2_vehicle-class-4_EURO6_2018.xml"),
+		TestCase(@"TestData/XML/XMLReaderDeclaration/GroupTest/Tractor_4x2_vehicle-class-5_EURO6_2018.xml"),
+        TestCase(@"TestData/XML/XMLReaderDeclaration/GroupTest/Rigid Truck_6x2_vehicle-class-9_EURO6_2018.xml"),
+        //TestCase(@"TestData/XML/XMLReaderDeclaration/GroupTest/Tractor_6x2_vehicle-class-10_EURO6_2018.xml"),
+        //TestCase(@"TestData/XML/XMLReaderDeclaration/GroupTest/Rigid Truck_6x4_vehicle-class-11_EURO6_2018.xml"),
+        //TestCase(@"TestData/XML/XMLReaderDeclaration/GroupTest/Tractor_6x4_vehicle-class-12_EURO6_2018.xml"),
+        TestCase(@"TestData/XML/XMLReaderDeclaration/GroupTest/Rigid Truck_8x4_vehicle-class-16_EURO6_2018.xml")]
         public void TestXMLSummaryReportExists(string jobfile)
         {
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
@@ -165,8 +165,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.AreNotEqual(null,customerReport.XPathSelectElement("//*[local-name()='Summary']"));
 		}
 
-		[TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml"),
-		 //TestCase(@"TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml") // ExemptedVehicles XML Version 1.0 no longer supported
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml"),
+		 //TestCase(@"TestData/Integration/DeclarationMode/ExemptedVehicle/vecto_vehicle-sample_exempted.xml") // ExemptedVehicles XML Version 1.0 no longer supported
 		]
 		public void TestValidationXMLReports(string jobfile)
 		{
@@ -232,7 +232,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 						}
 					}
 
-					var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
+					var jobfile = @"TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
 
 					var doc = new XmlDocument();
 					doc.Load(XmlReader.Create(jobfile));
@@ -298,7 +298,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		[TestCase]
 		public void TestXMLReportCorrectHashes()
 		{
-			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
+			var jobfile = @"TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(jobfile));
 			var xmlReport = _kernel.Get<IXMLDeclarationReportFactory>().CreateReport(dataProvider, writer);
@@ -347,7 +347,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		[TestCase]
 		public void TestXMLPrimaryVehicleReportTest()
 		{
-			var jobfile = @"Testdata\XML\XMLReaderDeclaration\SchemaVersion2.4/vecto_vehicle-primary_heavyBus-sample.xml";
+			var jobfile = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/vecto_vehicle-primary_heavyBus-sample.xml";
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(jobfile);
 			var xmlReport = _kernel.Get<IXMLDeclarationReportFactory>().CreateReport(dataProvider, writer);

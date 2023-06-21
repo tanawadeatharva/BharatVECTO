@@ -58,15 +58,15 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	[Parallelizable(ParallelScope.All)]
 	public class LossMapRangeValidationTest
 	{
-		public const string ShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
-		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
-		public const string EngineFile = @"TestData\Components\40t_Long_Haul_Truck.veng";
-		public const string AxleGearLossMap = @"TestData\Components\Axle 40t Truck.vtlm";
-		public const string GearboxIndirectLoss = @"TestData\Components\Indirect Gear.vtlm";
-		public const string GearboxDirectLoss = @"TestData\Components\Direct Gear.vtlm";
-		public const string GearboxLimited = @"TestData\Components\limited.vtlm";
-		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
-		//public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
+		public const string ShiftPolygonFile = @"TestData/Components/ShiftPolygons.vgbs";
+		public const string AccelerationFile = @"TestData/Components/Truck.vacc";
+		public const string EngineFile = @"TestData/Components/40t_Long_Haul_Truck.veng";
+		public const string AxleGearLossMap = @"TestData/Components/Axle 40t Truck.vtlm";
+		public const string GearboxIndirectLoss = @"TestData/Components/Indirect Gear.vtlm";
+		public const string GearboxDirectLoss = @"TestData/Components/Direct Gear.vtlm";
+		public const string GearboxLimited = @"TestData/Components/limited.vtlm";
+		public const string GearboxShiftPolygonFile = @"TestData/Components/ShiftPolygons.vgbs";
+		//public const string GearboxFullLoadCurveFile = @"TestData/Components/Gearbox.vfld";
 
 
 		[OneTimeSetUp]
@@ -289,7 +289,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestCase]
 		public void CreateJobWithLossMapEfficiency_Engineering()
 		{
-			var dataProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\12t Delivery Truck Engineering Efficiency.vecto");
+			var dataProvider = JSONInputDataFactory.ReadJsonJob(@"TestData/Jobs/12t Delivery Truck Engineering Efficiency.vecto");
 			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, dataProvider, null);
 			var jobContainer = new JobContainer(null);
 			jobContainer.AddRuns(runsFactory);
@@ -301,7 +301,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestCase]
 		public void RunJobWithLossMapEfficiency_Engineering()
 		{
-			const string jobFileName = @"TestData\Jobs\12t Delivery Truck Engineering Efficiency.vecto";
+			const string jobFileName = @"TestData/Jobs/12t Delivery Truck Engineering Efficiency.vecto";
 			var fileWriter = new FileOutputWriter(jobFileName);
 
 			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFileName);
@@ -322,7 +322,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestCase]
 		public void CreateJobWith_Axle_LossMapEfficiency_Declaration()
 		{
-			var dataProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck with AxleEfficiency.vecto");
+			var dataProvider = JSONInputDataFactory.ReadJsonJob(@"TestData/Jobs/40t_Long_Haul_Truck with AxleEfficiency.vecto");
 			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, null);
 			var jobContainer = new JobContainer(null);
 
@@ -335,7 +335,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestCase]
 		public void CreateJobWith_Gear_LossMapEfficiency_Declaration()
 		{
-			var dataProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck with GearEfficiency.vecto");
+			var dataProvider = JSONInputDataFactory.ReadJsonJob(@"TestData/Jobs/40t_Long_Haul_Truck with GearEfficiency.vecto");
 			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, null);
 			var jobContainer = new JobContainer(null);
 

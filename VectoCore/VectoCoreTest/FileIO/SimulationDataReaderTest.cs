@@ -51,8 +51,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 	[Parallelizable(ParallelScope.All)]
 	public class SimulationDataReaderTest
 	{
+		protected const string DeclarationJob = @"TestData/Jobs/12t Delivery Truck.vecto";
 		private StandardKernel _kernel;
-		protected const string DeclarationJob = @"TestData\Jobs\12t Delivery Truck.vecto";
 		protected const double Tolerance = 0.0001;
 
 		[OneTimeSetUp]

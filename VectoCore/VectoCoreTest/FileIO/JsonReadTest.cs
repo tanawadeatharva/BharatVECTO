@@ -55,8 +55,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 	[Parallelizable(ParallelScope.All)]
 	public class JsonReadTest
 	{
-		private const string TestJobFile = @"Testdata\Jobs\40t_Long_Haul_Truck.vecto";
-		private const string TestVehicleFile = @"Testdata\Components\24t Coach.vveh";
+		private const string TestJobFile = @"TestData/Jobs/40t_Long_Haul_Truck.vecto";
+		private const string TestVehicleFile = @"TestData/Components/24t Coach.vveh";
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
@@ -181,7 +181,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		[TestCase]
 		public void ReadGearboxV5()
 		{
-			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\Gearbox_v5.vgbx");
+			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData/Components/AT_GBX/Gearbox_v5.vgbx");
 
 			var ratios = new[] { 3.0, 1.0, 0.8 };
 			Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
@@ -201,7 +201,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						}
 					}
 				}, new VectoRunData() {
-					EngineData = MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0),
+					EngineData = MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
 					VehicleData = new VehicleData() {
 						VehicleCategory = VehicleCategory.RigidTruck,
 						DynamicTyreRadius = 0.5.SI<Meter>()
@@ -222,7 +222,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		[TestCase]
 		public void ReadGearboxSerialTC()
 		{
-			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\GearboxSerial.vgbx");
+			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData/Components/AT_GBX/GearboxSerial.vgbx");
 
 			var ratios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
 			Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
@@ -242,7 +242,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						}
 					}
 				}, new VectoRunData() {
-					EngineData = MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0),
+					EngineData = MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
 					VehicleData = new VehicleData() {
 						VehicleCategory = VehicleCategory.RigidTruck,
 						DynamicTyreRadius = 0.5.SI<Meter>()
@@ -251,7 +251,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				}, null);
 
 				//inputProvider,
-				//MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0),
+				//MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
 				//(IGearshiftEngineeringInputData)inputProvider, 2.1,
 				//0.5.SI<Meter>(), VehicleCategory.RigidTruck, (ITorqueConverterEngineeringInputData)inputProvider, null, null);
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
@@ -270,7 +270,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		[TestCase]
 		public void ReadGearboxPowersplitTC()
 		{
-			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\GearboxPowerSplit.vgbx");
+			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData/Components/AT_GBX/GearboxPowerSplit.vgbx");
 
 			var ratios = new[] { 1.35, 1.0, 0.73 };
 			Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
@@ -290,7 +290,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						}
 					}
 				}, new VectoRunData() {
-					EngineData = MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0),
+					EngineData = MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
 					VehicleData = new VehicleData() {
 						VehicleCategory = VehicleCategory.RigidTruck,
 						DynamicTyreRadius = 0.5.SI<Meter>()
@@ -299,7 +299,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				}, null);
 
 				//inputProvider,
-				//MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0),
+				//MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
 				//(IGearshiftEngineeringInputData)inputProvider, 2.1,
 				//0.5.SI<Meter>(), VehicleCategory.RigidTruck, (ITorqueConverterEngineeringInputData)inputProvider, null, null);
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
@@ -317,7 +317,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		[TestCase]
 		public void ReadGearboxDualTCTruck()
 		{
-			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\GearboxSerialDualTC.vgbx");
+			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData/Components/AT_GBX/GearboxSerialDualTC.vgbx");
 
 			var ratios = new[] { 4.35, 2.4, 1.8, 1.3, 1.0 };
 			Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
@@ -337,7 +337,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						}
 					}
 				}, new VectoRunData() {
-					EngineData = MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0),
+					EngineData = MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
 					VehicleData = new VehicleData() {
 						VehicleCategory = VehicleCategory.RigidTruck,
 						DynamicTyreRadius = 0.5.SI<Meter>()
@@ -345,7 +345,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 					AxleGearData = new AxleGearData() { AxleGear = new TransmissionData() { Ratio = 2.1 } }
 				}, null);
 				//inputProvider,
-				//MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0),
+				//MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
 				//(IGearshiftEngineeringInputData)inputProvider, 2.1,
 				//0.5.SI<Meter>(), VehicleCategory.RigidTruck, (ITorqueConverterEngineeringInputData)inputProvider, null, null);
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
@@ -365,7 +365,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		[TestCase]
 		public void ReadGearboxSingleTCBus()
 		{
-			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\GearboxSerialDualTC.vgbx");
+			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData/Components/AT_GBX/GearboxSerialDualTC.vgbx");
 
 			var ratios = new[] { 4.35, 2.4, 1.8, 1.3, 1.0 };
 			Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
@@ -385,7 +385,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						}
 					}
 				}, new VectoRunData() {
-					EngineData = MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0),
+					EngineData = MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
 					VehicleData = new VehicleData() {
 						VehicleCategory = VehicleCategory.HeavyBusPrimaryVehicle,
 						DynamicTyreRadius = 0.5.SI<Meter>()
@@ -393,7 +393,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 					AxleGearData = new AxleGearData() { AxleGear = new TransmissionData() { Ratio = 2.1 } }
 				}, null);
 				//inputProvider,
-				//MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0),
+				//MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
 				//(IGearshiftEngineeringInputData)inputProvider, 2.1,
 				//0.5.SI<Meter>(), VehicleCategory.InterurbanBus, (ITorqueConverterEngineeringInputData)inputProvider, null, null);
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
@@ -413,7 +413,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		[TestCase]
 		public void ReadGearboxDualTCBus()
 		{
-			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\GearboxSerialDualTCBus.vgbx");
+			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData/Components/AT_GBX/GearboxSerialDualTCBus.vgbx");
 
 			var ratios = new[] { 4.58, 2.4, 1.8, 1.3, 1.0 };
 			Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
@@ -433,7 +433,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						}
 					}
 				}, new VectoRunData() {
-					EngineData = MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0),
+					EngineData = MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
 					VehicleData = new VehicleData() {
 						VehicleCategory = VehicleCategory.RigidTruck,
 						DynamicTyreRadius = 0.5.SI<Meter>()
@@ -442,7 +442,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				}, null);
 				
 				//inputProvider,
-				//MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0),
+				//MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
 				//(IGearshiftEngineeringInputData)inputProvider, 2.1,
 				//0.5.SI<Meter>(), VehicleCategory.InterurbanBus, (ITorqueConverterEngineeringInputData)inputProvider, null, null);
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
@@ -490,7 +490,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		[TestCase]
 		public void JSON_Read_HeavyBus()
 		{
-			var inputProvider = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(@"TestData\Generic Vehicles\Engineering Mode\HeavyBusPrimary\HeavyBusPrimary_DECL.vecto");
+			var inputProvider = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(@"TestData/Generic Vehicles/Engineering Mode/HeavyBusPrimary/HeavyBusPrimary_DECL.vecto");
 			var busAux = inputProvider.JobInputData.Vehicle.Components.BusAuxiliaries;
 
 			Assert.AreEqual("Electrically driven - Electronically controlled", busAux.FanTechnology);
@@ -516,7 +516,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		[TestCase()]
 		public void JSON_Read_IEPC()
 		{
-			var inputProvider = new JSONComponentInputData(@"TestData\BatteryElectric\IEPC\GenericIEPC.viepc", null);
+			var inputProvider = new JSONComponentInputData(@"TestData/BatteryElectric/IEPC/GenericIEPC.viepc", null);
 			var iepcData = (IIEPCEngineeringInputData)inputProvider.IEPC;
 
 			Assert.AreEqual("3", iepcData.AppVersion);

@@ -2131,7 +2131,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         public void Declaration_WheelsForT1_Class2()
         {
             var dataProvider =
-                JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\12t Delivery Truck.vecto") as IDeclarationInputDataProvider;
+                JSONInputDataFactory.ReadJsonJob(@"TestData/Jobs/12t Delivery Truck.vecto") as IDeclarationInputDataProvider;
 			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>());
 
             var runs = dataReader.NextRun().ToList();
@@ -2155,7 +2155,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         {
             var dataProvider =
                 JSONInputDataFactory.ReadJsonJob(
-                    @"TestData\Jobs\Class4_40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
+                    @"TestData/Jobs/Class4_40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
 			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>());
 
             var runs = dataReader.NextRun().ToList();
@@ -2179,7 +2179,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         public void Declaration_WheelsForDefault_Class5()
         {
             var dataProvider =
-                JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
+                JSONInputDataFactory.ReadJsonJob(@"TestData/Jobs/40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
 			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>());
 
             var runs = dataReader.NextRun().ToList();

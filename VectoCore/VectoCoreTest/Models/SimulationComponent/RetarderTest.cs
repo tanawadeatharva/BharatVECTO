@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	[Parallelizable(ParallelScope.All)]
 	public class RetarderTest
 	{
-		private const string RetarderLossMapFile = @"TestData\Components\Retarder.vrlm";
+		private const string RetarderLossMapFile = @"TestData/Components/Retarder.vrlm";
 		private const double Delta = 0.0001;
 
 		[OneTimeSetUp]

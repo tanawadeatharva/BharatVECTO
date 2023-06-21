@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		[TestCase]
 		public void TestWriteActualModData()
 		{
-			const string jobFile = @"TestData\Integration\DeclarationMode\40t Truck\40t_Long_Haul_Truck.vecto";
+			const string jobFile = @"TestData/Integration/DeclarationMode/40t Truck/40t_Long_Haul_Truck.vecto";
 			var fileWriter = new FileOutputWriter(jobFile);
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);

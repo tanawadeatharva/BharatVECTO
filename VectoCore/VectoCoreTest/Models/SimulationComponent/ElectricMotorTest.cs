@@ -27,9 +27,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	[Parallelizable(ParallelScope.All)]
 	public class ElectricMotorTest
 	{
-		public const string MotorFile = @"TestData\Hybrids\ElectricMotor\GenericEMotor.vem";
-		public const string MotorFile_v2 = @"TestData\Hybrids\ElectricMotor\GenericEMotorV2.vem";
-		public const string BatFile = @"TestData\Hybrids\Battery\GenericBattery.vbat";
+		public const string MotorFile = @"TestData/Hybrids/ElectricMotor/GenericEMotor.vem";
+		public const string MotorFile_v2 = @"TestData/Hybrids/ElectricMotor/GenericEMotorV2.vem";
+		public const string BatFile = @"TestData/Hybrids/Battery/GenericBattery.vbat";
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()

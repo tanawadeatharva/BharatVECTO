@@ -43,11 +43,11 @@ namespace VectoHashingTest
 	//[Parallelizable(ParallelScope.All)]
 	public class BasicHasingTests
 	{
-		public const string SimpleXML = @"Testdata\XML\simple_document.xml";
-		public const string ReferenceXMLEngine = @"Testdata\XML\Reference\vecto_engine-sample.xml";
-		public const string ReferenceXMLVehicle = @"Testdata\XML\Reference\vecto_vehicle-sample_FULL.xml";
+		public const string SimpleXML = @"Testdata/XML/simple_document.xml";
+		public const string ReferenceXMLEngine = @"Testdata/XML/Reference/vecto_engine-sample.xml";
+		public const string ReferenceXMLVehicle = @"Testdata/XML/Reference/vecto_vehicle-sample_FULL.xml";
 
-		public const string UnorderedXMLVehicle = @"Testdata\XML\Variations\vecto_vehicle-sample_FULL_Entry_Order.xml";
+		public const string UnorderedXMLVehicle = @"Testdata/XML/Variations/vecto_vehicle-sample_FULL_Entry_Order.xml";
 
 		public const string HashSimpleXML = "U2zic7KOnKw60rzh+KKQ1lwZL6NmXju+DXG7cYYmlxo=";
 
