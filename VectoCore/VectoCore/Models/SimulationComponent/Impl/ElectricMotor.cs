@@ -191,8 +191,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				maxRecuperationTorqueEm = null;
 			}
 
-			var maxDriveTorqueDt = maxDriveTorqueEm == null ? null : ConvertEmTorqueToDrivetrain(avgEmSpeed, maxDriveTorqueEm, dryRun);
-			var maxRecuperationTorqueDt = maxRecuperationTorqueEm == null ? null : ConvertEmTorqueToDrivetrain(avgEmSpeed, maxRecuperationTorqueEm, dryRun);
+			NewtonMeter maxGbxTorque = null;
+			if (NextComponent == null && DataBus.GearboxInfo != null && DataBus.GearboxInfo.Gear.Gear != 0) {
+				maxGbxTorque = DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.Gear.Gear)?.MaxTorque;
+			}
+
+			var maxDriveTorqueDt = maxDriveTorqueEm == null ? null : VectoMath.Max(ConvertEmTorqueToDrivetrain(avgEmSpeed, maxDriveTorqueEm, dryRun), maxGbxTorque != null ? -maxGbxTorque : null);
+			var maxRecuperationTorqueDt = maxRecuperationTorqueEm == null ? null : VectoMath.Min(ConvertEmTorqueToDrivetrain(avgEmSpeed, maxRecuperationTorqueEm, dryRun), maxGbxTorque);
 			
 			// control returns torque that shall be applied on the drivetrain. calculate backward to the EM
 			var emTorqueDt = Control.MechanicalAssistPower(absTime, dt, outTorque,
@@ -327,11 +332,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					retVal = new ResponseBatteryEmpty(this, electricSupplyResponse);
 					return retVal;
 				}
-				// electric motor only
-				var remainingPower = inTorqueDt * avgDtSpeed;
+                // electric motor only
+				var speedLimit = GetMotorSpeedLimit(absTime);
+                var remainingPower = inTorqueDt * avgDtSpeed;
 				if (dryRun) {
 					retVal = new ResponseDryRun(this) {
-						Engine = { EngineSpeed = avgDtSpeed},
+						DeltaEngineSpeed = outAngularVelocity - speedLimit,
+                        Engine = { EngineSpeed = avgDtSpeed},
 						ElectricMotor = {
 							ElectricMotorPowerMech = (inTorqueDt - outTorque) * avgDtSpeed,
 						},
@@ -342,7 +349,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 					};
 				} else {
-
+					
+					if (outAngularVelocity.IsGreater(speedLimit)) {
+						return new ResponseEngineSpeedTooHigh(this) {
+							DeltaEngineSpeed = outAngularVelocity - speedLimit,
+						};
+					}
 					if (remainingPower.IsEqual(0, Constants.SimulationSettings.LineSearchTolerance)) {
 						//if (electricSupplyResponse.MaxPowerDrive.IsGreaterOrEqual(0)) {
 						if (electricSupplyResponse is ElectricSystemUnderloadResponse) {
@@ -420,7 +432,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		private NewtonMeter GetMaxRecuperationTorque(Volt volt, Second dt, PerSecond avgSpeed, GearshiftPosition gear)
+		protected virtual PerSecond GetMotorSpeedLimit(Second absTime)
+		{
+			if (DataBus.GearboxInfo.Gear.Gear == 0) {
+				return MaxSpeed;
+			}
+
+			return VectoMath.Min(DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.Gear.Gear)?.MaxSpeed, MaxSpeed);
+		}
+
+        private NewtonMeter GetMaxRecuperationTorque(Volt volt, Second dt, PerSecond avgSpeed, GearshiftPosition gear)
 		{
 			var tqContinuousPwr = DeRatingActive ? ModelData.Overload.ContinuousTorque : null;
 			
