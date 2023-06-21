@@ -19,22 +19,22 @@
         "Ratio": 17.5,
         "LossMap": "Transmission\\Gear_1.vtlm",
         "ShiftPolygon": "",
-        "MaxTorque": "",
-        "MaxSpeed": ""
+        "MaxTorque": "500",
+        "MaxSpeed": "3300"
       },
       {
         "Ratio": 6.49,
         "LossMap": "Transmission\\Gear_2.vtlm",
         "ShiftPolygon": "",
-        "MaxTorque": "",
-        "MaxSpeed": ""
+        "MaxTorque": "500",
+        "MaxSpeed": "3300"
       },
       {
         "Ratio": 2.48,
         "LossMap": "Transmission\\Gear_3.vtlm",
         "ShiftPolygon": "",
-        "MaxTorque": "",
-        "MaxSpeed": ""
+        "MaxTorque": "500",
+        "MaxSpeed": "3300"
       }
     ],
     "TqReserve": 0.0,
