@@ -8,6 +8,7 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
@@ -155,7 +156,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun, double ratio)
 		{
-			
 			var gear = DataBus.GearboxInfo?.Gear ?? new GearshiftPosition(1);
 			if (gear.Gear == 0) {
 				gear = new GearshiftPosition(1);
@@ -434,7 +434,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected virtual PerSecond GetMotorSpeedLimit(Second absTime)
 		{
-			if (DataBus.GearboxInfo.Gear.Gear == 0) {
+			if (DataBus.GearboxInfo == null || DataBus.GearboxInfo.Gear.Gear == 0) {
 				return MaxSpeed;
 			}
 

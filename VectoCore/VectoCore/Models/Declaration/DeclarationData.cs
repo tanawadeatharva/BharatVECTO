@@ -43,6 +43,7 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
@@ -972,9 +973,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 
 			public static ShiftPolygon ComputeElectricMotorShiftPolygon(int gearIdx,
-				ElectricMotorFullLoadCurve fullLoadCurve, double emRatio, IList<ITransmissionInputData> gears,
+				ElectricMotorFullLoadCurve fullLoadCurveOrig, double emRatio, IList<ITransmissionInputData> gears,
 				double axlegearRatio, Meter dynamicTyreRadius, PerSecond downshiftMaxSpeed = null, PerSecond downshiftMinSpeed = null)
 			{
+				var gbxMaxTq = gears[gearIdx].MaxTorque != null ? gears[gearIdx].MaxTorque / emRatio : null;
+				var gbxMaxSpeed = gears[gearIdx].MaxInputSpeed != null ? gears[gearIdx].MaxInputSpeed * emRatio : null;
+
+				var fullLoadCurve = gbxMaxTq == null
+					? fullLoadCurveOrig
+					: LimitElectricMotorFullLoadCurve(fullLoadCurveOrig, gbxMaxTq);
 				if (gears.Count < 2) {
 					throw new VectoException("ComputeShiftPolygon needs at least 2 gears. {0} gears given.", gears.Count);
 				}
@@ -985,20 +992,41 @@ namespace TUGraz.VectoCore.Models.Declaration
 					var nMax = downshiftMaxSpeed ?? fullLoadCurve.NP80low;
 					var nMin = downshiftMinSpeed ?? 0.1 * fullLoadCurve.RatedSpeed;
 
-					downShift.AddRange(DownshiftLineDrive(fullLoadCurve, nMin, fullLoadCurve.NP80low));
-					downShift.AddRange(DownshiftLineDrag(fullLoadCurve, nMin, nMax));
+					downShift.AddRange(DownshiftLineDrive(fullLoadCurve, fullLoadCurveOrig, nMin, fullLoadCurve.NP80low));
+					downShift.AddRange(DownshiftLineDrag(fullLoadCurve, fullLoadCurveOrig, nMin, nMax));
 
 				}
 				if (gearIdx >= gears.Count - 1) {
 					return new ShiftPolygon(downShift, upShift);
 				}
 
-				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxGenerationTorque * 1.1, fullLoadCurve.MaxSpeed * 0.9));
-				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDriveTorque * 1.1, fullLoadCurve.MaxSpeed * 0.9));
+				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxGenerationTorque * 1.1, VectoMath.Min(fullLoadCurve.MaxSpeed * 0.9, gbxMaxSpeed)));
+				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDriveTorque * 1.1, VectoMath.Min(fullLoadCurve.MaxSpeed * 0.9, gbxMaxSpeed)));
 				return new ShiftPolygon(downShift, upShift);
 			}
 
-			private static List<ShiftPolygon.ShiftPolygonEntry> DownshiftLineDrive(ElectricMotorFullLoadCurve fullLoadCurve, PerSecond nMin, PerSecond nMax)
+			public static ElectricMotorFullLoadCurve LimitElectricMotorFullLoadCurve(ElectricMotorFullLoadCurve emFld, NewtonMeter maxTq)
+			{
+				var contTqFld = new ElectricMotorFullLoadCurve(new List<ElectricMotorFullLoadCurve.FullLoadEntry>() {
+					new ElectricMotorFullLoadCurve.FullLoadEntry() {
+						MotorSpeed = 0.RPMtoRad(),
+						FullDriveTorque = -maxTq,
+						FullGenerationTorque = maxTq
+					},
+					new ElectricMotorFullLoadCurve.FullLoadEntry() {
+						MotorSpeed = 1.1 * emFld.MaxSpeed,
+						FullDriveTorque = -maxTq,
+						FullGenerationTorque = maxTq
+					}
+				});
+				var limitedFld = AbstractSimulationDataAdapter.IntersectEMFullLoadCurves(emFld, contTqFld);
+				
+				return limitedFld;
+			}
+
+            private static List<ShiftPolygon.ShiftPolygonEntry> DownshiftLineDrive(
+				ElectricMotorFullLoadCurve fullLoadCurve, ElectricMotorFullLoadCurve fullLoadCurveOrig,
+				PerSecond nMin, PerSecond nMax)
 			{
 				var retVal = new List<ShiftPolygon.ShiftPolygonEntry>();
 				var downShiftPoints = fullLoadCurve
@@ -1012,7 +1040,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					// coarse grid points in FLD
 					retVal.Add(
 						new ShiftPolygon.ShiftPolygonEntry(
-							fullLoadCurve.MaxDriveTorque * 1.1,
+							fullLoadCurveOrig.MaxDriveTorque * 1.1,
 							nMax));
 					retVal.Add(
 						new ShiftPolygon.ShiftPolygonEntry(
@@ -1026,7 +1054,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				} else {
 					retVal.Add(
 						new ShiftPolygon.ShiftPolygonEntry(
-							fullLoadCurve.MaxDriveTorque * 1.1,
+							fullLoadCurveOrig.MaxDriveTorque * 1.1,
 							nMax));
 					if (downShiftPoints.Max(x => x.X) < nMax) {
 						retVal.Add(
@@ -1050,7 +1078,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return retVal;
 			}
 
-			private static List<ShiftPolygon.ShiftPolygonEntry> DownshiftLineDrag(ElectricMotorFullLoadCurve fullLoadCurve, PerSecond nMin, PerSecond nMax)
+			private static List<ShiftPolygon.ShiftPolygonEntry> DownshiftLineDrag(
+				ElectricMotorFullLoadCurve fullLoadCurve, ElectricMotorFullLoadCurve fullLoadCurveOrig,
+				PerSecond nMin, PerSecond nMax)
 			{
 				var retVal = new List<ShiftPolygon.ShiftPolygonEntry>();
 				var downShiftPoints = fullLoadCurve
@@ -1072,7 +1102,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 							nMax));
 					retVal.Add(
 						new ShiftPolygon.ShiftPolygonEntry(
-							fullLoadCurve.MaxGenerationTorque * 1.1,
+							fullLoadCurveOrig.MaxGenerationTorque * 1.1,
 							nMax));
 				} else {
 					if (downShiftPoints.Min(x => x.X) > nMin) {
@@ -1094,7 +1124,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					}
 					retVal.Add(
 						new ShiftPolygon.ShiftPolygonEntry(
-							fullLoadCurve.MaxGenerationTorque * 1.1,
+							fullLoadCurveOrig.MaxGenerationTorque * 1.1,
 							nMax));
 				}
 
