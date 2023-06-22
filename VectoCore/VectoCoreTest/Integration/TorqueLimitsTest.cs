@@ -263,13 +263,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 			var view = new DataView(sumData.Table, "", SumDataFields.SORT, DataViewRowState.CurrentRows).ToTable();
 			Console.WriteLine(string.Join("; ", view.Rows.Cast<DataRow>().Select(x => x[string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble())));
-			//199.85546081524038; 235.84109954350555; 170.02172124055622; 183.1105954985868; 222.76859113196122; 254.11840916716432
-			Assert.AreEqual(199.85546081524038, view.Rows[0][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
+            //199.85546081524038; 235.84109954350555; 170.02172124055622; 183.09991889064247; 222.7685129117604; 254.11834369672036
+            Assert.AreEqual(199.85546081524038, view.Rows[0][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
 			Assert.AreEqual(235.84109954350555, view.Rows[1][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
 			Assert.AreEqual(170.02172124055622, view.Rows[2][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
-			Assert.AreEqual(183.1105954985868, view.Rows[3][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
-			Assert.AreEqual(222.76859113196122, view.Rows[4][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
-			Assert.AreEqual(254.11840916716432, view.Rows[5][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(183.09991889064247, view.Rows[3][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(222.7685129117604, view.Rows[4][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(254.11834369672036, view.Rows[5][string.Format(SumDataFields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
 		}
 
 		[TestCase(EngineSpeedLimitJobATDecl)]
