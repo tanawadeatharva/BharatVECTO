@@ -1550,6 +1550,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			private const double SOCMinHE = 0.05;
 			private const double SOCMaxHE = 0.95;
+			
+			public static readonly Ohm CablesAndConnectorsResistance = 0.63.SI(Unit.SI.Milli.Ohm).Cast<Ohm>();
+			public static readonly Ohm JunctionBoxResistance = 1.3.SI(Unit.SI.Milli.Ohm).Cast<Ohm>();
 
 			public static double GetMinSoc(BatteryType type)
 			{
@@ -1733,7 +1736,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				VectoMath.Max(MinDepotChgPwr, batteryData.UseableStoredEnergy / DepotChargingDuration);
 
 			var respChgBatDepot = tmpBattery.Request(0.SI<Second>(), 1.SI<Second>(), depotChargingPower, true);
-			var etaChgBatDepot = 1 - (respChgBatDepot.LossPower / respChgBatDepot.PowerDemand).Value();
+			// iest = depotChargPwr / U_centerSoc
+			// P_loss_conn = iest * iest * R_conn
+			var etaChgBatDepot = 1 - ((respChgBatDepot.LossPower /* + P_loss_conn */ ) / respChgBatDepot.PowerDemand).Value();
 			return etaChgBatDepot;
 		}
 

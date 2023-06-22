@@ -859,7 +859,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				return null;
 			}
 
-			var retVal = new BatterySystemData();
+			var addJunctionBoxResistance = false;
+			var addConnectorSystemResistance = false;
+            var retVal = new BatterySystemData();
 			var batteryCount = 0;
 			foreach (var entry in bat) {
 				var b = entry.REESSPack as IBatteryPackDeclarationInputData;
@@ -867,7 +869,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					continue;
 				}
 
-				for (var i = 0; i < entry.Count; i++) {
+				if (b.JunctionboxIncluded != null && !b.JunctionboxIncluded.Value) {
+					addJunctionBoxResistance = true;
+				}
+
+				if (b.ConnectorsSubsystemsIncluded != null && !b.ConnectorsSubsystemsIncluded.Value) {
+					addConnectorSystemResistance = true;
+				}
+                for (var i = 0; i < entry.Count; i++) {
 					retVal.Batteries.Add(Tuple.Create(entry.StringId, new BatteryData() {
 						MinSOC = b.MinSOC.Value,
 						MaxSOC = b.MaxSOC.Value,
@@ -880,8 +889,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					}));
 				}
 			}
+			if (addJunctionBoxResistance) {
+				retVal.ConnectionSystemResistance += DeclarationData.Battery.JunctionBoxResistance;
+			}
 
-			retVal.InitialSoC = initialSOC;
+			if (addConnectorSystemResistance) {
+				retVal.ConnectionSystemResistance += DeclarationData.Battery.CablesAndConnectorsResistance;
+			}
+
+            retVal.InitialSoC = initialSOC;
 			return retVal;
 		}
 
