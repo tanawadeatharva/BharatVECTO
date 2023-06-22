@@ -16,18 +16,18 @@
     "Gears": [
       {
         "Ratio": 8.31,
-        "MaxOutShaftTorque": "",
-        "MaxOutShaftSpeed": "" 
+        "MaxOutShaftTorque": "1500",
+        "MaxOutShaftSpeed": "1300"
       },
       {
         "Ratio": 4.65,
-        "MaxOutShaftTorque": "",
-        "MaxOutShaftSpeed": ""
+        "MaxOutShaftTorque": "1500",
+        "MaxOutShaftSpeed": "1300"
       },
       {
         "Ratio": 2.74,
-        "MaxOutShaftTorque": "",
-        "MaxOutShaftSpeed": ""
+        "MaxOutShaftTorque": "1500",
+        "MaxOutShaftSpeed": "1300"
       }
     ],
     "VoltageLevels": [
