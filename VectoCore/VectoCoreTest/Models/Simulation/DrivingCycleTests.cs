@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var dataWriter = new MockModalDataContainer();
 			var container = new VehicleContainer(ExecutionMode.Engineering, dataWriter);
 
-			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach Engine Only.vdri", CycleType.EngineOnly,
+			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData/Cycles/Coach Engine Only.vdri", CycleType.EngineOnly,
 				false);
 			var cycle = new PowertrainDrivingCycle(container, cycleData);
 			new EngineOnlyGearboxInfo(container);
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 
-			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach Engine Only Paux_var-dt.vdri",
+			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData/Cycles/Coach Engine Only Paux_var-dt.vdri",
 				CycleType.EngineOnly, false);
 			var cycle = new PowertrainDrivingCycle(container, cycleData);
 			new EngineOnlyGearboxInfo(container);
@@ -334,11 +334,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			AssertHelper.Exception<VectoException>(() => TestCycleRead(cycle, type));
 		}
 
-		[TestCase(@"TestData\Cycles\Coach.vdri", CycleType.DistanceBased),
-		TestCase(@"TestData\Cycles\Engine Only1.vdri", CycleType.EngineOnly),
-		TestCase(@"TestData\Pwheel\RD_#1_Pwheel_AuxStd.vdri", CycleType.PWheel),
-		TestCase(@"TestData\MeasuredSpeed\MeasuredSpeedVairAux.vdri", CycleType.MeasuredSpeed),
-		TestCase(@"TestData\MeasuredSpeed\MeasuredSpeed_Gear_Rural_VairAux.vdri",
+		[TestCase(@"TestData/Cycles/Coach.vdri", CycleType.DistanceBased),
+		TestCase(@"TestData/Cycles/Engine Only1.vdri", CycleType.EngineOnly),
+		TestCase(@"TestData/Pwheel/RD_#1_Pwheel_AuxStd.vdri", CycleType.PWheel),
+		TestCase(@"TestData/MeasuredSpeed/MeasuredSpeedVairAux.vdri", CycleType.MeasuredSpeed),
+		TestCase(@"TestData/MeasuredSpeed/MeasuredSpeed_Gear_Rural_VairAux.vdri",
 			CycleType.MeasuredSpeedGear),
 		]
 		public void DrivingCycle_Detect_File(string filename, CycleType type)
@@ -346,11 +346,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			TestCycleDetect(File.ReadAllText(filename), type);
 		}
 
-		[TestCase(@"TestData\Cycles\Coach.vdri", CycleType.DistanceBased, 6036),
-		TestCase(@"TestData\Cycles\Engine Only1.vdri", CycleType.EngineOnly, 696),
-		TestCase(@"TestData\Pwheel\RD_#1_Pwheel_AuxStd.vdri", CycleType.PWheel, 3917),
-		TestCase(@"TestData\MeasuredSpeed\MeasuredSpeedVairAux.vdri", CycleType.MeasuredSpeed, 1300),
-		TestCase(@"TestData\MeasuredSpeed\MeasuredSpeed_Gear_Rural_VairAux.vdri",
+		[TestCase(@"TestData/Cycles/Coach.vdri", CycleType.DistanceBased, 6036),
+		TestCase(@"TestData/Cycles/Engine Only1.vdri", CycleType.EngineOnly, 696),
+		TestCase(@"TestData/Pwheel/RD_#1_Pwheel_AuxStd.vdri", CycleType.PWheel, 3917),
+		TestCase(@"TestData/MeasuredSpeed/MeasuredSpeedVairAux.vdri", CycleType.MeasuredSpeed, 1300),
+		TestCase(@"TestData/MeasuredSpeed/MeasuredSpeed_Gear_Rural_VairAux.vdri",
 			CycleType.MeasuredSpeedGear, 1300),
 		]
 		public void DrivingCycle_Read_File(string filename, CycleType type, int entryCount)

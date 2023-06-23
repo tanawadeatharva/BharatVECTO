@@ -27,10 +27,10 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 	public class CompletedBusSanityCheckTests
 	{
 		private IXMLInputDataReader _xmlInputReader;
-		public const string CompletedFile32 = @"TestData\Integration\Buses\FactorMethod\vecto_vehicle-completed_heavyBus_41.xml";
-		//public const string CompletedFile33b1 = @"TestData\Integration\Buses\FactorMethod\CompletedHeavyBus_33b1.RSLT_VIF.xml";
-        public const string CompletedFile33b1 = @"TestData\Integration\Buses\FactorMethod\vecto_vehicle-completed_heavyBus_42.xml";
-        public const string  PifFile_33_34 = @"TestData\Integration\Buses\FactorMethod\VIF\primary_heavyBus group42_SmartPS.RSLT_VIF.xml";
+		public const string CompletedFile32 = @"TestData/Integration/Buses/FactorMethod/vecto_vehicle-completed_heavyBus_41.xml";
+		//public const string CompletedFile33b1 = @"TestData/Integration/Buses/FactorMethod/CompletedHeavyBus_33b1.RSLT_VIF.xml";
+        public const string CompletedFile33b1 = @"TestData/Integration/Buses/FactorMethod/vecto_vehicle-completed_heavyBus_42.xml";
+        public const string  PifFile_33_34 = @"TestData/Integration/Buses/FactorMethod/VIF/primary_heavyBus group42_SmartPS.RSLT_VIF.xml";
 
         [OneTimeSetUp]
 		public void RunBeforeAnyTests()

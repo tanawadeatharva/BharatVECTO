@@ -57,14 +57,14 @@ namespace TUGraz.VectoCore.Tests.Integration
 	{
 		protected static readonly PerSecond MaxTcSpeed = 1500.RPMtoRad();
 
-		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
-		public const string EngineFile = @"TestData\Components\AT_GBX\Engine.veng";
-		//public const string AxleGearLossMap = @"TestData\Components\AT_GBX\Axle.vtlm";
-		//public const string GearboxIndirectLoss = @"TestData\Components\AT_GBX\Indirect Gear.vtlm";
-		//public const string GearboxDirectLoss = @"TestData\Components\AT_GBX\Direct Gear.vtlm";
-		public const string TorqueConverterGenericFile = @"TestData\Components\AT_GBX\TorqueConverter.vtcc";
-		public const string TorqueConverterPowerSplitFile = @"TestData\Components\AT_GBX\TorqueConverterPowerSplit.vtcc";
-		public const string GearboxShiftPolygonFile = @"TestData\Components\AT_GBX\AT-Shift.vgbs";
+		public const string AccelerationFile = @"TestData/Components/Truck.vacc";
+		public const string EngineFile = @"TestData/Components/AT_GBX/Engine.veng";
+		//public const string AxleGearLossMap = @"TestData/Components/AT_GBX/Axle.vtlm";
+		//public const string GearboxIndirectLoss = @"TestData/Components/AT_GBX/Indirect Gear.vtlm";
+		//public const string GearboxDirectLoss = @"TestData/Components/AT_GBX/Direct Gear.vtlm";
+		public const string TorqueConverterGenericFile = @"TestData/Components/AT_GBX/TorqueConverter.vtcc";
+		public const string TorqueConverterPowerSplitFile = @"TestData/Components/AT_GBX/TorqueConverterPowerSplit.vtcc";
+		public const string GearboxShiftPolygonFile = @"TestData/Components/AT_GBX/AT-Shift.vgbs";
 
 		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, GearboxType gbxType,
 			SummaryDataContainer summaryDataContainer, string modFileName,

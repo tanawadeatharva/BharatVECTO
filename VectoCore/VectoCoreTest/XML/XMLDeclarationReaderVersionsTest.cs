@@ -60,57 +60,57 @@ namespace TUGraz.VectoCore.Tests.XML
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[TestCase(@"SchemaVersion1.0\Tractor_4x2_vehicle-class-5_5_t_0.xml")]
+		[TestCase(@"SchemaVersion1.0/Tractor_4x2_vehicle-class-5_5_t_0.xml")]
 		public void TestReadingJobVersion_V10(string jobFile)
 		{
 			ReadDeclarationJob(jobFile);
 		}
 
-		[TestCase(@"SchemaVersion2.0\Tractor_4x2_vehicle-class-5_5_t_0.xml")]
+		[TestCase(@"SchemaVersion2.0/Tractor_4x2_vehicle-class-5_5_t_0.xml")]
 		public void TestReadingJobVersion_V20(string jobFile)
 		{
 			ReadDeclarationJob(jobFile);
 		}
 
 
-		[TestCase(@"SchemaVersion2.0\vecto_vehicle-components_1.0.xml")]
+		[TestCase(@"SchemaVersion2.0/vecto_vehicle-components_1.0.xml")]
 		public void TestReadingJobVersion_V20_ComponentsV10(string jobFile)
 		{
 			ReadDeclarationJob(jobFile);
 		}
 
-		[TestCase(@"SchemaVersion2.1\Tractor_4x2_vehicle-class-5_5_t_0.xml")]
+		[TestCase(@"SchemaVersion2.1/Tractor_4x2_vehicle-class-5_5_t_0.xml")]
 		public void TestReadingJobVersion_V21(string jobFile)
 		{
 			ReadDeclarationJob(jobFile);
 		}
 
-		[TestCase(@"SchemaVersion2.1\vecto_vehicle-exempted-sample.xml"),
+		[TestCase(@"SchemaVersion2.1/vecto_vehicle-exempted-sample.xml"),
 		Ignore("ExemptedVehicles XML Version 1.0 no longer supported")]
 		public void TestReadingJobVersion_V21_Exempted(string jobFile)
 		{
 			ReadDeclarationJob(jobFile);
 		}
 
-		[TestCase(@"SchemaVersion2.1\vecto_vehicle-components_1.0.xml")]
+		[TestCase(@"SchemaVersion2.1/vecto_vehicle-components_1.0.xml")]
 		public void TestReadingJobVersion_V21_ComponentsV10(string jobFile)
 		{
 			ReadDeclarationJob(jobFile);
 		}
 
-		[TestCase(@"SchemaVersion2.1\vecto_vehicle-components_2.0.xml")]
+		[TestCase(@"SchemaVersion2.1/vecto_vehicle-components_2.0.xml")]
 		public void TestReadingJobVersion_V21_ComponentsV20(string jobFile)
 		{
 			ReadDeclarationJob(jobFile);
 		}
 
-		[TestCase(@"SchemaVersion2.1\vecto_vehicle-tyre25.xml")]
+		[TestCase(@"SchemaVersion2.1/vecto_vehicle-tyre25.xml")]
 		public void TestReadingJobVersion_V21_Tyre25(string jobFile)
 		{
 			ReadDeclarationJob(jobFile);
 		}
 
-		[TestCase(@"SchemaVersion2.2\Tractor_4x2_vehicle-class-5_5_t_0.xml")]
+		[TestCase(@"SchemaVersion2.2/Tractor_4x2_vehicle-class-5_5_t_0.xml")]
 		public void TestReadingJobVersion_V22(string jobFile)
 		{
 			// does not work as the new tire dimension is not allowed in VECTO at the moment
@@ -118,20 +118,20 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			//Assert.AreEqual("235/60 R17 C", runs[0].GetContainer().RunData.VehicleData.AxleData[1].WheelsDimension);
 
-			var filename = Path.Combine(@"TestData\XML\XMLReaderDeclaration", jobFile);
+			var filename = Path.Combine(@"TestData/XML/XMLReaderDeclaration", jobFile);
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
 			Assert.AreEqual("235/60 R17C", dataProvider.JobInputData.Vehicle.Components.AxleWheels.AxlesDeclaration[1].Tyre.Dimension);
 
 		}
 
 		
-		[TestCase(@"TestData\Integration\MediumLorries\vecto_vehicle-medium_lorry-Van.xml", TestName = "Medium Lorry Van"),
-		TestCase(@"TestData\Integration\MediumLorries\vecto_vehicle-medium_lorry.xml", TestName = "Medium Lorry"),
-		//TestCase(@"TestData\Integration\MediumLorries\vecto_vehicle-medium_lorryFWD.xml", TestName = "Medium Lorry FWD"), // FWD no longer supported / required
+		[TestCase(@"TestData/Integration/MediumLorries/vecto_vehicle-medium_lorry-Van.xml", TestName = "Medium Lorry Van"),
+		TestCase(@"TestData/Integration/MediumLorries/vecto_vehicle-medium_lorry.xml", TestName = "Medium Lorry"),
+		//TestCase(@"TestData/Integration/MediumLorries/vecto_vehicle-medium_lorryFWD.xml", TestName = "Medium Lorry FWD"), // FWD no longer supported / required
         ]
 		public void CreateRunDataMediumLorry(string jobFile)
 		{
-			//var jobFile = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-medium_lorry-sample.xml";
+			//var jobFile = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.6_Buses/vecto_vehicle-medium_lorry-sample.xml";
 
 			var writer = new FileOutputWriter(jobFile);
 			var inputData = xmlInputReader.CreateDeclaration(jobFile);
@@ -161,7 +161,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		public IVectoRun[] ReadDeclarationJob(string jobfile)
 		{
-			var filename = Path.Combine(@"TestData\XML\XMLReaderDeclaration", jobfile);
+			var filename = Path.Combine(@"TestData/XML/XMLReaderDeclaration", jobfile);
 
 			var fileWriter = new FileOutputWriter(filename);
 			//var sumWriter = new SummaryDataContainer(fileWriter);

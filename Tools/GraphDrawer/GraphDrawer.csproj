@@ -3,7 +3,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>GraphDrawer</RootNamespace>
     <AssemblyName>GraphDrawer</AssemblyName>
-    <TargetFrameworks>net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <DefineConstants />
   </PropertyGroup>
 

@@ -309,7 +309,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			GetGraphWriter().Write(modFileName, @"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0\" + compareFileName);
+			GetGraphWriter().Write(modFileName, @"../../TestData/Integration/BusAuxiliaries/Vecto2.0/" + compareFileName);
 		}
 	}
 }

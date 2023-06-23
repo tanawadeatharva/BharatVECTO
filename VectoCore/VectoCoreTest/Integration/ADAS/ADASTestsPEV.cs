@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 	[Parallelizable(ParallelScope.All)]
 	public class ADASTestsPEV
 	{
-		private const string BasePath = @"TestData\Integration\ADAS-PEV\Group5PCCEng\";
+		private const string BasePath = @"TestData/Integration/ADAS-PEV/Group5PCCEng/";
 		private const double tolerance = 1; //seconds of tolerance. Tolerance distance is calculated dynamically based on speed.
 
 		[OneTimeSetUp]
@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		[TestCase]
 		public void TestVECTO_1483()
 		{
-			var jobName = @"TestData\Integration\ADAS-PEV\VECTO-1483\E4_Group 5 LH_ll.vecto";
+			var jobName = @"TestData/Integration/ADAS-PEV/VECTO-1483/E4_Group 5 LH_ll.vecto";
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 			var sumContainer = new SummaryDataContainer(writer);

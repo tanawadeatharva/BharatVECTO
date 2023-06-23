@@ -7,7 +7,7 @@ xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3"
 xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
 xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4"
 xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
-xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd">
+xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCore/Resources/XSD/VectoDeclarationJob.xsd">
 	<v2.0:Vehicle id="VEH-1234567890_mixed" xsi:type="Vehicle_Conventional_CompletedBusDeclarationType" >
 		<Manufacturer>Some Manufacturer</Manufacturer>
 		<ManufacturerAddress>Infinite Loop 1</ManufacturerAddress>

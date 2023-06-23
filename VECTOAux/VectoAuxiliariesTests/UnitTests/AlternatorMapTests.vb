@@ -8,15 +8,15 @@ Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Namespace UnitTests
 	<TestFixture()>
 	Public Class AlternatorMapTests
-		Private Const _GOODMAP As String = "TestFiles\testAlternatorMap.aalt"
-		Private Const _GOODMAPORIGINALSINGLEMAP As String = "TestFiles\testAlternatorMapOriginalSingleMap.aalt"
-		Private Const _INVALIDRPMMAP As String = "TestFiles\testAlternatorMapWithInvalidRpm.aalt"
-		Private Const _INVALIDAMPSMAP As String = "TestFiles\testAlternatorMapWithInvalidAmps.aalt"
-		Private Const _IVALIDEFFICIENCYMAP As String = "TestFiles\testAlternatorMapWithInvalidEfficiency.aalt"
-		Private Const _INVALIDPOWERMAP As String = "TestFiles\testAlternatorMapWithInvalidPower.aalt"
-		Private Const _GOODCOMBINEDMAP As String = "TestFiles\testAlternatorMapCombined.aalt"
-		Private Const _ASYMETRICALCOMBINEDROWSMAP As String = "TestFiles\testAlternatorMapAsymetricalRowsCombined.aalt"
-		Private Const _ASYMETRICALCOMBINEDXYPAIRSMAP As String = "TestFiles\testAlternatorMapAsymetricalXYPairsCombined.aalt"
+		Private Const _GOODMAP As String = "TestFiles/testAlternatorMap.aalt"
+		Private Const _GOODMAPORIGINALSINGLEMAP As String = "TestFiles/testAlternatorMapOriginalSingleMap.aalt"
+		Private Const _INVALIDRPMMAP As String = "TestFiles/testAlternatorMapWithInvalidRpm.aalt"
+		Private Const _INVALIDAMPSMAP As String = "TestFiles/testAlternatorMapWithInvalidAmps.aalt"
+		Private Const _IVALIDEFFICIENCYMAP As String = "TestFiles/testAlternatorMapWithInvalidEfficiency.aalt"
+		Private Const _INVALIDPOWERMAP As String = "TestFiles/testAlternatorMapWithInvalidPower.aalt"
+		Private Const _GOODCOMBINEDMAP As String = "TestFiles/testAlternatorMapCombined.aalt"
+		Private Const _ASYMETRICALCOMBINEDROWSMAP As String = "TestFiles/testAlternatorMapAsymetricalRowsCombined.aalt"
+		Private Const _ASYMETRICALCOMBINEDXYPAIRSMAP As String = "TestFiles/testAlternatorMapAsymetricalXYPairsCombined.aalt"
 
         <OneTimeSetUp>
         Sub RunBeforeAnyTests()    

@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 	public class DeclarationDataAdapterTest_Class2
 	{
 		public const string Class2RigidTruckNoEMSJob =
-			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto";
+			@"TestData/Integration/DeclarationMode/Class2_RigidTruck_4x2/Class2_RigidTruck_DECL.vecto";
 
 		public const int CurbWeight = 4670;
 		public const double CdxA = 4.83;

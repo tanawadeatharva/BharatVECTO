@@ -24,8 +24,8 @@ Namespace UnitTests
 		Private Function GetSSM() As ISSMTOOL
 
 
-			Const _SSMMAP As String = "TestFiles\ssm.Ahsm"
-			'Const _BusDatabase As String ="TestFiles\BusDatabase.abdb
+			Const _SSMMAP As String = "TestFiles/ssm.Ahsm"
+			'Const _BusDatabase As String ="TestFiles/BusDatabase.abdb
 
 			Dim ssm As ISSMTOOL = New SSMTOOL(SSMInputData.ReadFile(_SSMMAP, Utils.GetDefaultVehicleData(), Nothing))
 		    'CType(CType(ssm.SSMInputs, SSMInputs).Vehicle, VehicleData).Height = 0.SI(of Meter)
@@ -48,11 +48,11 @@ Namespace UnitTests
 			signals.EngineSpeed = 2000.RPMtoRad()
 
             Dim auxConfig = Utils.GetAuxTestConfig()
-            'CType(CType(auxConfig.SSMInputs, SSMInputs).Vehicle, VehicleData).Height = 0.SI(of Meter)
+			'CType(CType(auxConfig.SSMInputs, SSMInputs).Vehicle, VehicleData).Height = 0.SI(of Meter)
 
-			Dim altMap As IAlternatorMap = AlternatorReader.ReadMap( "testfiles\testAlternatorMap.aalt")
+			Dim altMap As IAlternatorMap = AlternatorReader.ReadMap("TestFiles/testAlternatorMap.aalt")
 			'altMap.Initialise()
-		    CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage = 26.3.SI(Of Volt)
+			CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage = 26.3.SI(Of Volt)
 		    CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap =altMap
 		    CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorGearEfficiency = 0.8
 

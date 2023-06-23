@@ -18,7 +18,7 @@ Namespace UnitTests
         Public Sub SaveDefaultFile()
 
             dim auxDefault = AuxiliaryComparisonTests.GetDefaultAuxiliaryConfig() ' New AuxiliaryConfig("")
-            BusAuxWriter.SaveAuxConfig(auxDefault, "TestFiles\auxiliaryConfigKEEP.json")
+            BusAuxWriter.SaveAuxConfig(auxDefault, "TestFiles/auxiliaryConfigKEEP.json")
         End Sub
 
         <OneTimeSetUp>
@@ -38,8 +38,8 @@ Namespace UnitTests
 
             'Act
             SaveDefaultFile()
-            BusAuxiliaryInputData.ReadBusAuxiliaries("TestFiles\auxiliaryConfigKEEP.json", utils.GetDefaultVehicleData())
-            'actual=auxEmpty.Load("TestFiles\auxiliaryConfigKEEP.json")
+            BusAuxiliaryInputData.ReadBusAuxiliaries("TestFiles/auxiliaryConfigKEEP.json", utils.GetDefaultVehicleData())
+            'actual=auxEmpty.Load("TestFiles/auxiliaryConfigKEEP.json")
 
             Assert.AreEqual(auxDefault, auxEmpty)
         End Sub
@@ -76,7 +76,7 @@ Namespace UnitTests
 
             'Act
             SaveDefaultFile()
-            auxDefault = BusAuxiliaryInputData.ReadBusAuxiliaries("TestFiles\auxiliaryConfigKEEP.json",
+            auxDefault = BusAuxiliaryInputData.ReadBusAuxiliaries("TestFiles/auxiliaryConfigKEEP.json",
                                                                   Utils.GetDefaultVehicleData())
             Dim areEqual = auxTest.ConfigValuesAreTheSameAs(auxDefault)
             'Assert

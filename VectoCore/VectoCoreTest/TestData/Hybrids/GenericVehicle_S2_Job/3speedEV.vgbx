@@ -13,25 +13,25 @@
     "Gears": [
       {
         "Ratio": 2.64,
-        "LossMap": "Transmission\\Axle_4x2_Tractor.vtlm"
+        "LossMap": "Transmission//Axle_4x2_Tractor.vtlm"
       },
       {
         "Ratio": 17.5,
-        "LossMap": "Transmission\\Gear_1.vtlm",
+        "LossMap": "Transmission//Gear_1.vtlm",
         "ShiftPolygon": "",
         "MaxTorque": "",
         "MaxSpeed": ""
       },
       {
         "Ratio": 6.49,
-        "LossMap": "Transmission\\Gear_2.vtlm",
+        "LossMap": "Transmission//Gear_2.vtlm",
         "ShiftPolygon": "",
         "MaxTorque": "",
         "MaxSpeed": ""
       },
       {
         "Ratio": 2.48,
-        "LossMap": "Transmission\\Gear_3.vtlm",
+        "LossMap": "Transmission//Gear_3.vtlm",
         "ShiftPolygon": "",
         "MaxTorque": "",
         "MaxSpeed": ""

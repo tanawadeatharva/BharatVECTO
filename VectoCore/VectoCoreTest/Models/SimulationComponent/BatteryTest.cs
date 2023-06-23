@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	[Parallelizable(ParallelScope.All)]
 	public class BatteryTest
 	{
-		public const string componentFile = @"TestData\Hybrids\Battery\GenericBattery.vbat";
+		public const string componentFile = @"TestData/Hybrids/Battery/GenericBattery.vbat";
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()

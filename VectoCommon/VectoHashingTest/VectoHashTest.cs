@@ -61,8 +61,8 @@ namespace VectoHashingTest
 	//[Parallelizable(ParallelScope.All)]
 	public class VectoHashTest
 	{
-		public const string ReferenceXMLEngine = @"Testdata\XML\Reference\vecto_engine-sample.xml";
-		public const string ReferenceXMLVehicle = @"Testdata\XML\Reference\vecto_vehicle-sample_FULL.xml";
+		public const string ReferenceXMLEngine = @"Testdata/XML/Reference/vecto_engine-sample.xml";
+		public const string ReferenceXMLVehicle = @"Testdata/XML/Reference/vecto_vehicle-sample_FULL.xml";
 
 
 		protected IXMLInputDataReader xmlInputReader;
@@ -150,8 +150,8 @@ namespace VectoHashingTest
 			Assert.AreEqual(expectedHash, existingHash);
 		}
 
-		[TestCase(@"Testdata\XML\ToHash\vecto_vehicle-sample_3axle1.xml"),
-		TestCase(@"Testdata\XML\ToHash\vecto_vehicle-sample_3axle1_unsortedAxle.xml")]
+		[TestCase(@"Testdata/XML/ToHash/vecto_vehicle-sample_3axle1.xml"),
+		TestCase(@"Testdata/XML/ToHash/vecto_vehicle-sample_3axle1_unsortedAxle.xml")]
 		public void TestReadTyres1Index(string file)
 		{
 			var h = VectoHash.Load(file);
@@ -171,7 +171,7 @@ namespace VectoHashingTest
 		[TestCase]
 		public void TestReadTyres2Index()
 		{
-			var file = @"Testdata\XML\ToHash\vecto_vehicle-sample_3axle2.xml";
+			var file = @"Testdata/XML/ToHash/vecto_vehicle-sample_3axle2.xml";
 			var h = VectoHash.Load(file);
 			var expectedHash = new[] {
 				"5074334bb2c090c5e258e9a664f5d19689a3f13d",
@@ -189,8 +189,8 @@ namespace VectoHashingTest
 				"index exceeds number of components found! index: 3, #components: 3");
 		}
 
-		[TestCase(@"Testdata\XML\ToHash\vecto_vehicle-sample_3axle1.xml"),
-		TestCase(@"Testdata\XML\ToHash\vecto_vehicle-sample_3axle1_unsortedAxle.xml")]
+		[TestCase(@"Testdata/XML/ToHash/vecto_vehicle-sample_3axle1.xml"),
+		TestCase(@"Testdata/XML/ToHash/vecto_vehicle-sample_3axle1_unsortedAxle.xml")]
 		public void TestComputeTyres1Index(string file)
 		{
 			var h = VectoHash.Load(file);
@@ -207,7 +207,7 @@ namespace VectoHashingTest
 		[TestCase]
 		public void TestComputeTyres2Index()
 		{
-			var file = @"Testdata\XML\ToHash\vecto_vehicle-sample_3axle2.xml";
+			var file = @"Testdata/XML/ToHash/vecto_vehicle-sample_3axle2.xml";
 			var h = VectoHash.Load(file);
 
 			var hash1 = h.ComputeHash(VectoComponents.Tyre, 0);
@@ -234,23 +234,23 @@ namespace VectoHashingTest
 		]
 		public void TestHashComputationVariations(string file, string expectedHash)
 		{
-			var h = VectoHash.Load(@"Testdata\XML\Variations\" + file);
+			var h = VectoHash.Load(@"Testdata/XML/Variations/" + file);
 			var hash = h.ComputeHash();
 
 			Assert.AreEqual(expectedHash, hash);
 		}
 
 
-		[TestCase(@"Testdata\XML\Validation\vecto_engine_valid.xml"),
-		TestCase(@"Testdata\XML\Validation\vecto_gearbox_valid.xml")]
+		[TestCase(@"Testdata/XML/Validation/vecto_engine_valid.xml"),
+		TestCase(@"Testdata/XML/Validation/vecto_gearbox_valid.xml")]
 		public void TestValidation(string file)
 		{
 			var h = VectoHash.Load(file);
 			Assert.IsTrue(h.ValidateHash());
 		}
 
-		[TestCase(@"Testdata\XML\Validation\vecto_engine_invalid.xml"),
-		TestCase(@"Testdata\XML\Validation\vecto_gearbox_invalid.xml")]
+		[TestCase(@"Testdata/XML/Validation/vecto_engine_invalid.xml"),
+		TestCase(@"Testdata/XML/Validation/vecto_gearbox_invalid.xml")]
 		public void TestValidationInvalid(string file)
 		{
 			var h = VectoHash.Load(file);
@@ -262,7 +262,7 @@ namespace VectoHashingTest
 		]
 		public void TestValidationComponentValid(VectoComponents component)
 		{
-			var file = @"Testdata\XML\Validation\vecto_vehicle_components_valid-engine_gbx.xml";
+			var file = @"Testdata/XML/Validation/vecto_vehicle_components_valid-engine_gbx.xml";
 			var h = VectoHash.Load(file);
 
 			Assert.IsTrue(h.ValidateHash(component));
@@ -279,15 +279,15 @@ namespace VectoHashingTest
 		]
 		public void TestValidationComponentInvalid(VectoComponents component)
 		{
-			var file = @"Testdata\XML\Validation\vecto_vehicle_components_invalid.xml";
+			var file = @"Testdata/XML/Validation/vecto_vehicle_components_invalid.xml";
 			var h = VectoHash.Load(file);
 
 			Assert.IsFalse(h.ValidateHash(component));
 		}
 
-		[TestCase(@"Testdata\XML\ToHash\vecto_engine-input.xml"),
-		TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml"),
-		TestCase(@"Testdata\XML\ToHash\vecto_gearbox-input.xml")]
+		[TestCase(@"Testdata/XML/ToHash/vecto_engine-input.xml"),
+		TestCase(@"Testdata/XML/ToHash/vecto_engine_withid-input.xml"),
+		TestCase(@"Testdata/XML/ToHash/vecto_gearbox-input.xml")]
 		public void TestAddHash(string file)
 		{
 			var destination = Path.GetFileNameWithoutExtension(file) + "_hashed.xml";
@@ -304,10 +304,10 @@ namespace VectoHashingTest
 			Assert.IsTrue(h2.ValidateHash());
 		}
 
-		[TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml", 5),
-		TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml", 10),
-		TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml", 15),
-		TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml", 20),
+		[TestCase(@"Testdata/XML/ToHash/vecto_engine_withid-input.xml", 5),
+		TestCase(@"Testdata/XML/ToHash/vecto_engine_withid-input.xml", 10),
+		TestCase(@"Testdata/XML/ToHash/vecto_engine_withid-input.xml", 15),
+		TestCase(@"Testdata/XML/ToHash/vecto_engine_withid-input.xml", 20),
 		]
 		public void TestAddHashoDoNotOverwriteID(string file, int idLength)
 		{
@@ -325,9 +325,9 @@ namespace VectoHashingTest
 			Assert.AreEqual(newid, id.Attribute("id").Value);
 		}
 
-		[TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml", 2),
-		TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml", 3),
-		TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml", 4)]
+		[TestCase(@"Testdata/XML/ToHash/vecto_engine_withid-input.xml", 2),
+		TestCase(@"Testdata/XML/ToHash/vecto_engine_withid-input.xml", 3),
+		TestCase(@"Testdata/XML/ToHash/vecto_engine_withid-input.xml", 4)]
 		public void TestAddHashoDoOverwriteID(string file, int idLength)
 		{
 			var newid = "x" + Guid.NewGuid().ToString("n").Substring(0, idLength - 1);
@@ -344,7 +344,7 @@ namespace VectoHashingTest
 			Assert.AreNotEqual(newid, id.Attribute("id").Value);
 		}
 
-		[TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml")]
+		[TestCase(@"Testdata/XML/ToHash/vecto_engine_withid-input.xml")]
 		public void TestReplaceDate(string file)
 		{
 			var input = new XmlDocument();
@@ -365,10 +365,10 @@ namespace VectoHashingTest
 			Assert.IsTrue(now.ToUniversalTime() - newDate < new TimeSpan(0, 0, 0, 1));
 		}
 
-		[TestCase(@"Testdata\XML\ToHash\vecto_engine_withhash-input.xml", "input data already contains a signature element"),
-		TestCase(@"Testdata\XML\ToHash\vecto_vehicle-sample.xml", "adding hash for Vehicle is not supported"),
-		TestCase(@"Testdata\XML\ToHash\vecto_gearbox-input_nodata.xml", "'Data' element for component 'Gearbox' not found!"),
-		TestCase(@"Testdata\XML\ToHash\multiple_components.xml", "input must not contain multiple components!"),
+		[TestCase(@"Testdata/XML/ToHash/vecto_engine_withhash-input.xml", "input data already contains a signature element"),
+		TestCase(@"Testdata/XML/ToHash/vecto_vehicle-sample.xml", "adding hash for Vehicle is not supported"),
+		TestCase(@"Testdata/XML/ToHash/vecto_gearbox-input_nodata.xml", "'Data' element for component 'Gearbox' not found!"),
+		TestCase(@"Testdata/XML/ToHash/multiple_components.xml", "input must not contain multiple components!"),
 		]
 		public void TestAddHashException(string file, string expectedExceptionMsg)
 		{
@@ -381,7 +381,7 @@ namespace VectoHashingTest
 		[TestCase]
 		public void TestDuplicateSigElement()
 		{
-			var filename = @"Testdata\XML\Invalid\duplicate-sig.xml";
+			var filename = @"Testdata/XML/Invalid/duplicate-sig.xml";
 			var h = VectoHash.Load(filename);
 
 			AssertHelper.Exception<Exception>(() => { var r = h.ReadHash(); }, "Multiple DigestValue elements found!");
@@ -414,10 +414,10 @@ namespace VectoHashingTest
 			Assert.AreEqual(BasicHasingTests.HashVehicleXML, hash);
 		}
 
-		[TestCase(@"Testdata\XML\ToHash\vecto_engine-input.xml"),
-		TestCase(@"Testdata\XML\ToHash\vecto_engine-input_emptyDate.xml"),
-		TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml"),
-		TestCase(@"Testdata\XML\ToHash\vecto_gearbox-input.xml")]
+		[TestCase(@"Testdata/XML/ToHash/vecto_engine-input.xml"),
+		TestCase(@"Testdata/XML/ToHash/vecto_engine-input_emptyDate.xml"),
+		TestCase(@"Testdata/XML/ToHash/vecto_engine_withid-input.xml"),
+		TestCase(@"Testdata/XML/ToHash/vecto_gearbox-input.xml")]
 		public void TestHashedComponentIsValid(string file)
 		{
 			var destination = Path.GetFileNameWithoutExtension(file) + "_hashed.xml";
@@ -442,7 +442,7 @@ namespace VectoHashingTest
 		[TestCase("vecto_vehicle-namespace_prefix.xml", BasicHasingTests.HashVehicleXML)]
 		public void TestNamespacePrefixVariations(string file, string expectedHash)
 		{
-			var h = VectoHash.Load(@"Testdata\XML\Variations\" + file);
+			var h = VectoHash.Load(@"Testdata/XML/Variations/" + file);
 			var hash = h.ComputeHash();
 
 			Assert.AreEqual(expectedHash, hash);
@@ -451,7 +451,7 @@ namespace VectoHashingTest
 		[TestCase()]
 		public void TestInvalidXMLAsFile()
 		{
-			var file = @"Testdata\XML\Invalid\invalid-comp.xml";
+			var file = @"Testdata/XML/Invalid/invalid-comp.xml";
 
 			AssertHelper.Exception<Exception>(() => VectoHash.Load(file), "failed to read XML document");
 		}
@@ -459,7 +459,7 @@ namespace VectoHashingTest
 		[TestCase()]
 		public void TestInvalidXMLAsStream()
 		{
-			var file = @"Testdata\XML\Invalid\invalid-comp.xml";
+			var file = @"Testdata/XML/Invalid/invalid-comp.xml";
 			var stream = File.Open(file, FileMode.Open);
 			AssertHelper.Exception<Exception>(() => VectoHash.Load(stream), "failed to read XML document");
 		}
@@ -520,8 +520,8 @@ namespace VectoHashingTest
 
 
 
-		[TestCase(@"Testdata\XML\Validation\vecto_engine_valid.xml"),
-		TestCase(@"Testdata\XML\Validation\vecto_gearbox_valid.xml")]
+		[TestCase(@"Testdata/XML/Validation/vecto_engine_valid.xml"),
+		TestCase(@"Testdata/XML/Validation/vecto_gearbox_valid.xml")]
 		public void TestXMLComponentValidation(string file)
 		{
 			var xmlDoc = new XmlDocument();
@@ -534,8 +534,8 @@ namespace VectoHashingTest
 
 		}
 
-		[TestCase(@"Testdata\XML\Validation\vecto_engine_valid.xml"),
-		TestCase(@"Testdata\XML\Validation\vecto_engine_valid-typeAttr.xml")]
+		[TestCase(@"Testdata/XML/Validation/vecto_engine_valid.xml"),
+		TestCase(@"Testdata/XML/Validation/vecto_engine_valid-typeAttr.xml")]
 		public void TestIgnoreTypeAttribute(string file)
 		{
 			var h = VectoHash.Load(file);
@@ -543,7 +543,7 @@ namespace VectoHashingTest
 		}
 
 		public const string MultistageFile =
-			@"Testdata\XML\Multistage\vecto_multistage_primary_vehicle_stage_2_3_group41.xml";
+			@"Testdata/XML/Multistage/vecto_multistage_primary_vehicle_stage_2_3_group41.xml";
 
 
 
@@ -612,7 +612,7 @@ namespace VectoHashingTest
 		}
 
 
-		[TestCase(@"Testdata\XML\Multistage\final.VIF_Report_5.xml")]
+		[TestCase(@"Testdata/XML/Multistage/final.VIF_Report_5.xml")]
 		public void TestMultistageVerifyHashStructure(string file)
 		{
 			var h = VectoHash.Load(file);
@@ -661,7 +661,7 @@ namespace VectoHashingTest
 
 		}
 
-		private const string WheelsFileToHash25 = @"Testdata\XML\ToHash\Tyre_v25.xml";
+		private const string WheelsFileToHash25 = @"Testdata/XML/ToHash/Tyre_v25.xml";
 
         [TestCase(WheelsFileToHash25)]
 		public void TestTyreValidDimension(string file)

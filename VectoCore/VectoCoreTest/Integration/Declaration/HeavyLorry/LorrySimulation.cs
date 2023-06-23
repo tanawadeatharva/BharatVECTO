@@ -56,21 +56,21 @@ public class LorrySimulation
 		PTOActive, // Pto is active 
 	}
 
-	private const string BASE_DIR = @"TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\";
-	private const string Group5_HEV_P2_OVC = @"HeavyLorry\P-HEV\Group5_HEV_P2_ovc.xml";
-	private const string Group5_HEV_P3_OVC = @"HeavyLorry\P-HEV\Group5_HEV_P3_ovc.xml";
-	private const string Group5_HEV_P4_OVC = @"HeavyLorry\P-HEV\Group5_HEV_P4_ovc.xml";
-	private const string Group5_HEV_P2_5_OVC = @"HeavyLorry\P-HEV\Group5_HEV_P2_5_ovc.xml";
-	private const string Group5_HEV_S2_OVC = @"HeavyLorry\S-HEV\Group2_HEV_S2_ovc.xml";
-	private const string Group5_HEV_S3_OVC = @"HeavyLorry\S-HEV\Group2_HEV_S3_ovc.xml";
-	private const string Group5_HEV_S4_OVC = @"HeavyLorry\S-HEV\Group2_HEV_S4_ovc.xml";
-	private const string Group5_HEV_S_IEPC = @"HeavyLorry\S-HEV\Group2_HEV_IEPC_S.xml";
-	private const string Group5_HEV_S_IEPC_pto = @"HeavyLorry\S-HEV\Group2_HEV_IEPC_S_pto.xml";
-	private const string Group5_HEV_S_IEPC_ovc = @"HeavyLorry\S-HEV\Group2_HEV_IEPC_S_ovc.xml";
+	private const string BASE_DIR = @"TestData/Integration/DeclarationMode/2nd_AmendmDeclMode/";
+	private const string Group5_HEV_P2_OVC = @"HeavyLorry/P-HEV/Group5_HEV_P2_ovc.xml";
+	private const string Group5_HEV_P3_OVC = @"HeavyLorry/P-HEV/Group5_HEV_P3_ovc.xml";
+	private const string Group5_HEV_P4_OVC = @"HeavyLorry/P-HEV/Group5_HEV_P4_ovc.xml";
+	private const string Group5_HEV_P2_5_OVC = @"HeavyLorry/P-HEV/Group5_HEV_P2_5_ovc.xml";
+	private const string Group5_HEV_S2_OVC = @"HeavyLorry/S-HEV/Group2_HEV_S2_ovc.xml";
+	private const string Group5_HEV_S3_OVC = @"HeavyLorry/S-HEV/Group2_HEV_S3_ovc.xml";
+	private const string Group5_HEV_S4_OVC = @"HeavyLorry/S-HEV/Group2_HEV_S4_ovc.xml";
+	private const string Group5_HEV_S_IEPC = @"HeavyLorry/S-HEV/Group2_HEV_IEPC_S.xml";
+	private const string Group5_HEV_S_IEPC_pto = @"HeavyLorry/S-HEV/Group2_HEV_IEPC_S_pto.xml";
+	private const string Group5_HEV_S_IEPC_ovc = @"HeavyLorry/S-HEV/Group2_HEV_IEPC_S_ovc.xml";
 
-	private const string Group5_PEV_E3 = @"HeavyLorry\PEV\Group5_ PEV_E3_ES_Standard.xml";
-	private const string Group2_HEV_IEPC_S_StdVal = @"HeavyLorry\S-HEV\Group2_HEV_IEPC_S_standard_values.xml";
-	private const string ConventionalHeavyLorry = @"HeavyLorry\Conventional\Group5_Conv_ES_Standard.xml";
+	private const string Group5_PEV_E3 = @"HeavyLorry/PEV/Group5_ PEV_E3_ES_Standard.xml";
+	private const string Group2_HEV_IEPC_S_StdVal = @"HeavyLorry/S-HEV/Group2_HEV_IEPC_S_standard_values.xml";
+	private const string ConventionalHeavyLorry = @"HeavyLorry/Conventional/Group5_Conv_ES_Standard.xml";
 
 
 	private StandardKernel _kernel;
@@ -90,10 +90,10 @@ public class LorrySimulation
 	[TestCase(ConventionalHeavyLorry, TestName = "Stefan_Conv")]
 	//S-HEV
 	[TestCase(Group5_HEV_S2_OVC)]
-	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S3_stefan.xml", TestName = "Stefan_S2")]
+	[TestCase(@"HeavyLorry/S-HEV/Group2_HEV_S3_stefan.xml", TestName = "Stefan_S2")]
 	//PEV
 	[TestCase(Group5_PEV_E3)]
-	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_APT_E2.xml")]
+	[TestCase(@"HeavyLorry/PEV/PEV_heavyLorry_APT_E2.xml")]
 	//P-HEV
 	[TestCase(Group5_HEV_P2_OVC)]
 	public void HeavyLorrySimulationTest(string jobFile)
@@ -106,20 +106,20 @@ public class LorrySimulation
     }
 
 	//S-HEV
-	[TestCase(@"MediumLorry\S-HEV\Group2_HEV_S2.xml")]
+	[TestCase(@"MediumLorry/S-HEV/Group2_HEV_S2.xml")]
 
 
 	//P-HEV
-	[TestCase(@"MediumLorry\P-HEV\Group5_HEV_P3_ovc.xml")]
+	[TestCase(@"MediumLorry/P-HEV/Group5_HEV_P3_ovc.xml")]
 
 	//PEV
-	[TestCase(@"MediumLorry\PEV\Group5_ PEV_E3_ES_Standard.xml")]
+	[TestCase(@"MediumLorry/PEV/Group5_ PEV_E3_ES_Standard.xml")]
 	public void MediumLorrySimulationTest(string jobFile)
 	{
 		RunFullSimulation(jobFile, true, false);
 	}
 
-	[TestCase(@"HeavyLorry\Exempted\exempted_heavy_lorry.xml")]
+	[TestCase(@"HeavyLorry/Exempted/exempted_heavy_lorry.xml")]
 	public void ExemptedTest(string jobFile)
 	{
 		RunFullSimulation(jobFile, true);
@@ -479,8 +479,8 @@ public class LorrySimulation
 	}
 	#endregion
 
-	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S4_invalid_pto.xml")]
-	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_E3_pto_transmission_invalid.xml")]
+	[TestCase(@"HeavyLorry/S-HEV/Group2_HEV_S4_invalid_pto.xml")]
+	[TestCase(@"HeavyLorry/PEV/PEV_heavyLorry_E3_pto_transmission_invalid.xml")]
 	public void PTOWithoutTransmissionTest(string jobFile)
 	{
 		SummaryDataContainer sumDataContainer;
@@ -489,8 +489,8 @@ public class LorrySimulation
 	}
 
 
-	[TestCase(@"HeavyLorry\P-HEV\Group5_HEV_P2_supercap.xml", 10)]
-	[TestCase(@"HeavyLorry\P-HEV\Group5_HEV_P1_supercap.xml", 10)]
+	[TestCase(@"HeavyLorry/P-HEV/Group5_HEV_P2_supercap.xml", 10)]
+	[TestCase(@"HeavyLorry/P-HEV/Group5_HEV_P1_supercap.xml", 10)]
 	public void PHEV_SuperCap(string jobFile, int nrRuns)
 	{
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out var sumDataContainer);
@@ -510,7 +510,7 @@ public class LorrySimulation
 	}
 
 
-	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S2_supercap.xml", 6)]
+	[TestCase(@"HeavyLorry/S-HEV/Group2_HEV_S2_supercap.xml", 6)]
 	public void SHEV_SuperCap(string jobFile, int nrRuns)
 	{
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out var sumDataContainer);
@@ -532,7 +532,7 @@ public class LorrySimulation
 	[TestCase(Group5_HEV_P3_OVC, 20)]
 	[TestCase(Group5_HEV_P4_OVC, 20)]
 	[TestCase(Group5_HEV_P2_5_OVC, 20)]
-	[TestCase(@"MediumLorry\P-HEV\Group5_HEV_P3_ovc.xml", 8, MissionType.UrbanDelivery, LoadingType.ReferenceLoad)]
+	[TestCase(@"MediumLorry/P-HEV/Group5_HEV_P3_ovc.xml", 8, MissionType.UrbanDelivery, LoadingType.ReferenceLoad)]
 	public void PHEV_ChargeSustainingIt(string jobFile, int nrRuns, MissionType missionType = MissionType.UrbanDelivery, LoadingType loadingType = LoadingType.ReferenceLoad)
 	{
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out var sumDataContainer);
@@ -584,9 +584,9 @@ public class LorrySimulation
 	[TestCase(Group5_HEV_P3_OVC, 20)]
 	[TestCase(Group5_HEV_P4_OVC, 20)]
 	[TestCase(Group5_HEV_P2_5_OVC, 20)]
-	[TestCase(@"HeavyLorry\P-HEV\Group5_HEV_IHPC.xml", 20)]
-	[TestCase(@"HeavyLorry\P-HEV\Group5_HEV_P2_OVC_stefan.xml", 20, MissionType.UrbanDelivery, LoadingType.LowLoading)]
-	[TestCase(@"HeavyLorry\P-HEV\Group5_HEV_P3_OVC_stefan.xml", 20)]
+	[TestCase(@"HeavyLorry/P-HEV/Group5_HEV_IHPC.xml", 20)]
+	[TestCase(@"HeavyLorry/P-HEV/Group5_HEV_P2_OVC_stefan.xml", 20, MissionType.UrbanDelivery, LoadingType.LowLoading)]
+	[TestCase(@"HeavyLorry/P-HEV/Group5_HEV_P3_OVC_stefan.xml", 20)]
     public void PHEV_ChargeDepleting(string jobFile, int nrRuns, MissionType missionType = MissionType.UrbanDelivery, LoadingType loadingType = LoadingType.ReferenceLoad)
 	{
 		var jobContainer = GetJobContainer(jobFile, nrRuns, out var fileWriter, out var runs, out var sumDataContainer);
@@ -611,7 +611,7 @@ public class LorrySimulation
 	[TestCase(Group5_HEV_S3_OVC, 12)]
 	[TestCase(Group5_HEV_S4_OVC, 12)]
 	[TestCase(Group5_HEV_S_IEPC_ovc, 12)]
-	//[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S4_ovc.xml",12)]
+	//[TestCase(@"HeavyLorry/S-HEV/Group2_HEV_S4_ovc.xml",12)]
 	public void SHEV_ChargeDepleting(string jobFile, int nrRuns)
 	{
 		SummaryDataContainer sumDataContainer;
@@ -649,10 +649,10 @@ public class LorrySimulation
 
 	[TestCase(Group5_HEV_S2_OVC, 12)]
 	[TestCase(Group5_HEV_S3_OVC, 12)]
-	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S4.xml", 6)]
+	[TestCase(@"HeavyLorry/S-HEV/Group2_HEV_S4.xml", 6)]
 	[TestCase(Group5_HEV_S_IEPC, 6)]
 	[TestCase(Group2_HEV_IEPC_S_StdVal, 6)]
-	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S2.xml", 6)]
+	[TestCase(@"HeavyLorry/S-HEV/Group2_HEV_S2.xml", 6)]
 	public void SHEV_ChargeSustaining(string jobFile, int nrRuns)
 	{
 		SummaryDataContainer sumDataContainer;
@@ -688,7 +688,7 @@ public class LorrySimulation
 		Assert.IsTrue(modData.Rows.Count > 0);
 	}
 
-	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S2_pto_transmission.xml", 6)]
+	[TestCase(@"HeavyLorry/S-HEV/Group2_HEV_S2_pto_transmission.xml", 6)]
 	public void SHEV_PTO_Transmission(string jobFile, int nrRuns)
 	{
 		SummaryDataContainer sumDataContainer;
@@ -735,12 +735,12 @@ public class LorrySimulation
 		Assert.IsTrue(modData.Rows.Count > 0);
 	}
 
-	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_AMT_E2.xml", 6)]
+	[TestCase(@"HeavyLorry/PEV/PEV_heavyLorry_AMT_E2.xml", 6)]
 	[TestCase(Group5_PEV_E3,10)]
-	[TestCase(@"HeavyLorry\PEV\Group5_ PEV_E4.xml",10)]
-	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_E4_standardValues.xml", 6)]
-	[TestCase(@"HeavyLorry\PEV\Group5_ PEV_IEPC_E.xml",10)]
-	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_APT_E2.xml", null)]
+	[TestCase(@"HeavyLorry/PEV/Group5_ PEV_E4.xml",10)]
+	[TestCase(@"HeavyLorry/PEV/PEV_heavyLorry_E4_standardValues.xml", 6)]
+	[TestCase(@"HeavyLorry/PEV/Group5_ PEV_IEPC_E.xml",10)]
+	[TestCase(@"HeavyLorry/PEV/PEV_heavyLorry_APT_E2.xml", null)]
 	public void PEV(string jobFile, int? nrRuns)
 	{
 		SummaryDataContainer sumDataContainer;
@@ -842,7 +842,7 @@ public class LorrySimulation
 		
 	}
 
-	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S2_pto_transmission.xml", @"HeavyLorry\S-HEV\Group2_HEV_S2.xml")]
+	[TestCase(@"HeavyLorry/S-HEV/Group2_HEV_S2_pto_transmission.xml", @"HeavyLorry/S-HEV/Group2_HEV_S2.xml")]
 	[Ignore("not ready, maybe this test doesn't make any sense")]
 	public void PEVPtoTransmission(string withPTOTransmission, string withoutPTOTransmission)
 	{
@@ -879,9 +879,9 @@ public class LorrySimulation
 
 
 
-	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_E3_supercap_invalid.xml", TestName="SuperCap used in PEV")]
-	[TestCase(@"HeavyLorry\P-HEV\Group5_HEV_P2_ovc_supercap_invalid.xml", TestName="SuperCap used in OVC P-HEV")]
-	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S2_ovc_supercap_invalid.xml", TestName="SuperCap used in OVC S-HEV")]
+	[TestCase(@"HeavyLorry/PEV/PEV_heavyLorry_E3_supercap_invalid.xml", TestName="SuperCap used in PEV")]
+	[TestCase(@"HeavyLorry/P-HEV/Group5_HEV_P2_ovc_supercap_invalid.xml", TestName="SuperCap used in OVC P-HEV")]
+	[TestCase(@"HeavyLorry/S-HEV/Group2_HEV_S2_ovc_supercap_invalid.xml", TestName="SuperCap used in OVC S-HEV")]
 	public void SuperCapFailTest(string jobFile)
 	{
 		var ex = Assert.Throws<VectoException>(() => {
@@ -898,14 +898,14 @@ public class LorrySimulation
 	//}
 
 
-	[TestCase(@"HeavyLorry\PEV\PEV_heavyLorry_E4_pto.xml", 8)]
-	[TestCase(@"HeavyLorry\PEV\Group5_ PEV_IEPC_E_pto.xml", 8)]
-	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S3_pto.xml", 8)]
-	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_IEPC_S_pto.xml", 8)]
-	[TestCase(@"HeavyLorry\S-HEV\Group2_HEV_S2_supercap_epto.xml", 8)]
+	[TestCase(@"HeavyLorry/PEV/PEV_heavyLorry_E4_pto.xml", 8)]
+	[TestCase(@"HeavyLorry/PEV/Group5_ PEV_IEPC_E_pto.xml", 8)]
+	[TestCase(@"HeavyLorry/S-HEV/Group2_HEV_S3_pto.xml", 8)]
+	[TestCase(@"HeavyLorry/S-HEV/Group2_HEV_IEPC_S_pto.xml", 8)]
+	[TestCase(@"HeavyLorry/S-HEV/Group2_HEV_S2_supercap_epto.xml", 8)]
 	public void EPTO(string jobFile, int nrRuns)
 	{
-		//"HeavyLorry\S-HEV\Group2_HEV_S2_supercap_epto.xml"
+		//"HeavyLorry/S-HEV/Group2_HEV_S2_supercap_epto.xml"
 		///Charge is 0 in TestPowertrain but 45,9 kW in real powertrain
 		/// SM state of serial hybrid strategy in breaking phase was Break_S1 -> selects Accelerate S1 as new accelerate phase -> GEN is on but supercap is (almost full) 
 

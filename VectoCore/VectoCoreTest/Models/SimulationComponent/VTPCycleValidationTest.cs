@@ -53,7 +53,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
 	[TestFixture]
-	//[Parallelizable(ParallelScope.All)]
+	[NonParallelizable]
 	public class VTPCycleValidationTest
 	{
 		public static ThreadLocal<List<string>> LogList = new ThreadLocal<List<string>>();

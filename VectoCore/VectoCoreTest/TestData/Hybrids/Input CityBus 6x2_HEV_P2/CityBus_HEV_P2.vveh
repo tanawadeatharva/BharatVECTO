@@ -79,12 +79,12 @@
         "Ratio": 1.0,
         "MechanicalEfficiency": 0.98,
         "Position": "P2",
-        "MotorFile": "Electric components\\GenericEMotor_150kW_998Nm.vem"
+        "MotorFile": "Electric components//GenericEMotor_150kW_998Nm.vem"
       }
     ],
     "Battery": {
       "NumPacks": 1,
-      "BatteryFile": "Electric components\\GenericBattery_10kWh_600V.vbat"
+      "BatteryFile": "Electric components//GenericBattery_10kWh_600V.vbat"
     }
   }
 }

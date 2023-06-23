@@ -5,8 +5,8 @@
 	xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"
 	xmlns:q1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"
 	xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
-	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob E:\QUAM\Workspace\VECTO_quam\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd
-urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_quam\VectoCore\VectoCore\Resources\XSD/VectoDeclarationDefinitions.2.1.xsd">
+	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob E:/QUAM/Workspace/VECTO_quam/VectoCore/VectoCore/Resources/XSD/VectoDeclarationJob.xsd
+urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:/QUAM/Workspace/VECTO_quam/VectoCore/VectoCore/Resources/XSD/VectoDeclarationDefinitions.2.1.xsd">
 	<v2.0:Vehicle id="VEH-1234567890" xsi:type="ExemptedVehicleDeclarationType">
 		<Manufacturer>Generic Truck Manufacturer</Manufacturer>
 		<ManufacturerAddress>Street, ZIP City</ManufacturerAddress>

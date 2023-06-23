@@ -141,21 +141,21 @@ namespace TUGraz.VectoCore.Tests.Reports
 		}
 
 		[Category("LongRunning")]
-		[TestCase(@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto")]
+		[TestCase(@"TestData/Integration/DeclarationMode/Class2_RigidTruck_4x2/Class2_RigidTruck_DECL.vecto")]
 		public void TestFullCycleModDataIntegrityDeclMT(string jobName)
 		{
 			RunSimulation(jobName, ExecutionMode.Declaration);
 		}
 
 		[Category("LongRunning")]
-		[TestCase(@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_ESS\Class2_RigidTruck_DECL.vecto")]
+		[TestCase(@"TestData/Integration/DeclarationMode/Class2_RigidTruck_4x2_ESS/Class2_RigidTruck_DECL.vecto")]
 		public void TestFullCycleModDataIntegrityDeclESS(string jobName)
 		{
 			RunSimulation(jobName, ExecutionMode.Declaration);
 		}
 
 		[Category("LongRunning")]
-		[TestCase(@"TestData\Integration\EngineeringMode\P1_Group5_AMT\P1_Group5_s2c0_rep_Payload.vecto")]
+		[TestCase(@"TestData/Integration/EngineeringMode/P1_Group5_AMT/P1_Group5_s2c0_rep_Payload.vecto")]
 		public void TestFullCycleModDataIntegrityDecl_P1ESS(string jobName)
 		{
 			RunSimulation(jobName, ExecutionMode.Engineering);
@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		[TestCase]
 		public void Test_P1_PCC_ESSOn_EssOff()
 		{
-			var jobName = @"TestData\Integration\EngineeringMode\P1_Group5_AMT\P1_Group5_s2c0_rep_Payload.vecto";
+			var jobName = @"TestData/Integration/EngineeringMode/P1_Group5_AMT/P1_Group5_s2c0_rep_Payload.vecto";
 			var fileWriter = new FileOutputWriter(jobName);
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
@@ -181,7 +181,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			jobName = @"TestData\Integration\EngineeringMode\P1_Group5_AMT\P1_Group5_s2c0_rep_Payload_ESSoff.vecto";
+			jobName = @"TestData/Integration/EngineeringMode/P1_Group5_AMT/P1_Group5_s2c0_rep_Payload_ESSoff.vecto";
 			fileWriter = new FileOutputWriter(jobName);
 			inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
@@ -206,7 +206,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 
 
-		[TestCase(@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto")]
+		[TestCase(@"TestData/Integration/DeclarationMode/Class2_RigidTruck_4x2/Class2_RigidTruck_DECL.vecto")]
 		public void TestVSUM_VMOD_FormatDecl(string jobName)
 		{
 			RunSimulation(jobName, ExecutionMode.Declaration);
@@ -218,16 +218,16 @@ namespace TUGraz.VectoCore.Tests.Reports
 		}
 
 		[Category("LongRunning")]
-		[TestCase(@"TestData\Integration\EngineeringMode\Class2_RigidTruck_4x2\Class2_RigidTruck_ENG.vecto"),
-		TestCase(@"TestData\Integration\EngineeringMode\Class5_Tractor_4x2\Class5_Tractor_ENG.vecto"),
-		TestCase(@"TestData\Integration\EngineeringMode\Class9_RigidTruck_6x2_PTO\Class9_RigidTruck_ENG_PTO.vecto"),]
+		[TestCase(@"TestData/Integration/EngineeringMode/Class2_RigidTruck_4x2/Class2_RigidTruck_ENG.vecto"),
+		TestCase(@"TestData/Integration/EngineeringMode/Class5_Tractor_4x2/Class5_Tractor_ENG.vecto"),
+		TestCase(@"TestData/Integration/EngineeringMode/Class9_RigidTruck_6x2_PTO/Class9_RigidTruck_ENG_PTO.vecto"),]
 		public void TestFullCycleModDataIntegrityMT(string jobName)
 		{
 			RunSimulation(jobName, ExecutionMode.Engineering);
 		}
 
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\Tractor_4x2_vehicle-class-5_5_t_0.xml", 1, 1.0),
-		TestCase(@"TestData\XML\XMLReaderDeclaration\Tractor_4x2_vehicle-class-5_5_t_0.xml", 7, 1.0)
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/Tractor_4x2_vehicle-class-5_5_t_0.xml", 1, 1.0),
+		TestCase(@"TestData/XML/XMLReaderDeclaration/Tractor_4x2_vehicle-class-5_5_t_0.xml", 7, 1.0)
 			]
 		public void TractionInterruptionTest(string filename, int idx, double expectedTractionInterruption)
 		{
@@ -308,7 +308,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 
 		[Category("LongRunning")]
-		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle.vecto")]
+		[TestCase(@"TestData/Integration/VTPMode/GenericVehicle/class_5_generic vehicle.vecto")]
 		public void TestVTPModeDataIntegrity(string jobName)
 		{
 			RunSimulation(jobName, ExecutionMode.Engineering);
@@ -416,7 +416,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			jobContainer.WaitFinished();
 
 			// mod files will be stored in e.g. 
-			// VectoCoreTest\bin\Debug\TestData\Integration\EngineeringMode\Class2_RigidTruck_4x2\Class2_RigidTruck_ENG.vecto_00.vmod
+			// VectoCoreTest/bin/Debug/TestData/Integration/EngineeringMode/Class2_RigidTruck_4x2/Class2_RigidTruck_ENG.vecto_00.vmod
 			//fileWriter.WriteModData(Path.GetFileName(jobName), "0", "0", modData[0].Item1);
 			//fileWriter.WriteModData(Path.GetFileName(jobName), "1", "1", modData[1].Item1);
 
@@ -868,8 +868,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 		[Category("LongRunning")]
 		[
-			TestCase(@"TestData\Integration\EngineeringMode\CityBus_AT\CityBus_AT_Ser.vecto"),
-			TestCase(@"TestData\Integration\EngineeringMode\CityBus_AT\CityBus_AT_PS.vecto")]
+			TestCase(@"TestData/Integration/EngineeringMode/CityBus_AT/CityBus_AT_Ser.vecto"),
+			TestCase(@"TestData/Integration/EngineeringMode/CityBus_AT/CityBus_AT_PS.vecto")]
 		public void TestFullCycleModDataIntegrityAT(string jobName)
 		{
 			var fileWriter = new FileOutputWriter(jobName);

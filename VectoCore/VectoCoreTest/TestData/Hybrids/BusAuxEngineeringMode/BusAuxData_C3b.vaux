@@ -7,7 +7,7 @@
   },
   "Body": {
 		"PneumaticSystem": {
-			"CompressorMap": "DEFAULT_3-Cylinder_2-Stage_598ccm.acmp",
+			"CompressorMap": "DEFAULT_3-Cylinder_2-Stage_598ccm.ACMP",
 			"AverageAirDemand": 0.7663,
 			"SmartAirCompression": false,
 			"GearRatio": 1

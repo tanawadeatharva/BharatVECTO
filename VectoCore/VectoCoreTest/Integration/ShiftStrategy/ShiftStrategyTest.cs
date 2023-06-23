@@ -115,8 +115,8 @@ namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 		//[TestCase()]
 		//public void TestGearshiftTrigger()
 		//{
-		//	var amtTestcase = @"E:\QUAM\tmp\AT_Vdrop\AMT_normal\MB_Citaro_G_MP156_ZF_Sort.vecto";
-		//	var atTestcase = @"E:\QUAM\tmp\AT_Vdrop\AT_normal\MB_Citaro_G_MP156_ZF_Sort.vecto";
+		//	var amtTestcase = @"E:/QUAM/tmp/AT_Vdrop/AMT_normal/MB_Citaro_G_MP156_ZF_Sort.vecto";
+		//	var atTestcase = @"E:/QUAM/tmp/AT_Vdrop/AT_normal/MB_Citaro_G_MP156_ZF_Sort.vecto";
 
 
 		//	var relativeJobPath = amtTestcase;

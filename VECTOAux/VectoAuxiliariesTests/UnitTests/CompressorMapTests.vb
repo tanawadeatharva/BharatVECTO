@@ -9,13 +9,13 @@ Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Namespace UnitTests
     <TestFixture()>
     Public Class CompressorMapTests
-        Private Const GOODMAP As String = "TestFiles\testCompressorMap.acmp"
-        Private Const INVALIDPOWERCOMPRESSORONMAP As String = "TestFiles\testCompressorMapInvalidOnPower.acmp"
-        Private Const INVALIDPOWERCOMPRESSOROFFMAP As String = "TestFiles\testCompressorMapInvalidOffPower.acmp"
-        Private Const INVALIDFLOWRATEMAP As String = "TestFiles\testCompressorMapInvalidFlow.acmp"
-        Private Const INSSUFICIENTROWSMAP As String = "TestFiles\testCompressorMapNotEnoughRows.acmp"
-        Private Const INVALIDRPMMAP As String = "TestFiles\testCompressorMapInvalidRpm.acmp"
-        Private Const INVALIDNUMBEROFCOLUMNS As String = "TestFiles\testCompressorMapWrongNumberOfColumns.acmp"
+        Private Const GOODMAP As String = "TestFiles/testCompressorMap.acmp"
+        Private Const INVALIDPOWERCOMPRESSORONMAP As String = "TestFiles/testCompressorMapInvalidOnPower.acmp"
+        Private Const INVALIDPOWERCOMPRESSOROFFMAP As String = "TestFiles/testCompressorMapInvalidOffPower.acmp"
+        Private Const INVALIDFLOWRATEMAP As String = "TestFiles/testCompressorMapInvalidFlow.acmp"
+        Private Const INSSUFICIENTROWSMAP As String = "TestFiles/testCompressorMapNotEnoughRows.acmp"
+        Private Const INVALIDRPMMAP As String = "TestFiles/testCompressorMapInvalidRpm.acmp"
+        Private Const INVALIDNUMBEROFCOLUMNS As String = "TestFiles/testCompressorMapWrongNumberOfColumns.acmp"
 
 
 #Region "Helpers"

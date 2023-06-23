@@ -48,9 +48,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	[Parallelizable(ParallelScope.All)]
 	public class FactoryTest
 	{
-		public const string DeclarationJobFile = @"Testdata\Jobs\12t Delivery Truck.vecto";
+		public const string DeclarationJobFile = @"TestData/Jobs/12t Delivery Truck.vecto";
 
-		public const string EngineeringJobFile = @"Testdata\Jobs\24t Coach.vecto";
+		public const string EngineeringJobFile = @"TestData/Jobs/24t Coach.vecto";
 		
 
 		[OneTimeSetUp]
@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestCase]
 		public void TestDistanceCycleInVTPEngineering()
 		{
-			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\VTPModeWithDistanceCycle.vecto");
+			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData/Jobs/VTPModeWithDistanceCycle.vecto");
 			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, null);
 
 			AssertHelper.Exception<VectoException>(() => factory.SimulationRuns().ToArray(), "Distance-based cycle can not be simulated in VerificationTest mode");
@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestCase]
 		public void TestDistanceCycleInEngineOnly()
 		{
-			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\EngineOnlyJobWithDistanceCycle.vecto");
+			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData/Jobs/EngineOnlyJobWithDistanceCycle.vecto");
 			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, null);
 
 			AssertHelper.Exception<VectoException>(() => factory.SimulationRuns().ToArray(), "Distance-based cycle can not be simulated in EngineOnly mode");
@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestCase]
 		public void TestMeasuredSpeedCycleInEngineOnly()
 		{
-			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\EngineOnlyJobWithMeasuredCycle.vecto");
+			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData/Jobs/EngineOnlyJobWithMeasuredCycle.vecto");
 			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, null);
 
 			AssertHelper.Exception<VectoException>(() => {

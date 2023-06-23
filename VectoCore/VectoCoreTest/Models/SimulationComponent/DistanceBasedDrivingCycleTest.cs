@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	[Parallelizable(ParallelScope.All)]
 	public class DistanceBasedDrivingCycleTest
 	{
-		public const string ShortCycle = @"TestData\Cycles\Coach_24t_xshort.vdri";
+		public const string ShortCycle = @"TestData/Cycles/Coach_24t_xshort.vdri";
 
 		public const double Tolerance = 0.0001;
 

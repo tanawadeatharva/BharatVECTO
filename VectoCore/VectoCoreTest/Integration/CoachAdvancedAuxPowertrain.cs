@@ -56,16 +56,16 @@ namespace TUGraz.VectoCore.Tests.Integration
 {
 	public class CoachAdvancedAuxPowertrain
 	{
-		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
-		public const string EngineFile = @"TestData\Components\24t Coach.veng";
-		public const string EngineFileHigh = @"TestData\Components\24t Coach_high.veng";
-		public const string AxleGearLossMap = @"TestData\Components\Axle.vtlm";
-		public const string GearboxIndirectLoss = @"TestData\Components\Indirect Gear.vtlm";
-		public const string GearboxDirectLoss = @"TestData\Components\Direct Gear.vtlm";
-		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
-		//public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
+		public const string AccelerationFile = @"TestData/Components/Truck.vacc";
+		public const string EngineFile = @"TestData/Components/24t Coach.veng";
+		public const string EngineFileHigh = @"TestData/Components/24t Coach_high.veng";
+		public const string AxleGearLossMap = @"TestData/Components/Axle.vtlm";
+		public const string GearboxIndirectLoss = @"TestData/Components/Indirect Gear.vtlm";
+		public const string GearboxDirectLoss = @"TestData/Components/Direct Gear.vtlm";
+		public const string GearboxShiftPolygonFile = @"TestData/Components/ShiftPolygons.vgbs";
+		//public const string GearboxFullLoadCurveFile = @"TestData/Components/Gearbox.vfld";
 
-		public const string AdvancedAuxFile = @"Testdata\Integration\BusAuxiliaries\AdvAuxTest.aaux";
+		public const string AdvancedAuxFile = @"TestData/Integration/BusAuxiliaries/AdvAuxTest.aaux";
 
 		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
 			bool overspeed = false, bool highEnginePower = true)

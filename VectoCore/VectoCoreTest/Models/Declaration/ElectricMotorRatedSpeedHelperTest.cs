@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[TestCase(1850f, 1f)]
 		public void IEPCFld(double expectedSpeedRpm, double ratio)
 		{
-			var fldCruveData = VectoCSVFile.Read(@"TestData\BatteryElectric\IEPC\GenericFld.viepcp");
+			var fldCruveData = VectoCSVFile.Read(@"TestData/BatteryElectric/IEPC/GenericFld.viepcp");
 			var fld = IEPCFullLoadCurveReader.Create(fldCruveData, 1, ratio);
 
 			Assert.AreEqual(1850 * ratio, ElectricMotorRatedSpeedHelper.GetRatedSpeed(fld.FullLoadEntries, entry => entry.MotorSpeed,

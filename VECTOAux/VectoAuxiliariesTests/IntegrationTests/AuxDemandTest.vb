@@ -22,8 +22,8 @@ Namespace IntegrationTests
         <TestCase(15700, 1319, -35.79263, -144.0441, 9093.9511)>
         Public Sub AuxDemandTest(vehicleWeight As Double, engineSpeed As Double, driveLinePower As Double,
                                 internalPower As Double, expectedPowerDemand As Double)
-            Dim engineFCMapFilePath = "TestFiles\Integration\24t Coach.vmap"
-            Dim auxFilePath = "TestFiles\Integration\AdvAuxTest.aaux"
+            Dim engineFCMapFilePath = "TestFiles/Integration/24t Coach.vmap"
+            Dim auxFilePath = "TestFiles/Integration/AdvAuxTest.aaux"
 
             Dim aux As BusAuxiliaries = New BusAuxiliaries(new NoBattery(Nothing))
 
@@ -40,7 +40,7 @@ Namespace IntegrationTests
 
             dim auxConfig = BusAuxiliaryInputData.ReadBusAuxiliaries(auxFilePath, Utils.GetDefaultVehicleData(vehicleWeight.SI(Of Kilogram)))
             
-            aux.Initialise(auxConfig) ', Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
+            aux.Initialise(auxConfig) ', Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "/")
 
             aux.Signals.ClutchEngaged = True
             'aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)()  'kW
@@ -72,8 +72,8 @@ Namespace IntegrationTests
             Dim engineSpeed As Double = 1256
 
 
-            Dim engineFCMapFilePath = "TestFiles\Integration\24t Coach.vmap"
-            Dim auxFilePath = "TestFiles\Integration\AdvAuxTest.aaux"
+            Dim engineFCMapFilePath = "TestFiles/Integration/24t Coach.vmap"
+            Dim auxFilePath = "TestFiles/Integration/AdvAuxTest.aaux"
 
             Dim aux As BusAuxiliaries = New BusAuxiliaries(New NoBattery(Nothing))
 
@@ -91,7 +91,7 @@ Namespace IntegrationTests
             Dim auxCfg = BusAuxiliaryInputData.ReadBusAuxiliaries(auxFilePath, Utils.GetDefaultVehicleData(12000.SI(Of Kilogram)()))
             'CType(auxCfg, AuxiliaryConfig).FuelMap = fuelMap
 
-            CType(aux, BusAuxiliaries).Initialise(auxCfg) ', Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
+            CType(aux, BusAuxiliaries).Initialise(auxCfg) ', Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "/")
 
             aux.Signals.ClutchEngaged = True
             'aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)() 'kW

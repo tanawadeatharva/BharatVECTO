@@ -61,10 +61,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	[Parallelizable(ParallelScope.All)]
 	public class ATGearboxTest
 	{
-		public const string EngineDataFile = @"TestData\Components\AT_GBX\Engine.veng";
-		public const string GearboxDataFile = @"TestData\Components\AT_GBX\GearboxSerial.vgbx";
+		public const string EngineDataFile = @"TestData/Components/AT_GBX/Engine.veng";
+		public const string GearboxDataFile = @"TestData/Components/AT_GBX/GearboxSerial.vgbx";
 
-		public const string GearboxData8SpdFile = @"TestData\Components\AT_GBX\GearboxSerial8Spd.vgbx";
+		public const string GearboxData8SpdFile = @"TestData/Components/AT_GBX/GearboxSerial8Spd.vgbx";
 
 
 		[OneTimeSetUp]

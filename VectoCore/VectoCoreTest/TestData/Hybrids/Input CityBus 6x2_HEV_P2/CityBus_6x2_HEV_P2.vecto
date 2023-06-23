@@ -13,7 +13,7 @@
     "GearboxFile": "AMT_12.vgbx",
     "TCU": "AMT_12.vgbx",
     "ShiftStrategy": "TUGraz.VectoCore.Models.SimulationComponent.Impl.AMTShiftStrategy",
-    "HybridStrategyParams": "Electric components\\Hybrid_Parameters.vhctl",
+    "HybridStrategyParams": "Electric components//Hybrid_Parameters.vhctl",
     "AuxiliaryAssembly": "Classic",
     "AuxiliaryVersion": "CLASSIC",
     "AdvancedAuxiliaryFilePath": "",

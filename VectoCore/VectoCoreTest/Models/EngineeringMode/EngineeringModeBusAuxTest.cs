@@ -62,23 +62,23 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		const string JobFile = @"TestData\Integration\Buses\EngineeringMode\InterurbanBus_ENG_BusAux.vecto";
-		const string JobFile_SmartES = @"TestData\Integration\Buses\EngineeringMode\InterurbanBus_ENG_BusAux_SmartES.vecto";
-		const string JobFile_SmartPS = @"TestData\Integration\Buses\EngineeringMode\InterurbanBus_ENG_BusAux_SmartPS.vecto";
-		const string JobFile_SmartES_SmartPS = @"TestData\Integration\Buses\EngineeringMode\InterurbanBus_ENG_BusAux_SmartES-SmartPS.vecto";
+		const string JobFile = @"TestData/Integration/Buses/EngineeringMode/InterurbanBus_ENG_BusAux.vecto";
+		const string JobFile_SmartES = @"TestData/Integration/Buses/EngineeringMode/InterurbanBus_ENG_BusAux_SmartES.vecto";
+		const string JobFile_SmartPS = @"TestData/Integration/Buses/EngineeringMode/InterurbanBus_ENG_BusAux_SmartPS.vecto";
+		const string JobFile_SmartES_SmartPS = @"TestData/Integration/Buses/EngineeringMode/InterurbanBus_ENG_BusAux_SmartES-SmartPS.vecto";
 
-		const string JobFile_A = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_A.vecto";
-		const string JobFile_A_ESS = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_A_ESS.vecto";
-		const string JobFile_B = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_B.vecto";
-		const string JobFile_C1 = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_C1.vecto";
-		const string JobFile_C2a = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_C2a.vecto";
-		const string JobFile_C2b = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_C2b.vecto";
-		const string JobFile_C3a = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_C3a.vecto";
-		const string JobFile_C3b = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_C3b.vecto";
+		const string JobFile_A = @"TestData/Hybrids/BusAuxEngineeringMode/InterurbanBus_ENG_BusAux_A.vecto";
+		const string JobFile_A_ESS = @"TestData/Hybrids/BusAuxEngineeringMode/InterurbanBus_ENG_BusAux_A_ESS.vecto";
+		const string JobFile_B = @"TestData/Hybrids/BusAuxEngineeringMode/InterurbanBus_ENG_BusAux_B.vecto";
+		const string JobFile_C1 = @"TestData/Hybrids/BusAuxEngineeringMode/InterurbanBus_ENG_BusAux_C1.vecto";
+		const string JobFile_C2a = @"TestData/Hybrids/BusAuxEngineeringMode/InterurbanBus_ENG_BusAux_C2a.vecto";
+		const string JobFile_C2b = @"TestData/Hybrids/BusAuxEngineeringMode/InterurbanBus_ENG_BusAux_C2b.vecto";
+		const string JobFile_C3a = @"TestData/Hybrids/BusAuxEngineeringMode/InterurbanBus_ENG_BusAux_C3a.vecto";
+		const string JobFile_C3b = @"TestData/Hybrids/BusAuxEngineeringMode/InterurbanBus_ENG_BusAux_C3b.vecto";
 
 
 		//private const string JobRoeck_BusAux_B =
-		//	@"J:\TE-Em\Emissionsmodelle\VECTO\Arbeitsordner\AAUX\Check bus aux electrical system configurations\System type B\Citybus_P0-APT-S-175kW-6.8l_B\Citybus_P0_B.vecto";
+		//	@"J:/TE-Em/Emissionsmodelle/VECTO/Arbeitsordner/AAUX/Check bus aux electrical system configurations/System type B/Citybus_P0-APT-S-175kW-6.8l_B/Citybus_P0_B.vecto";
 		[
 		TestCase(JobFile, 0, TestName = "InterurbanBus ENG BusAux NonSmart Interurban"),
 		TestCase(JobFile, 1, TestName = "InterurbanBus ENG BusAux NonSmart Coach"),
@@ -839,7 +839,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			}
 		}
 
-		public const string EngineFileHigh = @"TestData\Components\24t Coach_high.veng";
+		public const string EngineFileHigh = @"TestData/Components/24t Coach_high.veng";
 
 		public static MockVehicleContainer CreatePowerTrain(AlternatorType alternatorType, double initialSoC,
 			double? reessSoC, bool connectEsToReess)

@@ -26,12 +26,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		private IXMLInputDataReader xmlInputReader;
 
 		public const string Class9Decl =
-			@"TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Class9_RigidTruck_DECL.vecto";
+			@"TestData/Generic Vehicles/Declaration Mode/Class9_RigidTruck_6x2/Class9_RigidTruck_DECL.vecto";
 
 		public const string Class9DeclAT =
-			@"TestData\Integration\ADAS\Group9_AT_PCC.xml";
+			@"TestData/Integration/ADAS/Group9_AT_PCC.xml";
 
-		public const string Class5Eng = @"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto";
+		public const string Class5Eng = @"TestData/Integration/ADAS/Group5PCCEng/Class5_Tractor_ENG.vecto";
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
@@ -115,9 +115,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 
 		[TestCase(Class9Decl, ExecutionMode.Declaration, 0),
-		TestCase(@"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto", ExecutionMode.Engineering, 0),
-		TestCase(@"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto", ExecutionMode.Engineering, 1),
-		TestCase(@"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto", ExecutionMode.Engineering, 12),
+		TestCase(@"TestData/Integration/ADAS/Group5PCCEng/Class5_Tractor_ENG.vecto", ExecutionMode.Engineering, 0),
+		TestCase(@"TestData/Integration/ADAS/Group5PCCEng/Class5_Tractor_ENG.vecto", ExecutionMode.Engineering, 1),
+		TestCase(@"TestData/Integration/ADAS/Group5PCCEng/Class5_Tractor_ENG.vecto", ExecutionMode.Engineering, 12),
 		]
 		public void TestSimulationPreprocessingPccSegments(string jobFile, ExecutionMode mode, int i)
 		{
@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 		[
-		TestCase(@"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto", ExecutionMode.Engineering, 12),
+		TestCase(@"TestData/Integration/ADAS/Group5PCCEng/Class5_Tractor_ENG.vecto", ExecutionMode.Engineering, 12),
 		]
 		public void TestSimulationPreprocessingPccSegmentsVehicleStop(string jobFile, ExecutionMode mode, int i)
 		{

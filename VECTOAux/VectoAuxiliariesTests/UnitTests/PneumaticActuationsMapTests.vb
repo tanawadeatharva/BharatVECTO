@@ -8,27 +8,27 @@ Namespace Pneumatics
     <TestFixture()>
     Public Class PneumaticActuationsMapTests
         Public _
-            Const cstrPneumaticActuationsMapPath_GOODMAP As String = "TestFiles\testPneumaticActuationsMap_GOODMAP.apac"
+            Const cstrPneumaticActuationsMapPath_GOODMAP As String = "TestFiles/testPneumaticActuationsMap_GOODMAP.apac"
 
         Public _
             Const cstrPneumaticActuationsMapPath_INCORRECTCOLUMNS As String =
-            "TestFiles\testPneumaticActuationsMap_INCORRECTCOLUMNS.apac"
+            "TestFiles/testPneumaticActuationsMap_INCORRECTCOLUMNS.apac"
 
         Public _
             Const cstrPneumaticActuationsMapPath_INVALIDINTEGERVALUE As String =
-            "TestFiles\testPneumaticActuationsMap_INVALIDINTEGERVALUE.apac"
+            "TestFiles/testPneumaticActuationsMap_INVALIDINTEGERVALUE.apac"
 
         Public _
             Const cstrPneumaticActuationsMapPath_DUPLICATEKEY As String =
-            "TestFiles\testPneumaticActuationsMap_DUPLICATEKEY.apac"
+            "TestFiles/testPneumaticActuationsMap_DUPLICATEKEY.apac"
 
         Public _
             Const cstrPneumaticActuationsMapPath_INVALIDCONSUMERNAME As String =
-            "TestFiles\testPneumaticActuationsMap_INVALIDCONSUMERNAME.apac"
+            "TestFiles/testPneumaticActuationsMap_INVALIDCONSUMERNAME.apac"
 
         Public _
             Const cstrPneumaticActuationsMapPath_INVALIDCYCLENAME As String =
-            "TestFiles\testPneumaticActuationsMap_INVALIDCYCLENAME.apac"
+            "TestFiles/testPneumaticActuationsMap_INVALIDCYCLENAME.apac"
 
 
         <OneTimeSetUp>
