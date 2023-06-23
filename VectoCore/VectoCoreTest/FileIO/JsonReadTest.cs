@@ -560,19 +560,19 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(1, gear.GearNumber);
 			Assert.AreEqual(3.2, gear.Ratio);
 			Assert.AreEqual(10000.SI<NewtonMeter>(), gear.MaxOutputShaftTorque);
-			Assert.AreEqual(5000.SI<PerSecond>(), gear.MaxOutputShaftSpeed);
+			Assert.AreEqual(5000.RPMtoRad(), gear.MaxOutputShaftSpeed);
 
 			gear = gears[1];
 			Assert.AreEqual(2, gear.GearNumber);
 			Assert.AreEqual(1.6, gear.Ratio);
 			Assert.AreEqual(10000.SI<NewtonMeter>(), gear.MaxOutputShaftTorque);
-			Assert.AreEqual(5000.SI<PerSecond>(), gear.MaxOutputShaftSpeed);
+			Assert.AreEqual(5000.RPMtoRad(), gear.MaxOutputShaftSpeed);
 
 			gear = gears[2];
 			Assert.AreEqual(3, gear.GearNumber);
 			Assert.AreEqual(1.6, gear.Ratio);
 			Assert.AreEqual(10000.SI<NewtonMeter>(), gear.MaxOutputShaftTorque);
-			Assert.AreEqual(5000.SI<PerSecond>(), gear.MaxOutputShaftSpeed);
+			Assert.AreEqual(5000.RPMtoRad(), gear.MaxOutputShaftSpeed);
 		}
 		
 		private void TestIEPCVoltageLevel(IList<IElectricMotorVoltageLevel> voltageLevels)
