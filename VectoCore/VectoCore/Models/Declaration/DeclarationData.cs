@@ -1580,6 +1580,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			private const double SOCMinHE = 0.05;
 			private const double SOCMaxHE = 0.95;
+			
+			public static readonly Ohm CablesAndConnectorsResistance = 0.63.SI(Unit.SI.Milli.Ohm).Cast<Ohm>();
+			public static readonly Ohm JunctionBoxResistance = 1.3.SI(Unit.SI.Milli.Ohm).Cast<Ohm>();
 
 			public static double GetMinSoc(BatteryType type)
 			{
@@ -1734,8 +1737,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var respChgBatDepot = tmpBattery.Request(0.SI<Second>(), 1.SI<Second>(), depotChargingPower, true);
 			var respChgBatInMission = tmpBattery.Request(0.SI<Second>(), 1.SI<Second>(), inMissionChargingPower, true);
 
-			var etaChgBatDepot = 1 - (respChgBatDepot.LossPower / respChgBatDepot.PowerDemand).Value();
-			var etaChgBatInMission = 1 - (respChgBatInMission.LossPower / respChgBatInMission.PowerDemand).Value();
+			var currentEstInMission = depotChargingPower / tmpBattery.InternalVoltage;
+			var connectorLossInMission = currentEstInMission * batteryData.ConnectionSystemResistance *
+								currentEstInMission;
+			var currentEstDepot = depotChargingPower / tmpBattery.InternalVoltage;
+			var connectorLossDepot = currentEstDepot * batteryData.ConnectionSystemResistance *
+								currentEstDepot;
+
+            var etaChgBatDepot = 1 - ((respChgBatDepot.LossPower + connectorLossDepot) / respChgBatDepot.PowerDemand).Value();
+			var etaChgBatInMission = 1 - ((respChgBatInMission.LossPower + connectorLossInMission) / respChgBatInMission.PowerDemand).Value();
 
 
 			var chargedEnergyDepot = batteryData.UseableStoredEnergy * vehicleOperation.RealWorldUsageFactors.StartSoCBeforeMission;
@@ -1763,7 +1773,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 				VectoMath.Max(MinDepotChgPwr, batteryData.UseableStoredEnergy / DepotChargingDuration);
 
 			var respChgBatDepot = tmpBattery.Request(0.SI<Second>(), 1.SI<Second>(), depotChargingPower, true);
-			var etaChgBatDepot = 1 - (respChgBatDepot.LossPower / respChgBatDepot.PowerDemand).Value();
+			var currentEst = depotChargingPower / tmpBattery.InternalVoltage;
+			var connectorLoss = currentEst * (runData.BatteryData?.ConnectionSystemResistance ?? 0.SI<Ohm>()) *
+								currentEst;
+			var etaChgBatDepot = 1 - ((respChgBatDepot.LossPower + connectorLoss ) / respChgBatDepot.PowerDemand).Value();
 			return etaChgBatDepot;
 		}
 

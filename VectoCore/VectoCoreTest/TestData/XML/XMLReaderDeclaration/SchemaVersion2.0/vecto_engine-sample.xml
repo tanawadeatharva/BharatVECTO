@@ -4,7 +4,7 @@
 	xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v2.0"
 	xmlns:di="http://www.w3.org/2000/09/xmldsig#" schemaVersion="2.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationComponent E:\QUAM\Workspace\VECTO_quam\VectoCore\VectoCore\Resources\XSD/VectoDeclarationComponent.xsd">
+	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationComponent E:/QUAM/Workspace/VECTO_quam/VectoCore/VectoCore/Resources/XSD/VectoDeclarationComponent.xsd">
 	<tns:Engine>
 		<Data id="ENG-gooZah3D" xsi:type="EngineDataDeclarationType">
 			<Manufacturer>Generic Engine Manufacturer</Manufacturer>

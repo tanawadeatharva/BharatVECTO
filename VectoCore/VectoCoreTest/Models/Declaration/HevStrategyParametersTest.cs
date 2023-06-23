@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
-		private const string HevStrategyParamFile = @"TestData\Cycles\HEV_Strategy_Parameters_fequiv_40soc_Lorries.csv";
+		private const string HevStrategyParamFile = @"TestData/Cycles/HEV_Strategy_Parameters_fequiv_40soc_Lorries.csv";
         [TestCase]
 		public void TestHevStrategyParametersInputLorry()
 		{

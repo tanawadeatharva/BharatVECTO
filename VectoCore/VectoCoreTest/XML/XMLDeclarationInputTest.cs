@@ -714,7 +714,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 		}
 
-		public const string SampleTyreXML = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.5\TyreSample.xml";
+		public const string SampleTyreXML = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.5/TyreSample.xml";
 
 		[TestCase()]
 		public void TestWheelsSupportedInXML()
@@ -1153,7 +1153,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 		}
 
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vecto_vehicle-fullElectricSP.xml")]
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.3/vecto_vehicle-fullElectricSP.xml")]
 		public void TestReadingNewSteeringPumpTechnologies(string file)
 		{
 			var reader = XmlReader.Create(file);

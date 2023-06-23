@@ -18,10 +18,10 @@ Namespace UnitTests
     <TestFixture()>
     Public Class _SSMTOOLTests
         'TechBenefitsList - FilePath Constants
-        Private Const GOODTechList As String = "TestFiles\testSSMTechBenefits.csv"
-        Private Const GOODTechListALLON As String = "TestFiles\testSSMTechBenefitsALLON.csv"
-        Private Const GOODTechListALLOFF As String = "TestFiles\testSSMTechBenefitsALLOFF.csv"
-        Private Const GOODTechListEMPTYLIST As String = "TestFiles\testSSMTechBenefitsEMPTYLIST.csv"
+        Private Const GOODTechList As String = "TestFiles/testSSMTechBenefits.csv"
+        Private Const GOODTechListALLON As String = "TestFiles/testSSMTechBenefitsALLON.csv"
+        Private Const GOODTechListALLOFF As String = "TestFiles/testSSMTechBenefitsALLOFF.csv"
+        Private Const GOODTechListEMPTYLIST As String = "TestFiles/testSSMTechBenefitsEMPTYLIST.csv"
 
         <OneTimeSetUp>
         Public Sub RunBeforeAnyTests()

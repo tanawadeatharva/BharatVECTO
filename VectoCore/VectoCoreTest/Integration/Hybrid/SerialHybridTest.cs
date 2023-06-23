@@ -38,25 +38,25 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 	Parallelizable(ParallelScope.All)]
 	public class SerialHybridTest
 	{
-		public const string BatFile = @"TestData\Hybrids\GenericVehicle_Sx\GenericBattery.vreess";
+		public const string BatFile = @"TestData/Hybrids/GenericVehicle_Sx/GenericBattery.vreess";
 
-		public const string AccelerationFile = @"TestData\Hybrids\GenericVehicle_Sx\Truck.vacc";
-		public const string MotorFile = @"TestData\Hybrids\GenericVehicle_Sx\GenericEMotor.vem";
+		public const string AccelerationFile = @"TestData/Hybrids/GenericVehicle_Sx/Truck.vacc";
+		public const string MotorFile = @"TestData/Hybrids/GenericVehicle_Sx/GenericEMotor.vem";
 
-		public const string GeneratorFile = @"TestData\Hybrids\GenericVehicle_Sx\GenericGen.vem";
+		public const string GeneratorFile = @"TestData/Hybrids/GenericVehicle_Sx/GenericGen.vem";
 
-		public const string GearboxIndirectLoss = @"TestData\Components\Indirect Gear.vtlm";
-		public const string GearboxDirectLoss = @"TestData\Components\Direct Gear.vtlm";
+		public const string GearboxIndirectLoss = @"TestData/Components/Indirect Gear.vtlm";
+		public const string GearboxDirectLoss = @"TestData/Components/Direct Gear.vtlm";
 
-		public const string EngineFile = @"TestData\Hybrids\GenericVehicle_Sx\Group2_6l.veng";
+		public const string EngineFile = @"TestData/Hybrids/GenericVehicle_Sx/Group2_6l.veng";
 
-		public const string SerialHybrid_S2_3Speed_Job = @"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3speed.vecto";
-		public const string SerialHybrid_S2_12Speed_Job = @"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto";
-		public const string SerialHybrid_S2_APTN_Job = @"TestData\Hybrids\GenericVehicle_S2_APTN\HEV_S2_Group5LH_rl_APTN.vecto";
-		public const string SerialHybrid_S2_APTS_Job = @"TestData\Hybrids\GenericVehicle_S2_AT\HEV_S2_Group5LH_rl_APTS.vecto";
-		public const string SerialHybrid_S2_APTP_Job = @"TestData\Hybrids\GenericVehicle_S2_AT\HEV_S2_Group5LH_rl_APTP.vecto";
+		public const string SerialHybrid_S2_3Speed_Job = @"TestData/Hybrids/GenericVehicle_S2_Job/SerialHybrid_S2_3Speed.vecto";
+		public const string SerialHybrid_S2_12Speed_Job = @"TestData/Hybrids/GenericVehicle_S2_Job/SerialHybrid_S2.vecto";
+		public const string SerialHybrid_S2_APTN_Job = @"TestData/Hybrids/GenericVehicle_S2_APTN/HEV_S2_Group5LH_rl_APTN.vecto";
+		public const string SerialHybrid_S2_APTS_Job = @"TestData/Hybrids/GenericVehicle_S2_AT/HEV_S2_Group5LH_rl_APTS.vecto";
+		public const string SerialHybrid_S2_APTP_Job = @"TestData/Hybrids/GenericVehicle_S2_AT/HEV_S2_Group5LH_rl_APTP.vecto";
 
-		public const string SerialHybrid_S2_3Speed_PTO_Job = @"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3speed_PTO.vecto";
+		public const string SerialHybrid_S2_3Speed_PTO_Job = @"TestData/Hybrids/GenericVehicle_S2_Job/SerialHybrid_S2_3Speed_PTO.vecto";
 
 		public const bool PlotGraphs = true;
 
@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			TestCase(SerialHybrid_S2_3Speed_PTO_Job, 7, TestName = "Generic Serial Hybrid S2 AMT 3Speed PTO Job, Coach"),
 		]
 		[
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_WHR.vecto", 1, TestName = "Generic Serial Hybrid S2 AMT WHR 12speed Job, RegionalDelivery"),
+			TestCase(@"TestData/Hybrids/GenericVehicle_S2_Job/SerialHybrid_S2_WHR.vecto", 1, TestName = "Generic Serial Hybrid S2 AMT WHR 12speed Job, RegionalDelivery"),
 		]
 		public void S2SerialHybridJob(string jobFile, int runIdx)
 		{
@@ -484,14 +484,14 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		// =================================================
 
 		[
-			TestCase(@"TestData\Hybrids\GenericVehicle_Sx_Job\SerialHybrid_S4.vecto", 0, TestName = "Generic Serial Hybrid S4 Job, LongHaul"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_Sx_Job\SerialHybrid_S4.vecto", 1, TestName = "Generic Serial Hybrid S4 Job, RegionalDelivery"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_Sx_Job\SerialHybrid_S4.vecto", 2, TestName = "Generic Serial Hybrid S4 Job, UrbanDelivery"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_Sx_Job\SerialHybrid_S4.vecto", 3, TestName = "Generic Serial Hybrid S4 Job, Construction"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_Sx_Job\SerialHybrid_S4.vecto", 4, TestName = "Generic Serial Hybrid S4 Job, Urban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_Sx_Job\SerialHybrid_S4.vecto", 5, TestName = "Generic Serial Hybrid S4 Job, Suburban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_Sx_Job\SerialHybrid_S4.vecto", 6, TestName = "Generic Serial Hybrid S4 Job, Interurban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_Sx_Job\SerialHybrid_S4.vecto", 7, TestName = "Generic Serial Hybrid S4 Job, Coach"),
+			TestCase(@"TestData/Hybrids/GenericVehicle_Sx_Job/SerialHybrid_S4.vecto", 0, TestName = "Generic Serial Hybrid S4 Job, LongHaul"),
+			TestCase(@"TestData/Hybrids/GenericVehicle_Sx_Job/SerialHybrid_S4.vecto", 1, TestName = "Generic Serial Hybrid S4 Job, RegionalDelivery"),
+			TestCase(@"TestData/Hybrids/GenericVehicle_Sx_Job/SerialHybrid_S4.vecto", 2, TestName = "Generic Serial Hybrid S4 Job, UrbanDelivery"),
+			TestCase(@"TestData/Hybrids/GenericVehicle_Sx_Job/SerialHybrid_S4.vecto", 3, TestName = "Generic Serial Hybrid S4 Job, Construction"),
+			TestCase(@"TestData/Hybrids/GenericVehicle_Sx_Job/SerialHybrid_S4.vecto", 4, TestName = "Generic Serial Hybrid S4 Job, Urban"),
+			TestCase(@"TestData/Hybrids/GenericVehicle_Sx_Job/SerialHybrid_S4.vecto", 5, TestName = "Generic Serial Hybrid S4 Job, Suburban"),
+			TestCase(@"TestData/Hybrids/GenericVehicle_Sx_Job/SerialHybrid_S4.vecto", 6, TestName = "Generic Serial Hybrid S4 Job, Interurban"),
+			TestCase(@"TestData/Hybrids/GenericVehicle_Sx_Job/SerialHybrid_S4.vecto", 7, TestName = "Generic Serial Hybrid S4 Job, Coach"),
 		]
 		public void S4SerialHybridJob(string jobFile, int runIdx)
 		{
@@ -577,7 +577,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		[TestCase]
 		public void RunJob_S3_AxlegearInputRetarder()
 		{
-			var modData = RunHybridJob(@"TestData\Components\Retarder\S3\S3WithAxlegearInputRetarder.vecto", 0);
+			var modData = RunHybridJob(@"TestData/Components/Retarder/S3/S3WithAxlegearInputRetarder.vecto", 0);
 			Assert.IsTrue(modData.Rows.Count > 0);
 			Assert.That(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
 			Assert.That(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
@@ -588,7 +588,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		[TestCase]
 		public void RunJob_S3_NoAxlegearInputRetarder()
 		{
-			var modData = RunHybridJob(@"TestData\Components\Retarder\S3\S3WithoutAxlegearInputRetarder.vecto", 0);
+			var modData = RunHybridJob(@"TestData/Components/Retarder/S3/S3WithoutAxlegearInputRetarder.vecto", 0);
 			Assert.IsTrue(modData.Rows.Count > 0);
             Assert.IsFalse(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
             Assert.IsFalse(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
@@ -692,7 +692,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				sumData) { RunData = runData };
 
 			var strategy = new SerialHybridStrategy(runData, container);
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, batteryData);
 			var battery = new BatterySystem(container, batteryData);
 			battery.Initialize(initialBatCharge);
 

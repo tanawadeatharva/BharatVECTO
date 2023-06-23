@@ -8,7 +8,7 @@
 	xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3"
 	xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4"
 	xmlns:di="http://www.w3.org/2000/09/xmldsig#"
-	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd">
+	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob E:/QUAM/Workspace/VECTO_DEV_Buses/VectoCore/VectoCore/Resources/XSD/VectoDeclarationJob.xsd">
 	<v2.0:Vehicle id="VEH-1234567890" xsi:type="Vehicle_Conventional_HeavyLorryDeclarationType"  xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
 		<Manufacturer>Generic Truck Manufacturer</Manufacturer>
 		<ManufacturerAddress>Street, ZIP City</ManufacturerAddress>

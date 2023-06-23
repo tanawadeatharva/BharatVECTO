@@ -14,7 +14,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
 
-		const string SampleVehicleDecl = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\vecto_vehicle-primary_heavyBus-sample.xml";
+		const string SampleVehicleDecl = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/vecto_vehicle-primary_heavyBus-sample.xml";
 
 
 		[OneTimeSetUp]

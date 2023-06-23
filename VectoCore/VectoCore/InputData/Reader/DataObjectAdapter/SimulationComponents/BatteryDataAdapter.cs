@@ -31,6 +31,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				return null;
 			}
 
+			var addJunctionBoxResistance = false;
+			var addConnectorSystemResistance = false;
 			var retVal = new BatterySystemData();
 			var genericSOC = DeclarationData.Battery.GenericSOC.Lookup(jobType, ovc);
 			foreach (var entry in batteries)
@@ -41,29 +43,35 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					continue;
 				}
 
-				//for (var i = 0; i < entry.Count; i++) {
-					var minSoc = genericSOC.SOCMin;
-					if (b.MinSOC != null && b.MinSOC > minSoc) {
-						minSoc = b.MinSOC.Value;
-					}
+				if (b.JunctionboxIncluded != null && !b.JunctionboxIncluded.Value) {
+					addJunctionBoxResistance = true;
+				}
 
-					var maxSoc = genericSOC.SOCMax;
-					if (b.MaxSOC != null && b.MaxSOC < maxSoc && b.MaxSOC > b.MinSOC) {
-						maxSoc = b.MaxSOC.Value;
-					}
-				
-					var batteryData = new BatteryData() {
-						MinSOC = maxSoc  * ((1d/2) * DeclarationData.Battery.GenericDeterioration)
-								+ minSoc * (1 - (1d/2) * DeclarationData.Battery.GenericDeterioration),
-						MaxSOC = (maxSoc * (1 - (1d/2) * DeclarationData.Battery.GenericDeterioration)
-								+ minSoc * ((1d/2) * DeclarationData.Battery.GenericDeterioration)),
-						MaxCurrent = BatteryMaxCurrentReader.Create(b.MaxCurrentMap),
-						Capacity = b.Capacity,
-						InternalResistance =
-							BatteryInternalResistanceReader.Create(b.InternalResistanceCurve, entry.REESSPack.DataSource.SourceType != DataSourceType.JSONFile),
-						SOCMap = BatterySOCReader.Create(b.VoltageCurve),
-						InputData = entry
-					};
+				if (b.ConnectorsSubsystemsIncluded != null && !b.ConnectorsSubsystemsIncluded.Value) {
+					addConnectorSystemResistance = true;
+				}
+				var minSoc = genericSOC.SOCMin;
+				if (b.MinSOC != null && b.MinSOC > minSoc) {
+					minSoc = b.MinSOC.Value;
+				}
+
+				var maxSoc = genericSOC.SOCMax;
+				if (b.MaxSOC != null && b.MaxSOC < maxSoc && b.MaxSOC > b.MinSOC) {
+					maxSoc = b.MaxSOC.Value;
+				}
+			
+				var batteryData = new BatteryData() {
+					MinSOC = maxSoc  * ((1d/2) * DeclarationData.Battery.GenericDeterioration)
+							+ minSoc * (1 - (1d/2) * DeclarationData.Battery.GenericDeterioration),
+					MaxSOC = (maxSoc * (1 - (1d/2) * DeclarationData.Battery.GenericDeterioration)
+							+ minSoc * ((1d/2) * DeclarationData.Battery.GenericDeterioration)),
+					MaxCurrent = BatteryMaxCurrentReader.Create(b.MaxCurrentMap),
+					Capacity = b.Capacity,
+					InternalResistance =
+						BatteryInternalResistanceReader.Create(b.InternalResistanceCurve, entry.REESSPack.DataSource.SourceType != DataSourceType.JSONFile),
+					SOCMap = BatterySOCReader.Create(b.VoltageCurve),
+					InputData = entry
+				};
 
 #if DEBUG
 				if (!entry.REESSPack.DataSource.SourceType.IsOneOf(DataSourceType.JSONFile, DataSourceType.XMLFile,
@@ -74,10 +82,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 #endif
 
 				retVal.Batteries.Add(Tuple.Create(entry.StringId, batteryData));
-				//}
 			}
 
+			if (addJunctionBoxResistance) {
+				retVal.ConnectionSystemResistance += DeclarationData.Battery.JunctionBoxResistance;
+			}
 
+			if (addConnectorSystemResistance) {
+				retVal.ConnectionSystemResistance += DeclarationData.Battery.CablesAndConnectorsResistance;
+			}
 
 			retVal.InitialSoC = CalculateInitialSoc(retVal);
 			return retVal;

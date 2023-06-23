@@ -48,9 +48,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[TestCase]
 		public void TestClass2()
 		{
-			var file = @"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto";
+			var file = @"TestData/Integration/DeclarationMode/Class2_RigidTruck_4x2/Class2_RigidTruck_DECL.vecto";
 			var fileNoAirdrag =
-				@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_NoAirdrag_DECL.vecto";
+				@"TestData/Integration/DeclarationMode/Class2_RigidTruck_4x2/Class2_RigidTruck_NoAirdrag_DECL.vecto";
 
 			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(fileNoAirdrag);
 			var runDataOrig = DeclarationAdapterTestHelper.CreateVectoRunData(file);
@@ -63,8 +63,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[TestCase]
 		public void TestClass5()
 		{
-			var file = @"TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Class5_Tractor_DECL.vecto";
-			var fileNoAirdrag = @"TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Class5_Tractor_NoAirdrag_DECL.vecto";
+			var file = @"TestData/Integration/DeclarationMode/Class5_Tractor_4x2/Class5_Tractor_DECL.vecto";
+			var fileNoAirdrag = @"TestData/Integration/DeclarationMode/Class5_Tractor_4x2/Class5_Tractor_NoAirdrag_DECL.vecto";
 
 			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(fileNoAirdrag);
 			var runDataOrig = DeclarationAdapterTestHelper.CreateVectoRunData(file);
@@ -76,9 +76,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[TestCase]
 		public void TestClass9()
 		{
-			var file = @"TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Class9_RigidTruck_DECL.vecto";
+			var file = @"TestData/Integration/DeclarationMode/Class9_RigidTruck_6x2/Class9_RigidTruck_DECL.vecto";
 			var fileNoAirdrag =
-				@"TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Class9_RigidTruck_NoAirdrag_DECL.vecto";
+				@"TestData/Integration/DeclarationMode/Class9_RigidTruck_6x2/Class9_RigidTruck_NoAirdrag_DECL.vecto";
 
 			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(fileNoAirdrag);
 			var runDataOrig = DeclarationAdapterTestHelper.CreateVectoRunData(file);

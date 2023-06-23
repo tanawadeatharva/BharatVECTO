@@ -6,7 +6,7 @@ xmlns:mrf0.8="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.8"
  xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
  xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput" 
  xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" 
- xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput v:\VectoCore\VectoCore\Resources\XSD/VectoOutputManufacturer.xsd">
+ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput v:/VectoCore/VectoCore/Resources/XSD/VectoOutputManufacturer.xsd">
   <mrf:Data xsi:type="VectoOutputDataType" id="RESULT-b2d5a208fb6d49b09083">
     <Vehicle xsi:type="VehicleCompletedBusType">
       <PrimaryVehicle>

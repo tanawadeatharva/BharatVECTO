@@ -391,133 +391,133 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestCase]
 		public void MeasuredSpeed_Run()
 		{
-			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeed.vecto",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeed_MeasuredSpeed.vmod",
-				@"TestData\MeasuredSpeed\MeasuredSpeed_MeasuredSpeed.vmod",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeed.vsum", @"TestData\MeasuredSpeed\MeasuredSpeed.vsum");
+			RunJob(@"TestData/MeasuredSpeed/MeasuredSpeed.vecto",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeed_MeasuredSpeed.vmod",
+				@"TestData/MeasuredSpeed/MeasuredSpeed_MeasuredSpeed.vmod",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeed.vsum", @"TestData/MeasuredSpeed/MeasuredSpeed.vsum");
 		}
 
 		[TestCase]
 		public void MeasuredSpeedAux_Run()
 		{
-			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedAux.vecto",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedAux_MeasuredSpeedAux.vmod",
-				@"TestData\MeasuredSpeed\MeasuredSpeedAux_MeasuredSpeedAux.vmod",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedAux.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedAux.vsum");
+			RunJob(@"TestData/MeasuredSpeed/MeasuredSpeedAux.vecto",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedAux_MeasuredSpeedAux.vmod",
+				@"TestData/MeasuredSpeed/MeasuredSpeedAux_MeasuredSpeedAux.vmod",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedAux.vsum", @"TestData/MeasuredSpeed/MeasuredSpeedAux.vsum");
 		}
 
 		[TestCase]
 		public void MeasuredSpeedVair_Run()
 		{
-			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedVair.vecto",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVair_MeasuredSpeedVair.vmod",
-				@"TestData\MeasuredSpeed\MeasuredSpeedVair_MeasuredSpeedVair.vmod",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVair.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedVair.vsum");
+			RunJob(@"TestData/MeasuredSpeed/MeasuredSpeedVair.vecto",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedVair_MeasuredSpeedVair.vmod",
+				@"TestData/MeasuredSpeed/MeasuredSpeedVair_MeasuredSpeedVair.vmod",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedVair.vsum", @"TestData/MeasuredSpeed/MeasuredSpeedVair.vsum");
 		}
 
 		[TestCase]
 		public void MeasuredSpeedVair_WindFromFront_Run()
 		{
-			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedVairFront.vecto",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVairFront_MeasuredSpeedVairFront.vmod",
-				@"TestData\MeasuredSpeed\MeasuredSpeedVairFront_MeasuredSpeedVairFront.vmod",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVairFront.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedVairFront.vsum");
+			RunJob(@"TestData/MeasuredSpeed/MeasuredSpeedVairFront.vecto",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedVairFront_MeasuredSpeedVairFront.vmod",
+				@"TestData/MeasuredSpeed/MeasuredSpeedVairFront_MeasuredSpeedVairFront.vmod",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedVairFront.vsum", @"TestData/MeasuredSpeed/MeasuredSpeedVairFront.vsum");
 		}
 
 		[TestCase]
 		public void MeasuredSpeedVair_WindFromBack_Run()
 		{
-			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedVairBack.vecto",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVairBack_MeasuredSpeedVairBack.vmod",
-				@"TestData\MeasuredSpeed\MeasuredSpeedVairBack_MeasuredSpeedVairBack.vmod",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVairBack.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedVairBack.vsum");
+			RunJob(@"TestData/MeasuredSpeed/MeasuredSpeedVairBack.vecto",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedVairBack_MeasuredSpeedVairBack.vmod",
+				@"TestData/MeasuredSpeed/MeasuredSpeedVairBack_MeasuredSpeedVairBack.vmod",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedVairBack.vsum", @"TestData/MeasuredSpeed/MeasuredSpeedVairBack.vsum");
 		}
 
 		[Category("LongRunning")]
 		[TestCase]
 		public void MeasuredSpeedVair_NoWind_Run()
 		{
-			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedVairNoWind.vecto",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVairNoWind_MeasuredSpeedVairNoWind.vmod",
-				@"TestData\MeasuredSpeed\MeasuredSpeedVairNoWind_MeasuredSpeedVairNoWind.vmod",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVairNoWind.vsum",
-				@"TestData\MeasuredSpeed\MeasuredSpeedVairNoWind.vsum");
+			RunJob(@"TestData/MeasuredSpeed/MeasuredSpeedVairNoWind.vecto",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedVairNoWind_MeasuredSpeedVairNoWind.vmod",
+				@"TestData/MeasuredSpeed/MeasuredSpeedVairNoWind_MeasuredSpeedVairNoWind.vmod",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedVairNoWind.vsum",
+				@"TestData/MeasuredSpeed/MeasuredSpeedVairNoWind.vsum");
 		}
 
 		[TestCase]
 		public void MeasuredSpeedVairAux_Run()
 		{
-			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedVairAux.vecto",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVairAux_MeasuredSpeedVairAux.vmod",
-				@"TestData\MeasuredSpeed\MeasuredSpeedVairAux_MeasuredSpeedVairAux.vmod",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVairAux.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedVairAux.vsum");
+			RunJob(@"TestData/MeasuredSpeed/MeasuredSpeedVairAux.vecto",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedVairAux_MeasuredSpeedVairAux.vmod",
+				@"TestData/MeasuredSpeed/MeasuredSpeedVairAux_MeasuredSpeedVairAux.vmod",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedVairAux.vsum", @"TestData/MeasuredSpeed/MeasuredSpeedVairAux.vsum");
 		}
 
 		[TestCase]
 		public void MeasuredSpeed_Gear_Run()
 		{
-			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGear.vecto",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGear_MeasuredSpeed_Gear_Rural.vmod",
-				@"TestData\MeasuredSpeed\MeasuredSpeedGear_MeasuredSpeed_Gear_Rural.vmod",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGear.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedGear.vsum");
+			RunJob(@"TestData/MeasuredSpeed/MeasuredSpeedGear.vecto",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedGear_MeasuredSpeed_Gear_Rural.vmod",
+				@"TestData/MeasuredSpeed/MeasuredSpeedGear_MeasuredSpeed_Gear_Rural.vmod",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedGear.vsum", @"TestData/MeasuredSpeed/MeasuredSpeedGear.vsum");
 		}
 
 		[TestCase]
 		public void MeasuredSpeed_Gear_TractionInterruption_Run()
 		{
-			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGear_TractionInterruption.vecto",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGear_TractionInterruption_MeasuredSpeed_Gear_Rural_TractionInterruption.vmod",
-				@"TestData\MeasuredSpeed\MeasuredSpeedGear_TractionInterruption_MeasuredSpeed_Gear_Rural_TractionInterruption.vmod",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGear_TractionInterruption.vsum",
-				@"TestData\MeasuredSpeed\MeasuredSpeedGear_TractionInterruption.vsum");
+			RunJob(@"TestData/MeasuredSpeed/MeasuredSpeedGear_TractionInterruption.vecto",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedGear_TractionInterruption_MeasuredSpeed_Gear_Rural_TractionInterruption.vmod",
+				@"TestData/MeasuredSpeed/MeasuredSpeedGear_TractionInterruption_MeasuredSpeed_Gear_Rural_TractionInterruption.vmod",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedGear_TractionInterruption.vsum",
+				@"TestData/MeasuredSpeed/MeasuredSpeedGear_TractionInterruption.vsum");
 		}
 
 		[TestCase]
 		public void MeasuredSpeed_Gear_Aux_Run()
 		{
-			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGearAux.vecto",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearAux_MeasuredSpeed_Gear_Rural_Aux.vmod",
-				@"TestData\MeasuredSpeed\MeasuredSpeedGearAux_MeasuredSpeed_Gear_Rural_Aux.vmod",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearAux.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedGearAux.vsum");
+			RunJob(@"TestData/MeasuredSpeed/MeasuredSpeedGearAux.vecto",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedGearAux_MeasuredSpeed_Gear_Rural_Aux.vmod",
+				@"TestData/MeasuredSpeed/MeasuredSpeedGearAux_MeasuredSpeed_Gear_Rural_Aux.vmod",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedGearAux.vsum", @"TestData/MeasuredSpeed/MeasuredSpeedGearAux.vsum");
 		}
 
 		[TestCase]
 		public void MeasuredSpeed_Gear_Vair_Run()
 		{
-			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGearVair.vecto",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearVair_MeasuredSpeed_Gear_Rural_Vair.vmod",
-				@"TestData\MeasuredSpeed\MeasuredSpeedGearVair_MeasuredSpeed_Gear_Rural_Vair.vmod",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearVair.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedGearVair.vsum");
+			RunJob(@"TestData/MeasuredSpeed/MeasuredSpeedGearVair.vecto",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedGearVair_MeasuredSpeed_Gear_Rural_Vair.vmod",
+				@"TestData/MeasuredSpeed/MeasuredSpeedGearVair_MeasuredSpeed_Gear_Rural_Vair.vmod",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedGearVair.vsum", @"TestData/MeasuredSpeed/MeasuredSpeedGearVair.vsum");
 		}
 
 		[TestCase]
 		public void MeasuredSpeed_Gear_VairAux_Run()
 		{
-			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGearVairAux.vecto",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearVairAux_MeasuredSpeed_Gear_Rural_VairAux.vmod",
-				@"TestData\MeasuredSpeed\MeasuredSpeedGearVairAux_MeasuredSpeed_Gear_Rural_VairAux.vmod",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearVairAux.vsum",
-				@"TestData\MeasuredSpeed\MeasuredSpeedGearVairAux.vsum");
+			RunJob(@"TestData/MeasuredSpeed/MeasuredSpeedGearVairAux.vecto",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedGearVairAux_MeasuredSpeed_Gear_Rural_VairAux.vmod",
+				@"TestData/MeasuredSpeed/MeasuredSpeedGearVairAux_MeasuredSpeed_Gear_Rural_VairAux.vmod",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedGearVairAux.vsum",
+				@"TestData/MeasuredSpeed/MeasuredSpeedGearVairAux.vsum");
 		}
 
 		[TestCase]
 		public void MeasuredSpeed_Gear_AT_PS_Run()
 		{
-			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-PS.vecto",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearAT-PS_MeasuredSpeedGear_AT-PS.vmod",
-				@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-PS_MeasuredSpeedGear_AT-PS.vmod",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearAT-PS.vsum",
-				@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-PS.vsum");
+			RunJob(@"TestData/MeasuredSpeed/MeasuredSpeedGearAT-PS.vecto",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedGearAT-PS_MeasuredSpeedGear_AT-PS.vmod",
+				@"TestData/MeasuredSpeed/MeasuredSpeedGearAT-PS_MeasuredSpeedGear_AT-PS.vmod",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedGearAT-PS.vsum",
+				@"TestData/MeasuredSpeed/MeasuredSpeedGearAT-PS.vsum");
 		}
 
 		[TestCase]
 		public void MeasuredSpeed_Gear_AT_Ser_Run()
 		{
-			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-Ser.vecto",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearAT-Ser_MeasuredSpeedGear_AT-Ser.vmod",
-				@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-Ser_MeasuredSpeedGear_AT-Ser.vmod",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearAT-Ser.vsum",
-				@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-Ser.vsum");
+			RunJob(@"TestData/MeasuredSpeed/MeasuredSpeedGearAT-Ser.vecto",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedGearAT-Ser_MeasuredSpeedGear_AT-Ser.vmod",
+				@"TestData/MeasuredSpeed/MeasuredSpeedGearAT-Ser_MeasuredSpeedGear_AT-Ser.vmod",
+				@"TestData/MeasuredSpeed/Results/MeasuredSpeedGearAT-Ser.vsum",
+				@"TestData/MeasuredSpeed/MeasuredSpeedGearAT-Ser.vsum");
 		}
 
 		[TestCase]

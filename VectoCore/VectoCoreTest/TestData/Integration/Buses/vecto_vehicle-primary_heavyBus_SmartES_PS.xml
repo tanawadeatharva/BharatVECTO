@@ -7,7 +7,7 @@ xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4"
 xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
 xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
 xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
-xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd">
+xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCore/Resources/XSD/VectoDeclarationJob.xsd">
 	<v2.0:Vehicle id="VEH-PrimaryBus_SmartES-PS" xsi:type="Vehicle_Conventional_PrimaryBusDeclarationType">
 		<Manufacturer>Generic Truck Manufacturer</Manufacturer>
 		<ManufacturerAddress>Street, ZIP City</ManufacturerAddress>

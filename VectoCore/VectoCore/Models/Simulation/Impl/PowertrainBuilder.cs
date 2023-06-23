@@ -2213,7 +2213,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				throw new VectoException("Powertrain requires either Battery OR SuperCapacitor, but none are defined.");
 			}
 
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, data.BatteryData);
 			if (data.BatteryData != null) {
 				if (data.BatteryData.InitialSoC < data.BatteryData.Batteries.Min(x => x.Item2.MinSOC)) {
 					throw new VectoException("Battery: Initial SoC has to be higher than min SoC");

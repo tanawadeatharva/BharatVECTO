@@ -14,6 +14,7 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -27,9 +28,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	[Parallelizable(ParallelScope.All)]
 	public class ElectricMotorTest
 	{
-		public const string MotorFile = @"TestData\Hybrids\ElectricMotor\GenericEMotor.vem";
-		public const string MotorFile_v2 = @"TestData\Hybrids\ElectricMotor\GenericEMotorV2.vem";
-		public const string BatFile = @"TestData\Hybrids\Battery\GenericBattery.vbat";
+		public const string MotorFile = @"TestData/Hybrids/ElectricMotor/GenericEMotor.vem";
+		public const string MotorFile_v2 = @"TestData/Hybrids/ElectricMotor/GenericEMotorV2.vem";
+		public const string BatFile = @"TestData/Hybrids/Battery/GenericBattery.vbat";
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
@@ -105,7 +106,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var battery = new MockBattery();
 			container.BatteryInfo = battery;
 			var motor = new ElectricMotor(container, data.First().Item2, strategy, PowertrainPosition.HybridP2);
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, new BatterySystemData());
 			es.Connect(battery);
 			motor.Connect(es);
 
@@ -152,7 +153,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var battery = new MockBattery();
 			container.BatteryInfo = battery;
 			var motor = new ElectricMotor(container, data.First().Item2, strategy, PowertrainPosition.HybridP2);
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, new BatterySystemData());
 			es.Connect(battery);
 			motor.Connect(es);
 
@@ -200,7 +201,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			container.BatteryInfo = battery;
 
 			var motor = new ElectricMotor(container, data.First().Item2, strategy, PowertrainPosition.HybridP2);
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, new BatterySystemData());
 			es.Connect(battery);
 			motor.Connect(es);
 			var tnPort = new MockTnOutPort();
@@ -249,7 +250,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var battery = new MockBattery();
 			container.BatteryInfo = battery;
 			var motor = new ElectricMotor(container, data.First().Item2, strategy, PowertrainPosition.HybridP2);
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, new BatterySystemData());
 			es.Connect(battery);
 			motor.Connect(es);
 			var tnPort = new MockTnOutPort();
@@ -297,7 +298,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			};
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
 			var battery = new Battery(container, batteryData.Batteries.First().Item2);
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, batteryData);
 			es.Connect(battery);
 
 			container.BatteryInfo = battery;
@@ -362,7 +363,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
 			var battery = new Battery(container, batteryData.Batteries.First().Item2);
 			container.BatteryInfo = battery;
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, batteryData);
 			es.Connect(battery);
 			battery.Initialize(initialSoc);
 			var motor = new ElectricMotor(container, data.First().Item2, strategy, PowertrainPosition.HybridP2);
@@ -429,7 +430,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			new EngineOnlyGearboxInfo(container);
 
 			var battery = new Battery(container, batteryData.Batteries.First().Item2);
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, batteryData);
 			es.Connect(battery);
 			battery.Initialize(initialSoc);
 

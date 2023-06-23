@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[TestCase(@"TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Class9_RigidTruck.vveh")]
+		[TestCase(@"TestData/Generic Vehicles/Declaration Mode/Class9_RigidTruck_6x2/Class9_RigidTruck.vveh")]
 		public void SaveVehicleFileDecl(string vehicleFile)
 		{
 			var outFile = "json_vehicle_write_test.vveh";
@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		}
 
 
-		[TestCase(@"TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Engine_324kW_12.7l.veng")]
+		[TestCase(@"TestData/Generic Vehicles/Declaration Mode/Class9_RigidTruck_6x2/Engine_324kW_12.7l.veng")]
 		public void SaveEngineFileDecl(string engineFile)
 		{
 			var outFile = "json_engine_write_test.veng";
@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				new[] { "Source", "EngineModes" });
 		}
 
-		[TestCase(@"TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\AMT_12.vgbx")]
+		[TestCase(@"TestData/Generic Vehicles/Declaration Mode/Class9_RigidTruck_6x2/AMT_12.vgbx")]
 		public void SaveGearboxAxlegearFileDecl(string engineFile)
 		{
 			var outFile = "json_gearbox_write_test.vgbx";

@@ -21,6 +21,12 @@
 </ItemGroup>
 
   <ItemGroup>
+    <None Include="Testdata\**\*.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
+  <ItemGroup>
     <None Include="TestData\**\*.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

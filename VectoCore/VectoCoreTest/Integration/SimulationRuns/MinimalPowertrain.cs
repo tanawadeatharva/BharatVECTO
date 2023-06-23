@@ -59,13 +59,13 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 	[Parallelizable(ParallelScope.All)]
 	public class MinimalPowertrain
 	{
-		public const string CycleFile = @"TestData\Integration\MinimalPowerTrain\1-Gear-Test-dist.vdri";
-		public const string CycleFileStop = @"TestData\Integration\MinimalPowerTrain\1-Gear-StopTest-dist.vdri";
-		public const string EngineFile = @"TestData\Integration\MinimalPowerTrain\24t Coach.veng";
-		public const string GearboxFile = @"TestData\Integration\MinimalPowerTrain\24t Coach-1Gear.vgbx";
-		public const string GbxLossMap = @"TestData\Integration\MinimalPowerTrain\NoLossGbxMap.vtlm";
-		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
-		public const string AccelerationFile2 = @"TestData\Components\Truck.vacc";
+		public const string CycleFile = @"TestData/Integration/MinimalPowerTrain/1-Gear-Test-dist.vdri";
+		public const string CycleFileStop = @"TestData/Integration/MinimalPowerTrain/1-Gear-StopTest-dist.vdri";
+		public const string EngineFile = @"TestData/Integration/MinimalPowerTrain/24t Coach.veng";
+		public const string GearboxFile = @"TestData/Integration/MinimalPowerTrain/24t Coach-1Gear.vgbx";
+		public const string GbxLossMap = @"TestData/Integration/MinimalPowerTrain/NoLossGbxMap.vtlm";
+		public const string AccelerationFile = @"TestData/Components/Coach.vacc";
+		public const string AccelerationFile2 = @"TestData/Components/Truck.vacc";
 		public const double Tolerance = 0.001;
 
 		[OneTimeSetUp]

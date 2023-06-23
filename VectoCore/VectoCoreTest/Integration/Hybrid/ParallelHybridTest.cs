@@ -37,21 +37,21 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 	public class ParallelHybridTest
 	{
 		//private ModalResultField[] Yfields;
-		public const string MotorFile = @"TestData\Hybrids\ElectricMotor\GenericEMotor.vem";
-		public const string BatFile = @"TestData\Hybrids\Battery\GenericBattery.vbat";
+		public const string MotorFile = @"TestData/Hybrids/ElectricMotor/GenericEMotor.vem";
+		public const string BatFile = @"TestData/Hybrids/Battery/GenericBattery.vbat";
 
-		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
-		public const string MotorFile240kW = @"TestData\Hybrids\ElectricMotor\GenericEMotor240kW.vem";
+		public const string AccelerationFile = @"TestData/Components/Truck.vacc";
+		public const string MotorFile240kW = @"TestData/Hybrids/ElectricMotor/GenericEMotor240kW.vem";
 
-		public const string P1HybridMotor = @"Testdata\Hybrids\GenericVehicle_P1-APT\GenericEMotor20kW.vem";
-		public const string P1BatteryFile = @"Testdata\Hybrids\GenericVehicle_P1-APT\GenericBattery.vbat";
+		public const string P1HybridMotor = @"TestData/Hybrids/GenericVehicle_P1-APT/GenericEMotor20kW.vem";
+		public const string P1BatteryFile = @"TestData/Hybrids/GenericVehicle_P1-APT/GenericBattery.vbat";
 
-		public const string GearboxIndirectLoss = @"TestData\Components\Indirect Gear.vtlm";
-		public const string GearboxDirectLoss = @"TestData\Components\Direct Gear.vtlm";
+		public const string GearboxIndirectLoss = @"TestData/Components/Indirect Gear.vtlm";
+		public const string GearboxDirectLoss = @"TestData/Components/Direct Gear.vtlm";
 
 
-		public const string TorqueConverterSerial = @"TestData\Hybrids\GenericVehicle_P1-APT\TorqueConverter.vtcc";
-		public const string TorqueConverterPowerSplit = @"TestData\Hybrids\GenericVehicle_P1-APT\TorqueConverterPowerSplit.vtcc";
+		public const string TorqueConverterSerial = @"TestData/Hybrids/GenericVehicle_P1-APT/TorqueConverter.vtcc";
+		public const string TorqueConverterPowerSplit = @"TestData/Hybrids/GenericVehicle_P1-APT/TorqueConverterPowerSplit.vtcc";
 
 		public const bool PlotGraphs = true;
 
@@ -236,12 +236,12 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			graphWriter.Write(modFilename);
 		}
 
-		const string TestJobP1_APTS = @"TestData\Hybrids\GenericVehicle_P1-APT\CityBus_AT_Ser.vecto";
-		const string TestJobP1_APTP = @"TestData\Hybrids\GenericVehicle_P1-APT\CityBus_AT_PS.vecto";
+		const string TestJobP1_APTS = @"TestData/Hybrids/GenericVehicle_P1-APT/CityBus_AT_Ser.vecto";
+		const string TestJobP1_APTP = @"TestData/Hybrids/GenericVehicle_P1-APT/CityBus_AT_PS.vecto";
 
-		//private const string TestJobP1 = @"E:\QUAM\tmp\Citybus_P1-APT-S-175kW-6.8l_C1\CityBus_AT_Ser.vecto";
+		//private const string TestJobP1 = @"E:/QUAM/tmp/Citybus_P1-APT-S-175kW-6.8l_C1/CityBus_AT_Ser.vecto";
 
-		private const string TestJobCityBusP1_APTP = @"TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\CityBus_AT-P.vecto";
+		private const string TestJobCityBusP1_APTP = @"TestData/Hybrids/Citybus_P1-APT-P-220kW-7.7l/CityBus_AT-P.vecto";
 
 		[
 			TestCase(TestJobP1_APTS, 0, TestName = "P1 Hybrid APT-S, DriveCycle LongHaul"),
@@ -309,10 +309,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			//Assert.IsTrue(jobContainer.GetProgress().All(x => x.Value.Success));
 		}
 
-		private const string BASE_PATH = @"E:\QUAM\Workspace\VECTO-Bugreports_DEV\Bugreport Jobs\2022\";
-        [TestCase(BASE_PATH + @"VECTO-1660_2022_11_02_VectoDaten_Iveco_CrosswayLE_MH\IVECO_CRW_LE_C9D_360hp_DNXT_7G_MH.vecto", 4),
-        TestCase(BASE_PATH + @"VECTO-1660_2022_11_02_VectoDaten_Iveco_CrosswayLE_MH\IVECO_CRW_LE_C9D_360hp_DNXT_7G_MH.vecto", 3),
-		TestCase(BASE_PATH + @"VECTO-1660_2022_11_02_VectoDaten_Iveco_CrosswayLE_MH\IVECO_CRW_LE_C9D_360hp_DNXT_7G_MH.vecto", 6),
+		private const string BASE_PATH = @"E:/QUAM/Workspace/VECTO-Bugreports_DEV/Bugreport Jobs/2022/";
+        [TestCase(BASE_PATH + @"VECTO-1660_2022_11_02_VectoDaten_Iveco_CrosswayLE_MH/IVECO_CRW_LE_C9D_360hp_DNXT_7G_MH.vecto", 4),
+        TestCase(BASE_PATH + @"VECTO-1660_2022_11_02_VectoDaten_Iveco_CrosswayLE_MH/IVECO_CRW_LE_C9D_360hp_DNXT_7G_MH.vecto", 3),
+		TestCase(BASE_PATH + @"VECTO-1660_2022_11_02_VectoDaten_Iveco_CrosswayLE_MH/IVECO_CRW_LE_C9D_360hp_DNXT_7G_MH.vecto", 6),
         ]
 		public void Vecto1660_BusAux_SmartPS_with_Hybrid(string jobFile, int cycleIdx)
 		{
@@ -657,24 +657,24 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 
 
-		public const string Group2TestJob180kW = @"TestData\Hybrids\Hyb_P2_Group2\Class2_RigidTruck_ParHyb_ENG.vecto";
+		public const string Group2TestJob180kW = @"TestData/Hybrids/Hyb_P2_Group2/Class2_RigidTruck_ParHyb_ENG.vecto";
 
 
-		public const string Group5TestJob = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5.vecto";
+		public const string Group5TestJob = @"TestData/Hybrids/GenericVehicle_Group5_P2/P2 Group 5.vecto";
 
-		public const string Group5TestJob_GbxTqLimit = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_GbxTqLimit.vecto";
+		public const string Group5TestJob_GbxTqLimit = @"TestData/Hybrids/GenericVehicle_Group5_P2/P2 Group 5_GbxTqLimit.vecto";
 
-		public const string Group5TestJob_BoostingLimit = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_BoostingLimit.vecto";
+		public const string Group5TestJob_BoostingLimit = @"TestData/Hybrids/GenericVehicle_Group5_P2/P2 Group 5_BoostingLimit.vecto";
 
-		public const string Group5TestJob_BoostingAndGbxLimit = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_BoostingAndGbxLimit.vecto";
+		public const string Group5TestJob_BoostingAndGbxLimit = @"TestData/Hybrids/GenericVehicle_Group5_P2/P2 Group 5_BoostingAndGbxLimit.vecto";
 
-		public const string Group5TestJob_BoostingAndGbxLimitTopTorque = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_BoostingAndGbxLimitTopTorque.vecto";
+		public const string Group5TestJob_BoostingAndGbxLimitTopTorque = @"TestData/Hybrids/GenericVehicle_Group5_P2/P2 Group 5_BoostingAndGbxLimitTopTorque.vecto";
 
-		public const string Group5TestJob_BoostingLimitTopTorque = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_BoostingLimitTopTorque.vecto";
+		public const string Group5TestJob_BoostingLimitTopTorque = @"TestData/Hybrids/GenericVehicle_Group5_P2/P2 Group 5_BoostingLimitTopTorque.vecto";
 
-		public const string Group5TestJob_BatterySystem = @"TestData\Hybrids\GenericVehicle_Group5_P2_BatSystem\P2 Group 5.vecto";
+		public const string Group5TestJob_BatterySystem = @"TestData/Hybrids/GenericVehicle_Group5_P2_BatSystem/P2 Group 5.vecto";
 
-		public const string Group5TestJob_BatterySystem2 = @"TestData\Hybrids\GenericVehicle_Group5_P2_BatSystem\P2 Group 5_2.vecto";
+		public const string Group5TestJob_BatterySystem2 = @"TestData/Hybrids/GenericVehicle_Group5_P2_BatSystem/P2 Group 5_2.vecto";
 
 		[
 			TestCase(Group5TestJob, 0, TestName = "P2 Hybrid Group 5 DriveCycle LongHaul"),
@@ -782,9 +782,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		{ RunHybridJob(jobFile, cycleIdx); }
 
 
-		public const string Group5TestJob325kW = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_325kW.vecto";
+		public const string Group5TestJob325kW = @"TestData/Hybrids/GenericVehicle_Group5_P2/P2 Group 5_325kW.vecto";
 
-		public const string Group5TestJob325kW_WhrEl = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_325kW_WHR.vecto";
+		public const string Group5TestJob325kW_WhrEl = @"TestData/Hybrids/GenericVehicle_Group5_P2/P2 Group 5_325kW_WHR.vecto";
 
 		[
 		TestCase(Group5TestJob325kW, 0, TestName = "P2 Hybrid Group 5 325kW DriveCycle LongHaul"),
@@ -803,7 +803,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		public void P2HybridGroup5DriveCycle_325kW(string jobFile, int cycleIdx)
 		{ RunHybridJob(jobFile, cycleIdx); }
 
-		public const string Group2TestJob = @"TestData\Hybrids\Hyb_P2_Group2\Class2_RigidTruck_ParHyb_ENG.vecto";
+		public const string Group2TestJob = @"TestData/Hybrids/Hyb_P2_Group2/Class2_RigidTruck_ParHyb_ENG.vecto";
 
 		[
 		TestCase(Group2TestJob, 0, TestName = "P2 Hybrid Group 2 DriveCycle LongHaul"),
@@ -822,7 +822,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 
 
-		public const string Group5_80kWh_TestJob = @"TestData\Hybrids\Hyb_P2_Group5\Hyb_P2_Group5_80kWh.vecto";
+		public const string Group5_80kWh_TestJob = @"TestData/Hybrids/Hyb_P2_Group5/Hyb_P2_Group5_80kWh.vecto";
 
 		[
 		TestCase(Group5_80kWh_TestJob, 0, TestName = "P2 Hybrid Group 5 80kWh DriveCycle LongHaul"),
@@ -839,7 +839,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		{ RunHybridJob(jobFile, cycleIdx); }
 
 
-		public const string Group5TestJob2 = @"TestData\Hybrids\Hyb_P2_Group5\Hyb_P2_Group5.vecto";
+		public const string Group5TestJob2 = @"TestData/Hybrids/Hyb_P2_Group5/Hyb_P2_Group5.vecto";
 
 		[
 		TestCase(Group5TestJob2, 0, TestName = "P2 Hybrid Group 5 B DriveCycle LongHaul"),
@@ -857,7 +857,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		{ RunHybridJob(jobFile, cycleIdx); }
 
 
-		public const string Group5TestJob_noESS = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5.vecto";
+		public const string Group5TestJob_noESS = @"TestData/Hybrids/GenericVehicle_Group5_P2/P2 Group 5.vecto";
 
 		[
 		//// P2 without ESS is not really relevant
@@ -876,7 +876,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		{ RunHybridJob(jobFile, cycleIdx); }
 
 
-		public const string Group5TestJob325kW_noESS = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_325kW.vecto";
+		public const string Group5TestJob325kW_noESS = @"TestData/Hybrids/GenericVehicle_Group5_P2/P2 Group 5_325kW.vecto";
 
 		[
 		//// P2 without ESS is not really relevant
@@ -895,7 +895,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		{ RunHybridJob(jobFile, cycleIdx); }
 
 
-		//public const string CityBus6x2 = @"TestData\Hybrids\Input CityBus 6x2_HEV_P2\CityBus_6x2_HEV_P2.vecto";
+		//public const string CityBus6x2 = @"TestData/Hybrids/Input CityBus 6x2_HEV_P2/CityBus_6x2_HEV_P2.vecto";
 
 		//[
 		//TestCase(CityBus6x2, 0, TestName = "P2 Hybrid CityBus DriveCycle Coach"),  // error
@@ -911,7 +911,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		//{ RunHybridJob(jobFile, cycleIdx); }
 
 
-		public const string Group2TestJobSuperCapOvl = @"TestData\Hybrids\Hyb_P2_Group2SuperCapOvl\Class2_RigidTruck_ParHyb_SuperCap_Ovl_ENG.vecto";
+		public const string Group2TestJobSuperCapOvl = @"TestData/Hybrids/Hyb_P2_Group2SuperCapOvl/Class2_RigidTruck_ParHyb_SuperCap_Ovl_ENG.vecto";
 
 		[
 		TestCase(Group2TestJobSuperCapOvl, 0, TestName = "P2 Hybrid Group 2 SuperCap Ovl, DriveCycle LongHaul"),
@@ -929,7 +929,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		{ RunHybridJob(jobFile, cycleIdx); }
 
 
-		public const string Group5_EMTorqueLimit_TestJob = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_LimitEMTorqueDrive.vecto";
+		public const string Group5_EMTorqueLimit_TestJob = @"TestData/Hybrids/GenericVehicle_Group5_P2/P2 Group 5_LimitEMTorqueDrive.vecto";
 
 		[
 		TestCase(Group5_EMTorqueLimit_TestJob, 0, TestName = "P2 Hybrid Group 5 EM TorqueLimit DriveCycle LongHaul"),
@@ -947,7 +947,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		{ RunHybridJob(jobFile, cycleIdx); }
 
 
-		public const string Group5_LimitPropTq_TestJob = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_LimitVehiclePropTq.vecto";
+		public const string Group5_LimitPropTq_TestJob = @"TestData/Hybrids/GenericVehicle_Group5_P2/P2 Group 5_LimitVehiclePropTq.vecto";
 
 		[
 		TestCase(Group5_LimitPropTq_TestJob, 0, TestName = "P2 Hybrid Group 5 Vehicle Prop TorqueLimit DriveCycle LongHaul"),
@@ -964,7 +964,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		public void P2HybridGroup5DriveCycle_LimitPropTq(string jobFile, int cycleIdx)
 		{ RunHybridJob(jobFile, cycleIdx); }
 
-		public const string Group5TestJob_EMLossMap_1 = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_EMLossMap_1.vecto"; // non-linear EM Loss-Map
+		public const string Group5TestJob_EMLossMap_1 = @"TestData/Hybrids/GenericVehicle_Group5_P2/P2 Group 5_EMLossMap_1.vecto"; // non-linear EM Loss-Map
 
 		[
 		TestCase(Group5TestJob_EMLossMap_1, 0, TestName = "P2 Hybrid Group 5 EM-LossMap 1 DriveCycle LongHaul"),
@@ -982,7 +982,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		{ RunHybridJob(jobFile, cycleIdx); }
 
 
-		public const string Group5TestJob_EMLossMap_2 = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_EMLossMap_2.vecto"; // linear EM Loss-Map
+		public const string Group5TestJob_EMLossMap_2 = @"TestData/Hybrids/GenericVehicle_Group5_P2/P2 Group 5_EMLossMap_2.vecto"; // linear EM Loss-Map
 
 		[TestCase(Group5TestJob_EMLossMap_2, 0, TestName = "P2 Hybrid Group 5 EM-LossMap 2 DriveCycle LongHaul"),
 		TestCase(Group5TestJob_EMLossMap_2, 1, TestName = "P2 Hybrid Group 5 EM-LossMap 2 DriveCycle Coach"), 
@@ -999,8 +999,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		{ RunHybridJob(jobFile, cycleIdx);}
 
 
-		public const string Group2_5TestJob = @"TestData\Hybrids\GenericVehicle_Group5_P2.5\P2.5 Group 5.vecto";
-		public const string Group2_5TestJob_2 = @"TestData\Hybrids\GenericVehicle_Group5_P2.5\P2.5 Group 5 2.vecto";
+		public const string Group2_5TestJob = @"TestData/Hybrids/GenericVehicle_Group5_P2.5/P2.5 Group 5.vecto";
+		public const string Group2_5TestJob_2 = @"TestData/Hybrids/GenericVehicle_Group5_P2.5/P2.5 Group 5 2.vecto";
 
 		[
 			TestCase(Group2_5TestJob, 0, TestName = "P2.5 Hybrid Group 2 DriveCycle LongHaul"),
@@ -1296,7 +1296,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			graphWriter.Write(modFilename);
 		}
 
-		public const string Group5_P3_AMT = @"TestData\Hybrids\GenericVehicle_Group5_P3\P3 Group 5.vecto";
+		public const string Group5_P3_AMT = @"TestData/Hybrids/GenericVehicle_Group5_P3/P3 Group 5.vecto";
 			
 		[
 			TestCase(Group5_P3_AMT, 0, TestName = "P3 Hybrid DriveCycle LongHaul"),
@@ -1316,7 +1316,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			RunHybridJob(jobFile, cycleIdx);
 		}
 
-		public const string Group5_P3_AMT_VehiclePropLimit = @"TestData\Hybrids\GenericVehicle_Group5_P3\P3 Group 5_LimitVehiclePropTq.vecto";
+		public const string Group5_P3_AMT_VehiclePropLimit = @"TestData/Hybrids/GenericVehicle_Group5_P3/P3 Group 5_LimitVehiclePropTq.vecto";
 
 		[
 			TestCase(Group5_P3_AMT_VehiclePropLimit, 0, TestName = "P3 Hybrid Limit Vehicle Prop.Tq DriveCycle LongHaul"),
@@ -1336,8 +1336,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			RunHybridJob(jobFile, cycleIdx);
 		}
 		
-		public const string Group5_P3_APT = @"TestData\Hybrids\GenericVehicle_Group5_P3_APT\P3 APT Group 5.vecto";
-		public const string Group5_P4_APT = @"TestData\Hybrids\GenericVehicle_Group5_P4_APT\P4 APT Group 5.vecto";
+		public const string Group5_P3_APT = @"TestData/Hybrids/GenericVehicle_Group5_P3_APT/P3 APT Group 5.vecto";
+		public const string Group5_P4_APT = @"TestData/Hybrids/GenericVehicle_Group5_P4_APT/P4 APT Group 5.vecto";
 
 
 		[
@@ -1534,7 +1534,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			graphWriter.Write(modFilename);
 		}
 
-		public const string Group5_P4_AMT = @"TestData\Hybrids\GenericVehicle_Group5_P4\P4 Group 5.vecto";
+		public const string Group5_P4_AMT = @"TestData/Hybrids/GenericVehicle_Group5_P4/P4 Group 5.vecto";
 
 		[
 			TestCase(Group5_P4_AMT, 0, TestName = "P4 Hybrid DriveCycle LongHaul"),
@@ -1554,7 +1554,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			RunHybridJob(jobFile, cycleIdx);
 		}
 
-		public const string Group5_P4_AMT_VehiclePropLimit = @"TestData\Hybrids\GenericVehicle_Group5_P4\P4 Group 5_LimitVehiclePropTq.vecto";
+		public const string Group5_P4_AMT_VehiclePropLimit = @"TestData/Hybrids/GenericVehicle_Group5_P4/P4 Group 5_LimitVehiclePropTq.vecto";
 
 		[
 			TestCase(Group5_P4_AMT_VehiclePropLimit, 0, TestName = "P4 Hybrid Limit Vehicle Prop.Tq DriveCycle LongHaul"),
@@ -1575,8 +1575,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		}
 
 
-        [TestCase(@"E:\QUAM\tmp\HybridStrategy\P1_Group31aU_ll\P1_CityBusU_ll.vecto"),
-		 TestCase(@"E:\QUAM\tmp\HybridStrategy\P1_Group31aU_rl\P1_CityBusU_rl.vecto"),
+        [TestCase(@"E:/QUAM/tmp/HybridStrategy/P1_Group31aU_ll/P1_CityBusU_ll.vecto"),
+		 TestCase(@"E:/QUAM/tmp/HybridStrategy/P1_Group31aU_rl/P1_CityBusU_rl.vecto"),
 		]
 		public void HybridTestGerard(string jobfile)
 		{
@@ -1695,7 +1695,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var strategy = gearboxType.AutomaticTransmission()
 				? (IHybridControlStrategy) new HybridStrategyAT(runData, container)
 				: new HybridStrategy(runData, container);
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, batteryData);
 			var battery = new BatterySystem(container, batteryData);
 			battery.Initialize(initialBatCharge);
 

@@ -197,7 +197,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestCase]
 		public void Pwheel_Run_Test()
 		{
-			var jobFile = @"TestData\Pwheel\Pwheel.vecto";
+			var jobFile = @"TestData/Pwheel/Pwheel.vecto";
 			var fileWriter = new FileOutputWriter(jobFile);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
@@ -212,10 +212,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 
-			ResultFileHelper.TestSumFile(@"TestData\Pwheel\Results\Pwheel.vsum", @"TestData\Pwheel\Pwheel.vsum");
+			ResultFileHelper.TestSumFile(@"TestData/Pwheel/Results/Pwheel.vsum", @"TestData/Pwheel/Pwheel.vsum");
 
-			ResultFileHelper.TestModFile(@"TestData\Pwheel\Results\Pwheel_Gear2_pt1_rep1_actual.vmod",
-				@"TestData\Pwheel\Pwheel_Gear2_pt1_rep1_actual.vmod");
+			ResultFileHelper.TestModFile(@"TestData/Pwheel/Results/Pwheel_Gear2_pt1_rep1_actual.vmod",
+				@"TestData/Pwheel/Pwheel_Gear2_pt1_rep1_actual.vmod");
 		}
 
 		/// <summary>
@@ -226,7 +226,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestCase]
 		public void Pwheel_ultimate_Run_Test()
 		{
-			var jobFile = @"TestData\Pwheel\Pwheel_ultimate.vecto";
+			var jobFile = @"TestData/Pwheel/Pwheel_ultimate.vecto";
 			var fileWriter = new FileOutputWriter(jobFile);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
@@ -241,10 +241,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 
-			ResultFileHelper.TestSumFile(@"TestData\Pwheel\Results\Pwheel_ultimate.vsum", @"TestData\Pwheel\Pwheel_ultimate.vsum");
+			ResultFileHelper.TestSumFile(@"TestData/Pwheel/Results/Pwheel_ultimate.vsum", @"TestData/Pwheel/Pwheel_ultimate.vsum");
 
-			ResultFileHelper.TestModFile(@"TestData\Pwheel\Results\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod",
-				@"TestData\Pwheel\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod");
+			ResultFileHelper.TestModFile(@"TestData/Pwheel/Results/Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod",
+				@"TestData/Pwheel/Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod");
 		}
 	}
 }

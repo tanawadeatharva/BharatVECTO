@@ -296,7 +296,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			ModalResultField.P_reess_int,
 			ModalResultField.P_reess_loss,
 			ModalResultField.P_reess_charge_max,
-			ModalResultField.P_reess_discharge_max
+			ModalResultField.P_reess_discharge_max,
+			ModalResultField.P_terminal_ES,
+			ModalResultField.P_ES_Conn_loss
 		};
 
 		// ------------------------------------------------------------------------------------
@@ -352,6 +354,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		{
 			foreach (var value in columns) {
 				var colName = nameFunc != null ? nameFunc(value) : value.GetName();
+				if (Columns.Contains(colName)) {
+					continue;
+				}
 				var col = new DataColumn(colName, value.GetAttribute().DataType)
 					{ Caption = captionFunc != null ? captionFunc(value) : value.GetCaption() };
 				col.ExtendedProperties[ExtendedPropertyNames.Decimals] = value.GetAttribute().Decimals;
