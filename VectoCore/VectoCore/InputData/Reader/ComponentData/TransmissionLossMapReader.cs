@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			return new TransmissionLossMap(entries, gearRatio, gearName);
 		}
 
-		public static TransmissionLossMap CreateEmADCLossMap(DataTable data, double gearRatio, string gearName)
+		public static TransmissionLossMap CreateEmADCLossMap(DataTable data, double gearRatio, string gearName, bool extendLossMap)
 		{
 			if (data == null || data.Columns.Count < 3) {
 				throw new VectoException("TransmissionLossMap Data File for {0} must consist of 3 columns.", gearName);
@@ -126,7 +126,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 						   torqueLoss: -row.ParseDouble(Fields.TorqeLoss).SI<NewtonMeter>()))
 				.ToList();
 
-			return new TransmissionLossMap(entries, gearRatio, gearName);
+			if (!extendLossMap) {
+				return new TransmissionLossMap(entries, gearRatio, gearName);
+			}
+			entries = ExtendLossMap(entries);
+            return new TransmissionLossMap(entries, gearRatio, gearName);
 		}
 
 		private static List<TransmissionLossMap.GearLossMapEntry> ExtendLossMap(

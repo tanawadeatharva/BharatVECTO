@@ -545,7 +545,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var lossMap =
 				TransmissionLossMapReader.CreateEmADCLossMap(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(header, mapData)), 1.0,
-					"EM ADC Map");
+					"EM ADC Map", false);
 
 			var outTorque = lossMap.GetOutTorque(emSpeed.RPMtoRad(), emTorque.SI<NewtonMeter>());
 
@@ -569,7 +569,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var lossMap =
 				TransmissionLossMapReader.CreateEmADCLossMap(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(header, mapData)), 1.0,
-					"EM ADC Map");
+					"EM ADC Map", false);
 
 			var torqueLoss = lossMap.GetTorqueLoss(dtSpeed.RPMtoRad(), dtTorque.SI<NewtonMeter>());
 

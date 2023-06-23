@@ -982,7 +982,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var lossMap = powertrainPosition == PowertrainPosition.IHPC
 				? TransmissionLossMapReader.CreateEmADCLossMap(1.0, 1.0, "EM ADC IHPC LossMap Eff")
 				: adcLossMap != null
-					? TransmissionLossMapReader.CreateEmADCLossMap(adcLossMap, ratio, "EM ADC LossMap")
+					? TransmissionLossMapReader.CreateEmADCLossMap(adcLossMap, ratio, "EM ADC LossMap", true)
 					: TransmissionLossMapReader.CreateEmADCLossMap(efficiency, ratio, "EM ADC LossMap Eff");
 
 			var retVal = new ElectricMotorData() {

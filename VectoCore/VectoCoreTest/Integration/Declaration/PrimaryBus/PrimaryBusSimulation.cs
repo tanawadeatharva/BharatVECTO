@@ -119,6 +119,7 @@ public class PrimaryBusSimulation
 
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_Conv.xml", 0, TestName="2nd Amendment PrimaryBus Coach P-HEV P2 AMT"),
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_Base_AMT.xml", 0, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 Base AMT"),
+	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_ADC.xml", 0, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 AMT ADC"),
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCoach_P2_HEV_AMT_OVC.xml", 0, TestName = "2nd Amendment PrimaryBus Coach P-HEV P2 AMT OVC"),
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCityBus_P1_HEV_Base_AT.xml", 0, TestName = "2nd Amendment PrimaryBus CityBus P-HEV P1 Base AT"),
 	TestCase(@"PrimaryBus/P-HEV/PrimaryCityBus_P1_HEV_Supercap.xml", 0, TestName = "2nd Amendment PrimaryBus CityBus P-HEV P1 Supercap"),
