@@ -1283,7 +1283,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				InputData = new IEPCGearboxInputData(iepc),
 			};
 
-			var gearInput = iepc.Gears.Select((x, idx) => new TransmissionInputData() { Gear = idx + 1, Ratio = x.Ratio }).Cast<ITransmissionInputData>().ToList();
+			var gearInput = iepc.Gears.Select((x, idx) => new TransmissionInputData() {
+				Gear = idx + 1,
+				Ratio = x.Ratio,
+				MaxInputSpeed = x.MaxOutputShaftSpeed == null ? null : x.MaxOutputShaftSpeed * x.Ratio,
+				MaxTorque = x.MaxOutputShaftTorque == null ? null : x.MaxOutputShaftTorque / x.Ratio,
+			}).Cast<ITransmissionInputData>().ToList();
 			var gears = new Dictionary<uint, GearData>();
 			for (uint i = 0; i < iepc.Gears.Count; i++) {
 				var gear = iepc.Gears[(int)i];

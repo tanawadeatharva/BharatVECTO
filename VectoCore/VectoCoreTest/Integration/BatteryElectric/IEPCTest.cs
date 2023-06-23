@@ -35,8 +35,11 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 		protected const string IEPC_Gbx1SpeedWhl2 = @"TestData/BatteryElectric/GenericIEPC/IEPC_Gbx1Speed-Whl2/IEPC_ENG_Gbx1Whl2.vecto";
 
+		protected const string IEPC_Gbx3Speed_TqLimit = @"TestData\BatteryElectric\GenericIEPC\IEPC_Gbx3Speed\IEPC_ENG_Gbx3_TqLimit.vecto";
+		protected const string IEPC_Gbx3Speed_SpeedLimit = @"TestData\BatteryElectric\GenericIEPC\IEPC_Gbx3Speed\IEPC_ENG_Gbx3_SpeedLimit.vecto";
+		protected const string IEPC_Gbx3Speed_SpeedTqLimit = @"TestData\BatteryElectric\GenericIEPC\IEPC_Gbx3Speed\IEPC_ENG_Gbx3_SpeedTqLimit.vecto";
 
-		[OneTimeSetUp]
+        [OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
@@ -156,8 +159,19 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		TestCase(IEPC_Gbx1SpeedWhl2, 6, TestName = "IEPC Gbx 1speed DTWheel-2 Job SU"),
 		TestCase(IEPC_Gbx1SpeedWhl2, 7, TestName = "IEPC Gbx 1speed DTWheel-2 Job U"),
 		TestCase(IEPC_Gbx1SpeedWhl2, 8, TestName = "IEPC Gbx 1speed DTWheel-2 Job UD"),
+
+		TestCase(IEPC_Gbx3Speed_TqLimit, 0, TestName = "IEPC Gbx 3speed Job LH TqLimit"),
+		TestCase(IEPC_Gbx3Speed_SpeedLimit, 0, TestName = "IEPC Gbx 3speed Job LH SpeedLimit"),
+		TestCase(IEPC_Gbx3Speed_SpeedTqLimit, 0, TestName = "IEPC Gbx 3speed Job LH SpeedTqLimit"),
+
+		TestCase(IEPC_Gbx3Speed_SpeedTqLimit, 1, TestName = "IEPC Gbx 3speed Job CO SpeedTqLimit"),
+		TestCase(IEPC_Gbx3Speed_SpeedTqLimit, 4, TestName = "IEPC Gbx 3speed Job IU SpeedTqLimit"),
+
+		TestCase(IEPC_Gbx3Speed_TqLimit, -1, TestName = "IEPC Gbx 3speed Job All TqLimit"),
+		TestCase(IEPC_Gbx3Speed_SpeedLimit, -1, TestName = "IEPC Gbx 3speed Job All SpeedLimit"),
+		TestCase(IEPC_Gbx3Speed_SpeedTqLimit, -1, TestName = "IEPC Gbx 3speed Job All SpeedTqLimit"),
 		]
-		public void IEPCRunJob(string jobFile, int cycleIdx)
+        public void IEPCRunJob(string jobFile, int cycleIdx)
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 
