@@ -149,12 +149,12 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
                 var emEff = 0.0;
                 if (endSoc < startSoc) {
                     var etaEmChg = modData.ElectricMotorEfficiencyGenerate(em.Item1);
-                    var etaReessChg = modData.WorkREESSChargeInternal().Value() / modData.WorkREESSChargeTerminal().Value();
+                    var etaReessChg = modData.WorkREESSChargeInternal().Value() / modData.WorkREESSChargeTerminal_ES().Value();
                     emEff = 1.0 / (etaEmChg * etaReessChg);
                 }
                 if (endSoc > startSoc) {
                     var etaEmDischg = modData.ElectricMotorEfficiencyDrive(em.Item1);
-                    var etaReessDischg = modData.WorkREESSDischargeTerminal().Value() / modData.WorkREESSDischargeInternal().Value();
+                    var etaReessDischg = modData.WorkREESSDischargeTerminal_ES().Value() / modData.WorkREESSDischargeInternal().Value();
                     emEff = etaEmDischg * etaReessDischg;
                 }
 

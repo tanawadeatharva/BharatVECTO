@@ -45,12 +45,12 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 				var emEff = 0.0;
 				if (endSoc < startSoc) {
 					var etaReessChg = modData.WorkREESSChargeInternal().Value() /
-									modData.WorkREESSChargeTerminal().Value();
+									modData.WorkREESSChargeTerminal_ES().Value();
 					emEff = 1.0 / etaReessChg;
 				}
 
 				if (endSoc > startSoc) {
-					var etaReessDischg = modData.WorkREESSDischargeTerminal().Value() /
+					var etaReessDischg = modData.WorkREESSDischargeTerminal_ES().Value() /
 										modData.WorkREESSDischargeInternal().Value();
 					emEff = etaReessDischg;
 				}
