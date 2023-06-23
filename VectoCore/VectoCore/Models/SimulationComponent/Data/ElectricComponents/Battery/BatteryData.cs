@@ -19,6 +19,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 		public List<Tuple<int, BatteryData>> Batteries { get; internal set; }
 
 		public double InitialSoC { get; internal set; }
+
+		public Ohm ConnectionSystemResistance { get; internal set; } = 0.SI<Ohm>();
+
 		public AmpereSecond Capacity
 		{
 			get
