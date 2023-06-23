@@ -16,7 +16,7 @@
     "Gears": [
       {
         "Ratio": 8.31,
-        "MaxOutShaftTorque": "1500",
+        "MaxOutShaftTorque": "3000",
         "MaxOutShaftSpeed": "1300"
       },
       {

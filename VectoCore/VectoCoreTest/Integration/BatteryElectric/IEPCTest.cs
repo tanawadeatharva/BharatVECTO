@@ -163,8 +163,15 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		TestCase(IEPC_Gbx3Speed_TqLimit, 0, TestName = "IEPC Gbx 3speed Job LH TqLimit"),
 		TestCase(IEPC_Gbx3Speed_SpeedLimit, 0, TestName = "IEPC Gbx 3speed Job LH SpeedLimit"),
 		TestCase(IEPC_Gbx3Speed_SpeedTqLimit, 0, TestName = "IEPC Gbx 3speed Job LH SpeedTqLimit"),
-        ]
-		public void IEPCRunJob(string jobFile, int cycleIdx)
+
+		TestCase(IEPC_Gbx3Speed_SpeedTqLimit, 1, TestName = "IEPC Gbx 3speed Job CO SpeedTqLimit"),
+		TestCase(IEPC_Gbx3Speed_SpeedTqLimit, 4, TestName = "IEPC Gbx 3speed Job IU SpeedTqLimit"),
+
+		TestCase(IEPC_Gbx3Speed_TqLimit, -1, TestName = "IEPC Gbx 3speed Job All TqLimit"),
+		TestCase(IEPC_Gbx3Speed_SpeedLimit, -1, TestName = "IEPC Gbx 3speed Job All SpeedLimit"),
+		TestCase(IEPC_Gbx3Speed_SpeedTqLimit, -1, TestName = "IEPC Gbx 3speed Job All SpeedTqLimit"),
+		]
+        public void IEPCRunJob(string jobFile, int cycleIdx)
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 
