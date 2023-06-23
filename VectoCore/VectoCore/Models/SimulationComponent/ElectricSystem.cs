@@ -76,6 +76,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		protected override void DoWriteModalResults(Second absTime, Second dt, IModalDataContainer container)
 		{
 			container[ModalResultField.P_Aux_el_HV] = CurrentState.AuxPower;
+			container[ModalResultField.P_ES_Conn_loss] = CurrentState.ConnectorLoss;
+			container[ModalResultField.P_terminal_ES] = CurrentState.TotalPowerDemand;
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
@@ -152,6 +154,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 				BatteryPower = batteryPower;
 				ConnectorLoss = connectorLoss;
 			}
+
+			public Watt TotalPowerDemand => ConsumerPower + ChargePower - AuxPower + ConnectorLoss;
 
 			public State Clone() => (State)MemberwiseClone();
 		}

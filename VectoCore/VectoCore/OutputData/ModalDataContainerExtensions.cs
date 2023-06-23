@@ -240,7 +240,17 @@ namespace TUGraz.VectoCore.OutputData
 			return -data.TimeIntegral<WattSecond>(ModalResultField.P_reess_terminal, x => x.IsSmaller(0));
 		}
 
-		public static WattSecond WorkREESSChargeInternal(this IModalDataContainer data)
+		public static WattSecond WorkREESSChargeTerminal_ES(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_terminal_ES, x => x.IsGreater(0));
+		}
+
+		public static WattSecond WorkREESSDischargeTerminal_ES(this IModalDataContainer data)
+		{
+			return -data.TimeIntegral<WattSecond>(ModalResultField.P_terminal_ES, x => x.IsSmaller(0));
+		}
+
+        public static WattSecond WorkREESSChargeInternal(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_reess_int, x => x.IsGreater(0));
 
@@ -543,7 +553,13 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_reess_loss);
 		}
 
-		public static double REESSDeltaSoc(this IModalDataContainer data)
+		public static WattSecond ESConnectorLoss(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_ES_Conn_loss);
+		}
+
+
+        public static double REESSDeltaSoc(this IModalDataContainer data)
 		{
 			return data.REESSEndSoC() - data.REESSStartSoC();
 		}

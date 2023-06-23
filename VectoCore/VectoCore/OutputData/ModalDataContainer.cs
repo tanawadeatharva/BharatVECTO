@@ -636,9 +636,11 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.P_ice_inertia,
 					ModalResultField.P_ice_out,
 					// REESS
+					ModalResultField.P_terminal_ES,
 					ModalResultField.P_reess_terminal,
 					ModalResultField.P_reess_int,
 					ModalResultField.P_reess_loss,
+					ModalResultField.P_ES_Conn_loss,
 					ModalResultField.P_reess_charge_max,
 					ModalResultField.P_reess_discharge_max,
 					ModalResultField.REESSStateOfCharge,

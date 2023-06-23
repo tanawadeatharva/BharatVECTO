@@ -536,7 +536,7 @@ namespace TUGraz.VectoCore.OutputData
 			{ E_BusAux_HVAC_El, SumFunc((r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_busAux_ES_HVAC).ConvertToKiloWattHour(), ModalResultField.P_busAux_ES_HVAC)},
 
 			// REESS
-			{ E_REESS_LOSS, SumFunc((r, m) => m.REESSLoss().ConvertToKiloWattHour(), ModalResultField.P_reess_loss)},
+			{ E_REESS_LOSS, SumFunc((r, m) => (m.REESSLoss() + m.ESConnectorLoss()).ConvertToKiloWattHour(), ModalResultField.P_reess_loss)},
 			{ E_REESS_T_chg, SumFunc((r, m) => m.WorkREESSChargeTerminal().ConvertToKiloWattHour(), ModalResultField.P_reess_terminal)},
 			{ E_REESS_T_dischg, SumFunc((r, m) => m.WorkREESSDischargeTerminal().ConvertToKiloWattHour(), ModalResultField.P_reess_terminal)},
 			{ E_REESS_int_chg, SumFunc((r, m) => m.WorkREESSChargeInternal().ConvertToKiloWattHour(), ModalResultField.P_reess_int)},
