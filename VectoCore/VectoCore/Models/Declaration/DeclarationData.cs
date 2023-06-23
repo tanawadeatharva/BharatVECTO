@@ -1707,8 +1707,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var respChgBatDepot = tmpBattery.Request(0.SI<Second>(), 1.SI<Second>(), depotChargingPower, true);
 			var respChgBatInMission = tmpBattery.Request(0.SI<Second>(), 1.SI<Second>(), inMissionChargingPower, true);
 
-			var etaChgBatDepot = 1 - (respChgBatDepot.LossPower / respChgBatDepot.PowerDemand).Value();
-			var etaChgBatInMission = 1 - (respChgBatInMission.LossPower / respChgBatInMission.PowerDemand).Value();
+			var currentEstInMission = depotChargingPower / tmpBattery.InternalVoltage;
+			var connectorLossInMission = currentEstInMission * batteryData.ConnectionSystemResistance *
+								currentEstInMission;
+			var currentEstDepot = depotChargingPower / tmpBattery.InternalVoltage;
+			var connectorLossDepot = currentEstDepot * batteryData.ConnectionSystemResistance *
+								currentEstDepot;
+
+            var etaChgBatDepot = 1 - ((respChgBatDepot.LossPower + connectorLossDepot) / respChgBatDepot.PowerDemand).Value();
+			var etaChgBatInMission = 1 - ((respChgBatInMission.LossPower + connectorLossInMission) / respChgBatInMission.PowerDemand).Value();
 
 
 			var chargedEnergyDepot = batteryData.UseableStoredEnergy * vehicleOperation.RealWorldUsageFactors.StartSoCBeforeMission;
@@ -1736,9 +1743,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 				VectoMath.Max(MinDepotChgPwr, batteryData.UseableStoredEnergy / DepotChargingDuration);
 
 			var respChgBatDepot = tmpBattery.Request(0.SI<Second>(), 1.SI<Second>(), depotChargingPower, true);
-			// iest = depotChargPwr / U_centerSoc
-			// P_loss_conn = iest * iest * R_conn
-			var etaChgBatDepot = 1 - ((respChgBatDepot.LossPower /* + P_loss_conn */ ) / respChgBatDepot.PowerDemand).Value();
+			var currentEst = depotChargingPower / tmpBattery.InternalVoltage;
+			var connectorLoss = currentEst * (runData.BatteryData?.ConnectionSystemResistance ?? 0.SI<Ohm>()) *
+								currentEst;
+			var etaChgBatDepot = 1 - ((respChgBatDepot.LossPower + connectorLoss ) / respChgBatDepot.PowerDemand).Value();
 			return etaChgBatDepot;
 		}
 
