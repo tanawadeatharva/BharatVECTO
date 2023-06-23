@@ -616,8 +616,11 @@ public class SSMHeatingPostProcessingCorrection
 		m.Setup(x => x.TimeIntegral<WattSecond>(ModalResultField.P_reess_terminal, It.IsAny<Func<SI, bool>>()))
 			.Returns<ModalResultField,
 				Func<SI, bool>>((_, f) => batteryEntries.Select(x => x.Item2).Where(x => f(x)).Sum());
+		m.Setup(x => x.TimeIntegral<WattSecond>(ModalResultField.P_terminal_ES, It.IsAny<Func<SI, bool>>()))
+			.Returns<ModalResultField,
+				Func<SI, bool>>((_, f) => batteryEntries.Select(x => x.Item2).Where(x => f(x)).Sum());
 
-		m.Setup(x => x.GetValues<SI>(ModalResultField.REESSStateOfCharge)).Returns(new[] { 0.5.SI<Scalar>(), 0.4.SI<Scalar>() });
+        m.Setup(x => x.GetValues<SI>(ModalResultField.REESSStateOfCharge)).Returns(new[] { 0.5.SI<Scalar>(), 0.4.SI<Scalar>() });
 	}
 
 

@@ -692,7 +692,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				sumData) { RunData = runData };
 
 			var strategy = new SerialHybridStrategy(runData, container);
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, batteryData);
 			var battery = new BatterySystem(container, batteryData);
 			battery.Initialize(initialBatCharge);
 

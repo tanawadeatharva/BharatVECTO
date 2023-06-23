@@ -25,7 +25,8 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 				return null;
 
 			var retVal = new BatterySystemData {
-				Batteries = GetBatteries(currentBatteryData, jobType, ovc)
+				Batteries = GetBatteries(currentBatteryData, jobType, ovc),
+				ConnectionSystemResistance = 0.SI<Ohm>()
 			};
 			var limits = retVal.GetSocLimits();
 			retVal.InitialSoC = (limits.MaxSoc + limits.MinSoc) / 2;

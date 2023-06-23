@@ -138,7 +138,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
 
 			var container = new MockVehicleContainer();
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, batteryData);
 			var bat = new Battery(container, batteryData.Batteries.First().Item2);
 			es.Connect(bat);
 			es.Connect(new MockElectricConsumer(auxPower.SI<Watt>()));
@@ -208,7 +208,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var container = new MockVehicleContainer();
 			var bat = new Battery(container, batteryData.Batteries.First().Item2);
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, batteryData);
 			es.Connect(bat);
 			es.Connect(new MockElectricConsumer(auxPower.SI<Watt>()));
 			bat.Initialize(initialSoC);
@@ -253,7 +253,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = new MockVehicleContainer();
 			var batId = batteryData.Batteries.First().Item2.BatteryId;
 			var bat = new Battery(container, batteryData.Batteries.First().Item2);
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, batteryData);
 			es.Connect(bat);
 			es.Connect(new MockElectricConsumer(0.SI<Watt>()));
 			bat.Initialize(initialSoC);
@@ -372,7 +372,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var batId = batteryData.Batteries.First().Item2.BatteryId;
 			var bat = new Battery(container, batteryData.Batteries.First().Item2);
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, batteryData);
 			es.Connect(bat);
 			es.Connect(new MockElectricConsumer(0.SI<Watt>()));
 			bat.Initialize(initialSoC);
@@ -499,7 +499,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var container = new MockVehicleContainer();
 			var bat = new BatterySystem(container, batteryData);
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, batteryData);
 			es.Connect(bat);
 			es.Connect(new MockElectricConsumer(0.SI<Watt>()));
 			bat.Initialize(initialSoC);
@@ -617,7 +617,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var container = new MockVehicleContainer();
 			var bat = new BatterySystem(container, batteryData);
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, batteryData);
 			es.Connect(bat);
 			es.Connect(new MockElectricConsumer(0.SI<Watt>()));
 			bat.Initialize(initialSoC);

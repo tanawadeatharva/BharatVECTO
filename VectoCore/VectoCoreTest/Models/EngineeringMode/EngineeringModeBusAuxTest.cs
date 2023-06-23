@@ -910,7 +910,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 					},
 					InitialSoC = reessSoC.Value
 				};
-				var es = new ElectricSystem(container);
+				var es = new ElectricSystem(container, runData.BatteryData);
 				var battery = new BatterySystem(container, runData.BatteryData);
 				battery.Initialize(runData.BatteryData.InitialSoC);
 				container.BatteryInfo = battery;
