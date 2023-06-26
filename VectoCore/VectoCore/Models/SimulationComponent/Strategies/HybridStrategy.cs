@@ -92,6 +92,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				TestPowertrain.CombustionEngine.UpdateFrom(DataBus.EngineInfo);
 				TestPowertrain.Gearbox.UpdateFrom(DataBus.GearboxInfo);
 				TestPowertrain.Clutch.UpdateFrom(DataBus.ClutchInfo);
+				TestPowertrain.Brakes.UpdateFrom(DataBus.Brakes);
 				var pos = ModelData.ElectricMachinesData.FirstOrDefault().Item1;
 				TestPowertrain.ElectricMotor.UpdateFrom(DataBus.ElectricMotorInfo(pos));
 				foreach (var emPos in TestPowertrain.ElectricMotorsUpstreamTransmission.Keys) {
@@ -850,8 +851,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var emPos = ModelData.ElectricMachinesData.First().Item1;
 			var disengageSpeedThreshold = ModelData.GearboxData.DisengageWhenHaltingSpeed;
 
-			// hint: only check for halting speed if vehicle is actually braking to halt.
-			var vehiclespeedBelowThreshold = DataBus.VehicleInfo.VehicleSpeed.IsSmaller(disengageSpeedThreshold)
+            // hint: only check for halting speed if vehicle is actually braking to halt.
+			var vehicleEndSpeed = DataBus.VehicleInfo.VehicleSpeed +
+							DataBus.DriverInfo.DriverAcceleration * ModelData.GearboxData.TractionInterruption; 
+            var vehiclespeedBelowThreshold = vehicleEndSpeed.IsSmaller(disengageSpeedThreshold)
 											&& (DataBus.DriverInfo.NextBrakeTriggerSpeed?.IsEqual(0) ?? false);
 
 			if (!ElectricMotorCanPropellDuringTractionInterruption && !DataBus.GearboxInfo.GearEngaged(absTime)) {
