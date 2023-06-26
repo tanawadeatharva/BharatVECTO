@@ -24,6 +24,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public Watt LossPower { get; set; }
 
 		public double StateOfCharge { get; set; }
+		public Volt InternalVoltage { get; set; }
 
 		public object Source { get; }
 	}
@@ -73,18 +74,41 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public IRESSResponse RESSResponse { get; set; }
 
 		public Watt MaxPowerDrive =>
-			(RESSResponse != null && RESSResponse.MaxDischargePower != null ? RESSResponse.MaxDischargePower : 0.SI<Watt>()) -
-			(ChargingPower != null ? ChargingPower : 0.SI<Watt>()) +
-			(AuxPower != null ? AuxPower : 0.SI<Watt>());
+			CalculateMaxEMPower(RESSResponse != null && RESSResponse.MaxDischargePower != null
+				? RESSResponse.MaxDischargePower
+				: 0.SI<Watt>(), RESSResponse.InternalVoltage);
 
 		public Watt MaxPowerDrag =>
-			(RESSResponse != null && RESSResponse.MaxChargePower != null ? RESSResponse.MaxChargePower : 0.SI<Watt>()) -
-			(ChargingPower != null ? ChargingPower : 0.SI<Watt>()) +
-			(AuxPower != null ? AuxPower : 0.SI<Watt>());
+			CalculateMaxEMPower(RESSResponse != null && RESSResponse.MaxChargePower != null
+				? RESSResponse.MaxChargePower
+				: 0.SI<Watt>(), RESSResponse.InternalVoltage);
+
+		protected Watt CalculateMaxEMPower(Watt P_batMax, Volt U_int)
+		{
+			//Note: consider losses of electric system (cables, junction box) when calculating max drive power
+			//      see ElectricSystem implementation...
+			// I_est = P_EM / U_Int
+			// P_Conn = I_est ^ 2 * R_Conn = (P_EM / U_Int) ^ 2 * R_Conn
+			// P_EM_max = P_Bat_max - P_Chg + P_aux +P_Conn(P_EM)
+			// P_EM_max + P_Conn = P_Bat_max - P_Chg + P_aux
+			// P_EM_max + ((P_EM_max + P_Chg - P_aux) / U_Int) ^ 2 * R_Conn = P_Bat_max - P_Chg + P_aux
+			// P_EM_max^2 * R_Conn / U_Int^2 + P_EM_max - (P_Bat_max - P_Chg + P_aux) = 0
+			// Px = P_Bat_max - P_Chg + P_aux
+			
+			var Px = P_batMax -
+					(ChargingPower != null ? ChargingPower : 0.SI<Watt>()) +
+					(AuxPower != null ? AuxPower : 0.SI<Watt>());
+            var a = (ConnectionSystemResistance / U_int / U_int).Value();
+			var b = 1.0;
+			var c = -Px.Value();
+			var solutions = VectoMath.QuadraticEquationSolver(a, b, c);
+			return solutions.First().SI<Watt>();
+        }
 
 		public Watt RESSPowerDemand { get; set; }
 
 		public object Source { get; }
+		public Ohm ConnectionSystemResistance { get; set; }
 
 		public override string ToString()
 		{

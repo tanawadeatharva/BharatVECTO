@@ -62,6 +62,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			response.SimulationInterval = dt;
 			response.RESSResponse = batResponse;
 			response.RESSPowerDemand = totalPowerDemand;
+			response.ConnectionSystemResistance = ModelData?.ConnectionSystemResistance ?? 0.SI<Ohm>();
 			response.ConsumerPower = powerDemand;
 			response.AuxPower = auxDemand;
 			response.ChargingPower = chargePower;
