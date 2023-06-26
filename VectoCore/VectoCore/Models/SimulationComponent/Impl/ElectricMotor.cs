@@ -453,7 +453,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// has to be positive for recuperation - battery is full
 				return null;
 			}
-
 			var maxBatRecuperationTorque = maxBatPower.IsEqual(0, 1e-3)
 				? ModelData.DragCurveLookup(avgSpeed, gear)
 				: ModelData.EfficiencyData.EfficiencyMapLookupTorque(volt, maxBatPower, avgSpeed, maxEmTorque, gear);
