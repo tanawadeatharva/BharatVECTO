@@ -64,8 +64,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						MaxChargePower = double.MaxValue.SI<Watt>(),
 						MaxDischargePower = -double.MaxValue.SI<Watt>(),
 						AbsTime = absTime,
+						InternalVoltage = 0.SI<Volt>()
 					},
-					ConsumerPower = powerDemand
+					ConsumerPower = powerDemand,
+					ConnectionSystemResistance = 0.SI<Ohm>(),
 				};
 			}
 

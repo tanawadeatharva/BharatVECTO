@@ -169,6 +169,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			response.MaxDischargePower = maxDischargePower;
 			response.PowerDemand = powerDemand;
 			response.LossPower = batteryLoss;
+			response.InternalVoltage = InternalVoltage;
 
 			return response;
 		}
