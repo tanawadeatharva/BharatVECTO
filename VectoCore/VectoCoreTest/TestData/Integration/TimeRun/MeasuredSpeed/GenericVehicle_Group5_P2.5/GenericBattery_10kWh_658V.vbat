@@ -13,6 +13,8 @@
     "SOC_max": 80.0,
     "MaxCurrentMap": "MaxCurrent.vimax",
     "InternalResistanceCurve": "GenericBattery_10kWh_658V.vbatr",
-    "SoCCurve": "GenericBattery_10kWh_658V.vbatv"
+    "SoCCurve": "GenericBattery_10kWh_658V.vbatv",
+    "ConnectorsSubsystemsIncluded": true,
+    "JunctionboxIncluded": true
   }
 }
