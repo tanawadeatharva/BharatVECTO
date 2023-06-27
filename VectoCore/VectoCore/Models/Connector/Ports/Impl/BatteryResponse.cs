@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
             //      see ElectricSystem implementation...
             // I_est = P_EM / U_Int
             // P_Conn = I_est ^ 2 * R_Conn = (P_EM / U_Int) ^ 2 * R_Conn
-            // P_EM_max = P_Bat_max - P_Chg + P_aux + P_Conn(P_EM)
+            // P_EM_max = P_Bat_max - P_Chg + P_aux - P_Conn(P_EM)
             // P_EM_max + P_Conn = P_Bat_max - P_Chg + P_aux
             // P_EM_max + ((P_EM_max + P_Chg - P_aux) / U_Int) ^ 2 * R_Conn = P_Bat_max - P_Chg + P_aux
             // P_EM_max^2 * R_Conn / U_Int^2 + P_EM_max - (P_Bat_max - P_Chg + P_aux) = 0
