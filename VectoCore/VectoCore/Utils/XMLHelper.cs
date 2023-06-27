@@ -198,7 +198,12 @@ namespace TUGraz.VectoCore.Utils
 			};
 		}
 
-		private static object[] GetValueAsUnit(this double? value, string unit, uint? decimals)
+		public static object[] ValueAsUnit(this ConvertedSI value, uint decimals)
+		{
+			return GetValueAsUnit(value, value.Units, decimals);
+		}
+
+        private static object[] GetValueAsUnit(this double? value, string unit, uint? decimals)
 		{
 			if (value == null) {
 				return new object[0];

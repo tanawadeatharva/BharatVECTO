@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return run;
 		}
 
-		internal void SetMissions(params (MissionType m, LoadingType loadingType)[] missionLoadingPairs)
+		public void SetMissions(params (MissionType m, LoadingType loadingType)[] missionLoadingPairs)
 		{
 			foreach (var missionLoadingPair in missionLoadingPairs) {
 				_missionsToRun.Add((missionLoadingPair.m, missionLoadingPair.loadingType));
