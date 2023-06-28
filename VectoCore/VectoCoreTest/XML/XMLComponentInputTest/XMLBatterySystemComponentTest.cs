@@ -14,6 +14,7 @@ using NUnit.Framework;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
@@ -120,7 +121,7 @@ namespace TUGraz.VectoCore.Tests.XML.XMLComponentInputTest
 		public void CheckInternalResistanceMeasured(IXMLBatteryPackDeclarationInputData m, XmlDocument document)
 		{
 			var resistanceCurve = m.InternalResistanceCurve;
-			BatteryInternalResistanceReader.Create(resistanceCurve, true);
+			var resistanceMap = BatteryInternalResistanceReader.Create(resistanceCurve, true);
 			//from input file "BatterySystem_StdValues.xml"
 
 			var uncorrected = ReadInternalResistanceFromFile(document);
@@ -135,14 +136,18 @@ namespace TUGraz.VectoCore.Tests.XML.XMLComponentInputTest
 						continue;
 					}
 					Assert.AreEqual(uncorrected.Rows[rowIdx].ParseDouble(colIdx), resistanceCurve.Rows[rowIdx].ParseDouble(colIdx), 10e-3);  //mOhm
+					
+					var soc = uncorrected.Rows[rowIdx].ParseDouble(0) / 100.0;
+					var entry = resistanceMap.Lookup(soc, 0.SI<Second>());
+					Assert.AreEqual(entry.AsMilliOhm, uncorrected.Rows[rowIdx].ParseDouble(1));
 				}
-			}
+            }
         }
 
 		public void CheckInternalResistanceStandard(IXMLBatteryPackDeclarationInputData s, XmlDocument document)
 		{
 			var resistanceCurve = s.InternalResistanceCurve;
-			BatteryInternalResistanceReader.Create(resistanceCurve, true);
+			var resistanceMap = BatteryInternalResistanceReader.Create(resistanceCurve, true);
             //from input file "BatterySystem_StdValues.xml"
 			var nominalVoltage = BatterySOCReader.Create(s.VoltageCurve).Lookup(0.5); //630
 
@@ -157,6 +162,9 @@ namespace TUGraz.VectoCore.Tests.XML.XMLComponentInputTest
 						continue;
 					}
 					Assert.AreEqual(uncorrected.Rows[rowIdx].ParseDouble(colIdx) * dcir, resistanceCurve.Rows[rowIdx].ParseDouble(colIdx), 10e-3);  //mOhm
+					var soc = uncorrected.Rows[rowIdx].ParseDouble(0) / 100.0;
+					var entry = resistanceMap.Lookup(soc, 0.SI<Second>());
+					Assert.AreEqual(entry.AsMilliOhm, uncorrected.Rows[rowIdx].ParseDouble(1) * dcir);
                 }
 			}
 		}
