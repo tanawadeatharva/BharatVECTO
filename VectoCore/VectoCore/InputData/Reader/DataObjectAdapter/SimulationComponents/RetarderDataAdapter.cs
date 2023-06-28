@@ -14,7 +14,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 	{
 		public RetarderData CreateRetarderData(IRetarderInputData retarder, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet)
 		{
-			return SetCommonRetarderData(retarder);
+			return SetCommonRetarderData(retarder, position);
 		}
 		internal static RetarderData SetCommonRetarderData(IRetarderInputData retarderInputData,
 			PowertrainPosition position = PowertrainPosition.HybridPositionNotSet)
@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 						break;
 
 					case RetarderType.AxlegearInputRetarder:
-						if (position != PowertrainPosition.BatteryElectricE3)
+						if (!position.IsOneOf(PowertrainPosition.BatteryElectricE3, PowertrainPosition.IEPC) )
 							throw new ArgumentException("AxlegearInputRetarder is only allowed for PEV-E3, HEV-S3, S-IEPC, E-IEPC. ", nameof(retarder));
 						retarder.LossMap = RetarderLossMapReader.Create(retarderInputData.LossMap);
 						retarder.Ratio = retarderInputData.Ratio;

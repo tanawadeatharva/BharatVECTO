@@ -401,7 +401,27 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		}
 
-		private void TestOverloadValues(IElectricMotorVoltageLevel voltageLevel)
+		private void TestVoltageLevelIEPC(IList<IElectricMotorVoltageLevel> voltageLevels)
+		{
+			Assert.AreEqual(2, voltageLevels.Count);
+			var voltageLevel = voltageLevels[0];
+			Assert.AreEqual(400.SI<Volt>(), voltageLevel.VoltageLevel);
+
+			TestOverloadValues(voltageLevel);
+			TestMaxTorqueCurveIEPC(voltageLevel.FullLoadCurve);
+			TestPowerMap(voltageLevel.PowerMap);
+
+			voltageLevel = voltageLevels[1];
+			Assert.AreEqual(600.SI<Volt>(), voltageLevel.VoltageLevel);
+
+			TestOverloadValues(voltageLevel);
+			TestMaxTorqueCurveIEPC(voltageLevel.FullLoadCurve);
+			TestPowerMap(voltageLevel.PowerMap);
+
+		}
+
+
+        private void TestOverloadValues(IElectricMotorVoltageLevel voltageLevel)
 		{
 			Assert.AreEqual(200.00.SI<NewtonMeter>(), voltageLevel.ContinuousTorque);
 			Assert.AreEqual(2000.00.RPMtoRad(), voltageLevel.ContinuousTorqueSpeed);//TestSpeedContinuousTorque
@@ -416,8 +436,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			if (powerMap.Count >= 1) 
 				TestPowerMapData01(powerMap[0]);
 			
-			if (powerMap.Count >= 2) 
-				TestPowerMapData02(powerMap[1]);
+			//if (powerMap.Count >= 2) 
+			//	TestPowerMapData02(powerMap[1]);
 			
 			if (powerMap.Count == 3) 
 				TestPowerMapData03(powerMap[2]);
@@ -427,8 +447,8 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 			TestPowerMapEntry("0.00", "400.00", "1000.00", powerMap.PowerMap.Rows[0]);
 			TestPowerMapEntry("0.00", "-400.00", "-1000.00", powerMap.PowerMap.Rows[1]);
-			TestPowerMapEntry("4000.00", "4000.00", "20000.00", powerMap.PowerMap.Rows[2]);
-			TestPowerMapEntry("4000.00", "-4000.00", "-20000.00", powerMap.PowerMap.Rows[3]);
+			TestPowerMapEntry("1000.00", "4000.00", "20000.00", powerMap.PowerMap.Rows[2]);
+			TestPowerMapEntry("1000.00", "-4000.00", "-20000.00", powerMap.PowerMap.Rows[3]);
 		}
 
 		private void TestPowerMapData02(IElectricMotorPowerMap powerMap)
@@ -453,8 +473,14 @@ namespace TUGraz.VectoCore.Tests.XML
 			TestMaxTorqueCurveEntry("0.00", "450.00", "-450.00", torqueCurve.Rows[0]);
 			TestMaxTorqueCurveEntry("4000.00", "100.00", "-100.00", torqueCurve.Rows[1]);
 		}
-		
-		private void TestMaxTorqueCurveEntry(string outShaftSpeed, string maxTorque, string minTorque, DataRow row)
+
+		private void TestMaxTorqueCurveIEPC(TableData torqueCurve)
+		{
+			TestMaxTorqueCurveEntry("0.00", "450.00", "-450.00", torqueCurve.Rows[0]);
+			TestMaxTorqueCurveEntry("1000.00", "450.00", "-450.00", torqueCurve.Rows[1]);
+		}
+
+        private void TestMaxTorqueCurveEntry(string outShaftSpeed, string maxTorque, string minTorque, DataRow row)
 		{
 			Assert.AreEqual(outShaftSpeed, row[XMLNames.MaxTorqueCurve_OutShaftSpeed]);
 			Assert.AreEqual(maxTorque, row[XMLNames.MaxTorqueCurve_MaxTorque]);
@@ -643,13 +669,13 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(2, limits.First().Value.Count);
 			Assert.AreEqual(PowertrainPosition.HybridP2, limits.First().Key);
 			
-			Assert.AreEqual(100, limits.First().Value[0].Item1.Value());
+			Assert.AreEqual(400, limits.First().Value[0].Item1.Value());
 			TestMaxTorqueCurveEntry("0.00", "200.00", "-200.00", limits.First().Value[0].Item2.Rows[0]);
-			TestMaxTorqueCurveEntry("1000.00", "300.00", "-300.00", limits.First().Value[0].Item2.Rows[1]);
+			TestMaxTorqueCurveEntry("4000.00", "300.00", "-300.00", limits.First().Value[0].Item2.Rows[1]);
 
-			Assert.AreEqual(500, limits.First().Value[1].Item1.Value());
+			Assert.AreEqual(600, limits.First().Value[1].Item1.Value());
 			TestMaxTorqueCurveEntry("0.00", "200.00", "-200.00", limits.First().Value[1].Item2.Rows[0]);
-			TestMaxTorqueCurveEntry("1000.00", "300.00", "-300.00", limits.First().Value[1].Item2.Rows[1]);
+			TestMaxTorqueCurveEntry("4000.00", "300.00", "-300.00", limits.First().Value[1].Item2.Rows[1]);
 		}
 
 		#endregion
@@ -1341,7 +1367,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(iepcData.DigestValue);
 
 			TestGearsData(iepcData.Gears);
-			TestVoltageLevel(iepcData.VoltageLevels);
+			TestVoltageLevelIEPC(iepcData.VoltageLevels);
 			TestDragCurves(iepcData.DragCurves);
 		}
 

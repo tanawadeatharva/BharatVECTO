@@ -641,7 +641,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					Vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					Vehicle.Length ?? mission.BusParameter.VehicleLength,
 					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType);
-				result.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData);
+				var emPos = result.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
+				result.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData, emPos);
 				result.DriverData = DriverData;
 
 				result.VehicleData.VehicleClass = _segment.VehicleClass;
