@@ -13,6 +13,8 @@
     "Capacity": 7.5,
     "InternalResistanceCurve": "GenericBat_3kWh.vbatr",
     "MaxCurrentMap": "MaxCurrent.vimax",
-    "SoCCurve": "GenericBat_3kWh.vbatv"
+    "SoCCurve": "GenericBat_3kWh.vbatv",
+    "ConnectorsSubsystemsIncluded": true,
+    "JunctionboxIncluded": true
   }
 }
