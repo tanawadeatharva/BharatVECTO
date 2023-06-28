@@ -27,7 +27,7 @@ using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 namespace TUGraz.VectoCore.Tests.XML.XMLComponentInputTest
 {
     [TestFixture]
-    internal class XMLBatterySystemComponentTest
+    public class XMLBatterySystemComponentTest
     {
 		private StandardKernel _kernel;
 
@@ -46,9 +46,9 @@ namespace TUGraz.VectoCore.Tests.XML.XMLComponentInputTest
 			_declarationFactory = _kernel.Get<IDeclarationInjectFactory>();
 		}
 
-		[TestCase("BatterySystem_1.xml", TestName="Measured")]
-		[TestCase("BatterySystem_StdValues.xml", TestName = "StandardValues")]
-        public void LoadComponent(string fileName)
+		[TestCase("BatterySystem_1.xml", typeof(XMLBatteryPackDeclarationInputDataMeasuredV23), TestName ="XMLBatterySystemData InternalResistance Measured")]
+		[TestCase("BatterySystem_StdValues.xml", typeof(XMLBatteryPackDeclarationInputDataStandardV23), TestName = "XMLBatterySystemData InternalResistance StandardValues")]
+        public void BatterySystemInternalResistanceTest(string fileName, Type expectedType)
 		{
 			var path = GetFullPath(BASEDIRComponent, fileName);
 			var document = LoadAndValidate(path);
@@ -56,12 +56,13 @@ namespace TUGraz.VectoCore.Tests.XML.XMLComponentInputTest
 			TestContext.WriteLine(document);
 
 			var reessReader = CreateBatterySystemReader(document, path);
+			Assert.AreEqual(reessReader.GetType(), expectedType);
 			switch (reessReader) {
 				case XMLBatteryPackDeclarationInputDataMeasuredV23 m:
-					CheckMeasured(m, document);
+					CheckInternalResistanceMeasured(m, document);
 					break;
 				case XMLBatteryPackDeclarationInputDataStandardV23 s:
-					CheckStandard(s, document);
+					CheckInternalResistanceStandard(s, document);
 					break;
 				default:
 					Assert.Fail("unexpected type");
@@ -70,7 +71,53 @@ namespace TUGraz.VectoCore.Tests.XML.XMLComponentInputTest
 
 		}
 
-		public void CheckMeasured(IXMLBatteryPackDeclarationInputData m, XmlDocument document)
+		[TestCase("BatterySystem_1.xml", typeof(XMLBatteryPackDeclarationInputDataMeasuredV23), TestName = "XMLBatterySystemData InternalResistance Measured")]
+		[TestCase("BatterySystem_StdValues.xml", typeof(XMLBatteryPackDeclarationInputDataStandardV23), TestName = "XMLBatterySystemData InternalResistance StandardValues")]
+		public void BatterySystemMaxCurrentTest(string fileName, Type expectedType)
+		{
+			var path = GetFullPath(BASEDIRComponent, fileName);
+			var document = LoadAndValidate(path);
+			Assert.IsNotNull(document);
+			TestContext.WriteLine(document);
+
+			var reessReader = CreateBatterySystemReader(document, path);
+			Assert.AreEqual(reessReader.GetType(), expectedType);
+			switch (reessReader) {
+				case XMLBatteryPackDeclarationInputDataMeasuredV23 m:
+					var expectedM = new[] {
+						Tuple.Create(0.0, 50.0, 0.0),
+						Tuple.Create(1.0, 0.0, -50.0)
+					};
+					CheckMaxCurrent(reessReader, expectedM);
+					break;
+				case XMLBatteryPackDeclarationInputDataStandardV23 s:
+					var expectedStd = new[] {
+						Tuple.Create(0.0, 50.0 * 0.9,   0.0 * 5.0),
+						Tuple.Create(0.3, 50.0 * 0.9, -50.0 * 5.0),
+						Tuple.Create(0.8, 50.0 * 0.9, -50.0 * 5.0),
+						Tuple.Create(1.0,  0.0 * 0.9, -50.0 * 5.0)
+					};
+                    CheckMaxCurrent(reessReader, expectedStd);
+					break;
+				default:
+					Assert.Fail("unexpected type");
+					break;
+			}
+
+		}
+
+		private void CheckMaxCurrent(IXMLBatteryPackDeclarationInputData m,
+			Tuple<double, double, double>[] expected)
+		{
+			var maxCurrentMap = BatteryMaxCurrentReader.Create(m.MaxCurrentMap);
+
+            foreach (var e in expected) {
+				Assert.AreEqual(e.Item2, maxCurrentMap.LookupMaxChargeCurrent(e.Item1).Value(), "max charge current for SoC {0} diverges. expected: {1} actual: {2}", e.Item1, e.Item2, maxCurrentMap.LookupMaxChargeCurrent(e.Item1));
+				Assert.AreEqual(e.Item3, maxCurrentMap.LookupMaxDischargeCurrent(e.Item1).Value(), "max charge current for SoC {0} diverges. expected: {1} actual: {2}", e.Item1, e.Item3, maxCurrentMap.LookupMaxDischargeCurrent(e.Item1));
+			}
+        }
+
+		public void CheckInternalResistanceMeasured(IXMLBatteryPackDeclarationInputData m, XmlDocument document)
 		{
 			var resistanceCurve = m.InternalResistanceCurve;
 			BatteryInternalResistanceReader.Create(resistanceCurve, true);
@@ -92,7 +139,7 @@ namespace TUGraz.VectoCore.Tests.XML.XMLComponentInputTest
 			}
         }
 
-		public void CheckStandard(IXMLBatteryPackDeclarationInputData s, XmlDocument document)
+		public void CheckInternalResistanceStandard(IXMLBatteryPackDeclarationInputData s, XmlDocument document)
 		{
 			var resistanceCurve = s.InternalResistanceCurve;
 			BatteryInternalResistanceReader.Create(resistanceCurve, true);
