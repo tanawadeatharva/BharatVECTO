@@ -23,7 +23,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	{
 		public const string componentFile = @"TestData/Hybrids/Battery/GenericBattery.vbat";
 
-		[OneTimeSetUp]
+
+        [OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
@@ -127,9 +128,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			double maxPowerDischarge, double battLoss)
 		{
 
-			var inputData = JSONInputDataFactory.ReadREESSData(componentFile, false);
-			Assert.NotNull(inputData);
+			var inputData = JSONInputDataFactory.ReadREESSData(componentFile, false) as JSONBatteryV1;
 
+			Assert.NotNull(inputData);
+			Assert.IsTrue(inputData.ConnectorsSubsystemsIncluded);
+			Assert.IsTrue(inputData.ConnectorsSubsystemsIncluded);
 			var dao = new EngineeringDataAdapter();
 			var tmp = new MockBatteryInputData()
 			{

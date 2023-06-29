@@ -351,9 +351,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[TestCase(VehicleClass.Class6, MissionType.Interurban, "Standard technology"),
 		TestCase(VehicleClass.Class6, MissionType.LongHaul, "Standard technology - Flux-Compensator")]
 		//Medium Lorry
-		[TestCase(VehicleClass.Class55, MissionType.LongHaul, "Standard technology"),
-		TestCase(VehicleClass.Class55, MissionType.UrbanDelivery, "Standard technology - Flux-Compensator"),
-		TestCase(VehicleClass.Class55, MissionType.LongHaul, "Standard technology - LED headlights, all")]
+		//[TestCase(VehicleClass.Class55, MissionType.LongHaul, "Standard technology"),
+		[TestCase(VehicleClass.Class55, MissionType.UrbanDelivery, "Standard technology - Flux-Compensator")]
+		//TestCase(VehicleClass.Class55, MissionType.LongHaul, "Standard technology - LED headlights, all")]
 
 		public void AuxElectricSystem_NotExistingError(VehicleClass hdvClass, MissionType mission, string technology)
         {

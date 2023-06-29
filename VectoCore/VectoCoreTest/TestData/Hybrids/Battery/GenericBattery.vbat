@@ -13,6 +13,8 @@
     "Capacity": 7.5,
     "InternalResistanceCurve": "GenericBattery.vbatr",
     "MaxCurrentMap": "MaxCurrent.vimax",
-    "SoCCurve": "GenericBattery.vbatv"
+    "SoCCurve": "GenericBattery.vbatv",
+    "JunctionboxIncluded": true,
+    "ConnectorsSubsystemsIncluded": true
   }
 }

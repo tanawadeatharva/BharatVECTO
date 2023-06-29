@@ -188,6 +188,12 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 			var fileOutputWriter = new FileOutputWriter(_outputDirectory);
 			var tempFileOutputWriter = new TempFileOutputWriter(fileOutputWriter);
+			var input = JSONInputDataFactory.ReadJsonJob(InterimDiesel) as JSONInputDataV10_PrimaryAndStageInputBus;
+			Assert.IsTrue(File.Exists(input.PrimaryVehicleInputDataPath));
+			Assert.IsTrue(File.Exists(input.StageInputDataPath));
+
+
+
             StartSimulation(InterimDiesel, tempFileOutputWriter, fileOutputWriter);
 
 
@@ -203,8 +209,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		{
 			var inputFile = Path.GetFullPath(path);
 			var input = JSONInputDataFactory.ReadJsonJob(inputFile);
-
-
+			
+			
 			StartSimulation(input, tempFileOutputWriter, fileOutputWriter, multithreaded:multithreaded);
 
 			_jobContainer.WaitFinished();
