@@ -1,6 +1,6 @@
 ﻿
 
-#define singlethreaded
+//#define singlethreaded
 
 using System.Collections.Immutable;
 using System.IO;

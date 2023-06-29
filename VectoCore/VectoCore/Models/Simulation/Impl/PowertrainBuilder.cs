@@ -1151,7 +1151,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			
 			IElectricMotor em = _PWheelBEVBuilders[position].Invoke(data, container, es, powertrain);
 
-			var dcdc = new DCDCConverter(container, data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+			var dcdc = new DCDCConverter(container, GetDCDCEfficiency(data));
             if (data.BusAuxiliaries != null) {
 				AddBEVBusAuxiliaries(data, container, es, em,dcdc);
 			}
@@ -1311,7 +1311,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			
 			IElectricMotor em = _MeasuredSpeedBEVBuilders[position].Invoke(data, container, es, powertrain);
 
-			var dcdc = new DCDCConverter(container, data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+			
+			var dcdc = new DCDCConverter(container,GetDCDCEfficiency(data));
             if (data.BusAuxiliaries != null) {
 				AddBEVBusAuxiliaries(data, container, es, em, dcdc);
 			}
@@ -1321,6 +1322,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			return container;
         }
+
+		private static double GetDCDCEfficiency(VectoRunData rd)
+		{
+			double dcdcEff = rd.BusAuxiliaries?.ElectricalUserInputsConfig?.DCDCEfficiency ?? rd.DCDCData?.DCDCEfficiency ?? 0;
+
+			return dcdcEff;
+		}
 
         private static IElectricMotor BuildMeasuredSpeedForIEPC(VectoRunData data, VehicleContainer container, ElectricSystem es, IPowerTrainComponent powertrain)
         { 
@@ -1465,7 +1473,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			new ATClutchInfo(container);
 			new DummyEngineInfo(container);
 
-			var dcdc = new DCDCConverter(container, data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+			var dcdc = new DCDCConverter(container, GetDCDCEfficiency(data));
             if (data.BusAuxiliaries != null) {
 				AddBEVBusAuxiliaries(data, container, es, em, dcdc);
 			}
@@ -1511,7 +1519,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				new DummyAxleGearInfo(container);
 			}
 
-			var dcdc = new DCDCConverter(container, data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+			var dcdc = new DCDCConverter(container, GetDCDCEfficiency(data));
             if (data.BusAuxiliaries != null) {
 				AddBEVBusAuxiliaries(data, container, es, em, dcdc);
 			}
