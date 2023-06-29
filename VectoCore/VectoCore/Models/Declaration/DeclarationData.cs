@@ -323,9 +323,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				switch (compressorSize) {
 					case "Small": return "DEFAULT_1-Cylinder_1-Stage_393ccm.acmp";
 					case "Medium Supply 1-stage": return "DEFAULT_1-Cylinder_1-Stage_393ccm.acmp";
-					case "Medium Supply 2-stage": return "DEFAULT_2-Cylinder_1-Stage_650ccm.acmp";
-					case "Large Supply 1-stage": return "DEFAULT_2-Cylinder_2-Stage_398ccm.acmp";
-					case "Large Supply 2-stage": return "DEFAULT_3-Cylinder_2-Stage_598ccm.acmp";
+					case "Medium Supply 2-stage": return "DEFAULT_2-Cylinder_2-Stage_398ccm.acmp";
+					case "Large Supply 1-stage":  return "DEFAULT_2-Cylinder_1-Stage_650ccm.acmp";
+					case "Large Supply 2-stage":  return "DEFAULT_3-Cylinder_2-Stage_598ccm.acmp";
 					//case "electrically": return "DEFAULT_electrically.acmp";
 					default: throw new ArgumentException($"unknown compressor size {compressorSize}", compressorSize);
 				}
