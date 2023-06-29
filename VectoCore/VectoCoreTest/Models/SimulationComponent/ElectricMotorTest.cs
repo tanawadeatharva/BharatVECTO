@@ -87,6 +87,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void ElectricMotorOnlyRequestTest(double speed, double torque, double expectedBatteryPower)
 		{
 			var container = new MockVehicleContainer();
+			container.Gear = new GearshiftPosition(0);
 
 			var inputData = JSONInputDataFactory.ReadElectricMotorData(MotorFile, false);
 			var dao = new EngineeringDataAdapter();
@@ -134,8 +135,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void ElectricMotorOnlyRequestTestMechLoss(double speed, double torque, double expectedBatteryPower)
 		{
 			var container = new MockVehicleContainer();
-
-			var inputData = JSONInputDataFactory.ReadElectricMotorData(MotorFile, false);
+			container.Gear = new GearshiftPosition(0);
+            var inputData = JSONInputDataFactory.ReadElectricMotorData(MotorFile, false);
 			var dao = new EngineeringDataAdapter();
 			var electricMachine = new MockElectricMachinesInputData() {
 				Entries = new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>() {
@@ -338,8 +339,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void ElectricMotorOnlyWithBatteryRequestTest(double initialSoc, double speed, double torque, double expectedBatteryPower, double expectedBatteryLoss)
 		{
 			var container = new MockVehicleContainer();
-
-			var inputData = JSONInputDataFactory.ReadElectricMotorData(MotorFile, false);
+			container.Gear = new GearshiftPosition(0);
+            var inputData = JSONInputDataFactory.ReadElectricMotorData(MotorFile, false);
 			var batInput = JSONInputDataFactory.ReadREESSData(BatFile, false);
 			var dao = new EngineeringDataAdapter();
 			var electricMachine = new MockElectricMachinesInputData()
