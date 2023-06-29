@@ -356,13 +356,33 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 					};
 				} else {
-					
+
 					if (outAngularVelocity.IsGreater(speedLimit)) {
 						retVal = new ResponseEngineSpeedTooHigh(this) {
 							DeltaEngineSpeed = outAngularVelocity - speedLimit,
 						};
+						retVal.ElectricMotor.TotalTorqueDemand = inTorqueDt;
+
+						retVal.ElectricMotor.MaxDriveTorque = maxDriveTorqueDt;
+						retVal.ElectricMotor.MaxDriveTorqueEM = maxDriveTorqueEm;
+						retVal.ElectricMotor.MaxRecuperationTorque = maxRecuperationTorqueDt;
+						retVal.ElectricMotor.MaxRecuperationTorqueEM = maxRecuperationTorqueEm;
+						retVal.ElectricMotor.AngularVelocity = avgEmSpeed;
+						retVal.ElectricMotor.AvgDrivetrainSpeed = avgDtSpeed;
+						retVal.ElectricMotor.DeRatingActive = DeRatingActive;
+
+						retVal.ElectricMotor.TorqueRequest = outTorque;
+						retVal.ElectricMotor.TorqueRequestEmMap = emTorqueMap;
+						retVal.ElectricMotor.InertiaTorque =
+							avgDtSpeed.IsEqual(0) ? 0.SI<NewtonMeter>() : inertiaTorqueEm * avgEmSpeed / avgDtSpeed;
+
+						retVal.ElectricMotor.PowerRequest = outTorque * outAngularVelocity;
+						retVal.ElectricMotor.InertiaPowerDemand = inertiaTorqueEm * avgEmSpeed;
+						retVal.ElectricSystem = electricSupplyResponse;
+						return retVal;
 					}
-					if (retVal == null && remainingPower.IsEqual(0, Constants.SimulationSettings.LineSearchTolerance)) {
+
+					if (remainingPower.IsEqual(0, Constants.SimulationSettings.LineSearchTolerance)) {
 						//if (electricSupplyResponse.MaxPowerDrive.IsGreaterOrEqual(0)) {
 						if (electricSupplyResponse is ElectricSystemUnderloadResponse) {
 							retVal = new ResponseBatteryEmpty(this, electricSupplyResponse);
@@ -376,11 +396,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 									EngineSpeed = outAngularVelocity
 								},
 							};
-							var busAuxPwr = BusAux?.TorqueDemand(absTime, dt, outTorque, outAngularVelocity) ?? 0.SI<NewtonMeter>();
+							var busAuxPwr = BusAux?.TorqueDemand(absTime, dt, outTorque, outAngularVelocity) ??
+											0.SI<NewtonMeter>();
 							if (!busAuxPwr.IsEqual(0)) {
 								Log.Warn("Check BusAux config for PEV!");
 							}
 						}
+
 					} else {
 						if (remainingPower > 0) {
 							retVal = new ResponseOverload(this) { Delta = remainingPower };
