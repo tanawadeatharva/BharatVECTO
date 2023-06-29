@@ -67,8 +67,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		//TestCase(@"CompletedBus/HEV_completedBus_1.xml"),
 		//TestCase(@"CompletedBus/IEPC_completedBus_1.xml"),
 		//TestCase(@"CompletedBus/PEV_completedBus_1.xml"),
-		TestCase(@"ExemptedVehicles/exempted_completedBus_input_full.xml"),
-		TestCase(@"ExemptedVehicles/exempted_completedBus_input_only_mandatory_entries.xml"),
+
 		TestCase(@"ExemptedVehicles/exempted_heavyLorry.xml"),
 		TestCase(@"ExemptedVehicles/exempted_mediumLorry.xml"),
 		TestCase(@"ExemptedVehicles/exempted_primaryBus.xml"),
@@ -104,6 +103,22 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(HeatPumpType.non_R_744_3_stage, busAux.HVACAux.HeatPumpTypeCoolingPassengerCompartment);
 
 			Assert.IsTrue(busAux.ElectricConsumers.BrakelightsLED);
+		}
+
+		[TestCase(@"ExemptedVehicles/exempted_completedBus_input_full.xml"),
+		TestCase(@"ExemptedVehicles/exempted_completedBus_input_only_mandatory_entries.xml")]
+		public void TestReadingExemptedCompletedBus_V24(string jobFile)
+		{
+			var filename = Path.Combine(BASE_DIR, jobFile);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
+
+			Assert.NotNull(dataProvider);
+			Assert.NotNull(dataProvider.JobInputData);
+			Assert.NotNull(dataProvider.JobInputData.Vehicle);
+
+			var job = dataProvider.JobInputData;
+			var veh = dataProvider.JobInputData.Vehicle;
+			Assert.IsTrue(veh.ExemptedVehicle);
 		}
 
 		public IVectoRun[] ReadDeclarationJob(string jobfile)
