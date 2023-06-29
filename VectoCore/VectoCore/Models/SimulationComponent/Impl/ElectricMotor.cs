@@ -333,7 +333,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			var inTorqueDt = outTorque + emTorqueDt;
 
-			IResponse retVal;
+			IResponse retVal = null;
 			if (NextComponent == null) {
 				if (electricSupplyResponse.MaxPowerDrive.IsEqual(0.SI<Watt>(), 100.SI<Watt>())) {
 					retVal = new ResponseBatteryEmpty(this, electricSupplyResponse);
@@ -358,11 +358,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				} else {
 					
 					if (outAngularVelocity.IsGreater(speedLimit)) {
-						return new ResponseEngineSpeedTooHigh(this) {
+						retVal = new ResponseEngineSpeedTooHigh(this) {
 							DeltaEngineSpeed = outAngularVelocity - speedLimit,
 						};
 					}
-					if (remainingPower.IsEqual(0, Constants.SimulationSettings.LineSearchTolerance)) {
+					if (retVal == null && remainingPower.IsEqual(0, Constants.SimulationSettings.LineSearchTolerance)) {
 						//if (electricSupplyResponse.MaxPowerDrive.IsGreaterOrEqual(0)) {
 						if (electricSupplyResponse is ElectricSystemUnderloadResponse) {
 							retVal = new ResponseBatteryEmpty(this, electricSupplyResponse);
