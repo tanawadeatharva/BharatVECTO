@@ -43,6 +43,9 @@
   </ItemGroup>
 
 	<ItemGroup>
+		<None Update="TestData\Hybrids\Battery\GenericBattery_JB_Connector_included.vbat">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 		<None Update="TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b.vecto">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>

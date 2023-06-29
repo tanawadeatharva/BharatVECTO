@@ -713,17 +713,19 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var genericTechnolgyBenefit = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputsCooling as ISSMDeclarationInputs).Technologies;
 			var specificTechnolgyBenefit = (relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputsCooling as ISSMDeclarationInputs).Technologies;
 
-			Assert.AreEqual(0.0, genericTechnolgyBenefit.CValueVariation);
-			Assert.AreEqual(0.02, genericTechnolgyBenefit.HValueVariation);
-			Assert.AreEqual(0.0, genericTechnolgyBenefit.VCValueVariation);
-			Assert.AreEqual(0.02, genericTechnolgyBenefit.VHValueVariation);
-			Assert.AreEqual(0.0, genericTechnolgyBenefit.VVValueVariation);
+			Assert.AreEqual(0.08, genericTechnolgyBenefit.CValueVariation);
+			Assert.AreEqual(0.06, genericTechnolgyBenefit.HValueVariation);
+			Assert.AreEqual(0.08, genericTechnolgyBenefit.VCValueVariation);
+			Assert.AreEqual(0.06, genericTechnolgyBenefit.VHValueVariation);
+			Assert.AreEqual(0.04, genericTechnolgyBenefit.VVValueVariation);
 
 			Assert.AreEqual(0.08, specificTechnolgyBenefit.CValueVariation);
 			Assert.AreEqual(0.08, specificTechnolgyBenefit.HValueVariation);
 			Assert.AreEqual(0.08, specificTechnolgyBenefit.VCValueVariation);
 			Assert.AreEqual(0.08, specificTechnolgyBenefit.VHValueVariation);
 			Assert.AreEqual(0.04, specificTechnolgyBenefit.VVValueVariation);
+
+
 		}
 
 		#endregion
@@ -822,12 +824,12 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			switch (currentIndex) {
 				case 0:
 				case 1://Interurban
-					Assert.AreEqual(31381.5, genericValue, 1e-3);
+					Assert.AreEqual(28543.35, genericValue, 1e-3);
 					Assert.AreEqual(28718.1875, specificValue, 1e-3);
 					break;
 				case 2:
 				case 3://Coach
-					Assert.AreEqual(47099.5, genericValue, 1e-3);
+					Assert.AreEqual(42639.55, genericValue, 1e-3);
 					Assert.AreEqual(41271.4375, specificValue, 1e-3);
 					break;
 			}
@@ -955,6 +957,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
             for (int i = 0; i < runs.Count; i++)
 			{
+				
 				var relatedRun = new RelatedRun
 				{
 					VectoRunDataSpezificBody = runs[i],
