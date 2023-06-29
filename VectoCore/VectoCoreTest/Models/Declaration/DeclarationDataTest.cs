@@ -340,7 +340,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			0.7),
 		TestCase(VehicleClass.Class55, MissionType.UrbanDelivery, "Standard technology - LED headlights, all", 550,
 			0.7)]
-		public void AuxElectricSystemTest(VehicleClass hdvClass, MissionType mission, string technology, double value,
+        [TestCase(VehicleClass.Class55, MissionType.LongHaul, "Standard technology", 720, 0.7),
+        TestCase(VehicleClass.Class55, MissionType.LongHaul, "Standard technology - LED headlights, all", 660, 0.7)]
+        public void AuxElectricSystemTest(VehicleClass hdvClass, MissionType mission, string technology, double value,
 			double efficiency)
 		{
 			AssertHelper.AreRelativeEqual(value / efficiency,
