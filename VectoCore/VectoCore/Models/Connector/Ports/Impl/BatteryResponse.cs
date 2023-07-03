@@ -87,15 +87,16 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		{
             //Note: consider losses of electric system (cables, junction box) when calculating max drive power
             //      see ElectricSystem implementation...
+			// P_Bat = P_EM + P_Chg - P_aux - P_Conn
             // I_est = P_EM / U_Int
             // P_Conn = I_est ^ 2 * R_Conn = (P_EM / U_Int) ^ 2 * R_Conn
-            // P_EM_max = P_Bat_max - P_Chg + P_aux - P_Conn(P_EM)
-            // P_EM_max + P_Conn = P_Bat_max - P_Chg + P_aux
-            // P_EM_max + ((P_EM_max + P_Chg - P_aux) / U_Int) ^ 2 * R_Conn = P_Bat_max - P_Chg + P_aux
-            // P_EM_max^2 * R_Conn / U_Int^2 + P_EM_max - (P_Bat_max - P_Chg + P_aux) = 0
-			// Px = P_Bat_max - P_Chg + P_aux
+            // P_EM_max = P_Bat_max - P_Chg + P_aux + P_Conn(P_EM)
+            // P_EM_max - P_Conn = P_Bat_max - P_Chg + P_aux
+            // P_EM_max - ((P_EM_max + P_Chg - P_aux) / U_Int) ^ 2 * R_Conn = P_Bat_max - P_Chg + P_aux
+            // -P_EM_max^2 * R_Conn / U_Int^2 + P_EM_max - (P_Bat_max - P_Chg + P_aux) = 0
+            // Px = P_Bat_max - P_Chg + P_aux
 
-			var Px = P_batMax -
+            var Px = P_batMax -
 					(ChargingPower != null ? ChargingPower : 0.SI<Watt>()) +
 					(AuxPower != null ? AuxPower : 0.SI<Watt>());
 			
@@ -103,7 +104,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 				return Px;
 			}
 
-            var a = (ConnectionSystemResistance / U_int / U_int).Value();
+            var a = -(ConnectionSystemResistance / U_int / U_int).Value();
 			var b = 1.0;
 			var c = -Px.Value();
 			var solutions = VectoMath.QuadraticEquationSolver(a, b, c);
