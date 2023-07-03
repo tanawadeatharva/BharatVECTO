@@ -297,11 +297,11 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(5969, 6043, WithinSegment, Brake),           // len: 74m
 			(6043, 6117, WithinSegment, Coast),           // len: 74m
 			(6117, 6456, OutsideSegment, Coast),          // len: 339m
-			(6456, 6759, OutsideSegment, Accelerate),     // len: 303m
-			(6759, 6782, OutsideSegment, Roll),           // len: 23m
-			(6782, 1e6, OutsideSegment, Accelerate));
+			(6456, 6747, OutsideSegment, Accelerate),     // len: 291m
+			(6747, 6771, OutsideSegment, Roll),           // len: 24m
+			(6771, 1e6, OutsideSegment, Accelerate));
 
-		[TestCase]
+        [TestCase]
 		public void Class5_PCC123_CrestCoast1_HEV() => TestPCC(MethodBase.GetCurrentMethod().Name,
 			(500, 3804, OutsideSegment, Accelerate),      // len: 3393m
 			(3804, 4533, OutsideSegment, Coast),          // len: 729m
@@ -1266,12 +1266,12 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(5969, 6043, WithinSegment, Brake),           // len: 74m
 			(6043, 6117, WithinSegment, Coast),           // len: 74m
 			(6117, 6456, OutsideSegment, Coast),          // len: 339m
-			(6456, 6759, OutsideSegment, Accelerate),     // len: 303m
-			(6759, 6782, OutsideSegment, Roll),           // len: 23m
-			(6782, 1e6, OutsideSegment, Accelerate));
+			(6456, 6747, OutsideSegment, Accelerate),     // len: 291m
+			(6747, 6771, OutsideSegment, Roll),           // len: 24m
+			(6771, 1e6, OutsideSegment, Accelerate));
 
 
-		[TestCase]
+        [TestCase]
 		public void Class5_PCC123EcoRollWithoutEngineStop_CrestCoast1_HEV() => TestPCC(MethodBase.GetCurrentMethod().Name,
 			(500, 3804, OutsideSegment, Accelerate),      // len: 3393m
 			(3804, 4533, OutsideSegment, Coast),          // len: 729m
@@ -1399,11 +1399,11 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(5969, 6043, WithinSegment, Brake),           // len: 74m
 			(6043, 6117, WithinSegment, Coast),           // len: 74m
 			(6117, 6456, OutsideSegment, Coast),          // len: 339m
-			(6456, 6759, OutsideSegment, Accelerate),     // len: 303m
-			(6759, 6782, OutsideSegment, Roll),           // len: 23m
-			(6782, 1e6, OutsideSegment, Accelerate));
+			(6456, 6747, OutsideSegment, Accelerate),     // len: 291m
+			(6747, 6771, OutsideSegment, Roll),           // len: 24m
+			(6771, 1e6, OutsideSegment, Accelerate));
 
-		[TestCase]
+        [TestCase]
 		public void Class5_PCC123EcoRollEngineStop_CrestCoast1_HEV() => TestPCC(MethodBase.GetCurrentMethod().Name,
 			(500, 3804, OutsideSegment, Accelerate),      // len: 3393m
 			(3804, 4533, OutsideSegment, Coast),          // len: 729m
