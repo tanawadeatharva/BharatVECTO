@@ -22,6 +22,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
         private const string IEPC3X_AXLE_JOB = @"TestData/Integration/TimeRun/MeasuredSpeed/GenericIEPC/IEPC_Gbx3Speed+Axle/IEPC_ENG_Gbx3Axl.vecto";
         private const string IEPC3X_WHEEL1_JOB = @"TestData/Integration/TimeRun/MeasuredSpeed/GenericIEPC/IEPC_Gbx3Speed-Whl1/IEPC_ENG_Gbx3Whl1.vecto";
         private const string IEPC3X_WHEEL2_JOB = @"TestData/Integration/TimeRun/MeasuredSpeed/GenericIEPC/IEPC_Gbx3Speed-Whl2\IEPC_ENG_Gbx3Whl2.vecto";
+        private const string IEPC1X_WHEEL1_JOB = @"TestData/Integration/TimeRun/MeasuredSpeed/GenericIEPC/IEPC_Gbx1Speed-Whl1/IEPC_ENG_Gbx1Whl1.vecto";
 
         [OneTimeSetUp]
         public void Init()
@@ -106,7 +107,9 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
         TestCase(IEPC3X_WHEEL2_JOB, 9, 0, 1.8934, 86.4688, TestName = "IEPC3X_WHEEL2 BEV TimeRun PWheel LongHaul"),
         TestCase(IEPC3X_WHEEL2_JOB, 10, 1, 6.2217, 83.8133, TestName = "IEPC3X_WHEEL2 BEV TimeRun PWheel RegionalDelivery"),
-        TestCase(IEPC3X_WHEEL2_JOB, 11, 2, 39.1629, 92.7617, TestName = "IEPC3X_WHEEL2 BEV TimeRun PWheel UrbanDelivery")
+        TestCase(IEPC3X_WHEEL2_JOB, 11, 2, 39.1629, 92.7617, TestName = "IEPC3X_WHEEL2 BEV TimeRun PWheel UrbanDelivery"),
+        
+        TestCase(IEPC1X_WHEEL1_JOB, 0, 0, 1.6654, 105.9877, TestName = "IEPC1X_WHEEL1 BEV TimeRun PWheel LongHaul")
         ]
         public void TestBEVTimeRunCycle(string jobFile, int cycleIdx, int distanceCycleIdx, double charge, double discharge)
         {
@@ -178,10 +181,10 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			Assert.IsTrue(run.FinishedWithoutErrors);
 			
-            
             string distanceSumPath = Path.Combine(Path.GetDirectoryName(jobFile), "distance.vsum");
             TestContext.WriteLine($"Comparing with results from {distanceSumPath}");
-			AssertHelper.ReportDeviations(distanceSumPath, distanceCycleIdx, factory, metrics);
+			
+            AssertHelper.ReportDeviations(distanceSumPath, distanceCycleIdx, factory, metrics);
             
             AssertHelper.AssertMetrics(factory, metrics);
 
@@ -205,6 +208,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			
             string distanceSumPath = Path.Combine(Path.GetDirectoryName(jobFile), "distance.vsum");
 			TestContext.WriteLine($"Comparing with results from {distanceSumPath}");
+            
             const int DISTANCE_RUN_START_POSITION = 3;
 
             AssertHelper.ReadMetricsFromVSum(distanceSumPath, cycleIdx - DISTANCE_RUN_START_POSITION, metrics);
