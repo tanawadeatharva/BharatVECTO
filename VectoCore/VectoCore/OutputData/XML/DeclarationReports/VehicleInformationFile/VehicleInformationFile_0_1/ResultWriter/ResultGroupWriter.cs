@@ -121,7 +121,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fc.Fuel.FuelType.ToXMLFormat()),
 				GetFuelConsumptionEntries(fc.TotalFuelConsumptionCorrected, fc.Fuel, entry.Distance, entry.Payload,
 					entry.CargoVolume, entry.PassengerCount).Select(x =>
-					new XElement(TNS + XMLNames.Report_Result_EnergyConsumption, x.ValueAsUnit(3, 1)))
+					new XElement(TNS + XMLNames.Report_Result_EnergyConsumption, new FormattedReportValue(x).GetElement()))
 			);
 		}
 
@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fuel.FuelType.ToXMLFormat()),
 				GetFuelConsumptionEntries(consumption, fuel, entry.Distance, entry.Payload, entry.CargoVolume,
 					entry.PassengerCount).Select(x =>
-					new XElement(TNS + XMLNames.Report_Result_EnergyConsumption, x.ValueAsUnit(3, 1)))
+					new XElement(TNS + XMLNames.Report_Result_EnergyConsumption, new FormattedReportValue(x).GetElement()))
 			);
 		}
 

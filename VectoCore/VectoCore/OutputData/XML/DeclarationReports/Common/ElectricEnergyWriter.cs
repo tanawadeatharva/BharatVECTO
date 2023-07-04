@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
             return new XElement(TNS + ElectricEnergyConsumptionXMLElementName,
                 GetEnergyConsumption(entry.ElectricEnergyConsumption, entry.Distance, entry.Payload, entry.CargoVolume,
                     entry.PassengerCount).Select(x =>
-                    new XElement(TNS + XMLNames.Report_Result_EnergyConsumption, x.ValueAsUnit(3, 1)))
+                    new XElement(TNS + XMLNames.Report_Result_EnergyConsumption, new FormattedReportValue(x).GetElement()))
             );
         }
 
@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
             return new XElement(TNS + ElectricEnergyConsumptionXMLElementName,
                 GetEnergyConsumption(weighted.ElectricEnergyConsumption, weighted.Distance, weighted.Payload, weighted.CargoVolume,
                     weighted.PassengerCount).Select(x =>
-                    new XElement(TNS + XMLNames.Report_Result_EnergyConsumption, x.ValueAsUnit(3, 1)))
+                    new XElement(TNS + XMLNames.Report_Result_EnergyConsumption, new FormattedReportValue(x).GetElement()))
             );
 
         }
