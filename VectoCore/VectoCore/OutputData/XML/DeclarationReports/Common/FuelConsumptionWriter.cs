@@ -32,9 +32,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		{
 			return new XElement(TNS + XMLNames.Report_Results_Fuel,
 				new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fuel.FuelType.ToXMLFormat()),
-				GetFuelConsumptionEntries(consumption, fuel, distance, payLoad, cargoVolume, passengerCount).Select(x => new XElement(TNS + XMLNames.Report_Results_FuelConsumption, x.ValueAsUnit(3, 1)))
+				GetFuelConsumptionEntries(consumption, fuel, distance, payLoad, cargoVolume, passengerCount).Select(x =>
+					new XElement(TNS + XMLNames.Report_Results_FuelConsumption, new FormattedReportValue(x).GetElement()))
 			);
-        }
+		}
 
         #endregion
 
