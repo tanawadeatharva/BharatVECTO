@@ -9,7 +9,7 @@
 	<Target Name="Packaging" AfterTargets="DispatchToInnerBuilds" Condition="('$(Configuration)'=='Deploy') Or ('$(Configuration)' == 'MockupDeploy')">
 
 
-		<Message Text="Packaging in $(Configuration) Configuration" Importance="high" />
+		<Message Text="Packaging in $(Configuration) Configuration $(VersionPrefix)" Importance="high" />
 		<Exec Command="cscript &quot;$(SolutionDir)documentation\user manual source\convertpptxtopdf.vbs&quot; &quot;$(SolutionDir)documentation\user manual source\release notes vecto3.x.pptx&quot; &quot;$(SolutionDir)documentation\user manual source\release notes vecto3.x.pdf&quot;"/>
 		<PropertyGroup>
 			<CurrentDate>$([System.DateTime]::Now.ToString(yyy_MM_dd))</CurrentDate>
@@ -176,14 +176,14 @@
 		<!-- <Copy SourceFiles="$(ParameterDocuStyle)" DestinationFolder="$(DeployPath)User Manual\Parameter Documentation\HTML\css"/> -->
 		<!-- NuGet Files-->
 		<ItemGroup Condition="'$(Configuration)'=='Deploy'">
-			<VectoNuget Include ="$(SolutionDir)VectoCore\VectoCore\bin\Release\*.nupkg" />
-			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoCommon\bin\Release\*.nupkg" />
-			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoHashing\bin\Release\*.nupkg" />
+			<VectoNuget Include ="$(SolutionDir)VectoCore\VectoCore\bin\Release\*$(Days)*.nupkg" />
+			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoCommon\bin\Release\*$(Days)*.nupkg" />
+			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoHashing\bin\Release\*$(Days)*.nupkg" />
 		</ItemGroup>
 		<ItemGroup Condition="'$(Configuration)'=='MockupDeploy'">
-			<VectoNuget Include ="$(SolutionDir)VectoCore\VectoCore\bin\MockupRelease\*.nupkg" />
-			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoCommon\bin\Release\*.nupkg" />
-			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoHashing\bin\Release\*.nupkg" />
+			<VectoNuget Include ="$(SolutionDir)VectoCore\VectoCore\bin\MockupRelease\*$(Days)*.nupkg" />
+			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoCommon\bin\Release\*$(Days)*.nupkg" />
+			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoHashing\bin\Release\*$(Days)*.nupkg" />
 		</ItemGroup>
 
 		<Copy SourceFiles="@(VectoNuget)" DestinationFolder ="$(NuGetPath)"/>
