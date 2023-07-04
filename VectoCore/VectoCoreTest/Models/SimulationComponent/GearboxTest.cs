@@ -465,12 +465,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			}
 		}
 
-		[TestCase(1, -1000, 600, 28.096, typeof(ResponseSuccess)),
+		[TestCase(2, -1000, 600, 28.096, typeof(ResponseSuccess)),
 		TestCase(2, -1000, 600, 28.096, typeof(ResponseSuccess)),
-		TestCase(1, 50, 600, 9.096, typeof(ResponseSuccess)),
-		TestCase(2, 2450, 800, 58.11, typeof(ResponseSuccess)),
+		TestCase(2, 50, 600, 9.096, typeof(ResponseSuccess)),
+		TestCase(1, 2450, 800, 58.11, typeof(ResponseSuccess)),
 		TestCase(2, 850, 800, 26.11, typeof(ResponseSuccess)),
-		TestCase(1, 850, 200, 23.07, typeof(ResponseSuccess)),
+		TestCase(2, 850, 200, 23.07, typeof(ResponseSuccess)),
 		TestCase(2, 50, 600, 9.096, typeof(ResponseSuccess)),
 		TestCase(2, 2050, 1200, 52.132, typeof(ResponseSuccess)),
 		TestCase(2, 850, 600, 25.096, typeof(ResponseSuccess)),
