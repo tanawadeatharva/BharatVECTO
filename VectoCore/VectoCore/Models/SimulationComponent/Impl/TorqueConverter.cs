@@ -82,12 +82,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (operatingPointList.Count > 0) {
 				operatingPoint = SelectOperatingPoint(operatingPointList);
 			} else {
-				if (outTorque.IsEqual(0) && outAngularVelocity.IsEqual(0)) {
-					Log.Info("TorqueConverter Initialize: No operating point found. Using output as input values as fallback for initialize.");
+				if (!DataBus.IsTestPowertrain) {
+					if (outTorque.IsEqual(0) && outAngularVelocity.IsEqual(0)) {
+						Log.Info(
+							"TorqueConverter Initialize: No operating point found. Using output as input values as fallback for initialize.");
+					} else {
+						Log.Warn(
+							"TorqueConverter Initialize: No operating point found. Using output as input values as fallback for initialize.");
+					}
 				}
-				else {
-					Log.Warn("TorqueConverter Initialize: No operating point found. Using output as input values as fallback for initialize.");
-				}
+
 				var inAngularVelocity = outAngularVelocity.LimitTo(DataBus.EngineInfo.EngineIdleSpeed, DataBus.EngineInfo.EngineN95hSpeed);
 				operatingPoint = new TorqueConverterOperatingPoint {
 					OutAngularVelocity = outAngularVelocity,
