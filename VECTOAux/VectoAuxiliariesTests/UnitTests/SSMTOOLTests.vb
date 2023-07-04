@@ -18,10 +18,10 @@ Namespace UnitTests
     <TestFixture()>
     Public Class _SSMTOOLTests
         'TechBenefitsList - FilePath Constants
-        Private Const GOODTechList As String = "TestFiles\testSSMTechBenefits.csv"
-        Private Const GOODTechListALLON As String = "TestFiles\testSSMTechBenefitsALLON.csv"
-        Private Const GOODTechListALLOFF As String = "TestFiles\testSSMTechBenefitsALLOFF.csv"
-        Private Const GOODTechListEMPTYLIST As String = "TestFiles\testSSMTechBenefitsEMPTYLIST.csv"
+        Private Const GOODTechList As String = "TestFiles/testSSMTechBenefits.csv"
+        Private Const GOODTechListALLON As String = "TestFiles/testSSMTechBenefitsALLON.csv"
+        Private Const GOODTechListALLOFF As String = "TestFiles/testSSMTechBenefitsALLOFF.csv"
+        Private Const GOODTechListEMPTYLIST As String = "TestFiles/testSSMTechBenefitsEMPTYLIST.csv"
 
         <OneTimeSetUp>
         Public Sub RunBeforeAnyTests()
@@ -78,6 +78,7 @@ Namespace UnitTests
             Dim mission As New Mission With {
                 .BusParameter = New BusParameters() With {
                     .HVACConventional = New HVACParameters  With {
+                    .HeatPumpTypeDriverCompartmentCooling = HeatPumpType.none,
                     .HeatPumpTypePassengerCompartmentCooling = HeatPumpType.non_R_744_2_stage,
                     .HVACAuxHeaterPower = 30000.0.SI(Of Watt),
                     .HVACConfiguration = BusHVACSystemConfiguration.Configuration6
@@ -96,7 +97,7 @@ Namespace UnitTests
 
             Dim dao = New GenericCompletedBusAuxiliaryDataAdapter()
             Dim target As ISSMDeclarationInputs = dao.CreatePrimarySSMModelParameters(auxInput, mission, LoadingType.ReferenceLoad, mission.BusParameter.HVACConventional.HVACConfiguration,
-                                                                               HeatPumpType.none, mission.BusParameter.HVACConventional.HeatPumpTypePassengerCompartmentCooling, mission.BusParameter.HVACConventional.HVACAuxHeaterPower, FuelData.Diesel, true)
+                                                                                      mission.BusParameter.HVACConventional, FuelData.Diesel, true)
 
             If section = "BusParameterisation" Then
                 'BUS Parameterisation
@@ -589,6 +590,7 @@ Namespace UnitTests
                 .MissionType = MissionType.HeavyUrban,
                 .BusParameter = New BusParameters() With {
                     .HVACConventional = New HVACParameters() With {
+                        .HeatPumpTypeDriverCompartmentCooling = HeatPumpType.none,
                         .HeatPumpTypePassengerCompartmentCooling = HeatPumpType.non_R_744_2_stage,
                         .HVACAuxHeaterPower = 18000.0.SI(Of Watt),
                         .HVACConfiguration = BusHVACSystemConfiguration.Configuration6
@@ -606,7 +608,7 @@ Namespace UnitTests
 
             Dim dao = New GenericCompletedBusAuxiliaryDataAdapter()
             Dim params as ISSMDeclarationInputs = dao.CreatePrimarySSMModelParameters(auxInput, mission, LoadingType.ReferenceLoad, mission.BusParameter.HVACConventional.HVACConfiguration,
-                                                                                             HeatPumpType.none, mission.BusParameter.HVACConventional.HeatPumpTypePassengerCompartmentCooling, mission.BusParameter.HVACConventional.HVACAuxHeaterPower, FuelData.Diesel, true)
+                                                                                              mission.BusParameter.HVACConventional, FuelData.Diesel, true)
 
             Dim target As SSMTOOL = New SSMTOOL(params)
 

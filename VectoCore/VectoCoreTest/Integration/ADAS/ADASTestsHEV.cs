@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 	[Parallelizable(ParallelScope.All)]
 	public class ADASTestsHEV
 	{
-		private const string BasePath = @"TestData\Integration\ADAS-HEV\Group5PCCEng\";
+		private const string BasePath = @"TestData/Integration/ADAS-HEV/Group5PCCEng/";
 		private const double tolerance = 1; //seconds of tolerance. Tolerance distance is calculated dynamically based on speed.
 
 		[OneTimeSetUp]
@@ -53,8 +53,8 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			return graphWriter;
 		}
 
-		[TestCase(@"TestData\Integration\ADAS-HEV\VECTO-1493\P1_CityBus.vecto", TestName = "VECTO-1493_P1Citybus")]
-		[TestCase(@"TestData\Integration\ADAS-HEV\VECTO-1484\P2_Group5_s2c0_rep_Payload.vecto", TestName = "VECTO-1484_P2Group5")]
+		[TestCase(@"TestData/Integration/ADAS-HEV/VECTO-1493/P1_CityBus.vecto", TestName = "VECTO-1493_P1Citybus")]
+		[TestCase(@"TestData/Integration/ADAS-HEV/VECTO-1484/P2_Group5_s2c0_rep_Payload.vecto", TestName = "VECTO-1484_P2Group5")]
 		public static void RunEngineeringJob(string jobName)
 		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		]
 		public void TestEcoRoll(int cycleIdx)
 		{
-			var jobName = @"TestData\Integration\ADAS-HEV\Group5EcoRollEng\Class5_Tractor_ENG.vecto";
+			var jobName = @"TestData/Integration/ADAS-HEV/Group5EcoRollEng/Class5_Tractor_ENG.vecto";
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 
@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		]
 		public void TestEcoRollAT_Neutral(int cycleIdx)
 		{
-			var jobName = @"TestData\Integration\ADAS-HEV\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng_Neutral.vecto";
+			var jobName = @"TestData/Integration/ADAS-HEV/Group9_RigidTruck_AT/Class_9_RigidTruck_AT_Eng_Neutral.vecto";
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 
@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		]
 		public void TestEcoRollAT_TC(int cycleIdx)
 		{
-			var jobName = @"TestData\Integration\ADAS-HEV\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng_TC.vecto";
+			var jobName = @"TestData/Integration/ADAS-HEV/Group9_RigidTruck_AT/Class_9_RigidTruck_AT_Eng_TC.vecto";
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 
@@ -297,11 +297,11 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(5969, 6043, WithinSegment, Brake),           // len: 74m
 			(6043, 6117, WithinSegment, Coast),           // len: 74m
 			(6117, 6456, OutsideSegment, Coast),          // len: 339m
-			(6456, 6759, OutsideSegment, Accelerate),     // len: 303m
-			(6759, 6782, OutsideSegment, Roll),           // len: 23m
-			(6782, 1e6, OutsideSegment, Accelerate));
+			(6456, 6747, OutsideSegment, Accelerate),     // len: 291m
+			(6747, 6771, OutsideSegment, Roll),           // len: 24m
+			(6771, 1e6, OutsideSegment, Accelerate));
 
-		[TestCase]
+        [TestCase]
 		public void Class5_PCC123_CrestCoast1_HEV() => TestPCC(MethodBase.GetCurrentMethod().Name,
 			(500, 3804, OutsideSegment, Accelerate),      // len: 3393m
 			(3804, 4533, OutsideSegment, Coast),          // len: 729m
@@ -1266,12 +1266,12 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(5969, 6043, WithinSegment, Brake),           // len: 74m
 			(6043, 6117, WithinSegment, Coast),           // len: 74m
 			(6117, 6456, OutsideSegment, Coast),          // len: 339m
-			(6456, 6759, OutsideSegment, Accelerate),     // len: 303m
-			(6759, 6782, OutsideSegment, Roll),           // len: 23m
-			(6782, 1e6, OutsideSegment, Accelerate));
+			(6456, 6747, OutsideSegment, Accelerate),     // len: 291m
+			(6747, 6771, OutsideSegment, Roll),           // len: 24m
+			(6771, 1e6, OutsideSegment, Accelerate));
 
 
-		[TestCase]
+        [TestCase]
 		public void Class5_PCC123EcoRollWithoutEngineStop_CrestCoast1_HEV() => TestPCC(MethodBase.GetCurrentMethod().Name,
 			(500, 3804, OutsideSegment, Accelerate),      // len: 3393m
 			(3804, 4533, OutsideSegment, Coast),          // len: 729m
@@ -1399,11 +1399,11 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(5969, 6043, WithinSegment, Brake),           // len: 74m
 			(6043, 6117, WithinSegment, Coast),           // len: 74m
 			(6117, 6456, OutsideSegment, Coast),          // len: 339m
-			(6456, 6759, OutsideSegment, Accelerate),     // len: 303m
-			(6759, 6782, OutsideSegment, Roll),           // len: 23m
-			(6782, 1e6, OutsideSegment, Accelerate));
+			(6456, 6747, OutsideSegment, Accelerate),     // len: 291m
+			(6747, 6771, OutsideSegment, Roll),           // len: 24m
+			(6771, 1e6, OutsideSegment, Accelerate));
 
-		[TestCase]
+        [TestCase]
 		public void Class5_PCC123EcoRollEngineStop_CrestCoast1_HEV() => TestPCC(MethodBase.GetCurrentMethod().Name,
 			(500, 3804, OutsideSegment, Accelerate),      // len: 3393m
 			(3804, 4533, OutsideSegment, Coast),          // len: 729m

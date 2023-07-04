@@ -7,8 +7,8 @@ namespace VectoHashingTest
 {
 	public class VectoComponentHashSortTest
 	{
-		private const string UnsortedComponentPath = @"Testdata\XML\Sort\Component\Unsorted\";
-		private const string SortedComponentPath = @"Testdata\XML\Sort\Component\Sorted\";
+		private const string UnsortedComponentPath = @"Testdata/XML/Sort/Component/Unsorted/";
+		private const string SortedComponentPath = @"Testdata/XML/Sort/Component/Sorted/";
 		
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()

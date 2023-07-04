@@ -43,6 +43,7 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
@@ -322,9 +323,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				switch (compressorSize) {
 					case "Small": return "DEFAULT_1-Cylinder_1-Stage_393ccm.acmp";
 					case "Medium Supply 1-stage": return "DEFAULT_1-Cylinder_1-Stage_393ccm.acmp";
-					case "Medium Supply 2-stage": return "DEFAULT_2-Cylinder_1-Stage_650ccm.acmp";
-					case "Large Supply 1-stage": return "DEFAULT_2-Cylinder_2-Stage_398ccm.acmp";
-					case "Large Supply 2-stage": return "DEFAULT_3-Cylinder_2-Stage_598ccm.acmp";
+					case "Medium Supply 2-stage": return "DEFAULT_2-Cylinder_2-Stage_398ccm.acmp";
+					case "Large Supply 1-stage":  return "DEFAULT_2-Cylinder_1-Stage_650ccm.acmp";
+					case "Large Supply 2-stage":  return "DEFAULT_3-Cylinder_2-Stage_598ccm.acmp";
 					//case "electrically": return "DEFAULT_electrically.acmp";
 					default: throw new ArgumentException($"unknown compressor size {compressorSize}", compressorSize);
 				}
@@ -972,9 +973,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 
 			public static ShiftPolygon ComputeElectricMotorShiftPolygon(int gearIdx,
-				ElectricMotorFullLoadCurve fullLoadCurve, double emRatio, IList<ITransmissionInputData> gears,
+				ElectricMotorFullLoadCurve fullLoadCurveOrig, double emRatio, IList<ITransmissionInputData> gears,
 				double axlegearRatio, Meter dynamicTyreRadius, PerSecond downshiftMaxSpeed = null, PerSecond downshiftMinSpeed = null)
 			{
+				var gbxMaxTq = gears[gearIdx].MaxTorque != null ? gears[gearIdx].MaxTorque / emRatio : null;
+				var gbxMaxSpeed = gears[gearIdx].MaxInputSpeed != null ? gears[gearIdx].MaxInputSpeed * emRatio : null;
+
+				var fullLoadCurve = gbxMaxTq == null
+					? fullLoadCurveOrig
+					: LimitElectricMotorFullLoadCurve(fullLoadCurveOrig, gbxMaxTq);
 				if (gears.Count < 2) {
 					throw new VectoException("ComputeShiftPolygon needs at least 2 gears. {0} gears given.", gears.Count);
 				}
@@ -985,20 +992,41 @@ namespace TUGraz.VectoCore.Models.Declaration
 					var nMax = downshiftMaxSpeed ?? fullLoadCurve.NP80low;
 					var nMin = downshiftMinSpeed ?? 0.1 * fullLoadCurve.RatedSpeed;
 
-					downShift.AddRange(DownshiftLineDrive(fullLoadCurve, nMin, fullLoadCurve.NP80low));
-					downShift.AddRange(DownshiftLineDrag(fullLoadCurve, nMin, nMax));
+					downShift.AddRange(DownshiftLineDrive(fullLoadCurve, fullLoadCurveOrig, nMin, fullLoadCurve.NP80low));
+					downShift.AddRange(DownshiftLineDrag(fullLoadCurve, fullLoadCurveOrig, nMin, nMax));
 
 				}
 				if (gearIdx >= gears.Count - 1) {
 					return new ShiftPolygon(downShift, upShift);
 				}
 
-				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxGenerationTorque * 1.1, fullLoadCurve.MaxSpeed * 0.9));
-				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDriveTorque * 1.1, fullLoadCurve.MaxSpeed * 0.9));
+				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxGenerationTorque * 1.1, VectoMath.Min(fullLoadCurve.MaxSpeed * 0.9, gbxMaxSpeed)));
+				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDriveTorque * 1.1, VectoMath.Min(fullLoadCurve.MaxSpeed * 0.9, gbxMaxSpeed)));
 				return new ShiftPolygon(downShift, upShift);
 			}
 
-			private static List<ShiftPolygon.ShiftPolygonEntry> DownshiftLineDrive(ElectricMotorFullLoadCurve fullLoadCurve, PerSecond nMin, PerSecond nMax)
+			public static ElectricMotorFullLoadCurve LimitElectricMotorFullLoadCurve(ElectricMotorFullLoadCurve emFld, NewtonMeter maxTq)
+			{
+				var contTqFld = new ElectricMotorFullLoadCurve(new List<ElectricMotorFullLoadCurve.FullLoadEntry>() {
+					new ElectricMotorFullLoadCurve.FullLoadEntry() {
+						MotorSpeed = 0.RPMtoRad(),
+						FullDriveTorque = -maxTq,
+						FullGenerationTorque = maxTq
+					},
+					new ElectricMotorFullLoadCurve.FullLoadEntry() {
+						MotorSpeed = 1.1 * emFld.MaxSpeed,
+						FullDriveTorque = -maxTq,
+						FullGenerationTorque = maxTq
+					}
+				});
+				var limitedFld = AbstractSimulationDataAdapter.IntersectEMFullLoadCurves(emFld, contTqFld);
+				
+				return limitedFld;
+			}
+
+            private static List<ShiftPolygon.ShiftPolygonEntry> DownshiftLineDrive(
+				ElectricMotorFullLoadCurve fullLoadCurve, ElectricMotorFullLoadCurve fullLoadCurveOrig,
+				PerSecond nMin, PerSecond nMax)
 			{
 				var retVal = new List<ShiftPolygon.ShiftPolygonEntry>();
 				var downShiftPoints = fullLoadCurve
@@ -1012,7 +1040,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					// coarse grid points in FLD
 					retVal.Add(
 						new ShiftPolygon.ShiftPolygonEntry(
-							fullLoadCurve.MaxDriveTorque * 1.1,
+							fullLoadCurveOrig.MaxDriveTorque * 1.1,
 							nMax));
 					retVal.Add(
 						new ShiftPolygon.ShiftPolygonEntry(
@@ -1026,7 +1054,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				} else {
 					retVal.Add(
 						new ShiftPolygon.ShiftPolygonEntry(
-							fullLoadCurve.MaxDriveTorque * 1.1,
+							fullLoadCurveOrig.MaxDriveTorque * 1.1,
 							nMax));
 					if (downShiftPoints.Max(x => x.X) < nMax) {
 						retVal.Add(
@@ -1050,7 +1078,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return retVal;
 			}
 
-			private static List<ShiftPolygon.ShiftPolygonEntry> DownshiftLineDrag(ElectricMotorFullLoadCurve fullLoadCurve, PerSecond nMin, PerSecond nMax)
+			private static List<ShiftPolygon.ShiftPolygonEntry> DownshiftLineDrag(
+				ElectricMotorFullLoadCurve fullLoadCurve, ElectricMotorFullLoadCurve fullLoadCurveOrig,
+				PerSecond nMin, PerSecond nMax)
 			{
 				var retVal = new List<ShiftPolygon.ShiftPolygonEntry>();
 				var downShiftPoints = fullLoadCurve
@@ -1072,7 +1102,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 							nMax));
 					retVal.Add(
 						new ShiftPolygon.ShiftPolygonEntry(
-							fullLoadCurve.MaxGenerationTorque * 1.1,
+							fullLoadCurveOrig.MaxGenerationTorque * 1.1,
 							nMax));
 				} else {
 					if (downShiftPoints.Min(x => x.X) > nMin) {
@@ -1094,7 +1124,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					}
 					retVal.Add(
 						new ShiftPolygon.ShiftPolygonEntry(
-							fullLoadCurve.MaxGenerationTorque * 1.1,
+							fullLoadCurveOrig.MaxGenerationTorque * 1.1,
 							nMax));
 				}
 
@@ -1550,6 +1580,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			private const double SOCMinHE = 0.05;
 			private const double SOCMaxHE = 0.95;
+			
+			public static readonly Ohm CablesAndConnectorsResistance = 0.63.SI(Unit.SI.Milli.Ohm).Cast<Ohm>();
+			public static readonly Ohm JunctionBoxResistance = 1.3.SI(Unit.SI.Milli.Ohm).Cast<Ohm>();
 
 			public static double GetMinSoc(BatteryType type)
 			{
@@ -1704,8 +1737,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var respChgBatDepot = tmpBattery.Request(0.SI<Second>(), 1.SI<Second>(), depotChargingPower, true);
 			var respChgBatInMission = tmpBattery.Request(0.SI<Second>(), 1.SI<Second>(), inMissionChargingPower, true);
 
-			var etaChgBatDepot = 1 - (respChgBatDepot.LossPower / respChgBatDepot.PowerDemand).Value();
-			var etaChgBatInMission = 1 - (respChgBatInMission.LossPower / respChgBatInMission.PowerDemand).Value();
+			var currentEstInMission = depotChargingPower / tmpBattery.InternalVoltage;
+			var connectorLossInMission = currentEstInMission * batteryData.ConnectionSystemResistance *
+								currentEstInMission;
+			var currentEstDepot = depotChargingPower / tmpBattery.InternalVoltage;
+			var connectorLossDepot = currentEstDepot * batteryData.ConnectionSystemResistance *
+								currentEstDepot;
+
+            var etaChgBatDepot = 1 - ((respChgBatDepot.LossPower + connectorLossDepot) / respChgBatDepot.PowerDemand).Value();
+			var etaChgBatInMission = 1 - ((respChgBatInMission.LossPower + connectorLossInMission) / respChgBatInMission.PowerDemand).Value();
 
 
 			var chargedEnergyDepot = batteryData.UseableStoredEnergy * vehicleOperation.RealWorldUsageFactors.StartSoCBeforeMission;
@@ -1733,7 +1773,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 				VectoMath.Max(MinDepotChgPwr, batteryData.UseableStoredEnergy / DepotChargingDuration);
 
 			var respChgBatDepot = tmpBattery.Request(0.SI<Second>(), 1.SI<Second>(), depotChargingPower, true);
-			var etaChgBatDepot = 1 - (respChgBatDepot.LossPower / respChgBatDepot.PowerDemand).Value();
+			var currentEst = depotChargingPower / tmpBattery.InternalVoltage;
+			var connectorLoss = currentEst * (runData.BatteryData?.ConnectionSystemResistance ?? 0.SI<Ohm>()) *
+								currentEst;
+			var etaChgBatDepot = 1 - ((respChgBatDepot.LossPower + connectorLoss ) / respChgBatDepot.PowerDemand).Value();
 			return etaChgBatDepot;
 		}
 

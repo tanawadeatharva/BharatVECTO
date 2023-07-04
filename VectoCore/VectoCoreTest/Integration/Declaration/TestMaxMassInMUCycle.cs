@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 		}
 
 
-		[TestCase(@"TestData\Integration\TotalMassExceededInMU\Class4_Tractor_DECL.vecto")]
+		[TestCase(@"TestData/Integration/TotalMassExceededInMU/Class4_Tractor_DECL.vecto")]
 		public void TestMaxMassInMunicipalCycle(string jobFile)
 		{
 			var relativeJobPath = jobFile;

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Moq;
 using NUnit.Framework;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
@@ -21,9 +23,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	[Parallelizable(ParallelScope.All)]
 	public class BatteryTest
 	{
-		public const string componentFile = @"TestData\Hybrids\Battery\GenericBattery.vbat";
+		public const string componentFile = @"TestData/Hybrids/Battery/GenericBattery.vbat";
 
-		[OneTimeSetUp]
+
+        [OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
@@ -127,9 +130,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			double maxPowerDischarge, double battLoss)
 		{
 
-			var inputData = JSONInputDataFactory.ReadREESSData(componentFile, false);
-			Assert.NotNull(inputData);
+			var inputData = JSONInputDataFactory.ReadREESSData(componentFile, false) as JSONBatteryV1;
 
+			Assert.NotNull(inputData);
+			Assert.IsTrue(inputData.ConnectorsSubsystemsIncluded);
+			Assert.IsTrue(inputData.ConnectorsSubsystemsIncluded);
 			var dao = new EngineeringDataAdapter();
 			var tmp = new MockBatteryInputData()
 			{
@@ -138,7 +143,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
 
 			var container = new MockVehicleContainer();
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, batteryData);
 			var bat = new Battery(container, batteryData.Batteries.First().Item2);
 			es.Connect(bat);
 			es.Connect(new MockElectricConsumer(auxPower.SI<Watt>()));
@@ -208,7 +213,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var container = new MockVehicleContainer();
 			var bat = new Battery(container, batteryData.Batteries.First().Item2);
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, batteryData);
 			es.Connect(bat);
 			es.Connect(new MockElectricConsumer(auxPower.SI<Watt>()));
 			bat.Initialize(initialSoC);
@@ -253,7 +258,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = new MockVehicleContainer();
 			var batId = batteryData.Batteries.First().Item2.BatteryId;
 			var bat = new Battery(container, batteryData.Batteries.First().Item2);
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, batteryData);
 			es.Connect(bat);
 			es.Connect(new MockElectricConsumer(0.SI<Watt>()));
 			bat.Initialize(initialSoC);
@@ -372,7 +377,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var batId = batteryData.Batteries.First().Item2.BatteryId;
 			var bat = new Battery(container, batteryData.Batteries.First().Item2);
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, batteryData);
 			es.Connect(bat);
 			es.Connect(new MockElectricConsumer(0.SI<Watt>()));
 			bat.Initialize(initialSoC);
@@ -499,7 +504,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var container = new MockVehicleContainer();
 			var bat = new BatterySystem(container, batteryData);
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, batteryData);
 			es.Connect(bat);
 			es.Connect(new MockElectricConsumer(0.SI<Watt>()));
 			bat.Initialize(initialSoC);
@@ -617,7 +622,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var container = new MockVehicleContainer();
 			var bat = new BatterySystem(container, batteryData);
-			var es = new ElectricSystem(container);
+			var es = new ElectricSystem(container, batteryData);
 			es.Connect(bat);
 			es.Connect(new MockElectricConsumer(0.SI<Watt>()));
 			bat.Initialize(initialSoC);
@@ -687,6 +692,38 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 				absTime += dt.SI<Second>();
 			}
+		}
+
+
+		[TestCase(-30000, 600, 0.019, 0 ,0, -29952.649, TestName = "ESMaxEMPowerTest 1"),
+		TestCase(30000, 600, 0.019, 0, 0, 30047.651, TestName = "ESMaxEMPowerTest 2"),
+		TestCase(-30000, 600, 0.019, 0, 1000, -28955.7492, TestName = "ESMaxEMPowerTest 3"),
+		TestCase(-30000, 600, 0.019, 5000, 0, -34935.584, TestName = "ESMaxEMPowerTest 4"),
+		TestCase(-30000, 600, 0.019, 5000, 1000, -33939.2068, TestName = "ESMaxEMPowerTest 5"),
+		TestCase(30000, 600, 0.019, 0, 1000, 31050.8860, TestName = "ESMaxEMPowerTest 6"),
+		TestCase(30000, 600, 0.019, 5000, 0, 25033.0734, TestName = "ESMaxEMPowerTest 7"),
+		TestCase(30000, 600, 0.019, 5000, 1000, 26035.7760, TestName = "ESMaxEMPowerTest 8"),
+		TestCase(30000, 600, 0, 5000, 1000, 26000, TestName = "ESMaxEMPowerTest 9"),
+		TestCase(-30000, 600, 0, 5000, 1000, -34000, TestName = "ESMaxEMPowerTest A"),
+        ]
+        public void ESMaxEMPowerTest(double P_batMax, double U_bat, double R_conn, double P_Chg, double P_Aux,
+			double expected_P_EmMax)
+		{
+			var reessResponse = new Mock<IRESSResponse>();
+			reessResponse.Setup(x => x.MaxChargePower).Returns(P_batMax.SI<Watt>());
+			reessResponse.Setup(x => x.MaxDischargePower).Returns(P_batMax.SI<Watt>());
+			reessResponse.Setup(x => x.InternalVoltage).Returns(U_bat.SI<Volt>());
+			var response = new ElectricSystemResponseSuccess(this) {
+				AbsTime = 0.SI<Second>(),
+				AuxPower = P_Aux.SI<Watt>(),
+				ChargingPower = P_Chg.SI<Watt>(),
+				ConnectionSystemResistance = R_conn.SI<Ohm>(),
+				RESSResponse = reessResponse.Object,
+			};
+
+			var maxEMPower = P_batMax > 0 ? response.MaxPowerDrag : response.MaxPowerDrive;
+
+			Assert.AreEqual(expected_P_EmMax, maxEMPower.Value(), 1e-3);
 		}
 	}
 }

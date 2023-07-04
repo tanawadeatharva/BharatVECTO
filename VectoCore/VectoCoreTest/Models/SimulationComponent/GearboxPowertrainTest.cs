@@ -105,12 +105,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			container.CommitSimulationStep(absTime, retVal.SimulationInterval);
 			absTime += retVal.SimulationInterval;
 
-			AssertHelper.AreRelativeEqual(560.RPMtoRad(), container.EngineInfo.EngineSpeed);
+			AssertHelper.AreRelativeEqual(560, container.EngineInfo.EngineSpeed.AsRPM);
 
 			container.Cycle.Request(absTime, ds);
 			container.CommitSimulationStep(absTime, retVal.SimulationInterval);
 
-			AssertHelper.AreRelativeEqual(87.3192, container.EngineInfo.EngineSpeed);
+			AssertHelper.AreRelativeEqual(646.152, container.EngineInfo.EngineSpeed.AsRPM);
 		}
 
 		[TestCase]

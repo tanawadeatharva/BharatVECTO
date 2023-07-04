@@ -7,12 +7,14 @@
 	},
 	"Body": {
 		"SavedInDeclMode": false,
-	"Model": "Generic Battery",
-	"InternalResistanceCurve": "GenericBattery_243kWh.vbatr",
-	"SOC_min": 10,
-	"SOC_max": 90,
+		"Model": "Generic Battery",
+		"InternalResistanceCurve": "GenericBattery_243kWh.vbatr",
+		"SOC_min": 10,
+		"SOC_max": 90,
 		"MaxCurrentMap": "MaxCurrent.vimax",
 		"Capacity": 324,
-		"SoCCurve": "GenericBattery_243kWh.vbatv"
+		"SoCCurve": "GenericBattery_243kWh.vbatv",
+    "ConnectorsSubsystemsIncluded": true,
+    "JunctionboxIncluded": true
 	}
 }

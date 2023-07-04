@@ -229,6 +229,8 @@ namespace TUGraz.VectoCommon.Models
 
 		double StateOfCharge { get; set; }
 
+		Volt InternalVoltage { get; set; }
+
 		object Source { get; }
 	}
 

@@ -32,8 +32,8 @@ Namespace UnitTests
         Private Function GetSSM() As ISSMTOOL
 
 
-            Const _SSMMAP As String = "TestFiles\ssm.Ahsm"
-            'Const _BusDatabase As String ="TestFiles\BusDatabase.abdb
+            Const _SSMMAP As String = "TestFiles/ssm.Ahsm"
+            'Const _BusDatabase As String ="TestFiles/BusDatabase.abdb
 
             dim ssmInput As ISSMDeclarationInputs = SSMInputData.ReadFile(_SSMMAP, utils.GetDefaultVehicleData(), Nothing)
             'CType(CType(ssmInput, SSMInputs).Vehicle, VehicleData).Height = 0.SI (Of Meter)
@@ -55,7 +55,7 @@ Namespace UnitTests
             signals.EngineSpeed = 2000.RPMtoRad()
            
             Dim auxConfig = Utils.GetAuxTestConfig()
-            'Dim  hvacMap As New HVACMap("testFiles\TestHvacMap.csv")
+            'Dim  hvacMap As New HVACMap("testFiles/TestHvacMap.csv")
             'hvacMap.Initialise()
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage = 26.3.SI (Of Volt)
             Dim m0 As New M00Impl(auxConfig.ElectricalUserInputsConfig, signals, ssm.ElectricalWAdjusted)

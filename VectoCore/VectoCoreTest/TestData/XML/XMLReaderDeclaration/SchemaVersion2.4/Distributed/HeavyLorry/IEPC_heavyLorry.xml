@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"  xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
+<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:/VectoCore/VectoCore/Resources/XSD/VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"  xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
 	<v2.0:Vehicle xsi:type="Vehicle_IEPC_HeavyLorryDeclarationType" id="a">
 		<Manufacturer>TU Graz</Manufacturer>
 		<ManufacturerAddress>Inffeldgasse 19</ManufacturerAddress>
@@ -57,19 +57,28 @@
 						<OverloadDuration>30.00</OverloadDuration>
 						<MaxTorqueCurve>
 							<Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
+							<Entry outShaftSpeed="1000.00" maxTorque="450.00" minTorque="-450.00"/>
 							<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
 						</MaxTorqueCurve>
 						<PowerMap gear="1">
 							<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
 							<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
+							<Entry outShaftSpeed="1000.00" torque="4000.00" electricPower="20000.00"/>
+							<Entry outShaftSpeed="1000.00" torque="-4000.00" electricPower="-20000.00"/>
+							<Entry outShaftSpeed="2000.00" torque="4000.00" electricPower="20000.00"/>
+							<Entry outShaftSpeed="2000.00" torque="-4000.00" electricPower="-20000.00"/>
 							<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
 							<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
 						</PowerMap>
 						<PowerMap gear="2">
 							<Entry outShaftSpeed="0.00" torque="500.00" electricPower="1500.00"/>
 							<Entry outShaftSpeed="0.00" torque="-500.00" electricPower="-1500.00"/>
-							<Entry outShaftSpeed="5000.00" torque="5000.00" electricPower="25000.00"/>
-							<Entry outShaftSpeed="5000.00" torque="-5000.00" electricPower="-25000.00"/>
+							<Entry outShaftSpeed="1000.00" torque="4000.00" electricPower="20000.00"/>
+							<Entry outShaftSpeed="1000.00" torque="-4000.00" electricPower="-20000.00"/>
+							<Entry outShaftSpeed="2000.00" torque="4000.00" electricPower="20000.00"/>
+							<Entry outShaftSpeed="2000.00" torque="-4000.00" electricPower="-20000.00"/>
+							<Entry outShaftSpeed="4000.00" torque="5000.00" electricPower="25000.00"/>
+							<Entry outShaftSpeed="4000.00" torque="-5000.00" electricPower="-25000.00"/>
 						</PowerMap>
 					</VoltageLevel>
 					<VoltageLevel>
@@ -81,19 +90,28 @@
 						<OverloadDuration>30.00</OverloadDuration>
 						<MaxTorqueCurve>
 							<Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
+							<Entry outShaftSpeed="1000.00" maxTorque="450.00" minTorque="-450.00"/>
 							<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
 						</MaxTorqueCurve>
 						<PowerMap gear="1">
 							<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
 							<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
+							<Entry outShaftSpeed="1000.00" torque="4000.00" electricPower="20000.00"/>
+							<Entry outShaftSpeed="1000.00" torque="-4000.00" electricPower="-20000.00"/>
+							<Entry outShaftSpeed="2000.00" torque="4000.00" electricPower="20000.00"/>
+							<Entry outShaftSpeed="2000.00" torque="-4000.00" electricPower="-20000.00"/>
 							<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
 							<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
 						</PowerMap>
 						<PowerMap gear="2">
 							<Entry outShaftSpeed="0.00" torque="500.00" electricPower="1500.00"/>
 							<Entry outShaftSpeed="0.00" torque="-500.00" electricPower="-1500.00"/>
-							<Entry outShaftSpeed="5000.00" torque="5000.00" electricPower="25000.00"/>
-							<Entry outShaftSpeed="5000.00" torque="-5000.00" electricPower="-25000.00"/>
+							<Entry outShaftSpeed="1000.00" torque="4000.00" electricPower="20000.00"/>
+							<Entry outShaftSpeed="1000.00" torque="-4000.00" electricPower="-20000.00"/>
+							<Entry outShaftSpeed="2000.00" torque="4000.00" electricPower="20000.00"/>
+							<Entry outShaftSpeed="2000.00" torque="-4000.00" electricPower="-20000.00"/>
+							<Entry outShaftSpeed="4000.00" torque="5000.00" electricPower="25000.00"/>
+							<Entry outShaftSpeed="4000.00" torque="-5000.00" electricPower="-25000.00"/>
 						</PowerMap>
 					</VoltageLevel>
 					<DragCurve gear="1">

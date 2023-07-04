@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Xml.Linq;
 using Newtonsoft.Json;
@@ -188,6 +189,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[JsonIgnore]
 		public IIterativeRunStrategy IterativeRunStrategy { get; internal set; } = new DefaultIterativeStrategy();
 
+		[DebuggerDisplay("{ID}: {PowerDemandMech}/{PowerDemandElectric}")]
 		public class AuxData
 		{
 			public delegate Watt PowerDemandFunc(IDataBus dataBus, bool mechPower = true);

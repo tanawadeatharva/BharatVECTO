@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 	[TestFixture]
 	public class GearshiftLinesVoithTest
 	{
-		public const string File = @"TestData\Components\GearshiftLinesVoith.vgsv";
+		public const string File = @"TestData/Components/GearshiftLinesVoith.vgsv";
 
 
 		[OneTimeSetUp]

@@ -65,25 +65,25 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	[Parallelizable(ParallelScope.All)]
 	public class GearboxTest
 	{
-		public const string GearboxDataFile = @"TestData\Components\24t Coach.vgbx";
-		public const string EngineDataFile = @"TestData\Components\24t Coach.veng";
+		public const string GearboxDataFile = @"TestData/Components/24t Coach.vgbx";
+		public const string EngineDataFile = @"TestData/Components/24t Coach.veng";
 
-		public const string CycleFile = @"TestData\Integration\FullPowerTrain\1-Gear-Test-dist.vdri";
-		public const string CoachCycleFile = @"TestData\Integration\FullPowerTrain\Coach.vdri";
-		public const string EngineFile = @"TestData\Components\24t Coach.veng";
+		public const string CycleFile = @"TestData/Integration/FullPowerTrain/1-Gear-Test-dist.vdri";
+		public const string CoachCycleFile = @"TestData/Integration/FullPowerTrain/Coach.vdri";
+		public const string EngineFile = @"TestData/Components/24t Coach.veng";
 
-		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
+		public const string AccelerationFile = @"TestData/Components/Coach.vacc";
 
-		public const string IndirectLossMap = @"TestData\Components\Indirect Gear.vtlm";
-		public const string DirectLossMap = @"TestData\Components\Direct Gear.vtlm";
+		public const string IndirectLossMap = @"TestData/Components/Indirect Gear.vtlm";
+		public const string DirectLossMap = @"TestData/Components/Direct Gear.vtlm";
 
-		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
-		//public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
+		public const string GearboxShiftPolygonFile = @"TestData/Components/ShiftPolygons.vgbs";
+		//public const string GearboxFullLoadCurveFile = @"TestData/Components/Gearbox.vfld";
 
-		public const string AxleGearValidRangeDataFile = @"TestData\Components\AxleGearValidRange.vgbx";
-		public const string AxleGearInvalidRangeDataFile = @"TestData\Components\AxleGearInvalidRange.vgbx";
+		public const string AxleGearValidRangeDataFile = @"TestData/Components/AxleGearValidRange.vgbx";
+		public const string AxleGearInvalidRangeDataFile = @"TestData/Components/AxleGearInvalidRange.vgbx";
 
-		public const string AngledriveLossMap = @"TestData\Components\AngleGear.vtlm";
+		public const string AngledriveLossMap = @"TestData/Components/AngleGear.vtlm";
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
@@ -199,7 +199,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				message: "Torque Engine Side");
 		}
 
-		[TestCase(@"TestData\Components\24t Coach LessThanTwoGears.vgbx")]
+		[TestCase(@"TestData/Components/24t Coach LessThanTwoGears.vgbx")]
 		public void Gearbox_LessThanTwoGearsException(string wrongFile)
 		{
 			AssertHelper.Exception<VectoSimulationException>(
@@ -465,12 +465,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			}
 		}
 
-		[TestCase(1, -1000, 600, 28.096, typeof(ResponseSuccess)),
+		[TestCase(2, -1000, 600, 28.096, typeof(ResponseSuccess)),
 		TestCase(2, -1000, 600, 28.096, typeof(ResponseSuccess)),
-		TestCase(1, 50, 600, 9.096, typeof(ResponseSuccess)),
-		TestCase(2, 2450, 800, 58.11, typeof(ResponseSuccess)),
+		TestCase(2, 50, 600, 9.096, typeof(ResponseSuccess)),
+		TestCase(1, 2450, 800, 58.11, typeof(ResponseSuccess)),
 		TestCase(2, 850, 800, 26.11, typeof(ResponseSuccess)),
-		TestCase(1, 850, 200, 23.07, typeof(ResponseSuccess)),
+		TestCase(2, 850, 200, 23.07, typeof(ResponseSuccess)),
 		TestCase(2, 50, 600, 9.096, typeof(ResponseSuccess)),
 		TestCase(2, 2050, 1200, 52.132, typeof(ResponseSuccess)),
 		TestCase(2, 850, 600, 25.096, typeof(ResponseSuccess)),

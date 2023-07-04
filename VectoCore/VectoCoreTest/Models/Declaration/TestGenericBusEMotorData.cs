@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 
-		[TestCase(@"TestData\XML\XMLVIFBusReport\IHPC_HEV_completedBus_2.VIF_Report_1.xml")]
+		[TestCase(@"TestData/XML/XMLVIFBusReport/IHPC_HEV_completedBus_2.VIF_Report_1.xml")]
 		public void TestGenericBusElectricMotorData(string filePath)
 		{
 			var multistepBusInputData = xmlInputReader.Create(filePath) as IMultistepBusInputDataProvider;
@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 
-		[TestCase(@"TestData\XML\XMLVIFBusReport\IEPC_completedBus_2.VIF_Report_2.xml")]
+		[TestCase(@"TestData/XML/XMLVIFBusReport/IEPC_completedBus_2.VIF_Report_2.xml")]
 		public void TestGenericIEPCElectricMotorData(string iepcFilePath)
 		{
 			var multistepBusInputData = xmlInputReader.Create(iepcFilePath) as IMultistepBusInputDataProvider;
@@ -139,7 +139,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 
-		[TestCase(@"TestData\XML\XMLVIFBusReport\IHPC_HEV_completedBus_2.VIF_Report_1.xml")]
+		[TestCase(@"TestData/XML/XMLVIFBusReport/IHPC_HEV_completedBus_2.VIF_Report_1.xml")]
 		public void TestGenericIHPCElectricMotorData(string ihpcFilePath)
 		{
 			var multistepBusInputData = xmlInputReader.Create(ihpcFilePath) as IMultistepBusInputDataProvider;
@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(2, ihpcData.EfficiencyData.VoltageLevels.Count);
 		}
 
-		[TestCase(@"TestData\XML\XMLVIFBusReport\IEPC_completedBus_2.VIF_Report_2.xml", 0.5)]
+		[TestCase(@"TestData/XML/XMLVIFBusReport/IEPC_completedBus_2.VIF_Report_2.xml", 0.5)]
 		public void TestGenericBatteryData(string vifFilePath, double initialSoC)
 		{
 			var multistepBusInputData = xmlInputReader.Create(vifFilePath) as IMultistepBusInputDataProvider;
@@ -205,7 +205,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		
-		[TestCase(@"TestData\Hybrids\Hyb_P2_Group2SuperCapOvl\SuperCap.vreess", 1)]
+		[TestCase(@"TestData/Hybrids/Hyb_P2_Group2SuperCapOvl/SuperCap.vreess", 1)]
 		public void TestGenericSuperCapData(string superCapFilePath, double initialSoC)
 		{
 			var superCap = JSONInputDataFactory.ReadREESSData(superCapFilePath, false) as ISuperCapDeclarationInputData; 

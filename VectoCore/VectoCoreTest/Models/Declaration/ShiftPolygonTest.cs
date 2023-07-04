@@ -406,8 +406,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[TestCase]
 		public void ComputeShiftPolygonDeclarationTest()
 		{
-			var engineFile = @"TestData\Components\40t_Long_Haul_Truck.veng";
-			var gearboxFile = @"TestData\Components\40t_Long_Haul_Truck.vgbx";
+			var engineFile = @"TestData/Components/40t_Long_Haul_Truck.veng";
+			var gearboxFile = @"TestData/Components/40t_Long_Haul_Truck.vgbx";
 
 			var rdyn = 0.4882675.SI<Meter>();
 			var axlegearRatio = 2.59;
@@ -490,8 +490,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[TestCase]
 		public void ComputeShiftPolygonATDeclarationTest()
 		{
-			var engineFile = @"TestData\Components\40t_Long_Haul_Truck.veng";
-			var gearboxFile = @"TestData\Components\40t_Long_Haul_Truck.vgbx";
+			var engineFile = @"TestData/Components/40t_Long_Haul_Truck.veng";
+			var gearboxFile = @"TestData/Components/40t_Long_Haul_Truck.vgbx";
 
 			var rdyn = 0.4882675.SI<Meter>();
 			var axlegearRatio = 2.59;
@@ -542,13 +542,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[TestCase]
 		public void ComputeShiftPolygonDeclarationTestConfidentialEngine()
 		{
-			//var engineFldFile = @"E:\QUAM\Downloads\EngineFLD\Map_375c_BB1390_modTUG_R49_375c_BB1386.vfld";
-			//var engineFldFile = @"E:\QUAM\tmp\scania_fullload_shiftpolygon-test.csv";
-			//var gearboxFile = @"E:\QUAM\Downloads\TUG_dev_gbx\TUG_dev\GRS905R.vgbx";
-			var engineFldFile = @"E:\QUAM\Downloads\attachment\Models_Declaration-mode\Overdrive\text\VENG_330kW_GENERIC.vfld";
-			var gearboxFile = @"E:\QUAM\Downloads\attachment\Models_Declaration-mode\Overdrive\text\VGBX_AMT_12_overdr_DECL.vgbx";
+			//var engineFldFile = @"E:/QUAM/Downloads/EngineFLD/Map_375c_BB1390_modTUG_R49_375c_BB1386.vfld";
+			//var engineFldFile = @"E:/QUAM/tmp/scania_fullload_shiftpolygon-test.csv";
+			//var gearboxFile = @"E:/QUAM/Downloads/TUG_dev_gbx/TUG_dev/GRS905R.vgbx";
+			var engineFldFile = @"E:/QUAM/Downloads/attachment/Models_Declaration-mode/Overdrive/text/VENG_330kW_GENERIC.vfld";
+			var gearboxFile = @"E:/QUAM/Downloads/attachment/Models_Declaration-mode/Overdrive/text/VGBX_AMT_12_overdr_DECL.vgbx";
 
-			//@"TestData\Components\40t_Long_Haul_Truck.vgbx";
+			//@"TestData/Components/40t_Long_Haul_Truck.vgbx";
 
 			if (!File.Exists(engineFldFile)) {
 				Assert.Inconclusive("Confidential File not found. Test cannot run without file.");
@@ -610,8 +610,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[TestCase(@"E:\QUAM\Downloads\upshifts-missing_over-revving\FL_curve_orig.xml"),
-			TestCase(@"E:\QUAM\Downloads\VECTO_821\VECTO_lorry_6x2_13L_276kW.vecto")]
+		[TestCase(@"E:/QUAM/Downloads/upshifts-missing_over-revving/FL_curve_orig.xml"),
+			TestCase(@"E:/QUAM/Downloads/VECTO_821/VECTO_lorry_6x2_13L_276kW.vecto")]
 		public void ComputeShiftPolygonDeclarationTestConfidentialXMLJob(string jobFile)
 		{
 			if (!File.Exists(jobFile)) {
@@ -675,7 +675,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 	[Parallelizable(ParallelScope.All)]
 	public class ShiftPolygonComparison
 	{
-		const string BasePath = @"E:\QUAM\Workspace\Daten_INTERN\Testfahrzeuge\";
+		const string BasePath = @"E:/QUAM/Workspace/Daten_INTERN/Testfahrzeuge/";
 
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
@@ -692,26 +692,26 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[Category("LongRunning")]
 		[Ignore("No Assertions - only plotting shift polygons")]
 		[
-			TestCase(@"class2_12t_baseline\175kW_Diesel_example.vfld", @"class2_12t_baseline\delivery_12t_example.vgbx", 0.421,
+			TestCase(@"class2_12t_baseline/175kW_Diesel_example.vfld", @"class2_12t_baseline/delivery_12t_example.vgbx", 0.421,
 				4.18, 600),
-			TestCase(@"class2_12t_iaxle_long\175kW_Diesel_example.vfld", @"class2_12t_iaxle_long\delivery_12t_example.vgbx",
+			TestCase(@"class2_12t_iaxle_long/175kW_Diesel_example.vfld", @"class2_12t_iaxle_long/delivery_12t_example.vgbx",
 				0.421, 2.85, 600),
-			TestCase(@"class2_12t_iaxle_short\175kW_Diesel_example.vfld", @"class2_12t_iaxle_short\delivery_12t_example.vgbx",
+			TestCase(@"class2_12t_iaxle_short/175kW_Diesel_example.vfld", @"class2_12t_iaxle_short/delivery_12t_example.vgbx",
 				0.421, 5.33, 600),
-			TestCase(@"class2_12t_Pmax_high\220kW_Diesel_example.vfld", @"class2_12t_Pmax_high\delivery_12t_example_220kW.vgbx",
+			TestCase(@"class2_12t_Pmax_high/220kW_Diesel_example.vfld", @"class2_12t_Pmax_high/delivery_12t_example_220kW.vgbx",
 				0.421, 4.18, 600),
-			TestCase(@"class2_12t_Pmax_low\130kW_Diesel_example.vfld", @"class2_12t_Pmax_low\delivery_12t_example.vgbx", 0.421,
+			TestCase(@"class2_12t_Pmax_low/130kW_Diesel_example.vfld", @"class2_12t_Pmax_low/delivery_12t_example.vgbx", 0.421,
 				4.18, 600),
-			TestCase(@"class5_40t_baseline\12L-324kW.vfld", @"class5_40t_baseline\tractor_12gear_example.vgbx", 0.421, 2.64,
+			TestCase(@"class5_40t_baseline/12L-324kW.vfld", @"class5_40t_baseline/tractor_12gear_example.vgbx", 0.421, 2.64,
 				600),
-			TestCase(@"class5_40t_iaxle_long\12L-324kW.vfld", @"class5_40t_iaxle_long\tractor_12gear_example.vgbx", 0.421, 2.31,
+			TestCase(@"class5_40t_iaxle_long/12L-324kW.vfld", @"class5_40t_iaxle_long/tractor_12gear_example.vgbx", 0.421, 2.31,
 				600),
-			TestCase(@"class5_40t_iaxle_short\12L-324kW.vfld", @"class5_40t_iaxle_short\tractor_12gear_example.vgbx", 0.421,
+			TestCase(@"class5_40t_iaxle_short/12L-324kW.vfld", @"class5_40t_iaxle_short/tractor_12gear_example.vgbx", 0.421,
 				3.71,
 				600),
-			TestCase(@"class5_40t_Pmax_high\13-9-L-375kW.vfld", @"class5_40t_Pmax_high\tractor_12gear_example.vgbx", 0.421,
+			TestCase(@"class5_40t_Pmax_high/13-9-L-375kW.vfld", @"class5_40t_Pmax_high/tractor_12gear_example.vgbx", 0.421,
 				2.64, 600),
-			TestCase(@"class5_40t_Pmax_low\9-6-L_260kW.vfld", @"class5_40t_Pmax_low\tractor_12gear_example.vgbx", 0.421, 2.64,
+			TestCase(@"class5_40t_Pmax_low/9-6-L_260kW.vfld", @"class5_40t_Pmax_low/tractor_12gear_example.vgbx", 0.421, 2.64,
 				600),
 		]
 		public void ComputeShiftPolygon(string engineFldFile, string gearboxFile, double rdyn, double axlegearRatio,
@@ -869,8 +869,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 
-        [TestCase(@"E:\QUAM\Workspace\VECTO-Bugreports\BugReportTests\Bugreport Jobs\20190307_VECTO-904_Extrapolation\OM-18173493.xml")]
-        //[TestCase(@"E:\QUAM\Workspace\VECTO_DEV_Hybrid\Generic Vehicles\Declaration Mode\Group5_Tractor_4x2\Class5_Tractor_DECL.xml")]
+        [TestCase(@"E:/QUAM/Workspace/VECTO-Bugreports/BugReportTests/Bugreport Jobs/20190307_VECTO-904_Extrapolation/OM-18173493.xml")]
+        //[TestCase(@"E:/QUAM/Workspace/VECTO_DEV_Hybrid/Generic Vehicles/Declaration Mode/Group5_Tractor_4x2/Class5_Tractor_DECL.xml")]
         public void ComputeShiftPolygonXML(string xmlJob)
 		{
 			if (!File.Exists(xmlJob)) {
@@ -929,10 +929,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[TestCase(@"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG.vecto", null),
-		TestCase(@"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_cont30kW.vecto", null),
-		TestCase(@"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_cont30kW.vecto", 0.9),
-		TestCase(@"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_cont30kW.vecto", 1.1),
+		[TestCase(@"TestData/BatteryElectric/GenericVehicleB2/BEV_ENG.vecto", null),
+		TestCase(@"TestData/BatteryElectric/GenericVehicleB2/BEV_ENG_Cont30kW.vecto", null),
+		TestCase(@"TestData/BatteryElectric/GenericVehicleB2/BEV_ENG_Cont30kW.vecto", 0.9),
+		TestCase(@"TestData/BatteryElectric/GenericVehicleB2/BEV_ENG_Cont30kW.vecto", 1.1),
 		]
 		public void ComputePEVShiftLines(string pevE2Job, double? factorDownshiftSpeed)
 		{
@@ -985,7 +985,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase(0.9)]
 		public void ComputePEVShiftLinesDeRated(double? factorDownshiftSpeed)
 		{
-			var pevE2Job = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_cont30kW.vecto";
+			var pevE2Job = @"TestData/BatteryElectric/GenericVehicleB2/BEV_ENG_Cont30kW.vecto";
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(pevE2Job) as IEngineeringInputDataProvider;
 			var gearboxData = inputData.JobInputData.Vehicle.Components.GearboxInputData;

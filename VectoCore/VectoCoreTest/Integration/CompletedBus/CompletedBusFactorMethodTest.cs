@@ -40,11 +40,11 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 	//[Parallelizable(ParallelScope.All)] --> job file executed more than 20 runs in parallel, which produces out-of-memory if run parallel
 	public class CompletedBusFactorMethodTest
 	{
-		const string JobFile_Group41 = @"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b.vecto";
-		const string JobFile_Group42 = @"TestData\Integration\Buses\FactorMethod\CompletedBus_42-33b.vecto";
+		const string JobFile_Group41 = @"TestData/Integration/Buses/FactorMethod/CompletedBus_41-32b.vecto";
+		const string JobFile_Group42 = @"TestData/Integration/Buses/FactorMethod/CompletedBus_42-33b.vecto";
 
-		const string JobFilePrimary41 = @"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart.xml";
-		const string JobFilePrimary42 = @"TestData\Integration\Buses\FactorMethod\primary_heavyBus group42_SmartPS.xml";
+		const string JobFilePrimary41 = @"TestData/Integration/Buses/FactorMethod/primary_heavyBus group41_nonSmart.xml";
+		const string JobFilePrimary42 = @"TestData/Integration/Buses/FactorMethod/primary_heavyBus group42_SmartPS.xml";
 
 		protected IXMLInputDataReader xmlInputReader;
 
@@ -713,17 +713,19 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var genericTechnolgyBenefit = (relatedRun.VectoRunDataGenericBody.BusAuxiliaries.SSMInputsCooling as ISSMDeclarationInputs).Technologies;
 			var specificTechnolgyBenefit = (relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.SSMInputsCooling as ISSMDeclarationInputs).Technologies;
 
-			Assert.AreEqual(0.0, genericTechnolgyBenefit.CValueVariation);
-			Assert.AreEqual(0.02, genericTechnolgyBenefit.HValueVariation);
-			Assert.AreEqual(0.0, genericTechnolgyBenefit.VCValueVariation);
-			Assert.AreEqual(0.02, genericTechnolgyBenefit.VHValueVariation);
-			Assert.AreEqual(0.0, genericTechnolgyBenefit.VVValueVariation);
+			Assert.AreEqual(0.08, genericTechnolgyBenefit.CValueVariation);
+			Assert.AreEqual(0.06, genericTechnolgyBenefit.HValueVariation);
+			Assert.AreEqual(0.08, genericTechnolgyBenefit.VCValueVariation);
+			Assert.AreEqual(0.06, genericTechnolgyBenefit.VHValueVariation);
+			Assert.AreEqual(0.04, genericTechnolgyBenefit.VVValueVariation);
 
 			Assert.AreEqual(0.08, specificTechnolgyBenefit.CValueVariation);
 			Assert.AreEqual(0.08, specificTechnolgyBenefit.HValueVariation);
 			Assert.AreEqual(0.08, specificTechnolgyBenefit.VCValueVariation);
 			Assert.AreEqual(0.08, specificTechnolgyBenefit.VHValueVariation);
 			Assert.AreEqual(0.04, specificTechnolgyBenefit.VVValueVariation);
+
+
 		}
 
 		#endregion
@@ -822,12 +824,12 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			switch (currentIndex) {
 				case 0:
 				case 1://Interurban
-					Assert.AreEqual(31381.5, genericValue, 1e-3);
+					Assert.AreEqual(28543.35, genericValue, 1e-3);
 					Assert.AreEqual(28718.1875, specificValue, 1e-3);
 					break;
 				case 2:
 				case 3://Coach
-					Assert.AreEqual(47099.5, genericValue, 1e-3);
+					Assert.AreEqual(42639.55, genericValue, 1e-3);
 					Assert.AreEqual(41271.4375, specificValue, 1e-3);
 					break;
 			}
@@ -955,6 +957,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
             for (int i = 0; i < runs.Count; i++)
 			{
+				
 				var relatedRun = new RelatedRun
 				{
 					VectoRunDataSpezificBody = runs[i],
@@ -971,9 +974,9 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		
 		[TestCase(JobFile_Group41, 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b CO/LL"),
 		 TestCase(JobFile_Group42, 1, TestName = "PrintVectoRunData CompletedBus Group 42/33b HU/RL"),
-		TestCase(@"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_AT-P.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b AT-P CO/LL"),
-		TestCase(@"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_ES-AUX.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b ES-Aux CO/LL"),
-		TestCase(@"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_ES-AUX_mixed.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b ES-Aux CO/LL mixedDoors"),]
+		TestCase(@"TestData/Integration/Buses/FactorMethod/CompletedBus_41-32b_AT-P.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b AT-P CO/LL"),
+		TestCase(@"TestData/Integration/Buses/FactorMethod/CompletedBus_41-32b_ES-AUX.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b ES-Aux CO/LL"),
+		TestCase(@"TestData/Integration/Buses/FactorMethod/CompletedBus_41-32b_ES-AUX_mixed.vecto", 0, TestName = "PrintVectoRunData CompletedBus Group 41/32b ES-Aux CO/LL mixedDoors"),]
 		public void PrintModelParametersCompletedBus(string jobFile, int pairIdx)
 		{
 			var runs = GetVectoRunData(jobFile);
@@ -987,12 +990,12 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		}
 
 
-		[TestCase(@"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart.xml", 12, TestName = "PrintVectoRunData PrimaryBus Group41 SD CO/LL"),
-		TestCase(@"TestData\Integration\Buses\FactorMethod\primary_heavyBus group42_SmartPS.xml", 1, TestName = "PrintVectoRunData PrimaryBus Group42 SD HU/RL"),
-		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_41-32b.vecto", 0, TestName = "PrintVectoRunData SingleBus Group 41/32b CO/LL"),
-		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_42-33b.vecto", 1, TestName = "PrintVectoRunData SingleBus Group 42/33b HU/RL"),
-		TestCase(@"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart_AT-P.xml", 12, TestName = "PrintVectoRunData PrimaryBus Group41 AT-P SD CO/LL"),
-		TestCase(@"TestData\Integration\Buses\FactorMethod\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 13, TestName = "PrintVectoRunData electric STP/Fan ESS IU/RL"),
+		[TestCase(@"TestData/Integration/Buses/FactorMethod/primary_heavyBus group41_nonSmart.xml", 12, TestName = "PrintVectoRunData PrimaryBus Group41 SD CO/LL"),
+		TestCase(@"TestData/Integration/Buses/FactorMethod/primary_heavyBus group42_SmartPS.xml", 1, TestName = "PrintVectoRunData PrimaryBus Group42 SD HU/RL"),
+		TestCase(@"TestData/Integration/Buses/FactorMethod/SingleBus_41-32b.vecto", 0, TestName = "PrintVectoRunData SingleBus Group 41/32b CO/LL"),
+		TestCase(@"TestData/Integration/Buses/FactorMethod/SingleBus_42-33b.vecto", 1, TestName = "PrintVectoRunData SingleBus Group 42/33b HU/RL"),
+		TestCase(@"TestData/Integration/Buses/FactorMethod/primary_heavyBus group41_nonSmart_AT-P.xml", 12, TestName = "PrintVectoRunData PrimaryBus Group41 AT-P SD CO/LL"),
+		TestCase(@"TestData/Integration/Buses/FactorMethod/vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 13, TestName = "PrintVectoRunData electric STP/Fan ESS IU/RL"),
 			]
 		public void PrintModelParameters(string jobFile, int runIdx)
 		{
@@ -1004,10 +1007,10 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			File.WriteAllText($"{run.JobName}_{run.Cycle.Name}{run.ModFileSuffix}.json", JsonConvert.SerializeObject(run, Formatting.Indented));
 		}
 
-		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_DECL.vecto", 0, TestName = "PrintVectoRunData VTP HeavyTruck"),
-		TestCase(@"TestData\Integration\VTPMode\MediumLorry\VTP_MediumLorry.vecto", 0, TestName = "PrintVectoRunData VTP MediumLory"),
-		TestCase(@"TestData\Integration\VTPMode\HeavyBus\VTP_PrimaryBus.vecto", 0, TestName = "PrintVectoRunData VTP PrimaryBus"),
-		TestCase(@"TestData\Integration\VTPMode\DualFuelVehicle\VTP_DualFuel.vecto", 0, TestName = "PrintVectoRunData VTP DualFuel"),
+		[TestCase(@"TestData/Integration/VTPMode/GenericVehicle/class_5_generic vehicle_DECL.vecto", 0, TestName = "PrintVectoRunData VTP HeavyTruck"),
+		TestCase(@"TestData/Integration/VTPMode/MediumLorry/VTP_MediumLorry.vecto", 0, TestName = "PrintVectoRunData VTP MediumLory"),
+		TestCase(@"TestData/Integration/VTPMode/HeavyBus/VTP_PrimaryBus.vecto", 0, TestName = "PrintVectoRunData VTP PrimaryBus"),
+		TestCase(@"TestData/Integration/VTPMode/DualFuelVehicle/VTP_DualFuel.vecto", 0, TestName = "PrintVectoRunData VTP DualFuel"),
 		]
 		public void PrintModelParametersVTP(string jobFile, int runIdx)
 		{
@@ -1101,12 +1104,12 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		}
 
 		[TestCase(JobFilePrimary41, TestName = "RunPrimaryBusSimulation Group41"),
-		TestCase(@"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart_AT-P.xml", TestName = "RunPrimaryBusSimulation Group41 AT-P"),
-		TestCase(@"TestData\Integration\Buses\FactorMethod\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", TestName = "RunPrimaryBusSimulation Group41 ES-AUX"),
+		TestCase(@"TestData/Integration/Buses/FactorMethod/primary_heavyBus group41_nonSmart_AT-P.xml", TestName = "RunPrimaryBusSimulation Group41 AT-P"),
+		TestCase(@"TestData/Integration/Buses/FactorMethod/vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", TestName = "RunPrimaryBusSimulation Group41 ES-AUX"),
 		TestCase(JobFilePrimary42, TestName = "RunPrimaryBusSimulation Group42"),
-		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_41-32b.vecto", TestName = "RunSingleBusSimulation Group 41/32b"),
-		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_42-33b.vecto", TestName = "RunSingleBusSimulation Group 42/33b"),
-		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_41-32b_AT-P.vecto", TestName = "RunSingleBusSimulation Group 41/32b AT-P"),
+		TestCase(@"TestData/Integration/Buses/FactorMethod/SingleBus_41-32b.vecto", TestName = "RunSingleBusSimulation Group 41/32b"),
+		TestCase(@"TestData/Integration/Buses/FactorMethod/SingleBus_42-33b.vecto", TestName = "RunSingleBusSimulation Group 42/33b"),
+		TestCase(@"TestData/Integration/Buses/FactorMethod/SingleBus_41-32b_AT-P.vecto", TestName = "RunSingleBusSimulation Group 41/32b AT-P"),
 		]
 		public void TestRunPrimaryOrSingleBusSimulation(string jobName)
 		{
@@ -1140,7 +1143,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
-        [TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_41-32b.vecto", TestName = "HVAC_Heating RunSingleBusSimulation Group 41/32b"),]
+        [TestCase(@"TestData/Integration/Buses/FactorMethod/SingleBus_41-32b.vecto", TestName = "HVAC_Heating RunSingleBusSimulation Group 41/32b"),]
 		public void TestRunPrimaryOrSingleBusSimulationHVACHeating(string jobName)
 		{
 			var relativeJobPath = jobName;
@@ -1173,18 +1176,18 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
-		[TestCase(@"TestData\Integration\Buses\FactorMethod\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 13, TestName = "RunBusSimulation electric STP/Fan ESS IU/RL"),
-		TestCase(@"TestData\Integration\Buses\FactorMethod\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 17, TestName = "RunBusSimulation electric STP/Fan ESS CO/RL"),
+		[TestCase(@"TestData/Integration/Buses/FactorMethod/vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 13, TestName = "RunBusSimulation electric STP/Fan ESS IU/RL"),
+		TestCase(@"TestData/Integration/Buses/FactorMethod/vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", 17, TestName = "RunBusSimulation electric STP/Fan ESS CO/RL"),
 
-		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 3, TestName = "RunBusSimulation Grp 39/40 P39SD U/RL"),
-		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 7, TestName = "RunBusSimulation Grp 39/40 P39SD IU/RL"),
-		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 9, TestName = "RunBusSimulation Grp 39/40 P39DD HU/RL"),
-		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 19, TestName = "RunBusSimulation Grp 39/40 P40DD IU/RL"), // fails! is intended/known
-		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 18, TestName = "RunBusSimulation Grp 39/40 P40DD IU/LL"),  // fails! is intended/known
+		TestCase(@"TestData/Integration/Buses/primary_heavyBus group P39_40_nonSmart_ESS.xml", 3, TestName = "RunBusSimulation Grp 39/40 P39SD U/RL"),
+		TestCase(@"TestData/Integration/Buses/primary_heavyBus group P39_40_nonSmart_ESS.xml", 7, TestName = "RunBusSimulation Grp 39/40 P39SD IU/RL"),
+		TestCase(@"TestData/Integration/Buses/primary_heavyBus group P39_40_nonSmart_ESS.xml", 9, TestName = "RunBusSimulation Grp 39/40 P39DD HU/RL"),
+		TestCase(@"TestData/Integration/Buses/primary_heavyBus group P39_40_nonSmart_ESS.xml", 19, TestName = "RunBusSimulation Grp 39/40 P40DD IU/RL"), // fails! is intended/known
+		TestCase(@"TestData/Integration/Buses/primary_heavyBus group P39_40_nonSmart_ESS.xml", 18, TestName = "RunBusSimulation Grp 39/40 P40DD IU/LL"),  // fails! is intended/known
 
-		//TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ConvAux_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ConvAux SmartPS"),
-		//TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ES Aux SmartPS"),
-		//TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ESS_SmartPS_SmartES.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ES Aux SmartPS SmartES"),
+		//TestCase(@"E:/QUAM/tmp/ESS_Tests/primary_heavyBus group 42_ConvAux_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ConvAux SmartPS"),
+		//TestCase(@"E:/QUAM/tmp/ESS_Tests/primary_heavyBus group 42_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ES Aux SmartPS"),
+		//TestCase(@"E:/QUAM/tmp/ESS_Tests/primary_heavyBus group 42_ESS_SmartPS_SmartES.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ES Aux SmartPS SmartES"),
 			]
 		public void TestRunPrimaryBusSimulation_ESS(string jobName, int runIdx)
 		{
@@ -1218,7 +1221,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			//Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
-		private const string JobGrp32b = @"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_ES-AUX.vecto";
+		private const string JobGrp32b = @"TestData/Integration/Buses/FactorMethod/CompletedBus_41-32b_ES-AUX.vecto";
 
 		[
 		TestCase(JobGrp32b, 2, 20, 5, 17, 9, 51, TestName = "CompleteBus PassengerCount IU specific RL"),
@@ -1257,8 +1260,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(expectedPassengers + 1, ssmInputs.NumberOfPassengers, 1e-3); // adding driver for SSM
 		}
 
-		private const string PrimaryGrp41 = @"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart.xml";
-		private const string CompletedGrp41_32b = @"TestData\Integration\Buses\FactorMethod\vecto_vehicle-completed_heavyBus_41.xml";
+		private const string PrimaryGrp41 = @"TestData/Integration/Buses/FactorMethod/primary_heavyBus group41_nonSmart.xml";
+		private const string CompletedGrp41_32b = @"TestData/Integration/Buses/FactorMethod/vecto_vehicle-completed_heavyBus_41.xml";
 
 		[
 			TestCase(PrimaryGrp41, CompletedGrp41_32b, 1, 20, 5, 17, 9, 51, TestName = "SingleBus PassengerCount IU RL"),
@@ -1364,7 +1367,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		}
 
 
-		//[TestCase(@"E:\QUAM\tmp\primary_heavyBus group 42_SmartPS_spec engine map.xml", 0),]
+		//[TestCase(@"E:/QUAM/tmp/primary_heavyBus group 42_SmartPS_spec engine map.xml", 0),]
 		public void TestRunPrimaryBusSimulationSngle(string jobName, int runIdx)
 		{
 			var relativeJobPath = jobName;

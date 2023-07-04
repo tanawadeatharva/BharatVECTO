@@ -17,23 +17,23 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 	public class IEPC_S_Test
 	{
 
-		protected const string IEPC_S_Gbx3Speed = @"TestData\Hybrids\GenericIEPC-S\IEPC-S_Gbx3Speed\IEPC-S_ENG_Gbx3.vecto";
+		protected const string IEPC_S_Gbx3Speed = @"TestData/Hybrids/GenericIEPC-S/IEPC-S_Gbx3Speed/IEPC-S_ENG_Gbx3.vecto";
 
-		protected const string IEPC_S_Gbx3Speed_drag = @"TestData\Hybrids\GenericIEPC-S\IEPC-S_Gbx3Speed\IEPC-S_ENG_Gbx3_drag.vecto";
+		protected const string IEPC_S_Gbx3Speed_drag = @"TestData/Hybrids/GenericIEPC-S/IEPC-S_Gbx3Speed/IEPC-S_ENG_Gbx3_drag.vecto";
 
-		protected const string IEPC_S_Gbx3SpeedAxle = @"TestData\Hybrids\GenericIEPC-S\IEPC-S_Gbx3Speed+Axle\IEPC-S_ENG_Gbx3Axl.vecto";
+		protected const string IEPC_S_Gbx3SpeedAxle = @"TestData/Hybrids/GenericIEPC-S/IEPC-S_Gbx3Speed+Axle/IEPC-S_ENG_Gbx3Axl.vecto";
 
-		protected const string IEPC_S_Gbx3SpeedWhl1 = @"TestData\Hybrids\GenericIEPC-S\IEPC-S_Gbx3Speed-Whl1\IEPC-S_ENG_Gbx3Whl1.vecto";
+		protected const string IEPC_S_Gbx3SpeedWhl1 = @"TestData/Hybrids/GenericIEPC-S/IEPC-S_Gbx3Speed-Whl1/IEPC-S_ENG_Gbx3Whl1.vecto";
 
-		protected const string IEPC_S_Gbx3SpeedWhl2 = @"TestData\Hybrids\GenericIEPC-S\IEPC-S_Gbx3Speed-Whl2\IEPC-S_ENG_Gbx3Whl2.vecto";
+		protected const string IEPC_S_Gbx3SpeedWhl2 = @"TestData/Hybrids/GenericIEPC-S/IEPC-S_Gbx3Speed-Whl2/IEPC-S_ENG_Gbx3Whl2.vecto";
 
-		protected const string IEPC_S_Gbx1Speed = @"TestData\Hybrids\GenericIEPC-S\IEPC-S_Gbx1Speed\IEPC-S_ENG_Gbx1.vecto";
+		protected const string IEPC_S_Gbx1Speed = @"TestData/Hybrids/GenericIEPC-S/IEPC-S_Gbx1Speed/IEPC-S_ENG_Gbx1.vecto";
 
-		protected const string IEPC_S_Gbx1SpeedAxl = @"TestData\Hybrids\GenericIEPC-S\IEPC-S_Gbx1Speed+Axle\IEPC-S_ENG_Gbx1Axl.vecto";
+		protected const string IEPC_S_Gbx1SpeedAxl = @"TestData/Hybrids/GenericIEPC-S/IEPC-S_Gbx1Speed+Axle/IEPC-S_ENG_Gbx1Axl.vecto";
 
-		protected const string IEPC_S_Gbx1SpeedWhl1 = @"TestData\Hybrids\GenericIEPC-S\IEPC-S_Gbx1Speed-Whl1\IEPC-S_ENG_Gbx1Whl1.vecto";
+		protected const string IEPC_S_Gbx1SpeedWhl1 = @"TestData/Hybrids/GenericIEPC-S/IEPC-S_Gbx1Speed-Whl1/IEPC-S_ENG_Gbx1Whl1.vecto";
 
-		protected const string IEPC_S_Gbx1SpeedWhl2 = @"TestData\Hybrids\GenericIEPC-S\IEPC-S_Gbx1Speed-Whl2\IEPC-S_ENG_Gbx1Whl2.vecto";
+		protected const string IEPC_S_Gbx1SpeedWhl2 = @"TestData/Hybrids/GenericIEPC-S/IEPC-S_Gbx1Speed-Whl2/IEPC-S_ENG_Gbx1Whl2.vecto";
 
 
 		[OneTimeSetUp]

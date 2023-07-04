@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"  xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
+<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:/VectoCore/VectoCore/Resources/XSD/VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"  xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
 	<v2.0:Vehicle xsi:type="Vehicle_HEV-Sx_MediumLorryDeclarationType" id="a">
 		<Manufacturer>TU Graz</Manufacturer>
 		<ManufacturerAddress>Inffeldgasse 19</ManufacturerAddress>
@@ -31,17 +31,17 @@
 			<ElectricMachine>
 				<Position>3</Position>
 				<VoltageLevel>
-					<Voltage>100</Voltage>
+					<Voltage>400</Voltage>
 					<MaxTorqueCurve>
 						<v2.3:Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-						<v2.3:Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
+						<v2.3:Entry outShaftSpeed="4000.00" maxTorque="300.00" minTorque="-300.00"/>
 					</MaxTorqueCurve>
 				</VoltageLevel>
 				<VoltageLevel>
-					<Voltage>500</Voltage>
+					<Voltage>600</Voltage>
 					<MaxTorqueCurve>
 						<v2.3:Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-						<v2.3:Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
+						<v2.3:Entry outShaftSpeed="4000.00" maxTorque="300.00" minTorque="-300.00"/>
 					</MaxTorqueCurve>
 				</VoltageLevel>
 			</ElectricMachine>
@@ -49,17 +49,17 @@
 			<ElectricMachine>
 				<Position>GEN</Position>
 				<VoltageLevel>
-					<Voltage>100</Voltage>
+					<Voltage>400</Voltage>
 					<MaxTorqueCurve>
 						<v2.3:Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-						<v2.3:Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
+						<v2.3:Entry outShaftSpeed="4000.00" maxTorque="300.00" minTorque="-300.00"/>
 					</MaxTorqueCurve>
 				</VoltageLevel>
 				<VoltageLevel>
-					<Voltage>500</Voltage>
+					<Voltage>600</Voltage>
 					<MaxTorqueCurve>
 						<v2.3:Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-						<v2.3:Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
+						<v2.3:Entry outShaftSpeed="4000.00" maxTorque="300.00" minTorque="-300.00"/>
 					</MaxTorqueCurve>
 				</VoltageLevel>
 			</ElectricMachine>
@@ -137,6 +137,10 @@
 							<PowerMap>
 								<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
 								<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
+								<Entry outShaftSpeed="1000.00" torque="4000.00" electricPower="20000.00"/>
+								<Entry outShaftSpeed="1000.00" torque="-4000.00" electricPower="-20000.00"/>
+								<Entry outShaftSpeed="2000.00" torque="4000.00" electricPower="20000.00"/>
+								<Entry outShaftSpeed="2000.00" torque="-4000.00" electricPower="-20000.00"/>
 								<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
 								<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
 							</PowerMap>
@@ -155,6 +159,10 @@
 							<PowerMap>
 								<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
 								<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
+								<Entry outShaftSpeed="1000.00" torque="4000.00" electricPower="20000.00"/>
+								<Entry outShaftSpeed="1000.00" torque="-4000.00" electricPower="-20000.00"/>
+								<Entry outShaftSpeed="2000.00" torque="4000.00" electricPower="20000.00"/>
+								<Entry outShaftSpeed="2000.00" torque="-4000.00" electricPower="-20000.00"/>
 								<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
 								<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
 							</PowerMap>
@@ -293,6 +301,10 @@
 							<PowerMap>
 								<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
 								<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
+								<Entry outShaftSpeed="1000.00" torque="4000.00" electricPower="20000.00"/>
+								<Entry outShaftSpeed="1000.00" torque="-4000.00" electricPower="-20000.00"/>
+								<Entry outShaftSpeed="2000.00" torque="4000.00" electricPower="20000.00"/>
+								<Entry outShaftSpeed="2000.00" torque="-4000.00" electricPower="-20000.00"/>
 								<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
 								<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
 							</PowerMap>
@@ -311,6 +323,10 @@
 							<PowerMap>
 								<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
 								<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
+								<Entry outShaftSpeed="1000.00" torque="4000.00" electricPower="20000.00"/>
+								<Entry outShaftSpeed="1000.00" torque="-4000.00" electricPower="-20000.00"/>
+								<Entry outShaftSpeed="2000.00" torque="4000.00" electricPower="20000.00"/>
+								<Entry outShaftSpeed="2000.00" torque="-4000.00" electricPower="-20000.00"/>
 								<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
 								<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
 							</PowerMap>

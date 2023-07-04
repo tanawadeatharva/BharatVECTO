@@ -1,6 +1,8 @@
-﻿namespace TUGraz.VectoCore.Models.Declaration
+﻿using System.Diagnostics;
+
+namespace TUGraz.VectoCore.Models.Declaration
 {
-	
+	[DebuggerDisplay("{BenefitName}|{Category}")]
 	public class SSMTechnology
 	{
 		public string Category { get; set; }

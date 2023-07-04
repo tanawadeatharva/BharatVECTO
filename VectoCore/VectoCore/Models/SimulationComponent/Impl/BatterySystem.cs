@@ -314,6 +314,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					PowerDemand = powerDemand,
 					LossPower = responses.Sum(x => x.Value.Sum(b => b.LossPower)),
 					//StateOfCharge = (currentCharge + current * dt) / ModelData.Capacity
+					InternalVoltage = InternalVoltage,
+					StateOfCharge = StateOfCharge,
 				};
 			}
 
@@ -334,8 +336,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					MaxDischargePower = maxDischargePower,
 					PowerDemand = powerDemand,
 					LossPower = responses.Sum(x => x.Value.Sum(b => b.LossPower)),
-					//StateOfCharge = (currentCharge + current * dt) / ModelData.Capacity
-				};
+                    //StateOfCharge = (currentCharge + current * dt) / ModelData.Capacity
+					InternalVoltage = InternalVoltage,
+					StateOfCharge = StateOfCharge,
+                };
 			}
 			throw new NotImplementedException("batterypack no success");
 		}
@@ -369,6 +373,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			response.MaxDischargePower = maxDischargePower;
 			response.PowerDemand = powerDemand;
 			response.LossPower = batteryLoss;
+			response.InternalVoltage = InternalVoltage;
 
 			return response;
 		}

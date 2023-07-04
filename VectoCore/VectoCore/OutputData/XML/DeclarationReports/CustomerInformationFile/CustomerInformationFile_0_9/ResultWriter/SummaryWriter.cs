@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		protected override XElement[] GetSummary(IWeightedResult weighted)
 		{
 			return new[] {
-				new XElement(TNS + "AveragePayload", XMLHelper.ValueAsUnit(weighted.Payload, "t"))
+				new XElement(TNS + "AveragePayload", XMLHelper.ValueAsUnit(weighted.Payload, "t", 3))
 			};
 		}
 	}

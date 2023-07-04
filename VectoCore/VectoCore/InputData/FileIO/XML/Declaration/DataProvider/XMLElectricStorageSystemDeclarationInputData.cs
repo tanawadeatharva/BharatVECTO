@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.IVT.VectoXML;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -108,6 +110,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 
 		protected TableData _correctedInternalResistanceCurve = null;
+		protected TableData _correctedMaxCurrentMap = null;
 
 		#region Implementation of IBatteryPackDeclarationInputData
 
@@ -159,17 +162,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual TableData VoltageCurve => ReadTableData(XMLNames.REESS_OCV, XMLNames.REESS_MapEntry,
 			AttributeMappings.VoltageMap);
 
-		public virtual TableData MaxCurrentMap => ReadTableData(XMLNames.REESS_CurrentLimits, XMLNames.REESS_MapEntry,
-			AttributeMappings.MaxCurrentMap);
+		public virtual TableData MaxCurrentMap =>
+			_correctedMaxCurrentMap ?? (_correctedMaxCurrentMap = GetMaxCurrentMap());
 
-        #endregion
+		protected virtual TableData GetMaxCurrentMap()
+		{
+			return ReadTableData(XMLNames.REESS_CurrentLimits, XMLNames.REESS_MapEntry,
+				AttributeMappings.MaxCurrentMap);
+        }
+
+		#endregion
 		protected virtual TableData GetInternalResistanceCurve()
 		{
 			return ReadTableData(XMLNames.REESS_InternalResistanceCurve, XMLNames.REESS_MapEntry,
 				AttributeMappings.InternalResistanceMap);
 		}
-
-
 
 
         #region Overrides of AbstractXMLResource
@@ -240,6 +247,36 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 
 			return corrected;
+		}
+
+		protected override TableData GetMaxCurrentMap()
+		{
+			var entries = base.GetMaxCurrentMap();
+			if (entries.Rows.Count != 2) {
+				throw new VectoException("exactly 2 entries for the max current map are expected for standard values");
+			}
+
+			var maxChargeCurrentRow = entries.AsEnumerable()
+				.FirstOrDefault(x => x.Field<string>(XMLNames.REESS_CurrentLimits_SoC).ToInt() == 0);
+			var maxDischargeCurrentRow = entries.AsEnumerable()
+				.FirstOrDefault(x => x.Field<string>(XMLNames.REESS_CurrentLimits_SoC).ToInt() == 100);
+			if (maxChargeCurrentRow == null) {
+				throw new VectoException("no max current entry for SoC 0% found in input data!");
+			}
+			if (maxDischargeCurrentRow == null) {
+				throw new VectoException("no max current entry for SoC 100% found in input data!");
+			}
+
+            var maxChargeCurrent = maxChargeCurrentRow.Field<string>(BatteryMaxCurrentReader.Fields.MaxChargeCurrent).ToDouble() * 0.9;
+			var maxDischargeCurrent = maxDischargeCurrentRow.Field<string>(BatteryMaxCurrentReader.Fields.MaxDischargeCurrent).ToDouble() * 5;
+			var newMap = new string[] {
+				$"{BatteryMaxCurrentReader.Fields.StateOfCharge}, {BatteryMaxCurrentReader.Fields.MaxChargeCurrent}, {BatteryMaxCurrentReader.Fields.MaxDischargeCurrent}",
+				$"  0, {maxChargeCurrent}, 0",
+				$" 30, {maxChargeCurrent}, {maxDischargeCurrent}",
+				$" 80, {maxChargeCurrent}, {maxDischargeCurrent}",
+				$"100, 0, {maxDischargeCurrent}"
+			};
+			return VectoCSVFile.ReadStream(newMap.Join(Environment.NewLine).ToStream());
 		}
 
 		#endregion

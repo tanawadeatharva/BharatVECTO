@@ -7,14 +7,14 @@
   },
   "Body": {
     "SavedInDeclMode": false,
-    "VehicleFile": "Components\\24t Coach.vveh",
-    "EngineFile": "Components\\24t Coach.veng",
-    "GearboxFile": "Components\\24t Coach.vgbx",
+    "VehicleFile": "Components//24t Coach.vveh",
+    "EngineFile": "Components//24t Coach.veng",
+    "GearboxFile": "Components//24t Coach.vgbx",
     "Cycles": [
-      "Cycles\\1-Gear-Test-dist.vdri"
+      "Cycles//1-Gear-Test-dist.vdri"
     ],
     "Aux": [],
-    "VACC": "Components\\Coach.vacc",
+    "VACC": "Components//Coach.vacc",
     "EngineOnlyMode": false,
     "StartStop": {
       "Enabled": false,

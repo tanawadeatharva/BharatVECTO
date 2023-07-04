@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 	[Parallelizable(ParallelScope.Fixtures)]
 	public class NaturalGasVehicles
 	{
-		const string Class5NG = @"Testdata\Integration\DeclarationMode\Class5_NG\Tractor_4x2_vehicle-class-5_EURO6_2018.xml";
+		const string Class5NG = @"TestData/Integration/DeclarationMode/Class5_NG/Tractor_4x2_vehicle-class-5_EURO6_2018.xml";
 
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-
+		[NonParallelizable]
 		[
 		 TestCase(Class5NG, 2, TankSystem.Liquefied, 249.8, 691.93, TestName = "Class5 LNG 2"),
 		 TestCase(Class5NG, 2, TankSystem.Compressed, 255.5, 687.35, TestName = "Class5 CNG 2"),

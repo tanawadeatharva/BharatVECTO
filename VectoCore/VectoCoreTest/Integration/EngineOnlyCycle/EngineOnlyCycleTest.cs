@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 	[Parallelizable(ParallelScope.All)]
 	public class EngineOnlyCycleTest
 	{
-		private const string EngineFile = @"TestData\Components\24t Coach.veng";
+		private const string EngineFile = @"TestData/Components/24t Coach.veng";
 
 		[OneTimeSetUp]
 		public void Init()
@@ -62,19 +62,19 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 
 		[TestCase(
 			"24tCoach_EngineOnly",
-			@"TestData\Components\24t Coach.veng",
-			@"TestData\Cycles\Coach Engine Only.vdri",
-			@"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly.vmod")]
+			@"TestData/Components/24t Coach.veng",
+			@"TestData/Cycles/Coach Engine Only.vdri",
+			@"TestData/Results/EngineOnlyCycles/24tCoach_EngineOnly.vmod")]
 		[TestCase(
 			"24tCoach_EngineOnlyPaux",
-			@"TestData\Components\24t Coach.veng",
-			@"TestData\Cycles\Coach Engine Only Paux.vdri",
-			@"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnlyPaux.vmod")]
+			@"TestData/Components/24t Coach.veng",
+			@"TestData/Cycles/Coach Engine Only Paux.vdri",
+			@"TestData/Results/EngineOnlyCycles/24tCoach_EngineOnlyPaux.vmod")]
 		[TestCase(
 			"24tCoach_EngineOnlyFullLoad",
-			@"TestData\Components\24t Coach.veng",
-			@"TestData\Cycles\Coach Engine Only FullLoad.vdri",
-			@"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnlyFullLoad.vmod")]
+			@"TestData/Components/24t Coach.veng",
+			@"TestData/Cycles/Coach Engine Only FullLoad.vdri",
+			@"TestData/Results/EngineOnlyCycles/24tCoach_EngineOnlyFullLoad.vmod")]
 		public void TestEngineOnlyDrivingCycle(string testName, string engineFile, string cycleFile, string modalResultFile)
 		{
 			var data = DrivingCycleDataReader.ReadFromFile(

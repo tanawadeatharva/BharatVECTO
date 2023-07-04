@@ -2639,6 +2639,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 				modData[ModalResultField.P_reess_int] = P_bat;
 				modData[ModalResultField.P_reess_terminal] = P_bat * (P_bat < 0 ? batEff : 1/batEff);
+				modData[ModalResultField.P_terminal_ES] = P_bat * (P_bat < 0 ? batEff : 1 / batEff);
 				modData[ModalResultField.REESSStateOfCharge] = soc.SI();
 
 
@@ -2690,7 +2691,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 				modData[ModalResultField.P_reess_int] = P_bat;
 				modData[ModalResultField.P_reess_terminal] = P_bat * (P_bat < 0 ? batEff : 1 / batEff);
-				modData[ModalResultField.REESSStateOfCharge] = soc.SI();
+				modData[ModalResultField.P_terminal_ES] = P_bat * (P_bat < 0 ? batEff : 1 / batEff);
+                modData[ModalResultField.REESSStateOfCharge] = soc.SI();
 
 				// WHR
 				modData[ModalResultField.P_WHR_el_corr] = 0.SI<Watt>();

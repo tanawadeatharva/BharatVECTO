@@ -22,10 +22,10 @@ namespace TUGraz.VectoCore.Tests.XML
 		private IKernel _kernel;
 
 		const string VIF01 =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_primary_vehicle_stage_2_3.xml";
+			@"TestData/XML/XMLReaderDeclaration/SchemaVersionMultistage.0.1/vecto_multistage_primary_vehicle_stage_2_3.xml";
 
 		const string VIF02 =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_primary_vehicle_stage_2_full.xml";
+			@"TestData/XML/XMLReaderDeclaration/SchemaVersionMultistage.0.1/vecto_multistage_primary_vehicle_stage_2_full.xml";
 
 
 		[OneTimeSetUp]

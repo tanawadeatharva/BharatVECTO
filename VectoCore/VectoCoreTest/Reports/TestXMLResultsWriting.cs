@@ -578,7 +578,7 @@ public class TestXMLResultsWriting
 		var doc = new XDocument();
 		doc.Add(new XElement(ns + "VectoMockResults",
 			new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
-			new XAttribute(xsi + "schemaLocation", $@"{ns.NamespaceName} V:\VectoCore\VectoCore\Resources\XSD\{reportType}.xsd"),
+			new XAttribute(xsi + "schemaLocation", $@"{ns.NamespaceName} V:/VectoCore/VectoCore/Resources/XSD/{reportType}.xsd"),
 			results));
 
 		return doc;

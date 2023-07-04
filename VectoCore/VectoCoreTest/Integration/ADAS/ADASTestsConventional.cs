@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 	[Parallelizable(ParallelScope.All)]
 	public class ADASTestsConventional
 	{
-		private const string BasePath = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\";
+		private const string BasePath = @"TestData/Integration/ADAS-Conventional/Group5PCCEng/";
 		private const double tolerance = 1; //seconds of tolerance. Tolerance distance is calculated dynamically based on speed.
 
 		private IXMLInputDataReader _xmlInputReader;
@@ -60,21 +60,21 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		}
 
 
-		[TestCase(@"TestData\Integration\ADAS-Conventional\Group5_EngineStopStart.xml")]
+		[TestCase(@"TestData/Integration/ADAS-Conventional/Group5_EngineStopStart.xml")]
 		public void TestVehicleWithADASEngineStopStart(string filename)
 		{
 			var container = RunAllDeclarationJob(filename);
 			//var container = RunSingleDeclarationJob(filename, 4);
 		}
 
-		[TestCase(@"TestData\Integration\ADAS-Conventional\Group5_EcoRoll.xml")]
+		[TestCase(@"TestData/Integration/ADAS-Conventional/Group5_EcoRoll.xml")]
 		public void TestVehicleWithADASEcoRoll(string filename)
 		{
 			var container = RunAllDeclarationJob(filename);
 			//var container = RunSingleDeclarationJob(filename, 4);
 		}
 
-		[TestCase(@"TestData\Integration\ADAS-Conventional\Group5_EcoRollEngineStop.xml")]
+		[TestCase(@"TestData/Integration/ADAS-Conventional/Group5_EcoRollEngineStop.xml")]
 		public void TestVehicleWithADASEcoRollEngineStopStart(string filename)
 		{
 			var container = RunAllDeclarationJob(filename);
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		]
 		public void TestEcoRoll(int cycleIdx)
 		{
-			var jobName = @"TestData\Integration\ADAS-Conventional\Group5EcoRollEng\Class5_Tractor_ENG.vecto";
+			var jobName = @"TestData/Integration/ADAS-Conventional/Group5EcoRollEng/Class5_Tractor_ENG.vecto";
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 
@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		]
 		public void TestEcoRollAT_Neutral(int cycleIdx)
 		{
-			const string jobName = @"TestData\Integration\ADAS-Conventional\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng_Neutral.vecto";
+			const string jobName = @"TestData/Integration/ADAS-Conventional/Group9_RigidTruck_AT/Class_9_RigidTruck_AT_Eng_Neutral.vecto";
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 
@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		]
 		public void TestEcoRollAT_TC(int cycleIdx)
 		{
-			const string jobName = @"TestData\Integration\ADAS-Conventional\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng_TC.vecto";
+			const string jobName = @"TestData/Integration/ADAS-Conventional/Group9_RigidTruck_AT/Class_9_RigidTruck_AT_Eng_TC.vecto";
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 
@@ -200,14 +200,14 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			GetGraphWriter().Write(modFilename);
 		}
 
-		[TestCase(@"TestData\Integration\ADAS-Conventional\Group9_AT_EngineStopStart.xml")]
+		[TestCase(@"TestData/Integration/ADAS-Conventional/Group9_AT_EngineStopStart.xml")]
 		public void TestATVehicleWithADASEngineStopStart(string filename)
 		{
 			//var container = RunAllDeclarationJob(filename);
 			var container = RunSingleDeclarationJob(filename, 5);
 		}
 
-		[TestCase(@"TestData\Integration\ADAS-Conventional\Group9_AT_EcoRoll.xml")]
+		[TestCase(@"TestData/Integration/ADAS-Conventional/Group9_AT_EcoRoll.xml")]
 		public void TestATVehicleWithADASEcoRoll(string filename)
 		{
 			var container = RunAllDeclarationJob(filename);
@@ -218,7 +218,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		TestCase(1, TestName = "PCC Group5 LH RefLoad")]
 		public void TestTCCDeclaration(int runIdx)
 		{
-			var jobName = @"TestData\Integration\ADAS-Conventional\Group5PCCDecl\Tractor_4x2_vehicle-class-5_5_t_0.xml";
+			var jobName = @"TestData/Integration/ADAS-Conventional/Group5PCCDecl/Tractor_4x2_vehicle-class-5_5_t_0.xml";
 			RunSingleDeclarationJob(jobName, runIdx);
 		}
 

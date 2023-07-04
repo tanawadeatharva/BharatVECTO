@@ -39,8 +39,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
         }
 
-        protected override AbstractResponse ShiftGear(HybridStrategyResponse strategySettings, bool dryRun, Second absTime, Second dt)
-        {
+        protected override AbstractResponse ShiftGear(HybridStrategyResponse strategySettings, bool dryRun, Second absTime, Second dt, out bool retry)
+		{
+			retry = false;
 			return null;
         }
 

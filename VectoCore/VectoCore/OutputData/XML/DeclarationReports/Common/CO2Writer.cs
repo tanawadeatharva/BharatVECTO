@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Models;
@@ -17,7 +18,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		{
 			return GetCO2ResultEntries(entry.CO2Total, entry.Distance, entry.Payload, entry.CargoVolume,
 					entry.PassengerCount)
-				.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2, x.ValueAsUnit(3, 1)))
+				.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2, x.GetElement()))
 				.ToArray();
 		}
 
@@ -25,12 +26,51 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		{
 			return GetCO2ResultEntries(entry.CO2Total, entry.Distance, entry.Payload, entry.CargoVolume,
 					entry.PassengerCount)
-				.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2, x.ValueAsUnit(3, 1)))
+				.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2, x.GetElement()))
 				.ToArray();
 		}
 
-		protected abstract IList<ConvertedSI> GetCO2ResultEntries(Kilogram co2, Meter distance, Kilogram payload,
+		protected abstract IList<FormattedReportValue> GetCO2ResultEntries(Kilogram co2, Meter distance, Kilogram payload,
 			CubicMeter volume, double? passengers);
+
+		protected object[] Format3Significant1Decimal(ConvertedSI value)
+		{
+			return value.ValueAsUnit(3, 1);
+		}
+
+		protected object[] Format1Decimal(ConvertedSI value)
+		{
+			return value.ValueAsUnit(1);
+		}
+
+		protected object[] Format2Decimal(ConvertedSI value)
+		{
+			return value.ValueAsUnit(2);
+		}
+
+    }
+
+    public class FormattedReportValue
+	{
+		public ConvertedSI Value { get; }
+
+		protected Func<ConvertedSI, object[]> Formatter;
+
+		public FormattedReportValue(ConvertedSI value, Func<ConvertedSI, object[]> formatter = null)
+		{
+			Value = value;
+			Formatter = formatter ?? DefaultFormat;
+		}
+
+		public object[] GetElement()
+		{
+			return Formatter(Value);
+		}
+
+		protected object[] DefaultFormat(ConvertedSI value)
+		{
+			return Value.ValueAsUnit(3, 1);
+		}
 
 	}
 
@@ -39,15 +79,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         public LorryCO2Writer(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 
-		protected override IList<ConvertedSI> GetCO2ResultEntries(Kilogram CO2Total, Meter distance, Kilogram payload,
+		protected override IList<FormattedReportValue> GetCO2ResultEntries(Kilogram CO2Total, Meter distance, Kilogram payload,
 			CubicMeter volume, double? passengers)
 		{
-			var retVal = new List<ConvertedSI>() {
-				(CO2Total / distance).ConvertToGrammPerKiloMeter(),
-				(CO2Total / distance / payload).ConvertToGrammPerTonKilometer(),
+			var retVal = new List<FormattedReportValue>() {
+				new FormattedReportValue((CO2Total / distance).ConvertToGrammPerKiloMeter()),
+				new FormattedReportValue((CO2Total / distance / payload).ConvertToGrammPerTonKilometer(), Format1Decimal),
 			};
 			if (volume.IsGreater(0)) {
-				retVal.Add((CO2Total / distance / volume).ConvertToGrammPerCubicMeterKiloMeter());
+				retVal.Add(new FormattedReportValue((CO2Total / distance / volume).ConvertToGrammPerCubicMeterKiloMeter()));
 			}
 			return retVal;
 		}
@@ -58,12 +98,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
     {
         public BusCO2Writer(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
-		protected override IList<ConvertedSI> GetCO2ResultEntries(Kilogram CO2Total, Meter distance, Kilogram payload,
+		protected override IList<FormattedReportValue> GetCO2ResultEntries(Kilogram CO2Total, Meter distance, Kilogram payload,
 			CubicMeter volume, double? passengers)
 		{
 			return new[] {
-				(CO2Total / distance).ConvertToGrammPerKiloMeter(),
-				(CO2Total / distance / passengers.Value).ConvertToGrammPerPassengerKilometer(),
+				new FormattedReportValue((CO2Total / distance).ConvertToGrammPerKiloMeter()),
+				new FormattedReportValue((CO2Total / distance / passengers.Value).ConvertToGrammPerPassengerKilometer(), Format2Decimal),
 			};
 		}
 
@@ -92,7 +132,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 				new XElement(TNS + XMLNames.Report_ResultEntry_CO2ZEVAuxHeater,
 					GetCO2ResultEntries(entry.ZEV_CO2, entry.Distance, entry.Payload, entry.CargoVolume,
 						entry.PassengerCount).Select(x =>
-						new XElement(TNS + XMLNames.Report_Results_CO2, x.ValueAsUnit(3, 1)))
+						new XElement(TNS + XMLNames.Report_Results_CO2, x.GetElement()))
 				)
 			};
 		}
@@ -114,7 +154,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
                 new XElement(TNS + XMLNames.Report_ResultEntry_CO2ZEVAuxHeater,
                     GetCO2ResultEntries(entry.ZEV_CO2, entry.Distance, entry.Payload, entry.CargoVolume,
                         entry.PassengerCount).Select(x =>
-                        new XElement(TNS + XMLNames.Report_Results_CO2, x.ValueAsUnit(3, 1)))
+                        new XElement(TNS + XMLNames.Report_Results_CO2, x.GetElement()))
                 )
             };
         }

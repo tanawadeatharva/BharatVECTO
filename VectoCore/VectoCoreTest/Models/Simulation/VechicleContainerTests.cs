@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	[Parallelizable(ParallelScope.All)]
 	public class VechicleContainerTests
 	{
-		private const string EngineFile = @"TestData\Components\24t Coach.veng";
+		private const string EngineFile = @"TestData/Components/24t Coach.veng";
 
 		[TestCase]
 		public void VechicleContainerHasEngine()

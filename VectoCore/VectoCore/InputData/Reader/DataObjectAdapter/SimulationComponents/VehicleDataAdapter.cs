@@ -232,7 +232,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				foreach (var emData in data.Components.ElectricMachines.Entries) {
 					var emVoltage = emData.ElectricMachine.VoltageLevels.OrderBy(x => x.VoltageLevel).Last();
 					var emContPwr = emVoltage.ContinuousTorque * emVoltage.ContinuousTorqueSpeed;
-					var massEM = emContPwr * DeclarationData.EM_MassPerPower + DeclarationData.EM_MassElectronics +
+					var massEM = emContPwr * emData.Count * DeclarationData.EM_MassPerPower + DeclarationData.EM_MassElectronics +
 								DeclarationData.EM_MassInverter;
 					additionalMass.Add(Tuple.Create(emData.Position.GetName(),
 						VectoMath.Round(massEM, MidpointRounding.AwayFromZero)));

@@ -146,9 +146,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (nextGear.Gear == 0) {
 				return false;
 			}
-			if (ModelData.Gears[2].HasTorqueConverter) {
-				return nextGear.TorqueConverterLocked.HasValue && nextGear.TorqueConverterLocked.Value; // || nextGear.Gear == 2;
-			}
 			return nextGear.TorqueConverterLocked.HasValue && nextGear.TorqueConverterLocked.Value;
 		}
 

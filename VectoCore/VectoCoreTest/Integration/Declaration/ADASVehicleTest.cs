@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 	[Parallelizable(ParallelScope.All)]
 	public class ADASVehicleTest
 	{
-		const string Class5ADAS = @"Testdata\Integration\DeclarationMode\Class5_ADAS\Tractor_4x2_vehicle-class-5_EURO6_2018.xml";
+		const string Class5ADAS = @"TestData/Integration/DeclarationMode/Class5_ADAS/Tractor_4x2_vehicle-class-5_EURO6_2018.xml";
 
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;

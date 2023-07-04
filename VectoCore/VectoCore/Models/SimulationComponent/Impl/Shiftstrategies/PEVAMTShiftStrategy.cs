@@ -181,53 +181,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		}
 
 
-
-		//#region Implementation of IShiftPolygonCalculator
-
-		//public ShiftPolygon ComputeDeclarationShiftPolygon(GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve,
-		//	IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius,
-		//	ElectricMotorData electricMotorData = null)
-		//{
-		//	if (electricMotorData == null) {
-		//		throw new VectoException("ElectricMotorData is required to calculate Shift Polygon!");
-		//	}
-		//	var emFld = electricMotorData.EfficiencyData.VoltageLevels.First().FullLoadCurve;
-		//	return ComputeDeclarationShiftPolygon(i, gearboxGears, axlegearRatio, dynamicTyreRadius, electricMotorData,
-		//		_shiftStrategyParameters.PEV_DownshiftSpeedFactor.LimitTo(0, 1) * emFld.RatedSpeed, _shiftStrategyParameters.PEV_DownshiftMinSpeedFactor * emFld.RatedSpeed);
-		//}
-
-
-		//private ShiftPolygon ComputeDeclarationShiftPolygon(int i,
-		//	IList<ITransmissionInputData> gearboxGears, double axlegearRatio,
-		//	Meter dynamicTyreRadius,
-		//	ElectricMotorData electricMotorData, PerSecond downshiftMaxSpeed, PerSecond downshiftMinSpeed)
-		//{
-		//	return DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(i,
-		//		electricMotorData.EfficiencyData.VoltageLevels.First().FullLoadCurve, electricMotorData.RatioADC,
-		//		gearboxGears, axlegearRatio, dynamicTyreRadius, downshiftMaxSpeed, downshiftMinSpeed);
-		//}
-
-		//#endregion
-
 		protected internal Dictionary<uint, ShiftPolygon> CalculateDeratedShiftLines(ElectricMotorData em,
 			IList<ITransmissionInputData> gearData, Meter rDyn, double axleGearRatio, GearboxType gearboxType)
 		{
 			var retVal = new Dictionary<uint, ShiftPolygon>();
 			for (var i = 0u; i < gearData.Count; i++) {
 				var emFld = em.EfficiencyData.VoltageLevels.First().FullLoadCurve;
-				var contTqFld = new ElectricMotorFullLoadCurve(new List<ElectricMotorFullLoadCurve.FullLoadEntry>() {
-					new ElectricMotorFullLoadCurve.FullLoadEntry() {
-						MotorSpeed = 0.RPMtoRad(),
-						FullDriveTorque = -em.Overload.ContinuousTorque,
-						FullGenerationTorque = em.Overload.ContinuousTorque
-					},
-					new ElectricMotorFullLoadCurve.FullLoadEntry() {
-						MotorSpeed = 1.1 * emFld.MaxSpeed,
-						FullDriveTorque = -em.Overload.ContinuousTorque,
-						FullGenerationTorque = em.Overload.ContinuousTorque
-					}
-				});
-				var limitedFld = AbstractSimulationDataAdapter.IntersectEMFullLoadCurves(emFld, contTqFld);
+				var contTq = em.Overload.ContinuousTorque;
+				var limitedFld = DeclarationData.Gearbox.LimitElectricMotorFullLoadCurve(emFld, contTq);
 				var limitedEm = new ElectricMotorData() {
 					EfficiencyData = new VoltageLevelData() {
 						VoltageLevels = new List<ElectricMotorVoltageLevelData>() {
@@ -235,10 +196,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 								FullLoadCurve = limitedFld
 							}
 						}
-					}
+					},
+					RatioADC = em.RatioADC,
 				};
-
-				var shiftPolygon = _shiftPolygonImplementation.ComputeDeclarationShiftPolygon((int)i,
+                var shiftPolygon = _shiftPolygonImplementation.ComputeDeclarationShiftPolygon((int)i,
 					gearData, axleGearRatio,
 					rDyn, limitedEm, _shiftStrategyParameters.PEV_DeRatedDownshiftSpeedFactor * emFld.RatedSpeed,
 					_shiftStrategyParameters.PEV_DownshiftMinSpeedFactor * emFld.RatedSpeed);
@@ -247,6 +208,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 			return retVal;
 		}
+
+		
 
 		#region Implementation of IShiftStrategy
 
@@ -486,7 +449,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 						break;
 					}
 
-					var maxTorque = VectoMath.Min(-resp.ElectricMotor.MaxDriveTorque,
+					var maxTorque = VectoMath.Min(resp.ElectricMotor.MaxDriveTorque == null ? null : - resp.ElectricMotor.MaxDriveTorque,
 						!nextGear.Equals(GearList.First())
 							? GearboxModelData.Gears[nextGear.Gear].ShiftPolygon
 								.InterpolateDownshift(resp.Engine.EngineSpeed)
@@ -531,21 +494,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				var ratio = gear.IsLockedGear()
 					? GearboxModelData.Gears[gear.Gear].Ratio
 					: GearboxModelData.Gears[gear.Gear].TorqueConverterRatio;
-				candidates[gear] = gbxOutSpeed * ratio;
+				var gbxInSpeed = gbxOutSpeed * ratio;
+				if (GearboxModelData.Gears[gear.Gear].MaxSpeed != null && gbxInSpeed.IsGreater(GearboxModelData.Gears[gear.Gear].MaxSpeed)) {
+					continue;
+				}
+                candidates[gear] = gbxInSpeed;
 			}
 
 			var ratedSpeed = VoltageLevels.VoltageLevels.First().FullLoadCurve.RatedSpeed;
 			var maxSpeedNorm = VoltageLevels.MaxSpeed / ratedSpeed;
 			var targetMotor = (_shiftStrategyParameters.PEV_TargetSpeedBrakeNorm * (maxSpeedNorm - 1) + 1) * ratedSpeed;
 
-			if (candidates.Any(x => x.Value > targetMotor && x.Value < VoltageLevels.MaxSpeed)) {
-				var best = candidates.Where(x => x.Value > targetMotor && x.Value < VoltageLevels.MaxSpeed)
+			if (candidates.Any(x => x.Value > targetMotor / EMRatio && x.Value < VoltageLevels.MaxSpeed / EMRatio)) {
+				var best = candidates.Where(x => x.Value > targetMotor / EMRatio && x.Value < VoltageLevels.MaxSpeed / EMRatio)
 					.OrderBy(x => x.Value).First();
 				return best.Key;
 			}
 
-			if (candidates.Any(x => x.Value < VoltageLevels.MaxSpeed))
-				return candidates.Where(x => x.Value < VoltageLevels.MaxSpeed).MaxBy(x => x.Value).Key;
+			if (candidates.Any(x => x.Value < VoltageLevels.MaxSpeed / EMRatio))
+				return candidates.Where(x => x.Value < VoltageLevels.MaxSpeed / EMRatio).MaxBy(x => x.Value).Key;
 			else {
 				return candidates.MaxBy(x => x.Value).Key;
 			}
@@ -570,6 +537,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				var inTorque = response.ElectricMotor.PowerRequest / inAngularVelocity;
 
 				if (IsAboveUpShiftCurve(tryNextGear, inTorque, inAngularVelocity, response.ElectricMotor.DeRatingActive)) {
+					continue;
+				}
+
+				if (GearboxModelData.Gears[tryNextGear.Gear].MaxSpeed != null && inAngularVelocity.IsGreater(GearboxModelData.Gears[tryNextGear.Gear].MaxSpeed)) {
 					continue;
 				}
 
@@ -747,7 +718,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				var reserve = 1 - (response.ElectricMotor.TorqueRequestEmMap ?? 0.SI<NewtonMeter>()) / response.ElectricMotor.MaxDriveTorqueEM;
 
 				var isBelowDownshift = gear.Gear > 1 &&
-										IsBelowDownshiftCurve(GearboxModelData.Gears[gear.Gear].ShiftPolygon, response.ElectricMotor.TorqueRequest,
+										IsBelowDownshiftCurve(GearboxModelData.Gears[gear.Gear].ShiftPolygon, -response.ElectricMotor.TorqueRequestEmMap,
 											response.ElectricMotor.AngularVelocity);
 
 				if (reserve >= GearshiftParams.StartTorqueReserve && !isBelowDownshift) {

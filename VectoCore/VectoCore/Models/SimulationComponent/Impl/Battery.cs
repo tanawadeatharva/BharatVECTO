@@ -81,8 +81,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					MaxDischargePower = maxDischargePower,
 					PowerDemand = powerDemand,
 					LossPower = batteryLoss,
-					StateOfCharge = (currentCharge + current * dt) / ModelData.Capacity
-
+					StateOfCharge = (currentCharge + current * dt) / ModelData.Capacity,
+					InternalVoltage = InternalVoltage
 				};
 			}
 			CurrentState.SimulationInterval = dt;
@@ -105,6 +105,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				PowerDemand = powerDemand,
 				LossPower = batteryLoss,
 				StateOfCharge = soc,
+				InternalVoltage = InternalVoltage
 			};
 		}
 
@@ -145,6 +146,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			response.MaxDischargePower = maxDischargePower;
 			response.PowerDemand = powerDemand;
 			response.LossPower = batteryLoss;
+			response.InternalVoltage = InternalVoltage;
 
 			return response;
 		}

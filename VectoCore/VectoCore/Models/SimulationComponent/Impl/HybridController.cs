@@ -36,12 +36,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private HybridStrategyResponse CurrentStrategySettings;
 
 		protected DebugData DebugData = new DebugData();
+		private readonly IVehicleContainer _vehicleContainer;
 
 
 		public HybridController(IVehicleContainer container, IHybridControlStrategy strategy, IElectricSystem es) : base(container)
 		{
 			_electricMotorCtl = new Dictionary<PowertrainPosition, ElectricMotorController>();
-
+			_vehicleContainer = container;
 			switch (container.RunData.GearboxData.Type) {
 				case GearboxType.ATPowerSplit:
 				case GearboxType.ATSerial:
@@ -148,10 +149,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					CurrentState.StrategyResponse = strategySettings;
 				}
 
-				var gearShiftResponse = ShiftGear(strategySettings, dryRun, absTime, dt);
+				var gearShiftResponse = ShiftGear(strategySettings, dryRun, absTime, dt, out var retryAfterGearshift);
 				if (gearShiftResponse != null) {
 					return gearShiftResponse; 
                 }
+
+				retry = retryAfterGearshift;
 
 				if (!dryRun /*&& DataBus.VehicleInfo.VehicleStopped*/) {
 					SelectedGear = GetNextGear(strategySettings);
@@ -228,18 +231,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return modifiedResponse;
         }
 
-        protected virtual AbstractResponse ShiftGear(HybridStrategyResponse strategySettings, bool dryRun, Second absTime, Second dt)
+        protected virtual AbstractResponse ShiftGear(HybridStrategyResponse strategySettings, bool dryRun, Second absTime, Second dt, out bool retry)
         {
-			if (!dryRun && strategySettings.ShiftRequired) {
-				DataBus.GearboxCtl.TriggerGearshift(absTime, dt);
+			retry = false;
+            if (!dryRun && strategySettings.ShiftRequired) {
+				var oldGear = DataBus.GearboxInfo.Gear;
+                DataBus.GearboxCtl.TriggerGearshift(absTime, dt);
 
 				_shiftStrategy.SetNextGear(strategySettings.NextGear);
 				SelectedGear = strategySettings.NextGear;
 
 				if (!DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+		
 					return new ResponseGearShift(this);
 				}
-			}
+				else if (_vehicleContainer.RunData.HybridStrategyParameters.MaxPropulsionTorque
+							?.GetVECTOValueOrDefault(oldGear) != null)
+				{
+					retry = true;
+				}
+
+            }
 
 			return null;
         }

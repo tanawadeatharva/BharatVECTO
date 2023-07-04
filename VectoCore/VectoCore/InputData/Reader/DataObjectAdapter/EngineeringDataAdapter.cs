@@ -859,7 +859,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				return null;
 			}
 
-			var retVal = new BatterySystemData();
+			var addJunctionBoxResistance = false;
+			var addConnectorSystemResistance = false;
+            var retVal = new BatterySystemData();
 			var batteryCount = 0;
 			foreach (var entry in bat) {
 				var b = entry.REESSPack as IBatteryPackDeclarationInputData;
@@ -867,7 +869,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					continue;
 				}
 
-				for (var i = 0; i < entry.Count; i++) {
+				if (b.JunctionboxIncluded != null && !b.JunctionboxIncluded.Value) {
+					addJunctionBoxResistance = true;
+				}
+
+				if (b.ConnectorsSubsystemsIncluded != null && !b.ConnectorsSubsystemsIncluded.Value) {
+					addConnectorSystemResistance = true;
+				}
+                for (var i = 0; i < entry.Count; i++) {
 					retVal.Batteries.Add(Tuple.Create(entry.StringId, new BatteryData() {
 						MinSOC = b.MinSOC.Value,
 						MaxSOC = b.MaxSOC.Value,
@@ -880,8 +889,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					}));
 				}
 			}
+			if (addJunctionBoxResistance) {
+				retVal.ConnectionSystemResistance += DeclarationData.Battery.JunctionBoxResistance;
+			}
 
-			retVal.InitialSoC = initialSOC;
+			if (addConnectorSystemResistance) {
+				retVal.ConnectionSystemResistance += DeclarationData.Battery.CablesAndConnectorsResistance;
+			}
+
+            retVal.InitialSoC = initialSOC;
 			return retVal;
 		}
 
@@ -966,7 +982,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var lossMap = powertrainPosition == PowertrainPosition.IHPC
 				? TransmissionLossMapReader.CreateEmADCLossMap(1.0, 1.0, "EM ADC IHPC LossMap Eff")
 				: adcLossMap != null
-					? TransmissionLossMapReader.CreateEmADCLossMap(adcLossMap, ratio, "EM ADC LossMap")
+					? TransmissionLossMapReader.CreateEmADCLossMap(adcLossMap, ratio, "EM ADC LossMap", true)
 					: TransmissionLossMapReader.CreateEmADCLossMap(efficiency, ratio, "EM ADC LossMap Eff");
 
 			var retVal = new ElectricMotorData() {
@@ -1267,7 +1283,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				InputData = new IEPCGearboxInputData(iepc),
 			};
 
-			var gearInput = iepc.Gears.Select((x, idx) => new TransmissionInputData() { Gear = idx + 1, Ratio = x.Ratio }).Cast<ITransmissionInputData>().ToList();
+			var gearInput = iepc.Gears.Select((x, idx) => new TransmissionInputData() {
+				Gear = idx + 1,
+				Ratio = x.Ratio,
+				MaxInputSpeed = x.MaxOutputShaftSpeed == null ? null : x.MaxOutputShaftSpeed * x.Ratio,
+				MaxTorque = x.MaxOutputShaftTorque == null ? null : x.MaxOutputShaftTorque / x.Ratio,
+			}).Cast<ITransmissionInputData>().ToList();
 			var gears = new Dictionary<uint, GearData>();
 			for (uint i = 0; i < iepc.Gears.Count; i++) {
 				var gear = iepc.Gears[(int)i];

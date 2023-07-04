@@ -390,7 +390,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XElement(
 						tns + XMLNames.Vehicle_Components,
 						new XAttribute(xsi + XMLNames.XSIType, "ComponentsTruckType"),
-						GetEngineDescription(modelData.EngineData, modelData.InputData.JobInputData.Vehicle.TankSystem),
+						GetEngineDescription(modelData.EngineData, modelData.VehicleData.InputData.TankSystem),
 						GetGearboxDescription(modelData.GearboxData),
 						GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
 						GetRetarderDescription(modelData.Retarder),

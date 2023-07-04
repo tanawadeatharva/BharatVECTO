@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.Tests.InputData
 	public class IEPCMapReaderTest
 	{
 		public const string repoRoot = "../../../../../"; //from cwd to repo root
-		public const string iepcMapTestFiles = @"TestData\Components\IEPC\IEPCMapReader\";
+		public const string iepcMapTestFiles = @"TestData/Components/IEPC/IEPCMapReader/";
 
 
 
@@ -229,7 +229,7 @@ namespace TUGraz.VectoCore.Tests.InputData
 
 
 				var dirInfo = Directory.CreateDirectory($@"{nameof(IEPCMapReaderTest)}//{String.Join("", TestContext.CurrentContext.Test.Name.Replace(repoRoot, "").Split(Path.GetInvalidFileNameChars()))}");
-				chart.SaveImage($"{dirInfo.FullName}\\{(fileName.EndsWith(".png") ? fileName : fileName + ".png")}",
+				chart.SaveImage($"{dirInfo.FullName}/{(fileName.EndsWith(".png") ? fileName : fileName + ".png")}",
 					ChartImageFormat.Png);
 				TestContext.WriteLine($"{dirInfo.FullName}");
 			}

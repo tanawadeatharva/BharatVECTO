@@ -213,6 +213,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 				TestContext.WriteLine($"{kvp.Key} = {result}   (expected = {kvp.Value})");
             }
+			TestContext.WriteLine();
+			TestContext.WriteLine(metrics.Keys.Select(x => results[x]).Join());
 
 			foreach (var kvp in metrics) {
 				AreRelativeEqual(kvp.Value.SI<Scalar>(), results[kvp.Key].SI<Scalar>(), $"{kvp.Key} ({results[kvp.Key]}) is other than expected ({kvp.Value})");
