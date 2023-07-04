@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Models;
@@ -33,48 +32,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		protected abstract IList<FormattedReportValue> GetCO2ResultEntries(Kilogram co2, Meter distance, Kilogram payload,
 			CubicMeter volume, double? passengers);
 
-		protected object[] Format3Significant1Decimal(ConvertedSI value)
-		{
-			return value.ValueAsUnit(3, 1);
-		}
-
-		protected object[] Format1Decimal(ConvertedSI value)
-		{
-			return value.ValueAsUnit(1);
-		}
-
-		protected object[] Format2Decimal(ConvertedSI value)
-		{
-			return value.ValueAsUnit(2);
-		}
+		
+		
 
     }
 
-    public class FormattedReportValue
-	{
-		public ConvertedSI Value { get; }
-
-		protected Func<ConvertedSI, object[]> Formatter;
-
-		public FormattedReportValue(ConvertedSI value, Func<ConvertedSI, object[]> formatter = null)
-		{
-			Value = value;
-			Formatter = formatter ?? DefaultFormat;
-		}
-
-		public object[] GetElement()
-		{
-			return Formatter(Value);
-		}
-
-		protected object[] DefaultFormat(ConvertedSI value)
-		{
-			return Value.ValueAsUnit(3, 1);
-		}
-
-	}
-
-    public class LorryCO2Writer : CO2WriterBase
+	public class LorryCO2Writer : CO2WriterBase
     {
         public LorryCO2Writer(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
@@ -84,7 +47,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		{
 			var retVal = new List<FormattedReportValue>() {
 				new FormattedReportValue((CO2Total / distance).ConvertToGrammPerKiloMeter()),
-				new FormattedReportValue((CO2Total / distance / payload).ConvertToGrammPerTonKilometer(), Format1Decimal),
+				new FormattedReportValue((CO2Total / distance / payload).ConvertToGrammPerTonKilometer(), FormattedReportValue.Format1Decimal),
 			};
 			if (volume.IsGreater(0)) {
 				retVal.Add(new FormattedReportValue((CO2Total / distance / volume).ConvertToGrammPerCubicMeterKiloMeter()));
@@ -103,7 +66,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		{
 			return new[] {
 				new FormattedReportValue((CO2Total / distance).ConvertToGrammPerKiloMeter()),
-				new FormattedReportValue((CO2Total / distance / passengers.Value).ConvertToGrammPerPassengerKilometer(), Format2Decimal),
+				new FormattedReportValue((CO2Total / distance / passengers.Value).ConvertToGrammPerPassengerKilometer(), FormattedReportValue.Format2Decimal),
 			};
 		}
 
@@ -127,7 +90,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 					new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, entry.AuxHeaterFuel.FuelType.ToXMLFormat()),
 					tmp?.GetFuelConsumptionEntries(entry.ZEV_FuelConsumption_AuxHtr, entry.AuxHeaterFuel, entry.Distance,
 						entry.Payload, entry.CargoVolume, entry.PassengerCount).Select(x =>
-						new XElement(TNS + XMLNames.Report_Results_FuelConsumption, x.ValueAsUnit(3, 1)))
+						new XElement(TNS + XMLNames.Report_Results_FuelConsumption, new FormattedReportValue(x).GetElement()))
 				),
 				new XElement(TNS + XMLNames.Report_ResultEntry_CO2ZEVAuxHeater,
 					GetCO2ResultEntries(entry.ZEV_CO2, entry.Distance, entry.Payload, entry.CargoVolume,
@@ -149,7 +112,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
                     new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, entry.AuxHeaterFuel.FuelType.ToXMLFormat()),
                     tmp?.GetFuelConsumptionEntries(entry.ZEV_FuelConsumption_AuxHtr, entry.AuxHeaterFuel, entry.Distance,
                         entry.Payload, entry.CargoVolume, entry.PassengerCount).Select(x =>
-                        new XElement(TNS + XMLNames.Report_Results_FuelConsumption, x.ValueAsUnit(3, 1)))
+                        new XElement(TNS + XMLNames.Report_Results_FuelConsumption, new FormattedReportValue(x).GetElement()))
                 ),
                 new XElement(TNS + XMLNames.Report_ResultEntry_CO2ZEVAuxHeater,
                     GetCO2ResultEntries(entry.ZEV_CO2, entry.Distance, entry.Payload, entry.CargoVolume,

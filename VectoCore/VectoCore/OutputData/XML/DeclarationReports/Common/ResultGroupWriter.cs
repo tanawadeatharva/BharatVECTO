@@ -95,11 +95,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		{
 			return new[] {
 				new XElement(TNS + XMLNames.Report_ResultEntry_ActualChargeDepletingRange,
-					XMLHelper.ValueAsUnit(result.ActualChargeDepletingRange.ConvertToKiloMeter())),
+					result.ActualChargeDepletingRange.ConvertToKiloMeter().ValueAsUnit()),
 				new XElement(TNS + XMLNames.Report_ResultEntry_EquivalentAllElectricRange,
-					XMLHelper.ValueAsUnit(result.EquivalentAllElectricRange.ConvertToKiloMeter())),
+					result.EquivalentAllElectricRange.ConvertToKiloMeter().ValueAsUnit()),
 				new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
-					XMLHelper.ValueAsUnit(result.ZeroCO2EmissionsRange.ConvertToKiloMeter())),
+					result.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit()),
 			};
 		}
 
@@ -107,11 +107,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		{
 			return new[] {
 				new XElement(TNS + XMLNames.Report_ResultEntry_ActualChargeDepletingRange,
-					XMLHelper.ValueAsUnit(weightedResult.ActualChargeDepletingRange.ConvertToKiloMeter())),
+					weightedResult.ActualChargeDepletingRange.ConvertToKiloMeter().ValueAsUnit()),
 				new XElement(TNS + XMLNames.Report_ResultEntry_EquivalentAllElectricRange,
-					XMLHelper.ValueAsUnit(weightedResult.EquivalentAllElectricRange.ConvertToKiloMeter())),
+					weightedResult.EquivalentAllElectricRange.ConvertToKiloMeter().ValueAsUnit()),
 				new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
-					XMLHelper.ValueAsUnit(weightedResult.ZeroCO2EmissionsRange.ConvertToKiloMeter())),
+					weightedResult.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit()),
 			};
 		}
 
