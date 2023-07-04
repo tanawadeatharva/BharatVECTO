@@ -12,7 +12,9 @@
     <VersionSuffix>RC</VersionSuffix>
 
     <!-- The following settings are used as default values for ALL projects -->
-    <VersionPrefix>$(MainProductVersion).$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</VersionPrefix>
+    <Days>$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</Days>
+    <VersionPrefix>$(MainProductVersion).$(Days)</VersionPrefix>
+
     <Authors>Graz University of Technology</Authors>
     <Company>European Union</Company>
     <Copyright>Copyright © 2012-$([System.DateTime]::UtcNow.Year)</Copyright>
