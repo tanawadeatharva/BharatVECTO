@@ -126,12 +126,23 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 						   torqueLoss: -row.ParseDouble(Fields.TorqeLoss).SI<NewtonMeter>()))
 				.ToList();
 
-			if (!extendLossMap) {
-				return new TransmissionLossMap(entries, gearRatio, gearName);
+			entries = (from DataRow row in data.Rows
+					select new TransmissionLossMap.GearLossMapEntry(
+						inputSpeed: row.ParseDouble(Fields.InputSpeed).RPMtoRad(),
+						inputTorque: row.ParseDouble(Fields.InputTorque).SI<NewtonMeter>(),
+						torqueLoss: row.ParseDouble(Fields.TorqeLoss).SI<NewtonMeter>()))
+				.ToList();
+
+			if (extendLossMap) {
+				entries = ExtendLossMap(entries);
 			}
-			entries = ExtendLossMap(entries);
-            return new TransmissionLossMap(entries, gearRatio, gearName);
-		}
+
+			entries = entries.Select(x => new TransmissionLossMap.GearLossMapEntry(
+				inputSpeed: x.InputSpeed,
+				inputTorque: -x.InputTorque,
+				torqueLoss: -x.TorqueLoss)).ToList();
+			return new TransmissionLossMap(entries, gearRatio, gearName);
+        }
 
 		private static List<TransmissionLossMap.GearLossMapEntry> ExtendLossMap(
 			List<TransmissionLossMap.GearLossMapEntry> entries)
