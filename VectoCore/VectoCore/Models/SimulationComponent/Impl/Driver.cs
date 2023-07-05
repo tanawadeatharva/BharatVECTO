@@ -1043,7 +1043,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var nextResp1 = NextComponent.Request(absTime, operatingPoint.SimulationInterval,
 						operatingPoint.Acceleration, gradient, true);
 
-					deltaPower = nextResp1.Gearbox.PowerRequest ?? nextResp1.ElectricMotor.PowerRequest;
+					deltaPower = DataBus.PowertrainInfo.HasGearbox ? nextResp1.Gearbox.PowerRequest : nextResp1.ElectricMotor.PowerRequest;/* ?? nextResp1.ElectricMotor.PowerRequest;*/
 					break;
 				case ResponseUnderload r:
 					deltaPower = DataBus.ClutchInfo.ClutchClosed(absTime) && DataBus.GearboxInfo.GearEngaged(absTime) ? r.Delta : r.Gearbox.PowerRequest;
