@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                 var cycle = CycleFactory.GetDeclarationCycle(mission);
 
                 CheckSuperCap(SingleBusDataProvider.PrimaryVehicle);
-
+				
 				var simulationRunData = new VectoRunData {
 					InputData = SingleBusDataProvider,
 					Loading = loading.Key,
