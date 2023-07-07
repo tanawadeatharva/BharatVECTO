@@ -1386,7 +1386,7 @@ public class LorrySimulation
 		LoadingType.ReferenceLoad,
 		8503,
 		0.01,
-		TestName = "Group5_HEV_IHPC.xml, Urbandelivcery selected section")]
+		TestName = "Group5_HEV_IHPC.xml, Urbandelivery selected section")]
 
 	public void HeavyLorryCycleSection(string jobFile, MissionType cycle, LoadingType loading,
 		double startDistance_m, double f_equiv)
@@ -1404,6 +1404,7 @@ public class LorrySimulation
 	public void RunSimulation(string jobFile, params Action<VectoRunData>[] runDataModifier)
 	{
 		var filePath = Path.Combine(BASE_DIR, jobFile);
+		TestContext.Progress.WriteLine(filePath);
 		var dataProvider = _xmlReader.CreateDeclaration(filePath);
 		var fileWriter = new FileOutputWriter(filePath);
 		var simFactory = Kernel.Get<ISimulatorFactoryFactory>();
@@ -1427,10 +1428,11 @@ public class LorrySimulation
 
 		jobContainer.Execute();
 		jobContainer.WaitFinished();
-		Assert.IsTrue(jobContainer.AllCompleted);
-		Assert.IsTrue(jobContainer.Runs.TrueForAll(runEntry => runEntry.Success));
 		PrintRuns(jobContainer, fileWriter);
 		PrintFiles(fileWriter);
+        Assert.IsTrue(jobContainer.AllCompleted);
+		Assert.IsTrue(jobContainer.Runs.TrueForAll(runEntry => runEntry.Success));
+
 
         return;
 	}
