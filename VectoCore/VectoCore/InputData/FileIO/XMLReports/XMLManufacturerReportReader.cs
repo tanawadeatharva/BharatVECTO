@@ -44,8 +44,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		{
 			var retVal = new List<VectoComponents>();
 			foreach (var component in EnumHelper.GetValues<VectoComponents>()) {
-				var nodes = xmlDocument.SelectNodes(string.Format("//*[local-name()='{0}']//*[local-name()='{1}']/*[local-name()='Model']",
-																XMLNames.VectoManufacturerReport, component.XMLElementName()));
+				var select = component == VectoComponents.ElectricEnergyStorage
+					? $"//*[local-name()='{XMLNames.VectoManufacturerReport}']//*[local-name()='{component.XMLElementNameMRF()}']//*[local-name()='Model']"
+					: $"//*[local-name()='{XMLNames.VectoManufacturerReport}']//*[local-name()='{component.XMLElementNameMRF()}']/*[local-name()='Model']";
+
+                var nodes = xmlDocument.SelectNodes(select);
 				var count = nodes?.Count ?? 0;
 				for (var i = 0; i < count; i++) {
 					retVal.Add(component);
@@ -71,7 +74,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		public static XmlNode GetNodes(XmlDocument xmlDocument, VectoComponents component, int index)
 		{
-			var nodes = xmlDocument.SelectNodes(GetComponentQueryString(component == VectoComponents.Tyre ? "Axle" : component.XMLElementName()));
+			var nodes = xmlDocument.SelectNodes(GetComponentQueryString(component));
 			if (nodes == null || nodes.Count == 0) {
 				throw new Exception($"Component {component} not found");
 			}
@@ -82,12 +85,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			return nodes[index];
 		}
 
-		static string GetComponentQueryString(string component = null)
+		static string GetComponentQueryString(VectoComponents component)
 		{
-			if (component == null) {
-				return "(//*[@id])[1]";
-			}
-			return $"//*[local-name()='{component}']";
+			//string componentString;
+			switch (component) {
+				case VectoComponents.Tyre:
+					return "//*[local-name()='Axle']";
+				case VectoComponents.ElectricEnergyStorage:
+					return "//*[local-name()='Battery' or local-name()='Capacitor']";
+				default:
+					return $"//*[local-name()='{component}']";
+            }
 		}
 
 		static string ReadElementValue(XmlNode xmlNode, string elementName)
