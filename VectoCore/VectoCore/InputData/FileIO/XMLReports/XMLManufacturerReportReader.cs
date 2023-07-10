@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 				case VectoComponents.ElectricEnergyStorage:
 					return "//*[local-name()='Battery' or local-name()='Capacitor']";
 				default:
-					return $"//*[local-name()='{component}']";
+					return $"//*[local-name()='{component.XMLElementName()}']";
             }
 		}
 
