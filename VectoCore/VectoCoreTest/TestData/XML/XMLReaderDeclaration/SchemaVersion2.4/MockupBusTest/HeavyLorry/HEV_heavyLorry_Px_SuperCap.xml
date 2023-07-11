@@ -226,10 +226,14 @@
 						<v2.3:MaxDischargingCurrent>220.00</v2.3:MaxDischargingCurrent>
 					</Data>
 					<Signature>
-						<di:Reference>
-							<di:DigestMethod Algorithm=""></di:DigestMethod>
-							<di:DigestValue>DummyDigestValue</di:DigestValue>
-						</di:Reference>
+						<di:Reference URI="#SuperCap-1234">
+						<di:Transforms>
+							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+						</di:Transforms>
+						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+						<di:DigestValue>U/8y372pna65Qym7MCdg452Uo13CcaQVl482sWY4L6g=</di:DigestValue>
+					</di:Reference>
 					</Signature>
 				</Capacitor>
 			</ElectricEnergyStorage>
