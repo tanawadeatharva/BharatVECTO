@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			if (archId == ArchitectureID.UNKNOWN) {
 				//Conventional vehicle
 				return true;
-				
+
 			}
 
 			switch (type) {
@@ -38,16 +38,21 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					valid = archId.IsParallelHybridVehicle() || archId.IsOneOf(ArchitectureID.S2, ArchitectureID.E2);
 					break;
 				case RetarderType.TransmissionOutputRetarder:
-					valid = archId.IsParallelHybridVehicle() || archId.IsOneOf(ArchitectureID.P_IHPC, ArchitectureID.S2, ArchitectureID.E2);
+					valid = archId.IsParallelHybridVehicle() ||
+							archId.IsOneOf(ArchitectureID.P_IHPC, ArchitectureID.S2, ArchitectureID.E2);
 					break;
 				case RetarderType.EngineRetarder:
 					valid = archId.IsParallelHybridVehicle() || archId.IsOneOf(ArchitectureID.P_IHPC);
 					break;
 				case RetarderType.LossesIncludedInTransmission:
-					valid = archId.IsParallelHybridVehicle() || archId.IsOneOf(ArchitectureID.P_IHPC, ArchitectureID.S2, ArchitectureID.S_IEPC, ArchitectureID.E2) || (archId == ArchitectureID.E_IEPC && !iepc.DesignTypeWheelMotor);
-                    break;
+					valid = archId.IsParallelHybridVehicle() ||
+							archId.IsOneOf(ArchitectureID.P_IHPC, ArchitectureID.S2, ArchitectureID.S_IEPC,
+								ArchitectureID.E2) || (archId == ArchitectureID.E_IEPC && !iepc.DesignTypeWheelMotor);
+					break;
 				case RetarderType.AxlegearInputRetarder:
-					valid = archId.IsOneOf(ArchitectureID.E3, ArchitectureID.S3, ArchitectureID.S_IEPC) || (archId == ArchitectureID.E_IEPC && !iepc.DifferentialIncluded && !iepc.DesignTypeWheelMotor);
+					valid = archId.IsOneOf(ArchitectureID.E3, ArchitectureID.S3, ArchitectureID.S_IEPC) ||
+							(archId == ArchitectureID.E_IEPC && !iepc.DifferentialIncluded &&
+							!iepc.DesignTypeWheelMotor);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(type), type, null);
@@ -55,9 +60,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 
 			if (!valid) {
-				errorMsg = $"Invalid retardertype for architecture [{type} - {archId}";
-			}
+				errorMsg =
+					$"Invalid retardertype ({type}) for architecture ({archId}";
+				if (archId == ArchitectureID.E_IEPC) {
+					errorMsg += $" Differential {(iepc.DifferentialIncluded? "": "not")} included\n";
+					errorMsg += iepc.DesignTypeWheelMotor ? "Design type wheel motor" : "";
+				}
 
+				errorMsg += ")\n";
+			}
 
 
 
