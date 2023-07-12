@@ -43,6 +43,8 @@ namespace TUGraz.VectoCommon.Models
 		LPGPI,
 		NGPI,
 		NGCI,
+		H2PI,
+		H2CI
 		// ReSharper restore InconsistentNaming
 	}
 
@@ -65,6 +67,10 @@ namespace TUGraz.VectoCommon.Models
 					return "NG PI";
 				case FuelType.NGCI:
 					return "NG CI";
+				case FuelType.H2PI:
+					return "H2 PI";
+				case FuelType.H2CI:
+					return "H2 CI";
 				default:
 					throw new ArgumentOutOfRangeException("fuel type", ftype, null);
 			}
