@@ -88,47 +88,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			if (!TypeValid(retarderInputData.Type, architecture, out var errorMsg)) {
 				throw new VectoException("Error while Reading Retarder Data: {0}", errorMsg);
             }
+
+
 			var retarder = new RetarderData { Type = retarderInputData?.Type ?? RetarderType.None };
 			SetRatioAndLossMap(retarderInputData, retarder);
-			//try
-			//{
-				
-			//	position
-			
 
-			//	switch (retarder.Type)
-			//	{
-			//		case RetarderType.TransmissionInputRetarder:
-			//		case RetarderType.TransmissionOutputRetarder:
-			//			if (!(position.IsParallelHybrid() || position.IsOneOf(PowertrainPosition.HybridPositionNotSet, PowertrainPosition.BatteryElectricE2)))
-			//			{
-							
-
-			//			}
-
-			//			retarder.LossMap = RetarderLossMapReader.Create(retarderInputData.LossMap);
-			//			retarder.Ratio = retarderInputData.Ratio;
-			//			break;
-
-			//		case RetarderType.AxlegearInputRetarder:
-			//			if (!position.IsOneOf(PowertrainPosition.BatteryElectricE3, PowertrainPosition.IEPC) )
-			//				throw new ArgumentException("AxlegearInputRetarder is only allowed for PEV-E3, HEV-S3, S-IEPC, E-IEPC. ", nameof(retarder));
-			//			retarder.LossMap = RetarderLossMapReader.Create(retarderInputData.LossMap);
-			//			retarder.Ratio = retarderInputData.Ratio;
-			//			break;
-
-			//		case RetarderType.None:
-			//		case RetarderType.LossesIncludedInTransmission:
-			//		case RetarderType.EngineRetarder:
-			//			retarder.Ratio = 1;
-			//			break;
-
-			//		default:
-			//			throw new ArgumentOutOfRangeException(nameof(retarder), retarder.Type, "RetarderType unknown");
-			//	}
-
-				if (retarder.Type.IsDedicatedComponent())
-				{
+			if (retarder.Type.IsDedicatedComponent())
+			{
 					retarder.SavedInDeclarationMode = retarderInputData.SavedInDeclarationMode;
 					retarder.Manufacturer = retarderInputData.Manufacturer;
 					retarder.ModelName = retarderInputData.Model;
@@ -136,10 +102,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					retarder.CertificationMethod = retarderInputData.CertificationMethod;
 					retarder.CertificationNumber = retarderInputData.CertificationNumber;
 					retarder.DigestValueInput = retarderInputData.DigestValue != null ? retarderInputData.DigestValue.DigestValue : "";
-				}
-
-				return retarder;
 			}
+
+			return retarder;
+		}
 		
 	}
 
