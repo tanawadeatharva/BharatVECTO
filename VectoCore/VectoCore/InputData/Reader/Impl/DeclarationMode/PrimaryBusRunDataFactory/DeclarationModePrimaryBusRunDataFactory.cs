@@ -696,7 +696,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 			{
 				if (inputData.Components.AngledriveInputData != null)
 				{
-					throw new VectoException("Angledrive not allowed in battery electric vehicles");
+					throw new VectoException("Angledrive not allowed in pure electric vehicles");
 				}
 			}
         }
