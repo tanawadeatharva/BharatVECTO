@@ -12,47 +12,120 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 {
     public class RetarderDataAdapter : IRetarderDataAdapter
 	{
-		public RetarderData CreateRetarderData(IRetarderInputData retarder, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet)
+		public RetarderData CreateRetarderData(IRetarderInputData retarder, ArchitectureID architecture)
 		{
-			return SetCommonRetarderData(retarder, position);
+			return SetCommonRetarderData(retarder, architecture);
 		}
-		internal static RetarderData SetCommonRetarderData(IRetarderInputData retarderInputData,
-			PowertrainPosition position = PowertrainPosition.HybridPositionNotSet)
+
+
+		private bool TypeValid(RetarderType type, ArchitectureID archId, out string errorMsg)
 		{
-			try
-			{
-				var retarder = new RetarderData { Type = retarderInputData?.Type ?? RetarderType.None};
+			var valid = true;
+			errorMsg = "";
+			if (archId == ArchitectureID.UNKNOWN) {
+				//Conventional vehicle
+				return true;
+				
+			}
 
-				switch (retarder.Type)
-				{
-					case RetarderType.TransmissionInputRetarder:
-					case RetarderType.TransmissionOutputRetarder:
-						if (!(position.IsParallelHybrid() || position.IsOneOf(PowertrainPosition.HybridPositionNotSet, PowertrainPosition.BatteryElectricE2)))
-						{
-							throw new ArgumentException("Transmission retarder is only allowed in powertrains that " +
-														"contain a gearbox: Conventional, HEV-P, and PEV-E2.", nameof(retarder));
-						}
+			switch (type) {
+				case RetarderType.None:
+					valid = true;
+					break;
+				case RetarderType.TransmissionInputRetarder:
+				case RetarderType.TransmissionOutputRetarder:
+					valid = archId.IsParallelHybridVehicle() || archId.IsOneOf(ArchitectureID.P_IHPC, ArchitectureID.S2, ArchitectureID.E2);
 
-						retarder.LossMap = RetarderLossMapReader.Create(retarderInputData.LossMap);
-						retarder.Ratio = retarderInputData.Ratio;
-						break;
 
-					case RetarderType.AxlegearInputRetarder:
-						if (!position.IsOneOf(PowertrainPosition.BatteryElectricE3, PowertrainPosition.IEPC) )
-							throw new ArgumentException("AxlegearInputRetarder is only allowed for PEV-E3, HEV-S3, S-IEPC, E-IEPC. ", nameof(retarder));
-						retarder.LossMap = RetarderLossMapReader.Create(retarderInputData.LossMap);
-						retarder.Ratio = retarderInputData.Ratio;
-						break;
+					break;
+				case RetarderType.EngineRetarder:
+					valid = archId.IsParallelHybridVehicle() || archId.IsOneOf(ArchitectureID.P_IHPC);
+					break;
+				case RetarderType.LossesIncludedInTransmission:
+					valid = archId.IsParallelHybridVehicle() || archId.IsOneOf(ArchitectureID.P_IHPC, ArchitectureID.S2, ArchitectureID.S_IEPC, ArchitectureID.E2);
+                    break;
+				case RetarderType.AxlegearInputRetarder:
+					valid = archId.IsOneOf(ArchitectureID.E3, ArchitectureID.S3, ArchitectureID.S_IEPC);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(type), type, null);
+			}
 
-					case RetarderType.None:
-					case RetarderType.LossesIncludedInTransmission:
-					case RetarderType.EngineRetarder:
-						retarder.Ratio = 1;
-						break;
 
-					default:
-						throw new ArgumentOutOfRangeException(nameof(retarder), retarder.Type, "RetarderType unknown");
-				}
+			if (!valid) {
+				errorMsg = $"Invalid retardertype for architecture [{type} - {archId}";
+			}
+
+
+
+
+
+			return valid;
+		}
+
+		private void SetRatioAndLossMap(IRetarderInputData inputData, RetarderData retarderData)
+		{
+			switch (inputData.Type) {
+				case RetarderType.TransmissionInputRetarder:
+				case RetarderType.TransmissionOutputRetarder:
+				case RetarderType.AxlegearInputRetarder:
+					retarderData.LossMap = RetarderLossMapReader.Create(inputData.LossMap);
+					retarderData.Ratio = inputData.Ratio;
+					break;
+                case RetarderType.LossesIncludedInTransmission:
+				case RetarderType.EngineRetarder:
+				case RetarderType.None:
+					retarderData.Ratio = 1.0;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+		}
+
+		internal RetarderData SetCommonRetarderData(IRetarderInputData retarderInputData,
+			ArchitectureID architecture)
+		{
+			if (!TypeValid(retarderInputData.Type, architecture, out var errorMsg)) {
+				throw new VectoException("Error while Reading Retarder Data: {0}", errorMsg);
+            }
+			var retarder = new RetarderData { Type = retarderInputData?.Type ?? RetarderType.None };
+			SetRatioAndLossMap(retarderInputData, retarder);
+			//try
+			//{
+				
+			//	position
+			
+
+			//	switch (retarder.Type)
+			//	{
+			//		case RetarderType.TransmissionInputRetarder:
+			//		case RetarderType.TransmissionOutputRetarder:
+			//			if (!(position.IsParallelHybrid() || position.IsOneOf(PowertrainPosition.HybridPositionNotSet, PowertrainPosition.BatteryElectricE2)))
+			//			{
+							
+
+			//			}
+
+			//			retarder.LossMap = RetarderLossMapReader.Create(retarderInputData.LossMap);
+			//			retarder.Ratio = retarderInputData.Ratio;
+			//			break;
+
+			//		case RetarderType.AxlegearInputRetarder:
+			//			if (!position.IsOneOf(PowertrainPosition.BatteryElectricE3, PowertrainPosition.IEPC) )
+			//				throw new ArgumentException("AxlegearInputRetarder is only allowed for PEV-E3, HEV-S3, S-IEPC, E-IEPC. ", nameof(retarder));
+			//			retarder.LossMap = RetarderLossMapReader.Create(retarderInputData.LossMap);
+			//			retarder.Ratio = retarderInputData.Ratio;
+			//			break;
+
+			//		case RetarderType.None:
+			//		case RetarderType.LossesIncludedInTransmission:
+			//		case RetarderType.EngineRetarder:
+			//			retarder.Ratio = 1;
+			//			break;
+
+			//		default:
+			//			throw new ArgumentOutOfRangeException(nameof(retarder), retarder.Type, "RetarderType unknown");
+			//	}
 
 				if (retarder.Type.IsDedicatedComponent())
 				{
@@ -67,17 +140,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 				return retarder;
 			}
-			catch (Exception e)
-			{
-				throw new VectoException("Error while Reading Retarder Data: {0}", e.Message);
-			}
-		}
+		
 	}
 
 	public class GenericRetarderDataAdapter : IRetarderDataAdapter
 	{
 		private readonly GenericBusRetarderData _genericRetarderData = new GenericBusRetarderData();
-		public  RetarderData CreateRetarderData(IRetarderInputData retarder, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet)
+		public RetarderData CreateRetarderData(IRetarderInputData retarder, ArchitectureID architecture)
 		{
 			return _genericRetarderData.CreateGenericBusRetarderData(retarder);
 		}

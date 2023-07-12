@@ -5,6 +5,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 {
     public interface IRetarderDataAdapter
     {
-        RetarderData CreateRetarderData(IRetarderInputData retarder, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet);
+        RetarderData CreateRetarderData(IRetarderInputData retarder, ArchitectureID architecture);
     }
 }

@@ -172,9 +172,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return GearboxDataAdapter.CreateGearshiftData(axleRatio, engineIdlingSpeed, gearboxType, gearsCount);
 			}
 
-			public RetarderData CreateRetarderData(IRetarderInputData retarderData, PowertrainPosition position)
+			public RetarderData CreateRetarderData(IRetarderInputData retarderData, ArchitectureID archID)
 			{
-				return _retarderDataAdapter.CreateRetarderData(retarderData, position);
+				return _retarderDataAdapter.CreateRetarderData(retarderData, archID);
 			}
 
 			public virtual PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto)
