@@ -103,9 +103,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 				return GearboxDataAdapter.CreateGearshiftData(axleRatio, engineIdlingSpeed, gearboxType, gearsCount);
 			}
 
-			public RetarderData CreateRetarderData(IRetarderInputData retarderData, ArchitectureID archID)
+			public RetarderData CreateRetarderData(IRetarderInputData retarderData, ArchitectureID archID,
+				IIEPCDeclarationInputData iepcInputData)
 			{
-				return _retarderDataAdapter.CreateRetarderData(retarderData, archID);
+				return _retarderDataAdapter.CreateRetarderData(retarderData, archID, iepcInputData);
 			}
 
 			public virtual IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits,

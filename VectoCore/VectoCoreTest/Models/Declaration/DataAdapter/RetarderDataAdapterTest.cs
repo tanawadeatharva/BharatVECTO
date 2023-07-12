@@ -15,7 +15,8 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 {
     [TestFixture]
-    internal class RetarderDataAdapterTest
+	// Issue codeeu vecto/vecto#70
+	internal class RetarderDataAdapterTest
 	{
 		private RetarderDataAdapter _retarderDataAdapter;
 
@@ -38,7 +39,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 
 			var shouldWork = P_HEVRetarderShouldWork(retarderType, archID);
 
-			CreateRetarderData(archID, shouldWork, retarderMoq);
+			CreateRetarderData(archID, shouldWork, retarderMoq, null);
 		}
 
 		[Test]
@@ -51,7 +52,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 
 			var shouldWork = S_HEVRetarderShouldWork(retarderType, archID);
 
-			CreateRetarderData(archID, shouldWork, retarderMoq);
+			CreateRetarderData(archID, shouldWork, retarderMoq, null);
         }
 
 		[Test]
@@ -64,7 +65,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 
 			var shouldWork = PEVRetarderShouldWork(retarderType, archID);
 
-			CreateRetarderData(archID, shouldWork, retarderMoq);
+			CreateRetarderData(archID, shouldWork, retarderMoq, null);
 		}
 
 
@@ -78,7 +79,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 
 			var shouldWork = IEPCShouldWork(retarderType, differentialIncluded, designTypeWheelMotor);
 
-			CreateRetarderData(ArchitectureID.E_IEPC, shouldWork, retarderMoq);
+			CreateRetarderData(ArchitectureID.E_IEPC, shouldWork, retarderMoq, iepcMoq);
 
 
 
@@ -86,15 +87,16 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 
 
 
-		private void CreateRetarderData(ArchitectureID archID, bool shouldWork, Mock<IRetarderInputData> retarderMoq)
+		private void CreateRetarderData(ArchitectureID archID, bool shouldWork, Mock<IRetarderInputData> retarderMoq,
+			Mock<IIEPCDeclarationInputData> iepcInputData)
 		{
 			if (shouldWork) {
 				TestContext.Progress.WriteLine("Should work");
-                var data = _retarderDataAdapter.CreateRetarderData(retarderMoq.Object, archID);
+                var data = _retarderDataAdapter.CreateRetarderData(retarderMoq.Object, archID, iepcInputData?.Object);
 				
 				Assert.NotNull(data, "Should work");
 			} else {
-				Assert.Throws<VectoException>((() => { _retarderDataAdapter.CreateRetarderData(retarderMoq.Object, archID); }), "Should not work - but does!");
+				Assert.Throws<VectoException>((() => { _retarderDataAdapter.CreateRetarderData(retarderMoq.Object, archID, iepcInputData?.Object); }), "Should not work - but does!");
 				TestContext.Progress.WriteLine("Doesnt work");
             }
 		}
@@ -172,8 +174,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 		//int? NrOfDesignTypeWheelMotorMeasured { get; }
         public bool IEPCShouldWork(RetarderType retarderType, bool differentialIncluded, bool DesignTypeWheelMotor)
 		{
-			
-			if (DesignTypeWheelMotor) {
+			if (retarderType == RetarderType.None)
+			{
+				return true;
+			}
+            if (DesignTypeWheelMotor) {
 				//This property "wins"!
 				return false;
 			}

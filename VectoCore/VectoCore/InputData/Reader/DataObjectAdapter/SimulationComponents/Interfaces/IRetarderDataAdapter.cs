@@ -5,6 +5,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 {
     public interface IRetarderDataAdapter
     {
-        RetarderData CreateRetarderData(IRetarderInputData retarder, ArchitectureID architecture);
+        RetarderData CreateRetarderData(IRetarderInputData retarder, ArchitectureID architecture,
+			IIEPCDeclarationInputData iepcInputData);
     }
 }

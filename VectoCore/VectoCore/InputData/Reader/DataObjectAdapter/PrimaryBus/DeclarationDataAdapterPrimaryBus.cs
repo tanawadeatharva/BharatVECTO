@@ -124,9 +124,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			}
 
 
-			public virtual RetarderData CreateRetarderData(IRetarderInputData retarderData, ArchitectureID archID)
+			public virtual RetarderData CreateRetarderData(IRetarderInputData retarderData, ArchitectureID archID,
+				IIEPCDeclarationInputData iepcInputData)
 			{
-				return _retarderDataAdapter.CreateRetarderData(retarderData, archID);
+				return _retarderDataAdapter.CreateRetarderData(retarderData, archID, iepcInputData);
 			}
 
 

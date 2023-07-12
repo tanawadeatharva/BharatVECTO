@@ -12,13 +12,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 {
     public class RetarderDataAdapter : IRetarderDataAdapter
 	{
-		public RetarderData CreateRetarderData(IRetarderInputData retarder, ArchitectureID architecture)
+		public RetarderData CreateRetarderData(IRetarderInputData retarder, ArchitectureID architecture,
+			IIEPCDeclarationInputData iepcInputData)
 		{
-			return SetCommonRetarderData(retarder, architecture);
+			return SetCommonRetarderData(retarder, architecture, iepcInputData);
 		}
 
 
-		private bool TypeValid(RetarderType type, ArchitectureID archId, out string errorMsg)
+		private bool TypeValid(RetarderType type, ArchitectureID archId,
+			IIEPCDeclarationInputData iepc, out string errorMsg)
 		{
 			var valid = true;
 			errorMsg = "";
@@ -33,19 +35,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					valid = true;
 					break;
 				case RetarderType.TransmissionInputRetarder:
+					valid = archId.IsParallelHybridVehicle() || archId.IsOneOf(ArchitectureID.S2, ArchitectureID.E2);
+					break;
 				case RetarderType.TransmissionOutputRetarder:
 					valid = archId.IsParallelHybridVehicle() || archId.IsOneOf(ArchitectureID.P_IHPC, ArchitectureID.S2, ArchitectureID.E2);
-
-
 					break;
 				case RetarderType.EngineRetarder:
 					valid = archId.IsParallelHybridVehicle() || archId.IsOneOf(ArchitectureID.P_IHPC);
 					break;
 				case RetarderType.LossesIncludedInTransmission:
-					valid = archId.IsParallelHybridVehicle() || archId.IsOneOf(ArchitectureID.P_IHPC, ArchitectureID.S2, ArchitectureID.S_IEPC, ArchitectureID.E2);
+					valid = archId.IsParallelHybridVehicle() || archId.IsOneOf(ArchitectureID.P_IHPC, ArchitectureID.S2, ArchitectureID.S_IEPC, ArchitectureID.E2) || (archId == ArchitectureID.E_IEPC && !iepc.DesignTypeWheelMotor);
                     break;
 				case RetarderType.AxlegearInputRetarder:
-					valid = archId.IsOneOf(ArchitectureID.E3, ArchitectureID.S3, ArchitectureID.S_IEPC);
+					valid = archId.IsOneOf(ArchitectureID.E3, ArchitectureID.S3, ArchitectureID.S_IEPC) || (archId == ArchitectureID.E_IEPC && !iepc.DifferentialIncluded && !iepc.DesignTypeWheelMotor);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(type), type, null);
@@ -83,9 +85,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 
 		internal RetarderData SetCommonRetarderData(IRetarderInputData retarderInputData,
-			ArchitectureID architecture)
+			ArchitectureID architecture, IIEPCDeclarationInputData iepcDeclarationInputData)
 		{
-			if (!TypeValid(retarderInputData.Type, architecture, out var errorMsg)) {
+			if (!TypeValid(retarderInputData.Type, architecture, iepcDeclarationInputData, out var errorMsg)) {
 				throw new VectoException("Error while Reading Retarder Data: {0}", errorMsg);
             }
 
@@ -112,7 +114,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 	public class GenericRetarderDataAdapter : IRetarderDataAdapter
 	{
 		private readonly GenericBusRetarderData _genericRetarderData = new GenericBusRetarderData();
-		public RetarderData CreateRetarderData(IRetarderInputData retarder, ArchitectureID architecture)
+		public RetarderData CreateRetarderData(IRetarderInputData retarder, ArchitectureID architecture,
+			IIEPCDeclarationInputData iepcInputData)
 		{
 			return _genericRetarderData.CreateGenericBusRetarderData(retarder);
 		}

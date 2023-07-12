@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType,
 					_segment.VehicleClass, PrimaryVehicle.Length ?? mission.BusParameter.VehicleLength,
 					PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
-				runData.Retarder = DataAdapter.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID);
+				runData.Retarder = DataAdapter.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID, null);
 				
 				runData.EngineData.FuelMode = modeIdx.Value;
 				runData.VehicleData.VehicleClass = _segment.VehicleClass;
@@ -307,7 +307,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                     runData.AxleGearData = DataAdapter.CreateAxleGearData(PrimaryVehicle.Components.AxleGearInputData);
                 }
 
-                runData.Retarder = DataAdapter.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID);
+                runData.Retarder = DataAdapter.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID, PrimaryVehicle.Components.IEPC);
 
                 runData.Aux = DataAdapter.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType,
@@ -504,7 +504,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					PrimaryVehicle.Length ?? mission.BusParameter.VehicleLength,
 					PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
-				runData.Retarder = DataAdapter.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID);
+				runData.Retarder = DataAdapter.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID, null);
 				runData.DriverData = DriverData;
 
 
@@ -674,7 +674,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                     vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
                     vehicle.Length ?? mission.BusParameter.VehicleLength,
                     vehicle.Components.AxleWheels.NumSteeredAxles, vehicle.VehicleType);
-                result.Retarder = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID);
+                result.Retarder = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID, PrimaryVehicle.Components.IEPC);
                 result.DriverData = DriverData;
 
                 result.VehicleData.VehicleClass = _segment.VehicleClass;

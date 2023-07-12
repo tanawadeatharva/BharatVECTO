@@ -259,7 +259,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
                     primarySegment.VehicleClass, mission.BusParameter.VehicleLength,
                     PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
                 simulationRunData.Retarder =
-                    DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID);
+                    DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID, PrimaryVehicle.Components.IEPC);
 
                 simulationRunData.EngineData.FuelMode = 0;
                 simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
@@ -298,7 +298,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					PrimaryVehicle.Components.AuxiliaryInputData,
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
-				simulationRunData.Retarder = DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID);
+				simulationRunData.Retarder = DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID, PrimaryVehicle.Components.IEPC);
 				simulationRunData.EngineData.FuelMode = 0;
 				simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
 				simulationRunData.BusAuxiliaries =
@@ -470,7 +470,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
                     primarySegment.VehicleClass, mission.BusParameter.VehicleLength,
                     PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
                 rd.Retarder =
-                    DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID);
+                    DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID, PrimaryVehicle.Components.IEPC);
 				rd.EngineData.FuelMode = 0;
                 rd.VehicleData.VehicleClass = _segment.VehicleClass;
                 rd.BusAuxiliaries =
@@ -536,7 +536,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					PrimaryVehicle.Components.AuxiliaryInputData,
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
-				rd.Retarder = DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID);
+				rd.Retarder = DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID, PrimaryVehicle.Components.IEPC);
 				rd.EngineData.FuelMode = 0;
 				rd.VehicleData.VehicleClass = _segment.VehicleClass;
 				rd.BusAuxiliaries =
@@ -687,7 +687,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
                     primarySegment.VehicleClass, mission.BusParameter.VehicleLength,
                     PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
                 rd.Retarder =
-                    DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID);
+                    DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID, PrimaryVehicle.Components.IEPC);
 
                 rd.EngineData.FuelMode = 0;
                 rd.VehicleData.VehicleClass = _segment.VehicleClass;
@@ -752,7 +752,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					PrimaryVehicle.Components.AuxiliaryInputData,
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
-				rd.Retarder = DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID);
+				rd.Retarder = DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID, PrimaryVehicle.Components.IEPC);
 				rd.EngineData.FuelMode = 0;
 				rd.VehicleData.VehicleClass = _segment.VehicleClass;
 				rd.BusAuxiliaries =
@@ -890,7 +890,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
                     PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
                     CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles,
                     PrimaryVehicle.VehicleType);
-                result.Retarder = DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID);
+                result.Retarder = DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID, PrimaryVehicle.Components.IEPC);
                 result.MaxChargingPower = PrimaryVehicle.MaxChargingPower;
 
                 //result.EngineData.FuelMode = 0;
@@ -938,7 +938,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles,
 					PrimaryVehicle.VehicleType);
-				result.Retarder = DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID);
+				result.Retarder = DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID, PrimaryVehicle.Components.IEPC);
 				result.MaxChargingPower = PrimaryVehicle.MaxChargingPower;
                    
 				//result.EngineData.FuelMode = 0;

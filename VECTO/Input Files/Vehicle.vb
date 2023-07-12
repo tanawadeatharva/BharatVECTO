@@ -163,7 +163,7 @@ Public Class Vehicle
 				vehicleData = New LorryVehicleDataAdapter().CreateVehicleData(vehicle, segment, segment.Missions.First(),
 													segment.Missions.First().Loadings.First(), True)
 				airdragData = New AirdragDataAdapter().CreateAirdragData(vehicle, segment.Missions.First(), segment)
-				retarderData = New RetarderDataAdapter().CreateRetarderData(vehicle, PowertrainPosition.HybridPositionNotSet)
+				retarderData = New RetarderDataAdapter().CreateRetarderData(vehicle, vehicle.ArchitectureID, vehicle.Components?.IEPC)
 				angledriveData = New AngledriveDataAdapter().CreateAngledriveData(vehicle)
 				ptoData = New PTODataAdapterLorry().CreatePTOTransmissionData(vehicle, vehicle.Components.GearboxInputData)
 			Else
