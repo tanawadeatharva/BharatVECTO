@@ -687,7 +687,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
                     primarySegment.VehicleClass, mission.BusParameter.VehicleLength,
                     PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
                 rd.Retarder =
-                    DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID, PrimaryVehicle.Components.IEPC);
+                    DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.VehicleType == VectoSimulationJobType.IHPC ? ArchitectureID.P_IHPC : PrimaryVehicle.ArchitectureID, PrimaryVehicle.Components.IEPC);
 
                 rd.EngineData.FuelMode = 0;
                 rd.VehicleData.VehicleClass = _segment.VehicleClass;
@@ -752,7 +752,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					PrimaryVehicle.Components.AuxiliaryInputData,
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
-				rd.Retarder = DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID, PrimaryVehicle.Components.IEPC);
+				rd.Retarder = DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.VehicleType == VectoSimulationJobType.IHPC ? ArchitectureID.P_IHPC : PrimaryVehicle.ArchitectureID, PrimaryVehicle.Components.IEPC);
 				rd.EngineData.FuelMode = 0;
 				rd.VehicleData.VehicleClass = _segment.VehicleClass;
 				rd.BusAuxiliaries =
