@@ -1,20 +1,27 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.FileIO.XML.Common;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Utils;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.VectoCore.Tests.Integration
 {
@@ -25,6 +32,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 	//[Parallelizable]
 	internal class GenericVehicleTest
     {
+
+
+		
 		private static string BASE_DIR = "TestData/Shipped_Generic";
 		private StandardKernel _kernel;
 		private IXMLInputDataReader _xmlReader;
@@ -48,7 +58,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		[Test, TestCaseSource(nameof(GetJSONEngineering))]
 		public void GenericVehiclesEngineering(string path)
 		{
-			RunJsonJob(path, ExecutionMode.Engineering);
+			PrepareJSONSimulation(path, ExecutionMode.Engineering, out _, out _);
 		}
 
 
@@ -75,26 +85,78 @@ namespace TUGraz.VectoCore.Tests.Integration
 				jobContainer.WaitFinished();
 				Assert.IsTrue(jobContainer.Runs.All(r => r.Success));
 			}
+		}
+
+		private void PrepareJSONSimulation(string path, ExecutionMode executionMode, out JobContainer jobContainer,
+			out ISimulatorFactory runsFactory)
+		{
+			TestContext.Progress.WriteLine($"Preparing {path} ...");
+			var writeReports = true;
+			var inputData = JSONInputDataFactory.ReadJsonJob(path, false);
+
+			var fileWriter = new FileOutputWriter(path);
+			runsFactory = SimulatorFactory.CreateSimulatorFactory(executionMode, inputData, fileWriter,
+				writeReports ? null : new NullDeclarationReport()); //, writeReports ? null : new NullDeclarationReport());
+			//DisableIterativeRuns(runsFactory);
+			runsFactory.WriteModalResults = false;
+			var sumWriter = new SummaryDataContainer(fileWriter); //new MockSumWriter();
+
+			jobContainer = new JobContainer(sumWriter);
+			runsFactory.SumData = sumWriter;
+			//var sumDataContainer = sumWriter;
+
+			jobContainer.AddRuns(runsFactory);
 
 
         }
 
 
-        [Test, TestCaseSource(nameof(GetJSONDeclaration)), TestCaseSource(nameof(GetXMLDeclaration))]
+		[Test, TestCaseSource(nameof(GetJSONEngineering))]
+        public void SimulateEngineering(string path)
+		{
+			PrepareJSONSimulation(path, ExecutionMode.Engineering, out var jobContainer, out var runsFactory);
+
+
+			jobContainer.Execute(true);
+			jobContainer.WaitFinished();
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success));
+		}
+
+		[Test, TestCaseSource(nameof(GetJSONDeclaration)), TestCaseSource(nameof(GetXMLDeclaration))]
 		public void GenericVehiclesDeclaration(string path)
 		{
-			if (Ignore(path)) {
-				Assert.Ignore("File should not be simulated");
+			if (IgnoreFiles(path, out var reason)) {
+				Assert.Ignore(reason);
 			}
 			if (path.EndsWith(".vecto")) {
 				RunJsonJob(path, ExecutionMode.Declaration);
 			} else {
 				TestContext.Progress.WriteLine($"Running {path} ...");
                 var writeReports = true;
+
+
+				
 				var inputData = _xmlReader.CreateDeclaration(path);
 				var fileWriter = new FileOutputWriter(path);
-				var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter,
-					writeReports ? null : new NullDeclarationReport()); //, writeReports ? null : new NullDeclarationReport());
+
+				if (IgnoreInputData(inputData, out reason)) {
+					Assert.Ignore(reason);
+				};
+				ISimulatorFactory runsFactory;
+				
+				if (inputData.DataSource.Type == "VectoOutputMultistepType") {
+					var busInputData = inputData as IMultistepBusInputDataProvider;
+					var multistepInputData = new XMLDeclarationVIFInputData(busInputData, null);
+						fileWriter = new FileOutputVIFWriter(path, busInputData.JobInputData.ManufacturingStages?.Count ?? 0);
+						runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration,
+							multistepInputData, fileWriter, null, null, true);
+				} else{
+			
+					runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter,
+						writeReports ? null : new NullDeclarationReport()); //, writeReports ? null : new NullDeclarationReport());
+
+				}
+
 				var sumWriter = new SummaryDataContainer(fileWriter); //new MockSumWriter();
 				runsFactory.WriteModalResults = false;
 				var jobContainer = new JobContainer(sumWriter);
@@ -110,6 +172,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 			}
 
         }
+
+
 
 
 		public static List<string> GetJSONEngineering()
@@ -132,7 +196,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			List<string> vectoJobs = new List<string>();
 			foreach (var fileName in Directory.EnumerateFiles(dirPath, searchPattern, SearchOption.AllDirectories))
 			{
-				if (Ignore(path)) {
+				if (IgnoreFiles(path, out _)) {
 					continue;
 				}
 			
@@ -143,17 +207,74 @@ namespace TUGraz.VectoCore.Tests.Integration
 			return vectoJobs;
 		}
 
-
-		static bool Ignore(string path)
+		/// <summary>
+		/// Check if a file should be ignored based on path of the file
+		/// </summary>
+		/// <param name="path"></param>
+		/// <returns></returns>
+		static bool IgnoreFiles(string path, out string reason)
 		{
+			reason = null;
 			if (_ignoredFiles.Contains(Path.GetRelativePath(BASE_DIR, path))) {
+				reason = "File ignored";
 				return true;
 
 			}
 
-			if (path.Contains("RSLT_MANUFACTURER") || path.Contains("RSLT_CUSTOMER")) {
-				return true;
+			if (path.EndsWith(".xml")) {
+				var xmlDoc = new XmlDocument();
+				xmlDoc.Load(path);
+
+				var documentType = XMLHelper.GetDocumentTypeFromRootElement(xmlDoc.DocumentElement.LocalName);
+				if (documentType == null) {
+					reason = "File ignored - No document type set";
+					return true;
+				}
+
+				switch (documentType.Value) {
+					case XmlDocumentType.DeclarationJobData:
+					case XmlDocumentType.MultistepOutputData:
+						break;
+
+					case XmlDocumentType.EngineeringJobData:
+						throw new Exception("Engineering xml still a thing?");
+						break;
+					case XmlDocumentType.EngineeringComponentData:
+					case XmlDocumentType.DeclarationComponentData:
+                    case XmlDocumentType.ManufacturerReport:
+					case XmlDocumentType.CustomerReport:
+					case XmlDocumentType.MonitoringReport:
+					case XmlDocumentType.VTPReport:
+						reason = $"{documentType} ignored";
+						return true;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+
 			}
+
+            //if (path.Contains("RSLT_MANUFACTURER") || path.Contains("RSLT_CUSTOMER")) {
+            //	return true;
+            //}
+
+
+            return false;
+		}
+
+		static bool IgnoreInputData(IDeclarationInputDataProvider inputData, out string reason)
+		{
+			reason = null;
+
+
+
+			if (inputData.DataSource.Type != "VectoOutputMultistepType" && inputData.JobInputData?.Vehicle is IXMLResource xmlResource) {
+				if (xmlResource.DataSource.Type.Contains("CompletedBus", StringComparison.InvariantCultureIgnoreCase)) {
+					reason = $"Ignore xml type {xmlResource.DataSource.Type}";
+					return true;
+                };
+			}
+
+
 
 			return false;
 		}
