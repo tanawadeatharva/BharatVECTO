@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		private static HashSet<string> _ignoredFiles = new HashSet<string>()
 		{
 			@"Engineering Mode\GenericVehicleE2\BEV_ENG_PTO_invalid.vecto", //INVALID Input file 
-			@"Declaration Mode\CompletedBus 31b2\airdrag.xml" //no job
+			//@"Declaration Mode\CompletedBus 31b2\airdrag.xml" //no job
         };
 
 		[OneTimeSetUp]
@@ -228,6 +228,11 @@ namespace TUGraz.VectoCore.Tests.Integration
 				var documentType = XMLHelper.GetDocumentTypeFromRootElement(xmlDoc.DocumentElement.LocalName);
 				if (documentType == null) {
 					reason = "File ignored - No document type set";
+					return true;
+				}
+
+				if (xmlDoc.DocumentElement.NamespaceURI == "urn:tugraz:ivt:VectoAPI:DeclarationComponent:v2.0") {
+					reason = $"Ignoring {xmlDoc.DocumentElement.NamespaceURI}";
 					return true;
 				}
 
