@@ -62,35 +62,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 
-		private void RunJsonJob(string path, ExecutionMode executionMode)
-		{
-			TestContext.Progress.WriteLine($"Running {path} ...");
-			var writeReports = true;
-			var inputData = JSONInputDataFactory.ReadJsonJob(path, false);
-
-			var fileWriter = new FileOutputWriter(path);
-			var runsFactory = SimulatorFactory.CreateSimulatorFactory(executionMode, inputData, fileWriter,
-				writeReports ? null : new NullDeclarationReport()); //, writeReports ? null : new NullDeclarationReport());
-			//DisableIterativeRuns(runsFactory);
-			runsFactory.WriteModalResults = false;
-			var sumWriter = new SummaryDataContainer(fileWriter); //new MockSumWriter();
-
-			var jobContainer = new JobContainer(sumWriter);
-			runsFactory.SumData = sumWriter;
-			//var sumDataContainer = sumWriter;
-
-			jobContainer.AddRuns(runsFactory);
-			if (_simulate) {
-				jobContainer.Execute(true);
-				jobContainer.WaitFinished();
-				Assert.IsTrue(jobContainer.Runs.All(r => r.Success));
-			}
-		}
-
 		private void PrepareJSONSimulation(string path, ExecutionMode executionMode, out JobContainer jobContainer,
 			out ISimulatorFactory runsFactory)
 		{
 			TestContext.Progress.WriteLine($"Preparing {path} ...");
+			if (IgnoreFiles(path, out var reason)) {
+				Assert.Ignore(reason);
+			}
 			var writeReports = true;
 			var inputData = JSONInputDataFactory.ReadJsonJob(path, false);
 
@@ -129,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				Assert.Ignore(reason);
 			}
 			if (path.EndsWith(".vecto")) {
-				RunJsonJob(path, ExecutionMode.Declaration);
+				PrepareJSONSimulation(path, ExecutionMode.Declaration, out _, out _);
 			} else {
 				TestContext.Progress.WriteLine($"Running {path} ...");
                 var writeReports = true;
