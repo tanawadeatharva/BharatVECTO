@@ -810,15 +810,21 @@ Public Class Vehicle
 	End Property
 
 	Public ReadOnly Property IEPCEngineeringInputData As IIEPCEngineeringInputData Implements IVehicleComponentsEngineering.IEPCEngineeringInputData
-	get
-		Return new IEPCWrapper(me)
-	End Get
+		Get
+			Return New IEPCWrapper(Me)
+		End Get
+	End Property
+
+	Public ReadOnly Property FuelCellSystemInputData As IFuelCellSystemEngineeringInputData Implements IVehicleComponentsEngineering.FuelCellSystemInputData
+		Get
+			Throw New NotImplementedException
+		End Get
 	End Property
 
 	Public ReadOnly Property IEPC As IIEPCDeclarationInputData Implements IVehicleComponentsDeclaration.IEPC
-	get
-		return IEPCEngineeringInputData
-	End Get
+		Get
+			Return IEPCEngineeringInputData
+		End Get
 	End Property
 
 	Public ReadOnly Property BusAuxiliaries As IBusAuxiliariesDeclarationData Implements IVehicleComponentsDeclaration.BusAuxiliaries

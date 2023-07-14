@@ -248,7 +248,45 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 		}
 
-		[TestCase()]
+
+
+		[TestCase]
+		public void TestReadFuelCellHybridVehicle()
+		{
+			var filePath = @"TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV.vecto";
+
+			Assert.IsTrue(File.Exists(filePath));
+
+			var inputProvider = JSONInputDataFactory.ReadComponentData(filePath) as IEngineeringInputDataProvider;
+			Assert.IsNotNull(inputProvider);
+			Assert.AreEqual(VectoSimulationJobType.FCHV, inputProvider.JobInputData.JobType);
+			
+			Assert.AreEqual(3, inputProvider.JobInputData.Cycles.Count);
+
+			// Vehicle
+			var vehicle = inputProvider.JobInputData.Vehicle;
+			Assert.IsNotNull(vehicle);
+			Assert.NotNull(vehicle.Manufacturer);
+			
+
+
+			// Components
+
+			var components = vehicle.Components;
+			Assert.NotNull(components);
+            // Gbx
+
+            Assert.NotNull(inputProvider.JobInputData.Vehicle.Components.GearboxInputData);
+
+
+
+			// FuelCellSystem
+			var fuelCellSystem = vehicle.Components.FuelCellSystemInputData;
+			Assert.NotNull(fuelCellSystem);
+		}
+
+
+        [TestCase()]
 		public void TestCreateHybridPowertrain()
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(@"TestData/Hybrids/GenericVehicle_Group2_P2/Class2_RigidTruck_ParHyb_ENG.vecto");
