@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		[Test, TestCaseSource(nameof(GetJSONDeclaration)), TestCaseSource(nameof(GetXMLDeclaration))]
 		public void GenericVehiclesDeclaration(string path)
 		{
-			PrepareDeclarationSimulation(path, out _, out, _);
+			PrepareDeclarationSimulation(path, out _, out _);
 		}
 
 		public void PrepareDeclarationSimulation(string path, out JobContainer jobContainer, out ISimulatorFactory runsFactory)
