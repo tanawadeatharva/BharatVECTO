@@ -60,6 +60,7 @@ namespace TUGraz.VectoCommon.InputData
 		ConventionalVehicle = 1,
 		ParallelHybridVehicle,
 		SerialHybridVehicle,
+		FCHV,
 		BatteryElectricVehicle,
 		EngineOnlySimulation,
 		IEPC_E,
@@ -290,6 +291,8 @@ namespace TUGraz.VectoCommon.InputData
 		IElectricMachinesEngineeringInputData ElectricMachines { get; }
 
 		IIEPCEngineeringInputData IEPCEngineeringInputData { get; }
+
+		IFuelCellSystemEngineeringInputData FuelCellSystemInputData { get; }
 	}
 
 	public interface IAxlesEngineeringInputData
@@ -637,6 +640,11 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface ISuperCapEngineeringInputData : ISuperCapDeclarationInputData
 	{
+	}
+
+	public interface IFuelCellSystemEngineeringInputData
+	{
+
 	}
 
 	public interface IDriverModelData { }
