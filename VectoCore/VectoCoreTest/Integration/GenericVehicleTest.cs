@@ -101,35 +101,57 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 		[Test, TestCaseSource(nameof(GetJSONDeclaration)), TestCaseSource(nameof(GetXMLDeclaration))]
+        public void SimulateDeclaration(string path)
+		{
+			PrepareDeclarationSimulation(path, out var jobContainer, out _);
+			jobContainer.Execute(true);
+			jobContainer.WaitFinished();
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success));
+
+        }
+
+		[Test, TestCaseSource(nameof(GetJSONDeclaration)), TestCaseSource(nameof(GetXMLDeclaration))]
 		public void GenericVehiclesDeclaration(string path)
 		{
-			if (IgnoreFiles(path, out var reason)) {
+			PrepareDeclarationSimulation(path, out _, out, _);
+		}
+
+		public void PrepareDeclarationSimulation(string path, out JobContainer jobContainer, out ISimulatorFactory runsFactory)
+		{
+			if (IgnoreFiles(path, out var reason))
+			{
 				Assert.Ignore(reason);
 			}
-			if (path.EndsWith(".vecto")) {
-				PrepareJSONSimulation(path, ExecutionMode.Declaration, out _, out _);
-			} else {
+			if (path.EndsWith(".vecto"))
+			{
+				PrepareJSONSimulation(path, ExecutionMode.Declaration, out jobContainer, out runsFactory);
+			}
+			else
+			{
 				TestContext.Progress.WriteLine($"Running {path} ...");
-                var writeReports = true;
+				var writeReports = true;
 
 
-				
+
 				var inputData = _xmlReader.CreateDeclaration(path);
 				var fileWriter = new FileOutputWriter(path);
 
-				if (IgnoreInputData(inputData, out reason)) {
+				if (IgnoreInputData(inputData, out reason))
+				{
 					Assert.Ignore(reason);
 				};
-				ISimulatorFactory runsFactory;
-				
-				if (inputData.DataSource.Type == "VectoOutputMultistepType") {
+
+				if (inputData.DataSource.Type == "VectoOutputMultistepType")
+				{
 					var busInputData = inputData as IMultistepBusInputDataProvider;
 					var multistepInputData = new XMLDeclarationVIFInputData(busInputData, null);
-						fileWriter = new FileOutputVIFWriter(path, busInputData.JobInputData.ManufacturingStages?.Count ?? 0);
-						runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration,
-							multistepInputData, fileWriter, null, null, true);
-				} else{
-			
+					fileWriter = new FileOutputVIFWriter(path, busInputData.JobInputData.ManufacturingStages?.Count ?? 0);
+					runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration,
+						multistepInputData, fileWriter, null, null, true);
+				}
+				else
+				{
+
 					runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter,
 						writeReports ? null : new NullDeclarationReport()); //, writeReports ? null : new NullDeclarationReport());
 
@@ -137,21 +159,19 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 				var sumWriter = new SummaryDataContainer(fileWriter); //new MockSumWriter();
 				runsFactory.WriteModalResults = false;
-				var jobContainer = new JobContainer(sumWriter);
+				jobContainer = new JobContainer(sumWriter);
 				runsFactory.SumData = sumWriter;
 				//var sumDataContainer = sumWriter;
 
 				jobContainer.AddRuns(runsFactory);
-				if (_simulate) {
+				if (_simulate)
+				{
 					jobContainer.Execute(true);
 					jobContainer.WaitFinished();
 					Assert.IsTrue(jobContainer.Runs.All(r => r.Success));
 				}
 			}
-
         }
-
-
 
 
 		public static List<string> GetJSONEngineering()
