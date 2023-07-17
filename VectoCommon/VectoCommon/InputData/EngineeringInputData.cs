@@ -73,6 +73,7 @@ namespace TUGraz.VectoCommon.InputData
 		public const string Conventional = "Conventional";
 		public const string Hybrid = "Hybrid";
 		public const string PureElectric = "PureElectric";
+		
 
 		public static string GetPowertrainArchitectureType(this VectoSimulationJobType jobType)
 		{
@@ -88,6 +89,8 @@ namespace TUGraz.VectoCommon.InputData
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
 					return PureElectric;
+				case VectoSimulationJobType.FCHV:
+					throw new NotImplementedException("Relevant for Reports");
 				default:
 					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
 			}
@@ -123,6 +126,27 @@ namespace TUGraz.VectoCommon.InputData
 
 
 			return ArchitectureID.UNKNOWN;
+		}
+
+		public static bool HasEngine(this VectoSimulationJobType jobType)
+		{
+			switch (jobType) {
+				case VectoSimulationJobType.ConventionalVehicle:
+				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.SerialHybridVehicle:
+				case VectoSimulationJobType.EngineOnlySimulation:
+				case VectoSimulationJobType.IHPC:
+				case VectoSimulationJobType.IEPC_S:
+					return true;
+                    break;
+                case VectoSimulationJobType.FCHV:
+				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.IEPC_E:
+					return false;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
+			}
 		}
 
 		private static ArchitectureID GetIepcArchitectureId(VectoSimulationJobType jobType, PowertrainPosition em)
