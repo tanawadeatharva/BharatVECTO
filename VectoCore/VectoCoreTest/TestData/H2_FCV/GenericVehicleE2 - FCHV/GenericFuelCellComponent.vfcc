@@ -9,7 +9,9 @@
         "SavedInDeclMode": false,
         "Manufacturer": "Fuel Cell Manufacturer",
         "Model": "Generic Fuel Cell",
-        "PowerLimit": 100,
+        "MinElectricPower": 10,
+        "MaxElectricPower": 100,
         "MassFlowMap": "GenericFuelCellMassflowMap.vfcm"
     }
+}
 }

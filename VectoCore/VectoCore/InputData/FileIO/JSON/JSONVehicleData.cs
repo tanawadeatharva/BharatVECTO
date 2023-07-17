@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		private JSONFuelCellSystemEngineeringInputData ReadFuelCellSystem()
 		{
 			var fcsJson = Body["FuelCellSystem"];
-			IList<IFuelCellComponentEngineeringInputData> fcList = new List<IFuelCellComponentEngineeringInputData>();
+			IList<FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>> fcList = new List<FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>>();
             if (fcsJson == null) {
 				throw new VectoException("Fuel Cell System missing");
 			}
@@ -71,9 +71,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			if (fcsJson["FuelCells"] != null)
 			{
 				foreach (var entry in fcsJson["FuelCells"]) {
-					var tmp = JSONInputDataFactory.ReadFuelCellComponentEngineeringInputData(
-						Path.Combine(BasePath, entry.GetEx<string>("FuelCellFile")), false);
-					fcList.Add(tmp);
+					var tmpEntry = new FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>() {
+						FuelCellComponent = JSONInputDataFactory.ReadFuelCellComponentEngineeringInputData(
+							Path.Combine(BasePath, entry.GetEx<string>("FuelCellFile")), false),
+						Count = entry.GetEx<uint>("Count"),
+					};
+
+					fcList.Add(tmpEntry);
 				}
 
 			

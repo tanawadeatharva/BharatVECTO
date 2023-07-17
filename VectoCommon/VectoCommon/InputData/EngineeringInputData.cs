@@ -646,14 +646,20 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		WattPerSecond GradientPowerChange { get; }
 		Second OnOffHysteresis { get; }
-		IList<IFuelCellComponentEngineeringInputData> FuelCellComponents { get; }
+		IList<FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>> FuelCellComponents { get; }
 	}
-
-	public interface IFuelCellComponentEngineeringInputData : IComponentInputData
+	public class FuelCellComponentEntry<T> where T : class, IFuelCellComponentEngineeringInputData //Generic to reuse for declaration?
 	{
-		Watt PowerLimit { get; }
-		TableData MassFlowMap { get; }
+		public uint Count { get; set; }
+		public T FuelCellComponent { get; set; }
 	}
+    public interface IFuelCellComponentEngineeringInputData : IComponentInputData
+	{
+		TableData MassFlowMap { get; }
+		Watt MaxElectricPower { get; }
+
+		Watt MinElectricPower { get; }
+    }
 
 	public interface IDriverModelData { }
 

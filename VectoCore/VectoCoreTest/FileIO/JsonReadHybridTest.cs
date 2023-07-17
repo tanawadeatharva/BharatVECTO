@@ -288,8 +288,12 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.NotNull(fuelCellSystem.FuelCellComponents);
 
 			Assert.AreEqual(2, fuelCellSystem.FuelCellComponents.Count);
-			Assert.IsTrue(fuelCellSystem.FuelCellComponents.All(AssertFuelCellComponent));
-		}
+			Assert.AreEqual(2, fuelCellSystem.FuelCellComponents[0].Count);
+			AssertFuelCellComponent(fuelCellSystem.FuelCellComponents[0].FuelCellComponent);
+
+			Assert.AreEqual(1, fuelCellSystem.FuelCellComponents[1].Count);
+			AssertFuelCellComponent(fuelCellSystem.FuelCellComponents[1].FuelCellComponent);
+        }
 
 		[TestCase]
 		public void ReadFuellCellComponent()
@@ -300,15 +304,14 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			AssertFuelCellComponent(inputDataProvider);
 		}
 
-		private static bool AssertFuelCellComponent(IFuelCellComponentEngineeringInputData inputDataProvider)
+		private static void AssertFuelCellComponent(IFuelCellComponentEngineeringInputData inputDataProvider)
 		{
 			Assert.IsNotNull(inputDataProvider);
 			Assert.IsNotNull(inputDataProvider.MassFlowMap);
 			Assert.AreEqual("Fuel Cell Manufacturer", inputDataProvider.Manufacturer);
 			Assert.AreEqual("Generic Fuel Cell", inputDataProvider.Model);
-			Assert.AreEqual(100.SI(Unit.SI.Kilo.Watt), inputDataProvider.PowerLimit);
-
-			return true;
+			Assert.AreEqual(100.SI(Unit.SI.Kilo.Watt), inputDataProvider.MaxElectricPower);
+			Assert.AreEqual(10.SI(Unit.SI.Kilo.Watt), inputDataProvider.MinElectricPower);
 		}
 
 

@@ -34,8 +34,10 @@
         "GradientPowerChange": 50,
         "OnOffHysteresis": 3,
         "FuelCells":[{
+          "Count": 2,
           "FuelCellFile": "GenericFuelCellComponent.vfcc"
         },{
+          "Count": 1,
           "FuelCellFile": "GenericFuelCellComponent.vfcc"
         }]
     },
