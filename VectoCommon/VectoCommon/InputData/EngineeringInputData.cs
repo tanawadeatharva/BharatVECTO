@@ -674,7 +674,7 @@ namespace TUGraz.VectoCommon.InputData
 	}
 	public class FuelCellComponentEntry<T> where T : class, IFuelCellComponentEngineeringInputData //Generic to reuse for declaration?
 	{
-		public uint Count { get; set; }
+		public int Count { get; set; }
 		public T FuelCellComponent { get; set; }
 	}
     public interface IFuelCellComponentEngineeringInputData : IComponentInputData

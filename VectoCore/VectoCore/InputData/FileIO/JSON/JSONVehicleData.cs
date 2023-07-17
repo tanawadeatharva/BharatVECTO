@@ -74,9 +74,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					var tmpEntry = new FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>() {
 						FuelCellComponent = JSONInputDataFactory.ReadFuelCellComponentEngineeringInputData(
 							Path.Combine(BasePath, entry.GetEx<string>("FuelCellFile")), false),
-						Count = entry.GetEx<uint>("Count"),
+						Count = entry.GetEx<int>("Count"),
 					};
-
+					
 					fcList.Add(tmpEntry);
 				}
 
@@ -94,6 +94,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			
 
 		}
+
+		#endregion
+
+		#region Overrides of JSONVehicleDataV10_HEV_BEV
+
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.FCHV;
 
 		#endregion
 	}
