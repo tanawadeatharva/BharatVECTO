@@ -31,7 +31,13 @@
         "BatteryFile": "GenericBattery_80kWh_750V.vbat"
     },
     "FuelCellSystem":{
-        "GradientPowerChange": 50
+        "GradientPowerChange": 50,
+        "OnOffHysteresis": 3,
+        "FuelCells":[{
+          "FuelCellFile": "GenericFuelCellComponent.vfcc"
+        },{
+          "FuelCellFile": "GenericFuelCellComponent.vfcc"
+        }]
     },
     "InitialSoC": 50,
     "TorqueLimits": {},

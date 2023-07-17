@@ -62,9 +62,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		private JSONFuelCellSystemEngineeringInputData ReadFuelCellSystem()
 		{
 			var fcsJson = Body["FuelCellSystem"];
+			IList<IFuelCellComponentEngineeringInputData> fcList = new List<IFuelCellComponentEngineeringInputData>();
+            if (fcsJson == null) {
+				throw new VectoException("Fuel Cell System missing");
+			}
+
+			var retVal = new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>();
+			if (fcsJson["FuelCells"] != null)
+			{
+				foreach (var entry in fcsJson["FuelCells"]) {
+					var tmp = JSONInputDataFactory.ReadFuelCellComponentEngineeringInputData(
+						Path.Combine(BasePath, entry.GetEx<string>("FuelCellFile")), false);
+					fcList.Add(tmp);
+				}
+
+			
+			}
+
+
+
 			return new JSONFuelCellSystemEngineeringInputData() {
 				GradientPowerChange = (fcsJson.GetEx<double>("GradientPowerChange") * 1000).SI<WattPerSecond>(), //given in kW/s
-				OnOffHysteresis = (fcsJson.GetEx<double>("OnOffHysteresis")).SI<Second>()
+				OnOffHysteresis = (fcsJson.GetEx<double>("OnOffHysteresis")).SI<Second>(),
+				FuelCellComponents = fcList
 			};
 
 			

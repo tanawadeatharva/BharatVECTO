@@ -263,7 +263,7 @@ namespace TUGraz.VectoCore.Configuration
 
 			public const string IEPCDataFile = ".viepc";
 
-			public const string FuelCellSystemFile = ".vfcs";
+			public const string FuelCellComponentFile = ".vfcc";
 
 		}
 

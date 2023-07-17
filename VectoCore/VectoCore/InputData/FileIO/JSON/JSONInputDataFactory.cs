@@ -276,17 +276,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public static object ReadFuelCellSystemEngineeringInputData(string filename, bool tolerateMissing)
+		public static IFuelCellComponentEngineeringInputData ReadFuelCellComponentEngineeringInputData(string filename,
+			bool tolerateMissing)
 		{
 			var json = ReadFile(filename);
 			var version = ReadVersion(json);
-			switch (version) {
-				case 14:
-					return new JSONFuelCellSystem(json, filename, tolerateMissing);
+			switch (version)
+			{
+				case 1:
+					return new JSONFuelCellComponent(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("Engineering Fuel Cell System: Unsupported FileVersion. Got {0}", version);
 			}
-		}
+        }
 	}
 
 

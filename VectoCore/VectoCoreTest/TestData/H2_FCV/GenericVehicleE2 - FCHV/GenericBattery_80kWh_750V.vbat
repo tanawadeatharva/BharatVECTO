@@ -7,10 +7,10 @@
 	},
 	"Body": {
 		"SavedInDeclMode": false,
-	"Model": "Generic Battery",
-	"InternalResistanceCurve": "GenericBattery_80kWh.vbatr",
-	"SOC_min": 10,
-	"SOC_max": 90,
+		"Model": "Generic Battery",
+		"InternalResistanceCurve": "GenericBattery_80kWh.vbatr",
+		"SOC_min": 10,
+		"SOC_max": 90,
 		"MaxCurrentMap": "MaxCurrent.vimax",
 		"Capacity": 110,
 		"SoCCurve": "GenericBattery_80kWh.vbatv"

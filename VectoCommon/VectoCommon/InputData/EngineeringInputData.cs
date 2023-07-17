@@ -644,7 +644,15 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IFuelCellSystemEngineeringInputData
 	{
+		WattPerSecond GradientPowerChange { get; }
+		Second OnOffHysteresis { get; }
+		IList<IFuelCellComponentEngineeringInputData> FuelCellComponents { get; }
+	}
 
+	public interface IFuelCellComponentEngineeringInputData : IComponentInputData
+	{
+		Watt PowerLimit { get; }
+		TableData MassFlowMap { get; }
 	}
 
 	public interface IDriverModelData { }

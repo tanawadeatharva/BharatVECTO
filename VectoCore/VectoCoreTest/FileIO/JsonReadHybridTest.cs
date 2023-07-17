@@ -283,10 +283,36 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			// FuelCellSystem
 			var fuelCellSystem = vehicle.Components.FuelCellSystemInputData;
 			Assert.NotNull(fuelCellSystem);
+			Assert.AreEqual(50000.SI<WattPerSecond>(), (fuelCellSystem.GradientPowerChange));
+			Assert.AreEqual(3.SI<Second>(), fuelCellSystem.OnOffHysteresis);
+			Assert.NotNull(fuelCellSystem.FuelCellComponents);
+
+			Assert.AreEqual(2, fuelCellSystem.FuelCellComponents.Count);
+			Assert.IsTrue(fuelCellSystem.FuelCellComponents.All(AssertFuelCellComponent));
+		}
+
+		[TestCase]
+		public void ReadFuellCellComponent()
+		{
+			var filePath = @"TestData\H2_FCV\GenericVehicleE2 - FCHV\GenericFuelCellComponent.vfcc";
+			var inputDataProvider = JSONInputDataFactory.ReadFuelCellComponentEngineeringInputData(filePath, false) as IFuelCellComponentEngineeringInputData;
+
+			AssertFuelCellComponent(inputDataProvider);
+		}
+
+		private static bool AssertFuelCellComponent(IFuelCellComponentEngineeringInputData inputDataProvider)
+		{
+			Assert.IsNotNull(inputDataProvider);
+			Assert.IsNotNull(inputDataProvider.MassFlowMap);
+			Assert.AreEqual("Fuel Cell Manufacturer", inputDataProvider.Manufacturer);
+			Assert.AreEqual("Generic Fuel Cell", inputDataProvider.Model);
+			Assert.AreEqual(100.SI(Unit.SI.Kilo.Watt), inputDataProvider.PowerLimit);
+
+			return true;
 		}
 
 
-        [TestCase()]
+		[TestCase()]
 		public void TestCreateHybridPowertrain()
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(@"TestData/Hybrids/GenericVehicle_Group2_P2/Class2_RigidTruck_ParHyb_ENG.vecto");

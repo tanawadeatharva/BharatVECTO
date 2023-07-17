@@ -70,7 +70,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		private IElectricMotorEngineeringInputData ElectricMotor;
 		private IBusAuxiliariesEngineeringData BusAux;
 		private IIEPCEngineeringInputData IEPCData;
-		private IFuelCellSystemEngineeringInputData FuelCellSystem;
 
 		public JSONComponentInputData(string filename, IJSONVehicleComponents job, bool tolerateMissing = false)
 		{
@@ -105,8 +104,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case Constants.FileExtensions.IEPCDataFile:
 					tmp = JSONInputDataFactory.ReadIEPCEngineeringInputData(filename, tolerateMissing);
 					break;
-				case Constants.FileExtensions.FuelCellSystemFile:
-					tmp = JSONInputDataFactory.ReadFuelCellSystemEngineeringInputData(filename, tolerateMissing);
+				case Constants.FileExtensions.FuelCellComponentFile:
+					tmp = JSONInputDataFactory.ReadFuelCellComponentEngineeringInputData(filename, tolerateMissing);
 					break;
 			}
 
@@ -127,7 +126,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			if(tmp is IHybridStrategyParameters x15) HybridStrategyParameters = x15;
 			if(tmp is IBusAuxiliariesEngineeringData x16) BusAux = x16;
 			if(tmp is IIEPCEngineeringInputData x17) IEPCData = x17;
-			if(tmp is IFuelCellSystemEngineeringInputData x18) FuelCellSystem = x18;
+			//if(tmp is IFuelCellSystemEngineeringInputData x18) FuelCellSystem = x18;
 
 			_filename = filename;
 		}
@@ -227,6 +226,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		} }
 
 		public IIEPCEngineeringInputData IEPCEngineeringInputData => IEPCData;
+
+		public IFuelCellSystemEngineeringInputData FuelCellSystemInputData => throw new NotImplementedException();
 
 		public IIEPCDeclarationInputData IEPC => IEPCData;
 
@@ -389,8 +390,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public Watt ElectricAuxPower => 0.SI<Watt>();
 
-        public IFuelCellSystemEngineeringInputData FuelCellSystemInputData => FuelCellSystem;
-
-        #endregion
+		#endregion
     }
 }
