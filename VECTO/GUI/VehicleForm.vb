@@ -1847,7 +1847,8 @@ Public Class VehicleForm
 		gbEPTO.Enabled = (val = PTOStandStillType.Electrical)
 	End Sub
 
-    Private Sub cbOvc_CheckedChanged(sender As Object, e As EventArgs) Handles cbOvc.CheckedChanged
+	Private Sub cbOvc_CheckedChanged(sender As Object, e As EventArgs) Handles cbOvc.CheckedChanged
 		pnMaxChargingPwr.Enabled = cbOvc.Checked
-    End Sub
+	End Sub
+
 End Class
