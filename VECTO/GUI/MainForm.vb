@@ -144,6 +144,10 @@ Public Class MainForm
         IEPCDragFileBrowser = new FileBrowser("viepcd")
         IEPCPowerMapFileBrowser = New FileBrowser("viepco")
         REESSFileBrowser = New FileBrowser("vreess")
+        FuelCellComponentFileBrowser = New FileBrowser("vfcc")
+        MassFlowMapFileBrowser = New FileBrowser("vfcm")
+
+
         EmADCLossMapFileBrowser = New FileBrowser("vtlm")
         DriverDecisionFactorVelocityDropFileBrowser = New FileBrowser("DfVelocityDrop")
         DriverDecisionFactorTargetSpeedFileBrowser = New FileBrowser("DfTargetSpeed")

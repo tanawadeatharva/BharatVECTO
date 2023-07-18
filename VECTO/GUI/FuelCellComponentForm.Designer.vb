@@ -22,6 +22,7 @@ Partial Class FuelCellComponentForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FuelCellComponentForm))
         Me.pcBoxMassFlowMap = New System.Windows.Forms.PictureBox()
         Me.lblTitle = New System.Windows.Forms.Label()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
@@ -39,13 +40,12 @@ Partial Class FuelCellComponentForm
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.gpMassFlowMap = New System.Windows.Forms.GroupBox()
-        Me.tbRiCurve = New System.Windows.Forms.TextBox()
-        Me.btnRiMapOpen = New System.Windows.Forms.Button()
-        Me.btnBrowseRiMap = New System.Windows.Forms.Button()
+        Me.tbMassFlowMap = New System.Windows.Forms.TextBox()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.LbStatus = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.btnBrowseMassFlowMap = New System.Windows.Forms.Button()
         CType(Me.pcBoxMassFlowMap, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TableLayoutPanel2.SuspendLayout()
         Me.pnMaxElectricPower.SuspendLayout()
@@ -245,9 +245,8 @@ Partial Class FuelCellComponentForm
         '
         'gpMassFlowMap
         '
-        Me.gpMassFlowMap.Controls.Add(Me.tbRiCurve)
-        Me.gpMassFlowMap.Controls.Add(Me.btnRiMapOpen)
-        Me.gpMassFlowMap.Controls.Add(Me.btnBrowseRiMap)
+        Me.gpMassFlowMap.Controls.Add(Me.btnBrowseMassFlowMap)
+        Me.gpMassFlowMap.Controls.Add(Me.tbMassFlowMap)
         Me.gpMassFlowMap.Location = New System.Drawing.Point(6, 188)
         Me.gpMassFlowMap.Name = "gpMassFlowMap"
         Me.gpMassFlowMap.Size = New System.Drawing.Size(394, 49)
@@ -255,28 +254,12 @@ Partial Class FuelCellComponentForm
         Me.gpMassFlowMap.TabStop = False
         Me.gpMassFlowMap.Text = "MassFlowMap"
         '
-        'tbRiCurve
+        'tbMassFlowMap
         '
-        Me.tbRiCurve.Location = New System.Drawing.Point(6, 19)
-        Me.tbRiCurve.Name = "tbRiCurve"
-        Me.tbRiCurve.Size = New System.Drawing.Size(333, 20)
-        Me.tbRiCurve.TabIndex = 64
-        '
-        'btnRiMapOpen
-        '
-        Me.btnRiMapOpen.Location = New System.Drawing.Point(370, 17)
-        Me.btnRiMapOpen.Name = "btnRiMapOpen"
-        Me.btnRiMapOpen.Size = New System.Drawing.Size(24, 24)
-        Me.btnRiMapOpen.TabIndex = 66
-        Me.btnRiMapOpen.UseVisualStyleBackColor = True
-        '
-        'btnBrowseRiMap
-        '
-        Me.btnBrowseRiMap.Location = New System.Drawing.Point(345, 17)
-        Me.btnBrowseRiMap.Name = "btnBrowseRiMap"
-        Me.btnBrowseRiMap.Size = New System.Drawing.Size(24, 24)
-        Me.btnBrowseRiMap.TabIndex = 65
-        Me.btnBrowseRiMap.UseVisualStyleBackColor = True
+        Me.tbMassFlowMap.Location = New System.Drawing.Point(6, 19)
+        Me.tbMassFlowMap.Name = "tbMassFlowMap"
+        Me.tbMassFlowMap.Size = New System.Drawing.Size(352, 20)
+        Me.tbMassFlowMap.TabIndex = 64
         '
         'Button1
         '
@@ -315,6 +298,15 @@ Partial Class FuelCellComponentForm
         Me.LbStatus.Name = "LbStatus"
         Me.LbStatus.Size = New System.Drawing.Size(39, 17)
         Me.LbStatus.Text = "Status"
+        '
+        'btnBrowseMassFlowMap
+        '
+        Me.btnBrowseMassFlowMap.Image = CType(resources.GetObject("btnBrowseMassFlowMap.Image"), System.Drawing.Image)
+        Me.btnBrowseMassFlowMap.Location = New System.Drawing.Point(364, 16)
+        Me.btnBrowseMassFlowMap.Name = "btnBrowseMassFlowMap"
+        Me.btnBrowseMassFlowMap.Size = New System.Drawing.Size(24, 24)
+        Me.btnBrowseMassFlowMap.TabIndex = 65
+        Me.btnBrowseMassFlowMap.UseVisualStyleBackColor = True
         '
         'FuelCellComponentForm
         '
@@ -368,11 +360,10 @@ Partial Class FuelCellComponentForm
     Friend WithEvents tbModel As TextBox
     Friend WithEvents tbManufacturer As TextBox
     Friend WithEvents gpMassFlowMap As GroupBox
-    Friend WithEvents tbRiCurve As TextBox
-    Friend WithEvents btnRiMapOpen As Button
-    Friend WithEvents btnBrowseRiMap As Button
+    Friend WithEvents tbMassFlowMap As TextBox
     Friend WithEvents Button1 As Button
     Friend WithEvents Button2 As Button
     Friend WithEvents StatusStrip1 As StatusStrip
     Friend WithEvents LbStatus As ToolStripStatusLabel
+    Friend WithEvents btnBrowseMassFlowMap As Button
 End Class

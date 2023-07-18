@@ -30,9 +30,13 @@ Partial Class FuelCellComponentDialog
         Me.lblFuelCellCount = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.numFuelCellCount = New System.Windows.Forms.NumericUpDown()
+        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.OK_Button = New System.Windows.Forms.Button()
+        Me.Cancel_Button = New System.Windows.Forms.Button()
         Me.pnSelectFuelCellComponent.SuspendLayout()
         Me.Panel1.SuspendLayout()
         CType(Me.numFuelCellCount, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnSelectFuelCellComponent
@@ -94,15 +98,52 @@ Partial Class FuelCellComponentDialog
         'numFuelCellCount
         '
         Me.numFuelCellCount.Location = New System.Drawing.Point(133, 4)
+        Me.numFuelCellCount.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.numFuelCellCount.Name = "numFuelCellCount"
         Me.numFuelCellCount.Size = New System.Drawing.Size(64, 20)
         Me.numFuelCellCount.TabIndex = 28
+        Me.numFuelCellCount.Value = New Decimal(New Integer() {1, 0, 0, 0})
+        '
+        'TableLayoutPanel1
+        '
+        Me.TableLayoutPanel1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TableLayoutPanel1.ColumnCount = 2
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel1.Controls.Add(Me.OK_Button, 0, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.Cancel_Button, 1, 0)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(424, 120)
+        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
+        Me.TableLayoutPanel1.RowCount = 1
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(146, 29)
+        Me.TableLayoutPanel1.TabIndex = 29
+        '
+        'OK_Button
+        '
+        Me.OK_Button.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.OK_Button.Location = New System.Drawing.Point(3, 3)
+        Me.OK_Button.Name = "OK_Button"
+        Me.OK_Button.Size = New System.Drawing.Size(67, 23)
+        Me.OK_Button.TabIndex = 3
+        Me.OK_Button.Text = "OK"
+        '
+        'Cancel_Button
+        '
+        Me.Cancel_Button.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.Cancel_Button.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.Cancel_Button.Location = New System.Drawing.Point(76, 3)
+        Me.Cancel_Button.Name = "Cancel_Button"
+        Me.Cancel_Button.Size = New System.Drawing.Size(67, 23)
+        Me.Cancel_Button.TabIndex = 4
+        Me.Cancel_Button.Text = "Cancel"
         '
         'FuelCellComponentDialog
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(579, 160)
+        Me.Controls.Add(Me.TableLayoutPanel1)
         Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.pnSelectFuelCellComponent)
         Me.Margin = New System.Windows.Forms.Padding(2)
@@ -114,6 +155,7 @@ Partial Class FuelCellComponentDialog
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         CType(Me.numFuelCellCount, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TableLayoutPanel1.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -125,4 +167,7 @@ Partial Class FuelCellComponentDialog
     Friend WithEvents lblFuelCellCount As Label
     Friend WithEvents Panel1 As Panel
     Friend WithEvents numFuelCellCount As NumericUpDown
+    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
+    Friend WithEvents OK_Button As Button
+    Friend WithEvents Cancel_Button As Button
 End Class

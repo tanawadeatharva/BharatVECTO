@@ -53,6 +53,11 @@ Public Class VehicleForm
 		StringId = 2
 	End Enum
 
+	Private Enum FcComponentTbl
+		FcComponentFile = 0
+		Count = 1
+	End Enum
+
 	Private Enum PTOStandStillType
 		Mechanical = 0
 		Electrical = 1
@@ -1772,21 +1777,18 @@ Public Class VehicleForm
 	Private Sub lvFuelCellComponents_DoubleClick(sender As Object, e As EventArgs) Handles lvFuelCellComponents.DoubleClick
 		Dim entry As ListViewItem = lvFuelCellComponents.SelectedItems(0)
 
+		If lvFuelCellComponents.SelectedItems.Count = 0 Then Exit Sub
+
+		_fcComponentDlg._vehFile = _vehFile
+		_fcComponentDlg.tbFuelCellComponent.Text = entry.SubItems(FcComponentTbl.FcComponentFile).Text
+		_fcComponentDlg.numFuelCellCount.Text = entry.SubItems(FcComponentTbl.Count).Text
+
+		_fcComponentDlg.tbFuelCellComponent.Focus()
+
 		If (_fcComponentDlg.ShowDialog() = DialogResult.OK) Then
-
+			entry.SubItems(FcComponentTbl.FcComponentFile).Text = _fcComponentDlg.tbFuelCellComponent.Text
+			entry.SubItems(FcComponentTbl.Count).Text = _fcComponentDlg.numFuelCellCount.Text
 		End If
-
-
-		'_reessPackDlg._vehFile = _vehFile
-		'_reessPackDlg.tbBattery.Text = entry.SubItems(REESPackTbl.ReessFile).Text
-		'_reessPackDlg.tbBatteryPackCnt.Text = entry.SubItems(REESPackTbl.Count).Text
-		'_reessPackDlg.tbStreamId.Text = entry.SubItems(REESPackTbl.StringId).Text
-		'_reessPackDlg.tbBattery.Focus()
-		'If (_reessPackDlg.ShowDialog() = DialogResult.OK) Then
-		'	entry.SubItems(REESPackTbl.ReessFile).Text = _reessPackDlg.tbBattery.Text
-		'	entry.SubItems(REESPackTbl.Count).Text = _reessPackDlg.tbBatteryPackCnt.Text
-		'	entry.SubItems(REESPackTbl.StringId).Text = _reessPackDlg.tbStreamId.Text
-		'End If
 	End Sub
 
 	Private Sub btnAddFuelCellComponent_Click(sender As Object, e As EventArgs) Handles btnAddFuelCellComponent.Click
