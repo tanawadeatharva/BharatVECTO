@@ -2301,7 +2301,7 @@ lbFound:
         OpenVECTOeditor("<New>", VectoSimulationJobType.IEPC_E)
     End Sub
 
-    Private Sub JobEditorIHPCVehicleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorIHPCVehicleToolStripMenuItem.Click 
+    Private Sub JobEditorIHPCVehicleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorIHPCVehicleToolStripMenuItem.Click
         OpenVECTOeditor("<New>", VectoSimulationJobType.IHPC)
     End Sub
 
@@ -2311,5 +2311,9 @@ lbFound:
 
     Private Sub tbInitSOCinPercent_TextChanged(sender As Object, e As EventArgs) Handles tbInitSOCinPercent.TextChanged
         
+    End Sub
+
+    Private Sub JobEditorFCHVehicle_Click(sender As Object, e As EventArgs) Handles JobEditorFCHVehicle.Click
+        OpenVECTOeditor("<New>", VectoSimulationJobType.FCHV)
     End Sub
 End Class

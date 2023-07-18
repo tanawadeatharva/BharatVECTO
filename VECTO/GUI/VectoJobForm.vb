@@ -112,6 +112,10 @@ Public Class VectoJobForm
                 lblTitle.Text = prefix + "Battery Electric Vehicle"
                 gbElectricAux.Enabled = True
                 GrAuxMech.Enabled = False
+            Case VectoSimulationJobType.FCHV
+                lblTitle.Text = prefix + "Fuel Cell Vehicle"
+                gbElectricAux.Enabled = True
+                GrAuxMech.Enabled = False
             Case VectoSimulationJobType.ConventionalVehicle
                 lblTitle.Text = prefix + "Conventional Vehicle"
                 gbElectricAux.Enabled = False
@@ -129,7 +133,8 @@ Public Class VectoJobForm
             Case VectoSimulationJobType.IHPC
                 lblTitle.Text = prefix + "IHPC Vehicle"
                 gbElectricAux.Enabled = True
-                GrAuxMech.Enabled = False      
+                GrAuxMech.Enabled = False
+
         End Select
     End Sub
 
