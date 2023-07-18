@@ -49,6 +49,8 @@ public class JSONFileWriter : IOutputFileWriter
 
 	private const int REESSFormatVersion = 1;
 
+	private const int FuelCellComponentFormatVersion = 1;
+
 	private const int HybridStrategyParamsVersion = 1;
 
 	private static JSONFileWriter _instance;
@@ -1566,4 +1568,22 @@ public class JSONFileWriter : IOutputFileWriter
 		};
 		WriteFile(header, body, filePath);
 	}
+
+	public void SaveFuelCellComponent(IFuelCellComponentEngineeringInputData fuelCellComponent, string filePath, bool declMode)
+	{
+		
+		var header = GetHeader(FuelCellComponentFormatVersion);
+
+		var body = new Dictionary<string, object> {
+			{ "SavedInDeclMode", declMode },
+			{ "Manufacturer", fuelCellComponent.Manufacturer },
+			{ "Model", fuelCellComponent.Model },
+			{ "MinElectricPower", fuelCellComponent.MinElectricPower / 1000},
+			{ "MaxElectricPower", fuelCellComponent.MaxElectricPower / 1000 },
+			{ "MassFlowMap", GetRelativePath(fuelCellComponent.MassFlowMap.Source, filePath)}
+		};
+
+		WriteFile(header, body, filePath);
+		
+    }
 }

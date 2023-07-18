@@ -67,4 +67,9 @@ Public Class FuelCellComponentDialog
             End Try
         End If
     End Sub
+
+    Public Sub Clear()
+        tbFuelCellComponent.Text = ""
+        numFuelCellCount.Text = "1"
+    End Sub
 End Class

@@ -1792,11 +1792,12 @@ Public Class VehicleForm
 	End Sub
 
 	Private Sub btnAddFuelCellComponent_Click(sender As Object, e As EventArgs) Handles btnAddFuelCellComponent.Click
-		_reessPackDlg.Clear()
-		_reessPackDlg._vehFile = _vehFile
-		If _reessPackDlg.ShowDialog() = DialogResult.OK Then
+		_fcComponentDlg.Clear()
+		_fcComponentDlg._vehFile = _vehFile
+		If _fcComponentDlg.ShowDialog() = DialogResult.OK Then
 
-			lvREESSPacks.Items.Add(CreateREESSPackListViewItem(_reessPackDlg.tbBattery.Text, _reessPackDlg.tbBatteryPackCnt.Text.ToInt(0), _reessPackDlg.tbStreamId.Text.ToInt(0)))
+			lvFuelCellComponents.Items.Add(CreateFuelCellSystemListViewItem(_fcComponentDlg.tbFuelCellComponent.Text,
+																			_fcComponentDlg.numFuelCellCount.Text.ToInt(0)))
 
 			Change()
 

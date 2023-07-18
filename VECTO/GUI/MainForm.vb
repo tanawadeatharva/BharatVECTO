@@ -212,6 +212,9 @@ Public Class MainForm
 
         ModalResultsFileBrowser.Extensions = New String() {"vmod"}
 
+        FuelCellComponentFileBrowser.Extensions = New String() {"vfcc"}
+        MassFlowMapFileBrowser.Extensions = New String() {"vfcm"}
+
         IHPCFileBrowser.Extensions = New String(){"vem"}
         IHPCPowerMapFileBrowser.Extensions = New String(){"vemo"}
         IHPCFullLoadCurveFileBrowser.Extensions = New String(){"vemp"}
@@ -247,6 +250,8 @@ Public Class MainForm
         TorqueConverterShiftPolygonFileBrowser.Close()
         CrossWindCorrectionFileBrowser.Close()
         ModalResultsFileBrowser.Close()
+        FuelCellComponentFileBrowser.Close()
+        MassFlowMapFileBrowser.Close()
     End Sub
 
 #End Region

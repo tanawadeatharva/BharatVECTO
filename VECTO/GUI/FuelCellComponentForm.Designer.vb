@@ -27,25 +27,25 @@ Partial Class FuelCellComponentForm
         Me.lblTitle = New System.Windows.Forms.Label()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
         Me.tbMinElectricPower = New System.Windows.Forms.TextBox()
+        Me.lblMinElectricPower = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
         Me.pnMaxElectricPower = New System.Windows.Forms.TableLayoutPanel()
         Me.tbMaxElectricPower = New System.Windows.Forms.TextBox()
         Me.lblMaxElectricPower = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
         Me.pnModel = New System.Windows.Forms.TableLayoutPanel()
+        Me.tbModel = New System.Windows.Forms.TextBox()
         Me.lblModel = New System.Windows.Forms.Label()
         Me.pnManufacturer = New System.Windows.Forms.TableLayoutPanel()
-        Me.lblManufacturer = New System.Windows.Forms.Label()
-        Me.lblMinElectricPower = New System.Windows.Forms.Label()
-        Me.tbModel = New System.Windows.Forms.TextBox()
         Me.tbManufacturer = New System.Windows.Forms.TextBox()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.Label7 = New System.Windows.Forms.Label()
+        Me.lblManufacturer = New System.Windows.Forms.Label()
         Me.gpMassFlowMap = New System.Windows.Forms.GroupBox()
+        Me.btnBrowseMassFlowMap = New System.Windows.Forms.Button()
         Me.tbMassFlowMap = New System.Windows.Forms.TextBox()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.Button2 = New System.Windows.Forms.Button()
+        Me.btnSaveFuelCellComponent = New System.Windows.Forms.Button()
+        Me.btnCancel = New System.Windows.Forms.Button()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.LbStatus = New System.Windows.Forms.ToolStripStatusLabel()
-        Me.btnBrowseMassFlowMap = New System.Windows.Forms.Button()
         CType(Me.pcBoxMassFlowMap, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TableLayoutPanel2.SuspendLayout()
         Me.pnMaxElectricPower.SuspendLayout()
@@ -98,7 +98,31 @@ Partial Class FuelCellComponentForm
         Me.tbMinElectricPower.Location = New System.Drawing.Point(179, 3)
         Me.tbMinElectricPower.Name = "tbMinElectricPower"
         Me.tbMinElectricPower.Size = New System.Drawing.Size(170, 20)
-        Me.tbMinElectricPower.TabIndex = 4
+        Me.tbMinElectricPower.TabIndex = 3
+        '
+        'lblMinElectricPower
+        '
+        Me.lblMinElectricPower.AutoSize = True
+        Me.lblMinElectricPower.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.lblMinElectricPower.Location = New System.Drawing.Point(0, 0)
+        Me.lblMinElectricPower.Margin = New System.Windows.Forms.Padding(0)
+        Me.lblMinElectricPower.Name = "lblMinElectricPower"
+        Me.lblMinElectricPower.Size = New System.Drawing.Size(176, 25)
+        Me.lblMinElectricPower.TabIndex = 5
+        Me.lblMinElectricPower.Text = "Min Electric Power"
+        Me.lblMinElectricPower.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label3.Location = New System.Drawing.Point(352, 0)
+        Me.Label3.Margin = New System.Windows.Forms.Padding(0)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(36, 25)
+        Me.Label3.TabIndex = 6
+        Me.Label3.Text = "[kW]"
+        Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'pnMaxElectricPower
         '
@@ -113,7 +137,7 @@ Partial Class FuelCellComponentForm
         Me.pnMaxElectricPower.Name = "pnMaxElectricPower"
         Me.pnMaxElectricPower.RowCount = 1
         Me.pnMaxElectricPower.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.pnMaxElectricPower.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.pnMaxElectricPower.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25.0!))
         Me.pnMaxElectricPower.Size = New System.Drawing.Size(388, 25)
         Me.pnMaxElectricPower.TabIndex = 58
         '
@@ -123,7 +147,7 @@ Partial Class FuelCellComponentForm
         Me.tbMaxElectricPower.Location = New System.Drawing.Point(179, 3)
         Me.tbMaxElectricPower.Name = "tbMaxElectricPower"
         Me.tbMaxElectricPower.Size = New System.Drawing.Size(170, 20)
-        Me.tbMaxElectricPower.TabIndex = 5
+        Me.tbMaxElectricPower.TabIndex = 2
         '
         'lblMaxElectricPower
         '
@@ -136,6 +160,18 @@ Partial Class FuelCellComponentForm
         Me.lblMaxElectricPower.TabIndex = 3
         Me.lblMaxElectricPower.Text = "Max Electric Power"
         Me.lblMaxElectricPower.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label7.Location = New System.Drawing.Point(352, 0)
+        Me.Label7.Margin = New System.Windows.Forms.Padding(0)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(36, 25)
+        Me.Label7.TabIndex = 6
+        Me.Label7.Text = "[kW]"
+        Me.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'pnModel
         '
@@ -151,6 +187,14 @@ Partial Class FuelCellComponentForm
         Me.pnModel.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25.0!))
         Me.pnModel.Size = New System.Drawing.Size(388, 25)
         Me.pnModel.TabIndex = 59
+        '
+        'tbModel
+        '
+        Me.tbModel.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.tbModel.Location = New System.Drawing.Point(197, 3)
+        Me.tbModel.Name = "tbModel"
+        Me.tbModel.Size = New System.Drawing.Size(188, 20)
+        Me.tbModel.TabIndex = 1
         '
         'lblModel
         '
@@ -179,6 +223,14 @@ Partial Class FuelCellComponentForm
         Me.pnManufacturer.Size = New System.Drawing.Size(388, 25)
         Me.pnManufacturer.TabIndex = 60
         '
+        'tbManufacturer
+        '
+        Me.tbManufacturer.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.tbManufacturer.Location = New System.Drawing.Point(197, 3)
+        Me.tbManufacturer.Name = "tbManufacturer"
+        Me.tbManufacturer.Size = New System.Drawing.Size(188, 20)
+        Me.tbManufacturer.TabIndex = 0
+        '
         'lblManufacturer
         '
         Me.lblManufacturer.AutoSize = True
@@ -191,58 +243,6 @@ Partial Class FuelCellComponentForm
         Me.lblManufacturer.Text = "Manufacturer"
         Me.lblManufacturer.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'lblMinElectricPower
-        '
-        Me.lblMinElectricPower.AutoSize = True
-        Me.lblMinElectricPower.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.lblMinElectricPower.Location = New System.Drawing.Point(0, 0)
-        Me.lblMinElectricPower.Margin = New System.Windows.Forms.Padding(0)
-        Me.lblMinElectricPower.Name = "lblMinElectricPower"
-        Me.lblMinElectricPower.Size = New System.Drawing.Size(176, 25)
-        Me.lblMinElectricPower.TabIndex = 5
-        Me.lblMinElectricPower.Text = "Min Electric Power"
-        Me.lblMinElectricPower.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'tbModel
-        '
-        Me.tbModel.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.tbModel.Location = New System.Drawing.Point(197, 3)
-        Me.tbModel.Name = "tbModel"
-        Me.tbModel.Size = New System.Drawing.Size(188, 20)
-        Me.tbModel.TabIndex = 5
-        '
-        'tbManufacturer
-        '
-        Me.tbManufacturer.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.tbManufacturer.Location = New System.Drawing.Point(197, 3)
-        Me.tbManufacturer.Name = "tbManufacturer"
-        Me.tbManufacturer.Size = New System.Drawing.Size(188, 20)
-        Me.tbManufacturer.TabIndex = 5
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label3.Location = New System.Drawing.Point(352, 0)
-        Me.Label3.Margin = New System.Windows.Forms.Padding(0)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(36, 25)
-        Me.Label3.TabIndex = 6
-        Me.Label3.Text = "[kW]"
-        Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'Label7
-        '
-        Me.Label7.AutoSize = True
-        Me.Label7.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label7.Location = New System.Drawing.Point(352, 0)
-        Me.Label7.Margin = New System.Windows.Forms.Padding(0)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(36, 25)
-        Me.Label7.TabIndex = 6
-        Me.Label7.Text = "[kW]"
-        Me.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
         'gpMassFlowMap
         '
         Me.gpMassFlowMap.Controls.Add(Me.btnBrowseMassFlowMap)
@@ -254,33 +254,42 @@ Partial Class FuelCellComponentForm
         Me.gpMassFlowMap.TabStop = False
         Me.gpMassFlowMap.Text = "MassFlowMap"
         '
+        'btnBrowseMassFlowMap
+        '
+        Me.btnBrowseMassFlowMap.Image = CType(resources.GetObject("btnBrowseMassFlowMap.Image"), System.Drawing.Image)
+        Me.btnBrowseMassFlowMap.Location = New System.Drawing.Point(364, 16)
+        Me.btnBrowseMassFlowMap.Name = "btnBrowseMassFlowMap"
+        Me.btnBrowseMassFlowMap.Size = New System.Drawing.Size(24, 24)
+        Me.btnBrowseMassFlowMap.TabIndex = 5
+        Me.btnBrowseMassFlowMap.UseVisualStyleBackColor = True
+        '
         'tbMassFlowMap
         '
         Me.tbMassFlowMap.Location = New System.Drawing.Point(6, 19)
         Me.tbMassFlowMap.Name = "tbMassFlowMap"
         Me.tbMassFlowMap.Size = New System.Drawing.Size(352, 20)
-        Me.tbMassFlowMap.TabIndex = 64
+        Me.tbMassFlowMap.TabIndex = 4
         '
-        'Button1
+        'btnSaveFuelCellComponent
         '
-        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button1.Location = New System.Drawing.Point(620, 303)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 53
-        Me.Button1.Text = "Save"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.btnSaveFuelCellComponent.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnSaveFuelCellComponent.Location = New System.Drawing.Point(620, 303)
+        Me.btnSaveFuelCellComponent.Name = "btnSaveFuelCellComponent"
+        Me.btnSaveFuelCellComponent.Size = New System.Drawing.Size(75, 23)
+        Me.btnSaveFuelCellComponent.TabIndex = 7
+        Me.btnSaveFuelCellComponent.Text = "Save"
+        Me.btnSaveFuelCellComponent.UseVisualStyleBackColor = True
         '
-        'Button2
+        'btnCancel
         '
-        Me.Button2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button2.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.Button2.Location = New System.Drawing.Point(701, 303)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(75, 23)
-        Me.Button2.TabIndex = 54
-        Me.Button2.Text = "Cancel"
-        Me.Button2.UseVisualStyleBackColor = True
+        Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.btnCancel.Location = New System.Drawing.Point(701, 303)
+        Me.btnCancel.Name = "btnCancel"
+        Me.btnCancel.Size = New System.Drawing.Size(75, 23)
+        Me.btnCancel.TabIndex = 8
+        Me.btnCancel.Text = "Cancel"
+        Me.btnCancel.UseVisualStyleBackColor = True
         '
         'StatusStrip1
         '
@@ -299,15 +308,6 @@ Partial Class FuelCellComponentForm
         Me.LbStatus.Size = New System.Drawing.Size(39, 17)
         Me.LbStatus.Text = "Status"
         '
-        'btnBrowseMassFlowMap
-        '
-        Me.btnBrowseMassFlowMap.Image = CType(resources.GetObject("btnBrowseMassFlowMap.Image"), System.Drawing.Image)
-        Me.btnBrowseMassFlowMap.Location = New System.Drawing.Point(364, 16)
-        Me.btnBrowseMassFlowMap.Name = "btnBrowseMassFlowMap"
-        Me.btnBrowseMassFlowMap.Size = New System.Drawing.Size(24, 24)
-        Me.btnBrowseMassFlowMap.TabIndex = 65
-        Me.btnBrowseMassFlowMap.UseVisualStyleBackColor = True
-        '
         'FuelCellComponentForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -315,9 +315,9 @@ Partial Class FuelCellComponentForm
         Me.ClientSize = New System.Drawing.Size(800, 450)
         Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.gpMassFlowMap)
-        Me.Controls.Add(Me.Button2)
+        Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.pnManufacturer)
-        Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.btnSaveFuelCellComponent)
         Me.Controls.Add(Me.pnModel)
         Me.Controls.Add(Me.pnMaxElectricPower)
         Me.Controls.Add(Me.TableLayoutPanel2)
@@ -361,8 +361,8 @@ Partial Class FuelCellComponentForm
     Friend WithEvents tbManufacturer As TextBox
     Friend WithEvents gpMassFlowMap As GroupBox
     Friend WithEvents tbMassFlowMap As TextBox
-    Friend WithEvents Button1 As Button
-    Friend WithEvents Button2 As Button
+    Friend WithEvents btnSaveFuelCellComponent As Button
+    Friend WithEvents btnCancel As Button
     Friend WithEvents StatusStrip1 As StatusStrip
     Friend WithEvents LbStatus As ToolStripStatusLabel
     Friend WithEvents btnBrowseMassFlowMap As Button
