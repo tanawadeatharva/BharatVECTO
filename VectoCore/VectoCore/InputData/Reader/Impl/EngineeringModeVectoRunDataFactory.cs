@@ -41,6 +41,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -96,8 +97,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		private IEnumerable<VectoRunData> GetFCHV_RunData()
 		{
 			foreach (var pevRd in GetBatteryElectricVehicleRunData()) {
+				pevRd.BatteryData = CreateFCHEV_PreProcessingBattery(pevRd);
+				pevRd.IterativeRunStrategy = new FCHEVIterativeRunStrategy();
 				yield return pevRd;
 			}
+		}
+
+		private BatterySystemData CreateFCHEV_PreProcessingBattery(VectoRunData pevRunData)
+		{
+			pevRunData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true); //<-Remove just a that avoids an empty 
+
+			return pevRunData.BatteryData;
 		}
 
 		private IEnumerable<VectoRunData> GetSerialHybridRunData()
