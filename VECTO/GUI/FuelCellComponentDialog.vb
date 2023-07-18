@@ -30,9 +30,9 @@ Public Class FuelCellComponentDialog
         Close()
     End Sub
 
-    Private Sub btnBrowseBattery_Click(sender As Object, e As EventArgs) Handles btnBrowseFuelCellComponent.Click
-        If REESSFileBrowser.OpenDialog(FileRepl(tbFuelCellComponent.Text, GetPath(_vehFile))) Then
-            tbFuelCellComponent.Text = GetFilenameWithoutDirectory(REESSFileBrowser.Files(0), GetPath(_vehFile))
+    Private Sub btnBrowseFuelCellComponent_Click(sender As Object, e As EventArgs) Handles btnBrowseFuelCellComponent.Click
+        If FuelCellComponentFileBrowser.OpenDialog(FileRepl(tbFuelCellComponent.Text, GetPath(_vehFile))) Then
+            tbFuelCellComponent.Text = GetFilenameWithoutDirectory(FuelCellComponentFileBrowser.Files(0), GetPath(_vehFile))
         End If
     End Sub
 

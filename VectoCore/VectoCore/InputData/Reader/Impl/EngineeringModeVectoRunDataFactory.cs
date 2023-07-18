@@ -86,8 +86,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					return GetIEPCRunData();
 				case VectoSimulationJobType.IEPC_S:
 					return GetIEPC_S_RunData();
+				case VectoSimulationJobType.FCHV:
+					return GetFCHV_RunData();
 				default:
 					throw new ArgumentOutOfRangeException($"Invalid JobType {InputDataProvider.JobInputData.JobType}");
+			}
+		}
+
+		private IEnumerable<VectoRunData> GetFCHV_RunData()
+		{
+			foreach (var pevRd in GetBatteryElectricVehicleRunData()) {
+				yield return pevRd;
 			}
 		}
 
@@ -280,7 +289,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					// gearbox required!
 					gearshiftParams = dao.CreateGearshiftData(
 						InputDataProvider.JobInputData.Vehicle.Components.GearboxInputData.Type, InputDataProvider.DriverInputData.GearshiftInputData,
-						axlegearData.AxleGear.Ratio * (angledriveData?.Angledrive.Ratio ?? 1.0), null);
+						//Is the Axlegear obligatory for E2 Vehicles?
+						axlegearData?.AxleGear.Ratio ?? 1.0 * (angledriveData?.Angledrive.Ratio ?? 1.0), null);
 					var tmpRunData = new VectoRunData() {
 						JobType = VectoSimulationJobType.BatteryElectricVehicle,
 						GearboxData = new GearboxData() {

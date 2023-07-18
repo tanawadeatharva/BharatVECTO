@@ -149,6 +149,7 @@ Partial Class FuelCellComponentDialog
         Me.Margin = New System.Windows.Forms.Padding(2)
         Me.Name = "FuelCellComponentDialog"
         Me.Padding = New System.Windows.Forms.Padding(8)
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "FuelCellComponentDialog"
         Me.pnSelectFuelCellComponent.ResumeLayout(False)
         Me.pnSelectFuelCellComponent.PerformLayout()

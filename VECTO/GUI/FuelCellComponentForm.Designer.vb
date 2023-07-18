@@ -324,6 +324,7 @@ Partial Class FuelCellComponentForm
         Me.Controls.Add(Me.lblTitle)
         Me.Controls.Add(Me.pcBoxMassFlowMap)
         Me.Name = "FuelCellComponentForm"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "pnMinElectricPower"
         CType(Me.pcBoxMassFlowMap, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TableLayoutPanel2.ResumeLayout(False)

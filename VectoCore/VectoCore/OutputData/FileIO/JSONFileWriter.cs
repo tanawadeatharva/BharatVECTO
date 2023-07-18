@@ -40,6 +40,7 @@ public class JSONFileWriter : IOutputFileWriter
 
 	private const int IEPCVectoJobFormatVersion = 12;
 	private const int IHPCVectoJobFormatVersion = 13;
+	private const int FCHVVectoJobFormatVersion = 14;
 	#endregion
 
 
@@ -751,9 +752,17 @@ public class JSONFileWriter : IOutputFileWriter
 			case VectoSimulationJobType.EngineOnlySimulation:
 				SaveEngineOnlyJob(input, filename, DeclMode);
 				break;
+			case VectoSimulationJobType.FCHV:
+				SaveFCHVJob(input, filename, DeclMode);
+				break;
 			default:
 				throw new ArgumentOutOfRangeException();
 		}
+	}
+
+	private void SaveFCHVJob(IEngineeringInputDataProvider input, string filename, bool declMode)
+	{
+		DoSaveBatteryElectricOrFCHVJob(input, filename, declMode, FCHVVectoJobFormatVersion);
 	}
 
 	private void SaveIHPCJob(IEngineeringInputDataProvider input, string filename, bool declMode)
@@ -1035,165 +1044,182 @@ public class JSONFileWriter : IOutputFileWriter
 		WriteFile(header, body, filename);
 	}
 
+
+	private void DoSaveBatteryElectricOrFCHVJob(IEngineeringInputDataProvider input, string filename, bool declMode,
+		int versionNumber)
+	{
+        var basePath = Path.GetDirectoryName(filename);
+
+        // Header
+        var header = GetHeader(versionNumber);
+
+        // Body
+        var body = new Dictionary<string, object>();
+
+        // SavedInDeclMode = Cfg.DeclMode
+
+        var job = input.JobInputData;
+
+        body.Add("SavedInDeclMode", job.SavedInDeclarationMode);
+        //body.Add("EngineOnlyMode", job.JobType);
+
+        // Main Files
+        body.Add("VehicleFile", GetRelativePath(job.Vehicle.DataSource.SourceFile, basePath));
+        if (input.JobInputData.Vehicle.Components.GearboxInputData != null)
+        {
+            body.Add("GearboxFile",
+                GetRelativePath(input.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, basePath));
+            if (input.DriverInputData.GearshiftInputData != null)
+            {
+                body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
+            }
+        }
+        body.Add("Padd_electric", input.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand.Value());
+
+        if (job.SavedInDeclarationMode && job.Vehicle is IVehicleDeclarationInputData declVehicle)
+        {
+            var aux = declVehicle.Components.AuxiliaryInputData;
+            var auxList = new List<object>();
+            foreach (var auxEntry in aux.Auxiliaries)
+            {
+                var auxOut = new Dictionary<string, object>();
+                var engineeringAuxEntry = auxEntry;
+                if (!job.SavedInDeclarationMode)
+                {
+                    auxOut.Add("Type", auxEntry.Type.Name());
+                    auxOut.Add("Technology", new string[] { });
+                }
+                else
+                {
+                    auxOut.Add("ID", auxEntry.Type.Key());
+                    auxOut.Add("Type", auxEntry.Type.Name());
+                    auxOut.Add("Technology", engineeringAuxEntry.Technology);
+                }
+
+                auxList.Add(auxOut);
+            }
+            body.Add("Aux", auxList);
+        }
+
+        if (!job.SavedInDeclarationMode && job.Vehicle is IVehicleEngineeringInputData engVehicle)
+        {
+            var aux = engVehicle.Components.AuxiliaryInputData;
+            if (aux.BusAuxiliariesData != null)
+            {
+                body.Add("BusAux",
+                    GetRelativePath(job.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile,
+                        basePath));
+            }
+        }
+        //if (!job.SavedInDeclarationMode)
+        //      {
+        //}
+
+        //body.Add("ShiftStrategy", input.JobInputData.ShiftStrategy);
+
+        //var aux = job.Vehicle.Components.AuxiliaryInputData;
+
+        // AA-TB
+        // ADVANCED AUXILIARIES 
+        //body.Add("AuxiliaryAssembly", aux.AuxiliaryAssembly.GetName());
+        //body.Add("AuxiliaryVersion", aux.AuxiliaryVersion);
+        //body.Add("AdvancedAuxiliaryFilePath", GetRelativePath(aux.AdvancedAuxiliaryFilePath, basePath));
+
+        //var pAdd = 0.0;
+        //var auxList = new List<object>();
+        //foreach (var auxEntry in aux.Auxiliaries)
+        //{
+        //    if (auxEntry.AuxiliaryType == AuxiliaryDemandType.Constant)
+        //    {
+        //        pAdd += auxEntry.ConstantPowerDemand.Value();
+        //        continue;
+        //    }
+
+        //    var auxOut = new Dictionary<string, object>();
+        //    var engineeringAuxEntry = auxEntry as IAuxiliaryDeclarationInputData;
+        //    if (!job.SavedInDeclarationMode)
+        //    {
+        //        auxOut.Add("ID", auxEntry.ID);
+        //        auxOut.Add("Type", AuxiliaryTypeHelper.ParseKey(auxEntry.ID).Name());
+        //        auxOut.Add("Path", GetRelativePath(auxEntry.DemandMap.Source, basePath));
+        //        auxOut.Add("Technology", new string[] { });
+        //    }
+        //    else
+        //    {
+        //        auxOut.Add("ID", auxEntry.ID);
+        //        auxOut.Add("Type", AuxiliaryTypeHelper.ParseKey(auxEntry.ID).Name());
+        //        auxOut.Add("Technology", engineeringAuxEntry.Technology);
+        //    }
+        //    auxList.Add(auxOut);
+        //}
+
+        //body.Add("Aux", auxList);
+        //if (!job.SavedInDeclarationMode)
+        //    body.Add("Padd", pAdd);
+
+        var driver = input.DriverInputData;
+
+        if (!job.SavedInDeclarationMode)
+        {
+            body.Add("VACC", GetRelativePath(driver.AccelerationCurve.AccelerationCurve.Source, basePath));
+            body.Add("EngineStopStartAtVehicleStopThreshold", driver.EngineStopStartData.ActivationDelay.Value());
+            body.Add("EngineStopStartMaxOffTimespan", driver.EngineStopStartData.MaxEngineOffTimespan.Value());
+            body.Add("EngineStopStartUtilityFactor", driver.EngineStopStartData.UtilityFactorStandstill);
+            body.Add("EngineStopStartUtilityFactorDriving", driver.EngineStopStartData.UtilityFactorDriving);
+
+            body.Add("EcoRollMinSpeed", driver.EcoRollData.MinSpeed.AsKmph);
+            body.Add("EcoRollActivationDelay", driver.EcoRollData.ActivationDelay.Value());
+            body.Add("EcoRollUnderspeedThreshold", driver.EcoRollData.UnderspeedThreshold.AsKmph);
+
+            body.Add("EcoRollMaxAcceleration", driver.EcoRollData.AccelerationUpperLimit.Value());
+            body.Add("PCCEnableSpeed", driver.PCCData.PCCEnabledSpeed.AsKmph);
+            body.Add("PCCMinSpeed", driver.PCCData.MinSpeed.AsKmph);
+            body.Add("PCCUnderspeed", driver.PCCData.Underspeed.AsKmph);
+            body.Add("PCCOverSpeed", driver.PCCData.OverspeedUseCase3.AsKmph);
+            body.Add("PCCPreviewDistanceUC1", driver.PCCData.PreviewDistanceUseCase1.Value());
+            body.Add("PCCPreviewDistanceUC2", driver.PCCData.PreviewDistanceUseCase2.Value());
+
+        }
+
+        if (!job.SavedInDeclarationMode)
+        {
+            var dfTargetSpeed = driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup != null &&
+                                File.Exists(driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup.Source)
+                ? GetRelativePath(driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup.Source, basePath)
+                : "";
+            var dfVelocityDrop = driver.Lookahead.CoastingDecisionFactorVelocityDropLookup != null &&
+                                File.Exists(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source)
+                ? GetRelativePath(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source, basePath)
+                : "";
+            body.Add("LAC", new Dictionary<string, object> {
+                { "Enabled", driver.Lookahead.Enabled },
+                { "PreviewDistanceFactor", driver.Lookahead.LookaheadDistanceFactor },
+                { "DF_offset", driver.Lookahead.CoastingDecisionFactorOffset },
+                { "DF_scaling", driver.Lookahead.CoastingDecisionFactorScaling },
+                { "DF_targetSpeedLookup", dfTargetSpeed },
+                { "Df_velocityDropLookup", dfVelocityDrop },
+                { "MinSpeed", driver.Lookahead.MinSpeed.AsKmph }
+            });
+        }
+
+        // Overspeed / EcoRoll
+        var overspeedDic = new Dictionary<string, object> {
+            { "Mode", driver.OverSpeedData.Enabled ? "Overspeed" : "Off" },
+            { "MinSpeed", driver.OverSpeedData.MinSpeed.AsKmph },
+            { "OverSpeed", driver.OverSpeedData.OverSpeed.AsKmph }
+        };
+
+        body.Add("OverSpeedEcoRoll", overspeedDic);
+
+        // Cycles
+        if (!job.SavedInDeclarationMode)
+            body.Add("Cycles", GetCycles(job, filename));
+
+        WriteFile(header, body, filename);
+    }
 	public void SaveBatteryElectricJob(IEngineeringInputDataProvider input, string filename, bool DeclMode)
 	{
-		var basePath = Path.GetDirectoryName(filename);
-
-		// Header
-		var header = GetHeader(BEVVectoJobFormatVersion);
-
-		// Body
-		var body = new Dictionary<string, object>();
-
-		// SavedInDeclMode = Cfg.DeclMode
-
-		var job = input.JobInputData;
-
-		body.Add("SavedInDeclMode", job.SavedInDeclarationMode);
-		//body.Add("EngineOnlyMode", job.JobType);
-
-		// Main Files
-		body.Add("VehicleFile", GetRelativePath(job.Vehicle.DataSource.SourceFile, basePath));
-		if (input.JobInputData.Vehicle.Components.GearboxInputData != null) {
-			body.Add("GearboxFile",
-				GetRelativePath(input.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, basePath));
-			if (input.DriverInputData.GearshiftInputData != null) {
-				body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
-			}
-		}
-		body.Add("Padd_electric", input.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand.Value());
-
-		if (job.SavedInDeclarationMode && job.Vehicle is IVehicleDeclarationInputData declVehicle) {
-			var aux = declVehicle.Components.AuxiliaryInputData;
-			var auxList = new List<object>();
-			foreach (var auxEntry in aux.Auxiliaries) {
-				var auxOut = new Dictionary<string, object>();
-				var engineeringAuxEntry = auxEntry;
-				if (!job.SavedInDeclarationMode) {
-					auxOut.Add("Type", auxEntry.Type.Name());
-					auxOut.Add("Technology", new string[] { });
-				} else {
-					auxOut.Add("ID", auxEntry.Type.Key());
-					auxOut.Add("Type", auxEntry.Type.Name());
-					auxOut.Add("Technology", engineeringAuxEntry.Technology);
-				}
-
-				auxList.Add(auxOut);
-			}
-			body.Add("Aux", auxList);
-		}
-
-		if (!job.SavedInDeclarationMode && job.Vehicle is IVehicleEngineeringInputData engVehicle) {
-			var aux = engVehicle.Components.AuxiliaryInputData;
-			if (aux.BusAuxiliariesData != null) {
-				body.Add("BusAux",
-					GetRelativePath(job.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile,
-						basePath));
-			}
-		}
-		//if (!job.SavedInDeclarationMode)
-		//      {
-		//}
-
-		//body.Add("ShiftStrategy", input.JobInputData.ShiftStrategy);
-
-		//var aux = job.Vehicle.Components.AuxiliaryInputData;
-
-		// AA-TB
-		// ADVANCED AUXILIARIES 
-		//body.Add("AuxiliaryAssembly", aux.AuxiliaryAssembly.GetName());
-		//body.Add("AuxiliaryVersion", aux.AuxiliaryVersion);
-		//body.Add("AdvancedAuxiliaryFilePath", GetRelativePath(aux.AdvancedAuxiliaryFilePath, basePath));
-
-		//var pAdd = 0.0;
-		//var auxList = new List<object>();
-		//foreach (var auxEntry in aux.Auxiliaries)
-		//{
-		//    if (auxEntry.AuxiliaryType == AuxiliaryDemandType.Constant)
-		//    {
-		//        pAdd += auxEntry.ConstantPowerDemand.Value();
-		//        continue;
-		//    }
-
-		//    var auxOut = new Dictionary<string, object>();
-		//    var engineeringAuxEntry = auxEntry as IAuxiliaryDeclarationInputData;
-		//    if (!job.SavedInDeclarationMode)
-		//    {
-		//        auxOut.Add("ID", auxEntry.ID);
-		//        auxOut.Add("Type", AuxiliaryTypeHelper.ParseKey(auxEntry.ID).Name());
-		//        auxOut.Add("Path", GetRelativePath(auxEntry.DemandMap.Source, basePath));
-		//        auxOut.Add("Technology", new string[] { });
-		//    }
-		//    else
-		//    {
-		//        auxOut.Add("ID", auxEntry.ID);
-		//        auxOut.Add("Type", AuxiliaryTypeHelper.ParseKey(auxEntry.ID).Name());
-		//        auxOut.Add("Technology", engineeringAuxEntry.Technology);
-		//    }
-		//    auxList.Add(auxOut);
-		//}
-
-		//body.Add("Aux", auxList);
-		//if (!job.SavedInDeclarationMode)
-		//    body.Add("Padd", pAdd);
-
-		var driver = input.DriverInputData;
-
-		if (!job.SavedInDeclarationMode) {
-			body.Add("VACC", GetRelativePath(driver.AccelerationCurve.AccelerationCurve.Source, basePath));
-			body.Add("EngineStopStartAtVehicleStopThreshold", driver.EngineStopStartData.ActivationDelay.Value());
-			body.Add("EngineStopStartMaxOffTimespan", driver.EngineStopStartData.MaxEngineOffTimespan.Value());
-			body.Add("EngineStopStartUtilityFactor", driver.EngineStopStartData.UtilityFactorStandstill);
-			body.Add("EngineStopStartUtilityFactorDriving", driver.EngineStopStartData.UtilityFactorDriving);
-
-			body.Add("EcoRollMinSpeed", driver.EcoRollData.MinSpeed.AsKmph);
-			body.Add("EcoRollActivationDelay", driver.EcoRollData.ActivationDelay.Value());
-			body.Add("EcoRollUnderspeedThreshold", driver.EcoRollData.UnderspeedThreshold.AsKmph);
-
-			body.Add("EcoRollMaxAcceleration", driver.EcoRollData.AccelerationUpperLimit.Value());
-			body.Add("PCCEnableSpeed", driver.PCCData.PCCEnabledSpeed.AsKmph);
-			body.Add("PCCMinSpeed", driver.PCCData.MinSpeed.AsKmph);
-			body.Add("PCCUnderspeed", driver.PCCData.Underspeed.AsKmph);
-			body.Add("PCCOverSpeed", driver.PCCData.OverspeedUseCase3.AsKmph);
-			body.Add("PCCPreviewDistanceUC1", driver.PCCData.PreviewDistanceUseCase1.Value());
-			body.Add("PCCPreviewDistanceUC2", driver.PCCData.PreviewDistanceUseCase2.Value());
-
-		}
-
-		if (!job.SavedInDeclarationMode) {
-			var dfTargetSpeed = driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup != null &&
-								File.Exists(driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup.Source)
-				? GetRelativePath(driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup.Source, basePath)
-				: "";
-			var dfVelocityDrop = driver.Lookahead.CoastingDecisionFactorVelocityDropLookup != null &&
-								File.Exists(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source)
-				? GetRelativePath(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source, basePath)
-				: "";
-			body.Add("LAC", new Dictionary<string, object> {
-				{ "Enabled", driver.Lookahead.Enabled },
-				{ "PreviewDistanceFactor", driver.Lookahead.LookaheadDistanceFactor },
-				{ "DF_offset", driver.Lookahead.CoastingDecisionFactorOffset },
-				{ "DF_scaling", driver.Lookahead.CoastingDecisionFactorScaling },
-				{ "DF_targetSpeedLookup", dfTargetSpeed },
-				{ "Df_velocityDropLookup", dfVelocityDrop },
-				{ "MinSpeed", driver.Lookahead.MinSpeed.AsKmph }
-			});
-		}
-
-		// Overspeed / EcoRoll
-		var overspeedDic = new Dictionary<string, object> {
-			{ "Mode", driver.OverSpeedData.Enabled ? "Overspeed" : "Off" },
-			{ "MinSpeed", driver.OverSpeedData.MinSpeed.AsKmph },
-			{ "OverSpeed", driver.OverSpeedData.OverSpeed.AsKmph }
-		};
-
-		body.Add("OverSpeedEcoRoll", overspeedDic);
-
-		// Cycles
-		if (!job.SavedInDeclarationMode)
-			body.Add("Cycles", GetCycles(job, filename));
-
-		WriteFile(header, body, filename);
+		DoSaveBatteryElectricOrFCHVJob(input, filename, DeclMode, BEVVectoJobFormatVersion);
 	}
 
 	private void SaveIEPCEJob(IEngineeringInputDataProvider input, string filename, bool declMode)
