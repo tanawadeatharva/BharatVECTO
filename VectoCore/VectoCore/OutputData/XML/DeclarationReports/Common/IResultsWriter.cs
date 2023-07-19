@@ -61,6 +61,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         IFuelConsumptionWriter GetFuelConsumptionLorry(ICommonResultsWriterFactory factory, XNamespace ns);
         IElectricEnergyConsumptionWriter GetElectricEnergyConsumptionLorry(ICommonResultsWriterFactory factory, XNamespace ns);
         ICO2Writer GetCO2ResultLorry(ICommonResultsWriterFactory factory, XNamespace ns);
+		ICO2Writer GetCO2SummaryResultLorry(ICommonResultsWriterFactory factory, XNamespace ns);
 
         IReportResultsSummaryWriter GetLorryConvSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IReportResultsSummaryWriter GetLorryHEVNonOVCSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
@@ -79,6 +80,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		IElectricEnergyConsumptionWriter GetElectricEnergyConsumptionBus(ICommonResultsWriterFactory factory, XNamespace ns);
         ICO2Writer GetCO2ResultBus(ICommonResultsWriterFactory factory, XNamespace ns);
         ICO2Writer GetCO2ResultPEVBus(ICommonResultsWriterFactory factory, XNamespace ns);
+		ICO2Writer GetCO2SummaryResultBus(ICommonResultsWriterFactory factory, XNamespace ns);
+		ICO2Writer GetCO2SummaryResultPEVBus(ICommonResultsWriterFactory factory, XNamespace ns);
 
 
 

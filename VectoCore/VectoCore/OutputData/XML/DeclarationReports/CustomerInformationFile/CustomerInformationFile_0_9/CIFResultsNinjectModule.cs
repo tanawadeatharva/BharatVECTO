@@ -100,8 +100,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetElectricEnergyConsumptionLorry(null, XNamespace.None));
 			Bind<ICO2Writer>().To<LorryCO2Writer>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetCO2ResultLorry(null, XNamespace.None));
+			Bind<ICO2Writer>().To<LorrySummaryCO2Writer>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetCO2SummaryResultLorry(null, XNamespace.None));
 
-			Bind<IReportResultsSummaryWriter>().To<LorryConvSummaryWriter>().When(AccessedViaCIFResultsWriterFactory)
+            Bind<IReportResultsSummaryWriter>().To<LorryConvSummaryWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetLorryConvSummaryWriter(null, XNamespace.None));
 			Bind<IReportResultsSummaryWriter>().To<LorryHEVNonOVCSummaryWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetLorryHEVNonOVCSummaryWriter(null, XNamespace.None));
@@ -155,8 +157,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetCO2ResultBus(null, XNamespace.None));
 			Bind<ICO2Writer>().To<BusPEVCO2Writer>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetCO2ResultPEVBus(null, XNamespace.None));
+			Bind<ICO2Writer>().To<BusSummaryCO2Writer>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetCO2SummaryResultBus(null, XNamespace.None));
+			Bind<ICO2Writer>().To<BusPEVSummaryCO2Writer>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetCO2SummaryResultPEVBus(null, XNamespace.None));
 
-			Bind<IReportResultsSummaryWriter>().To<BusConvSummaryWriter>().When(AccessedViaCIFResultsWriterFactory)
+            Bind<IReportResultsSummaryWriter>().To<BusConvSummaryWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetBusConvSummaryWriter(null, XNamespace.None));
 			Bind<IReportResultsSummaryWriter>().To<BusHEVNonOVCSummaryWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetBusHEVNonOVCSummaryWriter(null, XNamespace.None));

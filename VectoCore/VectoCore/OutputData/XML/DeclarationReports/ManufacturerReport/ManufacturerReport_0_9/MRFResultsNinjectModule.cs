@@ -105,6 +105,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetElectricEnergyConsumptionLorry(null, XNamespace.None));
             Bind<ICO2Writer>().To<LorryCO2Writer>().When(AccessedViaMRFResultsWriterFactory)
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetCO2ResultLorry(null, XNamespace.None));
+			Bind<ICO2Writer>().To<LorrySummaryCO2Writer>().When(AccessedViaMRFResultsWriterFactory)
+				.NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetCO2SummaryResultLorry(null, XNamespace.None));
 
             Bind<IReportResultsSummaryWriter>().To<NoSummaryWriter>().When(AccessedViaMRFResultsWriterFactory)
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetLorryConvSummaryWriter(null, XNamespace.None));
@@ -165,6 +167,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetCO2ResultBus(null, XNamespace.None));
             Bind<ICO2Writer>().To<BusPEVCO2Writer>().When(AccessedViaMRFResultsWriterFactory)
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetCO2ResultPEVBus(null, XNamespace.None));
+			Bind<ICO2Writer>().To<BusSummaryCO2Writer>().When(AccessedViaMRFResultsWriterFactory)
+				.NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetCO2SummaryResultBus(null, XNamespace.None));
+			Bind<ICO2Writer>().To<BusPEVSummaryCO2Writer>().When(AccessedViaMRFResultsWriterFactory)
+				.NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetCO2SummaryResultPEVBus(null, XNamespace.None));
 
             Bind<IReportResultsSummaryWriter>().To<NoSummaryWriter>().When(AccessedViaMRFResultsWriterFactory)
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetBusConvSummaryWriter(null, XNamespace.None));
