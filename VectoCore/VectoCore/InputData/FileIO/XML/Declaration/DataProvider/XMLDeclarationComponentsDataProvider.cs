@@ -478,7 +478,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override IGearboxDeclarationInputData GearboxInputData => null;
 
-		public override IAxleGearInputData AxleGearInputData => null;
+		public override IAxleGearInputData AxleGearInputData => ElementExists(XMLNames.Component_Axlegear) ? base.AxleGearInputData : null;
 
 		#endregion
 	}
