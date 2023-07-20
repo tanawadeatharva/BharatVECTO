@@ -11,11 +11,14 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 {
     internal class FCHEVIterativeRunStrategy : AbstractIterativeRunStrategy<FCHEVIterativeRunStrategy.FCHEVIterativeRunResult>
 	{
+		
+
 		private bool firstRunPerformed = false;
 		public class FCHEVIterativeRunResult : IIterativeRunResult
 		{
 
 		}
+
 
 		#region Overrides of AbstractIterativeRunStrategy<FCHEVIterativeRunResult>
 
