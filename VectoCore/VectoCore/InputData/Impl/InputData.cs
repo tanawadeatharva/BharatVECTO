@@ -149,6 +149,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public double RollResistanceCoefficient { get; internal set; }
 
 		public Newton TyreTestLoad { get; internal set; }
+
 		public string FuelEfficiencyClass { get; internal set; }
 
 		public KilogramSquareMeter Inertia { get; internal set; }
