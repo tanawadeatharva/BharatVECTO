@@ -66,8 +66,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var current = 0.SI<Ampere>();
 			if (!powerDemand.IsEqual(0))
 			{
-				var solutions = VectoMath.QuadraticEquationSolver(internalResistance.Value(), InternalVoltage.Value(),
-					-powerDemand.Value());
+				var R_int = InternalResistance(tPulse);
+				double[] solutions;
+				if (R_int.IsRelativeEqual(0.SI<Ohm>()))
+				{
+					//Linear solution, quadratic equation solver would become unstable if a is very close to zero
+					solutions = new[] {
+						(powerDemand / InternalVoltage).Value()
+					};
+				}
+				else
+				{
+					solutions = VectoMath.QuadraticEquationSolver(InternalResistance(tPulse).Value(), InternalVoltage.Value(),
+						-powerDemand.Value());
+				}
 				current = SelectSolution(solutions, powerDemand.Value());
 			}
 			var batteryLoss = current * internalResistance * current;
@@ -240,7 +252,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public AmpereSecond Capacity => ModelData.Capacity;
 		
 		public Volt NominalVoltage => ModelData.SOCMap.Lookup(0.5);
-		
+
 		public Ampere MaxChargeCurrent(Second dt)
 		{
 			return VectoMath.Min(

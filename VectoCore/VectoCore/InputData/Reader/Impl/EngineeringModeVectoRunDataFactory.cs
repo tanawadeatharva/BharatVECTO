@@ -112,6 +112,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			fcSystem.FuelCellComponents.Sum(fc => fc.Count * fc.FuelCellComponent.MaxElectricPower);
 
+			var pevBat = pevRunData.BatteryData;
+
+			var fcP = fcSystem.FuelCellComponents.Sum(fc => fc.FuelCellComponent.MaxElectricPower * fc.Count);
+			var V = pevBat.CalculateAverageVoltage();
+			var I = fcP / V;
+
+			var resistance = 1E-12.SI<Ohm>();
 
 			var batteryData = new BatteryData() {
 				BatteryId = 0xFCB,
@@ -119,22 +126,64 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				MinSOC = 0,
 				MaxSOC = 1,
 				InputData = null,
-				MaxCurrent = new MaxCurrentMap(new MaxCurrentMap.MaxCurrentEntry[] {
+				Capacity = 1E5.SI<AmpereSecond>(),
+				MaxCurrent = new MaxCurrentMap(new[] {
 					new MaxCurrentMap.MaxCurrentEntry() {
-						SoC = 0.4,
-						MaxDischargeCurrent = 400.SI<Ampere>(),
+						SoC = 0,
+						MaxDischargeCurrent = -I,
 						MaxChargeCurrent = 0.SI<Ampere>()
 					},
 					new MaxCurrentMap.MaxCurrentEntry() {
-						SoC = 0.4,
-						MaxDischargeCurrent = 400.SI<Ampere>(),
+						SoC = 0.5,
+						MaxDischargeCurrent = -I,
+						MaxChargeCurrent = 0.SI<Ampere>()
+					},
+					new MaxCurrentMap.MaxCurrentEntry() {
+						SoC = 1,
+						MaxDischargeCurrent = -I,
 						MaxChargeCurrent = 0.SI<Ampere>()
 					}
 				}),
-				SOCMap = 
+				SOCMap = new SOCMap(new [] {
+					new SOCMap.SOCMapEntry() {
+						SOC = 0,
+						BatteryVolts = V
+					},
+					new SOCMap.SOCMapEntry() {
+						SOC = 0.5,
+						BatteryVolts = V
+					},
+                    new SOCMap.SOCMapEntry(){
+						SOC = 1,
+						BatteryVolts = V
+					}
+				}),
+				InternalResistance = new InternalResistanceMap(new[] {
+					new InternalResistanceMap.InternalResistanceMapEntry() {
+						SoC = 0,
+						Resistance = new List<Tuple<Second, Ohm>>() {
+							Tuple.Create(0.SI<Second>(), resistance),
+							Tuple.Create(1e9.SI<Second>(), resistance)
+						}
+                    },
+					new InternalResistanceMap.InternalResistanceMapEntry() {
+						SoC = 0.5,
+						Resistance = new List<Tuple<Second, Ohm>>() {
+							Tuple.Create(0.SI<Second>(), resistance),
+							Tuple.Create(1e9.SI<Second>(), resistance)
+						}
+					},
+					new InternalResistanceMap.InternalResistanceMapEntry() {
+						SoC = 1,
+						Resistance = new List<Tuple<Second, Ohm>>() {
+							Tuple.Create(0.SI<Second>(), resistance),
+							Tuple.Create(1e9.SI<Second>(), resistance)
+						}
+					}
+                })
 			};
 			pevRunData.BatteryData.Batteries.Add(Tuple.Create(0xFCB, batteryData));
-
+			return pevRunData.BatteryData;
 
 			//Where to consider the inner resistance of the battery?
 
