@@ -145,6 +145,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public SuperCapData SuperCapData { get; internal set; }
 
+		public FuelCellSystemData FuelCellSystemData { get; internal set; }
+
 		public DCDCData DCDCData { get; internal set; }
 
 		public SimulationType SimulationType { get; internal set; }

@@ -5,13 +5,28 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 {
-	public class FuelCellData
+	public class FuelCellSystemData
 	{
-		
+		public WattPerSecond GradientPowerChange { get; set; }
+
+		public Second OnOffHysteresis { get; set; }
+
+
+		public IList<FuelCellData> FuelCells { get; set; }
 	}
 
+	public class FuelCellData
+	{
+		public FuelCellMassFlowMap MassFlowMap { get; set; }
+		public Watt MaxElectricPower { get; set; }
+		public Watt MinElectricPower { get; set; }
 
 
+
+
+
+
+	}
 
 	public class FuelCellMassFlowMap
 	{
@@ -28,7 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		public class MassFlowMapEntry
 		{
 			[Required, SIRange(0, 1e8)] public Watt P_el_out;
-			[Required, SIRange(0, 1e8)] public KilogramPerSecond Resistance;
+			[Required, SIRange(0, 1e8)] public KilogramPerSecond H2;
 		}
 
     }

@@ -11,13 +11,17 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 {
     internal class FCHEVIterativeRunStrategy : AbstractIterativeRunStrategy<FCHEVIterativeRunStrategy.FCHEVIterativeRunResult>
 	{
+		public delegate void DoUpdateRunData(IModalDataContainer modData, VectoRunData runData); 
 		
+		public DoUpdateRunData Update { get; set; }
 
 		private bool firstRunPerformed = false;
 		public class FCHEVIterativeRunResult : IIterativeRunResult
 		{
 
 		}
+
+
 
 
 		#region Overrides of AbstractIterativeRunStrategy<FCHEVIterativeRunResult>
@@ -36,11 +40,16 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 
 		public override void UpdateRunData(int iteration, IModalDataContainer modData, VectoRunData runData)
 		{
-			
+			if (Update != null) {
+				Update(modData, runData);
+
+			}
 
 
-			//Perform necessary changes to the rundata for the next run
-		}
+
+
+            //Perform necessary changes to the rundata for the next run
+        }
 
 		#endregion
 	}

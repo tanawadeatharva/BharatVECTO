@@ -97,188 +97,27 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		private IEnumerable<VectoRunData> GetFCHV_RunData()
 		{
+			var dao = new EngineeringDataAdapter();
 			foreach (var pevRd in GetBatteryElectricVehicleRunData()) {
-				///MOVE TO DATA ADAPTE
-				pevRd.BatteryData = CreateFCHEV_PreSimulationBattery(pevRd, InputDataProvider.JobInputData.Vehicle.Components.FuelCellSystemInputData);
-				pevRd.IterativeRunStrategy = new FCHEVIterativeRunStrategy();
-				
+                ///MOVE TO DATA ADAPTE
+                /// 
+				var iterativeRunStrategy = new FCHEVIterativeRunStrategy();
+				pevRd.BatteryData = dao.CreateFuelCellPreProcessingBattery(InputDataProvider.JobInputData.Vehicle.Components.FuelCellSystemInputData, pevRd.BatteryData);
+
+
+				iterativeRunStrategy.Update = (modData, runData) => {
+					runData.BatteryData =
+						dao.CreateBatteryData(InputDataProvider.JobInputData.Vehicle.Components.ElectricStorage, 0.5);
+					runData.FuelCellSystemData =
+						dao.CreateFuelCellSystemData(InputDataProvider.JobInputData.Vehicle.Components
+							.FuelCellSystemInputData);
+				};
+				pevRd.IterativeRunStrategy = iterativeRunStrategy;
 				yield return pevRd;
 			}
 		}
 
-		public BatterySystemData CreateFCHEV_PreSimulationBattery(VectoRunData pevRunData, IFuelCellSystemEngineeringInputData fcSystem)
-		{
-			var vehicleDataInput = pevRunData.VehicleData.InputData;
-
-			fcSystem.FuelCellComponents.Sum(fc => fc.Count * fc.FuelCellComponent.MaxElectricPower);
-
-			var pevBat = pevRunData.BatteryData;
-
-			var fcP = fcSystem.FuelCellComponents.Sum(fc => fc.FuelCellComponent.MaxElectricPower * fc.Count);
-			var V = pevBat.CalculateAverageVoltage();
-			var I = fcP / V;
-
-			var resistance = 1E-12.SI<Ohm>();
-
-			var batteryData = new BatteryData() {
-				BatteryId = 0xFCB,
-				ChargeSustainingBattery = true,
-				MinSOC = 0,
-				MaxSOC = 1,
-				InputData = null,
-				Capacity = 1E5.SI<AmpereSecond>(),
-				MaxCurrent = new MaxCurrentMap(new[] {
-					new MaxCurrentMap.MaxCurrentEntry() {
-						SoC = 0,
-						MaxDischargeCurrent = -I,
-						MaxChargeCurrent = 0.SI<Ampere>()
-					},
-					new MaxCurrentMap.MaxCurrentEntry() {
-						SoC = 0.5,
-						MaxDischargeCurrent = -I,
-						MaxChargeCurrent = 0.SI<Ampere>()
-					},
-					new MaxCurrentMap.MaxCurrentEntry() {
-						SoC = 1,
-						MaxDischargeCurrent = -I,
-						MaxChargeCurrent = 0.SI<Ampere>()
-					}
-				}),
-				SOCMap = new SOCMap(new [] {
-					new SOCMap.SOCMapEntry() {
-						SOC = 0,
-						BatteryVolts = V
-					},
-					new SOCMap.SOCMapEntry() {
-						SOC = 0.5,
-						BatteryVolts = V
-					},
-                    new SOCMap.SOCMapEntry(){
-						SOC = 1,
-						BatteryVolts = V
-					}
-				}),
-				InternalResistance = new InternalResistanceMap(new[] {
-					new InternalResistanceMap.InternalResistanceMapEntry() {
-						SoC = 0,
-						Resistance = new List<Tuple<Second, Ohm>>() {
-							Tuple.Create(0.SI<Second>(), resistance),
-							Tuple.Create(1e9.SI<Second>(), resistance)
-						}
-                    },
-					new InternalResistanceMap.InternalResistanceMapEntry() {
-						SoC = 0.5,
-						Resistance = new List<Tuple<Second, Ohm>>() {
-							Tuple.Create(0.SI<Second>(), resistance),
-							Tuple.Create(1e9.SI<Second>(), resistance)
-						}
-					},
-					new InternalResistanceMap.InternalResistanceMapEntry() {
-						SoC = 1,
-						Resistance = new List<Tuple<Second, Ohm>>() {
-							Tuple.Create(0.SI<Second>(), resistance),
-							Tuple.Create(1e9.SI<Second>(), resistance)
-						}
-					}
-                })
-			};
-			pevRunData.BatteryData.Batteries.Add(Tuple.Create(0xFCB, batteryData));
-			return pevRunData.BatteryData;
-
-			//Where to consider the inner resistance of the battery?
-
-			//var pevBatterySystemData = pevRunData.BatteryData;
-			//var (min, max) = pevBatterySystemData.GetSocLimits();
-			//pevBatterySystemData.InitialSoC = (min + max) / 2;
-			//var tmpBatterySystem = new BatterySystem(null, pevBatterySystemData);
-
-			//tmpBatterySystem.PreviousState.PowerDemand = 1.SI<Watt>();
-			//tmpBatterySystem.PreviousState.PulseDuration = 1.SI<Second>();
-			//foreach (var bats in tmpBatterySystem.Batteries) {
-			//	foreach (var bat in bats.Value.Batteries) {
-			//		bat.PreviousState.StateOfCharge = (bat.MinSoC + bat.MaxSoC) / 2;
-			//	}
-			//}
-			//var maxCharge = tmpBatterySystem.MaxChargePower(1.SI<Second>());
-
-			//tmpBatterySystem.PreviousState.PowerDemand = -1.SI<Watt>();
-			//var maxDischarge = tmpBatterySystem.MaxDischargePower(1.SI<Second>());
-
-
-			//var capacity = tmpBatterySystem.Capacity;
-
-			//var voltage = tmpBatterySystem.InternalVoltage; // OR tmpBatterySystem.NominalVoltage; ????
-			//var maxChargeCurrent = maxCharge / voltage;
-			//var maxDischargeCurrent = maxDischarge / voltage;
-
-			//var maxCurrentEntries = new List<MaxCurrentMap.MaxCurrentEntry>();
-			//var internalResistanceEntries = new List<InternalResistanceMap.InternalResistanceMapEntry>();
-			//var socMapEntries = new List<SOCMap.SOCMapEntry>();
-			////MaxCurrentMap
-
-			//var dSoc = pevBatterySystemData.InitialSoC * 0.1;
-			//var socRange = new List<double>() {
-			//	pevBatterySystemData.InitialSoC - dSoc,
-			//	pevBatterySystemData.InitialSoC,
-			//	pevBatterySystemData.InitialSoC + dSoc,
-			//};
-
-			//foreach(var soc in socRange){
-			//	//MaxCurrent
-			//	maxCurrentEntries.Add(new MaxCurrentMap.MaxCurrentEntry() {
-			//		SoC = soc,
-			//		MaxChargeCurrent = maxChargeCurrent,
-			//		MaxDischargeCurrent = maxDischargeCurrent,
-			//	});
-
-			//	//Resistance
-			//	var resistance = 1.SI<Ohm>(); //Considered in maxchargecurrent? make smaller (i.e. 1E-30) 
-			//	internalResistanceEntries.Add(new InternalResistanceMap.InternalResistanceMapEntry()
-			//	{
-			//		SoC = soc,
-			//		Resistance = new List<Tuple<Second, Ohm>>() {
-			//		Tuple.Create(0.SI<Second>(), resistance),
-			//		Tuple.Create(1e9.SI<Second>(), resistance)
-			//	}});
-
-			//	//SOCMap
-			//	socMapEntries.Add(new SOCMap.SOCMapEntry() {
-			//		SOC = soc,
-			//		BatteryVolts = voltage,
-			//	});
-			//};
-
-			//var maxCurrentMap = new MaxCurrentMap(maxCurrentEntries.ToArray());
-			//var socMap = new SOCMap(socMapEntries.ToArray());
-			//var internalResistanceMap = new InternalResistanceMap(internalResistanceEntries.ToArray());
-
-			//var batteryData = new BatteryData() {
-			//	BatteryId = 0,
-			//	Capacity = capacity,
-			//	ChargeSustainingBattery = true,
-			//	InputData = null,
-			//	MaxSOC = max,
-			//	MinSOC = min,
-			//	InternalResistance = internalResistanceMap, //TODO,
-			//	MaxCurrent = maxCurrentMap, //TODO;
-			//	SOCMap = socMap, //TODO;
-			//};
-
-
-			//var bsData = new BatterySystemData() {
-			//	Batteries = new List<Tuple<int, BatteryData>>() { Tuple.Create(1, batteryData) },
-			//	InitialSoC = pevBatterySystemData.InitialSoC,
-			//	ConnectionSystemResistance = 0.SI<Ohm>(),
-
-			//};
-
-			//pevRunData.BatteryData = bsData;
-
-			////var tmpBat2 = new BatterySystem(null, bsData);
-
-
-			//return pevRunData.BatteryData;
-		}
+		
 
 		private IEnumerable<VectoRunData> GetSerialHybridRunData()
 		{
