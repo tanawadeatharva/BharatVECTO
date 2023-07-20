@@ -302,6 +302,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		};
 
 		// ------------------------------------------------------------------------------------
+		public static readonly ModalResultField[] FuelCellSignals = {
+			ModalResultField.P_fuelCellSystem,
+		};
+
+		// ------------------------------------------------------------------------------------
 		public static readonly ModalResultField[] BrakeSignals = {
 			ModalResultField.P_brake_loss,
 			ModalResultField.P_brake_in
@@ -430,6 +435,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				case IHybridController _: CreateColumns(HybridControllerSignals);
 					break;
 				case IDCDCConverter _: CreateColumns(DCDCConverterSignals);
+					break;
+				case FuelCellSystem _: CreateColumns(FuelCellSignals);
 					break;
 				case ElectricAuxiliaries _:
 					CreateElectricAuxColumns();

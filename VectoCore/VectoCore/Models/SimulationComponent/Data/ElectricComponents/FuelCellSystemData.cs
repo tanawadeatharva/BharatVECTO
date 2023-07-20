@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 {
@@ -13,6 +14,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 
 
 		public IList<FuelCellData> FuelCells { get; set; }
+
+		public FuelCellPowerMap FuelCellPowerMap { get; set; }
+
+		public Watt ChargingPower(Meter mileageCounterDistance)
+		{
+			return FuelCellPowerMap.Lookup(mileageCounterDistance);
+		}
 	}
 
 	public class FuelCellData
@@ -24,6 +32,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 
 
 
+
+
+	}
+
+
+	/// <summary>
+	/// Determines the power delivery of the fuel cell given the current distance
+	/// </summary>
+	public class FuelCellPowerMap
+	{
+		private Watt _powerDelivery;
+
+		/// <summary>
+		/// Constant for now, remove when this is replaced with the actual implementation 
+		/// </summary>
+		/// <param name="powerDelivery"></param>
+		public FuelCellPowerMap(Watt powerDelivery)
+		{
+			_powerDelivery = powerDelivery;
+		}
+
+		public Watt Lookup(Meter distance)
+		{
+			return _powerDelivery;
+		}
 
 
 	}

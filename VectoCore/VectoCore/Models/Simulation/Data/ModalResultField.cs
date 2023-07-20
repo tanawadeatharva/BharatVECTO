@@ -469,7 +469,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "P_REESS_ES_T [kW]", outputFactor: 1e-3)] P_terminal_ES,
 		[ModalResultField(typeof(SI), caption: "P_REESS_JB_Cables_loss [kW]", outputFactor: 1e-3)] P_ES_Conn_loss,
 
-
+		[ModalResultField(typeof(SI), caption: "P_FuelCellSystem [kW]", outputFactor: 1e-3)] P_fuelCellSystem,
         [ModalResultField(typeof(SI), caption: "T_max_propulsion [Nm]")] MaxPropulsionTorqe,
 
 		[ModalResultField(typeof(SI), caption: "P_DC/DC_In [kW]", outputFactor: 1e-3)] P_DCDC_In,

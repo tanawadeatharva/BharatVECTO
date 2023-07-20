@@ -648,6 +648,10 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.U0_reess,
 					ModalResultField.I_reess,
 				}.Select(x => x.GetName()));
+
+			dataColumns.AddRange(new [] {
+				ModalResultField.P_fuelCellSystem
+			}.Select(x => x.GetName()));
 			// EMs
 			if (Data.ElectricMotors.Count > 0) {
 				foreach (var em in Data.ElectricMotors.OrderBy(x => x).Reverse()) {

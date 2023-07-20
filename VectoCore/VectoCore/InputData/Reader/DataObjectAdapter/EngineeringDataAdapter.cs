@@ -903,12 +903,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		public FuelCellSystemData CreateFuelCellSystemData(IFuelCellSystemEngineeringInputData fuelCellSystemInputData)
+		public FuelCellSystemData CreateFuelCellSystemData(IFuelCellSystemEngineeringInputData fuelCellSystemInputData, FuelCellPowerMap fuelCellPowerMap)
 		{
 			var fuelCellSystemData = new FuelCellSystemData();
 			fuelCellSystemData.GradientPowerChange = fuelCellSystemInputData.GradientPowerChange;
 			fuelCellSystemData.OnOffHysteresis = fuelCellSystemInputData.OnOffHysteresis;
-
+			fuelCellSystemData.FuelCellPowerMap = fuelCellPowerMap;
 			fuelCellSystemData.FuelCells = new List<FuelCellData>();
 			foreach (var fcC in fuelCellSystemInputData.FuelCellComponents) {
 				for (int i = 0; i < fcC.Count; i++) {

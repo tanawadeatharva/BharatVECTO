@@ -36,6 +36,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			var chargePower = Charger.Count == 0 ? 0.SI<Watt>() : Charger.Sum(x => x.PowerDemand(absTime, dt, powerDemand, auxDemand, dryRun));
 			var currentEst = powerDemand / Battery.InternalVoltage;
 			var connectorLoss = currentEst * (ModelData?.ConnectionSystemResistance ?? 0.SI<Ohm>() ) * currentEst;
+			if (chargePower.IsGreater(0)) {
+
+			}
 			var totalPowerDemand = powerDemand + chargePower - auxDemand - connectorLoss;
 
 			var batResponse = Battery.MainBatteryPort.Request(absTime, dt, totalPowerDemand, dryRun);
@@ -79,6 +82,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			container[ModalResultField.P_Aux_el_HV] = CurrentState.AuxPower;
 			container[ModalResultField.P_ES_Conn_loss] = CurrentState.ConnectorLoss;
 			container[ModalResultField.P_terminal_ES] = CurrentState.TotalPowerDemand;
+
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
