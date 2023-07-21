@@ -64,6 +64,8 @@ namespace TUGraz.VectoCore.OutputData
 
 		object this[ModalResultField key, int? pos] { get; set; }
 
+		object this[ModalResultField key, string arg] { get; set; }
+
 		/// <summary>
 		/// Indexer for auxiliary fields of the DataWriter.
 		/// </summary>

@@ -47,6 +47,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries;
@@ -1239,12 +1240,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			AddElectricAuxiliaries(data, container, es, cycle, dcdc);
 			//TODO: Just add to BatteryElectric???
-			if (data.FuelCellSystemData != null)
-			{
-				es.Connect(new FuelCellSystem(data.FuelCellSystemData, container));
-			}
+			ConnectFuelCellSystem(es, data.FuelCellSystemData, container);
             return container;
 
+		}
+
+		private static void ConnectFuelCellSystem(ElectricSystem es, FuelCellSystemData fcSystemData, IVehicleContainer container)
+		{
+			if (fcSystemData != null) {
+				var fuelCellSystem = new FuelCellSystem(fcSystemData, container);
+				foreach (var fuelCell in fcSystemData.FuelCells) {
+					fuelCellSystem.AddFuelCell(new FuelCell(fuelCell, container));
+				}
+				es.Connect(fuelCellSystem);
+			}
 		}
 		
 		private static IVehicleContainer BuildPWheelBatteryElectric(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)

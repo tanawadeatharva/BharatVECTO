@@ -649,9 +649,19 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.I_reess,
 				}.Select(x => x.GetName()));
 
+
+
+
+
+			//Fuel Cell 
+			dataColumns.AddRange(Data.FuelCellColumns);
 			dataColumns.AddRange(new [] {
 				ModalResultField.P_fuelCellSystem
 			}.Select(x => x.GetName()));
+
+
+
+
 			// EMs
 			if (Data.ElectricMotors.Count > 0) {
 				foreach (var em in Data.ElectricMotors.OrderBy(x => x).Reverse()) {
@@ -981,6 +991,11 @@ namespace TUGraz.VectoCore.OutputData
 			set => CurrentRow[key.GetName()] = value;
 		}
 
+		public string GetColumnName(ModalResultField mrf, string arg)
+		{
+			return string.Format(mrf.GetCaption(), arg);
+		}
+
 		public string GetColumnName(IFuelProperties fuelData, ModalResultField mrf)
 		{
 			try {
@@ -1018,6 +1033,12 @@ namespace TUGraz.VectoCore.OutputData
 			get => CurrentRow[GetColumnName(pos, key)];
 			set => CurrentRow[GetColumnName(pos, key)] = value;
 		}
+
+		public object this[ModalResultField key, string arg]
+		{
+			get => CurrentRow[GetColumnName(key, arg)]; 
+			set => CurrentRow[GetColumnName(key, arg)] = value;
+        }
 
 		public object this[ModalResultField key, int? idx]
 		{

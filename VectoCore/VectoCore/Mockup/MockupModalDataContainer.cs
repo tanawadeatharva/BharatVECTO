@@ -96,6 +96,12 @@ namespace TUGraz.VectoMockup
 			set => _modalDataContainerImplementation[key, pos] = value;
 		}
 
+		public object this[ModalResultField key, string arg]
+		{
+			get => _modalDataContainerImplementation[key, arg];
+			set => _modalDataContainerImplementation[key, arg] = value;
+		}
+
 		public object this[string auxId]
 		{
 			get => _modalDataContainerImplementation[auxId];

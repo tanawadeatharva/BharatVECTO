@@ -910,21 +910,27 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			fuelCellSystemData.OnOffHysteresis = fuelCellSystemInputData.OnOffHysteresis;
 			fuelCellSystemData.FuelCellPowerMap = fuelCellPowerMap;
 			fuelCellSystemData.FuelCells = new List<FuelCellData>();
+			var id = 0;
 			foreach (var fcC in fuelCellSystemInputData.FuelCellComponents) {
+				id++;
 				for (int i = 0; i < fcC.Count; i++) {
 					//Add each as own component to enable switching them on and off
-					fuelCellSystemData.FuelCells.Add(CreateFuelCellData(fcC.FuelCellComponent));
+					fuelCellSystemData.FuelCells.Add(CreateFuelCellData(fcC.FuelCellComponent, id, i + 1));
 				}
 			}
 			return fuelCellSystemData;
 		}
 
-		public FuelCellData CreateFuelCellData(IFuelCellComponentEngineeringInputData fuelCellInputData)
+		public FuelCellData CreateFuelCellData(IFuelCellComponentEngineeringInputData fuelCellInputData, int id, int subId)
 		{
 			return new FuelCellData() {
 				MassFlowMap = FuelCellMassFlowMapReader.Create(fuelCellInputData.MassFlowMap),
 				MaxElectricPower = fuelCellInputData.MaxElectricPower,
 				MinElectricPower = fuelCellInputData.MinElectricPower,
+				Id = new FuelCellData.FuelCellId() {
+					Id = id, 
+					SubId = subId,
+				}
 			};
 		}
 

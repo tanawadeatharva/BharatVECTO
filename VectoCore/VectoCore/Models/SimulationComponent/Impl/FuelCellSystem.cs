@@ -1,4 +1,6 @@
-﻿using TUGraz.VectoCommon.Utils;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
@@ -6,11 +8,14 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class FuelCellSystem : StatefulVectoSimulationComponent<FuelCellSystem.State>, IElectricChargerPort
 	{
+		private readonly IList<FuelCell> _fuelCells;
+
 		public class State
 		{
 			public Watt Power { get; set; }
@@ -21,9 +26,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public FuelCellSystem(FuelCellSystemData fuelCellSystemData, IVehicleContainer databus) : base(databus)
 		{
 			_mileageCounter = databus.MileageCounter;
-			
+			_fuelCells = new List<FuelCell>();
 			ModelData = fuelCellSystemData;
 		}
+
+		public IReadOnlyCollection<FuelCell> FuelCells => new ReadOnlyCollection<FuelCell>(_fuelCells);
 
 		private FuelCellSystemData ModelData { get; set; }
 
@@ -37,13 +44,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public Watt PowerDemand(Second absTime, Second dt, Watt powerDemandEletricMotor, Watt auxPower, bool dryRun)
 		{
 			var power = ModelData.ChargingPower(_mileageCounter.Distance);
+			var fcCount = FuelCells.Count;
+			foreach (var fc in FuelCells) {
+				fc.Request(power / fcCount);
+			}
+
 			CurrentState.Power = power;
-			
-
-
-
-
 			return power;
+		}
+
+
+		public void AddFuelCell(FuelCell fuelCell)
+		{
+			_fuelCells.Add(fuelCell);
+
 		}
 
 		#endregion
