@@ -12,6 +12,7 @@ using TUGraz.VectoCommon.OutputData;
 using TUGraz.VectoCore;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Utils;
 
@@ -27,6 +28,7 @@ public class JSONFileWriter : IOutputFileWriter
 	public const int BusVehicleFormatVersion = 9;
 	public const int HEV_BEVVehicleFormatVersion = 10;
 	public const int IEPCVehicleFormatVersion = 11;
+	public const int FCHV_VehicleFormatVersion = 12;
 
 	#endregion
 
@@ -416,7 +418,8 @@ public class JSONFileWriter : IOutputFileWriter
 			case VectoSimulationJobType.IHPC:
 				SaveHybridVehicle(vehicle, airdrag, retarder, pto, angledrive, filename, DeclMode);
 				break;
-			case VectoSimulationJobType.BatteryElectricVehicle:
+			case VectoSimulationJobType.FCHV:
+            case VectoSimulationJobType.BatteryElectricVehicle:
 				SaveBatteryElectricVehicle(vehicle, airdrag, retarder, pto, angledrive, filename, DeclMode);
 				break;
 			case VectoSimulationJobType.EngineOnlySimulation:
@@ -425,6 +428,7 @@ public class JSONFileWriter : IOutputFileWriter
 			case VectoSimulationJobType.IEPC_S:
 				SaveIEPCVehicle(vehicle, airdrag, retarder, pto, angledrive, filename, DeclMode);
 				break;
+
 			default:
 				throw new ArgumentOutOfRangeException();
 		}
@@ -615,7 +619,7 @@ public class JSONFileWriter : IOutputFileWriter
 		IPTOTransmissionInputData pto, IAngledriveInputData angledrive, string filename, bool DeclMode)
 	{
 		var basePath = Path.GetDirectoryName(filename);
-		var header = GetHeader(HEV_BEVVehicleFormatVersion);
+		var header = GetHeader(vehicle.VehicleType == VectoSimulationJobType.FCHV ?  FCHV_VehicleFormatVersion : HEV_BEVVehicleFormatVersion);
 		var retarderOut = GetRetarderOut(retarder, basePath);
 
         var ptoOut = GetPTOOut(pto, basePath);
@@ -631,6 +635,11 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("PowertrainConfiguration", "BatteryElectric");
 		body.Add("ElectricMotors", electricMotorsOut);
 		body.Add("Batteries", battery);
+
+		if (vehicle.Components.FuelCellSystemInputData != null) {
+			var fuelCellSystem = GetFuelCellSystem(vehicle, basePath);
+			body.Add(JsonKeys.FuelCell_FuelCellSystem, fuelCellSystem);
+		}
 		//body.Add("OvcHev", true);
 
 		//body.Add("IdlingSpeed", vehicle.EngineIdleSpeed.AsRPM);
@@ -643,8 +652,12 @@ public class JSONFileWriter : IOutputFileWriter
         if ((vehicle.TankSystem.HasValue))
 			body["TankSystem"] = vehicle.TankSystem.Value.ToString();
 
+
+
 		WriteFile(header, body, filename);
 	}
+
+
 
 	private void SaveIEPCVehicle(IVehicleEngineeringInputData vehicle, IAirdragEngineeringInputData airdrag,
 		IRetarderInputData retarder, IPTOTransmissionInputData pto, IAngledriveInputData angledrive, string filename,
@@ -696,7 +709,30 @@ public class JSONFileWriter : IOutputFileWriter
 				{ "BatteryFile", GetRelativePath(entry.REESSPack.DataSource.SourceFile, basePath) },
 				{ "StreamId", entry.StringId } }).ToArray();
 
-	private Array GetElectricMotors(IVehicleEngineeringInputData vehicle, string basePath)
+
+	private Dictionary<string, object> GetFuelCellSystem(IVehicleEngineeringInputData vehicle, string basePath)
+	{
+		var fcS = vehicle.Components.FuelCellSystemInputData;
+		var ret = new Dictionary<string, object>() {
+			{JsonKeys.FuelCell_GradientPowerChange, fcS.GradientPowerChange.Value()},
+			{JsonKeys.FuelCell_OnOffHysteresis, fcS.OnOffHysteresis.Value()}
+		};
+
+		ret[JsonKeys.FuelCell_FuelCells] = GetFuelCells(fcS, basePath);
+
+		return ret;
+	}
+
+	private Dictionary<string, object>[] GetFuelCells(IFuelCellSystemEngineeringInputData fuelCellSystem,
+		string basePath)
+	{
+		return fuelCellSystem.FuelCellComponents.Select(fc => new Dictionary<string, object> {
+			{JsonKeys.FuelCell_Count, fc.Count},
+			{JsonKeys.FuelCell_File, GetRelativePath(fc.FuelCellComponent.DataSource.SourceFile, basePath)}
+        }).ToArray();
+	}
+
+    private Array GetElectricMotors(IVehicleEngineeringInputData vehicle, string basePath)
 	{
 		//var em = vehicle.Components.ElectricMachines.Entries.First();
 		return vehicle.Components.ElectricMachines.Entries.Select(em => {

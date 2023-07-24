@@ -430,6 +430,96 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Count.
+        /// </summary>
+        internal static string FuelCell_Count {
+            get {
+                return ResourceManager.GetString("FuelCell_Count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FuelCellFile.
+        /// </summary>
+        internal static string FuelCell_File {
+            get {
+                return ResourceManager.GetString("FuelCell_File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FuelCells.
+        /// </summary>
+        internal static string FuelCell_FuelCells {
+            get {
+                return ResourceManager.GetString("FuelCell_FuelCells", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FuelCellSystem.
+        /// </summary>
+        internal static string FuelCell_FuelCellSystem {
+            get {
+                return ResourceManager.GetString("FuelCell_FuelCellSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GradientPowerChange.
+        /// </summary>
+        internal static string FuelCell_GradientPowerChange {
+            get {
+                return ResourceManager.GetString("FuelCell_GradientPowerChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MassFlowMap.
+        /// </summary>
+        internal static string FuelCell_MassFlowMap {
+            get {
+                return ResourceManager.GetString("FuelCell_MassFlowMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaxElectricPower.
+        /// </summary>
+        internal static string FuelCell_MaxPower {
+            get {
+                return ResourceManager.GetString("FuelCell_MaxPower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MinElectricPower.
+        /// </summary>
+        internal static string FuelCell_MinPower {
+            get {
+                return ResourceManager.GetString("FuelCell_MinPower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OnOffHysteresis.
+        /// </summary>
+        internal static string FuelCell_OnOffHysteresis {
+            get {
+                return ResourceManager.GetString("FuelCell_OnOffHysteresis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Count.
+        /// </summary>
+        internal static string FuelCells_Count {
+            get {
+                return ResourceManager.GetString("FuelCells_Count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to EaryShiftUp.
         /// </summary>
         internal static string Gearbox_EarlyShiftUp {

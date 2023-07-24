@@ -207,7 +207,7 @@
   <data name="Vehicle_EPTO_Cycle" xml:space="preserve">
     <value>CycleEPTO</value>
   </data>
-<data name="Vehicle_PTO_Type" xml:space="preserve">
+  <data name="Vehicle_PTO_Type" xml:space="preserve">
     <value>Type</value>
   </data>
   <data name="Vehicle_Angledrive" xml:space="preserve">
@@ -489,13 +489,43 @@
   <data name="JsonHeader_Date" xml:space="preserve">
     <value>Date</value>
   </data>
-<data name="BUS_RunSimulation" xml:space="preserve">
-	<value>RunSimulation</value>
-</data>
-<data name="EM_RatedPower" xml:space="preserve">
-	<value>R85RatedPower</value>
-</data>
-<data name="EM_ElectricMachineType" xml:space="preserve">
-	<value>ElectricMachineType</value>
-</data>
+  <data name="BUS_RunSimulation" xml:space="preserve">
+    <value>RunSimulation</value>
+  </data>
+  <data name="EM_RatedPower" xml:space="preserve">
+    <value>R85RatedPower</value>
+  </data>
+  <data name="EM_ElectricMachineType" xml:space="preserve">
+    <value>ElectricMachineType</value>
+  </data>
+  <data name="FuelCells_Count" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="FuelCell_Count" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="FuelCell_File" xml:space="preserve">
+    <value>FuelCellFile</value>
+  </data>
+  <data name="FuelCell_FuelCells" xml:space="preserve">
+    <value>FuelCells</value>
+  </data>
+  <data name="FuelCell_FuelCellSystem" xml:space="preserve">
+    <value>FuelCellSystem</value>
+  </data>
+  <data name="FuelCell_GradientPowerChange" xml:space="preserve">
+    <value>GradientPowerChange</value>
+  </data>
+  <data name="FuelCell_MassFlowMap" xml:space="preserve">
+    <value>MassFlowMap</value>
+  </data>
+  <data name="FuelCell_MaxPower" xml:space="preserve">
+    <value>MaxElectricPower</value>
+  </data>
+  <data name="FuelCell_MinPower" xml:space="preserve">
+    <value>MinElectricPower</value>
+  </data>
+  <data name="FuelCell_OnOffHysteresis" xml:space="preserve">
+    <value>OnOffHysteresis</value>
+  </data>
 </root>

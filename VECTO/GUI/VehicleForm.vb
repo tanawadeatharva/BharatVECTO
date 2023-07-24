@@ -1092,6 +1092,24 @@ Public Class VehicleForm
 			End If
 		End If
 
+		If (VehicleType = VectoSimulationJobType.FCHV) Then
+			veh.FuelCell_GradientPowerChange = tbGradientPowerChange.Text.ToDouble(0).SI(Of WattPerSecond)
+			veh.FuelCell_OnOffHysteresis = tbOnOffHysteresis.Text.ToDouble(0).SI(Of Second)
+			For Each reess As ListViewItem In lvFuelCellComponents.Items
+				veh.FuelCellComponents.Add(Tuple.Create(reess.SubItems(FcComponentTbl.FcComponentFile).Text, reess.SubItems(FcComponentTbl.Count).Text.ToInt()))
+			Next
+			If veh.FuelCellComponents.Count <= 1 Then
+				tcVehicleComponents.SelectedTab = tpFuelCellSystem
+				lvFuelCellComponents.Focus()
+				MsgBox("At least one fuel cell has to be provided")
+				Return False
+			End If
+
+
+
+
+		End If
+
 		If (VehicleType = VectoSimulationJobType.SerialHybridVehicle OrElse VehicleType = VectoSimulationJobType.IEPC_S) Then
 			If tbGenSetEM.Text = "" Then
 				MsgBox("Generator File is required.")

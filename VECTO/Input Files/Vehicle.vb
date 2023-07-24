@@ -22,6 +22,7 @@ Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
@@ -72,8 +73,8 @@ Public Class Vehicle
 	Public PtoType As String
 	Public ReadOnly PtoLossMap As SubPath
 	Public ReadOnly PtoCycleStandstill As SubPath
-    Public ReadOnly EPtoCycleStandstill As SubPath
-	
+	Public ReadOnly EPtoCycleStandstill As SubPath
+
 	Public ReadOnly PtoCycleDriving As SubPath
 	Public torqueLimitsList As List(Of ITorqueLimitInputData)
 	Public VehicleidlingSpeed As PerSecond
@@ -90,6 +91,11 @@ Public Class Vehicle
 	Public ReadOnly GenSetEMFile As SubPath
 
 	Public ReadOnly ReessPacks As List(Of Tuple(Of String, Integer, Integer))
+
+
+	Public FuelCell_GradientPowerChange As WattPerSecond
+	Public FuelCell_OnOffHysteresis As Second
+	Public ReadOnly FuelCellComponents As List(Of Tuple(Of String, Integer))
 
 	Public ElectricMotorPosition As PowertrainPosition
 	Public ElectricMotorCount As Integer
@@ -123,6 +129,7 @@ Public Class Vehicle
 		Axles = New List(Of AxleInputData)
 		torqueLimitsList = New List(Of ITorqueLimitInputData)
 		ReessPacks = New List(Of Tuple(Of String, Integer, Integer))
+		FuelCellComponents = New List(Of Tuple(Of String, Integer))
 		PtoLossMap = New SubPath()
 		PtoCycleStandstill = New SubPath()
 		EPtoCycleStandstill = New SubPath()
@@ -449,9 +456,9 @@ Public Class Vehicle
 
 	Public ReadOnly Property TransferredAirDragArea As SquareMeter Implements IAirdragDeclarationInputData.TransferredAirDragArea
 	Public ReadOnly Property AirDragArea_0 As SquareMeter Implements IAirdragDeclarationInputData.AirDragArea_0
-    Public ReadOnly Property IAirdragDeclarationInputData_XMLSource As XmlNode Implements IAirdragDeclarationInputData.XMLSource
+	Public ReadOnly Property IAirdragDeclarationInputData_XMLSource As XmlNode Implements IAirdragDeclarationInputData.XMLSource
 
-    Public ReadOnly Property IVehicleEngineeringInputData_Axles As IList(Of IAxleEngineeringInputData) _
+	Public ReadOnly Property IVehicleEngineeringInputData_Axles As IList(Of IAxleEngineeringInputData) _
 		Implements IAxlesEngineeringInputData.AxlesEngineering
 		Get
 			Return Axles.Cast(Of IAxleEngineeringInputData)().ToList()
@@ -603,7 +610,7 @@ Public Class Vehicle
 		End Get
 	End Property
 
-    Public ReadOnly Property EPTOCycleDuringStop As TableData Implements IPTOTransmissionInputData.EPTOCycleDuringStop
+	Public ReadOnly Property EPTOCycleDuringStop As TableData Implements IPTOTransmissionInputData.EPTOCycleDuringStop
 		Get
 			If String.IsNullOrWhiteSpace(EPtoCycleStandstill.FullPath) Then
 				Return Nothing
@@ -612,7 +619,7 @@ Public Class Vehicle
 		End Get
 	End Property
 
-    Public ReadOnly Property IPTOTransmissionInputData_PTOLossMap As TableData _
+	Public ReadOnly Property IPTOTransmissionInputData_PTOLossMap As TableData _
 		Implements IPTOTransmissionInputData.PTOLossMap
 		Get
 			If String.IsNullOrWhiteSpace(PtoLossMap.FullPath) Then
@@ -817,7 +824,7 @@ Public Class Vehicle
 
 	Public ReadOnly Property FuelCellSystemInputData As IFuelCellSystemEngineeringInputData Implements IVehicleComponentsEngineering.FuelCellSystemInputData
 		Get
-			Throw New NotImplementedException
+			Return New FuelCellSystemWrapper(Me)
 		End Get
 	End Property
 
@@ -862,19 +869,19 @@ Public Class Vehicle
 	End Property
 
 	Public ReadOnly Property PTO_DriveGear As GearshiftPosition Implements IVehicleEngineeringInputData.PTO_DriveGear
-	get
-			return If(gearDuringPTODrive.HasValue, new GearshiftPosition(GearDuringPTODrive.Value), Nothing)
-	End Get
-end Property
+		Get
+			Return If(GearDuringPTODrive.HasValue, New GearshiftPosition(GearDuringPTODrive.Value), Nothing)
+		End Get
+	End Property
 
 	Public Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
 	Public Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
 
 
 	Public ReadOnly Property PTO_DriveEngineSpeed As PerSecond Implements IVehicleEngineeringInputData.PTO_DriveEngineSpeed
-	get
+		Get
 			Return EngineSpeedDuringPTODrive
-	End Get
+		End Get
 	End Property
 
 	Public ReadOnly Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
@@ -901,7 +908,7 @@ end Property
 		End Get
 	End Property
 
-    Public ReadOnly Property ExemptedTechnology As String Implements IVehicleDeclarationInputData.ExemptedTechnology
+	Public ReadOnly Property ExemptedTechnology As String Implements IVehicleDeclarationInputData.ExemptedTechnology
 
 	Public ReadOnly Property RegisteredClass As RegistrationClass? Implements IVehicleDeclarationInputData.RegisteredClass
 	Public ReadOnly Property NumberPassengerSeatsUpperDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengerSeatsUpperDeck
@@ -946,9 +953,9 @@ end Property
 	End Property
 
 	Public ReadOnly Property NumSteeredAxles As Integer? Implements IAxlesDeclarationInputData.NumSteeredAxles
-	get
-		return nothing
-	End Get
+		Get
+			Return Nothing
+		End Get
 	End Property
 	Public ReadOnly Property XMLSource As XmlNode Implements IAdvancedDriverAssistantSystemDeclarationInputData.XMLSource
 	Public ReadOnly Property VehicleTypeApprovalNumber As String Implements IVehicleDeclarationInputData.VehicleTypeApprovalNumber
@@ -973,6 +980,7 @@ end Property
 	Public Property EcoRollReleaseLockupClutch As Boolean
 
 	Public ReadOnly Property IAxlesDeclarationInputData_XMLSource As XmlNode Implements IAxlesDeclarationInputData.XMLSource
+
 End Class
 
 Public Class IEPCWrapper
@@ -985,12 +993,12 @@ Public Class IEPCWrapper
 	End Sub
 
 	Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
-	get
-		Dim retVal As DataSource = New DataSource()
-		retVal.SourceType = DataSourceType.JSONFile
-		retVal.SourceFile = _vehicle.IEPCFile.FullPath
-		Return retVal
-	End Get
+		Get
+			Dim retVal As DataSource = New DataSource()
+			retVal.SourceType = DataSourceType.JSONFile
+			retVal.SourceFile = _vehicle.IEPCFile.FullPath
+			Return retVal
+		End Get
 	End Property
 	Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
 	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
@@ -1013,24 +1021,27 @@ Public Class IEPCWrapper
 	Public ReadOnly Property OverloadRecoveryFactor As Double Implements IIEPCEngineeringInputData.OverloadRecoveryFactor
 End Class
 
+
+
+
 Public Class ElectricStorageSystemWrapper
 	Implements IElectricStorageSystemEngineeringInputData
 
 	Private _vehicle As Vehicle
 
 	Public Sub New(vehicle As Vehicle)
-		_vehicle = vehicle    
+		_vehicle = vehicle
 	End Sub
 
 	Public ReadOnly Property ElectricStorageElements As IList(Of IElectricStorageDeclarationInputData) Implements IElectricStorageSystemDeclarationInputData.ElectricStorageElements
-	get
-			return _vehicle.ReessPacks.Select(Function(x) new ElectricStorageWrapper(x, GetPath(_vehicle.FilePath))).Cast(of IElectricStorageDeclarationInputData) .toList()
-	End Get
+		Get
+			Return _vehicle.ReessPacks.Select(Function(x) New ElectricStorageWrapper(x, GetPath(_vehicle.FilePath))).Cast(Of IElectricStorageDeclarationInputData).ToList()
+		End Get
 	End Property
 	Public ReadOnly Property IElectricStorageSystemEngineeringInputData_ElectricStorageElements As IList(Of IElectricStorageEngineeringInputData) Implements IElectricStorageSystemEngineeringInputData.ElectricStorageElements
-	get
-		return _vehicle.ReessPacks.Select(Function(x) new ElectricStorageWrapper(x, GetPath(_vehicle.FilePath))).cast(of IElectricStorageEngineeringInputData).toList()
-	End Get
+		Get
+			Return _vehicle.ReessPacks.Select(Function(x) New ElectricStorageWrapper(x, GetPath(_vehicle.FilePath))).Cast(Of IElectricStorageEngineeringInputData).ToList()
+		End Get
 	End Property
 End Class
 
@@ -1039,8 +1050,8 @@ Public Class ElectricStorageWrapper
 
 	Public Property BatteryFile As SubPath
 
-	Public Sub New(veh As Tuple(Of String,Integer,Integer), filePath As String)
-		count = veh.Item2
+	Public Sub New(veh As Tuple(Of String, Integer, Integer), filePath As String)
+		Count = veh.Item2
 		StringId = veh.Item3
 		BatteryFile = New SubPath
 		BatteryFile.Init(filePath, veh.Item1)
@@ -1055,7 +1066,7 @@ Public Class ElectricStorageWrapper
 	End Property
 
 	Public ReadOnly Property Count As Integer Implements IElectricStorageEngineeringInputData.Count
-		
+
 
 	Public ReadOnly Property StringId As Integer Implements IElectricStorageDeclarationInputData.StringId
 
@@ -1087,6 +1098,49 @@ Public Class ElectricStorageWrapper
 	Public ReadOnly Property MaxCurrentMap As TableData Implements IBatteryPackDeclarationInputData.MaxCurrentMap
 	Public ReadOnly Property StorageType As REESSType Implements IREESSPackInputData.StorageType
 End Class
+
+Public Class FuelCellSystemWrapper
+	Implements IFuelCellSystemEngineeringInputData
+
+	Protected Vehicle As Vehicle
+	Public Sub New(veh As Vehicle)
+		Vehicle = veh
+	End Sub
+
+
+	Public ReadOnly Property GradientPowerChange As WattPerSecond Implements IFuelCellSystemEngineeringInputData.GradientPowerChange
+		Get
+			Return Vehicle.FuelCell_GradientPowerChange
+		End Get
+	End Property
+
+	Public ReadOnly Property OnOffHysteresis As Second Implements IFuelCellSystemEngineeringInputData.OnOffHysteresis
+		Get
+			Return Vehicle.FuelCell_OnOffHysteresis
+		End Get
+	End Property
+	Public ReadOnly Property FuelCellComponents As IList(Of FuelCellComponentEntry(Of IFuelCellComponentEngineeringInputData)) Implements IFuelCellSystemEngineeringInputData.FuelCellComponents
+		Get
+			If (Vehicle.VehicleType <> VectoSimulationJobType.FCHV) Then
+				Return Nothing
+			End If
+			Dim retVal As List(Of FuelCellComponentEntry(Of IFuelCellComponentEngineeringInputData)) = New List(Of FuelCellComponentEntry(Of IFuelCellComponentEngineeringInputData))
+
+			retVal = Vehicle.FuelCellComponents.Select(
+				Function(x) _
+												 New FuelCellComponentEntry(Of IFuelCellComponentEngineeringInputData) _
+												 With {.Count = x.Item2,
+												 .FuelCellComponent =
+												 JSONInputDataFactory.ReadFuelCellComponentEngineeringInputData(
+													 Path.Combine(Path.GetDirectoryName(Vehicle.FilePath), x.Item1), False)}).ToList()
+
+
+			Return retVal
+		End Get
+	End Property
+End Class
+
+
 
 Public Class ElectricMachinesWrapper
 	Implements IElectricMachinesEngineeringInputData ', IElectricMotorEngineeringInputData
