@@ -142,6 +142,19 @@ namespace TUGraz.VectoCore.OutputData.XML
             };
             result.Status = generic.Status != VectoRun.Status.Success ? generic.Status : result.Status;
             result.Status = specific.Status != VectoRun.Status.Success ? specific.Status : result.Status;
+            var errors = new List<string>();
+			var stacktraces = new List<string>();
+			if (generic.Status != VectoRun.Status.Success) {
+                errors.Add($"Generic simulation run: {generic.Error}");
+                stacktraces.Add($"Generic simulation run: {generic.StackTrace}");
+			}
+
+			if (specific.Status != VectoRun.Status.Success) {
+                errors.Add($"Specific simulation run: {specific.Error}");
+                stacktraces.Add($"Specific simulation run: {specific.StackTrace}");
+			}
+            result.Error = errors.Any() ? errors.Join(Environment.NewLine) : null;
+			result.StackTrace = stacktraces.Any() ? stacktraces.Join(Environment.NewLine) : null;
             result.OVCMode = specific.OVCMode;
             if (generic.OVCMode != specific.OVCMode)
             {
