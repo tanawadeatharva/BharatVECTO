@@ -82,7 +82,7 @@
       "OnOffHysteresis": 3.0,
       "FuelCells": [
         {
-          "Count": 2,
+          "Count": 1,
           "FuelCellFile": "GenericFuelCellComponent.vfcc"
         }
       ]
