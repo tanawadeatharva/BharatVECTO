@@ -1,4 +1,4 @@
-﻿//#define FULL_SIMULATIONS
+﻿#define FULL_SIMULATIONS
 
 
 
@@ -372,6 +372,52 @@ public class PrimaryBusSimulation
 		var runsFactoryFinal = simFactoryFinal.Factory(ExecutionMode.Declaration, dataProviderFinal, fileWriterFinal, null, null);
 
 		SerializeRunData(runsFactoryFinal, outputPath);
+    }
+
+
+	[TestCase(-1, TestName = "CodeEU60_Voith_P1Hybrid - ALL"),
+	TestCase(2, TestName = "CodeEU60_Voith_P1Hybrid - FCMap Interpolation failed"),
+	TestCase(6, TestName = "CodeEU60_Voith_P1Hybrid - Battery Object reference not set")
+	]
+	public void CodeEU60_Voith_P1Hybrid(int cycleIdx)
+	{
+		RunSimulationPrimary(@"E:\QUAM\Downloads\CodeEU-60\Test_P1_MH.xml", cycleIdx);
+	}
+
+	[TestCase()]
+	public void CodeEU60_P1HybridCompleted()
+	{
+		CreateCompletedVIF(@"E:\QUAM\Downloads\CodeEU-60\A3_2023_07_03_Iveco_DIWA8_MH.vecto");
+	}
+
+	[NonParallelizable]
+	[TestCase(MissionType.HeavyUrban, LoadingType.LowLoading),
+	TestCase(MissionType.HeavyUrban, LoadingType.ReferenceLoad),
+	TestCase(MissionType.Urban, LoadingType.LowLoading),
+	TestCase(MissionType.Urban, LoadingType.ReferenceLoad),
+	TestCase(MissionType.Urban, LoadingType.ReferenceLoad),
+	TestCase(MissionType.Interurban, LoadingType.ReferenceLoad),]
+	public void CodeEU60_Voith_P1Hybrid_Completed(MissionType mission, LoadingType loading)
+	{
+		TestMissionFilter();
+		Kernel.Rebind<IMissionFilter>().To<TestMissionFilter>().InSingletonScope();
+		var missionFilter = Kernel.Get<IMissionFilter>() as TestMissionFilter;
+        missionFilter?.SetMissions((mission, loading));
+
+        string vif = @"E:\QUAM\Downloads\CodeEU-60\Test_P1_MH.RSLT_VIF.xml";
+		string completed = @"E:\QUAM\Downloads\CodeEU-60\Test_HEV_Interim_Input.xml";
+
+		var completedJob = GenerateJsonJobCompletedBus(vif, completed);
+
+		var finalVif = CreateCompletedVIF(completedJob);
+
+
+        //      var completedJob = GenerateJsonJobCompletedBus(Path.Combine(BASE_DIR, vifFile), Path.Combine(BASE_DIR, completed));
+
+        //var missionFilter = TestMissionFilter();
+        //missionFilter?.SetMissions((MissionType.Coach, LoadingType.ReferenceLoad));
+
+        //var finalVif = CreateCompletedVIF(completedJob);
     }
 
 
