@@ -1,7 +1,7 @@
-{
+﻿{
   "Header": {
     "CreatedBy": "",
-    "Date": "2023-07-24T11:09:21.1453257Z",
+    "Date": "2017-07-13T14:14:29.3226830Z",
     "AppVersion": "3",
     "FileVersion": 12
   },
@@ -11,11 +11,39 @@
     "LegislativeClass": "Unknown",
     "CurbWeight": 13500.0,
     "CurbWeightExtra": 0.0,
-    "MassMax": 39.99,
     "Loading": 19000.0,
+    "MassMax": 39.99,
     "rdyn": 420.0,
+    "PowertrainConfiguration": "BatteryElectric",
     "CdCorrMode": "CdofVdecl",
     "CdCorrFile": "",
+	  "ElectricMotors": [
+        {
+          "Count": 1,
+          "Ratio": 1,
+          "MechanicalEfficiency":  0.99, 
+          "Position": "B2",
+          "MotorFile": "Generic_EM_400kW_1550Nm.vem"
+        }
+    ],
+    "Battery": { 
+        "NumPacks": 1,
+        "BatteryFile": "GenericBattery_80kWh_750V.vbat"
+    },
+    "FuelCellSystem":{
+        "GradientPowerChange": 50,
+        "OnOffHysteresis": 3,
+        "FuelCells":[{
+          "Count": 2,
+          "FuelCellFile": "GenericFuelCellComponent.vfcc"
+        },{
+          "Count": 1,
+          "FuelCellFile": "GenericFuelCellComponent.vfcc"
+        }]
+    },
+    "InitialSoC": 50,
+    "TorqueLimits": {},
+    "IdlingSpeed": 0.0,
     "AxleConfig": {
       "Type": "4x2",
       "Axles": [
@@ -26,8 +54,7 @@
           "TwinTyres": false,
           "RRCISO": 0.0055,
           "FzISO": 20850.0,
-          "Type": "VehicleNonDriven",
-          "Steered": false
+          "Type": "VehicleNonDriven"
         },
         {
           "Inertia": 6.5,
@@ -36,8 +63,7 @@
           "TwinTyres": true,
           "RRCISO": 0.0065,
           "FzISO": 20850.0,
-          "Type": "VehicleDriven",
-          "Steered": false
+          "Type": "VehicleDriven"
         },
         {
           "Inertia": 4.5,
@@ -46,8 +72,7 @@
           "TwinTyres": false,
           "RRCISO": 0.0055,
           "FzISO": 16680.0,
-          "Type": "VehicleNonDriven",
-          "Steered": false
+          "Type": "VehicleNonDriven"
         },
         {
           "Inertia": 4.5,
@@ -56,8 +81,7 @@
           "TwinTyres": false,
           "RRCISO": 0.0055,
           "FzISO": 16680.0,
-          "Type": "VehicleNonDriven",
-          "Steered": false
+          "Type": "VehicleNonDriven"
         }
       ]
     },
@@ -66,33 +90,6 @@
     "PredictiveCruiseControl": "None",
     "ATEcoRollReleaseLockupClutch": false,
     "CdA": 4.5,
-    "VehicleHeight": 3.8,
-    "InitialSoC": 50.0,
-    "PowertrainConfiguration": "BatteryElectric",
-    "ElectricMotors": [],
-    "Batteries": [
-      {
-        "NumPacks": 1,
-        "BatteryFile": "GenericBattery_80kWh_750V.vbat",
-        "StreamId": 0
-      }
-    ],
-    "FuelCellSystem": {
-      "GradientPowerChange": 50.0,
-      "OnOffHysteresis": 3.0,
-      "FuelCells": [
-        {
-          "Count": 2,
-          "FuelCellFile": "GenericFuelCellComponent.vfcc"
-        }
-      ]
-    },
-    "PTO": {
-      "Type": "None",
-      "LossMap": "",
-      "Cycle": "",
-      "CycleEPTO": "",
-      "CycleDriving": ""
-    }
+    "VehicleHeight": 3.8
   }
 }
