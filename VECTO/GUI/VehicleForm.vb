@@ -532,7 +532,10 @@ Public Class VehicleForm
 				cbOvc.Checked = False
 			End If
 
-			If (vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse vehicle.VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle) Then
+			If (vehicle.VehicleType.IsOneOf(VectoSimulationJobType.FCHV,
+											VectoSimulationJobType.SerialHybridVehicle,
+											VectoSimulationJobType.ParallelHybridVehicle,
+											VectoSimulationJobType.BatteryElectricVehicle)) Then
 				Dim em As ElectricMachineEntry(Of IElectricMotorEngineeringInputData) = vehicle.Components.ElectricMachines.Entries.First(Function(x) x.Position <> PowertrainPosition.GEN)
 				tbElectricMotor.Text = GetRelativePath(em.ElectricMachine.DataSource.SourceFile, basePath)
 				tbEmCount.Text = em.Count.ToGUIFormat()
