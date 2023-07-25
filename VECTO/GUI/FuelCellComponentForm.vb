@@ -165,4 +165,5 @@ Public Class FuelCellComponentForm
         If MassFlowMapFileBrowser.OpenDialog(FileRepl(tbMassFlowMap.Text, GetPath(_fuelCellComponentFile))) Then _
             tbMassFlowMap.Text = GetFilenameWithoutDirectory(MassFlowMapFileBrowser.Files(0), GetPath(_fuelCellComponentFile))
     End Sub
+
 End Class

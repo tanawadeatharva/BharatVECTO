@@ -60,7 +60,7 @@ Partial Class FuelCellComponentForm
         Me.pcBoxMassFlowMap.BackColor = System.Drawing.Color.LightGray
         Me.pcBoxMassFlowMap.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.pcBoxMassFlowMap.Location = New System.Drawing.Point(537, 27)
-        Me.pcBoxMassFlowMap.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.pcBoxMassFlowMap.Margin = New System.Windows.Forms.Padding(4)
         Me.pcBoxMassFlowMap.Name = "pcBoxMassFlowMap"
         Me.pcBoxMassFlowMap.Size = New System.Drawing.Size(509, 327)
         Me.pcBoxMassFlowMap.TabIndex = 50
@@ -88,7 +88,7 @@ Partial Class FuelCellComponentForm
         Me.TableLayoutPanel2.Controls.Add(Me.lblMinElectricPower, 0, 0)
         Me.TableLayoutPanel2.Controls.Add(Me.Label3, 2, 0)
         Me.TableLayoutPanel2.Location = New System.Drawing.Point(16, 142)
-        Me.TableLayoutPanel2.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.TableLayoutPanel2.Margin = New System.Windows.Forms.Padding(4)
         Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
         Me.TableLayoutPanel2.RowCount = 1
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
@@ -99,10 +99,10 @@ Partial Class FuelCellComponentForm
         '
         Me.tbMinElectricPower.Dock = System.Windows.Forms.DockStyle.Fill
         Me.tbMinElectricPower.Location = New System.Drawing.Point(239, 4)
-        Me.tbMinElectricPower.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.tbMinElectricPower.Margin = New System.Windows.Forms.Padding(4)
         Me.tbMinElectricPower.Name = "tbMinElectricPower"
         Me.tbMinElectricPower.Size = New System.Drawing.Size(227, 22)
-        Me.tbMinElectricPower.TabIndex = 3
+        Me.tbMinElectricPower.TabIndex = 2
         '
         'lblMinElectricPower
         '
@@ -138,7 +138,7 @@ Partial Class FuelCellComponentForm
         Me.pnMaxElectricPower.Controls.Add(Me.lblMaxElectricPower, 0, 0)
         Me.pnMaxElectricPower.Controls.Add(Me.Label7, 2, 0)
         Me.pnMaxElectricPower.Location = New System.Drawing.Point(16, 180)
-        Me.pnMaxElectricPower.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.pnMaxElectricPower.Margin = New System.Windows.Forms.Padding(4)
         Me.pnMaxElectricPower.Name = "pnMaxElectricPower"
         Me.pnMaxElectricPower.RowCount = 1
         Me.pnMaxElectricPower.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
@@ -150,10 +150,10 @@ Partial Class FuelCellComponentForm
         '
         Me.tbMaxElectricPower.Dock = System.Windows.Forms.DockStyle.Fill
         Me.tbMaxElectricPower.Location = New System.Drawing.Point(239, 4)
-        Me.tbMaxElectricPower.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.tbMaxElectricPower.Margin = New System.Windows.Forms.Padding(4)
         Me.tbMaxElectricPower.Name = "tbMaxElectricPower"
         Me.tbMaxElectricPower.Size = New System.Drawing.Size(227, 22)
-        Me.tbMaxElectricPower.TabIndex = 2
+        Me.tbMaxElectricPower.TabIndex = 3
         '
         'lblMaxElectricPower
         '
@@ -187,7 +187,7 @@ Partial Class FuelCellComponentForm
         Me.pnModel.Controls.Add(Me.tbModel, 0, 0)
         Me.pnModel.Controls.Add(Me.lblModel, 0, 0)
         Me.pnModel.Location = New System.Drawing.Point(16, 103)
-        Me.pnModel.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.pnModel.Margin = New System.Windows.Forms.Padding(4)
         Me.pnModel.Name = "pnModel"
         Me.pnModel.RowCount = 1
         Me.pnModel.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
@@ -199,7 +199,7 @@ Partial Class FuelCellComponentForm
         '
         Me.tbModel.Dock = System.Windows.Forms.DockStyle.Fill
         Me.tbModel.Location = New System.Drawing.Point(262, 4)
-        Me.tbModel.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.tbModel.Margin = New System.Windows.Forms.Padding(4)
         Me.tbModel.Name = "tbModel"
         Me.tbModel.Size = New System.Drawing.Size(251, 22)
         Me.tbModel.TabIndex = 1
@@ -224,7 +224,7 @@ Partial Class FuelCellComponentForm
         Me.pnManufacturer.Controls.Add(Me.tbManufacturer, 0, 0)
         Me.pnManufacturer.Controls.Add(Me.lblManufacturer, 0, 0)
         Me.pnManufacturer.Location = New System.Drawing.Point(16, 66)
-        Me.pnManufacturer.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.pnManufacturer.Margin = New System.Windows.Forms.Padding(4)
         Me.pnManufacturer.Name = "pnManufacturer"
         Me.pnManufacturer.RowCount = 1
         Me.pnManufacturer.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
@@ -236,7 +236,7 @@ Partial Class FuelCellComponentForm
         '
         Me.tbManufacturer.Dock = System.Windows.Forms.DockStyle.Fill
         Me.tbManufacturer.Location = New System.Drawing.Point(262, 4)
-        Me.tbManufacturer.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.tbManufacturer.Margin = New System.Windows.Forms.Padding(4)
         Me.tbManufacturer.Name = "tbManufacturer"
         Me.tbManufacturer.Size = New System.Drawing.Size(251, 22)
         Me.tbManufacturer.TabIndex = 0
@@ -258,9 +258,9 @@ Partial Class FuelCellComponentForm
         Me.gpMassFlowMap.Controls.Add(Me.btnBrowseMassFlowMap)
         Me.gpMassFlowMap.Controls.Add(Me.tbMassFlowMap)
         Me.gpMassFlowMap.Location = New System.Drawing.Point(8, 231)
-        Me.gpMassFlowMap.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.gpMassFlowMap.Margin = New System.Windows.Forms.Padding(4)
         Me.gpMassFlowMap.Name = "gpMassFlowMap"
-        Me.gpMassFlowMap.Padding = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.gpMassFlowMap.Padding = New System.Windows.Forms.Padding(4)
         Me.gpMassFlowMap.Size = New System.Drawing.Size(525, 60)
         Me.gpMassFlowMap.TabIndex = 65
         Me.gpMassFlowMap.TabStop = False
@@ -270,7 +270,7 @@ Partial Class FuelCellComponentForm
         '
         Me.btnBrowseMassFlowMap.Image = CType(resources.GetObject("btnBrowseMassFlowMap.Image"), System.Drawing.Image)
         Me.btnBrowseMassFlowMap.Location = New System.Drawing.Point(485, 20)
-        Me.btnBrowseMassFlowMap.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnBrowseMassFlowMap.Margin = New System.Windows.Forms.Padding(4)
         Me.btnBrowseMassFlowMap.Name = "btnBrowseMassFlowMap"
         Me.btnBrowseMassFlowMap.Size = New System.Drawing.Size(32, 30)
         Me.btnBrowseMassFlowMap.TabIndex = 5
@@ -279,7 +279,7 @@ Partial Class FuelCellComponentForm
         'tbMassFlowMap
         '
         Me.tbMassFlowMap.Location = New System.Drawing.Point(8, 23)
-        Me.tbMassFlowMap.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.tbMassFlowMap.Margin = New System.Windows.Forms.Padding(4)
         Me.tbMassFlowMap.Name = "tbMassFlowMap"
         Me.tbMassFlowMap.Size = New System.Drawing.Size(468, 22)
         Me.tbMassFlowMap.TabIndex = 4
@@ -288,7 +288,7 @@ Partial Class FuelCellComponentForm
         '
         Me.btnSaveFuelCellComponent.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnSaveFuelCellComponent.Location = New System.Drawing.Point(827, 373)
-        Me.btnSaveFuelCellComponent.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnSaveFuelCellComponent.Margin = New System.Windows.Forms.Padding(4)
         Me.btnSaveFuelCellComponent.Name = "btnSaveFuelCellComponent"
         Me.btnSaveFuelCellComponent.Size = New System.Drawing.Size(100, 28)
         Me.btnSaveFuelCellComponent.TabIndex = 7
@@ -300,7 +300,7 @@ Partial Class FuelCellComponentForm
         Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnCancel.Location = New System.Drawing.Point(935, 373)
-        Me.btnCancel.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnCancel.Margin = New System.Windows.Forms.Padding(4)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(100, 28)
         Me.btnCancel.TabIndex = 8
@@ -341,10 +341,11 @@ Partial Class FuelCellComponentForm
         Me.Controls.Add(Me.lblTitle)
         Me.Controls.Add(Me.pcBoxMassFlowMap)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.Margin = New System.Windows.Forms.Padding(4)
+        Me.MinimizeBox = False
         Me.Name = "FuelCellComponentForm"
-        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-        Me.Text = "pnMinElectricPower"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+        Me.Text = "FuelCellComponent"
         CType(Me.pcBoxMassFlowMap, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TableLayoutPanel2.ResumeLayout(False)
         Me.TableLayoutPanel2.PerformLayout()

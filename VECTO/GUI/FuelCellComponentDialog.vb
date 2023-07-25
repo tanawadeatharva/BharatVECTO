@@ -40,6 +40,7 @@ Public Class FuelCellComponentDialog
         Dim f As String
         f = FileRepl(tbFuelCellComponent.Text, GetPath(_vehFile))
         Dim fuelCellForm = FuelCellComponentForm
+        'fuelCellForm.Parent = Me
         'Thus Veh-file is returned
         fuelCellForm.JobDir = GetPath(_vehFile)
         fuelCellForm.AutoSendTo = True
@@ -51,13 +52,13 @@ Public Class FuelCellComponentDialog
             End If
         End If
 
-        fuelCellForm.Show()
-        'If Not BatteryForm.Visible Then
-        '    BatteryForm.Show()
-        'Else
-        '    If BatteryForm.WindowState = FormWindowState.Minimized Then BatteryForm.WindowState = FormWindowState.Normal
-        '    BatteryForm.BringToFront()
-        'End If
+
+        If Not FuelCellComponentForm.Visible Then
+            FuelCellComponentForm.Show()
+        Else
+            If FuelCellComponentForm.WindowState = FormWindowState.Minimized Then BatteryForm.WindowState = FormWindowState.Normal
+            FuelCellComponentForm.BringToFront()
+        End If
 
         If Not Trim(f) = "" Then
             Try
