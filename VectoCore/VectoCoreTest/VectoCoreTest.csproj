@@ -58,6 +58,12 @@
 		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV.vveh">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV_singleFc.vecto">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV_singleFc.vveh">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Gear.vtlm">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>

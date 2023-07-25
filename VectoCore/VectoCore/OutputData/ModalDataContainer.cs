@@ -656,7 +656,8 @@ namespace TUGraz.VectoCore.OutputData
 			//Fuel Cell 
 			dataColumns.AddRange(Data.FuelCellColumns);
 			dataColumns.AddRange(new [] {
-				ModalResultField.P_fuelCellSystem
+				ModalResultField.P_fuelCellSystem_target,
+				ModalResultField.P_fuelCellSystem_actual,
 			}.Select(x => x.GetName()));
 
 

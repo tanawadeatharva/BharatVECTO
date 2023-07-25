@@ -108,17 +108,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 
 				iterativeRunStrategy.Update = (modData, runData) => {
-					var p_reess_terminal_dt = modData.GetValues(x => new {
-						p_reess_terminal = x.Field<Watt>(ModalResultField.P_reess_terminal.GetName()),
-						dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
-					});
-					var constantPower = p_reess_terminal_dt.Sum(x => x.p_reess_terminal * x.dt) /
-										p_reess_terminal_dt.Sum(x => x.dt);
+
+
+					
 					runData.BatteryData =
 						dao.CreateBatteryData(InputDataProvider.JobInputData.Vehicle.Components.ElectricStorage, 0.5);
 					runData.FuelCellSystemData =
 						dao.CreateFuelCellSystemData(InputDataProvider.JobInputData.Vehicle.Components
-							.FuelCellSystemInputData, new FuelCellPowerMap(-constantPower));
+							.FuelCellSystemInputData, dao.CreateFuelCellPowerMap(modData));
 				};
 				pevRd.IterativeRunStrategy = iterativeRunStrategy;
 				yield return pevRd;

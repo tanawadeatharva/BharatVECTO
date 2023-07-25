@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 	public class FuelCellVehicleTest
 	{
 
-		protected const string FCHV_E2_JOB = @"TestData/H2_FCV/GenericVehicleE2 - FCHV/FCHV.vecto";
+		protected const string FCHV_E2_JOB = @"TestData/H2_FCV/GenericVehicleE2 - FCHV/FCHV_singleFc.vecto";
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
@@ -49,6 +49,7 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 
 		private GraphWriter GetGraphWriter(ModalResultField[] yFields)
 		{
+			return new GraphWriter();
 			var graphWriter = new GraphWriter();
 			//#if TRACE
 			graphWriter.Enable();

@@ -10,6 +10,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		public class FuelCellState
 		{
+			public Watt RequestedPower { get; set; }
 			public Watt Power { get; set; }
 			public bool On { get; set; }
 		}
@@ -48,10 +49,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt Request(Watt requestedPower)
 		{
-			CurrentState.Power = requestedPower;
+			CurrentState.RequestedPower = requestedPower;
+			var generatedPower =
+				VectoMath.LimitTo(requestedPower, ModelData.MinElectricPower, ModelData.MaxElectricPower);
+
+			CurrentState.Power = generatedPower;
 
 
-			return requestedPower;
+			return generatedPower;
 		}
 
 		protected override bool DoUpdateFrom(object other)

@@ -158,6 +158,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 			}
 		}
 
+		public object this[ModalResultField key, string arg]
+		{
+			get => throw new NotImplementedException();
+			set => throw new NotImplementedException();
+		}
+
 		public object this[string auxId]
 		{
 			get => CurrentRow[Auxiliaries[auxId]];

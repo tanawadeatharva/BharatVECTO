@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			var modalDataContainer = run.GetContainer().ModalData;
 			var vectoRunData = run.GetContainer().RunData;
-			if (!_strategy.RunAgain(iteration, modalDataContainer, vectoRunData)) {
+			if (!_strategy.RunAgain(iteration, modalDataContainer, vectoRunData) || !run.FinishedWithoutErrors) {
 				return false;
 			}
 			original_modfile_suffix = original_modfile_suffix ?? (original_modfile_suffix = vectoRunData.ModFileSuffix);

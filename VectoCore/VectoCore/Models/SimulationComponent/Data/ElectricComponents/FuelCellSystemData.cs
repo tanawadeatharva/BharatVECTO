@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 {
@@ -60,20 +58,50 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 	{
 		private Watt _powerDelivery;
 
+		private readonly FuelCellPowerMapEntry[] _entries;
+
 		/// <summary>
 		/// Constant for now, remove when this is replaced with the actual implementation 
 		/// </summary>
-		/// <param name="powerDelivery"></param>
-		public FuelCellPowerMap(Watt powerDelivery)
+		/// <param name="powerDelivery">Test purpose (overrides lookup with constant power delivery</param>
+		public FuelCellPowerMap(FuelCellPowerMapEntry[] entries,Watt powerDelivery = null)
 		{
 			_powerDelivery = powerDelivery;
+			_entries = entries.OrderBy(e => e.Distance).ToArray();
 		}
 
 		public Watt Lookup(Meter distance)
 		{
-			return _powerDelivery;
+			if (_powerDelivery != null) {
+				return _powerDelivery;
+			}
+
+			//Just interpolate for now ?
+			var idx = FindIndex(distance);
+			return VectoMath.Interpolate(_entries[idx - 1].Distance, _entries[idx].Distance, _entries[idx - 1].Power,
+				_entries[idx].Power, distance);
+        }
+
+		protected int FindIndex(Meter distance)
+		{
+
+			for (var index = 1; index < _entries.Length; index++)
+			{
+				if (distance.IsGreaterOrEqual(_entries[index - 1].Distance) && distance.IsSmallerOrEqual(_entries[index].Distance))
+				{
+					return index;
+				}
+			}
+			throw new VectoException("Distance Request {0} exceeds fuel cell model data. min: {1} max: {2}", distance, _entries.First().Distance, _entries.Last().Distance);
 		}
 
+
+
+        public class FuelCellPowerMapEntry
+		{
+			[Required, SIRange(0, 1e8)] public Meter Distance;
+			[Required, SIRange(0, 1e8)] public Watt Power;
+		}
 
 	}
 

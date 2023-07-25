@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
@@ -60,6 +61,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
@@ -900,6 +902,38 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
             retVal.InitialSoC = initialSOC;
 			return retVal;
+		}
+
+		public FuelCellPowerMap CreateFuelCellPowerMap(IModalDataContainer modData)
+		{
+
+
+
+			//Constant power for the whole cycle
+			var p_reess_terminal_dt = modData.GetValues(x => new {
+				p_reess_terminal = x.Field<Watt>(ModalResultField.P_reess_terminal.GetName()),
+				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
+			});
+
+
+			var constantPower = p_reess_terminal_dt.Sum(x => x.p_reess_terminal * x.dt) /
+								p_reess_terminal_dt.Sum(x => x.dt);
+
+
+			var endDistance = modData.Distance;
+
+			//For constant power equidistant points should work
+			var distanceValues = modData.GetValues(x => x.Field<Meter>(ModalResultField.dist.GetName()));
+			var entries = new List<FuelCellPowerMap.FuelCellPowerMapEntry>();
+			foreach (var dist in distanceValues) {
+				entries.Add(new FuelCellPowerMap.FuelCellPowerMapEntry() {
+					Distance = dist,
+					Power = -constantPower,
+				});
+			}
+
+			return new FuelCellPowerMap(entries.ToArray());
+
 		}
 
 

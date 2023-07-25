@@ -18,7 +18,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public class State
 		{
-			public Watt Power { get; set; }
+			public Watt ActualPower { get; set; }
+			public Watt TargetPower { get; set; }
 
 		}
 		private readonly IMileageCounter _mileageCounter;
@@ -28,7 +29,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_mileageCounter = databus.MileageCounter;
 			_fuelCells = new List<FuelCell>();
 			ModelData = fuelCellSystemData;
-		}
+			PreviousState.TargetPower = 0.SI<Watt>();
+			PreviousState.ActualPower = 0.SI<Watt>();
+
+        }
 
 		public IReadOnlyCollection<FuelCell> FuelCells => new ReadOnlyCollection<FuelCell>(_fuelCells);
 
@@ -38,19 +42,38 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt Initialize()
 		{
+			PreviousState.TargetPower = 0.SI<Watt>();
+			PreviousState.ActualPower = 0.SI<Watt>();
 			return 0.SI<Watt>();
 		}
 
+
+
+
+
 		public Watt PowerDemand(Second absTime, Second dt, Watt powerDemandEletricMotor, Watt auxPower, bool dryRun)
 		{
-			var power = ModelData.ChargingPower(_mileageCounter.Distance);
+			var targetPower = ModelData.ChargingPower(_mileageCounter.Distance);
+
+
+
+
+			//Limit by gradient powerchange
+			var limitedPower =
+				GetLimitedPower(PreviousState.ActualPower, targetPower, dt, ModelData.GradientPowerChange);
+
+
+
 			var fcCount = FuelCells.Count;
+
+			var generatedPower = 0.SI<Watt>();
 			foreach (var fc in FuelCells) {
-				fc.Request(power / fcCount);
+				generatedPower += fc.Request(limitedPower / fcCount);
 			}
 
-			CurrentState.Power = power;
-			return power;
+			CurrentState.ActualPower = generatedPower;
+			CurrentState.TargetPower = targetPower;
+			return targetPower;
 		}
 
 
@@ -62,11 +85,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
+
+		/// <summary>
+		/// Returns the power wrt. to the GradientPowerChange
+		/// </summary>
+		/// <param name="previous"></param>
+		/// <param name="current"></param>
+		/// <param name="dt"></param>
+		/// <param name="gradientPowerChange"></param>
+		/// <returns></returns>
+		public static Watt GetLimitedPower(Watt previous, Watt current, Second dt, WattPerSecond gradientPowerChange)
+		{
+		
+
+			var delta = dt * gradientPowerChange;
+
+
+			return current.LimitTo(previous - delta, previous + delta);
+		} 
+
 		#region Overrides of VectoSimulationComponent
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
-			container[ModalResultField.P_fuelCellSystem] = CurrentState.Power;
+			container[ModalResultField.P_fuelCellSystem_target] = CurrentState.TargetPower;
+			container[ModalResultField.P_fuelCellSystem_actual] = CurrentState.ActualPower;
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)

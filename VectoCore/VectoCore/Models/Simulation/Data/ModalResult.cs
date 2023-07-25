@@ -303,7 +303,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		// ------------------------------------------------------------------------------------
 		public static readonly ModalResultField[] FuelCellSystemSignals = {
-			ModalResultField.P_fuelCellSystem,
+			ModalResultField.P_fuelCellSystem_target,
+			ModalResultField.P_fuelCellSystem_actual,
 		};
 
 		public static readonly ModalResultField[] FuelCellComponentSignals = {
