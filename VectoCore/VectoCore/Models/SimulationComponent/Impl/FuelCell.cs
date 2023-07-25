@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCommon.Utils;
+﻿using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
@@ -17,7 +18,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private FuelCellData ModelData;
 
-
+		public Watt MaxPower
+		{
+			get => ModelData.MaxElectricPower;
+		}
+		public Watt MinPower
+		{
+			get => ModelData.MinElectricPower;
+		}
 
 		public FuelCellData.FuelCellId Id { get; private set; }
 
@@ -49,6 +57,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt Request(Watt requestedPower)
 		{
+			//Dont know how to handle
+			//if (!requestedPower.IsBetween(MinPower, MaxPower)) {
+			//	throw new VectoException(string.Format("Requested power {0} is outside of fuelcell limits ({1}, {2}",
+			//		requestedPower, MinPower, MaxPower));
+			//}
 			CurrentState.RequestedPower = requestedPower;
 			var generatedPower =
 				VectoMath.LimitTo(requestedPower, ModelData.MinElectricPower, ModelData.MaxElectricPower);

@@ -1,4 +1,6 @@
-﻿using Moq;
+﻿using System.Collections.Generic;
+using System.Data;
+using Moq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
@@ -23,13 +25,49 @@ public class FuelCellTest
 		Mock<IElectricStorageSystemEngineeringInputData> batMock =
 			new Mock<IElectricStorageSystemEngineeringInputData>();
 
+		var storageElement = new Mock<IElectricStorageEngineeringInputData>();
+		var batPack = new Mock<IBatteryPackEngineeringInputData>();
+		batMock.SetupGet(b => b.ElectricStorageElements).Returns(new List<IElectricStorageEngineeringInputData>(){storageElement.Object});
+		storageElement.SetupGet(s => s.Count).Returns(1);
+		storageElement.SetupGet(s => s.StringId).Returns(1);
+		storageElement.SetupGet(s => s.REESSPack).Returns(batPack.Object);
+
+		batPack.SetupGet(r => r.StorageType).Returns(REESSType.Battery);
+		batPack.SetupGet(r => r.ConnectorsSubsystemsIncluded).Returns(true);
+
+		//TODO FILL MAPS
+		batPack.SetupGet(r => r.InternalResistanceCurve).Returns(new TableData() {
+			Columns = {
+				
+			},
+			Rows = {
+
+			}
+		});
+		batPack.SetupGet(r => r.MaxCurrentMap).Returns(new TableData()
+		{
+			Columns = {
+
+			},
+			Rows = {
+
+			}
+        });
+		batPack.SetupGet(r => r.VoltageCurve).Returns(new TableData());
+
+
+
 		Mock<IFuelCellSystemEngineeringInputData> fuelCellSystemMock = new Mock<IFuelCellSystemEngineeringInputData>();
+		
 
 
+		var pevBatSystemData = engAdapter.CreateBatteryData(batMock.Object, 0.5);
 
-		var pevBatSystem = engAdapter.CreateBatteryData(batMock.Object, 0.5);
+		var pevBatSystem = new BatterySystem(null, pevBatSystemData);
+		var maxDischargePower = pevBatSystem.MaxDischargePower(1.SI<Second>());
 
-		var preBatSystem = engAdapter.CreateFuelCellPreProcessingBattery(fuelCellSystemMock.Object, pevBatSystem);
+
+		var preBatSystem = engAdapter.CreateFuelCellPreProcessingBattery(fuelCellSystemMock.Object, pevBatSystemData);
 
 
 
