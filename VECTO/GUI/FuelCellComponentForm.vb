@@ -1,7 +1,13 @@
-﻿Imports System.IO
+﻿Imports System.Drawing.Imaging
+Imports System.IO
+Imports System.Security.Cryptography
+Imports System.Windows.Forms.DataVisualization.Charting
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
+Imports TUGraz.VectoCore.InputData.Reader.ComponentData
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
+Imports TUGraz.VectoCore.Utils
 
 Public Class FuelCellComponentForm
     Private _fuelCellComponentFile As String = ""
@@ -144,7 +150,61 @@ Public Class FuelCellComponentForm
     End Sub
 
     Private Sub UpdatePic()
+        Dim massFlowMap As FuelCellMassFlowMap = Nothing
 
+        pcBoxMassFlowMap.Image = Nothing
+
+        Try
+            Dim massFlowMapFile As String =
+                    If(Not String.IsNullOrWhiteSpace(_fuelCellComponentFile), Path.Combine(Path.GetDirectoryName(_fuelCellComponentFile),
+                                                                                           tbMassFlowMap.Text), tbMassFlowMap.Text)
+            If File.Exists(massFlowMapFile) Then _
+                massFlowMap = FuelCellMassFlowMapReader.Create(VectoCSVFile.Read(massFlowMapFile))
+        Catch ex As Exception
+
+        End Try
+
+        If (massFlowMap Is Nothing) Then Exit Sub
+
+        Dim chart As Chart = New Chart
+        chart.Width = pcBoxMassFlowMap.Width
+        chart.Height = pcBoxMassFlowMap.Height
+
+        Dim chartArea As ChartArea = New ChartArea
+
+        Dim series = New Series
+        series.Points.DataBindXY(massFlowMap.Entries.Select(Function(e) e.P_el_out.Value() / 1000).ToArray(),
+                                 massFlowMap.Entries.Select(Function(x) x.H2.Value() * 3600 * 1000).ToArray())
+
+        series.ChartType = SeriesChartType.FastLine
+        series.BorderWidth = 2
+        series.Color = Color.DarkCyan
+        series.Name = "Massflow (" & tbMassFlowMap.Text & ")"
+        chart.Series.Add(series)
+
+        chartArea.Name = "main"
+
+        chartArea.AxisX.Title = "Power [kW]"
+        chartArea.AxisX.TitleFont = New Font("Helvetica", 10)
+        chartArea.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
+        chartArea.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None
+        chartArea.AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dot
+
+        chartArea.AxisY.Title = "H2 [g/h]"
+        chartArea.AxisY.TitleFont = New Font("Helvetica", 10)
+        chartArea.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
+        chartArea.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None
+        chartArea.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dot
+
+        chartArea.BackColor = Color.GhostWhite
+        chart.ChartAreas.Add(chartArea)
+        chart.Update()
+
+        Dim img As Bitmap = New Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb)
+        chart.DrawToBitmap(img, New Rectangle(0, 0, pcBoxMassFlowMap.Width, pcBoxMassFlowMap.Height))
+
+
+        pcBoxMassFlowMap.Image = img
 
 
     End Sub

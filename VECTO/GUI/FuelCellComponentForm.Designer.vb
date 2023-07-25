@@ -287,7 +287,7 @@ Partial Class FuelCellComponentForm
         'btnSaveFuelCellComponent
         '
         Me.btnSaveFuelCellComponent.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSaveFuelCellComponent.Location = New System.Drawing.Point(827, 373)
+        Me.btnSaveFuelCellComponent.Location = New System.Drawing.Point(833, 368)
         Me.btnSaveFuelCellComponent.Margin = New System.Windows.Forms.Padding(4)
         Me.btnSaveFuelCellComponent.Name = "btnSaveFuelCellComponent"
         Me.btnSaveFuelCellComponent.Size = New System.Drawing.Size(100, 28)
@@ -299,7 +299,7 @@ Partial Class FuelCellComponentForm
         '
         Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnCancel.Location = New System.Drawing.Point(935, 373)
+        Me.btnCancel.Location = New System.Drawing.Point(946, 368)
         Me.btnCancel.Margin = New System.Windows.Forms.Padding(4)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(100, 28)
@@ -311,7 +311,7 @@ Partial Class FuelCellComponentForm
         '
         Me.StatusStrip1.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 528)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 400)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Padding = New System.Windows.Forms.Padding(1, 0, 19, 0)
         Me.StatusStrip1.Size = New System.Drawing.Size(1067, 26)
@@ -329,7 +329,7 @@ Partial Class FuelCellComponentForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1067, 554)
+        Me.ClientSize = New System.Drawing.Size(1067, 426)
         Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.gpMassFlowMap)
         Me.Controls.Add(Me.btnCancel)
