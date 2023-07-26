@@ -505,7 +505,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var electricSystemResponse = ElectricPower.Request(0.SI<Second>(), dt, 0.SI<Watt>(), true);
 			var maxBatPower = electricSystemResponse.MaxPowerDrive;
 
-			if (maxBatPower.IsGreater(0, 1e-3)) {
+			if (maxBatPower.IsGreaterOrEqual(0, 1e-3)) {
 				// has to be negative for propelling - so battery is below min SoC
 				return null;
 			}

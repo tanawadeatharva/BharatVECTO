@@ -55,11 +55,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.Gearbox.Disengaged = !useNextGear.Engaged;
 			TestPowertrain.Gearbox.DisengageGearbox = !useNextGear.Engaged;
 			TestPowertrain.Gearbox._nextGear = NextGear;
-			//if (DataBus.GearboxInfo.GearboxType != GearboxType.APTN) {
+			if (!DataBus.GearboxInfo.GearboxType.IsOneOf(GearboxType.APTN, GearboxType.IHPC)) {
 				TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed,
 					DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
-			//}
-
+			}
+			
 			TestPowertrain.HybridController.ApplyStrategySettings(cfg);
 			
 
@@ -83,10 +83,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 
-			//if (DataBus.GearboxInfo.GearboxType != GearboxType.APTN) {
+			if ((!DataBus.GearboxInfo.GearboxType.IsOneOf(GearboxType.APTN, GearboxType.IHPC))) {
 				TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque,
 					Controller.PreviousState.OutAngularVelocity);
-			//}
+			}
 
 			if (!PreviousState.GearboxEngaged || (useNextGear.Engaged && useNextGear.Equals(CurrentGear)) || !nextGear.Engaged) {
 				TestPowertrain.CombustionEngine.UpdateFrom(DataBus.EngineInfo);

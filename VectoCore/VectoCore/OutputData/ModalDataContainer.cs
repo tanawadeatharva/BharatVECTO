@@ -460,6 +460,9 @@ namespace TUGraz.VectoCore.OutputData
 
 		public PerSecond ElectricMotorAverageSpeed(PowertrainPosition emPos)
 		{
+			if (Duration == 0.SI<Second>()) {
+				return 0.SI<PerSecond>();
+			}
 			var field = emPos == PowertrainPosition.IEPC
 				? ModalResultField.n_IEPC_int_
 				: ModalResultField.n_EM_electricMotor_;
