@@ -106,9 +106,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				var iterativeRunStrategy = new FCHEVIterativeRunStrategy();
 				pevRd.BatteryData = dao.CreateFuelCellPreProcessingBattery(InputDataProvider.JobInputData.Vehicle.Components.FuelCellSystemInputData, pevRd.BatteryData);
 				//pevRd.SimulationType = VectoSimulationJobType.FCHV;
+				pevRd.ModFileSuffix += "pre";
 
 				iterativeRunStrategy.Update = (modData, runData) => {
-
+					runData.JobType = VectoSimulationJobType.FCHV;
+					
 					runData.BatteryData =
 						dao.CreateBatteryData(InputDataProvider.JobInputData.Vehicle.Components.ElectricStorage, 0.5);
 					runData.FuelCellSystemData =
