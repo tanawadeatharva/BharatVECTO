@@ -40,7 +40,8 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 	{
 
 		protected const string FCHV_E2_JOB = @"TestData/H2_FCV/GenericVehicleE2 - FCHV/FCHV_singleFc.vecto";
-		[OneTimeSetUp]
+		protected const string FCHV_E2_JOB_multipleFC = @"TestData/H2_FCV/GenericVehicleE2 - FCHV/FCHV_singleFc.vecto";
+        [OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
@@ -73,8 +74,9 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 
 
 		[
-			TestCase(FCHV_E2_JOB, 0, TestName = "FCHV E2 Job RD"),
-		]
+			TestCase(FCHV_E2_JOB, 0, TestName = "FCHV E2 Job RD single FC"),
+			TestCase(FCHV_E2_JOB_multipleFC, 0, TestName="FCHV E2 Job RD multiple FC"),
+        ]
 		public void E2_FCHV_Job(string jobFile, int cycleIdx)
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);

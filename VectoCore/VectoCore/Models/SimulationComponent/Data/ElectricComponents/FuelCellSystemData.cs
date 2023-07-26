@@ -1,8 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 {
@@ -62,7 +67,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 	{
 		private Watt _powerDelivery;
 
-		private readonly FuelCellPowerMapEntry[] _entries;
+		private readonly List<FuelCellPowerMapEntry> _entries;
+		private Meter[] _distanceEntries;
 
 		/// <summary>
 		/// Constant for now, remove when this is replaced with the actual implementation 
@@ -71,7 +77,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		public FuelCellPowerMap(FuelCellPowerMapEntry[] entries,Watt powerDelivery = null)
 		{
 			_powerDelivery = powerDelivery;
-			_entries = entries.OrderBy(e => e.Distance).ToArray();
+			_entries = entries.OrderBy(e => e.Distance).ToList();
+
+			_distanceEntries = _entries.Select(e => e.Distance).ToArray();
+
 		}
 
 		public Watt Lookup(Meter distance)
@@ -81,23 +90,62 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 			}
 
 			//Just interpolate for now ?
-			var idx = FindIndex(distance);
-			return VectoMath.Interpolate(_entries[idx - 1].Distance, _entries[idx].Distance, _entries[idx - 1].Power,
-				_entries[idx].Power, distance);
+
+			var closest = FindClosestIndex(distance, out var interval);
+
+			//var closest = FindIndex(distance, out var interval);
+
+
+
+			return VectoMath.Interpolate(_entries[interval.start].Distance, _entries[interval.end].Distance, _entries[interval.start].Power,
+				_entries[interval.end].Power, distance);
         }
 
-		protected int FindIndex(Meter distance)
+
+		protected int FindClosestIndex(Meter distance, out (int start, int end) interval)
 		{
 
-			for (var index = 1; index < _entries.Length; index++)
+			return SearchAlgorithm.FindClosest(_distanceEntries, distance, t => t.a.Value() - t.b.Value(), out interval);
+		}
+
+
+		//public Watt Lookup(Meter distance)
+		//{
+		//	if (_powerDelivery != null)
+		//	{
+		//		return _powerDelivery;
+		//	}
+
+		//	//Just interpolate for now ?
+		//	var idx = FindIndex(distance);
+		//	return VectoMath.Interpolate(_entries[idx - 1].Distance, _entries[idx].Distance, _entries[idx - 1].Power,
+		//		_entries[idx].Power, distance);
+		//}
+
+		protected int FindIndex(Meter distance, out (int start, int end) interval)
+		{
+
+			for (var index = 1; index < _entries.Count; index++)
 			{
-				if (distance.IsGreaterOrEqual(_entries[index - 1].Distance) && distance.IsSmallerOrEqual(_entries[index].Distance))
-				{
+				if (distance.IsGreaterOrEqual(_entries[index - 1].Distance) && distance.IsSmallerOrEqual(_entries[index].Distance)) {
+					interval = (index, index - 1);
 					return index;
 				}
 			}
 			throw new VectoException("Distance Request {0} exceeds fuel cell model data. min: {1} max: {2}", distance, _entries.First().Distance, _entries.Last().Distance);
 		}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -137,6 +185,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 					return index;
 				}
 			}
+			
 			throw new VectoException("Power Request {0} exceeds fuel cell model data. min: {1} max: {2}", power, Entries.First().P_el_out, Entries.Last().P_el_out);
 		}
 
