@@ -327,5 +327,90 @@ namespace TUGraz.VectoCore.Utils
 			}
 			VectoCSVFile.Write(filename, table);
 		}
+
+
+        /// <summary>
+		/// Tries to find the closest element in a sorted array using binary search
+        /// </summary>
+        /// <typeparam name="TArray"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="sortedArray">The SORTED array where the search should be performed</param>
+        /// <param name="accessor"></param>
+        /// <param name="searchValue"></param>
+        /// <param name="equal">Should return a - b</param>
+		/// <returns></returns>
+        public static int FindClosest<TValue>(TValue[] sortedArray, TValue searchValue, Func<(TValue a, TValue b), double> diff, out (int start, int end) interval)
+		{
+			//TODO handle accuracy
+			Func<(TValue a, TValue b), bool> greater = t => diff(t) > 0;
+			Func<(TValue a, TValue b), bool> less = t => diff(t) < 0;
+			Func<(TValue a, TValue b), bool> equal = t => diff(t) == 0;
+
+
+
+			var len = sortedArray.Length; //O(1)
+			int first = 0;
+			int last = len - 1;
+			int i = 0;
+
+			if (less((searchValue, sortedArray.First()))) {
+				interval = (first, first);
+				return first;
+			}
+
+			if (greater((searchValue, sortedArray.Last()))) {
+				interval = (last, last);
+				return last;
+			}
+
+
+            while (first <= last) {
+				i = (first + last) / 2;
+
+				var current_value = sortedArray[i];
+				//Debug.WriteLine($"Searching {searchValue}");
+				//Debug.WriteLine($"first {first}:{sortedArray[first]} last {last}:{sortedArray[last]} array[{i}] == {current_value} ");
+				//for (int j = first; j <= last; j++) {
+			
+				//	if (j == i) {
+				//		Debug.Write($"[{sortedArray[j]}]");
+				//	} else {
+				//		Debug.Write($"{sortedArray[j]} ");
+    //                }
+				//}
+				//Debug.WriteLine("\n");
+                //Debug.WriteLine(sortedArray.Select(accessor).Range(first).Take(last - (first + 1)).Join(","));
+
+				if (equal((current_value, searchValue))) {
+					interval = (i, i);
+					return i;
+				}
+				if (last - first == 1)
+				{
+                    //Only two elements left
+					double diffLeft = Math.Abs(diff((searchValue, sortedArray[first])));
+					double diffRight = Math.Abs(diff((searchValue, sortedArray[last])));
+
+					interval = (first, last);
+					return diffLeft < diffRight ? first : last;
+
+				}
+
+
+
+
+
+                if (greater((searchValue, current_value)))
+				{
+					first = i;
+				}else {
+					last = i;
+				}
+			}
+
+
+
+			throw new VectoException("Binary search failed");
+		}
 	}
 }
