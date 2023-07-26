@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using Moq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
@@ -8,6 +10,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent;
 
@@ -16,7 +19,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent;
 [TestFixture]
 public class FuelCellTest
 {
-
+	public TableData GetTableData(string csvContent)
+	{
+		return VectoCSVFile.ReadStream(csvContent.ToStream());
+	}
 
 	[Test]
 	public void EquivalentBattery()
@@ -32,33 +38,55 @@ public class FuelCellTest
 		storageElement.SetupGet(s => s.StringId).Returns(1);
 		storageElement.SetupGet(s => s.REESSPack).Returns(batPack.Object);
 
-		batPack.SetupGet(r => r.StorageType).Returns(REESSType.Battery);
+
+		batPack.SetupGet(r => r.MaxSOC).Returns(() => 0.8);
+		batPack.SetupGet(r => r.MinSOC).Returns(() => 0.2);
+
+		batPack.SetupGet(r => r.Capacity).Returns((110 * 3600).SI<AmpereSecond>());
+
+
+        batPack.SetupGet(r => r.StorageType).Returns(REESSType.Battery);
 		batPack.SetupGet(r => r.ConnectorsSubsystemsIncluded).Returns(true);
 
 		//TODO FILL MAPS
-		batPack.SetupGet(r => r.InternalResistanceCurve).Returns(new TableData() {
-			Columns = {
-				
-			},
-			Rows = {
-
-			}
-		});
-		batPack.SetupGet(r => r.MaxCurrentMap).Returns(new TableData()
-		{
-			Columns = {
-
-			},
-			Rows = {
-
-			}
-        });
-		batPack.SetupGet(r => r.VoltageCurve).Returns(new TableData());
-
+		batPack.SetupGet(r => r.InternalResistanceCurve).Returns(
+			GetTableData(
+				"SoC, Ri\r\n0,  0.04\r\n100,  0.04"
+			)
+		);
+		batPack.SetupGet(r => r.MaxCurrentMap).Returns(GetTableData(
+			"SOC, I_charge, I_discharge\r\n" +
+			"0, 1620, 1620\r\n" +
+			"100, 1620, 1620"
+		));
+		batPack.SetupGet(r => r.VoltageCurve).Returns(GetTableData(
+            "SOC, V\r\n" +
+			"0, 673.5\r\n" +
+			"10, 700.2\r\n" +
+			"20, 715.4\r\n" +
+			"30, 723.6\r\n" +
+			"40, 727.7\r\n" +
+			"50, 730.0\r\n" +
+			"60, 731.6\r\n" +
+			"70, 733.8\r\n" +
+			"80, 737.1\r\n" +
+			"90, 742.2\r\n" +
+			"100, 750.2"
+		));
 
 
 		Mock<IFuelCellSystemEngineeringInputData> fuelCellSystemMock = new Mock<IFuelCellSystemEngineeringInputData>();
-		
+		Mock<IFuelCellComponentEngineeringInputData> fuelCellComponentMock = new Mock<IFuelCellComponentEngineeringInputData>();
+
+		fuelCellSystemMock.SetupGet(fcs => fcs.FuelCellComponents).Returns(() => new List<FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>>() {
+			new FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>() {
+				Count = 1,
+				FuelCellComponent = fuelCellComponentMock.Object,
+			}
+		});
+
+		fuelCellComponentMock.SetupGet(fcC => fcC.MaxElectricPower).Returns((100 * 1000).SI<Watt>());
+
 
 
 		var pevBatSystemData = engAdapter.CreateBatteryData(batMock.Object, 0.5);
@@ -67,13 +95,23 @@ public class FuelCellTest
 		var maxDischargePower = pevBatSystem.MaxDischargePower(1.SI<Second>());
 
 
-		var preBatSystem = engAdapter.CreateFuelCellPreProcessingBattery(fuelCellSystemMock.Object, pevBatSystemData);
+		var preBatSystemData = engAdapter.CreateFuelCellPreProcessingBattery(fuelCellSystemMock.Object, pevBatSystemData);
+
+		var preBatSystem = new BatterySystem(null, preBatSystemData);
 
 
+		Assert.AreEqual(preBatSystem.MaxChargePower(1.SI<Second>()), pevBatSystem.MaxChargePower(1.SI<Second>())); //Fuel cell cannnot be charged
+
+		preBatSystem.Initialize(0.5);
+		pevBatSystem.Initialize(0.5);
+		preBatSystem.PreviousState.PulseDuration = 1.SI<Second>();
+		preBatSystem.PreviousState.PowerDemand = -1.SI<Watt>();
+		pevBatSystem.PreviousState.PulseDuration = 1.SI<Second>();
+		pevBatSystem.PreviousState.PowerDemand = -1.SI<Watt>();
 
 
-
-
+		Assert.Less(pevBatSystem.MaxDischargePower(1.SI<Second>()), (0.SI<Watt>()));
+		Assert.IsTrue(pevBatSystem.MaxDischargePower(1.SI<Second>()).IsRelativeEqual(preBatSystem.MaxDischargePower(1.SI<Second>()) + fuelCellComponentMock.Object.MaxElectricPower, 1E-03));
 	}
 
 
