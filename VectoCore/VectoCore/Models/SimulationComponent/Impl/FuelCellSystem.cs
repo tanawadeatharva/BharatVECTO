@@ -68,11 +68,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var generatedPower = 0.SI<Watt>();
 			foreach (var fc in FuelCells) {
-				generatedPower += fc.Request(limitedPower / fcCount);
+				generatedPower += fc.Request(limitedPower / fcCount, dryRun);
 			}
 
-			CurrentState.ActualPower = generatedPower;
-			CurrentState.TargetPower = targetPower;
+			if (!dryRun) {
+				CurrentState.ActualPower = generatedPower;
+				CurrentState.TargetPower = targetPower;
+            }
 			return targetPower;
 		}
 
@@ -96,11 +98,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public static Watt GetLimitedPower(Watt previous, Watt current, Second dt, WattPerSecond gradientPowerChange)
 		{
-		
-
 			var delta = dt * gradientPowerChange;
-
-
 			return current.LimitTo(previous - delta, previous + delta);
 		} 
 

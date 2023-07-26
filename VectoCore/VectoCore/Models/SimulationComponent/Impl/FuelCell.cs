@@ -55,18 +55,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AdvanceState();
 		}
 
-		public Watt Request(Watt requestedPower)
+		public Watt Request(Watt requestedPower, bool dryRun)
 		{
 			//Dont know how to handle
 			//if (!requestedPower.IsBetween(MinPower, MaxPower)) {
 			//	throw new VectoException(string.Format("Requested power {0} is outside of fuelcell limits ({1}, {2}",
 			//		requestedPower, MinPower, MaxPower));
 			//}
-			CurrentState.RequestedPower = requestedPower;
+
+
+
 			var generatedPower =
 				VectoMath.LimitTo(requestedPower, ModelData.MinElectricPower, ModelData.MaxElectricPower);
 
-			CurrentState.Power = generatedPower;
+
+			if (!dryRun) {
+				CurrentState.RequestedPower = requestedPower;
+				CurrentState.Power = generatedPower;
+			}
 
 
 			return generatedPower;

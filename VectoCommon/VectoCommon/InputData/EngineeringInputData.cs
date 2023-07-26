@@ -127,7 +127,7 @@ namespace TUGraz.VectoCommon.InputData
 
 			return ArchitectureID.UNKNOWN;
 		}
-
+		
 		public static bool HasEngine(this VectoSimulationJobType jobType)
 		{
 			switch (jobType) {

@@ -8,6 +8,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 {
 	public class FuelCellSystemData
 	{
+		/// <summary>
+		/// Battery string id for pre processing battery
+		/// </summary>
+		public const int FuelCellBatID = 0xFCB; 
 		public WattPerSecond GradientPowerChange { get; set; }
 
 		public Second OnOffHysteresis { get; set; }

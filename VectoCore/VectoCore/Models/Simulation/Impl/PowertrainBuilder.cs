@@ -1240,6 +1240,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			AddElectricAuxiliaries(data, container, es, cycle, dcdc);
 			//TODO: Just add to BatteryElectric???
+			//Move to FCHV
 			ConnectFuelCellSystem(es, data.FuelCellSystemData, container);
             return container;
 

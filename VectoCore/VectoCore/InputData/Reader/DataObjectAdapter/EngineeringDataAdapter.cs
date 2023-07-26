@@ -920,9 +920,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 								p_reess_terminal_dt.Sum(x => x.dt);
 
 
-			var endDistance = modData.Distance;
-
-			//For constant power equidistant points should work
 			var distanceValues = modData.GetValues(x => x.Field<Meter>(ModalResultField.dist.GetName()));
 			var entries = new List<FuelCellPowerMap.FuelCellPowerMapEntry>();
 			foreach (var dist in distanceValues) {
@@ -974,19 +971,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var pevBat = batterySystemData;
 			pevBat.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
             var fcP = fuelCellSystemInputData.FuelCellComponents.Sum(fc => fc.FuelCellComponent.MaxElectricPower * fc.Count);
-            var V = pevBat.CalculateAverageVoltage();
+            var V = pevBat.CalculateVoltageCenterSoc();
             var I = fcP / V;
 
             var resistance = 1E-12.SI<Ohm>();
 
             var batteryData = new BatteryData()
             {
-                BatteryId = 0xFCB,
+                BatteryId = FuelCellSystemData.FuelCellBatID,
                 ChargeSustainingBattery = true,
                 MinSOC = 0,
                 MaxSOC = 1,
                 InputData = null,
-                Capacity = 1E5.SI<AmpereSecond>(),
+                Capacity = 1E5.SI<AmpereSecond>(), //?
                 MaxCurrent = new MaxCurrentMap(new[] {
                     new MaxCurrentMap.MaxCurrentEntry() {
                         SoC = 0,

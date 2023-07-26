@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
@@ -24,8 +25,9 @@ public class FuelCellTest
 		return VectoCSVFile.ReadStream(csvContent.ToStream());
 	}
 
-	[Test]
-	public void EquivalentBattery()
+	[TestCase(true, TestName="Connector Included")]
+	//[TestCase(false, TestName="Connector not Included")] //Considered in ES
+    public void EquivalentBattery(bool connectorIncluded)
 	{
 		EngineeringDataAdapter engAdapter = new EngineeringDataAdapter();
 		Mock<IElectricStorageSystemEngineeringInputData> batMock =
@@ -33,60 +35,12 @@ public class FuelCellTest
 
 		var storageElement = new Mock<IElectricStorageEngineeringInputData>();
 		var batPack = new Mock<IBatteryPackEngineeringInputData>();
-		batMock.SetupGet(b => b.ElectricStorageElements).Returns(new List<IElectricStorageEngineeringInputData>(){storageElement.Object});
-		storageElement.SetupGet(s => s.Count).Returns(1);
-		storageElement.SetupGet(s => s.StringId).Returns(1);
-		storageElement.SetupGet(s => s.REESSPack).Returns(batPack.Object);
-
-
-		batPack.SetupGet(r => r.MaxSOC).Returns(() => 0.8);
-		batPack.SetupGet(r => r.MinSOC).Returns(() => 0.2);
-
-		batPack.SetupGet(r => r.Capacity).Returns((110 * 3600).SI<AmpereSecond>());
-
-
-        batPack.SetupGet(r => r.StorageType).Returns(REESSType.Battery);
-		batPack.SetupGet(r => r.ConnectorsSubsystemsIncluded).Returns(true);
-
-		//TODO FILL MAPS
-		batPack.SetupGet(r => r.InternalResistanceCurve).Returns(
-			GetTableData(
-				"SoC, Ri\r\n0,  0.04\r\n100,  0.04"
-			)
-		);
-		batPack.SetupGet(r => r.MaxCurrentMap).Returns(GetTableData(
-			"SOC, I_charge, I_discharge\r\n" +
-			"0, 1620, 1620\r\n" +
-			"100, 1620, 1620"
-		));
-		batPack.SetupGet(r => r.VoltageCurve).Returns(GetTableData(
-            "SOC, V\r\n" +
-			"0, 673.5\r\n" +
-			"10, 700.2\r\n" +
-			"20, 715.4\r\n" +
-			"30, 723.6\r\n" +
-			"40, 727.7\r\n" +
-			"50, 730.0\r\n" +
-			"60, 731.6\r\n" +
-			"70, 733.8\r\n" +
-			"80, 737.1\r\n" +
-			"90, 742.2\r\n" +
-			"100, 750.2"
-		));
-
 
 		Mock<IFuelCellSystemEngineeringInputData> fuelCellSystemMock = new Mock<IFuelCellSystemEngineeringInputData>();
 		Mock<IFuelCellComponentEngineeringInputData> fuelCellComponentMock = new Mock<IFuelCellComponentEngineeringInputData>();
 
-		fuelCellSystemMock.SetupGet(fcs => fcs.FuelCellComponents).Returns(() => new List<FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>>() {
-			new FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>() {
-				Count = 1,
-				FuelCellComponent = fuelCellComponentMock.Object,
-			}
-		});
-
-		fuelCellComponentMock.SetupGet(fcC => fcC.MaxElectricPower).Returns((100 * 1000).SI<Watt>());
-
+        SetMockData(batMock, storageElement, batPack, fuelCellSystemMock, fuelCellComponentMock);
+		batPack.SetupGet(b => b.ConnectorsSubsystemsIncluded).Returns(connectorIncluded);
 
 
 		var pevBatSystemData = engAdapter.CreateBatteryData(batMock.Object, 0.5);
@@ -111,7 +65,70 @@ public class FuelCellTest
 
 
 		Assert.Less(pevBatSystem.MaxDischargePower(1.SI<Second>()), (0.SI<Watt>()));
-		Assert.IsTrue(pevBatSystem.MaxDischargePower(1.SI<Second>()).IsRelativeEqual(preBatSystem.MaxDischargePower(1.SI<Second>()) + fuelCellComponentMock.Object.MaxElectricPower, 1E-03));
+
+		Assert.IsTrue(pevBatSystem.MaxDischargePower(1.SI<Second>()).IsRelativeEqual(preBatSystem.MaxDischargePower(1.SI<Second>()) + fuelCellComponentMock.Object.MaxElectricPower, 1E-06));
+
+		var internalResistance = preBatSystem.Batteries.First(x => x.Key == FuelCellSystemData.FuelCellBatID).Value.InternalResistance(1.SI<Second>());
+		Assert.IsTrue(internalResistance.IsEqual(0), $"Expected 0 was {internalResistance}");
+	}
+
+	private void SetMockData(Mock<IElectricStorageSystemEngineeringInputData> batMock, Mock<IElectricStorageEngineeringInputData> storageElement, Mock<IBatteryPackEngineeringInputData> batPack, Mock<IFuelCellSystemEngineeringInputData> fuelCellSystemMock,
+		Mock<IFuelCellComponentEngineeringInputData> fuelCellComponentMock)
+	{
+		batMock.SetupGet(b => b.ElectricStorageElements).Returns(new List<IElectricStorageEngineeringInputData>()
+			{ storageElement.Object });
+		storageElement.SetupGet(s => s.Count).Returns(1);
+		storageElement.SetupGet(s => s.StringId).Returns(1);
+		storageElement.SetupGet(s => s.REESSPack).Returns(batPack.Object);
+
+
+		batPack.SetupGet(r => r.MaxSOC).Returns(() => 0.8);
+		batPack.SetupGet(r => r.MinSOC).Returns(() => 0.2);
+
+		batPack.SetupGet(r => r.Capacity).Returns((110 * 3600).SI<AmpereSecond>());
+
+
+		batPack.SetupGet(r => r.StorageType).Returns(REESSType.Battery);
+		batPack.SetupGet(r => r.ConnectorsSubsystemsIncluded).Returns(true);
+
+		//TODO FILL MAPS
+		batPack.SetupGet(r => r.InternalResistanceCurve).Returns(
+			GetTableData(
+				"SoC, Ri\r\n" +
+				"0,  0.04\r\n" +
+				"100,  0.04"
+			)
+		);
+		batPack.SetupGet(r => r.MaxCurrentMap).Returns(GetTableData(
+			"SOC, I_charge, I_discharge\r\n" +
+			"0, 1620, 1620\r\n" +
+			"100, 1620, 1620"
+		));
+		batPack.SetupGet(r => r.VoltageCurve).Returns(GetTableData(
+			"SOC, V\r\n" +
+			"0, 673.5\r\n" +
+			"10, 700.2\r\n" +
+			"20, 715.4\r\n" +
+			"30, 723.6\r\n" +
+			"40, 727.7\r\n" +
+			"50, 730.0\r\n" +
+			"60, 731.6\r\n" +
+			"70, 733.8\r\n" +
+			"80, 737.1\r\n" +
+			"90, 742.2\r\n" +
+			"100, 750.2"
+		));
+
+
+		fuelCellSystemMock.SetupGet(fcs => fcs.FuelCellComponents).Returns(() =>
+			new List<FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>>() {
+				new FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>() {
+					Count = 1,
+					FuelCellComponent = fuelCellComponentMock.Object,
+				}
+			});
+
+		fuelCellComponentMock.SetupGet(fcC => fcC.MaxElectricPower).Returns((100 * 1000).SI<Watt>());
 	}
 
 
