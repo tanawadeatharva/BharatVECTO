@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 				iterativeRunStrategy.Update = (modData, runData) => {
 					runData.JobType = VectoSimulationJobType.FCHV;
-					
+					runData.ModFileSuffix = "";
 					runData.BatteryData =
 						dao.CreateBatteryData(InputDataProvider.JobInputData.Vehicle.Components.ElectricStorage, 0.5);
 					runData.FuelCellSystemData =
