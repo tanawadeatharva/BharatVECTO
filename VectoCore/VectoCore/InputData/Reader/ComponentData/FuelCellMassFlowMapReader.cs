@@ -40,8 +40,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 		public static class Fields
 		{
-			public const string ElectricPower = "P_el_out [kW]";
-			public const string m_H2 = "[g/h]";
+			public const string ElectricPower = "P_el_out";
+			public const string m_H2 = "m_H2";
 		}
 	}
 }
