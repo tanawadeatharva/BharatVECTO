@@ -1053,7 +1053,8 @@ Public Class VehicleForm
 
 			If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse
 				VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse
-				VehicleType = VectoSimulationJobType.SerialHybridVehicle) Then
+				VehicleType = VectoSimulationJobType.SerialHybridVehicle OrElse 
+                VehicleType = VectoSimulationJobType.FCHV) Then
 
 				If tbElectricMotor.Text = "" Then
 					MsgBox("Electric Motor File is required.")

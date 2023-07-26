@@ -1158,7 +1158,8 @@ Public Class ElectricMachinesWrapper
 			If (Vehicle.VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse 
                 Vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse 
                 Vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle OrElse 
-                Vehicle.VehicleType = VectoSimulationJobType.IHPC) Then 
+                Vehicle.VehicleType = VectoSimulationJobType.IHPC OrElse
+                Vehicle.VehicleType = VectoSimulationJobType.FCHV) Then 
 
 				retval.Add(New ElectricMachineEntry(Of IElectricMotorDeclarationInputData) With {
 					.ElectricMachine = new ElectricMachineWrapper(Vehicle.ElectricMotorFile),
@@ -1189,7 +1190,8 @@ Public Class ElectricMachinesWrapper
 			If (Vehicle.VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse 
                 Vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse 
                 Vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle OrElse 
-                Vehicle.VehicleType = VectoSimulationJobType.IHPC) Then 
+                Vehicle.VehicleType = VectoSimulationJobType.IHPC OrElse 
+                Vehicle.VehicleType = VectoSimulationJobType.FCHV) Then 
 
 				retval.Add(New ElectricMachineEntry(Of IElectricMotorEngineeringInputData) With {
 					.ElectricMachine = new ElectricMachineWrapper(Vehicle.ElectricMotorFile),
