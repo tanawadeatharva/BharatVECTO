@@ -93,7 +93,7 @@
 							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>/+OkpqMJNrSUR2r8zwuvw+IJOEP3c9lDM+Buo32YxO0=</di:DigestValue>
+						<di:DigestValue>NqOSIxriofgfqsNnOs4Mt2NjsTzQ3Vol6b7dx0Y638Q=</di:DigestValue>
 					</di:Reference>
 				</v2.3:Signature>
 			</IEPC>

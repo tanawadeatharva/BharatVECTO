@@ -281,6 +281,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			if (xEVBus && busAux.OtherHeatingTechnology == null) {
 				throw new VectoException("OtherElectricHeater input parameter is required for xEV vehicles");
 			}
+
+			if (primaryVehicle.ArchitectureID.IsBatteryElectricVehicle() ||
+				primaryVehicle.ArchitectureID.IsSerialHybridVehicle()) {
+				var heatpumps = new Dictionary<string, HeatPumpType>() {
+					{ "Heatpump Driver Compartment - cooling", busAux.HeatPumpTypeCoolingDriverCompartment.Value },
+					{ "Heatpump Driver Compartment - heating", busAux.HeatPumpTypeHeatingDriverCompartment.Value },
+					{ "Heatpump Passenger Compartment - cooling", busAux.HeatPumpTypeCoolingPassengerCompartment.Value },
+					{ "Heatpump Passenger Compartment - heating", busAux.HeatPumpTypeHeatingPassengerCompartment.Value },
+				};
+				var errors = new List<string>();
+				foreach (var entry in heatpumps) {
+					if (!entry.Value.IsOneOf(HeatPumpType.non_R_744_continuous, HeatPumpType.none, HeatPumpType.not_applicable)) {
+						errors.Add($"{entry.Key}: must not be mechanically driven for PEV/S-HEV ({entry.Value.ToXML()})");
+					}
+				}
+
+				throw new VectoException(errors.Join(Environment.NewLine));
+			}
         }
 
 		private HeaterType GetElectricHeater(IHVACBusAuxiliariesDeclarationData busAux)

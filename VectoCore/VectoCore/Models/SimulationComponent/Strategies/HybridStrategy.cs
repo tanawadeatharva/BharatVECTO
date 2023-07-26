@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					((DataBus.EngineInfo as CombustionEngine)?.EngineAux as BusAuxiliariesAdapter)?.CurrentState
 					.ExcessiveDragPower ?? 0.SI<Watt>();
 			}
-
+			
             TestPowertrain.HybridController.ApplyStrategySettings(cfg);
 			
 
@@ -87,10 +87,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 
-			//if (DataBus.GearboxInfo.GearboxType != GearboxType.APTN) {
+			if ((!DataBus.GearboxInfo.GearboxType.IsOneOf(GearboxType.APTN, GearboxType.IHPC))) {
 				TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque,
 					Controller.PreviousState.OutAngularVelocity);
-			//}
+			}
 
 			if (!PreviousState.GearboxEngaged || (useNextGear.Engaged && useNextGear.Equals(CurrentGear)) || !nextGear.Engaged) {
 				TestPowertrain.CombustionEngine.UpdateFrom(DataBus.EngineInfo);

@@ -113,7 +113,7 @@ namespace TUGraz.VectoHashing
 			foreach (var component in EnumHelper.GetValues<VectoComponents>()) {
 				// special treatment for REESS: can be either supercap or multiple batteries where the component node may contain several sub-components
 				var select = component == VectoComponents.ElectricEnergyStorage
-					? $"//*[local-name()='{XMLNames.VectoInputDeclaration}']//*[local-name()='{component.XMLElementName()}']//*[local-name()='Data']"
+					? $"//*[local-name()='{XMLNames.VectoInputDeclaration}']//*[local-name()='{component.XMLElementName()}'  or local-name()='Capacitor']//*[local-name()='Data']"
 					: $"//*[local-name()='{XMLNames.VectoInputDeclaration}']//*[local-name()='{component.XMLElementName()}']";
                 var nodes = Document.SelectNodes(select);
 				var count = nodes?.Count ?? 0;
@@ -429,7 +429,7 @@ namespace TUGraz.VectoHashing
 				case VectoComponents.Vehicle:
 					return $"//*[local-name()='{component.Value.XMLElementName()}']";
 				case VectoComponents.ElectricEnergyStorage:
-					return $"//*[local-name()='{component.Value.XMLElementName()}']//*[local-name()='Data']";
+					return $"//*[local-name()='{component.Value.XMLElementName()}' or local-name()='Capacitor']//*[local-name()='Data']";
 				default:
 					return $"//*[local-name()='{component.Value.XMLElementName()}']/*[local-name()='Data']";
 			}
