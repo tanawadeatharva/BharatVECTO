@@ -55,12 +55,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.Gearbox.Disengaged = !useNextGear.Engaged;
 			TestPowertrain.Gearbox.DisengageGearbox = !useNextGear.Engaged;
 			TestPowertrain.Gearbox._nextGear = NextGear;
-			if (!DataBus.GearboxInfo.GearboxType.IsOneOf(GearboxType.APTN, GearboxType.IHPC)) {
-				TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed,
-					DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
+			TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed,
+				DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
+			
+			if (TestPowertrain.CombustionEngine.EngineAux is BusAuxiliariesAdapter busAux) {
+				busAux.CurrentState.ExcessiveDragPower =
+					((DataBus.EngineInfo as CombustionEngine)?.EngineAux as BusAuxiliariesAdapter)?.CurrentState
+					.ExcessiveDragPower ?? 0.SI<Watt>();
 			}
 			
-			TestPowertrain.HybridController.ApplyStrategySettings(cfg);
+            TestPowertrain.HybridController.ApplyStrategySettings(cfg);
 			
 
 			if (useNextGear.Engaged && !useNextGear.Equals(TestPowertrain.Gearbox.Gear)) {
@@ -143,6 +147,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
 			TestPowertrain.DCDCConverter?.UpdateFrom(DataBus.DCDCConverter);
+			
+			if (TestPowertrain.CombustionEngine.EngineAux is BusAuxiliariesAdapter busAux) {
+				busAux.CurrentState.ExcessiveDragPower =
+					((DataBus.EngineInfo as CombustionEngine)?.EngineAux as BusAuxiliariesAdapter)?.CurrentState
+					.ExcessiveDragPower ?? 0.SI<Watt>();
+			}
 			
 			if (nextGear.Engaged && !nextGear.Equals(TestPowertrain.Gearbox.Gear)) {
 				if (!AllowEmergencyShift && ModelData.GearboxData.Gears[nextGear.Gear].Ratio > ModelData.GearshiftParameters.RatioEarlyUpshiftFC) {
