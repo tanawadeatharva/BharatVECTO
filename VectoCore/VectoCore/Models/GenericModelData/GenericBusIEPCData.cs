@@ -129,18 +129,22 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 
 		private Dictionary<uint, DragCurve> GetIEPCDragCurves(IIEPCDeclarationInputData iepcData, int count)
 		{
-			var result = new Dictionary<uint, DragCurve>();
+			var dragCurves = new Dictionary<uint, DragCurve>();
 
-			foreach (var dragCurve in iepcData.DragCurves) {
-		
-				if(!dragCurve.Gear.HasValue)
-					continue;
-
-				var ratio = iepcData.Gears.First(x => x.GearNumber == dragCurve.Gear.Value).Ratio;
-				result.Add((uint)dragCurve.Gear.Value, IEPCDragCurveReader.Create(dragCurve.DragCurve, count, ratio));
+			if (iepcData.DragCurves.Count > 1) {
+				for (var i = 0u; i < iepcData.DragCurves.Count; i++) {
+					var ratio = iepcData.Gears.First(x => x.GearNumber == i + 1).Ratio;
+					dragCurves.Add(i + 1, IEPCDragCurveReader.Create(iepcData.DragCurves[(int)i].DragCurve, count, ratio));
+				}
+			} else {
+				var dragCurve = iepcData.DragCurves.First().DragCurve;
+				for (var i = 0u; i < iepcData.Gears.Count; i++) {
+					var ratio = iepcData.Gears.First(x => x.GearNumber == i + 1).Ratio;
+					dragCurves.Add(i + 1, IEPCDragCurveReader.Create(dragCurve, count, ratio));
+				}
 			}
-			
-			return result;
+
+            return dragCurves;
 		}
 
 
