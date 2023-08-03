@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.BatteryLoss = batteryLoss;
 
 			var soc = (currentCharge + current * dt) / ModelData.Capacity;
-			if (ModelData.ChargeSustainingBattery) {
+			if (ModelData.ChargeDepletingBattery) {
 				soc = PreviousState.StateOfCharge.SI<Scalar>();
 			}
 			CurrentState.StateOfCharge = soc;

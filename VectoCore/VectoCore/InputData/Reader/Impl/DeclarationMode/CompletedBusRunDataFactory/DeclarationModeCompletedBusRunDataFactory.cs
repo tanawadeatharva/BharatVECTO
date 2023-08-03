@@ -412,7 +412,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				}
 
 				if (ovcHevMode == OvcHevMode.ChargeDepleting) {
-					rd.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
+					rd.BatteryData.Batteries.ForEach(b => b.Item2.ChargeDepletingBattery = true);
 				}
 			}
 		}
@@ -841,7 +841,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				foreach (var mission in _segment.Missions) {
 					foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
 						foreach (var run in CreateVectoRunData(mission, loading)) {
-							run.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
+							run.BatteryData.Batteries.ForEach(b => b.Item2.ChargeDepletingBattery = true);
 							yield return run;
 						}
 					}
