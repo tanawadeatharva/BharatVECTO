@@ -1,11 +1,12 @@
 ﻿using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 {
 	public class
-		OVCHevIterativeRunStrategy : AbstractIterativeRunStrategy<OVCHevIterativeRunStrategy.OVCHevIterativeRunResult>
+		HevChargeSustainingIterativeRunStrategy : AbstractIterativeRunStrategy<HevChargeSustainingIterativeRunStrategy.OVCHevIterativeRunResult>
 	{
 		#region Implementation of IIterativeRunStrategy
 
@@ -76,6 +77,7 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 					f_equiv_2 = _results[1].f_equiv;
 
 					f_equiv_3 = (((0 - d_soc_1) / (d_soc_2 - d_soc_1)) * (f_equiv_2 - f_equiv_1)) + f_equiv_1;
+					f_equiv_3 = f_equiv_3.LimitTo(0.1, 4);
 					runData.HybridStrategyParameters.EquivalenceFactor = f_equiv_3;
 					runData.HybridStrategyParameters.EquivalenceFactorCharge = f_equiv_3 * factorCharge;
 					runData.HybridStrategyParameters.EquivalenceFactorDischarge = f_equiv_3 * factorDischarge;

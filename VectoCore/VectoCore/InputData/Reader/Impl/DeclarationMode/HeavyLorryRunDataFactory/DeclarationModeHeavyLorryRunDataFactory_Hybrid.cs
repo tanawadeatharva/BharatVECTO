@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				}
 
 				if (ovcMode == OvcHevMode.ChargeDepleting) {
-					runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
+					runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeDepletingBattery = true);
 				}
 
 				runData.OVCMode = ovcMode;
@@ -258,11 +258,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				}
 
 				if (ovcMode == OvcHevMode.ChargeDepleting) {
-					runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
+					runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeDepletingBattery = true);
 				}
 
 				if (ovcMode == OvcHevMode.ChargeSustaining) {
-					runData.IterativeRunStrategy = new OVCHevIterativeRunStrategy();
+					runData.IterativeRunStrategy = new HevChargeSustainingIterativeRunStrategy();
 				}
 
 				runData.PTO = mission.MissionType == MissionType.MunicipalUtility

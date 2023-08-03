@@ -88,7 +88,7 @@ public class RunDataFactoryTest
 	private void HasInifinityBattery(IDeclarationInputDataProvider inputData, IVectoRun[] runs)
 	{
 		Assert.IsTrue(runs.All((run => run.GetContainer().RunData.BatteryData.Batteries.Select(bd => bd.Item2)
-			.All(b => b.ChargeSustainingBattery))), "PEVs should use the infinity battery");
+			.All(b => b.ChargeDepletingBattery))), "PEVs should use the infinity battery");
 	}
 
 	private void PEV_E2Checks(IDeclarationInputDataProvider inputData, IVectoRun[] runs)
