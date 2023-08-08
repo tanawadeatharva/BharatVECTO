@@ -19,6 +19,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
@@ -38,17 +39,60 @@ public class FuelCellPreRunPostprocessingT
 	}
 
 	[TestCase()]
+	public void TestFuelCellWindowIterator_1()
+	{
+		var modData = new ModalDataContainer(new VectoRunData() {
+			Cycle = new DrivingCycleData() {
+				CycleType = CycleType.DistanceBased,
+			}
+		}, null, null);
+		modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
+		modData.Data.CreateColumns(ModalResults.DriverSignals);
+		for (var i = 1; i <= 100; i++) {
+			modData[ModalResultField.dist] = i.SI<Meter>();
+			modData[ModalResultField.simulationDistance] = 1.SI<Meter>();
+			modData[ModalResultField.v_act] = 30.KMPHtoMeterPerSecond();
+			modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
+			modData.CommitSimulationStep();
+		}
+
+		var windowSize = 6.SI<Meter>();
+		var wIt = new ModDataWindowIterator(modData, windowSize);
+		for (; !wIt.CycleEndReached; wIt.MoveNext()) {
+			var sum = 0.0;
+			for (; !wIt.WindowEndReached; wIt.NextEntry()) {
+				sum += ((MeterPerSecond)modData.Data.Rows[wIt.Current][ModalResultField.v_act.GetShortCaption()]).AsKmph;
+			}
+			Console.WriteLine($"{wIt.Position}, {wIt.Current}: {wIt.Start} - {wIt.End}: {sum}");
+			Console.WriteLine($"{modData.Data.Rows[wIt.Position][ModalResultField.dist.GetShortCaption()]}, " +
+							$"{modData.Data.Rows[wIt.Start][ModalResultField.dist.GetShortCaption()]} - " +
+							$"{modData.Data.Rows[wIt.End][ModalResultField.dist.GetShortCaption()]}: {sum}");
+			//Assert.AreEqual(180, sum, 1e-6, $"at position: {wIt.Position}, {modData.Data.Rows[wIt.Position][ModalResultField.dist.GetShortCaption()]}");
+        }
+    }
+
+	[TestCase()]
 	public void FuelCellPostProcessing_DistanceWindow()
 	{
-		string jobFile = "TestData/H2_FCV/GenericVehicleE2 - FCHV/FCHV_singleFc.vecto";
+		string jobFile = "TestData/H2_FCV/PostProcessing/FCHV_singleFc.vecto";
 		int cycleIdx = 0;
 
-        var modData = RunFCHV_PEV_Simulation(jobFile, cycleIdx);
+        var (modData, rundata) = RunFCHV_PEV_Simulation(jobFile, cycleIdx);
 
 		var fcPostProcessor = new FuelCellPreRunPostprocessor(modData);
+		var fcData = new FuelCellSystemData() {
+			FuelCells = new List<FuelCellData>() {
+				new FuelCellData() {
+					MinElectricPower = 60.SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
+					MaxElectricPower = 300.SI(Unit.SI.Kilo.Watt).Cast<Watt>()
+				}
+			}
+		};
+
+		fcPostProcessor.CalculateFuelCellPowerDemand(1000.SI<Meter>(), fcData, rundata.BatteryData);
 	}
 
-	private static IModalDataContainer RunFCHV_PEV_Simulation(string jobFile, int cycleIdx)
+	private static (ModalDataContainer modData, VectoRunData RunData) RunFCHV_PEV_Simulation(string jobFile, int cycleIdx)
 	{
 		var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 
@@ -63,10 +107,12 @@ public class FuelCellPreRunPostprocessingT
 		factory.SumData = sumContainer;
 
 		var run = factory.SimulationRuns().ToArray()[cycleIdx];
-		run.GetContainer().RunData.IterativeRunStrategy = null;
-
-		Assert.NotNull(run);
-
+		//run.GetContainer().RunData.IterativeRunStrategy = null;
+		run.GetContainer().RunData.BatteryData.Batteries.ForEach(x => x.Item2.ChargeSustainingBattery = true);
+			
+        Assert.NotNull(run);
+		var modData = run.GetContainer().ModalData as ModalDataContainer;
+		var modDataData = modData.Data;
 		var pt = run.GetContainer();
 
 		Assert.NotNull(pt);
@@ -74,7 +120,8 @@ public class FuelCellPreRunPostprocessingT
 		run.Run();
 		Assert.IsTrue(run.FinishedWithoutErrors);
 
-		return run.GetContainer().ModalData;
+		modData.Data = modDataData;
+		return (modData, run.GetContainer().RunData);
 	}
 
 
