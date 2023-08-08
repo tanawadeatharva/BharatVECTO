@@ -449,7 +449,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
 			{
-				if (inputData.Components.AngledriveInputData != null)
+				if (inputData.Components.AngledriveInputData != null && inputData.Components.AngledriveInputData.Type == AngledriveType.SeparateAngledrive)
 				{
 					throw new VectoException("Angledrive not allowed in pure electric vehicles");
 				}
