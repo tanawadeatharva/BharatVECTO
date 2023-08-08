@@ -3,7 +3,7 @@
     "CreatedBy": "",
     "Date": "2023-07-18T14:55:35.2602349Z",
     "AppVersion": "3",
-    "FileVersion": 14
+    "FileVersion": 9
   },
   "Body": {
     "SavedInDeclMode": false,
@@ -41,6 +41,7 @@
       "OverSpeed": 5.0
     },
     "Cycles": [
+      "LongHaul_short.vdri",
       "LongHaul",
       "RegionalDelivery",
       "UrbanDelivery"
