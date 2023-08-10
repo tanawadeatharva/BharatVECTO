@@ -413,7 +413,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Implementation of ISuperCapDeclarationInputData
 
 		public virtual Farad Capacity => GetDouble(XMLNames.Capacitor_Capacitance).SI<Farad>();
-		public virtual Ohm InternalResistance => GetDouble(XMLNames.Capacitor_InternalResistance).SI(Unit.SI.Milli.Ohm).Cast<Ohm>();
+		public virtual Ohm InternalResistance => GetDouble(XMLNames.Capacitor_InternalResistance).SI<Ohm>();
 		public virtual Volt MinVoltage => GetDouble(XMLNames.Capacitor_MinVoltage).SI<Volt>();
 		public virtual Volt MaxVoltage => GetDouble(XMLNames.Capacitor_MaxVoltage).SI<Volt>();
 		public virtual Ampere MaxCurrentCharge => GetDouble(XMLNames.Capacitor_MaxChargingCurrent).SI<Ampere>();
