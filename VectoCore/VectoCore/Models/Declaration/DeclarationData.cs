@@ -107,9 +107,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
 
 		public static readonly HEVStrategyParameters HEVStrategyParameters = new HEVStrategyParameters();
+
+		public const double HEV_EquivalenceFactor_Min = 0.1;
+		public const double HEV_EquivalenceFactor_Max = 4.0;
 		//public static readonly HEVStrategyParameters InitEquivalenceFactorsBus = new HEVStrategyParametersBus();
 
-		public static readonly VehicleOperationLookup VehicleOperation = new VehicleOperationLookup();
+        public static readonly VehicleOperationLookup VehicleOperation = new VehicleOperationLookup();
 
 		public static readonly double ElectricMachineDefaultMechanicalTransmissionEfficiency = 1;
 		//public static MeterPerSecond CycleSpeedLimit;
