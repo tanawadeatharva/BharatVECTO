@@ -32,48 +32,13 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 			var minFcPower = fcData.FuelCells.First().MinElectricPower;
 			var maxFcPower = fcData.FuelCells.First().MaxElectricPower;
 
-
-			var data = ModData.Data;
-			var timeCol = data.Columns[ModalResultField.time.GetShortCaption()];
-			var dtCol = data.Columns[ModalResultField.simulationInterval.GetName()];
-			var distCol = data.Columns[ModalResultField.dist.GetShortCaption()];
-			var emPos = data.ElectricMotors.First(x => x != PowertrainPosition.GEN);
-			var pemCol =
-				data.Columns[string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(), emPos.GetName())];
-			var batTCol = data.Columns[ModalResultField.P_terminal_ES.GetName()];
-
+			
+			
 			batData.Batteries.ForEach(x => x.Item2.ChargeSustainingBattery = false);
 			var bat = new BatterySystem(null, batData);
 			bat.Initialize(batData.InitialSoC);
 
-			var wIt = new ModDataWindowIterator(ModData, windowSize);
-
-			var processed = new FCCalcEntry[ModData.Data.Rows.Count];
-			for (; !wIt.CycleEndReached; wIt.MoveNext()) {
-				var entry = new FCCalcEntry() {
-					Time = (Second)data.Rows[wIt.Position][timeCol],
-					dt = (Second)data.Rows[wIt.Position][dtCol],
-					Distance = (Meter)data.Rows[wIt.Position][distCol]
-				};
-				var time = 0.SI<Second>();
-				var emEnergy = 0.SI<WattSecond>();
-				for (; !wIt.WindowEndReached; wIt.NextEntry()) {
-					time += (Second)data.Rows[wIt.Current][dtCol];
-					emEnergy += (Second)data.Rows[wIt.Current][dtCol] * (Watt)data.Rows[wIt.Current][batTCol];
-				}
-
-				entry.P_FC_raw = -emEnergy / time;
-				entry.P_FC = entry.P_FC_raw > minFcPower
-					? VectoMath.Min(entry.P_FC_raw, maxFcPower)
-					: entry.P_FC_raw.IsSmaller(0)
-						? 0.SI<Watt>()
-						: minFcPower;
-				entry.P_el_dem = (Watt)data.Rows[wIt.Position][batTCol];
-				var batResonse = bat.Request(entry.Time, entry.dt, entry.P_Bat_T, true);
-				entry.P_Bat_loss = batResonse.LossPower;
-
-				processed[wIt.Position] = entry;
-			}
+			var processed = GetRawFuelCellPowerDemand(windowSize, minFcPower, maxFcPower, bat);
 
 			bat.Initialize(batData.InitialSoC);
 			var DeltaEnergyBat_int = 0.SI<WattSecond>();
@@ -87,6 +52,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 				var batResonse = bat.Request(entry.Time, entry.dt, batPower, false);
 				bat.CommitSimulationStep(entry.Time, entry.dt, dummyContainer);
 				DeltaEnergyBat_int += dummyContainer.P_REES_int * entry.dt;
+				entry.P_REESS_int = dummyContainer.P_REES_int;
 				entry.SoC = dummyContainer.SoC;
 				// check SoC min/max over cycle
 				// check P_bat min/max (
@@ -120,6 +86,71 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 			return processed;
 		}
 
+		protected FCCalcEntry[] GetRawFuelCellPowerDemand(Meter windowSize, Watt minFcPower, Watt maxFcPower, BatterySystem bat)
+		{
+			if (windowSize.IsGreater(ModData.Distance)) {
+				throw new VectoException("Window size must not exceed cycle distance!");
+			}
+			var data = ModData.Data;
+            var timeCol = data.Columns[ModalResultField.time.GetShortCaption()];
+			var dtCol = data.Columns[ModalResultField.simulationInterval.GetName()];
+			var distCol = data.Columns[ModalResultField.dist.GetShortCaption()];
+			var esTCol = data.Columns[ModalResultField.P_terminal_ES.GetName()];
+
+			if (windowSize.IsEqual(ModData.Distance)) {
+				var P_FC_raw = ModData.TimeIntegral<WattSecond>(ModalResultField.P_terminal_ES) / ModData.Duration;
+				var retVal = ModData.Data.AsEnumerable().Select(r => {
+					var entry = new FCCalcEntry() {
+						Time = (Second)r[timeCol],
+						dt = (Second)r[dtCol],
+						Distance = (Meter)r[distCol],
+						P_FC_raw = -P_FC_raw,
+						P_el_dem = (Watt)r[esTCol],
+					};
+					entry.P_FC = entry.P_FC_raw > minFcPower
+						? VectoMath.Min(entry.P_FC_raw, maxFcPower)
+						: entry.P_FC_raw.IsSmaller(0)
+							? 0.SI<Watt>()
+							: minFcPower;
+                    var batResonse = bat.Request(entry.Time, entry.dt, entry.P_Bat_T, true);
+					entry.P_Bat_loss = batResonse.LossPower;
+                    return entry;
+				}).ToArray();
+				return retVal;
+			}
+
+            var wIt = new ModDataWindowIterator(ModData, windowSize);
+
+			var processed = new FCCalcEntry[ModData.Data.Rows.Count];
+			for (; !wIt.CycleEndReached; wIt.MoveNext()) {
+				var entry = new FCCalcEntry() {
+					Time = (Second)data.Rows[wIt.Position][timeCol],
+					dt = (Second)data.Rows[wIt.Position][dtCol],
+					Distance = (Meter)data.Rows[wIt.Position][distCol]
+				};
+				var time = 0.SI<Second>();
+				var emEnergy = 0.SI<WattSecond>();
+				for (; !wIt.WindowEndReached; wIt.NextEntry()) {
+					time += (Second)data.Rows[wIt.Current][dtCol];
+					emEnergy += (Second)data.Rows[wIt.Current][dtCol] * (Watt)data.Rows[wIt.Current][esTCol];
+				}
+
+				entry.P_FC_raw = -emEnergy / time;
+				entry.P_FC = entry.P_FC_raw > minFcPower
+					? VectoMath.Min(entry.P_FC_raw, maxFcPower)
+					: entry.P_FC_raw.IsSmaller(0)
+						? 0.SI<Watt>()
+						: minFcPower;
+				entry.P_el_dem = (Watt)data.Rows[wIt.Position][esTCol];
+				var batResonse = bat.Request(entry.Time, entry.dt, entry.P_Bat_T, true);
+				entry.P_Bat_loss = batResonse.LossPower;
+
+				processed[wIt.Position] = entry;
+			}
+
+			return processed;
+		}
+
 		public class FCCalcEntry
 		{
 			public Second Time { get; set; }
@@ -132,7 +163,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 			public Watt P_Bat_T => P_FC + P_el_dem;
 			public Watt P_Bat_loss { get; set; }
 
-			public Watt P_FC_corr => P_FC + P_Bat_loss;
+			public Watt P_FC_corr => P_FC.IsEqual(0) ? P_FC : P_FC + P_Bat_loss;
 
 			public Watt delta_Power_corr => P_FC_corr + P_el_dem;
 			public double SoC { get; set; }
@@ -140,13 +171,14 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 			public bool CanIncreaseFCPower { get; set; }
 
 			public Watt FCPowerFinal { get; set; }
+			public Watt P_REESS_int { get; set; }
 
 			#region Overrides of Object
 
 			public override string ToString()
 			{
 				return $"{Time}, {dt}, {Distance}, {P_el_dem}, {P_FC_raw}, {P_FC}, {P_Bat_T}, {P_Bat_loss}, {P_FC_corr}, " +
-						$"{delta_Power_corr}, {SoC}, {CanIncreaseFCPower}, {FCPowerFinal}";
+						$"{delta_Power_corr}, {P_REESS_int}, {SoC}, {CanIncreaseFCPower}, {FCPowerFinal}";
 
 			}
 
@@ -264,7 +296,12 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 				if (endDistance < (Meter)ModData.Data.Rows[End][DistanceColumn]) {
 					End = MoveIteratorForward(0, r => (Meter)(ModData.Data.Rows[r][DistanceColumn]) <= endDistance);
 				} else {
-					End = MoveIteratorForward(End, r => (Meter)(ModData.Data.Rows[r][DistanceColumn]) <= endDistance);
+					End = MoveIteratorForward(End, r => {
+						if (endDistance.IsEqual(ModData.Distance) && r == 0) {
+							return false;
+						}
+						return (Meter)(ModData.Data.Rows[r][DistanceColumn]) <= endDistance;
+					});
 				}
 
 				if (startDistance < (Meter)ModData.Data.Rows[Start][DistanceColumn]) {
@@ -283,7 +320,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 		{
 			var cycleDistance = ModData.Distance;
 
-            while (relativeDistance.IsGreaterOrEqual(CycleStartDistance + cycleDistance)) {
+            while (relativeDistance.IsGreater(CycleStartDistance + cycleDistance)) {
 				relativeDistance -= cycleDistance;
 			}
 
