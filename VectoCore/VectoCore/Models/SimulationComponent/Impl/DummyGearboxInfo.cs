@@ -16,6 +16,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Gear = gear ?? new GearshiftPosition(1);
 		}
 
+		public IShiftStrategy Strategy => null;
+		
 		#region Overrides of VectoSimulationComponent
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container) { }

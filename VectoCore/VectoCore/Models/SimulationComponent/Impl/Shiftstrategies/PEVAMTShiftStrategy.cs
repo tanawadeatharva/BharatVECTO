@@ -67,7 +67,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected GearshiftPosition _nextGear;
 
 		private readonly ShiftStrategyParameters _shiftStrategyParameters;
-		protected readonly VelocityRollingLookup VelocityDropData = new VelocityRollingLookup();
 		private SimplePowertrainContainer TestContainer;
 		private Gearbox TestContainerGbx;
 		private Battery TestContainerBattery;
@@ -88,7 +87,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 		public static string Name => "AMT - EffShift (BEV)";
 
-
 		protected bool DriveOffStandstill { get; set; }
 
 		protected TestPowertrain<Gearbox> TestPowertrain;
@@ -103,6 +101,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				x.Item1 == PowertrainPosition.BatteryElectricE2 || x.Item1 == PowertrainPosition.IEPC)?.Item1 ?? PowertrainPosition.HybridPositionNotSet;
 			SetupVelocityDropPreprocessor(dataBus);
 		}
+
+		public VelocityRollingLookup VelocityDropData { get; } = new VelocityRollingLookup();
 
 		protected PEVAMTShiftStrategy(IVehicleContainer dataBus, bool dummy)
 		{

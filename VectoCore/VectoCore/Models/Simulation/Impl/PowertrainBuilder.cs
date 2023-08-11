@@ -730,8 +730,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			SwitchableClutch clutch = AddClutch(data, container);
 
 			var strategy = (data.GearboxData.Type.ManualTransmission() || data.GearboxData.Type == GearboxType.IHPC)
-				? (IHybridControlStrategy) new HybridStrategy(data, container)
-				: (IHybridControlStrategy) new HybridStrategyAT(data, container);
+				? (IHybridControlStrategy) new MeasuredSpeedHybridStrategy(data, container)
+				: (IHybridControlStrategy) new MeasuredSpeedHybridStrategyAT(data, container);
 			
 			HybridController ctl = new HybridController(container, strategy, es);
 
@@ -2726,6 +2726,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		#endregion
 
 		#region Implementation of IGearboxInfo
+
+		public IShiftStrategy Strategy => throw new VectoException("No Gearbox available.");
 
 		public GearboxType GearboxType => GearboxType.DrivingCycle;
 
