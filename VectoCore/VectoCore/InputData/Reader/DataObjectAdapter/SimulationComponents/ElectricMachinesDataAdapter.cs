@@ -265,9 +265,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				iepc = new StandardValuesInputData.StandardValueIEPCInputData(iepc, 1.SI<Volt>(), 10E9.SI<Volt>());
 			}
 
-
-
-
 			var pos = PowertrainPosition.IEPC;
 			var count = iepc.DesignTypeWheelMotor && iepc.NrOfDesignTypeWheelMotorMeasured == 1 ? 2 : 1;
 
@@ -276,7 +273,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var gearRatioUsedForMeasurement = iepc.Gears
 				.Select(x => new { x.GearNumber, x.Ratio, Diff = Math.Round(Math.Abs(x.Ratio - 1), 6) }).GroupBy(x => x.Diff)
 				.OrderBy(x => x.Key).First().OrderBy(x => x.Ratio).Reverse().First();
-
 
 			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
 
@@ -447,13 +443,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			if (iepc == null) {
 				return null;
 			}
+			if (iepc.CertificationMethod == CertificationMethod.StandardValues) {
+				//Fake one very low voltage level and one very high for standard values
+				iepc = new StandardValuesInputData.StandardValueIEPCInputData(iepc, 1.SI<Volt>(), 10E9.SI<Volt>());
+			}
 
-			var pos = PowertrainPosition.IEPC;
+            var pos = PowertrainPosition.IEPC;
 			var count = iepc.DesignTypeWheelMotor && iepc.NrOfDesignTypeWheelMotorMeasured == 1 ? 2 : 1;
             var gearRatioUsedForMeasurement = iepc.Gears
 				.Select(x => new { x.GearNumber, x.Ratio, Diff = Math.Round(Math.Abs(x.Ratio - 1), 6) }).GroupBy(x => x.Diff)
 				.OrderBy(x => x.Key).First().OrderBy(x => x.Ratio).Reverse().First();
-			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
+			//var voltageLevels = new List<ElectricMotorVoltageLevelData>();
 			var genericIEPCData = _genericIepcData.CreateIEPCElectricMotorData(iepc);
 			genericIEPCData.OverloadRecoveryFactor = DeclarationData.OverloadRecoveryFactor;
 			genericIEPCData.TransmissionLossMap =

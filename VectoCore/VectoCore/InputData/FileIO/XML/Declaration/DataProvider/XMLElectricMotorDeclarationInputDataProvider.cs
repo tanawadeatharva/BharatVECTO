@@ -510,6 +510,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public IList<IElectricMotorVoltageLevel> VoltageLevels => 
 			_voltageLevels ?? (_voltageLevels = GetVoltageLevels());
+
 		public TableData DragCurve => ReadDragCurve();
 		public TableData Conditioning => ElementExists(XMLNames.Conditioning)
 			? ReadConditioning() : null;
