@@ -369,6 +369,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			public const string Highway = "HW";
 			public const string PTODuringDrivePower = "PTO_Power";
 			public const string VTPPSCompressorActive = "PS_comp_active";
+			public const string PowerAdditionalHighVoltage = "Padd_hv";
 		}
 
 		#region DataParser
@@ -453,7 +454,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				ValidateHeader(table.Columns);
 
 				return table.Rows.Cast<DataRow>().Select(
-					row => new DrivingCycleData.DrivingCycleEntry {
+					row => new DrivingCycleData.DrivingCycleEntry
+					{
 						Distance = row.ParseDouble(Fields.Distance).SI<Meter>(),
 						VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
 						RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
@@ -472,8 +474,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 							: PTOActivity.Inactive,
 						PTOPowerDemandDuringDrive = table.Columns.Contains(Fields.PTOPowerDemand)
 							? row.ParseDouble(Fields.PTOPowerDemand).SI(Unit.SI.Kilo.Watt).Cast<Watt>()
-							: null
-					});
+							: null,
+						PowerAdditonalHighVoltage = table.Columns.Contains(Fields.PowerAdditionalHighVoltage) 
+							? row.ParseDouble(Fields.PowerAdditionalHighVoltage).SI(Unit.SI.Kilo.Watt).Cast<Watt>()
+							: null,
+					}); ;
 			}
 
 			public static bool ValidateHeader(DataColumnCollection header, bool throwExceptions = true)
@@ -495,6 +500,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					Fields.PTOActive,
 					Fields.Highway,
 					Fields.PTOPowerDemand,
+					Fields.PowerAdditionalHighVoltage,
 				};
 
 				const bool allowAux = true;
@@ -521,9 +527,12 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 						AngularVelocity = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).RPMtoRad(),
 						AdditionalAuxPowerDemand =
 							row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
-						AuxiliarySupplyPower = row.GetAuxiliaries()
-					};
-
+						AuxiliarySupplyPower = row.GetAuxiliaries(),
+                        PowerAdditonalHighVoltage = table.Columns.Contains(Fields.PowerAdditionalHighVoltage)
+							? row.ParseDouble(Fields.PowerAdditionalHighVoltage).SI(Unit.SI.Kilo.Watt).Cast<Watt>()
+							: null,
+                    };
+					
 					if (row.Table.Columns.Contains(Fields.EngineTorque)) {
 						if (row.Field<string>(Fields.EngineTorque).Equals("<DRAG>")) {
 							entry.Drag = true;
@@ -555,7 +564,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					Fields.EngineSpeed,
 					Fields.EngineTorque,
 					Fields.EnginePower,
-					Fields.AdditionalAuxPowerDemand
+                    Fields.AdditionalAuxPowerDemand,
+					Fields.PowerAdditionalHighVoltage,
 				};
 
 				const bool allowAux = false;
@@ -602,9 +612,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 						PWheel = row.ParseDouble(Fields.PWheel).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
 						Gear = (uint)row.ParseDoubleOrGetDefault(Fields.Gear),
 						AngularVelocity = row.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
-						AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI(Unit.SI.Kilo.Watt)
-													.Cast<Watt>()
-					}).ToArray();
+						AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
+                        PowerAdditonalHighVoltage = table.Columns.Contains(Fields.PowerAdditionalHighVoltage)
+							? row.ParseDouble(Fields.PowerAdditionalHighVoltage).SI(Unit.SI.Kilo.Watt).Cast<Watt>()
+							: null,
+                    }).ToArray();
 
 				return entries;
 			}
@@ -621,8 +633,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					Fields.PWheel,
 					Fields.Gear,
 					Fields.EngineSpeed,
-					Fields.AdditionalAuxPowerDemand
-				};
+					Fields.AdditionalAuxPowerDemand,
+					Fields.PowerAdditionalHighVoltage,
+                };
 
 				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux: false);
 			}
@@ -648,8 +661,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 						AirSpeedRelativeToVehicle =
 							crossWindRequired ? row.ParseDouble(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond() : null,
 						WindYawAngle = crossWindRequired ? row.ParseDouble(Fields.WindYawAngle) : 0,
-						AuxiliarySupplyPower = row.GetAuxiliaries()
-					}).ToArray();
+						AuxiliarySupplyPower = row.GetAuxiliaries(),
+                        PowerAdditonalHighVoltage = table.Columns.Contains(Fields.PowerAdditionalHighVoltage)
+                            ? row.ParseDouble(Fields.PowerAdditionalHighVoltage).SI(Unit.SI.Kilo.Watt).Cast<Watt>()
+                            : null,
+                    }).ToArray();
 
 				return entries;
 			}
@@ -667,8 +683,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					Fields.AdditionalAuxPowerDemand,
 					Fields.RoadGradient,
 					Fields.AirSpeedRelativeToVehicle,
-					Fields.WindYawAngle
-				};
+					Fields.WindYawAngle,
+                    Fields.PowerAdditionalHighVoltage,
+                };
 
 				const bool allowAux = true;
 
@@ -703,8 +720,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 							? row.ParseDouble(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond()
 							: null,
 						WindYawAngle = crossWindRequired ? row.ParseDoubleOrGetDefault(Fields.WindYawAngle) : 0,
-						AuxiliarySupplyPower = row.GetAuxiliaries()
-					}).ToArray();
+						AuxiliarySupplyPower = row.GetAuxiliaries(),
+                        PowerAdditonalHighVoltage = table.Columns.Contains(Fields.PowerAdditionalHighVoltage)
+                            ? row.ParseDouble(Fields.PowerAdditionalHighVoltage).SI(Unit.SI.Kilo.Watt).Cast<Watt>()
+                            : null,
+                    }).ToArray();
 
 				return entries;
 			}
@@ -725,8 +745,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					Fields.AdditionalAuxPowerDemand,
 					Fields.RoadGradient,
 					Fields.AirSpeedRelativeToVehicle,
-					Fields.WindYawAngle
-				};
+					Fields.WindYawAngle,
+                    Fields.PowerAdditionalHighVoltage,
+                };
 
 				const bool allowAux = true;
 
@@ -859,8 +880,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 							TorqueWheelLeft = tqLeft,
 							TorqueWheelRight = tqRight,
 							WheelSpeedLeft = speedLeft,
-							WheelSpeedRight = speedRight
-						};
+							WheelSpeedRight = speedRight,
+                            PowerAdditonalHighVoltage = table.Columns.Contains(Fields.PowerAdditionalHighVoltage)
+								? row.ParseDouble(Fields.PowerAdditionalHighVoltage).SI(Unit.SI.Kilo.Watt).Cast<Watt>()
+								: null,
+                        };
 					}).ToArray();
 
 				return entries;
@@ -891,6 +915,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					Fields.Gear,
 					Fields.TorqueConverterActive,
 					Fields.VTPPSCompressorActive,
+					Fields.PowerAdditionalHighVoltage,
 					//Fields.FuelConsumption
 				}.Concat(EnumHelper.GetValues<FuelType>().Select(x => "fc_" + x.ToXMLFormat()));
 

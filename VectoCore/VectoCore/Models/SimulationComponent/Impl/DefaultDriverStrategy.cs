@@ -115,14 +115,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// create a dummy powertrain for pre-processing and estimations
 				var testContainer = new SimplePowertrainContainer(data);
 
-				switch (data.JobType) {
-					case VectoSimulationJobType.BatteryElectricVehicle:
-					case VectoSimulationJobType.SerialHybridVehicle:
-					case VectoSimulationJobType.IEPC_E:
-					case VectoSimulationJobType.IEPC_S:
+				switch (data.JobType)
+                {
+                    case VectoSimulationJobType.BatteryElectricVehicle:
+                    case VectoSimulationJobType.SerialHybridVehicle:
+                    case VectoSimulationJobType.IEPC_E:
+                    case VectoSimulationJobType.IEPC_S:
 						PowertrainBuilder.BuildSimplePowertrainElectric(data, testContainer);
 						break;
-					case VectoSimulationJobType.IHPC:
+                    case VectoSimulationJobType.IHPC:
 					case VectoSimulationJobType.ParallelHybridVehicle:
 						PowertrainBuilder.BuildSimpleHybridPowertrain(data, testContainer);
 						break;
