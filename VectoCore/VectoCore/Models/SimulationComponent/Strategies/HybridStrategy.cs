@@ -1482,8 +1482,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						AllowICEOff(absTime), newEval,
 						best.Setting.MechanicalAssistPower.First().Key, dryRun);
 					if (newEval.Count > 0) {
+						var oldBest = best;
 						best = DoSelectBestOption(newEval, absTime, dt, outTorque, outAngularVelocity, dryRun,
 							currentGear);
+						if (best == null) {
+							best = oldBest;
+						}
 					}
 				}
 			}
@@ -2127,9 +2131,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 
-
+			var avgEngineSpeed = resp.Engine.DynamicFullLoadTorque.IsEqual(0)
+				? resp.Engine.EngineSpeed // dynamic full load may be 0 if engine speed is too high, use this as estimate for now
+				: resp.Engine.DynamicFullLoadPower / resp.Engine.DynamicFullLoadTorque;
 			if (!iceOff && /*!resp.Engine.TotalTorqueDemand.IsBetween(resp.Engine.DragTorque, resp.Engine.DynamicFullLoadTorque)*/
-				(resp.Engine.TotalTorqueDemand.IsSmaller(resp.Engine.DragTorque) || resp.Engine.TotalTorqueDemand.IsGreater(resp.Engine.DynamicFullLoadTorque))) {
+				((resp.Engine.TotalTorqueDemand * avgEngineSpeed).IsSmaller(resp.Engine.DragPower, Constants.SimulationSettings.LineSearchTolerance) || 
+				(resp.Engine.TotalTorqueDemand * avgEngineSpeed).IsGreater(resp.Engine.DynamicFullLoadPower, Constants.SimulationSettings.LineSearchTolerance))) {
 				tmp.FuelCosts = double.NaN;
 				tmp.IgnoreReason |= resp.Engine.TotalTorqueDemand.IsGreater(resp.Engine.DynamicFullLoadTorque)
 					? HybridConfigurationIgnoreReason.EngineTorqueDemandTooHigh

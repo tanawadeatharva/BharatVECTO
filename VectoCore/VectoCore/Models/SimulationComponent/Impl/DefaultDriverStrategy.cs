@@ -232,7 +232,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (CurrentDrivingMode == DrivingMode.DrivingModeBrake) {
 				var nextAction = GetNextDrivingAction(ds);
-				if (nextAction != null && !BrakeTrigger.HasEqualTrigger(nextAction) && nextAction.ActionDistance.IsSmallerOrEqual(BrakeTrigger.ActionDistance)) {
+				var currentDistance = DataBus.MileageCounter.Distance;
+
+                if (nextAction != null && !BrakeTrigger.HasEqualTrigger(nextAction) && 
+					(nextAction.ActionDistance.IsSmallerOrEqual(BrakeTrigger.ActionDistance) || nextAction.BrakingStartDistance.IsBetween(currentDistance, currentDistance + ds))) {
 					BrakeTrigger = nextAction;
 				}
 				if (DataBus.MileageCounter.Distance.IsGreaterOrEqual(BrakeTrigger.TriggerDistance, 1e-3.SI<Meter>())) {
