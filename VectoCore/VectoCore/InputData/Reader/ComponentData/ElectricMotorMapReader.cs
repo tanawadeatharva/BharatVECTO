@@ -35,7 +35,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			}
 			
 			var entries = (from DataRow row in data.Rows select CreateEntry(row)).ToList();
-			var entriesZero = GetEntriesAtZeroRpm(entries);
+			var duplicates = entries.GroupBy(x => Tuple.Create(x.MotorSpeed, x.Torque)).Where(g => g.Count() > 1).Select(x => x.Key).ToList();
+			if (duplicates.Count > 0) {
+				throw new VectoException("Duplicate entries in EM power map: {0}", duplicates.Select(x => $"{x.Item1.AsRPM} rpm / {x.Item2}").Join());
+			}
+            var entriesZero = GetEntriesAtZeroRpm(entries);
 
 			var delaunayMap = new DelaunayMap("ElectricMotorEfficiencyMap Mechanical to Electric");
 			var retVal = new EfficiencyMapNew(delaunayMap);

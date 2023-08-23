@@ -284,7 +284,15 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 		internal static IList<EfficiencyMap.Entry> GetEntries(DataTable data, double ratio)
 		{
-			return (from DataRow row in data.Rows select CreateEntry(row, ratio)).ToList();
+			var entries = (from DataRow row in data.Rows select CreateEntry(row, ratio)).OrderBy(x => x.MotorSpeed)
+				.ThenBy(x => x.Torque).ToList();
+
+			var duplicates = entries.GroupBy(x => Tuple.Create(x.MotorSpeed, x.Torque)).Where(g => g.Count() > 1).Select(x => x.Key).ToList();
+			if (duplicates.Count > 0) {
+				throw new VectoException("Duplicate entries in IEPC power map: {0}", duplicates.Select(x => $"{x.Item1.AsRPM / ratio} rpm / {x.Item2 * ratio}").Join());
+			}
+
+			return entries;
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection columns)
