@@ -69,6 +69,10 @@ namespace TUGraz.VectoCore.Configuration
 				public const string ENGMode_AUX_MECH_BASE = "ENG_AUX_BASE";
 				public const string ENGMode_AUX_MECH_FAN = "ENG_AUX_FAN";
 				public const string ENGMode_AUX_MECH_STP = "ENG_AUX_STP";
+
+				// High voltage auxiliaries
+				public const string PowerAdditonalHighVoltage = "Padd_hv";
+				public const string PowerAuxiliaryElectric = "P_aux_el";
 			}
 
 			public static class Names

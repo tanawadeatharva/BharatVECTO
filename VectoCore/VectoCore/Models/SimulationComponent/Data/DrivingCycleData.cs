@@ -148,7 +148,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				PTOPowerDemandDuringDrive = entry.PTOPowerDemandDuringDrive;
 				PTOElectricalPowerDemand = entry.PTOElectricalPowerDemand;
 				Highway = entry.Highway;
-			}
+                PowerAdditonalHighVoltage = entry.PowerAdditonalHighVoltage;
+            }
 
 			/// <summary>
 			/// Travelled distance used for distance-based cycles. If "t" is also defined this column will be ignored.
@@ -267,7 +268,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			// Electrical pto cycle
 			public Watt PTOElectricalPowerDemand;
-		}
+
+			/// <summary>
+			/// Additional high voltage power for PEVs.
+			/// </summary>
+            public Watt PowerAdditonalHighVoltage;
+        }
 	}
 
 	public enum PTOActivity

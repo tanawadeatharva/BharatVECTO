@@ -411,7 +411,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				: null;
 
 			public virtual PerSecond MaxOutputShaftSpeed => ElementExists(XMLNames.Gear_MaxOutputShaftSpeed)
-				? GetDouble(XMLNames.Gear_MaxOutputShaftSpeed).SI<PerSecond>()
+				? GetDouble(XMLNames.Gear_MaxOutputShaftSpeed).RPMtoRad()
 				: null;
 
 			#endregion
@@ -510,6 +510,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public IList<IElectricMotorVoltageLevel> VoltageLevels => 
 			_voltageLevels ?? (_voltageLevels = GetVoltageLevels());
+
 		public TableData DragCurve => ReadDragCurve();
 		public TableData Conditioning => ElementExists(XMLNames.Conditioning)
 			? ReadConditioning() : null;
