@@ -182,21 +182,33 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				var prev = orderedBuckets[i - 1];
 				var next = orderedBuckets[i + 1];
 
+
 				//Drive
-				if (current.Value.MinBy(x => x.Torque).Torque / prev.Value.MinBy(x => x.Torque).Torque < ignoreThreshold
-					&& 
-					current.Value.MinBy(x => x.Torque).Torque / next.Value.MinBy(x => x.Torque).Torque < ignoreThreshold) {
+				if (prev.Value.MinBy(x => x.Torque).Torque.IsEqual(0) || next.Value.MinBy(x => x.Torque).Torque.IsEqual(0)) {
 					ignoredSpeedBucketsDrive.Add(current.Key);
+				} else {
+					if (current.Value.MinBy(x => x.Torque).Torque / prev.Value.MinBy(x => x.Torque).Torque <
+						ignoreThreshold
+						&&
+						current.Value.MinBy(x => x.Torque).Torque / next.Value.MinBy(x => x.Torque).Torque <
+						ignoreThreshold) {
+						ignoredSpeedBucketsDrive.Add(current.Key);
+					}
 				}
 
-                //Recuperation
-				if (current.Value.MaxBy(x => x.Torque).Torque / prev.Value.MaxBy(x => x.Torque).Torque < ignoreThreshold
-					&&
-					current.Value.MaxBy(x => x.Torque).Torque / next.Value.MaxBy(x => x.Torque).Torque < ignoreThreshold)
-				{
+				//Recuperation
+				if (prev.Value.MaxBy(x => x.Torque).Torque.IsEqual(0) || next.Value.MaxBy(x => x.Torque).Torque.IsEqual(0)) {
 					ignoredSpeedBucketsRecuperation.Add(current.Key);
+				} else {
+					if (current.Value.MaxBy(x => x.Torque).Torque / prev.Value.MaxBy(x => x.Torque).Torque <
+						ignoreThreshold
+						&&
+						current.Value.MaxBy(x => x.Torque).Torque / next.Value.MaxBy(x => x.Torque).Torque <
+						ignoreThreshold) {
+						ignoredSpeedBucketsRecuperation.Add(current.Key);
+					}
 				}
-            }
+			}
 
 
 
@@ -211,8 +223,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 				var maxRecuperationEntry = speedBucket.Value.MaxBy(x => x.Torque);
 				var maxDriveEntry = speedBucket.Value.MinBy(x => x.Torque); //drive torque < 0
-				var recuperationFactor = maxTargetTorque / maxRecuperationEntry.Torque;
-				var driveFactor = minTargetTorque / maxDriveEntry.Torque;
+				var recuperationFactor = maxRecuperationEntry.Torque.IsEqual(0) ? 1.0 : maxTargetTorque / maxRecuperationEntry.Torque;
+				var driveFactor = maxDriveEntry.Torque.IsEqual(0) ? 1.0 : minTargetTorque / maxDriveEntry.Torque;
 
 				//Recuperation
 				if (!recuperationFactor.IsSmallerOrEqual(1) && !ignoredSpeedBucketsRecuperation.Contains(speedBucket.Key)) {
@@ -251,7 +263,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			return entries;
 		}
 
-		private static Scalar CalculateExtrapolationFactor(Scalar targetFactor, int currentStep,
+		private static double CalculateExtrapolationFactor(double targetFactor, int currentStep,
 			uint nrOfSteps)
 		{
 			if (currentStep < 1) {
@@ -272,7 +284,15 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 		internal static IList<EfficiencyMap.Entry> GetEntries(DataTable data, double ratio)
 		{
-			return (from DataRow row in data.Rows select CreateEntry(row, ratio)).ToList();
+			var entries = (from DataRow row in data.Rows select CreateEntry(row, ratio)).OrderBy(x => x.MotorSpeed)
+				.ThenBy(x => x.Torque).ToList();
+
+			var duplicates = entries.GroupBy(x => Tuple.Create(x.MotorSpeed, x.Torque)).Where(g => g.Count() > 1).Select(x => x.Key).ToList();
+			if (duplicates.Count > 0) {
+				throw new VectoException("Duplicate entries in IEPC power map: {0}", duplicates.Select(x => $"{x.Item1.AsRPM / ratio} rpm / {x.Item2 * ratio}").Join());
+			}
+
+			return entries;
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection columns)
