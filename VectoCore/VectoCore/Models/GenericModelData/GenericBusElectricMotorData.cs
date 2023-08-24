@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 				var electricMotorVoltageLevel = new ElectricMotorVoltageLevelData {
 					Voltage = voltageLevel.VoltageLevel,
 					FullLoadCurve = GetElectricMotorFullLoadCurve(voltageLevel, count, torqueLimits),
-					EfficiencyMap = ElectricMotorMapReader.Create(efficiencyMap, count)
+					EfficiencyMap = ElectricMotorMapReader.Create(efficiencyMap, count, ExecutionMode.Declaration)
 				};
 
 				result.Add(electricMotorVoltageLevel);

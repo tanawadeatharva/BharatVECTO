@@ -82,6 +82,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var maxTorque = electricPower > 0
 				? GetMaxRecuperationTorque(volt, dt, avgEmSpeed, gear)
 				: GetMaxDriveTorque(volt, dt, avgEmSpeed, gear);
+			if (maxTorque == null) {
+				return null;
+			}
+
 			var tqEmMap = ModelData.EfficiencyData.EfficiencyMapLookupTorque(volt, electricPower, avgEmSpeed, maxTorque, gear);
 			
 			if (tqEmMap == null) {

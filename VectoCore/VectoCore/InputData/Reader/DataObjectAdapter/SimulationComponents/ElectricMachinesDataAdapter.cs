@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				} catch (Exception ex) {
 					throw new VectoException(
 						$"Could not create Voltage Level data for {entry.VoltageLevel} at position {powertrainPosition}!\n" +
-						$"{ex.Message}",
+						$"{ex.Message} {ex.InnerException?.Message?.Substring(0, Math.Min(256, ex.InnerException.Message.Length))}",
 						ex);
 				}
 			}
@@ -229,7 +229,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 			var effMap = new Dictionary<uint, EfficiencyMap>();
 			foreach (var gear in gearList) {
-				effMap.Add(gear.Gear, ElectricMotorMapReader.Create(entry.PowerMap[(int)gear.Gear - 1].PowerMap, count));
+				effMap.Add(gear.Gear, ElectricMotorMapReader.Create(entry.PowerMap[(int)gear.Gear - 1].PowerMap, count, ExecutionMode.Declaration));
 			}
 			return new IHPCVoltageLevelData() {
 				Voltage = entry.VoltageLevel,
@@ -247,7 +247,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 					FullLoadCurve = fullLoadCurveCombined,
 					// DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
-					EfficiencyMap = ElectricMotorMapReader.Create(entry.PowerMap.First().PowerMap, count), //PowerMap
+					EfficiencyMap = ElectricMotorMapReader.Create(entry.PowerMap.First().PowerMap, count, ExecutionMode.Declaration), //PowerMap
 				};
 			} catch (Exception ex) {
 				throw new VectoException($"Invalid efficiency map at voltage level {entry.VoltageLevel}", ex);
@@ -282,7 +282,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, gearRatioUsedForMeasurement.Ratio);
 				for (var i = 0u; i < entry.PowerMap.Count; i++) {
 					var ratio = iepc.Gears.First(x => x.GearNumber == i + 1).Ratio;
-					effMap.Add(i + 1, IEPCMapReader.Create(entry.PowerMap[(int)i].PowerMap, count, ratio, fldCurve));
+					effMap.Add(i + 1, IEPCMapReader.Create(entry.PowerMap[(int)i].PowerMap, count, ratio, fldCurve, ExecutionMode.Declaration));
 					//fullLoadCurves.Add(i + 1, IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, ratio));
 				}
 				voltageLevels.Add(new IEPCVoltageLevelData() {

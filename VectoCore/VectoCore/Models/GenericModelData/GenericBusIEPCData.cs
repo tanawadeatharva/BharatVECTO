@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
@@ -120,7 +121,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 					_axleRatio, _gearRatioAtMeasurement.Value, GenericGearEfficiency, _axleEfficiency);
 				
 				var deNormalizedMap = DeNormalizeData(GetNormalizedEfficiencyMap(electricMachineType), ratedPoint, gearRatio);
-				result.Add((uint) gearEntry.Key, IEPCMapReader.Create(deNormalizedMap, count, gearRatio, fullLoadCurve));
+				result.Add((uint) gearEntry.Key, IEPCMapReader.Create(deNormalizedMap, count, gearRatio, fullLoadCurve, ExecutionMode.Declaration));
 			}
 
 			return result;
