@@ -28,6 +28,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				MotorSpeed = x.ParseDouble(Fields.MotorSpeed).RPMtoRad() * ratio,
 				DragTorque = -x.ParseDouble(Fields.DragTorque).SI<NewtonMeter>() * count / ratio // / efficiency
 			}).OrderBy(x => x.MotorSpeed).ToList();
+			var invalid = entries.Where(x => x.DragTorque.IsSmaller(0)).ToList();
+			if (invalid.Count > 0) {
+				throw new VectoException("Drag torque has to be negative in input: {0}",
+					invalid.Select(x => $"{x.MotorSpeed.AsRPM} rpm").Join());
+			}
 			var duplicates = entries.GroupBy(x => x.MotorSpeed).Where(g => g.Count() > 1).Select(x => x.Key.AsRPM / ratio).ToList();
 			if (duplicates.Any()) {
 				throw new VectoException(

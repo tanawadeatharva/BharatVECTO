@@ -19,13 +19,13 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 	public class IEPCMapReader
 	{
 		public static EfficiencyMap Create(Stream data, int count, double ratio,
-			ElectricMotorFullLoadCurve fullLoadCurve)
+			ElectricMotorFullLoadCurve fullLoadCurve, ExecutionMode mode)
 		{
-			return Create(VectoCSVFile.ReadStream(data), count, ratio, fullLoadCurve);
+			return Create(VectoCSVFile.ReadStream(data), count, ratio, fullLoadCurve, mode);
 		}
 
 		public static EfficiencyMap Create(DataTable data, int count, double ratio,
-			ElectricMotorFullLoadCurve fullLoadCurve)
+			ElectricMotorFullLoadCurve fullLoadCurve, ExecutionMode mode)
 		{
 			if (fullLoadCurve == null) {
 				throw new ArgumentNullException("Provide fullloadcurve for extrapolation");
@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				data.Columns[2].ColumnName = Fields.PowerElectrical;
 			}
 
-			var entries = GetEntries(data, ratio);
+			var entries = GetEntries(data, ratio, mode);
 			entries = ExtendEfficiencyMap(entries, fullLoadCurve);
 			var entriesZero = GetEntriesAtZeroRpm(entries);
 
@@ -282,7 +282,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				powerElectrical: row.ParseDouble(Fields.PowerElectrical).SI<Watt>());
 		}
 
-		internal static IList<EfficiencyMap.Entry> GetEntries(DataTable data, double ratio)
+		internal static IList<EfficiencyMap.Entry> GetEntries(DataTable data, double ratio, ExecutionMode mode)
 		{
 			var entries = (from DataRow row in data.Rows select CreateEntry(row, ratio)).OrderBy(x => x.MotorSpeed)
 				.ThenBy(x => x.Torque).ToList();
@@ -291,8 +291,26 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			if (duplicates.Count > 0) {
 				throw new VectoException("Duplicate entries in IEPC power map: {0}", duplicates.Select(x => $"{x.Item1.AsRPM / ratio} rpm / {x.Item2 * ratio}").Join());
 			}
+			var highEff = entries.Where(x => !x.Torque.IsEqual(0) && !x.MotorSpeed.IsEqual(0))
+                .Select(x => Tuple.Create(x,
+					x.Torque.IsGreater(0)
+						? x.MotorSpeed * x.Torque / x.PowerElectrical
+						: x.PowerElectrical / (x.MotorSpeed * x.Torque))).Where(x => x.Item2.IsGreater(1)).ToList();
+			if (highEff.Any()) {
+				if (mode == ExecutionMode.Declaration) {
+					throw new VectoException("Electric power map contains entries with efficiencies > 1! {1} entries: {0}",
+						highEff.Select(x =>
+							$"{x.Item1.MotorSpeed.AsRPM} rpm {x.Item1.Torque} => {x.Item1.PowerElectrical}").Join(),
+						highEff.Count);
+				}
 
-			return entries;
+				LogManager.GetLogger(typeof(ElectricMotorMapReader).FullName).Debug(
+					"Electric power map contains entries with efficiencies > 1! {0}",
+					highEff.Select(x =>
+						$"{x.Item1.MotorSpeed.AsRPM} rpm {x.Item1.Torque} => {x.Item1.PowerElectrical}").Join());
+
+			}
+            return entries;
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection columns)
