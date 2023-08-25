@@ -102,7 +102,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var dao = new EngineeringDataAdapter();
 			foreach (var pevRd in GetBatteryElectricVehicleRunData()) {
 
-
 				var iterativeRunStrategy = new FCHEVIterativeRunStrategy();
 				pevRd.BatteryData = dao.CreateFuelCellPreProcessingBattery(InputDataProvider.JobInputData.Vehicle.Components.FuelCellSystemInputData, pevRd.BatteryData);
 				//pevRd.SimulationType = VectoSimulationJobType.FCHV;
