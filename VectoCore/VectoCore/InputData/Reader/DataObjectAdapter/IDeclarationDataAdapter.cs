@@ -26,7 +26,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed, GearboxType gearboxType, int gearsCount);
 
-		RetarderData CreateRetarderData(IRetarderInputData retarderData, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet);
+		RetarderData CreateRetarderData(IRetarderInputData retarderData, ArchitectureID archID,
+			IIEPCDeclarationInputData iepcInputData);
 		
 		AxleGearData CreateAxleGearData(IAxleGearInputData axleGearInputData);
 

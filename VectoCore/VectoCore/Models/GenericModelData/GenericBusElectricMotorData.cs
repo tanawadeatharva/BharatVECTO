@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
@@ -29,8 +30,12 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 			ElectricMachineEntry<IElectricMotorDeclarationInputData> electricMachineEntry,
 			IList<Tuple<Volt, TableData>> torqueLimits, Volt averageVoltage)
 		{
-			var electricMachineType = electricMachineEntry.ElectricMachine.ElectricMachineType;
-			var efficiencyData = GetVoltageLevels(electricMachineEntry, electricMachineType, torqueLimits);
+			var motorData = electricMachineEntry.ElectricMachine;
+			if (electricMachineEntry.ElectricMachine.CertificationMethod == CertificationMethod.StandardValues) {
+				motorData = new StandardValuesInputData.StandardValuesEmInputData(motorData, 1.SI<Volt>(), 10e9.SI<Volt>());
+			}
+            var electricMachineType = electricMachineEntry.ElectricMachine.ElectricMachineType;
+			var efficiencyData = GetVoltageLevels(motorData, electricMachineEntry.Count, electricMachineType, torqueLimits);
 			var powertrainPosition = electricMachineEntry.Position;
             //var adcLossMap = electricMachineEntry.MechanicalTransmissionLossMap;
 			var adcRatio = electricMachineEntry.RatioADC;
@@ -41,6 +46,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 					? TransmissionLossMapReader.CreateEmADCLossMap(adcLossMap, adcRatio, "EM ADC LossMap")
 					: TransmissionLossMapReader.CreateEmADCLossMap(DeclarationData.ElectricMachineDefaultMechanicalTransmissionEfficiency, adcRatio, "EM ADC LossMap Eff");
 
+			
 
             var electricMotorData = new ElectricMotorData {
 				RatioPerGear = electricMachineEntry.RatioPerGear,
@@ -49,7 +55,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 				EfficiencyData = efficiencyData,
 				Inertia = electricMachineEntry.ElectricMachine.Inertia * electricMachineEntry.Count,//??
 				RatioADC = electricMachineEntry.RatioADC,
-				Overload = CalculateOverloadData(electricMachineEntry.ElectricMachine, electricMachineEntry.Count, efficiencyData, averageVoltage ),
+				Overload = CalculateOverloadData(motorData, electricMachineEntry.Count, efficiencyData, averageVoltage ),
 				TransmissionLossMap = lossMap,
 				OverloadRecoveryFactor = DeclarationData.OverloadRecoveryFactor,
 			};
@@ -132,11 +138,10 @@ namespace TUGraz.VectoCore.Models.GenericModelData
         }
 
         private VoltageLevelData GetVoltageLevels(
-			ElectricMachineEntry<IElectricMotorDeclarationInputData> electricMachineEntry,
+			IElectricMotorDeclarationInputData motorData, int count,
 			ElectricMachineType electricMachineType, IList<Tuple<Volt, TableData>> torqueLimits)
 		{
-			var voltageLevels = electricMachineEntry.ElectricMachine.VoltageLevels;
-			var count = electricMachineEntry.Count;
+			var voltageLevels = motorData.VoltageLevels;
 			var normalizedMap = GetNormalizedEfficiencyMap(electricMachineType);
 
 
@@ -160,7 +165,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 				var electricMotorVoltageLevel = new ElectricMotorVoltageLevelData {
 					Voltage = voltageLevel.VoltageLevel,
 					FullLoadCurve = GetElectricMotorFullLoadCurve(voltageLevel, count, torqueLimits),
-					EfficiencyMap = ElectricMotorMapReader.Create(efficiencyMap, count)
+					EfficiencyMap = ElectricMotorMapReader.Create(efficiencyMap, count, ExecutionMode.Declaration)
 				};
 
 				result.Add(electricMotorVoltageLevel);

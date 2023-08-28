@@ -490,6 +490,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 							GearboxModelData.Gears[tmpGear.Gear].Ratio;
 			var firstGear = GearList.Predecessor(currentGear, 1);
 			var lastGear = GearList.Predecessor(currentGear, (uint)GearshiftParams.AllowedGearRangeFC);
+			var maxEmSpeed = DataBus.GetElectricMotors().First(x => x.Position != PowertrainPosition.GEN).MaxSpeed;
 			foreach (var gear in GearList.IterateGears(firstGear, lastGear)) {
 				var ratio = gear.IsLockedGear()
 					? GearboxModelData.Gears[gear.Gear].Ratio
@@ -498,7 +499,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				if (GearboxModelData.Gears[gear.Gear].MaxSpeed != null && gbxInSpeed.IsGreater(GearboxModelData.Gears[gear.Gear].MaxSpeed)) {
 					continue;
 				}
+
+				if (gbxInSpeed.IsGreater(maxEmSpeed)) {
+					continue;
+				}
                 candidates[gear] = gbxInSpeed;
+			}
+
+			if (!candidates.Any()) {
+				return tmpGear;
 			}
 
 			var ratedSpeed = VoltageLevels.VoltageLevels.First().FullLoadCurve.RatedSpeed;

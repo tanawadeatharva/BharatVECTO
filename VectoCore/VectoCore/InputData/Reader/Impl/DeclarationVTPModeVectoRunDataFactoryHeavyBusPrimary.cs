@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             GearboxData = DataAdapter.CreateGearboxData(
                 vehicle, new VectoRunData() { EngineData = EngineData, AxleGearData = AxlegearData, VehicleData = tempVehicle },
                 null);
-            RetarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData);
+            RetarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData, vehicle.ArchitectureID, vehicle.Components.IEPC);
 
             //PTOTransmissionData =
             //    DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);

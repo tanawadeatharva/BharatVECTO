@@ -389,7 +389,8 @@ namespace TUGraz.VectoCore.OutputData
 		};
 
 		public static readonly Tuple<string, Type>[] ElectricAuxiliariesSignals = {
-			Tuple.Create(SumDataFields.E_AUX_EL, typeof(ConvertedSI))
+			Tuple.Create(SumDataFields.E_AUX_EL, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.E_AUX_EL_HV, typeof(ConvertedSI)),
 		};
 
 		private object _tableLock = new object();
@@ -1199,7 +1200,7 @@ namespace TUGraz.VectoCore.OutputData
 				row[colName] = modData.AuxiliaryWork(aux.Value).ConvertToKiloWattHour();
 			}
 
-			if (writeBusAux) {
+            if (writeBusAux) {
 				//row[SumDataFields.E_BusAux_HVAC_Mech] = modData.TimeIntegral<WattSecond>(ModalResultField.P_busAux_HVACmech_consumer).ConvertToKiloWattHour();
 				//row[SumDataFields.E_BusAux_HVAC_El] = modData.TimeIntegral<WattSecond>(ModalResultField.P_busAux_ES_HVAC).ConvertToKiloWattHour();
 			}

@@ -1,11 +1,12 @@
 ﻿using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 {
 	public class
-		OVCHevIterativeRunStrategy : AbstractIterativeRunStrategy<OVCHevIterativeRunStrategy.OVCHevIterativeRunResult>
+		HevChargeSustainingIterativeRunStrategy : AbstractIterativeRunStrategy<HevChargeSustainingIterativeRunStrategy.OVCHevIterativeRunResult>
 	{
 		#region Implementation of IIterativeRunStrategy
 
@@ -64,6 +65,8 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 					d_soc_1 = _results[iteration].d_soc;
 					f_equiv_2 = f_equiv_1 - (d_soc_1/100 / k);
 
+					f_equiv_2 = f_equiv_2.LimitTo(DeclarationData.HEV_EquivalenceFactor_Min,
+						DeclarationData.HEV_EquivalenceFactor_Max);
 					runData.HybridStrategyParameters.EquivalenceFactor = f_equiv_2;
 					runData.HybridStrategyParameters.EquivalenceFactorCharge = f_equiv_2 * factorCharge;
 					runData.HybridStrategyParameters.EquivalenceFactorDischarge = f_equiv_2 * factorDischarge;
@@ -75,7 +78,15 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 					f_equiv_1 = _results[0].f_equiv;
 					f_equiv_2 = _results[1].f_equiv;
 
-					f_equiv_3 = (((0 - d_soc_1) / (d_soc_2 - d_soc_1)) * (f_equiv_2 - f_equiv_1)) + f_equiv_1;
+					if (d_soc_1.IsGreater(0) && d_soc_2.IsGreater(0) && d_soc_1.IsEqual(d_soc_2, 1e-5)) {
+						f_equiv_3 = DeclarationData.HEV_EquivalenceFactor_Min;
+					} else if (d_soc_1.IsSmaller(0) && d_soc_2.IsSmaller(0) && d_soc_1.IsEqual(d_soc_2, 1e-5)) {
+						f_equiv_3 = DeclarationData.HEV_EquivalenceFactor_Max;
+					} else {
+						f_equiv_3 = (((0 - d_soc_1) / (d_soc_2 - d_soc_1)) * (f_equiv_2 - f_equiv_1)) + f_equiv_1;
+					}
+
+					f_equiv_3 = f_equiv_3.LimitTo(DeclarationData.HEV_EquivalenceFactor_Min, DeclarationData.HEV_EquivalenceFactor_Max);
 					runData.HybridStrategyParameters.EquivalenceFactor = f_equiv_3;
 					runData.HybridStrategyParameters.EquivalenceFactorCharge = f_equiv_3 * factorCharge;
 					runData.HybridStrategyParameters.EquivalenceFactorDischarge = f_equiv_3 * factorDischarge;

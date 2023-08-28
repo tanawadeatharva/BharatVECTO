@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			const double torqueRatioOverrunPtFactor = 0.65;
 
 
-			var speedRatioOverrunPt = 1.0 / ratio;
+			var speedRatioOverrunPt = ratio;
 
 			var torqueRatioStallPt = torqueRatioStallPtFactor / speedRatioOverrunPt;
 			var torqueRatioCouplingPt = torqueRatioCouplingPtFactor / speedRatioOverrunPt;
@@ -211,7 +211,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			// overrun point
 			var overrunPt = retVal.NewRow();
 			overrunPt[colSpeedRatio] = Math.Round(speedRatioOverrunPt, 4, MidpointRounding.AwayFromZero).ToXMLFormat(6);
-			overrunPt[colTqRatio] = Math.Round(torqueRatioOverrunPt / speedRatioOverrunPt / ratio, 2,
+			overrunPt[colTqRatio] = Math.Round(torqueRatioOverrunPtFactor / speedRatioOverrunPt, 2,
 				MidpointRounding.AwayFromZero).ToXMLFormat(6);
 			overrunPt[colRefTq] =
 				Math.Round(refTorqueStallPt * refTorqueOverrunPtFactor, 2, MidpointRounding.AwayFromZero).ToXMLFormat(6);

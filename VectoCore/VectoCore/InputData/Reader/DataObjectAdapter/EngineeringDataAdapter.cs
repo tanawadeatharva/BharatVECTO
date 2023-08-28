@@ -1010,7 +1010,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 			var effMap = new Dictionary<uint, EfficiencyMap>();
 			foreach (var gear in gearList) {
-				effMap.Add(gear.Gear, ElectricMotorMapReader.Create(entry.PowerMap[(int)gear.Gear - 1].PowerMap, count));
+				effMap.Add(gear.Gear, ElectricMotorMapReader.Create(entry.PowerMap[(int)gear.Gear - 1].PowerMap, count, ExecutionMode.Engineering));
 			}
 			return new IEPCVoltageLevelData() {
 				Voltage = entry.VoltageLevel,
@@ -1026,7 +1026,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					
 				FullLoadCurve = fullLoadCurveCombined,
 				// DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
-				EfficiencyMap = ElectricMotorMapReader.Create(entry.PowerMap.First().PowerMap, count), //PowerMap
+				EfficiencyMap = ElectricMotorMapReader.Create(entry.PowerMap.First().PowerMap, count, ExecutionMode.Engineering), //PowerMap
 			};
 		}
 
@@ -1223,7 +1223,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, gearRatioUsedForMeasurement.Ratio);
 				for (var i = 0u; i < entry.PowerMap.Count; i++) {
 					var ratio = iepc.Gears.First(x => x.GearNumber == i + 1).Ratio;
-					effMap.Add(i + 1, IEPCMapReader.Create(entry.PowerMap[(int)i].PowerMap, count, ratio, fldCurve));
+					effMap.Add(i + 1, IEPCMapReader.Create(entry.PowerMap[(int)i].PowerMap, count, ratio, fldCurve, ExecutionMode.Engineering));
 					//fullLoadCurves.Add(i + 1, IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, ratio));
 				}
 				voltageLevels.Add(new IEPCVoltageLevelData() {

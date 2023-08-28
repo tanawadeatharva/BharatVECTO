@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				var cycle = CycleFactory.GetDeclarationCycle(mission);
 				
 				CheckSuperCap(vehicle);
-
+				AngleDriveAllowed(vehicle);
 				var simulationRunData = new VectoRunData
 				{
 					Loading = loading.Key,
@@ -202,6 +202,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			protected abstract bool AxleGearRequired();
 
+			protected abstract void AngleDriveAllowed(IVehicleDeclarationInputData inputData);
 		}
 
 		public class Conventional : LorryBase
@@ -269,7 +270,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					_segment.VehicleClass, Vehicle.Length,
 					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType);
 
-				simulationRunData.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData);
+				simulationRunData.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData, Vehicle.ArchitectureID, Vehicle.Components.IEPC);
 				simulationRunData.DriverData = DriverData;
 				simulationRunData.PTO = mission.MissionType == MissionType.MunicipalUtility
 					? DataAdapter.CreatePTOCycleData(Vehicle.Components.GearboxInputData, Vehicle.Components.PTOTransmissionInputData)
@@ -315,7 +316,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				return true;
 			}
 
-			
+			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
+			{
+				return;
+			}
 
 			#endregion
 		}
@@ -355,7 +359,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
                     foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true))
 					{
 						var simulationRunData = CreateVectoRunData(mission, loading);
-						simulationRunData.BatteryData.Batteries.ForEach(t => t.Item2.ChargeSustainingBattery = true);
+						simulationRunData.BatteryData.Batteries.ForEach(t => t.Item2.ChargeDepletingBattery = true);
 						yield return simulationRunData;
 					}
 				}
@@ -394,7 +398,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 				if (Vehicle.Components.RetarderInputData != null) {
 					result.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData,
-						result.ElectricMachinesData.First(e => e.Item1 != PowertrainPosition.GEN).Item1);
+						Vehicle.ArchitectureID, Vehicle.Components.IEPC);
 				}
 
 				CreateGearboxAndGearshiftData(result);
@@ -441,8 +445,16 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				_segment = GetSegment(InputDataProvider.JobInputData.Vehicle, true);
 			}
 
-			#endregion
-		}
+            #endregion
+
+			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
+			{
+				if (inputData.Components.AngledriveInputData != null && inputData.Components.AngledriveInputData.Type == AngledriveType.SeparateAngledrive)
+				{
+					throw new VectoException("Angledrive not allowed in pure electric vehicles");
+				}
+			}
+        }
 
 		public class PEV_E2 : BatteryElectric
 		{
@@ -621,6 +633,16 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			protected override bool AxleGearRequired()
 			{
 				throw new NotImplementedException();
+			}
+
+			#endregion
+
+
+			#region Overrides of LorryBase
+
+			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
+			{
+				return;
 			}
 
 			#endregion

@@ -1,4 +1,4 @@
-﻿//#define FULL_SIMULATIONS
+﻿#define FULL_SIMULATIONS
 
 
 
@@ -162,9 +162,12 @@ public class PrimaryBusSimulation
     TestCase(@"FactorMethod/S-HEV/S2-HEV/P31_32_S2_HEV_nonSmartES_elecSP_mechFan.xml", 4, TestName = "2nd Amendment PrimaryBus FM S-HEV S2 nonSmartES_elecSP_mechFan 4"),
 	]
 
-
+	// Testcase Stefan Present
+	[TestCase(@"E:\QUAM\Downloads\HybridEquivFactor_IEPCAxle\P32_IEPC_Base.xml", -1, TestName = "PrimaryBus IEPC StefanP")]
+	[TestCase(@"E:\QUAM\Downloads\HybridEquivFactor_IEPCAxle\P1_HEV_P32_NonOVC_ICE-I_Base.xml", -1, TestName = "PrimaryBus EffFactor StefanP")]
     public void PrimaryBusSimulationTest(string jobFile, int runIdx)
 	{
+		TestMissionFilter()?.SetMissions((MissionType.Interurban, LoadingType.ReferenceLoad));
 		RunSimulationPrimary(jobFile, runIdx);
 	}
 	
@@ -192,6 +195,10 @@ public class PrimaryBusSimulation
 		TestName = "2nd Amendment CompletedBus Conventional SmartES_mechFan_mechSteer 32e_spez_Dim_HVAC"),
 
     ]
+
+	[TestCase(@"E:\QUAM\Downloads\HybridEquivFactor_IEPCAxle\P32_IEPC_Base.RSLT_VIF.xml", @"E:\QUAM\Downloads\HybridEquivFactor_IEPCAxle\IEPC_32c_Base.xml", -1, true, TestName = "CompletedBus IEPC StefanP")]
+	[TestCase(@"E:\QUAM\Downloads\HybridEquivFactor_IEPCAxle\P1_HEV_P32_NonOVC_ICE-I_Base.RSLT_VIF.xml", @"E:\QUAM\Downloads\HybridEquivFactor_IEPCAxle\P1_HEV_32c_NonOVC_ICE-I_Base.xml", -1, true, TestName = "CompletedBus EffFactor StefanP")]
+
     public void CompletedBusSimulationTest(string vifFile, string completed, int runIdx, bool full_sim = false)
 	{
 		if (full_sim) {
@@ -249,7 +256,10 @@ public class PrimaryBusSimulation
 		//TestCase(@"PrimaryBus/Exempted/exempted_primary_heavyBus.xml", @"exempted_completedBus_input_full.xml", 0, TestName = "2nd Amendment SingleBus Exempted"), // exempted single run not supported!
 
 	]
-	public void SingleBusSimulationTest(string jobFile, string completed, int runIdx)
+
+	[TestCase(@"E:\QUAM\Downloads\HybridEquivFactor_IEPCAxle\P32_IEPC_Base.xml", @"E:\QUAM\Downloads\HybridEquivFactor_IEPCAxle\IEPC_32c_Base.xml", -1, TestName = "SingleBus IEPC StefanP")]
+
+    public void SingleBusSimulationTest(string jobFile, string completed, int runIdx)
 	{
 		RunSimulationSingle(jobFile, completed, runIdx);
 	}
@@ -374,9 +384,7 @@ public class PrimaryBusSimulation
 		SerializeRunData(runsFactoryFinal, outputPath);
     }
 
-
-
-    private static void SerializeRunData(ISimulatorFactory runsFactorySingle, string outputPath)
+	private static void SerializeRunData(ISimulatorFactory runsFactorySingle, string outputPath)
 	{
 		var jsonSerializerSettings = new JsonSerializerSettings();
 		jsonSerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
@@ -396,11 +404,13 @@ public class PrimaryBusSimulation
 		var dataProvider = JSONInputDataFactory.ReadJsonJob(singleJob);
 		var fileWriter = new FileOutputWriter(singleJob);
 		var simFactory = Kernel.Get<ISimulatorFactoryFactory>();
+		var sumData = new SummaryDataContainer(fileWriter);
 
-		var runsFactory = simFactory.Factory(ExecutionMode.Declaration, dataProvider, fileWriter, null, null);
+        var runsFactory = simFactory.Factory(ExecutionMode.Declaration, dataProvider, fileWriter, null, null);
 		//runsFactory.WriteModalResults = true;
 		runsFactory.SerializeVectoRunData = true;
-		var jobContainer = new JobContainer(new SummaryDataContainer(fileWriter)) { };
+		runsFactory.SumData = sumData;
+		var jobContainer = new JobContainer(sumData) { };
 
 		if (runIdx < 0) {
 			jobContainer.AddRuns(runsFactory);
@@ -458,7 +468,7 @@ public class PrimaryBusSimulation
 		var runsFactory = simFactory.Factory(ExecutionMode.Declaration, dataProvider, fileWriter, null, null);
 		
 		runsFactory.WriteModalResults = true;
-		//runsFactory.SerializeVectoRunData = true;
+		runsFactory.SerializeVectoRunData = true;
 		var jobContainer = new JobContainer(new SummaryDataContainer(fileWriter)) { };
         //var jobContainer = new JobContainer(new MockSumWriter()) { };
 
@@ -488,11 +498,13 @@ public class PrimaryBusSimulation
 		var filePath = Path.Combine(BASE_DIR, jobFile);
 		var dataProvider = _xmlReader.CreateDeclaration(filePath);
 		var fileWriter = new FileOutputWriter(filePath);
+		var sumData = new SummaryDataContainer(fileWriter);
 		var simFactory = Kernel.Get<ISimulatorFactoryFactory>();
 		var runsFactory = simFactory.Factory(ExecutionMode.Declaration, dataProvider, fileWriter, null, null);
 		runsFactory.WriteModalResults = true;
-		//runsFactory.SerializeVectoRunData = true;
-		var jobContainer = new JobContainer(new SummaryDataContainer(fileWriter)) { };
+		runsFactory.SerializeVectoRunData = true;
+		runsFactory.SumData = sumData;
+		var jobContainer = new JobContainer(sumData) { };
 		//var jobContainer = new JobContainer(new MockSumWriter()) { };
 		var runs = runsFactory.SimulationRuns().ToList();
 		foreach (var vectoRun in runs) {
