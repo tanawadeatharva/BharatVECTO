@@ -3318,6 +3318,7 @@
 					</Fan>
 					<SteeringPump>
 						<Technology axleNumber="1">Variable displacement elec. controlled</Technology>
+						<Technology axleNumber="2">Variable displacement elec. controlled</Technology>
 					</SteeringPump>
 					<ElectricSystem>
 						<AlternatorTechnology>smart</AlternatorTechnology>
