@@ -114,7 +114,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						dao.CreateBatteryData(InputDataProvider.JobInputData.Vehicle.Components.ElectricStorage, 0.5);
 					runData.FuelCellSystemData =
 						dao.CreateFuelCellSystemData(InputDataProvider.JobInputData.Vehicle.Components
-							.FuelCellSystemInputData, dao.CreateFuelCellPowerMap(modData));
+								.FuelCellSystemInputData,
+							fcD => dao.CreateFuelCellPowerMap(modData, fcD, runData.BatteryData));
 				};
 				pevRd.IterativeRunStrategy = iterativeRunStrategy;
 				yield return pevRd;

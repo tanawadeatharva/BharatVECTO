@@ -6,10 +6,11 @@ using Newtonsoft.Json;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery {
 
-	public class BatterySystemData
+	public class BatterySystemData : ICloneable
 	{
 		public BatterySystemData()
 		{
@@ -47,9 +48,40 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 					(current, s) => current + Batteries.Where(x => x.Item1 == s).Min(x => x.Item2.UseableStoredEnergy));
 			}
 		}
+
+		public bool ChargeSustainingBatterySystem
+		{
+			get { return Batteries.All(b => b.Item2.ChargeSustainingBattery); } 
+			set { Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = value); }
+		}
+
+		#region Implementation of ICloneable
+
+		object ICloneable.Clone()
+		{
+			return Clone();
+		}
+
+		public BatterySystemData Clone()
+		{
+			var cloned = new BatterySystemData()
+			{
+				InitialSoC = this.InitialSoC,
+				ConnectionSystemResistance = this.ConnectionSystemResistance,
+			};
+
+			foreach (var b in Batteries)
+			{
+				cloned.Batteries.Add(Tuple.Create(b.Item1, b.Item2.Clone()));
+			}
+
+			return cloned;
+        }
+
+		#endregion
 	}
 
-	public class BatteryData
+	public class BatteryData : ICloneable
 	{
 		private WattSecond _totaltoredEnergy;
 		private WattSecond _useableStoredEnergy;
@@ -98,6 +130,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 			}
 			return retVal;
 		}
+
+		#region Implementation of ICloneable
+
+		object ICloneable.Clone()
+		{
+			return this.Clone();
+		}
+
+		public BatteryData Clone()
+		{
+			return new BatteryData() {
+				BatteryId = this.BatteryId,
+				ChargeSustainingBattery = this.ChargeSustainingBattery,
+				MinSOC = this.MinSOC,
+				MaxSOC = this.MaxSOC,
+				Capacity = this.Capacity,
+				InputData = this.InputData,
+
+				InternalResistance = this.InternalResistance,
+				MaxCurrent = this.MaxCurrent,
+				SOCMap = this.SOCMap,
+			};
+		}
+
+		#endregion
 	}
 
 	public class SuperCapData

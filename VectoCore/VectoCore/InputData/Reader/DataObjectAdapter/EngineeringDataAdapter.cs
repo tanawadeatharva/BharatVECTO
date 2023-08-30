@@ -62,6 +62,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
@@ -904,11 +905,28 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		public FuelCellPowerMap CreateFuelCellPowerMap(IModalDataContainer modData)
+		public FuelCellPowerMap CreateFuelCellPowerMap(IModalDataContainer modData,
+			FuelCellSystemData fcData,
+			BatterySystemData batSystemData)
 		{
+			return CreateDynamicFuelCellPowerMap(modData, fcData, batSystemData);
+
+			//return CreateStaticFuelCellPowerMap(modData);
+		}
+
+		private static FuelCellPowerMap CreateDynamicFuelCellPowerMap(IModalDataContainer modData, FuelCellSystemData fcData, BatterySystemData batData)
+		{
+			var fcPostProcessor = new FuelCellPreRunPostprocessor(modData);
+			var entries = fcPostProcessor.CalculateFuelCellPowerDemand(fcData, batData);
+			//var entries = fcPostProcessor.CalculateFuelCellPowerDemand(modData.Distance, fcData, batData);
 
 
 
+			return new FuelCellPowerMap(entries);
+		}
+
+		private static FuelCellPowerMap CreateStaticFuelCellPowerMap(IModalDataContainer modData)
+		{
 			//Constant power for the whole cycle
 			var p_reess_terminal_dt = modData.GetValues(x => new {
 				p_reess_terminal = x.Field<Watt>(ModalResultField.P_reess_terminal.GetName()),
@@ -930,16 +948,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			return new FuelCellPowerMap(entries.ToArray());
-
 		}
 
 
-		public FuelCellSystemData CreateFuelCellSystemData(IFuelCellSystemEngineeringInputData fuelCellSystemInputData, FuelCellPowerMap fuelCellPowerMap)
+		public FuelCellSystemData CreateFuelCellSystemData(IFuelCellSystemEngineeringInputData fuelCellSystemInputData, Func<FuelCellSystemData, FuelCellPowerMap> createPowerMap)
 		{
 			var fuelCellSystemData = new FuelCellSystemData();
 			fuelCellSystemData.GradientPowerChange = fuelCellSystemInputData.GradientPowerChange;
 			fuelCellSystemData.OnOffHysteresis = fuelCellSystemInputData.OnOffHysteresis;
-			fuelCellSystemData.FuelCellPowerMap = fuelCellPowerMap;
 			fuelCellSystemData.FuelCells = new List<FuelCellData>();
 			var id = 0;
 			foreach (var fcC in fuelCellSystemInputData.FuelCellComponents) {
@@ -949,6 +965,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					fuelCellSystemData.FuelCells.Add(CreateFuelCellData(fcC.FuelCellComponent, id, i + 1));
 				}
 			}
+
+			fuelCellSystemData.FuelCellPowerMap = createPowerMap(fuelCellSystemData);
 			return fuelCellSystemData;
 		}
 

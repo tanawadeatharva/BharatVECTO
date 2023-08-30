@@ -94,6 +94,9 @@
 		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Truck.vacc">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+		<None Update="TestData\H2_FCV\PostProcessing\LongHaul_short.vdri">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 		<None Update="TestData\Hybrids\Battery\GenericBattery_JB_Connector_included.vbat">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>

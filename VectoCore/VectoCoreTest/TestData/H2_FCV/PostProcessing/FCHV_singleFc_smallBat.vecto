@@ -7,7 +7,7 @@
   },
   "Body": {
     "SavedInDeclMode": false,
-    "VehicleFile": "FCHV_singleFc.vveh",
+    "VehicleFile": "FCHV_singleFc_smallBat.vveh",
     "GearboxFile": "AMT.vgbx",
     "TCU": "AMT.vgbx",
     "Padd_electric": 2.5,

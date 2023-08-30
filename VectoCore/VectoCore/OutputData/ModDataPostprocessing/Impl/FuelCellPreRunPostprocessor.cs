@@ -1,33 +1,260 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 {
+	public class TracingInfinityBatterySystem : StatefulVectoSimulationComponent<TracingInfinityBatterySystem.TracingInfinityBatteryState>, IElectricEnergyStoragePort, IRESSInfo
+	
+	{
+
+		public class TracingInfinityBatteryState
+		{
+			public double StateOfCharge;
+			public double MinSoc;
+			public double MaxSoc;
+
+
+			public Volt InternalVoltage;
+			public Ampere Current;
+
+		}
+
+		private BatterySystem _infinityBat;
+#if DEBUG
+		public IList<double> SoCTrace = new List<double>();
+#endif
+
+        public TracingInfinityBatterySystem(BatterySystemData batData) : base(null)
+		{
+			var tmp_batData = batData.Clone();
+			tmp_batData.ChargeSustainingBatterySystem = true;
+			_infinityBat = new BatterySystem(null, tmp_batData); ;
+		}
+
+
+        #region Implementation of IElectricEnergyStoragePort
+
+		public static double CalculateDeltaSOC(BatterySystem batterySystem, IRESSResponse response, out Ampere current)
+		{
+			var totalCapacity = batterySystem.Capacity;
+
+
+
+
+			current = (response.PowerDemand - response.LossPower) / response.InternalVoltage;
+			var energy = current * response.SimulationInterval;
+
+
+
+
+			var energy_in_bat = totalCapacity * batterySystem.StateOfCharge;
+			var remaining_energy = energy_in_bat + energy;
+
+
+
+			var remaining_soc = remaining_energy / batterySystem.Capacity;
+			var deltaSoc = remaining_soc - batterySystem.StateOfCharge;
+
+
+			return deltaSoc;
+		}
+
+
+		public void Initialize(double initialSoC)
+		{
+
+			_infinityBat.Initialize(initialSoC);
+			PreviousState.StateOfCharge = initialSoC;
+			SoCTrace.Add(initialSoC);
+        }
+
+		public IRESSResponse Request(Second absTime, Second dt, Watt powerDemand, bool dryRun)
+		{
+			var response = _infinityBat.Request(absTime, dt, powerDemand, dryRun);
+
+            if (response is RESSResponseSuccess responseSuccess) {
+				var dSoc = CalculateDeltaSOC(batterySystem: _infinityBat, response: responseSuccess, out var current);
+
+
+				CurrentState.Current = current;
+				CurrentState.InternalVoltage = responseSuccess.InternalVoltage;
+				CurrentState.StateOfCharge = PreviousState.StateOfCharge + dSoc;
+				SoCTrace.Add(CurrentState.StateOfCharge);
+			}
+
+
+			return response;
+		}
+
+		#endregion
+
+		#region Overrides of VectoSimulationComponent
+
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+			container[ModalResultField.P_reess_int] = CurrentState.InternalVoltage * CurrentState.Current;
+
+			container[ModalResultField.REESSStateOfCharge] = CurrentState.StateOfCharge.SI<Scalar>();
+		}
+
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
+		{
+			AdvanceState();
+		}
+
+		protected override bool DoUpdateFrom(object other)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+
+		#region Implementation of IRESSInfo
+
+		public Volt InternalVoltage => _infinityBat.InternalVoltage;
+
+		public double StateOfCharge => _infinityBat.StateOfCharge;
+
+		public WattSecond StoredEnergy => _infinityBat.StoredEnergy;
+
+		public Watt MaxChargePower(Second dt)
+		{
+			return _infinityBat.MaxChargePower(dt);
+		}
+
+		public Watt MaxDischargePower(Second dt)
+		{
+			return _infinityBat.MaxDischargePower(dt);
+		}
+
+		public double MinSoC => _infinityBat.MinSoC;
+
+		public double MaxSoC => _infinityBat.MaxSoC;
+
+		public AmpereSecond Capacity => _infinityBat.Capacity;
+
+		public Volt NominalVoltage => _infinityBat.NominalVoltage;
+
+		#endregion
+	}
+
+
 	public class FuelCellPreRunPostprocessor
 	{
 		public ModalDataContainer ModData;
-
-		//protected ModDataWindowIterator WindowIterator;
 
 
 		public FuelCellPreRunPostprocessor(IModalDataContainer modData)
 		{
 			ModData = modData as ModalDataContainer;
-			//WindowIterator = new ModDataWindowIterator(ModData, 300.SI<Meter>());
+		}
+
+		public FCCalcEntry[] CalculateFuelCellPowerDemand(FuelCellSystemData fcData, BatterySystemData batData)
+		{
+			//Infinity battery with virtual traces
+			batData.ChargeSustainingBatterySystem = true;
+
+
+			//try with initial SOC
+			var entries = CalculateFuelCellPowerDemand(ModData.Distance, fcData, batData);
+
+
+
+
+
+
+
+
+			return entries;
+		}
+
+		public double ShiftInitialSoc(double batMinSoc, double batMaxSoc, double initSoc, double minSocTrace,
+			double maxSocTrace)
+		{
+
+			
+
+			var initSoc_min = batMinSoc + (initSoc - minSocTrace);
+			var initSoc_max = batMaxSoc - (maxSocTrace - initSoc);
+
+			//TODO: add more checks and throw exceptions ;) 
+			return (initSoc_min + initSoc_max) / 2;
+
+
+
+
+
 		}
 
 		public FCCalcEntry[] CalculateFuelCellPowerDemand(Meter windowSize, FuelCellSystemData fcData,
 			BatterySystemData batData)
+		{
+			var tmpBatSystem = new BatterySystem(null, batData);
+
+			var minSoc = tmpBatSystem.MinSoC;
+			var maxSoc = tmpBatSystem.MaxSoC;
+			var success = CalculateFuelCellPowerDemand(windowSize, fcData, batData, out var entries, batData.InitialSoC, out var traceMinSoc, out var traceMaxSoc);
+
+
+			var energy_safety_margin = entries.Average(e => e.P_Bat_T.Value()).SI<Watt>() * 10.SI<Second>();
+
+			var dSocSafety = (tmpBatSystem.TotalCapacity / (energy_safety_margin / tmpBatSystem.NominalVoltage)).Value();
+			var minSocSafe = minSoc + dSocSafety;
+			var maxSocSafe = maxSoc - dSocSafety;
+
+			
+
+
+			if (!success) {
+				if (maxSocSafe - minSocSafe >= traceMaxSoc - traceMinSoc) {
+					var shiftedSoc = ShiftInitialSoc(minSocSafe, maxSocSafe, batData.InitialSoC, traceMinSoc, traceMaxSoc);
+
+
+				}
+
+
+				throw new NotImplementedException();
+			}
+
+
+			
+
+
+			return entries;
+		}
+
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="windowSize"></param>
+		/// <param name="fcData"></param>
+		/// <param name="batData"></param>
+		/// <param name="fcCalcEntries"></param>
+		/// <param name="minSoc_trace">the lowest SoC of the tracing infinity battery</param>
+		/// <param name="maxSoc_trace">the highest SoC of the tracing infinity battery</param>
+		/// <returns></returns>
+		public bool CalculateFuelCellPowerDemand(Meter windowSize, FuelCellSystemData fcData,
+			BatterySystemData batData, out FCCalcEntry[] fcCalcEntries, double initSoc, out double minSoc_trace,out double maxSoc_trace)
 		{
 			var minFcPower = fcData.FuelCells.First().MinElectricPower;
 			var maxFcPower = fcData.FuelCells.First().MaxElectricPower;
@@ -35,25 +262,37 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 			
 			
 			batData.Batteries.ForEach(x => x.Item2.ChargeSustainingBattery = false);
-			var bat = new BatterySystem(null, batData);
-			bat.Initialize(batData.InitialSoC);
 
-			var processed = GetRawFuelCellPowerDemand(windowSize, minFcPower, maxFcPower, bat);
+			var infinityBatterySystem = new TracingInfinityBatterySystem(batData);
+			infinityBatterySystem.Initialize(batData.InitialSoC);
 
-			bat.Initialize(batData.InitialSoC);
+			var processed = GetRawFuelCellPowerDemand(windowSize, minFcPower, maxFcPower, infinityBatterySystem);
+			fcCalcEntries = processed;
+
+
+
+			infinityBatterySystem.Initialize(batData.InitialSoC);
 			var DeltaEnergyBat_int = 0.SI<WattSecond>();
 			var timeFCCanIncrease = 0.SI<Second>();
-			var dummyContainer = new SimpleModDataContainer();
+			var infinityDummyContainer = new SimpleModDataContainer();
 			var countIncrease = 0;
+
+			minSoc_trace = batData.InitialSoC;
+			maxSoc_trace = batData.InitialSoC;
+
+
+			var batSystemMinSoc = infinityBatterySystem.MinSoC;
+			var batSystemMaxSoc = infinityBatterySystem.MaxSoC;
+
 			for (int i = 0; i < processed.Length; i++) {
 				var entry = processed[i];
 				// limit P_Bat_T to battery min/max
-				var batPower = entry.P_Bat_T.LimitTo(bat.MaxDischargePower(entry.dt), bat.MaxChargePower(entry.dt));
-				var batResonse = bat.Request(entry.Time, entry.dt, batPower, false);
-				bat.CommitSimulationStep(entry.Time, entry.dt, dummyContainer);
-				DeltaEnergyBat_int += dummyContainer.P_REES_int * entry.dt;
-				entry.P_REESS_int = dummyContainer.P_REES_int;
-				entry.SoC = dummyContainer.SoC;
+				var batPower = entry.P_Bat_T.LimitTo(infinityBatterySystem.MaxDischargePower(entry.dt), infinityBatterySystem.MaxChargePower(entry.dt));
+				var batResonse = infinityBatterySystem.Request(entry.Time, entry.dt, batPower, false);
+				infinityBatterySystem.CommitSimulationStep(entry.Time, entry.dt, infinityDummyContainer);
+				DeltaEnergyBat_int += infinityDummyContainer.P_REES_int * entry.dt;
+				entry.P_REESS_int = infinityDummyContainer.P_REES_int;
+				entry.SoC = infinityDummyContainer.SoC;
 				// check SoC min/max over cycle
 				// check P_bat min/max (
 				entry.CanIncreaseFCPower = entry.delta_Power_corr.IsGreater(0) &&
@@ -63,15 +302,45 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 					timeFCCanIncrease += entry.dt;
 					countIncrease++;
 				}
+
+				minSoc_trace = VectoMath.Min(minSoc_trace, entry.SoC);
+				maxSoc_trace = VectoMath.Max(maxSoc_trace, entry.SoC);
+
+				if (maxSoc_trace - minSoc_trace > infinityBatterySystem.MaxSoC - infinityBatterySystem.MaxSoC) {
+					return false;
+				}
 			}
 
-			var fcIncrease = - DeltaEnergyBat_int / timeFCCanIncrease;
+
+
+
+
+			var fcIncrease = - DeltaEnergyBat_int / timeFCCanIncrease; //delta_P_fcs
 			for (int i = 0; i < processed.Length; i++) {
 				var entry = processed[i];
-				entry.FCPowerFinal = VectoMath.Min(entry.CanIncreaseFCPower
+				entry.FCPowerFinal = VectoMath.Min(
+					(entry.CanIncreaseFCPower
 					? entry.P_FC_corr + fcIncrease / (1 - entry.P_Bat_loss / entry.P_Bat_T)
-					: entry.P_FC_corr, maxFcPower);
+					: entry.P_FC_corr),
+					
+					maxFcPower);
 			}
+
+
+			var batSystem = new BatterySystem(null, batData);
+			var dummyContainer = new SimpleModDataContainer();
+			for (int i = 0; i < processed.Length; i++) {
+				var entry = processed[i];
+
+				var batPower = entry.P_Bat_T.LimitTo(batSystem.MaxDischargePower(entry.dt),
+					batSystem.MaxChargePower(entry.dt));
+
+				var batResponse = batSystem.Request(entry.Time, entry.dt, batPower, false);
+				
+				batSystem.CommitSimulationStep(entry.Time, entry.dt, dummyContainer);
+				
+			}
+
 
 			using (var fs = new StreamWriter("fuelcell_data.txt")) {
 				fs.WriteLine($"DeltaEnergyBat: {DeltaEnergyBat_int} / {DeltaEnergyBat_int.ConvertToKiloWattHour()}");
@@ -83,10 +352,11 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 				}
 			}
 
-			return processed;
+			
+			return true;
 		}
 
-		protected FCCalcEntry[] GetRawFuelCellPowerDemand(Meter windowSize, Watt minFcPower, Watt maxFcPower, BatterySystem bat)
+		protected FCCalcEntry[] GetRawFuelCellPowerDemand(Meter windowSize, Watt minFcPower, Watt maxFcPower, TracingInfinityBatterySystem bat)
 		{
 			if (windowSize.IsGreater(ModData.Distance)) {
 				throw new VectoException("Window size must not exceed cycle distance!");

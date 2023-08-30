@@ -7,6 +7,7 @@ using System.Threading;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
@@ -80,6 +81,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 			_entries = entries.OrderBy(e => e.Distance).ToList();
 
 			_distanceEntries = _entries.Select(e => e.Distance).ToArray();
+
+		}
+
+		public FuelCellPowerMap(FuelCellPreRunPostprocessor.FCCalcEntry[] entries) : this(entries.Select(e => new FuelCellPowerMapEntry() {
+				Distance = e.Distance,
+				Power = e.P_FC_corr,
+			}).ToArray())
+		{
 
 		}
 
