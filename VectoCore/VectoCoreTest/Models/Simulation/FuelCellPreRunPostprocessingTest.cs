@@ -128,6 +128,54 @@ public class FuelCellPreRunPostprocessingT
 		fcPostProcessor.CalculateFuelCellPowerDemand(10000.SI<Meter>(), fcData, rundata.BatteryData);
 	}
 
+	[TestCase(0, 100, 63, 0.05, 62.5)]
+	[TestCase(0, 100, 63, 0.02, 62.5)]
+	[TestCase(0, 100, 33.4, 0.05, 32.8125)]
+	[TestCase(0, 100, 33.4, 0.02, 33.203125)]
+	[TestCase(0, 100, 74.9, 0.05, 71.8750)]
+	[TestCase(0, 100, 74.9, 0.02, 74.21875)]
+	[TestCase(0, 100, 24.9, 0.05, 24.21875)]
+	[TestCase(0, 100, 24.9, 0.02, 24.609375)]
+	[TestCase(0, 100, 4.9, 0.05, 4.8828125)]
+	[TestCase(0, 100, 4.9, 0.02, 4.882812)]
+
+    public void TestFuelCellWindowSearchAlgorithm(double start, double end, double actual, double searchThreshold, double expectedWnd)
+	{
+		Assert.IsTrue(Math.Abs((actual - expectedWnd) / (actual + expectedWnd) * 2) < searchThreshold, "invalid parameters for testcase");
+		var accepted = new List<Meter>();
+		// we can add the full distance already beforehand because the search starts only if the full distance is not 
+		// feasible.
+		var rejected = new List<Meter>() { end.SI(Unit.SI.Kilo.Meter).Cast<Meter>() };
+		int iterationCount = 0;
+		SearchAlgorithm.BinarySearch(start.SI<Meter>(), end.SI(Unit.SI.Kilo.Meter).Cast<Meter>(),
+			evaluateFunction: (d) => d > actual.SI(Unit.SI.Kilo.Meter).Cast<Meter>() ? null : 0.5,
+			acceptFunction: (d, o) => {
+				if (o == null) {
+					rejected.Add(d);
+				} else {
+					accepted.Add(d);
+				}
+
+				return o != null;
+			},
+			abortCriterion: (d, o) => {
+				if (!accepted.Any() || !rejected.Any()) {
+					return false;
+				}
+				var lastAccepted = accepted.Last();
+				var lastRejected = rejected.Last();
+				var deviation = Math.Abs((lastRejected - lastAccepted) / (lastRejected + lastAccepted) * 2);
+				return deviation < searchThreshold;
+			},
+			ref iterationCount,
+			searcher: this
+			);
+			var solution = accepted.Last();
+
+            TestContext.WriteLine($"iteration count: {iterationCount} deviation: {(actual - solution.ConvertToKiloMeter()) / (actual + solution.ConvertToKiloMeter()) * 2}");
+            Assert.AreEqual(expectedWnd * 1000, solution.Value(), 1e-3);
+	}
+
 	private static (ModalDataContainer modData, VectoRunData RunData) RunFCHV_PEV_Simulation(string jobFile, int cycleIdx)
 	{
 		var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
