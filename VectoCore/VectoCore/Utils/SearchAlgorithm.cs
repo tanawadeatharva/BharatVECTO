@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
@@ -411,6 +412,33 @@ namespace TUGraz.VectoCore.Utils
 
 
 			throw new VectoException("Binary search failed");
+		}
+
+		public static void BinarySearch<T>(T xStart, T xEnd, Func<T, object> evaluateFunction,
+			Func<T, object, bool> acceptFunction, Func<T, object, bool> abortCriterion, ref int iterationCount, object searcher) where T : SIBase<T>
+		{
+			var intervals = new List<Tuple<T, T>> {
+				Tuple.Create(xStart, xEnd)
+			};
+			const int maxIterations = 100;
+			for (var i = 0; i < maxIterations; i++) {
+				var current = intervals.Last();
+				var newX = (current.Item1 + current.Item2) / 2;
+				var result = evaluateFunction(newX);
+				if (acceptFunction(newX, result)) {
+					intervals.Add(Tuple.Create(newX, current.Item2));
+				} else {
+					intervals.Add(Tuple.Create(current.Item1, newX));
+				}
+
+
+                if (abortCriterion(newX, result)) {
+					iterationCount = i;
+					return;
+				}
+			}
+
+			throw new VectoSearchFailedException("Binary Search did not find a solution after {0} iterations", maxIterations);
 		}
 	}
 }
