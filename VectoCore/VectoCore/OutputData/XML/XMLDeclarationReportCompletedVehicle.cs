@@ -319,6 +319,8 @@ namespace TUGraz.VectoCore.OutputData.XML
             public Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
             public Kilogram ZEV_CO2 { get; set; }
 
+			public double BatteryEfficiencyDischarge { get; set; }
+
             public void SetResultData(VectoRunData runData, IModalDataContainer data, double weightingFactor)
             {
                 throw new NotImplementedException();

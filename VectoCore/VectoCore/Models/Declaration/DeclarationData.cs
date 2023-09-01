@@ -1644,7 +1644,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		private static IWeightedResult CalculateWeightedResultIMC(IResultEntry cdResult,
 			IResultEntry csResult,
-			VehicleOperationLookup.VehicleOperationData vehicleOperation, ChargingEfficiencies chargingEfficiency)
+			VehicleOperationLookup.VehicleOperationData vehicleOperation)
 		{
 			if (cdResult.Status != VectoRun.Status.Success || csResult.Status != VectoRun.Status.Success) {
 				return null;
@@ -1679,7 +1679,7 @@ namespace TUGraz.VectoCore.Models.Declaration
             var D17_zeroCO2EmissionsRange = D16_equivalentAllElectricRange;
 
             var D28_elRangefromStartSoC_ChargingAtDepot = D15_actualChargeDepletingRange * D23_realWorldFactorUsageStartSoC;
-            var D29_electricEnergyFromStartSoC = D28_elRangefromStartSoC_ChargingAtDepot * D11_energyConsumptionCdMode;
+            var D29_electricEnergyFromStartSoC = D11_energyConsumptionCdMode * D28_elRangefromStartSoC_ChargingAtDepot;
 			var D30_chargingEfficiencyBatteryStationaryDuringMission = double.NaN;
                 //VectoMath.Min(
                 //    VectoMath.Min(D9_maxStatChargingPower, D20_stationarychargingDuringMissionMaxPwrInfastructure) *
@@ -1709,9 +1709,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var D43_shareElectricEnergyFromGridFirstCharged = D41_limitationElectricEnergyChargedIntoBattery /
 															D40_electricEnergyReqForDailyMileage;
-			var D44_averageChargingEfficiencyDuringExtCharging = ;
+
+			var chargingEfficiency = CalculateChargingEfficiencyIMCOVCHEV(cdResult.VectoRunData, vehicleOperation,
+				D29_electricEnergyFromStartSoC, D31_electricEnergyChargedDuringMissionFromStatInfrastructure,
+				D35_electricEnergyChargedDuringMissionInMotion);
+
+			var D44_averageChargingEfficiencyDuringExtCharging = chargingEfficiency.EtaChargingWeighted;
 			var D45_shareElectricEnergyFromGrid = 1 - D43_shareElectricEnergyFromGridFirstCharged;
-			var D46_averageDischargeEfficiencyBattery = ;
+			var D46_averageDischargeEfficiencyBattery = cdResult.BatteryEfficiencyDischarge;
 
 			var D48_correctionFactor_ECSoC_to_ECTerminal =
 				D43_shareElectricEnergyFromGridFirstCharged * (1 / D44_averageChargingEfficiencyDuringExtCharging) +
@@ -1737,7 +1742,7 @@ namespace TUGraz.VectoCore.Models.Declaration
                 EquivalentAllElectricRange = D16_equivalentAllElectricRange,
                 ZeroCO2EmissionsRange = D17_zeroCO2EmissionsRange,
                 UtilityFactor = D38_utilityFactor,
-                ElectricEnergyConsumption = D52_electricEnergyConsumptionWeighted,
+                ElectricEnergyConsumption = D52_electricEnergyConsumptionWeighted * cdResult.Distance,
                 FuelConsumption = D53_fuelConsumptionWeighted,
                 CO2Total = D38_utilityFactor * cdResult.CO2Total + (1 - D38_utilityFactor) * csResult.CO2Total,
 
@@ -1745,7 +1750,7 @@ namespace TUGraz.VectoCore.Models.Declaration
                 ZEV_CO2 =
                     cdResult.AuxHeaterFuel != null && cdResult.ZEV_CO2 != null &&
                     csResult.ZEV_FuelConsumption_AuxHtr != null
-                        ? D38_utilityFactor * cdResult.ZEV_CO2 + (1 - D382_utilityFactor) * csResult.ZEV_CO2
+                        ? D38_utilityFactor * cdResult.ZEV_CO2 + (1 - D38_utilityFactor) * csResult.ZEV_CO2
                         : null,
                 ZEV_FuelConsumption_AuxHtr =
                     cdResult.AuxHeaterFuel != null && cdResult.ZEV_FuelConsumption_AuxHtr != null &&
