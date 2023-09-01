@@ -105,5 +105,4 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 
 		#endregion
 	}
-
 }

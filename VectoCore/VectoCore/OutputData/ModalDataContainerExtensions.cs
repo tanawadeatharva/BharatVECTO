@@ -261,7 +261,13 @@ namespace TUGraz.VectoCore.OutputData
 			return -data.TimeIntegral<WattSecond>(ModalResultField.P_reess_int, x => x.IsSmaller(0));
 		}
 
-		public static KilogramPerSecond FuelConsumptionPerSecond(this IModalDataContainer data, ModalResultField mrf, IFuelProperties fuelData)
+		public static double BatteryEfficiencyDischarge(this IModalDataContainer data)
+		{
+			return data.WorkREESSDischargeTerminal() / data.WorkREESSDischargeInternal();
+		}
+
+
+        public static KilogramPerSecond FuelConsumptionPerSecond(this IModalDataContainer data, ModalResultField mrf, IFuelProperties fuelData)
 		{
 			return data.TimeIntegral<Kilogram>(data.GetColumnName(fuelData, mrf)) / data.Duration;
 		}

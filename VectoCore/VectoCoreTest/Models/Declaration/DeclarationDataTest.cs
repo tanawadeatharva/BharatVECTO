@@ -2461,6 +2461,67 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(expectedDaily * 1000, val.Mileage.DailyMileage.Value()); //stored in meter
 		}
 
+        [TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 0.34)]
+		[TestCase(VehicleClass.Class2, MissionType.LongHaul, 0.5)]
+		[TestCase(VehicleClass.Class3, MissionType.RegionalDelivery, 0.34)]
+		[TestCase(VehicleClass.Class4, MissionType.UrbanDelivery, 0)]
+		[TestCase(VehicleClass.Class12, MissionType.RegionalDelivery, 0.34)]
+		[TestCase(VehicleClass.ClassP31SD, MissionType.HeavyUrban, 0.30)]
+		public void VehicleOperationLookupShareInMotionInfrastructureCatenary(VehicleClass hdvClass, MissionType mission,
+			double expectedShare)
+		{
+			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+            Assert.AreEqual(expectedShare, val.ShareInMotionCharging.ShareCatenary);
+		}
+
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.Class2, MissionType.LongHaul, 0.0)]
+		[TestCase(VehicleClass.Class3, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.Class4, MissionType.UrbanDelivery, 0.0)]
+		[TestCase(VehicleClass.Class12, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.ClassP31SD, MissionType.HeavyUrban, 0.80)]
+		[TestCase(VehicleClass.ClassP32SD, MissionType.Interurban, 0.20)]
+		[TestCase(VehicleClass.ClassP33SD, MissionType.Interurban, 0.20)]
+		[TestCase(VehicleClass.ClassP40DD, MissionType.Coach, 0.00)]
+        public void VehicleOperationLookupShareInMotionInfrastructurTrolley(VehicleClass hdvClass, MissionType mission,
+			double expectedShare)
+		{
+			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+			Assert.AreEqual(expectedShare, val.ShareInMotionCharging.ShareTrolley);
+		}
+
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.Class2, MissionType.LongHaul, 0.0)]
+		[TestCase(VehicleClass.Class3, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.Class4, MissionType.UrbanDelivery, 0.5)]
+		[TestCase(VehicleClass.Class12, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.ClassP31SD, MissionType.HeavyUrban, 0.50)]
+		[TestCase(VehicleClass.ClassP32SD, MissionType.Interurban, 0.00)]
+		[TestCase(VehicleClass.ClassP33SD, MissionType.Interurban, 0.00)]
+		[TestCase(VehicleClass.ClassP40DD, MissionType.Coach, 0.00)]
+        public void VehicleOperationLookupShareInMotionInfrastructureGroundRail(VehicleClass hdvClass, MissionType mission,
+			double expectedShare)
+		{
+			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+			Assert.AreEqual(expectedShare, val.ShareInMotionCharging.ShareGroundRail);
+		}
+
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.Class2, MissionType.LongHaul, 0.0)]
+		[TestCase(VehicleClass.Class3, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.Class4, MissionType.UrbanDelivery, 0.5)]
+		[TestCase(VehicleClass.Class12, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.ClassP31SD, MissionType.HeavyUrban, 0.50)]
+		[TestCase(VehicleClass.ClassP32SD, MissionType.Interurban, 0.00)]
+		[TestCase(VehicleClass.ClassP33SD, MissionType.Interurban, 0.00)]
+		[TestCase(VehicleClass.ClassP40DD, MissionType.Coach, 0.00)]
+        public void VehicleOperationLookupShareInMotionInfrastructureWireless(VehicleClass hdvClass, MissionType mission,
+			double expectedShare)
+		{
+			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+			Assert.AreEqual(expectedShare, val.ShareInMotionCharging.ShareWireless);
+		}
+
         [TestCaseSource(nameof(VehicleOperationTestSourceLorry))]
 		public void VehicleOperationLookupMileage(VehicleClass hdvClass, MissionType mission)
 		{

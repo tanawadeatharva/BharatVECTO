@@ -124,6 +124,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		
 
+
 		public int JobRunId => _runData.JobRunId;
 
 		public string RunName => _runData.JobName;
@@ -468,7 +469,7 @@ namespace TUGraz.VectoCore.OutputData
 			return (integral / Duration.Value()).SI<PerSecond>();
 		}
 
-		public ICorrectedModalData CorrectedModalData => _correctedModalData ?? (_correctedModalData = PostProcessingCorrection.ApplyCorrection(this, _runData));
+        public ICorrectedModalData CorrectedModalData => _correctedModalData ?? (_correctedModalData = PostProcessingCorrection.ApplyCorrection(this, _runData));
 
 
 		public void CalculateAggregateValues()

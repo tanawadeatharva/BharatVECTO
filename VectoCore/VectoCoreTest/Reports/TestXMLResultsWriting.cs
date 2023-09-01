@@ -482,7 +482,7 @@ public class TestXMLResultsWriting
 
 		var weighted = DeclarationData.CalculateElectricRangesPEV(runData, modData);
 
-		Console.WriteLine($"{weighted.ActualChargeDepletingRange.Value().ToXMLFormat(3)} {weighted.EquivalentAllElectricRange.Value().ToXMLFormat(3)} {weighted.ZeroCO2EmissionsRange.Value().ToXMLFormat(3)}");
+		Console.WriteLine($"{weighted.ActualChargeDepletingRange.Value().ToXMLFormat(3)} {weighted.EquivalentAllElectricRange.Value().ToXMLFormat(3)} {weighted.ZeroCO2EmissionsRange.Value().ToXMLFormat(3)} {weighted.ElectricEnergyConsumption.ConvertToKiloWattHour().ToXMLFormat(3)}");
 
 		//1518.750 1366.875 1366.875 0.004 797877.345 30.890 20.000
 
@@ -490,11 +490,39 @@ public class TestXMLResultsWriting
 		Assert.AreEqual(1518.750, weighted.EquivalentAllElectricRange.Value(), 1e-3);
 		Assert.AreEqual(1518.750, weighted.ZeroCO2EmissionsRange.Value(), 1e-3);
 
+		Assert.AreEqual(55.584, weighted.ElectricEnergyConsumption.ConvertToKiloWattHour(), 1e-3);
+    }
+
+	[TestCase()]
+	public void TestCalculatePEVRangesIMC(params FuelType[] fuels)
+	{
+		var jobType = VectoSimulationJobType.ParallelHybridVehicle;
+		var vehicleCategory = VehicleCategory.RigidTruck;
+		var ovcmode = OvcHevMode.ChargeDepleting;
+		var runData = GetMockRunData(vehicleCategory, jobType, true, false, ovcmode, fuels, IMCTechnology.OverheadPantograph);
+		var modData = GetMockModData(VectoRun.Status.Success, fuels, ovcmode);
+
+		//var result = GetResultEntry(runData);
+		//result.SetResultData(runData, modData, 1);
+
+
+		var weighted = DeclarationData.CalculateElectricRangesPEV(runData, modData);
+
+		Console.WriteLine($"{weighted.ActualChargeDepletingRange.Value().ToXMLFormat(3)} {weighted.EquivalentAllElectricRange.Value().ToXMLFormat(3)} {weighted.ZeroCO2EmissionsRange.Value().ToXMLFormat(3)} {weighted.ElectricEnergyConsumption.ConvertToKiloWattHour().ToXMLFormat(3)}");
+
+		//1518.750 1366.875 1366.875 0.004 797877.345 30.890 20.000
+
+		Assert.AreEqual(1518.750, weighted.ActualChargeDepletingRange.Value(), 1e-3);
+		Assert.AreEqual(1518.750, weighted.EquivalentAllElectricRange.Value(), 1e-3);
+		Assert.AreEqual(1518.750, weighted.ZeroCO2EmissionsRange.Value(), 1e-3);
+
+		Assert.AreEqual(55.659, weighted.ElectricEnergyConsumption.ConvertToKiloWattHour(), 1e-3);
+
 	}
 
-	// ===================================
+    // ===================================
 
-	private static void WriteToConsole(XDocument doc)
+    private static void WriteToConsole(XDocument doc)
 	{
 		var m = new MemoryStream();
 		var writer = new XmlTextWriter(m, Encoding.UTF8) { Formatting = Formatting.Indented };
@@ -603,7 +631,26 @@ public class TestXMLResultsWriting
 		modData.Setup(x => x.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, It.IsNotNull<Func<SI, bool>>())).Returns(e_gbxIn * gbxEff);
 		modData.Setup(x => x.TimeIntegral<WattSecond>(ModalResultField.P_brake_in, It.IsNotNull<Func<SI, bool>>())).Returns(e_gbxIn * gbxEff * axlEff);
 
-		if (runStatus != VectoRun.Status.Success) {
+		var batChgEff = 0.95;
+		var batDischgEff = 0.93;
+		var batEnergy = 200.SI(Unit.SI.Kilo.Watt.Hour).Cast<WattSecond>();
+		var factorChg = ovcMode.IsOneOf(OvcHevMode.ChargeSustaining, OvcHevMode.NotApplicable) ? 1 : 0.1;
+        var batteryEntries = new[] {
+			// internal , terminal
+			Tuple.Create(batEnergy * factorChg, batEnergy * factorChg / batChgEff),
+			Tuple.Create(-batEnergy, -batEnergy * batDischgEff)
+		};
+		modData.Setup(x => x.TimeIntegral<WattSecond>(ModalResultField.P_reess_int, It.IsAny<Func<SI, bool>>()))
+			.Returns<ModalResultField, Func<SI, bool>>((_, f) =>
+				batteryEntries.Select(x => x.Item1).Where(x => f == null || f(x)).Sum());
+		modData.Setup(x => x.TimeIntegral<WattSecond>(ModalResultField.P_reess_terminal, It.IsAny<Func<SI, bool>>()))
+			.Returns<ModalResultField,
+				Func<SI, bool>>((_, f) => batteryEntries.Select(x => x.Item2).Where(x => f(x)).Sum());
+		modData.Setup(x => x.TimeIntegral<WattSecond>(ModalResultField.P_terminal_ES, It.IsAny<Func<SI, bool>>()))
+			.Returns<ModalResultField,
+				Func<SI, bool>>((_, f) => batteryEntries.Select(x => x.Item2).Where(x => f(x)).Sum());
+
+        if (runStatus != VectoRun.Status.Success) {
 			modData.Setup(x => x.Error).Returns("TestCase Error!");
 			modData.Setup(x => x.StackTrace).Returns("Testcase Stacktrace");
 		}
@@ -635,7 +682,7 @@ public class TestXMLResultsWriting
 	}
 
 	private VectoRunData GetMockRunData(VehicleCategory vehicleCategory, VectoSimulationJobType jobType,
-		bool offVehicleCharging, bool exempted, OvcHevMode ovcMode, FuelType[] fuelTypes)
+		bool offVehicleCharging, bool exempted, OvcHevMode ovcMode, FuelType[] fuelTypes, IMCTechnology? imcTech = null)
 	{
 		var fuels = fuelTypes == null || fuelTypes.Length == 0 ? new [] { FuelType.DieselCI } : fuelTypes;
 		return new VectoRunData() {
@@ -643,6 +690,8 @@ public class TestXMLResultsWriting
 				MissionType = MissionType.LongHaul
 			},
 			OVCMode = ovcMode,
+			InMotionCharging = imcTech.HasValue && imcTech != IMCTechnology.NotApplicable,
+			InMotionChargingTechnology = imcTech ?? IMCTechnology.NotApplicable, 
 			Exempted = exempted,
 			JobType = jobType,
 			Loading = LoadingType.LowLoading,
