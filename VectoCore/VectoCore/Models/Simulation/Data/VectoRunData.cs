@@ -188,6 +188,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[JsonIgnore]
 		public IIterativeRunStrategy IterativeRunStrategy { get; internal set; } = new DefaultIterativeStrategy();
+		
+		public NewtonMeter TorqueDriftLeftWheel { get; internal set; }
+
+		public NewtonMeter TorqueDriftRightWheel { get; internal set; }
 
 		[DebuggerDisplay("{ID}: {PowerDemandMech}/{PowerDemandElectric}")]
 		public class AuxData
@@ -397,7 +401,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 	public class VTPData
 	{
-		public double CorrectionFactor;
+		public Dictionary<FuelType, double> CorrectionFactors;
+
+		public IList<IFuelNCVData> FuelNCVs;
 	}
 
 	public class AuxFanData

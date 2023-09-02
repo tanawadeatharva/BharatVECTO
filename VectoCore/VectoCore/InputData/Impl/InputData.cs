@@ -308,5 +308,13 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public IList<IElectricMotorPowerMap> PowerMap { get; internal set; }
 
 		#endregion
-	}
+    }
+
+    public class FuelNCVData : IFuelNCVData
+    {
+		public FuelType Type { get; internal set; }
+
+		public JoulePerKilogramm NCV { get; internal set; }
+    }
+
 }

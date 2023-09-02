@@ -179,7 +179,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                 DemandType = AuxiliaryDemandType.Direct,
                 Technology = new List<string>() { "default" },
                 ID = Constants.Auxiliaries.IDs.Fan,
-                PowerDemandMechCycleFunc = cycleEntry => engineFan.PowerDemand(cycleEntry.FanSpeed)
+                PowerDemandMechCycleFunc = cycleEntry => engineFan.PowerDemand(cycleEntry)
             });
 
             return retVal;
@@ -235,11 +235,21 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             //var ncvStd = DeclarationData.FuelData.Lookup(JobInputData.Vehicle.Components.EngineInputData.FuelType).LowerHeatingValueVecto;
             //var ncvCorrection = ncvStd / JobInputData.NetCalorificValueTestFuel;
             var mileageCorrection = GetMileagecorrectionFactor(JobInputData.Mileage);
-            vtpRunData.VTPData = new VTPData()
-            {
-                CorrectionFactor = mileageCorrection,
+			var correctionFactors = JobInputData.FuelNCVs.ToDictionary(
+				keySelector: f => f.Type, 
+				elementSelector: f => (f.NCV / DeclarationData.FuelData.Lookup(
+					f.Type, 
+					JobInputData.Vehicle.TankSystem).LowerHeatingValueVecto).Value() * mileageCorrection);
+            
+            vtpRunData.VTPData = new VTPData() {
+				CorrectionFactors = correctionFactors,
+				FuelNCVs = JobInputData.FuelNCVs
             };
+
             vtpRunData.DriverData = Driverdata;
+			vtpRunData.TorqueDriftLeftWheel = JobInputData.TorqueDriftLeftWheel;
+			vtpRunData.TorqueDriftRightWheel = JobInputData.TorqueDriftRightWheel;
+
             yield return vtpRunData;
         }
 

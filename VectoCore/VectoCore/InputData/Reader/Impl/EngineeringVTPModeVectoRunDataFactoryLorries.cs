@@ -71,6 +71,21 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						MissionType = MissionType.VerificationTest
 					};
 					runData.DriverData = Driverdata;
+
+					var mileageCorrection = GetMileagecorrectionFactor(JobInputData.Mileage);
+					var correctionFactors = JobInputData.FuelNCVs.ToDictionary(
+						keySelector: f => f.Type, 
+						elementSelector: f => (f.NCV / DeclarationData.FuelData.Lookup(
+							f.Type, 
+							JobInputData.Vehicle.TankSystem).LowerHeatingValueVecto).Value() * mileageCorrection);
+            
+					runData.VTPData = new VTPData() {
+						CorrectionFactors = correctionFactors,
+						FuelNCVs = JobInputData.FuelNCVs
+					};
+
+					runData.TorqueDriftLeftWheel = JobInputData.TorqueDriftLeftWheel;
+					runData.TorqueDriftRightWheel = JobInputData.TorqueDriftRightWheel;
 					return runData;
 				});
 		}

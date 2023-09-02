@@ -42,6 +42,7 @@ namespace TUGraz.VectoCore.Configuration
 		public const double RPMToRad = 2 * Math.PI / 60;
 		public const double Kilo = 1000;
 		public const double MeterPerSecondToKMH = 3.6;
+		public const int Mega = 1000000;
 
 		public static class Auxiliaries
 		{
@@ -362,6 +363,17 @@ namespace TUGraz.VectoCore.Configuration
 				public const int MaxHeight = 100; // percent
 				public const int HeightStep = 10; // percent
 			}
+			/// <summary>
+			/// When the simulated (in VTP) positive engine work deviates more than this threshold
+			/// from the measured positive energy of the vdri, a warning is issued.
+			/// </summary>
+			public const double VTPEngineWorkDeviationThreshold = 0.1;
+
+			/// <summary>
+			/// When the engine speed (in VTP) is higher than idle speed times this factor,
+			/// the combustion engine is set to on.
+			/// </summary>
+			public const double VTPIdleSpeedDetectionFactor = 0.85;
 		}
 
 		public static class XML

@@ -63,7 +63,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected internal void PrepareCycleData()
 		{
+			Second timeDriftZero = Data.Entries.First().Time;
+			Second timeDriftCheck = Data.Entries.Last().Time;
+			
 			foreach (var entry in Data.Entries) {
+				var timeFactor = (entry.Time - timeDriftZero) / (timeDriftCheck - timeDriftZero);
+
+				entry.TorqueWheelLeft = entry.TorqueWheelLeft - (RunData.TorqueDriftLeftWheel * timeFactor);
+                entry.TorqueWheelRight = entry.TorqueWheelRight - (RunData.TorqueDriftRightWheel * timeFactor);
+
 				var wheelSpeed = (entry.WheelSpeedLeft + entry.WheelSpeedRight) / 2;
 				var wheelPower = entry.TorqueWheelLeft * entry.WheelSpeedLeft + entry.TorqueWheelRight * entry.WheelSpeedRight;
 				entry.PWheel = wheelPower;
@@ -106,7 +114,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			
 			foreach (var entry in Data.Entries.Pairwise()) {
 				var dt = entry.Item2.Time - entry.Item1.Time;
-				//var fc = entry.Item1.VTPFuelconsumption * dt;
+				var fc = entry.Item1.Fuelconsumption.Sum(x => x.Value) * dt;
 				var eWheel = entry.Item1.PWheel > 0 ? entry.Item1.PWheel * dt : 0.SI<WattSecond>();
 				//window[idx % count] = new {FC= fc, EWheel = eWheel};
 				sumFC += window[idx % count].FC;
@@ -131,6 +139,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private void VerifyFanSpeed(bool hasElectricFan, DrivingCycleData.DrivingCycleEntry entry)
 		{
+			if (entry.FanSpeed == null) {
+				return;
+			}
+
 			if (hasElectricFan) {
 				if (entry.FanSpeed.IsSmaller(0)) {
 					Log.Error("Fan speed (electric) below zero! t: {0}, n_fan: {1}", entry.Time, entry.FanSpeed);
@@ -202,7 +214,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var response = Initialize(gear, wheelStartTorque, wheelStartSpeed);
 
 				var fullLoadPower = response.Engine.DynamicFullLoadPower; //EnginePowerRequest - response.DeltaFullLoad;
-				var reserve = 1 - response.Engine.PowerRequest / fullLoadPower;
+				var reserve = fullLoadPower.IsEqual(0) ? 0.SI<Scalar>() : 1 - response.Engine.PowerRequest / fullLoadPower;
 
 				if (response.Engine.EngineSpeed > DataBus.EngineInfo.EngineIdleSpeed && reserve >= RunData.GearshiftParameters.StartTorqueReserve) {
 					StartGear = gear;
