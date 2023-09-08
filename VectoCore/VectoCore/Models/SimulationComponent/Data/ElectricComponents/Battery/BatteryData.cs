@@ -98,7 +98,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 		[SIRange(0, 1e9)]
 		public InternalResistanceMap InternalResistance { get; internal set; }
 
-		public AmpereSecond Capacity { get; internal set; }
+		private AmpereSecond _capacity;
+
+		public AmpereSecond Capacity
+		{
+			get => _capacity;
+			internal set
+			{
+				_capacity = value;
+				_totaltoredEnergy = null;
+				_useableStoredEnergy = null;
+			}
+		}
 
 		public MaxCurrentMap MaxCurrent { get; internal set; }
 		public int BatteryId { get; internal set; }

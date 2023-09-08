@@ -103,20 +103,35 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			foreach (var pevRd in GetBatteryElectricVehicleRunData()) {
 
 				var iterativeRunStrategy = new FCHEVIterativeRunStrategy();
+
+
 				pevRd.BatteryData = dao.CreateFuelCellPreProcessingBattery(InputDataProvider.JobInputData.Vehicle.Components.FuelCellSystemInputData, pevRd.BatteryData);
 				//pevRd.SimulationType = VectoSimulationJobType.FCHV;
 				pevRd.ModFileSuffix += "pre";
 
+				pevRd.BatteryData.Batteries =
+					pevRd.BatteryData.Batteries.Where(b => b.Item1 != FuelCellSystemData.FuelCellBatID).ToList();
+
 				iterativeRunStrategy.Update = (modData, runData) => {
 					runData.JobType = VectoSimulationJobType.FCHV;
 					runData.ModFileSuffix = "";
-					runData.BatteryData =
-						dao.CreateBatteryData(InputDataProvider.JobInputData.Vehicle.Components.ElectricStorage, 0.5);
-					runData.FuelCellSystemData =
+
+					//In case the battery is modified after creating the rundata (testing, do not create new battery data)
+					pevRd.BatteryData.Batteries =
+						pevRd.BatteryData.Batteries.Where(b => b.Item1 != FuelCellSystemData.FuelCellBatID).ToList();
+
+
+                    //runData.BatteryData = pevBat;
+                    //runData.BatteryData =
+                    //	dao.CreateBatteryData(InputDataProvider.JobInputData.Vehicle.Components.ElectricStorage, 0.5);
+                    runData.FuelCellSystemData =
 						dao.CreateFuelCellSystemData(InputDataProvider.JobInputData.Vehicle.Components
-								.FuelCellSystemInputData,
-							fcD => dao.CreateFuelCellPowerMap(modData, fcD, runData.BatteryData));
-				};
+								.FuelCellSystemInputData);
+					runData.FuelCellSystemData.FuelCellPowerMap =
+						dao.CreateFuelCellPowerMap(modData, runData.FuelCellSystemData, runData.BatteryData);
+					pevRd.BatteryData.ChargeSustainingBatterySystem = false; //In the real run we don't use a chargesustaining battery
+
+                };
 				pevRd.IterativeRunStrategy = iterativeRunStrategy;
 				yield return pevRd;
 			}

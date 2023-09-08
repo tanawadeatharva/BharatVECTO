@@ -431,9 +431,9 @@ namespace TUGraz.VectoCore.Utils
 					intervals.Add(Tuple.Create(current.Item1, newX));
 				}
 
-
+				iterationCount = i;
                 if (abortCriterion(newX, result)) {
-					iterationCount = i;
+					//iterationCount = i;
 					return;
 				}
 			}

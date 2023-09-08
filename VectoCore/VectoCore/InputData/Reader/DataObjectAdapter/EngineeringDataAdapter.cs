@@ -909,7 +909,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			FuelCellSystemData fcData,
 			BatterySystemData batSystemData)
 		{
-			return CreateDynamicFuelCellPowerMap(modData, fcData, batSystemData);
+			return CreateDynamicFuelCellPowerMap(modData, fcData, batSystemData.Clone());
 
 			//return CreateStaticFuelCellPowerMap(modData);
 		}
@@ -917,12 +917,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		private static FuelCellPowerMap CreateDynamicFuelCellPowerMap(IModalDataContainer modData, FuelCellSystemData fcData, BatterySystemData batData)
 		{
 			var fcPostProcessor = new FuelCellPreRunPostprocessor(modData);
-			var entries = fcPostProcessor.CalculateFuelCellPowerDemand(fcData, batData);
-			//var entries = fcPostProcessor.CalculateFuelCellPowerDemand(modData.Distance, fcData, batData);
+			fcData.PostProcessing = fcPostProcessor;
+			var result = fcPostProcessor.CalculateFuelCellPowerDemand(fcData, batData);
+			//var entries = fcPostProcessor.CalculateFuelCellPowerDemandForSoC(modData.Distance, fcData, batData);
 
-
-
-			return new FuelCellPowerMap(entries);
+			NLog.Fluent.Log.Info($"Window distance = {result.distance}, SoC = {result.initSOC}");
+			batData.InitialSoC = result.initSOC;
+			return new FuelCellPowerMap(result.entries);
 		}
 
 		private static FuelCellPowerMap CreateStaticFuelCellPowerMap(IModalDataContainer modData)
@@ -951,7 +952,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		public FuelCellSystemData CreateFuelCellSystemData(IFuelCellSystemEngineeringInputData fuelCellSystemInputData, Func<FuelCellSystemData, FuelCellPowerMap> createPowerMap)
+		public FuelCellSystemData CreateFuelCellSystemData(IFuelCellSystemEngineeringInputData fuelCellSystemInputData)
 		{
 			var fuelCellSystemData = new FuelCellSystemData();
 			fuelCellSystemData.GradientPowerChange = fuelCellSystemInputData.GradientPowerChange;
@@ -966,7 +967,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				}
 			}
 
-			fuelCellSystemData.FuelCellPowerMap = createPowerMap(fuelCellSystemData);
 			return fuelCellSystemData;
 		}
 

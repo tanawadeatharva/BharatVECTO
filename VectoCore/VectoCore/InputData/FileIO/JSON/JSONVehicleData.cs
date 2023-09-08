@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
 	public class JSONVehicleDataV12_FCHV : JSONVehicleDataV10_HEV_BEV
 	{
-		private JSONFuelCellSystemEngineeringInputData _fuelCellSystem;
+		private IFuelCellSystemEngineeringInputData _fuelCellSystem;
 		public JSONVehicleDataV12_FCHV(JObject json, string filename, IJSONVehicleComponents job, bool tolerateMissing) : base(json, filename, job, tolerateMissing) {
 			
 		}

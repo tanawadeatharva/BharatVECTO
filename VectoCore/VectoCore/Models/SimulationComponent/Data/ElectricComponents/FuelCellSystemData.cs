@@ -31,6 +31,37 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		{
 			return FuelCellPowerMap.Lookup(mileageCounterDistance);
 		}
+
+		public IFuelCellPostProcessingInfo PostProcessing { get; set; }
+
+		private void CheckFcCount()
+		{
+			if (FuelCells.Count > 1) {
+				throw new VectoException("Multiple fuel-cells are currently not supported");
+			}
+
+			if (FuelCells.Count < 1) {
+				throw new VectoException("No fuel-cells provided");
+			}
+        }
+		public Watt MinPower
+		{
+			get
+			{
+				CheckFcCount();
+				return FuelCells.First().MinElectricPower;
+			}
+		}
+
+		public Watt MaxPower
+		{
+			get
+			{
+				CheckFcCount();
+				return FuelCells.First().MaxElectricPower;
+			}
+		}
+
 	}
 
 	public class FuelCellData
