@@ -359,7 +359,16 @@ namespace TUGraz.VectoCore.Tests.Utils
 			set;
 		}
 
-		public bool HasElectricMotor { get; set; }
+		public bool HasGearbox
+		{
+			get;
+			set;
+		}
+
+		public bool HasElectricMotor
+		{
+			get; set;
+		}
 		public PowertrainPosition[] ElectricMotorPositions { get; set; }
 		public VectoSimulationJobType VehicleArchitecutre { get; }
 

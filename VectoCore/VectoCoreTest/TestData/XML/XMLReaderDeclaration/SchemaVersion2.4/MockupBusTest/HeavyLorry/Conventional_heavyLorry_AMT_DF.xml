@@ -96,7 +96,7 @@
 							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>/qqS7iMvDm0MYurhsIRZTF5FeS+MNA2HnoS1P8SrSdA=</di:DigestValue>
+						<di:DigestValue>FY367WAM6cMU+bOXJ/DCFi9qvoZpMNPqo71xaufnMbI=</di:DigestValue>
 					</di:Reference>
 				</v2.0:Signature>
 			</Engine>

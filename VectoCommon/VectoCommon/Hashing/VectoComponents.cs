@@ -111,6 +111,17 @@ namespace TUGraz.VectoCommon.Hashing
 			}
 		}
 
+		public static string XMLElementNameMRF(this VectoComponents component)
+		{
+			switch (component) {
+				case VectoComponents.ElectricEnergyStorage:
+					return "REESSSpecifications";
+				default:
+					return component.XMLElementName();
+
+            }
+		}
+
 		public static string HashIdPrefix(this VectoComponents component)
 		{
 			switch (component) {

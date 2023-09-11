@@ -36,7 +36,7 @@ Imports DeclarationDataAdapterHeavyLorry = TUGraz.VectoCore.InputData.Reader.Dat
 Public Class Vehicle
 	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData,
 				IAngledriveInputData, IAirdragEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData, IAdvancedDriverAssistantSystemsEngineering,
-				IVehicleComponentsEngineering, IVehicleComponentsDeclaration, IAxlesEngineeringInputData, IAxlesDeclarationInputData
+				IVehicleComponentsEngineering, IVehicleComponentsDeclaration, IAxlesEngineeringInputData, IAxlesDeclarationInputData, IVehicleInMotionChargingEngineering
 
 	Private _filePath As String
 	Private _path As String
@@ -109,6 +109,7 @@ Public Class Vehicle
 	Public ElectricMotorPerGearRatios As Double()
 	Public IEPCFile As SubPath
 
+
 	Public Sub New()
 		_path = ""
 		_filePath = ""
@@ -163,7 +164,7 @@ Public Class Vehicle
 				vehicleData = New LorryVehicleDataAdapter().CreateVehicleData(vehicle, segment, segment.Missions.First(),
 													segment.Missions.First().Loadings.First(), True)
 				airdragData = New AirdragDataAdapter().CreateAirdragData(vehicle, segment.Missions.First(), segment)
-				retarderData = New RetarderDataAdapter().CreateRetarderData(vehicle)
+				retarderData = New RetarderDataAdapter().CreateRetarderData(vehicle, vehicle.ArchitectureID, vehicle.Components?.IEPC)
 				angledriveData = New AngledriveDataAdapter().CreateAngledriveData(vehicle)
 				ptoData = New PTODataAdapterLorry().CreatePTOTransmissionData(vehicle, vehicle.Components.GearboxInputData)
 			Else
@@ -259,6 +260,11 @@ Public Class Vehicle
 
 		GenSetEMFile.Clear()
 		GenSetMechLossMap.Clear()
+		'IMC
+		InMotionCharging.InMotionCharging_Enabled = False
+		InMotionCharging.InMotionCharging_CdxA = 0
+		InMotionCharging.InMotionCharging_MotorwaySections = False
+		InMotionCharging.InMotionCharging_TotalDistance = 0
 
 		SavedInDeclMode = False
 	End Sub
@@ -967,6 +973,18 @@ end Property
 	Public Property EcoRollReleaseLockupClutch As Boolean
 
 	Public ReadOnly Property IAxlesDeclarationInputData_XMLSource As XmlNode Implements IAxlesDeclarationInputData.XMLSource
+
+	Public ReadOnly Property InMotionCharging As IVehicleInMotionChargingEngineering Implements IVehicleEngineeringInputData.InMotionCharging
+		Get
+			Return Me
+		End Get
+	End Property
+
+
+	Public Property InMotionCharging_Enabled As Boolean Implements IVehicleInMotionChargingEngineering.InMotionCharging_Enabled
+	Public Property InMotionCharging_TotalDistance As Double Implements IVehicleInMotionChargingEngineering.InMotionCharging_TotalDistance
+	Public Property InMotionCharging_CdxA As Double Implements IVehicleInMotionChargingEngineering.InMotionCharging_CdxA
+	Public Property InMotionCharging_MotorwaySections As Boolean Implements IVehicleInMotionChargingEngineering.InMotionCharging_MotorwaySections
 End Class
 
 Public Class IEPCWrapper
@@ -1190,4 +1208,5 @@ Public Class ElectricMachineWrapper
 	Public ReadOnly Property DragCurve As TableData Implements IElectricMotorDeclarationInputData.DragCurve
 	Public ReadOnly Property Conditioning As TableData Implements IElectricMotorDeclarationInputData.Conditioning
 	Public ReadOnly Property OverloadRecoveryFactor As Double Implements IElectricMotorEngineeringInputData.OverloadRecoveryFactor
+
 End Class

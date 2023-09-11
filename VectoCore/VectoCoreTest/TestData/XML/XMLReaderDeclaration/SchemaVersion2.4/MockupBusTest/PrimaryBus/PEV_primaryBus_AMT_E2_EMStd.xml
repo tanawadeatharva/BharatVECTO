@@ -85,7 +85,7 @@
 								<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 							</di:Transforms>
 							<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-							<di:DigestValue>siONkqzC3QW+4si2eVwLNTwtAxUM0dxMFdAYXjVNl+0=</di:DigestValue>
+							<di:DigestValue>ayoksIz5L0oSc5nOIhmf9xlwVOa+eDuS1TWlKswl1jA=</di:DigestValue>
 						</di:Reference>
 					</v2.3:Signature>
 				</ElectricMachineSystem>

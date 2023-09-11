@@ -1,4 +1,4 @@
-﻿//#define FULL_SIMULATIONS
+﻿#define FULL_SIMULATIONS
 
 
 
@@ -374,9 +374,7 @@ public class PrimaryBusSimulation
 		SerializeRunData(runsFactoryFinal, outputPath);
     }
 
-
-
-    private static void SerializeRunData(ISimulatorFactory runsFactorySingle, string outputPath)
+	private static void SerializeRunData(ISimulatorFactory runsFactorySingle, string outputPath)
 	{
 		var jsonSerializerSettings = new JsonSerializerSettings();
 		jsonSerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
@@ -458,7 +456,7 @@ public class PrimaryBusSimulation
 		var runsFactory = simFactory.Factory(ExecutionMode.Declaration, dataProvider, fileWriter, null, null);
 		
 		runsFactory.WriteModalResults = true;
-		//runsFactory.SerializeVectoRunData = true;
+		runsFactory.SerializeVectoRunData = true;
 		var jobContainer = new JobContainer(new SummaryDataContainer(fileWriter)) { };
         //var jobContainer = new JobContainer(new MockSumWriter()) { };
 
@@ -491,7 +489,7 @@ public class PrimaryBusSimulation
 		var simFactory = Kernel.Get<ISimulatorFactoryFactory>();
 		var runsFactory = simFactory.Factory(ExecutionMode.Declaration, dataProvider, fileWriter, null, null);
 		runsFactory.WriteModalResults = true;
-		//runsFactory.SerializeVectoRunData = true;
+		runsFactory.SerializeVectoRunData = true;
 		var jobContainer = new JobContainer(new SummaryDataContainer(fileWriter)) { };
 		//var jobContainer = new JobContainer(new MockSumWriter()) { };
 		var runs = runsFactory.SimulationRuns().ToList();

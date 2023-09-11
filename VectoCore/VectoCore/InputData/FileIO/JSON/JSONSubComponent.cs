@@ -666,5 +666,37 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#endregion
 	}
 
+    public class JSONInMotionChargingInputData : JSONSubComponent, IVehicleInMotionChargingEngineering
+    {
+		public JSONInMotionChargingInputData(JSONVehicleDataV7 jsonFile) : base(jsonFile) { }
+
+		public bool InMotionCharging_Enabled
+		{
+			get => Body["InMotionCharging"]?.GetEx<bool>("IMC_Enabled") ?? false;  
+			set => throw new NotImplementedException();
+		}
+
+		public double InMotionCharging_TotalDistance
+		{
+			get => Body["InMotionCharging"]?.GetEx<double>("IMC_TotalDistance") ?? 0; 
+			set => throw new NotImplementedException();
+		}
+
+		public double InMotionCharging_CdxA
+		{
+			get => Body["InMotionCharging"]?.GetEx<double>("IMC_CdxA") ?? 0;
+			set => throw new NotImplementedException();
+		}
+
+		public bool InMotionCharging_MotorwaySections
+		{
+			get => Body["InMotionCharging"]?.GetEx<bool>("IMC_MotorwaySection") ?? false; 
+			set => throw new NotImplementedException();
+		}
+
+
+		
+}
+
 
 }

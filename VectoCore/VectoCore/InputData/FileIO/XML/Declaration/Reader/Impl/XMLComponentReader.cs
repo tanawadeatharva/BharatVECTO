@@ -645,7 +645,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			var node = GetNode(XMLNames.REESS, componentNode);
 			var dataNode = GetNode(XMLNames.ComponentDataWrapper, node);
 			version = XMLHelper.GetXsdType(dataNode.SchemaInfo.SchemaType);
-			return Factory.CreateBatteryPackDeclarationInputData(version, dataNode, sourcefile);
+			return Factory.CreateBatteryPackDeclarationInputData(version, node, sourcefile);
 		}
 
 		protected virtual ISuperCapDeclarationInputData SuperCapCreator(string version,

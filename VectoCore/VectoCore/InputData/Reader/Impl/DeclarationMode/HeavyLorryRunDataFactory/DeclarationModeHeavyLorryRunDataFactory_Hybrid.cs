@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					runData.AxleGearData = DataAdapter.CreateAxleGearData(Vehicle.Components.AxleGearInputData);
 				}
 				
-				runData.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData);
+				runData.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData, Vehicle.ArchitectureID, Vehicle.Components.IEPC);
 
 				runData.Aux = DataAdapter.CreateAuxiliaryData(Vehicle.Components.AuxiliaryInputData, null, mission.MissionType,
 					_segment.VehicleClass, Vehicle.Length, Vehicle.Components.AxleWheels.NumSteeredAxles,
@@ -184,9 +184,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				};
 			}
 
-			#endregion
-
-		}
+            #endregion
+			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
+			{
+				if (inputData.Components.AngledriveInputData != null)
+				{
+					throw new VectoException("Angledrive not allowed in pure electric vehicles");
+				}
+			}
+        }
 
 		public class ParallelHybrid : Hybrid
 		{
@@ -222,7 +228,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					runData.AxleGearData = DataAdapter.CreateAxleGearData(Vehicle.Components.AxleGearInputData);
 				}
 
-				runData.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData);
+				runData.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData, Vehicle.VehicleType == VectoSimulationJobType.IHPC ? ArchitectureID.P_IHPC : Vehicle.ArchitectureID, null);
 				runData.Aux = DataAdapter.CreateAuxiliaryData(Vehicle.Components.AuxiliaryInputData, null, mission.MissionType,
 					_segment.VehicleClass, Vehicle.Length, Vehicle.Components.AxleWheels.NumSteeredAxles,
 					VectoSimulationJobType.ParallelHybridVehicle);
@@ -296,6 +302,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				return true;
 			}
 
+			#region Overrides of Hybrid
+
+			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
+			{
+				return;
+			}
+
+			#endregion
 		}
 
 		public class HEV_S2 : SerialHybrid

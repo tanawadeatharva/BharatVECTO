@@ -171,7 +171,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (component is IGearboxInfo c18) {
 				GearboxInfo = c18;
 				commitPriority = 4;
-				HasGearbox = true;
+				_hasGearboxComponent = true;
 			}
 
 			if (component is IVehicleInfo c19) {
@@ -337,7 +337,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public virtual bool HasCombustionEngine { get; private set; }
 
-		public virtual bool HasGearbox { get; private set; }
+		/// <summary>
+		/// True if the powertrain has any gearbox component
+		/// </summary>
+		private bool _hasGearboxComponent = false;
+
+		/// <summary>
+		/// True if the powertrain has a gearbox component (No dummy gearbox)
+		/// </summary>
+		public virtual bool HasGearbox
+		{
+			get
+			{
+				var retVal = _hasGearboxComponent && !(GearboxInfo is DummyGearboxInfo);
+				//Maybe additional logic is needed for iepc?
+
+
+				return retVal;
+			}
+		}
 
 		[Required, ValidateObject]
 		public virtual VectoRunData RunData { get; set; }

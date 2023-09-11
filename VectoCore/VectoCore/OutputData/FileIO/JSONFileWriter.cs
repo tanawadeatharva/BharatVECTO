@@ -588,6 +588,10 @@ public class JSONFileWriter : IOutputFileWriter
 			body["TankSystem"] = vehicle.TankSystem.Value.ToString();
 		}
 
+		
+		
+		
+
 		//body.Add(JsonKeys.HEV_Vehicle_MaxDrivetrainPower, vehicle.MaxDrivetrainPower.ConvertToKiloWatt().Value);
 
 		//ToDo ElectricMotorTorqueLimits changed
@@ -604,7 +608,21 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("Batteries", GetBattery(vehicle, basePath));
 		body.Add("OvcHev", vehicle.OvcHev);
 		body.Add("MaxChargingPower", vehicle.OvcHev ? vehicle.MaxChargingPower.ConvertToKiloWatt().Value : 0);
-		WriteFile(header, body, filename);
+
+		var IMCDictionary = new Dictionary<string, object>();
+		if (vehicle.InMotionCharging.InMotionCharging_Enabled)
+		{
+			IMCDictionary.Add("IMC_Enabled",vehicle.InMotionCharging.InMotionCharging_Enabled);
+			IMCDictionary.Add("IMC_TotalDistance", vehicle.InMotionCharging.InMotionCharging_TotalDistance);
+			IMCDictionary.Add("IMC_CdxA", vehicle.InMotionCharging.InMotionCharging_CdxA);
+			IMCDictionary.Add("IMC_MotorwaySection", vehicle.InMotionCharging.InMotionCharging_MotorwaySections);
+        } else 
+		{
+			IMCDictionary.Add("IMC_Enabled", vehicle.InMotionCharging.InMotionCharging_Enabled);
+        }
+		body.Add("InMotionCharging", IMCDictionary);
+
+        WriteFile(header, body, filename);
 	}
 
 	public void SaveBatteryElectricVehicle(
@@ -640,7 +658,21 @@ public class JSONFileWriter : IOutputFileWriter
         if ((vehicle.TankSystem.HasValue))
 			body["TankSystem"] = vehicle.TankSystem.Value.ToString();
 
-		WriteFile(header, body, filename);
+		var IMCDictionary = new Dictionary<string, object>();
+		if (vehicle.InMotionCharging.InMotionCharging_Enabled)
+		{
+			IMCDictionary.Add("IMC_Enabled", vehicle.InMotionCharging.InMotionCharging_Enabled);
+			IMCDictionary.Add("IMC_TotalDistance", vehicle.InMotionCharging.InMotionCharging_TotalDistance);
+			IMCDictionary.Add("IMC_CdxA", vehicle.InMotionCharging.InMotionCharging_CdxA);
+			IMCDictionary.Add("IMC_MotorwaySection", vehicle.InMotionCharging.InMotionCharging_MotorwaySections);
+		}
+		else
+		{
+			IMCDictionary.Add("IMC_Enabled", vehicle.InMotionCharging.InMotionCharging_Enabled);
+		}
+		body.Add("InMotionCharging", IMCDictionary);
+
+        WriteFile(header, body, filename);
 	}
 
 	private void SaveIEPCVehicle(IVehicleEngineeringInputData vehicle, IAirdragEngineeringInputData airdrag,
@@ -683,7 +715,21 @@ public class JSONFileWriter : IOutputFileWriter
 		if ((vehicle.TankSystem.HasValue))
 			body["TankSystem"] = vehicle.TankSystem.Value.ToString();
 
-		WriteFile(header, body, filename);
+		var IMCDictionary = new Dictionary<string, object>();
+		if (vehicle.InMotionCharging.InMotionCharging_Enabled)
+		{
+			IMCDictionary.Add("IMC_Enabled", vehicle.InMotionCharging.InMotionCharging_Enabled);
+			IMCDictionary.Add("IMC_TotalDistance", vehicle.InMotionCharging.InMotionCharging_TotalDistance);
+			IMCDictionary.Add("IMC_CdxA", vehicle.InMotionCharging.InMotionCharging_CdxA);
+			IMCDictionary.Add("IMC_MotorwaySection", vehicle.InMotionCharging.InMotionCharging_MotorwaySections);
+		}
+		else
+		{
+			IMCDictionary.Add("IMC_Enabled", vehicle.InMotionCharging.InMotionCharging_Enabled);
+		}
+		body.Add("InMotionCharging", IMCDictionary);
+
+        WriteFile(header, body, filename);
 	}
 
 	private Dictionary<string, object>[] GetBattery(IVehicleEngineeringInputData vehicle, string basePath) =>

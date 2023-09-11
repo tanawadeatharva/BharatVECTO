@@ -82,7 +82,6 @@
     <Folder Include="Integration\Declaration\PrimaryBus\" />
     <Folder Include="Models\Declaration\BusAux\" />
     <Folder Include="TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\CompletedBus\VIF\" />
-    <Folder Include="TestUtils\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -264,8 +264,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				: ReadTableData(Path.Combine(BasePath, Body.GetEx<string>("MaxPropulsionTorque")),
 					"MaxPropulsionTorque");
 
-		#endregion
-	}
+		public override IVehicleInMotionChargingEngineering InMotionCharging => new JSONInMotionChargingInputData(this);
+
+		
+        #endregion
+    }
 
 
 	// ###################################################################
@@ -337,6 +340,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected IAirdragEngineeringInputData _airdragInputData;
 		protected IPTOTransmissionInputData _ptoInputData;
 		protected IAdvancedDriverAssistantSystemsEngineering _adasInputData;
+		protected IVehicleInMotionChargingEngineering _inMotionCharging;
 
 		#region IVehicleInputData
 
@@ -420,6 +424,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		public virtual double InitialSOC => double.NaN;
+
+		public virtual IVehicleInMotionChargingEngineering InMotionCharging => null; //GetInMotionCharging();
+
+		
+		
 
 		public virtual VectoSimulationJobType VehicleType => VectoSimulationJobType.ConventionalVehicle;
 

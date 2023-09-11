@@ -874,6 +874,7 @@ Public Class MockEngineeringVehicle
         Implements IVehicleDeclarationInputData.ADAS
 
     Public ReadOnly Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
+    Public ReadOnly Property InMotionCharging As IVehicleInMotionChargingEngineering Implements IVehicleEngineeringInputData.InMotionCharging
     Public Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
     Public ReadOnly Property PTO_DriveGear As GearshiftPosition Implements IVehicleEngineeringInputData.PTO_DriveGear
     Public ReadOnly Property PTO_DriveEngineSpeed As PerSecond Implements IVehicleEngineeringInputData.PTO_DriveEngineSpeed

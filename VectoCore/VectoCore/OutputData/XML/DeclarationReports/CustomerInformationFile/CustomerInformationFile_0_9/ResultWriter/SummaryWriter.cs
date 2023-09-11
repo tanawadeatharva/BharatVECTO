@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override string ResultSummaryXMLType => "ResultSummaryConventionalType";
 		protected override IFuelConsumptionWriter FuelConsumptionWriter => _factory.GetFuelConsumptionLorry(_factory, TNS);
 		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => null;
-		protected override ICO2Writer CO2Writer => _factory.GetCO2ResultLorry(_factory, TNS);
+		protected override ICO2Writer CO2Writer => _factory.GetCO2SummaryResultLorry(_factory, TNS);
 		protected override IElectricRangeWriter ElectricRangeWriter => null;
 		
 	}
@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override string ResultSummaryXMLType => "ResultSummaryNonOVCHEVType";
 		protected override IFuelConsumptionWriter FuelConsumptionWriter => _factory.GetFuelConsumptionLorry(_factory, TNS);
 		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => null;
-		protected override ICO2Writer CO2Writer => _factory.GetCO2ResultLorry(_factory, TNS);
+		protected override ICO2Writer CO2Writer => _factory.GetCO2SummaryResultLorry(_factory, TNS);
 		protected override IElectricRangeWriter ElectricRangeWriter => null;
 		
 	}
@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override string ResultSummaryXMLType => "ResultSummaryOVCHEVType";
 		protected override IFuelConsumptionWriter FuelConsumptionWriter => _factory.GetFuelConsumptionLorry(_factory, TNS);
 		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _factory.GetElectricEnergyConsumptionLorry(_factory, TNS);
-		protected override ICO2Writer CO2Writer => _factory.GetCO2ResultLorry(_factory, TNS);
+		protected override ICO2Writer CO2Writer => _factory.GetCO2SummaryResultLorry(_factory, TNS);
 		protected override IElectricRangeWriter ElectricRangeWriter => _factory.GetElectricRangeWriter(_factory, TNS);
 
 		#endregion
@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override string ResultSummaryXMLType => "ResultSummaryConventionalType";
 		protected override IFuelConsumptionWriter FuelConsumptionWriter => _factory.GetFuelConsumptionBus(_factory, TNS);
 		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => null;
-		protected override ICO2Writer CO2Writer => _factory.GetCO2ResultBus(_factory, TNS);
+		protected override ICO2Writer CO2Writer => _factory.GetCO2SummaryResultBus(_factory, TNS);
 		protected override IElectricRangeWriter ElectricRangeWriter => null;
 
 		#endregion
@@ -166,7 +166,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override string ResultSummaryXMLType => "ResultSummaryNonOVCHEVType";
 		protected override IFuelConsumptionWriter FuelConsumptionWriter => _factory.GetFuelConsumptionBus(_factory, TNS);
 		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => null;
-		protected override ICO2Writer CO2Writer => _factory.GetCO2ResultBus(_factory, TNS);
+		protected override ICO2Writer CO2Writer => _factory.GetCO2SummaryResultBus(_factory, TNS);
 		protected override IElectricRangeWriter ElectricRangeWriter => null;
 
 		#endregion
@@ -183,7 +183,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		protected override IFuelConsumptionWriter FuelConsumptionWriter => _factory.GetFuelConsumptionBus(_factory, TNS);
 
 		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _factory.GetElectricEnergyConsumptionBus(_factory, TNS);
-		protected override ICO2Writer CO2Writer => _factory.GetCO2ResultBus(_factory, TNS);
+		protected override ICO2Writer CO2Writer => _factory.GetCO2SummaryResultBus(_factory, TNS);
 		protected override IElectricRangeWriter ElectricRangeWriter => _factory.GetElectricRangeWriter(_factory, TNS);
 
 		#endregion
@@ -199,7 +199,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		protected override IFuelConsumptionWriter FuelConsumptionWriter => null;
 
 		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _factory.GetElectricEnergyConsumptionBus(_factory, TNS);
-		protected override ICO2Writer CO2Writer => _factory.GetCO2ResultPEVBus(_factory, TNS);
+		protected override ICO2Writer CO2Writer => _factory.GetCO2SummaryResultPEVBus(_factory, TNS);
 		protected override IElectricRangeWriter ElectricRangeWriter => _factory.GetElectricRangeWriter(_factory, TNS);
 
 		#endregion
