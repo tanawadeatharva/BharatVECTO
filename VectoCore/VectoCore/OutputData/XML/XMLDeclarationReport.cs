@@ -330,9 +330,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 					throw new VectoException("SleeperCab parameter is required");
 				}
 
-				WeightingGroup = DeclarationData.WeightingGroup.Lookup(
+				var propulsionPower = DeclarationData.GetReferencePropulsionPower(modelData.VehicleData.InputData);
+                WeightingGroup = DeclarationData.WeightingGroup.Lookup(
 						modelData.VehicleData.VehicleClass, modelData.VehicleData.SleeperCab.Value,
-						modelData.EngineData?.RatedPowerDeclared ?? 0.SI<Watt>());
+						propulsionPower);
 			}
 
 			_weightingFactors = WeightingGroup == WeightingGroup.Unknown
