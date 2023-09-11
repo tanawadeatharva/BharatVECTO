@@ -571,6 +571,18 @@ Public Class VehicleForm
 			tbPropulsionTorqueLimit.Text = If(Not vehicle.BoostingLimitations Is Nothing, GetRelativePath(vehicle.BoostingLimitations.Source, basePath), "")
 		End If
 
+
+		If (Not (VehicleType = VectoSimulationJobType.ConventionalVehicle) And Not (VehicleType = VectoSimulationJobType.EngineOnlySimulation)) Then
+			If (vehicle.InMotionCharging.InMotionCharging_Enabled) Then
+				cbInMotionChargingEnabled.Checked = vehicle.InMotionCharging.InMotionCharging_Enabled
+				tbIMCDeltaCdxA.Text = vehicle.InMotionCharging.InMotionCharging_CdxA.ToString()
+				cbIMCMotorway.Checked = vehicle.InMotionCharging.InMotionCharging_MotorwaySections
+				tbInMotionChargingShareOnTotalDistance.Text = vehicle.InMotionCharging.InMotionCharging_TotalDistance.ToString()
+			End If
+		Else
+			cbInMotionChargingEnabled.Checked = False
+		End If
+
 		DeclInit()
 
 		VehicleFileBrowser.UpdateHistory(file)
@@ -652,6 +664,9 @@ Public Class VehicleForm
 
 				'IHPC 
 				tcVehicleComponents.TabPages.Remove(tbIHPC)
+
+				'In Motion Charging
+				tcVehicleComponents.TabPages.Remove(tpInMotionCharging)
 
 			Case VectoSimulationJobType.ParallelHybridVehicle
 				lblTitle.Text = "Parallel Hybrid Vehicle"
@@ -913,7 +928,7 @@ Public Class VehicleForm
             Return False
         End If
 
-        veh.RetarderType = CType(CbRtType.SelectedValue, RetarderType)
+		veh.RetarderType = CType(CbRtType.SelectedValue, RetarderType)
 		veh.RetarderRatio = TbRtRatio.Text.ToDouble(0)
 		veh.RetarderLossMapFile.Init(GetPath(file), TbRtPath.Text)
 
@@ -1043,9 +1058,27 @@ Public Class VehicleForm
 
 
 		veh.GearDuringPTODrive = If(String.IsNullOrWhiteSpace(tbPtoGear.Text), Nothing, CType(tbPtoGear.Text.ToInt(), UInteger?))
-        veh.EngineSpeedDuringPTODrive = If(String.IsNullOrWhiteSpace(tbPtoEngineSpeed.Text), Nothing, tbPtoEngineSpeed.Text.ToDouble(0).RPMtoRad())
-        '---------------------------------------------------------------------------------
-        If Not veh.SaveFile Then
+		veh.EngineSpeedDuringPTODrive = If(String.IsNullOrWhiteSpace(tbPtoEngineSpeed.Text), Nothing, tbPtoEngineSpeed.Text.ToDouble(0).RPMtoRad())
+
+		'IMC
+		If (Not (VehicleType = VectoSimulationJobType.ConventionalVehicle) And Not (VehicleType = VectoSimulationJobType.EngineOnlySimulation)) Then
+			If (cbInMotionChargingEnabled.Checked) Then
+				If (String.IsNullOrWhiteSpace(tbIMCDeltaCdxA.Text) Or String.IsNullOrWhiteSpace(tbInMotionChargingShareOnTotalDistance.Text)) Then
+					MsgBox("Not all In Motion Charging Parameters are set")
+					Return False
+				End If
+
+				veh.InMotionCharging.InMotionCharging_CdxA = If(String.IsNullOrWhiteSpace(tbIMCDeltaCdxA.Text), 0, tbIMCDeltaCdxA.Text.ToDouble(0))
+				veh.InMotionCharging.InMotionCharging_MotorwaySections = cbIMCMotorway.Checked
+				veh.InMotionCharging.InMotionCharging_TotalDistance = If(String.IsNullOrWhiteSpace(tbInMotionChargingShareOnTotalDistance.Text), 0, tbInMotionChargingShareOnTotalDistance.Text.ToDouble(0))
+				veh.InMotionCharging.InMotionCharging_Enabled = cbInMotionChargingEnabled.Checked
+				End If
+			Else
+			veh.InMotionCharging.InMotionCharging_Enabled = False
+		End If
+
+		'---------------------------------------------------------------------------------
+		If Not veh.SaveFile Then
 			MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
 			Return False
 		End If
@@ -1847,7 +1880,14 @@ Public Class VehicleForm
 		gbEPTO.Enabled = (val = PTOStandStillType.Electrical)
 	End Sub
 
-    Private Sub cbOvc_CheckedChanged(sender As Object, e As EventArgs) Handles cbOvc.CheckedChanged
+	Private Sub cbOvc_CheckedChanged(sender As Object, e As EventArgs) Handles cbOvc.CheckedChanged
 		pnMaxChargingPwr.Enabled = cbOvc.Checked
-    End Sub
+	End Sub
+
+	Private Sub cbInMotionChargingEnabled_CheckedChanged(sender As Object, e As EventArgs) Handles cbInMotionChargingEnabled.CheckedChanged
+
+		pnInMotionCharging.Enabled = cbInMotionChargingEnabled.Checked
+
+	End Sub
+
 End Class
