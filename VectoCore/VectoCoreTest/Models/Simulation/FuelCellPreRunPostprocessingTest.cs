@@ -31,6 +31,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils.RunDataHelper;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation;
 
@@ -149,8 +150,6 @@ public class FuelCellPreRunPostprocessingT
 		var canBeShifted = preRunPostProcessor.TryShiftInitialSoC(batMinSoc, batMaxSoc, initSoc, minTraceSoc, maxTraceSoc, out var new_initSoc);
 
 
-		Assert.IsTrue(new_initSoc.IsGreaterOrEqual(batMinSoc, 1E-04));
-		Assert.IsTrue(new_initSoc.IsSmallerOrEqual(batMaxSoc, 1E-04));
 
 
 		TestContext.Progress.WriteLine($"Bat {batMinSoc} to {batMaxSoc} , init {initSoc}");
@@ -159,7 +158,13 @@ public class FuelCellPreRunPostprocessingT
 
 
         TestContext.Progress.WriteLine($"New initial Soc {new_initSoc}");
-		Assert.IsTrue(Math.Abs(new_initSoc - initSoc).IsGreaterOrEqual(d_minSoc, 1E-04));
+
+		Assert.IsTrue(new_initSoc.IsGreaterOrEqual(batMinSoc, 1E-04));
+		Assert.IsTrue(new_initSoc.IsSmallerOrEqual(batMaxSoc, 1E-04));
+
+
+
+        Assert.IsTrue(Math.Abs(new_initSoc - initSoc).IsGreaterOrEqual(d_minSoc, 1E-04));
 		Assert.IsTrue(Math.Abs(new_initSoc - initSoc).IsGreaterOrEqual(d_maxSoc, 1E-04));
 
     }

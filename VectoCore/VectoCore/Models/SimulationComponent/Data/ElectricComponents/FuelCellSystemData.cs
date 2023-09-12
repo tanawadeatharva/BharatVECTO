@@ -7,12 +7,12 @@ using System.Threading;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
-using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 {
-	public class FuelCellSystemData
+    public class FuelCellSystemData
 	{
 		/// <summary>
 		/// Battery string id for pre processing battery

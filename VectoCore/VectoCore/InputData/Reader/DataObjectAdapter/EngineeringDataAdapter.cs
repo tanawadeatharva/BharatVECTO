@@ -63,6 +63,7 @@ using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
@@ -918,8 +919,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var fcPostProcessor = new FuelCellPreRunPostprocessor(modData);
 			fcData.PostProcessing = fcPostProcessor;
+
+
 			var result = fcPostProcessor.CalculateFuelCellPowerDemand(fcData, batData);
-			//var entries = fcPostProcessor.CalculateFuelCellPowerDemandForSoC(modData.Distance, fcData, batData);
 
 			NLog.Fluent.Log.Info($"Window distance = {result.distance}, SoC = {result.initSOC}");
 			batData.InitialSoC = result.initSOC;
