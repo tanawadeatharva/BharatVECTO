@@ -1624,7 +1624,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			if (cdResult.VectoRunData.InMotionCharging) {
 				//var chgEfficiencies = CalculateChargingEfficiencyIMCOVCHEV(cdResult.VectoRunData, vehicleOperation);
-				CalculateWeightedResultIMC(cdResult, csResult, vehicleOperation);
+				return CalculateWeightedResultIMC(cdResult, csResult, vehicleOperation);
 			}
 			var chgEfficiency = CalculateChargingEfficiencyOVCHEV(cdResult.VectoRunData, vehicleOperation);
             return CalculateWeightedResult(cdResult, csResult, vehicleOperation, chgEfficiency);
@@ -1680,7 +1680,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
             var D28_elRangefromStartSoC_ChargingAtDepot = D15_actualChargeDepletingRange * D23_realWorldFactorUsageStartSoC;
             var D29_electricEnergyFromStartSoC = D11_energyConsumptionCdMode * D28_elRangefromStartSoC_ChargingAtDepot;
-			var D30_chargingEfficiencyBatteryStationaryDuringMission = double.NaN;
+			var D30_chargingEfficiencyBatteryStationaryDuringMission = 0; // double.NaN;
                 //VectoMath.Min(
                 //    VectoMath.Min(D9_maxStatChargingPower, D20_stationarychargingDuringMissionMaxPwrInfastructure) *
                 //    D21_stationaryChargingDuringMission_AvgDurationPerEvent * D29_chargingEffBattInMission,

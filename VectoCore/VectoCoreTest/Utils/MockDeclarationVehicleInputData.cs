@@ -164,6 +164,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		IAdvancedDriverAssistantSystemDeclarationInputData IVehicleDeclarationInputData.ADAS => null;
 
 		public double InitialSOC { get; }
+		public IVehicleInMotionChargingEngineering InMotionCharging { get; }
 		public VectoSimulationJobType VehicleType { get; }
 		public GearshiftPosition PTO_DriveGear { get; }
 		public PerSecond PTO_DriveEngineSpeed { get; }
