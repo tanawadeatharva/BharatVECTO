@@ -610,15 +610,15 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("MaxChargingPower", vehicle.OvcHev ? vehicle.MaxChargingPower.ConvertToKiloWatt().Value : 0);
 
 		var IMCDictionary = new Dictionary<string, object>();
-		if (vehicle.InMotionCharging.InMotionCharging_Enabled)
+		if (vehicle.InMotionCharging.Enabled)
 		{
-			IMCDictionary.Add("IMC_Enabled",vehicle.InMotionCharging.InMotionCharging_Enabled);
-			IMCDictionary.Add("IMC_TotalDistance", vehicle.InMotionCharging.InMotionCharging_TotalDistance);
-			IMCDictionary.Add("IMC_CdxA", vehicle.InMotionCharging.InMotionCharging_CdxA);
-			IMCDictionary.Add("IMC_MotorwaySection", vehicle.InMotionCharging.InMotionCharging_MotorwaySections);
+			IMCDictionary.Add("IMC_Enabled",vehicle.InMotionCharging.Enabled);
+			IMCDictionary.Add("IMC_TotalDistance", vehicle.InMotionCharging.ShareIMCAvailabilityTotalMission * 100);
+			IMCDictionary.Add("IMC_CdxA", vehicle.InMotionCharging.DeltaCdxA);
+			IMCDictionary.Add("IMC_MotorwaySection", vehicle.InMotionCharging.IMCOnMotorwayOnly);
         } else 
 		{
-			IMCDictionary.Add("IMC_Enabled", vehicle.InMotionCharging.InMotionCharging_Enabled);
+			IMCDictionary.Add("IMC_Enabled", vehicle.InMotionCharging.Enabled);
         }
 		body.Add("InMotionCharging", IMCDictionary);
 
@@ -659,16 +659,16 @@ public class JSONFileWriter : IOutputFileWriter
 			body["TankSystem"] = vehicle.TankSystem.Value.ToString();
 
 		var IMCDictionary = new Dictionary<string, object>();
-		if (vehicle.InMotionCharging.InMotionCharging_Enabled)
+		if (vehicle.InMotionCharging.Enabled)
 		{
-			IMCDictionary.Add("IMC_Enabled", vehicle.InMotionCharging.InMotionCharging_Enabled);
-			IMCDictionary.Add("IMC_TotalDistance", vehicle.InMotionCharging.InMotionCharging_TotalDistance);
-			IMCDictionary.Add("IMC_CdxA", vehicle.InMotionCharging.InMotionCharging_CdxA);
-			IMCDictionary.Add("IMC_MotorwaySection", vehicle.InMotionCharging.InMotionCharging_MotorwaySections);
+			IMCDictionary.Add("IMC_Enabled", vehicle.InMotionCharging.Enabled);
+			IMCDictionary.Add("IMC_TotalDistance", vehicle.InMotionCharging.ShareIMCAvailabilityTotalMission * 100);
+			IMCDictionary.Add("IMC_CdxA", vehicle.InMotionCharging.DeltaCdxA);
+			IMCDictionary.Add("IMC_MotorwaySection", vehicle.InMotionCharging.IMCOnMotorwayOnly);
 		}
 		else
 		{
-			IMCDictionary.Add("IMC_Enabled", vehicle.InMotionCharging.InMotionCharging_Enabled);
+			IMCDictionary.Add("IMC_Enabled", vehicle.InMotionCharging.Enabled);
 		}
 		body.Add("InMotionCharging", IMCDictionary);
 
@@ -716,16 +716,16 @@ public class JSONFileWriter : IOutputFileWriter
 			body["TankSystem"] = vehicle.TankSystem.Value.ToString();
 
 		var IMCDictionary = new Dictionary<string, object>();
-		if (vehicle.InMotionCharging.InMotionCharging_Enabled)
+		if (vehicle.InMotionCharging.Enabled)
 		{
-			IMCDictionary.Add("IMC_Enabled", vehicle.InMotionCharging.InMotionCharging_Enabled);
-			IMCDictionary.Add("IMC_TotalDistance", vehicle.InMotionCharging.InMotionCharging_TotalDistance);
-			IMCDictionary.Add("IMC_CdxA", vehicle.InMotionCharging.InMotionCharging_CdxA);
-			IMCDictionary.Add("IMC_MotorwaySection", vehicle.InMotionCharging.InMotionCharging_MotorwaySections);
+			IMCDictionary.Add("IMC_Enabled", vehicle.InMotionCharging.Enabled);
+			IMCDictionary.Add("IMC_TotalDistance", vehicle.InMotionCharging.ShareIMCAvailabilityTotalMission * 100);
+			IMCDictionary.Add("IMC_CdxA", vehicle.InMotionCharging.DeltaCdxA);
+			IMCDictionary.Add("IMC_MotorwaySection", vehicle.InMotionCharging.IMCOnMotorwayOnly);
 		}
 		else
 		{
-			IMCDictionary.Add("IMC_Enabled", vehicle.InMotionCharging.InMotionCharging_Enabled);
+			IMCDictionary.Add("IMC_Enabled", vehicle.InMotionCharging.Enabled);
 		}
 		body.Add("InMotionCharging", IMCDictionary);
 

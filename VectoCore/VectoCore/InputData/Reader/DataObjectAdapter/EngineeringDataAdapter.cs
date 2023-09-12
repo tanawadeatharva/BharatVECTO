@@ -119,17 +119,29 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var retVal = SetCommonAirdragData(airdragData);
 			retVal.CrossWindCorrectionMode = airdragData.CrossWindCorrectionMode;
 
+			var deltaCdxAIMC = 0.SI<SquareMeter>();
+			var deltaCdxAIMCHighway = 0.SI<SquareMeter>();
+			if (data.InMotionCharging.Enabled) {
+				if (data.InMotionCharging.IMCOnMotorwayOnly) {
+					deltaCdxAIMCHighway = data.InMotionCharging.DeltaCdxA *
+										data.InMotionCharging.ShareIMCAvailabilityTotalMission;
+				} else {
+					deltaCdxAIMC = data.InMotionCharging.DeltaCdxA *
+									data.InMotionCharging.ShareIMCAvailabilityTotalMission;
+				}
+			}
+
 			switch (airdragData.CrossWindCorrectionMode) {
 				case CrossWindCorrectionMode.NoCorrection:
 					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-						airdragData.AirDragArea,
+						airdragData.AirDragArea, deltaCdxAIMC, deltaCdxAIMCHighway,
 						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(airdragData.AirDragArea),
 						CrossWindCorrectionMode.NoCorrection);
 					break;
 				case CrossWindCorrectionMode.SpeedDependentCorrectionFactor:
 					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-						airdragData.AirDragArea,
-						CrossWindCorrectionCurveReader.ReadSpeedDependentCorrectionCurve(
+						airdragData.AirDragArea, deltaCdxAIMC, deltaCdxAIMCHighway,
+                        CrossWindCorrectionCurveReader.ReadSpeedDependentCorrectionCurve(
 							airdragData.CrosswindCorrectionMap,
 							airdragData.AirDragArea), CrossWindCorrectionMode.SpeedDependentCorrectionFactor);
 					break;
@@ -148,8 +160,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 										data.GrossVehicleMassRating, false)
 									: 4.SI<Meter>());
 					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-						airDragArea,
-						_airdragDataAdapter.GetDeclarationAirResistanceCurve(
+						airDragArea, deltaCdxAIMC, deltaCdxAIMCHighway,
+                        _airdragDataAdapter.GetDeclarationAirResistanceCurve(
 							GetAirdragParameterSet(
 								data.VehicleCategory, data.AxleConfiguration, data.Components.AxleWheels.AxlesEngineering.Count, data.GrossVehicleMassRating), airDragArea,
 							height),

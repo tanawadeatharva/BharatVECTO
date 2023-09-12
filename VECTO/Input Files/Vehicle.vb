@@ -261,10 +261,10 @@ Public Class Vehicle
 		GenSetEMFile.Clear()
 		GenSetMechLossMap.Clear()
 		'IMC
-		InMotionCharging.InMotionCharging_Enabled = False
-		InMotionCharging.InMotionCharging_CdxA = 0
-		InMotionCharging.InMotionCharging_MotorwaySections = False
-		InMotionCharging.InMotionCharging_TotalDistance = 0
+		InMotionCharging.Enabled = False
+		InMotionCharging.DeltaCdxA = 0
+		InMotionCharging.IMCOnMotorwayOnly = False
+		InMotionCharging.ShareIMCAvailabilityTotalMission = 0
 
 		SavedInDeclMode = False
 	End Sub
@@ -981,10 +981,10 @@ end Property
 	End Property
 
 
-	Public Property InMotionCharging_Enabled As Boolean Implements IVehicleInMotionChargingEngineering.InMotionCharging_Enabled
-	Public Property InMotionCharging_TotalDistance As Double Implements IVehicleInMotionChargingEngineering.InMotionCharging_TotalDistance
-	Public Property InMotionCharging_CdxA As Double Implements IVehicleInMotionChargingEngineering.InMotionCharging_CdxA
-	Public Property InMotionCharging_MotorwaySections As Boolean Implements IVehicleInMotionChargingEngineering.InMotionCharging_MotorwaySections
+	Public Property Enabled As Boolean Implements IVehicleInMotionChargingEngineering.Enabled
+	Public Property ShareIMCAvailabilityTotalMission As Double Implements IVehicleInMotionChargingEngineering.ShareIMCAvailabilityTotalMission
+	Public Property DeltaCdxA As SquareMeter Implements IVehicleInMotionChargingEngineering.DeltaCdxA
+	Public Property IMCOnMotorwayOnly As Boolean Implements IVehicleInMotionChargingEngineering.IMCOnMotorwayOnly
 End Class
 
 Public Class IEPCWrapper

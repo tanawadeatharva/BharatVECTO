@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public CrossWindCorrectionMode CorrectionMode => CrossWindCorrectionMode.VAirBetaLookupTable;
 
-		public Watt AverageAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2, KilogramPerCubicMeter airDensity)
+		public AirDragLossResult AverageAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2, KilogramPerCubicMeter airDensity)
 		{
 			if (DataBus == null) {
 				throw new VectoException("Databus is not set - can't access vAir, beta!");
@@ -74,10 +74,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			// P(t) = F_air(t) * v(t) , v(t) = v1 + a * t
 			// P_avg = 1/T * Integral P(t) dt
 			// P_avg = k * CdA_korr * v_air^2 * (v1 + v2) / 2
-			var airDragForce = (AirDragArea + DeltaCdxA(Math.Abs(beta))) * Physics.AirDensity / 2.0 * vAir * vAir;
+			var airdragArea = (AirDragArea + DeltaCdxA(Math.Abs(beta)));
+			var airDragForce = airdragArea * Physics.AirDensity / 2.0 * vAir * vAir;
 			var vAverage = (v1 + v2) / 2;
 
-			return (airDragForce * vAverage).Cast<Watt>();
+			return new AirDragLossResult((airDragForce * vAverage).Cast<Watt>(), airdragArea, vAverage);
 		}
 
 		protected SquareMeter DeltaCdxA(double beta)

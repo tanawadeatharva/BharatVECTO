@@ -670,25 +670,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
     {
 		public JSONInMotionChargingInputData(JSONVehicleDataV7 jsonFile) : base(jsonFile) { }
 
-		public bool InMotionCharging_Enabled
+		public bool Enabled
 		{
 			get => Body["InMotionCharging"]?.GetEx<bool>("IMC_Enabled") ?? false;  
 			set => throw new NotImplementedException();
 		}
 
-		public double InMotionCharging_TotalDistance
+		public double ShareIMCAvailabilityTotalMission
 		{
-			get => Body["InMotionCharging"]?.GetEx<double>("IMC_TotalDistance") ?? 0; 
+			get => Body["InMotionCharging"]?.GetEx<double>("IMC_TotalDistance") / 100.0 ?? 0; 
 			set => throw new NotImplementedException();
 		}
 
-		public double InMotionCharging_CdxA
+		public SquareMeter DeltaCdxA
 		{
-			get => Body["InMotionCharging"]?.GetEx<double>("IMC_CdxA") ?? 0;
+			get => Body["InMotionCharging"]?.GetEx<double>("IMC_CdxA").SI<SquareMeter>() ?? 0.SI<SquareMeter>();
 			set => throw new NotImplementedException();
 		}
 
-		public bool InMotionCharging_MotorwaySections
+		public bool IMCOnMotorwayOnly
 		{
 			get => Body["InMotionCharging"]?.GetEx<bool>("IMC_MotorwaySection") ?? false; 
 			set => throw new NotImplementedException();

@@ -1,7 +1,7 @@
 {
   "Header": {
     "CreatedBy": "",
-    "Date": "2021-06-16T09:38:08.6512146Z",
+    "Date": "2023-09-12T13:06:40.5122323Z",
     "AppVersion": "3",
     "FileVersion": 10
   },
@@ -12,8 +12,8 @@
     "CurbWeight": 11242.6,
     "CurbWeightExtra": 7500.0,
     "MassMax": 18.0,
-    "Loading": 19300,
-    "rdyn": 492.2,
+    "Loading": 19300.0,
+    "rdyn": 492.20000000000005,
     "CdCorrMode": "CdofVdecl",
     "CdCorrFile": "",
     "AxleConfig": {
@@ -26,16 +26,18 @@
           "TwinTyres": false,
           "RRCISO": 0.0034,
           "FzISO": 33350.0,
-          "Type": "VehicleNonDriven"
+          "Type": "VehicleNonDriven",
+          "Steered": false
         },
         {
           "Inertia": 14.9,
           "Wheels": "315/70 R22.5",
           "AxleWeightShare": 0.25,
           "TwinTyres": true,
-          "RRCISO": 0.0040,
+          "RRCISO": 0.004,
           "FzISO": 33350.0,
-          "Type": "VehicleDriven"
+          "Type": "VehicleDriven",
+          "Steered": false
         },
         {
           "Inertia": 19.2,
@@ -44,7 +46,8 @@
           "TwinTyres": false,
           "RRCISO": 0.0055,
           "FzISO": 37500.0,
-          "Type": "Trailer"
+          "Type": "Trailer",
+          "Steered": false
         },
         {
           "Inertia": 19.2,
@@ -53,7 +56,8 @@
           "TwinTyres": false,
           "RRCISO": 0.0055,
           "FzISO": 37500.0,
-          "Type": "Trailer"
+          "Type": "Trailer",
+          "Steered": false
         },
         {
           "Inertia": 19.2,
@@ -62,11 +66,12 @@
           "TwinTyres": false,
           "RRCISO": 0.0055,
           "FzISO": 37500.0,
-          "Type": "Trailer"
+          "Type": "Trailer",
+          "Steered": false
         }
       ]
     },
-    "EngineStopStart": true,
+    "EngineStopStart": false,
     "EcoRoll": "None",
     "PredictiveCruiseControl": "Option_1_2_3",
     "ATEcoRollReleaseLockupClutch": false,
@@ -83,10 +88,25 @@
         "MechanicalEfficiency": 1.0
       }
     ],
-    "Battery": {
-      "NumPacks": 1,
-      "BatteryFile": "BEV_Group5_REESS.vreess",
-      "StreamId": 0
+    "Batteries": [
+      {
+        "NumPacks": 1,
+        "BatteryFile": "BEV_Group5_REESS.vreess",
+        "StreamId": 0
+      }
+    ],
+    "PTO": {
+      "Type": "None",
+      "LossMap": "",
+      "Cycle": "",
+      "CycleEPTO": "",
+      "CycleDriving": ""
+    },
+    "InMotionCharging": {
+      "IMC_Enabled": true,
+      "IMC_TotalDistance": 50.0,
+      "IMC_CdxA": 0.6,
+      "IMC_MotorwaySection": true
     }
   }
 }

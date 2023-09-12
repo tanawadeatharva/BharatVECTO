@@ -252,8 +252,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 					},
 				AirdragData = new AirdragData() {
 					CrossWindCorrectionCurve =
-						new CrosswindCorrectionCdxALookup(6.16498344.SI<SquareMeter>(),
-							CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>()),
+						new CrosswindCorrectionCdxALookup(6.16498344.SI<SquareMeter>(), 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+                            CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>()),
 							CrossWindCorrectionMode.NoCorrection),
 				},
 				AxleGearData = new AxleGearData { AxleGear = new GearData { Ratio = 2.3 } },
@@ -324,8 +324,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 					},
 				AirdragData = new AirdragData() {
 					CrossWindCorrectionCurve =
-						new CrosswindCorrectionCdxALookup(6.16498344.SI<SquareMeter>(),
-							CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>()),
+						new CrosswindCorrectionCdxALookup(6.16498344.SI<SquareMeter>(), 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+                            CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>()),
 							CrossWindCorrectionMode.NoCorrection)
 				},
 				AxleGearData = new AxleGearData { AxleGear = new GearData { Ratio = 2.3 } },
@@ -538,31 +538,31 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			dataBus.CycleData = new CycleData() { LeftSample = cycleEntry };
 
 			var pAvg =
-				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), Physics.AirDensity).AirdragForce.Value();
 			Assert.AreEqual(509.259, pAvg, 1e-3);
 
 			pAvg =
-				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 21.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 21.KMPHtoMeterPerSecond(), Physics.AirDensity).AirdragForce.Value();
 			Assert.AreEqual(521.990, pAvg, 1e-3);
 
 			pAvg =
-				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 30.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 30.KMPHtoMeterPerSecond(), Physics.AirDensity).AirdragForce.Value();
 			Assert.AreEqual(636.574, pAvg, 1e-3);
 
 			cycleEntry.WindYawAngle = 20;
 
 			pAvg =
-				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), Physics.AirDensity).AirdragForce.Value();
 			Assert.AreEqual(829.074, pAvg, 1e-3);
 
 			pAvg =
-				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 30.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 30.KMPHtoMeterPerSecond(), Physics.AirDensity).AirdragForce.Value();
 			Assert.AreEqual(1036.343, pAvg, 1e-3);
 
 			cycleEntry.WindYawAngle = -120;
 
 			pAvg =
-				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), Physics.AirDensity).AirdragForce.Value();
 			Assert.AreEqual(-1019.5370, pAvg, 1e-3);
 		}
 	}

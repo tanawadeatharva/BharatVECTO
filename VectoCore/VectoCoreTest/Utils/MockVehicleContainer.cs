@@ -181,9 +181,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public Kilogram TotalMass { get; set; }
 		public CubicMeter CargoVolume { get; set; }
 
-		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
+		public AirDragLossResult AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
 		{
-			return 0.SI<Newton>();
+			return new AirDragLossResult(0.SI<Watt>(), 0.SI<SquareMeter>(), (previousVelocity + nextVelocity) / 2.0);
 		}
 
 		public Newton RollingResistance(Radian gradient)
@@ -229,6 +229,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public SpeedChangeEntry LastTargetspeedChange { get; set; }
+
+		public double ShareDistanceHighway { get; }
 
 		public bool VehicleStopped { get; set; }
 

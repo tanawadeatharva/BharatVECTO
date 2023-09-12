@@ -27,4 +27,21 @@ public class IMC_EngineeringTest
         run.Run();
         Assert.IsTrue(run.FinishedWithoutErrors);
     }
+
+	[TestCase]
+	public void RunJob_PEV_IMC_Engineering()
+	{
+		var jobFile = "TestData/IMC/BEV_E2_Group5_2030LH_rl_Electr_Gear/BEV_Group5LH_rl_Electr_Gear.vecto";
+		var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+		var writer = new FileOutputWriter(jobFile);
+		var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
+		factory.Validate = false;
+		factory.WriteModalResults = true;
+		factory.SumData = new SummaryDataContainer(writer);
+		var run = factory.SimulationRuns().ToArray()[0];
+		var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+		run.Run();
+		Assert.IsTrue(run.FinishedWithoutErrors);
+	}
 }

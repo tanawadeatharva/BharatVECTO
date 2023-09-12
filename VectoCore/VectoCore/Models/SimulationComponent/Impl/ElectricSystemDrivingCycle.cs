@@ -128,6 +128,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public SpeedChangeEntry LastTargetspeedChange => null;
+		public double ShareDistanceHighway => double.NaN;
+
 		public void FinishSimulation()
 		{
 			Data.Finish();

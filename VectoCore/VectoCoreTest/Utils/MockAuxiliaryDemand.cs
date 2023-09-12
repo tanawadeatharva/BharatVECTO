@@ -111,6 +111,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public SpeedChangeEntry LastTargetspeedChange { get; set; }
+		public double ShareDistanceHighway => double.NaN;
 
 		public void FinishSimulation() {}
 

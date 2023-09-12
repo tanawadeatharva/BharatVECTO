@@ -573,11 +573,11 @@ Public Class VehicleForm
 
 
 		If (Not (VehicleType = VectoSimulationJobType.ConventionalVehicle) And Not (VehicleType = VectoSimulationJobType.EngineOnlySimulation)) Then
-			If (vehicle.InMotionCharging.InMotionCharging_Enabled) Then
-				cbInMotionChargingEnabled.Checked = vehicle.InMotionCharging.InMotionCharging_Enabled
-				tbIMCDeltaCdxA.Text = vehicle.InMotionCharging.InMotionCharging_CdxA.ToString()
-				cbIMCMotorway.Checked = vehicle.InMotionCharging.InMotionCharging_MotorwaySections
-				tbInMotionChargingShareOnTotalDistance.Text = vehicle.InMotionCharging.InMotionCharging_TotalDistance.ToString()
+			If (vehicle.InMotionCharging.Enabled) Then
+				cbInMotionChargingEnabled.Checked = vehicle.InMotionCharging.Enabled
+				tbIMCDeltaCdxA.Text = vehicle.InMotionCharging.DeltaCdxA.ToString()
+				cbIMCMotorway.Checked = vehicle.InMotionCharging.IMCOnMotorwayOnly
+				tbInMotionChargingShareOnTotalDistance.Text = (vehicle.InMotionCharging.ShareIMCAvailabilityTotalMission * 100).ToString()
 			End If
 		Else
 			cbInMotionChargingEnabled.Checked = False
@@ -1068,13 +1068,13 @@ Public Class VehicleForm
 					Return False
 				End If
 
-				veh.InMotionCharging.InMotionCharging_CdxA = If(String.IsNullOrWhiteSpace(tbIMCDeltaCdxA.Text), 0, tbIMCDeltaCdxA.Text.ToDouble(0))
-				veh.InMotionCharging.InMotionCharging_MotorwaySections = cbIMCMotorway.Checked
-				veh.InMotionCharging.InMotionCharging_TotalDistance = If(String.IsNullOrWhiteSpace(tbInMotionChargingShareOnTotalDistance.Text), 0, tbInMotionChargingShareOnTotalDistance.Text.ToDouble(0))
-				veh.InMotionCharging.InMotionCharging_Enabled = cbInMotionChargingEnabled.Checked
+				veh.InMotionCharging.DeltaCdxA = If(String.IsNullOrWhiteSpace(tbIMCDeltaCdxA.Text), 0.SI(of SquareMeter), (tbIMCDeltaCdxA.Text.ToDouble(0).SI(of SquareMeter)))
+				veh.InMotionCharging.IMCOnMotorwayOnly = cbIMCMotorway.Checked
+				veh.InMotionCharging.ShareIMCAvailabilityTotalMission = If(String.IsNullOrWhiteSpace(tbInMotionChargingShareOnTotalDistance.Text), 0, tbInMotionChargingShareOnTotalDistance.Text.ToDouble(0) / 100.0)
+				veh.InMotionCharging.Enabled = cbInMotionChargingEnabled.Checked
 				End If
 			Else
-			veh.InMotionCharging.InMotionCharging_Enabled = False
+			veh.InMotionCharging.Enabled = False
 		End If
 
 		'---------------------------------------------------------------------------------

@@ -234,8 +234,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void CrossWindCorrectionTest(string parameterSet, double crossSectionArea, double kmph, double height,
 			double expected)
 		{
-			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
-				new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet,
+			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(), 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+                new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet,
 					crossSectionArea.SI<SquareMeter>(),
 					height.SI<Meter>()),
 				CrossWindCorrectionMode.DeclarationModeCorrection);
@@ -277,8 +277,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void CrossWindCorrectionExceptionTest(string parameterSet, double crossSectionArea, double kmph,
 			double height)
 		{
-			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
-				new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet,
+			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(), 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+                new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet,
 					crossSectionArea.SI<SquareMeter>(),
 					height.SI<Meter>()),
 				CrossWindCorrectionMode.DeclarationModeCorrection);
@@ -293,7 +293,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var airDrag = new AirdragData() {
 				CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection,
 				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(null, null, CrossWindCorrectionMode.DeclarationModeCorrection)
+					new CrosswindCorrectionCdxALookup(null, null, null, null, CrossWindCorrectionMode.DeclarationModeCorrection)
 			};
 
 			Assert.IsTrue(airDrag.IsValid(),
@@ -311,7 +311,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				var airDrag = new AirdragData {
 					CrossWindCorrectionMode = correctionMode,
 					CrossWindCorrectionCurve =
-						new CrosswindCorrectionCdxALookup(null, null, correctionMode)
+						new CrosswindCorrectionCdxALookup(null, null, null, null, correctionMode)
 				};
 
 				Assert.IsFalse(airDrag.IsValid(),

@@ -1,16 +1,17 @@
 {
   "Header": {
     "CreatedBy": "",
-    "Date": "2021-09-03T12:30:36.5535578Z",
+    "Date": "2023-09-12T13:06:45.0384876Z",
     "AppVersion": "3",
     "FileVersion": 9
   },
   "Body": {
     "SavedInDeclMode": false,
     "VehicleFile": "BEV_Group5.vveh",
-	"GearboxFile": "3speedAMT.vgbx",
+    "GearboxFile": "3speedAMT.vgbx",
     "TCU": "3speedAMT.vgbx",
-	"BusAux": "xEV_Aux.vaux",
+    "Padd_electric": 0.0,
+    "BusAux": "xEV_Aux.vaux",
     "VACC": "Truck.vacc",
     "EngineStopStartAtVehicleStopThreshold": 2.0,
     "EngineStopStartMaxOffTimespan": 120.0,
@@ -41,7 +42,7 @@
       "OverSpeed": 2.5
     },
     "Cycles": [
-      "cycle.vdri",
+      "cycle.vdri"
     ]
   }
 }

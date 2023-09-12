@@ -159,6 +159,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		}
 
 		public SpeedChangeEntry LastTargetspeedChange => realContainer.DrivingCycleInfo.LastTargetspeedChange;
+		public double ShareDistanceHighway => double.NaN;
 
 		public void FinishSimulation()
 		{

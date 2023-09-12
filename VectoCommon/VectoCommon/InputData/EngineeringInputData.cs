@@ -259,10 +259,10 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IVehicleInMotionChargingEngineering
 	{
-		bool InMotionCharging_Enabled { get; set; }
-		double InMotionCharging_TotalDistance { get; set; }
-		double InMotionCharging_CdxA { get; set; }
-		bool InMotionCharging_MotorwaySections { get; set; }
+		bool Enabled { get; set; }
+		double ShareIMCAvailabilityTotalMission { get; set; }
+		SquareMeter DeltaCdxA { get; set; }
+		bool IMCOnMotorwayOnly { get; set; }
     }
 
 	public interface IVehicleComponentsEngineering
