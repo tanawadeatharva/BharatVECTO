@@ -64,6 +64,12 @@
 		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV_singleFc.vveh">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV_singleFc_300kW_fc.vecto">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV_singleFc_300kW_fc.vveh">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Gear.vtlm">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
@@ -78,6 +84,9 @@
 		</None>
 		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\GenericDrag_400kW_1550Nm.vemd">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\GenericFuelCellComponent_300kW.vfcc">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Generic_EM_400kW_1550Nm.vem">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

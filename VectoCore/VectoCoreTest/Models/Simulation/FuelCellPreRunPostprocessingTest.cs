@@ -46,8 +46,16 @@ public class FuelCellPreRunPostprocessingT
 
 	}
 
-	[TestCase()]
-	public void TestFuelCellWindowIterator_1()
+	internal class PostProcessingEntry
+	{
+		public Meter dist;
+		public Meter simulationDistance;
+		public MeterPerSecond v_act;
+	}
+
+	[TestCase(true)]
+	[TestCase(false)]
+	public void TestFuelCellWindowIterator_1(bool compareWithGeneric)
 	{
 		// apply a constant value - the sum of all windows has to be the same
 		var modData = new ModalDataContainer(new VectoRunData() {
@@ -57,12 +65,27 @@ public class FuelCellPreRunPostprocessingT
 		}, null, null);
 		modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 		modData.Data.CreateColumns(ModalResults.DriverSignals);
-		for (var i = 1; i <= 100; i++) {
+
+
+
+		var entries = new List<PostProcessingEntry>();
+
+        for (var i = 1; i <= 100; i++) {
 			modData[ModalResultField.dist] = i.SI<Meter>();
 			modData[ModalResultField.simulationDistance] = 1.SI<Meter>();
 			modData[ModalResultField.v_act] = 30.KMPHtoMeterPerSecond();
 			modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
 			modData.CommitSimulationStep();
+
+			if (compareWithGeneric) {
+				entries.Add(new PostProcessingEntry() {
+					dist = i.SI<Meter>(),
+					simulationDistance = 1.SI<Meter>(),
+					v_act = 30.KMPHtoMeterPerSecond(),
+				});
+			}
+
+
 		}
 
 		var windowSize = 6.SI<Meter>();
@@ -72,13 +95,33 @@ public class FuelCellPreRunPostprocessingT
 			for (; !wIt.WindowEndReached; wIt.NextEntry()) {
 				sum += ((MeterPerSecond)modData.Data.Rows[wIt.Current][ModalResultField.v_act.GetShortCaption()]).AsKmph;
 			}
-			Console.WriteLine($"{wIt.Position}, {wIt.Current}: {wIt.Start} - {wIt.End}: {sum}");
-			Console.WriteLine($"    {modData.Data.Rows[wIt.Position][ModalResultField.dist.GetShortCaption()]}, " +
-							$"{modData.Data.Rows[wIt.Start][ModalResultField.dist.GetShortCaption()]} - " +
-							$"{modData.Data.Rows[wIt.End][ModalResultField.dist.GetShortCaption()]}: {sum}");
+			TestContext.Progress.WriteLine($"{wIt.Position}, {wIt.Current}: {wIt.Start} - {wIt.End}: {sum}");
+			TestContext.Progress.WriteLine($"    {modData.Data.Rows[wIt.Position][ModalResultField.dist.GetShortCaption()]}, " +
+										$"{modData.Data.Rows[wIt.Start][ModalResultField.dist.GetShortCaption()]} - " +
+										$"{modData.Data.Rows[wIt.End][ModalResultField.dist.GetShortCaption()]}: {sum}");
 			Assert.AreEqual(180, sum, 1e-6, $"at position: {wIt.Position}, {modData.Data.Rows[wIt.Position][ModalResultField.dist.GetShortCaption()]}");
 		}
-    }
+
+		if (compareWithGeneric) {
+			TestContext.Progress.WriteLine("Test generic iterator");
+			var gIt =
+				new GeneralizedModDataWindowIterator<PostProcessingEntry, Meter>(entries, windowSize, entry => entry.dist, entry => entry.simulationDistance)
+					{ };
+			for (; !gIt.EndReached; gIt.MoveNext())
+			{
+				var sum = 0.0;
+				for (; !gIt.WindowEndReached; gIt.NextEntry())
+				{
+					sum += entries[gIt.Current].v_act.AsKmph;
+				}
+				TestContext.Progress.WriteLine($"{gIt.Position}, {gIt.Current}: {gIt.Start} - {gIt.End}: {sum}");
+				TestContext.Progress.WriteLine($"    {entries[gIt.Position].dist}, " +
+												$"{entries[gIt.Start].dist} - " +
+												$"{entries[gIt.End].dist}: {sum}");
+                Assert.AreEqual(180, sum, 1e-6, $"at position: {gIt.Position}, {entries[gIt.Position]}");
+			}
+        }
+	}
 
 	[TestCase()]
 	public void TestFuelCellWindowIterator_2()

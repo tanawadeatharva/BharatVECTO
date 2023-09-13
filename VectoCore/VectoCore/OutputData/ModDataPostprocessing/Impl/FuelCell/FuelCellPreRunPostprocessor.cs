@@ -392,6 +392,11 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 
 
 
+
+            
+
+
+
 			infinityBatterySystem.Initialize(initSoc);
 			infinityDummyContainer = new SimpleModDataContainer();
 
