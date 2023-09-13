@@ -72,10 +72,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		SpeedChangeEntry LastTargetspeedChange { get; }
 
-		double ShareDistanceHighway { get; }
-
-
-        void FinishSimulation();
+		void FinishSimulation();
 	}
 
 	public class SpeedChangeEntry

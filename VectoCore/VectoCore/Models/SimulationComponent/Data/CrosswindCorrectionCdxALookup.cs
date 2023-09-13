@@ -43,8 +43,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		protected readonly List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> Entries;
 
-		protected IDataBus DataBus;
-
         public CrosswindCorrectionCdxALookup(SquareMeter airDragArea, SquareMeter deltaAirDragAreaIMC, 
 			SquareMeter deltaAirDragAreaIMCHighway,
 			List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> entries,
@@ -65,12 +63,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public SquareMeter DeltaAirDragAreaIMC { get; }
 
-		public void SetDataBus(IDataBus dataBus)
-		{
-			DataBus = dataBus;
-		}
-
-
 		public string[] SerializedEntries
 		{
 			get {
@@ -78,12 +70,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 		}
 
-		public AirDragLossResult AverageAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2, KilogramPerCubicMeter airDensity)
+		public AirDragLossResult AverageAirDragPowerLoss(DrivingCycleData.DrivingCycleEntry positionInCycle, MeterPerSecond v1, MeterPerSecond v2, KilogramPerCubicMeter airDensity)
 		{
 			var vAverage = (v1 + v2) / 2;
 			var cdA_Base = EffectiveAirDragArea(vAverage);
 
-			var cdA = cdA_Base + DeltaAirDragAreaIMC + DeltaAirDragAreaIMCHighway / DataBus.DrivingCycleInfo.ShareDistanceHighway;
+			var cdA = cdA_Base + DeltaAirDragAreaIMC;
+			if (positionInCycle.Highway) {
+				cdA += DeltaAirDragAreaIMCHighway;
+			}
 			// compute the average force within the current simulation interval
 			// P(t) = k * CdA * v(t)^3  , v(t) = v0 + a * t  // P_avg = 1/T * Integral P(t) dt
 			// => P_avg = (CdA * rho/2)/(4*a * dt) * (v2^4 - v1^4) // a = (v2-v1)/dt

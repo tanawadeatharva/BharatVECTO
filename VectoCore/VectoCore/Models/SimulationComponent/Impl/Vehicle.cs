@@ -58,9 +58,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			ModelData = modelData;
 			AirdragData = airdrag;
-			if (AirdragData?.CrossWindCorrectionCurve != null) {
-				AirdragData.CrossWindCorrectionCurve.SetDataBus(container);
-			}
+			//if (AirdragData?.CrossWindCorrectionCurve != null) {
+			//	AirdragData.CrossWindCorrectionCurve.SetDataBus(container);
+			//}
 			var model = container.RunData;
 			
 			
@@ -251,7 +251,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private AirDragLossResult ComputeAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2)
 		{
-			return AirdragData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(v1, v2, ModelData.AirDensity);
+			return AirdragData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(DataBus.DrivingCycleInfo.CycleData.LeftSample, v1, v2, ModelData.AirDensity);
 		}
 
 		public Meter Distance => PreviousState.Distance;

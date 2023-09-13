@@ -170,7 +170,7 @@ Public Class Vehicle
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				vehicleData = doa.CreateVehicleData(vehicle)
-				airdragData = doa.CreateAirdragData(vehicle, vehicle)
+				airdragData = doa.CreateAirdragData(vehicle, vehicle, If(vehicle.InMotionCharging.Enabled, vehicle.InMotionCharging.ShareIMCAvailabilityTotalMission * 0.5, 0))
 				retarderData = doa.CreateRetarderData(vehicle, emPos)
 				angledriveData = doa.CreateAngledriveData(vehicle)
 				ptoData = doa.CreatePTOTransmissionData(vehicle)
@@ -262,7 +262,7 @@ Public Class Vehicle
 		GenSetMechLossMap.Clear()
 		'IMC
 		InMotionCharging.Enabled = False
-		InMotionCharging.DeltaCdxA = 0
+		InMotionCharging.DeltaCdxA = 0.SI(of SquareMeter)
 		InMotionCharging.IMCOnMotorwayOnly = False
 		InMotionCharging.ShareIMCAvailabilityTotalMission = 0
 

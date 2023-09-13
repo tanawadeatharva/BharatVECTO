@@ -260,16 +260,19 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var genericCrosswind = GetCrosswindCorrection("CoachBus", genericDragArea, genericVehicleHeight);
 			var specificCrosswind = GetCrosswindCorrection("CoachBus", specificDragArea, specificVehicleHeight);
 
-			var genericValueExpected = genericCrosswind.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(),
+			var cyclePos = new DrivingCycleData.DrivingCycleEntry() {
+				Highway = false
+			};
+			var genericValueExpected = genericCrosswind.AverageAirDragPowerLoss(cyclePos, 20.KMPHtoMeterPerSecond(),
 				21.KMPHtoMeterPerSecond(), Physics.AirDensity).AirdragForce.Value();
 
 			var currentGenericValue = genericAirdragData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(
-				20.KMPHtoMeterPerSecond(), 21.KMPHtoMeterPerSecond(), Physics.AirDensity).AirdragForce.Value();
+				cyclePos, 20.KMPHtoMeterPerSecond(), 21.KMPHtoMeterPerSecond(), Physics.AirDensity).AirdragForce.Value();
 
-			var expectedSpecificValue = specificCrosswind.AverageAirDragPowerLoss(21.KMPHtoMeterPerSecond(),
+			var expectedSpecificValue = specificCrosswind.AverageAirDragPowerLoss(cyclePos, 21.KMPHtoMeterPerSecond(),
 				22.KMPHtoMeterPerSecond(), Physics.AirDensity).AirdragForce.Value();
 
-			var currentSpecificValue = specificAirdragData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(21.KMPHtoMeterPerSecond(),
+			var currentSpecificValue = specificAirdragData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(cyclePos, 21.KMPHtoMeterPerSecond(),
 				22.KMPHtoMeterPerSecond(), Physics.AirDensity).AirdragForce.Value();
 
 

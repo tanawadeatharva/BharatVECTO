@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		public AirdragData CreateAirdragData(IAirdragEngineeringInputData airdragData, IVehicleEngineeringInputData data)
+		public AirdragData CreateAirdragData(IAirdragEngineeringInputData airdragData, IVehicleEngineeringInputData data, double shareHighwayIMCOnTotalCycle)
 		{
 			var retVal = SetCommonAirdragData(airdragData);
 			retVal.CrossWindCorrectionMode = airdragData.CrossWindCorrectionMode;
@@ -122,9 +122,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var deltaCdxAIMC = 0.SI<SquareMeter>();
 			var deltaCdxAIMCHighway = 0.SI<SquareMeter>();
 			if (data.InMotionCharging.Enabled) {
-				if (data.InMotionCharging.IMCOnMotorwayOnly) {
+				if (data.InMotionCharging.ShareIMCAvailabilityTotalMission < 0 || data.InMotionCharging.ShareIMCAvailabilityTotalMission > 1) {
+					throw new VectoException(
+						"Share of In-motion charging infrastructure availability has to be between 0% and 100%");
+				}
+                if (data.InMotionCharging.IMCOnMotorwayOnly) {
+					if (data.InMotionCharging.ShareIMCAvailabilityTotalMission > shareHighwayIMCOnTotalCycle) {
+						throw new VectoException(
+							"Share of In-motion charging availability can not be higher than share of motorway sections when IMC is only available on motorways (share motorway: {0})",
+							shareHighwayIMCOnTotalCycle);
+					}
 					deltaCdxAIMCHighway = data.InMotionCharging.DeltaCdxA *
-										data.InMotionCharging.ShareIMCAvailabilityTotalMission;
+										data.InMotionCharging.ShareIMCAvailabilityTotalMission / shareHighwayIMCOnTotalCycle;
 				} else {
 					deltaCdxAIMC = data.InMotionCharging.DeltaCdxA *
 									data.InMotionCharging.ShareIMCAvailabilityTotalMission;

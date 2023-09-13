@@ -587,8 +587,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public SpeedChangeEntry LastTargetspeedChange => null;
 
-		public double ShareDistanceHighway => Data.ShareDistanceHighway;
-
         public void FinishSimulation() => Data.Finish();
 
 		public DrivingBehavior DriverBehavior { get; internal set; } = DrivingBehavior.Driving;

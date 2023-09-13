@@ -291,7 +291,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 		public SpeedChangeEntry LastTargetspeedChange => throw new NotImplementedException();
-		public double ShareDistanceHighway => 0;
 
 		public void FinishSimulation()
 		{

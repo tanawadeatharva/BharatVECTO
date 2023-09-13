@@ -230,8 +230,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public SpeedChangeEntry LastTargetspeedChange { get; set; }
 
-		public double ShareDistanceHighway { get; }
-
 		public bool VehicleStopped { get; set; }
 
 		public DrivingBehavior DriverBehavior { get; set; }

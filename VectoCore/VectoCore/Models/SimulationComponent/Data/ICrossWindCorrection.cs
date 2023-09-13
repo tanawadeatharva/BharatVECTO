@@ -38,15 +38,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public interface ICrossWindCorrection
 	{
-		//SquareMeter EffectiveAirDragArea(MeterPerSecond x, IDataBus dataBus);
-
-		void SetDataBus(IDataBus dataBus);
-
 		CrossWindCorrectionMode CorrectionMode { get; }
 
 		SquareMeter AirDragArea { get; }
 
-		AirDragLossResult AverageAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2, KilogramPerCubicMeter airDensity);
+		AirDragLossResult AverageAirDragPowerLoss(DrivingCycleData.DrivingCycleEntry positionInCycle, MeterPerSecond v1, MeterPerSecond v2, KilogramPerCubicMeter airDensity);
 	}
 
 	[DebuggerDisplay("{PowerLoss}, {AirdragForce}, {AverageSpeed}, {EffectiveAirDragArea}")]

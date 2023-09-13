@@ -42,7 +42,8 @@
       "OverSpeed": 2.5
     },
     "Cycles": [
-      "cycle.vdri"
+      "LongHaul",
+      "RegionalDelivery"
     ]
   }
 }
