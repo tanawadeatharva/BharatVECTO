@@ -2213,7 +2213,7 @@
 							<xs:sequence>
 								<xs:element name="AverageSpeed">
 									<xs:annotation>
-										<xs:documentation>I.2.2.1 / #60</xs:documentation>
+										<xs:documentation>II.2.2.</xs:documentation>
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
@@ -2228,7 +2228,7 @@
 										<xs:sequence>
 											<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded">
 												<xs:annotation>
-													<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
+													<xs:documentation>II.2.3.1. - II.2.3.8.</xs:documentation>
 												</xs:annotation>
 											</xs:element>
 										</xs:sequence>
@@ -2238,7 +2238,7 @@
 								<xs:element name="ElectricEnergy" type="ElectricEnergyType" minOccurs="0"/>
 								<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded">
 									<xs:annotation>
-										<xs:documentation>I.2.3.13 - I.2.3.16 / #68</xs:documentation>
+										<xs:documentation>II.2.4.1. - II.2.4.5.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -2257,7 +2257,7 @@
 							<xs:sequence>
 								<xs:element name="AverageSpeed">
 									<xs:annotation>
-										<xs:documentation>I.2.2.1 / #60</xs:documentation>
+										<xs:documentation>II.2.2.</xs:documentation>
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
@@ -2272,7 +2272,7 @@
 										<xs:sequence>
 											<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded">
 												<xs:annotation>
-													<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
+													<xs:documentation>II.2.3.1. - II.2.3.8.</xs:documentation>
 												</xs:annotation>
 											</xs:element>
 										</xs:sequence>
@@ -2282,7 +2282,7 @@
 								<xs:element name="ElectricEnergy" type="ElectricEnergyType"/>
 								<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded">
 									<xs:annotation>
-										<xs:documentation>I.2.3.13 - I.2.3.16 / #68</xs:documentation>
+										<xs:documentation>II.2.4.1 - II.2.4.5.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 								<xs:group ref="ElectricRangeSequenceGroup"/>
@@ -2304,7 +2304,7 @@
 							<xs:sequence>
 								<xs:element name="AverageSpeed">
 									<xs:annotation>
-										<xs:documentation>I.2.2.1 / #60</xs:documentation>
+										<xs:documentation>II.2.2.</xs:documentation>
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
@@ -2321,7 +2321,7 @@
 											<xs:sequence>
 												<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded">
 													<xs:annotation>
-														<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
+														<xs:documentation>II.2.3.1 - II.2.3.8.</xs:documentation>
 													</xs:annotation>
 												</xs:element>
 											</xs:sequence>
@@ -2333,7 +2333,7 @@
 											<xs:sequence>
 												<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded">
 													<xs:annotation>
-														<xs:documentation>I.2.3.13 - I.2.3.16 / #68</xs:documentation>
+														<xs:documentation>II.2.4.1. - II.2.4.5</xs:documentation>
 													</xs:annotation>
 												</xs:element>
 											</xs:sequence>
@@ -2358,7 +2358,7 @@
 							<xs:sequence>
 								<xs:element name="AverageSpeed">
 									<xs:annotation>
-										<xs:documentation>I.2.2.1 / #60</xs:documentation>
+										<xs:documentation>II.2.2.</xs:documentation>
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
@@ -2373,7 +2373,7 @@
 										<xs:sequence>
 											<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded">
 												<xs:annotation>
-													<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
+													<xs:documentation>II.2.3.1 - II.2.3.8.</xs:documentation>
 												</xs:annotation>
 											</xs:element>
 										</xs:sequence>
@@ -2382,7 +2382,7 @@
 								</xs:element>
 								<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded">
 									<xs:annotation>
-										<xs:documentation>I.2.3.13 - I.2.3.16 / #68</xs:documentation>
+										<xs:documentation>II.2.4.1. - II.2.4.5.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -2403,7 +2403,7 @@
 				<xs:sequence>
 					<xs:element name="Mission" type="MissionTypeType">
 						<xs:annotation>
-							<xs:documentation>I.2.1.1 / #56</xs:documentation>
+							<xs:documentation>I.2.1.1</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="SimulationParameters" type="SimulationParametersType"/>
@@ -2640,7 +2640,7 @@
 							<xs:sequence>
 								<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded">
 									<xs:annotation>
-										<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
+										<xs:documentation>II.2.3.1. - II.2.3.8.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -2649,7 +2649,7 @@
 					</xs:element>
 					<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded">
 						<xs:annotation>
-							<xs:documentation>I.2.3.13 - I.2.3.16 / #68</xs:documentation>
+							<xs:documentation>II.2.4.1. - II.2.4.5.</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 				</xs:sequence>
@@ -2677,7 +2677,7 @@
 							<xs:sequence>
 								<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded">
 									<xs:annotation>
-										<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
+										<xs:documentation>II.2.3.1. - II.2.3.8.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -2687,7 +2687,7 @@
 					<xs:element name="ElectricEnergy" type="ElectricEnergyType"/>
 					<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded">
 						<xs:annotation>
-							<xs:documentation>I.2.3.13 - I.2.3.16 / #68</xs:documentation>
+							<xs:documentation>II.2.4.1 - I.2.4.5.</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:group ref="ElectricRangeSequenceGroup"/>
@@ -2718,7 +2718,7 @@
 								<xs:sequence>
 									<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded">
 										<xs:annotation>
-											<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
+											<xs:documentation>II.2.3.1 - II.2.3.8.</xs:documentation>
 										</xs:annotation>
 									</xs:element>
 								</xs:sequence>
@@ -2730,7 +2730,7 @@
 								<xs:sequence>
 									<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded">
 										<xs:annotation>
-											<xs:documentation>I.2.3.13 - I.2.3.16 / #68</xs:documentation>
+											<xs:documentation>II.2.4.1 - II.2.4.5.</xs:documentation>
 										</xs:annotation>
 									</xs:element>
 								</xs:sequence>
