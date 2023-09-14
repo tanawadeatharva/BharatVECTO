@@ -55,6 +55,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public event Action GearShiftTriggered;
 
+		public virtual IShiftStrategy Strategy { get; }
+
 		protected AbstractGearbox(IVehicleContainer container) : base(container)
 		{
 			ModelData = container.RunData.GearboxData;

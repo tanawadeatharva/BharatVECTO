@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		void WriteModalResults(IModalDataContainer container);
 
-		
+		VelocityRollingLookup VelocityDropData { get; }
 	}
 
 	public interface IShiftPolygonCalculator

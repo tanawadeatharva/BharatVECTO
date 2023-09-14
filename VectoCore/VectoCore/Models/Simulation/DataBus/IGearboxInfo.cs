@@ -80,6 +80,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		bool GearEngaged(Second absTime);
 
 		bool RequestAfterGearshift { get; set; }
+
+		IShiftStrategy Strategy { get; }
 	}
 
 	public interface IGearboxControl

@@ -39,8 +39,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private ShiftStrategyParameters _shiftStrategyParameters;
 		private SimplePowertrainContainer TestContainer;
 		private Gearbox TestContainerGbx;
-
-		protected readonly VelocityRollingLookup VelocityDropData = new VelocityRollingLookup();
 		//private AccelerationCurveData accCurve;
 
 		private Kilogram vehicleMass;
@@ -73,6 +71,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_shiftStrategyParameters.AllowedGearRangeFC = _shiftStrategyParameters.AllowedGearRangeFC.LimitTo(1, 2);
 			}
 		}
+
+		public override VelocityRollingLookup VelocityDropData { get; } = new VelocityRollingLookup();
 
 		private void SetupVelocityDropPreprocessor(IVehicleContainer dataBus)
 		{

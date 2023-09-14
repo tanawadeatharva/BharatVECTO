@@ -52,6 +52,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		internal readonly IShiftStrategy _strategy;
 
+		public override IShiftStrategy Strategy => _strategy;
+
 		/// <summary>
 		/// Time when a gearbox shift engages a new gear (shift is finished). Is set when shifting is needed.
 		/// </summary>
