@@ -1,22 +1,17 @@
 {
   "Header": {
     "CreatedBy": "",
-    "Date": "2023-09-12T09:40:30.4673454Z",
+    "Date": "2023-09-12T13:06:45.0384876Z",
     "AppVersion": "3",
-    "FileVersion": 8
+    "FileVersion": 9
   },
   "Body": {
     "SavedInDeclMode": false,
-    "EngineOnlyMode": false,
-    "VehicleFile": "P2_Group5.vveh",
-    "EngineFile": "P2_Group5_12.7l.veng",
-    "GearboxFile": "AMT_12.vgbx",
-    "TCU": "AMT_12.vgbx",
-    "HybridStrategyParams": "HEV_Parameter.vhctl",
-    "Padd": 3242.9,
-    "Paux_ICEOff_Driving": 2624.9,
-    "Paux_ICEOff_Standstill": 2192.9,
+    "VehicleFile": "BEV_Group5_IMC-all.vveh",
+    "GearboxFile": "3speedAMT.vgbx",
+    "TCU": "3speedAMT.vgbx",
     "Padd_electric": 0.0,
+    "BusAux": "xEV_Aux.vaux",
     "VACC": "Truck.vacc",
     "EngineStopStartAtVehicleStopThreshold": 2.0,
     "EngineStopStartMaxOffTimespan": 120.0,
@@ -47,7 +42,8 @@
       "OverSpeed": 2.5
     },
     "Cycles": [
-      "cycle.vdri"
+      "LongHaul",
+      "RegionalDelivery"
     ]
   }
 }

@@ -1,7 +1,7 @@
 {
   "Header": {
     "CreatedBy": "",
-    "Date": "2023-09-12T09:40:16.0425318Z",
+    "Date": "2023-09-13T13:59:03.8064982Z",
     "AppVersion": "3",
     "FileVersion": 10
   },
@@ -9,7 +9,7 @@
     "SavedInDeclMode": false,
     "VehCat": "Tractor",
     "LegislativeClass": "Unknown",
-    "CurbWeight": 9079.6,
+    "CurbWeight": 11242.6,
     "CurbWeightExtra": 7500.0,
     "MassMax": 18.0,
     "Loading": 19300.0,
@@ -71,43 +71,42 @@
         }
       ]
     },
-    "EngineStopStart": true,
+    "EngineStopStart": false,
     "EcoRoll": "None",
     "PredictiveCruiseControl": "Option_1_2_3",
     "ATEcoRollReleaseLockupClutch": false,
-    "CdA": 4.63,
+    "CdA": 4.31,
     "VehicleHeight": 4.0,
-    "IdlingSpeed": 600.0,
-    "Retarder": {
-      "Type": "None",
-      "Ratio": 1.0,
-      "File": ""
-    },
-    "InitialSoC": 50.0,
-    "PowertrainConfiguration": "ParallelHybrid",
+    "InitialSoC": 92.5,
+    "PowertrainConfiguration": "BatteryElectric",
     "ElectricMotors": [
       {
-        "Count": 1,
+        "Count": 2,
         "Ratio": 1.0,
-        "Position": "P2",
-        "MotorFile": "P2_Group5_EM.vem",
+        "Position": "E2",
+        "MotorFile": "BEV_Group5_EM.vem",
         "MechanicalEfficiency": 1.0
       }
     ],
     "Batteries": [
       {
         "NumPacks": 1,
-        "BatteryFile": "P2_Group5_REESS.vreess",
+        "BatteryFile": "BEV_Group5_REESS.vreess",
         "StreamId": 0
       }
     ],
-    "OvcHev": false,
-    "MaxChargingPower": 0.0,
+    "PTO": {
+      "Type": "None",
+      "LossMap": "",
+      "Cycle": "",
+      "CycleEPTO": "",
+      "CycleDriving": ""
+    },
     "InMotionCharging": {
       "IMC_Enabled": true,
-      "IMC_TotalDistance": 0.5,
+      "IMC_TotalDistance": 50.0,
       "IMC_CdxA": 0.6,
-      "IMC_MotorwaySection": true
+      "IMC_MotorwaySection": false
     }
   }
 }

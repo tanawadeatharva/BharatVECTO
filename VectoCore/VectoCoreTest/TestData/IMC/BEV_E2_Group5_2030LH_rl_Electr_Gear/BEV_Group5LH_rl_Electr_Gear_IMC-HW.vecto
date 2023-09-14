@@ -7,7 +7,7 @@
   },
   "Body": {
     "SavedInDeclMode": false,
-    "VehicleFile": "BEV_Group5.vveh",
+    "VehicleFile": "BEV_Group5_IMC-HW.vveh",
     "GearboxFile": "3speedAMT.vgbx",
     "TCU": "3speedAMT.vgbx",
     "Padd_electric": 0.0,
