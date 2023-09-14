@@ -1,0 +1,49 @@
+{
+  "Header": {
+    "CreatedBy": "",
+    "Date": "2023-09-14T05:25:38.7289208Z",
+    "AppVersion": "3",
+    "FileVersion": 9
+  },
+  "Body": {
+    "SavedInDeclMode": true,
+    "VehicleFile": "BEV_Group5_IMC-HW.vveh",
+    "GearboxFile": "3speedAMT.vgbx",
+    "Padd_electric": 0.0,
+    "Aux": [
+      {
+        "ID": "STP",
+        "Type": "Steering pump",
+        "Technology": [
+          "Full electric steering gear"
+        ]
+      },
+      {
+        "ID": "AC",
+        "Type": "HVAC",
+        "Technology": [
+          "Default"
+        ]
+      },
+      {
+        "ID": "PS",
+        "Type": "Pneumatic System",
+        "Technology": [
+          "Medium Supply 2-stage + elec. driven"
+        ]
+      },
+      {
+        "ID": "ES",
+        "Type": "Electric System",
+        "Technology": [
+          "Standard technology - LED headlights, all"
+        ]
+      }
+    ],
+    "OverSpeedEcoRoll": {
+      "Mode": "Overspeed",
+      "MinSpeed": 50.0,
+      "OverSpeed": 2.5
+    }
+  }
+}
