@@ -182,8 +182,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 			// used for factor method
 			public IResult PrimaryResult { get; set; }
 
+			public double BatteryEfficiencyDischarge { get; set; }
 
-			public virtual void SetResultData(VectoRunData runData, IModalDataContainer data, double weightingFactor)
+            public virtual void SetResultData(VectoRunData runData, IModalDataContainer data, double weightingFactor)
 			{
 				OVCMode = runData.OVCMode;
 				Status = data.RunStatus;
@@ -266,6 +267,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 				WeightingFactor = weightingFactor;
 
 				PrimaryResult = runData.PrimaryResult;
+
+				BatteryEfficiencyDischarge = data.BatteryEfficiencyDischarge();
+
 
 			}
 

@@ -185,7 +185,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var dao = new EngineeringDataAdapter();
 			var vehicleInput = JSONInputDataFactory.ReadJsonVehicle(vehicleDataFile, null);
 			var airdragData = vehicleInput.Components.AirdragInputData;
-			return dao.CreateAirdragData(airdragData, vehicleInput);
+			return dao.CreateAirdragData(airdragData, vehicleInput, 0);
 		}
 
 		public static DriverData CreateDriverDataFromFile(string driverDataFile)
@@ -278,6 +278,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool? AirdragModifiedMultistep { get; }
 		public TankSystem? TankSystem { get; }
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; }
+		public IVehicleInMotionChargingDeclaration InMotionCharging { get; }
 		public bool ZeroEmissionVehicle { get; }
 		public bool HybridElectricHDV { get; }
 		public bool DualFuelVehicle { get; }

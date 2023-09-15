@@ -136,10 +136,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			}
 
 
-			public virtual AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission,
-				Segment segment)
+			public virtual AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData,
+				IVehicleInMotionChargingDeclaration imcData, Mission mission,
+				Segment segment, double cycleShareDistanceHighway)
 			{
-				return _airdragDataAdapter.CreateAirdragData(airdragData, mission, segment);
+				return _airdragDataAdapter.CreateAirdragData(airdragData, imcData, mission, segment, cycleShareDistanceHighway);
 			}
 
 			public AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData)
@@ -172,9 +173,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return GearboxDataAdapter.CreateGearshiftData(axleRatio, engineIdlingSpeed, gearboxType, gearsCount);
 			}
 
-			public RetarderData CreateRetarderData(IRetarderInputData retarderData, PowertrainPosition position)
+			public RetarderData CreateRetarderData(IRetarderInputData retarderData, ArchitectureID archID,
+				IIEPCDeclarationInputData iepcInputData)
 			{
-				return _retarderDataAdapter.CreateRetarderData(retarderData, position);
+				return _retarderDataAdapter.CreateRetarderData(retarderData, archID, iepcInputData);
 			}
 
 			public virtual PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto)

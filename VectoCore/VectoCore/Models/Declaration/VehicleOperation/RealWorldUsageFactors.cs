@@ -17,10 +17,12 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 				var group = tableRow.Field<string>("vehiclegroup");
 				var startSoCBeforeMission = tableRow.ParseDouble("startsocbeforemission");
 				var stationaryChargingDuringMission = tableRow.ParseDouble("stationarychargingduringmission");
+				var inMotionChargingDuringMission = tableRow.ParseDouble("realworldfactorinmotionchargingduringmission");
 				foreach (var g in group.Split('/')) {
 					Data.Add(g.RemoveWhitespace(), new Entry() {
 						StartSoCBeforeMission = startSoCBeforeMission,
 						StationaryChargingDuringMission = stationaryChargingDuringMission,
+						InMotionChargingDuringMission = inMotionChargingDuringMission,
 					});
 				}
 			}
@@ -38,6 +40,8 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 			public double StartSoCBeforeMission { get; internal set; }
 
 			public double StationaryChargingDuringMission { get; internal set; }
+
+			public double InMotionChargingDuringMission { get; internal set; }
 		}
 
 	}

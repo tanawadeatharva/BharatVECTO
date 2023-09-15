@@ -171,19 +171,19 @@ namespace HashingTool.ViewModel.UserControl
 
 			if (_xmlFile.Document != null && _xmlFile.Document.DocumentElement != null) {
 				var digestValueNode =
-					_xmlFile.Document.SelectSingleNode("//*[local-name()='ResultDataSignature']//*[local-name()='DigestValue']");
+					_xmlFile.Document.SelectSingleNode("//*[local-name()='ManufacturerRecordSignature']//*[local-name()='DigestValue']");
 				if (digestValueNode != null) {
 					manufacturerReportDigestValueRead = digestValueNode.InnerText;
 				}
 				var digestMethodNode =
 					_xmlFile.Document.SelectSingleNode(
-						"//*[local-name()='ResultDataSignature']//*[local-name()='DigestMethod']/@Algorithm");
+                        "//*[local-name()='ManufacturerRecordSignature']//*[local-name()='DigestMethod']/@Algorithm");
 				if (digestMethodNode != null) {
 					manufacturerReportDigestMethodRead = digestMethodNode.InnerText;
 				}
 
 				var c14NtMethodNodes =
-					_xmlFile.Document.SelectNodes("//*[local-name()='ResultDataSignature']//*[local-name()='Transform']/@Algorithm");
+					_xmlFile.Document.SelectNodes("//*[local-name()='ManufacturerRecordSignature']//*[local-name()='Transform']/@Algorithm");
 				if (c14NtMethodNodes != null) {
 					manufacturerReportCanonicalizationMethodRead = (from XmlNode node in c14NtMethodNodes select node.InnerText).ToArray();
 				}

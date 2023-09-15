@@ -237,10 +237,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// </summary>
 		[ModalResultField(typeof(SI), caption: "P_air [kW]", outputFactor: 1e-3)] P_air,
 
-		/// <summary>
-		///     [kW]	Power demand due to road gradient.
-		/// </summary>
-		[ModalResultField(typeof(SI), caption: "P_slope [kW]", outputFactor: 1e-3)] P_slope,
+		[ModalResultField(typeof(SI), caption: "CdxA_eff [m^2]")] EffectiveAirDragArea,
+
+        /// <summary>
+        ///     [kW]	Power demand due to road gradient.
+        /// </summary>
+        [ModalResultField(typeof(SI), caption: "P_slope [kW]", outputFactor: 1e-3)] P_slope,
 
 		/// <summary>
 		///     [kW]	Total power demand at wheel = sum of rolling, air, acceleration and road gradient resistance.
@@ -361,7 +363,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// </summary>
 		[ModalResultField(typeof(SI), "altitude [m]")] altitude,
 
-		[ModalResultField(typeof(SI), name: "ds [m]")] simulationDistance,
+		[ModalResultField(typeof(int), "highway [-]")] Highway,
+
+        [ModalResultField(typeof(SI), name: "ds [m]")] simulationDistance,
 
 		[ModalResultField(typeof(DrivingBehavior))] drivingBehavior,
 

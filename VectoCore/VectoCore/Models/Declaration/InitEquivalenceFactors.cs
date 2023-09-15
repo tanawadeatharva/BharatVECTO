@@ -196,7 +196,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			private Tuple<double, double> SplitStringToDoubleTuple(string input)
             {
                 var arr = input.Split('/');
-                return input.IsNullOrEmpty() ? Tuple.Create(0.0, 0.0) : Tuple.Create(Convert.ToDouble(arr[0]), Convert.ToDouble(arr[1]));
+                return input.IsNullOrEmpty() ? Tuple.Create(0.0, 0.0) : Tuple.Create(arr[0].ToDouble(), arr[1].ToDouble());
             }
         }
 
@@ -241,7 +241,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			private Tuple<double, double> SplitStringToDoubleTuple(string input)
 			{
 				var arr = input.Split('/');
-				return input.IsNullOrEmpty() ? Tuple.Create(0.0, 0.0) : Tuple.Create(Convert.ToDouble(arr[0]), Convert.ToDouble(arr[1]));
+				return input.IsNullOrEmpty() ? Tuple.Create(0.0, 0.0) : Tuple.Create(arr[0].ToDouble(), arr[1].ToDouble());
 			}
 			#endregion
         }

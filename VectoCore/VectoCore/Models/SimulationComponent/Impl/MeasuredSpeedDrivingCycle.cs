@@ -526,7 +526,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.v_targ] = CycleIterator.LeftSample.VehicleTargetSpeed;
 			container[ModalResultField.grad] = CycleIterator.LeftSample.RoadGradientPercent;
 			container[ModalResultField.altitude] = CycleIterator.LeftSample.Altitude;
-			container[ModalResultField.acc] = CurrentState.Acceleration;
+			container[ModalResultField.Highway] = CycleIterator.LeftSample.Highway ? 1 : 0;
+            container[ModalResultField.acc] = CurrentState.Acceleration;
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
@@ -586,7 +587,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public SpeedChangeEntry LastTargetspeedChange => null;
 
-		public void FinishSimulation() => Data.Finish();
+        public void FinishSimulation() => Data.Finish();
 
 		public DrivingBehavior DriverBehavior { get; internal set; } = DrivingBehavior.Driving;
 

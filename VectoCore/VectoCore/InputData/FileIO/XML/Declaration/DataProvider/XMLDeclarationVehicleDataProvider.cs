@@ -177,6 +177,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				: (TankSystem?)null;
 
 		public virtual IAdvancedDriverAssistantSystemDeclarationInputData ADAS => ADASReader.ADASInputData;
+		public IVehicleInMotionChargingDeclaration InMotionCharging => new XMLIMCData();
 
 		public virtual bool ZeroEmissionVehicle => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ZeroEmissionVehicle));
 
@@ -248,6 +249,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
+
+		#endregion
+	}
+
+	public class XMLIMCData : IVehicleInMotionChargingDeclaration
+	{
+		#region Implementation of IVehicleInMotionChargingDeclaration
+
+		public IMCTechnology Technology => IMCTechnology.None;
 
 		#endregion
 	}
@@ -509,7 +519,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		public virtual AngledriveType AngledriveType => GetString(XMLNames.Vehicle_AngledriveType).ParseEnum<AngledriveType>();
 
-		
+
+		public IVehicleInMotionChargingDeclaration InMotionCharging => new XMLIMCData();
 		public virtual bool ZeroEmissionVehicle => GetBool(XMLNames.Vehicle_ZeroEmissionVehicle);
 
 		

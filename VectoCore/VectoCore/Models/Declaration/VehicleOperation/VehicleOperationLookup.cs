@@ -19,6 +19,8 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 
 		private RealWorldUsageFactors _realWorldUsageFactors = new RealWorldUsageFactors();
 
+		private ShareInMotionChargingInfrastructureLookup _inMotionChargingShare = new ShareInMotionChargingInfrastructureLookup();
+
 
 		public VehicleOperationData LookupVehicleOperation(VehicleClass hdvClass, MissionType mission)
 		{
@@ -28,6 +30,7 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 				StationaryChargingDuringMission_AvgDurationPerEvent = _chargingDurationLookup.Lookup(hdvClass, mission),
 				StationaryChargingDuringMission_NbrEvents = _numberOfChargingEventsLookup.Lookup(hdvClass, mission),
 				RealWorldUsageFactors = _realWorldUsageFactors.Lookup(hdvClass),
+				ShareInMotionCharging = _inMotionChargingShare.Lookup(hdvClass, mission),
 			};
 		}
 
@@ -43,6 +46,7 @@ namespace TUGraz.VectoCore.Models.Declaration.VehicleOperation
 
 			public RealWorldUsageFactors.Entry RealWorldUsageFactors { get; internal set; }
 
+			public ShareInMotionChargingInfrastructureLookup.Entry ShareInMotionCharging { get; internal set; }
 		}
 	}
 }

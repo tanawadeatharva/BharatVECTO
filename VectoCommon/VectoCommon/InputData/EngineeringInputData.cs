@@ -241,10 +241,12 @@ namespace TUGraz.VectoCommon.InputData
 		
 		double InitialSOC { get; }
 
-		// input parameters for road sweeper use case
+		new IVehicleInMotionChargingEngineering InMotionCharging { get; }
+
+        // input parameters for road sweeper use case
 
 
-		VectoSimulationJobType VehicleType { get; }
+        VectoSimulationJobType VehicleType { get; }
 		GearshiftPosition PTO_DriveGear { get; }
 
 		PerSecond PTO_DriveEngineSpeed { get; }
@@ -255,6 +257,13 @@ namespace TUGraz.VectoCommon.InputData
 		DataSource DataSource { get; }
 	}
 
+	public interface IVehicleInMotionChargingEngineering : IVehicleInMotionChargingDeclaration
+    {
+		bool Enabled { get; }
+		double ShareIMCAvailabilityTotalMission { get; }
+		SquareMeter DeltaCdxA { get; }
+		bool IMCOnMotorwayOnly { get; }
+    }
 
 	public interface IVehicleComponentsEngineering
 	{

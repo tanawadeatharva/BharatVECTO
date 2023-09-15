@@ -186,8 +186,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public Watt MaxChargingPower { get; internal set; }
 
-		[JsonIgnore]
+		public bool InMotionCharging { get; internal set; }
+
+		public IMCTechnology InMotionChargingTechnology { get; internal set; }
+
+        [JsonIgnore]
 		public IIterativeRunStrategy IterativeRunStrategy { get; internal set; } = new DefaultIterativeStrategy();
+
 
 		[DebuggerDisplay("{ID}: {PowerDemandMech}/{PowerDemandElectric}")]
 		public class AuxData

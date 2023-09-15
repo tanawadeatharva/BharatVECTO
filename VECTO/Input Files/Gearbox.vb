@@ -873,7 +873,10 @@ Public Class MockEngineeringVehicle
     Public Property ADAS As IAdvancedDriverAssistantSystemDeclarationInputData _
         Implements IVehicleDeclarationInputData.ADAS
 
+    Public ReadOnly Property IVehicleDeclarationInputData_InMotionCharging As IVehicleInMotionChargingDeclaration Implements IVehicleDeclarationInputData.InMotionCharging
+
     Public ReadOnly Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
+    Public ReadOnly Property InMotionCharging As IVehicleInMotionChargingEngineering Implements IVehicleEngineeringInputData.InMotionCharging
     Public Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
     Public ReadOnly Property PTO_DriveGear As GearshiftPosition Implements IVehicleEngineeringInputData.PTO_DriveGear
     Public ReadOnly Property PTO_DriveEngineSpeed As PerSecond Implements IVehicleEngineeringInputData.PTO_DriveEngineSpeed

@@ -57,8 +57,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                 ? DeclarationData.VTPMode.SelectedMissionLowFloorBus
                 : DeclarationData.VTPMode.SelectedMissionHighFloorBus;
             AirdragData = DataAdapter.CreateAirdragData(
-                vehicle.Components.AirdragInputData,
-                Segment.Missions.First(), Segment);
+                vehicle.Components.AirdragInputData, vehicle.InMotionCharging,
+                Segment.Missions.First(), Segment, 0);
             EngineData = DataAdapter.CreateEngineData(
                 vehicle, vehicle.Components.EngineInputData.EngineModes.First(),
                 new Mission() { MissionType = vtpMission });
@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             GearboxData = DataAdapter.CreateGearboxData(
                 vehicle, new VectoRunData() { EngineData = EngineData, AxleGearData = AxlegearData, VehicleData = tempVehicle },
                 null);
-            RetarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData);
+            RetarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData, vehicle.ArchitectureID, vehicle.Components.IEPC);
 
             //PTOTransmissionData =
             //    DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
