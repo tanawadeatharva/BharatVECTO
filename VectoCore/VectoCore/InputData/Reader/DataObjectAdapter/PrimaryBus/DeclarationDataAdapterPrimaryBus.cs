@@ -59,9 +59,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 					loading.Value.Item2, allowVocational);
 			}
 
-			public virtual AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment)
+			public virtual AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, IVehicleInMotionChargingDeclaration imcData, Mission mission, Segment segment, double cycleShareDistanceHighway)
 			{
-				return _airdragDataAdapter.CreateAirdragData(airdragData, mission, segment);
+				return _airdragDataAdapter.CreateAirdragData(airdragData, imcData, mission, segment, cycleShareDistanceHighway);
 			}
 
 			public abstract void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,

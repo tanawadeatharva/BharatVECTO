@@ -232,7 +232,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						GearshiftParameters = gearshiftParams,
 						ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData
 							.Auxiliaries.ElectricPowerDemand,
-					};
+						InMotionCharging = vehicle.InMotionCharging.Enabled,
+						InMotionChargingTechnology = IMCTechnology.NotApplicable,
+
+                    };
 				}
 			}
 		
@@ -340,6 +343,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel,
 					GearshiftParameters = gearshiftParams,
 					ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand,
+					InMotionCharging = vehicle.InMotionCharging.Enabled,
+					InMotionChargingTechnology = IMCTechnology.NotApplicable,
 				};
 			}
 		}
@@ -498,7 +503,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				GearshiftParameters = gearshiftParams,
 				ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries
 					.ElectricPowerDemand,
-			};
+				InMotionCharging = vehicle.InMotionCharging.Enabled,
+				InMotionChargingTechnology = IMCTechnology.NotApplicable,
+
+            };
 		}
 
 
@@ -600,6 +608,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 						//ElectricMachinesData = electricMachines,
 						//HybridStrategyParameters = hybridParameters,
+						InMotionCharging = false, // vehicle.InMotionCharging.Enabled,
+						InMotionChargingTechnology = IMCTechnology.NotApplicable,
 						BatteryData = battery,
 						SuperCapData = superCap,
 						SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle |

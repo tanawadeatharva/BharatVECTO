@@ -670,33 +670,41 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
     {
 		public JSONInMotionChargingInputData(JSONVehicleDataV7 jsonFile) : base(jsonFile) { }
 
-		public bool Enabled
-		{
-			get => Body["InMotionCharging"]?.GetEx<bool>("IMC_Enabled") ?? false;  
-			set => throw new NotImplementedException();
-		}
+		public bool Enabled => (Body["InMotionCharging"]?["IMC_Enabled"] != null) && Body["InMotionCharging"].GetEx<bool>("IMC_Enabled");
 
-		public double ShareIMCAvailabilityTotalMission
-		{
-			get => Body["InMotionCharging"]?.GetEx<double>("IMC_TotalDistance") / 100.0 ?? 0; 
-			set => throw new NotImplementedException();
-		}
+		public double ShareIMCAvailabilityTotalMission => Body["InMotionCharging"]?["IMC_TotalDistance"] != null ? Body["InMotionCharging"].GetEx<double>("IMC_TotalDistance") / 100.0 : 0;
 
-		public SquareMeter DeltaCdxA
-		{
-			get => Body["InMotionCharging"]?.GetEx<double>("IMC_CdxA").SI<SquareMeter>() ?? 0.SI<SquareMeter>();
-			set => throw new NotImplementedException();
-		}
+		public SquareMeter DeltaCdxA => Body["InMotionCharging"]?["IMC_CdxA"] != null ? Body["InMotionCharging"].GetEx<double>("IMC_CdxA").SI<SquareMeter>() : 0.SI<SquareMeter>();
 
-		public bool IMCOnMotorwayOnly
-		{
-			get => Body["InMotionCharging"]?.GetEx<bool>("IMC_MotorwaySection") ?? false; 
-			set => throw new NotImplementedException();
-		}
+		public bool IMCOnMotorwayOnly => Body["InMotionCharging"]?["IMC_MotorwaySection"] != null && Body["InMotionCharging"].GetEx<bool>("IMC_MotorwaySection");
 
 
-		
-}
+		#region Implementation of IVehicleInMotionChargingDeclaration
+
+		public IMCTechnology Technology => Body["InMotionCharging"]?["Technology"] != null
+			? Body["InMotionCharging"].GetEx<string>("Technology").ParseEnum<IMCTechnology>()
+			: IMCTechnology.NotApplicable;
+
+		#endregion
+	}
+
+	public class JSONInMotionChargingNotApplicable : IVehicleInMotionChargingEngineering
+    {
+		#region Implementation of IVehicleInMotionChargingDeclaration
+
+		public IMCTechnology Technology => Technology;
+
+		#endregion
+
+		#region Implementation of IVehicleInMotionChargingEngineering
+
+		public bool Enabled => false;
+		public double ShareIMCAvailabilityTotalMission => 0.0;
+		public SquareMeter DeltaCdxA => 0.0.SI<SquareMeter>();
+		public bool IMCOnMotorwayOnly => false;
+
+		#endregion
+	}
 
 
 }

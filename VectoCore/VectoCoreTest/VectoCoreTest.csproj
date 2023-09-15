@@ -81,6 +81,7 @@
     <Folder Include="InputData\DeclarationDataAdapterTest\" />
     <Folder Include="Integration\Declaration\PrimaryBus\" />
     <Folder Include="Models\Declaration\BusAux\" />
+    <Folder Include="TestData\IMC\Declaration\" />
     <Folder Include="TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\CompletedBus\VIF\" />
   </ItemGroup>
 

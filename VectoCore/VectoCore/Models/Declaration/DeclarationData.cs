@@ -100,8 +100,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly SteeringPumpBus SteeringPumpBus = new SteeringPumpBus();
 		public static readonly WHTCCorrection WHTCCorrection = new WHTCCorrection();
 		public static readonly AirDrag AirDrag = new AirDrag();
-		public static readonly SquareMeter DeltaCdxAIMC = 0.0.SI<SquareMeter>();
-		public static readonly SquareMeter DeltaCdxAIMCHighway = 0.0.SI<SquareMeter>();
 
         public static readonly StandardBodies StandardBodies = new StandardBodies();
 		public static readonly Conditioning Conditioning = new Conditioning();
@@ -113,6 +111,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		//public static readonly HEVStrategyParameters InitEquivalenceFactorsBus = new HEVStrategyParametersBus();
 
 		public static readonly VehicleOperationLookup VehicleOperation = new VehicleOperationLookup();
+
+		public static readonly IMCTechnologyLookup ImcTechnology = new IMCTechnologyLookup();
 
 		public static readonly double ElectricMachineDefaultMechanicalTransmissionEfficiency = 1;
 		//public static MeterPerSecond CycleSpeedLimit;
@@ -1663,7 +1663,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var D22_stationaryChargingDuringMission_NbrEvents = vehicleOperation.StationaryChargingDuringMission_NbrEvents;
 			var D23_realWorldFactorUsageStartSoC = vehicleOperation.RealWorldUsageFactors.StartSoCBeforeMission;
 			var D24_realWorldFactorChargeDuringMission = 0.0; // vehicleOperation.RealWorldUsageFactors.StationaryChargingDuringMission;
-			var D25_shareOfDistanceWithInMotionCharging = GetShareIMCInfrastructure(cdResult.VectoRunData, vehicleOperation);
+			var D25_shareOfDistanceWithInMotionCharging = GetShareIMCInfrastructure(cdResult.VectoRunData.InMotionChargingTechnology, vehicleOperation);
 			var D26_realWorldFactorInMotionChargingDuringMission = vehicleOperation.RealWorldUsageFactors.InMotionChargingDuringMission;
 
             var D9_maxStatChargingPower = cdResult.MaxChargingPower;
@@ -2153,7 +2153,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var D16_dailySpecificMileage = vehicleOperation.Mileage.DailyMileage;
 			var D17_RealWorldFactorUsageStartSoC = vehicleOperation.RealWorldUsageFactors.StartSoCBeforeMission;
-			var D18_shareInMotionChargingInfrastructure = GetShareIMCInfrastructure(runData, vehicleOperation);
+			var D18_shareInMotionChargingInfrastructure = GetShareIMCInfrastructure(runData.InMotionChargingTechnology, vehicleOperation);
 			var D19_realWorkdFactorInMotionChargingDuringMission =
 				vehicleOperation.RealWorldUsageFactors.InMotionChargingDuringMission;
 
@@ -2183,10 +2183,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return retVal;
 		}
 
-		private static double GetShareIMCInfrastructure(VectoRunData runData,
+		public static double GetShareIMCInfrastructure(IMCTechnology imcTech,
 			VehicleOperationLookup.VehicleOperationData vehicleOperationData)
 		{
-			switch (runData.InMotionChargingTechnology) {
+			switch (imcTech) {
 				case IMCTechnology.NotApplicable:
 					return double.NaN;
 				case IMCTechnology.OverheadPantograph:
@@ -2217,5 +2217,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public double EtaChargingInMotion { get; set; }
 			public double EtaChargingWeighted { get; set; }
 		}
-}
+
+		public static bool ApplyIMCOnHighwayOnly(IVehicleInMotionChargingDeclaration imcData, VehicleClass vehicleClass)
+		{
+			if (imcData.Technology == IMCTechnology.OverheadPantograph && vehicleClass.IsHeavyLorry()) {
+				return true;
+			}
+
+			return false;
+		}
+	}
 }

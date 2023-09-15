@@ -91,7 +91,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					VehicleDesignSpeed = segment.DesignSpeed,
 					InputDataHash = InputDataProvider.XMLHash,
 					MaxChargingPower = InputDataProvider.JobInputData.Vehicle.MaxChargingPower,
-				};
+					InMotionCharging = !vehicle.InMotionCharging.Technology.IsOneOf(IMCTechnology.None, IMCTechnology.NotApplicable),
+					InMotionChargingTechnology = vehicle.InMotionCharging.Technology,
+
+                };
 
 				return simulationRunData;
 			}
@@ -253,7 +256,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				DataAdapter.CreateVehicleData(Vehicle, _segment, mission, loading, _allowVocational);
 
 				simulationRunData.AirdragData =
-					DataAdapter.CreateAirdragData(Vehicle.Components.AirdragInputData, mission, _segment);
+					DataAdapter.CreateAirdragData(Vehicle.Components.AirdragInputData, Vehicle.InMotionCharging, mission, _segment, simulationRunData.Cycle.ShareDistanceHighway);
 
 				simulationRunData.EngineData =
 					DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode,
@@ -372,7 +375,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			{
 				var result = CreateCommonRunData(Vehicle, mission, loading, _segment);
 				result.AirdragData =
-					DataAdapter.CreateAirdragData(Vehicle.Components.AirdragInputData, mission, _segment);
+					DataAdapter.CreateAirdragData(Vehicle.Components.AirdragInputData, Vehicle.InMotionCharging, mission, _segment, result.Cycle.ShareDistanceHighway);
 				result.DriverData = DriverData;
 
 				DataAdapter.CreateREESSData(
@@ -449,7 +452,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
 			{
-				if (inputData.Components.AngledriveInputData != null)
+				if (inputData.Components.AngledriveInputData != null && inputData.Components.AngledriveInputData.Type != AngledriveType.None)
 				{
 					throw new VectoException("Angledrive not allowed in pure electric vehicles");
 				}

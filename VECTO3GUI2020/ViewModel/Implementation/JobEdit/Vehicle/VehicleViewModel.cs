@@ -252,6 +252,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 			set => throw new NotImplementedException();
 		}
 
+		public IVehicleInMotionChargingDeclaration InMotionCharging { get; }
+
 		public virtual bool ZeroEmissionVehicle
 		{
 			get => throw new NotImplementedException();

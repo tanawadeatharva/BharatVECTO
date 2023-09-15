@@ -278,6 +278,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool? AirdragModifiedMultistep { get; }
 		public TankSystem? TankSystem { get; }
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; }
+		public IVehicleInMotionChargingDeclaration InMotionCharging { get; }
 		public bool ZeroEmissionVehicle { get; }
 		public bool HybridElectricHDV { get; }
 		public bool DualFuelVehicle { get; }

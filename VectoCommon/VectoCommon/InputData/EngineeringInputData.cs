@@ -241,7 +241,7 @@ namespace TUGraz.VectoCommon.InputData
 		
 		double InitialSOC { get; }
 
-		IVehicleInMotionChargingEngineering InMotionCharging { get; }
+		new IVehicleInMotionChargingEngineering InMotionCharging { get; }
 
         // input parameters for road sweeper use case
 
@@ -257,12 +257,12 @@ namespace TUGraz.VectoCommon.InputData
 		DataSource DataSource { get; }
 	}
 
-	public interface IVehicleInMotionChargingEngineering
-	{
-		bool Enabled { get; set; }
-		double ShareIMCAvailabilityTotalMission { get; set; }
-		SquareMeter DeltaCdxA { get; set; }
-		bool IMCOnMotorwayOnly { get; set; }
+	public interface IVehicleInMotionChargingEngineering : IVehicleInMotionChargingDeclaration
+    {
+		bool Enabled { get; }
+		double ShareIMCAvailabilityTotalMission { get; }
+		SquareMeter DeltaCdxA { get; }
+		bool IMCOnMotorwayOnly { get; }
     }
 
 	public interface IVehicleComponentsEngineering

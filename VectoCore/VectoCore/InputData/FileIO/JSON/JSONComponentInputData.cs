@@ -276,9 +276,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public PerSecond PTO_DriveEngineSpeed => VehicleData.PTO_DriveEngineSpeed;
 
 		public double InitialSOC => VehicleData.InitialSOC;
-		public IVehicleInMotionChargingEngineering InMotionCharging { get; }
 
-		public VectoSimulationJobType VehicleType => VehicleData.VehicleType;
+		public IVehicleInMotionChargingEngineering InMotionCharging { get; }
+		IVehicleInMotionChargingDeclaration IVehicleDeclarationInputData.InMotionCharging => InMotionCharging;
+
+        public VectoSimulationJobType VehicleType => VehicleData.VehicleType;
 
 		public IAirdragEngineeringInputData AirdragInputData => AirdragData;
 

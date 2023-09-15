@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 				runData.DriverData = DriverData;
 				runData.AirdragData =
-					DataAdapter.CreateAirdragData(Vehicle.Components.AirdragInputData, mission, _segment);
+					DataAdapter.CreateAirdragData(Vehicle.Components.AirdragInputData, Vehicle.InMotionCharging, mission, _segment, runData.Cycle.ShareDistanceHighway);
 				runData.VehicleData = DataAdapter.CreateVehicleData(Vehicle, _segment, mission, loading, _allowVocational);
 
 
@@ -187,9 +187,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
             #endregion
 			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
 			{
-				if (inputData.Components.AngledriveInputData != null)
+				if (inputData.Components.AngledriveInputData != null && inputData.Components.AngledriveInputData.Type != AngledriveType.None)
 				{
-					throw new VectoException("Angledrive not allowed in pure electric vehicles");
+					throw new VectoException("Angledrive not allowed in serial hybrid vehicles");
 				}
 			}
         }
@@ -215,7 +215,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				runData.DriverData = DriverData;
 
 				runData.AirdragData =
-					DataAdapter.CreateAirdragData(Vehicle.Components.AirdragInputData, mission, _segment);
+					DataAdapter.CreateAirdragData(Vehicle.Components.AirdragInputData, Vehicle.InMotionCharging, mission, _segment, runData.Cycle.ShareDistanceHighway);
 				runData.VehicleData = DataAdapter.CreateVehicleData(Vehicle, _segment, mission, loading, _allowVocational);
 
 				runData.EngineData = DataAdapter.CreateEngineData(Vehicle, engineMode, mission);

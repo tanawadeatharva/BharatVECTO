@@ -120,6 +120,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 				: (TankSystem?)null;
 
 
+		IVehicleInMotionChargingDeclaration IVehicleDeclarationInputData.InMotionCharging => InMotionCharging;
+
 		public bool ZeroEmissionVehicle => false;
 
 		public bool HybridElectricHDV => false;
