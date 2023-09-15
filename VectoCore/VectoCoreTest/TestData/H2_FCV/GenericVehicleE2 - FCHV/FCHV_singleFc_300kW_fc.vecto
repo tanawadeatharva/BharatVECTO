@@ -7,7 +7,7 @@
   },
   "Body": {
     "SavedInDeclMode": false,
-    "VehicleFile": "FCHV_singleFc_smallBat.vveh",
+    "VehicleFile": "FCHV_singleFc_300kW_fc.vveh",
     "GearboxFile": "AMT.vgbx",
     "TCU": "AMT.vgbx",
     "Padd_electric": 2.5,
@@ -41,7 +41,6 @@
       "OverSpeed": 5.0
     },
     "Cycles": [
-      "../../Cycles/LongHaul_short.vdri",
       "LongHaul",
       "RegionalDelivery",
       "UrbanDelivery"

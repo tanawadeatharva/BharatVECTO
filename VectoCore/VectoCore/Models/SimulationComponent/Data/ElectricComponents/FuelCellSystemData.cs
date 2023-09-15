@@ -116,8 +116,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		}
 
 		public FuelCellPowerMap(FuelCellPreRunPostprocessor.FCCalcEntry[] entries) : this(entries.Select(e => new FuelCellPowerMapEntry() {
-				Distance = e.Distance,
-				Power = e.P_FC_corr,
+				Distance = e.s,
+				Power = e.FCPowerFinal,
 			}).ToArray())
 		{
 

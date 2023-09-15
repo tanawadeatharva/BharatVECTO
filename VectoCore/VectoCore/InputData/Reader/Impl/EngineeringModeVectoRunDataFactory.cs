@@ -52,6 +52,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Batter
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
@@ -63,6 +64,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		private static readonly Dictionary<string, Tuple<DrivingCycleData, DateTime>> CyclesCache = new Dictionary<string, Tuple<DrivingCycleData, DateTime>>();
 
 		protected readonly IEngineeringInputDataProvider InputDataProvider;
+
+		/// <summary>
+		/// Used only for debug output
+		/// </summary>
+		public IOutputDataWriter Writer { get; set; }
 
 		internal EngineeringModeVectoRunDataFactory(IEngineeringInputDataProvider dataProvider)
 		{
@@ -99,7 +105,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		private IEnumerable<VectoRunData> GetFCHV_RunData()
 		{
-			var dao = new EngineeringDataAdapter();
+			var dao = new EngineeringDataAdapter() {
+				DebugOutputDataWriter = Writer,
+			};
+
+
 			foreach (var pevRd in GetBatteryElectricVehicleRunData()) {
 
 				var iterativeRunStrategy = new FCHEVIterativeRunStrategy();

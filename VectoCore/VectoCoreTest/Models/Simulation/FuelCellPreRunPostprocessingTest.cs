@@ -5,6 +5,7 @@ using Microsoft.VisualBasic.FileIO;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
@@ -32,6 +33,7 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils.RunDataHelper;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell;
+using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation;
 
@@ -112,9 +114,9 @@ public class FuelCellPreRunPostprocessingT
 				var sum = 0.0;
 				for (; !gIt.WindowEndReached; gIt.NextEntry())
 				{
-					sum += entries[gIt.Current].v_act.AsKmph;
+					sum += entries[gIt.CurrentIndex].v_act.AsKmph;
 				}
-				TestContext.Progress.WriteLine($"{gIt.Position}, {gIt.Current}: {gIt.Start} - {gIt.End}: {sum}");
+				TestContext.Progress.WriteLine($"{gIt.Position}, {gIt.CurrentIndex}: {gIt.Start} - {gIt.End}: {sum}");
 				TestContext.Progress.WriteLine($"    {entries[gIt.Position].dist}, " +
 												$"{entries[gIt.Start].dist} - " +
 												$"{entries[gIt.End].dist}: {sum}");
@@ -282,6 +284,20 @@ public class FuelCellPreRunPostprocessingT
 	}
 
 
+
+
+	[Test]
+	public void GetFuelCellRaw([Range(1, 1000)]double windowSize_m)
+	{
+
+
+
+
+	}
+
+
+
+
 	//[TestCase(0)]
 	[TestCase(1, true)]
 	[TestCase(1, false)]
@@ -353,59 +369,8 @@ public class FuelCellPreRunPostprocessingT
 			}
 		};
 
-		fcPostProcessor.CalculateFuelCellPowerDemandForWindowSize(distance.SI<Meter>(), fcData, rundata.BatteryData, out _, out _);
+		fcPostProcessor.CalculateFuelCellPowerDemandForWindowSize(distance.SI<Meter>(), fcData, rundata.BatteryData, out _);
 	}
-
-
-	[TestCase()]
-	public void Calculate_Delta_FuelCell(double deltaEnergyBatInt_Ws, double remainingTime_s, double minFcPower_kW, double maxFcPower_kW, double p_Fc_w, bool canChangeFCPower, double pBatLoss_w, double P_el_dem_w)
-	{
-		FuelCellPreRunPostprocessor.FCCalcEntry entry = new FuelCellPreRunPostprocessor.FCCalcEntry() {
-			CanChangeFCPower = canChangeFCPower,
-			P_Bat_loss = pBatLoss_w.SI<Watt>(),
-			P_FC = p_Fc_w.SI<Watt>(),
-			P_el_dem = P_el_dem_w.SI<Watt>()
-		};
-		WattSecond deltaEnergyBatInt = deltaEnergyBatInt_Ws.SI<WattSecond>();
-		Second remainingTime = remainingTime_s.SI<Second>();
-		Watt maxFcPower = maxFcPower_kW.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
-		Watt minFcPower = minFcPower_kW.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
-
-
-
-
-
-
-
-
-
-        Watt batChangeTarget = entry.CanChangeFCPower ? -deltaEnergyBatInt / remainingTime : 0.SI<Watt>();
-
-		var fcChangeTarget = batChangeTarget * (1 - entry.P_Bat_loss / entry.P_Bat_T);
-
-
-		var fcChange_actual = fcChangeTarget
-							- VectoMath.Max(fcChangeTarget - maxFcPower, 0.SI<Watt>())
-							- VectoMath.Min(fcChangeTarget - minFcPower, 0.SI<Watt>());
-
-		var fcPower = entry.P_FC;
-
-		var fcPower_actual = fcPower + fcChange_actual / (1 - entry.P_Bat_loss / entry.P_Bat_T);
-
-		deltaEnergyBatInt += fcChange_actual * entry.dt;
-		remainingTime -= entry.dt;
-
-
-
-		entry.delta_P_FCS = fcChange_actual;
-		entry.FCPowerFinal = fcPower_actual;
-		if (!entry.FCPowerFinal.IsBetween(minFcPower, maxFcPower))
-		{
-
-			//WriteEntriesToFile(windowSize, fcCalcEntries, initSoc, deltaEnergyBatInt, timeFcCanChange);
-			//throw new VectoException("Fuel cell limits violated");
-		}
-    }
 
 
 
@@ -520,6 +485,24 @@ public class FuelCellPreRunPostprocessingT
 		modData.Data = modDataData;
 		return (modData, run.GetContainer().RunData);
 	}
+
+
+	//[TestCase]
+	//public void TestWindowSizes()
+	//{
+	//	//var modaldataMock = new Mock<IModalDataContainer>(behavior:MockBehavior.Strict);
+	//	//modaldataMock.SetupGet(m => m.Data).Returns(() => null);
+	//	//MockModalDataContainer
+	//	FuelCellPreRunPostprocessor.FcCalcEntries(windowSize, minFcPower, maxFcPower, new BatterySystem()
+			
+			
+			
+			
+	//		)
+
+
+	//}
+
 
 
 

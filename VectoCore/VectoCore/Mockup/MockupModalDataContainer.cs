@@ -305,6 +305,11 @@ namespace TUGraz.VectoMockup
 		}
 
 		public ICorrectedModalData CorrectedModalData => _modalDataContainerImplementation.CorrectedModalData;
+
+		public ModalResults Data => throw new NotImplementedException();
+
+		public string RunName => throw new NotImplementedException();
+
 		public void RegisterComponent(VectoSimulationComponent component)
 		{
 			throw new NotImplementedException();

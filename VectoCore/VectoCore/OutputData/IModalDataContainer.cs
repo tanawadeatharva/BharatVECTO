@@ -147,7 +147,9 @@ namespace TUGraz.VectoCore.OutputData
 		WattSecond ElectricMotorLosses(PowertrainPosition emPos);
 		WattSecond ElectricMotorMotLosses(PowertrainPosition emPos);
 		WattSecond ElectricMotorTransmissionLosses(PowertrainPosition emPos);
-		ICorrectedModalData CorrectedModalData { get; }
+		ICorrectedModalData CorrectedModalData { get; } 
+		ModalResults Data { get; }
+		string RunName { get; }
 		void RegisterComponent(VectoSimulationComponent component);
 		bool ContainsColumn(string modalResultField);
 	}

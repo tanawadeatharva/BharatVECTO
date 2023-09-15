@@ -305,10 +305,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var electricSupplyResponse =
 				ElectricPower.Request(absTime, dt, electricPower, dryRun);
-			//if (!dryRun && !DataBus.IsTestPowertrain && BatteryElectricPowertrain && electricSupplyResponse is ElectricSystemUnderloadResponse) {
-			//	return new ResponseBatteryEmpty(this, electricSupplyResponse);
-			//}
-			if (NextComponent != null && !dryRun && !DataBus.IsTestPowertrain && !emOff && !(electricSupplyResponse is ElectricSystemResponseSuccess)) {
+
+			if (!dryRun && !DataBus.IsTestPowertrain && !emOff && !(electricSupplyResponse is ElectricSystemResponseSuccess))
+			{
+				
+			}
+
+
+            if (NextComponent != null && !dryRun && !DataBus.IsTestPowertrain && !emOff && !(electricSupplyResponse is ElectricSystemResponseSuccess)) {
 				if ( !avgEmSpeed.IsEqual(DataBus.HybridControllerInfo.ElectricMotorSpeed(Position) / ModelData.RatioADC)) {
 					return new ResponseInvalidOperatingPoint(this) {
 						ElectricMotor = {

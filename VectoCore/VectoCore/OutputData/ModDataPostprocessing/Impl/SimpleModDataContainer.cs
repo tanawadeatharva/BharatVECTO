@@ -232,6 +232,11 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 		}
 
 		public ICorrectedModalData CorrectedModalData { get; }
+
+		public ModalResults Data => throw new NotImplementedException();
+
+		public string RunName => throw new NotImplementedException();
+
 		public Watt P_REES_int
 		{
 			get { return (Watt)_data[GetColumnName(ModalResultField.P_reess_int)]; }

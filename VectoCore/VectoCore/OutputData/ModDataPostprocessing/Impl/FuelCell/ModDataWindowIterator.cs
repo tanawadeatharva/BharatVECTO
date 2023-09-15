@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -11,17 +12,15 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 {
-	//public class WindowIterator<TIterable, TCollection, TOut>
+	//public class Window<TEntry>
 	//{
-	//	public WindowIterator<TIterable,TCollection, TOut>(TIterable windowSize)
+	//	public IEnumerable<TEntry> Entries
+	//	{
+	//		get
+	//		{
 
-
-
-
-
-
-
-
+	//		}
+	//	}
 	//}
 
 	/// <summary>
@@ -29,8 +28,12 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 	/// </summary>
 	/// <typeparam name="TEntry"></typeparam>
 	/// <typeparam name="TIterable">Type of variable to iterate over</typeparam>
-	public class GeneralizedModDataWindowIterator<TEntry, TIterable> where TIterable : SIBase<TIterable> 
+	public class GeneralizedModDataWindowIterator<TEntry, TIterable> // : IEnumerator<Window<TEntry>>
+		where TIterable : SIBase<TIterable>
 	{
+
+
+
 		/// <summary>
 		/// TODO: update this class with generic math (.net 6)
 		/// </summary>
@@ -49,7 +52,36 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 		protected internal int Start { get; protected set; }
 		protected internal int End { get; protected set; }
 		public bool WindowEndReached { get; protected set; }
-        public int Current { get; protected set; }
+
+
+		#region Implementation of IEnumerator
+		//bool IEnumerator.MoveNext()
+		//{
+		//	if (!EndReached) {
+		//		MoveNext();
+		//		return true;
+		//	}
+
+		//	return false;
+		//}
+
+		//public void Reset()
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		//Window<TEntry> IEnumerator<Window<TEntry>>.Current {
+		//	get
+		//	{
+
+		//	}
+		//}
+
+
+		#endregion
+
+
+		public int CurrentIndex { get; protected set; }
 		protected bool IsOnStart = true;
 
 		public bool EndReached { get; protected set; }
@@ -165,7 +197,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 				}
 			}
 
-			Current = Start;
+			CurrentIndex = Start;
 			WindowEndReached = false;
 		}
 
@@ -250,14 +282,22 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 			{
 				return;
 			}
-			Current = GetNextRow(Current);
-			if (Current == GetNextRow(End))
+			CurrentIndex = GetNextRow(CurrentIndex);
+			if (CurrentIndex == GetNextRow(End))
 			{
 				WindowEndReached = true;
 			}
 		}
 
-    }
+		#region Implementation of IDisposable
+
+		public void Dispose()
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
 
 
 

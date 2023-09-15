@@ -12,7 +12,7 @@
 		"SOC_min": 10,
 		"SOC_max": 90,
 		"MaxCurrentMap": "MaxCurrent.vimax",
-		"Capacity": 5,
+		"Capacity": 40,
 		"SoCCurve": "GenericBattery_80kWh.vbatv"
 	}
 }

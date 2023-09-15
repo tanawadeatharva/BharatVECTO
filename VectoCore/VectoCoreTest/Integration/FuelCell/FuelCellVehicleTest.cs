@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Moq;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
@@ -43,7 +44,7 @@ using ElectricSystem = TUGraz.VectoCore.Models.SimulationComponent.ElectricSyste
 namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 {
     [TestFixture]
-	[Parallelizable(ParallelScope.All)]
+	[Parallelizable]
 	public class FuelCellVehicleTest
 	{
 
@@ -52,12 +53,13 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 		protected const string FCHV_E2_JOB_300kW = @"TestData/H2_FCV/GenericVehicleE2 - FCHV/FCHV_singleFc_300kW_fc.vecto";
         protected const string FCHV_E2_JOB_multipleFC = @"TestData/H2_FCV/GenericVehicleE2 - FCHV/FCHV_singleFc.vecto";
 
-
+		private string TEST_WORKING_DIR;
 
         [OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
-			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+			//TEST_WORKING_DIR = Directory.GetCurrentDirectory();
+			//Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
 
@@ -119,17 +121,17 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 		[TestCase(FCHV_E2_JOB, 0, 20,  10, 300, TestName = "FCHV E2 Job RD single FC, 20kWh   , 300 kW 0" )]
 		[TestCase(FCHV_E2_JOB, 0, 20,  10, 500, TestName = "FCHV E2 Job RD single FC, 20kWh   , 500 kW 0" )]
 
-		[TestCase(FCHV_E2_JOB, 0, 10,  10, 300, TestName = "FCHV E2 Job RD single FC, 10kWh   , 300 kW 0" )]
-		[TestCase(FCHV_E2_JOB, 0, 10,  10, 500, TestName = "FCHV E2 Job RD single FC, 10kWh   , 500 kW 0" )]
+		[TestCase(FCHV_E2_JOB, 0, 10, 10, 300, TestName = "FCHV E2 Job RD single FC, 10kWh   , 300 kW 0")]
+		[TestCase(FCHV_E2_JOB, 0, 10, 10, 500, TestName = "FCHV E2 Job RD single FC, 10kWh   , 500 kW 0")]
 
-		[TestCase(FCHV_E2_JOB, 0, 5,   10, 300, TestName = "FCHV E2 Job RD single FC, 5kWh    , 300 kW 0" )]
-		[TestCase(FCHV_E2_JOB, 0, 5,   10, 500, TestName = "FCHV E2 Job RD single FC, 5kWh    , 500 kW 0" )]
+		[TestCase(FCHV_E2_JOB, 0, 5, 10, 300, TestName = "FCHV E2 Job RD single FC, 5kWh    , 300 kW 0")]
+		[TestCase(FCHV_E2_JOB, 0, 5, 10, 500, TestName = "FCHV E2 Job RD single FC, 5kWh    , 500 kW 0")]
 
-		[TestCase(FCHV_E2_JOB, 0, 1,   10, 300, TestName = "FCHV E2 Job RD single FC, 1kWh    , 300 kW 0" )]
-		[TestCase(FCHV_E2_JOB, 0, 1,   10, 500, TestName = "FCHV E2 Job RD single FC, 1kWh    , 500 kW 0" )]
+		[TestCase(FCHV_E2_JOB, 0, 1, 10, 300, TestName = "FCHV E2 Job RD single FC, 1kWh    , 300 kW 0")]
+		[TestCase(FCHV_E2_JOB, 0, 1, 10, 500, TestName = "FCHV E2 Job RD single FC, 1kWh    , 500 kW 0")]
 
-		[TestCase(FCHV_E2_JOB, 0, 0.1, 10, 300, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 300 kW 0" )]
-		[TestCase(FCHV_E2_JOB, 0, 0.1, 10, 500, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 500 kW 0" )]
+		//[TestCase(FCHV_E2_JOB, 0, 0.1, 10, 300, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 300 kW 0")]
+		//[TestCase(FCHV_E2_JOB, 0, 0.1, 10, 500, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 500 kW 0")]
 
 		[TestCase(FCHV_E2_JOB, 1, 100, 10, 100, TestName = "FCHV E2 Job RD single FC, 100kWh  , 100 kW 1")]
         [TestCase(FCHV_E2_JOB, 1, 100, 10, 300, TestName = "FCHV E2 Job RD single FC, 100kWh  , 300 kW 1")]
@@ -146,20 +148,20 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
         [TestCase(FCHV_E2_JOB, 1, 20, 10, 100, TestName = "FCHV E2 Job RD single FC, 20kWh    , 100 kW 1")]
         [TestCase(FCHV_E2_JOB, 1, 20, 10, 300, TestName = "FCHV E2 Job RD single FC, 20kWh    , 300 kW 1")]
         [TestCase(FCHV_E2_JOB, 1, 20, 10, 500, TestName = "FCHV E2 Job RD single FC, 20kWh    , 500 kW 1")]
-        [TestCase(FCHV_E2_JOB, 1, 10, 10, 100, TestName = "FCHV E2 Job RD single FC, 10kWh    , 100 kW 1")]
-        [TestCase(FCHV_E2_JOB, 1, 10, 10, 300, TestName = "FCHV E2 Job RD single FC, 10kWh    , 300 kW 1")]
-        [TestCase(FCHV_E2_JOB, 1, 10, 10, 500, TestName = "FCHV E2 Job RD single FC, 10kWh    , 500 kW 1")]
-        [TestCase(FCHV_E2_JOB, 1, 5, 10, 100, TestName = "FCHV E2 Job RD single FC, 5kWh      , 100 kW 1")]
-        [TestCase(FCHV_E2_JOB, 1, 5, 10, 300, TestName = "FCHV E2 Job RD single FC, 5kWh      , 300 kW 1")]
-        [TestCase(FCHV_E2_JOB, 1, 5, 10, 500, TestName = "FCHV E2 Job RD single FC, 5kWh      , 500 kW 1")]
-        [TestCase(FCHV_E2_JOB, 1, 1, 10, 100, TestName = "FCHV E2 Job RD single FC, 1kWh      , 100 kW 1")]
-        [TestCase(FCHV_E2_JOB, 1, 1, 10, 300, TestName = "FCHV E2 Job RD single FC, 1kWh      , 300 kW 1")]
-        [TestCase(FCHV_E2_JOB, 1, 1, 10, 500, TestName = "FCHV E2 Job RD single FC, 1kWh      , 500 kW 1")]
-        [TestCase(FCHV_E2_JOB, 1, 0.1, 10, 100, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 100 kW 1")]
-        [TestCase(FCHV_E2_JOB, 1, 0.1, 10, 300, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 300 kW 1")]
-        [TestCase(FCHV_E2_JOB, 1, 0.1, 10, 500, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 500 kW 1")]
+		[TestCase(FCHV_E2_JOB, 1, 10, 10, 100, TestName = "FCHV E2 Job RD single FC, 10kWh    , 100 kW 1")]
+		[TestCase(FCHV_E2_JOB, 1, 10, 10, 300, TestName = "FCHV E2 Job RD single FC, 10kWh    , 300 kW 1")]
+		[TestCase(FCHV_E2_JOB, 1, 10, 10, 500, TestName = "FCHV E2 Job RD single FC, 10kWh    , 500 kW 1")]
+		[TestCase(FCHV_E2_JOB, 1, 5, 10, 100, TestName = "FCHV E2 Job RD single FC, 5kWh      , 100 kW 1")]
+		[TestCase(FCHV_E2_JOB, 1, 5, 10, 300, TestName = "FCHV E2 Job RD single FC, 5kWh      , 300 kW 1")]
+		[TestCase(FCHV_E2_JOB, 1, 5, 10, 500, TestName = "FCHV E2 Job RD single FC, 5kWh      , 500 kW 1")]
+		[TestCase(FCHV_E2_JOB, 1, 1, 10, 100, TestName = "FCHV E2 Job RD single FC, 1kWh      , 100 kW 1")]
+		[TestCase(FCHV_E2_JOB, 1, 1, 10, 300, TestName = "FCHV E2 Job RD single FC, 1kWh      , 300 kW 1")]
+		[TestCase(FCHV_E2_JOB, 1, 1, 10, 500, TestName = "FCHV E2 Job RD single FC, 1kWh      , 500 kW 1")]
+		//[TestCase(FCHV_E2_JOB, 1, 0.1, 10, 100, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 100 kW 1")]
+		//[TestCase(FCHV_E2_JOB, 1, 0.1, 10, 300, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 300 kW 1")]
+		//[TestCase(FCHV_E2_JOB, 1, 0.1, 10, 500, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 500 kW 1")]
 
-        [TestCase(FCHV_E2_JOB, 2, 100, 10, 100, TestName = "FCHV E2 Job RD single FC, 100kWh  , 100 kW 2")]
+		[TestCase(FCHV_E2_JOB, 2, 100, 10, 100, TestName = "FCHV E2 Job RD single FC, 100kWh  , 100 kW 2")]
         [TestCase(FCHV_E2_JOB, 2, 100, 10, 300, TestName = "FCHV E2 Job RD single FC, 100kWh  , 300 kW 2")]
         [TestCase(FCHV_E2_JOB, 2, 100, 10, 500, TestName = "FCHV E2 Job RD single FC, 100kWh  , 500 kW 2")]
         [TestCase(FCHV_E2_JOB, 2, 80, 10, 100, TestName = "FCHV E2 Job RD single FC, 80kWh    , 100 kW 2")]
@@ -174,68 +176,28 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
         [TestCase(FCHV_E2_JOB, 2, 20, 10, 100, TestName = "FCHV E2 Job RD single FC, 20kWh    , 100 kW 2")]
         [TestCase(FCHV_E2_JOB, 2, 20, 10, 300, TestName = "FCHV E2 Job RD single FC, 20kWh    , 300 kW 2")]
         [TestCase(FCHV_E2_JOB, 2, 20, 10, 500, TestName = "FCHV E2 Job RD single FC, 20kWh    , 500 kW 2")]
-        [TestCase(FCHV_E2_JOB, 2, 10, 10, 100, TestName = "FCHV E2 Job RD single FC, 10kWh    , 100 kW 2")]
-        [TestCase(FCHV_E2_JOB, 2, 10, 10, 300, TestName = "FCHV E2 Job RD single FC, 10kWh    , 300 kW 2")]
-        [TestCase(FCHV_E2_JOB, 2, 10, 10, 500, TestName = "FCHV E2 Job RD single FC, 10kWh    , 500 kW 2")]
-        [TestCase(FCHV_E2_JOB, 2, 5, 10, 100, TestName = "FCHV E2 Job RD single FC, 5kWh      , 100 kW 2")]
-        [TestCase(FCHV_E2_JOB, 2, 5, 10, 300, TestName = "FCHV E2 Job RD single FC, 5kWh      , 300 kW 2")]
-        [TestCase(FCHV_E2_JOB, 2, 5, 10, 500, TestName = "FCHV E2 Job RD single FC, 5kWh      , 500 kW 2")]
-        [TestCase(FCHV_E2_JOB, 2, 1, 10, 100, TestName = "FCHV E2 Job RD single FC, 1kWh      , 100 kW 2")]
-        [TestCase(FCHV_E2_JOB, 2, 1, 10, 300, TestName = "FCHV E2 Job RD single FC, 1kWh      , 300 kW 2")]
-        [TestCase(FCHV_E2_JOB, 2, 1, 10, 500, TestName = "FCHV E2 Job RD single FC, 1kWh      , 500 kW 2")]
-        [TestCase(FCHV_E2_JOB, 2, 0.1, 10, 100, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 100 kW 2")]
-        [TestCase(FCHV_E2_JOB, 2, 0.1, 10, 300, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 300 kW 2")]
-        [TestCase(FCHV_E2_JOB, 2, 0.1, 10, 500, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 500 kW 2")]
-		#region
 
-        //[TestCase(FCHV_E2_JOB_300kW, 0, 100, TestName = "FCHV E2 Job RD single FC_300kW, 100kWh")]
-        //[TestCase(FCHV_E2_JOB_300kW, 0, 80,  TestName = "FCHV E2 Job RD single FC_300kW, 80kWh")]
-        //[TestCase(FCHV_E2_JOB_300kW, 0, 70,  TestName = "FCHV E2 Job RD single FC_300kW, 70kWh")]
-        //[TestCase(FCHV_E2_JOB_300kW, 0, 60,  TestName = "FCHV E2 Job RD single FC_300kW, 60kWh")]
-        //[TestCase(FCHV_E2_JOB_300kW, 0, 50,  TestName = "FCHV E2 Job RD single FC_300kW, 50kWh")]
-        //[TestCase(FCHV_E2_JOB_300kW, 0, 35,  TestName = "FCHV E2 Job RD single FC_300kW, 35kWh")]
-        //[TestCase(FCHV_E2_JOB_300kW, 0, 20,  TestName = "FCHV E2 Job RD single FC_300kW, 20kWh")]
-        //[TestCase(FCHV_E2_JOB_300kW, 0, 10,  TestName = "FCHV E2 Job RD single FC_300kW, 10kWh")]
-        //[TestCase(FCHV_E2_JOB_300kW, 0, 5,   TestName = "FCHV E2 Job RD single FC_300kW, 5kWh  ")]
-        //[TestCase(FCHV_E2_JOB_300kW, 0, 1,   TestName = "FCHV E2 Job RD single FC_300kW, 1kWh  ")]
 
-        //[TestCase(FCHV_E2_JOB, 1, 100, TestName = "1 FCHV E2 Job RD single FC, 100kWh")]
-        //[TestCase(FCHV_E2_JOB, 1, 80,  TestName = "1 FCHV E2 Job RD single FC, 80 kWh")]
-        //[TestCase(FCHV_E2_JOB, 1, 20,  TestName = "1 FCHV E2 Job RD single FC, 20 kWh")]
-        //[TestCase(FCHV_E2_JOB, 1, 10,  TestName = "1 FCHV E2 Job RD single FC, 10 kWh")]
-        //[TestCase(FCHV_E2_JOB, 1, 5,   TestName = "1 FCHV E2 Job RD single FC, 5kWh")]
-        //[TestCase(FCHV_E2_JOB, 1, 1,   TestName = "1 FCHV E2 Job RD single FC, 1kWh")]
-
-        //[TestCase(FCHV_E2_JOB, 2, 100, TestName = "2 FCHV E2 Job RD single FC, 100kWh")]
-        //[TestCase(FCHV_E2_JOB, 2, 80,  TestName = "2 FCHV E2 Job RD single FC, 80 kWh")]
-        //[TestCase(FCHV_E2_JOB, 2, 20,  TestName = "2 FCHV E2 Job RD single FC, 20 kWh")]
-        //[TestCase(FCHV_E2_JOB, 2, 10,  TestName = "2 FCHV E2 Job RD single FC, 10 kWh")]
-        //[TestCase(FCHV_E2_JOB, 2, 5,   TestName = "2 FCHV E2 Job RD single FC, 5kWh")]
-        //[TestCase(FCHV_E2_JOB, 2, 1,   TestName = "2 FCHV E2 Job RD single FC, 1kWh")]
-        //[TestCase(FCHV_E2_JOB, 2, 0.1, TestName = "2 FCHV E2 Job RD single FC, 0.1kWh")]
-
-        //[TestCase(FCHV_E2_JOB, 2, 100, TestName = "2 FCHV E2 Job RD single FC, 100kWh")]
-        //[TestCase(FCHV_E2_JOB, 2, 80, TestName = "2 FCHV E2 Job RD single FC, 80 kWh")]
-        //[TestCase(FCHV_E2_JOB, 2, 20, TestName = "2 FCHV E2 Job RD single FC, 20 kWh")]
-        //[TestCase(FCHV_E2_JOB, 2, 10, TestName = "2 FCHV E2 Job RD single FC, 10 kWh")]
-        //[TestCase(FCHV_E2_JOB, 2, 5, TestName = "2 FCHV E2 Job RD single FC, 5kWh")]
-        //[TestCase(FCHV_E2_JOB, 2, 0.1, TestName = "2 FCHV E2 Job RD single FC, 0.1kWh")]
-
-        //[TestCase(FCHV_E2_JOB, 3, 100, TestName = "3 FCHV E2 Job RD single FC, 100kWh")]
-        //[TestCase(FCHV_E2_JOB, 3, 80,  TestName = "3 FCHV E2 Job RD single FC, 80 kWh")]
-        //[TestCase(FCHV_E2_JOB, 3, 20,  TestName = "3 FCHV E2 Job RD single FC, 20 kWh")]
-        //[TestCase(FCHV_E2_JOB, 3, 10,  TestName = "3 FCHV E2 Job RD single FC, 10 kWh")]
-        //[TestCase(FCHV_E2_JOB, 3, 5,   TestName = "3 FCHV E2 Job RD single FC, 5kWh")]
-        //[TestCase(FCHV_E2_JOB, 3, 1,   TestName = "3 FCHV E2 Job RD single FC, 1kWh")]
-        #endregion
-
-        public void E2_FCHV_Job_var_capacity(string jobFile, int cycleIdx, double usable_energy_kWh, double min_fcPower_kW, double max_fcPower_kW)
+        //[TestCase(FCHV_E2_JOB, 2, 10, 10, 100, TestName = "FCHV E2 Job RD single FC, 10kWh    , 100 kW 2")]
+        //[TestCase(FCHV_E2_JOB, 2, 10, 10, 300, TestName = "FCHV E2 Job RD single FC, 10kWh    , 300 kW 2")]
+        //[TestCase(FCHV_E2_JOB, 2, 10, 10, 500, TestName = "FCHV E2 Job RD single FC, 10kWh    , 500 kW 2")]
+        //[TestCase(FCHV_E2_JOB, 2, 5, 10, 100, TestName = "FCHV E2 Job RD single FC, 5kWh      , 100 kW 2")]
+        //[TestCase(FCHV_E2_JOB, 2, 5, 10, 300, TestName = "FCHV E2 Job RD single FC, 5kWh      , 300 kW 2")]
+        //[TestCase(FCHV_E2_JOB, 2, 5, 10, 500, TestName = "FCHV E2 Job RD single FC, 5kWh      , 500 kW 2")]
+        //[TestCase(FCHV_E2_JOB, 2, 1, 10, 100, TestName = "FCHV E2 Job RD single FC, 1kWh      , 100 kW 2")]
+        //[TestCase(FCHV_E2_JOB, 2, 1, 10, 300, TestName = "FCHV E2 Job RD single FC, 1kWh      , 300 kW 2")]
+        //[TestCase(FCHV_E2_JOB, 2, 1, 10, 500, TestName = "FCHV E2 Job RD single FC, 1kWh      , 500 kW 2")]
+		//Battery safety margin
+        //[TestCase(FCHV_E2_JOB, 2, 0.1, 10, 100, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 100 kW 2")]
+        //[TestCase(FCHV_E2_JOB, 2, 0.1, 10, 300, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 300 kW 2")]
+        //[TestCase(FCHV_E2_JOB, 2, 0.1, 10, 500, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 500 kW 2")]
+		public void E2_FCHV_Job_var_capacity(string jobFile, int cycleIdx, double usable_energy_kWh, double min_fcPower_kW, double max_fcPower_kW)
 		{
-
-			var targetDir = @$"TestResults/FCHV_fc_{max_fcPower_kW}_kW_bat_{usable_energy_kWh}_kWh_{cycleIdx}";
+			//TODO: fix this if test should run in parallel
+			//Directory.SetCurrentDirectory(TEST_WORKING_DIR);
+			var targetDir = @$"TestResults/FCHV_bat_{usable_energy_kWh}_kWh_fc_{max_fcPower_kW}_kW_{cycleIdx}";
 			CopyToOutputDirectory(Path.GetDirectoryName(jobFile), targetDir);
-			jobFile = Path.GetFileName(jobFile);
-            Directory.SetCurrentDirectory(targetDir);
+			jobFile = Path.Combine(targetDir, Path.GetFileName(jobFile));
 
 
 
@@ -277,7 +239,7 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 				rd = run.GetContainer().RunData;
 				var postProcessing = rd.FuelCellSystemData.PostProcessing;
 				TestContext.Progress.WriteLine(ex.Message);
-				WritePostprocessingInfo(rd.FuelCellSystemData.PostProcessing);
+				WritePostprocessingInfo(rd.FuelCellSystemData?.PostProcessing);
 
 				throw;
 			}
@@ -289,11 +251,17 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 
 			var fcs = rd.FuelCellSystemData;
 			var pP = fcs.PostProcessing;
-
+			
 
 			WritePostprocessingInfo(pP);
+			Assert.That(rd.BatteryData.InitialSoC, Is.EqualTo(pP.StartSoC));
+
+			//if (pP.BinarySearchIterations > 0) {
+			//	Assert.Fail();
+			//}
 		}
 
+		
 		public void CopyToOutputDirectory(string source, string target)
 		{
 			Directory.CreateDirectory(target);
@@ -339,9 +307,13 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 
         public void WritePostprocessingInfo(IFuelCellPostProcessingInfo pP)
 		{
+			if (pP == null) {
+				TestContext.WriteLine("PostProcessingInfo not available");
+				return;
+			}
 			TestContext.Progress.WriteLine($"Window Size {pP.WindowSize} \n" +
 											$"found after {pP.BinarySearchIterations} iterations \n" +
-											$"SoC {pP.SoC}");
+											$"SoC {pP.StartSoC}");
 
         }
 

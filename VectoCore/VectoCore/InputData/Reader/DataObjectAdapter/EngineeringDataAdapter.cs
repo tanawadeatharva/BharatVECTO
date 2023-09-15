@@ -69,6 +69,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public class EngineeringDataAdapter : AbstractSimulationDataAdapter
 	{
+		public IOutputDataWriter DebugOutputDataWriter
+		{
+			get;
+			set;
+		}
+
 		private AirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
 		internal VehicleData CreateVehicleData(IVehicleEngineeringInputData data)
 		{
@@ -910,22 +916,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			FuelCellSystemData fcData,
 			BatterySystemData batSystemData)
 		{
-			return CreateDynamicFuelCellPowerMap(modData, fcData, batSystemData.Clone());
+			return CreateDynamicFuelCellPowerMap(modData, fcData, batSystemData);
 
 			//return CreateStaticFuelCellPowerMap(modData);
 		}
 
-		private static FuelCellPowerMap CreateDynamicFuelCellPowerMap(IModalDataContainer modData, FuelCellSystemData fcData, BatterySystemData batData)
+		private FuelCellPowerMap CreateDynamicFuelCellPowerMap(IModalDataContainer modData, FuelCellSystemData fcData, BatterySystemData batData)
 		{
-			var fcPostProcessor = new FuelCellPreRunPostprocessor(modData);
+			var fcPostProcessor = new FuelCellPreRunPostprocessor(modData) {
+				Writer = DebugOutputDataWriter
+			};
 			fcData.PostProcessing = fcPostProcessor;
 
 
-			var result = fcPostProcessor.CalculateFuelCellPowerDemand(fcData, batData);
+			var result = fcPostProcessor.CalculateFuelCellPowerDemand(fcData, batData.Clone());
 
-			NLog.Fluent.Log.Info($"Window distance = {result.distance}, SoC = {result.initSOC}");
-			batData.InitialSoC = result.initSOC;
-			return new FuelCellPowerMap(result.entries);
+			NLog.Fluent.Log.Info($"Window distance = {result.Distance}, SoC = {result.InitSoc}");
+			batData.InitialSoC = result.InitSoc;
+			return new FuelCellPowerMap(result.Entries);
 		}
 
 		private static FuelCellPowerMap CreateStaticFuelCellPowerMap(IModalDataContainer modData)

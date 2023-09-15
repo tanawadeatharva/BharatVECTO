@@ -39,13 +39,13 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 
 
 		/// <summary>
-		/// Smallest SoC since last call to <see cref="Initialize"/>
+		/// Smallest SoC since last call of <see cref="Initialize"/>
 		/// </summary>
-		public double MinSocTrace => SoCTrace.Max();
+		public double MinSocTrace => SoCTrace.Min();
 		/// <summary>
-		/// Largest SoC since last call to <see cref="Initialize"/>
+		/// Largest SoC since last call of <see cref="Initialize"/>
 		/// </summary>
-		public double MaxSocTrace => SoCTrace.Min();
+		public double MaxSocTrace => SoCTrace.Max();
 
 
 		#region Implementation of IElectricEnergyStoragePort
@@ -71,7 +71,6 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 
 		public void Initialize(double initialSoC)
 		{
-
 			_infinityBat.Initialize(initialSoC);
 			PreviousState.StateOfCharge = initialSoC;
 			SoCTrace.Clear();
