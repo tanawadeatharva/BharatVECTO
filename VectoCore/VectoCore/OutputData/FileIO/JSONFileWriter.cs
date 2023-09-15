@@ -619,7 +619,7 @@ public class JSONFileWriter : IOutputFileWriter
 	{
 		var imcDictionary = new Dictionary<string, object>();
 		if (vehicle.SavedInDeclarationMode) {
-			imcDictionary.Add("Technology", vehicle.InMotionCharging.Technology);
+			imcDictionary.Add("Technology", vehicle.InMotionCharging.Technology.ToString());
 			return imcDictionary;
 		}
 		if (vehicle.InMotionCharging.Enabled) {
