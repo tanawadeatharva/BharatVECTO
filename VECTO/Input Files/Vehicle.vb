@@ -36,7 +36,7 @@ Imports DeclarationDataAdapterHeavyLorry = TUGraz.VectoCore.InputData.Reader.Dat
 Public Class Vehicle
 	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData,
 				IAngledriveInputData, IAirdragEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData, IAdvancedDriverAssistantSystemsEngineering,
-				IVehicleComponentsEngineering, IVehicleComponentsDeclaration, IAxlesEngineeringInputData, IAxlesDeclarationInputData, IVehicleInMotionChargingEngineering
+				IVehicleComponentsEngineering, IVehicleComponentsDeclaration, IAxlesEngineeringInputData, IAxlesDeclarationInputData, IVehicleInMotionChargingEngineering, IVehicleInMotionChargingDeclaration
 
 	Private _filePath As String
 	Private _path As String
@@ -163,7 +163,7 @@ Public Class Vehicle
 																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis, False)
 				vehicleData = New LorryVehicleDataAdapter().CreateVehicleData(vehicle, segment, segment.Missions.First(),
 													segment.Missions.First().Loadings.First(), True)
-				airdragData = New AirdragDataAdapter().CreateAirdragData(vehicle, segment.Missions.First(), segment)
+				airdragData = New AirdragDataAdapter().CreateAirdragData(vehicle, vehicle.InMotionChargingDecl, segment.Missions.First(), segment, 0)
 				retarderData = New RetarderDataAdapter().CreateRetarderData(vehicle, vehicle.ArchitectureID, vehicle.Components?.IEPC)
 				angledriveData = New AngledriveDataAdapter().CreateAngledriveData(vehicle)
 				ptoData = New PTODataAdapterLorry().CreatePTOTransmissionData(vehicle, vehicle.Components.GearboxInputData)
@@ -261,10 +261,10 @@ Public Class Vehicle
 		GenSetEMFile.Clear()
 		GenSetMechLossMap.Clear()
 		'IMC
-		InMotionCharging.Enabled = False
-		InMotionCharging.DeltaCdxA = 0.SI(of SquareMeter)
-		InMotionCharging.IMCOnMotorwayOnly = False
-		InMotionCharging.ShareIMCAvailabilityTotalMission = 0
+		IMCEnabled = False
+		IMCDeltaCdxA = 0.SI(of SquareMeter)
+		IMCOnMotorwayOnly = False
+		ShareIMCAvailabilityTotalMission = 0
 
 		SavedInDeclMode = False
 	End Sub
@@ -980,11 +980,19 @@ end Property
 		End Get
 	End Property
 
+    Public ReadOnly Property InMotionChargingDecl As IVehicleInMotionChargingDeclaration Implements IVehicleDeclarationInputData.InMotionCharging
+        Get
+            Return Me
+        End Get
+    End Property
 
-	Public Property Enabled As Boolean Implements IVehicleInMotionChargingEngineering.Enabled
+
+	Public Property IMCEnabled As Boolean Implements IVehicleInMotionChargingEngineering.Enabled
 	Public Property ShareIMCAvailabilityTotalMission As Double Implements IVehicleInMotionChargingEngineering.ShareIMCAvailabilityTotalMission
-	Public Property DeltaCdxA As SquareMeter Implements IVehicleInMotionChargingEngineering.DeltaCdxA
+	Public Property IMCDeltaCdxA As SquareMeter Implements IVehicleInMotionChargingEngineering.DeltaCdxA
 	Public Property IMCOnMotorwayOnly As Boolean Implements IVehicleInMotionChargingEngineering.IMCOnMotorwayOnly
+   
+    Public Property IMCDeclarationTechnology As IMCTechnology Implements IVehicleInMotionChargingDeclaration.Technology
 End Class
 
 Public Class IEPCWrapper

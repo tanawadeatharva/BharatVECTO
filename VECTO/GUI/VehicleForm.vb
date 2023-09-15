@@ -132,6 +132,8 @@ Public Class VehicleForm
 
         cbAngledriveType.DataSource = EnumHelper.GetKeyValuePairs(Of AngledriveType)(Function(t) t.GetLabel())
 
+		cbImcTech.DataSource = EnumHelper.GetKeyValuePairs(Of IMCTechnology)(Function (t) t.GetLabel()).Where(Function(x) x.Key <> IMCTechnology.NotApplicable).ToArray()
+
 		_axlDlog = New VehicleAxleDialog
 		_torqueLimitDlog = New VehicleTorqueLimitDialog()
 		_emRatioPerGearDlog = New EMGearRatioDialog()
@@ -147,6 +149,9 @@ Public Class VehicleForm
 		Else
 			'VehicleType
 		End If
+
+		pnImcDecl.Visible = Cfg.DeclMode
+		pnImcEng.Visible = not Cfg.DeclMode
 
 		pnInitialSoC.Enabled = not cfg.DeclMode
 
@@ -571,17 +576,20 @@ Public Class VehicleForm
 			tbPropulsionTorqueLimit.Text = If(Not vehicle.BoostingLimitations Is Nothing, GetRelativePath(vehicle.BoostingLimitations.Source, basePath), "")
 		End If
 
-
-		If (Not (VehicleType = VectoSimulationJobType.ConventionalVehicle) And Not (VehicleType = VectoSimulationJobType.EngineOnlySimulation)) Then
-			If (vehicle.InMotionCharging.Enabled) Then
-				cbInMotionChargingEnabled.Checked = vehicle.InMotionCharging.Enabled
-				tbIMCDeltaCdxA.Text = vehicle.InMotionCharging.DeltaCdxA.ToString()
-				cbIMCMotorway.Checked = vehicle.InMotionCharging.IMCOnMotorwayOnly
-				tbInMotionChargingShareOnTotalDistance.Text = (vehicle.InMotionCharging.ShareIMCAvailabilityTotalMission * 100).ToString()
-			End If
-		Else
-			cbInMotionChargingEnabled.Checked = False
-		End If
+		if (Cfg.DeclMode) then
+			cbImcTech.SelectedValue = vehicle.InMotionCharging.Technology
+		else
+		    If (Not (VehicleType = VectoSimulationJobType.ConventionalVehicle) And Not (VehicleType = VectoSimulationJobType.EngineOnlySimulation)) Then
+			    If (vehicle.InMotionCharging.Enabled) Then
+				    cbInMotionChargingEnabled.Checked = vehicle.InMotionCharging.Enabled
+				    tbIMCDeltaCdxA.Text = vehicle.InMotionCharging.DeltaCdxA.Value().ToString()
+				    cbIMCMotorway.Checked = vehicle.InMotionCharging.IMCOnMotorwayOnly
+				    tbInMotionChargingShareOnTotalDistance.Text = (vehicle.InMotionCharging.ShareIMCAvailabilityTotalMission * 100).ToString()
+			    End If
+		    Else
+			    cbInMotionChargingEnabled.Checked = False
+		    End If
+		end If
 
 		DeclInit()
 
@@ -1061,6 +1069,26 @@ Public Class VehicleForm
 		veh.EngineSpeedDuringPTODrive = If(String.IsNullOrWhiteSpace(tbPtoEngineSpeed.Text), Nothing, tbPtoEngineSpeed.Text.ToDouble(0).RPMtoRad())
 
 		'IMC
+		if Cfg.DeclMode Then
+			veh.IMCDeclarationTechnology = CType(cbImcTech.SelectedValue, IMCTechnology)
+		else
+		    If (Not (VehicleType = VectoSimulationJobType.ConventionalVehicle) And Not (VehicleType = VectoSimulationJobType.EngineOnlySimulation)) Then
+		        If (cbInMotionChargingEnabled.Checked) Then
+		            If (String.IsNullOrWhiteSpace(tbIMCDeltaCdxA.Text) Or String.IsNullOrWhiteSpace(tbInMotionChargingShareOnTotalDistance.Text)) Then
+		                MsgBox("Not all In Motion Charging Parameters are set")
+		                Return False
+		            End If
+
+		            veh.IMCDeltaCdxA = If(String.IsNullOrWhiteSpace(tbIMCDeltaCdxA.Text), 0.SI(of SquareMeter), (tbIMCDeltaCdxA.Text.ToDouble(0).SI(of SquareMeter)))
+		            veh.IMCOnMotorwayOnly = cbIMCMotorway.Checked
+		            veh.ShareIMCAvailabilityTotalMission = If(String.IsNullOrWhiteSpace(tbInMotionChargingShareOnTotalDistance.Text), 0, tbInMotionChargingShareOnTotalDistance.Text.ToDouble(0) / 100.0)
+		            veh.IMCEnabled = cbInMotionChargingEnabled.Checked
+		        End If
+		    Else
+		        veh.IMCEnabled = False
+		    End If
+		End If
+
 		If (Not (VehicleType = VectoSimulationJobType.ConventionalVehicle) And Not (VehicleType = VectoSimulationJobType.EngineOnlySimulation)) Then
 			If (cbInMotionChargingEnabled.Checked) Then
 				If (String.IsNullOrWhiteSpace(tbIMCDeltaCdxA.Text) Or String.IsNullOrWhiteSpace(tbInMotionChargingShareOnTotalDistance.Text)) Then
@@ -1068,13 +1096,13 @@ Public Class VehicleForm
 					Return False
 				End If
 
-				veh.InMotionCharging.DeltaCdxA = If(String.IsNullOrWhiteSpace(tbIMCDeltaCdxA.Text), 0.SI(of SquareMeter), (tbIMCDeltaCdxA.Text.ToDouble(0).SI(of SquareMeter)))
-				veh.InMotionCharging.IMCOnMotorwayOnly = cbIMCMotorway.Checked
-				veh.InMotionCharging.ShareIMCAvailabilityTotalMission = If(String.IsNullOrWhiteSpace(tbInMotionChargingShareOnTotalDistance.Text), 0, tbInMotionChargingShareOnTotalDistance.Text.ToDouble(0) / 100.0)
-				veh.InMotionCharging.Enabled = cbInMotionChargingEnabled.Checked
+				veh.IMCDeltaCdxA = If(String.IsNullOrWhiteSpace(tbIMCDeltaCdxA.Text), 0.SI(of SquareMeter), (tbIMCDeltaCdxA.Text.ToDouble(0).SI(of SquareMeter)))
+				veh.IMCOnMotorwayOnly = cbIMCMotorway.Checked
+				veh.ShareIMCAvailabilityTotalMission = If(String.IsNullOrWhiteSpace(tbInMotionChargingShareOnTotalDistance.Text), 0, tbInMotionChargingShareOnTotalDistance.Text.ToDouble(0) / 100.0)
+				veh.IMCEnabled = cbInMotionChargingEnabled.Checked
 				End If
 			Else
-			veh.InMotionCharging.Enabled = False
+			veh.IMCEnabled = False
 		End If
 
 		'---------------------------------------------------------------------------------
@@ -1886,7 +1914,7 @@ Public Class VehicleForm
 
 	Private Sub cbInMotionChargingEnabled_CheckedChanged(sender As Object, e As EventArgs) Handles cbInMotionChargingEnabled.CheckedChanged
 
-		pnInMotionCharging.Enabled = cbInMotionChargingEnabled.Checked
+		pnInMotionChargingParamsEng.Enabled = cbInMotionChargingEnabled.Checked
 
 	End Sub
 
