@@ -246,7 +246,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 				simulationRunData.VehicleData =
 					DataAdapterGeneric.CreateVehicleData(PrimaryVehicle, primarySegment, mission, loading, false);
-				simulationRunData.AirdragData = DataAdapterGeneric.CreateAirdragData(null, null, mission, new Segment(), simulationRunData.Cycle.ShareDistanceHighway);
+				simulationRunData.AirdragData = DataAdapterGeneric.CreateAirdragData(null, null, mission, new Segment(), ovcHevMode, simulationRunData.Cycle.ShareDistanceHighway);
 				simulationRunData.EngineData =
 					DataAdapterGeneric.CreateEngineData(PrimaryVehicle, modeIdx.Value, mission);
 				simulationRunData.ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>();
@@ -457,7 +457,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 				rd.VehicleData =
 					DataAdapterGeneric.CreateVehicleData(PrimaryVehicle, primarySegment, mission, loading, false);
-				rd.AirdragData = DataAdapterGeneric.CreateAirdragData(null, null, mission, new Segment(), rd.Cycle.ShareDistanceHighway);
+				rd.AirdragData = DataAdapterGeneric.CreateAirdragData(null, null, mission, new Segment(), ovcHevMode, rd.Cycle.ShareDistanceHighway);
 				rd.EngineData =
 					DataAdapterGeneric.CreateEngineData(PrimaryVehicle, modeIdx.Value, mission);
 				//rd.ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>();
@@ -674,7 +674,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 				rd.VehicleData =
 					DataAdapterGeneric.CreateVehicleData(PrimaryVehicle, primarySegment, mission, loading, false);
-				rd.AirdragData = DataAdapterGeneric.CreateAirdragData(null, null, mission, new Segment(), rd.Cycle.ShareDistanceHighway);
+				rd.AirdragData = DataAdapterGeneric.CreateAirdragData(null, null, mission, new Segment(), ovcHevMode, rd.Cycle.ShareDistanceHighway);
 				rd.EngineData =
 					DataAdapterGeneric.CreateEngineData(PrimaryVehicle, modeIdx.Value, mission);
 
@@ -877,7 +877,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				//result.VehicleData = DataAdapterGeneric.CreateVehicleData(PrimaryVehicle, CompletedVehicle, _segment,
 				 //   mission, loading);
 				result.AirdragData =
-					DataAdapterGeneric.CreateAirdragData(PrimaryVehicle.Components.AirdragInputData, PrimaryVehicle.InMotionCharging, mission, _segment, result.Cycle.ShareDistanceHighway);
+					DataAdapterGeneric.CreateAirdragData(PrimaryVehicle.Components.AirdragInputData, PrimaryVehicle.InMotionCharging, mission, _segment, ovcHevMode, result.Cycle.ShareDistanceHighway);
 				if (AxleGearRequired() || PrimaryVehicle.Components.AxleGearInputData != null)
 				{
 					result.AxleGearData =

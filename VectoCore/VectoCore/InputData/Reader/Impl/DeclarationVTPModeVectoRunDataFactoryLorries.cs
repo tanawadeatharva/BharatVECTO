@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             AirdragData = DataAdapter.CreateAirdragData(
                 vehicle.Components.AirdragInputData,
                 vehicle.InMotionCharging,
-                Segment.Missions.First(), Segment, 0);
+                Segment.Missions.First(), Segment, OvcHevMode.NotApplicable, 0);
             EngineData = DataAdapter.CreateEngineData(
                 vehicle, vehicle.Components.EngineInputData.EngineModes.First(),
                 new Mission() { MissionType = vtpMission });

@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto);
 
         AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData,
-			IVehicleInMotionChargingDeclaration imcData, Mission mission, Segment segment,
+			IVehicleInMotionChargingDeclaration imcData, Mission mission, Segment segment, OvcHevMode ovcMode,
 			double cycleShareDistanceHighway);
 
 		CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle,
@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			IBusAuxiliariesDeclarationData busAuxData, MissionType missionType, VehicleClass vehicleClass,
 			Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType);
 
-		AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, IVehicleInMotionChargingDeclaration imcData, Mission mission, Segment segment, double cycleShareDistanceHighway);
+		AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, IVehicleInMotionChargingDeclaration imcData, Mission mission, Segment segment, OvcHevMode ovcMode, double cycleShareDistanceHighway);
 
 		// serial hybrid strategy
 		HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 	public interface IGenericCompletedBusDeclarationDataAdapter : IDeclarationDataAdapter
 	{
-		AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, IVehicleInMotionChargingDeclaration imcData, Mission mission, Segment segment, double cycleShareDistanceHighway);
+		AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, IVehicleInMotionChargingDeclaration imcData, Mission mission, Segment segment, OvcHevMode ovcMode, double cycleShareDistanceHighway);
 		DriverData CreateBusDriverData(Segment segment, VectoSimulationJobType jobType, ArchitectureID arch, CompressorDrive compressorDrive);
         CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx,
 			Mission mission);
