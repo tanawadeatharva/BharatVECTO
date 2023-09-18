@@ -75,7 +75,7 @@
     "OvcHev": true,
     "MaxChargingPower": 50.0,
     "InMotionCharging": {
-      "Technology": "OverheadTrolley"
+      "Technology": "OverheadPantograph"
     }
   }
 }
