@@ -8,12 +8,21 @@
   "Body": {
     "SavedInDeclMode": false,
     "DeclarationVehicle": "Tractor_4x2_vehicle-class-5_Generic vehicle.xml",
+	"Mileage": 30000.0,
     "FanPowerCoefficients": [
       5.5E-07,
       15.0,
       108.5
     ],
     "FanDiameter": 0.225,
+	"FuelNCVs": [
+      {
+        "Type": "Diesel CI",
+        "NCV": 42.7
+      }
+    ],
+    "TorqueDriftLeftWheel": 0.0,
+    "TorqueDriftRightWheel": 0.0,
     "Cycles": [
       "..//Cycles//Coach.vdri"
     ]

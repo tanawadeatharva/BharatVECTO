@@ -77,8 +77,14 @@
     </None>
   </ItemGroup>
 
+
   <ItemGroup>
-    <Folder Include="InputData\DeclarationDataAdapterTest\" />
+      <Content Include="$(SolutionDir)Generic Vehicles\**\*.*">
+          <Link>TestData\Shipped_Generic\%(RecursiveDir)%(FileName)%(Extension)</Link>
+          <!--<TargetPath>TestData\Integration\Multistage</TargetPath>-->
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Folder Include="InputData\DeclarationDataAdapterTest\" />
     <Folder Include="Integration\Declaration\PrimaryBus\" />
     <Folder Include="Models\Declaration\BusAux\" />
     <Folder Include="TestData\IMC\Declaration\" />

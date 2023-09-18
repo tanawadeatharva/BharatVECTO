@@ -108,9 +108,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
 
 		public static readonly HEVStrategyParameters HEVStrategyParameters = new HEVStrategyParameters();
+
+		public const double HEV_EquivalenceFactor_Min = 0.1;
+		public const double HEV_EquivalenceFactor_Max = 4.0;
 		//public static readonly HEVStrategyParameters InitEquivalenceFactorsBus = new HEVStrategyParametersBus();
 
-		public static readonly VehicleOperationLookup VehicleOperation = new VehicleOperationLookup();
+        public static readonly VehicleOperationLookup VehicleOperation = new VehicleOperationLookup();
 
 		public static readonly IMCTechnologyLookup ImcTechnology = new IMCTechnologyLookup();
 
@@ -1486,7 +1489,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 						TorqueRatio = 0.9,
 						Torque =  -4 * first.Torque
 					},
-				};
+					new TorqueConverterEntry() {
+						SpeedRatio = 15,
+						TorqueRatio = 0.85,
+						Torque =  -4.1 * first.Torque
+					},
+                };
 				foreach (var torqueConverterEntry in characteristicTorque) {
 					torqueConverterEntry.SpeedRatio = torqueConverterEntry.SpeedRatio * ratio;
 					torqueConverterEntry.TorqueRatio = torqueConverterEntry.TorqueRatio / ratio;
@@ -1515,13 +1523,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly Meter RunInThreshold = 15000.SI(Unit.SI.Kilo.Meter).Cast<Meter>();
 			public const double EvolutionCoefficient = 0.98;
 
-			public const MissionType SelectedMissionHeavyLorry = MissionType.LongHaul;
 			public const MissionType SelectedMissionMediumLorry = MissionType.RegionalDelivery;
 
 			public const MissionType SelectedMissionLowFloorBus = MissionType.Urban;
 			public const MissionType SelectedMissionHighFloorBus = MissionType.Coach;
 
 			public const LoadingType SelectedLoading = LoadingType.ReferenceLoad;
+
+			public static MissionType GetSelectedMissionHeavyLorry(VehicleClass vc)
+			{
+				return vc.IsOneOf(VehicleClass.Class1, VehicleClass.Class2, VehicleClass.Class3)
+					? MissionType.RegionalDelivery
+					: MissionType.LongHaul;
+			}
 
 			// verification of input data
 

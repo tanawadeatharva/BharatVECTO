@@ -498,4 +498,19 @@
 <data name="EM_ElectricMachineType" xml:space="preserve">
 	<value>ElectricMachineType</value>
 </data>
+  <data name="Job_FuelNCVs" xml:space="preserve">
+    <value>FuelNCVs</value>
+  </data>
+  <data name="Job_FuelNCV_NCV" xml:space="preserve">
+    <value>NCV</value>
+  </data>
+  <data name="Job_FuelNCV_Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Job_TorqueDriftLeftWheel" xml:space="preserve">
+    <value>TorqueDriftLeftWheel</value>
+  </data>
+  <data name="Job_TorqueDriftRightWheel" xml:space="preserve">
+    <value>TorqueDriftRightWheel</value>
+  </data>
 </root>

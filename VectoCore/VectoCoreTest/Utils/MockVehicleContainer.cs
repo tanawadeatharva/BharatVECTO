@@ -96,6 +96,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IGearboxInfo GearboxInfo => this;
 
+		public IShiftStrategy Strategy => null;
+
 		public event Action GearShiftTriggered;
 
 		public IGearboxControl GearboxCtl => this;

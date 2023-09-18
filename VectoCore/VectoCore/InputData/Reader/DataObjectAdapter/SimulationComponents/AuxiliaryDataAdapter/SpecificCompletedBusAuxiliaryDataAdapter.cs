@@ -297,7 +297,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					}
 				}
 
-				throw new VectoException(errors.Join(Environment.NewLine));
+				if (errors.Count > 0) {
+					throw new VectoException(errors.Join(Environment.NewLine));
+				}
 			}
         }
 

@@ -315,7 +315,7 @@ xmlns:mrf0.8="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.8"
         <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
       </di:Transforms>
       <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-      <di:DigestValue>WQAMzAwhNh51mrrQdaeNYuRmUxIOnRUS39TxeetWt9Q=</di:DigestValue>
+      <di:DigestValue>lCaZa9JbMm7CQhI8w500Pb8ppaJJj5Na3uAq8Qg8orQ=</di:DigestValue>
     </di:Reference>
   </mrf:Signature>
 </mrf:VectoOutput>

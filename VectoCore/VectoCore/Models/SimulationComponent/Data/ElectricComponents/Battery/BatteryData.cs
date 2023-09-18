@@ -70,7 +70,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 
 		public MaxCurrentMap MaxCurrent { get; internal set; }
 		public int BatteryId { get; internal set; }
-		public bool ChargeSustainingBattery { get; internal set; }
+
+		public bool ChargeDepletingBattery { get; internal set; }
 
 		public WattSecond TotalStoredEnergy => _totaltoredEnergy ?? (_totaltoredEnergy = CalculateBatteryEnergy(0, 1));
 

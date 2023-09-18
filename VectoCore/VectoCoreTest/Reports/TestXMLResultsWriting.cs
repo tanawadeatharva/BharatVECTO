@@ -755,7 +755,7 @@ public class TestXMLResultsWriting
 					Tuple.Create(1, new BatteryData() {
 						BatteryId = 0,
 						Capacity = 7.5.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(),
-						ChargeSustainingBattery = true,
+						ChargeDepletingBattery = true,
 						MinSOC = 0.2,
 						MaxSOC = 0.8,
 						SOCMap = BatterySOCReader.Create("SoC, V\n0, 600\n100, 650\n".ToStream()),
