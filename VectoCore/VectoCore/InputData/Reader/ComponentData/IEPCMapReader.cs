@@ -211,9 +211,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			}
 
 
-
-			var maxTargetTorque = fullLoadCurve.MaxGenerationTorque * extrapolationfactor;
-			var minTargetTorque = fullLoadCurve.MaxDriveTorque * extrapolationfactor;
+			// full-load curve has already inverted sign, power map is not yet sign-changed
+			var maxTargetTorque = -fullLoadCurve.MaxDriveTorque * extrapolationfactor;
+			var minTargetTorque = -fullLoadCurve.MaxGenerationTorque * extrapolationfactor;
 			var ratedSpeed = ElectricMotorRatedSpeedHelper.GetRatedSpeed(fullLoadCurve.FullLoadEntries,
 				e => e.MotorSpeed, e => e.FullDriveTorque);
 			PerSecond prevSpeed = null;
@@ -254,8 +254,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				if (prevSpeed != null && prevSpeed.IsGreaterOrEqual(ratedSpeed))
 				{
 					//update target values for next speed entry, 1 entry after rated speed should still be extrapolated to maxtorque * 1.2
-					maxTargetTorque = fullLoadCurve.FullGenerationTorque(speedBucket.Key) * extrapolationfactor;
-					minTargetTorque = fullLoadCurve.FullLoadDriveTorque(speedBucket.Key) * extrapolationfactor;
+					maxTargetTorque = - fullLoadCurve.FullLoadDriveTorque(speedBucket.Key) * extrapolationfactor;
+					minTargetTorque = - fullLoadCurve.FullGenerationTorque(speedBucket.Key)  * extrapolationfactor;
 				}
 				prevSpeed = speedBucket.Key;
 			}
