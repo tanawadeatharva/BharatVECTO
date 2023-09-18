@@ -135,6 +135,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 		{
 
 			batData = batData.Clone();
+		
             var tmpBatSystem = new BatterySystem(null, batData);
 			tmpBatSystem.Initialize(batData.InitialSoC);
 
@@ -144,6 +145,9 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 			ApplyBatterySafetyMargin(batData, rawFcCalcEntries);
 
 			if (TryWithFullDistance(fcData, ref batData, out var result)) {
+				StartSoC = result.InitSoc;
+				WindowSize = TotalDistance;
+				BinarySearchIterations = 0;
 				return result;
 			}
 			return BinarySearchFuelCellPowerDemand(fcData, batData);

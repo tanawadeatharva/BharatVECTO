@@ -44,7 +44,7 @@ using ElectricSystem = TUGraz.VectoCore.Models.SimulationComponent.ElectricSyste
 namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 {
     [TestFixture]
-	[Parallelizable]
+	[Parallelizable(ParallelScope.All)]
 	public class FuelCellVehicleTest
 	{
 
@@ -178,19 +178,19 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
         [TestCase(FCHV_E2_JOB, 2, 20, 10, 500, TestName = "FCHV E2 Job RD single FC, 20kWh    , 500 kW 2")]
 
 
-        //[TestCase(FCHV_E2_JOB, 2, 10, 10, 100, TestName = "FCHV E2 Job RD single FC, 10kWh    , 100 kW 2")]
-        //[TestCase(FCHV_E2_JOB, 2, 10, 10, 300, TestName = "FCHV E2 Job RD single FC, 10kWh    , 300 kW 2")]
-        //[TestCase(FCHV_E2_JOB, 2, 10, 10, 500, TestName = "FCHV E2 Job RD single FC, 10kWh    , 500 kW 2")]
-        //[TestCase(FCHV_E2_JOB, 2, 5, 10, 100, TestName = "FCHV E2 Job RD single FC, 5kWh      , 100 kW 2")]
-        //[TestCase(FCHV_E2_JOB, 2, 5, 10, 300, TestName = "FCHV E2 Job RD single FC, 5kWh      , 300 kW 2")]
-        //[TestCase(FCHV_E2_JOB, 2, 5, 10, 500, TestName = "FCHV E2 Job RD single FC, 5kWh      , 500 kW 2")]
-        //[TestCase(FCHV_E2_JOB, 2, 1, 10, 100, TestName = "FCHV E2 Job RD single FC, 1kWh      , 100 kW 2")]
-        //[TestCase(FCHV_E2_JOB, 2, 1, 10, 300, TestName = "FCHV E2 Job RD single FC, 1kWh      , 300 kW 2")]
-        //[TestCase(FCHV_E2_JOB, 2, 1, 10, 500, TestName = "FCHV E2 Job RD single FC, 1kWh      , 500 kW 2")]
+		[TestCase(FCHV_E2_JOB, 2, 10, 10, 100, TestName = "FCHV E2 Job RD single FC, 10kWh    , 100 kW 2")]
+		[TestCase(FCHV_E2_JOB, 2, 10, 10, 300, TestName = "FCHV E2 Job RD single FC, 10kWh    , 300 kW 2")]
+		[TestCase(FCHV_E2_JOB, 2, 10, 10, 500, TestName = "FCHV E2 Job RD single FC, 10kWh    , 500 kW 2")]
+		[TestCase(FCHV_E2_JOB, 2, 5, 10, 100, TestName = "FCHV E2 Job RD single FC, 5kWh      , 100 kW 2")]
+		[TestCase(FCHV_E2_JOB, 2, 5, 10, 300, TestName = "FCHV E2 Job RD single FC, 5kWh      , 300 kW 2")]
+		[TestCase(FCHV_E2_JOB, 2, 5, 10, 500, TestName = "FCHV E2 Job RD single FC, 5kWh      , 500 kW 2")]
+		//[TestCase(FCHV_E2_JOB, 2, 1, 10, 100, TestName = "FCHV E2 Job RD single FC, 1kWh      , 100 kW 2")]
+		//[TestCase(FCHV_E2_JOB, 2, 1, 10, 300, TestName = "FCHV E2 Job RD single FC, 1kWh      , 300 kW 2")]
+		//[TestCase(FCHV_E2_JOB, 2, 1, 10, 500, TestName = "FCHV E2 Job RD single FC, 1kWh      , 500 kW 2")]
 		//Battery safety margin
-        //[TestCase(FCHV_E2_JOB, 2, 0.1, 10, 100, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 100 kW 2")]
-        //[TestCase(FCHV_E2_JOB, 2, 0.1, 10, 300, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 300 kW 2")]
-        //[TestCase(FCHV_E2_JOB, 2, 0.1, 10, 500, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 500 kW 2")]
+		//[TestCase(FCHV_E2_JOB, 2, 0.1, 10, 100, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 100 kW 2")]
+		//[TestCase(FCHV_E2_JOB, 2, 0.1, 10, 300, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 300 kW 2")]
+		//[TestCase(FCHV_E2_JOB, 2, 0.1, 10, 500, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 500 kW 2")]
 		public void E2_FCHV_Job_var_capacity(string jobFile, int cycleIdx, double usable_energy_kWh, double min_fcPower_kW, double max_fcPower_kW)
 		{
 			//TODO: fix this if test should run in parallel
