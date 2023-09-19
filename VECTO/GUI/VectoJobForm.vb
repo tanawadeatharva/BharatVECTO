@@ -1102,12 +1102,13 @@ Public Class VectoJobForm
             Case VectoSimulationJobType.SerialHybridVehicle
                 pnHybridStrategy.Enabled = Not Cfg.DeclMode
                 gbEngineStopStart.Enabled = False
-            Case VectoSimulationJobType.BatteryElectricVehicle
+            Case VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.FCHV
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = True
                 GrAuxMech.Enabled = cfg.DeclMode
                 pnShiftParams.Enabled = not Cfg.DeclMode
                 gbEngineStopStart.Enabled = False
+                pnHybridStrategy.Enabled = False
             Case VectoSimulationJobType.IHPC
                 pnEngine.Enabled = True
                 pnGearbox.Enabled = True
@@ -1128,6 +1129,7 @@ Public Class VectoJobForm
                 pnShiftParams.Enabled = not Cfg.DeclMode
                 gbEngineStopStart.Enabled = False
                 pnHybridStrategy.Enabled = not Cfg.DeclMode
+   
         End Select
     End Sub
 
