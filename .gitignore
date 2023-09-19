@@ -211,6 +211,7 @@ Documentation/VehiclesReleaseComparisonDeclarationMode/tmp/
 Documentation/VehiclesReleaseComparisonDeclarationMode/**/*.vmod
 Documentation/VehiclesReleaseComparisonDeclarationMode/**/*.vsum
 .vs/
+.vscode/
 **/dev/*.vmod
 **/dev/*.vsum
 /VectoCore/VectoCoreTest/TestData/XML/XMLReaderDeclaration/testVif.VIF_Report_5.xml

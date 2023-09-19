@@ -80,6 +80,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public NewtonMeter GearMaxTorque => null;
 
+		public IShiftStrategy Strategy => null;
+
 		public Watt GearboxLoss()
 		{
 			return 0.SI<Watt>();

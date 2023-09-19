@@ -17,6 +17,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public event Action GearShiftTriggered;
 
+		public IShiftStrategy Strategy => null;
+
 		public SingleSpeedGearbox(IVehicleContainer container, GearboxData modelData) : base(container,
 			modelData.Gears.First().Value)
 		{

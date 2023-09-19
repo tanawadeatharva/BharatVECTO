@@ -188,6 +188,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				PTOPowerDemandDuringDrive = entry.PTOPowerDemandDuringDrive;
 				PTOElectricalPowerDemand = entry.PTOElectricalPowerDemand;
 				Highway = entry.Highway;
+                PowerAdditonalHighVoltage = entry.PowerAdditonalHighVoltage;
+				FanElectricalPower = entry.FanElectricalPower;
+				CombustionEngineTorque = entry.CombustionEngineTorque;
+				CH4MassFlow = entry.CH4MassFlow;
+				COMassFlow = entry.COMassFlow;
+				NMHCMassFlow = entry.NMHCMassFlow;
+				NOxMassFlow = entry.NOxMassFlow;
+				THCMassFlow = entry.THCMassFlow;
+				PMNumberFlow = entry.PMNumberFlow;
+				CO2MassFlow = entry.CO2MassFlow;
 			}
 
 			/// <summary>
@@ -215,7 +225,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			/// </summary>
 			public Scalar RoadGradientPercent => (Math.Tan(RoadGradient.Value()) * 100).SI<Scalar>();
 
-			public Dictionary<FuelType, KilogramPerSecond> VTPFuelconsumption;
+			public Dictionary<FuelType, KilogramPerSecond> Fuelconsumption;
 
 			/// <summary>
 			/// relative altitude of the driving cycle over distance
@@ -291,6 +301,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			public PerSecond FanSpeed;
 
+			public Watt FanElectricalPower;
+
+			public NewtonMeter CombustionEngineTorque;
+
+			public KilogramPerSecond CH4MassFlow;
+
+			public KilogramPerSecond COMassFlow;
+
+			public KilogramPerSecond NMHCMassFlow;
+
+			public KilogramPerSecond NOxMassFlow;
+
+			public KilogramPerSecond THCMassFlow;
+
+			public KilogramPerSecond CO2MassFlow;
+
+			public PerSecond PMNumberFlow;
+
 			// required for VTP Mode (validation of cycle data in declaration mode)
 			public NewtonMeter TorqueWheelLeft;
 
@@ -307,7 +335,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			// Electrical pto cycle
 			public Watt PTOElectricalPowerDemand;
-		}
+
+			/// <summary>
+			/// Additional high voltage power for PEVs.
+			/// </summary>
+            public Watt PowerAdditonalHighVoltage;
+        }
 	}
 
 	public enum PTOActivity

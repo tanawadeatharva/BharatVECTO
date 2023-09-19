@@ -85,6 +85,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			return nodes[index];
 		}
 
+		public static string ReadElementValue(XmlDocument xmlDocument, string elementName)
+		{
+			var node = xmlDocument.SelectSingleNode(string.Format("//*[local-name()='{0}']", elementName));
+			if (node == null) {
+				throw new Exception(string.Format("Element {0} not found", elementName));
+			}
+			return node.InnerText;
+		}
+
 		static string GetComponentQueryString(VectoComponents component)
 		{
 			//string componentString;

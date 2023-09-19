@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
@@ -38,7 +39,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 
 			var pwr = inputProvider.VoltageLevels.First().PowerMap.First().PowerMap; //ToDo FK: maybe wrong selection
 			// var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
-			var pwrMap = ElectricMotorMapReader.Create(pwr, 1);
+			var pwrMap = ElectricMotorMapReader.Create(pwr, 1, ExecutionMode.Engineering);
 
 			var maxEmPwr = batPwr < 0
 				? fldMap.FullLoadDriveTorque(emSpeed.RPMtoRad())
@@ -103,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 			
 			var pwr = inputProvider.VoltageLevels.First().PowerMap.First().PowerMap;//ToDo FK: maybe wrong selection
 			// var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
-			var pwrMap = ElectricMotorMapReader.Create(pwr, 1);
+			var pwrMap = ElectricMotorMapReader.Create(pwr, 1, ExecutionMode.Engineering);
 
 			var maxEmPwr = batPwr < 0
 				? fldMap.FullLoadDriveTorque(emSpeed.RPMtoRad())
@@ -120,7 +121,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 		public void TestInterpolationMethod_PowerMap(string filename, double etaMin, double etaMax)
 		{
 			var data = VectoCSVFile.Read(filename).ApplyFactor(ElectricMotorMapReader.Fields.PowerElectrical, 1000.0);
-			var emMap = ElectricMotorMapReader.Create(data, 1);
+			var emMap = ElectricMotorMapReader.Create(data, 1, ExecutionMode.Engineering);
 			
 			var efficiencies = new List<double>();
 			for (var n = 10.RPMtoRad(); n < 4000.RPMtoRad(); n += 10.RPMtoRad()) {

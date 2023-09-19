@@ -604,7 +604,7 @@ xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput" xsi:schemaLocation="urn:tu
         <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
       </di:Transforms>
       <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-      <di:DigestValue>p4tDoSd4q3WwJj5P37NWx7V/LqsJj2h5aVTHgCieiQU=</di:DigestValue>
+      <di:DigestValue>e39/DVvsMH2ftcj+r//NSWTVClXrys+yPNsqm9ldZWM=</di:DigestValue>
     </di:Reference>
   </mrf:Signature>
 </mrf:VectoOutput>
