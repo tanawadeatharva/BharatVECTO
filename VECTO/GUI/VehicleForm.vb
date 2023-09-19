@@ -1102,7 +1102,7 @@ Public Class VehicleForm
 			For Each reess As ListViewItem In lvFuelCellComponents.Items
 				veh.FuelCellComponents.Add(Tuple.Create(reess.SubItems(FcComponentTbl.FcComponentFile).Text, reess.SubItems(FcComponentTbl.Count).Text.ToInt()))
 			Next
-			If veh.FuelCellComponents.Count <= 1 Then
+			If veh.FuelCellComponents.Count = 0 Then
 				tcVehicleComponents.SelectedTab = tpFuelCellSystem
 				lvFuelCellComponents.Focus()
 				MsgBox("At least one fuel cell has to be provided")
