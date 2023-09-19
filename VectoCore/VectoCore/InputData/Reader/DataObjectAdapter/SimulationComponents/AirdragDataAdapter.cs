@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -168,6 +169,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			IVehicleInMotionChargingDeclaration imcData, Mission mission, VehicleClass vehicleClass,
 			OvcHevMode ovcMode, double cycleShareDistanceHighway)
 		{
+			CheckAllowedIMCConfiguration(vehicleClass, imcData);
 			var deltaCdxAIMC = 0.SI<SquareMeter>();
 			var deltaCdxAIMCHighway = 0.SI<SquareMeter>();
 			if (ovcMode != OvcHevMode.ChargeDepleting) {
@@ -193,7 +195,27 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return (deltaCdxAIMC, deltaCdxAIMCHighway);
 		}
 
-		public virtual AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission)
+		private static void CheckAllowedIMCConfiguration(VehicleClass vehicleClass, IVehicleInMotionChargingDeclaration imcData)
+		{
+			if (vehicleClass.IsHeavyLorry()) {
+				if (imcData.Technology.IsOneOf(IMCTechnology.OverheadTrolley)) {
+					throw new VectoException(
+						$"IMC Technology {imcData.Technology.GetLabel()} not supported for heavy lorries");
+				}
+			}
+			if (vehicleClass.IsMediumLorry()) {
+				if (imcData.Technology.IsOneOf(IMCTechnology.OverheadPantograph, IMCTechnology.OverheadTrolley)) {
+					throw new VectoException(
+						$"IMC Technology {imcData.Technology.GetLabel()} not supported for medium lorries");
+				}
+			}
+			if (vehicleClass.IsBus()) {
+				// everything is supported for buses...
+			}
+
+        }
+
+        public virtual AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission)
 		{
 			var deltaCdxAIMC = 0.SI<SquareMeter>();
 			var deltaCdxAIMCHighway = 0.SI<SquareMeter>();
