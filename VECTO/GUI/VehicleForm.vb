@@ -1827,15 +1827,15 @@ Public Class VehicleForm
 	End Sub
 
 	Private Sub btnRemoveFuelCellComponent_Click(sender As Object, e As EventArgs) Handles btnRemoveFuelCellComponent.Click
-		If lvREESSPacks.SelectedItems.Count = 0 Then
-			If lvREESSPacks.Items.Count = 0 Then
+		If lvFuelCellComponents.SelectedItems.Count = 0 Then
+			If lvFuelCellComponents.Items.Count = 0 Then
 				Exit Sub
 			Else
-				lvREESSPacks.Items(lvREESSPacks.Items.Count - 1).Selected = True
+			    lvFuelCellComponents.Items(lvFuelCellComponents.Items.Count - 1).Selected = True
 			End If
 		End If
 
-		lvREESSPacks.SelectedItems(0).Remove()
+	    lvFuelCellComponents.SelectedItems(0).Remove()
 	End Sub
 
 	Private Sub btnOpenGenSetEM_Click(sender As Object, e As EventArgs) Handles btnOpenGenSetEM.Click
