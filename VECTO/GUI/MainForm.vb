@@ -1465,8 +1465,13 @@ lbFound:
     Friend Sub OpenVECTOeditor(x As String, jobType As VectoSimulationJobType)
 
         If x = "<New>" Then
-            ShowVectoJobForm(jobType)
-            VectoJobForm.VectoNew()
+            Try
+                ShowVectoJobForm(jobType)
+                VectoJobForm.VectoNew()
+            Catch ex As VectoException
+                MsgBox(ex.Message,MsgBoxStyle.OkOnly, "Error creating new Vecto job")
+                Exit Sub
+            End Try
         ElseIf x = "<VTP>" Then
             ShowVectoEPTPJobForm()
             VectoVTPJobForm.VectoNew()

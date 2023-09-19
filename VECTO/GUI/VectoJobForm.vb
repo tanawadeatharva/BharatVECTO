@@ -16,6 +16,7 @@ Imports System.IO
 Imports System.Linq
 Imports System.Windows.Forms.DataVisualization.Charting
 Imports TUGraz.VECTO.Input_Files
+Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
@@ -171,6 +172,8 @@ Public Class VectoJobForm
                 auxList = New HeavyLorryAuxiliaryDataAdapter().AuxiliaryTypes.OrderBy(Function(x) x).ToList()
             Case VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E
                 auxList = new HeavyLorryPEVAuxiliaryDataAdapter().AuxiliaryTypes.OrderBy(Function(x) x).ToList()
+            Case Else
+                Throw New VectoException($"{JobType} not supported in declaration mode")
         End Select
 
         Dim auxTechs = New Dictionary(Of AuxiliaryType, IDeclarationAuxiliaryTable) from {
@@ -636,8 +639,12 @@ Public Class VectoJobForm
             tbBusAuxParams.Text = ""
         End If
 
-        DeclInit()
-
+        Try
+            DeclInit()
+        Catch ex As VectoException
+            MsgBox(ex.Message,MsgBoxStyle.OkOnly, "Error loading Vecto job" )
+            Exit Sub
+        End Try
 
         EngineForm.AutoSendTo = False
         GearboxForm.AutoSendTo = False
@@ -805,7 +812,6 @@ Public Class VectoJobForm
         tbLacDfVelocityDropFile.Text = ""
 
         '---------------------------------------------------
-
         DeclInit()
 
         EngineForm.AutoSendTo = False
