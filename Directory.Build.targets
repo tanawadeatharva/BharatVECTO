@@ -141,7 +141,7 @@
 			<DeclarationData Include="$(SolutionDir)VectoCore\VectoCore\Resources\Declaration\**\*.ahsm" Exclude="$(SolutionDir)**\MissionCycles\**\*.*"/>
 			<DeclarationData Include="$(SolutionDir)VectoCore\VectoCore\Resources\Declaration\**\*.acmp" Exclude="$(SolutionDir)**\MissionCycles\**\*.*"/>
 			<DeclarationData Include="$(SolutionDir)VectoCore\VectoCore\Resources\Declaration\**\*.vmap" Exclude="$(SolutionDir)**\MissionCycles\**\*.*"/>
-			<VectoXSD Include="$(SolutionDir)VectoCore\VectoCore\Resources\XSD\**\*.*" Exclude="$(SolutionDir)**\*Engineering*"/>
+			<VectoXSD Include="$(SolutionDir)VectoCore\VectoCore\Resources\XSD\**\*.*" Exclude="$(SolutionDir)**\*Engineering*;$(SolutionDir)**\Engineering\*"/>
 			<VectoXMLExamples Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\*-sample.xml"/>
 			<UserManual Include="$(SolutionDir)Documentation\User Manual\help.html"/>
 			<UserManual Include="$(SolutionDir)Documentation\VectoHashingTool\HashingToolHelp.html"/>
