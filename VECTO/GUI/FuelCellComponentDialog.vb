@@ -39,11 +39,12 @@ Public Class FuelCellComponentDialog
     Private Sub btnOpenFuelCellComponent_Click(sender As Object, e As EventArgs) Handles btnOpenFuelCellComponent.Click
         Dim f As String
         f = FileRepl(tbFuelCellComponent.Text, GetPath(_vehFile))
-        Dim fuelCellForm = FuelCellComponentForm
+       
+        
         'fuelCellForm.Parent = Me
         'Thus Veh-file is returned
-        fuelCellForm.JobDir = GetPath(_vehFile)
-        fuelCellForm.AutoSendTo = True
+        FuelCellComponentForm.JobDir = GetPath(_vehFile)
+        FuelCellComponentForm.AutoSendTo = True
 
         If Not Trim(f) = "" Then
             If Not File.Exists(f) Then
@@ -54,7 +55,7 @@ Public Class FuelCellComponentDialog
 
 
         If Not FuelCellComponentForm.Visible Then
-            FuelCellComponentForm.Show()
+            FuelCellComponentForm.ShowDialog()
         Else
             If FuelCellComponentForm.WindowState = FormWindowState.Minimized Then BatteryForm.WindowState = FormWindowState.Normal
             FuelCellComponentForm.BringToFront()
@@ -62,7 +63,7 @@ Public Class FuelCellComponentDialog
 
         If Not Trim(f) = "" Then
             Try
-                fuelCellForm.OpenFuelCellFile(f)
+                FuelCellComponentForm.OpenFuelCellFile(f)
             Catch ex As Exception
                 MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading FuelCell File")
             End Try

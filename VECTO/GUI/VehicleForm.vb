@@ -142,7 +142,7 @@ Public Class VehicleForm
 		_torqueLimitDlog = New VehicleTorqueLimitDialog()
 		_emRatioPerGearDlog = New EMGearRatioDialog()
 		_reessPackDlg = New REESSPackDialog()
-		_fcComponentDlg = New FuelCellComponentDialog()
+		_fcComponentDlg = FuelCellComponentDialog
 
 		cbPTOType.DataSource = DeclarationData.PTOTransmission.GetTechnologies.Select(
 			Function(technology) New With {.Key = technology, .Value = technology}).ToList()
