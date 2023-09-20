@@ -1,5 +1,6 @@
 ﻿using System;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
@@ -13,7 +14,7 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 
 		}
 
-		public DefaultIterativeStrategy()
+		public DefaultIterativeStrategy() : base(Array.Empty<PreRunOptions>())
 		{
 			Enabled = false;
 		}

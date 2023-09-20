@@ -12,9 +12,21 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
+	public class PreRunOptions
+	{
+		/// <summary>
+		/// Determines if the Mod data should be written for this iteration AND if an entry should be added to the sumfile
+		/// default true
+		/// </summary>
+		public bool WriteModAndSumData { get; set; } = true;
+	}
+
+
+
+
 	public interface IFollowUpRunCreator
 	{
-		bool RunAgain(Action<VectoRunData> runAgainAction, IVectoRun run, Action beforeNextRun);
+		bool RunAgain(Action<VectoRunData> runAgainAction, IVectoRun run, Action<PreRunOptions> beforeNextRun);
 	}
 
 
@@ -22,7 +34,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	{
 		#region Implementation of IFollowUpRunCreator
 
-		public bool RunAgain(Action<VectoRunData> runAgainAction, IVectoRun run, Action beforeNextRun)
+		public bool RunAgain(Action<VectoRunData> runAgainAction, IVectoRun run, Action<PreRunOptions> beforeNextRun)
 		{
 			return false;
 		}
@@ -52,8 +64,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// <param name="runAgainAction"></param>
 		/// <param name="run"></param>
 		/// <return>true if the run is executed again, false otherwise</return>
-		public bool RunAgain(Action<VectoRunData> runAgainAction, IVectoRun run, Action beforeNextRun)
+		public bool RunAgain(Action<VectoRunData> runAgainAction, IVectoRun run, Action<PreRunOptions> beforeNextRun)
 		{
+
+			
 			var modalDataContainer = run.GetContainer().ModalData;
 			var vectoRunData = run.GetContainer().RunData;
 			if (!_strategy.RunAgain(iteration, modalDataContainer, vectoRunData) || !run.FinishedWithoutErrors) {
@@ -64,7 +78,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	
 			Log.Info(string.Format("Run {0} again!", run.RunName));
 
-			beforeNextRun();
+			var options = _strategy.GetPreRunOptions(iteration);
+			beforeNextRun(options);
 
 			vectoRunData.ModFileSuffix = original_modfile_suffix + (iteration + 1);
 			_strategy.UpdateRunData(iteration, modalDataContainer, vectoRunData);

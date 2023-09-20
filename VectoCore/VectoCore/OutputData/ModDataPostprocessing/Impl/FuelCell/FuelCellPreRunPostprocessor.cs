@@ -763,9 +763,12 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 			return success;
 		}
 
+
+		[Conditional("TRACE_FC")]
 		private void WriteEntriesToFile(Meter windowSize, FCCalcEntry[] fcCalcEntries, double initSoc,
             WattSecond deltaEnergyBatInt, Second timeFcCanChange, bool success)
         {
+
 			lock (fileLock)
             {
                 using (var fs = new StreamWriter(Path.Combine(Path.GetDirectoryName(Writer?.JobFile) ?? "", $"fuelcell_data_{RunName}_{Math.Round(windowSize.Value(), 0)}_soc_{initSoc}_{(success ? "success" : "")}.csv")))
@@ -779,7 +782,8 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
                     }
                 }
             }
-        }
+
+		}
 
         /// <summary>
         /// Check if fuelcell can supply enough power over the cycle.

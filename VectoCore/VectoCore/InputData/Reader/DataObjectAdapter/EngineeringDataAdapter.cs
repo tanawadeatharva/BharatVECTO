@@ -964,6 +964,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public FuelCellSystemData CreateFuelCellSystemData(IFuelCellSystemEngineeringInputData fuelCellSystemInputData)
 		{
+			if (fuelCellSystemInputData.FuelCellComponents.Count != 1 
+				&& fuelCellSystemInputData.FuelCellComponents[0].Count != 1) {
+				throw new VectoException(
+					$"Invalid fuel cell count! Currently only one fuel cell component is supported");
+			}
+			
+			
 			var fuelCellSystemData = new FuelCellSystemData();
 			fuelCellSystemData.GradientPowerChange = fuelCellSystemInputData.GradientPowerChange;
 			fuelCellSystemData.OnOffHysteresis = fuelCellSystemInputData.OnOffHysteresis;

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NLog.Fluent;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
@@ -52,5 +53,7 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
         }
 
 		#endregion
+
+		public FCHEVIterativeRunStrategy(PreRunOptions[] preRunOptions) : base(preRunOptions) { }
 	}
 }

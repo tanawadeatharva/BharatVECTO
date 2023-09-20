@@ -106,13 +106,27 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		private IEnumerable<VectoRunData> GetFCHV_RunData()
 		{
 			var dao = new EngineeringDataAdapter() {
+
 				DebugOutputDataWriter = Writer,
 			};
 
 
 			foreach (var pevRd in GetBatteryElectricVehicleRunData()) {
 
-				var iterativeRunStrategy = new FCHEVIterativeRunStrategy();
+				var iterativeRunStrategy = new FCHEVIterativeRunStrategy( new []{
+					//Prerun, iteration 0
+					new PreRunOptions() {
+#if TRACE_FC
+						WriteModAndSumData = true,
+#else
+						WriteModAndSumData = false
+#endif
+					},
+					//Real run, iteration 1
+					new PreRunOptions() {
+						WriteModAndSumData = true
+					}
+				});
 
 
 				pevRd.BatteryData = dao.CreateFuelCellPreProcessingBattery(InputDataProvider.JobInputData.Vehicle.Components.FuelCellSystemInputData, pevRd.BatteryData);

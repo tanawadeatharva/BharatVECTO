@@ -1,5 +1,6 @@
 ﻿using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
@@ -84,6 +85,15 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 				default:
 					throw new VectoException($"Iteration {iteration} not implemented");
 			}
+		}
+
+		public OVCHevIterativeRunStrategy() : base(new PreRunOptions[3] {
+			new PreRunOptions(),
+			new PreRunOptions(),
+			new PreRunOptions()
+		})
+		{
+
 		}
 	}
 }
