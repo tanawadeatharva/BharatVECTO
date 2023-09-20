@@ -26,8 +26,8 @@ Partial Class FuelCellComponentForm
         Me.pcBoxMassFlowMap = New System.Windows.Forms.PictureBox()
         Me.lblTitle = New System.Windows.Forms.Label()
         Me.pnMinElectricPower = New System.Windows.Forms.TableLayoutPanel()
-        Me.tbMinElectricPower = New System.Windows.Forms.TextBox()
         Me.lblMinElectricPower = New System.Windows.Forms.Label()
+        Me.tbMinElectricPower = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.pnMaxElectricPower = New System.Windows.Forms.TableLayoutPanel()
         Me.tbMaxElectricPower = New System.Windows.Forms.TextBox()
@@ -92,14 +92,6 @@ Partial Class FuelCellComponentForm
         Me.pnMinElectricPower.Size = New System.Drawing.Size(388, 25)
         Me.pnMinElectricPower.TabIndex = 4
         '
-        'tbMinElectricPower
-        '
-        Me.tbMinElectricPower.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.tbMinElectricPower.Location = New System.Drawing.Point(179, 3)
-        Me.tbMinElectricPower.Name = "tbMinElectricPower"
-        Me.tbMinElectricPower.Size = New System.Drawing.Size(170, 20)
-        Me.tbMinElectricPower.TabIndex = 1
-        '
         'lblMinElectricPower
         '
         Me.lblMinElectricPower.AutoSize = true
@@ -111,6 +103,14 @@ Partial Class FuelCellComponentForm
         Me.lblMinElectricPower.TabIndex = 0
         Me.lblMinElectricPower.Text = "Min Electric Power"
         Me.lblMinElectricPower.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'tbMinElectricPower
+        '
+        Me.tbMinElectricPower.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.tbMinElectricPower.Location = New System.Drawing.Point(179, 3)
+        Me.tbMinElectricPower.Name = "tbMinElectricPower"
+        Me.tbMinElectricPower.Size = New System.Drawing.Size(170, 20)
+        Me.tbMinElectricPower.TabIndex = 1
         '
         'Label3
         '
@@ -182,7 +182,7 @@ Partial Class FuelCellComponentForm
         Me.pnModel.Controls.Add(Me.lblModel, 0, 0)
         Me.pnModel.Location = New System.Drawing.Point(12, 84)
         Me.pnModel.Name = "pnModel"
-        Me.pnModel.RowCount = 2
+        Me.pnModel.RowCount = 1
         Me.pnModel.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100!))
         Me.pnModel.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25!))
         Me.pnModel.Size = New System.Drawing.Size(388, 25)
@@ -203,7 +203,7 @@ Partial Class FuelCellComponentForm
         Me.lblModel.Location = New System.Drawing.Point(0, 0)
         Me.lblModel.Margin = New System.Windows.Forms.Padding(0)
         Me.lblModel.Name = "lblModel"
-        Me.lblModel.Size = New System.Drawing.Size(194, 1)
+        Me.lblModel.Size = New System.Drawing.Size(194, 25)
         Me.lblModel.TabIndex = 0
         Me.lblModel.Text = "Model"
         Me.lblModel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
