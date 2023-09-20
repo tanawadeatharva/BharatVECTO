@@ -31,7 +31,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -39,6 +38,7 @@ using System.Reflection;
 using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.XPath;
 using Ninject;
 using NLog;
 using NLog.Config;
@@ -73,7 +73,6 @@ Usage:
 	vectocmd.exe [-h] [-v] [-q] -ams PREVIOUS_STEP.xml CURRENT_STEP.xml OUTPUT.xml
 
 ";
-
 
 		private const string UsageAMS = @"
 Usage:
@@ -241,6 +240,12 @@ Examples:
 							return 0;
 						}
 
+						if (!CanSimulateVehicleStep(fileList))
+						{
+							WriteErrorLine("Can not simulate interim steps. Only final can be simulated.");
+							return 0;
+						}
+
 						jobFiles = new List<string> { outputVifPath };
 					}
 					catch(VectoException e)
@@ -398,6 +403,16 @@ Examples:
 			WriteLine($"Output file written to {writer.XMLMultistageReportFileName}");
 
 			return writer.XMLMultistageReportFileName;
+		}
+
+		private static bool CanSimulateVehicleStep(string[] fileList)
+		{
+			var vehicleInputDataFilePath = fileList[1];
+
+			var xDocument = XDocument.Load(vehicleInputDataFilePath);
+			var vehicleType = xDocument?.XPathSelectElement("/*[local-name()='VectoInputDeclaration']/*[local-name()='Vehicle']/*[local-name()='VehicleDeclarationType']").Value;
+
+			return vehicleType == "final";
 		}
 
 		private static void WriteLine()
