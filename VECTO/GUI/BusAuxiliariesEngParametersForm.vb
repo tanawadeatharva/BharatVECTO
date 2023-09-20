@@ -66,8 +66,7 @@ Public Class BusAuxiliariesEngParametersForm
         pnCurrentDemand.Enabled = True
 
         select case JobType
-            case VectoSimulationJobType.BatteryElectricVehicle:
-            case VectoSimulationJobType.IEPC_E:
+            case VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.FCHV, VectoSimulationJobType.IEPC_E:
                 bgPneumaticSystem.Enabled = False
                 gbHVAC.Enabled = False
                 cbES_HEVREESS.Checked = True
