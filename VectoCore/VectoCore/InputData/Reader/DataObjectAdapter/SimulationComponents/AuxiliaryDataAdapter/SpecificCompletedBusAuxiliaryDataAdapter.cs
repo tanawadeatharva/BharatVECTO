@@ -292,7 +292,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				};
 				var errors = new List<string>();
 				foreach (var entry in heatpumps) {
-					if (!entry.Value.IsOneOf(HeatPumpType.non_R_744_continuous, HeatPumpType.none, HeatPumpType.not_applicable)) {
+					if (!entry.Value.IsElectrical() && !entry.Value.IsOneOf(HeatPumpType.none, HeatPumpType.not_applicable)) {
 						errors.Add($"{entry.Key}: must not be mechanically driven for PEV/S-HEV ({entry.Value.ToXML()})");
 					}
 				}
