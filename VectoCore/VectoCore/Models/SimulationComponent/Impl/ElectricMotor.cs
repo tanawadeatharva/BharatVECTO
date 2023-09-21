@@ -82,6 +82,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var maxTorque = electricPower > 0
 				? GetMaxRecuperationTorque(volt, dt, avgEmSpeed, gear)
 				: GetMaxDriveTorque(volt, dt, avgEmSpeed, gear);
+			if (maxTorque == null) {
+				return null;
+			}
+
 			var tqEmMap = ModelData.EfficiencyData.EfficiencyMapLookupTorque(volt, electricPower, avgEmSpeed, maxTorque, gear);
 			
 			if (tqEmMap == null) {
@@ -509,7 +513,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var electricSystemResponse = ElectricPower.Request(0.SI<Second>(), dt, 0.SI<Watt>(), true);
 			var maxBatPower = electricSystemResponse.MaxPowerDrive;
 
-			if (maxBatPower.IsGreater(0, 1e-3)) {
+			if (maxBatPower.IsGreaterOrEqual(0, 1e-3)) {
 				// has to be negative for propelling - so battery is below min SoC
 				return null;
 			}

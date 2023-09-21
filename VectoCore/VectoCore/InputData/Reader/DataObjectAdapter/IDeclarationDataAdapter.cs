@@ -26,7 +26,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed, GearboxType gearboxType, int gearsCount);
 
-		RetarderData CreateRetarderData(IRetarderInputData retarderData, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet);
+		RetarderData CreateRetarderData(IRetarderInputData retarderData, ArchitectureID archID,
+			IIEPCDeclarationInputData iepcInputData);
 		
 		AxleGearData CreateAxleGearData(IAxleGearInputData axleGearInputData);
 
@@ -51,7 +52,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData, IGearboxDeclarationInputData gbx);
 		PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto);
 
-        AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment);
+        AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData,
+			IVehicleInMotionChargingDeclaration imcData, Mission mission, Segment segment, OvcHevMode ovcMode,
+			double cycleShareDistanceHighway);
 
 		CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle,
 			IEngineModeDeclarationInputData engineMode, Mission mission);
@@ -93,7 +96,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			IBusAuxiliariesDeclarationData busAuxData, MissionType missionType, VehicleClass vehicleClass,
 			Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType);
 
-		AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment);
+		AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, IVehicleInMotionChargingDeclaration imcData, Mission mission, Segment segment, OvcHevMode ovcMode, double cycleShareDistanceHighway);
 
 		// serial hybrid strategy
 		HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
@@ -108,7 +111,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 	public interface IGenericCompletedBusDeclarationDataAdapter : IDeclarationDataAdapter
 	{
-		AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment);
+		AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, IVehicleInMotionChargingDeclaration imcData, Mission mission, Segment segment, OvcHevMode ovcMode, double cycleShareDistanceHighway);
 		DriverData CreateBusDriverData(Segment segment, VectoSimulationJobType jobType, ArchitectureID arch, CompressorDrive compressorDrive);
         CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx,
 			Mission mission);

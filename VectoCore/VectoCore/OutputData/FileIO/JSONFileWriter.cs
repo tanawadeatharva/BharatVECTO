@@ -595,6 +595,10 @@ public class JSONFileWriter : IOutputFileWriter
 			body["TankSystem"] = vehicle.TankSystem.Value.ToString();
 		}
 
+		
+		
+		
+
 		//body.Add(JsonKeys.HEV_Vehicle_MaxDrivetrainPower, vehicle.MaxDrivetrainPower.ConvertToKiloWatt().Value);
 
 		//ToDo ElectricMotorTorqueLimits changed
@@ -611,7 +615,30 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("Batteries", GetBattery(vehicle, basePath));
 		body.Add("OvcHev", vehicle.OvcHev);
 		body.Add("MaxChargingPower", vehicle.OvcHev ? vehicle.MaxChargingPower.ConvertToKiloWatt().Value : 0);
-		WriteFile(header, body, filename);
+
+		var IMCDictionary = GetInMotionChargingData(vehicle);
+		body.Add("InMotionCharging", IMCDictionary);
+
+        WriteFile(header, body, filename);
+	}
+
+	private static Dictionary<string, object> GetInMotionChargingData(IVehicleEngineeringInputData vehicle)
+	{
+		var imcDictionary = new Dictionary<string, object>();
+		if (vehicle.SavedInDeclarationMode) {
+			imcDictionary.Add("Technology", vehicle.InMotionCharging.Technology.ToString());
+			return imcDictionary;
+		}
+		if (vehicle.InMotionCharging.Enabled) {
+			imcDictionary.Add("IMC_Enabled", vehicle.InMotionCharging.Enabled);
+			imcDictionary.Add("IMC_TotalDistance", vehicle.InMotionCharging.ShareIMCAvailabilityTotalMission * 100);
+			imcDictionary.Add("IMC_CdxA", vehicle.InMotionCharging.DeltaCdxA.Value());
+			imcDictionary.Add("IMC_MotorwaySection", vehicle.InMotionCharging.IMCOnMotorwayOnly);
+		} else {
+			imcDictionary.Add("IMC_Enabled", vehicle.InMotionCharging.Enabled);
+		}
+
+		return imcDictionary;
 	}
 
 	public void SaveBatteryElectricVehicle(
@@ -652,9 +679,10 @@ public class JSONFileWriter : IOutputFileWriter
         if ((vehicle.TankSystem.HasValue))
 			body["TankSystem"] = vehicle.TankSystem.Value.ToString();
 
+		var IMCDictionary = GetInMotionChargingData(vehicle);
+        body.Add("InMotionCharging", IMCDictionary);
 
-
-		WriteFile(header, body, filename);
+        WriteFile(header, body, filename);
 	}
 
 
@@ -699,7 +727,10 @@ public class JSONFileWriter : IOutputFileWriter
 		if ((vehicle.TankSystem.HasValue))
 			body["TankSystem"] = vehicle.TankSystem.Value.ToString();
 
-		WriteFile(header, body, filename);
+		var IMCDictionary = GetInMotionChargingData(vehicle);
+        body.Add("InMotionCharging", IMCDictionary);
+
+        WriteFile(header, body, filename);
 	}
 
 	private Dictionary<string, object>[] GetBattery(IVehicleEngineeringInputData vehicle, string basePath) =>
@@ -1538,6 +1569,13 @@ public class JSONFileWriter : IOutputFileWriter
 		WriteFile(header, body, filename);
 	}
 
+	public class FuelNCVOutput
+    {
+		public string Type { get; internal set; }
+
+		public double NCV { get; internal set; }
+	}
+
 	private Dictionary<string, object> SaveVTPJob(IVTPDeclarationJobInputData job, string filename, bool declarationmode)
 	{
 		// Body
@@ -1551,7 +1589,17 @@ public class JSONFileWriter : IOutputFileWriter
 		}
 		body.Add("FanPowerCoefficients", job.FanPowerCoefficents);
 		body.Add("FanDiameter", job.FanDiameter.Value());
-		body.Add("Cycles", job.Cycles.Select(x => GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray());
+		body.Add(JsonKeys.Job_FuelNCVs, job.FuelNCVs.Select(x => new FuelNCVOutput() 
+			{ 
+				Type = x.Type.GetLabel(), 
+				NCV = x.NCV.ConvertToMegaJoulePerKilogram().Value 
+			}).ToArray());
+
+		body.Add(JsonKeys.Job_TorqueDriftLeftWheel, job.TorqueDriftLeftWheel.Value());
+		body.Add(JsonKeys.Job_TorqueDriftRightWheel, job.TorqueDriftRightWheel.Value());
+		body.Add(
+			"Cycles", job.Cycles.Select(x => GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray());
+		
 		return body;
 	}
 

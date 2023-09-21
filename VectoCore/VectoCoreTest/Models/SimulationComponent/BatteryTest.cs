@@ -725,5 +725,51 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			Assert.AreEqual(expected_P_EmMax, maxEMPower.Value(), 1e-3);
 		}
-	}
+
+		[TestCase(0, 100, 470.023560, 358.455326),
+		TestCase(20, 90, 472.106880, 358.770513),
+		TestCase(30, 90, 473.435280, 359.461282),
+        ]
+		public void BatteryCapacityCalculationLimitedSoCMap(double minSoC, double maxSoC, double expectedTotalCapacitykWh, double expectedUsableCapacitykWh)
+		{
+			var socMapData = new[] {
+				"SOC,  V",
+				"0   , 673.5",
+				"10  , 700.2",
+				"20  , 715.4",
+				"30  , 723.6",
+				"40  , 727.7",
+				"50  , 730",
+				"60  , 731.6",
+				"70  , 733.8",
+				"80  , 737.1",
+				"90  , 742.2",
+				"100 , 750.2",
+			};
+
+			var socMap = BatterySOCReader.Create(socMapData.Where(x => {
+				var parts = x.Split(',');
+				var ok = double.TryParse(parts[0], out var soc);
+				if (!ok) {
+					return true;
+				}
+				return soc >= minSoC && soc <= maxSoC;
+			}).Join(Environment.NewLine).ToStream());
+
+			var batData = new BatteryData() {
+				SOCMap = socMap,
+				Capacity = (2 * 324).SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(),
+				MinSOC = 0.12,
+				MaxSOC = 0.88,
+			};
+
+			var totalCap = batData.TotalStoredEnergy;
+			var usableCap = batData.UseableStoredEnergy;
+
+			Console.WriteLine($"{totalCap.ConvertToKiloWattHour().Value.ToXMLFormat(6)}, {usableCap.ConvertToKiloWattHour().Value.ToXMLFormat(6)}");
+
+			Assert.AreEqual(expectedTotalCapacitykWh, totalCap.ConvertToKiloWattHour().Value, 1e-6);
+			Assert.AreEqual(expectedUsableCapacitykWh, usableCap.ConvertToKiloWattHour().Value, 1e-6);
+		}
+    }
 }

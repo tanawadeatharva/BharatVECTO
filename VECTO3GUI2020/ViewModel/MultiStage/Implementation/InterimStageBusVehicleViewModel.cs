@@ -928,6 +928,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			
 		}
 
+		public IVehicleInMotionChargingDeclaration InMotionCharging { get; }
+
 		public bool AdasEditingEnabled
 		{
 			get => _adasEditingEnabled;

@@ -139,7 +139,9 @@ namespace TUGraz.VectoCore.OutputData
 		string StackTrace { get; }
 
 		BatterySystemData BatteryData { get; }
-	}
+
+		double BatteryEfficiencyDischarge { get; set; }
+    }
 
 	public interface IWeightedResult
 	{

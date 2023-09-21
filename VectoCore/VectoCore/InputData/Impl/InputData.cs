@@ -149,6 +149,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public double RollResistanceCoefficient { get; internal set; }
 
 		public Newton TyreTestLoad { get; internal set; }
+
 		public string FuelEfficiencyClass { get; internal set; }
 
 		public KilogramSquareMeter Inertia { get; internal set; }
@@ -307,5 +308,13 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public IList<IElectricMotorPowerMap> PowerMap { get; internal set; }
 
 		#endregion
-	}
+    }
+
+    public class FuelNCVData : IFuelNCVData
+    {
+		public FuelType Type { get; internal set; }
+
+		public JoulePerKilogramm NCV { get; internal set; }
+    }
+
 }

@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 				CurrentState.ElectricAuxPower = electricConsumersPower;
 			}
 
-			if (powerDemand.IsBetween(chargeEnergy, dischargeEnergy))
+			if ((powerDemand * dt).IsBetween(chargeEnergy, dischargeEnergy))
 			{
 				return powerDemand;
 			}

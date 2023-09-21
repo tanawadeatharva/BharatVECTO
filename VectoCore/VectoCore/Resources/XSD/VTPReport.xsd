@@ -3,7 +3,9 @@
 <xs:schema xmlns="urn:tugraz:ivt:VectoAPI:VTPReport" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" xmlns:vtp1.0="urn:tugraz:ivt:VectoAPI:VTPReport:v0.1" xmlns:vtp2.0="urn:tugraz:ivt:VectoAPI:VTPReport:v0.2" targetNamespace="urn:tugraz:ivt:VectoAPI:VTPReport" elementFormDefault="qualified" attributeFormDefault="unqualified" version="0.1">
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" schemaLocation="VectoOutputDefinitions.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:VTPReport:v0.1" schemaLocation="VTPReport.0.1.xsd"/>
-	<xs:import namespace="urn:tugraz:ivt:VectoAPI:VTPReport:v0.2" schemaLocation="VTPReport.0.2.xsd"/>
+  <xs:import namespace="urn:tugraz:ivt:VectoAPI:VTPReport:v0.11" schemaLocation="VTPReport.0.11.xsd"/>
+  <xs:import namespace="urn:tugraz:ivt:VectoAPI:VTPReport:v0.2" schemaLocation="VTPReport.0.2.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:VTPReport:v0.21" schemaLocation="VTPReport.0.21.xsd"/>
 	<xs:element name="VectoVTPReport" type="VectoVTPReportType"/>
 	<xs:complexType name="VectoVTPReportType">
 		<xs:sequence>

@@ -51,8 +51,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 
 		public bool ChargeSustainingBatterySystem
 		{
-			get { return Batteries.All(b => b.Item2.ChargeSustainingBattery); } 
-			set { Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = value); }
+			get { return Batteries.All(b => b.Item2.ChargeDepletingBattery); } 
+			set { Batteries.ForEach(b => b.Item2.ChargeDepletingBattery = value); }
 		}
 
 		#region Implementation of ICloneable
@@ -113,7 +113,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 
 		public MaxCurrentMap MaxCurrent { get; internal set; }
 		public int BatteryId { get; internal set; }
-		public bool ChargeSustainingBattery { get; internal set; }
+
+		/// <summary>
+		/// Infinity Battery
+		/// </summary>
+		public bool ChargeDepletingBattery { get; internal set; }
 
 		public WattSecond TotalStoredEnergy => _totaltoredEnergy ?? (_totaltoredEnergy = CalculateBatteryEnergy(0, 1));
 
@@ -153,7 +157,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 		{
 			return new BatteryData() {
 				BatteryId = this.BatteryId,
-				ChargeSustainingBattery = this.ChargeSustainingBattery,
+				ChargeDepletingBattery = this.ChargeDepletingBattery,
 				MinSOC = this.MinSOC,
 				MaxSOC = this.MaxSOC,
 				Capacity = this.Capacity,

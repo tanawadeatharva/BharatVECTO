@@ -163,9 +163,11 @@ namespace TUGraz.VectoCommon.InputData
 
 		IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; }
 
-		// fields for exempted vehicles
+		IVehicleInMotionChargingDeclaration InMotionCharging { get; }
 
-		bool ZeroEmissionVehicle { get; }
+        // fields for exempted vehicles
+
+        bool ZeroEmissionVehicle { get; }
 
 		bool HybridElectricHDV { get; }
 
@@ -232,7 +234,13 @@ namespace TUGraz.VectoCommon.InputData
 
 	}
 
-	public interface IVehicleComponentsDeclaration
+	public interface IVehicleInMotionChargingDeclaration 
+    {
+		IMCTechnology Technology { get; }
+	}
+
+
+    public interface IVehicleComponentsDeclaration
 	{
 		IAirdragDeclarationInputData AirdragInputData { get; }
 
@@ -728,6 +736,13 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		TableData CycleData { get; }
 	}
+
+	public interface IFuelNCVData
+	{
+		FuelType Type { get; }
+
+		JoulePerKilogramm NCV { get; }
+    }
 
 	public interface IDriverDeclarationInputData : IDriverModelData
 	{
@@ -1310,7 +1325,7 @@ namespace TUGraz.VectoCommon.InputData
 		E4,
 		E_IEPC,
 		P1,
-		P2,P,
+		P2,
 		P2_5,
 		P3,
 		P4,

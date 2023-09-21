@@ -43,20 +43,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		protected readonly List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> Entries;
 
-		public CrosswindCorrectionCdxALookup(SquareMeter airDragArea,
+        public CrosswindCorrectionCdxALookup(SquareMeter airDragArea, SquareMeter deltaAirDragAreaIMC, 
+			SquareMeter deltaAirDragAreaIMCHighway,
 			List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> entries,
 			CrossWindCorrectionMode correctionMode)
 		{
 			AirDragArea = airDragArea;
+			DeltaAirDragAreaIMC = deltaAirDragAreaIMC;
+			DeltaAirDragAreaIMCHighway = deltaAirDragAreaIMCHighway;
 			CorrectionMode = correctionMode;
 			Entries = entries;
 		}
 
-		public CrossWindCorrectionMode CorrectionMode { get; internal set; }
+		public CrossWindCorrectionMode CorrectionMode { get; }
 
-		public SquareMeter AirDragArea { get; internal set; }
+		public SquareMeter AirDragArea { get; }
 
-		public void SetDataBus(IDataBus dataBus) {}
+		public SquareMeter DeltaAirDragAreaIMCHighway { get; }
+
+		public SquareMeter DeltaAirDragAreaIMC { get; }
 
 		public string[] SerializedEntries
 		{
@@ -65,16 +70,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 		}
 
-		public Watt AverageAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2, KilogramPerCubicMeter airDensity)
+		public AirDragLossResult AverageAirDragPowerLoss(DrivingCycleData.DrivingCycleEntry positionInCycle, MeterPerSecond v1, MeterPerSecond v2, KilogramPerCubicMeter airDensity)
 		{
 			var vAverage = (v1 + v2) / 2;
-			var cdA = EffectiveAirDragArea(vAverage);
+			var cdA_Base = EffectiveAirDragArea(vAverage);
 
+			var cdA = cdA_Base + DeltaAirDragAreaIMC;
+			if (positionInCycle.Highway) {
+				cdA += DeltaAirDragAreaIMCHighway;
+			}
 			// compute the average force within the current simulation interval
 			// P(t) = k * CdA * v(t)^3  , v(t) = v0 + a * t  // P_avg = 1/T * Integral P(t) dt
 			// => P_avg = (CdA * rho/2)/(4*a * dt) * (v2^4 - v1^4) // a = (v2-v1)/dt
 			// -> P_avg = (CdA * rho/2) * (v2^4 - v1^4) / (v2 - v1) = (CdA * rho/2) * (v1 + v2) * (v1^2 + v2^2)
-			return (airDensity / (2.0 * 4) * cdA * (v1 + v2) * (v1 * v1 + v2 * v2)).Cast<Watt>();
+			var powerLoss = (airDensity / (2.0 * 4) * cdA * (v1 + v2) * (v1 * v1 + v2 * v2)).Cast<Watt>();
+			return new AirDragLossResult(powerLoss, cdA, vAverage);
 		}
 
 		protected internal SquareMeter EffectiveAirDragArea(MeterPerSecond x)
@@ -89,5 +99,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return VectoMath.Interpolate(p.Item1.Velocity, p.Item2.Velocity,
 				p.Item1.EffectiveCrossSectionArea, p.Item2.EffectiveCrossSectionArea, x);
 		}
+
+		
 	}
 }

@@ -907,6 +907,51 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to NCV.
+        /// </summary>
+        internal static string Job_FuelNCV_NCV {
+            get {
+                return ResourceManager.GetString("Job_FuelNCV_NCV", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        internal static string Job_FuelNCV_Type {
+            get {
+                return ResourceManager.GetString("Job_FuelNCV_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FuelNCVs.
+        /// </summary>
+        internal static string Job_FuelNCVs {
+            get {
+                return ResourceManager.GetString("Job_FuelNCVs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TorqueDriftLeftWheel.
+        /// </summary>
+        internal static string Job_TorqueDriftLeftWheel {
+            get {
+                return ResourceManager.GetString("Job_TorqueDriftLeftWheel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TorqueDriftRightWheel.
+        /// </summary>
+        internal static string Job_TorqueDriftRightWheel {
+            get {
+                return ResourceManager.GetString("Job_TorqueDriftRightWheel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Body.
         /// </summary>
         internal static string JsonBody {

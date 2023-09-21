@@ -119,6 +119,28 @@ namespace TUGraz.VectoCore.Utils
 			throw new NotImplementedException($"unknown unit '{unit}'");
 		}
 
+		public static object[] ValueAsUnit(KilogramPerWattSecond kpws, string unit, uint? decimals = 0)
+		{
+			switch (unit) {
+				case "mg/kWh":
+					return GetValueAsUnit(kpws?.ConvertToMilliGramPerKiloWattHour(), unit, decimals);
+				case "g/kWh":
+					return GetValueAsUnit(kpws?.ConvertToGramPerKiloWattHour(), unit, decimals);
+			}
+
+			throw new NotImplementedException(string.Format("unknown unit '{0}'", unit));
+		}
+
+		public static object[] ValueAsUnit(PerWattSecond pws, string unit, uint? decimals = 0)
+		{
+			switch (unit) {
+				case "#/kWh":
+					return GetValueAsUnit(pws?.ConvertToPerKiloWattHour(), unit, decimals);
+			}
+
+			throw new NotImplementedException(string.Format("unknown unit '{0}'", unit));
+		}
+		
 		public static object[] ValueAsUnit(this AmpereSecond capacity, string unit, uint? decimals = 0)
 		{
 			switch (unit)

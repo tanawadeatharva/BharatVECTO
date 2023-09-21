@@ -115,14 +115,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// create a dummy powertrain for pre-processing and estimations
 				var testContainer = new SimplePowertrainContainer(data);
 
-				switch (data.JobType) {
-					case VectoSimulationJobType.BatteryElectricVehicle:
-					case VectoSimulationJobType.SerialHybridVehicle:
-					case VectoSimulationJobType.IEPC_E:
-					case VectoSimulationJobType.IEPC_S:
+				switch (data.JobType)
+                {
+                    case VectoSimulationJobType.BatteryElectricVehicle:
+                    case VectoSimulationJobType.SerialHybridVehicle:
+                    case VectoSimulationJobType.IEPC_E:
+                    case VectoSimulationJobType.IEPC_S:
 						PowertrainBuilder.BuildSimplePowertrainElectric(data, testContainer);
 						break;
-					case VectoSimulationJobType.IHPC:
+                    case VectoSimulationJobType.IHPC:
 					case VectoSimulationJobType.ParallelHybridVehicle:
 						PowertrainBuilder.BuildSimpleHybridPowertrain(data, testContainer);
 						break;
@@ -231,7 +232,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (CurrentDrivingMode == DrivingMode.DrivingModeBrake) {
 				var nextAction = GetNextDrivingAction(ds);
-				if (nextAction != null && !BrakeTrigger.HasEqualTrigger(nextAction) && nextAction.ActionDistance.IsSmallerOrEqual(BrakeTrigger.ActionDistance)) {
+				var currentDistance = DataBus.MileageCounter.Distance;
+
+                if (nextAction != null && !BrakeTrigger.HasEqualTrigger(nextAction) && 
+					(nextAction.ActionDistance.IsSmallerOrEqual(BrakeTrigger.ActionDistance) || nextAction.BrakingStartDistance.IsBetween(currentDistance, currentDistance + ds))) {
 					BrakeTrigger = nextAction;
 				}
 				if (DataBus.MileageCounter.Distance.IsGreaterOrEqual(BrakeTrigger.TriggerDistance, 1e-3.SI<Meter>())) {
@@ -431,7 +435,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private Newton CalculateCoastingForce(MeterPerSecond targetVelocity, MeterPerSecond vehicleSpeed, Meter targetAltitude, Meter targetDistance)
 		{
 			var dataBus = DataBus;
-			var airDragForce = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, targetVelocity);
+			var airDrag = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, targetVelocity);
 			var rollResistanceForce = DataBus.VehicleInfo.RollingResistance(dataBus.DrivingCycleInfo.RoadGradient);
 
 			//mk20211008 shouldn't we calculate it the same as in ComputeCoastingDistance?
@@ -454,7 +458,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var totalComponentLossPowers = gearboxLoss + axleLoss + emDragLoss - iceDragLoss;
-			var coastingResistanceForce = airDragForce + rollResistanceForce + totalComponentLossPowers / vehicleSpeed;
+			var coastingResistanceForce = airDrag.AirdragForce + rollResistanceForce + totalComponentLossPowers / vehicleSpeed;
 			return coastingResistanceForce;
 		}
 
@@ -472,7 +476,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	return;
 			//}
 			var forces = dBus.VehicleInfo.SlopeResistance(dBus.DrivingCycleInfo.RoadGradient) + dBus.VehicleInfo.RollingResistance(dBus.DrivingCycleInfo.RoadGradient) +
-						dBus.VehicleInfo.AirDragResistance(dBus.VehicleInfo.VehicleSpeed, dBus.VehicleInfo.VehicleSpeed);
+						dBus.VehicleInfo.AirDragResistance(dBus.VehicleInfo.VehicleSpeed, dBus.VehicleInfo.VehicleSpeed).AirdragForce;
 
 			if (dBus.GearboxInfo.GearboxType.AutomaticTransmission() && ATEcoRollReleaseLockupClutch && dBus.VehicleInfo.VehicleSpeed.IsGreater(0)) {
 				// for AT transmissions consider engine drag losses during eco-roll events
@@ -732,7 +736,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 											+ vehicleMass * vehicleSpeed * vehicleSpeed / 2;
 			var energyDifference = currentKineticEnergy - kineticEnergyAtTarget;
 
-			var airDragForce = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, targetSpeed);
+			var airDrag = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, targetSpeed);
 			var rollingResistanceForce = DataBus.VehicleInfo.RollingResistance(
 				((targetAltitude - vehicleAltitude) / (actionEntry.Distance - DataBus.MileageCounter.Distance))
 				.Value().SI<Radian>());
@@ -743,7 +747,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var iceDragLossPower = DataBus.EngineInfo?.EngineDragPower(DataBus.EngineInfo.EngineSpeed) ?? 0.SI<Watt>();
 
 			var totalComponentLossPowers = gearboxLossPower + axleLossPower + emDragLossPower - iceDragLossPower;
-			var coastingResistanceForce = airDragForce + rollingResistanceForce + totalComponentLossPowers / vehicleSpeed;
+			var coastingResistanceForce = airDrag.AirdragForce + rollingResistanceForce + totalComponentLossPowers / vehicleSpeed;
 
 			var coastingDecisionFactor = Driver.DriverData.LookAheadCoasting.LookAheadDecisionFactor.Lookup(
 				targetSpeed, vehicleSpeed - targetSpeed);

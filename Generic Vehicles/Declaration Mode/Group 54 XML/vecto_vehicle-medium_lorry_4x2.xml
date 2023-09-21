@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<tns:VectoInputDeclaration schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.2" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd">
-	<v2.0:Vehicle id="VEH-ML2r" xsi:type="VehicleMediumLorryDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6">
+<tns:VectoInputDeclaration schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.2" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd">
+	<v2.0:Vehicle id="VEH-ML2r" xsi:type="Vehicle_Conventional_MediumLorryDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
 		<Manufacturer>Generic Vendor</Manufacturer>
 		<ManufacturerAddress>N.A.</ManufacturerAddress>
 		<Model>ML2r</Model>
 		<VIN>standard values</VIN>
 		<Date>2017-09-26T15:33:45.0798047Z</Date>
-		<LegislativeClass>N2</LegislativeClass>
-		<VehicleCategory>Van</VehicleCategory>
+		<LegislativeCategory>N2</LegislativeCategory>
+		<ChassisConfiguration>Tractor</ChassisConfiguration>
+		<!-- <VehicleCategory>Van</VehicleCategory> -->
 		<AxleConfiguration>4x2</AxleConfiguration>
-		<CurbMassChassis>2500</CurbMassChassis>
+		<CorrectedActualMass>2500</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>7000</TechnicalPermissibleMaximumLadenMass>
-		<CargoVolume>8.53</CargoVolume>
+		<!-- <CargoVolume>8.53</CargoVolume> -->
 		<IdlingSpeed>800</IdlingSpeed>
 		<RetarderType>None</RetarderType>
 		<AngledriveType>None</AngledriveType>
 		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
-		<v2.6:ADAS xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xsi:type="v2.1:AdvancedDriverAssistantSystemsType">
+		<ADAS xsi:type="ADAS_Conventional_Type">
 			<EngineStopStart>false</EngineStopStart>
 			<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
 			<EcoRollWithEngineStop>false</EcoRollWithEngineStop>
 			<PredictiveCruiseControl>none</PredictiveCruiseControl>
-		</v2.6:ADAS>
-		<v2.6:Components xsi:type="VehicleComponentsType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+		</ADAS>
+		<Components xsi:type="Components_Conventional_LorryType">
 			<Engine xsi:type="v2.0:EngineComponentDeclarationType">
-				<Data id="ENG-130kW_IVT_3l" xsi:type="EngineDataDeclarationType">
+				<Data id="ENG-130kW_IVT_3l" xsi:type="EngineDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Vendor</Manufacturer>
 					<Model>130kW engine</Model>
 					<CertificationNumber>ENG-130kW_IVT_3l</CertificationNumber>
@@ -275,7 +276,7 @@
 						<Entry engineSpeed='3987.18' maxTorque='235.95' dragTorque='-65.72'/>
 					</FullLoadAndDragCurve>
 				</Data>
-				<Signature>
+				<v2.0:Signature>
 					<Reference URI="#ENG-130kW_IVT_3l" xmlns="http://www.w3.org/2000/09/xmldsig#">
 						<Transforms>
 							<Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments"/>
@@ -284,10 +285,10 @@
 						<DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 						<DigestValue/>
 					</Reference>
-				</Signature>
+				</v2.0:Signature>
 			</Engine>
-			<Gearbox xsi:type="GearboxComponentDeclarationType">
-				<v2.0:Data id="GB_6-gear_MT" xsi:type="v2.0:GearboxDataDeclarationType">
+			<Gearbox xsi:type="v2.0:GearboxComponentDeclarationType">
+				<v2.0:Data id="GB_6-gear_MT" xsi:type="v2.0:GearboxDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Vendor</Manufacturer>
 					<Model>GB_6-gear_MT</Model>
 					<CertificationNumber>GB_6-gear_MT</CertificationNumber>
@@ -1894,7 +1895,7 @@
 						</Gear>
 					</Gears>
 				</v2.0:Data>
-				<Signature>
+				<v2.0:Signature>
 					<Reference URI="#GB_6-gear_MT" xmlns="http://www.w3.org/2000/09/xmldsig#">
 						<Transforms>
 							<Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments"/>
@@ -1903,10 +1904,10 @@
 						<DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 						<DigestValue/>
 					</Reference>
-				</Signature>
+				</v2.0:Signature>
 			</Gearbox>
 			<Retarder xsi:type="v2.0:RetarderComponentDeclarationType">
-				<Data id="RET-RET-generic" xsi:type="RetarderDataDeclarationType">
+				<v2.0:Data id="RET-RET-generic" xsi:type="RetarderDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Vendor</Manufacturer>
 					<Model>RET-generic</Model>
 					<CertificationNumber>standard values</CertificationNumber>
@@ -1946,8 +1947,8 @@
 						<Entry retarderSpeed="2900.00" torqueLoss="26.80"/>
 						<Entry retarderSpeed="3000.00" torqueLoss="28.00"/>
 					</RetarderLossMap>
-				</Data>
-				<Signature>
+				</v2.0:Data>
+				<v2.0:Signature>
 					<Reference URI="#RET-RET-generic" xmlns="http://www.w3.org/2000/09/xmldsig#">
 						<Transforms>
 							<Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments"/>
@@ -1956,10 +1957,10 @@
 						<DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 						<DigestValue/>
 					</Reference>
-				</Signature>
+				</v2.0:Signature>
 			</Retarder>
 			<Axlegear>
-				<Data xsi:type="v2.0:AxlegearDataDeclarationType" id="AXL-asdf">
+				<v2.0:Data xsi:type="v2.0:AxlegearDataDeclarationType" id="AXL-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Vendor</Manufacturer>
 					<Model>Standard axlegear</Model>
 					<CertificationNumber>AXL_123</CertificationNumber>
@@ -2138,8 +2139,8 @@
 						<Entry inputSpeed='4000.00' inputTorque='990.00' torqueLoss='28.30'/>
 						<Entry inputSpeed='4000.00' inputTorque='1100.00' torqueLoss='30.50'/>
 					</TorqueLossMap>
-				</Data>
-				<Signature>
+				</v2.0:Data>
+				<v2.0:Signature>
 					<Reference URI="#RET-RET-generic" xmlns="http://www.w3.org/2000/09/xmldsig#">
 						<Transforms>
 							<Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments"/>
@@ -2148,10 +2149,10 @@
 						<DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 						<DigestValue/>
 					</Reference>
-				</Signature>
+				</v2.0:Signature>
 			</Axlegear>
-			<AxleWheels xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="AxleWheelsComponentDeclarationType">
-				<Data xsi:type="AxleWheelsDataDeclarationType">
+			<AxleWheels xsi:type="v2.0:AxleWheelsComponentDeclarationType">
+				<Data xsi:type="AxleWheelsDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Axles>
 						<Axle axleNumber="1" xsi:type="AxleDataDeclarationType">
 							<AxleType>VehicleDriven</AxleType>
@@ -2168,7 +2169,7 @@
 									<RRCDeclared>0.0074</RRCDeclared>
 									<FzISO>10150</FzISO>
 								</Data>
-								<Signature>
+								<v2.0:Signature>
 									<Reference URI="#TYRE-235/65 R16C" xmlns="http://www.w3.org/2000/09/xmldsig#">
 										<Transforms>
 											<Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments"/>
@@ -2177,7 +2178,7 @@
 										<DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 										<DigestValue/>
 									</Reference>
-								</Signature>
+								</v2.0:Signature>
 							</Tyre>
 						</Axle>
 						<Axle axleNumber="2" xsi:type="AxleDataDeclarationType">
@@ -2195,7 +2196,7 @@
 									<RRCDeclared>0.0074</RRCDeclared>
 									<FzISO>10150</FzISO>
 								</v2.0:Data>
-								<Signature>
+								<v2.0:Signature>
 									<Reference URI="#TYRE-215_75R17.5" xmlns="http://www.w3.org/2000/09/xmldsig#">
 										<Transforms>
 											<Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments"/>
@@ -2204,19 +2205,19 @@
 										<DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 										<DigestValue/>
 									</Reference>
-								</Signature>
+								</v2.0:Signature>
 							</Tyre>
 						</Axle>
 					</Axles>
 				</Data>
 			</AxleWheels>
-			<Auxiliaries xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="AuxiliariesComponentDeclarationType">
-				<Data xsi:type="AuxiliariesDataDeclarationType">
+			<Auxiliaries xsi:type="v2.4:AUX_Component_Conventional_Lorry_Type">
+				<Data xsi:type="AUX_Conventional_LorryDataType">
 					<Fan>
 						<Technology>Crankshaft mounted - Bimetallic controlled visco clutch</Technology>
 					</Fan>
 					<SteeringPump>
-						<Technology>Fixed displacement</Technology>
+						<Technology axleNumber="1">Fixed displacement</Technology>
 					</SteeringPump>
 					<ElectricSystem>
 						<Technology>Standard technology - LED headlights, all</Technology>
@@ -2229,8 +2230,8 @@
 					</HVAC>
 				</Data>
 			</Auxiliaries>
-			<AirDrag xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="AirDragComponentDeclarationType">
-				<Data id="Airdrag-genericcabin" xsi:type="AirDragDataDeclarationType">
+			<AirDrag xsi:type="v2.0:AirDragComponentDeclarationType">
+				<Data id="Airdrag-genericcabin" xsi:type="AirDragDataDeclarationType"  xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" >
 					<Manufacturer>Generic Vendor</Manufacturer>
 					<Model>N.A.</Model>
 					<CertificationNumber>generic cabin</CertificationNumber>
@@ -2240,7 +2241,7 @@
 					<TransferredCdxA>5.80</TransferredCdxA>
 					<DeclaredCdxA>5.80</DeclaredCdxA>
 				</Data>
-				<Signature>
+				<v2.0:Signature>
 					<Reference URI="#Airdrag-genericcabin" xmlns="http://www.w3.org/2000/09/xmldsig#">
 						<Transforms>
 							<Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments"/>
@@ -2249,8 +2250,8 @@
 						<DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 						<DigestValue/>
 					</Reference>
-				</Signature>
+				</v2.0:Signature>
 			</AirDrag>
-		</v2.6:Components>
+		</Components>
 	</v2.0:Vehicle>
 </tns:VectoInputDeclaration>

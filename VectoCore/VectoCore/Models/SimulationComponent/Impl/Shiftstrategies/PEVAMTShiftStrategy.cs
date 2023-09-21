@@ -67,7 +67,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected GearshiftPosition _nextGear;
 
 		private readonly ShiftStrategyParameters _shiftStrategyParameters;
-		protected readonly VelocityRollingLookup VelocityDropData = new VelocityRollingLookup();
 		private SimplePowertrainContainer TestContainer;
 		private Gearbox TestContainerGbx;
 		private Battery TestContainerBattery;
@@ -88,7 +87,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 		public static string Name => "AMT - EffShift (BEV)";
 
-
 		protected bool DriveOffStandstill { get; set; }
 
 		protected TestPowertrain<Gearbox> TestPowertrain;
@@ -103,6 +101,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				x.Item1 == PowertrainPosition.BatteryElectricE2 || x.Item1 == PowertrainPosition.IEPC)?.Item1 ?? PowertrainPosition.HybridPositionNotSet;
 			SetupVelocityDropPreprocessor(dataBus);
 		}
+
+		public VelocityRollingLookup VelocityDropData { get; } = new VelocityRollingLookup();
 
 		protected PEVAMTShiftStrategy(IVehicleContainer dataBus, bool dummy)
 		{
@@ -490,6 +490,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 							GearboxModelData.Gears[tmpGear.Gear].Ratio;
 			var firstGear = GearList.Predecessor(currentGear, 1);
 			var lastGear = GearList.Predecessor(currentGear, (uint)GearshiftParams.AllowedGearRangeFC);
+			var maxEmSpeed = DataBus.GetElectricMotors().First(x => x.Position != PowertrainPosition.GEN).MaxSpeed;
 			foreach (var gear in GearList.IterateGears(firstGear, lastGear)) {
 				var ratio = gear.IsLockedGear()
 					? GearboxModelData.Gears[gear.Gear].Ratio
@@ -498,7 +499,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				if (GearboxModelData.Gears[gear.Gear].MaxSpeed != null && gbxInSpeed.IsGreater(GearboxModelData.Gears[gear.Gear].MaxSpeed)) {
 					continue;
 				}
+
+				if (gbxInSpeed.IsGreater(maxEmSpeed)) {
+					continue;
+				}
                 candidates[gear] = gbxInSpeed;
+			}
+
+			if (!candidates.Any()) {
+				return tmpGear;
 			}
 
 			var ratedSpeed = VoltageLevels.VoltageLevels.First().FullLoadCurve.RatedSpeed;

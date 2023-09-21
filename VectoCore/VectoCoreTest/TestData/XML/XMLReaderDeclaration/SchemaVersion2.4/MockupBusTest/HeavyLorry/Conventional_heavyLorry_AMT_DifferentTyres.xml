@@ -313,7 +313,7 @@
 											<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 										</di:Transforms>
 										<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-										<di:DigestValue>z+KDXmc5MIezM6RVgfYax5J9Efi0ghciG2/wLLmWaBk=</di:DigestValue>
+										<di:DigestValue>VCQehqnyJXQnDdY/+ZvR0TDdvaBivmncqhtGmDQ7JpE=</di:DigestValue>
 									</di:Reference>
 								</Signature>
 							</Tyre>

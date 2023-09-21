@@ -72,10 +72,12 @@
     <None Remove="Resources\Declaration\Buses\HVACHeatingPowerDriver.csv" />
     <None Remove="Resources\Declaration\Buses\HVACHeatingPowerPassenger.csv" />
     <None Remove="resources\declaration\buses\SmartES_Limits.csv" />
+    <None Remove="Resources\Declaration\IMC-Tech.csv" />
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_1-Cylinder_1-Stage_393ccm.acmp" />
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_1-Stage_650ccm.acmp" />
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_2-Stage_398ccm.acmp" />
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_3-Cylinder_2-Stage_598ccm.acmp" />
+    <None Remove="Resources\Declaration\VehicleOperation\InMotionShareGroundRailWireless.csv" />
     <None Remove="Resources\Declaration\VehicleOperation\RealWorldUsageFactors.csv" />
     <None Remove="Resources\MockupCIFResults.xml" />
     <None Remove="Resources\MockupMRFResults.xml" />

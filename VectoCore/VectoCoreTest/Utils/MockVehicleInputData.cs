@@ -59,6 +59,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public TUGraz.VectoCommon.InputData.TankSystem? TankSystem { get; set; }
 
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; set; }
+		public IVehicleInMotionChargingDeclaration InMotionCharging { get; }
 
 		public bool ZeroEmissionVehicle { get; set; }
 

@@ -685,6 +685,11 @@ namespace TUGraz.VectoCommon.Utils
 			return SIBase<AmpereSecond>.Create(wattSecond.Val / volt.Value());
 		}
 
+		public static PerWattSecond operator /(double val, WattSecond wattSecond)
+		{
+			return SIBase<PerWattSecond>.Create(val / wattSecond.Value());
+		}
+		
 		public static Kilogram operator *(WattSecond ws, KilogramPerWattSecond kpws)
 		{
 			return SIBase<Kilogram>.Create(ws.Val * kpws.Value());
@@ -708,6 +713,14 @@ namespace TUGraz.VectoCommon.Utils
 
 	}
 
+	public class PerWattSecond : SIBase<PerWattSecond>
+	{
+		private static readonly int[] Units = { -1, -2, 2, 0, 0, 0, 0 };
+
+		[DebuggerHidden]
+		private PerWattSecond(double val) : base(val, Units) { }
+	}
+	
 	public class WattSecondPerMeter : SIBase<WattSecondPerMeter>
 	{
 		private static readonly int[] Units = { 1, 1, -2, 0, 0, 0, 0 };
@@ -723,6 +736,11 @@ namespace TUGraz.VectoCommon.Utils
 		public static WattSecondPerCubicMeterMeter operator /(WattSecondPerMeter wattSecond, CubicMeter m3)
 		{
 			return SIBase<WattSecondPerCubicMeterMeter>.Create(wattSecond.Val / m3.Value());
+		}
+
+		public static WattSecond operator *(WattSecondPerMeter wpm, Meter m)
+		{
+			return SIBase<WattSecond>.Create(wpm.Val * m.Value());
 		}
 	}
 
@@ -1052,6 +1070,11 @@ namespace TUGraz.VectoCommon.Utils
 			return SIBase<MeterPerSecond>.Create(perSecond.Val * meter.Value());
 		}
 
+		public static Scalar operator *(PerSecond perSecond, Second sec)
+		{
+			return SIBase<Scalar>.Create(perSecond.Val * sec.Value());
+		}
+		
 		public double AsRPM => Val * 60 / (2 * Math.PI);
 	}
 

@@ -65,14 +65,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	public interface IDrivingCycleData
 	{
 		List<DrivingCycleData.DrivingCycleEntry> Entries { get; }
+
+		double ShareDistanceHighway { get; }
+		
 		string Name { get; }
+		
 		CycleType CycleType { get; }
+		
 		void Finish();
 	}
 
 	[CustomValidation(typeof(DrivingCycleData), "ValidateCycleData")]
 	public class DrivingCycleData : SimulationComponentData, IDrivingCycleData
 	{
+		private double? _shareHighway;
 		internal DrivingCycleData() {}
 
 		[JsonIgnore]
@@ -120,6 +126,40 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return ValidationResult.Success;
 		}
 
+		public double ShareDistanceHighway
+		{
+			get {
+				if (!_shareHighway.HasValue) {
+					_shareHighway = CalculateShareHighway();
+				} 
+				return _shareHighway.Value;
+			}
+		}
+
+		private double CalculateShareHighway()
+		{
+			if (CycleType != CycleType.DistanceBased) {
+				return double.NaN;
+			}
+			var onHighway = Entries.First().Highway;
+			var highwayDistance = 0.SI<Meter>();
+
+			for (var i = 1; i < Entries.Count; i++) {
+				var entry = Entries[i];
+				if (onHighway) {
+					if (entry.Highway) {
+						highwayDistance += entry.Distance - Entries[i - 1].Distance;
+					} else {
+						onHighway = false;
+					}
+				} else {
+					onHighway = entry.Highway;
+				}
+			}
+			var distance = Entries.Last().Distance - Entries.First().Distance;
+			return highwayDistance / distance;
+		}
+
 		[DebuggerDisplay(
 			"s:{Distance}, t:{Time}, v:{VehicleTargetSpeed}, grad:{RoadGradient}, n:{AngularVelocity}, gear:{Gear}")]
 		public class DrivingCycleEntry
@@ -148,6 +188,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				PTOPowerDemandDuringDrive = entry.PTOPowerDemandDuringDrive;
 				PTOElectricalPowerDemand = entry.PTOElectricalPowerDemand;
 				Highway = entry.Highway;
+                PowerAdditonalHighVoltage = entry.PowerAdditonalHighVoltage;
+				FanElectricalPower = entry.FanElectricalPower;
+				CombustionEngineTorque = entry.CombustionEngineTorque;
+				CH4MassFlow = entry.CH4MassFlow;
+				COMassFlow = entry.COMassFlow;
+				NMHCMassFlow = entry.NMHCMassFlow;
+				NOxMassFlow = entry.NOxMassFlow;
+				THCMassFlow = entry.THCMassFlow;
+				PMNumberFlow = entry.PMNumberFlow;
+				CO2MassFlow = entry.CO2MassFlow;
 			}
 
 			/// <summary>
@@ -175,7 +225,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			/// </summary>
 			public Scalar RoadGradientPercent => (Math.Tan(RoadGradient.Value()) * 100).SI<Scalar>();
 
-			public Dictionary<FuelType, KilogramPerSecond> VTPFuelconsumption;
+			public Dictionary<FuelType, KilogramPerSecond> Fuelconsumption;
 
 			/// <summary>
 			/// relative altitude of the driving cycle over distance
@@ -251,6 +301,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			public PerSecond FanSpeed;
 
+			public Watt FanElectricalPower;
+
+			public NewtonMeter CombustionEngineTorque;
+
+			public KilogramPerSecond CH4MassFlow;
+
+			public KilogramPerSecond COMassFlow;
+
+			public KilogramPerSecond NMHCMassFlow;
+
+			public KilogramPerSecond NOxMassFlow;
+
+			public KilogramPerSecond THCMassFlow;
+
+			public KilogramPerSecond CO2MassFlow;
+
+			public PerSecond PMNumberFlow;
+
 			// required for VTP Mode (validation of cycle data in declaration mode)
 			public NewtonMeter TorqueWheelLeft;
 
@@ -267,7 +335,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			// Electrical pto cycle
 			public Watt PTOElectricalPowerDemand;
-		}
+
+			/// <summary>
+			/// Additional high voltage power for PEVs.
+			/// </summary>
+            public Watt PowerAdditonalHighVoltage;
+        }
 	}
 
 	public enum PTOActivity
