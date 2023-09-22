@@ -293,8 +293,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				});
 			}
 
-			//voltageLevels.First().Voltage = 1.SI<Volt>();
-			//voltageLevels.Last().Voltage = 10E9.SI<Volt>();
+			voltageLevels.First().Voltage = voltageLevels.First().Voltage ?? 1.SI<Volt>();
+			voltageLevels.Last().Voltage = voltageLevels.Last().Voltage ?? 10E9.SI<Volt>();
 
 
 			var dragCurves = new Dictionary<uint, DragCurve>();
