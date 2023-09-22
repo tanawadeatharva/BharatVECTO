@@ -287,6 +287,12 @@ namespace TUGraz.VectoCore.OutputData
 		public const string E_EM_Mot_LOSS_FORMAT = "E_EM_{0}-em_loss [kWh]";
 		public const string E_EM_LOSS_FORMAT = "E_EM_{0}_loss [kWh]";
 		public const string E_EM_OFF_TIME_SHARE = "EM {0} off time share [%]";
+		public const string EM_RATED_TORQUE_HI = "EM {0} high voltage rated T [Nm]";
+		public const string EM_RATED_TORQUE_LO = "EM {0} low voltage rated T [Nm]";
+		public const string EM_RATED_POWER = "EM {0} total rated power [kW]";
+		public const string EM_RATED_SPEED_HI = "EM {0} high voltage rated speed [rpm]";
+		public const string EM_RATED_SPEED_LO = "EM {0} low voltage rated speed [rpm]";
+		public const string EM_MOTOR_NUMBER = "EM number of motors";
 
 		public const string REESS_CAPACITY = "REESS Capacity";
 		public const string REESS_StartSoC = "REESS Start SoC [%]";
@@ -732,6 +738,12 @@ namespace TUGraz.VectoCore.OutputData
 			{ E_EM_Mot_LOSS_FORMAT, (r, m, em) => m.ElectricMotorMotLosses(em)?.ConvertToKiloWattHour() },
 			{ E_EM_LOSS_FORMAT, (r, m, em) => m.ElectricMotorLosses(em)?.ConvertToKiloWattHour() },
 			{ E_EM_OFF_TIME_SHARE, (r, m, em) => (ConvertedSI)m.ElectricMotorOffTimeShare(em) },
+			{ EM_RATED_POWER, (r, m, em) => DeclarationData.GetReferencePropulsionPower(r.VehicleData.InputData).ConvertToKiloWatt() },
+			{ EM_RATED_SPEED_HI, (r, m, em) => r.VehicleData.InputData.Components.ElectricMachines.Entries.First().ElectricMachine.VoltageLevels.MaxBy(v  => v.VoltageLevel).ContinuousTorqueSpeed.AsRPM },
+			{ EM_RATED_SPEED_LO, (r, m, em) => r.VehicleData.InputData.Components.ElectricMachines.Entries.First().ElectricMachine.VoltageLevels.MinBy(v  => v.VoltageLevel).ContinuousTorqueSpeed.AsRPM },
+			{ EM_RATED_TORQUE_LO, (r, m, em) => (ConvertedSI)r.VehicleData.InputData.Components.ElectricMachines.Entries.First().ElectricMachine.VoltageLevels.MaxBy(v  => v.VoltageLevel).ContinuousTorque },
+			{ EM_RATED_TORQUE_HI, (r, m, em) => (ConvertedSI)r.VehicleData.InputData.Components.ElectricMachines.Entries.First().ElectricMachine.VoltageLevels.MinBy(v  => v.VoltageLevel).ContinuousTorque },
+			{ EM_MOTOR_NUMBER, (r, m, em) => r.VehicleData.InputData.Components.ElectricMachines.Entries.First().Count },
 		};
 
 		public static readonly Dictionary<string, WriteEmEntry> IEPCValue = new Dictionary<string, WriteEmEntry>() {
@@ -746,7 +758,6 @@ namespace TUGraz.VectoCore.OutputData
 		};
 
 		public static readonly WriteAuxEntry AuxDataValue = (r, m, a) => m.AuxiliaryWork(a).ConvertToKiloWattHour();
-
 	}
 
 
