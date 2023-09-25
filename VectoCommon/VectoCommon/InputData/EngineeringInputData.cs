@@ -109,6 +109,7 @@ namespace TUGraz.VectoCommon.InputData
 					return GetSHEVArchitecureID(em);
 
 				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.FCHV:
 					return GetPEVArchId(emPos: em);
 
 				case VectoSimulationJobType.IEPC_E:
@@ -117,15 +118,9 @@ namespace TUGraz.VectoCommon.InputData
 
 				case VectoSimulationJobType.IHPC:
 					return ArchitectureID.P2;
-					break;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
 			}
-
-
-
-
-			return ArchitectureID.UNKNOWN;
 		}
 		
 		public static bool HasEngine(this VectoSimulationJobType jobType)
@@ -138,12 +133,10 @@ namespace TUGraz.VectoCommon.InputData
 				case VectoSimulationJobType.IHPC:
 				case VectoSimulationJobType.IEPC_S:
 					return true;
-                    break;
-                case VectoSimulationJobType.FCHV:
+				case VectoSimulationJobType.FCHV:
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
 					return false;
-					break;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
 			}

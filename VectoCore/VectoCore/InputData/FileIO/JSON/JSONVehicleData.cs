@@ -232,13 +232,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			switch (VehicleType) {
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
+				case VectoSimulationJobType.FCHV:
 					return _adasInputData = new JSONADASInputDataV10BEV(this);
 				case VectoSimulationJobType.ParallelHybridVehicle:
 				case VectoSimulationJobType.IHPC:
 				case VectoSimulationJobType.SerialHybridVehicle:
 				case VectoSimulationJobType.IEPC_S:
 					return _adasInputData = new JSONADASInputDataV10HEV(this);
-				default:
+				case VectoSimulationJobType.ConventionalVehicle:
+				case VectoSimulationJobType.EngineOnlySimulation:
+                default:
 					return base.GetADS();
 			}
 		}

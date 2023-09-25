@@ -53,6 +53,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
 using TUGraz.VectoCore.Utils;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
@@ -139,7 +140,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				iterativeRunStrategy.Update = (modData, runData) => {
 					runData.JobType = VectoSimulationJobType.FCHV;
 					runData.ModFileSuffix = "";
-
+					modData.PostProcessingCorrection = new BatteryElectricPostprocessingCorrection();
 					//In case the battery is modified after creating the rundata (testing, do not create new battery data)
 					pevRd.BatteryData.Batteries =
 						pevRd.BatteryData.Batteries.Where(b => b.Item1 != FuelCellSystemData.FuelCellBatID).ToList();

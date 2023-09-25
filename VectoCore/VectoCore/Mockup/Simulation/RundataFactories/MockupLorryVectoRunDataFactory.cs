@@ -80,12 +80,11 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 case VectoSimulationJobType.IEPC_E:
 					return VectoRunDataBatteryElectricVehicle();
 				case VectoSimulationJobType.EngineOnlySimulation:
-					break;
+				case VectoSimulationJobType.FCHV:
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
-			return VectoRunDataConventionalTruckNonExempted();
-
+			//return VectoRunDataConventionalTruckNonExempted();
 		}
 
 		private IEnumerable<VectoRunData> VectoRunDataBatteryElectricVehicle()

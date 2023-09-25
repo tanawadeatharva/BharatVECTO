@@ -237,9 +237,9 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 				run.Run();
 			} catch (Exception ex) {
 				rd = run.GetContainer().RunData;
-				var postProcessing = rd.FuelCellSystemData.PostProcessing;
+				var postProcessing = rd.FuelCellSystemData.PreRunPostProcessing;
 				TestContext.Progress.WriteLine(ex.Message);
-				WritePostprocessingInfo(rd.FuelCellSystemData?.PostProcessing);
+				WritePostprocessingInfo(rd.FuelCellSystemData?.PreRunPostProcessing);
 
 				throw;
 			}
@@ -250,7 +250,7 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 			rd = run.GetContainer().RunData;
 
 			var fcs = rd.FuelCellSystemData;
-			var pP = fcs.PostProcessing;
+			var pP = fcs.PreRunPostProcessing;
 			
 
 			WritePostprocessingInfo(pP);
@@ -305,7 +305,7 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 
 		}
 
-        public void WritePostprocessingInfo(IFuelCellPostProcessingInfo pP)
+        public void WritePostprocessingInfo(IFuelCellPreRunInfo pP)
 		{
 			if (pP == null) {
 				TestContext.WriteLine("PostProcessingInfo not available");

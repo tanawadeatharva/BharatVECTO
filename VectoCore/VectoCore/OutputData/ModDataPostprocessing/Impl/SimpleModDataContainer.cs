@@ -93,6 +93,16 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 			throw new NotImplementedException();
 		}
 
+		public T TimeIntegral<T>(ModalResultField field, params object[] formatArgs) where T : SIBase<T>
+		{
+			throw new NotImplementedException();
+		}
+
+		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter, object[] formatArgs) where T : SIBase<T>
+		{
+			throw new NotImplementedException();
+		}
+
 		public void SetDataValue(string fieldName, object value)
 		{
 			throw new NotImplementedException();
@@ -236,6 +246,11 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 		public ModalResults Data => throw new NotImplementedException();
 
 		public string RunName => throw new NotImplementedException();
+
+		public IModalDataPostProcessor PostProcessingCorrection
+		{
+			set => throw new NotImplementedException();
+		}
 
 		public Watt P_REES_int
 		{

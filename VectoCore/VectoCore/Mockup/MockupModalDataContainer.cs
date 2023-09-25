@@ -148,6 +148,16 @@ namespace TUGraz.VectoMockup
 			return _modalDataContainerImplementation.TimeIntegral<T>(field, filter);
 		}
 
+		public T TimeIntegral<T>(ModalResultField field, params object[] formatArgs) where T : SIBase<T>
+		{
+			throw new NotImplementedException();
+		}
+
+		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter, object[] formatArgs) where T : SIBase<T>
+		{
+			throw new NotImplementedException();
+		}
+
 		public void SetDataValue(string fieldName, object value)
 		{
 			_modalDataContainerImplementation.SetDataValue(fieldName, value);
@@ -309,6 +319,11 @@ namespace TUGraz.VectoMockup
 		public ModalResults Data => throw new NotImplementedException();
 
 		public string RunName => throw new NotImplementedException();
+
+		public IModalDataPostProcessor PostProcessingCorrection
+		{
+			set => throw new NotImplementedException();
+		}
 
 		public void RegisterComponent(VectoSimulationComponent component)
 		{

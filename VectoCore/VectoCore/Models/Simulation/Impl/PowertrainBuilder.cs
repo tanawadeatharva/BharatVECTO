@@ -2463,6 +2463,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							return AMTShiftStrategyOptimized.Name;
 						case VectoSimulationJobType.BatteryElectricVehicle:
 						case VectoSimulationJobType.SerialHybridVehicle:
+						case VectoSimulationJobType.FCHV:
 							return PEVAMTShiftStrategy.Name;
 						default:
 							throw new VectoException(
@@ -2480,6 +2481,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							return ATShiftStrategyOptimized.Name;
 						case VectoSimulationJobType.SerialHybridVehicle:
 						case VectoSimulationJobType.BatteryElectricVehicle:
+						case VectoSimulationJobType.FCHV:
 							return APTNShiftStrategy.Name;
 						default:
 							throw new VectoException(
@@ -2493,6 +2495,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						case VectoSimulationJobType.BatteryElectricVehicle:
 						case VectoSimulationJobType.IEPC_E:
 						case VectoSimulationJobType.IEPC_S:
+						case VectoSimulationJobType.FCHV:
 							return APTNShiftStrategy.Name;
 						case VectoSimulationJobType.ConventionalVehicle when isTestPowerTrain:
 							return null;

@@ -96,8 +96,8 @@ namespace TUGraz.VectoCore.OutputData
 		Dictionary<string, DataColumn> Auxiliaries { get; }
 
 		T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>;
-
 		T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T>;
+
 
 		void SetDataValue(string fieldName, object value);
 
@@ -150,6 +150,7 @@ namespace TUGraz.VectoCore.OutputData
 		ICorrectedModalData CorrectedModalData { get; } 
 		ModalResults Data { get; }
 		string RunName { get; }
+		IModalDataPostProcessor PostProcessingCorrection { set; }
 		void RegisterComponent(VectoSimulationComponent component);
 		bool ContainsColumn(string modalResultField);
 	}

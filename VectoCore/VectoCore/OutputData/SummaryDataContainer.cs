@@ -101,7 +101,26 @@ namespace TUGraz.VectoCore.OutputData
 			SumDataFields.K_ENGLINE
 		};
 
+		public static readonly Tuple<string, Type>[] FuelCell_FcColumns = {
+			Tuple.Create(SumDataFields.FuelCellFields.FCMAP_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FCMAP_KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_BusAux_PS_CORR_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_BusAux_PS_CORR_KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_BusAux_ES_CORR_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_BusAux_ES_CORR_KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_AUXHTR_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_AUXHTR_KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_AUXHTR_H_CORR, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_AUXHTR_KM_CORR, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FCFINAL_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FCFINAL_KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.K_FCSLine, typeof(ConvertedSI)),
+        };
 
+		public static readonly Tuple<string, Type>[] FuelCell_Columns = {
+			Tuple.Create(SumDataFields.FuelCellFields.P_FCS, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.E_FCS, typeof(ConvertedSI)),
+		};
 
 		public static readonly Tuple<string, Type>[] CommonColumns = {
 			Tuple.Create(SumDataFields.SORT, typeof(int)),
@@ -510,6 +529,10 @@ namespace TUGraz.VectoCore.OutputData
 				case ElectricAuxiliaries _:
 					CreateColumns(ElectricAuxiliariesSignals);
 					break;
+				case FuelCellSystem _:
+					CreateColumns(FuelCell_Columns);
+					CreateColumns(FuelCell_FcColumns);
+					break;
 			}
 		}
 
@@ -658,6 +681,9 @@ namespace TUGraz.VectoCore.OutputData
 			});
 
 			cols.AddRange(FcCols.Reverse());
+
+			cols.AddRange(FuelCell_FcColumns.Select(x => x.Item1));
+			cols.AddRange(FuelCell_Columns.Select(x => x.Item1));
 
 			cols.AddRange(new[] {
 				SumDataFields.CO2_KM,

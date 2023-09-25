@@ -69,6 +69,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
 				case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.SerialHybridVehicle:
 				case VectoSimulationJobType.IEPC_S:
+				case VectoSimulationJobType.FCHV:
 					return GetPEV_SHEV_PowerDemand(dataBus);
 				case VectoSimulationJobType.ParallelHybridVehicle:
 					return GetP_HEV_PowerDemand(dataBus);

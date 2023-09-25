@@ -347,6 +347,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public ICorrectedModalData CorrectedModalData { get; }
 		public bool HasAxlegear { get; set; }
 
+		public IModalDataPostProcessor PostProcessingCorrection
+		{
+			set => throw new NotImplementedException();
+		}
+
 		public void RegisterComponent(VectoSimulationComponent component)
 		{
 			

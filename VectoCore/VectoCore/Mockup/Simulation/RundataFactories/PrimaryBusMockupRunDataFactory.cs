@@ -63,6 +63,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 					return VectoRunDataBatteryElectricHeavyBusPrimaryNonExempted();
 				case VectoSimulationJobType.EngineOnlySimulation:
 					break;
+				case VectoSimulationJobType.FCHV:
 				default:
 					throw new ArgumentOutOfRangeException();
 			}

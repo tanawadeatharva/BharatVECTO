@@ -19,6 +19,7 @@ namespace TUGraz.VectoCore.OutputData
 	[SuppressMessage("ReSharper", "IdentifierTypo")]
 	public static class SumDataFields
 	{
+		#region Fields
 		public const string INTERNAL_PREFIX = "INTERNAL";
 
 		public const string SORT = INTERNAL_PREFIX + " Sorting";
@@ -311,6 +312,39 @@ namespace TUGraz.VectoCore.OutputData
 		public const string E_IEPC_OFF_TIME_SHARE = "{0} off time share [%]";
 
 		public const string f_equiv = "f_equiv";
+
+        #region FuelCells
+
+		public static class FuelCellFields
+		{
+			public const string FCMAP_H = "FC-Map [g/h]";
+			public const string FCMAP_KM = "FC-Map [g/km]";
+
+			public const string FC_BusAux_PS_CORR_H = "FC-BusAux_PS_Corr [g/h]";
+			public const string FC_BusAux_PS_CORR_KM = "FC-BusAux_PS_Corr [g/km]";
+			public const string FC_BusAux_ES_CORR_H = "FC-BusAux_ES_Corr [g/h]";
+			public const string FC_BusAux_ES_CORR_KM = "FC-BusAux_ES_Corr [g/km]";
+			public const string FC_AUXHTR_H = "FC-BusAux_AuxHeater [g/h]";
+			public const string FC_AUXHTR_KM = "FC-BusAux_AuxHeater [g/km]";
+			public const string FC_AUXHTR_H_CORR = "FC-BusAux_AuxHeater_Corr [g/h]";
+			public const string FC_AUXHTR_KM_CORR = "FC-BusAux_AuxHeater_Corr [g/km]";
+
+			public const string FCFINAL_H = "FC-Final [g/h]";
+			public const string FCFINAL_KM = "FC-Final [g/km]";
+
+			public const string K_FCSLine = "k_FCSline [g/kWh]";
+
+			public const string P_FCS = "P_FCS [kW]";
+			public const string E_FCS = "E_FCS [kWh]";
+        }
+
+#endregion
+
+
+#endregion
+
+
+
 
 		public delegate object WriteSumEntry(VectoRunData r, IModalDataContainer m);
 
@@ -674,8 +708,48 @@ namespace TUGraz.VectoCore.OutputData
 					? null : (m.CorrectedModalData.ElectricEnergyConsumption_Final_PerMeter / r.VehicleData.PassengerCount.Value).ConvertToKiloWattHourPerPassengerKiloMeter())},
 			//			{, SumFunc((r, m) =>)},
 
-		};
 
+			//FuelCell
+			{ FuelCellFields.FCMAP_H, 
+				SumFunc((r, m) => {
+					return r.FuelCellSystemData.FuelCells.Aggregate(0.SI<KilogramPerSecond>(),
+						(a, fc) => {
+							var singleFc = (m.TimeIntegral<Kilogram>(ModalResultField.FC_FCS.Format(fc.Id)) / m.Duration) ?? 0.SI<KilogramPerSecond>();
+							return a + singleFc;
+						}).ConvertToGrammPerHour();
+				})
+			},
+			{ FuelCellFields.FCMAP_KM,
+				SumFunc((r, m) => {
+					return r.FuelCellSystemData.FuelCells.Aggregate(0.SI<KilogramPerMeter>(),
+						(a, fc) => {
+							var singleFc = (m.TimeIntegral<Kilogram>(ModalResultField.FC_FCS.Format(fc.Id)) / m.Distance) ?? 0.SI<KilogramPerMeter>();
+							return a + singleFc;
+						}).ConvertToGrammPerKiloMeter();
+				})
+			},
+
+			{ FuelCellFields.FC_BusAux_PS_CORR_H, SumFunc((r, m) => (null))},
+			{ FuelCellFields.FC_BusAux_PS_CORR_KM, SumFunc((r, m) => (null))},
+			{ FuelCellFields.FC_BusAux_ES_CORR_H, SumFunc((r, m) => (null))},
+			{ FuelCellFields.FC_BusAux_ES_CORR_KM, SumFunc((r, m) => (null))},
+
+			{ FuelCellFields.FCFINAL_H, SumFunc((r, m) => (null))},
+			{ FuelCellFields.FCFINAL_KM, SumFunc((r, m) => (null))},
+
+			{ FuelCellFields.K_FCSLine, SumFunc((r, m) => (null))},
+
+			{ FuelCellFields.P_FCS, SumFunc((r, m) => {
+				var p_fcs = m.TimeIntegral<WattSecond>(ModalResultField.P_fuelCellSystem_actual) / m.Duration;
+				return p_fcs.ConvertToKiloWatt();
+				})},
+
+			{ FuelCellFields.E_FCS, SumFunc((r, m) => {
+				var e_fcs = m.TimeIntegral<WattSecond>(ModalResultField.P_fuelCellSystem_actual);
+				return e_fcs.ConvertToKiloWattHour();
+			})},
+
+		};
 
 		public static readonly Dictionary<string, Tuple<ModalResultField[], WriteFuelEntry>> FuelDataValue = new Dictionary<string, Tuple<ModalResultField[], WriteFuelEntry>>() {
 			{ FCMAP_H, FuelFunc((r, m, f) => m.FuelConsumptionPerSecond(ModalResultField.FCMap, f)?.ConvertToGrammPerHour())},
@@ -713,8 +787,12 @@ namespace TUGraz.VectoCore.OutputData
 			{ FCFINAL_LiterPer100PassengerKM, FuelFunc((r, m, f) => f.FuelDensity == null || r.VehicleData?.PassengerCount == null || m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter == null ? null :(m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter / r.VehicleData.PassengerCount.Value).ConvertToLiterPer100Kilometer()) },
 			
 			{ SPECIFIC_FC, FuelFunc((r, m, f) => r.Cycle.CycleType == CycleType.VTP ? (m.TotalFuelConsumption(ModalResultField.FCFinal, f) / m.WorkWheelsPos()).ConvertToGramPerKiloWattHour() : null) },
-
-		};
+			//TODO: use from PEV if possible
+			{ FuelCellFields.FC_AUXHTR_H, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_AUXHTR_H?.ConvertToGrammPerHour())},
+			{ FuelCellFields.FC_AUXHTR_KM,  FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_AUXHTR_KM?.ConvertToGrammPerKiloMeter())},
+			{ FuelCellFields.FC_AUXHTR_H_CORR, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_AUXHTR_H?.ConvertToGrammPerHour())},
+			{ FuelCellFields.FC_AUXHTR_KM_CORR, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_ESS_CORR_KM?.ConvertToGrammPerKiloMeter())},
+        };
 
 		public static readonly Dictionary<string, WriteEmEntry> ElectricMotorValue = new Dictionary<string, WriteEmEntry>() {
 			{ EM_AVG_SPEED_FORMAT, (r, m, em) =>    m.ElectricMotorAverageSpeed(em).ConvertToRoundsPerMinute() },

@@ -22,7 +22,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 {
-	public interface IFuelCellPostProcessingInfo
+	public interface IFuelCellPreRunInfo
     {
         Meter WindowSize { get; }
         int BinarySearchIterations { get; }
@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
         FuelCellPreRunPostprocessor.SearchResult[] RejectedSearchResults { get; }
     }
 
-    public partial class FuelCellPreRunPostprocessor : IFuelCellPostProcessingInfo
+    public partial class FuelCellPreRunPostprocessor : IFuelCellPreRunInfo
     {
 		#region
 		

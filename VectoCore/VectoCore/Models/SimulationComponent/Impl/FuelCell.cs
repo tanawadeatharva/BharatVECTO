@@ -44,10 +44,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			var power = CurrentState.Power;
-			container[ModalResultField.P_fuelCell, Id.ToString()] = power;
+			container[ModalResultField.P_FCS, Id.ToString()] = power;
 
 			var h2 = ModelData.MassFlowMap.Lookup(CurrentState.Power);
-			container[ModalResultField.H2, Id.ToString()] = h2;
+			container[ModalResultField.FC_FCS, Id.ToString()] = h2;
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)

@@ -187,25 +187,33 @@ namespace TUGraz.VectoCore.Utils
 		[Conditional("TRACE")]
 		private static void AppendDebug(DebugData debug)
 		{
-			var xmin = debug.LocalData.Min(d => d.x);
-			var xmax = debug.LocalData.Max(d => d.x);
-			var ymin = debug.LocalData.Min(d => d.y);
-			var ymax = debug.LocalData.Max(d => d.y);
+#if TRACE
+			//try {
+			//	var xmin = debug.LocalData.Min(d => d.x);
+			//	var xmax = debug.LocalData.Max(d => d.x);
+			//	var ymin = debug.LocalData.Min(d => d.y);
+			//	var ymax = debug.LocalData.Max(d => d.y);
 
-			var rand = new Random().Next();
-			using (
-				var f = new StreamWriter(File.Open("LineSearch-" + Thread.CurrentThread.ManagedThreadId + "-statistics.csv",
-						FileMode.Append))) {
-				foreach (var d in debug.LocalData) {
-					f.WriteLine($"{rand}, " +
-								$"{(d.x - xmin) / (xmax - xmin)}, " +
-								$"{(d.y - ymin) / (ymax - ymin)}, " +
-								$"{d.x / Math.Max(Math.Abs(xmax), Math.Abs(xmin))}, " +
-								$"{d.y / Math.Max(Math.Abs(ymax), Math.Abs(ymin))}, " +
-								$"{d.x}, " +
-								$"{d.y}");
-				}
-			}
+			//	var rand = new Random().Next();
+			//	using (
+			//		var f = new StreamWriter(File.Open(
+			//			"LineSearch-" + Thread.CurrentThread.ManagedThreadId + "-statistics.csv",
+			//			FileMode.Append))) {
+			//		foreach (var d in debug.LocalData) {
+			//			f.WriteLine($"{rand}, " +
+			//						$"{(d.x - xmin) / (xmax - xmin)}, " +
+			//						$"{(d.y - ymin) / (ymax - ymin)}, " +
+			//						$"{d.x / Math.Max(Math.Abs(xmax), Math.Abs(xmin))}, " +
+			//						$"{d.y / Math.Max(Math.Abs(ymax), Math.Abs(ymin))}, " +
+			//						$"{d.x}, " +
+			//						$"{d.y}");
+			//		}
+			//	}
+			//} catch (Exception ex) {
+			//	//Silently ignore
+			//}
+
+#endif
 		}
 
 		/// <summary>
@@ -343,13 +351,18 @@ namespace TUGraz.VectoCore.Utils
         public static int FindClosest<TValue>(TValue[] sortedArray, TValue searchValue, Func<(TValue a, TValue b), double> diff, out (int start, int end) interval)
 		{
 			//TODO handle accuracy
-			Func<(TValue a, TValue b), bool> greater = t => diff(t) > 0;
-			Func<(TValue a, TValue b), bool> less = t => diff(t) < 0;
-			Func<(TValue a, TValue b), bool> equal = t => diff(t) == 0;
+			//Func<(TValue a, TValue b), bool> greater = t => diff(t) > 0;
+			//Func<(TValue a, TValue b), bool> less = t => diff(t) < 0;
+			//Func<(TValue a, TValue b), bool> equal = t => diff(t) == 0;
+
+			Func<(TValue a, TValue b), bool> greater = t => diff(t).IsGreater(0, 1E-12);
+			Func<(TValue a, TValue b), bool> less = t => diff(t).IsSmaller(0, 1E-12);
+			Func<(TValue a, TValue b), bool> equal = t => diff(t).IsEqual(0, 1E-12);
 
 
 
-			var len = sortedArray.Length; //O(1)
+
+            var len = sortedArray.Length; //O(1)
 			int first = 0;
 			int last = len - 1;
 			int i = 0;

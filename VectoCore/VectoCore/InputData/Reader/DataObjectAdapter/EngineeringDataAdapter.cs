@@ -926,7 +926,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var fcPostProcessor = new FuelCellPreRunPostprocessor(modData) {
 				Writer = DebugOutputDataWriter
 			};
-			fcData.PostProcessing = fcPostProcessor;
+			fcData.PreRunPostProcessing = fcPostProcessor;
 
 
 			var result = fcPostProcessor.CalculateFuelCellPowerDemand(fcData, batData.Clone());

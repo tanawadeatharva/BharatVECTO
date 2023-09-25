@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 			return FuelCellPowerMap.Lookup(mileageCounterDistance);
 		}
 
-		public IFuelCellPostProcessingInfo PostProcessing { get; set; }
+		public IFuelCellPreRunInfo PreRunPostProcessing { get; set; }
 
 		private void CheckFcCount()
 		{
@@ -135,9 +135,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 
 			//var closest = FindIndex(distance, out var interval);
 
+			if (distance.IsEqual(_entries[interval.end].Distance, 1E-06.SI<Meter>())) {
+				return _entries[interval.end].Power;
+			}
+
+			if (distance.IsEqual(_entries[interval.start].Distance, 1E-06.SI<Meter>()))
+			{
+				return _entries[interval.start].Power;
+			}
 
 
-			return VectoMath.Interpolate(_entries[interval.start].Distance, _entries[interval.end].Distance, _entries[interval.start].Power,
+            return VectoMath.Interpolate(_entries[interval.start].Distance, _entries[interval.end].Distance, _entries[interval.start].Power,
 				_entries[interval.end].Power, distance);
         }
 
