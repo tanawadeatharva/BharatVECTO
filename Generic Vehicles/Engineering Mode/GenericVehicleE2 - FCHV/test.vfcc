@@ -1,0 +1,20 @@
+{
+  "Header": {
+    "CreatedBy": "",
+    "Date": "2023-09-20T07:17:09.7948096Z",
+    "AppVersion": "3",
+    "FileVersion": 1
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "Manufacturer": "asdf",
+    "Model": "asdf",
+    "MinElectricPower": {
+      "SerializedValue": "0.0001 [W]"
+    },
+    "MaxElectricPower": {
+      "SerializedValue": "0.0001 [W]"
+    },
+    "MassFlowMap": "../GenericFuelCellMassflowMap.vfcm"
+  }
+}
