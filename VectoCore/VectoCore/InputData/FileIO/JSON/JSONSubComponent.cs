@@ -669,7 +669,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	public class JSONFuelCellSystemEngineeringInputData : IFuelCellSystemEngineeringInputData
 	{
 		public WattPerSecond GradientPowerChange { get; internal set; }
-		public Second OnOffHysteresis { get; internal set; }
 
 		public IList<FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>> FuelCellComponents { get; internal set; }
 	}

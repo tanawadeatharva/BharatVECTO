@@ -79,15 +79,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					
 					fcList.Add(tmpEntry);
 				}
-
-			
 			}
-
-
 
 			return new JSONFuelCellSystemEngineeringInputData() {
 				GradientPowerChange = (fcsJson.GetEx<double>(JsonKeys.FuelCell_GradientPowerChange) * 1000).SI<WattPerSecond>(), //given in kW/s
-				OnOffHysteresis = (fcsJson.GetEx<double>(JsonKeys.FuelCell_OnOffHysteresis)).SI<Second>(),
 				FuelCellComponents = fcList
 			};
 

@@ -1114,11 +1114,6 @@ Public Class FuelCellSystemWrapper
 		End Get
 	End Property
 
-	Public ReadOnly Property OnOffHysteresis As Second Implements IFuelCellSystemEngineeringInputData.OnOffHysteresis
-		Get
-			Return Vehicle.FuelCell_OnOffHysteresis
-		End Get
-	End Property
 	Public ReadOnly Property FuelCellComponents As IList(Of FuelCellComponentEntry(Of IFuelCellComponentEngineeringInputData)) Implements IFuelCellSystemEngineeringInputData.FuelCellComponents
 		Get
 			If (Vehicle.VehicleType <> VectoSimulationJobType.FCHV) Then

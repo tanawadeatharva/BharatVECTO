@@ -572,7 +572,6 @@ Public Class VehicleForm
 				lvFuelCellComponents.Items.Add(CreateFuelCellSystemListViewItem(entry.FuelCellComponent.DataSource.SourceFile, entry.Count))
 			Next
 			tbGradientPowerChange.Text = (fcs.GradientPowerChange / 1000).ToGUIFormat()
-			tbOnOffHysteresis.Text = fcs.OnOffHysteresis.ToGUIFormat()
 		End If
 
 		If (vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle OrElse vehicle.VehicleType = VectoSimulationJobType.IEPC_S) Then
@@ -1098,7 +1097,6 @@ Public Class VehicleForm
 
 		If (VehicleType = VectoSimulationJobType.FCHV) Then
 			veh.FuelCell_GradientPowerChange = tbGradientPowerChange.Text.ToDouble(0).SI(Of WattPerSecond)
-			veh.FuelCell_OnOffHysteresis = tbOnOffHysteresis.Text.ToDouble(0).SI(Of Second)
 			For Each reess As ListViewItem In lvFuelCellComponents.Items
 				veh.FuelCellComponents.Add(Tuple.Create(reess.SubItems(FcComponentTbl.FcComponentFile).Text, reess.SubItems(FcComponentTbl.Count).Text.ToInt()))
 			Next

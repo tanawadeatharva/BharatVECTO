@@ -715,7 +715,6 @@ public class JSONFileWriter : IOutputFileWriter
 		var fcS = vehicle.Components.FuelCellSystemInputData;
 		var ret = new Dictionary<string, object>() {
 			{JsonKeys.FuelCell_GradientPowerChange, fcS.GradientPowerChange.Value()},
-			{JsonKeys.FuelCell_OnOffHysteresis, fcS.OnOffHysteresis.Value()}
 		};
 
 		ret[JsonKeys.FuelCell_FuelCells] = GetFuelCells(fcS, basePath);

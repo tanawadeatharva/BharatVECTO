@@ -20,7 +20,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		public const int FuelCellBatID = 0xFCB; 
 		public WattPerSecond GradientPowerChange { get; set; }
 
-		public Second OnOffHysteresis { get; set; }
 
 
 		public IList<FuelCellData> FuelCells { get; set; }
