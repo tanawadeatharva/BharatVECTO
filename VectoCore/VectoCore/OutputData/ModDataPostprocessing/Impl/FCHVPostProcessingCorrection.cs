@@ -111,29 +111,29 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 
 		private void SetReessCorrectionDemand(IModalDataContainer modData, VectoRunData runData, FCHVCorrectedModalData corrected)
 		{
-			var deltaSoc = modData.REESSDeltaSoc();
-			if (deltaSoc.IsEqual(0)) {
+			var startSoc = modData.REESSStartSoC();
+			var endSoc = modData.REESSEndSoC();
+            if ((endSoc - startSoc).IsEqual(0)) {
 				//Set everything to zero
-
-
+				corrected.DeltaEReessFuelCell = 0.SI<WattSecond>();
 			}
 
-
-			var batEff = 1f;
-			if (deltaSoc > 0) {
-				//Bat discharge eff
-				// BAT_Terminal, ES_Ter its possible that we need different efficiencies depending on charging/discharging
-			} else {
+			var batEff = 1d;
+			if (endSoc.IsSmaller(startSoc)) {
 				//Bat charge eff
-
-			}
+           
+                Debug.Assert(modData.REESSEndSoC() < modData.REESSStartSoC());
+				var etaReessChg = modData.WorkREESSChargeInternal().Value() /
+								modData.WorkREESSChargeTerminal_ES().Value();
+				batEff = 1.0 / etaReessChg;
+			} else {
+				//Bat discharge eff
+                var etaReessDischg = modData.WorkREESSDischargeTerminal_ES().Value() /
+									modData.WorkREESSDischargeInternal().Value();
+				batEff = etaReessDischg;
+            }
 
 			corrected.DeltaEReessFuelCell = batEff * corrected.ElectricEnergyConsumption_SoC_Corr; //includes work ps bus aux
-
-
-
-
-
 		}
 
 		#endregion

@@ -558,7 +558,11 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_ES_Conn_loss);
 		}
 
-
+		/// <summary>
+		/// SOC(end) - SOC(start)
+		/// </summary>
+		/// <param name="data"></param>
+		/// <returns></returns>
         public static double REESSDeltaSoc(this IModalDataContainer data)
 		{
 			return data.REESSEndSoC() - data.REESSStartSoC();
