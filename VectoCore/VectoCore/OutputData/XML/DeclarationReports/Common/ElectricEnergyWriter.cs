@@ -50,7 +50,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         protected override IList<ConvertedSI> GetEnergyConsumption(WattSecond elEnergy, Meter distance,
             Kilogram payload, CubicMeter volume, double? passengers)
 		{
-			var retVal = new List<ConvertedSI>() {
+			if (distance.IsEqual(0)) {
+				// in some testcases only a single cycle is simulated which has a weighting of 0. consider this to generate a valid report
+				return new List<ConvertedSI>() { (elEnergy / 1.SI<Meter>()).ConvertToKiloWattHourPerKiloMeter(), };
+			}
+            var retVal = new List<ConvertedSI>() {
 				(elEnergy / distance).ConvertToKiloWattHourPerKiloMeter(),
 				(elEnergy / distance / payload).ConvertToKiloWattHourPerTonKiloMeter(),
 			};

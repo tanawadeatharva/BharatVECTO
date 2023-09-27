@@ -453,6 +453,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					operatingPoint.InAngularVelocity);
 			}
 
+			if (operatingPoint.InAngularVelocity.IsEqual(DataBus.EngineInfo.EngineIdleSpeed, 1.RPMtoRad())) {
+				operatingPoint.Creeping = true;
+			}
 			var maxInputSpeed = VectoMath.Min(ModelData.TorqueConverterSpeedLimit, DataBus.EngineInfo.EngineN95hSpeed);
 			if (operatingPoint.InAngularVelocity.IsGreater(maxInputSpeed)) {
 				operatingPoint = ModelData.FindOperatingPoint(maxInputSpeed, outAngularVelocity);
