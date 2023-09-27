@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				iterativeRunStrategy.Update = (modData, runData) => {
 					runData.JobType = VectoSimulationJobType.FCHV;
 					runData.ModFileSuffix = "";
-					modData.PostProcessingCorrection = new BatteryElectricPostprocessingCorrection();
+					modData.PostProcessingCorrection = new FCHVPostProcessingCorrection();
 					//In case the battery is modified after creating the rundata (testing, do not create new battery data)
 					pevRd.BatteryData.Batteries =
 						pevRd.BatteryData.Batteries.Where(b => b.Item1 != FuelCellSystemData.FuelCellBatID).ToList();

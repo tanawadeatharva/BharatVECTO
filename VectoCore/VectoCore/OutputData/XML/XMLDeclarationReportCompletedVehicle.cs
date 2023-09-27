@@ -345,7 +345,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
             public KilogramPerWattSecond VehicleLine => throw new NotImplementedException();
 
-            public KilogramPerSecond FC_ESS_H => throw new NotImplementedException();
+			public KilogramPerWattSecond FuelCellLine => throw new NotImplementedException();
+
+			public KilogramPerSecond FC_ESS_H => throw new NotImplementedException();
 
             public KilogramPerSecond FC_ESS_CORR_H => throw new NotImplementedException();
 

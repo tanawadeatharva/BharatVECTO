@@ -473,16 +473,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(SI), caption: "P_FCS_target [kW]", outputFactor: 1e-3)] P_fuelCellSystem_target,
 		[ModalResultField(typeof(SI), caption: "P_FCS_actual [kW]", outputFactor: 1e-3)] P_fuelCellSystem_actual,
+		[ModalResultField(typeof(SI), caption: "P_FCS [g/h]", outputFactor: 3600 * 1000)] Fc_fuelCellSystem_actual,
+
+
 
 		/// <summary>
-		/// Power fuel cell systems 
-		/// </summary>
+        /// Power fuel cell systems 
+        /// </summary>
         [ModalResultField(typeof(SI), caption: "P_FCS_{0} [kW]", outputFactor: 1e-3)] P_FCS,
 		/// <summary>
 		/// Fuel consumption from each fuel cell system
 		/// </summary>
 		[ModalResultField(typeof(SI), caption: "FC_FCS_{0} [g/h]", outputFactor: 3600 * 1000)] FC_FCS,
+
 		
+
+
 
 
         [ModalResultField(typeof(SI), caption: "T_max_propulsion [Nm]")] MaxPropulsionTorqe,
@@ -490,6 +496,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "P_DC/DC_In [kW]", outputFactor: 1e-3)] P_DCDC_In,
 		[ModalResultField(typeof(SI), caption: "P_DC/DC_Out [kW]", outputFactor: 1e-3)] P_DCDC_Out,
 		[ModalResultField(typeof(SI), caption: "P_DC/DC_missing [kW]", outputFactor: 1e-3)] P_DCDC_missing,
+
 
 	}
 

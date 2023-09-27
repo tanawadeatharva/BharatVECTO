@@ -252,6 +252,8 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 			set => throw new NotImplementedException();
 		}
 
+		public KilogramPerWattSecond FuelCellLine => throw new NotImplementedException();
+
 		public Watt P_REES_int
 		{
 			get { return (Watt)_data[GetColumnName(ModalResultField.P_reess_int)]; }

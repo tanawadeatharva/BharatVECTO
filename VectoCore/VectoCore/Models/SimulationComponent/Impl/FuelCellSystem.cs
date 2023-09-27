@@ -108,6 +108,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			container[ModalResultField.P_fuelCellSystem_target] = CurrentState.TargetPower;
 			container[ModalResultField.P_fuelCellSystem_actual] = CurrentState.ActualPower;
+			container[ModalResultField.Fc_fuelCellSystem_actual] = _fuelCells.Sum(x => x.PreviousState.FuelConsumption);
+
+
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)

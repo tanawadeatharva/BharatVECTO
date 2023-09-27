@@ -75,7 +75,14 @@ namespace TUGraz.VectoCore.OutputData
 
 
 		private readonly Dictionary<String, SI> _timeIntegrals = new Dictionary<string, SI>();
+		
 		private readonly Dictionary<FuelType, KilogramPerWattSecond> _engLine = new Dictionary<FuelType, KilogramPerWattSecond>();
+		
+		private KilogramPerWattSecond _fuelCellLine = null;
+
+		public KilogramPerWattSecond FuelCellLine => _fuelCellLine ?? (_fuelCellLine = GetFuelCellCorrectionFactor());
+
+
 		private readonly Dictionary<FuelType, KilogramPerWattSecond> _vehLine = new Dictionary<FuelType, KilogramPerWattSecond>();
 		
 		private Dictionary<PowertrainPosition, WattSecond> _eEmDrive = new Dictionary<PowertrainPosition, WattSecond>();
@@ -184,6 +191,25 @@ namespace TUGraz.VectoCore.OutputData
 			_engLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
 
 			return _engLine[fuel.FuelType];
+		}
+
+		private KilogramPerWattSecond GetFuelCellCorrectionFactor()
+		{
+			var (k, _) = VectoMath.LeastSquaresFitting(
+				GetValues(
+					x => x.Field<SI>(ModalResultField.P_fuelCellSystem_actual.GetName()).IsGreater(0) //FC is on
+						? new Point(
+							
+							x.Field<SI>(ModalResultField.P_fuelCellSystem_actual.GetName()).Value(),
+							x.Field<SI>(ModalResultField.Fc_fuelCellSystem_actual.GetName()).Value())
+						: null).Where(x => x != null && x.Y > 0).ToArray());
+			if (double.IsInfinity(k) || double.IsNaN(k))
+			{
+				LogManager.GetLogger(typeof(ModalDataContainer).FullName).Warn("could not fuel cell correction line - k: {0}", k);
+				k = 0;
+			}
+
+			return k.SI<KilogramPerWattSecond>();
 		}
 
 		public KilogramPerWattSecond VehicleLineSlope(IFuelProperties fuel)
@@ -658,6 +684,7 @@ namespace TUGraz.VectoCore.OutputData
 			dataColumns.AddRange(new [] {
 				ModalResultField.P_fuelCellSystem_target,
 				ModalResultField.P_fuelCellSystem_actual,
+				ModalResultField.Fc_fuelCellSystem_actual,
 			}.Select(x => x.GetName()));
 
 

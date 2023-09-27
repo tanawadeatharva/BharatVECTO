@@ -151,6 +151,7 @@ namespace TUGraz.VectoCore.OutputData
 		ModalResults Data { get; }
 		string RunName { get; }
 		IModalDataPostProcessor PostProcessingCorrection { set; }
+		KilogramPerWattSecond FuelCellLine { get; }
 		void RegisterComponent(VectoSimulationComponent component);
 		bool ContainsColumn(string modalResultField);
 	}

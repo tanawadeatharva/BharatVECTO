@@ -77,6 +77,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static IFuelProperties Diesel => Instance().Lookup(FuelType.DieselCI);
 
+		/// <summary>
+		/// Used for Fuel Cell
+		/// </summary>
+		public static IFuelProperties H2 => Instance().Lookup(FuelType.H2FC);
+
+
 		protected override void ParseData(DataTable table)
 		{
 			foreach (DataRow row in table.Rows) {

@@ -112,10 +112,16 @@ namespace TUGraz.VectoCore.OutputData
 			Tuple.Create(SumDataFields.FuelCellFields.FC_AUXHTR_KM, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.FuelCellFields.FC_AUXHTR_H_CORR, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.FuelCellFields.FC_AUXHTR_KM_CORR, typeof(ConvertedSI)),
-			Tuple.Create(SumDataFields.FuelCellFields.FCFINAL_H, typeof(ConvertedSI)),
-			Tuple.Create(SumDataFields.FuelCellFields.FCFINAL_KM, typeof(ConvertedSI)),
+
+			Tuple.Create(SumDataFields.FuelCellFields.FC_HEV_SOC_CORR_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_HEV_SOC_CORR_KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_HEV_SOC_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_HEV_SOC_KM, typeof(ConvertedSI)),
+
 			Tuple.Create(SumDataFields.FuelCellFields.K_FCSLine, typeof(ConvertedSI)),
-        };
+            Tuple.Create(SumDataFields.FuelCellFields.FCFINAL_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FCFINAL_KM, typeof(ConvertedSI)),
+		};
 
 		public static readonly Tuple<string, Type>[] FuelCell_Columns = {
 			Tuple.Create(SumDataFields.FuelCellFields.P_FCS, typeof(ConvertedSI)),
@@ -943,7 +949,7 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			if (_sumWriter != null) {
 				lock (Table) {
-					var outputColumns = GetOutputColumnsOrdered().ToArray();
+					var outputColumns = GetOutputColumnsOrdered().Distinct().ToArray();
 					var view = new DataView(Table, "", SumDataFields.SORT, DataViewRowState.CurrentRows).ToTable(false, outputColumns);
 					
 					try {
@@ -1031,17 +1037,7 @@ namespace TUGraz.VectoCore.OutputData
 			var row = GetResultDictionary(modData, runData);
 
 			foreach (DataColumn col in Table.Columns) {
-				var func = SumDataFields.SumDataValue.GetVECTOValueOrDefault(col.ColumnName);
-				if (func == null) {
-					continue;
-				}
-
-				if (func.Item1 == null || func.Item1.All(x => modData.ContainsColumn(x.GetName()))) {
-					var value = func.Item2(runData, modData);
-					if (value != null) {
-						row[col.ColumnName] = value;
-					}
-				}
+				SetValue(modData, runData, col, row, SumDataFields.SumDataValue.GetVECTOValueOrDefault(col.ColumnName));
 			}
 
 			var multipleEngineModes = runData.EngineData?.MultipleEngineFuelModes ?? false;
@@ -1078,11 +1074,32 @@ namespace TUGraz.VectoCore.OutputData
 				}
 			}
 
+			if (runData.JobType == VectoSimulationJobType.FCHV && runData.FuelCellSystemData.FuelCells.Count > 0) {
+				foreach (DataColumn col in Table.Columns) {
+					SetValue(modData, runData, col, row, SumDataFields.FuelCellValue.GetVECTOValueOrDefault(col.ColumnName));
+                }
+			}
+
 			if ((runData.GearboxData?.Gears.Count ?? 0) > 0) {
 				WriteGearshiftStats(modData, row, (uint?)runData.GearboxData?.Gears.Count ?? 0u);
 			}
 
 			AddResultDictionary(row);
+		}
+
+		private static void SetValue(IModalDataContainer modData, VectoRunData runData, DataColumn col, Dictionary<string, object> row, Tuple<ModalResultField[], SumDataFields.WriteSumEntry> ValueFunc)
+		{
+			var func = ValueFunc;
+			if (func == null) {
+				return;
+			}
+
+			if (func.Item1 == null || func.Item1.All(x => modData.ContainsColumn(x.GetName()))) {
+				var value = func.Item2(runData, modData);
+				if (value != null) {
+					row[col.ColumnName] = value;
+				}
+			}
 		}
 
 		private string GetAuxColName(string auxKey)

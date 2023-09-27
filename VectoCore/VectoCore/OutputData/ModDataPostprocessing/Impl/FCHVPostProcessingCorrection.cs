@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using Castle.DynamicProxy.Contributors;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRunDataFactory;
@@ -7,28 +9,136 @@ using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ShiftStrategy;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 
 namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 {
-    public class FCHVPostProcessingCorrection : BatteryElectricPostprocessingCorrection
+    public class FCHVPostProcessingCorrection : ModalDataPostProcessingCorrectionBase
     {
         #region Implementation of IModalDataPostProcessor
 
         public override ICorrectedModalData ApplyCorrection(IModalDataContainer modData, VectoRunData runData)
 		{
-            //PEV Corrections
-			var corrected = base.ApplyCorrection(modData, runData);
+			if (modData.Duration.IsEqual(0))
+			{
+				return new FCHVCorrectedModalData(modData);
+			}
 
 
-		
+            var deltaEPSel = 0.SI<WattSecond>();
+			var airDemandCorr = 0.SI<NormLiter>();
+			var deltaAir = 0.SI<NormLiter>();
+			if (runData.BusAuxiliaries != null && runData.BusAuxiliaries.PneumaticUserInputsConfig.CompressorMap == null)
+			{
+				// no compressor map - electric compressor
+				var actuations = new Actuations()
+				{
+					Braking = runData.BusAuxiliaries.Actuations.Braking,
+					ParkBrakeAndDoors = runData.BusAuxiliaries.Actuations.ParkBrakeAndDoors,
+					Kneeling = runData.BusAuxiliaries.Actuations.Kneeling,
+					CycleTime = modData.Duration
+				};
+				airDemandCorr = M03Impl.TotalAirDemandCalculation(runData.BusAuxiliaries, actuations);
+				deltaAir = airDemandCorr - modData.AirGenerated();
+				deltaEPSel = deltaAir * DeclarationData.BusAuxiliaries.PneumaticSystemElectricDemandPerAirGenerated /
+							runData.DCDCData.DCDCEfficiency;
+
+			}
 
 
 
-			return corrected;
+
+			var electricEnergyConsumption_SoC = -modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int);
+            var corrected = new FCHVCorrectedModalData(modData) {
+				CorrectedAirDemand = airDemandCorr,
+				DeltaAir = deltaAir,
+				WorkBusAux_elPS_SoC_ElRange = deltaEPSel,
+				ElectricEnergyConsumption_SoC = electricEnergyConsumption_SoC,
+				ElectricEnergyConsumption_SoC_Corr = electricEnergyConsumption_SoC
+			};
+
+
+			SetReessCorrectionDemand(modData, runData, corrected);
+
+
+
+
+
+
+			SetFuelConsumptionCorrection(modData, runData, corrected);
+			SetAuxHeaterDemand(modData, runData, corrected);
+
+			if (corrected.AuxHeaterDemand?.IsGreater(0) ?? false)
+			{
+
+				var f = FuelData.Diesel;
+
+				var fc = new AuxHeaterFuelConsumptionCorrection(
+					fuel: f,
+					distance: modData.Distance,
+					duration: modData.Duration,
+					fcAuxHeater: corrected.AuxHeaterDemand / f.LowerHeatingValueVecto);
+
+
+				corrected.FuelCorrection[f.FuelType] = fc;
+			}
+
+
+
+
+            return corrected;
 		}
 
-        #endregion
+		private void SetFuelConsumptionCorrection(IModalDataContainer modData, VectoRunData runData,
+			FCHVCorrectedModalData corrected)
+		{
+			var f = FuelData.H2;
+
+			var fcLine = modData.FuelCellLine;
+			var fc = new FuelCellFuelConsumptionCorrection(
+				fuel: f,
+				fuelCellLine: modData.FuelCellLine,
+				fcReessSoc: corrected.DeltaEReessFuelCell * fcLine,
+				fcMap: modData.TimeIntegral<Kilogram>(ModalResultField.Fc_fuelCellSystem_actual),
+				duration: modData.Duration,
+				distance: modData.Distance
+			);
+			corrected.FuelCorrection[f.FuelType] = fc;
+		}
+
+
+		private void SetReessCorrectionDemand(IModalDataContainer modData, VectoRunData runData, FCHVCorrectedModalData corrected)
+		{
+			var deltaSoc = modData.REESSDeltaSoc();
+			if (deltaSoc.IsEqual(0)) {
+				//Set everything to zero
+
+
+			}
+
+
+			var batEff = 1f;
+			if (deltaSoc > 0) {
+				//Bat discharge eff
+				// BAT_Terminal, ES_Ter its possible that we need different efficiencies depending on charging/discharging
+			} else {
+				//Bat charge eff
+
+			}
+
+			corrected.DeltaEReessFuelCell = batEff * corrected.ElectricEnergyConsumption_SoC_Corr; //includes work ps bus aux
+
+
+
+
+
+		}
+
+		#endregion
+
+
+
     }
 }

@@ -13,6 +13,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			public Watt RequestedPower { get; set; }
 			public Watt Power { get; set; }
+
+			public KilogramPerSecond FuelConsumption { get; set; }
 			public bool On { get; set; }
 		}
 
@@ -45,9 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var power = CurrentState.Power;
 			container[ModalResultField.P_FCS, Id.ToString()] = power;
-
-			var h2 = ModelData.MassFlowMap.Lookup(CurrentState.Power);
-			container[ModalResultField.FC_FCS, Id.ToString()] = h2;
+			container[ModalResultField.FC_FCS, Id.ToString()] = CurrentState.FuelConsumption;
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
@@ -67,11 +67,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var generatedPower =
 				VectoMath.LimitTo(requestedPower, ModelData.MinElectricPower, ModelData.MaxElectricPower);
+			var h2 = ModelData.MassFlowMap.Lookup(generatedPower);
 
-
-			if (!dryRun) {
+            if (!dryRun) {
 				CurrentState.RequestedPower = requestedPower;
 				CurrentState.Power = generatedPower;
+				CurrentState.FuelConsumption = h2;
 			}
 
 
