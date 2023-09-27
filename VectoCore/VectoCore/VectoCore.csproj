@@ -117,7 +117,7 @@
     <InternalsVisibleTo Include="VECTO_GIT" />
     <InternalsVisibleTo Include="VectoAuxiliariesTests" />
     <InternalsVisibleTo Include="VECTO3" />
-    <InternalsVisibleTo Include="VECTOMultistage" />
+    <InternalsVisibleTo Include="VECTOMultistep" />
     <InternalsVisibleTo Include="VectoMockup" />
     <InternalsVisibleTo Include="Vecto3GUI2020Test" />
   </ItemGroup>
