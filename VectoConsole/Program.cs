@@ -39,6 +39,7 @@ using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using Castle.Core.Internal;
 using Ninject;
 using NLog;
 using NLog.Config;
@@ -91,6 +92,9 @@ Description:
 	FILE1.vecto [FILE2.vecto ...]: A list of vecto-job files (with the 
 	   extension: .vecto). At least one file must be given. Delimited by 
 	   whitespace.
+	PREVIOUS_STEP.xml: Previous manufacturing step VIF.
+	CURRENT_STEP.xml: Current interim or completed manufacturing step VIF.
+	OUTPUT.xml: Output path for the new VIF.
 
 	-ams: append manufacturing step
 	-t: output information about execution times
@@ -128,14 +132,14 @@ Examples:
 				// if no arguments given: display usage and terminate
 				if (!args.Any())
 				{
-					Console.Write(Usage);
+					WriteErrorLine(Usage, ConsoleColor.Gray);
 					return 1;
 				}
 
 				// on -h display help and terminate.
 				if (args.Contains("-h")) {
 					ShowVersionInformation();
-					Console.Write(Help);
+					WriteLine(Help);
 					return 0;
 				}
 
@@ -225,36 +229,45 @@ Examples:
 
 				if (args.Contains("-ams"))
 				{
-					try
+					string errorMessage = null;
+					int requiredFiles = 3;
+					if (fileList.Length < requiredFiles)
 					{
-						string outputVifPath = AppendManufacturingStep(args, fileList);
-						if (_quiet)
-						{
-							return 0;
-						}
-
-						WriteLine("Do you want to run the simulation? [Y]es or [N]o (Default)");
-						string line = Console.ReadLine().Trim().ToUpper();
-						if (line != "Y" && line != "YES")
-						{
-							return 0;
-						}
-
-						if (!CanSimulateVehicleStep(fileList))
-						{
-							WriteErrorLine("Can not simulate interim steps. Only final can be simulated.");
-							return 0;
-						}
-
-						jobFiles = new List<string> { outputVifPath };
+						errorMessage = "Input or output files not provided.";
 					}
-					catch(VectoException e)
-					{
-						WriteErrorLine(e.Message);
-						WriteLine(UsageAMS);
 
+					if (args.Contains("-eng"))
+					{
+						errorMessage = "It is not possible to execute -ams command in Engineering (-eng) mode.";
+					}
+
+					if (!errorMessage.IsNullOrEmpty())
+					{
+						WriteErrorLine(errorMessage);
+						WriteLine(UsageAMS);
 						return 1;
 					}
+
+					string outputVifPath = AppendManufacturingStepAndStore(args, fileList);
+					if (_quiet)
+					{
+						return 0;
+					}
+
+					WriteLine("Do you want to run the simulation? [Y]es or [N]o (Default)");
+					string line = Console.ReadLine().Trim().ToUpper();
+					if (line != "Y" && line != "YES")
+					{
+						return 0;
+					}
+
+					if (!CanSimulateVehicleStep(fileList))
+					{
+						WriteErrorLine("Can not simulate interim steps. Only final can be simulated.");
+						return 0;
+					}
+
+					jobFiles = new List<string> { outputVifPath };
 				}
 
 				stopWatch.Start();
@@ -354,6 +367,7 @@ Examples:
 				if (!_quiet) {
 					WriteErrorLine(e.Message);
 
+					// TODO: Is there a log file?
 					Console.Error.WriteLine("Please see log-file for further details (logs/log.txt)");
 				}
 				Environment.ExitCode = Environment.ExitCode != 0 ? Environment.ExitCode : 1;
@@ -369,19 +383,8 @@ Examples:
 			return Environment.ExitCode;
 		}
 
-		private static string AppendManufacturingStep(string[] commands, string[] fileList)
+		private static string AppendManufacturingStepAndStore(string[] commands, string[] fileList)
 		{
-			int requiredFiles = 3;
-			if (fileList.Length < requiredFiles)
-			{
-				throw new VectoException("Input or output files not provided.");
-			}
-
-			if (commands.Contains("-eng"))
-			{
-				throw new VectoException("It is not possible to execute -ams command in Engineering (-eng) mode.");
-			}
-
 			var multistageJobInputDataFilePath = fileList[0];
 			var vehicleInputDataFilePath = fileList[1];
 			var outputFilePath = fileList[2];
