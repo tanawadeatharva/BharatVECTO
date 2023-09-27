@@ -29,10 +29,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_mileageCounter = databus.MileageCounter;
 			_fuelCells = new List<FuelCell>();
 			ModelData = fuelCellSystemData;
-			PreviousState.TargetPower = 0.SI<Watt>();
-			PreviousState.ActualPower = 0.SI<Watt>();
-
-        }
+			Initialize();
+		}
 
 		public IReadOnlyCollection<FuelCell> FuelCells => new ReadOnlyCollection<FuelCell>(_fuelCells);
 
@@ -42,9 +40,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt Initialize()
 		{
-			PreviousState.TargetPower = 0.SI<Watt>();
-			PreviousState.ActualPower = 0.SI<Watt>();
-			return 0.SI<Watt>();
+			var distance = _mileageCounter.Distance;
+			var power = ModelData.ChargingPower(distance);
+			PreviousState.TargetPower = power;
+			PreviousState.ActualPower = power;
+			return power;
 		}
 
 
