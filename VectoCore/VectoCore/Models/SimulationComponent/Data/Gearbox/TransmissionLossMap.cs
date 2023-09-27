@@ -66,20 +66,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			get { return _entries.Select(x => $"{x.InputSpeed.AsRPM} [rpm], {x.InputTorque}, {x.TorqueLoss}").ToArray(); }
 		}
 
-		public TransmissionLossMap(IReadOnlyList<GearLossMapEntry> entries, double gearRatio, string gearName)
+		public TransmissionLossMap(IReadOnlyList<GearLossMapEntry> entries, double gearRatio, string gearName, bool createInnvertedMap)
 		{
 			GearName = gearName;
 			_ratio = gearRatio;
 			_entries = entries;
 			_lossMap = new DelaunayMap("TransmissionLossMap " + GearName);
-			_invertedLossMap = new DelaunayMap("TransmissionLossMapInv. " + GearName);
+			_invertedLossMap = createInnvertedMap ? new DelaunayMap("TransmissionLossMapInv. " + GearName) : null;
 			foreach (var entry in _entries) {
 				_lossMap.AddPoint(entry.InputSpeed.Value(), (entry.InputTorque - entry.TorqueLoss).Value(), entry.TorqueLoss.Value());
-				_invertedLossMap.AddPoint(entry.InputSpeed.Value(), entry.InputTorque.Value(), entry.TorqueLoss.Value());
+				_invertedLossMap?.AddPoint(entry.InputSpeed.Value(), entry.InputTorque.Value(), entry.TorqueLoss.Value());
 			}
 
 			_lossMap.Triangulate();
-			_invertedLossMap.Triangulate();
+			_invertedLossMap?.Triangulate();
 		}
 
 		/// <summary>
@@ -121,6 +121,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		/// <returns>Torque needed at output side (towards the wheels).</returns>
 		public NewtonMeter GetOutTorque(PerSecond inAngularVelocity, NewtonMeter inTorque, bool allowExtrapolation = false)
 		{
+			if (_invertedLossMap == null) {
+				throw new VectoException("Required inverted Loss-Map not available");
+			}
 			var torqueLoss = _invertedLossMap.Interpolate(inAngularVelocity.Value(), inTorque.Value());
 			if (!torqueLoss.IsNaN()) {
 				return (inTorque - torqueLoss.SI<NewtonMeter>()) * _ratio;
