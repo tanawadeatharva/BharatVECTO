@@ -935,7 +935,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			batData.InitialSoC = result.InitSoc;
 			return new FuelCellPowerMap(result.Entries);
 		}
-
+		[Obsolete]
 		private static FuelCellPowerMap CreateStaticFuelCellPowerMap(IModalDataContainer modData)
 		{
 			//Constant power for the whole cycle
@@ -988,7 +988,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public FuelCellData CreateFuelCellData(IFuelCellComponentEngineeringInputData fuelCellInputData, int id, int subId)
 		{
-			return new FuelCellData() {
+			var fuelCellData =  new FuelCellData() {
 				MassFlowMap = FuelCellMassFlowMapReader.Create(fuelCellInputData.MassFlowMap),
 				MaxElectricPower = fuelCellInputData.MaxElectricPower,
 				MinElectricPower = fuelCellInputData.MinElectricPower,
@@ -997,6 +997,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					SubId = subId,
 				}
 			};
+
+			if (fuelCellData.MinElectricPower.IsSmaller(fuelCellData.MassFlowMap.MinPower) ||
+				fuelCellData.MaxElectricPower.IsGreater(fuelCellData.MassFlowMap.MaxPower)) {
+				throw new VectoException("Fuel cell limits exceed mass flow map");
+			}
+
+			return fuelCellData;
 		}
 
 		public BatterySystemData CreateFuelCellPreProcessingBattery(

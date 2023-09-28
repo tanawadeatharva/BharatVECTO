@@ -113,8 +113,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 
 			foreach (var pevRd in GetBatteryElectricVehicleRunData()) {
-
-				var iterativeRunStrategy = new FCHEVIterativeRunStrategy( new []{
+				var fuelCellData = 
+					dao.CreateFuelCellSystemData(InputDataProvider.JobInputData.Vehicle.Components
+						.FuelCellSystemInputData);
+                var iterativeRunStrategy = new FCHEVIterativeRunStrategy( new []{
 					//Prerun, iteration 0
 					new PreRunOptions() {
 #if TRACE_FC
@@ -149,9 +151,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                     //runData.BatteryData = pevBat;
                     //runData.BatteryData =
                     //	dao.CreateBatteryData(InputDataProvider.JobInputData.Vehicle.Components.ElectricStorage, 0.5);
-                    runData.FuelCellSystemData =
-						dao.CreateFuelCellSystemData(InputDataProvider.JobInputData.Vehicle.Components
-								.FuelCellSystemInputData);
+					runData.FuelCellSystemData = fuelCellData;
 					runData.FuelCellSystemData.FuelCellPowerMap =
 						dao.CreateFuelCellPowerMap(modData, runData.FuelCellSystemData, runData.BatteryData);
 					pevRd.BatteryData.ChargeSustainingBatterySystem = false; //In the real run we don't use a chargesustaining battery

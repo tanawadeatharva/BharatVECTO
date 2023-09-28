@@ -101,6 +101,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		private readonly List<FuelCellPowerMapEntry> _entries;
 		private Meter[] _distanceEntries;
 
+		public Watt InitPower => _entries.MinBy(e => e.Power).Power;
+
 		/// <summary>
 		/// Constant for now, remove when this is replaced with the actual implementation 
 		/// </summary>
@@ -206,9 +208,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 
 	public class FuelCellMassFlowMap
 	{
+		public Watt MinPower => Entries.MinBy(e => e.P_el_out).P_el_out;
+		public Watt MaxPower => Entries.MaxBy(e => e.P_el_out).P_el_out;
 
-
-		protected internal MassFlowMapEntry[] Entries;
+		protected internal readonly MassFlowMapEntry[] Entries;
 
 		public FuelCellMassFlowMap(MassFlowMapEntry[] entries)
 		{

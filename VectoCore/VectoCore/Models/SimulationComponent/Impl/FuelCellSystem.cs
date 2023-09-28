@@ -40,8 +40,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt Initialize()
 		{
-			var distance = _mileageCounter.Distance;
-			var power = ModelData.ChargingPower(distance);
+
+			//var distance = _mileageCounter.Distance;
+			var power = ModelData.FuelCellPowerMap.InitPower;
 			PreviousState.TargetPower = power;
 			PreviousState.ActualPower = power;
 			return power;
