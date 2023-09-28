@@ -260,7 +260,7 @@ Public Class BusAuxiliariesEngParametersForm
         busAuxParams.MaxAlternatorPower = tbMaxAlternatorPower.Text.ToDouble(0)
         busAuxParams.ElectricStorageCapacity = tbElectricStorageCapacity.Text.ToDouble(0)
         busAuxParams.ElectricStorageEfficiency = tbBatEfficiency.Text.ToDouble(1)
-        busAuxParams.DCDCEfficiency = tbDCDCEff.Text.ToDouble(0)
+        busAuxParams.DCDCEfficiency = tbDCDCEff.Text.ToDouble(1)
         busAuxParams.SupplyESFromHEVREESS = cbES_HEVREESS.Checked
 
         if (JobType = VectoSimulationJobType.IEPC_E OrElse JobType = VectoSimulationJobType.BatteryElectricVehicle OrElse JobType = VectoSimulationJobType.FCHV) then
