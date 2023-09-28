@@ -52,14 +52,16 @@ Public Class FuelCellComponentDialog
                 Exit Sub
             End If
         End If
-
-
+        
+        
         If Not FuelCellComponentForm.Visible Then
-            FuelCellComponentForm.ShowDialog()
+            FuelCellComponentForm.Show()
         Else
             If FuelCellComponentForm.WindowState = FormWindowState.Minimized Then BatteryForm.WindowState = FormWindowState.Normal
             FuelCellComponentForm.BringToFront()
         End If
+
+       
 
         If Not Trim(f) = "" Then
             Try
@@ -68,6 +70,8 @@ Public Class FuelCellComponentDialog
                 MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading FuelCell File")
             End Try
         End If
+
+
     End Sub
 
     Public Sub Clear()

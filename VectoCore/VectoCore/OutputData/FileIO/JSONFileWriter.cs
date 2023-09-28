@@ -1639,9 +1639,9 @@ public class JSONFileWriter : IOutputFileWriter
 			{ "SavedInDeclMode", declMode },
 			{ "Manufacturer", fuelCellComponent.Manufacturer },
 			{ "Model", fuelCellComponent.Model },
-			{ "MinElectricPower", fuelCellComponent.MinElectricPower / 1000},
-			{ "MaxElectricPower", fuelCellComponent.MaxElectricPower / 1000 },
-			{ "MassFlowMap", GetRelativePath(fuelCellComponent.MassFlowMap.Source, filePath)}
+			{ "MinElectricPower", (fuelCellComponent.MinElectricPower * 1000).Value()},
+			{ "MaxElectricPower", (fuelCellComponent.MaxElectricPower * 1000).Value()},
+			{ "MassFlowMap", GetRelativePath(fuelCellComponent.MassFlowMap.Source, Path.GetDirectoryName(filePath))}
 		};
 
 		WriteFile(header, body, filePath);

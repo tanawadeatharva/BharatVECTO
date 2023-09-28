@@ -222,8 +222,10 @@ Public Class FuelCellComponentForm
     End Sub
 
     Private Sub btnBrowseMassFlowMap_Click(sender As Object, e As EventArgs) Handles btnBrowseMassFlowMap.Click
-        If MassFlowMapFileBrowser.OpenDialog(FileRepl(tbMassFlowMap.Text, GetPath(_fuelCellComponentFile))) Then _
+        If MassFlowMapFileBrowser.OpenDialog(FileRepl(tbMassFlowMap.Text, GetPath(_fuelCellComponentFile))) Then
             tbMassFlowMap.Text = GetFilenameWithoutDirectory(MassFlowMapFileBrowser.Files(0), GetPath(_fuelCellComponentFile))
+            UpdatePic()
+        End If
     End Sub
 
 End Class
