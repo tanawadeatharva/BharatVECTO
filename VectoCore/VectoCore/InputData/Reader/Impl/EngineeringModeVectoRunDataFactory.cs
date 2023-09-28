@@ -134,8 +134,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 				pevRd.BatteryData = dao.CreateFuelCellPreProcessingBattery(InputDataProvider.JobInputData.Vehicle.Components.FuelCellSystemInputData, pevRd.BatteryData);
 				//pevRd.SimulationType = VectoSimulationJobType.FCHV;
+#if TRACE_FC
 				pevRd.ModFileSuffix += "pre";
+#else
 
+#endif
 				pevRd.BatteryData.Batteries =
 					pevRd.BatteryData.Batteries.Where(b => b.Item1 != FuelCellSystemData.FuelCellBatID).ToList();
 
