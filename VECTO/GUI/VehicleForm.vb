@@ -491,7 +491,7 @@ Public Class VehicleForm
 		tbPTOLossMap.Text =
 			If(Cfg.DeclMode OrElse pto.PTOLossMap Is Nothing, "", GetRelativePath(pto.PTOLossMap.Source, basePath))
 
-		If (vehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.IEPC_S)) Then
+		If (vehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.IEPC_S, VectoSimulationJobType.FCHV)) Then
 			cbPTOStandstillCycleType.SelectedIndex = 1
 		End If
 
@@ -512,7 +512,7 @@ Public Class VehicleForm
 			If (Cfg.DeclMode) Then
 				tbInitialSoC.Text = String.Empty
 				pnOvcHEV.Enabled = True
-				If vehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E) Then
+				If vehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.FCHV) Then
 					pnOvcHEV.Enabled = False
 					cbOvc.Checked = False
 					pnMaxChargingPwr.Enabled = False
@@ -1036,7 +1036,7 @@ Public Class VehicleForm
 			End If
 		End If
 
-		If (VehicleType = VectoSimulationJobType.BatteryElectricVehicle) Then
+		If (VehicleType = VectoSimulationJobType.BatteryElectricVehicle Or VehicleType = VectoSimulationJobType.FCHV) Then
 			veh.PtoType = CType(cbPTOType.SelectedValue, String)
 			veh.PtoLossMap.Init(GetPath(file), tbPTOLossMap.Text)
 		End If

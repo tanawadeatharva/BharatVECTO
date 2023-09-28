@@ -198,7 +198,7 @@ Public Class BusAuxiliariesEngParametersForm
         tbCurrentDemandEngineOffDriving.Text = inputData.ElectricSystem.CurrentDemandEngineOffDriving.ToGUIFormat()
         tbCurrentDemandEngineOffStandstill.Text = inputData.ElectricSystem.CurrentDemandEngineOffStandstill.ToGUIFormat()
         tbDCDCEff.Text = inputData.ElectricSystem.DCDCConverterEfficiency.ToGUIFormat()
-        if (JobType <> VectoSimulationJobType.BatteryElectricVehicle AndAlso JobType <> VectoSimulationJobType.IEPC_E) Then
+        if (JobType <> VectoSimulationJobType.BatteryElectricVehicle AndAlso JobType <> VectoSimulationJobType.IEPC_E AndAlso JobType <> VectoSimulationJobType.FCHV) Then
             tbAlternatorEfficiency.Text = inputData.ElectricSystem.AlternatorEfficiency.ToGUIFormat()
             cbAlternatorTechnology.SelectedValue  = inputData.ElectricSystem.AlternatorType
             tbMaxAlternatorPower.Text = inputData.ElectricSystem.MaxAlternatorPower.ToGUIFormat()
@@ -263,7 +263,7 @@ Public Class BusAuxiliariesEngParametersForm
         busAuxParams.DCDCEfficiency = tbDCDCEff.Text.ToDouble(0)
         busAuxParams.SupplyESFromHEVREESS = cbES_HEVREESS.Checked
 
-        if (JobType = VectoSimulationJobType.IEPC_E OrElse JobType = VectoSimulationJobType.BatteryElectricVehicle) then
+        if (JobType = VectoSimulationJobType.IEPC_E OrElse JobType = VectoSimulationJobType.BatteryElectricVehicle OrElse JobType = VectoSimulationJobType.FCHV) then
             busAuxParams.CompressorMap = Nothing
         Else 
             busAuxParams.CompressorMap = new SubPath()

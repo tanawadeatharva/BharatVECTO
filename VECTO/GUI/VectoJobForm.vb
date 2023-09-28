@@ -170,7 +170,7 @@ Public Class VectoJobForm
         Select case JobType
             Case VectoSimulationJobType.ConventionalVehicle, VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.IHPC, VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_S
                 auxList = New HeavyLorryAuxiliaryDataAdapter().AuxiliaryTypes.OrderBy(Function(x) x).ToList()
-            Case VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E
+            Case VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.FCHV
                 auxList = new HeavyLorryPEVAuxiliaryDataAdapter().AuxiliaryTypes.OrderBy(Function(x) x).ToList()
             Case Else
                 Throw New VectoException($"{JobType} not supported in declaration mode")

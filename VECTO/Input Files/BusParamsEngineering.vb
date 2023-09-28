@@ -131,7 +131,7 @@ Public Class BusAuxEngineeringParams
 
     Public ReadOnly Property PS_CompressorMap As TableData Implements IBusAuxPneumaticSystemEngineeringData.CompressorMap
     get
-        if JobType =VectoSimulationJobType.BatteryElectricVehicle OrElse JobType = VectoSimulationJobType.IEPC_E then
+        if JobType =VectoSimulationJobType.BatteryElectricVehicle OrElse JobType = VectoSimulationJobType.IEPC_E OrElse JobType =VectoSimulationJobType.FCHV then
                 return Nothing
         End If
         if Not file.Exists(CompressorMap.FullPath) Then

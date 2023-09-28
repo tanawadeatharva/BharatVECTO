@@ -1598,7 +1598,9 @@ public class JSONFileWriter : IOutputFileWriter
 		var header = GetHeader(HybridStrategyParamsVersion);
 
 		var ps = new Dictionary<string, object> {
-			{ "CompressorMap", busAux.PneumaticSystem.CompressorMap != null ? GetRelativePath(busAux.PneumaticSystem.CompressorMap.Source, Path.GetDirectoryName(filePath)) : "" },
+			{ "CompressorMap", (busAux.PneumaticSystem.CompressorMap != null)
+				? GetRelativePath(busAux.PneumaticSystem.CompressorMap.Source, Path.GetDirectoryName(filePath)) 
+				: "" },
 			{ "AverageAirDemand", busAux.PneumaticSystem.AverageAirConsumed.Value() },
 			{ "SmartAirCompression", busAux.PneumaticSystem.SmartAirCompression },
 			{ "GearRatio", busAux.PneumaticSystem.GearRatio },
