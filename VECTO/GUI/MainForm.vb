@@ -451,7 +451,7 @@ Public Class MainForm
                         MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Engine File")
                     End Try
                 Case ".VECTO"
-                    OpenVECTOeditor(file, VectoSimulationJobType.ConventionalVehicle)
+                    OpenVECTOeditor(file)
                 Case Else
                     MsgBox("Type '" & GetExtension(file) & "' unknown!", MsgBoxStyle.Critical)
             End Select
@@ -632,7 +632,7 @@ Public Class MainForm
         If Not File.Exists(f) Then
             MsgBox(f & " not found!")
         Else
-            OpenVECTOeditor(f, VectoSimulationJobType.ConventionalVehicle)
+            OpenVECTOeditor(f)
         End If
     End Sub
 
@@ -1451,28 +1451,29 @@ lbFound:
         End Sub
     End Class
 
-
     'Open Job Editor and open file (or new file)
-    Friend Sub OpenVECTOeditor(x As String, jobType As VectoSimulationJobType)
+    Friend Sub OpenVECTOeditor(filePathOrType As String, Optional jobType As VectoSimulationJobType = Nothing)
+        Dim jobDataProvider As IInputDataProvider = JSONInputDataFactory.ReadComponentData(filePathOrType)
+        Dim vtpEngineeringJob As IVTPEngineeringInputDataProvider = TryCast(jobDataProvider, IVTPEngineeringInputDataProvider)
+        Dim vtpDeclarationJob As IVTPDeclarationInputDataProvider = TryCast(jobDataProvider, IVTPDeclarationInputDataProvider)
 
-        If x = "<New>" Then
+        'Declaration is the base class for EngineeringJobInputData, hence is valid for both Eng. and Decl.
+        If jobType = Nothing Then jobType = TryCast(jobDataProvider, IDeclarationJobInputData).JobType
+
+        If filePathOrType = "<New>" Then
             ShowVectoJobForm(jobType)
             VectoJobForm.VectoNew()
-        ElseIf x = "<VTP>" Then
+        ElseIf filePathOrType = "<VTP>" Then
             ShowVectoEPTPJobForm()
             VectoVTPJobForm.VectoNew()
         Else
             Try
-                Dim engJob As IVTPEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(x),
-                                                                         IVTPEngineeringInputDataProvider)
-                Dim declJob As IVTPDeclarationInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(x),
-                                                                          IVTPDeclarationInputDataProvider)
-                If engJob Is Nothing AndAlso declJob Is Nothing Then
+                If vtpEngineeringJob Is Nothing AndAlso vtpDeclarationJob Is Nothing Then
                     ShowVectoJobForm(jobType)
-                    VectoJobForm.VECTOload2Form(x)
+                    VectoJobForm.VECTOload2Form(filePathOrType)
                 Else
                     ShowVectoEPTPJobForm()
-                    VectoVTPJobForm.VECTOload2Form(x)
+                    VectoVTPJobForm.VECTOload2Form(filePathOrType)
                 End If
             Catch ex As Exception
                 MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vecto Job File")
