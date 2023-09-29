@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 			Bind<ISimulatorFactory>().To<SimulatorFactoryEngineering>().Named(ExecutionMode.Engineering.ToString());
 
 			// ToDo: MQ 2023-05-09: REMOVE CLASS IN PRODUCTION!!!
-            Bind<IDeclarationCycleFactory>().To<DeclarationCycleFromFilesystemFactory>().InSingletonScope();
+            //Bind<IDeclarationCycleFactory>().To<DeclarationCycleFromFilesystemFactory>().InSingletonScope();
 			Bind<IMissionFilter>().To<DefaultMissionFilter>();
 
             //Bind<IDeclarationCycleFactory>().To<DeclarationCycleFactory>().InSingletonScope();
