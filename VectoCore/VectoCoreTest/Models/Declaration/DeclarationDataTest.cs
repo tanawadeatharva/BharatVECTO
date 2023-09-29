@@ -234,8 +234,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void CrossWindCorrectionTest(string parameterSet, double crossSectionArea, double kmph, double height,
 			double expected)
 		{
-			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
-				new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet,
+			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(), 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+                new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet,
 					crossSectionArea.SI<SquareMeter>(),
 					height.SI<Meter>()),
 				CrossWindCorrectionMode.DeclarationModeCorrection);
@@ -277,8 +277,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void CrossWindCorrectionExceptionTest(string parameterSet, double crossSectionArea, double kmph,
 			double height)
 		{
-			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
-				new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet,
+			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(), 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+                new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet,
 					crossSectionArea.SI<SquareMeter>(),
 					height.SI<Meter>()),
 				CrossWindCorrectionMode.DeclarationModeCorrection);
@@ -293,7 +293,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var airDrag = new AirdragData() {
 				CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection,
 				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(null, null, CrossWindCorrectionMode.DeclarationModeCorrection)
+					new CrosswindCorrectionCdxALookup(null, null, null, null, CrossWindCorrectionMode.DeclarationModeCorrection)
 			};
 
 			Assert.IsTrue(airDrag.IsValid(),
@@ -311,7 +311,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				var airDrag = new AirdragData {
 					CrossWindCorrectionMode = correctionMode,
 					CrossWindCorrectionCurve =
-						new CrosswindCorrectionCdxALookup(null, null, correctionMode)
+						new CrosswindCorrectionCdxALookup(null, null, null, null, correctionMode)
 				};
 
 				Assert.IsFalse(airDrag.IsValid(),
@@ -2459,6 +2459,67 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
 			Assert.AreEqual(expectedAnnual * 1000, val.Mileage.AnnualMileage.Value()); //stored in meter
 			Assert.AreEqual(expectedDaily * 1000, val.Mileage.DailyMileage.Value()); //stored in meter
+		}
+
+        [TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 0.34)]
+		[TestCase(VehicleClass.Class2, MissionType.LongHaul, 0.5)]
+		[TestCase(VehicleClass.Class3, MissionType.RegionalDelivery, 0.34)]
+		[TestCase(VehicleClass.Class4, MissionType.UrbanDelivery, 0)]
+		[TestCase(VehicleClass.Class12, MissionType.RegionalDelivery, 0.34)]
+		[TestCase(VehicleClass.ClassP31SD, MissionType.HeavyUrban, 0.30)]
+		public void VehicleOperationLookupShareInMotionInfrastructureCatenary(VehicleClass hdvClass, MissionType mission,
+			double expectedShare)
+		{
+			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+            Assert.AreEqual(expectedShare, val.ShareInMotionCharging.ShareCatenary);
+		}
+
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.Class2, MissionType.LongHaul, 0.0)]
+		[TestCase(VehicleClass.Class3, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.Class4, MissionType.UrbanDelivery, 0.0)]
+		[TestCase(VehicleClass.Class12, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.ClassP31SD, MissionType.HeavyUrban, 0.80)]
+		[TestCase(VehicleClass.ClassP32SD, MissionType.Interurban, 0.20)]
+		[TestCase(VehicleClass.ClassP33SD, MissionType.Interurban, 0.20)]
+		[TestCase(VehicleClass.ClassP40DD, MissionType.Coach, 0.00)]
+        public void VehicleOperationLookupShareInMotionInfrastructurTrolley(VehicleClass hdvClass, MissionType mission,
+			double expectedShare)
+		{
+			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+			Assert.AreEqual(expectedShare, val.ShareInMotionCharging.ShareTrolley);
+		}
+
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.Class2, MissionType.LongHaul, 0.0)]
+		[TestCase(VehicleClass.Class3, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.Class4, MissionType.UrbanDelivery, 0.5)]
+		[TestCase(VehicleClass.Class12, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.ClassP31SD, MissionType.HeavyUrban, 0.50)]
+		[TestCase(VehicleClass.ClassP32SD, MissionType.Interurban, 0.00)]
+		[TestCase(VehicleClass.ClassP33SD, MissionType.Interurban, 0.00)]
+		[TestCase(VehicleClass.ClassP40DD, MissionType.Coach, 0.00)]
+        public void VehicleOperationLookupShareInMotionInfrastructureGroundRail(VehicleClass hdvClass, MissionType mission,
+			double expectedShare)
+		{
+			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+			Assert.AreEqual(expectedShare, val.ShareInMotionCharging.ShareGroundRail);
+		}
+
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.Class2, MissionType.LongHaul, 0.0)]
+		[TestCase(VehicleClass.Class3, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.Class4, MissionType.UrbanDelivery, 0.5)]
+		[TestCase(VehicleClass.Class12, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.ClassP31SD, MissionType.HeavyUrban, 0.50)]
+		[TestCase(VehicleClass.ClassP32SD, MissionType.Interurban, 0.00)]
+		[TestCase(VehicleClass.ClassP33SD, MissionType.Interurban, 0.00)]
+		[TestCase(VehicleClass.ClassP40DD, MissionType.Coach, 0.00)]
+        public void VehicleOperationLookupShareInMotionInfrastructureWireless(VehicleClass hdvClass, MissionType mission,
+			double expectedShare)
+		{
+			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+			Assert.AreEqual(expectedShare, val.ShareInMotionCharging.ShareWireless);
 		}
 
         [TestCaseSource(nameof(VehicleOperationTestSourceLorry))]

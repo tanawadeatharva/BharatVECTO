@@ -77,6 +77,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			
 			ModalResultField.grad,
 			ModalResultField.altitude,
+			ModalResultField.Highway,
 
 			ModalResultField.drivingBehavior,
 		};
@@ -92,6 +93,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			ModalResultField.grad,
 			ModalResultField.altitude,
+			ModalResultField.Highway,
 
 			ModalResultField.drivingBehavior,
 		};
@@ -190,6 +192,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			ModalResultField.P_veh_inertia,
 			ModalResultField.P_roll,
 			ModalResultField.P_air,
+			ModalResultField.EffectiveAirDragArea,
 			ModalResultField.P_slope,
 			ModalResultField.P_trac
 		};

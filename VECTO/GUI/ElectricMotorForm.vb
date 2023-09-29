@@ -4,6 +4,7 @@ Imports System.IO
 Imports System.Linq
 Imports System.Windows.Forms.DataVisualization.Charting
 Imports TUGraz.VectoCommon.InputData
+Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
@@ -399,7 +400,7 @@ Public Class ElectricMotorForm
         Try
             Dim fcFile As String =
                     If(Not String.IsNullOrWhiteSpace(_emFile), Path.Combine(Path.GetDirectoryName(_emFile), tbMapHi.Text), tbMapHi.Text)
-            If File.Exists(fcFile) Then fcMap = ElectricMotorMapReader.Create(VectoCSVFile.Read(fcFile), 1)
+            If File.Exists(fcFile) Then fcMap = ElectricMotorMapReader.Create(VectoCSVFile.Read(fcFile), 1, ExecutionMode.Engineering)
         Catch ex As Exception
         End Try
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -112,17 +113,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return AirdragDataAdapterHelper.GetDeclarationAirResistanceCurve(crosswindCorrectionParameters,
 				aerodynamicDragAera, vehicleHeight);
 		}
-		protected AirdragData DefaultAirdragData(Mission mission)
+		protected AirdragData DefaultAirdragData(Mission mission, VehicleClass vehicleClass,
+			IVehicleInMotionChargingDeclaration imcData, OvcHevMode ovcMode, double cycleShareDistanceHighway)
 		{
 			var aerodynamicDragArea = mission.DefaultCDxA + mission.Trailer.Sum(t => t.DeltaCdA).DefaultIfNull(0);
+			var (deltaCdxAIMC, deltaCdxAIMCHighway) = DeltaCdxAIMC(imcData, mission, vehicleClass, ovcMode, cycleShareDistanceHighway);
 
-			return new AirdragData()
+            return new AirdragData()
 			{
 				CertificationMethod = CertificationMethod.StandardValues,
 				CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection,
 				DeclaredAirdragArea = mission.DefaultCDxA,
 				CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-					aerodynamicDragArea,
+					aerodynamicDragArea, deltaCdxAIMC, deltaCdxAIMCHighway,
 					GetDeclarationAirResistanceCurve(
 						mission.CrossWindCorrectionParameters, aerodynamicDragArea, mission.VehicleHeight),
 					CrossWindCorrectionMode.DeclarationModeCorrection)
@@ -133,13 +136,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return AirdragDataAdapterHelper.SetCommonAirdragData(data);
 		}
 
-		public virtual AirdragData CreateAirdragData(
-			IAirdragDeclarationInputData airdragInputData, Mission mission,
-			Segment segment)
+		public virtual AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragInputData,
+			IVehicleInMotionChargingDeclaration imcData, Mission mission,
+			Segment segment, OvcHevMode ovcMode, double cycleShareDistanceHighway)
 		{
 			if (airdragInputData == null || airdragInputData.AirDragArea == null)
 			{
-				return DefaultAirdragData(mission);
+				return DefaultAirdragData(mission, segment.VehicleClass, imcData, ovcMode, cycleShareDistanceHighway);
 			}
 
 			var retVal = SetCommonAirdragData(airdragInputData);
@@ -151,25 +154,79 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var aerodynamicDragArea =
 				retVal.DeclaredAirdragArea + mission.Trailer.Sum(t => t.DeltaCdA).DefaultIfNull(0);
 
+			var (deltaCdxAIMC, deltaCdxAIMCHighway) = DeltaCdxAIMC(imcData, mission, segment.VehicleClass, ovcMode, cycleShareDistanceHighway);
+
 			retVal.CrossWindCorrectionCurve =
 				new CrosswindCorrectionCdxALookup(
-					aerodynamicDragArea,
-					GetDeclarationAirResistanceCurve(
+					aerodynamicDragArea, deltaCdxAIMC, deltaCdxAIMCHighway,
+                    GetDeclarationAirResistanceCurve(
 						mission.CrossWindCorrectionParameters, aerodynamicDragArea, mission.VehicleHeight),
 					CrossWindCorrectionMode.DeclarationModeCorrection);
 			return retVal;
 		}
 
-		public virtual AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission)
+		private static (SquareMeter deltaCdxAIMC, SquareMeter deltaCdxAIMCHighway) DeltaCdxAIMC(
+			IVehicleInMotionChargingDeclaration imcData, Mission mission, VehicleClass vehicleClass,
+			OvcHevMode ovcMode, double cycleShareDistanceHighway)
 		{
-			if (!mission.BusParameter.AirDragMeasurementAllowed ||
+			CheckAllowedIMCConfiguration(vehicleClass, imcData);
+			var deltaCdxAIMC = 0.SI<SquareMeter>();
+			var deltaCdxAIMCHighway = 0.SI<SquareMeter>();
+			if (ovcMode != OvcHevMode.ChargeDepleting) {
+				// additional airdrag only for CS simulation as for CD any IMC shall not be active
+				return (deltaCdxAIMC, deltaCdxAIMCHighway);
+            }
+			if (imcData != null && !imcData.Technology.IsOneOf(IMCTechnology.None, IMCTechnology.NotApplicable)) {
+				var deltaCdxA = DeclarationData.ImcTechnology.Lookup(imcData.Technology).deltaCdxA;
+				var imcOnHighwayOnly = DeclarationData.ApplyIMCOnHighwayOnly(imcData, vehicleClass);
+				var vehicleOperation =
+					DeclarationData.VehicleOperation.LookupVehicleOperation(vehicleClass, mission.MissionType);
+				var shareImcAvailable = DeclarationData.GetShareIMCInfrastructure(imcData.Technology, vehicleOperation);
+
+				if (imcOnHighwayOnly) {
+					deltaCdxAIMCHighway = cycleShareDistanceHighway.IsGreater(0)
+						? deltaCdxA * shareImcAvailable / cycleShareDistanceHighway
+						: 0.SI<SquareMeter>();
+				} else {
+					deltaCdxAIMC = deltaCdxA * shareImcAvailable;
+				}
+			}
+
+			return (deltaCdxAIMC, deltaCdxAIMCHighway);
+		}
+
+		private static void CheckAllowedIMCConfiguration(VehicleClass vehicleClass, IVehicleInMotionChargingDeclaration imcData)
+		{
+			if (vehicleClass.IsHeavyLorry()) {
+				if (imcData.Technology.IsOneOf(IMCTechnology.OverheadTrolley)) {
+					throw new VectoException(
+						$"IMC Technology {imcData.Technology.GetLabel()} not supported for heavy lorries");
+				}
+			}
+			if (vehicleClass.IsMediumLorry()) {
+				if (imcData.Technology.IsOneOf(IMCTechnology.OverheadPantograph, IMCTechnology.OverheadTrolley)) {
+					throw new VectoException(
+						$"IMC Technology {imcData.Technology.GetLabel()} not supported for medium lorries");
+				}
+			}
+			if (vehicleClass.IsBus()) {
+				// everything is supported for buses...
+			}
+
+        }
+
+        public virtual AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission)
+		{
+			var deltaCdxAIMC = 0.SI<SquareMeter>();
+			var deltaCdxAIMCHighway = 0.SI<SquareMeter>();
+            if (!mission.BusParameter.AirDragMeasurementAllowed ||
 				completedVehicle.Components.AirdragInputData?.AirDragArea == null) {
 				return new AirdragData() {
 					CertificationMethod = CertificationMethod.StandardValues,
 					DeclaredAirdragArea = mission.DefaultCDxA,
 					CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-						mission.DefaultCDxA,
-						AirdragDataAdapterHelper.GetDeclarationAirResistanceCurve(
+						mission.DefaultCDxA, deltaCdxAIMC, deltaCdxAIMCHighway,
+                        AirdragDataAdapterHelper.GetDeclarationAirResistanceCurve(
 							mission.CrossWindCorrectionParameters, mission.DefaultCDxA, completedVehicle.Height + mission.BusParameter.DeltaHeight),
 						CrossWindCorrectionMode.DeclarationModeCorrection),
 					CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection
@@ -182,8 +239,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			retVal.DeclaredAirdragArea = aerodynamicDragArea;
 			retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-				aerodynamicDragArea,
-				AirdragDataAdapterHelper.GetDeclarationAirResistanceCurve(
+				aerodynamicDragArea, deltaCdxAIMC, deltaCdxAIMCHighway,
+                AirdragDataAdapterHelper.GetDeclarationAirResistanceCurve(
 					mission.CrossWindCorrectionParameters,
 					aerodynamicDragArea,
 					completedVehicle.Height + mission.BusParameter.DeltaHeight),

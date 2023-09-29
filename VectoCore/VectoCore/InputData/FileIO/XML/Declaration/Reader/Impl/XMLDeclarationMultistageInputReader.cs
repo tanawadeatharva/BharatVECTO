@@ -9,6 +9,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
@@ -548,6 +549,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public ConsumerTechnology? DoorDriveTechnology => GetVehiclePropertyValue<ConsumerTechnology?>(nameof(DoorDriveTechnology));
 
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS => GetADAS();
+		public IVehicleInMotionChargingDeclaration InMotionCharging => new XMLIMCData();
 
 		private IAdvancedDriverAssistantSystemDeclarationInputData GetADAS()
 		{

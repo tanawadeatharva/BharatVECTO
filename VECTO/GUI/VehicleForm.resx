@@ -184,6 +184,11 @@
         eyX/NDkNOcG9FD9vY/yfYTB+A9kMOLKC3dXwAAAAAElFTkSuQmCC
 </value>
   </data>
+  <data name="tbIMCShareNote.Text" xml:space="preserve">
+    <value>Attention: In case "In-motion charging feature only applicable on motorway sections" is selected, 
+the value for "Share of in-motion charging infrastructure availability on total mission distance" 
+must be aligned with the distance shares declared as "highway" in the cycle (*.vdri). </value>
+  </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>56</value>
   </metadata>

@@ -37,11 +37,27 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 					Fields.BatteryVoltage,
 					data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Join());
 			}
-			return new SOCMap(data.Rows.Cast<DataRow>().Select(row => new SOCMap.SOCMapEntry
-			{
+
+			var entries = data.Rows.Cast<DataRow>().Select(row => new SOCMap.SOCMapEntry {
 				SOC = row.ParseDouble(Fields.StateOfCharge) / 100,
 				BatteryVolts = row.ParseDouble(Fields.BatteryVoltage).SI<Volt>()
-			}).OrderBy(e => e.SOC).ToArray());
+			}).OrderBy(e => e.SOC).ToList();
+			var first = entries.FirstOrDefault();
+			var last = entries.LastOrDefault();
+			if (first.SOC > 0) {
+				entries.Add(new SOCMap.SOCMapEntry() {
+					SOC = 0,
+					BatteryVolts = first.BatteryVolts
+				});
+			}
+
+			if (last.SOC < 1) {
+				entries.Add(new SOCMap.SOCMapEntry() {
+					SOC = 1,
+					BatteryVolts = last.BatteryVolts
+				});
+			}
+            return new SOCMap(entries.OrderBy(x => x.SOC).ToArray());
 		}
 
 		public static class Fields

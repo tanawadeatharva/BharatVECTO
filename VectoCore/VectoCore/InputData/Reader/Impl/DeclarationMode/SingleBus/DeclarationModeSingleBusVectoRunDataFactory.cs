@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                 var cycle = CycleFactory.GetDeclarationCycle(mission);
 
                 CheckSuperCap(SingleBusDataProvider.PrimaryVehicle);
-
+				
 				var simulationRunData = new VectoRunData {
 					InputData = SingleBusDataProvider,
 					Loading = loading.Key,
@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType,
 					_segment.VehicleClass, PrimaryVehicle.Length ?? mission.BusParameter.VehicleLength,
 					PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
-				runData.Retarder = DataAdapter.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData);
+				runData.Retarder = DataAdapter.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID, null);
 				
 				runData.EngineData.FuelMode = modeIdx.Value;
 				runData.VehicleData.VehicleClass = _segment.VehicleClass;
@@ -307,7 +307,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                     runData.AxleGearData = DataAdapter.CreateAxleGearData(PrimaryVehicle.Components.AxleGearInputData);
                 }
 
-                runData.Retarder = DataAdapter.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData);
+                runData.Retarder = DataAdapter.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID, PrimaryVehicle.Components.IEPC);
 
                 runData.Aux = DataAdapter.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType,
@@ -337,7 +337,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                 }
 
                 if (ovcMode == OvcHevMode.ChargeDepleting) {
-                    runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
+                    runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeDepletingBattery = true);
                 }
 
                 runData.OVCMode = ovcMode;
@@ -504,7 +504,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					PrimaryVehicle.Length ?? mission.BusParameter.VehicleLength,
 					PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
-				runData.Retarder = DataAdapter.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData);
+				runData.Retarder = DataAdapter.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData, PrimaryVehicle.VehicleType == VectoSimulationJobType.IHPC ? ArchitectureID.P_IHPC : PrimaryVehicle.ArchitectureID, null);
 				runData.DriverData = DriverData;
 
 
@@ -540,11 +540,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 				}
 
 				if (ovcMode == OvcHevMode.ChargeDepleting) {
-					runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
+					runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeDepletingBattery = true);
 				}
 
 				if (ovcMode == OvcHevMode.ChargeSustaining) {
-					runData.IterativeRunStrategy = new OVCHevIterativeRunStrategy();
+					runData.IterativeRunStrategy = new HevChargeSustainingIterativeRunStrategy();
 				}
 
 				if (ovcMode != OvcHevMode.NotApplicable && runData.InputData.JobInputData.Vehicle.OvcHev) {
@@ -632,7 +632,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 				foreach (var mission in _segment.Missions) {
 					foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
 						var run = CreateVectoRunData(mission, loading);
-						run.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
+						run.BatteryData.Batteries.ForEach(b => b.Item2.ChargeDepletingBattery = true);
 						yield return run;
 					}
 				}
@@ -674,7 +674,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                     vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
                     vehicle.Length ?? mission.BusParameter.VehicleLength,
                     vehicle.Components.AxleWheels.NumSteeredAxles, vehicle.VehicleType);
-                result.Retarder = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData);
+                result.Retarder = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData, PrimaryVehicle.ArchitectureID, PrimaryVehicle.Components.IEPC);
                 result.DriverData = DriverData;
 
                 result.VehicleData.VehicleClass = _segment.VehicleClass;

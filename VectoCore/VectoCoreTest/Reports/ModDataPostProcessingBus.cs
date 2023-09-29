@@ -476,7 +476,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 						Tuple.Create(0, new BatteryData() {
 							BatteryId = 0,
 							Capacity = 7.5.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(),
-							ChargeSustainingBattery = false,
+							ChargeDepletingBattery = false,
 							InternalResistance =
 								BatteryInternalResistanceReader.Create("SoC, Ri\n0,  0.024\n100,  0.024".ToStream(),
 									false),
@@ -564,7 +564,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 						Tuple.Create(0, new BatteryData() {
 							BatteryId = 0,
 							Capacity = 7.5.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(),
-							ChargeSustainingBattery = false,
+							ChargeDepletingBattery = false,
 							InternalResistance =
 								BatteryInternalResistanceReader.Create("SoC, Ri\n0,  0.024\n100,  0.024".ToStream(),
 									false),

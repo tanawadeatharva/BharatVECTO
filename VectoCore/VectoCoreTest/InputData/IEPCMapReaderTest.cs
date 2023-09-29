@@ -14,6 +14,7 @@ using System.Linq;
 using System.Reflection;
 
 using NUnit.Framework;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
@@ -66,10 +67,10 @@ namespace TUGraz.VectoCore.Tests.InputData
 			powerMapData.Columns[2].ColumnName = IEPCMapReader.Fields.PowerElectrical;
 
 			var fld = IEPCFullLoadCurveReader.Create(fullLoadCurveData, 1, fldMeasuredRatio);
-			var powerMapInput = IEPCMapReader.GetEntries(powerMapData, ratio);
+			var powerMapInput = IEPCMapReader.GetEntries(powerMapData, ratio, ExecutionMode.Engineering);
 
 
-			var effMap = IEPCMapReader.Create(powerMapData, 1, ratio, fld);
+			var effMap = IEPCMapReader.Create(powerMapData, 1, ratio, fld, ExecutionMode.Engineering);
 #if TRACE
 			PrintMaps("FLD.png", 
 				new SeriesProperties<ElectricMotorFullLoadCurve.FullLoadEntry>() {

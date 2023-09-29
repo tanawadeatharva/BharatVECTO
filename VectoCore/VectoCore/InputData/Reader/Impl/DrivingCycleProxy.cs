@@ -43,10 +43,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			Name = name;
 			CycleType = cycle.CycleType;
 			Entries = cycle.Entries;
+			ShareDistanceHighway = cycle.ShareDistanceHighway;
 		}
 
 		[JsonIgnore]
 		public List<DrivingCycleData.DrivingCycleEntry> Entries { get; protected internal set; }
+
+		public double ShareDistanceHighway { get; }
 
 		public string Name { get; private set; }
 

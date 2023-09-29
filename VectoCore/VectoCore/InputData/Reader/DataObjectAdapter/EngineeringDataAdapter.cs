@@ -125,22 +125,43 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		public AirdragData CreateAirdragData(IAirdragEngineeringInputData airdragData, IVehicleEngineeringInputData data)
+		public AirdragData CreateAirdragData(IAirdragEngineeringInputData airdragData, IVehicleEngineeringInputData data, double shareHighwayIMCOnTotalCycle)
 		{
 			var retVal = SetCommonAirdragData(airdragData);
 			retVal.CrossWindCorrectionMode = airdragData.CrossWindCorrectionMode;
 
+			var deltaCdxAIMC = 0.SI<SquareMeter>();
+			var deltaCdxAIMCHighway = 0.SI<SquareMeter>();
+			if (data.InMotionCharging.Enabled) {
+				if (data.InMotionCharging.ShareIMCAvailabilityTotalMission < 0 || data.InMotionCharging.ShareIMCAvailabilityTotalMission > 1) {
+					throw new VectoException(
+						"Share of In-motion charging infrastructure availability has to be between 0% and 100%");
+				}
+                if (data.InMotionCharging.IMCOnMotorwayOnly) {
+					if (data.InMotionCharging.ShareIMCAvailabilityTotalMission > shareHighwayIMCOnTotalCycle) {
+						throw new VectoException(
+							"Share of In-motion charging availability can not be higher than share of motorway sections when IMC is only available on motorways (share motorway: {0})",
+							shareHighwayIMCOnTotalCycle);
+					}
+					deltaCdxAIMCHighway = data.InMotionCharging.DeltaCdxA *
+										data.InMotionCharging.ShareIMCAvailabilityTotalMission / shareHighwayIMCOnTotalCycle;
+				} else {
+					deltaCdxAIMC = data.InMotionCharging.DeltaCdxA *
+									data.InMotionCharging.ShareIMCAvailabilityTotalMission;
+				}
+			}
+
 			switch (airdragData.CrossWindCorrectionMode) {
 				case CrossWindCorrectionMode.NoCorrection:
 					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-						airdragData.AirDragArea,
+						airdragData.AirDragArea, deltaCdxAIMC, deltaCdxAIMCHighway,
 						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(airdragData.AirDragArea),
 						CrossWindCorrectionMode.NoCorrection);
 					break;
 				case CrossWindCorrectionMode.SpeedDependentCorrectionFactor:
 					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-						airdragData.AirDragArea,
-						CrossWindCorrectionCurveReader.ReadSpeedDependentCorrectionCurve(
+						airdragData.AirDragArea, deltaCdxAIMC, deltaCdxAIMCHighway,
+                        CrossWindCorrectionCurveReader.ReadSpeedDependentCorrectionCurve(
 							airdragData.CrosswindCorrectionMap,
 							airdragData.AirDragArea), CrossWindCorrectionMode.SpeedDependentCorrectionFactor);
 					break;
@@ -159,8 +180,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 										data.GrossVehicleMassRating, false)
 									: 4.SI<Meter>());
 					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-						airDragArea,
-						_airdragDataAdapter.GetDeclarationAirResistanceCurve(
+						airDragArea, deltaCdxAIMC, deltaCdxAIMCHighway,
+                        _airdragDataAdapter.GetDeclarationAirResistanceCurve(
 							GetAirdragParameterSet(
 								data.VehicleCategory, data.AxleConfiguration, data.Components.AxleWheels.AxlesEngineering.Count, data.GrossVehicleMassRating), airDragArea,
 							height),
@@ -1010,7 +1031,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			IFuelCellSystemEngineeringInputData fuelCellSystemInputData, BatterySystemData batterySystemData)
 		{
 			var pevBat = batterySystemData;
-			pevBat.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
+			pevBat.Batteries.ForEach(b => b.Item2.ChargeDepletingBattery = true);
             var fcP = fuelCellSystemInputData.FuelCellComponents.Sum(fc => fc.FuelCellComponent.MaxElectricPower * fc.Count);
             var V = pevBat.CalculateVoltageCenterSoc();
             var I = fcP / V;
@@ -1020,7 +1041,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
             var batteryData = new BatteryData()
             {
                 BatteryId = FuelCellSystemData.FuelCellBatID,
-                ChargeSustainingBattery = true,
+                ChargeDepletingBattery = true,
                 MinSOC = 0,
                 MaxSOC = 1,
                 InputData = null,
@@ -1197,7 +1218,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 			var effMap = new Dictionary<uint, EfficiencyMap>();
 			foreach (var gear in gearList) {
-				effMap.Add(gear.Gear, ElectricMotorMapReader.Create(entry.PowerMap[(int)gear.Gear - 1].PowerMap, count));
+				effMap.Add(gear.Gear, ElectricMotorMapReader.Create(entry.PowerMap[(int)gear.Gear - 1].PowerMap, count, ExecutionMode.Engineering));
 			}
 			return new IEPCVoltageLevelData() {
 				Voltage = entry.VoltageLevel,
@@ -1213,7 +1234,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					
 				FullLoadCurve = fullLoadCurveCombined,
 				// DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
-				EfficiencyMap = ElectricMotorMapReader.Create(entry.PowerMap.First().PowerMap, count), //PowerMap
+				EfficiencyMap = ElectricMotorMapReader.Create(entry.PowerMap.First().PowerMap, count, ExecutionMode.Engineering), //PowerMap
 			};
 		}
 
@@ -1410,7 +1431,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, gearRatioUsedForMeasurement.Ratio);
 				for (var i = 0u; i < entry.PowerMap.Count; i++) {
 					var ratio = iepc.Gears.First(x => x.GearNumber == i + 1).Ratio;
-					effMap.Add(i + 1, IEPCMapReader.Create(entry.PowerMap[(int)i].PowerMap, count, ratio, fldCurve));
+					effMap.Add(i + 1, IEPCMapReader.Create(entry.PowerMap[(int)i].PowerMap, count, ratio, fldCurve, ExecutionMode.Engineering));
 					//fullLoadCurves.Add(i + 1, IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, ratio));
 				}
 				voltageLevels.Add(new IEPCVoltageLevelData() {

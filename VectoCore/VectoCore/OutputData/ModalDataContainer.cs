@@ -132,6 +132,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		
 
+
 		public int JobRunId => _runData.JobRunId;
 
 		public string RunName => _runData.JobName;
@@ -505,6 +506,9 @@ namespace TUGraz.VectoCore.OutputData
 
 		public PerSecond ElectricMotorAverageSpeed(PowertrainPosition emPos)
 		{
+			if (Duration == 0.SI<Second>()) {
+				return 0.SI<PerSecond>();
+			}
 			var field = emPos == PowertrainPosition.IEPC
 				? ModalResultField.n_IEPC_int_
 				: ModalResultField.n_EM_electricMotor_;
@@ -513,7 +517,7 @@ namespace TUGraz.VectoCore.OutputData
 			return (integral / Duration.Value()).SI<PerSecond>();
 		}
 
-		public ICorrectedModalData CorrectedModalData => _correctedModalData ?? (_correctedModalData = PostProcessingCorrection.ApplyCorrection(this, _runData));
+        public ICorrectedModalData CorrectedModalData => _correctedModalData ?? (_correctedModalData = PostProcessingCorrection.ApplyCorrection(this, _runData));
 
 
 		public void CalculateAggregateValues()
@@ -667,6 +671,7 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.acc,
 					ModalResultField.grad,
 					ModalResultField.altitude,
+					ModalResultField.Highway,
 					ModalResultField.Gear,
 					ModalResultField.TC_Locked,
 					// ICE
@@ -761,6 +766,7 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.P_trac,
 					ModalResultField.P_slope,
 					ModalResultField.P_air,
+					ModalResultField.EffectiveAirDragArea,
 					ModalResultField.P_roll,
 					ModalResultField.P_veh_inertia,
 				}.Select(x => x.GetName()));
@@ -831,158 +837,6 @@ namespace TUGraz.VectoCore.OutputData
 		}
 
 		[Obsolete]
-		private IList<string> GetOutputColumns()
-		{
-			var dataColumns = new List<string> { ModalResultField.time.GetName() };
-			var writeEngineOnly = _runData.JobType == VectoSimulationJobType.EngineOnlySimulation;
-
-			if (!writeEngineOnly) {
-				dataColumns.AddRange(
-					new[] {
-						ModalResultField.simulationInterval,
-						ModalResultField.dist,
-						ModalResultField.v_act,
-						ModalResultField.v_targ,
-						ModalResultField.acc,
-						ModalResultField.grad,
-						ModalResultField.altitude
-			}.Select(x => x.GetName()));
-			}
-			if (!writeEngineOnly) {
-				dataColumns.AddRange(
-					new[] {
-						ModalResultField.Gear,
-					}.Select(x => x.GetName()));
-				if (HasTorqueConverter) {
-					dataColumns.AddRange(new[] { ModalResultField.TC_Locked }.Select(x => x.GetName()));
-				}
-			}
-			dataColumns.AddRange(
-				new[] {
-					ModalResultField.n_ice_avg,
-					ModalResultField.T_ice_fcmap,
-					ModalResultField.T_ice_full,
-					ModalResultField.T_ice_drag,
-					ModalResultField.P_ice_fcmap,
-					ModalResultField.P_ice_full,
-					ModalResultField.P_ice_full_stat,
-					ModalResultField.P_ice_drag,
-					ModalResultField.P_ice_inertia,
-					ModalResultField.P_ice_out,
-				}.Select(x => x.GetName()));
-			if (Data.ElectricMotors.Count > 0) {
-				dataColumns.AddRange(new[] {
-					ModalResultField.P_reess_terminal,
-					ModalResultField.P_reess_int,
-					ModalResultField.P_reess_loss,
-					ModalResultField.P_reess_charge_max,
-					ModalResultField.P_reess_discharge_max,
-					ModalResultField.REESSStateOfCharge,
-					ModalResultField.U_reess_terminal,
-					ModalResultField.U0_reess,
-					ModalResultField.I_reess,
-				}.Select(x => x.GetName()));
-				foreach (var em in Data.ElectricMotors.OrderBy(x => x).Reverse()) {
-					var cols = em == PowertrainPosition.IEPC ? ModalResults.IEPCSignals : ModalResults.ElectricMotorSignals;
-					dataColumns.AddRange(cols.Select(emCol =>
-						string.Format(emCol.GetAttribute().Caption, em.GetName())));
-				}
-			}
-			if (HasTorqueConverter) {
-				dataColumns.AddRange(
-					new[] {
-						ModalResultField.P_gbx_shift_loss,
-						ModalResultField.P_TC_loss,
-						ModalResultField.P_TC_out,
-					}.Select(x => x.GetName()));
-			} else {
-				dataColumns.AddRange(
-					new[] {
-						ModalResultField.P_clutch_loss,
-						ModalResultField.P_clutch_out,
-					}.Select(x => x.GetName()));
-			}
-
-			if (HasElectricAuxiliaries) {
-				dataColumns.Add(ModalResultField.P_aux_el.GetName());
-			}
-			dataColumns.AddRange(
-				new[] {
-					ModalResultField.P_aux_mech,
-					ModalResultField.P_Aux_el_HV
-				}.Select(x => x.GetName()));
-
-			if (!writeEngineOnly) {
-				dataColumns.AddRange(
-					new[] {
-						ModalResultField.P_gbx_in,
-						ModalResultField.P_gbx_loss,
-						ModalResultField.P_gbx_inertia,
-						ModalResultField.P_retarder_in,
-						ModalResultField.P_ret_loss,
-						ModalResultField.P_angle_in,
-						ModalResultField.P_angle_loss,
-						ModalResultField.P_axle_in,
-						ModalResultField.P_axle_loss,
-						ModalResultField.P_brake_in,
-						ModalResultField.P_brake_loss,
-						ModalResultField.P_wheel_in,
-						ModalResultField.P_wheel_inertia,
-						ModalResultField.P_trac,
-						ModalResultField.P_slope,
-						ModalResultField.P_air,
-						ModalResultField.P_roll,
-						ModalResultField.P_veh_inertia,
-						ModalResultField.n_gbx_out_avg,
-						ModalResultField.T_gbx_out,
-						ModalResultField.T_gbx_in
-					}.Select(x => x.GetName()));
-				if (_runData.BusAuxiliaries != null) {
-					dataColumns.AddRange(
-						new[] {
-							ModalResultField.P_busAux_ES_HVAC,
-							ModalResultField.P_busAux_ES_other,
-							ModalResultField.P_busAux_ES_consumer_sum,
-							ModalResultField.P_busAux_ES_sum_mech,
-							ModalResultField.P_busAux_ES_generated,
-							ModalResultField.BatterySOC,
-							ModalResultField.P_busAux_HVACmech_consumer,
-							ModalResultField.P_busAux_HVACmech_gen,
-							ModalResultField.Nl_busAux_PS_consumer,
-							ModalResultField.Nl_busAux_PS_generated,
-							ModalResultField.Nl_busAux_PS_generated_alwaysOn,
-							//ModalResultField.Nl_busAux_PS_generated_dragOnly,
-							ModalResultField.P_busAux_PS_generated,
-							ModalResultField.P_busAux_PS_generated_alwaysOn,
-							ModalResultField.P_busAux_PS_generated_dragOnly,
-							ModalResultField.P_DCDC_In,
-							ModalResultField.P_DCDC_Out,
-							ModalResultField.P_DCDC_missing,
-						}.Select(x => x.GetName()));
-				}
-				if (HasTorqueConverter) {
-					dataColumns.AddRange(
-						new[] {
-							ModalResultField.TorqueConverterSpeedRatio,
-							ModalResultField.TorqueConverterTorqueRatio,
-							ModalResultField.TC_TorqueOut,
-							ModalResultField.TC_angularSpeedOut,
-							ModalResultField.TC_TorqueIn,
-							ModalResultField.TC_angularSpeedIn,
-						}.Select(x => x.GetName()));
-				}
-			}
-			if (_runData.HybridStrategyParameters != null) {
-				dataColumns.AddRange(new[] {
-					ModalResultField.HybridStrategyScore, 
-					ModalResultField.HybridStrategySolution,
-					ModalResultField.HybridStrategyState,
-					ModalResultField.MaxPropulsionTorqe
-				}.Select(x => x.GetName()));
-			}
-			return dataColumns;
-		}
-
 		public bool HasElectricAuxiliaries
 		{
 			get => _runData.Aux.Any(aux => aux.ConnectToREESS);

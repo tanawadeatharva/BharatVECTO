@@ -129,7 +129,7 @@
 							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>8fsWE1AvinkI5UcWuU/vyx3X2kKjarP/qPC+Uon+aBE=</di:DigestValue>
+						<di:DigestValue>St9yfGznnyvzxkA8lllcPrX05dQsOUnNa0pC3kPKhvw=</di:DigestValue>
 					</di:Reference>
 				</v2.0:Signature>
 			</Gearbox>

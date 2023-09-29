@@ -288,7 +288,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						AxleGearData = axlegearData,
 						AngledriveData = angledriveData,
 						VehicleData = vehicleData,
-						AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle),
+						AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle, drivingCycle.ShareDistanceHighway),
 						DriverData = driver,
 						Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
 						BusAuxiliaries = dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData, 
@@ -308,7 +308,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						GearshiftParameters = gearshiftParams,
 						ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData
 							.Auxiliaries.ElectricPowerDemand,
-					};
+						InMotionCharging = vehicle.InMotionCharging.Enabled,
+						InMotionChargingTechnology = IMCTechnology.NotApplicable,
+
+                    };
 				}
 			}
 		
@@ -402,7 +405,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					AxleGearData = axlegearData,
 					AngledriveData = angledriveData,
 					VehicleData = vehicleData,
-					AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle),
+					AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle, drivingCycle.ShareDistanceHighway),
 					DriverData = driver,
 					Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
 					BusAuxiliaries = dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData, vehicleData, VectoSimulationJobType.BatteryElectricVehicle),
@@ -417,6 +420,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel,
 					GearshiftParameters = gearshiftParams,
 					ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand,
+					InMotionCharging = vehicle.InMotionCharging.Enabled,
+					InMotionChargingTechnology = IMCTechnology.NotApplicable,
 				};
 			}
 		}
@@ -558,7 +563,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				AxleGearData = axlegearData,
 				AngledriveData = null,
 				VehicleData = vehicleData,
-				AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle),
+				AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle, drivingCycle.ShareDistanceHighway),
 				DriverData = driver,
 				Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
 				BusAuxiliaries = dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData, vehicleData,
@@ -575,7 +580,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				GearshiftParameters = gearshiftParams,
 				ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries
 					.ElectricPowerDemand,
-			};
+				InMotionCharging = vehicle.InMotionCharging.Enabled,
+				InMotionChargingTechnology = IMCTechnology.NotApplicable,
+
+            };
 		}
 
 
@@ -664,7 +672,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						AxleGearData = axlegearData,
 						AngledriveData = angledriveData,
 						VehicleData = vehicleData,
-						AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle),
+						AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle, drivingCycle.ShareDistanceHighway),
 						DriverData = driver,
 						Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
 						//BusAuxiliaries =
@@ -677,6 +685,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 						//ElectricMachinesData = electricMachines,
 						//HybridStrategyParameters = hybridParameters,
+						InMotionCharging = false, // vehicle.InMotionCharging.Enabled,
+						InMotionChargingTechnology = IMCTechnology.NotApplicable,
 						BatteryData = battery,
 						SuperCapData = superCap,
 						SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle |

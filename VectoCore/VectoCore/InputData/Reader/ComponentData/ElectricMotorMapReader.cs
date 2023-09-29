@@ -12,14 +12,14 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 
-    public class ElectricMotorMapReader
+    public class ElectricMotorMapReader 
 	{
-		public static EfficiencyMap Create(Stream data, int count)
+		public static EfficiencyMap Create(Stream data, int count, ExecutionMode mode)
 		{
-			return Create(VectoCSVFile.ReadStream(data), count);
+			return Create(VectoCSVFile.ReadStream(data), count, mode);
 		}
 
-		public static EfficiencyMap Create(DataTable data, int count)
+		public static EfficiencyMap Create(DataTable data, int count, ExecutionMode mode)
 		{
 			var headerValid = HeaderIsValid(data.Columns);
 			if (!headerValid) {
@@ -35,7 +35,31 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			}
 			
 			var entries = (from DataRow row in data.Rows select CreateEntry(row)).ToList();
-			var entriesZero = GetEntriesAtZeroRpm(entries);
+			var duplicates = entries.GroupBy(x => Tuple.Create(x.MotorSpeed, x.Torque)).Where(g => g.Count() > 1).Select(x => x.Key).ToList();
+			if (duplicates.Count > 0) {
+				throw new VectoException("Duplicate entries in EM power map: {0}", duplicates.Select(x => $"{x.Item1.AsRPM} rpm / {x.Item2}").Join());
+			}
+
+			var highEff = entries.Where(x => !x.Torque.IsEqual(0) && !x.MotorSpeed.IsEqual(0))
+				.Select(x => Tuple.Create(x,
+					x.Torque.IsGreater(0)
+						? x.MotorSpeed * x.Torque / x.PowerElectrical
+						: x.PowerElectrical / (x.MotorSpeed * x.Torque))).Where(x => x.Item2.IsGreater(1)).ToList();
+			if (highEff.Any()) {
+				if (mode == ExecutionMode.Declaration) {
+					throw new VectoException("Electric power map contains entries with efficiencies > 1! {1} entries: {0}",
+						highEff.Select(x =>
+							$"{x.Item1.MotorSpeed.AsRPM} rpm {x.Item1.Torque} => {x.Item1.PowerElectrical}").Join(),
+						highEff.Count);
+				}
+
+				LogManager.GetLogger(typeof(ElectricMotorMapReader).FullName).Debug(
+					"Electric power map contains entries with efficiencies > 1! {0}",
+					highEff.Select(x =>
+						$"{x.Item1.MotorSpeed.AsRPM} rpm {x.Item1.Torque} => {x.Item1.PowerElectrical}").Join());
+
+			}
+            var entriesZero = GetEntriesAtZeroRpm(entries);
 
 			var delaunayMap = new DelaunayMap("ElectricMotorEfficiencyMap Mechanical to Electric");
 			var retVal = new EfficiencyMapNew(delaunayMap);

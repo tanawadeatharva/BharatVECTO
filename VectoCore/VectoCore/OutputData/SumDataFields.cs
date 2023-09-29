@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -501,15 +502,15 @@ namespace TUGraz.VectoCore.OutputData
 						: (ConvertedSI)r.EngineData?.FullLoadCurves[0].RatedSpeed.AsRPM.SI<Scalar>())
 				},
 				{ ENGINE_DISPLACEMENT, SumFunc((r, m) => r.EngineData?.Displacement.ConvertToCubicCentiMeter()) },
-				{ ENGINE_WHTC_URBAN, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.WHTCUrban).Join(" / ")) },
-				{ ENGINE_WHTC_RURAL, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.WHTCRural).Join(" / ")) }, {
-					ENGINE_WHTC_MOTORWAY, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.WHTCMotorway).Join(" / "))
+				{ ENGINE_WHTC_URBAN, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.WHTCUrban.ToString(CultureInfo.InvariantCulture)).Join(" / ")) },
+				{ ENGINE_WHTC_RURAL, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.WHTCRural.ToString(CultureInfo.InvariantCulture)).Join(" / ")) }, {
+					ENGINE_WHTC_MOTORWAY, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.WHTCMotorway.ToString(CultureInfo.InvariantCulture)).Join(" / "))
 				}, {
 					ENGINE_BF_COLD_HOT,
-					SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.ColdHotCorrectionFactor).Join(" / "))
+					SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.ColdHotCorrectionFactor.ToString(CultureInfo.InvariantCulture)).Join(" / "))
 				}, {
 					ENGINE_CF_REG_PER,
-					SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.CorrectionFactorRegPer).Join(" / "))
+					SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.CorrectionFactorRegPer.ToString(CultureInfo.InvariantCulture)).Join(" / "))
 				}, {
 					ENGINE_ACTUAL_CORRECTION_FACTOR, SumFunc((r, m) => {
 						if (r.Mission?.MissionType == MissionType.VerificationTest) {
@@ -518,11 +519,11 @@ namespace TUGraz.VectoCore.OutputData
 												ModalResultField.FCWHTCc)) /
 											m.TimeIntegral<Kilogram>(m.GetColumnName(fuel.FuelData,
 												ModalResultField.FCMap)))
-								.Select(dummy => (double)dummy).ToArray();
+								.Select(dummy => (double)dummy).ToString(CultureInfo.InvariantCulture).ToArray();
 							return fuelsWhtc?.Join(" / ");
 						}
 
-						return r.EngineData?.Fuels.Select(x => x.FuelConsumptionCorrectionFactor).Join(" / ");
+						return r.EngineData?.Fuels.Select(x => x.FuelConsumptionCorrectionFactor.ToString(CultureInfo.InvariantCulture)).Join(" / ");
 					})
 				},
 
@@ -1204,26 +1205,22 @@ namespace TUGraz.VectoCore.OutputData
 				},
 			};
 
-		public static readonly Dictionary<string, WriteEmEntry> ElectricMotorValue =
-			new Dictionary<string, WriteEmEntry>() {
-				{ EM_AVG_SPEED_FORMAT, (r, m, em) => m.ElectricMotorAverageSpeed(em).ConvertToRoundsPerMinute() },
-				{ E_EM_Mot_DRIVE_FORMAT, (r, m, em) => m.TotalElectricMotorMotWorkDrive(em).ConvertToKiloWattHour() }, {
-					E_EM_Mot_GENERATE_FORMAT,
-					(r, m, em) => m.TotalElectricMotorMotWorkRecuperate(em).ConvertToKiloWattHour()
-				},
-				{ ETA_EM_Mot_DRIVE_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorMotEfficiencyDrive(em), "") },
-				{ ETA_EM_Mot_GEN_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorMotEfficiencyGenerate(em), "") },
-				{ E_EM_DRIVE_FORMAT, (r, m, em) => m.TotalElectricMotorWorkDrive(em).ConvertToKiloWattHour() },
-				{ E_EM_GENERATE_FORMAT, (r, m, em) => m.TotalElectricMotorWorkRecuperate(em).ConvertToKiloWattHour() },
-				{ ETA_EM_DRIVE_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorEfficiencyDrive(em), "") },
-				{ ETA_EM_GEN_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorEfficiencyGenerate(em), "") },
-				{ E_EM_OFF_Loss_Format, (r, m, em) => m.ElectricMotorOffLosses(em).ConvertToKiloWattHour() }, {
-					E_EM_LOSS_TRANSM_FORMAT, (r, m, em) => m.ElectricMotorTransmissionLosses(em).ConvertToKiloWattHour()
-				},
-				{ E_EM_Mot_LOSS_FORMAT, (r, m, em) => m.ElectricMotorMotLosses(em).ConvertToKiloWattHour() },
-				{ E_EM_LOSS_FORMAT, (r, m, em) => m.ElectricMotorLosses(em).ConvertToKiloWattHour() },
-				{ E_EM_OFF_TIME_SHARE, (r, m, em) => (ConvertedSI)m.ElectricMotorOffTimeShare(em) },
-			};
+		public static readonly Dictionary<string, WriteEmEntry> ElectricMotorValue = new Dictionary<string, WriteEmEntry>() {
+			{ EM_AVG_SPEED_FORMAT, (r, m, em) =>    m.ElectricMotorAverageSpeed(em).ConvertToRoundsPerMinute() },
+			{ E_EM_Mot_DRIVE_FORMAT, (r, m, em) => m.TotalElectricMotorMotWorkDrive(em).ConvertToKiloWattHour() },
+			{ E_EM_Mot_GENERATE_FORMAT, (r, m, em) => m.TotalElectricMotorMotWorkRecuperate(em).ConvertToKiloWattHour() },
+			{ ETA_EM_Mot_DRIVE_FORMAT, (r, m, em) =>    new ConvertedSI(m.ElectricMotorMotEfficiencyDrive(em), "") },
+			{ ETA_EM_Mot_GEN_FORMAT, (r, m, em) =>  new ConvertedSI(m.ElectricMotorMotEfficiencyGenerate(em), "") },
+			{ E_EM_DRIVE_FORMAT, (r, m, em) => m.TotalElectricMotorWorkDrive(em).ConvertToKiloWattHour() },
+			{ E_EM_GENERATE_FORMAT, (r, m, em) => m.TotalElectricMotorWorkRecuperate(em).ConvertToKiloWattHour() },
+			{ ETA_EM_DRIVE_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorEfficiencyDrive(em), "") },
+			{ ETA_EM_GEN_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorEfficiencyGenerate(em), "") },
+			{ E_EM_OFF_Loss_Format, (r, m, em) => m.ElectricMotorOffLosses(em).ConvertToKiloWattHour() },
+			{ E_EM_LOSS_TRANSM_FORMAT, (r, m, em) => m.ElectricMotorTransmissionLosses(em)?.ConvertToKiloWattHour() },
+			{ E_EM_Mot_LOSS_FORMAT, (r, m, em) => m.ElectricMotorMotLosses(em)?.ConvertToKiloWattHour() },
+			{ E_EM_LOSS_FORMAT, (r, m, em) => m.ElectricMotorLosses(em)?.ConvertToKiloWattHour() },
+			{ E_EM_OFF_TIME_SHARE, (r, m, em) => (ConvertedSI)m.ElectricMotorOffTimeShare(em) },
+		};
 
 		public static readonly Dictionary<string, WriteEmEntry> IEPCValue = new Dictionary<string, WriteEmEntry>() {
 			{ IEPC_AVG_SPEED_FORMAT, (r, m, em) => m.ElectricMotorAverageSpeed(em).ConvertToRoundsPerMinute() },

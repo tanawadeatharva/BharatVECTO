@@ -37,7 +37,7 @@ Imports DeclarationDataAdapterHeavyLorry = TUGraz.VectoCore.InputData.Reader.Dat
 Public Class Vehicle
 	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData,
 				IAngledriveInputData, IAirdragEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData, IAdvancedDriverAssistantSystemsEngineering,
-				IVehicleComponentsEngineering, IVehicleComponentsDeclaration, IAxlesEngineeringInputData, IAxlesDeclarationInputData
+				IVehicleComponentsEngineering, IVehicleComponentsDeclaration, IAxlesEngineeringInputData, IAxlesDeclarationInputData, IVehicleInMotionChargingEngineering, IVehicleInMotionChargingDeclaration
 
 	Private _filePath As String
 	Private _path As String
@@ -115,6 +115,7 @@ Public Class Vehicle
 	Public ElectricMotorPerGearRatios As Double()
 	Public IEPCFile As SubPath
 
+
 	Public Sub New()
 		_path = ""
 		_filePath = ""
@@ -169,14 +170,14 @@ Public Class Vehicle
 																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis, False)
 				vehicleData = New LorryVehicleDataAdapter().CreateVehicleData(vehicle, segment, segment.Missions.First(),
 													segment.Missions.First().Loadings.First(), True)
-				airdragData = New AirdragDataAdapter().CreateAirdragData(vehicle, segment.Missions.First(), segment)
-				retarderData = New RetarderDataAdapter().CreateRetarderData(vehicle)
+				airdragData = New AirdragDataAdapter().CreateAirdragData(vehicle, vehicle.InMotionChargingDecl, segment.Missions.First(), segment,OvcHevMode.NotApplicable, 0)
+				retarderData = New RetarderDataAdapter().CreateRetarderData(vehicle, vehicle.ArchitectureID, vehicle.Components?.IEPC)
 				angledriveData = New AngledriveDataAdapter().CreateAngledriveData(vehicle)
 				ptoData = New PTODataAdapterLorry().CreatePTOTransmissionData(vehicle, vehicle.Components.GearboxInputData)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				vehicleData = doa.CreateVehicleData(vehicle)
-				airdragData = doa.CreateAirdragData(vehicle, vehicle)
+				airdragData = doa.CreateAirdragData(vehicle, vehicle, If(vehicle.InMotionCharging.Enabled, vehicle.InMotionCharging.ShareIMCAvailabilityTotalMission * 0.5, 0))
 				retarderData = doa.CreateRetarderData(vehicle, emPos)
 				angledriveData = doa.CreateAngledriveData(vehicle)
 				ptoData = doa.CreatePTOTransmissionData(vehicle)
@@ -266,6 +267,11 @@ Public Class Vehicle
 
 		GenSetEMFile.Clear()
 		GenSetMechLossMap.Clear()
+		'IMC
+		IMCEnabled = False
+		IMCDeltaCdxA = 0.SI(of SquareMeter)
+		IMCOnMotorwayOnly = False
+		ShareIMCAvailabilityTotalMission = 0
 
 		SavedInDeclMode = False
 	End Sub
@@ -981,6 +987,25 @@ Public Class Vehicle
 
 	Public ReadOnly Property IAxlesDeclarationInputData_XMLSource As XmlNode Implements IAxlesDeclarationInputData.XMLSource
 
+	Public ReadOnly Property InMotionCharging As IVehicleInMotionChargingEngineering Implements IVehicleEngineeringInputData.InMotionCharging
+		Get
+			Return Me
+		End Get
+	End Property
+
+    Public ReadOnly Property InMotionChargingDecl As IVehicleInMotionChargingDeclaration Implements IVehicleDeclarationInputData.InMotionCharging
+        Get
+            Return Me
+        End Get
+    End Property
+
+
+	Public Property IMCEnabled As Boolean Implements IVehicleInMotionChargingEngineering.Enabled
+	Public Property ShareIMCAvailabilityTotalMission As Double Implements IVehicleInMotionChargingEngineering.ShareIMCAvailabilityTotalMission
+	Public Property IMCDeltaCdxA As SquareMeter Implements IVehicleInMotionChargingEngineering.DeltaCdxA
+	Public Property IMCOnMotorwayOnly As Boolean Implements IVehicleInMotionChargingEngineering.IMCOnMotorwayOnly
+   
+    Public Property IMCDeclarationTechnology As IMCTechnology Implements IVehicleInMotionChargingDeclaration.Technology
 End Class
 
 Public Class IEPCWrapper
@@ -1247,4 +1272,5 @@ Public Class ElectricMachineWrapper
 	Public ReadOnly Property DragCurve As TableData Implements IElectricMotorDeclarationInputData.DragCurve
 	Public ReadOnly Property Conditioning As TableData Implements IElectricMotorDeclarationInputData.Conditioning
 	Public ReadOnly Property OverloadRecoveryFactor As Double Implements IElectricMotorEngineeringInputData.OverloadRecoveryFactor
+
 End Class
