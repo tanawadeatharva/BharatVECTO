@@ -66,8 +66,7 @@ Public Class BusAuxiliariesEngParametersForm
         pnCurrentDemand.Enabled = True
 
         select case JobType
-            case VectoSimulationJobType.BatteryElectricVehicle:
-            case VectoSimulationJobType.IEPC_E:
+            case VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.FCHV, VectoSimulationJobType.IEPC_E:
                 bgPneumaticSystem.Enabled = False
                 gbHVAC.Enabled = False
                 cbES_HEVREESS.Checked = True
@@ -199,7 +198,7 @@ Public Class BusAuxiliariesEngParametersForm
         tbCurrentDemandEngineOffDriving.Text = inputData.ElectricSystem.CurrentDemandEngineOffDriving.ToGUIFormat()
         tbCurrentDemandEngineOffStandstill.Text = inputData.ElectricSystem.CurrentDemandEngineOffStandstill.ToGUIFormat()
         tbDCDCEff.Text = inputData.ElectricSystem.DCDCConverterEfficiency.ToGUIFormat()
-        if (JobType <> VectoSimulationJobType.BatteryElectricVehicle AndAlso JobType <> VectoSimulationJobType.IEPC_E) Then
+        if (JobType <> VectoSimulationJobType.BatteryElectricVehicle AndAlso JobType <> VectoSimulationJobType.IEPC_E AndAlso JobType <> VectoSimulationJobType.FCHV) Then
             tbAlternatorEfficiency.Text = inputData.ElectricSystem.AlternatorEfficiency.ToGUIFormat()
             cbAlternatorTechnology.SelectedValue  = inputData.ElectricSystem.AlternatorType
             tbMaxAlternatorPower.Text = inputData.ElectricSystem.MaxAlternatorPower.ToGUIFormat()
@@ -261,10 +260,10 @@ Public Class BusAuxiliariesEngParametersForm
         busAuxParams.MaxAlternatorPower = tbMaxAlternatorPower.Text.ToDouble(0)
         busAuxParams.ElectricStorageCapacity = tbElectricStorageCapacity.Text.ToDouble(0)
         busAuxParams.ElectricStorageEfficiency = tbBatEfficiency.Text.ToDouble(1)
-        busAuxParams.DCDCEfficiency = tbDCDCEff.Text.ToDouble(0)
+        busAuxParams.DCDCEfficiency = tbDCDCEff.Text.ToDouble(1)
         busAuxParams.SupplyESFromHEVREESS = cbES_HEVREESS.Checked
 
-        if (JobType = VectoSimulationJobType.IEPC_E OrElse JobType = VectoSimulationJobType.BatteryElectricVehicle) then
+        if (JobType = VectoSimulationJobType.IEPC_E OrElse JobType = VectoSimulationJobType.BatteryElectricVehicle OrElse JobType = VectoSimulationJobType.FCHV) then
             busAuxParams.CompressorMap = Nothing
         Else 
             busAuxParams.CompressorMap = new SubPath()

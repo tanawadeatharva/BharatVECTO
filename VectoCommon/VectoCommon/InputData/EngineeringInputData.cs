@@ -60,6 +60,7 @@ namespace TUGraz.VectoCommon.InputData
 		ConventionalVehicle = 1,
 		ParallelHybridVehicle,
 		SerialHybridVehicle,
+		FCHV,
 		BatteryElectricVehicle,
 		EngineOnlySimulation,
 		IEPC_E,
@@ -72,6 +73,7 @@ namespace TUGraz.VectoCommon.InputData
 		public const string Conventional = "Conventional";
 		public const string Hybrid = "Hybrid";
 		public const string PureElectric = "PureElectric";
+		
 
 		public static string GetPowertrainArchitectureType(this VectoSimulationJobType jobType)
 		{
@@ -87,6 +89,8 @@ namespace TUGraz.VectoCommon.InputData
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
 					return PureElectric;
+				case VectoSimulationJobType.FCHV:
+					throw new NotImplementedException("Relevant for Reports");
 				default:
 					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
 			}
@@ -105,6 +109,7 @@ namespace TUGraz.VectoCommon.InputData
 					return GetSHEVArchitecureID(em);
 
 				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.FCHV:
 					return GetPEVArchId(emPos: em);
 
 				case VectoSimulationJobType.IEPC_E:
@@ -113,15 +118,28 @@ namespace TUGraz.VectoCommon.InputData
 
 				case VectoSimulationJobType.IHPC:
 					return ArchitectureID.P2;
-					break;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
 			}
-
-
-
-
-			return ArchitectureID.UNKNOWN;
+		}
+		
+		public static bool HasEngine(this VectoSimulationJobType jobType)
+		{
+			switch (jobType) {
+				case VectoSimulationJobType.ConventionalVehicle:
+				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.SerialHybridVehicle:
+				case VectoSimulationJobType.EngineOnlySimulation:
+				case VectoSimulationJobType.IHPC:
+				case VectoSimulationJobType.IEPC_S:
+					return true;
+				case VectoSimulationJobType.FCHV:
+				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.IEPC_E:
+					return false;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
+			}
 		}
 
 		private static ArchitectureID GetIepcArchitectureId(VectoSimulationJobType jobType, PowertrainPosition em)
@@ -299,6 +317,8 @@ namespace TUGraz.VectoCommon.InputData
 		IElectricMachinesEngineeringInputData ElectricMachines { get; }
 
 		IIEPCEngineeringInputData IEPCEngineeringInputData { get; }
+
+		IFuelCellSystemEngineeringInputData FuelCellSystemInputData { get; }
 	}
 
 	public interface IAxlesEngineeringInputData
@@ -647,6 +667,24 @@ namespace TUGraz.VectoCommon.InputData
 	public interface ISuperCapEngineeringInputData : ISuperCapDeclarationInputData
 	{
 	}
+
+	public interface IFuelCellSystemEngineeringInputData
+	{
+		WattPerSecond GradientPowerChange { get; }
+		IList<FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>> FuelCellComponents { get; }
+	}
+	public class FuelCellComponentEntry<T> where T : class, IFuelCellComponentEngineeringInputData //Generic to reuse for declaration?
+	{
+		public int Count { get; set; }
+		public T FuelCellComponent { get; set; }
+	}
+    public interface IFuelCellComponentEngineeringInputData : IComponentInputData
+	{
+		TableData MassFlowMap { get; }
+		Watt MaxElectricPower { get; }
+
+		Watt MinElectricPower { get; }
+    }
 
 	public interface IDriverModelData { }
 

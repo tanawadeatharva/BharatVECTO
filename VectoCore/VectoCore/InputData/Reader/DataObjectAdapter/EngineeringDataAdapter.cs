@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
@@ -53,17 +54,27 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public class EngineeringDataAdapter : AbstractSimulationDataAdapter
 	{
+		public IOutputDataWriter DebugOutputDataWriter
+		{
+			get;
+			set;
+		}
+
 		private AirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
 		internal VehicleData CreateVehicleData(IVehicleEngineeringInputData data)
 		{
@@ -921,6 +932,182 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
             retVal.InitialSoC = initialSOC;
 			return retVal;
 		}
+
+		public FuelCellPowerMap CreateFuelCellPowerMap(IModalDataContainer modData,
+			FuelCellSystemData fcData,
+			BatterySystemData batSystemData)
+		{
+			return CreateDynamicFuelCellPowerMap(modData, fcData, batSystemData);
+
+			//return CreateStaticFuelCellPowerMap(modData);
+		}
+
+		private FuelCellPowerMap CreateDynamicFuelCellPowerMap(IModalDataContainer modData, FuelCellSystemData fcData, BatterySystemData batData)
+		{
+			var fcPostProcessor = new FuelCellPreRunPostprocessor(modData) {
+				Writer = DebugOutputDataWriter
+			};
+			fcData.PreRunPostProcessing = fcPostProcessor;
+
+
+			var result = fcPostProcessor.CalculateFuelCellPowerDemand(fcData, batData.Clone());
+
+			NLog.Fluent.Log.Info($"Window distance = {result.Distance}, SoC = {result.InitSoc}");
+			batData.InitialSoC = result.InitSoc;
+			return new FuelCellPowerMap(result.Entries);
+		}
+		[Obsolete]
+		private static FuelCellPowerMap CreateStaticFuelCellPowerMap(IModalDataContainer modData)
+		{
+			//Constant power for the whole cycle
+			var p_reess_terminal_dt = modData.GetValues(x => new {
+				p_reess_terminal = x.Field<Watt>(ModalResultField.P_reess_terminal.GetName()),
+				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
+			});
+
+
+			var constantPower = p_reess_terminal_dt.Sum(x => x.p_reess_terminal * x.dt) /
+								p_reess_terminal_dt.Sum(x => x.dt);
+
+
+			var distanceValues = modData.GetValues(x => x.Field<Meter>(ModalResultField.dist.GetName()));
+			var entries = new List<FuelCellPowerMap.FuelCellPowerMapEntry>();
+			foreach (var dist in distanceValues) {
+				entries.Add(new FuelCellPowerMap.FuelCellPowerMapEntry() {
+					Distance = dist,
+					Power = -constantPower,
+				});
+			}
+
+			return new FuelCellPowerMap(entries.ToArray());
+		}
+
+
+		public FuelCellSystemData CreateFuelCellSystemData(IFuelCellSystemEngineeringInputData fuelCellSystemInputData)
+		{
+			if (fuelCellSystemInputData.FuelCellComponents.Count != 1 
+				&& fuelCellSystemInputData.FuelCellComponents[0].Count != 1) {
+				throw new VectoException(
+					$"Invalid fuel cell count! Currently only one fuel cell component is supported");
+			}
+			
+			
+			var fuelCellSystemData = new FuelCellSystemData();
+			fuelCellSystemData.GradientPowerChange = fuelCellSystemInputData.GradientPowerChange;
+			fuelCellSystemData.FuelCells = new List<FuelCellData>();
+			var id = 0;
+			foreach (var fcC in fuelCellSystemInputData.FuelCellComponents) {
+				id++;
+				for (int i = 0; i < fcC.Count; i++) {
+					//Add each as own component to enable switching them on and off
+					fuelCellSystemData.FuelCells.Add(CreateFuelCellData(fcC.FuelCellComponent, id, i + 1));
+				}
+			}
+
+			return fuelCellSystemData;
+		}
+
+		public FuelCellData CreateFuelCellData(IFuelCellComponentEngineeringInputData fuelCellInputData, int id, int subId)
+		{
+			var fuelCellData =  new FuelCellData() {
+				MassFlowMap = FuelCellMassFlowMapReader.Create(fuelCellInputData.MassFlowMap),
+				MaxElectricPower = fuelCellInputData.MaxElectricPower,
+				MinElectricPower = fuelCellInputData.MinElectricPower,
+				Id = new FuelCellData.FuelCellId() {
+					Id = id, 
+					SubId = subId,
+				}
+			};
+
+			if (fuelCellData.MinElectricPower.IsSmaller(fuelCellData.MassFlowMap.MinPower) ||
+				fuelCellData.MaxElectricPower.IsGreater(fuelCellData.MassFlowMap.MaxPower)) {
+				throw new VectoException("Fuel cell limits exceed mass flow map");
+			}
+
+			return fuelCellData;
+		}
+
+		public BatterySystemData CreateFuelCellPreProcessingBattery(
+			IFuelCellSystemEngineeringInputData fuelCellSystemInputData, BatterySystemData batterySystemData)
+		{
+			var pevBat = batterySystemData;
+			pevBat.Batteries.ForEach(b => b.Item2.ChargeDepletingBattery = true);
+            var fcP = fuelCellSystemInputData.FuelCellComponents.Sum(fc => fc.FuelCellComponent.MaxElectricPower * fc.Count);
+            var V = pevBat.CalculateVoltageCenterSoc();
+            var I = fcP / V;
+
+            var resistance = 1E-12.SI<Ohm>();
+
+            var batteryData = new BatteryData()
+            {
+                BatteryId = FuelCellSystemData.FuelCellBatID,
+                ChargeDepletingBattery = true,
+                MinSOC = 0,
+                MaxSOC = 1,
+                InputData = null,
+                Capacity = 1E5.SI<AmpereSecond>(), //?
+                MaxCurrent = new MaxCurrentMap(new[] {
+                    new MaxCurrentMap.MaxCurrentEntry() {
+                        SoC = 0,
+                        MaxDischargeCurrent = -I,
+                        MaxChargeCurrent = 0.SI<Ampere>()
+                    },
+                    new MaxCurrentMap.MaxCurrentEntry() {
+                        SoC = 0.5,
+                        MaxDischargeCurrent = -I,
+                        MaxChargeCurrent = 0.SI<Ampere>()
+                    },
+                    new MaxCurrentMap.MaxCurrentEntry() {
+                        SoC = 1,
+                        MaxDischargeCurrent = -I,
+                        MaxChargeCurrent = 0.SI<Ampere>()
+                    }
+                }),
+                SOCMap = new SOCMap(new[] {
+                    new SOCMap.SOCMapEntry() {
+                        SOC = 0,
+                        BatteryVolts = V
+                    },
+                    new SOCMap.SOCMapEntry() {
+                        SOC = 0.5,
+                        BatteryVolts = V
+                    },
+                    new SOCMap.SOCMapEntry(){
+                        SOC = 1,
+                        BatteryVolts = V
+                    }
+                }),
+                InternalResistance = new InternalResistanceMap(new[] {
+                    new InternalResistanceMap.InternalResistanceMapEntry() {
+                        SoC = 0,
+                        Resistance = new List<Tuple<Second, Ohm>>() {
+                            Tuple.Create(0.SI<Second>(), resistance),
+                            Tuple.Create(1e9.SI<Second>(), resistance)
+                        }
+                    },
+                    new InternalResistanceMap.InternalResistanceMapEntry() {
+                        SoC = 0.5,
+                        Resistance = new List<Tuple<Second, Ohm>>() {
+                            Tuple.Create(0.SI<Second>(), resistance),
+                            Tuple.Create(1e9.SI<Second>(), resistance)
+                        }
+                    },
+                    new InternalResistanceMap.InternalResistanceMapEntry() {
+                        SoC = 1,
+                        Resistance = new List<Tuple<Second, Ohm>>() {
+                            Tuple.Create(0.SI<Second>(), resistance),
+                            Tuple.Create(1e9.SI<Second>(), resistance)
+                        }
+                    }
+                })
+            };
+            batterySystemData.Batteries.Add(Tuple.Create(0xFCB, batteryData));
+            return batterySystemData;
+
+
+        }
+
+
 
 		public SuperCapData CreateSuperCapData(IElectricStorageSystemEngineeringInputData reessInputData, double initialSOC)
 		{

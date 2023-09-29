@@ -191,6 +191,18 @@ Partial Class VehicleForm
         Me.btnAddReessPack = New System.Windows.Forms.Button()
         Me.lblEditReessPack = New System.Windows.Forms.Label()
         Me.btnRemoveReessPack = New System.Windows.Forms.Button()
+        Me.tpFuelCellSystem = New System.Windows.Forms.TabPage()
+        Me.gbFuelCellSystem = New System.Windows.Forms.GroupBox()
+        Me.pnGradientPowerChange = New System.Windows.Forms.Panel()
+        Me.tbGradientPowerChange = New System.Windows.Forms.TextBox()
+        Me.lblGradientPowerChange = New System.Windows.Forms.Label()
+        Me.lblGradientPowerChangeUnit = New System.Windows.Forms.Label()
+        Me.lvFuelCellComponents = New System.Windows.Forms.ListView()
+        Me.chFuelCellComponent = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
+        Me.chCount = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
+        Me.btnAddFuelCellComponent = New System.Windows.Forms.Button()
+        Me.lblEditFuelCellComponent = New System.Windows.Forms.Label()
+        Me.btnRemoveFuelCellComponent = New System.Windows.Forms.Button()
         Me.tpInMotionCharging = New System.Windows.Forms.TabPage()
         Me.pnInMotionChargingParamsEng = New System.Windows.Forms.Panel()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -340,6 +352,70 @@ Partial Class VehicleForm
         Me.pnImcEng.SuspendLayout
         Me.pnImcDecl.SuspendLayout
         Me.SuspendLayout
+        Me.ColumnHeader15 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.GroupBox6.SuspendLayout()
+        Me.ToolStrip1.SuspendLayout()
+        Me.gbRetarderLosses.SuspendLayout()
+        Me.PnRt.SuspendLayout()
+        Me.GroupBox8.SuspendLayout()
+        Me.PnWheelDiam.SuspendLayout()
+        Me.StatusStrip1.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
+        Me.PnLoad.SuspendLayout()
+        Me.GrAirRes.SuspendLayout()
+        Me.PnCdATrTr.SuspendLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.CmOpenFile.SuspendLayout()
+        Me.GroupBox3.SuspendLayout()
+        Me.gbAngledrive.SuspendLayout()
+        Me.pnAngledriveFields.SuspendLayout()
+        CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.tcVehicleComponents.SuspendLayout()
+        Me.tpGeneral.SuspendLayout()
+        Me.tpPowertrain.SuspendLayout()
+        Me.gbVehicleIdlingSpeed.SuspendLayout()
+        Me.Panel1.SuspendLayout()
+        Me.gbTankSystem.SuspendLayout()
+        Me.tpElectricMachine.SuspendLayout()
+        Me.gpElectricMotor.SuspendLayout()
+        Me.gbRatiosPerGear.SuspendLayout()
+        Me.pnElectricMotor.SuspendLayout()
+        Me.tpIEPC.SuspendLayout()
+        Me.FlowLayoutPanel1.SuspendLayout()
+        Me.tbIHPC.SuspendLayout()
+        Me.FlowLayoutPanel2.SuspendLayout()
+        Me.tpReess.SuspendLayout()
+        Me.gbBattery.SuspendLayout()
+        Me.pnMaxChargingPwr.SuspendLayout()
+        Me.pnOvcHEV.SuspendLayout()
+        Me.pnInitialSoC.SuspendLayout()
+        Me.tpFuelCellSystem.SuspendLayout()
+        Me.gbFuelCellSystem.SuspendLayout()
+        Me.pnGradientPowerChange.SuspendLayout()
+        Me.tpGensetComponents.SuspendLayout()
+        Me.gbGenSet.SuspendLayout()
+        Me.pnGenSetEM.SuspendLayout()
+        Me.tpTorqueLimits.SuspendLayout()
+        Me.gbPropulsionTorque.SuspendLayout()
+        Me.gbEMTorqueLimits.SuspendLayout()
+        Me.bgVehicleTorqueLimits.SuspendLayout()
+        Me.tpADAS.SuspendLayout()
+        Me.gbADAS.SuspendLayout()
+        Me.pnEcoRoll.SuspendLayout()
+        Me.tpRoadSweeper.SuspendLayout()
+        Me.FlowLayoutPanel3.SuspendLayout()
+        Me.FlowLayoutPanel4.SuspendLayout()
+        Me.gbPTO.SuspendLayout()
+        Me.GroupBox2.SuspendLayout()
+        Me.pnPTO.SuspendLayout()
+        Me.gbPTOICEGroupBox.SuspendLayout()
+        Me.pnPtoMode3.SuspendLayout()
+        Me.gbPTODrive.SuspendLayout()
+        Me.pnPtoMode1.SuspendLayout()
+        Me.gbPTOLossmap.SuspendLayout()
+        Me.gbEPTO.SuspendLayout()
+        Me.GroupBox5.SuspendLayout()
+        Me.SuspendLayout()
         '
         'Label1
         '
@@ -1963,6 +2039,132 @@ Partial Class VehicleForm
         Me.cbInMotionChargingEnabled.Text = "Has In Motion Charging"
         Me.cbInMotionChargingEnabled.UseVisualStyleBackColor = true
         '
+        'tpFuelCellSystem
+        '
+        Me.tpFuelCellSystem.Controls.Add(Me.gbFuelCellSystem)
+        Me.tpFuelCellSystem.Location = New System.Drawing.Point(4, 22)
+        Me.tpFuelCellSystem.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
+        Me.tpFuelCellSystem.Name = "tpFuelCellSystem"
+        Me.tpFuelCellSystem.Padding = New System.Windows.Forms.Padding(4, 2, 4, 2)
+        Me.tpFuelCellSystem.Size = New System.Drawing.Size(648, 375)
+        Me.tpFuelCellSystem.TabIndex = 10
+        Me.tpFuelCellSystem.Text = "Fuel Cell System"
+        Me.tpFuelCellSystem.UseVisualStyleBackColor = true
+        '
+        'gbFuelCellSystem
+        '
+        Me.gbFuelCellSystem.Controls.Add(Me.pnGradientPowerChange)
+        Me.gbFuelCellSystem.Controls.Add(Me.lvFuelCellComponents)
+        Me.gbFuelCellSystem.Controls.Add(Me.btnAddFuelCellComponent)
+        Me.gbFuelCellSystem.Controls.Add(Me.lblEditFuelCellComponent)
+        Me.gbFuelCellSystem.Controls.Add(Me.btnRemoveFuelCellComponent)
+        Me.gbFuelCellSystem.Location = New System.Drawing.Point(6, 6)
+        Me.gbFuelCellSystem.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
+        Me.gbFuelCellSystem.Name = "gbFuelCellSystem"
+        Me.gbFuelCellSystem.Padding = New System.Windows.Forms.Padding(4, 2, 4, 2)
+        Me.gbFuelCellSystem.Size = New System.Drawing.Size(632, 257)
+        Me.gbFuelCellSystem.TabIndex = 3
+        Me.gbFuelCellSystem.TabStop = false
+        Me.gbFuelCellSystem.Text = "Fuel Cell System"
+        '
+        'pnGradientPowerChange
+        '
+        Me.pnGradientPowerChange.Controls.Add(Me.tbGradientPowerChange)
+        Me.pnGradientPowerChange.Controls.Add(Me.lblGradientPowerChange)
+        Me.pnGradientPowerChange.Controls.Add(Me.lblGradientPowerChangeUnit)
+        Me.pnGradientPowerChange.Location = New System.Drawing.Point(6, 19)
+        Me.pnGradientPowerChange.Margin = New System.Windows.Forms.Padding(2)
+        Me.pnGradientPowerChange.Name = "pnGradientPowerChange"
+        Me.pnGradientPowerChange.Size = New System.Drawing.Size(301, 24)
+        Me.pnGradientPowerChange.TabIndex = 4
+        '
+        'tbGradientPowerChange
+        '
+        Me.tbGradientPowerChange.Location = New System.Drawing.Point(200, 2)
+        Me.tbGradientPowerChange.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
+        Me.tbGradientPowerChange.Name = "tbGradientPowerChange"
+        Me.tbGradientPowerChange.Size = New System.Drawing.Size(59, 20)
+        Me.tbGradientPowerChange.TabIndex = 0
+        '
+        'lblGradientPowerChange
+        '
+        Me.lblGradientPowerChange.AutoSize = true
+        Me.lblGradientPowerChange.Location = New System.Drawing.Point(2, 5)
+        Me.lblGradientPowerChange.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblGradientPowerChange.Name = "lblGradientPowerChange"
+        Me.lblGradientPowerChange.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.lblGradientPowerChange.Size = New System.Drawing.Size(120, 13)
+        Me.lblGradientPowerChange.TabIndex = 25
+        Me.lblGradientPowerChange.Text = "Gradient Power Change"
+        '
+        'lblGradientPowerChangeUnit
+        '
+        Me.lblGradientPowerChangeUnit.AutoSize = true
+        Me.lblGradientPowerChangeUnit.Location = New System.Drawing.Point(260, 4)
+        Me.lblGradientPowerChangeUnit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblGradientPowerChangeUnit.Name = "lblGradientPowerChangeUnit"
+        Me.lblGradientPowerChangeUnit.Size = New System.Drawing.Size(40, 13)
+        Me.lblGradientPowerChangeUnit.TabIndex = 27
+        Me.lblGradientPowerChangeUnit.Text = "[kW/s]"
+        '
+        'lvFuelCellComponents
+        '
+        Me.lvFuelCellComponents.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
+            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.lvFuelCellComponents.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.chFuelCellComponent, Me.chCount})
+        Me.lvFuelCellComponents.FullRowSelect = true
+        Me.lvFuelCellComponents.GridLines = true
+        Me.lvFuelCellComponents.HideSelection = false
+        Me.lvFuelCellComponents.Location = New System.Drawing.Point(6, 47)
+        Me.lvFuelCellComponents.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
+        Me.lvFuelCellComponents.MultiSelect = false
+        Me.lvFuelCellComponents.Name = "lvFuelCellComponents"
+        Me.lvFuelCellComponents.Size = New System.Drawing.Size(552, 162)
+        Me.lvFuelCellComponents.TabIndex = 31
+        Me.lvFuelCellComponents.TabStop = false
+        Me.lvFuelCellComponents.UseCompatibleStateImageBehavior = false
+        Me.lvFuelCellComponents.View = System.Windows.Forms.View.Details
+        '
+        'chFuelCellComponent
+        '
+        Me.chFuelCellComponent.Text = "Fuel Cell Component"
+        Me.chFuelCellComponent.Width = 350
+        '
+        'chCount
+        '
+        Me.chCount.Text = "Count"
+        Me.chCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'btnAddFuelCellComponent
+        '
+        Me.btnAddFuelCellComponent.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
+        Me.btnAddFuelCellComponent.Location = New System.Drawing.Point(8, 213)
+        Me.btnAddFuelCellComponent.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
+        Me.btnAddFuelCellComponent.Name = "btnAddFuelCellComponent"
+        Me.btnAddFuelCellComponent.Size = New System.Drawing.Size(24, 24)
+        Me.btnAddFuelCellComponent.TabIndex = 1
+        Me.btnAddFuelCellComponent.UseVisualStyleBackColor = true
+        '
+        'lblEditFuelCellComponent
+        '
+        Me.lblEditFuelCellComponent.AutoSize = true
+        Me.lblEditFuelCellComponent.Location = New System.Drawing.Point(452, 213)
+        Me.lblEditFuelCellComponent.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblEditFuelCellComponent.Name = "lblEditFuelCellComponent"
+        Me.lblEditFuelCellComponent.Size = New System.Drawing.Size(106, 13)
+        Me.lblEditFuelCellComponent.TabIndex = 30
+        Me.lblEditFuelCellComponent.Text = "(Double-Click to Edit)"
+        '
+        'btnRemoveFuelCellComponent
+        '
+        Me.btnRemoveFuelCellComponent.Image = Global.TUGraz.VECTO.My.Resources.Resources.minus_circle_icon
+        Me.btnRemoveFuelCellComponent.Location = New System.Drawing.Point(31, 213)
+        Me.btnRemoveFuelCellComponent.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
+        Me.btnRemoveFuelCellComponent.Name = "btnRemoveFuelCellComponent"
+        Me.btnRemoveFuelCellComponent.Size = New System.Drawing.Size(24, 24)
+        Me.btnRemoveFuelCellComponent.TabIndex = 2
+        Me.btnRemoveFuelCellComponent.UseVisualStyleBackColor = true
+        '
         'tpGensetComponents
         '
         Me.tpGensetComponents.Controls.Add(Me.Label30)
@@ -2448,7 +2650,8 @@ Partial Class VehicleForm
         Me.gbPTOICEGroupBox.Controls.Add(Me.gbPTODrive)
         Me.gbPTOICEGroupBox.Controls.Add(Me.pnPtoMode1)
         Me.gbPTOICEGroupBox.Controls.Add(Me.gbPTOLossmap)
-        Me.gbPTOICEGroupBox.Location = New System.Drawing.Point(3, 3)
+        Me.gbPTOICEGroupBox.Location = New System.Drawing.Point(2, 2)
+        Me.gbPTOICEGroupBox.Margin = New System.Windows.Forms.Padding(2)
         Me.gbPTOICEGroupBox.Name = "gbPTOICEGroupBox"
         Me.gbPTOICEGroupBox.Size = New System.Drawing.Size(477, 195)
         Me.gbPTOICEGroupBox.TabIndex = 2
@@ -2719,6 +2922,8 @@ Partial Class VehicleForm
         Me.lblImcTech.Size = New System.Drawing.Size(152, 13)
         Me.lblImcTech.TabIndex = 1
         Me.lblImcTech.Text = "In-motion charging technology:"
+        Me.ColumnHeader15.Text = "Stream #"
+        Me.ColumnHeader15.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'VehicleForm
         '
@@ -2854,6 +3059,12 @@ Partial Class VehicleForm
         Me.pnImcDecl.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
+	    Me.tpFuelCellSystem.ResumeLayout(false)
+	    Me.gbFuelCellSystem.ResumeLayout(false)
+	    Me.gbFuelCellSystem.PerformLayout
+	    Me.pnGradientPowerChange.ResumeLayout(false)
+	    Me.pnGradientPowerChange.PerformLayout
+
 
 End Sub
     Friend WithEvents Label1 As System.Windows.Forms.Label
@@ -3112,4 +3323,18 @@ End Sub
     Friend WithEvents pnImcDecl As Panel
     Friend WithEvents lblImcTech As Label
     Friend WithEvents cbImcTech As ComboBox
+    Friend WithEvents tpFuelCellSystem As TabPage
+    Friend WithEvents gbFuelCellSystem As GroupBox
+    Friend WithEvents pnGradientPowerChange As Panel
+    Friend WithEvents tbGradientPowerChange As TextBox
+    Friend WithEvents lblGradientPowerChange As Label
+    Friend WithEvents lblGradientPowerChangeUnit As Label
+    Friend WithEvents lvFuelCellComponents As ListView
+    Friend WithEvents chFuelCellComponent As ColumnHeader
+    Friend WithEvents chCount As ColumnHeader
+    Friend WithEvents btnAddFuelCellComponent As Button
+    Friend WithEvents lblEditFuelCellComponent As Label
+    Friend WithEvents btnRemoveFuelCellComponent As Button
+    Friend WithEvents ColumnHeader15 As ColumnHeader
+    '>>>>>>> VECTO_CERT/master
 End Class

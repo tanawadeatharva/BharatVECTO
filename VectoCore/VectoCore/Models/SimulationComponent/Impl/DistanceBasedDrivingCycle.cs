@@ -309,7 +309,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.WaitTime = PreviousState.WaitTime + dt;
 			CurrentState.Gradient = ComputeGradient(0.SI<Meter>());
 			CurrentState.VehicleTargetSpeed = Left.VehicleTargetSpeed;
-			
+			CurrentState.SimulationDistance = 0.SI<Meter>();
 
 			return NextComponent.Request(absTime, dt, Left.VehicleTargetSpeed, CurrentState.Gradient);
 		}

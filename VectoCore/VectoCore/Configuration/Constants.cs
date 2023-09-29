@@ -267,6 +267,9 @@ namespace TUGraz.VectoCore.Configuration
 			public const string Json = ".json";
 
 			public const string IEPCDataFile = ".viepc";
+
+			public const string FuelCellComponentFile = ".vfcc";
+
 		}
 
 		public static class SimulationSettings

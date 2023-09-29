@@ -920,8 +920,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		public IADCDeclarationInputData ADC {get; set; }
 	}
-	
-	public interface IADCDeclarationInputData : IComponentInputData
+
+    public interface IADCDeclarationInputData : IComponentInputData
 	{
 		/// <summary>
 		/// P176

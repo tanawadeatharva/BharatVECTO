@@ -123,6 +123,7 @@ namespace VECTO3GUI2020.Ninject.Factories
 				case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.IEPC_S:
 					return CompletedBusArchitecture.IEPC;
+				case VectoSimulationJobType.FCHV:
 				default:
 					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
 			}

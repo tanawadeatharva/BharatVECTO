@@ -79,8 +79,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			{
 				var current = 0.SI<Ampere>();
 				if (!powerDemand.IsEqual(0, 1e-3)) {
-					var solutions = VectoMath.QuadraticEquationSolver(InternalResistance(tPulse).Value(), OpenCircuitVoltage.Value(),
-						-powerDemand.Value());
+					var R_int = InternalResistance(tPulse);
+					double[] solutions;
+					if (R_int.IsRelativeEqual(0.SI<Ohm>())) {
+						//Linear solution, quadratic equation solver would become unstable if a is very close to zero
+						solutions = new[] {
+							(powerDemand / OpenCircuitVoltage).Value()
+						};
+					} else {
+						solutions = VectoMath.QuadraticEquationSolver(InternalResistance(tPulse).Value(), OpenCircuitVoltage.Value(),
+							-powerDemand.Value());
+                    }
+			
 					current = SelectSolution(solutions, powerDemand.Value(), dt);
 				}
 

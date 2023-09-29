@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.OutputData
 		//private readonly bool _writeEngineOnly;
 		private readonly IModalDataFilter[] _filters;
 		private readonly Action<ModalDataContainer> _addReportResult;
-		protected internal ModalResults Data { get; set; }
+		public ModalResults Data { get; set; }
 		private DataRow CurrentRow { get; set; }
 
 		private readonly IModalDataWriter _writer;
@@ -75,8 +75,16 @@ namespace TUGraz.VectoCore.OutputData
 
 
 		private readonly Dictionary<String, SI> _timeIntegrals = new Dictionary<string, SI>();
+		
 		private readonly Dictionary<FuelType, KilogramPerWattSecond> _engLine = new Dictionary<FuelType, KilogramPerWattSecond>();
-		private readonly Dictionary<FuelType, KilogramPerWattSecond> _vehLine = new Dictionary<FuelType, KilogramPerWattSecond>();
+		
+		private KilogramPerWattSecond _fuelCellLine = null;
+
+		public KilogramPerWattSecond FuelCellLine => GetFuelCellCorrectionFactor();
+		//public KilogramPerWattSecond FuelCellLine => _fuelCellLine ?? (_fuelCellLine = GetFuelCellCorrectionFactor());
+
+
+        private readonly Dictionary<FuelType, KilogramPerWattSecond> _vehLine = new Dictionary<FuelType, KilogramPerWattSecond>();
 		
 		private Dictionary<PowertrainPosition, WattSecond> _eEmDrive = new Dictionary<PowertrainPosition, WattSecond>();
 		private Dictionary<PowertrainPosition, WattSecond> _eEmRecuperate = new Dictionary<PowertrainPosition, WattSecond>();
@@ -187,6 +195,43 @@ namespace TUGraz.VectoCore.OutputData
 			return _engLine[fuel.FuelType];
 		}
 
+		private KilogramPerWattSecond GetFuelCellCorrectionFactor()
+		{
+			var values = GetValues(
+				x => x.Field<SI>(ModalResultField.P_fuelCellSystem_actual.GetName()).IsGreater(0) //FC is on
+					? new Point(
+						x.Field<SI>(ModalResultField.P_fuelCellSystem_actual.GetName()).Value(),
+						x.Field<SI>(ModalResultField.Fc_fuelCellSystem_actual.GetName()).Value())
+					: null).Where(x => x != null && x.Y > 0).Distinct().OrderBy(p => p.X).ToList();
+
+			if (_runData.FuelCellSystemData.FuelCells.Count > 1) {
+				throw new NotImplementedException("Multiple fuel cells are not supported");
+			}
+
+			var fuelCell = _runData.FuelCellSystemData.FuelCells[0];
+			var mid = (int)Math.Floor((values.Count() / 2.0f));
+			var lowerOperatingPower = VectoMath.Max(0.9 * values[mid].X, fuelCell.MinElectricPower.Value());
+			var higherOperatingPower = VectoMath.Min(1.1 * values[mid].X, fuelCell.MaxElectricPower.Value());
+			if (!(values.First().X.IsSmallerOrEqual(lowerOperatingPower) &&
+				values.Last().X.IsGreaterOrEqual(higherOperatingPower))) {
+                //Insert artificial operating points before calculating the fuel cell line
+				var fcLow = fuelCell.MassFlowMap.Lookup(lowerOperatingPower.SI<Watt>());
+				var fcHigh = fuelCell.MassFlowMap.Lookup(higherOperatingPower.SI<Watt>());
+				values.Add(new Point(lowerOperatingPower, fcLow.Value()));
+				values.Add(new Point(higherOperatingPower, fcHigh.Value()));
+				values = values.OrderBy(x => x.X).ToList();
+			}
+
+			var (k, _) = VectoMath.LeastSquaresFitting(values);
+
+			if (double.IsInfinity(k) || double.IsNaN(k)) {
+				LogManager.GetLogger(typeof(ModalDataContainer).FullName).Warn("could not fuel cell correction line - k: {0}", k);
+				k = 0;
+			}
+
+			return k.SI<KilogramPerWattSecond>();
+		}
+
 		public KilogramPerWattSecond VehicleLineSlope(IFuelProperties fuel)
 		{
 			if (_runData.Cycle.CycleType == CycleType.EngineOnly) {
@@ -220,7 +265,7 @@ namespace TUGraz.VectoCore.OutputData
 			return null;
 		}
 
-		public bool HasCombustionEngine => !(_runData.JobType == VectoSimulationJobType.BatteryElectricVehicle || _runData.JobType == VectoSimulationJobType.IEPC_E);
+		public bool HasCombustionEngine => !(_runData.JobType == VectoSimulationJobType.BatteryElectricVehicle || _runData.JobType == VectoSimulationJobType.IEPC_E || _runData.JobType == VectoSimulationJobType.FCHV);
 
 		public bool HasGearbox => _runData.GearboxData != null;
 
@@ -653,6 +698,22 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.U0_reess,
 					ModalResultField.I_reess,
 				}.Select(x => x.GetName()));
+
+
+
+
+
+			//Fuel Cell 
+			dataColumns.AddRange(Data.FuelCellColumns);
+			dataColumns.AddRange(new [] {
+				ModalResultField.P_fuelCellSystem_target,
+				ModalResultField.P_fuelCellSystem_actual,
+				ModalResultField.Fc_fuelCellSystem_actual,
+			}.Select(x => x.GetName()));
+
+
+
+
 			// EMs
 			if (Data.ElectricMotors.Count > 0) {
 				foreach (var em in Data.ElectricMotors.OrderBy(x => x).Reverse()) {
@@ -831,6 +892,11 @@ namespace TUGraz.VectoCore.OutputData
 			set => CurrentRow[key.GetName()] = value;
 		}
 
+		public string GetColumnName(ModalResultField mrf, string arg)
+		{
+			return string.Format(mrf.GetCaption(), arg);
+		}
+
 		public string GetColumnName(IFuelProperties fuelData, ModalResultField mrf)
 		{
 			try {
@@ -868,6 +934,12 @@ namespace TUGraz.VectoCore.OutputData
 			get => CurrentRow[GetColumnName(pos, key)];
 			set => CurrentRow[GetColumnName(pos, key)] = value;
 		}
+
+		public object this[ModalResultField key, string arg]
+		{
+			get => CurrentRow[GetColumnName(key, arg)]; 
+			set => CurrentRow[GetColumnName(key, arg)] = value;
+        }
 
 		public object this[ModalResultField key, int? idx]
 		{

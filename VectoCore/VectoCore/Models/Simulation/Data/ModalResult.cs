@@ -305,6 +305,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		};
 
 		// ------------------------------------------------------------------------------------
+		public static readonly ModalResultField[] FuelCellSystemSignals = {
+			ModalResultField.P_fuelCellSystem_target,
+			ModalResultField.P_fuelCellSystem_actual,
+			ModalResultField.Fc_fuelCellSystem_actual,
+		};
+
+		public static readonly ModalResultField[] FuelCellComponentSignals = {
+			ModalResultField.FC_FCS,
+			ModalResultField.P_FCS,
+		};
+
+
+		// ------------------------------------------------------------------------------------
 		public static readonly ModalResultField[] BrakeSignals = {
 			ModalResultField.P_brake_loss,
 			ModalResultField.P_brake_in
@@ -342,6 +355,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		protected internal readonly Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>> FuelColumns = new Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>>();
 
 		protected internal List<PowertrainPosition> ElectricMotors = new List<PowertrainPosition>();
+
+		protected internal List<string> FuelCellColumns = new List<string>(); //contains fuel cell ids as string
 
 		protected internal Dictionary<int, Dictionary<ModalResultField, DataColumn>> BatteryColumns =
 			new Dictionary<int, Dictionary<ModalResultField, DataColumn>>();
@@ -434,6 +449,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 					break;
 				case IDCDCConverter _: CreateColumns(DCDCConverterSignals);
 					break;
+				case FuelCellSystem _: CreateColumns(FuelCellSystemSignals);
+					break;
+				case FuelCell fc: CreateFuelCellColumns(fc.Id.ToString(), runData, FuelCellComponentSignals);
+					break;
 				case ElectricAuxiliaries _:
 					CreateElectricAuxColumns();
 					break;
@@ -481,6 +500,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] =
 					entry.GetAttribute().ShowUnit;
 			}
+		}
+
+		protected internal void CreateFuelCellColumns(string id, VectoRunData runData, ModalResultField[] signals)
+		{
+			foreach (var entry in signals) {
+				FuelCellColumns.Add(string.Format(entry.GetCaption(), id));
+				var col = Columns.Add(string.Format(entry.GetAttribute().Caption, id), typeof(SI));
+				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] = entry.GetAttribute().Decimals;
+				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
+					entry.GetAttribute().OutputFactor;
+				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] =
+					entry.GetAttribute().ShowUnit;
+			}
+			
 		}
 
 		protected internal void CreateCombustionEngineColumns(VectoRunData runData)

@@ -295,11 +295,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 
                 runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
 					PrimaryVehicle.Components.ElectricMachines, PrimaryVehicle.ElectricMotorTorqueLimits,
-                    runData.BatteryData.CalculateAverageVoltage());
+                    runData.BatteryData.CalculateVoltageCenterSoc());
 
                 if (PrimaryVehicle.VehicleType == VectoSimulationJobType.IEPC_S) {
                     var iepcData = DataAdapter.CreateIEPCElectricMachines(PrimaryVehicle.Components.IEPC,
-                        runData.BatteryData.CalculateAverageVoltage());
+                        runData.BatteryData.CalculateVoltageCenterSoc());
                     iepcData.ForEach(iepc => runData.ElectricMachinesData.Add(iepc));
                 }
 
@@ -517,7 +517,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 
 				runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
 					PrimaryVehicle.Components.ElectricMachines, PrimaryVehicle.ElectricMotorTorqueLimits,
-					runData.BatteryData.CalculateAverageVoltage(), runData.GearboxData.GearList);
+					runData.BatteryData.CalculateVoltageCenterSoc(), runData.GearboxData.GearList);
 
 				runData.HybridStrategyParameters =
 					DataAdapter.CreateHybridStrategy(runData.BatteryData,
@@ -656,10 +656,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 
                 if (vehicle.VehicleType == VectoSimulationJobType.IEPC_E) {
                     result.ElectricMachinesData = DataAdapter.CreateIEPCElectricMachines(vehicle.Components.IEPC,
-                        result.BatteryData.CalculateAverageVoltage());
+                        result.BatteryData.CalculateVoltageCenterSoc());
                 } else {
                     result.ElectricMachinesData = DataAdapter.CreateElectricMachines(vehicle.Components.ElectricMachines,
-                        vehicle.ElectricMotorTorqueLimits, result.BatteryData.CalculateAverageVoltage(), null);
+                        vehicle.ElectricMotorTorqueLimits, result.BatteryData.CalculateVoltageCenterSoc(), null);
                 }
 
                 result.VehicleData = DataAdapter.CreateVehicleData(SingleBusDataProvider, _segment, mission, loading, _allowVocational);

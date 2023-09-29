@@ -808,6 +808,17 @@ namespace TUGraz.VectoCommon.Utils
 		}
 	}
 
+	public class WattPerSecond : SIBase<WattPerSecond>
+	{
+		private static readonly int[] Units = { 1, 2, -4, 0, 0, 0, 0 };
+
+		private WattPerSecond(double val) : base(val, Units)
+		{
+
+		}
+		public override string UnitString => "W/s";
+	}
+
 	/// <summary>
 	/// SI Class for Watt [W].
 	/// </summary>

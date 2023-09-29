@@ -47,6 +47,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries;
@@ -99,7 +100,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				{ VectoSimulationJobType.BatteryElectricVehicle, BuildFullPowertrainBatteryElectric },
 				{ VectoSimulationJobType.EngineOnlySimulation, BuildEngineOnly },
 				{ VectoSimulationJobType.IEPC_E, BuildFullPowertrainIEPCE },
-				{ VectoSimulationJobType.IEPC_S, BuildFullPowertrainIEPCSerial }
+				{ VectoSimulationJobType.IEPC_S, BuildFullPowertrainIEPCSerial },
+				{ VectoSimulationJobType.FCHV, BuildFullPowertrainFCHV}
 			};
 
 			var pWheelBuilders = new Dictionary<VectoSimulationJobType, Func<VectoRunData, IModalDataContainer, ISumData, IVehicleContainer>>()
@@ -172,6 +174,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				{ PowertrainPosition.IHPC, BuildTimerunGearHybridForP2 }
             };
         }
+
+		private static IVehicleContainer BuildFullPowertrainFCHV(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
+		{
+
+			var container = BuildFullPowertrainBatteryElectric(data, modData, sumWriter);
+			var es = container.ElectricSystemInfo as ElectricSystem;
+			ConnectFuelCellSystem(es, data.FuelCellSystemData, container);
+			return container;
+		}
 
 		public static IVehicleContainer Build(VectoRunData data, IModalDataContainer modData, ISumData sumWriter = null)
 		{
@@ -1144,8 +1155,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			} 
 
 			AddElectricAuxiliaries(data, container, es, cycle, dcdc);
+			//TODO: Just add to BatteryElectric???
+			//Move to FCHV
 
-            return container;
+			return container;
+
+		}
+
+		private static void ConnectFuelCellSystem(ElectricSystem es, FuelCellSystemData fcSystemData, IVehicleContainer container)
+		{
+			if (fcSystemData != null) {
+				var fuelCellSystem = new FuelCellSystem(fcSystemData, container);
+				foreach (var fuelCell in fcSystemData.FuelCells) {
+					fuelCellSystem.AddFuelCell(new FuelCell(fuelCell, container));
+				}
+				es.Connect(fuelCellSystem);
+			}
 		}
 		
 		private static IVehicleContainer BuildPWheelBatteryElectric(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
@@ -2433,6 +2458,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							return AMTShiftStrategyOptimized.Name;
 						case VectoSimulationJobType.BatteryElectricVehicle:
 						case VectoSimulationJobType.SerialHybridVehicle:
+						case VectoSimulationJobType.FCHV:
 							return PEVAMTShiftStrategy.Name;
 						default:
 							throw new VectoException(
@@ -2450,6 +2476,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							return ATShiftStrategyOptimized.Name;
 						case VectoSimulationJobType.SerialHybridVehicle:
 						case VectoSimulationJobType.BatteryElectricVehicle:
+						case VectoSimulationJobType.FCHV:
 							return APTNShiftStrategy.Name;
 						default:
 							throw new VectoException(
@@ -2463,6 +2490,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						case VectoSimulationJobType.BatteryElectricVehicle:
 						case VectoSimulationJobType.IEPC_E:
 						case VectoSimulationJobType.IEPC_S:
+						case VectoSimulationJobType.FCHV:
 							return APTNShiftStrategy.Name;
 						case VectoSimulationJobType.ConventionalVehicle when isTestPowerTrain:
 							return null;

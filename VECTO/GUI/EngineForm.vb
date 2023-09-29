@@ -67,18 +67,20 @@ Public Class EngineForm
 	    tbWHR.TabPages.Remove(ElectricalWhrTab)
 	    tbWHR.TabPages.Remove(MechanicalWhrTab)
 
+
+		Dim excludedFuelTypes As New List(Of FuelType) From {FuelType.H2FC}
 		cbFuelType.Items.Clear()
 		cbFuelType.ValueMember = "Value"
 		cbFuelType.DisplayMember = "Label"
 		cbFuelType.DataSource =
-			[Enum].GetValues(GetType(FuelType)).Cast (Of FuelType).Select(
+			[Enum].GetValues(GetType(FuelType)).Cast (Of FuelType).Where(Function(fuelType) Not excludedFuelTypes.Contains(fuelType)).Select(
 				Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 
 		cbFuelType2.Items.Clear()
 		cbFuelType2.ValueMember = "Value"
 		cbFuelType2.DisplayMember = "Label"
 		cbFuelType2.DataSource =
-			[Enum].GetValues(GetType(FuelType)).Cast (Of FuelType).Select(
+			[Enum].GetValues(GetType(FuelType)).Cast (Of FuelType).Where(Function(fuelType) Not excludedFuelTypes.Contains(fuelType)).Select(
 				Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 
 		_changed = False

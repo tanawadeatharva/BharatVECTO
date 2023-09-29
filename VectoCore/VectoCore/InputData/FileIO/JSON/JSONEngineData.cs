@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -227,7 +228,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public override double CorrectionFactorRegPer => Body.GetEx<double>("CFRegPer");
 
 
-		public override FuelType FuelType => Body.GetEx<string>("FuelType").ParseEnum<FuelType>();
+		public override FuelType FuelType
+		{
+			get
+			{
+				var fuel = Body.GetEx<string>("FuelType").ParseEnum<FuelType>();
+				if (fuel.IsOneOf(FuelType.H2FC)) {
+					throw new VectoException($"Invalid fuel type {fuel}");
+				}
+
+                return fuel;
+			}
+		}
 	}
 
 

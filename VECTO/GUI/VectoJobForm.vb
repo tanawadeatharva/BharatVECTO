@@ -16,6 +16,7 @@ Imports System.IO
 Imports System.Linq
 Imports System.Windows.Forms.DataVisualization.Charting
 Imports TUGraz.VECTO.Input_Files
+Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
@@ -112,6 +113,10 @@ Public Class VectoJobForm
                 lblTitle.Text = prefix + "Battery Electric Vehicle"
                 gbElectricAux.Enabled = True
                 GrAuxMech.Enabled = False
+            Case VectoSimulationJobType.FCHV
+                lblTitle.Text = prefix + "Fuel Cell Vehicle"
+                gbElectricAux.Enabled = True
+                GrAuxMech.Enabled = False
             Case VectoSimulationJobType.ConventionalVehicle
                 lblTitle.Text = prefix + "Conventional Vehicle"
                 gbElectricAux.Enabled = False
@@ -129,7 +134,8 @@ Public Class VectoJobForm
             Case VectoSimulationJobType.IHPC
                 lblTitle.Text = prefix + "IHPC Vehicle"
                 gbElectricAux.Enabled = True
-                GrAuxMech.Enabled = False      
+                GrAuxMech.Enabled = False
+
         End Select
     End Sub
 
@@ -164,8 +170,10 @@ Public Class VectoJobForm
         Select case JobType
             Case VectoSimulationJobType.ConventionalVehicle, VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.IHPC, VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_S
                 auxList = New HeavyLorryAuxiliaryDataAdapter().AuxiliaryTypes.OrderBy(Function(x) x).ToList()
-            Case VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E
+            Case VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.FCHV
                 auxList = new HeavyLorryPEVAuxiliaryDataAdapter().AuxiliaryTypes.OrderBy(Function(x) x).ToList()
+            Case Else
+                Throw New VectoException($"{JobType} not supported in declaration mode")
         End Select
 
         Dim auxTechs = New Dictionary(Of AuxiliaryType, IDeclarationAuxiliaryTable) from {
@@ -508,10 +516,10 @@ Public Class VectoJobForm
         UpdateEnabledControls()
         'Files -----------------------------
         TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.DataSource.SourceFile, _basePath)
-		If (JobType <> VectoSimulationJobType.BatteryElectricVehicle AndAlso JobType <> VectoSimulationJobType.IEPC_E) Then
-			TbENG.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.EngineInputData.DataSource.SourceFile, _basePath)
-		Else
-			TbENG.Text = ""
+        If (JobType.HasEngine()) Then
+            TbENG.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.EngineInputData.DataSource.SourceFile, _basePath)
+        Else
+            TbENG.Text = ""
 		End If
 		If (inputData.JobInputData.Vehicle.Components.GearboxInputData IsNot Nothing) Then
 			TbGBX.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, _basePath)
@@ -631,8 +639,12 @@ Public Class VectoJobForm
             tbBusAuxParams.Text = ""
         End If
 
-        DeclInit()
-
+        Try
+            DeclInit()
+        Catch ex As VectoException
+            MsgBox(ex.Message,MsgBoxStyle.OkOnly, "Error loading Vecto job" )
+            Exit Sub
+        End Try
 
         EngineForm.AutoSendTo = False
         GearboxForm.AutoSendTo = False
@@ -800,7 +812,6 @@ Public Class VectoJobForm
         tbLacDfVelocityDropFile.Text = ""
 
         '---------------------------------------------------
-
         DeclInit()
 
         EngineForm.AutoSendTo = False
@@ -1091,12 +1102,13 @@ Public Class VectoJobForm
             Case VectoSimulationJobType.SerialHybridVehicle
                 pnHybridStrategy.Enabled = Not Cfg.DeclMode
                 gbEngineStopStart.Enabled = False
-            Case VectoSimulationJobType.BatteryElectricVehicle
+            Case VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.FCHV
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = True
                 GrAuxMech.Enabled = cfg.DeclMode
                 pnShiftParams.Enabled = not Cfg.DeclMode
                 gbEngineStopStart.Enabled = False
+                pnHybridStrategy.Enabled = False
             Case VectoSimulationJobType.IHPC
                 pnEngine.Enabled = True
                 pnGearbox.Enabled = True
@@ -1117,6 +1129,7 @@ Public Class VectoJobForm
                 pnShiftParams.Enabled = not Cfg.DeclMode
                 gbEngineStopStart.Enabled = False
                 pnHybridStrategy.Enabled = not Cfg.DeclMode
+   
         End Select
     End Sub
 

@@ -1241,9 +1241,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public override VectoSimulationJobType JobType => VectoSimulationJobType.IHPC;
 	}
 
-	// --------------------------
+	public class JSONInputDataV14_FCHybrid : JSONInputDataV9_BEV
+	{
+		public JSONInputDataV14_FCHybrid(JObject json, string filename, bool tolerateMissing) : base(json, filename, tolerateMissing)
+		{
+			//VehicleData = ReadVehicle();
+			//Gearbox = ReadGearbox();
+			
 
-		public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider, IMultistagePrimaryAndStageInputDataProvider
+		}
+
+		public override VectoSimulationJobType JobType => VectoSimulationJobType.FCHV;
+    }
+
+    // --------------------------
+
+    public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider, IMultistagePrimaryAndStageInputDataProvider
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
 		private readonly string _primaryVehicleInputDataPath;

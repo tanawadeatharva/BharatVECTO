@@ -288,11 +288,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 				runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
 					Vehicle.Components.ElectricMachines, Vehicle.ElectricMotorTorqueLimits,
-					runData.BatteryData.CalculateAverageVoltage());
+					runData.BatteryData.CalculateVoltageCenterSoc());
 
 				if (Vehicle.VehicleType == VectoSimulationJobType.IEPC_S) {
 					var iepcData = DataAdapter.CreateIEPCElectricMachines(Vehicle.Components.IEPC,
-						runData.BatteryData.CalculateAverageVoltage());
+						runData.BatteryData.CalculateVoltageCenterSoc());
 					iepcData.ForEach(iepc => runData.ElectricMachinesData.Add(iepc));
 				}
 
@@ -507,7 +507,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 				runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
 					Vehicle.Components.ElectricMachines, Vehicle.ElectricMotorTorqueLimits,
-					runData.BatteryData.CalculateAverageVoltage(), runData.GearboxData.GearList);
+					runData.BatteryData.CalculateVoltageCenterSoc(), runData.GearboxData.GearList);
 
 				runData.HybridStrategyParameters =
 					DataAdapter.CreateHybridStrategy(runData.BatteryData,
@@ -647,10 +647,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				
 				if (Vehicle.VehicleType == VectoSimulationJobType.IEPC_E) {
 					result.ElectricMachinesData = DataAdapter.CreateIEPCElectricMachines(Vehicle.Components.IEPC,
-						result.BatteryData.CalculateAverageVoltage());
+						result.BatteryData.CalculateVoltageCenterSoc());
 				} else {
 					result.ElectricMachinesData = DataAdapter.CreateElectricMachines(Vehicle.Components.ElectricMachines,
-						Vehicle.ElectricMotorTorqueLimits, result.BatteryData.CalculateAverageVoltage(), null);
+						Vehicle.ElectricMotorTorqueLimits, result.BatteryData.CalculateVoltageCenterSoc(), null);
 				}
 
 				result.VehicleData = DataAdapter.CreateVehicleData(Vehicle, _segment, mission, loading, _allowVocational);

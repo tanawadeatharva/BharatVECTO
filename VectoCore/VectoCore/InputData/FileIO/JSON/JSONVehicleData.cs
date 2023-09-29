@@ -47,7 +47,60 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
-	public class JSONVehicleDataV11_IEPC : JSONVehicleDataV10_HEV_BEV
+	public class JSONVehicleDataV12_FCHV : JSONVehicleDataV10_HEV_BEV
+	{
+		private IFuelCellSystemEngineeringInputData _fuelCellSystem;
+		public JSONVehicleDataV12_FCHV(JObject json, string filename, IJSONVehicleComponents job, bool tolerateMissing) : base(json, filename, job, tolerateMissing) {
+			
+		}
+
+		#region Overrides of JSONVehicleDataV7
+
+		public override IFuelCellSystemEngineeringInputData FuelCellSystemInputData =>
+			_fuelCellSystem ?? (_fuelCellSystem = ReadFuelCellSystem());
+
+		private JSONFuelCellSystemEngineeringInputData ReadFuelCellSystem()
+		{
+			var fcsJson = Body[JsonKeys.FuelCell_FuelCellSystem];
+			IList<FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>> fcList = new List<FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>>();
+            if (fcsJson == null) {
+				throw new VectoException("Fuel Cell System missing");
+			}
+
+			var retVal = new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>();
+			if (fcsJson[JsonKeys.FuelCell_FuelCells] != null)
+			{
+				foreach (var entry in fcsJson[JsonKeys.FuelCell_FuelCells]) {
+					var tmpEntry = new FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>() {
+						FuelCellComponent = JSONInputDataFactory.ReadFuelCellComponentEngineeringInputData(
+							Path.Combine(BasePath, entry.GetEx<string>(JsonKeys.FuelCell_File)), false),
+						Count = entry.GetEx<int>(JsonKeys.FuelCell_Count),
+					};
+					
+					fcList.Add(tmpEntry);
+				}
+			}
+
+			return new JSONFuelCellSystemEngineeringInputData() {
+				GradientPowerChange = (fcsJson.GetEx<double>(JsonKeys.FuelCell_GradientPowerChange) * 1000).SI<WattPerSecond>(), //given in kW/s
+				FuelCellComponents = fcList
+			};
+
+			
+
+		}
+
+		#endregion
+
+		#region Overrides of JSONVehicleDataV10_HEV_BEV
+
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.FCHV;
+
+		#endregion
+	}
+
+
+    public class JSONVehicleDataV11_IEPC : JSONVehicleDataV10_HEV_BEV
 	{
 		public JSONVehicleDataV11_IEPC(JObject data, string fileName, IJSONVehicleComponents job, bool tolerateMissing = false) :
 			base(data, fileName, job, tolerateMissing)
@@ -174,13 +227,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			switch (VehicleType) {
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
+				case VectoSimulationJobType.FCHV:
 					return _adasInputData = new JSONADASInputDataV10BEV(this);
 				case VectoSimulationJobType.ParallelHybridVehicle:
 				case VectoSimulationJobType.IHPC:
 				case VectoSimulationJobType.SerialHybridVehicle:
 				case VectoSimulationJobType.IEPC_S:
 					return _adasInputData = new JSONADASInputDataV10HEV(this);
-				default:
+				case VectoSimulationJobType.ConventionalVehicle:
+				case VectoSimulationJobType.EngineOnlySimulation:
+                default:
 					return base.GetADAS();
 			}
 		}
@@ -550,6 +606,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		IElectricMachinesEngineeringInputData IVehicleComponentsEngineering.ElectricMachines => GetElectricMachines();
 		public virtual IIEPCEngineeringInputData IEPCEngineeringInputData => null;
+
+		public virtual IFuelCellSystemEngineeringInputData FuelCellSystemInputData => null;
+
 		public virtual IIEPCDeclarationInputData IEPC => null;
 
 		protected virtual IElectricMachinesEngineeringInputData GetElectricMachines()

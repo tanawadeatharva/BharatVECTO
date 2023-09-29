@@ -101,7 +101,32 @@ namespace TUGraz.VectoCore.OutputData
 			SumDataFields.K_ENGLINE
 		};
 
+		public static readonly Tuple<string, Type>[] FuelCell_FcColumns = {
+			Tuple.Create(SumDataFields.FuelCellFields.FCMAP_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FCMAP_KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_BusAux_PS_CORR_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_BusAux_PS_CORR_KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_BusAux_ES_CORR_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_BusAux_ES_CORR_KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_AUXHTR_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_AUXHTR_KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_AUXHTR_H_CORR, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_AUXHTR_KM_CORR, typeof(ConvertedSI)),
 
+			Tuple.Create(SumDataFields.FuelCellFields.FC_HEV_SOC_CORR_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_HEV_SOC_CORR_KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_HEV_SOC_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_HEV_SOC_KM, typeof(ConvertedSI)),
+
+			Tuple.Create(SumDataFields.FuelCellFields.K_FCSLine, typeof(ConvertedSI)),
+            Tuple.Create(SumDataFields.FuelCellFields.FCFINAL_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FCFINAL_KM, typeof(ConvertedSI)),
+		};
+
+		public static readonly Tuple<string, Type>[] FuelCell_Columns = {
+			Tuple.Create(SumDataFields.FuelCellFields.P_FCS, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.E_FCS, typeof(ConvertedSI)),
+		};
 
 		public static readonly Tuple<string, Type>[] CommonColumns = {
 			Tuple.Create(SumDataFields.SORT, typeof(int)),
@@ -511,6 +536,10 @@ namespace TUGraz.VectoCore.OutputData
 				case ElectricAuxiliaries _:
 					CreateColumns(ElectricAuxiliariesSignals);
 					break;
+				case FuelCellSystem _:
+					CreateColumns(FuelCell_Columns);
+					CreateColumns(FuelCell_FcColumns);
+					break;
 			}
 		}
 
@@ -659,6 +688,9 @@ namespace TUGraz.VectoCore.OutputData
 			});
 
 			cols.AddRange(FcCols.Reverse());
+
+			cols.AddRange(FuelCell_FcColumns.Select(x => x.Item1));
+			cols.AddRange(FuelCell_Columns.Select(x => x.Item1));
 
 			cols.AddRange(new[] {
 				SumDataFields.CO2_KM,
@@ -918,7 +950,7 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			if (_sumWriter != null) {
 				lock (Table) {
-					var outputColumns = GetOutputColumnsOrdered().ToArray();
+					var outputColumns = GetOutputColumnsOrdered().Distinct().ToArray();
 					var view = new DataView(Table, "", SumDataFields.SORT, DataViewRowState.CurrentRows).ToTable(false, outputColumns);
 					
 					try {
@@ -1006,17 +1038,7 @@ namespace TUGraz.VectoCore.OutputData
 			var row = GetResultDictionary(modData, runData);
 
 			foreach (DataColumn col in Table.Columns) {
-				var func = SumDataFields.SumDataValue.GetVECTOValueOrDefault(col.ColumnName);
-				if (func == null) {
-					continue;
-				}
-
-				if (func.Item1 == null || func.Item1.All(x => modData.ContainsColumn(x.GetName()))) {
-					var value = func.Item2(runData, modData);
-					if (value != null) {
-						row[col.ColumnName] = value;
-					}
-				}
+				SetValue(modData, runData, col, row, SumDataFields.SumDataValue.GetVECTOValueOrDefault(col.ColumnName));
 			}
 
 			var multipleEngineModes = runData.EngineData?.MultipleEngineFuelModes ?? false;
@@ -1053,11 +1075,32 @@ namespace TUGraz.VectoCore.OutputData
 				}
 			}
 
+			if (runData.JobType == VectoSimulationJobType.FCHV && runData.FuelCellSystemData.FuelCells.Count > 0) {
+				foreach (DataColumn col in Table.Columns) {
+					SetValue(modData, runData, col, row, SumDataFields.FuelCellValue.GetVECTOValueOrDefault(col.ColumnName));
+                }
+			}
+
 			if ((runData.GearboxData?.Gears.Count ?? 0) > 0) {
 				WriteGearshiftStats(modData, row, (uint?)runData.GearboxData?.Gears.Count ?? 0u);
 			}
 
 			AddResultDictionary(row);
+		}
+
+		private static void SetValue(IModalDataContainer modData, VectoRunData runData, DataColumn col, Dictionary<string, object> row, Tuple<ModalResultField[], SumDataFields.WriteSumEntry> ValueFunc)
+		{
+			var func = ValueFunc;
+			if (func == null) {
+				return;
+			}
+
+			if (func.Item1 == null || func.Item1.All(x => modData.ContainsColumn(x.GetName()))) {
+				var value = func.Item2(runData, modData);
+				if (value != null) {
+					row[col.ColumnName] = value;
+				}
+			}
 		}
 
 		private string GetAuxColName(string auxKey)

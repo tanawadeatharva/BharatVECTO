@@ -43,6 +43,69 @@
   </ItemGroup>
 
 	<ItemGroup>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\AMT.vgbx">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Axle_4x2_Tractor.vtlm">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Default.vrlm">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV.vecto">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV.vveh">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV_singleFc.vecto">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV_singleFc.vveh">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV_singleFc_300kW_fc.vecto">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV_singleFc_300kW_fc.vveh">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Gear.vtlm">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\GenericBattery_80kWh.vbatr">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\GenericBattery_80kWh.vbatv">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\GenericBattery_80kWh_750V.vbat">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\GenericDrag_400kW_1550Nm.vemd">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\GenericFuelCellComponent_300kW.vfcc">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Generic_EM_400kW_1550Nm.vem">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Generic_EM_400kW_1550Nm.vemo">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Generic_EM_400kW_1550Nm.vemp">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\MaxCurrent.vimax">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Truck.vacc">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\PostProcessing\LongHaul_short.vdri">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 		<None Update="TestData\Hybrids\Battery\GenericBattery_JB_Connector_included.vbat">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>

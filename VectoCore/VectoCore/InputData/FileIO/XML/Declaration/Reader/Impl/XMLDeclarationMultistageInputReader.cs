@@ -1350,6 +1350,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 				case VectoSimulationJobType.IEPC_S:
 				case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.IHPC:
+				case VectoSimulationJobType.FCHV:
 					return WaterElectricHeater != null && AirElectricHeater != null && OtherHeatingTechnology != null;
 				default:
 					return false;

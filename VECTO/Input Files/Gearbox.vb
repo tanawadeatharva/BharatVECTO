@@ -946,6 +946,7 @@ Public Class MockEngineeringVehicle
     Public ReadOnly Property ElectricStorage As IElectricStorageSystemEngineeringInputData Implements IVehicleComponentsEngineering.ElectricStorage
     Public ReadOnly Property ElectricMachines As IElectricMachinesEngineeringInputData Implements IVehicleComponentsEngineering.ElectricMachines
     Public ReadOnly Property IEPCEngineeringInputData As IIEPCEngineeringInputData Implements IVehicleComponentsEngineering.IEPCEngineeringInputData
+    Public ReadOnly Property FuelCellSystemInputData As IFuelCellSystemEngineeringInputData Implements IVehicleComponentsEngineering.FuelCellSystemInputData
 End Class
 
 Public Class MockJobInputData

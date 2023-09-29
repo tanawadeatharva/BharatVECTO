@@ -3,7 +3,7 @@
     <RootNamespace>TUGraz.VectoCore</RootNamespace>
     <AssemblyName>VectoCore</AssemblyName>
     <TargetFrameworks>net48;net6.0</TargetFrameworks>
-    <DefineConstants />
+    <DefineConstants>FCOutput</DefineConstants>
     <Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
 	<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -16,7 +16,7 @@
     <DebugType>full</DebugType>
   </PropertyGroup>
 	<PropertyGroup Condition="('$(Configuration)' == 'MockupRelease') Or ('$(Configuration)' == 'MockupDebug')">
-		<DefineConstants>$(DefineConstants);MOCKUP</DefineConstants>
+		<!--<DefineConstants>TRACE</DefineConstants>-->
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|AnyCPU'">
 	  <DebugType>none</DebugType>
@@ -24,11 +24,17 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
 	  <DebugType>none</DebugType>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupRelease|net48|AnyCPU'">
-	  <!--<DebugType>full</DebugType>-->
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupRelease|net48|AnyCPU'"><!--<DebugType>full</DebugType>-->
+	
+	
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupRelease|net6.0|AnyCPU'">
-	  <!--<DebugType>full</DebugType>-->
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupRelease|net6.0|AnyCPU'"><!--<DebugType>full</DebugType>-->
+	
+	
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|AnyCPU'">
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
 	</PropertyGroup>
 
 	<!--<Choose>
@@ -113,7 +119,7 @@
     <InternalsVisibleTo Include="VECTO_GIT" />
     <InternalsVisibleTo Include="VectoAuxiliariesTests" />
     <InternalsVisibleTo Include="VECTO3" />
-    <InternalsVisibleTo Include="VECTOMultistage" />
+    <InternalsVisibleTo Include="VECTOMultistep" />
     <InternalsVisibleTo Include="VectoMockup" />
     <InternalsVisibleTo Include="Vecto3GUI2020Test" />
   </ItemGroup>

@@ -129,6 +129,7 @@ Partial Class MainForm
         Me.OpenInGraphWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.JobEditorFCHVehicle = New System.Windows.Forms.ToolStripMenuItem()
         Me.StatusBAR.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPageGEN.SuspendLayout()
@@ -823,7 +824,7 @@ Partial Class MainForm
         '
         'ToolStripDrDnBtTools
         '
-        Me.ToolStripDrDnBtTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GENEditorToolStripMenuItem1, Me.JobEditorSerialHybridVehicleToolStripMenuItem, Me.JobEditorParallelHybridVehicleToolStripMenuItem, Me.JobEditorBatteryElectricVehicleToolStripMenuItem, Me.JobEditorIEPC_E_VehicleToolStripMenuItem, Me.JobEditorIEPC_S_VehicleToolStripMenuItem, Me.JobEditorIHPCVehicleToolStripMenuItem, Me.JobEditorEngineOnlyModeToolStripMenuItem, Me.EPTPJobEditorToolStripMenuItem, Me.VEHEditorToolStripMenuItem, Me.EngineEditorToolStripMenuItem, Me.GearboxEditorToolStripMenuItem, Me.GraphToolStripMenuItem, Me.ToolStripSeparator6, Me.OpenLogToolStripMenuItem, Me.SettingsToolStripMenuItem})
+        Me.ToolStripDrDnBtTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GENEditorToolStripMenuItem1, Me.JobEditorSerialHybridVehicleToolStripMenuItem, Me.JobEditorParallelHybridVehicleToolStripMenuItem, Me.JobEditorBatteryElectricVehicleToolStripMenuItem, Me.JobEditorIEPC_E_VehicleToolStripMenuItem, Me.JobEditorIEPC_S_VehicleToolStripMenuItem, Me.JobEditorIHPCVehicleToolStripMenuItem, Me.JobEditorFCHVehicle, Me.JobEditorEngineOnlyModeToolStripMenuItem, Me.EPTPJobEditorToolStripMenuItem, Me.VEHEditorToolStripMenuItem, Me.EngineEditorToolStripMenuItem, Me.GearboxEditorToolStripMenuItem, Me.GraphToolStripMenuItem, Me.ToolStripSeparator6, Me.OpenLogToolStripMenuItem, Me.SettingsToolStripMenuItem})
         Me.ToolStripDrDnBtTools.Image = Global.TUGraz.VECTO.My.Resources.Resources.Misc_Tools_icon
         Me.ToolStripDrDnBtTools.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDrDnBtTools.Name = "ToolStripDrDnBtTools"
@@ -1013,6 +1014,13 @@ Partial Class MainForm
         Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(208, 24)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
+        'JobEditorFCHVehicle
+        '
+        Me.JobEditorFCHVehicle.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
+        Me.JobEditorFCHVehicle.Name = "JobEditorFCHVehicle"
+        Me.JobEditorFCHVehicle.Size = New System.Drawing.Size(263, 30)
+        Me.JobEditorFCHVehicle.Text = "Job Editor - Fuel Cell Vehicle"
+        '
         'MainForm
         '
         Me.AcceptButton = Me.btStartV3
@@ -1163,4 +1171,5 @@ End Sub
     Friend WithEvents Label1 As Label
     Friend WithEvents tbInitSOCinPercent As TextBox
     Friend WithEvents cbInitialSOC As CheckBox
+    Friend WithEvents JobEditorFCHVehicle As ToolStripMenuItem
 End Class
