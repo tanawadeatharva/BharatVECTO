@@ -59,11 +59,11 @@ namespace TUGraz.VectoCore.Models.Simulation
             //Bind<IDeclarationCycleFactory>().To<DeclarationCycleFromFilesystemFactory>().InSingletonScope();
 			Bind<IMissionFilter>().To<DefaultMissionFilter>();
 
-            //Bind<IDeclarationCycleFactory>().To<DeclarationCycleFactory>().InSingletonScope();
+			Bind<IDeclarationCycleFactory>().To<DeclarationCycleFactory>().InSingletonScope();
 			//Bind<IMissionFilter>().ToMethod((context => null));
 
 
-            Bind<IDeclarationReport>().To<NullDeclarationReport>();
+			Bind<IDeclarationReport>().To<NullDeclarationReport>();
 			Bind<IVTPReport>().To<NullVTPReport>();
 
 		}
