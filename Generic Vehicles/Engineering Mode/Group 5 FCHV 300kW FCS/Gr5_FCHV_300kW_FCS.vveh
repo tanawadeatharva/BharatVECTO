@@ -1,0 +1,105 @@
+{
+  "Header": {
+    "CreatedBy": "",
+    "Date": "2023-09-29T07:48:33.7178125Z",
+    "AppVersion": "3",
+    "FileVersion": 12
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "VehCat": "Tractor",
+    "LegislativeClass": "Unknown",
+    "CurbWeight": 13500.0,
+    "CurbWeightExtra": 0.0,
+    "MassMax": 39.99,
+    "Loading": 19000.0,
+    "rdyn": 420.0,
+    "CdCorrMode": "CdofVdecl",
+    "CdCorrFile": "",
+    "AxleConfig": {
+      "Type": "4x2",
+      "Axles": [
+        {
+          "Inertia": 6.5,
+          "Wheels": "265/70 R22.5",
+          "AxleWeightShare": 0.2,
+          "TwinTyres": false,
+          "RRCISO": 0.0055,
+          "FzISO": 20850.0,
+          "Type": "VehicleNonDriven",
+          "Steered": false
+        },
+        {
+          "Inertia": 6.5,
+          "Wheels": "265/70 R22.5",
+          "AxleWeightShare": 0.3,
+          "TwinTyres": true,
+          "RRCISO": 0.0065,
+          "FzISO": 20850.0,
+          "Type": "VehicleDriven",
+          "Steered": false
+        },
+        {
+          "Inertia": 4.5,
+          "Wheels": "235/75 R17.5",
+          "AxleWeightShare": 0.25,
+          "TwinTyres": false,
+          "RRCISO": 0.0055,
+          "FzISO": 16680.0,
+          "Type": "VehicleNonDriven",
+          "Steered": false
+        },
+        {
+          "Inertia": 4.5,
+          "Wheels": "235/75 R17.5",
+          "AxleWeightShare": 0.25,
+          "TwinTyres": false,
+          "RRCISO": 0.0055,
+          "FzISO": 16680.0,
+          "Type": "VehicleNonDriven",
+          "Steered": false
+        }
+      ]
+    },
+    "EngineStopStart": false,
+    "EcoRoll": "None",
+    "PredictiveCruiseControl": "None",
+    "ATEcoRollReleaseLockupClutch": false,
+    "CdA": 4.5,
+    "VehicleHeight": 3.8,
+    "InitialSoC": 50.0,
+    "PowertrainConfiguration": "BatteryElectric",
+    "ElectricMotors": [
+      {
+        "Count": 1,
+        "Ratio": 1.0,
+        "Position": "E2",
+        "MotorFile": "Generic_EM_400kW_1550Nm.vem",
+        "MechanicalEfficiency": 0.99
+      }
+    ],
+    "Batteries": [
+      {
+        "NumPacks": 1,
+        "BatteryFile": "GenericBattery_80kWh_750V.vbat",
+        "StreamId": 0
+      }
+    ],
+    "FuelCellSystem": {
+      "GradientPowerChange": 50.0,
+      "FuelCells": [
+        {
+          "Count": 1,
+          "FuelCellFile": "GenericFuelCellComponent_300kW.vfcc"
+        }
+      ]
+    },
+    "PTO": {
+      "Type": "None",
+      "LossMap": "",
+      "Cycle": "",
+      "CycleEPTO": "",
+      "CycleDriving": ""
+    }
+  }
+}
