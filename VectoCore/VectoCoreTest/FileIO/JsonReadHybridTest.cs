@@ -284,7 +284,6 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var fuelCellSystem = vehicle.Components.FuelCellSystemInputData;
 			Assert.NotNull(fuelCellSystem);
 			Assert.AreEqual(50000.SI<WattPerSecond>(), (fuelCellSystem.GradientPowerChange));
-			Assert.AreEqual(3.SI<Second>(), fuelCellSystem.OnOffHysteresis);
 			Assert.NotNull(fuelCellSystem.FuelCellComponents);
 
 			Assert.AreEqual(2, fuelCellSystem.FuelCellComponents.Count);

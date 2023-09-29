@@ -352,7 +352,6 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 
 			var fuelCellSystemMock = new Mock<IFuelCellSystemEngineeringInputData>();
 			fuelCellSystemMock.Setup(fcs => fcs.GradientPowerChange).Returns(int.MaxValue.SI<WattPerSecond>());
-			fuelCellSystemMock.Setup(fcs => fcs.OnOffHysteresis).Returns(0.SI<Second>());
 
 			var fuelCellComponentMock = new Mock<IFuelCellComponentEngineeringInputData>();
 			var fuelCellComponentEntry = new FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>() {

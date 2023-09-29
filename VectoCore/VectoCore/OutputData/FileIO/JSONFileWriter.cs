@@ -663,7 +663,7 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("ElectricMotors", electricMotorsOut);
 		body.Add("Batteries", battery);
 
-		if (vehicle.Components.FuelCellSystemInputData != null) {
+		if (vehicle.Components.FuelCellSystemInputData?.FuelCellComponents != null) {
 			var fuelCellSystem = GetFuelCellSystem(vehicle, basePath);
 			body.Add(JsonKeys.FuelCell_FuelCellSystem, fuelCellSystem);
 		}

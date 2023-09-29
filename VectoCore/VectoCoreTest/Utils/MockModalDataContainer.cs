@@ -352,6 +352,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			set => throw new NotImplementedException();
 		}
 
+		public KilogramPerWattSecond FuelCellLine => throw new NotImplementedException();
+
 		public void RegisterComponent(VectoSimulationComponent component)
 		{
 			

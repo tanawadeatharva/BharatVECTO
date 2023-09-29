@@ -391,7 +391,6 @@ Partial Class VehicleForm
         Me.pnInitialSoC.SuspendLayout()
         Me.tpFuelCellSystem.SuspendLayout()
         Me.gbFuelCellSystem.SuspendLayout()
-        Me.pnOnOffHysteresis.SuspendLayout()
         Me.pnGradientPowerChange.SuspendLayout()
         Me.tpGensetComponents.SuspendLayout()
         Me.gbGenSet.SuspendLayout()

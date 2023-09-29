@@ -519,7 +519,7 @@ namespace TUGraz.VectoCore.OutputData
 												ModalResultField.FCWHTCc)) /
 											m.TimeIntegral<Kilogram>(m.GetColumnName(fuel.FuelData,
 												ModalResultField.FCMap)))
-								.Select(dummy => (double)dummy).ToString(CultureInfo.InvariantCulture).ToArray();
+								.Select(dummy => ((double)dummy).ToString(CultureInfo.InvariantCulture)).ToArray();
 							return fuelsWhtc?.Join(" / ");
 						}
 
@@ -795,7 +795,7 @@ namespace TUGraz.VectoCore.OutputData
 						ModalResultField.P_busAux_ES_consumer_sum)
 				}, {
 					Delta_E_BusAux_Battery, SumFunc((r, m) =>
-						(r.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
+						(r.BusAuxiliaries?.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
 							? m.DeltaSOCBusAuxBattery() *
 							r.BusAuxiliaries.ElectricalUserInputsConfig.ElectricStorageCapacity
 							: 0.SI<WattSecond>())
@@ -848,7 +848,7 @@ namespace TUGraz.VectoCore.OutputData
 				},
 
 				//P-HEV
-				{ f_equiv, SumFunc((r, m) => r.HybridStrategyParameters.EquivalenceFactor) },
+				{ f_equiv, SumFunc((r, m) => r.HybridStrategyParameters?.EquivalenceFactor ?? Double.NaN) },
 
 				// performance entries
 				{ ACC, SumFunc((r, m) => (ConvertedSI)m.AccelerationAverage(), ModalResultField.acc) },

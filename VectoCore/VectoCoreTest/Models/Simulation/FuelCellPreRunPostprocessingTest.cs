@@ -467,7 +467,7 @@ public class FuelCellPreRunPostprocessingT
 
 		var run = factory.SimulationRuns().ToArray()[cycleIdx];
 		//run.GetContainer().RunData.IterativeRunStrategy = null;
-		run.GetContainer().RunData.BatteryData.Batteries.ForEach(x => x.Item2.ChargeSustainingBattery = true);
+		run.GetContainer().RunData.BatteryData.Batteries.ForEach(x => x.Item2.ChargeDepletingBattery = true);
 
 
 

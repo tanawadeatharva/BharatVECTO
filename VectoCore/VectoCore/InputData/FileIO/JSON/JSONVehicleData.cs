@@ -237,7 +237,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case VectoSimulationJobType.ConventionalVehicle:
 				case VectoSimulationJobType.EngineOnlySimulation:
                 default:
-					return base.GetADS();
+					return base.GetADAS();
 			}
 		}
 
