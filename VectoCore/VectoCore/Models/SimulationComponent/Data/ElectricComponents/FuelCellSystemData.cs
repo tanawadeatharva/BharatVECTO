@@ -227,7 +227,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 
 		protected int FindIndex(Watt power)
 		{
-
+			//TODO switch to binary search
 			for (var index = 1; index < Entries.Length; index++)
 			{
 				if (power.IsGreaterOrEqual(Entries[index - 1].P_el_out) && power.IsSmallerOrEqual(Entries[index].P_el_out))
@@ -239,6 +239,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 			throw new VectoException("Power Request {0} exceeds fuel cell model data. min: {1} max: {2}", power, Entries.First().P_el_out, Entries.Last().P_el_out);
 		}
 
+		public List<Watt> MeasuredPoints => Entries.Select(e => e.P_el_out).ToList();
+
+		/// <summary>
+		/// Point with the maximal efficiency, usually at low powers, used to split the power between the fuel cells in a string
+		/// </summary>
+		public Watt MinPowerEff => Entries.MaxBy(e => e.P_el_out / e.H2)?.P_el_out;
+
 
 
         public class MassFlowMapEntry
@@ -247,4 +254,52 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 			[Required, SIRange(0, 1e8)] public KilogramPerSecond H2;
 		}
 	}
+
+	public class FuelCellStringMassFlowMap
+	{
+		public Watt MinPower => _fuelCellComponentMap.MinPower;
+		public Watt MaxPower => _fuelCellComponentMap.MaxPower * _fcCount;
+
+
+		public Watt MinPowerEff => _fuelCellComponentMap.MinPowerEff;
+
+		public FuelCellMassFlowMap _fuelCellComponentMap;
+		private readonly int _fcCount;
+
+		
+
+		public FuelCellStringMassFlowMap(FuelCellMassFlowMap fcMap, int fcCount)
+		{
+			_fcCount = fcCount;
+			_fuelCellComponentMap = fcMap;
+			if (fcCount < 1) {
+				throw new ArgumentException("At string must consist of at least one fuel cell");
+			}
+
+			
+
+
+
+			
+		}
+
+		internal int GetActiveFuelCellCount(Watt p)
+		{
+			return (int)VectoMath.LimitTo(Math.Floor((p / _fuelCellComponentMap.MinPowerEff).Value()), 1, _fcCount);
+		}
+
+		public KilogramPerSecond Lookup(Watt power)
+		{
+			var activeFc = GetActiveFuelCellCount(power);
+			var totalFc = 0.SI<KilogramPerSecond>();
+
+			for (int i = 0; i < activeFc; i++) {
+				totalFc += _fuelCellComponentMap.Lookup(power / activeFc);
+			}
+
+			return totalFc;
+		}
+		
+	}
+
 }
