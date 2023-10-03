@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//Limit by gradient powerchange
 			var limitedPower =
-				GetLimitedPower(PreviousState.ActualPower, targetPower, dt, ModelData.GradientPowerChange);
+				GetLimitedPower(PreviousState.ActualPower, targetPower, dt);
 
 
 
@@ -95,12 +95,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="previous"></param>
 		/// <param name="current"></param>
 		/// <param name="dt"></param>
-		/// <param name="gradientPowerChange"></param>
 		/// <returns></returns>
-		public static Watt GetLimitedPower(Watt previous, Watt current, Second dt, WattPerSecond gradientPowerChange)
+		public static Watt GetLimitedPower(Watt previous, Watt current, Second dt)
 		{
-			var delta = dt * gradientPowerChange;
-			return current.LimitTo(previous - delta, previous + delta);
+
+			return current;
 		} 
 
 		#region Overrides of VectoSimulationComponent

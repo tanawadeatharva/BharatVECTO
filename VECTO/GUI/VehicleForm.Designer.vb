@@ -2067,46 +2067,6 @@ Partial Class VehicleForm
         Me.gbFuelCellSystem.TabStop = false
         Me.gbFuelCellSystem.Text = "Fuel Cell System"
         '
-        'pnGradientPowerChange
-        '
-        Me.pnGradientPowerChange.Controls.Add(Me.tbGradientPowerChange)
-        Me.pnGradientPowerChange.Controls.Add(Me.lblGradientPowerChange)
-        Me.pnGradientPowerChange.Controls.Add(Me.lblGradientPowerChangeUnit)
-        Me.pnGradientPowerChange.Location = New System.Drawing.Point(6, 19)
-        Me.pnGradientPowerChange.Margin = New System.Windows.Forms.Padding(2)
-        Me.pnGradientPowerChange.Name = "pnGradientPowerChange"
-        Me.pnGradientPowerChange.Size = New System.Drawing.Size(301, 24)
-        Me.pnGradientPowerChange.TabIndex = 4
-        '
-        'tbGradientPowerChange
-        '
-        Me.tbGradientPowerChange.Location = New System.Drawing.Point(200, 2)
-        Me.tbGradientPowerChange.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
-        Me.tbGradientPowerChange.Name = "tbGradientPowerChange"
-        Me.tbGradientPowerChange.Size = New System.Drawing.Size(59, 20)
-        Me.tbGradientPowerChange.TabIndex = 0
-        '
-        'lblGradientPowerChange
-        '
-        Me.lblGradientPowerChange.AutoSize = true
-        Me.lblGradientPowerChange.Location = New System.Drawing.Point(2, 5)
-        Me.lblGradientPowerChange.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblGradientPowerChange.Name = "lblGradientPowerChange"
-        Me.lblGradientPowerChange.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblGradientPowerChange.Size = New System.Drawing.Size(120, 13)
-        Me.lblGradientPowerChange.TabIndex = 25
-        Me.lblGradientPowerChange.Text = "Gradient Power Change"
-        '
-        'lblGradientPowerChangeUnit
-        '
-        Me.lblGradientPowerChangeUnit.AutoSize = true
-        Me.lblGradientPowerChangeUnit.Location = New System.Drawing.Point(260, 4)
-        Me.lblGradientPowerChangeUnit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblGradientPowerChangeUnit.Name = "lblGradientPowerChangeUnit"
-        Me.lblGradientPowerChangeUnit.Size = New System.Drawing.Size(40, 13)
-        Me.lblGradientPowerChangeUnit.TabIndex = 27
-        Me.lblGradientPowerChangeUnit.Text = "[kW/s]"
-        '
         'lvFuelCellComponents
         '
         Me.lvFuelCellComponents.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
@@ -3325,10 +3285,6 @@ End Sub
     Friend WithEvents cbImcTech As ComboBox
     Friend WithEvents tpFuelCellSystem As TabPage
     Friend WithEvents gbFuelCellSystem As GroupBox
-    Friend WithEvents pnGradientPowerChange As Panel
-    Friend WithEvents tbGradientPowerChange As TextBox
-    Friend WithEvents lblGradientPowerChange As Label
-    Friend WithEvents lblGradientPowerChangeUnit As Label
     Friend WithEvents lvFuelCellComponents As ListView
     Friend WithEvents chFuelCellComponent As ColumnHeader
     Friend WithEvents chCount As ColumnHeader

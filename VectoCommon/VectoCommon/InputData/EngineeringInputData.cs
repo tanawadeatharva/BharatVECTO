@@ -670,7 +670,6 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IFuelCellSystemEngineeringInputData
 	{
-		WattPerSecond GradientPowerChange { get; }
 		IList<FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>> FuelCellComponents { get; }
 	}
 	public class FuelCellComponentEntry<T> where T : class, IFuelCellComponentEngineeringInputData //Generic to reuse for declaration?

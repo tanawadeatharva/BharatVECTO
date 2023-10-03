@@ -17,10 +17,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		/// <summary>
 		/// Battery string id for pre processing battery
 		/// </summary>
-		public const int FuelCellBatID = 0xFCB; 
-		public WattPerSecond GradientPowerChange { get; set; }
-
-
+		public const int FuelCellBatID = 0xFCB;
 
 		public IList<FuelCellData> FuelCells { get; set; }
 
@@ -33,8 +30,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 
 		public IFuelCellPreRunInfo PreRunPostProcessing { get; set; }
 
-		private void CheckFcCount()
-		{
+		private void CheckFcCount() {
 			if (FuelCells.Count > 1) {
 				throw new VectoException("Multiple fuel-cells are currently not supported");
 			}
@@ -43,10 +39,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 				throw new VectoException("No fuel-cells provided");
 			}
         }
-		public Watt MinPower
-		{
-			get
-			{
+		public Watt MinPower {
+			get {
 				CheckFcCount();
 				return FuelCells.First().MinElectricPower;
 			}
@@ -275,12 +269,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 			if (fcCount < 1) {
 				throw new ArgumentException("At string must consist of at least one fuel cell");
 			}
-
-			
-
-
-
-			
 		}
 
 		internal int GetActiveFuelCellCount(Watt p)

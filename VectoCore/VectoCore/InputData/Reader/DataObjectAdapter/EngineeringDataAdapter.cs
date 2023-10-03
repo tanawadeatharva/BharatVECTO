@@ -993,7 +993,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			
 			
 			var fuelCellSystemData = new FuelCellSystemData();
-			fuelCellSystemData.GradientPowerChange = fuelCellSystemInputData.GradientPowerChange;
 			fuelCellSystemData.FuelCells = new List<FuelCellData>();
 			var id = 0;
 			foreach (var fcC in fuelCellSystemInputData.FuelCellComponents) {

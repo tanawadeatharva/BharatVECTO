@@ -93,8 +93,6 @@ Public Class Vehicle
 	Public ReadOnly ReessPacks As List(Of Tuple(Of String, Integer, Integer))
 
 
-	Public FuelCell_GradientPowerChange As WattPerSecond
-	Public FuelCell_OnOffHysteresis As Second
 	Public ReadOnly FuelCellComponents As List(Of Tuple(Of String, Integer))
 
 	Public ElectricMotorPosition As PowertrainPosition
@@ -1133,11 +1131,6 @@ Public Class FuelCellSystemWrapper
 	End Sub
 
 
-	Public ReadOnly Property GradientPowerChange As WattPerSecond Implements IFuelCellSystemEngineeringInputData.GradientPowerChange
-		Get
-			Return Vehicle.FuelCell_GradientPowerChange
-		End Get
-	End Property
 
 	Public ReadOnly Property FuelCellComponents As IList(Of FuelCellComponentEntry(Of IFuelCellComponentEngineeringInputData)) Implements IFuelCellSystemEngineeringInputData.FuelCellComponents
 		Get

@@ -537,10 +537,7 @@
   <data name="FuelCell_FuelCellSystem" xml:space="preserve">
     <value>FuelCellSystem</value>
   </data>
-  <data name="FuelCell_GradientPowerChange" xml:space="preserve">
-    <value>GradientPowerChange</value>
-  </data>
-  <data name="FuelCell_MassFlowMap" xml:space="preserve">
+<data name="FuelCell_MassFlowMap" xml:space="preserve">
     <value>MassFlowMap</value>
   </data>
   <data name="FuelCell_MaxPower" xml:space="preserve">
