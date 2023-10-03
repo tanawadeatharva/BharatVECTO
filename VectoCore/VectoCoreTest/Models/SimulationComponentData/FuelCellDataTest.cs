@@ -11,8 +11,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData;
 public class FuelCellDataTest
 {
 	[Test]
-	public void FuelCellMassFlowMap_MinMaxPowerTest()
-	{
+	public void FuelCellMassFlowMap_MinMaxPowerTest() {
 		var massFlowMap = GetFuelCellMassFlowMap(1);
 
 
@@ -26,8 +25,7 @@ public class FuelCellDataTest
 	[TestCase(300.0, 21450.0)]
 	//interpolate
 	[TestCase(45, 2502.5)]
-	public void FuelCellMassFlowMap_LookupTest(double power_kW, double exp_H2_g_p_h)
-	{
+	public void FuelCellMassFlowMap_LookupTest(double power_kW, double exp_H2_g_p_h) {
 		var massFlowMap = GetFuelCellMassFlowMap(1);
 
 		var power = power_kW.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
@@ -41,8 +39,7 @@ public class FuelCellDataTest
 	[TestCase(600)]
 	[TestCase(10)]
 	[TestCase(-100)]
-	public void FuelCellMassFlowMap_LookupTestFail(double power_kW)
-	{
+	public void FuelCellMassFlowMap_LookupTestFail(double power_kW) {
 		var massFlowMap = GetFuelCellMassFlowMap(1);
 
 		var power = power_kW.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
@@ -52,8 +49,7 @@ public class FuelCellDataTest
 
 
     [Test]
-	public void InvalidFuelCellMassFlowMapTest()
-	{
+	public void InvalidFuelCellMassFlowMapTest() {
 		Assert.Fail("Add checks if entry is present twice" +
 					"Add checks there are enough entries present" +
 					"..." +
@@ -76,8 +72,7 @@ public class FuelCellDataTest
 	[TestCase(180, 3)]
 
 	[TestCase(900, 3)]
-    public void FuelCellString_FuelCellCountTest(double power_kW, int activeFc)
-	{
+    public void FuelCellString_FuelCellCountTest(double power_kW, int activeFc) {
 		var map = GetFuelCellMassFlowMap(1);
 		var power = power_kW.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
 		var fcString = new FuelCellStringMassFlowMap(map, 3);
@@ -85,8 +80,7 @@ public class FuelCellDataTest
 	}
 
 	[Test]
-	public void FuelCellString_MinMaxPowerTest()
-	{
+	public void FuelCellString_MinMaxPowerTest() {
 		var map = GetFuelCellMassFlowMap(1);
 		var fcString = new FuelCellStringMassFlowMap(map, 3);
 		Assert.That(fcString.MinPower.Value(), Is.EqualTo(30*1e3));
@@ -99,8 +93,7 @@ public class FuelCellDataTest
     [TestCase(120, 6006)]
 	[TestCase(180, 9009)]
 
-    public void FuelCellString_LookupTest(double power_kW, double exp_H2_g_p_h)
-	{
+    public void FuelCellString_LookupTest(double power_kW, double exp_H2_g_p_h) {
 		var map = GetFuelCellMassFlowMap(1);
 		var fcString = new FuelCellStringMassFlowMap(map, 3);
 
@@ -120,10 +113,8 @@ public class FuelCellDataTest
 
 
 
-    public FuelCellMassFlowMap GetFuelCellMassFlowMap(int variant = 1)
-	{
-		switch (variant)
-		{
+    public FuelCellMassFlowMap GetFuelCellMassFlowMap(int variant = 1) {
+		switch (variant) {
 			case 1:
 				return new FuelCellMassFlowMap(
 					new FuelCellMassFlowMap.MassFlowMapEntry[] {
@@ -153,11 +144,5 @@ public class FuelCellDataTest
 			default:
 				throw new ArgumentOutOfRangeException();
 		}
-
-
-
-
 	}
-
-
 }
