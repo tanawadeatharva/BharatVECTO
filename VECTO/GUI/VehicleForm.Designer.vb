@@ -193,10 +193,6 @@ Partial Class VehicleForm
         Me.btnRemoveReessPack = New System.Windows.Forms.Button()
         Me.tpFuelCellSystem = New System.Windows.Forms.TabPage()
         Me.gbFuelCellSystem = New System.Windows.Forms.GroupBox()
-        Me.pnGradientPowerChange = New System.Windows.Forms.Panel()
-        Me.tbGradientPowerChange = New System.Windows.Forms.TextBox()
-        Me.lblGradientPowerChange = New System.Windows.Forms.Label()
-        Me.lblGradientPowerChangeUnit = New System.Windows.Forms.Label()
         Me.lvFuelCellComponents = New System.Windows.Forms.ListView()
         Me.chFuelCellComponent = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
         Me.chCount = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
@@ -391,7 +387,6 @@ Partial Class VehicleForm
         Me.pnInitialSoC.SuspendLayout()
         Me.tpFuelCellSystem.SuspendLayout()
         Me.gbFuelCellSystem.SuspendLayout()
-        Me.pnGradientPowerChange.SuspendLayout()
         Me.tpGensetComponents.SuspendLayout()
         Me.gbGenSet.SuspendLayout()
         Me.pnGenSetEM.SuspendLayout()
@@ -2053,7 +2048,6 @@ Partial Class VehicleForm
         '
         'gbFuelCellSystem
         '
-        Me.gbFuelCellSystem.Controls.Add(Me.pnGradientPowerChange)
         Me.gbFuelCellSystem.Controls.Add(Me.lvFuelCellComponents)
         Me.gbFuelCellSystem.Controls.Add(Me.btnAddFuelCellComponent)
         Me.gbFuelCellSystem.Controls.Add(Me.lblEditFuelCellComponent)
@@ -3022,8 +3016,6 @@ Partial Class VehicleForm
 	    Me.tpFuelCellSystem.ResumeLayout(false)
 	    Me.gbFuelCellSystem.ResumeLayout(false)
 	    Me.gbFuelCellSystem.PerformLayout
-	    Me.pnGradientPowerChange.ResumeLayout(false)
-	    Me.pnGradientPowerChange.PerformLayout
 
 
 End Sub
