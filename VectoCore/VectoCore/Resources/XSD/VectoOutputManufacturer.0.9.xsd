@@ -4,7 +4,7 @@
 	<!-- 
 Changelog
 	 2.10.2023: adding unit attribute to TPMLM and corrected mass output fields
-
+	 2.10.2023: make Airdrag component in output mandatory (provide standard values in case no Airdrag is provided in input). make Model and DigestValue optional (only in output for measured component)
 
 -->
 	<!-- Imports_______________________________________________ -->
@@ -1366,7 +1366,7 @@ Changelog
 			<xs:element name="Components">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+						<xs:element name="AirDrag" type="mrf:AirdragType">
 							<xs:annotation>
 								<xs:documentation>I.1.8.</xs:documentation>
 							</xs:annotation>
@@ -1602,7 +1602,7 @@ Changelog
 					<xs:documentation>I.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+			<xs:element name="AirDrag" type="mrf:AirdragType">
 				<xs:annotation>
 					<xs:documentation>I.1.8.</xs:documentation>
 				</xs:annotation>
@@ -1657,7 +1657,7 @@ Changelog
 					<xs:documentation>I.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+			<xs:element name="AirDrag" type="mrf:AirdragType">
 				<xs:annotation>
 					<xs:documentation>I.1.8.</xs:documentation>
 				</xs:annotation>
@@ -1712,7 +1712,7 @@ Changelog
 					<xs:documentation>I.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+			<xs:element name="AirDrag" type="mrf:AirdragType">
 				<xs:annotation>
 					<xs:documentation>I.1.8.</xs:documentation>
 				</xs:annotation>
@@ -1752,7 +1752,7 @@ Changelog
 					<xs:documentation>I.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+			<xs:element name="AirDrag" type="mrf:AirdragType">
 				<xs:annotation>
 					<xs:documentation>I.1.8.</xs:documentation>
 				</xs:annotation>
@@ -1782,7 +1782,7 @@ Changelog
 					<xs:documentation>I.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+			<xs:element name="AirDrag" type="mrf:AirdragType">
 				<xs:annotation>
 					<xs:documentation>I.1.8.</xs:documentation>
 				</xs:annotation>
@@ -1827,7 +1827,7 @@ Changelog
 					<xs:documentation>I.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+			<xs:element name="AirDrag" type="mrf:AirdragType">
 				<xs:annotation>
 					<xs:documentation>I.1.8.</xs:documentation>
 				</xs:annotation>
@@ -1876,7 +1876,7 @@ Changelog
 					<xs:documentation>I.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+			<xs:element name="AirDrag" type="mrf:AirdragType">
 				<xs:annotation>
 					<xs:documentation>I.1.8.</xs:documentation>
 				</xs:annotation>
@@ -1911,7 +1911,7 @@ Changelog
 					<xs:documentation>I.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+			<xs:element name="AirDrag" type="mrf:AirdragType">
 				<xs:annotation>
 					<xs:documentation>I.1.8.</xs:documentation>
 				</xs:annotation>
@@ -1936,7 +1936,7 @@ Changelog
 					<xs:documentation>I.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+			<xs:element name="AirDrag" type="mrf:AirdragType">
 				<xs:annotation>
 					<xs:documentation>I.1.8.</xs:documentation>
 				</xs:annotation>
@@ -1967,7 +1967,7 @@ Changelog
 					<xs:documentation>I.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+			<xs:element name="AirDrag" type="mrf:AirdragType">
 				<xs:annotation>
 					<xs:documentation>I.1.8.</xs:documentation>
 				</xs:annotation>
@@ -2908,7 +2908,7 @@ Changelog
 	</xs:complexType>
 	<xs:complexType name="AirdragType">
 		<xs:sequence>
-			<xs:element name="Model" type="v1.0:ModelType">
+			<xs:element name="Model" type="v1.0:ModelType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>I.1.8.1.</xs:documentation>
 				</xs:annotation>
@@ -2928,7 +2928,7 @@ Changelog
 					<xs:documentation>I.1.8.4.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DigestValue" type="xs:token">
+			<xs:element name="DigestValue" type="xs:token" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>I.1.8.5.</xs:documentation>
 				</xs:annotation>
