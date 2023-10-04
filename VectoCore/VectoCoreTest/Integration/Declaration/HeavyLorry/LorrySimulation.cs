@@ -34,6 +34,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -122,7 +123,7 @@ public class LorrySimulation
 	[TestCase(@"HeavyLorry/PEV/PEV_heavyLorry_APT_E2.xml")]
 	//P-HEV
 	[TestCase(Group5_HEV_P2_OVC)]
-	//P-HEV with SuperCap 0Ohm R_i
+	//P-HEV with SuperCap 0 Ohm R_i
 	[TestCase(Group5_HEV_P2_SuperCap, TestName = "P2 HEV SuperCap")]
 	public void HeavyLorrySimulationTest(string jobFile)
 	{
@@ -840,7 +841,65 @@ public class LorrySimulation
 
 	}
 
-	private void CheckPEVHVACInRunData(VectoRunData rd, IVehicleDeclarationInputData vehicle)
+	[TestCase(@"HeavyLorry/PEV/Group5_ PEV_IEPC_E-EffCorrection.xml", 413.75, -1396.825, -61756.61)]
+	[TestCase(@"HeavyLorry/PEV/Group5_ PEV_IEPC_E-EffCorrection.xml", 827.50, 161.085, 13679.79)]
+    public void TestIEPC_EfficiencyCorrection(string jobFile, double rpm, double tq, double expectedPel)
+	{
+		var jobContainer = GetJobContainer(jobFile, null, out var fileWriter, out var runs, out var sumDataContainer,
+			out var inputProvider);
+		var run = runs.First().GetContainer().RunData;
+
+		var iepc = run.ElectricMachinesData.First().Item2 as IEPCElectricMotorData;
+		Assert.IsNotNull(iepc);
+		var voltageLevel = iepc.EfficiencyData.VoltageLevels.First() as IEPCVoltageLevelData;
+		Assert.IsNotNull(voltageLevel);
+		var map = voltageLevel.EfficiencyMaps[1];
+
+		var entry = map.Entries.First(x => x.Torque.IsEqual(tq, 0.1) && x.MotorSpeed.AsRPM.IsEqual(rpm, 0.1));
+
+		// calculate electric power as the raw map contains a virtual 'torque loss' of the EM.
+		var elPower = entry.MotorSpeed * entry.Torque + entry.PowerElectrical.Value().SI<NewtonMeter>() * entry.MotorSpeed;
+
+		// < 0 means propulsion, hence the electric power needs to be 'more negative'
+		if (tq < 0) {
+			Assert.IsTrue(entry.MotorSpeed * entry.Torque > elPower);
+		} else {
+			Assert.IsTrue(entry.MotorSpeed * entry.Torque > elPower);
+		}
+
+        Assert.AreEqual(expectedPel, elPower.Value(), 0.1);
+	}
+
+	[TestCase(@"HeavyLorry/P-HEV/Group5_HEV_P2_EM-EffCorrection.xml", 25, -1050, -2804.993)]
+	[TestCase(@"HeavyLorry/P-HEV/Group5_HEV_P2_EM-EffCorrection.xml", 255, 1050, 27477.94)]
+	public void TestEM_EfficiencyCorrection(string jobFile, double rpm, double tq, double expectedPel)
+	{
+		var jobContainer = GetJobContainer(jobFile, null, out var fileWriter, out var runs, out var sumDataContainer,
+			out var inputProvider);
+		var run = runs.First().GetContainer().RunData;
+
+		var em = run.ElectricMachinesData.First().Item2;
+		Assert.IsNotNull(em);
+		var voltageLevel = em.EfficiencyData.VoltageLevels.First();
+		Assert.IsNotNull(voltageLevel);
+		var map = voltageLevel.EfficiencyMap;
+
+		var entry = map.Entries.First(x => x.Torque.IsEqual(tq, 0.1) && x.MotorSpeed.AsRPM.IsEqual(rpm, 0.1));
+
+		// calculate electric power as the raw map contains a virtual 'torque loss' of the EM.
+		var elPower = entry.MotorSpeed * entry.Torque + entry.PowerElectrical.Value().SI<NewtonMeter>() * entry.MotorSpeed;
+
+		// < 0 means propulsion, hence the electric power needs to be 'more negative'
+		if (tq < 0) {
+			Assert.IsTrue(entry.MotorSpeed * entry.Torque > elPower);
+		} else {
+			Assert.IsTrue(entry.MotorSpeed * entry.Torque > elPower);
+		}
+
+		Assert.AreEqual(expectedPel, elPower.Value(), 0.1);
+	}
+
+    private void CheckPEVHVACInRunData(VectoRunData rd, IVehicleDeclarationInputData vehicle)
 	{
 		var hvacInput = vehicle.Components.AuxiliaryInputData.Auxiliaries
 			.First(a => a.Type == AuxiliaryType.HVAC);

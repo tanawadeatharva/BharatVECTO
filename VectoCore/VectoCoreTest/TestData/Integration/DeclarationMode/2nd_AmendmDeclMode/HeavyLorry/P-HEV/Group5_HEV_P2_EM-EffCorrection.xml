@@ -351,8 +351,8 @@
 <Entry outShaftSpeed="25.00" torque="893.00" electricPower="2361.48"/>
 <Entry outShaftSpeed="25.00" torque="945.00" electricPower="2498.99"/>
 <Entry outShaftSpeed="25.00" torque="998.00" electricPower="2639.15"/>
-<Entry outShaftSpeed="25.00" torque="1050.00" electricPower="2776.66"/>
-<Entry outShaftSpeed="255.00" torque="-1050.00" electricPower="-27758.33"/>
+<Entry outShaftSpeed="25.00" torque="1050.00" electricPower="2676.66"/><!-- single entry with efficiency > 1. this is automatically 'corrected' by VECTO -->
+<Entry outShaftSpeed="255.00" torque="-1050.00" electricPower="-30758.33"/>
 <Entry outShaftSpeed="255.00" torque="-998.00" electricPower="-26383.63"/>
 <Entry outShaftSpeed="255.00" torque="-945.00" electricPower="-24982.49"/>
 <Entry outShaftSpeed="255.00" torque="-893.00" electricPower="-23607.80"/>

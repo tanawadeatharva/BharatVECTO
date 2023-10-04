@@ -134,6 +134,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static readonly Ohm SuperCapMinInternalResistance = 5.SI(Unit.SI.Milli.Ohm).Cast<Ohm>();
 
+		public const double ElectricMachineDefaultEfficiencyFallback = 0.98;
+
 		public static readonly Watt MinDepotChgPwr = 10.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
 		public static readonly Second DepotChargingDuration = 6.SI(Unit.SI.Hour).Cast<Second>();
 		public static readonly KilogramPerCubicMeter ICE_MassPerDisplacement = 770.SI<Kilogram>() / 7.7.SI<Liter>().Cast<CubicMeter>();
