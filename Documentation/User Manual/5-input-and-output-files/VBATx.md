@@ -3,7 +3,7 @@
 This file contains the battery's internal voltage as function of the state of charge (SoC). The file must cover the SOC range from 0 to 100%! The file uses the [VECTO CSV format](#csv).
 
 - Filetype: .vbatv
-- Header: **SOC, V**
+- Header: **SOC [%], V**
 - Requires at least 2 data entries
 
 
@@ -30,8 +30,8 @@ SOC , V
 This file contains the battery's internal resistance as function of the state of charge (SoC). The file must cover the SOC range from 0 to 100%! The file uses the [VECTO CSV format](#csv).
 
 - Filetype: .vbatr
-- Header: **SOC, Ri** in case of pulse independent internal resistance
-- Header: **SoC, Ri-2, Ri-10, Ri-20** *,Ri-120*
+- Header: **SOC [%], Ri [Ohm]** in case of pulse independent internal resistance
+- Header: **SoC [%], Ri-2 [Ohm], Ri-10[Ohm], Ri-20 [Ohm]** *,Ri-120*
 - Requires at least 2 data entries
 
 
@@ -56,7 +56,7 @@ This file contains the battery's maximum current for charging and discharging de
 The file uses the [VECTO CSV format](#csv).
 
 - Filetype: .vbatr
-- Header: **SOC, I_charge, I_discharge**
+- Header: **SOC [%], I_charge [A], I_discharge [A]**
 - Requires at least 2 data entries
 
 **Example:**

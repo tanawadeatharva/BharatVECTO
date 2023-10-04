@@ -23,7 +23,7 @@ Make and Model
 
 
 Transmission Type
-:   Depending on the transmission type some options below are not available. The following types are available:
+:   Depending on the vehicle type some options below are not available. The following types are available:
 :   -   **MT**: Manual Transmission
 -   **AMT**: Automated Manual Transmission
 -   **APT-S**: Automatic Transmission with torque converter - Serial configuration
@@ -61,7 +61,7 @@ Some parameters influencing the gearshift behavior can be defined in the gearbox
 
 In addition, the gearshift polygon affects the gearshift behavior to a certain degree. The gearshift polygon can be defined individually for each gear. If no shift polygon is provided the declaration mode shift polygons for the selected transmission type are used.
 
-The gearshift strategy depends on the transmission type:
+The gearshift strategy depends on the specific combination of vehicle and transmission type:
 
 Manual Transmission
 :   Shiftline based approach. The calculation of gearshift lines and the gearshift rules are [described here](#shift-strategy-mt-gearshift-rules)
@@ -82,6 +82,12 @@ Automatic Transmission - Hybrid Electric vehicle
 :   Gearshift is handled by the hybrid controller. Shift lines (calculated in the same way as for conventional vehicles) are used as upper and lower boundary for allowed ICE operating points.
 
 Automatic Transmission (APT-N) - Pure Electric vehicle
+:    Efficiency shift based strategy. The calculation of gearshift lines and the gearshift rules are [described here](#pev-gear-shift-model)
+
+Automated Manual Transmission (IHPC Transmission) - IHPC-Type 1
+:   Gearshift is handled by the hybrid controller. Shift lines (calculated in the same way as for conventional vehicles) are used as upper and lower boundary for allowed ICE operating points.
+
+Automatic Transmission (APT-N) (IEPC Transmission) - IEPC
 :    Efficiency shift based strategy. The calculation of gearshift lines and the gearshift rules are [described here](#pev-gear-shift-model)
 
 <div class="engineering">

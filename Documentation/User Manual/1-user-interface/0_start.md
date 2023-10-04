@@ -8,7 +8,7 @@ Hardware Requirements
 
 Software Requirements
 
-   + Microsoft .NET Framework 4.5
+   + Microsoft .NET Framework 4.8
 
 ## Installation Options
 
@@ -48,4 +48,4 @@ This User Manual consists of 4 Parts:
 
 This user manual describes verson 3.3.x of VECTO. 
 
-Additional information can be found on the <a href="https://code.europa.eu/groups/vecto/-/wikis/home" target="_blank">VECTO Wiki</a>. For bugs and issues, please, visit <a href="https://code.europa.eu/vecto/vecto/-/issues" target="_blank">code.europa.eu</a>.
+
