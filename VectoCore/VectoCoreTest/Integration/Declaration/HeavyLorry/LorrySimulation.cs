@@ -60,6 +60,7 @@ public class LorrySimulation
 
 	private const string BASE_DIR = @"TestData/Integration/DeclarationMode/2nd_AmendmDeclMode/";
 	private const string Group5_HEV_P2_OVC = @"HeavyLorry/P-HEV/Group5_HEV_P2_ovc.xml";
+	private const string Group5_HEV_P2_SuperCap = @"HeavyLorry/P-HEV/Group5_HEV_P2_supercap.xml";
 	private const string Group5_HEV_P3_OVC = @"HeavyLorry/P-HEV/Group5_HEV_P3_ovc.xml";
 	private const string Group5_HEV_P4_OVC = @"HeavyLorry/P-HEV/Group5_HEV_P4_ovc.xml";
 	private const string Group5_HEV_P2_5_OVC = @"HeavyLorry/P-HEV/Group5_HEV_P2_5_ovc.xml";
@@ -121,6 +122,8 @@ public class LorrySimulation
 	[TestCase(@"HeavyLorry/PEV/PEV_heavyLorry_APT_E2.xml")]
 	//P-HEV
 	[TestCase(Group5_HEV_P2_OVC)]
+	//P-HEV with SuperCap 0Ohm R_i
+	[TestCase(Group5_HEV_P2_SuperCap, TestName = "P2 HEV SuperCap")]
 	public void HeavyLorrySimulationTest(string jobFile)
 	{
 #if singlethreaded
