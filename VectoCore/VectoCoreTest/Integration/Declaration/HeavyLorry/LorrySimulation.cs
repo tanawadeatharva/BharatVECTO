@@ -29,6 +29,7 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -857,16 +858,30 @@ public class LorrySimulation
 
 		var entry = map.Entries.First(x => x.Torque.IsEqual(tq, 0.1) && x.MotorSpeed.AsRPM.IsEqual(rpm, 0.1));
 
-		// calculate electric power as the raw map contains a virtual 'torque loss' of the EM.
-		var elPower = entry.MotorSpeed * entry.Torque + entry.PowerElectrical.Value().SI<NewtonMeter>() * entry.MotorSpeed;
+		var input = run.InputData.JobInputData.Vehicle.Components.IEPC
+			.VoltageLevels.First().PowerMap.First();
+		var ratio = run.InputData.JobInputData.Vehicle.Components.IEPC.Gears.First().Ratio;
 
-		// < 0 means propulsion, hence the electric power needs to be 'more negative'
+        var inputRow = input.PowerMap.AsEnumerable().First(r => r.ParseDouble(IEPCMapReader.Fields.MotorSpeed).IsEqual(rpm / ratio, 0.1) &&
+																r.ParseDouble(IEPCMapReader.Fields.Torque).IsEqual(-tq * ratio, 0.1));
+		var inputPwrEl = inputRow.ParseDouble(IEPCMapReader.Fields.PowerElectrical);
+
+		// check that in the input the efficiency is greater than 1
+		Assert.IsTrue(-inputPwrEl > expectedPel);
 		if (tq < 0) {
-			Assert.IsTrue(entry.MotorSpeed * entry.Torque > elPower);
+			// propulsion
+			Assert.IsTrue(rpm.RPMtoRad() * -tq.SI<NewtonMeter>() / inputPwrEl > 1);
 		} else {
-			Assert.IsTrue(entry.MotorSpeed * entry.Torque > elPower);
+			// recuperation
+			Assert.IsTrue(inputPwrEl / (rpm.RPMtoRad() * -tq.SI<NewtonMeter>()) > 1);
 		}
 
+        // calculate electric power as the raw map contains a virtual 'torque loss' of the EM.
+        var elPower = entry.MotorSpeed * entry.Torque + entry.PowerElectrical.Value().SI<NewtonMeter>() * entry.MotorSpeed;
+
+		// < 0 means propulsion, hence the electric power needs to be 'more negative'
+		Assert.IsTrue(entry.MotorSpeed * entry.Torque > elPower);
+		
         Assert.AreEqual(expectedPel, elPower.Value(), 0.1);
 	}
 
@@ -886,16 +901,28 @@ public class LorrySimulation
 
 		var entry = map.Entries.First(x => x.Torque.IsEqual(tq, 0.1) && x.MotorSpeed.AsRPM.IsEqual(rpm, 0.1));
 
-		// calculate electric power as the raw map contains a virtual 'torque loss' of the EM.
-		var elPower = entry.MotorSpeed * entry.Torque + entry.PowerElectrical.Value().SI<NewtonMeter>() * entry.MotorSpeed;
+		var input = run.InputData.JobInputData.Vehicle.Components.ElectricMachines.Entries.First().ElectricMachine
+			.VoltageLevels.First().PowerMap.First();
+		var inputRow = input.PowerMap.AsEnumerable().First(r => r.ParseDouble(ElectricMotorMapReader.Fields.MotorSpeed).IsEqual(rpm, 0.1) &&
+																r.ParseDouble(ElectricMotorMapReader.Fields.Torque).IsEqual(-tq, 0.1));
+		var inputPwrEl = inputRow.ParseDouble(ElectricMotorMapReader.Fields.PowerElectrical);
 
-		// < 0 means propulsion, hence the electric power needs to be 'more negative'
+		// check that in the input the efficiency is greater than 1
+		Assert.IsTrue(-inputPwrEl > expectedPel);
 		if (tq < 0) {
-			Assert.IsTrue(entry.MotorSpeed * entry.Torque > elPower);
+			// propulsion
+			Assert.IsTrue(rpm.RPMtoRad() * -tq.SI<NewtonMeter>() / inputPwrEl > 1);
 		} else {
-			Assert.IsTrue(entry.MotorSpeed * entry.Torque > elPower);
+			// recuperation
+			Assert.IsTrue(inputPwrEl / (rpm.RPMtoRad() * -tq.SI<NewtonMeter>())  > 1);
 		}
 
+        // calculate electric power as the raw map contains a virtual 'torque loss' of the EM.
+        var elPower = entry.MotorSpeed * entry.Torque + entry.PowerElectrical.Value().SI<NewtonMeter>() * entry.MotorSpeed;
+
+		// < 0 means propulsion, hence the electric power needs to be 'more negative'
+		Assert.IsTrue(entry.MotorSpeed * entry.Torque > elPower);
+		
 		Assert.AreEqual(expectedPel, elPower.Value(), 0.1);
 	}
 
