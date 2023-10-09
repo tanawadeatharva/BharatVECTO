@@ -11,7 +11,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public FuelCellString(FuelCell[] fuelCells)
 		{
-			_fcStringMap 
+			_fcStringMap = new FuelCellStringMassFlowMap(null, 1);
 		}
 
 

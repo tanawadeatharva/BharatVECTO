@@ -49,7 +49,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
+		public (double a, double b) GetStringPowerDistribution(Watt power)
+		{
+			var a = 1;
+			var b = 1 - a;
 
+
+
+
+
+				
+			// ReSharper disable once UselessBinaryOperation
+			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
+			System.Diagnostics.Debug.Assert(a + b == 1);
+			return (a, 1 - a);
+		}
 
 
 		public Watt PowerDemand(Second absTime, Second dt, Watt powerDemandEletricMotor, Watt auxPower, bool dryRun)
