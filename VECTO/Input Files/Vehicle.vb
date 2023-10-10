@@ -1132,16 +1132,16 @@ Public Class FuelCellSystemWrapper
 
 
 
-	Public ReadOnly Property FuelCellComponents As IList(Of FuelCellComponentEntry(Of IFuelCellComponentEngineeringInputData)) Implements IFuelCellSystemEngineeringInputData.FuelCellComponents
+	Public ReadOnly Property FuelCellStrings As IList(Of FuelCellStringEntry(Of IFuelCellComponentEngineeringInputData)) Implements IFuelCellSystemEngineeringInputData.FuelCellStrings
 		Get
 			If (Vehicle.VehicleType <> VectoSimulationJobType.FCHV) Then
 				Return Nothing
 			End If
-			Dim retVal As List(Of FuelCellComponentEntry(Of IFuelCellComponentEngineeringInputData)) = New List(Of FuelCellComponentEntry(Of IFuelCellComponentEngineeringInputData))
+			Dim retVal As List(Of FuelCellStringEntry(Of IFuelCellComponentEngineeringInputData)) = New List(Of FuelCellStringEntry(Of IFuelCellComponentEngineeringInputData))
 
 			retVal = Vehicle.FuelCellComponents.Select(
 				Function(x) _
-												 New FuelCellComponentEntry(Of IFuelCellComponentEngineeringInputData) _
+												 New FuelCellStringEntry(Of IFuelCellComponentEngineeringInputData) _
 												 With {.Count = x.Item2,
 												 .FuelCellComponent =
 												 JSONInputDataFactory.ReadFuelCellComponentEngineeringInputData(

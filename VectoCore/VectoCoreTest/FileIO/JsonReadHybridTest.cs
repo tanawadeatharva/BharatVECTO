@@ -284,14 +284,14 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var fuelCellSystem = vehicle.Components.FuelCellSystemInputData;
 			Assert.NotNull(fuelCellSystem);
 			
-			Assert.NotNull(fuelCellSystem.FuelCellComponents);
+			Assert.NotNull(fuelCellSystem.FuelCellStrings);
 
-			Assert.AreEqual(2, fuelCellSystem.FuelCellComponents.Count);
-			Assert.AreEqual(2, fuelCellSystem.FuelCellComponents[0].Count);
-			AssertFuelCellComponent(fuelCellSystem.FuelCellComponents[0].FuelCellComponent);
+			Assert.AreEqual(2, fuelCellSystem.FuelCellStrings.Count);
+			Assert.AreEqual(2, fuelCellSystem.FuelCellStrings[0].Count);
+			AssertFuelCellComponent(fuelCellSystem.FuelCellStrings[0].FuelCellComponent);
 
-			Assert.AreEqual(1, fuelCellSystem.FuelCellComponents[1].Count);
-			AssertFuelCellComponent(fuelCellSystem.FuelCellComponents[1].FuelCellComponent);
+			Assert.AreEqual(1, fuelCellSystem.FuelCellStrings[1].Count);
+			AssertFuelCellComponent(fuelCellSystem.FuelCellStrings[1].FuelCellComponent);
         }
 
 		[TestCase]

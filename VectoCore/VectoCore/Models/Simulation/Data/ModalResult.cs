@@ -451,7 +451,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 					break;
 				case FuelCellSystem _: CreateColumns(FuelCellSystemSignals);
 					break;
-				case FuelCell fc: CreateFuelCellColumns(fc.Id.ToString(), runData, FuelCellComponentSignals);
+				case FuelCellString fcs: CreateFuelCellColumns(fcs.StringId,  FuelCellComponentSignals);
+					break;
+				case FuelCell fc: CreateFuelCellColumns(fc.Id.ToString(), FuelCellComponentSignals);
 					break;
 				case ElectricAuxiliaries _:
 					CreateElectricAuxColumns();
@@ -502,7 +504,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			}
 		}
 
-		protected internal void CreateFuelCellColumns(string id, VectoRunData runData, ModalResultField[] signals)
+		protected internal void CreateFuelCellColumns(string id, ModalResultField[] signals)
 		{
 			foreach (var entry in signals) {
 				FuelCellColumns.Add(string.Format(entry.GetCaption(), id));

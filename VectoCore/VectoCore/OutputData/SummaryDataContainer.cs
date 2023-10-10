@@ -1075,7 +1075,7 @@ namespace TUGraz.VectoCore.OutputData
 				}
 			}
 
-			if (runData.JobType == VectoSimulationJobType.FCHV && runData.FuelCellSystemData.FuelCells.Count > 0) {
+			if (runData.JobType == VectoSimulationJobType.FCHV && runData.FuelCellSystemData.FuelCellStrings.Count > 0) {
 				foreach (DataColumn col in Table.Columns) {
 					SetValue(modData, runData, col, row, SumDataFields.FuelCellValue.GetVECTOValueOrDefault(col.ColumnName));
                 }

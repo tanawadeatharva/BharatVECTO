@@ -15,7 +15,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Watt Power { get; set; }
 
 			public KilogramPerSecond FuelConsumption { get; set; }
-			public bool On { get; set; }
 		}
 
 		private FuelCellData ModelData;
@@ -32,12 +31,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public FuelCellData.FuelCellId Id { get; private set; }
 
 
-		public FuelCell(FuelCellData fcData, IVehicleContainer dataBus) : base(null) //provide null here, when registering the component the Id is accessed but is not set in the base constructor
+		public FuelCell(FuelCellData fcData, IVehicleContainer dataBus, FuelCellData.FuelCellId id) : base(null) //provide null here, when registering the component the Id is accessed but is not set in the base constructor
 		{
 			DataBus = dataBus;
 			ModelData = fcData;
-			Id = fcData.Id;
-			CurrentState.On = true;
+			Id = id;
 			dataBus.AddComponent(this);
 		}
 
@@ -46,8 +44,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			var power = CurrentState.Power;
-			container[ModalResultField.P_FCS, Id.ToString()] = power;
-			container[ModalResultField.FC_FCS, Id.ToString()] = CurrentState.FuelConsumption;
+			container[ModalResultField.P_FCS, Id.ToString()] = power ?? 0.SI<Watt>();
+			container[ModalResultField.FC_FCS, Id.ToString()] = CurrentState.FuelConsumption ?? 0.SI<KilogramPerSecond>();
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
@@ -65,8 +63,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 
-			var generatedPower =
-				VectoMath.LimitTo(requestedPower, ModelData.MinElectricPower, ModelData.MaxElectricPower);
+			var generatedPower = requestedPower; //Handle time slicing
 			var h2 = ModelData.MassFlowMap.Lookup(generatedPower);
 
             if (!dryRun) {

@@ -708,6 +708,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 	public class JSONFuelCellSystemEngineeringInputData : IFuelCellSystemEngineeringInputData
 	{
-		public IList<FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>> FuelCellComponents { get; internal set; }
+		public IList<FuelCellStringEntry<IFuelCellComponentEngineeringInputData>> FuelCellStrings { get; internal set; }
 	}
 }

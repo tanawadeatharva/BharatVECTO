@@ -574,7 +574,7 @@ Public Class VehicleForm
 		If (vehicle.VehicleType = VectoSimulationJobType.FCHV) Then
 			Dim fcs = vehicle.Components.FuelCellSystemInputData
 			lvFuelCellComponents.Items.Clear()
-			For Each entry In fcs.FuelCellComponents
+			For Each entry In fcs.FuelCellStrings
 				lvFuelCellComponents.Items.Add(CreateFuelCellSystemListViewItem(entry.FuelCellComponent.DataSource.SourceFile, entry.Count))
 			Next
 		End If

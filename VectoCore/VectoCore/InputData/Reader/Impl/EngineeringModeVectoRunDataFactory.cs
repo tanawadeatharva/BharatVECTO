@@ -157,6 +157,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					runData.FuelCellSystemData = fuelCellData;
 					runData.FuelCellSystemData.FuelCellPowerMap =
 						dao.CreateFuelCellPowerMap(modData, runData.FuelCellSystemData, runData.BatteryData);
+					runData.FuelCellSystemData.FuelCellShareMap = dao.CreateFuelCellShareMap(fuelCellData);
 					pevRd.BatteryData.ChargeSustainingBatterySystem = false; //In the real run we don't use a chargesustaining battery
 
                 };

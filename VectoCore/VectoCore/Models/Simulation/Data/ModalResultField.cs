@@ -477,7 +477,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(SI), caption: "P_FCS_target [kW]", outputFactor: 1e-3)] P_fuelCellSystem_target,
 		[ModalResultField(typeof(SI), caption: "P_FCS_actual [kW]", outputFactor: 1e-3)] P_fuelCellSystem_actual,
-		[ModalResultField(typeof(SI), caption: "P_FCS [g/h]", outputFactor: 3600 * 1000)] Fc_fuelCellSystem_actual,
+		[ModalResultField(typeof(SI), caption: "FC_FCS [g/h]", outputFactor: 3600 * 1000)] Fc_fuelCellSystem_actual,
 
 
 

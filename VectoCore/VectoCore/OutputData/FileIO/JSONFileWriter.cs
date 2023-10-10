@@ -663,7 +663,7 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("ElectricMotors", electricMotorsOut);
 		body.Add("Batteries", battery);
 
-		if (vehicle.Components.FuelCellSystemInputData?.FuelCellComponents != null) {
+		if (vehicle.Components.FuelCellSystemInputData?.FuelCellStrings != null) {
 			var fuelCellSystem = GetFuelCellSystem(vehicle, basePath);
 			body.Add(JsonKeys.FuelCell_FuelCellSystem, fuelCellSystem);
 		}
@@ -756,7 +756,7 @@ public class JSONFileWriter : IOutputFileWriter
 	private Dictionary<string, object>[] GetFuelCells(IFuelCellSystemEngineeringInputData fuelCellSystem,
 		string basePath)
 	{
-		return fuelCellSystem.FuelCellComponents.Select(fc => new Dictionary<string, object> {
+		return fuelCellSystem.FuelCellStrings.Select(fc => new Dictionary<string, object> {
 			{JsonKeys.FuelCell_Count, fc.Count},
 			{JsonKeys.FuelCell_File, GetRelativePath(fc.FuelCellComponent.DataSource.SourceFile, basePath)}
         }).ToArray();

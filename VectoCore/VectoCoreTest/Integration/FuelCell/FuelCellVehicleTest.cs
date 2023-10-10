@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 		protected const string FCHV_E2_JOB = @"TestData/H2_FCV/GenericVehicleE2 - FCHV/FCHV_singleFc.vecto";
 
 		protected const string FCHV_E2_JOB_300kW = @"TestData/H2_FCV/GenericVehicleE2 - FCHV/FCHV_singleFc_300kW_fc.vecto";
-        protected const string FCHV_E2_JOB_multipleFC = @"TestData/H2_FCV/GenericVehicleE2 - FCHV/FCHV_singleFc.vecto";
+        protected const string FCHV_E2_JOB_multipleFC = @"TestData/H2_FCV/Group 2 FCHV 100kW FCS/Gr2_FCHV_100kW_FCS_10kWhBat_multipleFc.vecto";
 
 		private string TEST_WORKING_DIR;
 
@@ -66,8 +66,7 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 		[TestCase(FCHV_E2_JOB, 0, TestName = "FCHV E2 Job RD single FC")]
 		
 		[TestCase(FCHV_E2_JOB_multipleFC, 0, 
-			TestName="FCHV E2 Job RD multiple FC", 
-			IgnoreReason = "MultipleFC not implemented")]
+			TestName="FCHV E2 Job RD multiple FC")]
 
 
 		public void E2_FCHV_Job(string jobFile, int cycleIdx)
@@ -212,8 +211,8 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 			fcProperty.SetValue(components, GetFuelCellSystemInputData((max_fcPower_kW * 1E3).SI<Watt>(), (min_fcPower_kW * 1E3).SI<Watt>()));
 
 			TestContext.Progress.WriteLine(
-				$"FC ({components.FuelCellSystemInputData.FuelCellComponents.Single().FuelCellComponent.MinElectricPower}/" +
-				$"{components.FuelCellSystemInputData.FuelCellComponents.Single().FuelCellComponent.MaxElectricPower}) ");
+				$"FC ({components.FuelCellSystemInputData.FuelCellStrings.Single().FuelCellComponent.MinElectricPower}/" +
+				$"{components.FuelCellSystemInputData.FuelCellStrings.Single().FuelCellComponent.MaxElectricPower}) ");
 
 			
 			var engineeringDao = new EngineeringDataAdapter();
@@ -245,7 +244,7 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 			}
 	
 			Assert.IsTrue(run.FinishedWithoutErrors);
-			Assert.AreEqual(max_fcPower_kW, run.GetContainer().RunData.FuelCellSystemData.FuelCells.First().MaxElectricPower.ConvertToKiloWatt().Value);
+			Assert.AreEqual(max_fcPower_kW, run.GetContainer().RunData.FuelCellSystemData.FuelCellStrings.First().MaxPower.ConvertToKiloWatt().Value);
 
 			rd = run.GetContainer().RunData;
 
@@ -354,12 +353,12 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 
 
 			var fuelCellComponentMock = new Mock<IFuelCellComponentEngineeringInputData>();
-			var fuelCellComponentEntry = new FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>() {
+			var fuelCellComponentEntry = new FuelCellStringEntry<IFuelCellComponentEngineeringInputData>() {
 				Count = 1,
 				FuelCellComponent = fuelCellComponentMock.Object,
 			};
-			fuelCellSystemMock.Setup(fcs => fcs.FuelCellComponents).Returns(
-				new List<FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>>() {
+			fuelCellSystemMock.Setup(fcs => fcs.FuelCellStrings).Returns(
+				new List<FuelCellStringEntry<IFuelCellComponentEngineeringInputData>>() {
 					fuelCellComponentEntry
 				});
 

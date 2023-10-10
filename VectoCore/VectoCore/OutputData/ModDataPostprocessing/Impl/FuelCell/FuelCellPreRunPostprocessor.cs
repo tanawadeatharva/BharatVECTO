@@ -792,8 +792,8 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
         public bool CheckFCPower(FuelCellSystemData fcData, BatterySystemData batData, out string msg)
         {
             msg = "";
-            var minFcPower = fcData.FuelCells.Single().MinElectricPower;
-            var maxFcPower = fcData.FuelCells.Single().MaxElectricPower;
+			var minFcPower = 0.SI<Watt>(); //values below min power will be handled with time slicing
+			var maxFcPower = fcData.MaxPower;
 
             var tmpBatSystem = new BatterySystem(null, batData);
             tmpBatSystem.Initialize(batData.InitialSoC);

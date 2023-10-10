@@ -9,6 +9,7 @@ using NLog.Filters;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell;
 using TUGraz.VectoCore.Utils;
 
@@ -21,9 +22,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		/// </summary>
 		public const int FuelCellBatID = 0xFCB;
 
-		public IList<FuelCellData> FuelCells { get; set; }
+		public IList<FuelCellStringData> FuelCellStrings { get; set; }
 
 		public FuelCellPowerMap FuelCellPowerMap { get; set; }
+		public FuelCellSystemShareMap FuelCellShareMap { get; set; }
 
 		public Watt ChargingPower(Meter mileageCounterDistance)
 		{
@@ -33,18 +35,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		public IFuelCellPreRunInfo PreRunPostProcessing { get; set; }
 
 		private void CheckFcCount() {
-			if (FuelCells.Count > 1) {
-				throw new VectoException("Multiple fuel-cells are currently not supported");
+			if (FuelCellStrings.Count > 2) {
+				throw new VectoException("Only two strings are supported");
 			}
 
-			if (FuelCells.Count < 1) {
+			if (FuelCellStrings.Any(fcs => fcs.FcCount > 3)) {
+				throw new VectoException("Max 3 fuel cells per string are allowed");
+			}
+
+
+			if (FuelCellStrings.Count < 1) {
 				throw new VectoException("No fuel-cells provided");
 			}
         }
 		public Watt MinPower {
 			get {
 				CheckFcCount();
-				return FuelCells.First().MinElectricPower;
+				return FuelCellStrings.Min(fcs => fcs.MinPower);
 			}
 		}
 
@@ -53,7 +60,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 			get
 			{
 				CheckFcCount();
-				return FuelCells.First().MaxElectricPower;
+				return FuelCellStrings.Sum(fcs => fcs.MaxPower);
 			}
 		}
 
@@ -83,15 +90,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 
 		public Watt MinEffPower => MassFlowMap.MinPowerEff;
 
-		/// <summary>
-		/// id -> each different fuelcell component, subId -> if the same fuelcell component is used multiple times
-        /// </summary>
-        public FuelCellId Id { get; set; }
+		///// <summary>
+		///// id -> each different fuelcell string, subId -> if the same fuelcell component is used multiple times
+  //      /// </summary>
+  //      public FuelCellId Id { get; set; }
 	}
 
 	public class FuelCellStringData
 	{
 		private readonly FuelCellData _fcData;
+
+		public FuelCellData FcData => _fcData;
+
+		private readonly int _count;
+
 		public FuelCellStringData(FuelCellData fcData, int count)
 		{
 
@@ -100,9 +112,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 			}
 
 			_fcData = fcData;
+			_count = count;
 		}
 
-		
+		public int FcCount => _count;
+
+		public FuelCellStringMassFlowMap MassFlowMap { get; set; }
+
+
+
+		public Watt MaxPower => FcData.MaxElectricPower * _count;
+		public Watt MinPower => FcData.MinElectricPower;
 	}
 
 
@@ -462,13 +482,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		/// <param name="power"></param>
 		/// <param name="previous">If multiple shares lead to the same fuel consumption, a similar share than the previous one is selected</param>
 		/// <returns></returns>
-		public FuelCellShareEntry Lookup(Watt power, FuelCellShareEntry previous = null)
+		public FuelCellShareEntry Lookup(Watt power, FuelCellShare previous = null)
 		{
 			var shares = GetSharesWithLowestFuelConsumption(power);
 			var p = previous;
 
 			return previous != null 
-				? shares.OrderBy(s => Math.Sqrt(Math.Pow(s.Share.ShareA - p.Share.ShareA, 2) - Math.Pow(s.Share.ShareB - p.Share.ShareB, 2))).First() 
+				? shares.OrderBy(s => Math.Sqrt(Math.Pow(s.Share.ShareA - p.ShareA, 2))).First()
 				: shares.First();
 		}
 
@@ -523,13 +543,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 			var validSharesFuelConsumption = validShares.Select(s => new FuelCellShareEntry(power, fuelConsumption:_fcSystemMassFlowMap.Lookup(s, power), s));
 
 
-			var shares = validSharesFuelConsumption
-				.OrderBy(s => s.FuelConsumption)
-				.GroupBy(s => s.FuelConsumption)
-				.First().AsEnumerable();
-
-
-			return shares;
+			var orderedShares = validSharesFuelConsumption
+				.OrderBy(s => s.FuelConsumption);
+			var minFc = orderedShares.First().FuelConsumption;
+			foreach (var share in orderedShares) {
+				if (share.FuelConsumption.IsEqual(minFc)) {
+					yield return share;
+				} else {
+					yield break;
+				}
+			}
 		}
 
 

@@ -120,9 +120,9 @@ public class FuelCellTest
 		));
 
 
-		fuelCellSystemMock.SetupGet(fcs => fcs.FuelCellComponents).Returns(() =>
-			new List<FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>>() {
-				new FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>() {
+		fuelCellSystemMock.SetupGet(fcs => fcs.FuelCellStrings).Returns(() =>
+			new List<FuelCellStringEntry<IFuelCellComponentEngineeringInputData>>() {
+				new FuelCellStringEntry<IFuelCellComponentEngineeringInputData>() {
 					Count = 1,
 					FuelCellComponent = fuelCellComponentMock.Object,
 				}
