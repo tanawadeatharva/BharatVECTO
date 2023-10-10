@@ -210,15 +210,22 @@ public class FuelCellDataTest
 
 
 	[TestCase(493e3, new double[]{0.60}, 1, 1)]
-    [TestCase(494e3, new double[]{0.60}, 3, 3)]
-    [TestCase(495e3, new double[]{0.60}, 1, 1)]
-	public void FuelCellSystem_GetShareTestDifferentFuelCellDifferentRange(double power_W, double[] expected_a_s, int countfc1, int countfc2)
+	[TestCase(495e3, new double[]{0.60}, 1, 1)]
+	[TestCase(494e3, new double[] { 0.15 }, 3, 3)]
+    public void FuelCellSystem_GetShareTestDifferentFuelCellDifferentRange(double power_W, double[] expected_a_s, int countfc1, int countfc2)
 	{
 		TestShares(power_W, expected_a_s, 1,3, countfc1:countfc1, countfc2:countfc2);
 
 	}
 
+	[TestCase(214000, 3,3, 2, Description="The maximum power of the fuel cell is smaller than 2x minEffPower")]
+	public void GetActiveFuelCellCount(double power_W, int fcVariant, int fcCount, int expectedFcCount)
+	{
+		var fc = GetFuelCellStringMassFlowMap(fcVariant, fcCount);
+		var p = power_W.SI<Watt>();
+		Assert.That(fc.GetActiveFuelCellCount(p), Is.EqualTo(expectedFcCount));
 
+	}
 
 
 

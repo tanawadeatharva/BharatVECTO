@@ -308,6 +308,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		{
 			var measuredPoints = new List<Watt>();
 			var minEffPower = _fuelCellComponentMap.MinPowerEff;
+
+			if (_fcCount == 1) {
+				return _fuelCellComponentMap.MeasuredPoints;
+			}
+
 			for (int i = 1; i <= _fcCount; i++) {
 				//Get points before switching
 				if (i == 1) {
@@ -347,7 +352,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 
 		internal int GetActiveFuelCellCount(Watt p)
 		{
-			return (int)VectoMath.LimitTo(Math.Floor((p / _fuelCellComponentMap.MinPowerEff).Value()), 1, _fcCount);
+			var minFcCount = (int)Math.Ceiling(p / _fuelCellComponentMap.MaxPower);
+
+			var fcEffCount = (int)VectoMath.LimitTo(Math.Floor((p / _fuelCellComponentMap.MinPowerEff).Value()), 1, _fcCount);
+
+			return VectoMath.Max(minFcCount, fcEffCount);
+
 		}
 
 		public KilogramPerSecond Lookup(Watt power)
