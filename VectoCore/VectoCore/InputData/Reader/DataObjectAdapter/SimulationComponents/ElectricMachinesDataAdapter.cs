@@ -436,17 +436,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				var maxTorqueFldContSpeed =
 					-voltageLevel.FullLoadDriveTorque(voltageEntry.VoltageLevel, continuousTorqueSpeed);
 
-				var overloadTorque = VectoMath.Min(maxTqContSpeed, maxTorqueFldContSpeed);
-				var etaOvl = continuousTorqueSpeed * overloadTorque / voltageLevel.LookupElectricPower(
+				var overloadTorqueTrans = VectoMath.Min(maxTqContSpeed, maxTorqueFldContSpeed);
+				var etaOvl = continuousTorqueSpeed * overloadTorqueTrans / -voltageLevel.LookupElectricPower(
 					voltageEntry.VoltageLevel,
-					continuousTorqueSpeed, -overloadTorque, gear, true).ElectricalPower;
+					continuousTorqueSpeed, -overloadTorqueTrans, gear, true).ElectricalPower;
 
 				var continuousTorque = voltageEntry.ContinuousTorque * count / gearRatioUsedForMeasurement;
 
                 var continuousPowerLoss = (1 / etaOvl.Value() - 1) * continuousTorqueSpeed * continuousTorque;
 				var ovlElPwr = voltageLevel.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
-					-overloadTorque, gear).ElectricalPower;
-				var overloadPwrLoss = -ovlElPwr - overloadTorque * continuousTorqueSpeed; // loss needs to be positive
+					-overloadTorqueTrans, gear).ElectricalPower;
+				var overloadTorque = (voltageEntry.OverloadTorque ?? 0.SI<NewtonMeter>()) * count / gearRatioUsedForMeasurement;
+                var overloadPwrLoss = -ovlElPwr - overloadTorque * overloadTestSpeed; // loss needs to be positive
 				var overloadBuffer = (overloadPwrLoss - continuousPowerLoss) * voltageEntry.OverloadTime;
 				return new OverloadData() {
 					OverloadBuffer = overloadBuffer,
