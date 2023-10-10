@@ -26,6 +26,15 @@ Make and Model
 Capacity \[Ah\]
 :   Nominal capacity of the battery
 
+Testing Temp \[°C\]
+:   Battery testing temperature
+
+Connector Subsystems Included
+:	Only relevant if representative battery sub-system is tested: Set to ‘true’ if representative cable harness for connecting battery sub-systems was included in testing. Always set to ‘true’ if complete battery system was tested.
+
+Junctionbox Included
+:	Only relevant if representative battery sub-system is tested: Set to ‘true’ if representative junction box with shut-off device and fuses was included in testing. Always set to ‘true’ if complete battery system was tested
+
 SoC min \[%\]
 :   Minimum allowed state of charge
 
@@ -73,6 +82,9 @@ Max Current Chg \[A\]
 
 Max Current Dischg \[A\]
 :	Maximum allowed current discharge
+
+Testing Temp \[°C\]
+:   Super Cap testing temperature
 
 
 ### Controls

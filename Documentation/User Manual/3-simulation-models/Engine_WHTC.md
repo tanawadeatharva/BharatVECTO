@@ -17,10 +17,10 @@ with the correction factor CF~urb~, CF~rur~, CF~mot~ coming from the [Engine](#e
 
 |  Mission profile   | WF~urb~ | WF~rur~ | WF~mot~ |
 |--------------------|---------|---------|---------|
-| Long haul          | 11%     | 0%      | 89%     |
+| Long haul          | 0%      | 0%      | 100%    |
 | Regional delivery  | 17%     | 30%     | 53%     |
 | Urban delivery     | 69%     | 27%     | 4%      |
-| Municipal utility | 98%     | 0%      | 2%      |
+| Municipal utility  | 98%     | 0%      | 2%      |
 | Construction       | 62%     | 32%     | 6%      |
 | Citybus            | 100%    | 0%      | 0%      |
 | Interurban bus     | 45%     | 36%     | 19%     |

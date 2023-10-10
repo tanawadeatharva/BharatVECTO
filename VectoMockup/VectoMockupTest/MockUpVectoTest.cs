@@ -157,6 +157,7 @@ namespace VectoMockupTest
 		#region Complete(d) Bus Input
 
 		protected const string Conventional_CompletedBusInput = BasePath + @"CompletedBus\Conventional_completedBus_2.xml";
+		protected const string Conventional_CompletedBusInputNoAirdrag = BasePathMockup + @"CompletedBus\Conventional_completedBus_NoAirdrag.xml";
 		protected const string Conventional_CompletedBusInput_TypeApproval = BasePath + @"CompletedBus\Conventional_completedBus_2_TypeApprovalNumber.xml";
 		protected const string Conventional_CompletedBusInput_AirdragV10 = BasePathMockup + @"CompletedBus\Conventional_completedBus_AirdragV10.xml";
 		protected const string Conventional_CompletedBusInput_AirdragV20 = BasePathMockup + @"CompletedBus\Conventional_completedBus_AirdragV20.xml";
@@ -571,6 +572,7 @@ namespace VectoMockupTest
 		
 
 		[TestCase(Conventional_PrimaryBus_Tyres, Conventional_CompletedBusInput, "Conventional", TestName = "Complete Conventional Bus Different Tyres")]
+		[TestCase(Conventional_PrimaryBus_Tyres, Conventional_CompletedBusInputNoAirdrag, "Conventional", TestName = "Complete Conventional Bus NoAirdrag")]
 		[TestCase(Conventional_PrimaryBus_NoRetarder, Conventional_CompletedBusInput, "Conventional", TestName = "Complete_ConventionalPrimaryBus_NoRetarder")]
 		[TestCase(Conventional_PrimaryBus_DF, Conventional_CompletedBusInput, "Conventional", TestName = "Complete ConventionalPrimaryBus_DualFuel")]
 		[TestCase(Conventional_PrimaryBus_AT_Angledrive, Conventional_CompletedBusInput, "Conventional", TestName = "Complete ConventionalPrimaryBus_AT_Angledrive")]

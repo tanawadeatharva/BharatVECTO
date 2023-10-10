@@ -295,13 +295,13 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
                 .Select(x => Tuple.Create(x,
 					x.Torque.IsGreater(0)
 						? x.MotorSpeed * x.Torque / x.PowerElectrical
-						: x.PowerElectrical / (x.MotorSpeed * x.Torque))).Where(x => x.Item2.IsGreater(1)).ToList();
-			if (highEff.Any()) {
+						: x.PowerElectrical / (x.MotorSpeed * x.Torque))).Where(x => x.Item2.IsGreater(1)).ToArray();
+			if (highEff.Any(x => x.Item2.IsGreater(2))) {
 				if (mode == ExecutionMode.Declaration) {
-					throw new VectoException("Electric power map contains entries with efficiencies > 1! {1} entries: {0}",
+					throw new VectoException("Electric power map contains entries with efficiencies > 2! {1} entries: {0}",
 						highEff.Select(x =>
 							$"{x.Item1.MotorSpeed.AsRPM} rpm {x.Item1.Torque} => {x.Item1.PowerElectrical}").Join(),
-						highEff.Count);
+						highEff.Length);
 				}
 
 				LogManager.GetLogger(typeof(ElectricMotorMapReader).FullName).Debug(
@@ -309,6 +309,17 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					highEff.Select(x =>
 						$"{x.Item1.MotorSpeed.AsRPM} rpm {x.Item1.Torque} => {x.Item1.PowerElectrical}").Join());
 
+			}
+			if (highEff.Any()) {
+				LogManager.GetLogger(typeof(ElectricMotorMapReader).FullName).Debug(
+					"Electric power map contains {0} entries with efficiencies > 1! These will be set to an efficiency of {1}!", highEff.Length, DeclarationData.ElectricMachineDefaultEfficiencyFallback);
+				foreach (var entry in highEff) {
+					// entry contains a referencee to the original entry. so changing it in this array also changes the entries array.
+					entry.Item1.PowerElectrical = entry.Item1.Torque * entry.Item1.MotorSpeed *
+												(entry.Item1.Torque.IsGreater(0)
+													? 1 / DeclarationData.ElectricMachineDefaultEfficiencyFallback
+													: DeclarationData.ElectricMachineDefaultEfficiencyFallback);
+				}
 			}
             return entries;
 		}

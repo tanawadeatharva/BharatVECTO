@@ -220,14 +220,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 			return CreateFromFile<IAirdragDeclarationInputData>(filename);
 		}
 
-		private TOut CreateFromFile<TOut>(string filename) where TOut : class
+		// when using this method to create component data, make sure to have a binding like this for the component:
+		//  Bind<IComponentInputData>().ToConstructor<XMLElectricMotorDeclarationInputDataProviderV23>((syntax) => new XMLElectricMotorDeclarationInputDataProviderV23(syntax.Inject<XmlNode>(), syntax.Inject<string>()))
+		//   .Named(XMLElectricMotorDeclarationInputDataProviderV23.QUALIFIED_XSD_TYPE);
+		public TOut CreateFromFile<TOut>(string filename) where TOut : class
 		{
 			using (var reader = XmlReader.Create(filename)) {
 				return CreateFromXmlReader<TOut>(reader, filename);
 			}
 		}
 
-		private TOut CreateFromStream<TOut>(Stream inputData) where TOut : class
+		public TOut CreateFromStream<TOut>(Stream inputData) where TOut : class
 		{
 			using (var reader = XmlReader.Create(inputData)) {
 				return CreateFromXmlReader<TOut>(reader, null);
@@ -254,11 +257,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 		public IAirdragDeclarationInputData CreateAirdrag(XmlReader inputData)
 		{
 			throw new NotImplementedException();
-		}
+        }
 
 		#endregion
 
-		private IComponentInputData ReadXMLDoc(XmlReader inputData, string fileName)
+        private IComponentInputData ReadXMLDoc(XmlReader inputData, string fileName)
 		{
 			var xmlDoc = new XmlDocument();
 			xmlDoc.Load(inputData);

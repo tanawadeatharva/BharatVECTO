@@ -1079,38 +1079,6 @@ lbFound:
                 Dim runsFactory As ISimulatorFactory = SimulatorFactory.CreateSimulatorFactory(mode, input, fileWriter)
                 'Remove
 
-               
-                runsFactory.ModifyRunData = Sub(data) 
-                    Dim runData = data
-                    If(cbInitialSOC.Checked And (runData.OVCMode = OvcHevMode.ChargeDepleting))
-                        
-                        Dim initSOC = Double.Parse(tbInitSOCinPercent.Text) / 100
-
-                        
-
-                        If(runData.HybridStrategyParameters IsNot Nothing)
-                            runData.HybridStrategyParameters.InitialSoc = initSOC
-                            runData.HybridStrategyParameters.TargetSoC = initSOC - 0.01
-                        End If
-
-                        If(runData.BatteryData IsNot Nothing)
-                            runData.BatteryData.InitialSoc = initSOC
-                        End If
-
-                        If(runData.SuperCapData IsNot Nothing)
-                            runData.SuperCapData.InitialSoC = initSOC
-                        End If
-                    End If
-
-                    runData.IterativeRunStrategy.Enabled = Not cbCSIteratingModeDeactivated.Checked
-                End Sub
-
-               
-
-
-
-
-
                 runsFactory.WriteModalResults = Cfg.ModOut
                 runsFactory.ModalResults1Hz = Cfg.Mod1Hz
                 runsFactory.Validate = cbValidateRunData.Checked
@@ -1123,16 +1091,6 @@ lbFound:
                     fileWriters.Add(run, fileWriter)
                 Next
 
-                ' TODO MQ-20200525: Remove the following loop in production (or after evaluation of LAC!!
-                If not string.IsNullOrWhiteSpace(tbMinSpeedLAC.Text) then
-                    'for Each run as JobContainer.RunEntry In jobContainer.Runs
-                    '    dim tmpDriver as DriverData = CType(run.Run, VectoRun).GetContainer().RunData.DriverData
-                    '    tmpDriver.LookAheadCoasting.Enabled = True
-                    '    tmpDriver.LookAheadCoasting.MinSpeed = tbMinSpeedLAC.Text.ToDouble().KMPHtoMeterPerSecond()
-                    'Next
-                end if
-
-                    
                 sender.ReportProgress(0,
                                       New VectoProgress _
                                          With {.Target = "ListBox",
@@ -1573,10 +1531,6 @@ lbFound:
         cbSaveVectoRunData.Checked = Cfg.SaveVectoRunData
         tbOutputFolder.Text = Cfg.OutputFolder
 
-        'Test Settings for 2nd amendment
-        cbCSIteratingModeDeactivated.Checked = Cfg.ChargeSustainingIterationModeDeActivated
-        cbInitialSOC.Checked = Cfg.InitialSOCOverride
-        tbInitSOCinPercent.Text = Cfg.InitialSOCOverrideValue.ToString()
     End Sub
 
     'Update config class from options in GUI, e.g. before running calculations 
@@ -1587,16 +1541,6 @@ lbFound:
         Cfg.SaveVectoRunData = cbSaveVectoRunData.Checked
         Cfg.OutputFolder = tbOutputFolder.Text
 
-        Cfg.ChargeSustainingIterationModeDeActivated = cbCSIteratingModeDeactivated.Checked
-        Cfg.InitialSOCOverride =  cbInitialSOC.Checked 
-
-        Dim initSoc as Double
-        Dim parsingOk = Double.TryParse(tbInitSOCinPercent.Text, initSoc)
-        Cfg.InitialSOCOverrideValue = If(parsingOk, initSoc, 0d)
-
-        
-        'Test Settings for 2nd amendment
-        '
     End Sub
 
 #End Region
@@ -2306,7 +2250,7 @@ lbFound:
         OpenVECTOeditor("<New>", VectoSimulationJobType.IEPC_S)
     End Sub
 
-    Private Sub tbInitSOCinPercent_TextChanged(sender As Object, e As EventArgs) Handles tbInitSOCinPercent.TextChanged
+    Private Sub tbInitSOCinPercent_TextChanged(sender As Object, e As EventArgs) 
         
     End Sub
 End Class
