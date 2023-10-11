@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		public Watt MaxElectricPower { get; set; }
 		public Watt MinElectricPower { get; set; }
 
-		public Watt MinEffPower => MassFlowMap.MinPowerEff;
+		public Watt MinEffPower => MassFlowMap.MinEffPower;
 
 		///// <summary>
 		///// id -> each different fuelcell string, subId -> if the same fuelcell component is used multiple times
@@ -254,14 +254,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		{
 			Entries = entries.OrderBy(e => e.P_el_out).ToArray();
 		}
-
-		public KilogramPerSecond Lookup(Watt power)
+		/// <summary>
+		/// Looks up the fuel consumption for the given power
+		/// </summary>
+		/// <param name="power"></param>
+		/// <param name="useMinEfficiency">If set to true, the maximum efficiency is used if <see cref="power"/> is smaller than <see cref="MinEffPower"/></param>
+		/// <returns></returns>
+		/// <exception cref="VectoException"></exception>
+		public KilogramPerSecond Lookup(Watt power, bool useMinEfficiency = true)
 		{
 			if (power < 0) {
 				throw new VectoException($"{nameof(power)} power must be > 0");
 			}
-			if (power < MinPowerEff) {
-				return LookupPowerInMap(MinPowerEff) * (power / MinPowerEff);
+			if (useMinEfficiency && power < MinEffPower) {
+				return LookupPowerInMap(MinEffPower) * (power / MinEffPower);
 
 
 
@@ -297,7 +303,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		/// <summary>
 		/// Point with the maximal efficiency, usually at low powers, used to split the power between the fuel cells in a string
 		/// </summary>
-		public Watt MinPowerEff => Entries.MaxBy(e => e.P_el_out / e.H2)?.P_el_out;
+		public Watt MinEffPower => Entries.MaxBy(e => e.P_el_out / e.H2)?.P_el_out;
 
 
 
@@ -314,7 +320,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		public Watt MaxPower => _fuelCellComponentMap.MaxPower * _fcCount;
 
 
-		public Watt MinPowerEff => _fuelCellComponentMap.MinPowerEff;
+		public Watt MinPowerEff => _fuelCellComponentMap.MinEffPower;
 
 		public FuelCellMassFlowMap _fuelCellComponentMap;
 		private readonly int _fcCount;
@@ -327,7 +333,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		private List<Watt> GetMeasuredPoints()
 		{
 			var measuredPoints = new List<Watt>();
-			var minEffPower = _fuelCellComponentMap.MinPowerEff;
+			var minEffPower = _fuelCellComponentMap.MinEffPower;
 
 			if (_fcCount == 1) {
 				return _fuelCellComponentMap.MeasuredPoints;
@@ -374,7 +380,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		{
 			var minFcCount = (int)Math.Ceiling(p / _fuelCellComponentMap.MaxPower);
 
-			var fcEffCount = (int)VectoMath.LimitTo(Math.Floor((p / _fuelCellComponentMap.MinPowerEff).Value()), 1, _fcCount);
+			var fcEffCount = (int)VectoMath.LimitTo(Math.Floor((p / _fuelCellComponentMap.MinEffPower).Value()), 1, _fcCount);
 
 			return VectoMath.Max(minFcCount, fcEffCount);
 

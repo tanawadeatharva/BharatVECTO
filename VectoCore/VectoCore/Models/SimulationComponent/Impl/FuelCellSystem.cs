@@ -62,9 +62,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var generatedPower = 0.SI<Watt>();
 			
-			generatedPower += _fuelCellStrings[0].Request(targetPower * shareResult.Share.ShareA, dryRun);
+			generatedPower += _fuelCellStrings[0].Request(targetPower * shareResult.Share.ShareA, dryRun, dt);
 			if (_fuelCellStrings.Count > 1) {
-				generatedPower += _fuelCellStrings[1].Request(targetPower * shareResult.Share.ShareB, dryRun);
+				generatedPower += _fuelCellStrings[1].Request(targetPower * shareResult.Share.ShareB, dryRun, dt);
 			}
 
 			if (!dryRun) {

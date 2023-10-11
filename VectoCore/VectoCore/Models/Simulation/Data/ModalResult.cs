@@ -311,9 +311,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			ModalResultField.Fc_fuelCellSystem_actual,
 		};
 
-		public static readonly ModalResultField[] FuelCellComponentSignals = {
+		public static readonly ModalResultField[] FuelCellSignals = {
 			ModalResultField.FC_FCS,
 			ModalResultField.P_FCS,
+		};
+
+		public static readonly ModalResultField[] FuelCellComponentSignals = {
+			ModalResultField.t_FCS_On,
+			ModalResultField.P_FCS_MinEff,
 		};
 
 
@@ -451,9 +456,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 					break;
 				case FuelCellSystem _: CreateColumns(FuelCellSystemSignals);
 					break;
-				case FuelCellString fcs: CreateFuelCellColumns(fcs.StringId,  FuelCellComponentSignals);
+				case FuelCellString fcs: CreateFuelCellColumns(fcs.StringId,  FuelCellSignals);
 					break;
-				case FuelCell fc: CreateFuelCellColumns(fc.Id.ToString(), FuelCellComponentSignals);
+				case FuelCell fc: 
+					CreateFuelCellColumns(fc.Id.ToString(), FuelCellSignals.Concat(FuelCellComponentSignals));
 					break;
 				case ElectricAuxiliaries _:
 					CreateElectricAuxColumns();
@@ -504,7 +510,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			}
 		}
 
-		protected internal void CreateFuelCellColumns(string id, ModalResultField[] signals)
+		protected internal void CreateFuelCellColumns(string id, IEnumerable<ModalResultField> signals)
 		{
 			foreach (var entry in signals) {
 				FuelCellColumns.Add(string.Format(entry.GetCaption(), id));

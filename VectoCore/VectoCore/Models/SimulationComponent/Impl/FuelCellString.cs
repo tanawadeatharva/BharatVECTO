@@ -41,13 +41,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 
-		public Watt Request(Watt requestedPower, bool dryRun)
+		public Watt Request(Watt requestedPower, bool dryRun, Second dt)
 		{
 			var fcCount = _fcStringMap.GetActiveFuelCellCount(requestedPower);
 			var generatedPower = 0.SI<Watt>();
 			var fc = 0.SI<KilogramPerSecond>();
 			foreach (var fuelCell in _fuelCells.Take(fcCount)) {
-				generatedPower += fuelCell.Request(requestedPower / fcCount, dryRun);
+				generatedPower += fuelCell.Request(requestedPower / fcCount, dt, dryRun);
 				if (!dryRun) {
 					fc += (fuelCell.CurrentState.FuelConsumption);
                 }

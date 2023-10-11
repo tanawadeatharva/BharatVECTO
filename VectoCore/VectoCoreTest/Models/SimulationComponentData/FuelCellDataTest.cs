@@ -20,7 +20,7 @@ public class FuelCellDataTest
 
 		Assert.That(massFlowMap.MinPower.Value(), Is.EqualTo(30*1e3));
 		Assert.That(massFlowMap.MaxPower.Value(), Is.EqualTo(300*1e3));
-		Assert.That(massFlowMap.MinPowerEff.Value(), Is.EqualTo(60*1e3));
+		Assert.That(massFlowMap.MinEffPower.Value(), Is.EqualTo(60*1e3));
 	}
 	//[TestCase(30.0, 2002.0)] <- without timeslicing
 	[TestCase(30.0, 1501.5)]
