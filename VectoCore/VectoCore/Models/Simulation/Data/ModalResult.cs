@@ -361,7 +361,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		protected internal List<PowertrainPosition> ElectricMotors = new List<PowertrainPosition>();
 
+		protected internal List<string> FuelCellStringColumns = new List<string>();
 		protected internal List<string> FuelCellColumns = new List<string>(); //contains fuel cell ids as string
+		protected internal List<string> FuelCellComponentIds = new List<string>();
+
 
 		protected internal Dictionary<int, Dictionary<ModalResultField, DataColumn>> BatteryColumns =
 			new Dictionary<int, Dictionary<ModalResultField, DataColumn>>();
@@ -456,10 +459,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 					break;
 				case FuelCellSystem _: CreateColumns(FuelCellSystemSignals);
 					break;
-				case FuelCellString fcs: CreateFuelCellColumns(fcs.StringId,  FuelCellSignals);
+				case FuelCellString fcs: 
+					CreateFuelCellColumns(fcs.StringId,  FuelCellSignals, FuelCellStringColumns, FuelCellColumns);
 					break;
 				case FuelCell fc: 
-					CreateFuelCellColumns(fc.Id.ToString(), FuelCellSignals.Concat(FuelCellComponentSignals));
+					CreateFuelCellColumns(fc.Id.ToString(), FuelCellSignals, FuelCellColumns);
+					CreateFuelCellColumns(fc.Id.ToString(), FuelCellComponentSignals, FuelCellColumns);
+					FuelCellStringColumns.Add(fc.Id.ToString());
 					break;
 				case ElectricAuxiliaries _:
 					CreateElectricAuxColumns();
@@ -510,10 +516,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			}
 		}
 
-		protected internal void CreateFuelCellColumns(string id, IEnumerable<ModalResultField> signals)
+		protected internal void CreateFuelCellColumns(string id, IEnumerable<ModalResultField> signals, params List<string>[] columnLists)
 		{
 			foreach (var entry in signals) {
-				FuelCellColumns.Add(string.Format(entry.GetCaption(), id));
+				foreach (var columnList in columnLists) {
+					columnList.Add(string.Format(entry.GetCaption(), id));
+				}
+
 				var col = Columns.Add(string.Format(entry.GetAttribute().Caption, id), typeof(SI));
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] = entry.GetAttribute().Decimals;
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =

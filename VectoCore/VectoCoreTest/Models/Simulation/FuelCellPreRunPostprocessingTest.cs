@@ -286,67 +286,61 @@ public class FuelCellPreRunPostprocessingT
 
 
 
-	[Test]
-	public void GetFuelCellRaw([Range(1, 1000)]double windowSize_m)
-	{
-
-
-
-
-	}
-
-
 
 
 	//[TestCase(0)]
 	[TestCase(1, true)]
 	[TestCase(1, false)]
+	[Ignore("CalculateFuelCellPowerDemand is obsolete")]
     public void FuelCellPostProcessing_DistanceWindow__SoCRange(int cycleIdx, bool tryShift)
 	{
-		Assert.Fail("Update test for multiple fc");
 		string jobFile = "TestData/H2_FCV/PostProcessing/FCHV_singleFc.vecto";
 
 		var (modData, rundata) = RunFCHV_PEV_Simulation(jobFile, cycleIdx);
 
 		var fcPostProcessor = new FuelCellPreRunPostprocessor(modData);
-		//var fcData = new FuelCellSystemData() {
-		//	FuelCells = new List<FuelCellData>() {
-		//		new FuelCellData() {
-		//			MinElectricPower = 60.SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
-		//			MaxElectricPower = 300.SI(Unit.SI.Kilo.Watt).Cast<Watt>()
-		//		}
-		//	}
-		//};
+		var fcData = new FuelCellSystemData()
+		{
+			FuelCellStrings = new List<FuelCellStringData>() {
+				new FuelCellStringData(new FuelCellData() {
+					MinElectricPower = 60.SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
+					MaxElectricPower = 300.SI(Unit.SI.Kilo.Watt).Cast<Watt>()
+                }, 1)
+			}
+		};
 
-		//rundata.BatteryData.SetUsableCapacity(10.SI(Unit.SI.Kilo.Watt.Hour).Cast<WattSecond>());
-		//var tmpSystem = new BatterySystem(null, rundata.BatteryData);
-		//var minSoc = tmpSystem.MinSoC;
-		//var maxSoc = tmpSystem.MaxSoC;
+		rundata.BatteryData.SetUsableCapacity(10.SI(Unit.SI.Kilo.Watt.Hour).Cast<WattSecond>());
+		var tmpSystem = new BatterySystem(null, rundata.BatteryData);
+		var minSoc = tmpSystem.MinSoC;
+		var maxSoc = tmpSystem.MaxSoC;
 
-		//for (Meter d = modData.Distance; d > 2.SI<Meter>(); d /= 2) {
+		for (Meter d = modData.Distance; d > 2.SI<Meter>(); d /= 2)
+		{
 
-		//	var success = fcPostProcessor.CalculateFuelCellPowerDemandForSoC(d, fcData, rundata.BatteryData, out var entries, rundata.BatteryData.InitialSoC, out var minTrace, out var maxTrace);
+			var success = fcPostProcessor.CalculateFuelCellPowerDemandForSoC(d, fcData, rundata.BatteryData, out var entries, rundata.BatteryData.InitialSoC, out var minTrace, out var maxTrace);
 
-		//	var range = maxTrace - minTrace;
-		//	TestContext.Progress.WriteLine($"s:{d}, soc_range:{range}, $[{minTrace}|{maxTrace}], {(success ? "success" : "")}");
+			var range = maxTrace - minTrace;
+			TestContext.Progress.WriteLine($"s:{d}, soc_range:{range}, $[{minTrace}|{maxTrace}], {(success ? "success" : "")}");
 
-  //          if (!success && tryShift) {
-		//		if(fcPostProcessor.TryShiftInitialSoC(minSoc,maxSoc,rundata.BatteryData.InitialSoC, minTrace, maxTrace, out var init_soc))
-		//		{
-		//			TestContext.Progress.WriteLine($"\t Shifted soc {init_soc}");
-		//			success = fcPostProcessor.CalculateFuelCellPowerDemandForSoC(d, fcData, rundata.BatteryData, out entries, init_soc, out minTrace, out maxTrace);
-		//			range = maxTrace - minTrace;
+			if (!success && tryShift)
+			{
+				if (fcPostProcessor.TryShiftInitialSoC(minSoc, maxSoc, rundata.BatteryData.InitialSoC, minTrace, maxTrace, out var init_soc))
+				{
+					TestContext.Progress.WriteLine($"\t Shifted soc {init_soc}");
+					success = fcPostProcessor.CalculateFuelCellPowerDemandForSoC(d, fcData, rundata.BatteryData, out entries, init_soc, out minTrace, out maxTrace);
+					range = maxTrace - minTrace;
 
-		//			TestContext.Progress.WriteLine($"\t s:{d}, soc_range:{range}, $[{minTrace}|{maxTrace}], {(success ? "success" : "")}");
-  //              }
-		//	}
+					TestContext.Progress.WriteLine($"\t s:{d}, soc_range:{range}, $[{minTrace}|{maxTrace}], {(success ? "success" : "")}");
+				}
+			}
 
-		//	if (success) {
-		//		Assert.Pass();
-		//		break;
-		//	}
-		//}
-		//Assert.Fail();
+			if (success)
+			{
+				Assert.Pass();
+				break;
+			}
+		}
+		Assert.Fail();
 
 	}
 
@@ -355,23 +349,23 @@ public class FuelCellPreRunPostprocessingT
 	[TestCase(1, 10000)]
 	public void FuelCellPostProcessing_DistanceWindow(int cycleIdx, int distance)
 	{
-		Assert.Fail("Update for multiple fc");
-		//string jobFile = "TestData/H2_FCV/PostProcessing/FCHV_singleFc.vecto";
+		
+		string jobFile = "TestData/H2_FCV/PostProcessing/FCHV_singleFc.vecto";
 
-		//var (modData, rundata) = RunFCHV_PEV_Simulation(jobFile, cycleIdx);
+		var (modData, rundata) = RunFCHV_PEV_Simulation(jobFile, cycleIdx);
 
-		//var fcPostProcessor = new FuelCellPreRunPostprocessor(modData);
-		//var fcData = new FuelCellSystemData()
-		//{
-		//	FuelCells = new List<FuelCellData>() {
-		//		new FuelCellData() {
-		//			MinElectricPower = 60.SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
-		//			MaxElectricPower = 300.SI(Unit.SI.Kilo.Watt).Cast<Watt>()
-		//		}
-		//	}
-		//};
+		var fcPostProcessor = new FuelCellPreRunPostprocessor(modData);
+		var fcData = new FuelCellSystemData()
+		{
+			FuelCellStrings = new List<FuelCellStringData>() {
+				new FuelCellStringData(new FuelCellData() {
+					MinElectricPower = 60.SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
+					MaxElectricPower = 300.SI(Unit.SI.Kilo.Watt).Cast<Watt>()
+                }, 1)
+			}
+		};
 
-		//fcPostProcessor.CalculateFuelCellPowerDemandForWindowSize(distance.SI<Meter>(), fcData, rundata.BatteryData, out _);
+		fcPostProcessor.CalculateFuelCellPowerDemandForWindowSize(distance.SI<Meter>(), fcData, rundata.BatteryData, out _);
 	}
 
 
@@ -382,25 +376,24 @@ public class FuelCellPreRunPostprocessingT
 	[TestCase(2, 10000)]
 
 	[TestCase(3, 10000)]
-    public void FuelCellPostProcessing_DistanceWindow_small_bat(int cycleIdx, int distance)
+	public void FuelCellPostProcessing_DistanceWindow_small_bat(int cycleIdx, int distance)
 	{
-		Assert.Fail("Update for use with multiple fc");
-		//string jobFile = "TestData/H2_FCV/PostProcessing/FCHV_singleFc_smallBat.vecto";
+		string jobFile = "TestData/H2_FCV/PostProcessing/FCHV_singleFc_smallBat.vecto";
 
-		//var (modData, rundata) = RunFCHV_PEV_Simulation(jobFile, cycleIdx);
+		var (modData, rundata) = RunFCHV_PEV_Simulation(jobFile, cycleIdx);
 
-		//var fcPostProcessor = new FuelCellPreRunPostprocessor(modData);
-		//var fcData = new FuelCellSystemData()
-		//{
-		//	FuelCells = new List<FuelCellData>() {
-		//		new FuelCellData() {
-		//			MinElectricPower = 60.SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
-		//			MaxElectricPower = 300.SI(Unit.SI.Kilo.Watt).Cast<Watt>()
-		//		}
-		//	}
-		//};
+		var fcPostProcessor = new FuelCellPreRunPostprocessor(modData);
+		var fcData = new FuelCellSystemData()
+		{
+			FuelCellStrings = new List<FuelCellStringData>() {
+				new FuelCellStringData(new FuelCellData() {
+					MinElectricPower = 60.SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
+					MaxElectricPower = 300.SI(Unit.SI.Kilo.Watt).Cast<Watt>()
+				}, 1)
+			}
+        };
 
-		//var entries = fcPostProcessor.CalculateFuelCellPowerDemand(fcData, rundata.BatteryData);
+		var entries = fcPostProcessor.CalculateFuelCellPowerDemand(fcData, rundata.BatteryData);
 	}
 
 	[TestCase(0, 100, 63, 0.05, 62.5)]

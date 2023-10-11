@@ -81,6 +81,7 @@ namespace TUGraz.VectoCore.OutputData
 		private KilogramPerWattSecond _fuelCellLine = null;
 
 		public KilogramPerWattSecond FuelCellLine => GetFuelCellCorrectionFactor();
+
 		//public KilogramPerWattSecond FuelCellLine => _fuelCellLine ?? (_fuelCellLine = GetFuelCellCorrectionFactor());
 
 

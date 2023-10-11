@@ -1239,25 +1239,23 @@ namespace TUGraz.VectoCore.OutputData
 			new Dictionary<string, Tuple<ModalResultField[], WriteSumEntry>>() {
 				{ FuelCellFields.FCMAP_H,
 					SumFunc((r, m) => {
-						return 0.SI<KilogramPerSecond>().ConvertToGrammPerHour();
-						//return r.FuelCellSystemData.FuelCells.Aggregate(0.SI<KilogramPerSecond>(),
-						//	(a, fc) => {
-						//		var singleFc =
-						//			(m.TimeIntegral<Kilogram>(ModalResultField.FC_FCS.Format(fc.Id)) / m.Duration) ??
-						//			0.SI<KilogramPerSecond>();
-						//		return a + singleFc;
-						//	}).ConvertToGrammPerHour();
+						return m.Data.FuelCellComponentIds.Aggregate(0.SI<KilogramPerSecond>(),
+							(a, id) => {
+								var singleFc =
+									(m.TimeIntegral<Kilogram>(ModalResultField.FC_FCS.Format(id)) / m.Duration) ??
+									0.SI<KilogramPerSecond>();
+								return a + singleFc;
+							}).ConvertToGrammPerHour();
 					})},
 				{ FuelCellFields.FCMAP_KM,
 					SumFunc((r, m) => {
-						return 0.SI<KilogramPerSecond>().ConvertToGrammPerHour();
-       //                 return r.FuelCellSystemData.FuelCells.Aggregate(0.SI<KilogramPerMeter>(),
-							//(a, fc) => {
-							//	var singleFc = (m.TimeIntegral<Kilogram>(ModalResultField.FC_FCS.Format(fc.Id)) /
-							//					m.Distance) ??
-							//					0.SI<KilogramPerMeter>();
-							//	return a + singleFc;
-							//}).ConvertToGrammPerKiloMeter();
+						return m.Data.FuelCellComponentIds.Aggregate(0.SI<KilogramPerMeter>(),
+							(a, id) => {
+								var singleFc =
+									(m.TimeIntegral<Kilogram>(ModalResultField.FC_FCS.Format(id)) / m.Distance) ??
+									0.SI<KilogramPerMeter>();
+								return a + singleFc;
+							}).ConvertToGrammPerKiloMeter();
 					})}, 
 				{ FuelCellFields.FCFINAL_H, SumFunc((r, m) =>
 						m.CorrectedModalData.FuelConsumptionCorrection(FuelData.H2).FC_FINAL_H.ConvertToGrammPerHour())}, 

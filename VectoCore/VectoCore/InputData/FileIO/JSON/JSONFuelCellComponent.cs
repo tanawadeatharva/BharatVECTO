@@ -31,14 +31,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#endregion
 
 		#region Implementation of IFuelCellComponentEngineeringInputData
-
 		public TableData MassFlowMap => ReadTableData(Body.GetEx<string>("MassFlowMap"), "FuelCell MassFlowMap", true);
 
-		public Watt MaxElectricPower => Body.GetEx<double>("MaxElectricPower").SI<Watt>() * 1000;
+		public Watt MaxElectricPower => Body.GetEx<double>("MaxElectricPower").SI(Unit.SI.Kilo.Watt).Cast<Watt>();
 
-        public Watt MinElectricPower => Body.GetEx<double>("MinElectricPower").SI<Watt>() * 1000;
-
-        #endregion
+        public Watt MinElectricPower => Body.GetEx<double>("MinElectricPower").SI(Unit.SI.Kilo.Watt).Cast<Watt>();
+		#endregion
     }
 
 
