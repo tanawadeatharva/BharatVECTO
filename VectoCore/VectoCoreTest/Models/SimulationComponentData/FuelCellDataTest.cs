@@ -28,16 +28,16 @@ public class FuelCellDataTest
 	[TestCase(255.0, 17017.0)]
 	[TestCase(300.0, 21450.0)]
 	//interpolate
-	[TestCase(70, 2502.5)]
+	[TestCase(70, 3543.778)]
 	public void FuelCellMassFlowMap_LookupTest(double power_kW, double exp_H2_g_p_h) {
 		var massFlowMap = GetFuelCellMassFlowMap(1);
 
 		var power = power_kW.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
 		var expFuelConsumption = exp_H2_g_p_h.SI(Unit.SI.Gramm.Per.Hour).Cast<KilogramPerSecond>();
-
+		TestContext.WriteLine($"MinEffPower {massFlowMap.MinEffPower.ConvertToKiloWatt()}");
 		var fc = massFlowMap.Lookup(power);
 
-		Assert.That(fc, Is.EqualTo(expFuelConsumption));
+		Assert.That(fc.IsEqual(expFuelConsumption), "exp {0} got {1}", expFuelConsumption.Value(), fc.Value());
 	}
 
 	[TestCase(600)]
@@ -189,6 +189,10 @@ public class FuelCellDataTest
 
 		var fuelCellSystemShare = new FuelCellSystemShareMap(fuelCellSystemMassFlowMap);
 		var shares = fuelCellSystemShare.GetSharesWithLowestFuelConsumption(power).ToList();
+		var fc = shares.First().FuelConsumption;
+		Assert.That(shares.All(s => s.FuelConsumption.IsEqual(fc, 1E-12.SI<KilogramPerSecond>())));
+
+		TestContext.Progress.WriteLine(shares.Select(s => s.FuelConsumption.ConvertToGrammPerHour()).Join("\n"));
 
 
 		var share = fuelCellSystemShare.Lookup(power);

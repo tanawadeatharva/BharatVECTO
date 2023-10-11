@@ -522,7 +522,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 			var a2 = b1.Select(b => 1 - b);
 
 
-			return a1.Concat(a2).Distinct().Select(a => new FuelCellShare(a));
+			return a1.Concat(a2).Select(a => Math.Round(Convert.ToDecimal(a), 9)).Distinct().Select(a => new FuelCellShare(Convert.ToDouble(a)));
 		}
 
 		private IEnumerable<double> FilterInvalid(IList<double> leadShare, IList<Watt> leadFc, IList<Watt> followFc, Watt power)
