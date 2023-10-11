@@ -16,6 +16,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public KilogramPerSecond FuelConsumption { get; set; }
 			public Watt MinEffPower { get; set; }
 			public Second TimeShare { get; set; }
+
+			public double ShareOn { get; set; }
 		}
 
 		private FuelCellData ModelData;
@@ -85,6 +87,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.Power = generatedPower;
 				CurrentState.FuelConsumption = h2;
 				CurrentState.TimeShare = timeShare;
+				CurrentState.ShareOn = timeShareFactor;
 			}
 
 

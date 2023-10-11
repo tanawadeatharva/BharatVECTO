@@ -48,14 +48,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 				throw new VectoException("No fuel-cells provided");
 			}
         }
-		public Watt MinPower {
+		public Watt MinElectricPower {
 			get {
 				CheckFcCount();
 				return FuelCellStrings.Min(fcs => fcs.MinPower);
 			}
 		}
 
-		public Watt MaxPower
+		public Watt MaxElectricPower
 		{
 			get
 			{

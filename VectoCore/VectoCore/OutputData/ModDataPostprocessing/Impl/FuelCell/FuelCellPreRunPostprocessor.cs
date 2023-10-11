@@ -139,7 +139,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
             var tmpBatSystem = new BatterySystem(null, batData);
 			tmpBatSystem.Initialize(batData.InitialSoC);
 
-			var rawFcCalcEntries = GetRawFuelCellPowerDemand(TotalDistance, fcData.MinPower, fcData.MaxPower, tmpBatSystem,
+			var rawFcCalcEntries = GetRawFuelCellPowerDemand(TotalDistance, fcData.MinElectricPower, fcData.MaxElectricPower, tmpBatSystem,
 				_preRunResults);
 
 			ApplyBatterySafetyMargin(batData, rawFcCalcEntries);
@@ -256,8 +256,8 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
             BatterySystemData batData, out SearchResult result)
         {
             ///For a given window size as first step we calculate the fuel cell power, try to simulate it with a tracing infinity battery and check if the SoC limits are violated
-			var minFcPower = fcData.MinPower;
-			var maxFcPower = fcData.MaxPower;
+			var minFcPower = fcData.MinElectricPower;
+			var maxFcPower = fcData.MaxElectricPower;
 
 			batData = batData.Clone();
 			//Calculate Raw Fuel CellDemand
@@ -572,8 +572,8 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 		{
 			throw new NotImplementedException();
             //Use Enumerators instead of converting everything to an array
-			var minFcPower = fcData.MinPower;
-			var maxFcPower = fcData.MaxPower;
+			var minFcPower = fcData.MinElectricPower;
+			var maxFcPower = fcData.MaxElectricPower;
 
             batData.ChargeSustainingBatterySystem = true;
 			batData.InitialSoC = initSoc;
@@ -793,7 +793,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
         {
             msg = "";
 			var minFcPower = 0.SI<Watt>(); //values below min power will be handled with time slicing
-			var maxFcPower = fcData.MaxPower;
+			var maxFcPower = fcData.MaxElectricPower;
 
             var tmpBatSystem = new BatterySystem(null, batData);
             tmpBatSystem.Initialize(batData.InitialSoC);

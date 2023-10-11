@@ -209,24 +209,32 @@ namespace TUGraz.VectoCore.OutputData
 			//	throw new NotImplementedException("Multiple fuel cells are not supported");
 			//}
 
-			//var fuelCell = _runData.FuelCellSystemData;
-			//var mid = (int)Math.Floor((values.Count() / 2.0f));
-			//var lowerOperatingPower = VectoMath.Max(0.9 * values[mid].X, fuelCell.MinElectricPower.Value());
-			//var higherOperatingPower = VectoMath.Min(1.1 * values[mid].X, fuelCell.MaxElectricPower.Value());
-			//if (!(values.First().X.IsSmallerOrEqual(lowerOperatingPower) &&
-			//	values.Last().X.IsGreaterOrEqual(higherOperatingPower))) {
-   //             //Insert artificial operating points before calculating the fuel cell line
-			//	var fcLow = fuelCell.MassFlowMap.Lookup(lowerOperatingPower.SI<Watt>());
-			//	var fcHigh = fuelCell.MassFlowMap.Lookup(higherOperatingPower.SI<Watt>());
-			//	values.Add(new Point(lowerOperatingPower, fcLow.Value()));
-			//	values.Add(new Point(higherOperatingPower, fcHigh.Value()));
-			//	values = values.OrderBy(x => x.X).ToList();
-			//}
+			var fuelCell = _runData.FuelCellSystemData;
+			var mid = (int)Math.Floor((values.Count() / 2.0f));
+			var lowerOperatingPower = VectoMath.Max(0.9 * values[mid].X, fuelCell.MinElectricPower.Value());
+			var higherOperatingPower = VectoMath.Min(1.1 * values[mid].X, fuelCell.MaxElectricPower.Value());
+			if (!(values.First().X.IsSmallerOrEqual(lowerOperatingPower) &&
+				values.Last().X.IsGreaterOrEqual(higherOperatingPower)))
+			{
+				//Insert artificial operating points before calculating the fuel cell line
+				var fcShareLow = fuelCell.FuelCellShareMap.Lookup(lowerOperatingPower.SI<Watt>());
+				var fcLow = fcShareLow.FuelConsumption;
+
+				var fcShareHigh = fuelCell.FuelCellShareMap.Lookup(lowerOperatingPower.SI<Watt>());
+				var fcHigh = fcShareHigh.FuelConsumption;
+				
+
+
+
+				values.Add(new Point(lowerOperatingPower, fcLow.Value()));
+				values.Add(new Point(higherOperatingPower, fcHigh.Value()));
+				values = values.OrderBy(x => x.X).ToList();
+			}
 
 			var (k, _) = VectoMath.LeastSquaresFitting(values);
 
 			if (double.IsInfinity(k) || double.IsNaN(k)) {
-				LogManager.GetLogger(typeof(ModalDataContainer).FullName).Warn("could not fuel cell correction line - k: {0}", k);
+				LogManager.GetLogger(typeof(ModalDataContainer).FullName).Warn("could determine not fuel cell correction line - k: {0}", k);
 				k = 0;
 			}
 
