@@ -958,8 +958,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 
 			var result = fcPostProcessor.CalculateFuelCellPowerDemand(fcData, batData.Clone());
-
-			NLog.Fluent.Log.Info($"Window distance = {result.Distance}, SoC = {result.InitSoc}");
+			//Debug($"Window distance = {result.Distance}, SoC = {result.InitSoc}");
 			batData.InitialSoC = result.InitSoc;
 			return new FuelCellPowerMap(result.Entries);
 		}
