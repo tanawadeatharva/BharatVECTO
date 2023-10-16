@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <!-- Version Information (only needed if it differs from Global VECTO Version)-->
-    <MainProductVersion>0.2.0</MainProductVersion>
+    <MainProductVersion>1.0.0</MainProductVersion>
     <VersionPrefix>$(MainProductVersion).$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</VersionPrefix>
     <OutputType>WinExe</OutputType>
     <RootNamespace>VECTO3GUI2020</RootNamespace>
-    <AssemblyName>VECTOMultistage</AssemblyName>
+    <AssemblyName>VECTOMultistep</AssemblyName>
     <ApplicationIcon>Resources\Icons\Icon2.ico</ApplicationIcon>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
