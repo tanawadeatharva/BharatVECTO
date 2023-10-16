@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.ModelbasedTests.DriverStrategy
 		{
 			var graphWriter = new GraphWriter();
 			//LogManager.DisableLogging();
-#if TRACE
+#if VECTOTRACE
 			graphWriter.Enable();
 #else
 			graphWriter.Disable();

@@ -3,7 +3,7 @@
     <RootNamespace>TUGraz.VectoCore.ModelbasedTests</RootNamespace>
     <AssemblyName>ModelbasedTests</AssemblyName>
     <TargetFrameworks>net6.0</TargetFrameworks>
-    <DefineConstants />
+     
   </PropertyGroup>
   
   <ItemGroup>

@@ -7,7 +7,7 @@
     <ApplicationIcon>Icon2.ico</ApplicationIcon>
     <RootNamespace>TUGraz.VECTO</RootNamespace>
     <TargetFrameworks>net48</TargetFrameworks>
-	<DefineConstants />
+	 
     <StartupObject></StartupObject>
   </PropertyGroup>
 

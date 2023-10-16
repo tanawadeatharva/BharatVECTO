@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <DefineConstants />
+     
     <!-- For a Release-Candidate uncomment the following line: -->
     <!-- <DefineConstants>RELEASE_CANDIDATE</DefineConstants> -->
 
@@ -23,11 +23,13 @@
     <!-- Set to true for VectoCore to fix Ninject version conflicts-->
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 	  <DefineTrace>false</DefineTrace>
+    <DisableDiagnosticTracing>true</DisableDiagnosticTracing>
     <RemoveIntegerChecks>true</RemoveIntegerChecks>
     <DebugType>none</DebugType>
     <WarningLevel>5</WarningLevel>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
+
 
   <PropertyGroup Condition="$(DefineConstants.Contains('RELEASE_CANDIDATE'))">
     <VersionSuffix>RC</VersionSuffix>

@@ -12,7 +12,7 @@
     <PublishTrimmed>false</PublishTrimmed>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
-    <DefineConstants />
+     
     <Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
 </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net48|AnyCPU'">

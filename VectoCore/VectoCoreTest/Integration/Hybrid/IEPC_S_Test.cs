@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		private GraphWriter GetGraphWriter(ModalResultField[] yFields)
 		{
 			var graphWriter = new GraphWriter();
-			//#if TRACE
+			//#if VECTOTRACE
 			graphWriter.Enable();
 
 			//#else
