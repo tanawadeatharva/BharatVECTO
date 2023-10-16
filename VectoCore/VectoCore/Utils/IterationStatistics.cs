@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Utils
 			set => CurrentLocal.Value = value;
 		}
 
-		[Conditional("TRACE")]
+		[Conditional("VECTOTRACE")]
 		public static void Increment<T>(T o, string key, double? value = null)
 		{
 			var t = typeof(T).Name;
@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Utils
 			c[key] = c.GetVECTOValueOrDefault(key, 0) + value ?? 1;
 		}
 
-		[Conditional("TRACE")]
+		[Conditional("VECTOTRACE")]
 		public static void StartIteration()
 		{
 			Timer.Restart();
@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Utils
 			Current = new Dictionary<string, Dictionary<string, double>>();
 		}
 
-		[Conditional("TRACE")]
+		[Conditional("VECTOTRACE")]
 		public static void FinishSimulation(string runName)
 		{
 			var table = new DataTable();
