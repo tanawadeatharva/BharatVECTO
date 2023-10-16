@@ -166,8 +166,6 @@ namespace TUGraz.VectoCore.OutputData
 			Tuple.Create(SumDataFields.GEARBOX_CERTIFICATION_METHOD, typeof(string)),
 			Tuple.Create(SumDataFields.GEARBOX_CERTIFICATION_NUMBER, typeof(string)),
 			Tuple.Create(SumDataFields.GEARBOX_TYPE, typeof(string)),
-			Tuple.Create(SumDataFields.GEAR_RATIO_FIRST_GEAR, typeof(ConvertedSI)),
-			Tuple.Create(SumDataFields.GEAR_RATIO_LAST_GEAR, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.TORQUECONVERTER_MANUFACTURER, typeof(string)),
 			Tuple.Create(SumDataFields.TORQUECONVERTER_MODEL, typeof(string)),
 			Tuple.Create(SumDataFields.TORQUE_CONVERTER_CERTIFICATION_METHOD, typeof(string)),
@@ -407,7 +405,7 @@ namespace TUGraz.VectoCore.OutputData
 		protected IList<string> GearColumns = new List<string>();
 		protected IList<string> AuxColumns = new List<string>();
 		protected IList<string> EmColumns = new List<string>();
-
+		protected IList<string> GearRatioColumns = new List<string>();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SummaryDataContainer"/> class.
@@ -444,11 +442,13 @@ namespace TUGraz.VectoCore.OutputData
 						? GearboxColumns_AT
 						: GearboxColumns);
 					CreateGearTimeShareColumns(runData.GearboxData.GearList);
+					CreateGearRatioColumns(runData);
 					break;
 				case IGearbox _ when runData.JobType == VectoSimulationJobType.IEPC_E:
 				case IGearbox _ when runData.JobType == VectoSimulationJobType.IEPC_S:
 					CreateColumns(IEPCTransmissionColumns);
 					CreateGearTimeShareColumns(runData.GearboxData.GearList);
+					CreateGearRatioColumns(runData);
 					break;
 				case VTPCycle _:
 					CreateColumns(VTPCycleColumns);
@@ -567,6 +567,32 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
+		private void CreateGearRatioColumns(VectoRunData runData)
+		{
+			lock (Table) {
+				var gears = runData.GearboxData.GearList;
+				var gearNumbers = new uint[] { }.Concat(gears.Select(x => x.Gear)).Distinct().OrderBy(x => x);
+				
+				var gearColNames = gearNumbers
+					.Select(x => string.Format(SumDataFields.RATIO_PER_GEAR_FORMAT, x))
+					.Where(x => !Table.Columns.Contains(x)).Select(x => new DataColumn(x, typeof(ConvertedSI)));
+					
+				if (runData.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP2_5)) {
+					gearColNames = gearColNames.Concat(
+						gearNumbers
+							.Select(x => string.Format(SumDataFields.P2_5_RATIO_PER_GEAR_FORMAT, x))
+							.Where(x => !Table.Columns.Contains(x)).Select(x => new DataColumn(x, typeof(ConvertedSI))));
+				}
+
+				var gearColumnsArray = gearColNames.ToArray();
+
+				Table.Columns.AddRange(gearColumnsArray);
+				
+				foreach (var gearColName in gearColumnsArray) {
+					GearRatioColumns.Add(gearColName.ColumnName);
+				}
+			}
+		}
 
 		protected internal void CreateColumns(Tuple<string, Type>[] cols)
 		{
@@ -629,9 +655,12 @@ namespace TUGraz.VectoCore.OutputData
 				SumDataFields.NUM_AXLES_TRAILER,
 				SumDataFields.GEARBOX_MANUFACTURER,
 				SumDataFields.GEARBOX_MODEL,
-				SumDataFields.GEARBOX_TYPE,
-				SumDataFields.GEAR_RATIO_FIRST_GEAR,
-				SumDataFields.GEAR_RATIO_LAST_GEAR,
+				SumDataFields.GEARBOX_TYPE
+			});
+
+			cols.AddRange(GearRatioColumns);
+
+			cols.AddRange(new[] {
 				SumDataFields.TORQUECONVERTER_MANUFACTURER,
 				SumDataFields.TORQUECONVERTER_MODEL,
 				SumDataFields.RETARDER_MANUFACTURER,
@@ -644,6 +673,7 @@ namespace TUGraz.VectoCore.OutputData
 				SumDataFields.AXLE_MODEL,
 				SumDataFields.AXLE_RATIO
 			});
+
             cols.AddRange(new[] {
                 Constants.Auxiliaries.IDs.SteeringPump, 
 				Constants.Auxiliaries.IDs.Fan,
@@ -698,7 +728,7 @@ namespace TUGraz.VectoCore.OutputData
 
 
 
-        cols.AddRange(new[] {
+			cols.AddRange(new[] {
 				SumDataFields.REESS_StartSoC,
 				SumDataFields.REESS_EndSoC,
 				SumDataFields.REESS_DeltaEnergy,
@@ -786,6 +816,7 @@ namespace TUGraz.VectoCore.OutputData
 				SumDataFields.AIRDRAG_CERTIFICATION_METHOD, 
 			});
 			cols.AddRange(GearColumns);
+
 			return cols.Where(x => Table.Columns.Contains(x)).ToArray();
 		}
 
@@ -1061,6 +1092,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			if ((runData.GearboxData?.Gears.Count ?? 0) > 0) {
 				WriteGearshiftStats(modData, row, (uint?)runData.GearboxData?.Gears.Count ?? 0u);
+				WriteGearRatios(row, runData);
 			}
 
 			AddResultDictionary(row);
@@ -1220,6 +1252,27 @@ namespace TUGraz.VectoCore.OutputData
 			for (uint i = 0; i <= gearCount; i++) {
 				var colName = string.Format(SumDataFields.TIME_SHARE_PER_GEAR_FORMAT, i);
 				row[colName] = (ConvertedSI)timeSharePerGear[i];
+			}
+		}
+
+		private void WriteGearRatios(Dictionary<string, object> row, VectoRunData runData)
+		{ 
+			var emData = runData.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP2_5)
+				? runData.ElectricMachinesData.First(x => x.Item1 == PowertrainPosition.HybridP2_5).Item2
+				: null;
+
+			foreach (var gear in runData.GearboxData.Gears) {
+				var colName = string.Format(SumDataFields.RATIO_PER_GEAR_FORMAT, gear.Key);
+
+				row[colName] = (double.IsNaN(gear.Value.Ratio)
+								? (ConvertedSI)gear.Value.TorqueConverterRatio.SI<Scalar>()
+								: (ConvertedSI)gear.Value.Ratio.SI<Scalar>());
+
+				if (emData != null) {
+					var colNameP2_5 = string.Format(SumDataFields.P2_5_RATIO_PER_GEAR_FORMAT, gear.Key);
+
+					row[colNameP2_5] = (ConvertedSI)emData.RatioPerGear[gear.Key - 1].SI<Scalar>();
+				}
 			}
 		}
 

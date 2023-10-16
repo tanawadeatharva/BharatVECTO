@@ -56,9 +56,7 @@ namespace TUGraz.VectoCore.OutputData
 		public const string GEARBOX_MANUFACTURER = "Gearbox manufacturer [-]";
 		public const string GEARBOX_MODEL = "Gearbox model [-]";
 		public const string GEARBOX_TYPE = "Gearbox type [-]";
-		public const string GEAR_RATIO_FIRST_GEAR = "Gear ratio first gear [-]";
-		public const string GEAR_RATIO_LAST_GEAR = "Gear ratio last gear [-]";
-
+		
 		public const string TORQUECONVERTER_MANUFACTURER = "Torque converter manufacturer [-]";
 		public const string TORQUECONVERTER_MODEL = "Torque converter model [-]";
 
@@ -219,6 +217,8 @@ namespace TUGraz.VectoCore.OutputData
 		public const string BRAKING_TIME_SHARE = "BrakingTimeShare [%]";
 
 		public const string TIME_SHARE_PER_GEAR_FORMAT = "Gear {0} TimeShare [%]";
+		public const string RATIO_PER_GEAR_FORMAT = "Gear {0} Ratio [-]";
+		public const string P2_5_RATIO_PER_GEAR_FORMAT = "Gear {0} P2.5 Ratio [-]";
 
 		public const string NUM_AXLES_DRIVEN = "Number axles vehicle driven [-]";
 		public const string NUM_AXLES_NON_DRIVEN = "Number axles vehicle non-driven [-]";
@@ -474,15 +474,6 @@ namespace TUGraz.VectoCore.OutputData
 			{ GEARBOX_TYPE, SumFunc((r, m) => r.GearboxData?.Type.ToXMLFormat()  ?? Constants.NOT_AVAILABLE)},
 			{ GEARBOX_CERTIFICATION_NUMBER, SumFunc((r, m) => r.GearboxData?.CertificationMethod == CertificationMethod.StandardValues ? "" : r.GearboxData?.CertificationNumber)},
 			{ GEARBOX_CERTIFICATION_METHOD, SumFunc((r, m) => r.GearboxData?.CertificationMethod.GetName())},
-
-			{ GEAR_RATIO_FIRST_GEAR, SumFunc((r, m) => r.GearboxData?.Gears.Count > 0
-					? (double.IsNaN(r.GearboxData.Gears.First().Value.Ratio)
-						? (ConvertedSI)r.GearboxData.Gears.First().Value.TorqueConverterRatio.SI<Scalar>()
-						: (ConvertedSI)r.GearboxData.Gears.First().Value.Ratio.SI<Scalar>())
-					: 0.SI<Scalar>())}, 
-			{ GEAR_RATIO_LAST_GEAR, SumFunc((r, m) => r.GearboxData?.Gears.Count > 0
-				? (ConvertedSI) r.GearboxData.Gears.Last().Value.Ratio.SI<Scalar>()
-				: (ConvertedSI)0.SI<Scalar>())},
 
 			// torque converter
 			{ TORQUECONVERTER_MANUFACTURER, SumFunc((r, m) => r.GearboxData?.TorqueConverterData?.Manufacturer ?? Constants.NOT_AVAILABLE)},
