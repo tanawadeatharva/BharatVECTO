@@ -1005,7 +1005,7 @@
 							<Voltage>1000</Voltage>
 							<ContinuousTorque>700.00</ContinuousTorque>
 							<TestSpeedContinuousTorque>2069.00</TestSpeedContinuousTorque>
-							<OverloadTorque>7500.00</OverloadTorque>
+							<OverloadTorque>750.00</OverloadTorque>
 							<TestSpeedOverloadTorque>2069.00</TestSpeedOverloadTorque>
 							<OverloadDuration>120.00</OverloadDuration>
 							<MaxTorqueCurve>
