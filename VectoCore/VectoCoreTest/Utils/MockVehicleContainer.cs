@@ -96,6 +96,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IGearboxInfo GearboxInfo => this;
 
+		public IShiftStrategy Strategy => null;
+
 		public event Action GearShiftTriggered;
 
 		public IGearboxControl GearboxCtl => this;
@@ -359,7 +361,16 @@ namespace TUGraz.VectoCore.Tests.Utils
 			set;
 		}
 
-		public bool HasElectricMotor { get; set; }
+		public bool HasGearbox
+		{
+			get;
+			set;
+		}
+
+		public bool HasElectricMotor
+		{
+			get; set;
+		}
 		public PowertrainPosition[] ElectricMotorPositions { get; set; }
 		public VectoSimulationJobType VehicleArchitecutre { get; }
 

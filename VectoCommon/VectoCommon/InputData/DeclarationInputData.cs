@@ -729,6 +729,13 @@ namespace TUGraz.VectoCommon.InputData
 		TableData CycleData { get; }
 	}
 
+	public interface IFuelNCVData
+	{
+		FuelType Type { get; }
+
+		JoulePerKilogramm NCV { get; }
+    }
+
 	public interface IDriverDeclarationInputData : IDriverModelData
 	{
 		bool SavedInDeclarationMode { get; }
@@ -1310,7 +1317,7 @@ namespace TUGraz.VectoCommon.InputData
 		E4,
 		E_IEPC,
 		P1,
-		P2,P,
+		P2,
 		P2_5,
 		P3,
 		P4,

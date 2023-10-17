@@ -55,12 +55,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.Gearbox.Disengaged = !useNextGear.Engaged;
 			TestPowertrain.Gearbox.DisengageGearbox = !useNextGear.Engaged;
 			TestPowertrain.Gearbox._nextGear = NextGear;
-			//if (DataBus.GearboxInfo.GearboxType != GearboxType.APTN) {
-				TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed,
-					DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
-			//}
-
-			TestPowertrain.HybridController.ApplyStrategySettings(cfg);
+			TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed,
+				DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
+			
+			if (TestPowertrain.CombustionEngine.EngineAux is BusAuxiliariesAdapter busAux) {
+				busAux.CurrentState.ExcessiveDragPower =
+					((DataBus.EngineInfo as CombustionEngine)?.EngineAux as BusAuxiliariesAdapter)?.CurrentState
+					.ExcessiveDragPower ?? 0.SI<Watt>();
+			}
+			
+            TestPowertrain.HybridController.ApplyStrategySettings(cfg);
 			
 
 			if (useNextGear.Engaged && !useNextGear.Equals(TestPowertrain.Gearbox.Gear)) {
@@ -83,10 +87,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 
-			//if (DataBus.GearboxInfo.GearboxType != GearboxType.APTN) {
+			if ((!DataBus.GearboxInfo.GearboxType.IsOneOf(GearboxType.APTN, GearboxType.IHPC))) {
 				TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque,
 					Controller.PreviousState.OutAngularVelocity);
-			//}
+			}
 
 			if (!PreviousState.GearboxEngaged || (useNextGear.Engaged && useNextGear.Equals(CurrentGear)) || !nextGear.Engaged) {
 				TestPowertrain.CombustionEngine.UpdateFrom(DataBus.EngineInfo);
@@ -143,6 +147,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
 			TestPowertrain.DCDCConverter?.UpdateFrom(DataBus.DCDCConverter);
+			
+			if (TestPowertrain.CombustionEngine.EngineAux is BusAuxiliariesAdapter busAux) {
+				busAux.CurrentState.ExcessiveDragPower =
+					((DataBus.EngineInfo as CombustionEngine)?.EngineAux as BusAuxiliariesAdapter)?.CurrentState
+					.ExcessiveDragPower ?? 0.SI<Watt>();
+			}
 			
 			if (nextGear.Engaged && !nextGear.Equals(TestPowertrain.Gearbox.Gear)) {
 				if (!AllowEmergencyShift && ModelData.GearboxData.Gears[nextGear.Gear].Ratio > ModelData.GearshiftParameters.RatioEarlyUpshiftFC) {
@@ -1472,8 +1482,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						AllowICEOff(absTime), newEval,
 						best.Setting.MechanicalAssistPower.First().Key, dryRun);
 					if (newEval.Count > 0) {
+						var oldBest = best;
 						best = DoSelectBestOption(newEval, absTime, dt, outTorque, outAngularVelocity, dryRun,
 							currentGear);
+						if (best == null) {
+							best = oldBest;
+						}
 					}
 				}
 			}
@@ -2117,9 +2131,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 
-
+			var avgEngineSpeed = resp.Engine.DynamicFullLoadTorque.IsEqual(0)
+				? resp.Engine.EngineSpeed // dynamic full load may be 0 if engine speed is too high, use this as estimate for now
+				: resp.Engine.DynamicFullLoadPower / resp.Engine.DynamicFullLoadTorque;
 			if (!iceOff && /*!resp.Engine.TotalTorqueDemand.IsBetween(resp.Engine.DragTorque, resp.Engine.DynamicFullLoadTorque)*/
-				(resp.Engine.TotalTorqueDemand.IsSmaller(resp.Engine.DragTorque) || resp.Engine.TotalTorqueDemand.IsGreater(resp.Engine.DynamicFullLoadTorque))) {
+				((resp.Engine.TotalTorqueDemand * avgEngineSpeed).IsSmaller(resp.Engine.DragPower, Constants.SimulationSettings.LineSearchTolerance) || 
+				(resp.Engine.TotalTorqueDemand * avgEngineSpeed).IsGreater(resp.Engine.DynamicFullLoadPower, Constants.SimulationSettings.LineSearchTolerance))) {
 				tmp.FuelCosts = double.NaN;
 				tmp.IgnoreReason |= resp.Engine.TotalTorqueDemand.IsGreater(resp.Engine.DynamicFullLoadTorque)
 					? HybridConfigurationIgnoreReason.EngineTorqueDemandTooHigh

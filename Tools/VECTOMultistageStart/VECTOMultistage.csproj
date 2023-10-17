@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <AssemblyName>VECTOMultistage</AssemblyName>
+    <AssemblyName>VECTOMultistep</AssemblyName>
     <ApplicationIcon>Icon2.ico</ApplicationIcon>
     <RootNamespace>TUGraz.VECTO</RootNamespace>
     <TargetFrameworks>net48</TargetFrameworks>
-    <DefineConstants />
+     
     <Configurations>Debug;Release;MockupDebug</Configurations>
   </PropertyGroup>
 

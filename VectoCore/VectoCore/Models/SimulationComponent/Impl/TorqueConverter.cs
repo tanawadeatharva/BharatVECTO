@@ -305,8 +305,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					x => VectoMath.Abs(DataBus.EngineInfo.EngineSpeed - x.Engine.EngineSpeed).Value());
 				return operatingPoint;
 			} catch (VectoException ve) {
-				Log.Warn(ve, "TorqueConverter: Failed to find operating point for DragPower {0}", engineResponse.Engine.DragPower);
-				            //var engineSpeed = VectoMath.Max(DataBus.EngineIdleSpeed * 1.001, 0.8 * DataBus.EngineSpeed);
+				if (!DataBus.IsTestPowertrain) {
+					Log.Warn(ve, "TorqueConverter: Failed to find operating point for DragPower {0}",
+						engineResponse.Engine.DragPower);
+					//var engineSpeed = VectoMath.Max(DataBus.EngineIdleSpeed * 1.001, 0.8 * DataBus.EngineSpeed);
+				}
+
 				var engineSpeed = DataBus.DriverInfo.DrivingAction == DrivingAction.Brake
 					? DataBus.EngineInfo.EngineIdleSpeed * 1.001
 					: VectoMath.Max(DataBus.EngineInfo.EngineIdleSpeed * 1.001, 0.8 * DataBus.EngineInfo.EngineSpeed);
@@ -357,9 +361,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 				return operatingPoint;
 			} catch (VectoException ve) {
-				Log.Warn(
-					ve, "TorqueConverter: Failed to find operating point for MaxPower {0}",
-					engineResponse.Engine.DynamicFullLoadPower);
+				if (!DataBus.IsTestPowertrain) {
+					Log.Warn(
+						ve, "TorqueConverter: Failed to find operating point for MaxPower {0}",
+						engineResponse.Engine.DynamicFullLoadPower);
+				}
+
 				var engineSpeed = VectoMath.Max(DataBus.EngineInfo.EngineSpeed, VectoMath.Min(DataBus.EngineInfo.EngineRatedSpeed, DataBus.EngineInfo.EngineSpeed));
 
 				var tqOperatingPoint = FindValidTorqueConverterOperatingPoint(
@@ -420,7 +427,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			var operatingPointList = ModelData.FindOperatingPoint(outTorque, outAngularVelocity, DataBus.EngineInfo.EngineIdleSpeed);
 			if (operatingPointList.Count == 0) {
-				Log.Debug("TorqueConverter: Failed to find torque converter operating point, fallback: creeping");
+				if (!DataBus.IsTestPowertrain) {
+					Log.Debug("TorqueConverter: Failed to find torque converter operating point, fallback: creeping");
+				}
+
 				//var tqOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineInfo.EngineIdleSpeed, outAngularVelocity);
 				var tqOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineInfo.EngineIdleSpeed * 1.00, outAngularVelocity);
 
@@ -443,6 +453,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					operatingPoint.InAngularVelocity);
 			}
 
+			if (operatingPoint.InAngularVelocity.IsEqual(DataBus.EngineInfo.EngineIdleSpeed, 1.RPMtoRad())) {
+				operatingPoint.Creeping = true;
+			}
 			var maxInputSpeed = VectoMath.Min(ModelData.TorqueConverterSpeedLimit, DataBus.EngineInfo.EngineN95hSpeed);
 			if (operatingPoint.InAngularVelocity.IsGreater(maxInputSpeed)) {
 				operatingPoint = ModelData.FindOperatingPoint(maxInputSpeed, outAngularVelocity);

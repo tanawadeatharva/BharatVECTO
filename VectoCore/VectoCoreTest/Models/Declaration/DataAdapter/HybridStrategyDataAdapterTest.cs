@@ -41,7 +41,7 @@ public class HybridStrategyDataAdapterTest
 			Batteries = new EditableList<Tuple<int, BatteryData>>() {
 				new Tuple<int, BatteryData>(1, new BatteryData() {
 					Capacity = cap_nom,
-					ChargeSustainingBattery = false,
+					ChargeDepletingBattery = false,
 					BatteryId = -42,
 					MaxSOC = bat_soc_max,
 					MinSOC = bat_soc_min,

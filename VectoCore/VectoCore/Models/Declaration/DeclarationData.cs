@@ -107,9 +107,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
 
 		public static readonly HEVStrategyParameters HEVStrategyParameters = new HEVStrategyParameters();
+
+		public const double HEV_EquivalenceFactor_Min = 0.1;
+		public const double HEV_EquivalenceFactor_Max = 4.0;
 		//public static readonly HEVStrategyParameters InitEquivalenceFactorsBus = new HEVStrategyParametersBus();
 
-		public static readonly VehicleOperationLookup VehicleOperation = new VehicleOperationLookup();
+        public static readonly VehicleOperationLookup VehicleOperation = new VehicleOperationLookup();
 
 		public static readonly double ElectricMachineDefaultMechanicalTransmissionEfficiency = 1;
 		//public static MeterPerSecond CycleSpeedLimit;
@@ -128,6 +131,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public const double WHRChargerEfficiency = 0.98;
 
 		public const double OverloadRecoveryFactor = 0.9;
+
+		public static readonly Ohm SuperCapMinInternalResistance = 5.SI(Unit.SI.Milli.Ohm).Cast<Ohm>();
+
+		public const double ElectricMachineDefaultEfficiencyFallback = 0.98;
 
 		public static readonly Watt MinDepotChgPwr = 10.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
 		public static readonly Second DepotChargingDuration = 6.SI(Unit.SI.Hour).Cast<Second>();
@@ -203,8 +210,46 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 
+		public static SegmentLookup GetTruckSegment(IVehicleDeclarationInputData vehicle, bool batteryElectric = false)
+			{
+                var allowVocational = true;
+			var ng = vehicle.ExemptedVehicle ? false : vehicle.Components.EngineInputData?.EngineModes.Any(e =>
+				e.Fuels.Any(f => f.FuelType.IsOneOf(FuelType.LPGPI, FuelType.NGCI, FuelType.NGPI))) ?? false;
+			var ovcHev = vehicle.ExemptedVehicle ? false : vehicle.OvcHev;
+			Segment segment;
+			try {
+				segment = DeclarationData.TruckSegments.Lookup(
+					vehicle.VehicleCategory, batteryElectric, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating,
+					vehicle.CurbMassChassis,
+					vehicle.VocationalVehicle, ng, ovcHev);
+			} catch (VectoException) {
+				allowVocational = false;
+				segment = DeclarationData.TruckSegments.Lookup(
+					vehicle.VehicleCategory, batteryElectric, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating,
+					vehicle.CurbMassChassis,
+					false, ng, ovcHev);
+			}
 
-		public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IVehicleDeclarationInputData vehicleData)
+			if (!segment.Found) {
+				throw new VectoException(
+					"no segment found for vehicle configuration: vehicle category: {0}, axle configuration: {1}, GVMR: {2}",
+					vehicle.VehicleCategory, vehicle.AxleConfiguration,
+					vehicle.GrossVehicleMassRating);
+			}
+
+			return new SegmentLookup() { Segment = segment, AllowVocational = allowVocational };
+		}
+
+
+		public struct SegmentLookup
+		{
+			public Segment Segment { get; set; }
+
+			public bool AllowVocational { get; set; }
+		}
+
+
+        public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IVehicleDeclarationInputData vehicleData)
 		{
 			switch (vehicleData.VehicleCategory) {
 				case VehicleCategory.Van:
@@ -1483,7 +1528,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 						TorqueRatio = 0.9,
 						Torque =  -4 * first.Torque
 					},
-				};
+					new TorqueConverterEntry() {
+						SpeedRatio = 15,
+						TorqueRatio = 0.85,
+						Torque =  -4.1 * first.Torque
+					},
+                };
 				foreach (var torqueConverterEntry in characteristicTorque) {
 					torqueConverterEntry.SpeedRatio = torqueConverterEntry.SpeedRatio * ratio;
 					torqueConverterEntry.TorqueRatio = torqueConverterEntry.TorqueRatio / ratio;
@@ -1512,13 +1562,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly Meter RunInThreshold = 15000.SI(Unit.SI.Kilo.Meter).Cast<Meter>();
 			public const double EvolutionCoefficient = 0.98;
 
-			public const MissionType SelectedMissionHeavyLorry = MissionType.LongHaul;
 			public const MissionType SelectedMissionMediumLorry = MissionType.RegionalDelivery;
 
 			public const MissionType SelectedMissionLowFloorBus = MissionType.Urban;
 			public const MissionType SelectedMissionHighFloorBus = MissionType.Coach;
 
 			public const LoadingType SelectedLoading = LoadingType.ReferenceLoad;
+
+			public static MissionType GetSelectedMissionHeavyLorry(VehicleClass vc)
+			{
+				return vc.IsOneOf(VehicleClass.Class1, VehicleClass.Class2, VehicleClass.Class3)
+					? MissionType.RegionalDelivery
+					: MissionType.LongHaul;
+			}
 
 			// verification of input data
 

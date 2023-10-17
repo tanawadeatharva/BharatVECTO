@@ -15,6 +15,7 @@ Changelog:
     04.04.2023: Bugfix: new data type for Battery System with standard values. P520 and P511 are not applicable in case of standard 
                         values
     11.04.2023: Bugfix IEPC standard values: allow only one drag curve, remove gear attribute
+	03.10.2023: Changes SuperCap Data: InternalResistance: allow 0.00
 -->
 	<xs:complexType name="AbstractADCDataDeclarationType" abstract="true">
 		<xs:complexContent>
@@ -516,9 +517,9 @@ Changelog:
 							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="InternalResistance" type="v2.3:InternalResistanceType">
+					<xs:element name="InternalResistance" type="v2.3:InternalResistanceSuperCapType">
 						<xs:annotation>
-							<xs:documentation>P539 - [mOhm]</xs:documentation>
+							<xs:documentation>P539 - [Ohm]</xs:documentation>
 							<xs:appinfo>
 								<vectoParam:description>
 									<vectoParam:parameterId component="CapacitorSystem">539</vectoParam:parameterId>
@@ -2082,6 +2083,22 @@ Changelog:
 		</xs:annotation>
 		<xs:restriction base="v1.0:Double2">
 			<xs:minExclusive value="0.00"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="InternalResistanceSuperCapType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="BatterySystem/DCIR">525</vectoParam:parameterId>
+					<vectoParam:parameterId component="BatterySystem/DCIR">526</vectoParam:parameterId>
+					<vectoParam:parameterId component="BatterySystem/DCIR">527</vectoParam:parameterId>
+					<vectoParam:parameterId component="BatterySystem/DCIR">528</vectoParam:parameterId>
+					<vectoParam:unit>mOhm</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="v1.0:Double2">
+			<xs:minInclusive value="0.00"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="MaxTorqueType">

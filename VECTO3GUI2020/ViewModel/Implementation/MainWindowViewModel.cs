@@ -74,7 +74,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		
 		public string Version => "[MOCKUP] VECTO Multistep " + Assembly.GetExecutingAssembly().GetName().Version + " (For Testing and Feedback)";
 #else
-		public string Version => "VECTO Multistep " + Assembly.GetExecutingAssembly().GetName().Version + " (For Testing and Feedback)";
+		public string Version => "VECTO Multistep " + Assembly.GetExecutingAssembly().GetName().Version;
 
 #endif
 

@@ -7,7 +7,7 @@
     <RootNamespace>TUGraz.VECTO</RootNamespace>
     <Configurations>Debug;Release;Deploy;MockupDeploy</Configurations>
     <TargetFrameworks>net48</TargetFrameworks>
-    <DefineConstants />
+     
   </PropertyGroup>
 
   <ItemGroup>

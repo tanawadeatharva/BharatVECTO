@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
             var vtpMission = Segment.VehicleClass.IsMediumLorry()
                 ? DeclarationData.VTPMode.SelectedMissionMediumLorry
-                : DeclarationData.VTPMode.SelectedMissionHeavyLorry;
+				: DeclarationData.VTPMode.GetSelectedMissionHeavyLorry(Segment.VehicleClass);
 
             AirdragData = DataAdapter.CreateAirdragData(
                 vehicle.Components.AirdragInputData,
@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             GearboxData = DataAdapter.CreateGearboxData(
                 vehicle, new VectoRunData() { EngineData = EngineData, AxleGearData = AxlegearData, VehicleData = tempVehicle },
                 null);
-            RetarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData);
+            RetarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData, vehicle.ArchitectureID, vehicle.Components.IEPC);
 
             PTOTransmissionData =
 				DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData, vehicle.Components.GearboxInputData);
@@ -202,10 +202,20 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             //var ncvStd = DeclarationData.FuelData.Lookup(JobInputData.Vehicle.Components.EngineInputData.FuelType).LowerHeatingValueVecto;
             //var ncvCorrection = ncvStd / JobInputData.NetCalorificValueTestFuel;
             var mileageCorrection = GetMileagecorrectionFactor(JobInputData.Mileage);
-            vtpRunData.VTPData = new VTPData()
-            {
-                CorrectionFactor = mileageCorrection,
+            var correctionFactors = JobInputData.FuelNCVs.ToDictionary(
+				keySelector: f => f.Type, 
+				elementSelector: f => (f.NCV / DeclarationData.FuelData.Lookup(
+					f.Type, 
+					JobInputData.Vehicle.TankSystem).LowerHeatingValueVecto).Value() * mileageCorrection);
+            
+            vtpRunData.VTPData = new VTPData() {
+				CorrectionFactors = correctionFactors,
+				FuelNCVs = JobInputData.FuelNCVs
             };
+
+			vtpRunData.TorqueDriftLeftWheel = JobInputData.TorqueDriftLeftWheel;
+			vtpRunData.TorqueDriftRightWheel = JobInputData.TorqueDriftRightWheel;
+
             yield return vtpRunData;
         }
     }

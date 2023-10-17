@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
+using Ninject;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
@@ -38,7 +42,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 
 			var pwr = inputProvider.VoltageLevels.First().PowerMap.First().PowerMap; //ToDo FK: maybe wrong selection
 			// var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
-			var pwrMap = ElectricMotorMapReader.Create(pwr, 1);
+			var pwrMap = ElectricMotorMapReader.Create(pwr, 1, ExecutionMode.Engineering);
 
 			var maxEmPwr = batPwr < 0
 				? fldMap.FullLoadDriveTorque(emSpeed.RPMtoRad())
@@ -103,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 			
 			var pwr = inputProvider.VoltageLevels.First().PowerMap.First().PowerMap;//ToDo FK: maybe wrong selection
 			// var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
-			var pwrMap = ElectricMotorMapReader.Create(pwr, 1);
+			var pwrMap = ElectricMotorMapReader.Create(pwr, 1, ExecutionMode.Engineering);
 
 			var maxEmPwr = batPwr < 0
 				? fldMap.FullLoadDriveTorque(emSpeed.RPMtoRad())
@@ -120,7 +124,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 		public void TestInterpolationMethod_PowerMap(string filename, double etaMin, double etaMax)
 		{
 			var data = VectoCSVFile.Read(filename).ApplyFactor(ElectricMotorMapReader.Fields.PowerElectrical, 1000.0);
-			var emMap = ElectricMotorMapReader.Create(data, 1);
+			var emMap = ElectricMotorMapReader.Create(data, 1, ExecutionMode.Engineering);
 			
 			var efficiencies = new List<double>();
 			for (var n = 10.RPMtoRad(); n < 4000.RPMtoRad(); n += 10.RPMtoRad()) {
@@ -148,6 +152,28 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 			Assert.IsTrue(efficiencies.All(x => x.IsBetween(etaMin, etaMax)), $"{efficiencies.Min()} - {efficiencies.Max()}");
 		}
 
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/ComponentData/ElectricMachineSystem_Std_Overload.xml", 600063.423)]
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/ComponentData/ElectricMachineSystem_Std_Overload2.xml", 600063.423)]
+		public void TestElectricMotorOverloadBufferTest(string testFile, double expectedOvlBfr)
+		{
+			var kernel = new StandardKernel(new VectoNinjectModule());
+
+			var componentFactory = kernel.Get<IXMLComponentInputReader>();
+			var componentData = componentFactory.CreateFromFile<IXMLElectricMotorDeclarationInputData>(testFile);
+			var em = new XMLElectricMachinesDeclarationData(
+				new List<ElectricMachineEntry<IElectricMotorDeclarationInputData>> {
+					new ElectricMachineEntry<IElectricMotorDeclarationInputData>() {
+						Count = 1,
+						ElectricMachine = componentData
+					}
+				});
+			var da = new ElectricMachinesDataAdapter();
+
+            var modelData = da.CreateElectricMachines(em, null, 500.SI<Volt>());
+			var emData = modelData.First().Item2;
+
+			Assert.AreEqual(expectedOvlBfr, emData.Overload.OverloadBuffer.Value(), 0.1);
+		}
 		
 	}
 }

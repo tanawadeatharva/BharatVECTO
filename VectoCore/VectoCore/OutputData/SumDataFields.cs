@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
@@ -55,9 +56,7 @@ namespace TUGraz.VectoCore.OutputData
 		public const string GEARBOX_MANUFACTURER = "Gearbox manufacturer [-]";
 		public const string GEARBOX_MODEL = "Gearbox model [-]";
 		public const string GEARBOX_TYPE = "Gearbox type [-]";
-		public const string GEAR_RATIO_FIRST_GEAR = "Gear ratio first gear [-]";
-		public const string GEAR_RATIO_LAST_GEAR = "Gear ratio last gear [-]";
-
+		
 		public const string TORQUECONVERTER_MANUFACTURER = "Torque converter manufacturer [-]";
 		public const string TORQUECONVERTER_MODEL = "Torque converter model [-]";
 
@@ -218,6 +217,8 @@ namespace TUGraz.VectoCore.OutputData
 		public const string BRAKING_TIME_SHARE = "BrakingTimeShare [%]";
 
 		public const string TIME_SHARE_PER_GEAR_FORMAT = "Gear {0} TimeShare [%]";
+		public const string RATIO_PER_GEAR_FORMAT = "Gear {0} Ratio [-]";
+		public const string P2_5_RATIO_PER_GEAR_FORMAT = "Gear {0} P2.5 Ratio [-]";
 
 		public const string NUM_AXLES_DRIVEN = "Number axles vehicle driven [-]";
 		public const string NUM_AXLES_NON_DRIVEN = "Number axles vehicle non-driven [-]";
@@ -286,6 +287,12 @@ namespace TUGraz.VectoCore.OutputData
 		public const string E_EM_Mot_LOSS_FORMAT = "E_EM_{0}-em_loss [kWh]";
 		public const string E_EM_LOSS_FORMAT = "E_EM_{0}_loss [kWh]";
 		public const string E_EM_OFF_TIME_SHARE = "EM {0} off time share [%]";
+		public const string EM_RATED_TORQUE_HI = "EM {0} high voltage rated T [Nm]";
+		public const string EM_RATED_TORQUE_LO = "EM {0} low voltage rated T [Nm]";
+		public const string EM_RATED_POWER = "EM {0} total rated power [kW]";
+		public const string EM_RATED_SPEED_HI = "EM {0} high voltage rated speed [rpm]";
+		public const string EM_RATED_SPEED_LO = "EM {0} low voltage rated speed [rpm]";
+		public const string EM_MOTOR_NUMBER = "EM number of motors";
 
 		public const string REESS_CAPACITY = "REESS Capacity";
 		public const string REESS_StartSoC = "REESS Start SoC [%]";
@@ -389,7 +396,7 @@ namespace TUGraz.VectoCore.OutputData
 				}
 				return ret;
 			})},
-			{ REESS_CAPACITY, SumFunc((r, m) => r.BatteryData?.Capacity != null ? $"{r.BatteryData?.Capacity.AsAmpHour} Ah" : r.SuperCapData?.Capacity != null ?  $"{r.SuperCapData.Capacity} F" : null)},
+			{ REESS_CAPACITY, SumFunc((r, m) => r.BatteryData?.Capacity != null ? $"{r.BatteryData?.Capacity.AsAmpHour.ToString(CultureInfo.InvariantCulture)} Ah" : r.SuperCapData?.Capacity != null ?  $"{r.SuperCapData.Capacity.Value().ToString(CultureInfo.InvariantCulture)} F" : null)},
 			{ TCU_MODEL, SumFunc((r, m) =>  r.ShiftStrategy)},
 			{ PTO_TECHNOLOGY, SumFunc((r, m) => r.PTO?.TransmissionType ?? "")},
 
@@ -409,20 +416,20 @@ namespace TUGraz.VectoCore.OutputData
 			{ ENGINE_IDLING_SPEED, SumFunc((r, m) => (ConvertedSI)r.EngineData?.IdleSpeed.AsRPM.SI<Scalar>())},
 			{ ENGINE_RATED_SPEED, SumFunc((r, m) => r.EngineData?.RatedSpeedDeclared != null && r.EngineData.RatedSpeedDeclared > 0 ? (ConvertedSI)r.EngineData.RatedSpeedDeclared.AsRPM.SI<Scalar>() : (ConvertedSI)r.EngineData?.FullLoadCurves[0].RatedSpeed.AsRPM.SI<Scalar>())},
 			{ ENGINE_DISPLACEMENT, SumFunc((r, m) => r.EngineData?.Displacement.ConvertToCubicCentiMeter())},
-			{ ENGINE_WHTC_URBAN, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.WHTCUrban).Join(" / "))},
-			{ ENGINE_WHTC_RURAL, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.WHTCRural).Join(" / "))},
-			{ ENGINE_WHTC_MOTORWAY, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.WHTCMotorway).Join(" / "))},
-			{ ENGINE_BF_COLD_HOT, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.ColdHotCorrectionFactor).Join(" / "))},
-			{ ENGINE_CF_REG_PER, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.CorrectionFactorRegPer).Join(" / "))},
+			{ ENGINE_WHTC_URBAN, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.WHTCUrban.ToString(CultureInfo.InvariantCulture)).Join(" / "))},
+			{ ENGINE_WHTC_RURAL, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.WHTCRural.ToString(CultureInfo.InvariantCulture)).Join(" / "))},
+			{ ENGINE_WHTC_MOTORWAY, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.WHTCMotorway.ToString(CultureInfo.InvariantCulture)).Join(" / "))},
+			{ ENGINE_BF_COLD_HOT, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.ColdHotCorrectionFactor.ToString(CultureInfo.InvariantCulture)).Join(" / "))},
+			{ ENGINE_CF_REG_PER, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.CorrectionFactorRegPer.ToString(CultureInfo.InvariantCulture)).Join(" / "))},
 			{ ENGINE_ACTUAL_CORRECTION_FACTOR, SumFunc((r, m) => {
 				if (r.Mission?.MissionType == MissionType.VerificationTest) {
 					var fuelsWhtc = r.EngineData?.Fuels.Select(
 							fuel => m.TimeIntegral<Kilogram>(m.GetColumnName(fuel.FuelData, ModalResultField.FCWHTCc)) /
 									m.TimeIntegral<Kilogram>(m.GetColumnName(fuel.FuelData, ModalResultField.FCMap)))
-						.Select(dummy => (double)dummy).ToArray();
+						.Select(dummy => ((double)dummy).ToString(CultureInfo.InvariantCulture)).ToArray();
 					return fuelsWhtc?.Join(" / ");
 				}
-				return r.EngineData?.Fuels.Select(x => x.FuelConsumptionCorrectionFactor).Join(" / ");
+				return r.EngineData?.Fuels.Select(x => x.FuelConsumptionCorrectionFactor.ToString(CultureInfo.InvariantCulture)).Join(" / ");
 			})},
 			
 			// axlegear infos
@@ -467,15 +474,6 @@ namespace TUGraz.VectoCore.OutputData
 			{ GEARBOX_TYPE, SumFunc((r, m) => r.GearboxData?.Type.ToXMLFormat()  ?? Constants.NOT_AVAILABLE)},
 			{ GEARBOX_CERTIFICATION_NUMBER, SumFunc((r, m) => r.GearboxData?.CertificationMethod == CertificationMethod.StandardValues ? "" : r.GearboxData?.CertificationNumber)},
 			{ GEARBOX_CERTIFICATION_METHOD, SumFunc((r, m) => r.GearboxData?.CertificationMethod.GetName())},
-
-			{ GEAR_RATIO_FIRST_GEAR, SumFunc((r, m) => r.GearboxData?.Gears.Count > 0
-					? (double.IsNaN(r.GearboxData.Gears.First().Value.Ratio)
-						? (ConvertedSI)r.GearboxData.Gears.First().Value.TorqueConverterRatio.SI<Scalar>()
-						: (ConvertedSI)r.GearboxData.Gears.First().Value.Ratio.SI<Scalar>())
-					: 0.SI<Scalar>())}, 
-			{ GEAR_RATIO_LAST_GEAR, SumFunc((r, m) => r.GearboxData?.Gears.Count > 0
-				? (ConvertedSI) r.GearboxData.Gears.Last().Value.Ratio.SI<Scalar>()
-				: (ConvertedSI)0.SI<Scalar>())},
 
 			// torque converter
 			{ TORQUECONVERTER_MANUFACTURER, SumFunc((r, m) => r.GearboxData?.TorqueConverterData?.Manufacturer ?? Constants.NOT_AVAILABLE)},
@@ -727,10 +725,16 @@ namespace TUGraz.VectoCore.OutputData
 			{ ETA_EM_DRIVE_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorEfficiencyDrive(em), "") },
 			{ ETA_EM_GEN_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorEfficiencyGenerate(em), "") },
 			{ E_EM_OFF_Loss_Format, (r, m, em) => m.ElectricMotorOffLosses(em).ConvertToKiloWattHour() },
-			{ E_EM_LOSS_TRANSM_FORMAT, (r, m, em) => m.ElectricMotorTransmissionLosses(em).ConvertToKiloWattHour() },
-			{ E_EM_Mot_LOSS_FORMAT, (r, m, em) => m.ElectricMotorMotLosses(em).ConvertToKiloWattHour() },
-			{ E_EM_LOSS_FORMAT, (r, m, em) => m.ElectricMotorLosses(em).ConvertToKiloWattHour() },
+			{ E_EM_LOSS_TRANSM_FORMAT, (r, m, em) => m.ElectricMotorTransmissionLosses(em)?.ConvertToKiloWattHour() },
+			{ E_EM_Mot_LOSS_FORMAT, (r, m, em) => m.ElectricMotorMotLosses(em)?.ConvertToKiloWattHour() },
+			{ E_EM_LOSS_FORMAT, (r, m, em) => m.ElectricMotorLosses(em)?.ConvertToKiloWattHour() },
 			{ E_EM_OFF_TIME_SHARE, (r, m, em) => (ConvertedSI)m.ElectricMotorOffTimeShare(em) },
+			{ EM_RATED_POWER, (r, m, em) => DeclarationData.GetReferencePropulsionPower(r.VehicleData.InputData).ConvertToKiloWatt() },
+			{ EM_RATED_SPEED_HI, (r, m, em) => r.VehicleData.InputData.Components.ElectricMachines.Entries.First().ElectricMachine.VoltageLevels.MaxBy(v  => v.VoltageLevel).ContinuousTorqueSpeed.AsRPM },
+			{ EM_RATED_SPEED_LO, (r, m, em) => r.VehicleData.InputData.Components.ElectricMachines.Entries.First().ElectricMachine.VoltageLevels.MinBy(v  => v.VoltageLevel).ContinuousTorqueSpeed.AsRPM },
+			{ EM_RATED_TORQUE_LO, (r, m, em) => (ConvertedSI)r.VehicleData.InputData.Components.ElectricMachines.Entries.First().ElectricMachine.VoltageLevels.MaxBy(v  => v.VoltageLevel).ContinuousTorque },
+			{ EM_RATED_TORQUE_HI, (r, m, em) => (ConvertedSI)r.VehicleData.InputData.Components.ElectricMachines.Entries.First().ElectricMachine.VoltageLevels.MinBy(v  => v.VoltageLevel).ContinuousTorque },
+			{ EM_MOTOR_NUMBER, (r, m, em) => r.VehicleData.InputData.Components.ElectricMachines.Entries.First().Count },
 		};
 
 		public static readonly Dictionary<string, WriteEmEntry> IEPCValue = new Dictionary<string, WriteEmEntry>() {
@@ -745,7 +749,6 @@ namespace TUGraz.VectoCore.OutputData
 		};
 
 		public static readonly WriteAuxEntry AuxDataValue = (r, m, a) => m.AuxiliaryWork(a).ConvertToKiloWattHour();
-
 	}
 
 

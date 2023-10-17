@@ -104,12 +104,12 @@ namespace HashingTool.ViewModel.UserControl
 						DigestValue = ReadElementValue(node, XMLNames.DI_Signature_Reference_DigestValue),
 						CertificationMethod = ReadElementValue(node, XMLNames.Report_Component_CertificationMethod),
 					};
-					if (entry.Component.StartsWith("Tyre ")) {
-						entry.CertificationNumber = ReadElementValue(node, XMLNames.Report_Tyre_TyreCertificationNumber);
-					} else {
+					//if (entry.Component.StartsWith("Tyre ")) {
+					//	entry.CertificationNumber = ReadElementValue(node, XMLNames.Report_Tyre_TyreCertificationNumber);
+					//} else {
 						entry.CertificationNumber = ReadElementValue(node, XMLNames.Report_Component_CertificationNumber) ??
 													ReadElementValue(node, XMLNames.Report_Component_CertificationMethod);
-					}
+					//}
 					componentData.Add(entry);
 					if (!hasComponentsFromJob) {
 						continue;
@@ -167,7 +167,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		private string ReadElementValue(XmlNode xmlNode, string elementName)
 		{
-			var node = xmlNode.SelectSingleNode($"./*[local-name()='{elementName}']");
+			var node = xmlNode.SelectSingleNode($".//*[local-name()='{elementName}']");
 			if (node == null) {
 				return null;
 			}

@@ -174,7 +174,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 
         protected override void Initialize()
         {
-            _segment = GetSegment(InputDataProvider.JobInputData.Vehicle);
+            _segment = DeclarationData.GetTruckSegment(InputDataProvider.JobInputData.Vehicle).Segment;
 
         }
 

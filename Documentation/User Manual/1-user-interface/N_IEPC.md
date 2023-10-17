@@ -23,8 +23,14 @@ VECTO automatically uses relative paths if the input file (e.g. electric power m
 Make and Model
 :   Free text defining the gearbox model, type, etc.
 
+EM Type
+:   Type of the electric motor (ASM, PSM, ESM, RM)
+
 Inertia \[kgm²\]
 :   Rotational inertia of the electric machine at the output shaft of the EM. (Engineering mode only)
+
+Rated Power \[kW\]
+:    The nominal power the electric machine can provide continuously
 
 Gears
 :   Gear ratios of the transmission steps of the IEPC
@@ -48,7 +54,7 @@ Thermal Overload Recovery Factor  \[-\]
 :    The accumulated overload energy has to be below the max. overload capacity multiplied by this factor so that the peak power is available again.
 
 Full Load Curve
-:	TODO    
+:	Torque over speed the IEPC can apply on its output shaft. (see [IEPC Max Torque File (.viepcp)](#iepc-max-torque-file-.viepcp)). The max drive and max generation torque have to be provided for two different voltage levels.The full load curve is determined at IEPC output shaft using the gear closest to 1 (if two gear ratios have the same distance to a gear ratio of 1, the full load curve shall be declared only for the gear with the higher of the two gear ratios).     
 
 Drag Curves
 :	The motor's drag torque over engine speed when the motor is not energized. The torque values in the drag curve have to be negative. (see [Electric Motor Drag Curve File (.vemd)](#electric-motor-drag-curve-file-.vemd))

@@ -5,15 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using NLog.LayoutRenderers.Wrappers;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
 	public interface IMrfAirdragType
 	{
-		XElement GetXmlType(IAirdragDeclarationInputData inputData);
+		XElement GetXmlType(IVehicleDeclarationInputData vehicle, IAirdragDeclarationInputData inputData);
 
 
 	}
@@ -24,11 +27,25 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Implementation of IMrfAirdragType
 
-		public XElement GetXmlType(IAirdragDeclarationInputData inputData)
+		public XElement GetXmlType(IVehicleDeclarationInputData vehicle, IAirdragDeclarationInputData inputData)
 		{
 			if (inputData == null || inputData.AirDragArea == null) {
-				return null;
-			}
+				Segment? segment = null;
+				if (vehicle.VehicleCategory.IsLorry()) {
+					segment = DeclarationData.GetTruckSegment(vehicle).Segment;
+                }
+				if (vehicle.VehicleCategory.IsBus()) {
+					segment = DeclarationData.PrimaryBusSegments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
+						vehicle.Articulated);
+				}
+
+				if (segment == null) {
+					return null;
+				}
+				return new XElement(_mrf + XMLNames.Component_AirDrag,
+					new XElement(_mrf + XMLNames.Component_CertificationMethod, "Standard values"),
+					new XElement(_mrf + "CdxA", segment.Value.Missions.First().DefaultCDxA.ToXMLFormat(2)));
+            }
 			return new XElement(_mrf + XMLNames.Component_AirDrag,
 				new XElement(_mrf + XMLNames.Component_Model, inputData.Model),
 				new XElement(_mrf + XMLNames.Component_CertificationMethod, inputData.CertificationMethod),
@@ -40,7 +57,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		}
 
 		#endregion
-	}
+    }
 
 
 }

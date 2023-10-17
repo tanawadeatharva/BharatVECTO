@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
             elements.AddRange(_mrfFactory.GetGeneralVehicleOutputGroup().GetElements(vehicle));
             elements.AddRange(new List<XElement>() {
 				// new XElement(mrf + "CO2StandardGroup", vehicle.) //CO2 Standardgroup
-				new XElement(_mrf + XMLNames.CorrectedActualMass, vehicle.CurbMassChassis.ToXMLFormat(0)),
+				new XElement(_mrf + XMLNames.CorrectedActualMass, vehicle.CurbMassChassis.ValueAsUnit("kg")),
                 new XElement(_mrf + XMLNames.Vehicle_VocationalVehicle, vehicleGoup.Item2),
                 new XElement(_mrf + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle),
                 new XElement(_mrf + XMLNames.Vehicle_HybridElectricHDV, vehicle.HybridElectricHDV),

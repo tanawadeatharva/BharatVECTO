@@ -101,6 +101,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 
 		bool HasElectricMotor { get; }
 
+		bool HasGearbox { get; }
+
 		PowertrainPosition[] ElectricMotorPositions { get; }
 
 		VectoSimulationJobType VehicleArchitecutre { get; }

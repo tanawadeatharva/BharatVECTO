@@ -188,36 +188,43 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[JsonIgnore]
 		public IIterativeRunStrategy IterativeRunStrategy { get; internal set; } = new DefaultIterativeStrategy();
+		
+		public NewtonMeter TorqueDriftLeftWheel { get; internal set; }
+
+		public NewtonMeter TorqueDriftRightWheel { get; internal set; }
 
 		[DebuggerDisplay("{ID}: {PowerDemandMech}/{PowerDemandElectric}")]
 		public class AuxData
-		{
-			public delegate Watt PowerDemandFunc(IDataBus dataBus, bool mechPower = true);
-			// ReSharper disable once InconsistentNaming
-			public string ID;
+        {
+            // ReSharper disable once InconsistentNaming
+            public string ID;
 
 			public IList<string> Technology;
 
-			[SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemandMech;
-			[SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemandElectric;
+			[SIRange(0, 100 * Constants.Kilo)]
+			public Watt PowerDemandMech;
 
-			[JsonIgnore]
+			[SIRange(0, 100 * Constants.Kilo)]
+			public Watt PowerDemandElectric;
+
+            public delegate Watt PowerDemandFunc(IDataBus dataBus, bool mechPower = true);
+
+            [JsonIgnore]
 			public Func<DrivingCycleData.DrivingCycleEntry, Watt> PowerDemandMechCycleFunc;
 
-			[JsonIgnore] public PowerDemandFunc PowerDemandDataBusFunc;
+			[JsonIgnore]
+			public PowerDemandFunc PowerDemandDataBusFunc;
 
+			[Required]
+			public AuxiliaryDemandType DemandType;
 
+			[Required]
+			public bool ConnectToREESS;
 
-			[Required] public AuxiliaryDemandType DemandType;
-
-			[Required] public bool ConnectToREESS;
-
-			[Required] public bool IsFullyElectric;
+			[Required]
+			public bool IsFullyElectric;
 
 			public MissionType? MissionType;
-
-
-
 		}
 
 		// container to pass genset data from powertrain to post-processing, not filled by dataadapter/rundatafactory
@@ -394,7 +401,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 	public class VTPData
 	{
-		public double CorrectionFactor;
+		public Dictionary<FuelType, double> CorrectionFactors;
+
+		public IList<IFuelNCVData> FuelNCVs;
 	}
 
 	public class AuxFanData

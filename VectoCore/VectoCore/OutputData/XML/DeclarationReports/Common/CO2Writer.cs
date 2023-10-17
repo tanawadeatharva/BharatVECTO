@@ -47,7 +47,31 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		{
 			var retVal = new List<FormattedReportValue>() {
 				new FormattedReportValue((CO2Total / distance).ConvertToGrammPerKiloMeter()),
-				new FormattedReportValue((CO2Total / distance / payload).ConvertToGrammPerTonKilometer(), FormattedReportValue.Format1Decimal),
+				new FormattedReportValue((CO2Total / distance / payload).ConvertToGrammPerTonKilometer()),
+			};
+			if (volume.IsGreater(0)) {
+				retVal.Add(new FormattedReportValue((CO2Total / distance / volume).ConvertToGrammPerCubicMeterKiloMeter()));
+			}
+			return retVal;
+		}
+
+	}
+
+	public class LorrySummaryCO2Writer : CO2WriterBase
+	{
+		public LorrySummaryCO2Writer(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+
+		protected override IList<FormattedReportValue> GetCO2ResultEntries(Kilogram CO2Total, Meter distance, Kilogram payload,
+			CubicMeter volume, double? passengers)
+		{
+			if (distance.IsEqual(0)) {
+				// in some testcases only a single cycle is simulated which has a weighting of 0. consider this to generate a valid report
+				return new List<FormattedReportValue>() { new FormattedReportValue((CO2Total / 1.SI<Meter>()).ConvertToGrammPerKiloMeter()), };
+			}
+            var retVal = new List<FormattedReportValue>() {
+				new FormattedReportValue((CO2Total / distance).ConvertToGrammPerKiloMeter()),
+				new FormattedReportValue((CO2Total / distance / payload).ConvertToGrammPerTonKilometer(), FormattedReportValue.Format2Decimal),
 			};
 			if (volume.IsGreater(0)) {
 				retVal.Add(new FormattedReportValue((CO2Total / distance / volume).ConvertToGrammPerCubicMeterKiloMeter()));
@@ -60,6 +84,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
     public class BusCO2Writer : CO2WriterBase
     {
         public BusCO2Writer(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		protected override IList<FormattedReportValue> GetCO2ResultEntries(Kilogram CO2Total, Meter distance, Kilogram payload,
+			CubicMeter volume, double? passengers)
+		{
+			return new[] {
+				new FormattedReportValue((CO2Total / distance).ConvertToGrammPerKiloMeter()),
+				new FormattedReportValue((CO2Total / distance / passengers.Value).ConvertToGrammPerPassengerKilometer()),
+			};
+		}
+
+	}
+
+	public class BusSummaryCO2Writer : CO2WriterBase
+	{
+		public BusSummaryCO2Writer(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		protected override IList<FormattedReportValue> GetCO2ResultEntries(Kilogram CO2Total, Meter distance, Kilogram payload,
 			CubicMeter volume, double? passengers)
@@ -125,4 +164,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         #endregion
 
     }
+
+	public class BusPEVSummaryCO2Writer : BusPEVCO2Writer
+	{
+		public BusPEVSummaryCO2Writer(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+	}
 }

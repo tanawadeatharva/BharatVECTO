@@ -2,7 +2,7 @@
 
 The basic principle of the hybrid control strategy is to evaluate different options of operating modes, i.e., different splits of the demanded torque at the wheels among the electric motor and the combustion engine. For every option a cost function is calculated, taking onto account the required electric energy and the fuel consumption. Out of the examined operating modes the best option, i.e, the option with the lowest cost value is selected.
 
-The hybrid control is located in the simulated power train right after the wheels. Hence, the hybrid control strategy gets as input the torque and angular velocity at the wheels as input. 
+The hybrid control is located in the simulated power train right after the wheels. Hence, the hybrid control strategy gets the torque and angular velocity at the wheels as input. 
 
 ### Model Parameters
 

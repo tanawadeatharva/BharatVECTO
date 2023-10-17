@@ -331,7 +331,7 @@ namespace TUGraz.VectoCore.OutputData
 			});
 			var eMech = 0.SI<WattSecond>();
 			var eEl = 0.SI<WattSecond>();
-			foreach (var entry in selected.Where(x => x.P_em.IsSmaller(0) && !x.EM_off.IsEqual(0))) {
+			foreach (var entry in selected.Where(x => x.P_em.IsSmaller(0) && x.EM_off.IsEqual(0))) {
 				eMech += entry.E_mech;
 				eEl += entry.E_el;
 			}
@@ -460,6 +460,9 @@ namespace TUGraz.VectoCore.OutputData
 
 		public PerSecond ElectricMotorAverageSpeed(PowertrainPosition emPos)
 		{
+			if (Duration == 0.SI<Second>()) {
+				return 0.SI<PerSecond>();
+			}
 			var field = emPos == PowertrainPosition.IEPC
 				? ModalResultField.n_IEPC_int_
 				: ModalResultField.n_EM_electricMotor_;

@@ -3,7 +3,7 @@
     <RootNamespace>TUGraz.VectoCore</RootNamespace>
     <AssemblyName>VectoCore</AssemblyName>
     <TargetFrameworks>net48;net6.0</TargetFrameworks>
-    <DefineConstants />
+     
     <Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
 	<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -111,7 +111,7 @@
     <InternalsVisibleTo Include="VECTO_GIT" />
     <InternalsVisibleTo Include="VectoAuxiliariesTests" />
     <InternalsVisibleTo Include="VECTO3" />
-    <InternalsVisibleTo Include="VECTOMultistage" />
+    <InternalsVisibleTo Include="VECTOMultistep" />
     <InternalsVisibleTo Include="VectoMockup" />
     <InternalsVisibleTo Include="Vecto3GUI2020Test" />
   </ItemGroup>

@@ -8,7 +8,7 @@ Hardware Requirements
 
 Software Requirements
 
-   + Microsoft .NET Framework 4.5
+   + Microsoft .NET Framework 4.8 or .NET 6.0
 
 ## Installation Options
 
@@ -28,7 +28,7 @@ User Manual
 ====================================
 ![](pics/VECTOlarge.png)\
 \
-Version: VECTO 3.3 / VectoCore 3.3.2 / VectoCmd 3.3.2
+Version: VECTO 4.x / VectoCore 4.x / VectoCmd 4.x
 
 ---
 
@@ -46,6 +46,6 @@ This User Manual consists of 4 Parts:
 - [Input and Output](#input-and-output):
     : Describes the input and output file formats.
 
-This user manual describes verson 3.3.x of VECTO. 
+This user manual describes verson 4.x of VECTO. 
 
 

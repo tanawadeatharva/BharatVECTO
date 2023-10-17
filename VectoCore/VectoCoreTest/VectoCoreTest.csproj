@@ -3,7 +3,7 @@
     <RootNamespace>TUGraz.VectoCore.Tests</RootNamespace>
     <AssemblyName>VectoCoreTest</AssemblyName>
     <TargetFrameworks>net6.0</TargetFrameworks>
-    <DefineConstants />
+     
 	<!--uncomment to add windows forms an enable plotting of diagrams in some testcases-->
 	<!--<DefineConstants>$(DefineConstants);TRACE</DefineConstants>-->
 	<!--<UseWindowsForms>true</UseWindowsForms>-->
@@ -13,7 +13,7 @@
     <DebugType>full</DebugType>
   </PropertyGroup>
 	<!--uncomment to add windows forms an enable plotting of diagrams in some testcases-->
-	<PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA; $(DefineConstants), '^(.*;)*TRACE(;.*)*$'))">
+	<PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA; $(DefineConstants), '^(.*;)*VECTOTRACE(;.*)*$'))">
 		<TargetFrameworks>net6.0-windows</TargetFrameworks>
 		<UseWindowsForms>true</UseWindowsForms>
 	</PropertyGroup>
@@ -21,7 +21,7 @@
 		<DefineConstants>$(DefineConstants);MOCKUP</DefineConstants>
 	</PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="HIC.System.Windows.Forms.DataVisualization" Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA; $(DefineConstants), '^(.*;)*TRACE(;.*)*$'))" Version="1.0.1" />
+    <PackageReference Include="HIC.System.Windows.Forms.DataVisualization" Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA; $(DefineConstants), '^(.*;)*VECTOTRACE(;.*)*$'))" Version="1.0.1" />
     <PackageReference Include="Moq" Version="4.18.4" />
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
@@ -77,12 +77,17 @@
     </None>
   </ItemGroup>
 
+
   <ItemGroup>
-    <Folder Include="InputData\DeclarationDataAdapterTest\" />
+      <Content Include="$(SolutionDir)Generic Vehicles\**\*.*">
+          <Link>TestData\Shipped_Generic\%(RecursiveDir)%(FileName)%(Extension)</Link>
+          <!--<TargetPath>TestData\Integration\Multistage</TargetPath>-->
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Folder Include="InputData\DeclarationDataAdapterTest\" />
     <Folder Include="Integration\Declaration\PrimaryBus\" />
     <Folder Include="Models\Declaration\BusAux\" />
     <Folder Include="TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\CompletedBus\VIF\" />
-    <Folder Include="TestUtils\" />
   </ItemGroup>
 
   <ItemGroup>

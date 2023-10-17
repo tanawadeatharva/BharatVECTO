@@ -166,7 +166,7 @@
 								<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 							</di:Transforms>
 							<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-							<di:DigestValue>siONkqzC3QW+4si2eVwLNTwtAxUM0dxMFdAYXjVNl+0=</di:DigestValue>
+							<di:DigestValue>M4HLcihWbqOOm8XVdtOjRkGljLAnaxsNQ9w2K5XgZaI=</di:DigestValue>
 						</di:Reference>
 					</v2.3:Signature>
 				</ElectricMachineSystem>
@@ -362,7 +362,7 @@
 							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>cs4ui0pCgphHUIZKV6abOqX/XCq0CMFVc763j4vdpuE=</di:DigestValue>
+						<di:DigestValue>Wqa0zufUQ5eeZ0SbZG6uqwBlpzbddrA8Ku1+HMTi5Xo=</di:DigestValue>
 					</di:Reference>
 				</v2.3:Signature>
 			</IEPC>
