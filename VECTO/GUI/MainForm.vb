@@ -809,7 +809,7 @@ lbFound:
 
     Private Sub UpdateNotesToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles UpdateNotesToolStripMenuItem.Click
-        OpenFileExternal("User Manual\Release Notes.pdf")
+        OpenFileExternal("User Manual\Release Notes Vecto 4.pdf")
     End Sub
 
     Private Sub OpenFileExternal(filename As String)
