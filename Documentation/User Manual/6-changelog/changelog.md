@@ -2,6 +2,26 @@
 
 **VECTO-4.0.0**
 
+***Build 3211 (2023-10-16) OFFICIAL RELEASE***
+
+- First official VECTO release for the 2nd amendment of Regulation (EU) 2017/2400
+- Features
+   - Declaration Mode simulation
+       - xEV heavy lorries
+       - Conventional medium lorries
+       - xEV medium lorries
+       - conventional buses (primary and complete(d))
+       - xEV buses (primary and complete(d))
+    - Dedicated user interface for simulating buses in declaration mode using the multistep tool
+    - Updated XML reports (MRF, CIF, VIF)
+    - Updated simulation output (.vsum, .vmod)
+    - XML job files in version below 2.4 are no longer supported
+       - XML component data is still supported in all XML versions
+    - Dropped support for .NET Framework 4.5 (EOL 04/2022)
+    - Engineering mode simulation of xEV vehicles
+
+
+
 ***Build 3078 (2023-06-06) RELEASE CANDIDATE***
 
 - First fully functional tool version according to the provisions of the 2nd amendment of Regulation (EU) 2017/2400.   
