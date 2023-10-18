@@ -432,7 +432,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 						var tmpResponseDs = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
 						SetGear(gbxState);
 						// done
-						if (tmpResponseDs.DeltaFullLoad - Formulas.InertiaPower(
+						if (tmpResponseDs.Engine.EngineSpeed.IsSmaller(DataBus.EngineInfo.EngineN95hSpeed) && tmpResponseDs.DeltaFullLoad - Formulas.InertiaPower(
 								tmpResponseDs.Engine.EngineSpeed, DataBus.EngineInfo.EngineSpeed, EngineInertia, dt) < tmpResponseCurr.DeltaFullLoad) {
 							Downshift(absTime, gear);
 							return true;

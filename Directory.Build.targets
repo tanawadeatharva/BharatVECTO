@@ -11,6 +11,7 @@
 
 		<Message Text="Packaging in $(Configuration) Configuration $(VersionPrefix)" Importance="high" />
 		<Exec Command="cscript &quot;$(SolutionDir)documentation\user manual source\convertpptxtopdf.vbs&quot; &quot;$(SolutionDir)documentation\user manual source\release notes vecto3.x.pptx&quot; &quot;$(SolutionDir)documentation\user manual source\release notes vecto3.x.pdf&quot;"/>
+		<Exec Command="cscript &quot;$(SolutionDir)documentation\user manual source\convertpptxtopdf.vbs&quot; &quot;$(SolutionDir)documentation\user manual source\release notes vecto4.x.pptx&quot; &quot;$(SolutionDir)documentation\user manual source\release notes vecto4.x.pdf&quot;"/>
 		<PropertyGroup>
 			<CurrentDate>$([System.DateTime]::Now.ToString(yyy_MM_dd))</CurrentDate>
 			<DeployPath>$(SolutionDir)Deploy\$(CurrentDate)-VECTO-$(Version)\</DeployPath>
@@ -141,8 +142,39 @@
 			<DeclarationData Include="$(SolutionDir)VectoCore\VectoCore\Resources\Declaration\**\*.ahsm" Exclude="$(SolutionDir)**\MissionCycles\**\*.*"/>
 			<DeclarationData Include="$(SolutionDir)VectoCore\VectoCore\Resources\Declaration\**\*.acmp" Exclude="$(SolutionDir)**\MissionCycles\**\*.*"/>
 			<DeclarationData Include="$(SolutionDir)VectoCore\VectoCore\Resources\Declaration\**\*.vmap" Exclude="$(SolutionDir)**\MissionCycles\**\*.*"/>
-			<VectoXSD Include="$(SolutionDir)VectoCore\VectoCore\Resources\XSD\**\*.*" Exclude="$(SolutionDir)**\*Engineering*"/>
-			<VectoXMLExamples Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\*-sample.xml"/>
+			<VectoXSD Include="$(SolutionDir)VectoCore\VectoCore\Resources\XSD\**\*.*" Exclude="$(SolutionDir)**\*Engineering*;$(SolutionDir)**\Engineering\*"/>
+
+
+			<!-- VectoXML Examples -->
+			<VectoXMLExamples Include="$(SolutionDir)Documentation\XML\Readme.md" />
+
+
+			<VectoXMLExamplesMultistep Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\Airdrag_Sample_v1.xml"/>
+			<VectoXMLExamplesMultistep Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\Airdrag_Sample_v2.xml"/>
+
+			<VectoXMLExamples_v25 Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.5\TyreSample.xml"/>
+
+			<VectoXMLExamples_v23 Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vecto_vehicle-fullElectricSP.xml" />
+			<VectoXMLExamples_v23 Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\engineSample.xml" />
+			<VectoXMLExamples_v23 Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\engineSample_WHR.xml" />
+			<VectoXMLExamples_v23 Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\engineSampleDualModeDualFuel.xml" />
+			<VectoXMLExamples_v23 Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vecto_tyre-sample.xml" />
+
+			<VectoXMLExamples_v22 Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.2\vecto_tyre-sample.xml" />
+			<VectoXMLExamples_v22 Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.2\vecto_engine-sample.xml" />
+
+			<VectoXMLExamples_v21 Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.1\vecto_tyre-sample.xml" />
+			<VectoXMLExamples_v21 Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.1\vecto_engine-sample.xml" />
+
+			<VectoXMLExamples_v20 Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.0\vecto_tyre-sample.xml" />
+			<VectoXMLExamples_v20 Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.0\vecto_engine-sample.xml" />
+
+
+			<VectoXMLExamples_v10 Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion1.0\vecto_engine-sample.xml" />
+			<VectoXMLExamples_v10 Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_gearbox-sample.xml" />
+
+
+			<!-- <VectoXMLExamples Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\*-sample.xml"/> -->
 			<UserManual Include="$(SolutionDir)Documentation\User Manual\help.html"/>
 			<UserManual Include="$(SolutionDir)Documentation\VectoHashingTool\HashingToolHelp.html"/>
 			<!-- <ParameterDocu Include="$(SolutionDir)Documentation\ParameterDocumentation\VectoParameterDocumentation.html"/> -->
@@ -154,16 +186,27 @@
 			<UserManual Include="$(SolutionDir)Documentation\XML\Documentation_OfficialResults_2ndAmendment_20230425.xlsx"/>
 			<ParameterDocu Include="$(SolutionDir)Documentation\XML\ParameterDocumentation\*.*"/>
 			<ParameterDocuStyle Include="$(SolutionDir)Documentation\XML\ParameterDocumentation\HTML\css\*.*"/>
-			<ReleaseNotes Include="$(SolutionDir)Documentation\User Manual Source\Release Notes Vecto3.x.pdf"/>
+			<ReleaseNotes3 Include="$(SolutionDir)Documentation\User Manual Source\Release Notes Vecto3.x.pdf"/>
+			<ReleaseNotes4 Include="$(SolutionDir)Documentation\User Manual Source\Release Notes Vecto4.x.pdf"/>
 		</ItemGroup>
 		<Copy SourceFiles="@(GenericVehicles)" DestinationFiles="@(GenericVehicles->'$(DeployPath)Generic Vehicles\%(RecursiveDir)%(Filename)%(Extension)')" />
 		<!-- <Copy SourceFiles="@(DeclarationData)" DestinationFolder="$(DeployPath)Declaration" /> -->
 		<Copy SourceFiles="@(DeclarationData)" DestinationFiles="@(DeclarationData->'$(DeployPath)Declaration\%(RecursiveDir)%(Filename)%(Extension)')"/>
 		<Copy SourceFiles="@(MissionProfiles)" DestinationFolder="$(DeployPath)Mission Profiles" />
+		
 		<Copy SourceFiles="@(VectoXMLExamples)" DestinationFolder="$(DeployPath)XML\Examples" />
+		<Copy SourceFiles="@(VectoXMLExamplesMultistep)" DestinationFiles="@(VectoXMLExamplesMultistep->'$(DeployPath)XML\Examples\multistep_v0.1\(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(VectoXMLExamples_v25)" DestinationFiles="@(VectoXMLExamples_v25->'$(DeployPath)XML\Examples\v2.5\%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(VectoXMLExamples_v23)" DestinationFiles="@(VectoXMLExamples_v23->'$(DeployPath)XML\Examples\v2.3\%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(VectoXMLExamples_v22)" DestinationFiles="@(VectoXMLExamples_v22->'$(DeployPath)XML\Examples\v2.2\%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(VectoXMLExamples_v20)" DestinationFiles="@(VectoXMLExamples_v20->'$(DeployPath)XML\Examples\v2.0\%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(VectoXMLExamples_V10)" DestinationFiles="@(VectoXMLExamples_v10->'$(DeployPath)XML\Examples\v1.0\%(Filename)%(Extension)')" />
+
+		
 		<Copy SourceFiles="@(VectoXSD)" DestinationFolder="$(DeployPath)XML\XSD" />
 		<Copy SourceFiles="@(UserManual)" DestinationFolder="$(DeployPath)User Manual" />
-		<Copy SourceFiles="@(ReleaseNotes)" DestinationFiles="$(DeployPath)User Manual\Release Notes.pdf" />
+		<Copy SourceFiles="@(ReleaseNotes3)" DestinationFiles="$(DeployPath)User Manual\Release Notes Vecto 3.pdf" />
+		<Copy SourceFiles="@(ReleaseNotes4)" DestinationFiles="$(DeployPath)User Manual\Release Notes Vecto 4.pdf" />
 		<Copy SourceFiles="@(VectoConfigurationSample)" DestinationFolder="$(DeployPath)"/>
 		<Copy SourceFiles="$(SolutionDir)\Documentation\User Manual Source\README for Mission Profiles Directory.txt" DestinationFiles="$(DeployPath)Mission Profiles\!! README !!.TXT"/>
 		<Copy SourceFiles="$(SolutionDir)\Documentation\User Manual Source\README for Declaration Directory.txt" DestinationFiles="$(DeployPath)Declaration\!! README !!.TXT"/>

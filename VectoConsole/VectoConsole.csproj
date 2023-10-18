@@ -5,7 +5,7 @@
     <AssemblyName>vectocmd</AssemblyName>
     <ApplicationIcon>VECTO.ico</ApplicationIcon>
     <TargetFrameworks>net48;net6.0</TargetFrameworks>
-    <DefineConstants />
+     
     <Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
   </PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net48|AnyCPU'">

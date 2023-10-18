@@ -1,4 +1,10 @@
-﻿/*
+﻿#if CERTIFICATION_RELEASE || RELEASE_CANDIDATE
+#define PROHIBIT_OLD_XML
+#endif
+
+//#define PROHIBIT_OLD_XML
+
+/*
 * This file is part of VECTO.
 *
 * Copyright © 2012-2019 European Union
@@ -35,6 +41,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -44,6 +51,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Utils;
+
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 {
@@ -67,10 +75,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			Job = jobData;
 			SourceType = DataSourceType.XMLEmbedded;
+
+#if PROHIBIT_OLD_XML
+			throw new VectoException("XML Jobs in version 1.0 are no longer supported!");
+#endif
+        }
+
+        protected XMLDeclarationVehicleDataProviderV10(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool dummy)
+			: base(xmlNode, sourceFile)
+		{
+			Job = jobData;
+			SourceType = DataSourceType.XMLEmbedded;
 		}
 
 
-		public virtual XmlElement ComponentNode
+        public virtual XmlElement ComponentNode
 		{
 			get {
 				if (ExemptedVehicle) {
@@ -278,10 +297,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationVehicleDataProviderV20(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) :
-			base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationVehicleDataProviderV20(IXMLDeclarationJobInputData jobData, XmlNode xmlNode,
+			string sourceFile) :
+			base(jobData, xmlNode, sourceFile, false)
+		{
+#if PROHIBIT_OLD_XML
+			throw new VectoException("XML Jobs in version 2.0 are no longer supported!");
+#endif
+        }
 
-		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+        protected XMLDeclarationVehicleDataProviderV20(IXMLDeclarationJobInputData jobData, XmlNode xmlNode,
+			string sourceFile, bool dummy) :
+			base(jobData, xmlNode, sourceFile, dummy) {}
+
+        protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		public override bool VocationalVehicle => false;
 
@@ -334,14 +363,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 
-		public XMLDeclarationVehicleDataProviderV21(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) :
-			base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationVehicleDataProviderV21(IXMLDeclarationJobInputData jobData, XmlNode xmlNode,
+			string sourceFile) :
+			base(jobData, xmlNode, sourceFile, false)
+		{
+#if PROHIBIT_OLD_XML
+			throw new VectoException("XML Jobs in version 2.1 are no longer supported!");
+#endif
+        }
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
 		#endregion
 
-		public override VehicleCategory VehicleCategory
+        public override VehicleCategory VehicleCategory
 		{
 			get {
 				var val = GetString(XMLNames.Vehicle_VehicleCategory);
@@ -373,11 +408,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile)
 		{
 			SourceType = DataSourceType.XMLEmbedded;
-		}
+#if PROHIBIT_OLD_XML
+			throw new VectoException("XML Jobs in version 2.2 are no longer supported!");
+#endif
+        }
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+        protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -450,9 +488,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode,
 			sourceFile)
 		{
-		}
+#if PROHIBIT_OLD_XML
+			throw new VectoException("XML Jobs in version 2.2.1 are no longer supported!");
+#endif
+        }
 
-		public override bool? SleeperCab => ElementExists(XMLNames.Vehicle_SleeperCab) ? XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_SleeperCab)) : (bool?)null;
+        public override bool? SleeperCab => ElementExists(XMLNames.Vehicle_SleeperCab) ? XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_SleeperCab)) : (bool?)null;
 
 		public override AxleConfiguration AxleConfiguration =>
 			ElementExists(XMLNames.Vehicle_AxleConfiguration)
@@ -773,7 +814,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected IAdvancedDriverAssistantSystemDeclarationInputData _adas;
 
 		protected AbstractXMLVehicleDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
-			: base(jobData, xmlNode, sourceFile) { }
+			: base(jobData, xmlNode, sourceFile, false) { }
 		
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10

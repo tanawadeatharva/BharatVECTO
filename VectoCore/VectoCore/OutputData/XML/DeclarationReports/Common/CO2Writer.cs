@@ -65,7 +65,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		protected override IList<FormattedReportValue> GetCO2ResultEntries(Kilogram CO2Total, Meter distance, Kilogram payload,
 			CubicMeter volume, double? passengers)
 		{
-			var retVal = new List<FormattedReportValue>() {
+			if (distance.IsEqual(0)) {
+				// in some testcases only a single cycle is simulated which has a weighting of 0. consider this to generate a valid report
+				return new List<FormattedReportValue>() { new FormattedReportValue((CO2Total / 1.SI<Meter>()).ConvertToGrammPerKiloMeter()), };
+			}
+            var retVal = new List<FormattedReportValue>() {
 				new FormattedReportValue((CO2Total / distance).ConvertToGrammPerKiloMeter()),
 				new FormattedReportValue((CO2Total / distance / payload).ConvertToGrammPerTonKilometer(), FormattedReportValue.Format2Decimal),
 			};

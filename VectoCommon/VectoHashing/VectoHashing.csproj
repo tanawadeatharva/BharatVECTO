@@ -7,7 +7,7 @@
     <RootNamespace>TUGraz.VectoHashing</RootNamespace>
     <AssemblyName>VectoHashing</AssemblyName>
     <TargetFrameworks>net48;net6.0</TargetFrameworks>
-    <DefineConstants />
+     
     <Configurations>Debug;Release;MockupRelease</Configurations>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>

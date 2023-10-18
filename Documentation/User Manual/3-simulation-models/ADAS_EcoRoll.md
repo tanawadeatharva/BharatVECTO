@@ -130,6 +130,12 @@ The following state diagram depicts when eco-roll is activated during the simula
 
 ![](pics/EcoRollActivation.svg)
 
+## Advanced Driver Assistant Systems: AT Gearbox Eco-Roll Release Lockup Clutch
+
+### Description
+
+Eco-Roll Release Lockup Clutch is a functionality only relevant for APT-transmissions which opens the torque converter lock-up clutch during Eco-roll mode. This allows the engine to operate in coast mode at lower engine speeds and reduces or even eliminates fuel injection. This function is only declareable for pure ICE (conventional) vehicles.
+
 ## Advanced Driver Assistant Systems: Predictive Cruise Control
 
 ### Description

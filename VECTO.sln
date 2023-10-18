@@ -34,7 +34,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectoCommon", "VectoCommon\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelbasedTests", "VectoCore\ModelbasedTests\ModelbasedTests.csproj", "{A0256B2A-09F8-45AD-B46A-FD98D7AAAA0C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectoCore BugReportTests", "..\VECTO-Bugreports\BugReportTests\VectoCore BugReportTests.csproj", "{7C364099-9B85-473A-8A42-BBEBE4798FF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectoCore BugReportTests", "..\VECTO-Bugreports_DEV\BugReportTests\VectoCore BugReportTests.csproj", "{7C364099-9B85-473A-8A42-BBEBE4798FF5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectoHashing", "VectoCommon\VectoHashing\VectoHashing.csproj", "{B673E12F-D323-4C4C-8805-9915B2C72D3D}"
 EndProject
@@ -48,7 +48,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VECTO3GUI2020", "VECTO3GUI2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vecto3GUI2020Test", "Vecto3GUI2020Test\Vecto3GUI2020Test.csproj", "{7F4FF473-96B3-461E-9CE6-76D3B75F87CB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Article10Notifications", "..\VECTO-Article10\Article10Notifications.csproj", "{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Article10Notifications", "..\VECTO-Article10_DEV\Article10Notifications\Article10Notifications.csproj", "{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParameterDocumentationTest", "..\vecto-SchemaDocumentation\ParameterDocumentationTest\ParameterDocumentationTest.csproj", "{C5A75A10-0726-4FCA-B350-2F1694E1EABE}"
 EndProject

@@ -118,11 +118,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 
 			public readonly PerSecond MotorSpeed;
 			public readonly NewtonMeter Torque;
-			public readonly Watt PowerElectrical;
+			public Watt PowerElectrical;
 
 			public override string ToString()
 			{
-				return $"{MotorSpeed.AsRPM} / {Torque} / {PowerElectrical}";
+				return $"{MotorSpeed.AsRPM} [rpm] / {Torque} / {PowerElectrical}";
 			}
 		}
 

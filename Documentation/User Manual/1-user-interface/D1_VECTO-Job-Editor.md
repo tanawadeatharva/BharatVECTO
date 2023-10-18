@@ -65,7 +65,7 @@ The list contains the predefined auxiliaries where the concrete technology for e
 Auxiliaries
 :	In Engineering Mode the auxiliary power demand can be defined in three ways. 
 
-The first option is to define the power demand directly in the driving cycle in the column "Padd" (see [Driving Cycles](#driving-cycles-.vdri). This allows to vary the auxiliary load over distance (or time, for time-based driving cycles). TODO: ask for Padd
+The first option is to define the power demand directly in the driving cycle in the column "Padd" (see [Driving Cycles](#driving-cycles-.vdri). This allows to vary the auxiliary load over distance (or time, for time-based driving cycles).
 
 The second option is to define a constant power demand over the whole cycle. The auxiliary power demand can be specified depending on whether the combustion engine is on or off and the vehicle is driving. The auxiliary power demand during engine-off phase is corrected in the [post-processing](#engine-fuel-consumption-correction).
 

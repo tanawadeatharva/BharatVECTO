@@ -117,8 +117,8 @@ Output values in vmod at beginning and end of simulation interval
     - Opens this User Manual
 - **Release Notes**
     - Open the Release Notes (pdf)
-- **Report Issue via code.europa.eu**
-    - Open the code.europa.eu website for reporting issues
+- **Report Bug via CITnet / JIRA**
+    - Open the CITnet/JIRA website for reporting bug
 - **Create Activation File**
     - Create an Activation File used for Licensing
 - **About VECTO**

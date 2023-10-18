@@ -165,6 +165,7 @@ public class PrimaryBusSimulation
 	// Testcase Stefan Present
 	[TestCase(@"E:\QUAM\Downloads\HybridEquivFactor_IEPCAxle\P32_IEPC_Base.xml", -1, TestName = "PrimaryBus IEPC StefanP")]
 	[TestCase(@"E:\QUAM\Downloads\HybridEquivFactor_IEPCAxle\P1_HEV_P32_NonOVC_ICE-I_Base.xml", -1, TestName = "PrimaryBus EffFactor StefanP")]
+	[TestCase(@"E:\QUAM\Downloads\StefanP_OVC-SoC_UF\P2_HEV_P32_OVC_ICE-I_Base.xml", 12, TestName = "PrimaryBus StefanP EC_EL in XML")]
     public void PrimaryBusSimulationTest(string jobFile, int runIdx)
 	{
 		TestMissionFilter()?.SetMissions((MissionType.Interurban, LoadingType.ReferenceLoad));
@@ -492,7 +493,7 @@ public class PrimaryBusSimulation
 	public void RunSimulationPrimary(string jobFile, int runIdx, out string vifFile, params Action<VectoRunData>[] runDataModifier)
 	{
 #if FULL_SIMULATIONS
-		runIdx = -1;
+		//runIdx = -1;
 #endif
 
 		var filePath = Path.Combine(BASE_DIR, jobFile);

@@ -19,8 +19,14 @@ VECTO automatically uses relative paths if the input file (e.g. electric power m
 Make and Model
 :   Free text defining the gearbox model, type, etc.
 
+EM Type
+:   Type of the electric motor (ASM, PSM, ESM, RM)
+
 Inertia \[kgm²\]
 :   Rotational inertia of the gearbox (constant for all gears). (Engineering mode only)
+
+Rated Power \[kW\]
+:    The nominal power the electric machine can provide continuously
 
 Continuous Torque \[Nm\]
 :    The nominal torque the electric machine can provide continuously

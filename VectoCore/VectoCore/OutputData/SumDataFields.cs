@@ -4,7 +4,6 @@ using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -14,6 +13,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using static TUGraz.VectoCore.OutputData.SumDataFields;
 
 namespace TUGraz.VectoCore.OutputData
 {
@@ -21,8 +21,6 @@ namespace TUGraz.VectoCore.OutputData
 	[SuppressMessage("ReSharper", "IdentifierTypo")]
 	public static class SumDataFields
 	{
-		#region Fields
-
 		public const string INTERNAL_PREFIX = "INTERNAL";
 
 		public const string SORT = INTERNAL_PREFIX + " Sorting";
@@ -59,8 +57,6 @@ namespace TUGraz.VectoCore.OutputData
 		public const string GEARBOX_MANUFACTURER = "Gearbox manufacturer [-]";
 		public const string GEARBOX_MODEL = "Gearbox model [-]";
 		public const string GEARBOX_TYPE = "Gearbox type [-]";
-		public const string GEAR_RATIO_FIRST_GEAR = "Gear ratio first gear [-]";
-		public const string GEAR_RATIO_LAST_GEAR = "Gear ratio last gear [-]";
 
 		public const string TORQUECONVERTER_MANUFACTURER = "Torque converter manufacturer [-]";
 		public const string TORQUECONVERTER_MODEL = "Torque converter model [-]";
@@ -222,6 +218,8 @@ namespace TUGraz.VectoCore.OutputData
 		public const string BRAKING_TIME_SHARE = "BrakingTimeShare [%]";
 
 		public const string TIME_SHARE_PER_GEAR_FORMAT = "Gear {0} TimeShare [%]";
+		public const string RATIO_PER_GEAR_FORMAT = "Gear {0} Ratio [-]";
+		public const string P2_5_RATIO_PER_GEAR_FORMAT = "Gear {0} P2.5 Ratio [-]";
 
 		public const string NUM_AXLES_DRIVEN = "Number axles vehicle driven [-]";
 		public const string NUM_AXLES_NON_DRIVEN = "Number axles vehicle non-driven [-]";
@@ -290,6 +288,12 @@ namespace TUGraz.VectoCore.OutputData
 		public const string E_EM_Mot_LOSS_FORMAT = "E_EM_{0}-em_loss [kWh]";
 		public const string E_EM_LOSS_FORMAT = "E_EM_{0}_loss [kWh]";
 		public const string E_EM_OFF_TIME_SHARE = "EM {0} off time share [%]";
+		public const string EM_RATED_TORQUE_HI = "EM {0} high voltage rated T [Nm]";
+		public const string EM_RATED_TORQUE_LO = "EM {0} low voltage rated T [Nm]";
+		public const string EM_RATED_POWER = "EM {0} total rated power [kW]";
+		public const string EM_RATED_SPEED_HI = "EM {0} high voltage rated speed [rpm]";
+		public const string EM_RATED_SPEED_LO = "EM {0} low voltage rated speed [rpm]";
+		public const string EM_MOTOR_NUMBER = "EM number of motors";
 
 		public const string REESS_CAPACITY = "REESS Capacity";
 		public const string REESS_StartSoC = "REESS Start SoC [%]";
@@ -344,13 +348,9 @@ namespace TUGraz.VectoCore.OutputData
 			public const string FC_HEV_SOC_KM = "FC-SoC [g/km]";
 			public const string FC_HEV_SOC_CORR_H = "FC-SoC_Corr [g/h]";
 			public const string FC_HEV_SOC_CORR_KM = "FC-SoC_Corr [g/km]";
-        }
+		}
 
 		#endregion
-
-
-		#endregion
-
 
 
 
@@ -459,9 +459,12 @@ namespace TUGraz.VectoCore.OutputData
 					})
 				}, {
 					REESS_CAPACITY,
-					SumFunc((r, m) =>
-						r.BatteryData?.Capacity != null ? $"{r.BatteryData?.Capacity.AsAmpHour} Ah" :
-						r.SuperCapData?.Capacity != null ? $"{r.SuperCapData.Capacity} F" : null)
+					SumFunc((r, m) => r.BatteryData?.Capacity != null
+						?
+						$"{r.BatteryData?.Capacity.AsAmpHour.ToString(CultureInfo.InvariantCulture)} Ah"
+						: r.SuperCapData?.Capacity != null
+							? $"{r.SuperCapData.Capacity.Value().ToString(CultureInfo.InvariantCulture)} F"
+							: null)
 				},
 				{ TCU_MODEL, SumFunc((r, m) => r.ShiftStrategy) },
 				{ PTO_TECHNOLOGY, SumFunc((r, m) => r.PTO?.TransmissionType ?? "") },
@@ -501,16 +504,29 @@ namespace TUGraz.VectoCore.OutputData
 						? (ConvertedSI)r.EngineData.RatedSpeedDeclared.AsRPM.SI<Scalar>()
 						: (ConvertedSI)r.EngineData?.FullLoadCurves[0].RatedSpeed.AsRPM.SI<Scalar>())
 				},
-				{ ENGINE_DISPLACEMENT, SumFunc((r, m) => r.EngineData?.Displacement.ConvertToCubicCentiMeter()) },
-				{ ENGINE_WHTC_URBAN, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.WHTCUrban.ToString(CultureInfo.InvariantCulture)).Join(" / ")) },
-				{ ENGINE_WHTC_RURAL, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.WHTCRural.ToString(CultureInfo.InvariantCulture)).Join(" / ")) }, {
-					ENGINE_WHTC_MOTORWAY, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.WHTCMotorway.ToString(CultureInfo.InvariantCulture)).Join(" / "))
+				{ ENGINE_DISPLACEMENT, SumFunc((r, m) => r.EngineData?.Displacement.ConvertToCubicCentiMeter()) }, {
+					ENGINE_WHTC_URBAN,
+					SumFunc((r, m) =>
+						r.EngineData?.Fuels.Select(x => x.WHTCUrban.ToString(CultureInfo.InvariantCulture)).Join(" / "))
+				}, {
+					ENGINE_WHTC_RURAL,
+					SumFunc((r, m) =>
+						r.EngineData?.Fuels.Select(x => x.WHTCRural.ToString(CultureInfo.InvariantCulture)).Join(" / "))
+				}, {
+					ENGINE_WHTC_MOTORWAY,
+					SumFunc((r, m) =>
+						r.EngineData?.Fuels.Select(x => x.WHTCMotorway.ToString(CultureInfo.InvariantCulture))
+							.Join(" / "))
 				}, {
 					ENGINE_BF_COLD_HOT,
-					SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.ColdHotCorrectionFactor.ToString(CultureInfo.InvariantCulture)).Join(" / "))
+					SumFunc((r, m) =>
+						r.EngineData?.Fuels
+							.Select(x => x.ColdHotCorrectionFactor.ToString(CultureInfo.InvariantCulture)).Join(" / "))
 				}, {
 					ENGINE_CF_REG_PER,
-					SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.CorrectionFactorRegPer.ToString(CultureInfo.InvariantCulture)).Join(" / "))
+					SumFunc((r, m) =>
+						r.EngineData?.Fuels.Select(x => x.CorrectionFactorRegPer.ToString(CultureInfo.InvariantCulture))
+							.Join(" / "))
 				}, {
 					ENGINE_ACTUAL_CORRECTION_FACTOR, SumFunc((r, m) => {
 						if (r.Mission?.MissionType == MissionType.VerificationTest) {
@@ -523,7 +539,8 @@ namespace TUGraz.VectoCore.OutputData
 							return fuelsWhtc?.Join(" / ");
 						}
 
-						return r.EngineData?.Fuels.Select(x => x.FuelConsumptionCorrectionFactor.ToString(CultureInfo.InvariantCulture)).Join(" / ");
+						return r.EngineData?.Fuels.Select(x =>
+							x.FuelConsumptionCorrectionFactor.ToString(CultureInfo.InvariantCulture)).Join(" / ");
 					})
 				},
 
@@ -657,17 +674,7 @@ namespace TUGraz.VectoCore.OutputData
 							? ""
 							: r.GearboxData?.CertificationNumber)
 				},
-				{ GEARBOX_CERTIFICATION_METHOD, SumFunc((r, m) => r.GearboxData?.CertificationMethod.GetName()) }, {
-					GEAR_RATIO_FIRST_GEAR, SumFunc((r, m) => r.GearboxData?.Gears.Count > 0
-						? (double.IsNaN(r.GearboxData.Gears.First().Value.Ratio)
-							? (ConvertedSI)r.GearboxData.Gears.First().Value.TorqueConverterRatio.SI<Scalar>()
-							: (ConvertedSI)r.GearboxData.Gears.First().Value.Ratio.SI<Scalar>())
-						: 0.SI<Scalar>())
-				}, {
-					GEAR_RATIO_LAST_GEAR, SumFunc((r, m) => r.GearboxData?.Gears.Count > 0
-						? (ConvertedSI)r.GearboxData.Gears.Last().Value.Ratio.SI<Scalar>()
-						: (ConvertedSI)0.SI<Scalar>())
-				},
+				{ GEARBOX_CERTIFICATION_METHOD, SumFunc((r, m) => r.GearboxData?.CertificationMethod.GetName()) },
 
 				// torque converter
 				{
@@ -848,7 +855,7 @@ namespace TUGraz.VectoCore.OutputData
 				},
 
 				//P-HEV
-				{ f_equiv, SumFunc((r, m) => r.HybridStrategyParameters?.EquivalenceFactor ?? Double.NaN) },
+				{ f_equiv, SumFunc((r, m) => r.HybridStrategyParameters?.EquivalenceFactor ?? double.NaN) },
 
 				// performance entries
 				{ ACC, SumFunc((r, m) => (ConvertedSI)m.AccelerationAverage(), ModalResultField.acc) },
@@ -1026,10 +1033,8 @@ namespace TUGraz.VectoCore.OutputData
 				},
 				//			{, SumFunc((r, m) =>)},
 
-
-
-
 			};
+
 
 		public static readonly Dictionary<string, Tuple<ModalResultField[], WriteFuelEntry>> FuelDataValue =
 			new Dictionary<string, Tuple<ModalResultField[], WriteFuelEntry>>() {
@@ -1185,42 +1190,53 @@ namespace TUGraz.VectoCore.OutputData
 							.ConvertToGramPerKiloWattHour()
 							: null)
 				},
-				//TODO: use from PEV if possible
-				{
-					FuelCellFields.FC_AUXHTR_H,
-					FuelFunc((r, m, f) =>
-						m.CorrectedModalData.FuelConsumptionCorrection(f).FC_AUXHTR_H?.ConvertToGrammPerHour())
-				}, {
-					FuelCellFields.FC_AUXHTR_KM,
-					FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_AUXHTR_KM
-						?.ConvertToGrammPerKiloMeter())
-				}, {
-					FuelCellFields.FC_AUXHTR_H_CORR,
-					FuelFunc((r, m, f) =>
-						m.CorrectedModalData.FuelConsumptionCorrection(f).FC_AUXHTR_H?.ConvertToGrammPerHour())
-				}, {
-					FuelCellFields.FC_AUXHTR_KM_CORR,
-					FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_ESS_CORR_KM
-						?.ConvertToGrammPerKiloMeter())
-				},
+
 			};
 
-		public static readonly Dictionary<string, WriteEmEntry> ElectricMotorValue = new Dictionary<string, WriteEmEntry>() {
-			{ EM_AVG_SPEED_FORMAT, (r, m, em) =>    m.ElectricMotorAverageSpeed(em).ConvertToRoundsPerMinute() },
-			{ E_EM_Mot_DRIVE_FORMAT, (r, m, em) => m.TotalElectricMotorMotWorkDrive(em).ConvertToKiloWattHour() },
-			{ E_EM_Mot_GENERATE_FORMAT, (r, m, em) => m.TotalElectricMotorMotWorkRecuperate(em).ConvertToKiloWattHour() },
-			{ ETA_EM_Mot_DRIVE_FORMAT, (r, m, em) =>    new ConvertedSI(m.ElectricMotorMotEfficiencyDrive(em), "") },
-			{ ETA_EM_Mot_GEN_FORMAT, (r, m, em) =>  new ConvertedSI(m.ElectricMotorMotEfficiencyGenerate(em), "") },
-			{ E_EM_DRIVE_FORMAT, (r, m, em) => m.TotalElectricMotorWorkDrive(em).ConvertToKiloWattHour() },
-			{ E_EM_GENERATE_FORMAT, (r, m, em) => m.TotalElectricMotorWorkRecuperate(em).ConvertToKiloWattHour() },
-			{ ETA_EM_DRIVE_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorEfficiencyDrive(em), "") },
-			{ ETA_EM_GEN_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorEfficiencyGenerate(em), "") },
-			{ E_EM_OFF_Loss_Format, (r, m, em) => m.ElectricMotorOffLosses(em).ConvertToKiloWattHour() },
-			{ E_EM_LOSS_TRANSM_FORMAT, (r, m, em) => m.ElectricMotorTransmissionLosses(em)?.ConvertToKiloWattHour() },
-			{ E_EM_Mot_LOSS_FORMAT, (r, m, em) => m.ElectricMotorMotLosses(em)?.ConvertToKiloWattHour() },
-			{ E_EM_LOSS_FORMAT, (r, m, em) => m.ElectricMotorLosses(em)?.ConvertToKiloWattHour() },
-			{ E_EM_OFF_TIME_SHARE, (r, m, em) => (ConvertedSI)m.ElectricMotorOffTimeShare(em) },
-		};
+		public static readonly Dictionary<string, WriteEmEntry> ElectricMotorValue =
+			new Dictionary<string, WriteEmEntry>() {
+				{ EM_AVG_SPEED_FORMAT, (r, m, em) => m.ElectricMotorAverageSpeed(em).ConvertToRoundsPerMinute() },
+				{ E_EM_Mot_DRIVE_FORMAT, (r, m, em) => m.TotalElectricMotorMotWorkDrive(em).ConvertToKiloWattHour() }, {
+					E_EM_Mot_GENERATE_FORMAT,
+					(r, m, em) => m.TotalElectricMotorMotWorkRecuperate(em).ConvertToKiloWattHour()
+				},
+				{ ETA_EM_Mot_DRIVE_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorMotEfficiencyDrive(em), "") },
+				{ ETA_EM_Mot_GEN_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorMotEfficiencyGenerate(em), "") },
+				{ E_EM_DRIVE_FORMAT, (r, m, em) => m.TotalElectricMotorWorkDrive(em).ConvertToKiloWattHour() },
+				{ E_EM_GENERATE_FORMAT, (r, m, em) => m.TotalElectricMotorWorkRecuperate(em).ConvertToKiloWattHour() },
+				{ ETA_EM_DRIVE_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorEfficiencyDrive(em), "") },
+				{ ETA_EM_GEN_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorEfficiencyGenerate(em), "") },
+				{ E_EM_OFF_Loss_Format, (r, m, em) => m.ElectricMotorOffLosses(em).ConvertToKiloWattHour() }, {
+					E_EM_LOSS_TRANSM_FORMAT,
+					(r, m, em) => m.ElectricMotorTransmissionLosses(em)?.ConvertToKiloWattHour()
+				},
+				{ E_EM_Mot_LOSS_FORMAT, (r, m, em) => m.ElectricMotorMotLosses(em)?.ConvertToKiloWattHour() },
+				{ E_EM_LOSS_FORMAT, (r, m, em) => m.ElectricMotorLosses(em)?.ConvertToKiloWattHour() },
+				{ E_EM_OFF_TIME_SHARE, (r, m, em) => (ConvertedSI)m.ElectricMotorOffTimeShare(em) }, {
+					EM_RATED_POWER,
+					(r, m, em) => DeclarationData.GetReferencePropulsionPower(r.VehicleData.InputData)
+						.ConvertToKiloWatt()
+				}, {
+					EM_RATED_SPEED_HI,
+					(r, m, em) => r.VehicleData.InputData.Components.ElectricMachines.Entries.First().ElectricMachine
+						.VoltageLevels.MaxBy(v => v.VoltageLevel).ContinuousTorqueSpeed.AsRPM
+				}, {
+					EM_RATED_SPEED_LO,
+					(r, m, em) => r.VehicleData.InputData.Components.ElectricMachines.Entries.First().ElectricMachine
+						.VoltageLevels.MinBy(v => v.VoltageLevel).ContinuousTorqueSpeed.AsRPM
+				}, {
+					EM_RATED_TORQUE_LO,
+					(r, m, em) => (ConvertedSI)r.VehicleData.InputData.Components.ElectricMachines.Entries.First()
+						.ElectricMachine.VoltageLevels.MaxBy(v => v.VoltageLevel).ContinuousTorque
+				}, {
+					EM_RATED_TORQUE_HI,
+					(r, m, em) => (ConvertedSI)r.VehicleData.InputData.Components.ElectricMachines.Entries.First()
+						.ElectricMachine.VoltageLevels.MinBy(v => v.VoltageLevel).ContinuousTorque
+				}, {
+					EM_MOTOR_NUMBER,
+					(r, m, em) => r.VehicleData.InputData.Components.ElectricMachines.Entries.First().Count
+				},
+			};
 
 		public static readonly Dictionary<string, WriteEmEntry> IEPCValue = new Dictionary<string, WriteEmEntry>() {
 			{ IEPC_AVG_SPEED_FORMAT, (r, m, em) => m.ElectricMotorAverageSpeed(em).ConvertToRoundsPerMinute() },
@@ -1235,9 +1251,11 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static readonly WriteAuxEntry AuxDataValue = (r, m, a) => m.AuxiliaryWork(a).ConvertToKiloWattHour();
 
+
 		public static readonly Dictionary<string, Tuple<ModalResultField[], WriteSumEntry>> FuelCellValue =
 			new Dictionary<string, Tuple<ModalResultField[], WriteSumEntry>>() {
-				{ FuelCellFields.FCMAP_H,
+				{
+					FuelCellFields.FCMAP_H,
 					SumFunc((r, m) => {
 						return m.Data.FuelCellComponentIds.Aggregate(0.SI<KilogramPerSecond>(),
 							(a, id) => {
@@ -1246,8 +1264,9 @@ namespace TUGraz.VectoCore.OutputData
 									0.SI<KilogramPerSecond>();
 								return a + singleFc;
 							}).ConvertToGrammPerHour();
-					})},
-				{ FuelCellFields.FCMAP_KM,
+					})
+				}, {
+					FuelCellFields.FCMAP_KM,
 					SumFunc((r, m) => {
 						return m.Data.FuelCellComponentIds.Aggregate(0.SI<KilogramPerMeter>(),
 							(a, id) => {
@@ -1256,34 +1275,46 @@ namespace TUGraz.VectoCore.OutputData
 									0.SI<KilogramPerMeter>();
 								return a + singleFc;
 							}).ConvertToGrammPerKiloMeter();
-					})}, 
-				{ FuelCellFields.FCFINAL_H, SumFunc((r, m) =>
-						m.CorrectedModalData.FuelConsumptionCorrection(FuelData.H2).FC_FINAL_H.ConvertToGrammPerHour())}, 
-				{ FuelCellFields.FCFINAL_KM, SumFunc((r, m) =>
+					})
+				}, {
+					FuelCellFields.FCFINAL_H, SumFunc((r, m) =>
+						m.CorrectedModalData.FuelConsumptionCorrection(FuelData.H2).FC_FINAL_H.ConvertToGrammPerHour())
+				}, {
+					FuelCellFields.FCFINAL_KM, SumFunc((r, m) =>
 						m.CorrectedModalData.FuelConsumptionCorrection(FuelData.H2).FC_FINAL_KM
-							.ConvertToGrammPerKiloMeter())}, 
-				{ FuelCellFields.K_FCSLine, SumFunc((r, m) =>
+							.ConvertToGrammPerKiloMeter())
+				}, {
+					FuelCellFields.K_FCSLine, SumFunc((r, m) =>
 						m.CorrectedModalData.FuelConsumptionCorrection(FuelData.H2).FuelCellLine
-							.ConvertToGramPerKiloWattHour()) }, { FuelCellFields.P_FCS, SumFunc((r, m) => {
+							.ConvertToGramPerKiloWattHour())
+				}, {
+					FuelCellFields.P_FCS, SumFunc((r, m) => {
 						var p_fcs = m.TimeIntegral<WattSecond>(ModalResultField.P_fuelCellSystem_actual) / m.Duration;
 						return p_fcs.ConvertToKiloWatt();
-					})},
-				{ FuelCellFields.E_FCS, SumFunc((r, m) => {
+					})
+				}, {
+					FuelCellFields.E_FCS, SumFunc((r, m) => {
 						var e_fcs = m.TimeIntegral<WattSecond>(ModalResultField.P_fuelCellSystem_actual);
 						return e_fcs.ConvertToKiloWattHour();
-					})},
-				{ FuelCellFields.FC_HEV_SOC_CORR_H, SumFunc((r, m) => m.CorrectedModalData.FuelConsumptionCorrection(FuelData.H2).FC_REESS_SOC_CORR_H
-					.ConvertToGrammPerHour())},
-
-				{ FuelCellFields.FC_HEV_SOC_CORR_KM,SumFunc((r, m) => m.CorrectedModalData.FuelConsumptionCorrection(FuelData.H2).FC_REESS_SOC_CORR_KM
-					.ConvertToGrammPerKiloMeter()) },
-
-				{ FuelCellFields.FC_HEV_SOC_H,SumFunc((r, m) => m.CorrectedModalData.FuelConsumptionCorrection(FuelData.H2).FC_REESS_SOC_H
-					.ConvertToGrammPerHour()) },
-
-				{ FuelCellFields.FC_HEV_SOC_KM,SumFunc((r, m) => m.CorrectedModalData.FuelConsumptionCorrection(FuelData.H2).FC_REESS_SOC_KM
-					.ConvertToGrammPerKiloMeter()) },
-            };
-
+					})
+				}, {
+					FuelCellFields.FC_HEV_SOC_CORR_H, SumFunc((r, m) => m.CorrectedModalData
+						.FuelConsumptionCorrection(FuelData.H2).FC_REESS_SOC_CORR_H
+						.ConvertToGrammPerHour())
+				}, {
+					FuelCellFields.FC_HEV_SOC_CORR_KM, SumFunc((r, m) => m.CorrectedModalData
+						.FuelConsumptionCorrection(FuelData.H2).FC_REESS_SOC_CORR_KM
+						.ConvertToGrammPerKiloMeter())
+				}, {
+					FuelCellFields.FC_HEV_SOC_H, SumFunc((r, m) => m.CorrectedModalData
+						.FuelConsumptionCorrection(FuelData.H2).FC_REESS_SOC_H
+						.ConvertToGrammPerHour())
+				}, {
+					FuelCellFields.FC_HEV_SOC_KM, SumFunc((r, m) => m.CorrectedModalData
+						.FuelConsumptionCorrection(FuelData.H2).FC_REESS_SOC_KM
+						.ConvertToGrammPerKiloMeter())
+				},
+			};
 	}
+
 }

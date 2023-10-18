@@ -79,6 +79,7 @@
 5-input-and-output-files/VTCU.md
 5-input-and-output-files/VHCTL.md
 5-input-and-output-files/VPTOC.md
+5-input-and-output-files/VPTOEL.md
 5-input-and-output-files/VPTOI.md
 5-input-and-output-files/VPTOR.md
 5-input-and-output-files/AAUX.md
