@@ -16,6 +16,8 @@ Imports TUGraz.VectoCore.Utils
 ''' </summary>
 ''' <remarks></remarks>
 Public Class WelcomeDialog
+
+	Private Const UserManualPDF = "User Manual\Release Notes Vecto 4.pdf"
 	'Close
 	Private Sub Cancel_Button_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Cancel_Button.Click
 		DialogResult = DialogResult.Cancel
@@ -29,8 +31,8 @@ Public Class WelcomeDialog
 
 	'Open Release Notes
 	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-		If File.Exists(Path.Combine(MyAppPath, "User Manual\Release Notes.pdf")) Then
-			Process.Start(New ProcessStartInfo(Path.Combine(MyAppPath, "User Manual\Release Notes.pdf")) With {.UseShellExecute = true})
+		If File.Exists(Path.Combine(MyAppPath, UserManualPDF)) Then
+			Process.Start(New ProcessStartInfo(Path.Combine(MyAppPath, UserManualPDF)) With {.UseShellExecute = true})
 		Else
 			MsgBox("Release Notes not found!", MsgBoxStyle.Critical)
 		End If

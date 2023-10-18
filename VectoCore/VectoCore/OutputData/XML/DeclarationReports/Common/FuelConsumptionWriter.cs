@@ -54,6 +54,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         public override IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc, IFuelProperties fuel, Meter distance, Kilogram payload, CubicMeter volume, double? passenger)
         {
+			if (distance.IsEqual(0)) {
+                // in some testcases only a single cycle is simulated which has a weighting of 0. consider this to generate a valid report
+				return new List<ConvertedSI>() { (fc / 1.SI<Meter>()).ConvertToGrammPerKiloMeter(),};
+			}
             var retVal = new List<ConvertedSI> {
                 (fc / distance).ConvertToGrammPerKiloMeter(),
                 (fc / distance /payload).ConvertToGrammPerTonKilometer()};

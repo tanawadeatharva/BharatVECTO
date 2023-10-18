@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		private GraphWriter GetGraphWriter() 
 		{
 			var graphWriter = new GraphWriter();
-#if TRACE
+#if VECTOTRACE
 			graphWriter.Enable();
 #else
 			graphWriter.Disable();

@@ -62,11 +62,11 @@ Useable Electric Storage Capacity \[Wh\]
 Electric Storage Efficiency \[-\]
 :   This efficiency is applied when storing electric energy from the alternator in the battery.
 
-ESS supply from HEV REESS
+ES supply from HEV REESS
 :   If selected, the low-voltage electric auxiliaries can be supplied from the high voltage REESS via the DC/DC converter. Needs to be selected in case "no alternator" is chosen as alternator technology. In case of a smart alternator, the low-voltage battery is used first and if empty the energy is drawn from the high voltage system.
 
-DC/DC Converter Efficiency  \[-]\
-:	TODO
+DC/DC Converter Efficiency  \[-\]
+:	In case the electric system is supplied by the high voltage REESS, the efficiency of the DC/DC converter can be defined via a constant efficiency value
 
 #### Pneumatic System
 

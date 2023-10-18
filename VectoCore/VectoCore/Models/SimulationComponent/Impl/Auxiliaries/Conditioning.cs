@@ -101,8 +101,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
 				var iceInfo = dataBus.EngineInfo;
 				var emPower = elInfo.ElectricMotorSpeed * elInfo.ElectricMotorTorque;
 				var icePower = iceInfo.EngineSpeed * iceInfo.EngineTorque;
-
-				xFactor = emPower.Abs() / (emPower.Abs() + icePower.Abs());
+				if (!(emPower + icePower).IsEqual(0)) {
+					xFactor = emPower.Abs() / (emPower.Abs() + icePower.Abs());
+				}
 			}
 
 			return _electricPowerDemand * xFactor;

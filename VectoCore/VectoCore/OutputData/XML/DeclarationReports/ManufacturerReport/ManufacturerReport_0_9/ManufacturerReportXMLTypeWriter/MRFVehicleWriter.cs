@@ -214,7 +214,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + XMLNames.Component_Manufacturer, vehicle.Manufacturer),
 				new XElement(_mrf + XMLNames.ManufacturerAddress, vehicle.ManufacturerAddress),
 				_mrfFactory.GetGeneralVehicleOutputGroup().GetElements(vehicle),
-				new XElement(_mrf + XMLNames.CorrectedActualMass, vehicle.CurbMassChassis.ToXMLFormat(0)),
+				new XElement(_mrf + XMLNames.CorrectedActualMass, vehicle.CurbMassChassis.ValueAsUnit("kg")),
 				new XElement(_mrf + XMLNames.Vehicle_SleeperCab, vehicle.SleeperCab),
 				new XElement(_mrf + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle),
 				new XElement(_mrf + "VehicleTechnologyExempted", inputData.JobInputData.Vehicle.ExemptedTechnology),
@@ -506,7 +506,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			result.Add(_mrfFactory.GetGeneralVehicleOutputGroup().GetElements(multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle));
 			result.Add(
 				new XElement(_mrf + XMLNames.CorrectedActualMass,
-					consolidatedVehicleData.CurbMassChassis.ToXMLFormat(0)),
+					consolidatedVehicleData.CurbMassChassis.ValueAsUnit("kg")),
 				new XElement(_mrf + XMLNames.Vehicle_ZeroEmissionVehicle, consolidatedVehicleData.ZeroEmissionVehicle),
 				new XElement(_mrf + XMLNames.Vehicle_RegisteredClass,
 					consolidatedVehicleData.RegisteredClass.ToXMLFormat()),

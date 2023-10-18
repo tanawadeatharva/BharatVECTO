@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <tns:VectoInputDeclaration schemaVersion="2.0"
-	xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
+	xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
 	xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" 
 	xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" 
@@ -9,36 +9,36 @@
 	xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3"
 	xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
 	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd">
-  <v2.0:Vehicle id="VEH-NA" xsi:type="VehicleDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1">
+  <v2.0:Vehicle id="VEH-NA" xsi:type="Vehicle_Conventional_HeavyLorryDeclarationType">
     <Manufacturer>TU Graz, IVT</Manufacturer>
     <ManufacturerAddress>N/A</ManufacturerAddress>
     <Model>N/A</Model>
     <VIN>N/A</VIN>
     <Date>2019-12-03T08:33:49.5321872Z</Date>
-    <LegislativeClass>N3</LegislativeClass>
-    <VehicleCategory>Tractor</VehicleCategory>
+    <LegislativeCategory>N3</LegislativeCategory>
+    <ChassisConfiguration>Tractor</ChassisConfiguration>
     <AxleConfiguration>4x2</AxleConfiguration>
-    <CurbMassChassis>8229</CurbMassChassis>
-    <GrossVehicleMass>18000</GrossVehicleMass>
+    <CorrectedActualMass>8229</CorrectedActualMass>
+    <TechnicalPermissibleMaximumLadenMass>18000</TechnicalPermissibleMaximumLadenMass>
     <IdlingSpeed>600</IdlingSpeed>
     <RetarderType>Transmission Output Retarder</RetarderType>
     <RetarderRatio>1.000</RetarderRatio>
     <AngledriveType>None</AngledriveType>
-    <v2.1:PTO xsi:type="v2.0:PTOType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+    <PTO xsi:type="PTOType">
       <PTOShaftsGearWheels>none</PTOShaftsGearWheels>
       <PTOOtherElements>none</PTOOtherElements>
-    </v2.1:PTO>
+    </PTO>
     <ZeroEmissionVehicle>false</ZeroEmissionVehicle>
     <VocationalVehicle>false</VocationalVehicle>
     <SleeperCab>true</SleeperCab>
-    <v2.1:ADAS xsi:type="AdvancedDriverAssistantSystemsType">
+    <ADAS xsi:type="ADAS_Conventional_Type">
       <EngineStopStart>false</EngineStopStart>
       <EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
       <EcoRollWithEngineStop>false</EcoRollWithEngineStop>
       <PredictiveCruiseControl>none</PredictiveCruiseControl>
-    </v2.1:ADAS>
-   <v2.1:Components xsi:type="v2.0:VehicleComponentsType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-			<Engine  xsi:type="EngineComponentDeclarationType">
+    </ADAS>
+   <Components xsi:type="Components_Conventional_LorryType">
+			<Engine>
 				<v2.0:Data id="ENG-gooZah3D" xsi:type="v2.3:EngineDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">
           <Manufacturer>TU Graz, IVT</Manufacturer>
           <Model>325kW 12.7l Engine</Model>
@@ -421,7 +421,7 @@
 </Fuel>
 </Mode> 
        </v2.0:Data>
-        <Signature>
+        <v2.0:Signature>
           <Reference URI="#ENG-325kW12.7lEngine" xmlns="http://www.w3.org/2000/09/xmldsig#">
             <Transforms>
               <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
@@ -430,7 +430,7 @@
             <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
             <DigestValue></DigestValue>
           </Reference>
-        </Signature>
+        </v2.0:Signature>
       </Engine>
       <Gearbox >
         <v2.0:Data id="GBX-tractor_12gear_example" xsi:type="v1.0:GearboxDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0">
@@ -3288,7 +3288,7 @@
             </Gear>
           </Gears>
         </v2.0:Data>
-        <Signature>
+        <v2.0:Signature>
           <Reference URI="#GBX-tractor_12gear_example" xmlns="http://www.w3.org/2000/09/xmldsig#">
             <Transforms>
               <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
@@ -3297,7 +3297,7 @@
             <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
             <DigestValue></DigestValue>
           </Reference>
-        </Signature>
+        </v2.0:Signature>
       </Gearbox>
       <Retarder>
         <v2.0:Data id="RET-NA" xsi:type="v1.0:RetarderDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0">
@@ -3324,7 +3324,7 @@
             <Entry retarderSpeed="5000.00" torqueLoss="60.00" />
           </RetarderLossMap>
         </v2.0:Data>
-        <Signature>
+        <v2.0:Signature>
           <Reference URI="#RET-NA" xmlns="http://www.w3.org/2000/09/xmldsig#">
             <Transforms>
               <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
@@ -3333,7 +3333,7 @@
             <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
             <DigestValue></DigestValue>
           </Reference>
-        </Signature>
+        </v2.0:Signature>
       </Retarder>
       <Axlegear>
         <v2.0:Data id="AXLGEAR-2.640" xsi:type="v1.0:AxlegearDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0">
@@ -4181,7 +4181,7 @@
             <Entry inputSpeed="2112.00" inputTorque="11642.10" torqueLoss="278.40" />
           </TorqueLossMap>
         </v2.0:Data>
-        <Signature>
+        <v2.0:Signature>
           <Reference URI="#AXLGEAR-2.640" xmlns="http://www.w3.org/2000/09/xmldsig#">
             <Transforms>
               <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
@@ -4190,10 +4190,10 @@
             <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
             <DigestValue></DigestValue>
           </Reference>
-        </Signature>
+        </v2.0:Signature>
       </Axlegear>
       <AxleWheels>
-        <Data xsi:type="AxleWheelsDataDeclarationType">
+        <v2.0:Data xsi:type="AxleWheelsDataDeclarationType"  xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
           <Axles>
             <Axle axleNumber="1" xsi:type="AxleDataDeclarationType">
               <AxleType>VehicleNonDriven</AxleType>
@@ -4250,15 +4250,15 @@
               </Tyre>
             </Axle>
           </Axles>
-        </Data>
+        </v2.0:Data>
       </AxleWheels>
       <Auxiliaries>
-        <Data xsi:type="AuxiliariesDataDeclarationType">
+        <Data xsi:type="AUX_Conventional_LorryDataType">
           <Fan>
             <Technology>Belt driven or driven via transm. - Electronically controlled visco clutch</Technology>
           </Fan>
           <SteeringPump>
-            <Technology>Fixed displacement with elec. control</Technology>
+            <Technology axleNumber="1">Fixed displacement with elec. control</Technology>
           </SteeringPump>
           <ElectricSystem>
             <Technology>Standard technology</Technology>
@@ -4272,7 +4272,7 @@
         </Data>
       </Auxiliaries>
       <AirDrag>
-        <Data id="Airdrag-NA" xsi:type="AirDragDataDeclarationType">
+        <Data id="Airdrag-NA" xsi:type="AirDragDataDeclarationType"  xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
           <Manufacturer>TU Graz, IVT</Manufacturer>
           <Model>N/A</Model>
           <CertificationNumber>N/A</CertificationNumber>
@@ -4282,7 +4282,7 @@
           <TransferredCdxA>5.30</TransferredCdxA>
           <DeclaredCdxA>5.30</DeclaredCdxA>
         </Data>
-        <Signature>
+        <v2.0:Signature>
           <Reference URI="#Airdrag-NA" xmlns="http://www.w3.org/2000/09/xmldsig#">
             <Transforms>
               <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
@@ -4291,8 +4291,8 @@
             <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
             <DigestValue></DigestValue>
           </Reference>
-        </Signature>
+        </v2.0:Signature>
       </AirDrag>
-    </v2.1:Components>
+    </Components>
   </v2.0:Vehicle>
 </tns:VectoInputDeclaration>

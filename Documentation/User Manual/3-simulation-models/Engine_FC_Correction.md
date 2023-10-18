@@ -161,7 +161,7 @@ $$
 
 $\eta_{\textrm{REESS}_\textrm{chg}} = \frac{\textrm{E\_REESS\_INT\_CHG}}{\textrm{E\_REEES\_T\_CHG}}$
 
-$\eta_{\textrm{REESS}_\textrm{dischg}} = \frac{\textrm{E\_REESS\_INT\_DISCHG}}{\textrm{E\_REEES\_T\_DISCHG}}$
+$\eta_{\textrm{REESS}_\textrm{dischg}} = \frac{\textrm{E\_REESS\_T\_DISCHG}}{\textrm{E\_REEES\_INT\_DISCHG}}$
 
 
 #### Serial Hybrid Vehicles: REESS SoC Correction

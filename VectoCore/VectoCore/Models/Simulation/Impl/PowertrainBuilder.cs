@@ -431,7 +431,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			_timerunGearHybridBuilders[position].Invoke(data, container, components);
 
-			AddElectricAuxiliaries(data, container, es, null, new DCDCConverter(container, data.DCDCData.DCDCEfficiency));
+			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+
+            AddElectricAuxiliaries(data, container, es, null, dcdc);
             AddHybridBusAuxiliaries(data, container, es);
 
 			return container;
@@ -705,7 +707,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 			}
 
-			if (data.BusAuxiliaries != null) {
+			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+
+            if (data.BusAuxiliaries != null) {
 				if (container.BusAux is BusAuxiliariesAdapter busAux) {
 					var auxCfg = data.BusAuxiliaries;
 					var electricStorage = auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
@@ -713,8 +717,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						: (ISimpleBattery)new NoBattery(container);
 					busAux.ElectricStorage = electricStorage;
 					if (data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
-						var dcdc = new DCDCConverter(container,
-							data.DCDCData.DCDCEfficiency);
 						busAux.DCDCConverter = dcdc;
 						es.Connect(dcdc);
 					}
@@ -722,7 +724,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					throw new VectoException("BusAux data set but no BusAux component found!");
 				}
 			}
-            AddElectricAuxiliaries(data, container, es, cycle, new DCDCConverter(container, data.DCDCData.DCDCEfficiency));
+            AddElectricAuxiliaries(data, container, es, cycle, dcdc);
 
 
             ///TODO: remove
@@ -779,7 +781,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			SetIdleControllerForHybridP1(data, gearbox, idleController, clutch);
 
-            AddElectricAuxiliaries(data, container, es, null, new DCDCConverter(container, data.DCDCData.DCDCEfficiency));
+			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+            AddElectricAuxiliaries(data, container, es, null, dcdc);
             AddHybridBusAuxiliaries(data, container, es);
 
 			return container;
@@ -1189,10 +1192,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var dcdc = new DCDCConverter(container, GetDCDCEfficiency(data));
             if (data.BusAuxiliaries != null) {
-				AddBEVBusAuxiliaries(data, container, es, em,dcdc);
+				AddBEVBusAuxiliaries(data, container, es, em, dcdc);
 			}
 			else {
-				AddElectricAuxiliaries(data, container, es, null,dcdc);
+				AddElectricAuxiliaries(data, container, es, null, dcdc);
 			}
 
 			return container;
@@ -1886,8 +1889,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			};
 
 			_timerunGearHybridBuilders[position].Invoke(data, container, components);
-			
-			AddElectricAuxiliaries(data, container, es, null, new DCDCConverter(container, data.DCDCData.DCDCEfficiency));
+
+			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+
+			AddElectricAuxiliaries(data, container, es, null, dcdc);
 			AddHybridBusAuxiliaries(data, container, es);
 		}
 		
@@ -2089,7 +2094,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public static void BuildSimpleHybridPowertrain(VectoRunData data, VehicleContainer container)
 		{
 			var es = ConnectREESS(data, container);
-            AddElectricAuxiliaries(data, container, es, null, new DCDCConverter(container, data.DCDCData.DCDCEfficiency));
+			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+            AddElectricAuxiliaries(data, container, es, null, dcdc);
 
             //IMPORTANT HINT: add engine BEFORE gearbox to container that gearbox can obtain if an ICE is available
             var engine = new StopStartCombustionEngine(container, data.EngineData);
@@ -2163,7 +2169,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					: (ISimpleBattery)new NoBattery(container);
 				busAux.ElectricStorage = electricStorage;
 				if (data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
-					var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
 					busAux.DCDCConverter = dcdc;
 					es.Connect(dcdc);
 				}

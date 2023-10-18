@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
+<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Markus Quaritsch (Technische Universität Graz) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" xmlns:dd="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!-- 
+Changelog
+	 2.10.2023: adding unit attribute to TPMLM and corrected mass output fields
+	 2.10.2023: make Airdrag component in output mandatory (provide standard values in case no Airdrag is provided in input). make Model and DigestValue optional (only in output for measured component)
+
+-->
 	<!-- Imports_______________________________________________ -->
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" schemaLocation="VectoDeclarationDefinitions.2.0.xsd"/>
@@ -945,10 +951,17 @@
 					<xs:documentation>P037 / I.1.1.5</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="TechnicalPermissibleMaximumLadenMass" type="v1.0:VehicleGrossVehicleMassType">
+			<xs:element name="TechnicalPermissibleMaximumLadenMass">
 				<xs:annotation>
 					<xs:documentation>P041 / I.1.1.6.</xs:documentation>
 				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="v1.0:VehicleGrossVehicleMassType">
+							<xs:attribute name="unit" type="mrf:MassUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
 			</xs:element>
 			<xs:element name="VehicleGroup" type="xs:string">
 				<xs:annotation>
@@ -1030,10 +1043,17 @@
 		<xs:sequence>
 			<xs:group ref="mrf:ManufacturerGroup"/>
 			<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
-			<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType">
+			<xs:element name="CorrectedActualMass">
 				<xs:annotation>
 					<xs:documentation>P038 / I.1.1.8 </xs:documentation>
 				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="v1.0:VehicleCurbMassChassisType">
+							<xs:attribute name="unit" type="mrf:MassUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
 			</xs:element>
 			<xs:element name="VocationalVehicle" type="v1.0:VocationalVehicleType">
 				<xs:annotation>
@@ -1131,10 +1151,17 @@
 	</xs:complexType>
 	<xs:group name="CompletedBusSequenceGroup">
 		<xs:sequence>
-			<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType">
+			<xs:element name="CorrectedActualMass">
 				<xs:annotation>
 					<xs:documentation>I.1.1.8.</xs:documentation>
 				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="v1.0:VehicleCurbMassChassisType">
+							<xs:attribute name="unit" type="mrf:MassUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
 			</xs:element>
 			<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
 				<xs:annotation>
@@ -1339,7 +1366,7 @@
 			<xs:element name="Components">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+						<xs:element name="AirDrag" type="mrf:AirdragType">
 							<xs:annotation>
 								<xs:documentation>I.1.8.</xs:documentation>
 							</xs:annotation>
@@ -1406,10 +1433,17 @@
 		<xs:sequence>
 			<xs:group ref="mrf:ManufacturerGroup"/>
 			<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
-			<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType">
+			<xs:element name="CorrectedActualMass">
 				<xs:annotation>
 					<xs:documentation>I.1.1.8</xs:documentation>
 				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="v1.0:VehicleCurbMassChassisType">
+							<xs:attribute name="unit" type="mrf:MassUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
 			</xs:element>
 			<xs:element name="SleeperCab" type="v1.0:SleeperCabType">
 				<xs:annotation>
@@ -1479,10 +1513,17 @@
 				</xs:element>
 				<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
 				<xs:sequence>
-					<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType">
+					<xs:element name="CorrectedActualMass">
 						<xs:annotation>
 							<xs:documentation>I.1.1.8.</xs:documentation>
 						</xs:annotation>
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="v1.0:VehicleCurbMassChassisType">
+									<xs:attribute name="unit" type="mrf:MassUnitType" use="required"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
 					</xs:element>
 					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
 						<xs:annotation>
@@ -1561,7 +1602,7 @@
 					<xs:documentation>I.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+			<xs:element name="AirDrag" type="mrf:AirdragType">
 				<xs:annotation>
 					<xs:documentation>I.1.8.</xs:documentation>
 				</xs:annotation>
@@ -1616,7 +1657,7 @@
 					<xs:documentation>I.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+			<xs:element name="AirDrag" type="mrf:AirdragType">
 				<xs:annotation>
 					<xs:documentation>I.1.8.</xs:documentation>
 				</xs:annotation>
@@ -1671,7 +1712,7 @@
 					<xs:documentation>I.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+			<xs:element name="AirDrag" type="mrf:AirdragType">
 				<xs:annotation>
 					<xs:documentation>I.1.8.</xs:documentation>
 				</xs:annotation>
@@ -1711,7 +1752,7 @@
 					<xs:documentation>I.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+			<xs:element name="AirDrag" type="mrf:AirdragType">
 				<xs:annotation>
 					<xs:documentation>I.1.8.</xs:documentation>
 				</xs:annotation>
@@ -1741,7 +1782,7 @@
 					<xs:documentation>I.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+			<xs:element name="AirDrag" type="mrf:AirdragType">
 				<xs:annotation>
 					<xs:documentation>I.1.8.</xs:documentation>
 				</xs:annotation>
@@ -1786,7 +1827,7 @@
 					<xs:documentation>I.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+			<xs:element name="AirDrag" type="mrf:AirdragType">
 				<xs:annotation>
 					<xs:documentation>I.1.8.</xs:documentation>
 				</xs:annotation>
@@ -1835,7 +1876,7 @@
 					<xs:documentation>I.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+			<xs:element name="AirDrag" type="mrf:AirdragType">
 				<xs:annotation>
 					<xs:documentation>I.1.8.</xs:documentation>
 				</xs:annotation>
@@ -1870,7 +1911,7 @@
 					<xs:documentation>I.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+			<xs:element name="AirDrag" type="mrf:AirdragType">
 				<xs:annotation>
 					<xs:documentation>I.1.8.</xs:documentation>
 				</xs:annotation>
@@ -1895,7 +1936,7 @@
 					<xs:documentation>I.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+			<xs:element name="AirDrag" type="mrf:AirdragType">
 				<xs:annotation>
 					<xs:documentation>I.1.8.</xs:documentation>
 				</xs:annotation>
@@ -1926,7 +1967,7 @@
 					<xs:documentation>I.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0">
+			<xs:element name="AirDrag" type="mrf:AirdragType">
 				<xs:annotation>
 					<xs:documentation>I.1.8.</xs:documentation>
 				</xs:annotation>
@@ -2867,7 +2908,7 @@
 	</xs:complexType>
 	<xs:complexType name="AirdragType">
 		<xs:sequence>
-			<xs:element name="Model" type="v1.0:ModelType">
+			<xs:element name="Model" type="v1.0:ModelType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>I.1.8.1.</xs:documentation>
 				</xs:annotation>
@@ -2887,7 +2928,7 @@
 					<xs:documentation>I.1.8.4.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DigestValue" type="xs:token">
+			<xs:element name="DigestValue" type="xs:token" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>I.1.8.5.</xs:documentation>
 				</xs:annotation>
