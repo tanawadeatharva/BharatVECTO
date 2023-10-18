@@ -124,13 +124,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
             // -- Bus
 
-            Bind<IResultGroupWriter>().To<BusConvResultWriter>().When(AccessedViaMRFResultsWriterFactory)
+            Bind<IResultGroupWriter>().To<BusConvMRFResultWriter>().When(AccessedViaMRFResultsWriterFactory)
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetBusConvSuccessResultWriter(null, XNamespace.None));
-            Bind<IResultGroupWriter>().To<BusHEVNonOVCResultWriter>().When(AccessedViaMRFResultsWriterFactory)
+            Bind<IResultGroupWriter>().To<BusHEVNonOVCMRFResultWriter>().When(AccessedViaMRFResultsWriterFactory)
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetBusHEVNonOVCSuccessResultWriter(null, XNamespace.None));
-            Bind<IResultGroupWriter>().To<BusHEVOVCResultWriter>().When(AccessedViaMRFResultsWriterFactory)
+            Bind<IResultGroupWriter>().To<BusHEVOVCMRFResultWriter>().When(AccessedViaMRFResultsWriterFactory)
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetBusHEVOVCSuccessResultWriter(null, XNamespace.None));
-            Bind<IResultGroupWriter>().To<BusPEVResultWriter>().When(AccessedViaMRFResultsWriterFactory)
+            Bind<IResultGroupWriter>().To<BusPEVMRFResultWriter>().When(AccessedViaMRFResultsWriterFactory)
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetBusPEVSuccessResultWriter(null, XNamespace.None));
             Bind<IResultGroupWriter>().To<ErrorResultWriter>().When(AccessedViaMRFResultsWriterFactory)
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetBusErrorResultWriter(null, XNamespace.None));

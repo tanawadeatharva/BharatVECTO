@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		protected XNamespace TNS { get; }
 
 
-		protected XElement GetPrimaryBusSubGroupElement(IResultEntry entry)
+		protected virtual XElement GetPrimaryBusSubGroupElement(IResultEntry entry)
 		{
 			if (entry.VehicleClass.IsCompletedBus())
 			{
@@ -186,9 +186,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 	// ----- bus
 
-	public class BusConvResultWriter : ResultWriterBase
+	public class BusConvMRFResultWriter : ResultWriterBase
 	{
-		public BusConvResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+		public BusConvMRFResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Overrides of CIFResultWriterBase
 
@@ -199,9 +199,19 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		#endregion
 	}
 
-	public class BusHEVNonOVCResultWriter : ResultWriterBase
+	public class BusConvCIFResultWriter : BusConvMRFResultWriter
+    {
+		public BusConvCIFResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		protected override XElement GetPrimaryBusSubGroupElement(IResultEntry entry)
+		{
+			return null;
+		}
+	}
+
+    public class BusHEVNonOVCMRFResultWriter : ResultWriterBase
 	{
-		public BusHEVNonOVCResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+		public BusHEVNonOVCMRFResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Overrides of CIFResultWriterBase
 
@@ -212,9 +222,19 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		#endregion
 	}
 
-	public class BusPEVResultWriter : ResultWriterBase
+	public class BusHEVNonOVCCIFResultWriter : BusHEVNonOVCMRFResultWriter
+    {
+		public BusHEVNonOVCCIFResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		protected override XElement GetPrimaryBusSubGroupElement(IResultEntry entry)
+		{
+			return null;
+		}
+    }
+
+	public class BusPEVMRFResultWriter : ResultWriterBase
 	{
-		public BusPEVResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+		public BusPEVMRFResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Overrides of CIFResultWriterBase
 
@@ -225,11 +245,20 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		#endregion
 	}
 
+	public class BusPEVCIFResultWriter : BusPEVMRFResultWriter
+    {
+		public BusPEVCIFResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
-	public class BusHEVOVCResultWriter : AbstractResultGroupWriter
+		protected override XElement GetPrimaryBusSubGroupElement(IResultEntry entry)
+		{
+			return null;
+		}
+    }
+
+	public class BusHEVOVCMRFResultWriter : AbstractResultGroupWriter
 	{
 
-		public BusHEVOVCResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+		public BusHEVOVCMRFResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Implementation of IResultGroupWriter
 
@@ -258,6 +287,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 		protected virtual string ResultXMLType => "ResultSuccessOVCHEVType";
 	}
+
+	public class BusHEVOVCCIFResultWriter : BusHEVOVCMRFResultWriter
+    {
+
+		public BusHEVOVCCIFResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		protected override XElement GetPrimaryBusSubGroupElement(IResultEntry entry)
+		{
+			return null;
+		}
+
+    }
 
 	public class BusOVCChargeDepletingWriter : AbstractResultGroupWriter
 	{

@@ -38,6 +38,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		protected virtual XElement GetNGTankSystem(IMultistepBusInputDataProvider multiStageInputData)
 		{
 			var consolidatedVehicleData = multiStageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle;
+			if (consolidatedVehicleData.TankSystem == null) {
+				return null;
+			}
 			return new XElement(_mrf + XMLNames.Vehicle_NgTankSystem, consolidatedVehicleData.TankSystem);
 		}
 
