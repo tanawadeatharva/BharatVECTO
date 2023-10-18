@@ -46,6 +46,7 @@
 3-simulation-models/Auxiliaries.md
 3-simulation-models/BusAuxiliaries.md
 3-simulation-models/PwheelInput.md
+3-simulation-models/FuelCell.md
 3-simulation-models/PTO.md
 3-simulation-models/Electric_Motor.md
 3-simulation-models/IEPC.md
