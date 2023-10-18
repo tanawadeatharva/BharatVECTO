@@ -183,7 +183,7 @@ namespace TUGraz.VectoCore.Utils
 			throw new VectoSearchFailedException("Failed to find operating point! points: {0}", debug.LocalData.Select(d => d.b).Join());
 		}
 
-		[Conditional("TRACE")]
+		[Conditional("VECTOTRACE")]
 		private static void AppendDebug(DebugData debug)
 		{
 			var xmin = debug.LocalData.Min(d => d.x);
@@ -299,7 +299,7 @@ namespace TUGraz.VectoCore.Utils
 			throw new VectoSearchFailedException("Failed to find operating point! points: {0}", debug.LocalData.Select(d => d.b).Join());
 		}
 
-		[Conditional("TRACE")]
+		[Conditional("VECTOTRACE")]
 		private static void WriteSearch(DebugData debug, string filename)
 		{
 			var table = new DataTable();

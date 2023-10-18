@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		protected GraphWriter GetGraphWriter()
 		{
 			var graphWriter = new GraphWriter();
-#if TRACE
+#if VECTOTRACE
 			graphWriter.Enable();
 #else
 			graphWriter.Disable();

@@ -14,6 +14,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Utils;
 
@@ -413,7 +414,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Implementation of ISuperCapDeclarationInputData
 
 		public virtual Farad Capacity => GetDouble(XMLNames.Capacitor_Capacitance).SI<Farad>();
-		public virtual Ohm InternalResistance => GetDouble(XMLNames.Capacitor_InternalResistance).SI<Ohm>();
+		public virtual Ohm InternalResistance
+		{
+			get
+			{
+				var value = GetDouble(XMLNames.Capacitor_InternalResistance).SI<Ohm>();
+				if (value.IsEqual(0)) {
+					value = DeclarationData.SuperCapMinInternalResistance;
+				}
+				return value;
+			}
+		}
+
 		public virtual Volt MinVoltage => GetDouble(XMLNames.Capacitor_MinVoltage).SI<Volt>();
 		public virtual Volt MaxVoltage => GetDouble(XMLNames.Capacitor_MaxVoltage).SI<Volt>();
 		public virtual Ampere MaxCurrentCharge => GetDouble(XMLNames.Capacitor_MaxChargingCurrent).SI<Ampere>();

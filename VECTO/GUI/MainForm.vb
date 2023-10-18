@@ -451,7 +451,7 @@ Public Class MainForm
                         MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Engine File")
                     End Try
                 Case ".VECTO"
-                    OpenVECTOeditor(file, VectoSimulationJobType.ConventionalVehicle)
+                    OpenVECTOeditor(file)
                 Case Else
                     MsgBox("Type '" & GetExtension(file) & "' unknown!", MsgBoxStyle.Critical)
             End Select
@@ -632,7 +632,7 @@ Public Class MainForm
         If Not File.Exists(f) Then
             MsgBox(f & " not found!")
         Else
-            OpenVECTOeditor(f, VectoSimulationJobType.ConventionalVehicle)
+            OpenVECTOeditor(f)
         End If
     End Sub
 
@@ -809,7 +809,7 @@ lbFound:
 
     Private Sub UpdateNotesToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles UpdateNotesToolStripMenuItem.Click
-        OpenFileExternal("User Manual\Release Notes.pdf")
+        OpenFileExternal("User Manual\Release Notes Vecto 4.pdf")
     End Sub
 
     Private Sub OpenFileExternal(filename As String)
@@ -1079,38 +1079,6 @@ lbFound:
                 Dim runsFactory As ISimulatorFactory = SimulatorFactory.CreateSimulatorFactory(mode, input, fileWriter)
                 'Remove
 
-               
-                runsFactory.ModifyRunData = Sub(data) 
-                    Dim runData = data
-                    If(cbInitialSOC.Checked And (runData.OVCMode = OvcHevMode.ChargeDepleting))
-                        
-                        Dim initSOC = Double.Parse(tbInitSOCinPercent.Text) / 100
-
-                        
-
-                        If(runData.HybridStrategyParameters IsNot Nothing)
-                            runData.HybridStrategyParameters.InitialSoc = initSOC
-                            runData.HybridStrategyParameters.TargetSoC = initSOC - 0.01
-                        End If
-
-                        If(runData.BatteryData IsNot Nothing)
-                            runData.BatteryData.InitialSoc = initSOC
-                        End If
-
-                        If(runData.SuperCapData IsNot Nothing)
-                            runData.SuperCapData.InitialSoC = initSOC
-                        End If
-                    End If
-
-                    runData.IterativeRunStrategy.Enabled = Not cbCSIteratingModeDeactivated.Checked
-                End Sub
-
-               
-
-
-
-
-
                 runsFactory.WriteModalResults = Cfg.ModOut
                 runsFactory.ModalResults1Hz = Cfg.Mod1Hz
                 runsFactory.Validate = cbValidateRunData.Checked
@@ -1123,16 +1091,6 @@ lbFound:
                     fileWriters.Add(run, fileWriter)
                 Next
 
-                ' TODO MQ-20200525: Remove the following loop in production (or after evaluation of LAC!!
-                If not string.IsNullOrWhiteSpace(tbMinSpeedLAC.Text) then
-                    'for Each run as JobContainer.RunEntry In jobContainer.Runs
-                    '    dim tmpDriver as DriverData = CType(run.Run, VectoRun).GetContainer().RunData.DriverData
-                    '    tmpDriver.LookAheadCoasting.Enabled = True
-                    '    tmpDriver.LookAheadCoasting.MinSpeed = tbMinSpeedLAC.Text.ToDouble().KMPHtoMeterPerSecond()
-                    'Next
-                end if
-
-                    
                 sender.ReportProgress(0,
                                       New VectoProgress _
                                          With {.Target = "ListBox",
@@ -1451,28 +1409,29 @@ lbFound:
         End Sub
     End Class
 
-
     'Open Job Editor and open file (or new file)
-    Friend Sub OpenVECTOeditor(x As String, jobType As VectoSimulationJobType)
+    Friend Sub OpenVECTOeditor(filePathOrType As String, Optional jobType As VectoSimulationJobType = Nothing)
+        Dim jobDataProvider As IInputDataProvider = JSONInputDataFactory.ReadComponentData(filePathOrType)
+        Dim vtpEngineeringJob As IVTPEngineeringInputDataProvider = TryCast(jobDataProvider, IVTPEngineeringInputDataProvider)
+        Dim vtpDeclarationJob As IVTPDeclarationInputDataProvider = TryCast(jobDataProvider, IVTPDeclarationInputDataProvider)
 
-        If x = "<New>" Then
+        'Declaration is the base class for EngineeringJobInputData, hence is valid for both Eng. and Decl.
+        If jobType = Nothing Then jobType = TryCast(jobDataProvider, IDeclarationJobInputData).JobType
+
+        If filePathOrType = "<New>" Then
             ShowVectoJobForm(jobType)
             VectoJobForm.VectoNew()
-        ElseIf x = "<VTP>" Then
+        ElseIf filePathOrType = "<VTP>" Then
             ShowVectoEPTPJobForm()
             VectoVTPJobForm.VectoNew()
         Else
             Try
-                Dim engJob As IVTPEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(x),
-                                                                         IVTPEngineeringInputDataProvider)
-                Dim declJob As IVTPDeclarationInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(x),
-                                                                          IVTPDeclarationInputDataProvider)
-                If engJob Is Nothing AndAlso declJob Is Nothing Then
+                If vtpEngineeringJob Is Nothing AndAlso vtpDeclarationJob Is Nothing Then
                     ShowVectoJobForm(jobType)
-                    VectoJobForm.VECTOload2Form(x)
+                    VectoJobForm.VECTOload2Form(filePathOrType)
                 Else
                     ShowVectoEPTPJobForm()
-                    VectoVTPJobForm.VECTOload2Form(x)
+                    VectoVTPJobForm.VECTOload2Form(filePathOrType)
                 End If
             Catch ex As Exception
                 MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vecto Job File")
@@ -1572,10 +1531,6 @@ lbFound:
         cbSaveVectoRunData.Checked = Cfg.SaveVectoRunData
         tbOutputFolder.Text = Cfg.OutputFolder
 
-        'Test Settings for 2nd amendment
-        cbCSIteratingModeDeactivated.Checked = Cfg.ChargeSustainingIterationModeDeActivated
-        cbInitialSOC.Checked = Cfg.InitialSOCOverride
-        tbInitSOCinPercent.Text = Cfg.InitialSOCOverrideValue.ToString()
     End Sub
 
     'Update config class from options in GUI, e.g. before running calculations 
@@ -1586,16 +1541,6 @@ lbFound:
         Cfg.SaveVectoRunData = cbSaveVectoRunData.Checked
         Cfg.OutputFolder = tbOutputFolder.Text
 
-        Cfg.ChargeSustainingIterationModeDeActivated = cbCSIteratingModeDeactivated.Checked
-        Cfg.InitialSOCOverride =  cbInitialSOC.Checked 
-
-        Dim initSoc as Double
-        Dim parsingOk = Double.TryParse(tbInitSOCinPercent.Text, initSoc)
-        Cfg.InitialSOCOverrideValue = If(parsingOk, initSoc, 0d)
-
-        
-        'Test Settings for 2nd amendment
-        '
     End Sub
 
 #End Region
@@ -2305,7 +2250,7 @@ lbFound:
         OpenVECTOeditor("<New>", VectoSimulationJobType.IEPC_S)
     End Sub
 
-    Private Sub tbInitSOCinPercent_TextChanged(sender As Object, e As EventArgs) Handles tbInitSOCinPercent.TextChanged
+    Private Sub tbInitSOCinPercent_TextChanged(sender As Object, e As EventArgs) 
         
     End Sub
 End Class

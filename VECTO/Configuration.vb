@@ -42,9 +42,6 @@ Public Class Configuration
 	Private Const FormatVersion As Short = 2
 
 	'Test Settings 2nd amendment
-	Public InitialSOCOverrideValue As Double
-	Public InitialSOCOverride As Boolean
-	Public ChargeSustainingIterationModeDeActivated As Boolean
     Private _body as String = "Body"
     Private _mod1Hz as String = "Mod1Hz"
     Private _modOut as String = "ModOut"
@@ -88,9 +85,6 @@ Public Class Configuration
         OutputFolder = ""
 		Multithreaded = True
 		SaveVectoRunData = False
-		ChargeSustainingIterationModeDeActivated = False
-		InitialSOCOverride = False
-		InitialSOCOverrideValue = 50
 	End Sub
 
 	Public Sub Load()
@@ -125,11 +119,6 @@ Public Class Configuration
                 OutputFolder = If(body(_outputfolder) Is Nothing, "", body(_outputfolder).Value(of string)())
 				SaveVectoRunData = If(body(_saverundata) Is Nothing, False, body.GetEx(Of Boolean)(_saverundata))
 
-				InitialSOCOverride = if(body(_overrideinitialsoc) is nothing, false, body.GetEx(Of Boolean)(_overrideinitialsoc))
-				InitialSOCOverrideValue = if (body(_overrideinitialsoc) Is Nothing, 50, body.GetEx(Of Double)(_overrideinitialsocvalue))
-				ChargeSustainingIterationModeDeActivated = if (body(_csItActive) Is Nothing, true, body.GetEx(Of Boolean)(_csItActive))
-
-
 			End Using
 		Catch ex As Exception
 			GUIMsg(MessageType.Err, "Error while loading settings!")
@@ -157,12 +146,6 @@ Public Class Configuration
 		body.Add(_validaterundata, ValidateRunData)
         body.Add(_outputfolder, OutputFolder)
 		body.Add(_saverundata, SaveVectoRunData)
-
-		body.Add(_overrideinitialsoc, InitialSOCOverride)
-		body.Add(_overrideinitialsocvalue, InitialSOCOverrideValue)
-		body.Add(_csItActive, ChargeSustainingIterationModeDeActivated)
-
-
 
 		JSONFileWriter.WriteFile(New Dictionary(Of String, Object) From {{"Header", header}, {_body, body}}, FilePath)
 	End Sub

@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.Utils
 				}
 			}
 
-#if TRACE
+#if VECTOTRACE
 			DrawGraph(pointCount, triangles, superTriangle, points);
 #endif
 			_convexHull = triangles.FindAll(t => t.SharesVertexWith(superTriangle)).

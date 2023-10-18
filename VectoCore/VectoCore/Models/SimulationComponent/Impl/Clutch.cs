@@ -188,17 +188,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				torqueIn = outTorque * avgOutAngularVelocity / avgInAngularVelocity;
 			}
 
-			var retVal = NextComponent.Request(absTime, dt, torqueIn, angularVelocityIn, dryRun);
+			var response = NextComponent.Request(absTime, dt, torqueIn, angularVelocityIn, dryRun);
 			if (!dryRun) {
 				CurrentState.SetState(torqueIn, angularVelocityIn, outTorque, outAngularVelocity);
 				CurrentState.ClutchLoss = torqueIn * avgInAngularVelocity - outTorque * avgOutAngularVelocity;
 				CurrentState.ICEOn = iceOn;
 				CurrentState.ICEOnSpeed = DataBus.EngineInfo.EngineSpeed;
 			}
-			retVal.Clutch.PowerRequest = outTorque *
-										((PreviousState.OutAngularVelocity ?? 0.SI<PerSecond>()) + CurrentState.OutAngularVelocity) / 2.0;
-			retVal.Clutch.OutputSpeed = outAngularVelocity;
-			return retVal;
+
+			response.Clutch.PowerRequest = outTorque * ((PreviousState.OutAngularVelocity ?? 0.SI<PerSecond>()) + outAngularVelocity) / 2.0;
+			response.Clutch.OutputSpeed = outAngularVelocity;
+			return response;
 		}
 
 		protected virtual void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, bool allowSlipping, out NewtonMeter torqueIn,

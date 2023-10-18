@@ -29,11 +29,13 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -60,6 +62,7 @@ public class LorrySimulation
 
 	private const string BASE_DIR = @"TestData/Integration/DeclarationMode/2nd_AmendmDeclMode/";
 	private const string Group5_HEV_P2_OVC = @"HeavyLorry/P-HEV/Group5_HEV_P2_ovc.xml";
+	private const string Group5_HEV_P2_SuperCap = @"HeavyLorry/P-HEV/Group5_HEV_P2_supercap.xml";
 	private const string Group5_HEV_P3_OVC = @"HeavyLorry/P-HEV/Group5_HEV_P3_ovc.xml";
 	private const string Group5_HEV_P4_OVC = @"HeavyLorry/P-HEV/Group5_HEV_P4_ovc.xml";
 	private const string Group5_HEV_P2_5_OVC = @"HeavyLorry/P-HEV/Group5_HEV_P2_5_ovc.xml";
@@ -121,6 +124,8 @@ public class LorrySimulation
 	[TestCase(@"HeavyLorry/PEV/PEV_heavyLorry_APT_E2.xml")]
 	//P-HEV
 	[TestCase(Group5_HEV_P2_OVC)]
+	//P-HEV with SuperCap 0 Ohm R_i
+	[TestCase(Group5_HEV_P2_SuperCap, TestName = "P2 HEV SuperCap")]
 	public void HeavyLorrySimulationTest(string jobFile)
 	{
 #if singlethreaded
@@ -837,7 +842,91 @@ public class LorrySimulation
 
 	}
 
-	private void CheckPEVHVACInRunData(VectoRunData rd, IVehicleDeclarationInputData vehicle)
+	[TestCase(@"HeavyLorry/PEV/Group5_ PEV_IEPC_E-EffCorrection.xml", 413.75, -1396.825, -61756.61)]
+	[TestCase(@"HeavyLorry/PEV/Group5_ PEV_IEPC_E-EffCorrection.xml", 827.50, 161.085, 13679.79)]
+    public void TestIEPC_EfficiencyCorrection(string jobFile, double rpm, double tq, double expectedPel)
+	{
+		var jobContainer = GetJobContainer(jobFile, null, out var fileWriter, out var runs, out var sumDataContainer,
+			out var inputProvider);
+		var run = runs.First().GetContainer().RunData;
+
+		var iepc = run.ElectricMachinesData.First().Item2 as IEPCElectricMotorData;
+		Assert.IsNotNull(iepc);
+		var voltageLevel = iepc.EfficiencyData.VoltageLevels.First() as IEPCVoltageLevelData;
+		Assert.IsNotNull(voltageLevel);
+		var map = voltageLevel.EfficiencyMaps[1];
+
+		var entry = map.Entries.First(x => x.Torque.IsEqual(tq, 0.1) && x.MotorSpeed.AsRPM.IsEqual(rpm, 0.1));
+
+		var input = run.InputData.JobInputData.Vehicle.Components.IEPC
+			.VoltageLevels.First().PowerMap.First();
+		var ratio = run.InputData.JobInputData.Vehicle.Components.IEPC.Gears.First().Ratio;
+
+        var inputRow = input.PowerMap.AsEnumerable().First(r => r.ParseDouble(IEPCMapReader.Fields.MotorSpeed).IsEqual(rpm / ratio, 0.1) &&
+																r.ParseDouble(IEPCMapReader.Fields.Torque).IsEqual(-tq * ratio, 0.1));
+		var inputPwrEl = inputRow.ParseDouble(IEPCMapReader.Fields.PowerElectrical);
+
+		// check that in the input the efficiency is greater than 1
+		Assert.IsTrue(-inputPwrEl > expectedPel);
+		if (tq < 0) {
+			// propulsion
+			Assert.IsTrue(rpm.RPMtoRad() * -tq.SI<NewtonMeter>() / inputPwrEl > 1);
+		} else {
+			// recuperation
+			Assert.IsTrue(inputPwrEl / (rpm.RPMtoRad() * -tq.SI<NewtonMeter>()) > 1);
+		}
+
+        // calculate electric power as the raw map contains a virtual 'torque loss' of the EM.
+        var elPower = entry.MotorSpeed * entry.Torque + entry.PowerElectrical.Value().SI<NewtonMeter>() * entry.MotorSpeed;
+
+		// < 0 means propulsion, hence the electric power needs to be 'more negative'
+		Assert.IsTrue(entry.MotorSpeed * entry.Torque > elPower);
+		
+        Assert.AreEqual(expectedPel, elPower.Value(), 0.1);
+	}
+
+	[TestCase(@"HeavyLorry/P-HEV/Group5_HEV_P2_EM-EffCorrection.xml", 25, -1050, -2804.993)]
+	[TestCase(@"HeavyLorry/P-HEV/Group5_HEV_P2_EM-EffCorrection.xml", 255, 1050, 27477.94)]
+	public void TestEM_EfficiencyCorrection(string jobFile, double rpm, double tq, double expectedPel)
+	{
+		var jobContainer = GetJobContainer(jobFile, null, out var fileWriter, out var runs, out var sumDataContainer,
+			out var inputProvider);
+		var run = runs.First().GetContainer().RunData;
+
+		var em = run.ElectricMachinesData.First().Item2;
+		Assert.IsNotNull(em);
+		var voltageLevel = em.EfficiencyData.VoltageLevels.First();
+		Assert.IsNotNull(voltageLevel);
+		var map = voltageLevel.EfficiencyMap;
+
+		var entry = map.Entries.First(x => x.Torque.IsEqual(tq, 0.1) && x.MotorSpeed.AsRPM.IsEqual(rpm, 0.1));
+
+		var input = run.InputData.JobInputData.Vehicle.Components.ElectricMachines.Entries.First().ElectricMachine
+			.VoltageLevels.First().PowerMap.First();
+		var inputRow = input.PowerMap.AsEnumerable().First(r => r.ParseDouble(ElectricMotorMapReader.Fields.MotorSpeed).IsEqual(rpm, 0.1) &&
+																r.ParseDouble(ElectricMotorMapReader.Fields.Torque).IsEqual(-tq, 0.1));
+		var inputPwrEl = inputRow.ParseDouble(ElectricMotorMapReader.Fields.PowerElectrical);
+
+		// check that in the input the efficiency is greater than 1
+		Assert.IsTrue(-inputPwrEl > expectedPel);
+		if (tq < 0) {
+			// propulsion
+			Assert.IsTrue(rpm.RPMtoRad() * -tq.SI<NewtonMeter>() / inputPwrEl > 1);
+		} else {
+			// recuperation
+			Assert.IsTrue(inputPwrEl / (rpm.RPMtoRad() * -tq.SI<NewtonMeter>())  > 1);
+		}
+
+        // calculate electric power as the raw map contains a virtual 'torque loss' of the EM.
+        var elPower = entry.MotorSpeed * entry.Torque + entry.PowerElectrical.Value().SI<NewtonMeter>() * entry.MotorSpeed;
+
+		// < 0 means propulsion, hence the electric power needs to be 'more negative'
+		Assert.IsTrue(entry.MotorSpeed * entry.Torque > elPower);
+		
+		Assert.AreEqual(expectedPel, elPower.Value(), 0.1);
+	}
+
+    private void CheckPEVHVACInRunData(VectoRunData rd, IVehicleDeclarationInputData vehicle)
 	{
 		var hvacInput = vehicle.Components.AuxiliaryInputData.Auxiliaries
 			.First(a => a.Type == AuxiliaryType.HVAC);

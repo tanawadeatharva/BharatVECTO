@@ -132,6 +132,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public const double OverloadRecoveryFactor = 0.9;
 
+		public static readonly Ohm SuperCapMinInternalResistance = 5.SI(Unit.SI.Milli.Ohm).Cast<Ohm>();
+
+		public const double ElectricMachineDefaultEfficiencyFallback = 0.98;
+
 		public static readonly Watt MinDepotChgPwr = 10.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
 		public static readonly Second DepotChargingDuration = 6.SI(Unit.SI.Hour).Cast<Second>();
 		public static readonly KilogramPerCubicMeter ICE_MassPerDisplacement = 770.SI<Kilogram>() / 7.7.SI<Liter>().Cast<CubicMeter>();
@@ -206,8 +210,46 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 
+		public static SegmentLookup GetTruckSegment(IVehicleDeclarationInputData vehicle, bool batteryElectric = false)
+			{
+                var allowVocational = true;
+			var ng = vehicle.ExemptedVehicle ? false : vehicle.Components.EngineInputData?.EngineModes.Any(e =>
+				e.Fuels.Any(f => f.FuelType.IsOneOf(FuelType.LPGPI, FuelType.NGCI, FuelType.NGPI))) ?? false;
+			var ovcHev = vehicle.ExemptedVehicle ? false : vehicle.OvcHev;
+			Segment segment;
+			try {
+				segment = DeclarationData.TruckSegments.Lookup(
+					vehicle.VehicleCategory, batteryElectric, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating,
+					vehicle.CurbMassChassis,
+					vehicle.VocationalVehicle, ng, ovcHev);
+			} catch (VectoException) {
+				allowVocational = false;
+				segment = DeclarationData.TruckSegments.Lookup(
+					vehicle.VehicleCategory, batteryElectric, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating,
+					vehicle.CurbMassChassis,
+					false, ng, ovcHev);
+			}
 
-		public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IVehicleDeclarationInputData vehicleData)
+			if (!segment.Found) {
+				throw new VectoException(
+					"no segment found for vehicle configuration: vehicle category: {0}, axle configuration: {1}, GVMR: {2}",
+					vehicle.VehicleCategory, vehicle.AxleConfiguration,
+					vehicle.GrossVehicleMassRating);
+			}
+
+			return new SegmentLookup() { Segment = segment, AllowVocational = allowVocational };
+		}
+
+
+		public struct SegmentLookup
+		{
+			public Segment Segment { get; set; }
+
+			public bool AllowVocational { get; set; }
+		}
+
+
+        public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IVehicleDeclarationInputData vehicleData)
 		{
 			switch (vehicleData.VehicleCategory) {
 				case VehicleCategory.Van:

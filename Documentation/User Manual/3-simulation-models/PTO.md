@@ -32,7 +32,7 @@ The idling losses are a function of speed as determined by the DIN 30752-1 proce
 
 A specific PTO cycle (time-based, engine speed and torque from PTO consumer as determined by the DIN 30752-1 procedure) is simulated during vehicle stops labeled as "with PTO activation". The execution of the driving cycle stops during this time and the pto cycle is executed. Afterwards the normal driving cycle continues.
 
-Power consumption in the PTO transmission part added to power demand from the PTO cycle. The cycle is configurable in the [Vehicle Editor](#vehicle-editor-pto-tab) and follows the file format described in [PTO-Cycle (.vptoc)](#pto-cycle-.vptoc). The timings in the PTO cycle get shifted to start at 0.
+Power consumption in the PTO transmission part added to power demand from the PTO cycle. The cycle is configurable in the [Vehicle Editor](#vehicle-editor-pto-tab) and follows the file format described in [PTO-Cycle (.vptoc)](#pto-cycle-.vptoc) in case of mechanical PTOs or [PTO Cycle (.vptoel)](#pto-cycle-.vptoel) in case of electrical PTOs. The latter can only be decalred for battery electric and serial hybrid electric vehicles. The timings in the PTO cycle get shifted to start at 0.
 
 
 ### Behavior During PTO Driving Cycles

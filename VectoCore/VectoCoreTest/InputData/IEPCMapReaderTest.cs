@@ -1,5 +1,5 @@
 ﻿
-#if TRACE
+#if VECTOTRACE
 using System.Windows.Forms.DataVisualization.Charting;
 #endif
 
@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.InputData
 
 
 			var effMap = IEPCMapReader.Create(powerMapData, 1, ratio, fld, ExecutionMode.Engineering);
-#if TRACE
+#if VECTOTRACE
 			PrintMaps("FLD.png", 
 				new SeriesProperties<ElectricMotorFullLoadCurve.FullLoadEntry>() {
 					xSelector = (x => x.MotorSpeed.AsRPM),
@@ -162,7 +162,7 @@ namespace TUGraz.VectoCore.Tests.InputData
 			}
 		}
 
-#if TRACE
+#if VECTOTRACE
 		public abstract class SeriesProperties
 		{
 			public abstract IEnumerable<(double x, double y)> GetPoints();

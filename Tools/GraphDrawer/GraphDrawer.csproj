@@ -4,7 +4,7 @@
     <RootNamespace>GraphDrawer</RootNamespace>
     <AssemblyName>GraphDrawer</AssemblyName>
     <TargetFrameworks>net6.0</TargetFrameworks>
-    <DefineConstants />
+     
   </PropertyGroup>
 
   <ItemGroup>

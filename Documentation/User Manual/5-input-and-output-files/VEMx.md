@@ -3,13 +3,13 @@
 This file contains the electric motor's maximum drive torque and maximum recuperation torque depending on the motor's angular speed. The file uses the [VECTO CSV format](#csv).
 
 - Filetype: .vemp
-- Header: **n [rpm] , T_drive [Nm] , T_recuperation [Nm]**
+- Header: **n [rpm] , T_drive [Nm] , T_drag [Nm]**
 - Requires at least 2 data entries
 
 **Example:**
 
 ~~~
-n [rpm] , T_drive [Nm] , T_recuperation [Nm]
+n [rpm] , T_drive [Nm] , T_drag [Nm]
 0       , 802.14       , -802.14
 1600    , 802.14       , -802.14
 1665    , 802.14       , -802.14

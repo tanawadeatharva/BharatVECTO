@@ -136,8 +136,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						InputDataProvider.JobInputData.Vehicle.LegislativeClass.ToString());
 				}
 
-				_segment = GetSegment(vehicle);
-				
+				var tmp = DeclarationData.GetTruckSegment(vehicle);
+				_segment = tmp.Segment;
+				_allowVocational = tmp.AllowVocational;
 			}
 
 			protected abstract void CreateGearboxAndGearshiftData(VectoRunData runData);
@@ -164,38 +165,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			#endregion
 
-			protected Segment GetSegment(IVehicleDeclarationInputData vehicle, bool batteryElectric = false)
-			{
-				_allowVocational = true;
-				var ng = vehicle.ExemptedVehicle ? false : vehicle.Components.EngineInputData?.EngineModes.Any(e =>
-					e.Fuels.Any(f => f.FuelType.IsOneOf(FuelType.LPGPI, FuelType.NGCI, FuelType.NGPI))) ?? false;
-				var ovcHev = vehicle.ExemptedVehicle ? false : vehicle.OvcHev;
-				Segment segment;
-				try
-				{
-					segment = DeclarationData.TruckSegments.Lookup(
-						vehicle.VehicleCategory, batteryElectric, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating,
-						vehicle.CurbMassChassis,
-						vehicle.VocationalVehicle, ng, ovcHev);
-				}
-				catch (VectoException)
-				{
-					_allowVocational = false;
-					segment = DeclarationData.TruckSegments.Lookup(
-						vehicle.VehicleCategory, batteryElectric, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating,
-						vehicle.CurbMassChassis,
-						false, ng, ovcHev);
-				}
-
-				if (!segment.Found)
-				{
-					throw new VectoException(
-						"no segment found for vehicle configuration: vehicle category: {0}, axle configuration: {1}, GVMR: {2}",
-						vehicle.VehicleCategory, vehicle.AxleConfiguration,
-						vehicle.GrossVehicleMassRating);
-				}
-				return segment;
-			}
+			
 
 
 			#endregion
@@ -442,7 +412,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					throw new VectoException("Unsupported Legislative class '{0}'",
 						InputDataProvider.JobInputData.Vehicle.LegislativeClass.ToString());
 				}
-				_segment = GetSegment(InputDataProvider.JobInputData.Vehicle, true);
+				var tmp = DeclarationData.GetTruckSegment(InputDataProvider.JobInputData.Vehicle, true);
+				_segment = tmp.Segment;
+				_allowVocational = tmp.AllowVocational;
 			}
 
             #endregion

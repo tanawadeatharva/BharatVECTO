@@ -15,7 +15,7 @@
 		<TargetFrameworks Condition="'$(Configuration)' == 'Deploy'">net48;net6.0-windows</TargetFrameworks>
 		<TargetFrameworks Condition="'$(Configuration)' == 'MockupDeploy'">net48;net6.0-windows</TargetFrameworks>
 	<DefineTrace>false</DefineTrace>
-	<DefineConstants />
+	 
 		<Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 	</PropertyGroup>
