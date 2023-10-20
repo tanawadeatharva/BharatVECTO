@@ -1,0 +1,31 @@
+﻿{
+  "Header": {
+    "CreatedBy": "",
+    "Date": "2018-06-12T11:24:10.6066876Z",
+    "AppVersion": "3",
+    "FileVersion": 4
+  },
+  "Body": {
+    "SavedInDeclMode": true,
+    "DeclarationVehicle": "vecto_vehicle-medium_lorry_4x2.xml",
+    "ManufacturerRecord": "vecto_vehicle-medium_lorry_4x2.RSLT_MANUFACTURER.xml",
+    "Mileage": 30000.0,
+    "FanPowerCoefficients": [
+      0.0,
+      1.0,
+      1.0
+    ],
+	"FuelNCVs": [
+      {
+        "Type": "Diesel CI",
+        "NCV": 42.5
+      }
+    ],
+	"TorqueDriftLeftWheel": 0.0,
+    "TorqueDriftRightWheel": 0.0,
+    "FanDiameter": 0.3,
+    "Cycles": [
+      "VTP Testzyklus.vdri"
+    ]
+  }
+}

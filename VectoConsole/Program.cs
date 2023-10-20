@@ -218,7 +218,7 @@ Examples:
 				// process the file list and start simulation
 				var fileWriter = new FileOutputWriter(fileList.First());
 				var sumWriter = new SummaryDataContainer(fileWriter);
-				_jobContainer = new JobContainer(sumWriter);
+				_jobContainer = new JobContainer(sumWriter, new JobArchiveBuilder());
 
 				var mode = ExecutionMode.Declaration;
 				if (args.Contains("-eng")) {

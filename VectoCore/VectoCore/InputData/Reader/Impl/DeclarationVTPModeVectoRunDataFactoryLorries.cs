@@ -51,12 +51,24 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
     {
         private ILorryDeclarationDataAdapter _dao;
 
+        protected readonly IInputDataProvider InputDataProvider;
+
         public DeclarationVTPModeVectoRunDataFactoryLorries(IVTPDeclarationInputDataProvider ivtpProvider, IVTPReport report) : base(
             ivtpProvider.JobInputData, report)
-        { }
+        {
+            InputDataProvider = ivtpProvider;
+        }
 
-        protected DeclarationVTPModeVectoRunDataFactoryLorries(IVTPDeclarationJobInputData job, IVTPReport report) : base(job, report)
-        { }
+        protected DeclarationVTPModeVectoRunDataFactoryLorries(IInputDataProvider inputProvider, IVTPReport report) : 
+            base((inputProvider as IVTPEngineeringInputDataProvider).JobInputData, report)
+        { 
+            InputDataProvider = inputProvider;
+        }
+
+        public override IInputDataProvider DataProvider
+		{
+			get { return InputDataProvider; }
+		}
 
 		protected override IDeclarationDataAdapter Dao => DataAdapter;
 		private ILorryDeclarationDataAdapter DataAdapter => _dao ?? (_dao = new DeclarationDataAdapterHeavyLorry.Conventional());

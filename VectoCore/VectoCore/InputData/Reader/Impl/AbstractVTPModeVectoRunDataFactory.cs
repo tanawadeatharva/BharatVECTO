@@ -86,6 +86,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		public abstract IEnumerable<VectoRunData> NextRun();
 
+		public abstract IInputDataProvider DataProvider { get; }
+		
 		#endregion
 
 		

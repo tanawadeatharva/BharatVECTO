@@ -99,6 +99,8 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		public string SumFileName => Path.ChangeExtension(_jobFile, Constants.FileExtensions.SumFile);
 
 
+		public List<string> ModDataFiles { get; protected set; } = new List<string>();
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -148,7 +150,10 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		public virtual void WriteModData(int jobRunId, string runName, string cycleName, string runSuffix, DataTable modData)
 		{
 			var modDataFileName = GetModDataFileName(runName, cycleName, runSuffix);
+			
 			VectoCSVFile.Write(modDataFileName, modData, true);
+			
+			ModDataFiles.Add(modDataFileName);
 		}
 
 		public virtual void WriteReport(ReportType type, XDocument data)
