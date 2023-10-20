@@ -1411,13 +1411,6 @@ lbFound:
 
     'Open Job Editor and open file (or new file)
     Friend Sub OpenVECTOeditor(filePathOrType As String, Optional jobType As VectoSimulationJobType = Nothing)
-        Dim jobDataProvider As IInputDataProvider = JSONInputDataFactory.ReadComponentData(filePathOrType)
-        Dim vtpEngineeringJob As IVTPEngineeringInputDataProvider = TryCast(jobDataProvider, IVTPEngineeringInputDataProvider)
-        Dim vtpDeclarationJob As IVTPDeclarationInputDataProvider = TryCast(jobDataProvider, IVTPDeclarationInputDataProvider)
-
-        'Declaration is the base class for EngineeringJobInputData, hence is valid for both Eng. and Decl.
-        If jobType = Nothing Then jobType = TryCast(jobDataProvider, IDeclarationJobInputData).JobType
-
         If filePathOrType = "<New>" Then
             ShowVectoJobForm(jobType)
             VectoJobForm.VectoNew()
@@ -1426,6 +1419,14 @@ lbFound:
             VectoVTPJobForm.VectoNew()
         Else
             Try
+                Dim jobDataProvider As IInputDataProvider = JSONInputDataFactory.ReadComponentData(filePathOrType)
+
+                'Declaration is the base class for EngineeringJobInputData, hence is valid for both Eng. and Decl.
+                If jobType = Nothing Then jobType = TryCast(jobDataProvider, IDeclarationJobInputData).JobType
+
+                Dim vtpEngineeringJob As IVTPEngineeringInputDataProvider = TryCast(jobDataProvider, IVTPEngineeringInputDataProvider)
+                Dim vtpDeclarationJob As IVTPDeclarationInputDataProvider = TryCast(jobDataProvider, IVTPDeclarationInputDataProvider)
+
                 If vtpEngineeringJob Is Nothing AndAlso vtpDeclarationJob Is Nothing Then
                     ShowVectoJobForm(jobType)
                     VectoJobForm.VECTOload2Form(filePathOrType)
