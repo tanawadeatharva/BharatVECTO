@@ -820,6 +820,8 @@ namespace TUGraz.VectoCore.OutputData
 			return cols.Where(x => Table.Columns.Contains(x)).ToArray();
 		}
 
+		public ISummaryWriter SummaryWriter { get { return _sumWriter; } }
+
 		private void InitTableColumns()
 		{
 			//lock (Table) {

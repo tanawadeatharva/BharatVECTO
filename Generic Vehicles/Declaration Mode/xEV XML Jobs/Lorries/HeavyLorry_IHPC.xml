@@ -1,28 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob x:/VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"  xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
-	<v2.0:Vehicle xsi:type="Vehicle_HEV-Px_PrimaryBusDeclarationType" id="a">
+<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" 
+xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" 
+xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"  
+xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
+	<v2.0:Vehicle xsi:type="Vehicle_HEV-Px_HeavyLorryDeclarationType" id="a">
 		<Manufacturer>Generic Truck Manufacturer</Manufacturer>
 		<ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
 		<Model>Generic Model</Model>
 		<VIN>VEH-1234567890</VIN>
 		<Date>2017-02-15T11:00:00Z</Date>
-		<LegislativeCategory>M3</LegislativeCategory>
-		<ChassisConfiguration>Bus</ChassisConfiguration>
+		<LegislativeCategory>N2</LegislativeCategory>
+		<ChassisConfiguration>Rigid Lorry</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
-		<Articulated>false</Articulated>
+		<CorrectedActualMass>7500</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>20000</TechnicalPermissibleMaximumLadenMass>
 		<IdlingSpeed>600</IdlingSpeed>
 		<RetarderType>None</RetarderType>
 		<RetarderRatio>1.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
+		<PTO xsi:type="PTOType">
+			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
+			<PTOOtherElements>none</PTOOtherElements>
+		</PTO>
 		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<VocationalVehicle>false</VocationalVehicle>
+		<SleeperCab>false</SleeperCab>
 		<ArchitectureID>P2</ArchitectureID>
 		<OvcHev>false</OvcHev>
 		<ADAS xsi:type="ADAS_HEV_Type">
 			<EngineStopStart>true</EngineStopStart>
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
-		<Components xsi:type="Components_HEV-Px_PrimaryBusType">
+		<Components xsi:type="Components_HEV-Px_LorryType">
 			<Engine>
 				<v2.0:Data xsi:type="v1.0:EngineDataDeclarationType" id="ENG-gooZah3D" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0">
 					<Manufacturer>Generic Engine Manufacturer</Manufacturer>
@@ -17187,30 +17196,21 @@
 				</v2.0:Data>
 			</AxleWheels>
 			<Auxiliaries>
-				<Data xsi:type="AUX_HEV-P_PrimaryBusType">
+				<Data xsi:type="AUX_HEV-P_LorryDataType">
 					<Fan>
-						<Technology>Crankshaft mounted - Electronically controlled visco clutch</Technology>
+						<Technology>Belt driven or driven via transm. - Bimetallic controlled visco clutch</Technology>
 					</Fan>
 					<SteeringPump>
 						<Technology axleNumber="1">Variable displacement elec. controlled</Technology>
 					</SteeringPump>
 					<ElectricSystem>
-						<AlternatorTechnology>conventional</AlternatorTechnology>
-						<SupplyFromHEVPossible>false</SupplyFromHEVPossible>
+					 <Technology>Standard technology</Technology>
 					</ElectricSystem>
 					<PneumaticSystem>
-						<SizeOfAirSupply>Large Supply 2-stage</SizeOfAirSupply>
-						<CompressorDrive>mechanically</CompressorDrive>
-						<Clutch>none</Clutch>
-						<CompressorRatio>1.000</CompressorRatio>
-						<SmartCompressionSystem>true</SmartCompressionSystem>
-						<SmartRegenerationSystem>false</SmartRegenerationSystem>
-						<AirsuspensionControl>electronically</AirsuspensionControl>
-						<PneumaticSCRReagentDosing>true</PneumaticSCRReagentDosing>
+					 <Technology>Medium Supply 1-stage</Technology>
 					</PneumaticSystem>
 					<HVAC>
-						<AdjustableCoolantThermostat>true</AdjustableCoolantThermostat>
-						<EngineWasteGasHeatExchanger>true</EngineWasteGasHeatExchanger>
+					 <Technology>None</Technology>
 					</HVAC>
 				</Data>
 			</Auxiliaries>

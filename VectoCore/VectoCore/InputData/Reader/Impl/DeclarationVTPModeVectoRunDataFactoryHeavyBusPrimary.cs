@@ -22,17 +22,24 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
     {
         private IPrimaryBusDeclarationDataAdapter _dao;
 
+        protected readonly IInputDataProvider InputDataProvider;
+
         public DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary(
             IVTPDeclarationInputDataProvider ivtpProvider, IVTPReport report) : base(ivtpProvider.JobInputData, report)
         {
-
+            InputDataProvider = ivtpProvider;
         }
 
-        protected DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary(IVTPDeclarationJobInputData vtpJob, IVTPReport report) : base(vtpJob, report) { }
+        protected DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary(IInputDataProvider inputProvider, IVTPReport report) : 
+            base((inputProvider as IVTPEngineeringInputDataProvider).JobInputData, report) 
+        {
+            InputDataProvider = inputProvider;
+        }
 
 
         #region Implementation of IVectoRunDataFactory
 
+        public override IInputDataProvider DataProvider => InputDataProvider;
 
         protected IPrimaryBusDeclarationDataAdapter DataAdapter => _dao ?? (_dao = new DeclarationDataAdapterPrimaryBus.Conventional());
 

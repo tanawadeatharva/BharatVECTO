@@ -30,6 +30,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			return GetNextRun();
 		}
 
+		public IInputDataProvider DataProvider => InputDataProvider;
+
 		protected abstract IEnumerable<VectoRunData> GetNextRun();
 
 		protected abstract VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading);

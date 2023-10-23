@@ -19,6 +19,7 @@ Changelog:
 	16.11.2022: 	- Removed trailing white spaces from PSTechnologies and SPTechnologies
 				- changed Small + elec. driven + ESS to Small + AMS + elec. driven
     13.06.2023: Changed rated current, rated voltage, rated capacity (bus aux smart electrics) from datatype xs:integer to xs:int 	
+	19.10.2023: remove erroneous lorry PS technology entry
 	-->
 	<xs:complexType name="Abstract_ADAS_ConventionalType" abstract="true">
 		<xs:complexContent>
@@ -2530,7 +2531,6 @@ Changelog:
 	</xs:simpleType>
 	<xs:simpleType name="AuxPSTechnologyLorryType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="Crankshaft mounted - Electronically controlled visco clutch"/>
 			<xs:enumeration value="Small"/>
 			<xs:enumeration value="Small + ESS"/>
 			<xs:enumeration value="Small + visco clutch"/>
@@ -2560,7 +2560,6 @@ Changelog:
 			<xs:enumeration value="Large Supply + visco clutch + AMS"/>
 			<xs:enumeration value="Large Supply + mech. clutch + AMS"/>
 			<xs:enumeration value="Vacuum pump"/>
-			<!--fully electric-->
 			<xs:enumeration value="Small + elec. driven"/>
 			<xs:enumeration value="Small + AMS + elec. driven"/>
 			<xs:enumeration value="Medium Supply 1-stage + elec. driven"/>
@@ -2570,6 +2569,7 @@ Changelog:
 			<xs:enumeration value="Large Supply + elec. driven"/>
 			<xs:enumeration value="Large Supply + AMS + elec. driven"/>
 			<xs:enumeration value="Vacuum pump + elec. driven"/>
+			<!--fully electric-->
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="AuxSPTechnology_HEV-S_LorryType">

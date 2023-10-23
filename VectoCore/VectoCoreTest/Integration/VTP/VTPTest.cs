@@ -30,6 +30,9 @@
 */
 
 using System.IO;
+using System.IO.Compression;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -90,6 +93,7 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 		private const string PEL_FAN_JOB = @"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_DECL_FanPel.vecto";
 		private const string DUAL_FUEL_JOB = @"TestData\Integration\VTPMode\DualFuelVehicle\VTP_DualFuel.vecto";
 		private const string TORQUE_DRIFT_JOB = @"TestData\Integration\VTPMode\Group2_RigidTruck_4x2\Class2_RigidTruck_VTP_TorqueDrift.vecto";
+		private const string ARCHIVE_BUILDER_JOB = @"TestData\Integration\VTPMode\JobArchiveBuilder\VTP_MediumLorry.vecto";
 
 		[Category("LongRunning")]
 		[Category("Integration")]
@@ -143,6 +147,52 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 
 			Assert.AreEqual(expectedDeclaredCO2, declared, 1e-8);
 			Assert.AreEqual(expectedCVTP, cvtp, 1e-4);
+		}
+
+		[Category("LongRunning")]
+		[Category("Integration")]
+		[TestCase(ARCHIVE_BUILDER_JOB, TestName = "VTP Job Archive creation")]
+		public void TestVTPJobArchiveCreation(string jobFile)
+		{ 
+			var fileWriter = new FileOutputWriter(jobFile);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter, new JobArchiveBuilder());
+			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
+			runsFactory.ModalResults1Hz = false;
+			runsFactory.WriteModalResults = true;
+			runsFactory.ActualModalData = false;
+			runsFactory.Validate = false;
+
+			jobContainer.AddRuns(runsFactory);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.AreEqual(true, jobContainer.AllCompleted);
+
+			var archivePath = Path.Combine(Path.GetDirectoryName(jobFile), "JobArchive_VTP_MediumLorry.zip");
+			Assert.IsTrue(File.Exists(archivePath));
+
+			var fileNames = new List<string>() {
+				"VTP_MediumLorry.VTP_Report.xml",
+				"VTP_MediumLorry.vsum",
+				"standard values_VTP Testzyklus.vmod",
+				"VTP_MediumLorry.vecto",
+				"vecto_vehicle-medium_lorry_4x2.RSLT_MANUFACTURER.xml",
+				"vecto_vehicle-medium_lorry_4x2.xml",
+				"VTP Testzyklus.vdri"
+			};
+
+			var zipFiles = new List<string>();
+
+			using (ZipArchive archive = ZipFile.OpenRead(archivePath))
+			{
+				foreach (ZipArchiveEntry entry in archive.Entries) { zipFiles.Add(entry.FullName); }
+			} 
+
+			Assert.IsTrue(fileNames.Count == zipFiles.Count);
+			Assert.IsTrue(fileNames.All(x => zipFiles.Contains(x)));
 		}
 
 		[Category("LongRunning")]
