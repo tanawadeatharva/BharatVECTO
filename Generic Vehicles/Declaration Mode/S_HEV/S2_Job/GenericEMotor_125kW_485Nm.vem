@@ -16,10 +16,10 @@
     "VoltageLevels": [
       {
         "Voltage": 0.0,
-        "ContinuousTorque": 23873.2414637843,
+        "ContinuousTorque": 350,
         "ContinuousTorqueSpeed": "2000",
-        "OverloadTorque": 0.0,
-        "OverloadTorqueSpeed": 0.0,
+        "OverloadTorque": 480,
+        "OverloadTorqueSpeed": 2000,
         "OverloadTime": 30.0,
         "FullLoadCurve": "GenericEMotor_125kW_485Nm.vemp",
         "EfficiencyMap": {
@@ -28,10 +28,10 @@
       },
       {
         "Voltage": 1000000000.0,
-        "ContinuousTorque": 23873.2414637843,
+        "ContinuousTorque": 350,
         "ContinuousTorqueSpeed": "2000",
-        "OverloadTorque": 0.0,
-        "OverloadTorqueSpeed": 0.0,
+        "OverloadTorque": 480,
+        "OverloadTorqueSpeed": 2000,
         "OverloadTime": 30.0,
         "FullLoadCurve": "GenericEMotor_125kW_485Nm.vemp",
         "EfficiencyMap": {

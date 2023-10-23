@@ -429,6 +429,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			//var overloadTorque = (voltageEntry.OverloadTorque ?? 0.SI<NewtonMeter>()) * count / gearRatioUsedForMeasurement;
 			var overloadTestSpeed = (voltageEntry.OverloadTestSpeed ?? 0.RPMtoRad()) * gearRatioUsedForMeasurement;
 
+			if (overloadTestSpeed.IsEqual(0)) {
+				throw new VectoException("Invalid model parameters for EM overload");
+			}
+
 			if (overloadTestSpeed > continuousTorqueSpeed) {
 				var overloadPwr = (voltageEntry.OverloadTorque ?? 0.SI<NewtonMeter>()) * count *
 								(voltageEntry.OverloadTestSpeed ?? 0.RPMtoRad());
