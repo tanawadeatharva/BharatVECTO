@@ -448,7 +448,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					-overloadTorqueTrans, gear).ElectricalPower;
 				if (ovlElPwr == null) {
 					throw new VectoException(
-						$"Overloadbuffer calculation: failed to lookup electric power for overload point {overloadTestSpeed} {-overloadTorqueTrans}");
+						$"Overloadbuffer calculation: failed to lookup electric power for overload point {overloadTestSpeed.AsRPM} [rpm] {overloadTorqueTrans / count}");
 
 				}
 				var overloadTorque = (voltageEntry.OverloadTorque ?? 0.SI<NewtonMeter>()) * count / gearRatioUsedForMeasurement;
@@ -477,7 +477,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					-overloadTorque, gear).ElectricalPower;
 				if (ovlElPwr == null) {
 					throw new VectoException(
-						$"Overloadbuffer calculation: failed to lookup electric power for overload point {overloadTestSpeed} {-overloadTorque}");
+						$"Overloadbuffer calculation: failed to lookup electric power for overload point {overloadTestSpeed.AsRPM} [rpm] {overloadTorque / count}");
 				}
 				var overloadPwrLoss = -ovlElPwr - overloadTorque * overloadTestSpeed; // loss needs to be positive
 				var overloadBuffer = (overloadPwrLoss - continuousPowerLoss) * voltageEntry.OverloadTime;
