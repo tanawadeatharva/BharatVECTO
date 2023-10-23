@@ -1,5 +1,18 @@
 # Changelog
 
+**VECTO-4.0.1**
+
+***Build 3217 (2023-10-23) OFFICIAL RELEASE***
+
+- Improvements
+    * VTP mode: create zip archive for input and output files
+- Bugfixes
+    * bugfix in CIF for complete(d) buses - do not write PrimaryVehicleSubgroup element
+    * fix hybrid strategy: power comparison
+    * fix exempted vehicles do not work (error message that XML version is not supported)
+    * bugfix in XML schema: remove wrong PS technology entry for lorries
+    * bugfix for conditioning power demand for IHPC vehicles
+
 **VECTO-4.0.0**
 
 ***Build 3211 (2023-10-16) OFFICIAL RELEASE***
