@@ -189,6 +189,28 @@ In the REESS Dialog the battery file itself and how it is connected to the elect
 
 ![](pics/BatteryPackDialog.png)
 
+## Vehicle Editor -- In-motion Charging Tab
+
+<div class="engineering">
+![](pics/Vehicle_IMC_Eng.png)
+
+In engineering mode the following model parameters are necessary:
+
+  - Share of in-motion charging infrastructure available on total mission distance
+  - Delta CdxA with active in-motion charging feature
+  - In-motion charging feature only available on motorway sections
+
+The influence of these parameters is described [here](#in-motion-charging)
+</div>	
+
+<div class="declaration">
+![](pics/Vehicle_IMC_Decl.png)
+
+In declaration mode only the available in-motion charging technology needs to be selected.
+</div>	
+
+
+
 ## Vehicle Editor -- IEPC Tab
 
 ![](pics/VehicleForm_IEPC.png)
