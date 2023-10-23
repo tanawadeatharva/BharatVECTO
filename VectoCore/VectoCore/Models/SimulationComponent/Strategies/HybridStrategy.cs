@@ -1899,7 +1899,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 				// if battery is getting empty try to set EM-torque to discharge battery to lower SoC boundary
 
-				if (maxEmTorque.IsSmaller(0) && (-emDrivePower).IsGreaterOrEqual(maxEmTorque * firstResponse.ElectricMotor.AngularVelocity)) {
+				if (maxEmTorque.IsSmaller(0) && emDrivePower.IsGreaterOrEqual(maxEmTorque * firstResponse.ElectricMotor.AngularVelocity)) {
 					// maxEmTorque < 0  ==> EM can still propel
 					// (-emDrivePower).IsGreaterOrEqual(maxEmTorque * firstResponse.ElectricMotor.AngularVelocity) ==> power available from battery for driving does not exceed max EM power (otherwise torque lookup may fail) 
 					//var emDriveTorque = ModelData.ElectricMachinesData.Where(x => x.Item1 == emPos).First().Item2.EfficiencyMap
