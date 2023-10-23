@@ -1431,9 +1431,6 @@ lbFound:
                 ShowVectoJobForm(jobType)
                 VectoJobForm.VectoNew()
         ElseIf filePathOrType = "<VTP>" Then
-                MsgBox(ex.Message,MsgBoxStyle.OkOnly, "Error creating new Vecto job")
-                Exit Sub
-            End Try
             ShowVectoEPTPJobForm()
             VectoVTPJobForm.VectoNew()
         Else
