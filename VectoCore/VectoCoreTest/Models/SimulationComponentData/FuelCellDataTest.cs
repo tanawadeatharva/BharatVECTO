@@ -103,8 +103,8 @@ public class FuelCellDataTest
 		var limits = GetLimits(variant);
 		var dir = BASEOUTPUTPATH + $"fuel_cell_count_test_{power_kW}";
 
-        PrintFcMap(limits.min_kW, limits.max_kW, variant, dir );
-		PrintString(limits.min_kW, limits.max_kW, variant, 3, dir);
+        PrintFcMap(limits.min, limits.max, variant, dir );
+		PrintString(limits.min, limits.max, variant, 3, dir);
 
 
 		Assert.That(fcString.GetActiveFuelCellCount(power), Is.EqualTo(activeFc));
@@ -204,10 +204,28 @@ public class FuelCellDataTest
 	{
 		Assert.That(expected_a_s.Count() > 0);
 
+		var fc1Limits = GetLimits(1, true);
+		var fc2Limits = GetLimits(2, true);
 
-
-		PrintPowerDistribution(1, 3, 2, 3, power_W, BASEOUTPUTPATH + $"ShareTestDifferentFuelCellSameRange_{power_W / 1000} kW/");
+		PrintPowerDistribution(1, 3, 2, 3, power_W, BASEOUTPUTPATH + $"ShareTestDifferentFuelCellSameRange_{power_W / 1000} kW/", fc1Limits.min, fc1Limits.max, fc2Limits.min, fc2Limits.max);
         TestShares(power_W, expected_a_s, 1, 2);
+	}
+
+
+	[TestCase(116667.4412, new double[]{0}) ]
+	public void FuelCellSystem_GetShare_GenericFCHV(double power_W, double[] expected_a_s)
+	{
+
+		Assert.That(expected_a_s.Count() > 0);
+
+		var var1 = 1;
+		var var2 = 4;
+
+		(double min, double max) fc1Limits_W = (30 * 1000, 100 * 1000);
+		(double min, double max) fc2Limits_W = (30 * 1000, 100 * 1000);
+
+        PrintPowerDistribution(var1, 3, var2, 3, power_W, BASEOUTPUTPATH + $"GenericFCHV{power_W / 1000} kW/", fc1Limits_W.min, fc1Limits_W.max, fc2Limits_W.min, fc2Limits_W.max);
+		TestShares(power_W, expected_a_s, var1, var2);
 	}
 
 	[TestCase(493e3, new double[]{0.60}, 1, 1)]
@@ -521,10 +539,11 @@ public class FuelCellDataTest
 		plt.SaveFig(outputFile);
 	}
 
-	[TestCase(1,1,1,1, 120e3, BASEOUTPUTPATH + "PowerDistribution_v1_c1_v1_c1_120kW")]
-	public void PrintPowerDistribution(int var1, int count1, int var2, int count2, double power_W, string outputDirectory)
+	[TestCase(1, 1, 1, 1, 120e3, BASEOUTPUTPATH + "PowerDistribution_v1_c1_v1_c1_120kW", 30e3, 300e3, 30e3, 300e3 )]
+	public void PrintPowerDistribution(int var1, int count1, int var2, int count2, double power_W,
+		string outputDirectory, double minPower1_W, double maxPower1_W, double minPower2_W, double maxPower2_W)
 	{
-		var fcs = GetFuelCellSystemInputData(var1, 30e3, 300e3, count1, var2, 30e3, 300e3, count2);
+		var fcs = GetFuelCellSystemInputData(var1, minPower1_W, maxPower1_W, count1, var2, minPower2_W, maxPower2_W, count2);
 		PrintFcSystemPowerDistributions(fcs, outputDirectory, (power_W / 1000).ToString(CultureInfo.InvariantCulture), power_W.SI<Watt>());
 
 
@@ -582,6 +601,8 @@ public class FuelCellDataTest
 		total.OnNaN = ScatterPlot.NanBehavior.Gap;
 		fc1.OnNaN = ScatterPlot.NanBehavior.Gap;
 		fc2.OnNaN = ScatterPlot.NanBehavior.Gap;
+		//share.OnNaN = ScatterPlot.NanBehavior.Gap; //should not happen because only valid shares should be provided by GetValidShares() <- as the name suggests
+		
 
 		plt.Title($"Power distribution {power.ConvertToKiloWatt().ToOutputFormat(showUnit:true)}");
 
@@ -663,6 +684,22 @@ public class FuelCellDataTest
 			(150.0, 7662.5),
 			(195.0, 14199.7),
 		};
+
+		var variant4 = new (double, double)[] {
+
+			//P_el_out [kW],  m_H2 [g/h]
+			(30.0,           2002.0),
+			(60.0,           2503.0),
+			(105.0,          4436.5),
+			(150.0,          7662.5),
+			(195.0,          10199.7),
+			(255.0,          14017.0),
+			(300.0,          18450.0),
+
+        };
+
+
+
 		switch (variant) {
 			case 1:
 				return variant1;
@@ -670,17 +707,19 @@ public class FuelCellDataTest
 				return variant2;
 			case 3:
 				return variant3;
+			case 4:
+				return variant4;
 			default:
 				throw new ArgumentOutOfRangeException();
 		}
 	}
 
-	public (double min_kW, double max_kW) GetLimits(int variant)
+	public (double min, double max) GetLimits(int variant, bool inWatt = false)
 	{
 		var table = GetTable(variant);
 
-
-		return (table.First().Item1, table.Last().Item1);
+		var factor = inWatt ? 1000 : 1;
+		return (table.First().Item1 * factor, table.Last().Item1 * factor);
 	}
 
 
