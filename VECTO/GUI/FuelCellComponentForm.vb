@@ -159,7 +159,7 @@ Public Class FuelCellComponentForm
                     If(Not String.IsNullOrWhiteSpace(_fuelCellComponentFile), Path.Combine(Path.GetDirectoryName(_fuelCellComponentFile),
                                                                                            tbMassFlowMap.Text), tbMassFlowMap.Text)
             If File.Exists(massFlowMapFile) Then _
-                massFlowMap = FuelCellMassFlowMapReader.Create(VectoCSVFile.Read(massFlowMapFile))
+                massFlowMap = FuelCellMassFlowMapReader.Create(VectoCSVFile.Read(massFlowMapFile), Nothing, Nothing)
         Catch ex As Exception
 
         End Try
