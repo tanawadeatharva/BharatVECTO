@@ -541,11 +541,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		internal int GetActiveFuelCellCount(Watt power)
 		{
 			var fcActive = 1;
-			if (_fcCount == 1 || !SwitchingPoints.Any(p => p.IsSmallerOrEqual(power))) {
+			var minActive = (int)Math.Max(1, Math.Ceiling(Math.Round(power / _fuelCellComponentMap.MaxPowerMap, 6))); //minActive wrt power limits
+			if (minActive > _fcCount) {
+				throw new VectoException("Power demand to high for string");
+			}
+
+			fcActive = VectoMath.Max(fcActive, minActive);
+
+            if (_fcCount == 1 || !SwitchingPoints.Any(p => p.IsSmallerOrEqual(power))) {
 				return fcActive;
 			}
 
-			var minActive = (int)Math.Max(1, Math.Ceiling(Math.Round(power / _fuelCellComponentMap.MaxPowerMap, 6)));
 
 			var index = SwitchingPoints.IndexOf(SwitchingPoints.Last(p => p.IsSmallerOrEqual(power)));
 			fcActive = index + 2;
