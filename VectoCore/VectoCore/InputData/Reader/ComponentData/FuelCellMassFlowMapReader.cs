@@ -36,9 +36,13 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				P_el_out = (row.ParseDouble(Fields.ElectricPower) * 1000).SI<Watt>(),
 				H2 = (row.ParseDouble(Fields.m_H2) / (1000 * 3600)).SI<KilogramPerSecond>(),
 			}).ToArray());
+			if (minPower != null) {
+				fcMap.MinPower = minPower;
+            }
 
-			fcMap.MinPower = minPower;
-			fcMap.MaxPower = maxPower;
+			if (maxPower != null) {
+				fcMap.MaxPower = maxPower;
+            }
 
 			return fcMap;
 		}
