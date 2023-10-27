@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.IO.Ports;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Threading;
@@ -9,6 +11,7 @@ using NLog.Filters;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell;
 using TUGraz.VectoCore.Utils;
@@ -245,15 +248,64 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 	{
 
 
-		public Watt MinPower => Entries.MinBy(e => e.P_el_out).P_el_out;
-		public Watt MaxPower => Entries.MaxBy(e => e.P_el_out).P_el_out;
+		public Watt MinPowerMap => Entries.MinBy(e => e.P_el_out).P_el_out;
+		public Watt MaxPowerMap => Entries.MaxBy(e => e.P_el_out).P_el_out;
 
-		protected internal readonly MassFlowMapEntry[] Entries;
+		protected internal MassFlowMapEntry[] Entries;
 
 		public FuelCellMassFlowMap(MassFlowMapEntry[] entries)
 		{
 			Entries = entries.OrderBy(e => e.P_el_out).ToArray();
 		}
+
+        /// <summary>
+		/// Cuts the map at MinPower, introduces an artificial measurepoint at MinPower if it not matches an existing measured point
+        /// </summary>
+        public Watt MinPower
+		{
+			set
+			{
+				if (value.IsEqual(MinPowerMap)) {
+					return;
+				}
+
+				var entries = Entries.Where(e => e.P_el_out.IsGreaterOrEqual(value)).ToList();
+				if (!entries.First().P_el_out.IsEqual(value)) {
+					entries.Add(new MassFlowMapEntry() {
+						P_el_out = value,
+						H2 = Lookup(value, false)
+					});
+				}
+
+				Entries = entries.ToArray();
+
+
+			}
+		}
+
+		/// <summary>
+		/// Cuts the map at MaxPower, introduces an artificial measurepoint at MaxPower if it not matches an existing measured point
+		/// </summary>
+		public Watt MaxPower
+		{
+			set
+			{
+				if (value.IsEqual(MaxPowerMap)) {
+					return;
+				}
+
+				var entries = Entries.Where(e => e.P_el_out.IsSmallerOrEqual(value)).ToList();
+				if (!entries.Last().P_el_out.IsEqual(value)) {
+					entries.Add(new MassFlowMapEntry() {
+						P_el_out = value,
+						H2 = Lookup(value, false),
+					});
+				}
+				Entries = entries.ToArray();
+			}
+		}
+		
+
 		/// <summary>
 		/// Looks up the fuel consumption for the given power
 		/// </summary>
@@ -289,7 +341,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 			//TODO switch to binary search
 			for (var index = 1; index < Entries.Length; index++)
 			{
-				if (power.IsGreaterOrEqual(Entries[index - 1].P_el_out) && power.IsSmallerOrEqual(Entries[index].P_el_out))
+				if (power.IsGreaterOrEqual(Entries[index - 1].P_el_out, 1E-3.SI<Watt>()) && power.IsSmallerOrEqual(Entries[index].P_el_out, 1E-3.SI<Watt>()))
 				{
 					return index;
 				}
@@ -316,8 +368,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 
 	public class FuelCellStringMassFlowMap
 	{
-		public Watt MinPower => _fuelCellComponentMap.MinPower;
-		public Watt MaxPower => _fuelCellComponentMap.MaxPower * _fcCount;
+		public Watt MinPower => _fuelCellComponentMap.MinPowerMap;
+		public Watt MaxPower => _fuelCellComponentMap.MaxPowerMap * _fcCount;
 
 
 		public Watt MinPowerEff => _fuelCellComponentMap.MinEffPower;
@@ -325,10 +377,120 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		public FuelCellMassFlowMap _fuelCellComponentMap;
 		private readonly int _fcCount;
 
+
+		private List<Watt> _supportingPoints = null;
+
+		public IList<Watt> SupportingPoints
+		{
+			get { return (_supportingPoints ?? (_supportingPoints = SwitchingPoints.Concat(MeasuredPoints).OrderBy(p => p).Distinct().ToList())); }
+		}
+
+		private List<Watt> _switchingPoints = null;
+
+		public IList<Watt> SwitchingPoints
+		{
+			get { return (_switchingPoints ?? (_switchingPoints = GetSwitchingPoints())); }
+		}
+
+
 		private List<Watt> _measuredPoints = null;
 		public IList<Watt> MeasuredPoints {
 			get { return _measuredPoints ?? (_measuredPoints = GetMeasuredPoints()); }
 		}
+
+		private List<Watt> GetSwitchingPoints()
+		{
+			var switchingPoints = new List<Watt>();
+			if (_fcCount == 1) {
+				return switchingPoints;
+			}
+			var singleFcMap = _fuelCellComponentMap;
+			var singleFcMinPower = singleFcMap.MinPowerMap;
+			var singleFcMaxPower = singleFcMap.MaxPowerMap;
+
+			for (int active = 1; active < _fcCount; active++) {
+
+				var entries = singleFcMap.Entries
+					.Where(e => (e.P_el_out / active).IsBetween(singleFcMinPower, singleFcMaxPower)).Select(e => {
+						return new FuelCellMassFlowMap.MassFlowMapEntry() {
+							H2 = active * singleFcMap.Lookup(e.P_el_out, false),
+							P_el_out = e.P_el_out * active,
+						};
+					}).ToList();
+
+				//Add minpower and max power points to cover the whole range
+				if (!entries.Any(e => (e.P_el_out / active).IsEqual(singleFcMinPower))) {
+					entries.Insert(0, new FuelCellMassFlowMap.MassFlowMapEntry() {
+
+						P_el_out = singleFcMinPower * active,
+						H2 = active * singleFcMap.Lookup(singleFcMinPower, false)
+					});
+				}
+
+				if (!entries.Any(e => (e.P_el_out / active).IsEqual(singleFcMaxPower))) {
+					entries.Add(new FuelCellMassFlowMap.MassFlowMapEntry() {
+
+						P_el_out = singleFcMaxPower * active,
+						H2 = active * singleFcMap.Lookup(singleFcMinPower, false)
+					});
+				}
+
+
+
+				foreach (var pair in entries.Pairwise()) {
+					//One fuel cell is on
+					var fcEdge = new Edge(new Point(pair.Item1.P_el_out.Value(), pair.Item1.H2.Value()),
+						new Point(pair.Item2.P_el_out.Value(), pair.Item2.H2.Value()));
+
+					var activeInc = active + 1;
+					var sectionMinPower = pair.Item1.P_el_out;
+					var sectionMaxPower = pair.Item2.P_el_out;
+					var distributedMinPower = VectoMath.Max(sectionMinPower / activeInc, singleFcMinPower);
+					var distributedMaxPower = VectoMath.Min(sectionMaxPower / activeInc, singleFcMaxPower);
+
+                    //Entries per fuel cell assuming increased fuel cell count
+                    var entriesPerFc =
+						singleFcMap.Entries.Where(e => (e.P_el_out).IsBetween(sectionMinPower/activeInc, sectionMaxPower/activeInc)).ToList();
+
+					if (!entriesPerFc.Any(e => e.P_el_out.IsEqual(distributedMinPower)))
+					{
+						entriesPerFc.Insert(0, new FuelCellMassFlowMap.MassFlowMapEntry()
+						{
+
+							P_el_out = distributedMinPower,
+							H2 = singleFcMap.Lookup(distributedMinPower, false)
+						});
+					}
+					if (!entriesPerFc.Any(e => e.P_el_out.IsEqual(distributedMaxPower)))
+					{
+						entriesPerFc.Add(new FuelCellMassFlowMap.MassFlowMapEntry()
+						{
+							P_el_out = distributedMaxPower,
+							H2 = singleFcMap.Lookup(distributedMaxPower, false)
+						});
+					}
+
+					var entriesIncreased = entriesPerFc.Select(e => new FuelCellMassFlowMap.MassFlowMapEntry() {
+						P_el_out = e.P_el_out * activeInc,
+						H2 = e.H2 * activeInc
+					});
+
+					foreach (var increasedPair in entriesIncreased.Pairwise()) {
+						var edgeIncreased =
+							new Edge(new Point(increasedPair.Item1.P_el_out.Value(), increasedPair.Item1.H2.Value()),
+								new Point(increasedPair.Item2.P_el_out.Value(),increasedPair.Item2.H2.Value()));
+						var intersect = VectoMath.Intersect(fcEdge, edgeIncreased);
+						if (intersect == null) {
+							continue;
+						}
+						switchingPoints.Add(intersect.X.SI<Watt>());
+
+					}
+				}
+			}
+			return switchingPoints;
+		}
+
 
 		private List<Watt> GetMeasuredPoints()
 		{
@@ -376,14 +538,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 			}
 		}
 
-		internal int GetActiveFuelCellCount(Watt p)
+		internal int GetActiveFuelCellCount(Watt power)
 		{
-			var minFcCount = (int)Math.Ceiling(p / _fuelCellComponentMap.MaxPower);
+			var fcActive = 1;
+			if (_fcCount == 1 || !SwitchingPoints.Any(p => p.IsSmallerOrEqual(power))) {
+				return fcActive;
+			}
 
-			var fcEffCount = (int)VectoMath.LimitTo(Math.Floor((p / _fuelCellComponentMap.MinEffPower).Value()), 1, _fcCount);
+			var minActive = (int)Math.Max(1, Math.Ceiling(Math.Round(power / _fuelCellComponentMap.MaxPowerMap, 6)));
 
-			return VectoMath.Max(minFcCount, fcEffCount);
+			var index = SwitchingPoints.IndexOf(SwitchingPoints.Last(p => p.IsSmallerOrEqual(power)));
+			fcActive = index + 2;
 
+			var activeFuelCells = VectoMath.LimitTo(fcActive, minActive, _fcCount);
+
+#if DEBUG
+			_fuelCellComponentMap.Lookup(power / activeFuelCells);
+#endif
+
+			return activeFuelCells;
 		}
 
 		public KilogramPerSecond Lookup(Watt power)
@@ -392,7 +565,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 			var totalFc = 0.SI<KilogramPerSecond>();
 
 			for (int i = 0; i < activeFc; i++) {
-				totalFc += _fuelCellComponentMap.Lookup(power / activeFc);
+				totalFc += _fuelCellComponentMap.Lookup(power / activeFc, activeFc == 1);
 			}
 
 			return totalFc;
@@ -547,13 +720,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 			var validShares = GetValidShares(power).ToList();
 
 			var validSharesFuelConsumption = validShares.Select(s => new FuelCellShareEntry(power, fuelConsumption:_fcSystemMassFlowMap.Lookup(s, power), s));
-
+			var tol = 1E-9;
 
 			var orderedShares = validSharesFuelConsumption
-				.OrderBy(s => s.FuelConsumption);
+				.OrderBy(s => s.FuelConsumption).ToArray();
 			var minFc = orderedShares.First().FuelConsumption;
+
+	
 			foreach (var share in orderedShares) {
-				if (share.FuelConsumption.IsEqual(minFc)) {
+				if (share.FuelConsumption.Value().IsEqual(minFc.Value(), tol)) {
 					yield return share;
 				} else {
 					yield break;

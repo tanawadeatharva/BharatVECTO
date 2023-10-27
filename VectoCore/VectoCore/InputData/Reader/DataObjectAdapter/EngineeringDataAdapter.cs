@@ -1025,7 +1025,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		public FuelCellData CreateFuelCellData(IFuelCellComponentEngineeringInputData fuelCellInputData)
 		{
 			var fuelCellData =  new FuelCellData() {
-				MassFlowMap = FuelCellMassFlowMapReader.Create(fuelCellInputData.MassFlowMap),
+				MassFlowMap = FuelCellMassFlowMapReader.Create(fuelCellInputData.MassFlowMap, fuelCellInputData.MinElectricPower, fuelCellInputData.MaxElectricPower),
 				MaxElectricPower = fuelCellInputData.MaxElectricPower,
 				MinElectricPower = fuelCellInputData.MinElectricPower,
 				//Id = new FuelCellData.FuelCellId() {
@@ -1034,8 +1034,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				//}
 			};
 
-			if (fuelCellData.MinElectricPower.IsSmaller(fuelCellData.MassFlowMap.MinPower) ||
-				fuelCellData.MaxElectricPower.IsGreater(fuelCellData.MassFlowMap.MaxPower)) {
+			if (fuelCellData.MinElectricPower.IsSmaller(fuelCellData.MassFlowMap.MinPowerMap) ||
+				fuelCellData.MaxElectricPower.IsGreater(fuelCellData.MassFlowMap.MaxPowerMap)) {
 				throw new VectoException("Fuel cell limits exceed mass flow map");
 			}
 

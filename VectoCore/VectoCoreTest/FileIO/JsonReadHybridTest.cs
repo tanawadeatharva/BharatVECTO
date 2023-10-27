@@ -295,7 +295,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
         }
 
 		[TestCase]
-		public void ReadFuellCellComponent()
+		public void ReadFuelCellComponent()
 		{
 			var filePath = @"TestData\H2_FCV\GenericVehicleE2 - FCHV\GenericFuelCellComponent.vfcc";
 			var inputDataProvider = JSONInputDataFactory.ReadFuelCellComponentEngineeringInputData(filePath, false) as IFuelCellComponentEngineeringInputData;

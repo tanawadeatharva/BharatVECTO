@@ -11,7 +11,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 	public static class FuelCellMassFlowMapReader
 	{
-		public static FuelCellMassFlowMap Create(DataTable data)
+		public static FuelCellMassFlowMap Create(DataTable data, Watt minPower, Watt maxPower)
 		{
 			if (data == null) {
 				return null;
@@ -32,10 +32,15 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				data.Columns[1].ColumnName = Fields.m_H2;
 			}
 
-			return new FuelCellMassFlowMap(data.Rows.Cast<DataRow>().Select(row => new FuelCellMassFlowMap.MassFlowMapEntry() {
+			var fcMap = new FuelCellMassFlowMap(data.Rows.Cast<DataRow>().Select(row => new FuelCellMassFlowMap.MassFlowMapEntry() {
 				P_el_out = (row.ParseDouble(Fields.ElectricPower) * 1000).SI<Watt>(),
 				H2 = (row.ParseDouble(Fields.m_H2) / (1000 * 3600)).SI<KilogramPerSecond>(),
 			}).ToArray());
+
+			fcMap.MinPower = minPower;
+			fcMap.MaxPower = maxPower;
+
+			return fcMap;
 		}
 
 		public static class Fields
