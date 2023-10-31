@@ -47,10 +47,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var generatedPower = 0.SI<Watt>();
 			var fc = 0.SI<KilogramPerSecond>();
 			foreach (var fuelCell in _fuelCells.Take(fcCount)) {
-				generatedPower += fuelCell.Request(requestedPower / fcCount, dt, dryRun);
+				generatedPower += fuelCell.Request(requestedPower / fcCount, dt, dryRun, (fcCount == 1) && (requestedPower.IsSmallerOrEqual(_fcStringMap.MinPower)));
 				if (!dryRun) {
 					fc += (fuelCell.CurrentState.FuelConsumption);
-                }
+#if DEBUG
+					if (fcCount != 1) {
+						System.Diagnostics.Debug.Assert(fuelCell.CurrentState.TimeShare.IsEqual(dt));
+					}
+#endif
+				}
+
 			}
 
 			if (!dryRun) {

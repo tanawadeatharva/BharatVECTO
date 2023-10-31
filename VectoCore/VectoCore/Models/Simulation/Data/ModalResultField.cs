@@ -475,9 +475,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 
 
-		[ModalResultField(typeof(SI), caption: "P_FCS_target [kW]", outputFactor: 1e-3)] P_fuelCellSystem_target,
-		[ModalResultField(typeof(SI), caption: "P_FCS_actual [kW]", outputFactor: 1e-3)] P_fuelCellSystem_actual,
-		[ModalResultField(typeof(SI), caption: "FC_FCS [g/h]", outputFactor: 3600 * 1000)] Fc_fuelCellSystem_actual,
+		[ModalResultField(typeof(SI), caption: "P_CFCS [kW]", outputFactor: 1e-3)] P_FCSystem,
+		[ModalResultField(typeof(SI), caption: "FC_CFCS [g/h]", outputFactor: 3600 * 1000)] FC_FCSystem,
 
 
 
@@ -486,10 +485,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
         /// </summary>
         [ModalResultField(typeof(SI), caption: "P_FCS_{0} [kW]", outputFactor: 1e-3)] P_FCS,
 
-		/// <summary>
-		/// Power fuel cell systems 
-		/// </summary>
-		[ModalResultField(typeof(SI), caption: "P_FCS_MinEff_{0} [kW]", outputFactor: 1e-3)] P_FCS_MinEff,
+		///// <summary>
+		///// Power fuel cell systems 
+		///// </summary>
+		//[ModalResultField(typeof(SI), caption: "P_FCS_MinEff_{0} [kW]", outputFactor: 1e-3)] P_FCS_MinEff,
 
 		/// <summary>
 		/// Power fuel cell systems 

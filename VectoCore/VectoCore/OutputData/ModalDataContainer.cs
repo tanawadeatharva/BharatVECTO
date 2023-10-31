@@ -199,10 +199,10 @@ namespace TUGraz.VectoCore.OutputData
 		private KilogramPerWattSecond GetFuelCellCorrectionFactor()
 		{
 			var values = GetValues(
-				x => x.Field<SI>(ModalResultField.P_fuelCellSystem_actual.GetName()).IsGreater(0) //FC is on
+				x => x.Field<SI>(ModalResultField.P_FCSystem.GetName()).IsGreater(0) //FC is on
 					? new Point(
-						x.Field<SI>(ModalResultField.P_fuelCellSystem_actual.GetName()).Value(),
-						x.Field<SI>(ModalResultField.Fc_fuelCellSystem_actual.GetName()).Value())
+						x.Field<SI>(ModalResultField.P_FCSystem.GetName()).Value(),
+						x.Field<SI>(ModalResultField.FC_FCSystem.GetName()).Value())
 					: null).Where(x => x != null && x.Y > 0).Distinct().OrderBy(p => p.X).ToList();
 
 			//if (_runData.FuelCellSystemData.FuelCells.Count > 1) {
@@ -715,9 +715,8 @@ namespace TUGraz.VectoCore.OutputData
 			//Fuel Cell 
 			dataColumns.AddRange(Data.FuelCellColumns);
 			dataColumns.AddRange(new [] {
-				ModalResultField.P_fuelCellSystem_target,
-				ModalResultField.P_fuelCellSystem_actual,
-				ModalResultField.Fc_fuelCellSystem_actual,
+				ModalResultField.P_FCSystem,
+				ModalResultField.FC_FCSystem,
 			}.Select(x => x.GetName()));
 
 

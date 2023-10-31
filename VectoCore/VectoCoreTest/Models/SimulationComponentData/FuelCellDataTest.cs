@@ -211,6 +211,8 @@ public class FuelCellDataTest
         TestShares(power_W, expected_a_s, 1, 2);
 	}
 
+	
+
 
 	[TestCase(116667.4412, new double[]{0}) ]
 	public void FuelCellSystem_GetShare_GenericFCHV(double power_W, double[] expected_a_s)
@@ -494,14 +496,14 @@ public class FuelCellDataTest
 
 
 
-		var plt = new Plot(1920, 1080);
+		var plt = new Plot();
 
 
 
 		plt.AddScatterLines(p, fc, label:"Fuel Consumption");
 		plt.AddScatterPoints(pMeasured, fcMeasured, label: "Fuel Consumption at measured points");
-		var yaxis3 = plt.AddAxis(Edge.Right, title: "nr of active fc");
-		var active_fc_line = plt.AddScatterLines(p, activeFc, label: "Active FC");
+		var yaxis3 = plt.AddAxis(Edge.Right, title: "nr of active fcs");
+		var active_fc_line = plt.AddScatterLines(p, activeFc, label: "Active FCS");
 		active_fc_line.YAxisIndex = yaxis3.AxisIndex;
 		var limits = plt.GetAxisLimits();
 
@@ -510,9 +512,9 @@ public class FuelCellDataTest
 				var fc = LookupMaxActiveFc(fcStringData, p.SI<Watt>(), out var fcCount, i);
 				return (fc, fcCount);
 			}).ToArray();
-			var fuelConsumptionAllActive = plt.AddScatterLines(p, fcAllActive.Select(tuple => tuple.fc).ToArray(), label: $"Fuel consumption (max fc = {i})", lineStyle: LineStyle.Dot);
+			var fuelConsumptionAllActive = plt.AddScatterLines(p, fcAllActive.Select(tuple => tuple.fc).ToArray(), label: $"Fuel consumption (max fcs = {i})", lineStyle: LineStyle.Dot);
 			var activeFcAllActive = plt.AddScatterLines(p, fcAllActive.Select(tuple => (double)tuple.fcCount).ToArray(),
-				label: $"nr of active fc (max fc = {i})", lineStyle: LineStyle.Dot);
+				label: $"Nr of active fcs (max fcs = {i})", lineStyle: LineStyle.Dot);
 			//var measuredMax = pMeasured.Select(p => p * i);
 
 			//var measured = plt.AddScatterPoints(measuredMax.ToArray(), measuredMax.Select(m =>
@@ -527,7 +529,7 @@ public class FuelCellDataTest
 
         plt.Legend(true, Alignment.LowerRight);
 
-		plt.XLabel("power in W");
+		plt.XLabel("Power in W");
 		plt.YLabel("Fuel consumption in g/h");
 		plt.SetAxisLimits(xMax: fcStringData.MaxPower.Value());
 
@@ -536,11 +538,12 @@ public class FuelCellDataTest
 		{
 			Directory.CreateDirectory(Path.GetDirectoryName(outputFile));
 		}
-		plt.SaveFig(outputFile);
+		plt.SaveFig(outputFile, 800, 600, scale:2);
 	}
 
 	[TestCase(1, 1, 1, 1, 120e3, BASEOUTPUTPATH + "PowerDistribution_v1_c1_v1_c1_120kW", 30e3, 300e3, 30e3, 300e3 )]
-	public void PrintPowerDistribution(int var1, int count1, int var2, int count2, double power_W,
+	[TestCase(1, 1, 4, 1, 120e3, BASEOUTPUTPATH + "PowerDistribution_v1_c1_v4_c1_120kW", 30e3, 300e3, 30e3, 300e3)]
+    public void PrintPowerDistribution(int var1, int count1, int var2, int count2, double power_W,
 		string outputDirectory, double minPower1_W, double maxPower1_W, double minPower2_W, double maxPower2_W)
 	{
 		var fcs = GetFuelCellSystemInputData(var1, minPower1_W, maxPower1_W, count1, var2, minPower2_W, maxPower2_W, count2);
@@ -602,16 +605,17 @@ public class FuelCellDataTest
 		fc1.OnNaN = ScatterPlot.NanBehavior.Gap;
 		fc2.OnNaN = ScatterPlot.NanBehavior.Gap;
 		//share.OnNaN = ScatterPlot.NanBehavior.Gap; //should not happen because only valid shares should be provided by GetValidShares() <- as the name suggests
-		
 
+		plt.XAxis.Label("Share of String 1");
+		plt.YAxis.Label("Fuel consumption in g/h");
 		plt.Title($"Power distribution {power.ConvertToKiloWatt().ToOutputFormat(showUnit:true)}");
-
+		plt.Legend(true, Alignment.MiddleRight);
 		var outputFile = $"{outputDirectory}/powerDistribution_{power.ToOutputFormat()}.png";
 		if (!File.Exists(outputFile))
 		{
 			Directory.CreateDirectory(Path.GetDirectoryName(outputFile));
 		}
-		plt.SaveFig(outputFile);
+		plt.SaveFig(outputFile, 1000, 400);
 
     }
 

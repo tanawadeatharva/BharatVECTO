@@ -341,8 +341,8 @@ namespace TUGraz.VectoCore.OutputData
 
 			public const string K_FCSLine = "k_FCSline [g/kWh]";
 
-			public const string P_FCS = "P_FCS [kW]";
-			public const string E_FCS = "E_FCS [kWh]";
+			public const string P_FCS = "P_CFCS [kW]";
+			public const string E_FCS = "E_CFCS [kWh]";
 
 			public const string FC_HEV_SOC_H = "FC-SoC [g/h]";
 			public const string FC_HEV_SOC_KM = "FC-SoC [g/km]";
@@ -1289,12 +1289,12 @@ namespace TUGraz.VectoCore.OutputData
 							.ConvertToGramPerKiloWattHour())
 				}, {
 					FuelCellFields.P_FCS, SumFunc((r, m) => {
-						var p_fcs = m.TimeIntegral<WattSecond>(ModalResultField.P_fuelCellSystem_actual) / m.Duration;
+						var p_fcs = m.TimeIntegral<WattSecond>(ModalResultField.P_FCSystem) / m.Duration;
 						return p_fcs.ConvertToKiloWatt();
 					})
 				}, {
 					FuelCellFields.E_FCS, SumFunc((r, m) => {
-						var e_fcs = m.TimeIntegral<WattSecond>(ModalResultField.P_fuelCellSystem_actual);
+						var e_fcs = m.TimeIntegral<WattSecond>(ModalResultField.P_FCSystem);
 						return e_fcs.ConvertToKiloWattHour();
 					})
 				}, {

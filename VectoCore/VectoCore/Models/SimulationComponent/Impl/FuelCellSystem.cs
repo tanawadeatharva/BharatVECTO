@@ -18,8 +18,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public class State
 		{
-			public Watt ActualPower { get; set; }
-			public Watt TargetPower { get; set; }
+			public Watt Power { get; set; }
 
 			public FuelCellSystemShareMap.FuelCellShare Share { get; set; }
 		}
@@ -46,8 +45,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//var distance = _mileageCounter.Distance;
 			var power = ModelData.FuelCellPowerMap.InitPower;
-			PreviousState.TargetPower = power;
-			PreviousState.ActualPower = power;
+			PreviousState.Power = power;
 			return power;
 		}
 
@@ -69,8 +67,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (!dryRun) {
 				CurrentState.Share = shareResult.Share;
-				CurrentState.ActualPower = generatedPower;
-				CurrentState.TargetPower = targetPower;
+				CurrentState.Power = generatedPower;
             }
 			return generatedPower;
 		}
@@ -88,9 +85,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
-			container[ModalResultField.P_fuelCellSystem_target] = CurrentState.TargetPower;
-			container[ModalResultField.P_fuelCellSystem_actual] = CurrentState.ActualPower;
-			container[ModalResultField.Fc_fuelCellSystem_actual] = _fuelCellStrings.Sum(x => x.PreviousState.FuelConsumption);
+			container[ModalResultField.P_FCSystem] = CurrentState.Power;
+			container[ModalResultField.FC_FCSystem] = _fuelCellStrings.Sum(x => x.PreviousState.FuelConsumption);
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
