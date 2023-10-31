@@ -1,19 +1,15 @@
 ## Fuel Cell
 
 ```mermaid
-
----
-title: Fuel Cell System
----
 flowchart TB
-    subgraph Fuel Cell System
-        subgraph Fuel Cell String 1
+    subgraph Composite Fuel Cell System
+        subgraph Fuel Cell System String 1
             direction LR
-            FC1.1-.-FC1.2:::dot-.-FC1.3:::dot
+            FCS1.1-.-FCS1.2:::dot-.-FCS1.3:::dot
         end
-        subgraph Fuel Cell String 2
+        subgraph Fuel Cell System String 2
             direction LR
-            FC2.1:::dot-.-FC2.2:::dot-.-FC2.3:::dot
+            FCS2.1:::dot-.-FCS2.2:::dot-.-FCS2.3:::dot
         end
     end
     
@@ -22,22 +18,26 @@ flowchart TB
 
 ```
 
-The Fuel Cell System can constist of up to two fuel cell strings with up to three fuel cells in each string. (For more details see (!!!!link inputdata))
+The Composite Fuel Cell System (CFCS) can constist of up to two Fuel Cell System Strings (FCS String) with up to three Fuel Cell Systems (FCS) in each string.
 
 ### General approach
-
+Fuel cell vehicles are simulated in a two-step approach. The first step is intended to obtain the optimal fuel cell power over the cycle. This is detemined in a pre-simulation run with extensive post-processing of these results. The second step is the simulation of the actual fuel cell vehicle with the fuel cell power trace obtained from the first simulation step.
+The goal is to operate the CFCS as stationary as possible (i.e., avoid dynamic changes in the requested power) and to operate the individual FCS as close to their optimal operating point as possible.
 
 #### Pre-simulation run
-When simulating a fuel cell hybrid vehicle, the power provided by the fuel cell is determined based on the total electric energy demand of pre-run. In the pre-run the vehicle is simulated as PEV in charge depleting mode with a modified battery system (see [pre run battery](#pre-run-battery)). 
+In the pre-simulation run the fuel cell vehicle is modeled and simulated as a PEV vehicle in charge depleting mode wit ha modified battery system (See [pre run battery](#pre-run-battery)). The power demand of the propulsion system is used to determine the fuel cell power demand over the distance in the driving cycle.
+
 
 #### Determining the power of the fuel cell system
-The fuel cell power for a given distance equals the average electric power demand over a certain distance window. The window size is mainly influenced by the battery size. Vecto aims to use the largest possible window size without violating the SoC limits at any given time or distance.
+The fuel cell power at a given distance equals the average electric power demand over a certain distance window. The window size is mainly influenced by the battery size. VECTO aims to use the largest possible window size without violating the SoC limits at any given time or distance.
 
 The start SoC is also adapted to the specific mission in order to maximize the usage of the battery as a buffer. For further details see [window algorithm](#window-algorithm)
 
 #### Actual Simulation
-During the actual simulation 
-Based on the previous steps the power trace of the fuel cell is fixed and is sufficient to cover the actual energy demand of the vehicle. Deviations from the electric power demand are covered by the battery.
+During the actual simulation the power that is provided by the fuel cell system is already known. 
+Deviations from the electric power demand are covered by the battery.
+
+If the power demain for propulsion is higher than the power provided by the fuel cell, the battery is discharged, while if the fuel cell provides more power than the powertrail requires the battery is charged.
 
 If the fuel cell system consists of more than one fuel cell the most efficient power distribution between the fuel cell strings is used (see [power distribution](#power-distribution))
 
@@ -55,7 +55,7 @@ To avoid violating the SoC-limits both of the batteries have infinite capacity.
 
 
 ##### Window algorithm
-The power that should be provided by the fuel cell at a certain distance $s$ is calculated for a window size $s_w$ based on the trace of the electric power demand $P_{el}$ determined in the prerun.
+The power that should be provided by the fuel cell at a certain distance $s$ is calculated for a window size $s_w$ based on the trace of the electric power demand $P_{el}$ determined in the pre-run.
 The maximum window size is equal to the length of the cycle ($s_{cycle}$)
 At the beginning (and the end) of the cycle the window expands over the actual cycle, therefore $P_{el}$ is augmented with $P_{el}$ shifted to the left by $s_{cycle}$ (or to the right at the end of the cycle)
 
@@ -70,15 +70,10 @@ Given a window size $s_w$ and the power trace $P_{el}$. The fuel cell power at d
 
 
 
-##### Window binary search
-The window size is determined using a binary search, starting with the window size set to the cycle distance (which is the maximum possible window size).
-For each window size that is checked the following steps are performed:
+##### Window search algorithm
+The window size is determined using the following algorithm, starting with the window size set to the cycle distance (which is the maximum possible window size).
 
 ```mermaid
-
----
-title: Binary search
----
 flowchart LR
     SInit["Simulate(s_cycle, P_el)"]
     Dec["Decrease window size s_w"]
@@ -110,9 +105,6 @@ The window size is increased/decreased to $s_{w} = (s_{w, last \ accepted} + s_{
 
 
 ```mermaid
----
-title: Search step
----
 flowchart TB
     subgraph "Simulate(s_w, P_el)"
     C["Calculate fuel cell power
@@ -134,7 +126,7 @@ flowchart TB
     end
 ```
 
-**Calculate fuel cell power trace P_FC for s_w**
+**Calculate fuel cell power trace $P_{FC}$ for $s_{w}$**
 For each distance s in the cycle, the average electric power demand (=$P_{fc,raw}$) in the window is calculated. 
 
 The difference between the actual electric power demand $P_{el}[s]$ of the vehicle and the power that should be provided by the fuel cell $P_{fc, raw}[s]$ must be compensated by the battery, which leads to losses.
@@ -144,26 +136,48 @@ The losses of the battery as well as the maximum fuel cell power are considered 
 **Simulate with infinity battery**
 Given the fuel cell power trace $P_{fc}[s]$ for each distance the remaining power is requested from the battery and VECTO keeps track of the current SoC.
 
-*Note: The SoC is always kept at CenterSoC. VECTO keeps track of a virtual SoC that is used for shifting
+Note: The SoC is always kept at CenterSoC. VECTO keeps track of a virtual SoC which is then used to calculate the new initial SoC.
 
 **Shift initial SoC**
-Using the virtual SoC range VECTO tries to set the Initial SoC so that the SoC limits of the battery are not violated. If this is not possible (virtual SoC range is larger than the SoC range of the battery) the window is too large and therefore rejected.
+Using the virtual SoC range VECTO tries to set the initial SoC so that the SoC limits of the battery are not violated. If this is not possible (virtual SoC range is larger than the SoC range of the real battery) the window is too large and therefore rejected.
 
 **Simulate with real battery**
 Finally a request for each distance is send to the real battery starting with the updated initial SoC. If the SoC limits are violated the window size is rejected.
 
 
-##### Power distribution
+#### Power distribution
+The trace of the fuel cell power reflects the power that has to be provided by the CFCS. If there are several FCS Strings, the power must be split between the individual FCS. Since the power of the CFCS is known before the actual simulation run for each distance in the cycle, the power distribution can also be calculated before the final simulation run.
 
-The trace of the fuel cell power reflects the power that has to be provided by the complete fuel cell system. If there are several fuel cell strings, the power must be split between the individual fuel cells. Since the power of the fuel cell system is known before the actual simulation run for each distance in the cycle, the power distribution can also be calculated before the final simulation run.
+Inside a FCS String the power is always equally distributed among the switched on fuel cell systems.
 
-##### Power distribution among the strings
-For each distinct $P_{FC}$ occuring in the cycle the shares a (power that has to be provided by string 1) and b (power that has to be provided by string 2) are calculated.
 
+##### Power distribution among strings
+For each distinct $P_{FC}$ occuring in the cycle the shares a (share of FCS String 1) and b (share of FCS String 2) are calculated.
 
 $P_{FC} = a \cdot P_{FC} + b \cdot P_{FC} \Rightarrow a + b = 1 $
 
-VECTO minimizes the fuel consumption $FC(P) = FC_{1}(a \cdot P) + FC_{2}(b \cdot P)$ at each operating point
+![](../pics/FuelCell/powerDistribution_120000.0000.png)
+
+
+
+VECTO minimizes the fuel consumption $FC(P) = FC_{1}(a \cdot P) + FC_{2}(b \cdot P)$ at each operating point in the cycle.
+
+##### Power distribution inside a string
+Taking into account the power limits, vecto calculates the number of active FCSs in an FCS string that lead to the lowest fuel consumption.
+
+![](../pics/FuelCell/massFlowmap_fc_variant2_count3.png)
+
+##### Time splitting
+If the requested power on a string is lower than the power at the best efficiency point of a single FCS. In this case, a virtual "time splitting" is carried out, i.e. for the time step the FCS is operated at the best efficiency point for a fraction of the time corresponding to the requested power. For the rest of the time step, the FCS is considered switched off.
+
+
+
+
+
+
+
+
+
 
 
 
