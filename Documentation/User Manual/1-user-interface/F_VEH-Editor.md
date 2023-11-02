@@ -169,25 +169,25 @@ The *Loss map EM ADC* can be used to consider the losses of a transmission step 
 
 In case of a P2.5 configuration (the electric motor is connected to an internal shaft of the transmission) the transmission ratio for every single gear of the transmission has to be specified in the list to the right of the electric motor parameters. The ratio is defined as $n_\textrm{GBX,in} / n_\textrm{EM}$ in case of EM without additional ADC or $n_\textrm{GBX,in} / n_\textrm{ADC,out}$ in case of EM with additional ADC.
 
-## Vehicle Editor -- Fuel Cell System Tab
+## Vehicle Editor -- Composite Fuel Cell System Tab
 
-![Fuel Cell System Tab](pics/FuelCell/veh_form_fuel_cell.png)
+![Composite Fuel Cell System Tab](pics/FuelCell/veh_form_fuel_cell.png)
 
-For fuel cell hybrid vehicles the input element on the *Fuel Cell System* tab is enabled. 
+For fuel cell hybrid vehicles the input element on the *Composite Fuel Cell System* tab is enabled. 
 
-Here the component file for the fuel cell string can be loaded or created (see [Fuel Cell String Editor](#fuel-cell-string-editor))
+Here the FCS file for the FCS-String can be loaded or created (see [Fuel Cell System String Editor](#fuel-cell-system-editor))
 
-The number of fuel cell string component files is limited to *two*, each of them supports up to *three* fuel cells.
+The number of *Fuel Cell System Strings (FCS-String)* limited to *two*, each of them supports up to *three* *Fuel Cell Systems (FCS)*.
 
 **Double-click** an entry to edit.
 
 **Click** selected item.
-: ![addfc](pics/plus-circle-icon.png) Add Fuel Cell String Component File (.vfcc)
-: ![remfc](pics/minus-circle-icon.png) Remove the selected Fuel Cell String Component File from the list
+: ![addfc](pics/plus-circle-icon.png) Add Fuel Cell System File (.vfcc)
+: ![remfc](pics/minus-circle-icon.png) Remove the selected Fuel Cell System File from the list
 
-In the Fuel Cell Component Dialog the Fuel Cell String Component file itself and the number of fuel cells in the string can be modified. (see [Fuel Cell Model](#fuel-cell) for details)
+In the Fuel Cell System Dialog, the Fuel Cell System File itself, and the number of fuel cell systems in the string can be modified. (see [Fuel Cell System Model](#fuel-cell-system) for details)
 
-![Fuel Cell Component Dialog](pics/FuelCell/fuel_cell_component_dialog.png)
+![Fuel Cell System Dialog](pics/FuelCell/fuel_cell_component_dialog.png)
 
 
 ## Vehicle Editor -- REESS Tab

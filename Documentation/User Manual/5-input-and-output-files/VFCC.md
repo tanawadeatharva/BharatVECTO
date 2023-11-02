@@ -1,6 +1,6 @@
 ## Fuel Cell (.vfcc)
 
-The fuel cell component file contains the input data for a single fuel cell
+The fuel cell system file contains the input data for a single fuel cell system
 
 **Example:**
 

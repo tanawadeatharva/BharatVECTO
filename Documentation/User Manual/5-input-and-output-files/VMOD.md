@@ -138,6 +138,13 @@ $P_{avg} = \frac{1}{simulation interval} \int{P(t) dt}$.
 | PCCSegment                 |           | Driver            | 1 if a PCC segment was identified in the pre-processing (gradient below threshold where vehicle accelerates on its own without engine power) , 0 otherwise                                                                                                                                                                                                                                                     |
 | PCCState                   |           | Driver            | 0: not inside PCC segment, 1: inside PCC segment, 2: PCC use-case 1 active, 3: PCC use-case 2 active                                                                                                                                                                                                                                                                                                           |
 | ICE On                     |           | CombustionEngine  | 0 if the combustion engine is switched off (either during stand-still or eco-roll), 1 otherwise                                                                                                                                                                                                                                                                                                                |
+| FC_FCS_\<A>.\<B> | [g/h] | FuelCellSystem | Fuel consumption of FCS \<B> in string <A> | 
+| P_FCS_\<A>.\<B> | [kW] | FuelCellSystem | Power provided by FCS \<B> in string <A> |
+| t_FCS_\<A>.\<B> | [s] | FuelCellSystem | Describes the time the fuel cell is on in the current time step (in case of time splitting) |
+| FC_FCS_\<A> | [g/h] | FuelCellSystem | Total fuel consumption in string \<A> |
+| P_FCS_\<A> | [kW] | FuelCellSystem | Total power provided by string \<A> |
+| FC_CFCS | [g/h] | FuelCellSystem | Total fuel consumption of the composite fuel cell system |
+| P_CFCS | [kW] | FuelCellSystem | Total power provided by the composite fuel cell system |
  
 
 **Note:** The fuel name is only added to the fuel-consumption signals in case of dual-fuel engines.

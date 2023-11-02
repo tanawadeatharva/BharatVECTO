@@ -60,12 +60,12 @@ The maximum window size is equal to the length of the cycle ($s_{cycle}$)
 At the beginning (and the end) of the cycle the window expands over the actual cycle, therefore $P_{el}$ is augmented with $P_{el}$ shifted to the left by $s_{cycle}$ (or to the right at the end of the cycle)
 
 
-![](../pics/FuelCell/FuelCellWindow.drawio.png)
+![](pics/FuelCell/FuelCellWindow.drawio.png)
 
 
 Given a window size $s_w$ and the power trace $P_{el}$. The fuel cell power at distance $s$ is the average $P_{el}$ inside the window.  
 
-![](../pics/FuelCell/FuelCellWindow2.drawio.png)
+![](pics/FuelCell/FuelCellWindow2.drawio.png)
 
 
 
@@ -156,16 +156,16 @@ For each distinct $P_{FC}$ occuring in the cycle the shares a (share of FCS Stri
 
 $P_{FC} = a \cdot P_{FC} + b \cdot P_{FC} \Rightarrow a + b = 1 $
 
-![](../pics/FuelCell/powerDistribution_120000.0000.png)
+![](pics/FuelCell/powerDistribution_120000.0000.png)
 
 
 
 VECTO minimizes the fuel consumption $FC(P) = FC_{1}(a \cdot P) + FC_{2}(b \cdot P)$ at each operating point in the cycle.
 
 ##### Power distribution inside a string
-Taking into account the power limits, vecto calculates the number of active FCSs in an FCS string that lead to the lowest fuel consumption.
+Taking into account the power limits, VECTO calculates the number of active FCSs in an FCS string that lead to the lowest fuel consumption.
 
-![](../pics/FuelCell/massFlowmap_fc_variant2_count3.png)
+![](pics/FuelCell/massFlowmap_fc_variant2_count3.png)
 
 ##### Time splitting
 If the requested power on a string is lower than the power at the best efficiency point of a single FCS. In this case, a virtual "time splitting" is carried out, i.e. for the time step the FCS is operated at the best efficiency point for a fraction of the time corresponding to the requested power. For the rest of the time step, the FCS is considered switched off.
