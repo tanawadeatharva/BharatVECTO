@@ -73,7 +73,7 @@ Partial Class FuelCellComponentForm
         Me.lblTitle.Name = "lblTitle"
         Me.lblTitle.Size = New System.Drawing.Size(388, 29)
         Me.lblTitle.TabIndex = 0
-        Me.lblTitle.Text = "Fuel Cell Component"
+        Me.lblTitle.Text = "Fuel Cell System"
         Me.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'pnMinElectricPower
@@ -325,9 +325,9 @@ Partial Class FuelCellComponentForm
         Me.Controls.Add(Me.btnCancel)
         Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
         Me.MinimizeBox = false
-        Me.Name = "FuelCellComponentForm"
+        Me.Name = "FuelCellSystemForm"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "FuelCellComponent"
+        Me.Text = "Fuel Cell System"
         CType(Me.pcBoxMassFlowMap,System.ComponentModel.ISupportInitialize).EndInit
         Me.pnMinElectricPower.ResumeLayout(false)
         Me.pnMinElectricPower.PerformLayout

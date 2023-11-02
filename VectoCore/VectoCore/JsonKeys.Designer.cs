@@ -439,7 +439,7 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die FuelCellFile ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die FuelCellSystemFile ähnelt.
         /// </summary>
         internal static string FuelCell_File {
             get {
@@ -448,7 +448,7 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die FuelCells ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die FuelCellSystems ähnelt.
         /// </summary>
         internal static string FuelCell_FuelCells {
             get {
@@ -457,7 +457,7 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die FuelCellSystem ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die CompositeFuelCellSystem ähnelt.
         /// </summary>
         internal static string FuelCell_FuelCellSystem {
             get {

@@ -85,16 +85,16 @@
         "StreamId": 0
       }
     ],
-    "FuelCellSystem": {
+    "CompositeFuelCellSystem": {
       "GradientPowerChange": 50.0,
-      "FuelCells": [
+      "FuelCellSystems": [
         {
           "Count": 3,
-          "FuelCellFile": "GenericFuelCellComponent_100kW.vfcc"
+          "FuelCellSystemFile": "GenericFuelCellSystem_100kW.vfcc"
         },
         {
           "Count": 3,
-          "FuelCellFile": "GenericFuelCellComponent_100kW.vfcc"
+          "FuelCellSystemFile": "GenericFuelCellSystem_100kW.vfcc"
         }
       ]
     },

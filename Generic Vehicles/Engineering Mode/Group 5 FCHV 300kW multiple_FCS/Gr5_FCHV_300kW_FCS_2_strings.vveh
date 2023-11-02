@@ -85,15 +85,15 @@
         "StreamId": 0
       }
     ],
-    "FuelCellSystem": {
-      "FuelCells": [
+    "CompositeFuelCellSystem": {
+      "FuelCellSystems": [
         {
           "Count": 3,
-          "FuelCellFile": "GenericFuelCellComponent_300kW.vfcc"
+          "FuelCellSystemFile": "GenericFuelCellSystem_300kW.vfcc"
         },
         {
           "Count": 3,
-          "FuelCellFile": "GenericFuelCellComponent_300kW_2.vfcc"
+          "FuelCellSystemFile": "GenericFuelCellSystem_300kW_2.vfcc"
         }
       ],
     },

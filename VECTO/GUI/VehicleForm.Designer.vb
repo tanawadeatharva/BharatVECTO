@@ -2714,7 +2714,7 @@ Partial Class VehicleForm
         Me.tpFuelCellSystem.Padding = New System.Windows.Forms.Padding(4, 2, 4, 2)
         Me.tpFuelCellSystem.Size = New System.Drawing.Size(648, 375)
         Me.tpFuelCellSystem.TabIndex = 10
-        Me.tpFuelCellSystem.Text = "Fuel Cell System"
+        Me.tpFuelCellSystem.Text = "Composite Fuel Cell System"
         Me.tpFuelCellSystem.UseVisualStyleBackColor = true
         '
         'gbFuelCellSystem
@@ -2730,7 +2730,7 @@ Partial Class VehicleForm
         Me.gbFuelCellSystem.Size = New System.Drawing.Size(632, 257)
         Me.gbFuelCellSystem.TabIndex = 3
         Me.gbFuelCellSystem.TabStop = false
-        Me.gbFuelCellSystem.Text = "Fuel Cell System"
+        Me.gbFuelCellSystem.Text = "Composite Fuel Cell System"
         '
         'lvFuelCellComponents
         '
@@ -2752,7 +2752,7 @@ Partial Class VehicleForm
         '
         'chFuelCellComponent
         '
-        Me.chFuelCellComponent.Text = "Fuel Cell Component"
+        Me.chFuelCellComponent.Text = "Fuel Cell System"
         Me.chFuelCellComponent.Width = 350
         '
         'chCount

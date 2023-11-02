@@ -489,15 +489,15 @@
   <data name="JsonHeader_Date" xml:space="preserve">
     <value>Date</value>
   </data>
-<data name="BUS_RunSimulation" xml:space="preserve">
-	<value>RunSimulation</value>
-</data>
-<data name="EM_RatedPower" xml:space="preserve">
-	<value>R85RatedPower</value>
-</data>
-<data name="EM_ElectricMachineType" xml:space="preserve">
-	<value>ElectricMachineType</value>
-</data>
+  <data name="BUS_RunSimulation" xml:space="preserve">
+    <value>RunSimulation</value>
+  </data>
+  <data name="EM_RatedPower" xml:space="preserve">
+    <value>R85RatedPower</value>
+  </data>
+  <data name="EM_ElectricMachineType" xml:space="preserve">
+    <value>ElectricMachineType</value>
+  </data>
   <data name="Job_FuelNCVs" xml:space="preserve">
     <value>FuelNCVs</value>
   </data>
@@ -513,15 +513,6 @@
   <data name="Job_TorqueDriftRightWheel" xml:space="preserve">
     <value>TorqueDriftRightWheel</value>
   </data>
-  <data name="BUS_RunSimulation" xml:space="preserve">
-    <value>RunSimulation</value>
-  </data>
-  <data name="EM_RatedPower" xml:space="preserve">
-    <value>R85RatedPower</value>
-  </data>
-  <data name="EM_ElectricMachineType" xml:space="preserve">
-    <value>ElectricMachineType</value>
-  </data>
   <data name="FuelCells_Count" xml:space="preserve">
     <value>Count</value>
   </data>
@@ -529,15 +520,15 @@
     <value>Count</value>
   </data>
   <data name="FuelCell_File" xml:space="preserve">
-    <value>FuelCellFile</value>
+    <value>FuelCellSystemFile</value>
   </data>
   <data name="FuelCell_FuelCells" xml:space="preserve">
-    <value>FuelCells</value>
+    <value>FuelCellSystems</value>
   </data>
   <data name="FuelCell_FuelCellSystem" xml:space="preserve">
-    <value>FuelCellSystem</value>
+    <value>CompositeFuelCellSystem</value>
   </data>
-<data name="FuelCell_MassFlowMap" xml:space="preserve">
+  <data name="FuelCell_MassFlowMap" xml:space="preserve">
     <value>MassFlowMap</value>
   </data>
   <data name="FuelCell_MaxPower" xml:space="preserve">

@@ -59,7 +59,7 @@ Partial Class FuelCellComponentDialog
         Me.btnOpenFuelCellComponent.Size = New System.Drawing.Size(155, 26)
         Me.btnOpenFuelCellComponent.TabIndex = 0
         Me.btnOpenFuelCellComponent.TabStop = False
-        Me.btnOpenFuelCellComponent.Text = "Fuel Cell Component"
+        Me.btnOpenFuelCellComponent.Text = "Fuel Cell System"
         Me.btnOpenFuelCellComponent.UseVisualStyleBackColor = True
         '
         'btnBrowseFuelCellComponent
@@ -88,7 +88,7 @@ Partial Class FuelCellComponentDialog
         Me.lblFuelCellCount.Name = "lblFuelCellCount"
         Me.lblFuelCellCount.Size = New System.Drawing.Size(131, 16)
         Me.lblFuelCellCount.TabIndex = 27
-        Me.lblFuelCellCount.Text = "Number of Fuel Cells"
+        Me.lblFuelCellCount.Text = "Number of Fuel Cell Systems"
         '
         'Panel1
         '
@@ -157,10 +157,10 @@ Partial Class FuelCellComponentDialog
         Me.Controls.Add(Me.pnSelectFuelCellComponent)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.Name = "FuelCellComponentDialog"
+        Me.Name = "Fuel Cell System Dialog"
         Me.Padding = New System.Windows.Forms.Padding(11, 10, 11, 10)
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-        Me.Text = "FuelCellComponentDialog"
+        Me.Text = "Fuel Cell System Dialog"
         Me.pnSelectFuelCellComponent.ResumeLayout(False)
         Me.pnSelectFuelCellComponent.PerformLayout()
         Me.Panel1.ResumeLayout(False)
