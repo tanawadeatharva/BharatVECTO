@@ -1,6 +1,6 @@
-## Fuel Cell Mass Flow Map (.vfcm)
+## Fuel Cell System Mass Flow Map
 
-File containing the fuel cell system mass flow map.
+The Fuel Cell System Mass Flow Map File (.vfcm) contains the fuel cell system mass flow map.
 
 Contains entries for the fuel consumption in g/h depending on the power demand in kW
 

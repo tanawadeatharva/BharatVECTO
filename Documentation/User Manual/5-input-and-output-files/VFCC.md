@@ -1,6 +1,6 @@
-## Fuel Cell (.vfcc)
+## Fuel Cell System Input File
 
-The fuel cell system file contains the input data for a single fuel cell system
+The fuel cell system file (.vfcc) contains the input data for a single fuel cell system
 
 **Example:**
 

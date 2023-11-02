@@ -90,4 +90,6 @@
 5-input-and-output-files/VMOD.md
 5-input-and-output-files/VSUM.md
 5-input-and-output-files/App.md
+5-input-and-output-files/VFCM.md
+5-input-and-output-files/VFCC.md
 6-changelog/changelog.md

@@ -409,6 +409,10 @@ Limiting Input File (.vacc)</a></li>
 <li><a href="#modal-results-.vmod">Modal Results (.vmod)</a></li>
 <li><a href="#summary-results-.vsum">Summary Results (.vsum)</a></li>
 <li><a href="#application-files">Application Files</a></li>
+<li><a href="#fuel-cell-system-mass-flow-map">Fuel Cell System Mass Flow
+Map</a></li>
+<li><a href="#fuel-cell-system-input-file">Fuel Cell System Input
+File</a></li>
 </ul></li>
 <li><a href="#changelog">Changelog</a></li>
 </ul>
@@ -3035,10 +3039,9 @@ saving</em></strong></p>
 <section id="description-13" class="level4">
 <h4>Description</h4>
 <p>In the Fuel Cell System Editor a new FCS file can be created or an
-existing file can be updated.</p>
-</section>
-<section id="main-parameters-5" class="level4">
-<h4>Main Parameters</h4>
+existing file can be updated. For more info on the input files see <a href="#fuel-cell-system-input-file">Fuel Cell System Input File</a> and
+<a href="#fuel-cell-system-mass-flow-map">Fuel Cell Mass Flow Map
+(.vfcm)</a> #### Main Parameters</p>
 <dl>
 <dt>Manufacturer and Model</dt>
 <dd>
@@ -10893,6 +10896,44 @@ loaded in checked state.</p>
 program directory. The file is restarted whenever the <a href="#settings">Logfile Size Limit</a> is reached.One backup is always
 stored as LOG_backup.txt.</p>
 </section>
+</section>
+<section id="fuel-cell-system-mass-flow-map" class="level2">
+<h2>Fuel Cell System Mass Flow Map</h2>
+<p>The Fuel Cell System Mass Flow Map File (.vfcm) contains the fuel
+cell system mass flow map.</p>
+<p>Contains entries for the fuel consumption in g/h depending on the
+power demand in kW</p>
+<p><strong>Example:</strong></p>
+<pre><code>P_el_out [kW],  m_H2 [g/h]
+30.0,           2002.0
+60.0,           3003.0
+105.0,          5436.5
+150.0,          8662.5
+195.0,          12199.7
+255.0,          17017.0
+300.0,          21450.0</code></pre>
+</section>
+<section id="fuel-cell-system-input-file" class="level2">
+<h2>Fuel Cell System Input File</h2>
+<p>The fuel cell system file (.vfcc) contains the input data for a
+single fuel cell system</p>
+<p><strong>Example:</strong></p>
+<pre><code>{
+  &quot;Header&quot;: {
+    &quot;CreatedBy&quot;: &quot;&quot;,
+    &quot;Date&quot;: &quot;2023-10-11T10:34:56.5007858Z&quot;,
+    &quot;AppVersion&quot;: &quot;3&quot;,
+    &quot;FileVersion&quot;: 1
+  },
+  &quot;Body&quot;: {
+    &quot;SavedInDeclMode&quot;: false,
+    &quot;Manufacturer&quot;: &quot;Fuel Cell Manufacturer&quot;,
+    &quot;Model&quot;: &quot;Generic Fuel Cell&quot;,
+    &quot;MinElectricPower&quot;: 30.0,
+    &quot;MaxElectricPower&quot;: 100.0,
+    &quot;MassFlowMap&quot;: &quot;GenericFuelCellMassflowMap_300kW.vfcm&quot;
+  }
+}</code></pre>
 </section>
 </section>
 <section id="changelog" class="level1">

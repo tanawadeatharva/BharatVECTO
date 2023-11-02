@@ -1,10 +1,10 @@
 
 ## Fuel Cell System Editor
-
 #### Description
 
 In the Fuel Cell System Editor a new FCS file can be created or an existing file can be updated.
-
+For more info on the input files see [Fuel Cell System Input File](#fuel-cell-system-input-file) and 
+[Fuel Cell Mass Flow Map (.vfcm)](#fuel-cell-system-mass-flow-map)
 #### Main Parameters
 
 Manufacturer and Model
