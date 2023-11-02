@@ -463,7 +463,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				case FuelCell fc: 
 					CreateFuelCellColumns(fc.Id.ToString(), FuelCellSignals, FuelCellColumns);
 					CreateFuelCellColumns(fc.Id.ToString(), FuelCellComponentSignals, FuelCellColumns);
-					FuelCellStringColumns.Add(fc.Id.ToString());
+					FuelCellComponentIds.Add(fc.Id.ToString());
 					break;
 				case ElectricAuxiliaries _:
 					CreateElectricAuxColumns();

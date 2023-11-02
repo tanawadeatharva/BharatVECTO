@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.OutputData
 		
 		private KilogramPerWattSecond _fuelCellLine = null;
 
-		public KilogramPerWattSecond FuelCellLine => GetFuelCellCorrectionFactor();
+		public KilogramPerWattSecond FuelCellLine => _fuelCellLine ?? (_fuelCellLine = GetFuelCellCorrectionFactor());
 
 		//public KilogramPerWattSecond FuelCellLine => _fuelCellLine ?? (_fuelCellLine = GetFuelCellCorrectionFactor());
 
@@ -211,16 +211,17 @@ namespace TUGraz.VectoCore.OutputData
 
 			var fuelCell = _runData.FuelCellSystemData;
 			var mid = (int)Math.Floor((values.Count() / 2.0f));
-			var lowerOperatingPower = VectoMath.Max(0.9 * values[mid].X, fuelCell.MinElectricPower.Value());
+			var lowerOperatingPower = VectoMath.Max(0.9 * values[mid].X, 0);
 			var higherOperatingPower = VectoMath.Min(1.1 * values[mid].X, fuelCell.MaxElectricPower.Value());
-			if (!(values.First().X.IsSmallerOrEqual(lowerOperatingPower) &&
-				values.Last().X.IsGreaterOrEqual(higherOperatingPower)))
+			if (!(values.First().X.IsSmallerOrEqual(lowerOperatingPower) 
+				&& values.Last().X.IsGreaterOrEqual(higherOperatingPower)
+				))
 			{
 				//Insert artificial operating points before calculating the fuel cell line
 				var fcShareLow = fuelCell.FuelCellShareMap.Lookup(lowerOperatingPower.SI<Watt>());
 				var fcLow = fcShareLow.FuelConsumption;
 
-				var fcShareHigh = fuelCell.FuelCellShareMap.Lookup(lowerOperatingPower.SI<Watt>());
+				var fcShareHigh = fuelCell.FuelCellShareMap.Lookup(higherOperatingPower.SI<Watt>());
 				var fcHigh = fcShareHigh.FuelConsumption;
 				
 
