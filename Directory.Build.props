@@ -8,7 +8,7 @@
     <DefineConstants>CERTIFICATION_RELEASE</DefineConstants>
 
     <!-- Global VECTO Version -->
-    <MainProductVersion>0.11.0</MainProductVersion>
+    <MainProductVersion>0.11.1</MainProductVersion>
     <VersionSuffix>DEV</VersionSuffix>
 
     <!-- The following settings are used as default values for ALL projects -->
