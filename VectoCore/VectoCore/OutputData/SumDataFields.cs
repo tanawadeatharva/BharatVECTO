@@ -339,7 +339,7 @@ namespace TUGraz.VectoCore.OutputData
 			public const string FCFINAL_H = "FC-Final [g/h]";
 			public const string FCFINAL_KM = "FC-Final [g/km]";
 
-			public const string K_FCSLine = "k_FCSline [g/kWh]";
+			public const string K_FCSLine = "k_CFCSline [g/kWh]";
 
 			public const string P_FCS = "P_CFCS [kW]";
 			public const string E_FCS = "E_CFCS [kWh]";
