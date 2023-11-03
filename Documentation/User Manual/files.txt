@@ -55,6 +55,7 @@
 3-simulation-models/Electric_Storage.md
 3-simulation-models/ParallelHybridControlStrategy.md
 3-simulation-models/SerialHybridControlStrategy.md
+3-simulation-models/InMotionCharging.md
 5-input-and-output-files/input-output.md
 5-input-and-output-files/XML_Job-File_DeclarationMode.md
 5-input-and-output-files/XML_DeclarationReport.md
