@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		private JSONFuelCellSystemEngineeringInputData ReadFuelCellSystem()
 		{
 			var fcsJson = Body[JsonKeys.FuelCell_FuelCellSystem];
-			IList<FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>> fcList = new List<FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>>();
+			IList<FuelCellStringEntry<IFuelCellComponentEngineeringInputData>> fcList = new List<FuelCellStringEntry<IFuelCellComponentEngineeringInputData>>();
             if (fcsJson == null) {
 				throw new VectoException("Fuel Cell System missing");
 			}
@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			if (fcsJson[JsonKeys.FuelCell_FuelCells] != null)
 			{
 				foreach (var entry in fcsJson[JsonKeys.FuelCell_FuelCells]) {
-					var tmpEntry = new FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>() {
+					var tmpEntry = new FuelCellStringEntry<IFuelCellComponentEngineeringInputData>() {
 						FuelCellComponent = JSONInputDataFactory.ReadFuelCellComponentEngineeringInputData(
 							Path.Combine(BasePath, entry.GetEx<string>(JsonKeys.FuelCell_File)), false),
 						Count = entry.GetEx<int>(JsonKeys.FuelCell_Count),
@@ -82,8 +82,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 
 			return new JSONFuelCellSystemEngineeringInputData() {
-				GradientPowerChange = (fcsJson.GetEx<double>(JsonKeys.FuelCell_GradientPowerChange) * 1000).SI<WattPerSecond>(), //given in kW/s
-				FuelCellComponents = fcList
+				FuelCellStrings = fcList
 			};
 
 			

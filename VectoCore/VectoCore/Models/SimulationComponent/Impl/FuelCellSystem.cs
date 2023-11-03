@@ -14,25 +14,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class FuelCellSystem : StatefulVectoSimulationComponent<FuelCellSystem.State>, IElectricChargerPort
 	{
-		private readonly IList<FuelCell> _fuelCells;
+		private readonly IList<FuelCellString> _fuelCellStrings;
 
 		public class State
 		{
-			public Watt ActualPower { get; set; }
-			public Watt TargetPower { get; set; }
+			public Watt Power { get; set; }
 
+			public FuelCellSystemShareMap.FuelCellShare Share { get; set; }
 		}
 		private readonly IMileageCounter _mileageCounter;
+		private readonly FuelCellSystemShareMap _fuelCellShareMap;
 
 		public FuelCellSystem(FuelCellSystemData fuelCellSystemData, IVehicleContainer databus) : base(databus)
 		{
+			_fuelCellShareMap = fuelCellSystemData.FuelCellShareMap;
 			_mileageCounter = databus.MileageCounter;
-			_fuelCells = new List<FuelCell>();
+			_fuelCellStrings = new List<FuelCellString>();
 			ModelData = fuelCellSystemData;
 			Initialize();
 		}
 
-		public IReadOnlyCollection<FuelCell> FuelCells => new ReadOnlyCollection<FuelCell>(_fuelCells);
+		public IReadOnlyCollection<FuelCellString> FuelCellStrings => new ReadOnlyCollection<FuelCellString>(_fuelCellStrings);
 
 		private FuelCellSystemData ModelData { get; set; }
 
@@ -43,75 +45,48 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//var distance = _mileageCounter.Distance;
 			var power = ModelData.FuelCellPowerMap.InitPower;
-			PreviousState.TargetPower = power;
-			PreviousState.ActualPower = power;
+			PreviousState.Power = power;
 			return power;
 		}
-
-
-
 
 
 		public Watt PowerDemand(Second absTime, Second dt, Watt powerDemandEletricMotor, Watt auxPower, bool dryRun)
 		{
 			var targetPower = ModelData.ChargingPower(_mileageCounter.Distance);
+			
+			var shareResult = _fuelCellShareMap.Lookup(targetPower, PreviousState?.Share);
 
 
-
-
-			//Limit by gradient powerchange
-			var limitedPower =
-				GetLimitedPower(PreviousState.ActualPower, targetPower, dt, ModelData.GradientPowerChange);
-
-
-
-			var fcCount = FuelCells.Count;
 
 			var generatedPower = 0.SI<Watt>();
-			foreach (var fc in FuelCells) {
-				generatedPower += fc.Request(limitedPower / fcCount, dryRun);
+			
+			generatedPower += _fuelCellStrings[0].Request(targetPower * shareResult.Share.ShareA, dryRun, dt);
+			if (_fuelCellStrings.Count > 1) {
+				generatedPower += _fuelCellStrings[1].Request(targetPower * shareResult.Share.ShareB, dryRun, dt);
 			}
 
 			if (!dryRun) {
-				CurrentState.ActualPower = generatedPower;
-				CurrentState.TargetPower = targetPower;
+				CurrentState.Share = shareResult.Share;
+				CurrentState.Power = generatedPower;
             }
-			return targetPower;
+			return generatedPower;
 		}
 
 
-		public void AddFuelCell(FuelCell fuelCell)
+		public void AddFuelCellString(FuelCellString fuelCellString)
 		{
-			_fuelCells.Add(fuelCell);
-
+			_fuelCellStrings.Add(fuelCellString);
 		}
 
 		#endregion
 
 
-		/// <summary>
-		/// Returns the power wrt. to the GradientPowerChange
-		/// </summary>
-		/// <param name="previous"></param>
-		/// <param name="current"></param>
-		/// <param name="dt"></param>
-		/// <param name="gradientPowerChange"></param>
-		/// <returns></returns>
-		public static Watt GetLimitedPower(Watt previous, Watt current, Second dt, WattPerSecond gradientPowerChange)
-		{
-			var delta = dt * gradientPowerChange;
-			return current.LimitTo(previous - delta, previous + delta);
-		} 
-
 		#region Overrides of VectoSimulationComponent
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
-			container[ModalResultField.P_fuelCellSystem_target] = CurrentState.TargetPower;
-			container[ModalResultField.P_fuelCellSystem_actual] = CurrentState.ActualPower;
-			container[ModalResultField.Fc_fuelCellSystem_actual] = _fuelCells.Sum(x => x.PreviousState.FuelConsumption);
-
-
+			container[ModalResultField.P_FCSystem] = CurrentState.Power;
+			container[ModalResultField.FC_FCSystem] = _fuelCellStrings.Sum(x => x.PreviousState.FuelConsumption);
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)

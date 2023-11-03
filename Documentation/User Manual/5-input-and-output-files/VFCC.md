@@ -1,0 +1,24 @@
+## Fuel Cell System Input File
+
+The fuel cell system file (.vfcc) contains the input data for a single fuel cell system
+
+**Example:**
+
+~~~
+{
+  "Header": {
+    "CreatedBy": "",
+    "Date": "2023-10-11T10:34:56.5007858Z",
+    "AppVersion": "3",
+    "FileVersion": 1
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "Manufacturer": "Fuel Cell Manufacturer",
+    "Model": "Generic Fuel Cell",
+    "MinElectricPower": 30.0,
+    "MaxElectricPower": 100.0,
+    "MassFlowMap": "GenericFuelCellMassflowMap_300kW.vfcm"
+  }
+}
+~~~

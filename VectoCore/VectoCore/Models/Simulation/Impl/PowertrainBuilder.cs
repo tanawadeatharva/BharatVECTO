@@ -1169,8 +1169,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			if (fcSystemData != null) {
 				var fuelCellSystem = new FuelCellSystem(fcSystemData, container);
-				foreach (var fuelCell in fcSystemData.FuelCells) {
-					fuelCellSystem.AddFuelCell(new FuelCell(fuelCell, container));
+				var id = 1;
+				foreach (var fuelCell in fcSystemData.FuelCellStrings) {
+					var fcs = new FuelCellString(fuelCell, id++, dataBus:container);
+					fuelCellSystem.AddFuelCellString(fcs);
 				}
 				es.Connect(fuelCellSystem);
 			}

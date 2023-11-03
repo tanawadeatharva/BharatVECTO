@@ -339,10 +339,10 @@ namespace TUGraz.VectoCore.OutputData
 			public const string FCFINAL_H = "FC-Final [g/h]";
 			public const string FCFINAL_KM = "FC-Final [g/km]";
 
-			public const string K_FCSLine = "k_FCSline [g/kWh]";
+			public const string K_FCSLine = "k_CFCSline [g/kWh]";
 
-			public const string P_FCS = "P_FCS [kW]";
-			public const string E_FCS = "E_FCS [kWh]";
+			public const string P_FCS = "P_CFCS [kW]";
+			public const string E_FCS = "E_CFCS [kWh]";
 
 			public const string FC_HEV_SOC_H = "FC-SoC [g/h]";
 			public const string FC_HEV_SOC_KM = "FC-SoC [g/km]";
@@ -1257,10 +1257,10 @@ namespace TUGraz.VectoCore.OutputData
 				{
 					FuelCellFields.FCMAP_H,
 					SumFunc((r, m) => {
-						return r.FuelCellSystemData.FuelCells.Aggregate(0.SI<KilogramPerSecond>(),
-							(a, fc) => {
+						return m.Data.FuelCellComponentIds.Aggregate(0.SI<KilogramPerSecond>(),
+							(a, id) => {
 								var singleFc =
-									(m.TimeIntegral<Kilogram>(ModalResultField.FC_FCS.Format(fc.Id)) / m.Duration) ??
+									(m.TimeIntegral<Kilogram>(ModalResultField.FC_FCS.Format(id)) / m.Duration) ??
 									0.SI<KilogramPerSecond>();
 								return a + singleFc;
 							}).ConvertToGrammPerHour();
@@ -1268,11 +1268,11 @@ namespace TUGraz.VectoCore.OutputData
 				}, {
 					FuelCellFields.FCMAP_KM,
 					SumFunc((r, m) => {
-						return r.FuelCellSystemData.FuelCells.Aggregate(0.SI<KilogramPerMeter>(),
-							(a, fc) => {
-								var singleFc = (m.TimeIntegral<Kilogram>(ModalResultField.FC_FCS.Format(fc.Id)) /
-												m.Distance) ??
-												0.SI<KilogramPerMeter>();
+						return m.Data.FuelCellComponentIds.Aggregate(0.SI<KilogramPerMeter>(),
+							(a, id) => {
+								var singleFc =
+									(m.TimeIntegral<Kilogram>(ModalResultField.FC_FCS.Format(id)) / m.Distance) ??
+									0.SI<KilogramPerMeter>();
 								return a + singleFc;
 							}).ConvertToGrammPerKiloMeter();
 					})
@@ -1289,12 +1289,12 @@ namespace TUGraz.VectoCore.OutputData
 							.ConvertToGramPerKiloWattHour())
 				}, {
 					FuelCellFields.P_FCS, SumFunc((r, m) => {
-						var p_fcs = m.TimeIntegral<WattSecond>(ModalResultField.P_fuelCellSystem_actual) / m.Duration;
+						var p_fcs = m.TimeIntegral<WattSecond>(ModalResultField.P_FCSystem) / m.Duration;
 						return p_fcs.ConvertToKiloWatt();
 					})
 				}, {
 					FuelCellFields.E_FCS, SumFunc((r, m) => {
-						var e_fcs = m.TimeIntegral<WattSecond>(ModalResultField.P_fuelCellSystem_actual);
+						var e_fcs = m.TimeIntegral<WattSecond>(ModalResultField.P_FCSystem);
 						return e_fcs.ConvertToKiloWattHour();
 					})
 				}, {

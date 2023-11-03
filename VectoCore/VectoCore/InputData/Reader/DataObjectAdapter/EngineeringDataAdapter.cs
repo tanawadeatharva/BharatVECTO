@@ -942,7 +942,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			//return CreateStaticFuelCellPowerMap(modData);
 		}
 
-		private FuelCellPowerMap CreateDynamicFuelCellPowerMap(IModalDataContainer modData, FuelCellSystemData fcData, BatterySystemData batData)
+		public FuelCellSystemShareMap CreateFuelCellShareMap(FuelCellSystemData fuelCellSystemData)
+		{
+			var fcSystemMassFlowMap = new FuelCellSystemMassFlowMap(fuelCellSystemData.FuelCellStrings.ElementAt(0).MassFlowMap,
+				fuelCellSystemData.FuelCellStrings.ElementAtOrDefault(1)?.MassFlowMap);
+			return new FuelCellSystemShareMap(fcSystemMassFlowMap);
+		}
+
+        private FuelCellPowerMap CreateDynamicFuelCellPowerMap(IModalDataContainer modData, FuelCellSystemData fcData, BatterySystemData batData)
 		{
 			var fcPostProcessor = new FuelCellPreRunPostprocessor(modData) {
 				Writer = DebugOutputDataWriter
@@ -951,8 +958,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 
 			var result = fcPostProcessor.CalculateFuelCellPowerDemand(fcData, batData.Clone());
-
-			NLog.Fluent.Log.Info($"Window distance = {result.Distance}, SoC = {result.InitSoc}");
+			//Debug($"Window distance = {result.Distance}, SoC = {result.InitSoc}");
 			batData.InitialSoC = result.InitSoc;
 			return new FuelCellPowerMap(result.Entries);
 		}
@@ -985,42 +991,51 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public FuelCellSystemData CreateFuelCellSystemData(IFuelCellSystemEngineeringInputData fuelCellSystemInputData)
 		{
-			if (fuelCellSystemInputData.FuelCellComponents.Count != 1 
-				&& fuelCellSystemInputData.FuelCellComponents[0].Count != 1) {
-				throw new VectoException(
-					$"Invalid fuel cell count! Currently only one fuel cell component is supported");
+			if (fuelCellSystemInputData.FuelCellStrings.Count > 2) {
+				throw new VectoException("Number of fuel cell strings must be <= 2");
+			}
+
+			if (fuelCellSystemInputData.FuelCellStrings.Aggregate(0, (a, fcs) => a + fcs.Count) < 1) {
+				throw new VectoException("At least one fuel cell has to be provided");
+			}
+
+			if (fuelCellSystemInputData.FuelCellStrings.Any(fcs => fcs.Count > 3)) {
+				throw new VectoException("Number of fuel cells per string must be <= 3");
 			}
 			
-			
 			var fuelCellSystemData = new FuelCellSystemData();
-			fuelCellSystemData.GradientPowerChange = fuelCellSystemInputData.GradientPowerChange;
-			fuelCellSystemData.FuelCells = new List<FuelCellData>();
+			fuelCellSystemData.FuelCellStrings = new List<FuelCellStringData>();
 			var id = 0;
-			foreach (var fcC in fuelCellSystemInputData.FuelCellComponents) {
-				id++;
-				for (int i = 0; i < fcC.Count; i++) {
-					//Add each as own component to enable switching them on and off
-					fuelCellSystemData.FuelCells.Add(CreateFuelCellData(fcC.FuelCellComponent, id, i + 1));
-				}
+			foreach (var fcC in fuelCellSystemInputData.FuelCellStrings) {
+				fuelCellSystemData.FuelCellStrings.Add(CreateFuelCellStringData(fcC.FuelCellComponent, fcC.Count));
 			}
 
 			return fuelCellSystemData;
 		}
 
-		public FuelCellData CreateFuelCellData(IFuelCellComponentEngineeringInputData fuelCellInputData, int id, int subId)
+		public FuelCellStringData CreateFuelCellStringData(IFuelCellComponentEngineeringInputData fuelCellComponent, int count)
+		{
+			var fcData = CreateFuelCellData(fuelCellInputData: fuelCellComponent);
+			var fuelCellStringData = new FuelCellStringData(fcData, count);
+			fuelCellStringData.MassFlowMap = new FuelCellStringMassFlowMap(fcData.MassFlowMap, count);
+			return fuelCellStringData;
+		}
+
+
+		public FuelCellData CreateFuelCellData(IFuelCellComponentEngineeringInputData fuelCellInputData)
 		{
 			var fuelCellData =  new FuelCellData() {
-				MassFlowMap = FuelCellMassFlowMapReader.Create(fuelCellInputData.MassFlowMap),
+				MassFlowMap = FuelCellMassFlowMapReader.Create(fuelCellInputData.MassFlowMap, fuelCellInputData.MinElectricPower, fuelCellInputData.MaxElectricPower),
 				MaxElectricPower = fuelCellInputData.MaxElectricPower,
 				MinElectricPower = fuelCellInputData.MinElectricPower,
-				Id = new FuelCellData.FuelCellId() {
-					Id = id, 
-					SubId = subId,
-				}
+				//Id = new FuelCellData.FuelCellId() {
+				//	Id = id, 
+				//	SubId = subId,
+				//}
 			};
 
-			if (fuelCellData.MinElectricPower.IsSmaller(fuelCellData.MassFlowMap.MinPower) ||
-				fuelCellData.MaxElectricPower.IsGreater(fuelCellData.MassFlowMap.MaxPower)) {
+			if (fuelCellData.MinElectricPower.IsSmaller(fuelCellData.MassFlowMap.MinPowerMap) ||
+				fuelCellData.MaxElectricPower.IsGreater(fuelCellData.MassFlowMap.MaxPowerMap)) {
 				throw new VectoException("Fuel cell limits exceed mass flow map");
 			}
 
@@ -1032,7 +1047,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var pevBat = batterySystemData;
 			pevBat.Batteries.ForEach(b => b.Item2.ChargeDepletingBattery = true);
-            var fcP = fuelCellSystemInputData.FuelCellComponents.Sum(fc => fc.FuelCellComponent.MaxElectricPower * fc.Count);
+            var fcP = fuelCellSystemInputData.FuelCellStrings.Sum(fc => fc.FuelCellComponent.MaxElectricPower * fc.Count);
             var V = pevBat.CalculateVoltageCenterSoc();
             var I = fcP / V;
 
@@ -1807,6 +1822,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			return entries;
 		}
+
+
 	}
 
 	public class IEPCGearboxInputData : IGearboxDeclarationInputData

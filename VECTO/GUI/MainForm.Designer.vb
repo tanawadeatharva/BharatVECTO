@@ -96,6 +96,7 @@ Partial Class MainForm
         Me.JobEditorIEPC_E_VehicleToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.JobEditorIEPC_S_VehicleToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.JobEditorIHPCVehicleToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.JobEditorFCHVehicle = New System.Windows.Forms.ToolStripMenuItem()
         Me.JobEditorEngineOnlyModeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.EPTPJobEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.VEHEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -118,7 +119,6 @@ Partial Class MainForm
         Me.OpenInGraphWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.JobEditorFCHVehicle = New System.Windows.Forms.ToolStripMenuItem()
         Me.StatusBAR.SuspendLayout
         Me.TabControl1.SuspendLayout
         Me.TabPageGEN.SuspendLayout
@@ -142,16 +142,16 @@ Partial Class MainForm
         '
         Me.StatusBAR.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.StatusBAR.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripLbStatus, Me.ToolStripProgBarJob, Me.ToolStripProgBarOverall})
-        Me.StatusBAR.Location = New System.Drawing.Point(0, 644)
+        Me.StatusBAR.Location = New System.Drawing.Point(0, 648)
         Me.StatusBAR.Name = "StatusBAR"
-        Me.StatusBAR.Size = New System.Drawing.Size(1045, 26)
+        Me.StatusBAR.Size = New System.Drawing.Size(1045, 22)
         Me.StatusBAR.TabIndex = 7
         Me.StatusBAR.Text = "StatusBAR"
         '
         'ToolStripLbStatus
         '
         Me.ToolStripLbStatus.Name = "ToolStripLbStatus"
-        Me.ToolStripLbStatus.Size = New System.Drawing.Size(1030, 20)
+        Me.ToolStripLbStatus.Size = New System.Drawing.Size(1030, 17)
         Me.ToolStripLbStatus.Spring = true
         Me.ToolStripLbStatus.Text = "Status Text"
         Me.ToolStripLbStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -161,7 +161,7 @@ Partial Class MainForm
         Me.ToolStripProgBarJob.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.ToolStripProgBarJob.AutoSize = false
         Me.ToolStripProgBarJob.Name = "ToolStripProgBarJob"
-        Me.ToolStripProgBarJob.Size = New System.Drawing.Size(100, 18)
+        Me.ToolStripProgBarJob.Size = New System.Drawing.Size(100, 20)
         Me.ToolStripProgBarJob.Style = System.Windows.Forms.ProgressBarStyle.Continuous
         Me.ToolStripProgBarJob.ToolTipText = "overall progress"
         Me.ToolStripProgBarJob.Visible = false
@@ -171,7 +171,7 @@ Partial Class MainForm
         Me.ToolStripProgBarOverall.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.ToolStripProgBarOverall.AutoSize = false
         Me.ToolStripProgBarOverall.Name = "ToolStripProgBarOverall"
-        Me.ToolStripProgBarOverall.Size = New System.Drawing.Size(100, 18)
+        Me.ToolStripProgBarOverall.Size = New System.Drawing.Size(100, 20)
         Me.ToolStripProgBarOverall.Style = System.Windows.Forms.ProgressBarStyle.Continuous
         Me.ToolStripProgBarOverall.ToolTipText = "job progress"
         Me.ToolStripProgBarOverall.Visible = false
@@ -243,7 +243,7 @@ Partial Class MainForm
         Me.Label6.Location = New System.Drawing.Point(813, 260)
         Me.Label6.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(249, 15)
+        Me.Label6.Size = New System.Drawing.Size(217, 13)
         Me.Label6.TabIndex = 21
         Me.Label6.Text = "(Double-Click to Edit, Right-Click for Options)"
         '
@@ -269,7 +269,7 @@ Partial Class MainForm
         Me.LbDecl.Location = New System.Drawing.Point(5, 109)
         Me.LbDecl.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.LbDecl.Name = "LbDecl"
-        Me.LbDecl.Size = New System.Drawing.Size(135, 17)
+        Me.LbDecl.Size = New System.Drawing.Size(107, 13)
         Me.LbDecl.TabIndex = 19
         Me.LbDecl.Text = "Declaration Mode"
         Me.LbDecl.Visible = false
@@ -312,10 +312,10 @@ Partial Class MainForm
         '
         Me.ChBoxAllGEN.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
         Me.ChBoxAllGEN.AutoSize = true
-        Me.ChBoxAllGEN.Location = New System.Drawing.Point(194, 263)
+        Me.ChBoxAllGEN.Location = New System.Drawing.Point(194, 265)
         Me.ChBoxAllGEN.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
         Me.ChBoxAllGEN.Name = "ChBoxAllGEN"
-        Me.ChBoxAllGEN.Size = New System.Drawing.Size(79, 19)
+        Me.ChBoxAllGEN.Size = New System.Drawing.Size(70, 17)
         Me.ChBoxAllGEN.TabIndex = 16
         Me.ChBoxAllGEN.Text = "Select All"
         Me.ToolTip1.SetToolTip(Me.ChBoxAllGEN, "Select All / None")
@@ -454,7 +454,7 @@ Partial Class MainForm
         Me.cbSaveVectoRunData.Location = New System.Drawing.Point(7, 86)
         Me.cbSaveVectoRunData.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
         Me.cbSaveVectoRunData.Name = "cbSaveVectoRunData"
-        Me.cbSaveVectoRunData.Size = New System.Drawing.Size(190, 19)
+        Me.cbSaveVectoRunData.Size = New System.Drawing.Size(166, 17)
         Me.cbSaveVectoRunData.TabIndex = 19
         Me.cbSaveVectoRunData.Text = "Export ModelData (EXPERT!)"
         Me.cbSaveVectoRunData.UseVisualStyleBackColor = true
@@ -477,7 +477,7 @@ Partial Class MainForm
         Me.cbValidateRunData.Location = New System.Drawing.Point(6, 19)
         Me.cbValidateRunData.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
         Me.cbValidateRunData.Name = "cbValidateRunData"
-        Me.cbValidateRunData.Size = New System.Drawing.Size(102, 19)
+        Me.cbValidateRunData.Size = New System.Drawing.Size(90, 17)
         Me.cbValidateRunData.TabIndex = 17
         Me.cbValidateRunData.Text = "Validate Data"
         Me.cbValidateRunData.UseVisualStyleBackColor = true
@@ -503,7 +503,7 @@ Partial Class MainForm
         Me.ChBoxModOut.Location = New System.Drawing.Point(6, 19)
         Me.ChBoxModOut.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
         Me.ChBoxModOut.Name = "ChBoxModOut"
-        Me.ChBoxModOut.Size = New System.Drawing.Size(134, 19)
+        Me.ChBoxModOut.Size = New System.Drawing.Size(115, 17)
         Me.ChBoxModOut.TabIndex = 0
         Me.ChBoxModOut.Text = "Write modal results"
         Me.ChBoxModOut.UseVisualStyleBackColor = true
@@ -514,7 +514,7 @@ Partial Class MainForm
         Me.ChBoxMod1Hz.Location = New System.Drawing.Point(6, 41)
         Me.ChBoxMod1Hz.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
         Me.ChBoxMod1Hz.Name = "ChBoxMod1Hz"
-        Me.ChBoxMod1Hz.Size = New System.Drawing.Size(141, 19)
+        Me.ChBoxMod1Hz.Size = New System.Drawing.Size(121, 17)
         Me.ChBoxMod1Hz.TabIndex = 16
         Me.ChBoxMod1Hz.Text = "Modal results in 1Hz"
         Me.ChBoxMod1Hz.UseVisualStyleBackColor = true
@@ -539,7 +539,7 @@ Partial Class MainForm
         Me.RbDev.Location = New System.Drawing.Point(6, 41)
         Me.RbDev.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
         Me.RbDev.Name = "RbDev"
-        Me.RbDev.Size = New System.Drawing.Size(130, 19)
+        Me.RbDev.Size = New System.Drawing.Size(111, 17)
         Me.RbDev.TabIndex = 1
         Me.RbDev.TabStop = true
         Me.RbDev.Text = "Engineering Mode"
@@ -551,7 +551,7 @@ Partial Class MainForm
         Me.RbDecl.Location = New System.Drawing.Point(6, 19)
         Me.RbDecl.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
         Me.RbDecl.Name = "RbDecl"
-        Me.RbDecl.Size = New System.Drawing.Size(126, 19)
+        Me.RbDecl.Size = New System.Drawing.Size(109, 17)
         Me.RbDecl.TabIndex = 0
         Me.RbDecl.TabStop = true
         Me.RbDecl.Text = "Declaration Mode"
@@ -563,36 +563,36 @@ Partial Class MainForm
         Me.ConMenFilelist.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ShowInFolderMenuItem, Me.SaveListToolStripMenuItem, Me.LoadListToolStripMenuItem, Me.LoadDefaultListToolStripMenuItem, Me.ClearListToolStripMenuItem})
         Me.ConMenFilelist.Name = "ConMenFilelist"
         Me.ConMenFilelist.ShowImageMargin = false
-        Me.ConMenFilelist.Size = New System.Drawing.Size(180, 124)
+        Me.ConMenFilelist.Size = New System.Drawing.Size(151, 114)
         '
         'ShowInFolderMenuItem
         '
         Me.ShowInFolderMenuItem.Name = "ShowInFolderMenuItem"
-        Me.ShowInFolderMenuItem.Size = New System.Drawing.Size(179, 24)
+        Me.ShowInFolderMenuItem.Size = New System.Drawing.Size(150, 22)
         Me.ShowInFolderMenuItem.Text = "Show in Folder"
         '
         'SaveListToolStripMenuItem
         '
         Me.SaveListToolStripMenuItem.Name = "SaveListToolStripMenuItem"
-        Me.SaveListToolStripMenuItem.Size = New System.Drawing.Size(179, 24)
+        Me.SaveListToolStripMenuItem.Size = New System.Drawing.Size(150, 22)
         Me.SaveListToolStripMenuItem.Text = "Save List..."
         '
         'LoadListToolStripMenuItem
         '
         Me.LoadListToolStripMenuItem.Name = "LoadListToolStripMenuItem"
-        Me.LoadListToolStripMenuItem.Size = New System.Drawing.Size(179, 24)
+        Me.LoadListToolStripMenuItem.Size = New System.Drawing.Size(150, 22)
         Me.LoadListToolStripMenuItem.Text = "Load List..."
         '
         'LoadDefaultListToolStripMenuItem
         '
         Me.LoadDefaultListToolStripMenuItem.Name = "LoadDefaultListToolStripMenuItem"
-        Me.LoadDefaultListToolStripMenuItem.Size = New System.Drawing.Size(179, 24)
+        Me.LoadDefaultListToolStripMenuItem.Size = New System.Drawing.Size(150, 22)
         Me.LoadDefaultListToolStripMenuItem.Text = "Load Autosave-List"
         '
         'ClearListToolStripMenuItem
         '
         Me.ClearListToolStripMenuItem.Name = "ClearListToolStripMenuItem"
-        Me.ClearListToolStripMenuItem.Size = New System.Drawing.Size(179, 24)
+        Me.ClearListToolStripMenuItem.Size = New System.Drawing.Size(150, 22)
         Me.ClearListToolStripMenuItem.Text = "Clear List"
         '
         'LvMsg
@@ -670,7 +670,7 @@ Partial Class MainForm
         Me.ToolStripBtNew.Image = Global.TUGraz.VECTO.My.Resources.Resources.blue_document_icon
         Me.ToolStripBtNew.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtNew.Name = "ToolStripBtNew"
-        Me.ToolStripBtNew.Size = New System.Drawing.Size(29, 28)
+        Me.ToolStripBtNew.Size = New System.Drawing.Size(28, 28)
         Me.ToolStripBtNew.Text = "ToolStripBtNew"
         Me.ToolStripBtNew.ToolTipText = "New Job File"
         '
@@ -680,7 +680,7 @@ Partial Class MainForm
         Me.ToolStripBtOpen.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
         Me.ToolStripBtOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtOpen.Name = "ToolStripBtOpen"
-        Me.ToolStripBtOpen.Size = New System.Drawing.Size(29, 28)
+        Me.ToolStripBtOpen.Size = New System.Drawing.Size(28, 28)
         Me.ToolStripBtOpen.Text = "ToolStripButton1"
         Me.ToolStripBtOpen.ToolTipText = "Open File..."
         '
@@ -695,115 +695,122 @@ Partial Class MainForm
         Me.ToolStripDrDnBtTools.Image = Global.TUGraz.VECTO.My.Resources.Resources.Misc_Tools_icon
         Me.ToolStripDrDnBtTools.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDrDnBtTools.Name = "ToolStripDrDnBtTools"
-        Me.ToolStripDrDnBtTools.Size = New System.Drawing.Size(82, 28)
+        Me.ToolStripDrDnBtTools.Size = New System.Drawing.Size(71, 28)
         Me.ToolStripDrDnBtTools.Text = "Tools"
         '
         'GENEditorToolStripMenuItem1
         '
         Me.GENEditorToolStripMenuItem1.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
         Me.GENEditorToolStripMenuItem1.Name = "GENEditorToolStripMenuItem1"
-        Me.GENEditorToolStripMenuItem1.Size = New System.Drawing.Size(323, 26)
+        Me.GENEditorToolStripMenuItem1.Size = New System.Drawing.Size(255, 22)
         Me.GENEditorToolStripMenuItem1.Text = "Job Editor - Conventional Vehicle"
         '
         'JobEditorSerialHybridVehicleToolStripMenuItem
         '
         Me.JobEditorSerialHybridVehicleToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
         Me.JobEditorSerialHybridVehicleToolStripMenuItem.Name = "JobEditorSerialHybridVehicleToolStripMenuItem"
-        Me.JobEditorSerialHybridVehicleToolStripMenuItem.Size = New System.Drawing.Size(323, 26)
+        Me.JobEditorSerialHybridVehicleToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.JobEditorSerialHybridVehicleToolStripMenuItem.Text = "Job Editor - Serial Hybrid Vehicle"
         '
         'JobEditorParallelHybridVehicleToolStripMenuItem
         '
         Me.JobEditorParallelHybridVehicleToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
         Me.JobEditorParallelHybridVehicleToolStripMenuItem.Name = "JobEditorParallelHybridVehicleToolStripMenuItem"
-        Me.JobEditorParallelHybridVehicleToolStripMenuItem.Size = New System.Drawing.Size(323, 26)
+        Me.JobEditorParallelHybridVehicleToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.JobEditorParallelHybridVehicleToolStripMenuItem.Text = "Job Editor - Parallel Hybrid Vehicle"
         '
         'JobEditorBatteryElectricVehicleToolStripMenuItem
         '
         Me.JobEditorBatteryElectricVehicleToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
         Me.JobEditorBatteryElectricVehicleToolStripMenuItem.Name = "JobEditorBatteryElectricVehicleToolStripMenuItem"
-        Me.JobEditorBatteryElectricVehicleToolStripMenuItem.Size = New System.Drawing.Size(323, 26)
+        Me.JobEditorBatteryElectricVehicleToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.JobEditorBatteryElectricVehicleToolStripMenuItem.Text = "Job Editor - Battery Electric Vehicle"
         '
         'JobEditorIEPC_E_VehicleToolStripMenuItem
         '
         Me.JobEditorIEPC_E_VehicleToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
         Me.JobEditorIEPC_E_VehicleToolStripMenuItem.Name = "JobEditorIEPC_E_VehicleToolStripMenuItem"
-        Me.JobEditorIEPC_E_VehicleToolStripMenuItem.Size = New System.Drawing.Size(323, 26)
+        Me.JobEditorIEPC_E_VehicleToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.JobEditorIEPC_E_VehicleToolStripMenuItem.Text = "Job Editor - IEPC-E Vehicle"
         '
         'JobEditorIEPC_S_VehicleToolStripMenuItem
         '
         Me.JobEditorIEPC_S_VehicleToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
         Me.JobEditorIEPC_S_VehicleToolStripMenuItem.Name = "JobEditorIEPC_S_VehicleToolStripMenuItem"
-        Me.JobEditorIEPC_S_VehicleToolStripMenuItem.Size = New System.Drawing.Size(323, 26)
+        Me.JobEditorIEPC_S_VehicleToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.JobEditorIEPC_S_VehicleToolStripMenuItem.Text = "Job Editor - IEPC-S Vehicle"
         '
         'JobEditorIHPCVehicleToolStripMenuItem
         '
         Me.JobEditorIHPCVehicleToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
         Me.JobEditorIHPCVehicleToolStripMenuItem.Name = "JobEditorIHPCVehicleToolStripMenuItem"
-        Me.JobEditorIHPCVehicleToolStripMenuItem.Size = New System.Drawing.Size(323, 26)
+        Me.JobEditorIHPCVehicleToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.JobEditorIHPCVehicleToolStripMenuItem.Text = "Job Editor - IHPC Vehicle"
+        '
+        'JobEditorFCHVehicle
+        '
+        Me.JobEditorFCHVehicle.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
+        Me.JobEditorFCHVehicle.Name = "JobEditorFCHVehicle"
+        Me.JobEditorFCHVehicle.Size = New System.Drawing.Size(255, 22)
+        Me.JobEditorFCHVehicle.Text = "Job Editor - Fuel Cell Vehicle"
         '
         'JobEditorEngineOnlyModeToolStripMenuItem
         '
         Me.JobEditorEngineOnlyModeToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
         Me.JobEditorEngineOnlyModeToolStripMenuItem.Name = "JobEditorEngineOnlyModeToolStripMenuItem"
-        Me.JobEditorEngineOnlyModeToolStripMenuItem.Size = New System.Drawing.Size(323, 26)
+        Me.JobEditorEngineOnlyModeToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.JobEditorEngineOnlyModeToolStripMenuItem.Text = "Job Editor - Engine Only Mode"
         '
         'EPTPJobEditorToolStripMenuItem
         '
         Me.EPTPJobEditorToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
         Me.EPTPJobEditorToolStripMenuItem.Name = "EPTPJobEditorToolStripMenuItem"
-        Me.EPTPJobEditorToolStripMenuItem.Size = New System.Drawing.Size(323, 26)
+        Me.EPTPJobEditorToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.EPTPJobEditorToolStripMenuItem.Text = "VTP Job Editor"
         '
         'VEHEditorToolStripMenuItem
         '
         Me.VEHEditorToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VEH
         Me.VEHEditorToolStripMenuItem.Name = "VEHEditorToolStripMenuItem"
-        Me.VEHEditorToolStripMenuItem.Size = New System.Drawing.Size(323, 26)
+        Me.VEHEditorToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.VEHEditorToolStripMenuItem.Text = "Vehicle Editor"
         '
         'EngineEditorToolStripMenuItem
         '
         Me.EngineEditorToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_ENG
         Me.EngineEditorToolStripMenuItem.Name = "EngineEditorToolStripMenuItem"
-        Me.EngineEditorToolStripMenuItem.Size = New System.Drawing.Size(323, 26)
+        Me.EngineEditorToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.EngineEditorToolStripMenuItem.Text = "Engine Editor"
         '
         'GearboxEditorToolStripMenuItem
         '
         Me.GearboxEditorToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_GBX
         Me.GearboxEditorToolStripMenuItem.Name = "GearboxEditorToolStripMenuItem"
-        Me.GearboxEditorToolStripMenuItem.Size = New System.Drawing.Size(323, 26)
+        Me.GearboxEditorToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.GearboxEditorToolStripMenuItem.Text = "Gearbox Editor"
         '
         'GraphToolStripMenuItem
         '
         Me.GraphToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_Graph
         Me.GraphToolStripMenuItem.Name = "GraphToolStripMenuItem"
-        Me.GraphToolStripMenuItem.Size = New System.Drawing.Size(323, 26)
+        Me.GraphToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.GraphToolStripMenuItem.Text = "Graph"
         '
         'ToolStripSeparator6
         '
         Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
-        Me.ToolStripSeparator6.Size = New System.Drawing.Size(320, 6)
+        Me.ToolStripSeparator6.Size = New System.Drawing.Size(252, 6)
         '
         'OpenLogToolStripMenuItem
         '
         Me.OpenLogToolStripMenuItem.Name = "OpenLogToolStripMenuItem"
-        Me.OpenLogToolStripMenuItem.Size = New System.Drawing.Size(323, 26)
+        Me.OpenLogToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.OpenLogToolStripMenuItem.Text = "Open Log"
         '
         'SettingsToolStripMenuItem
         '
         Me.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem"
-        Me.SettingsToolStripMenuItem.Size = New System.Drawing.Size(323, 26)
+        Me.SettingsToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.SettingsToolStripMenuItem.Text = "Settings"
         '
         'ToolStripDrDnBtInfo
@@ -812,36 +819,36 @@ Partial Class MainForm
         Me.ToolStripDrDnBtInfo.Image = Global.TUGraz.VECTO.My.Resources.Resources.Help_icon
         Me.ToolStripDrDnBtInfo.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDrDnBtInfo.Name = "ToolStripDrDnBtInfo"
-        Me.ToolStripDrDnBtInfo.Size = New System.Drawing.Size(79, 28)
+        Me.ToolStripDrDnBtInfo.Size = New System.Drawing.Size(69, 28)
         Me.ToolStripDrDnBtInfo.Text = "Help"
         '
         'UserManualToolStripMenuItem
         '
         Me.UserManualToolStripMenuItem.Name = "UserManualToolStripMenuItem"
-        Me.UserManualToolStripMenuItem.Size = New System.Drawing.Size(302, 26)
+        Me.UserManualToolStripMenuItem.Size = New System.Drawing.Size(241, 22)
         Me.UserManualToolStripMenuItem.Text = "User Manual"
         '
         'UpdateNotesToolStripMenuItem
         '
         Me.UpdateNotesToolStripMenuItem.Name = "UpdateNotesToolStripMenuItem"
-        Me.UpdateNotesToolStripMenuItem.Size = New System.Drawing.Size(302, 26)
+        Me.UpdateNotesToolStripMenuItem.Size = New System.Drawing.Size(241, 22)
         Me.UpdateNotesToolStripMenuItem.Text = "Release Notes"
         '
         'ReportBugViaCITnetToolStripMenuItem
         '
         Me.ReportBugViaCITnetToolStripMenuItem.Name = "ReportBugViaCITnetToolStripMenuItem"
-        Me.ReportBugViaCITnetToolStripMenuItem.Size = New System.Drawing.Size(302, 26)
+        Me.ReportBugViaCITnetToolStripMenuItem.Size = New System.Drawing.Size(241, 22)
         Me.ReportBugViaCITnetToolStripMenuItem.Text = "Report Issue via code.europa.eu"
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(299, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(238, 6)
         '
         'AboutVECTOToolStripMenuItem1
         '
         Me.AboutVECTOToolStripMenuItem1.Name = "AboutVECTOToolStripMenuItem1"
-        Me.AboutVECTOToolStripMenuItem1.Size = New System.Drawing.Size(302, 26)
+        Me.AboutVECTOToolStripMenuItem1.Size = New System.Drawing.Size(241, 22)
         Me.AboutVECTOToolStripMenuItem1.Text = "About VECTO"
         '
         'CmDEV
@@ -861,32 +868,25 @@ Partial Class MainForm
         Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.OpenInGraphWindowToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
         Me.CmOpenFile.Name = "CmOpenFile"
         Me.CmOpenFile.ShowImageMargin = false
-        Me.CmOpenFile.Size = New System.Drawing.Size(209, 76)
+        Me.CmOpenFile.Size = New System.Drawing.Size(174, 70)
         '
         'OpenWithToolStripMenuItem
         '
         Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
-        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(208, 24)
+        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.OpenWithToolStripMenuItem.Text = "Open with ..."
         '
         'OpenInGraphWindowToolStripMenuItem
         '
         Me.OpenInGraphWindowToolStripMenuItem.Name = "OpenInGraphWindowToolStripMenuItem"
-        Me.OpenInGraphWindowToolStripMenuItem.Size = New System.Drawing.Size(208, 24)
+        Me.OpenInGraphWindowToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.OpenInGraphWindowToolStripMenuItem.Text = "Open in Graph Window"
         '
         'ShowInFolderToolStripMenuItem
         '
         Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
-        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(208, 24)
+        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
-        '
-        'JobEditorFCHVehicle
-        '
-        Me.JobEditorFCHVehicle.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
-        Me.JobEditorFCHVehicle.Name = "JobEditorFCHVehicle"
-        Me.JobEditorFCHVehicle.Size = New System.Drawing.Size(263, 30)
-        Me.JobEditorFCHVehicle.Text = "Job Editor - Fuel Cell Vehicle"
         '
         'MainForm
         '

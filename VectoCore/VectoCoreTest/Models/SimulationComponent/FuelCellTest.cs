@@ -120,9 +120,9 @@ public class FuelCellTest
 		));
 
 
-		fuelCellSystemMock.SetupGet(fcs => fcs.FuelCellComponents).Returns(() =>
-			new List<FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>>() {
-				new FuelCellComponentEntry<IFuelCellComponentEngineeringInputData>() {
+		fuelCellSystemMock.SetupGet(fcs => fcs.FuelCellStrings).Returns(() =>
+			new List<FuelCellStringEntry<IFuelCellComponentEngineeringInputData>>() {
+				new FuelCellStringEntry<IFuelCellComponentEngineeringInputData>() {
 					Count = 1,
 					FuelCellComponent = fuelCellComponentMock.Object,
 				}
@@ -130,20 +130,4 @@ public class FuelCellTest
 
 		fuelCellComponentMock.SetupGet(fcC => fcC.MaxElectricPower).Returns((100 * 1000).SI<Watt>());
 	}
-
-
-	[TestCase(100, 100, 1, 0, 100, TestName = "Constant")]
-	[TestCase(100, 1, 1, 5, 95, TestName = "Reduce Power (Limited)")]
-	[TestCase(100, 150, 1, 5, 105, TestName="Increasing (Limited)")]
-	[TestCase(100, 110, 1, 50, 110, TestName="Increasing unlimited")]
-	public void GradientPowerChange(double previous, double current, double dt, double gradientPowerChange, double expected)
-	{
-		var result = FuelCellSystem.GetLimitedPower(previous.SI<Watt>(), current.SI<Watt>(), dt.SI<Second>(),
-			gradientPowerChange.SI<WattPerSecond>());
-
-		Assert.AreEqual(expected, result.Value());
-	}
-
-
-	
 }

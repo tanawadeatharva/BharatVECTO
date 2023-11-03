@@ -30,15 +30,15 @@
         "NumPacks": 1,
         "BatteryFile": "GenericBattery_80kWh_750V.vbat"
     },
-    "FuelCellSystem":{
+    "CompositeFuelCellSystem":{
         "GradientPowerChange": 50,
         "OnOffHysteresis": 3,
-        "FuelCells":[{
+        "FuelCellSystems":[{
           "Count": 2,
-          "FuelCellFile": "GenericFuelCellComponent.vfcc"
+          "FuelCellSystemFile": "GenericFuelCellSystem.vfcc"
         },{
           "Count": 1,
-          "FuelCellFile": "GenericFuelCellComponent.vfcc"
+          "FuelCellSystemFile": "GenericFuelCellSystem.vfcc"
         }]
     },
     "InitialSoC": 50,

@@ -13,12 +13,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			public Watt RequestedPower { get; set; }
 			public Watt Power { get; set; }
-
 			public KilogramPerSecond FuelConsumption { get; set; }
-			public bool On { get; set; }
+			public Watt MinEffPower { get; set; }
+			public Second TimeShare { get; set; }
+
+			public double ShareOn { get; set; }
 		}
 
 		private FuelCellData ModelData;
+		private Watt _minEffPower;
 
 		public Watt MaxPower
 		{
@@ -32,13 +35,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public FuelCellData.FuelCellId Id { get; private set; }
 
 
-		public FuelCell(FuelCellData fcData, IVehicleContainer dataBus) : base(null) //provide null here, when registering the component the Id is accessed but is not set in the base constructor
+		public FuelCell(FuelCellData fcData, IVehicleContainer dataBus, FuelCellData.FuelCellId id) : base(null) //provide null here, when registering the component the Id is accessed but is not set in the base constructor
 		{
 			DataBus = dataBus;
 			ModelData = fcData;
-			Id = fcData.Id;
-			CurrentState.On = true;
+			Id = id;
 			dataBus.AddComponent(this);
+			_minEffPower = ModelData.MassFlowMap.MinEffPower;
 		}
 
 		#region Overrides of VectoSimulationComponent
@@ -46,8 +49,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			var power = CurrentState.Power;
-			container[ModalResultField.P_FCS, Id.ToString()] = power;
-			container[ModalResultField.FC_FCS, Id.ToString()] = CurrentState.FuelConsumption;
+			container[ModalResultField.P_FCS, Id.ToString()] = power ?? 0.SI<Watt>();
+			container[ModalResultField.FC_FCS, Id.ToString()] = CurrentState.FuelConsumption ?? 0.SI<KilogramPerSecond>();
+			container[ModalResultField.t_FCS_On, Id.ToString()] = CurrentState.TimeShare;
+
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
@@ -55,24 +60,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AdvanceState();
 		}
 
-		public Watt Request(Watt requestedPower, bool dryRun)
+		public Watt Request(Watt requestedPower, Second dt, bool dryRun, bool allowTimeSlicing)
 		{
-			//Dont know how to handle
-			//if (!requestedPower.IsBetween(MinPower, MaxPower)) {
-			//	throw new VectoException(string.Format("Requested power {0} is outside of fuelcell limits ({1}, {2}",
-			//		requestedPower, MinPower, MaxPower));
-			//}
+			var timeShare = dt;
+			var timeShareFactor = 1.0d;
+            if (allowTimeSlicing) {
+				if (requestedPower.IsSmaller(_minEffPower))
+				{
+					timeShareFactor = (requestedPower / _minEffPower);
+					System.Diagnostics.Debug.Assert(timeShareFactor.IsSmallerOrEqual(1));
+					timeShare = timeShareFactor * timeShare;
+				}
+			}
+
+            var generatedPower = requestedPower; //Handle time slicing
 
 
-
-			var generatedPower =
-				VectoMath.LimitTo(requestedPower, ModelData.MinElectricPower, ModelData.MaxElectricPower);
-			var h2 = ModelData.MassFlowMap.Lookup(generatedPower);
+			var h2 = ModelData.MassFlowMap.Lookup(generatedPower, allowTimeSlicing);
 
             if (!dryRun) {
 				CurrentState.RequestedPower = requestedPower;
 				CurrentState.Power = generatedPower;
 				CurrentState.FuelConsumption = h2;
+				CurrentState.TimeShare = timeShare;
+				CurrentState.ShareOn = timeShareFactor;
 			}
 
 

@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 				fuel: f,
 				fuelCellLine: modData.FuelCellLine,
 				fcReessSoc: corrected.DeltaEReessFuelCell * fcLine,
-				fcMap: modData.TimeIntegral<Kilogram>(ModalResultField.Fc_fuelCellSystem_actual),
+				fcMap: modData.TimeIntegral<Kilogram>(ModalResultField.FC_FCSystem),
 				duration: modData.Duration,
 				distance: modData.Distance
 			);

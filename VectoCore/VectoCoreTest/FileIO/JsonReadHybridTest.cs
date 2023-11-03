@@ -283,19 +283,19 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			// FuelCellSystem
 			var fuelCellSystem = vehicle.Components.FuelCellSystemInputData;
 			Assert.NotNull(fuelCellSystem);
-			Assert.AreEqual(50000.SI<WattPerSecond>(), (fuelCellSystem.GradientPowerChange));
-			Assert.NotNull(fuelCellSystem.FuelCellComponents);
+			
+			Assert.NotNull(fuelCellSystem.FuelCellStrings);
 
-			Assert.AreEqual(2, fuelCellSystem.FuelCellComponents.Count);
-			Assert.AreEqual(2, fuelCellSystem.FuelCellComponents[0].Count);
-			AssertFuelCellComponent(fuelCellSystem.FuelCellComponents[0].FuelCellComponent);
+			Assert.AreEqual(2, fuelCellSystem.FuelCellStrings.Count);
+			Assert.AreEqual(2, fuelCellSystem.FuelCellStrings[0].Count);
+			AssertFuelCellComponent(fuelCellSystem.FuelCellStrings[0].FuelCellComponent);
 
-			Assert.AreEqual(1, fuelCellSystem.FuelCellComponents[1].Count);
-			AssertFuelCellComponent(fuelCellSystem.FuelCellComponents[1].FuelCellComponent);
+			Assert.AreEqual(1, fuelCellSystem.FuelCellStrings[1].Count);
+			AssertFuelCellComponent(fuelCellSystem.FuelCellStrings[1].FuelCellComponent);
         }
 
 		[TestCase]
-		public void ReadFuellCellComponent()
+		public void ReadFuelCellComponent()
 		{
 			var filePath = @"TestData\H2_FCV\GenericVehicleE2 - FCHV\GenericFuelCellComponent.vfcc";
 			var inputDataProvider = JSONInputDataFactory.ReadFuelCellComponentEngineeringInputData(filePath, false) as IFuelCellComponentEngineeringInputData;

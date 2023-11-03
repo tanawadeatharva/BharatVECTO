@@ -818,7 +818,7 @@ lbFound:
 
     Private Sub UpdateNotesToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles UpdateNotesToolStripMenuItem.Click
-        OpenFileExternal("User Manual\Release Notes Vecto 4.pdf")
+        OpenFileExternal("User Manual\Release Notes Vecto DEV.pdf")
     End Sub
 
     Private Sub OpenFileExternal(filename As String)
@@ -1420,20 +1420,28 @@ lbFound:
 
     'Open Job Editor and open file (or new file)
     Friend Sub OpenVECTOeditor(filePathOrType As String, Optional jobType As VectoSimulationJobType = Nothing)
-        Dim jobDataProvider As IInputDataProvider = JSONInputDataFactory.ReadComponentData(filePathOrType)
-        Dim vtpEngineeringJob As IVTPEngineeringInputDataProvider = TryCast(jobDataProvider, IVTPEngineeringInputDataProvider)
-        Dim vtpDeclarationJob As IVTPDeclarationInputDataProvider = TryCast(jobDataProvider, IVTPDeclarationInputDataProvider)
 
-        'Declaration is the base class for EngineeringJobInputData, hence is valid for both Eng. and Decl.
-        If jobType = Nothing Then jobType = TryCast(jobDataProvider, IDeclarationJobInputData).JobType
 
         If filePathOrType = "<New>" Then
+            Try
                 ShowVectoJobForm(jobType)
                 VectoJobForm.VectoNew()
+            Catch ex As VectoException
+                MsgBox(ex.Message,MsgBoxStyle.OkOnly, "Error creating new Vecto job")
+                Exit Sub
+            End Try
         ElseIf filePathOrType = "<VTP>" Then
             ShowVectoEPTPJobForm()
             VectoVTPJobForm.VectoNew()
         Else
+            Dim jobDataProvider As IInputDataProvider = JSONInputDataFactory.ReadComponentData(filePathOrType)
+            Dim vtpEngineeringJob As IVTPEngineeringInputDataProvider = TryCast(jobDataProvider, IVTPEngineeringInputDataProvider)
+            Dim vtpDeclarationJob As IVTPDeclarationInputDataProvider = TryCast(jobDataProvider, IVTPDeclarationInputDataProvider)
+
+            'Declaration is the base class for EngineeringJobInputData, hence is valid for both Eng. and Decl.
+            If jobType = Nothing Then jobType = TryCast(jobDataProvider, IDeclarationJobInputData).JobType
+
+
             Try
                 If vtpEngineeringJob Is Nothing AndAlso vtpDeclarationJob Is Nothing Then
                     ShowVectoJobForm(jobType)

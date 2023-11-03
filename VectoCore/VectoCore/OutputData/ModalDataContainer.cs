@@ -80,7 +80,8 @@ namespace TUGraz.VectoCore.OutputData
 		
 		private KilogramPerWattSecond _fuelCellLine = null;
 
-		public KilogramPerWattSecond FuelCellLine => GetFuelCellCorrectionFactor();
+		public KilogramPerWattSecond FuelCellLine => _fuelCellLine ?? (_fuelCellLine = GetFuelCellCorrectionFactor());
+
 		//public KilogramPerWattSecond FuelCellLine => _fuelCellLine ?? (_fuelCellLine = GetFuelCellCorrectionFactor());
 
 
@@ -198,25 +199,34 @@ namespace TUGraz.VectoCore.OutputData
 		private KilogramPerWattSecond GetFuelCellCorrectionFactor()
 		{
 			var values = GetValues(
-				x => x.Field<SI>(ModalResultField.P_fuelCellSystem_actual.GetName()).IsGreater(0) //FC is on
+				x => x.Field<SI>(ModalResultField.P_FCSystem.GetName()).IsGreater(0) //FC is on
 					? new Point(
-						x.Field<SI>(ModalResultField.P_fuelCellSystem_actual.GetName()).Value(),
-						x.Field<SI>(ModalResultField.Fc_fuelCellSystem_actual.GetName()).Value())
+						x.Field<SI>(ModalResultField.P_FCSystem.GetName()).Value(),
+						x.Field<SI>(ModalResultField.FC_FCSystem.GetName()).Value())
 					: null).Where(x => x != null && x.Y > 0).Distinct().OrderBy(p => p.X).ToList();
 
-			if (_runData.FuelCellSystemData.FuelCells.Count > 1) {
-				throw new NotImplementedException("Multiple fuel cells are not supported");
-			}
+			//if (_runData.FuelCellSystemData.FuelCells.Count > 1) {
+			//	throw new NotImplementedException("Multiple fuel cells are not supported");
+			//}
 
-			var fuelCell = _runData.FuelCellSystemData.FuelCells[0];
+			var fuelCell = _runData.FuelCellSystemData;
 			var mid = (int)Math.Floor((values.Count() / 2.0f));
-			var lowerOperatingPower = VectoMath.Max(0.9 * values[mid].X, fuelCell.MinElectricPower.Value());
+			var lowerOperatingPower = VectoMath.Max(0.9 * values[mid].X, 0);
 			var higherOperatingPower = VectoMath.Min(1.1 * values[mid].X, fuelCell.MaxElectricPower.Value());
-			if (!(values.First().X.IsSmallerOrEqual(lowerOperatingPower) &&
-				values.Last().X.IsGreaterOrEqual(higherOperatingPower))) {
-                //Insert artificial operating points before calculating the fuel cell line
-				var fcLow = fuelCell.MassFlowMap.Lookup(lowerOperatingPower.SI<Watt>());
-				var fcHigh = fuelCell.MassFlowMap.Lookup(higherOperatingPower.SI<Watt>());
+			if (!(values.First().X.IsSmallerOrEqual(lowerOperatingPower) 
+				&& values.Last().X.IsGreaterOrEqual(higherOperatingPower)
+				))
+			{
+				//Insert artificial operating points before calculating the fuel cell line
+				var fcShareLow = fuelCell.FuelCellShareMap.Lookup(lowerOperatingPower.SI<Watt>());
+				var fcLow = fcShareLow.FuelConsumption;
+
+				var fcShareHigh = fuelCell.FuelCellShareMap.Lookup(higherOperatingPower.SI<Watt>());
+				var fcHigh = fcShareHigh.FuelConsumption;
+				
+
+
+
 				values.Add(new Point(lowerOperatingPower, fcLow.Value()));
 				values.Add(new Point(higherOperatingPower, fcHigh.Value()));
 				values = values.OrderBy(x => x.X).ToList();
@@ -225,7 +235,7 @@ namespace TUGraz.VectoCore.OutputData
 			var (k, _) = VectoMath.LeastSquaresFitting(values);
 
 			if (double.IsInfinity(k) || double.IsNaN(k)) {
-				LogManager.GetLogger(typeof(ModalDataContainer).FullName).Warn("could not fuel cell correction line - k: {0}", k);
+				LogManager.GetLogger(typeof(ModalDataContainer).FullName).Warn("could determine not fuel cell correction line - k: {0}", k);
 				k = 0;
 			}
 
@@ -706,9 +716,8 @@ namespace TUGraz.VectoCore.OutputData
 			//Fuel Cell 
 			dataColumns.AddRange(Data.FuelCellColumns);
 			dataColumns.AddRange(new [] {
-				ModalResultField.P_fuelCellSystem_target,
-				ModalResultField.P_fuelCellSystem_actual,
-				ModalResultField.Fc_fuelCellSystem_actual,
+				ModalResultField.P_FCSystem,
+				ModalResultField.FC_FCSystem,
 			}.Select(x => x.GetName()));
 
 
