@@ -281,6 +281,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public bool HasAxlegear => _runData.AxleGearData != null;
 
+		public bool HasBattery => _runData.BatteryData != null;
 
 		public WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos)
 		{
