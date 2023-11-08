@@ -268,9 +268,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 				PrimaryResult = runData.PrimaryResult;
 
-				BatteryEfficiencyDischarge = data.BatteryEfficiencyDischarge();
+				if (data.HasBattery) {
+					BatteryEfficiencyDischarge = data.BatteryEfficiencyDischarge();
 
-
+                }
 			}
 
 		}

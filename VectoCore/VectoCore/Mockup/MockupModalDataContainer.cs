@@ -327,6 +327,8 @@ namespace TUGraz.VectoMockup
 
 		public KilogramPerWattSecond FuelCellLine => throw new NotImplementedException();
 
+		public bool HasBattery => throw new NotImplementedException();
+
 		public void RegisterComponent(VectoSimulationComponent component)
 		{
 			throw new NotImplementedException();
