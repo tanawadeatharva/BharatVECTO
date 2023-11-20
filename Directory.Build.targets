@@ -177,6 +177,7 @@
 			<!-- <VectoXMLExamples Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\*-sample.xml"/> -->
 			<UserManual Include="$(SolutionDir)Documentation\User Manual\help.html"/>
 			<UserManual Include="$(SolutionDir)Documentation\VectoHashingTool\HashingToolHelp.html"/>
+			<UserManual Include="$(SolutionDir)Documentation\MultiStepTool\MultiStepToolHelp.html"/>
 			<!-- <ParameterDocu Include="$(SolutionDir)Documentation\ParameterDocumentation\VectoParameterDocumentation.html"/> -->
 
 			<UserManual Include="$(SolutionDir)Documentation\XML\*.png"/>
