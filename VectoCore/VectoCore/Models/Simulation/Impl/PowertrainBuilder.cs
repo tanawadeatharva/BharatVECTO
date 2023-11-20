@@ -422,8 +422,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
 
-            AddElectricAuxiliaries(data, container, es, null, dcdc);
-            AddHybridBusAuxiliaries(data, container, es);
+            AddHighVoltageAuxiliaries(data, container, es, dcdc);
+			AddHybridBusAuxiliaries(data, container, es);
 
 			return container;
 		}
@@ -713,11 +713,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					throw new VectoException("BusAux data set but no BusAux component found!");
 				}
 			}
-            AddElectricAuxiliaries(data, container, es, cycle, dcdc);
+						
+			AddHighVoltageAuxiliaries(data, container, es, new DCDCConverter(container, data.DCDCData.DCDCEfficiency));
 
-
-            ///TODO: remove
-            data.ElectricAuxDemand = 0.SI<Watt>();
+			///TODO: remove
+			data.ElectricAuxDemand = 0.SI<Watt>();
 
 			return container;
 		}
@@ -770,9 +770,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			SetIdleControllerForHybridP1(data, gearbox, idleController, clutch);
 
-			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
-            AddElectricAuxiliaries(data, container, es, null, dcdc);
-            AddHybridBusAuxiliaries(data, container, es);
+			AddHighVoltageAuxiliaries(data, container, es, new DCDCConverter(container, data.DCDCData.DCDCEfficiency));
+			AddHybridBusAuxiliaries(data, container, es);
 
 			return container;
 		}
@@ -973,15 +972,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
-        /// <summary>
-        /// Adds electric auxilaries and EPTO to the powertrain
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="container"></param>
-        /// <param name="es"></param>
-        /// <param name="cycle">Only for EPTO controller.</param>
-        /// <param name="dcdc"></param>
-        private static void AddElectricAuxiliaries(
+		/// <summary>
+		/// Adds electric auxilaries and EPTO to the powertrain
+		/// </summary>
+		/// <param name="data"></param>
+		/// <param name="container"></param>
+		/// <param name="es"></param>
+		/// <param name="cycle">Only for EPTO controller.</param>
+		/// <param name="dcdc"></param>
+		private static void AddElectricAuxiliaries(
 			VectoRunData data,
 			VehicleContainer container,
 			ElectricSystem es,
@@ -1003,12 +1002,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			elAux.AddAuxiliaries(data.Aux.Where(x => x.ConnectToREESS && x.ID != Constants.Auxiliaries.IDs.Cond));
-			if (data.Aux.Any(aux => aux.ID == Constants.Auxiliaries.IDs.Cond)) {
+			if (data.Aux.Any(aux => aux.ID == Constants.Auxiliaries.IDs.Cond))
+			{
 				elAux.AddAuxiliary(new Conditioning(data.Aux.FirstOrDefault(aux => aux.ID == Constants.Auxiliaries.IDs.Cond),
 					epto));
-            }
+			}
 
-            var hvElectricAuxiliaries = ConfigureHVElectricAuxilariesData(data);
+			var hvElectricAuxiliaries = ConfigureHVElectricAuxilariesData(data);
             elAux.AddAuxiliaries(hvElectricAuxiliaries);
 
             dcdc.Connect(elAux);
@@ -1016,49 +1016,65 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
             es.Connect(dcdc);
         }
 
-        private static IEnumerable<VectoRunData.AuxData> ConfigureHVElectricAuxilariesData(VectoRunData data)
-        {
+		private static void AddHighVoltageAuxiliaries(
+			VectoRunData data,
+			VehicleContainer container,
+			ElectricSystem es,
+			DCDCConverter dcdc)
+		{
+			var elAux = new ElectricAuxiliaries(container);
+
+			var hvElectricAuxiliaries = ConfigureHVElectricAuxilariesData(data);
+			elAux.AddAuxiliaries(hvElectricAuxiliaries);
+
+			dcdc.Connect(elAux);
+			dcdc.Initialize();
+			es.Connect(dcdc);
+		}
+
+		private static IEnumerable<VectoRunData.AuxData> ConfigureHVElectricAuxilariesData(VectoRunData data)
+		{
 			VectoRunData.AuxData additionalPowerData = new VectoRunData.AuxData()
 			{
 				ID = Constants.Auxiliaries.IDs.PowerAdditonalHighVoltage,
-                IsFullyElectric = true,
+				IsFullyElectric = true,
 				ConnectToREESS = true,
 				DemandType = AuxiliaryDemandType.Dynamic,
-                PowerDemandDataBusFunc = (d, m) => d.DrivingCycleInfo.CycleData.LeftSample.PowerAdditonalHighVoltage ?? 0.SI<Watt>()
-            };
+				PowerDemandDataBusFunc = (d, m) => d.DrivingCycleInfo.CycleData.LeftSample.PowerAdditonalHighVoltage ?? 0.SI<Watt>()
+			};
 
-            VectoRunData.AuxData auxElectricPowerData = new VectoRunData.AuxData()
-            {
-                ID = Constants.Auxiliaries.IDs.PowerAuxiliaryElectric,
-                IsFullyElectric = true,
-                ConnectToREESS = true,
-                DemandType = AuxiliaryDemandType.Constant,
-                PowerDemandElectric = data.ElectricAuxDemand ?? 0.SI<Watt>(),
-            };
+			VectoRunData.AuxData auxElectricPowerData = new VectoRunData.AuxData()
+			{
+				ID = Constants.Auxiliaries.IDs.PowerAuxiliaryElectric,
+				IsFullyElectric = true,
+				ConnectToREESS = true,
+				DemandType = AuxiliaryDemandType.Constant,
+				PowerDemandElectric = data.ElectricAuxDemand ?? 0.SI<Watt>(),
+			};
 
-            return new List<VectoRunData.AuxData> { additionalPowerData, auxElectricPowerData };
-        }
+			return new List<VectoRunData.AuxData> { additionalPowerData, auxElectricPowerData };
+		}
 
-        /// <summary>
-        /// Builds a battery electric powertrain for either E4, E3, or E2.
-        /// <code>
-        /// DistanceBasedDrivingCycle
-        /// └Driver
-        ///  └Vehicle
-        ///   └Wheels
-        ///    └Brakes
-        ///     │ └Engine E4
-        ///     └AxleGear
-        ///      │ ├(AxlegearInputRetarder)
-        ///      | └Engine E3
-        ///      ├(Angledrive)
-        ///      ├(TransmissionOutputRetarder)
-        ///      └PEVGearbox or APTNGearbox
-        ///       ├(TransmissionInputRetarder)
-        ///       └Engine E2
-        /// </code>
-        /// </summary>
-        private static IVehicleContainer BuildFullPowertrainBatteryElectric(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
+		/// <summary>
+		/// Builds a battery electric powertrain for either E4, E3, or E2.
+		/// <code>
+		/// DistanceBasedDrivingCycle
+		/// └Driver
+		///  └Vehicle
+		///   └Wheels
+		///    └Brakes
+		///     │ └Engine E4
+		///     └AxleGear
+		///      │ ├(AxlegearInputRetarder)
+		///      | └Engine E3
+		///      ├(Angledrive)
+		///      ├(TransmissionOutputRetarder)
+		///      └PEVGearbox or APTNGearbox
+		///       ├(TransmissionInputRetarder)
+		///       └Engine E2
+		/// </code>
+		/// </summary>
+		private static IVehicleContainer BuildFullPowertrainBatteryElectric(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
 		{
 			if (data.Cycle.CycleType != CycleType.DistanceBased) {
 				throw new VectoException("CycleType must be DistanceBased");
@@ -1864,10 +1880,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			};
 
 			_timerunGearHybridBuilders[position].Invoke(data, container, components);
-
-			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
-
-			AddElectricAuxiliaries(data, container, es, null, dcdc);
+			
+			AddHighVoltageAuxiliaries(data, container, es, new DCDCConverter(container, data.DCDCData.DCDCEfficiency));
 			AddHybridBusAuxiliaries(data, container, es);
 		}
 		
@@ -1999,8 +2013,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(gearbox)
 				.AddComponent(em);
 			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
-
-            AddElectricAuxiliaries(data, container, es, null, dcdc);
+			AddElectricAuxiliaries(data, container, es, null, dcdc);
 		}
 
 		/// <summary>
@@ -2070,10 +2083,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			var es = ConnectREESS(data, container);
 			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
-            AddElectricAuxiliaries(data, container, es, null, dcdc);
+			AddHighVoltageAuxiliaries(data, container, es, dcdc);
 
-            //IMPORTANT HINT: add engine BEFORE gearbox to container that gearbox can obtain if an ICE is available
-            var engine = new StopStartCombustionEngine(container, data.EngineData);
+			//IMPORTANT HINT: add engine BEFORE gearbox to container that gearbox can obtain if an ICE is available
+			var engine = new StopStartCombustionEngine(container, data.EngineData);
 			var gearbox = GetSimpleGearbox(container, data);
 			if (!(gearbox is IHybridControlledGearbox gbx)) {
 				throw new VectoException("Gearbox can not be used for parallel hybrid");
