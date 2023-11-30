@@ -378,7 +378,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			int count, VoltageLevelData voltageLevel, Tuple<uint, double> gearUsedForMeasurement = null)
 		{
 			var ovl1 = CalculateOverloadBufferDirect(voltageEntry, count, voltageLevel, gearUsedForMeasurement);
-			var ovl2 = CalculateOverloadBufferTransf(voltageEntry,count,  voltageLevel, gearUsedForMeasurement);
+			var ovl2 = CalculateOverloadBufferTransf(voltageEntry, count,  voltageLevel, gearUsedForMeasurement);
 
 			if (ovl2.OverloadBuffer.IsGreater(ovl1.OverloadBuffer)) {
 				return ovl2;
@@ -449,7 +449,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
                 var continuousPowerLoss = (1 / etaOvl.Value() - 1) * continuousTorqueSpeed * continuousTorque;
 				var ovlElPwr = voltageLevel.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
-					-overloadTorqueTrans, gear).ElectricalPower;
+					-overloadTorqueTrans, gear, true).ElectricalPower;
 				if (ovlElPwr == null) {
 					throw new VectoException(
 						$"Overloadbuffer calculation: failed to lookup electric power for overload point {overloadTestSpeed.AsRPM} [rpm] {overloadTorqueTrans / count}");
@@ -477,8 +477,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					overloadTestSpeed, -overloadTorque, gear, true).ElectricalPower;
 				var continuousTorque = voltageEntry.ContinuousTorque * count / gearRatioUsedForMeasurement;
                 var continuousPowerLoss = (1 / etaOvl.Value() - 1) * continuousTorqueSpeed * continuousTorque;
+				
 				var ovlElPwr = voltageLevel.LookupElectricPower(voltageEntry.VoltageLevel, overloadTestSpeed,
-					-overloadTorque, gear).ElectricalPower;
+					-overloadTorque, gear, true).ElectricalPower;
 				if (ovlElPwr == null) {
 					throw new VectoException(
 						$"Overloadbuffer calculation: failed to lookup electric power for overload point {overloadTestSpeed.AsRPM} [rpm] {overloadTorque / count}");
