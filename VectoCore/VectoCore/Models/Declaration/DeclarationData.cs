@@ -272,7 +272,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				case VectoSimulationJobType.ParallelHybridVehicle:
 				case VectoSimulationJobType.EngineOnlySimulation:
 				case VectoSimulationJobType.IHPC:
-					return vehicleData.Components?.EngineInputData?.RatedPowerDeclared ?? 0.SI<Watt>() + vehicleData.MaxNetPower1 ?? 0.SI<Watt>();
+					return (vehicleData.Components?.EngineInputData?.RatedPowerDeclared ?? 0.SI<Watt>()) + (vehicleData.MaxNetPower1 ?? 0.SI<Watt>());
 				case VectoSimulationJobType.SerialHybridVehicle:
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
