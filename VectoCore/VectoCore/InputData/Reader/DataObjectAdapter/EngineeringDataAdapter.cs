@@ -1142,6 +1142,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var retVal = new Dictionary<GearshiftPosition, VehicleMaxPropulsionTorque>();
 			var isP3OrP4Hybrid = vehicleInputData.Components.ElectricMachines.Entries.Select(x => x.Position)
 				.Any(x => x == PowertrainPosition.HybridP3 || x == PowertrainPosition.HybridP4);
+			var isAtGearbox = gearboxData.Type.IsOneOf(GearboxType.ATSerial, GearboxType.ATPowerSplit);
 			foreach (var key in engineData.FullLoadCurves.Keys) {
 				if (key == 0) {
 					continue;
@@ -1161,8 +1162,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 							FullDriveTorque = gearboxData.Gears[key].MaxTorque
 						}
 					}.ToList();
-					retVal[new GearshiftPosition(key, true)] = new VehicleMaxPropulsionTorque(gbxLimit);
-					continue;
+					var bKey = isAtGearbox
+						? new GearshiftPosition(key, true)
+						: new GearshiftPosition(key);
+					if (isAtGearbox && gearboxData.Gears[key].HasTorqueConverter) {
+						retVal[new GearshiftPosition(key, false)] = new VehicleMaxPropulsionTorque(gbxLimit);
+                    }
+					retVal[bKey] = new VehicleMaxPropulsionTorque(gbxLimit);
+                    continue;
 				} 
 
 				// case boosting limit is defined, gearbox limit can be defined or not (handled in Intersect method)
@@ -1193,9 +1200,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				// if no gearbox limit is defined, MaxTorque is null;
 				// in case of P3 or P4, do not apply gearbox limit to propulsion limit as ICE is already cropped with max torque
 				var gearboxTorqueLimit = isP3OrP4Hybrid ? null : gearboxData.Gears[key].MaxTorque;
-				retVal[new GearshiftPosition(key, true)] = new VehicleMaxPropulsionTorque(IntersectMaxPropulsionTorqueCurve(entries, gearboxTorqueLimit));
+				var dKey = isAtGearbox
+					? new GearshiftPosition(key, true)
+					: new GearshiftPosition(key);
+				if (isAtGearbox && gearboxData.Gears[key].HasTorqueConverter) {
+					retVal[new GearshiftPosition(key, false)] =
+						new VehicleMaxPropulsionTorque(IntersectMaxPropulsionTorqueCurve(entries, gearboxTorqueLimit));
+				}
+                retVal[dKey] = new VehicleMaxPropulsionTorque(IntersectMaxPropulsionTorqueCurve(entries, gearboxTorqueLimit));
 
-			}
+            }
 
 			return retVal;
 		}
