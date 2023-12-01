@@ -172,12 +172,10 @@ public class FuelCellPreRunPostprocessingT
 	[TestCase(0.1, 0.9, 0.5, 0.5, 1.5)]
 
 	[TestCase(0.1, 0.9, 0.9, 0.7, 1.5)]
-    
-    public void ShiftInitSoc(
-		double batMinSoc,
-		double batMaxSoc,
-		double initSoc,
+	[TestCase(0.1, 0.9, 0.5, 0.32, 0.55)]
 
+    public void ShiftInitSoc(double batMinSoc, double batMaxSoc,
+		double initSoc,
 		double minTraceSoc,
 		double maxTraceSoc)
 	{
@@ -284,65 +282,6 @@ public class FuelCellPreRunPostprocessingT
 	}
 
 
-
-
-
-
-	//[TestCase(0)]
-	[TestCase(1, true)]
-	[TestCase(1, false)]
-	[Ignore("CalculateFuelCellPowerDemand is obsolete")]
-    public void FuelCellPostProcessing_DistanceWindow__SoCRange(int cycleIdx, bool tryShift)
-	{
-		string jobFile = "TestData/H2_FCV/PostProcessing/FCHV_singleFc.vecto";
-
-		var (modData, rundata) = RunFCHV_PEV_Simulation(jobFile, cycleIdx);
-
-		var fcPostProcessor = new FuelCellPreRunPostprocessor(modData);
-		var fcData = new FuelCellSystemData()
-		{
-			FuelCellStrings = new List<FuelCellStringData>() {
-				new FuelCellStringData(new FuelCellData() {
-					MinElectricPower = 60.SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
-					MaxElectricPower = 300.SI(Unit.SI.Kilo.Watt).Cast<Watt>()
-                }, 1)
-			}
-		};
-
-		rundata.BatteryData.SetUsableCapacity(10.SI(Unit.SI.Kilo.Watt.Hour).Cast<WattSecond>());
-		var tmpSystem = new BatterySystem(null, rundata.BatteryData);
-		var minSoc = tmpSystem.MinSoC;
-		var maxSoc = tmpSystem.MaxSoC;
-
-		for (Meter d = modData.Distance; d > 2.SI<Meter>(); d /= 2)
-		{
-
-			var success = fcPostProcessor.CalculateFuelCellPowerDemandForSoC(d, fcData, rundata.BatteryData, out var entries, rundata.BatteryData.InitialSoC, out var minTrace, out var maxTrace);
-
-			var range = maxTrace - minTrace;
-			TestContext.Progress.WriteLine($"s:{d}, soc_range:{range}, $[{minTrace}|{maxTrace}], {(success ? "success" : "")}");
-
-			if (!success && tryShift)
-			{
-				if (fcPostProcessor.TryShiftInitialSoC(minSoc, maxSoc, rundata.BatteryData.InitialSoC, minTrace, maxTrace, out var init_soc))
-				{
-					TestContext.Progress.WriteLine($"\t Shifted soc {init_soc}");
-					success = fcPostProcessor.CalculateFuelCellPowerDemandForSoC(d, fcData, rundata.BatteryData, out entries, init_soc, out minTrace, out maxTrace);
-					range = maxTrace - minTrace;
-
-					TestContext.Progress.WriteLine($"\t s:{d}, soc_range:{range}, $[{minTrace}|{maxTrace}], {(success ? "success" : "")}");
-				}
-			}
-
-			if (success)
-			{
-				Assert.Pass();
-				break;
-			}
-		}
-		Assert.Fail();
-
-	}
 
 
 	[TestCase(0, 10)]
