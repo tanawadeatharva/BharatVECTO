@@ -614,9 +614,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					var gbxOutTqV = dryRunResponse.Gearbox.OutputTorque - emTq;
 
 					var prevGbxSpeed = GetPrevGbxSpeed();
-					var gbxLoss = ModelData.GearboxData.Gears[gear.Gear].LossMap
+					var lossMap = gear.TorqueConverterLocked.HasValue && !gear.TorqueConverterLocked.Value
+						? ModelData.GearboxData.Gears[gear.Gear].TorqueConverterGearLossMap
+						: ModelData.GearboxData.Gears[gear.Gear].LossMap;
+					var gbxLoss = lossMap
 						.GetTorqueLoss((dryRunResponse.Gearbox.OutputSpeed + prevGbxSpeed) / 2.0, gbxOutTqV);
-					gbxInTq = gbxOutTqV / ModelData.GearboxData.Gears[gear.Gear].Ratio + gbxLoss.Value;
+					var ratio = gear.TorqueConverterLocked.HasValue && !gear.TorqueConverterLocked.Value
+						? ModelData.GearboxData.Gears[gear.Gear].TorqueConverterRatio
+						: ModelData.GearboxData.Gears[gear.Gear].Ratio;
+                        gbxInTq = gbxOutTqV / ratio + gbxLoss.Value;
 					break;
 				}
 				case PowertrainPosition.HybridP4 when dryRunResponse.Gearbox.Gear.Gear != 0: {
@@ -638,9 +644,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					}
 					var gear = dryRunResponse.Gearbox.Gear;
 					var prevGbxSpeed = GetPrevGbxSpeed();
-					var gbxLoss = ModelData.GearboxData.Gears[gear.Gear].LossMap
+					var lossMap = gear.TorqueConverterLocked.HasValue && !gear.TorqueConverterLocked.Value
+						? ModelData.GearboxData.Gears[gear.Gear].TorqueConverterGearLossMap
+						: ModelData.GearboxData.Gears[gear.Gear].LossMap;
+					var gbxLoss = lossMap
 						.GetTorqueLoss((dryRunResponse.Gearbox.OutputSpeed + prevGbxSpeed) / 2.0, gbxInTorque);
-					gbxInTq = gbxInTorque / ModelData.GearboxData.Gears[gear.Gear].Ratio + gbxLoss.Value;
+					var ratio = gear.TorqueConverterLocked.HasValue && !gear.TorqueConverterLocked.Value
+						? ModelData.GearboxData.Gears[gear.Gear].TorqueConverterRatio
+						: ModelData.GearboxData.Gears[gear.Gear].Ratio;
+					gbxInTq = gbxInTorque / ratio + gbxLoss.Value;
 					break;
 				}
 			}
