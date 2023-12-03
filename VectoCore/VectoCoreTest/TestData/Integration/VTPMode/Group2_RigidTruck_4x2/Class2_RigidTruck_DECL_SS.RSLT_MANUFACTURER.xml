@@ -600,7 +600,7 @@
         <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
       </di:Transforms>
       <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-      <di:DigestValue>coaZ5w/8XcMv86HBmfD97l4Ph7UafU8oAkFORvNyncs=</di:DigestValue>
+      <di:DigestValue>dJDrxmpwMWdtoxTif1dHqfDE/5aThxeSbryyUsbJbys=</di:DigestValue>
     </di:Reference>
   </Signature>
 </VectoOutput>
