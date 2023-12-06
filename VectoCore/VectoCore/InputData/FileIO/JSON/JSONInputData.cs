@@ -783,7 +783,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			bool xmlVersionNewer = VersioningUtil.CompareVersions(simToolVersionStr, vectoVersionStr) > 0;
 			
 			if (xmlVersionNewer) {
-				throw new VectoException($"Not allowed to run simulation because VECTO version is older than <SimulationToolVersion> in Manufacturer Report ({simToolVersionStr}).");
+				throw new VectoException($"Not allowed to run simulation because VECTO version ({vectoVersionStr}) is older than <SimulationToolVersion> in Manufacturer Report ({simToolVersionStr}).");
 			}
 		}
 
@@ -794,9 +794,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			
 			var signatureNode = xmlDoc.SelectSingleNode("//*[local-name()='Signature']");
 			var signatureDigest = new DigestData(signatureNode);
-
-			var parent = signatureNode.ParentNode;
-			parent.RemoveChild(signatureNode);
 
 			var hash = XMLHashProvider.ComputeHash(xmlDoc, signatureDigest.Reference.Remove(0, 1), signatureDigest.CanonicalizationMethods,
 				signatureDigest.DigestMethod);
