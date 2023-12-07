@@ -115,7 +115,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             AngledriveData = DataAdapter.CreateAngledriveData(vehicle.Components.AngledriveInputData);
 
             GearboxData = DataAdapter.CreateGearboxData(
-                vehicle, new VectoRunData() { EngineData = EngineData, AxleGearData = AxlegearData, VehicleData = tempVehicle },
+                vehicle, new VectoRunData() { EngineData = EngineData, AxleGearData = AxlegearData, VehicleData = tempVehicle,
+                Cycle = VTPCycle },
                 null);
             RetarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData, vehicle.ArchitectureID, vehicle.Components.IEPC);
 
@@ -187,18 +188,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                 throw InitException;
             }
 
-            // simulate the Measured cycle
-            var vtpCycle = JobInputData.Cycles.FirstOrDefault();
-            if (vtpCycle == null)
-            {
-                throw new VectoException("no VTP-Cycle provided!");
-            }
-
-            var drivingCycle = DrivingCycleDataReader.ReadFromDataTable(vtpCycle.CycleData, vtpCycle.Name, false);
-
             // Loading is not relevant as we use P_wheel
             var vtpRunData = CreateVectoRunData(Segment, Segment.Missions.First(), Tuple.Create<Kilogram, double?>(0.SI<Kilogram>(), null));
-            vtpRunData.Cycle = new DrivingCycleProxy(drivingCycle, vtpCycle.Name);
+            vtpRunData.Cycle = VTPCycle;
             vtpRunData.Aux = AuxVTP;
             vtpRunData.FanDataVTP = GetFanData();
             vtpRunData.ExecutionMode = ExecutionMode.Declaration;

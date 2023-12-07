@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData/Jobs/VTPModeWithDistanceCycle.vecto");
 			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, null);
 
-			AssertHelper.Exception<VectoException>(() => factory.SimulationRuns().ToArray(), "Distance-based cycle can not be simulated in VerificationTest mode");
+			AssertHelper.Exception<VectoException>(() => factory.SimulationRuns().ToArray(), "first cycle is not a VTP cycle!");
 		}
 
 		[Category("LongRunning")]

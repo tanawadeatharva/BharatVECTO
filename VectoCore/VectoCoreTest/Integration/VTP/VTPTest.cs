@@ -94,6 +94,7 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 		private const string DUAL_FUEL_JOB = @"TestData\Integration\VTPMode\DualFuelVehicle\VTP_DualFuel.vecto";
 		private const string TORQUE_DRIFT_JOB = @"TestData\Integration\VTPMode\Group2_RigidTruck_4x2\Class2_RigidTruck_VTP_TorqueDrift.vecto";
 		private const string ARCHIVE_BUILDER_JOB = @"TestData\Integration\VTPMode\JobArchiveBuilder\VTP_MediumLorry.vecto";
+		private const string MRF_v09_JOB = @"TestData\Integration\VTPMode\MRF_v0.9\VTP_DualFuel.vecto";
 
 		[Category("LongRunning")]
 		[Category("Integration")]
@@ -107,6 +108,7 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			TestCase(PEL_FAN_JOB, 45.6, 0.8968, TestName = "VTP Fan Electrical Power"),
 			TestCase(POLLUTANTS_JOB, 188, 1.0082, TestName = "VTP Pollutants"),
 			TestCase(DUAL_FUEL_JOB, 43.5, 1.0148, TestName = "VTP Dual Fuel"),
+			TestCase(MRF_v09_JOB, 42.4, 1.0148, TestName = "VTP MRF v09"),
 			TestCase(TORQUE_DRIFT_JOB, 188, 1.0082, TestName = "VTP Torque Drift")
 		]
 		public void RunVTP_Declaration(string jobFile, double expectedDeclaredCO2, double expectedCVTP)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ninject.Activation.Caching;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -72,7 +73,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 		protected virtual void CreateATGearData(GearboxType gearboxType, uint i, GearData gearData,
 			ShiftPolygon tcShiftPolygon, double gearDifferenceRatio, Dictionary<uint, GearData> gears,
-			VehicleCategory vehicleCategory)
+			VehicleCategory vehicleCategory, IDrivingCycleData cycle)
 		{
 			if (gearboxType == GearboxType.ATPowerSplit && i == 0)
 			{
@@ -87,22 +88,28 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					// torqueconverter is active in first gear - duplicate ratio and lossmap for torque converter mode
 					CreateTCFirstGearATSerial(gearData, tcShiftPolygon);
 				}
-
-				if (i == 1 && gearDifferenceRatio >=
-					DeclarationData.Gearbox.TorqueConverterSecondGearThreshold(vehicleCategory))
-				{
+				if (i == 1) {
+					if ((cycle != null) && ((cycle.CycleType == CycleType.MeasuredSpeedGear) || (cycle.CycleType == CycleType.VTP))) {
+						CreateTCSecondGearATSerial(gearData, tcShiftPolygon);
+					}
+					else if (gearDifferenceRatio >= DeclarationData.Gearbox.TorqueConverterSecondGearThreshold(vehicleCategory)) {
 					// ratio between first and second gear is above threshold, torqueconverter is active in second gear as well
 					// -> duplicate ratio and lossmap for torque converter mode, remove locked transmission for previous gear
-					CreateTCSecondGearATSerial(gearData, tcShiftPolygon);
+						CreateTCSecondGearATSerial(gearData, tcShiftPolygon);
 
-					// NOTE: the lower gear in 'gears' dictionary has index i !!
-					gears[i].Ratio = double.NaN;
-					gears[i].LossMap = null;
+						// NOTE: the lower gear in 'gears' dictionary has index i !!
+						gears[i].Ratio = double.NaN;
+						gears[i].LossMap = null;
+					}
+				}
+				else {
+					if ((cycle != null) && ((cycle.CycleType == CycleType.MeasuredSpeedGear) || (cycle.CycleType == CycleType.VTP))) {
+						CreateTCSecondGearATSerial(gearData, tcShiftPolygon);
+					}
 				}
 			}
-		}
-
-		protected virtual TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i,
+        }
+        protected virtual TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i,
 			bool useEfficiencyFallback, VehicleCategory vehicleCategory, GearboxType gearboxType)
 		{
 			if (gear.LossMap != null)
@@ -377,9 +384,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					Ratio = gear.Ratio,
 					LossMap = lossMap,
 				};
-
+				
 				CreateATGearData(retVal.Type, i, gearData, tcShiftPolygon, gearDifferenceRatio, gears,
-					runData.VehicleData.VehicleCategory);
+					runData.VehicleData.VehicleCategory, runData.Cycle);
 				gears.Add(i + 1, gearData);
 			}
 

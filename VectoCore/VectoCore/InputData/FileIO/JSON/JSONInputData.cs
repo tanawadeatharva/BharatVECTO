@@ -615,7 +615,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IVehicleDeclarationInputData Vehicle =>
 			_inputReader.CreateDeclaration(
-				Path.Combine(Path.GetFullPath(BasePath), Body["DeclarationVehicle"].Value<string>())).JobInputData.Vehicle;
+				Path.Combine(Path.GetFullPath(BasePath), Body["DeclarationVehicle"].Value<string>()), true).JobInputData.Vehicle;
 
 		public IVectoHash VectoJobHash { get; }
 
@@ -861,7 +861,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 													?.InnerText
 													.ToDouble().SI(Unit.SI.Mega.Joule.Per.Kilo.Meter).Cast<JoulePerMeter>()))
 											.ToDictionary(x => x.Key, x => x.Value),
-					CO2 = node.SelectNodes("./*[local-name()='CO2' and @unit]").Cast<XmlNode>().Select(
+					CO2 = node.SelectNodes(".//*[local-name()='CO2' and @unit]").Cast<XmlNode>().Select(
 								x => new KeyValuePair<string, double>(x.Attributes.GetNamedItem("unit").InnerText, x.InnerText.ToDouble()))
 							.ToDictionary(x => x.Key, x => x.Value)
 

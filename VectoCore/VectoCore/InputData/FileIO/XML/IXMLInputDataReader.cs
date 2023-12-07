@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 
 		IEngineeringInputDataProvider CreateEngineering(XmlReader inputData);
 
-		IDeclarationInputDataProvider CreateDeclaration(string filename);
+		IDeclarationInputDataProvider CreateDeclaration(string filename, bool allowDeprecated = false);
 
 		IDeclarationInputDataProvider CreateDeclaration(XmlReader inputData);
 	}
