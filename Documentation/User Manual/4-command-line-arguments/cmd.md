@@ -25,13 +25,16 @@ The VECTO 4.x commandline tool can be used to start simulations from the command
 - PREVIOUS_STEP.xml: Previous manufacturing step VIF.
 - CURRENT_STEP.xml: Current interim or completed manufacturing step VIF.
 - OUTPUT.xml: Output path for the new VIF.
-- -ams: Append manufacturing step.
-- -t: output information about execution times.
-- -mod: write mod-data in addition to sum-data.
-- -eng: switch to engineering mode (implies -mod).
+- -ams: Append manufacturing step
+- -eng: Switch to engineering mode (implies -mod).
+- -mod: Write mod-data in addition to sum-data.
+- -1Hz: Convert mod-data to 1Hz resolution.
+- -nv: Skip validation of internal data structure before simulation.
+- -t: Output information about execution times.
 - -v: Shows verbose information (errors and warnings will be displayed).
-- -vv: Shows more verbose information (infos will be displayed).
+- -vv: Shows more verbose information (info will be displayed).
 - -vvv: Shows debug messages (slow!).
 - -vvvv: Shows all verbose information (everything, slow!).
-- -V: show version information.
+- -q: Disables console output unless verbose information is enabled.
+- -V: Show version information.
 - -h: Displays this help.
