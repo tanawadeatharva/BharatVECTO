@@ -17,6 +17,7 @@ Changelog:
     11.04.2023: Bugfix IEPC standard values: allow only one drag curve, remove gear attribute
 	03.10.2023: Changes SuperCap Data: InternalResistance: allow 0.00
     22.11.2023: Update annotation on EM torque limits
+	11.12.2022: change restrictions of EM continuous torque - allow 0.00
 -->
 	<xs:complexType name="AbstractADCDataDeclarationType" abstract="true">
 		<xs:complexContent>
@@ -898,10 +899,15 @@ Changelog:
 							<xs:documentation>P467 - [V]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ContinuousTorque" type="v2.3:MaxTorqueType">
+					<xs:element name="ContinuousTorque">
 						<xs:annotation>
 							<xs:documentation>P459 - [Nm]</xs:documentation>
 						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double2">
+								<xs:minInclusive value="0.00"/>
+							</xs:restriction>
+						</xs:simpleType>
 					</xs:element>
 					<xs:element name="TestSpeedContinuousTorque" type="v2.3:TestSpeedType">
 						<xs:annotation>
@@ -944,10 +950,15 @@ Changelog:
 							<xs:documentation>P459 - [Nm]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="TestSpeedContinuousTorque" type="v2.3:TestSpeedType">
+					<xs:element name="TestSpeedContinuousTorque">
 						<xs:annotation>
 							<xs:documentation>P460 - [1/min]</xs:documentation>
 						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double2">
+								<xs:minInclusive value="0.00"/>
+							</xs:restriction>
+						</xs:simpleType>
 					</xs:element>
 					<xs:element name="OverloadTorque" type="v2.3:MaxTorqueType">
 						<xs:annotation>
