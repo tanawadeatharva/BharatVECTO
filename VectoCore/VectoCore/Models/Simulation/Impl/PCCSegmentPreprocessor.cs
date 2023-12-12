@@ -34,7 +34,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var preProcessor = new PCCEcoRollEngineStopPreprocessor(Container, slopes, PCCDriverData.MinSpeed, maxSpeed);
 			preProcessor.RunPreprocessing();
 
-			DebugWriteLine($"Slopes:\n{slopes.Select(p => $"{p.Key.AsKmph:F}\t{p.Value.ToInclinationPercent():P}").Join("\n")}");
+			//DebugWriteLine($"Slopes:\n{slopes.Select(p => $"{p.Key.AsKmph:F}\t{p.Value.ToInclinationPercent():P}").Join("\n")}");
 
 			var runData = Container.RunData;
 
