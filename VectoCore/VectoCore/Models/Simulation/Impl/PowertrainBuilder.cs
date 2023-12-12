@@ -572,6 +572,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var engine = new StopStartCombustionEngine(container, data.EngineData);
 			var idleController = GetIdleController(data.PTO, engine, container);
 			cycle.IdleController = idleController as IdleControllerSwitcher;
+
+			var gearbox = GetGearbox(container);
+
 			cycle.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
@@ -579,11 +582,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
-				.AddComponent(GetGearbox(container))
+				.AddComponent(gearbox)
 				.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
 				.AddComponent(data.GearboxData.Type.ManualTransmission() ? new Clutch(container, data.EngineData) : null)
 				.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
+
+			if (gearbox is ATGearbox atGbx) {
+				atGbx.IdleController = idleController;
+			}
+
 			return container;
 		}
 
@@ -1842,16 +1850,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var engine = new StopStartCombustionEngine(container, data.EngineData);
+			var gearbox = GetSimpleGearbox(container, data);
+			var idleController = GetIdleController(data.PTO, engine, container);
+
 			vehicle.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
-				.AddComponent(GetSimpleGearbox(container, data))
+				.AddComponent(gearbox)
 				.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
 				.AddComponent(data.GearboxData.Type.ManualTransmission() ? new Clutch(container, data.EngineData) : null)
-				.AddComponent(engine, GetIdleController(data.PTO, engine, container))
+				.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
+
+			if (gearbox is ATGearbox atGbx) {
+				atGbx.IdleController = idleController;
+			}
 		}
 
 		public static void BuildSimpleHybridPowertrainGear(VectoRunData data, VehicleContainer container)
