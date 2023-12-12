@@ -67,8 +67,8 @@
 							<Heating>not applicable</Heating>
 						</HeatPumpTypeDriverCompartment>
 						<HeatPumpTypePassengerCompartment>
-							<Cooling>non R-744 2-stage</Cooling>
-							<Heating>non R-744 2-stage</Heating>
+							<Cooling>non R-744 continuous</Cooling>
+							<Heating>non R-744 continuous</Heating>
 						</HeatPumpTypePassengerCompartment>
 						<AuxiliaryHeaterPower>15000</AuxiliaryHeaterPower>
 						<DoubleGlazing>true</DoubleGlazing>
