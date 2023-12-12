@@ -945,19 +945,22 @@ Changelog:
 		<xs:complexContent>
 			<xs:extension base="v2.3:AbstractElectricMachineSystemVoltageLevelType">
 				<xs:sequence>
-					<xs:element name="ContinuousTorque" type="v2.3:MaxTorqueType">
+					<xs:element name="ContinuousTorque">
 						<xs:annotation>
 							<xs:documentation>P459 - [Nm]</xs:documentation>
 						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double2">
+								<xs:minInclusive value="0.00"/>
+							</xs:restriction>
+						</xs:simpleType>
 					</xs:element>
 					<xs:element name="TestSpeedContinuousTorque">
 						<xs:annotation>
 							<xs:documentation>P460 - [1/min]</xs:documentation>
 						</xs:annotation>
 						<xs:simpleType>
-							<xs:restriction base="v1.0:Double2">
-								<xs:minInclusive value="0.00"/>
-							</xs:restriction>
+							<xs:restriction base="v2.3:TestSpeedType"/>
 						</xs:simpleType>
 					</xs:element>
 					<xs:element name="OverloadTorque" type="v2.3:MaxTorqueType">
