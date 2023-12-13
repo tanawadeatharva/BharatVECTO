@@ -715,6 +715,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					PrimaryVehicle.BoostingLimitations,
 					rd.GearboxData,
 					rd.EngineData,
+					rd.ElectricMachinesData,
 					PrimaryVehicle.ArchitectureID
 				);
                 SetOvcModeProperties(ovcHevMode, rd);
@@ -775,6 +776,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					PrimaryVehicle.BoostingLimitations,
 					rd.GearboxData,
 					rd.EngineData,
+					rd.ElectricMachinesData,
 					PrimaryVehicle.ArchitectureID
 					);
                 SetOvcModeProperties(ovcMode, rd);

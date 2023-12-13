@@ -123,7 +123,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				MissionType missionType,
 				TableData boostingLimitations, 
 				GearboxData gearboxData, 
-				CombustionEngineData engineData, 
+				CombustionEngineData engineData,
+				IList<Tuple<PowertrainPosition, ElectricMotorData>> emData,
 				ArchitectureID archId)
 			{
 				return HybridStrategyDataAdapter.CreateHybridStrategyParameters(
@@ -132,7 +133,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 					ovcMode: ovcMode,
 					loading: loading,
 					vehicleClass: vehicleClass,
-					missionType: missionType, archId, engineData, gearboxData, boostingLimitations);
+					missionType: missionType, archID: archId, engineData: engineData, emData, gearboxData: gearboxData, boostingLimitations: boostingLimitations);
 			}
 
 
