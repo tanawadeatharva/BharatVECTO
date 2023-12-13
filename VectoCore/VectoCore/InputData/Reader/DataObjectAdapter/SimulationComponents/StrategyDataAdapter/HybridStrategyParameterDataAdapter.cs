@@ -35,6 +35,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var isP3OrP4Hybrid = archId.IsOneOf(ArchitectureID.P3, ArchitectureID.P4);
 			var isAtGearbox = gearboxData.Type.IsOneOf(GearboxType.ATSerial, GearboxType.ATPowerSplit);
 			var em = isP3OrP4Hybrid ? null : emData.First(x => x.Item1 != PowertrainPosition.GEN).Item2;
+			var ratioAdc = em?.RatioADC ?? 1.0;
+
             foreach (var key in engineData.FullLoadCurves.Keys)
             {
                 if (key == 0)
@@ -62,13 +64,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					gbxLimit.Add(new VehicleMaxPropulsionTorque.FullLoadEntry() {
 						MotorSpeed = 0.RPMtoRad(),
 						FullDriveTorque = VectoMath.Min(gearboxData.Gears[key].MaxTorque,
-							(em?.EfficiencyData.VoltageLevels.Last().FullLoadDriveTorque(0.RPMtoRad()) ?? 0.SI<NewtonMeter>()))
+							(em?.EfficiencyData.VoltageLevels.Last().FullLoadDriveTorque(0.RPMtoRad()) ?? 0.SI<NewtonMeter>() * ratioAdc))
 					});
                     foreach (var iceEntry in engineData.FullLoadCurves[0].FullLoadEntries) {
 						gbxLimit.Add(new VehicleMaxPropulsionTorque.FullLoadEntry() {
 							MotorSpeed = iceEntry.EngineSpeed,
 							FullDriveTorque = VectoMath.Min(gearboxData.Gears[key].MaxTorque, 
-								iceEntry.TorqueFullLoad + (em?.EfficiencyData.VoltageLevels.Last().FullLoadDriveTorque(iceEntry.EngineSpeed) ?? 0.SI<NewtonMeter>()))
+								iceEntry.TorqueFullLoad + (em?.EfficiencyData.VoltageLevels.Last().FullLoadDriveTorque(
+									iceEntry.EngineSpeed * ratioAdc) * ratioAdc ?? 0.SI<NewtonMeter>()))
 						});
 					}
 					var bKey = isAtGearbox
