@@ -425,7 +425,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 				if (CertificationMethod == CertificationMethod.StandardValues) {
 					var estCellCnt = MaxVoltage / DeclarationData.SuperCapReferenceVoltage;
-					value = value / estCellCnt * DeclarationData.SuperCapInternalResistanceStdValuesCorrection; 
+					value = value / estCellCnt * DeclarationData.SuperCapInternalResistanceStdValuesCorrection;
+					if (value < DeclarationData.SuperCapMinInternalResistance) {
+						value = DeclarationData.SuperCapMinInternalResistance;
+					}
 				}
 				return value;
 			}
