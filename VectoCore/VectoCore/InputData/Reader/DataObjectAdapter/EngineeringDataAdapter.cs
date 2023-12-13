@@ -1142,7 +1142,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var retVal = new Dictionary<GearshiftPosition, VehicleMaxPropulsionTorque>();
 			var isP3OrP4Hybrid = vehicleInputData.Components.ElectricMachines.Entries.Select(x => x.Position)
 				.Any(x => x == PowertrainPosition.HybridP3 || x == PowertrainPosition.HybridP4);
-			var isAtGearbox = gearboxData.Type.IsOneOf(GearboxType.ATSerial, GearboxType.ATPowerSplit);
+			var isAtGearbox = gearboxData?.Type.IsOneOf(GearboxType.ATSerial, GearboxType.ATPowerSplit) ?? false;
 			foreach (var key in engineData.FullLoadCurves.Keys) {
 				if (key == 0) {
 					continue;
