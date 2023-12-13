@@ -133,8 +133,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public const double OverloadRecoveryFactor = 0.9;
 
 		public static readonly Ohm SuperCapMinInternalResistance = 5.SI(Unit.SI.Milli.Ohm).Cast<Ohm>();
+		public static readonly Volt SuperCapReferenceVoltage = 2.7.SI<Volt>();
+		public const double SuperCapInternalResistanceStdValuesCorrection = 0.25;
 
-		public const double ElectricMachineDefaultEfficiencyFallback = 0.98;
+        public const double ElectricMachineDefaultEfficiencyFallback = 0.98;
 
 		public static readonly Watt MinDepotChgPwr = 10.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
 		public static readonly Second DepotChargingDuration = 6.SI(Unit.SI.Hour).Cast<Second>();
@@ -821,7 +823,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly KilogramSquareMeter TorqueConverterInertia = 1.2.SI<KilogramSquareMeter>();
 
 			public static readonly KilogramSquareMeter EngineBaseInertia = 0.41.SI<KilogramSquareMeter>();
-			public static readonly SI EngineDisplacementInertia = (0.27 * 1000).SI(Unit.SI.Kilo.Gramm.Per.Meter); // [kg/m]
+			public static readonly KilogramPerMeter EngineDisplacementInertia = (0.27 * 1000).SI<KilogramPerMeter>(); // [kg/m]
 			public static readonly Second DefaultEngineStartTime = 1.SI<Second>();
 
 			public const double TorqueLimitGearboxFactor = 0.9;
