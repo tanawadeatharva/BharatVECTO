@@ -127,16 +127,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			double averageRRC = 0;
 			var result = new List<XElement>();
 			int axleCount = 0;
-			
+			int wheelsCount = 0;
 			foreach (var axle in axleWheels.AxlesDeclaration) {
-				averageRRC += axle.Tyre.RollResistanceCoefficient;
+				var nbrWheels = axle.TwinTyres ? 4 : 2;
+				wheelsCount += nbrWheels;
+				averageRRC += axle.Tyre.RollResistanceCoefficient * nbrWheels;
 				result.Add(new XElement(_cif + XMLNames.AxleWheels_Axles_Axle, 
 					new XAttribute(XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr, ++axleCount),
 					new XElement(_cif + XMLNames.Report_Tyre_TyreDimension, axle.Tyre.Dimension),
 					new XElement(_cif + "FuelEfficiencyClass", axle.Tyre.FuelEfficiencyClass),
 					new XElement(_cif + XMLNames.Report_Tyre_TyreCertificationNumber, axle.Tyre.CertificationNumber)));
 			}
-			averageRRC /= axleWheels.AxlesDeclaration.Count;
+			averageRRC /= wheelsCount;
 			result.Insert(0, new XElement(_cif + "AverageRRC", averageRRC.ToXMLFormat(4)));
 
 
