@@ -829,8 +829,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const double TorqueLimitGearboxFactor = 0.9;
 			public const double TorqueLimitVehicleFactor = 0.95;
 
-			public static readonly SI SmallEnginesBound = (3.2 / 1000).SI<CubicMeter>();
-			public static readonly SI MidEnginesBound = (5.0 / 1000).SI<CubicMeter>();
+			public static readonly SI SmallEnginesBound = 3.2.SI<Liter>().Cast<CubicMeter>();
+			public static readonly SI MidEnginesBound = 5.SI<Liter>().Cast<CubicMeter>();
 
 			public static readonly KilogramSquareMeter ManualBaseInertia = 1.885.SI<KilogramSquareMeter>();
 			public static readonly KilogramSquareMeter ATBaseInertia = 1.707.SI<KilogramSquareMeter>();
