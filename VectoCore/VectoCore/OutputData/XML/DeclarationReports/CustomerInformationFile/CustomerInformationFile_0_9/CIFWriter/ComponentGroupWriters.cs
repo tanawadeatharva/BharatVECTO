@@ -180,7 +180,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			IList<IElectricMotorVoltageLevel> voltageLevels = null;
 			var vehicle = GetVehicle(inputData);
 			if (vehicle.ArchitectureID == ArchitectureID.S_IEPC || vehicle.ArchitectureID == ArchitectureID.E_IEPC) {
-				totalRatedPropulsionPower = vehicle.Components.IEPC.R85RatedPower;
+				var count = vehicle.Components.IEPC.DesignTypeWheelMotor &&
+							vehicle.Components.IEPC.NrOfDesignTypeWheelMotorMeasured == 1
+					? 2
+					: 1;
+				totalRatedPropulsionPower = vehicle.Components.IEPC.R85RatedPower * count;
 				voltageLevels = vehicle.Components.IEPC.VoltageLevels.ToList();
 
 			} else {
