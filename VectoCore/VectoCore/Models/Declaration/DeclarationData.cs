@@ -823,7 +823,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly KilogramSquareMeter TorqueConverterInertia = 1.2.SI<KilogramSquareMeter>();
 
 			public static readonly KilogramSquareMeter EngineBaseInertia = 0.41.SI<KilogramSquareMeter>();
-			public static readonly KilogramPerMeter EngineDisplacementInertia = (0.27 * 1000).SI<KilogramPerMeter>(); // [kg/m]
+			public static readonly KilogramPerMeter EngineDisplacementInertia = 270.SI<KilogramPerMeter>();
 			public static readonly Second DefaultEngineStartTime = 1.SI<Second>();
 
 			public const double TorqueLimitGearboxFactor = 0.9;
@@ -835,9 +835,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly KilogramSquareMeter ManualBaseInertia = 1.885.SI<KilogramSquareMeter>();
 			public static readonly KilogramSquareMeter ATBaseInertia = 1.707.SI<KilogramSquareMeter>();
 
-			public static readonly SI SmallEngineDisplacementInertia = (0.4 * 1000).SI(Unit.SI.Kilo.Gramm.Per.Meter);
-			public static readonly SI MidEngineATDisplacementInertia = (0.933 * 1000).SI(Unit.SI.Kilo.Gramm.Per.Meter);
-			public static readonly SI MidEngineManualDisplacementInertia = (0.989 * 1000).SI(Unit.SI.Kilo.Gramm.Per.Meter);
+			public static readonly KilogramPerMeter SmallEngineDisplacementInertia = 400.SI<KilogramPerMeter>();
+			public static readonly KilogramPerMeter MidEngineATDisplacementInertia = 933.SI<KilogramPerMeter>();
+			public static readonly KilogramPerMeter MidEngineManualDisplacementInertia = 989.SI<KilogramPerMeter>();
 
 			public static KilogramSquareMeter EngineInertia(VectoSimulationJobType jobType, CubicMeter displacement, GearboxType? gbxType)
 			{
