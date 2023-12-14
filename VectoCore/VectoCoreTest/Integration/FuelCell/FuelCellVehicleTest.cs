@@ -252,7 +252,7 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
             }
 	
 			rd.BatteryData =
-				engineeringDao.CreateFuelCellPreProcessingBattery(vehicle.Components.FuelCellSystemInputData, batData.Clone());
+				engineeringDao.CreateFuelCellPreProcessingBattery(vehicle.Components.FuelCellSystemInputData, batData.Clone(), out _);
 
 
 			Assert.AreEqual(usable_energy_kWh, batData.UseableStoredEnergy.ConvertToKiloWattHour().Value, 1E-3);

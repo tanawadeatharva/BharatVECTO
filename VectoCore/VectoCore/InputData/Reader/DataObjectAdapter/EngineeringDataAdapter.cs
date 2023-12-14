@@ -1046,7 +1046,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		public BatterySystemData CreateFuelCellPreProcessingBattery(
-			IFuelCellSystemEngineeringInputData fuelCellSystemInputData, BatterySystemData batterySystemData)
+			IFuelCellSystemEngineeringInputData fuelCellSystemInputData, BatterySystemData batterySystemData, out Tuple<int, BatteryData> fuelCellBattery)
 		{
 			var pevBat = batterySystemData;
 			pevBat.Batteries.ForEach(b => b.Item2.ChargeDepletingBattery = true);
@@ -1121,8 +1121,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
             };
             batterySystemData.Batteries.Add(Tuple.Create(0xFCB, batteryData));
             return batterySystemData;
-
-
         }
 
 

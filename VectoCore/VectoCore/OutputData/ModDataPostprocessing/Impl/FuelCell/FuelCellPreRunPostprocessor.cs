@@ -258,7 +258,8 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
             BatterySystemData batData, out SearchResult result)
         {
             ///For a given window size as first step we calculate the fuel cell power, try to simulate it with a tracing infinity battery and check if the SoC limits are violated
-			var minFcPower = fcData.MinElectricPower;
+			//var minFcPower = fcData.MinElectricPower;
+			var minFcPower = 0.SI<Watt>();
 			var maxFcPower = fcData.MaxElectricPower;
 
 			batData = batData.Clone();
@@ -628,15 +629,14 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 			}
 
 			var maxChargingPower = bat.MaxChargePower(0.5.SI<Second>());
+			var maxDischargingPower = bat.MaxDischargePower(0.5.SI<Second>());
 			var preRunEntries = preRunResults as PreRunEntry[] ?? preRunResults.ToArray();
 			if (windowSize.IsEqual(totalDistance)) {
 				var P_FC_raw = preRunEntries.TimeIntegral<PreRunEntry, Second, Watt, WattSecond>((e) => e.dt, (e) => e.P_es_T) /
 								totalDuration;
 				foreach (var r in preRunEntries) {
-					var entry = new FCCalcEntry() {
-						P_max_charging = maxChargingPower,
+					var entry = new FCCalcEntry(maxChargingPower, maxDischargingPower, r) {
 						WindowSize = windowSize,
-						preRunEntry = r,
 						P_FC_raw = -P_FC_raw,
 						P_el_dem = r.P_es_T,
 					};
@@ -659,10 +659,9 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 
 
 			for (; !wIt.EndReached; wIt.MoveNext()) {
-				var entry = new FCCalcEntry() {
-					preRunEntry = preRunEntries[wIt.Position],
+				var entry = new FCCalcEntry(maxChargingPower, maxDischargingPower, preRunEntries[wIt.Position]) {
 					WindowSize = windowSize,
-					P_max_charging = maxChargingPower,
+				
 				};
 
 

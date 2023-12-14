@@ -1,4 +1,5 @@
-﻿/*
+﻿#define TRACE_FC
+/*
 * This file is part of VECTO.
 *
 * Copyright © 2012-2019 European Union
@@ -131,16 +132,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					}
 				});
 
-
-				pevRd.BatteryData = dao.CreateFuelCellPreProcessingBattery(InputDataProvider.JobInputData.Vehicle.Components.FuelCellSystemInputData, pevRd.BatteryData);
+				//pevRd.BatteryData.ConnectionSystemResistance = 0.SI<Ohm>();
+				pevRd.BatteryData = dao.CreateFuelCellPreProcessingBattery(InputDataProvider.JobInputData.Vehicle.Components.FuelCellSystemInputData, pevRd.BatteryData, out var fcBat);
 				//pevRd.SimulationType = VectoSimulationJobType.FCHV;
 #if TRACE_FC
 				pevRd.ModFileSuffix += "pre";
 #else
 
 #endif
-				pevRd.BatteryData.Batteries =
-					pevRd.BatteryData.Batteries.Where(b => b.Item1 != FuelCellSystemData.FuelCellBatID).ToList();
+				
 
 				iterativeRunStrategy.Update = (modData, runData) => {
 					runData.JobType = VectoSimulationJobType.FCHV;
@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					modData.PostProcessingCorrection = new FCHVPostProcessingCorrection();
 					//In case the battery is modified after creating the rundata (testing, do not create new battery data)
 					pevRd.BatteryData.Batteries =
-						pevRd.BatteryData.Batteries.Where(b => b.Item1 != FuelCellSystemData.FuelCellBatID).ToList();
+						pevRd.BatteryData.Batteries.Where(b => b.Item1 != fcBat.Item1).ToList();
 
 
                     //runData.BatteryData = pevBat;

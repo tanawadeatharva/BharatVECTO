@@ -7,13 +7,23 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 	{
 		public class FCCalcEntry
 		{
-
+			public FCCalcEntry(Watt p_max_charging, Watt p_max_discharge, PreRunEntry preRunEntry)
+			{
+				this.P_max_charging = p_max_charging;
+				this.P_max_discharge = p_max_discharge;
+				this.preRunEntry = preRunEntry;
+			}
 			/// <summary>
 			/// Limits the Battery Charging Power
 			/// </summary>
-			public Watt P_max_charging { get; set; }
+			public Watt P_max_charging { get; private set; }
 
-			public PreRunEntry preRunEntry { get; set; }
+			/// <summary>
+			/// Limits the Battery Discharing Power
+			/// </summary>
+			public Watt P_max_discharge { get; private set; }
+
+            public PreRunEntry preRunEntry { get; private set; }
 
 			public Second t => preRunEntry.t; 
 
@@ -49,7 +59,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 			/// <summary>
 			/// Remaining power that should be provided by battery
 			/// </summary>
-			public Watt P_Bat_T => VectoMath.Min(P_FC + P_el_dem, P_max_charging);
+			public Watt P_Bat_T => P_FC + P_el_dem.LimitTo(P_max_discharge, P_max_charging);
 
 			/// <summary>
 			/// Battery losses from P_Bat_T
@@ -83,7 +93,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 			/// <summary>
 			/// Resulting power provided by battery considering <see cref="P_Bat_T_Final"/>
 			/// </summary>
-			public Watt P_Bat_T_Final => VectoMath.Min(FCPowerFinal + P_el_dem, P_max_charging);
+			public Watt P_Bat_T_Final => (FCPowerFinal + P_el_dem).LimitTo(P_max_discharge, P_max_charging);
 
 			///// <summary>
 			///// <see cref="P_Bat_T_Final"/> limited by MaxCharge and MaxDischargePower of the infinity battery, not considering SoC/>
@@ -140,6 +150,8 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 			/// Windowsize that was used to create this entry
 			/// </summary>
 			public Meter WindowSize { get; set; }
+
+
 		}
 
 
