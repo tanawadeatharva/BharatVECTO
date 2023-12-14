@@ -823,13 +823,52 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly KilogramSquareMeter TorqueConverterInertia = 1.2.SI<KilogramSquareMeter>();
 
 			public static readonly KilogramSquareMeter EngineBaseInertia = 0.41.SI<KilogramSquareMeter>();
-			public static readonly KilogramPerMeter EngineDisplacementInertia = (0.27 * 1000).SI<KilogramPerMeter>(); // [kg/m]
+			public static readonly KilogramPerMeter EngineDisplacementInertia = 270.SI<KilogramPerMeter>();
 			public static readonly Second DefaultEngineStartTime = 1.SI<Second>();
 
 			public const double TorqueLimitGearboxFactor = 0.9;
 			public const double TorqueLimitVehicleFactor = 0.95;
 
+			public static readonly SI SmallEnginesBound = 3.2.SI<Liter>().Cast<CubicMeter>();
+			public static readonly SI MidEnginesBound = 5.SI<Liter>().Cast<CubicMeter>();
+
+			public static readonly KilogramSquareMeter ManualBaseInertia = 1.885.SI<KilogramSquareMeter>();
+			public static readonly KilogramSquareMeter ATBaseInertia = 1.707.SI<KilogramSquareMeter>();
+
+			public static readonly KilogramPerMeter SmallEngineDisplacementInertia = 400.SI<KilogramPerMeter>();
+			public static readonly KilogramPerMeter MidEngineATDisplacementInertia = 933.SI<KilogramPerMeter>();
+			public static readonly KilogramPerMeter MidEngineManualDisplacementInertia = 989.SI<KilogramPerMeter>();
+
 			public static KilogramSquareMeter EngineInertia(VectoSimulationJobType jobType, CubicMeter displacement, GearboxType? gbxType)
+			{
+				if (displacement <= SmallEnginesBound) {
+					return ComputeSmallEngineInertia(displacement);
+				}
+				else if ((displacement > SmallEnginesBound) && (displacement <= MidEnginesBound)) {
+					return ComputeMidEngineInertia(displacement, gbxType);
+				}
+				else {
+					return ComputeBigEngineInertia(jobType, displacement, gbxType);
+				}
+			}
+
+			private static KilogramSquareMeter ComputeSmallEngineInertia(CubicMeter displacement)
+			{ 
+				return (SmallEngineDisplacementInertia * displacement).Cast<KilogramSquareMeter>();
+			}
+
+			private static KilogramSquareMeter ComputeMidEngineInertia(CubicMeter displacement, GearboxType? gbxType)
+			{ 
+				if (!gbxType.HasValue) {
+					throw new VectoException("Gearbox type must be provided!");
+				}
+
+				return gbxType.Value.AutomaticTransmission()
+					? (MidEngineATDisplacementInertia * displacement) - ATBaseInertia
+					: (MidEngineManualDisplacementInertia * displacement) - ManualBaseInertia;
+			}
+
+			private static KilogramSquareMeter ComputeBigEngineInertia(VectoSimulationJobType jobType, CubicMeter displacement, GearboxType? gbxType)
 			{
 				// VB Code:    Return 1.3 + 0.41 + 0.27 * (Displ / 1000)
 				KilogramSquareMeter clutchPlateTc;

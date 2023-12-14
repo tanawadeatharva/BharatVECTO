@@ -77,10 +77,31 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 			_kernel = new StandardKernel(new VectoNinjectModule());
-		}
+        }
+
+        [
+        TestCase(VectoSimulationJobType.ConventionalVehicle, 0.002, null, 0.8),
+        TestCase(VectoSimulationJobType.ConventionalVehicle, 0.0032, null, 1.28),
+        TestCase(VectoSimulationJobType.ConventionalVehicle, 0.0033, GearboxType.ATPowerSplit, 1.3719),
+        TestCase(VectoSimulationJobType.ConventionalVehicle, 0.0033, GearboxType.MT, 1.3787),
+        TestCase(VectoSimulationJobType.ConventionalVehicle, 0.005, GearboxType.MT, 3.06),
+        TestCase(VectoSimulationJobType.ConventionalVehicle, 0.006, GearboxType.MT, 3.33),
+        TestCase(VectoSimulationJobType.ConventionalVehicle, 0.006, GearboxType.ATPowerSplit, 3.23),
+        TestCase(VectoSimulationJobType.SerialHybridVehicle, 0.006, null, 2.03)
+        ]
+        public void EngineInertiaTest(VectoSimulationJobType jobType, double displacement, GearboxType? gbxType,
+            double inertia)
+        { 
+            KilogramSquareMeter result = DeclarationData.Engine.EngineInertia(
+                jobType, 
+                displacement.SI<CubicMeter>(), 
+                gbxType);
+            
+            Assert.AreEqual(inertia, result.Value(), 1e-4);
+        }
 
 
-		[TestCase("285/60 R22.5", 10.6, 0.914, 3.03, 0.440766),
+        [TestCase("285/60 R22.5", 10.6, 0.914, 3.03, 0.440766),
 		TestCase("285/70 R19.5", 7.9, 0.895, 3.05, 0.434453),
 		TestCase("395/85 R20", 27.9, 1.18, 3.05, 0.572798)]
 		public void WheelDataTest(string wheels, double inertia, double wheelsDiameter, double circumferenceFactor,
