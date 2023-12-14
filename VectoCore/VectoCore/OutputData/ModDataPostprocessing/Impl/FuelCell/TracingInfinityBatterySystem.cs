@@ -12,7 +12,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 {
-	public class TracingInfinityBatterySystem : StatefulVectoSimulationComponent<TracingInfinityBatterySystem.TracingInfinityBatteryState>, IElectricEnergyStoragePort, IRESSInfo
+	public class TracingInfinityBatterySystem : StatefulVectoSimulationComponent<TracingInfinityBatterySystem.TracingInfinityBatteryState>, IElectricEnergyStoragePort, IElectricEnergyStorage, IRESSInfo
 	{
 
 		public class TracingInfinityBatteryState
@@ -147,6 +147,12 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 		public AmpereSecond Capacity => _infinityBat.Capacity;
 
 		public Volt NominalVoltage => _infinityBat.NominalVoltage;
+
+		#endregion
+
+		#region Implementation of IBatteryProvider
+
+		public IElectricEnergyStoragePort MainBatteryPort => this;
 
 		#endregion
 	}

@@ -1119,7 +1119,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
                     }
                 })
             };
-            batterySystemData.Batteries.Add(Tuple.Create(0xFCB, batteryData));
+			fuelCellBattery = Tuple.Create(0xFCB, batteryData);
+            batterySystemData.Batteries.Add(fuelCellBattery);
             return batterySystemData;
         }
 

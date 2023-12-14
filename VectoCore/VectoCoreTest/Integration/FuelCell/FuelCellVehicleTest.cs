@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using Moq;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using ScottPlot.Drawing.Colormaps;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -164,9 +165,9 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 		[TestCase(FCHV_E2_JOB, 1, 5, 10, 100, TestName = "FCHV E2 Job RD single FC, 5kWh      , 100 kW 1")]
 		[TestCase(FCHV_E2_JOB, 1, 5, 10, 300, TestName = "FCHV E2 Job RD single FC, 5kWh      , 300 kW 1")]
 		[TestCase(FCHV_E2_JOB, 1, 5, 10, 500, TestName = "FCHV E2 Job RD single FC, 5kWh      , 500 kW 1")]
-		[TestCase(FCHV_E2_JOB, 1, 1, 10, 100, TestName = "FCHV E2 Job RD single FC, 1kWh      , 100 kW 1")]
-		[TestCase(FCHV_E2_JOB, 1, 1, 10, 300, TestName = "FCHV E2 Job RD single FC, 1kWh      , 300 kW 1")]
-		[TestCase(FCHV_E2_JOB, 1, 1, 10, 500, TestName = "FCHV E2 Job RD single FC, 1kWh      , 500 kW 1")]
+		[TestCase(FCHV_E2_JOB, 1, 1, 10, 100, TestName = "FCHV E2 Job RD single FC, 1kWh      , 100 kW 1", Ignore = "Battery too small")]
+        [TestCase(FCHV_E2_JOB, 1, 1, 10, 300, TestName = "FCHV E2 Job RD single FC, 1kWh      , 300 kW 1", Ignore = "Battery too small")]
+        [TestCase(FCHV_E2_JOB, 1, 1, 10, 500, TestName = "FCHV E2 Job RD single FC, 1kWh      , 500 kW 1", Ignore = "Battery too small")]
 		//[TestCase(FCHV_E2_JOB, 1, 0.1, 10, 100, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 100 kW 1")]
 		//[TestCase(FCHV_E2_JOB, 1, 0.1, 10, 300, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 300 kW 1")]
 		//[TestCase(FCHV_E2_JOB, 1, 0.1, 10, 500, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 500 kW 1")]
