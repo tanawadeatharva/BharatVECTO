@@ -547,7 +547,7 @@ namespace TUGraz.VectoCore.OutputData
 			{ REESS_DeltaEnergy, SumFunc((r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_reess_int.GetName()).ConvertToKiloWattHour(), ModalResultField.P_reess_int)},
 
 			//P-HEV
-			{ f_equiv, SumFunc((r, m) => r.HybridStrategyParameters.EquivalenceFactor)},
+			{ f_equiv, SumFunc((r, m) => r.HybridStrategyParameters?.EquivalenceFactor)},
 
 			// performance entries
 			{ ACC, SumFunc((r, m) => (ConvertedSI)m.AccelerationAverage(), ModalResultField.acc)},

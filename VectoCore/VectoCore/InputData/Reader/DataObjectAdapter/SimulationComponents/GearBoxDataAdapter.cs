@@ -497,15 +497,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 		private GearboxData CreateIEPCGearboxData(IVehicleDeclarationInputData vehicle, VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalc)
 		{
-
-
 			var iepc = vehicle.Components.IEPC;
 
 			var axlegearRatio = runData.AxleGearData?.AxleGear.Ratio ?? 1.0;
 			var dynamicTyreRadius = runData.VehicleData.DynamicTyreRadius;
 
+			var count = iepc.DesignTypeWheelMotor && iepc.NrOfDesignTypeWheelMotorMeasured == 1 ? 2 : 1;
 
-			var retVal = new GearboxData()
+            var retVal = new GearboxData()
 			{
 				Type = GearboxType.APTN,
 				Inertia = 0.SI<KilogramSquareMeter>(),
@@ -518,7 +517,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				Gear = idx + 1,
 				Ratio = x.Ratio,
 				MaxInputSpeed = x.MaxOutputShaftSpeed == null ? null : x.MaxOutputShaftSpeed * x.Ratio,
-				MaxTorque = x.MaxOutputShaftTorque == null ? null : x.MaxOutputShaftTorque / x.Ratio,
+				MaxTorque = x.MaxOutputShaftTorque == null ? null : x.MaxOutputShaftTorque * count / x.Ratio,
 			}).Cast<ITransmissionInputData>().ToList();
 			var gears = new Dictionary<uint, GearData>();
 			for (uint i = 0; i < iepc.Gears.Count; i++)
@@ -546,7 +545,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				{
 					ShiftPolygon = shiftPolygon,
 					MaxSpeed = gear.MaxOutputShaftSpeed == null ? null : gear.MaxOutputShaftSpeed * gear.Ratio,
-					MaxTorque = gear.MaxOutputShaftTorque == null ? null : gear.MaxOutputShaftTorque / gear.Ratio,
+					MaxTorque = gear.MaxOutputShaftTorque == null ? null : gear.MaxOutputShaftTorque * count / gear.Ratio,
 					Ratio = gear.Ratio,
 					LossMap = lossMap,
 				};
