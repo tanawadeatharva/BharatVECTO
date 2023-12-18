@@ -732,8 +732,8 @@ namespace TUGraz.VectoCore.OutputData
 			{ EM_RATED_POWER, (r, m, em) => DeclarationData.GetReferencePropulsionPower(r.VehicleData.InputData).ConvertToKiloWatt() },
 			{ EM_RATED_SPEED_HI, (r, m, em) => r.VehicleData.InputData.Components.ElectricMachines?.Entries.First().ElectricMachine.VoltageLevels.MaxBy(v  => v.VoltageLevel)?.ContinuousTorqueSpeed.AsRPM ?? 0 },
 			{ EM_RATED_SPEED_LO, (r, m, em) => r.VehicleData.InputData.Components.ElectricMachines?.Entries.First().ElectricMachine.VoltageLevels.MinBy(v  => v.VoltageLevel)?.ContinuousTorqueSpeed.AsRPM ?? 0 },
-			{ EM_RATED_TORQUE_HI, (r, m, em) => (ConvertedSI)r.VehicleData.InputData.Components.ElectricMachines?.Entries.First().ElectricMachine.VoltageLevels.MaxBy(v  => v.VoltageLevel)?.ContinuousTorque ?? 0.SI<NewtonMeter>()},
-			{ EM_RATED_TORQUE_LO, (r, m, em) => (ConvertedSI)r.VehicleData.InputData.Components.ElectricMachines?.Entries.First().ElectricMachine.VoltageLevels.MinBy(v  => v.VoltageLevel)?.ContinuousTorque ?? 0.SI<NewtonMeter>() },
+			{ EM_RATED_TORQUE_HI, (r, m, em) => (ConvertedSI)(r.VehicleData.InputData.Components.ElectricMachines?.Entries.First().ElectricMachine.VoltageLevels.MaxBy(v  => v.VoltageLevel)?.ContinuousTorque ?? 0.SI<NewtonMeter>()) },
+			{ EM_RATED_TORQUE_LO, (r, m, em) => (ConvertedSI)(r.VehicleData.InputData.Components.ElectricMachines?.Entries.First().ElectricMachine.VoltageLevels.MinBy(v  => v.VoltageLevel)?.ContinuousTorque ?? 0.SI<NewtonMeter>()) },
 			{ EM_MOTOR_NUMBER, (r, m, em) => r.VehicleData.InputData.Components.ElectricMachines?.Entries.First().Count ?? 0 },
 		};
 
@@ -749,8 +749,8 @@ namespace TUGraz.VectoCore.OutputData
 			{ EM_RATED_POWER, (r, m, em) => r.VehicleData.InputData.Components.IEPC.TotalRatedPowerCalculated.ConvertToKiloWatt() },
 			{ EM_RATED_SPEED_HI, (r, m, em) => r.VehicleData.InputData.Components.IEPC.VoltageLevels.MaxBy(v  => v.VoltageLevel)?.ContinuousTorqueSpeed.AsRPM ?? 0 },
 			{ EM_RATED_SPEED_LO, (r, m, em) => r.VehicleData.InputData.Components.IEPC.VoltageLevels.MinBy(v  => v.VoltageLevel)?.ContinuousTorqueSpeed.AsRPM ?? 0 },
-			{ EM_RATED_TORQUE_HI, (r, m, em) => (ConvertedSI)r.VehicleData.InputData.Components.IEPC.VoltageLevels.MaxBy(v  => v.VoltageLevel)?.ContinuousTorque ?? 0.SI<NewtonMeter>() },
-			{ EM_RATED_TORQUE_LO, (r, m, em) => (ConvertedSI)r.VehicleData.InputData.Components.IEPC.VoltageLevels.MinBy(v  => v.VoltageLevel)?.ContinuousTorque ?? 0.SI<NewtonMeter>()},
+			{ EM_RATED_TORQUE_HI, (r, m, em) => (ConvertedSI)(r.VehicleData.InputData.Components.IEPC.VoltageLevels.MaxBy(v  => v.VoltageLevel)?.ContinuousTorque ?? 0.SI<NewtonMeter>()) },
+			{ EM_RATED_TORQUE_LO, (r, m, em) => (ConvertedSI)(r.VehicleData.InputData.Components.IEPC.VoltageLevels.MinBy(v  => v.VoltageLevel)?.ContinuousTorque ?? 0.SI<NewtonMeter>()) },
         };
 
 		public static readonly WriteAuxEntry AuxDataValue = (r, m, a) => m.AuxiliaryWork(a).ConvertToKiloWattHour();
