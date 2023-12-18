@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Moq;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
@@ -2060,6 +2061,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 					TyreTestLoad = 30436.SI<Newton>()
 				},
 			};
+			var inputData = new Mock<IVehicleDeclarationInputData>();
+			inputData.Setup(v => v.VehicleType).Returns(VectoSimulationJobType.ParallelHybridVehicle);
 			return new VehicleData {
 				AirDensity = DeclarationData.AirDensity,
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
@@ -2070,7 +2073,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				SavedInDeclarationMode = false,
 				ADAS = new VehicleData.ADASData() {
 					EngineStopStart = true
-				}
+				},
+				InputData = inputData.Object,
 			};
 		}
 

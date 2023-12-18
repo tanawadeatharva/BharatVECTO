@@ -730,11 +730,11 @@ namespace TUGraz.VectoCore.OutputData
 			{ E_EM_LOSS_FORMAT, (r, m, em) => m.ElectricMotorLosses(em)?.ConvertToKiloWattHour() },
 			{ E_EM_OFF_TIME_SHARE, (r, m, em) => (ConvertedSI)m.ElectricMotorOffTimeShare(em) },
 			{ EM_RATED_POWER, (r, m, em) => DeclarationData.GetReferencePropulsionPower(r.VehicleData.InputData).ConvertToKiloWatt() },
-			{ EM_RATED_SPEED_HI, (r, m, em) => r.VehicleData.InputData.Components.ElectricMachines?.Entries.First().ElectricMachine.VoltageLevels.MaxBy(v  => v.VoltageLevel)?.ContinuousTorqueSpeed.AsRPM ?? 0 },
-			{ EM_RATED_SPEED_LO, (r, m, em) => r.VehicleData.InputData.Components.ElectricMachines?.Entries.First().ElectricMachine.VoltageLevels.MinBy(v  => v.VoltageLevel)?.ContinuousTorqueSpeed.AsRPM ?? 0 },
+			{ EM_RATED_SPEED_HI, (r, m, em) => r.VehicleData.InputData.Components?.ElectricMachines?.Entries.First().ElectricMachine.VoltageLevels.MaxBy(v  => v.VoltageLevel)?.ContinuousTorqueSpeed.AsRPM ?? 0 },
+			{ EM_RATED_SPEED_LO, (r, m, em) => r.VehicleData.InputData.Components?.ElectricMachines?.Entries.First().ElectricMachine.VoltageLevels.MinBy(v  => v.VoltageLevel)?.ContinuousTorqueSpeed.AsRPM ?? 0 },
 			{ EM_RATED_TORQUE_HI, (r, m, em) => (ConvertedSI)(r.VehicleData.InputData.Components.ElectricMachines?.Entries.First().ElectricMachine.VoltageLevels.MaxBy(v  => v.VoltageLevel)?.ContinuousTorque ?? 0.SI<NewtonMeter>()) },
 			{ EM_RATED_TORQUE_LO, (r, m, em) => (ConvertedSI)(r.VehicleData.InputData.Components.ElectricMachines?.Entries.First().ElectricMachine.VoltageLevels.MinBy(v  => v.VoltageLevel)?.ContinuousTorque ?? 0.SI<NewtonMeter>()) },
-			{ EM_MOTOR_NUMBER, (r, m, em) => r.VehicleData.InputData.Components.ElectricMachines?.Entries.First().Count ?? 0 },
+			{ EM_MOTOR_NUMBER, (r, m, em) => r.VehicleData.InputData.Components?.ElectricMachines?.Entries.First().Count ?? 0 },
 		};
 
 		public static readonly Dictionary<string, WriteEmEntry> IEPCValue = new Dictionary<string, WriteEmEntry>() {
