@@ -930,7 +930,11 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IIEPCDeclarationInputData : IComponentInputData 
 	{
 		ElectricMachineType ElectricMachineType { get; }
+		
 		Watt R85RatedPower { get; }
+		
+		Watt TotalRatedPowerCalculated { get; }
+
 		KilogramSquareMeter Inertia { get; } //RotationalInertia
 
 		bool DifferentialIncluded { get; }

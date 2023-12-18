@@ -677,7 +677,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
             public Watt R85RatedPower => _iiepcDeclarationInputDataImplementation.R85RatedPower;
 
-            public KilogramSquareMeter Inertia => _iiepcDeclarationInputDataImplementation.Inertia;
+			public Watt TotalRatedPowerCalculated => _iiepcDeclarationInputDataImplementation.TotalRatedPowerCalculated;
+
+			public KilogramSquareMeter Inertia => _iiepcDeclarationInputDataImplementation.Inertia;
 
             public bool DifferentialIncluded => _iiepcDeclarationInputDataImplementation.DifferentialIncluded;
 
