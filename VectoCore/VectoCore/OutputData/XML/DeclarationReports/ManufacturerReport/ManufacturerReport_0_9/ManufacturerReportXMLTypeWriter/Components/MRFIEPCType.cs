@@ -20,13 +20,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var iepcData = inputData.JobInputData.Vehicle.Components.IEPC;
-			
+			var count = iepcData.DesignTypeWheelMotor && iepcData.NrOfDesignTypeWheelMotorMeasured == 1 ? 2 : 1;
 
-			var iepcXElement = new XElement(_mrf + "IEPCSpecifications",
+            var iepcXElement = new XElement(_mrf + "IEPCSpecifications",
 				new XElement(_mrf + XMLNames.Component_Model, iepcData.Model),
 				new XElement(_mrf + XMLNames.Component_CertificationNumber, iepcData.CertificationNumber),
 				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, iepcData.DigestValue?.DigestValue ?? ""),
-				new XElement(_mrf + XMLNames.Engine_RatedPower, iepcData.R85RatedPower.ConvertToKiloWatt().ToXMLFormat(0)));
+				new XElement(_mrf + XMLNames.Engine_RatedPower, iepcData.TotalRatedPowerCalculated.ConvertToKiloWatt().ToXMLFormat(0)));
 				//new XElement(_mrf + "MaxContinuousPower",(iepcData.ContinuousTorque*iepcData.ContinuousTorqueSpeed).ToXMLFormat()),
 
 			var voltageLevels = new XElement(_mrf + "VoltageLevels");
@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 						? null
 						: new XAttribute("voltage", electricMotorVoltageLevel.VoltageLevel.ToXMLFormat(0)),
 					new XElement(_mrf + "MaxContinuousPower",
-						(electricMotorVoltageLevel.ContinuousTorque * electricMotorVoltageLevel.ContinuousTorqueSpeed)
+						(electricMotorVoltageLevel.ContinuousTorque * electricMotorVoltageLevel.ContinuousTorqueSpeed * count)
 						.ConvertToKiloWatt().ToXMLFormat(0)));
 
 

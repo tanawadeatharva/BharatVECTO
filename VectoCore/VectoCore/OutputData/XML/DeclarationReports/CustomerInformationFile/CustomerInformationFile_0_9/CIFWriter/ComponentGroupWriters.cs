@@ -181,12 +181,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			Watt totalRatedPropulsionPower = null;
 			IList<IElectricMotorVoltageLevel> voltageLevels = null;
 			var vehicle = GetVehicle(inputData);
+			var count = 1;
 			if (vehicle.ArchitectureID == ArchitectureID.S_IEPC || vehicle.ArchitectureID == ArchitectureID.E_IEPC) {
-				var count = vehicle.Components.IEPC.DesignTypeWheelMotor &&
-							vehicle.Components.IEPC.NrOfDesignTypeWheelMotorMeasured == 1
-					? 2
-					: 1;
-				totalRatedPropulsionPower = vehicle.Components.IEPC.R85RatedPower * count;
+				count = vehicle.Components.IEPC.DesignTypeWheelMotor && vehicle.Components.IEPC.NrOfDesignTypeWheelMotorMeasured == 1 ? 2 : 1;
+                totalRatedPropulsionPower = vehicle.Components.IEPC.TotalRatedPowerCalculated;
 				voltageLevels = vehicle.Components.IEPC.VoltageLevels.ToList();
 
 			} else {
@@ -212,7 +210,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 						? new XAttribute("voltage", electricMotorVoltageLevel.VoltageLevel.ToXMLFormat(0))
 						: null,
 					new XElement(_cif + "MaxContinuousPropulsionPower",
-						(electricMotorVoltageLevel.ContinuousTorque * electricMotorVoltageLevel.ContinuousTorqueSpeed)
+						(electricMotorVoltageLevel.ContinuousTorque * electricMotorVoltageLevel.ContinuousTorqueSpeed * count)
 						.ValueAsUnit("kW", 0)));
 
 				voltageLevelsXElement.Add(voltageLevel);
