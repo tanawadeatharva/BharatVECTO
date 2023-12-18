@@ -26,10 +26,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\XSLT\SortInputData.v3.xslt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\VectoCommon\VectoCommon.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\XSLT\SortInputData.v3.xslt" />
     <EmbeddedResource Include="Resources\XSLT\SortInputData.xslt" />
   </ItemGroup>
 </Project>

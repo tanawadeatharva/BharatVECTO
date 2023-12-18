@@ -16,7 +16,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
 		public AbstractXMLDeclarationExemptedVehicleDataProviderV24(
-			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile, false)
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : 
+			base(jobData, xmlNode, sourceFile, 0)
 		{
 			SourceType = DataSourceType.XMLEmbedded;
 

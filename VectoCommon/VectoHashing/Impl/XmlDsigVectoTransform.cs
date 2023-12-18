@@ -43,15 +43,18 @@ namespace TUGraz.VectoHashing
 		//private static readonly Type[] _outputTypes = { typeof(Stream) };
 		//private XmlDocument _doc = new XmlDocument();
 
+		public const string XSLT_v4 = "TUGraz.VectoHashing.Resources.XSLT.SortInputData.xslt";
+		public const string XSLT_v3 = "TUGraz.VectoHashing.Resources.XSLT.SortInputData.v3.xslt";
+
 		private XmlDsigXsltTransform _transform;
 
-		public XmlDsigVectoTransform()
+		public XmlDsigVectoTransform(string xslt = XSLT_v4)
 		{
 			Algorithm = "urn:vecto:xml:2017:canonicalization";
 			_transform = new XmlDsigXsltTransform();
 
 			XmlDocument doc = new XmlDocument();
-			doc.Load(ReadStream("TUGraz.VectoHashing.Resources.XSLT.SortInputData.xslt"));
+			doc.Load(ReadStream(xslt));
 
 			_transform.LoadInnerXml(doc.ChildNodes);
 		}

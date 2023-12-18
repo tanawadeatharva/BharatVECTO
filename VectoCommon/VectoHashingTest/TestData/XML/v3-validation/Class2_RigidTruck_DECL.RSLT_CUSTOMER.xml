@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet href="https://citnet.tech.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css"?>
+<VectoCustomerInformation schemaVersion="0.7" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.7.2" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.7.2 https://citnet.tech.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/VectoOutputCustomer.0.7.2.xsd">
+  <Data id="COC-fdc3a394aa0744d49f50">
+    <Vehicle>
+      <Model>N/A</Model>
+      <Manufacturer>N/A</Manufacturer>
+      <ManufacturerAddress>N/A</ManufacturerAddress>
+      <VIN>N/A</VIN>
+      <LegislativeClass>N2</LegislativeClass>
+      <GrossVehicleMass unit="t">12.0</GrossVehicleMass>
+      <CurbMassChassis unit="kg">4670</CurbMassChassis>
+      <ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+      <HybridElectricHDV>false</HybridElectricHDV>
+      <WasteHeatRecovery>false</WasteHeatRecovery>
+      <DualFuelVehicle>false</DualFuelVehicle>
+      <AxleConfiguration>4x2</AxleConfiguration>
+      <VehicleGroup>2</VehicleGroup>
+      <CO2StandardsGroup>N/A</CO2StandardsGroup>
+      <VocationalVehicle>false</VocationalVehicle>
+      <SleeperCab>true</SleeperCab>
+      <ADAS>
+        <EngineStopStart>false</EngineStopStart>
+        <EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
+        <EcoRollWithEngineStop>false</EcoRollWithEngineStop>
+        <PredictiveCruiseControl>false</PredictiveCruiseControl>
+      </ADAS>
+      <EngineRatedPower unit="kW">175</EngineRatedPower>
+      <EngineDisplacement unit="ltr">6.9</EngineDisplacement>
+      <FuelType>Diesel CI</FuelType>
+      <TransmissionMainCertificationMethod>NOT CERTIFIED</TransmissionMainCertificationMethod>
+      <TransmissionType>SMT</TransmissionType>
+      <GearsCount>6</GearsCount>
+      <Retarder>false</Retarder>
+      <AxleRatio>4.180</AxleRatio>
+      <AverageRRCMotorVehicleTyres>0.0072</AverageRRCMotorVehicleTyres>
+      <AverageFuelEfficiencyLabelMotorVehicleTyres>E</AverageFuelEfficiencyLabelMotorVehicleTyres>
+      <InputDataSignature>
+        <Signature xmlns="" />
+      </InputDataSignature>
+    </Vehicle>
+    <ResultDataSignature>
+      <di:Reference URI="#RESULT-a0256e1e714943a7b72c">
+        <di:Transforms>
+          <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+          <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+        </di:Transforms>
+        <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+        <di:DigestValue>M6ppEC64PAgurrmV5NOdUeptgGkgMbDrRAZDNm9t7Pc=</di:DigestValue>
+      </di:Reference>
+    </ResultDataSignature>
+    <Results>
+      <Status>success</Status>
+      <Result status="success">
+        <Mission>Long Haul</Mission>
+        <Payload unit="kg">1304</Payload>
+        <FuelType>Diesel CI</FuelType>
+        <AverageSpeed unit="km/h">79.3</AverageSpeed>
+        <Fuel type="Diesel CI">
+          <FuelConsumption unit="g/km">216.7</FuelConsumption>
+          <FuelConsumption unit="g/t-km">166.2</FuelConsumption>
+          <FuelConsumption unit="g/m³-km">2.55</FuelConsumption>
+          <FuelConsumption unit="l/100km">25.9</FuelConsumption>
+          <FuelConsumption unit="l/t-km">0.199</FuelConsumption>
+          <FuelConsumption unit="l/m³-km">0.00305</FuelConsumption>
+        </Fuel>
+        <CO2 unit="g/km">678.38</CO2>
+        <CO2 unit="g/t-km">520.26</CO2>
+        <CO2 unit="g/m³-km">7.98</CO2>
+      </Result>
+      <Result status="success">
+        <Mission>Long Haul</Mission>
+        <Payload unit="kg">9841</Payload>
+        <FuelType>Diesel CI</FuelType>
+        <AverageSpeed unit="km/h">77.6</AverageSpeed>
+        <Fuel type="Diesel CI">
+          <FuelConsumption unit="g/km">248.2</FuelConsumption>
+          <FuelConsumption unit="g/t-km">25.2</FuelConsumption>
+          <FuelConsumption unit="g/m³-km">2.92</FuelConsumption>
+          <FuelConsumption unit="l/100km">29.7</FuelConsumption>
+          <FuelConsumption unit="l/t-km">0.0302</FuelConsumption>
+          <FuelConsumption unit="l/m³-km">0.00349</FuelConsumption>
+        </Fuel>
+        <CO2 unit="g/km">776.74</CO2>
+        <CO2 unit="g/t-km">78.93</CO2>
+        <CO2 unit="g/m³-km">9.14</CO2>
+      </Result>
+      <Result status="success">
+        <Mission>Regional Delivery</Mission>
+        <Payload unit="kg">604</Payload>
+        <FuelType>Diesel CI</FuelType>
+        <AverageSpeed unit="km/h">60.5</AverageSpeed>
+        <Fuel type="Diesel CI">
+          <FuelConsumption unit="g/km">167.9</FuelConsumption>
+          <FuelConsumption unit="g/t-km">278.0</FuelConsumption>
+          <FuelConsumption unit="g/m³-km">3.71</FuelConsumption>
+          <FuelConsumption unit="l/100km">20.1</FuelConsumption>
+          <FuelConsumption unit="l/t-km">0.333</FuelConsumption>
+          <FuelConsumption unit="l/m³-km">0.00444</FuelConsumption>
+        </Fuel>
+        <CO2 unit="g/km">525.51</CO2>
+        <CO2 unit="g/t-km">870.16</CO2>
+        <CO2 unit="g/m³-km">11.63</CO2>
+      </Result>
+      <Result status="success">
+        <Mission>Regional Delivery</Mission>
+        <Payload unit="kg">3020</Payload>
+        <FuelType>Diesel CI</FuelType>
+        <AverageSpeed unit="km/h">60.4</AverageSpeed>
+        <Fuel type="Diesel CI">
+          <FuelConsumption unit="g/km">181.4</FuelConsumption>
+          <FuelConsumption unit="g/t-km">60.1</FuelConsumption>
+          <FuelConsumption unit="g/m³-km">4.01</FuelConsumption>
+          <FuelConsumption unit="l/100km">21.7</FuelConsumption>
+          <FuelConsumption unit="l/t-km">0.0718</FuelConsumption>
+          <FuelConsumption unit="l/m³-km">0.00480</FuelConsumption>
+        </Fuel>
+        <CO2 unit="g/km">567.69</CO2>
+        <CO2 unit="g/t-km">188.00</CO2>
+        <CO2 unit="g/m³-km">12.56</CO2>
+      </Result>
+      <Result status="success">
+        <Mission>Urban Delivery</Mission>
+        <Payload unit="kg">604</Payload>
+        <FuelType>Diesel CI</FuelType>
+        <AverageSpeed unit="km/h">25.4</AverageSpeed>
+        <Fuel type="Diesel CI">
+          <FuelConsumption unit="g/km">213.4</FuelConsumption>
+          <FuelConsumption unit="g/t-km">353.3</FuelConsumption>
+          <FuelConsumption unit="g/m³-km">4.72</FuelConsumption>
+          <FuelConsumption unit="l/100km">25.5</FuelConsumption>
+          <FuelConsumption unit="l/t-km">0.423</FuelConsumption>
+          <FuelConsumption unit="l/m³-km">0.00565</FuelConsumption>
+        </Fuel>
+        <CO2 unit="g/km">667.90</CO2>
+        <CO2 unit="g/t-km">1105.95</CO2>
+        <CO2 unit="g/m³-km">14.78</CO2>
+      </Result>
+      <Result status="success">
+        <Mission>Urban Delivery</Mission>
+        <Payload unit="kg">3020</Payload>
+        <FuelType>Diesel CI</FuelType>
+        <AverageSpeed unit="km/h">25.5</AverageSpeed>
+        <Fuel type="Diesel CI">
+          <FuelConsumption unit="g/km">246.6</FuelConsumption>
+          <FuelConsumption unit="g/t-km">81.7</FuelConsumption>
+          <FuelConsumption unit="g/m³-km">5.46</FuelConsumption>
+          <FuelConsumption unit="l/100km">29.5</FuelConsumption>
+          <FuelConsumption unit="l/t-km">0.0977</FuelConsumption>
+          <FuelConsumption unit="l/m³-km">0.00653</FuelConsumption>
+        </Fuel>
+        <CO2 unit="g/km">771.89</CO2>
+        <CO2 unit="g/t-km">255.63</CO2>
+        <CO2 unit="g/m³-km">17.08</CO2>
+      </Result>
+      <Summary>
+        <SpecificCO2Emissions unit="gCO2/tkm">275.5</SpecificCO2Emissions>
+        <AveragePayload unit="t">2.355</AveragePayload>
+      </Summary>
+    </Results>
+    <ApplicationInformation>
+      <SimulationToolVersion>3.3.15.3102-RC !!NOT FOR CERTIFICATION!!</SimulationToolVersion>
+      <Date>2023-12-03T14:44:34.355639Z</Date>
+    </ApplicationInformation>
+  </Data>
+  <Signature>
+    <di:Reference URI="#COC-fdc3a394aa0744d49f50">
+      <di:Transforms>
+        <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+        <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+      </di:Transforms>
+      <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+      <di:DigestValue>v2YPLchB3BhHi1Zw+01q0SQHUVUv6oYiWhfeSVoytGE=</di:DigestValue>
+    </di:Reference>
+  </Signature>
+</VectoCustomerInformation>

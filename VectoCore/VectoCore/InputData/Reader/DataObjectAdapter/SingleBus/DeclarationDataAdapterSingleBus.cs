@@ -62,8 +62,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 
 			public HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData, SuperCapData runDataSuperCapData,
 				Kilogram vehicleMass, OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType,
-				TableData boostingLimitations, GearboxData gearboxData, CombustionEngineData engineData,
-				ArchitectureID architectureId)
+				TableData boostingLimitations, GearboxData gearboxData, CombustionEngineData engineData, IList<Tuple<PowertrainPosition, ElectricMotorData>> emData,
+                ArchitectureID architectureId)
 			{
 				return HybridStrategyDataAdapter.CreateHybridStrategyParameters(
 					batterySystemData: runDataBatteryData,
@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 					ovcMode: ovcMode,
 					loading: loading,
 					vehicleClass: vehicleClass,
-					missionType: missionType, architectureId, engineData, gearboxData, boostingLimitations);
+					missionType: missionType, archID: architectureId, engineData: engineData, emData, gearboxData: gearboxData, boostingLimitations: boostingLimitations);
             }
 
 			#endregion

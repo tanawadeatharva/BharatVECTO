@@ -19,7 +19,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 	public abstract class HybridStrategyDataAdapter : IHybridStrategyDataAdapter
 	{
         protected internal static Dictionary<GearshiftPosition, VehicleMaxPropulsionTorque> CreateMaxPropulsionTorque(
-			ArchitectureID archId, CombustionEngineData engineData, GearboxData gearboxData, TableData boostingLimitations)
+			ArchitectureID archId, CombustionEngineData engineData,
+			IList<Tuple<PowertrainPosition, ElectricMotorData>> emData, GearboxData gearboxData,
+			TableData boostingLimitations)
         {
 
             // engine data contains full-load curves already cropped with max gearbox torque and max ICE torque (vehicle level)
@@ -30,9 +32,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
             var retVal = new Dictionary<GearshiftPosition, VehicleMaxPropulsionTorque>();
 
-			var isP3OrP4Hybrid = archId.IsOneOf(ArchitectureID.P3, ArchitectureID.P4); 
-			//vehicleInputData.Components.ElectricMachines.Entries.Select(x => x.Position)
-   //             .Any(x => x == PowertrainPosition.HybridP3 || x == PowertrainPosition.HybridP4);
+			var isP3OrP4Hybrid = archId.IsOneOf(ArchitectureID.P3, ArchitectureID.P4);
+			var isAtGearbox = gearboxData.Type.IsOneOf(GearboxType.ATSerial, GearboxType.ATPowerSplit);
+			var em = isP3OrP4Hybrid ? null : emData.First(x => x.Item1 != PowertrainPosition.GEN).Item2;
+			var ratioAdc = em?.RatioADC ?? 1.0;
+
             foreach (var key in engineData.FullLoadCurves.Keys)
             {
                 if (key == 0)
@@ -48,15 +52,35 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
                     // don't know what to do...
                     // idea 1: apply gearbox limit for whole speed range
                     // idea 2: use em max torque as boosting limitation
-                    var gbxLimit = new[] {
-                        new VehicleMaxPropulsionTorque.FullLoadEntry()
-                            { MotorSpeed = 0.RPMtoRad(), FullDriveTorque = gearboxData.Gears[key].MaxTorque },
-                        new VehicleMaxPropulsionTorque.FullLoadEntry() {
-                            MotorSpeed = engineData.FullLoadCurves[0].N95hSpeed * 1.1,
-                            FullDriveTorque = gearboxData.Gears[key].MaxTorque
-                        }
-                    }.ToList();
-                    retVal[new GearshiftPosition(key, true)] = new VehicleMaxPropulsionTorque(gbxLimit);
+                    //var gbxLimit = new[] {
+                    //    new VehicleMaxPropulsionTorque.FullLoadEntry()
+                    //        { MotorSpeed = 0.RPMtoRad(), FullDriveTorque = gearboxData.Gears[key].MaxTorque },
+                    //    new VehicleMaxPropulsionTorque.FullLoadEntry() {
+                    //        MotorSpeed = engineData.FullLoadCurves[0].N95hSpeed * 1.1,
+                    //        FullDriveTorque = gearboxData.Gears[key].MaxTorque
+                    //    }
+                    //}.ToList();
+					var gbxLimit = new List<VehicleMaxPropulsionTorque.FullLoadEntry>();
+					gbxLimit.Add(new VehicleMaxPropulsionTorque.FullLoadEntry() {
+						MotorSpeed = 0.RPMtoRad(),
+						FullDriveTorque = VectoMath.Min(gearboxData.Gears[key].MaxTorque,
+							(em?.EfficiencyData.VoltageLevels.Last().FullLoadDriveTorque(0.RPMtoRad()) ?? 0.SI<NewtonMeter>() * ratioAdc))
+					});
+                    foreach (var iceEntry in engineData.FullLoadCurves[0].FullLoadEntries) {
+						gbxLimit.Add(new VehicleMaxPropulsionTorque.FullLoadEntry() {
+							MotorSpeed = iceEntry.EngineSpeed,
+							FullDriveTorque = VectoMath.Min(gearboxData.Gears[key].MaxTorque, 
+								iceEntry.TorqueFullLoad + (em?.EfficiencyData.VoltageLevels.Last().FullLoadDriveTorque(
+									iceEntry.EngineSpeed * ratioAdc) * ratioAdc ?? 0.SI<NewtonMeter>()))
+						});
+					}
+					var bKey = isAtGearbox
+						? new GearshiftPosition(key, true)
+						: new GearshiftPosition(key);
+					if (isAtGearbox && gearboxData.Gears[key].HasTorqueConverter) {
+						retVal[new GearshiftPosition(key, false)] = new VehicleMaxPropulsionTorque(gbxLimit);
+					}
+                    retVal[bKey] = new VehicleMaxPropulsionTorque(gbxLimit);
                     continue;
                 }
 
@@ -90,7 +114,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
                 // if no gearbox limit is defined, MaxTorque is null;
                 // in case of P3 or P4, do not apply gearbox limit to propulsion limit as ICE is already cropped with max torque
                 var gearboxTorqueLimit = isP3OrP4Hybrid ? null : gearboxData.Gears[key].MaxTorque;
-                retVal[new GearshiftPosition(key, true)] = new VehicleMaxPropulsionTorque(IntersectMaxPropulsionTorqueCurve(entries, gearboxTorqueLimit));
+				var dKey = isAtGearbox
+					? new GearshiftPosition(key, true)
+					: new GearshiftPosition(key);
+				if (isAtGearbox && gearboxData.Gears[key].HasTorqueConverter) {
+					retVal[new GearshiftPosition(key, false)] =
+						new VehicleMaxPropulsionTorque(IntersectMaxPropulsionTorqueCurve(entries, gearboxTorqueLimit));
+				}
+                retVal[dKey] = new VehicleMaxPropulsionTorque(IntersectMaxPropulsionTorqueCurve(entries, gearboxTorqueLimit));
 
             }
 
@@ -171,9 +202,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 		#region Implementation of IHybridStrategyDataAdapter
 
-		public abstract HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData, SuperCapData superCap,
-			OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType, ArchitectureID archID,
-			CombustionEngineData engineData, GearboxData gearboxData, TableData boostingLimitations);
+		public abstract HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData,
+			SuperCapData superCap,
+			OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType,
+			ArchitectureID archID,
+			CombustionEngineData engineData,
+			IList<Tuple<PowertrainPosition, ElectricMotorData>> runDataElectricMachinesData, GearboxData gearboxData,
+			TableData boostingLimitations);
 
 		public abstract HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData, SuperCapData superCapData,
 			Kilogram vehicleMass, OvcHevMode ovcMode);
@@ -183,13 +218,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
     public class ParallelHybridStrategyParameterDataAdapter : HybridStrategyDataAdapter
 	{
-		public override HybridStrategyParameters CreateHybridStrategyParameters(
-			BatterySystemData batterySystemData,
-			SuperCapData superCap, 
-			OvcHevMode ovcMode, 
-			LoadingType loading, 
-			VehicleClass vehicleClass, 
-			MissionType missionType, ArchitectureID archID, CombustionEngineData engineData, GearboxData gearboxData, TableData boostingLimitations)
+		public override HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData,
+			SuperCapData superCap,
+			OvcHevMode ovcMode,
+			LoadingType loading,
+			VehicleClass vehicleClass,
+			MissionType missionType, ArchitectureID archID, CombustionEngineData engineData,
+			IList<Tuple<PowertrainPosition, ElectricMotorData>> emData, GearboxData gearboxData,
+			TableData boostingLimitations)
 		{
 			if (batterySystemData == null && superCap == null) {
 				return null;
@@ -226,7 +262,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			result.ICEStartPenaltyFactor = 0.1;
 			result.CostFactorSOCExponent = 1;
 			result.MaxPropulsionTorque =
-				CreateMaxPropulsionTorque(archID, engineData, gearboxData, boostingLimitations);
+				CreateMaxPropulsionTorque(archID, engineData, emData, gearboxData, boostingLimitations);
 
 			if (ovcMode == OvcHevMode.ChargeSustaining) {
 				result.EquivalenceFactor =
@@ -256,9 +292,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 	public class SerialHybridStrategyParameterDataAdapter : HybridStrategyDataAdapter
 	{
-		public override HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData, SuperCapData superCap,
-			OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType, ArchitectureID archID,
-			CombustionEngineData engineData, GearboxData gearboxData, TableData boostingLimitations)
+		public override HybridStrategyParameters CreateHybridStrategyParameters(BatterySystemData batterySystemData,
+			SuperCapData superCap,
+			OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType,
+			ArchitectureID archID,
+			CombustionEngineData engineData,
+			IList<Tuple<PowertrainPosition, ElectricMotorData>> runDataElectricMachinesData, GearboxData gearboxData,
+			TableData boostingLimitations)
 		{
 			throw new NotImplementedException("Not supported for serial hybrid strategy");
 		}

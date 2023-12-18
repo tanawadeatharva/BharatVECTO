@@ -208,7 +208,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		private IVehicleDeclarationInputData VehicleCreator(string version, XmlNode node, string arg3)
 		{
-			var vehicle = Factory.CreateVehicleData(version, null, node, arg3);
+			var vehicle = Factory.CreateVehicleData(version, null, node, arg3, false);
 
 			if (vehicle.ComponentNode != null)
 				vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);

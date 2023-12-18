@@ -614,9 +614,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					var gbxOutTqV = dryRunResponse.Gearbox.OutputTorque - emTq;
 
 					var prevGbxSpeed = GetPrevGbxSpeed();
-					var gbxLoss = ModelData.GearboxData.Gears[gear.Gear].LossMap
+					var lossMap = gear.TorqueConverterLocked.HasValue && !gear.TorqueConverterLocked.Value
+						? ModelData.GearboxData.Gears[gear.Gear].TorqueConverterGearLossMap
+						: ModelData.GearboxData.Gears[gear.Gear].LossMap;
+					var gbxLoss = lossMap
 						.GetTorqueLoss((dryRunResponse.Gearbox.OutputSpeed + prevGbxSpeed) / 2.0, gbxOutTqV);
-					gbxInTq = gbxOutTqV / ModelData.GearboxData.Gears[gear.Gear].Ratio + gbxLoss.Value;
+					var ratio = gear.TorqueConverterLocked.HasValue && !gear.TorqueConverterLocked.Value
+						? ModelData.GearboxData.Gears[gear.Gear].TorqueConverterRatio
+						: ModelData.GearboxData.Gears[gear.Gear].Ratio;
+                        gbxInTq = gbxOutTqV / ratio + gbxLoss.Value;
 					break;
 				}
 				case PowertrainPosition.HybridP4 when dryRunResponse.Gearbox.Gear.Gear != 0: {
@@ -638,9 +644,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					}
 					var gear = dryRunResponse.Gearbox.Gear;
 					var prevGbxSpeed = GetPrevGbxSpeed();
-					var gbxLoss = ModelData.GearboxData.Gears[gear.Gear].LossMap
+					var lossMap = gear.TorqueConverterLocked.HasValue && !gear.TorqueConverterLocked.Value
+						? ModelData.GearboxData.Gears[gear.Gear].TorqueConverterGearLossMap
+						: ModelData.GearboxData.Gears[gear.Gear].LossMap;
+					var gbxLoss = lossMap
 						.GetTorqueLoss((dryRunResponse.Gearbox.OutputSpeed + prevGbxSpeed) / 2.0, gbxInTorque);
-					gbxInTq = gbxInTorque / ModelData.GearboxData.Gears[gear.Gear].Ratio + gbxLoss.Value;
+					var ratio = gear.TorqueConverterLocked.HasValue && !gear.TorqueConverterLocked.Value
+						? ModelData.GearboxData.Gears[gear.Gear].TorqueConverterRatio
+						: ModelData.GearboxData.Gears[gear.Gear].Ratio;
+					gbxInTq = gbxInTorque / ratio + gbxLoss.Value;
 					break;
 				}
 			}
@@ -2063,6 +2075,46 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						}
 					}
 				}
+
+				if (maxEmTorqueRecuperate.IsGreater(0) && DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate) {
+					// search EM torque for ICE to be on FLD
+					try {
+						var emTorqueICEMax = SearchAlgorithm.Search(
+							firstResponse.ElectricMotor.ElectricMotorPowerMech / firstResponse.ElectricMotor.AngularVelocity,
+							firstResponse.Engine.TorqueOutDemand, firstResponse.ElectricMotor.MaxRecuperationTorque * 0.1,
+							getYValue: r => {
+								var response = r as IResponse;
+								return response.Engine.TotalTorqueDemand - response.Engine.DynamicFullLoadTorque;
+							},
+							evaluateFunction: emTq => {
+								var cfg = new HybridStrategyResponse {
+									CombustionEngineOn = nextGear.IsLockedGear() ? true : false,
+									GearboxInNeutral = false,
+									MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> {
+										{ emPos, Tuple.Create(firstResponse.ElectricMotor.AngularVelocity, emTq) }
+									}
+								};
+								return RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, cfg);
+							},
+							criterion: r => {
+								var response = r as IResponse;
+								return (response.Engine.TotalTorqueDemand - response.Engine.DynamicFullLoadTorque).Value();
+							},
+							abortCriterion: (r, c) => r == null,
+							searcher: this
+						);
+						if (emTorqueICEMax.IsBetween(0.SI<NewtonMeter>(), maxEmTorqueRecuperate)) {
+							// only consider where EM is recuperating
+							var tmp = TryConfiguration(
+								absTime, dt, outTorque, outAngularVelocity, nextGear, emPos, Tuple.Create(firstResponse.ElectricMotor.AngularVelocity, emTorqueICEMax),
+								emTorqueICEMax / maxEmTorqueRecuperate,
+								allowIceOff, dryRun);
+							responses.Add(tmp);
+						}
+					} catch (Exception) {
+						Log.Debug("Failed to find EM torque to compensate drag losses of next components.");
+					}
+                }
 			}
 		}
 

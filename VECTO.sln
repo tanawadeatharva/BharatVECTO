@@ -103,6 +103,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VectoMockup", "VectoMockup"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectoMockupTest", "VectoMockup\VectoMockupTest\VectoMockupTest.csproj", "{EC0D4019-BBE6-431C-90E1-BD4AAEC0BF88}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectoCommonTests", "VectoCommon\VectoCommonTests\VectoCommonTests.csproj", "{57FB17D2-F715-4FDF-9BC1-0820D36D5650}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -393,6 +395,18 @@ Global
 		{EC0D4019-BBE6-431C-90E1-BD4AAEC0BF88}.MockupRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{EC0D4019-BBE6-431C-90E1-BD4AAEC0BF88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC0D4019-BBE6-431C-90E1-BD4AAEC0BF88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57FB17D2-F715-4FDF-9BC1-0820D36D5650}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57FB17D2-F715-4FDF-9BC1-0820D36D5650}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57FB17D2-F715-4FDF-9BC1-0820D36D5650}.Deploy|Any CPU.ActiveCfg = Debug|Any CPU
+		{57FB17D2-F715-4FDF-9BC1-0820D36D5650}.Deploy|Any CPU.Build.0 = Debug|Any CPU
+		{57FB17D2-F715-4FDF-9BC1-0820D36D5650}.MockupDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57FB17D2-F715-4FDF-9BC1-0820D36D5650}.MockupDebug|Any CPU.Build.0 = Debug|Any CPU
+		{57FB17D2-F715-4FDF-9BC1-0820D36D5650}.MockupDeploy|Any CPU.ActiveCfg = Debug|Any CPU
+		{57FB17D2-F715-4FDF-9BC1-0820D36D5650}.MockupDeploy|Any CPU.Build.0 = Debug|Any CPU
+		{57FB17D2-F715-4FDF-9BC1-0820D36D5650}.MockupRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{57FB17D2-F715-4FDF-9BC1-0820D36D5650}.MockupRelease|Any CPU.Build.0 = Release|Any CPU
+		{57FB17D2-F715-4FDF-9BC1-0820D36D5650}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57FB17D2-F715-4FDF-9BC1-0820D36D5650}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -416,6 +430,7 @@ Global
 		{4977BE2A-CB80-4FC0-8D1A-30EC094011B4} = {351FF7E8-B56B-445E-8E98-A61E07C990DA}
 		{D78AD145-DD1F-45E7-89DA-4BF58F8F2D3E} = {351FF7E8-B56B-445E-8E98-A61E07C990DA}
 		{EC0D4019-BBE6-431C-90E1-BD4AAEC0BF88} = {927F1B17-8075-4185-A324-92971D2FB020}
+		{57FB17D2-F715-4FDF-9BC1-0820D36D5650} = {73A5BF70-6168-456F-95E5-A1402BFA488C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B38F3172-132E-43F7-9C4B-5FDC3A28C051}

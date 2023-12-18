@@ -57,14 +57,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		[Inject]
 		public IDeclarationInjectFactory Factory { protected get; set; }
 
-		public XMLJobDataReaderV10(IXMLDeclarationJobInputData jobData, XmlNode jobNode) : base(
+		public XMLJobDataReaderV10(IXMLDeclarationJobInputData jobData, XmlNode jobNode, bool allowDeprecated) : base(
 			jobData, jobNode)
 		{
 			JobNode = jobNode;
 			JobData = jobData;
+			AllowDeprecated = allowDeprecated;
 		}
 
 		#region Implementation of IXMLJobDataReader
+
+		public bool AllowDeprecated { get; protected set; }
 
 		public virtual IVehicleDeclarationInputData CreateVehicle => _vehicle ?? (_vehicle = CreateComponent(XMLNames.Component_Vehicle, VehicleCreator));
 
@@ -72,7 +75,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		protected virtual IVehicleDeclarationInputData VehicleCreator(string version, XmlNode vehicleNode, string sourceFile)
 		{
-			var vehicle = Factory.CreateVehicleData(version, JobData, vehicleNode, sourceFile);
+			var vehicle = Factory.CreateVehicleData(version, JobData, vehicleNode, sourceFile, AllowDeprecated);
 
 			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);  	
 			vehicle.ADASReader =  GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader);
@@ -93,13 +96,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLJobDataReaderV20(IXMLDeclarationJobInputData jobData, XmlNode jobNode) : base(
-			jobData, jobNode) { }
+		public XMLJobDataReaderV20(IXMLDeclarationJobInputData jobData, XmlNode jobNode, bool allowDeprecated) : base(
+			jobData, jobNode, allowDeprecated) { }
 
 		protected override IVehicleDeclarationInputData VehicleCreator(string version, XmlNode vehicleNode, string sourceFile)
 		{
-			var vehicle = Factory.CreateVehicleData(version, JobData, vehicleNode, sourceFile);
-
+			var vehicle = Factory.CreateVehicleData(version, JobData, vehicleNode, sourceFile, AllowDeprecated);
+			
 			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
 			vehicle.ADASReader = vehicle.ADASNode == null ? null : GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader); //null;
 			vehicle.PTOReader = vehicle.PTONode == null ? null : GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader);
@@ -118,13 +121,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLJobDataReaderV21(IXMLDeclarationJobInputData jobData, XmlNode jobNode) : base(
-			jobData, jobNode)
+		public XMLJobDataReaderV21(IXMLDeclarationJobInputData jobData, XmlNode jobNode, bool allowDeprecated) : base(
+			jobData, jobNode, allowDeprecated)
 		{ }
 
 		protected override IVehicleDeclarationInputData VehicleCreator(string version, XmlNode vehicleNode, string sourceFile)
 		{
-			var vehicle = Factory.CreateVehicleData(version, JobData, vehicleNode, sourceFile);
+			var vehicle = Factory.CreateVehicleData(version, JobData, vehicleNode, sourceFile, AllowDeprecated);
 
 			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
 			vehicle.ADASReader = GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader);

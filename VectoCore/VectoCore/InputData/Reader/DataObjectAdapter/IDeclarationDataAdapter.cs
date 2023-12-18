@@ -74,7 +74,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			TableData boostingLimitations,
 			GearboxData gearboxData,
 			CombustionEngineData engineData,
-			ArchitectureID archId);
+			IList<Tuple<PowertrainPosition, ElectricMotorData>> emData,
+            ArchitectureID archId);
 	}
 
 	public interface IPrimaryBusDeclarationDataAdapter : IDeclarationDataAdapter
@@ -104,7 +105,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
         HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
 			SuperCapData runDataSuperCapData, Kilogram vehicleMass, OvcHevMode ovcMode,
 			LoadingType loading, VehicleClass vehicleClass, MissionType missionType, TableData boostingLimitations,
-			GearboxData gearboxData, CombustionEngineData engineData, ArchitectureID architectureId);
+			GearboxData gearboxData, CombustionEngineData engineData,
+			IList<Tuple<PowertrainPosition, ElectricMotorData>> runDataElectricMachinesData,
+			ArchitectureID architectureId);
 	}
 
 	public interface IGenericCompletedBusDeclarationDataAdapter : IDeclarationDataAdapter
@@ -129,7 +132,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
         HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
 			SuperCapData runDataSuperCapData, Kilogram vehicleMass, OvcHevMode ovcMode,
 			LoadingType loading, VehicleClass vehicleClass, MissionType missionType, TableData boostingLimitations,
-			GearboxData gearboxData, CombustionEngineData engineData, ArchitectureID architectureId);
+			GearboxData gearboxData, CombustionEngineData engineData,
+			IList<Tuple<PowertrainPosition, ElectricMotorData>> runDataElectricMachinesData, ArchitectureID architectureId);
 
     }
 
@@ -172,6 +176,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
         HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
 			SuperCapData runDataSuperCapData, Kilogram vehicleMass, OvcHevMode ovcMode,
 			LoadingType loading, VehicleClass vehicleClass, MissionType missionType, TableData boostingLimitations,
-			GearboxData gearboxData, CombustionEngineData engineData, ArchitectureID architectureId);
+			GearboxData gearboxData, CombustionEngineData engineData, IList<Tuple<PowertrainPosition, ElectricMotorData>> emData, ArchitectureID architectureId);
     }
 }

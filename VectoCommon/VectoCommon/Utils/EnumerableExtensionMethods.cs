@@ -209,7 +209,12 @@ namespace TUGraz.VectoCommon.Utils
 			Func<TSource, IComparable> projectionToComparable)
 		{
 			using (var e = source.GetEnumerator()) {
-				if (!e.MoveNext()) {
+				if (!e.MoveNext())
+				{
+					if (default(TSource) == null)
+					{
+						return default;
+					}
 					throw new InvalidOperationException("Sequence is empty.");
 				}
 
@@ -229,10 +234,14 @@ namespace TUGraz.VectoCommon.Utils
 		}
 
 		public static TSource MaxBy<TSource>(this IEnumerable<TSource> source,
-			Func<TSource, IComparable> projectionToComparable)
+			Func<TSource, IComparable> projectionToComparable) 
 		{
 			using (var e = source.GetEnumerator()) {
-				if (!e.MoveNext()) {
+				if (!e.MoveNext())
+				{
+					if (default(TSource) == null) {
+						return default;
+					}
 					throw new InvalidOperationException("Sequence is empty.");
 				}
 

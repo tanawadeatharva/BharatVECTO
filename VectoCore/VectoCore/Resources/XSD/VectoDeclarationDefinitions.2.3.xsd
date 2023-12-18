@@ -16,6 +16,8 @@ Changelog:
                         values
     11.04.2023: Bugfix IEPC standard values: allow only one drag curve, remove gear attribute
 	03.10.2023: Changes SuperCap Data: InternalResistance: allow 0.00
+    22.11.2023: Update annotation on EM torque limits
+	11.12.2022: change restrictions of EM continuous torque - allow 0.00
 -->
 	<xs:complexType name="AbstractADCDataDeclarationType" abstract="true">
 		<xs:complexContent>
@@ -734,17 +736,17 @@ Changelog:
 	<xs:complexType name="ElectricMachineSystemMaxTorqueEntryType">
 		<xs:attribute name="outShaftSpeed" type="v2.3:OutShaftSpeedType" use="required">
 			<xs:annotation>
-				<xs:documentation>P468 - [rpm]</xs:documentation>
+				<xs:documentation>P408, P468 - [rpm]</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 		<xs:attribute name="maxTorque" type="v2.3:maxTorqueType" use="required">
 			<xs:annotation>
-				<xs:documentation>P469 - [Nm]</xs:documentation>
+				<xs:documentation>P409, P469 - [Nm]</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 		<xs:attribute name="minTorque" type="v2.3:minTorqueType" use="required">
 			<xs:annotation>
-				<xs:documentation>P470 - [Nm]</xs:documentation>
+				<xs:documentation>P210, P470 - [Nm]</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
@@ -897,10 +899,15 @@ Changelog:
 							<xs:documentation>P467 - [V]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ContinuousTorque" type="v2.3:MaxTorqueType">
+					<xs:element name="ContinuousTorque">
 						<xs:annotation>
 							<xs:documentation>P459 - [Nm]</xs:documentation>
 						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double2">
+								<xs:minInclusive value="0.00"/>
+							</xs:restriction>
+						</xs:simpleType>
 					</xs:element>
 					<xs:element name="TestSpeedContinuousTorque" type="v2.3:TestSpeedType">
 						<xs:annotation>
@@ -938,15 +945,23 @@ Changelog:
 		<xs:complexContent>
 			<xs:extension base="v2.3:AbstractElectricMachineSystemVoltageLevelType">
 				<xs:sequence>
-					<xs:element name="ContinuousTorque" type="v2.3:MaxTorqueType">
+					<xs:element name="ContinuousTorque">
 						<xs:annotation>
 							<xs:documentation>P459 - [Nm]</xs:documentation>
 						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double2">
+								<xs:minInclusive value="0.00"/>
+							</xs:restriction>
+						</xs:simpleType>
 					</xs:element>
-					<xs:element name="TestSpeedContinuousTorque" type="v2.3:TestSpeedType">
+					<xs:element name="TestSpeedContinuousTorque">
 						<xs:annotation>
 							<xs:documentation>P460 - [1/min]</xs:documentation>
 						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="v2.3:TestSpeedType"/>
+						</xs:simpleType>
 					</xs:element>
 					<xs:element name="OverloadTorque" type="v2.3:MaxTorqueType">
 						<xs:annotation>

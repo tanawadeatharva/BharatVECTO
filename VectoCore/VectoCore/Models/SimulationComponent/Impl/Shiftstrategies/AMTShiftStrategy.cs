@@ -109,7 +109,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private bool SpeedTooLowForEngine(GearshiftPosition gear, PerSecond outAngularSpeed)
 		{
-			return (outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsSmaller(DataBus.EngineInfo.EngineIdleSpeed);
+			return (outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsSmaller(
+				Constants.SimulationSettings.DownshiftIdlespeedFactor * DataBus.EngineInfo.EngineIdleSpeed);
 		}
 
 		private bool SpeedTooHighForEngine(GearshiftPosition gear, PerSecond outAngularSpeed)

@@ -374,6 +374,8 @@ namespace TUGraz.VectoCore.Configuration
 			/// the combustion engine is set to on.
 			/// </summary>
 			public const double VTPIdleSpeedDetectionFactor = 0.85;
+
+			public const double DownshiftIdlespeedFactor = 1.1;
 		}
 
 		public static class XML

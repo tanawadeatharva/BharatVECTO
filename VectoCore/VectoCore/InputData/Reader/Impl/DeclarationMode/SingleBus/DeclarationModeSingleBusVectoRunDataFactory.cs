@@ -527,6 +527,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 						//runData.VehicleData.VehicleClass,
 						mission.BusParameter.BusGroup,
 						mission.MissionType, PrimaryVehicle.BoostingLimitations, runData.GearboxData, runData.EngineData,
+						runData.ElectricMachinesData,
 						PrimaryVehicle.ArchitectureID);
 
 				if (ovcMode != OvcHevMode.NotApplicable) {
