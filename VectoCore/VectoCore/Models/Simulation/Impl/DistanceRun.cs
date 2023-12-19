@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 	public class DistanceRun : VectoRun
 	{
-		public DistanceRun(IVehicleContainer container, IFollowUpRunCreator followUpCreator) : base(container, followUpCreator) {}
+		public DistanceRun(IVehicleContainer container, IFollowUpRunCreator followUpCreator, IPostMortemAnalyzer postMortem) : base(container, followUpCreator, postMortem) {}
 		public DistanceRun(IVehicleContainer container) : base(container) {}
 		protected override IResponse DoSimulationStep()
 		{

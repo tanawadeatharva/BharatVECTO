@@ -35,7 +35,4 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 	{
 		//IIterativeRunResult CreateIterativeResult(IModalDataContainer modData);
 	}
-
-
-
 }
