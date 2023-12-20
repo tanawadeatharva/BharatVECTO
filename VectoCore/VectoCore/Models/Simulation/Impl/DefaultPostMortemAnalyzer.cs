@@ -40,6 +40,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			if (!_strategy.AbortSimulation(container, ex)) {
 				//_strategy.M
+				container.RunStatus = VectoRun.Status.PrimaryBusSimulationIgnore;
 				return false;
 			}
 			return true;

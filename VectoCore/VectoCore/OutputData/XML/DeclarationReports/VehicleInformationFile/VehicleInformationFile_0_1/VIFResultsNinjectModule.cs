@@ -70,7 +70,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			Bind<ICO2Writer>().To<VIFCO2Writer>().When(AccessedViaVIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetCO2ResultPEVBus(null, XNamespace.None));
 
-
 			Bind<IResultGroupWriter>().To<VIFErrorResultWriter>().When(AccessedViaVIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((IVIFResultsWriterFactory c) => c.GetBusErrorResultWriter(null, XNamespace.None));
 			Bind<IResultSequenceWriter>().To<VIFResultErrorMissionWriter>().When(AccessedViaVIFResultsWriterFactory)

@@ -1734,7 +1734,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 																VehicleOperationLookup.VehicleOperationData vehicleOperation,
 																(double etaChgBatDepot, double etaChgBatInMission, double etaChtBatWeighted) chargingEfficiency)
 		{
-			if (cdResult.Status != VectoRun.Status.Success || csResult.Status != VectoRun.Status.Success) {
+			if (!cdResult.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore) || 
+				!csResult.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore)) {
 				return null;
 			}
 			var batteryData = cdResult.BatteryData;
@@ -1787,6 +1788,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				.ToDictionary(x => x.Item1, x => x.Item2);
 
 			var retVal = new WeightedResult() {
+				Status = cdResult.Status == VectoRun.Status.PrimaryBusSimulationIgnore || csResult.Status == VectoRun.Status.PrimaryBusSimulationIgnore ? VectoRun.Status.PrimaryBusSimulationIgnore : VectoRun.Status.Success,
 				Distance = cdResult.Distance,
 				Payload = cdResult.Payload,
 				CargoVolume = cdResult.CargoVolume,
@@ -1889,6 +1891,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var fuels = entries.First().FuelData;
 			return new WeightedResult() {
+				Status = VectoRun.Status.Success,
 				AverageSpeed = null,
 				AverageDrivingSpeed = null,
 				Distance = entries.Sum(e => e.Distance * e.WeightingFactor),
@@ -1924,6 +1927,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var fuels = entries.First().ChargeDepletingResult.FuelData;
 			return new WeightedResult() {
+				Status = VectoRun.Status.Success,
 				AverageSpeed = null,
 				AverageDrivingSpeed = null,
 				Distance = entries.Sum(e => e.ChargeDepletingResult.Distance * e.ChargeDepletingResult.WeightingFactor),

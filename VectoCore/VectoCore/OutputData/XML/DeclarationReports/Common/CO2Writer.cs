@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter;
 using TUGraz.VectoCore.Utils;
 
@@ -15,6 +16,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         public virtual XElement[] GetElements(IResultEntry entry)
 		{
+			if (entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
+				GetCO2ResultEntries(entry.CO2Total, entry.Distance, entry.Payload, entry.CargoVolume,
+						entry.PassengerCount)
+					.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2,
+						new ConvertedSI(double.NaN, x.Value.Units).ValueAsUnit()))
+					.ToArray();
+			}
 			return GetCO2ResultEntries(entry.CO2Total, entry.Distance, entry.Payload, entry.CargoVolume,
 					entry.PassengerCount)
 				.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2, x.GetElement()))
@@ -23,9 +31,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         public virtual XElement[] GetElements(IWeightedResult entry)
 		{
+			if (entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
+				return GetCO2ResultEntries(entry.CO2Total, entry.Distance, entry.Payload, entry.CargoVolume,
+						entry.PassengerCount)
+					.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2, x.GetElement()))
+					.ToArray();
+            }
+
 			return GetCO2ResultEntries(entry.CO2Total, entry.Distance, entry.Payload, entry.CargoVolume,
 					entry.PassengerCount)
-				.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2, x.GetElement()))
+				.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2,
+					new ConvertedSI(double.NaN, x.Value.Units).ValueAsUnit()))
 				.ToArray();
 		}
 

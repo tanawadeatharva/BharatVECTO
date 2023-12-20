@@ -191,6 +191,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 			}
 
+			if (Container.RunStatus == Status.PrimaryBusSimulationIgnore) {
+				Container.FinishSimulationRun();
+				WritingResultsDone = true;
+				FinishedWithoutErrors = true;
+                IterationStatistics.FinishSimulation(RunName + CycleName + RunSuffix + RunIdentifier);
+				Log.Info("VectoJob finished.");
+				return;
+			}
+
 			if (CheckCyclePortProgress()) {
 				if (CyclePort.Progress < 1) {
 					Container.RunStatus = response is ResponseBatteryEmpty ? Status.REESSEmpty : Status.Aborted;
@@ -207,14 +216,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					Container = PowertrainBuilder.Build(data, Container.ModalData, Container.SumData);
 					AbsTime = 0.SI<Second>();
 					Container.AbsTime = AbsTime;
-                CyclePort = Container.GetCycleOutPort();
+					CyclePort = Container.GetCycleOutPort();
 					Initialize();
 					Run();
 				},
 				this,
 				() => {
 					Container.RunData.Report?.PrepareResult(null); //<- increase number of expected results;
-                    Container.FinishSingleSimulationRun();
+					Container.FinishSingleSimulationRun();
 				}) ?? false;
 			if (!runAgain) {
 				Container.FinishSimulationRun();
@@ -268,7 +277,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Success,
 			Canceled,
 			Aborted,
-			REESSEmpty
+			REESSEmpty,
+			PrimaryBusSimulationIgnore
 		}
 	}
 }

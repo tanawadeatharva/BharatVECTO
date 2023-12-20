@@ -132,7 +132,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetBusHEVOVCSuccessResultWriter(null, XNamespace.None));
             Bind<IResultGroupWriter>().To<BusPEVMRFResultWriter>().When(AccessedViaMRFResultsWriterFactory)
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetBusPEVSuccessResultWriter(null, XNamespace.None));
-            Bind<IResultGroupWriter>().To<ErrorResultWriter>().When(AccessedViaMRFResultsWriterFactory)
+
+			Bind<IResultGroupWriter>().To<ErrorResultWriter>().When(AccessedViaMRFResultsWriterFactory)
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetBusErrorResultWriter(null, XNamespace.None));
 
             Bind<IResultGroupWriter>().To<ResultSimulationParameterMRFBusWriter>().When(AccessedViaMRFResultsWriterFactory)

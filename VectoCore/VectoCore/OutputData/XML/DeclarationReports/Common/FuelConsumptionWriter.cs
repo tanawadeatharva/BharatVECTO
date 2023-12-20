@@ -6,6 +6,7 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter;
 using TUGraz.VectoCore.Utils;
@@ -20,12 +21,20 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         public XElement GetElement(IResultEntry entry, IFuelConsumptionCorrection fc)
         {
+			if (entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
+				return GetElementIgnore(fc.TotalFuelConsumptionCorrected, fc.Fuel, entry.Distance, entry.Payload,
+					entry.CargoVolume, entry.PassengerCount);
+			}
 			return GetElement(fc.TotalFuelConsumptionCorrected, fc.Fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount);
         }
 
         public XElement GetElement(IWeightedResult entry, IFuelProperties fuel, Kilogram consumption)
 		{
-			return GetElement(consumption, fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount);
+			if (entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
+				return GetElementIgnore(consumption, fuel, entry.Distance, entry.Payload,
+					entry.CargoVolume, entry.PassengerCount);
+			}
+            return GetElement(consumption, fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount);
 		}
 
 		protected virtual XElement GetElement(Kilogram consumption, IFuelProperties fuel, Meter distance, Kilogram payLoad, CubicMeter cargoVolume, double? passengerCount)
@@ -37,9 +46,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 			);
 		}
 
+		protected virtual XElement GetElementIgnore(Kilogram consumption, IFuelProperties fuel, Meter distance, Kilogram payLoad, CubicMeter cargoVolume, double? passengerCount)
+		{
+			return new XElement(TNS + XMLNames.Report_Results_Fuel,
+				new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fuel.FuelType.ToXMLFormat()),
+				GetFuelConsumptionEntries(consumption, fuel, distance, payLoad, cargoVolume, passengerCount).Select(x =>
+					new XElement(TNS + XMLNames.Report_Results_FuelConsumption,
+						new FormattedReportValue(new ConvertedSI(double.NaN, x.Units)).GetElement()))
+			);
+		}
         #endregion
 
-		public abstract IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc,
+        public abstract IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc,
 			IFuelProperties fuel, Meter distance, Kilogram payload, CubicMeter volume,
 			double? passenger);
 
