@@ -543,7 +543,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 			var fcActive = 1;
 			var minActive = (int)Math.Max(1, Math.Ceiling(Math.Round(power / _fuelCellComponentMap.MaxPowerMap, 6))); //minActive wrt power limits
 			if (minActive > _fcCount) {
-				throw new VectoException("Power demand to high for string");
+				throw new VectoException($"Power demand too high for string req: {power}, max power {this.MaxPower}");
 			}
 
 			fcActive = VectoMath.Max(fcActive, minActive);
