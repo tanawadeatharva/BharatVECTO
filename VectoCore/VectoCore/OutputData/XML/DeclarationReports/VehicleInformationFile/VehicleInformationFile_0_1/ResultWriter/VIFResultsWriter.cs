@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
@@ -59,8 +60,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 							? XMLNames.Report_Results_Status_Success_Val
 							: XMLNames.Report_Results_Status_Error_Val),
 					ordered.Select(x =>
-						x.ChargeDepletingResult.Status == VectoRun.Status.Success &&
-						x.ChargeSustainingResult.Status == VectoRun.Status.Success
+						x.ChargeDepletingResult.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore) &&
+						x.ChargeSustainingResult.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore)
 							? ResultSuccessWriter.GetElement(x)
 							: ResultErrorWriter.GetElement(x)),
 					SummaryWriter.GetElement(ordered)

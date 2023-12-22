@@ -17,6 +17,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
     {
         protected FuelConsumptionWriterBase(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
+		protected virtual string FCElementName { get; } = XMLNames.Report_Results_FuelConsumption;
+
         #region Implementation of IFuelConsumptionWriter
 
         public XElement GetElement(IResultEntry entry, IFuelConsumptionCorrection fc)
@@ -42,7 +44,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 			return new XElement(TNS + XMLNames.Report_Results_Fuel,
 				new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fuel.FuelType.ToXMLFormat()),
 				GetFuelConsumptionEntries(consumption, fuel, distance, payLoad, cargoVolume, passengerCount).Select(x =>
-					new XElement(TNS + XMLNames.Report_Results_FuelConsumption, new FormattedReportValue(x).GetElement()))
+					new XElement(TNS + FCElementName, new FormattedReportValue(x).GetElement()))
 			);
 		}
 
@@ -51,7 +53,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 			return new XElement(TNS + XMLNames.Report_Results_Fuel,
 				new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fuel.FuelType.ToXMLFormat()),
 				GetFuelConsumptionEntries(consumption, fuel, distance, payLoad, cargoVolume, passengerCount).Select(x =>
-					new XElement(TNS + XMLNames.Report_Results_FuelConsumption,
+					new XElement(TNS + FCElementName,
 						new FormattedReportValue(new ConvertedSI(double.NaN, x.Units)).GetElement()))
 			);
 		}

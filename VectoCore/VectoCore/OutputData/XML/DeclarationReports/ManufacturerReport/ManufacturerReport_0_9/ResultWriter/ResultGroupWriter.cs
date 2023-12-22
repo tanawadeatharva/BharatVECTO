@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					new XElement(TNS + XMLNames.Report_ResultEntry_MaxSpeed, new ConvertedSI(double.NaN, XMLNames.Unit_kmph).ValueAsUnit()),
 					new XElement(TNS + XMLNames.Report_ResultEntry_MaxDeceleration, new ConvertedSI(double.NaN, XMLNames.Unit_mps2).ValueAsUnit()),
 					new XElement(TNS + XMLNames.Report_ResultEntry_MaxAcceleration, new ConvertedSI(double.NaN, XMLNames.Unit_mps2).ValueAsUnit()),
-					new XElement(TNS + XMLNames.Report_ResultEntry_FullLoadDrivingtimePercentage, double.NaN),
+					new XElement(TNS + XMLNames.Report_ResultEntry_FullLoadDrivingtimePercentage, 0),
 					new XElement(TNS + XMLNames.Report_ResultEntry_GearshiftCount, 0),
 					new XElement(TNS + XMLNames.Report_Results_AverageGearboxEfficiency, new ConvertedSI(double.NaN, XMLNames.UnitPercent).ValueAsUnit()),
 					new XElement(TNS + XMLNames.Report_Results_AverageAxlegearEfficiency, new ConvertedSI(double.NaN, XMLNames.UnitPercent).ValueAsUnit())

@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         public virtual XElement[] GetElements(IResultEntry entry)
 		{
 			if (entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
-				GetCO2ResultEntries(entry.CO2Total, entry.Distance, entry.Payload, entry.CargoVolume,
+				return GetCO2ResultEntries(entry.CO2Total, entry.Distance, entry.Payload, entry.CargoVolume,
 						entry.PassengerCount)
 					.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2,
 						new ConvertedSI(double.NaN, x.Value.Units).ValueAsUnit()))
@@ -34,14 +34,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 			if (entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
 				return GetCO2ResultEntries(entry.CO2Total, entry.Distance, entry.Payload, entry.CargoVolume,
 						entry.PassengerCount)
-					.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2, x.GetElement()))
+					.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2, new ConvertedSI(double.NaN, x.Value.Units).ValueAsUnit()))
 					.ToArray();
             }
 
 			return GetCO2ResultEntries(entry.CO2Total, entry.Distance, entry.Payload, entry.CargoVolume,
 					entry.PassengerCount)
 				.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2,
-					new ConvertedSI(double.NaN, x.Value.Units).ValueAsUnit()))
+					x.GetElement()))
 				.ToArray();
 		}
 
@@ -138,6 +138,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
             if (entry.AuxHeaterFuel == null) {
                 return null;
             }
+
+			if (entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
+				GetCO2ResultEntries(entry.CO2Total, entry.Distance, entry.Payload, entry.CargoVolume,
+						entry.PassengerCount)
+					.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2,
+						new ConvertedSI(double.NaN, x.Value.Units).ValueAsUnit()))
+					.ToArray();
+			}
 
             var tmp = _factory.GetFuelConsumptionBus(_factory, TNS);
 			return new[] {

@@ -128,8 +128,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 							? XMLNames.Report_Results_Status_Success_Val
 							: XMLNames.Report_Results_Status_Error_Val),
 					ordered.Select(x =>
-						x.ChargeDepletingResult.Status == VectoRun.Status.Success &&
-						x.ChargeSustainingResult.Status == VectoRun.Status.Success
+						x.ChargeDepletingResult.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore) &&
+						x.ChargeSustainingResult.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore)
 							? ResultSuccessWriter.GetElement(x)
 							: ResultErrorWriter.GetElement(x)),
 					SummaryWriter.GetElement(ordered)

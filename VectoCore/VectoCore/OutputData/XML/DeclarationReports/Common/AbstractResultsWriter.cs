@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         public virtual XElement GenerateResults(List<IResultEntry> results)
         {
             var ordered = GetOrderedResults(results);
-            var allSuccess = results.All(x => x.Status == VectoRun.Status.Success);
+            var allSuccess = results.All(x => x.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore));
 			return new XElement(TNS + XMLNames.Report_Results,
 				new XElement(TNS + XMLNames.Report_Result_Status,
 					allSuccess ? XMLNames.Report_Results_Status_Success_Val : XMLNames.Report_Results_Status_Error_Val),

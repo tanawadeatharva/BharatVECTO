@@ -54,10 +54,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 		public override XElement GetElement(IResultEntry entry)
 		{
-			
-			
-
-            return new XElement(TNS + XMLNames.Report_Result_Result,
+			return new XElement(TNS + XMLNames.Report_Result_Result,
 				new XAttribute(XMLNames.Report_Result_Status_Attr, XMLNames.Report_Results_Status_Success_Val),
 				new XAttribute(xsi + XMLNames.XSIType, ResultXMLType),
 				_factory.GetSuccessMissionWriter(_factory, TNS).GetElement(entry),
