@@ -220,7 +220,7 @@ namespace TUGraz.VectoCommon.Utils
 			return Max(Max(c1, c2), c3);
 		}
 
-		//[DebuggerStepThrough]
+		[DebuggerStepThrough]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static T LimitTo<T>(this T value, T lowerBound, T upperBound) where T : IComparable
 		{
