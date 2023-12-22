@@ -12,7 +12,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class FuelCellSystem : StatefulVectoSimulationComponent<FuelCellSystem.State>, IElectricChargerPort
+	public class FuelCellSystem : StatefulVectoSimulationComponent<FuelCellSystem.State>, IFuelCellPort
 	{
 		private readonly IList<FuelCellString> _fuelCellStrings;
 
@@ -49,18 +49,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return power;
 		}
 
-
-		public Watt PowerDemand(Second absTime, Second dt, Watt powerDemandEletricMotor, Watt auxPower, bool dryRun)
+		public Watt PowerDemand(Second absTime, Second dt, Watt maxPower, bool dryRun)
 		{
-			var targetPower = ModelData.ChargingPower(_mileageCounter.Distance);
-			
+			var targetPower = ModelData.ChargingPower(_mileageCounter.Distance).LimitTo(0.SI<Watt>(), maxPower);
+
 			var shareResult = _fuelCellShareMap.Lookup(targetPower, PreviousState?.Share);
 
-
-
 			var generatedPower = 0.SI<Watt>();
-			
+
 			generatedPower += _fuelCellStrings[0].Request(targetPower * shareResult.Share.ShareA, dryRun, dt);
+
 			if (_fuelCellStrings.Count > 1) {
 				generatedPower += _fuelCellStrings[1].Request(targetPower * shareResult.Share.ShareB, dryRun, dt);
 			}
@@ -68,9 +66,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!dryRun) {
 				CurrentState.Share = shareResult.Share;
 				CurrentState.Power = generatedPower;
-            }
+			}
+
 			return generatedPower;
-		}
+        }
 
 
 		public void AddFuelCellString(FuelCellString fuelCellString)

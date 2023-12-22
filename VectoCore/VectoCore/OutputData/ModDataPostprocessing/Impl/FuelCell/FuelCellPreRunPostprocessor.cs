@@ -118,9 +118,11 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 			var distCol = data?.Columns[ModalResultField.dist.GetShortCaption()];
 			var dsCol = data?.Columns[ModalResultField.simulationDistance.GetName()];
 			var esTCol = data?.Columns[ModalResultField.P_terminal_ES.GetName()];
+			var elAuxCol = data?.Columns[ModalResultField.P_Aux_el_HV.GetName()];
 
 			_preRunResults = data?.AsEnumerable().Select(m => new PreRunEntry() {
 				P_es_T = (Watt)m[esTCol],
+				P_el_aux = (Watt)m[elAuxCol],
 				t = (Second)m[timeCol],
 				dt = (Second)m[dtCol],
 				s = (Meter)m[distCol],
@@ -164,7 +166,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 			var es = GetElectricSystem(batData, batData.InitialSoC, out _);
 
 
-			var rawFcCalcEntries = GetRawFuelCellPowerDemand(TotalDistance, fcData.MinElectricPower, fcData.MaxElectricPower, es,
+			var rawFcCalcEntries = GetRawFuelCellPowerDemand(TotalDistance, 0.SI<Watt>(), fcData.MaxElectricPower, es,
 				_preRunResults);
 
 			ApplyBatterySafetyMargin(batData, rawFcCalcEntries);
@@ -283,7 +285,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
             ///For a given window size as first step we calculate the fuel cell power, try to simulate it with a tracing infinity battery and check if the SoC limits are violated
 			//var minFcPower = fcData.MinElectricPower;
 			var minFcPower = 0.SI<Watt>();
-			var maxFcPower = fcData.MaxElectricPower;
+			//var maxFcPower = fcData.MaxElectricPower;
 
 			batData = batData.Clone();
 			//Calculate Raw Fuel CellDemand
@@ -293,7 +295,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 
 
 			var fcCalcEntries = GetRawFuelCellPowerDemand(windowSize: windowSize, minFcPower: minFcPower,
-				maxFcPower: maxFcPower, es, preRunResults: _preRunResults);
+				maxFcPower: fcData.MaxElectricPower, es, preRunResults: _preRunResults);
 
 			var processedFcCalcEntries = new List<FCCalcEntry>(_preRunResults.Length); //Holds the processed fcCalcEntries to avoid multiple enumerations
 			//var socLimits = ApplyBatterySafetyMargin(batData, fcCalcEntries, batSystem);
@@ -310,7 +312,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 
 
 			var deltaEnergyBatInt = 0.SI<WattSecond>();
-			var timeFcCanChange = 0.SI<Second>();
+
 
 			var infinityDummyContainer = new SimpleModDataContainer();
 
@@ -325,7 +327,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 				var correctedPreRunEntry = new PreRunEntry(entry.preRunEntry);
 				correctedPreRunResults.Add(correctedPreRunEntry);
 
-				var SoC = RequestFromEs(entry, infEs, infinityDummyContainer, tracingInfinityBat, maxFcPower, minFcPower, ref deltaEnergyBatInt, ref timeFcCanChange);
+				var SoC = RequestFromEs(entry, infEs, infinityDummyContainer, tracingInfinityBat, ref deltaEnergyBatInt);
 
 				processedFcCalcEntries.Add(entry);
 				if ((SoC - tracingInfinityBat.MinSoC).IsGreater(usableRange))
@@ -349,8 +351,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 							distance: windowSize,
 							entries: processedFcCalcEntries.ToArray(), 
 							reason: $"SoC Range too large usable: {usableRange}, range: {SoC - tracingInfinityBat.MinSoC}");
-						WriteEntriesToFile(windowSize, processedFcCalcEntries.ToArray(), initSoc, deltaEnergyBatInt,
-							timeFcCanChange, false);
+						WriteEntriesToFile(windowSize, processedFcCalcEntries.ToArray(), initSoc, deltaEnergyBatInt, false);
 						//Return false to decrease window size
 						return false;
 					}
@@ -360,7 +361,6 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 			if (preRunResultsAreCorrected) {
 				//Throw away old results
                 deltaEnergyBatInt = 0.SI<WattSecond>();
-				timeFcCanChange = 0.SI<Second>();
 				processedFcCalcEntries.Clear(); 
 
 
@@ -369,7 +369,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 				infEs = GetElectricSystem(tracingInfinityBat, batData);
 
 				//Calculate updated fc demand
-				fcCalcEntries = GetRawFuelCellPowerDemand(windowSize, minFcPower, maxFcPower, es,
+				fcCalcEntries = GetRawFuelCellPowerDemand(windowSize, minFcPower, fcData.MaxElectricPower, es,
 					correctedPreRunResults);
 
 
@@ -377,8 +377,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 				foreach (var entry in fcCalcEntries) {
 
 
-					var SoC = RequestFromEs(entry, infEs, infinityDummyContainer, tracingInfinityBat, maxFcPower,
-						minFcPower, ref deltaEnergyBatInt, ref timeFcCanChange);
+					var SoC = RequestFromEs(entry, infEs, infinityDummyContainer, tracingInfinityBat, ref deltaEnergyBatInt);
 					processedFcCalcEntries.Add(entry);
 					if ((SoC - tracingInfinityBat.MinSoC).IsGreater(usableRange)) {
 						throw new VectoException("Violation of usable SoC should be covered");
@@ -394,51 +393,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 
 
 
-			var remainingTime = timeFcCanChange;
-            //compensate delta P_bat_int
-            foreach (var entry in processedFcCalcEntries)
-			{
-				var fcPower = entry.P_FC;
-				//var fcPower = entry.P_FC_corr;
-
-				if (entry.CanChangeFCPower)
-				{
-					if (deltaEnergyBatInt.IsGreater(0)) {
-						//WriteEntriesToFile(windowSize, processedFcCalcEntries.ToArray(), initSoc, deltaEnergyBatInt, timeFcCanChange, false);
-						//throw new NotImplementedException("Positive delta bat_int is not implemented");
-					}
-
-					Watt batChangeTarget = -deltaEnergyBatInt / remainingTime;
-
-					var fcChangeTarget = batChangeTarget;
-
-					var fcPowerTarget = fcPower + fcChangeTarget;
-					var fcPowerActual = fcPowerTarget.LimitTo<Watt>(0.SI<Watt>(), maxFcPower);
-
-
-
-					var fcChangeActual = fcChangeTarget - (fcPowerTarget - fcPowerActual);
-					var batChangeActual = fcChangeActual;
-
-					deltaEnergyBatInt += batChangeActual * entry.dt;
-					remainingTime -= entry.dt;
-
-					entry.delta_P_FCS = fcChangeActual;
-					entry.FCPowerFinal = fcPowerActual;
-					if (!entry.FCPowerFinal.IsBetween(0.SI<Watt>(), maxFcPower))
-					{
-
-						//WriteEntriesToFile(windowSize, fcCalcEntries, initSoc, deltaEnergyBatInt, timeFcCanChange);
-						throw new VectoException("Fuel cell limits violated");
-					}
-				}
-				else
-				{
-					entry.FCPowerFinal = fcPower;
-					entry.delta_P_FCS = 0.SI<Watt>();
-				}
-			}
-
+			CompensateBatteryDelta(processedFcCalcEntries, deltaEnergyBatInt);
 
 
 			//Check infintiy battery again for violated SoC limits
@@ -449,7 +404,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 
 			foreach (var entry in processedFcCalcEntries) {
 				//Should be limited?
-				var response = tracingInfinityBat.Request(entry.t, entry.dt, entry.P_Bat_T_Final, false);
+				var response = infEs.Request(entry.t, entry.dt, entry.P_Bat_T_Final, false).RESSResponse;
 				if (!(response is RESSResponseSuccess))
 				{
 					throw new VectoException("Unexpected Response");
@@ -471,7 +426,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 
 				if(CalculateWithRealBattery(batData, initSoc, processedFcCalcEntries.ToArray()))
 				{
-					WriteEntriesToFile(windowSize, processedFcCalcEntries.ToArray(), initSoc, deltaEnergyBatInt, timeFcCanChange, true);
+					WriteEntriesToFile(windowSize, processedFcCalcEntries.ToArray(), initSoc, deltaEnergyBatInt, true);
 					result = new SearchResult(
 						distance: windowSize,
 						entries: processedFcCalcEntries.ToArray(),
@@ -482,7 +437,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 				}
 			}
 
-			WriteEntriesToFile(windowSize, processedFcCalcEntries.ToArray(), initSoc, deltaEnergyBatInt, timeFcCanChange, false);
+			WriteEntriesToFile(windowSize, processedFcCalcEntries.ToArray(), initSoc, deltaEnergyBatInt, false);
 			result = new SearchResult(
 				distance: windowSize,
 				entries: processedFcCalcEntries.ToArray(),
@@ -493,9 +448,29 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 			return false;
 		}
 
+		private static void CompensateBatteryDelta(List<FCCalcEntry> processedFcCalcEntries, WattSecond deltaEnergyBatInt)
+		{
+			var remainingTime = processedFcCalcEntries.Sum(e => e.CanChangeFCPower ? e.dt.Value() : 0).SI<Second>();
+			//Maximum Additional Energy that can be provided by the fuel cell in a timestep
+			var maxInc =
+				processedFcCalcEntries.Select(e => !e.CanChangeFCPower ? 0.SI<WattSecond>() : VectoMath.Max(e.P_max_fc - e.P_FC_corr, 0.SI<Watt>()) * e.dt).ToArray();
+
+			var weights = new List<double>(maxInc.Length);
+			var totalIncPotential = maxInc.Sum();
+			for (var i = 0; i < maxInc.Length; i++) {
+				var weight = maxInc[i] / totalIncPotential;
+				weights.Add(weight);
+				var entry = processedFcCalcEntries[i];
+				entry.delta_P_FCS = weights[i] * -deltaEnergyBatInt / entry.dt;
+
+				if (entry.FCPowerFinal.IsGreater(entry.P_max_CFCS)) {
+					throw new VectoException("Power too high");
+				}
+			}
+		}
+
 		private static double RequestFromEs(FCCalcEntry entry, ElectricSystem infinityEs,
-			SimpleModDataContainer infinityDummyContainer, TracingInfinityBatterySystem infBat, Watt maxFcPower, Watt minFcPower, ref WattSecond deltaEnergyBatInt,
-			ref Second timeFcCanChange)
+			SimpleModDataContainer infinityDummyContainer, TracingInfinityBatterySystem infBat, ref WattSecond deltaEnergyBatInt)
 		{
 			//Since we are using the infinity battery, the limit that is applied is only influenced by the properties of the battery but not by the SoC
             var batPower = entry.P_Bat_T.LimitTo
@@ -512,22 +487,10 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 			infBat.CommitSimulationStep(entry.t, entry.dt, infinityDummyContainer);
 
 			deltaEnergyBatInt += infinityDummyContainer.P_REES_int * entry.dt;
-		
-
 
 			entry.P_REESS_int = infinityDummyContainer.P_REES_int;
 			var SoC = infinityEs.StateOfCharge; //Current virtual soc
 			entry.SoC = SoC;
-
-
-			// check SoC min/max over cycle
-			// check P_bat min/max (
-			entry.CanChangeFCPower = !entry.P_FC.IsEqual(0) //Fuel cell is switched off
-									&& (entry.P_FC_corr.IsSmaller(maxFcPower) ||
-										entry.P_FC_corr.IsGreater(minFcPower)); //power is within limits
-			if (entry.CanChangeFCPower) {
-				timeFcCanChange += entry.dt;
-			}
 
 			return SoC;
 		}
@@ -570,6 +533,10 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
             batSystem.Initialize(SoC);
             var dummyContainer = new SimpleModDataContainer();
 
+			var es = new ElectricSystem(null, batData);
+			es.Connect(batSystem);
+
+
             var infBattery = new TracingInfinityBatterySystem(batData);
 			infBattery.Initialize((batSystem.MaxSoC + batSystem.MinSoC) / 2);
 
@@ -578,17 +545,24 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
             for (int i = 0; i < entries.Length; i++)
             {
                 var entry = entries[i];
-                //var batPower = entry.P_Bat_T_Final;
-				//var maxPower = infBattery.MaxChargePower(entry.dt);
-				//var minPower = infBattery.MaxDischargePower(entry.dt);
+				var maxPower = es.MaxChargePower(entry.dt);
+				var minPower = es.MaxDischargePower(entry.dt);
 
-				var maxPower = batSystem.MaxChargePower(entry.dt);
-				var minPower = batSystem.MaxDischargePower(entry.dt);
+
+
+				
+				//We have to limit the power, if we are recuperating in the prerun, it is possible, that the power limits of the battery are violated here,
+				//In the real simulation, there will be no recuperation if the power limit is reached
                 var batPower = entry.P_Bat_T_Final.LimitTo(minPower,maxPower);
+				
+
                 //Limit batPower
-                var batResponse = batSystem.Request(entry.t, entry.dt, batPower, false);
+                var batResponse = es.Request(entry.t, entry.dt, batPower, false).RESSResponse;
                 if (!(batResponse is RESSResponseSuccess))
                 {
+					//Assuming no recuperation
+
+
 					return false;
                 }
 
@@ -603,7 +577,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 
 		[Conditional("TRACE_FC")]
 		private void WriteEntriesToFile(Meter windowSize, FCCalcEntry[] fcCalcEntries, double initSoc,
-            WattSecond deltaEnergyBatInt, Second timeFcCanChange, bool success)
+            WattSecond deltaEnergyBatInt, bool success)
         {
 
 			lock (fileLock)
@@ -611,7 +585,6 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
                 using (var fs = new StreamWriter(Path.Combine(Path.GetDirectoryName(Writer?.JobFile) ?? "", $"fuelcell_data_{RunName}_{Math.Round(windowSize.Value(), 0)}_soc_{initSoc}_{(success ? "success" : "")}.csv")))
                 {
                     fs.WriteLine($"DeltaEnergyBat: {deltaEnergyBatInt} / {deltaEnergyBatInt.ConvertToKiloWattHour()}");
-                    fs.WriteLine($"timeFCCanIncrease: {timeFcCanChange}");
                     fs.WriteLine(FCCalcEntry.Header);
                     foreach (var entry in fcCalcEntries)
                     {
@@ -673,20 +646,27 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 				var P_FC_raw = preRunEntries.TimeIntegral<PreRunEntry, Second, Watt, WattSecond>((e) => e.dt, (e) => e.P_es_T) /
 								totalDuration;
 				foreach (var r in preRunEntries) {
-					var entry = new FCCalcEntry(maxChargingPower, maxDischargingPower, r) {
+					var entry = new FCCalcEntry(maxChargingPower, maxDischargingPower, r, maxFcPower) {
 						WindowSize = windowSize,
 						P_FC_raw = -P_FC_raw,
 						P_el_dem = r.P_es_T,
 					};
-					entry.P_FC = entry.P_FC_raw > minFcPower
-						? VectoMath.Min(entry.P_FC_raw, maxFcPower)
-						: entry.P_FC_raw.IsSmaller(0)
-							? 0.SI<Watt>()
-							: minFcPower;
+					
+
+					entry.P_FC = entry.P_FC_raw.LimitTo(minFcPower, entry.P_max_fc);
+
 					var esResponse = es.Request(entry.t, entry.dt, entry.P_Bat_T, true);
 					entry.P_Bat_loss = esResponse.RESSResponse.LossPower;
 
-					yield return entry;
+					if (entry.FCPowerFinal > entry.P_max_fc) {
+						entry.P_FC -= 2*entry.P_Bat_loss;
+						entry.P_Bat_loss = es.Request(entry.t, entry.dt, entry.P_Bat_T, true).RESSResponse.LossPower;
+					}
+
+
+
+
+                    yield return entry;
 				}
 
 				yield break;
@@ -697,9 +677,8 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 
 
 			for (; !wIt.EndReached; wIt.MoveNext()) {
-				var entry = new FCCalcEntry(maxChargingPower, maxDischargingPower, preRunEntries[wIt.Position]) {
+				var entry = new FCCalcEntry(maxChargingPower, maxDischargingPower, preRunEntries[wIt.Position], maxFcPower) {
 					WindowSize = windowSize,
-				
 				};
 
 
@@ -712,15 +691,25 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 					emEnergy += dt * preRunEntries[wIt.CurrentIndex].P_es_T;
 				}
 
+
+
+                entry.P_el_dem = preRunEntries[wIt.Position].P_es_T;
 				entry.P_FC_raw = -emEnergy / time;
-				entry.P_FC = entry.P_FC_raw > minFcPower
-					? VectoMath.Min(entry.P_FC_raw, maxFcPower)
-					: entry.P_FC_raw.IsSmaller(0)
-						? 0.SI<Watt>()
-						: minFcPower;
-				entry.P_el_dem = preRunEntries[wIt.Position].P_es_T;
-				var esResponse = es.Request(entry.t, entry.dt, entry.P_Bat_T, true);
+
+
+
+				entry.P_FC = entry.P_FC_raw.LimitTo(minFcPower, entry.P_max_fc);
+                var esResponse = es.Request(entry.t, entry.dt, entry.P_Bat_T, true);
 				entry.P_Bat_loss = esResponse.RESSResponse.LossPower;
+				if (entry.FCPowerFinal > entry.P_max_fc) {
+					entry.P_FC -= 2*entry.P_Bat_loss; //If P_Bat_T is negative, decreasing the fuel cell power will increase the loss power. Leading to Fuel Cell power that is still too high
+					entry.P_Bat_loss = es.Request(entry.t, entry.dt, entry.P_Bat_T, true).RESSResponse.LossPower;
+				}
+
+				if (entry.FCPowerFinal > entry.P_max_fc) {
+
+				}
+
 				yield return entry;
 			}
 

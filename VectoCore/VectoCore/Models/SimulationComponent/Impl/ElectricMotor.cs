@@ -310,11 +310,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var electricSupplyResponse =
 				ElectricPower.Request(absTime, dt, electricPower, dryRun);
 
-			if (!dryRun && !DataBus.IsTestPowertrain && !emOff && !(electricSupplyResponse is ElectricSystemResponseSuccess))
-			{
-				
-			}
+			if (!dryRun && electricSupplyResponse is ElectricSystemOverloadResponse &&
+				electricPower.IsEqual(0.SI<Watt>())) {
+				//We have a problem here! We cannot further reduce the power demand of the em.
+				//There is a overload in the ES even if we are not demanding any power.
 
+
+			}
 
             if (NextComponent != null && !dryRun && !DataBus.IsTestPowertrain && !emOff && !(electricSupplyResponse is ElectricSystemResponseSuccess)) {
 				if ( !avgEmSpeed.IsEqual(DataBus.HybridControllerInfo.ElectricMotorSpeed(Position) / ModelData.RatioADC)) {
@@ -327,7 +329,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							PowerRequest = outTorque * avgDtSpeed,
 							DeRatingActive = DeRatingActive,
 						}
-							};
+					};
 				}
 				throw new VectoException(
 					"Invalid operating point provided by strategy! EM Torque: {0}, req. electric Power: {1}, battery demand motor: {3}, max Power from Battery: {2}",
