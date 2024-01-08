@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 
@@ -45,7 +46,19 @@ namespace TUGraz.VectoCore.Tests.Utils.RunDataHelper
 			return batData;
 		}
 
+		public static BatterySystemData SetMaxChargingPower(this BatterySystemData batData, Watt maxChargingPower)
+		{
+			
+			foreach (var battery in batData.Batteries.Select(t => t.Item2)) {
+				foreach (var entry in battery.MaxCurrent.Entries) {
+					var voltage = battery.SOCMap.Lookup(entry.SoC);
+					var current = maxChargingPower/voltage;
+					entry.MaxChargeCurrent = current;
+				}
+			}
 
+			return batData;
+		}
 
 
 

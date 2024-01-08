@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using Moq;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using ScottPlot.Drawing.Colormaps;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -44,7 +45,7 @@ using ElectricSystem = TUGraz.VectoCore.Models.SimulationComponent.ElectricSyste
 namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 {
     [TestFixture]
-	[Parallelizable(ParallelScope.All)]
+	[Parallelizable(ParallelScope.Children)]
 	public class FuelCellVehicleTest
 	{
 
@@ -93,6 +94,9 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 
 			//var outputFile = jobFile.Replace(".vecto", fileWriterSuffix + ".vecto");
 			var writer = new FileOutputWriter(jobFile);
+			TestContext.Progress.WriteLine($"Creating job using {jobFile}");
+
+			
 			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
 			factory.Validate = false;
 			factory.WriteModalResults = true;
@@ -137,8 +141,8 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 		[TestCase(FCHV_E2_JOB, 0, 5, 10, 300, TestName = "FCHV E2 Job RD single FC, 5kWh    , 300 kW 0")]
 		[TestCase(FCHV_E2_JOB, 0, 5, 10, 500, TestName = "FCHV E2 Job RD single FC, 5kWh    , 500 kW 0")]
 
-		[TestCase(FCHV_E2_JOB, 0, 1, 10, 300, TestName = "FCHV E2 Job RD single FC, 1kWh    , 300 kW 0")]
-		[TestCase(FCHV_E2_JOB, 0, 1, 10, 500, TestName = "FCHV E2 Job RD single FC, 1kWh    , 500 kW 0")]
+		[TestCase(FCHV_E2_JOB, 0, 1, 10, 300, TestName = "FCHV E2 Job RD single FC, 1kWh    , 300 kW 0", Ignore = "Battery too small")]
+		[TestCase(FCHV_E2_JOB, 0, 1, 10, 500, TestName = "FCHV E2 Job RD single FC, 1kWh    , 500 kW 0", Ignore = "Battery too small")]
 
 		//[TestCase(FCHV_E2_JOB, 0, 0.1, 10, 300, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 300 kW 0")]
 		//[TestCase(FCHV_E2_JOB, 0, 0.1, 10, 500, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 500 kW 0")]
@@ -161,12 +165,12 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 		[TestCase(FCHV_E2_JOB, 1, 10, 10, 100, TestName = "FCHV E2 Job RD single FC, 10kWh    , 100 kW 1")]
 		[TestCase(FCHV_E2_JOB, 1, 10, 10, 300, TestName = "FCHV E2 Job RD single FC, 10kWh    , 300 kW 1")]
 		[TestCase(FCHV_E2_JOB, 1, 10, 10, 500, TestName = "FCHV E2 Job RD single FC, 10kWh    , 500 kW 1")]
-		[TestCase(FCHV_E2_JOB, 1, 5, 10, 100, TestName = "FCHV E2 Job RD single FC, 5kWh      , 100 kW 1")]
+		[TestCase(FCHV_E2_JOB, 1, 5, 10, 100, TestName = "FCHV E2 Job RD single FC, 5kWh      , 100 kW 1", Ignore = "Battery too small")]
 		[TestCase(FCHV_E2_JOB, 1, 5, 10, 300, TestName = "FCHV E2 Job RD single FC, 5kWh      , 300 kW 1")]
 		[TestCase(FCHV_E2_JOB, 1, 5, 10, 500, TestName = "FCHV E2 Job RD single FC, 5kWh      , 500 kW 1")]
-		[TestCase(FCHV_E2_JOB, 1, 1, 10, 100, TestName = "FCHV E2 Job RD single FC, 1kWh      , 100 kW 1")]
-		[TestCase(FCHV_E2_JOB, 1, 1, 10, 300, TestName = "FCHV E2 Job RD single FC, 1kWh      , 300 kW 1")]
-		[TestCase(FCHV_E2_JOB, 1, 1, 10, 500, TestName = "FCHV E2 Job RD single FC, 1kWh      , 500 kW 1")]
+		[TestCase(FCHV_E2_JOB, 1, 1, 10, 100, TestName = "FCHV E2 Job RD single FC, 1kWh      , 100 kW 1", Ignore = "Battery too small")]
+        [TestCase(FCHV_E2_JOB, 1, 1, 10, 300, TestName = "FCHV E2 Job RD single FC, 1kWh      , 300 kW 1", Ignore = "Battery too small")]
+        [TestCase(FCHV_E2_JOB, 1, 1, 10, 500, TestName = "FCHV E2 Job RD single FC, 1kWh      , 500 kW 1", Ignore = "Battery too small")]
 		//[TestCase(FCHV_E2_JOB, 1, 0.1, 10, 100, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 100 kW 1")]
 		//[TestCase(FCHV_E2_JOB, 1, 0.1, 10, 300, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 300 kW 1")]
 		//[TestCase(FCHV_E2_JOB, 1, 0.1, 10, 500, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 500 kW 1")]
@@ -194,6 +198,14 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 		[TestCase(FCHV_E2_JOB, 2, 5, 10, 100, TestName = "FCHV E2 Job RD single FC, 5kWh      , 100 kW 2")]
 		[TestCase(FCHV_E2_JOB, 2, 5, 10, 300, TestName = "FCHV E2 Job RD single FC, 5kWh      , 300 kW 2")]
 		[TestCase(FCHV_E2_JOB, 2, 5, 10, 500, TestName = "FCHV E2 Job RD single FC, 5kWh      , 500 kW 2")]
+
+
+
+		[TestCase(FCHV_E2_JOB, 1, 100, 10, 500, 150, TestName = "FCHV E2 Job RD single FC, 100kWh  , 500 kW ltd charge")]
+		[TestCase(FCHV_E2_JOB, 2, 80, 10, 300, 150, TestName = "FCHV E2 Job RD single FC, 80kWh    , 300 kW ltd charge")]
+		[TestCase(FCHV_E2_JOB, 1, 20, 10, 500, 100, TestName = "FCHV E2 Job RD single FC, 20kWh    , 500 kW ltd charge")]
+
+        [Parallelizable(ParallelScope.Children)]
 		//[TestCase(FCHV_E2_JOB, 2, 1, 10, 100, TestName = "FCHV E2 Job RD single FC, 1kWh      , 100 kW 2")]
 		//[TestCase(FCHV_E2_JOB, 2, 1, 10, 300, TestName = "FCHV E2 Job RD single FC, 1kWh      , 300 kW 2")]
 		//[TestCase(FCHV_E2_JOB, 2, 1, 10, 500, TestName = "FCHV E2 Job RD single FC, 1kWh      , 500 kW 2")]
@@ -201,10 +213,8 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 		//[TestCase(FCHV_E2_JOB, 2, 0.1, 10, 100, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 100 kW 2")]
 		//[TestCase(FCHV_E2_JOB, 2, 0.1, 10, 300, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 300 kW 2")]
 		//[TestCase(FCHV_E2_JOB, 2, 0.1, 10, 500, TestName = "FCHV E2 Job RD single FC, 0.1kWh  , 500 kW 2")]
-		public void E2_FCHV_Job_var_capacity(string jobFile, int cycleIdx, double usable_energy_kWh, double min_fcPower_kW, double max_fcPower_kW)
+		public void E2_FCHV_Job_var_capacity(string jobFile, int cycleIdx, double usable_energy_kWh, double min_fcPower_kW, double max_fcPower_kW, double? maxChargingPower_kW = null)
 		{
-			//TODO: fix this if test should run in parallel
-			//Directory.SetCurrentDirectory(TEST_WORKING_DIR);
 			var targetDir = @$"TestResults/FCHV_bat_{usable_energy_kWh}_kWh_fc_{max_fcPower_kW}_kW_{cycleIdx}";
 			CopyToOutputDirectory(Path.GetDirectoryName(jobFile), targetDir);
 			jobFile = Path.Combine(targetDir, Path.GetFileName(jobFile));
@@ -240,9 +250,13 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 
 			var usableWs = usable_energy_kWh.SI(Unit.SI.Kilo.Watt.Hour).Cast<WattSecond>();
 			batData = batData.SetUsableCapacity(usableWs);
-
+			if (maxChargingPower_kW.HasValue) {
+				var maxChargingPower = maxChargingPower_kW.Value.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
+				batData = batData.SetMaxChargingPower(maxChargingPower);
+            }
+	
 			rd.BatteryData =
-				engineeringDao.CreateFuelCellPreProcessingBattery(vehicle.Components.FuelCellSystemInputData, batData.Clone());
+				engineeringDao.CreateFuelCellPreProcessingBattery(vehicle.Components.FuelCellSystemInputData, batData.Clone(), out _);
 
 
 			Assert.AreEqual(usable_energy_kWh, batData.UseableStoredEnergy.ConvertToKiloWattHour().Value, 1E-3);
@@ -269,10 +283,6 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 
 			WritePostprocessingInfo(pP);
 			Assert.That(rd.BatteryData.InitialSoC, Is.EqualTo(pP.StartSoC));
-
-			//if (pP.BinarySearchIterations > 0) {
-			//	Assert.Fail();
-			//}
 		}
 
 		

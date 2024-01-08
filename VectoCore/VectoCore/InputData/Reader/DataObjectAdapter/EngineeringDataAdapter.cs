@@ -1,4 +1,7 @@
-﻿/*
+﻿#define TRACE_FC
+
+
+/*
 * This file is part of VECTO.
 *
 * Copyright © 2012-2019 European Union
@@ -1043,7 +1046,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		public BatterySystemData CreateFuelCellPreProcessingBattery(
-			IFuelCellSystemEngineeringInputData fuelCellSystemInputData, BatterySystemData batterySystemData)
+			IFuelCellSystemEngineeringInputData fuelCellSystemInputData, BatterySystemData batterySystemData, out Tuple<int, BatteryData> fuelCellBattery)
 		{
 			var pevBat = batterySystemData;
 			pevBat.Batteries.ForEach(b => b.Item2.ChargeDepletingBattery = true);
@@ -1116,10 +1119,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
                     }
                 })
             };
-            batterySystemData.Batteries.Add(Tuple.Create(0xFCB, batteryData));
+			fuelCellBattery = Tuple.Create(0xFCB, batteryData);
+            batterySystemData.Batteries.Add(fuelCellBattery);
             return batterySystemData;
-
-
         }
 
 

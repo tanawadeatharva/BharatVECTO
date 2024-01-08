@@ -1,4 +1,5 @@
 ﻿using System;
+using Ninject.Planning.Bindings.Resolvers;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
@@ -7,8 +8,26 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 	{
 		public class FCCalcEntry
 		{
+			private readonly Watt _p_max_cfcs = 0.SI<Watt>();
 
-			public PreRunEntry preRunEntry { get; set; }
+			public FCCalcEntry(Watt p_max_charging, Watt p_max_discharge, PreRunEntry preRunEntry, Watt p_max_cfcs)
+			{
+				this.P_max_charging = p_max_charging * 0.9;
+				this._p_max_cfcs = p_max_cfcs;
+				this.P_max_discharge = p_max_discharge;
+				this.preRunEntry = preRunEntry;
+			}
+			/// <summary>
+			/// Limits the Battery Charging Power
+			/// </summary>
+			public Watt P_max_charging { get; private set; }
+
+			/// <summary>
+			/// Limits the Battery Discharing Power
+			/// </summary>
+			public Watt P_max_discharge { get; private set; }
+
+            public PreRunEntry preRunEntry { get; private set; }
 
 			public Second t => preRunEntry.t; 
 
@@ -20,21 +39,43 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 			/// P_ES_t, electric demand from powertrain + aux.
 			/// </summary>
 			public Watt P_el_dem { get; set; }
-
+			
 			/// <summary>
 			/// P_ES_t, electric demand from powertrain + aux, without recuperation if battery is full
 			/// </summary>
 			public Watt P_el_dem_corr { get; set; }
 
 			/// <summary>
+			/// Max power that can be provided by the fuel cell at a given time wrt. to battery charging power, max fuel cell power and powerdemand of the powertrain
+			/// </summary>
+			public Watt P_max_fc
+			{
+				get
+				{
+					var p_prop = VectoMath.Min(P_el_dem, 0.SI<Watt>()); //Just propelling no recuperation // p_prop < 0!
+					var remainder = P_max_charging - p_prop; //Maximum allowed power from the fuel cell
+					var p_max = VectoMath.Min(this._p_max_cfcs, remainder); //limited by the max fuel cell power
+					return p_max;
+
+				}
+			}
+
+			/// <summary>
+			/// Maximum power of the composite fuel cell system
+			/// </summary>
+			public Watt P_max_CFCS
+			{
+				get
+				{
+					return _p_max_cfcs;
+				}
+			}
+
+
+			/// <summary>
 			/// Fuel Cell power without any corrections
 			/// </summary>
 			public Watt P_FC_raw { get; set; }
-
-			/// <summary>
-			/// Fuel Cell power calculated based on <see cref="P_el_dem_corr"/>
-			/// </summary>
-			public Watt P_FC_raw_corr { get; set; }
 
 			/// <summary>
             /// Fuel Cell power limited to Min/Max power, zero => fuel cell is off
@@ -44,7 +85,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 			/// <summary>
 			/// Remaining power that should be provided by battery
 			/// </summary>
-			public Watt P_Bat_T => P_FC + P_el_dem;
+			public Watt P_Bat_T => (P_FC + P_el_dem).LimitTo(P_max_discharge, P_max_charging);
 
 			/// <summary>
 			/// Battery losses from P_Bat_T
@@ -71,14 +112,20 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 			/// </summary>
 			public double Real_SoC { get; set; } = -1;
 
-			public bool CanChangeFCPower { get; set; }
+			public bool CanChangeFCPower => P_FC_corr.IsSmallerOrEqual(P_max_fc);
 
-			public Watt FCPowerFinal { get; set; }
+			public Watt FCPowerFinal
+			{
+				get => P_FC_corr + delta_P_FCS;
+			}
+
+
+
 
 			/// <summary>
 			/// Resulting power provided by battery considering <see cref="P_Bat_T_Final"/>
 			/// </summary>
-			public Watt P_Bat_T_Final => FCPowerFinal + P_el_dem;
+			public Watt P_Bat_T_Final => (FCPowerFinal + P_el_dem).LimitTo(P_max_discharge, P_max_charging);
 
 			///// <summary>
 			///// <see cref="P_Bat_T_Final"/> limited by MaxCharge and MaxDischargePower of the infinity battery, not considering SoC/>
@@ -108,7 +155,8 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 											"SoC_real [%], " +
 											"CanChangeFCPower, " +
 											"FCPowerFinal [kW]," +
-											"delta_P_FCS [kW],";
+											"delta_P_FCS [kW]," +
+											"P_max_charge_bat [kW],";
 			#region Overrides of Object
 			public override string ToString()
 			{
@@ -128,13 +176,16 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 						$"{(Real_SoC * 100).ToXMLFormat() ?? "-"}, " +
                         (CanChangeFCPower ? "1" : "0") + "," +
 						$"{FCPowerFinal?.ConvertToKiloWatt()?.ToXMLFormat() ?? "-"}, " +
-						$"{delta_P_FCS?.ConvertToKiloWatt()?.ToXMLFormat() ?? "-"},";
+						$"{delta_P_FCS?.ConvertToKiloWatt()?.ToXMLFormat() ?? "-"}," + 
+						$"{P_max_charging?.ConvertToKiloWatt()?.ToXMLFormat() ?? "-"},";
 			}
 			#endregion
 			/// <summary>
 			/// Windowsize that was used to create this entry
 			/// </summary>
 			public Meter WindowSize { get; set; }
+
+
 		}
 
 
@@ -156,6 +207,8 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 
 			public Second t { get; set; }
 
+			public Watt P_el_aux { get; set; }
+
 			public PreRunEntry()
 			{
 
@@ -167,6 +220,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 				this.s = s.s;
 				this.t = s.t;
 				this.P_es_T = s.P_es_T;
+				this.P_es_T = s.P_el_aux;
 			}
 		}
 	}

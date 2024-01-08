@@ -9,6 +9,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
@@ -26,7 +27,7 @@ public class FuelCellTest
 	}
 
 	[TestCase(true, TestName="Connector Included")]
-	//[TestCase(false, TestName="Connector not Included")] //Considered in ES
+	[TestCase(false, TestName = "Connector not Included")]
     public void EquivalentBattery(bool connectorIncluded)
 	{
 		EngineeringDataAdapter engAdapter = new EngineeringDataAdapter();
@@ -39,7 +40,7 @@ public class FuelCellTest
 		Mock<IFuelCellSystemEngineeringInputData> fuelCellSystemMock = new Mock<IFuelCellSystemEngineeringInputData>();
 		Mock<IFuelCellComponentEngineeringInputData> fuelCellComponentMock = new Mock<IFuelCellComponentEngineeringInputData>();
 
-        SetMockData(batMock, storageElement, batPack, fuelCellSystemMock, fuelCellComponentMock);
+        SetMockData(batMock, storageElement, batPack, fuelCellSystemMock, fuelCellComponentMock, true);
 		batPack.SetupGet(b => b.ConnectorsSubsystemsIncluded).Returns(connectorIncluded);
 
 
@@ -49,7 +50,8 @@ public class FuelCellTest
 		var maxDischargePower = pevBatSystem.MaxDischargePower(1.SI<Second>());
 
 
-		var preBatSystemData = engAdapter.CreateFuelCellPreProcessingBattery(fuelCellSystemMock.Object, pevBatSystemData);
+		var preBatSystemData = engAdapter.CreateFuelCellPreProcessingBattery(fuelCellSystemMock.Object, pevBatSystemData, out var fcBat);
+
 
 		var preBatSystem = new BatterySystem(null, preBatSystemData);
 
@@ -63,17 +65,35 @@ public class FuelCellTest
 		pevBatSystem.PreviousState.PulseDuration = 1.SI<Second>();
 		pevBatSystem.PreviousState.PowerDemand = -1.SI<Watt>();
 
+		var fcPower = fuelCellComponentMock.Object.MaxElectricPower;
 
 		Assert.Less(pevBatSystem.MaxDischargePower(1.SI<Second>()), (0.SI<Watt>()));
 
-		Assert.IsTrue(pevBatSystem.MaxDischargePower(1.SI<Second>()).IsRelativeEqual(preBatSystem.MaxDischargePower(1.SI<Second>()) + fuelCellComponentMock.Object.MaxElectricPower, 1E-06));
+		Assert.IsTrue(pevBatSystem.MaxDischargePower(1.SI<Second>()).IsRelativeEqual(preBatSystem.MaxDischargePower(1.SI<Second>()) + fcPower, 1E-06));
 
 		var internalResistance = preBatSystem.Batteries.First(x => x.Key == FuelCellSystemData.FuelCellBatID).Value.InternalResistance(1.SI<Second>());
 		Assert.IsTrue(internalResistance.IsEqual(0), $"Expected 0 was {internalResistance}");
+
+		var pevEs = new ElectricSystem(null, pevBatSystemData);
+		var preEs = new ElectricSystem(null, preBatSystemData);
+
+		pevEs.Connect(pevBatSystem);
+		preEs.Connect(preBatSystem);
+
+		var maxChargePev = pevEs.MaxChargePower(1.SI<Second>());
+		var maxChargePre = preEs.MaxChargePower(1.SI<Second>());
+
+
+
+		var maxDischgPev = pevEs.MaxDischargePower(1.SI<Second>());
+		var maxDischgPre = preEs.MaxDischargePower(1.SI<Second>());
+
+		Assert.IsTrue(maxChargePev.IsEqual(maxChargePre));
+		Assert.IsTrue(maxDischgPre.IsEqual(maxDischgPev - fcPower));
 	}
 
 	private void SetMockData(Mock<IElectricStorageSystemEngineeringInputData> batMock, Mock<IElectricStorageEngineeringInputData> storageElement, Mock<IBatteryPackEngineeringInputData> batPack, Mock<IFuelCellSystemEngineeringInputData> fuelCellSystemMock,
-		Mock<IFuelCellComponentEngineeringInputData> fuelCellComponentMock)
+		Mock<IFuelCellComponentEngineeringInputData> fuelCellComponentMock, bool connectorsIncluded)
 	{
 		batMock.SetupGet(b => b.ElectricStorageElements).Returns(new List<IElectricStorageEngineeringInputData>()
 			{ storageElement.Object });
@@ -89,7 +109,7 @@ public class FuelCellTest
 
 
 		batPack.SetupGet(r => r.StorageType).Returns(REESSType.Battery);
-		batPack.SetupGet(r => r.ConnectorsSubsystemsIncluded).Returns(true);
+		batPack.SetupGet(r => r.ConnectorsSubsystemsIncluded).Returns(connectorsIncluded);
 
 		//TODO FILL MAPS
 		batPack.SetupGet(r => r.InternalResistanceCurve).Returns(
