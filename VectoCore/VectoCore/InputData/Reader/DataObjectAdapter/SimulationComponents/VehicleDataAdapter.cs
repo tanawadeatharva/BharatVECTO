@@ -339,10 +339,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		{
 			var retVal = base.DoCreateVehicleData(data, segment, mission, loading, passengerCount, allowVocational);
 			retVal.GrossVehicleMass = data.GrossVehicleMassRating;
-			if (retVal.TotalVehicleMass.IsGreater(retVal.GrossVehicleMass))
-			{
-				throw new VectoException("Total Vehicle Mass exceeds Gross Vehicle Mass for completed bus generic ({0}/{1})", retVal.TotalVehicleMass, retVal.GrossVehicleMass);
-			}
+			
 			return retVal;
 		}
 
