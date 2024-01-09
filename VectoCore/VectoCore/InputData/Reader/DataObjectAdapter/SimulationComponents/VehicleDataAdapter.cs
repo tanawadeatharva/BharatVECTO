@@ -216,8 +216,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			double? passengerCount, bool allowVocational)
 		{
 			var retVal = base.DoCreateVehicleData(data, segment, mission, loading, passengerCount, allowVocational);
-			
+
 			retVal.CurbMass = mission.CurbMass;
+			if (!mission.BusParameter.CurbMassTPMLMFactor.IsNaN() &&
+				data.GrossVehicleMassRating * mission.BusParameter.CurbMassTPMLMFactor < mission.CurbMass) {
+				retVal.CurbMass = data.GrossVehicleMassRating * mission.BusParameter.CurbMassTPMLMFactor;
+			}
 			retVal.GrossVehicleMass = 40000.SI<Kilogram>();
 			return retVal;
 		}
@@ -303,7 +307,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		{
 			var retVal =  base.DoCreateVehicleData(data, segment, mission, loading, passengerCount, allowVocational);
 
-			retVal.CurbMass = mission.CurbMass + CalculateElectricComponentMass(data);
+			if (!mission.BusParameter.CurbMassTPMLMFactor.IsNaN() &&
+				data.GrossVehicleMassRating * mission.BusParameter.CurbMassTPMLMFactor < mission.CurbMass) {
+				retVal.CurbMass = data.GrossVehicleMassRating * mission.BusParameter.CurbMassTPMLMFactor;
+			} else {
+				retVal.CurbMass = mission.CurbMass + CalculateElectricComponentMass(data);
+			}
 
 			return retVal;
 		}
@@ -321,8 +330,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		{
 			var retVal = base.DoCreateVehicleData(data, segment, mission, loading, passengerCount, allowVocational);
 
-			retVal.CurbMass = mission.CurbMass - mission.GenericMassICE + CalculateElectricComponentMass(data);
+			if (!mission.BusParameter.CurbMassTPMLMFactor.IsNaN() &&
+				data.GrossVehicleMassRating * mission.BusParameter.CurbMassTPMLMFactor < mission.CurbMass) {
+				retVal.CurbMass = data.GrossVehicleMassRating * mission.BusParameter.CurbMassTPMLMFactor;
+			} else {
+				retVal.CurbMass = mission.CurbMass - mission.GenericMassICE + CalculateElectricComponentMass(data);
 
+			}
 			return retVal;
 		}
 

@@ -153,6 +153,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 							BusGroup = VehicleClassHelper.Parse(row.Field<string>("hdvgroup")),
 							VehicleLength = row.ParseDouble("length").SI<Meter>(),
 							VehicleWidth = row.ParseDouble("width").SI<Meter>(),
+							CurbMassTPMLMFactor = row.Field<string>("curbmasstpmlmfactor").ToDouble(double.NaN),
 							BodyHeight = row.ParseDouble("bodyheight").SI<Meter>(),
 							NumberPassengersLowerDeck = row.ParseDouble("passengerslowerdeck"),
 							NumberPassengersUpperDeck = row.ParseDouble("passengersupperdeck"),
