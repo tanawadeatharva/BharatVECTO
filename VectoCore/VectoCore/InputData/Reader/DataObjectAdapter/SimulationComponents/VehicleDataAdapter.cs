@@ -14,7 +14,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 {
-    internal abstract class VehicleDataAdapter : ComponentDataAdapterBase, IVehicleDataAdapter
+	internal abstract class VehicleDataAdapter : ComponentDataAdapterBase, IVehicleDataAdapter
 	{
 		public static NewtonMeter VehMaxTorque(
 			ITransmissionInputData gear, int numGears,
@@ -205,8 +205,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			exempted.DualFuelVehicle = data.DualFuelVehicle;
 			exempted.MaxNetPower1 = data.MaxNetPower1;
 			return exempted;
-        }
-    }
+		}
+	}
 
 	internal class PrimaryBusVehicleDataAdapter : LorryVehicleDataAdapter
 	{
@@ -226,7 +226,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return retVal;
 		}
 
-        #endregion
+		#endregion
 
 		protected virtual SIBase<Kilogram> CalculateElectricComponentMass(IVehicleDeclarationInputData data)
 		{
@@ -251,7 +251,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 							DeclarationData.EM_MassInverter;
 				additionalMass.Add(Tuple.Create("IEPC",
 					VectoMath.Round(massEM, MidpointRounding.AwayFromZero)));
-            }
+			}
 
 			var count = 0;
 			foreach (var reess in data.Components.ElectricStorage.ElectricStorageElements) {
@@ -266,7 +266,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			return additionalMass.Sum(x => x.Item2);
 		}
-    }
+	}
 
 	internal class ExemptedPrimaryBusVehicleDataAdapter : PrimaryBusVehicleDataAdapter
 	{
@@ -317,9 +317,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return retVal;
 		}
 
-        #endregion
+		#endregion
 
-    }
+	}
 
 	internal class PrimaryBusVehicleDataAdapter_PEV : PrimaryBusVehicleDataAdapter
 	{
@@ -341,10 +341,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 
 		#endregion
-    }
+	}
 
 
-    internal class CompletedBusGenericVehicleDataAdapter : PrimaryBusVehicleDataAdapter
+	internal class CompletedBusGenericVehicleDataAdapter : PrimaryBusVehicleDataAdapter
 	{
 		#region Overrides of PrimaryBusVehicleDataAdapter
 
@@ -371,7 +371,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 	}
 
 
-    internal class CompletedBusSpecificVehicleDataAdapter : IVehicleDataAdapter
+	internal class CompletedBusSpecificVehicleDataAdapter : IVehicleDataAdapter
 	{
 		protected IVehicleDataAdapter completedBusGenericDataAdapter = new CompletedBusGenericVehicleDataAdapter();
 
@@ -384,54 +384,54 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 
 		public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData primaryVehicle,
-            IVehicleDeclarationInputData completedVehicle, Segment segment, Mission mission,
-            KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
-        {
-            if (completedVehicle.NumberPassengerSeatsLowerDeck == null) {
-                throw new VectoException("NumberOfPassengerSeatsLowerDeck input parameter is required");
-            }
-            if (completedVehicle.NumberPassengerSeatsUpperDeck == null) {
-                throw new VectoException("NumberOfPassengerSeatsUpperDeck input parameter is required");
-            }
-            if (completedVehicle.NumberPassengersStandingLowerDeck == null) {
-                throw new VectoException("NumberOfPassengersStandingLowerDeck input parameter is required");
-            }
-            if (completedVehicle.NumberPassengersStandingUpperDeck == null) {
-                throw new VectoException("NumberOfPassengersStandingUpperDeck input parameter is required");
-            }
-            var passengers = DeclarationData.GetNumberOfPassengers(
-                mission, completedVehicle.Length, completedVehicle.Width,
-                completedVehicle.NumberPassengerSeatsLowerDeck.Value + completedVehicle.NumberPassengerSeatsUpperDeck.Value,
-                completedVehicle.NumberPassengersStandingLowerDeck.Value + completedVehicle.NumberPassengersStandingUpperDeck.Value,
-                loading.Key);
+			IVehicleDeclarationInputData completedVehicle, Segment segment, Mission mission,
+			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
+		{
+			if (completedVehicle.NumberPassengerSeatsLowerDeck == null) {
+				throw new VectoException("NumberOfPassengerSeatsLowerDeck input parameter is required");
+			}
+			if (completedVehicle.NumberPassengerSeatsUpperDeck == null) {
+				throw new VectoException("NumberOfPassengerSeatsUpperDeck input parameter is required");
+			}
+			if (completedVehicle.NumberPassengersStandingLowerDeck == null) {
+				throw new VectoException("NumberOfPassengersStandingLowerDeck input parameter is required");
+			}
+			if (completedVehicle.NumberPassengersStandingUpperDeck == null) {
+				throw new VectoException("NumberOfPassengersStandingUpperDeck input parameter is required");
+			}
+			var passengers = DeclarationData.GetNumberOfPassengers(
+				mission, completedVehicle.Length, completedVehicle.Width,
+				completedVehicle.NumberPassengerSeatsLowerDeck.Value + completedVehicle.NumberPassengerSeatsUpperDeck.Value,
+				completedVehicle.NumberPassengersStandingLowerDeck.Value + completedVehicle.NumberPassengersStandingUpperDeck.Value,
+				loading.Key);
 
-            var vehicleData = completedBusGenericDataAdapter.CreateVehicleData(primaryVehicle, segment, mission, loading.Value.Item1, loading.Value.Item2, false);
-            vehicleData.InputData = completedVehicle;
-            vehicleData.VIN = completedVehicle.VIN;
-            vehicleData.LegislativeClass = completedVehicle.LegislativeClass;
-            vehicleData.VehicleCategory = VehicleCategory.HeavyBusCompletedVehicle;
-            vehicleData.Manufacturer = completedVehicle.Manufacturer;
-            vehicleData.ModelName = completedVehicle.Model;
-            vehicleData.ManufacturerAddress = completedVehicle.ManufacturerAddress;
-            vehicleData.CurbMass = completedVehicle.CurbMassChassis;
+			var vehicleData = completedBusGenericDataAdapter.CreateVehicleData(primaryVehicle, segment, mission, loading.Value.Item1, loading.Value.Item2, false);
+			vehicleData.InputData = completedVehicle;
+			vehicleData.VIN = completedVehicle.VIN;
+			vehicleData.LegislativeClass = completedVehicle.LegislativeClass;
+			vehicleData.VehicleCategory = VehicleCategory.HeavyBusCompletedVehicle;
+			vehicleData.Manufacturer = completedVehicle.Manufacturer;
+			vehicleData.ModelName = completedVehicle.Model;
+			vehicleData.ManufacturerAddress = completedVehicle.ManufacturerAddress;
+			vehicleData.CurbMass = completedVehicle.CurbMassChassis;
 
-            vehicleData.Loading = passengers * mission.MissionType.GetAveragePassengerMass();
-            vehicleData.PassengerCount = passengers;
-            vehicleData.GrossVehicleMass = completedVehicle.GrossVehicleMassRating;
-            vehicleData.DigestValueInput = completedVehicle.DigestValue?.DigestValue ?? "";
+			vehicleData.Loading = passengers * mission.MissionType.GetAveragePassengerMass();
+			vehicleData.PassengerCount = passengers;
+			vehicleData.GrossVehicleMass = completedVehicle.GrossVehicleMassRating;
+			vehicleData.DigestValueInput = completedVehicle.DigestValue?.DigestValue ?? "";
 
-            vehicleData.RegisteredClass = completedVehicle.RegisteredClass;
+			vehicleData.RegisteredClass = completedVehicle.RegisteredClass;
 
-            vehicleData.VehicleCode = completedVehicle.VehicleCode;
-            if (vehicleData.TotalVehicleMass.IsGreater(vehicleData.GrossVehicleMass)) {
-                throw new VectoException("Total Vehicle Mass exceeds Gross Vehicle Mass for completed bus specific ({0}/{1})",
-                    vehicleData.TotalVehicleMass, vehicleData.GrossVehicleMass);
-            }
-            return vehicleData;
-        }
+			vehicleData.VehicleCode = completedVehicle.VehicleCode;
+			if (vehicleData.TotalVehicleMass.IsGreater(vehicleData.GrossVehicleMass)) {
+				throw new VectoException("Total Vehicle Mass exceeds Gross Vehicle Mass for completed bus specific ({0}/{1})",
+					vehicleData.TotalVehicleMass, vehicleData.GrossVehicleMass);
+			}
+			return vehicleData;
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 
 	internal class ExemptedCompletedBusSpecificVehicleDataAdapter : CompletedBusSpecificVehicleDataAdapter
 	{
@@ -454,11 +454,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				MaxNetPower1 = primaryVehicle.MaxNetPower1,
 				InputData = completedVehicle
 			};
-        }
+		}
 	}
 
 
-    internal class SingleBusVehicleDataAdapter : VehicleDataAdapter
+	internal class SingleBusVehicleDataAdapter : VehicleDataAdapter
 	{
 		#region Overrides of VehicleDataAdapter
 
