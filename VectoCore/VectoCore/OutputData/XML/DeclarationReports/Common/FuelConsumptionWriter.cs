@@ -58,6 +58,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
                 // in some testcases only a single cycle is simulated which has a weighting of 0. consider this to generate a valid report
 				return new List<ConvertedSI>() { (fc / 1.SI<Meter>()).ConvertToGrammPerKiloMeter(),};
 			}
+
+            if (fc == null) {
+                return new List<ConvertedSI>();
+            }
+
             var retVal = new List<ConvertedSI> {
                 (fc / distance).ConvertToGrammPerKiloMeter(),
                 (fc / distance /payload).ConvertToGrammPerTonKilometer()};
