@@ -9,7 +9,7 @@ namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
 		bool AbortSimulation(IVehicleContainer container, Exception exception);
 	}
 
-	public class DefaultPostMortemAnalyseStrategy : IPostMortemAnalyzeStrategy
+	public class DefaultPostMortemAnalyzeStrategy : IPostMortemAnalyzeStrategy
 	{
 		#region Implementation of IPostMortemAnalyzeStrategy
 
@@ -20,17 +20,4 @@ namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
 
 		#endregion
 	}
-
-	public class PrimaryBusPostMortemStrategy : IPostMortemAnalyzeStrategy
-	{
-		#region Implementation of IPostMortemAnalyzeStrategy
-
-		public bool AbortSimulation(IVehicleContainer container, Exception exception)
-		{
-			return false;
-		}
-
-		#endregion
-	}
-
 }

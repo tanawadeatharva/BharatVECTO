@@ -191,7 +191,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public IIterativeRunStrategy IterativeRunStrategy { get; internal set; } = new DefaultIterativeStrategy();
 
 		[JsonIgnore]
-		public IPostMortemAnalyzeStrategy PostMortemStrategy { get; internal set; } = new DefaultPostMortemAnalyseStrategy();
+		public IPostMortemAnalyzeStrategy PostMortemStrategy { get; internal set; } = new DefaultPostMortemAnalyzeStrategy();
 		
 		public NewtonMeter TorqueDriftLeftWheel { get; internal set; }
 
