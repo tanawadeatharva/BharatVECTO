@@ -1,7 +1,15 @@
 ﻿using System;
+using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
 {
@@ -33,7 +41,7 @@ namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
 				return true;
 			}
 
-			if (!container.VehicleInfo.VehicleSpeed.IsGreater(MinSpeed)) {
+			if (container.VehicleInfo.VehicleSpeed.IsGreater(MinSpeed)) {
 				// vehicle has to be almost stopped
 				return true;
 			}
@@ -46,10 +54,94 @@ namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
 			return true;
 		}
 
-		private Radian GetMaxGradability(IVehicleContainer container)
+		protected virtual Radian GetMaxGradability(IVehicleContainer container)
 		{
-			return 0.SI<Radian>();
+			var testContainer = new SimplePowertrainContainer(container.RunData);
+			switch (container.PowertrainInfo.VehicleArchitecutre) {
+				case VectoSimulationJobType.ConventionalVehicle:
+					PowertrainBuilder.BuildSimplePowertrain(container.RunData, testContainer);
+					break;
+				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.IHPC:
+					PowertrainBuilder.BuildSimpleHybridPowertrain(container.RunData, testContainer);
+					break;
+				case VectoSimulationJobType.SerialHybridVehicle:
+					PowertrainBuilder.BuildSimpleSerialHybridPowertrain(container.RunData, testContainer);
+					break;
+				case VectoSimulationJobType.IEPC_S:
+					PowertrainBuilder.BuildSimpleIEPCHybridPowertrain(container.RunData, testContainer);
+					break;
+                case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.IEPC_E:
+					PowertrainBuilder.BuildSimplePowertrainElectric(container.RunData, testContainer);
+					break;
+				default:
+					throw new VectoException($"unhandled powertrain architecture {container.PowertrainInfo.VehicleArchitecutre} to calculate gradability");
+			}
+
+			testContainer.UpdateComponents(container);
+
+			var maxSlope = SearchSlope(testContainer);
+
+			return maxSlope;
 		}
+
+		protected virtual Radian SearchSlope(SimplePowertrainContainer container)
+		{
+			var simulationInterval = Constants.SimulationSettings.TargetTimeInterval;
+			var absTime = 0.SI<Second>();
+			var gradient = 0.SI<Radian>();
+
+			var vehicle = container.VehiclePort;
+			var acceleration = DeclarationData.GearboxTCU.StartAcceleration * 0.5;
+
+            foreach (var motor in container.ElectricMotors.Values) {
+				if ((motor as ElectricMotor).Control is SimpleElectricMotorControl emCtl) {
+					emCtl.EmOff = false;
+				}
+			}
+
+			if (container.HasGearbox) {
+				var gbx = container.GearboxCtl as Gearbox;
+				gbx.Gear = gbx.ModelData.GearList.First();
+			}
+			vehicle.Initialize(0.KMPHtoMeterPerSecond(), gradient);
+
+            var initialResponse = vehicle.Request(absTime, simulationInterval, acceleration, gradient, true);
+			var delta = GetDelta(initialResponse as ResponseDryRun, container.VehicleArchitecutre);
+			
+			try {
+				gradient = SearchAlgorithm.Search(
+					gradient, delta, 0.1.SI<Radian>(),
+					getYValue: response => GetDelta(response as ResponseDryRun, container.VehicleArchitecutre),
+					evaluateFunction: grad => vehicle.Request(absTime, simulationInterval, acceleration, grad, true),
+					criterion: response => GetDelta(response as ResponseDryRun, container.VehicleArchitecutre).Value(),
+					searcher: this);
+			} catch (VectoSearchAbortedException) {
+				return double.MaxValue.SI<Radian>();
+			}
+
+			return gradient;
+		}
+
+		private Watt GetDelta(ResponseDryRun response, VectoSimulationJobType vehicleArchitecutre)
+		{
+			//return response.DeltaFullLoad;
+
+			switch (vehicleArchitecutre) {
+				case VectoSimulationJobType.ConventionalVehicle:
+				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.IHPC:
+					return response.DeltaFullLoad;
+				case VectoSimulationJobType.SerialHybridVehicle:
+				case VectoSimulationJobType.IEPC_S:
+				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.IEPC_E:
+					return (response.ElectricMotor.TorqueRequest + response.ElectricMotor.MaxDriveTorque) * response.ElectricMotor.AvgDrivetrainSpeed;
+				default:
+					throw new VectoException($"unhandled powertrain architecture {vehicleArchitecutre} to calculate gradability");
+			}
+        }
 
 		#endregion
 	}
