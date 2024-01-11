@@ -37,6 +37,7 @@ using System.Xml;
 using HashingTool.Helper;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoHashing;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
@@ -51,7 +52,8 @@ namespace HashingTool.ViewModel.UserControl
 
 
 		public VectoJobFile(string name, Func<XmlDocument, IErrorLogger, bool?> contentCheck,
-			Action<XmlDocument, VectoXMLFile> hashValidation = null) : base(name, true, contentCheck, XmlDocumentType.DeclarationJobData, hashValidation)
+			Action<XmlDocument, VectoXMLFile> hashValidation = null) : 
+			base(name, true, contentCheck, XmlDocumentType.DeclarationJobData | XmlDocumentType.MultistepOutputData, hashValidation)
 		{
 			_xmlFile.PropertyChanged += JobFilechanged;
 			Components = new ObservableCollection<ComponentEntry>();
@@ -176,6 +178,13 @@ namespace HashingTool.ViewModel.UserControl
 						entry.Component = component.Count == 1
 							? component.Entry.XMLElementName()
 							: $"{component.Entry.XMLElementName()} ({i + 1})";
+
+						if (entry.Component.IsOneOf(XMLNames.Bus_PrimaryVehicle, XMLNames.ManufacturingStep)
+							|| !h.ElementIsSigned(component.Entry, i)) {
+						
+							continue;
+						}
+
 						entry.Valid = h.ValidateHash(component.Entry, i);
 						entry.CanonicalizationMethod = h.GetCanonicalizationMethods(component.Entry, i).ToArray();
 						entry.DigestMethod = h.GetDigestMethod(component.Entry, i);
