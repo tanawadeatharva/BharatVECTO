@@ -58,19 +58,19 @@ namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
 		{
 			var testContainer = new SimplePowertrainContainer(container.RunData);
 			switch (container.PowertrainInfo.VehicleArchitecutre) {
-				case VectoSimulationJobType.ConventionalVehicle:
-					PowertrainBuilder.BuildSimplePowertrain(container.RunData, testContainer);
-					break;
-				case VectoSimulationJobType.ParallelHybridVehicle:
-				case VectoSimulationJobType.IHPC:
-					PowertrainBuilder.BuildSimpleHybridPowertrain(container.RunData, testContainer);
-					break;
-				case VectoSimulationJobType.SerialHybridVehicle:
-					PowertrainBuilder.BuildSimpleSerialHybridPowertrain(container.RunData, testContainer);
-					break;
-				case VectoSimulationJobType.IEPC_S:
-					PowertrainBuilder.BuildSimpleIEPCHybridPowertrain(container.RunData, testContainer);
-					break;
+				//case VectoSimulationJobType.ConventionalVehicle:
+				//	PowertrainBuilder.BuildSimplePowertrain(container.RunData, testContainer);
+				//	break;
+				//case VectoSimulationJobType.ParallelHybridVehicle:
+				//case VectoSimulationJobType.IHPC:
+				//	PowertrainBuilder.BuildSimpleHybridPowertrain(container.RunData, testContainer);
+				//	break;
+				//case VectoSimulationJobType.SerialHybridVehicle:
+				//	PowertrainBuilder.BuildSimpleSerialHybridPowertrain(container.RunData, testContainer);
+				//	break;
+				//case VectoSimulationJobType.IEPC_S:
+				//	PowertrainBuilder.BuildSimpleIEPCHybridPowertrain(container.RunData, testContainer);
+				//	break;
                 case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
 					PowertrainBuilder.BuildSimplePowertrainElectric(container.RunData, testContainer);
