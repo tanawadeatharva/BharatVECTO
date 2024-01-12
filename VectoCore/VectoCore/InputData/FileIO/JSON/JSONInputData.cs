@@ -836,7 +836,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 			_manufacturerResults = new ManufacturerResults(xmlDoc.SelectSingleNode("//*[local-name() = 'Results']"));
 			_vehicleLenght = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleLength']")?.InnerText.ToDouble().SI<Meter>();
-			_vehicleClass = VehicleClassHelper.Parse(xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleGroup']").InnerText);
+			_vehicleClass = VehicleClassHelper.Parse(xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleGroup']")?.InnerText);
 			_vehicleCode = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleCode']")?.InnerText.ParseEnum<VehicleCode>() ?? VehicleCode.NOT_APPLICABLE;
 		}
 	}
@@ -849,7 +849,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			Results = new List<IResult>();
 			foreach (XmlNode node in resultNode.SelectNodes("./*[local-name() = 'Result' and @status='success']")) {
 				var entry = new Result {
-					ResultStatus = node.Attributes.GetNamedItem("status").InnerText,
+					ResultStatus = node.Attributes.GetNamedItem("status").InnerText.ParseEnum<ResultStatus>(),
 					Mission = node.SelectSingleNode("./*[local-name()='Mission']").InnerText.ParseEnum<MissionType>(),
 					SimulationParameter = GetSimulationParameter(node.SelectSingleNode("./*[local-name() = 'SimulationParameters' or local-name() = 'SimulationParametersCompletedVehicle']")),
 					EnergyConsumption = node.SelectSingleNode("./*[local-name()='Fuel' and FuelConsumption/@unit='MJ/km']")?

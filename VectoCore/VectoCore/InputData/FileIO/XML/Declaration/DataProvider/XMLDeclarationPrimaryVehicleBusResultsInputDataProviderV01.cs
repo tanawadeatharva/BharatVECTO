@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -54,7 +55,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		private IList<IResult> GetResult(XmlNode xmlNode)
 		{
-			var resultStatus = GetAttribute(xmlNode, XMLNames.Result_Status);
+			var resultStatus = GetAttribute(xmlNode, XMLNames.Result_Status).ParseEnum<ResultStatus>();
 			var vehicleGroup = GetString(XMLNames.Report_Results_PrimaryVehicleSubgroup, xmlNode);
 			var mission = GetString(XMLNames.Report_Result_Mission, xmlNode).ParseEnum<MissionType>();
 			var simulationNode = GetNode(XMLNames.Report_ResultEntry_SimulationParameters, xmlNode);
@@ -66,9 +67,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				var retVal = new List<IResult>();
 				foreach (XmlNode node in ovcModes) {
 					var ovcMode = GetAttribute(node, XMLNames.Results_Report_OVCModeAttr).ParseEnum<OvcHevMode>();
-					GetEnergyConsumption(node, out var ovcEnergyConsumption, out var ovcElectricEnergyConsumption);
+					GetEnergyConsumption(node, out var ovcEnergyConsumption, out var ovcElectricEnergyConsumption, out var ovcIgnoredPrimaryRun);
 					retVal.Add(new Result {
-						ResultStatus = resultStatus,
+						ResultStatus = ovcIgnoredPrimaryRun ? ResultStatus.PrimaryRunIgnored : resultStatus,
 						Mission = mission,
 						VehicleGroup = VehicleClassHelper.Parse(vehicleGroup),
 						SimulationParameter = simulationParams,
@@ -82,10 +83,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				return retVal;
 			}
 
-			GetEnergyConsumption(xmlNode, out var energyConsumption, out var electricEnergyConsumption);
+			GetEnergyConsumption(xmlNode, out var energyConsumption, out var electricEnergyConsumption, out var ignoredPrimaryRun);
 			return new List<IResult>() {
 				new Result {
-					ResultStatus = resultStatus,
+					ResultStatus = ignoredPrimaryRun ? ResultStatus.PrimaryRunIgnored : resultStatus,
 					Mission = mission,
 					VehicleGroup = VehicleClassHelper.Parse(vehicleGroup),
 					SimulationParameter = simulationParams,
@@ -98,19 +99,37 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		private void GetEnergyConsumption(XmlNode xmlNode, out Dictionary<FuelType, JoulePerMeter> energyConsumption,
-			out JoulePerMeter electricEnergyConsumption)
+			out JoulePerMeter electricEnergyConsumption, out bool ignoredPrimaryRun)
 		{
+			var ignoredPrimaryRunTmp = false;
 			energyConsumption = GetNodes(XMLNames.Report_Results_Fuel, xmlNode)
-				.Cast<XmlNode>().Select(x => new KeyValuePair<FuelType, JoulePerMeter>(
-					GetAttribute(x, XMLNames.Report_Results_Fuel_Type_Attr).ParseEnum<FuelType>(),
-					x.SelectSingleNode(
-							$".//*[local-name()='{XMLNames.Report_Result_EnergyConsumption}' and @unit='MJ/km']")?.InnerText
-						.ToDouble().SI(Unit.SI.Mega.Joule.Per.Kilo.Meter).Cast<JoulePerMeter>())).ToDictionary(x => x.Key, x => x.Value);
-			electricEnergyConsumption = GetNode(XMLNames.Report_ResultEntry_VIF_ElectricEnergyConsumption, xmlNode, required:false)?
+				.Cast<XmlNode>().Select(x => {
+					var fuelType = GetAttribute(x, XMLNames.Report_Results_Fuel_Type_Attr).ParseEnum<FuelType>();
+					var consumption = x.SelectSingleNode(
+							$".//*[local-name()='{XMLNames.Report_Result_EnergyConsumption}' and @unit='MJ/km']")
+						?.InnerText.ToDouble();
+					if (consumption.HasValue && double.IsNaN(consumption.Value)) {
+						ignoredPrimaryRunTmp = true;
+						return new KeyValuePair<FuelType, JoulePerMeter>(fuelType,
+							null);
+                    }
+                    return new KeyValuePair<FuelType, JoulePerMeter>(fuelType,
+						consumption?.SI(Unit.SI.Mega.Joule.Per.Kilo.Meter).Cast<JoulePerMeter>());
+				}).ToDictionary(x => x.Key, x => x.Value);
+			
+			var electricEnergyConsumptionValue = GetNode(XMLNames.Report_ResultEntry_VIF_ElectricEnergyConsumption, xmlNode, required:false)?
 				.SelectSingleNode(
 					$".//*[local-name()='{XMLNames.Report_Result_EnergyConsumption}' and @unit='MJ/km']")?.InnerText?
-				.ToDouble().SI(Unit.SI.Mega.Joule.Per.Kilo.Meter).Cast<JoulePerMeter>();
+				.ToDouble();
+			if (electricEnergyConsumptionValue.HasValue && double.IsNaN(electricEnergyConsumptionValue.Value)) {
+				ignoredPrimaryRunTmp = true;
+				electricEnergyConsumption = null;
+            } else {
+				electricEnergyConsumption = electricEnergyConsumptionValue?.SI(Unit.SI.Mega.Joule.Per.Kilo.Meter)
+					.Cast<JoulePerMeter>();
+			}
 
+			ignoredPrimaryRun = ignoredPrimaryRunTmp;
 		}
 
 

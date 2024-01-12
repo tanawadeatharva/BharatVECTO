@@ -185,19 +185,24 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                     var primaryResult = InputDataProvider.JobInputData.PrimaryVehicle.GetResult(
                         simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
                         simulationRunData.VehicleData.Loading, OvcHevMode.NotApplicable);
-                    if (primaryResult == null || !primaryResult.ResultStatus.Equals("success")) {
-                        throw new VectoException(
-                            "Failed to find results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3}. Make sure PIF and completed vehicle data match!",
-                            simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
-                            simulationRunData.VehicleData.Loading);
-                    }
-
-                    if (primaryResult.ResultStatus != "success") {
-                        throw new VectoException(
-                            "Simulation results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3} not finished successfully.",
-                            simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
-                            simulationRunData.VehicleData.Loading);
-                    }
+					if (primaryResult == null) {
+						throw new VectoException(
+							"Failed to find results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3}. Make sure PIF and completed vehicle data match!",
+							simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
+							simulationRunData.VehicleData.Loading);
+					}
+					if (primaryResult.ResultStatus == ResultStatus.PrimaryRunIgnored) {
+						throw new VectoException(
+                            "The vehicle group of the complete(d) vehicle falls into a primary vehicle sub-group for which no result could be calculated due to the criterion of insufficient powertrain power.   mission: {1}, fuel mode: '{2}', payload: {3}.",
+							simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
+							simulationRunData.VehicleData.Loading);
+					}
+					if (primaryResult.ResultStatus != ResultStatus.Success) {
+						throw new VectoException(
+							"Simulation results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3} not finished successfully.",
+							simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
+							simulationRunData.VehicleData.Loading);
+					}
 
                     simulationRunData.PrimaryResult = primaryResult;
 
