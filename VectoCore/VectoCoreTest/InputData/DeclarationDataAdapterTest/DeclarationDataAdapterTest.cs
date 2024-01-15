@@ -240,130 +240,136 @@ namespace TUGraz.VectoCore.Tests.InputData.DeclarationDataAdapterTest
 			PrimaryBusCurbMassTest(jobType, archId, axleConfiguration, articulated, TPMLM, runIdx, expectedVehicleClass, expectedCurbMass);
 		}
 
+		private const VehicleCode VC_CA = VehicleCode.CA;
+		private const VehicleCode VC_CB = VehicleCode.CB;
+		private const VehicleCode VC_CE = VehicleCode.CE;
+		private const VehicleCode VC_CF = VehicleCode.CF;
+		private const RegistrationClass RC_II = RegistrationClass.II;
+
 		[
 			// testcases for vehicle mass with a high tpmlm
-			TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl2, false, 25000, 0,
+			TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl2, false, 25000, 0, VC_CE, RC_II, false,
 				VehicleClass.ClassP31SD, 11975),
-			TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl2, false, 25000, 0,
-				VehicleClass.ClassP31SD, 12291),
-			TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl2, false, 25000, 0,
-				VehicleClass.ClassP31SD, 12291),
-			TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl2, false, 25000, 0,
-				VehicleClass.ClassP31SD, 11416),
+			TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl2, false, 25000, 0, VC_CE, RC_II, false,
+                VehicleClass.ClassP31SD, 12291),
+			TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl2, false, 25000, 0, VC_CE, RC_II, false,
+                VehicleClass.ClassP31SD, 12291),
+			TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl2, false, 25000, 0, VC_CE, RC_II, false,
+                VehicleClass.ClassP31SD, 11416),
 
-            TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl2, false, 25000, 4,
+            TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl2, false, 25000, 4, VC_CF, RC_II, false,
                 VehicleClass.ClassP31DD, 12350),
-            TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl2, false, 25000, 4,
+            TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl2, false, 25000, 4, VC_CF, RC_II, false,
                 VehicleClass.ClassP31DD, 12666),
-            TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl2, false, 25000, 4,
+            TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl2, false, 25000, 4, VC_CF, RC_II, false,
                 VehicleClass.ClassP31DD, 12666),
-            TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl2, false, 25000, 4,
+            TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl2, false, 25000, 4, VC_CF, RC_II, false,
                 VehicleClass.ClassP31DD, 11791),
 
-            TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl2, false, 25000, 7,
+            TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl2, false, 25000, 7, VC_CA, RC_II, false,
                 VehicleClass.ClassP32SD, 13150),
-            TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl2, false, 25000, 7,
+            TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl2, false, 25000, 7, VC_CA, RC_II, false,
                 VehicleClass.ClassP32SD, 13466),
-            TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl2, false, 25000, 7,
+            TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl2, false, 25000, 7, VC_CA, RC_II, false,
                 VehicleClass.ClassP32SD, 13466),
-            TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl2, false, 25000, 7,
+            TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl2, false, 25000, 7, VC_CA, RC_II, false,
                 VehicleClass.ClassP32SD, 12229),
 
-            TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl2, false, 25000, 9,
+            TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl2, false, 25000, 9, VC_CB, RC_II, false,
                 VehicleClass.ClassP32DD, 13400),
-            TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl2, false, 25000, 9,
+            TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl2, false, 25000, 9, VC_CB, RC_II, false,
                 VehicleClass.ClassP32DD, 13716),
-            TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl2, false, 25000, 9,
+            TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl2, false, 25000, 9, VC_CB, RC_II, false,
                 VehicleClass.ClassP32DD, 13716),
-            TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl2, false, 25000, 9,
+            TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl2, false, 25000, 9, VC_CB, RC_II, false,
                 VehicleClass.ClassP32DD, 12479),
 
-            TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl3, false, 25000, 0,
+            TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl3, false, 25000, 0, VC_CE, RC_II, false,
                 VehicleClass.ClassP33SD, 14175),
-            TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl3, false, 25000, 0,
+            TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl3, false, 25000, 0, VC_CE, RC_II, false,
                 VehicleClass.ClassP33SD, 14491),
-            TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl3, false, 25000, 0,
+            TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl3, false, 25000, 0, VC_CE, RC_II, false,
                 VehicleClass.ClassP33SD, 14491),
-            TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl3, false, 25000, 0,
+            TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl3, false, 25000, 0, VC_CE, RC_II, false,
                 VehicleClass.ClassP33SD, 13616),
 
-            TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl3, false, 25000, 4,
+            TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl3, false, 25000, 4, VC_CF, RC_II, false,
                 VehicleClass.ClassP33DD, 14725),
-            TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl3, false, 25000, 4,
+            TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl3, false, 25000, 4, VC_CF, RC_II, false,
                 VehicleClass.ClassP33DD, 15041),
-            TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl3, false, 25000, 4,
+            TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl3, false, 25000, 4, VC_CF, RC_II, false,
                 VehicleClass.ClassP33DD, 15041),
-            TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl3, false, 25000, 4,
+            TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl3, false, 25000, 4, VC_CF, RC_II, false,
                 VehicleClass.ClassP33DD, 14166),
         ]
 		public void CompletedGenericBusCurbMassTest_HighTPMLM(VectoSimulationJobType jobType, ArchitectureID archId,
 			AxleConfiguration axleConfiguration, bool articulated, double TPMLM, int runIdx,
-			VehicleClass expectedVehicleClass, double expectedCurbMass)
+			VehicleCode vehicleCode, RegistrationClass registrationClass, bool lowEntry, VehicleClass expectedVehicleClass, double expectedCurbMass)
 		{
-			CompletedGenericBusCurbMassTest(jobType, archId, axleConfiguration, articulated, TPMLM, runIdx, expectedVehicleClass, expectedCurbMass);
+			CompletedGenericBusCurbMassTest(jobType, archId, axleConfiguration, articulated, TPMLM, runIdx, vehicleCode, registrationClass, lowEntry, expectedVehicleClass, expectedCurbMass);
 		}
 
 		[
 			// testcases for vehicle mass with a low tpmlm
-			TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl2, false, 13000, 0,
-				VehicleClass.ClassP31SD, 13000 * 0.7),
-			TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl2, false, 13000, 0,
-				VehicleClass.ClassP31SD, 13000 * 0.7),
-			TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl2, false, 13000, 0,
-				VehicleClass.ClassP31SD, 13000 * 0.7),
-			TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl2, false, 13000, 0,
-				VehicleClass.ClassP31SD, 13000 * 0.7),
+			TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl2, false, 13000, 0, VC_CE, RC_II, false,
+                VehicleClass.ClassP31SD, 13000 * 0.7),
+			TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl2, false, 13000, 0, VC_CE, RC_II, false,
+                VehicleClass.ClassP31SD, 13000 * 0.7),
+			TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl2, false, 13000, 0, VC_CE, RC_II, false,
+                VehicleClass.ClassP31SD, 13000 * 0.7),
+			TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl2, false, 13000, 0, VC_CE, RC_II, false,
+                VehicleClass.ClassP31SD, 13000 * 0.7),
 
-            TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl2, false, 13000, 4,
+            TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl2, false, 13000, 4, VC_CF, RC_II, false,
                 VehicleClass.ClassP31DD, 13000 * 0.7),
-            TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl2, false, 13000, 4,
+            TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl2, false, 13000, 4, VC_CF, RC_II, false,
                 VehicleClass.ClassP31DD, 13000 * 0.7),
-            TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl2, false, 13000, 4,
+            TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl2, false, 13000, 4, VC_CF, RC_II, false,
                 VehicleClass.ClassP31DD, 13000 * 0.7),
-            TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl2, false, 13000, 4,
+            TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl2, false, 13000, 4, VC_CF, RC_II, false,
                 VehicleClass.ClassP31DD, 13000 * 0.7),
 
-            TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl2, false, 13000, 7,
+            TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl2, false, 13000, 7, VC_CA, RC_II, false,
                 VehicleClass.ClassP32SD, 13000 * 0.75),
-            TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl2, false, 13000, 7,
+            TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl2, false, 13000, 7, VC_CA, RC_II, false,
                 VehicleClass.ClassP32SD, 13000 * 0.75),
-            TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl2, false, 13000, 7,
+            TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl2, false, 13000, 7, VC_CA, RC_II, false,
                 VehicleClass.ClassP32SD, 13000 * 0.75),
-            TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl2, false, 13000, 7,
+            TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl2, false, 13000, 7, VC_CA, RC_II, false,
                 VehicleClass.ClassP32SD, 13000 * 0.75),
 
-            TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl2, false, 13000, 9,
+            TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl2, false, 13000, 9, VC_CB, RC_II, false,
                 VehicleClass.ClassP32DD, 13000 * 0.75),
-            TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl2, false, 13000, 9,
+            TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl2, false, 13000, 9, VC_CB, RC_II, false,
                 VehicleClass.ClassP32DD, 13000 * 0.75),
-            TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl2, false, 13000, 9,
+            TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl2, false, 13000, 9, VC_CB, RC_II, false,
                 VehicleClass.ClassP32DD, 13000 * 0.75),
-            TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl2, false, 13000, 9,
+            TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl2, false, 13000, 9, VC_CB, RC_II, false,
                 VehicleClass.ClassP32DD, 13000 * 0.75),
 
-            TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl3, false, 13000, 0,
+            TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl3, false, 13000, 0, VC_CE, RC_II, false,
                 VehicleClass.ClassP33SD, 14175),
-            TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl3, false, 13000, 0,
+            TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl3, false, 13000, 0, VC_CE, RC_II, false,
                 VehicleClass.ClassP33SD, 14491),
-            TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl3, false, 13000, 0,
+            TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl3, false, 13000, 0, VC_CE, RC_II, false,
                 VehicleClass.ClassP33SD, 14491),
-            TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl3, false, 13000, 0,
+            TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl3, false, 13000, 0, VC_CE, RC_II, false,
                 VehicleClass.ClassP33SD, 13616),
 
-            TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl3, false, 13000, 4,
+            TestCase(VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, Axl3, false, 13000, 4, VC_CF, RC_II, false,
                 VehicleClass.ClassP33DD, 14725),
-            TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl3, false, 13000, 4,
+            TestCase(VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, Axl3, false, 13000, 4, VC_CF, RC_II, false,
                 VehicleClass.ClassP33DD, 15041),
-            TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl3, false, 13000, 4,
+            TestCase(VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, Axl3, false, 13000, 4, VC_CF, RC_II, false,
                 VehicleClass.ClassP33DD, 15041),
-            TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl3, false, 13000, 4,
+            TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl3, false, 13000, 4, VC_CF, RC_II, false,
                 VehicleClass.ClassP33DD, 14166),
         ]
 		public void CompletedGenericBusCurbMassTest_LowTPMLM(VectoSimulationJobType jobType, ArchitectureID archId,
 			AxleConfiguration axleConfiguration, bool articulated, double TPMLM, int runIdx,
-			VehicleClass expectedVehicleClass, double expectedCurbMass)
+			VehicleCode vehicleCode, RegistrationClass registrationClass, bool lowEntry, VehicleClass expectedVehicleClass, double expectedCurbMass)
 		{
-			CompletedGenericBusCurbMassTest(jobType, archId, axleConfiguration, articulated, TPMLM, runIdx, expectedVehicleClass, expectedCurbMass);
+			CompletedGenericBusCurbMassTest(jobType, archId, axleConfiguration, articulated, TPMLM, runIdx, vehicleCode, registrationClass, lowEntry, expectedVehicleClass, expectedCurbMass);
 		}
 
         public void PrimaryBusCurbMassTest(VectoSimulationJobType jobType, ArchitectureID archId, AxleConfiguration axleConfiguration, bool articulated, double TPMLM, int runIdx, VehicleClass expectedVehicleClass, double expectedCurbMass)
@@ -410,6 +416,8 @@ namespace TUGraz.VectoCore.Tests.InputData.DeclarationDataAdapterTest
 
 		public void CompletedGenericBusCurbMassTest(VectoSimulationJobType jobType, ArchitectureID archId,
 			AxleConfiguration axleConfiguration, bool articulated, double TPMLM, int runIdx,
+			VehicleCode vehicleCode,
+			RegistrationClass registrationClass, bool lowEntry,
 			VehicleClass expectedVehicleClass, double expectedCurbMassGeneric)
 		{
 			var addElectricComponents = false;
@@ -443,18 +451,31 @@ namespace TUGraz.VectoCore.Tests.InputData.DeclarationDataAdapterTest
 
 			var vehicleType = VehicleCategory.HeavyBusPrimaryVehicle;
 
-			var segment = DeclarationData.PrimaryBusSegments.Lookup(
+			var primarySegment = DeclarationData.PrimaryBusSegments.Lookup(
 				vehicleType, axleConfiguration, articulated);
+			var completedSegment = DeclarationData.CompletedBusSegments.Lookup(axleConfiguration.NumAxles(),
+				vehicleCode, registrationClass, 10, 3.1.SI<Meter>(), lowEntry);
 
 			var curbMassCompleted = 12345;
 
-			var mission = segment.Missions[runIdx];
-			var vehicleInputData = GetMockVehicleData(TPMLM, axleConfiguration, addElectricComponents);
+			var mission = primarySegment.Missions[runIdx];
+			//var primaryMission = primarySegment.Missions.Where(
+			//	m => {
+			//		return m.BusParameter.DoubleDecker ==
+			//				vehicleCode.IsDoubleDeckerBus() &&
+			//				m.MissionType == mission.MissionType &&
+			//				m.BusParameter.FloorType == vehicleCode.GetFloorType();
+			//	}).First();
+			var completedMission = completedSegment.Missions.FirstOrDefault(m => m.MissionType == mission.MissionType);
+			var loading = mission.Loadings.First();
+            var vehicleInputData = GetMockVehicleData(TPMLM, axleConfiguration, addElectricComponents);
 			var completedInput = GetMockCompletedInputData(curbMassCompleted);
 			var vehicleDataGeneric =
-				dataAdapterGeneric.CreateVehicleData(vehicleInputData, segment, mission, mission.Loadings.First(), false);
+				dataAdapterGeneric.CreateVehicleData(vehicleInputData, primarySegment, mission, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(loading.Key,
+					mission.Loadings[loading.Key]), false);
+			
 			var vehicleDataSpecific =
-				dataAdapterSpecific.CreateVehicleData(vehicleInputData, completedInput, segment, mission, mission.Loadings.First());
+				dataAdapterSpecific.CreateVehicleData(vehicleInputData, completedInput, completedSegment, completedMission, loading);
 
             Assert.AreEqual(expectedVehicleClass, mission.BusParameter.BusGroup);
 			Assert.AreEqual(expectedCurbMassGeneric, vehicleDataGeneric.CurbMass.Value());
