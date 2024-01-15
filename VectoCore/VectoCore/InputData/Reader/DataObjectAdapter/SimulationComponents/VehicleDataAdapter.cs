@@ -218,7 +218,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var retVal = base.DoCreateVehicleData(data, segment, mission, loading, passengerCount, allowVocational);
 
 			retVal.CurbMass = mission.CurbMass;
-			if (!mission.BusParameter.CurbMassTPMLMFactor.IsNaN() &&
+			if (mission.BusParameter.BusGroup.IsPrimaryBus() && !mission.BusParameter.CurbMassTPMLMFactor.IsNaN() &&
 				data.GrossVehicleMassRating * mission.BusParameter.CurbMassTPMLMFactor < mission.CurbMass) {
 				retVal.CurbMass = data.GrossVehicleMassRating * mission.BusParameter.CurbMassTPMLMFactor;
 			}

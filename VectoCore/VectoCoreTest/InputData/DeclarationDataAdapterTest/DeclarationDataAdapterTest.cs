@@ -459,21 +459,14 @@ namespace TUGraz.VectoCore.Tests.InputData.DeclarationDataAdapterTest
 			var curbMassCompleted = 12345;
 
 			var mission = primarySegment.Missions[runIdx];
-			//var primaryMission = primarySegment.Missions.Where(
-			//	m => {
-			//		return m.BusParameter.DoubleDecker ==
-			//				vehicleCode.IsDoubleDeckerBus() &&
-			//				m.MissionType == mission.MissionType &&
-			//				m.BusParameter.FloorType == vehicleCode.GetFloorType();
-			//	}).First();
 			var completedMission = completedSegment.Missions.FirstOrDefault(m => m.MissionType == mission.MissionType);
 			var loading = mission.Loadings.First();
             var vehicleInputData = GetMockVehicleData(TPMLM, axleConfiguration, addElectricComponents);
 			var completedInput = GetMockCompletedInputData(curbMassCompleted);
+
+
 			var vehicleDataGeneric =
-				dataAdapterGeneric.CreateVehicleData(vehicleInputData, primarySegment, mission, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(loading.Key,
-					mission.Loadings[loading.Key]), false);
-			
+				dataAdapterGeneric.CreateVehicleData(vehicleInputData, primarySegment, mission, loading, false);
 			var vehicleDataSpecific =
 				dataAdapterSpecific.CreateVehicleData(vehicleInputData, completedInput, completedSegment, completedMission, loading);
 
