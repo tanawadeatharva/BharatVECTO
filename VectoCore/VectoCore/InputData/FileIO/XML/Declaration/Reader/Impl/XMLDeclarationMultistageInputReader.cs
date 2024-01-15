@@ -1175,12 +1175,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 				return InputComplete(_consolidateElectricConsumerData, nameof(_consolidateElectricConsumerData))
 					& _consolidateElectricConsumerData.IsInputDataCompleteFullCheck(jobType)
 					& InputComplete(_consolidatedHVACBusAuxiliariesData, nameof(_consolidatedHVACBusAuxiliariesData))
-					& _consolidatedHVACBusAuxiliariesData.IsInputDataCompleteFullCheck(jobType);
+					& ((_consolidatedHVACBusAuxiliariesData != null)
+						&& _consolidatedHVACBusAuxiliariesData.IsInputDataCompleteFullCheck(jobType));
 
 			}
 			return InputComplete(_consolidateElectricConsumerData, nameof(_consolidateElectricConsumerData)) 
 					&& _consolidateElectricConsumerData.IsInputDataComplete(jobType)
 					&& InputComplete(_consolidatedHVACBusAuxiliariesData, nameof(_consolidatedHVACBusAuxiliariesData))
+					&& (_consolidatedHVACBusAuxiliariesData != null)
 					&& _consolidatedHVACBusAuxiliariesData.IsInputDataComplete(jobType);
 		}
 
@@ -1200,7 +1202,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected override IList<string> GetInvalidEntriesTemplate(VectoSimulationJobType jobType)
 		{
 			return _invalidEntries.Concat(_consolidateElectricConsumerData.GetInvalidEntries(jobType))
-				.Concat(_consolidatedHVACBusAuxiliariesData.GetInvalidEntries(jobType)).ToList();
+				.Concat(_consolidatedHVACBusAuxiliariesData?.GetInvalidEntries(jobType) ?? new List<string>()).ToList();
 		}
 
 
