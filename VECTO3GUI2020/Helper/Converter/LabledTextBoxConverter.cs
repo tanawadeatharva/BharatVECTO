@@ -120,7 +120,7 @@ namespace VECTO3GUI2020.Helper.Converter
 
 		private void GetConversionFactor(ref double factor, string convertId)
 		{
-			switch (convertId.ToLower())
+			switch (convertId.ToLowerInvariant())
 			{
 				case "asrpm":
 					factor = ToRpm;
@@ -133,7 +133,7 @@ namespace VECTO3GUI2020.Helper.Converter
 
 		private void GetDecimals(string arg, ref int? decimals)
 		{
-			switch (arg.ToLower())
+			switch (arg.ToLowerInvariant())
 			{
 				case "int":
 					decimals = 0;
