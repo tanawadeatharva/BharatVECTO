@@ -8,7 +8,11 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" schemaLocation="VectoDeclarationDefinitions.2.1.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" schemaLocation="VectoDeclarationDefinitions.2.3.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" schemaLocation="VectoDeclarationDefinitions.2.4.xsd"/>
-	<xs:complexType name="ElectricMachineSystemMaxTorqueEntryType">
+  <!--
+	Changelog:
+	18.01.2024: change restrictions of EM continuous torque - allow 0.00
+	-->
+  <xs:complexType name="ElectricMachineSystemMaxTorqueEntryType">
 		<xs:attribute name="outShaftSpeed" type="v2.3:OutShaftSpeedType" use="required">
 			<xs:annotation>
 				<xs:documentation>P468 - [rpm]</xs:documentation>
@@ -1617,10 +1621,15 @@
 							<xs:documentation>P467 - [V]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ContinuousTorque" type="v2.3:MaxTorqueType">
+					<xs:element name="ContinuousTorque">
 						<xs:annotation>
 							<xs:documentation>P459 - [Nm]</xs:documentation>
 						</xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="v1.0:Double2">
+                <xs:minInclusive value="0.00"/>
+              </xs:restriction>
+            </xs:simpleType>
 					</xs:element>
 					<xs:element name="TestSpeedContinuousTorque" type="v2.3:TestSpeedType">
 						<xs:annotation>
