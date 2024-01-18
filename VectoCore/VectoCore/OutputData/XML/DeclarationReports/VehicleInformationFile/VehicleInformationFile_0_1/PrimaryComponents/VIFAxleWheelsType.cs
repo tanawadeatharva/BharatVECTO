@@ -72,7 +72,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					if (defaultNsAttr != null) {
 						defaultNsAttr.Value = xmlTyre.GetXmlNode.GetNamespaceOfPrefix(parts.First());
 					} else {
-						ptr.Parent.Add(new XAttribute("xmlns", ptr.Parent.GetNamespaceOfPrefix(parts.First())));
+						var ns = ptr.Parent.GetNamespaceOfPrefix(parts.First()) 
+							?? xmlTyre.GetXmlNode.GetNamespaceOfPrefix(parts.First());
+						
+						ptr.Parent.Add(new XAttribute("xmlns", ns));
 					}
 				}
 				ptr = ptr.NextAttribute;
