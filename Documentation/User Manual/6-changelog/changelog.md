@@ -2,6 +2,12 @@
 
 **VECTO-4.0.2**
 
+***Build 3275 (2023-12-20)***
+
+- Hotfix
+    * CodeEU-273, CodeEU-274: Changes in the AMT shift strategy regarding idling speed caused simulation aborts
+    * CodeEU-260: regression fix handling overload buffer
+
 ***Build 3273 (2023-12-18)***
 
 - Bugfixes
