@@ -101,8 +101,8 @@ namespace TUGraz.VectoCore.Models.Declaration {
 						Data[Tuple.Create(axleNumber, mission)] =
 							 new SteeringPumpTechnologyEntry() {
 									FullyElectric = !row.Field<string>("fullyelectric").Equals("0"),
-									TubingFactor = row.ParseDouble("tubing-"+mission.ToString().ToLower()),
-									AxleFactor = row.ParseDouble("axle-"+mission.ToString().ToLower())
+									TubingFactor = row.ParseDouble("tubing-"+mission.ToString().ToLowerInvariant()),
+									AxleFactor = row.ParseDouble("axle-"+mission.ToString().ToLowerInvariant())
 							};
 					}
 				}

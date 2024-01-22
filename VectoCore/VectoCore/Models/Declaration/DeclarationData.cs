@@ -153,11 +153,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// </summary>
 		public static Kilogram GetPayloadForGrossVehicleWeight(Kilogram grossVehicleWeight, string equationName)
 		{
-			if (equationName.ToLower().StartsWith("pc10")) {
+			if (equationName.ToLowerInvariant().StartsWith("pc10")) {
 				return Payloads.Lookup10Percent(grossVehicleWeight);
 			}
 
-			if (equationName.ToLower().StartsWith("pc75")) {
+			if (equationName.ToLowerInvariant().StartsWith("pc75")) {
 				return Payloads.Lookup75Percent(grossVehicleWeight);
 			}
 

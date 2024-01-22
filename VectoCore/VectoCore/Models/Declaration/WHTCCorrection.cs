@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					if (mission.IsEMS() || !mission.IsDeclarationMission() || mission == MissionType.ExemptedMission) {
 						continue;
 					}
-					var values = table.Columns[mission.ToString().ToLower()].Values<string>().ToDouble().ToArray();
+					var values = table.Columns[mission.ToString().ToLowerInvariant()].Values<string>().ToDouble().ToArray();
 					Data[mission] = new Entry { Urban = values[0], Rural = values[1], Motorway = values[2] };
 				}
 			}
