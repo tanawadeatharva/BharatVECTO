@@ -71,18 +71,22 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			var retVal = new XElement(v24 + XMLNames.Component_AirDrag);
 			
-
-
 			var tmp = XElement.Load(inputData.XMLSource.CreateNavigator().ReadSubtree());
 			var dataElement = tmp.Descendants().Where(e => e.Name.LocalName == XMLNames.ComponentDataWrapper).First();
 			dataElement.Name =
 				v20 + XMLNames.ComponentDataWrapper;
 			dataElement.SetAttributeValue("xmlns", inputData.DataSource.TypeVersion);
-			//dataElement.Add(new XAttribute("xmlns", inputData.DataSource.TypeVersion));
+			
+			//Remove prefix from value of type attribute.
+			for (var ptr = dataElement.FirstAttribute; ptr != null; ptr = ptr.NextAttribute) {
+				if (!ptr.IsNamespaceDeclaration && (ptr.Name.LocalName == "type") && ptr.Value.Contains(':')) {
+					ptr.Value = ptr.Value.Split(':').Last();
+					break;
+				}
+			}
 
 			var signatureElement = tmp.Descendants().Where(e => e.Name.LocalName == XMLNames.DI_Signature).First();
             signatureElement.Name = v20 + XMLNames.DI_Signature;
-
 			
             retVal.Add(dataElement, signatureElement);
 			return retVal;
