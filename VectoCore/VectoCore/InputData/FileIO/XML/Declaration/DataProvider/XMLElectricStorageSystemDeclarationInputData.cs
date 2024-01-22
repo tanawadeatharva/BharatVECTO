@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -272,10 +273,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			var maxDischargeCurrent = maxDischargeCurrentRow.Field<string>(BatteryMaxCurrentReader.Fields.MaxDischargeCurrent).ToDouble() * 5;
 			var newMap = new string[] {
 				$"{BatteryMaxCurrentReader.Fields.StateOfCharge}, {BatteryMaxCurrentReader.Fields.MaxChargeCurrent}, {BatteryMaxCurrentReader.Fields.MaxDischargeCurrent}",
-				$"  0, {maxChargeCurrent}, 0",
-				$" 30, {maxChargeCurrent}, {maxDischargeCurrent}",
-				$" 80, {maxChargeCurrent}, {maxDischargeCurrent}",
-				$"100, 0, {maxDischargeCurrent}"
+				$"  0, {maxChargeCurrent.ToString(CultureInfo.InvariantCulture)}, 0",
+				$" 30, {maxChargeCurrent.ToString(CultureInfo.InvariantCulture)}, {maxDischargeCurrent.ToString(CultureInfo.InvariantCulture)}",
+				$" 80, {maxChargeCurrent.ToString(CultureInfo.InvariantCulture)}, {maxDischargeCurrent.ToString(CultureInfo.InvariantCulture)}",
+				$"100, 0, {maxDischargeCurrent.ToString(CultureInfo.InvariantCulture)}"
 			};
 			return VectoCSVFile.ReadStream(newMap.Join(Environment.NewLine).ToStream());
 		}
