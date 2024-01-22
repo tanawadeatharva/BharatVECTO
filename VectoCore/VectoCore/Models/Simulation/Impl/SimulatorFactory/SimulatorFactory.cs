@@ -268,7 +268,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 					var container = PowertrainBuilder.Build(data, modData, sumWriter);
 					
-					run = new DistanceRun(container, new FollowUpRunCreator(data.IterativeRunStrategy)); 
+					run = new DistanceRun(container, new FollowUpRunCreator(data.IterativeRunStrategy), new DefaultPostMortemAnalyzer(data.PostMortemStrategy)); 
 					break;
 				case CycleType.EngineOnly:
 					if ((data.SimulationType & SimulationType.EngineOnly) == 0) {

@@ -265,11 +265,12 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public IList<IResult> Results { get; internal set; }
 	}
+
 	
 	[DebuggerDisplay("{ResultStatus} | {VehicleGroup} {Mission} {OvcMode}")]
 	public class Result : IResult
 	{
-		public string ResultStatus { get; internal set; }
+		public ResultStatus ResultStatus { get; internal set; }
 		public VehicleClass VehicleGroup { get; internal set; }
 		public MissionType Mission { get; internal set; }
 		public ISimulationParameter SimulationParameter { get; internal set; }

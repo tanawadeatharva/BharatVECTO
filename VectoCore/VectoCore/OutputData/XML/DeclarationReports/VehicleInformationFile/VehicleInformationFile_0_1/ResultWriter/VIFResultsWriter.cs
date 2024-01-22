@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter;
@@ -28,7 +30,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			protected override IResultGroupWriter ResultSuccessWriter => _vifFactory.GetBusConvSuccessResultWriter(_vifFactory, TNS);
 			protected override IResultGroupWriter ResultErrorWriter => _vifFactory.GetBusErrorResultWriter(_vifFactory, TNS);
-			public override IReportResultsSummaryWriter SummaryWriter => _vifFactory.GetBusConvSummaryWriter(_vifFactory, TNS);
+			
+            public override IReportResultsSummaryWriter SummaryWriter => _vifFactory.GetBusConvSummaryWriter(_vifFactory, TNS);
 
 		}
 
@@ -38,6 +41,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			protected override IResultGroupWriter ResultSuccessWriter => _vifFactory.GetBusHEVNonOVCSuccessResultWriter(_vifFactory, TNS);
 			protected override IResultGroupWriter ResultErrorWriter => _vifFactory.GetBusErrorResultWriter(_vifFactory, TNS);
+			
 			public override IReportResultsSummaryWriter SummaryWriter => _vifFactory.GetBusHEVNonOVCSummaryWriter(_vifFactory, TNS);
 
 		}
@@ -49,15 +53,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			public override XElement GenerateResults(List<IResultEntry> results)
 			{
 				var ordered = GetOrderedResultsOVC(results);
-				var allSuccess = results.All(x => x.Status == VectoRun.Status.Success);
+				var allSuccess = results.All(x => x.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore));
 				return new XElement(TNS + XMLNames.Report_Results,
 					new XElement(TNS + XMLNames.Report_Result_Status,
 						allSuccess
 							? XMLNames.Report_Results_Status_Success_Val
 							: XMLNames.Report_Results_Status_Error_Val),
 					ordered.Select(x =>
-						x.ChargeDepletingResult.Status == VectoRun.Status.Success &&
-						x.ChargeSustainingResult.Status == VectoRun.Status.Success
+						x.ChargeDepletingResult.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore) &&
+						x.ChargeSustainingResult.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore)
 							? ResultSuccessWriter.GetElement(x)
 							: ResultErrorWriter.GetElement(x)),
 					SummaryWriter.GetElement(ordered)
@@ -66,6 +70,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			protected override IResultGroupWriter ResultSuccessWriter => _vifFactory.GetBusHEVOVCSuccessResultWriter(_vifFactory, TNS);
 			protected override IResultGroupWriter ResultErrorWriter => _vifFactory.GetBusErrorResultWriter(_vifFactory, TNS);
+			
 			public override IReportResultsSummaryWriter SummaryWriter => _vifFactory.GetBusHEVOVCSummaryWriter(_vifFactory, TNS);
 
 		}
@@ -76,6 +81,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			protected override IResultGroupWriter ResultSuccessWriter => _vifFactory.GetBusPEVSuccessResultWriter(_vifFactory, TNS);
 			protected override IResultGroupWriter ResultErrorWriter => _vifFactory.GetBusErrorResultWriter(_vifFactory, TNS);
+			
 			public override IReportResultsSummaryWriter SummaryWriter => _vifFactory.GetBusPEVSummaryWriter(_vifFactory, TNS);
 
 		}
@@ -95,6 +101,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			protected override IResultGroupWriter ResultSuccessWriter => null;
 			protected override IResultGroupWriter ResultErrorWriter => null;
+			
 			public override IReportResultsSummaryWriter SummaryWriter => null;
 
 
