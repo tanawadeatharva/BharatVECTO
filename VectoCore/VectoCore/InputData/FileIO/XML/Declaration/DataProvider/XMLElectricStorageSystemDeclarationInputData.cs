@@ -244,7 +244,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			foreach (DataRow row in corrected.Rows) {
 				for (var i = 1; i < nrCols; i++) {
 					var uncorr = row.ParseDouble(i);
-					row[i] = (uncorr * dcir_corr.Value()).ToString(CultureInfo.InvariantCulture);
+					row[i] = (uncorr * dcir_corr.Value()).ToXMLFormat(2);
 				}
 			}
 
