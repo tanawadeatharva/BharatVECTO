@@ -1477,7 +1477,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					if (newEval.Count > 0) {
 						var newBest = DoSelectBestOption(newEval, absTime, dt, outTorque, outAngularVelocity, dryRun,
 							currentGear);
-						if (!newBest.IgnoreReason.EngineSpeedTooHigh()) {
+						if ((newBest != null) && !newBest.IgnoreReason.EngineSpeedTooHigh()) {
 							best = newBest;
 						}
 					}
@@ -1520,8 +1520,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 
-			best.SimulationInterval = dt;
-			best.ProhibitGearshift = prohibitGearshift;
+			if (best != null) {
+				best.SimulationInterval = dt;
+				best.ProhibitGearshift = prohibitGearshift;
+			}
+
 			return best;
 		}
 
