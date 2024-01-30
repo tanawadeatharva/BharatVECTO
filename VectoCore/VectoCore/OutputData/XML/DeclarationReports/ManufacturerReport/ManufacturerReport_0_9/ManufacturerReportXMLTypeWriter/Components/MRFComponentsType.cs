@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter
 {
@@ -269,11 +270,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var components = inputData.JobInputData.Vehicle.Components;
+
 			return new XElement(_mrf + XMLNames.Vehicle_Components,
 				_mrfFactory.GetEngineType().GetElement(inputData),
 				_mrfFactory.GetTransmissionType().GetElement(inputData),
 				components.TorqueConverterInputData != null ? _mrfFactory.GetTorqueConverterType().GetElement(inputData) : null,
-				components.AngledriveInputData != null ? _mrfFactory.GetAngleDriveType().GetElement(inputData) : null,
+				(components.AngledriveInputData != null) && (components.AngledriveInputData.Type == AngledriveType.SeparateAngledrive)
+					? _mrfFactory.GetAngleDriveType().GetElement(inputData) : null,
 				components.RetarderInputData != null ? _mrfFactory.GetRetarderType().GetElement(inputData) : null,
 				components.AxleGearInputData != null ? _mrfFactory.GetAxleGearType().GetElement(inputData) : null,
 
