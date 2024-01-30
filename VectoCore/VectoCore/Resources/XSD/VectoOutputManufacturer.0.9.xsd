@@ -3194,7 +3194,7 @@ Changelog
 					<xs:documentation>I.1.1.28.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType">
+			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>I.1.1.29.</xs:documentation>
 				</xs:annotation>
@@ -3210,7 +3210,7 @@ Changelog
 					<xs:documentation>I.1.1.28.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType">
+			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>I.1.1.29</xs:documentation>
 				</xs:annotation>
