@@ -1368,7 +1368,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 						& InputComplete(DoubleGlazing, nameof(DoubleGlazing))
 						& InputComplete(AdjustableAuxiliaryHeater, nameof(AdjustableAuxiliaryHeater))
 						& InputComplete(SeparateAirDistributionDucts, nameof(SeparateAirDistributionDucts))
-						& MethodComplete(RequiredParametersForJobType(jobType), nameof(RequiredParametersForJobType));
+						& MethodComplete(RequiredParametersForJobType(jobType), "Electric Heater");
 			}
 			return MethodComplete(IsCorrectSystemConfiguration(), nameof(IsCorrectSystemConfiguration))
 					&& InputComplete(HeatPumpTypeCoolingDriverCompartment, nameof(HeatPumpTypeCoolingDriverCompartment))
@@ -1379,7 +1379,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					&& InputComplete(DoubleGlazing, nameof(DoubleGlazing))
 					&& InputComplete(AdjustableAuxiliaryHeater, nameof(AdjustableAuxiliaryHeater))
 					&& InputComplete(SeparateAirDistributionDucts, nameof(SeparateAirDistributionDucts))
-					&& MethodComplete(RequiredParametersForJobType(jobType), nameof(RequiredParametersForJobType));
+					&& MethodComplete(RequiredParametersForJobType(jobType), "Electric Heater");
 		}
 
 		public override string GetInvalidEntry()
