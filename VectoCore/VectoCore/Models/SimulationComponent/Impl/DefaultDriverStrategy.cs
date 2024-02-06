@@ -1354,11 +1354,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 									debug.Add("[DMB-DB-12] Roll", response);
 									break;
 								case ResponseUnderload _:
-									if (gear.Gear != DataBus.GearboxInfo.Gear.Gear) {
+									if (gear.Gear != DataBus.GearboxInfo.Gear.Gear)
+									{
 										// AT Gearbox switched gears, shift losses are no longer applied, try once more...
 										response = Driver.DrivingActionAccelerate(absTime, ds,
 											DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
 										debug.Add("[DMB-DB-13] Accelerate", response);
+										if (response is ResponseUnderload)
+										{
+											Log.Info("Brake -> Overload --> Accelerate -> Gearshift -> Accelerate --> Underload --> Accelerate --> Underload --> trying brake action");
+											response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+												gradient, targetDistance: targetDistance);
+											debug.Add("[DMB-DB-14] Brake", response);
+										}
 									}
 									break;
 							}
