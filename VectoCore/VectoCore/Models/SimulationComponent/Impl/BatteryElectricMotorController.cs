@@ -2,6 +2,7 @@
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
@@ -58,8 +59,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
         #endregion
 
         protected virtual bool CannotProvideRecuperationAtLowSpeed(NewtonMeter outTorque)
-        { 
-			return (DataBus.VehicleInfo.VehicleSpeed ?? 0.SI<MeterPerSecond>()).IsSmallerOrEqual(
+		{
+			var driverIsBraking = DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Braking &&
+								DataBus.DriverInfo.DrivingAction == DrivingAction.Brake;
+
+            return driverIsBraking && (DataBus.VehicleInfo.VehicleSpeed ?? 0.SI<MeterPerSecond>()).IsSmallerOrEqual(
 				GearboxModelData?.DisengageWhenHaltingSpeed ?? Constants.SimulationSettings.ATGearboxDisengageWhenHaltingSpeed)
 					&& outTorque.IsSmaller(0);
 		}
