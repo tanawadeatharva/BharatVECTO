@@ -78,7 +78,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 						? new GearshiftPosition(key, true)
 						: new GearshiftPosition(key);
 					if (isAtGearbox && gearboxData.Gears[key].HasTorqueConverter) {
-						retVal[new GearshiftPosition(key, false)] = new VehicleMaxPropulsionTorque(gbxLimit);
+						var limit1C = new List<VehicleMaxPropulsionTorque.FullLoadEntry>() {
+                            new VehicleMaxPropulsionTorque.FullLoadEntry() {
+                                MotorSpeed = 0.RPMtoRad(),
+                                FullDriveTorque = gearboxData.Gears[key].MaxTorque
+                            },
+                            new VehicleMaxPropulsionTorque.FullLoadEntry() {
+                                MotorSpeed = engineData.FullLoadCurves[0].N95hSpeed,
+                                FullDriveTorque = gearboxData.Gears[key].MaxTorque
+                            }
+                        };
+
+                        retVal[new GearshiftPosition(key, false)] = new VehicleMaxPropulsionTorque(limit1C);
 					}
                     retVal[bKey] = new VehicleMaxPropulsionTorque(gbxLimit);
                     continue;
