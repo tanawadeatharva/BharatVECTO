@@ -279,8 +279,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.IEPC_S:
-					return (vehicleData.Components?.EngineInputData?.RatedPowerDeclared ?? 0.SI<Watt>()) +
-							(vehicleData.Components?.ElectricMachines?.Entries
+					return (vehicleData.Components?.ElectricMachines?.Entries
 								.Where(x => x.Position != PowertrainPosition.GEN)
 								.Sum(x => x.ElectricMachine.R85RatedPower * x.Count) ?? 0.SI<Watt>()) +
 							(vehicleData.Components?.IEPC?.R85RatedPower ?? 0.SI<Watt>()) +
