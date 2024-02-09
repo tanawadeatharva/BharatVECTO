@@ -2247,7 +2247,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			SetBatteryCosts(resp, dt, tmp);
 			var absTime = DataBus.AbsTime; // todo!
-			if (DataBus.GearboxInfo.GearEngaged(absTime)) {
+			if (resp.Gearbox.Gear.Engaged) {
 
 				if (iceOff) {
 					// no torque from ICE requested, ICE could be turned off
