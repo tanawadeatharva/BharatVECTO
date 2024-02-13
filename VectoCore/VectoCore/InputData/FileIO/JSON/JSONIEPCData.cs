@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			foreach (var entry in VoltageLevels.OrderBy(x => x.VoltageLevel).AsEnumerable()) {
 				var maxTq = IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count,
 					gearRatioUsedForMeasurement.Ratio);
-				if (maxTq.MaxSpeed > maxPwr) {
+				if (maxTq.MaxPower > maxPwr) {
 					maxPwr = maxTq.MaxPower;
 				}
 			}

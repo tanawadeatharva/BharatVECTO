@@ -153,11 +153,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// </summary>
 		public static Kilogram GetPayloadForGrossVehicleWeight(Kilogram grossVehicleWeight, string equationName)
 		{
-			if (equationName.ToLower().StartsWith("pc10")) {
+			if (equationName.ToLowerInvariant().StartsWith("pc10")) {
 				return Payloads.Lookup10Percent(grossVehicleWeight);
 			}
 
-			if (equationName.ToLower().StartsWith("pc75")) {
+			if (equationName.ToLowerInvariant().StartsWith("pc75")) {
 				return Payloads.Lookup75Percent(grossVehicleWeight);
 			}
 
@@ -279,8 +279,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.IEPC_S:
-					return (vehicleData.Components?.EngineInputData?.RatedPowerDeclared ?? 0.SI<Watt>()) +
-							(vehicleData.Components?.ElectricMachines?.Entries
+					return (vehicleData.Components?.ElectricMachines?.Entries
 								.Where(x => x.Position != PowertrainPosition.GEN)
 								.Sum(x => x.ElectricMachine.R85RatedPower * x.Count) ?? 0.SI<Watt>()) +
 							(vehicleData.Components?.IEPC?.R85RatedPower ?? 0.SI<Watt>()) +
@@ -1734,7 +1733,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 																VehicleOperationLookup.VehicleOperationData vehicleOperation,
 																(double etaChgBatDepot, double etaChgBatInMission, double etaChtBatWeighted) chargingEfficiency)
 		{
-			if (cdResult.Status != VectoRun.Status.Success || csResult.Status != VectoRun.Status.Success) {
+			if (!cdResult.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore) || 
+				!csResult.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore)) {
 				return null;
 			}
 			var batteryData = cdResult.BatteryData;
@@ -1787,6 +1787,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				.ToDictionary(x => x.Item1, x => x.Item2);
 
 			var retVal = new WeightedResult() {
+				Status = cdResult.Status == VectoRun.Status.PrimaryBusSimulationIgnore || csResult.Status == VectoRun.Status.PrimaryBusSimulationIgnore ? VectoRun.Status.PrimaryBusSimulationIgnore : VectoRun.Status.Success,
 				Distance = cdResult.Distance,
 				Payload = cdResult.Payload,
 				CargoVolume = cdResult.CargoVolume,
@@ -1889,6 +1890,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var fuels = entries.First().FuelData;
 			return new WeightedResult() {
+				Status = VectoRun.Status.Success,
 				AverageSpeed = null,
 				AverageDrivingSpeed = null,
 				Distance = entries.Sum(e => e.Distance * e.WeightingFactor),
@@ -1924,6 +1926,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var fuels = entries.First().ChargeDepletingResult.FuelData;
 			return new WeightedResult() {
+				Status = VectoRun.Status.Success,
 				AverageSpeed = null,
 				AverageDrivingSpeed = null,
 				Distance = entries.Sum(e => e.ChargeDepletingResult.Distance * e.ChargeDepletingResult.WeightingFactor),

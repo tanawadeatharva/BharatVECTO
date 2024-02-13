@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
@@ -16,7 +17,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         public virtual XElement GetElement(IResultEntry entry)
         {
-            return new XElement(TNS + ElectricEnergyConsumptionXMLElementName,
+			if (entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
+				return new XElement(TNS + ElectricEnergyConsumptionXMLElementName,
+					GetEnergyConsumption(entry.ElectricEnergyConsumption, entry.Distance, entry.Payload,
+						entry.CargoVolume,
+						entry.PassengerCount).Select(x =>
+						new XElement(TNS + XMLNames.Report_Result_EnergyConsumption,
+							new FormattedReportValue(new ConvertedSI(double.NaN, x.Units)).GetElement()))
+				);
+			}
+
+			return new XElement(TNS + ElectricEnergyConsumptionXMLElementName,
                 GetEnergyConsumption(entry.ElectricEnergyConsumption, entry.Distance, entry.Payload, entry.CargoVolume,
                     entry.PassengerCount).Select(x =>
                     new XElement(TNS + XMLNames.Report_Result_EnergyConsumption, new FormattedReportValue(x).GetElement()))
@@ -25,6 +36,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         public virtual XElement GetElement(IWeightedResult weighted)
         {
+			if (weighted.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
+				return new XElement(TNS + ElectricEnergyConsumptionXMLElementName,
+					GetEnergyConsumption(weighted.ElectricEnergyConsumption, weighted.Distance, weighted.Payload,
+						weighted.CargoVolume,
+						weighted.PassengerCount).Select(x =>
+						new XElement(TNS + XMLNames.Report_Result_EnergyConsumption,
+							new FormattedReportValue(new ConvertedSI(double.NaN, x.Units)).GetElement()))
+				);
+			}
             return new XElement(TNS + ElectricEnergyConsumptionXMLElementName,
                 GetEnergyConsumption(weighted.ElectricEnergyConsumption, weighted.Distance, weighted.Payload, weighted.CargoVolume,
                     weighted.PassengerCount).Select(x =>

@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 			helper.AddNamespaces(manager);
 
 			var vocational = nav.SelectSingleNode(XMLHelper.QueryLocalName(XMLNames.Component_Vehicle, XMLNames.Vehicle_VocationalVehicle));
-			vocational.SetValue(true.ToString().ToLower());
+			vocational.SetValue(true.ToString().ToLowerInvariant());
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			
 			var dataProvider = xmlInputReader.CreateDeclaration(modified);

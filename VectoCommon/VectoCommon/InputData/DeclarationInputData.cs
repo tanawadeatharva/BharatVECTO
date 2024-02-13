@@ -1172,10 +1172,16 @@ namespace TUGraz.VectoCommon.InputData
 		IList<IResult> Results { get; }
 	}
 
-
-	public interface IResult
+	public enum ResultStatus
 	{
-		string ResultStatus { get; }
+		Success,
+		Error,
+		PrimaryRunIgnored
+	}
+
+    public interface IResult
+	{
+		ResultStatus ResultStatus { get; }
 
 		VehicleClass VehicleGroup { get; }
 

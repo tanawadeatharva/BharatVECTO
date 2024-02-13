@@ -77,12 +77,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public readonly MeterPerSecond PTODriveMinSpeed;
 
-		protected EcoRoll EcoRollState;
+		protected internal EcoRoll EcoRollState;
 		protected PCCSegments PCCSegments;
 
 		public PCCStates PCCState => pccState;
 		protected internal PCCStates pccState = PCCStates.OutsideSegment;
-		protected bool ATEcoRollReleaseLockupClutch;
+		protected internal bool ATEcoRollReleaseLockupClutch;
 
 		public DefaultDriverStrategy(IVehicleContainer container)
 		{
@@ -998,6 +998,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					second = Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient, first);
 					break;
 				case ResponseSpeedLimitExceeded _:
+					if (DriverStrategy.EcoRollState.State == EcoRollStates.EcoRollOn &&
+						DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && DriverStrategy.ATEcoRollReleaseLockupClutch) {
+						DriverStrategy.EcoRollState.State = EcoRollStates.EcoRollOff;
+						DataBus.GearboxCtl.DisengageGearbox = false;
+					}
 					second = Driver.DrivingActionBrake(absTime, ds, velocityWithOverspeed, gradient);
 					debug.Add("[DMD.HRE-3] SpeedLimitExceeded->Brake", second);
 					break;
@@ -1349,11 +1354,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 									debug.Add("[DMB-DB-12] Roll", response);
 									break;
 								case ResponseUnderload _:
-									if (gear.Gear != DataBus.GearboxInfo.Gear.Gear) {
+									if (gear.Gear != DataBus.GearboxInfo.Gear.Gear)
+									{
 										// AT Gearbox switched gears, shift losses are no longer applied, try once more...
 										response = Driver.DrivingActionAccelerate(absTime, ds,
 											DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
 										debug.Add("[DMB-DB-13] Accelerate", response);
+										if (response is ResponseUnderload)
+										{
+											Log.Info("Brake -> Overload --> Accelerate -> Gearshift -> Accelerate --> Underload --> Accelerate --> Underload --> trying brake action");
+											response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+												gradient, targetDistance: targetDistance);
+											debug.Add("[DMB-DB-14] Brake", response);
+										}
 									}
 									break;
 							}

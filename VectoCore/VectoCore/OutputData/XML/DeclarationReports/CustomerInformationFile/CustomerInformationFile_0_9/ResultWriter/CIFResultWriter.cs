@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 
@@ -34,10 +35,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			#region Overrides of AbstractResultsWriter
 
 			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetLorryConvSuccessResultWriter(_cifFactory, TNS);
-
 			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetLorryErrorResultWriter(_cifFactory, TNS);
-
-			public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetLorryConvSummaryWriter(_cifFactory, TNS);
+			
+            public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetLorryConvSummaryWriter(_cifFactory, TNS);
 
 			#endregion
 		}
@@ -48,8 +48,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetLorryHEVNonOVCSuccessResultWriter(_cifFactory, TNS);
 			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetLorryErrorResultWriter(_cifFactory, TNS);
-
-			public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetLorryHEVNonOVCSummaryWriter(_cifFactory, TNS);
+			
+            public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetLorryHEVNonOVCSummaryWriter(_cifFactory, TNS);
 
 		}
 
@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			public override XElement GenerateResults(List<IResultEntry> results)
 			{
 				var ordered = GetOrderedResultsOVC(results);
-				var allSuccess = results.All(x => x.Status == VectoRun.Status.Success);
+				var allSuccess = results.All(x => x.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore) );
 				return new XElement(TNS + XMLNames.Report_Results,
 					new XElement(TNS + XMLNames.Report_Result_Status,
 						allSuccess ? XMLNames.Report_Results_Status_Success_Val : XMLNames.Report_Results_Status_Error_Val),
@@ -79,7 +79,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetLorryHEVOVCSuccessResultWriter(_cifFactory, TNS);
 			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetLorryErrorResultWriter(_cifFactory, TNS);
-			public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetLorryHEVOVCSummaryWriter(_cifFactory, TNS);
+			
+            public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetLorryHEVOVCSummaryWriter(_cifFactory, TNS);
 
 		}
 
@@ -89,8 +90,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetLorryPEVSuccessResultWriter(_cifFactory, TNS);
 			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetLorryErrorResultWriter(_cifFactory, TNS);
-
-			public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetLorryPEVSummaryWriter(_cifFactory, TNS);
+			
+            public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetLorryPEVSummaryWriter(_cifFactory, TNS);
 
 		}
 
@@ -100,6 +101,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetBusConvSuccessResultWriter(_cifFactory, TNS);
 			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetBusErrorResultWriter(_cifFactory, TNS);
+			
 			public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetBusConvSummaryWriter(_cifFactory, TNS);
 
 		}
@@ -110,6 +112,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetBusHEVNonOVCSuccessResultWriter(_cifFactory, TNS);
 			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetLorryErrorResultWriter(_cifFactory, TNS);
+			
 			public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetBusHEVNonOVCSummaryWriter(_cifFactory, TNS);
 
 		}
@@ -121,7 +124,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			public override XElement GenerateResults(List<IResultEntry> results)
 			{
 				var ordered = GetOrderedResultsOVC(results);
-				var allSuccess = results.All(x => x.Status == VectoRun.Status.Success);
+				var allSuccess = results.All(x => x.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore));
 				return new XElement(TNS + XMLNames.Report_Results,
 					new XElement(TNS + XMLNames.Report_Result_Status,
 						allSuccess
@@ -138,6 +141,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetBusHEVOVCSuccessResultWriter(_cifFactory, TNS);
 			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetBusErrorResultWriter(_cifFactory, TNS);
+			
 			public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetBusHEVOVCSummaryWriter(_cifFactory, TNS);
 
 		}
@@ -148,6 +152,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetBusPEVSuccessResultWriter(_cifFactory, TNS);
 			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetBusErrorResultWriter(_cifFactory, TNS);
+			
 			public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetBusPEVSummaryWriter(_cifFactory, TNS);
 
 		}
@@ -167,6 +172,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			protected override IResultGroupWriter ResultSuccessWriter => null;
 			protected override IResultGroupWriter ResultErrorWriter => null;
+			
 			public override Common.IReportResultsSummaryWriter SummaryWriter => null;
 
 

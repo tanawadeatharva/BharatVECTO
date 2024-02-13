@@ -64,21 +64,32 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					gbxLimit.Add(new VehicleMaxPropulsionTorque.FullLoadEntry() {
 						MotorSpeed = 0.RPMtoRad(),
 						FullDriveTorque = VectoMath.Min(gearboxData.Gears[key].MaxTorque,
-							(em?.EfficiencyData.VoltageLevels.Last().FullLoadDriveTorque(0.RPMtoRad()) ?? 0.SI<NewtonMeter>() * ratioAdc))
+							(em?.EfficiencyData.VoltageLevels.Last().FullLoadDriveTorque(0.RPMtoRad())?.Abs() ?? 0.SI<NewtonMeter>() * ratioAdc))
 					});
                     foreach (var iceEntry in engineData.FullLoadCurves[0].FullLoadEntries) {
 						gbxLimit.Add(new VehicleMaxPropulsionTorque.FullLoadEntry() {
 							MotorSpeed = iceEntry.EngineSpeed,
 							FullDriveTorque = VectoMath.Min(gearboxData.Gears[key].MaxTorque, 
 								iceEntry.TorqueFullLoad + (em?.EfficiencyData.VoltageLevels.Last().FullLoadDriveTorque(
-									iceEntry.EngineSpeed * ratioAdc) * ratioAdc ?? 0.SI<NewtonMeter>()))
+									iceEntry.EngineSpeed * ratioAdc).Abs() * ratioAdc ?? 0.SI<NewtonMeter>()))
 						});
 					}
 					var bKey = isAtGearbox
 						? new GearshiftPosition(key, true)
 						: new GearshiftPosition(key);
 					if (isAtGearbox && gearboxData.Gears[key].HasTorqueConverter) {
-						retVal[new GearshiftPosition(key, false)] = new VehicleMaxPropulsionTorque(gbxLimit);
+						var limit1C = new List<VehicleMaxPropulsionTorque.FullLoadEntry>() {
+                            new VehicleMaxPropulsionTorque.FullLoadEntry() {
+                                MotorSpeed = 0.RPMtoRad(),
+                                FullDriveTorque = gearboxData.Gears[key].MaxTorque
+                            },
+                            new VehicleMaxPropulsionTorque.FullLoadEntry() {
+                                MotorSpeed = engineData.FullLoadCurves[0].N95hSpeed,
+                                FullDriveTorque = gearboxData.Gears[key].MaxTorque
+                            }
+                        };
+
+                        retVal[new GearshiftPosition(key, false)] = new VehicleMaxPropulsionTorque(limit1C);
 					}
                     retVal[bKey] = new VehicleMaxPropulsionTorque(gbxLimit);
                     continue;

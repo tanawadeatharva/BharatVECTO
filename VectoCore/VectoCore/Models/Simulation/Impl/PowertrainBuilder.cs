@@ -423,7 +423,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
 
             AddHighVoltageAuxiliaries(data, container, es, dcdc);
-			AddHybridBusAuxiliaries(data, container, es);
+			AddHybridBusAuxiliaries(data, container, es, dcdc);
 
 			return container;
 		}
@@ -722,7 +722,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 			}
 						
-			AddHighVoltageAuxiliaries(data, container, es, new DCDCConverter(container, data.DCDCData.DCDCEfficiency));
+			AddHighVoltageAuxiliaries(data, container, es, dcdc);
 
 			///TODO: remove
 			data.ElectricAuxDemand = 0.SI<Watt>();
@@ -778,8 +778,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			SetIdleControllerForHybridP1(data, gearbox, idleController, clutch);
 
-			AddHighVoltageAuxiliaries(data, container, es, new DCDCConverter(container, data.DCDCData.DCDCEfficiency));
-			AddHybridBusAuxiliaries(data, container, es);
+			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+			AddHighVoltageAuxiliaries(data, container, es, dcdc);
+			AddHybridBusAuxiliaries(data, container, es, dcdc);
 
 			return container;
 		}
@@ -798,7 +799,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return clutch;
         }
 
-        private static void AddHybridBusAuxiliaries(VectoRunData data, VehicleContainer container, ElectricSystem es)
+        private static void AddHybridBusAuxiliaries(VectoRunData data, VehicleContainer container, ElectricSystem es, 
+			DCDCConverter dcdc)
         {
 			if (data.BusAuxiliaries == null) {
 				return;
@@ -817,7 +819,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			busAux.ElectricStorage = electricStorage;
 
 			if (data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
-				var dcdc = new DCDCConverter(container, data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
 				busAux.DCDCConverter = dcdc;
 				es.Connect(dcdc);
 			}
@@ -1896,8 +1897,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			_timerunGearHybridBuilders[position].Invoke(data, container, components);
 			
-			AddHighVoltageAuxiliaries(data, container, es, new DCDCConverter(container, data.DCDCData.DCDCEfficiency));
-			AddHybridBusAuxiliaries(data, container, es);
+			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+			AddHighVoltageAuxiliaries(data, container, es, dcdc);
+			AddHybridBusAuxiliaries(data, container, es, dcdc);
 		}
 		
 		/// <summary>

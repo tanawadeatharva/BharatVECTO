@@ -48,6 +48,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies;
+using TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -188,6 +189,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[JsonIgnore]
 		public IIterativeRunStrategy IterativeRunStrategy { get; internal set; } = new DefaultIterativeStrategy();
+
+		[JsonIgnore]
+		public IPostMortemAnalyzeStrategy PostMortemStrategy { get; internal set; } = new DefaultPostMortemAnalyzeStrategy();
 		
 		public NewtonMeter TorqueDriftLeftWheel { get; internal set; }
 

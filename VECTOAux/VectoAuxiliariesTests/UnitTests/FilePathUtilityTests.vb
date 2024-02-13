@@ -22,7 +22,7 @@ Public Sub GetPathOnly()
 
   Dim actual  As String = FilePathUtils.filePathOnly( GOODFILEPATH_WithExt)
 
-  Assert.AreEqual( expected.ToLower(), actual.ToLower())
+  Assert.AreEqual( expected.ToLowerInvariant(), actual.ToLowerInvariant())
     
 End Sub
 
@@ -33,7 +33,7 @@ Public Sub GetExtOnly()
 
   Dim actual  As String = FilePathUtils.fileExtentionOnly( GOODFILEPATH_WithExt)
 
-  Assert.AreEqual( expected.ToLower(), actual.ToLower())
+  Assert.AreEqual( expected.ToLowerInvariant(), actual.ToLowerInvariant())
 
 End Sub
 
@@ -45,7 +45,7 @@ Public Sub NoFileNameExpectOne()
 
   Dim actual  As String = FilePathUtils.fileNameOnly( noFileFILEPATH, True)
 
-  Assert.AreEqual( expected.ToLower(), actual.ToLower())
+  Assert.AreEqual( expected.ToLowerInvariant(), actual.ToLowerInvariant())
 
 
 End Sub

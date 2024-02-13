@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 
 namespace TUGraz.VectoCore.OutputData
 {
@@ -38,6 +39,7 @@ namespace TUGraz.VectoCore.OutputData
 		public IFuelProperties AuxHeaterFuel { get; set; }
 		public Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
 		public Kilogram ZEV_CO2 { get; set; }
+		public VectoRun.Status Status { get; set; }
 
 		#endregion
 	}
