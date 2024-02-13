@@ -5,10 +5,10 @@
     <!-- <DefineConstants>RELEASE_CANDIDATE</DefineConstants> -->
 
     <!-- For a Release uncomment the following line: -->
-    <!-- <DefineConstants>CERTIFICATION_RELEASE</DefineConstants> -->
+    <DefineConstants>CERTIFICATION_RELEASE</DefineConstants>
 
     <!-- Global VECTO Version -->
-    <MainProductVersion>4.0.2</MainProductVersion>
+    <MainProductVersion>4.0.3</MainProductVersion>
     <!-- <VersionSuffix>RC</VersionSuffix> -->
 
     <!-- The following settings are used as default values for ALL projects -->

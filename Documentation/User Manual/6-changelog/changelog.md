@@ -1,5 +1,27 @@
 # Changelog
 
+**VECTO-4.0.3**
+
+***Build 3330 (2024-02-13)***
+
+- Bugfixes
+    * CodeEU-293: DistanceRun got an unexpected response
+    * CodeEU-298: Object reference not set to an instance of an object
+    * CodeEU-300: Full drive torque miscalculation
+    * CodeEU-336: Feature: Hashing tool must validate the previous step data for multi-step jobs
+    * CodeEU-337: Electric Citybus - ERROR with "31a-Specific" bus configuration
+    * CodeEU-343: Cannot simulate Primary Vehicle using vectocmd.exe
+    * CodeEU-387: VECTO sometimes fails to properly read Tyre data from primary vehicle xml
+    * CodeEU-427: Vehicle speed resulting to exceeding max gearbox speed
+    * CodeEU-428: Remove speed safety margin for gearbox re-engaging
+    * CodeEU-438: Mismatch XML schema vs Regulation (exempted vehicles)
+    * CodeEU-248: Bus P2 hybrid VECTO error in urban cycle
+    * CodeEU-278: Simulation crash when writing fuel consumption results to reports
+    * CodeEU-284: New error message and failed simulation obtained for P2 hybrid buses
+    * CodeEU-285: PEV vehicle error in routine to write the results with new vecto version  4.0.2.3275
+    * CodeEU-287: PEV_IEPC error message:"can only operate on SI Objects with the same unit"
+    * CodeEU-289: VECTO Simulation Error for bus with validated input data
+
 **VECTO-4.0.2**
 
 ***Build 3275 (2023-12-20)***
