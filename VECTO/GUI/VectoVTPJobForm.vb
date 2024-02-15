@@ -207,7 +207,7 @@ Public Class VectoVTPJobForm
         'Files -----------------------------
         TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.DataSource.SourceFile, _basePath)
         tbManufacturerRecord.Text =
-            If(Cfg.DeclMode, GetRelativePath(inputData.JobInputData.ManufacturerReportInputData.Source, _basePath), "")
+            If(Cfg.DeclMode, inputData.JobInputData.ManufacturerReportInputData.Source, "")
 
         Dim auxInput As IAuxiliariesDeclarationInputData = inputData.JobInputData.Vehicle.Components.AuxiliaryInputData
 
@@ -408,6 +408,8 @@ Public Class VectoVTPJobForm
         ToolStripStatusLabelGEN.Text = ""
         _changed = False
         UpdatePic()
+        _tqDriftLeftTextbox.Text = "0"
+        _tqDriftRightTextbox.Text = "0"
     End Sub
 
     Private Sub DeclInit()
@@ -446,7 +448,7 @@ Public Class VectoVTPJobForm
         If File.Exists(vehicleFile) Then
             Try
                 Dim inputData As IDeclarationInputDataProvider =
-                        _xmlInputReader.CreateDeclaration(XmlReader.Create(vehicleFile))
+                        _xmlInputReader.CreateDeclaration(vehicleFile, True)
 
                 Dim auxiliaries As IList(Of IAuxiliaryDeclarationInputData) = inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries
 
@@ -495,7 +497,7 @@ Public Class VectoVTPJobForm
         If File.Exists(vehicleFile) Then
             Try
                 Dim inputData As IDeclarationInputDataProvider =
-                        _xmlInputReader.CreateDeclaration(XmlReader.Create(vehicleFile))
+                        _xmlInputReader.CreateDeclaration(vehicleFile, True)
 
                 Dim fuels As IList(Of IEngineFuelDeclarationInputData) =
                     inputData.JobInputData.Vehicle.Components.EngineInputData.EngineModes.First().Fuels
@@ -550,7 +552,7 @@ Public Class VectoVTPJobForm
         If File.Exists(vehicleFile) Then
             Try
                 Dim inputData As IDeclarationInputDataProvider =
-                        _xmlInputReader.CreateDeclaration(XmlReader.Create(vehicleFile))
+                        _xmlInputReader.CreateDeclaration(vehicleFile, True)
                 Dim auxInput As IAuxiliariesDeclarationInputData = inputData.JobInputData.Vehicle.Components.AuxiliaryInputData
                 PopulateAuxiliaryList(auxInput)
             Catch
@@ -733,7 +735,7 @@ Public Class VectoVTPJobForm
         If File.Exists(vehicleFile) Then
             Try
                 Dim inputData As IDeclarationInputDataProvider =
-                        _xmlInputReader.CreateDeclaration(XmlReader.Create(vehicleFile))
+                        _xmlInputReader.CreateDeclaration(vehicleFile, True)
                 gearbox = inputData.JobInputData.Vehicle.Components.GearboxInputData
             Catch
             End Try
@@ -757,7 +759,7 @@ Public Class VectoVTPJobForm
         If File.Exists(vehicleFile) Then
             Try
                 Dim inputData As IDeclarationInputDataProvider =
-                        _xmlInputReader.CreateDeclaration(XmlReader.Create(vehicleFile))
+                        _xmlInputReader.CreateDeclaration(vehicleFile, True)
                 engine = inputData.JobInputData.Vehicle.Components.EngineInputData
             Catch
                 Return
@@ -848,7 +850,7 @@ Public Class VectoVTPJobForm
         If File.Exists(vehicleFile) Then
             Try
                 Dim inputData As IDeclarationInputDataProvider =
-                        _xmlInputReader.CreateDeclaration(XmlReader.Create(vehicleFile))
+                        _xmlInputReader.CreateDeclaration(vehicleFile, True)
                 vehicle = inputData.JobInputData.Vehicle
             Catch
             End Try

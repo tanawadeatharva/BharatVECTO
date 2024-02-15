@@ -122,7 +122,7 @@ Public Class VectoVTPJob
         Get
             If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
             'Return New JSONComponentInputData(_vehicleFile.FullPath).JobInputData.Vehicle
-            Return _xmlInputReader.CreateDeclaration(_vehicleFile.FullPath).JobInputData.Vehicle
+            Return _xmlInputReader.CreateDeclaration(_vehicleFile.FullPath, True).JobInputData.Vehicle
         End Get
     End Property
 
