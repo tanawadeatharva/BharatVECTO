@@ -6,6 +6,7 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter;
 using TUGraz.VectoCore.Utils;
@@ -16,16 +17,26 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
     {
         protected FuelConsumptionWriterBase(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
+		protected virtual string FCElementName { get; } = XMLNames.Report_Results_FuelConsumption;
+
         #region Implementation of IFuelConsumptionWriter
 
         public XElement GetElement(IResultEntry entry, IFuelConsumptionCorrection fc)
         {
+			if (entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
+				return GetElementIgnore(fc.TotalFuelConsumptionCorrected, fc.Fuel, entry.Distance, entry.Payload,
+					entry.CargoVolume, entry.PassengerCount);
+			}
 			return GetElement(fc.TotalFuelConsumptionCorrected, fc.Fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount);
         }
 
         public XElement GetElement(IWeightedResult entry, IFuelProperties fuel, Kilogram consumption)
 		{
-			return GetElement(consumption, fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount);
+			if (entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
+				return GetElementIgnore(consumption, fuel, entry.Distance, entry.Payload,
+					entry.CargoVolume, entry.PassengerCount);
+			}
+            return GetElement(consumption, fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount);
 		}
 
 		protected virtual XElement GetElement(Kilogram consumption, IFuelProperties fuel, Meter distance, Kilogram payLoad, CubicMeter cargoVolume, double? passengerCount)
@@ -33,13 +44,22 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 			return new XElement(TNS + XMLNames.Report_Results_Fuel,
 				new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fuel.FuelType.ToXMLFormat()),
 				GetFuelConsumptionEntries(consumption, fuel, distance, payLoad, cargoVolume, passengerCount).Select(x =>
-					new XElement(TNS + XMLNames.Report_Results_FuelConsumption, new FormattedReportValue(x).GetElement()))
+					new XElement(TNS + FCElementName, new FormattedReportValue(x).GetElement()))
 			);
 		}
 
+		protected virtual XElement GetElementIgnore(Kilogram consumption, IFuelProperties fuel, Meter distance, Kilogram payLoad, CubicMeter cargoVolume, double? passengerCount)
+		{
+			return new XElement(TNS + XMLNames.Report_Results_Fuel,
+				new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fuel.FuelType.ToXMLFormat()),
+				GetFuelConsumptionEntries(consumption, fuel, distance, payLoad, cargoVolume, passengerCount).Select(x =>
+					new XElement(TNS + FCElementName,
+						new FormattedReportValue(new ConvertedSI(double.NaN, x.Units)).GetElement()))
+			);
+		}
         #endregion
 
-		public abstract IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc,
+        public abstract IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc,
 			IFuelProperties fuel, Meter distance, Kilogram payload, CubicMeter volume,
 			double? passenger);
 
@@ -58,6 +78,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
                 // in some testcases only a single cycle is simulated which has a weighting of 0. consider this to generate a valid report
 				return new List<ConvertedSI>() { (fc / 1.SI<Meter>()).ConvertToGrammPerKiloMeter(),};
 			}
+
+            if (fc == null) {
+                return new List<ConvertedSI>();
+            }
+
             var retVal = new List<ConvertedSI> {
                 (fc / distance).ConvertToGrammPerKiloMeter(),
                 (fc / distance /payload).ConvertToGrammPerTonKilometer()};

@@ -245,7 +245,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						runData.VehicleData.TotalVehicleMass,
 						ovcMode, loading.Key,
 						runData.VehicleData.VehicleClass,
-						mission.MissionType, Vehicle.BoostingLimitations, runData.GearboxData, runData.EngineData, Vehicle.ArchitectureID);
+						mission.MissionType, Vehicle.BoostingLimitations, runData.GearboxData, runData.EngineData, runData.ElectricMachinesData, Vehicle.ArchitectureID);
 
 				if (ovcMode != OvcHevMode.NotApplicable) {
 					if (runData.BatteryData?.InitialSoC != null) {

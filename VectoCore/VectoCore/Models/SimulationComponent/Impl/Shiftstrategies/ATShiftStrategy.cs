@@ -178,9 +178,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			var disengageTCEngineSpeedLowerIdle = braking && torqueNegative && gear1C &&
 												inAngularVelocity.IsSmallerOrEqual(DataBus.EngineInfo.EngineIdleSpeed);
 
-			if (disengageBeforeHalting || disengageTCEngineSpeedLowerIdle || disengageAngularVelocityZero ||
-				disengageTOutNegativeAndTInPositive) {
-				_nextGear.SetState(absTime, disengaged: true, gear: Gears.First());
+			if (disengageBeforeHalting
+				|| disengageTCEngineSpeedLowerIdle
+				|| disengageAngularVelocityZero
+				|| disengageTOutNegativeAndTInPositive)
+			{
+				// In order to make it to the halting distance do not allow disengaging if propulsion from engine is needed.
+				bool allowDisengageGear = braking && !torqueNegative && slowerThanDisengageSpeed;
+
+				_nextGear.SetState(absTime, disengaged: !allowDisengageGear, gear: Gears.First());
 				return true;
 			}
 

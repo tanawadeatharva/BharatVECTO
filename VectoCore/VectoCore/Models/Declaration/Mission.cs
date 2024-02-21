@@ -163,6 +163,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public VehicleCode? VehicleCode { get; set; }
 		public FloorType FloorType { get; set; }
 		public IList<BusHVACSystemConfiguration> SeparateAirDistributionDuctsHVACCfg { get; set; }
+		
+		public double CurbMassTPMLMFactor { get; set; }
 	}
 
 	public class HVACParameters

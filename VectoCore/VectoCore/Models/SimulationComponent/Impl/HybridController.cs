@@ -11,6 +11,7 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -645,6 +646,41 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// fallback: start with first gear;
 				_gearbox.Disengaged = false;
 				return Gears.First();
+			}
+			
+			public override GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+			{
+				var tmpGear = new GearshiftPosition(_nextGear.Gear, false);
+				if (DataBus.EngineCtl.CombustionEngineOn)
+				{
+					//  GX -> 0: disengage before halting
+					var vehicleSpeed = DataBus.VehicleInfo.VehicleSpeed + DataBus.DriverInfo.DriverAcceleration * dt;
+					var isSlowerThanDisengageSpeed = vehicleSpeed.IsSmaller(GearboxModelData.DisengageWhenHaltingSpeed);
+					var isNegativeTorque = outTorque.IsSmaller(0);
+					var isBraking = DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Braking;
+					var disengageBeforeHalting = isBraking && isSlowerThanDisengageSpeed && isNegativeTorque;
+
+					if (disengageBeforeHalting)
+					{
+						if (_gearbox != null)
+						{
+							_gearbox.Disengaged = true;
+							return tmpGear;
+						}
+					}
+
+					while (GearList.HasPredecessor(_nextGear) && SpeedTooLowForEngine(_nextGear, outAngularVelocity))
+					{
+						_nextGear = GearList.Predecessor(_nextGear);
+					}
+
+					while (GearList.HasSuccessor(_nextGear) && SpeedTooHighForEngine(_nextGear, outAngularVelocity))
+					{
+						_nextGear = GearList.Successor(_nextGear);
+					}
+				}
+
+				return _nextGear;
 			}
 
 			protected override bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, 

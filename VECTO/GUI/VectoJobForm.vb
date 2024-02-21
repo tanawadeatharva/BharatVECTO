@@ -173,7 +173,7 @@ Public Class VectoJobForm
             Case VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.FCHV
                 auxList = new HeavyLorryPEVAuxiliaryDataAdapter().AuxiliaryTypes.OrderBy(Function(x) x).ToList()
             Case Else
-                Throw New VectoException($"{JobType} not supported in declaration mode")
+                auxList = New List(Of AuxiliaryType)
         End Select
 
         Dim auxTechs = New Dictionary(Of AuxiliaryType, IDeclarationAuxiliaryTable) from {

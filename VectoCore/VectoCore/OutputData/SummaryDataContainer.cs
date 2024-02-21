@@ -371,7 +371,12 @@ namespace TUGraz.VectoCore.OutputData
 			Tuple.Create(SumDataFields.E_IEPC_OFF_Loss_Format, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.E_IEPC_LOSS_FORMAT, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.E_IEPC_OFF_TIME_SHARE, typeof(ConvertedSI)),
-		};
+			Tuple.Create(SumDataFields.EM_RATED_POWER, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.EM_RATED_SPEED_HI, typeof(int)),
+			Tuple.Create(SumDataFields.EM_RATED_SPEED_LO, typeof(int)),
+			Tuple.Create(SumDataFields.EM_RATED_TORQUE_HI, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.EM_RATED_TORQUE_LO, typeof(ConvertedSI)),
+        };
 
 		public static readonly Tuple<string, Type>[] CO2Columns = {
 			Tuple.Create(SumDataFields.CO2_KM, typeof(ConvertedSI)),
@@ -851,6 +856,8 @@ namespace TUGraz.VectoCore.OutputData
 
 			return cols.Where(x => Table.Columns.Contains(x)).ToArray();
 		}
+
+		public ISummaryWriter SummaryWriter { get { return _sumWriter; } }
 
 		private void InitTableColumns()
 		{

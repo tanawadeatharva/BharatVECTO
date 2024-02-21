@@ -1033,7 +1033,8 @@ Public Class IEPCWrapper
 	Public ReadOnly Property DigestValue As DigestData Implements IComponentInputData.DigestValue
 	Public ReadOnly Property ElectricMachineType As ElectricMachineType Implements IIEPCDeclarationInputData.ElectricMachineType
 	Public ReadOnly Property R85RatedPower As Watt Implements IIEPCDeclarationInputData.R85RatedPower
-	Public ReadOnly Property Inertia As KilogramSquareMeter Implements IIEPCDeclarationInputData.Inertia
+    Public ReadOnly Property TotalRatedPowerCalculated As Watt Implements IIEPCDeclarationInputData.TotalRatedPowerCalculated
+    Public ReadOnly Property Inertia As KilogramSquareMeter Implements IIEPCDeclarationInputData.Inertia
 	Public ReadOnly Property DifferentialIncluded As Boolean Implements IIEPCDeclarationInputData.DifferentialIncluded
 	Public ReadOnly Property DesignTypeWheelMotor As Boolean Implements IIEPCDeclarationInputData.DesignTypeWheelMotor
 	Public ReadOnly Property NrOfDesignTypeWheelMotorMeasured As Integer? Implements IIEPCDeclarationInputData.NrOfDesignTypeWheelMotorMeasured

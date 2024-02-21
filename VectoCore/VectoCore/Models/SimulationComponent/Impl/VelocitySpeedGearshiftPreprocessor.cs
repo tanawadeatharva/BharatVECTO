@@ -185,7 +185,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					searcher: this
 				);
 				var step = vehicle.Request(absTime, simulationInterval, acceleration, gradient);
-				if (!(step is ResponseSuccess)) {
+				if (!(step is ResponseSuccess) && !(step is ResponseEngineSpeedTooHigh)) {
 					throw new VectoSimulationException("failed to find acceleration for rolling");
 				}
 

@@ -73,10 +73,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 
 		[NonParallelizable]
 		[
-		 TestCase(Class5NG, 2, TankSystem.Liquefied, 249.8, 691.93, TestName = "Class5 LNG 2"),
-		 TestCase(Class5NG, 2, TankSystem.Compressed, 255.5, 687.35, TestName = "Class5 CNG 2"),
-		TestCase(Class5NG, 6, TankSystem.Liquefied, 253.2, 701.46, TestName = "Class5 LNG 6"),
-		TestCase(Class5NG, 6, TankSystem.Compressed, 259.0, 696.8, TestName = "Class5 CNG 6"),
+		 TestCase(Class5NG, 2, TankSystem.Liquefied, 250.0, 692.4, TestName = "Class5 LNG 2"),
+		 TestCase(Class5NG, 2, TankSystem.Compressed, 255.7, 687.8, TestName = "Class5 CNG 2"),
+		TestCase(Class5NG, 6, TankSystem.Liquefied, 253.6, 702.5, TestName = "Class5 LNG 6"),
+		TestCase(Class5NG, 6, TankSystem.Compressed, 259.4, 697.9, TestName = "Class5 CNG 6"),
 			]
 		public void NaturalGasTankSystemTest(string filename, int runIdx, TankSystem tankSystem, double expectedFc, double expectedCo2)
 		{

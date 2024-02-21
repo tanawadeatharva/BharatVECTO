@@ -377,6 +377,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				DataBus.GearboxCtl.DisengageGearbox = false;
             }
 			else {
+				if (!AreVelocityDropDataAvailable()) {
+					DrivingAction = DrivingAction.Accelerate;
+					DriverBehavior = DrivingBehavior.Accelerating;
+					return;
+				}
+
 				var nextSpeed = CalculateVehicleSpeedAtNextStep(absTime);
 				var tolerance = (((DataBus.VehicleInfo.VehicleSpeed + nextSpeed) / 2) * 0.001).Abs();
 
@@ -404,6 +410,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
         }
+
+		private bool AreVelocityDropDataAvailable()
+		{
+			return ((DataBus.HybridControllerCtl != null) 
+				? DataBus.HybridControllerCtl.Strategy.VelocityDropData
+				: DataBus.GearboxInfo.Strategy.VelocityDropData) 
+				!= null;
+		}
 
         private MeterPerSecond CalculateVehicleSpeedAtNextStep(Second absTime)
         {

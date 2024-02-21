@@ -160,11 +160,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 			/// <param name="boostingLimitations"></param>
 			/// <param name="gearboxData"></param>
 			/// <param name="engineData"></param>
+			/// <param name="runDataElectricMachinesData"></param>
 			/// <param name="architectureId"></param>
 			/// <returns></returns>
 			public virtual HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData, SuperCapData runDataSuperCapData,
 				Kilogram vehicleMass, OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType,
 				TableData boostingLimitations, GearboxData gearboxData, CombustionEngineData engineData,
+				IList<Tuple<PowertrainPosition, ElectricMotorData>> runDataElectricMachinesData,
 				ArchitectureID architectureId)
 			{
 				return HybridStrategyDataAdapter.CreateHybridStrategyParameters(
@@ -173,7 +175,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 					ovcMode: ovcMode,
 					loading: loading,
 					vehicleClass: vehicleClass,
-					missionType: missionType, architectureId, engineData, gearboxData, boostingLimitations);
+					missionType: missionType, archID: architectureId, engineData: engineData, runDataElectricMachinesData, gearboxData: gearboxData, boostingLimitations: boostingLimitations);
             }
 
 

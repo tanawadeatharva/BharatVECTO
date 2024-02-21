@@ -111,13 +111,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 
         [Category("Integration")]
         [
-            TestCase(HYBRID_P2_Group_5, TestName = "GenericVehicle Group5 P2 Padd_hv"),
-            TestCase(HYBRID_SerialHybrid_S2, TestName = "GenericVehicle S2 Job Padd_hv"),
-            TestCase(HYBRID_SerialHybrid_S4, TestName = "GenericVehicle S4 Job Padd_hv"),
-            TestCase(HYBRID_IEPC_S_GBX3, TestName = "IEPC-S 3 Speed Gearbox Padd_hv"),
-            TestCase(HYBRID_IHPC_G5_12SPEED, TestName = "IHPC Group 5 12 Speed Gearbox Padd_hv"),
+			TestCase(HYBRID_P2_Group_5, TestName = "GenericVehicle Group5 P2 Padd_hv"),
+			TestCase(HYBRID_SerialHybrid_S2, TestName = "GenericVehicle S2 Job Padd_hv"),
+			TestCase(HYBRID_SerialHybrid_S4, TestName = "GenericVehicle S4 Job Padd_hv"),
+			TestCase(HYBRID_IEPC_S_GBX3, TestName = "IEPC-S 3 Speed Gearbox Padd_hv"),
+			TestCase(HYBRID_IHPC_G5_12SPEED, TestName = "IHPC Group 5 12 Speed Gearbox Padd_hv"),
         ]
-        public void HighVoltageAuxiliaries_IncreaseConsumption_ForHybrid(String jobFile)
+        public void HighVoltageAuxiliaries_IncreaseConsumption_ForHybrid(string jobFile)
         {
             // Arrange.
             var fileWriter = new FileOutputWriter(jobFile);
@@ -154,9 +154,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 
             string pWheelCycle = "PWheel";
             AssertHVElectricAxuliariesForHybrids(summaryData, pWheelCycle);
-        }
+		}
 
-        private void AssertHVElectricAxuliaries(Dictionary<object, DataRow> summaryData, string drivingCycle)
+		private void AssertHVElectricAxuliaries(Dictionary<object, DataRow> summaryData, string drivingCycle)
         {
             string extendedSuffix = "Extended";
             string cycle = $"{drivingCycle}.vdri";
@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.Tests.Integration
                 return;
             }
 
-            TestContext.WriteLine($"Testing cycle: {cycle}");
+            TestContext.WriteLine($"Tested cycle: {cycle}");
 
             var absoluteTime = (ConvertedSI)summaryData[extendedCycle][SumDataFields.TIME];
 
@@ -192,7 +192,7 @@ namespace TUGraz.VectoCore.Tests.Integration
                 return;
             }
 
-            TestContext.WriteLine($"Testing cycle: {cycle}");
+            TestContext.WriteLine($"Tested cycle: {cycle}");
             
             var absoluteTime = (ConvertedSI)summaryData[extendedCycle][SumDataFields.TIME];
 

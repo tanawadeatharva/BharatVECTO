@@ -244,9 +244,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						}
 					}
 
-#if DEBUG
+#if DEBUG 
 					if (!found) {
-						Console.WriteLine("Test Component is not updateable: " + c.GetType());
+						//Console.WriteLine("Test Component is not updateable: " + c.GetType());
 					}
 #endif
 				}
@@ -255,7 +255,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var sourceList = ComponentUpdateList.Select(st => st.Item2).ToArray();
 				foreach (var source in realComponents) {
 					if (!sourceList.Contains(source)){
-						Console.WriteLine("Real Component is not used for update: " + source.GetType());
+						//Console.WriteLine("Real Component is not used for update: " + source.GetType());
 					}
 				}
 #endif

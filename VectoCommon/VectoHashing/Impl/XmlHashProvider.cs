@@ -35,6 +35,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
 using System.Xml;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoHashing.Impl
 {
@@ -77,6 +78,16 @@ namespace TUGraz.VectoHashing.Impl
 			}
 		}
 
+		private static bool IsOldVectoSimReport(XmlDocument xmlDoc)
+		{ 
+			var versionNodes = xmlDoc.SelectNodes("//*[local-name()='SimulationToolVersion']");
+
+			return (versionNodes.Count == 1) 
+				&& VersioningUtil.IsVersion(versionNodes[0].InnerText)
+				&& (VersioningUtil.CompareVersions(versionNodes[0].InnerText, "4.0.0") < 0)
+				&& (VersioningUtil.CompareVersions(versionNodes[0].InnerText, "1.0.0") >= 0);
+		}
+
 		public static XmlDocument ComputeHash(XmlDocument doc, string elementId, IEnumerable<string> canonicalization,
 			string digestMethod)
 		{
@@ -93,6 +104,8 @@ namespace TUGraz.VectoHashing.Impl
 				throw new Exception($"CanonicalizationMethod(s) {string.Join(", ", unsupported)} not supported!");
 			}
 
+			bool isOldVectoSimReport = IsOldVectoSimReport(doc);
+
 			// load any HMAC algorithm so that the key is also available. the HVAC algorithm used is the one set in the Reference object below
 			var hmac = HMAC.Create("HMACSHA256"); 
 			var signedXml = new SignedXml(doc);
@@ -100,7 +113,7 @@ namespace TUGraz.VectoHashing.Impl
 				DigestMethod = digestMethod
 			};
 			foreach (var c in c14N) {
-				reference.AddTransform(GetTransform(c));
+				reference.AddTransform(GetTransform(c, isOldVectoSimReport));
 			}
 
 			signedXml.AddReference(reference);
@@ -114,11 +127,13 @@ namespace TUGraz.VectoHashing.Impl
 			return sigdoc;
 		}
 
-		private static Transform GetTransform(string transformUrn)
+		private static Transform GetTransform(string transformUrn, bool isOldVectoSimReport = false)
 		{
 			switch (transformUrn) {
 				case VectoDsigTransform:
-					return new XmlDsigVectoTransform();
+					return new XmlDsigVectoTransform(isOldVectoSimReport 
+						? XmlDsigVectoTransform.XSLT_v3 
+						: XmlDsigVectoTransform.XSLT_v4);
 				case DsigExcC14NTransform:
 					return new XmlDsigExcC14NTransform();
 			}

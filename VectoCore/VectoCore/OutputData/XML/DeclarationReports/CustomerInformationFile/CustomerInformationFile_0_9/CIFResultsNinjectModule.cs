@@ -114,18 +114,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			// -- Bus
 
-			Bind<IResultGroupWriter>().To<BusConvResultWriter>().When(AccessedViaCIFResultsWriterFactory)
+			Bind<IResultGroupWriter>().To<BusConvCIFResultWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetBusConvSuccessResultWriter(null, XNamespace.None));
-			Bind<IResultGroupWriter>().To<BusHEVNonOVCResultWriter>().When(AccessedViaCIFResultsWriterFactory)
+			Bind<IResultGroupWriter>().To<BusHEVNonOVCCIFResultWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetBusHEVNonOVCSuccessResultWriter(null, XNamespace.None));
-			Bind<IResultGroupWriter>().To<BusHEVOVCResultWriter>().When(AccessedViaCIFResultsWriterFactory)
+			Bind<IResultGroupWriter>().To<BusHEVOVCCIFResultWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetBusHEVOVCSuccessResultWriter(null, XNamespace.None));
-			Bind<IResultGroupWriter>().To<BusPEVResultWriter>().When(AccessedViaCIFResultsWriterFactory)
+			Bind<IResultGroupWriter>().To<BusPEVCIFResultWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetBusPEVSuccessResultWriter(null, XNamespace.None));
 			Bind<IResultGroupWriter>().To<ErrorResultWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetBusErrorResultWriter(null, XNamespace.None));
-
-			Bind<IResultGroupWriter>().To<ResultSimulationParameterCIFBusWriter>().When(AccessedViaCIFResultsWriterFactory)
+			
+            Bind<IResultGroupWriter>().To<ResultSimulationParameterCIFBusWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetBusSimulationParameterWriter(null, XNamespace.None));
 
 			Bind<IResultGroupWriter>().To<BusConvTotalWriter>().When(AccessedViaCIFResultsWriterFactory)

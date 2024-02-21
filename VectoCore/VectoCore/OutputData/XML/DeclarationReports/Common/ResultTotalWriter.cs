@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter;
 using TUGraz.VectoCore.Utils;
 
@@ -124,7 +125,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
                 GetElectricConsumption(entry),
                 GetCO2(entry),
                 _factory.GetElectricRangeWriter(_factory, TNS).GetElements(total),
-                new XElement(TNS + "UtilityFactor", total.UtilityFactor.ToXMLFormat(3))
+                new XElement(TNS + "UtilityFactor", entry.Weighted.Status == VectoRun.Status.PrimaryBusSimulationIgnore ? double.NaN.ToString() : total.UtilityFactor.ToXMLFormat(3))
             );
         }
 

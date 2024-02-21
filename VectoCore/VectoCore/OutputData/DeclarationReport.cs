@@ -145,7 +145,9 @@ namespace TUGraz.VectoCore.OutputData
 
 	public interface IWeightedResult
 	{
-		MeterPerSecond AverageSpeed { get; }
+		VectoRun.Status Status { get; }
+
+        MeterPerSecond AverageSpeed { get; }
 
 		MeterPerSecond AverageDrivingSpeed { get; }
 

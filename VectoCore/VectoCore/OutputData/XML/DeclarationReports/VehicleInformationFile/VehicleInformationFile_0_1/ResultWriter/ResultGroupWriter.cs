@@ -108,36 +108,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		#endregion
 	}
 
-	public class VIFFuelConsumptionWriter : AbstractResultWriter, IFuelConsumptionWriter
-	{
+	public class VIFFuelConsumptionWriter : FuelConsumptionWriterBase
+    {
 		public VIFFuelConsumptionWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
+		protected override string FCElementName { get; } = XMLNames.Report_Result_EnergyConsumption;
 
-		#region Implementation of IFuelConsumptionWriter
-
-		public XElement GetElement(IResultEntry entry, IFuelConsumptionCorrection fc)
-		{
-			return new XElement(TNS + XMLNames.Report_Results_Fuel,
-				new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fc.Fuel.FuelType.ToXMLFormat()),
-				GetFuelConsumptionEntries(fc.TotalFuelConsumptionCorrected, fc.Fuel, entry.Distance, entry.Payload,
-					entry.CargoVolume, entry.PassengerCount).Select(x =>
-					new XElement(TNS + XMLNames.Report_Result_EnergyConsumption, new FormattedReportValue(x).GetElement()))
-			);
-		}
-
-		public XElement GetElement(IWeightedResult entry, IFuelProperties fuel, Kilogram consumption)
-		{
-			return new XElement(TNS + XMLNames.Report_Results_Fuel,
-				new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fuel.FuelType.ToXMLFormat()),
-				GetFuelConsumptionEntries(consumption, fuel, entry.Distance, entry.Payload, entry.CargoVolume,
-					entry.PassengerCount).Select(x =>
-					new XElement(TNS + XMLNames.Report_Result_EnergyConsumption, new FormattedReportValue(x).GetElement()))
-			);
-		}
-
-		#endregion
-
-		public virtual IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc, IFuelProperties fuel,
+		public override IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc, IFuelProperties fuel,
 			Meter distance, Kilogram payload, CubicMeter volume, double? passenger)
 		{
 			return new List<ConvertedSI> {

@@ -46,7 +46,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			foreach (var component in EnumHelper.GetValues<VectoComponents>()) {
 				var select = component == VectoComponents.ElectricEnergyStorage
 					? $"//*[local-name()='{XMLNames.VectoManufacturerReport}']//*[local-name()='{component.XMLElementNameMRF()}']//*[local-name()='Model']"
-					: $"//*[local-name()='{XMLNames.VectoManufacturerReport}']//*[local-name()='{component.XMLElementNameMRF()}']/*[local-name()='Model']";
+					: (component == VectoComponents.Gearbox)
+						? $"//*[local-name()='{XMLNames.VectoManufacturerReport}']//*[local-name()='{component.XMLElementNameMRF()}' or local-name()='Transmission']/*[local-name()='Model']"
+						: $"//*[local-name()='{XMLNames.VectoManufacturerReport}']//*[local-name()='{component.XMLElementNameMRF()}']/*[local-name()='Model']";
 
                 var nodes = xmlDocument.SelectNodes(select);
 				var count = nodes?.Count ?? 0;
@@ -102,6 +104,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 					return "//*[local-name()='Axle']";
 				case VectoComponents.ElectricEnergyStorage:
 					return "//*[local-name()='Battery' or local-name()='Capacitor']";
+				case VectoComponents.Gearbox:
+					return $"//*[local-name()='{component.XMLElementName()}' or local-name()='Transmission']";
 				default:
 					return $"//*[local-name()='{component.XMLElementName()}']";
             }
@@ -109,7 +113,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		static string ReadElementValue(XmlNode xmlNode, string elementName)
 		{
-			var node = xmlNode.SelectSingleNode($"./*[local-name()='{elementName}']");
+			var node = xmlNode.SelectSingleNode($".//*[local-name()='{elementName}']");
 			if (node == null) {
 				return null;
 			}

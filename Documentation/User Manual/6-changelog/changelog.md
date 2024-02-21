@@ -1,5 +1,81 @@
 # Changelog
 
+**VECTO-4.0.3**
+
+***Build 3330 (2024-02-13)***
+
+- Bugfixes
+    * CodeEU-293: DistanceRun got an unexpected response
+    * CodeEU-298: Object reference not set to an instance of an object
+    * CodeEU-300: Full drive torque miscalculation
+    * CodeEU-336: Feature: Hashing tool must validate the previous step data for multi-step jobs
+    * CodeEU-337: Electric Citybus - ERROR with "31a-Specific" bus configuration
+    * CodeEU-343: Cannot simulate Primary Vehicle using vectocmd.exe
+    * CodeEU-387: VECTO sometimes fails to properly read Tyre data from primary vehicle xml
+    * CodeEU-427: Vehicle speed resulting to exceeding max gearbox speed
+    * CodeEU-428: Remove speed safety margin for gearbox re-engaging
+    * CodeEU-438: Mismatch XML schema vs Regulation (exempted vehicles)
+    * CodeEU-248: Bus P2 hybrid VECTO error in urban cycle
+    * CodeEU-278: Simulation crash when writing fuel consumption results to reports
+    * CodeEU-284: New error message and failed simulation obtained for P2 hybrid buses
+    * CodeEU-285: PEV vehicle error in routine to write the results with new vecto version  4.0.2.3275
+    * CodeEU-287: PEV_IEPC error message:"can only operate on SI Objects with the same unit"
+    * CodeEU-289: VECTO Simulation Error for bus with validated input data
+
+**VECTO-4.0.2**
+
+***Build 3275 (2023-12-20)***
+
+- Hotfix
+    * CodeEU-273, CodeEU-274: Changes in the AMT shift strategy regarding idling speed caused simulation aborts
+    * CodeEU-260: regression fix handling overload buffer
+
+***Build 3273 (2023-12-18)***
+
+- Bugfixes
+    * CodeEU-94: DistanceRun got an unexpected response
+    * CodeEU-153: DrivingActionAccelerate: Failed to find operating point after Overload
+    * CodeEU-158: Urban RefLoad DrivingActionAccelerate: Failed to find operating point (IEPC Wheelhub 1 measured)
+    * CodeEU-168: Vecto Declaration Simulation with P1-Hybrid shows multiple errors - Simulation Aborts!
+    * CodeEU-191: Boosting limits HEV ovc are not working
+    * CodeEU-202: EMS Standard Values: Continuous/Overload Torque 0 Nm
+    * CodeEU-203: HybridStrategy error for IHPC type 1 hybrid lorry
+    * CodeEU-206: VTP + PEMS test done by Renault Trucks France - VECTO tool errors most probably linked to automatic gearbox (with torque converter)
+    * CodeEU-211: Hybrid P1 configurations with errors
+    * CodeEU-215: MultiStep tool help
+    * CodeEU-216: NrOfGears in CIF is 1 for IEPC no matter how many gears it has
+    * CodeEU-220: Error manual transmission 2. gear
+    * CodeEU-224: Issue with PEV complete vehicle simulation (Vecto MultiStage)
+    * CodeEU-231: IVECO CONFIDENTIAL : hybrid buses completed simulation aborted
+    * CodeEU-234: Error Conventional Lorry Gear: 1C DistanceRun got an unexpected response
+    * CodeEU-235: Tyre error calculation buses "invalid xsi:type 'TyreDataDeclarationType'"
+    * CodeEU-238: Bus VIF files not valid in Multistep VECTO
+    * CodeEU-243: Simulation aborted: Gear 5 Lossmap not sufficiant
+    * CodeEU-244: Signature validation fails for old (prior to v4) Manufacturer reports
+    * CodeEU-246: VTP report generation problems (failing to read some data from MRF)
+    * CodeEU-249: Fix handling gear torque limits in case of IEPC WheelHub motor and only one side is measured
+    * CodeEU-250: Maximum vehicle speed exceeded during pre-processing
+    * CodeEU-253: Replace VTP HeavyBus in Generic Vehicles with VTP Truck
+    * CodeEU-259: Inconsistent calculation of AverageRRC in CIF
+    * CodeEU-260: Handling of overload buffer in case Continuous Torque is 0Nm
+    * CodeEU-261: SuperCap internal resistance standard values correction
+    * CodeEU-263: Determination of rated power for IEPCs for MRF and CIF
+    * CodeEU-266: Fix Measured Speed Testcases
+
+
+**VECTO-4.0.1**
+
+***Build 3217 (2023-10-23) OFFICIAL RELEASE***
+
+- Improvements
+    * VTP mode: create zip archive for input and output files
+- Bugfixes
+    * bugfix in CIF for complete(d) buses - do not write PrimaryVehicleSubgroup element
+    * fix hybrid strategy: power comparison
+    * fix exempted vehicles do not work (error message that XML version is not supported)
+    * bugfix in XML schema: remove wrong PS technology entry for lorries
+    * bugfix for conditioning power demand for IHPC vehicles
+
 **VECTO-4.0.0**
 
 ***Build 3211 (2023-10-16) OFFICIAL RELEASE***

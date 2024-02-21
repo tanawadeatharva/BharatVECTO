@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		protected static void NormalizeTable(DataTable table)
 		{
 			foreach (DataColumn col in table.Columns) {
-				table.Columns[col.ColumnName].ColumnName = col.ColumnName.ToLower().RemoveWhitespace();
+				table.Columns[col.ColumnName].ColumnName = col.ColumnName.ToLowerInvariant().RemoveWhitespace();
 			}
 		}
 	}

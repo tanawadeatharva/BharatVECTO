@@ -10,6 +10,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies;
+using TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -115,8 +116,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
 					ExecutionMode = ExecutionMode.Declaration,
 				};
-
-				return simulationRunData;
+				simulationRunData.PostMortemStrategy = new PrimaryBusPostMortemStrategy();
+                return simulationRunData;
 			}
 
 			protected abstract void CreateGearboxAndGearshiftData(VectoRunData runData);
@@ -516,7 +517,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 						ovcMode, loading.Key,
 						//runData.VehicleData.VehicleClass,
 						mission.BusParameter.BusGroup,
-						mission.MissionType, Vehicle.BoostingLimitations, runData.GearboxData, runData.EngineData, Vehicle.ArchitectureID);
+						mission.MissionType, Vehicle.BoostingLimitations, runData.GearboxData, runData.EngineData, runData.ElectricMachinesData, Vehicle.ArchitectureID);
 
 				if (ovcMode != OvcHevMode.NotApplicable) {
 					if (runData.BatteryData?.InitialSoC != null) {
@@ -539,6 +540,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					runData.ModFileSuffix += ovcMode == OvcHevMode.ChargeSustaining ? "CS" : "CD";
 				}
 				runData.OVCMode = ovcMode;
+				
 				return runData;
 			}
 

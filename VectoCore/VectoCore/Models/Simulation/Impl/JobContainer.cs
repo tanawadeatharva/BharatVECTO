@@ -137,13 +137,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			new ConcurrentDictionary<int, ProgressEntry>();
 
 
+		private IJobArchiveBuilder _jobArchiveBuilder;
+
 		/// <summary>
 		/// Initializes a new empty instance of the <see cref="JobContainer"/> class.
 		/// </summary>
 		/// <param name="sumWriter">The sum writer.</param>
-		public JobContainer(SummaryDataContainer sumWriter)
+		public JobContainer(SummaryDataContainer sumWriter, IJobArchiveBuilder jobArchiveBuilder = null)
 		{
 			_sumWriter = sumWriter;
+			_jobArchiveBuilder = jobArchiveBuilder;
 		}
 
 		
@@ -237,6 +240,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				var added = _runContainerMap.TryAdd(factory.JobNumber, new RunContainer(factory, runIDs));
 				System.Diagnostics.Debug.Assert(added);
+				
+				if (_jobArchiveBuilder != null) {
+					_jobArchiveBuilder.SimulatorFactory = factory;
+				}
+			
 				return runIDs;
 			}
 			finally {
@@ -356,6 +364,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				_unfinishedRuns.TryRemove(runId, out var tmpVal);
 				if (AllCompletedUnsafe()) {
 					_sumWriter.Finish();
+
+					if (Runs.All(x => x.Run.FinishedWithoutErrors && (x.ExecException == null))) {
+						_jobArchiveBuilder?.Build();
+					}
 				}
 			} finally {
 				_runsRwLock.ExitWriteLock();

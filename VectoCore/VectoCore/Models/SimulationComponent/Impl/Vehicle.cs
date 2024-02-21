@@ -93,7 +93,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					throw new VectoException("Powertrain with combustion engine requires gearbox and axlegear!");
 					//return;
 				}
-				MaxVehicleSpeed = DataBus.EngineInfo.EngineN95hSpeed /
+
+				var maxDrivetrainSpeed = VectoMath.Min(
+					DataBus.EngineInfo.EngineN95hSpeed, 
+					DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.NumGears).MaxSpeed);
+
+				MaxVehicleSpeed = maxDrivetrainSpeed /
 					DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.NumGears).Ratio /
 					DataBus.AxlegearInfo.Ratio /
 					(DataBus.AngledriveInfo?.Ratio ?? 1.0) * 
@@ -121,6 +126,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						ratio = DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.NumGears).Ratio *
 								(DataBus.AxlegearInfo?.Ratio ?? 1.0) *
 								(DataBus.AngledriveInfo?.Ratio ?? 1.0);
+
+						maxEMSpeed = VectoMath.Min(
+							DataBus.ElectricMotorInfo(pos).MaxSpeed,
+							DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.NumGears).MaxSpeed);
 					}
 					MaxVehicleSpeed = maxEMSpeed / ratio * DataBus.WheelsInfo.DynamicTyreRadius * 0.995;
 				}

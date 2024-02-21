@@ -93,6 +93,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 		public XElement[] GetElements(IResultEntry result)
 		{
+			if (result.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
+				return new[] {
+					new XElement(TNS + XMLNames.Report_ResultEntry_ActualChargeDepletingRange,
+						new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit()),
+					new XElement(TNS + XMLNames.Report_ResultEntry_EquivalentAllElectricRange,
+						new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit()),
+					new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
+						new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit()),
+				};
+            }
 			return new[] {
 				new XElement(TNS + XMLNames.Report_ResultEntry_ActualChargeDepletingRange,
 					result.ActualChargeDepletingRange.ConvertToKiloMeter().ValueAsUnit()),
@@ -105,7 +115,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 		public XElement[] GetElements(IWeightedResult weightedResult)
 		{
-			return new[] {
+			if (weightedResult.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
+				return new[] {
+					new XElement(TNS + XMLNames.Report_ResultEntry_ActualChargeDepletingRange,
+						new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit()),
+					new XElement(TNS + XMLNames.Report_ResultEntry_EquivalentAllElectricRange,
+						new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit()),
+					new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
+						new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit()),
+				};
+			}
+            return new[] {
 				new XElement(TNS + XMLNames.Report_ResultEntry_ActualChargeDepletingRange,
 					weightedResult.ActualChargeDepletingRange.ConvertToKiloMeter().ValueAsUnit()),
 				new XElement(TNS + XMLNames.Report_ResultEntry_EquivalentAllElectricRange,

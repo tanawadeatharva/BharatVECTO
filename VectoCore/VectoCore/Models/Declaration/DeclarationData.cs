@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public const double HEV_EquivalenceFactor_Max = 4.0;
 		//public static readonly HEVStrategyParameters InitEquivalenceFactorsBus = new HEVStrategyParametersBus();
 
-        public static readonly VehicleOperationLookup VehicleOperation = new VehicleOperationLookup();
+		public static readonly VehicleOperationLookup VehicleOperation = new VehicleOperationLookup();
 
 		public static readonly IMCTechnologyLookup ImcTechnology = new IMCTechnologyLookup();
 
@@ -136,6 +136,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public const double OverloadRecoveryFactor = 0.9;
 
 		public static readonly Ohm SuperCapMinInternalResistance = 5.SI(Unit.SI.Milli.Ohm).Cast<Ohm>();
+		public static readonly Volt SuperCapReferenceVoltage = 2.7.SI<Volt>();
+		public const double SuperCapInternalResistanceStdValuesCorrection = 0.25;
 
 		public const double ElectricMachineDefaultEfficiencyFallback = 0.98;
 
@@ -154,11 +156,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// </summary>
 		public static Kilogram GetPayloadForGrossVehicleWeight(Kilogram grossVehicleWeight, string equationName)
 		{
-			if (equationName.ToLower().StartsWith("pc10")) {
+			if (equationName.ToLowerInvariant().StartsWith("pc10")) {
 				return Payloads.Lookup10Percent(grossVehicleWeight);
 			}
 
-			if (equationName.ToLower().StartsWith("pc75")) {
+			if (equationName.ToLowerInvariant().StartsWith("pc75")) {
 				return Payloads.Lookup75Percent(grossVehicleWeight);
 			}
 
@@ -215,7 +217,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static SegmentLookup GetTruckSegment(IVehicleDeclarationInputData vehicle, bool batteryElectric = false)
 			{
-                var allowVocational = true;
+				var allowVocational = true;
 			var ng = vehicle.ExemptedVehicle ? false : vehicle.Components.EngineInputData?.EngineModes.Any(e =>
 				e.Fuels.Any(f => f.FuelType.IsOneOf(FuelType.LPGPI, FuelType.NGCI, FuelType.NGPI))) ?? false;
 			var ovcHev = vehicle.ExemptedVehicle ? false : vehicle.OvcHev;
@@ -252,7 +254,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 
-        public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IVehicleDeclarationInputData vehicleData)
+		public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IVehicleDeclarationInputData vehicleData)
 		{
 			switch (vehicleData.VehicleCategory) {
 				case VehicleCategory.Van:
@@ -275,7 +277,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				case VectoSimulationJobType.ParallelHybridVehicle:
 				case VectoSimulationJobType.EngineOnlySimulation:
 				case VectoSimulationJobType.IHPC:
-					return vehicleData.Components?.EngineInputData?.RatedPowerDeclared ?? 0.SI<Watt>() + vehicleData.MaxNetPower1 ?? 0.SI<Watt>();
+					return (vehicleData.Components?.EngineInputData?.RatedPowerDeclared ?? 0.SI<Watt>()) + (vehicleData.MaxNetPower1 ?? 0.SI<Watt>());
 				case VectoSimulationJobType.SerialHybridVehicle:
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
@@ -763,15 +765,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return new EngineStopStartLorry();
 			}
 
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <param name="hdvClass"></param>
-            /// <param name="jobType">only used for buses</param>
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name="hdvClass"></param>
+			/// <param name="jobType">only used for buses</param>
 			/// <param name="arch">only used for buses</param>
-            /// <param name="compressorDrive">only used for buses</param>
-            /// <returns></returns>
-            public static IEngineStopStart GetEngineStopStart(VehicleClass hdvClass, VectoSimulationJobType? jobType = null,  ArchitectureID? arch = null,
+			/// <param name="compressorDrive">only used for buses</param>
+			/// <returns></returns>
+			public static IEngineStopStart GetEngineStopStart(VehicleClass hdvClass, VectoSimulationJobType? jobType = null,  ArchitectureID? arch = null,
 				CompressorDrive? compressorDrive = null)
 			{
 
@@ -825,13 +827,52 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly KilogramSquareMeter TorqueConverterInertia = 1.2.SI<KilogramSquareMeter>();
 
 			public static readonly KilogramSquareMeter EngineBaseInertia = 0.41.SI<KilogramSquareMeter>();
-			public static readonly SI EngineDisplacementInertia = (0.27 * 1000).SI(Unit.SI.Kilo.Gramm.Per.Meter); // [kg/m]
+			public static readonly KilogramPerMeter EngineDisplacementInertia = 270.SI<KilogramPerMeter>();
 			public static readonly Second DefaultEngineStartTime = 1.SI<Second>();
 
 			public const double TorqueLimitGearboxFactor = 0.9;
 			public const double TorqueLimitVehicleFactor = 0.95;
 
+			public static readonly SI SmallEnginesBound = 3.2.SI<Liter>().Cast<CubicMeter>();
+			public static readonly SI MidEnginesBound = 5.SI<Liter>().Cast<CubicMeter>();
+
+			public static readonly KilogramSquareMeter ManualBaseInertia = 1.885.SI<KilogramSquareMeter>();
+			public static readonly KilogramSquareMeter ATBaseInertia = 1.707.SI<KilogramSquareMeter>();
+
+			public static readonly KilogramPerMeter SmallEngineDisplacementInertia = 400.SI<KilogramPerMeter>();
+			public static readonly KilogramPerMeter MidEngineATDisplacementInertia = 933.SI<KilogramPerMeter>();
+			public static readonly KilogramPerMeter MidEngineManualDisplacementInertia = 989.SI<KilogramPerMeter>();
+
 			public static KilogramSquareMeter EngineInertia(VectoSimulationJobType jobType, CubicMeter displacement, GearboxType? gbxType)
+			{
+				if (displacement <= SmallEnginesBound) {
+					return ComputeSmallEngineInertia(displacement);
+				}
+				else if ((displacement > SmallEnginesBound) && (displacement <= MidEnginesBound)) {
+					return ComputeMidEngineInertia(displacement, gbxType);
+				}
+				else {
+					return ComputeBigEngineInertia(jobType, displacement, gbxType);
+				}
+			}
+
+			private static KilogramSquareMeter ComputeSmallEngineInertia(CubicMeter displacement)
+			{ 
+				return (SmallEngineDisplacementInertia * displacement).Cast<KilogramSquareMeter>();
+			}
+
+			private static KilogramSquareMeter ComputeMidEngineInertia(CubicMeter displacement, GearboxType? gbxType)
+			{ 
+				if (!gbxType.HasValue) {
+					throw new VectoException("Gearbox type must be provided!");
+				}
+
+				return gbxType.Value.AutomaticTransmission()
+					? (MidEngineATDisplacementInertia * displacement) - ATBaseInertia
+					: (MidEngineManualDisplacementInertia * displacement) - ManualBaseInertia;
+			}
+
+			private static KilogramSquareMeter ComputeBigEngineInertia(VectoSimulationJobType jobType, CubicMeter displacement, GearboxType? gbxType)
 			{
 				// VB Code:    Return 1.3 + 0.41 + 0.27 * (Displ / 1000)
 				KilogramSquareMeter clutchPlateTc;
@@ -1073,7 +1114,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return limitedFld;
 			}
 
-            private static List<ShiftPolygon.ShiftPolygonEntry> DownshiftLineDrive(
+			private static List<ShiftPolygon.ShiftPolygonEntry> DownshiftLineDrive(
 				ElectricMotorFullLoadCurve fullLoadCurve, ElectricMotorFullLoadCurve fullLoadCurveOrig,
 				PerSecond nMin, PerSecond nMax)
 			{
@@ -1537,7 +1578,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 						TorqueRatio = 0.85,
 						Torque =  -4.1 * first.Torque
 					},
-                };
+				};
 				foreach (var torqueConverterEntry in characteristicTorque) {
 					torqueConverterEntry.SpeedRatio = torqueConverterEntry.SpeedRatio * ratio;
 					torqueConverterEntry.TorqueRatio = torqueConverterEntry.TorqueRatio / ratio;
@@ -1828,7 +1869,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 																VehicleOperationLookup.VehicleOperationData vehicleOperation,
 																ChargingEfficiencies chargingEfficiency)
 		{
-			if (cdResult.Status != VectoRun.Status.Success || csResult.Status != VectoRun.Status.Success) {
+			if (!cdResult.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore) || 
+				!csResult.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore)) {
 				return null;
 			}
 			var batteryData = cdResult.BatteryData;
@@ -1881,6 +1923,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				.ToDictionary(x => x.Item1, x => x.Item2);
 
 			var retVal = new WeightedResult() {
+				Status = cdResult.Status == VectoRun.Status.PrimaryBusSimulationIgnore || csResult.Status == VectoRun.Status.PrimaryBusSimulationIgnore ? VectoRun.Status.PrimaryBusSimulationIgnore : VectoRun.Status.Success,
 				Distance = cdResult.Distance,
 				Payload = cdResult.Payload,
 				CargoVolume = cdResult.CargoVolume,
@@ -1937,7 +1980,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var connectorLossDepot = currentEstDepot * batteryData.ConnectionSystemResistance *
 								currentEstDepot;
 
-            var etaChgBatDepot = 1 - ((respChgBatDepot.LossPower + connectorLossDepot) / respChgBatDepot.PowerDemand).Value();
+			var etaChgBatDepot = 1 - ((respChgBatDepot.LossPower + connectorLossDepot) / respChgBatDepot.PowerDemand).Value();
 			var etaChgBatInMission = 1 - ((respChgBatInMission.LossPower + connectorLossInMission) / respChgBatInMission.PowerDemand).Value();
 
 
@@ -2088,6 +2131,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var fuels = entries.First().FuelData;
 			return new WeightedResult() {
+				Status = VectoRun.Status.Success,
 				AverageSpeed = null,
 				AverageDrivingSpeed = null,
 				Distance = entries.Sum(e => e.Distance * e.WeightingFactor),
@@ -2123,6 +2167,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var fuels = entries.First().ChargeDepletingResult.FuelData;
 			return new WeightedResult() {
+				Status = VectoRun.Status.Success,
 				AverageSpeed = null,
 				AverageDrivingSpeed = null,
 				Distance = entries.Sum(e => e.ChargeDepletingResult.Distance * e.ChargeDepletingResult.WeightingFactor),
@@ -2131,7 +2176,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				PassengerCount = entries.All(e => e.ChargeDepletingResult.PassengerCount != null) ? entries.Sum(e => e.ChargeDepletingResult.PassengerCount.Value * e.ChargeDepletingResult.WeightingFactor) : (double?)null,
 				FuelConsumption = fuels.Select(f => Tuple.Create(f,
 						entries.Sum(e =>
-                            e.Weighted.FuelConsumption[f] * e.ChargeDepletingResult.WeightingFactor)))
+							e.Weighted.FuelConsumption[f] * e.ChargeDepletingResult.WeightingFactor)))
 					.ToDictionary(x => x.Item1, x => x.Item2),
 				ElectricEnergyConsumption = entries.Sum(e => e.Weighted.ElectricEnergyConsumption * e.ChargeDepletingResult.WeightingFactor),
 				CO2Total = entries.Sum(e => e.Weighted.CO2Total * e.ChargeDepletingResult.WeightingFactor),

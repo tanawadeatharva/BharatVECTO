@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		private EngineeringDataAdapter _engineeringDao = new EngineeringDataAdapter();
 
-		public EngineeringVTPModeVectoRunDataFactoryLorries(IVTPEngineeringInputDataProvider ivtpProvider) : base(ivtpProvider.JobInputData, null)
+		public EngineeringVTPModeVectoRunDataFactoryLorries(IVTPEngineeringInputDataProvider ivtpProvider) : base(ivtpProvider, null)
 		{
 
 		}

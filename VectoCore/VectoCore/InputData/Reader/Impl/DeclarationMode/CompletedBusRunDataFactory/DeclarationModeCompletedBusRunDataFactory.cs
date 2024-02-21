@@ -171,14 +171,20 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				var primaryResult = DataProvider.MultistageJobInputData.JobInputData.PrimaryVehicle.GetResult(
 					simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
 					simulationRunData.VehicleData.Loading, ovcHevMode);
-				if (primaryResult == null || !primaryResult.ResultStatus.Equals("success")) {
+				
+				if (primaryResult == null) {
 					throw new VectoException(
 						"Failed to find results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3}. Make sure PIF and completed vehicle data match!",
 						simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
 						simulationRunData.VehicleData.Loading);
 				}
-
-				if (primaryResult.ResultStatus != "success") {
+				if (primaryResult.ResultStatus == ResultStatus.PrimaryRunIgnored) {
+					throw new VectoException(
+                        "The vehicle group of the complete(d) vehicle falls into a primary vehicle sub-group for which no result could be calculated due to the criterion of insufficient powertrain power.   mission: {1}, fuel mode: '{2}', payload: {3}.",
+						simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
+						simulationRunData.VehicleData.Loading);
+				}
+                if (primaryResult.ResultStatus != ResultStatus.Success) {
 					throw new VectoException(
 						"Simulation results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3} not finished successfully.",
 						simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
@@ -715,6 +721,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					PrimaryVehicle.BoostingLimitations,
 					rd.GearboxData,
 					rd.EngineData,
+					rd.ElectricMachinesData,
 					PrimaryVehicle.ArchitectureID
 				);
 				SetOvcModeProperties(ovcHevMode, rd);
@@ -775,6 +782,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					PrimaryVehicle.BoostingLimitations,
 					rd.GearboxData,
 					rd.EngineData,
+					rd.ElectricMachinesData,
 					PrimaryVehicle.ArchitectureID
 					);
 				SetOvcModeProperties(ovcMode, rd);

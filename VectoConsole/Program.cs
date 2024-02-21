@@ -96,18 +96,18 @@ Description:
 	CURRENT_STEP.xml: Current interim or completed manufacturing step VIF.
 	OUTPUT.xml: Output path for the new VIF.
 
-	-ams: append manufacturing step
-	-t: output information about execution times
-	-mod: write mod-data in addition to sum-data
-	-1Hz: convert mod-data to 1Hz resolution
-	-eng: switch to engineering mode (implies -mod)
-	-q: quiet - disables console output unless verbose information is enabled
-	-nv: skip validation of internal data structure before simulation
-	-v: Shows verbose information (errors and warnings will be displayed)
-	-vv: Shows more verbose information (infos will be displayed)
-	-vvv: Shows debug messages (slow!)
-	-vvvv: Shows all verbose information (everything, slow!)
-	-V: show version information
+	-ams: Append manufacturing step
+	-eng: Switch to engineering mode (implies -mod).
+	-mod: Write mod-data in addition to sum-data.
+	-1Hz: Convert mod-data to 1Hz resolution.
+	-nv: Skip validation of internal data structure before simulation.
+	-t: Output information about execution times.
+	-v: Shows verbose information (errors and warnings will be displayed).
+	-vv: Shows more verbose information (info will be displayed).
+	-vvv: Shows debug messages (slow!).
+	-vvvv: Shows all verbose information (everything, slow!).
+	-q: Disables console output unless verbose information is enabled.
+	-V: Show version information.
 	-h: Displays this help.
 	
 Examples:
@@ -218,7 +218,7 @@ Examples:
 				// process the file list and start simulation
 				var fileWriter = new FileOutputWriter(fileList.First());
 				var sumWriter = new SummaryDataContainer(fileWriter);
-				_jobContainer = new JobContainer(sumWriter);
+				_jobContainer = new JobContainer(sumWriter, new JobArchiveBuilder());
 
 				var mode = ExecutionMode.Declaration;
 				if (args.Contains("-eng")) {

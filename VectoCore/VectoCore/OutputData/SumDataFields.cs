@@ -1193,50 +1193,30 @@ namespace TUGraz.VectoCore.OutputData
 
 			};
 
-		public static readonly Dictionary<string, WriteEmEntry> ElectricMotorValue =
-			new Dictionary<string, WriteEmEntry>() {
-				{ EM_AVG_SPEED_FORMAT, (r, m, em) => m.ElectricMotorAverageSpeed(em).ConvertToRoundsPerMinute() },
-				{ E_EM_Mot_DRIVE_FORMAT, (r, m, em) => m.TotalElectricMotorMotWorkDrive(em).ConvertToKiloWattHour() }, {
-					E_EM_Mot_GENERATE_FORMAT,
-					(r, m, em) => m.TotalElectricMotorMotWorkRecuperate(em).ConvertToKiloWattHour()
-				},
-				{ ETA_EM_Mot_DRIVE_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorMotEfficiencyDrive(em), "") },
-				{ ETA_EM_Mot_GEN_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorMotEfficiencyGenerate(em), "") },
-				{ E_EM_DRIVE_FORMAT, (r, m, em) => m.TotalElectricMotorWorkDrive(em).ConvertToKiloWattHour() },
-				{ E_EM_GENERATE_FORMAT, (r, m, em) => m.TotalElectricMotorWorkRecuperate(em).ConvertToKiloWattHour() },
-				{ ETA_EM_DRIVE_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorEfficiencyDrive(em), "") },
-				{ ETA_EM_GEN_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorEfficiencyGenerate(em), "") },
-				{ E_EM_OFF_Loss_Format, (r, m, em) => m.ElectricMotorOffLosses(em).ConvertToKiloWattHour() }, {
-					E_EM_LOSS_TRANSM_FORMAT,
-					(r, m, em) => m.ElectricMotorTransmissionLosses(em)?.ConvertToKiloWattHour()
-				},
-				{ E_EM_Mot_LOSS_FORMAT, (r, m, em) => m.ElectricMotorMotLosses(em)?.ConvertToKiloWattHour() },
-				{ E_EM_LOSS_FORMAT, (r, m, em) => m.ElectricMotorLosses(em)?.ConvertToKiloWattHour() },
-				{ E_EM_OFF_TIME_SHARE, (r, m, em) => (ConvertedSI)m.ElectricMotorOffTimeShare(em) }, {
-					EM_RATED_POWER,
-					(r, m, em) => DeclarationData.GetReferencePropulsionPower(r.VehicleData.InputData)
-						.ConvertToKiloWatt()
-				}, {
-					EM_RATED_SPEED_HI,
-					(r, m, em) => r.VehicleData.InputData.Components.ElectricMachines.Entries.First().ElectricMachine
-						.VoltageLevels.MaxBy(v => v.VoltageLevel).ContinuousTorqueSpeed.AsRPM
-				}, {
-					EM_RATED_SPEED_LO,
-					(r, m, em) => r.VehicleData.InputData.Components.ElectricMachines.Entries.First().ElectricMachine
-						.VoltageLevels.MinBy(v => v.VoltageLevel).ContinuousTorqueSpeed.AsRPM
-				}, {
-					EM_RATED_TORQUE_LO,
-					(r, m, em) => (ConvertedSI)r.VehicleData.InputData.Components.ElectricMachines.Entries.First()
-						.ElectricMachine.VoltageLevels.MaxBy(v => v.VoltageLevel).ContinuousTorque
-				}, {
-					EM_RATED_TORQUE_HI,
-					(r, m, em) => (ConvertedSI)r.VehicleData.InputData.Components.ElectricMachines.Entries.First()
-						.ElectricMachine.VoltageLevels.MinBy(v => v.VoltageLevel).ContinuousTorque
-				}, {
-					EM_MOTOR_NUMBER,
-					(r, m, em) => r.VehicleData.InputData.Components.ElectricMachines.Entries.First().Count
-				},
-			};
+		};
+
+		public static readonly Dictionary<string, WriteEmEntry> ElectricMotorValue = new Dictionary<string, WriteEmEntry>() {
+			{ EM_AVG_SPEED_FORMAT, (r, m, em) =>    m.ElectricMotorAverageSpeed(em).ConvertToRoundsPerMinute() },
+			{ E_EM_Mot_DRIVE_FORMAT, (r, m, em) => m.TotalElectricMotorMotWorkDrive(em).ConvertToKiloWattHour() },
+			{ E_EM_Mot_GENERATE_FORMAT, (r, m, em) => m.TotalElectricMotorMotWorkRecuperate(em).ConvertToKiloWattHour() },
+			{ ETA_EM_Mot_DRIVE_FORMAT, (r, m, em) =>    new ConvertedSI(m.ElectricMotorMotEfficiencyDrive(em), "") },
+			{ ETA_EM_Mot_GEN_FORMAT, (r, m, em) =>  new ConvertedSI(m.ElectricMotorMotEfficiencyGenerate(em), "") },
+			{ E_EM_DRIVE_FORMAT, (r, m, em) => m.TotalElectricMotorWorkDrive(em).ConvertToKiloWattHour() },
+			{ E_EM_GENERATE_FORMAT, (r, m, em) => m.TotalElectricMotorWorkRecuperate(em).ConvertToKiloWattHour() },
+			{ ETA_EM_DRIVE_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorEfficiencyDrive(em), "") },
+			{ ETA_EM_GEN_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorEfficiencyGenerate(em), "") },
+			{ E_EM_OFF_Loss_Format, (r, m, em) => m.ElectricMotorOffLosses(em).ConvertToKiloWattHour() },
+			{ E_EM_LOSS_TRANSM_FORMAT, (r, m, em) => m.ElectricMotorTransmissionLosses(em)?.ConvertToKiloWattHour() },
+			{ E_EM_Mot_LOSS_FORMAT, (r, m, em) => m.ElectricMotorMotLosses(em)?.ConvertToKiloWattHour() },
+			{ E_EM_LOSS_FORMAT, (r, m, em) => m.ElectricMotorLosses(em)?.ConvertToKiloWattHour() },
+			{ E_EM_OFF_TIME_SHARE, (r, m, em) => (ConvertedSI)m.ElectricMotorOffTimeShare(em) },
+			{ EM_RATED_POWER, (r, m, em) => DeclarationData.GetReferencePropulsionPower(r.VehicleData.InputData).ConvertToKiloWatt() },
+			{ EM_RATED_SPEED_HI, (r, m, em) => r.VehicleData.InputData.Components?.ElectricMachines?.Entries.First().ElectricMachine.VoltageLevels.MaxBy(v  => v.VoltageLevel)?.ContinuousTorqueSpeed.AsRPM ?? 0 },
+			{ EM_RATED_SPEED_LO, (r, m, em) => r.VehicleData.InputData.Components?.ElectricMachines?.Entries.First().ElectricMachine.VoltageLevels.MinBy(v  => v.VoltageLevel)?.ContinuousTorqueSpeed.AsRPM ?? 0 },
+			{ EM_RATED_TORQUE_HI, (r, m, em) => (ConvertedSI)(r.VehicleData.InputData.Components.ElectricMachines?.Entries.First().ElectricMachine.VoltageLevels.MaxBy(v  => v.VoltageLevel)?.ContinuousTorque ?? 0.SI<NewtonMeter>()) },
+			{ EM_RATED_TORQUE_LO, (r, m, em) => (ConvertedSI)(r.VehicleData.InputData.Components.ElectricMachines?.Entries.First().ElectricMachine.VoltageLevels.MinBy(v  => v.VoltageLevel)?.ContinuousTorque ?? 0.SI<NewtonMeter>()) },
+			{ EM_MOTOR_NUMBER, (r, m, em) => r.VehicleData.InputData.Components?.ElectricMachines?.Entries.First().Count ?? 0 },
+		};
 
 		public static readonly Dictionary<string, WriteEmEntry> IEPCValue = new Dictionary<string, WriteEmEntry>() {
 			{ IEPC_AVG_SPEED_FORMAT, (r, m, em) => m.ElectricMotorAverageSpeed(em).ConvertToRoundsPerMinute() },
@@ -1247,7 +1227,12 @@ namespace TUGraz.VectoCore.OutputData
 			{ E_IEPC_OFF_Loss_Format, (r, m, em) => m.ElectricMotorOffLosses(em).ConvertToKiloWattHour() },
 			{ E_IEPC_LOSS_FORMAT, (r, m, em) => m.ElectricMotorLosses(em).ConvertToKiloWattHour() },
 			{ E_IEPC_OFF_TIME_SHARE, (r, m, em) => (ConvertedSI)m.ElectricMotorOffTimeShare(em) },
-		};
+			{ EM_RATED_POWER, (r, m, em) => r.VehicleData.InputData.Components.IEPC?.TotalRatedPowerCalculated.ConvertToKiloWatt() ?? 0.SI<Watt>().ConvertToKiloWatt() },
+			{ EM_RATED_SPEED_HI, (r, m, em) => r.VehicleData.InputData.Components.IEPC?.VoltageLevels.MaxBy(v  => v.VoltageLevel)?.ContinuousTorqueSpeed.AsRPM ?? 0 },
+			{ EM_RATED_SPEED_LO, (r, m, em) => r.VehicleData.InputData.Components.IEPC?.VoltageLevels.MinBy(v  => v.VoltageLevel)?.ContinuousTorqueSpeed.AsRPM ?? 0 },
+			{ EM_RATED_TORQUE_HI, (r, m, em) => (ConvertedSI)(r.VehicleData.InputData.Components.IEPC?.VoltageLevels.MaxBy(v  => v.VoltageLevel)?.ContinuousTorque ?? 0.SI<NewtonMeter>()) },
+			{ EM_RATED_TORQUE_LO, (r, m, em) => (ConvertedSI)(r.VehicleData.InputData.Components.IEPC?.VoltageLevels.MinBy(v  => v.VoltageLevel)?.ContinuousTorque ?? 0.SI<NewtonMeter>()) },
+        };
 
 		public static readonly WriteAuxEntry AuxDataValue = (r, m, a) => m.AuxiliaryWork(a).ConvertToKiloWattHour();
 

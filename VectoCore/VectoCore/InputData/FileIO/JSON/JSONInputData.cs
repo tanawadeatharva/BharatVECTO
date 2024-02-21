@@ -615,7 +615,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IVehicleDeclarationInputData Vehicle =>
 			_inputReader.CreateDeclaration(
-				Path.Combine(Path.GetFullPath(BasePath), Body["DeclarationVehicle"].Value<string>())).JobInputData.Vehicle;
+				Path.Combine(Path.GetFullPath(BasePath), Body["DeclarationVehicle"].Value<string>()), true).JobInputData.Vehicle;
 
 		public IVectoHash VectoJobHash { get; }
 
@@ -783,7 +783,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			bool xmlVersionNewer = VersioningUtil.CompareVersions(simToolVersionStr, vectoVersionStr) > 0;
 			
 			if (xmlVersionNewer) {
-				throw new VectoException($"Not allowed to run simulation because VECTO version is older than <SimulationToolVersion> in Manufacturer Report ({simToolVersionStr}).");
+				throw new VectoException($"Not allowed to run simulation because VECTO version ({vectoVersionStr}) is older than <SimulationToolVersion> in Manufacturer Report ({simToolVersionStr}).");
 			}
 		}
 
@@ -794,9 +794,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			
 			var signatureNode = xmlDoc.SelectSingleNode("//*[local-name()='Signature']");
 			var signatureDigest = new DigestData(signatureNode);
-
-			var parent = signatureNode.ParentNode;
-			parent.RemoveChild(signatureNode);
 
 			var hash = XMLHashProvider.ComputeHash(xmlDoc, signatureDigest.Reference.Remove(0, 1), signatureDigest.CanonicalizationMethods,
 				signatureDigest.DigestMethod);
@@ -839,7 +836,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 			_manufacturerResults = new ManufacturerResults(xmlDoc.SelectSingleNode("//*[local-name() = 'Results']"));
 			_vehicleLenght = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleLength']")?.InnerText.ToDouble().SI<Meter>();
-			_vehicleClass = VehicleClassHelper.Parse(xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleGroup']").InnerText);
+			_vehicleClass = VehicleClassHelper.Parse(xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleGroup']")?.InnerText);
 			_vehicleCode = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleCode']")?.InnerText.ParseEnum<VehicleCode>() ?? VehicleCode.NOT_APPLICABLE;
 		}
 	}
@@ -852,7 +849,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			Results = new List<IResult>();
 			foreach (XmlNode node in resultNode.SelectNodes("./*[local-name() = 'Result' and @status='success']")) {
 				var entry = new Result {
-					ResultStatus = node.Attributes.GetNamedItem("status").InnerText,
+					ResultStatus = node.Attributes.GetNamedItem("status").InnerText.ParseEnum<ResultStatus>(),
 					Mission = node.SelectSingleNode("./*[local-name()='Mission']").InnerText.ParseEnum<MissionType>(),
 					SimulationParameter = GetSimulationParameter(node.SelectSingleNode("./*[local-name() = 'SimulationParameters' or local-name() = 'SimulationParametersCompletedVehicle']")),
 					EnergyConsumption = node.SelectSingleNode("./*[local-name()='Fuel' and FuelConsumption/@unit='MJ/km']")?
@@ -864,7 +861,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 													?.InnerText
 													.ToDouble().SI(Unit.SI.Mega.Joule.Per.Kilo.Meter).Cast<JoulePerMeter>()))
 											.ToDictionary(x => x.Key, x => x.Value),
-					CO2 = node.SelectNodes("./*[local-name()='CO2' and @unit]").Cast<XmlNode>().Select(
+					CO2 = node.SelectNodes(".//*[local-name()='CO2' and @unit]").Cast<XmlNode>().Select(
 								x => new KeyValuePair<string, double>(x.Attributes.GetNamedItem("unit").InnerText, x.InnerText.ToDouble()))
 							.ToDictionary(x => x.Key, x => x.Value)
 

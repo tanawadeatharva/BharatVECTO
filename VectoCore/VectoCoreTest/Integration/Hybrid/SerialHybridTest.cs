@@ -30,6 +30,7 @@ using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using ElectricSystem = TUGraz.VectoCore.Models.SimulationComponent.ElectricSystem;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
+using Moq;
 
 
 namespace TUGraz.VectoCore.Tests.Integration.Hybrid
@@ -935,8 +936,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 					RollResistanceCoefficient = 0.007,
 					TwinTyres = true,
 					TyreTestLoad = 30436.SI<Newton>()
-				},
-			};
+                },
+            };
+			var inputData = new Mock<IVehicleDeclarationInputData>();
+			inputData.Setup(v => v.VehicleType).Returns(VectoSimulationJobType.SerialHybridVehicle);
 			return new VehicleData {
 				AirDensity = DeclarationData.AirDensity,
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
@@ -947,7 +950,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				SavedInDeclarationMode = false,
 				ADAS = new VehicleData.ADASData() {
 					EngineStopStart = true
-				}
+				},
+				InputData = inputData.Object,
 			};
 		}
 

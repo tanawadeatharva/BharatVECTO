@@ -585,6 +585,10 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 							Type = MessageType.ErrorMessage, 
 							Message = ex.Message
 						});
+					DialogHelper.ShowErrorMessage(
+						$"ERROR running job {Path.GetFileName(jobEntry.DataSource.SourceFile)}: {ex.Message}", "Error");
+					status.Report($"Failed to initialize Simulation");
+                    return;
 				}
 			}
 			foreach (var cycle in jobContainer.GetCycleTypes())
