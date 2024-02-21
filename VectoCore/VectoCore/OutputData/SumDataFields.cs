@@ -1193,8 +1193,6 @@ namespace TUGraz.VectoCore.OutputData
 
 			};
 
-		};
-
 		public static readonly Dictionary<string, WriteEmEntry> ElectricMotorValue = new Dictionary<string, WriteEmEntry>() {
 			{ EM_AVG_SPEED_FORMAT, (r, m, em) =>    m.ElectricMotorAverageSpeed(em).ConvertToRoundsPerMinute() },
 			{ E_EM_Mot_DRIVE_FORMAT, (r, m, em) => m.TotalElectricMotorMotWorkDrive(em).ConvertToKiloWattHour() },
@@ -1300,6 +1298,8 @@ namespace TUGraz.VectoCore.OutputData
 						.ConvertToGrammPerKiloMeter())
 				},
 			};
+
+		
 	}
 
 }

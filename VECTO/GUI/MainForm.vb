@@ -1432,14 +1432,6 @@ lbFound:
             ShowVectoEPTPJobForm()
             VectoVTPJobForm.VectoNew()
         Else
-            Dim jobDataProvider As IInputDataProvider = JSONInputDataFactory.ReadComponentData(filePathOrType)
-            Dim vtpEngineeringJob As IVTPEngineeringInputDataProvider = TryCast(jobDataProvider, IVTPEngineeringInputDataProvider)
-            Dim vtpDeclarationJob As IVTPDeclarationInputDataProvider = TryCast(jobDataProvider, IVTPDeclarationInputDataProvider)
-
-            'Declaration is the base class for EngineeringJobInputData, hence is valid for both Eng. and Decl.
-            If jobType = Nothing Then jobType = TryCast(jobDataProvider, IDeclarationJobInputData).JobType
-
-
             Try
                 Dim jobDataProvider As IInputDataProvider = JSONInputDataFactory.ReadComponentData(filePathOrType)
 
