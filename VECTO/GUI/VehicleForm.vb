@@ -1391,9 +1391,9 @@ Public Class VehicleForm
 			tbInitialSoC.Focus()
 			Return
 		End If
-        If Not 100 < Convert.ToInt32(tbInitialSoC.Text) Then
-            MsgBox("Input has to below 100")
-            tbInitialSoC.Focus()
+        If 100 < Convert.ToInt32(tbInitialSoC.Text) Then
+			MsgBox("Input has to be less than or equal to 100")
+			tbInitialSoC.Focus()
             Return
         End If
     End Sub
