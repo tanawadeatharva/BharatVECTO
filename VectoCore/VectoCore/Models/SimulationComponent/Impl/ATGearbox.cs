@@ -256,7 +256,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IResponse retVal;
 			var count = 0;
 			var loop = false;
-			SetPowershiftLossEnergy(absTime, dt, outTorque, outAngularVelocity);
+			SetPowershiftLossEnergy(absTime, dt, outTorque, outAngularVelocity, dryRun);
 			do {
 				if (CurrentState.Disengaged 
 					|| (DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Halted)
@@ -294,11 +294,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		private void SetPowershiftLossEnergy(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+		private void SetPowershiftLossEnergy(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
 		{
 			if (RequestAfterGearshift /*&& Gear != PreviousState.Gear*/) {
 				LastShift = absTime;
-				Gear = _strategy?.Engage(absTime, dt, outTorque, outAngularVelocity) ?? Gear;
+				if (!dryRun) {
+                    Gear = _strategy?.Engage(absTime, dt, outTorque, outAngularVelocity) ?? Gear;
+                }
 				_powershiftLossEnergy = ComputeShiftLosses(outTorque, outAngularVelocity, Gear);
 			} else {
 				if (PreviousState.PowershiftLossEnergy != null && PreviousState.PowershiftLossEnergy.IsGreater(0)) {
