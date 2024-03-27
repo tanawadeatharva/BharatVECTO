@@ -1909,8 +1909,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				UtilityFactor = double.NaN,
 
 				AuxHeaterFuel = entries.First().AuxHeaterFuel,
-				ZEV_CO2 = entries.All(e => e.ZEV_CO2 != null) ? entries.Sum(e => e.ZEV_CO2 * e.WeightingFactor) : null,
-				ZEV_FuelConsumption_AuxHtr = entries.All(e => e.ZEV_FuelConsumption_AuxHtr != null) ? entries.Sum(e => e.ZEV_FuelConsumption_AuxHtr * e.WeightingFactor) : null
+				ZEV_CO2 = entries.Sum(e => (e?.ZEV_CO2 ?? 0.SI<Kilogram>()) * e.WeightingFactor),
+				ZEV_FuelConsumption_AuxHtr = entries.Sum(e => (e?.ZEV_FuelConsumption_AuxHtr ?? 0.SI<Kilogram>()) * e.WeightingFactor),
 			};
 		}
 
@@ -1945,8 +1945,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				UtilityFactor = double.NaN,
 
 				AuxHeaterFuel = entries.First().ChargeDepletingResult.AuxHeaterFuel,
-				ZEV_CO2 = entries.All(e => e.Weighted.ZEV_CO2 != null) ? entries.Sum(e => e.Weighted.ZEV_CO2 * e.ChargeDepletingResult.WeightingFactor) : null,
-				ZEV_FuelConsumption_AuxHtr = entries.All(e => e.Weighted.ZEV_FuelConsumption_AuxHtr != null) ? entries.Sum(e => e.Weighted.ZEV_FuelConsumption_AuxHtr * e.ChargeDepletingResult.WeightingFactor) : null,
+				ZEV_CO2 = entries.Sum(e => (e?.Weighted?.ZEV_CO2 ?? 0.SI<Kilogram>()) * e.ChargeDepletingResult.WeightingFactor),
+				ZEV_FuelConsumption_AuxHtr = entries.Sum(e => (e?.Weighted?.ZEV_FuelConsumption_AuxHtr ?? 0.SI<Kilogram>()) * e.ChargeDepletingResult.WeightingFactor),
 			};
 		}
 
