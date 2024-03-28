@@ -340,7 +340,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 				var propulsionPower = DeclarationData.GetReferencePropulsionPower(modelData.VehicleData.InputData);
                 WeightingGroup = DeclarationData.WeightingGroup.Lookup(
 					modelData.VehicleData.VehicleClass,
-					modelData.VehicleData.VocationalVehicle,
 					modelData.VehicleData.SleeperCab.Value,
 					propulsionPower);
 			}

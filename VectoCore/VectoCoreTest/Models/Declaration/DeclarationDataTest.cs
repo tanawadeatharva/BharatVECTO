@@ -2463,28 +2463,25 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         TestCase(VehicleClass.Class9, true, true, 265, WeightingGroup.Group9V),
         TestCase(VehicleClass.Class9, true, false, 265, WeightingGroup.Group9V),
 
-        TestCase(VehicleClass.Class10, false, false, 169.9, WeightingGroup.Group10RD),
-        TestCase(VehicleClass.Class10, false, false, 264.9, WeightingGroup.Group10RD),
-        TestCase(VehicleClass.Class10, false, false, 265, WeightingGroup.Group10RD),
-        TestCase(VehicleClass.Class10, false, true, 169.9, WeightingGroup.Group10LH),
-        TestCase(VehicleClass.Class10, false, true, 264.9, WeightingGroup.Group10LH),
-        TestCase(VehicleClass.Class10, false, true, 265, WeightingGroup.Group10LH),
-        TestCase(VehicleClass.Class10, true, true, 265, WeightingGroup.Group10V),
-        TestCase(VehicleClass.Class10, true, false, 265, WeightingGroup.Group10V),
+        TestCase(VehicleClass.Class10, false, 169.9, WeightingGroup.Group10RD),
+        TestCase(VehicleClass.Class10, false, 264.9, WeightingGroup.Group10RD),
+        TestCase(VehicleClass.Class10, false, 265, WeightingGroup.Group10RD),
+        TestCase(VehicleClass.Class10, true, 169.9, WeightingGroup.Group10LH),
+        TestCase(VehicleClass.Class10, true, 264.9, WeightingGroup.Group10LH),
+        TestCase(VehicleClass.Class10, true, 265, WeightingGroup.Group10LH),
 		
-		TestCase(VehicleClass.Class11, false, true, 169.9, WeightingGroup.Group11),
-		TestCase(VehicleClass.Class11, false, false, 265, WeightingGroup.Group11),
-		TestCase(VehicleClass.Class12, false, true, 169.9, WeightingGroup.Group12),
-		TestCase(VehicleClass.Class12, false, false, 265, WeightingGroup.Group12),
-		TestCase(VehicleClass.Class16, false, true, 169.9, WeightingGroup.Group16),
-		TestCase(VehicleClass.Class16, false, false, 265, WeightingGroup.Group16),
+		TestCase(VehicleClass.Class11, true, 169.9, WeightingGroup.Group11),
+		TestCase(VehicleClass.Class11, false, 265, WeightingGroup.Group11),
+		TestCase(VehicleClass.Class12, true, 169.9, WeightingGroup.Group12),
+		TestCase(VehicleClass.Class12, false, 265, WeightingGroup.Group12),
+		TestCase(VehicleClass.Class16, true, 169.9, WeightingGroup.Group16),
+		TestCase(VehicleClass.Class16, false, 265, WeightingGroup.Group16),
             ]
         public void TestWeightingGroupLookup(
             VehicleClass vehicleGroup, bool vocational, bool sleeperCab, double ratedPowerkWm, WeightingGroup expectedWeightingGroup)
         {
             var wGroup = DeclarationData.WeightingGroup.Lookup(
 				vehicleGroup,
-				vocational,
 				sleeperCab,
 				ratedPowerkWm.SI(Unit.SI.Kilo.Watt).Cast<Watt>());
             Assert.AreEqual(expectedWeightingGroup, wGroup);
