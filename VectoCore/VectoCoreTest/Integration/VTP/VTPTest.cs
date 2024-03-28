@@ -144,11 +144,13 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 
 			var declared = vtpXml.Document?.XPathSelectElement("//*[local-name()='Declared']")?.Value.ToDouble();
 			var cvtp = vtpXml.Document?.XPathSelectElement("//*[local-name()='C_VTP']")?.Value.ToDouble();
+			var status = vtpXml.Document?.XPathSelectElement("//*[local-name()='Status']")?.Value;
 
 			TestContext.WriteLine($"declared CO2 = {declared}, cvtp = {cvtp}");
 
 			Assert.AreEqual(expectedDeclaredCO2, declared, 1e-8);
 			Assert.AreEqual(expectedCVTP, cvtp, 1e-4);
+			Assert.AreEqual(status, "Passed");
 		}
 
 		[Category("LongRunning")]
