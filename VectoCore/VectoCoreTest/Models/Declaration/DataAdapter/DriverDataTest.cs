@@ -174,6 +174,24 @@ public class DriverDataTest
 	TestCase(VehicleClass.Class31a, VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, psEl, 0.65),
 	TestCase(VehicleClass.Class31a, VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, psEl, 0.65),
 	TestCase(VehicleClass.Class31a, VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, psEl, 0.65),
+
+	TestCase(VehicleClass.Class33a, VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, psMech, 0.35),
+	TestCase(VehicleClass.Class33a, VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, psMech, 0.55),
+	TestCase(VehicleClass.Class33a, VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, psMech, 0.55),
+	TestCase(VehicleClass.Class33a, VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, psMech, 0.55),
+	TestCase(VehicleClass.Class33a, VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, psEl, 0.35),
+	TestCase(VehicleClass.Class33a, VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, psEl, 0.65),
+	TestCase(VehicleClass.Class33a, VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, psEl, 0.65),
+	TestCase(VehicleClass.Class33a, VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, psEl, 0.65),
+
+	TestCase(VehicleClass.Class37a, VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, psMech, 0.35),
+	TestCase(VehicleClass.Class37a, VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, psMech, 0.55),
+	TestCase(VehicleClass.Class37a, VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, psMech, 0.55),
+	TestCase(VehicleClass.Class37a, VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, psMech, 0.55),
+	TestCase(VehicleClass.Class37a, VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, psEl, 0.35),
+	TestCase(VehicleClass.Class37a, VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, psEl, 0.65),
+	TestCase(VehicleClass.Class37a, VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, psEl, 0.65),
+	TestCase(VehicleClass.Class37a, VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, psEl, 0.65),
     ]
     public void TestCompletedGenericBusDeclarationDriverData(VehicleClass group, VectoSimulationJobType jobType,
     ArchitectureID arch, CompressorDrive compressorDrive, double expectedESSUF)
@@ -225,7 +243,25 @@ public class DriverDataTest
 	TestCase(VehicleClass.Class31a, VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, psEl, 0.65),
 	TestCase(VehicleClass.Class31a, VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, psEl, 0.65),
 	TestCase(VehicleClass.Class31a, VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, psEl, 0.65),
-	]
+
+	TestCase(VehicleClass.Class33a, VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, psMech, 0.35),
+	TestCase(VehicleClass.Class33a, VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, psMech, 0.55),
+	TestCase(VehicleClass.Class33a, VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, psMech, 0.55),
+	TestCase(VehicleClass.Class33a, VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, psMech, 0.55),
+	TestCase(VehicleClass.Class33a, VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, psEl, 0.35),
+	TestCase(VehicleClass.Class33a, VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, psEl, 0.65),
+	TestCase(VehicleClass.Class33a, VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, psEl, 0.65),
+	TestCase(VehicleClass.Class33a, VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, psEl, 0.65),
+
+	TestCase(VehicleClass.Class37a, VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, psMech, 0.35),
+	TestCase(VehicleClass.Class37a, VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, psMech, 0.55),
+	TestCase(VehicleClass.Class37a, VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, psMech, 0.55),
+	TestCase(VehicleClass.Class37a, VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, psMech, 0.55),
+	TestCase(VehicleClass.Class37a, VectoSimulationJobType.ConventionalVehicle, ArchitectureID.UNKNOWN, psEl, 0.35),
+	TestCase(VehicleClass.Class37a, VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, psEl, 0.65),
+	TestCase(VehicleClass.Class37a, VectoSimulationJobType.SerialHybridVehicle, ArchitectureID.S2, psEl, 0.65),
+	TestCase(VehicleClass.Class37a, VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.P2, psEl, 0.65),
+    ]
     public void TestCompletedSpecificBusDeclarationDriverData(VehicleClass group, VectoSimulationJobType jobType, 
 		ArchitectureID arch, CompressorDrive compressorDrive, double expectedESSUF)
     {
@@ -323,7 +359,7 @@ public class DriverDataTest
             //	break;
             case VehicleClass.Class31a:
 				return DeclarationData.CompletedBusSegments.Lookup(AxleConfiguration.AxleConfig_4x2.NumAxles(), VehicleCode.CE, RegistrationClass.I, 0, 0.SI<Meter>(), false);
-			//case VehicleClass.Class31b1:
+            //case VehicleClass.Class31b1:
             //	break;
             //case VehicleClass.Class31b2:
             //	break;
@@ -333,8 +369,8 @@ public class DriverDataTest
             //	break;
             //case VehicleClass.Class31e:
             //	break;
-            //case VehicleClass.Class32a:
-            //	break;
+            //        case VehicleClass.Class32a:
+            //break;
             //case VehicleClass.Class32b:
             //	break;
             //case VehicleClass.Class32c:
@@ -345,8 +381,8 @@ public class DriverDataTest
             //	break;
             //case VehicleClass.Class32f:
             //	break;
-            //case VehicleClass.Class33a:
-            //	break;
+            case VehicleClass.Class33a:
+				return DeclarationData.CompletedBusSegments.Lookup(AxleConfiguration.AxleConfig_6x2.NumAxles(), VehicleCode.CE, RegistrationClass.I, 0, 0.SI<Meter>(), false);
             //case VehicleClass.Class33b1:
             //	break;
             //case VehicleClass.Class33b2:
@@ -389,8 +425,8 @@ public class DriverDataTest
             //	break;
             //case VehicleClass.Class36f:
             //	break;
-            //case VehicleClass.Class37a:
-            //	break;
+            case VehicleClass.Class37a:
+				return DeclarationData.CompletedBusSegments.Lookup(AxleConfiguration.AxleConfig_8x2.NumAxles(), VehicleCode.CE, RegistrationClass.I, 0, 0.SI<Meter>(), false);
             //case VehicleClass.Class37b1:
             //	break;
             //case VehicleClass.Class37b2:
