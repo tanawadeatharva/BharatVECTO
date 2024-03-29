@@ -750,7 +750,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				private ArchitectureID _arch;
 				private readonly VectoSimulationJobType _jobType;
 				public Second ActivationDelay => 2.SI<Second>();
-				public Second MaxEngineOffTimespan => 12.SI<Second>();
+				public Second MaxEngineOffTimespan => 120.SI<Second>();
 				public double UtilityFactor { get; }
 			}
 
