@@ -737,14 +737,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 					{
 						// P0 ???
 						UtilityFactor = ConventionalUF;
+					} else {
+						if (_compressorDrive == CompressorDrive.electrically) {
+							UtilityFactor = HybridElectrifiedCompressorUF;
+						} else {
+							UtilityFactor = HybridUF;
+						}
 					}
-
-
-					if (_compressorDrive == CompressorDrive.electrically) {
-						UtilityFactor = HybridElectrifiedCompressorUF;
-					}
-
-					UtilityFactor = HybridUF;
 				}
 				private CompressorDrive _compressorDrive;
 				private ArchitectureID _arch;
