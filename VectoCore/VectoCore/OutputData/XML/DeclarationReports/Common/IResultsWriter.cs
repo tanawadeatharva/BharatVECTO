@@ -112,10 +112,22 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 	public interface IFuelConsumptionWriter
 	{
 		XElement GetElement(IResultEntry entry, IFuelConsumptionCorrection fuelConsumptionCorrection);
-		XElement GetElement(IWeightedResult entry, IFuelProperties fuel, Kilogram consumption);
+		
+		XElement[] GetElements(IWeightedResult entry);
 
-		IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc,
-			IFuelProperties fuel, Meter distance, Kilogram payload, CubicMeter volume,
+		IList<ConvertedSI> GetFuelConsumptionEntries(
+			Kilogram fc,
+			IFuelProperties fuel,
+			Meter distance,
+			Kilogram payload,
+			CubicMeter volume,
+			double? passenger);
+
+		IList<ConvertedSI> GetFuelConsumptionEntries(
+			KilogramPerMeter fcPerMeter,
+			IFuelProperties fuel,
+			Kilogram payload,
+			CubicMeter volume,
 			double? passenger);
 	}
 

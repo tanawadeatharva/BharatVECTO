@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				GetSummary(weighted),
 				fcWriter != null
 					? weighted.FuelConsumption.Select(x =>
-						fcWriter.GetElement(weighted, x.Key, x.Value)).ToArray()
+						fcWriter.GetElements(weighted))
 					: null,
 				ElectricEnergyConsumptionWriter?.GetElement(weighted),
 				CO2Writer?.GetElements(weighted),

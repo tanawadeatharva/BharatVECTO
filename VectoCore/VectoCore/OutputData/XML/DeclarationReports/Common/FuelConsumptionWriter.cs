@@ -30,13 +30,26 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 			return GetElement(fc.TotalFuelConsumptionCorrected, fc.Fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount);
         }
 
-        public XElement GetElement(IWeightedResult entry, IFuelProperties fuel, Kilogram consumption)
+		public XElement[] GetElements(IWeightedResult entry)
 		{
-			if (entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
-				return GetElementIgnore(consumption, fuel, entry.Distance, entry.Payload,
-					entry.CargoVolume, entry.PassengerCount);
+			if (entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore)
+			{
+				List<XElement> fcElementsIgnore = new List<XElement>();
+				foreach (var fcEntry in entry.FuelConsumptionPerMeter)
+				{
+					fcElementsIgnore.Add(GetElementIgnore(fcEntry.Value, fcEntry.Key, entry.Payload, entry.CargoVolume, entry.PassengerCount));
+				}
+
+				return fcElementsIgnore.ToArray();
 			}
-            return GetElement(consumption, fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount);
+
+			List<XElement> fcElements = new List<XElement>();
+			foreach (var fcEntry in entry.FuelConsumptionPerMeter)
+			{
+				fcElements.Add(GetElement(fcEntry.Value, fcEntry.Key, entry.Payload, entry.CargoVolume, entry.PassengerCount));
+			}
+
+			return fcElements.ToArray();
 		}
 
 		protected virtual XElement GetElement(Kilogram consumption, IFuelProperties fuel, Meter distance, Kilogram payLoad, CubicMeter cargoVolume, double? passengerCount)
@@ -57,13 +70,43 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 						new FormattedReportValue(new ConvertedSI(double.NaN, x.Units)).GetElement()))
 			);
 		}
-        #endregion
 
-        public abstract IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc,
-			IFuelProperties fuel, Meter distance, Kilogram payload, CubicMeter volume,
+
+		protected virtual XElement GetElement(KilogramPerMeter consumption, IFuelProperties fuel, Kilogram payLoad, CubicMeter cargoVolume, double? passengerCount)
+		{
+			return new XElement(TNS + XMLNames.Report_Results_Fuel,
+				new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fuel.FuelType.ToXMLFormat()),
+				GetFuelConsumptionEntries(consumption, fuel, payLoad, cargoVolume, passengerCount).Select(x =>
+					new XElement(TNS + FCElementName, new FormattedReportValue(x).GetElement()))
+			);
+		}
+
+		protected virtual XElement GetElementIgnore(KilogramPerMeter consumption, IFuelProperties fuel, Kilogram payLoad, CubicMeter cargoVolume, double? passengerCount)
+		{
+			return new XElement(TNS + XMLNames.Report_Results_Fuel,
+				new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fuel.FuelType.ToXMLFormat()),
+				GetFuelConsumptionEntries(consumption, fuel, payLoad, cargoVolume, passengerCount).Select(x =>
+					new XElement(TNS + FCElementName,
+						new FormattedReportValue(new ConvertedSI(double.NaN, x.Units)).GetElement()))
+			);
+		}
+		#endregion
+
+		public abstract IList<ConvertedSI> GetFuelConsumptionEntries(
+			Kilogram fc,
+			IFuelProperties fuel,
+			Meter distance,
+			Kilogram payload,
+			CubicMeter volume,
 			double? passenger);
 
-    }
+		public abstract IList<ConvertedSI> GetFuelConsumptionEntries(
+			KilogramPerMeter fcPerMeter,
+			IFuelProperties fuel,
+			Kilogram payload,
+			CubicMeter volume,
+			double? passenger);
+	}
 
     public class LorryFuelConsumptionWriter : FuelConsumptionWriterBase
     {
@@ -111,8 +154,51 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
             return retVal;
         }
 
-        #endregion
-    }
+		public override IList<ConvertedSI> GetFuelConsumptionEntries(KilogramPerMeter fcPerMeter, IFuelProperties fuel, Kilogram payload, CubicMeter volume, double? passenger)
+		{
+			if (fcPerMeter == null)
+			{
+				return new List<ConvertedSI>();
+			}
+
+			var retVal = new List<ConvertedSI> {
+				(fcPerMeter).ConvertToGrammPerKiloMeter(),
+				(fcPerMeter /payload).ConvertToGrammPerTonKilometer()};
+			if (volume.IsGreater(0))
+			{
+				retVal.Add((fcPerMeter / volume).ConvertToGrammPerCubicMeterKiloMeter());
+			}
+
+			JoulePerMeter fcPerMeterlowerHeatingValue = (fcPerMeter.Value() * fuel.LowerHeatingValueVecto.Value()).SI<JoulePerMeter>();
+			retVal.AddRange(new[] {
+				(fcPerMeterlowerHeatingValue).ConvertToMegaJoulePerKilometer(),
+				(fcPerMeterlowerHeatingValue / payload).ConvertToMegaJoulePerTonKiloMeter(),
+			});
+
+			if (volume.IsGreater(0))
+			{
+				retVal.Add((fcPerMeterlowerHeatingValue / volume).ConvertToMegaJoulePerCubicMeterKiloMeter());
+			}
+
+			if (fuel.FuelDensity != null)
+			{
+				CubicMeterPerMeter fcPerMeterDensity = (fcPerMeter.Value() / fuel.FuelDensity.Value()).SI<CubicMeterPerMeter>();
+				retVal.AddRange(new[] {
+					(fcPerMeterDensity).ConvertToLiterPer100KiloMeter(),
+					(fcPerMeterDensity / payload).ConvertToLiterPerTonKiloMeter(),
+				});
+
+				if (volume.IsGreater(0))
+				{
+					retVal.Add((fcPerMeterDensity / volume).ConvertToLiterPerCubicMeterKiloMeter());
+				}
+			}
+
+			return retVal;
+		}
+
+		#endregion
+	}
 
     public class BusFuelConsumptionWriter : FuelConsumptionWriterBase
     {
@@ -143,7 +229,31 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
             return retVal;
         }
 
-        #endregion
+		public override IList<ConvertedSI> GetFuelConsumptionEntries(KilogramPerMeter fcPerMeter, IFuelProperties fuel, Kilogram payload, CubicMeter volume, double? passenger)
+		{
+			JoulePerMeter fcPerMeterLowerHeatingValue = (fcPerMeter.Value() * fuel.LowerHeatingValueVecto.Value()).SI<JoulePerMeter>();
 
-    }
+			var retVal = new List<ConvertedSI> {
+				(fcPerMeter).ConvertToGrammPerKiloMeter(),
+				(fcPerMeter / passenger.Value).ConvertToGrammPerPassengerKilometer(),
+				(fcPerMeterLowerHeatingValue).ConvertToMegaJoulePerKilometer(),
+				(fcPerMeterLowerHeatingValue / passenger.Value)
+				.ConvertToMegaJoulePerPassengerKilometer(),
+			};
+
+			if (fuel.FuelDensity != null)
+			{
+				CubicMeterPerMeter fcPerMeterDensity = (fcPerMeter.Value() / fuel.FuelDensity.Value()).SI<CubicMeterPerMeter>();
+				retVal.AddRange(new[] {
+					(fcPerMeterDensity).ConvertToLiterPer100KiloMeter(),
+					(fcPerMeterDensity / passenger.Value).ConvertToLiterPerPassengerKiloMeter(),
+				});
+			}
+
+			return retVal;
+		}
+
+		#endregion
+
+	}
 }

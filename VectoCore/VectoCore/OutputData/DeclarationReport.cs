@@ -158,10 +158,12 @@ namespace TUGraz.VectoCore.OutputData
 		double? PassengerCount { get; }
 
 		IDictionary<IFuelProperties, Kilogram> FuelConsumption { get; }
+		
+		IDictionary<IFuelProperties, KilogramPerMeter> FuelConsumptionPerMeter { get; }
 
 		WattSecond ElectricEnergyConsumption { get; }
 
-		Kilogram CO2Total { get; }
+		KilogramPerMeter CO2PerMeter { get; }
 
 		Meter ActualChargeDepletingRange { get; }
 

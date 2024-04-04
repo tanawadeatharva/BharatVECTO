@@ -62,6 +62,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
 using Point = TUGraz.VectoCommon.Utils.Point;
+using System.Net.WebSockets;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
@@ -1799,7 +1800,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				UtilityFactor = D32_utilityFactor,
 				ElectricEnergyConsumption = D36_electricEnergyConsumptionWeighted,
 				FuelConsumption = D37_fuelConsumptionWeighted,
-				CO2Total = D32_utilityFactor * cdResult.CO2Total + (1 - D32_utilityFactor) * csResult.CO2Total,
+
+				CO2PerMeter = D32_utilityFactor * (cdResult.CO2Total / cdResult.Distance) + (1 - D32_utilityFactor) * (csResult.CO2Total / csResult.Distance),
 
 				AuxHeaterFuel = cdResult.AuxHeaterFuel,
 				ZEV_CO2 =
@@ -1888,7 +1890,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 
 			var fuels = entries.First().FuelData;
-			return new WeightedResult() {
+			var result = new WeightedResult()
+			{
 				Status = VectoRun.Status.Success,
 				AverageSpeed = null,
 				AverageDrivingSpeed = null,
@@ -1900,8 +1903,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 						entries.All(e => e.FuelConsumptionFinal(f.FuelType) != null) ? entries.Sum(e =>
 							e.FuelConsumptionFinal(f.FuelType).TotalFuelConsumptionCorrected * e.WeightingFactor) : null))
 					.ToDictionary(x => x.Item1, x => x.Item2),
+
+				FuelConsumptionPerMeter = fuels.Select(f => Tuple.Create(f,
+						entries.All(e => e.FuelConsumptionFinal(f.FuelType) != null) ? entries.Sum(e =>
+							(e.FuelConsumptionFinal(f.FuelType).TotalFuelConsumptionCorrected / e.Distance) * e.WeightingFactor) : null))
+					.ToDictionary(x => x.Item1, x => x.Item2),
 				ElectricEnergyConsumption = entries.All(e => e.ElectricEnergyConsumption != null) ? entries.Sum(e => e.ElectricEnergyConsumption * e.WeightingFactor) : null,
-				CO2Total = entries.All(e => e.CO2Total != null) ? entries.Sum(e => e.CO2Total * e.WeightingFactor) : null,
+				CO2PerMeter = entries.All(e => e.CO2Total != null) ? entries.Sum(e => (e.CO2Total / e.Distance) * e.WeightingFactor) : null,
 				ActualChargeDepletingRange = entries.All(e => e.ActualChargeDepletingRange != null) ? entries.Sum(e => e.ActualChargeDepletingRange * e.WeightingFactor) : null,
 				EquivalentAllElectricRange = entries.All(e => e.EquivalentAllElectricRange != null) ? entries.Sum(e => e.EquivalentAllElectricRange * e.WeightingFactor) : null,
 				ZeroCO2EmissionsRange = entries.All(e => e.ZeroCO2EmissionsRange != null) ? entries.Sum(e => e.ZeroCO2EmissionsRange * e.WeightingFactor) : null,
@@ -1911,6 +1919,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				ZEV_CO2 = entries.Sum(e => (e?.ZEV_CO2 ?? 0.SI<Kilogram>()) * e.WeightingFactor),
 				ZEV_FuelConsumption_AuxHtr = entries.Sum(e => (e?.ZEV_FuelConsumption_AuxHtr ?? 0.SI<Kilogram>()) * e.WeightingFactor),
 			};
+
+			return result;
 		}
 
 		public static IWeightedResult CalculateWeightedSummary(IList<IOVCResultEntry> entries)
@@ -1924,7 +1934,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 
 			var fuels = entries.First().ChargeDepletingResult.FuelData;
-			return new WeightedResult() {
+			return new WeightedResult()
+			{
 				Status = VectoRun.Status.Success,
 				AverageSpeed = null,
 				AverageDrivingSpeed = null,
@@ -1937,7 +1948,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 							e.Weighted.FuelConsumption[f] * e.ChargeDepletingResult.WeightingFactor)))
 					.ToDictionary(x => x.Item1, x => x.Item2),
 				ElectricEnergyConsumption = entries.Sum(e => e.Weighted.ElectricEnergyConsumption * e.ChargeDepletingResult.WeightingFactor),
-				CO2Total = entries.Sum(e => e.Weighted.CO2Total * e.ChargeDepletingResult.WeightingFactor),
+				CO2PerMeter = entries.All(e => e.Weighted.CO2PerMeter != null) ? entries.Sum(e => (e.Weighted.CO2PerMeter) * e.ChargeDepletingResult.WeightingFactor) : null,
 				ActualChargeDepletingRange = entries.Sum(e => e.Weighted.ActualChargeDepletingRange * e.ChargeDepletingResult.WeightingFactor),
 				EquivalentAllElectricRange = entries.Sum(e => e.Weighted.EquivalentAllElectricRange * e.ChargeDepletingResult.WeightingFactor),
 				ZeroCO2EmissionsRange = entries.Sum(e => e.Weighted.ZeroCO2EmissionsRange * e.ChargeDepletingResult.WeightingFactor),
