@@ -31,7 +31,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -44,7 +43,6 @@ using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Models.Declaration.VehicleOperation;
@@ -54,15 +52,12 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
-using TUGraz.VectoCore.Models.GenericModelData;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.OutputData.XML;
 using Point = TUGraz.VectoCommon.Utils.Point;
-using System.Net.WebSockets;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
@@ -1801,19 +1796,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 				ElectricEnergyConsumption = D36_electricEnergyConsumptionWeighted,
 				FuelConsumption = D37_fuelConsumptionWeighted,
 
-				CO2PerMeter = D32_utilityFactor * (cdResult.CO2Total / cdResult.Distance) + (1 - D32_utilityFactor) * (csResult.CO2Total / csResult.Distance),
+				CO2PerMeter = (D32_utilityFactor * (cdResult.CO2Total / cdResult.Distance)) + ((1 - D32_utilityFactor) * (csResult.CO2Total / csResult.Distance)),
 
 				AuxHeaterFuel = cdResult.AuxHeaterFuel,
 				ZEV_CO2 =
 					cdResult.AuxHeaterFuel != null && cdResult.ZEV_CO2 != null &&
 					csResult.ZEV_FuelConsumption_AuxHtr != null
-						? D32_utilityFactor * cdResult.ZEV_CO2 + (1 - D32_utilityFactor) * csResult.ZEV_CO2
+						? (D32_utilityFactor * (cdResult.ZEV_CO2 / cdResult.Distance)) + ((1 - D32_utilityFactor) * (csResult.ZEV_CO2 / csResult.Distance))
 						: null,
 				ZEV_FuelConsumption_AuxHtr =
 					cdResult.AuxHeaterFuel != null && cdResult.ZEV_FuelConsumption_AuxHtr != null &&
 					csResult.ZEV_FuelConsumption_AuxHtr != null
-						? D32_utilityFactor * cdResult.ZEV_FuelConsumption_AuxHtr +
-						(1 - D32_utilityFactor) * csResult.ZEV_FuelConsumption_AuxHtr
+						? (D32_utilityFactor * (cdResult.ZEV_FuelConsumption_AuxHtr / cdResult.Distance)) +
+						((1 - D32_utilityFactor) * (csResult.ZEV_FuelConsumption_AuxHtr / csResult.Distance))
 						: null,
 			};
 
@@ -1916,8 +1911,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				UtilityFactor = double.NaN,
 
 				AuxHeaterFuel = entries.First().AuxHeaterFuel,
-				ZEV_CO2 = entries.Sum(e => (e?.ZEV_CO2 ?? 0.SI<Kilogram>()) * e.WeightingFactor),
-				ZEV_FuelConsumption_AuxHtr = entries.Sum(e => (e?.ZEV_FuelConsumption_AuxHtr ?? 0.SI<Kilogram>()) * e.WeightingFactor),
+				ZEV_CO2 = entries.Sum(e => ((e?.ZEV_CO2 ?? 0.SI<Kilogram>()) / e.Distance) * e.WeightingFactor),
+				ZEV_FuelConsumption_AuxHtr = entries.Sum(e => ((e?.ZEV_FuelConsumption_AuxHtr ?? 0.SI<Kilogram>()) / e.Distance) * e.WeightingFactor),
 			};
 
 			return result;
@@ -1955,8 +1950,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				UtilityFactor = double.NaN,
 
 				AuxHeaterFuel = entries.First().ChargeDepletingResult.AuxHeaterFuel,
-				ZEV_CO2 = entries.Sum(e => (e?.Weighted?.ZEV_CO2 ?? 0.SI<Kilogram>()) * e.ChargeDepletingResult.WeightingFactor),
-				ZEV_FuelConsumption_AuxHtr = entries.Sum(e => (e?.Weighted?.ZEV_FuelConsumption_AuxHtr ?? 0.SI<Kilogram>()) * e.ChargeDepletingResult.WeightingFactor),
+				ZEV_CO2 = entries.Sum(e => (e?.Weighted?.ZEV_CO2 ?? 0.SI<KilogramPerMeter>()) * e.ChargeDepletingResult.WeightingFactor),
+				ZEV_FuelConsumption_AuxHtr = entries.Sum(e => (e?.Weighted?.ZEV_FuelConsumption_AuxHtr ?? 0.SI<KilogramPerMeter>()) * e.ChargeDepletingResult.WeightingFactor),
 			};
 		}
 

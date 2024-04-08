@@ -174,8 +174,8 @@ namespace TUGraz.VectoCore.OutputData
 		double UtilityFactor { get; }
 
 		IFuelProperties AuxHeaterFuel { get; set; }
-		Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
-		Kilogram ZEV_CO2 { get; set; }
+		KilogramPerMeter ZEV_FuelConsumption_AuxHtr { get; set; }
+		KilogramPerMeter ZEV_CO2 { get; set; }
 	}
 
 	public interface IOVCResultEntry 

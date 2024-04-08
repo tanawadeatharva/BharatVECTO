@@ -51,9 +51,9 @@ namespace TUGraz.VectoCore.OutputData
 		
 		public IFuelProperties AuxHeaterFuel { get; set; }
 		
-		public Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
+		public KilogramPerMeter ZEV_FuelConsumption_AuxHtr { get; set; }
 		
-		public Kilogram ZEV_CO2 { get; set; }
+		public KilogramPerMeter ZEV_CO2 { get; set; }
 		
 		public VectoRun.Status Status { get; set; }
 

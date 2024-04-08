@@ -216,12 +216,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
             return new[] {
                 new XElement(TNS + XMLNames.Report_ResultEntry_FCZEVAuxHeater,
                     new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, entry.AuxHeaterFuel.FuelType.ToXMLFormat()),
-                    tmp?.GetFuelConsumptionEntries(entry.ZEV_FuelConsumption_AuxHtr, entry.AuxHeaterFuel, entry.Distance,
+                    tmp?.GetFuelConsumptionEntries(entry.ZEV_FuelConsumption_AuxHtr, entry.AuxHeaterFuel,
                         entry.Payload, entry.CargoVolume, entry.PassengerCount).Select(x =>
                         new XElement(TNS + XMLNames.Report_Results_FuelConsumption, new FormattedReportValue(x).GetElement()))
                 ),
                 new XElement(TNS + XMLNames.Report_ResultEntry_CO2ZEVAuxHeater,
-                    GetCO2ResultEntries(entry.ZEV_CO2, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount)
+                    GetCO2ResultEntries(entry.ZEV_CO2, entry.Payload, entry.CargoVolume, entry.PassengerCount)
 						.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2, x.GetElement()))
                 )
             };
