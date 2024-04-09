@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:VectoInputDeclaration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0"
+	xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" 
+	xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" 
+	xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"
+	xmlns:q1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"
+	xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
+	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCore/Resources/XSD/VectoDeclarationJob.xsd
+urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 v:/VectoCore/VectoCore/Resources/XSD/VectoDeclarationDefinitions.2.1.xsd">
+	<v2.0:Vehicle id="VEH-1234567890" xsi:type="Vehicle_Exempted_HeavyLorryDeclarationType">
+		<Manufacturer>Generic Truck Manufacturer</Manufacturer>
+		<ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
+		<Model>Generic Model</Model>
+		<VIN>VEH-1234567890</VIN>
+		<Date>2017-02-15T11:00:00Z</Date>
+		<LegislativeCategory>N3</LegislativeCategory>
+		<ChassisConfiguration>Tractor</ChassisConfiguration>
+		<AxleConfiguration>4x2</AxleConfiguration>
+		<CorrectedActualMass>7100</CorrectedActualMass>
+		<TechnicalPermissibleMaximumLadenMass>40000</TechnicalPermissibleMaximumLadenMass>
+		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<SleeperCab>false</SleeperCab>
+		<SumNetPower>20000</SumNetPower>
+		<Technology>HV Article 9 exempted</Technology>
+	</v2.0:Vehicle>
+</tns:VectoInputDeclaration>
