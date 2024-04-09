@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCommon.InputData;
+﻿using System.Linq;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
@@ -101,10 +102,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			if (dataProvider is IMultistageVIFInputData multistageVifInputData &&
 				multistageVifInputData.VehicleInputData == null) {
 				var inputComplete = multistageVifInputData.MultistageJobInputData.JobInputData.InputComplete;
-				var declType = multistageVifInputData.MultistageJobInputData.JobInputData.ConsolidateManufacturingStage
+                var declType = multistageVifInputData.MultistageJobInputData.JobInputData.ConsolidateManufacturingStage
 					?.Vehicle.VehicleDeclarationType;
 				var final = declType == VehicleDeclarationType.final;
-				var exempted = multistageVifInputData.MultistageJobInputData.JobInputData.ConsolidateManufacturingStage?
+
+				if (final) {
+                    MissingInputEntries = multistageVifInputData.MultistageJobInputData.JobInputData.InvalidEntries
+						.Distinct().Where(x => !x.StartsWith("_")).ToList();
+                }
+
+                var exempted = multistageVifInputData.MultistageJobInputData.JobInputData.ConsolidateManufacturingStage?
 					.Vehicle.ExemptedVehicle == true;
 
 				if (!((final || exempted) && inputComplete)) {
