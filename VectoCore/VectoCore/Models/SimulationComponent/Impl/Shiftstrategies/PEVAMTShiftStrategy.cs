@@ -213,7 +213,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 		#region Implementation of IShiftStrategy
 
-		public bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
+		public virtual bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
 			PerSecond inAngularVelocity, GearshiftPosition gear, Second lastShiftTime, IResponse response)
 		{
 			CheckGearshiftRequired = true;
