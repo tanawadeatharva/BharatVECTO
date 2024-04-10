@@ -795,6 +795,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 7500, 0, false, VehicleClass.Class16),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 99000, 0, false, VehicleClass.Class16),
+            Category(Definitions.TestcaseMigrated),
         ]
         public void SegmentLookupTest(VehicleCategory category, AxleConfiguration axleConfiguration, double grossWeight,
             double curbWeight, bool vocational, VehicleClass expectedClass)
@@ -826,7 +827,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 7500, 0, false, VehicleClass.Class11, 85),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 7500, 0, false, VehicleClass.Class12, 85),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 7500, 0, false, VehicleClass.Class16, 85),
-        ]
+		Category(Definitions.TestcaseMigrated),]
         public void SegmentDesignSpeedTest(VehicleCategory category, AxleConfiguration axleConfiguration, double grossWeight,
             double curbWeight, bool vocational, VehicleClass expectedClass, double speed)
         {
@@ -884,7 +885,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 12000, 0, false, VehicleClass.Class12, null, 7500,
             TestName = "SegmentLookupBodyWeight Class12"),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 12000, 0, false, VehicleClass.Class16, null, null,
-            TestName = "SegmentLookupBodyWeight Class16")]
+            TestName = "SegmentLookupBodyWeight Class16"),
+		Category(Definitions.TestcaseMigrated)]
         public void SegmentLookupBodyTest(VehicleCategory category, AxleConfiguration axleConfiguration, double grossWeight,
             double curbWeight, bool vocational, VehicleClass expectedClass, int? expectedBodyWeight, int? expectedTrailerWeight)
         {
@@ -974,7 +976,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 12000, 0, false, VehicleClass.Class12, 4.0,
             TestName = "SegmentLookupHeight Class12"),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 12000, 0, false, VehicleClass.Class16, 3.6,
-            TestName = "SegmentLookupHeight Class16")]
+            TestName = "SegmentLookupHeight Class16"),
+		Category(Definitions.TestcaseMigrated)]
         public void SegmentLookupHeightTest(VehicleCategory category, AxleConfiguration axleConfiguration, double grossWeight,
             double curbWeight, bool vocational, VehicleClass expectedClass, double expectedHeight)
         {
@@ -1022,7 +1025,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 99000, 0, false, VehicleClass.Class12,
             new[] { 91.0, 140.5, 91.0, 140.5, 0.0 }),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 99000, 0, false, VehicleClass.Class16,
-            new[] { 0.0 })
+            new[] { 0.0 }),
+		Category(Definitions.TestcaseMigrated)
         ]
         public void SegmentLookupCargoVolumeTest(VehicleCategory category, AxleConfiguration axleConfiguration,
             double grossWeight,
@@ -1041,7 +1045,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// trailer in longhaul, always pc formula
         /// </summary>
-        [TestCase]
+        [TestCase, Category(Definitions.TestcaseMigrated)]
         public void Segment2Test()
         {
             var vehicleData = new
@@ -1115,7 +1119,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// trailer in longhaul, always pc formula
         /// </summary>
-        [TestCase]
+        [TestCase, Category(Definitions.TestcaseMigrated)]
         public void Segment2TestHeavy()
         {
             var vehicleData = new
@@ -1189,7 +1193,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// normal pc formula, no trailer
         /// </summary>
-        [TestCase]
+        [TestCase, Category(Definitions.TestcaseMigrated)]
         public void Segment3Test()
         {
             var vehicleData = new
@@ -1243,7 +1247,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// fixed reference weight, trailer only in longhaul
         /// </summary>
-        [TestCase]
+        [TestCase, Category(Definitions.TestcaseMigrated)]
         public void Segment4Test()
         {
             var vehicleData = new
@@ -1332,7 +1336,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// fixed reference weight, trailer only in longhaul
         /// </summary>
-        [TestCase]
+        [TestCase, Category(Definitions.TestcaseMigrated)]
         public void Segment4VocationalTest()
         {
             var vehicleData = new
@@ -1389,7 +1393,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// Segment 5: fixed reference weight, trailer always used
         /// </summary>
-        [TestCase]
+        [TestCase, Category(Definitions.TestcaseMigrated)]
         public void Segment5Test()
         {
             var vehicleData = new
@@ -1493,7 +1497,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// Segment 5: fixed reference weight, trailer always used
         /// </summary>
-        [TestCase]
+        [TestCase, Category(Definitions.TestcaseMigrated)]
         public void Segment5VocationalTest()
         {
             var vehicleData = new
@@ -1534,7 +1538,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// Segment 9: fixed reference weight, trailer always used
         /// </summary>
-        [TestCase]
+        [TestCase, Category(Definitions.TestcaseMigrated)]
         public void Segment9Test()
         {
             var vehicleData = new
@@ -1641,7 +1645,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// Segment 9: fixed reference weight, trailer always used
         /// </summary>
-        [TestCase]
+        [TestCase, Category(Definitions.TestcaseMigrated)]
         public void Segment9VocationalTest()
         {
             var vehicleData = new
@@ -1699,7 +1703,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// Segment 10: fixed reference weight, trailer always used
         /// </summary>
-        [TestCase]
+        [TestCase, Category(Definitions.TestcaseMigrated)]
         public void Segment10Test()
         {
             var vehicleData = new
@@ -1790,7 +1794,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// Segment 10: fixed reference weight, trailer always used
         /// </summary>
-        [TestCase]
+        [TestCase, Category(Definitions.TestcaseMigrated)]
         public void Segment10VocationalTest()
         {
             var vehicleData = new
@@ -1832,7 +1836,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// Segment 11: fixed reference weight, trailer always used
         /// </summary>
-        [TestCase]
+        [TestCase, Category(Definitions.TestcaseMigrated)]
         public void Segment11Test()
         {
             var vehicleData = new
@@ -1954,7 +1958,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// Segment 10: fixed reference weight, trailer always used
         /// </summary>
-        [TestCase]
+        [TestCase, Category(Definitions.TestcaseMigrated)]
         public void Segment12Test()
         {
             var vehicleData = new
@@ -2062,7 +2066,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// Segment 9: fixed reference weight, trailer always used
         /// </summary>
-        [TestCase]
+        [TestCase, Category(Definitions.TestcaseMigrated)]
         public void Segment16Test()
         {
             var vehicleData = new
@@ -2103,7 +2107,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		/// <summary>
 		/// Segment 53: medium lorry
 		/// </summary>
-		[TestCase]
+		[TestCase, Category(Definitions.TestcaseMigrated)]
 		public void Segment53Test()
 		{
 			var vehicleData = new {
@@ -2158,7 +2162,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		/// <summary>
 		/// Segment 54: medium lorry
 		/// </summary>
-		[TestCase]
+		[TestCase, Category(Definitions.TestcaseMigrated)]
 		public void Segment54Test()
 		{
 			var vehicleData = new {
