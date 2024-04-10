@@ -177,7 +177,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 	}
 
-	public class WeightingGroups : LookupData<VehicleClass, bool, bool, Watt, WeightingGroup>
+	public class WeightingGroups : LookupData<VehicleClass, bool, Watt, WeightingGroup>
 	{
 		protected readonly List<Entry> Entries = new List<Entry>();
 
@@ -192,7 +192,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			foreach (DataRow row in table.Rows) {
 				Entries.Add(new Entry() {
 					VehicleGroup = VehicleClassHelper.Parse(row.Field<string>("vehiclegroup")),
-					Vocational = "1".Equals(row.Field<string>("Vocational"), StringComparison.InvariantCultureIgnoreCase),
 					SleeperCab = "SleeperCab".Equals(row.Field<string>("cabintype"), StringComparison.InvariantCultureIgnoreCase),
 					RatedPowerMin = row.ParseDouble("engineratedpowermin").SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
 					RatedPowerMax = row.ParseDouble("engineratedpowermax").SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
@@ -202,10 +201,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 
-		public override WeightingGroup Lookup(VehicleClass group, bool vocational, bool sleeperCab, Watt engineRatedPower)
+		public override WeightingGroup Lookup(VehicleClass group, bool sleeperCab, Watt engineRatedPower)
 		{
 			var rows = Entries.FindAll(
-				x => x.VehicleGroup == group && x.Vocational == vocational && x.SleeperCab == sleeperCab && engineRatedPower >= x.RatedPowerMin &&
+				x => x.VehicleGroup == group && x.SleeperCab == sleeperCab && engineRatedPower >= x.RatedPowerMin &&
 					engineRatedPower < x.RatedPowerMax);
 			return rows.Count == 0 ? WeightingGroup.Unknown : rows.First().WeightingGroup;
 		}

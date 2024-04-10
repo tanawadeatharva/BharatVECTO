@@ -294,8 +294,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected override void WriteResult(ResultEntry result)
 		{
 			var sumWeightinFactors = _weightingFactors.Values.Sum(x => x);
-			if (!sumWeightinFactors.IsEqual(0) && !sumWeightinFactors.IsEqual(1)) {
-				throw new VectoException("Mission Profile Weighting factors do not sum up to 1!");
+			bool isNormalWeights = sumWeightinFactors.IsEqual(0) || sumWeightinFactors.IsEqual(1, 1e-12);
+			bool isVocationalWeights = sumWeightinFactors % 2 == 0;
+			if (!isNormalWeights && !isVocationalWeights) {
+				throw new VectoException("Mission Profile Weighting factors or Mission Profile Weighting factors for Vocational misisons do not sum up to 1!");
 			}
 
 			ManufacturerRpt.WriteResult(result);

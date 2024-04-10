@@ -255,7 +255,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				case VehicleCategory.Tractor:
 					var vehicleGroup = GetVehicleGroupGroup(vehicleData);
 					var propulsionPower = GetReferencePropulsionPower(vehicleData);
-					var co2Group = WeightingGroup.Lookup(vehicleGroup.Item1, vehicleGroup.Item2 ?? false, vehicleData.SleeperCab ?? false, propulsionPower);
+					var co2Group = WeightingGroup.Lookup(vehicleGroup.Item1, vehicleData.SleeperCab ?? false, propulsionPower);
 					return co2Group;
 				default:
 					return Declaration.WeightingGroup.Unknown;

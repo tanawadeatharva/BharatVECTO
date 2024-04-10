@@ -8,12 +8,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 	{
 		#region Implementation of IReportResultsSummaryWriter
 
-		public XElement GetElement(IList<IResultEntry> entries)
+		public XElement[] GetElement(IList<IResultEntry> entries)
 		{
 			return null;
 		}
 
-		public XElement GetElement(IList<IOVCResultEntry> entries)
+		public XElement[] GetElement(IList<IOVCResultEntry> entries)
 		{
 			return null;
 		}

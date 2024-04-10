@@ -2175,4 +2175,10 @@
   <data name="MonitoringElectricMachineGEN" xml:space="preserve">
     <value>ElectricMachineGEN</value>
   </data>
+  <data name="REESS" xml:space="preserve">
+    <value>REESS</value>
+  </data>
+  <data name="XMLCustomerReportIsVocational" xml:space="preserve">
+    <value>Vocational</value>
+  </data>
 </root>
