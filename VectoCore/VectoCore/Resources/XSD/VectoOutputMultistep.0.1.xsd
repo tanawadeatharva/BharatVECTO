@@ -105,6 +105,9 @@
 									<xs:enumeration value="lead-acid battery – conventional"/>
 									<xs:enumeration value="lead-acid battery – AGM"/>
 									<xs:enumeration value="lead-acid battery – gel"/>
+									<xs:enumeration value="lead-acid battery - conventional"/>
+									<xs:enumeration value="lead-acid battery - AGM"/>
+									<xs:enumeration value="lead-acid battery - gel"/>
 									<xs:enumeration value="li-ion battery - high power"/>
 									<xs:enumeration value="li-ion battery - high energy"/>
 								</xs:restriction>
@@ -450,6 +453,9 @@
 															<xs:enumeration value="lead-acid battery – conventional"/>
 															<xs:enumeration value="lead-acid battery – AGM"/>
 															<xs:enumeration value="lead-acid battery – gel"/>
+															<xs:enumeration value="lead-acid battery - conventional"/>
+															<xs:enumeration value="lead-acid battery - AGM"/>
+															<xs:enumeration value="lead-acid battery - gel"/>
 															<xs:enumeration value="li-ion battery - high power"/>
 															<xs:enumeration value="li-ion battery - high energy"/>
 														</xs:restriction>
