@@ -228,14 +228,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var engTorque = 0.SI<NewtonMeter>();
 
             /* gear used for clutch slipping: saturation to avoid case where Gear==0 (where GetGearData crash) and Gear>2 (allowslipping does not allow slipping at speed higher than 2) */
-            var slipGear = Math.Min(Math.Max(DataBus.GearboxInfo?.Gear?.Gear ?? 1, 1), 2); 
-            var ratioGB = DataBus.GearboxInfo?.GetGearData(slipGear)?.Ratio ?? 1.0; 
-			var ratioAxl = DataBus.AxlegearInfo?.Ratio ?? 1.0;
-            var axlegearlossP = DataBus.AxlegearInfo?.AxlegearLoss() ?? 0.0.SI<Watt>();
-			var gearboxlossP = DataBus.GearboxInfo?.GearboxLoss() ?? 0.0.SI<Watt>();
-
-			if (DataBus.DrivingCycleInfo.RoadGradient != null)
+            
+			if ((DataBus.DrivingCycleInfo.RoadGradient != null) && (DataBus.WheelsInfo != null))
 			{
+				var slipGear = Math.Min(Math.Max(DataBus.GearboxInfo?.Gear?.Gear ?? 1, 1), 2);
+				var ratioGB = DataBus.GearboxInfo?.GetGearData(slipGear)?.Ratio ?? 1.0;
+				var ratioAxl = DataBus.AxlegearInfo?.Ratio ?? 1.0;
+				var axlegearlossP = DataBus.AxlegearInfo?.AxlegearLoss() ?? 0.0.SI<Watt>();
+				var gearboxlossP = DataBus.GearboxInfo?.GearboxLoss() ?? 0.0.SI<Watt>();
+
 				var fWheel = DataBus.VehicleInfo.RollingResistance(DataBus.DrivingCycleInfo.RoadGradient)
                     + DataBus.VehicleInfo.SlopeResistance(DataBus.DrivingCycleInfo.RoadGradient)
                     + DataBus.VehicleInfo.TotalMass*acc;
