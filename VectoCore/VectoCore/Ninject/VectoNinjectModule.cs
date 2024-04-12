@@ -40,7 +40,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 using TUGraz.VectoCore.OutputData.XML;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_1_0;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 using TUGraz.VectoCore.OutputData.XML.ComponentWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;

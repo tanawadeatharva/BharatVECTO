@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
     
 	public class XMLCustomerReport : IXMLCustomerReport
 	{
-		public const string CURRENT_SCHEMA_VERSION = "0.8";
+		public const string CURRENT_SCHEMA_VERSION = "1.0";
 
 		protected readonly XElement VehiclePart;
 
