@@ -64,9 +64,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				if ("none".Equals(shaftGearWheels, StringComparison.InvariantCultureIgnoreCase)) {
 					return "None";
 				}
+
 				if ("only one engaged gearwheel above oil level".Equals(
 					shaftGearWheels, StringComparison.CurrentCultureIgnoreCase)) {
 					return "only one engaged gearwheel above oil level";
+				}
+
+				if ("PTO which includes 1 or more additional gearmesh(es), without disconnect clutch".Equals(
+					shaftGearWheels, StringComparison.CurrentCultureIgnoreCase))
+				{
+					return "PTO which includes 1 or more additional gearmesh(es), without disconnect clutch";
 				}
 
 				var otherElements = GetString(XMLNames.Vehicle_PTO_OtherElements);

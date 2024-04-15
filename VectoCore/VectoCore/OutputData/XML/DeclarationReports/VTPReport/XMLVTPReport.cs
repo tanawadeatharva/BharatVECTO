@@ -59,6 +59,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using LogManager = NLog.LogManager;
 using static TUGraz.VectoCore.Models.Simulation.Data.VectoRunData;
 using static TUGraz.VectoCore.Models.Declaration.PT1;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
 
@@ -341,11 +342,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 			if (result == null) {
 				throw new VectoException("no corresponding simulation result found for generating vtp report");
 			}
-
+			
 			var verifiedCO2 = declaredCO2 * cVtp.Value();
-
+			
 			ResultsPart.Add(
-				new XElement(tns + "Status", cVtp < 1.075 ? "Passed" : "Failed"),
+				new XElement(tns + "Status", 
+					(cVtp < 1.075) && (vtpResult.Status == VectoRun.Status.Success) ? "Passed" : "Failed"),
 				new XElement(
 					tns + "AverageFanPower",
 					new XAttribute(XMLNames.Report_Results_Unit_Attr, "kW"),

@@ -1,5 +1,58 @@
 # Changelog
 
+**VECTO-4.1.0-RC**
+
+***Build 3392 (2024-04-15)***
+
+- Features
+   * CodeEU-577: Add missing mission profiles to vocational and non-vocational
+
+- Bugfixes
+   * CodeEU-331: Gear 1 DrivingActionAccelerate: Fail
+   * CodeEU-367: Gear 1 DrivingActionAccelerate: Fail
+   * CodeEU-372: ADT Error on Bus Category Primary Vehicle Simulation on VECTO
+   * CodeEU-373: ADT Error on Bus Category Primary Vehicle Simulation on VECTO
+   * CodeEU-374: ADT Error on Bus Category Primary Vehicle Simulation on VECTO
+   * CodeEU-375: ADT Error on Bus Category Primary Vehicle Simulation on VECTO
+   * CodeEU-393: Finished Run VEH-PrimaryBus_nonSmart Interurban _P32SD_ReferenceLoad with ERROR: 16
+   * CodeEU-439: 615 (Interurban _P32DD_ReferenceLoad) - absTime: 7129.6359 [s], distance: 53875.9765 [m], dt: 0.6388 [s], v: 0.5098 [m/s], Gear: 1 | DrivingActionAccelerate: Failed
+   * CodeEU-446: Finished Run VEH-PrimaryBus_nonSmart Interurban _P32SD_ReferenceLoad with ERROR: 16
+   * CodeEU-449: Finished Run VEH-PrimaryBus_nonSmart Interurban _P32SD_ReferenceLoad with ERROR: 16
+   * CodeEU-478: Finished Run VEH-PrimaryBus_nonSmart Urban _P31SD_ReferenceLoad with ERROR: 4 (Urban _P31SD_ReferenceLoad) - absTime: 8606.6241 [s], distance: 39112.5127 [m], dt: 1.1131 [s], v: 0.1833 [m/s], Gear: 1 | DrivingActionAccelerate: Failed to find operating poi
+   * CodeEU-481: Finished Run VEH-PrimaryBus_nonSmart Urban _P31SD_ReferenceLoad with ERROR: 4 (Urban _P31SD_ReferenceLoad) - absTime: 8606.6241 [s], distance: 39112.5127 [m], dt: 1.1131 [s], v: 0.1833 [m/s], Gear: 1 |
+   * CodeEU-488: Finished Run VEH-PrimaryBus_nonSmart Urban _P31SD_ReferenceLoad with ERROR: 4 (Urban _P31SD_ReferenceLoad) - absTime: 8606.6241 [s], distance: 39112.5127 [m], dt: 1.1131 [s], v: 0.1833 [m/s], Gear: 1 | DrivingActionAccelerate: Failed to find operating poi
+   * CodeEU-494: Finished Run VEH-PrimaryBus_nonSmart Urban _P31SD_ReferenceLoad with ERROR: 26 (Urban _P31SD_ReferenceLoad) - absTime: 8606.6241 [s], distance: 39112.5127 [m], dt: 1.1131 [s], v: 0.1833 [m/s], Gear: 1 | DrivingActionAccelerate: Failed to fi
+   * CodeEU-420: Finished Run VEH-PrimaryBus_nonSmart Interurban _P32SD_ReferenceLoad with ERROR: 16
+   * CodeEU-573: Unhandled powertrain architecture Conventional Vehicle to calculate gradability
+   * CodeEU-582: unhandled powertrain architecture ConventionalVehicle to calculate gradability, 11:44:36.63,
+   * CodeEU-595: Inconsistency exempted vehicles "Fuel cell vehicle" vs. "FCV Article 9 exempted"
+   * CodeEU-501: Help regarding VTP vdri format is not up to date in v4
+   * CodeEU-594: inadequate validation for auxiliaries in completed vehicle XML
+   * CodeEU-580: Potential error in XML schema v2.4 (exempted vehicles)
+   * CodeEU-551: Article-10-2 XLRASF5E00G419905
+   * CodeEU-547: Max ICE Off timespan for buses
+   * CodeEU-583: Incorrect internal resistance for SuperCap used in factor method
+   * CodeEU-571: Article10-2-issue | VECTO-4.0.3 | Order-Nr 28202896 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-526: VTP calculation aborted on fuel consumption map
+   * CodeEU-502: Error in VECTO calculation WMA10CZZ0RF022326
+   * CodeEU-401: Electric steering system with conventional vehicle not according to 2017/2400
+   * CodeEU-476: Setting Initial SoC in REESS editor leads to error
+   * CodeEU-533: Question about heavy lorry_IEPC_Gb×4speed: Failed to generate electric power map - at least two negative entries are required
+   * CodeEU-456: Clarification Documentation official Results
+   * CodeEU-506: Article 10(2) issue - VIN YS2P6X200R2201285
+   * CodeEU-507: Article 10(2) issue - VIN YS2P6X20005732399
+   * CodeEU-508: Article 10(2) issue - VIN S2P6X20005734199
+   * CodeEU-499: Object Reference not set Error
+   * CodeEU-546: Problem with P181 (Cooling Fan Technology) for a conventional vehicle
+   * CodeEU-516: Article10-2-issue | VECTO-4.0.3 | Order-Nr 28208044 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-517: Article10-2-issue | VECTO-4.0.3 | Order-Nr 28208037 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-519: Article10-2-issue | VECTO-4.0.3 | Order-Nr 10098181 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-527: Article10-2-issue | VECTO-4.0.3 | Order-Nr 28196233 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-528: Article10-2-issue | VECTO-4.0.3 | Order-Nr 28196652 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-338: Eco-roll only, without engine stop, impact on CO2 emission
+   * CodeEU-475: XML files loading in VTP Job not OK; No auxiliary data and torque curve visible, Job can't be saved in VECTO 4.0.3.3330
+   * CodeEU-610: VTP mode is broken due to changes in the Clutch component.
+
 **VECTO-4.0.3**
 
 ***Build 3330 (2024-02-13)***

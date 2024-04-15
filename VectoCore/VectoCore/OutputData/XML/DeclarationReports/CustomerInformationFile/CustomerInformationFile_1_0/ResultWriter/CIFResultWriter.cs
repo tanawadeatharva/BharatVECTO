@@ -6,7 +6,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 
-namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter
+namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_1_0.ResultWriter
 {
     public abstract class AbstractCIFResultsWriter : AbstractResultsWriter
 	{
@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Overrides of AbstractResultsWriter
 
-		protected override XNamespace TNS => "urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9";
+		protected override XNamespace TNS => "urn:tugraz:ivt:VectoAPI:CustomerOutput:v1.0";
 		
 		#endregion
 	}

@@ -1,25 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.JSON;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.CustomerInformationFile;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.CIFWriter
+namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_1_0.CIFWriter
 {
 	public abstract class VehicleWriter : IXmlTypeWriter
 	{
 		protected readonly ICustomerInformationFileFactory _cifFactory;
 		//protected readonly IManufacturerReportFactory _mrfFactory;
-		protected XNamespace _cif = "urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9";
+		protected XNamespace _cif = "urn:tugraz:ivt:VectoAPI:CustomerOutput:v1.0";
 		protected XNamespace _xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 
 		public VehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory)
@@ -333,6 +327,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var vehicleData = inputData.JobInputData.Vehicle;
+			var tech = new string(vehicleData.ExemptedTechnology
+				.Where(c => char.IsLetterOrDigit(c) || c == ' ' || c == '.').ToArray());
 			return new XElement(_cif + XMLNames.Component_Vehicle,
 				
 				new XElement(_cif + XMLNames.Component_Manufacturer, vehicleData.Manufacturer),
@@ -343,7 +339,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
                 new XElement(_cif + XMLNames.CorrectedActualMass, vehicleData.CurbMassChassis.ToXMLFormat(0)),
 				new XElement(_cif + XMLNames.Vehicle_SleeperCab, vehicleData.SleeperCab),
 				new XElement(_cif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicleData.ZeroEmissionVehicle),
-				new XElement(_cif + "VehicleTechnologyExempted", vehicleData.ExemptedTechnology)
+				new XElement(_cif + "VehicleTechnologyExempted", tech)
 			);
 		}
 

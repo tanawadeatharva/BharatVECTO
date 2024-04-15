@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		[ValidateObject]
 		public TransmissionLossMap LossMap { get; internal set; }
 
-		[Required, RangeOrNaN(double.Epsilon, 100)]
+		[Required, RangeOrNaN(double.Epsilon, 500)]
 		public double Ratio { get; internal set; }
 	}
 

@@ -11,6 +11,7 @@
   <!--
 	Changelog:
 	18.01.2024: change restrictions of EM continuous torque - allow 0.00
+	10.04.2024: change "Fuel cell vehicle" to "FCV Article 9 exempted" according to regulation
 	-->
   <xs:complexType name="ElectricMachineSystemMaxTorqueEntryType">
 		<xs:attribute name="outShaftSpeed" type="v2.3:OutShaftSpeedType" use="required">
@@ -104,6 +105,9 @@
 									<xs:enumeration value="lead-acid battery – conventional"/>
 									<xs:enumeration value="lead-acid battery – AGM"/>
 									<xs:enumeration value="lead-acid battery – gel"/>
+									<xs:enumeration value="lead-acid battery - conventional"/>
+									<xs:enumeration value="lead-acid battery - AGM"/>
+									<xs:enumeration value="lead-acid battery - gel"/>
 									<xs:enumeration value="li-ion battery - high power"/>
 									<xs:enumeration value="li-ion battery - high energy"/>
 								</xs:restriction>
@@ -363,8 +367,8 @@
 											<xs:enumeration value="Crankshaft mounted - On/off clutch"/>
 											<xs:enumeration value="Belt driven or driven via transm. - Electronically controlled visco clutch"/>
 											<xs:enumeration value="Belt driven or driven via transm. - Bimetallic controlled visco clutch"/>
-											<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch 2 steps"/>
-											<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch 3 steps"/>
+											<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch 2 stages"/>
+											<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch 3 stages"/>
 											<xs:enumeration value="Belt driven or driven via transm. - On/off clutch"/>
 											<xs:enumeration value="Hydraulic driven - Variable displacement pump"/>
 											<xs:enumeration value="Hydraulic driven - Constant displacement pump"/>
@@ -449,6 +453,9 @@
 															<xs:enumeration value="lead-acid battery – conventional"/>
 															<xs:enumeration value="lead-acid battery – AGM"/>
 															<xs:enumeration value="lead-acid battery – gel"/>
+															<xs:enumeration value="lead-acid battery - conventional"/>
+															<xs:enumeration value="lead-acid battery - AGM"/>
+															<xs:enumeration value="lead-acid battery - gel"/>
 															<xs:enumeration value="li-ion battery - high power"/>
 															<xs:enumeration value="li-ion battery - high energy"/>
 														</xs:restriction>
@@ -2656,8 +2663,8 @@
 								<xs:enumeration value="HEV Article 9 exempted"/>
 								<xs:enumeration value="PEV Article 9 exempted"/>
 								<xs:enumeration value="HV Article 9 exempted"/>
-								<xs:enumeration value="Fuel cell vehicle"/>
-								<xs:enumeration value="H2 ICE"/>
+								<xs:enumeration value="FCV Article 9 exempted"/>
+								<xs:enumeration value="H2 ICE Article 9 exempted"/>
 								<xs:enumeration value="Dual fuel vehicle Article 9 exempted"/>
 								<xs:enumeration value="In-motion charging Article 9 exempted"/>
 								<xs:enumeration value="Other technology Article 9 exempted"/>

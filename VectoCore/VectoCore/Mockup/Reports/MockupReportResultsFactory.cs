@@ -12,7 +12,7 @@ namespace TUGraz.VectoMockup.Reports
 {
 	class MockupReportResultsFactory : IResultsWriterFactory
 	{
-		protected XNamespace CIF = XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9");
+		protected XNamespace CIF = XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput:v1.0");
 		protected XNamespace MRF = XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9");
 		protected XNamespace VIF = XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1");
 

@@ -1,6 +1,6 @@
 technology                       , SoC range , C-rate
-lead-acid battery – conventional , 20        , 5
-lead-acid battery – AGM          , 30        , 5
-lead-acid battery – gel          , 40        , 5
+lead-acid battery - conventional , 20        , 5
+lead-acid battery - AGM          , 30        , 5
+lead-acid battery - gel          , 40        , 5
 li-ion battery - high power      , 25        , 30
 li-ion battery - high energy     , 50        , 5

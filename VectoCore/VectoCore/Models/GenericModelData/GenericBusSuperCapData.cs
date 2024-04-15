@@ -7,7 +7,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 {
 	public class GenericBusSuperCapData
 	{
-		public static Ohm InternalResistance = 0.015.SI<Ohm>();
+		public static Ohm InternalResistance = 0.00375.SI<Ohm>(); // 0.015.SI<Ohm>(); 
 		public static Volt ReferenceMaximumVoltage =  2.7.SI<Volt>();
 		public static Farad CapacitanceReference = 3000.SI<Farad>();
 		
@@ -32,10 +32,12 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 
 		private Ohm GetInternalResistance(ISuperCapDeclarationInputData superCapData)
 		{
-			return (InternalResistance.Value() *
-					((superCapData.MaxVoltage.Value() - superCapData.MinVoltage.Value()) /
-					(0.55 * ReferenceMaximumVoltage.Value())) *
-					(CapacitanceReference.Value() / superCapData.Capacity.Value())).SI<Ohm>();
+			var estCellCnt = (superCapData.MaxVoltage / ReferenceMaximumVoltage).Value();
+
+            return InternalResistance / estCellCnt *
+					((superCapData.MaxVoltage - superCapData.MinVoltage) /
+					(0.55 * ReferenceMaximumVoltage)) *
+					(CapacitanceReference.Value() / superCapData.Capacity.Value());
 		}
 	}
 }

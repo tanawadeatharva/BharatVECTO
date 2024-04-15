@@ -714,7 +714,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return validAirdragEntries;
 		}
 
-		private bool IsInputDataCompleteExempted(VectoSimulationJobType jobType, bool fullCheck)
+        private bool IsInputDataCompleteExempted(VectoSimulationJobType jobType, bool fullCheck)
 		{
 			if (fullCheck)
 			{
@@ -756,7 +756,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			if (fullCheck) {
 				//use Binary AND to execute all Statements and gather information about missing parameters.
 				return InputComplete(Model, nameof(Model))
-					& InputComplete(LegislativeClass, nameof(LegislativeClass))
+                    & InputComplete(LegislativeClass, nameof(LegislativeClass))
 					& InputComplete(CurbMassChassis, nameof(CurbMassChassis))
 					& InputComplete(GrossVehicleMassRating, nameof(GrossVehicleMassRating))
 					& MethodComplete(IsAirdragEntriesValid(), nameof(IsAirdragEntriesValid))
@@ -779,7 +779,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			}
 			
 		
-			return  InputComplete(Model, nameof(Model)) 
+			return  InputComplete(Model, nameof(Model))
 					&& InputComplete(LegislativeClass, nameof(LegislativeClass)) 
 					&& InputComplete(CurbMassChassis, nameof(CurbMassChassis)) 
 					&& InputComplete(GrossVehicleMassRating, nameof(GrossVehicleMassRating))
@@ -1175,7 +1175,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			if (fullCheck) {
 				//use Binary AND to execute all Statements and gather information about missing parameters.
 				return InputComplete(_consolidateElectricConsumerData, nameof(_consolidateElectricConsumerData))
-					& _consolidateElectricConsumerData.IsInputDataCompleteFullCheck(jobType)
+					& ((_consolidateElectricConsumerData != null)
+                        && _consolidateElectricConsumerData.IsInputDataCompleteFullCheck(jobType))
 					& InputComplete(_consolidatedHVACBusAuxiliariesData, nameof(_consolidatedHVACBusAuxiliariesData))
 					& ((_consolidatedHVACBusAuxiliariesData != null)
 						&& _consolidatedHVACBusAuxiliariesData.IsInputDataCompleteFullCheck(jobType));
@@ -1203,7 +1204,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		protected override IList<string> GetInvalidEntriesTemplate(VectoSimulationJobType jobType)
 		{
-			return _invalidEntries.Concat(_consolidateElectricConsumerData.GetInvalidEntries(jobType))
+			return _invalidEntries.Concat(_consolidateElectricConsumerData?.GetInvalidEntries(jobType) 
+					?? new List<string>() { XMLNames.BusAux_ElectricSystem })
 				.Concat(_consolidatedHVACBusAuxiliariesData?.GetInvalidEntries(jobType) ?? new List<string>()).ToList();
 		}
 

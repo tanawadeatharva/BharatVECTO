@@ -2,7 +2,7 @@
   <PropertyGroup>
      
     <!-- For a Release-Candidate uncomment the following line: -->
-    <!-- <DefineConstants>RELEASE_CANDIDATE</DefineConstants> -->
+     <DefineConstants>RELEASE_CANDIDATE</DefineConstants> 
 
     <!-- For a Release uncomment the following line: -->
     <!-- <DefineConstants>CERTIFICATION_RELEASE</DefineConstants> -->

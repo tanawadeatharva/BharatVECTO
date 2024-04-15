@@ -82,21 +82,22 @@ Public Class VehicleAuxiliariesDialog
 				CbTech.DataSource =
 				    If(batteryElectricAuxOnly,DeclarationData.SteeringPump.FullyElectricTechnologies() ,DeclarationData.SteeringPump.GetTechnologies()).Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
 
-				CbTech2.DataSource = notSteered.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
-				CbTech3.DataSource = notSteered.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
-				CbTech4.DataSource = notSteered.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
-			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.HeatingVentilationAirCondition
-				CbTech.DataSource =
-					DeclarationData.HeatingVentilationAirConditioning.GetTechnologies().Select(
-						Function(x) New With {.Caption = x, .Value = x}).ToArray()
-			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.ElectricSystem
-				CbTech.DataSource =
-					DeclarationData.ElectricSystem.GetTechnologies().Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
-			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.PneumaticSystem
-				CbTech.DataSource =
-					if(batteryElectricAuxOnly, DeclarationData.PneumaticSystem.FullyElectricTechnologies(), DeclarationData.PneumaticSystem.GetTechnologies()).Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
-		End Select
-		If CbTech.Items.Count > 0 Then
+                CbTech.DataSource = steeringTechs.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
+                CbTech2.DataSource = notSteered.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
+                CbTech3.DataSource = notSteered.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
+                CbTech4.DataSource = notSteered.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
+            Case VectoCore.Configuration.Constants.Auxiliaries.IDs.HeatingVentilationAirCondition
+                CbTech.DataSource =
+                    DeclarationData.HeatingVentilationAirConditioning.GetTechnologies().Select(
+                        Function(x) New With {.Caption = x, .Value = x}).ToArray()
+            Case VectoCore.Configuration.Constants.Auxiliaries.IDs.ElectricSystem
+                CbTech.DataSource =
+                    DeclarationData.ElectricSystem.GetTechnologies().Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
+            Case VectoCore.Configuration.Constants.Auxiliaries.IDs.PneumaticSystem
+                CbTech.DataSource =
+                    If(JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle), DeclarationData.PneumaticSystem.FullyElectricTechnologies(), DeclarationData.PneumaticSystem.GetTechnologies()).Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
+        End Select
+        If CbTech.Items.Count > 0 Then
 			'CbTech.SelectedIndex = 0
 			PnTech.Enabled = True
 		Else
