@@ -1,6 +1,7 @@
 ﻿using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
@@ -47,5 +48,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		{
 			return base.DoCheckUpshift(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, currentGear, r);
 		}
+		
+		public override bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
+            PerSecond inAngularVelocity, GearshiftPosition gear, Second lastShiftTime, IResponse response)
+        {
+            var shiftAllowed = !dt.IsSmaller(Constants.SimulationSettings.TargetTimeInterval / 10);
+			return shiftAllowed && base.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, lastShiftTime, response) ;
+        }
 	}
 }

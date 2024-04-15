@@ -32,6 +32,18 @@ Refers to other files:
       108.5
     ],
     "FanDiameter": 0.225,
+    "FuelNCVs": [
+      {
+        "Type": "Diesel CI",
+        "NCV": 42.7
+      },
+      {
+        "Type": "NG CI",
+        "NCV": 48.0
+      }
+    ],
+    "TorqueDriftLeftWheel": 0.0,
+    "TorqueDriftRightWheel": 0.0,
     "Cycles": [
       "VTP-cycle.vdri"
     ]

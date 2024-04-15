@@ -122,6 +122,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			};
 		}
 
+		public override IList<ConvertedSI> GetFuelConsumptionEntries(KilogramPerMeter fcPerMeter, IFuelProperties fuel, Kilogram payload, CubicMeter volume, double? passenger)
+		{
+			JoulePerMeter fcPerMeterlowerHeatingValue = (fcPerMeter.Value() * fuel.LowerHeatingValueVecto.Value()).SI<JoulePerMeter>();
+			return new List<ConvertedSI> {
+				(fcPerMeterlowerHeatingValue).ConvertToMegaJoulePerKilometer(),
+			};
+		}
 	}
 
 	public class VIFElectricEnergyConsumptionWriter : ElectricEnergyConsumptionWriterBase

@@ -54,16 +54,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 	public abstract class AbstractSimulationDataAdapter : LoggingObject
 	{
 		// =========================
-		protected VehicleData.ADASData CreateADAS(IAdvancedDriverAssistantSystemDeclarationInputData adas)
-		{
-			return new VehicleData.ADASData
-			{
-				EngineStopStart = adas.EngineStopStart,
-				EcoRoll = adas.EcoRoll,
-				PredictiveCruiseControl = adas.PredictiveCruiseControl,
-				InputData = adas
-			};
-		}
 		internal AirdragData SetCommonAirdragData(IAirdragDeclarationInputData data)
 		{
 			var retVal = new AirdragData()
