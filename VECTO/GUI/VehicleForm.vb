@@ -1557,12 +1557,12 @@ Public Class VehicleForm
 			tbInitialSoC.Focus()
 			Return
 		End If
-        If 100 < Convert.ToInt32(tbInitialSoC.Text) Then
+		If 100 < Convert.ToInt32(tbInitialSoC.Text) Then
 			MsgBox("Input has to be less than or equal to 100")
 			tbInitialSoC.Focus()
-            Return
-        End Ifs
-    End Sub
+			Return
+		End If
+	End Sub
 
 	Private Sub cbPTOType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbPTOType.SelectedIndexChanged
 

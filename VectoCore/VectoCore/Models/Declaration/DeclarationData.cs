@@ -1840,20 +1840,20 @@ namespace TUGraz.VectoCore.Models.Declaration
                 UtilityFactor = D38_utilityFactor,
                 ElectricEnergyConsumption = D52_electricEnergyConsumptionWeighted * cdResult.Distance,
                 FuelConsumption = D53_fuelConsumptionWeighted,
-                CO2Total = D38_utilityFactor * cdResult.CO2Total + (1 - D38_utilityFactor) * csResult.CO2Total,
+				CO2PerMeter = (D38_utilityFactor * (cdResult.CO2Total / cdResult.Distance)) + ((1 - D38_utilityFactor) * (csResult.CO2Total / csResult.Distance)),
 
-                AuxHeaterFuel = cdResult.AuxHeaterFuel,
-                ZEV_CO2 =
-                    cdResult.AuxHeaterFuel != null && cdResult.ZEV_CO2 != null &&
-                    csResult.ZEV_FuelConsumption_AuxHtr != null
-                        ? D38_utilityFactor * cdResult.ZEV_CO2 + (1 - D38_utilityFactor) * csResult.ZEV_CO2
-                        : null,
-                ZEV_FuelConsumption_AuxHtr =
-                    cdResult.AuxHeaterFuel != null && cdResult.ZEV_FuelConsumption_AuxHtr != null &&
-                    csResult.ZEV_FuelConsumption_AuxHtr != null
-                        ? D38_utilityFactor * cdResult.ZEV_FuelConsumption_AuxHtr +
-                        (1 - D38_utilityFactor) * csResult.ZEV_FuelConsumption_AuxHtr
-                        : null,
+				AuxHeaterFuel = cdResult.AuxHeaterFuel,
+				ZEV_CO2 =
+					cdResult.AuxHeaterFuel != null && cdResult.ZEV_CO2 != null &&
+					csResult.ZEV_FuelConsumption_AuxHtr != null
+						? (D38_utilityFactor * (cdResult.ZEV_CO2 / cdResult.Distance)) + ((1 - D38_utilityFactor) * (csResult.ZEV_CO2 / csResult.Distance))
+						: null,
+				ZEV_FuelConsumption_AuxHtr =
+					cdResult.AuxHeaterFuel != null && cdResult.ZEV_FuelConsumption_AuxHtr != null &&
+					csResult.ZEV_FuelConsumption_AuxHtr != null
+						? (D38_utilityFactor * (cdResult.ZEV_FuelConsumption_AuxHtr / cdResult.Distance)) +
+						((1 - D38_utilityFactor) * (csResult.ZEV_FuelConsumption_AuxHtr / csResult.Distance))
+						: null,
             };
 
             return retVal;

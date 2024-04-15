@@ -72,7 +72,7 @@ Public Class VehicleAuxiliariesDialog
 
 		If CbType.SelectedItem Is Nothing Then Exit Sub
 
-		dim batteryElectricAuxOnly = JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.FCHV)
+		Dim batteryElectricAuxOnly = JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.FCHV, VectoSimulationJobType.SerialHybridVehicle)
 		Select Case CbType.SelectedValue.ToString()
 			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.Fan
 				CbTech.DataSource =
@@ -80,11 +80,10 @@ Public Class VehicleAuxiliariesDialog
 			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.SteeringPump
 				Dim notSteered = (New String() {AxleNotSteered}).Concat(If(batteryElectricAuxOnly,DeclarationData.SteeringPump.FullyElectricTechnologies() ,DeclarationData.SteeringPump.GetTechnologies())).ToArray()
 				CbTech.DataSource =
-				    If(batteryElectricAuxOnly,DeclarationData.SteeringPump.FullyElectricTechnologies() ,DeclarationData.SteeringPump.GetTechnologies()).Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
+					If(batteryElectricAuxOnly, DeclarationData.SteeringPump.FullyElectricTechnologies(), DeclarationData.SteeringPump.GetTechnologies()).Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
 
-                CbTech.DataSource = steeringTechs.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
-                CbTech2.DataSource = notSteered.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
-                CbTech3.DataSource = notSteered.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
+				CbTech2.DataSource = notSteered.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
+				CbTech3.DataSource = notSteered.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
                 CbTech4.DataSource = notSteered.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
             Case VectoCore.Configuration.Constants.Auxiliaries.IDs.HeatingVentilationAirCondition
                 CbTech.DataSource =
