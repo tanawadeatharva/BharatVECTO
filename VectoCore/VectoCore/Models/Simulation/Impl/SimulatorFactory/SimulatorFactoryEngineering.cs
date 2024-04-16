@@ -21,8 +21,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 					RunDataFactory = new EngineeringVTPModeVectoRunDataFactoryLorries(vtpProvider);
 					return;
 				case IVTPEngineeringInputDataProvider vtpProvider when vtpProvider.JobInputData.Vehicle.VehicleCategory.IsBus():
-					throw new NotImplementedException();
-					//RunDataFactory = new EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary(vtpProvider);
+					RunDataFactory = new EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary(vtpProvider);
 					return;
 				case IEngineeringInputDataProvider engDataProvider when engDataProvider.JobInputData.JobType == VectoSimulationJobType.EngineOnlySimulation:
 					RunDataFactory = new EngineOnlyVectoRunDataFactory(engDataProvider);

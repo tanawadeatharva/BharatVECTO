@@ -57,8 +57,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             var tempVehicle = DataAdapter.CreateVehicleData(
                 vehicle, Segment, Segment.Missions.First(),
                 Segment.Missions.First().Loadings.First(), _allowVocational);
-            tempVehicle.VehicleClass = JobInputData.ManufacturerReportInputData.VehicleClass;
-            tempVehicle.VehicleCode = JobInputData.ManufacturerReportInputData.VehicleCode;
+            tempVehicle.VehicleClass = Segment.VehicleClass;
+            tempVehicle.VehicleCode = JobInputData.CompletedVIFInputData.BodyworkCode;
 
             var vtpMission = tempVehicle.VehicleCode.GetFloorType() == FloorType.LowFloor
                 ? DeclarationData.VTPMode.SelectedMissionLowFloorBus
@@ -103,8 +103,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             var tempVehicle = DataAdapter.CreateVehicleData(
                 vehicle, Segment, Segment.Missions.First(),
                 Segment.Missions.First().Loadings.First(), _allowVocational);
-            tempVehicle.VehicleClass = JobInputData.ManufacturerReportInputData.VehicleClass;
-            tempVehicle.VehicleCode = JobInputData.ManufacturerReportInputData.VehicleCode;
+            tempVehicle.VehicleClass = Segment.VehicleClass;
+            tempVehicle.VehicleCode = JobInputData.CompletedVIFInputData.BodyworkCode;
             var powertrainConfig = new VectoRunData()
             {
                 VehicleData = tempVehicle,
@@ -136,15 +136,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                 Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency *
                 DeclarationData.BusAuxiliaries.AlternatorTechnologies.Lookup("default");
 
-            // TODO: vehicle length from MRF
-
             var spPowerDemand = DeclarationData.SteeringPumpBus.LookupMechanicalPowerDemand(
                                     MissionType.VerificationTest, JobInputData.Vehicle.Components.BusAuxiliaries.SteeringPumpTechnology,
-                                    JobInputData.ManufacturerReportInputData.VehicleLength)
+                                    JobInputData.CompletedVIFInputData.VehicleLength)
                                 +
                                 DeclarationData.SteeringPumpBus.LookupElectricalPowerDemand(
                                     MissionType.VerificationTest, JobInputData.Vehicle.Components.BusAuxiliaries.SteeringPumpTechnology,
-                                    JobInputData.ManufacturerReportInputData.VehicleLength) / electricEfficiency;
+									JobInputData.CompletedVIFInputData.VehicleLength) / electricEfficiency;
 
             retVal.Add(
                 new VectoRunData.AuxData()
@@ -241,8 +239,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             {
                 MissionType = MissionType.VerificationTest
             };
-            vtpRunData.VehicleData.VehicleClass = JobInputData.ManufacturerReportInputData.VehicleClass; //Segment.VehicleClass;
-            vtpRunData.VehicleData.VehicleCode = JobInputData.ManufacturerReportInputData.VehicleCode;
+            vtpRunData.VehicleData.VehicleClass = Segment.VehicleClass;
+            vtpRunData.VehicleData.VehicleCode = JobInputData.CompletedVIFInputData.BodyworkCode;
             vtpRunData.VehicleData.LegislativeClass = JobInputData.Vehicle.LegislativeClass;
 
             //var ncvStd = DeclarationData.FuelData.Lookup(JobInputData.Vehicle.Components.EngineInputData.FuelType).LowerHeatingValueVecto;

@@ -1615,10 +1615,16 @@ public class JSONFileWriter : IOutputFileWriter
 			{ "SavedInDeclMode", declarationmode },
 			{ "DeclarationVehicle", GetRelativePath(job.Vehicle.DataSource.SourceFile, Path.GetDirectoryName(filename)) }
 		};
-		if (declarationmode) {
-			body.Add("ManufacturerRecord", GetRelativePath(job.ManufacturerReportInputData.Source, Path.GetDirectoryName(filename)));
-			body.Add("Mileage", job.Mileage.ConvertToKiloMeter().Value);
+		
+		body.Add("ManufacturerRecord", GetRelativePath(job.ManufacturerReportInputData.Source, Path.GetDirectoryName(filename)));
+
+		if (!String.IsNullOrEmpty(job.CompletedVIFInputData?.Source))
+		{
+			body.Add(JsonKeys.VTP_CompletedVIF, GetRelativePath(job.CompletedVIFInputData.Source, Path.GetDirectoryName(filename)));
 		}
+
+		body.Add("Mileage", job.Mileage.ConvertToKiloMeter().Value);
+		
 		body.Add("FanPowerCoefficients", job.FanPowerCoefficents);
 		body.Add("FanDiameter", job.FanDiameter.Value());
 		body.Add(JsonKeys.Job_FuelNCVs, job.FuelNCVs.Select(x => new FuelNCVOutput() 

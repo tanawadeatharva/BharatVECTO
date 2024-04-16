@@ -24,7 +24,8 @@ Public Module FileBrowserModule
 	Public TextFileBrowser As FileBrowser
 	Public VehicleFileBrowser As FileBrowser
 	Public VehicleXMLFileBrowser As FileBrowser
-    public ManRXMLFileBrowser As FileBrowser
+	Public ManRXMLFileBrowser As FileBrowser
+	Public CompletedVIFFileBrowser As FileBrowser
 	Public DrivingCycleFileBrowser As FileBrowser
 	Public PTODrivingCycleStandstillFileBrowser As FileBrowser
 	Public PTODrivingCycleDrivingFileBrowser As FileBrowser

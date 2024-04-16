@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration schemaVersion="2.0" 
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" 
-xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" 
-xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" 
-xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
-xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
-xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
-xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCore/Resources/XSD/VectoDeclarationJob.xsd">
-	<v2.0:Vehicle id="VEH-PrimaryBus_nonSmart" xsi:type="Vehicle_Conventional_PrimaryBusDeclarationType">
+<tns:VectoInputDeclaration schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:/VectoCore/VectoCore/Resources/XSD">
+	<v2.0:Vehicle id="VEH-PrimaryBus_nonSmart" xsi:type="Vehicle_Conventional_PrimaryBusDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
 		<Manufacturer>Generic Truck Manufacturer</Manufacturer>
 		<ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
 		<Model>Generic Model</Model>
@@ -36,7 +28,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCor
 			<Entry gear="12" maxTorque="1900"/>
 		</v2.4:TorqueLimits>
 		<Components xsi:type="Components_Conventional_PrimaryBusType">
-			<Engine>
+			<Engine xsi:type="v2.0:EngineComponentDeclarationType">
 				<v2.0:Data id="ENG-gooZah3D" xsi:type="v2.1:EngineDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1">
 					<Manufacturer>Generic Engine Manufacturer</Manufacturer>
 					<Model>Bus 6x2</Model>
@@ -197,12 +189,12 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCor
 							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>sNtMe9udO39TyKXzgwYEpVKImWizFalaBVqq3jLktuo=</di:DigestValue>
+						<di:DigestValue>UkPdSVc1IstCjskGE9abIAQ2nPaKhfMHIJlc/fsdtkA=</di:DigestValue>
 					</di:Reference>
 				</v2.0:Signature>
 			</Engine>
 			<Gearbox>
-				<v2.0:Data id="gbx-vi2Oak2N" xsi:type="GearboxDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" >
+				<Data id="gbx-vi2Oak2N" xsi:type="GearboxDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 					<Model>Generic 40t Long Haul Truck Gearbox</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -210,7 +202,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCor
 					<AppVersion>3.0.1</AppVersion>
 					<TransmissionType>AMT</TransmissionType>
 					<MainCertificationMethod>Standard values</MainCertificationMethod>
-					<Gears>
+					<Gears xsi:type="GearsDeclarationType">
 						<Gear number="1">
 							<Ratio>14.930</Ratio>
 							<MaxTorque>1900</MaxTorque>
@@ -2589,7 +2581,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCor
 							</TorqueLossMap>
 						</Gear>
 					</Gears>
-				</v2.0:Data>
+				</Data>
 				<v2.0:Signature>
 					<di:Reference URI="#gbx-vi2Oak2N">
 						<di:Transforms>
@@ -2597,12 +2589,12 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCor
 							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>ieNmjofFObDBGnB7+GX9of3HYe3ydK/ra+YvmULVJIk=</di:DigestValue>
+						<di:DigestValue>h40w9F01Evf4Y0qFVPNBze76qhd8atmw6Zsj1Mzu6Vg=</di:DigestValue>
 					</di:Reference>
 				</v2.0:Signature>
 			</Gearbox>
 			<TorqueConverter>
-				<v2.0:Data id="tc-123xyz" xsi:type="TorqueConverterDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" >
+				<Data id="tc-123xyz" xsi:type="TorqueConverterDataDeclarationType"  xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Some Manufacturer</Manufacturer>
 					<Model>Some Model</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -2614,16 +2606,16 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCor
 						<Entry speedRatio="0.5000" torqueRatio="1.00" inputTorqueRef="200.00"/>
 						<Entry speedRatio="0.9000" torqueRatio="0.90" inputTorqueRef="200.00"/>
 					</Characteristics>
-				</v2.0:Data>
+				</Data>
 				<v2.0:Signature>
 					<di:Reference URI="#tc-123xyz">
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>q2sumDwsqQKLw4xwkEllgsygF5bHBwZPSS66UNaXXis=</di:DigestValue>
+						<di:DigestValue>BpqbVEM5dAFXyIeZfvKBUhv+Oj4OU5R85aK9M4ylV+4=</di:DigestValue>
 					</di:Reference>
 				</v2.0:Signature>
 			</TorqueConverter>
 			<Angledrive>
-				<v2.0:Data id="agl-vi2Oak2N" xsi:type="AngledriveDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" >
+				<Data id="agl-vi2Oak2N" xsi:type="AngledriveDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 					<Model>Generic 40t Long Haul Truck Gearbox</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -2639,7 +2631,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCor
 						<Entry inputSpeed="0.00" inputTorque="10000.00" torqueLoss="100.00"/>
 						<Entry inputSpeed="1000.00" inputTorque="1000.00" torqueLoss="100.00"/>
 					</TorqueLossMap>
-				</v2.0:Data>
+				</Data>
 				<v2.0:Signature>
 					<di:Reference URI="#agl-vi2Oak2N">
 						<di:Transforms>
@@ -2647,12 +2639,12 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCor
 							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>1tuF9SoA8luoUBQGym4bYi1TurDSmcYqBDJ6AP20OSs=</di:DigestValue>
+						<di:DigestValue>iVRxT+wETVrlCQhZMsiqRC1mKcw3a3KSeb1y5uhINQk=</di:DigestValue>
 					</di:Reference>
 				</v2.0:Signature>
 			</Angledrive>
 			<Retarder>
-				<v2.0:Data id="RET-Shai9imi" xsi:type="RetarderDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" >
+				<Data id="RET-Shai9imi" xsi:type="RetarderDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 						<Manufacturer>Generic Vendor</Manufacturer>
 						<Model>RET-generic</Model>
 						<CertificationNumber>standard values</CertificationNumber>
@@ -2722,7 +2714,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCor
             <Entry retarderSpeed="5900.00" torqueLoss="13.70" />
             <Entry retarderSpeed="6000.00" torqueLoss="14.00" />
 					</RetarderLossMap>
-				</v2.0:Data>
+				</Data>
 				<v2.0:Signature>
 					<di:Reference URI="#RET-Shai9imi">
 						<di:Transforms>
@@ -2730,12 +2722,12 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCor
 							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>fcEtYfDAbfuRq0xpuzapmEj+Py1PIPUZwVmx+amNvcc=</di:DigestValue>
+						<di:DigestValue>gO/IdNo3sHx+uRNEtOYo2XBmZlleIBQUn16ee46G5P4=</di:DigestValue>
 					</di:Reference>
 				</v2.0:Signature>
 			</Retarder>
 			<Axlegear>
-				<v2.0:Data id="AXL-EC3ohnoh" xsi:type="AxlegearDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" >
+				<Data id="AXL-EC3ohnoh" xsi:type="AxlegearDataDeclarationType"  xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 					<Model>Generic 40t Long Haul Truck AxleGear</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -3239,7 +3231,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCor
 						<Entry inputSpeed="2100.00" inputTorque="34000.00" torqueLoss="550.00"/>
 						<Entry inputSpeed="2100.00" inputTorque="35000.00" torqueLoss="565.00"/>
 					</TorqueLossMap>
-				</v2.0:Data>
+				</Data>
 				<v2.0:Signature>
 					<di:Reference URI="#AXL-EC3ohnoh">
 						<di:Transforms>
@@ -3247,7 +3239,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCor
 							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>o4nYTajmWKaduxys5ShmnfJbYd23rpxZ01JbuG6dmzU=</di:DigestValue>
+						<di:DigestValue>4zNNxDHUsN32kPYIi5NuHkZIzYFgptEjv8Z9eFCDKrU=</di:DigestValue>
 					</di:Reference>
 				</v2.0:Signature>
 			</Axlegear>
@@ -3269,16 +3261,16 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCor
 									<RRCDeclared>0.0055</RRCDeclared>
 									<FzISO>31300</FzISO>
 								</Data>
-								<Signature>
+								<v2.0:Signature>
 									<di:Reference URI="#WHL-5432198760-315-70-R22.5">
 										<di:Transforms>
 											<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 											<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 										</di:Transforms>
 										<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-										<di:DigestValue>4TkUGQTX8tevHOU9Cj9uyCFuI/aqcEYlo/gyVjVQmv0=</di:DigestValue>
+										<di:DigestValue>A/sq1ng4cqeOyauDUqUEnonRSPch3VCqZDX9Pf3tW1Q=</di:DigestValue>
 									</di:Reference>
-								</Signature>
+								</v2.0:Signature>
 							</Tyre>
 						</Axle>
 						<Axle axleNumber="2" xsi:type="AxleDataDeclarationType">
@@ -3296,16 +3288,16 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCor
 									<RRCDeclared>0.0063</RRCDeclared>
 									<FzISO>31300</FzISO>
 								</Data>
-								<Signature>
+								<v2.0:Signature>
 									<di:Reference URI="#WHL-5432198760-315-70-R22.5">
 										<di:Transforms>
 											<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 											<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 										</di:Transforms>
 										<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-										<di:DigestValue>KljvtvGUUQ/L7MiLVAqU+bckL5PNDNNwdeLH9kUVrfM=</di:DigestValue>
+										<di:DigestValue>z+KDXmc5MIezM6RVgfYax5J9Efi0ghciG2/wLLmWaBk=</di:DigestValue>
 									</di:Reference>
-								</Signature>
+								</v2.0:Signature>
 							</Tyre>
 						</Axle>
 						<Axle axleNumber="3" xsi:type="AxleDataDeclarationType">
@@ -3323,16 +3315,16 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCor
 									<RRCDeclared>0.0055</RRCDeclared>
 									<FzISO>31300</FzISO>
 								</Data>
-								<Signature>
+								<v2.0:Signature>
 									<di:Reference URI="#WHL-5432198760-315-70-R22.5">
 										<di:Transforms>
 											<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 											<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 										</di:Transforms>
 										<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-										<di:DigestValue>4TkUGQTX8tevHOU9Cj9uyCFuI/aqcEYlo/gyVjVQmv0=</di:DigestValue>
+										<di:DigestValue>A/sq1ng4cqeOyauDUqUEnonRSPch3VCqZDX9Pf3tW1Q=</di:DigestValue>
 									</di:Reference>
-								</Signature>
+								</v2.0:Signature>
 							</Tyre>
 						</Axle>
 					</Axles>

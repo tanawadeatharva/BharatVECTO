@@ -297,10 +297,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				throw new VectoException("CycleType must be VTP.");
 			}
 
-			if ((data.ExecutionMode == ExecutionMode.Declaration) && data.VehicleData.VehicleCategory.IsBus()) {
-				throw new VectoException("VTP in Declaration mode is not allowed for buses.");
-			}
-
 			var container = new VehicleContainer(data.ExecutionMode, modData, sumWriter) { RunData = data };
 			var engine = new VTPCombustionEngine(container, data, pt1Disabled: true);
 
