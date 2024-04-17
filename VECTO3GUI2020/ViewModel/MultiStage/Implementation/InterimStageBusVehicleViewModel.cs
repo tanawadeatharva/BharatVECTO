@@ -372,7 +372,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 			_parameterViewModels[nameof(DoorDriveTechnology)].AllowedItems =
 				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, ConsumerTechnology>(
-					ConsumerTechnology.Unknown);
+					ConsumerTechnology.Unknown, ConsumerTechnology.Mechanically);
 
 			//Setup additional consolidatedVehicleData
 			_parameterViewModels[nameof(EngineStopStartNullable)].PreviousContent =
@@ -387,13 +387,16 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			//Set Mandatory Fields
 
 			_parameterViewModels[nameof(Manufacturer)].Mandatory = true;
+			_parameterViewModels[nameof(Manufacturer)].EditingEnabled = true;
 			_parameterViewModels[nameof(ManufacturerAddress)].Mandatory = true;
+			_parameterViewModels[nameof(ManufacturerAddress)].EditingEnabled = true;
 			_parameterViewModels[nameof(VIN)].Mandatory = true;
+			_parameterViewModels[nameof(VIN)].EditingEnabled = true;
 		}
 
-		#region Overrides of ViewModelBase
+        #region Overrides of ViewModelBase
 
-		protected override bool SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        protected override bool SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
 		{
 			var propertyChanged = base.SetProperty(ref field, value, propertyName);
 
@@ -541,7 +544,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public string ManufacturerAddress
 		{
-			get { return String.IsNullOrEmpty(_manufacturerAddress) ? null : _manufacturerAddress; }
+			get { return /*String.IsNullOrEmpty(_manufacturerAddress) ? null :*/ _manufacturerAddress; }
 			set { SetProperty(ref _manufacturerAddress, value); }
 		}
 
