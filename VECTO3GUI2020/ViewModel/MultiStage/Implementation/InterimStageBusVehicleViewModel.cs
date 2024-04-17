@@ -692,6 +692,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set { SetProperty(ref _tankSystem, value); }
 		}
 
+		public virtual bool TankSystemEnabled => true;
+
 		public MultistageParameterViewModel TankSystemVM
 		{
 			get => _parameterViewModels[nameof(TankSystem)];
@@ -954,6 +956,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
+		public virtual bool EngineStopStartEnabled => true;
+
 		public bool EngineStopStart
 		{
 			get
@@ -979,6 +983,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
+		public virtual bool EcoRollEnabled => true;
+
 		public PredictiveCruiseControlType? PredictiveCruiseControlNullable
 		{
 			get => _predictiveCruiseControlNullable;
@@ -987,6 +993,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				SetProperty(ref _predictiveCruiseControlNullable, value);
 			}
 		}
+
+		public virtual bool PredictiveCruiseControlEnabled => true;
 
 		public PredictiveCruiseControlType PredictiveCruiseControl
 		{
@@ -1006,6 +1014,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				SetProperty(ref _atEcoRollReleaseLockupClutch, value);
 			}
 		}
+
+		public virtual bool ATEcoRollReleaseLockupClutchEnabled => true;
 
 		#endregion
 
@@ -1324,7 +1334,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get => CompletedBusArchitecture.HEV;
 		}
 
-		public override string XMLType => XMLTypes.Vehicle_Hev_CompletedBusDeclarationType;
+		public override bool EcoRollEnabled => false;
+
+		public override bool ATEcoRollReleaseLockupClutchEnabled => false;
+
+
+        public override string XMLType => XMLTypes.Vehicle_Hev_CompletedBusDeclarationType;
     }
 
 	public class InterimStagePevBusVehicleViewModel : InterimStageBusVehicleViewModel
@@ -1343,6 +1358,16 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get { return CompletedBusArchitecture.PEV; }
 		}
+
+		public override bool TankSystemEnabled => false;
+
+		public override bool EcoRollEnabled => false;
+
+		public override bool EngineStopStartEnabled => false;
+
+		public override bool ATEcoRollReleaseLockupClutchEnabled => false;
+
+
 		public override string XMLType => XMLTypes.Vehicle_Pev_CompletedBusDeclarationType;
         #endregion
     }
@@ -1361,7 +1386,17 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public override CompletedBusArchitecture Architecture =>
 			CompletedBusArchitecture.IEPC;
-		public override string XMLType => XMLTypes.Vehicle_Iepc_CompletedBusDeclarationType;
+
+		public override bool TankSystemEnabled => false;
+
+		public override bool EcoRollEnabled => false;
+
+		public override bool EngineStopStartEnabled => false;
+
+		public override bool ATEcoRollReleaseLockupClutchEnabled => false;
+
+
+        public override string XMLType => XMLTypes.Vehicle_Iepc_CompletedBusDeclarationType;
         #endregion
     }
 
