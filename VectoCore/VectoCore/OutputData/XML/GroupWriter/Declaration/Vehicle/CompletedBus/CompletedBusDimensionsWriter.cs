@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.Comple
 			}
 			return new XElement[] {
 				new XElement(writerNamespace + XMLNames.Bus_HeightIntegratedBody,
-					vehicle.Height.ConvertToMilliMeter()),
+					vehicle.Height.ConvertToMilliMeter().ToXMLFormat(0)),
 				new XElement(writerNamespace + XMLNames.Bus_VehicleLength, vehicle.Length.ConvertToMilliMeter().ToXMLFormat(0)),
 				new XElement(writerNamespace + XMLNames.Bus_VehicleWidth, vehicle.Width.ConvertToMilliMeter().ToXMLFormat(0)),
 				new XElement(writerNamespace + XMLNames.Bus_EntranceHeight,
