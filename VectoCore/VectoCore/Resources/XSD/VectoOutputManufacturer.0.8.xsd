@@ -9,6 +9,7 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" targetNamespace
 	<!-- 
 Changelog
 	10.04.2024: change "Fuel cell vehicle" to "FCV Article 9 exempted" according to regulation
+	19.04.2024: restore wrong exempt techs along with the correct ones.
 	-->
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" schemaLocation="VectoDeclarationDefinitions.2.0.xsd"/>
@@ -909,7 +910,9 @@ Changelog
 								<xs:enumeration value="PEV Article 9 exempted"/>
 								<xs:enumeration value="HV Article 9 exempted"/>
 								<xs:enumeration value="FCV Article 9 exempted"/>
+								<xs:enumeration value="Fuel cell vehicle"/>
 								<xs:enumeration value="H2 ICE Article 9 exempted"/>
+								<xs:enumeration value="H2 ICE"/>
 								<xs:enumeration value="Dual fuel vehicle Article 9 exempted"/>
 								<xs:enumeration value="In-motion charging Article 9 exempted"/>
 								<xs:enumeration value="Other technology Article 9 exempted"/>
