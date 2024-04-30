@@ -4,6 +4,8 @@ using System.Xml.Linq;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 {
@@ -145,7 +147,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         protected override XElement[] GetFuelConsumption(IOVCResultEntry entry)
         {
-            return _factory.GetFuelConsumptionLorry(_factory, TNS).GetElements(entry.Weighted);
+            return entry.Weighted.FuelConsumption.Select(e =>
+                    _factory.GetFuelConsumptionLorry(_factory, TNS).GetElement(entry.Weighted, e.Key, e.Value)).ToArray();
         }
 
         protected override XElement GetElectricConsumption(IOVCResultEntry entry)
@@ -219,8 +222,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         protected override XElement[] GetFuelConsumption(IOVCResultEntry entry)
         {
-            return _factory.GetFuelConsumptionBus(_factory, TNS).GetElements(entry.Weighted);
-		}
+            return entry.Weighted.FuelConsumption.Select(e =>
+                _factory.GetFuelConsumptionBus(_factory, TNS).GetElement(entry.Weighted, e.Key, e.Value)).ToArray();
+        }
 
         protected override XElement GetElectricConsumption(IOVCResultEntry entry)
         {

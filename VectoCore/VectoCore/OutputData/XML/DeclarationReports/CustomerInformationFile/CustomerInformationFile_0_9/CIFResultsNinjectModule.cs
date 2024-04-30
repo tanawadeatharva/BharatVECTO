@@ -6,11 +6,11 @@ using Ninject.Modules;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_1_0.ResultWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Utils.Ninject;
 
-namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_1_0
+namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9
 {
 
     internal class CIFResultsNinjectModule : NinjectModule

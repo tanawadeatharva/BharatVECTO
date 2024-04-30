@@ -2463,7 +2463,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         TestCase(VehicleClass.Class10, true, 169.9, WeightingGroup.Group10LH),
         TestCase(VehicleClass.Class10, true, 264.9, WeightingGroup.Group10LH),
         TestCase(VehicleClass.Class10, true, 265, WeightingGroup.Group10LH),
-		
+
 		TestCase(VehicleClass.Class11, true, 169.9, WeightingGroup.Group11),
 		TestCase(VehicleClass.Class11, false, 265, WeightingGroup.Group11),
 		TestCase(VehicleClass.Class12, true, 169.9, WeightingGroup.Group12),
@@ -2475,9 +2475,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             VehicleClass vehicleGroup, bool sleeperCab, double ratedPowerkWm, WeightingGroup expectedWeightingGroup)
         {
             var wGroup = DeclarationData.WeightingGroup.Lookup(
-				vehicleGroup,
-				sleeperCab,
-				ratedPowerkWm.SI(Unit.SI.Kilo.Watt).Cast<Watt>());
+                vehicleGroup, sleeperCab, ratedPowerkWm.SI(Unit.SI.Kilo.Watt).Cast<Watt>());
             Assert.AreEqual(expectedWeightingGroup, wGroup);
         }
 

@@ -14,7 +14,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_1_0;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
@@ -72,10 +72,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 			if (modelData.Exempted) {
 				WeightingGroup = WeightingGroup.Unknown;
 			} else {
-				WeightingGroup = DeclarationData.WeightingGroup.Lookup(
-					modelData.VehicleData.VehicleClass,
-					false,
-					0.SI<Watt>());
+				WeightingGroup = DeclarationData.WeightingGroup.Lookup(modelData.VehicleData.VehicleClass,
+					false, 0.SI<Watt>());
 				_weightingFactors =
 					DeclarationData.WeightingFactors.Lookup(WeightingGroup);
 			}

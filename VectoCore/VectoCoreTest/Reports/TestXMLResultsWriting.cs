@@ -24,8 +24,8 @@ using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_1_0;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_1_0.ResultWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.ResultWriter;
 using TUGraz.VectoCore.Utils;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
@@ -40,7 +40,7 @@ public class TestXMLResultsWriting
 	private IResultsWriterFactory _reportResultsFactory;
 	//private IXMLInputDataReader _xmlReader;
 
-	XNamespace CIF_NS = XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput:v1.0");
+	XNamespace CIF_NS = XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9");
 	XNamespace MRF_NS = XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9");
 	XNamespace VIF_NS = XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1");
 
@@ -451,7 +451,7 @@ public class TestXMLResultsWriting
 		var weighted = DeclarationData.CalculateWeightedResult(cdResult, csResult);
 
 		Console.WriteLine($"{weighted.ActualChargeDepletingRange.Value().ToXMLFormat(3)} {weighted.EquivalentAllElectricRange.Value().ToXMLFormat(3)} {weighted.ZeroCO2EmissionsRange.Value().ToXMLFormat(3)} {weighted.UtilityFactor.ToXMLFormat(3)}" +
-						$" {weighted.ElectricEnergyConsumption.Value().ToXMLFormat(3)} {weighted.FuelConsumption[FuelData.Diesel].Value().ToXMLFormat(3)} {weighted.CO2PerMeter.Value().ToXMLFormat(3)}");
+						$" {weighted.ElectricEnergyConsumption.Value().ToXMLFormat(3)} {weighted.FuelConsumption[FuelData.Diesel].Value().ToXMLFormat(3)} {weighted.CO2Total.Value().ToXMLFormat(3)}");
 
 		//1518.750 1366.875 1366.875 0.004 795230.237 30.890 20.000
 
@@ -461,8 +461,7 @@ public class TestXMLResultsWriting
 		Assert.AreEqual(0.004, weighted.UtilityFactor, 1e-3);
 		Assert.AreEqual(795230.237, weighted.ElectricEnergyConsumption.Value(), 1e-3);
 		Assert.AreEqual(30.890, weighted.FuelConsumption[FuelData.Diesel].Value(), 1e-3);
-		Assert.AreEqual(30000.0, weighted.Distance.Value(), 1e-3);
-		Assert.AreEqual(20.0/30000.0, weighted.CO2PerMeter.Value(), 1e-8);
+		Assert.AreEqual(20.000, weighted.CO2Total.Value(), 1e-3);
 
 	}
 

@@ -90,12 +90,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			foreach (var entry in Data) {
 				var sum = entry.Value.Sum(item => item.Value);
-
-				bool hasVocationalWeights = sum % 2.0 == 0;
-				bool isNormalWeights = sum.IsEqual(1.0, 1e-12);
-
-				if (!isNormalWeights && !hasVocationalWeights)
-				{
+				if (!sum.IsEqual(1.0, 1e-12)) {
 					throw new VectoException("Weighting Factors for {0} do not sum up to 1.0! sum: {1}", entry.Key, sum);
 				}
 			}
