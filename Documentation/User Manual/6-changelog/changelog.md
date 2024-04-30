@@ -1,5 +1,16 @@
 # Changelog
 
+**VECTO-4.1.1**
+
+***Build 3413 (2024-05-06)***
+
+- Bugfixes
+   * CodeEU-615: Multistep freezes after loading VIF chassis
+   * CodeEU-616: Multistep tool freezes
+   * CodeEU-619: restore wrong exempted techs in XSD for backwards compatibility
+   * CodeEU-617: Results change depending the time format
+   * CodeEU-635: Revert multiple summary in CIF
+
 **VECTO-4.1.0-RC**
 
 ***Build 3392 (2024-04-15)***
