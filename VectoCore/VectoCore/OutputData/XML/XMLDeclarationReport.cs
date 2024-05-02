@@ -48,7 +48,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_1_0;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 
@@ -289,10 +289,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected override void WriteResult(ResultEntry result)
 		{
 			var sumWeightinFactors = _weightingFactors.Values.Sum(x => x);
-			bool isNormalWeights = sumWeightinFactors.IsEqual(0) || sumWeightinFactors.IsEqual(1, 1e-12);
-			bool isVocationalWeights = sumWeightinFactors % 2 == 0;
-			if (!isNormalWeights && !isVocationalWeights) {
-				throw new VectoException("Mission Profile Weighting factors or Mission Profile Weighting factors for Vocational misisons do not sum up to 1!");
+			if (!sumWeightinFactors.IsEqual(0) && !sumWeightinFactors.IsEqual(1)) {
+				throw new VectoException("Mission Profile Weighting factors do not sum up to 1!");
 			}
 
 			ManufacturerRpt.WriteResult(result);
@@ -335,6 +333,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				var propulsionPower = DeclarationData.GetReferencePropulsionPower(modelData.VehicleData.InputData);
                 WeightingGroup = DeclarationData.WeightingGroup.Lookup(
 					modelData.VehicleData.VehicleClass,
+					modelData.VehicleData.VocationalVehicle,
 					modelData.VehicleData.SleeperCab.Value,
 					propulsionPower);
 			}
