@@ -60,14 +60,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 	{
 		public abstract class LorryBase : AbstractSimulationDataAdapter, ILorryDeclarationDataAdapter
 		{
-            
-            private readonly IDriverDataAdapter _driverDataAdapter = new LorryDriverDataAdapter();
-            //protected readonly IVehicleDataAdapter _vehicleDataAdapter = new LorryVehicleDataAdapter();
-			private readonly IAxleGearDataAdapter _axleGearDataAdapter = new AxleGearDataAdapter();
-			private readonly IRetarderDataAdapter _retarderDataAdapter = new RetarderDataAdapter();
-			private readonly IAirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
 
-			private IAngledriveDataAdapter _angleDriveDataAdapter = new AngledriveDataAdapter();
+			protected virtual IDriverDataAdapter DriverDataAdapter { get; } = new LorryDriverDataAdapter();
+            //protected readonly IVehicleDataAdapter _vehicleDataAdapter = new LorryVehicleDataAdapter();
+			protected virtual IAxleGearDataAdapter AxleGearDataAdapter { get; }  = new AxleGearDataAdapter();
+			protected virtual IRetarderDataAdapter RetarderDataAdapter { get; }  = new RetarderDataAdapter();
+			protected virtual IAirdragDataAdapter AirdragDataAdapter { get; }  = new AirdragDataAdapter();
+
+			protected virtual IAngledriveDataAdapter AngleDriveDataAdapter { get; } = new AngledriveDataAdapter();
 
 			protected virtual IVehicleDataAdapter VehicleDataAdapter { get; } = new LorryVehicleDataAdapter();
 			protected abstract IEngineDataAdapter EngineDataAdapter { get; }
@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			public virtual DriverData CreateDriverData(Segment segment)
 			{
-				return _driverDataAdapter.CreateDriverData(segment);
+				return DriverDataAdapter.CreateDriverData(segment);
 			}
 
 			protected abstract GearboxType[] SupportedGearboxTypes { get; }
@@ -140,18 +140,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			public virtual AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission,
 				Segment segment)
 			{
-				return _airdragDataAdapter.CreateAirdragData(airdragData, mission, segment);
+				return AirdragDataAdapter.CreateAirdragData(airdragData, mission, segment);
 			}
 
 			public AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData)
 			{
-				return _axleGearDataAdapter.CreateAxleGearData(axlegearData);
+				return AxleGearDataAdapter.CreateAxleGearData(axlegearData);
 			}
 
 
 			public AngledriveData CreateAngledriveData(IAngledriveInputData data)
 			{
-				return _angleDriveDataAdapter.CreateAngledriveData(data, false);
+				return AngleDriveDataAdapter.CreateAngledriveData(data, false);
 			}
 
 			public virtual CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle,
@@ -176,7 +176,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			public RetarderData CreateRetarderData(IRetarderInputData retarderData, ArchitectureID archID,
 				IIEPCDeclarationInputData iepcInputData)
 			{
-				return _retarderDataAdapter.CreateRetarderData(retarderData, archID, iepcInputData);
+				return RetarderDataAdapter.CreateRetarderData(retarderData, archID, iepcInputData);
 			}
 
 			public virtual PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto)
@@ -202,7 +202,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			public AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData)
 			{
-				return _axleGearDataAdapter.CreateDummyAxleGearData(gbxData);
+				return AxleGearDataAdapter.CreateDummyAxleGearData(gbxData);
 			}
 
 			public virtual IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(

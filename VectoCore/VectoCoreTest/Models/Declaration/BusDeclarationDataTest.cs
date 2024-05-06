@@ -77,6 +77,7 @@ public class BusDeclarationDataTest
 	TestCase(4, true, VehicleCode.CC, RegistrationClass.III, null, null, null, VehicleClass.Class40d, 0.0),
 	TestCase(4, true, VehicleCode.CD, RegistrationClass.II, null, 5, null, VehicleClass.Class40e, 0.0),
 	TestCase(4, true, VehicleCode.CD, RegistrationClass.II, null, 10, null, VehicleClass.Class40f, 0.0),
+		Category(Definitions.TESTCASE_MIGRATED)
 	]
 	public void TestDrivetrainCorrectionLengthDrivetrain(int numAxles, bool articulated, VehicleCode vc, RegistrationClass regCode,  bool? lowEntry, int? passCntLow, double? height,
 		VehicleClass expecteClass, double expectedLength)

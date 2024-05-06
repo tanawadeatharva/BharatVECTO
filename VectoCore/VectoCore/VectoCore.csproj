@@ -114,7 +114,7 @@
     <InternalsVisibleTo Include="VECTOMultistep" />
     <InternalsVisibleTo Include="VectoMockup" />
     <InternalsVisibleTo Include="Vecto3GUI2020Test" />
-	<InternalsVisibleTo Include="Vecto_UnitTests" />
+	<InternalsVisibleTo Include="VectoUnitTest" />
   </ItemGroup>
 
   <ItemGroup>

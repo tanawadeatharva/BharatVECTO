@@ -75,7 +75,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void IntersectShiftLines1()
 		{
 			var upShift = new[] {
@@ -106,7 +107,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void IntersectShiftLines2()
 		{
 			var upShift = new[] {
@@ -146,7 +148,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void IntersectShiftLines3()
 		{
 			var upShift = new[] {
@@ -187,7 +190,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void IntersectShiftLines4()
 		{
 			var upShift = new[] {
@@ -228,7 +232,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void LimitShiftlines1()
 		{
 			var upShift = new[] {
@@ -257,7 +262,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void LimitShiftlines2()
 		{
 			var upShift = new[] {
@@ -288,7 +294,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void LimitShiftlines3()
 		{
 			var upShift = new[] {
@@ -318,7 +325,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void ShiftPolygonFldMarginTest()
 		{
 			var engineFld = new[] {
@@ -373,7 +381,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void CorrectDownShiftByEngineFldTest()
 		{
 			var downshift = Edge.Create(new Point(10, 10), new Point(22, 20));
@@ -403,7 +412,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(20, corrected.P2.Y, 1e-3);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void ComputeShiftPolygonDeclarationTest()
 		{
 			var engineFile = @"TestData/Components/40t_Long_Haul_Truck.veng";
@@ -487,7 +497,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(0, shiftPolygons.Last().Upshift.Count);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void ComputeShiftPolygonATDeclarationTest()
 		{
 			var engineFile = @"TestData/Components/40t_Long_Haul_Truck.veng";
@@ -539,7 +550,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(0, shiftPolygons.Last().Upshift.Count);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.DEPRECATED)]
 		public void ComputeShiftPolygonDeclarationTestConfidentialEngine()
 		{
 			//var engineFldFile = @"E:/QUAM/Downloads/EngineFLD/Map_375c_BB1390_modTUG_R49_375c_BB1386.vfld";
@@ -713,6 +725,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				2.64, 600),
 			TestCase(@"class5_40t_Pmax_low/9-6-L_260kW.vfld", @"class5_40t_Pmax_low/tractor_12gear_example.vgbx", 0.421, 2.64,
 				600),
+			Category(Definitions.DEPRECATED),
 		]
 		public void ComputeShiftPolygon(string engineFldFile, string gearboxFile, double rdyn, double axlegearRatio,
 			double idlingSpeed)
@@ -825,7 +838,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		/// <summary>
 		/// VECTO-517 Shiftpolygon is considered invalid
 		/// </summary>
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void ShiftCurve_ShiftPolygon_Validation_Test()
 		{
 			var vgbs = new[] {
@@ -973,7 +987,23 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				fullLoadCurves[(uint)(i + 1)] = new EngineFullLoadCurve(fullLoadCurve, null) { EngineData = engineData };
 			}
 
-			var suffix = factorDownshiftSpeed.HasValue ? $"_{factorDownshiftSpeed.Value}" : "";
+			var shiftLines = "";
+			var gear = 1;
+			foreach (var shiftPolygon in shiftPolygons) {
+				shiftLines += "Gear " + gear++ + "\n";
+				shiftLines += "Upshift\n";
+				foreach (var shiftPolygonEntry in shiftPolygon.Upshift) {
+					shiftLines += $"{shiftPolygonEntry.AngularSpeed.AsRPM} {shiftPolygonEntry.Torque.Value()}\n";
+				}
+				shiftLines += "Downshift\n";
+				foreach (var shiftPolygonEntry in shiftPolygon.Downshift) {
+					shiftLines += $"{shiftPolygonEntry.AngularSpeed.AsRPM} {shiftPolygonEntry.Torque.Value()}\n";
+				}
+			}
+
+			TestContext.WriteLine(shiftLines);
+
+            var suffix = factorDownshiftSpeed.HasValue ? $"_{factorDownshiftSpeed.Value}" : "";
 			var imageFile = Path.Combine(Path.GetDirectoryName(pevE2Job), Path.GetFileNameWithoutExtension(pevE2Job) + $"_shiftlines{suffix}.png");
 
 			ShiftPolygonDrawer.DrawShiftPolygons(Path.GetDirectoryName(pevE2Job), fullLoadCurves, shiftPolygons,
@@ -1036,7 +1066,23 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				shiftPolygons.Add(deRatedShiftLines[(uint)(i + 1)]);
 				fullLoadCurves[(uint)(i + 1)] = new EngineFullLoadCurve(fullLoadCurve, null) { EngineData = engineData };
 			}
-			var suffix = factorDownshiftSpeed.HasValue ? $"_{factorDownshiftSpeed.Value}" : "";
+
+			var shiftLines = "";
+			var gear = 1;
+			foreach (var shiftPolygon in shiftPolygons) {
+				shiftLines += "Gear " + gear++ + "\n";
+				shiftLines += "Upshift\n";
+				foreach (var shiftPolygonEntry in shiftPolygon.Upshift) {
+					shiftLines += $"{shiftPolygonEntry.AngularSpeed.AsRPM} {shiftPolygonEntry.Torque.Value()}\n";
+				}
+				shiftLines += "Downshift\n";
+				foreach (var shiftPolygonEntry in shiftPolygon.Downshift) {
+					shiftLines += $"{shiftPolygonEntry.AngularSpeed.AsRPM} {shiftPolygonEntry.Torque.Value()}\n";
+				}
+			}
+			TestContext.WriteLine(shiftLines);
+
+            var suffix = factorDownshiftSpeed.HasValue ? $"_{factorDownshiftSpeed.Value}" : "";
 			var imageFile = Path.Combine(Path.GetDirectoryName(pevE2Job), Path.GetFileNameWithoutExtension(pevE2Job) + $"_shiftlines_DeRated{suffix}.png");
 
 			ShiftPolygonDrawer.DrawShiftPolygons(Path.GetDirectoryName(pevE2Job), fullLoadCurves, shiftPolygons,

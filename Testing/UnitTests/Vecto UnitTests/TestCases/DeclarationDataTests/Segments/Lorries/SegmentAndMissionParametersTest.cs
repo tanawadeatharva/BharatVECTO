@@ -9,7 +9,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using CollectionAssert = Microsoft.VisualStudio.TestTools.UnitTesting.CollectionAssert;
 
-namespace TUGraz.Vecto.UnitTests.TestCases.DeclarationDataTests.Lorries;
+namespace TUGraz.Vecto.UnitTests.TestCases.DeclarationDataTests.Segments.Lorries;
 
 [TestFixture]
 [Parallelizable(ParallelScope.All)]
@@ -22,7 +22,8 @@ public class SegmentAndMissionParametersTest
     [TestCase]
     public void Segment2Test()
     {
-        var vehicleData = new {
+        var vehicleData = new
+        {
             VehicleCategory = VehicleCategory.RigidTruck,
             AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
             GrossVehicleMassRating = 11900.SI<Kilogram>(),
@@ -95,7 +96,8 @@ public class SegmentAndMissionParametersTest
     [TestCase]
     public void Segment2TestHeavy()
     {
-        var vehicleData = new {
+        var vehicleData = new
+        {
             VehicleCategory = VehicleCategory.RigidTruck,
             AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
             GrossVehicleMassRating = 11990.SI<Kilogram>(),
@@ -168,7 +170,8 @@ public class SegmentAndMissionParametersTest
     [TestCase]
     public void Segment3Test()
     {
-        var vehicleData = new {
+        var vehicleData = new
+        {
             VehicleCategory = VehicleCategory.RigidTruck,
             AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
             GrossVehicleMassRating = 14000.SI<Kilogram>(),
@@ -221,7 +224,8 @@ public class SegmentAndMissionParametersTest
     [TestCase]
     public void Segment4Test()
     {
-        var vehicleData = new {
+        var vehicleData = new
+        {
             VehicleCategory = VehicleCategory.RigidTruck,
             AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
             GrossVehicleMassRating = 18000.SI<Kilogram>(),
@@ -309,7 +313,8 @@ public class SegmentAndMissionParametersTest
     [TestCase]
     public void Segment4VocationalTest()
     {
-        var vehicleData = new {
+        var vehicleData = new
+        {
             VehicleCategory = VehicleCategory.RigidTruck,
             AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
             GrossVehicleMassRating = 18000.SI<Kilogram>(),
@@ -365,7 +370,8 @@ public class SegmentAndMissionParametersTest
     [TestCase]
     public void Segment5Test()
     {
-        var vehicleData = new {
+        var vehicleData = new
+        {
             VehicleCategory = VehicleCategory.Tractor,
             AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
             GrossVehicleMassRating = 18000.SI<Kilogram>(),
@@ -468,7 +474,8 @@ public class SegmentAndMissionParametersTest
     [TestCase]
     public void Segment5VocationalTest()
     {
-        var vehicleData = new {
+        var vehicleData = new
+        {
             VehicleCategory = VehicleCategory.Tractor,
             AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
             GrossVehicleMassRating = 18000.SI<Kilogram>(),
@@ -508,7 +515,8 @@ public class SegmentAndMissionParametersTest
     [TestCase]
     public void Segment9Test()
     {
-        var vehicleData = new {
+        var vehicleData = new
+        {
             VehicleCategory = VehicleCategory.RigidTruck,
             AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
             GrossVehicleMassRating = 24000.SI<Kilogram>(),
@@ -614,7 +622,8 @@ public class SegmentAndMissionParametersTest
     [TestCase]
     public void Segment9VocationalTest()
     {
-        var vehicleData = new {
+        var vehicleData = new
+        {
             VehicleCategory = VehicleCategory.RigidTruck,
             AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
             GrossVehicleMassRating = 24000.SI<Kilogram>(),
@@ -671,7 +680,8 @@ public class SegmentAndMissionParametersTest
     [TestCase]
     public void Segment10Test()
     {
-        var vehicleData = new {
+        var vehicleData = new
+        {
             VehicleCategory = VehicleCategory.Tractor,
             AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
             GrossVehicleMassRating = 24000.SI<Kilogram>(),
@@ -761,7 +771,8 @@ public class SegmentAndMissionParametersTest
     [TestCase]
     public void Segment10VocationalTest()
     {
-        var vehicleData = new {
+        var vehicleData = new
+        {
             VehicleCategory = VehicleCategory.Tractor,
             AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
             GrossVehicleMassRating = 24000.SI<Kilogram>(),
@@ -802,7 +813,8 @@ public class SegmentAndMissionParametersTest
     [TestCase]
     public void Segment11Test()
     {
-        var vehicleData = new {
+        var vehicleData = new
+        {
             VehicleCategory = VehicleCategory.RigidTruck,
             AxleConfiguration = AxleConfiguration.AxleConfig_6x4,
             GrossVehicleMassRating = 24000.SI<Kilogram>(),
@@ -923,7 +935,8 @@ public class SegmentAndMissionParametersTest
     [TestCase]
     public void Segment12Test()
     {
-        var vehicleData = new {
+        var vehicleData = new
+        {
             VehicleCategory = VehicleCategory.Tractor,
             AxleConfiguration = AxleConfiguration.AxleConfig_6x4,
             GrossVehicleMassRating = 24000.SI<Kilogram>(),
@@ -1030,7 +1043,8 @@ public class SegmentAndMissionParametersTest
     [TestCase]
     public void Segment16Test()
     {
-        var vehicleData = new {
+        var vehicleData = new
+        {
             VehicleCategory = VehicleCategory.RigidTruck,
             AxleConfiguration = AxleConfiguration.AxleConfig_8x4,
             GrossVehicleMassRating = 36000.SI<Kilogram>(),
@@ -1070,7 +1084,8 @@ public class SegmentAndMissionParametersTest
     [TestCase]
     public void Segment53Test()
     {
-        var vehicleData = new {
+        var vehicleData = new
+        {
             VehicleCategory = VehicleCategory.RigidTruck,
             AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
             GrossVehicleMassRating = 5200.SI<Kilogram>(),
@@ -1125,7 +1140,8 @@ public class SegmentAndMissionParametersTest
     [TestCase]
     public void Segment54Test()
     {
-        var vehicleData = new {
+        var vehicleData = new
+        {
             VehicleCategory = VehicleCategory.Van,
             AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
             GrossVehicleMassRating = 5200.SI<Kilogram>(),
@@ -1210,34 +1226,34 @@ public class SegmentAndMissionParametersTest
             m.Trailer.Sum(t => t.DeltaCdA).DefaultIfNull(0));
     }
 
-	private const double Tolerance = 0.0001;
+    private const double Tolerance = 0.0001;
 
     private static void EqualAcceleration(AccelerationCurveData data, double velocity, double acceleration,
-		double deceleration)
-	{
-		var entry = data.Lookup(velocity.KMPHtoMeterPerSecond());
-		Assert.AreEqual(entry.Acceleration.Value(), acceleration, Tolerance);
-		Assert.AreEqual(entry.Deceleration.Value(), deceleration, Tolerance);
-	}
+        double deceleration)
+    {
+        var entry = data.Lookup(velocity.KMPHtoMeterPerSecond());
+        Assert.AreEqual(entry.Acceleration.Value(), acceleration, Tolerance);
+        Assert.AreEqual(entry.Deceleration.Value(), deceleration, Tolerance);
+    }
 
-	private static void TestAcceleration(AccelerationCurveData data)
-	{
-		// FIXED POINTS
-		EqualAcceleration(data, 0, 1, -1);
-		EqualAcceleration(data, 25, 1, -1);
-		EqualAcceleration(data, 50, 0.642857143, -1);
-		EqualAcceleration(data, 60, 0.5, -0.5);
-		EqualAcceleration(data, 120, 0.5, -0.5);
+    private static void TestAcceleration(AccelerationCurveData data)
+    {
+        // FIXED POINTS
+        EqualAcceleration(data, 0, 1, -1);
+        EqualAcceleration(data, 25, 1, -1);
+        EqualAcceleration(data, 50, 0.642857143, -1);
+        EqualAcceleration(data, 60, 0.5, -0.5);
+        EqualAcceleration(data, 120, 0.5, -0.5);
 
-		// INTERPOLATED POINTS
-		EqualAcceleration(data, 20, 1, -1);
-		EqualAcceleration(data, 40, 0.785714286, -1);
-		EqualAcceleration(data, 55, 0.571428572, -0.75);
-		EqualAcceleration(data, 80, 0.5, -0.5);
-		EqualAcceleration(data, 100, 0.5, -0.5);
+        // INTERPOLATED POINTS
+        EqualAcceleration(data, 20, 1, -1);
+        EqualAcceleration(data, 40, 0.785714286, -1);
+        EqualAcceleration(data, 55, 0.571428572, -0.75);
+        EqualAcceleration(data, 80, 0.5, -0.5);
+        EqualAcceleration(data, 100, 0.5, -0.5);
 
-		// EXTRAPOLATE 
-		EqualAcceleration(data, -20, 1, -1);
-		EqualAcceleration(data, 140, 0.5, -0.5);
-	}
+        // EXTRAPOLATE 
+        EqualAcceleration(data, -20, 1, -1);
+        EqualAcceleration(data, 140, 0.5, -0.5);
+    }
 }
