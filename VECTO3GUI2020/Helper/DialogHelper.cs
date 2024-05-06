@@ -146,20 +146,18 @@ namespace VECTO3GUI2020.Helper
 			MessageBoxImage icon)
 		{
 			var t = Application.Current.Dispatcher
-				.InvokeAsync(() => MessageBox.Show(messageBoxText, caption, button, icon)).Task;
+				.Invoke(() => MessageBox.Show(messageBoxText, caption, button, icon));
 
-			t.Wait();
-			return t.Result;
+			return t;
             //return MessageBox.Show(messageBoxText, caption, button, icon);
 		}
 
 		public MessageBoxResult ShowMessageBox(string messageBoxText, string caption)
 		{
 			var t = Application.Current.Dispatcher
-				.InvokeAsync(() => MessageBox.Show(messageBoxText, caption)).Task;
+				.Invoke(() => MessageBox.Show(messageBoxText, caption), DispatcherPriority.Send);
 
-			t.Wait();
-			return t.Result;
+			return t;
             //return MessageBox.Show(messageBoxText, caption);
         }
 

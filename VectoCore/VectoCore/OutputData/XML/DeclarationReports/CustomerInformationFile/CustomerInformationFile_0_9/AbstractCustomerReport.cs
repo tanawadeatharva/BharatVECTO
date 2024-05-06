@@ -19,7 +19,7 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 
-namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_1_0
+namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9
 {
     public abstract class AbstractCustomerReport : IXMLCustomerReport
 	{
@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public static XNamespace Cif => XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput");
 
-		public static XNamespace Cif_0_9 => XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput:v1.0");
+		public static XNamespace Cif_0_9 => XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9");
 		public static XNamespace _di => XNamespace.Get("http://www.w3.org/2000/09/xmldsig#");
 
 
