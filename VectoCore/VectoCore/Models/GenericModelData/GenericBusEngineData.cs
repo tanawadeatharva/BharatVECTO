@@ -145,13 +145,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			foreach (var entry in clusterResult) {
 				var dragTorque = fullLoadCurve.DragLoadStationaryTorque(entry.RPMtoRad()).Value();
 				var newRow = denormalizedData.NewRow();
-				newRow[FuelConsumptionMapReader.Fields.EngineSpeed] = Math.Round(entry, 2, MidpointRounding.AwayFromZero);
-				newRow[FuelConsumptionMapReader.Fields.Torque] =  Math.Round(dragTorque, 2, MidpointRounding.AwayFromZero);
+				newRow[FuelConsumptionMapReader.Fields.EngineSpeed] = Math.Round(entry, 2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
+				newRow[FuelConsumptionMapReader.Fields.Torque] =  Math.Round(dragTorque, 2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
 				newRow[FuelConsumptionMapReader.Fields.FuelConsumption] = 0;
 				denormalizedData.Rows.Add(newRow);
 				var newRow2 = denormalizedData.NewRow();
-				newRow2[FuelConsumptionMapReader.Fields.EngineSpeed] = Math.Round(entry, 2, MidpointRounding.AwayFromZero);
-				newRow2[FuelConsumptionMapReader.Fields.Torque] = Math.Round(dragTorque - 100, 2, MidpointRounding.AwayFromZero);
+				newRow2[FuelConsumptionMapReader.Fields.EngineSpeed] = Math.Round(entry, 2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
+				newRow2[FuelConsumptionMapReader.Fields.Torque] = Math.Round(dragTorque - 100, 2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
 				newRow2[FuelConsumptionMapReader.Fields.FuelConsumption] = 0;
 				denormalizedData.Rows.Add(newRow2);
 			}

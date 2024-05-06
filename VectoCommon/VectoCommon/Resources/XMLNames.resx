@@ -2040,10 +2040,7 @@
   <data name="Results_Report_OVCModeAttr_ChargeSustaining" xml:space="preserve">
     <value>charge sustaining</value>
   </data>
-  <data name="REESS" xml:space="preserve">
-    <value>REESS</value>
-  </data>
-  <data name="XMLCustomerReportIsVocational" xml:space="preserve">
-    <value>Vocational</value>
-  </data>
+<data name="REESS" xml:space="preserve">
+	<value>REESS</value>
+</data>
 </root>

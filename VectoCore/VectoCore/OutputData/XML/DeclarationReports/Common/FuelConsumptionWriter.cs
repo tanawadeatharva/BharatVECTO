@@ -8,6 +8,7 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
@@ -31,13 +32,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 		public XElement[] GetElements(IWeightedResult entry)
 		{
+			if (entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore)
+			{
+				List<XElement> fcElementsIgnore = new List<XElement>();
+				foreach (var fcEntry in entry.FuelConsumptionPerMeter)
+				{
+					fcElementsIgnore.Add(GetElementIgnore(fcEntry.Value, fcEntry.Key, entry.Payload, entry.CargoVolume, entry.PassengerCount));
+				}
+
+				return fcElementsIgnore.ToArray();
+			}
+
 			List<XElement> fcElements = new List<XElement>();
 			foreach (var fcEntry in entry.FuelConsumptionPerMeter)
 			{
-				XElement element = entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore
-					? GetElementIgnore(fcEntry.Value, fcEntry.Key, entry.Payload, entry.CargoVolume, entry.PassengerCount)
-					: GetElement(fcEntry.Value, fcEntry.Key, entry.Payload, entry.CargoVolume, entry.PassengerCount);
-				fcElements.Add(element);
+				fcElements.Add(GetElement(fcEntry.Value, fcEntry.Key, entry.Payload, entry.CargoVolume, entry.PassengerCount));
 			}
 
 			return fcElements.ToArray();
