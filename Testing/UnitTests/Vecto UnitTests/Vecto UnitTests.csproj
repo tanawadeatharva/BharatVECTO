@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -33,7 +33,6 @@
 
   <ItemGroup>
     <Folder Include="TestCases\Components\TorqueConverter\" />
-    <Folder Include="TestCases\DataAdapter\Declaration\" />
     <Folder Include="TestCases\DeclarationDataTests\CO2StandardsGroups\" />
     <Folder Include="TestCases\DeclarationDataTests\GenericModelParams\Vehicle\" />
     <Folder Include="TestCases\InputData\InputDataReader\" />

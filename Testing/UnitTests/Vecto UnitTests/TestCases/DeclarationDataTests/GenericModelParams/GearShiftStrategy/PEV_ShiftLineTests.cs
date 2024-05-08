@@ -107,7 +107,7 @@ public class PEV_ShiftLineTests
             shiftPolygons.Add(shiftpolygon);
         }
 
-		for (var i = 0; i < Math.Min(gearboxData.Gears.Count, expectedDownshift.Length); i++) {
+		for (var i = 0; i < Math.Min(gearboxData.Gears.Count, Math.Min(expectedDownshift.Length, expectedUpshift.Length)); i++) {
 			foreach (var tuple in expectedDownshift[i].Zip(shiftPolygons[i].Downshift, Tuple.Create)) {
 				Assert.AreEqual(tuple.Item1.X, tuple.Item2.AngularSpeed.AsRPM, 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
 				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Torque.Value(), 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
@@ -133,47 +133,252 @@ public class PEV_ShiftLineTests
         var axlegearRatio = 2.64;
 		var r_dyn = 0.421.SI<Meter>();
 
-        //emData.ContinuousTorque = 500.SI<NewtonMeter>();
-        var contTqFld = new ElectricMotorFullLoadCurve(new List<ElectricMotorFullLoadCurve.FullLoadEntry>() {
-                new ElectricMotorFullLoadCurve.FullLoadEntry() {
-                    MotorSpeed = 0.RPMtoRad(),
-                    FullDriveTorque = -emData.Overload.ContinuousTorque,
-                    FullGenerationTorque = emData.Overload.ContinuousTorque
-                },
-                new ElectricMotorFullLoadCurve.FullLoadEntry() {
-                    MotorSpeed = 1.1 * emData.EfficiencyData.VoltageLevels.First().FullLoadCurve.MaxSpeed,
-                    FullDriveTorque = -emData.Overload.ContinuousTorque,
-                    FullGenerationTorque = emData.Overload.ContinuousTorque
-                }
-            });
-        var limitedFld = AbstractSimulationDataAdapter.IntersectEMFullLoadCurves(emData.EfficiencyData.VoltageLevels.First().FullLoadCurve, contTqFld);
 
-        var fullLoadCurve = limitedFld.FullLoadEntries.Select(x =>
-            new EngineFullLoadCurve.FullLoadCurveEntry() {
-                EngineSpeed = x.MotorSpeed,
-                TorqueFullLoad = -x.FullDriveTorque,
-                TorqueDrag = -x.FullGenerationTorque
-            }).ToList();
-        var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>();
-        var engineData = new CombustionEngineData() {
-            IdleSpeed = 600.RPMtoRad()
-        };
-        fullLoadCurves[(uint)(0)] = new EngineFullLoadCurve(fullLoadCurve, null) { EngineData = engineData };
+		var expectedDownshift = new Point[][] {
+			new Point[] { },
+			new[] {
+				new Point(6480.117820000001, -319),
+				new Point(6480.117820000001, -284.2),
+				new Point(6480.11782, -284.2),
+				new Point(6406.480118, -284.2),
+				new Point(6332.842415, -284.2),
+				new Point(6259.204713, -284.2),
+				new Point(6185.56701, -284.2),
+				new Point(6111.929308000001, -284.2),
+				new Point(6038.291605, -284.2),
+				new Point(5964.653903, -284.2),
+				new Point(5891.016200000001, -284.2),
+				new Point(5817.378498, -284.2),
+				new Point(5743.740795, -284.2),
+				new Point(5670.103092999999, -284.2),
+				new Point(5596.46539, -284.2),
+				new Point(5522.827688, -284.2),
+				new Point(5449.189984999999, -284.2),
+				new Point(5375.552283000001, -284.2),
+				new Point(5301.91458, -284.2),
+				new Point(5228.276878, -284.2),
+				new Point(5154.639175000001, -284.2),
+				new Point(5081.001473, -284.2),
+				new Point(5007.36377, -284.2),
+				new Point(4933.726068000001, -284.2),
+				new Point(4860.088365, -284.2),
+				new Point(4786.450663, -284.2),
+				new Point(4712.81296, -284.2),
+				new Point(4639.175258, -284.2),
+				new Point(4565.537555, -284.2),
+				new Point(4491.899853, -284.2),
+				new Point(4418.26215, -284.2),
+				new Point(4344.624448, -284.2),
+				new Point(4270.986745, -284.2),
+				new Point(4197.349043, -284.2),
+				new Point(4123.71134, -284.2),
+				new Point(4050.073638, -284.2),
+				new Point(3976.435935, -284.2),
+				new Point(3902.7982329999995, -284.2),
+				new Point(3829.16053, -284.2),
+				new Point(3755.5228280000006, -284.2),
+				new Point(3681.8851250000002, -284.2),
+				new Point(3608.247423, -284.2),
+				new Point(3534.60972, -284.2),
+				new Point(3460.972018, -284.2),
+				new Point(3387.334315, -284.2),
+				new Point(3313.696613, -284.2),
+				new Point(3240.05891, -284.2),
+				new Point(3166.4212079999998, -284.2),
+				new Point(3092.783505, -284.2),
+				new Point(3019.145803, -284.2),
+				new Point(2945.5081000000005, -284.2),
+				new Point(2871.870398, -284.2),
+				new Point(2798.232695, -284.2),
+				new Point(2724.594993, -284.2),
+				new Point(2650.95729, -284.2),
+				new Point(2577.319588, -284.2),
+				new Point(2503.681885, -284.2),
+				new Point(2496.3181150000005, -284.2),
+				new Point(2481.590574, -284.2),
+				new Point(2466.8630340000004, -284.2),
+				new Point(2461.1589140000006, -284.2),
+				new Point(2452.135493, -284.2),
+				new Point(253.98783622789142, -284.2),
+				new Point(253.98783622789142, 284.2),
+				new Point(2452.135493, 284.2),
+				new Point(2461.1589140000006, 284.2),
+				new Point(2466.8630340000004, 284.2),
+				new Point(2481.590574, 284.2),
+				new Point(2496.3181150000005, 284.2),
+				new Point(2503.681885, 284.2),
+				new Point(2539.878362278914, 284.2),
+				new Point(2539.878362278914, 319),
+			},
+			new[] {
+				new Point(6480.117820000001, -319),
+				new Point(6480.117820000001, -284.2),
+				new Point(6480.11782, -284.2),
+				new Point(6406.480118, -284.2),
+				new Point(6332.842415, -284.2),
+				new Point(6259.204713, -284.2),
+				new Point(6185.56701, -284.2),
+				new Point(6111.929308000001, -284.2),
+				new Point(6038.291605, -284.2),
+				new Point(5964.653903, -284.2),
+				new Point(5891.016200000001, -284.2),
+				new Point(5817.378498, -284.2),
+				new Point(5743.740795, -284.2),
+				new Point(5670.103092999999, -284.2),
+				new Point(5596.46539, -284.2),
+				new Point(5522.827688, -284.2),
+				new Point(5449.189984999999, -284.2),
+				new Point(5375.552283000001, -284.2),
+				new Point(5301.91458, -284.2),
+				new Point(5228.276878, -284.2),
+				new Point(5154.639175000001, -284.2),
+				new Point(5081.001473, -284.2),
+				new Point(5007.36377, -284.2),
+				new Point(4933.726068000001, -284.2),
+				new Point(4860.088365, -284.2),
+				new Point(4786.450663, -284.2),
+				new Point(4712.81296, -284.2),
+				new Point(4639.175258, -284.2),
+				new Point(4565.537555, -284.2),
+				new Point(4491.899853, -284.2),
+				new Point(4418.26215, -284.2),
+				new Point(4344.624448, -284.2),
+				new Point(4270.986745, -284.2),
+				new Point(4197.349043, -284.2),
+				new Point(4123.71134, -284.2),
+				new Point(4050.073638, -284.2),
+				new Point(3976.435935, -284.2),
+				new Point(3902.7982329999995, -284.2),
+				new Point(3829.16053, -284.2),
+				new Point(3755.5228280000006, -284.2),
+				new Point(3681.8851250000002, -284.2),
+				new Point(3608.247423, -284.2),
+				new Point(3534.60972, -284.2),
+				new Point(3460.972018, -284.2),
+				new Point(3387.334315, -284.2),
+				new Point(3313.696613, -284.2),
+				new Point(3240.05891, -284.2),
+				new Point(3166.4212079999998, -284.2),
+				new Point(3092.783505, -284.2),
+				new Point(3019.145803, -284.2),
+				new Point(2945.5081000000005, -284.2),
+				new Point(2871.870398, -284.2),
+				new Point(2798.232695, -284.2),
+				new Point(2724.594993, -284.2),
+				new Point(2650.95729, -284.2),
+				new Point(2577.319588, -284.2),
+				new Point(2503.681885, -284.2),
+				new Point(2496.3181150000005, -284.2),
+				new Point(2481.590574, -284.2),
+				new Point(2466.8630340000004, -284.2),
+				new Point(2461.1589140000006, -284.2),
+				new Point(2452.135493, -284.2),
+				new Point(253.98783622789142, -284.2),
+				new Point(253.98783622789142, 284.2),
+				new Point(2452.135493, 284.2),
+				new Point(2461.1589140000006, 284.2),
+				new Point(2466.8630340000004, 284.2),
+				new Point(2481.590574, 284.2),
+				new Point(2496.3181150000005, 284.2),
+				new Point(2503.681885, 284.2),
+				new Point(2539.878362278914, 284.2),
+				new Point(2539.878362278914, 319),
+			}
+		};
+		var expectedUpshift = new Point[][] {
+			new [] {
+				new Point(7290.132547500001, 319),
+				new Point(7290.132547500001, -319),
+			},
+			new [] {
+				new Point(7290.132547500001, 319),
+				new Point(7290.132547500001, -319),
+			},
+			new [] {
+				new Point(7290.132547500001, 319),
+				new Point(7290.132547500001, -319),
+			}
+		};
+        //emData.ContinuousTorque = 500.SI<NewtonMeter>();
+        //var contTqFld = new ElectricMotorFullLoadCurve(new List<ElectricMotorFullLoadCurve.FullLoadEntry>() {
+        //        new ElectricMotorFullLoadCurve.FullLoadEntry() {
+        //            MotorSpeed = 0.RPMtoRad(),
+        //            FullDriveTorque = -emData.Overload.ContinuousTorque,
+        //            FullGenerationTorque = emData.Overload.ContinuousTorque
+        //        },
+        //        new ElectricMotorFullLoadCurve.FullLoadEntry() {
+        //            MotorSpeed = 1.1 * emData.EfficiencyData.VoltageLevels.First().FullLoadCurve.MaxSpeed,
+        //            FullDriveTorque = -emData.Overload.ContinuousTorque,
+        //            FullGenerationTorque = emData.Overload.ContinuousTorque
+        //        }
+        //    });
+
+		var countEm = 2;
+		var emRatio = 2.0;
+		var continuousTorque = 145.SI<NewtonMeter>() * countEm;
+        var emFld = new ElectricMotorFullLoadCurve(EM_FullLoad_125kW_485Nm.Select(x =>
+			new ElectricMotorFullLoadCurve.FullLoadEntry() {
+				// invert motor full load curve here as would be done in respective reader class
+				MotorSpeed = x[0].RPMtoRad(),
+				FullDriveTorque = -x[1].SI<NewtonMeter>() * countEm,
+				FullGenerationTorque = -x[2].SI<NewtonMeter>() * countEm,
+			}).ToList());
+
+		var emData = new ElectricMotorData() {
+			RatioADC = emRatio,
+			Overload = new OverloadData() {
+				ContinuousTorque = continuousTorque,
+			},
+			EfficiencyData = new VoltageLevelData() {
+				VoltageLevels = new List<ElectricMotorVoltageLevelData>() {
+					new ElectricMotorVoltageLevelData() {
+						FullLoadCurve = emFld
+					}
+				}
+			}
+		};
+		var gearboxData = new Mock<IGearboxEngineeringInputData>().Object;
+		var gear = new Mock<ITransmissionInputData>().Object;
+		Mock.Get(gearboxData).Setup(g => g.Gears).Returns(new List<ITransmissionInputData>() {
+			gear, gear, gear, gear, gear, gear, gear, gear, gear, gear, gear, gear,
+		});
+        //var limitedFld = AbstractSimulationDataAdapter.IntersectEMFullLoadCurves(emData.EfficiencyData.VoltageLevels.First().FullLoadCurve, contTqFld);
+
+        //var fullLoadCurve = limitedFld.FullLoadEntries.Select(x =>
+        //    new EngineFullLoadCurve.FullLoadCurveEntry() {
+        //        EngineSpeed = x.MotorSpeed,
+        //        TorqueFullLoad = -x.FullDriveTorque,
+        //        TorqueDrag = -x.FullGenerationTorque
+        //    }).ToList();
+        //var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>();
+        //var engineData = new CombustionEngineData() {
+        //    IdleSpeed = 600.RPMtoRad()
+        //};
+        //fullLoadCurves[(uint)(0)] = new EngineFullLoadCurve(fullLoadCurve, null) { EngineData = engineData };
 
         var shiftPolygons = new List<ShiftPolygon>();
-        var runData = new VectoRunData() { GearshiftParameters = new ShiftStrategyParameters() };
-        if (factorDownshiftSpeed.HasValue) {
-            runData.GearshiftParameters.PEV_DeRatedDownshiftSpeedFactor = factorDownshiftSpeed.Value;
-        }
-        var shiftStrategy = new PEVAMTShiftStrategy(new VehicleContainer(ExecutionMode.Engineering) { RunData = runData });
+		var runData = new VectoRunData() { GearshiftParameters = new ShiftStrategyParameters() };
+        var shiftStrategy = new PEVAMTShiftStrategy(new VehicleContainer(ExecutionMode.Engineering) { RunData = runData});
         var deRatedShiftLines = shiftStrategy.CalculateDeratedShiftLines(emData, gearboxData.Gears,
-            r_dyn, axlegearRatio, gearboxData.Type);
+            r_dyn, axlegearRatio, GearboxType.AMT);
         for (var i = 0; i < gearboxData.Gears.Count; i++) {
             shiftPolygons.Add(deRatedShiftLines[(uint)(i + 1)]);
-            fullLoadCurves[(uint)(i + 1)] = new EngineFullLoadCurve(fullLoadCurve, null) { EngineData = engineData };
         }
-        var suffix = factorDownshiftSpeed.HasValue ? $"_{factorDownshiftSpeed.Value}" : "";
-        var imageFile = Path.Combine(Path.GetDirectoryName(pevE2Job), Path.GetFileNameWithoutExtension(pevE2Job) + $"_shiftlines_DeRated{suffix}.png");
+
+		for (var i = 0; i < Math.Min(gearboxData.Gears.Count, Math.Min(expectedDownshift.Length, expectedUpshift.Length)); i++) {
+			foreach (var tuple in expectedDownshift[i].Zip(shiftPolygons[i].Downshift, Tuple.Create)) {
+				Assert.AreEqual(tuple.Item1.X, tuple.Item2.AngularSpeed.AsRPM, 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Torque.Value(), 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+			}
+
+			foreach (var tuple in expectedUpshift[i].Zip(shiftPolygons[i].Upshift, Tuple.Create)) {
+				Assert.AreEqual(tuple.Item1.X, tuple.Item2.AngularSpeed.AsRPM, 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Torque.Value(), 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+			}
+		}
+
+        //var suffix = factorDownshiftSpeed.HasValue ? $"_{factorDownshiftSpeed.Value}" : "";
+        //var imageFile = Path.Combine(Path.GetDirectoryName(pevE2Job), Path.GetFileNameWithoutExtension(pevE2Job) + $"_shiftlines_DeRated{suffix}.png");
 
         //ShiftPolygonDrawer.DrawShiftPolygons(Path.GetDirectoryName(pevE2Job), fullLoadCurves, shiftPolygons,
         //    imageFile,

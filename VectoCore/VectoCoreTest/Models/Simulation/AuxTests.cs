@@ -180,7 +180,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"AuxWriteModFileSumFile.vsum");
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void AuxConstant()
 		{
 			var dataWriter = new MockModalDataContainer();
@@ -213,7 +214,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			AssertHelper.AreRelativeEqual(constPower / speed, auxDemand);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void AuxDirect()
 		{
 			var dataWriter = new MockModalDataContainer();

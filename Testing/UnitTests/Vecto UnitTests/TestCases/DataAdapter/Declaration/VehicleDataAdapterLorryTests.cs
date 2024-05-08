@@ -17,7 +17,7 @@ using CollectionAssert = NUnit.Framework.CollectionAssert;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.DataAdapter.Declaration;
 
-public class VehicleDataAdapterLorry
+public class VehicleDataAdapterLorryTests
 {
 	private StandardKernel _kernel;
 

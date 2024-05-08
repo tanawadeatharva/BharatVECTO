@@ -301,6 +301,7 @@ namespace TUGraz.VectoCore.Tests.InputData.DeclarationDataAdapterTest
                 VehicleClass.ClassP33DD, 15041),
             TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl3, false, 25000, 4, VC_CF, RC_II, false,
                 VehicleClass.ClassP33DD, 14166),
+			Category(Definitions.TESTCASE_MIGRATED)
         ]
 		public void CompletedGenericBusCurbMassTest_HighTPMLM(VectoSimulationJobType jobType, ArchitectureID archId,
 			AxleConfiguration axleConfiguration, bool articulated, double TPMLM, int runIdx,
@@ -364,6 +365,7 @@ namespace TUGraz.VectoCore.Tests.InputData.DeclarationDataAdapterTest
                 VehicleClass.ClassP33DD, 15041),
             TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl3, false, 13000, 4, VC_CF, RC_II, false,
                 VehicleClass.ClassP33DD, 14166),
+			Category(Definitions.TESTCASE_MIGRATED)
         ]
 		public void CompletedGenericBusCurbMassTest_LowTPMLM(VectoSimulationJobType jobType, ArchitectureID archId,
 			AxleConfiguration axleConfiguration, bool articulated, double TPMLM, int runIdx,
