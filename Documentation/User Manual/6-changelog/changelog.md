@@ -1,5 +1,12 @@
 # Changelog
 
+**VECTO-4.1.3**
+
+***Build 3415 (2024-05-08)***
+
+- Hotfixes
+   * CodeEU-638: Incorrect construction payloads for group 9 non-vocational vehicle
+
 **VECTO-4.1.1**
 
 ***Build 3413 (2024-05-06)***
