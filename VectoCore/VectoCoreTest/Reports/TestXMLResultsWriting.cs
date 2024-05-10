@@ -67,7 +67,7 @@ public class TestXMLResultsWriting
 		TestCase(VehicleCategory.HeavyBusCompletedVehicle, VectoSimulationJobType.ParallelHybridVehicle, false, false, typeof(CIFResultsWriter.HEVNonOVCBus)),
 		TestCase(VehicleCategory.HeavyBusCompletedVehicle, VectoSimulationJobType.SerialHybridVehicle, true, false, typeof(CIFResultsWriter.HEVOVCBus)),
 		TestCase(VehicleCategory.HeavyBusCompletedVehicle, VectoSimulationJobType.BatteryElectricVehicle, true, false, typeof(CIFResultsWriter.PEVBus)),
-
+		Category(Definitions.TESTCASE_MIGRATED)
 	]
 	public void Test_CIF_ReportResultInstance(VehicleCategory vehicleCategory, VectoSimulationJobType jobType, bool ovc,
 		bool exempted, Type expectedResultWriterType)
@@ -98,6 +98,7 @@ public class TestXMLResultsWriting
 
 		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, true, true, TestName = "CIF_ReportResult_WritingResults: Lorry HEV exempted"),
 		TestCase(VectoSimulationJobType.ConventionalVehicle, true, true, true, TestName = "CIF_ReportResult_WritingResults: Lorry Conv exempted"),
+		Category(Definitions.TESTCASE_MIGRATED)
 	]
 	public void Test_CIF_ReportResult_WritingResults_Lorry(VectoSimulationJobType jobType, bool ovc, bool exempted, bool success, params FuelType[] fuels)
 	{
@@ -156,6 +157,7 @@ public class TestXMLResultsWriting
 		TestCase(VectoSimulationJobType.BatteryElectricVehicle, true, false, false, TestName = "CIF_ReportResult_WritingResults: CompletedBus PEV ERROR"),
 
 		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, true, true, TestName = "CIF_ReportResult_WritingResults: CompletedBus HEV exempted"),
+		Category(Definitions.TESTCASE_MIGRATED)
 	]
 	public void TestReportResult_WritingResults_CompletedBus(VectoSimulationJobType jobType, bool ovc, bool exempted, bool success, params FuelType[] fuels)
 	{
@@ -218,6 +220,7 @@ public class TestXMLResultsWriting
 		TestCase(VehicleCategory.HeavyBusCompletedVehicle, VectoSimulationJobType.ParallelHybridVehicle, false, false, typeof(MRFResultsWriter.HEVNonOVCBus)),
 		TestCase(VehicleCategory.HeavyBusCompletedVehicle, VectoSimulationJobType.SerialHybridVehicle, true, false, typeof(MRFResultsWriter.HEVOVCBus)),
 		TestCase(VehicleCategory.HeavyBusCompletedVehicle, VectoSimulationJobType.BatteryElectricVehicle, true, false, typeof(MRFResultsWriter.PEVBus)),
+		Category(Definitions.TESTCASE_MIGRATED)
 	]
 	public void Test_MRF_ReportResultInstance(VehicleCategory vehicleCategory, VectoSimulationJobType jobType, bool ovc,
 		bool exempted, Type expectedResultWriterType)
@@ -247,6 +250,7 @@ public class TestXMLResultsWriting
 
 		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, true, true, TestName = "MRF_ReportResult_WritingResults: Lorry HEV exempted"),
 		TestCase(VectoSimulationJobType.ConventionalVehicle, true, true, true, TestName = "MRF_ReportResult_WritingResults: Lorry Conv exempted"),
+		Category(Definitions.TESTCASE_MIGRATED)
 	]
 	public void Test_MRF_ReportResult_WritingResults_Lorry(VectoSimulationJobType jobType, bool ovc, bool exempted, bool success, params FuelType[] fuels)
 	{
@@ -306,6 +310,7 @@ public class TestXMLResultsWriting
 
 		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, true, true, TestName = "MRF_ReportResult_WritingResults: CompletedBus HEV exempted"),
 		TestCase(VectoSimulationJobType.ConventionalVehicle, true, true, true, TestName = "MRF_ReportResult_WritingResults: CompletedBus Conv exempted"),
+		Category(Definitions.TESTCASE_MIGRATED)
 	]
 	public void Test_MRF_ReportResult_WritingResults_Bus(VectoSimulationJobType jobType, bool ovc, bool exempted, bool success, params FuelType[] fuels)
 	{
@@ -361,6 +366,7 @@ public class TestXMLResultsWriting
 		TestCase(VehicleCategory.HeavyBusPrimaryVehicle, VectoSimulationJobType.ParallelHybridVehicle, false, false, typeof(VIFResultsWriter.HEVNonOVCBus)),
 		TestCase(VehicleCategory.HeavyBusPrimaryVehicle, VectoSimulationJobType.SerialHybridVehicle, true, false, typeof(VIFResultsWriter.HEVOVCBus)),
 		TestCase(VehicleCategory.HeavyBusPrimaryVehicle, VectoSimulationJobType.BatteryElectricVehicle, true, false, typeof(VIFResultsWriter.PEVBus)),
+		Category(Definitions.TESTCASE_MIGRATED)
 	]
 	public void Test_VIF_ReportResultInstance(VehicleCategory vehicleCategory, VectoSimulationJobType jobType, bool ovc,
 		bool exempted, Type expectedResultWriterType)
@@ -389,6 +395,7 @@ public class TestXMLResultsWriting
 
 		TestCase(VectoSimulationJobType.ParallelHybridVehicle, true, true, true, TestName = "VIF_ReportResult_WritingResults: PrimaryBus HEV exempted"),
 		TestCase(VectoSimulationJobType.ConventionalVehicle, true, true, true, TestName = "VIF_ReportResult_WritingResults: PrimaryBus Conv exempted"),
+		Category(Definitions.TESTCASE_MIGRATED)
 	]
 	public void Test_VIF_ReportResult_WritingResults_Bus(VectoSimulationJobType jobType, bool ovc, bool exempted, bool success, params FuelType[] fuels)
 	{
@@ -431,7 +438,8 @@ public class TestXMLResultsWriting
 
 	// ---------
 
-	[TestCase()]
+	[TestCase(),
+	Category(Definitions.TESTCASE_MIGRATED)]
 	public void TestCalculateOVCWeightedResult(params FuelType[] fuels)
 	{
 		var jobType = VectoSimulationJobType.ParallelHybridVehicle;
@@ -467,7 +475,8 @@ public class TestXMLResultsWriting
 
 	// ---------
 
-	[TestCase()]
+	[TestCase(),
+	Category(Definitions.TESTCASE_MIGRATED)]
 	public void TestCalculatePEVRanges(params FuelType[] fuels)
 	{
 		var jobType = VectoSimulationJobType.ParallelHybridVehicle;

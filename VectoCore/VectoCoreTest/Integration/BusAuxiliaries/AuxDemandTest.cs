@@ -79,7 +79,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			Assert.AreEqual(expectedPowerDemand, (torque * engineSpeed).Value(), 1e-2);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.DUPLICATE)]
 		public void AuxFCConsumptionTest()
 		{
 			var driveLinePower = 148;

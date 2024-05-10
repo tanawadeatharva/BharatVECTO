@@ -103,6 +103,7 @@ public class BusDeclarationDataTest
 	TestCase(HeatPumpType.none, HeaterType.WaterElectricHeater, true, HeatingDistributionCase.HeatingDistribution10),
 	TestCase(HeatPumpType.none, HeaterType.None, true, HeatingDistributionCase.HeatingDistribution11),
 	TestCase(HeatPumpType.none, HeaterType.None, false, HeatingDistributionCase.HeatingDistribution12),
+	Category(Definitions.TESTCASE_MIGRATED)
 	]
 	public void TestBusAuxHeatingDistributionCase(HeatPumpType heatPump, HeaterType heater, bool fuelHeater,
 		HeatingDistributionCase expectedCase)
@@ -127,6 +128,7 @@ public class BusDeclarationDataTest
 	TestCase(HeatingDistributionCase.HeatingDistribution10, HeatPumpType.none, HeaterType.WaterElectricHeater, true),
 	TestCase(HeatingDistributionCase.HeatingDistribution11, HeatPumpType.none, HeaterType.None, true),
 //	TestCase(HeatingDistributionCase.HeatingDistribution12, HeatPumpType.none, HeaterType.None, false),
+	Category(Definitions.TESTCASE_MIGRATED)
 	]
 	public void TestBusAuxHeatingDistribution(HeatingDistributionCase hdCase, HeatPumpType hpType, HeaterType heater, bool fuelHeater)
 	{
@@ -146,7 +148,8 @@ public class BusDeclarationDataTest
 		}
 	}
 
-	[Test]
+	[Test,
+	Category(Definitions.TESTCASE_MIGRATED)]
 	public void TestBusAusHeatingDistribution_ALL()
 	{
 		var heatpumps = EnumHelper.GetValues<HeatPumpType>().Where(x => !x.IsOneOf(HeatPumpType.not_applicable))

@@ -37,6 +37,8 @@
     <Folder Include="TestCases\DeclarationDataTests\GenericModelParams\Vehicle\" />
     <Folder Include="TestCases\InputData\InputDataReader\" />
     <Folder Include="TestCases\ModelValidationTests\GearShiftPolygon\" />
+    <Folder Include="TestCases\Reports\MRF\" />
+    <Folder Include="TestCases\Reports\WeightedResultCalculation\" />
     <Folder Include="Utils\DataAdapter\" />
     <Folder Include="Utils\ExtensionMethods\" />
   </ItemGroup>
