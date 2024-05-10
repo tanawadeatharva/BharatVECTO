@@ -11,7 +11,6 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
-using TUGraz.VectoCore.InputData.Reader.ShiftStrategy;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -171,47 +170,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
 				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration,
 
-				StartVelocity = DeclarationData.GearboxTCU.StartSpeed,
-				GearResidenceTime = DeclarationData.GearboxTCU.GearResidenceTime,
-				DnT99L_highMin1 = DeclarationData.GearboxTCU.DnT99L_highMin1,
-				DnT99L_highMin2 = DeclarationData.GearboxTCU.DnT99L_highMin2,
-				AllowedGearRangeUp = DeclarationData.GearboxTCU.AllowedGearRangeUp,
-				AllowedGearRangeDown = DeclarationData.GearboxTCU.AllowedGearRangeDown,
-				LookBackInterval = DeclarationData.GearboxTCU.LookBackInterval,
-				DriverAccelerationLookBackInterval = DeclarationData.GearboxTCU.DriverAccelerationLookBackInterval,
-				DriverAccelerationThresholdLow = DeclarationData.GearboxTCU.DriverAccelerationThresholdLow,
-				AverageCardanPowerThresholdPropulsion =
-					DeclarationData.GearboxTCU.AverageCardanPowerThresholdPropulsion,
-				CurrentCardanPowerThresholdPropulsion =
-					DeclarationData.GearboxTCU.CurrentCardanPowerThresholdPropulsion,
-				TargetSpeedDeviationFactor = DeclarationData.GearboxTCU.TargetSpeedDeviationFactor,
-				EngineSpeedHighDriveOffFactor = DeclarationData.GearboxTCU.EngineSpeedHighDriveOffFactor,
 				RatingFactorCurrentGear = gearboxType.AutomaticTransmission()
 					? DeclarationData.GearboxTCU.RatingFactorCurrentGearAT
 					: DeclarationData.GearboxTCU.RatingFactorCurrentGear,
-				AccelerationReserveLookup = AccelerationReserveLookupReader.ReadFromStream(
-					RessourceHelper.ReadStream(
-						DeclarationData.DeclarationDataResourcePrefix +
-						".GearshiftParameters.AccelerationReserveLookup.csv")),
-				ShareTorque99L = ShareTorque99lLookupReader.ReadFromStream(
-					RessourceHelper.ReadStream(
-						DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareTq99L.csv")
-				),
-				PredictionDurationLookup = PredictionDurationLookupReader.ReadFromStream(
-					RessourceHelper.ReadStream(
-						DeclarationData.DeclarationDataResourcePrefix +
-						".GearshiftParameters.PredictionTimeLookup.csv")
-				),
-				ShareIdleLow = ShareIdleLowReader.ReadFromStream(
-					RessourceHelper.ReadStream(
-						DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareIdleLow.csv")
-				),
-				ShareEngineHigh = EngineSpeedHighLookupReader.ReadFromStream(
-					RessourceHelper.ReadStream(
-						DeclarationData.DeclarationDataResourcePrefix +
-						".GearshiftParameters.ShareEngineSpeedHigh.csv")
-				),
-
+				
 				//--------------------
 				RatioEarlyUpshiftFC = DeclarationData.GearboxTCU.RatioEarlyUpshiftFC / axleRatio,
 				RatioEarlyDownshiftFC = DeclarationData.GearboxTCU.RatioEarlyDownshiftFC / axleRatio,
