@@ -947,7 +947,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
-		public bool? EngineStopStartNullable
+		public virtual bool? EngineStopStartNullable
 		{
 			get => _engineStopStartNullable;
 			set
@@ -966,7 +966,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
-		public EcoRollType? EcoRollTypeNullable
+		public virtual EcoRollType? EcoRollTypeNullable
 		{
 			get => _ecoRollTypeNullable;
 			set
@@ -1336,7 +1336,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public override bool EcoRollEnabled => false;
 
-		public override bool ATEcoRollReleaseLockupClutchEnabled => false;
+		public override EcoRollType? EcoRollTypeNullable {
+			get { return EcoRollType.None; }
+			set { }
+		}
+
+        public override bool ATEcoRollReleaseLockupClutchEnabled => false;
 
 
         public override string XMLType => XMLTypes.Vehicle_Hev_CompletedBusDeclarationType;
@@ -1363,7 +1368,19 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public override bool EcoRollEnabled => false;
 
+		public override EcoRollType? EcoRollTypeNullable
+		{
+			get { return EcoRollType.None; }
+			set { }
+		}
+
 		public override bool EngineStopStartEnabled => false;
+
+		public override bool? EngineStopStartNullable
+		{
+			get { return false; }
+			set { }
+		}
 
 		public override bool ATEcoRollReleaseLockupClutchEnabled => false;
 
@@ -1391,8 +1408,18 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public override bool EcoRollEnabled => false;
 
-		public override bool EngineStopStartEnabled => false;
+		public override EcoRollType? EcoRollTypeNullable {
+			get { return EcoRollType.None; }
+			set { }
+		}
 
+        public override bool EngineStopStartEnabled => false;
+
+		public override bool? EngineStopStartNullable {
+			get { return false; }
+			set { }
+		}
+		
 		public override bool ATEcoRollReleaseLockupClutchEnabled => false;
 
 
