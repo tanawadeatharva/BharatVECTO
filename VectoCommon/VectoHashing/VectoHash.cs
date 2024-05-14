@@ -139,7 +139,7 @@ namespace TUGraz.VectoHashing
 
 		public string ComputeHash(IEnumerable<string> canonicalization = null, string digestMethod = null)
 		{
-			var isMultiStep = (Document.ChildNodes.Count > 0) 
+			var isMultiStep = (Document.ChildNodes.Count > 1) 
 				&& Document.ChildNodes[1].ChildNodes.Cast<XmlNode>().Any(x => x.LocalName == XMLNames.ManufacturingStep);
 			
 			var nodes = Document.SelectNodes(GetComponentQueryString(null, isMultiStep));
