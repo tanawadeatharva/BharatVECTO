@@ -48,7 +48,7 @@ public class BusAuxTests
     }
 
 
-    public static BusAuxiliariesAdapter CreateBusAuxAdapterForTesting(double vehicleMass)
+    public static BusAuxiliariesAdapter CreateBusAuxAdapterForTesting(double vehicleMass, DrivingBehavior behavior = DrivingBehavior.Braking, DrivingAction action = DrivingAction.Brake)
     {
         var container = new Mock<IVehicleContainer>();
         var modelData = new CombustionEngineData()
@@ -75,8 +75,8 @@ public class BusAuxTests
         container.Setup(v => v.EngineInfo).Returns(engine.Object);
         container.Setup(v => v.EngineCtl).Returns(engineCtl.Object);
         var driver = new Mock<IDriverInfo>();
-        driver.Setup(d => d.DrivingAction).Returns(DrivingAction.Brake);
-        driver.Setup(d => d.DriverBehavior).Returns(DrivingBehavior.Braking);
+        driver.Setup(d => d.DrivingAction).Returns(action);
+        driver.Setup(d => d.DriverBehavior).Returns(behavior);
         container.Setup(v => v.DriverInfo).Returns(driver.Object);
         var gbx = new Mock<IGearboxInfo>();
         gbx.Setup(g => g.GearEngaged(It.IsNotNull<Second>())).Returns(true);
