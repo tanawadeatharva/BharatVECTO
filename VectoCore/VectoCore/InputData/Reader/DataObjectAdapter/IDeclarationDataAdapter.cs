@@ -16,8 +16,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public interface IDeclarationDataAdapter
 	{
-		
-
 		VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission first, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> keyValuePair, bool allowVocational);
 		
 		GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData,
@@ -28,7 +26,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		RetarderData CreateRetarderData(IRetarderInputData retarderData, ArchitectureID archID,
 			IIEPCDeclarationInputData iepcInputData);
-		
+				
 		AxleGearData CreateAxleGearData(IAxleGearInputData axleGearInputData);
 
 		AngledriveData CreateAngledriveData(IAngledriveInputData angledriveData);
@@ -135,7 +133,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			GearboxData gearboxData, CombustionEngineData engineData,
 			IList<Tuple<PowertrainPosition, ElectricMotorData>> runDataElectricMachinesData, ArchitectureID architectureId);
 
-    }
+		RetarderData CreateGenericRetarderData(IRetarderInputData retarderData, VectoRunData vectoRun);
+	}
 
 	public interface ISpecificCompletedBusDeclarationDataAdapter
 	{

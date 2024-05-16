@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 			private readonly IDriverDataAdapterBus _driverDataAdapter = new CompletedBusGenericDriverDataAdapter();
 			//protected readonly IVehicleDataAdapter _vehicleDataAdapter = new CompletedBusGenericVehicleDataAdapter();
 			private readonly IAxleGearDataAdapter _axleGearDataAdapter = new GenericCompletedBusAxleGearDataAdapter();
-			private readonly IRetarderDataAdapter _retarderDataAdapter = new GenericRetarderDataAdapter();
+			private readonly IGenericRetarderDataAdapter _retarderDataAdapter = new GenericRetarderDataAdapter();
 			private readonly IAirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
 			private readonly IAngledriveDataAdapter _angledriveDataAdapter = new GenericAngledriveDataAdapter();
             #endregion
@@ -106,7 +106,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 			public RetarderData CreateRetarderData(IRetarderInputData retarderData, ArchitectureID archID,
 				IIEPCDeclarationInputData iepcInputData)
 			{
-				return _retarderDataAdapter.CreateRetarderData(retarderData, archID, iepcInputData);
+				throw new NotImplementedException("No longer applicable to buses.");
+			}
+
+			public RetarderData CreateGenericRetarderData(IRetarderInputData retarderData, VectoRunData vectoRun)
+			{
+				return _retarderDataAdapter.CreateGenericRetarderData(retarderData, vectoRun);
 			}
 
 			public virtual IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits,
