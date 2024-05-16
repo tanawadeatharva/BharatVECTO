@@ -15,7 +15,8 @@ public class ADASTests
     [TestCase(false, false, false, PredictiveCruiseControlType.None, "0"),
         TestCase(true, false, false, PredictiveCruiseControlType.None, "1"),
         TestCase(true, false, false, PredictiveCruiseControlType.Option_1_2_3, "7/2"),
-        TestCase(true, true, false, PredictiveCruiseControlType.Option_1_2, "10/1")]
+        TestCase(true, true, false, PredictiveCruiseControlType.Option_1_2, "10/1")
+	]
     public void TestADASCombinationLookup(bool engineStopStart, bool ecoRollWOEngineStop, bool ecoRollWEngineStop, PredictiveCruiseControlType pcc,
     string expectedADASGroup)
     {

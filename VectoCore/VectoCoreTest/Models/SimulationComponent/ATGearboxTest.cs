@@ -88,6 +88,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		TestCase(70, 100, 6),
 		TestCase(70, 300, 6),
 		TestCase(70, 600, 6),
+			Category(Definitions.TESTCASE_MIGRATED)
 		]
 		public void TestATGearInitialize(double vehicleSpeed, double torque, int expectedGear)
 		{
@@ -195,7 +196,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestATGearboxLastGearDisabled()
 		{
 			var limits = new List<ITorqueLimitInputData>() {
@@ -226,7 +228,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			
 		}
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestATGearboxLastTwoGearsDisabled()
 		{
 			var limits = new List<ITorqueLimitInputData>() {
@@ -244,7 +247,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(6, gbx.Gears.Count);
 		}
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestATGearboxFirstGearDisabled()
 		{
 			var limits = new List<ITorqueLimitInputData>() {

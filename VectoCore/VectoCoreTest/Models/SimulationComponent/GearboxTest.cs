@@ -121,7 +121,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			return ((60 * v) / (2 * r * Math.PI / 1000)).RPMtoRad();
 		}
 
-		[TestCase(520, 20.320, 279698.4, 9401.44062)]
+		[TestCase(520, 20.320, 279698.4, 9401.44062),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void AxleGearTest(double rdyn, double speed, double power, double expectedLoss)
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
@@ -148,7 +149,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				"AngularVelocity Engine Side");
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void AxleGearValidRangeTest()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
@@ -157,7 +159,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(0, axleGear.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false).Count);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void AxleGearInvalidRangeTest()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
@@ -167,7 +170,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(1, errors.Count);
 		}
 
-		[TestCase(520, 20.320, 279698.4, 9401.44062, 3.240355)]
+		[TestCase(520, 20.320, 279698.4, 9401.44062, 3.240355),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void Angledrive_Losses(double rdyn, double speed, double power, double expectedLoss, double ratio)
 		{
 			// convert to SI
@@ -199,7 +203,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				message: "Torque Engine Side");
 		}
 
-		[TestCase(@"TestData/Components/24t Coach LessThanTwoGears.vgbx")]
+		[TestCase(@"TestData/Components/24t Coach LessThanTwoGears.vgbx"),
+			// this testcase checks the json readin method, not the data adapter, nor the gearbox itself
+			Category(Definitions.TESTCASE_MIGRATED)
+		]
 		public void Gearbox_LessThanTwoGearsException(string wrongFile)
 		{
 			AssertHelper.Exception<VectoSimulationException>(
@@ -211,7 +218,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		TestCase(GearboxDataFile, EngineDataFile, 6.38, -1300, 1000, -1267.0686),
 		// the following entries are beyond the original loss map, but are not 'extrapolated' because the loss-map is extended on reading
 		TestCase(GearboxDataFile, EngineDataFile, 6.38, 6300, 1600, 6437.86530),
-		TestCase(GearboxDataFile, EngineDataFile, 6.38, -3300, 1000, -3227.8529411)]
+		TestCase(GearboxDataFile, EngineDataFile, 6.38, -3300, 1000, -3227.8529411),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void Gearbox_LossMapInterpolation(string gbxFile, string engineFile, double ratio, double torque,
 			double inAngularSpeed, double expectedTorque)
 		{

@@ -205,13 +205,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var numGears = gbxInputData.Gears.Count;
 			var gearNumbers = gbxInputData.Gears.Select(g => g.Gear);
 
-			if (gearNumbers.Distinct().Count() != numGears) {
+			if (numGears < 1) {
+				throw new VectoException("At least one Gear-Entry must be defined in Gearbox!");
+			}
+
+            if (gearNumbers.Distinct().Count() != numGears) {
 				throw new VectoException("Duplicate gear number");
 			}
 
 			if (gearNumbers.Min() < 0 || gearNumbers.Max() > numGears) {
 				throw new VectoException("Gear numbers out of range");
 			}
+
 		}
 
 

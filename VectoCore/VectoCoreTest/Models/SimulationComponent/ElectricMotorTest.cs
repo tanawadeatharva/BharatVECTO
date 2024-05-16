@@ -499,6 +499,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		[TestCase(0.95, 1000, 1000, 1052.63157894),   // case EM drag: EM torque is lower than DT torque
 		 TestCase(0.95, 1000, -1000, -950), // case EM drive: DT torque is lower than EM torque
+			Category(Definitions.TESTCASE_MIGRATED)
 		]
 		public void TestADCEfficiencyMapLookupFWD(double eff, double emSpeed, double emTorque, double expectedDTTorque)
 		{
@@ -515,6 +516,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		[TestCase(0.95, 1000, 1000, 950),   // case EM drag: EM torque is lower than DT torque
 		TestCase(0.95, 1000, -1000, -1052.63157894), // case EM drive: DT torque is lower than EM torque
+			Category(Definitions.TESTCASE_MIGRATED)
 		]
 		public void TestADCEfficiencyMapLookupBWD(double eff, double dtSpeed, double dtTorque, double expectedEMTorque)
 		{
@@ -531,6 +533,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		[TestCase(1000, 1000, 1050),
 		TestCase(1000, -1000, -950),
+			Category(Definitions.TESTCASE_MIGRATED)
 		]
 		public void TestADCEfficiencyMapLookupFWD(double emSpeed, double emTorque, double expectedDTTorque)
 		{
@@ -554,7 +557,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 		[TestCase(1000, 1000, 952.380952),
-		TestCase(1000, -1000, -1052.6315789),
+		TestCase(1000, -1000, -1052.6315789), 
+		Category(Definitions.TESTCASE_MIGRATED)
 		]
 		public void TestADCEfficiencyMapLookupBWD(double dtSpeed, double dtTorque, double expectedEMTorque)
 		{

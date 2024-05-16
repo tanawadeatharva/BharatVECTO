@@ -32,7 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="TestCases\Components\Angledrive\" />
     <Folder Include="TestCases\Components\TorqueConverter\" />
+    <Folder Include="TestCases\DataAdapter\Engineering\" />
     <Folder Include="TestCases\DeclarationDataTests\CO2StandardsGroups\" />
     <Folder Include="TestCases\DeclarationDataTests\GenericModelParams\Vehicle\" />
     <Folder Include="TestCases\InputData\InputDataReader\" />
