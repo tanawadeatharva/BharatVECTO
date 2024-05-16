@@ -67,7 +67,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		private KilogramSquareMeter EngineInertia;
 		private IShiftPolygonCalculator _shiftPolygonCalculator;
 
-		public override IGearbox Gearbox
+		public ATShiftStrategy(IVehicleContainer dataBus) : base(dataBus)
+		{
+			EngineInertia = dataBus.RunData.EngineData?.Inertia ?? 0.SI<KilogramSquareMeter>();
+			ShiftPolygonCalculator.Create(Name, null);
+			if (Gears.Any(x => !x.TorqueConverterLocked.HasValue)) {
+				throw new VectoException("Gear list must have TC info for all gears! {0}", Gears.Join());
+			}
+
+			MaxStartGear = Gears.Any() ? Gears.First() : new GearshiftPosition(0);
+		}
+
+        public override IGearbox Gearbox
 		{
 			get => _gearbox;
 			set {
@@ -90,17 +101,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		}
 
 		public static string Name => "AT - Classic";
-
-		public ATShiftStrategy(IVehicleContainer dataBus) : base(dataBus)
-		{
-			EngineInertia = dataBus.RunData.EngineData?.Inertia ?? 0.SI<KilogramSquareMeter>();
-			ShiftPolygonCalculator.Create(Name, null);
-			if (Gears.Any(x => !x.TorqueConverterLocked.HasValue)) {
-				throw new VectoException("Gear list must have TC info for all gears! {0}", Gears.Join());
-			}
-
-			MaxStartGear = Gears.Any() ? Gears.First() : new GearshiftPosition(0);
-		}
 
 		public override GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity)
 		{
