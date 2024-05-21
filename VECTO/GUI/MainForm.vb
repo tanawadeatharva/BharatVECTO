@@ -2270,4 +2270,8 @@ lbFound:
     Private Sub JobEditorFCHVehicle_Click(sender As Object, e As EventArgs) Handles JobEditorFCHVehicle.Click
         OpenVECTOeditor("<New>", VectoSimulationJobType.FCHV)
     End Sub
+
+    Private Sub JobEditorFCHV_IEPC_Vehicle_Click(sender As Object, e As EventArgs) Handles JobEditorFCHV_IEPC_Vehicle.Click
+        OpenVECTOeditor("<New>", VectoSimulationJobType.FCHV_IEPC)
+    End Sub
 End Class

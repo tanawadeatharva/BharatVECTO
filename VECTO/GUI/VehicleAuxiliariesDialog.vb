@@ -72,7 +72,7 @@ Public Class VehicleAuxiliariesDialog
 
 		If CbType.SelectedItem Is Nothing Then Exit Sub
 
-		Dim batteryElectricAuxOnly = JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.FCHV, VectoSimulationJobType.SerialHybridVehicle)
+		Dim batteryElectricAuxOnly = JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.FCHV, VectoSimulationJobType.FCHV_IEPC, VectoSimulationJobType.SerialHybridVehicle)
 		Select Case CbType.SelectedValue.ToString()
 			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.Fan
 				CbTech.DataSource =

@@ -107,7 +107,7 @@ Public Class GearboxForm
                     .Where(Function(type)  type = GearboxType.IHPC ) _
                     .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 
-            Case VectoSimulationJobType.IEPC_E,VectoSimulationJobType.IEPC_S
+            Case VectoSimulationJobType.IEPC_E, VectoSimulationJobType.IEPC_S, VectoSimulationJobType.FCHV_IEPC
                 CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
                     .Cast(Of GearboxType)() _
                     .Where(Function(type)  type = GearboxType.IEPC) _

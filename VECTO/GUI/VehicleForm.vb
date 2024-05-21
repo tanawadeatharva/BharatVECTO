@@ -497,7 +497,7 @@ Public Class VehicleForm
 		tbPTOLossMap.Text =
 			If(Cfg.DeclMode OrElse pto.PTOLossMap Is Nothing, "", GetRelativePath(pto.PTOLossMap.Source, basePath))
 
-		If (vehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.IEPC_S, VectoSimulationJobType.FCHV)) Then
+		If (vehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.IEPC_S, VectoSimulationJobType.FCHV, VectoSimulationJobType.FCHV_IEPC)) Then
 			cbPTOStandstillCycleType.SelectedIndex = 1
 		End If
 
@@ -518,7 +518,7 @@ Public Class VehicleForm
 			If (Cfg.DeclMode) Then
 				tbInitialSoC.Text = String.Empty
 				pnOvcHEV.Enabled = True
-				If vehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.FCHV) Then
+				If vehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.FCHV, VectoSimulationJobType.FCHV_IEPC) Then
 					pnOvcHEV.Enabled = False
 					cbOvc.Checked = False
 					pnMaxChargingPwr.Enabled = False
@@ -560,7 +560,7 @@ Public Class VehicleForm
 					Next
 				End If
 			End If
-			If vehicle.VehicleType = VectoSimulationJobType.IEPC_E OrElse vehicle.VehicleType = VectoSimulationJobType.IEPC_S Then
+			If vehicle.VehicleType = VectoSimulationJobType.IEPC_E OrElse vehicle.VehicleType = VectoSimulationJobType.IEPC_S OrElse vehicle.VehicleType = VectoSimulationJobType.FCHV_IEPC Then
 				Dim iepc = vehicle.Components.IEPCEngineeringInputData
 				tbIEPCFilePath.Text = GetRelativePath(iepc.DataSource.SourceFile, basePath)
 			End If
@@ -571,7 +571,7 @@ Public Class VehicleForm
 			End If
 		End If
 
-		If (vehicle.VehicleType = VectoSimulationJobType.FCHV) Then
+		If (vehicle.VehicleType = VectoSimulationJobType.FCHV OrElse vehicle.VehicleType = VectoSimulationJobType.FCHV_IEPC) Then
 			Dim fcs = vehicle.Components.FuelCellSystemInputData
 			lvFuelCellComponents.Items.Clear()
 			For Each entry In fcs.FuelCellStrings
@@ -796,7 +796,7 @@ Public Class VehicleForm
 
 				'Electric Powertrain Components -------------------------------------------
 				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition) _
-					(Function(t) t.GetLabel(), Function(x) x.IsBatteryElectric())
+					(Function(t) t.GetLabel(), Function(x) x.IsBatteryElectric() AndAlso x <> PowertrainPosition.IEPC)
 
 				'GenSet Components --------------------------------------------------------
 				tcVehicleComponents.TabPages.Remove(tpGensetComponents)
@@ -828,6 +828,30 @@ Public Class VehicleForm
 				gbVehicleIdlingSpeed.Enabled = False
 			Case VectoSimulationJobType.IEPC_E
 				lblTitle.Text = "IEPC-E Vehicle"
+
+				tcVehicleComponents.TabPages.Remove(tpElectricMachine)
+				tcVehicleComponents.TabPages.Remove(tpGensetComponents)
+				tcVehicleComponents.TabPages.Remove(tbIHPC)
+
+				'Torque Limits ------------------------------------------------------------
+				gbEMTorqueLimits.Enabled = False
+				tcVehicleComponents.TabPages.Remove(tpTorqueLimits)
+
+				'ADAS ---------------------------------------------------------------------
+				cbEngineStopStart.Visible = False
+				cbAtEcoRollReleaseLockupClutch.Visible = False
+				pnEcoRoll.Visible = False
+				cbEcoRoll.SelectedIndex = 0
+
+				'Fuel Cell System
+				tcVehicleComponents.TabPages.Remove(tpFuelCellSystem)
+
+				'PTO
+				gbPTO.Enabled = False
+				pnPTO.Enabled = False
+				gbVehicleIdlingSpeed.Enabled = False
+			Case VectoSimulationJobType.FCHV_IEPC
+				lblTitle.Text = "Fuel Cell IEPC-E Vehicle"
 
 				tcVehicleComponents.TabPages.Remove(tpElectricMachine)
 				tcVehicleComponents.TabPages.Remove(tpGensetComponents)
@@ -896,7 +920,7 @@ Public Class VehicleForm
 
 				'Electric Powertrain Components -------------------------------------------
 				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition) _
-					(Function(t) t.GetLabel(), Function(x) x.IsBatteryElectric())
+					(Function(t) t.GetLabel(), Function(x) x.IsBatteryElectric() AndAlso x <> PowertrainPosition.IEPC)
 
 				'GenSet Components --------------------------------------------------------
 				tcVehicleComponents.TabPages.Remove(tpGensetComponents)
@@ -1102,7 +1126,7 @@ Public Class VehicleForm
 				End If
 
 			End If
-			If (VehicleType = VectoSimulationJobType.IEPC_S OrElse VehicleType = VectoSimulationJobType.IEPC_E) Then
+			If (VehicleType = VectoSimulationJobType.IEPC_S OrElse VehicleType = VectoSimulationJobType.IEPC_E OrElse VehicleType = VectoSimulationJobType.FCHV_IEPC) Then
 				veh.IEPCFile.Init(GetPath(file), tbIEPCFilePath.Text)
 			End If
 			If (VehicleType = VectoSimulationJobType.IHPC) Then
@@ -1118,7 +1142,7 @@ Public Class VehicleForm
 			End If
 		End If
 
-		If (VehicleType = VectoSimulationJobType.FCHV) Then
+		If (VehicleType = VectoSimulationJobType.FCHV OrElse VehicleType = VectoSimulationJobType.FCHV_IEPC) Then
 			For Each reess As ListViewItem In lvFuelCellComponents.Items
 				veh.FuelCellComponents.Add(Tuple.Create(reess.SubItems(FcComponentTbl.FcComponentFile).Text, reess.SubItems(FcComponentTbl.Count).Text.ToInt()))
 			Next

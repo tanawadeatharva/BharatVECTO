@@ -61,6 +61,7 @@ namespace TUGraz.VectoCommon.InputData
 		ParallelHybridVehicle,
 		SerialHybridVehicle,
 		FCHV,
+		FCHV_IEPC,
 		BatteryElectricVehicle,
 		EngineOnlySimulation,
 		IEPC_E,
@@ -90,6 +91,7 @@ namespace TUGraz.VectoCommon.InputData
 				case VectoSimulationJobType.IEPC_E:
 					return PureElectric;
 				case VectoSimulationJobType.FCHV:
+				case VectoSimulationJobType.FCHV_IEPC:
 					throw new NotImplementedException("Relevant for Reports");
 				default:
 					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
@@ -114,6 +116,7 @@ namespace TUGraz.VectoCommon.InputData
 
 				case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.IEPC_S:
+				case VectoSimulationJobType.FCHV_IEPC:
 					return GetIepcArchitectureId(jobType, em);
 
 				case VectoSimulationJobType.IHPC:
@@ -134,6 +137,7 @@ namespace TUGraz.VectoCommon.InputData
 				case VectoSimulationJobType.IEPC_S:
 					return true;
 				case VectoSimulationJobType.FCHV:
+				case VectoSimulationJobType.FCHV_IEPC:
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
 					return false;
@@ -150,6 +154,7 @@ namespace TUGraz.VectoCommon.InputData
 
 			switch (jobType) {
 				case VectoSimulationJobType.IEPC_E:
+				case VectoSimulationJobType.FCHV_IEPC:
 					return ArchitectureID.E_IEPC;
 				case VectoSimulationJobType.IEPC_S:
 					return ArchitectureID.S_IEPC;

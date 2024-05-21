@@ -236,6 +236,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				case VectoSimulationJobType.IEPC_S:
 					return CompletedBusArchitecture.IEPC;
 				case VectoSimulationJobType.FCHV:
+                case VectoSimulationJobType.FCHV_IEPC:
 				case VectoSimulationJobType.EngineOnlySimulation:
 				default:
 					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);

@@ -64,6 +64,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 				case VectoSimulationJobType.EngineOnlySimulation:
 					break;
 				case VectoSimulationJobType.FCHV:
+                case VectoSimulationJobType.FCHV_IEPC:
 				default:
 					throw new ArgumentOutOfRangeException();
 			}

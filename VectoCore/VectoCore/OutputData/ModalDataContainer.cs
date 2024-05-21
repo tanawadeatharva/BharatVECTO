@@ -275,7 +275,10 @@ namespace TUGraz.VectoCore.OutputData
 			return null;
 		}
 
-		public bool HasCombustionEngine => !(_runData.JobType == VectoSimulationJobType.BatteryElectricVehicle || _runData.JobType == VectoSimulationJobType.IEPC_E || _runData.JobType == VectoSimulationJobType.FCHV);
+		public bool HasCombustionEngine => !(_runData.JobType == VectoSimulationJobType.BatteryElectricVehicle
+			|| _runData.JobType == VectoSimulationJobType.IEPC_E
+			|| _runData.JobType == VectoSimulationJobType.FCHV
+			|| _runData.JobType == VectoSimulationJobType.FCHV_IEPC);
 
 		public bool HasGearbox => _runData.GearboxData != null;
 
