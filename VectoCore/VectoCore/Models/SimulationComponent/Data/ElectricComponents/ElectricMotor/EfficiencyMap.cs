@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 		public override string[] SerializedEntries {
 			get {
 				return _efficiencyMapMech2El.Entries.Select(
-						entry => $"{entry.Y.SI<PerSecond>().AsRPM} [rpm], {entry.X.SI<NewtonMeter>()}, {(entry.Z * entry.Y + entry.Y * entry.X).SI<Watt>()}")
+						entry => $"{entry.Y.SI<PerSecond>().AsRPM} [rpm], {entry.X.SI<NewtonMeter>()}, {(entry.Z * entry.Y + entry.Y * entry.X).SI<Watt>()} ({entry.Z.SI<NewtonMeter>()})")
 					.ToArray();
 			}
 		}
@@ -169,13 +169,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 					// propelling
 					if (retVal.IsSmaller(maxEmTorque)) {
 						retVal = SearchTorqueForElectricPower(batPower, avgSpeed, maxEmTorque, elPowerMaxEM, 1e3, true);
+						if (retVal.IsSmaller(maxEmTorque)) {
+							// the line search does not yield a better solution, still 'above' max EM torque - battery power is sufficient
+							return null;
+						}
 					}
 				} else {
 					// recuperating
 					if (retVal.IsGreater(maxEmTorque)) {
 						retVal = SearchTorqueForElectricPower(batPower, avgSpeed, maxEmTorque, elPowerMaxEM, 1e3, true);
+						if (retVal.IsGreater(maxEmTorque)) {
+							// the line search does not yield a better solution, still 'above' max EM torque - battery power is sufficient
+							return null;
+						}
 					}
-				}
+                }
 				return retVal;
 			} catch (VectoSearchFailedException vsfe) {
 #if DEBUG
