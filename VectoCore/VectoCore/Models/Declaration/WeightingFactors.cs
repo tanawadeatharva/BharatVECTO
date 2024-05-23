@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			foreach (var entry in Data) {
 				var sum = entry.Value.Sum(item => item.Value);
 
-				bool hasVocationalWeights = sum % 2.0 == 0;
+				bool hasVocationalWeights = sum.IsEqual(2.0, 1e-12);
 				bool isNormalWeights = sum.IsEqual(1.0, 1e-12);
 
 				if (!isNormalWeights && !hasVocationalWeights)
