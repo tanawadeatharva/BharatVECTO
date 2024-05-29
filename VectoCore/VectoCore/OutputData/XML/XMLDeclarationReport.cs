@@ -47,6 +47,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
@@ -99,9 +100,25 @@ namespace TUGraz.VectoCore.OutputData.XML
 				BatteryData = runData.BatteryData;
 				OVCMode = runData.OVCMode;
 				VectoRunData = runData;
+			}
 
-			
-				//VehicleCode = runData.VehicleData.VehicleCode;
+			public void Initialize(VectoRunData runData, IModalDataContainer modalData)
+			{
+				Mission = runData.Mission.MissionType;
+				LoadingType = runData.Loading;
+				FuelMode = runData.EngineData?.FuelMode ?? 0;
+				FuelData = runData.EngineData?.Fuels.Select(x => x.FuelData).ToList() ?? new List<IFuelProperties>();
+				Payload = runData.VehicleData.Loading;
+				TotalVehicleMass = runData.VehicleData.TotalVehicleMass;
+				CargoVolume = runData.VehicleData.CargoVolume;
+				VehicleClass = runData.Mission?.BusParameter?.BusGroup ?? runData.VehicleData.VehicleClass;
+				PassengerCount = runData.VehicleData.PassengerCount;
+				MaxChargingPower = runData.MaxChargingPower;
+				BatteryData = runData.BatteryData;
+				OVCMode = runData.OVCMode;
+				VectoRunData = runData;
+
+				SetResultData(runData, modalData, 0.0);
 			}
 
 			public VectoRunData VectoRunData { get; private set; }
@@ -267,11 +284,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				}
 
 				WeightingFactor = weightingFactor;
-
-				PrimaryResult = runData.PrimaryResult;
-
 			}
-
 		}
 
 
@@ -312,6 +325,24 @@ namespace TUGraz.VectoCore.OutputData.XML
 			_monitoringReport.GenerateReport();
 		}
 
+		public override void SetWeightingFactors(VectoRunData runData, IEnumerable<IResultEntry> orderedeResults, double? electricRange)
+		{
+			WeightingGroup = DeclarationData.WeightingGroup.Lookup(
+				runData.VehicleData.VehicleClass,
+				runData.VehicleData.SleeperCab.Value,
+				DeclarationData.GetReferencePropulsionPower(runData.VehicleData.InputData),
+				runData.JobType.IsBatteryElectric(),
+				electricRange);
+
+			_weightingFactors = WeightingGroup == WeightingGroup.Unknown
+				? ZeroWeighting
+				: DeclarationData.WeightingFactors.Lookup(WeightingGroup);
+
+			foreach(var result in orderedeResults)
+			{
+				result.WeightingFactor = _weightingFactors[Tuple.Create(result.Mission, result.LoadingType)];
+			}
+		}
 
 		protected override void OutputReports()
 		{
@@ -332,15 +363,19 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public override void InitializeReport(VectoRunData modelData)
 		{
-			if (modelData.Exempted) {
+			if (modelData.Exempted)
+			{
 				WeightingGroup = WeightingGroup.Unknown;
-			} else {
-				if (modelData.VehicleData.SleeperCab == null) {
+			}
+			else
+			{
+				if (modelData.VehicleData.SleeperCab == null)
+				{
 					throw new VectoException("SleeperCab parameter is required");
 				}
 
 				var propulsionPower = DeclarationData.GetReferencePropulsionPower(modelData.VehicleData.InputData);
-                WeightingGroup = DeclarationData.WeightingGroup.Lookup(
+				WeightingGroup = DeclarationData.WeightingGroup.Lookup(
 					modelData.VehicleData.VehicleClass,
 					modelData.VehicleData.SleeperCab.Value,
 					propulsionPower);
@@ -349,7 +384,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 			_weightingFactors = WeightingGroup == WeightingGroup.Unknown
 				? ZeroWeighting
 				: DeclarationData.WeightingFactors.Lookup(WeightingGroup);
-
 
 			InstantiateReports(modelData);
 

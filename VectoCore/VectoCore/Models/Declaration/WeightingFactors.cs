@@ -43,6 +43,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public sealed class WeightingFactors : LookupData
 	{
+		private const double VocationalFactorsSum = 2.0;
+		private const double NonVocationalFactorsSum = 1.0;
+
 		private readonly Dictionary<WeightingGroup, Dictionary<Tuple<MissionType, LoadingType>, double>> Data = new Dictionary<WeightingGroup, Dictionary<Tuple<MissionType, LoadingType>, double>>();
 
 		public IDictionary<Tuple<MissionType, LoadingType>, double> Lookup(WeightingGroup group)
@@ -91,8 +94,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			foreach (var entry in Data) {
 				var sum = entry.Value.Sum(item => item.Value);
 
-				bool hasVocationalWeights = sum.IsEqual(2.0, 1e-12);
-				bool isNormalWeights = sum.IsEqual(1.0, 1e-12);
+				bool hasVocationalWeights = sum.IsEqual(VocationalFactorsSum, 1e-12);
+				bool isNormalWeights = sum.IsEqual(NonVocationalFactorsSum, 1e-12);
 
 				if (!isNormalWeights && !hasVocationalWeights)
 				{
