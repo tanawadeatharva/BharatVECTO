@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+	<AssemblyName>XMLConverterCmdLine</AssemblyName>
+	<RootNamespace>TUGraz.VECTO</RootNamespace>
+    <TargetFramework>net48</TargetFramework>
+    
+  </PropertyGroup>
+
+	<ItemGroup>
+		<Compile Include="..\VECTOStart\StarterHelper.cs" Link="StarterHelper.cs" />
+	</ItemGroup>
+
+</Project>

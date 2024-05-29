@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;net48</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="XMLConverterLibraryTests" />
+  </ItemGroup>
+
+	<ItemGroup>
+    <PackageReference Include="ErrorOr" Version="2.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj" />
+  </ItemGroup>
+
+</Project>
