@@ -145,14 +145,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static string ToXMLFormat(this WeightingGroup group)
 		{
 			switch (group) {
+				case WeightingGroup.Unknown:
+					return Constants.NOT_AVAILABLE;
 				case WeightingGroup.Group1:
 				case WeightingGroup.Group2:
 				case WeightingGroup.Group3:
 				case WeightingGroup.Group11:
 				case WeightingGroup.Group12:
 				case WeightingGroup.Group16:
-				case WeightingGroup.Unknown:
-					return Constants.NOT_AVAILABLE;
+					return group.ToString().Replace(Prefix, "");
 				case WeightingGroup.Group4UD:
 				case WeightingGroup.Group4RD:
 				case WeightingGroup.Group4LH:
