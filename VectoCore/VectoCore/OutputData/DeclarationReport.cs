@@ -124,7 +124,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		Watt MaxChargingPower { get; }
 
-		double WeightingFactor { get; set; }
+		double WeightingFactor { get; }
 
 		Meter ActualChargeDepletingRange { get; }
 
@@ -143,6 +143,8 @@ namespace TUGraz.VectoCore.OutputData
 		string StackTrace { get; }
 
 		BatterySystemData BatteryData { get; }
+		
+		void SetResultWeightingFactor(double weightingFactor);
 	}
 
 	public interface IWeightedResult

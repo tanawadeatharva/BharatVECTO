@@ -347,6 +347,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 				throw new NotImplementedException();
 			}
 
+			public void SetResultWeightingFactor(double weightingFactor)
+			{
+				throw new NotImplementedException();
+			}
+
 			public string Error { get; set; } 
 			public string StackTrace { get; set; }
             public BatterySystemData BatteryData

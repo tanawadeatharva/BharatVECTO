@@ -189,12 +189,18 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public double AverageAxlegearEfficiency { get; private set; }
 
-			public double WeightingFactor { get; set; }
+			public double WeightingFactor { get; private set; }
+
 			public Meter ActualChargeDepletingRange { get; set; }
+
 			public Meter EquivalentAllElectricRange { get; set; }
+
 			public Meter ZeroCO2EmissionsRange { get; set; }
+
 			public IFuelProperties AuxHeaterFuel { get; set; }
+
 			public Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
+
 			public Kilogram ZEV_CO2 { get; set; }
 
 			public OvcHevMode OVCMode { get; set; }
@@ -285,6 +291,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 				WeightingFactor = weightingFactor;
 			}
+
+			public void SetResultWeightingFactor(double weightingFactor)
+			{
+				WeightingFactor = weightingFactor;
+			}
 		}
 
 
@@ -340,7 +351,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			foreach(var result in orderedeResults)
 			{
-				result.WeightingFactor = _weightingFactors[Tuple.Create(result.Mission, result.LoadingType)];
+				result.SetResultWeightingFactor(_weightingFactors[Tuple.Create(result.Mission, result.LoadingType)]);
 			}
 		}
 
