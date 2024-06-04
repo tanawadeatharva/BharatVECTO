@@ -17,6 +17,7 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
 
 namespace TUGraz.VectoCore.OutputData.XML
@@ -65,8 +66,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 				iepc,
 				ihpc);
 
-
+            _monitoringReport = new XMLMonitoringReport(ManufacturerRpt);
 		}
+
 		public override void InitializeReport(VectoRunData modelData)
 		{
 			if (modelData.Exempted) {
@@ -85,6 +87,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			ManufacturerRpt.Initialize(modelData);
 			CustomerRpt.Initialize(modelData);
+            _monitoringReport.Initialize(modelData);
 		}
 		#endregion
 

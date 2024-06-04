@@ -51,6 +51,7 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
@@ -59,6 +60,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected IXMLManufacturerReport ManufacturerRpt;
 
 		protected IXMLCustomerReport CustomerRpt;
+
+		protected IXMLMonitoringReport _monitoringReport;
 
 		protected readonly IManufacturerReportFactory _mrfFactory;
 		protected readonly ICustomerInformationFileFactory _cifFactory;
@@ -277,6 +280,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public virtual XDocument CustomerReport => CustomerRpt?.Report;
 
+		public virtual XDocument MonitoringReport => _monitoringReport.Report;
+
 		public virtual XDocument PrimaryVehicleReport => null;
 
 
@@ -302,6 +307,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			ManufacturerRpt.GenerateReport();
 			var fullReportHash = GetSignature(ManufacturerRpt.Report);
 			CustomerRpt?.GenerateReport(fullReportHash);
+			_monitoringReport.GenerateReport();
 		}
 
 
@@ -312,6 +318,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			}
 
 			Writer.WriteReport(ReportType.DeclarationReportManufacturerXML, ManufacturerRpt.Report);
+			Writer.WriteReport(ReportType.DeclarationReportMonitoringXML, _monitoringReport.Report);
 		}
 
 
@@ -347,6 +354,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			ManufacturerRpt.Initialize(modelData);
 			CustomerRpt?.Initialize(modelData);
+			_monitoringReport.Initialize(modelData);
 		}
 
 		public WeightingGroup WeightingGroup { get; protected set; }
@@ -371,6 +379,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 				vehicleData.ExemptedVehicle,
 				iepc,
 				ihpc);
+
+			_monitoringReport = new XMLMonitoringReport(ManufacturerRpt);	
 		}
 
 		private static IDictionary<Tuple<MissionType, LoadingType>, double> ZeroWeighting =>
