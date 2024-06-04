@@ -101,7 +101,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				{ VectoSimulationJobType.EngineOnlySimulation, BuildEngineOnly },
 				{ VectoSimulationJobType.IEPC_E, BuildFullPowertrainIEPCE },
 				{ VectoSimulationJobType.IEPC_S, BuildFullPowertrainIEPCSerial },
-				{ VectoSimulationJobType.FCHV, BuildFullPowertrainFCHV}
+				{ VectoSimulationJobType.FCHV, BuildFullPowertrainFCHV },
+				{ VectoSimulationJobType.FCHV_IEPC, BuildFullPowertrainFCHV_IEPC }
 			};
 
 			var pWheelBuilders = new Dictionary<VectoSimulationJobType, Func<VectoRunData, IModalDataContainer, ISumData, IVehicleContainer>>()
@@ -175,9 +176,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
             };
         }
 
+		private static IVehicleContainer BuildFullPowertrainFCHV_IEPC(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
+		{
+			var container = BuildFullPowertrainIEPCE(data, modData, sumWriter);
+
+			ConnectFuelCellSystem(container.ElectricSystemInfo as ElectricSystem, data.FuelCellSystemData, container);
+			
+			return container;
+		}
+
 		private static IVehicleContainer BuildFullPowertrainFCHV(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
 		{
-
 			var container = BuildFullPowertrainBatteryElectric(data, modData, sumWriter);
 			var es = container.ElectricSystemInfo as ElectricSystem;
 			ConnectFuelCellSystem(es, data.FuelCellSystemData, container);
@@ -2528,6 +2537,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						case VectoSimulationJobType.IEPC_E:
 						case VectoSimulationJobType.IEPC_S:
 						case VectoSimulationJobType.FCHV:
+						case VectoSimulationJobType.FCHV_IEPC:
 							return APTNShiftStrategy.Name;
 						case VectoSimulationJobType.ConventionalVehicle when isTestPowerTrain:
 							return null;

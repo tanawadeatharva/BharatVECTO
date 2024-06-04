@@ -1135,7 +1135,7 @@ Public Class FuelCellSystemWrapper
 
 	Public ReadOnly Property FuelCellStrings As IList(Of FuelCellStringEntry(Of IFuelCellComponentEngineeringInputData)) Implements IFuelCellSystemEngineeringInputData.FuelCellStrings
 		Get
-			If (Vehicle.VehicleType <> VectoSimulationJobType.FCHV) Then
+			If (Vehicle.VehicleType <> VectoSimulationJobType.FCHV AndAlso Vehicle.VehicleType <> VectoSimulationJobType.FCHV_IEPC) Then
 				Return Nothing
 			End If
 			Dim retVal As List(Of FuelCellStringEntry(Of IFuelCellComponentEngineeringInputData)) = New List(Of FuelCellStringEntry(Of IFuelCellComponentEngineeringInputData))

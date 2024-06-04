@@ -29,6 +29,7 @@ public class JSONFileWriter : IOutputFileWriter
 	public const int HEV_BEVVehicleFormatVersion = 10;
 	public const int IEPCVehicleFormatVersion = 11;
 	public const int FCHV_VehicleFormatVersion = 12;
+	public const int FCHV_IEPC_VehicleFormatVersion = 13;
 
 	#endregion
 
@@ -43,6 +44,7 @@ public class JSONFileWriter : IOutputFileWriter
 	private const int IEPCVectoJobFormatVersion = 12;
 	private const int IHPCVectoJobFormatVersion = 13;
 	private const int FCHVVectoJobFormatVersion = 14;
+	private const int FCHVIEPCEVectoJobFormatVersion = 15;
 	#endregion
 
 
@@ -426,6 +428,7 @@ public class JSONFileWriter : IOutputFileWriter
 				break;
 			case VectoSimulationJobType.IEPC_E:
 			case VectoSimulationJobType.IEPC_S:
+			case VectoSimulationJobType.FCHV_IEPC:
 				SaveIEPCVehicle(vehicle, airdrag, retarder, pto, angledrive, filename, DeclMode);
 				break;
 
@@ -692,7 +695,7 @@ public class JSONFileWriter : IOutputFileWriter
 		bool DeclMode)
 	{
 		var basePath = Path.GetDirectoryName(filename);
-		var header = GetHeader(IEPCVehicleFormatVersion);
+		var header = GetHeader(vehicle.VehicleType == VectoSimulationJobType.FCHV_IEPC ? FCHV_IEPC_VehicleFormatVersion : IEPCVehicleFormatVersion);
 		var retarderOut = GetRetarderOut(retarder, basePath);
 
 		var ptoOut = GetPTOOut(pto, basePath);
@@ -715,6 +718,11 @@ public class JSONFileWriter : IOutputFileWriter
 		if (vehicle.VehicleType == VectoSimulationJobType.IEPC_S) {
 			body.Add("OvcHev", vehicle.OvcHev);
 			body.Add("MaxChargingPower", vehicle.OvcHev ? vehicle.MaxChargingPower.ConvertToKiloWatt().Value : 0);
+		}
+
+		if (vehicle.Components.FuelCellSystemInputData?.FuelCellStrings != null) {
+			var fuelCellSystem = GetFuelCellSystem(vehicle, basePath);
+			body.Add(JsonKeys.FuelCell_FuelCellSystem, fuelCellSystem);
 		}
 
 		//body.Add("IdlingSpeed", vehicle.EngineIdleSpeed.AsRPM);
@@ -821,6 +829,9 @@ public class JSONFileWriter : IOutputFileWriter
 			case VectoSimulationJobType.FCHV:
 				SaveFCHVJob(input, filename, DeclMode);
 				break;
+			case VectoSimulationJobType.FCHV_IEPC:
+				SaveFCHVIEPCEJob(input, filename, DeclMode);
+				break;
 			default:
 				throw new ArgumentOutOfRangeException();
 		}
@@ -829,6 +840,11 @@ public class JSONFileWriter : IOutputFileWriter
 	private void SaveFCHVJob(IEngineeringInputDataProvider input, string filename, bool declMode)
 	{
 		DoSaveBatteryElectricOrFCHVJob(input, filename, declMode, FCHVVectoJobFormatVersion);
+	}
+
+	private void SaveFCHVIEPCEJob(IEngineeringInputDataProvider input, string filename, bool declMode)
+	{
+		DoSaveIEPCEOrFCHVIEPCEJob(input, filename, declMode, FCHVIEPCEVectoJobFormatVersion);
 	}
 
 	private void SaveIHPCJob(IEngineeringInputDataProvider input, string filename, bool declMode)
@@ -1288,12 +1304,12 @@ public class JSONFileWriter : IOutputFileWriter
 		DoSaveBatteryElectricOrFCHVJob(input, filename, DeclMode, BEVVectoJobFormatVersion);
 	}
 
-	private void SaveIEPCEJob(IEngineeringInputDataProvider input, string filename, bool declMode)
+	private void DoSaveIEPCEOrFCHVIEPCEJob(IEngineeringInputDataProvider input, string filename, bool declMode, int version)
 	{
 		var basePath = Path.GetDirectoryName(filename);
 
 		// Header
-		var header = GetHeader(IEPCVectoJobFormatVersion);
+		var header = GetHeader(version);
 
 		// Body
 		var body = new Dictionary<string, object>();
@@ -1413,6 +1429,11 @@ public class JSONFileWriter : IOutputFileWriter
 			body.Add("Cycles", GetCycles(job, filename));
 
 		WriteFile(header, body, filename);
+	}
+
+	private void SaveIEPCEJob(IEngineeringInputDataProvider input, string filename, bool declMode)
+	{
+		DoSaveIEPCEOrFCHVIEPCEJob(input, filename, declMode, IEPCVectoJobFormatVersion);
 	}
 
 	private string[] GetCycles(IEngineeringJobInputData job, string filename)

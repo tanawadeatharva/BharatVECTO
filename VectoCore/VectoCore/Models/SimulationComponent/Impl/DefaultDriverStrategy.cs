@@ -121,6 +121,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					case VectoSimulationJobType.IEPC_E:
 					case VectoSimulationJobType.IEPC_S:
 					case VectoSimulationJobType.FCHV:
+					case VectoSimulationJobType.FCHV_IEPC:
 						PowertrainBuilder.BuildSimplePowertrainElectric(data, testContainer);
 						break;
                     case VectoSimulationJobType.IHPC:

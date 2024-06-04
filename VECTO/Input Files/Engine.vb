@@ -610,6 +610,7 @@ End Class
 
 Public Class DummyVehicle
 	Implements IVehicleDeclarationInputData, IVehicleComponentsDeclaration, IVehicleEngineeringInputData, IVehicleComponentsEngineering
+
 	Public Property DataSource As DataSource Implements IComponentInputData.DataSource
 	Public Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
 	Public Property Manufacturer As String Implements IComponentInputData.Manufacturer

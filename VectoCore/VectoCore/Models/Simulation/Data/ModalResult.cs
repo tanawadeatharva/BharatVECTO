@@ -414,7 +414,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				case IClutch _:
 					CreateColumns(ClutchSignals);
 					break;
-				case IGearbox g when runData.JobType != VectoSimulationJobType.IEPC_E && runData.JobType != VectoSimulationJobType.IEPC_S:
+				case IGearbox g when runData.JobType != VectoSimulationJobType.FCHV_IEPC
+						&& runData.JobType != VectoSimulationJobType.IEPC_E 
+						&& runData.JobType != VectoSimulationJobType.IEPC_S:
+					
 					CreateColumns(runData.GearboxData?.Type.IsOneOf(GearboxType.ATPowerSplit, GearboxType.ATSerial, GearboxType.IHPC) ?? false
 						? GearboxSignals_AT
 						: GearboxSignals);
@@ -428,6 +431,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 					break;
 				case IGearbox _ when runData.JobType == VectoSimulationJobType.IEPC_E:
 				case IGearbox _ when runData.JobType == VectoSimulationJobType.IEPC_S:
+				case IGearbox _ when runData.JobType == VectoSimulationJobType.FCHV_IEPC:
 					CreateColumns(IEPCTransmissionSignals);
 					break;
 				case ITorqueConverter _: CreateColumns(TorqueConverterSignals);

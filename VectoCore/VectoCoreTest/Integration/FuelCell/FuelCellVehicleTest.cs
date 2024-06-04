@@ -54,6 +54,8 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 		protected const string FCHV_E2_JOB_300kW = @"TestData/H2_FCV/GenericVehicleE2 - FCHV/FCHV_singleFc_300kW_fc.vecto";
         protected const string FCHV_E2_JOB_multipleFC = @"TestData/H2_FCV/Group 2 FCHV 100kW FCS/Gr2_FCHV_100kW_FCS_10kWhBat_multipleFc.vecto";
 
+		protected const string FCHV_IEPC_JOB_1 = @"TestData/H2_FCV/FCHV_IEPC/IEPC_Gbx3Speed_FC/IEPC_ENG_Gbx3.vecto";
+
 		private string TEST_WORKING_DIR;
 
         [OneTimeSetUp]
@@ -69,6 +71,7 @@ namespace TUGraz.VectoCore.Tests.Integration.FuelCell
 		[TestCase(FCHV_E2_JOB_multipleFC, 0, 
 			TestName="FCHV E2 Job RD multiple FC")]
 
+		[TestCase(FCHV_IEPC_JOB_1, 0, TestName="FCHV_IEPC_Job")]
 
 		public void E2_FCHV_Job(string jobFile, int cycleIdx)
 		{

@@ -117,6 +117,10 @@ Public Class VectoJobForm
                 lblTitle.Text = prefix + "Fuel Cell Vehicle"
                 gbElectricAux.Enabled = True
                 GrAuxMech.Enabled = False
+            Case VectoSimulationJobType.FCHV_IEPC
+                lblTitle.Text = prefix + "Fuel Cell IEPC Vehicle"
+                gbElectricAux.Enabled = True
+                GrAuxMech.Enabled = Cfg.DeclMode
             Case VectoSimulationJobType.ConventionalVehicle
                 lblTitle.Text = prefix + "Conventional Vehicle"
                 gbElectricAux.Enabled = False
@@ -127,7 +131,7 @@ Public Class VectoJobForm
                 lblTitle.Text = prefix + "IEPC-E Vehicle"
                 gbElectricAux.Enabled = True
                 GrAuxMech.Enabled = Cfg.DeclMode
-            case VectoSimulationJobType.IEPC_S
+            Case VectoSimulationJobType.IEPC_S
                 lblTitle.Text = prefix + "IEPC-S Vehicle"
                 gbElectricAux.Enabled = True
                 GrAuxMech.Enabled = False
@@ -167,16 +171,16 @@ Public Class VectoJobForm
         TbAuxPAuxICEOn.Text = ""
 
         Dim auxList As List(Of AuxiliaryType)
-        Select case JobType
+        Select Case JobType
             Case VectoSimulationJobType.ConventionalVehicle, VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.IHPC, VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_S
                 auxList = New HeavyLorryAuxiliaryDataAdapter().AuxiliaryTypes.OrderBy(Function(x) x).ToList()
-            Case VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.FCHV
-                auxList = new HeavyLorryPEVAuxiliaryDataAdapter().AuxiliaryTypes.OrderBy(Function(x) x).ToList()
+            Case VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.FCHV, VectoSimulationJobType.FCHV_IEPC
+                auxList = New HeavyLorryPEVAuxiliaryDataAdapter().AuxiliaryTypes.OrderBy(Function(x) x).ToList()
             Case Else
                 auxList = New List(Of AuxiliaryType)
         End Select
 
-        Dim auxTechs = New Dictionary(Of AuxiliaryType, IDeclarationAuxiliaryTable) from {
+        Dim auxTechs = New Dictionary(Of AuxiliaryType, IDeclarationAuxiliaryTable) From {
                 {AuxiliaryType.Fan, DeclarationData.Fan},
                 {AuxiliaryType.SteeringPump, DeclarationData.SteeringPump},
                 {AuxiliaryType.HVAC, DeclarationData.HeatingVentilationAirConditioning},
@@ -184,10 +188,10 @@ Public Class VectoJobForm
                 {AuxiliaryType.PneumaticSystem, DeclarationData.PneumaticSystem}
                 }
 
-        Dim toRemove As List(Of  ListViewItem) = new List(Of ListViewItem)
+        Dim toRemove As List(Of ListViewItem) = New List(Of ListViewItem)
 
         For Each item As ListViewItem In LvAux.Items
-            If not auxTechs.Keys.Select(Function(x) x.Key()).Contains(item.Text) then
+            If Not auxTechs.Keys.Select(Function(x) x.Key()).Contains(item.Text) Then
                 toRemove.Add(item)
             End If
         Next
@@ -196,14 +200,14 @@ Public Class VectoJobForm
         Next
 
         For Each entry As AuxiliaryType In auxList
-           dim found = false
+            Dim found = False
             For Each item As ListViewItem In LvAux.Items
                 If item.Text.Equals(entry.Key(), StringComparison.CurrentCultureIgnoreCase) Then
-                    found = true
-                    exit For
+                    found = True
+                    Exit For
                 End If
             Next
-            if found Then continue for 
+            If found Then Continue For
 
             LvAux.Items.Add(GetTechListForAux(entry, auxTechs(entry)))
 
@@ -367,7 +371,7 @@ Public Class VectoJobForm
             GearboxForm.BringToFront()
         End If
         Dim vehicleType As VehicleCategory
-        Dim jobType as VectoSimulationJobType
+        Dim jobType As VectoSimulationJobType
         Try
             If Not Trim(f) = "" Then
                 Dim vehInput As IVehicleEngineeringInputData =
@@ -520,26 +524,26 @@ Public Class VectoJobForm
             TbENG.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.EngineInputData.DataSource.SourceFile, _basePath)
         Else
             TbENG.Text = ""
-		End If
-		If (inputData.JobInputData.Vehicle.Components.GearboxInputData IsNot Nothing) Then
-			TbGBX.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, _basePath)
-		Else
-			TbGBX.Text = ""
-		End If
-		If (cfg.DeclMode OrElse inputData.DriverInputData.GearshiftInputData Is Nothing) Then
-			TbShiftStrategyParams.Text = ""
-		Else
-			TbShiftStrategyParams.Text = GetRelativePath(inputData.DriverInputData.GearshiftInputData.Source, _basePath)
-		End If
-		If (not Cfg.DeclMode AndAlso ( JobType = VectoSimulationJobType.ParallelHybridVehicle OrElse JobType = VectoSimulationJobType.SerialHybridVehicle _
+        End If
+        If (inputData.JobInputData.Vehicle.Components.GearboxInputData IsNot Nothing) Then
+            TbGBX.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, _basePath)
+        Else
+            TbGBX.Text = ""
+        End If
+        If (Cfg.DeclMode OrElse inputData.DriverInputData.GearshiftInputData Is Nothing) Then
+            TbShiftStrategyParams.Text = ""
+        Else
+            TbShiftStrategyParams.Text = GetRelativePath(inputData.DriverInputData.GearshiftInputData.Source, _basePath)
+        End If
+        If (Not Cfg.DeclMode AndAlso (JobType = VectoSimulationJobType.ParallelHybridVehicle OrElse JobType = VectoSimulationJobType.SerialHybridVehicle _
                 OrElse JobType = VectoSimulationJobType.IEPC_S OrElse JobType = VectoSimulationJobType.IHPC)) Then
-			tbHybridStrategyParams.Text = GetRelativePath(inputData.JobInputData.HybridStrategyParameters.Source, _basePath)
-		End If
+            tbHybridStrategyParams.Text = GetRelativePath(inputData.JobInputData.HybridStrategyParameters.Source, _basePath)
+        End If
 
         'Start/Stop
         Dim driver As IDriverEngineeringInputData = inputData.DriverInputData
 
-	    If (Cfg.DeclMode) Then
+        If (Cfg.DeclMode) Then
             TbDesMaxFile.Text = ""
             'AA-TB
             'Try and Select any previously selected Auxiliary Type
@@ -558,7 +562,7 @@ Public Class VectoJobForm
             Next
         Else
             LvAux.Items.Clear()
-            
+
             'VACC
             TbDesMaxFile.Text =
                 If(driver.AccelerationCurve Is Nothing, "", GetRelativePath(driver.AccelerationCurve.AccelerationCurve.Source, _basePath))
@@ -579,9 +583,9 @@ Public Class VectoJobForm
             Dim sb As ICycleData
             For Each sb In vectoJob.Cycles
                 Dim lv0 As ListViewItem = New ListViewItem
-                if (sb.CycleData.SourceType = DataSourceType.Embedded) Then
+                If (sb.CycleData.SourceType = DataSourceType.Embedded) Then
                     lv0.Text = sb.Name
-                else 
+                Else
                     lv0.Text = GetRelativePath(sb.CycleData.Source, Path.GetDirectoryName(Path.GetFullPath(file))) 'sb.Name
                 End If
                 LvCycles.Items.Add(lv0)
@@ -631,10 +635,10 @@ Public Class VectoJobForm
 
         '-------------------------------------------------------------
 
-        if (Not inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData Is nothing) Then
+        If (Not inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData Is Nothing) Then
             cbEnableBusAux.Checked = True
             tbBusAuxParams.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile, _basePath)
-        Else 
+        Else
             cbEnableBusAux.Checked = False
             tbBusAuxParams.Text = ""
         End If
@@ -642,7 +646,7 @@ Public Class VectoJobForm
         Try
             DeclInit()
         Catch ex As VectoException
-            MsgBox(ex.Message,MsgBoxStyle.OkOnly, "Error loading Vecto job" )
+            MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vecto job")
             Exit Sub
         End Try
 
@@ -717,14 +721,14 @@ Public Class VectoJobForm
 
         vectoJob.AuxElPadd = tbElectricAuxConstant.Text.ToDouble(0)
 
-        if cbEnableBusAux.Checked AndAlso Not string.IsNullOrWhiteSpace(tbBusAuxParams.Text) Then
-            vectoJob.UseBusAux = true
+        If cbEnableBusAux.Checked AndAlso Not String.IsNullOrWhiteSpace(tbBusAuxParams.Text) Then
+            vectoJob.UseBusAux = True
             vectoJob.PathBusAux = tbBusAuxParams.Text
-        Else 
-            vectoJob.UseBusAux = false
+        Else
+            vectoJob.UseBusAux = False
         End If
 
-        
+
 
         'vectoJob.EngineOnly = JobType = VectoSimulationJobType.EngineOnlySimulation
 
@@ -946,7 +950,7 @@ Public Class VectoJobForm
         ' clear and set selected item to force re-init of tech dropdown (apply filter for electric-only aux)
         _auxDialog.CbType.SelectedIndex = -1
         _auxDialog.CbType.SelectedValue = selItem.SubItems(AuxViewColumns.AuxID).Text   ' last call, updates GUI
-        
+
         If selItem.SubItems(AuxViewColumns.AuxID).Text = AuxiliaryTypeHelper.GetAuxKey(AuxiliaryType.SteeringPump) Then
             Dim parts As String() = selItem.SubItems(AuxViewColumns.AuxInputOrTech).Text.Split(";"c)
             _auxDialog.CbTech2.SelectedItem = VehicleAuxiliariesDialog.AxleNotSteered
@@ -959,7 +963,7 @@ Public Class VectoJobForm
         Else
             _auxDialog.CbTech.SelectedValue = selItem.SubItems(AuxViewColumns.AuxInputOrTech).Text
         End If
-   
+
         '_auxDialog.TbID.Text = selItem.SubItems(AuxViewColumns.AuxID).Text	
 
         If _auxDialog.ShowDialog = DialogResult.OK Then
@@ -1072,14 +1076,14 @@ Public Class VectoJobForm
 
         pnVehicle.Enabled = True
         pnGearbox.Enabled = True
-        pnShiftParams.Enabled = not Cfg.DeclMode
+        pnShiftParams.Enabled = Not Cfg.DeclMode
         TabPgADAS.Enabled = True
         tpAuxiliaries.Enabled = True
         gbElectricAux.Enabled = True
         GrAuxMech.Enabled = True
         pnEngine.Enabled = True
-        pnHybridStrategy.Enabled = not Cfg.DeclMode
-        gbEngineStopStart.Enabled = not Cfg.DeclMode
+        pnHybridStrategy.Enabled = Not Cfg.DeclMode
+        gbEngineStopStart.Enabled = Not Cfg.DeclMode
         lblESSUtilityFactorDriving.Visible = True
         tbESSUtilityFactorDriving.Visible = True
         lblESSUtilityFactorDrivingUnit.Visible = True
@@ -1105,18 +1109,18 @@ Public Class VectoJobForm
             Case VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.FCHV
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = True
-                GrAuxMech.Enabled = cfg.DeclMode
-                pnShiftParams.Enabled = not Cfg.DeclMode
+                GrAuxMech.Enabled = Cfg.DeclMode
+                pnShiftParams.Enabled = Not Cfg.DeclMode
                 gbEngineStopStart.Enabled = False
                 pnHybridStrategy.Enabled = False
             Case VectoSimulationJobType.IHPC
                 pnEngine.Enabled = True
                 pnGearbox.Enabled = True
                 GrAuxMech.Enabled = True
-                pnShiftParams.Enabled = not Cfg.DeclMode
+                pnShiftParams.Enabled = Not Cfg.DeclMode
                 gbEngineStopStart.Enabled = False
-                pnHybridStrategy.Enabled = not cfg.DeclMode
-            Case VectoSimulationJobType.IEPC_E
+                pnHybridStrategy.Enabled = Not Cfg.DeclMode
+            Case VectoSimulationJobType.IEPC_E, VectoSimulationJobType.FCHV_IEPC
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = True
                 GrAuxMech.Enabled = Cfg.DeclMode

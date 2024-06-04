@@ -40,6 +40,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
@@ -99,21 +100,22 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				case VectoSimulationJobType.IEPC_S:
 					return GetIEPC_S_RunData();
 				case VectoSimulationJobType.FCHV:
-					return GetFCHV_RunData();
+					return GetFCHV_RunData(GetBatteryElectricVehicleRunData, VectoSimulationJobType.FCHV);
+				case VectoSimulationJobType.FCHV_IEPC:
+					return GetFCHV_RunData(GetIEPCRunData, VectoSimulationJobType.FCHV_IEPC);
 				default:
 					throw new ArgumentOutOfRangeException($"Invalid JobType {InputDataProvider.JobInputData.JobType}");
 			}
 		}
 
-		private IEnumerable<VectoRunData> GetFCHV_RunData()
+		private IEnumerable<VectoRunData> GetFCHV_RunData(Func<IEnumerable<VectoRunData>> baseDataFunc, VectoSimulationJobType jobType)
 		{
 			var dao = new EngineeringDataAdapter() {
 
 				DebugOutputDataWriter = Writer,
 			};
 
-
-			foreach (var pevRd in GetBatteryElectricVehicleRunData()) {
+			foreach (var pevRd in baseDataFunc()) {
 				var fuelCellData = 
 					dao.CreateFuelCellSystemData(InputDataProvider.JobInputData.Vehicle.Components
 						.FuelCellSystemInputData);
@@ -134,7 +136,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 				//pevRd.BatteryData.ConnectionSystemResistance = 0.SI<Ohm>();
 				pevRd.BatteryData = dao.CreateFuelCellPreProcessingBattery(InputDataProvider.JobInputData.Vehicle.Components.FuelCellSystemInputData, pevRd.BatteryData, out var fcBat);
-				//pevRd.SimulationType = VectoSimulationJobType.FCHV;
+				//pevRd.SimulationType = jobType;
 #if TRACE_FC
 				pevRd.ModFileSuffix += "pre";
 #else
@@ -143,7 +145,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				
 
 				iterativeRunStrategy.Update = (modData, runData) => {
-					runData.JobType = VectoSimulationJobType.FCHV;
+					runData.JobType = jobType;
 					runData.ModFileSuffix = "";
 					modData.PostProcessingCorrection = new FCHVPostProcessingCorrection();
 					//In case the battery is modified after creating the rundata (testing, do not create new battery data)
