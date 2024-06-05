@@ -5,7 +5,7 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Tests.Utils;
 using Assert = NUnit.Framework.Assert;
 
-namespace TUGraz.Vecto.UnitTests.TestCases.Components.TorqueConverter;
+namespace TUGraz.Vecto.UnitTests.TestCases.ComponentData;
 
 public class TorqueConverterDataTests
 {
@@ -50,15 +50,15 @@ public class TorqueConverterDataTests
 
         // check appended data
 
-		var entry = tqData.TorqueConverterEntries.Reverse().Skip(1).First();
-		Assert.AreEqual(0.9, entry.TorqueRatio, 1e-9);
-		Assert.AreEqual(-1511.2, entry.Torque.Value(), 1e-9);
-		Assert.AreEqual(5, entry.SpeedRatio, 1e-9);
+        var entry = tqData.TorqueConverterEntries.Reverse().Skip(1).First();
+        Assert.AreEqual(0.9, entry.TorqueRatio, 1e-9);
+        Assert.AreEqual(-1511.2, entry.Torque.Value(), 1e-9);
+        Assert.AreEqual(5, entry.SpeedRatio, 1e-9);
 
-		entry = tqData.TorqueConverterEntries.Last();
-		Assert.AreEqual(0.85, entry.TorqueRatio, 1e-9);
-		Assert.AreEqual(-1511.2 * 4.1 / 4, entry.Torque.Value(), 1e-9);
-		Assert.AreEqual(15, entry.SpeedRatio, 1e-9);
+        entry = tqData.TorqueConverterEntries.Last();
+        Assert.AreEqual(0.85, entry.TorqueRatio, 1e-9);
+        Assert.AreEqual(-1511.2 * 4.1 / 4, entry.Torque.Value(), 1e-9);
+        Assert.AreEqual(15, entry.SpeedRatio, 1e-9);
     }
 
     [TestCase]
@@ -104,15 +104,15 @@ public class TorqueConverterDataTests
 
         // check appended data
 
-		var entry = tqData.TorqueConverterEntries.Reverse().Skip(1).First();
+        var entry = tqData.TorqueConverterEntries.Reverse().Skip(1).First();
         Assert.AreEqual(0.9 / ratio, entry.TorqueRatio, 1e-9);
         Assert.AreEqual(-1511.2, entry.Torque.Value(), 1e-9);
         Assert.AreEqual(5 * ratio, entry.SpeedRatio, 1e-9);
 
-		entry = tqData.TorqueConverterEntries.Last();
-		Assert.AreEqual(0.85 / ratio, entry.TorqueRatio, 1e-9);
-		Assert.AreEqual(-1511.2 * 4.1/4, entry.Torque.Value(), 1e-9);
-		Assert.AreEqual(15 * ratio, entry.SpeedRatio, 1e-9);
+        entry = tqData.TorqueConverterEntries.Last();
+        Assert.AreEqual(0.85 / ratio, entry.TorqueRatio, 1e-9);
+        Assert.AreEqual(-1511.2 * 4.1 / 4, entry.Torque.Value(), 1e-9);
+        Assert.AreEqual(15 * ratio, entry.SpeedRatio, 1e-9);
     }
 
     [TestCase]
@@ -149,15 +149,15 @@ public class TorqueConverterDataTests
         Assert.AreEqual(0, tqData.TorqueConverterEntries[10].Torque.Value(), 1e-9);
         Assert.AreEqual(1, tqData.TorqueConverterEntries[10].SpeedRatio, 1e-9);
 
-		var entry = tqData.TorqueConverterEntries.Reverse().Skip(1).First();
-		Assert.AreEqual(0.9 , entry.TorqueRatio, 1e-9);
-		Assert.AreEqual(-1511.2, entry.Torque.Value(), 1e-9);
-		Assert.AreEqual(5 , entry.SpeedRatio, 1e-9);
+        var entry = tqData.TorqueConverterEntries.Reverse().Skip(1).First();
+        Assert.AreEqual(0.9, entry.TorqueRatio, 1e-9);
+        Assert.AreEqual(-1511.2, entry.Torque.Value(), 1e-9);
+        Assert.AreEqual(5, entry.SpeedRatio, 1e-9);
 
-		entry = tqData.TorqueConverterEntries.Last();
-		Assert.AreEqual(0.85, entry.TorqueRatio, 1e-9);
-		Assert.AreEqual(-1511.2 * 4.1 / 4, entry.Torque.Value(), 1e-9);
-		Assert.AreEqual(15, entry.SpeedRatio, 1e-9);
+        entry = tqData.TorqueConverterEntries.Last();
+        Assert.AreEqual(0.85, entry.TorqueRatio, 1e-9);
+        Assert.AreEqual(-1511.2 * 4.1 / 4, entry.Torque.Value(), 1e-9);
+        Assert.AreEqual(15, entry.SpeedRatio, 1e-9);
     }
 
     [TestCase]
@@ -330,7 +330,8 @@ public class TorqueConverterDataTests
                 tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad(), ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
                 0.1.SI<MeterPerSquareSecond>());
 
-        foreach (var entry in testData) {
+        foreach (var entry in testData)
+        {
             var torqueTCOut = entry.Item1.SI<NewtonMeter>();
             var angularSpeedOut = entry.Item2.RPMtoRad();
             var result = tqData.FindOperatingPoint(torqueTCOut, angularSpeedOut, 0.SI<PerSecond>()).First();
@@ -467,12 +468,14 @@ public class TorqueConverterDataTests
 
         var outSpeed = 1200.RPMtoRad();
         var results = new Dictionary<NewtonMeter, IList<TorqueConverterOperatingPoint>>();
-        for (var t = -2000; t < 2000; t += 10) {
+        for (var t = -2000; t < 2000; t += 10)
+        {
             var op = tqData.FindOperatingPoint(t.SI<NewtonMeter>(), outSpeed, 0.RPMtoRad());
             results[t.SI<NewtonMeter>()] = op;
         }
 
-        foreach (var result in results) {
+        foreach (var result in results)
+        {
             var tmp = result.Value.FirstOrDefault();
             Console.WriteLine("speed_out: {0},  torque_out: {1}, speed_in: {2},  torque_in: {3}", outSpeed.AsRPM, result.Key, tmp?.InAngularVelocity.AsRPM, tmp?.InTorque);
         }

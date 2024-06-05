@@ -1,169 +1,121 @@
 ﻿using Moq;
 using NUnit.Framework;
-using TUGraz.Vecto.UnitTests.Utils;
-using TUGraz.Vecto.UnitTests.Utils.MockComponents;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
-using TUGraz.VectoCore.Models.Connector.Ports;
-using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
-namespace TUGraz.Vecto.UnitTests.TestCases.Components.Transmission;
+namespace TUGraz.Vecto.UnitTests.TestCases.DataAdapter.Engineering;
 
-public class GearboxDataTests
+public class GearboxDataAdapterTests
 {
+	[TestCase]
+	public void TestGearboxDataReadTest()
+	{
+		var input = GetMockInputData();
 
+		var dao = new EngineeringDataAdapter();
+		var axleData = dao.CreateAxleGearData(GetMockAxlegearInputdata());
+		Assert.AreEqual(3.240355, axleData.AxleGear.Ratio, 0.0001);
 
+		var gbxData = dao.CreateGearboxData(input, GetDummyRunData(input.JobInputData.Vehicle.Components.GearboxInputData), null);
+		Assert.AreEqual(GearboxType.AMT, gbxData.Type);
+		Assert.AreEqual(1.0, gbxData.TractionInterruption.Value(), 0.0001);
+		Assert.AreEqual(8, gbxData.Gears.Count);
 
+		Assert.AreEqual(1.0, gbxData.Gears[7].Ratio, 0.0001);
 
-    [TestCase(6.38, 2300, 1600, 2356.2326),
-    TestCase(6.38, -1300, 1000, -1267.0686),
-    // the following entries are beyond the original loss map, but are not 'extrapolated' because the loss-map is extended on reading
-    TestCase(6.38, 6300, 1600, 6437.86530),
-    TestCase(6.38, -3300, 1000, -3227.8529411)]
-    public void Gearbox_LossMapInterpolation(double ratio, double torque,
-        double inAngularSpeed, double expectedTorque)
+		Assert.AreEqual(-400, gbxData.Gears[1].ShiftPolygon.Downshift[0].Torque.Value(), 0.0001);
+		Assert.AreEqual(560.RPMtoRad().Value(), gbxData.Gears[1].ShiftPolygon.Downshift[0].AngularSpeed.Value(), 0.0001);
+		Assert.AreEqual(1289.RPMtoRad().Value(), gbxData.Gears[1].ShiftPolygon.Upshift[0].AngularSpeed.Value(), 0.0001);
+
+		Assert.AreEqual(200.RPMtoRad().Value(), gbxData.Gears[1].LossMap[26].InputSpeed.Value(), 0.0001);
+		Assert.AreEqual(-350, gbxData.Gears[1].LossMap[35].InputTorque.Value(), 0.0001);
+		Assert.AreEqual(13.072, gbxData.Gears[1].LossMap[35].TorqueLoss.Value(), 0.0001);
+	}
+
+    private IEngineeringInputDataProvider GetMockInputData()
     {
-        var expectedTq = expectedTorque.SI<NewtonMeter>();
-        var expectedRpm = inAngularSpeed.RPMtoRad();
+        var input = new Mock<IEngineeringInputDataProvider>();
+		var job = new Mock<IEngineeringJobInputData>();
+		input.Setup(i => i.JobInputData).Returns(job.Object);
+		var components = new Mock<IVehicleComponentsEngineering>();
+		var driver = new Mock<IDriverEngineeringInputData>();
+		input.Setup(i => i.DriverInputData).Returns(driver.Object);
+		//var gs = new Mock<IGearshiftEngineeringInputData>();
+		//driver.Setup(d => d.GearshiftInputData).Returns(gs.Object);
 
+		var vehicle = new Mock<IVehicleEngineeringInputData>();
+		job.Setup(j => j.Vehicle).Returns(vehicle.Object);
+        vehicle.Setup(i => i.Components).Returns(components.Object);
+        var gbx = GetMockGearboxInputdata();
+        components.Setup(c => c.GearboxInputData).Returns(gbx);
+        var axl = GetMockAxlegearInputdata();
+        components.Setup(c => c.AxleGearInputData).Returns(axl);
 
-        var inputData = GetMockInputData();
-        var gbxTypes = new[] {
-            GearboxType.AMT
-        };
-        var runData = GetDummyRunData(inputData.Components.GearboxInputData);
-        var shiftPolygonCalc = new Mock<IShiftPolygonCalculator>();
-        // create gearbox data
-        var gearboxData = new GearboxDataAdapter(null).CreateGearboxData(inputData, runData, shiftPolygonCalc.Object, gbxTypes); // MockSimulationDataFactory.CreateGearboxDataFromFile(gbxFile, engineFile);
-
-        runData.GearboxData = gearboxData;
-        var container = GetMockVehicleContainer(runData);
-        var shiftStrategy = new Mock<IShiftStrategy>();
-        shiftStrategy.Setup(s =>
-                s.InitGear(It.IsAny<Second>(), It.IsAny<Second>(), It.IsAny<NewtonMeter>(), It.IsAny<PerSecond>()))
-            .Returns(new GearshiftPosition(1));
-        var gearbox = new Gearbox(container, shiftStrategy.Object);
-
-        NewtonMeter tqRequest = null;
-        PerSecond rpmRequest = null;
-        var port = new Mock<ITnOutPort>();
-        port.Setup(p => p.Request(It.IsAny<Second>(), It.IsAny<Second>(), It.IsAny<NewtonMeter>(),
-            It.IsAny<PerSecond>(), It.Is<bool>(b => !b))).Returns((Second _, Second _, NewtonMeter tq, PerSecond rpm, bool _) =>
-            {
-                tqRequest = tq;
-                rpmRequest = rpm;
-                return new ResponseSuccess(this);
-            });
-        gearbox.InPort().Connect(port.Object);
-
-
-        gearbox.Initialize(0.SI<NewtonMeter>(), 0.RPMtoRad());
-
-        var absTime = 0.SI<Second>();
-        var dt = 2.SI<Second>();
-        var tq = torque.SI<NewtonMeter>();
-        var n = inAngularSpeed.RPMtoRad();
-        Mock.Get(container).Setup(c => c.AbsTime).Returns(absTime);
-
-        var response = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, tq * ratio, n / ratio, false);
-
-        port.Verify(p => p.Request(It.IsAny<Second>(), It.IsAny<Second>(), It.IsAny<NewtonMeter>(), It.IsAny<PerSecond>(), false), Times.Once);
-        Assert.IsNotNull(tqRequest);
-        Assert.IsNotNull(rpmRequest);
-        Assert.AreEqual(expectedTq.Value(), tqRequest.Value(), 0.01, "Torque Engine Side");
-        Assert.AreEqual(expectedRpm.Value(), rpmRequest.Value(), 0.01, "AngularVelocity Engine Side");
-
-        Assert.IsFalse(gearbox.CurrentState.TorqueLossResult.Extrapolated);
-
-        var modData = new MockModalDataContainer();
-        gearbox.CommitSimulationStep(absTime, dt, modData);
+        return input.Object;
     }
 
-
-
-    private static IVehicleContainer GetMockVehicleContainer(VectoRunData runData)
+    private IAxleGearInputData GetMockAxlegearInputdata()
     {
-        var container = new Mock<IVehicleContainer>();
-        var powertrainInfo = new Mock<IPowertainInfo>();
-        var vehicle = new Mock<IVehicleInfo>();
-        var driver = new Mock<IDriverInfo>();
-        var engine = new Mock<IEngineInfo>();
+        var lossMap = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(AxlMapHdr, AxlMapData));
+        var axl = new Mock<IAxleGearInputData>();
+        axl.Setup(a => a.Ratio).Returns(3.240355);
+        axl.Setup(a => a.LossMap).Returns(lossMap);
 
-        container.Setup(c => c.RunData).Returns(runData);
-        container.Setup(c => c.VehicleInfo).Returns(vehicle.Object);
-        container.Setup(c => c.PowertrainInfo).Returns(powertrainInfo.Object);
-        container.Setup(c => c.DriverInfo).Returns(driver.Object);
-
-        vehicle.Setup(v => v.VehicleSpeed).Returns(0.KMPHtoMeterPerSecond());
-        powertrainInfo.Setup(p => p.HasCombustionEngine).Returns(true);
-        driver.Setup(d => d.DriverBehavior).Returns(DrivingBehavior.Accelerating);
-        driver.Setup(d => d.DrivingAction).Returns(DrivingAction.Accelerate);
-        container.Setup(c => c.EngineInfo).Returns(engine.Object);
-
-        return container.Object;
+        return axl.Object;
     }
 
-    private IVehicleDeclarationInputData GetMockInputData()
+    private IGearboxEngineeringInputData GetMockGearboxInputdata()
     {
-        var input = new Mock<IVehicleDeclarationInputData>();
-        var components = new Mock<IVehicleComponentsDeclaration>();
-        input.Setup(i => i.Components).Returns(components.Object);
-        var gbx = new Mock<IGearboxDeclarationInputData>();
-        components.Setup(c => c.GearboxInputData).Returns(gbx.Object);
-        var gearRatios = new double[] {
-            6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1.0, 0.76
-        };
-        var gears = gearRatios.Select((x, idx) =>
-        {
-            var gear = new Mock<ITransmissionInputData>();
-            gear.Setup(g => g.Ratio).Returns(x);
-            gear.Setup(g => g.Gear).Returns(idx + 1);
-            var lossMap = x != 1.0 ? LossMapIndirect : LossMapDirect;
-            gear.Setup(g => g.LossMap)
+        var gbx = new Mock<IGearboxEngineeringInputData>();
+        
+        var gearRatios = new double[] { 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1.0, 0.76 };
+        var gears = gearRatios.Select((i, idx) => {
+            var g = new Mock<ITransmissionInputData>();
+            g.Setup(x => x.Ratio).Returns(i);
+            g.Setup(x => x.Gear).Returns(idx + 1);
+            var lossMap = !i.IsEqual(1.0) ? LossMapIndirect : LossMapDirect;
+            g.Setup(x => x.LossMap)
                 .Returns(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(LossMapHdr, lossMap)));
-            return gear.Object;
+			g.Setup(x => x.ShiftPolygon)
+				.Returns(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(ShiftPolyHdr, ShiftPolyData)));
+            return g.Object;
         }).ToList();
+
+		gbx.Setup(g => g.TractionInterruption).Returns(1.SI<Second>());
         gbx.Setup(g => g.Type).Returns(GearboxType.AMT);
         gbx.Setup(g => g.Gears).Returns(gears);
-        return input.Object;
+
+        return gbx.Object;
     }
 
     private static VectoRunData GetDummyRunData(IGearboxDeclarationInputData gbxData)
     {
         var fld = new[] {
-                "560,1180,-149,0.6		   ",
-                "600,1282,-148,0.6		   ",
-                "799.9999999,1791,-149,0.6 ",
-                "1000,2300,-160,0.6		   ",
-                "1200,2300,-179,0.6		   ",
-                "1400,2300,-203,0.6		   ",
-                "1599.999999,2079,-235,0.49",
-                "1800,1857,-264,0.25	   ",
-                "2000.000001,1352,-301,0.25",
-                "2100,1100,-320,0.25	   ",
+            "560        ,680      ,-149      ,0.6",
+            "600        ,882      ,-148      ,0.6",
+            "800        ,1491      ,-149      ,0.6",
+            "1000       ,2100      ,-160      ,0.6",
+            "1200       ,2200      ,-179      ,0.6",
+            "1400       ,2300      ,-203      ,0.6",
+            "1600       ,2179      ,-235      ,0.49",
+            "1800       ,2057      ,-264      ,0.25",
+            "2000       ,1652      ,-301      ,0.25",
+            "2100       ,1500      ,-320      ,0.25",
             };
-        var engineData = new CombustionEngineData()
-        {
-            IdleSpeed = 600.RPMtoRad(),
+        var engineData = new CombustionEngineData() {
+            IdleSpeed = 560.RPMtoRad(),
             Inertia = 0.SI<KilogramSquareMeter>(),
             EngineStartTime = 1.SI<Second>(),
         };
@@ -173,27 +125,21 @@ public class GearboxDataTests
                 InputDataHelper.InputDataAsStream("engine speed [1/min],full load torque [Nm],motoring torque [Nm],PT1 [s]",
                     fld)));
         fullLoadCurves[0].EngineData = engineData;
-        foreach (var gears in gbxData.Gears)
-        {
+        foreach (var gears in gbxData.Gears) {
             fullLoadCurves[(uint)gears.Gear] = fullLoadCurves[0];
         }
         engineData.FullLoadCurves = fullLoadCurves;
-        return new VectoRunData()
-        {
-            VehicleData = new VehicleData()
-            {
+        return new VectoRunData() {
+            VehicleData = new VehicleData() {
                 DynamicTyreRadius = 0.492.SI<Meter>(),
-			},
-            AxleGearData = new AxleGearData()
-            {
-                AxleGear = new GearData()
-                {
+            },
+            AxleGearData = new AxleGearData() {
+                AxleGear = new GearData() {
                     Ratio = 2.64
                 }
             },
-			EngineData = engineData,
-            GearshiftParameters = new ShiftStrategyParameters()
-            {
+            EngineData = engineData,
+            GearshiftParameters = new ShiftStrategyParameters() {
                 StartSpeed = 2.SI<MeterPerSecond>(),
                 StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration,
                 TimeBetweenGearshifts = DeclarationData.Gearbox.MinTimeBetweenGearshifts,
@@ -201,10 +147,10 @@ public class GearboxDataTests
                 UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
                 UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration,
             },
-		};
+        };
     }
 
-    public const string LossMapHdr = "Input Speed [rpm],Input Torque [Nm],Torque Loss [Nm]";
+	public const string LossMapHdr = "Input Speed [rpm],Input Torque [Nm],Torque Loss [Nm]";
 
     public static readonly string[] LossMapIndirect = new[] {
         "0,-650,18.06",
@@ -806,5 +752,307 @@ public class GearboxDataTests
         "3000,2050,25.43",
         "3000,2250,26.43",
         "3000,2450,27.43",
+    };
+
+    const string ShiftPolyHdr = "M [Nm],nDown [rpm],nUp [rpm]";
+
+	private static readonly string[] ShiftPolyData = new[] {
+		"-400,560,1289",
+		"759,560,1289",
+		"1252,742,1289",
+		"2372,1155,1942",
+	};
+
+    const string AxlMapHdr = "Input Speed [rpm],Input Torque [Nm],Torque Loss [Nm] # this is a comment";
+
+    private readonly static string[] AxlMapData = new string[] {
+        "# rpm, Nm, Nm",
+        "# this is a comment",
+        "0,-2500,77.5  # this is a comment",
+        "0,-1500,62.5",
+        "0,-500,47.5",
+        "0,500,47.5",
+        "0,1500,62.5",
+        "0,2500,77.5",
+        "0,3500,92.5",
+        "0,4500,107.5",
+        "# this is a comment",
+        "0,5500,122.5",
+        "0,6500,137.5",
+        "0,7500,152.5",
+        "0,8500,167.5",
+        "0,9500,182.5",
+        "0,10500,197.5",
+        "0,11500,212.5",
+        "0,12500,227.5",
+        "0,13500,242.5",
+        "0,14500,257.5",
+        "0,15500,272.5",
+        "200,-2500,77.5",
+        "200,-1500,62.5",
+        "200,-500,47.5",
+        "200,500,47.5",
+        "200,1500,62.5",
+        "200,2500,77.5",
+        "200,3500,92.5",
+        "200,4500,107.5",
+        "200,5500,122.5",
+        "200,6500,137.5",
+        "200,7500,152.5",
+        "200,8500,167.5",
+        "200,9500,182.5",
+        "200,10500,197.5",
+        "200,11500,212.5",
+        "200,12500,227.5",
+        "200,13500,242.5",
+        "200,14500,257.5",
+        "200,15500,272.5",
+        "400,-2500,77.5",
+        "400,-1500,62.5",
+        "400,-500,47.5",
+        "400,500,47.5",
+        "400,1500,62.5",
+        "400,2500,77.5",
+        "400,3500,92.5",
+        "400,4500,107.5",
+        "400,5500,122.5",
+        "400,6500,137.5",
+        "400,7500,152.5",
+        "400,8500,167.5",
+        "400,9500,182.5",
+        "400,10500,197.5",
+        "400,11500,212.5",
+        "400,12500,227.5",
+        "400,13500,242.5",
+        "400,14500,257.5",
+        "400,15500,272.5",
+        "600,-2500,77.5",
+        "600,-1500,62.5",
+        "600,-500,47.5",
+        "600,500,47.5",
+        "600,1500,62.5",
+        "600,2500,77.5",
+        "600,3500,92.5",
+        "600,4500,107.5",
+        "600,5500,122.5",
+        "600,6500,137.5",
+        "600,7500,152.5",
+        "600,8500,167.5",
+        "600,9500,182.5",
+        "600,10500,197.5",
+        "600,11500,212.5",
+        "600,12500,227.5",
+        "600,13500,242.5",
+        "600,14500,257.5",
+        "600,15500,272.5",
+        "800,-2500,77.5",
+        "800,-1500,62.5",
+        "800,-500,47.5",
+        "800,500,47.5",
+        "800,1500,62.5",
+        "800,2500,77.5",
+        "800,3500,92.5",
+        "800,4500,107.5",
+        "800,5500,122.5",
+        "800,6500,137.5",
+        "800,7500,152.5",
+        "800,8500,167.5",
+        "800,9500,182.5",
+        "800,10500,197.5",
+        "800,11500,212.5",
+        "800,12500,227.5",
+        "800,13500,242.5",
+        "800,14500,257.5",
+        "800,15500,272.5",
+        "1000,-2500,77.5",
+        "1000,-1500,62.5",
+        "1000,-500,47.5",
+        "1000,500,47.5",
+        "1000,1500,62.5",
+        "1000,2500,77.5",
+        "1000,3500,92.5",
+        "1000,4500,107.5",
+        "1000,5500,122.5",
+        "1000,6500,137.5",
+        "1000,7500,152.5",
+        "1000,8500,167.5",
+        "1000,9500,182.5",
+        "1000,10500,197.5",
+        "1000,11500,212.5",
+        "1000,12500,227.5",
+        "1000,13500,242.5",
+        "1000,14500,257.5",
+        "1000,15500,272.5",
+        "1200,-2500,77.5",
+        "1200,-1500,62.5",
+        "1200,-500,47.5",
+        "1200,500,47.5",
+        "1200,1500,62.5",
+        "1200,2500,77.5",
+        "1200,3500,92.5",
+        "1200,4500,107.5",
+        "1200,5500,122.5",
+        "1200,6500,137.5",
+        "1200,7500,152.5",
+        "1200,8500,167.5",
+        "1200,9500,182.5",
+        "1200,10500,197.5",
+        "1200,11500,212.5",
+        "1200,12500,227.5",
+        "1200,13500,242.5",
+        "1200,14500,257.5",
+        "1200,15500,272.5",
+        "1400,-2500,77.5",
+        "1400,-1500,62.5",
+        "1400,-500,47.5",
+        "1400,500,47.5",
+        "1400,1500,62.5",
+        "1400,2500,77.5",
+        "1400,3500,92.5",
+        "1400,4500,107.5",
+        "1400,5500,122.5",
+        "1400,6500,137.5",
+        "1400,7500,152.5",
+        "1400,8500,167.5",
+        "1400,9500,182.5",
+        "1400,10500,197.5",
+        "1400,11500,212.5",
+        "1400,12500,227.5",
+        "1400,13500,242.5",
+        "1400,14500,257.5",
+        "1400,15500,272.5",
+        "1600,-2500,77.5",
+        "1600,-1500,62.5",
+        "1600,-500,47.5",
+        "1600,500,47.5",
+        "1600,1500,62.5",
+        "1600,2500,77.5",
+        "1600,3500,92.5",
+        "1600,4500,107.5",
+        "1600,5500,122.5",
+        "1600,6500,137.5",
+        "1600,7500,152.5",
+        "1600,8500,167.5",
+        "1600,9500,182.5",
+        "1600,10500,197.5",
+        "1600,11500,212.5",
+        "1600,12500,227.5",
+        "1600,13500,242.5",
+        "1600,14500,257.5",
+        "1600,15500,272.5",
+        "1800,-2500,77.5",
+        "1800,-1500,62.5",
+        "1800,-500,47.5",
+        "1800,500,47.5",
+        "1800,1500,62.5",
+        "1800,2500,77.5",
+        "1800,3500,92.5",
+        "1800,4500,107.5",
+        "1800,5500,122.5",
+        "1800,6500,137.5",
+        "1800,7500,152.5",
+        "1800,8500,167.5",
+        "1800,9500,182.5",
+        "1800,10500,197.5",
+        "1800,11500,212.5",
+        "1800,12500,227.5",
+        "1800,13500,242.5",
+        "1800,14500,257.5",
+        "1800,15500,272.5",
+        "2000,-2500,77.5",
+        "2000,-1500,62.5",
+        "2000,-500,47.5",
+        "2000,500,47.5",
+        "2000,1500,62.5",
+        "2000,2500,77.5",
+        "2000,3500,92.5",
+        "2000,4500,107.5",
+        "2000,5500,122.5",
+        "2000,6500,137.5",
+        "2000,7500,152.5",
+        "2000,8500,167.5",
+        "2000,9500,182.5",
+        "2000,10500,197.5",
+        "2000,11500,212.5",
+        "2000,12500,227.5",
+        "2000,13500,242.5",
+        "2000,14500,257.5",
+        "2000,15500,272.5",
+        "2200,-2500,77.5",
+        "2200,-1500,62.5",
+        "2200,-500,47.5",
+        "2200,500,47.5",
+        "2200,1500,62.5",
+        "2200,2500,77.5",
+        "2200,3500,92.5",
+        "2200,4500,107.5",
+        "2200,5500,122.5",
+        "2200,6500,137.5",
+        "2200,7500,152.5",
+        "2200,8500,167.5",
+        "2200,9500,182.5",
+        "2200,10500,197.5",
+        "2200,11500,212.5",
+        "2200,12500,227.5",
+        "2200,13500,242.5",
+        "2200,14500,257.5",
+        "2200,15500,272.5",
+        "2400,-2500,77.5",
+        "2400,-1500,62.5",
+        "2400,-500,47.5",
+        "2400,500,47.5",
+        "2400,1500,62.5",
+        "2400,2500,77.5",
+        "2400,3500,92.5",
+        "2400,4500,107.5",
+        "2400,5500,122.5",
+        "2400,6500,137.5",
+        "2400,7500,152.5",
+        "2400,8500,167.5",
+        "2400,9500,182.5",
+        "2400,10500,197.5",
+        "2400,11500,212.5",
+        "2400,12500,227.5",
+        "2400,13500,242.5",
+        "2400,14500,257.5",
+        "2400,15500,272.5",
+        "2600,-2500,77.5",
+        "2600,-1500,62.5",
+        "2600,-500,47.5",
+        "2600,500,47.5",
+        "2600,1500,62.5",
+        "2600,2500,77.5",
+        "2600,3500,92.5",
+        "2600,4500,107.5",
+        "2600,5500,122.5",
+        "2600,6500,137.5",
+        "2600,7500,152.5",
+        "2600,8500,167.5",
+        "2600,9500,182.5",
+        "2600,10500,197.5",
+        "2600,11500,212.5",
+        "2600,12500,227.5",
+        "2600,13500,242.5",
+        "2600,14500,257.5",
+        "2600,15500,272.5",
+        "3600,-2500,77.5",
+        "3600,-1500,62.5",
+        "3600,-500,47.5",
+        "3600,500,47.5",
+        "3600,1500,62.5",
+        "3600,2500,77.5",
+        "3600,3500,92.5",
+        "3600,4500,107.5",
+        "3600,5500,122.5",
+        "3600,6500,137.5",
+        "3600,7500,152.5",
+        "3600,8500,167.5",
+        "3600,9500,182.5",
+        "3600,10500,197.5",
+        "3600,11500,212.5",
+        "3600,12500,227.5",
+        "3600,13500,242.5",
+        "3600,14500,257.5",
+        "3600,15500,272.5",
     };
 }

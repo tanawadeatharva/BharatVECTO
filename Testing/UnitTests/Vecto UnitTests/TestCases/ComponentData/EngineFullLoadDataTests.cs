@@ -4,6 +4,7 @@ using TUGraz.Vecto.UnitTests.Utils;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -14,6 +15,26 @@ namespace TUGraz.Vecto.UnitTests.TestCases.ComponentData;
 public class EngineFullLoadDataTests
 {
 	private const double Tolerance = 0.0001;
+
+	/// <summary>
+	///		VECTO-190
+	/// </summary>
+	[TestCase]
+	public void TestFullLoadSorting()
+	{
+		var gbxFldString = new[] {
+			"600, 1000, -100",
+			"2400, 2000, -120",
+			"1000, 500, -110"
+		};
+
+		var dataGbx =
+			VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm], Mdrag [Nm]", gbxFldString));
+		var gbxFld = FullLoadCurveReader.Create(dataGbx, true);
+
+		var maxTorque = gbxFld.FullLoadStationaryTorque(800.RPMtoRad());
+		Assert.AreEqual(750, maxTorque.Value());
+	}
 
     [TestCase]
 	public void TestFullLoadEngineSpeedRated()
@@ -163,9 +184,35 @@ public class EngineFullLoadDataTests
 
         Assert.AreEqual(2420.5, fldCurve.N95hSpeed.AsRPM, 1);
 
-
     }
 
+	[TestCase]
+	public void TestFullLoadCurveIntersection()
+	{
+		var engineFldString = new[] {
+			"560, 1180, -149",
+			"600, 1282, -148",
+			"800, 1791, -149",
+			"1000, 2300, -160",
+			"1200, 2300, -179",
+			"1400, 2300, -203",
+			"1600, 2079, -235",
+			"1800, 1857, -264",
+			"2000, 1352, -301",
+			"2100, 1100, -320",
+		};
+		var dataEng =
+			VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm],Mdrag [Nm]", engineFldString));
+		var engineFld = FullLoadCurveReader.Create(dataEng, true);
+
+
+		var fullLoadCurve = AbstractSimulationDataAdapter.IntersectFullLoadCurves(engineFld, 2500.SI<NewtonMeter>());
+
+		Assert.AreEqual(10, fullLoadCurve.FullLoadEntries.Count);
+
+		Assert.AreEqual(1180.0, fullLoadCurve.FullLoadStationaryTorque(560.RPMtoRad()).Value());
+		Assert.AreEqual(1100.0, fullLoadCurve.FullLoadStationaryTorque(2100.RPMtoRad()).Value());
+	}
 
     public const string EngineFldHeader = "engine speed [1/min],full load torque [Nm],motoring torque [Nm],PT1 [s]";
 

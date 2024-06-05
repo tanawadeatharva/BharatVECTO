@@ -44,7 +44,8 @@ namespace TUGraz.VectoCore.Tests.Models
 			_runDataFactory = _kernel.Get<IVectoRunDataFactoryFactory>();
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestWHRMapCSVDataElectric()
 		{
 
@@ -61,7 +62,8 @@ namespace TUGraz.VectoCore.Tests.Models
 			Assert.AreEqual(400, result.GeneratedPower.Value());
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestWHRMapCSVDataMechanical()
 		{
 
@@ -79,7 +81,8 @@ namespace TUGraz.VectoCore.Tests.Models
 		}
 
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestWHRMapCSVDataElectricAndMechanical()
 		{
 

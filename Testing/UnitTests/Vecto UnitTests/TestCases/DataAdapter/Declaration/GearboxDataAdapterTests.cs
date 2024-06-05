@@ -5,10 +5,15 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
@@ -17,6 +22,7 @@ namespace TUGraz.Vecto.UnitTests.TestCases.DataAdapter.Declaration;
 
 public class GearboxDataAdapterTests
 {
+
 	[TestCase()]
 	public void Gearbox_LessThanTwoGearsException()
 	{
@@ -32,7 +38,9 @@ public class GearboxDataAdapterTests
 			"At least one Gear-Entry must be defined in Gearbox!");
 	}
 
-	private VectoRunData GetDummyRunData()
+	
+
+    private VectoRunData GetDummyRunData()
 	{
 		return new VectoRunData() {
 			VehicleData = new VehicleData() {
@@ -48,15 +56,15 @@ public class GearboxDataAdapterTests
 		var gbx = new Mock<IGearboxDeclarationInputData>();
 		//var vehicle = new Mock<IVehicleDeclarationInputData>();
 
-		var gearRatios = new double[] { 1.0 };
-		var gears = gearRatios.Select((i, idx) => {
-			var g = new Mock<ITransmissionInputData>();
-			g.Setup(x => x.Ratio).Returns(i);
-			g.Setup(x => x.Gear).Returns(idx + 1);
-			g.Setup(x => x.LossMap)
-				.Returns(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(LossMapHdr, LossMapData)));
-			return g.Object;
-		}).ToList();
+		//var gearRatios = new double[] { 1.0 };
+		//var gears = gearRatios.Select((i, idx) => {
+		//	var g = new Mock<ITransmissionInputData>();
+		//	g.Setup(x => x.Ratio).Returns(i);
+		//	g.Setup(x => x.Gear).Returns(idx + 1);
+		//	g.Setup(x => x.LossMap)
+		//		.Returns(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(LossMapHdr, LossMapData)));
+		//	return g.Object;
+		//}).ToList();
 
 		input.Setup(i => i.Components).Returns(components.Object);
 		components.Setup(c => c.GearboxInputData).Returns(gbx.Object);
@@ -74,4 +82,7 @@ public class GearboxDataAdapterTests
 		"5000,-100000,100",
 		"5000,100000,100",
 	};
+
+    
+
 }

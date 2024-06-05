@@ -1,6 +1,7 @@
 ﻿using Moq;
 using NUnit.Framework;
 using TUGraz.Vecto.UnitTests.Utils;
+using TUGraz.Vecto.UnitTests.Utils.MockComponents;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;

@@ -22,7 +22,7 @@ using Assert = NUnit.Framework.Assert;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.ModDataPostprocessing;
 
-public class BusAuxPostProcessingTests
+public class BusAuxHeatingPostProcessingTests
 {
     private const BusHVACSystemConfiguration CFG1 = BusHVACSystemConfiguration.Configuration1;
     private const BusHVACSystemConfiguration CFG2 = BusHVACSystemConfiguration.Configuration2;

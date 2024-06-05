@@ -1,9 +1,8 @@
-﻿using System;
+﻿using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
-using NUnit.Framework;
 using Assert = NUnit.Framework.Assert;
 
-namespace TUGraz.VectoCore.Tests.Utils
+namespace TUGraz.Vecto.UnitTests.TestCases.Utils
 {
     [TestFixture]
 	[Parallelizable(ParallelScope.All)]

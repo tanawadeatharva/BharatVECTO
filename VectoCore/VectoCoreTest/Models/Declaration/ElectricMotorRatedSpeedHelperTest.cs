@@ -22,8 +22,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void GetRatedSpeedPass(double expectedSpeedRpm)
 		{
 
-
-
 			(string speed, string torque)[] entries = new (string speedd, string torque)[] {
 				("0.00	  ", "4027.80"),
 				("14.96   ", "4010.00"),
