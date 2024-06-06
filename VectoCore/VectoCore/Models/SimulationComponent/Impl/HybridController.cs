@@ -417,6 +417,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
 			}
 
+			public override ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
+				GearboxType gearboxType,
+				int i,
+				EngineFullLoadCurve engineDataFullLoadCurve,
+				IList<ITransmissionInputData> gearboxGears,
+				CombustionEngineData engineData,
+				double axlegearRatio,
+				Meter dynamicTyreRadius,
+				ElectricMotorData electricMotorData = null)
+			{
+				return DeclarationData.Gearbox.ComputeManualTransmissionShiftPolygonExtended(
+					i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
+			}
+
 			protected override bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
 				PerSecond outAngularVelocity, NewtonMeter inTorque,
 				PerSecond inAngularVelocity, GearshiftPosition gear, Second lastShiftTime, IResponse response)

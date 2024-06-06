@@ -58,6 +58,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Batter
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using Point = TUGraz.VectoCommon.Utils.Point;
+using System.Diagnostics;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
@@ -1308,12 +1309,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return new ShiftPolygon(downShift, upShift);
 			}
 
-
 			public static ShiftPolygon ComputeManualTransmissionShiftPolygon(
 				int gearIdx, EngineFullLoadCurve fullLoadCurve,
 				IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius)
 			{
-				if (gears.Count < 2) {
+				if (gears.Count < 2)
+				{
 					throw new VectoException("ComputeShiftPolygon needs at least 2 gears. {0} gears given.", gears.Count);
 				}
 
@@ -1323,8 +1324,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var nVHigh = VectoMath.Min(engineSpeed85kmhLastGear, engine.FullLoadCurves[0].RatedSpeed);
 
 				var diffRatio = gears[gears.Count - 2].Ratio / gears[gears.Count - 1].Ratio - 1;
-
-				var maxDragTorque = fullLoadCurve.MaxDragTorque * 1.1;
 
 				var p1 = new Point(engine.IdleSpeed.Value() / 2, 0);
 				var p2 = new Point(engine.IdleSpeed.Value() * 1.1, 0);
@@ -1337,12 +1336,63 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				var p6 = new Point(p2.X, VectoMath.Interpolate(p1, p3, p2.X));
 				var p7 = new Point(p4.X, VectoMath.Interpolate(p2, p5, p4.X));
+				
+				return ComputeManualTransmissionShiftPolygonBase(gearIdx, fullLoadCurve, gears, p2, p3, p4, p5, p6, p7);
+			}
 
+			public static ShiftPolygon ComputeManualTransmissionShiftPolygonExtended(
+				int gearIdx,
+				EngineFullLoadCurve fullLoadCurve,
+				IList<ITransmissionInputData> gears,
+				CombustionEngineData engine,
+				double axlegearRatio,
+				Meter dynamicTyreRadius)
+			{
+				if (gears.Count < 2)
+				{
+					throw new VectoException("ComputeShiftPolygon needs at least 2 gears. {0} gears given.", gears.Count);
+				}
+
+				// ReSharper disable once InconsistentNaming
+				var engineSpeed85kmhLastGear = ComputeEngineSpeed85kmh(gears[gears.Count - 1], axlegearRatio, dynamicTyreRadius);
+				var nVHigh = VectoMath.Min(engineSpeed85kmhLastGear, engine.FullLoadCurves[0].RatedSpeed);
+				var diffRatio = gears[gears.Count - 2].Ratio / gears[gears.Count - 1].Ratio - 1;
+
+				var p1 = new Point(engine.IdleSpeed.Value() / 2, 0);
+				var p2 = new Point(engine.IdleSpeed.Value() * 1.1, 0);
+
+				var p3 = new Point(
+					nVHigh.Value() * 0.9,
+					fullLoadCurve.FullLoadStationaryTorque(nVHigh * 0.9).Value());
+
+				var p4 = new Point((nVHigh * (1 + diffRatio / 3)).Value(), 0);
+				var p5 = new Point(fullLoadCurve.N95hSpeed.Value(), fullLoadCurve.MaxTorque.Value());
+
+				var p6 = new Point(p2.X, VectoMath.Interpolate(p1, p3, p2.X));
+				var p7 = new Point(p4.X, VectoMath.Interpolate(p2, p5, p4.X));
+
+				/// Increase the torque at P6 by 20% and create a new extended shift polygon.
+				var extendedRatio = 0.20;
+				var p6YOffset = extendedRatio * p6.Y;
+				var p3Extended = new Point(p3.X, p3.Y + p6YOffset);
+				var p6Extended = new Point(p6.X, p6.Y + p6YOffset);
+
+				return ComputeManualTransmissionShiftPolygonBase(gearIdx, fullLoadCurve, gears, p2, p3Extended, p4, p5, p6Extended, p7);
+			}
+
+			private static ShiftPolygon ComputeManualTransmissionShiftPolygonBase(
+				int gearIdx,
+				EngineFullLoadCurve fullLoadCurve,
+				IList<ITransmissionInputData> gears,
+				Point p2, Point p3, Point p4, Point p5, Point p6, Point p7)
+			{
+				var maxDragTorque = fullLoadCurve.MaxDragTorque * 1.1;
 				var fldMargin = ShiftPolygonFldMargin(fullLoadCurve.FullLoadEntries, (p3.X * 0.95).SI<PerSecond>());
 				var downshiftCorr = MoveDownshiftBelowFld(Edge.Create(p6, p3), fldMargin, 1.1 * fullLoadCurve.MaxTorque);
 
 				var downShift = new List<ShiftPolygon.ShiftPolygonEntry>();
-				if (gearIdx > 0) {
+				if (gearIdx > 0)
+				{
 					downShift =
 						new[] { p2, downshiftCorr.P1, downshiftCorr.P2 }.Select(
 																			point => new ShiftPolygon.ShiftPolygonEntry(point.Y.SI<NewtonMeter>(), point.X.SI<PerSecond>()))
@@ -1351,7 +1401,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 					downShift[0].Torque = maxDragTorque;
 				}
 				var upShift = new List<ShiftPolygon.ShiftPolygonEntry>();
-				if (gearIdx >= gears.Count - 1) {
+				if (gearIdx >= gears.Count - 1)
+				{
 					return new ShiftPolygon(downShift, upShift);
 				}
 
@@ -1368,7 +1419,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				// ReSharper restore InconsistentNaming
 
 				var upShiftPts = IntersectTakeHigherShiftLine(new[] { p4, p7, p5 }, new[] { p2p, p6p, p3pExt });
-				if (gears[gearIdx].MaxInputSpeed != null) {
+				if (gears[gearIdx].MaxInputSpeed != null)
+				{
 					var maxSpeed = gears[gearIdx].MaxInputSpeed.Value();
 					upShiftPts = IntersectTakeLowerShiftLine(
 						upShiftPts,
@@ -1378,6 +1430,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					upShiftPts.Select(point => new ShiftPolygon.ShiftPolygonEntry(point.Y.SI<NewtonMeter>(), point.X.SI<PerSecond>()))
 							.ToList();
 				upShift[0].Torque = maxDragTorque;
+
 				return new ShiftPolygon(downShift, upShift);
 			}
 

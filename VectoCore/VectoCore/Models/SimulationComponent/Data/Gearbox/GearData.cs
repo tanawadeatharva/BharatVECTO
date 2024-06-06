@@ -61,6 +61,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		[ValidateObject]
 		public ShiftPolygon ShiftPolygon { get; internal set; }
 
+		public ShiftPolygon ExtendedShiftPolygon { get; internal set; }
+
 		public double TorqueConverterRatio { get; internal set; }
 
 		public TransmissionLossMap TorqueConverterGearLossMap { get; internal set; }
