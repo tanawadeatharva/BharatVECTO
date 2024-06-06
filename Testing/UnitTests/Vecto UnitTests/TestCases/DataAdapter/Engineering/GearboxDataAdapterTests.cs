@@ -68,7 +68,7 @@ public class GearboxDataAdapterTests
 
     private IAxleGearInputData GetMockAxlegearInputdata()
     {
-        var lossMap = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(AxlMapHdr, AxlMapData));
+        var lossMap = InputDataHelper.InputDataAsTableData(AxlMapHdr, AxlMapData);
         var axl = new Mock<IAxleGearInputData>();
         axl.Setup(a => a.Ratio).Returns(3.240355);
         axl.Setup(a => a.LossMap).Returns(lossMap);
@@ -87,9 +87,9 @@ public class GearboxDataAdapterTests
             g.Setup(x => x.Gear).Returns(idx + 1);
             var lossMap = !i.IsEqual(1.0) ? LossMapIndirect : LossMapDirect;
             g.Setup(x => x.LossMap)
-                .Returns(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(LossMapHdr, lossMap)));
+                .Returns(InputDataHelper.InputDataAsTableData(LossMapHdr, lossMap));
 			g.Setup(x => x.ShiftPolygon)
-				.Returns(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(ShiftPolyHdr, ShiftPolyData)));
+				.Returns(InputDataHelper.InputDataAsTableData(ShiftPolyHdr, ShiftPolyData));
             return g.Object;
         }).ToList();
 

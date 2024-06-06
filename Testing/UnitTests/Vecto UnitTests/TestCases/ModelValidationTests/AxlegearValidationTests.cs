@@ -62,7 +62,7 @@ public class AxlegearValidationTests
 		axl.Setup(a => a.LineType).Returns(AxleLineType.SinglePortalAxle);
 		axl.Setup(a => a.Ratio).Returns(3.240355);
 		axl.Setup(a => a.LossMap)
-			.Returns(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(AxlMapHdr, mapData)));
+			.Returns(InputDataHelper.InputDataAsTableData(AxlMapHdr, mapData));
 		return axl.Object;
 	}
 }

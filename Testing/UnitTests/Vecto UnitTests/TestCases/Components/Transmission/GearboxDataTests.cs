@@ -139,7 +139,7 @@ public class GearboxDataTests
             gear.Setup(g => g.Gear).Returns(idx + 1);
             var lossMap = x != 1.0 ? LossMapIndirect : LossMapDirect;
             gear.Setup(g => g.LossMap)
-                .Returns(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(LossMapHdr, lossMap)));
+                .Returns(InputDataHelper.InputDataAsTableData(LossMapHdr, lossMap));
             return gear.Object;
         }).ToList();
         gbx.Setup(g => g.Type).Returns(GearboxType.AMT);
@@ -169,9 +169,8 @@ public class GearboxDataTests
         };
         var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>();
         fullLoadCurves[0] = FullLoadCurveReader.Create(
-            VectoCSVFile.ReadStream(
-                InputDataHelper.InputDataAsStream("engine speed [1/min],full load torque [Nm],motoring torque [Nm],PT1 [s]",
-                    fld)));
+			InputDataHelper.InputDataAsTableData("engine speed [1/min],full load torque [Nm],motoring torque [Nm],PT1 [s]",
+                    fld));
         fullLoadCurves[0].EngineData = engineData;
         foreach (var gears in gbxData.Gears)
         {

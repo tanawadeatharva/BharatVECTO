@@ -20,7 +20,7 @@ public class FullLoadCurveReaderTests
     [TestCase]
     public void TestFullLoadStaticTorque()
     {
-		var data = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(EngineFldHeader, EngineFldData));
+		var data = InputDataHelper.InputDataAsTableData(EngineFldHeader, EngineFldData);
 		var fldCurve = FullLoadCurveReader.Create(data);
 
         Assert.AreEqual(1180, fldCurve.FullLoadStationaryTorque(560.RPMtoRad()).Value(), Tolerance);
@@ -32,7 +32,7 @@ public class FullLoadCurveReaderTests
     [TestCase]
     public void TestFullLoadStaticPower()
     {
-		var data = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(EngineFldHeader, EngineFldData));
+		var data = InputDataHelper.InputDataAsTableData(EngineFldHeader, EngineFldData);
 		var fldCurve = FullLoadCurveReader.Create(data);
 
         Assert.AreEqual(69198.814183, fldCurve.FullLoadStationaryPower(560.RPMtoRad()).Value(), Tolerance);
@@ -43,7 +43,7 @@ public class FullLoadCurveReaderTests
     [TestCase]
     public void TestDragLoadStaticTorque()
     {
-		var data = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(EngineFldHeader, EngineFldData));
+		var data = InputDataHelper.InputDataAsTableData(EngineFldHeader, EngineFldData);
 		var fldCurve = FullLoadCurveReader.Create(data);
 
         Assert.AreEqual(-149, fldCurve.DragLoadStationaryTorque(560.RPMtoRad()).Value(), Tolerance);
@@ -57,7 +57,7 @@ public class FullLoadCurveReaderTests
     public void TestDragLoadStaticPower()
     {
 
-		var data = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(EngineFldHeader, EngineFldData));
+		var data = InputDataHelper.InputDataAsTableData(EngineFldHeader, EngineFldData);
 		var fldCurve = FullLoadCurveReader.Create(data);
 
         Assert.AreEqual(-8737.81636, fldCurve.DragLoadStationaryPower(560.RPMtoRad()).Value(), Tolerance);
@@ -68,7 +68,7 @@ public class FullLoadCurveReaderTests
     [TestCase]
     public void TestPT1()
 	{
-		var data = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(EngineFldHeader, EngineFldData));
+		var data = InputDataHelper.InputDataAsTableData(EngineFldHeader, EngineFldData);
 		var fldCurve = FullLoadCurveReader.Create(data);
 
         Assert.AreEqual(0.6, fldCurve.PT1(560.RPMtoRad()).Value.Value(), Tolerance);
@@ -95,7 +95,7 @@ public class FullLoadCurveReaderTests
 			"2000.000001,1352",
 			"2100,1100",
 		};
-		var data = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(hdr, fld));
+		var data = InputDataHelper.InputDataAsTableData(hdr, fld);
         AssertHelper.Exception<VectoException>(
             () => FullLoadCurveReader.Create(data),
             "Engine FullLoadCurve Data File must consist of at least 3 columns.");
@@ -118,7 +118,7 @@ public class FullLoadCurveReaderTests
         target.Parameters.Add(new MethodCallParameter("${level}"));
         target.Parameters.Add(new MethodCallParameter("${message}"));
         SimpleConfigurator.ConfigureForTargetLogging(target, LogLevel.Warn);
-		var data = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm],Mdrag [Nm],<PT1> [s]", EngineFldData));
+		var data = InputDataHelper.InputDataAsTableData("n [U/min],Mfull [Nm],Mdrag [Nm],<PT1> [s]", EngineFldData);
 
         FullLoadCurveReader.Create(data);
         Assert.IsTrue(
@@ -139,7 +139,7 @@ public class FullLoadCurveReaderTests
     [TestCase]
     public void Test_FileRead_NoHeader()
 	{
-		var data = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(null, EngineFldData));
+		var data = InputDataHelper.InputDataAsTableData(null, EngineFldData);
 
         var curve = FullLoadCurveReader.Create(data);
         var result = curve.FullLoadStationaryTorque(1.SI<PerSecond>());
@@ -152,8 +152,7 @@ public class FullLoadCurveReaderTests
     [TestCase]
     public void Test_FileRead_InsufficientEntries()
 	{
-		var data = VectoCSVFile.ReadStream(
-			InputDataHelper.InputDataAsStream(EngineFldHeader, EngineFldData.Slice(0, 1)));
+		var data = InputDataHelper.InputDataAsTableData(EngineFldHeader, EngineFldData.Slice(0, 1));
 
         AssertHelper.Exception<VectoException>(
 			() => FullLoadCurveReader.Create(data),
@@ -179,8 +178,7 @@ public class FullLoadCurveReaderTests
 			"2100,1100,-320,0.25		 ",
 		};
 
-		var data = VectoCSVFile.ReadStream(
-			InputDataHelper.InputDataAsStream(EngineFldHeader, fldEntries));
+		var data = InputDataHelper.InputDataAsTableData(EngineFldHeader, fldEntries);
 
         var fldCurve = FullLoadCurveReader.Create(data);
 
@@ -205,7 +203,7 @@ public class FullLoadCurveReaderTests
 			"2100,1100,-320,0.25",
 			"1200,2410,-180,0.6",
 		};
-		var data = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(EngineFldHeader, fldData));
+		var data = InputDataHelper.InputDataAsTableData(EngineFldHeader, fldData);
 
 		AssertHelper.Exception<VectoException>(
 			() => {

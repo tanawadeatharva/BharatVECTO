@@ -106,17 +106,17 @@ public class CombustionEngineValidationTests
 
 	private static IEngineEngineeringInputData GetMockEngineInputData()
 	{
-		var fuelConsumption = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("", new[] {
+		var fuelConsumption = InputDataHelper.InputDataAsTableData("", new[] {
 			"1, 1, 1",
 			"2, 2, 2",
 			"3, 3, 3"
-		}));
+		});
 
-		var fullLoad = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(
+		var fullLoad = InputDataHelper.InputDataAsTableData(
 			"Engine speed, max torque, drag torque, PT1", new[] {
 				"3, 3, -3, 3",
 				"4, 3, -3, 3"
-			}));
+			});
 		var data = new Mock<IEngineEngineeringInputData>();
 		data.Setup(e => e.Model).Returns("asdf");
 		data.Setup(e => e.Displacement).Returns(6374.SI(Unit.SI.Cubic.Centi.Meter).Cast<CubicMeter>());

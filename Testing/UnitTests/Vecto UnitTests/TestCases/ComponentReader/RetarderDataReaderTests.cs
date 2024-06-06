@@ -29,9 +29,8 @@ public class RetarderDataReaderTests
             "300,10.18",
             "400,10.32",
         };
-        var retarderTbl =
-            VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("Retarder Speed [rpm],Loss Torque [Nm]",
-                retarderEntries));
+        var retarderTbl =  InputDataHelper.InputDataAsTableData("Retarder Speed [rpm],Loss Torque [Nm]",
+                retarderEntries);
         var vehicle = new VehicleContainer(ExecutionMode.Engineering);
         var retarderData = RetarderLossMapReader.Create(retarderTbl);
         var retarder = new Retarder(vehicle, retarderData, 2.0);

@@ -544,9 +544,9 @@ public class BatteryTests
 		bat.Setup(b => b.Capacity).Returns(7.5.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>());
 		bat.Setup(b => b.JunctionboxIncluded).Returns(true);
 		bat.Setup(b => b.ConnectorsSubsystemsIncluded).Returns(true);
-		bat.Setup(b => b.InternalResistanceCurve).Returns(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("SoC, Ri", InternalResistanceData)));
-		bat.Setup(b => b.MaxCurrentMap).Returns(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("SOC, I_charge, I_discharge", MaxCurrentData)));
-		bat.Setup(b => b.VoltageCurve).Returns(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("SOC, V", VoltageCurve)));
+		bat.Setup(b => b.InternalResistanceCurve).Returns(InputDataHelper.InputDataAsTableData("SoC, Ri", InternalResistanceData));
+		bat.Setup(b => b.MaxCurrentMap).Returns(InputDataHelper.InputDataAsTableData("SOC, I_charge, I_discharge", MaxCurrentData));
+		bat.Setup(b => b.VoltageCurve).Returns(InputDataHelper.InputDataAsTableData("SOC, V", VoltageCurve));
 		return bat.Object;
 	}
 

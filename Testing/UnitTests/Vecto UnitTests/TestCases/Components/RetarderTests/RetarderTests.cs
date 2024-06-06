@@ -30,7 +30,7 @@ public class RetarderTests
 	public void RetarderRequestTest(double cardanTorque, double cardanSpeed, double ratio, double expectedRetarderLoss)
 	{
 		var vehicle = new VehicleContainer(ExecutionMode.Declaration);
-		var data = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(RetarderHdr, RetarderData));
+		var data = InputDataHelper.InputDataAsTableData(RetarderHdr, RetarderData);
 		var retarderData = RetarderLossMapReader.Create(data);
 		var retarder = new Retarder(vehicle, retarderData, ratio);
 
@@ -65,7 +65,7 @@ public class RetarderTests
 	public void RetarderSubsequentRequestTest()
 	{
 		var vehicle = new VehicleContainer(ExecutionMode.Declaration);
-		var data = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(RetarderHdr, RetarderData));
+		var data = InputDataHelper.InputDataAsTableData(RetarderHdr, RetarderData);
 		var retarderData = RetarderLossMapReader.Create(data);
         var retarder = new Retarder(vehicle, retarderData, 1.0);
 
@@ -109,7 +109,7 @@ public class RetarderTests
 	[TestCase]
 	public void RetarderDeclarationNoExtrapolationTest()
 	{
-		var data = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(RetarderHdr, RetarderData));
+		var data = InputDataHelper.InputDataAsTableData(RetarderHdr, RetarderData);
 		var retarderData = RetarderLossMapReader.Create(data);
 		var declVehicle = new VehicleContainer(ExecutionMode.Declaration);
 		var retarder = new Retarder(declVehicle, retarderData, 2.0);

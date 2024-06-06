@@ -32,7 +32,7 @@ public class AngledriveTests
         var vehicle = new VehicleContainer(ExecutionMode.Engineering);
 		var angledriveData = new AngledriveData {
 			Angledrive = new TransmissionData {
-				LossMap = TransmissionLossMapReader.Create(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(AngleLossHdr, AnleLossMap)), ratio, "Angledrive"),
+				LossMap = TransmissionLossMapReader.Create(InputDataHelper.InputDataAsTableData(AngleLossHdr, AnleLossMap), ratio, "Angledrive"),
 				Ratio = ratio
 			}
 		};

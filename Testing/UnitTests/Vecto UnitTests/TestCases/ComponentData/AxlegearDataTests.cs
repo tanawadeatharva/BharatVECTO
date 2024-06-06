@@ -52,7 +52,7 @@ public class AxlegearDataTests
 	
     private IAxleGearInputData GetMockAxlegearInputdata()
 	{
-		var lossMap = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(AxlMapHdr, AxlMapData));
+		var lossMap = InputDataHelper.InputDataAsTableData(AxlMapHdr, AxlMapData);
 		var axl = new Mock<IAxleGearInputData>();
 		axl.Setup(a => a.Ratio).Returns(3.240355);
 		axl.Setup(a => a.LossMap).Returns(lossMap);

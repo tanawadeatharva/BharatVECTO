@@ -751,9 +751,9 @@ public class BusAuxDemandESSAlternatorTypeTests
             double? reessSoC, bool connectEsToReess)
 	{
 		var fld = FullLoadCurveReader.Create(
-			VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(EngineFLDHeader, EngineFLDData)));
+			InputDataHelper.InputDataAsTableData(EngineFLDHeader, EngineFLDData));
 		var fuelmap =
-			FuelConsumptionMapReader.ReadFromStream(InputDataHelper.InputDataAsStream(EngineMapHdr, EngineMapData));
+			FuelConsumptionMapReader.Create(InputDataHelper.InputDataAsTableData(EngineMapHdr, EngineMapData));
 		var engineData = new CombustionEngineData() {
 			IdleSpeed = 560.RPMtoRad(),
 			Inertia = 3.8.SI<KilogramSquareMeter>(),
@@ -962,7 +962,7 @@ public class BusAuxDemandESSAlternatorTypeTests
             },
             PneumaticUserInputsConfig = new PneumaticUserInputsConfig() {
                 CompressorMap =
-                    new CompressorMap(CompressorMapReader.Create(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(CompressorMapHdr, CompressorMapData)), 1.0),
+                    new CompressorMap(CompressorMapReader.Create(InputDataHelper.InputDataAsTableData(CompressorMapHdr, CompressorMapData), 1.0),
                         "engineering mode", ""),
                 CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
                 CompressorGearRatio = GearRatio,

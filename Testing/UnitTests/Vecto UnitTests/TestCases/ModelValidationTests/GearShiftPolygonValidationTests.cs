@@ -29,8 +29,7 @@ public class GearShiftPolygonValidationTests
 
         var shiftPolygon =
             ShiftPolygonReader.Create(
-                VectoCSVFile.ReadStream(
-                    InputDataHelper.InputDataAsStream("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs)));
+				InputDataHelper.InputDataAsTableData("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs));
 
         var results = shiftPolygon.Validate(ExecutionMode.Engineering, VectoSimulationJobType.ConventionalVehicle, null, GearboxType.MT, false);
         Assert.IsFalse(results.Any(), results.Select(r => r.ErrorMessage).Join("\n"));
@@ -52,8 +51,7 @@ public class GearShiftPolygonValidationTests
 
         var shiftPolygon =
             ShiftPolygonReader.Create(
-                VectoCSVFile.ReadStream(
-                    InputDataHelper.InputDataAsStream("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs)));
+				InputDataHelper.InputDataAsTableData("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs));
 
         var results = shiftPolygon.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, GearboxType.MT, false);
         Assert.IsFalse(results.Any());
@@ -61,8 +59,7 @@ public class GearShiftPolygonValidationTests
         // change columns
         shiftPolygon =
             ShiftPolygonReader.Create(
-                VectoCSVFile.ReadStream(
-                    InputDataHelper.InputDataAsStream("engine torque,upshift rpm [rpm], downshift rpm [rpm]	", vgbs)));
+				InputDataHelper.InputDataAsTableData("engine torque,upshift rpm [rpm], downshift rpm [rpm]	", vgbs));
 
         results = shiftPolygon.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, GearboxType.MT, false);
         Assert.IsTrue(results.Any());
@@ -81,8 +78,7 @@ public class GearShiftPolygonValidationTests
 
         var shiftPolygon =
             ShiftPolygonReader.Create(
-                VectoCSVFile.ReadStream(
-                    InputDataHelper.InputDataAsStream("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs)));
+				InputDataHelper.InputDataAsTableData("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs));
 
         var results = shiftPolygon.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, GearboxType.ATSerial, false);
         Assert.IsFalse(results.Any());
@@ -90,8 +86,7 @@ public class GearShiftPolygonValidationTests
         // change columns
         shiftPolygon =
             ShiftPolygonReader.Create(
-                VectoCSVFile.ReadStream(
-                    InputDataHelper.InputDataAsStream("engine torque,upshift rpm [rpm], downshift rpm [rpm]	", vgbs)));
+				InputDataHelper.InputDataAsTableData("engine torque,upshift rpm [rpm], downshift rpm [rpm]	", vgbs));
 
         results = shiftPolygon.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, GearboxType.ATSerial, false);
         Assert.IsFalse(results.Any());

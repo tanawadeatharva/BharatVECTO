@@ -66,7 +66,7 @@ public class BusAuxTests
                 CurbMass = vehicleMass.SI<Kilogram>()
             }
         });
-        var fld = FullLoadCurveReader.Create(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(ICEFldHeader, ICEFld)));
+        var fld = FullLoadCurveReader.Create(InputDataHelper.InputDataAsTableData(ICEFldHeader, ICEFld));
         var engine = new Mock<IEngineInfo>();
         engine.Setup(e => e.EngineIdleSpeed).Returns(560.RPMtoRad());
         engine.Setup(e => e.EngineDragPower(It.IsNotNull<PerSecond>())).Returns((PerSecond r) => fld.DragLoadStationaryPower(r));

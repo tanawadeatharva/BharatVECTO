@@ -30,8 +30,11 @@
 */
 
 using System;
+using System.Data;
 using System.IO;
 using System.Text.RegularExpressions;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -48,6 +51,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			writer.Flush();
 			cycleData.Seek(0, SeekOrigin.Begin);
 			return cycleData;
+		}
+
+		public static TableData InputDataAsTableData(string header, string[] entries)
+		{
+			return VectoCSVFile.ReadStream(InputDataAsStream(header, entries));
 		}
 
 		public static string GetRandomFilename(string jobFile)

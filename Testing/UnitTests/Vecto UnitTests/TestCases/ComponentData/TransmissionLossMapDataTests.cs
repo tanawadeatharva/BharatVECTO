@@ -105,7 +105,7 @@ public class TransmissionLossMapDataTests
     [TestCase()]
 	public void TestLossMapExtension()
 	{
-		var gbxData = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(GbxMapHdr, GbxMapData));
+		var gbxData = InputDataHelper.InputDataAsTableData(GbxMapHdr, GbxMapData);
 
 		var lossMapOrig = TransmissionLossMapReader.Create(gbxData, 1.0, "origLossMap");
 		var extendedMap = TransmissionLossMapReader.Create(gbxData, 1.0, "origLossMap", true);
@@ -133,7 +133,7 @@ public class TransmissionLossMapDataTests
     [TestCase()]
 	public void TestAxlegearLossMapExtension()
 	{
-		var lossMap = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(AxlMapHdr, AxlMapData));
+		var lossMap = InputDataHelper.InputDataAsTableData(AxlMapHdr, AxlMapData);
 		var origLossMap = TransmissionLossMapReader.Create(lossMap, 3.240355, "AxleOrig");
 		var extendedLossMap = TransmissionLossMapReader.Create(lossMap, 3.240355, "AxleExtended", true);
 

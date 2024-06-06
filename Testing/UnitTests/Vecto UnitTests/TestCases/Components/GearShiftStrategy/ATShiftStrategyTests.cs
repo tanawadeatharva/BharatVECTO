@@ -89,7 +89,7 @@ public class ATShiftStrategyTests
 
 	private static VectoRunData GetDummyVectoRunData(int inputData)
 	{
-		var fldData = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(EngineFldHeader, EngineFldData));
+		var fldData = InputDataHelper.InputDataAsTableData(EngineFldHeader, EngineFldData);
 		var fld = FullLoadCurveReader.Create(fldData);
 		var runData = new VectoRunData() {
 			VehicleData = new VehicleData() {
@@ -152,7 +152,7 @@ public class ATShiftStrategyTests
 				data.Add($"{speed:f2}, {tq:f2}, {(1 - efficiency) * Math.Abs(tq)}");
 			}
 		}
-        var lossmap = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(header, data.ToArray()));
+        var lossmap = InputDataHelper.InputDataAsTableData(header, data.ToArray());
 		var gears = gearRatios.Select((x, idx) => {
 			var gear = new Mock<ITransmissionInputData>();
 			gear.Setup(g => g.Ratio).Returns(x);
@@ -164,7 +164,7 @@ public class ATShiftStrategyTests
 		gbx.Setup(g => g.Type).Returns(GearboxType.ATSerial);
 		gbx.Setup(g => g.Gears).Returns(gears);
 
-		var tcData = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(TcHeader, TcData));
+		var tcData = InputDataHelper.InputDataAsTableData(TcHeader, TcData);
 		tc.Setup(t => t.TCData).Returns(tcData);
 		return input.Object;
 	}

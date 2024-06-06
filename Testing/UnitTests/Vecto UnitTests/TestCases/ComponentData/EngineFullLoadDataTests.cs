@@ -29,7 +29,7 @@ public class EngineFullLoadDataTests
 		};
 
 		var dataGbx =
-			VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm], Mdrag [Nm]", gbxFldString));
+			InputDataHelper.InputDataAsTableData("n [U/min],Mfull [Nm], Mdrag [Nm]", gbxFldString);
 		var gbxFld = FullLoadCurveReader.Create(dataGbx, true);
 
 		var maxTorque = gbxFld.FullLoadStationaryTorque(800.RPMtoRad());
@@ -39,14 +39,14 @@ public class EngineFullLoadDataTests
     [TestCase]
 	public void TestFullLoadEngineSpeedRated()
 	{
-		var fldCurve = FullLoadCurveReader.Create(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(EngineFldHeader, EngineFldData)));
+		var fldCurve = FullLoadCurveReader.Create(InputDataHelper.InputDataAsTableData(EngineFldHeader, EngineFldData));
 		Assert.AreEqual(181.8444, fldCurve.RatedSpeed.Value(), Tolerance);
 	}
 
     [TestCase]
     public void TestPreferredSpeed()
     {
-		var fldCurve = FullLoadCurveReader.Create(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(EngineFldHeader, EngineFldData)));
+		var fldCurve = FullLoadCurveReader.Create(InputDataHelper.InputDataAsTableData(EngineFldHeader, EngineFldData));
         fldCurve.EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad() };
         AssertHelper.AreRelativeEqual(130.691151551712.SI<PerSecond>(), fldCurve.PreferredSpeed);
         var totalArea = fldCurve.ComputeArea(fldCurve.EngineData.IdleSpeed, fldCurve.N95hSpeed);
@@ -62,7 +62,7 @@ public class EngineFullLoadDataTests
     [TestCase()]
     public void TestP99HighSpeed()
     {
-		var fldCurve = FullLoadCurveReader.Create(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(EngineFldHeader, EngineFldData)));
+		var fldCurve = FullLoadCurveReader.Create(InputDataHelper.InputDataAsTableData(EngineFldHeader, EngineFldData));
         fldCurve.EngineData = new CombustionEngineData() { IdleSpeed = 560.RPMtoRad() };
 
         var nP99h = fldCurve.NP99hSpeed;
@@ -75,7 +75,7 @@ public class EngineFullLoadDataTests
     [TestCase()]
     public void TestTq99HighSpeed()
     {
-		var fldCurve = FullLoadCurveReader.Create(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(EngineFldHeader, EngineFldData)));
+		var fldCurve = FullLoadCurveReader.Create(InputDataHelper.InputDataAsTableData(EngineFldHeader, EngineFldData));
         fldCurve.EngineData = new CombustionEngineData() { IdleSpeed = 560.RPMtoRad() };
 
         var nTq99h = fldCurve.NTq99hSpeed;
@@ -89,7 +89,7 @@ public class EngineFullLoadDataTests
     [TestCase()]
     public void TestTq99LowSpeed()
     {
-		var fldCurve = FullLoadCurveReader.Create(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(EngineFldHeader, EngineFldData)));
+		var fldCurve = FullLoadCurveReader.Create(InputDataHelper.InputDataAsTableData(EngineFldHeader, EngineFldData));
         fldCurve.EngineData = new CombustionEngineData() { IdleSpeed = 560.RPMtoRad() };
 
         var nTq99l = fldCurve.NTq99lSpeed;
@@ -202,7 +202,7 @@ public class EngineFullLoadDataTests
 			"2100, 1100, -320",
 		};
 		var dataEng =
-			VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm],Mdrag [Nm]", engineFldString));
+			InputDataHelper.InputDataAsTableData("n [U/min],Mfull [Nm],Mdrag [Nm]", engineFldString);
 		var engineFld = FullLoadCurveReader.Create(dataEng, true);
 
 

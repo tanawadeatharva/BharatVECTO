@@ -59,8 +59,8 @@ public class RetarderDataAdapterTests
     public void CreateRetarderDataTest(RetarderType type, PowertrainPosition arch, bool throwsExeption)
     {
         var adapter = new EngineeringDataAdapter();
-        var lossMap = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("Retarder Speed [rpm],Loss Torque [Nm]",
-            new[] { "0, 10", "1000, 12", "2000, 18", "2300, 20.58" }));
+        var lossMap = InputDataHelper.InputDataAsTableData("Retarder Speed [rpm],Loss Torque [Nm]",
+            new[] { "0, 10", "1000, 12", "2000, 18", "2300, 20.58" });
 
         var inputData = new Mock<IRetarderInputData>();
         inputData.Setup(r => r.Type).Returns(type);

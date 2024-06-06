@@ -66,8 +66,8 @@ public class ValidationModeTests
         var engineData = new CombustionEngineData {
             FullLoadCurves =
                 new Dictionary<uint, EngineFullLoadCurve>() {
-                        { 0, FullLoadCurveReader.Create(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(EngineFldHeader, EngineFldData))) },
-                        { 1, FullLoadCurveReader.Create(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(EngineFldHeader, EngineFldData))) },
+                        { 0, FullLoadCurveReader.Create(InputDataHelper.InputDataAsTableData(EngineFldHeader, EngineFldData)) },
+                        { 1, FullLoadCurveReader.Create(InputDataHelper.InputDataAsTableData(EngineFldHeader, EngineFldData)) },
                 },
             IdleSpeed = 560.RPMtoRad()
         };
