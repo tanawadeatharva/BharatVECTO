@@ -32,21 +32,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 		public XElement[] GetElements(IWeightedResult entry)
 		{
-			if (entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore)
-			{
-				List<XElement> fcElementsIgnore = new List<XElement>();
-				foreach (var fcEntry in entry.FuelConsumptionPerMeter)
-				{
-					fcElementsIgnore.Add(GetElementIgnore(fcEntry.Value, fcEntry.Key, entry.Payload, entry.CargoVolume, entry.PassengerCount));
-				}
-
-				return fcElementsIgnore.ToArray();
-			}
-
 			List<XElement> fcElements = new List<XElement>();
 			foreach (var fcEntry in entry.FuelConsumptionPerMeter)
 			{
-				fcElements.Add(GetElement(fcEntry.Value, fcEntry.Key, entry.Payload, entry.CargoVolume, entry.PassengerCount));
+				XElement element = entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore
+					? GetElementIgnore(fcEntry.Value, fcEntry.Key, entry.Payload, entry.CargoVolume, entry.PassengerCount)
+					: GetElement(fcEntry.Value, fcEntry.Key, entry.Payload, entry.CargoVolume, entry.PassengerCount);
+				fcElements.Add(element);
 			}
 
 			return fcElements.ToArray();

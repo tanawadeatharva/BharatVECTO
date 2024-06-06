@@ -76,7 +76,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 			} else {
 				WeightingGroup = DeclarationData.WeightingGroup.Lookup(
 					modelData.VehicleData.VehicleClass,
-					modelData.VehicleData.VocationalVehicle,
 					false,
 					0.SI<Watt>());
 				_weightingFactors =
