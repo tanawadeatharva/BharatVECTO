@@ -271,6 +271,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			}
 		}
 
+		public PerSecond MaxSpeed => FullLoadEntries.MaxBy(e => e.EngineSpeed).EngineSpeed;
+
 		public PerSecond NTq99hSpeed => _nTq99hSpeed ?? (_nTq99hSpeed = FindEnginSpeedForTorque(0.99 * MaxTorque).Last());
 
 		public PerSecond NTq99lSpeed => _nTq99lSpeed ?? (_nTq99lSpeed = FindEnginSpeedForTorque(0.99 * MaxTorque).First());
