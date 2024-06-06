@@ -1000,6 +1000,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 			};
 		}
 
+		public override void SetWeightingFactors(VectoRunData runData, IEnumerable<IResultEntry> orderedeResults, double? electricRange)
+		{
+			throw new NotImplementedException();
+		}
+
 		#region Implementation of IVTPReport
 
 		public IVectoHash InputDataHash { protected get; set; }

@@ -180,27 +180,40 @@ namespace TUGraz.VectoCore.Models.Declaration
 				case VehicleCategory.RigidTruck:
 				case VehicleCategory.Tractor:
 					try {
-						var truckSegment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory,
-							vehicleData.AxleConfiguration, vehicleData.GrossVehicleMassRating,
+						var truckSegment = DeclarationData.TruckSegments.Lookup(
+							vehicleData.VehicleCategory,
+							vehicleData.AxleConfiguration,
+							vehicleData.GrossVehicleMassRating,
 							vehicleData.CurbMassChassis,
 							vehicleData.VocationalVehicle);
+
 						return Tuple.Create(truckSegment.VehicleClass, (bool?)vehicleData.VocationalVehicle);
 					} catch (VectoException) {
-						var truckSegment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory,
-							vehicleData.AxleConfiguration, vehicleData.GrossVehicleMassRating,
+						var truckSegment = DeclarationData.TruckSegments.Lookup(
+							vehicleData.VehicleCategory,
+							vehicleData.AxleConfiguration,
+							vehicleData.GrossVehicleMassRating,
 							vehicleData.CurbMassChassis,
 							false);
+
 						return Tuple.Create(truckSegment.VehicleClass, (bool?)false);
 					}
 				case VehicleCategory.HeavyBusPrimaryVehicle:
-					var primarySegment = DeclarationData.PrimaryBusSegments.Lookup(vehicleData.VehicleCategory,
-						vehicleData.AxleConfiguration, vehicleData.Articulated);
+					var primarySegment = DeclarationData.PrimaryBusSegments.Lookup(
+						vehicleData.VehicleCategory,
+						vehicleData.AxleConfiguration, 
+						vehicleData.Articulated);
+
 					return Tuple.Create(primarySegment.VehicleClass, (bool?)null);
 				case VehicleCategory.HeavyBusCompletedVehicle:
-					var segment = DeclarationData.CompletedBusSegments.Lookup(vehicleData.AxleConfiguration.NumAxles(),
+					var segment = DeclarationData.CompletedBusSegments.Lookup(
+						vehicleData.AxleConfiguration.NumAxles(),
 						vehicleData.VehicleCode,
-						vehicleData.RegisteredClass, vehicleData.NumberPassengerSeatsLowerDeck, vehicleData.Height,
+						vehicleData.RegisteredClass,
+						vehicleData.NumberPassengerSeatsLowerDeck, 
+						vehicleData.Height,
 						vehicleData.LowEntry);
+
 					return Tuple.Create(segment.VehicleClass, (bool?)null);
 			}
 
@@ -246,21 +259,39 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public bool AllowVocational { get; set; }
 		}
 
+		/// <summary>
+		/// Checks whether the LH subgroup conditions are met, otherwise RD allocation needs to be carried out.
+		/// </summary>
+		/// <param name="result">Simulation cycle result entry.</param>
+		/// <returns>True if RD allocation is needed; false otherwise.</returns>
+		public static bool EvaluateLHSubgroupConditions(IResultEntry result)
+		{
+			Meter electricOprerationalRange = result.VectoRunData.JobType.IsBatteryElectric() ?
+				(result.ActualChargeDepletingRange ?? 0.SI<Meter>()) :
+				double.MaxValue.SI<Meter>();
 
-		public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IVehicleDeclarationInputData vehicleData)
+			return result.Mission == MissionType.LongHaul &&
+				result.LoadingType == LoadingType.ReferenceLoad &&
+				electricOprerationalRange < 350000.SI<Meter>();
+		}
+
+		public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IVehicleDeclarationInputData vehicleData, double? electricRange = null)
 		{
 			switch (vehicleData.VehicleCategory) {
 				case VehicleCategory.Van:
 				case VehicleCategory.RigidTruck:
 				case VehicleCategory.Tractor:
 					var vehicleGroup = GetVehicleGroupGroup(vehicleData);
-					var propulsionPower = GetReferencePropulsionPower(vehicleData);
-					var co2Group = WeightingGroup.Lookup(vehicleGroup.Item1, vehicleData.SleeperCab ?? false, propulsionPower);
+					var co2Group = WeightingGroup.Lookup(
+						vehicleGroup.Item1,
+						vehicleData.SleeperCab ?? false,
+						GetReferencePropulsionPower(vehicleData),
+						vehicleData.VehicleType.IsBatteryElectric(),
+						electricRange);
 					return co2Group;
 				default:
 					return Declaration.WeightingGroup.Unknown;
 			}
-			//throw new VectoException("No CO2 Group found for vehicle");
 		}
 
 		public static Watt GetReferencePropulsionPower(IVehicleDeclarationInputData vehicleData)

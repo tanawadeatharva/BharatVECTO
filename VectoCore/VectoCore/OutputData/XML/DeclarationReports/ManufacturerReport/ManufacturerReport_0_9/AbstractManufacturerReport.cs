@@ -112,10 +112,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				)
 			);
 
-			//var lh = _results.SingleOrDefault(res => res.Mission == MissionType.LongHaul && res.LoadingType == LoadingType.ReferenceLoad);
-			
-			Vehicle.XPathSelectElement($"//*[local-name()='{XMLNames.VehicleGroupCO2}']").Value = DeclarationData
-				.GetVehicleGroupCO2StandardsGroup(Input).ToXMLFormat();
+			var RDGroupEntry = _results.SingleOrDefault(e => DeclarationData.EvaluateLHSubgroupConditions(e));
+			double? LHOperationalRange = RDGroupEntry != null ? RDGroupEntry.ActualChargeDepletingRange?.Value() : null;
+
+			Vehicle.XPathSelectElement($"//*[local-name()='{XMLNames.VehicleGroupCO2}']").Value =
+				DeclarationData.GetVehicleGroupCO2StandardsGroup(Input, LHOperationalRange).ToXMLFormat();
 
 			var stream = new MemoryStream();
 			var writer = new StreamWriter(stream);
