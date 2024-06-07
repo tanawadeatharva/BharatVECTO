@@ -266,13 +266,12 @@ namespace TUGraz.VectoCore.OutputData
 				var entry = new T();
 				entry.Initialize(runData, modData);
 				lock (Results) {
-					var existingResults = Results.Where(e =>
-						e.Mission == entry.Mission && e.LoadingType == entry.LoadingType && e.OVCMode == entry.OVCMode && e.VehicleClass == entry.VehicleClass).ToList();
-					bool areElectric = existingResults.All(e => e.LoadingType == LoadingType.ReferenceLoad);
-					if (existingResults.Count > 1)
+					var existingResults = Results.SingleOrDefault(e =>
+						e.Mission == entry.Mission && e.LoadingType == entry.LoadingType && e.OVCMode == entry.OVCMode && e.VehicleClass == entry.VehicleClass);
+					if (existingResults != null)
 					{
 						//We already have a result for this run stored, this can happen with iterative runs, in this case we have to remove the old result
-						Results.RemoveRange(1, existingResults.Count - 1);
+						Results.Remove(existingResults);
 					}
 
 					Results.Add(entry);
