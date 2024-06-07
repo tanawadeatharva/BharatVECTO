@@ -286,7 +286,7 @@ namespace TUGraz.VectoCore.OutputData.XML
                 throw new NotImplementedException();
             }
 
-			public VectoRunData VectoRunData => throw new NotImplementedException();
+			public VectoRunData VectoRunData => null;
             public VectoRun.Status Status { get; set; }
             public OvcHevMode OVCMode { get; set; }
             public MissionType Mission { get; set; }

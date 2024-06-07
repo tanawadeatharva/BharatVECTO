@@ -290,6 +290,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				}
 
 				WeightingFactor = weightingFactor;
+				PrimaryResult = runData.PrimaryResult;
 			}
 
 			public void SetResultWeightingFactor(double weightingFactor)

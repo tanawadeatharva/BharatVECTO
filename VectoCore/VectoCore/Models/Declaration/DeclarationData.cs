@@ -267,7 +267,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// <returns>True if RD allocation is needed; false otherwise.</returns>
 		public static bool EvaluateLHSubgroupConditions(IResultEntry result)
 		{
-			Meter electricOprerationalRange = result.VectoRunData.JobType.IsBatteryElectric() ?
+			Meter electricOprerationalRange = result.VectoRunData?.JobType.IsBatteryElectric() ?? false ?
 				(result.ActualChargeDepletingRange ?? 0.SI<Meter>()) :
 				double.MaxValue.SI<Meter>();
 
