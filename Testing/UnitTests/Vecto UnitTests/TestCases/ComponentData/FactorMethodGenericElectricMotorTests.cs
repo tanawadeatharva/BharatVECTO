@@ -1,5 +1,10 @@
-﻿using NUnit.Framework;
+﻿using Moq;
+using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.GenericModelData;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
@@ -8,6 +13,73 @@ namespace TUGraz.Vecto.UnitTests.TestCases.ComponentData;
 
 public class FactorMethodGenericElectricMotorTests
 {
+    [TestCase()]
+    public void TestGenericBusElectricMotorDataMeasured()
+    {
+        var em = GetMockElectricMotorInputData(CertificationMethod.Measured);
+
+        var genericElectricMotor = new GenericBusElectricMotorData();
+        var electricMotorData = genericElectricMotor.CreateGenericElectricMotorData(em, null,
+            em.ElectricMachine.VoltageLevels.Average(v => v.VoltageLevel.Value()).SI<Volt>());
+
+        Assert.AreEqual(2, electricMotorData.EfficiencyData.VoltageLevels.Count);
+		// Todo: More assertions...
+    }
+
+	[TestCase()]
+	public void TestGenericBusElectricMotorDataStdVal()
+	{
+		var em = GetMockElectricMotorInputData(CertificationMethod.StandardValues);
+
+		var genericElectricMotor = new GenericBusElectricMotorData();
+		var electricMotorData = genericElectricMotor.CreateGenericElectricMotorData(em, null,
+			em.ElectricMachine.VoltageLevels.Average(v => v.VoltageLevel.Value()).SI<Volt>());
+
+		Assert.AreEqual(2, electricMotorData.EfficiencyData.VoltageLevels.Count);
+		// Todo: More assertions...
+	}
+
+	[TestCase()]
+	public void TestGenericIEPCElectricMotorDataMeasured()
+	{
+		var iepcData = GetMockIEPCInputData(CertificationMethod.StandardValues);
+
+		var genericIEPCData = new GenericBusIEPCData();
+		var iepcMotorData = genericIEPCData.CreateIEPCElectricMotorData(iepcData);
+
+		Assert.AreEqual(1, iepcMotorData.EfficiencyData.VoltageLevels.Count);
+		// Todo: More assertions...
+	}
+
+    [TestCase()]
+    public void TestGenericIEPCElectricMotorDataStdVal()
+    {
+        var iepcData = GetMockIEPCInputData(CertificationMethod.StandardValues);
+        
+        var genericIEPCData = new GenericBusIEPCData();
+        var iepcMotorData = genericIEPCData.CreateIEPCElectricMotorData(iepcData);
+
+        Assert.AreEqual(1, iepcMotorData.EfficiencyData.VoltageLevels.Count);
+		// Todo: More assertions...
+    }
+
+	
+
+	[TestCase(@"TestData/XML/XMLVIFBusReport/IHPC_HEV_completedBus_2.VIF_Report_1.xml")]
+    public void TestGenericIHPCElectricMotorData(string ihpcFilePath)
+    {
+        var electricMachineEntry = GetMockIHPCEMInputData(CertificationMethod.Measured);
+        var transmission = GetMockIHPCGbxInputData();
+        var machineType = electricMachineEntry.ElectricMachine.ElectricMachineType;
+
+        var genericBusIHPCData = new GenericBusIHPCData();
+        var ihpcData = genericBusIHPCData.CreateGenericBusIHPCData(electricMachineEntry, machineType, transmission);
+
+        Assert.AreEqual(2, ihpcData.EfficiencyData.VoltageLevels.Count);
+		// Todo: More assertions...
+    }
+
+	
 	[TestCase()]
 	public void TestFullLoadCurveRatedPointSearch()
 	{
@@ -26,7 +98,118 @@ public class FactorMethodGenericElectricMotorTests
 		Assert.AreEqual(335261.0740, iepcResult.PRated.Value(), 1e-2);
 	}
 
-	private const string EMFldHdr = "outShaftSpeed, maxTorque, minTorque";
+	private ElectricMachineEntry<IElectricMotorDeclarationInputData> GetMockElectricMotorInputData(
+		CertificationMethod certificationMethod)
+	{
+		var retVal = new ElectricMachineEntry<IElectricMotorDeclarationInputData>();
+		var em = new Mock<IElectricMotorDeclarationInputData>();
+		retVal.ElectricMachine = em.Object;
+		retVal.Count = 1;
+		retVal.Position = PowertrainPosition.HybridP2;
+
+		em.Setup(e => e.Inertia).Returns(0.1.SI<KilogramSquareMeter>());
+		em.Setup(e => e.CertificationMethod).Returns(certificationMethod);
+		var vLow = new Mock<IElectricMotorVoltageLevel>();
+		var vHi = new Mock<IElectricMotorVoltageLevel>();
+		if (certificationMethod == CertificationMethod.StandardValues) {
+			em.Setup(e => e.VoltageLevels).Returns(new List<IElectricMotorVoltageLevel>() { vLow.Object });
+		} else {
+			em.Setup(e => e.VoltageLevels).Returns(new List<IElectricMotorVoltageLevel>() { vLow.Object, vHi.Object });
+			vLow.Setup(v => v.VoltageLevel).Returns(400.SI<Volt>());
+		}
+
+        vLow.Setup(v => v.ContinuousTorque).Returns(200.SI<NewtonMeter>());
+		vLow.Setup(v => v.ContinuousTorqueSpeed).Returns(2000.RPMtoRad());
+		vLow.Setup(v => v.OverloadTorque).Returns(400.SI<NewtonMeter>());
+		vLow.Setup(v => v.OverloadTestSpeed).Returns(2000.RPMtoRad());
+		vLow.Setup(v => v.OverloadTime).Returns(30.SI<Second>());
+		// explicitly return a new instance on every call because the column names in GenericBusElectricMotorData are overwritten and this leads to an error, see also ToDo's in ElectricMotorInputData
+		vLow.Setup(v => v.FullLoadCurve).Returns(() => InputDataHelper.InputDataAsTableData(EMFldHdr, EMFldData));
+
+		vHi.Setup(v => v.VoltageLevel).Returns(400.SI<Volt>());
+		vHi.Setup(v => v.ContinuousTorque).Returns(200.SI<NewtonMeter>());
+		vHi.Setup(v => v.ContinuousTorqueSpeed).Returns(2000.RPMtoRad());
+		vHi.Setup(v => v.OverloadTorque).Returns(400.SI<NewtonMeter>());
+		vHi.Setup(v => v.OverloadTestSpeed).Returns(2000.RPMtoRad());
+		vHi.Setup(v => v.OverloadTime).Returns(30.SI<Second>());
+		// explicitly return a new instance on every call because the column names in GenericBusElectricMotorData are overwritten and this leads to an error, see also ToDo's in ElectricMotorInputData
+		vHi.Setup(v => v.FullLoadCurve).Returns(() => InputDataHelper.InputDataAsTableData(EMFldHdr, EMFldData));
+
+		em.Setup(e => e.DragCurve).Returns(InputDataHelper.InputDataAsTableData(EmDragHdr, EmDragData));
+        return retVal;
+	}
+
+	private IIEPCDeclarationInputData GetMockIEPCInputData(CertificationMethod certificationMethod)
+	{
+		var retVal = new Mock<IIEPCDeclarationInputData>();
+
+		retVal.Setup(r => r.CertificationMethod).Returns(CertificationMethod.StandardValues);
+		retVal.Setup(r => r.DifferentialIncluded).Returns(false);
+		retVal.Setup(r => r.DesignTypeWheelMotor).Returns(false);
+		retVal.Setup(r => r.Inertia).Returns(0.1.SI<KilogramSquareMeter>());
+		retVal.Setup(r => r.Gears).Returns(new[] { 3.0, 1.0 }.Select((i, idx) => {
+			var g = new Mock<IGearEntry>();
+			g.Setup(x => x.Ratio).Returns(i);
+			g.Setup(x => x.GearNumber).Returns(idx + 1);
+			return g.Object;
+		}).ToList());
+
+		var vLow = new Mock<IElectricMotorVoltageLevel>();
+		var vHi = new Mock<IElectricMotorVoltageLevel>();
+		if (certificationMethod == CertificationMethod.StandardValues) {
+			retVal.Setup(e => e.VoltageLevels).Returns(new List<IElectricMotorVoltageLevel>() { vLow.Object });
+		} else {
+			retVal.Setup(e => e.VoltageLevels).Returns(new List<IElectricMotorVoltageLevel>() { vLow.Object, vHi.Object });
+			vLow.Setup(v => v.VoltageLevel).Returns(400.SI<Volt>());
+		}
+
+		vLow.Setup(v => v.ContinuousTorque).Returns(200.SI<NewtonMeter>());
+		vLow.Setup(v => v.ContinuousTorqueSpeed).Returns(2000.RPMtoRad());
+		vLow.Setup(v => v.OverloadTorque).Returns(400.SI<NewtonMeter>());
+		vLow.Setup(v => v.OverloadTestSpeed).Returns(2000.RPMtoRad());
+		vLow.Setup(v => v.OverloadTime).Returns(30.SI<Second>());
+		// explicitly return a new instance on every call because the column names in GenericBusElectricMotorData are overwritten and this leads to an error, see also ToDo's in ElectricMotorInputData
+		vLow.Setup(v => v.FullLoadCurve).Returns(() => InputDataHelper.InputDataAsTableData(EMFldHdr, EMFldData));
+
+		vHi.Setup(v => v.VoltageLevel).Returns(400.SI<Volt>());
+		vHi.Setup(v => v.ContinuousTorque).Returns(200.SI<NewtonMeter>());
+		vHi.Setup(v => v.ContinuousTorqueSpeed).Returns(2000.RPMtoRad());
+		vHi.Setup(v => v.OverloadTorque).Returns(400.SI<NewtonMeter>());
+		vHi.Setup(v => v.OverloadTestSpeed).Returns(2000.RPMtoRad());
+		vHi.Setup(v => v.OverloadTime).Returns(30.SI<Second>());
+		// explicitly return a new instance on every call because the column names in GenericBusElectricMotorData are overwritten and this leads to an error, see also ToDo's in ElectricMotorInputData
+		vHi.Setup(v => v.FullLoadCurve).Returns(() => InputDataHelper.InputDataAsTableData(EMFldHdr, EMFldData));
+
+		var drag = new Mock<IDragCurve>();
+		drag.Setup(d => d.DragCurve).Returns(() => InputDataHelper.InputDataAsTableData(EmDragHdr, EmDragData));
+		drag.Setup(d => d.Gear).Returns(1);
+        retVal.Setup(r => r.DragCurves).Returns(new List<IDragCurve>() { drag.Object });
+
+        return retVal.Object;
+	}
+
+	private IGearboxDeclarationInputData GetMockIHPCGbxInputData()
+	{
+		var gbx = new Mock<IGearboxDeclarationInputData>();
+		gbx.Setup(g => g.Gears).Returns(new[] { 14.93, 11.64 }.Select((i, idx) => {
+			var g = new Mock<ITransmissionInputData>();
+			g.Setup(x => x.Ratio).Returns(i);
+			g.Setup(x => x.Gear).Returns(idx + 1);
+			return g.Object;
+		}).ToList());
+		return gbx.Object;
+	}
+
+	private ElectricMachineEntry<IElectricMotorDeclarationInputData> GetMockIHPCEMInputData(CertificationMethod certificationMethod)
+	{
+		var em = GetMockElectricMotorInputData(certificationMethod);
+		var mock = Mock.Get(em.ElectricMachine);
+		mock.Setup(m => m.IHPCType).Returns("IHPC Type 1");
+		return em;
+	}
+
+
+    private const string EMFldHdr = "outShaftSpeed, maxTorque, minTorque";
 
 	private static readonly string[] EMFldData = new[] {
 		"0.00, 4027.80, -4027.80",
@@ -52,4 +235,11 @@ public class FactorMethodGenericElectricMotorTests
 		"2869.34, 1059.96, -1059.96",
 		"3020.44, 1006.95, -1006.95",
     };
+
+	private const string EmDragHdr = "outShaftSpeed, dragTorque";
+
+	private static readonly string[] EmDragData = new[] {
+		"0, -10",
+		"4000, -30",
+	};
 }

@@ -112,7 +112,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 
-		[TestCase(@"TestData/XML/XMLVIFBusReport/IHPC_HEV_completedBus_2.VIF_Report_1.xml")]
+		[TestCase(@"TestData/XML/XMLVIFBusReport/IHPC_HEV_completedBus_2.VIF_Report_1.xml"),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestGenericBusElectricMotorData(string filePath)
 		{
 			var multistepBusInputData = xmlInputReader.Create(filePath) as IMultistepBusInputDataProvider;
@@ -126,7 +127,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 
-		[TestCase(@"TestData/XML/XMLVIFBusReport/IEPC_completedBus_2.VIF_Report_2.xml")]
+		[TestCase(@"TestData/XML/XMLVIFBusReport/IEPC_completedBus_2.VIF_Report_2.xml"),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestGenericIEPCElectricMotorData(string iepcFilePath)
 		{
 			var multistepBusInputData = xmlInputReader.Create(iepcFilePath) as IMultistepBusInputDataProvider;
@@ -140,7 +142,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 
-		[TestCase(@"TestData/XML/XMLVIFBusReport/IHPC_HEV_completedBus_2.VIF_Report_1.xml")]
+		[TestCase(@"TestData/XML/XMLVIFBusReport/IHPC_HEV_completedBus_2.VIF_Report_1.xml"),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestGenericIHPCElectricMotorData(string ihpcFilePath)
 		{
 			var multistepBusInputData = xmlInputReader.Create(ihpcFilePath) as IMultistepBusInputDataProvider;
