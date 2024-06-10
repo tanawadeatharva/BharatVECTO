@@ -29,6 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -74,6 +76,8 @@ namespace TUGraz.VectoCore.OutputData
 	public interface IResultEntry
 	{
 		void Initialize(VectoRunData vectoRunData);
+		
+		void Initialize(VectoRunData vectoRunData, IModalDataContainer modalData);
 
 		VectoRunData VectoRunData { get; }
 
@@ -139,6 +143,8 @@ namespace TUGraz.VectoCore.OutputData
 		string StackTrace { get; }
 
 		BatterySystemData BatteryData { get; }
+		
+		void SetResultWeightingFactor(double weightingFactor);
 	}
 
 	public interface IWeightedResult
@@ -250,25 +256,28 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
+		List<Tuple<T, VectoRunData, IModalDataContainer>> StoredResults = new List<Tuple<T, VectoRunData, IModalDataContainer>>();
+
 		public void AddResult(VectoRunData runData,
 			IModalDataContainer modData)
 		{
 			//return;
 			if (runData.Mission.MissionType != MissionType.ExemptedMission) {
 				var entry = new T();
-				entry.Initialize(runData);
+				entry.Initialize(runData, modData);
 				lock (Results) {
-					var exístingResult = Results.SingleOrDefault(e =>
+					var existingResults = Results.SingleOrDefault(e =>
 						e.Mission == entry.Mission && e.LoadingType == entry.LoadingType && e.OVCMode == entry.OVCMode && e.VehicleClass == entry.VehicleClass);
-					if (exístingResult != null) {
+					if (existingResults != null)
+					{
 						//We already have a result for this run stored, this can happen with iterative runs, in this case we have to remove the old result
-						Results.Remove(exístingResult);
+						Results.Remove(existingResults);
 					}
 
 					Results.Add(entry);
 				}
-				
-				DoStoreResult(entry, runData, modData);
+
+				StoredResults.Add(Tuple.Create(entry, runData, modData));
 			}
 
 			WriteResults();
@@ -297,8 +306,19 @@ namespace TUGraz.VectoCore.OutputData
 
 		protected internal virtual void DoWriteReport()
 		{
-			foreach (var result in OrderedResults) {
-				WriteResult(result);
+			/// Check if LH does not meet LH requierements, i.e. ReferenceLoad and OperationalRange > 350km.
+			var RDGroupEntry = StoredResults.SingleOrDefault(e => DeclarationData.EvaluateLHSubgroupConditions(e.Item1));
+
+			foreach (var resultEntry in OrderedResults)
+			{
+				var rdResultEntry = RDGroupEntry != null ? RDGroupEntry.Item1 : resultEntry;
+				var vectoRun = RDGroupEntry != null ? RDGroupEntry.Item2 : resultEntry.VectoRunData;
+
+				/// Set new weighting factors according to new RD group.
+				SetWeightingFactors(vectoRun, OrderedResults, rdResultEntry != null ? rdResultEntry.ActualChargeDepletingRange?.Value() : null);
+
+				/// Update results with newest weighting factors (WFs), i.e. RD WFs if updated otherwise if else.
+				WriteResult(resultEntry);
 			}
 
 			GenerateReports();
@@ -315,5 +335,7 @@ namespace TUGraz.VectoCore.OutputData
 		protected abstract void WriteResult(T result);
 
 		public abstract void InitializeReport(VectoRunData modelData);
+
+		public abstract void SetWeightingFactors(VectoRunData runData, IEnumerable<IResultEntry> orderedeResults, double? electricRange);
 	}
 }

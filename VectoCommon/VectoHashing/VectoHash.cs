@@ -304,7 +304,7 @@ namespace TUGraz.VectoHashing
 			if (Document.DocumentElement.LocalName.Equals(XMLNames.ManufacturingStep)) {
 				return VectoComponents.VectoManufacturingStep;
 			}
-			throw new Exception("unknown document structure! neither input data nor output data format");
+			throw new Exception($"{Document.DocumentElement.LocalName}: unknown document structure! neither input data nor output data format");
 		}
 
 		public string GetDigestMethod()

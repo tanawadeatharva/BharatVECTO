@@ -147,9 +147,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 	public interface IReportResultsSummaryWriter
 	{
-		XElement GetElement(IList<IResultEntry> entries);
+		XElement[] GetElement(IList<IResultEntry> entries);
 
-		XElement GetElement(IList<IOVCResultEntry> entries);
+		XElement[] GetElement(IList<IOVCResultEntry> entries);
 	}
 
 	public interface IElectricRangeWriter
