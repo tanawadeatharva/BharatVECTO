@@ -33,6 +33,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			_shiftStrategyParameters = shiftStrategyparamets;
 		}
 
+		public ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
+			GearboxType gearboxType,
+			int i,
+			EngineFullLoadCurve engineDataFullLoadCurve,
+			IList<ITransmissionInputData> gearboxGears,
+			CombustionEngineData engineData,
+			double axlegearRatio,
+			Meter dynamicTyreRadius,
+			ElectricMotorData electricMotorData = null)
+		{
+			throw new NotImplementedException("Not applicable to PEVAMT Gearbox.");
+		}
+
 		public ShiftPolygon ComputeDeclarationShiftPolygon(GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve,
 			IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius,
 			ElectricMotorData electricMotorData = null)
@@ -925,6 +938,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			ElectricMotorData electricMotorData = null)
 		{
 			return _shiftPolygonImplementation.ComputeDeclarationShiftPolygon(gearboxType, i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius, electricMotorData);
+		}
+
+		public ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
+			GearboxType gearboxType,
+			int i,
+			EngineFullLoadCurve engineDataFullLoadCurve,
+			IList<ITransmissionInputData> gearboxGears,
+			CombustionEngineData engineData,
+			double axlegearRatio,
+			Meter dynamicTyreRadius,
+			ElectricMotorData electricMotorData = null)
+		{
+			throw new NotImplementedException("Not applicable to PEVAMT gearbox.");
 		}
 
 		#endregion

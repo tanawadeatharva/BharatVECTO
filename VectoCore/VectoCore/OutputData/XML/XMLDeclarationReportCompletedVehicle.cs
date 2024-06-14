@@ -17,6 +17,7 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
 
 namespace TUGraz.VectoCore.OutputData.XML
@@ -65,8 +66,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 				iepc,
 				ihpc);
 
-
+            _monitoringReport = new XMLMonitoringReport(ManufacturerRpt);
 		}
+
 		public override void InitializeReport(VectoRunData modelData)
 		{
 			if (modelData.Exempted) {
@@ -74,7 +76,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 			} else {
 				WeightingGroup = DeclarationData.WeightingGroup.Lookup(
 					modelData.VehicleData.VehicleClass,
-					modelData.VehicleData.VocationalVehicle,
 					false,
 					0.SI<Watt>());
 				_weightingFactors =
@@ -85,6 +86,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			ManufacturerRpt.Initialize(modelData);
 			CustomerRpt.Initialize(modelData);
+            _monitoringReport.Initialize(modelData);
 		}
 		#endregion
 
@@ -284,7 +286,7 @@ namespace TUGraz.VectoCore.OutputData.XML
                 throw new NotImplementedException();
             }
 
-			public VectoRunData VectoRunData => throw new NotImplementedException();
+			public VectoRunData VectoRunData => null;
             public VectoRun.Status Status { get; set; }
             public OvcHevMode OVCMode { get; set; }
             public MissionType Mission { get; set; }
@@ -341,6 +343,16 @@ namespace TUGraz.VectoCore.OutputData.XML
             {
                 throw new NotImplementedException();
             }
+
+			public void Initialize(VectoRunData vectoRunData, IModalDataContainer modalData)
+			{
+				throw new NotImplementedException();
+			}
+
+			public void SetResultWeightingFactor(double weightingFactor)
+			{
+				throw new NotImplementedException();
+			}
 
 			public string Error { get; set; } 
 			public string StackTrace { get; set; }

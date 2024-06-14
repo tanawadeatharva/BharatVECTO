@@ -76,6 +76,11 @@ namespace TUGraz.VectoCommon.InputData
 		public const string PureElectric = "PureElectric";
 		
 
+		public static bool IsBatteryElectric(this VectoSimulationJobType jobType)
+		{
+			return jobType == VectoSimulationJobType.BatteryElectricVehicle || jobType == VectoSimulationJobType.IEPC_E;
+		}
+
 		public static string GetPowertrainArchitectureType(this VectoSimulationJobType jobType)
 		{
 			switch (jobType) {

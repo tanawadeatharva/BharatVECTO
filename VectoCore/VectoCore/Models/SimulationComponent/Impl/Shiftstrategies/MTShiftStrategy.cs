@@ -29,19 +29,30 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
 	public class MTShiftStrategy : AMTShiftStrategy
 	{
+		VelocitySpeedGearshiftPreprocessor PreprocessorSpeed;
+		VelocityRollingLookup velocityDropData = new VelocityRollingLookup();
+
 		public MTShiftStrategy(IVehicleContainer bus) : base(bus)
 		{
 			EarlyShiftUp = false;
 			SkipGears = true;
+
+			PreprocessorSpeed = ConfigureSpeedPreprocessor(bus);
+			bus.AddPreprocessor(PreprocessorSpeed);
 		}
 
 		public new static string Name => "MT Shift Strategy";
@@ -108,7 +119,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, GearshiftPosition currentGear, IResponse response1)
 		{
 			// down shift
-			if (IsBelowDownShiftCurve(currentGear, inTorque, inAngularVelocity)) {
+			var interpolatedDroppedSpeed = velocityDropData.Interpolate(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
+			var droppedSpeed = interpolatedDroppedSpeed == 0.SI<MeterPerSecond>() || interpolatedDroppedSpeed == null
+				? DataBus.VehicleInfo.VehicleSpeed : interpolatedDroppedSpeed;
+
+			double droppedSpeedRatio = DataBus.VehicleInfo.VehicleSpeed / droppedSpeed;
+			if ((IsBelowDownShiftCurve(currentGear, inTorque, inAngularVelocity) && droppedSpeedRatio.IsSmallerOrEqual(2.0)) ||
+				IsBelowExtendedDownShiftCurve(currentGear, inTorque, inAngularVelocity))
+			{
 				currentGear = Gears.Predecessor(currentGear);
 				while (SkipGears && currentGear.Gear > 1) {
 					currentGear = Gears.Predecessor(currentGear);
@@ -132,6 +150,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				}
 			}
 			return currentGear;
+		}
+
+		private VelocitySpeedGearshiftPreprocessor ConfigureSpeedPreprocessor(IVehicleContainer bus)
+		{
+			var TestContainer = new SimplePowertrainContainer(bus.RunData);
+			PowertrainBuilder.BuildSimplePowertrain(bus.RunData, TestContainer);
+			var TestContainerGbx = TestContainer.GearboxCtl as Gearbox;
+			if (TestContainerGbx == null)
+			{
+				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
+			}
+
+			var maxGradient = bus.RunData.Cycle.Entries.Max(x => Math.Abs(x.RoadGradientPercent.Value())) + 1;
+			var gradient = Convert.ToInt32(maxGradient / 2) * 2;
+			if (gradient == 0)
+			{
+				gradient = 2;
+			}
+
+			return new VelocitySpeedGearshiftPreprocessor(
+					velocityDropData,
+					bus.RunData.GearboxData.TractionInterruption,
+					TestContainer,
+					-gradient,
+					gradient,
+					2);
 		}
 	}
 }

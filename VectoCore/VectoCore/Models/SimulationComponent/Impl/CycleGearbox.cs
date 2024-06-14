@@ -617,6 +617,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			{
 				return null;
 			}
+
+			public override ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
+				GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
+				CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
+			{
+				return null;
+			}
 		}
 	}
 }
