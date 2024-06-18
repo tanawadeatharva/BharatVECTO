@@ -62,7 +62,9 @@ namespace TUGraz.VectoCore.OutputData
 
 		object this[ModalResultField key, PowertrainPosition pos] { get; set; }
 
-		object this[ModalResultField key, int? pos] { get; set; }
+		object this[ModalResultField key, int? idx] { get; set; }
+
+		object this[ModalResultField key, string arg] { get; set; }
 
 		/// <summary>
 		/// Indexer for auxiliary fields of the DataWriter.
@@ -94,8 +96,8 @@ namespace TUGraz.VectoCore.OutputData
 		Dictionary<string, DataColumn> Auxiliaries { get; }
 
 		T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>;
-
 		T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T>;
+
 
 		void SetDataValue(string fieldName, object value);
 
@@ -145,7 +147,12 @@ namespace TUGraz.VectoCore.OutputData
 		WattSecond ElectricMotorLosses(PowertrainPosition emPos);
 		WattSecond ElectricMotorMotLosses(PowertrainPosition emPos);
 		WattSecond ElectricMotorTransmissionLosses(PowertrainPosition emPos);
-		ICorrectedModalData CorrectedModalData { get; }
+		ICorrectedModalData CorrectedModalData { get; } 
+		ModalResults Data { get; }
+		string RunName { get; }
+		IModalDataPostProcessor PostProcessingCorrection { set; }
+		KilogramPerWattSecond FuelCellLine { get; }
+		bool HasBattery { get; }
 		void RegisterComponent(VectoSimulationComponent component);
 		bool ContainsColumn(string modalResultField);
 	}

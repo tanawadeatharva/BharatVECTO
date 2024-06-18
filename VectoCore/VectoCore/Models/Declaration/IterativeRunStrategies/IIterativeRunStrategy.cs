@@ -1,5 +1,6 @@
 ﻿using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
@@ -29,13 +30,17 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 		/// Enables or disables the iterative run strategy
 		/// </summary>
 		bool Enabled { get; set; }
+
+
+
+		/// <summary>
+		/// Get the PreRunOptions for the current iteration 
+		/// </summary>
+		PreRunOptions GetPreRunOptions(int iteration);
 	}
 
 	public interface IIterativeRunResult
 	{
 		//IIterativeRunResult CreateIterativeResult(IModalDataContainer modData);
 	}
-
-
-
 }

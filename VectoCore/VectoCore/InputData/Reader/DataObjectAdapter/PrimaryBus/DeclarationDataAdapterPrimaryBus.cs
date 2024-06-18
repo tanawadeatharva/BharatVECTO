@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 {
     public abstract class DeclarationDataAdapterPrimaryBus
 	{
-		public abstract class PrimaryBusBase : IPrimaryBusDeclarationDataAdapter
+		public abstract class PrimaryBusBase : BaseSimulationDataAdapter, IPrimaryBusDeclarationDataAdapter
 		{
 
 			public abstract GearboxType[] SupportedGearboxTypes { get; }
@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			//protected readonly IVehicleDataAdapter _vehicleDataAdapter = new PrimaryBusVehicleDataAdapter();
 			protected readonly IAxleGearDataAdapter _axleGearDataAdapter = new AxleGearDataAdapter();
 			//protected readonly IPrimaryBusAuxiliaryDataAdapter _auxDataAdapter = new PrimaryBusAuxiliaryDataAdapter();
-			protected readonly IRetarderDataAdapter _retarderDataAdapter = new RetarderDataAdapter();
+			protected readonly IGenericRetarderDataAdapter _retarderDataAdapter = new GenericRetarderDataAdapter();
 			protected readonly IAirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
 			private readonly IAngledriveDataAdapter _angledriveDataAdapter = new AngledriveDataAdapter();
 
@@ -59,9 +59,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 					loading.Value.Item2, allowVocational);
 			}
 
-			public virtual AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment)
+			public virtual AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, IVehicleInMotionChargingDeclaration imcData, Mission mission, Segment segment, OvcHevMode ovcMode, double cycleShareDistanceHighway)
 			{
-				return _airdragDataAdapter.CreateAirdragData(airdragData, mission, segment);
+				return _airdragDataAdapter.CreateAirdragData(airdragData, imcData, mission, segment, ovcMode, cycleShareDistanceHighway);
 			}
 
 			public abstract void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
@@ -81,9 +81,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			}
 
 			// parallel hybrids
-            public virtual HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData, SuperCapData runDataSuperCapData,
-				Kilogram vehicleMass, OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType,
+            public virtual HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
+				SuperCapData runDataSuperCapData,
+				Kilogram vehicleMass, OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass,
+				MissionType missionType,
 				TableData boostingLimitations, GearboxData gearboxData, CombustionEngineData engineData,
+				IList<Tuple<PowertrainPosition, ElectricMotorData>> runDataElectricMachinesData,
 				ArchitectureID architectureId)
 			{
 				return HybridStrategyDataAdapter.CreateHybridStrategyParameters(
@@ -92,7 +95,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 					ovcMode: ovcMode,
 					loading: loading,
 					vehicleClass: vehicleClass,
-					missionType: missionType, architectureId, engineData, gearboxData, boostingLimitations);
+					missionType: missionType, architectureId, engineData, runDataElectricMachinesData, gearboxData, boostingLimitations);
 			}
 
 			public virtual AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData)
@@ -124,9 +127,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			}
 
 
-			public virtual RetarderData CreateRetarderData(IRetarderInputData retarderData, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet)
+			public virtual RetarderData CreateRetarderData(IRetarderInputData retarderData, ArchitectureID archID,
+				IIEPCDeclarationInputData iepcInputData)
 			{
-				return _retarderDataAdapter.CreateRetarderData(retarderData, position);
+				return _retarderDataAdapter.CreateRetarderData(retarderData, archID, iepcInputData);
 			}
 
 
@@ -164,6 +168,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 				VectoRunData runData)
 			{
 				return AuxDataAdapter.CreateBusAuxiliariesData(mission, vehicleData, runData);
+			}
+
+			public RetarderData CreateGenericRetarderData(IRetarderInputData retarderData, VectoRunData vectoRun)
+			{
+				return _retarderDataAdapter.CreateGenericRetarderData(retarderData, vectoRun);
 			}
 		}
 
@@ -229,6 +238,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			}
 
 			#endregion
+
+	
 		}
 
 		public abstract class SerialHybrid : Hybrid
@@ -240,6 +251,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 			protected override IHybridStrategyDataAdapter HybridStrategyDataAdapter { get; } = new
 				SerialHybridStrategyParameterDataAdapter();
+
+
+			
 		}
 
 		public class HEV_S2 : SerialHybrid
@@ -360,7 +374,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 					throw new VectoException("Supercaps are not allowed for PEVs");
 				}
 			}
-			
 		}
 
 

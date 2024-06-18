@@ -56,12 +56,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		[Inject]
 		public IDeclarationInjectFactory Factory { protected get; set; }
 
-		public XMLDeclarationInputReaderV10(IXMLDeclarationInputData inputData, XmlNode baseNode) : base(
+		public XMLDeclarationInputReaderV10(IXMLDeclarationInputData inputData, XmlNode baseNode, bool allowDeprecated) : base(
 			inputData, baseNode)
 		{
 			JobNode = baseNode;
 			InputData = inputData;
+			AllowDeprecated = allowDeprecated;
 		}
+
+		public bool AllowDeprecated { get; protected set; }
 
 		#region Implementation of IXMLDeclarationInputReader
 
@@ -72,7 +75,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected virtual IDeclarationJobInputData JobCreator(string version, XmlNode node, string arg3)
 		{
 			var job = Factory.CreateJobData(version, BaseNode, InputData, (InputData as IXMLResource).DataSource.SourceFile);
-			job.Reader = Factory.CreateJobReader(version, job, JobNode);
+			job.Reader = Factory.CreateJobReader(version, job, JobNode, AllowDeprecated);
 			return job;
 		}
 	}
@@ -87,7 +90,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationInputReaderV20(IXMLDeclarationInputData inputData, XmlNode baseNode) 
-			: base(inputData, baseNode) { }
+		public XMLDeclarationInputReaderV20(IXMLDeclarationInputData inputData, XmlNode baseNode, bool allowDeprecated) 
+			: base(inputData, baseNode, allowDeprecated) { }
 	}
 }

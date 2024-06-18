@@ -207,7 +207,7 @@
 <v2.3:Entry outShaftSpeed="18.86" torque="26047.02" electricPower="61610.00"/>
 <v2.3:Entry outShaftSpeed="18.86" torque="27579.20" electricPower="65390.00"/>
 <v2.3:Entry outShaftSpeed="18.86" torque="29111.38" electricPower="69190.00"/>
-<v2.3:Entry outShaftSpeed="18.86" torque="30643.56" electricPower="73010.00"/>
+<v2.3:Entry outShaftSpeed="18.86" torque="30643.56" electricPower="60010.00"/> <!-- efficiency > 1, this is corrected in VECTO on reading the map -->
 <v2.3:Entry outShaftSpeed="37.72" torque="-35338.92" electricPower="-120570.00"/>
 <v2.3:Entry outShaftSpeed="37.72" torque="-33571.97" electricPower="-114730.00"/>
 <v2.3:Entry outShaftSpeed="37.72" torque="-31805.03" electricPower="-108870.00"/>

@@ -442,6 +442,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
 					return busParams.HVACPEV;
+				case VectoSimulationJobType.FCHV:
+				case VectoSimulationJobType.FCHV_IEPC:
+				case VectoSimulationJobType.EngineOnlySimulation:
 				default:
 					throw new ArgumentOutOfRangeException(nameof(vehicleType), vehicleType, null);
 			}
@@ -600,6 +603,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				case VectoSimulationJobType.IEPC_E:
 					hvacParams = mission.BusParameter.HVACPEV;
 					break;
+				case VectoSimulationJobType.FCHV:
+				case VectoSimulationJobType.FCHV_IEPC:
+				case VectoSimulationJobType.EngineOnlySimulation:
 				default:
 					throw new ArgumentOutOfRangeException();
 			}

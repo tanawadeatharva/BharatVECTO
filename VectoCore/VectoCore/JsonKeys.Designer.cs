@@ -430,6 +430,87 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Count.
+        /// </summary>
+        internal static string FuelCell_Count {
+            get {
+                return ResourceManager.GetString("FuelCell_Count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FuelCellSystemFile.
+        /// </summary>
+        internal static string FuelCell_File {
+            get {
+                return ResourceManager.GetString("FuelCell_File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FuelCellSystems.
+        /// </summary>
+        internal static string FuelCell_FuelCells {
+            get {
+                return ResourceManager.GetString("FuelCell_FuelCells", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CompositeFuelCellSystem.
+        /// </summary>
+        internal static string FuelCell_FuelCellSystem {
+            get {
+                return ResourceManager.GetString("FuelCell_FuelCellSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MassFlowMap.
+        /// </summary>
+        internal static string FuelCell_MassFlowMap {
+            get {
+                return ResourceManager.GetString("FuelCell_MassFlowMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaxElectricPower.
+        /// </summary>
+        internal static string FuelCell_MaxPower {
+            get {
+                return ResourceManager.GetString("FuelCell_MaxPower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MinElectricPower.
+        /// </summary>
+        internal static string FuelCell_MinPower {
+            get {
+                return ResourceManager.GetString("FuelCell_MinPower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OnOffHysteresis.
+        /// </summary>
+        internal static string FuelCell_OnOffHysteresis {
+            get {
+                return ResourceManager.GetString("FuelCell_OnOffHysteresis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Count.
+        /// </summary>
+        internal static string FuelCells_Count {
+            get {
+                return ResourceManager.GetString("FuelCells_Count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to EaryShiftUp.
         /// </summary>
         internal static string Gearbox_EarlyShiftUp {
@@ -817,6 +898,51 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to NCV.
+        /// </summary>
+        internal static string Job_FuelNCV_NCV {
+            get {
+                return ResourceManager.GetString("Job_FuelNCV_NCV", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        internal static string Job_FuelNCV_Type {
+            get {
+                return ResourceManager.GetString("Job_FuelNCV_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FuelNCVs.
+        /// </summary>
+        internal static string Job_FuelNCVs {
+            get {
+                return ResourceManager.GetString("Job_FuelNCVs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TorqueDriftLeftWheel.
+        /// </summary>
+        internal static string Job_TorqueDriftLeftWheel {
+            get {
+                return ResourceManager.GetString("Job_TorqueDriftLeftWheel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TorqueDriftRightWheel.
+        /// </summary>
+        internal static string Job_TorqueDriftRightWheel {
+            get {
+                return ResourceManager.GetString("Job_TorqueDriftRightWheel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Body.
         /// </summary>
         internal static string JsonBody {
@@ -948,6 +1074,15 @@ namespace TUGraz.VectoCore {
         internal static string Vehicle_AxleConfiguration_Type {
             get {
                 return ResourceManager.GetString("Vehicle_AxleConfiguration_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WheelEndFriction.
+        /// </summary>
+        internal static string Vehicle_Axles_Friction {
+            get {
+                return ResourceManager.GetString("Vehicle_Axles_Friction", resourceCulture);
             }
         }
         

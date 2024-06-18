@@ -30,13 +30,21 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				data.Columns[2].ColumnName = Fields.GenerationTorque;
 			}
 
-			return new ElectricMotorFullLoadCurve(
-				(from DataRow row in data.Rows
+			var entries = (from DataRow row in data.Rows
 				select new ElectricMotorFullLoadCurve.FullLoadEntry {
 					MotorSpeed = row.ParseDouble(Fields.MotorSpeed).RPMtoRad(), // / ratio,
-					FullDriveTorque = -row.ParseDouble(Fields.DrivingTorque).SI<NewtonMeter>() * count, // * ratio * efficiency,
-					FullGenerationTorque = -row.ParseDouble(Fields.GenerationTorque).SI<NewtonMeter>() * count, //* ratio / efficiency
-				}).ToList());
+					FullDriveTorque =
+						-row.ParseDouble(Fields.DrivingTorque).SI<NewtonMeter>() * count, // * ratio * efficiency,
+					FullGenerationTorque =
+						-row.ParseDouble(Fields.GenerationTorque).SI<NewtonMeter>() * count, //* ratio / efficiency
+				}).OrderBy(x => x.MotorSpeed).ToList();
+
+            var duplicates = entries.GroupBy(x => x.MotorSpeed).Where(g => g.Count() > 1).Select(x => x.Key.AsRPM).ToList();
+			if (duplicates.Any()) {
+				throw new VectoException(
+					$"EM full-load curve contains multiple entries for a single motor speed: {duplicates.Join()}");
+			}
+            return new ElectricMotorFullLoadCurve(entries);
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection dataColumns)

@@ -43,6 +43,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool? AirdragModifiedMultistep { get; }
 		public TankSystem? TankSystem { get; }
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; }
+		public IVehicleInMotionChargingDeclaration InMotionCharging { get; }
 		public bool ZeroEmissionVehicle { get; }
 		public bool HybridElectricHDV { get; }
 		public bool DualFuelVehicle { get; }
@@ -162,8 +163,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public TankSystem? TankSystem { get; }
 
 		IAdvancedDriverAssistantSystemDeclarationInputData IVehicleDeclarationInputData.ADAS => null;
+		IVehicleInMotionChargingDeclaration IVehicleDeclarationInputData.InMotionCharging => InMotionCharging;
 
 		public double InitialSOC { get; }
+		public IVehicleInMotionChargingEngineering InMotionCharging { get; }
 		public VectoSimulationJobType VehicleType { get; }
 		public GearshiftPosition PTO_DriveGear { get; }
 		public PerSecond PTO_DriveEngineSpeed { get; }
@@ -191,6 +194,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IElectricStorageSystemEngineeringInputData ElectricStorage { get; set; }
 		public IElectricMachinesEngineeringInputData ElectricMachines { get; set; }
 		public IIEPCEngineeringInputData IEPCEngineeringInputData { get; }
+
+		public IFuelCellSystemEngineeringInputData FuelCellSystemInputData { get; }
 
 		IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> IVehicleDeclarationInputData.ElectricMotorTorqueLimits => throw new NotImplementedException();
 

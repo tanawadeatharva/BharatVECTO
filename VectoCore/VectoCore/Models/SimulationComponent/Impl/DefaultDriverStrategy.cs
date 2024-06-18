@@ -77,12 +77,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public readonly MeterPerSecond PTODriveMinSpeed;
 
-		protected EcoRoll EcoRollState;
+		protected internal EcoRoll EcoRollState;
 		protected PCCSegments PCCSegments;
 
 		public PCCStates PCCState => pccState;
 		protected internal PCCStates pccState = PCCStates.OutsideSegment;
-		protected bool ATEcoRollReleaseLockupClutch;
+		protected internal bool ATEcoRollReleaseLockupClutch;
 
 		public DefaultDriverStrategy(IVehicleContainer container)
 		{
@@ -120,15 +120,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					case VectoSimulationJobType.SerialHybridVehicle:
 					case VectoSimulationJobType.IEPC_E:
 					case VectoSimulationJobType.IEPC_S:
+					case VectoSimulationJobType.FCHV:
+					case VectoSimulationJobType.FCHV_IEPC:
 						PowertrainBuilder.BuildSimplePowertrainElectric(data, testContainer);
 						break;
-					case VectoSimulationJobType.IHPC:
+                    case VectoSimulationJobType.IHPC:
 					case VectoSimulationJobType.ParallelHybridVehicle:
 						PowertrainBuilder.BuildSimpleHybridPowertrain(data, testContainer);
 						break;
 					case VectoSimulationJobType.ConventionalVehicle:
 						PowertrainBuilder.BuildSimplePowertrain(data, testContainer);
 						break;
+					case VectoSimulationJobType.EngineOnlySimulation:
 					default:
 						throw new ArgumentOutOfRangeException(nameof(data.JobType));
 				}
@@ -231,7 +234,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (CurrentDrivingMode == DrivingMode.DrivingModeBrake) {
 				var nextAction = GetNextDrivingAction(ds);
-				if (nextAction != null && !BrakeTrigger.HasEqualTrigger(nextAction) && nextAction.ActionDistance.IsSmallerOrEqual(BrakeTrigger.ActionDistance)) {
+				var currentDistance = DataBus.MileageCounter.Distance;
+
+                if (nextAction != null && !BrakeTrigger.HasEqualTrigger(nextAction) && 
+					(nextAction.ActionDistance.IsSmallerOrEqual(BrakeTrigger.ActionDistance) || nextAction.BrakingStartDistance.IsBetween(currentDistance, currentDistance + ds))) {
 					BrakeTrigger = nextAction;
 				}
 				if (DataBus.MileageCounter.Distance.IsGreaterOrEqual(BrakeTrigger.TriggerDistance, 1e-3.SI<Meter>())) {
@@ -431,7 +437,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private Newton CalculateCoastingForce(MeterPerSecond targetVelocity, MeterPerSecond vehicleSpeed, Meter targetAltitude, Meter targetDistance)
 		{
 			var dataBus = DataBus;
-			var airDragForce = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, targetVelocity);
+			var airDrag = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, targetVelocity);
 			var rollResistanceForce = DataBus.VehicleInfo.RollingResistance(dataBus.DrivingCycleInfo.RoadGradient);
 
 			//mk20211008 shouldn't we calculate it the same as in ComputeCoastingDistance?
@@ -454,7 +460,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var totalComponentLossPowers = gearboxLoss + axleLoss + emDragLoss - iceDragLoss;
-			var coastingResistanceForce = airDragForce + rollResistanceForce + totalComponentLossPowers / vehicleSpeed;
+			var coastingResistanceForce = airDrag.AirdragForce + rollResistanceForce + totalComponentLossPowers / vehicleSpeed;
 			return coastingResistanceForce;
 		}
 
@@ -472,7 +478,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	return;
 			//}
 			var forces = dBus.VehicleInfo.SlopeResistance(dBus.DrivingCycleInfo.RoadGradient) + dBus.VehicleInfo.RollingResistance(dBus.DrivingCycleInfo.RoadGradient) +
-						dBus.VehicleInfo.AirDragResistance(dBus.VehicleInfo.VehicleSpeed, dBus.VehicleInfo.VehicleSpeed);
+						dBus.VehicleInfo.AirDragResistance(dBus.VehicleInfo.VehicleSpeed, dBus.VehicleInfo.VehicleSpeed).AirdragForce;
 
 			if (dBus.GearboxInfo.GearboxType.AutomaticTransmission() && ATEcoRollReleaseLockupClutch && dBus.VehicleInfo.VehicleSpeed.IsGreater(0)) {
 				// for AT transmissions consider engine drag losses during eco-roll events
@@ -732,7 +738,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 											+ vehicleMass * vehicleSpeed * vehicleSpeed / 2;
 			var energyDifference = currentKineticEnergy - kineticEnergyAtTarget;
 
-			var airDragForce = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, targetSpeed);
+			var airDrag = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, targetSpeed);
 			var rollingResistanceForce = DataBus.VehicleInfo.RollingResistance(
 				((targetAltitude - vehicleAltitude) / (actionEntry.Distance - DataBus.MileageCounter.Distance))
 				.Value().SI<Radian>());
@@ -743,7 +749,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var iceDragLossPower = DataBus.EngineInfo?.EngineDragPower(DataBus.EngineInfo.EngineSpeed) ?? 0.SI<Watt>();
 
 			var totalComponentLossPowers = gearboxLossPower + axleLossPower + emDragLossPower - iceDragLossPower;
-			var coastingResistanceForce = airDragForce + rollingResistanceForce + totalComponentLossPowers / vehicleSpeed;
+			var coastingResistanceForce = airDrag.AirdragForce + rollingResistanceForce + totalComponentLossPowers / vehicleSpeed;
 
 			var coastingDecisionFactor = Driver.DriverData.LookAheadCoasting.LookAheadDecisionFactor.Lookup(
 				targetSpeed, vehicleSpeed - targetSpeed);
@@ -994,6 +1000,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					second = Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient, first);
 					break;
 				case ResponseSpeedLimitExceeded _:
+					if (DriverStrategy.EcoRollState.State == EcoRollStates.EcoRollOn &&
+						DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && DriverStrategy.ATEcoRollReleaseLockupClutch) {
+						DriverStrategy.EcoRollState.State = EcoRollStates.EcoRollOff;
+						DataBus.GearboxCtl.DisengageGearbox = false;
+					}
 					second = Driver.DrivingActionBrake(absTime, ds, velocityWithOverspeed, gradient);
 					debug.Add("[DMD.HRE-3] SpeedLimitExceeded->Brake", second);
 					break;
@@ -1265,17 +1276,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Driver.DriverBehavior = DrivingBehavior.Braking;
 
 			if (DataBus.VehicleInfo.VehicleSpeed.IsEqual(0) && DriverStrategy.BrakeTrigger.NextTargetSpeed.IsEqual(0)) {
-				if (ds.IsEqual(targetDistance - currentDistance)) {
+				if (ds.IsEqual(targetDistance - currentDistance, 1e-4.SI<Meter>())) {
 					return new ResponseDrivingCycleDistanceExceeded(this) {
 						MaxDistance = ds / 2
 					};
 				}
-
-				response = Driver.DrivingActionAccelerate(absTime, ds, 1.KMPHtoMeterPerSecond(), gradient);
+				var tmpTargetVelocity = Math.Max(0.001.KMPHtoMeterPerSecond().Value(),
+					Math.Min(
+						1.KMPHtoMeterPerSecond().Value(),
+						(ds / 0.1).Value()
+					)
+				).SI<MeterPerSecond>();
+				//var tmpTargetVelocity = 1.KMPHtoMeterPerSecond();
+				response = Driver.DrivingActionAccelerate(absTime, ds, tmpTargetVelocity, gradient);
 				debug.Add("[DMB-DB-1] Accelerate", response);
 
 				if (response is ResponseUnderload) {
-					response = Driver.DrivingActionBrake(absTime, ds, 1.KMPHtoMeterPerSecond(), gradient, response,
+					response = Driver.DrivingActionBrake(absTime, ds, tmpTargetVelocity, gradient, response,
 						overrideAction: DrivingAction.Accelerate);
 					debug.Add("[DMB-DB-2] Brake", response);
 				}
@@ -1339,11 +1356,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 									debug.Add("[DMB-DB-12] Roll", response);
 									break;
 								case ResponseUnderload _:
-									if (gear.Gear != DataBus.GearboxInfo.Gear.Gear) {
+									if (gear.Gear != DataBus.GearboxInfo.Gear.Gear)
+									{
 										// AT Gearbox switched gears, shift losses are no longer applied, try once more...
 										response = Driver.DrivingActionAccelerate(absTime, ds,
 											DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
 										debug.Add("[DMB-DB-13] Accelerate", response);
+										if (response is ResponseUnderload)
+										{
+											Log.Info("Brake -> Overload --> Accelerate -> Gearshift -> Accelerate --> Underload --> Accelerate --> Underload --> trying brake action");
+											response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+												gradient, targetDistance: targetDistance);
+											debug.Add("[DMB-DB-14] Brake", response);
+										}
 									}
 									break;
 							}

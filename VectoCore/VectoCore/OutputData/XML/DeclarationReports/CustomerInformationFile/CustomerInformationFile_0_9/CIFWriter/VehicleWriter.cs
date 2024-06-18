@@ -214,7 +214,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				_cifFactory.GetEngineGroup().GetElements(inputData),
 				_cifFactory.GetElectricMachineGroup().GetElements(inputData),
 				_cifFactory.GetREESSGroup().GetElements(inputData),
-				_cifFactory.GetTransmissionGroupNoGearbox().GetElements(inputData),
+				_cifFactory.GetIEPCTransmissionGroup().GetElements(inputData),
 				GetRetarder(inputData),
 				GetAxleRatio(inputData, true),
 				_cifFactory.GetAxleWheelsGroup().GetElements(inputData),
@@ -312,7 +312,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				_cifFactory.GetPEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS).WithXName(_cif + "ADAS"),
 				_cifFactory.GetElectricMachineGroup().GetElements(inputData),
 				_cifFactory.GetREESSGroup().GetElements(inputData),
-				_cifFactory.GetTransmissionGroupNoGearbox().GetElements(inputData),
+				_cifFactory.GetIEPCTransmissionGroup().GetElements(inputData),
 				GetRetarder(inputData),
 				GetAxleRatio(inputData, true),
 				_cifFactory.GetAxleWheelsGroup().GetElements(inputData),
@@ -333,6 +333,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var vehicleData = inputData.JobInputData.Vehicle;
+			var tech = new string(vehicleData.ExemptedTechnology
+				.Where(c => char.IsLetterOrDigit(c) || c == ' ' || c == '.').ToArray());
 			return new XElement(_cif + XMLNames.Component_Vehicle,
 				
 				new XElement(_cif + XMLNames.Component_Manufacturer, vehicleData.Manufacturer),
@@ -343,7 +345,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
                 new XElement(_cif + XMLNames.CorrectedActualMass, vehicleData.CurbMassChassis.ToXMLFormat(0)),
 				new XElement(_cif + XMLNames.Vehicle_SleeperCab, vehicleData.SleeperCab),
 				new XElement(_cif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicleData.ZeroEmissionVehicle),
-				new XElement(_cif + "VehicleTechnologyExempted", vehicleData.ExemptedTechnology)
+				new XElement(_cif + "VehicleTechnologyExempted", tech)
 			);
 		}
 
@@ -518,7 +520,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				_cifFactory.GetEngineGroup().GetElements(inputData),
 				_cifFactory.GetElectricMachineGroup().GetElements(inputData),
 				_cifFactory.GetREESSGroup().GetElements(inputData),
-				_cifFactory.GetTransmissionGroupNoGearbox().GetElements(inputData),
+				_cifFactory.GetIEPCTransmissionGroup().GetElements(inputData),
 				_cifFactory.GetAxleWheelsGroup().GetElements(inputData),
 
 				_cifFactory.GetHEV_Sx_CompletedBusAuxGroup().GetElements(inputData)

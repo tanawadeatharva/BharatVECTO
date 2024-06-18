@@ -145,13 +145,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			foreach (var entry in clusterResult) {
 				var dragTorque = fullLoadCurve.DragLoadStationaryTorque(entry.RPMtoRad()).Value();
 				var newRow = denormalizedData.NewRow();
-				newRow[FuelConsumptionMapReader.Fields.EngineSpeed] = Math.Round(entry, 2, MidpointRounding.AwayFromZero);
-				newRow[FuelConsumptionMapReader.Fields.Torque] =  Math.Round(dragTorque, 2, MidpointRounding.AwayFromZero);
+				newRow[FuelConsumptionMapReader.Fields.EngineSpeed] = Math.Round(entry, 2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
+				newRow[FuelConsumptionMapReader.Fields.Torque] =  Math.Round(dragTorque, 2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
 				newRow[FuelConsumptionMapReader.Fields.FuelConsumption] = 0;
 				denormalizedData.Rows.Add(newRow);
 				var newRow2 = denormalizedData.NewRow();
-				newRow2[FuelConsumptionMapReader.Fields.EngineSpeed] = Math.Round(entry, 2, MidpointRounding.AwayFromZero);
-				newRow2[FuelConsumptionMapReader.Fields.Torque] = Math.Round(dragTorque - 100, 2, MidpointRounding.AwayFromZero);
+				newRow2[FuelConsumptionMapReader.Fields.EngineSpeed] = Math.Round(entry, 2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
+				newRow2[FuelConsumptionMapReader.Fields.Torque] = Math.Round(dragTorque - 100, 2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
 				newRow2[FuelConsumptionMapReader.Fields.FuelConsumption] = 0;
 				denormalizedData.Rows.Add(newRow2);
 			}
@@ -207,15 +207,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		private static TableData ReadCsvResource(string ressourceId)
 		{
-			// TODO: MQ 2020-07 Remove in official bus version!
-
-			var tmp = ressourceId.Replace(DeclarationData.DeclarationDataResourcePrefix + ".", "");
-			var parts = tmp.Split('.');
-			var fileName = Path.Combine("Declaration", string.Join(".", parts[parts.Length - 2], parts[parts.Length - 1]));
-			if (File.Exists(fileName)) {
-				return VectoCSVFile.Read(fileName);
-			}
-
 			return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(ressourceId), source: ressourceId);
 		}
 	}

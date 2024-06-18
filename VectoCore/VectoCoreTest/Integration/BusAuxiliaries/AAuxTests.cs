@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		private GraphWriter GetGraphWriter() 
 		{
 			var graphWriter = new GraphWriter();
-#if TRACE
+#if VECTOTRACE
 			graphWriter.Enable();
 #else
 			graphWriter.Disable();
@@ -158,10 +158,10 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 				string.Format(CultureInfo.InvariantCulture, "24t Coach_AAux_Cycle_Decelerate_{0}_{1}_{2}.vmod", v1, v2, slopeStr));
 		}
 
-		[Category("ComparisonAAUX"),
-		TestCase(40, 0, 25),
-		TestCase(60, 0, 25),
-		TestCase(80, 0, 25)]
+		[Category("ComparisonAAUX")]
+		[TestCase(40, 0, 25), Ignore("Slope not relevant")]
+		[TestCase(60, 0, 25)]
+		[TestCase(80, 0, 25)]
 		public void Coach_Decelerate_AAux_Low(double v1, double v2, double slope)
 		{
 			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
@@ -230,12 +230,12 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 				string.Format(CultureInfo.InvariantCulture, "24t Coach_AAux_Cycle_Drive_{0}_{1}_{2}.vmod", v1, v2, slopeStr));
 		}
 
-		[Category("ComparisonAAUX"),
-		TestCase(10, 10, 25),
-		TestCase(40, 40, 25),
-		TestCase(60, 60, 25),
-		TestCase(80, 80, 25),
-		]
+		[Category("ComparisonAAUX")]
+		[TestCase(10, 10, 25)]
+		[TestCase(40, 40, 25), Ignore("Not relevant")]
+		[TestCase(60, 60, 25)]
+		[TestCase(80, 80, 25)]
+		
 		public void Coach_Drive_AAux_Low(double v1, double v2, double slope)
 		{
 			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,

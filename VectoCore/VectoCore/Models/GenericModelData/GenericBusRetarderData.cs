@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -11,24 +12,27 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class GenericBusRetarderData
 	{
+		public RetarderData CreateGenericBusRetarderData(IRetarderInputData retarderInput, PerSecond engineSpeed, double gearboxRatio) =>
+			new RetarderData {
+				Type = retarderInput?.Type ?? RetarderType.None,
+				Ratio = retarderInput?.Type.IsDedicatedComponent() ?? false ? retarderInput.Ratio : 1.0,
+				LossMap = retarderInput?.Type.IsDedicatedComponent() ?? false 
+					? GenerateGenericLossMap(retarderInput, engineSpeed.AsRPM, gearboxRatio) : null
+			};
 
 		public RetarderData CreateGenericBusRetarderData(IRetarderInputData retarderInput) =>
 			new RetarderData {
 				Type = retarderInput?.Type ?? RetarderType.None,
 				Ratio = retarderInput?.Type.IsDedicatedComponent() ?? false ? retarderInput.Ratio : 1.0,
 				LossMap = retarderInput?.Type.IsDedicatedComponent() ?? false 
-					? GenerateGenericLossMap(retarderInput.Ratio) : null
+					? GenerateGenericLossMap(retarderInput) : null
 			};
 
-		private RetarderLossMap GenerateGenericLossMap(double stepUpRatio)
+		private RetarderLossMap GenerateGenericLossMap(IRetarderInputData retarderData, double engineSpeed = 0, double gearboxRatio = 0)
 		{
-			var retarderSpeeds = new double[] {
-					0, 200 , 400, 600, 900, 1200,
-					1600, 2000, 2500, 3000, 3500, 4000,
-					4500, 5000
-				};
+			var retarderSpeeds = GenerateRetarderSpeeds(retarderData, engineSpeed, gearboxRatio);
 
-			var genericRetarderLosses = GetHydrodynamicRetardersLoss(retarderSpeeds, stepUpRatio);
+			var genericRetarderLosses = GetHydrodynamicRetardersLoss(retarderSpeeds, retarderData.Ratio);
 			//var genericRetarderLosses = GetMagneticRetarderLoss(retarderSpeeds, stepUpRatio);
 
 			var torqueLoss = new DataTable();
@@ -45,6 +49,39 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 
 			return RetarderLossMapReader.Create(torqueLoss);
+		}
+
+		private double[] GenerateRetarderSpeeds(IRetarderInputData retarderData, double engineSpeedRPM, double gearboxRatio)
+		{
+			var SMALL_STEP = 200;
+			var LARGE_STEP = 500;
+			var LARGE_STEP_THRESHOLD = 1000;
+
+			var defaultEngineSpeed = 5000;
+			var maxRetarderSpeed = retarderData.Ratio * defaultEngineSpeed;
+			if (engineSpeedRPM != 0 && gearboxRatio != 0)
+			{
+				maxRetarderSpeed = retarderData.Ratio * engineSpeedRPM;
+
+				if (retarderData.Type == RetarderType.TransmissionOutputRetarder)
+				{
+					maxRetarderSpeed = retarderData.Ratio * (engineSpeedRPM / gearboxRatio);
+				}
+			}
+
+			var step = SMALL_STEP;
+			var retarderSpeeds = new List<double>();
+			for (int i = 0; i < maxRetarderSpeed + step; i += step)
+			{
+				retarderSpeeds.Add(i);
+				var currentMaxSpeed = retarderSpeeds.MaxBy(v => v);
+				if (currentMaxSpeed >= LARGE_STEP_THRESHOLD)
+				{
+					step = LARGE_STEP;
+				}
+			}
+
+			return retarderSpeeds.ToArray();
 		}
 
 		private double[] GetHydrodynamicRetardersLoss(double[] retarderSpeeds, double stepUpRatio)

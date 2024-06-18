@@ -120,6 +120,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 				: (TankSystem?)null;
 
 
+		IVehicleInMotionChargingDeclaration IVehicleDeclarationInputData.InMotionCharging => InMotionCharging;
+
 		public bool ZeroEmissionVehicle => false;
 
 		public bool HybridElectricHDV => false;
@@ -221,10 +223,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public IVehicleComponentsEngineering Components => _components ?? (_components = ComponentReader.ComponentInputData);
 
-		#endregion
+        #endregion
 
 
-		public virtual RetarderType RetarderType => GetString(XMLNames.Vehicle_RetarderType).ParseEnum<RetarderType>();
+		public IVehicleInMotionChargingEngineering InMotionCharging { get; }
+        public virtual RetarderType RetarderType => GetString(XMLNames.Vehicle_RetarderType).ParseEnum<RetarderType>();
 
 		public virtual double RetarderRatio => GetDouble(XMLNames.Vehicle_RetarderRatio);
 
@@ -258,9 +261,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
-
 		#endregion
-	}
+    }
 
 
 	internal class XMLEngineeringVehicleDataProviderV10 : XMLEngineeringVehicleDataProviderV07

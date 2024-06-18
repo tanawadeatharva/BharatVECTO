@@ -38,6 +38,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
@@ -52,6 +53,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected Second dt = 1.SI<Second>();
 		private bool _cancelled;
 		private readonly IFollowUpRunCreator _followUpCreator;
+		private readonly IPostMortemAnalyzer _postMortemAnalyzer;
 		protected ISimulationOutPort CyclePort { get; set; }
 
 		[Required, ValidateObject]
@@ -72,7 +74,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public virtual double Progress => CyclePort.Progress * (PostProcessingDone ? 1.0 : 0.99) * (WritingResultsDone ? 1.0 : 0.99);
 
-		protected VectoRun(IVehicleContainer container, IFollowUpRunCreator followUpCreator = null)
+		protected VectoRun(IVehicleContainer container, IFollowUpRunCreator followUpCreator = null, IPostMortemAnalyzer postMortem = null)
 		{
 			Container = container;
 			RunIdentifier = Interlocked.Increment(ref _runIdCounter);
@@ -81,6 +83,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			PostProcessingDone = false;
 			WritingResultsDone = false;
 			_followUpCreator = followUpCreator ?? new NoFollowUpRunCreator();
+			_postMortemAnalyzer = postMortem ?? new NoPostMortemAnalysis();
+
 		}
 		[DebuggerStepThrough]
 		public IVehicleContainer GetContainer() => Container;
@@ -108,7 +112,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Container.AbsTime = AbsTime;
 
 			Initialize();
-			IResponse response;
+			IResponse response = null;
 			var iterationCount = 0;
 
 			try {
@@ -138,39 +142,62 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				PostProcessingDone = true;
 			} catch (VectoSimulationException vse) {
-				Log.Error("SIMULATION RUN ABORTED! ========================");
-				Log.Error(vse);
-				Container.RunStatus = Status.Aborted;
-				var ex = new VectoSimulationException("{6} ({7} {8}) - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}, f_equiv:{9}",
-					vse, AbsTime, Container.MileageCounter.Distance, dt, Container.VehicleInfo.VehicleSpeed, 
-					TryCatch(() => Container.GearboxInfo.Gear), vse.Message, RunIdentifier, CycleName, RunSuffix, TryCatch(() => Container.RunData.HybridStrategyParameters?.EquivalenceFactor));
-				Container.FinishSimulationRun(ex);
-				throw ex;
-			} catch (VectoException ve) {
-				Log.Error("SIMULATION RUN ABORTED! ========================");
-				Log.Error(ve);
-				Container.RunStatus = Status.Aborted;
-				var ex = new VectoSimulationException("{6} ({7} {8}) - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}, f_equiv:{9}",
-					ve, AbsTime, Container.MileageCounter.Distance, dt, Container.VehicleInfo.VehicleSpeed, 
-					TryCatch(() => Container.GearboxInfo.Gear), ve.Message, RunIdentifier, CycleName, RunSuffix, TryCatch(() => Container.RunData.HybridStrategyParameters?.EquivalenceFactor));
-				try {
+				if (_postMortemAnalyzer?.AbortSimulation(Container, vse) ?? true) {
+					Log.Error("SIMULATION RUN ABORTED! ========================");
+					Log.Error(vse);
+					Container.RunStatus = Status.Aborted;
+					var ex = new VectoSimulationException(
+						"{6} ({7} {8}) - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}, f_equiv:{9}",
+						vse, AbsTime, Container.MileageCounter.Distance, dt, Container.VehicleInfo.VehicleSpeed,
+						TryCatch(() => Container.GearboxInfo.Gear), vse.Message, RunIdentifier, CycleName, RunSuffix,
+						TryCatch(() => Container.RunData.HybridStrategyParameters?.EquivalenceFactor));
 					Container.FinishSimulationRun(ex);
-				} catch (Exception ve2) {
-					ve = new VectoException("Multiple Exceptions occured.",
-						new AggregateException(ve, new VectoException("Exception during finishing Simulation.", ve2)));
-					throw ve;
+					throw ex;
 				}
-				throw ex;
-			} catch (Exception e) {
-				Log.Error("SIMULATION RUN ABORTED! ========================");
-				Log.Error(e);
-				Container.RunStatus = Status.Aborted;
+			} catch (VectoException ve) {
+				if (_postMortemAnalyzer?.AbortSimulation(Container, ve) ?? true) {
+					Log.Error("SIMULATION RUN ABORTED! ========================");
+					Log.Error(ve);
+					Container.RunStatus = Status.Aborted;
+					var ex = new VectoSimulationException(
+						"{6} ({7} {8}) - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}, f_equiv:{9}",
+						ve, AbsTime, Container.MileageCounter.Distance, dt, Container.VehicleInfo.VehicleSpeed,
+						TryCatch(() => Container.GearboxInfo.Gear), ve.Message, RunIdentifier, CycleName, RunSuffix,
+						TryCatch(() => Container.RunData.HybridStrategyParameters?.EquivalenceFactor));
+					try {
+						Container.FinishSimulationRun(ex);
+					} catch (Exception ve2) {
+						ve = new VectoException("Multiple Exceptions occured.",
+							new AggregateException(ve,
+								new VectoException("Exception during finishing Simulation.", ve2)));
+						throw ve;
+					}
 
-				var ex = new VectoSimulationException("{6} ({7} {8}) - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}, f_equiv:{9}",
-					e, AbsTime, Container.MileageCounter.Distance, dt, Container.VehicleInfo.VehicleSpeed, 
-					TryCatch(() => Container.GearboxInfo.Gear), e.Message, RunIdentifier, CycleName, RunSuffix, TryCatch(() => Container.RunData.HybridStrategyParameters?.EquivalenceFactor) ?? "-");
-				Container.FinishSimulationRun(ex);
-				throw ex;
+					throw ex;
+				}
+			} catch (Exception e) {
+				if (_postMortemAnalyzer?.AbortSimulation(Container, e) ?? true) {
+					Log.Error("SIMULATION RUN ABORTED! ========================");
+					Log.Error(e);
+					Container.RunStatus = Status.Aborted;
+
+					var ex = new VectoSimulationException(
+						"{6} ({7} {8}) - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}, f_equiv:{9}",
+						e, AbsTime, Container.MileageCounter.Distance, dt, Container.VehicleInfo.VehicleSpeed,
+						TryCatch(() => Container.GearboxInfo.Gear), e.Message, RunIdentifier, CycleName, RunSuffix,
+						TryCatch(() => Container.RunData.HybridStrategyParameters?.EquivalenceFactor) ?? "-");
+					Container.FinishSimulationRun(ex);
+					throw ex;
+				}
+			}
+
+			if (Container.RunStatus == Status.PrimaryBusSimulationIgnore) {
+				Container.FinishSimulationRun();
+				WritingResultsDone = true;
+				FinishedWithoutErrors = true;
+                IterationStatistics.FinishSimulation(RunName + CycleName + RunSuffix + RunIdentifier);
+				Log.Info("VectoJob finished.");
+				return;
 			}
 
 			if (CheckCyclePortProgress()) {
@@ -189,14 +216,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					Container = PowertrainBuilder.Build(data, Container.ModalData, Container.SumData);
 					AbsTime = 0.SI<Second>();
 					Container.AbsTime = AbsTime;
-                CyclePort = Container.GetCycleOutPort();
+					CyclePort = Container.GetCycleOutPort();
 					Initialize();
 					Run();
 				},
 				this,
-				() => {
-					Container.RunData.Report?.PrepareResult(null); //<- increase number of expected results;
-                    Container.FinishSingleSimulationRun();
+				(options) => {
+					if (options.WriteModAndSumData) {
+						Container.RunData.Report?.PrepareResult(null); //<- increase number of expected results;
+						Container.FinishSingleSimulationRun();
+                    }
 				}) ?? false;
 			if (!runAgain) {
 				Container.FinishSimulationRun();
@@ -250,7 +279,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Success,
 			Canceled,
 			Aborted,
-			REESSEmpty
+			REESSEmpty,
+			PrimaryBusSimulationIgnore
 		}
 	}
 }

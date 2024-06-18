@@ -10,6 +10,7 @@ using System.Xml.XPath;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -96,9 +97,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				)
 			);
 
+			var RDGroupEntry = _results.SingleOrDefault(e => DeclarationData.EvaluateLHSubgroupConditions(e));
+
 			// ReSharper disable once PossibleNullReferenceException
-			Vehicle.XPathSelectElement($"//*[local-name()='{XMLNames.VehicleGroupCO2}']").Value = DeclarationData
-				.GetVehicleGroupCO2StandardsGroup(Input).ToXMLFormat();
+			Vehicle.XPathSelectElement($"//*[local-name()='{XMLNames.VehicleGroupCO2}']").Value =
+				DeclarationData.GetVehicleGroupCO2StandardsGroup(Input, RDGroupEntry != null ? RDGroupEntry.ActualChargeDepletingRange?.Value() : null).ToXMLFormat();
 
 			var stream = new MemoryStream();
 			var writer = new StreamWriter(stream);

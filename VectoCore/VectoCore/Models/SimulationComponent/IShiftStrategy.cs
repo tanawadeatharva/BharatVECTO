@@ -107,12 +107,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		void WriteModalResults(IModalDataContainer container);
 
-		
+		VelocityRollingLookup VelocityDropData { get; }
 	}
 
 	public interface IShiftPolygonCalculator
 	{
 		ShiftPolygon ComputeDeclarationShiftPolygon(
+			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve,
+			IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio,
+			Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null);
+
+		ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
 			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve,
 			IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio,
 			Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null);

@@ -32,7 +32,9 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.XPath;
 using Ninject;
 using NUnit.Framework;
@@ -56,12 +58,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 	[Parallelizable(ParallelScope.All)]
 	public class ExemptedVehicleTest
 	{
-		const string ExemptedVehicle = @"TestData/Integration/DeclarationMode/ExemptedVehicle/vecto_vehicle-sample_exempted.xml";
-		const string ExemptedVehicleNoHEV = @"TestData/Integration/DeclarationMode/ExemptedVehicle/vecto_vehicle-sample_exempted_nonHEV.xml";
-		const string ExemptedVehicleV2 = @"TestData/Integration/DeclarationMode/ExemptedVehicle/vecto_vehicle-sample_exempted_v2.xml";
-		const string ExemptedVehicleV2NoHEV = @"TestData/Integration/DeclarationMode/ExemptedVehicle/vecto_vehicle-sample_exempted_v2_nonHEV.xml";
+		//const string ExemptedVehicle = @"TestData/Integration/DeclarationMode/ExemptedVehicle/vecto_vehicle-sample_exempted.xml";
+		//const string ExemptedVehicleNoHEV = @"TestData/Integration/DeclarationMode/ExemptedVehicle/vecto_vehicle-sample_exempted_nonHEV.xml";
+		const string ExemptedVehicleV24 = @"TestData/Integration/DeclarationMode/ExemptedVehicle/vecto_vehicle-sample_exempted_v24.xml";
+		const string ExemptedVehicleV24NoHEV = @"TestData/Integration/DeclarationMode/ExemptedVehicle/vecto_vehicle-sample_exempted_v24_nonHEV.xml";
+		const string ExemptedVehicleV24InvisibleChar = @"TestData/Integration/DeclarationMode/ExemptedVehicle/vecto_vehicle-sample_exempted_v24_mupltiplePowertrains_invisibleChar.xml";
 
-		const string ExemptedPrimaryBus = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/exempted_primary_heavyBus.xml";
+        const string ExemptedPrimaryBus = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/exempted_primary_heavyBus.xml";
 
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
@@ -75,13 +78,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[TestCase(ExemptedVehicle, 1),
-		TestCase(ExemptedVehicleNoHEV, 1),
-		TestCase(ExemptedVehicleV2, 1),
-		TestCase(ExemptedVehicleV2NoHEV, 1),
-			Ignore("ExemptedVehicles XML Version 1.0/2.0 no longer supported")
-		]
-		public void TestSimulationExemptedVehicle(string filename, int numRuns)
+		[
+		TestCase(ExemptedVehicleV24, 1),
+		TestCase(ExemptedVehicleV24NoHEV, 1),
+		TestCase(ExemptedVehicleV24InvisibleChar, 1),
+
+        ]
+        public void TestSimulationExemptedVehicle(string filename, int numRuns)
 		{
 			var writer = new FileOutputWriter(filename);
 
@@ -121,178 +124,25 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var val2 = new XMLValidator(XmlReader.Create(customerFile));
 			Assert.IsTrue(val2.ValidateXML(XmlDocumentType.CustomerReport), val2.ValidationError);
 
-			//var val3 = new XMLValidator(XmlReader.Create(monitoringFile));
-			//Assert.IsTrue(val3.ValidateXML(XmlDocumentType.MonitoringReport), val3.ValidationError);
+			var cif = XDocument.Load(XmlReader.Create(customerFile));
+			var techNode = cif.XPathSelectElement("//*[local-name()='VehicleTechnologyExempted']");
+			Assert.NotNull(techNode);
+			var match = Regex.Match(techNode.Value, "^[a-zA-Z0-9 ]+$");
+			Assert.IsTrue(match.Success);
 
-		}
+			var mrf = XDocument.Load(XmlReader.Create(manufactuerFile));
+			techNode = mrf.XPathSelectElement("//*[local-name()='VehicleTechnologyExempted']");
+			Assert.NotNull(techNode);
+			match = Regex.Match(techNode.Value, "^[a-zA-Z0-9 ]+$");
+			Assert.IsTrue(match.Success);
 
-		[TestCase(ExemptedVehicle, true, true, true, "Invalid input: ZE-HDV and DualFuelVehicle are mutually exclusive!"),
-			TestCase(ExemptedVehicle, true, false, true, "Invalid input: ZE-HDV and DualFuelVehicle are mutually exclusive!"),
-			TestCase(ExemptedVehicle, false, false, false, "Invalid input: at least one option of ZE-HDV, He-HDV, and DualFuelVehicle has to be set for an exempted vehicle!"),
-		 Ignore("ExemptedVehicles XML Version 1.0 no longer supported")
-		]
-		public void TestInvalidExemptedCombination(string filename, bool zeroEmission, bool hybrid, bool dualFuel, string exMsg)
-		{
-			var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(filename));
+            //var val3 = new XMLValidator(XmlReader.Create(monitoringFile));
+            //Assert.IsTrue(val3.ValidateXML(XmlDocumentType.MonitoringReport), val3.ValidationError);
 
-			var customerFile = writer.XMLCustomerReportName;
-			var manufactuerFile = writer.XMLFullReportName;
-			var monitoringFile = writer.XMLMonitoringReportName;
-			if (File.Exists(customerFile)) {
-				File.Delete(customerFile);
-			}
-			if (File.Exists(manufactuerFile)) {
-				File.Delete(manufactuerFile);
-			}
-			if (File.Exists(monitoringFile)) {
-				File.Delete(monitoringFile);
-			}
-
-			var reader = XmlReader.Create(filename);
-
-			var doc = new XmlDocument();
-			doc.Load(reader);
-			var nav = doc.CreateNavigator();
-
-			SetExemptedParameters(nav, zeroEmission, hybrid, dualFuel);
-
-			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
-
-			var inputData = xmlInputReader.CreateDeclaration(modified);
-			
-			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
-			factory.WriteModalResults = true;
-			factory.ActualModalData = true;
-			var jobContainer = new JobContainer(new MockSumWriter());
-
-			jobContainer.AddRuns(factory);
-
-			AssertHelper.Exception<VectoException>(
-				() => {
-					jobContainer.Runs[0].Run.Run();
-				},
-				messageContains: exMsg);
-			Assert.IsFalse(File.Exists(customerFile));
-			Assert.IsFalse(File.Exists(manufactuerFile));
-			Assert.IsFalse(File.Exists(monitoringFile));
-		}
-
-		
-
-
-		[TestCase(ExemptedVehicle, null, 10000),
-		TestCase(ExemptedVehicle, 100000, null),
-		TestCase(ExemptedVehicle, null, null),
-		Ignore("ExemptedVehicles XML Version 1.0 no longer supported")]
-		public void TestHybridExemptedRequiresMaxNetPower(string filename, double? maxNetPower1, double? maxNetPower2)
-		{
-			var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(filename));
-
-			var customerFile = writer.XMLCustomerReportName;
-			var manufactuerFile = writer.XMLFullReportName;
-			var monitoringFile = writer.XMLMonitoringReportName;
-			if (File.Exists(customerFile)) {
-				File.Delete(customerFile);
-			}
-			if (File.Exists(manufactuerFile)) {
-				File.Delete(manufactuerFile);
-			}
-			if (File.Exists(monitoringFile)) {
-				File.Delete(monitoringFile);
-			}
-
-			var reader = XmlReader.Create(filename);
-
-			var doc = new XmlDocument();
-			doc.Load(reader);
-			var nav = doc.CreateNavigator();
-			var manager = new XmlNamespaceManager(nav.NameTable);
-			var helper = new XPathHelper(ExecutionMode.Declaration);
-			helper.AddNamespaces(manager);
-
-			SetExemptedParameters(nav, false, true, false);
-			var maxPower1 = nav.SelectSingleNode(helper.QueryAbs(
-													helper.NSPrefix(XMLNames.VectoInputDeclaration,
-																	Constants.XML.RootNSPrefix),
-													XMLNames.Component_Vehicle,
-													XMLNames.Vehicle_MaxNetPower1),
-												manager);
-			if (maxNetPower1.HasValue) {
-				maxPower1.SetValue(maxNetPower1.Value.ToXMLFormat(0));
-			} else {
-				maxPower1.DeleteSelf();
-			}
-			var maxPower2 = nav.SelectSingleNode(helper.QueryAbs(
-													helper.NSPrefix(XMLNames.VectoInputDeclaration,
-																	Constants.XML.RootNSPrefix),
-													XMLNames.Component_Vehicle,
-													XMLNames.Vehicle_MaxNetPower2),
-												manager);
-			if (maxNetPower2.HasValue) {
-				maxPower2.SetValue(maxNetPower2.Value.ToXMLFormat(0));
-			} else {
-				maxPower2.DeleteSelf();
-			}
-
-			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
-
-			var inputData = xmlInputReader.CreateDeclaration(modified);
-			
-			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
-			factory.WriteModalResults = true;
-			factory.ActualModalData = true;
-			var jobContainer = new JobContainer(new MockSumWriter());
-
-			jobContainer.AddRuns(factory);
-
-			AssertHelper.Exception<VectoException>(
-				() => {
-					jobContainer.Runs[0].Run.Run();
-				},
-				messageContains: "For He-HDV both MaxNetPower1 and MaxNetPower2 have to be provided!");
-			Assert.IsFalse(File.Exists(customerFile));
-			Assert.IsFalse(File.Exists(manufactuerFile));
-			Assert.IsFalse(File.Exists(monitoringFile));
-		}
+        }
 
 
 
-		private static void SetExemptedParameters(XPathNavigator nav, bool zeroEmission, bool hybrid, bool dualFuel)
-		{
-			var manager = new XmlNamespaceManager(nav.NameTable);
-			var helper = new XPathHelper(ExecutionMode.Declaration);
-			helper.AddNamespaces(manager);
-
-			var zeNode = nav.SelectSingleNode(
-				helper.QueryAbs(
-					helper.NSPrefix(
-						XMLNames.VectoInputDeclaration,
-						Constants.XML.RootNSPrefix),
-					XMLNames.Component_Vehicle,
-					XMLNames.Vehicle_ZeroEmissionVehicle),
-				manager);
-			zeNode.SetValue(zeroEmission.ToString().ToLowerInvariant());
-
-			var dualfuelNode = nav.SelectSingleNode(
-				helper.QueryAbs(
-					helper.NSPrefix(
-						XMLNames.VectoInputDeclaration,
-						Constants.XML.RootNSPrefix),
-					XMLNames.Component_Vehicle,
-					XMLNames.Vehicle_DualFuelVehicle),
-				manager);
-			dualfuelNode.SetValue(dualFuel.ToString().ToLowerInvariant());
-
-			var hybridNode = nav.SelectSingleNode(
-				helper.QueryAbs(
-					helper.NSPrefix(
-						XMLNames.VectoInputDeclaration,
-						Constants.XML.RootNSPrefix),
-					XMLNames.Component_Vehicle,
-					XMLNames.Vehicle_HybridElectricHDV),
-				manager);
-			hybridNode.SetValue(hybrid.ToString().ToLowerInvariant());
-		}
 
 		[TestCase(ExemptedPrimaryBus, 1)]
 		public void TestSimulationExemptedPrimaryBusVehicle(string filename, int numRuns)

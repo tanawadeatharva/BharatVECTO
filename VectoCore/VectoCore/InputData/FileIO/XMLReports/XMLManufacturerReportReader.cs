@@ -44,8 +44,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		{
 			var retVal = new List<VectoComponents>();
 			foreach (var component in EnumHelper.GetValues<VectoComponents>()) {
-				var nodes = xmlDocument.SelectNodes(string.Format("//*[local-name()='{0}']//*[local-name()='{1}']/*[local-name()='Model']",
-																XMLNames.VectoManufacturerReport, component.XMLElementName()));
+				var select = component == VectoComponents.ElectricEnergyStorage
+					? $"//*[local-name()='{XMLNames.VectoManufacturerReport}']//*[local-name()='{component.XMLElementNameMRF()}']//*[local-name()='Model']"
+					: (component == VectoComponents.Gearbox)
+						? $"//*[local-name()='{XMLNames.VectoManufacturerReport}']//*[local-name()='{component.XMLElementNameMRF()}' or local-name()='Transmission']/*[local-name()='Model']"
+						: $"//*[local-name()='{XMLNames.VectoManufacturerReport}']//*[local-name()='{component.XMLElementNameMRF()}']/*[local-name()='Model']";
+
+                var nodes = xmlDocument.SelectNodes(select);
 				var count = nodes?.Count ?? 0;
 				for (var i = 0; i < count; i++) {
 					retVal.Add(component);
@@ -71,7 +76,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		public static XmlNode GetNodes(XmlDocument xmlDocument, VectoComponents component, int index)
 		{
-			var nodes = xmlDocument.SelectNodes(GetComponentQueryString(component == VectoComponents.Tyre ? "Axle" : component.XMLElementName()));
+			var nodes = xmlDocument.SelectNodes(GetComponentQueryString(component));
 			if (nodes == null || nodes.Count == 0) {
 				throw new Exception($"Component {component} not found");
 			}
@@ -82,17 +87,33 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			return nodes[index];
 		}
 
-		static string GetComponentQueryString(string component = null)
+		public static string ReadElementValue(XmlDocument xmlDocument, string elementName)
 		{
-			if (component == null) {
-				return "(//*[@id])[1]";
+			var node = xmlDocument.SelectSingleNode(string.Format("//*[local-name()='{0}']", elementName));
+			if (node == null) {
+				throw new Exception(string.Format("Element {0} not found", elementName));
 			}
-			return $"//*[local-name()='{component}']";
+			return node.InnerText;
+		}
+
+		static string GetComponentQueryString(VectoComponents component)
+		{
+			//string componentString;
+			switch (component) {
+				case VectoComponents.Tyre:
+					return "//*[local-name()='Axle']";
+				case VectoComponents.ElectricEnergyStorage:
+					return "//*[local-name()='Battery' or local-name()='Capacitor']";
+				case VectoComponents.Gearbox:
+					return $"//*[local-name()='{component.XMLElementName()}' or local-name()='Transmission']";
+				default:
+					return $"//*[local-name()='{component.XMLElementName()}']";
+            }
 		}
 
 		static string ReadElementValue(XmlNode xmlNode, string elementName)
 		{
-			var node = xmlNode.SelectSingleNode($"./*[local-name()='{elementName}']");
+			var node = xmlNode.SelectSingleNode($".//*[local-name()='{elementName}']");
 			if (node == null) {
 				return null;
 			}

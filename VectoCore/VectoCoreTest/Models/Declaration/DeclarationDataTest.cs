@@ -77,10 +77,31 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 			_kernel = new StandardKernel(new VectoNinjectModule());
-		}
+        }
+
+        [
+        TestCase(VectoSimulationJobType.ConventionalVehicle, 0.002, null, 0.8),
+        TestCase(VectoSimulationJobType.ConventionalVehicle, 0.0032, null, 1.28),
+        TestCase(VectoSimulationJobType.ConventionalVehicle, 0.0033, GearboxType.ATPowerSplit, 1.3719),
+        TestCase(VectoSimulationJobType.ConventionalVehicle, 0.0033, GearboxType.MT, 1.3787),
+        TestCase(VectoSimulationJobType.ConventionalVehicle, 0.005, GearboxType.MT, 3.06),
+        TestCase(VectoSimulationJobType.ConventionalVehicle, 0.006, GearboxType.MT, 3.33),
+        TestCase(VectoSimulationJobType.ConventionalVehicle, 0.006, GearboxType.ATPowerSplit, 3.23),
+        TestCase(VectoSimulationJobType.SerialHybridVehicle, 0.006, null, 2.03)
+        ]
+        public void EngineInertiaTest(VectoSimulationJobType jobType, double displacement, GearboxType? gbxType,
+            double inertia)
+        { 
+            KilogramSquareMeter result = DeclarationData.Engine.EngineInertia(
+                jobType, 
+                displacement.SI<CubicMeter>(), 
+                gbxType);
+            
+            Assert.AreEqual(inertia, result.Value(), 1e-4);
+        }
 
 
-		[TestCase("285/60 R22.5", 10.6, 0.914, 3.03, 0.440766),
+        [TestCase("285/60 R22.5", 10.6, 0.914, 3.03, 0.440766),
 		TestCase("285/70 R19.5", 7.9, 0.895, 3.05, 0.434453),
 		TestCase("395/85 R20", 27.9, 1.18, 3.05, 0.572798)]
 		public void WheelDataTest(string wheels, double inertia, double wheelsDiameter, double circumferenceFactor,
@@ -234,8 +255,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void CrossWindCorrectionTest(string parameterSet, double crossSectionArea, double kmph, double height,
 			double expected)
 		{
-			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
-				new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet,
+			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(), 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+                new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet,
 					crossSectionArea.SI<SquareMeter>(),
 					height.SI<Meter>()),
 				CrossWindCorrectionMode.DeclarationModeCorrection);
@@ -277,8 +298,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void CrossWindCorrectionExceptionTest(string parameterSet, double crossSectionArea, double kmph,
 			double height)
 		{
-			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
-				new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet,
+			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(), 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+                new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet,
 					crossSectionArea.SI<SquareMeter>(),
 					height.SI<Meter>()),
 				CrossWindCorrectionMode.DeclarationModeCorrection);
@@ -293,7 +314,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var airDrag = new AirdragData() {
 				CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection,
 				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(null, null, CrossWindCorrectionMode.DeclarationModeCorrection)
+					new CrosswindCorrectionCdxALookup(null, null, null, null, CrossWindCorrectionMode.DeclarationModeCorrection)
 			};
 
 			Assert.IsTrue(airDrag.IsValid(),
@@ -311,7 +332,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				var airDrag = new AirdragData {
 					CrossWindCorrectionMode = correctionMode,
 					CrossWindCorrectionCurve =
-						new CrosswindCorrectionCdxALookup(null, null, correctionMode)
+						new CrosswindCorrectionCdxALookup(null, null, null, null, correctionMode)
 				};
 
 				Assert.IsFalse(airDrag.IsValid(),
@@ -1452,6 +1473,21 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
                 deltaCdA: 1.5,
                 maxLoad: 39600,
                 ems: true);
+
+			AssertMission(segment.Missions[4],
+				vehicleData: vehicleData,
+				missionType: MissionType.UrbanDelivery,
+				cosswindCorrection: "TractorSemitrailer",
+				axleWeightDistribution: new[] { 0.25, 0.25 },
+				trailerAxleWeightDistribution: new[] { 0.5 },
+				trailerAxleCount: new[] { 3 },
+				bodyCurbWeight: 0,
+				trailerCurbWeight: new[] { 7500.0 },
+				trailerType: new[] { TrailerType.ST1 },
+				lowLoad: 2600,
+				refLoad: 12900,
+				trailerGrossVehicleWeight: new[] { 24000.0 },
+				deltaCdA: 0, maxLoad: 25000);
         }
 
         /// <summary>
@@ -2064,6 +2100,116 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
                 maxLoad: 24145);
         }
 
+		/// <summary>
+		/// Segment 53: medium lorry
+		/// </summary>
+		[TestCase]
+		public void Segment53Test()
+		{
+			var vehicleData = new {
+				VehicleCategory = VehicleCategory.RigidTruck,
+				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
+				GrossVehicleMassRating = 5200.SI<Kilogram>(),
+				CurbWeight = 1300.SI<Kilogram>()
+			};
+
+			var segment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
+
+			Assert.AreEqual(VehicleClass.Class53, segment.VehicleClass);
+
+			var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
+			TestAcceleration(data);
+
+			Assert.AreEqual(2, segment.Missions.Length);
+
+			AssertMission(segment.Missions[0],
+				vehicleData: vehicleData,
+				missionType: MissionType.RegionalDelivery,
+				cosswindCorrection: "MediumLorriesRigid",
+				axleWeightDistribution: new[] { 0.45, 0.55 },
+				trailerAxleWeightDistribution: new double[] { },
+				trailerAxleCount: new int[] { },
+				bodyCurbWeight: 800,
+				trailerCurbWeight: new double[] { },
+				trailerType: new TrailerType[] { },
+				lowLoad: 149.743589,
+				refLoad: 764.3589743,
+				trailerGrossVehicleWeight: new double[] { },
+				deltaCdA: 0,
+				maxLoad: 3100);
+			AssertMission(segment.Missions[1],
+				vehicleData: vehicleData,
+				missionType: MissionType.UrbanDelivery,
+				cosswindCorrection: "MediumLorriesRigid",
+				axleWeightDistribution: new[] { 0.45, 0.55 },
+				trailerAxleWeightDistribution: new double[] { },
+				trailerAxleCount: new int[] { },
+				bodyCurbWeight: 800,
+				trailerCurbWeight: new double[] { },
+				trailerType: new TrailerType[] { },
+				lowLoad: 149.743589,
+				refLoad: 764.3589743,
+				trailerGrossVehicleWeight: new double[] { },
+				deltaCdA: 0,
+				maxLoad: 3100);
+        }
+
+		/// <summary>
+		/// Segment 54: medium lorry
+		/// </summary>
+		[TestCase]
+		public void Segment54Test()
+		{
+			var vehicleData = new {
+				VehicleCategory = VehicleCategory.Van,
+				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
+				GrossVehicleMassRating = 5200.SI<Kilogram>(),
+				CurbWeight = 1300.SI<Kilogram>()
+			};
+
+			var segment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
+
+			Assert.AreEqual(VehicleClass.Class54, segment.VehicleClass);
+
+			var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
+			TestAcceleration(data);
+
+			Assert.AreEqual(2, segment.Missions.Length);
+
+			AssertMission(segment.Missions[0],
+				vehicleData: vehicleData,
+				missionType: MissionType.RegionalDelivery,
+				cosswindCorrection: "MediumLorriesVan",
+				axleWeightDistribution: new[] { 0.45, 0.55 },
+				trailerAxleWeightDistribution: new double[] { },
+				trailerAxleCount: new int[] { },
+				bodyCurbWeight: 0,
+				trailerCurbWeight: new double[] { },
+				trailerType: new TrailerType[] { },
+				lowLoad: 149.743589,
+				refLoad: 764.3589743,
+				trailerGrossVehicleWeight: new double[] { },
+				deltaCdA: 0,
+				maxLoad: 3900);
+			AssertMission(segment.Missions[1],
+				vehicleData: vehicleData,
+				missionType: MissionType.UrbanDelivery,
+				cosswindCorrection: "MediumLorriesVan",
+				axleWeightDistribution: new[] { 0.45, 0.55 },
+				trailerAxleWeightDistribution: new double[] { },
+				trailerAxleCount: new int[] { },
+				bodyCurbWeight: 0,
+				trailerCurbWeight: new double[] { },
+				trailerType: new TrailerType[] { },
+				lowLoad: 149.743589,
+				refLoad: 764.3589743,
+				trailerGrossVehicleWeight: new double[] { },
+				deltaCdA: 0,
+				maxLoad: 3900);
+        }
+
         public static void AssertMission(Mission m, dynamic vehicleData, MissionType missionType, string cosswindCorrection,
             double[] axleWeightDistribution, double[] trailerAxleWeightDistribution, int[] trailerAxleCount,
             double bodyCurbWeight, double[] trailerCurbWeight, TrailerType[] trailerType, double lowLoad, double refLoad,
@@ -2282,58 +2428,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         }
 
         [
-		TestCase(VehicleClass.Class1, true, 169.9, WeightingGroup.Group1),
-		TestCase(VehicleClass.Class1, false, 265, WeightingGroup.Group1),
-		TestCase(VehicleClass.Class2, true, 169.9, WeightingGroup.Group2),
-		TestCase(VehicleClass.Class2, false, 265, WeightingGroup.Group2),
-		TestCase(VehicleClass.Class3, true, 169.9, WeightingGroup.Group3),
-		TestCase(VehicleClass.Class3, false, 265, WeightingGroup.Group3),
-
-
-        TestCase(VehicleClass.Class4, true, 169.9, WeightingGroup.Group4UD),
-        TestCase(VehicleClass.Class4, false, 169.9, WeightingGroup.Group4UD),
-        TestCase(VehicleClass.Class4, false, 170, WeightingGroup.Group4RD),
-        TestCase(VehicleClass.Class4, true, 170, WeightingGroup.Group4RD),
-        TestCase(VehicleClass.Class4, true, 264.9, WeightingGroup.Group4RD),
-        TestCase(VehicleClass.Class4, true, 265, WeightingGroup.Group4LH),
-
-        TestCase(VehicleClass.Class5, false, 169.9, WeightingGroup.Group5RD),
-        TestCase(VehicleClass.Class5, false, 170, WeightingGroup.Group5RD),
-        TestCase(VehicleClass.Class5, false, 264.9, WeightingGroup.Group5RD),
-        TestCase(VehicleClass.Class5, false, 265, WeightingGroup.Group5RD),
-        TestCase(VehicleClass.Class5, true, 264.9, WeightingGroup.Group5RD),
-        TestCase(VehicleClass.Class5, true, 265, WeightingGroup.Group5LH),
-
-        TestCase(VehicleClass.Class9, false, 169.9, WeightingGroup.Group9RD),
-        TestCase(VehicleClass.Class9, false, 264.9, WeightingGroup.Group9RD),
-        TestCase(VehicleClass.Class9, false, 265, WeightingGroup.Group9RD),
-        TestCase(VehicleClass.Class9, true, 169.9, WeightingGroup.Group9LH),
-        TestCase(VehicleClass.Class9, true, 264.9, WeightingGroup.Group9LH),
-        TestCase(VehicleClass.Class9, true, 265, WeightingGroup.Group9LH),
-
-        TestCase(VehicleClass.Class10, false, 169.9, WeightingGroup.Group10RD),
-        TestCase(VehicleClass.Class10, false, 264.9, WeightingGroup.Group10RD),
-        TestCase(VehicleClass.Class10, false, 265, WeightingGroup.Group10RD),
-        TestCase(VehicleClass.Class10, true, 169.9, WeightingGroup.Group10LH),
-        TestCase(VehicleClass.Class10, true, 264.9, WeightingGroup.Group10LH),
-        TestCase(VehicleClass.Class10, true, 265, WeightingGroup.Group10LH),
-
-		TestCase(VehicleClass.Class11, true, 169.9, WeightingGroup.Group11),
-		TestCase(VehicleClass.Class11, false, 265, WeightingGroup.Group11),
-		TestCase(VehicleClass.Class12, true, 169.9, WeightingGroup.Group12),
-		TestCase(VehicleClass.Class12, false, 265, WeightingGroup.Group12),
-		TestCase(VehicleClass.Class16, true, 169.9, WeightingGroup.Group16),
-		TestCase(VehicleClass.Class16, false, 265, WeightingGroup.Group16),
-            ]
-        public void TestWeightingGroupLookup(
-            VehicleClass vehicleGroup, bool sleeperCab, double ratedPowerkWm, WeightingGroup expectedWeightingGroup)
-        {
-            var wGroup = DeclarationData.WeightingGroup.Lookup(
-                vehicleGroup, sleeperCab, ratedPowerkWm.SI(Unit.SI.Kilo.Watt).Cast<Watt>());
-            Assert.AreEqual(expectedWeightingGroup, wGroup);
-        }
-
-        [
 
             TestCase(WeightingGroup.Group51, 0, 0, 0.25, 0.25, 0.25, 0.25),
             TestCase(WeightingGroup.Group52, 0, 0, 0.25, 0.25, 0.25, 0.25),
@@ -2459,6 +2553,67 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
 			Assert.AreEqual(expectedAnnual * 1000, val.Mileage.AnnualMileage.Value()); //stored in meter
 			Assert.AreEqual(expectedDaily * 1000, val.Mileage.DailyMileage.Value()); //stored in meter
+		}
+
+        [TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 0.34)]
+		[TestCase(VehicleClass.Class2, MissionType.LongHaul, 0.5)]
+		[TestCase(VehicleClass.Class3, MissionType.RegionalDelivery, 0.34)]
+		[TestCase(VehicleClass.Class4, MissionType.UrbanDelivery, 0)]
+		[TestCase(VehicleClass.Class12, MissionType.RegionalDelivery, 0.34)]
+		[TestCase(VehicleClass.ClassP31SD, MissionType.HeavyUrban, 0.30)]
+		public void VehicleOperationLookupShareInMotionInfrastructureCatenary(VehicleClass hdvClass, MissionType mission,
+			double expectedShare)
+		{
+			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+            Assert.AreEqual(expectedShare, val.ShareInMotionCharging.ShareCatenary);
+		}
+
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.Class2, MissionType.LongHaul, 0.0)]
+		[TestCase(VehicleClass.Class3, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.Class4, MissionType.UrbanDelivery, 0.0)]
+		[TestCase(VehicleClass.Class12, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.ClassP31SD, MissionType.HeavyUrban, 0.80)]
+		[TestCase(VehicleClass.ClassP32SD, MissionType.Interurban, 0.20)]
+		[TestCase(VehicleClass.ClassP33SD, MissionType.Interurban, 0.20)]
+		[TestCase(VehicleClass.ClassP40DD, MissionType.Coach, 0.00)]
+        public void VehicleOperationLookupShareInMotionInfrastructurTrolley(VehicleClass hdvClass, MissionType mission,
+			double expectedShare)
+		{
+			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+			Assert.AreEqual(expectedShare, val.ShareInMotionCharging.ShareTrolley);
+		}
+
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.Class2, MissionType.LongHaul, 0.0)]
+		[TestCase(VehicleClass.Class3, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.Class4, MissionType.UrbanDelivery, 0.5)]
+		[TestCase(VehicleClass.Class12, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.ClassP31SD, MissionType.HeavyUrban, 0.50)]
+		[TestCase(VehicleClass.ClassP32SD, MissionType.Interurban, 0.00)]
+		[TestCase(VehicleClass.ClassP33SD, MissionType.Interurban, 0.00)]
+		[TestCase(VehicleClass.ClassP40DD, MissionType.Coach, 0.00)]
+        public void VehicleOperationLookupShareInMotionInfrastructureGroundRail(VehicleClass hdvClass, MissionType mission,
+			double expectedShare)
+		{
+			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+			Assert.AreEqual(expectedShare, val.ShareInMotionCharging.ShareGroundRail);
+		}
+
+		[TestCase(VehicleClass.Class1, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.Class2, MissionType.LongHaul, 0.0)]
+		[TestCase(VehicleClass.Class3, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.Class4, MissionType.UrbanDelivery, 0.5)]
+		[TestCase(VehicleClass.Class12, MissionType.RegionalDelivery, 0.0)]
+		[TestCase(VehicleClass.ClassP31SD, MissionType.HeavyUrban, 0.50)]
+		[TestCase(VehicleClass.ClassP32SD, MissionType.Interurban, 0.00)]
+		[TestCase(VehicleClass.ClassP33SD, MissionType.Interurban, 0.00)]
+		[TestCase(VehicleClass.ClassP40DD, MissionType.Coach, 0.00)]
+        public void VehicleOperationLookupShareInMotionInfrastructureWireless(VehicleClass hdvClass, MissionType mission,
+			double expectedShare)
+		{
+			var val = DeclarationData.VehicleOperation.LookupVehicleOperation(hdvClass, mission);
+			Assert.AreEqual(expectedShare, val.ShareInMotionCharging.ShareWireless);
 		}
 
         [TestCaseSource(nameof(VehicleOperationTestSourceLorry))]

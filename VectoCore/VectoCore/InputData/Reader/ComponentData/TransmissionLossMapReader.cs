@@ -60,6 +60,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		/// <param name="data"></param>
 		/// <param name="gearRatio"></param>
 		/// <param name="gearName"></param>
+		/// <param name="useInvertedMap"></param>
 		/// <param name="extendLossMap"></param>
 		/// <returns></returns>
 		public static TransmissionLossMap Create(DataTable data, double gearRatio, string gearName, bool extendLossMap = false)
@@ -88,10 +89,10 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				entries = CreateFromColumIndizes(data);
 			}
 			if (!extendLossMap) {
-				return new TransmissionLossMap(entries, gearRatio, gearName);
+				return new TransmissionLossMap(entries, gearRatio, gearName, false);
 			}
-			entries = ExtendLossMap(entries);
-			return new TransmissionLossMap(entries, gearRatio, gearName);
+			entries = ExtendLossMap(entries, false);
+			return new TransmissionLossMap(entries, gearRatio, gearName, false);
 		}
 
 		public static TransmissionLossMap CreateEmADCLossMap(DataTable data, double gearRatio, string gearName, bool extendLossMap)
@@ -126,15 +127,26 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 						   torqueLoss: -row.ParseDouble(Fields.TorqeLoss).SI<NewtonMeter>()))
 				.ToList();
 
-			if (!extendLossMap) {
-				return new TransmissionLossMap(entries, gearRatio, gearName);
+			entries = (from DataRow row in data.Rows
+					select new TransmissionLossMap.GearLossMapEntry(
+						inputSpeed: row.ParseDouble(Fields.InputSpeed).RPMtoRad(),
+						inputTorque: row.ParseDouble(Fields.InputTorque).SI<NewtonMeter>(),
+						torqueLoss: row.ParseDouble(Fields.TorqeLoss).SI<NewtonMeter>()))
+				.ToList();
+
+			if (extendLossMap) {
+				entries = ExtendLossMap(entries, true);
 			}
-			entries = ExtendLossMap(entries);
-            return new TransmissionLossMap(entries, gearRatio, gearName);
-		}
+
+			entries = entries.Select(x => new TransmissionLossMap.GearLossMapEntry(
+				inputSpeed: x.InputSpeed,
+				inputTorque: -x.InputTorque,
+				torqueLoss: -x.TorqueLoss)).ToList();
+			return new TransmissionLossMap(entries, gearRatio, gearName, true);
+        }
 
 		private static List<TransmissionLossMap.GearLossMapEntry> ExtendLossMap(
-			List<TransmissionLossMap.GearLossMapEntry> entries)
+			List<TransmissionLossMap.GearLossMapEntry> entries, bool useInvertedMap)
 		{
 			var maxTorque = entries.Max(x => x.InputTorque);
 
@@ -153,6 +165,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					}
 				}
 			}
+			var rnd = new Random();
 			foreach (var speedBucket in speedBuckets) {
 				if (speedBucket.Value.Count < 2) {
 					continue;
@@ -161,7 +174,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				var (k, d) = VectoMath.LeastSquaresFitting(speedBucket.Value, x => x.InputTorque.Value(), x => x.TorqueLoss.Value());
 
 				for (var i = 2; i <= DeclarationData.LossMapExtrapolationFactor; i++) {
-					var inTq = i * maxTorque;
+					// in some rare cases the Delaunay triangulation of extrapolated map points in the inverted map fails
+					// due to numerical inaccuracy. moving the map points a little bit to avoid this (has no effect on the
+					// result as the loss is extrapolated linearly and this is only necessary in very rare cases of high
+					// ICE inertia
+					var inTq = i * maxTorque + (useInvertedMap ? rnd.NextDouble() * 0.1.SI<NewtonMeter>() : 0.SI<NewtonMeter>());
 					if (k > 0) {
 						entries.Add(new TransmissionLossMap.GearLossMapEntry(speedBucket.Key, inTq, k * inTq + d.SI<NewtonMeter>()));
 						entries.Add(new TransmissionLossMap.GearLossMapEntry(speedBucket.Key, -inTq, k * inTq + d.SI<NewtonMeter>()));
@@ -207,7 +224,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				new TransmissionLossMap.GearLossMapEntry(100000.RPMtoRad(), 1e5.SI<NewtonMeter>(),
 					(1 - efficiency) * 1e5.SI<NewtonMeter>()),
 			};
-			return new TransmissionLossMap(entries, gearRatio, gearName);
+			return new TransmissionLossMap(entries, gearRatio, gearName, false);
 		}
 
 		public static TransmissionLossMap CreateEmADCLossMap(double efficiency, double gearRatio, string gearName)
@@ -238,7 +255,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				new TransmissionLossMap.GearLossMapEntry(100000.RPMtoRad(), 1e5.SI<NewtonMeter>(),
 					(1 - 1/efficiency) * 1e5.SI<NewtonMeter>()),
 			};
-			return new TransmissionLossMap(entries, gearRatio, gearName);
+			return new TransmissionLossMap(entries, gearRatio, gearName, true);
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection columns)

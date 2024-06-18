@@ -23,10 +23,23 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				data.Columns[0].ColumnName = Fields.MotorSpeed;
 				data.Columns[1].ColumnName = Fields.DragTorque;
 			}
-			return new DragCurve(data.AsEnumerable().Cast<DataRow>().Select(x => new DragCurve.DragLoadEntry() {
+
+			var entries = data.AsEnumerable().Cast<DataRow>().Select(x => new DragCurve.DragLoadEntry() {
 				MotorSpeed = x.ParseDouble(Fields.MotorSpeed).RPMtoRad(), // / ratio,
 				DragTorque = -x.ParseDouble(Fields.DragTorque).SI<NewtonMeter>() * count, // * ratio / efficiency
-			}).ToList());
+			}).OrderBy(x => x.MotorSpeed).ToList();
+			var invalid = entries.Where(x => x.DragTorque.IsSmaller(0)).ToList();
+			if (invalid.Count > 0) {
+				throw new VectoException("Drag torque has to be negative in input: {0}",
+					invalid.Select(x => x.MotorSpeed.AsRPM).Join());
+
+			}
+            var duplicates = entries.GroupBy(x => x.MotorSpeed).Where(g => g.Count() > 1).Select(x => x.Key.AsRPM).ToList();
+			if (duplicates.Any()) {
+				throw new VectoException(
+					$"Drag curve contains multiple entries for a single motor speed: {duplicates.Join()}");
+			}
+            return new DragCurve(entries);
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection columns)

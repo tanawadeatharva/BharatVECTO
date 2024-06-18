@@ -22,17 +22,24 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
     {
         private IPrimaryBusDeclarationDataAdapter _dao;
 
+        protected readonly IInputDataProvider InputDataProvider;
+
         public DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary(
             IVTPDeclarationInputDataProvider ivtpProvider, IVTPReport report) : base(ivtpProvider.JobInputData, report)
         {
-
+            InputDataProvider = ivtpProvider;
         }
 
-        protected DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary(IVTPDeclarationJobInputData vtpJob, IVTPReport report) : base(vtpJob, report) { }
+        protected DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary(IInputDataProvider inputProvider, IVTPReport report) : 
+            base((inputProvider as IVTPEngineeringInputDataProvider).JobInputData, report) 
+        {
+            InputDataProvider = inputProvider;
+        }
 
 
         #region Implementation of IVectoRunDataFactory
 
+        public override IInputDataProvider DataProvider => InputDataProvider;
 
         protected IPrimaryBusDeclarationDataAdapter DataAdapter => _dao ?? (_dao = new DeclarationDataAdapterPrimaryBus.Conventional());
 
@@ -57,8 +64,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                 ? DeclarationData.VTPMode.SelectedMissionLowFloorBus
                 : DeclarationData.VTPMode.SelectedMissionHighFloorBus;
             AirdragData = DataAdapter.CreateAirdragData(
-                vehicle.Components.AirdragInputData,
-                Segment.Missions.First(), Segment);
+                vehicle.Components.AirdragInputData, vehicle.InMotionCharging,
+                Segment.Missions.First(), Segment, OvcHevMode.NotApplicable, 0);
             EngineData = DataAdapter.CreateEngineData(
                 vehicle, vehicle.Components.EngineInputData.EngineModes.First(),
                 new Mission() { MissionType = vtpMission });
@@ -67,10 +74,16 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                 : DataAdapter.CreateAxleGearData(vehicle.Components.AxleGearInputData);
             AngledriveData = DataAdapter.CreateAngledriveData(vehicle.Components.AngledriveInputData);
 
-            GearboxData = DataAdapter.CreateGearboxData(
-                vehicle, new VectoRunData() { EngineData = EngineData, AxleGearData = AxlegearData, VehicleData = tempVehicle },
-                null);
-            RetarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData);
+			var vectoRun = new VectoRunData()
+			{
+				EngineData = EngineData,
+				AxleGearData = AxlegearData,
+				VehicleData = tempVehicle,
+				Cycle = VTPCycle
+			};
+			
+			GearboxData = DataAdapter.CreateGearboxData(vehicle, vectoRun, null);
+			RetarderData = DataAdapter.CreateGenericRetarderData(vehicle.Components.RetarderInputData, vectoRun);
 
             //PTOTransmissionData =
             //    DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
@@ -179,7 +192,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                 DemandType = AuxiliaryDemandType.Direct,
                 Technology = new List<string>() { "default" },
                 ID = Constants.Auxiliaries.IDs.Fan,
-                PowerDemandMechCycleFunc = cycleEntry => engineFan.PowerDemand(cycleEntry.FanSpeed)
+                PowerDemandMechCycleFunc = cycleEntry => engineFan.PowerDemand(cycleEntry)
             });
 
             return retVal;
@@ -235,11 +248,21 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             //var ncvStd = DeclarationData.FuelData.Lookup(JobInputData.Vehicle.Components.EngineInputData.FuelType).LowerHeatingValueVecto;
             //var ncvCorrection = ncvStd / JobInputData.NetCalorificValueTestFuel;
             var mileageCorrection = GetMileagecorrectionFactor(JobInputData.Mileage);
-            vtpRunData.VTPData = new VTPData()
-            {
-                CorrectionFactor = mileageCorrection,
+			var correctionFactors = JobInputData.FuelNCVs.ToDictionary(
+				keySelector: f => f.Type, 
+				elementSelector: f => (f.NCV / DeclarationData.FuelData.Lookup(
+					f.Type, 
+					JobInputData.Vehicle.TankSystem).LowerHeatingValueVecto).Value() * mileageCorrection);
+            
+            vtpRunData.VTPData = new VTPData() {
+				CorrectionFactors = correctionFactors,
+				FuelNCVs = JobInputData.FuelNCVs
             };
+
             vtpRunData.DriverData = Driverdata;
+			vtpRunData.TorqueDriftLeftWheel = JobInputData.TorqueDriftLeftWheel;
+			vtpRunData.TorqueDriftRightWheel = JobInputData.TorqueDriftRightWheel;
+
             yield return vtpRunData;
         }
 

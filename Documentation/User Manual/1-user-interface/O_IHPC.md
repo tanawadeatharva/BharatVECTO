@@ -20,8 +20,14 @@ VECTO automatically uses relative paths if the input file (e.g. electric power m
 Make and Model
 :   Free text defining the gearbox model, type, etc.
 
+EM Type
+:   Type of the electric motor (ASM, PSM, ESM, RM)
+
 Inertia \[kgm²\]
 :   Rotational inertia of the electric machine defined at the output shaft of the EM. (Engineering mode only)
+
+Rated Power \[kW\]
+:    The nominal power the electric machine can provide continuously
 
 Continuous Torque \[Nm\]
 :    The nominal torque the electric machine can provide continuously
@@ -41,11 +47,14 @@ Overload Duration \[s\]
 Thermal Overload Recovery Factor  \[-\]
 :    The accumulated overload energy has to be below the max. overload capacity multiplied by this factor so that the peak power is available again.
 
+Drag Torque Curve
+:   The motor's drag torque over engine speed when the motor is not energized. The format is the same as for the normal electric motor (see [Electric Motor Drag Curve File (.vemd)](#electric-motor-drag-curve-file-.vemd)), however the values of the drag torque must be set to zero because the drag losses are already included in the IHPC gearbox loss maps due to the virtual split of electric machine and gearbox in the simulation.
+
 Full Load Curve
-:   TODO 
+:   Torque over engine speed the electric motor can apply on its output shaft. (see [IEPC Max Torque File (.viepcp)](#iepc-max-torque-file-.viepcp)). The max drive and max generation torque have to be provided for two different voltage levels.
 
 Power Map Per Gear
-:   Defines the electric power that is required to provide a certain mechanical power (torque and angular speed) at the motor's shaft. This map is used to calculate the electric power demand. The electric power consumption map shall cover a torque range exceeding the max. drive and max. generation torque and shall cover the speed range from 0 up to the maximum speed. (see [Electric Motor Map (.viepco)](#electric-motor-power-map-.vemo)). The power map has to be provided for two different voltage levels and all gears.
+:   Defines the electric power that is required to provide a certain mechanical power (torque and angular speed) at the motor's shaft. This map is used to calculate the electric power demand. The electric power consumption map shall cover a torque range exceeding the max. drive and max. generation torque and shall cover the speed range from 0 up to the maximum speed. (see [IEPC Power Map (.viepco)](#iepc-power-map-.viepco)). The power map has to be provided for two different voltage levels and all gears.
 
 Voltage Level Low/High
 :    Applicable voltage level for the electric power consumption map and max drive/generation torque curve

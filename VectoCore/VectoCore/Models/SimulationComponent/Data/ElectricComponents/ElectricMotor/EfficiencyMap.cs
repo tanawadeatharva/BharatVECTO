@@ -118,11 +118,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 
 			public readonly PerSecond MotorSpeed;
 			public readonly NewtonMeter Torque;
-			public readonly Watt PowerElectrical;
+			public Watt PowerElectrical;
 
 			public override string ToString()
 			{
-				return $"{MotorSpeed.AsRPM} / {Torque} / {PowerElectrical}";
+				return $"{MotorSpeed.AsRPM} [rpm] / {Torque} / {PowerElectrical}";
 			}
 		}
 
@@ -187,9 +187,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 		private NewtonMeter SearchTorqueForElectricPower(Watt batPower, PerSecond avgSpeed, NewtonMeter maxEmTorque,
 			EfficiencyResult elPowerMaxEM, double factor = 1.0, bool forceLinesearch = false)
 		{
-			var retVal = SearchAlgorithm.Search(
+			var delta = -maxEmTorque * 0.1 * (maxEmTorque > 0 ? -1 : 1);
+			if (delta.IsEqual(0)) {
+				delta = 0.1.SI<NewtonMeter>();
+			}
+            var retVal = SearchAlgorithm.Search(
 				maxEmTorque, elPowerMaxEM.ElectricalPower - batPower,
-				-maxEmTorque * 0.1 * (maxEmTorque > 0 ? -1 : 1),
+				delta,
 				getYValue: x => {
 					var myX = (EfficiencyResult)x;
 					return (myX.ElectricalPower - batPower) * factor;

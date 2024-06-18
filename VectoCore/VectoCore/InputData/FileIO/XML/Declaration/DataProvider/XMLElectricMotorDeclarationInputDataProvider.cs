@@ -13,6 +13,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
@@ -251,6 +252,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		private IList<IGearEntry> _gears;
 		private IList<IDragCurve> _dragCurves;
 
+		protected Watt _ratedPowerCalculated;
 
 		public XMLElectricMotorIEPCIInputDataProviderV23(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
 			: base(componentNode, sourceFile)
@@ -289,6 +291,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 
 		#region Implementation of IIEPCDeclarationInputData
+
+		public Watt TotalRatedPowerCalculated => _ratedPowerCalculated ?? (_ratedPowerCalculated = CalculateRatedPower());
+
+		protected virtual Watt CalculateRatedPower()
+		{
+			var gearRatioUsedForMeasurement = Gears
+				.Select(x => new { x.GearNumber, x.Ratio, Diff = Math.Round(Math.Abs(x.Ratio - 1), 6) }).GroupBy(x => x.Diff)
+				.OrderBy(x => x.Key).First().OrderBy(x => x.Ratio).Reverse().First();
+			var count = DesignTypeWheelMotor && NrOfDesignTypeWheelMotorMeasured == 1 ? 2 : 1;
+			var maxPwr = 0.SI<Watt>();
+			foreach (var entry in VoltageLevels.OrderBy(x => x.VoltageLevel).AsEnumerable()) {
+				var maxTq = IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count,
+					gearRatioUsedForMeasurement.Ratio);
+				if (maxTq.MaxPower > maxPwr) {
+					maxPwr = maxTq.MaxPower;
+				}
+			}
+
+			return maxPwr;
+		}
 
 		public virtual bool DifferentialIncluded => GetBool(XMLNames.IEPC_DifferentialIncluded);
 
@@ -411,7 +433,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				: null;
 
 			public virtual PerSecond MaxOutputShaftSpeed => ElementExists(XMLNames.Gear_MaxOutputShaftSpeed)
-				? GetDouble(XMLNames.Gear_MaxOutputShaftSpeed).SI<PerSecond>()
+				? GetDouble(XMLNames.Gear_MaxOutputShaftSpeed).RPMtoRad()
 				: null;
 
 			#endregion
@@ -510,6 +532,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public IList<IElectricMotorVoltageLevel> VoltageLevels => 
 			_voltageLevels ?? (_voltageLevels = GetVoltageLevels());
+
 		public TableData DragCurve => ReadDragCurve();
 		public TableData Conditioning => ElementExists(XMLNames.Conditioning)
 			? ReadConditioning() : null;

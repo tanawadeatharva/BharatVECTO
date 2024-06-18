@@ -163,9 +163,11 @@ namespace TUGraz.VectoCommon.InputData
 
 		IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; }
 
-		// fields for exempted vehicles
+		IVehicleInMotionChargingDeclaration InMotionCharging { get; }
 
-		bool ZeroEmissionVehicle { get; }
+        // fields for exempted vehicles
+
+        bool ZeroEmissionVehicle { get; }
 
 		bool HybridElectricHDV { get; }
 
@@ -232,7 +234,13 @@ namespace TUGraz.VectoCommon.InputData
 
 	}
 
-	public interface IVehicleComponentsDeclaration
+	public interface IVehicleInMotionChargingDeclaration 
+    {
+		IMCTechnology Technology { get; }
+	}
+
+
+    public interface IVehicleComponentsDeclaration
 	{
 		IAirdragDeclarationInputData AirdragInputData { get; }
 
@@ -494,7 +502,9 @@ namespace TUGraz.VectoCommon.InputData
 		DataSource DataSource { get; }
 
         bool Steered { get; }
-    }
+
+		NewtonMeter WheelEndFriction { get; }
+	}
 
 	public interface ITyreDeclarationInputData : IComponentInputData
 	{
@@ -729,6 +739,13 @@ namespace TUGraz.VectoCommon.InputData
 		TableData CycleData { get; }
 	}
 
+	public interface IFuelNCVData
+	{
+		FuelType Type { get; }
+
+		JoulePerKilogramm NCV { get; }
+    }
+
 	public interface IDriverDeclarationInputData : IDriverModelData
 	{
 		bool SavedInDeclarationMode { get; }
@@ -905,8 +922,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		public IADCDeclarationInputData ADC {get; set; }
 	}
-	
-	public interface IADCDeclarationInputData : IComponentInputData
+
+    public interface IADCDeclarationInputData : IComponentInputData
 	{
 		/// <summary>
 		/// P176
@@ -923,7 +940,11 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IIEPCDeclarationInputData : IComponentInputData 
 	{
 		ElectricMachineType ElectricMachineType { get; }
+		
 		Watt R85RatedPower { get; }
+		
+		Watt TotalRatedPowerCalculated { get; }
+
 		KilogramSquareMeter Inertia { get; } //RotationalInertia
 
 		bool DifferentialIncluded { get; }
@@ -1161,10 +1182,16 @@ namespace TUGraz.VectoCommon.InputData
 		IList<IResult> Results { get; }
 	}
 
-
-	public interface IResult
+	public enum ResultStatus
 	{
-		string ResultStatus { get; }
+		Success,
+		Error,
+		PrimaryRunIgnored
+	}
+
+    public interface IResult
+	{
+		ResultStatus ResultStatus { get; }
 
 		VehicleClass VehicleGroup { get; }
 
@@ -1310,7 +1337,7 @@ namespace TUGraz.VectoCommon.InputData
 		E4,
 		E_IEPC,
 		P1,
-		P2,P,
+		P2,
 		P2_5,
 		P3,
 		P4,

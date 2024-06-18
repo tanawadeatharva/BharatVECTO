@@ -61,6 +61,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         IFuelConsumptionWriter GetFuelConsumptionLorry(ICommonResultsWriterFactory factory, XNamespace ns);
         IElectricEnergyConsumptionWriter GetElectricEnergyConsumptionLorry(ICommonResultsWriterFactory factory, XNamespace ns);
         ICO2Writer GetCO2ResultLorry(ICommonResultsWriterFactory factory, XNamespace ns);
+		ICO2Writer GetCO2SummaryResultLorry(ICommonResultsWriterFactory factory, XNamespace ns);
 
         IReportResultsSummaryWriter GetLorryConvSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IReportResultsSummaryWriter GetLorryHEVNonOVCSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
@@ -79,6 +80,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		IElectricEnergyConsumptionWriter GetElectricEnergyConsumptionBus(ICommonResultsWriterFactory factory, XNamespace ns);
         ICO2Writer GetCO2ResultBus(ICommonResultsWriterFactory factory, XNamespace ns);
         ICO2Writer GetCO2ResultPEVBus(ICommonResultsWriterFactory factory, XNamespace ns);
+		ICO2Writer GetCO2SummaryResultBus(ICommonResultsWriterFactory factory, XNamespace ns);
+		ICO2Writer GetCO2SummaryResultPEVBus(ICommonResultsWriterFactory factory, XNamespace ns);
 
 
 
@@ -109,10 +112,22 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 	public interface IFuelConsumptionWriter
 	{
 		XElement GetElement(IResultEntry entry, IFuelConsumptionCorrection fuelConsumptionCorrection);
-		XElement GetElement(IWeightedResult entry, IFuelProperties fuel, Kilogram consumption);
+		
+		XElement[] GetElements(IWeightedResult entry);
 
-		IList<ConvertedSI> GetFuelConsumptionEntries(Kilogram fc,
-			IFuelProperties fuel, Meter distance, Kilogram payload, CubicMeter volume,
+		IList<ConvertedSI> GetFuelConsumptionEntries(
+			Kilogram fc,
+			IFuelProperties fuel,
+			Meter distance,
+			Kilogram payload,
+			CubicMeter volume,
+			double? passenger);
+
+		IList<ConvertedSI> GetFuelConsumptionEntries(
+			KilogramPerMeter fcPerMeter,
+			IFuelProperties fuel,
+			Kilogram payload,
+			CubicMeter volume,
 			double? passenger);
 	}
 
@@ -132,9 +147,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 	public interface IReportResultsSummaryWriter
 	{
-		XElement GetElement(IList<IResultEntry> entries);
+		XElement[] GetElement(IList<IResultEntry> entries);
 
-		XElement GetElement(IList<IOVCResultEntry> entries);
+		XElement[] GetElement(IList<IOVCResultEntry> entries);
 	}
 
 	public interface IElectricRangeWriter

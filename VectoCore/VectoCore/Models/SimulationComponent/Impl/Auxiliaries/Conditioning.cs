@@ -69,11 +69,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
 				case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.SerialHybridVehicle:
 				case VectoSimulationJobType.IEPC_S:
+				case VectoSimulationJobType.FCHV:
+				case VectoSimulationJobType.FCHV_IEPC:
 					return GetPEV_SHEV_PowerDemand(dataBus);
 				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.IHPC:
 					return GetP_HEV_PowerDemand(dataBus);
 				case VectoSimulationJobType.EngineOnlySimulation:
-				case VectoSimulationJobType.IHPC:
 				case VectoSimulationJobType.ConventionalVehicle:
 				default:
 					throw new ArgumentOutOfRangeException($"{nameof(dataBus)}");
@@ -100,8 +102,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
 				var iceInfo = dataBus.EngineInfo;
 				var emPower = elInfo.ElectricMotorSpeed * elInfo.ElectricMotorTorque;
 				var icePower = iceInfo.EngineSpeed * iceInfo.EngineTorque;
-
-				xFactor = emPower.Abs() / (emPower.Abs() + icePower.Abs());
+				if (!(emPower + icePower).IsEqual(0)) {
+					xFactor = emPower.Abs() / (emPower.Abs() + icePower.Abs());
+				}
 			}
 
 			return _electricPowerDemand * xFactor;

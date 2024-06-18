@@ -3,7 +3,7 @@
     <RootNamespace>TUGraz.VectoCore.Tests</RootNamespace>
     <AssemblyName>VectoCoreTest</AssemblyName>
     <TargetFrameworks>net6.0</TargetFrameworks>
-    <DefineConstants />
+     
 	<!--uncomment to add windows forms an enable plotting of diagrams in some testcases-->
 	<!--<DefineConstants>$(DefineConstants);TRACE</DefineConstants>-->
 	<!--<UseWindowsForms>true</UseWindowsForms>-->
@@ -13,7 +13,7 @@
     <DebugType>full</DebugType>
   </PropertyGroup>
 	<!--uncomment to add windows forms an enable plotting of diagrams in some testcases-->
-	<PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA; $(DefineConstants), '^(.*;)*TRACE(;.*)*$'))">
+	<PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA; $(DefineConstants), '^(.*;)*VECTOTRACE(;.*)*$'))">
 		<TargetFrameworks>net6.0-windows</TargetFrameworks>
 		<UseWindowsForms>true</UseWindowsForms>
 	</PropertyGroup>
@@ -21,7 +21,7 @@
 		<DefineConstants>$(DefineConstants);MOCKUP</DefineConstants>
 	</PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="HIC.System.Windows.Forms.DataVisualization" Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA; $(DefineConstants), '^(.*;)*TRACE(;.*)*$'))" Version="1.0.1" />
+    <PackageReference Include="HIC.System.Windows.Forms.DataVisualization" Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA; $(DefineConstants), '^(.*;)*VECTOTRACE(;.*)*$'))" Version="1.0.1" />
     <PackageReference Include="Moq" Version="4.18.4" />
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
@@ -29,6 +29,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Ninject" Version="3.3.6" />
     <PackageReference Include="NLog" Version="4.7.13" />
+    <PackageReference Include="ScottPlot" Version="4.1.68" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,6 +44,69 @@
   </ItemGroup>
 
 	<ItemGroup>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\AMT.vgbx">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Axle_4x2_Tractor.vtlm">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Default.vrlm">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV.vecto">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV.vveh">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV_singleFc.vecto">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV_singleFc.vveh">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV_singleFc_300kW_fc.vecto">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV_singleFc_300kW_fc.vveh">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Gear.vtlm">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\GenericBattery_80kWh.vbatr">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\GenericBattery_80kWh.vbatv">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\GenericBattery_80kWh_750V.vbat">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\GenericDrag_400kW_1550Nm.vemd">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\GenericFuelCellComponent_300kW.vfcc">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Generic_EM_400kW_1550Nm.vem">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Generic_EM_400kW_1550Nm.vemo">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Generic_EM_400kW_1550Nm.vemp">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\MaxCurrent.vimax">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Truck.vacc">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\PostProcessing\LongHaul_short.vdri">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 		<None Update="TestData\Hybrids\Battery\GenericBattery_JB_Connector_included.vbat">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
@@ -77,12 +141,18 @@
     </None>
   </ItemGroup>
 
+
   <ItemGroup>
-    <Folder Include="InputData\DeclarationDataAdapterTest\" />
+      <Content Include="$(SolutionDir)Generic Vehicles\**\*.*">
+          <Link>TestData\Shipped_Generic\%(RecursiveDir)%(FileName)%(Extension)</Link>
+          <!--<TargetPath>TestData\Integration\Multistage</TargetPath>-->
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Folder Include="InputData\DeclarationDataAdapterTest\" />
     <Folder Include="Integration\Declaration\PrimaryBus\" />
     <Folder Include="Models\Declaration\BusAux\" />
+    <Folder Include="TestData\IMC\Declaration\" />
     <Folder Include="TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\CompletedBus\VIF\" />
-    <Folder Include="TestUtils\" />
   </ItemGroup>
 
   <ItemGroup>

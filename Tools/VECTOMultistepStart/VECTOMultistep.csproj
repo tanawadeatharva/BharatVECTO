@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>VECTOMultistep</AssemblyName>
+    <ApplicationIcon>Icon2.ico</ApplicationIcon>
+    <RootNamespace>TUGraz.VECTO</RootNamespace>
+    <TargetFrameworks>net48</TargetFrameworks>
+     
+    <Configurations>Debug;Release;MockupDebug</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\VECTOStart\StarterHelper.cs" Link="StarterHelper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+</Project>

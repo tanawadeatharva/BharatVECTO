@@ -144,6 +144,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 		public bool SerializeVectoRunData { get; set; }
 
+		public List<string> MissingInputEntries { get; protected set; } = new List<string>();
 
 		/// <summary>
 		/// Only for testing purposes
@@ -161,6 +162,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			bool firstRun = true;
 			var warning1Hz = false;
 			if (!_simulate) {
+				if (MissingInputEntries.Count > 0) {
+					throw new VectoException(MissingInputEntries.Select(x => $"<{x}> is bad or missing.").Join("\n"));
+				}
 				yield break;
 			}
 			foreach (var data in RunDataFactory.NextRun()) {
@@ -268,7 +272,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 					var container = PowertrainBuilder.Build(data, modData, sumWriter);
 					
-					run = new DistanceRun(container, new FollowUpRunCreator(data.IterativeRunStrategy)); 
+					run = new DistanceRun(container, new FollowUpRunCreator(data.IterativeRunStrategy), new DefaultPostMortemAnalyzer(data.PostMortemStrategy)); 
 					break;
 				case CycleType.EngineOnly:
 					if ((data.SimulationType & SimulationType.EngineOnly) == 0) {

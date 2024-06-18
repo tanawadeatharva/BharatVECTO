@@ -9,6 +9,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
@@ -208,7 +209,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		private IVehicleDeclarationInputData VehicleCreator(string version, XmlNode node, string arg3)
 		{
-			var vehicle = Factory.CreateVehicleData(version, null, node, arg3);
+			var vehicle = Factory.CreateVehicleData(version, null, node, arg3, false);
 
 			if (vehicle.ComponentNode != null)
 				vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
@@ -548,6 +549,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public ConsumerTechnology? DoorDriveTechnology => GetVehiclePropertyValue<ConsumerTechnology?>(nameof(DoorDriveTechnology));
 
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS => GetADAS();
+		public IVehicleInMotionChargingDeclaration InMotionCharging => new XMLIMCData();
 
 		private IAdvancedDriverAssistantSystemDeclarationInputData GetADAS()
 		{
@@ -712,7 +714,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return validAirdragEntries;
 		}
 
-		private bool IsInputDataCompleteExempted(VectoSimulationJobType jobType, bool fullCheck)
+        private bool IsInputDataCompleteExempted(VectoSimulationJobType jobType, bool fullCheck)
 		{
 			if (fullCheck)
 			{
@@ -754,7 +756,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			if (fullCheck) {
 				//use Binary AND to execute all Statements and gather information about missing parameters.
 				return InputComplete(Model, nameof(Model))
-					& InputComplete(LegislativeClass, nameof(LegislativeClass))
+                    & InputComplete(LegislativeClass, nameof(LegislativeClass))
 					& InputComplete(CurbMassChassis, nameof(CurbMassChassis))
 					& InputComplete(GrossVehicleMassRating, nameof(GrossVehicleMassRating))
 					& MethodComplete(IsAirdragEntriesValid(), nameof(IsAirdragEntriesValid))
@@ -777,7 +779,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			}
 			
 		
-			return  InputComplete(Model, nameof(Model)) 
+			return  InputComplete(Model, nameof(Model))
 					&& InputComplete(LegislativeClass, nameof(LegislativeClass)) 
 					&& InputComplete(CurbMassChassis, nameof(CurbMassChassis)) 
 					&& InputComplete(GrossVehicleMassRating, nameof(GrossVehicleMassRating))
@@ -1173,14 +1175,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			if (fullCheck) {
 				//use Binary AND to execute all Statements and gather information about missing parameters.
 				return InputComplete(_consolidateElectricConsumerData, nameof(_consolidateElectricConsumerData))
-					& _consolidateElectricConsumerData.IsInputDataCompleteFullCheck(jobType)
+					& ((_consolidateElectricConsumerData != null)
+                        && _consolidateElectricConsumerData.IsInputDataCompleteFullCheck(jobType))
 					& InputComplete(_consolidatedHVACBusAuxiliariesData, nameof(_consolidatedHVACBusAuxiliariesData))
-					& _consolidatedHVACBusAuxiliariesData.IsInputDataCompleteFullCheck(jobType);
+					& ((_consolidatedHVACBusAuxiliariesData != null)
+						&& _consolidatedHVACBusAuxiliariesData.IsInputDataCompleteFullCheck(jobType));
 
 			}
 			return InputComplete(_consolidateElectricConsumerData, nameof(_consolidateElectricConsumerData)) 
 					&& _consolidateElectricConsumerData.IsInputDataComplete(jobType)
 					&& InputComplete(_consolidatedHVACBusAuxiliariesData, nameof(_consolidatedHVACBusAuxiliariesData))
+					&& (_consolidatedHVACBusAuxiliariesData != null)
 					&& _consolidatedHVACBusAuxiliariesData.IsInputDataComplete(jobType);
 		}
 
@@ -1199,8 +1204,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		protected override IList<string> GetInvalidEntriesTemplate(VectoSimulationJobType jobType)
 		{
-			return _invalidEntries.Concat(_consolidateElectricConsumerData.GetInvalidEntries(jobType))
-				.Concat(_consolidatedHVACBusAuxiliariesData.GetInvalidEntries(jobType)).ToList();
+			return _invalidEntries.Concat(_consolidateElectricConsumerData?.GetInvalidEntries(jobType) 
+					?? new List<string>() { XMLNames.BusAux_ElectricSystem })
+				.Concat(_consolidatedHVACBusAuxiliariesData?.GetInvalidEntries(jobType) ?? new List<string>()).ToList();
 		}
 
 
@@ -1348,6 +1354,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 				case VectoSimulationJobType.IEPC_S:
 				case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.IHPC:
+				case VectoSimulationJobType.FCHV:
+				case VectoSimulationJobType.FCHV_IEPC:
 					return WaterElectricHeater != null && AirElectricHeater != null && OtherHeatingTechnology != null;
 				default:
 					return false;
@@ -1366,7 +1374,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 						& InputComplete(DoubleGlazing, nameof(DoubleGlazing))
 						& InputComplete(AdjustableAuxiliaryHeater, nameof(AdjustableAuxiliaryHeater))
 						& InputComplete(SeparateAirDistributionDucts, nameof(SeparateAirDistributionDucts))
-						& MethodComplete(RequiredParametersForJobType(jobType), nameof(RequiredParametersForJobType));
+						& MethodComplete(RequiredParametersForJobType(jobType), "Electric Heater");
 			}
 			return MethodComplete(IsCorrectSystemConfiguration(), nameof(IsCorrectSystemConfiguration))
 					&& InputComplete(HeatPumpTypeCoolingDriverCompartment, nameof(HeatPumpTypeCoolingDriverCompartment))
@@ -1377,7 +1385,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					&& InputComplete(DoubleGlazing, nameof(DoubleGlazing))
 					&& InputComplete(AdjustableAuxiliaryHeater, nameof(AdjustableAuxiliaryHeater))
 					&& InputComplete(SeparateAirDistributionDucts, nameof(SeparateAirDistributionDucts))
-					&& MethodComplete(RequiredParametersForJobType(jobType), nameof(RequiredParametersForJobType));
+					&& MethodComplete(RequiredParametersForJobType(jobType), "Electric Heater");
 		}
 
 		public override string GetInvalidEntry()

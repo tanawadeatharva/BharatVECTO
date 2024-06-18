@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Moq;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
@@ -1339,9 +1340,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		public const string Group5_P3_APT = @"TestData/Hybrids/GenericVehicle_Group5_P3_APT/P3 APT Group 5.vecto";
 		public const string Group5_P4_APT = @"TestData/Hybrids/GenericVehicle_Group5_P4_APT/P4 APT Group 5.vecto";
 
+		public const string Group5_P4_APT_VehiclePropLimit = @"TestData/Hybrids/GenericVehicle_Group5_P4_APT/P4 APT Group 5_LimitVehiclePropTq.vecto";
 
-		[
-			TestCase(Group5_P3_APT, 0, TestName = "P3 APT Hybrid Group 5 DriveCycle LongHaul"),
+
+        [
+            TestCase(Group5_P3_APT, 0, TestName = "P3 APT Hybrid Group 5 DriveCycle LongHaul"),
 			TestCase(Group5_P3_APT, 1, TestName = "P3 APT Hybrid Group 5 DriveCycle Coach"),
 			TestCase(Group5_P3_APT, 2, TestName = "P3 APT Hybrid Group 5 DriveCycle Construction"),
 			TestCase(Group5_P3_APT, 3, TestName = "P3 APT Hybrid Group 5 DriveCycle HeavyUrban"),
@@ -1363,8 +1366,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			TestCase(Group5_P4_APT, 8, TestName = "P4 APT Hybrid Group 5 DriveCycle Urban"),
 			TestCase(Group5_P4_APT, 9, TestName = "P4 APT Hybrid Group 5 DriveCycle UrbanDelivery"),
 
-		]
-		public void P4APTHybridGroup5DriveCycle(string jobFile, int cycleIdx)
+			TestCase(Group5_P4_APT_VehiclePropLimit, 6, TestName = "P4 APT Hybrid Group 5 BoostingLimit DriveCycle RegionalDelivery"),
+
+        ]
+        public void P4APTHybridGroup5DriveCycle(string jobFile, int cycleIdx)
 		{
 			RunHybridJob(jobFile, cycleIdx);
 		}
@@ -2056,6 +2061,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 					TyreTestLoad = 30436.SI<Newton>()
 				},
 			};
+			var inputData = new Mock<IVehicleDeclarationInputData>();
+			inputData.Setup(v => v.VehicleType).Returns(VectoSimulationJobType.ParallelHybridVehicle);
 			return new VehicleData {
 				AirDensity = DeclarationData.AirDensity,
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
@@ -2066,7 +2073,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				SavedInDeclarationMode = false,
 				ADAS = new VehicleData.ADASData() {
 					EngineStopStart = true
-				}
+				},
+				InputData = inputData.Object,
 			};
 		}
 
@@ -2075,8 +2083,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			return new AirdragData() {
 				CrossWindCorrectionCurve =
 					new CrosswindCorrectionCdxALookup(
-						3.2634.SI<SquareMeter>(),
-						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
+						3.2634.SI<SquareMeter>(), 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+                        CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
 						CrossWindCorrectionMode.NoCorrection),
 			};
 		}

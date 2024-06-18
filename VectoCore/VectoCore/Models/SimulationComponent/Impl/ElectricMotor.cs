@@ -82,6 +82,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var maxTorque = electricPower > 0
 				? GetMaxRecuperationTorque(volt, dt, avgEmSpeed, gear)
 				: GetMaxDriveTorque(volt, dt, avgEmSpeed, gear);
+			if (maxTorque == null) {
+				return null;
+			}
+
 			var tqEmMap = ModelData.EfficiencyData.EfficiencyMapLookupTorque(volt, electricPower, avgEmSpeed, maxTorque, gear);
 			
 			if (tqEmMap == null) {
@@ -305,10 +309,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var electricSupplyResponse =
 				ElectricPower.Request(absTime, dt, electricPower, dryRun);
-			//if (!dryRun && !DataBus.IsTestPowertrain && BatteryElectricPowertrain && electricSupplyResponse is ElectricSystemUnderloadResponse) {
-			//	return new ResponseBatteryEmpty(this, electricSupplyResponse);
-			//}
-			if (NextComponent != null && !dryRun && !DataBus.IsTestPowertrain && !emOff && !(electricSupplyResponse is ElectricSystemResponseSuccess)) {
+
+			if (!dryRun && electricSupplyResponse is ElectricSystemOverloadResponse &&
+				electricPower.IsEqual(0.SI<Watt>())) {
+				//We have a problem here! We cannot further reduce the power demand of the em.
+				//There is a overload in the ES even if we are not demanding any power.
+
+
+			}
+
+            if (NextComponent != null && !dryRun && !DataBus.IsTestPowertrain && !emOff && !(electricSupplyResponse is ElectricSystemResponseSuccess)) {
 				if ( !avgEmSpeed.IsEqual(DataBus.HybridControllerInfo.ElectricMotorSpeed(Position) / ModelData.RatioADC)) {
 					return new ResponseInvalidOperatingPoint(this) {
 						ElectricMotor = {
@@ -319,7 +329,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							PowerRequest = outTorque * avgDtSpeed,
 							DeRatingActive = DeRatingActive,
 						}
-							};
+					};
 				}
 				throw new VectoException(
 					"Invalid operating point provided by strategy! EM Torque: {0}, req. electric Power: {1}, battery demand motor: {3}, max Power from Battery: {2}",
@@ -505,7 +515,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var electricSystemResponse = ElectricPower.Request(0.SI<Second>(), dt, 0.SI<Watt>(), true);
 			var maxBatPower = electricSystemResponse.MaxPowerDrive;
 
-			if (maxBatPower.IsGreater(0, 1e-3)) {
+			if (maxBatPower.IsGreaterOrEqual(0, 1e-3)) {
 				// has to be negative for propelling - so battery is below min SoC
 				return null;
 			}

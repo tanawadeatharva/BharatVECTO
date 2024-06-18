@@ -171,7 +171,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (component is IGearboxInfo c18) {
 				GearboxInfo = c18;
 				commitPriority = 4;
-				HasGearbox = true;
+				_hasGearboxComponent = true;
 			}
 
 			if (component is IVehicleInfo c19) {
@@ -244,9 +244,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						}
 					}
 
-#if DEBUG
+#if DEBUG 
 					if (!found) {
-						Console.WriteLine("Test Component is not updateable: " + c.GetType());
+						//Console.WriteLine("Test Component is not updateable: " + c.GetType());
 					}
 #endif
 				}
@@ -255,7 +255,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var sourceList = ComponentUpdateList.Select(st => st.Item2).ToArray();
 				foreach (var source in realComponents) {
 					if (!sourceList.Contains(source)){
-						Console.WriteLine("Real Component is not used for update: " + source.GetType());
+						//Console.WriteLine("Real Component is not used for update: " + source.GetType());
 					}
 				}
 #endif
@@ -337,7 +337,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public virtual bool HasCombustionEngine { get; private set; }
 
-		public virtual bool HasGearbox { get; private set; }
+		/// <summary>
+		/// True if the powertrain has any gearbox component
+		/// </summary>
+		private bool _hasGearboxComponent = false;
+
+		/// <summary>
+		/// True if the powertrain has a gearbox component (No dummy gearbox)
+		/// </summary>
+		public virtual bool HasGearbox
+		{
+			get
+			{
+				var retVal = _hasGearboxComponent && !(GearboxInfo is DummyGearboxInfo);
+				//Maybe additional logic is needed for iepc?
+
+
+				return retVal;
+			}
+		}
 
 		[Required, ValidateObject]
 		public virtual VectoRunData RunData { get; set; }

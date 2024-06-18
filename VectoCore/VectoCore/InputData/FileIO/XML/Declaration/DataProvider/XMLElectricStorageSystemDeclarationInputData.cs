@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -14,6 +15,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Utils;
 
@@ -242,7 +244,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			foreach (DataRow row in corrected.Rows) {
 				for (var i = 1; i < nrCols; i++) {
 					var uncorr = row.ParseDouble(i);
-					row[i] = uncorr * dcir_corr.Value();
+					row[i] = (uncorr * dcir_corr.Value()).ToXMLFormat(2);
 				}
 			}
 
@@ -271,10 +273,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			var maxDischargeCurrent = maxDischargeCurrentRow.Field<string>(BatteryMaxCurrentReader.Fields.MaxDischargeCurrent).ToDouble() * 5;
 			var newMap = new string[] {
 				$"{BatteryMaxCurrentReader.Fields.StateOfCharge}, {BatteryMaxCurrentReader.Fields.MaxChargeCurrent}, {BatteryMaxCurrentReader.Fields.MaxDischargeCurrent}",
-				$"  0, {maxChargeCurrent}, 0",
-				$" 30, {maxChargeCurrent}, {maxDischargeCurrent}",
-				$" 80, {maxChargeCurrent}, {maxDischargeCurrent}",
-				$"100, 0, {maxDischargeCurrent}"
+				$"  0, {maxChargeCurrent.ToXMLFormat(2)}, 0",
+				$" 30, {maxChargeCurrent.ToXMLFormat(2)}, {maxDischargeCurrent.ToXMLFormat(2)}",
+				$" 80, {maxChargeCurrent.ToXMLFormat(2)}, {maxDischargeCurrent.ToXMLFormat(2)}",
+				$"100, 0, {maxDischargeCurrent.ToXMLFormat(2)}"
 			};
 			return VectoCSVFile.ReadStream(newMap.Join(Environment.NewLine).ToStream());
 		}
@@ -413,7 +415,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Implementation of ISuperCapDeclarationInputData
 
 		public virtual Farad Capacity => GetDouble(XMLNames.Capacitor_Capacitance).SI<Farad>();
-		public virtual Ohm InternalResistance => GetDouble(XMLNames.Capacitor_InternalResistance).SI(Unit.SI.Milli.Ohm).Cast<Ohm>();
+		public virtual Ohm InternalResistance
+		{
+			get
+			{
+				var value = GetDouble(XMLNames.Capacitor_InternalResistance).SI<Ohm>();
+				if (value.IsEqual(0)) {
+					value = DeclarationData.SuperCapMinInternalResistance;
+				}
+
+				if (CertificationMethod == CertificationMethod.StandardValues) {
+					var estCellCnt = MaxVoltage / DeclarationData.SuperCapReferenceVoltage;
+					value = value / estCellCnt * DeclarationData.SuperCapInternalResistanceStdValuesCorrection;
+					if (value < DeclarationData.SuperCapMinInternalResistance) {
+						value = DeclarationData.SuperCapMinInternalResistance;
+					}
+				}
+				return value;
+			}
+		}
+
 		public virtual Volt MinVoltage => GetDouble(XMLNames.Capacitor_MinVoltage).SI<Volt>();
 		public virtual Volt MaxVoltage => GetDouble(XMLNames.Capacitor_MaxVoltage).SI<Volt>();
 		public virtual Ampere MaxCurrentCharge => GetDouble(XMLNames.Capacitor_MaxChargingCurrent).SI<Ampere>();

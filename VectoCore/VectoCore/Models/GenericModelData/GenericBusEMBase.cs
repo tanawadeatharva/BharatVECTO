@@ -36,14 +36,6 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 
 		protected TableData ReadCsvResource(string ressourceId)
 		{
-			var tmp = ressourceId.Replace(DeclarationData.DeclarationDataResourcePrefix + ".", "");
-			var parts = tmp.Split('.');
-			var fileName = Path.Combine("Declaration", string.Join(".", parts[parts.Length - 2], parts[parts.Length - 1]));
-			if (File.Exists(fileName))
-			{
-				return VectoCSVFile.Read(fileName);
-			}
-
 			return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(ressourceId), source: ressourceId);
 		}
 	}

@@ -54,20 +54,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 		public IInputDataProvider Create(string filename)
 		{
 			using (var reader = XmlReader.Create(filename)) {
-				return ReadXmlDoc(reader, filename);
+				return ReadXmlDoc(reader, filename, false);
 			}
 		}
 
 		public IInputDataProvider Create(Stream inputData)
 		{
 			using (var reader = XmlReader.Create(inputData)) {
-				return ReadXmlDoc(reader, null);
+				return ReadXmlDoc(reader, null, false);
 			}
 		}
 
 		public IInputDataProvider Create(XmlReader inputData)
 		{
-			return ReadXmlDoc(inputData, null);
+			return ReadXmlDoc(inputData, null, false);
 		}
 
 		public IEngineeringInputDataProvider CreateEngineering(string filename)
@@ -91,22 +91,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 		}
 
 
-		public IDeclarationInputDataProvider CreateDeclaration(string filename)
+		public IDeclarationInputDataProvider CreateDeclaration(string filename, bool allowDeprecated = false)
 		{
 			using (var reader = XmlReader.Create(filename)) {
-				return DoCreateDeclaration(reader, filename);
+				return DoCreateDeclaration(reader, filename, allowDeprecated);
 			}
 		}
 
 		public IDeclarationInputDataProvider CreateDeclaration(XmlReader inputData)
 		{
-			return DoCreateDeclaration(inputData, null);
+			return DoCreateDeclaration(inputData, null, false);
 		}
 
 
-		private IDeclarationInputDataProvider DoCreateDeclaration(XmlReader inputData, string source)
+		private IDeclarationInputDataProvider DoCreateDeclaration(XmlReader inputData, string source, bool allowDeprecated)
 		{
-			var retVal = ReadXmlDoc(inputData, source) as IDeclarationInputDataProvider;
+			var retVal = ReadXmlDoc(inputData, source, allowDeprecated) as IDeclarationInputDataProvider;
 			if (retVal == null) {
 				throw new VectoException("Input data is not in declaration mode!");
 			}
@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 
 		private IEngineeringInputDataProvider DoCreateEngineering(XmlReader inputData, string source)
 		{
-			var retVal = ReadXmlDoc(inputData, source) as IEngineeringInputDataProvider;
+			var retVal = ReadXmlDoc(inputData, source, false) as IEngineeringInputDataProvider;
 			if (retVal == null) {
 				throw new VectoException("Input data is not in engineering mode!");
 			}
@@ -124,7 +124,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 			return retVal;
 		}
 
-		private IInputDataProvider ReadXmlDoc(XmlReader inputData, string source)
+		private IInputDataProvider ReadXmlDoc(XmlReader inputData, string source, bool allowDeprecated)
 		{
 			var xmlDoc = new XmlDocument();
 			xmlDoc.Load(inputData);
@@ -143,7 +143,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 
 			switch (documentType.Value)
 			{
-				case XmlDocumentType.DeclarationJobData: return ReadDeclarationJob(xmlDoc, source);
+				case XmlDocumentType.DeclarationJobData: return ReadDeclarationJob(xmlDoc, source, allowDeprecated);
 				case XmlDocumentType.EngineeringJobData: return ReadEngineeringJob(xmlDoc, source);
 				//case XmlDocumentType.PrimaryVehicleBusOutputData: return ReadPrimaryVehicleDeclarationJob(xmlDoc, source);
 				case XmlDocumentType.MultistepOutputData: return ReadMultistageDeclarationJob(xmlDoc, source);
@@ -177,12 +177,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 			return input;
 		}
 
-		protected virtual IDeclarationInputDataProvider ReadDeclarationJob(XmlDocument xmlDoc, string source)
+		protected virtual IDeclarationInputDataProvider ReadDeclarationJob(XmlDocument xmlDoc, string source, 
+			bool allowDeprecated)
 		{
 			var versionNumber = XMLHelper.GetXsdType(xmlDoc.DocumentElement?.SchemaInfo.SchemaType);
 			try {
-				var input = DeclarationFactory.CreateInputProvider(versionNumber, xmlDoc, source);
-				input.Reader = DeclarationFactory.CreateInputReader(versionNumber, input, xmlDoc.DocumentElement);
+				var input = DeclarationFactory.CreateInputProvider(versionNumber, xmlDoc, source, allowDeprecated);
+				input.Reader = DeclarationFactory.CreateInputReader(versionNumber, input, xmlDoc.DocumentElement, allowDeprecated);
 				return input;
 			} catch (Exception e) {
 				throw new VectoException("Failed to read Declaration job version {0}", e, versionNumber);
@@ -220,14 +221,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 			return CreateFromFile<IAirdragDeclarationInputData>(filename);
 		}
 
-		private TOut CreateFromFile<TOut>(string filename) where TOut : class
+		// when using this method to create component data, make sure to have a binding like this for the component:
+		//  Bind<IComponentInputData>().ToConstructor<XMLElectricMotorDeclarationInputDataProviderV23>((syntax) => new XMLElectricMotorDeclarationInputDataProviderV23(syntax.Inject<XmlNode>(), syntax.Inject<string>()))
+		//   .Named(XMLElectricMotorDeclarationInputDataProviderV23.QUALIFIED_XSD_TYPE);
+		public TOut CreateFromFile<TOut>(string filename) where TOut : class
 		{
 			using (var reader = XmlReader.Create(filename)) {
 				return CreateFromXmlReader<TOut>(reader, filename);
 			}
 		}
 
-		private TOut CreateFromStream<TOut>(Stream inputData) where TOut : class
+		public TOut CreateFromStream<TOut>(Stream inputData) where TOut : class
 		{
 			using (var reader = XmlReader.Create(inputData)) {
 				return CreateFromXmlReader<TOut>(reader, null);
@@ -254,11 +258,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 		public IAirdragDeclarationInputData CreateAirdrag(XmlReader inputData)
 		{
 			throw new NotImplementedException();
-		}
+        }
 
 		#endregion
 
-		private IComponentInputData ReadXMLDoc(XmlReader inputData, string fileName)
+        private IComponentInputData ReadXMLDoc(XmlReader inputData, string fileName)
 		{
 			var xmlDoc = new XmlDocument();
 			xmlDoc.Load(inputData);

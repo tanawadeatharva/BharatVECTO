@@ -60,6 +60,8 @@ namespace TUGraz.VectoCommon.InputData
 		ConventionalVehicle = 1,
 		ParallelHybridVehicle,
 		SerialHybridVehicle,
+		FCHV,
+		FCHV_IEPC,
 		BatteryElectricVehicle,
 		EngineOnlySimulation,
 		IEPC_E,
@@ -72,6 +74,12 @@ namespace TUGraz.VectoCommon.InputData
 		public const string Conventional = "Conventional";
 		public const string Hybrid = "Hybrid";
 		public const string PureElectric = "PureElectric";
+		
+
+		public static bool IsBatteryElectric(this VectoSimulationJobType jobType)
+		{
+			return jobType == VectoSimulationJobType.BatteryElectricVehicle || jobType == VectoSimulationJobType.IEPC_E;
+		}
 
 		public static string GetPowertrainArchitectureType(this VectoSimulationJobType jobType)
 		{
@@ -87,6 +95,9 @@ namespace TUGraz.VectoCommon.InputData
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
 					return PureElectric;
+				case VectoSimulationJobType.FCHV:
+				case VectoSimulationJobType.FCHV_IEPC:
+					throw new NotImplementedException("Relevant for Reports");
 				default:
 					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
 			}
@@ -105,23 +116,39 @@ namespace TUGraz.VectoCommon.InputData
 					return GetSHEVArchitecureID(em);
 
 				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.FCHV:
 					return GetPEVArchId(emPos: em);
 
 				case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.IEPC_S:
+				case VectoSimulationJobType.FCHV_IEPC:
 					return GetIepcArchitectureId(jobType, em);
 
 				case VectoSimulationJobType.IHPC:
 					return ArchitectureID.P2;
-					break;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
 			}
-
-
-
-
-			return ArchitectureID.UNKNOWN;
+		}
+		
+		public static bool HasEngine(this VectoSimulationJobType jobType)
+		{
+			switch (jobType) {
+				case VectoSimulationJobType.ConventionalVehicle:
+				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.SerialHybridVehicle:
+				case VectoSimulationJobType.EngineOnlySimulation:
+				case VectoSimulationJobType.IHPC:
+				case VectoSimulationJobType.IEPC_S:
+					return true;
+				case VectoSimulationJobType.FCHV:
+				case VectoSimulationJobType.FCHV_IEPC:
+				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.IEPC_E:
+					return false;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
+			}
 		}
 
 		private static ArchitectureID GetIepcArchitectureId(VectoSimulationJobType jobType, PowertrainPosition em)
@@ -132,6 +159,7 @@ namespace TUGraz.VectoCommon.InputData
 
 			switch (jobType) {
 				case VectoSimulationJobType.IEPC_E:
+				case VectoSimulationJobType.FCHV_IEPC:
 					return ArchitectureID.E_IEPC;
 				case VectoSimulationJobType.IEPC_S:
 					return ArchitectureID.S_IEPC;
@@ -241,10 +269,12 @@ namespace TUGraz.VectoCommon.InputData
 		
 		double InitialSOC { get; }
 
-		// input parameters for road sweeper use case
+		new IVehicleInMotionChargingEngineering InMotionCharging { get; }
+
+        // input parameters for road sweeper use case
 
 
-		VectoSimulationJobType VehicleType { get; }
+        VectoSimulationJobType VehicleType { get; }
 		GearshiftPosition PTO_DriveGear { get; }
 
 		PerSecond PTO_DriveEngineSpeed { get; }
@@ -255,6 +285,13 @@ namespace TUGraz.VectoCommon.InputData
 		DataSource DataSource { get; }
 	}
 
+	public interface IVehicleInMotionChargingEngineering : IVehicleInMotionChargingDeclaration
+    {
+		bool Enabled { get; }
+		double ShareIMCAvailabilityTotalMission { get; }
+		SquareMeter DeltaCdxA { get; }
+		bool IMCOnMotorwayOnly { get; }
+    }
 
 	public interface IVehicleComponentsEngineering
 	{
@@ -290,6 +327,8 @@ namespace TUGraz.VectoCommon.InputData
 		IElectricMachinesEngineeringInputData ElectricMachines { get; }
 
 		IIEPCEngineeringInputData IEPCEngineeringInputData { get; }
+
+		IFuelCellSystemEngineeringInputData FuelCellSystemInputData { get; }
 	}
 
 	public interface IAxlesEngineeringInputData
@@ -638,6 +677,23 @@ namespace TUGraz.VectoCommon.InputData
 	public interface ISuperCapEngineeringInputData : ISuperCapDeclarationInputData
 	{
 	}
+
+	public interface IFuelCellSystemEngineeringInputData
+	{
+		IList<FuelCellStringEntry<IFuelCellComponentEngineeringInputData>> FuelCellStrings { get; }
+	}
+	public class FuelCellStringEntry<T> where T : class, IFuelCellComponentEngineeringInputData //Generic to reuse for declaration?
+	{
+		public int Count { get; set; }
+		public T FuelCellComponent { get; set; }
+	}
+    public interface IFuelCellComponentEngineeringInputData : IComponentInputData
+	{
+		TableData MassFlowMap { get; }
+		Watt MaxElectricPower { get; }
+
+		Watt MinElectricPower { get; }
+    }
 
 	public interface IDriverModelData { }
 

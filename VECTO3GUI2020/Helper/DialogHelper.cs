@@ -2,7 +2,9 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Threading;
 using VECTO3GUI2020.Properties;
+using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
 
 namespace VECTO3GUI2020.Helper
@@ -143,13 +145,21 @@ namespace VECTO3GUI2020.Helper
 			MessageBoxButton button,
 			MessageBoxImage icon)
 		{
-			return MessageBox.Show(messageBoxText, caption, button, icon);
+			var t = Application.Current.Dispatcher
+				.Invoke(() => MessageBox.Show(messageBoxText, caption, button, icon));
+
+			return t;
+            //return MessageBox.Show(messageBoxText, caption, button, icon);
 		}
 
 		public MessageBoxResult ShowMessageBox(string messageBoxText, string caption)
 		{
-			return MessageBox.Show(messageBoxText, caption);
-		}
+			var t = Application.Current.Dispatcher
+				.Invoke(() => MessageBox.Show(messageBoxText, caption), DispatcherPriority.Send);
+
+			return t;
+            //return MessageBox.Show(messageBoxText, caption);
+        }
 
 
 

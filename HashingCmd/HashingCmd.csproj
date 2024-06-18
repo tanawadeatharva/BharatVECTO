@@ -7,7 +7,7 @@
     <RootNamespace>HashingCmd</RootNamespace>
     <AssemblyName>hashingcmd</AssemblyName>
     <TargetFrameworks>net48;net6.0</TargetFrameworks>
-    <DefineConstants />
+     
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 

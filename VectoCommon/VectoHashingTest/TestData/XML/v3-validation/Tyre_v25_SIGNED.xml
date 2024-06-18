@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:di="http://www.w3.org/2000/09/xmldsig#" schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationComponent E:\QUAM\Workspace\VECTO_quam\VectoCore\VectoCore\Resources\XSD\VectoDeclarationComponent.xsd">
+    <tns:Tyre xmlns:v2.5="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.5">
+        <v2.0:Data xsi:type="TyreDataDeclarationType" id="TYR-123" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.5">
+            <Manufacturer>Generic Vendor</Manufacturer>
+            <Model>ADC 20</Model>
+            <CertificationNumber>xyz-abc-def</CertificationNumber>
+            <Date>2023-12-03T14:03:11.5648004Z</Date>
+            <AppVersion>Some Application v1.0</AppVersion>
+            <Dimension>16.00 R20</Dimension>
+            <TyreClass>C1</TyreClass>
+            <FuelEfficiencyClass>A</FuelEfficiencyClass>
+            <RRCDeclared>0.0055</RRCDeclared>
+            <FzISO>33500</FzISO>
+        </v2.0:Data>
+        <v2.0:Signature>
+            <di:Reference URI="#TYR-123">
+                <di:Transforms>
+                    <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+                    <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                </di:Transforms>
+                <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+                <di:DigestValue>/17fLSjI4tp91UNHO0HmPOI16US3deEzh7rBYta3ZT8=</di:DigestValue>
+            </di:Reference>
+        </v2.0:Signature>
+    </tns:Tyre>
+</tns:VectoInputDeclaration>

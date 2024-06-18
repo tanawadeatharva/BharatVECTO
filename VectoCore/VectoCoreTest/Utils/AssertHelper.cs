@@ -245,6 +245,16 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return sumFilePath;
 		}
 
+		public static void AssertSumFromSummaryFileData(string sumFilePath, string field, double expected)
+		{ 
+			var table = VectoCSVFile.Read(sumFilePath, true, true);
+
+			double result;
+			var sum = table.AsEnumerable().Sum(x => double.TryParse(x[field].ToString(), out result) ? result : 0);
+
+			Assert.AreEqual(expected, sum);
+		}
+
 		private static void TableDataEquals(TableData expected, TableData actual)
 		{
 			Assert.NotNull(expected);

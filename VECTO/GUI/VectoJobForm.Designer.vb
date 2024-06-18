@@ -920,7 +920,7 @@ Partial Class VectoJobForm
         Me.gbElectricAux.TabIndex = 2
         Me.gbElectricAux.TabStop = false
         Me.gbElectricAux.Text = "Electric Auxiliaries"
-        Me.gbElectricAux.Visible = false
+        Me.gbElectricAux.Visible = True
         '
         'Label46
         '

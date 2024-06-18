@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog.Fluent;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,14 +24,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 {
     public abstract class DeclarationDataAdapterSingleBus
 	{
-		public abstract class SingleBusBase : ISingleBusDeclarationDataAdapter
+		public abstract class SingleBusBase : BaseSimulationDataAdapter, ISingleBusDeclarationDataAdapter
 		{
 			public abstract GearboxType[] SupportedGearboxTypes { get; }
 
 			private IDriverDataAdapterBus _driverDataAdapter = new PrimaryBusDriverDataAdapter();
 			private SingleBusVehicleDataAdapter _vehicleDataAdapter = new SingleBusVehicleDataAdapter();
 			private IAxleGearDataAdapter _axleGearDataAdapter = new AxleGearDataAdapter();
-			private IRetarderDataAdapter _retarderDataAdapter = new RetarderDataAdapter();
+			private IGenericRetarderDataAdapter _retarderDataAdapter = new GenericRetarderDataAdapter();
 			private IAirdragDataAdapter _airdragDataAdapter = new SingleBusAirdragDataAdapter();
 			private IAngledriveDataAdapter _angledriveDataAdapter = new AngledriveDataAdapter();
 
@@ -62,8 +63,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 
 			public HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData, SuperCapData runDataSuperCapData,
 				Kilogram vehicleMass, OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType,
-				TableData boostingLimitations, GearboxData gearboxData, CombustionEngineData engineData,
-				ArchitectureID architectureId)
+				TableData boostingLimitations, GearboxData gearboxData, CombustionEngineData engineData, IList<Tuple<PowertrainPosition, ElectricMotorData>> emData,
+                ArchitectureID architectureId)
 			{
 				return HybridStrategyDataAdapter.CreateHybridStrategyParameters(
 					batterySystemData: runDataBatteryData,
@@ -71,7 +72,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 					ovcMode: ovcMode,
 					loading: loading,
 					vehicleClass: vehicleClass,
-					missionType: missionType, architectureId, engineData, gearboxData, boostingLimitations);
+					missionType: missionType, archID: architectureId, engineData: engineData, emData, gearboxData: gearboxData, boostingLimitations: boostingLimitations);
             }
 
 			#endregion
@@ -118,9 +119,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 					SupportedGearboxTypes);
 			}
 
-			public virtual RetarderData CreateRetarderData(IRetarderInputData retarderData, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet)
+			public virtual RetarderData CreateRetarderData(IRetarderInputData retarderData, ArchitectureID archID,
+				IIEPCDeclarationInputData iepcInputData)
 			{
-				return _retarderDataAdapter.CreateRetarderData(retarderData, position);
+				return _retarderDataAdapter.CreateRetarderData(retarderData, archID, iepcInputData);
 			}
 
 			public virtual PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData)
@@ -173,6 +175,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 			public abstract void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData,
 				Action<SuperCapData> setSuperCapData);
+
+			public RetarderData CreateGenericRetarderData(IRetarderInputData retarderData, VectoRunData vectoRun)
+			{
+				return _retarderDataAdapter.CreateGenericRetarderData(retarderData, vectoRun);
+			}
 
 			#endregion
 		}

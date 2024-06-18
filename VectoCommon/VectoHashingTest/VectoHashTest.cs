@@ -554,7 +554,7 @@ namespace VectoHashingTest
 
 			var primaryHash = h.ComputeHash(VectoComponents.VectoPrimaryVehicleInformation);
 
-			Assert.AreEqual("VTu71FU/Sijqk2Z8sScROGolObZK/UNTycf4K2CAgEs=", primaryHash);
+			Assert.AreEqual("TucUgmYxbydAHCJghTlegvgCtX7KmXZYvO8q8sHhns0=", primaryHash);
 		}
 
 		

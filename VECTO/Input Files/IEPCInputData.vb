@@ -41,13 +41,13 @@ Public Class IEPCInputData
     End Function
 
     Public Sub SetCommonEntries(model As String, inertia As String, designTypeWheelMotorMeasured As Boolean, 
-                                nrOfDesignTypeWheelMotorMeasured As string, differentialIncluded as Boolean,
+                                nrOfDesignTypeWheelMotorMeasured As Integer, differentialIncluded as Boolean,
                                 thermalOverloadRecoverFactor As String)
 
         _model = model
         _inertia = inertia.ToDouble().SI(Of KilogramSquareMeter)
         _wheelMotorMeasured = designTypeWheelMotorMeasured
-        _nrDesignTypeWheelMotor = nrOfDesignTypeWheelMotorMeasured.ToInt(Nothing)
+        _nrDesignTypeWheelMotor = nrOfDesignTypeWheelMotorMeasured
         _differentialIncluded = differentialIncluded
         _overloadRecoverFactor = thermalOverloadRecoverFactor.ToDouble(0)
 
@@ -192,7 +192,8 @@ Public Class IEPCInputData
     Public Property ElectricMachineType As ElectricMachineType Implements IIEPCDeclarationInputData.ElectricMachineType
 
     Public Property R85RatedPower As Watt Implements IIEPCDeclarationInputData.R85RatedPower
-       
+    Public ReadOnly Property TotalRatedPowerCalculated As Watt Implements IIEPCDeclarationInputData.TotalRatedPowerCalculated
+
 
     Public ReadOnly Property Inertia As KilogramSquareMeter Implements IIEPCDeclarationInputData.Inertia
         Get

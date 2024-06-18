@@ -510,8 +510,8 @@ Public Class EngineFuel
 	Friend ReadOnly _fuelConsumptionMapPath As SubPath
 
 
-	Public ColdHotBalancingFactorInput As Double
-	Public correctionFactorRegPerInput As Double
+    Public ColdHotBalancingFactorInput As Double
+    Public correctionFactorRegPerInput As Double
 	Public FuelTypeInput As FuelType
 	Private engineData As Engine
 
@@ -560,13 +560,13 @@ Public Class EngineFuel
 		End Get
 	End Property
 
-	Public ReadOnly Property CorrectionFactorRegPer As Double Implements IEngineFuelDeclarationInputData.CorrectionFactorRegPer
-		Get
-			Return correctionFactorRegPerInput
-		End Get
-	End Property
+    Public ReadOnly Property CorrectionFactorRegPer As Double Implements IEngineFuelDeclarationInputData.CorrectionFactorRegPer
+        Get
+            Return correctionFactorRegPerInput
+        End Get
+    End Property
 
-	Public ReadOnly Property FuelType As FuelType Implements IEngineFuelDeclarationInputData.FuelType
+    Public ReadOnly Property FuelType As FuelType Implements IEngineFuelDeclarationInputData.FuelType
 		Get
 			Return FuelTypeInput
 		End Get
@@ -610,6 +610,7 @@ End Class
 
 Public Class DummyVehicle
 	Implements IVehicleDeclarationInputData, IVehicleComponentsDeclaration, IVehicleEngineeringInputData, IVehicleComponentsEngineering
+
 	Public Property DataSource As DataSource Implements IComponentInputData.DataSource
 	Public Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
 	Public Property Manufacturer As String Implements IComponentInputData.Manufacturer
@@ -645,9 +646,11 @@ Public Class DummyVehicle
 		End Get
 	End Property
 	Public Property ADAS As IAdvancedDriverAssistantSystemDeclarationInputData Implements IVehicleDeclarationInputData.ADAS
-	Public ReadOnly Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
+    Public ReadOnly Property IVehicleDeclarationInputData_InMotionCharging As IVehicleInMotionChargingDeclaration Implements IVehicleDeclarationInputData.InMotionCharging
+    Public ReadOnly Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
+	Public ReadOnly Property InMotionCharging As IVehicleInMotionChargingEngineering Implements IVehicleEngineeringInputData.InMotionCharging
 	Public ReadOnly Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
-    Public ReadOnly Property PTO_DriveGear As GearshiftPosition Implements IVehicleEngineeringInputData.PTO_DriveGear
+	Public ReadOnly Property PTO_DriveGear As GearshiftPosition Implements IVehicleEngineeringInputData.PTO_DriveGear
     Public ReadOnly Property PTO_DriveEngineSpeed As PerSecond Implements IVehicleEngineeringInputData.PTO_DriveEngineSpeed
 	Public Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
 	Public Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV
@@ -714,8 +717,9 @@ Public Class DummyVehicle
 	Public ReadOnly Property ElectricStorage As IElectricStorageSystemDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricStorage
 	Public ReadOnly Property IVehicleComponentsEngineering_ElectricMachines As IElectricMachinesEngineeringInputData Implements IVehicleComponentsEngineering.ElectricMachines
 	Public ReadOnly Property ElectricMachines As IElectricMachinesDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricMachines
-    Public ReadOnly Property IEPCEngineeringInputData As IIEPCEngineeringInputData Implements IVehicleComponentsEngineering.IEPCEngineeringInputData
-    Public ReadOnly Property IEPC As IIEPCDeclarationInputData Implements IVehicleComponentsDeclaration.IEPC
+	Public ReadOnly Property IEPCEngineeringInputData As IIEPCEngineeringInputData Implements IVehicleComponentsEngineering.IEPCEngineeringInputData
+	Public ReadOnly Property FuelCellSystemInputData As IFuelCellSystemEngineeringInputData Implements IVehicleComponentsEngineering.FuelCellSystemInputData
+	Public ReadOnly Property IEPC As IIEPCDeclarationInputData Implements IVehicleComponentsDeclaration.IEPC
 End Class
 
 

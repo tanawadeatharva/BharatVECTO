@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		[ValidateObject]
 		public TransmissionLossMap LossMap { get; internal set; }
 
-		[Required, RangeOrNaN(double.Epsilon, 100)]
+		[Required, RangeOrNaN(double.Epsilon, 500)]
 		public double Ratio { get; internal set; }
 	}
 
@@ -60,6 +60,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		[ValidateObject]
 		public ShiftPolygon ShiftPolygon { get; internal set; }
+
+		public ShiftPolygon ExtendedShiftPolygon { get; internal set; }
 
 		public double TorqueConverterRatio { get; internal set; }
 

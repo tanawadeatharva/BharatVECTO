@@ -20,6 +20,6 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCor
 		<TechnicalPermissibleMaximumLadenMass>15400</TechnicalPermissibleMaximumLadenMass>
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<SumNetPower>350000</SumNetPower>
-		<Technology>Fuel cell vehicle</Technology>
+		<Technology>FCV Article 9 exempted</Technology>
 	</v2.0:Vehicle>
 </tns:VectoInputDeclaration>

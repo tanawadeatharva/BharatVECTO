@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                 var cycle = CycleFactory.GetDeclarationCycle(mission);
 
                 CheckSuperCap(SingleBusDataProvider.PrimaryVehicle);
-
+				
 				var simulationRunData = new VectoRunData {
 					InputData = SingleBusDataProvider,
 					Loading = loading.Key,
@@ -157,6 +157,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 				var runData = CreateCommonRunData(mission, loading);
 
                 runData.VehicleData = DataAdapter.CreateVehicleData(SingleBusDataProvider, _segment, mission, loading, _allowVocational); //Primary
+				runData.WheelEndData = DataAdapter.CreateWheelEndData(_segment.VehicleClass, PrimaryVehicle);
 				runData.AirdragData = DataAdapter.CreateAirdragData(CompletedVehicle, mission); //Single
 				runData.EngineData = DataAdapter.CreateEngineData(PrimaryVehicle, engineMode, mission); //Primary
 				runData.ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>();
@@ -167,13 +168,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType,
 					_segment.VehicleClass, PrimaryVehicle.Length ?? mission.BusParameter.VehicleLength,
 					PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
-				runData.Retarder = DataAdapter.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData);
 				
 				runData.EngineData.FuelMode = modeIdx.Value;
 				runData.VehicleData.VehicleClass = _segment.VehicleClass;
+				CreateGearboxAndGearshiftData(runData);
+				runData.Retarder = DataAdapter.CreateGenericRetarderData(PrimaryVehicle.Components.RetarderInputData, runData);
 				runData.BusAuxiliaries = DataAdapter.CreateBusAuxiliariesData(mission, PrimaryVehicle, CompletedVehicle, runData);
 				
-				CreateGearboxAndGearshiftData(runData);
                 return runData;
             }
 
@@ -285,7 +286,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                 runData.AirdragData =
                     DataAdapter.CreateAirdragData(CompletedVehicle, mission);
                 runData.VehicleData = DataAdapter.CreateVehicleData(SingleBusDataProvider, _segment, mission, loading, _allowVocational);
-
+				runData.WheelEndData = DataAdapter.CreateWheelEndData(_segment.VehicleClass, PrimaryVehicle);
 
                 runData.EngineData = DataAdapter.CreateEngineData(PrimaryVehicle, engineMode, mission);
 
@@ -295,11 +296,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 
                 runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
 					PrimaryVehicle.Components.ElectricMachines, PrimaryVehicle.ElectricMotorTorqueLimits,
-                    runData.BatteryData.CalculateAverageVoltage());
+                    runData.BatteryData.CalculateVoltageCenterSoc());
 
                 if (PrimaryVehicle.VehicleType == VectoSimulationJobType.IEPC_S) {
                     var iepcData = DataAdapter.CreateIEPCElectricMachines(PrimaryVehicle.Components.IEPC,
-                        runData.BatteryData.CalculateAverageVoltage());
+                        runData.BatteryData.CalculateVoltageCenterSoc());
                     iepcData.ForEach(iepc => runData.ElectricMachinesData.Add(iepc));
                 }
 
@@ -307,7 +308,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                     runData.AxleGearData = DataAdapter.CreateAxleGearData(PrimaryVehicle.Components.AxleGearInputData);
                 }
 
-                runData.Retarder = DataAdapter.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData);
+				CreateGearboxAndGearshiftData(runData);
+				runData.Retarder = DataAdapter.CreateGenericRetarderData(PrimaryVehicle.Components.RetarderInputData, runData);
 
                 runData.Aux = DataAdapter.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType,
@@ -315,8 +317,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                     VectoSimulationJobType.SerialHybridVehicle);
                 runData.BusAuxiliaries = DataAdapter.CreateBusAuxiliariesData(
                     mission, PrimaryVehicle, CompletedVehicle , runData);
-
-                CreateGearboxAndGearshiftData(runData);
 
                 runData.HybridStrategyParameters =
                     DataAdapter.CreateHybridStrategy(runData.BatteryData, runData.SuperCapData, runData.VehicleData.TotalVehicleMass,
@@ -337,7 +337,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                 }
 
                 if (ovcMode == OvcHevMode.ChargeDepleting) {
-                    runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
+                    runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeDepletingBattery = true);
                 }
 
                 runData.OVCMode = ovcMode;
@@ -490,6 +490,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 
 				runData.VehicleData =
 					DataAdapter.CreateVehicleData(SingleBusDataProvider, _segment, mission, loading, _allowVocational);
+
+				runData.WheelEndData = DataAdapter.CreateWheelEndData(_segment.VehicleClass, PrimaryVehicle);
 				runData.AirdragData = DataAdapter.CreateAirdragData(CompletedVehicle, mission);
 				runData.EngineData =
 					DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode, mission);
@@ -504,20 +506,19 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					PrimaryVehicle.Length ?? mission.BusParameter.VehicleLength,
 					PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
-				runData.Retarder = DataAdapter.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData);
 				runData.DriverData = DriverData;
-
 
 				runData.EngineData.FuelMode = modeIdx.Value;
 				runData.VehicleData.VehicleClass = _segment.VehicleClass;
+				
+				CreateGearboxAndGearshiftData(runData);
+				runData.Retarder = DataAdapter.CreateGenericRetarderData(PrimaryVehicle.Components.RetarderInputData, runData);
 				runData.BusAuxiliaries = DataAdapter.CreateBusAuxiliariesData(
 					mission, PrimaryVehicle, CompletedVehicle, runData);
 
-				CreateGearboxAndGearshiftData(runData);
-
 				runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
 					PrimaryVehicle.Components.ElectricMachines, PrimaryVehicle.ElectricMotorTorqueLimits,
-					runData.BatteryData.CalculateAverageVoltage(), runData.GearboxData.GearList);
+					runData.BatteryData.CalculateVoltageCenterSoc(), runData.GearboxData.GearList);
 
 				runData.HybridStrategyParameters =
 					DataAdapter.CreateHybridStrategy(runData.BatteryData,
@@ -527,6 +528,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 						//runData.VehicleData.VehicleClass,
 						mission.BusParameter.BusGroup,
 						mission.MissionType, PrimaryVehicle.BoostingLimitations, runData.GearboxData, runData.EngineData,
+						runData.ElectricMachinesData,
 						PrimaryVehicle.ArchitectureID);
 
 				if (ovcMode != OvcHevMode.NotApplicable) {
@@ -540,11 +542,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 				}
 
 				if (ovcMode == OvcHevMode.ChargeDepleting) {
-					runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
+					runData.BatteryData.Batteries.ForEach(b => b.Item2.ChargeDepletingBattery = true);
 				}
 
 				if (ovcMode == OvcHevMode.ChargeSustaining) {
-					runData.IterativeRunStrategy = new OVCHevIterativeRunStrategy();
+					runData.IterativeRunStrategy = new HevChargeSustainingIterativeRunStrategy();
 				}
 
 				if (ovcMode != OvcHevMode.NotApplicable && runData.InputData.JobInputData.Vehicle.OvcHev) {
@@ -632,7 +634,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 				foreach (var mission in _segment.Missions) {
 					foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
 						var run = CreateVectoRunData(mission, loading);
-						run.BatteryData.Batteries.ForEach(b => b.Item2.ChargeSustainingBattery = true);
+						run.BatteryData.Batteries.ForEach(b => b.Item2.ChargeDepletingBattery = true);
 						yield return run;
 					}
 				}
@@ -656,14 +658,16 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 
                 if (vehicle.VehicleType == VectoSimulationJobType.IEPC_E) {
                     result.ElectricMachinesData = DataAdapter.CreateIEPCElectricMachines(vehicle.Components.IEPC,
-                        result.BatteryData.CalculateAverageVoltage());
+                        result.BatteryData.CalculateVoltageCenterSoc());
                 } else {
                     result.ElectricMachinesData = DataAdapter.CreateElectricMachines(vehicle.Components.ElectricMachines,
-                        vehicle.ElectricMotorTorqueLimits, result.BatteryData.CalculateAverageVoltage(), null);
+                        vehicle.ElectricMotorTorqueLimits, result.BatteryData.CalculateVoltageCenterSoc(), null);
                 }
 
                 result.VehicleData = DataAdapter.CreateVehicleData(SingleBusDataProvider, _segment, mission, loading, _allowVocational);
-                result.AirdragData = DataAdapter.CreateAirdragData(SingleBusDataProvider.CompletedVehicle, mission);
+				result.WheelEndData = DataAdapter.CreateWheelEndData(_segment.VehicleClass, vehicle);
+
+				result.AirdragData = DataAdapter.CreateAirdragData(SingleBusDataProvider.CompletedVehicle, mission);
                 if (AxleGearRequired() || vehicle.Components.AxleGearInputData != null) {
                     result.AxleGearData = DataAdapter.CreateAxleGearData(vehicle.Components.AxleGearInputData);
                 }
@@ -674,13 +678,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                     vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
                     vehicle.Length ?? mission.BusParameter.VehicleLength,
                     vehicle.Components.AxleWheels.NumSteeredAxles, vehicle.VehicleType);
-                result.Retarder = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData);
                 result.DriverData = DriverData;
 
                 result.VehicleData.VehicleClass = _segment.VehicleClass;
+                CreateGearboxAndGearshiftData(result);
+                result.Retarder = DataAdapter.CreateGenericRetarderData(vehicle.Components.RetarderInputData, result);
                 result.BusAuxiliaries = DataAdapter.CreateBusAuxiliariesData(
                     mission, SingleBusDataProvider.PrimaryVehicle, SingleBusDataProvider.CompletedVehicle, result);
-                CreateGearboxAndGearshiftData(result);
 
                 return result;
             }

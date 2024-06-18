@@ -90,10 +90,16 @@ namespace TUGraz.VectoMockup
 			set => _modalDataContainerImplementation[key, pos] = value;
 		}
 
-		public object this[ModalResultField key, int? pos]
+		public object this[ModalResultField key, int? idx]
 		{
-			get => _modalDataContainerImplementation[key, pos];
-			set => _modalDataContainerImplementation[key, pos] = value;
+			get => _modalDataContainerImplementation[key, idx];
+			set => _modalDataContainerImplementation[key, idx] = value;
+		}
+
+		public object this[ModalResultField key, string arg]
+		{
+			get => _modalDataContainerImplementation[key, arg];
+			set => _modalDataContainerImplementation[key, arg] = value;
 		}
 
 		public object this[string auxId]
@@ -140,6 +146,16 @@ namespace TUGraz.VectoMockup
 		public T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T>
 		{
 			return _modalDataContainerImplementation.TimeIntegral<T>(field, filter);
+		}
+
+		public T TimeIntegral<T>(ModalResultField field, params object[] formatArgs) where T : SIBase<T>
+		{
+			throw new NotImplementedException();
+		}
+
+		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter, object[] formatArgs) where T : SIBase<T>
+		{
+			throw new NotImplementedException();
 		}
 
 		public void SetDataValue(string fieldName, object value)
@@ -299,6 +315,20 @@ namespace TUGraz.VectoMockup
 		}
 
 		public ICorrectedModalData CorrectedModalData => _modalDataContainerImplementation.CorrectedModalData;
+
+		public ModalResults Data => throw new NotImplementedException();
+
+		public string RunName => throw new NotImplementedException();
+
+		public IModalDataPostProcessor PostProcessingCorrection
+		{
+			set => throw new NotImplementedException();
+		}
+
+		public KilogramPerWattSecond FuelCellLine => throw new NotImplementedException();
+
+		public bool HasBattery => throw new NotImplementedException();
+
 		public void RegisterComponent(VectoSimulationComponent component)
 		{
 			throw new NotImplementedException();

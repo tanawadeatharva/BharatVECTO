@@ -68,8 +68,9 @@ Public Module FileBrowserModule
 
     Public ElectricMotorFileBrowser As FileBrowser
     Public REESSFileBrowser As FileBrowser
-
-	public EmADCLossMapFileBrowser As FileBrowser
+	Public FuelCellComponentFileBrowser As FileBrowser
+	Public MassFlowMapFileBrowser As FileBrowser
+	Public EmADCLossMapFileBrowser As FileBrowser
 	Public IEPCFileBrowser As FileBrowser
 	Public IEPCFLCFileBrowser As FileBrowser
 	Public IEPCDragFileBrowser As FileBrowser

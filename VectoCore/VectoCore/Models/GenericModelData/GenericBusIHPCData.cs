@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
@@ -84,7 +85,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 			var efficiencyMap = DeNormalizeData(normalizedMap, ratedPoint);
 
 			foreach (var gearData in gearboxData.Gears.OrderBy(x => x.Gear)) {
-				result.Add((uint)gearData.Gear, ElectricMotorMapReader.Create(efficiencyMap, count));
+				result.Add((uint)gearData.Gear, ElectricMotorMapReader.Create(efficiencyMap, count, ExecutionMode.Declaration));
 			}
 
 			return result;
@@ -122,7 +123,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 				var powerElectrical = row.ParseDouble(PowerElectricalNorm) * ratedPoint.PRated;
 
 				var newRow = result.NewRow();
-				newRow[ElectricMotorMapReader.Fields.MotorSpeed] = Math.Round(motorSpeed.Value(), 2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
+				newRow[ElectricMotorMapReader.Fields.MotorSpeed] = Math.Round(motorSpeed.AsRPM, 2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
 				newRow[ElectricMotorMapReader.Fields.Torque] = Math.Round(torque.Value(), 2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
 				newRow[ElectricMotorMapReader.Fields.PowerElectrical] = Math.Round(powerElectrical.Value(), 2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
 				result.Rows.Add(newRow);

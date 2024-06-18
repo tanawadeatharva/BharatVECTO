@@ -110,11 +110,13 @@ namespace TUGraz.VectoHashing
 		public IList<VectoComponents> GetContainigComponents()
 		{
 			var retVal = new List<VectoComponents>();
+			var rootName = Document.FirstChild.NextSibling.LocalName;
+
 			foreach (var component in EnumHelper.GetValues<VectoComponents>()) {
 				// special treatment for REESS: can be either supercap or multiple batteries where the component node may contain several sub-components
 				var select = component == VectoComponents.ElectricEnergyStorage
-					? $"//*[local-name()='{XMLNames.VectoInputDeclaration}']//*[local-name()='{component.XMLElementName()}']//*[local-name()='Data']"
-					: $"//*[local-name()='{XMLNames.VectoInputDeclaration}']//*[local-name()='{component.XMLElementName()}']";
+					? $"//*[local-name()='{rootName}']//*[local-name()='{component.XMLElementName()}'  or local-name()='Capacitor']//*[local-name()='Data']"
+					: $"//*[local-name()='{rootName}']//*[local-name()='{component.XMLElementName()}']";
                 var nodes = Document.SelectNodes(select);
 				var count = nodes?.Count ?? 0;
 				for (var i = 0; i < count; i++) {
@@ -137,7 +139,10 @@ namespace TUGraz.VectoHashing
 
 		public string ComputeHash(IEnumerable<string> canonicalization = null, string digestMethod = null)
 		{
-			var nodes = Document.SelectNodes(GetComponentQueryString());
+			var isMultiStep = (Document.ChildNodes.Count > 0) 
+				&& Document.ChildNodes[1].ChildNodes.Cast<XmlNode>().Any(x => x.LocalName == XMLNames.ManufacturingStep);
+			
+			var nodes = Document.SelectNodes(GetComponentQueryString(null, isMultiStep));
 			if (nodes == null || nodes.Count == 0) {
 				throw new Exception("No component found");
 			}
@@ -299,7 +304,7 @@ namespace TUGraz.VectoHashing
 			if (Document.DocumentElement.LocalName.Equals(XMLNames.ManufacturingStep)) {
 				return VectoComponents.VectoManufacturingStep;
 			}
-			throw new Exception("unknown document structure! neither input data nor output data format");
+			throw new Exception($"{Document.DocumentElement.LocalName}: unknown document structure! neither input data nor output data format");
 		}
 
 		public string GetDigestMethod()
@@ -420,16 +425,36 @@ namespace TUGraz.VectoHashing
 				ComputeHash(component, index));
 		}
 
+		public bool ElementIsSigned(VectoComponents component, int index = 0)
+		{ 
+			var nodes = GetNodes(component, index);
 
-		protected static string GetComponentQueryString(VectoComponents? component = null)
+			var parent = nodes[index].ParentNode;
+			if (parent == null) {
+				throw new Exception("Invalid structure of input XML!");
+			}
+
+			if (nodes[index].Attributes[XMLNames.Component_ID_Attr] == null) {
+				return false;
+			}
+
+			var elementToHash = nodes[index].Attributes[XMLNames.Component_ID_Attr].Value;
+			var nodesDV = parent.SelectNodes(".//*[@URI='#" + elementToHash + "']/*[local-name() = 'DigestValue']");
+			
+			return (nodesDV != null && nodesDV.Count > 0);
+		}
+
+		protected static string GetComponentQueryString(VectoComponents? component = null, bool isMultiStep = false)
 		{
 			switch (component) {
 				case null:
-					return "(//*[@id])[1]";
+					return isMultiStep 
+						? $"//*[local-name()='{XMLNames.ManufacturingStep}']/*[local-name()='Data']" 
+						: "(//*[@id])[1]";
 				case VectoComponents.Vehicle:
 					return $"//*[local-name()='{component.Value.XMLElementName()}']";
 				case VectoComponents.ElectricEnergyStorage:
-					return $"//*[local-name()='{component.Value.XMLElementName()}']//*[local-name()='Data']";
+					return $"//*[local-name()='{component.Value.XMLElementName()}' or local-name()='Capacitor']//*[local-name()='Data']";
 				default:
 					return $"//*[local-name()='{component.Value.XMLElementName()}']/*[local-name()='Data']";
 			}

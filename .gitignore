@@ -211,6 +211,7 @@ Documentation/VehiclesReleaseComparisonDeclarationMode/tmp/
 Documentation/VehiclesReleaseComparisonDeclarationMode/**/*.vmod
 Documentation/VehiclesReleaseComparisonDeclarationMode/**/*.vsum
 .vs/
+.vscode/
 **/dev/*.vmod
 **/dev/*.vsum
 /VectoCore/VectoCoreTest/TestData/XML/XMLReaderDeclaration/testVif.VIF_Report_5.xml
@@ -229,3 +230,5 @@ Documentation/VehiclesReleaseComparisonDeclarationMode/**/*.vsum
 /Generic Vehicles/Engineering Mode/GenericIHPC/6SpeedGbx/EM_Maps.xlsx
 /Nuget
 /.idea/.idea.hm_vecto-dev.dir/.idea
+/Documentation/User Manual/pics/FuelCell/Workshop_VECTO_DEV_19_TUG_final.pdf - Verknüpfung.lnk
+Documentation/User Manual/mermaid-filter.err

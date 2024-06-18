@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Moq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -81,7 +82,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		private GraphWriter GetGraphWriter(ModalResultField[] yFields)
 		{
 			var graphWriter = new GraphWriter();
-			//#if TRACE
+			//#if VECTOTRACE
 			graphWriter.Enable();
 
 			//#else
@@ -1113,6 +1114,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				},
 			};
 			var wheels = DeclarationData.Wheels.Lookup("275/70 R22.5");
+			var inputdata = new Mock<IVehicleDeclarationInputData>();
+			inputdata.Setup(v => v.VehicleType).Returns(VectoSimulationJobType.BatteryElectricVehicle);
 			return new VehicleData {
 				AirDensity = DeclarationData.AirDensity,
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
@@ -1121,6 +1124,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				DynamicTyreRadius = wheels.DynamicTyreRadius,
 				AxleData = axles,
 				SavedInDeclarationMode = false,
+				InputData = inputdata.Object,
 			};
 		}
 
@@ -1129,8 +1133,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			return new AirdragData() {
 				CrossWindCorrectionCurve =
 					new CrosswindCorrectionCdxALookup(
-						3.2634.SI<SquareMeter>(),
-						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
+						3.2634.SI<SquareMeter>(), 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+                        CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
 						CrossWindCorrectionMode.NoCorrection),
 			};
 		}

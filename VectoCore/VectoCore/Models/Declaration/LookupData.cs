@@ -83,13 +83,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 				ParseData(table);
 			}
 		}
-#if USE_EXTERNAL_DECLARATION_DATA
+
+		#if USE_EXTERNAL_DECLARATION_DATA
 		[MethodImpl(MethodImplOptions.Synchronized)]
-#endif
+		#endif
 		protected DataTable ReadCsvResource(string resourceId, Action<string> overrideWarning = null)
 		{
-// TODO: MQ 2020-07 Remove in official bus version!
-#if USE_EXTERNAL_DECLARATION_DATA
+			// TODO: MQ 2020-07 Remove in official bus version!
+			#if USE_EXTERNAL_DECLARATION_DATA
 			var tmp = resourceId.Replace(DeclarationData.DeclarationDataResourcePrefix + ".", "");
 			var parts = tmp.Split('.');
 			var fileName = Path.GetFullPath(Path.Combine(@"Declaration\Override", string.Join(".", parts[parts.Length-2], parts[parts.Length-1])));
@@ -102,15 +103,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 				_readFromFile = true;
 				return VectoCSVFile.Read(fileName);
 			}
-#endif
-			return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId), source: resourceId);
+			#endif
 
+			return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId), source: resourceId);
 		}
 
 		protected static void NormalizeTable(DataTable table)
 		{
 			foreach (DataColumn col in table.Columns) {
-				table.Columns[col.ColumnName].ColumnName = col.ColumnName.ToLower().RemoveWhitespace();
+				table.Columns[col.ColumnName].ColumnName = col.ColumnName.ToLowerInvariant().RemoveWhitespace();
 			}
 		}
 	}
@@ -131,6 +132,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
+		public bool ContainsKey(TKey key)
+		{
+			return Data.ContainsKey(key);
+		}
+
 		public Dictionary<TKey, TValue> Entries => Data;
 	}
 
@@ -141,7 +147,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public virtual TValue Lookup(TKey1 key1, TKey2 key2)
 		{
 			WarnReadFromFile();
-            try {
+			try {
 				return Data[Tuple.Create(key1, key2)];
 			} catch (KeyNotFoundException) {
 				throw new VectoException(string.Format(ErrorMessage, key1, key2));
@@ -157,7 +163,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public virtual TValue Lookup(TKey1 key1, TKey2 key2, TKey3 key3)
 		{
 			WarnReadFromFile();
-            try {
+			try {
 				return Data[Tuple.Create(key1, key2, key3)];
 			} catch (KeyNotFoundException) {
 				throw new VectoException(string.Format(ErrorMessage, key1, key2, key3));

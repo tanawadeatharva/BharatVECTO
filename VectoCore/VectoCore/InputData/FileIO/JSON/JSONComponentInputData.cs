@@ -104,6 +104,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case Constants.FileExtensions.IEPCDataFile:
 					tmp = JSONInputDataFactory.ReadIEPCEngineeringInputData(filename, tolerateMissing);
 					break;
+				case Constants.FileExtensions.FuelCellComponentFile:
+					tmp = JSONInputDataFactory.ReadFuelCellComponentEngineeringInputData(filename, tolerateMissing);
+					break;
 			}
 
 			if(tmp is IVehicleEngineeringInputData x1) VehicleData = x1;
@@ -122,7 +125,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			if(tmp is IElectricMotorEngineeringInputData x14) ElectricMotor = x14;
 			if(tmp is IHybridStrategyParameters x15) HybridStrategyParameters = x15;
 			if(tmp is IBusAuxiliariesEngineeringData x16) BusAux = x16;
-			if (tmp is IIEPCEngineeringInputData x17) IEPCData = x17;
+			if(tmp is IIEPCEngineeringInputData x17) IEPCData = x17;
+			//if(tmp is IFuelCellSystemEngineeringInputData x18) FuelCellSystem = x18;
 
 			_filename = filename;
 		}
@@ -223,6 +227,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IIEPCEngineeringInputData IEPCEngineeringInputData => IEPCData;
 
+		public IFuelCellSystemEngineeringInputData FuelCellSystemInputData => throw new NotImplementedException();
+
 		public IIEPCDeclarationInputData IEPC => IEPCData;
 
 		IElectricStorageSystemDeclarationInputData IVehicleComponentsDeclaration.ElectricStorage => 
@@ -277,7 +283,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public double InitialSOC => VehicleData.InitialSOC;
 
-		public VectoSimulationJobType VehicleType => VehicleData.VehicleType;
+		public IVehicleInMotionChargingEngineering InMotionCharging { get; }
+		IVehicleInMotionChargingDeclaration IVehicleDeclarationInputData.InMotionCharging => InMotionCharging;
+
+        public VectoSimulationJobType VehicleType => VehicleData.VehicleType;
 
 		public IAirdragEngineeringInputData AirdragInputData => AirdragData;
 
@@ -385,5 +394,5 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public Watt ElectricAuxPower => 0.SI<Watt>();
 
 		#endregion
-	}
+    }
 }

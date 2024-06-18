@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:v2.10.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd">
+<tns:VectoInputDeclaration schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd">
 	<v2.0:Vehicle id="VEH-PrimaryBus_nonSmart" xsi:type="Vehicle_Conventional_PrimaryBusDeclarationType">
 		<Manufacturer>Generic Bus Manufacturer</Manufacturer>
 		<ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
@@ -22,10 +22,10 @@
 			<EcoRollWithEngineStop>false</EcoRollWithEngineStop>
 			<PredictiveCruiseControl>none</PredictiveCruiseControl>
 		</ADAS>
-		<v2.10.2:TorqueLimits xsi:type="TorqueLimitsType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+		<v2.4:TorqueLimits xsi:type="TorqueLimitsType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 			<Entry gear="6" maxTorque="1800"/>
 			<Entry gear="1" maxTorque="2500"/>
-		</v2.10.2:TorqueLimits>
+		</v2.4:TorqueLimits>
 		<Components xsi:type="Components_Conventional_PrimaryBusType">
 			<Engine xsi:type="v2.0:EngineComponentDeclarationType">
 				<v2.0:Data id="ENG-gooZah3D" xsi:type="v2.1:EngineDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1">

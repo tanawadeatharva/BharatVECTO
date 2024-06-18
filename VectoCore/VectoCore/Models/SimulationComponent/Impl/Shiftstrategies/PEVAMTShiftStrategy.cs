@@ -33,6 +33,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			_shiftStrategyParameters = shiftStrategyparamets;
 		}
 
+		public ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
+			GearboxType gearboxType,
+			int i,
+			EngineFullLoadCurve engineDataFullLoadCurve,
+			IList<ITransmissionInputData> gearboxGears,
+			CombustionEngineData engineData,
+			double axlegearRatio,
+			Meter dynamicTyreRadius,
+			ElectricMotorData electricMotorData = null)
+		{
+			throw new NotImplementedException("Not applicable to PEVAMT Gearbox.");
+		}
+
 		public ShiftPolygon ComputeDeclarationShiftPolygon(GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve,
 			IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius,
 			ElectricMotorData electricMotorData = null)
@@ -67,7 +80,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected GearshiftPosition _nextGear;
 
 		private readonly ShiftStrategyParameters _shiftStrategyParameters;
-		protected readonly VelocityRollingLookup VelocityDropData = new VelocityRollingLookup();
 		private SimplePowertrainContainer TestContainer;
 		private Gearbox TestContainerGbx;
 		private Battery TestContainerBattery;
@@ -88,7 +100,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 		public static string Name => "AMT - EffShift (BEV)";
 
-
 		protected bool DriveOffStandstill { get; set; }
 
 		protected TestPowertrain<Gearbox> TestPowertrain;
@@ -103,6 +114,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				x.Item1 == PowertrainPosition.BatteryElectricE2 || x.Item1 == PowertrainPosition.IEPC)?.Item1 ?? PowertrainPosition.HybridPositionNotSet;
 			SetupVelocityDropPreprocessor(dataBus);
 		}
+
+		public VelocityRollingLookup VelocityDropData { get; } = new VelocityRollingLookup();
 
 		protected PEVAMTShiftStrategy(IVehicleContainer dataBus, bool dummy)
 		{
@@ -213,7 +226,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 		#region Implementation of IShiftStrategy
 
-		public bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
+		public virtual bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
 			PerSecond inAngularVelocity, GearshiftPosition gear, Second lastShiftTime, IResponse response)
 		{
 			CheckGearshiftRequired = true;
@@ -490,6 +503,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 							GearboxModelData.Gears[tmpGear.Gear].Ratio;
 			var firstGear = GearList.Predecessor(currentGear, 1);
 			var lastGear = GearList.Predecessor(currentGear, (uint)GearshiftParams.AllowedGearRangeFC);
+			var maxEmSpeed = DataBus.GetElectricMotors().First(x => x.Position != PowertrainPosition.GEN).MaxSpeed;
 			foreach (var gear in GearList.IterateGears(firstGear, lastGear)) {
 				var ratio = gear.IsLockedGear()
 					? GearboxModelData.Gears[gear.Gear].Ratio
@@ -498,7 +512,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				if (GearboxModelData.Gears[gear.Gear].MaxSpeed != null && gbxInSpeed.IsGreater(GearboxModelData.Gears[gear.Gear].MaxSpeed)) {
 					continue;
 				}
+
+				if (gbxInSpeed.IsGreater(maxEmSpeed)) {
+					continue;
+				}
                 candidates[gear] = gbxInSpeed;
+			}
+
+			if (!candidates.Any()) {
+				return tmpGear;
 			}
 
 			var ratedSpeed = VoltageLevels.VoltageLevels.First().FullLoadCurve.RatedSpeed;
@@ -916,6 +938,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			ElectricMotorData electricMotorData = null)
 		{
 			return _shiftPolygonImplementation.ComputeDeclarationShiftPolygon(gearboxType, i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius, electricMotorData);
+		}
+
+		public ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
+			GearboxType gearboxType,
+			int i,
+			EngineFullLoadCurve engineDataFullLoadCurve,
+			IList<ITransmissionInputData> gearboxGears,
+			CombustionEngineData engineData,
+			double axlegearRatio,
+			Meter dynamicTyreRadius,
+			ElectricMotorData electricMotorData = null)
+		{
+			throw new NotImplementedException("Not applicable to PEVAMT gearbox.");
 		}
 
 		#endregion

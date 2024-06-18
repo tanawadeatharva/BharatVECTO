@@ -102,9 +102,13 @@ namespace TUGraz.VectoCore.Utils
 
 		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V24 = DECLARATION_NAMESPACE + ":v2.4";
 		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V25 = DECLARATION_NAMESPACE + ":v2.5";
+		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_DEV_V26 = DECLARATION_NAMESPACE + ":DEV:v2.6";
+
+		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_DEV_V211 = DECLARATION_NAMESPACE + ":DEV:v2.11";
 
 
-		public const string DECLARATION_INPUT_NAMESPACE = "urn:tugraz:ivt:VectoAPI:DeclarationInput";
+
+        public const string DECLARATION_INPUT_NAMESPACE = "urn:tugraz:ivt:VectoAPI:DeclarationInput";
 
 		public const string DECLARATION_INPUT_NAMESPACE_URI_V10 = DECLARATION_INPUT_NAMESPACE + ":v1.0";
 
@@ -120,9 +124,19 @@ namespace TUGraz.VectoCore.Utils
 		public const string DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1 =
 			DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE + ":v0.1";
 
+		public const string MONITORING_NAMESPACE = "urn:tugraz:ivt:VectoAPI:MonitoringOutput";
+
+		public const string MONITORING_SCHEMA_VERSION = "1.0";
+
+		public const string MONITORING_NAMESPACE_URI = MONITORING_NAMESPACE + ":v" + MONITORING_SCHEMA_VERSION;
+
+		public const string DECLARATION_OUTPUT = "urn:tugraz:ivt:VectoAPI:DeclarationOutput";
+
+		public const string DECLARATION_OUTPUT_NAMESPACE_URI_V09 = DECLARATION_OUTPUT + ":v0.9";
+
+		public const string XSI_TYPE_LOCALNAME = "type";
 
 		public const string XML_SCHEMA_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance";
-
 
 		// mapping of document type + version => supported schema files (+version)
 		//private static Dictionary<Tuple<XmlDocumentType, string>, IList<string>> schemaFilenames = new Dictionary<Tuple<XmlDocumentType, string>, IList<string>>();

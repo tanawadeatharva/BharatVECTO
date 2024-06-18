@@ -2055,8 +2055,8 @@
 							</PowerMap>
 						</VoltageLevel>
 						<DragCurve>
-							<Entry outShaftSpeed="0.00" dragTorque="10.00"/>
-							<Entry outShaftSpeed="7363.00" dragTorque="30.00"/>
+							<Entry outShaftSpeed="0.00" dragTorque="-10.00"/>
+							<Entry outShaftSpeed="7363.00" dragTorque="-30.00"/>
 						</DragCurve>
 						<Conditioning>
 							<Entry coolantTempInlet="30" coolingPower="5000"/>

@@ -28,7 +28,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 					RunDataFactory = new EngineOnlyVectoRunDataFactory(engDataProvider);
 					return;
 				case IEngineeringInputDataProvider engDataProvider:
-					RunDataFactory = new EngineeringModeVectoRunDataFactory(engDataProvider);
+					RunDataFactory = new EngineeringModeVectoRunDataFactory(engDataProvider) {
+						Writer = ReportWriter
+					};
 					return;
 				default:
 					throw new VectoException("Unknown InputData for Engineering Mode!");

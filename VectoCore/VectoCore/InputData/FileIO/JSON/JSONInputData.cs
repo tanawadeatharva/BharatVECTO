@@ -53,6 +53,8 @@ using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
+using TUGraz.VectoHashing.Impl;
+using System.Globalization;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -613,7 +615,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IVehicleDeclarationInputData Vehicle =>
 			_inputReader.CreateDeclaration(
-				Path.Combine(Path.GetFullPath(BasePath), Body["DeclarationVehicle"].Value<string>())).JobInputData.Vehicle;
+				Path.Combine(Path.GetFullPath(BasePath), Body["DeclarationVehicle"].Value<string>()), true).JobInputData.Vehicle;
 
 		public IVectoHash VectoJobHash { get; }
 
@@ -664,7 +666,55 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public Meter FanDiameter => Body.GetEx<double>("FanDiameter").SI<Meter>();
 
-		#region Implementation of IVTPDeclarationInputDataProvider
+		public IList<IFuelNCVData> FuelNCVs
+		{
+			get 
+			{
+				var fuelNCVs = new List<IFuelNCVData>();
+
+				if (Body[JsonKeys.Job_FuelNCVs] == null) {
+					throw new Exception($"Job input data: missing input field: {JsonKeys.Job_FuelNCVs}");
+                }
+
+				foreach (var fuelNCV in Body.GetEx(JsonKeys.Job_FuelNCVs)) {
+					var type = fuelNCV.GetEx<string>(JsonKeys.Job_FuelNCV_Type);
+					var ncv = fuelNCV.GetEx<double>(JsonKeys.Job_FuelNCV_NCV);
+
+					IEnumerable<FuelType> matches = Enum.GetValues(typeof(FuelType)).Cast<FuelType>().Where(x => x.GetLabel().Equals(type));
+					if (matches.Count() == 0) {
+						throw new Exception($"Job input data: {JsonKeys.Job_FuelNCVs}: invalid {JsonKeys.Job_FuelNCV_Type}: {type}");
+                    }
+
+					fuelNCVs.Add(new FuelNCVData() { Type = matches.First(), NCV = (ncv * Constants.Mega).SI<JoulePerKilogramm>() });
+                }
+
+				var fuelsPerMode = JobInputData.Vehicle.Components.EngineInputData.EngineModes.Select(
+					x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, JobInputData.Vehicle.TankSystem)));
+
+				foreach (var fuels in fuelsPerMode) {
+					foreach (var fuel in fuels) {
+						if (fuelNCVs.Count(x => x.Type == fuel.FuelType) == 0) {
+							throw new Exception($"Job input data: {JsonKeys.Job_FuelNCVs}: missing {JsonKeys.Job_FuelNCV_Type}: {fuel.FuelType.GetLabel()}");
+						}
+					}
+				}
+
+				return fuelNCVs;
+            }
+        }
+
+		public NewtonMeter TorqueDriftLeftWheel
+		{
+			get { return Body.GetEx<double>(JsonKeys.Job_TorqueDriftLeftWheel).SI<NewtonMeter>(); }
+        }
+
+		public NewtonMeter TorqueDriftRightWheel
+		{
+			get { return Body.GetEx<double>(JsonKeys.Job_TorqueDriftRightWheel).SI<NewtonMeter>(); }		
+		}
+
+
+        #region Implementation of IVTPDeclarationInputDataProvider
 
 		IVTPDeclarationJobInputData IVTPDeclarationInputDataProvider.JobInputData => JobInputData;
 
@@ -722,6 +772,39 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public void ValidateSimulationToolVersion()
+		{
+			var xmlDoc = new XmlDocument();
+			xmlDoc.Load(Path.Combine(Path.GetFullPath(BasePath), Body["ManufacturerRecord"].Value<string>()));
+			
+			string simToolVersionStr = XMLManufacturerReportReader.ReadElementValue(xmlDoc, "SimulationToolVersion");
+			string vectoVersionStr = VectoSimulationCore.VersionNumber;
+
+			bool xmlVersionNewer = VersioningUtil.CompareVersions(simToolVersionStr, vectoVersionStr) > 0;
+
+			#if !DEBUG
+			if (xmlVersionNewer) {
+				throw new VectoException($"Not allowed to run simulation because VECTO version ({vectoVersionStr}) is older than <SimulationToolVersion> in Manufacturer Report ({simToolVersionStr}).");
+			}
+			#endif
+		}
+
+		public void ValidateHash()
+		{
+			var xmlDoc = new XmlDocument();
+			xmlDoc.Load(Path.Combine(Path.GetFullPath(BasePath), Body["ManufacturerRecord"].Value<string>()));
+			
+			var signatureNode = xmlDoc.SelectSingleNode("//*[local-name()='Signature']");
+			var signatureDigest = new DigestData(signatureNode);
+
+			var hash = XMLHashProvider.ComputeHash(xmlDoc, signatureDigest.Reference.Remove(0, 1), signatureDigest.CanonicalizationMethods,
+				signatureDigest.DigestMethod);
+			
+			if (!hash.InnerText.Equals(signatureDigest.DigestValue)) {
+				throw new VectoException($"Manufacturer Report hash: {signatureDigest.DigestValue} differs from calculated hash: {hash.InnerText}");
+			}
+		}
+
 		#endregion
 
 		private void ReadManufacturerReport()
@@ -755,7 +838,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 			_manufacturerResults = new ManufacturerResults(xmlDoc.SelectSingleNode("//*[local-name() = 'Results']"));
 			_vehicleLenght = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleLength']")?.InnerText.ToDouble().SI<Meter>();
-			_vehicleClass = VehicleClassHelper.Parse(xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleGroup']").InnerText);
+			_vehicleClass = VehicleClassHelper.Parse(xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleGroup']")?.InnerText);
 			_vehicleCode = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleCode']")?.InnerText.ParseEnum<VehicleCode>() ?? VehicleCode.NOT_APPLICABLE;
 		}
 	}
@@ -768,7 +851,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			Results = new List<IResult>();
 			foreach (XmlNode node in resultNode.SelectNodes("./*[local-name() = 'Result' and @status='success']")) {
 				var entry = new Result {
-					ResultStatus = node.Attributes.GetNamedItem("status").InnerText,
+					ResultStatus = node.Attributes.GetNamedItem("status").InnerText.ParseEnum<ResultStatus>(),
 					Mission = node.SelectSingleNode("./*[local-name()='Mission']").InnerText.ParseEnum<MissionType>(),
 					SimulationParameter = GetSimulationParameter(node.SelectSingleNode("./*[local-name() = 'SimulationParameters' or local-name() = 'SimulationParametersCompletedVehicle']")),
 					EnergyConsumption = node.SelectSingleNode("./*[local-name()='Fuel' and FuelConsumption/@unit='MJ/km']")?
@@ -780,7 +863,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 													?.InnerText
 													.ToDouble().SI(Unit.SI.Mega.Joule.Per.Kilo.Meter).Cast<JoulePerMeter>()))
 											.ToDictionary(x => x.Key, x => x.Value),
-					CO2 = node.SelectNodes("./*[local-name()='CO2' and @unit]").Cast<XmlNode>().Select(
+					CO2 = node.SelectNodes(".//*[local-name()='CO2' and @unit]").Cast<XmlNode>().Select(
 								x => new KeyValuePair<string, double>(x.Attributes.GetNamedItem("unit").InnerText, x.InnerText.ToDouble()))
 							.ToDictionary(x => x.Key, x => x.Value)
 
@@ -1015,7 +1098,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public override bool SavedInDeclarationMode => true;
 
-        #endregion
+		#endregion
 
         //#region Implementation of IDeclarationInputDataProvider
 
@@ -1034,7 +1117,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
         //#endregion
 
-        #region Implementation of IMultistageVIFInputData
+		#region Implementation of IMultistageVIFInputData
 
 		public IVehicleDeclarationInputData VehicleInputData => Vehicle;
 		public IMultistepBusInputDataProvider MultistageJobInputData => PrimaryVehicleData;
@@ -1157,9 +1240,30 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public override VectoSimulationJobType JobType => VectoSimulationJobType.IHPC;
 	}
 
+	public class JSONInputDataV14_FCHybrid : JSONInputDataV9_BEV
+	{
+		public JSONInputDataV14_FCHybrid(JObject json, string filename, bool tolerateMissing) : base(json, filename, tolerateMissing)
+		{
+			//VehicleData = ReadVehicle();
+			//Gearbox = ReadGearbox();
+			
+
+		}
+
+		public override VectoSimulationJobType JobType => VectoSimulationJobType.FCHV;
+    }
+
+	public class JSONInputDataV15_FCHV_IEPC : JSONInputDataV12_IEPC
+	{
+		public JSONInputDataV15_FCHV_IEPC(JObject json, string filename, bool tolerateMissing) : base(json, filename, tolerateMissing)
+		{}
+
+		public override VectoSimulationJobType JobType => VectoSimulationJobType.FCHV_IEPC;
+	}
+
 	// --------------------------
 
-		public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider, IMultistagePrimaryAndStageInputDataProvider
+    public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider, IMultistagePrimaryAndStageInputDataProvider
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
 		private readonly string _primaryVehicleInputDataPath;

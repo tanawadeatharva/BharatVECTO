@@ -33,6 +33,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Runtime;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Models;
 
@@ -209,7 +211,12 @@ namespace TUGraz.VectoCommon.Utils
 			Func<TSource, IComparable> projectionToComparable)
 		{
 			using (var e = source.GetEnumerator()) {
-				if (!e.MoveNext()) {
+				if (!e.MoveNext())
+				{
+					if (default(TSource) == null)
+					{
+						return default;
+					}
 					throw new InvalidOperationException("Sequence is empty.");
 				}
 
@@ -229,10 +236,14 @@ namespace TUGraz.VectoCommon.Utils
 		}
 
 		public static TSource MaxBy<TSource>(this IEnumerable<TSource> source,
-			Func<TSource, IComparable> projectionToComparable)
+			Func<TSource, IComparable> projectionToComparable) 
 		{
 			using (var e = source.GetEnumerator()) {
-				if (!e.MoveNext()) {
+				if (!e.MoveNext())
+				{
+					if (default(TSource) == null) {
+						return default;
+					}
 					throw new InvalidOperationException("Sequence is empty.");
 				}
 
@@ -345,5 +356,32 @@ namespace TUGraz.VectoCommon.Utils
 		/// Checks if a value is one of the candidate values.
 		/// </summary>
 		public static bool IsOneOf<T>(this T self, params T[] candidates) => candidates.Contains(self);
+
+
+		/// <summary>
+		/// Σ getY * getDX
+		/// </summary>
+		/// <typeparam name="TY"></typeparam>
+		/// <typeparam name="TX"></typeparam>
+		/// <typeparam name="TEntry"></typeparam>
+		/// <typeparam name="TResult"></typeparam>
+		/// <param name="self"></param>
+		/// <param name=""></param>
+		/// <returns></returns>
+		public static TResult TimeIntegral<TEntry, TX, TY, TResult>(this IEnumerable<TEntry> self, Expression<Func<TEntry, TX>> getDX, Expression<Func<TEntry, TY>> getY)
+			where TY : SIBase<TY>
+			where TX : SIBase<TX>
+			where TResult : SIBase<TResult>
+		{
+			var GetDx = getDX.Compile();
+			var GetY = getY.Compile();
+			TResult sum = 0.SI<TResult>();
+
+			foreach (var entry in self) {
+				sum += GetDx(entry) * GetY(entry);
+			}
+
+			return sum;
+		}
 	}
 }

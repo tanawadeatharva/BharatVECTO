@@ -13,6 +13,7 @@ When VECTO starts the [Main Form](#main-form) is loaded. Closing this form will 
 -	[Vehicle Editor - IEPC](#vehicle-editor-iepc-tab)
 -	[Vehicle Editor - IHPC](#vehicle-editor-ihpc-tab)
 -	[Vehicle Editor - GenSet](#vehicle-editor-genset-tab)
+-   [Vehicle Editor - Composite Fuel Cell System](#vehicle-editor-composite-fuel-cell-system-tab)
 -	[Vehicle Editor - Torque Limits](#vehicle-editor-torque-limits-tab)
 -	[Vehicle Editor - ADAS](#vehicle-editor-adas-tab)
 -	[Vehicle Editor - PTO](#vehicle-editor-pto-tab)

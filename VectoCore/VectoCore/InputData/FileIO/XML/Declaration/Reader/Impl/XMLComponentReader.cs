@@ -37,11 +37,13 @@ using System.Xml.Linq;
 using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
@@ -77,7 +79,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected IElectricMachinesDeclarationInputData _electricMachinesInputData;
 		protected IElectricStorageSystemDeclarationInputData _electricStorageSystemInputData;
 		protected IIEPCDeclarationInputData _iepcDeclarationInputData;
-
 
 
 		[Inject]
@@ -169,7 +170,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					"Unsupported XML Version! Node: {0} Axle: {1} Version: {2}", e, axleNode.LocalName, axleNumber, version);
 			}
 		}
-
 
 		public virtual IAxleGearInputData AxleGearInputData => _axlegearInputData ?? (_axlegearInputData = CreateComponent(XMLNames.Component_Axlegear, AxlegearCreator));
 
@@ -271,7 +271,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return Factory.CreateTyre(version, Vehicle, componentNode, sourceFile);
 		}
 
-
 		protected virtual IAuxiliariesDeclarationInputData AuxiliaryCreator(
 			string version, XmlNode componentNode, string sourceFile)
 		{
@@ -364,6 +363,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			vehicle, componentsNode)
 		{ }
 	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLComponentReaderV26 : XMLComponentReaderV20
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_DEV_V26;
+
+		public new static readonly string AXLE_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AXLE_READER_TYPE);
+
+		public new static readonly string AXLES_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AXLES_READER_TYPE);
+
+		public XMLComponentReaderV26(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(vehicle, componentsNode) 
+		{ }
+    }
 
 	// ---------------------------------------------------------------------------------------
 
@@ -470,7 +483,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public override ITyreDeclarationInputData Tyre => null;
 
-		public override IRetarderInputData RetarderInputData => null;
+        public override IRetarderInputData RetarderInputData => null;
 
 		public override IAuxiliariesDeclarationInputData AuxiliaryData => null;
 
@@ -645,7 +658,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			var node = GetNode(XMLNames.REESS, componentNode);
 			var dataNode = GetNode(XMLNames.ComponentDataWrapper, node);
 			version = XMLHelper.GetXsdType(dataNode.SchemaInfo.SchemaType);
-			return Factory.CreateBatteryPackDeclarationInputData(version, dataNode, sourcefile);
+			return Factory.CreateBatteryPackDeclarationInputData(version, node, sourcefile);
 		}
 
 		protected virtual ISuperCapDeclarationInputData SuperCapCreator(string version,

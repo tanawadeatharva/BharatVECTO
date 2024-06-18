@@ -30,6 +30,9 @@
 */
 
 using System.IO;
+using System.IO.Compression;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -60,7 +63,6 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 		 TestCase(@"TestData/Integration/VTPMode/GenericVehicle/class_5_generic vehicle_noGear.vecto"),
 		 //TestCase(@"TestData/Integration/VTPMode/HeavyBus/VTP_PrimaryBus_ENG.vecto", TestName = "RunVTPHeavyPrimaryBus Engineering")
 		]
-		[Ignore("Fix this when testing VTP mode.")]
 		public void RunVTP(string jobFile)
 		{
 			var fileWriter = new FileOutputWriter(jobFile);
@@ -86,12 +88,28 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			Assert.AreEqual(true, jobContainer.AllCompleted);
 		}
 
+		private const string STOP_START_JOB = @"TestData\Integration\VTPMode\Group2_RigidTruck_4x2\Class2_RigidTruck_DECL_SS_VTP.vecto";
+		private const string POLLUTANTS_JOB = @"TestData\Integration\VTPMode\Group2_RigidTruck_4x2\Class2_RigidTruck_VTP_pollutants.vecto";
+		private const string PEL_FAN_JOB = @"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_DECL_FanPel.vecto";
+		private const string DUAL_FUEL_JOB = @"TestData\Integration\VTPMode\DualFuelVehicle\VTP_DualFuel.vecto";
+		private const string TORQUE_DRIFT_JOB = @"TestData\Integration\VTPMode\Group2_RigidTruck_4x2\Class2_RigidTruck_VTP_TorqueDrift.vecto";
+		private const string ARCHIVE_BUILDER_JOB = @"TestData\Integration\VTPMode\JobArchiveBuilder\VTP_MediumLorry.vecto";
+		private const string MRF_v09_JOB = @"TestData\Integration\VTPMode\MRF_v0.9\VTP_DualFuel.vecto";
+
 		[Category("LongRunning")]
 		[Category("Integration")]
-		[TestCase(@"TestData/Integration/VTPMode/GenericVehicle/class_5_generic vehicle_DECL.vecto", 45.6, 0.8972, TestName = "RunVTPHeavyLorry_Declaration"),
-		TestCase(@"TestData/Integration/VTPMode/MediumLorry/VTP_MediumLorry.vecto", 400.0, 1.06, TestName = "RunVTPMediumLorry_Declaration"),
-		TestCase(@"TestData/Integration/VTPMode/DualFuelVehicle/VTP_DualFuel.vecto", 43.5, 1.0154, TestName = "RunVTPDualFuel_Declaration"),
-		TestCase(@"TestData/Integration/VTPMode/HeavyBus/VTP_PrimaryBus.vecto", 14.2, 1.1413, TestName = "RunVTPHeavyPrimaryBus")	
+		[
+			TestCase(@"TestData/Integration/VTPMode/GenericVehicle/class_5_generic vehicle_DECL.vecto", 45.6, 0.8615, TestName = "RunVTPHeavyLorry_Declaration"),
+			TestCase(@"TestData/Integration/VTPMode/MediumLorry/VTP_MediumLorry.vecto", 400.0, 1.0712, TestName = "RunVTPMediumLorry_Declaration"),
+			TestCase(@"TestData/Integration/VTPMode/HeavyBus/VTP_PrimaryBus.vecto", 14.2, 1.1359, TestName = "RunVTPHeavyPrimaryBus", Ignore = "Declaration mode VTP not allowed for buses"),
+			TestCase(@"TestData/Integration/VTPMode/GenericVehicle XMLJob PTO/class_5_generic vehicle_DECL.vecto", 45.6, 0.8592, TestName = "Generic Group 5 VTP Test Declaration Mode with PTO"),
+			TestCase(@"TestData/Integration/VTPMode/GenericVehicle/class_3_generic vehicle_DECL.vecto", 126, 0.9668, TestName = "Generic Group 3 VTP Test Declaration Mode"),
+			TestCase(STOP_START_JOB, 188, 1.0099, TestName = "VTP StopStart"),
+			TestCase(PEL_FAN_JOB, 45.6, 0.8968, TestName = "VTP Fan Electrical Power"),
+			TestCase(POLLUTANTS_JOB, 188, 1.0082, TestName = "VTP Pollutants"),
+			TestCase(DUAL_FUEL_JOB, 43.5, 1.0148, TestName = "VTP Dual Fuel"),
+			TestCase(MRF_v09_JOB, 42.4, 1.0148, TestName = "VTP MRF v09"),
+			TestCase(TORQUE_DRIFT_JOB, 188, 1.0082, TestName = "VTP Torque Drift")
 		]
 		public void RunVTP_Declaration(string jobFile, double expectedDeclaredCO2, double expectedCVTP)
 		{
@@ -124,8 +142,61 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 
 			var vtpXml = XDocument.Load(vtpReport);
 
-			Assert.AreEqual(expectedDeclaredCO2, vtpXml.Document?.XPathSelectElement("//*[local-name()='Declared']")?.Value.ToDouble(), 1e-1);
-			Assert.AreEqual(expectedCVTP, vtpXml.Document?.XPathSelectElement("//*[local-name()='C_VTP']")?.Value.ToDouble(), 1e-4);
+			var declared = vtpXml.Document?.XPathSelectElement("//*[local-name()='Declared']")?.Value.ToDouble();
+			var cvtp = vtpXml.Document?.XPathSelectElement("//*[local-name()='C_VTP']")?.Value.ToDouble();
+			var status = vtpXml.Document?.XPathSelectElement("//*[local-name()='Status']")?.Value;
+
+			TestContext.WriteLine($"declared CO2 = {declared}, cvtp = {cvtp}");
+
+			Assert.AreEqual(expectedDeclaredCO2, declared, 1e-8);
+			Assert.AreEqual(expectedCVTP, cvtp, 1e-4);
+			Assert.AreEqual(status, "Passed");
+		}
+
+		[Category("LongRunning")]
+		[Category("Integration")]
+		[TestCase(ARCHIVE_BUILDER_JOB, TestName = "VTP Job Archive creation")]
+		public void TestVTPJobArchiveCreation(string jobFile)
+		{ 
+			var fileWriter = new FileOutputWriter(jobFile);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter, new JobArchiveBuilder());
+			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
+			runsFactory.ModalResults1Hz = false;
+			runsFactory.WriteModalResults = true;
+			runsFactory.ActualModalData = false;
+			runsFactory.Validate = false;
+
+			jobContainer.AddRuns(runsFactory);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.AreEqual(true, jobContainer.AllCompleted);
+
+			var archivePath = Path.Combine(Path.GetDirectoryName(jobFile), "JobArchive_VTP_MediumLorry.zip");
+			Assert.IsTrue(File.Exists(archivePath));
+
+			var fileNames = new List<string>() {
+				"VTP_MediumLorry.VTP_Report.xml",
+				"VTP_MediumLorry.vsum",
+				"standard values_VTP Testzyklus.vmod",
+				"VTP_MediumLorry.vecto",
+				"vecto_vehicle-medium_lorry_4x2.RSLT_MANUFACTURER.xml",
+				"vecto_vehicle-medium_lorry_4x2.xml",
+				"VTP Testzyklus.vdri"
+			};
+
+			var zipFiles = new List<string>();
+
+			using (ZipArchive archive = ZipFile.OpenRead(archivePath))
+			{
+				foreach (ZipArchiveEntry entry in archive.Entries) { zipFiles.Add(entry.FullName); }
+			} 
+
+			Assert.IsTrue(fileNames.Count == zipFiles.Count);
+			Assert.IsTrue(fileNames.All(x => zipFiles.Contains(x)));
 		}
 
 		[Category("LongRunning")]
@@ -158,7 +229,7 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			var vtpReport = XDocument.Load(XmlReader.Create(fileWriter.XMLVTPReportName));
 			var vtpFactor = vtpReport.XPathSelectElement("//*[local-name() = 'Results']/*[local-name() = 'C_VTP']")?.Value.ToDouble(0);
 
-			Assert.AreEqual(0.9549, vtpFactor);
+			Assert.AreEqual(0.8157, vtpFactor);
 		}
 
 		[Category("LongRunning")]

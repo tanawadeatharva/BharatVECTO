@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 
 		IEngineeringInputDataProvider CreateEngineering(XmlReader inputData);
 
-		IDeclarationInputDataProvider CreateDeclaration(string filename);
+		IDeclarationInputDataProvider CreateDeclaration(string filename, bool allowDeprecated = false);
 
 		IDeclarationInputDataProvider CreateDeclaration(XmlReader inputData);
 	}
@@ -62,5 +62,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 		IAirdragDeclarationInputData CreateAirdrag(string filename);
 		IAirdragDeclarationInputData CreateAirdrag(Stream inputData);
 		IAirdragDeclarationInputData CreateAirdrag(XmlReader inputData);
-	}
+
+		TOut CreateFromFile<TOut>(string filename) where TOut : class;
+		TOut CreateFromStream<TOut>(Stream inputData) where TOut : class;
+
+    }
 }

@@ -80,11 +80,18 @@ namespace HashingTool.Helper
 			if (x == null || x.DocumentElement == null) {
 				return null;
 			}
-			var valid = x.DocumentElement.LocalName == XMLNames.VectoInputDeclaration &&
-						x.DocumentElement.FirstChild.LocalName == XMLNames.Component_Vehicle;
+			var validSingleStep = (x.DocumentElement.LocalName == XMLNames.VectoInputDeclaration &&
+						x.DocumentElement.FirstChild.LocalName == XMLNames.Component_Vehicle);
+
+			var validMultiStep = (x.DocumentElement.LocalName == XMLNames.VectoOutputMultistep && 
+						x.DocumentElement.FirstChild.LocalName == XMLNames.Bus_PrimaryVehicle);
+
+			var valid = validSingleStep || validMultiStep;
+
 			if (!valid) {
 				errorLog.LogError($"Invalid XML file given ({x.DocumentElement.LocalName}/{x.DocumentElement.FirstChild.LocalName}). " +
-								$"Expected Vehicle XML ({XMLNames.VectoInputDeclaration}/{XMLNames.Component_Vehicle})!");
+								$"Expected Vehicle XML ({XMLNames.VectoInputDeclaration}/{XMLNames.Component_Vehicle}) or " +
+								$"({XMLNames.VectoOutputMultistep}/{XMLNames.Bus_PrimaryVehicle}) !");
 			}
 			return valid;
 		}

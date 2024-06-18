@@ -1,4 +1,6 @@
-﻿using Ninject.Modules;
+﻿using System.Xml;
+using Ninject.Modules;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
@@ -302,8 +304,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLElectricMotorDeclarationInputData>().To<XMLElectricMotorDeclarationInputDataProviderV23>()
 				.Named(XMLElectricMotorDeclarationInputDataProviderV23.QUALIFIED_XSD_TYPE);
+			Bind<IComponentInputData>().ToConstructor<XMLElectricMotorDeclarationInputDataProviderV23>((syntax) => new XMLElectricMotorDeclarationInputDataProviderV23(syntax.Inject<XmlNode>(), syntax.Inject<string>()))
+				.Named(XMLElectricMotorDeclarationInputDataProviderV23.QUALIFIED_XSD_TYPE);
 
-			Bind<IXMLElectricMotorDeclarationInputData>().To<XMLElectricMotorSystemStandardDeclarationInputDataProviderV23>()
+            Bind<IXMLElectricMotorDeclarationInputData>().To<XMLElectricMotorSystemStandardDeclarationInputDataProviderV23>()
 				.Named(XMLElectricMotorSystemStandardDeclarationInputDataProviderV23.QUALIFIED_XSD_TYPE);
 			
 			Bind<IXMLElectricMotorDeclarationInputData>().To<XMLElectricMotorIhpcDeclarationInputDataProviderV23>()

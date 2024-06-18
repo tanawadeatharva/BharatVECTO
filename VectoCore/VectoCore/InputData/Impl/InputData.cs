@@ -115,6 +115,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public ITyreEngineeringInputData Tyre { get; internal set; }
 
+		public NewtonMeter WheelEndFriction { get; internal set; }
 
 		public double AxleWeightShare { get; internal set; }
 
@@ -149,6 +150,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public double RollResistanceCoefficient { get; internal set; }
 
 		public Newton TyreTestLoad { get; internal set; }
+
 		public string FuelEfficiencyClass { get; internal set; }
 
 		public KilogramSquareMeter Inertia { get; internal set; }
@@ -264,11 +266,12 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public IList<IResult> Results { get; internal set; }
 	}
+
 	
 	[DebuggerDisplay("{ResultStatus} | {VehicleGroup} {Mission} {OvcMode}")]
 	public class Result : IResult
 	{
-		public string ResultStatus { get; internal set; }
+		public ResultStatus ResultStatus { get; internal set; }
 		public VehicleClass VehicleGroup { get; internal set; }
 		public MissionType Mission { get; internal set; }
 		public ISimulationParameter SimulationParameter { get; internal set; }
@@ -307,5 +310,13 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public IList<IElectricMotorPowerMap> PowerMap { get; internal set; }
 
 		#endregion
-	}
+    }
+
+    public class FuelNCVData : IFuelNCVData
+    {
+		public FuelType Type { get; internal set; }
+
+		public JoulePerKilogramm NCV { get; internal set; }
+    }
+
 }

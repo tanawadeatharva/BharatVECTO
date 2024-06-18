@@ -1,6 +1,225 @@
 # Changelog
 
+**VECTO-4.2.0-RC**
+
+**Build 3448 (2024-06-10)**
+
+- Features
+   * CodeEU-697: Re-evaluate subgroup allocations for Long Haul
+   * CodeEU-696: Double summary in CIF for vocationals and non vocational missions.
+   * CodeEU-698: Incorporate missions RD, LH and EMS to class 16 vehicles
+   * CodeEU-676: Feature: Implement monitoring report
+
+- Bugfixes
+   * CodeEU-471: VectoSimulationException: VF640J869RB022573
+   * CodeEU-462: Article10-2-issue | Order-Nr 28206354 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-326: Article10-2-issue | Order-Nr 28195581 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-348: Article10-2-issue | Order-Nr 28204519 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-457: Article10-2-issue | Order-Nr 28174000 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-458: Article10-2-issue | Order-Nr 28186528 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-459: Article10-2-issue | Order-Nr 28203057 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-545: IVECO confidential : BUG REPORT : HEV-P1 : UW18m C9 VOITH NXT CRU 48V mild hybrid
+   * CodeEU-346: Article10-2-issue | Order-Nr 28202338 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-352: Article10-2-issue | Order-Nr 28202130 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-394: Article10-2-issue | Order-Nr 28204065 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-433: Article10-2-issue | Order-Nr 28192321 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-451: Article10-2-issue | Order-Nr 28204280 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-452: Article10-2-issue | Order-Nr 28197394 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-453: Article10-2-issue | Order-Nr 28199435 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-454: Article10-2-issue | Order-Nr 28206982 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-655: Article10-2-issue | VECTO-4.0.3 | Order-Nr 28208126 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-660: Retarder lossmap error in completed vehicle simulation
+   * CodeEU-662: Generic retarder map speed range insufficient in some cases
+   * CodeEU-648: Error in Multistep Tool PEV/P-HEV
+   * CodeEU-618: PEV vehicles simulation error depending the time format
+   * CodeEU-700: Factor Method Generic IHPC Powermap De-normaization bug
+   * CodeEU-482: Article10-2-issue | Order-Nr 28203040 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-514: Article10-2-issue | VECTO-4.0.3 | Order-Nr 28208051 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-529: Article10-2-issue | VECTO-4.0.3 | Order-Nr 28199994 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-544: IVECO confidential : BUG REPORT : HEV-P1 : CRW LE C9 VOITH NXT CRU 48V mild hybrid
+   * CodeEU-552: Article10-2-issue | VECTO-4.0.3 | Order-Nr 28201759 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-556: Article10-2-issue | VECTO-4.0.3 | Order-Nr 28208176 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-557: Article10-2-issue | VECTO-4.0.3 | Order-Nr 28209751 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-622: Article10-2-issue | VECTO-4.0.3 | Order-Nr 28210594 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-632: Article10-2-issue | VECTO-4.0.3 | Order-Nr 28210591 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-672: Article10-2-issue | VECTO-4.1.3 | Order-Nr 28208841 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-673: Article10-2-issue | VECTO-4.1.3 | Order-Nr 28209179 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-674: Article10-2-issue | VECTO-4.1.3 | Order-Nr 28211540 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-678: Article10-2-issue | VECTO-4.1.3 | Order-Nr 28192673 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-697: Article10-2-issue | VECTO-4.1.3 | Order-Nr 28209551 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-685: Article10-2-issue | VECTO-4.1.3 | Order-Nr 28200286 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-686: Article10-2-issue | VECTO-4.1.3 | Order-Nr 28201178 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-687: Article10-2-issue | VECTO-4.1.3 | Order-Nr 28209679 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-692: Article10-2-issue | VECTO-4.1.3 | Order-Nr 28209789 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+
+**VECTO-4.1.3**
+
+***Build 3415 (2024-05-08)***
+
+- Hotfixes
+   * CodeEU-638: Incorrect construction payloads for group 9 non-vocational vehicle
+
+**VECTO-4.1.1**
+
+***Build 3413 (2024-05-06)***
+
+- Bugfixes
+   * CodeEU-615: Multistep freezes after loading VIF chassis
+   * CodeEU-616: Multistep tool freezes
+   * CodeEU-619: restore wrong exempted techs in XSD for backwards compatibility
+   * CodeEU-617: Results change depending the time format
+   * CodeEU-635: Revert multiple summary in CIF
+
+**VECTO-4.1.0-RC**
+
+***Build 3392 (2024-04-15)***
+
+- Features
+   * CodeEU-577: Add missing mission profiles to vocational and non-vocational
+
+- Bugfixes
+   * CodeEU-331: Gear 1 DrivingActionAccelerate: Fail
+   * CodeEU-367: Gear 1 DrivingActionAccelerate: Fail
+   * CodeEU-372: ADT Error on Bus Category Primary Vehicle Simulation on VECTO
+   * CodeEU-373: ADT Error on Bus Category Primary Vehicle Simulation on VECTO
+   * CodeEU-374: ADT Error on Bus Category Primary Vehicle Simulation on VECTO
+   * CodeEU-375: ADT Error on Bus Category Primary Vehicle Simulation on VECTO
+   * CodeEU-393: Finished Run VEH-PrimaryBus_nonSmart Interurban _P32SD_ReferenceLoad with ERROR: 16
+   * CodeEU-439: 615 (Interurban _P32DD_ReferenceLoad) - absTime: 7129.6359 [s], distance: 53875.9765 [m], dt: 0.6388 [s], v: 0.5098 [m/s], Gear: 1 | DrivingActionAccelerate: Failed
+   * CodeEU-446: Finished Run VEH-PrimaryBus_nonSmart Interurban _P32SD_ReferenceLoad with ERROR: 16
+   * CodeEU-449: Finished Run VEH-PrimaryBus_nonSmart Interurban _P32SD_ReferenceLoad with ERROR: 16
+   * CodeEU-478: Finished Run VEH-PrimaryBus_nonSmart Urban _P31SD_ReferenceLoad with ERROR: 4 (Urban _P31SD_ReferenceLoad) - absTime: 8606.6241 [s], distance: 39112.5127 [m], dt: 1.1131 [s], v: 0.1833 [m/s], Gear: 1 | DrivingActionAccelerate: Failed to find operating poi
+   * CodeEU-481: Finished Run VEH-PrimaryBus_nonSmart Urban _P31SD_ReferenceLoad with ERROR: 4 (Urban _P31SD_ReferenceLoad) - absTime: 8606.6241 [s], distance: 39112.5127 [m], dt: 1.1131 [s], v: 0.1833 [m/s], Gear: 1 |
+   * CodeEU-488: Finished Run VEH-PrimaryBus_nonSmart Urban _P31SD_ReferenceLoad with ERROR: 4 (Urban _P31SD_ReferenceLoad) - absTime: 8606.6241 [s], distance: 39112.5127 [m], dt: 1.1131 [s], v: 0.1833 [m/s], Gear: 1 | DrivingActionAccelerate: Failed to find operating poi
+   * CodeEU-494: Finished Run VEH-PrimaryBus_nonSmart Urban _P31SD_ReferenceLoad with ERROR: 26 (Urban _P31SD_ReferenceLoad) - absTime: 8606.6241 [s], distance: 39112.5127 [m], dt: 1.1131 [s], v: 0.1833 [m/s], Gear: 1 | DrivingActionAccelerate: Failed to fi
+   * CodeEU-420: Finished Run VEH-PrimaryBus_nonSmart Interurban _P32SD_ReferenceLoad with ERROR: 16
+   * CodeEU-573: Unhandled powertrain architecture Conventional Vehicle to calculate gradability
+   * CodeEU-582: unhandled powertrain architecture ConventionalVehicle to calculate gradability, 11:44:36.63,
+   * CodeEU-595: Inconsistency exempted vehicles "Fuel cell vehicle" vs. "FCV Article 9 exempted"
+   * CodeEU-501: Help regarding VTP vdri format is not up to date in v4
+   * CodeEU-594: inadequate validation for auxiliaries in completed vehicle XML
+   * CodeEU-580: Potential error in XML schema v2.4 (exempted vehicles)
+   * CodeEU-551: Article-10-2 XLRASF5E00G419905
+   * CodeEU-547: Max ICE Off timespan for buses
+   * CodeEU-583: Incorrect internal resistance for SuperCap used in factor method
+   * CodeEU-571: Article10-2-issue | VECTO-4.0.3 | Order-Nr 28202896 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-526: VTP calculation aborted on fuel consumption map
+   * CodeEU-502: Error in VECTO calculation WMA10CZZ0RF022326
+   * CodeEU-401: Electric steering system with conventional vehicle not according to 2017/2400
+   * CodeEU-476: Setting Initial SoC in REESS editor leads to error
+   * CodeEU-533: Question about heavy lorry_IEPC_Gb×4speed: Failed to generate electric power map - at least two negative entries are required
+   * CodeEU-456: Clarification Documentation official Results
+   * CodeEU-506: Article 10(2) issue - VIN YS2P6X200R2201285
+   * CodeEU-507: Article 10(2) issue - VIN YS2P6X20005732399
+   * CodeEU-508: Article 10(2) issue - VIN S2P6X20005734199
+   * CodeEU-499: Object Reference not set Error
+   * CodeEU-546: Problem with P181 (Cooling Fan Technology) for a conventional vehicle
+   * CodeEU-516: Article10-2-issue | VECTO-4.0.3 | Order-Nr 28208044 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-517: Article10-2-issue | VECTO-4.0.3 | Order-Nr 28208037 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-519: Article10-2-issue | VECTO-4.0.3 | Order-Nr 10098181 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-527: Article10-2-issue | VECTO-4.0.3 | Order-Nr 28196233 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-528: Article10-2-issue | VECTO-4.0.3 | Order-Nr 28196652 | HEV P1 Error Mercedes-Benz and Setra Hybrid Buses
+   * CodeEU-338: Eco-roll only, without engine stop, impact on CO2 emission
+   * CodeEU-475: XML files loading in VTP Job not OK; No auxiliary data and torque curve visible, Job can't be saved in VECTO 4.0.3.3330
+   * CodeEU-610: VTP mode is broken due to changes in the Clutch component.
+
+**VECTO-4.0.3**
+
+***Build 3330 (2024-02-13)***
+
+- Bugfixes
+    * CodeEU-293: DistanceRun got an unexpected response
+    * CodeEU-298: Object reference not set to an instance of an object
+    * CodeEU-300: Full drive torque miscalculation
+    * CodeEU-336: Feature: Hashing tool must validate the previous step data for multi-step jobs
+    * CodeEU-337: Electric Citybus - ERROR with "31a-Specific" bus configuration
+    * CodeEU-343: Cannot simulate Primary Vehicle using vectocmd.exe
+    * CodeEU-387: VECTO sometimes fails to properly read Tyre data from primary vehicle xml
+    * CodeEU-427: Vehicle speed resulting to exceeding max gearbox speed
+    * CodeEU-428: Remove speed safety margin for gearbox re-engaging
+    * CodeEU-438: Mismatch XML schema vs Regulation (exempted vehicles)
+    * CodeEU-248: Bus P2 hybrid VECTO error in urban cycle
+    * CodeEU-278: Simulation crash when writing fuel consumption results to reports
+    * CodeEU-284: New error message and failed simulation obtained for P2 hybrid buses
+    * CodeEU-285: PEV vehicle error in routine to write the results with new vecto version  4.0.2.3275
+    * CodeEU-287: PEV_IEPC error message:"can only operate on SI Objects with the same unit"
+    * CodeEU-289: VECTO Simulation Error for bus with validated input data
+
+**VECTO-4.0.2**
+
+***Build 3275 (2023-12-20)***
+
+- Hotfix
+    * CodeEU-273, CodeEU-274: Changes in the AMT shift strategy regarding idling speed caused simulation aborts
+    * CodeEU-260: regression fix handling overload buffer
+
+***Build 3273 (2023-12-18)***
+
+- Bugfixes
+    * CodeEU-94: DistanceRun got an unexpected response
+    * CodeEU-153: DrivingActionAccelerate: Failed to find operating point after Overload
+    * CodeEU-158: Urban RefLoad DrivingActionAccelerate: Failed to find operating point (IEPC Wheelhub 1 measured)
+    * CodeEU-168: Vecto Declaration Simulation with P1-Hybrid shows multiple errors - Simulation Aborts!
+    * CodeEU-191: Boosting limits HEV ovc are not working
+    * CodeEU-202: EMS Standard Values: Continuous/Overload Torque 0 Nm
+    * CodeEU-203: HybridStrategy error for IHPC type 1 hybrid lorry
+    * CodeEU-206: VTP + PEMS test done by Renault Trucks France - VECTO tool errors most probably linked to automatic gearbox (with torque converter)
+    * CodeEU-211: Hybrid P1 configurations with errors
+    * CodeEU-215: MultiStep tool help
+    * CodeEU-216: NrOfGears in CIF is 1 for IEPC no matter how many gears it has
+    * CodeEU-220: Error manual transmission 2. gear
+    * CodeEU-224: Issue with PEV complete vehicle simulation (Vecto MultiStage)
+    * CodeEU-231: IVECO CONFIDENTIAL : hybrid buses completed simulation aborted
+    * CodeEU-234: Error Conventional Lorry Gear: 1C DistanceRun got an unexpected response
+    * CodeEU-235: Tyre error calculation buses "invalid xsi:type 'TyreDataDeclarationType'"
+    * CodeEU-238: Bus VIF files not valid in Multistep VECTO
+    * CodeEU-243: Simulation aborted: Gear 5 Lossmap not sufficiant
+    * CodeEU-244: Signature validation fails for old (prior to v4) Manufacturer reports
+    * CodeEU-246: VTP report generation problems (failing to read some data from MRF)
+    * CodeEU-249: Fix handling gear torque limits in case of IEPC WheelHub motor and only one side is measured
+    * CodeEU-250: Maximum vehicle speed exceeded during pre-processing
+    * CodeEU-253: Replace VTP HeavyBus in Generic Vehicles with VTP Truck
+    * CodeEU-259: Inconsistent calculation of AverageRRC in CIF
+    * CodeEU-260: Handling of overload buffer in case Continuous Torque is 0Nm
+    * CodeEU-261: SuperCap internal resistance standard values correction
+    * CodeEU-263: Determination of rated power for IEPCs for MRF and CIF
+    * CodeEU-266: Fix Measured Speed Testcases
+
+
+**VECTO-4.0.1**
+
+***Build 3217 (2023-10-23) OFFICIAL RELEASE***
+
+- Improvements
+    * VTP mode: create zip archive for input and output files
+- Bugfixes
+    * bugfix in CIF for complete(d) buses - do not write PrimaryVehicleSubgroup element
+    * fix hybrid strategy: power comparison
+    * fix exempted vehicles do not work (error message that XML version is not supported)
+    * bugfix in XML schema: remove wrong PS technology entry for lorries
+    * bugfix for conditioning power demand for IHPC vehicles
+
 **VECTO-4.0.0**
+
+***Build 3211 (2023-10-16) OFFICIAL RELEASE***
+
+- First official VECTO release for the 2nd amendment of Regulation (EU) 2017/2400
+- Features
+   - Declaration Mode simulation
+       - xEV heavy lorries
+       - Conventional medium lorries
+       - xEV medium lorries
+       - conventional buses (primary and complete(d))
+       - xEV buses (primary and complete(d))
+    - Dedicated user interface for simulating buses in declaration mode using the multistep tool
+    - Updated XML reports (MRF, CIF, VIF)
+    - Updated simulation output (.vsum, .vmod)
+    - XML job files in version below 2.4 are no longer supported
+       - XML component data is still supported in all XML versions
+    - Dropped support for .NET Framework 4.5 (EOL 04/2022)
+    - Engineering mode simulation of xEV vehicles
+
+
 
 ***Build 3078 (2023-06-06) RELEASE CANDIDATE***
 

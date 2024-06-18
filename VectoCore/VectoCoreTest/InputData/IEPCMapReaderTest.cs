@@ -1,5 +1,5 @@
 ﻿
-#if TRACE
+#if VECTOTRACE
 using System.Windows.Forms.DataVisualization.Charting;
 #endif
 
@@ -14,6 +14,7 @@ using System.Linq;
 using System.Reflection;
 
 using NUnit.Framework;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
@@ -66,11 +67,11 @@ namespace TUGraz.VectoCore.Tests.InputData
 			powerMapData.Columns[2].ColumnName = IEPCMapReader.Fields.PowerElectrical;
 
 			var fld = IEPCFullLoadCurveReader.Create(fullLoadCurveData, 1, fldMeasuredRatio);
-			var powerMapInput = IEPCMapReader.GetEntries(powerMapData, ratio);
+			var powerMapInput = IEPCMapReader.GetEntries(powerMapData, ratio, ExecutionMode.Engineering);
 
 
-			var effMap = IEPCMapReader.Create(powerMapData, 1, ratio, fld);
-#if TRACE
+			var effMap = IEPCMapReader.Create(powerMapData, 1, ratio, fld, ExecutionMode.Engineering);
+#if VECTOTRACE
 			PrintMaps("FLD.png", 
 				new SeriesProperties<ElectricMotorFullLoadCurve.FullLoadEntry>() {
 					xSelector = (x => x.MotorSpeed.AsRPM),
@@ -161,7 +162,7 @@ namespace TUGraz.VectoCore.Tests.InputData
 			}
 		}
 
-#if TRACE
+#if VECTOTRACE
 		public abstract class SeriesProperties
 		{
 			public abstract IEnumerable<(double x, double y)> GetPoints();

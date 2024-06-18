@@ -4,6 +4,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.Utils;
 
@@ -62,9 +63,28 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetElement(IResultEntry entry)
 		{
+			if (entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
+				return new XElement(TNS + XMLNames.Report_ResultEntry_VehiclePerformance,
+					new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed, new ConvertedSI(double.NaN, XMLNames.Unit_kmph).ValueAsUnit()),
+					new XElement(TNS + XMLNames.Report_ResultEntry_AvgDrivingSpeed, new ConvertedSI(double.NaN, XMLNames.Unit_kmph).ValueAsUnit()),
+					new XElement(TNS + XMLNames.Report_ResultEntry_MinSpeed, new ConvertedSI(double.NaN, XMLNames.Unit_kmph).ValueAsUnit()),
+					new XElement(TNS + XMLNames.Report_ResultEntry_MaxSpeed, new ConvertedSI(double.NaN, XMLNames.Unit_kmph).ValueAsUnit()),
+					new XElement(TNS + XMLNames.Report_ResultEntry_MaxDeceleration, new ConvertedSI(double.NaN, XMLNames.Unit_mps2).ValueAsUnit()),
+					new XElement(TNS + XMLNames.Report_ResultEntry_MaxAcceleration, new ConvertedSI(double.NaN, XMLNames.Unit_mps2).ValueAsUnit()),
+					new XElement(TNS + XMLNames.Report_ResultEntry_FullLoadDrivingtimePercentage, 0),
+					new XElement(TNS + XMLNames.Report_ResultEntry_GearshiftCount, 0),
+					new XElement(TNS + XMLNames.Report_ResultEntry_EngineSpeedDriving,
+						new XElement(TNS + XMLNames.Report_ResultEntry_EngineSpeedDriving_Min, new ConvertedSI(double.NaN, XMLNames.Unit_RPM).ValueAsUnit()),
+						new XElement(TNS + XMLNames.Report_ResultEntry_EngineSpeedDriving_Avg, new ConvertedSI(double.NaN, XMLNames.Unit_RPM).ValueAsUnit()),
+						new XElement(TNS + XMLNames.Report_ResultEntry_EngineSpeedDriving_Max, new ConvertedSI(double.NaN, XMLNames.Unit_RPM).ValueAsUnit())
+					),
+					new XElement(TNS + XMLNames.Report_Results_AverageGearboxEfficiency, new ConvertedSI(double.NaN, XMLNames.UnitPercent).ValueAsUnit()),
+					new XElement(TNS + XMLNames.Report_Results_AverageAxlegearEfficiency, new ConvertedSI(double.NaN, XMLNames.UnitPercent).ValueAsUnit())
+				);
+            }
 			return new XElement(TNS + XMLNames.Report_ResultEntry_VehiclePerformance,
-				new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed, entry.AverageSpeed.ValueAsUnit("km/h", 1)),
-				new XElement(TNS + XMLNames.Report_ResultEntry_AvgDrivingSpeed, entry.AverageDrivingSpeed.ValueAsUnit("km/h", 1)),
+				new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed, entry.AverageSpeed.ValueAsUnit(XMLNames.Unit_kmph, 1)),
+				new XElement(TNS + XMLNames.Report_ResultEntry_AvgDrivingSpeed, entry.AverageDrivingSpeed.ValueAsUnit(XMLNames.Unit_kmph, 1)),
 				new XElement(TNS + XMLNames.Report_ResultEntry_MinSpeed, entry.MinSpeed.ValueAsUnit(XMLNames.Unit_kmph, 1)),
 				new XElement(TNS + XMLNames.Report_ResultEntry_MaxSpeed, entry.MaxSpeed.ValueAsUnit(XMLNames.Unit_kmph, 1)),
 				new XElement(TNS + XMLNames.Report_ResultEntry_MaxDeceleration, entry.MaxDeceleration.ValueAsUnit(XMLNames.Unit_mps2, 2)),
@@ -84,6 +104,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public override XElement GetElement(IOVCResultEntry entry)
 		{
 			var weighted = entry.Weighted;
+			if (weighted.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
+				return new XElement(TNS + XMLNames.Report_ResultEntry_VehiclePerformance,
+					new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed, new ConvertedSI(double.NaN, XMLNames.Unit_kmph).ValueAsUnit()),
+					new XElement(TNS + XMLNames.Report_ResultEntry_AvgDrivingSpeed, new ConvertedSI(double.NaN, XMLNames.Unit_kmph).ValueAsUnit())
+				);
+            }
 			return new XElement(TNS + XMLNames.Report_ResultEntry_VehiclePerformance,
 				new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed, weighted.AverageSpeed.ValueAsUnit("km/h", 1)),
 				new XElement(TNS + XMLNames.Report_ResultEntry_AvgDrivingSpeed, weighted.AverageDrivingSpeed.ValueAsUnit("km/h", 1))
@@ -101,9 +127,23 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetElement(IResultEntry entry)
 		{
-			return new XElement(TNS + XMLNames.Report_ResultEntry_VehiclePerformance,
-				new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed, entry.AverageSpeed.ValueAsUnit("km/h", 1)),
-				new XElement(TNS + XMLNames.Report_ResultEntry_AvgDrivingSpeed, entry.AverageDrivingSpeed.ValueAsUnit("km/h", 1)),
+			if (entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
+				return new XElement(TNS + XMLNames.Report_ResultEntry_VehiclePerformance,
+					new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed, new ConvertedSI(double.NaN, XMLNames.Unit_kmph).ValueAsUnit()),
+					new XElement(TNS + XMLNames.Report_ResultEntry_AvgDrivingSpeed, new ConvertedSI(double.NaN, XMLNames.Unit_kmph).ValueAsUnit()),
+					new XElement(TNS + XMLNames.Report_ResultEntry_MinSpeed, new ConvertedSI(double.NaN, XMLNames.Unit_kmph).ValueAsUnit()),
+					new XElement(TNS + XMLNames.Report_ResultEntry_MaxSpeed, new ConvertedSI(double.NaN, XMLNames.Unit_kmph).ValueAsUnit()),
+					new XElement(TNS + XMLNames.Report_ResultEntry_MaxDeceleration, new ConvertedSI(double.NaN, XMLNames.Unit_mps2).ValueAsUnit()),
+					new XElement(TNS + XMLNames.Report_ResultEntry_MaxAcceleration, new ConvertedSI(double.NaN, XMLNames.Unit_mps2).ValueAsUnit()),
+					new XElement(TNS + XMLNames.Report_ResultEntry_FullLoadDrivingtimePercentage, 0),
+					new XElement(TNS + XMLNames.Report_ResultEntry_GearshiftCount, 0),
+					new XElement(TNS + XMLNames.Report_Results_AverageGearboxEfficiency, new ConvertedSI(double.NaN, XMLNames.UnitPercent).ValueAsUnit()),
+					new XElement(TNS + XMLNames.Report_Results_AverageAxlegearEfficiency, new ConvertedSI(double.NaN, XMLNames.UnitPercent).ValueAsUnit())
+				);
+			}
+            return new XElement(TNS + XMLNames.Report_ResultEntry_VehiclePerformance,
+				new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed, entry.AverageSpeed.ValueAsUnit(XMLNames.Unit_kmph, 1)),
+				new XElement(TNS + XMLNames.Report_ResultEntry_AvgDrivingSpeed, entry.AverageDrivingSpeed.ValueAsUnit(XMLNames.Unit_kmph, 1)),
 				new XElement(TNS + XMLNames.Report_ResultEntry_MinSpeed, entry.MinSpeed.ValueAsUnit(XMLNames.Unit_kmph, 1)),
 				new XElement(TNS + XMLNames.Report_ResultEntry_MaxSpeed, entry.MaxSpeed.ValueAsUnit(XMLNames.Unit_kmph, 1)),
 				new XElement(TNS + XMLNames.Report_ResultEntry_MaxDeceleration, entry.MaxDeceleration.ValueAsUnit(XMLNames.Unit_mps2, 2)),
@@ -118,9 +158,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public override XElement GetElement(IOVCResultEntry entry)
 		{
 			var weighted = entry.Weighted;
-			return new XElement(TNS + XMLNames.Report_ResultEntry_VehiclePerformance,
-				new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed, weighted.AverageSpeed.ValueAsUnit("km/h", 1)),
-				new XElement(TNS + XMLNames.Report_ResultEntry_AvgDrivingSpeed, weighted.AverageDrivingSpeed.ValueAsUnit("km/h", 1))
+			if (weighted.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
+				return new XElement(TNS + XMLNames.Report_ResultEntry_VehiclePerformance,
+					new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed, new ConvertedSI(double.NaN, XMLNames.Unit_kmph).ValueAsUnit()),
+					new XElement(TNS + XMLNames.Report_ResultEntry_AvgDrivingSpeed, new ConvertedSI(double.NaN, XMLNames.Unit_kmph).ValueAsUnit())
+				);
+			}
+            return new XElement(TNS + XMLNames.Report_ResultEntry_VehiclePerformance,
+				new XElement(TNS + XMLNames.Report_ResultEntry_AverageSpeed, weighted.AverageSpeed.ValueAsUnit(XMLNames.Unit_kmph, 1)),
+				new XElement(TNS + XMLNames.Report_ResultEntry_AvgDrivingSpeed, weighted.AverageDrivingSpeed.ValueAsUnit(XMLNames.Unit_kmph, 1))
 			);
 		}
 

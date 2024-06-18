@@ -176,7 +176,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 	public static class BatterySystemHelper
 	{
-		public static Volt CalculateAverageVoltage(this BatterySystemData battery)
+		public static Volt CalculateVoltageCenterSoc(this BatterySystemData battery)
 		{
 			if (battery == null) {
 				return null;

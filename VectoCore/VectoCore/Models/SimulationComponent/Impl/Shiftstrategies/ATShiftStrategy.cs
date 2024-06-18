@@ -50,6 +50,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
 	public class ATShiftStrategyPolygonCalculator : IShiftPolygonCalculator
 	{
+		public ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
+			GearboxType gearboxType,
+			int i,
+			EngineFullLoadCurve engineDataFullLoadCurve,
+			IList<ITransmissionInputData> gearboxGears,
+			CombustionEngineData engineData,
+			double axlegearRatio,
+			Meter dynamicTyreRadius,
+			ElectricMotorData electricMotorData = null)
+		{
+			throw new System.NotImplementedException();
+		}
+
 		public ShiftPolygon ComputeDeclarationShiftPolygon(
 			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve,
 			IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio,
@@ -88,6 +101,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			return _shiftPolygonCalculator.ComputeDeclarationShiftPolygon(gearboxType, i, engineDataFullLoadCurve,
 				gearboxGears, engineData, axlegearRatio, dynamicTyreRadius, electricMotorData);
 		}
+
+		public override ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
+			GearboxType gearboxType,
+			int i,
+			EngineFullLoadCurve engineDataFullLoadCurve,
+			IList<ITransmissionInputData> gearboxGears,
+			CombustionEngineData engineData,
+			double axlegearRatio,
+			Meter dynamicTyreRadius,
+			ElectricMotorData electricMotorData = null)
+		{
+			throw new System.NotImplementedException("Not applicable to AT Gearbox.");
+		}
+
 
 		public static string Name => "AT - Classic";
 
@@ -178,9 +205,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			var disengageTCEngineSpeedLowerIdle = braking && torqueNegative && gear1C &&
 												inAngularVelocity.IsSmallerOrEqual(DataBus.EngineInfo.EngineIdleSpeed);
 
-			if (disengageBeforeHalting || disengageTCEngineSpeedLowerIdle || disengageAngularVelocityZero ||
-				disengageTOutNegativeAndTInPositive) {
-				_nextGear.SetState(absTime, disengaged: true, gear: Gears.First());
+			if (disengageBeforeHalting
+				|| disengageTCEngineSpeedLowerIdle
+				|| disengageAngularVelocityZero
+				|| disengageTOutNegativeAndTInPositive)
+			{
+				// In order to make it to the halting distance do not allow disengaging if propulsion from engine is needed.
+				bool allowDisengageGear = braking && !torqueNegative && slowerThanDisengageSpeed;
+
+				_nextGear.SetState(absTime, disengaged: !allowDisengageGear, gear: Gears.First());
 				return true;
 			}
 
@@ -432,7 +465,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 						var tmpResponseDs = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
 						SetGear(gbxState);
 						// done
-						if (tmpResponseDs.DeltaFullLoad - Formulas.InertiaPower(
+						if (tmpResponseDs.Engine.EngineSpeed.IsSmaller(DataBus.EngineInfo.EngineN95hSpeed) && tmpResponseDs.DeltaFullLoad - Formulas.InertiaPower(
 								tmpResponseDs.Engine.EngineSpeed, DataBus.EngineInfo.EngineSpeed, EngineInertia, dt) < tmpResponseCurr.DeltaFullLoad) {
 							Downshift(absTime, gear);
 							return true;
@@ -495,7 +528,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			((DataBus.DrivingCycleInfo.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
 			DataBus.DrivingCycleInfo.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
 
-			var airDragLoss = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, vehicleSpeed) * DataBus.VehicleInfo.VehicleSpeed;
+			var airDragLoss = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, vehicleSpeed).AirdragForce * DataBus.VehicleInfo.VehicleSpeed;
 			var rollResistanceLoss = DataBus.VehicleInfo.RollingResistance(avgSlope) * DataBus.VehicleInfo.VehicleSpeed;
 
 			var slopeLoss = DataBus.VehicleInfo.SlopeResistance(avgSlope) * DataBus.VehicleInfo.VehicleSpeed;

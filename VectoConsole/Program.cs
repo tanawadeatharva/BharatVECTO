@@ -38,6 +38,8 @@ using System.Reflection;
 using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.XPath;
+using Castle.Core.Internal;
 using Ninject;
 using NLog;
 using NLog.Config;
@@ -45,7 +47,6 @@ using NLog.Targets;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
@@ -67,30 +68,46 @@ namespace VectoConsole
 		private static int _numLines;
 		private static int ProgessCounter { get; set; }
 
-		private const string Usage = @"Usage: vectocmd.exe [-h] [-v] FILE1.vecto [FILE2.vecto ...]";
+		private const string Usage = @"
+Usage:
+	vectocmd.exe [-h] [-v] [-q] FILE1.vecto [FILE2.vecto ...]
+	vectocmd.exe [-h] [-v] [-q] -ams PREVIOUS_STEP.xml CURRENT_STEP.xml OUTPUT.xml
+
+";
+
+		private const string UsageAMS = @"
+Usage:
+	vectocmd.exe [-h] [-v] [-q] -ams PREVIOUS_STEP.xml CURRENT_STEP.xml OUTPUT.xml
+
+";
 
 		private const string Help = @"
 Commandline Interface for Vecto.
 
 Synopsis:
-	vectocmd.exe [-h] [-v] FILE1.(vecto|xml) [FILE2.(vecto|xml) ...]
+	vectocmd.exe [-h] [-v] [-q] FILE1.(vecto|xml) [FILE2.(vecto|xml) ...]
+	vectocmd.exe [-h] [-v] [-q] -ams PREVIOUS_STEP.xml CURRENT_STEP.xml OUTPUT.xml
 
 Description:
 	FILE1.vecto [FILE2.vecto ...]: A list of vecto-job files (with the 
 	   extension: .vecto). At least one file must be given. Delimited by 
 	   whitespace.
+	PREVIOUS_STEP.xml: Previous manufacturing step VIF.
+	CURRENT_STEP.xml: Current interim or completed manufacturing step VIF.
+	OUTPUT.xml: Output path for the new VIF.
 
-	-t: output information about execution times
-	-mod: write mod-data in addition to sum-data
-	-1Hz: convert mod-data to 1Hz resolution
-	-eng: switch to engineering mode (implies -mod)
-	-q: quiet - disables console output unless verbose information is enabled
-	-nv: skip validation of internal data structure before simulation
-	-v: Shows verbose information (errors and warnings will be displayed)
-	-vv: Shows more verbose information (infos will be displayed)
-	-vvv: Shows debug messages (slow!)
-	-vvvv: Shows all verbose information (everything, slow!)
-	-V: show version information
+	-ams: Append manufacturing step
+	-eng: Switch to engineering mode (implies -mod).
+	-mod: Write mod-data in addition to sum-data.
+	-1Hz: Convert mod-data to 1Hz resolution.
+	-nv: Skip validation of internal data structure before simulation.
+	-t: Output information about execution times.
+	-v: Shows verbose information (errors and warnings will be displayed).
+	-vv: Shows more verbose information (info will be displayed).
+	-vvv: Shows debug messages (slow!).
+	-vvvv: Shows all verbose information (everything, slow!).
+	-q: Disables console output unless verbose information is enabled.
+	-V: Show version information.
 	-h: Displays this help.
 	
 Examples:
@@ -98,6 +115,7 @@ Examples:
 	vecto.exe 24tCoach.vecto 40t_Long_Haul_Truck.vecto
 	vecto.exe -v 24tCoach.vecto
 	vecto.exe -v jobs\40t_Long_Haul_Truck.vecto
+	vecto.exe -ams heavyBus32b.VIF_Report_2.xml heavyBus_Completed32b.xml output.xml
 	vecto.exe -h
 ";
 
@@ -108,13 +126,20 @@ Examples:
 
 		private static int Main(string[] args)
 		{
-
 			_kernel = new StandardKernel(new VectoNinjectModule());
-			try {
+			try
+			{
+				// if no arguments given: display usage and terminate
+				if (!args.Any())
+				{
+					WriteErrorLine(Usage, ConsoleColor.Gray);
+					return 1;
+				}
+
 				// on -h display help and terminate.
 				if (args.Contains("-h")) {
 					ShowVersionInformation();
-					Console.Write(Help);
+					WriteLine(Help);
 					return 0;
 				}
 
@@ -171,17 +196,19 @@ Examples:
 				}
 
 				var fileList =
-					args.Except(new[] { "-v", "-vv", "-vvv", "-vvvv", "-V", "-nv", "-mod", "-eng", "-t", "-1Hz", "-q", "-act" })
+					args.Except(new[] { "-v", "-vv", "-vvv", "-vvvv", "-V", "-nv", "-mod", "-eng", "-t", "-1Hz", "-q", "-act", "-ams" })
 						.ToArray();
 				var jobFiles =
-					fileList.Where(
+					fileList
+					.Where(
 						f =>
 							Path.GetExtension(f) == Constants.FileExtensions.VectoJobFile ||
-							Path.GetExtension(f) == Constants.FileExtensions.VectoXMLDeclarationFile).ToList();
+							Path.GetExtension(f) == Constants.FileExtensions.VectoXMLDeclarationFile)
+					.ToList();
 
-				// if no other arguments given: display usage and terminate
-				if (!args.Any()) {
-					Console.Write(Usage);
+				if (!jobFiles.Any())
+				{
+					WriteErrorLine(@"No Job files found. Please restart the application with a valid '.vecto' or '.xml' file.");
 					return 1;
 				}
 
@@ -191,7 +218,7 @@ Examples:
 				// process the file list and start simulation
 				var fileWriter = new FileOutputWriter(fileList.First());
 				var sumWriter = new SummaryDataContainer(fileWriter);
-				_jobContainer = new JobContainer(sumWriter);
+				_jobContainer = new JobContainer(sumWriter, new JobArchiveBuilder());
 
 				var mode = ExecutionMode.Declaration;
 				if (args.Contains("-eng")) {
@@ -200,19 +227,55 @@ Examples:
 						ConsoleColor.White);
 				}
 
-				stopWatch.Start();
+				if (args.Contains("-ams"))
+				{
+					string errorMessage = null;
+					int requiredFiles = 3;
+					if (fileList.Length < requiredFiles)
+					{
+						errorMessage = "Input or output files not provided.";
+					}
 
-				if (!jobFiles.Any()) {
-					WriteLine(@"No Job files found. Please restart the application with a valid '.vecto' file.", ConsoleColor.Red);
-					return 1;
+					if (args.Contains("-eng"))
+					{
+						errorMessage = "It is not possible to execute -ams command in Engineering (-eng) mode.";
+					}
+
+					if (!errorMessage.IsNullOrEmpty())
+					{
+						WriteErrorLine(errorMessage);
+						WriteLine(UsageAMS);
+						return 1;
+					}
+
+					string outputVifPath = AppendManufacturingStepAndStore(args, fileList);
+					if (_quiet)
+					{
+						return 0;
+					}
+
+					WriteLine("Do you want to run the simulation? [Y]es or [N]o (Default)");
+					string line = Console.ReadLine().Trim().ToUpper();
+					if (line != "Y" && line != "YES")
+					{
+						return 0;
+					}
+
+					if (!CanSimulateVehicleStep(fileList))
+					{
+						WriteErrorLine("Can not simulate interim steps. Only final can be simulated.");
+						return 0;
+					}
+
+					jobFiles = new List<string> { outputVifPath };
 				}
 
+				stopWatch.Start();
+
 				var inputReader = _kernel.Get<IXMLInputDataReader>();
-				
+
                 foreach (var file in jobFiles) {
 					fileWriter = new FileOutputWriter(file);
-
-
 
                     WriteLine(@"Reading job: " + file);
 					var extension = Path.GetExtension(file);
@@ -233,24 +296,19 @@ Examples:
 									break;
 								case "VectoOutputMultistep":
 									var vif = new XMLDeclarationVIFInputData(inputReader.Create(file) as IMultistepBusInputDataProvider, null);
-									fileWriter = new FileOutputVIFWriter(file,
-										vif.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? 0);
+									fileWriter = new FileOutputVIFWriter(file, vif.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? 0);
 
 									dataProvider = vif;
-
-
                                     break;
-
                             }
 							break;
 					}
 
 					if (dataProvider == null) {
-						WriteLine($@"failed to read job: '{file}'");
+						WriteErrorLine($@"failed to read job: '{file}'");
 						continue;
 					}
 
-					
 					var runsFactory = _kernel.Get<ISimulatorFactoryFactory>().Factory(mode, dataProvider, fileWriter, null, null);
 					//var runsFactory = SimulatorFactory.CreateSimulatorFactory(mode, dataProvider, fileWriter);
 					runsFactory.ModalResults1Hz = args.Contains("-1Hz");
@@ -307,10 +365,9 @@ Examples:
 				DisplayWarnings();
 			} catch (Exception e) {
 				if (!_quiet) {
-					Console.ForegroundColor = ConsoleColor.Red;
-					Console.Error.WriteLine(e.Message);
-					Console.ResetColor();
+					WriteErrorLine(e.Message);
 
+					// TODO: Is there a log file?
 					Console.Error.WriteLine("Please see log-file for further details (logs/log.txt)");
 				}
 				Environment.ExitCode = Environment.ExitCode != 0 ? Environment.ExitCode : 1;
@@ -326,6 +383,41 @@ Examples:
 			return Environment.ExitCode;
 		}
 
+		private static string AppendManufacturingStepAndStore(string[] commands, string[] fileList)
+		{
+			var multistageJobInputDataFilePath = fileList[0];
+			var vehicleInputDataFilePath = fileList[1];
+			var outputFilePath = fileList[2];
+
+			var xmlReader = _kernel.Get<IXMLInputDataReader>();
+			var multistageJobInputData = (IMultistepBusInputDataProvider)xmlReader.Create(multistageJobInputDataFilePath);
+			var vehicleInputData = xmlReader.CreateDeclaration(vehicleInputDataFilePath).JobInputData.Vehicle;
+
+			var vifInputData = new XMLDeclarationVIFInputData(multistageJobInputData, vehicleInputData, false);
+
+			var numberOfManufacturingStages = vifInputData.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? 0;
+			var writer = new FileOutputVIFWriter(outputFilePath, numberOfManufacturingStages);
+
+			var runsFactory = _kernel.Get<ISimulatorFactoryFactory>().Factory(ExecutionMode.Declaration, vifInputData, writer, null, null);
+			_jobContainer.AddRuns(runsFactory);
+			_jobContainer.Execute();
+			_jobContainer.WaitFinished();
+
+			WriteLine($"Output file written to {writer.XMLMultistageReportFileName}");
+
+			return writer.XMLMultistageReportFileName;
+		}
+
+		private static bool CanSimulateVehicleStep(string[] fileList)
+		{
+			var vehicleInputDataFilePath = fileList[1];
+
+			var xDocument = XDocument.Load(vehicleInputDataFilePath);
+			var vehicleType = xDocument?.XPathSelectElement("/*[local-name()='VectoInputDeclaration']/*[local-name()='Vehicle']/*[local-name()='VehicleDeclarationType']").Value;
+
+			return vehicleType == "final";
+		}
+
 		private static void WriteLine()
 		{
 			if (_quiet && !_debugEnabled) {
@@ -339,6 +431,19 @@ Examples:
 			if (_quiet && !_debugEnabled) {
 				return;
 			}
+
+			Console.ForegroundColor = foregroundColor;
+			Console.WriteLine(message);
+			Console.ResetColor();
+		}
+
+		private static void WriteErrorLine(string message, ConsoleColor foregroundColor = ConsoleColor.Red)
+		{
+			if (_quiet && !_debugEnabled)
+			{
+				return;
+			}
+
 			Console.ForegroundColor = foregroundColor;
 			Console.Error.WriteLine(message);
 			Console.ResetColor();
@@ -419,9 +524,7 @@ Examples:
 				Console.WriteLine(@"   {2}   [{1,-50}]  [{0,7:P}]", sumProgress, bar, spinner);
 
 				if (WarningMessages.Any()) {
-					Console.ForegroundColor = ConsoleColor.Yellow;
-					Console.Error.WriteLine(@"Warnings: {0,5}", WarningMessages.Count);
-					Console.ResetColor();
+					WriteErrorLine(string.Format(@"Warnings: {0,5}", WarningMessages.Count), ConsoleColor.Yellow);
 				} else {
 					Console.WriteLine("");
 				}

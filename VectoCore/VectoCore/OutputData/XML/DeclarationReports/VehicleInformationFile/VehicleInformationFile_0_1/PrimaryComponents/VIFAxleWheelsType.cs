@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
@@ -60,7 +61,27 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				throw new VectoException("Tyre input data must be in XML format");
 			}
 
-			return XElement.Load(xmlTyre.GetXmlNode.CreateNavigator().ReadSubtree());
+			var retVal = XElement.Load(xmlTyre.GetXmlNode.CreateNavigator().ReadSubtree());
+			var ptr = (retVal.FirstNode as XElement).FirstAttribute;
+			while (ptr != null) {
+				if (!ptr.IsNamespaceDeclaration && ptr.Name.LocalName == "type" && ptr.Name.Namespace == _xsi && ptr.Value.Contains(':')) {
+					var parts = ptr.Value.Split(':');
+					ptr.Value = parts.Last();
+					var defaultNsAttr = ptr.Parent.Attributes()
+						.FirstOrDefault(x => x.IsNamespaceDeclaration && x.Name.LocalName == "xmlns");
+					if (defaultNsAttr != null) {
+						defaultNsAttr.Value = xmlTyre.GetXmlNode.GetNamespaceOfPrefix(parts.First());
+					} else {
+						var ns = ptr.Parent.GetNamespaceOfPrefix(parts.First()) 
+							?? xmlTyre.GetXmlNode.GetNamespaceOfPrefix(parts.First());
+						
+						ptr.Parent.Add(new XAttribute("xmlns", ns));
+					}
+				}
+				ptr = ptr.NextAttribute;
+			}
+
+			return retVal;
 			//var currentTyre = 
 			//	new XElement(_v20 + XMLNames.ComponentDataWrapper,
 			//		new XAttribute(_xsi + XMLNames.XSIType, "TyreDataDeclarationType"),

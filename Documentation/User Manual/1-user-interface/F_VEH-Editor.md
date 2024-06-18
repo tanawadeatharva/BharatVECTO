@@ -6,7 +6,7 @@
 
 The [Vehicle File (.vveh)](#vehicle-file-.vveh) defines the main vehicle/chassis parameters like axles including [RRC](#vehicle-rolling-resistance-coefficient)s, air resistance and masses.
 
-The Vehicle Editor contains up to 6 tabs, depending on the powertrain architecture and simulation mode, to edit all vehicle-related parameters. The 'General' tab allows to input mass, loading, air resistance, vehicle axles, etc. The 'Powertrain' tab allows to define the retarder, an optional angle drive. The 'Electric Machine' tab is dedicated to all electric components in case of hybrid electric and battery electric vehicles. In the 'Torque Limits' tab the torque limitations for the combustion engine, the electric motor and the whole vehicle can be specified. The 'ADAS' tab allows to enable or disable certain advanced driver assistant systems to be considered in the vehicle. The 'PTO' tab is dedicated to PTOs, either as a basic component or to simulate municipal vehicles such as refuse trucks or road sweepers with dedicated PTO activation either during driving or during standstill. 
+The Vehicle Editor contains up to 8 tabs, depending on the powertrain architecture and simulation mode, to edit all vehicle-related parameters. The 'General' tab allows to input mass, loading, air resistance, vehicle axles, etc. The 'Powertrain' tab allows to define the retarder, an optional angle drive and an optional NG Tank System. The 'Electric Machine' tab is dedicated to all electric components used to propell the vehicle in case of hybrid electric and battery electric vehicles. The 'REESS' tab covers all inputs related to the rechargeable electric energy storage system. The 'GenSet Components' tab is only available for serial hybrid vehicles and contains all input fields required to define the electric machine used to generate electricity via the ICE. In the 'Torque Limits' tab the torque limitations for the combustion engine, the electric motor and the whole vehicle can be specified. The 'ADAS' tab allows to enable or disable certain advanced driver assistant systems to be considered in the vehicle. The 'PTO' tab is dedicated to PTOs, either as a basic component or to simulate municipal vehicles such as refuse trucks or road sweepers with dedicated PTO activation either during driving or during standstill. 
 
 ### Relative File Paths
 
@@ -52,7 +52,7 @@ In Declaration Mode only the vehicle itself needs to be specified. Depending on 
 
 ### Air Resistance and Cross Wind Correction Options
 
-The product of Drag Coefficient [-] and Cross Sectional Area [m²] (**c~d~ x A**) and **Air Density** [kg/m³] (see [Settings](#settings)) together with the vehicle speed defines the Air Resistance. Vecto uses the combined value **c~d x A** as input. 
+The product of Drag Coefficient [-] and Cross Sectional Area [m²] (**c~d~ x A**) and **Air Density** [kg/m³] (see [Settings](#settings)) together with the vehicle speed defines the Air Resistance. Vecto uses the combined value **c~d~ x A** as input. 
 **Note that the Air Drag depends on the chosen [**Cross Wind Correction**](#vehicle-cross-wind-correction).**
 
 <div class="declaration">
@@ -78,7 +78,7 @@ In [Engineering Mode](#engineering-mode) this defines the effective (dynamic) wh
 
 ### Axles/Wheels
 
-For each axle the parameters **Relative axle load, RRC~ISO~** and **F~zISO~** have to be given in order to calculate the total [Rolling Resistance Coefficient](#vehicle-rolling-resistance-coefficient).
+For each axle the parameters **Relative axle load, RRC~ISO~** and **F~zISO~** have to be given in order to calculate the total [Rolling Resistance Coefficient](#vehicle-rolling-resistance-coefficient). For non-driven axles the user can edit the wheel end friction.
 
 <div class="engineering">
 In Engineering mode, the **Wheels Inertia [kgm²]** has to be set per wheel for each axle.
@@ -134,24 +134,24 @@ The idling speed of the combustion engine can be increased in the vehicle settin
 If a separate retarder is used in the vehicle a **Retarder Torque Loss Map** can be defined here to consider idling losses caused by the retarder.
 
 The following options are available:
-: -   No retarder
+-   None: No retarder present in the vehicle
 -	Included in Transmission Loss Maps: Use this if the [Transmission Loss Maps](#transmission-loss-map-.vtlm) already include retarder losses.
--   Primary Retarder (before gearbox, transmission input retarder): The rpm ratio is relative to the engine speed.
--   Secondary Retarder (after gearbox, transmission output retarder): The rpm ratio is relative to the cardan shaft speed.
+-   Transmission Input Retarder: The rpm ratio is relative to the engine speed.
+-   Transmission Output Retarder: The rpm ratio is relative to the cardan shaft speed.
 -   Engine Retarder: Used this if the engine already includes the retarder losses.
 -   Axlegear Input Retarder (after axle gear): The rpm ratio is relative to the axle gear input shaft speed. Only available for battery electric vehicles with E3 motor, serial hybrid with S3 motor, IEPC-S, and IEPC-E.
 
-Primary, secondary and axle gear input retarder require an [Retarder Torque Loss Input File (.vrlm)](#retarder-loss-torque-input-file-.vrlm).
+Transmission Input. Transmission Output and axle gear input retarder require an [Retarder Torque Loss Input File (.vrlm)](#retarder-loss-torque-input-file-.vrlm).
 The retarder ratio defines the ratio between the engine speed/cardan shaft speed and the retarder.
 
 ### Angledrive
 
-If an angledrive is used in the vehicle, it can be defined here.
+If an angledrive is used in the vehicle, it can be defined here. Note that angledives can only be declared for conventional and parallel hybrid electric vehicles.  
 Three options are available:
 
 - None (**default**)
 - Separate Angledrive: Use this if the angledrive is measured separately. In this case the ratio must be set and the [Transmission Loss Map](#transmission-loss-map-.vtlm) (or an Efficiency value in Engineering mode) must also be given.
-- Included in transmission: Use this if the gearbox already includes the transmission losses for the angledrive in the respective transmission loss maps.
+- Included in Transmission Loss Map: Use this if the gearbox already includes the transmission losses for the angledrive in the respective transmission loss maps.
 
 
 
@@ -169,6 +169,25 @@ The *Loss map EM ADC* can be used to consider the losses of a transmission step 
 
 In case of a P2.5 configuration (the electric motor is connected to an internal shaft of the transmission) the transmission ratio for every single gear of the transmission has to be specified in the list to the right of the electric motor parameters. The ratio is defined as $n_\textrm{GBX,in} / n_\textrm{EM}$ in case of EM without additional ADC or $n_\textrm{GBX,in} / n_\textrm{ADC,out}$ in case of EM with additional ADC.
 
+## Vehicle Editor -- Composite Fuel Cell System Tab
+
+![Composite Fuel Cell System Tab](pics/FuelCell/veh_form_fuel_cell.png)
+
+For fuel cell hybrid vehicles the input element on the *Composite Fuel Cell System* tab is enabled. 
+
+Here the FCS file for the FCS-String can be loaded or created (see [Fuel Cell System String Editor](#fuel-cell-system-editor))
+
+The number of *Fuel Cell System Strings (FCS-String)* limited to *two*, each of them supports up to *three* *Fuel Cell Systems (FCS)*.
+
+**Double-click** an entry to edit.
+
+**Click** selected item.
+: ![addfc](pics/plus-circle-icon.png) Add Fuel Cell System File (.vfcc)
+: ![remfc](pics/minus-circle-icon.png) Remove the selected Fuel Cell System File from the list
+
+In the Fuel Cell System Dialog, the Fuel Cell System File itself, and the number of fuel cell systems in the string can be modified. (see [Fuel Cell System Model](#fuel-cell-system) for details)
+
+![Fuel Cell System Dialog](pics/FuelCell/fuel_cell_component_dialog.png)
 
 
 ## Vehicle Editor -- REESS Tab
@@ -177,7 +196,7 @@ In case of a P2.5 configuration (the electric motor is connected to an internal 
 
 For hybrid vehicles and battery electric vehicles the input elements on the *rechargeable electric energy storage system (REESS)* tab is enabled. Here the component file for the battery pack can be loaded or created (see [Electric Energy Storage Editor](#rechargeable-electric-energy-storage-editor))
 
-For the electric energy storage multiple battery packs can be configured either in series or in parallel and the initial state of charge of the whole battery system can be defined.  For every entry of a battery pack the number of packs (count) in series and a stream identifier need to be specified. Battery packs on the same stream are connected in series (e.g., two different battery packs on stream number 1 are in series) while all streams are then connected in parallel (see [Battery Model](#ress) for details). This is only supported for batteries and **not** for SuperCaps.
+For the electric energy storage multiple battery packs can be configured either in series or in parallel and the initial state of charge of the whole battery system can be defined.  For every entry of a battery pack the number of packs (count) in series and a stream identifier need to be specified. Battery packs on the same stream are connected in series (e.g., two different battery packs on stream number 1 are in series) while all streams are then connected in parallel (see [Battery Model](#ress) for details). This is only supported for batteries and **not** for SuperCaps. Moreover, if the vehicle is capable of 'Off-Vehicle Charging', the max. charging power allowed by the vehicle shall be declared (this information is needed to calculate the utility factor and hence the final fuel and/or energy consumption).
 
 **Double-click** an entry to edit.
 
@@ -187,7 +206,29 @@ For the electric energy storage multiple battery packs can be configured either 
 
 In the REESS Dialog the battery file itself and how it is connected to the electric system (i.e, the stream identifier and number of packs used) can be modified.
 
-![](pics/BatteryPackDialog.png)
+![BatteryPackDialog](pics/BatteryPackDialog.png)
+
+## Vehicle Editor -- In-motion Charging Tab
+
+<div class="engineering">
+![](pics/Vehicle_IMC_Eng.png)
+
+In engineering mode the following model parameters are necessary:
+
+  - Share of in-motion charging infrastructure available on total mission distance
+  - Delta CdxA with active in-motion charging feature
+  - In-motion charging feature only available on motorway sections
+
+The influence of these parameters is described [here](#in-motion-charging)
+</div>	
+
+<div class="declaration">
+![](pics/Vehicle_IMC_Decl.png)
+
+In declaration mode only the available in-motion charging technology needs to be selected.
+</div>	
+
+
 
 ## Vehicle Editor -- IEPC Tab
 
@@ -220,13 +261,13 @@ In case that the gearbox' maximum torque is lower than the engine's maximum torq
 
 Next, the maximum available torque for the electric machine can be reduced at the vehicle level, both for propulsion and recuperation. The input file is the same as the maximum drive and maximum recuperation curve (see [Electric Motor Max Torque File](#electric-motor-max-torque-file-.vemp))
 
-Last, the overall propulsion of the vehicle (i.e., HEV Px, electric motor plus combustion engine) can be limited. The "Propulsion Torque Limit" curve limits the maximum effective torque at the gearbox input shaft over the input speed. This curve is added to the combustion engine's maximum torque curve (only positive values are allowed!). For details on the file format see [Vehicle Boosting Limits](#vehicle-boosting-limits-.vtqp). The propulsion torque limit has to be provided from 0 rpm to the maximum speed of the combustion engine. In case of P3 or P4 configuration, the torque at the gearbox input shaft is calculated assuming that the electric motor does not contribute to propelling the vehicle, considering the increased losses in the transmission components in between. For P2.5 powertrain configurations no special calculations are necessary as this architecture is internally anyhow modeled as P2 architecture.
+Last, the overall propulsion of the vehicle (i.e., HEV Px, electric motor plus combustion engine) can be limited. The "Boosting Torque Limit" curve limits the maximum effective torque at the gearbox input shaft over the input speed. This curve is added to the combustion engine's maximum torque curve (only positive values are allowed!). For details on the file format see [Vehicle Boosting Limits](#vehicle-boosting-limits-.vtqp). The propulsion torque limit has to be provided from 0 rpm to the maximum speed of the combustion engine. In case of P3 or P4 configuration, the torque at the gearbox input shaft is calculated assuming that the electric motor does not contribute to propelling the vehicle, considering the increased losses in the transmission components in between. For P2.5 powertrain configurations no special calculations are necessary as this architecture is internally anyhow modeled as P2 architecture.
 
 ## Vehicle Editor -- ADAS Tab
 
 ![](pics/VehicleForm_ADAS.png)
 
-On the ADAS tab, the advanced driver assistant systems present in the vehicle can be selected.  See [ADAS - Engine Stop/Start](#advanced-driver-assistant-systems-engine-stopstart), [ADAS - EcoRoll](#advanced-driver-assistant-systems-eco-roll), and [ADAS - Predictive Cruise Control](#advanced-driver-assistant-systems-predictive-cruise-control)
+On the ADAS tab, the advanced driver assistant systems present in the vehicle can be selected.  See [ADAS - Engine Stop/Start](#advanced-driver-assistant-systems-engine-stopstart), [ADAS - EcoRoll](#advanced-driver-assistant-systems-eco-roll), [ADAS - Predictive Cruise Control](#advanced-driver-assistant-systems-predictive-cruise-control), and [ADAS - Eco-Roll: Release Lockup Clutch](#advanced-driver-assistant-systems-at-gearbox-eco-roll-release-lockup-clutch)
 
 The following table describes which ADAS technology can be used and is supported for different powertrain architectures (X: supported, O: optional, -: not supported):
 
@@ -250,13 +291,13 @@ The following table describes which ADAS technology can be used and is supported
 
 ### PTO Transmission
 
-If the vehicle has an PTO consumer, a pto transmission and consumer can be defined here. (Only in [Engineering Mode](#engineering-mode))
+If the vehicle has a PTO consumer, a pto transmission and consumer can be defined here. (Only in [Engineering Mode](#engineering-mode))
 
 Three settings can be set:
 
-- PTO Transmission: Here a transmission type can be chosen (adds constant load at all times).
-- PTO Consumer Loss Map (.vptol): Here the [PTO Idle Loss Map](#pto-idle-consumption-map-.vptoi) of the pto consumer can be defined (adds power demand when the pto cycle is not active).
-- PTO Cycle (.vptoc): Defines the [PTO Cycle](#pto-cycle-.vptoc) which is used when the pto-cycle is activated (when the PTO-Flag in the driving cycle is set).
+- PTO Transmission (PTO Design Variant): Here a transmission type can be chosen (adds constant load at all times).
+- PTO Consumer Loss Map (.vptoi): Here the [PTO Idle Loss Map](#pto-idle-consumption-map-.vptoi) of the pto consumer can be defined (adds power demand when the pto cycle is not active).
+- PTO Cycle (.vptoc / .vptoel): Defines the [PTO Cycle .vptoc](#pto-cycle-.vptoc) in case of a mechanical PTO declared or [PTO Cycle .vptoel](#pto-cycle-.vptoel) in case of an electrical PTO declared. Those cycles are performed in the simulation when the vehicle is standing and the pto-cycle is activated (when the PTO-Flag in the driving cycle is set). Note that an electrical PTO is only valid for battery electric and serial hybrid electric vehicles.
 
 <div class="engineering">
 In engineering mode additional PTO activations are available to simulate different types of municipal vehicles. It is possible to add a certain PTO load during driving while the engine speed and gear is fixed (to simulate for example roadsweepers), or to add PTO activation while driving (to simulate side loader refuse trucks for example). In both cases the PTO activation is indicated in the [driving cycle](#driving-cycles-.vdri) (column "PTO").

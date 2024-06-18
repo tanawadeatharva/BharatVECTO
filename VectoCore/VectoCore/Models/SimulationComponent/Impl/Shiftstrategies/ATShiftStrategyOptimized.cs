@@ -44,6 +44,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			return new ShiftPolygon(shiftLine.Downshift.ToList(), upshift);
 		}
 
+		public ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
+			GearboxType gearboxType,
+			int i,
+			EngineFullLoadCurve engineDataFullLoadCurve,
+			IList<ITransmissionInputData> gearboxGears,
+			CombustionEngineData engineData,
+			double axlegearRatio,
+			Meter dynamicTyreRadius,
+			ElectricMotorData electricMotorData = null)
+		{
+			throw new NotImplementedException("Not applicable to AT transmissions.");
+		}
+
 	}
 
 	public class ATShiftStrategyOptimized : ATShiftStrategy
@@ -211,7 +224,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			((DataBus.DrivingCycleInfo.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
 			DataBus.DrivingCycleInfo.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
 
-			var airDragLoss = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, vehicleSpeed) * DataBus.VehicleInfo.VehicleSpeed;
+			var airDragLoss = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, vehicleSpeed).AirdragForce * DataBus.VehicleInfo.VehicleSpeed;
 			var rollResistanceLoss = DataBus.VehicleInfo.RollingResistance(avgSlope) * DataBus.VehicleInfo.VehicleSpeed;
 
 			var slopeLoss = DataBus.VehicleInfo.SlopeResistance(avgSlope) * DataBus.VehicleInfo.VehicleSpeed;
@@ -304,7 +317,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				var reserve = 1 - response.Engine.PowerRequest / fullLoadPower;
 
 				if (reserve < GearshiftParams.TorqueReserve) {
-					var accelerationFactor = outAngularVelocity * GearboxModelData.Gears[currentGear.Gear].Ratio < fld[0].NTq98hSpeed
+					var ratio = currentGear.TorqueConverterLocked.HasValue && !currentGear.TorqueConverterLocked.Value
+						? GearboxModelData.Gears[currentGear.Gear].TorqueConverterRatio
+						: GearboxModelData.Gears[currentGear.Gear].Ratio;
+                    var accelerationFactor = outAngularVelocity * ratio < fld[0].NTq98hSpeed
 						? 1.0
 						: VectoMath.Interpolate(
 							fld[0].NTq98hSpeed, fld[0].NP98hSpeed, 1.0, shiftStrategyParameters.AccelerationFactor,

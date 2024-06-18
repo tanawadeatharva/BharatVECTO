@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -27,6 +28,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		protected List<VectoRunData.AuxData> AuxVTP;
 		protected Segment Segment;
 		protected bool _allowVocational;
+		private DrivingCycleProxy _VTPCycle;
 		
 		protected Exception InitException;
 
@@ -81,11 +83,31 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		protected abstract IEnumerable<VectoRunData.AuxData> GetAuxiliaryData(MissionType missionType);
 
+		protected DrivingCycleProxy VTPCycle => _VTPCycle ?? ( _VTPCycle = GetVTPCycle());
+
+		private DrivingCycleProxy GetVTPCycle()
+		{
+			var vtpCycle = JobInputData.Cycles.FirstOrDefault();
+            if (vtpCycle == null) {
+                throw new VectoException("no VTP-Cycle provided!");
+            }
+            var drivingCycle = DrivingCycleDataReader.ReadFromDataTable(vtpCycle.CycleData, vtpCycle.Name, false);
+
+			var cycle =  new DrivingCycleProxy(drivingCycle, vtpCycle.Name);
+
+			if (cycle.CycleType != CycleType.VTP) {
+				throw new VectoException("first cycle is not a VTP cycle!");
+			}
+
+			return cycle;
+		}
 
 		#region Implementation of IVectoRunDataFactory
 
 		public abstract IEnumerable<VectoRunData> NextRun();
 
+		public abstract IInputDataProvider DataProvider { get; }
+		
 		#endregion
 
 		
@@ -126,6 +148,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 				Retarder = RetarderData,
 				PTO = PTOTransmissionData,
 				Report = Report,
+				WheelEndData = Dao.CreateWheelEndData(segment.VehicleClass, JobInputData.Vehicle)
 			};
 		}
 

@@ -6,6 +6,13 @@ The powertrain in Vecto V3 consists of the following components which are genera
 The engine tries to supply the requested power demand (including all power losses happening in the powertrain and auxiliaries).
 If the engine can't supply the given power demand, the driver reduces the  accelerating.
 
+### Powertrain Architectures
+
+The following image depicts all Powertrain Architectures covered by VECTO.
+
+![](pics/Powertrain_Architectures.png)
+
+for further details refer to points 10.1.2 and 10.1.3 of Annex III of COMMISSION REGULATION (EU) 2017/2400
 
 ### Powertrain Values
 

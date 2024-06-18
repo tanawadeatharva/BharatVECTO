@@ -114,7 +114,7 @@
 								<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 							</di:Transforms>
 							<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-							<di:DigestValue>siONkqzC3QW+4si2eVwLNTwtAxUM0dxMFdAYXjVNl+0=</di:DigestValue>
+							<di:DigestValue>zjmudKZukZPABd3soTnh0/hYQikvePJ/cuRW221qYtk=</di:DigestValue>
 						</di:Reference>
 					</v2.3:Signature>
 				</ElectricMachineSystem>

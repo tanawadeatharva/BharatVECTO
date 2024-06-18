@@ -25,3 +25,4 @@ In this chapter the used component models for the simulation are described.
 * [Auxiliaries](#auxiliaries)
 * [Engine Only Mode](#engine-only-mode)
 * [Pwheel-Input (SiCo Mode)](#pwheel-input-sico-mode)
+* [Fuel Cell](#fuel-cell)

@@ -30,6 +30,13 @@ Public Class IEPCForm
 	    cbEmType.DisplayMember = "Label"
 	    cbEmType.DataSource = [enum].GetValues(GetType(ElectricMachineType)).Cast(Of ElectricMachineType).Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 
+	    cbNumWheelMotors.ValueMember = "Key"
+	    cbNumWheelMotors.DisplayMember = "Value"
+	    cbNumWheelMotors.DataSource = {
+		    			New KeyValuePair(of Integer, string)(1, "1"),
+                        New KeyValuePair(of Integer, string)(2, "2") }
+	    
+
 	End Sub
 
 #Region "Set IEPC Data"
@@ -41,8 +48,12 @@ Public Class IEPCForm
 		tbInertia.Text = inputData.Inertia.ToGUIFormat()
 		cbDifferentialIncluded.Checked = inputData.DifferentialIncluded
 		cbDesignTypeWheelMotor.Checked = inputData.DesignTypeWheelMotor
-		tbNumberOfDesignTypeWheelMotor.Text = inputData.NrOfDesignTypeWheelMotorMeasured.Value.ToGUIFormat()
-		
+		if  inputData.DesignTypeWheelMotor andalso inputData.NrOfDesignTypeWheelMotorMeasured.HasValue then
+	        cbNumWheelMotors.SelectedValue = inputData.NrOfDesignTypeWheelMotorMeasured.Value
+		Else 
+		    cbNumWheelMotors.SelectedIndex = -1
+		end if
+
 		tbRatedPower.Text = inputData.R85RatedPower.ConvertToKiloWatt().Value.ToGUIFormat()
 		cbEmType.SelectedValue = inputData.ElectricMachineType
 		if Not Cfg.DeclMode Then
@@ -301,7 +312,7 @@ Public Class IEPCForm
 		cbDifferentialIncluded.Checked = False
 		cbDesignTypeWheelMotor.Checked = False
 	    FlowLayoutPanel5.Enabled = False
-        tbNumberOfDesignTypeWheelMotor.Text = "0"
+	    cbNumWheelMotors.SelectedIndex = -1
         tbThermalOverload.Text = ""
 
 		tbVoltage1.Text = ""
@@ -419,7 +430,7 @@ Public Class IEPCForm
 		Dim iepc = New IEPCInputData(file)
 
 		iepc.SetCommonEntries(tbModel.Text, tbInertia.Text, cbDesignTypeWheelMotor.Checked, 
-							  tbNumberOfDesignTypeWheelMotor.Text, cbDifferentialIncluded.Checked,
+                              CType(cbNumWheelMotors.SelectedValue, Integer), cbDifferentialIncluded.Checked,
 							  tbThermalOverload.Text)
 		iepc.R85RatedPower = tbRatedPower.Text.ToDouble(0).SI(Unit.SI.Kilo.Watt).Cast(of Watt)
 		iepc.ElectricMachineType =  CType(cbEmType.SelectedValue, ElectricMachineType)
@@ -516,9 +527,9 @@ Public Class IEPCForm
 		Return True
 	End Function
 
-	Private Function ValidateNrDesignTypeWheelMotorMeasured() As Boolean 
-		If Not cbDesignTypeWheelMotor.Checked AND Not ValidDoubleValue(tbNumberOfDesignTypeWheelMotor.Text) Then
-			ShowErrorMessageBox("Nr of Design Type Wheel Motor Measured", tbNumberOfDesignTypeWheelMotor)
+	Private Function ValidateNrDesignTypeWheelMotorMeasured() As Boolean
+		If cbDesignTypeWheelMotor.Checked andalso cbNumWheelMotors.SelectedIndex = -1 Then
+			ShowErrorMessageBox("Nr of Design Type Wheel Motor Measured missing")
 			Return False
 		End If
 		Return True
@@ -725,18 +736,18 @@ Public Class IEPCForm
 	End Sub
 
 	Private Sub cbDesignTypeWheelMotor_CheckedChanged(sender As Object, e As EventArgs) Handles cbDesignTypeWheelMotor.CheckedChanged
-		tbNumberOfDesignTypeWheelMotor.Enabled = cbDesignTypeWheelMotor.Checked
+	    cbNumWheelMotors.Enabled = cbDesignTypeWheelMotor.Checked
 		FlowLayoutPanel5.Enabled =  cbDesignTypeWheelMotor.Checked
 		cbDifferentialIncluded.Enabled = Not cbDesignTypeWheelMotor.Checked
 		if (cbDesignTypeWheelMotor.Checked) then
 		    cbDifferentialIncluded.Checked = False
 		end if
-		If tbNumberOfDesignTypeWheelMotor.Enabled = False Then _
-			tbNumberOfDesignTypeWheelMotor.Text = "0"
-		Change()
+		If cbNumWheelMotors.Enabled = False Then _
+		    cbNumWheelMotors.SelectedIndex = -1
+	    Change()
 	End Sub
 
-	Private Sub tbNumberOfDesignTypeWheelMotor_TextChanged(sender As Object, e As EventArgs) Handles tbNumberOfDesignTypeWheelMotor.TextChanged
+	Private Sub tbNumberOfDesignTypeWheelMotor_TextChanged(sender As Object, e As EventArgs) 
 		Change()
 	End Sub
 

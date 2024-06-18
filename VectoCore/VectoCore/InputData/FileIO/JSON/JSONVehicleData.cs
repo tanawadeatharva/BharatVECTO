@@ -47,7 +47,78 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
-	public class JSONVehicleDataV11_IEPC : JSONVehicleDataV10_HEV_BEV
+	public class JSONVehicleDataV13_FCHV_IEPC : JSONVehicleDataV11_IEPC
+	{
+		private IFuelCellSystemEngineeringInputData _fuelCellSystem;
+
+		public JSONVehicleDataV13_FCHV_IEPC(JObject json, string filename, IJSONVehicleComponents job, bool tolerateMissing) : 
+			base(json, filename, job, tolerateMissing)
+		{}
+
+		public override IFuelCellSystemEngineeringInputData FuelCellSystemInputData =>
+			_fuelCellSystem ?? (_fuelCellSystem = JSONVehicleData_FCHV.ReadFuelCellSystem(Body, BasePath));
+
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.FCHV_IEPC;
+	}
+
+	internal class JSONVehicleData_FCHV 
+	{
+		public static JSONFuelCellSystemEngineeringInputData ReadFuelCellSystem(JObject body, String basePath)
+		{
+			var fcsJson = body[JsonKeys.FuelCell_FuelCellSystem];
+			IList<FuelCellStringEntry<IFuelCellComponentEngineeringInputData>> fcList = new List<FuelCellStringEntry<IFuelCellComponentEngineeringInputData>>();
+			if (fcsJson == null)
+			{
+				throw new VectoException("Fuel Cell System missing");
+			}
+
+			var retVal = new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>();
+			if (fcsJson[JsonKeys.FuelCell_FuelCells] != null)
+			{
+				foreach (var entry in fcsJson[JsonKeys.FuelCell_FuelCells])
+				{
+					var tmpEntry = new FuelCellStringEntry<IFuelCellComponentEngineeringInputData>()
+					{
+						FuelCellComponent = JSONInputDataFactory.ReadFuelCellComponentEngineeringInputData(
+							Path.Combine(basePath, entry.GetEx<string>(JsonKeys.FuelCell_File)), false),
+						Count = entry.GetEx<int>(JsonKeys.FuelCell_Count),
+					};
+
+					fcList.Add(tmpEntry);
+				}
+			}
+
+			return new JSONFuelCellSystemEngineeringInputData()
+			{
+				FuelCellStrings = fcList
+			};
+		}
+
+	}
+
+	public class JSONVehicleDataV12_FCHV : JSONVehicleDataV10_HEV_BEV
+	{
+		private IFuelCellSystemEngineeringInputData _fuelCellSystem;
+		public JSONVehicleDataV12_FCHV(JObject json, string filename, IJSONVehicleComponents job, bool tolerateMissing) : base(json, filename, job, tolerateMissing) {
+			
+		}
+
+		#region Overrides of JSONVehicleDataV7
+
+		public override IFuelCellSystemEngineeringInputData FuelCellSystemInputData =>
+			_fuelCellSystem ?? (_fuelCellSystem = JSONVehicleData_FCHV.ReadFuelCellSystem(Body, BasePath));
+
+		#endregion
+
+		#region Overrides of JSONVehicleDataV10_HEV_BEV
+
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.FCHV;
+
+		#endregion
+	}
+
+
+    public class JSONVehicleDataV11_IEPC : JSONVehicleDataV10_HEV_BEV
 	{
 		public JSONVehicleDataV11_IEPC(JObject data, string fileName, IJSONVehicleComponents job, bool tolerateMissing = false) :
 			base(data, fileName, job, tolerateMissing)
@@ -76,8 +147,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#endregion
 	}
 
-	public class JSONVehicleDataV10_HEV_BEV : JSONVehicleDataV9
-	{
+	public class JSONVehicleDataV10_HEV_BEV :  JSONVehicleDataV9, IVehicleEngineeringInputData
+    {
 		private JSONElectricStorageSystemEngineeringInputData _batteries;
 		private JSONElectricMotors _electricMotors;
 
@@ -166,7 +237,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return new JSONElectricMotors(retVal);
 		}
 
-		protected override IAdvancedDriverAssistantSystemsEngineering GetADS()
+		protected override IAdvancedDriverAssistantSystemsEngineering GetADAS()
 		{
 			if (_adasInputData != null)
 				return _adasInputData;
@@ -174,14 +245,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			switch (VehicleType) {
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
+				case VectoSimulationJobType.FCHV:
+				case VectoSimulationJobType.FCHV_IEPC:
 					return _adasInputData = new JSONADASInputDataV10BEV(this);
 				case VectoSimulationJobType.ParallelHybridVehicle:
 				case VectoSimulationJobType.IHPC:
 				case VectoSimulationJobType.SerialHybridVehicle:
 				case VectoSimulationJobType.IEPC_S:
 					return _adasInputData = new JSONADASInputDataV10HEV(this);
-				default:
-					return base.GetADS();
+				case VectoSimulationJobType.ConventionalVehicle:
+				case VectoSimulationJobType.EngineOnlySimulation:
+                default:
+					return base.GetADAS();
 			}
 		}
 
@@ -264,8 +339,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				: ReadTableData(Path.Combine(BasePath, Body.GetEx<string>("MaxPropulsionTorque")),
 					"MaxPropulsionTorque");
 
-		#endregion
-	}
+		public override IVehicleInMotionChargingDeclaration InMotionCharging => GetIMC();
+
+		IVehicleInMotionChargingEngineering IVehicleEngineeringInputData.InMotionCharging => GetIMC();
+
+
+        #endregion
+
+		protected override IVehicleInMotionChargingEngineering GetIMC()
+		{
+			return new JSONInMotionChargingInputData(this);
+
+		}
+    }
 
 
 	// ###################################################################
@@ -287,7 +373,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public override bool Articulated => Body.GetEx<bool>("Articulated");
 
-		protected override IAdvancedDriverAssistantSystemsEngineering GetADS()
+		protected override IAdvancedDriverAssistantSystemsEngineering GetADAS()
 		{
 			return _adasInputData ?? (_adasInputData = new JSONADASInputDataV9(this));
 		}
@@ -310,7 +396,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public override TankSystem? TankSystem => Body["TankSystem"]?.ToString().ParseEnum<TankSystem>();
 
-		protected override IAdvancedDriverAssistantSystemsEngineering GetADS()
+		protected override IAdvancedDriverAssistantSystemsEngineering GetADAS()
 		{
 			return _adasInputData ?? (_adasInputData = new JSONADASInputDataV8(this));
 		}
@@ -410,18 +496,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public PerSecond PTO_DriveEngineSpeed => Body["EngineSpeedDuringPTODrive"] != null ? Body.GetEx<double>("EngineSpeedDuringPTODrive").RPMtoRad() : null;
 
-		IAdvancedDriverAssistantSystemsEngineering IVehicleEngineeringInputData.ADAS => GetADS();
+		IAdvancedDriverAssistantSystemsEngineering IVehicleEngineeringInputData.ADAS => GetADAS();
 
-		public virtual IAdvancedDriverAssistantSystemDeclarationInputData ADAS => GetADS();
+		public virtual IAdvancedDriverAssistantSystemDeclarationInputData ADAS => GetADAS();
 
-		protected virtual IAdvancedDriverAssistantSystemsEngineering GetADS()
+		protected virtual IAdvancedDriverAssistantSystemsEngineering GetADAS()
 		{
 			return _adasInputData ?? (_adasInputData = new JSONADASInputDataV7(this));
 		}
 
 		public virtual double InitialSOC => double.NaN;
 
-		public virtual VectoSimulationJobType VehicleType => VectoSimulationJobType.ConventionalVehicle;
+		public virtual IVehicleInMotionChargingDeclaration InMotionCharging => GetIMC(); //GetInMotionCharging();
+
+		IVehicleInMotionChargingEngineering IVehicleEngineeringInputData.InMotionCharging => GetIMC();
+
+		protected virtual IVehicleInMotionChargingEngineering GetIMC()
+		{
+			return new JSONInMotionChargingNotApplicable();
+
+		}
+
+
+        public virtual VectoSimulationJobType VehicleType => VectoSimulationJobType.ConventionalVehicle;
 
 		public virtual AxleConfiguration AxleConfiguration =>
 			AxleConfigurationHelper.Parse(
@@ -447,9 +544,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		IList<IAxleDeclarationInputData> IAxlesDeclarationInputData.AxlesDeclaration => AxleWheels().Cast<IAxleDeclarationInputData>().ToList();
 
-		private IEnumerable<AxleInputData> AxleWheels()
+		protected virtual IEnumerable<AxleInputData> AxleWheels()
 		{
-			return
+			IEnumerable<AxleInputData> axleWheels =
 				Body.GetEx(JsonKeys.Vehicle_AxleConfiguration).GetEx(JsonKeys.Vehicle_AxleConfiguration_Axles).Select(
 					(axle, idx) => new AxleInputData {
 						TwinTyres = axle.GetEx<bool>(JsonKeys.Vehicle_Axles_TwinTyres),
@@ -470,8 +567,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 							Dimension = axle.GetEx<string>(JsonKeys.Vehicle_Axles_Wheels),
 							RollResistanceCoefficient = axle.GetEx<double>(JsonKeys.Vehicle_Axles_RollResistanceCoefficient),
 							TyreTestLoad = axle.GetEx<double>(JsonKeys.Vehicle_Axles_TyreTestLoad).SI<Newton>(),
-						}
+						},
+						WheelEndFriction = axle.GetValueOrDefault<double>(JsonKeys.Vehicle_Axles_Friction)?.SI<NewtonMeter>()
 					});
+
+			return axleWheels;
 		}
 
 		#endregion
@@ -528,6 +628,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		IElectricMachinesEngineeringInputData IVehicleComponentsEngineering.ElectricMachines => GetElectricMachines();
 		public virtual IIEPCEngineeringInputData IEPCEngineeringInputData => null;
+
+		public virtual IFuelCellSystemEngineeringInputData FuelCellSystemInputData => null;
+
 		public virtual IIEPCDeclarationInputData IEPC => null;
 
 		protected virtual IElectricMachinesEngineeringInputData GetElectricMachines()

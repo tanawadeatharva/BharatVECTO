@@ -63,6 +63,8 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 					return VectoRunDataBatteryElectricHeavyBusPrimaryNonExempted();
 				case VectoSimulationJobType.EngineOnlySimulation:
 					break;
+				case VectoSimulationJobType.FCHV:
+                case VectoSimulationJobType.FCHV_IEPC:
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
@@ -198,6 +200,12 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 		public static AirdragData CreateMockupAirdragData(IVehicleDeclarationInputData vehicle)
 		{
 			var airdrag = vehicle.Components.AirdragInputData;
+			if (airdrag == null) {
+				return new AirdragData() {
+					CertificationMethod = CertificationMethod.StandardValues,
+					DeclaredAirdragArea = 0.SI<SquareMeter>(), // dummy value -- no used at all
+				};
+			}
 			return new AirdragData() {
 				CertificationMethod = airdrag.CertificationMethod,
 				CertificationNumber = airdrag.CertificationNumber,

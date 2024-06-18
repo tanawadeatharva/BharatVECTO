@@ -2040,7 +2040,151 @@
   <data name="Results_Report_OVCModeAttr_ChargeSustaining" xml:space="preserve">
     <value>charge sustaining</value>
   </data>
-<data name="REESS" xml:space="preserve">
-	<value>REESS</value>
-</data>
+  <data name="REESS" xml:space="preserve">
+    <value>REESS</value>
+  </data>
+  <data name="AbstractVectoOutputManufacturerType" xml:space="preserve">
+    <value>AbstractVectoOutputManufacturerType</value>
+  </data>
+  <data name="DI" xml:space="preserve">
+    <value>di</value>
+  </data>
+  <data name="GramsPerKWattHour" xml:space="preserve">
+    <value>g/kWh</value>
+  </data>
+  <data name="ManufacturerRecord" xml:space="preserve">
+    <value>ManufacturerRecord</value>
+  </data>
+  <data name="MonitoringAddADAs" xml:space="preserve">
+    <value>additional ADAS technologies</value>
+  </data>
+  <data name="MonitoringAdvAero" xml:space="preserve">
+    <value>advanced aerodynamic measures</value>
+  </data>
+  <data name="MonitoringAdvAux" xml:space="preserve">
+    <value>advanced auxiliary technologies</value>
+  </data>
+  <data name="MonitoringAdvDrivetrain" xml:space="preserve">
+    <value>advanced drivetrain technologies</value>
+  </data>
+  <data name="MonitoringAdvEngine" xml:space="preserve">
+    <value>advanced engine technologies</value>
+  </data>
+  <data name="MonitoringAdvPowertrain" xml:space="preserve">
+    <value>advanced powertrain integration and hybridisation</value>
+  </data>
+  <data name="MonitoringAdvReducingTech" xml:space="preserve">
+    <value>AdvancedReducingTechnologies</value>
+  </data>
+  <data name="MonitoringAdvRoll" xml:space="preserve">
+    <value>advanced rolling resistance measures</value>
+  </data>
+  <data name="MonitoringAxle" xml:space="preserve">
+    <value>Axle</value>
+  </data>
+  <data name="MonitoringAxlegear" xml:space="preserve">
+    <value>Axlegear</value>
+  </data>
+  <data name="MonitoringAxleNumber" xml:space="preserve">
+    <value>axleNumber</value>
+  </data>
+  <data name="MonitoringAxleWheels" xml:space="preserve">
+    <value>AxleWheels</value>
+  </data>
+  <data name="MonitoringCategory" xml:space="preserve">
+    <value>category</value>
+  </data>
+  <data name="MonitoringCO2" xml:space="preserve">
+    <value>CO2</value>
+  </data>
+  <data name="MonitoringDataNode" xml:space="preserve">
+    <value>AdditionalData</value>
+  </data>
+  <data name="MonitoringEngine" xml:space="preserve">
+    <value>Engine</value>
+  </data>
+  <data name="MonitoringEntry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="MonitoringFuelConsumption" xml:space="preserve">
+    <value>FuelConsumption</value>
+  </data>
+  <data name="MonitoringGearbox" xml:space="preserve">
+    <value>Gearbox</value>
+  </data>
+  <data name="MonitoringLicenseNumber" xml:space="preserve">
+    <value>VectoLicenseNbr</value>
+  </data>
+  <data name="MonitoringMake" xml:space="preserve">
+    <value>Make</value>
+  </data>
+  <data name="MonitoringManufacturer" xml:space="preserve">
+    <value>Manufacturer</value>
+  </data>
+  <data name="MonitoringManufacturerAddress" xml:space="preserve">
+    <value>ManufacturerAddress</value>
+  </data>
+  <data name="MonitoringOtherTech" xml:space="preserve">
+    <value>other</value>
+  </data>
+  <data name="MonitoringRootNode" xml:space="preserve">
+    <value>VectoMonitoring</value>
+  </data>
+  <data name="MonitoringTyre" xml:space="preserve">
+    <value>Tyre</value>
+  </data>
+  <data name="MonitoringVehicle" xml:space="preserve">
+    <value>Vehicle</value>
+  </data>
+  <data name="MonitoringWHSC" xml:space="preserve">
+    <value>WHSC</value>
+  </data>
+  <data name="MonitoringWHTC" xml:space="preserve">
+    <value>WHTC</value>
+  </data>
+  <data name="SchemaLocation" xml:space="preserve">
+    <value>schemaLocation</value>
+  </data>
+  <data name="SchemaVersion" xml:space="preserve">
+    <value>schemaVersion</value>
+  </data>
+  <data name="XMLNS" xml:space="preserve">
+    <value>xmlns</value>
+  </data>
+  <data name="XSI" xml:space="preserve">
+    <value>xsi</value>
+  </data>
+  <data name="MonitoringTypeApprovalNumber" xml:space="preserve">
+    <value>TypeApprovalNumber</value>
+  </data>
+  <data name="MonitoringDataTypeSuffix" xml:space="preserve">
+    <value>DataType</value>
+  </data>
+  <data name="MRFDataNode" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="MRFDataTypeSuffix" xml:space="preserve">
+    <value>ManufacturerOutputDataType</value>
+  </data>
+  <data name="MonitoringElectricEnergyStorage" xml:space="preserve">
+    <value>ElectricEnergyStorage</value>
+  </data>
+  <data name="MonitoringElectricMachine" xml:space="preserve">
+    <value>ElectricMachine</value>
+  </data>
+  <data name="MonitoringElectricMachineGEN" xml:space="preserve">
+    <value>ElectricMachineGEN</value>
+  </data>
+  <data name="REESS" xml:space="preserve">
+    <value>REESS</value>
+  </data>
+  <data name="XMLCustomerReportIsVocational" xml:space="preserve">
+    <value>Vocational</value>
+  </data>
+  <data name="AxleWheels_Axles_Axle_WheelEnd" xml:space="preserve">
+    <value>WheelEnd</value>
+  </data>
+  <data name="AxleWheels_Axles_Axle_Friction" xml:space="preserve">
+    <value>WheelEndFriction</value>
+  </data>
 </root>

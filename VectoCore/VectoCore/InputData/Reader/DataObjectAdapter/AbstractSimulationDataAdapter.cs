@@ -40,6 +40,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.Declaration;
@@ -51,19 +52,26 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
-	public abstract class AbstractSimulationDataAdapter : LoggingObject
+	public abstract class BaseSimulationDataAdapter : LoggingObject
+	{
+		protected IWheelEndDataAdapter WheelEndDataAdapter { get; } = new WheelEndDataAdapter();
+
+		public WheelEndData CreateWheelEndData(VehicleClass vehicleClass, IVehicleDeclarationInputData vehicle)
+		{
+			var wheelEndData = WheelEndDataAdapter.CreateWheelEndData(vehicleClass, vehicle.Components.AxleWheels.AxlesDeclaration);
+
+			if (wheelEndData.DisallowedVehicleClassHasMeasuredData) {
+				Log.Warn($"Vehicle of class '{vehicleClass}' cannot have measured wheel bearing friction. Measured friction is ignored.");
+			}
+
+			return wheelEndData;
+		}
+
+	}
+
+	public abstract class AbstractSimulationDataAdapter : BaseSimulationDataAdapter
 	{
 		// =========================
-		protected VehicleData.ADASData CreateADAS(IAdvancedDriverAssistantSystemDeclarationInputData adas)
-		{
-			return new VehicleData.ADASData
-			{
-				EngineStopStart = adas.EngineStopStart,
-				EcoRoll = adas.EcoRoll,
-				PredictiveCruiseControl = adas.PredictiveCruiseControl,
-				InputData = adas
-			};
-		}
 		internal AirdragData SetCommonAirdragData(IAirdragDeclarationInputData data)
 		{
 			var retVal = new AirdragData()

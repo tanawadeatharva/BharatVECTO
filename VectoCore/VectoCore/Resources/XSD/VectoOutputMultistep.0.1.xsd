@@ -8,7 +8,13 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" schemaLocation="VectoDeclarationDefinitions.2.1.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" schemaLocation="VectoDeclarationDefinitions.2.3.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" schemaLocation="VectoDeclarationDefinitions.2.4.xsd"/>
-	<xs:complexType name="ElectricMachineSystemMaxTorqueEntryType">
+  <!--
+	Changelog:
+	18.01.2024: change restrictions of EM continuous torque - allow 0.00
+	10.04.2024: change "Fuel cell vehicle" to "FCV Article 9 exempted" according to regulation
+	19.04.2024: restore wrong exempt techs along with the correct ones
+	-->
+  <xs:complexType name="ElectricMachineSystemMaxTorqueEntryType">
 		<xs:attribute name="outShaftSpeed" type="v2.3:OutShaftSpeedType" use="required">
 			<xs:annotation>
 				<xs:documentation>P468 - [rpm]</xs:documentation>
@@ -100,6 +106,9 @@
 									<xs:enumeration value="lead-acid battery – conventional"/>
 									<xs:enumeration value="lead-acid battery – AGM"/>
 									<xs:enumeration value="lead-acid battery – gel"/>
+									<xs:enumeration value="lead-acid battery - conventional"/>
+									<xs:enumeration value="lead-acid battery - AGM"/>
+									<xs:enumeration value="lead-acid battery - gel"/>
 									<xs:enumeration value="li-ion battery - high power"/>
 									<xs:enumeration value="li-ion battery - high energy"/>
 								</xs:restriction>
@@ -359,8 +368,8 @@
 											<xs:enumeration value="Crankshaft mounted - On/off clutch"/>
 											<xs:enumeration value="Belt driven or driven via transm. - Electronically controlled visco clutch"/>
 											<xs:enumeration value="Belt driven or driven via transm. - Bimetallic controlled visco clutch"/>
-											<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch 2 steps"/>
-											<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch 3 steps"/>
+											<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch 2 stages"/>
+											<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch 3 stages"/>
 											<xs:enumeration value="Belt driven or driven via transm. - On/off clutch"/>
 											<xs:enumeration value="Hydraulic driven - Variable displacement pump"/>
 											<xs:enumeration value="Hydraulic driven - Constant displacement pump"/>
@@ -445,6 +454,9 @@
 															<xs:enumeration value="lead-acid battery – conventional"/>
 															<xs:enumeration value="lead-acid battery – AGM"/>
 															<xs:enumeration value="lead-acid battery – gel"/>
+															<xs:enumeration value="lead-acid battery - conventional"/>
+															<xs:enumeration value="lead-acid battery - AGM"/>
+															<xs:enumeration value="lead-acid battery - gel"/>
 															<xs:enumeration value="li-ion battery - high power"/>
 															<xs:enumeration value="li-ion battery - high energy"/>
 														</xs:restriction>
@@ -1617,10 +1629,15 @@
 							<xs:documentation>P467 - [V]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ContinuousTorque" type="v2.3:MaxTorqueType">
+					<xs:element name="ContinuousTorque">
 						<xs:annotation>
 							<xs:documentation>P459 - [Nm]</xs:documentation>
 						</xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="v1.0:Double2">
+                <xs:minInclusive value="0.00"/>
+              </xs:restriction>
+            </xs:simpleType>
 					</xs:element>
 					<xs:element name="TestSpeedContinuousTorque" type="v2.3:TestSpeedType">
 						<xs:annotation>
@@ -2647,7 +2664,9 @@
 								<xs:enumeration value="HEV Article 9 exempted"/>
 								<xs:enumeration value="PEV Article 9 exempted"/>
 								<xs:enumeration value="HV Article 9 exempted"/>
+								<xs:enumeration value="FCV Article 9 exempted"/>
 								<xs:enumeration value="Fuel cell vehicle"/>
+								<xs:enumeration value="H2 ICE Article 9 exempted"/>
 								<xs:enumeration value="H2 ICE"/>
 								<xs:enumeration value="Dual fuel vehicle Article 9 exempted"/>
 								<xs:enumeration value="In-motion charging Article 9 exempted"/>

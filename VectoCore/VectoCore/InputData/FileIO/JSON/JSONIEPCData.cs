@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -16,7 +17,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		private readonly JObject _header;
 
-		public JSONIEPCData(JObject data, string filename, bool tolerateMissing = false)
+		protected Watt _ratedPowerCalculated;
+
+        public JSONIEPCData(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing)
 		{
 			_header = (JObject)data.GetEx(JsonKeys.JsonHeader);
@@ -48,7 +51,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			: ElectricMachineType.PSM;
 
 		public Watt R85RatedPower => Body.ContainsKey(JsonKeys.EM_RatedPower) ? Body.GetEx<double>(JsonKeys.EM_RatedPower).SI(Unit.SI.Kilo.Watt).Cast<Watt>() : 0.SI<Watt>();
-		public KilogramSquareMeter Inertia => Body.GetEx<double>(JsonKeys.IEPC_Inertia).SI<KilogramSquareMeter>();
+		public Watt TotalRatedPowerCalculated => _ratedPowerCalculated ?? (_ratedPowerCalculated = CalculateRatedPower());
+        public KilogramSquareMeter Inertia => Body.GetEx<double>(JsonKeys.IEPC_Inertia).SI<KilogramSquareMeter>();
 		public bool DifferentialIncluded => Body.GetEx<bool>(JsonKeys.IEPC_DifferentialIncluded);
 		public bool DesignTypeWheelMotor => Body.GetEx<bool>(JsonKeys.IEPC_DesignTypeWheelMotor);
 		public int? NrOfDesignTypeWheelMotorMeasured => Body.GetEx<int?>(JsonKeys.IEPC_NrOfDesignTypeWheelMotorMeasured);
@@ -63,10 +67,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public double OverloadRecoveryFactor => Body.GetEx<double>(JsonKeys.IEPC_ThermalOverloadRecoveryFactor);
 
-		#endregion
+        #endregion
 
+		protected virtual Watt CalculateRatedPower()
+		{
+			var gearRatioUsedForMeasurement = Gears
+				.Select(x => new { x.GearNumber, x.Ratio, Diff = Math.Round(Math.Abs(x.Ratio - 1), 6) }).GroupBy(x => x.Diff)
+				.OrderBy(x => x.Key).First().OrderBy(x => x.Ratio).Reverse().First();
+			var count = DesignTypeWheelMotor && NrOfDesignTypeWheelMotorMeasured == 1 ? 2 : 1;
+			var maxPwr = 0.SI<Watt>();
+			foreach (var entry in VoltageLevels.OrderBy(x => x.VoltageLevel).AsEnumerable()) {
+				var maxTq = IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count,
+					gearRatioUsedForMeasurement.Ratio);
+				if (maxTq.MaxPower > maxPwr) {
+					maxPwr = maxTq.MaxPower;
+				}
+			}
 
-		protected virtual IList<IGearEntry> ReadGearEntries(JToken gears)
+			return maxPwr;
+		}
+
+        protected virtual IList<IGearEntry> ReadGearEntries(JToken gears)
 		{
 			var gearData = new List<IGearEntry>();
 			var gearNumber = 1;

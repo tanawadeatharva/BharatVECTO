@@ -267,7 +267,7 @@
         <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
       </di:Transforms>
       <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-      <di:DigestValue>Ymq1wujbJTpLLkbvcZZcMb0DkFHpOD6khpNPuRz89RI=</di:DigestValue>
+      <di:DigestValue>w+UXokqfS7jykBCLUpMFJm1vp1dlfrbJChx18wki/l8=</di:DigestValue>
     </di:Reference>
   </mrf:Signature>
 </mrf:VectoOutput>

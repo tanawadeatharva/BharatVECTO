@@ -15,7 +15,7 @@
         <TechnicalPermissibleMaximumLadenMass>15400</TechnicalPermissibleMaximumLadenMass>
         <ZeroEmissionVehicle>true</ZeroEmissionVehicle>
         <SumNetPower unit="W">350000</SumNetPower>
-        <Technology>Fuel cell vehicle</Technology>
+        <Technology>FCV Article 9 exempted</Technology>
       </Vehicle>
       <InputDataSignature>
         <di:Reference URI="#VEH-1234567890">
