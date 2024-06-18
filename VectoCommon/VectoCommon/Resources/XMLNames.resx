@@ -2181,4 +2181,10 @@
   <data name="XMLCustomerReportIsVocational" xml:space="preserve">
     <value>Vocational</value>
   </data>
+  <data name="AxleWheels_Axles_Axle_WheelEnd" xml:space="preserve">
+    <value>WheelEnd</value>
+  </data>
+  <data name="AxleWheels_Axles_Axle_Friction" xml:space="preserve">
+    <value>WheelEndFriction</value>
+  </data>
 </root>

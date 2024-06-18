@@ -85,10 +85,12 @@
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_3-Cylinder_2-Stage_598ccm.acmp" />
     <None Remove="Resources\Declaration\VehicleOperation\InMotionShareGroundRailWireless.csv" />
     <None Remove="Resources\Declaration\VehicleOperation\RealWorldUsageFactors.csv" />
+    <None Remove="Resources\Declaration\WheelEndFriction.csv" />
     <None Remove="Resources\MockupCIFResults.xml" />
     <None Remove="Resources\MockupMRFResults.xml" />
     <None Remove="Resources\XSD\VectoDeclarationDefinitions.2.2.1.xsd" />
     <None Remove="Resources\XSD\VectoMonitoring.1.0.xsd" />
+    <None Remove="Resources\XSD\VectoDeclarationDefinitions.DEV.2.6.xsd" />
     <None Remove="Resources\XSD\VectoOutputPrimaryBus.xsd" />
   </ItemGroup>
 

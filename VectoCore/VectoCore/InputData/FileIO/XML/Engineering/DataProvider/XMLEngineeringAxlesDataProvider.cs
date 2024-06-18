@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
 
-				public const string XSD_TYPE = "AxleDataEngineeringType";
+		public const string XSD_TYPE = "AxleDataEngineeringType";
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
 
@@ -149,11 +149,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		ITyreDeclarationInputData IAxleDeclarationInputData.Tyre => throw new NotImplementedException();
 
-		#endregion
+        #endregion
 
-		#region Implementation of ITyreDeclarationInputData
+        #region Implementation of IWheelEndDeclarationInputData
 
-		public virtual string Dimension => GetNode(XMLNames.AxleWheels_Axles_Axle_Dimension)?.InnerText;
+		public virtual NewtonMeter WheelEndFriction => GetNode(XMLNames.AxleWheels_Axles_Axle_Friction)?.InnerText.ToDouble().SI<NewtonMeter>();
+
+        #endregion
+
+        #region Implementation of ITyreDeclarationInputData
+
+        public virtual string Dimension => GetNode(XMLNames.AxleWheels_Axles_Axle_Dimension)?.InnerText;
 
 		public virtual double RollResistanceCoefficient => GetNode(XMLNames.AxleWheels_Axles_Axle_RRCISO)?.InnerText.ToDouble() ?? double.NaN;
 
@@ -208,6 +214,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public virtual ITyreEngineeringInputData Tyre => _tyre ?? (_tyre = Reader.Tyre);
 
+		public virtual NewtonMeter WheelEndFriction => GetNode(XMLNames.AxleWheels_Axles_Axle_Friction)?.InnerText.ToDouble().SI<NewtonMeter>();
 
 		public virtual double AxleWeightShare => GetNode(XMLNames.AxleWheels_Axles_Axle_WeightShare)?.InnerText.ToDouble() ?? 0;
 

@@ -544,9 +544,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		IList<IAxleDeclarationInputData> IAxlesDeclarationInputData.AxlesDeclaration => AxleWheels().Cast<IAxleDeclarationInputData>().ToList();
 
-		private IEnumerable<AxleInputData> AxleWheels()
+		protected virtual IEnumerable<AxleInputData> AxleWheels()
 		{
-			return
+			IEnumerable<AxleInputData> axleWheels =
 				Body.GetEx(JsonKeys.Vehicle_AxleConfiguration).GetEx(JsonKeys.Vehicle_AxleConfiguration_Axles).Select(
 					(axle, idx) => new AxleInputData {
 						TwinTyres = axle.GetEx<bool>(JsonKeys.Vehicle_Axles_TwinTyres),
@@ -567,8 +567,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 							Dimension = axle.GetEx<string>(JsonKeys.Vehicle_Axles_Wheels),
 							RollResistanceCoefficient = axle.GetEx<double>(JsonKeys.Vehicle_Axles_RollResistanceCoefficient),
 							TyreTestLoad = axle.GetEx<double>(JsonKeys.Vehicle_Axles_TyreTestLoad).SI<Newton>(),
-						}
+						},
+						WheelEndFriction = axle.GetValueOrDefault<double>(JsonKeys.Vehicle_Axles_Friction)?.SI<NewtonMeter>()
 					});
+
+			return axleWheels;
 		}
 
 		#endregion

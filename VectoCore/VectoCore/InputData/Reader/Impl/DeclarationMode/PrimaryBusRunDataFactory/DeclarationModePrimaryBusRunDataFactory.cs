@@ -171,6 +171,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				var simulationRunData = CreateCommonRunData(mission, loading, _segment, engineModes, modeIdx.Value);
 
 				simulationRunData.VehicleData = DataAdapter.CreateVehicleData(Vehicle, _segment, mission, loading, _allowVocational);
+				simulationRunData.WheelEndData = DataAdapter.CreateWheelEndData(_segment.VehicleClass, InputDataProvider.JobInputData.Vehicle);
 				simulationRunData.AirdragData = DataAdapter.CreateAirdragData(null, null, mission, new Segment(), ovcMode, simulationRunData.Cycle.ShareDistanceHighway);
 				simulationRunData.EngineData = DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode, mission);
 				simulationRunData.ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>();
@@ -281,7 +282,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				runData.AirdragData =
 					DataAdapter.CreateAirdragData(Vehicle.Components.AirdragInputData, Vehicle.InMotionCharging, mission, _segment, ovcMode, runData.Cycle.ShareDistanceHighway);
 				runData.VehicleData = DataAdapter.CreateVehicleData(Vehicle, _segment, mission, loading, _allowVocational);
-
+				runData.WheelEndData = DataAdapter.CreateWheelEndData(_segment.VehicleClass, Vehicle);
 
 				runData.EngineData = DataAdapter.CreateEngineData(Vehicle, engineMode, mission);
 
@@ -483,6 +484,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				var runData = CreateCommonRunData(mission, loading, _segment, engineModes, modeIdx.Value);
 
 				runData.VehicleData = DataAdapter.CreateVehicleData(Vehicle, _segment, mission, loading, _allowVocational);
+				runData.WheelEndData = DataAdapter.CreateWheelEndData(_segment.VehicleClass, Vehicle);
 				runData.AirdragData = DataAdapter.CreateAirdragData(null, null, mission, new Segment(), ovcMode, runData.Cycle.ShareDistanceHighway);
 				runData.EngineData = DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode, mission);
 				DataAdapter.CreateREESSData(Vehicle.Components.ElectricStorage, Vehicle.VehicleType, Vehicle.OvcHev,
@@ -658,6 +660,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				}
 
 				result.VehicleData = DataAdapter.CreateVehicleData(Vehicle, _segment, mission, loading, _allowVocational);
+				result.WheelEndData = DataAdapter.CreateWheelEndData(_segment.VehicleClass, Vehicle);
 				result.AirdragData = DataAdapter.CreateAirdragData(null, null, mission, new Segment(), ovcMode, result.Cycle.ShareDistanceHighway);
 				if (AxleGearRequired() || Vehicle.Components.AxleGearInputData != null) {
 					result.AxleGearData = DataAdapter.CreateAxleGearData(Vehicle.Components.AxleGearInputData);

@@ -540,4 +540,7 @@
   <data name="FuelCell_OnOffHysteresis" xml:space="preserve">
     <value>OnOffHysteresis</value>
   </data>
+  <data name="Vehicle_Axles_Friction" xml:space="preserve">
+    <value>WheelEndFriction</value>
+  </data>
 </root>

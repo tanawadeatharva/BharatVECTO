@@ -769,6 +769,9 @@ namespace TUGraz.VectoCore.OutputData
 					// axlegear
 					ModalResultField.P_axle_in,
 					ModalResultField.P_axle_loss,
+					// wheelEnd
+					ModalResultField.P_wheelEnd_in,
+					ModalResultField.P_wheelEnd_saving,
 					// brakes
 					ModalResultField.P_brake_in,
 					ModalResultField.P_brake_loss,

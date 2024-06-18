@@ -263,6 +263,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData, _sumWriter) { RunData = data };
 			var engine = new StopStartCombustionEngine(container, data.EngineData, pt1Disabled: true);
 			new PWheelCycle(container, data.Cycle)
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
@@ -304,6 +305,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var engine = new VTPCombustionEngine(container, data, pt1Disabled: true);
 
 			new VTPCycle(container, data.Cycle)
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
@@ -396,6 +398,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
@@ -455,6 +458,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(components.HybridController)
 				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
@@ -475,6 +479,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(components.HybridController)
 				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
@@ -493,6 +498,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(components.HybridController)
 				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(components.ElectricMotor)
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
@@ -511,6 +517,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(components.HybridController)
 				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(components.ElectricMotor)
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
@@ -550,6 +557,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
@@ -599,6 +607,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
@@ -700,6 +709,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ctl)
 				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP4, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP3, data.ElectricMachinesData, container, es, ctl))
@@ -781,6 +791,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ctl)
 				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP4, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP3, data.ElectricMachinesData, container, es, ctl))
@@ -920,7 +931,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ctl)
-				.AddComponent(new Brakes(container));
+				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData));
 
 			var pos = data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
 			switch (pos) {
@@ -1126,7 +1138,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
-				.AddComponent(new Brakes(container));
+				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData));
 
 			var pos = data.ElectricMachinesData.First().Item1;
 			IElectricMotor em;
@@ -1245,6 +1258,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			ITnInProvider powertrain = cycle;
 
+			cycle.AddComponent(new WheelEnd(container, data.WheelEndData));
+
 			if (data.AxleGearData != null) {
 				powertrain = cycle
 					.AddComponent(new AxleGear(container, data.AxleGearData))
@@ -1272,6 +1287,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			IElectricMotor em = GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData, container, es, ctl);
 			
 			powertrain
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
@@ -1294,6 +1310,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			IElectricMotor em = GetElectricMachine(PowertrainPosition.BatteryElectricE3, data.ElectricMachinesData, container, es, ctl);
 			
 			powertrain
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(GetRetarder(RetarderType.AxlegearInputRetarder, data.Retarder, container))
 				.AddComponent(em);
@@ -1311,6 +1328,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			IElectricMotor em = GetElectricMachine(PowertrainPosition.BatteryElectricE4, data.ElectricMachinesData, container, es, ctl);
 			
+			powertrain.AddComponent(new WheelEnd(container, data.WheelEndData));
 			powertrain.AddComponent(em);
 			new DummyGearboxInfo(container);
 			new DummyAxleGearInfo(container);
@@ -1380,7 +1398,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			IPowerTrainComponent powertrain = new MeasuredSpeedDrivingCycle(container, data.Cycle)
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
-				.AddComponent(new Brakes(container));
+				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData));
 
 			var position = data.ElectricMachinesData.First().Item1;
 			
@@ -1530,6 +1549,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
@@ -1575,6 +1595,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(data.AxleGearData != null ? new AxleGear(container, data.AxleGearData) : null)
 				.AddComponent(GetRetarder(RetarderType.AxlegearInputRetarder, data.Retarder, container))
 				.AddComponent(new BEVCycleGearbox(container, data))
@@ -1702,7 +1723,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
-				.AddComponent(new Brakes(container));
+				.AddComponent(new Brakes(container)
+				.AddComponent(new WheelEnd(container, data.WheelEndData)));
 
 			var pos = data.ElectricMachinesData.First().Item1;
 			IElectricMotor em;
@@ -1802,7 +1824,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ctl)
-				.AddComponent(new Brakes(container));
+				.AddComponent(new Brakes(container)
+				.AddComponent(new WheelEnd(container, data.WheelEndData)));
 
 			var pos = data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
 			IElectricMotor em;
@@ -1892,6 +1915,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			vehicle.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
@@ -1969,7 +1993,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var powertrain = new Vehicle(container, data.VehicleData, data.AirdragData)
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ctl)
-				.AddComponent(new Brakes(container));
+				.AddComponent(new Brakes(container)
+				.AddComponent(new WheelEnd(container, data.WheelEndData)));
 
 			var pos = data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
 			switch (pos) {
@@ -2053,7 +2078,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var powertrain = new Vehicle(container, data.VehicleData, data.AirdragData)
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ctl)
-				.AddComponent(new Brakes(container));
+				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData));
 
 			var pos = data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
 			var gearbox = data.GearboxData.Gears.Count > 1
@@ -2174,6 +2200,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			vehicle.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ctl)
 				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP4, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP3, data.ElectricMachinesData, container, es, ctl))
@@ -2253,6 +2280,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
             vehicle.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
                 .AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
                 .AddComponent(data.AxleGearData is null ? null : new AxleGear(container, data.AxleGearData))
                 .AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
                 .AddComponent(data.GearboxData is null ? null : GetSimpleGearbox(container, data))

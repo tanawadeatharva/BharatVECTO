@@ -78,7 +78,7 @@ In [Engineering Mode](#engineering-mode) this defines the effective (dynamic) wh
 
 ### Axles/Wheels
 
-For each axle the parameters **Relative axle load, RRC~ISO~** and **F~zISO~** have to be given in order to calculate the total [Rolling Resistance Coefficient](#vehicle-rolling-resistance-coefficient).
+For each axle the parameters **Relative axle load, RRC~ISO~** and **F~zISO~** have to be given in order to calculate the total [Rolling Resistance Coefficient](#vehicle-rolling-resistance-coefficient). For non-driven axles the user can edit the wheel end friction.
 
 <div class="engineering">
 In Engineering mode, the **Wheels Inertia [kgm²]** has to be set per wheel for each axle.

@@ -25,11 +25,17 @@ Imports TUGraz.VectoCore.Models.Declaration
 ''' Axle Config Editor (Vehicle Editor sub-dialog)
 ''' </summary>
 Public Class VehicleAxleDialog
+
+	Private _storedFriction As String
+	Public _stdFriction As Double = INVALID_FRICTION
+
+	Public Const INVALID_FRICTION As Integer = -1
+
 	Public Sub New()
 		InitializeComponent()
 
 		CbWheels.Items.Add("-")
-		CbWheels.Items.AddRange(DeclarationData.Wheels.GetWheelsDimensions().OrderBy(function(s) s).ToArray())
+		CbWheels.Items.AddRange(DeclarationData.Wheels.GetWheelsDimensions().OrderBy(Function(s) s).ToArray())
 
 		cbAxleType.Items.Clear()
 		cbAxleType.ValueMember = "Value"
@@ -48,7 +54,9 @@ Public Class VehicleAxleDialog
 		TbI_wheels.Text = ""
 		TbRRC.Text = ""
 		TbFzISO.Text = ""
+		TbFriction.Text = ""
 		CbWheels.SelectedIndex = 0
+		_storedFriction = ""
 	End Sub
 
 	'Initialise
@@ -59,6 +67,14 @@ Public Class VehicleAxleDialog
 	'Save and close
 	Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
 
+		Dim frVal = TbFriction.Text.Trim()
+		If (Not ValidateWheelEndFriction(frVal)) Then
+			MsgBox("Invalid input:" + Environment.NewLine +
+				   "Wheel End Friction must either be empty or within [0, " + _stdFriction.ToString() + "].",
+				   MsgBoxStyle.OkOnly, "Failed to save axle gear")
+			Exit Sub
+		End If
+
 		Dim axleData As Axle = New Axle With {
 				.AxleWeightShare = TbAxleShare.Text.ToDouble(0),
 				.RollResistanceCoefficient = TbRRC.Text.ToDouble(0),
@@ -66,7 +82,7 @@ Public Class VehicleAxleDialog
 				.TwinTyres = CbTwinT.Checked,
 				.WheelsDimension = If(IsNothing(CbWheels.SelectedItem), "", CbWheels.SelectedItem.ToString()),
 				.Inertia = TbI_wheels.Text.ToDouble(0).SI(Of KilogramSquareMeter)(),
-                .AxleType = CType(if(IsNothing(cbAxleType.SelectedValue), AxleType.VehicleNonDriven, cbAxleType.SelectedValue), AxleType) 
+				.AxleType = CType(If(IsNothing(cbAxleType.SelectedValue), AxleType.VehicleNonDriven, cbAxleType.SelectedValue), AxleType)
 				}
 
 		Dim results As IList(Of ValidationResult) =
@@ -84,6 +100,15 @@ Public Class VehicleAxleDialog
 		Close()
 	End Sub
 
+	Private Function ValidateWheelEndFriction(frVal As String) As Boolean
+		If (frVal Is "") Then
+			Return True
+		End If
+
+		Dim result As Double = -1
+		Return If(Double.TryParse(frVal, result), (result >= 0) And (result <= _stdFriction), False)
+	End Function
+
 	Private Sub CbWheels_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CbWheels.SelectedIndexChanged
 		'Dim inertia As Double
 		If Cfg.DeclMode Then
@@ -100,5 +125,21 @@ Public Class VehicleAxleDialog
 	Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
 		DialogResult = DialogResult.Cancel
 		Close()
+	End Sub
+
+	Private Sub cbAxleType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbAxleType.SelectedIndexChanged
+		Dim v1 = CType(cbAxleType.SelectedValue, AxleType) = AxleType.VehicleDriven
+		Dim v2 = CType(cbAxleType.SelectedValue, AxleType) = AxleType.Trailer
+
+		If (v1 Or v2 Or (_stdFriction = INVALID_FRICTION)) Then
+			_storedFriction = TbFriction.Text
+			TbFriction.Text = ""
+			TbFriction.Enabled = False
+		End If
+
+		If ((CType(cbAxleType.SelectedValue, AxleType) = AxleType.VehicleNonDriven) And (_stdFriction <> INVALID_FRICTION)) Then
+			TbFriction.Enabled = True
+			TbFriction.Text = _storedFriction
+		End If
 	End Sub
 End Class

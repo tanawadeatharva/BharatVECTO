@@ -115,6 +115,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public ITyreEngineeringInputData Tyre { get; internal set; }
 
+		public NewtonMeter WheelEndFriction { get; internal set; }
 
 		public double AxleWeightShare { get; internal set; }
 

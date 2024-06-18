@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 {
     public abstract class DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration
 	{
-		public abstract class CompletedBusDeclarationBase : IGenericCompletedBusDeclarationDataAdapter
+		public abstract class CompletedBusDeclarationBase : BaseSimulationDataAdapter, IGenericCompletedBusDeclarationDataAdapter
 		{
 			protected virtual GearboxType[] SupportedGearboxTypes => new []
 				{ GearboxType.MT, GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial };

@@ -478,6 +478,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to WheelEndFriction.
+        /// </summary>
+        public static string AxleWheels_Axles_Axle_Friction {
+            get {
+                return ResourceManager.GetString("AxleWheels_Axles_Axle_Friction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FzISO.
         /// </summary>
         public static string AxleWheels_Axles_Axle_FzISO {

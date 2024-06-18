@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog.Fluent;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,7 +24,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 {
     public abstract class DeclarationDataAdapterSingleBus
 	{
-		public abstract class SingleBusBase : ISingleBusDeclarationDataAdapter
+		public abstract class SingleBusBase : BaseSimulationDataAdapter, ISingleBusDeclarationDataAdapter
 		{
 			public abstract GearboxType[] SupportedGearboxTypes { get; }
 

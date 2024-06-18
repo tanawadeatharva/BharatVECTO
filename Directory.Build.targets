@@ -114,7 +114,7 @@
 		<ItemGroup Condition="'$(Configuration)'=='Deploy'">
 			<!-- All files for the VECTO starters -->
 			<VectoStart Include="$(SolutionDir)Tools\VECTOStart\bin\Deploy\net48\VECTO.exe" />
-			<VectoStart Include="$(SolutionDir)Tools\VECTOMultistageStart\bin\Release\net48\VECTOMultistep.exe" />
+			<VectoStart Include="$(SolutionDir)Tools\VECTOMultistepStart\bin\Release\net48\VECTOMultistep.exe" />
 			<VectoStart Include="$(SolutionDir)Tools\HashingCmdStart\bin\Release\net48\hashingcmd.exe" />
 			<VectoStart Include="$(SolutionDir)Tools\HashingToolStart\bin\Release\net48\HashingTool.exe" />
 			<VectoStart Include="$(SolutionDir)Tools\VECTOConsoleStart\bin\Release\net48\vectocmd.exe" />
@@ -122,7 +122,7 @@
 		<ItemGroup Condition="'$(Configuration)'=='MockupDeploy'">
 			<!-- All files for the VECTO starters -->
 			<VectoStart Include="$(SolutionDir)Tools\VECTOStart\bin\MockupDeploy\net48\VECTO.exe" />
-			<VectoStart Include="$(SolutionDir)Tools\VECTOMultistageStart\bin\Release\net48\VECTOMultistep.exe" />
+			<VectoStart Include="$(SolutionDir)Tools\VECTOMultistepStart\bin\Release\net48\VECTOMultistep.exe" />
 			<VectoStart Include="$(SolutionDir)Tools\HashingCmdStart\bin\Release\net48\hashingcmd.exe" />
 			<VectoStart Include="$(SolutionDir)Tools\HashingToolStart\bin\Release\net48\HashingTool.exe" />
 			<VectoStart Include="$(SolutionDir)Tools\VECTOConsoleStart\bin\Release\net48\vectocmd.exe" />

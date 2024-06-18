@@ -484,16 +484,28 @@ public class JSONFileWriter : IOutputFileWriter
 				"AxleConfig", new Dictionary<string, object> {
 					{ "Type", vehicle.AxleConfiguration.GetName() }, {
 						"Axles", from axle in vehicle.Components.AxleWheels.AxlesEngineering
-						select new Dictionary<string, object> {
-							{ "Inertia", axle.Tyre.Inertia.Value() },
-							{ "Wheels", axle.Tyre.Dimension },
-							{ "AxleWeightShare", axle.AxleWeightShare },
-							{ "TwinTyres", axle.TwinTyres },
-							{ "RRCISO", axle.Tyre.RollResistanceCoefficient },
-							{ "FzISO", axle.Tyre.TyreTestLoad.Value() },
-							{ "Type", axle.AxleType.ToString() },
-							{ "Steered", axle.Steered }
-						}
+						select (axle.WheelEndFriction == null)
+							? new Dictionary<string, object> {
+								{ "Inertia", axle.Tyre.Inertia.Value() },
+								{ "Wheels", axle.Tyre.Dimension },
+								{ "AxleWeightShare", axle.AxleWeightShare },
+								{ "TwinTyres", axle.TwinTyres },
+								{ "RRCISO", axle.Tyre.RollResistanceCoefficient },
+								{ "FzISO", axle.Tyre.TyreTestLoad.Value() },
+								{ "Type", axle.AxleType.ToString() },
+								{ "Steered", axle.Steered }
+							}
+							: new Dictionary<string, object> {
+								{ "Inertia", axle.Tyre.Inertia.Value() },
+								{ "Wheels", axle.Tyre.Dimension },
+								{ "AxleWeightShare", axle.AxleWeightShare },
+								{ "TwinTyres", axle.TwinTyres },
+								{ "RRCISO", axle.Tyre.RollResistanceCoefficient },
+								{ "FzISO", axle.Tyre.TyreTestLoad.Value() },
+								{ "Type", axle.AxleType.ToString() },
+								{ "Steered", axle.Steered },
+								{ JsonKeys.Vehicle_Axles_Friction, axle.WheelEndFriction.Value() }
+							}
 					}
 				}
 			},

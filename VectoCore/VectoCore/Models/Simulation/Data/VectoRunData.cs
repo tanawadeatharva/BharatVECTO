@@ -203,6 +203,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public NewtonMeter TorqueDriftRightWheel { get; internal set; }
 
+		public WheelEndData WheelEndData { get; internal set; }
 
 		[DebuggerDisplay("{ID}: {PowerDemandMech}/{PowerDemandElectric}")]
 		public class AuxData

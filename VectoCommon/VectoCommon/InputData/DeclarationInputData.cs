@@ -502,7 +502,9 @@ namespace TUGraz.VectoCommon.InputData
 		DataSource DataSource { get; }
 
         bool Steered { get; }
-    }
+
+		NewtonMeter WheelEndFriction { get; }
+	}
 
 	public interface ITyreDeclarationInputData : IComponentInputData
 	{

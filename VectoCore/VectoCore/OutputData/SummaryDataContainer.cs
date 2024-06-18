@@ -321,6 +321,10 @@ namespace TUGraz.VectoCore.OutputData
 			Tuple.Create(SumDataFields.P_WHEEL_POS, typeof(ConvertedSI)),
 		};
 
+		public static readonly Tuple<string, Type>[] WheelEndColumns = {
+			Tuple.Create(SumDataFields.E_WHEELEND_SAVED, typeof(ConvertedSI)),
+		};
+
 		public static readonly Tuple<string, Type>[] BrakeColumns = {
 			Tuple.Create(SumDataFields.E_BRAKE, typeof(ConvertedSI)),
 		};
@@ -500,6 +504,9 @@ namespace TUGraz.VectoCore.OutputData
 					break;
 				case IBrakes _:
 					CreateColumns(BrakeColumns);
+					break;
+				case WheelEnd _:
+					CreateColumns(WheelEndColumns);
 					break;
 				case IDriver _:
 					//CreateColumns(DriverSignals);
@@ -789,6 +796,7 @@ namespace TUGraz.VectoCore.OutputData
 				SumDataFields.E_RET_LOSS,
 				SumDataFields.E_ANGLE_LOSS,
 				SumDataFields.E_AXL_LOSS, 
+				SumDataFields.E_WHEELEND_SAVED,
 				SumDataFields.E_BRAKE, 
 				SumDataFields.E_VEHICLE_INERTIA, 
 				SumDataFields.E_WHEEL, 

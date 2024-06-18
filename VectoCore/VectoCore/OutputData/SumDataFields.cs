@@ -318,6 +318,8 @@ namespace TUGraz.VectoCore.OutputData
 		public const string E_IEPC_LOSS_FORMAT = "E_{0}_loss [kWh]";
 		public const string E_IEPC_OFF_TIME_SHARE = "{0} off time share [%]";
 
+		public const string E_WHEELEND_SAVED = "E_wheelEnd_saved [kWh]";
+
 		public const string f_equiv = "f_equiv";
 
 		#region FuelCells
@@ -757,6 +759,9 @@ namespace TUGraz.VectoCore.OutputData
 				}, {
 					E_ANGLE_LOSS,
 					SumFunc((r, m) => m.WorkAngledrive().ConvertToKiloWattHour(), ModalResultField.P_angle_loss)
+				}, {
+					E_WHEELEND_SAVED,
+					SumFunc((r, m) => m.WorkWheelEnd().ConvertToKiloWattHour(), ModalResultField.P_wheelEnd_saving)
 				}, {
 					E_BRAKE,
 					SumFunc((r, m) => m.WorkTotalMechanicalBrake().ConvertToKiloWattHour(),

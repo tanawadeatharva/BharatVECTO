@@ -146,6 +146,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly Kilogram EM_MassInverter = 100.SI<Kilogram>();
 		public static readonly KilogramPerWattSecond Battery_MassPerCapacity = 6.7.SI(Unit.SI.Kilo.Gramm.Per.Kilo.Watt.Hour).Cast<KilogramPerWattSecond>();
 
+		public static readonly WheelEndStdFrictions WwheelEndStdFrictions = new WheelEndStdFrictions();
+
 
 		/// <summary>
 		/// Formula for calculating the payload for a given gross vehicle weight.

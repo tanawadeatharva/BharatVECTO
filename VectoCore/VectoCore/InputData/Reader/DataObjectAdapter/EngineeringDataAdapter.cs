@@ -106,10 +106,30 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					TyreTestLoad = axle.Tyre.TyreTestLoad,
 					FuelEfficiencyClass = axle.Tyre.FuelEfficiencyClass,
 					AxleType = axle.AxleType,
-
 					//Wheels = axle.WheelsStr
 				}).ToList();
+
+			retVal.VehicleClass = DetectVehicleClass(data);
+
 			return retVal;
+		}
+
+		private static VehicleClass DetectVehicleClass(IVehicleEngineeringInputData data)
+		{
+			var segmentTruck = DeclarationData.GetTruckSegment(data);
+			if (segmentTruck.Segment.Found) {
+				return segmentTruck.Segment.VehicleClass;
+			}
+
+			var segmentPrimaryBus = DeclarationData.PrimaryBusSegments.Lookup(
+				data.VehicleCategory,
+				data.AxleConfiguration,
+				data.Articulated);
+			if (segmentPrimaryBus.Found) {
+				return segmentPrimaryBus.VehicleClass;
+			}
+
+			return VehicleClass.Unknown;
 		}
 
 		private VehicleData.ADASData CreateADAS(IAdvancedDriverAssistantSystemsEngineering adas)

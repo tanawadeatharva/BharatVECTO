@@ -281,6 +281,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					var powertrainPosition = electricMachines.First(e => e.Item1 != PowertrainPosition.GEN).Item1;
 					var jobType = VectoSimulationJobType.SerialHybridVehicle;
 					var vehicleData = dao.CreateVehicleData(vehicle);
+					var wheelEndData = dao.CreateWheelEndData(vehicleData.VehicleClass, vehicle);
 					var hybridParameters = dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData, 
 						engineData, gearboxData);
 
@@ -292,6 +293,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						AxleGearData = axlegearData,
 						AngledriveData = angledriveData,
 						VehicleData = vehicleData,
+						WheelEndData = wheelEndData,
 						AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle, drivingCycle.ShareDistanceHighway),
 						DriverData = driver,
 						Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
@@ -401,6 +403,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				var drivingCycle = GetDrivingCycle(cycle, crossWindRequired);
 
 				var vehicleData = dao.CreateVehicleData(vehicle);
+				var wheelEndData = dao.CreateWheelEndData(vehicleData.VehicleClass, vehicle);
+
 				yield return new VectoRunData
 				{
 					JobName = InputDataProvider.JobInputData.JobName,
@@ -409,6 +413,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					AxleGearData = axlegearData,
 					AngledriveData = angledriveData,
 					VehicleData = vehicleData,
+					WheelEndData = wheelEndData,
 					AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle, drivingCycle.ShareDistanceHighway),
 					DriverData = driver,
 					Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
@@ -560,6 +565,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             var drivingCycle = GetDrivingCycle(cycle, crossWindRequired);
 
 			var vehicleData = dao.CreateVehicleData(vehicle);
+			var wheelEndData = dao.CreateWheelEndData(vehicleData.VehicleClass, vehicle);
+
 			return new VectoRunData {
 				JobName = InputDataProvider.JobInputData.JobName,
 				JobType = VectoSimulationJobType.IEPC_E,
@@ -567,6 +574,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				AxleGearData = axlegearData,
 				AngledriveData = null,
 				VehicleData = vehicleData,
+				WheelEndData = wheelEndData,
 				AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle, drivingCycle.ShareDistanceHighway),
 				DriverData = driver,
 				Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
@@ -651,6 +659,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 					
 					var vehicleData = dao.CreateVehicleData(vehicle);
+					var wheelEndData = dao.CreateWheelEndData(vehicleData.VehicleClass, vehicle);
 
 					//var gearshiftParams = dao.CreateGearshiftData(
 					//	gearboxData.Type, InputDataProvider.DriverInputData.GearshiftInputData,
@@ -676,6 +685,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						AxleGearData = axlegearData,
 						AngledriveData = angledriveData,
 						VehicleData = vehicleData,
+						WheelEndData = wheelEndData,
 						AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle, drivingCycle.ShareDistanceHighway),
 						DriverData = driver,
 						Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),

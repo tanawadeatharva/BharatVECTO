@@ -184,6 +184,11 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_TC_loss);
 		}
 
+		public static WattSecond WorkWheelEnd(this IModalDataContainer data)
+		{ 
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_wheelEnd_saving);
+		}
+
 		public static WattSecond WorkTotalMechanicalBrake(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_brake_loss);

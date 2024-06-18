@@ -16,6 +16,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public interface IDeclarationDataAdapter
 	{
+		WheelEndData CreateWheelEndData(VehicleClass vehicleClass, IVehicleDeclarationInputData vehicle);
+
 		VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission first, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> keyValuePair, bool allowVocational);
 		
 		GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData,

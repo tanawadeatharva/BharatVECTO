@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 {
     public abstract class DeclarationDataAdapterPrimaryBus
 	{
-		public abstract class PrimaryBusBase : IPrimaryBusDeclarationDataAdapter
+		public abstract class PrimaryBusBase : BaseSimulationDataAdapter, IPrimaryBusDeclarationDataAdapter
 		{
 
 			public abstract GearboxType[] SupportedGearboxTypes { get; }

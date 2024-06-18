@@ -148,6 +148,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 				Retarder = RetarderData,
 				PTO = PTOTransmissionData,
 				Report = Report,
+				WheelEndData = Dao.CreateWheelEndData(segment.VehicleClass, JobInputData.Vehicle)
 			};
 		}
 

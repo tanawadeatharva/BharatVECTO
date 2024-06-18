@@ -258,6 +258,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(SI), caption: "P_brake_in [kW]", outputFactor: 1e-3)] P_brake_in,
 
+		[ModalResultField(typeof(SI), caption: "P_wheelEnd_saving [kW]", outputFactor: 1e-3)] P_wheelEnd_saving,
+
+		[ModalResultField(typeof(SI), caption: "P_wheelEnd_in [kW]", outputFactor: 1e-3)] P_wheelEnd_in,
+
 		[ModalResultField(typeof(SI), caption: "P_axle_in [kW]", outputFactor: 1e-3)] P_axle_in,
 
 		[ModalResultField(typeof(SI), caption: "P_angle_in [kW]", outputFactor: 1e-3)] P_angle_in,

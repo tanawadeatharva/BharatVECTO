@@ -225,6 +225,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				simulationRunData.VehicleData =
 				DataAdapter.CreateVehicleData(Vehicle, _segment, mission, loading, _allowVocational);
 
+				simulationRunData.WheelEndData = DataAdapter.CreateWheelEndData(_segment.VehicleClass, InputDataProvider.JobInputData.Vehicle);
+
 				simulationRunData.AirdragData =
 					DataAdapter.CreateAirdragData(Vehicle.Components.AirdragInputData, Vehicle.InMotionCharging, mission, _segment, ovcMode, simulationRunData.Cycle.ShareDistanceHighway);
 
@@ -368,6 +370,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 				result.VehicleData =
 					DataAdapter.CreateVehicleData(Vehicle, _segment, mission, loading, _allowVocational);
+
+				result.WheelEndData = DataAdapter.CreateWheelEndData(_segment.VehicleClass, Vehicle);
 
 				if (Vehicle.Components.RetarderInputData != null) {
 					result.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData,

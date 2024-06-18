@@ -157,6 +157,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 				var runData = CreateCommonRunData(mission, loading);
 
                 runData.VehicleData = DataAdapter.CreateVehicleData(SingleBusDataProvider, _segment, mission, loading, _allowVocational); //Primary
+				runData.WheelEndData = DataAdapter.CreateWheelEndData(_segment.VehicleClass, PrimaryVehicle);
 				runData.AirdragData = DataAdapter.CreateAirdragData(CompletedVehicle, mission); //Single
 				runData.EngineData = DataAdapter.CreateEngineData(PrimaryVehicle, engineMode, mission); //Primary
 				runData.ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>();
@@ -285,7 +286,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                 runData.AirdragData =
                     DataAdapter.CreateAirdragData(CompletedVehicle, mission);
                 runData.VehicleData = DataAdapter.CreateVehicleData(SingleBusDataProvider, _segment, mission, loading, _allowVocational);
-
+				runData.WheelEndData = DataAdapter.CreateWheelEndData(_segment.VehicleClass, PrimaryVehicle);
 
                 runData.EngineData = DataAdapter.CreateEngineData(PrimaryVehicle, engineMode, mission);
 
@@ -489,6 +490,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 
 				runData.VehicleData =
 					DataAdapter.CreateVehicleData(SingleBusDataProvider, _segment, mission, loading, _allowVocational);
+
+				runData.WheelEndData = DataAdapter.CreateWheelEndData(_segment.VehicleClass, PrimaryVehicle);
 				runData.AirdragData = DataAdapter.CreateAirdragData(CompletedVehicle, mission);
 				runData.EngineData =
 					DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode, mission);
@@ -662,7 +665,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                 }
 
                 result.VehicleData = DataAdapter.CreateVehicleData(SingleBusDataProvider, _segment, mission, loading, _allowVocational);
-                result.AirdragData = DataAdapter.CreateAirdragData(SingleBusDataProvider.CompletedVehicle, mission);
+				result.WheelEndData = DataAdapter.CreateWheelEndData(_segment.VehicleClass, vehicle);
+
+				result.AirdragData = DataAdapter.CreateAirdragData(SingleBusDataProvider.CompletedVehicle, mission);
                 if (AxleGearRequired() || vehicle.Components.AxleGearInputData != null) {
                     result.AxleGearData = DataAdapter.CreateAxleGearData(vehicle.Components.AxleGearInputData);
                 }

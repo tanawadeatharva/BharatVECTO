@@ -781,10 +781,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			string vectoVersionStr = VectoSimulationCore.VersionNumber;
 
 			bool xmlVersionNewer = VersioningUtil.CompareVersions(simToolVersionStr, vectoVersionStr) > 0;
-			
+
+			#if !DEBUG
 			if (xmlVersionNewer) {
 				throw new VectoException($"Not allowed to run simulation because VECTO version ({vectoVersionStr}) is older than <SimulationToolVersion> in Manufacturer Report ({simToolVersionStr}).");
 			}
+			#endif
 		}
 
 		public void ValidateHash()
@@ -1096,7 +1098,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public override bool SavedInDeclarationMode => true;
 
-        #endregion
+		#endregion
 
         //#region Implementation of IDeclarationInputDataProvider
 
@@ -1115,7 +1117,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
         //#endregion
 
-        #region Implementation of IMultistageVIFInputData
+		#region Implementation of IMultistageVIFInputData
 
 		public IVehicleDeclarationInputData VehicleInputData => Vehicle;
 		public IMultistepBusInputDataProvider MultistageJobInputData => PrimaryVehicleData;

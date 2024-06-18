@@ -327,6 +327,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		};
 
 		// ------------------------------------------------------------------------------------
+		public static readonly ModalResultField[] WheelEndSignals = {
+			ModalResultField.P_wheelEnd_in,
+			ModalResultField.P_wheelEnd_saving
+		};
+
+		// ------------------------------------------------------------------------------------
 		public static readonly ModalResultField[] ElectricSystemSignals = {
 			ModalResultField.P_Aux_el_HV,
 		};
@@ -441,6 +447,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				case Retarder _: CreateColumns(RetarderSignals); break;
 				case IWheels _: CreateColumns(WheelSignals); break;
 				case IBrakes _: CreateColumns(BrakeSignals); break;
+				case WheelEnd _: CreateColumns(WheelEndSignals); break;	
 				case IDriverInfo _: CreateColumns(DriverSignals); break;
 				case IVehicle _: CreateColumns(VehicleSignals); break;
 				case IElectricMotor c3 when c3.Position == PowertrainPosition.IEPC: 

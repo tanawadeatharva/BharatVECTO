@@ -35,6 +35,7 @@ Public Class VehicleForm
 		WheelsDimension = 5
 		Inertia = 6
 		AxleType = 7
+		Friction = 8
 	End Enum
 
 	Private Enum TorqueLimitsTbl
@@ -77,7 +78,6 @@ Public Class VehicleForm
 	Private _reessPackDlg As REESSPackDialog
 	Private _fcComponentDlg As FuelCellComponentDialog
 	Friend VehicleType As VectoSimulationJobType
-
 
 	Public Sub New()
 
@@ -198,6 +198,7 @@ Public Class VehicleForm
 		End Try
 		If s0.Found Then
 			_hdVclass = s0.VehicleClass
+			_axlDlog._stdFriction = If(DeclarationData.WwheelEndStdFrictions.ContainsKey(_hdVclass), DeclarationData.WwheelEndStdFrictions.Find(_hdVclass).Value(), VehicleAxleDialog.INVALID_FRICTION)
 		End If
 
 
@@ -229,6 +230,8 @@ Public Class VehicleForm
 			Dim axleCount As Integer = s0.Missions(0).AxleWeightDistribution.Count()
 			Dim i0 As Integer = LvRRC.Items.Count
 
+			_axlDlog._stdFriction = If(DeclarationData.WwheelEndStdFrictions.ContainsKey(_hdVclass), DeclarationData.WwheelEndStdFrictions.Find(_hdVclass).Value(), VehicleAxleDialog.INVALID_FRICTION)
+
 			TbHDVclass.Text = _hdVclass.GetClassNumber()
 			PicVehicle.Image = ConvPicPath(_hdVclass, False)
 
@@ -236,7 +239,7 @@ Public Class VehicleForm
 			If axleCount > i0 Then
 				For i = 1 To axleCount - LvRRC.Items.Count
 					LvRRC.Items.Add(CreateListViewItem(i + i0, Double.NaN, False, Double.NaN, Double.NaN, "", Double.NaN,
-														AxleType.VehicleNonDriven))
+														AxleType.VehicleNonDriven, Nothing))
 				Next
 
 			ElseIf axleCount < LvRRC.Items.Count Then
@@ -473,10 +476,10 @@ Public Class VehicleForm
 			If Cfg.DeclMode Then
 				Dim inertia As Double = DeclarationData.Wheels.Lookup(a0.Tyre.Dimension).Inertia.Value()
 				LvRRC.Items.Add(CreateListViewItem(i, Double.NaN, a0.TwinTyres, a0.Tyre.RollResistanceCoefficient,
-													a0.Tyre.TyreTestLoad.Value(), a0.Tyre.Dimension, inertia, a0.AxleType))
+					a0.Tyre.TyreTestLoad.Value(), a0.Tyre.Dimension, inertia, a0.AxleType, a0.WheelEndFriction))
 			Else
 				LvRRC.Items.Add(CreateListViewItem(i, a0.AxleWeightShare, a0.TwinTyres, a0.Tyre.RollResistanceCoefficient,
-													a0.Tyre.TyreTestLoad.Value(), a0.Tyre.Dimension, a0.Tyre.Inertia.Value(), a0.AxleType))
+					a0.Tyre.TyreTestLoad.Value(), a0.Tyre.Dimension, a0.Tyre.Inertia.Value(), a0.AxleType, a0.WheelEndFriction))
 
 			End If
 		Next
@@ -611,6 +614,9 @@ Public Class VehicleForm
 		end If
 
 		DeclInit()
+
+		SetHdVclass()
+		_axlDlog._stdFriction = If(DeclarationData.WwheelEndStdFrictions.ContainsKey(_hdVclass), DeclarationData.WwheelEndStdFrictions.Find(_hdVclass).Value(), VehicleAxleDialog.INVALID_FRICTION)
 
 		VehicleFileBrowser.UpdateHistory(file)
 		Text = GetFilenameWithoutPath(file, True)
@@ -971,7 +977,7 @@ Public Class VehicleForm
 	End Sub
 
 	Private Function CreateListViewItem(axleNumber As Integer, share As Double, twinTire As Boolean, rrc As Double,
-										fzIso As Double, wheels As String, inertia As Double, axletype As AxleType) As ListViewItem
+		fzIso As Double, wheels As String, inertia As Double, axletype As AxleType, friction As NewtonMeter) As ListViewItem
 		Dim retVal As New ListViewItem
 		retVal.SubItems(0).Text = axleNumber.ToGUIFormat()
 		FillDoubleValue(retVal, share, "-")
@@ -981,6 +987,8 @@ Public Class VehicleForm
 		retVal.SubItems.Add(wheels)
 		FillDoubleValue(retVal, inertia)
 		retVal.SubItems.Add(axletype.GetLabel())
+		Dim frVal As Double = If(friction = Nothing, Double.NaN, friction.Value())
+		FillDoubleValue(retVal, frVal)
 		Return retVal
 	End Function
 
@@ -1028,6 +1036,8 @@ Public Class VehicleForm
 			tyre.TyreTestLoad = entry.SubItems(AxleTbl.FzISO).Text.ToDouble(0).SI(Of Newton)()
 			tyre.Dimension = entry.SubItems(AxleTbl.WheelsDimension).Text
 			tyre.Inertia = entry.SubItems(AxleTbl.Inertia).Text.ToDouble(0).SI(Of KilogramSquareMeter)()
+			Dim frVal As String = entry.SubItems(AxleTbl.Friction).Text
+			a0.WheelEndFriction = If(frVal = Nothing, Nothing, frVal.ToDouble().SI(Of NewtonMeter)())
 			a0.Tyre = tyre
 			veh.Axles.Add(a0)
 			relCheck += a0.AxleWeightShare
@@ -1425,11 +1435,17 @@ Public Class VehicleForm
 	End Sub
 
 	Private Sub ButAxlAdd_Click(sender As Object, e As EventArgs) Handles ButAxlAdd.Click
+		If _axlDlog._stdFriction = VehicleAxleDialog.INVALID_FRICTION Then
+			MsgBox("Cannot add axle wheel for an unknown vehicle class.")
+			Exit Sub
+		End If
 		_axlDlog.Clear()
 		If _axlDlog.ShowDialog = DialogResult.OK Then
+			Dim frVal = _axlDlog.TbFriction.Text
 			LvRRC.Items.Add(CreateListViewItem(LvRRC.Items.Count + 1, _axlDlog.TbAxleShare.Text.ToDouble(0),
-												_axlDlog.CbTwinT.Checked, _axlDlog.TbRRC.Text.ToDouble(0), _axlDlog.TbFzISO.Text.ToDouble(0),
-												_axlDlog.CbWheels.Text, _axlDlog.TbI_wheels.Text.ToDouble(0), CType(_axlDlog.cbAxleType.SelectedValue, AxleType)))
+				_axlDlog.CbTwinT.Checked, _axlDlog.TbRRC.Text.ToDouble(0), _axlDlog.TbFzISO.Text.ToDouble(0),
+				_axlDlog.CbWheels.Text, _axlDlog.TbI_wheels.Text.ToDouble(0),
+				CType(_axlDlog.cbAxleType.SelectedValue, AxleType), If(frVal = Nothing, Nothing, frVal.ToDouble().SI(Of NewtonMeter)())))
 			Change()
 			DeclInit()
 
@@ -1494,6 +1510,7 @@ Public Class VehicleForm
 		_axlDlog.TbI_wheels.Text = lv0.SubItems(AxleTbl.Inertia).Text
 		_axlDlog.CbWheels.SelectedItem = If(String.IsNullOrWhiteSpace(lv0.SubItems(AxleTbl.WheelsDimension).Text), "-", lv0.SubItems(AxleTbl.WheelsDimension).Text)
 		_axlDlog.cbAxleType.SelectedValue = lv0.SubItems(AxleTbl.AxleType).Text.ParseEnum(Of AxleType)()
+		_axlDlog.TbFriction.Text = lv0.SubItems(AxleTbl.Friction).Text
 
 		If _axlDlog.ShowDialog = DialogResult.OK Then
 			lv0.SubItems(AxleTbl.RelativeLoad).Text = _axlDlog.TbAxleShare.Text
@@ -1507,6 +1524,7 @@ Public Class VehicleForm
 			lv0.SubItems(AxleTbl.WheelsDimension).Text = _axlDlog.CbWheels.Text
 			lv0.SubItems(AxleTbl.Inertia).Text = _axlDlog.TbI_wheels.Text
 			lv0.SubItems(AxleTbl.AxleType).Text = CType(_axlDlog.cbAxleType.SelectedValue, AxleType).GetLabel()
+			lv0.SubItems(AxleTbl.Friction).Text = _axlDlog.TbFriction.Text
 			Change()
 			DeclInit()
 		End If

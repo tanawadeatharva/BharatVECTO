@@ -68,6 +68,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual ITyreDeclarationInputData Tyre => _tyre ?? (_tyre = Reader.Tyre);
 
+		public virtual NewtonMeter WheelEndFriction => null;
+
 		public bool Steered =>
 			_steered ?? (_steered = XmlConvert.ToBoolean(GetString(XMLNames.AxleWheels_Axles_Axle_Steered))).Value;
 
@@ -109,4 +111,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
+
+	public class XMLDeclarationAxleDataProviderV26 : XMLDeclarationAxleDataProviderV20
+	{ 
+		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_DEV_V26;
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		static XMLDeclarationAxleDataProviderV26()
+		{
+			NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_DEV_V26;
+		}
+
+		public XMLDeclarationAxleDataProviderV26(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+			: base(vehicle, componentNode, sourceFile) 
+		{ }
+
+		public override NewtonMeter WheelEndFriction => 
+			GetNode(XMLNames.AxleWheels_Axles_Axle_Friction, BaseNode, false)?.InnerText.ToDouble().SI<NewtonMeter>();
+
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+	}
+
 }

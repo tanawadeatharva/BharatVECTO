@@ -136,6 +136,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationAxlesDataProviderV26 : XMLDeclarationAxlesDataProviderV20
+	{
+		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_DEV_V26;
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		
+		public XMLDeclarationAxlesDataProviderV26(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
+			vehicle, componentNode, sourceFile) { }
+
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+	}
 
 	// ---------------------------------------------------------------------------------------
 
