@@ -61,7 +61,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		const string Header = "<t> [s],<v> [km/h],<n_eng> [rpm],<n_fan> [rpm],<tq_wh_left> [Nm],<tq_wh_right> [Nm],<n_wh_left> [rpm],<n_wh_right> [rpm],<fc_Diesel CI> [g/h],<gear>,CO,NMHC,NOx,PN,tq_eng,thc,CO2";
 
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestWheelSpeedRatioExceeds_Left()
 		{
 			SetupLogging();
@@ -90,7 +91,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.IsTrue(LogList.Value[0].Contains("Wheel-speed difference rel."));
 		}
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestWheelSpeedRatioExceeds_Right()
 		{
 			SetupLogging();
@@ -122,7 +124,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.IsTrue(LogList.Value[0].Contains("Wheel-speed difference rel."));
 		}
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestWheelSpeedDifferenceStandstillExceeds_Left()
 		{
 			SetupLogging();
@@ -150,7 +153,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.IsTrue(LogList.Value[0].Contains("Wheel-speed difference abs."));
 		}
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestWheelSpeedDifferenceStandstillExceeds_Right()
 		{
 			SetupLogging();
@@ -180,7 +184,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestFanSpeedTooLow()
 		{
 			SetupLogging();
@@ -213,7 +218,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.IsTrue(LogList.Value[0].Contains("Fan speed (non-electric) exceeds range"));
 		}
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestFanSpeedTooHigh()
 		{
 			SetupLogging();
@@ -247,7 +253,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestFanSpeedElectricLow()
 		{
 			SetupLogging();
@@ -279,7 +286,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(0, LogList.Value.Count);
 		}
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestFanSpeedElectricHigh()
 		{
 			SetupLogging();
@@ -312,7 +320,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			
 		}
 
-		[TestCase(), Ignore("FC-Checks disabled (dual fuel)")]
+		[TestCase(), Ignore("FC-Checks disabled (dual fuel)"),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestFuelConsumptionTooLow()
 		{
 			SetupLogging();
@@ -344,7 +353,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		}
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestFuelConsumptionLowOK()
 		{
 			SetupLogging();
@@ -375,7 +385,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		}
 
-		[TestCase(), Ignore("FC-Checks disabled (dual fuel")]
+		[TestCase(), Ignore("FC-Checks disabled (dual fuel"),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestFuelConsumptionTooHigh()
 		{
 			SetupLogging();
@@ -406,7 +417,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.IsTrue(LogList.Value.Any(x => x.StartsWith("Fuel consumption for the previous 10 [min] above threshold")));
 		}
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestFuelConsumptionHighOK()
 		{
 			SetupLogging();

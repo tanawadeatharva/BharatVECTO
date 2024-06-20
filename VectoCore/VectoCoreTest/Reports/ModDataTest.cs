@@ -77,7 +77,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 		[TestCase(80, 0),
 			TestCase(80, -0.1),
-			TestCase(10, 0.1)]
+			TestCase(10, 0.1),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void SumDataTest(double initialSpeedVal, double accVal)
 		{
 			var rundata = new VectoRunData() {

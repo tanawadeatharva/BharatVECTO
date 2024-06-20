@@ -16,7 +16,7 @@ using Assert = NUnit.Framework.Assert;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.DeclarationDataTests.GenericModelParams.Vehicle;
 
-public class VehiclePrimaryBusCurbMassTest
+public class VehicleCompletedBusCurbMassTest
 {
 
 	private const AxleConfiguration Axl2 = AxleConfiguration.AxleConfig_4x2;

@@ -17,10 +17,11 @@ public class FactorMethodGenericElectricMotorTests
     public void TestGenericBusElectricMotorDataMeasured()
     {
         var em = GetMockElectricMotorInputData(CertificationMethod.Measured);
+		var averageVoltage = 350.SI<Volt>();
 
         var genericElectricMotor = new GenericBusElectricMotorData();
         var electricMotorData = genericElectricMotor.CreateGenericElectricMotorData(em, null,
-            em.ElectricMachine.VoltageLevels.Average(v => v.VoltageLevel.Value()).SI<Volt>());
+            averageVoltage);
 
         Assert.AreEqual(2, electricMotorData.EfficiencyData.VoltageLevels.Count);
 		// Todo: More assertions...
@@ -30,10 +31,11 @@ public class FactorMethodGenericElectricMotorTests
 	public void TestGenericBusElectricMotorDataStdVal()
 	{
 		var em = GetMockElectricMotorInputData(CertificationMethod.StandardValues);
+		var averageVoltage = 350.SI<Volt>();
 
-		var genericElectricMotor = new GenericBusElectricMotorData();
+        var genericElectricMotor = new GenericBusElectricMotorData();
 		var electricMotorData = genericElectricMotor.CreateGenericElectricMotorData(em, null,
-			em.ElectricMachine.VoltageLevels.Average(v => v.VoltageLevel.Value()).SI<Volt>());
+			averageVoltage);
 
 		Assert.AreEqual(2, electricMotorData.EfficiencyData.VoltageLevels.Count);
 		// Todo: More assertions...

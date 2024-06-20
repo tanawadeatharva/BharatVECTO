@@ -13,7 +13,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+using Assert = NUnit.Framework.Assert;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.DataAdapter.Engineering;
 
@@ -44,7 +44,297 @@ public class GearboxDataAdapterTests
 		Assert.AreEqual(13.072, gbxData.Gears[1].LossMap[35].TorqueLoss.Value(), 0.0001);
 	}
 
-    private IEngineeringInputDataProvider GetMockInputData()
+    [TestCase]
+    public void ReadGearboxSerialTC()
+    {
+       // var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData/Components/AT_GBX/GearboxSerial.vgbx");
+
+		var inputProvider = GetMockGbxInputData(GearboxType.ATSerial, VehicleCategory.Tractor, 1);
+        var tcInputProvider = GetMockTcInputData(GearboxType.ATSerial);
+
+        var ratios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
+        Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
+        for (int i = 0; i < ratios.Length; i++) {
+            Assert.AreEqual(ratios[i], inputProvider.Gears[i].Ratio);
+        }
+
+		var inputData = GetMockInputData(inputProvider, tcInputProvider);
+		var runData = GetDummyVectoRunData(VehicleCategory.Tractor);
+        var gbxData = new EngineeringDataAdapter().CreateGearboxData(
+            inputData,
+			runData,
+			null);
+
+        //inputProvider,
+        //MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
+        //(IGearshiftEngineeringInputData)inputProvider, 2.1,
+        //0.5.SI<Meter>(), VehicleCategory.RigidTruck, (ITorqueConverterEngineeringInputData)inputProvider, null, null);
+        Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
+
+        Assert.IsTrue(gbxData.Gears[1].HasLockedGear);
+        Assert.IsTrue(gbxData.Gears[1].HasTorqueConverter);
+        Assert.IsTrue(gbxData.Gears[2].HasLockedGear);
+        Assert.IsFalse(gbxData.Gears[2].HasTorqueConverter);
+        Assert.IsTrue(gbxData.Gears[3].HasLockedGear);
+        Assert.IsFalse(gbxData.Gears[3].HasTorqueConverter);
+
+        var gear = gbxData.Gears[1];
+        Assert.AreEqual(gear.Ratio, gear.TorqueConverterRatio);
+    }
+
+	
+
+	[TestCase]
+    public void ReadGearboxPowersplitTC()
+    {
+        // var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData/Components/AT_GBX/GearboxPowerSplit.vgbx");
+		var inputProvider = GetMockGbxInputData(GearboxType.ATPowerSplit, VehicleCategory.Tractor, 1);
+		var tcInputProvider = GetMockTcInputData(GearboxType.ATSerial);
+
+        var ratios = new[] { 1.35, 1.0, 0.73 };
+        Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
+        for (int i = 0; i < ratios.Length; i++) {
+            Assert.AreEqual(ratios[i], inputProvider.Gears[i].Ratio);
+        }
+
+		var inputData = GetMockInputData(inputProvider, tcInputProvider);
+		var runData = GetDummyVectoRunData(VehicleCategory.Tractor);
+        var gbxData = new EngineeringDataAdapter().CreateGearboxData(
+            inputData, runData, null);
+
+        //inputProvider,
+        //MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
+        //(IGearshiftEngineeringInputData)inputProvider, 2.1,
+        //0.5.SI<Meter>(), VehicleCategory.RigidTruck, (ITorqueConverterEngineeringInputData)inputProvider, null, null);
+        Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
+
+        Assert.IsTrue(gbxData.Gears[1].HasLockedGear);
+        Assert.IsTrue(gbxData.Gears[1].HasTorqueConverter);
+        Assert.IsTrue(gbxData.Gears[2].HasLockedGear);
+        Assert.IsFalse(gbxData.Gears[2].HasTorqueConverter);
+        Assert.IsTrue(gbxData.Gears[3].HasLockedGear);
+        Assert.IsFalse(gbxData.Gears[3].HasTorqueConverter);
+
+        Assert.AreEqual(1, gbxData.Gears[1].TorqueConverterRatio);
+    }
+
+	
+
+	[TestCase]
+    public void ReadGearboxDualTCTruck()
+    {
+        // var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData/Components/AT_GBX/GearboxSerialDualTC.vgbx");
+		var inputProvider = GetMockGbxInputData(GearboxType.ATSerial, VehicleCategory.Tractor, 2);
+		var tcInputProvider = GetMockTcInputData(GearboxType.ATSerial);
+
+        var ratios = new[] { 4.35, 2.4, 1.8, 1.3, 1.0 };
+        Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
+        for (int i = 0; i < ratios.Length; i++) {
+            Assert.AreEqual(ratios[i], inputProvider.Gears[i].Ratio);
+        }
+
+		var inputData = GetMockInputData(inputProvider, tcInputProvider);
+		var runData = GetDummyVectoRunData(VehicleCategory.Tractor);
+
+        var gbxData = new EngineeringDataAdapter().CreateGearboxData(
+           inputData, runData, null);
+        //inputProvider,
+        //MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
+        //(IGearshiftEngineeringInputData)inputProvider, 2.1,
+        //0.5.SI<Meter>(), VehicleCategory.RigidTruck, (ITorqueConverterEngineeringInputData)inputProvider, null, null);
+        Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
+
+        Assert.IsFalse(gbxData.Gears[1].HasLockedGear);
+        Assert.IsTrue(gbxData.Gears[1].HasTorqueConverter);
+        Assert.IsTrue(gbxData.Gears[2].HasLockedGear);
+        Assert.IsTrue(gbxData.Gears[2].HasTorqueConverter);
+        Assert.IsTrue(gbxData.Gears[3].HasLockedGear);
+        Assert.IsFalse(gbxData.Gears[3].HasTorqueConverter);
+
+
+        var gear = gbxData.Gears[2];
+        Assert.AreEqual(gear.Ratio, gear.TorqueConverterRatio);
+    }
+
+    [TestCase]
+    public void ReadGearboxSingleTCBus()
+    {
+        //var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData/Components/AT_GBX/GearboxSerialDualTC.vgbx");
+		var inputProvider = GetMockGbxInputData(GearboxType.ATSerial, VehicleCategory.HeavyBusPrimaryVehicle, 1);
+		var tcInputProvider = GetMockTcInputData(GearboxType.ATSerial);
+
+        var ratios = new[] { 4.35, 2.4, 1.8, 1.3, 1.0 };
+        Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
+        for (int i = 0; i < ratios.Length; i++) {
+            Assert.AreEqual(ratios[i], inputProvider.Gears[i].Ratio);
+        }
+
+		var inputData = GetMockInputData(inputProvider, tcInputProvider);
+		var runData = GetDummyVectoRunData(VehicleCategory.HeavyBusPrimaryVehicle);
+        var gbxData = new EngineeringDataAdapter().CreateGearboxData(
+            inputData, runData, null);
+        //inputProvider,
+        //MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
+        //(IGearshiftEngineeringInputData)inputProvider, 2.1,
+        //0.5.SI<Meter>(), VehicleCategory.InterurbanBus, (ITorqueConverterEngineeringInputData)inputProvider, null, null);
+        Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
+
+        Assert.IsTrue(gbxData.Gears[1].HasLockedGear);
+        Assert.IsTrue(gbxData.Gears[1].HasTorqueConverter);
+        Assert.IsTrue(gbxData.Gears[2].HasLockedGear);
+        Assert.IsFalse(gbxData.Gears[2].HasTorqueConverter);
+        Assert.IsTrue(gbxData.Gears[3].HasLockedGear);
+        Assert.IsFalse(gbxData.Gears[3].HasTorqueConverter);
+
+
+        var gear = gbxData.Gears[1];
+        Assert.AreEqual(gear.Ratio, gear.TorqueConverterRatio);
+    }
+
+    [TestCase]
+    public void ReadGearboxDualTCBus()
+    {
+        //var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData/Components/AT_GBX/GearboxSerialDualTCBus.vgbx");
+		var inputProvider = GetMockGbxInputData(GearboxType.ATSerial, VehicleCategory.HeavyBusPrimaryVehicle, 2);
+		var tcInputProvider = GetMockTcInputData(GearboxType.ATSerial);
+
+        var ratios = new[] { 4.58, 2.4, 1.8, 1.3, 1.0 };
+        Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
+        for (int i = 0; i < ratios.Length; i++) {
+            Assert.AreEqual(ratios[i], inputProvider.Gears[i].Ratio);
+        }
+
+		var inputData = GetMockInputData(inputProvider, tcInputProvider);
+		var runData = GetDummyVectoRunData(VehicleCategory.HeavyBusPrimaryVehicle);
+        var gbxData = new EngineeringDataAdapter().CreateGearboxData(
+            inputData, runData, null);
+
+        //inputProvider,
+        //MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
+        //(IGearshiftEngineeringInputData)inputProvider, 2.1,
+        //0.5.SI<Meter>(), VehicleCategory.InterurbanBus, (ITorqueConverterEngineeringInputData)inputProvider, null, null);
+        Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
+
+        Assert.IsFalse(gbxData.Gears[1].HasLockedGear);
+        Assert.IsTrue(gbxData.Gears[1].HasTorqueConverter);
+        Assert.IsTrue(gbxData.Gears[2].HasLockedGear);
+        Assert.IsTrue(gbxData.Gears[2].HasTorqueConverter);
+        Assert.IsTrue(gbxData.Gears[3].HasLockedGear);
+        Assert.IsFalse(gbxData.Gears[3].HasTorqueConverter);
+
+
+        var gear = gbxData.Gears[2];
+        Assert.AreEqual(gear.Ratio, gear.TorqueConverterRatio);
+    }
+
+
+	private IGearboxEngineeringInputData GetMockGbxInputData(GearboxType gbxType, VehicleCategory vehicleCategory, int numTcGears)
+	{
+		var gbx = new Mock<IGearboxEngineeringInputData>();
+		double[] ratios = {};
+		switch (gbxType) {
+            case GearboxType.ATSerial:
+				
+				if (vehicleCategory.IsBus()) {
+					ratios = numTcGears == 1 ? new[] { 4.35, 2.4, 1.8, 1.3, 1.0 } : new[] { 4.58, 2.4, 1.8, 1.3, 1.0 };
+				} else {
+					ratios = numTcGears == 1 ? new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 } : new[] { 4.35, 2.4, 1.8, 1.3, 1.0 };
+                }
+				break;
+            case GearboxType.ATPowerSplit:
+				ratios = new[] { 1.35, 1.0, 0.73 };
+				break;
+        }
+
+		gbx.Setup(g => g.Type).Returns(gbxType);
+		var gears = new List<ITransmissionInputData>();
+		foreach (var ratio in ratios) {
+			var gear = new Mock<ITransmissionInputData>();
+			gear.Setup(g => g.Ratio).Returns(ratio);
+			gear.Setup(g => g.Efficiency).Returns(0.98);
+			gear.Setup(g => g.ShiftPolygon).Returns(InputDataHelper.InputDataAsTableData(ShiftHdr, ShiftData));
+            gears.Add(gear.Object);
+		}
+		gbx.Setup(g => g.Gears).Returns(gears);
+        return gbx.Object;
+	}
+
+    const string ShiftHdr = "engine torque [Nm],downshift rpm [1/min],upshift rpm [1/min]";
+
+	private readonly string[] ShiftData = new[] {
+		"-200,700,800",
+		"0,700,800",
+		"3000,700,800",
+	};
+
+	private ITorqueConverterEngineeringInputData GetMockTcInputData(GearboxType atSerial)
+	{
+		var tc = new Mock<ITorqueConverterEngineeringInputData>();
+		tc.Setup(t => t.ReferenceRPM).Returns(1000.RPMtoRad());
+		string[] tcData = null;
+		switch (atSerial) {
+            case GearboxType.ATSerial:
+				tcData = TcDataSerial;
+				break;
+            case GearboxType.ATPowerSplit:
+				tcData = TcDataPS;
+                break;
+		}
+
+		tc.Setup(t => t.TCData).Returns(InputDataHelper.InputDataAsTableData(TcHdr, tcData));
+		
+		//tc.Setup(t => t.Inertia).Returns(0.SI<KilogramSquareMeter>());
+        return tc.Object;
+	}
+
+    const string TcHdr = "Speed Ratio, Torque Ratio,MP1000";
+
+	private static string[] TcDataSerial = new[] {
+		"0.0,1.80,377.80",
+		"0.1,1.71,365.21",
+		"0.2,1.61,352.62",
+		"0.3,1.52,340.02",
+		"0.4,1.42,327.43",
+		"0.5,1.33,314.84",
+		"0.6,1.23,302.24",
+		"0.7,1.14,264.46",
+		"0.8,1.04,226.68",
+		"0.9,1.02,188.90",
+	};
+
+	private static string[] TcDataPS = new[] {
+		"0.0,  4.5, 700",
+		"0.1,  3.5, 640",
+		"0.2,  2.7, 560",
+		"0.3,  2.2, 460",
+		"0.4,  1.6, 350",
+		"0.5,  1.2, 250",
+		"0.6,  0.9, 160",
+		"0.74, 0.9,   1",
+	};
+
+    private VectoRunData GetDummyVectoRunData(VehicleCategory vehCategory)
+	{
+		return new VectoRunData() {
+			EngineData = new CombustionEngineData() {
+				Displacement = 7700.SI(Unit.SI.Cubic.Centi.Meter).Cast<CubicMeter>(),
+				IdleSpeed = 600.RPMtoRad(),
+				Inertia = 3.8.SI<KilogramSquareMeter>(),
+				FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() {
+					{ 0, FullLoadCurveReader.Create(InputDataHelper.InputDataAsTableData(EngineFldHdr, EngineFldData)) }
+				}
+			},
+			VehicleData = new VehicleData() {
+				VehicleCategory = vehCategory,
+				DynamicTyreRadius = 0.5.SI<Meter>()
+			},
+			AxleGearData = new AxleGearData() { AxleGear = new TransmissionData() { Ratio = 2.1 } }
+		};
+
+	}
+
+    private IEngineeringInputDataProvider GetMockInputData(IGearboxEngineeringInputData? gbxInput = null,
+		ITorqueConverterEngineeringInputData? tcInput = null)
     {
         var input = new Mock<IEngineeringInputDataProvider>();
 		var job = new Mock<IEngineeringJobInputData>();
@@ -58,10 +348,18 @@ public class GearboxDataAdapterTests
 		var vehicle = new Mock<IVehicleEngineeringInputData>();
 		job.Setup(j => j.Vehicle).Returns(vehicle.Object);
         vehicle.Setup(i => i.Components).Returns(components.Object);
-        var gbx = GetMockGearboxInputdata();
+        var gbx = gbxInput ?? GetMockGearboxInputdata();
         components.Setup(c => c.GearboxInputData).Returns(gbx);
         var axl = GetMockAxlegearInputdata();
         components.Setup(c => c.AxleGearInputData).Returns(axl);
+
+		if (tcInput != null) {
+			components.Setup(c => c.TorqueConverterInputData).Returns(tcInput);
+			var gs = new Mock<IGearshiftEngineeringInputData>();
+			driver.Setup(d => d.GearshiftInputData).Returns(gs.Object);
+			gs.Setup(s => s.CLUpshiftMinAcceleration).Returns(DeclarationData.TorqueConverter.CLUpshiftMinAcceleration);
+			gs.Setup(s => s.CCUpshiftMinAcceleration).Returns(DeclarationData.TorqueConverter.CCUpshiftMinAcceleration);
+		}
 
         return input.Object;
     }
@@ -149,6 +447,24 @@ public class GearboxDataAdapterTests
             },
         };
     }
+
+	private const string EngineFldHdr = "n in rpm,M_FL in Nm,M_frict in Nm,PT1 in s";
+
+	private static string[] EngineFldData = new[] {
+		"575,570,-12,0.21",
+		"800,834,-16,0.47",
+		"1000,1068,-24,0.58",
+		"1200,1198,-33,0.53",
+		"1400,1198,-44,0.46",
+		"1600,1198,-56,0.35",
+		"1800,1122,-67,0.20",
+		"2000,1036,-82,0.11",
+		"2100,995,-89,0.11",
+		"2200,952,-97,0.11",
+		"2400,813,-119,0.11",
+		"2500,709,-134,0.11",
+		"2600,0,-148,0.11",
+	};
 
 	public const string LossMapHdr = "Input Speed [rpm],Input Torque [Nm],Torque Loss [Nm]";
 

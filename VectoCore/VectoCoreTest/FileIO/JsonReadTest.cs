@@ -219,7 +219,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.IsFalse(gbxData.Gears[3].HasTorqueConverter);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void ReadGearboxSerialTC()
 		{
 			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData/Components/AT_GBX/GearboxSerial.vgbx");
@@ -267,7 +268,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(gear.Ratio, gear.TorqueConverterRatio);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void ReadGearboxPowersplitTC()
 		{
 			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData/Components/AT_GBX/GearboxPowerSplit.vgbx");
@@ -314,7 +316,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(1, gbxData.Gears[1].TorqueConverterRatio);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void ReadGearboxDualTCTruck()
 		{
 			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData/Components/AT_GBX/GearboxSerialDualTC.vgbx");
@@ -362,7 +365,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(gear.Ratio, gear.TorqueConverterRatio);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void ReadGearboxSingleTCBus()
 		{
 			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData/Components/AT_GBX/GearboxSerialDualTC.vgbx");
@@ -410,7 +414,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(gear.Ratio, gear.TorqueConverterRatio);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void ReadGearboxDualTCBus()
 		{
 			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData/Components/AT_GBX/GearboxSerialDualTCBus.vgbx");

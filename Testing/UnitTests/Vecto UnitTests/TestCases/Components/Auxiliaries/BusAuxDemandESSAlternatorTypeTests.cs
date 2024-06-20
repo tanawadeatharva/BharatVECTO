@@ -962,7 +962,7 @@ public class BusAuxDemandESSAlternatorTypeTests
             },
             PneumaticUserInputsConfig = new PneumaticUserInputsConfig() {
                 CompressorMap =
-                    new CompressorMap(CompressorMapReader.Create(InputDataHelper.InputDataAsTableData(CompressorMapHdr, CompressorMapData), 1.0),
+                    new CompressorMap(CompressorMapReader.Create(VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream(CompressorMapHdr, CompressorMapData)), 1.0),
                         "engineering mode", ""),
                 CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
                 CompressorGearRatio = GearRatio,
