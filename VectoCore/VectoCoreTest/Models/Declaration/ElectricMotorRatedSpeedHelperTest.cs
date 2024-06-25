@@ -18,7 +18,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 	internal class ElectricMotorRatedSpeedHelperTest
 	{
 
-		[TestCase(755.11f)]
+		[TestCase(755.11f),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void GetRatedSpeedPass(double expectedSpeedRpm)
 		{
 
@@ -59,7 +60,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[TestCase(755.11f)]
+		[TestCase(755.11f),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void GetRatedSpeedDivisionByZero(double expectedSpeedRpm)
 		{
 			(string speed, string torque)[] entries = new (string speedd, string torque)[] {
@@ -101,7 +103,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 		}
 
-		[TestCase(755.11f)]
+		[TestCase(755.11f),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void GetRatedSpeedMissingZeroRPM(double expectedSpeedRpm)
 		{
 			(string speed, string torque)[] entries = new (string speedd, string torque)[] {
@@ -143,7 +146,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 		}
 
-		[TestCase(1850f, 1f)]
+		[TestCase(1850f, 1f),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void IEPCFld(double expectedSpeedRpm, double ratio)
 		{
 			var fldCruveData = VectoCSVFile.Read(@"TestData/BatteryElectric/IEPC/GenericFld.viepcp");

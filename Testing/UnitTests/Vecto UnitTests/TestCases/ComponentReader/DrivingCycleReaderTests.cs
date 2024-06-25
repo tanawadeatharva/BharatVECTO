@@ -7,7 +7,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 using Assert = NUnit.Framework.Assert;
 
-namespace TUGraz.Vecto.UnitTests.TestCases.InputData.InputDataReader;
+namespace TUGraz.Vecto.UnitTests.TestCases.ComponentReader;
 
 public class DrivingCycleReaderTests
 {
@@ -76,48 +76,48 @@ public class DrivingCycleReaderTests
         TestCycleDetect(cycle, type);
     }
 
-	[
-		TestCase("t, Engine Speed, PTO Torque\n1,2,3", CycleType.PTO),
-		TestCase("t, engine speed, PTO Torque\n1,2,3", CycleType.PTO),
-		TestCase("t, Engine Speed, pto torque\n1,2,3", CycleType.PTO),
-		TestCase("t, engine speed, pto torque\n1,2,3", CycleType.PTO),
-		TestCase("T, ENGINE SPEED, PTO TORQUE\n1,2,3", CycleType.PTO),
-		TestCase("<Me>,<n>,<Padd>,<t>\n1,1,1,1", CycleType.EngineOnly),
-		TestCase("t,n,Me,Padd\n1,1,1,1", CycleType.EngineOnly),
-		TestCase("<s>,<v>,<Grad>,<STOP>\n1,0,1,1", CycleType.DistanceBased),
-		TestCase("<s>,<V>,<grad>,<stop>,<PADD>,<vAir_res>,<vAir_Beta>,<Aux_ELE>,<Aux_SP>\n1,1,1,0,1,1,1,1,1",
-			CycleType.DistanceBased),
-		TestCase("<S>,<v>,<stop>,<pAdd>,<Vair_res>,<vair_BETA>,<Aux_ELE>,<Aux_SP>\n1,1,0,1,1,1,1,1",
-			CycleType.DistanceBased)
-	]
-	public void DrivingCycleDetect_CaseInsensitive(string cycle, CycleType type)
-	{
-		TestCycleDetect(cycle, type);
-	}
+    [
+        TestCase("t, Engine Speed, PTO Torque\n1,2,3", CycleType.PTO),
+        TestCase("t, engine speed, PTO Torque\n1,2,3", CycleType.PTO),
+        TestCase("t, Engine Speed, pto torque\n1,2,3", CycleType.PTO),
+        TestCase("t, engine speed, pto torque\n1,2,3", CycleType.PTO),
+        TestCase("T, ENGINE SPEED, PTO TORQUE\n1,2,3", CycleType.PTO),
+        TestCase("<Me>,<n>,<Padd>,<t>\n1,1,1,1", CycleType.EngineOnly),
+        TestCase("t,n,Me,Padd\n1,1,1,1", CycleType.EngineOnly),
+        TestCase("<s>,<v>,<Grad>,<STOP>\n1,0,1,1", CycleType.DistanceBased),
+        TestCase("<s>,<V>,<grad>,<stop>,<PADD>,<vAir_res>,<vAir_Beta>,<Aux_ELE>,<Aux_SP>\n1,1,1,0,1,1,1,1,1",
+            CycleType.DistanceBased),
+        TestCase("<S>,<v>,<stop>,<pAdd>,<Vair_res>,<vair_BETA>,<Aux_ELE>,<Aux_SP>\n1,1,0,1,1,1,1,1",
+            CycleType.DistanceBased)
+    ]
+    public void DrivingCycleDetect_CaseInsensitive(string cycle, CycleType type)
+    {
+        TestCycleDetect(cycle, type);
+    }
 
     [
-		// wrong cycles
-		TestCase("v,grad,Padd,n,gear", CycleType.MeasuredSpeedGear),
-		TestCase("<t>,<grad>", CycleType.MeasuredSpeed),
-		//TestCase("<t>,<Pwheel>,<n>,<Padd>", CycleType.PWheel),
-		//TestCase("<t>,<Pwheel>,<Pwheel>,<n>,<Padd>", CycleType.PWheel),
-		TestCase("<t>,<n>,<torque>,<>,<Padd>", CycleType.EngineOnly),
-		TestCase("x,y,z", CycleType.EngineOnly),
-		TestCase("x", CycleType.EngineOnly),
-		TestCase("", CycleType.MeasuredSpeed),
-		TestCase("<t>,<v>,<gear>,<Pwheel>,<s>,<grad>,<Padd>,<n>,<gear>,<vair_res>,<vair_beta>,<Aux_HVAC>,<Aux_HP>",
-			CycleType.MeasuredSpeedGear),
-		TestCase("<t>,<v>,<n_eng>,<n_fan>,<tq_left>,<tq_right>,<n_wh_left>,<n_wh_right>,<fc_DIESEL CI>,<CO>,<NOx>,<THC>,<PN>",
-			CycleType.VTP),
-		TestCase("<t>,<v>,<n_eng>,<n_fan>,<tq_left>,<tq_right>,<n_wh_left>,<n_wh_right>,<fc_NG CI>,<tq_eng>,<CH4>,<NMHC>,<CO>,<NOx>,<THC>",
-			CycleType.VTP),
-		TestCase("<t>,<v>,<n_eng>,<n_fan>,<tq_left>,<tq_right>,<n_wh_left>,<n_wh_right>,<fc_NG CI>,<tq_eng>,<CO>,<NOx>,<PN>",
-			CycleType.VTP),
-	]
-	public void DrivingCycle_AutoDetect_Exception(string cycle, CycleType type)
-	{
-		AssertHelper.Exception<VectoException>(() => TestCycleDetect(cycle, type));
-	}
+        // wrong cycles
+        TestCase("v,grad,Padd,n,gear", CycleType.MeasuredSpeedGear),
+        TestCase("<t>,<grad>", CycleType.MeasuredSpeed),
+        //TestCase("<t>,<Pwheel>,<n>,<Padd>", CycleType.PWheel),
+        //TestCase("<t>,<Pwheel>,<Pwheel>,<n>,<Padd>", CycleType.PWheel),
+        TestCase("<t>,<n>,<torque>,<>,<Padd>", CycleType.EngineOnly),
+        TestCase("x,y,z", CycleType.EngineOnly),
+        TestCase("x", CycleType.EngineOnly),
+        TestCase("", CycleType.MeasuredSpeed),
+        TestCase("<t>,<v>,<gear>,<Pwheel>,<s>,<grad>,<Padd>,<n>,<gear>,<vair_res>,<vair_beta>,<Aux_HVAC>,<Aux_HP>",
+            CycleType.MeasuredSpeedGear),
+        TestCase("<t>,<v>,<n_eng>,<n_fan>,<tq_left>,<tq_right>,<n_wh_left>,<n_wh_right>,<fc_DIESEL CI>,<CO>,<NOx>,<THC>,<PN>",
+            CycleType.VTP),
+        TestCase("<t>,<v>,<n_eng>,<n_fan>,<tq_left>,<tq_right>,<n_wh_left>,<n_wh_right>,<fc_NG CI>,<tq_eng>,<CH4>,<NMHC>,<CO>,<NOx>,<THC>",
+            CycleType.VTP),
+        TestCase("<t>,<v>,<n_eng>,<n_fan>,<tq_left>,<tq_right>,<n_wh_left>,<n_wh_right>,<fc_NG CI>,<tq_eng>,<CO>,<NOx>,<PN>",
+            CycleType.VTP),
+    ]
+    public void DrivingCycle_AutoDetect_Exception(string cycle, CycleType type)
+    {
+        AssertHelper.Exception<VectoException>(() => TestCycleDetect(cycle, type));
+    }
 
     [
             // declaration mode - distance based
@@ -184,44 +184,44 @@ public class DrivingCycleReaderTests
         TestCycleRead(cycle, type, entryCount);
     }
 
-	[
-		TestCase("t, Engine Speed, PTO Torque\n1,2,3", CycleType.PTO, 1),
-		TestCase("t, engine speed, PTO Torque\n1,2,3", CycleType.PTO, 1),
-		TestCase("t, Engine Speed, pto torque\n1,2,3", CycleType.PTO, 1),
-		TestCase("t, engine speed, pto torque\n1,2,3", CycleType.PTO, 1),
-		TestCase("T, ENGINE SPEED, PTO TORQUE\n1,2,3", CycleType.PTO, 1),
-		TestCase("<Me>,<n>,<Padd>,<t>\n1,1,1,1", CycleType.EngineOnly, 1),
-		TestCase("t,n,Me,Padd\n1,1,1,1", CycleType.EngineOnly, 1),
-		TestCase("<s>,<v>,<Grad>,<STOP>\n1,0,1,1", CycleType.DistanceBased, 3),
-		TestCase("<s>,<V>,<grad>,<stop>,<PADD>,<vAir_res>,<vAir_Beta>,<Aux_ELE>,<Aux_SP>\n1,1,1,0,1,1,1,1,1",
-			CycleType.DistanceBased, 2),
-		TestCase("<S>,<v>,<stop>,<pAdd>,<Vair_res>,<vair_BETA>,<Aux_ELE>,<Aux_SP>\n1,1,0,1,1,1,1,1",
-			CycleType.DistanceBased, 2)
-	]
-	public void DrivingCycleRead_CaseInsensitive(string cycle, CycleType type, int entryCount)
-	{
-		TestCycleRead(cycle, type, entryCount);
-	}
+    [
+        TestCase("t, Engine Speed, PTO Torque\n1,2,3", CycleType.PTO, 1),
+        TestCase("t, engine speed, PTO Torque\n1,2,3", CycleType.PTO, 1),
+        TestCase("t, Engine Speed, pto torque\n1,2,3", CycleType.PTO, 1),
+        TestCase("t, engine speed, pto torque\n1,2,3", CycleType.PTO, 1),
+        TestCase("T, ENGINE SPEED, PTO TORQUE\n1,2,3", CycleType.PTO, 1),
+        TestCase("<Me>,<n>,<Padd>,<t>\n1,1,1,1", CycleType.EngineOnly, 1),
+        TestCase("t,n,Me,Padd\n1,1,1,1", CycleType.EngineOnly, 1),
+        TestCase("<s>,<v>,<Grad>,<STOP>\n1,0,1,1", CycleType.DistanceBased, 3),
+        TestCase("<s>,<V>,<grad>,<stop>,<PADD>,<vAir_res>,<vAir_Beta>,<Aux_ELE>,<Aux_SP>\n1,1,1,0,1,1,1,1,1",
+            CycleType.DistanceBased, 2),
+        TestCase("<S>,<v>,<stop>,<pAdd>,<Vair_res>,<vair_BETA>,<Aux_ELE>,<Aux_SP>\n1,1,0,1,1,1,1,1",
+            CycleType.DistanceBased, 2)
+    ]
+    public void DrivingCycleRead_CaseInsensitive(string cycle, CycleType type, int entryCount)
+    {
+        TestCycleRead(cycle, type, entryCount);
+    }
 
     [
-		// wrong cycles
-		TestCase("<s>,<v>,<grad>,<stop>\n1,1,1,1", CycleType.DistanceBased),
-		TestCase("v,grad,Padd,n,gear\n1,1,1,1,1", CycleType.MeasuredSpeedGear),
-		TestCase("<t>,<grad>\n1,1,1,1,1,1,1,1,1", CycleType.MeasuredSpeed),
-		TestCase("<t>,<Pwheel>,<n>,<Padd>\n1,1,1,1,1,1,1,1,1", CycleType.PWheel),
-		TestCase("<t>,<Pwheel>,<Pwheel>,<n>,<Padd>\n1,1,1,1,1,1,1,1,1", CycleType.PWheel),
-		TestCase("<t>,<n>,<torque>,<>,<Padd>\n1,1,1,1,1,1,1,1,1", CycleType.EngineOnly),
-		TestCase("x,y,z\n1,1,1,1,1,1,1,1,1", CycleType.EngineOnly),
-		TestCase("x\n1,1,1,1,1,1,1,1,1", CycleType.EngineOnly),
-		TestCase("\n1,1,1,1,1,1,1,1,1", CycleType.MeasuredSpeed),
-		TestCase(
-			"<t>,<v>,<gear>,<Pwheel>,<s>,<grad>,<Padd>,<n>,<gear>,<vair_res>,<vair_beta>,<Aux_HVAC>,<Aux_HP>\n1,1,1,1,1,1,1,1,1",
-			CycleType.MeasuredSpeedGear),
-	]
-	public void DrivingCycle_Read_Exception(string cycle, CycleType type)
-	{
-		AssertHelper.Exception<VectoException>(() => TestCycleRead(cycle, type));
-	}
+        // wrong cycles
+        TestCase("<s>,<v>,<grad>,<stop>\n1,1,1,1", CycleType.DistanceBased),
+        TestCase("v,grad,Padd,n,gear\n1,1,1,1,1", CycleType.MeasuredSpeedGear),
+        TestCase("<t>,<grad>\n1,1,1,1,1,1,1,1,1", CycleType.MeasuredSpeed),
+        TestCase("<t>,<Pwheel>,<n>,<Padd>\n1,1,1,1,1,1,1,1,1", CycleType.PWheel),
+        TestCase("<t>,<Pwheel>,<Pwheel>,<n>,<Padd>\n1,1,1,1,1,1,1,1,1", CycleType.PWheel),
+        TestCase("<t>,<n>,<torque>,<>,<Padd>\n1,1,1,1,1,1,1,1,1", CycleType.EngineOnly),
+        TestCase("x,y,z\n1,1,1,1,1,1,1,1,1", CycleType.EngineOnly),
+        TestCase("x\n1,1,1,1,1,1,1,1,1", CycleType.EngineOnly),
+        TestCase("\n1,1,1,1,1,1,1,1,1", CycleType.MeasuredSpeed),
+        TestCase(
+            "<t>,<v>,<gear>,<Pwheel>,<s>,<grad>,<Padd>,<n>,<gear>,<vair_res>,<vair_beta>,<Aux_HVAC>,<Aux_HP>\n1,1,1,1,1,1,1,1,1",
+            CycleType.MeasuredSpeedGear),
+    ]
+    public void DrivingCycle_Read_Exception(string cycle, CycleType type)
+    {
+        AssertHelper.Exception<VectoException>(() => TestCycleRead(cycle, type));
+    }
 
     [TestCase()]
     public void DrivingCycleRead_CompressEntries_TargetSpeedOnly()
@@ -280,15 +280,15 @@ public class DrivingCycleReaderTests
 
 
     private static void TestCycleDetect(string inputData, CycleType cycleType)
-	{
-		var cycleTypeCalc = DrivingCycleDataReader.DetectCycleType(VectoCSVFile.ReadStream(inputData.ToStream()));
-		Assert.AreEqual(cycleType, cycleTypeCalc);
-	}
+    {
+        var cycleTypeCalc = DrivingCycleDataReader.DetectCycleType(VectoCSVFile.ReadStream(inputData.ToStream()));
+        Assert.AreEqual(cycleType, cycleTypeCalc);
+    }
 
-	private static void TestCycleRead(string inputData, CycleType cycleType, int entryCount = 1)
-	{
-		var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.ToStream(), cycleType, "", false);
-		Assert.AreEqual(cycleType, drivingCycle.CycleType);
-		Assert.AreEqual(entryCount, drivingCycle.Entries.Count, "Driving Cycle Entry count.");
-	}
+    private static void TestCycleRead(string inputData, CycleType cycleType, int entryCount = 1)
+    {
+        var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.ToStream(), cycleType, "", false);
+        Assert.AreEqual(cycleType, drivingCycle.CycleType);
+        Assert.AreEqual(entryCount, drivingCycle.Entries.Count, "Driving Cycle Entry count.");
+    }
 }

@@ -71,7 +71,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// Test if the cycle file can be read.
 		/// </summary>
 		/// <remarks>VECTO-177</remarks>
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void Pwheel_ReadCycle_Test()
 		{
 			var runData = new VectoRunData() {
