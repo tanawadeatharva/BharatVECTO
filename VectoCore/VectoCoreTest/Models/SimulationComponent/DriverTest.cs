@@ -220,7 +220,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			modData.Finish(VectoRun.Status.Success);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void DriverOverloadTest()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFileHigh, 1);

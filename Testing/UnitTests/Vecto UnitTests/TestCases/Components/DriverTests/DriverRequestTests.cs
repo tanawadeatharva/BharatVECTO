@@ -4,6 +4,7 @@ using NUnit.Framework.Constraints;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -201,73 +202,31 @@ public class DriverRequestTests
     [TestCase]
     public void DriverOverloadTest()
     {
-        //var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFileHigh, 1);
-
-        //var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
-        //var airdragData = CreateAirdragData();
-
-        // take into account the axle ratio and 1st-gear ratio
-        var dynamicTyreRadius = 0.52.SI<Meter>() / (3.24 * 6.38);
-
-        //var runData = new VectoRunData() {
-        //    JobName = "Coach_MinimalPowertrain",
-        //    SimulationType = SimulationType.DistanceCycle,
-        //    VehicleData = vehicleData,
-        //    AirdragData = airdragData,
-        //    EngineData = engineData,
-        //    ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
-        //    DriverData = driverData,
-        //    GearboxData = new GearboxData() { Type = GearboxType.AMT }
-        //};
-        //var modData = new ModalDataContainer(runData, fileWriter, null);
-        //var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
-        //    RunData = runData
-        //};
-
-		var cycleData = DrivingCycleDataReader.ReadFromStream("s,v,grad,stop\n0,5,0,0\n10,20,0,0\n20,21,0,0\n30,22,0,0\n40,23,0,0\n50,24,0,0\n60,25,0,0\n70,26,0,0\n80,27,0,0\n90,28,0,0\n100,29,0,0".ToStream(), CycleType.DistanceBased, "DummyCycle", false);
+        var cycleData = DrivingCycleDataReader.ReadFromStream("s,v,grad,stop\n0,5,0,0\n10,20,0,0\n20,21,0,0\n30,22,0,0\n40,23,0,0\n50,24,0,0\n60,25,0,0\n70,26,0,0\n80,27,0,0\n90,28,0,0\n100,29,0,0".ToStream(), CycleType.DistanceBased, "DummyCycle", false);
 		var vehicleContainer = GetMockVehicleContainer(cycleData);
-
-		var engineFld = FullLoadCurveReader.Create(InputDataHelper.InputDataAsTableData(IceFldHdr, IceFldData));
-        //var cycle = new MockDrivingCycle(vehicleContainer, cycleData);
-
-		//var brakes = new Brakes(vehicleContainer);
-        var driver = new Driver(vehicleContainer, vehicleContainer.RunData.DriverData, new DefaultDriverStrategy(vehicleContainer));
-
-        //dynamic tmp = AddComponent(driver, new VectoCore.Models.SimulationComponent.Impl.Vehicle(vehicleContainer, vehicleData, airdragData));
-        //tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
-        //var engine = new CombustionEngine(vehicleContainer, engineData);
-        //var clutch = new Clutch(vehicleContainer, engineData);
-        //clutch.IdleController = engine.IdleController;
-        //tmp = AddComponent(tmp, clutch);
-        //AddComponent(tmp, engine);
-
-        //var gbx = new MockGearbox(vehicleContainer) { Gear = new GearshiftPosition(1) };
-        //var axleGear = new MockAxlegear(vehicleContainer);
-		
-		MeterPerSquareSecond reqAcc = null;
-		Radian reqGradient = null;
-		Second reqSimInterval = null;
+        
+		var driver = new Driver(vehicleContainer, vehicleContainer.RunData.DriverData, new DefaultDriverStrategy(vehicleContainer));
 
 		var vehicleSpeed = 5.KMPHtoMeterPerSecond();
+
+		// take into account the axle ratio and 1st-gear ratio
+		var dynamicTyreRadius = 0.52.SI<Meter>() / (3.24 * 6.38);
 		var vehicleMass = 48700.SI<Kilogram>();
 		var wheelsInertia = 108.SI<KilogramSquareMeter>();
+		var engineFld = FullLoadCurveReader.Create(InputDataHelper.InputDataAsTableData(IceFldHdr, IceFldData));
 
-		var vehicleMock = Mock.Get(vehicleContainer.VehicleInfo);
+        var vehicleMock = Mock.Get(vehicleContainer.VehicleInfo);
 		vehicleMock.Setup(v => v.VehicleSpeed).Returns(() => vehicleSpeed);
 
         var mockPort = new Mock<IDriverDemandOutPort>();
 		mockPort.Setup(p =>
 				p.Request(It.IsAny<Second>(), It.IsAny<Second>(), It.IsAny<MeterPerSquareSecond>(), It.IsAny<Radian>(), It.IsAny<bool>()))
 			.Returns((Second t, Second dt, MeterPerSquareSecond acc, Radian grad, bool dryRun) => {
-				reqAcc = acc;
-				reqGradient = grad;
-				reqSimInterval = dt;
 				var speed = vehicleSpeed + acc * dt;
-				var force = vehicleMass * acc;
 				var rpm = speed / dynamicTyreRadius;
 				var inertiaTq = Formulas.InertiaPower(rpm, vehicleSpeed /dynamicTyreRadius, wheelsInertia, dt) / ((speed + vehicleSpeed)/2.0/dynamicTyreRadius);
 
-				var tq = force * dynamicTyreRadius + inertiaTq;
+				var tq = (vehicleMass * acc + vehicleMass * Physics.GravityAccelleration * Math.Sin(grad.Value())) * dynamicTyreRadius + inertiaTq;
 				var maxTq = engineFld.FullLoadStationaryTorque(rpm);
 				var minTq = engineFld.DragLoadStationaryTorque(rpm);
                 var deltaFull = tq - maxTq;
@@ -284,7 +243,6 @@ public class DriverRequestTests
 					return new ResponseOverload(this) {
 						AbsTime = t,
 						Delta = deltaFull * rpm,
-
 					};
 				}
 
@@ -292,7 +250,6 @@ public class DriverRequestTests
 					return new ResponseUnderload(this) {
 						AbsTime = t,
 						Delta = deltaDrag * rpm,
-
 					};
 				}
 				return new ResponseSuccess(this) {
@@ -317,8 +274,7 @@ public class DriverRequestTests
         vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
         absTime += response.SimulationInterval;
 
-        //Assert.AreEqual(0.24182, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
-		Assert.AreEqual(0.29066, response.Driver.Acceleration.Value(), Tolerance);
+        Assert.AreEqual(0.29066, response.Driver.Acceleration.Value(), Tolerance);
 
         response = driverPort.Request(absTime, 1.SI<Meter>(), 20.SI<MeterPerSecond>(), 0.SI<Radian>());
 
@@ -330,7 +286,201 @@ public class DriverRequestTests
         Assert.AreEqual(0.2900, response.Driver.Acceleration.Value(), Tolerance);
     }
 
+    [TestCase]
+    public void DriverCoastingTest()
+    {
+        var vehicleContainer = GetMockVehicleContainer(null);
 
+        var driver = new Driver(vehicleContainer, vehicleContainer.RunData.DriverData, new DefaultDriverStrategy(vehicleContainer));
+
+        var vehicleSpeed = 5.KMPHtoMeterPerSecond();
+
+        // take into account the axle ratio and 1st-gear ratio
+        var dynamicTyreRadius = 0.52.SI<Meter>() / (3.24 * 6.38);
+        var vehicleMass = 48700.SI<Kilogram>();
+        var wheelsInertia = 108.SI<KilogramSquareMeter>();
+        var engineFld = FullLoadCurveReader.Create(InputDataHelper.InputDataAsTableData(IceFldHdr, IceFldData));
+
+        var vehicleMock = Mock.Get(vehicleContainer.VehicleInfo);
+        vehicleMock.Setup(v => v.VehicleSpeed).Returns(() => vehicleSpeed);
+
+		NewtonMeter tqRequest = null;
+		NewtonMeter tqDrag = null;
+        var mockPort = new Mock<IDriverDemandOutPort>();
+        mockPort.Setup(p =>
+                p.Request(It.IsAny<Second>(), It.IsAny<Second>(), It.IsAny<MeterPerSquareSecond>(), It.IsAny<Radian>(), It.IsAny<bool>()))
+            .Returns((Second t, Second dt, MeterPerSquareSecond acc, Radian grad, bool dryRun) => {
+                var speed = vehicleSpeed + acc * dt;
+                var rpm = speed / dynamicTyreRadius;
+                var inertiaTq = Formulas.InertiaPower(rpm, vehicleSpeed / dynamicTyreRadius, wheelsInertia, dt) / ((speed + vehicleSpeed) / 2.0 / dynamicTyreRadius);
+
+                var tq = (vehicleMass * acc + vehicleMass * Physics.GravityAccelleration * Math.Sin(grad.Value())) * dynamicTyreRadius + inertiaTq;
+                var maxTq = engineFld.FullLoadStationaryTorque(rpm);
+                var minTq = engineFld.DragLoadStationaryTorque(rpm);
+                var deltaFull = tq - maxTq;
+                var deltaDrag = tq - minTq;
+				tqRequest = tq;
+				tqDrag = minTq;
+                if (dryRun) {
+                    return new ResponseDryRun(this) {
+                        DeltaFullLoad = deltaFull * rpm,
+                        DeltaDragLoad = deltaDrag * rpm,
+                        DeltaFullLoadTorque = deltaFull,
+                        DeltaDragLoadTorque = deltaDrag,
+                    };
+                }
+                if (deltaFull.IsGreater(0)) {
+                    return new ResponseOverload(this) {
+                        AbsTime = t,
+                        Delta = deltaFull * rpm,
+                    };
+                }
+
+                if (deltaDrag.IsSmaller(0)) {
+                    return new ResponseUnderload(this) {
+                        AbsTime = t,
+                        Delta = deltaDrag * rpm,
+                    };
+                }
+                return new ResponseSuccess(this) {
+                    SimulationInterval = dt
+                };
+            });
+
+        mockPort.Setup(p => p.Initialize(It.IsAny<MeterPerSecond>(), It.IsAny<Radian>(), It.IsAny<MeterPerSquareSecond>())).Returns(
+            (MeterPerSecond velocity, Radian gradient, MeterPerSquareSecond acc) => new ResponseSuccess(this));
+        driver.Connect(mockPort.Object);
+
+
+        var velocity = 5.SI<MeterPerSecond>();
+        driver.OutPort().Initialize(velocity, 0.SI<Radian>());
+
+        var absTime = 0.SI<Second>();
+
+        var response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, 0.SI<Radian>());
+
+        Assert.IsInstanceOf<ResponseSuccess>(response);
+
+        vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+        absTime += response.SimulationInterval;
+
+        Assert.AreEqual(4.9877, vehicleContainer.VehicleInfo.VehicleSpeed.Value(), Tolerance);
+        Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
+        Assert.AreEqual(tqDrag.Value(), tqRequest.Value(),
+            Constants.SimulationSettings.LineSearchTolerance);
+
+        while (vehicleContainer.VehicleInfo.VehicleSpeed > 1.7) {
+            response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, 0.SI<Radian>());
+
+            Assert.IsInstanceOf<ResponseSuccess>(response);
+
+            vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+            absTime += response.SimulationInterval;
+            //modData.Finish(VectoRun.Status.Success);
+        }
+        //modData.Finish(VectoRun.Status.Success);
+    }
+
+    [TestCase]
+    public void DriverCoastingTest2()
+    {
+        var vehicleContainer = GetMockVehicleContainer(null);
+
+        var driver = new Driver(vehicleContainer, vehicleContainer.RunData.DriverData, new DefaultDriverStrategy(vehicleContainer));
+
+        var vehicleSpeed = 5.KMPHtoMeterPerSecond();
+
+        // take into account the axle ratio and 1st-gear ratio
+        var dynamicTyreRadius = 0.52.SI<Meter>() / (3.24 * 6.38);
+        var vehicleMass = 48700.SI<Kilogram>();
+        var wheelsInertia = 108.SI<KilogramSquareMeter>();
+        var engineFld = FullLoadCurveReader.Create(InputDataHelper.InputDataAsTableData(IceFldHdr, IceFldData));
+
+        var vehicleMock = Mock.Get(vehicleContainer.VehicleInfo);
+        vehicleMock.Setup(v => v.VehicleSpeed).Returns(() => vehicleSpeed);
+
+        NewtonMeter tqRequest = null;
+        NewtonMeter tqDrag = null;
+        var mockPort = new Mock<IDriverDemandOutPort>();
+        mockPort.Setup(p =>
+                p.Request(It.IsAny<Second>(), It.IsAny<Second>(), It.IsAny<MeterPerSquareSecond>(), It.IsAny<Radian>(), It.IsAny<bool>()))
+            .Returns((Second t, Second dt, MeterPerSquareSecond acc, Radian grad, bool dryRun) => {
+                var speed = vehicleSpeed + acc * dt;
+                var rpm = speed / dynamicTyreRadius;
+                var inertiaTq = Formulas.InertiaPower(rpm, vehicleSpeed / dynamicTyreRadius, wheelsInertia, dt) / ((speed + vehicleSpeed) / 2.0 / dynamicTyreRadius);
+
+                var tq = (vehicleMass * acc + vehicleMass * Physics.GravityAccelleration * Math.Sin(grad.Value())) * dynamicTyreRadius + inertiaTq;
+                var maxTq = engineFld.FullLoadStationaryTorque(rpm);
+                var minTq = engineFld.DragLoadStationaryTorque(rpm);
+                var deltaFull = tq - maxTq;
+                var deltaDrag = tq - minTq;
+                tqRequest = tq;
+                tqDrag = minTq;
+                if (dryRun) {
+                    return new ResponseDryRun(this) {
+                        DeltaFullLoad = deltaFull * rpm,
+                        DeltaDragLoad = deltaDrag * rpm,
+                        DeltaFullLoadTorque = deltaFull,
+                        DeltaDragLoadTorque = deltaDrag,
+                    };
+                }
+                if (deltaFull.IsGreater(0)) {
+                    return new ResponseOverload(this) {
+                        AbsTime = t,
+                        Delta = deltaFull * rpm,
+                    };
+                }
+
+                if (deltaDrag.IsSmaller(0)) {
+                    return new ResponseUnderload(this) {
+                        AbsTime = t,
+                        Delta = deltaDrag * rpm,
+                    };
+                }
+                return new ResponseSuccess(this) {
+                    SimulationInterval = dt
+                };
+            });
+
+        mockPort.Setup(p => p.Initialize(It.IsAny<MeterPerSecond>(), It.IsAny<Radian>(), It.IsAny<MeterPerSquareSecond>())).Returns(
+            (MeterPerSecond velocity, Radian gradient, MeterPerSquareSecond acc) => new ResponseSuccess(this));
+        driver.Connect(mockPort.Object);
+
+
+        var velocity = 5.SI<MeterPerSecond>();
+        driver.OutPort().Initialize(velocity, 0.SI<Radian>());
+
+        var gradient = VectoMath.InclinationToAngle(-0.020237973 / 100.0);
+        driver.OutPort().Initialize(velocity, gradient);
+
+        var absTime = 0.SI<Second>();
+
+        var response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, gradient);
+
+        Assert.IsInstanceOf<ResponseSuccess>(response);
+
+        vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+        absTime += response.SimulationInterval;
+
+        Assert.AreEqual(4.9878, vehicleContainer.VehicleInfo.VehicleSpeed.Value(), Tolerance);
+        Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
+        Assert.AreEqual(tqDrag.Value(), tqRequest.Value(),
+            Constants.SimulationSettings.LineSearchTolerance);
+
+        while (vehicleContainer.VehicleInfo.VehicleSpeed > 1.7) {
+            response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, gradient);
+
+            Assert.IsInstanceOf<ResponseSuccess>(response);
+
+            vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+            absTime += response.SimulationInterval;
+            //modData.Finish(VectoRun.Status.Success);
+        }
+        //modData.Finish(VectoRun.Status.Success);
+    }
+
+
+    // --------
     private static DriverData GetDriverData()
     {
         var lookAheadData = new DriverData.LACData {
@@ -368,39 +518,46 @@ public class DriverRequestTests
         };
     }
 
-    private static IVehicleContainer GetMockVehicleContainer(DrivingCycleData drivingCycleData)
-    {
-        var runData = new VectoRunData() {
-            GearshiftParameters = new ShiftStrategyParameters() {
-                StartSpeed = DeclarationData.GearboxTCU.StartSpeed,
-                StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration
-            },
-            DriverData = GetDriverData(),
-            Cycle = drivingCycleData,
-            VehicleData = new VehicleData() {
-                VehicleCategory = VehicleCategory.RigidTruck
-            }
-        };
-        var container = new Mock<IVehicleContainer>();
-        var vehicle = new Mock<IVehicleInfo>();
-        vehicle.Setup(v => v.VehicleSpeed).Returns(0.KMPHtoMeterPerSecond());
+	private static IVehicleContainer GetMockVehicleContainer(DrivingCycleData drivingCycleData)
+	{
+		var runData = new VectoRunData() {
+			GearshiftParameters = new ShiftStrategyParameters() {
+				StartSpeed = DeclarationData.GearboxTCU.StartSpeed,
+				StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration
+			},
+			DriverData = GetDriverData(),
+			Cycle = drivingCycleData,
+			VehicleData = new VehicleData() {
+				VehicleCategory = VehicleCategory.RigidTruck
+			}
+		};
+		var container = new Mock<IVehicleContainer>();
+		var vehicle = new Mock<IVehicleInfo>();
+		vehicle.Setup(v => v.VehicleSpeed).Returns(0.KMPHtoMeterPerSecond());
 
-        var left = drivingCycleData.Entries.GetEnumerator();
-        var right = drivingCycleData.Entries.GetEnumerator();
-        left.MoveNext();
-        right.MoveNext();
-        right.MoveNext();
-        var cycle = new Mock<IDrivingCycleInfo>();
+		
+
+		var cycle = new Mock<IDrivingCycleInfo>();
         cycle.Setup(c => c.CycleStartDistance).Returns(0.SI<Meter>());
         cycle.Setup(c => c.LookAhead(It.IsAny<Meter>())).Returns(new List<DrivingCycleData.DrivingCycleEntry>());
-        cycle.Setup(c => c.CycleData).Returns(() => new CycleData() {
-            AbsTime = 0.SI<Second>(),
-            AbsDistance = 0.SI<Meter>(),
-            LeftSample = left.Current,
-            RightSample = right.Current
-        });
+		List<DrivingCycleData.DrivingCycleEntry>.Enumerator? right = null;
+		List<DrivingCycleData.DrivingCycleEntry>.Enumerator? left = null;
+		if (drivingCycleData != null) {
+			left = drivingCycleData.Entries.GetEnumerator();
+			right = drivingCycleData.Entries.GetEnumerator();
+			left.Value.MoveNext();
+			right.Value.MoveNext();
+			right.Value.MoveNext();
 
-        var milage = new Mock<IMileageCounter>();
+			cycle.Setup(c => c.CycleData).Returns(() => new CycleData() {
+				AbsTime = 0.SI<Second>(),
+				AbsDistance = 0.SI<Meter>(),
+				LeftSample = left.Value.Current,
+				RightSample = right.Value.Current
+			});
+		}
+
+		var milage = new Mock<IMileageCounter>();
         milage.Setup(m => m.Distance).Returns(0.SI<Meter>());
 
         var pt = new Mock<IPowertainInfo>();
@@ -430,8 +587,10 @@ public class DriverRequestTests
         container.Setup(c => c.Brakes).Returns(br.Object);
         container.Setup(c => c.CommitSimulationStep(It.IsAny<Second>(), It.IsAny<Second>())).Callback(
             (Second absTime, Second dt) => {
-                left.MoveNext();
-                right.MoveNext();
+                if (left.HasValue)
+					left.Value.MoveNext();
+                if (right.HasValue)
+					right.Value.MoveNext();
             });
         return container.Object;
     }
