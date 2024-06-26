@@ -250,7 +250,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				RunData = runData
 			};
 
-			var cycleData = DrivingCycleDataReader.ReadFromStream("s,v,grad,stop\n0,0,0,10\n10,20,0,0\n20,21,0,0\n30,22,0,0\n40,23,0,0\n50,24,0,0\n60,25,0,0\n70,26,0,0\n80,27,0,0\n90,28,0,0\n100,29,0,0".ToStream(), CycleType.DistanceBased, "DummyCycle", false);
+			var cycleData = DrivingCycleDataReader.ReadFromStream("s,v,grad,stop\n0,5,0,0\n10,20,0,0\n20,21,0,0\n30,22,0,0\n40,23,0,0\n50,24,0,0\n60,25,0,0\n70,26,0,0\n80,27,0,0\n90,28,0,0\n100,29,0,0".ToStream(), CycleType.DistanceBased, "DummyCycle", false);
 			var cycle = new MockDrivingCycle(vehicleContainer, cycleData);
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 			
@@ -270,7 +270,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var driverPort = driver.OutPort();
 
-			driverPort.Initialize(0.SI<MeterPerSecond>(), 0.SI<Radian>());
+			driverPort.Initialize(5.KMPHtoMeterPerSecond(), 0.SI<Radian>());
 
 			var absTime = 0.SI<Second>();
 
@@ -293,7 +293,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(0.2900, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void DriverAccelerationTest()
 		{
 			var driverData = MockSimulationDataFactory.CreateDriverDataFromFile(JobFile);
@@ -371,7 +372,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(0.2, response.SimulationInterval.Value(), Tolerance);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void DriverDecelerationTest()
 		{
 			var driverData = MockSimulationDataFactory.CreateDriverDataFromFile(JobFile);
