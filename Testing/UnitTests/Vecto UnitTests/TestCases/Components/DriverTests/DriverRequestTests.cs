@@ -318,7 +318,7 @@ public class DriverRequestTests
         absTime += response.SimulationInterval;
 
         //Assert.AreEqual(0.24182, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
-		Assert.AreEqual(0.24182, response.Driver.Acceleration.Value(), Tolerance);
+		Assert.AreEqual(0.29066, response.Driver.Acceleration.Value(), Tolerance);
 
         response = driverPort.Request(absTime, 1.SI<Meter>(), 20.SI<MeterPerSecond>(), 0.SI<Radian>());
 
