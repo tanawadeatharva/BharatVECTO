@@ -18,6 +18,8 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing
 				.Named(VectoSimulationJobType.BatteryElectricVehicle.ToString());
 			Bind<IModalDataPostProcessor>().To<BatteryElectricPostprocessingCorrection>()
 				.Named(VectoSimulationJobType.IEPC_E.ToString());
+			Bind<IModalDataPostProcessor>().To<BatteryElectricPostprocessingCorrection>()
+				.Named(VectoSimulationJobType.MultiplePowertrains.ToString());
 
 			Bind<IModalDataPostProcessor>().To<SerialHybridModalDataPostprocessingCorrection>()
 				.Named(VectoSimulationJobType.SerialHybridVehicle.ToString());

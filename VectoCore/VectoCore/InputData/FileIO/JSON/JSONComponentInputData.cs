@@ -283,6 +283,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public double InitialSOC => VehicleData.InitialSOC;
 
+		public IList<IAxlePowertrainEngineeringInputData> AxlePowertrainEngineeringInputData => null;
+
 		public IVehicleInMotionChargingEngineering InMotionCharging { get; }
 		IVehicleInMotionChargingDeclaration IVehicleDeclarationInputData.InMotionCharging => InMotionCharging;
 

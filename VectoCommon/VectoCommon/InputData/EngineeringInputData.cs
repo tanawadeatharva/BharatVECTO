@@ -66,7 +66,8 @@ namespace TUGraz.VectoCommon.InputData
 		EngineOnlySimulation,
 		IEPC_E,
 		IEPC_S,
-		IHPC
+		IHPC,
+		MultiplePowertrains
 	}
 
 	public static class VectoSimulationJobTypeHelper
@@ -329,6 +330,31 @@ namespace TUGraz.VectoCommon.InputData
 		IIEPCEngineeringInputData IEPCEngineeringInputData { get; }
 
 		IFuelCellSystemEngineeringInputData FuelCellSystemInputData { get; }
+
+		IList<IAxlePowertrainEngineeringInputData> AxlePowertrainEngineeringInputData { get; }
+	}
+
+	public interface IAxlePowertrainEngineeringInputData
+	{
+		int AxleNumber { get; }
+
+		VectoSimulationJobType Type { get; }
+
+		IGearboxEngineeringInputData GearboxInputData { get; }
+
+		IAxleGearInputData AxleGearInputData { get; }
+
+		ITorqueConverterEngineeringInputData TorqueConverterInputData { get; }
+
+		IAngledriveInputData AngledriveInputData { get; }
+
+		IRetarderInputData RetarderInputData { get; }
+
+		IPTOTransmissionInputData PTOTransmissionInputData { get; }
+
+		IGearshiftEngineeringInputData GearshiftInputData { get; }
+
+		ElectricMachineEntry<IElectricMotorEngineeringInputData> ElectricMotor { get; }
 	}
 
 	public interface IAxlesEngineeringInputData
@@ -821,5 +847,5 @@ namespace TUGraz.VectoCommon.InputData
 
 		Watt ElectricPowerDemand { get; }
 	}
-	
+
 }

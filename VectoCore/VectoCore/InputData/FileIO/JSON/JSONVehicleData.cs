@@ -47,6 +47,40 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
+	public class JSONVehicleDataV14_MultiplePowertrains : JSONVehicleDataV9
+	{
+		private IList<IAxlePowertrainEngineeringInputData> _axlePowertrains;
+
+		public JSONVehicleDataV14_MultiplePowertrains(
+			JObject json, string filename, IJSONVehicleComponents job, bool tolerateMissing) :
+				base(json, filename, job, tolerateMissing)
+		{}
+
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.MultiplePowertrains;
+
+		public override IList<IAxlePowertrainEngineeringInputData> AxlePowertrainEngineeringInputData => 
+			_axlePowertrains ?? (_axlePowertrains = GetAxlePowertrains());
+
+		private IList<IAxlePowertrainEngineeringInputData> GetAxlePowertrains()
+		{
+			if (Body[JsonKeys.Vehicle_AxlePowertrains] == null)
+			{
+				throw new VectoException(
+					$"Vehicle file '{DataSource.SourceFile}' does not containt field '{JsonKeys.Vehicle_AxlePowertrains}'");
+			}
+
+			var axlePowertrains = new List<IAxlePowertrainEngineeringInputData>();
+
+			foreach (var axlePt in Body.GetEx(JsonKeys.Vehicle_AxlePowertrains))
+			{
+				axlePowertrains.Add(new JSONAxlePowertrainInputData(axlePt, BasePath));
+			}
+
+			return axlePowertrains;
+		}
+
+	}
+
 	public class JSONVehicleDataV13_FCHV_IEPC : JSONVehicleDataV11_IEPC
 	{
 		private IFuelCellSystemEngineeringInputData _fuelCellSystem;
@@ -187,22 +221,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public override VectoSimulationJobType VehicleType
-		{
-			get {
-				switch (Body.GetEx<String>("PowertrainConfiguration")) {
-					case "ParallelHybrid": return VectoSimulationJobType.ParallelHybridVehicle;
-					case "BatteryElectric": return VectoSimulationJobType.BatteryElectricVehicle;
-					case "SerialHybrid": return VectoSimulationJobType.SerialHybridVehicle;
-					case "IEPC_E":
-					case "IEPC": return VectoSimulationJobType.IEPC_E;
-					case "IEPC_S":
-					case "IEPC-S": return VectoSimulationJobType.IEPC_S;
-					case "IHPC": return VectoSimulationJobType.IHPC;
-					default: throw new VectoException("Invalid parameter value {0}", Body.GetEx<String>("PowertrainConfiguration"));
-				}
-			}
-		}
+		public override VectoSimulationJobType VehicleType => ParsePowertrainType(Body, "PowertrainConfiguration");
 
 		protected virtual JSONElectricMotors ReadMotors()
 		{
@@ -506,6 +525,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		public virtual double InitialSOC => double.NaN;
+
+		public virtual IList<IAxlePowertrainEngineeringInputData> AxlePowertrainEngineeringInputData => null;
 
 		public virtual IVehicleInMotionChargingDeclaration InMotionCharging => GetIMC(); //GetInMotionCharging();
 

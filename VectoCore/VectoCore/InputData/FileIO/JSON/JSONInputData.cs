@@ -54,7 +54,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 using TUGraz.VectoHashing.Impl;
-using System.Globalization;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -123,6 +122,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					{ JsonKeys.JsonHeader, new object() },
 					{ JsonKeys.JsonBody, new object() }
 				});
+		}
+
+		public static VectoSimulationJobType ParsePowertrainType(JToken json, string field)
+		{
+			switch (json.GetEx<String>(field))
+			{
+				case "ParallelHybrid": return VectoSimulationJobType.ParallelHybridVehicle;
+				case "BatteryElectric": return VectoSimulationJobType.BatteryElectricVehicle;
+				case "SerialHybrid": return VectoSimulationJobType.SerialHybridVehicle;
+				case "IEPC_E":
+				case "IEPC": return VectoSimulationJobType.IEPC_E;
+				case "IEPC_S":
+				case "IEPC-S": return VectoSimulationJobType.IEPC_S;
+				case "IHPC": return VectoSimulationJobType.IHPC;
+				case "MultiplePowertrains": return VectoSimulationJobType.MultiplePowertrains;
+				default: throw new VectoException("Invalid parameter value {0}", json.GetEx<String>(field));
+			}
 		}
 	}
 
@@ -1261,9 +1277,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public override VectoSimulationJobType JobType => VectoSimulationJobType.FCHV_IEPC;
 	}
 
+	public class JSONInputDataV16_MultiplePowertrains : AbstractJSONInputData
+	{
+		public JSONInputDataV16_MultiplePowertrains(JObject json, string filename, bool tolerateMissing) : base(json, filename, tolerateMissing)
+		{
+			VehicleData = ReadVehicle();
+		}
+
+		public override VectoSimulationJobType JobType => VectoSimulationJobType.MultiplePowertrains;
+	}
+
+
 	// --------------------------
 
-    public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider, IMultistagePrimaryAndStageInputDataProvider
+	public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider, IMultistagePrimaryAndStageInputDataProvider
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
 		private readonly string _primaryVehicleInputDataPath;

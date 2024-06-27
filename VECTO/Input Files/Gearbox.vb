@@ -873,6 +873,8 @@ Public Class MockEngineeringVehicle
     Public Property ADAS As IAdvancedDriverAssistantSystemDeclarationInputData _
         Implements IVehicleDeclarationInputData.ADAS
 
+    Public ReadOnly Property AxlePowertrainEngineeringInputData As IList(Of IAxlePowertrainEngineeringInputData) Implements IVehicleComponentsEngineering.AxlePowertrainEngineeringInputData
+
     Public ReadOnly Property IVehicleDeclarationInputData_InMotionCharging As IVehicleInMotionChargingDeclaration Implements IVehicleDeclarationInputData.InMotionCharging
 
     Public ReadOnly Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC

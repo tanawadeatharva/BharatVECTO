@@ -1078,6 +1078,33 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AxleNumber.
+        /// </summary>
+        internal static string Vehicle_AxlePowertrain_AxleNumber {
+            get {
+                return ResourceManager.GetString("Vehicle_AxlePowertrain_AxleNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        internal static string Vehicle_AxlePowertrain_Type {
+            get {
+                return ResourceManager.GetString("Vehicle_AxlePowertrain_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AxlePowertrains.
+        /// </summary>
+        internal static string Vehicle_AxlePowertrains {
+            get {
+                return ResourceManager.GetString("Vehicle_AxlePowertrains", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to WheelEndFriction.
         /// </summary>
         internal static string Vehicle_Axles_Friction {
@@ -1182,6 +1209,69 @@ namespace TUGraz.VectoCore {
         internal static string Vehicle_DynamicTyreRadius {
             get {
                 return ResourceManager.GetString("Vehicle_DynamicTyreRadius", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ElectricMotor.
+        /// </summary>
+        internal static string Vehicle_ElectricMotor {
+            get {
+                return ResourceManager.GetString("Vehicle_ElectricMotor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MechanicalEfficiency.
+        /// </summary>
+        internal static string Vehicle_EM_MechEff {
+            get {
+                return ResourceManager.GetString("Vehicle_EM_MechEff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MechanicalTransmissionLossMap.
+        /// </summary>
+        internal static string Vehicle_EM_MechTransLossMap {
+            get {
+                return ResourceManager.GetString("Vehicle_EM_MechTransLossMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MotorFile.
+        /// </summary>
+        internal static string Vehicle_EM_MotorFile {
+            get {
+                return ResourceManager.GetString("Vehicle_EM_MotorFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Position.
+        /// </summary>
+        internal static string Vehicle_EM_Position {
+            get {
+                return ResourceManager.GetString("Vehicle_EM_Position", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ratio.
+        /// </summary>
+        internal static string Vehicle_EM_Ratio {
+            get {
+                return ResourceManager.GetString("Vehicle_EM_Ratio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RatioPerGear.
+        /// </summary>
+        internal static string Vehicle_EM_RatioPerGear {
+            get {
+                return ResourceManager.GetString("Vehicle_EM_RatioPerGear", resourceCulture);
             }
         }
         
@@ -1317,6 +1407,15 @@ namespace TUGraz.VectoCore {
         internal static string Vehicle_Rim {
             get {
                 return ResourceManager.GetString("Vehicle_Rim", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TCU.
+        /// </summary>
+        internal static string Vehicle_TCU {
+            get {
+                return ResourceManager.GetString("Vehicle_TCU", resourceCulture);
             }
         }
         

@@ -676,6 +676,13 @@ Public Class Vehicle
 		End Get
 	End Property
 
+	Public ReadOnly Property AxlePowertrainEngineeringInputData As IList(Of IAxlePowertrainEngineeringInputData) _
+		Implements IVehicleComponentsEngineering.AxlePowertrainEngineeringInputData
+		Get
+			Return Nothing
+		End Get
+	End Property
+
 	Public ReadOnly Property IDeclarationInputDataProvider_TorqueConverterInputData As ITorqueConverterDeclarationInputData _
 		Implements IVehicleComponentsDeclaration.TorqueConverterInputData
 		Get

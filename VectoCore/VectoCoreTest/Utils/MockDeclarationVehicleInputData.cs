@@ -197,6 +197,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IFuelCellSystemEngineeringInputData FuelCellSystemInputData { get; }
 
+		public IList<IAxlePowertrainEngineeringInputData> AxlePowertrainEngineeringInputData { get; }
+
 		IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> IVehicleDeclarationInputData.ElectricMotorTorqueLimits => throw new NotImplementedException();
 
 		#endregion

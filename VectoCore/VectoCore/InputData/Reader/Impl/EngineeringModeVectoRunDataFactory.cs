@@ -103,6 +103,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					return GetFCHV_RunData(GetBatteryElectricVehicleRunData, VectoSimulationJobType.FCHV);
 				case VectoSimulationJobType.FCHV_IEPC:
 					return GetFCHV_RunData(GetIEPCRunData, VectoSimulationJobType.FCHV_IEPC);
+				case VectoSimulationJobType.MultiplePowertrains:
+					return GetMultiplePowertrainsRunData();
 				default:
 					throw new ArgumentOutOfRangeException($"Invalid JobType {InputDataProvider.JobInputData.JobType}");
 			}
@@ -337,6 +339,51 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired);
 				CyclesCache[cycle.CycleData.Source] = Tuple.Create(cycleData, lastModified);
 				return cycleData;
+			}
+		}
+
+		private IEnumerable<VectoRunData> GetMultiplePowertrainsRunData()
+		{
+			foreach (var cycle in InputDataProvider.JobInputData.Cycles)
+			{
+				var dao = new EngineeringDataAdapter();
+				var vehicle = InputDataProvider.JobInputData.Vehicle;
+
+				var batteryData = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
+				var averageVoltage = (batteryData != null) ? CalculateAverageVoltage(batteryData) : null;
+
+				var crossWindRequired = vehicle.Components.AirdragInputData.CrossWindCorrectionMode ==
+										CrossWindCorrectionMode.VAirBetaLookupTable;
+
+				var drivingCycle = GetDrivingCycle(cycle, crossWindRequired);
+
+				var vehicleData = dao.CreateVehicleData(vehicle);
+
+				yield return new VectoRunData {
+					JobName = InputDataProvider.JobInputData.JobName,
+					JobType = VectoSimulationJobType.MultiplePowertrains,
+					VehicleData = vehicleData,
+					WheelEndData = dao.CreateWheelEndData(vehicleData.VehicleClass, vehicle),
+					AirdragData = dao.CreateAirdragData(
+						vehicle.Components.AirdragInputData, 
+						vehicle,
+						drivingCycle.ShareDistanceHighway),
+					DriverData = dao.CreateDriverData(InputDataProvider.DriverInputData),
+					Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
+					BusAuxiliaries = dao.CreateBusAuxiliariesData(
+						vehicle.Components.AuxiliaryInputData, 
+						vehicleData, 
+						VectoSimulationJobType.MultiplePowertrains),
+					Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
+					ExecutionMode = ExecutionMode.Engineering,
+					BatteryData = batteryData,
+					SuperCapData = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC),
+					SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel,
+					ElectricAuxDemand = vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand,
+					InMotionCharging = vehicle.InMotionCharging.Enabled,
+					InMotionChargingTechnology = IMCTechnology.NotApplicable,
+					AxlePowertrainsData = dao.CreateAxlePowertrainsData(InputDataProvider, averageVoltage)
+				};
 			}
 		}
 
