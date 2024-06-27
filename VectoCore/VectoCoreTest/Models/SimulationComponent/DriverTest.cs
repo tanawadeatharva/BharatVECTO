@@ -74,7 +74,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 
-		[TestCase]
+		[TestCase, 
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void DriverCoastingTest()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);
@@ -146,7 +147,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			modData.Finish(VectoRun.Status.Success);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void DriverCoastingTest2()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);

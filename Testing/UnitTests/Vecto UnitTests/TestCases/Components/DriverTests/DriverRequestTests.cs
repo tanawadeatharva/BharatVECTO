@@ -293,7 +293,7 @@ public class DriverRequestTests
 
         var driver = new Driver(vehicleContainer, vehicleContainer.RunData.DriverData, new DefaultDriverStrategy(vehicleContainer));
 
-        var vehicleSpeed = 5.KMPHtoMeterPerSecond();
+        var vehicleSpeed = 5.SI<MeterPerSecond>();
 
         // take into account the axle ratio and 1st-gear ratio
         var dynamicTyreRadius = 0.52.SI<Meter>() / (3.24 * 6.38);
@@ -352,27 +352,29 @@ public class DriverRequestTests
         driver.Connect(mockPort.Object);
 
 
-        var velocity = 5.SI<MeterPerSecond>();
-        driver.OutPort().Initialize(velocity, 0.SI<Radian>());
+        //var velocity = 5.SI<MeterPerSecond>();
+        driver.OutPort().Initialize(vehicleSpeed, 0.SI<Radian>());
 
         var absTime = 0.SI<Second>();
 
-        var response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, 0.SI<Radian>());
-
+        var response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), vehicleSpeed, 0.SI<Radian>());
+		vehicleSpeed += response.Driver.Acceleration * response.SimulationInterval;
         Assert.IsInstanceOf<ResponseSuccess>(response);
 
         vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
         absTime += response.SimulationInterval;
 
-        Assert.AreEqual(4.9877, vehicleContainer.VehicleInfo.VehicleSpeed.Value(), Tolerance);
+        Assert.AreEqual(4.989790, vehicleContainer.VehicleInfo.VehicleSpeed.Value(), Tolerance);
         Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
         Assert.AreEqual(tqDrag.Value(), tqRequest.Value(),
             Constants.SimulationSettings.LineSearchTolerance);
 
         while (vehicleContainer.VehicleInfo.VehicleSpeed > 1.7) {
-            response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, 0.SI<Radian>());
+            response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), vehicleSpeed, 0.SI<Radian>());
+			vehicleSpeed += response.Driver.Acceleration * response.SimulationInterval;
 
             Assert.IsInstanceOf<ResponseSuccess>(response);
+            Assert.IsTrue(response.Driver.Acceleration.IsSmaller(0));
 
             vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
             absTime += response.SimulationInterval;
@@ -388,7 +390,7 @@ public class DriverRequestTests
 
         var driver = new Driver(vehicleContainer, vehicleContainer.RunData.DriverData, new DefaultDriverStrategy(vehicleContainer));
 
-        var vehicleSpeed = 5.KMPHtoMeterPerSecond();
+        var vehicleSpeed = 5.SI<MeterPerSecond>();
 
         // take into account the axle ratio and 1st-gear ratio
         var dynamicTyreRadius = 0.52.SI<Meter>() / (3.24 * 6.38);
@@ -447,31 +449,32 @@ public class DriverRequestTests
         driver.Connect(mockPort.Object);
 
 
-        var velocity = 5.SI<MeterPerSecond>();
-        driver.OutPort().Initialize(velocity, 0.SI<Radian>());
+        driver.OutPort().Initialize(vehicleSpeed, 0.SI<Radian>());
 
         var gradient = VectoMath.InclinationToAngle(-0.020237973 / 100.0);
-        driver.OutPort().Initialize(velocity, gradient);
+        driver.OutPort().Initialize(vehicleSpeed, gradient);
 
         var absTime = 0.SI<Second>();
 
-        var response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, gradient);
+        var response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), vehicleSpeed, gradient);
+		vehicleSpeed += response.Driver.Acceleration * response.SimulationInterval;
 
         Assert.IsInstanceOf<ResponseSuccess>(response);
 
         vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
         absTime += response.SimulationInterval;
 
-        Assert.AreEqual(4.9878, vehicleContainer.VehicleInfo.VehicleSpeed.Value(), Tolerance);
+        Assert.AreEqual(4.98987, vehicleContainer.VehicleInfo.VehicleSpeed.Value(), Tolerance);
         Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
         Assert.AreEqual(tqDrag.Value(), tqRequest.Value(),
             Constants.SimulationSettings.LineSearchTolerance);
 
         while (vehicleContainer.VehicleInfo.VehicleSpeed > 1.7) {
-            response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, gradient);
+            response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), vehicleSpeed, gradient);
+			vehicleSpeed += response.Driver.Acceleration * response.SimulationInterval;
 
             Assert.IsInstanceOf<ResponseSuccess>(response);
-
+            Assert.IsTrue(response.Driver.Acceleration.IsSmaller(0));
             vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
             absTime += response.SimulationInterval;
             //modData.Finish(VectoRun.Status.Success);
