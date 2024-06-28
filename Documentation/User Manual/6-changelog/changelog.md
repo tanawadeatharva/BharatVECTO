@@ -1,5 +1,22 @@
 # Changelog
 
+**VECTO-4.2.1**
+
+**Build 3469 (2024-07-01)**
+
+- Features
+   * CodeEU-726: Build an XML converter tool for older VECTO jobs
+
+- Bugfixes
+   * CodeEU-719: the six new tyre dimensions from line 126 onwards to the latest “wheels.csv” file in the VECTO repository
+   * CodeEU-717: VECTO-4.2.0.3448-RC - Buses AMT Gearbox Type with 1% higher C02 in primary results
+   * CodeEU-724: Error in Primary Bus Simulation: Object reference not set to an instance of an object
+   * CodeEU-716: VECTO-4.2.0.3448-RC - Buses Result Summary section missing in RLST_Customer.xml
+   * CodeEU-694: Primary and Completed heavybus FCV article 9 exempted hashcode mismatch.
+   * CodeEU-735: SMT strategy different between engineering and declaration mode
+   * CodeEU-736: Existing customer reports (CIF) fail validation
+   * CodeEU-737: Missing data from XML report
+
 **VECTO-4.2.0-RC**
 
 **Build 3448 (2024-06-10)**
