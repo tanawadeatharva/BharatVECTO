@@ -69,7 +69,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestEngineHasOutPort()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
@@ -80,7 +81,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.IsNotNull(port);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestOutPortRequestNotFailing()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
@@ -167,7 +169,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestCase("TestvarHz", @"TestData/Components/24t Coach.veng", 1000, 50, 50,
 			@"TestData/Results/EngineFullLoadJumps/EngineFLJ_1000rpm_varHz.csv")]
 		[TestCase("Test10Hz", @"TestData/Components/24t Coach_IncPT1.veng", 1000, 50, 50,
-			@"TestData/Results/EngineFullLoadJumps/EngineFLJ_1000rpm_10Hz_IncPT1.csv")]
+			@"TestData/Results/EngineFullLoadJumps/EngineFLJ_1000rpm_10Hz_IncPT1.csv"),
+		Category(Definitions.DUPLICATE)]
 		public void TestEngineOnlyEngineFullLoadJump(string testName, string engineFile, double rpm, double initialIdleLoad,
 			double finalIdleLoad, string resultFile)
 		{
@@ -227,6 +230,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			@"TestData/Results/EngineFullLoadJumps/EngineFLJ_1000rpm_varHz.csv")]
 		[TestCase("Test10Hz", @"TestData/Components/24t Coach_IncPT1.veng", 1000, 50, 50,
 			@"TestData/Results/EngineFullLoadJumps/EngineFLJ_1000rpm_10Hz_IncPT1.csv")]
+		[Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestEngineFullLoadJump(string testName, string engineFile, double rpm, double initialIdleLoad,
 			double finalIdleLoad, string resultFile)
 		{
@@ -276,7 +280,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			modalData.Finish(VectoRun.Status.Success);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void EngineIdleJump()
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
@@ -346,7 +351,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(680.RPMtoRad(), row[ModalResultField.n_ice_avg.GetName()]);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void EngineIdleControllerTestCoach()
 		{
 			VehicleContainer(CoachEngine, out var container, out var engine, out var requestPort, out var gearbox);
@@ -397,7 +403,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		| 70.5     | 308.729     | 1284.139  | 2295.815    | 9        |
 				*/
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void EngineIdleControllerTestTruck()
 		{
 			VehicleContainer(TruckEngine, out var container, out var engine, out var requestPort, out var gearbox);
@@ -447,7 +454,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//dataWriter.Finish();
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void EngineIdleControllerTest2Truck()
 		{
 			VehicleContainer(TruckEngine, out var container, out var engine, out var requestPort, out var gearbox);
@@ -501,7 +509,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//dataWriter.Finish();
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void Test_EngineData()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 0);

@@ -543,22 +543,25 @@ public class DriverRequestTests
 		var cycle = new Mock<IDrivingCycleInfo>();
         cycle.Setup(c => c.CycleStartDistance).Returns(0.SI<Meter>());
         cycle.Setup(c => c.LookAhead(It.IsAny<Meter>())).Returns(new List<DrivingCycleData.DrivingCycleEntry>());
-		List<DrivingCycleData.DrivingCycleEntry>.Enumerator? right = null;
-		List<DrivingCycleData.DrivingCycleEntry>.Enumerator? left = null;
 		if (drivingCycleData != null) {
-			left = drivingCycleData.Entries.GetEnumerator();
-			right = drivingCycleData.Entries.GetEnumerator();
-			left.Value.MoveNext();
-			right.Value.MoveNext();
-			right.Value.MoveNext();
+			var left = drivingCycleData.Entries.GetEnumerator();
+			var right = drivingCycleData.Entries.GetEnumerator();
+			left.MoveNext();
+			right.MoveNext();
+			right.MoveNext();
 
 			cycle.Setup(c => c.CycleData).Returns(() => new CycleData() {
 				AbsTime = 0.SI<Second>(),
 				AbsDistance = 0.SI<Meter>(),
-				LeftSample = left.Value.Current,
-				RightSample = right.Value.Current
+				LeftSample = left.Current,
+				RightSample = right.Current
 			});
-		}
+			container.Setup(c => c.CommitSimulationStep(It.IsAny<Second>(), It.IsAny<Second>())).Callback(
+				(Second absTime, Second dt) => {
+					left.MoveNext();
+					right.MoveNext();
+				});
+        }
 
 		var milage = new Mock<IMileageCounter>();
         milage.Setup(m => m.Distance).Returns(0.SI<Meter>());
@@ -588,13 +591,7 @@ public class DriverRequestTests
         container.Setup(c => c.GearboxInfo).Returns(gi.Object);
         container.Setup(c => c.ClutchInfo).Returns(ci.Object);
         container.Setup(c => c.Brakes).Returns(br.Object);
-        container.Setup(c => c.CommitSimulationStep(It.IsAny<Second>(), It.IsAny<Second>())).Callback(
-            (Second absTime, Second dt) => {
-                if (left.HasValue)
-					left.Value.MoveNext();
-                if (right.HasValue)
-					right.Value.MoveNext();
-            });
+        
         return container.Object;
     }
 

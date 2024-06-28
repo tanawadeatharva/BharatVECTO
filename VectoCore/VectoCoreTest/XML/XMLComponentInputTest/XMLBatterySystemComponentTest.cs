@@ -49,6 +49,7 @@ namespace TUGraz.VectoCore.Tests.XML.XMLComponentInputTest
 
 		[TestCase("BatterySystem_1.xml", typeof(XMLBatteryPackDeclarationInputDataMeasuredV23), TestName ="XMLBatterySystemData InternalResistance Measured")]
 		[TestCase("BatterySystem_StdValues.xml", typeof(XMLBatteryPackDeclarationInputDataStandardV23), TestName = "XMLBatterySystemData InternalResistance StandardValues")]
+		[Category(Definitions.TESTCASE_MIGRATED)]
         public void BatterySystemInternalResistanceTest(string fileName, Type expectedType)
 		{
 			var path = GetFullPath(BASEDIRComponent, fileName);
@@ -72,8 +73,9 @@ namespace TUGraz.VectoCore.Tests.XML.XMLComponentInputTest
 
 		}
 
-		[TestCase("BatterySystem_1.xml", typeof(XMLBatteryPackDeclarationInputDataMeasuredV23), TestName = "XMLBatterySystemData InternalResistance Measured")]
-		[TestCase("BatterySystem_StdValues.xml", typeof(XMLBatteryPackDeclarationInputDataStandardV23), TestName = "XMLBatterySystemData InternalResistance StandardValues")]
+		[TestCase("BatterySystem_1.xml", typeof(XMLBatteryPackDeclarationInputDataMeasuredV23), TestName = "XMLBatterySystemData MaxCurrent Measured")]
+		[TestCase("BatterySystem_StdValues.xml", typeof(XMLBatteryPackDeclarationInputDataStandardV23), TestName = "XMLBatterySystemData MaxCurrent StandardValues")]
+		[Category(Definitions.TESTCASE_MIGRATED)]
 		public void BatterySystemMaxCurrentTest(string fileName, Type expectedType)
 		{
 			var path = GetFullPath(BASEDIRComponent, fileName);
@@ -192,6 +194,7 @@ namespace TUGraz.VectoCore.Tests.XML.XMLComponentInputTest
 		[TestCase(XMLBatteryPackDeclarationInputDataStandardV23.XSD_TYPE,
 			XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V23,
 			typeof(XMLBatteryPackDeclarationInputDataStandardV23))]
+		[Category(Definitions.TESTCASE_MIGRATED)]
         public void FactoryTest(string type, string ns, Type expType)
 		{
 			XNamespace nameSpace = ns;
@@ -201,6 +204,7 @@ namespace TUGraz.VectoCore.Tests.XML.XMLComponentInputTest
 			Assert.NotNull(provider);
 
 		}
+
 		[DebuggerStepThrough]
 		public string GetFullPath(string baseDir, string fileName)
 		{
