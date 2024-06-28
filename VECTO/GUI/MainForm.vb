@@ -1018,6 +1018,7 @@ lbFound:
 
         'list of finished runs
         Dim finishedRuns As List(Of Integer) = New List(Of Integer)
+        
         For Each jobFile As String In JobFileList
             Try
                 sender.ReportProgress(0,
@@ -1058,10 +1059,6 @@ lbFound:
 
 
                                 End Using
-                                
-                             
-                        
-         
                         End Select
                 End Select
 
@@ -1073,9 +1070,6 @@ lbFound:
                     Continue For
                 End If
 
-
-                
-
                 Dim runsFactory As ISimulatorFactory = SimulatorFactory.CreateSimulatorFactory(mode, input, fileWriter)
                 'Remove
 
@@ -1084,8 +1078,6 @@ lbFound:
                 runsFactory.Validate = cbValidateRunData.Checked
                 runsFactory.ActualModalData = cbActVmod.Checked
                 runsFactory.SerializeVectoRunData = cbSaveVectoRunData.Checked
-
-
 
                 For Each run as integer In jobContainer.AddRuns(runsFactory)
                     fileWriters.Add(run, fileWriter)
@@ -1170,6 +1162,7 @@ lbFound:
 
         For Each job As String In JobFileList
             dim w as FileOutputWriter = new FileOutputWriter(GetOutputDirectory(job))
+
             For Each entry as KeyValuePair(Of string, string) In _
                 new Dictionary(Of string, string) _
                     from {{w.XMLFullReportName, "XML Manufacturer Report"}, {w.XMLCustomerReportName, "XML Customer Report"},
