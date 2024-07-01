@@ -247,6 +247,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 
 			if (jobType == VectoSimulationJobType.ConventionalVehicle || jobType == VectoSimulationJobType.ParallelHybridVehicle) {
+				if (runData.AxleGearData == null) {
+					return new ValidationResult("Axlegear data is required for conventional and parallel hybrid vehicles!");
+				}
+				
 				if (gearboxData == null) {
 					return new ValidationResult("Gearbox data is required for conventional and parallel hybrid vehicles!");
 				}
