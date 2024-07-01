@@ -84,7 +84,7 @@ namespace HashingTool.ViewModel.UserControl
 			if (_jobData != null && _jobData.JobDataValid != null && !_jobData.JobDataValid.Value) {
 				_validationErrors.Add("Verifying Manufacturer Report: Job data is not valid - no validation checks against job data.");
 			}
-
+			
 			var hasComponentsFromJob = _jobData != null && _jobData.JobDataValid != null && _jobData.JobDataValid.Value &&
 										jobComponents.Any();
 
@@ -150,7 +150,11 @@ namespace HashingTool.ViewModel.UserControl
 				}
 			}
 
-			ManufacturerReportValid = FileIntegrityValid != null && FileIntegrityValid.Value && hasComponentsFromJob && !certificationNumberMismatch.Any() && !digestMismatch.Any();
+			ManufacturerReportValid = FileIntegrityValid != null 
+				&& FileIntegrityValid.Value 
+				&& (_jobData.ExemptedVehicle || hasComponentsFromJob) 
+				&& !certificationNumberMismatch.Any() 
+				&& !digestMismatch.Any();
 		}
 
 		public bool ManufacturerReportValid
