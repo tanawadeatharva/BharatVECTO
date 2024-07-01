@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 			private IDriverDataAdapterBus _driverDataAdapter = new PrimaryBusDriverDataAdapter();
 			private SingleBusVehicleDataAdapter _vehicleDataAdapter = new SingleBusVehicleDataAdapter();
 			private IAxleGearDataAdapter _axleGearDataAdapter = new AxleGearDataAdapter();
-			private IRetarderDataAdapter _retarderDataAdapter = new RetarderDataAdapter();
+			private IGenericRetarderDataAdapter _retarderDataAdapter = new GenericRetarderDataAdapter();
 			private IAirdragDataAdapter _airdragDataAdapter = new SingleBusAirdragDataAdapter();
 			private IAngledriveDataAdapter _angledriveDataAdapter = new AngledriveDataAdapter();
 
@@ -174,6 +174,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 			public abstract void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData,
 				Action<SuperCapData> setSuperCapData);
+
+			public RetarderData CreateGenericRetarderData(IRetarderInputData retarderData, VectoRunData vectoRun)
+			{
+				throw new NotImplementedException("Not applicable to SingleBus");
+			}
 
 			#endregion
 		}

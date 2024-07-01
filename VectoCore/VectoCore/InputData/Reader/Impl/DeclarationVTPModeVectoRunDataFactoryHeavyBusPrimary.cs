@@ -74,11 +74,16 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                 : DataAdapter.CreateAxleGearData(vehicle.Components.AxleGearInputData);
             AngledriveData = DataAdapter.CreateAngledriveData(vehicle.Components.AngledriveInputData);
 
-            GearboxData = DataAdapter.CreateGearboxData(
-                vehicle, new VectoRunData() { EngineData = EngineData, AxleGearData = AxlegearData, 
-                    VehicleData = tempVehicle, Cycle = VTPCycle },
-                null);
-            RetarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData, vehicle.ArchitectureID, vehicle.Components.IEPC);
+			var vectoRun = new VectoRunData()
+			{
+				EngineData = EngineData,
+				AxleGearData = AxlegearData,
+				VehicleData = tempVehicle,
+				Cycle = VTPCycle
+			};
+			
+			GearboxData = DataAdapter.CreateGearboxData(vehicle, vectoRun, null);
+			RetarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData, vehicle.ArchitectureID, vehicle.Components.IEPC);
 
             //PTOTransmissionData =
             //    DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);

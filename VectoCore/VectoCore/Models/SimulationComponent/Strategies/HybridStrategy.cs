@@ -440,7 +440,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						return HandleRequestExceedsMaxPower(absTime, dt, outTorque, outAngularVelocity, dryRun,
 							testRequest);
 					}
-				}
+                    else {
+                        LimitedGbxTorque = false;
+                    }
+                }
 			}
 
 			VehicleHaltTimestamp = DataBus.VehicleInfo.VehicleStopped ? VehicleHaltTimestamp : null;
@@ -458,7 +461,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				LimitedGbxTorque = false;
 			}
 
-			if (dryRun && DryRunSolution != null && DryRunSolution.DrivingAction == DataBus.DriverInfo.DrivingAction) {
+            if (dryRun && DryRunSolution != null && DryRunSolution.DrivingAction == DataBus.DriverInfo.DrivingAction && DataBus.GearboxInfo.TCLocked && !DryRunSolution.Solution.IgnoreReason.EngineSpeedBelowDownshift()) {
 				var tmp = CreateResponse(DryRunSolution.Solution, currentGear);
 				return tmp;
 			}

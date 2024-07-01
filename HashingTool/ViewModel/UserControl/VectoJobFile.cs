@@ -49,6 +49,7 @@ namespace HashingTool.ViewModel.UserControl
 		private string _jobValidToolTip;
 		private string _vin;
 		private DateTime? _jobDate;
+		private bool _exemptedVehicle;
 
 
 		public VectoJobFile(string name, Func<XmlDocument, IErrorLogger, bool?> contentCheck,
@@ -113,6 +114,20 @@ namespace HashingTool.ViewModel.UserControl
 			}
 		}
 
+		public bool ExemptedVehicle
+		{
+			get => _exemptedVehicle;
+			set
+			{
+				if (_exemptedVehicle == value)
+				{
+					return;
+				}
+				_exemptedVehicle = value;
+				RaisePropertyChanged("ExemptedVehicle");
+			}
+		}
+
 		private void JobFilechanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName != GeneralUpdate) {
@@ -121,6 +136,7 @@ namespace HashingTool.ViewModel.UserControl
 			DoValidateHash();
 			VehicleIdentificationNumber = DoReadVIN();
 			JobCreationDate = DoReadJobDate();
+			ExemptedVehicle = DoReadExemptedVehicle();
 
 			RaisePropertyChanged(GeneralUpdate);
 		}
@@ -149,6 +165,19 @@ namespace HashingTool.ViewModel.UserControl
 				return "";
 			}
 			return node.InnerText;
+		}
+
+		private bool DoReadExemptedVehicle()
+		{
+			if (_xmlFile.Document == null || _xmlFile.IsValid != XmlFileStatus.ValidXML || _xmlFile.ContentValid == null ||
+				!_xmlFile.ContentValid.Value)
+			{
+				return false;
+			}
+
+			var techNode = _xmlFile.Document.SelectSingleNode($"//*[local-name()='Vehicle']/*[local-name()='Technology']");
+
+			return techNode != null;
 		}
 
 		private void DoValidateHash()

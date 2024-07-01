@@ -68,21 +68,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 
 
-		public ISimulatorFactory FollowUpSimulatorFactory
+		public ISimulatorFactory FollowUpSimulatorFactory(IDictionary<int, JobContainer.ProgressEntry> progressEntries)
 		{
-			get
-			{
-				var factory = _followUpSimulatorFactoryCreator?.GetNextFactory();
-				if (factory != null) {
-					factory.WriteModalResults = this.WriteModalResults;
-					//factory.SerializeVectoRunData = this.SerializeVectoRunData;
-                }
-
-
-
-
-                return factory;
+			var factory = _followUpSimulatorFactoryCreator?.GetNextFactory(progressEntries);
+			if (factory != null) {
+				factory.WriteModalResults = this.WriteModalResults;
+				//factory.SerializeVectoRunData = this.SerializeVectoRunData;
 			}
+
+			return factory;
 		}
 
 		public bool CreateFollowUpSimulatorFactory { get; set; } = false;

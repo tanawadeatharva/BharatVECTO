@@ -109,6 +109,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			return GearboxModelData.Gears[gear.Gear].ShiftPolygon.IsAboveDownshiftCurve(inTorque, inEngineSpeed);
 		}
 
+		protected bool IsBelowExtendedDownShiftCurve(GearshiftPosition gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
+		{
+			if (!Gears.HasPredecessor(gear))
+			{
+				return false;
+			}
+			return GearboxModelData.Gears[gear.Gear].ExtendedShiftPolygon.IsBelowDownshiftCurve(inTorque, inEngineSpeed);
+		}
+
+		protected bool IsAboveExtendedDownShiftCurve(GearshiftPosition gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
+		{
+			if (!Gears.HasPredecessor(gear))
+			{
+				return true;
+			}
+			return GearboxModelData.Gears[gear.Gear].ExtendedShiftPolygon.IsAboveDownshiftCurve(inTorque, inEngineSpeed);
+		}
+
 
 		/// <summary>
 		/// Tests if the operating point is above the up-shift curve (=outside of shift curve).

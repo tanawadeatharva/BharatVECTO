@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
@@ -11,40 +12,56 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 {
     public abstract class SummaryWriterBase : AbstractResultWriter, IReportResultsSummaryWriter
 	{
+		private MissionType[] vocationalMissions = new[] { MissionType.Construction, MissionType.MunicipalUtility };
+
 		protected SummaryWriterBase(ICIFResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		#region Implementation of ICifSummaryWriter
 
-		public XElement GetElement(IList<IResultEntry> entries)
+		public XElement[] GetElement(IList<IResultEntry> entries)
 		{
-			var weighted = DeclarationData.CalculateWeightedSummary(entries);
-			return DoGetElement(weighted);
+			var weighted = DeclarationData.CalculateWeightedSummary(entries.Where(e => !vocationalMissions.Contains(e.Mission)).ToList());
+			var weightedVocationals = DeclarationData.CalculateWeightedSummary(entries.Where(e => vocationalMissions.Contains(e.Mission)).ToList());
+			return DoGetElement(weighted, weightedVocationals);
 		}
 
-		public XElement GetElement(IList<IOVCResultEntry> entries)
+		public XElement[] GetElement(IList<IOVCResultEntry> entries)
 		{
-			var weighted = DeclarationData.CalculateWeightedSummary(entries);
-			return DoGetElement(weighted);
+			var weighted = DeclarationData.CalculateWeightedSummary(entries.Where(e => !vocationalMissions.Contains(e.ChargeDepletingResult.Mission)).ToList());
+			var weightedVocationals = DeclarationData.CalculateWeightedSummary(entries.Where(e => vocationalMissions.Contains(e.ChargeDepletingResult.Mission)).ToList());
+			return DoGetElement(weighted, weightedVocationals);
 		}
 
-		protected virtual XElement DoGetElement(IWeightedResult weighted)
+		protected virtual XElement[] DoGetElement(IWeightedResult weighted, IWeightedResult weightedVocationals)
 		{
-			if (weighted == null) {
-				return null;
+			bool isVocational = false;
+			List<XElement> results = new List<XElement>();
+			foreach (IWeightedResult weightedResult in new[] { weighted, weightedVocationals })
+			{
+				if (weightedResult == null)
+				{
+					results.Add(null);
+					continue;
+				}
+
+				XElement element = new XElement(TNS + XMLNames.Report_Results_Summary,
+					new XAttribute(xsi + XMLNames.XSIType, ResultSummaryXMLType),
+					new XElement(TNS + XMLNames.XMLCustomerReportIsVocational, isVocational),
+					GetSummary(weightedResult),
+					FuelConsumptionWriter != null
+						? weightedResult.FuelConsumption.Select(x =>
+							FuelConsumptionWriter.GetElements(weightedResult))
+						: null,
+					ElectricEnergyConsumptionWriter?.GetElement(weightedResult),
+					CO2Writer?.GetElements(weightedResult),
+					ElectricRangeWriter?.GetElements(weightedResult)
+				);
+
+				results.Add(element);
+				isVocational = !isVocational;
 			}
 
-			var fcWriter = FuelConsumptionWriter;
-			return new XElement(TNS + XMLNames.Report_Results_Summary,
-				new XAttribute(xsi + XMLNames.XSIType, ResultSummaryXMLType),
-				GetSummary(weighted),
-				fcWriter != null
-					? weighted.FuelConsumption.Select(x =>
-						fcWriter.GetElements(weighted))
-					: null,
-				ElectricEnergyConsumptionWriter?.GetElement(weighted),
-				CO2Writer?.GetElements(weighted),
-				ElectricRangeWriter?.GetElements(weighted)
-			);
+			return results.ToArray();
 		}
 
 		public abstract string ResultSummaryXMLType { get; }

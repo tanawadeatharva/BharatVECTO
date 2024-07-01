@@ -169,6 +169,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			{
 				return AuxDataAdapter.CreateBusAuxiliariesData(mission, vehicleData, runData);
 			}
+
+			public RetarderData CreateGenericRetarderData(IRetarderInputData retarderData, VectoRunData vectoRun)
+			{
+				throw new NotImplementedException("Not applicable to Primary Buses");
+			}
 		}
 
 		public class Conventional : PrimaryBusBase

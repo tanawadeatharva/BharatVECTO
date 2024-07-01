@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Simulation
@@ -47,7 +48,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 		SummaryDataContainer SumData { get; set; }
 		int JobNumber { get; set; }
 		IVectoRunDataFactory RunDataFactory { get; }
-		ISimulatorFactory FollowUpSimulatorFactory { get; }
+		ISimulatorFactory FollowUpSimulatorFactory(IDictionary<int, JobContainer.ProgressEntry> progressEntries);
 		IOutputDataWriter ReportWriter { get; }
 		bool SerializeVectoRunData { get; set; }
 

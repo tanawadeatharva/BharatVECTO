@@ -101,11 +101,11 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 				var soc = r == 0 ? 0 : 100;
 				result.Rows.Add(result.NewRow());
 				result.Rows[r][BatteryInternalResistanceReader.Fields.StateOfCharge] = soc;
-				result.Rows[r][BatteryInternalResistanceReader.Fields.InternalResistance_2] = resistance;
-				result.Rows[r][BatteryInternalResistanceReader.Fields.InternalResistance_10] = resistance;
-				result.Rows[r][BatteryInternalResistanceReader.Fields.InternalResistance_20] = resistance;
+				result.Rows[r][BatteryInternalResistanceReader.Fields.InternalResistance_2] = resistance.ToXMLFormat(6);
+				result.Rows[r][BatteryInternalResistanceReader.Fields.InternalResistance_10] = resistance.ToXMLFormat(6);
+				result.Rows[r][BatteryInternalResistanceReader.Fields.InternalResistance_20] = resistance.ToXMLFormat(6);
 				if (batteryType == BatteryType.HEBS)
-					result.Rows[r][BatteryInternalResistanceReader.Fields.InternalResistance_120] = resistance;
+					result.Rows[r][BatteryInternalResistanceReader.Fields.InternalResistance_120] = resistance.ToXMLFormat(6);
 			}
 			
 			return result;
