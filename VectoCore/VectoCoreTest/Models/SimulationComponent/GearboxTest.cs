@@ -319,7 +319,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 96000, 1600, 96499.10109),
-		TestCase(GearboxDataFile, EngineDataFile, 6.38, -96000, 1000, -95502.403188)]
+		TestCase(GearboxDataFile, EngineDataFile, 6.38, -96000, 1000, -95502.403188),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void Gearbox_LossMapExtrapolation_Declaration(string gbxFile, string engineFile, double ratio, double torque,
 			double inAngularSpeed, double expectedTorque)
 		{
@@ -357,7 +358,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 96000, 1600, 96499.10109),
-		TestCase(GearboxDataFile, EngineDataFile, 6.38, -96000, 1000, -95502.403188)]
+		TestCase(GearboxDataFile, EngineDataFile, 6.38, -96000, 1000, -95502.403188),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void Gearbox_LossMapExtrapolation_Engineering(string gbxFile, string engineFile, double ratio, double torque,
 			double inAngularSpeed, double expectedTorque)
 		{
@@ -396,7 +398,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 96000, 1600, true, 96499.10109),
 		TestCase(GearboxDataFile, EngineDataFile, 6.38, -2500, 1000, false, -2443.5392),
-		TestCase(GearboxDataFile, EngineDataFile, 6.38, -3000, 1000, false, -2933.73529)]
+		TestCase(GearboxDataFile, EngineDataFile, 6.38, -3000, 1000, false, -2933.73529),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void Gearbox_LossMapExtrapolation_DryRun(string gbxFile, string engineFile, double ratio, double torque,
 			double inAngularSpeed, bool extrapolated, double expectedTorque)
 		{
@@ -483,6 +486,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		TestCase(2, 2050, 1200, 52.132, typeof(ResponseSuccess)),
 		TestCase(2, 850, 600, 25.096, typeof(ResponseSuccess)),
 		TestCase(1, 850, 0, 0, typeof(ResponseSuccess)), // torque loss is 0 if speed is 0
+		Category(Definitions.TESTCASE_MIGRATED)
 		]
 		public void Gearbox_Request_engaged(int gear, double t, double n, double loss, Type responseType)
 		{
