@@ -18,11 +18,14 @@ using TUGraz.VectoCore.OutputData.FileIO;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
-	[TestFixture]
+    [TestFixture]
 	[Parallelizable(ParallelScope.All)]
 	public class SimulationPreprocessingTest
 	{
-		private StandardKernel _kernel;
+
+		protected ISimplePowertrainBuilder PowertrainBuilder;
+
+        private StandardKernel _kernel;
 		private IXMLInputDataReader xmlInputReader;
 
 		public const string Class9Decl =
@@ -40,6 +43,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			_kernel = new StandardKernel(new VectoNinjectModule());
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
+			PowertrainBuilder = _kernel.Get<ISimplePowertrainBuilder>();
 		}
 
 		[TestCase(Class9Decl),
@@ -196,7 +200,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		protected virtual Dictionary<MeterPerSecond, Radian> SimulationRunPreprocessingEcoRoll(IVectoRun run)
 		{
 			var data = run.GetContainer().RunData;
-			var simpleContainer = new SimplePowertrainContainer(data);
+			var simpleContainer = new SimplePowertrainContainer(data, new SimplePowertrainBuilder());
 			PowertrainBuilder.BuildSimplePowertrain(data, simpleContainer);
 
 			var tmp = new Dictionary<MeterPerSecond, Radian>();
@@ -218,7 +222,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		protected virtual PCCSegments SimulationRunPreprocessingPCCSegments(IVectoRun run)
 		{
 			var data = run.GetContainer().RunData;
-			var simpleContainer = new SimplePowertrainContainer(data);
+			var simpleContainer = new SimplePowertrainContainer(data, new SimplePowertrainBuilder());
 			PowertrainBuilder.BuildSimplePowertrain(data, simpleContainer);
 
 			var tmp = new PCCSegments();
@@ -288,7 +292,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		protected virtual VelocityRollingLookup SimulationRunPreprocessingVelocityTractionInterruption(IVectoRun run)
 		{
 			var data = run.GetContainer().RunData;
-			var simpleContainer = new SimplePowertrainContainer(data);
+			var simpleContainer = new SimplePowertrainContainer(data, new SimplePowertrainBuilder());
 			PowertrainBuilder.BuildSimplePowertrain(data, simpleContainer);
 
 			var tmp = new VelocityRollingLookup();

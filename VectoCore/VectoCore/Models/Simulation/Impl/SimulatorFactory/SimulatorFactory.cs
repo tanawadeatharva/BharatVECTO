@@ -176,7 +176,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			if (data.Report != null) {
 				data.Report.PrepareResult(data);
 			}
-			return new ExemptedRun(new ExemptedRunContainer(data.ExecutionMode, PowertrainBuilder.SimplePowertrainBuilder) { RunData = data }, modData => {
+			return new ExemptedRun(new ExemptedRunContainer(data.ExecutionMode, data, null, null, PowertrainBuilder.SimplePowertrainBuilder), modData => {
 				if (data.Report != null) {
 					data.Report.AddResult(data, modData);
 				}

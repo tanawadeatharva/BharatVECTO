@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// create testcontainer
-			var testContainer = new SimplePowertrainContainer(runData);
+			var testContainer = new SimplePowertrainContainer(runData, PowertrainBuilder);
 			PowertrainBuilder.BuildSimplePowertrain(runData, testContainer);
 
 			TestPowertrain = new TestPowertrain<Gearbox>(testContainer, DataBus);

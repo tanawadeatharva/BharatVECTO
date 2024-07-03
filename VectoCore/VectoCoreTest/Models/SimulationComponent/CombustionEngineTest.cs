@@ -44,6 +44,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using System.IO;
+using TUGraz.VectoCore.Models.Simulation;
 
 // ReSharper disable UnusedVariable
 // ReSharper disable NotAccessedVariable
@@ -73,7 +74,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestEngineHasOutPort()
 		{
-			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
+			var vehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, null, null);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 0);
 			var engine = new CombustionEngine(vehicle, engineData);
 
@@ -85,8 +86,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestOutPortRequestNotFailing()
 		{
-			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 0);
+			var vehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, null, null);
+            var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 0);
 			var engine = new CombustionEngine(vehicle, engineData);
 			var gearbox = new MockGearbox(vehicle) { Gear = new GearshiftPosition(0) };
 
@@ -104,8 +105,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestCase]
 		public void TestSimpleModalData()
 		{
-			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 0);
+			var vehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, null, null);
+            var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 0);
 			var engine = new CombustionEngine(vehicle, engineData);
 			var gearbox = new MockGearbox(vehicle) { Gear = new GearshiftPosition(0) };
 			var port = engine.OutPort();
@@ -174,8 +175,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void TestEngineOnlyEngineFullLoadJump(string testName, string engineFile, double rpm, double initialIdleLoad,
 			double finalIdleLoad, string resultFile)
 		{
-			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile, 0);
+			var vehicleContainer = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, null, null);
+            var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile, 0);
 			var engine = new EngineOnlyCombustionEngine(vehicleContainer, engineData);
 			new EngineOnlyGearboxInfo(vehicleContainer);
 			new ZeroMileageCounter(vehicleContainer);
@@ -234,8 +235,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void TestEngineFullLoadJump(string testName, string engineFile, double rpm, double initialIdleLoad,
 			double finalIdleLoad, string resultFile)
 		{
-			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile, 0);
+			var vehicleContainer = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, null, null);
+            var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile, 0);
 			var engine = new CombustionEngine(vehicleContainer, engineData);
 			var gearbox = new MockGearbox(vehicleContainer) { Gear = new GearshiftPosition(0) };
 
@@ -284,8 +285,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		Category(Definitions.TESTCASE_MIGRATED)]
 		public void EngineIdleJump()
 		{
-			var container = new VehicleContainer(ExecutionMode.Engineering);
-			var gearbox = new MockGearbox(container);
+			var dataWriter = new MockModalDataContainer();
+            var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, dataWriter, null);
+            var gearbox = new MockGearbox(container);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 1);
 			var vehicle = new MockVehicle(container);
 			vehicle.MyVehicleSpeed = 0.SI<MeterPerSecond>();
@@ -310,8 +312,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var requestPort = gearbox.OutPort();
 
 			//vehicleContainer.DataWriter = new ModalDataWriter("engine_idle_test.csv");
-			var dataWriter = new MockModalDataContainer();
-			container.ModData = dataWriter;
+			
 			container.AddAuxiliary("CONST");
 
 			var torque = 1200.SI<NewtonMeter>();
@@ -355,7 +356,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		Category(Definitions.TESTCASE_MIGRATED)]
 		public void EngineIdleControllerTestCoach()
 		{
-			VehicleContainer(CoachEngine, out var container, out var engine, out var requestPort, out var gearbox);
+			GetVehicleContainer(CoachEngine, out var container, out var engine, out var requestPort, out var gearbox);
 
 			var absTime = 0.SI<Second>();
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
@@ -407,7 +408,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		Category(Definitions.TESTCASE_MIGRATED)]
 		public void EngineIdleControllerTestTruck()
 		{
-			VehicleContainer(TruckEngine, out var container, out var engine, out var requestPort, out var gearbox);
+			GetVehicleContainer(TruckEngine, out var container, out var engine, out var requestPort, out var gearbox);
 
 			//var dataWriter = new ModalDataWriter("EngineIdle.vmod");
 			//container.DataWriter = dataWriter;
@@ -458,7 +459,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		Category(Definitions.TESTCASE_MIGRATED)]
 		public void EngineIdleControllerTest2Truck()
 		{
-			VehicleContainer(TruckEngine, out var container, out var engine, out var requestPort, out var gearbox);
+			GetVehicleContainer(TruckEngine, out var container, out var engine, out var requestPort, out var gearbox);
 
 			//var dataWriter = new ModalDataWriter("EngienIdle.vmod");
 			//container.DataWriter = dataWriter;
@@ -537,10 +538,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 		
-		private static void VehicleContainer(string engineFile, out VehicleContainer container, out CombustionEngine engine,
+		private static void GetVehicleContainer(string engineFile, out IVehicleContainer container, out CombustionEngine engine,
 			out ITnOutPort requestPort, out MockGearbox gearbox)
 		{
-			container = new VehicleContainer(ExecutionMode.Engineering);
+			var dataWriter = new MockModalDataContainer();
+			container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, dataWriter, null);
 			gearbox = new MockGearbox(container);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile, 1);
 
@@ -566,8 +568,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			requestPort = gearbox.OutPort();
 
 			//vehicleContainer.DataWriter = new ModalDataWriter("engine_idle_test.csv");
-			var dataWriter = new MockModalDataContainer();
-			container.ModData = dataWriter;
+			
 			container.AddAuxiliary("CONST");
 		}
 	}

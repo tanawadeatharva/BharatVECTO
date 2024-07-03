@@ -1,5 +1,6 @@
 ﻿using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -8,7 +9,7 @@ using TUGraz.VectoCore.OutputData;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 	public class SimplePowertrainContainer : VehicleContainer, IDriverInfo
 	{
-		public SimplePowertrainContainer(VectoRunData runData, IModalDataContainer modData = null) : base(runData.ExecutionMode, modData)
+		public SimplePowertrainContainer(VectoRunData runData, ISimplePowertrainBuilder ptBuilder, IModalDataContainer modData = null) : base(runData.ExecutionMode, runData, modData, null, ptBuilder)
 		{
 			RunData = runData;
 		}

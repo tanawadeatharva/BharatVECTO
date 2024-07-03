@@ -34,7 +34,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				grad = 2;
 			}
 
-			var testContainer = new SimplePowertrainContainer(runData);
+			var testContainer = new SimplePowertrainContainer(runData, PowertrainBuilder);
 			PowertrainBuilder.BuildSimpleHybridPowertrain(runData, testContainer);
 
 			return new VelocitySpeedGearshiftPreprocessor(VelocityDropData, runData.GearboxData.TractionInterruption,
@@ -347,7 +347,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					* x.FuelData.LowerHeatingValueVecto * StrategyParameters.MinICEOnTime).Value());
 
 			// create testcontainer
-			var testContainer = new SimplePowertrainContainer(runData);
+			var testContainer = new SimplePowertrainContainer(runData, PowertrainBuilder);
 			BuildSimplePowertrain(runData, testContainer);
 
 			TestPowertrain = new TestPowertrain<T>(testContainer, DataBus);

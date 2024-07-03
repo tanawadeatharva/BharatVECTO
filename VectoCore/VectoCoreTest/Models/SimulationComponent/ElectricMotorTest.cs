@@ -427,7 +427,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//modData.AddElectricMotor(PowertrainPosition.HybridP2);
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 			
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
+			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, modData, null);
 			new EngineOnlyGearboxInfo(container);
 
 			var battery = new Battery(container, batteryData.Batteries.First().Item2);

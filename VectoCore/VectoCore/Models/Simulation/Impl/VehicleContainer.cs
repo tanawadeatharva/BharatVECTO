@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -53,8 +54,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
     public class VehicleContainer : LoggingObject, IVehicleContainer, IPowertainInfo
 	{
+		private static object _kernelLock = new object();
+		private static IKernel _kernel; //Kernel is only used when the VehicleContainer is created with the Factory Method.
 
-		private List<Tuple<int, VectoSimulationComponent>> _components =
+        private List<Tuple<int, VectoSimulationComponent>> _components =
 			new List<Tuple<int, VectoSimulationComponent>>();
 
 		public virtual IEngineInfo EngineInfo { get; protected internal set; }
@@ -104,18 +107,34 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private IList<IResetableVectoSimulationComponent> _resetableComponents = new List<IResetableVectoSimulationComponent>(3);
 
 
-		public VehicleContainer(ExecutionMode executionMode, ISimplePowertrainBuilder ptBuilder, IModalDataContainer modData = null,
-			ISumData writeSumData = null)
+		protected VehicleContainer(ExecutionMode executionMode, VectoRunData runData, IModalDataContainer modData,
+			ISumData writeSumData, ISimplePowertrainBuilder ptBuilder)
 		{
 			PowertrainBuilder = ptBuilder;
 			ModData = modData;
 			WriteSumData = writeSumData;
 			ExecutionMode = executionMode;
+			RunData = runData;
 		}
 
-#region IVehicleContainer
+		[Obsolete("Creation of VehicleContainer should be done with VehicleContainerFactory NInject Factory", false)]
+		public static IVehicleContainer CreateVehicleContainer(ExecutionMode executionMode, VectoRunData runData, IModalDataContainer modData,
+			ISumData writeSumData)
+		{
+			if (_kernel == null) {
+				lock (_kernelLock) {
+					if (_kernel == null) {
+						_kernel = new StandardKernel(new VectoNinjectModule());
+					}
+				}
+			}
+			return _kernel.Get<IVehicleContainerFactory>().GetVehicleContainer(executionMode, runData, modData, writeSumData);
 
-		public virtual IModalDataContainer ModalData => ModData;
+        }
+
+        #region IVehicleContainer
+
+        public virtual IModalDataContainer ModalData => ModData;
 
 		public virtual ISimulationOutPort GetCycleOutPort()
 		{
@@ -361,7 +380,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 		[Required, ValidateObject]
-		public virtual VectoRunData RunData { get; set; }
+		public VectoRunData RunData { get; protected set; }
 		public virtual ExecutionMode ExecutionMode { get; }
 
 
@@ -376,8 +395,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private IGearboxInfo _gearboxInfo;
 
 		public ExemptedRunContainer(
-			ExecutionMode executionMode, ISimplePowertrainBuilder simplePowertrainBuilder, IModalDataContainer modData = null, ISumData writeSumData = null) : base(
-			executionMode, simplePowertrainBuilder, modData, writeSumData)
+			ExecutionMode executionMode, VectoRunData runData, IModalDataContainer modData, ISumData writeSumData, ISimplePowertrainBuilder simplePowertrainBuilder) 
+			: base(executionMode, runData, modData, writeSumData, simplePowertrainBuilder)
 		{
 			_mileageCounter = new ZeroMileageCounter(this);
 			_vehicleInfo = new DummyVehicleInfo(this);

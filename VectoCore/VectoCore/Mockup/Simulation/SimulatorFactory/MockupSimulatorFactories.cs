@@ -76,7 +76,7 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 			{
 				data.Report.PrepareResult(data);
 			}
-			return new MockupExemptedRun(new ExemptedRunContainer(data.ExecutionMode, SimplePowertrainBuilder) { RunData = data }, modData => {
+			return new MockupExemptedRun(new ExemptedRunContainer(data.ExecutionMode, data, null, null, SimplePowertrainBuilder), modData => {
 				if (data.Report != null)
 				{
 					data.Report.AddResult(data, modData);
@@ -87,9 +87,8 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 		protected override IVectoRun GetNonExemptedRun(VectoRunData data, int current, ref bool warning1Hz, ref bool firstRun)
 		{
 			var addReportResult = PrepareReport(data);
-			return new MockupRun(new VehicleContainer(ExecutionMode.Declaration, SimplePowertrainBuilder,
-					new MockupModalDataContainer(new ModalDataContainer(data, ReportWriter, null), addReportResult))
-				{ RunData = data });
+			return new MockupRun(VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, data,
+					new MockupModalDataContainer(new ModalDataContainer(data, ReportWriter, null), addReportResult), null));
 			
 		}
 		protected new static Action<IModalDataContainer> PrepareReport(VectoRunData data)

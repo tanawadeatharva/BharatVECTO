@@ -136,8 +136,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			sumWriter.UpdateTableColumns(runData.EngineData);
-			var container = new VehicleContainer(ExecutionMode.Declaration, modData,
-				sumWriter) { RunData = runData};
+			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, runData, modData,
+				sumWriter);
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData/Cycles/LongHaul_short.vdri", CycleType.DistanceBased, false);
 			new MockDrivingCycle(container, data);
 			new ZeroMileageCounter(container);
@@ -185,7 +185,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void AuxConstant()
 		{
 			var dataWriter = new MockModalDataContainer();
-			var container = new VehicleContainer(ExecutionMode.Engineering, dataWriter);
+			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, dataWriter, null);
 			//var port = new MockTnOutPort();
 			var aux = new EngineAuxiliary(container);
 			new MockEngine(container);
@@ -219,7 +219,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void AuxDirect()
 		{
 			var dataWriter = new MockModalDataContainer();
-			var container = new VehicleContainer(ExecutionMode.Engineering, dataWriter);
+			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, dataWriter, null);
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData/Cycles/Coach time based short.vdri",
 				CycleType.MeasuredSpeed, false);
 			var cycle = new MockDrivingCycle(container, data);
@@ -251,7 +251,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var dataWriter = new MockModalDataContainer();
 			dataWriter.AddAuxiliary("CONSTANT");
 
-			var container = new VehicleContainer(ExecutionMode.Engineering, dataWriter);
+			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, dataWriter, null);
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData/Cycles/Coach time based short.vdri",
 				CycleType.MeasuredSpeed, false);
 			// cycle ALT1 is set to values to equal the first few fixed points in the auxiliary file.

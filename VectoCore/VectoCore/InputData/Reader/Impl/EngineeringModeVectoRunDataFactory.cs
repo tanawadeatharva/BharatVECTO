@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 							//VehicleData = dao.CreateVehicleData(vehicle)
 						};
 						var tempVehicle = dao.CreateVehicleData(vehicle);
-						var tmpStrategy = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData));
+						var tmpStrategy = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData, null));
 						gearboxData = dao.CreateGearboxData(
 							InputDataProvider, new VectoRunData() {
 								JobType = VectoSimulationJobType.SerialHybridVehicle,
@@ -296,7 +296,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						//VehicleData = dao.CreateVehicleData(vehicle)
 					};
 					var tempVehicle = dao.CreateVehicleData(vehicle);
-					var tmpStrategy = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData));
+					var tmpStrategy = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData, null));
 					gearboxData = dao.CreateGearboxData(
 						InputDataProvider, new VectoRunData() {
 							JobType = VectoSimulationJobType.BatteryElectricVehicle,
@@ -462,7 +462,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				//VehicleData = dao.CreateVehicleData(vehicle)
 			};
 			var tempVehicle = dao.CreateVehicleData(vehicle);
-			var tmpStrategy = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData));
+			var tmpStrategy = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData, null));
 			var gearboxData = dao.CreateIEPCGearboxData(
 				InputDataProvider, new VectoRunData() {
 					JobType = VectoSimulationJobType.IEPC_E,

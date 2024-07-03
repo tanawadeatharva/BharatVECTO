@@ -31,6 +31,7 @@ using TUGraz.VectoCore.Utils;
 using ElectricSystem = TUGraz.VectoCore.Models.SimulationComponent.ElectricSystem;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 using Moq;
+using TUGraz.VectoCore.Models.Simulation;
 
 
 namespace TUGraz.VectoCore.Tests.Integration.Hybrid
@@ -614,7 +615,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			jobContainer.AddRun(run);
 			return jobContainer;
 		}
-		public static VehicleContainer CreateSerialHybridPowerTrain(DrivingCycleData cycleData, string modFileName,
+		public static IVehicleContainer CreateSerialHybridPowerTrain(DrivingCycleData cycleData, string modFileName,
 			double initialBatCharge, SummaryDataContainer sumData, double pAuxEl,
 			PowertrainPosition pos, double ratio, Kilogram payload = null, Watt maxDriveTrainPower = null, 
 			GearboxType gearboxType = GearboxType.NoGearbox, RetarderType retarderType = RetarderType.None)
@@ -689,8 +690,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var modData = new ModalDataContainer(runData, fileWriter, null, modDataFilter) {
 				WriteModalResults = true,
 			};
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData, 
-				sumData) { RunData = runData };
+			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, modData, 
+				sumData);
 
 			var strategy = new SerialHybridStrategy(runData, container);
 			var es = new ElectricSystem(container, batteryData);
@@ -775,8 +776,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			ctl.GenSet.AddComponent(GetElectricMachine(PowertrainPosition.GEN, runData.ElectricMachinesData, container,
 					es, ctl))
-				.AddComponent(engine, idleController)
-				.AddAuxiliaries(container, runData);
+				.AddComponent(engine, idleController);
+			PowertrainBuilderBase.AddAuxiliaries(engine, container, runData);
 
 			return container;
 		}
@@ -829,7 +830,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		}
 
 		private static IElectricMotor GetElectricMachine(PowertrainPosition pos,
-			IList<Tuple<PowertrainPosition, ElectricMotorData>> electricMachinesData, VehicleContainer container,
+			IList<Tuple<PowertrainPosition, ElectricMotorData>> electricMachinesData, IVehicleContainer container,
 			ElectricSystem es, IHybridController ctl)
 		{
 			var motorData = electricMachinesData.FirstOrDefault(x => x.Item1 == pos);

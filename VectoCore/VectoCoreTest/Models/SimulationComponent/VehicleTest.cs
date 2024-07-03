@@ -40,6 +40,7 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -79,13 +80,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//VehicleData.ReadFromFile(VehicleDataFile);
 			//vehicleData.CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection;
 
-			var container = new VehicleContainer(ExecutionMode.Engineering) {
-				RunData = new VectoRunData() {
-					VehicleData = vehicleData,
-					AirdragData = airdragData,
-					ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
-				}
-			};
+			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, new VectoRunData() {
+				VehicleData = vehicleData,
+				AirdragData = airdragData,
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
+			}, null, null);
+		
 			var vehicle = new Vehicle(container, vehicleData, airdragData);
 			var driver = new MockDriver(container) { DriverBehavior = DrivingBehavior.Driving };
 			new DummyCycle(container);
@@ -121,10 +121,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void VehicleAirResistanceTest(double vehicleSpeed, double acceleration, double dt, double height,
 			double expected)
 		{
-			var container = new VehicleContainer(ExecutionMode.Declaration);
-			container.RunData = new VectoRunData() {
+			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, new VectoRunData() {
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
-			};
+			}, null, null);
 
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
 			var airdragData = MockSimulationDataFactory.CreateAirdragDataFromFile(VehicleDataFileTruck);
@@ -150,20 +149,18 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		Category(Definitions.TESTCASE_MIGRATED)]
 		public void VehicleAirDragPowerLossDeclarationTest()
 		{
-			var container = new VehicleContainer(ExecutionMode.Declaration);
-
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
 			var airdragData = MockSimulationDataFactory.CreateAirdragDataFromFile(VehicleDataFileTruck);
 			airdragData.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(6.2985.SI<SquareMeter>(),
 				_airdragDataAdapter.GetDeclarationAirResistanceCurve("TractorSemitrailer",
 					6.2985.SI<SquareMeter>(), 3.SI<Meter>()), CrossWindCorrectionMode.DeclarationModeCorrection);
-			container.RunData = new VectoRunData() {
+			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, new VectoRunData() {
 				VehicleData = vehicleData,
 				AirdragData = airdragData,
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
-			};
+			}, null, null);
 
-			var vehicle = new Vehicle(container, vehicleData,airdragData);
+            var vehicle = new Vehicle(container, vehicleData,airdragData);
 			var driver = new MockDriver(container) { DriverBehavior = DrivingBehavior.Driving };
 			new DummyCycle(container);
 			var mockPort = new MockFvOutPort();
@@ -242,7 +239,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 	public class DummyCycle : VectoSimulationComponent, IDrivingCycleInfo
 	{
-		public DummyCycle(VehicleContainer container) :base(container)
+		public DummyCycle(IVehicleContainer container) :base(container)
 		{
 			
 		}

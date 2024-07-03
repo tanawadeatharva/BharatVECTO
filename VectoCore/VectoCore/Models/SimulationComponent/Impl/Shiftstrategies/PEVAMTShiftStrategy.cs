@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				runData.AxleGearData?.AxleGear.Ratio ?? 1.0, runData.GearboxData.Type);
 
 			// create testcontainer
-			var testContainer = new SimplePowertrainContainer(runData);
+			var testContainer = new SimplePowertrainContainer(runData, PowertrainBuilder);
 			PowertrainBuilder.BuildSimplePowertrainElectric(runData, testContainer);
 
 			TestPowertrain = new TestPowertrain<Gearbox>(testContainer, DataBus);
@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		{
 			var runData = dataBus.RunData;
 			// MQ: 2019-11-29 - fuel used here has no effect as this is the modDatacontainer for the test-powertrain only!
-			TestContainer = new SimplePowertrainContainer(runData);
+			TestContainer = new SimplePowertrainContainer(runData, PowertrainBuilder);
 			PowertrainBuilder.BuildSimplePowertrainElectric(runData, TestContainer);
 			TestContainerGbx = TestContainer.GearboxCtl as Gearbox;
 			TestContainerBattery = TestContainer.BatteryInfo as Battery;

@@ -52,6 +52,11 @@ namespace TUGraz.VectoCore.Models.Simulation
 		{
 			Bind<ISimulatorFactoryFactory>().ToFactory(() => new UseFirstArgumentAsInstanceProvider());
 
+			Bind<IVehicleContainerFactory>().ToFactory().InSingletonScope();
+
+			Bind<IPowertrainBuilder>().To<PowertrainBuilder>().InSingletonScope();
+			Bind<ISimplePowertrainBuilder>().To<SimplePowertrainBuilder>().InSingletonScope();
+
 			Bind<ISimulatorFactory>().To<SimulatorFactoryDeclaration>().Named(ExecutionMode.Declaration.ToString());
 			Bind<ISimulatorFactory>().To<SimulatorFactoryEngineering>().Named(ExecutionMode.Engineering.ToString());
 

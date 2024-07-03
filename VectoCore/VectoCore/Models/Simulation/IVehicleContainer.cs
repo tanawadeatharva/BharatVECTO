@@ -59,11 +59,13 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		ISimplePowertrainBuilder PowertrainBuilder { get; }
 
+		IAuxInProvider BusAux { get; }
+
 		/// <summary>
-		/// Adds a component to the vehicle container.
-		/// </summary>
-		/// <param name="component"></param>
-		void AddComponent(VectoSimulationComponent component);
+        /// Adds a component to the vehicle container.
+        /// </summary>
+        /// <param name="component"></param>
+        void AddComponent(VectoSimulationComponent component);
 
 		void AddAuxiliary(string id, string columnName = null);
 

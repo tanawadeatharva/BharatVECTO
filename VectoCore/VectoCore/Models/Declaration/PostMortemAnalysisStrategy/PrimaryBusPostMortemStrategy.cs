@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
 
 		protected virtual Radian GetMaxGradability(IVehicleContainer container)
 		{
-			var testContainer = new SimplePowertrainContainer(container.RunData);
+			var testContainer = new SimplePowertrainContainer(container.RunData, container.PowertrainBuilder);
 			switch (container.PowertrainInfo.VehicleArchitecutre) {
 				//case VectoSimulationJobType.ConventionalVehicle:
 				//	PowertrainBuilder.BuildSimplePowertrain(container.RunData, testContainer);

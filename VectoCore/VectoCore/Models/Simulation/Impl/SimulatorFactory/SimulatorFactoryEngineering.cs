@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 					//RunDataFactory = new EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary(vtpProvider);
 					return;
 				case IEngineeringInputDataProvider engDataProvider when engDataProvider.JobInputData.JobType == VectoSimulationJobType.EngineOnlySimulation:
-					RunDataFactory = new EngineOnlyVectoRunDataFactory(engDataProvider);
+					RunDataFactory = new EngineOnlyVectoRunDataFactory(engDataProvider, PowertrainBuilder);
 					return;
 				case IEngineeringInputDataProvider engDataProvider:
 					RunDataFactory = new EngineeringModeVectoRunDataFactory(engDataProvider, PowertrainBuilder);
