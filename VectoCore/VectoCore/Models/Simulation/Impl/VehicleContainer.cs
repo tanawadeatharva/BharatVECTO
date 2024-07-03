@@ -51,7 +51,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	public class VehicleContainer : LoggingObject, IVehicleContainer, IPowertainInfo
+    public class VehicleContainer : LoggingObject, IVehicleContainer, IPowertainInfo
 	{
 
 		private List<Tuple<int, VectoSimulationComponent>> _components =
@@ -104,9 +104,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private IList<IResetableVectoSimulationComponent> _resetableComponents = new List<IResetableVectoSimulationComponent>(3);
 
 
-		public VehicleContainer(ExecutionMode executionMode, IModalDataContainer modData = null,
+		public VehicleContainer(ExecutionMode executionMode, ISimplePowertrainBuilder ptBuilder, IModalDataContainer modData = null,
 			ISumData writeSumData = null)
 		{
+			PowertrainBuilder = ptBuilder;
 			ModData = modData;
 			WriteSumData = writeSumData;
 			ExecutionMode = executionMode;
@@ -136,6 +137,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public IHybridControllerCtl HybridControllerCtl => HybridController;
 
+
+		public ISimplePowertrainBuilder PowertrainBuilder { get; }
 
 		public virtual void AddComponent(VectoSimulationComponent component)
 		{
@@ -373,8 +376,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private IGearboxInfo _gearboxInfo;
 
 		public ExemptedRunContainer(
-			ExecutionMode executionMode, IModalDataContainer modData = null, ISumData writeSumData = null) : base(
-			executionMode, modData, writeSumData)
+			ExecutionMode executionMode, ISimplePowertrainBuilder simplePowertrainBuilder, IModalDataContainer modData = null, ISumData writeSumData = null) : base(
+			executionMode, simplePowertrainBuilder, modData, writeSumData)
 		{
 			_mileageCounter = new ZeroMileageCounter(this);
 			_vehicleInfo = new DummyVehicleInfo(this);

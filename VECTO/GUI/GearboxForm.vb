@@ -26,8 +26,8 @@ Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 
 Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Models.Simulation
 Imports TUGraz.VectoCore.Models.Simulation.Data
-Imports TUGraz.VectoCore.Models.Simulation.Impl
 Imports TUGraz.VectoCore.Models.SimulationComponent
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
@@ -1100,7 +1100,9 @@ Public Class GearboxForm
                 .GearshiftParameters = New  ShiftStrategyParameters(), 
                 .JobType = VectoSimulationJobType.BatteryElectricVehicle
                 }
-        Dim tmpStrategy as IShiftPolygonCalculator = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData))
+        Dim kernel As IKernel = new StandardKernel(new VectoNinjectModule)
+        dim ptBuilder as IPowertrainBuilder = kernel.Get(of IPowertrainBuilder)()
+        Dim tmpStrategy as IShiftPolygonCalculator = ptBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData))
         
         dim em as ElectricMotorData = ConvertToElectricMotorData(emFld, gear)
 
@@ -1139,7 +1141,9 @@ Public Class GearboxForm
             },
             .JobType = _vehicleJobType
         }
-        Dim tmpStrategy as IShiftPolygonCalculator = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData))
+        Dim kernel As IKernel = new StandardKernel(new VectoNinjectModule)
+        dim ptBuilder as IPowertrainBuilder = kernel.Get(of IPowertrainBuilder)()
+        Dim tmpStrategy as IShiftPolygonCalculator = ptBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData))
             
 
         Dim shiftLines As ShiftPolygon = tmpStrategy.ComputeDeclarationShiftPolygon(

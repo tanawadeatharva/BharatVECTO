@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
 				//	break;
                 case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
-					PowertrainBuilder.BuildSimplePowertrainElectric(container.RunData, testContainer);
+					container.PowertrainBuilder.BuildSimplePowertrainElectric(container.RunData, testContainer);
 					break;
 				default:
 					throw new VectoException($"unhandled powertrain architecture {container.PowertrainInfo.VehicleArchitecutre} to calculate gradability");

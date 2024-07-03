@@ -10,16 +10,17 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 using static TUGraz.VectoCommon.InputData.VectoSimulationJobType;
 
-namespace TUGraz.VectoCore.InputData.Reader.Impl {
-	public abstract class AbstractDeclarationVectoRunDataFactory : LoggingObject, IVectoRunDataFactory
+namespace TUGraz.VectoCore.InputData.Reader.Impl
+{
+    public abstract class AbstractDeclarationVectoRunDataFactory : LoggingObject, IVectoRunDataFactory
 	{
 		protected readonly IDeclarationInputDataProvider InputDataProvider;
 
@@ -34,13 +35,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		
 		protected IDeclarationCycleFactory CycleFactory { get; }
 
+		protected IPowertrainBuilder PowertrainBuilder { get; }
+
 		protected virtual IVehicleDeclarationInputData Vehicle => InputDataProvider.JobInputData.Vehicle;
 
         protected AbstractDeclarationVectoRunDataFactory(IDeclarationInputDataProvider dataProvider,
-			IDeclarationReport report, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter,
-			bool checkJobType = true)
+			IDeclarationReport report,
+			IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter,
+			bool checkJobType, IPowertrainBuilder ptBuilder)
 		{
 			CycleFactory = cycleFactory;
+			PowertrainBuilder = ptBuilder;
 			InputDataProvider = dataProvider;
 			MissionFilter = missionFilter;
 			if (checkJobType) {

@@ -188,15 +188,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			// create testcontainer
 			var testContainer = new SimplePowertrainContainer(runData);
 			if (runData.JobType == VectoSimulationJobType.IEPC_S) {
-				PowertrainBuilder.BuildSimpleIEPCHybridPowertrain(runData, testContainer);
+				container.PowertrainBuilder.BuildSimpleIEPCHybridPowertrain(runData, testContainer);
 			} else {
-				PowertrainBuilder.BuildSimpleSerialHybridPowertrain(runData, testContainer);
+				container.PowertrainBuilder.BuildSimpleSerialHybridPowertrain(runData, testContainer);
 			}
 
 			TestPowertrain = new TestPowertrain<T>(testContainer, DataBus);
 
 			var gensetContainer = new SimplePowertrainContainer(runData);
-			PowertrainBuilder.BuildSimpleGenSet(runData, gensetContainer);
+			container.PowertrainBuilder.BuildSimpleGenSet(runData, gensetContainer);
 			TestGenSet = new TestGenset(gensetContainer, DataBus);
 
 

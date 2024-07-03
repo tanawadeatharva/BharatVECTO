@@ -9,10 +9,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 {
     public class SimulatorFactoryEngineering : SimulatorFactory
     {
-        public SimulatorFactoryEngineering(IInputDataProvider dataProvider, IOutputDataWriter writer, bool validate) : base(ExecutionMode.Engineering, writer, validate)
-        {
-            CreateEngineeringDataReader(dataProvider);
-        }
+		public SimulatorFactoryEngineering(IInputDataProvider dataProvider, IOutputDataWriter writer, bool validate,
+			IPowertrainBuilder ptBuilder)
+			: base(ExecutionMode.Engineering, writer, validate, ptBuilder)
+		{
+			CreateEngineeringDataReader(dataProvider);
+		}
 
 		private void CreateEngineeringDataReader(IInputDataProvider dataProvider)
 		{
@@ -28,7 +30,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 					RunDataFactory = new EngineOnlyVectoRunDataFactory(engDataProvider);
 					return;
 				case IEngineeringInputDataProvider engDataProvider:
-					RunDataFactory = new EngineeringModeVectoRunDataFactory(engDataProvider);
+					RunDataFactory = new EngineeringModeVectoRunDataFactory(engDataProvider, PowertrainBuilder);
 					return;
 				default:
 					throw new VectoException("Unknown InputData for Engineering Mode!");

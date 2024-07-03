@@ -42,11 +42,11 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Simulation
 {
-	/// <summary>
-	/// Defines Methods for adding components, commiting a simulation step and finishing the simulation.
-	/// Also defines interfaces for all cockpit access to data.
-	/// </summary>
-	public interface IVehicleContainer : IDataBus
+    /// <summary>
+    /// Defines Methods for adding components, commiting a simulation step and finishing the simulation.
+    /// Also defines interfaces for all cockpit access to data.
+    /// </summary>
+    public interface IVehicleContainer : IDataBus
 	{
 		IModalDataContainer ModalData { get; }
 
@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		VectoRun.Status RunStatus { get; set; }
 
-		
+		ISimplePowertrainBuilder PowertrainBuilder { get; }
 
 		/// <summary>
 		/// Adds a component to the vehicle container.

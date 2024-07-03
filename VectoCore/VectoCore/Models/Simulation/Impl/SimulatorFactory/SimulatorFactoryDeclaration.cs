@@ -27,11 +27,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			IDeclarationReport declarationReport, 
 			IVTPReport vtpReport,
 			bool validate,
+			// the following parameters are injected
 			IXMLInputDataReader xmlInputDataReader,
 			ISimulatorFactoryFactory simulatorFactoryFactory,
 			IXMLDeclarationReportFactory xmlDeclarationReportFactory,
-			IVectoRunDataFactoryFactory runDataFactoryFactory 
-		) : base(ExecutionMode.Declaration, writer, validate)
+			IVectoRunDataFactoryFactory runDataFactoryFactory,
+			IPowertrainBuilder ptBuilder
+		) : base(ExecutionMode.Declaration, writer, validate, ptBuilder)
 		{
 			_xmlInputDataReader = xmlInputDataReader;
 			_simFactoryFactory = simulatorFactoryFactory;
@@ -78,23 +80,24 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		public SimulatorFactoryDeclaration(
 			IInputDataProvider dataProvider,
 			IOutputDataWriter writer,
-			bool validate, 
+			bool validate,
+			// the following parameters are injected
 			IXMLInputDataReader xmlInputDataReader,
-			ISimulatorFactoryFactory simulatorFactoryFactory, 
+			ISimulatorFactoryFactory simulatorFactoryFactory,
 			IXMLDeclarationReportFactory xmlDeclarationReportFactory,
-			IVectoRunDataFactoryFactory runDataFactoryFactory) : this(
-				dataProvider: dataProvider, 
-				declarationReport: null,
-				writer: writer,
-				vtpReport: null, 
-				validate: validate,
-				xmlInputDataReader: xmlInputDataReader, 
-				simulatorFactoryFactory: simulatorFactoryFactory,
-				xmlDeclarationReportFactory: xmlDeclarationReportFactory,
-				runDataFactoryFactory: runDataFactoryFactory)
-		{
-
-		}
+			IVectoRunDataFactoryFactory runDataFactoryFactory,
+			IPowertrainBuilder ptBuilder
+		) : this(
+			dataProvider: dataProvider,
+			declarationReport: null,
+			writer: writer,
+			vtpReport: null,
+			validate: validate,
+			xmlInputDataReader: xmlInputDataReader,
+			simulatorFactoryFactory: simulatorFactoryFactory,
+			xmlDeclarationReportFactory: xmlDeclarationReportFactory,
+			runDataFactoryFactory: runDataFactoryFactory,
+			ptBuilder: ptBuilder) { }
 
 		private bool CanBeSimulated(IInputDataProvider dataProvider)
 		{

@@ -41,8 +41,8 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -54,15 +54,18 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
-	public class EngineeringModeVectoRunDataFactory : LoggingObject, IVectoRunDataFactory
+    public class EngineeringModeVectoRunDataFactory : LoggingObject, IVectoRunDataFactory
 	{
 		private static readonly Dictionary<string, Tuple<DrivingCycleData, DateTime>> CyclesCache = new Dictionary<string, Tuple<DrivingCycleData, DateTime>>();
 
 		protected readonly IEngineeringInputDataProvider InputDataProvider;
 
-		internal EngineeringModeVectoRunDataFactory(IEngineeringInputDataProvider dataProvider)
+		protected IPowertrainBuilder PowertrainBuilder { get; private set; }
+
+		internal EngineeringModeVectoRunDataFactory(IEngineeringInputDataProvider dataProvider, IPowertrainBuilder ptBuilder)
 		{
 			InputDataProvider = dataProvider;
+			PowertrainBuilder = ptBuilder;
 		}
 
 		/// <summary>
@@ -611,8 +614,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 							.Auxiliaries.ElectricPowerDemand,
 					};
 					
-					var shiftStrategyName =
-						PowertrainBuilder.GetShiftStrategyName(vehicle.Components.GearboxInputData.Type,
+					var shiftStrategyName =PowertrainBuilder.GetShiftStrategyName(vehicle.Components.GearboxInputData.Type,
 							vehicle.VehicleType);
 					var gearshiftParams =
 						dao.CreateGearshiftData(

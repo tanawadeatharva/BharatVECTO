@@ -24,7 +24,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
 
-	public class PEVAMTShiftStrategyPolygonCreator : IShiftPolygonCalculator
+    public class PEVAMTShiftStrategyPolygonCreator : IShiftPolygonCalculator
 	{
 		private ShiftStrategyParameters _shiftStrategyParameters;
 
@@ -89,6 +89,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 		protected bool DriveOffStandstill { get; set; }
 
+		protected ISimplePowertrainBuilder PowertrainBuilder { get; private set; }
 		protected TestPowertrain<Gearbox> TestPowertrain;
 
 		public PEVAMTShiftStrategy(IVehicleContainer dataBus) : this(dataBus, false)
@@ -107,6 +108,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected PEVAMTShiftStrategy(IVehicleContainer dataBus, bool dummy)
 		{
 			DataBus = dataBus;
+			PowertrainBuilder = dataBus.PowertrainBuilder;
 			var runData = dataBus.RunData;
 			_shiftStrategyParameters = runData.GearshiftParameters;
 			_shiftPolygonImplementation =
