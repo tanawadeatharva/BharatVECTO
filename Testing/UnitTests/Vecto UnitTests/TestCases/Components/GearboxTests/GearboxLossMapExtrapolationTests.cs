@@ -12,12 +12,10 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.Tests.Utils;
 using Assert = NUnit.Framework.Assert;
 
@@ -150,7 +148,8 @@ public class GearboxLossMapExtrapolationTests
 
         var modData = new MockModalDataContainer();
         Assert.IsTrue(gearbox.CurrentState.TorqueLossResult.Extrapolated);
-        gearbox.CommitSimulationStep(absTime, dt, modData);
+		// no exception
+		gearbox.CommitSimulationStep(absTime, dt, modData);
     }
 
     [TestCase(ExecutionMode.Engineering, 6.38, 96000, 1600, true, 96499.10109),
@@ -215,6 +214,7 @@ public class GearboxLossMapExtrapolationTests
         AssertHelper.AreRelativeEqual(expectedTorque.SI<NewtonMeter>(), reqTorque, 1e-2);
 
         var modData = new MockModalDataContainer();
+        // no exception
         gearbox.CommitSimulationStep(absTime, dt, modData);
     }
 
