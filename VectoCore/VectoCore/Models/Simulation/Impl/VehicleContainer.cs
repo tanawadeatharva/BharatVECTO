@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private IList<IResetableVectoSimulationComponent> _resetableComponents = new List<IResetableVectoSimulationComponent>(3);
 
 
-		protected VehicleContainer(ExecutionMode executionMode, VectoRunData runData, IModalDataContainer modData,
+		public VehicleContainer(ExecutionMode executionMode, VectoRunData runData, IModalDataContainer modData,
 			ISumData writeSumData, ISimplePowertrainBuilder ptBuilder)
 		{
 			PowertrainBuilder = ptBuilder;
@@ -128,7 +128,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					}
 				}
 			}
-			return _kernel.Get<IVehicleContainerFactory>().GetVehicleContainer(executionMode, runData, modData, writeSumData);
+
+			return _kernel.Get<IVehicleContainerFactory>().CreateVehicleContainer(executionMode, runData, modData, writeSumData);
 
         }
 

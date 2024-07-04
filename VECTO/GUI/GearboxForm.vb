@@ -1102,7 +1102,7 @@ Public Class GearboxForm
                 }
         Dim kernel As IKernel = new StandardKernel(new VectoNinjectModule)
         dim ptBuilder as IPowertrainBuilder = kernel.Get(of IPowertrainBuilder)()
-        Dim tmpStrategy as IShiftPolygonCalculator = ptBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData))
+        Dim tmpStrategy as IShiftPolygonCalculator = ptBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData, Nothing))
         
         dim em as ElectricMotorData = ConvertToElectricMotorData(emFld, gear)
 
@@ -1143,7 +1143,7 @@ Public Class GearboxForm
         }
         Dim kernel As IKernel = new StandardKernel(new VectoNinjectModule)
         dim ptBuilder as IPowertrainBuilder = kernel.Get(of IPowertrainBuilder)()
-        Dim tmpStrategy as IShiftPolygonCalculator = ptBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData))
+        Dim tmpStrategy as IShiftPolygonCalculator = ptBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData, Nothing))
             
 
         Dim shiftLines As ShiftPolygon = tmpStrategy.ComputeDeclarationShiftPolygon(

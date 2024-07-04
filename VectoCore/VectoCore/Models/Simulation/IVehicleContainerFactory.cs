@@ -30,6 +30,7 @@
 */
 
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData;
 
@@ -38,8 +39,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 	public interface IVehicleContainerFactory
 	{
-		IVehicleContainer GetVehicleContainer(ExecutionMode executionMode, VectoRunData runData,
-			IModalDataContainer modData,
+		IVehicleContainer CreateVehicleContainer(ExecutionMode executionMode, VectoRunData runData, IModalDataContainer modData,
 			ISumData writeSumData);
 
 	}
