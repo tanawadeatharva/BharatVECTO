@@ -9,6 +9,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -100,6 +101,7 @@ TestCase(8, 4, 15000, 200, typeof(ResponseGearShift)),]
 		var eng = new Mock<IEngineInfo>();
 		container.Setup(c => c.EngineInfo).Returns(eng.Object);
 		eng.Setup(e => e.EngineIdleSpeed).Returns(560.RPMtoRad());
+		//var ptBuilder = new Mock<ISimplePowertrainBuilder>();
 
 		var shiftStrategy = new AMTShiftStrategy(container.Object);
 
