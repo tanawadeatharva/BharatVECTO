@@ -24,7 +24,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
 
-	public class PEVAMTShiftStrategyPolygonCreator : IShiftPolygonCalculator
+    public class PEVAMTShiftStrategyPolygonCreator : IShiftPolygonCalculator
 	{
 		private ShiftStrategyParameters _shiftStrategyParameters;
 
@@ -89,6 +89,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 		protected bool DriveOffStandstill { get; set; }
 
+		protected ISimplePowertrainBuilder PowertrainBuilder { get; private set; }
 		protected TestPowertrain<Gearbox> TestPowertrain;
 
 		public PEVAMTShiftStrategy(IVehicleContainer dataBus) : this(dataBus, false)
@@ -107,6 +108,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected PEVAMTShiftStrategy(IVehicleContainer dataBus, bool dummy)
 		{
 			DataBus = dataBus;
+			PowertrainBuilder = dataBus.PowertrainBuilder;
 			var runData = dataBus.RunData;
 			_shiftStrategyParameters = runData.GearshiftParameters;
 			_shiftPolygonImplementation =
@@ -140,7 +142,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				runData.AxleGearData?.AxleGear.Ratio ?? 1.0, runData.GearboxData.Type);
 
 			// create testcontainer
-			var testContainer = new SimplePowertrainContainer(runData);
+			var testContainer = new SimplePowertrainContainer(runData, PowertrainBuilder);
 			PowertrainBuilder.BuildSimplePowertrainElectric(runData, testContainer);
 
 			TestPowertrain = new TestPowertrain<Gearbox>(testContainer, DataBus);
@@ -156,7 +158,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		{
 			var runData = dataBus.RunData;
 			// MQ: 2019-11-29 - fuel used here has no effect as this is the modDatacontainer for the test-powertrain only!
-			TestContainer = new SimplePowertrainContainer(runData);
+			TestContainer = new SimplePowertrainContainer(runData, PowertrainBuilder);
 			PowertrainBuilder.BuildSimplePowertrainElectric(runData, TestContainer);
 			TestContainerGbx = TestContainer.GearboxCtl as Gearbox;
 			TestContainerBattery = TestContainer.BatteryInfo as Battery;

@@ -33,6 +33,7 @@ namespace TUGraz.VectoCore.Tests.Models
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
 		private IVectoRunDataFactoryFactory _runDataFactory;
+		private IPowertrainBuilder PowertrainBuilder;
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
@@ -42,6 +43,7 @@ namespace TUGraz.VectoCore.Tests.Models
 			_kernel = new StandardKernel(new VectoNinjectModule());
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 			_runDataFactory = _kernel.Get<IVectoRunDataFactoryFactory>();
+			PowertrainBuilder = _kernel.Get<IPowertrainBuilder>();
 		}
 
 		[TestCase,
@@ -362,7 +364,7 @@ namespace TUGraz.VectoCore.Tests.Models
 		public void ReadEngineeringXMLDualFuel()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringDualFuelWHRVehicle);
-			var dao = new EngineeringModeVectoRunDataFactory(inputDataProvider);
+			var dao = new EngineeringModeVectoRunDataFactory(inputDataProvider, PowertrainBuilder);
 
 			var runs = dao.NextRun().ToArray();
 			Assert.AreEqual(1, runs.Length);

@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			};
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_SimpleGearbox");
 			var modData = new ModalDataContainer(runData, fileWriter, null);
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData) { RunData = runData };
+			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, modData, null);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var cyclePort = cycle.OutPort();
@@ -183,7 +183,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			};
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain");
 			var modData = new ModalDataContainer(runData, fileWriter, null);
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData) { RunData = runData };
+			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, modData, null);
 
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
@@ -276,7 +276,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			};
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_LowSpeed");
 			var modData = new ModalDataContainer(runData, fileWriter, null);
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData) { RunData = runData };
+			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, modData, null);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var cyclePort = cycle.OutPort();

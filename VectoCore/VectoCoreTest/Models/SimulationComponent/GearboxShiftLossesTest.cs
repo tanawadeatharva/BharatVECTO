@@ -193,8 +193,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var gearboxData = ATPowerTrain.CreateGearboxData(GearboxType.ATSerial);
 
-			var container = new VehicleContainer(ExecutionMode.Engineering);
-			gearboxData.PowershiftShiftTime = 0.8.SI<Second>();
+			var runData = new VectoRunData() {
+				GearboxData = gearboxData,
+				GearshiftParameters = ATPowerTrain.CreateGearshiftData(),
+				EngineData = new CombustionEngineData() { Inertia = 5.SI<KilogramSquareMeter>() }
+			};
+            var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, null, null) as VehicleContainer;
+            gearboxData.PowershiftShiftTime = 0.8.SI<Second>();
 			new ATClutchInfo(container);
 			
 			var cycleData = SimpleDrivingCycles.CreateCycleData(cycleDataStr);
@@ -215,12 +220,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				container,
 				MockSimulationDataFactory.CreateEngineDataFromFile(ATPowerTrain.EngineFile, gearboxData.Gears.Count));
 			container.EngineInfo = engine;
-			var runData = new VectoRunData() {
-				GearboxData = gearboxData,
-				GearshiftParameters = ATPowerTrain.CreateGearshiftData(),
-				EngineData = new CombustionEngineData() { Inertia = 5.SI<KilogramSquareMeter>() }
-			};
-			container.RunData = runData;
+			
+			
 			gbx = new ATGearbox(container, new ATShiftStrategy(container));
 			gbx.Connect(engine);
 			gbx.IdleController = new MockIdleController();

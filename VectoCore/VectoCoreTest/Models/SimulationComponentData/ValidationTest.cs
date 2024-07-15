@@ -245,8 +245,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		Category(Definitions.TESTCASE_MIGRATED)]
 		public void ValidationModeVectoRunDataTest()
 		{
-			var container = new VehicleContainer(ExecutionMode.Engineering);
-			var data = new DistanceRun(container);
 			var engineData = new CombustionEngineData {
 				FullLoadCurves =
 					new Dictionary<uint, EngineFullLoadCurve>() {
@@ -294,8 +292,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					},
 				}
 			};
-
-			container.RunData = new VectoRunData {
+			var runData = new VectoRunData {
 				JobRunId = 0,
 				VehicleData = vehicleData,
 				AirdragData = new AirdragData() {
@@ -309,6 +306,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				EngineData = engineData,
 				AxleGearData = axleGearData
 			};
+
+            var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, null, null);
+			var data = new DistanceRun(container);
 
 			var results = data.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);
 			Assert.IsTrue(results.Any(), "Validation should have failed, but succeded.");
@@ -324,8 +324,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		Category(Definitions.DUPLICATE)]
 		public void Validation_VectoRun()
 		{
-			var container = new VehicleContainer(ExecutionMode.Engineering);
-			var data = new DistanceRun(container);
+			
 			var engineData = new CombustionEngineData {
 				FullLoadCurves =
 					new Dictionary<uint, EngineFullLoadCurve>() {
@@ -348,12 +347,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				}
 			};
 
-			container.RunData = new VectoRunData {
-				JobRunId = 0,
-				GearboxData = gearboxData,
-				EngineData = engineData,
-				AxleGearData = axleGearData
-			};
+			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering,
+				new VectoRunData {
+					JobRunId = 0,
+					GearboxData = gearboxData,
+					EngineData = engineData,
+					AxleGearData = axleGearData
+				}, null, null);
+			var data = new DistanceRun(container);
 
 			Stopwatch stopwatch = new Stopwatch();
 			stopwatch.Start();

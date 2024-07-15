@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		private void InitializeTestContainer(VectoRunData runData)
 		{
 			// fuel list here has no effect as this is the mod-container for the test-powertrain only
-			TestContainer = new SimplePowertrainContainer(runData);
+			TestContainer = new SimplePowertrainContainer(runData, PowertrainBuilder);
 
 			PowertrainBuilder.BuildSimplePowertrain(runData, TestContainer);
 			TestContainerGbx = TestContainer.GearboxCtl as ATGearbox;

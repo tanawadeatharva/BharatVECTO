@@ -1,11 +1,14 @@
 ﻿using Moq;
+using Ninject;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
@@ -17,6 +20,15 @@ namespace TUGraz.Vecto.UnitTests.TestCases.ComponentReader;
 public class RetarderDataReaderTests
 {
 	private const double Tolerance = 0.0001;
+
+	protected ISimplePowertrainBuilder powertrainBuilder;
+
+	[OneTimeSetUp]
+	public void RunBeforeAnyTests()
+	{
+		var kernel = new StandardKernel(new VectoNinjectModule());
+		powertrainBuilder = kernel.Get<ISimplePowertrainBuilder>();
+	}
 
     [TestCase]
     public void RetarderDataSorting()
@@ -31,7 +43,7 @@ public class RetarderDataReaderTests
         };
         var retarderTbl =  InputDataHelper.InputDataAsTableData("Retarder Speed [rpm],Loss Torque [Nm]",
                 retarderEntries);
-        var vehicle = new VehicleContainer(ExecutionMode.Engineering);
+        var vehicle = new VehicleContainer(ExecutionMode.Engineering, powertrainBuilder);
         var retarderData = RetarderLossMapReader.Create(retarderTbl);
         var retarder = new Retarder(vehicle, retarderData, 2.0);
 

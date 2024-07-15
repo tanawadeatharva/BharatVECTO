@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestCase]
 		public void WheelsRequestTest()
 		{
-			var container = new VehicleContainer(ExecutionMode.Engineering);
+			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, null, null);
 			//var reader = new EngineeringModeSimulationDataReader();
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFile);
 

@@ -55,7 +55,7 @@ using Formatting = Newtonsoft.Json.Formatting;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 {
-	public abstract class SimulatorFactory : LoggingObject, ISimulatorFactory
+    public abstract class SimulatorFactory : LoggingObject, ISimulatorFactory
 	{
 		private static int _jobNumberCounter;
 
@@ -66,31 +66,32 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 		protected bool _simulate = true;
 
-
-
-		public ISimulatorFactory FollowUpSimulatorFactory
-		{
-			get
-			{
-				var factory = _followUpSimulatorFactoryCreator?.GetNextFactory();
-				if (factory != null) {
-					factory.WriteModalResults = this.WriteModalResults;
-					//factory.SerializeVectoRunData = this.SerializeVectoRunData;
-                }
-
-
-
-
-                return factory;
-			}
-		}
-
 		public bool CreateFollowUpSimulatorFactory { get; set; } = false;
 		protected readonly ExecutionMode _mode;
 
-		#region Constructors and Factory Methods to instantiate Instances of SimulatorFactory without NInject (should only be used in Testcases that are not updated yet)
+		protected IPowertrainBuilder PowertrainBuilder { get; private set; }
 
-		[Obsolete("Creation of new SimulatorFactories should be done with SimulatorFactoryFactory NInject Factory", false)]
+        #region Constructors and Factory Methods to instantiate Instances of SimulatorFactory without NInject (should only be used in Testcases that are not updated yet)
+
+		protected SimulatorFactory(ExecutionMode mode, IOutputDataWriter writer, bool validate, IPowertrainBuilder ptBuilder)
+		{
+			System.Diagnostics.Debug.WriteLine("Created Simulator Factory");
+			Log.Info("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
+			JobNumber = Interlocked.Increment(ref _jobNumberCounter);
+			ReportWriter = writer;
+			Validate = validate;
+			_mode = mode;
+			PowertrainBuilder = ptBuilder;
+
+			ThreadPool.GetMinThreads(out var workerThreads, out var completionThreads);
+			if (workerThreads < 12) {
+				workerThreads = 12;
+			}
+			ThreadPool.SetMinThreads(workerThreads, completionThreads);
+
+		}
+
+        [Obsolete("Creation of new SimulatorFactories should be done with SimulatorFactoryFactory NInject Factory", false)]
 		public static ISimulatorFactory CreateSimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer, IDeclarationReport declarationReport = null, IVTPReport vtpReport=null, bool validate = true)
 		{
 			if (_kernel == null) {
@@ -103,32 +104,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			return _kernel.Get<ISimulatorFactoryFactory>().Factory(mode, dataProvider, writer, declarationReport, vtpReport, validate);
 		}
 
-		protected SimulatorFactory(ExecutionMode mode, IOutputDataWriter writer, bool validate = true)
-		{
-			System.Diagnostics.Debug.WriteLine("Created Simulator Factory");
-			Log.Info("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
-			JobNumber = Interlocked.Increment(ref _jobNumberCounter);
-			ReportWriter = writer;
-			Validate = validate;
-			_mode = mode;
 
-			ThreadPool.GetMinThreads(out var workerThreads, out var completionThreads);
-			if (workerThreads < 12) {
-				workerThreads = 12;
+        #endregion
+
+		public ISimulatorFactory FollowUpSimulatorFactory {
+			get {
+				var factory = _followUpSimulatorFactoryCreator?.GetNextFactory();
+				if (factory != null) {
+					factory.WriteModalResults = this.WriteModalResults;
+					//factory.SerializeVectoRunData = this.SerializeVectoRunData;
+				}
+
+				return factory;
 			}
-			ThreadPool.SetMinThreads(workerThreads, completionThreads);
-
 		}
 
-
-#endregion
-
-
-
-
-
-
-		public bool Validate { get; set; }
+        public bool Validate { get; set; }
 
 		public IVectoRunDataFactory RunDataFactory { get; protected set; }
 
@@ -185,7 +176,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			if (data.Report != null) {
 				data.Report.PrepareResult(data);
 			}
-			return new ExemptedRun(new ExemptedRunContainer(data.ExecutionMode) { RunData = data }, modData => {
+			return new ExemptedRun(new ExemptedRunContainer(data.ExecutionMode, data, null, null, PowertrainBuilder.SimplePowertrainBuilder), modData => {
 				if (data.Report != null) {
 					data.Report.AddResult(data, modData);
 				}
@@ -256,7 +247,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			}
 		}
 
-		private static VectoRun GetVectoRun(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
+		private VectoRun GetVectoRun(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
 		{
 			VectoRun run;
 			
@@ -268,7 +259,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 					var container = PowertrainBuilder.Build(data, modData, sumWriter);
 					
-					run = new DistanceRun(container, new FollowUpRunCreator(data.IterativeRunStrategy), new DefaultPostMortemAnalyzer(data.PostMortemStrategy)); 
+					run = new DistanceRun(container, new FollowUpRunCreator(data.IterativeRunStrategy, PowertrainBuilder), new DefaultPostMortemAnalyzer(data.PostMortemStrategy)); 
 					break;
 				case CycleType.EngineOnly:
 					if ((data.SimulationType & SimulationType.EngineOnly) == 0) {

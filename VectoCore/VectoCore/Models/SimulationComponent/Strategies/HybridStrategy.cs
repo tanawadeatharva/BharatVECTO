@@ -11,7 +11,6 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -19,7 +18,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 {
-	public class HybridStrategy : AbstractHybridStrategy<Gearbox>
+    public class HybridStrategy : AbstractHybridStrategy<Gearbox>
 	{
 		public HybridStrategy(VectoRunData runData, IVehicleContainer vehicleContainer) : base(runData, vehicleContainer)
 		{
@@ -35,7 +34,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				grad = 2;
 			}
 
-			var testContainer = new SimplePowertrainContainer(runData);
+			var testContainer = new SimplePowertrainContainer(runData, PowertrainBuilder);
 			PowertrainBuilder.BuildSimpleHybridPowertrain(runData, testContainer);
 
 			return new VelocitySpeedGearshiftPreprocessor(VelocityDropData, runData.GearboxData.TractionInterruption,
@@ -289,6 +288,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		//private Second lastShiftTime;
 
+		protected ISimplePowertrainBuilder PowertrainBuilder { get; private set; }
+
 		protected TestPowertrain<T> TestPowertrain;
 
 		public VelocityRollingLookup VelocityDropData { get; } = new VelocityRollingLookup();
@@ -316,6 +317,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public AbstractHybridStrategy(VectoRunData runData, IVehicleContainer vehicleContainer)
 		{
 			DataBus = vehicleContainer;
+			PowertrainBuilder = vehicleContainer.PowertrainBuilder;
 			ModelData = runData;
 			if (ModelData.ElectricMachinesData.Select(x => x.Item1).Distinct().Count() > 1) {
 				throw new VectoException("More than one electric motors are currently not supported");
@@ -345,7 +347,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					* x.FuelData.LowerHeatingValueVecto * StrategyParameters.MinICEOnTime).Value());
 
 			// create testcontainer
-			var testContainer = new SimplePowertrainContainer(runData);
+			var testContainer = new SimplePowertrainContainer(runData, PowertrainBuilder);
 			BuildSimplePowertrain(runData, testContainer);
 
 			TestPowertrain = new TestPowertrain<T>(testContainer, DataBus);

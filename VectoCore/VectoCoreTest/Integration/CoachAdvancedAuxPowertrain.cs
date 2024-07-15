@@ -41,6 +41,7 @@ using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -75,7 +76,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			return new DistanceRun(container);
 		}
 
-		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName, bool overspeed = false,
+		public static IVehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName, bool overspeed = false,
 			bool highEnginePower = true)
 		{
 			var gearboxData = CreateGearboxData();
@@ -109,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				WriteModalResults = true
 			};
 
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData) { RunData = runData };
+			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, modData, null);
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var engine = new CombustionEngine(container, engineData);
 

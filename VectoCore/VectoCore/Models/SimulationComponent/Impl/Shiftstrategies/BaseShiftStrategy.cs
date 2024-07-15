@@ -46,7 +46,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public abstract class BaseShiftStrategy : LoggingObject, IShiftStrategy
+    public abstract class BaseShiftStrategy : LoggingObject, IShiftStrategy
 	{
 		protected readonly IDataBus DataBus;
 		protected readonly GearboxData GearboxModelData;
@@ -54,8 +54,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected readonly GearList Gears;
 
+		protected ISimplePowertrainBuilder PowertrainBuilder { get; private set; }
+
 		protected BaseShiftStrategy(IVehicleContainer dataBus)
 		{
+			PowertrainBuilder = dataBus.PowertrainBuilder;
 			GearboxModelData = dataBus.RunData.GearboxData;
 			GearshiftParams = dataBus.RunData.GearshiftParameters;
 			DataBus = dataBus;
