@@ -76,7 +76,7 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 			{
 				data.Report.PrepareResult(data);
 			}
-			return new MockupExemptedRun(new ExemptedRunContainer(data.ExecutionMode, data, null, null, SimplePowertrainBuilder), modData => {
+			return new MockupExemptedRun(new ExemptedVehicleContainer(data.ExecutionMode, data, null, null, SimplePowertrainBuilder), modData => {
 				if (data.Report != null)
 				{
 					data.Report.AddResult(data, modData);

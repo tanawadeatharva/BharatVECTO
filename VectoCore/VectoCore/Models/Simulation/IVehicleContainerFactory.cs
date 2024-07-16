@@ -42,5 +42,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 		IVehicleContainer CreateVehicleContainer(ExecutionMode executionMode, VectoRunData runData, IModalDataContainer modData,
 			ISumData writeSumData);
 
-	}
+		IExemptedVehicleContainer CreateExemptedVehicleContainer(ExecutionMode executionMode, VectoRunData runData,
+			IModalDataContainer modData, ISumData writeSumData);
+    }
 }

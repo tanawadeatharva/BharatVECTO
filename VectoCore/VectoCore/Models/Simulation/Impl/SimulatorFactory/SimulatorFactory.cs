@@ -176,12 +176,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			if (data.Report != null) {
 				data.Report.PrepareResult(data);
 			}
-			return new ExemptedRun(new ExemptedRunContainer(data.ExecutionMode, data, null, null, PowertrainBuilder.SimplePowertrainBuilder), modData => {
+			var container = PowertrainBuilder.BuildExempted(data);
+			return new ExemptedRun(container, modData => {
 				if (data.Report != null) {
 					data.Report.AddResult(data, modData);
 				}
 			});
-		}
+        }
 
 		protected virtual IVectoRun GetNonExemptedRun(VectoRunData data, int current, ref bool warning1Hz, ref bool firstRun)
 		{

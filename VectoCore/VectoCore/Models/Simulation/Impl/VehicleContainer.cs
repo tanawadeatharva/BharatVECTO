@@ -388,14 +388,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 	}
 
-	public class ExemptedRunContainer : VehicleContainer
+	public class ExemptedVehicleContainer : VehicleContainer, IExemptedVehicleContainer
 	{
 		private IMileageCounter _mileageCounter;
 		private IVehicleInfo _vehicleInfo;
 
 		private IGearboxInfo _gearboxInfo;
 
-		public ExemptedRunContainer(
+		public ExemptedVehicleContainer(
 			ExecutionMode executionMode, VectoRunData runData, IModalDataContainer modData, ISumData writeSumData, ISimplePowertrainBuilder simplePowertrainBuilder) 
 			: base(executionMode, runData, modData, writeSumData, simplePowertrainBuilder)
 		{

@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	{
 		private Action<ModalDataContainer> _writeSumData;
 
-		public ExemptedRun(VehicleContainer data, Action<ModalDataContainer> writeSumData) : base(data)
+		public ExemptedRun(IExemptedVehicleContainer data, Action<ModalDataContainer> writeSumData) : base(data)
 		{
 			_writeSumData = writeSumData;
 		}

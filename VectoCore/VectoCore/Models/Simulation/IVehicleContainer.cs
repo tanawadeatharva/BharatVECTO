@@ -90,4 +90,9 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		IReadOnlyList<VectoSimulationComponent> Components { get; }
 	}
+
+	public interface IExemptedVehicleContainer : IVehicleContainer
+	{
+
+	}
 }

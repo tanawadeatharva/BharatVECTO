@@ -70,12 +70,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private readonly Dictionary<PowertrainPosition, Func<VectoRunData, IVehicleContainer, ElectricSystem, PWheelCycle, IElectricMotor>> _PWheelBEVBuilders;
 
 
-		private ISimplePowertrainBuilder _simplePowertrainBuilder;
 		private IVehicleContainerFactory _vehicleContainerFactory;
 
-		public PowertrainBuilder(ISimplePowertrainBuilder simplePtBuilder, IVehicleContainerFactory vehicleContainerFactory)
+		public PowertrainBuilder(IVehicleContainerFactory vehicleContainerFactory)
 		{
-			_simplePowertrainBuilder = simplePtBuilder;
 			_vehicleContainerFactory = vehicleContainerFactory;
 
 			var distanceBuilders = new Dictionary<VectoSimulationJobType, Func<VectoRunData, IModalDataContainer, ISumData, IVehicleContainer>>()
@@ -153,8 +151,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			
         }
 
-		public ISimplePowertrainBuilder SimplePowertrainBuilder => _simplePowertrainBuilder;
-
 		public IVehicleContainer Build(VectoRunData data, IModalDataContainer modData, ISumData sumWriter = null)
 		{
 			var cycleType = data.Cycle.CycleType;	
@@ -167,15 +163,21 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return _builders[cycleType][jobType].Invoke(data, modData, sumWriter);
 		}
 
-		/// <summary>
-		/// Builds an engine only powertrain.
-		/// <code>
-		/// PowertrainDrivingCycle
-		/// └StopStartCombustionEngine
-		///  └(Aux)
-		/// </code>
-		/// </summary>
-		private IVehicleContainer BuildEngineOnly(VectoRunData data, IModalDataContainer modData, ISumData _sumWriter)
+		public IExemptedVehicleContainer BuildExempted(VectoRunData data)
+		{
+			var container = _vehicleContainerFactory.CreateExemptedVehicleContainer(data.ExecutionMode, data, null, null);
+			return container;
+		}
+
+        /// <summary>
+        /// Builds an engine only powertrain.
+        /// <code>
+        /// PowertrainDrivingCycle
+        /// └StopStartCombustionEngine
+        ///  └(Aux)
+        /// </code>
+        /// </summary>
+        private IVehicleContainer BuildEngineOnly(VectoRunData data, IModalDataContainer modData, ISumData _sumWriter)
 		{
 			if (_sumWriter == null)
 				throw new ArgumentNullException(nameof(_sumWriter));
