@@ -20,7 +20,7 @@ public class AxlegearTests
     [TestCase(520, 20.320, 279698.4, 2220.9965722057)]
     public void AxleGearTest(double rdyn, double speed, double power, double expectedTqIn)
     {
-        var vehicle = new VehicleContainer(ExecutionMode.Declaration);
+        var vehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, null, null, null);
 		var inputData = GetAxleInputData();
 		var axleGearData = new AxleGearDataAdapter().CreateAxleGearData(inputData); // MockSimulationDataFactory.CreateAxleGearDataFromFile(GearboxDataFile);
         var axleGear = new AxleGear(vehicle, axleGearData);

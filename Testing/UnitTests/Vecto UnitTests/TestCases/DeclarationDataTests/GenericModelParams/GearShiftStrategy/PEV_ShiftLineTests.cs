@@ -6,6 +6,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -358,7 +359,9 @@ public class PEV_ShiftLineTests
 
         var shiftPolygons = new List<ShiftPolygon>();
 		var runData = new VectoRunData() { GearshiftParameters = new ShiftStrategyParameters() };
-        var shiftStrategy = new PEVAMTShiftStrategy(new VehicleContainer(ExecutionMode.Engineering) { RunData = runData});
+		var container = new Mock<IVehicleContainer>();
+		container.Setup(c => c.RunData).Returns(runData);
+        var shiftStrategy = new PEVAMTShiftStrategy(container.Object);
         var deRatedShiftLines = shiftStrategy.CalculateDeratedShiftLines(emData, gearboxData.Gears,
             r_dyn, axlegearRatio, GearboxType.AMT);
         for (var i = 0; i < gearboxData.Gears.Count; i++) {

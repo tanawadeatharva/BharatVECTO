@@ -29,7 +29,7 @@ public class AngledriveTests
 		var expectedRpm = angSpeed * ratio;
 
         // setup components
-        var vehicle = new VehicleContainer(ExecutionMode.Engineering);
+        var vehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, null, null);
 		var angledriveData = new AngledriveData {
 			Angledrive = new TransmissionData {
 				LossMap = TransmissionLossMapReader.Create(InputDataHelper.InputDataAsTableData(AngleLossHdr, AnleLossMap), ratio, "Angledrive"),

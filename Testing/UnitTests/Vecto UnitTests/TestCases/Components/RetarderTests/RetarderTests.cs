@@ -29,7 +29,7 @@ public class RetarderTests
     ]
 	public void RetarderRequestTest(double cardanTorque, double cardanSpeed, double ratio, double expectedRetarderLoss)
 	{
-		var vehicle = new VehicleContainer(ExecutionMode.Declaration);
+		var vehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, null, null, null);
 		var data = InputDataHelper.InputDataAsTableData(RetarderHdr, RetarderData);
 		var retarderData = RetarderLossMapReader.Create(data);
 		var retarder = new Retarder(vehicle, retarderData, ratio);
@@ -64,7 +64,7 @@ public class RetarderTests
 	[TestCase]
 	public void RetarderSubsequentRequestTest()
 	{
-		var vehicle = new VehicleContainer(ExecutionMode.Declaration);
+		var vehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, null, null, null);
 		var data = InputDataHelper.InputDataAsTableData(RetarderHdr, RetarderData);
 		var retarderData = RetarderLossMapReader.Create(data);
         var retarder = new Retarder(vehicle, retarderData, 1.0);
@@ -111,7 +111,7 @@ public class RetarderTests
 	{
 		var data = InputDataHelper.InputDataAsTableData(RetarderHdr, RetarderData);
 		var retarderData = RetarderLossMapReader.Create(data);
-		var declVehicle = new VehicleContainer(ExecutionMode.Declaration);
+		var declVehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, null, null, null);
 		var retarder = new Retarder(declVehicle, retarderData, 2.0);
 		var mockPort = new Mock<ITnOutPort>();
 		NewtonMeter tqRequest = null;

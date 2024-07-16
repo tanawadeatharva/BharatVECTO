@@ -29,6 +29,7 @@ Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.InputData.Reader.Impl
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.Declaration.Auxiliaries
+Imports TUGraz.VectoCore.Models.Simulation
 Imports TUGraz.VectoCore.Models.Simulation.Data
 Imports TUGraz.VectoCore.Utils
 
@@ -585,7 +586,7 @@ Public Class VectoJob
                     Return _
                         New ValidationResult("Vecto Job Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
                 End If
-                Dim dataFactory As EngineeringModeVectoRunDataFactory = New EngineeringModeVectoRunDataFactory(vectoJob)
+                Dim dataFactory As EngineeringModeVectoRunDataFactory = New EngineeringModeVectoRunDataFactory(vectoJob,  _kernel.Value.Get(Of IPowertrainBuilder))
                 jobData = dataFactory.NextRun().FirstOrDefault()
                 If jobData Is Nothing Then
                     Return New ValidationResult("No cycles selected in Vecto Job.", result.Select(Function(r) r.ErrorMessage).ToList())

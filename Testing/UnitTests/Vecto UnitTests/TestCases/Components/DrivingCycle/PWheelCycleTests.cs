@@ -29,8 +29,7 @@ public class PWheelCycleTests
 		});
 		var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel, "", false);
 
-		var container = new VehicleContainer(ExecutionMode.Engineering);
-		container.RunData = runData;
+		var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, null, null);
 
         var cycle = new PWheelCycle(container, drivingCycle);
 		var port = new Mock<ITnOutPort>();

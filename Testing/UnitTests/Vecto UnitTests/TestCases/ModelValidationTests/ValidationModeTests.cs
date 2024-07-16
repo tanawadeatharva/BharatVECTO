@@ -1,10 +1,12 @@
 ﻿using System.Diagnostics;
+using Moq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -61,8 +63,7 @@ public class ValidationModeTests
     [TestCase]
     public void ValidationModeVectoRunDataTest()
     {
-        var container = new VehicleContainer(ExecutionMode.Engineering);
-        var data = new DistanceRun(container);
+        var container = new Mock<IVehicleContainer>();
         var engineData = new CombustionEngineData {
             FullLoadCurves =
                 new Dictionary<uint, EngineFullLoadCurve>() {
@@ -111,7 +112,7 @@ public class ValidationModeTests
                 }
         };
 
-        container.RunData = new VectoRunData {
+        container.Setup(c => c.RunData).Returns(new VectoRunData {
             JobRunId = 0,
             VehicleData = vehicleData,
             AirdragData = new AirdragData() {
@@ -124,15 +125,17 @@ public class ValidationModeTests
             GearboxData = gearboxData,
             EngineData = engineData,
             AxleGearData = axleGearData
-        };
+        });
+		var data = new DistanceRun(container.Object);
 
-		var stopwatch = new Stopwatch();
+        var stopwatch = new Stopwatch();
 		stopwatch.Start();
         var results = data.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);
 		stopwatch.Stop();
 		Console.WriteLine(stopwatch.Elapsed + " " + stopwatch.ElapsedMilliseconds);
         Assert.IsTrue(results.Any(), "Validation should have failed, but succeded.");
 
+        ValidationHelper.ClearValHistory();
         results = vehicleData.Validate(ExecutionMode.Engineering, VectoSimulationJobType.ConventionalVehicle, null, null, false);
         Assert.IsTrue(!results.Any());
     }

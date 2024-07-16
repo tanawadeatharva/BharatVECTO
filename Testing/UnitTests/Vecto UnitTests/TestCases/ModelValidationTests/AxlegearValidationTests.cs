@@ -4,6 +4,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
@@ -17,7 +18,7 @@ public class AxlegearValidationTests
 	[TestCase]
 	public void AxleGearValidRangeTest()
 	{
-		var vehicle = new VehicleContainer(ExecutionMode.Declaration);
+		var vehicle = new Mock<IVehicleContainer>().Object;
 		var inputData = GetAxlegearInputData(true);
 		var axleGearData = new AxleGearDataAdapter().CreateAxleGearData(inputData);
 		var axleGear = new AxleGear(vehicle, axleGearData);
@@ -27,8 +28,8 @@ public class AxlegearValidationTests
 	[TestCase]
 	public void AxleGearInvalidRangeTest()
 	{
-		var vehicle = new VehicleContainer(ExecutionMode.Declaration);
-		var inputData = GetAxlegearInputData(false);
+		var vehicle = new Mock<IVehicleContainer>().Object;
+        var inputData = GetAxlegearInputData(false);
 		var axleGearData = new AxleGearDataAdapter().CreateAxleGearData(inputData);
         var axleGear = new AxleGear(vehicle, axleGearData);
 		var errors = axleGear.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);

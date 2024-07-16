@@ -24,7 +24,7 @@ public class LorryAuxTests
     public void AuxConstant(double rpm, double tq, double auxPwrDemand)
     {
         var dataWriter = new MockModalDataContainer();
-        var container = new VehicleContainer(ExecutionMode.Engineering, dataWriter);
+        var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, dataWriter, null);
 		var aux = new EngineAuxiliary(container);
         new MockEngine(container);
 
@@ -45,7 +45,7 @@ public class LorryAuxTests
     public void AuxDirect()
     {
         var dataWriter = new MockModalDataContainer();
-        var container = new VehicleContainer(ExecutionMode.Engineering, dataWriter);
+        var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, dataWriter, null);
 		var data = DrivingCycleDataReader.ReadFromStream(InputDataHelper.InputDataAsStream(Header, CycleData),
 			CycleType.MeasuredSpeed, "TestCycle", false);
         var cycle = new MockDrivingCycle(container, data);
@@ -77,7 +77,7 @@ public class LorryAuxTests
         var dataWriter = new MockModalDataContainer();
         dataWriter.AddAuxiliary("CONSTANT");
 
-        var container = new VehicleContainer(ExecutionMode.Engineering, dataWriter);
+        var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, dataWriter, null);
         var data = DrivingCycleDataReader.ReadFromStream(InputDataHelper.InputDataAsStream(Header, CycleData),
             CycleType.MeasuredSpeed, "TestCycle", false);
         // cycle ALT1 is set to values to equal the first few fixed points in the auxiliary file.

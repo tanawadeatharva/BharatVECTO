@@ -76,7 +76,7 @@ public class MeasuredSpeedDrivingCycleReaderTests
     private static void TestCycleRead(string inputData, CycleType cycleType, bool autoCycle = true,
         bool crossWindRequired = false)
     {
-        var container = new VehicleContainer(ExecutionMode.Engineering);
+        var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, null, null);
 
         if (autoCycle) {
             var cycleTypeCalc = DrivingCycleDataReader.DetectCycleType(VectoCSVFile.ReadStream(inputData.ToStream()));
