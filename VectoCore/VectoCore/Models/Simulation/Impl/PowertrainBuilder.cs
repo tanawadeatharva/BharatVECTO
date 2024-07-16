@@ -1594,8 +1594,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 	}
 
-	public class GensetMotorController : IElectricMotorControl
-	{
+	public class GensetMotorController : IGensetMotorController
+    {
 		public GensetMotorController(IVehicleContainer container, ElectricSystem es)
 		{
 

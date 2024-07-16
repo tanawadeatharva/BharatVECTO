@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			strategy.ElectricShare = -torque.SI<NewtonMeter>();
 			motor.Initialize(0.SI<NewtonMeter>(), speed.RPMtoRad());
 
-			var response = motor.Request(0.SI<Second>(), 0.5.SI<Second>(), torque.SI<NewtonMeter>(), speed.RPMtoRad());
+			var response = motor.Request(0.SI<Second>(), 0.5.SI<Second>(), torque.SI<NewtonMeter>(), speed.RPMtoRad(), false);
 
 			Assert.IsInstanceOf<ResponseSuccess>(response);
 			var enginePower = speed.RPMtoRad() * strategy.ElectricShare;
@@ -161,7 +161,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			strategy.ElectricShare = -torque.SI<NewtonMeter>();
 			motor.Initialize(0.SI<NewtonMeter>(), speed.RPMtoRad());
 
-			var response = motor.Request(0.SI<Second>(), 0.5.SI<Second>(), torque.SI<NewtonMeter>(), speed.RPMtoRad());
+			var response = motor.Request(0.SI<Second>(), 0.5.SI<Second>(), torque.SI<NewtonMeter>(), speed.RPMtoRad(), false);
 
 			Assert.IsInstanceOf<ResponseSuccess>(response);
 			var enginePower = speed.RPMtoRad() * strategy.ElectricShare;
@@ -211,7 +211,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			strategy.ElectricShare = electricTorque.SI<NewtonMeter>();
 			motor.Initialize(0.SI<NewtonMeter>(), speed.RPMtoRad());
 
-			var response = motor.Request(0.SI<Second>(), 0.5.SI<Second>(), torque.SI<NewtonMeter>(), speed.RPMtoRad());
+			var response = motor.Request(0.SI<Second>(), 0.5.SI<Second>(), torque.SI<NewtonMeter>(), speed.RPMtoRad(), false);
 
 			Assert.IsInstanceOf<ResponseSuccess>(response);
 			var enginePower = speed.RPMtoRad() * (torque + electricTorque).SI<NewtonMeter>();
@@ -260,7 +260,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			strategy.ElectricShare = electricTorque.SI<NewtonMeter>();
 			motor.Initialize(0.SI<NewtonMeter>(), speed.RPMtoRad());
 
-			var response = motor.Request(0.SI<Second>(), 0.5.SI<Second>(), torque.SI<NewtonMeter>(), speed.RPMtoRad());
+			var response = motor.Request(0.SI<Second>(), 0.5.SI<Second>(), torque.SI<NewtonMeter>(), speed.RPMtoRad(), false);
 
 			Assert.IsInstanceOf<ResponseSuccess>(response);
 			var enginePower = speed.RPMtoRad() * (torque + electricTorque).SI<NewtonMeter>();
@@ -315,7 +315,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var absTime = 0.SI<Second>();
 			var dt = 0.5.SI<Second>();
-			var response = motor.Request(absTime, dt, torque.SI<NewtonMeter>(), speed.RPMtoRad());
+			var response = motor.Request(absTime, dt, torque.SI<NewtonMeter>(), speed.RPMtoRad(), false);
 
 			Assert.IsInstanceOf<ResponseSuccess>(response);
 			var dragTorque = data.First().Item2.DragCurveLookup(speed.RPMtoRad(), 0u);
@@ -373,7 +373,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			strategy.ElectricShare = -torque.SI<NewtonMeter>();
 			motor.Initialize(0.SI<NewtonMeter>(), speed.RPMtoRad());
 
-			var response = motor.Request(0.SI<Second>(), 0.5.SI<Second>(), torque.SI<NewtonMeter>(), speed.RPMtoRad());
+			var response = motor.Request(0.SI<Second>(), 0.5.SI<Second>(), torque.SI<NewtonMeter>(), speed.RPMtoRad(), false);
 
 			Assert.IsInstanceOf<ResponseSuccess>(response);
 			var enginePower = speed.RPMtoRad() * strategy.ElectricShare;
@@ -458,7 +458,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					var dt = 0.5.SI<Second>();
 					var absTime = i * dt;
 
-					var response = motor.Request(absTime, dt, torque, speed);
+					var response = motor.Request(absTime, dt, torque, speed, false);
 					Assert.AreEqual(-334.23, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2, $"{i}");
 					motor.CommitSimulationStep(absTime, dt, modData);
 					modData[ModalResultField.time] = absTime;
@@ -472,7 +472,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					var dt = 0.5.SI<Second>();
 					var absTime = i * dt;
 
-					var response = motor.Request(absTime, dt, continuousTorque, speed);
+					var response = motor.Request(absTime, dt, continuousTorque, speed, false);
 					Assert.AreEqual(-100, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2, $"{i}");
 					motor.CommitSimulationStep(absTime, dt, modData);
 					modData[ModalResultField.time] = absTime;
@@ -485,7 +485,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					var dt = 0.5.SI<Second>();
 					var absTime = i * dt;
 
-					var response = motor.Request(absTime, dt, torque * 0.5, speed);
+					var response = motor.Request(absTime, dt, torque * 0.5, speed, false);
 					Assert.AreEqual(-334.23, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2, $"{i}");
 					motor.CommitSimulationStep(absTime, dt, modData);
 					modData[ModalResultField.time] = absTime;

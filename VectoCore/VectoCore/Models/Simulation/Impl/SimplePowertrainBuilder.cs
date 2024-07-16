@@ -7,9 +7,11 @@ using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
@@ -17,7 +19,7 @@ using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 
-	public class SimplePowertrainBuilder : PowertrainBuilderBase, ISimplePowertrainBuilder
+    public class SimplePowertrainBuilder : PowertrainBuilderBase, ISimplePowertrainBuilder
 	{
 
 		private IVehicleContainerFactory _vehicleContainerFactory;
@@ -27,6 +29,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
             _vehicleContainerFactory = vehicleContainerFactory;
         }
 
+
+		public ITestPowertrain<T> CreateTestPowertrain<T>(ISimpleVehicleContainer testContainer, IDataBus dataBus) where T : class, IHybridControlledGearbox, IGearbox
+		{
+			return new TestPowertrain<T>(testContainer, dataBus);
+		}
+
+		public ITestGenset CreateTestGenset(ISimpleVehicleContainer testContainer, IDataBus realContainer)
+		{
+			return new TestGenset(testContainer, realContainer);
+		}
 
         /// <summary>
         /// Builds a simple conventional powertrain.

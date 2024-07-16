@@ -1,10 +1,16 @@
 ﻿using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Models.Simulation
 {
     public interface ISimplePowertrainBuilder
     {
+		ITestPowertrain<T> CreateTestPowertrain<T>(ISimpleVehicleContainer testContainer, IDataBus dataBus) where T : class, IHybridControlledGearbox, IGearbox;
+
+		ITestGenset CreateTestGenset(ISimpleVehicleContainer testContainer, IDataBus realContainer);
+
         /// <summary>
         /// Builds a simple conventional powertrain.
         /// <code>
@@ -113,5 +119,5 @@ namespace TUGraz.VectoCore.Models.Simulation
         /// </code>
         /// </summary>
 		ISimpleVehicleContainer BuildSimplePowertrainElectric(VectoRunData data);
-    }
+	}
 }

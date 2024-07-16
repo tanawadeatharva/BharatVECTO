@@ -12,7 +12,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class StopStartCombustionEngine : CombustionEngine, IUpdateable
+	public class StopStartCombustionEngine : CombustionEngine
 	{
 		private WattSecond EngineStartEnergy;
 

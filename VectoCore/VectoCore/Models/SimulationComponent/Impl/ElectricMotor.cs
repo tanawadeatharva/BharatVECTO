@@ -149,7 +149,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="dryRun"></param>
 		/// <returns></returns>
 		public virtual IResponse Request(
-			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun = false)
+			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
 		{
 
 			if (TransmissionRatioPerGear == null) {

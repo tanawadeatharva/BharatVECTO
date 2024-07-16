@@ -4,6 +4,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -11,55 +12,91 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies 
+namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 {
 
-	public class TestGenset
+    public class TestGenset : ITestGenset
 	{
 
 		public ISimpleVehicleContainer Container;
-		public StopStartCombustionEngine CombustionEngine;
-		public ElectricMotor ElectricMotor;
-		public GensetMotorController ElectricMotorCtl;
+		public ICombustionEngine CombustionEngine { get; }
+		public IElectricMotor ElectricMotor => _em;
+		public IGensetMotorController ElectricMotorCtl { get; }
 
-		public Battery Battery;
-		public BatterySystem BatterySystem;
-		public SuperCap SuperCap;
+		public Joule EM_ThermalBuffer
+		{
+			set { _em.ThermalBuffer = value; }
+		}
+
+		public bool EM_DeRatingActive
+		{
+			set { _em.DeRatingActive = value; }
+		}
+
+		public PerSecond EM_DrivetrainSpeed
+		{
+			set { _em.PreviousState.DrivetrainSpeed = value; }
+		}
+
+		public PerSecond EM_Speed
+		{
+			set { _em.PreviousState.EMSpeed = value; }
+		}
+
+		public IAuxPort EngineAux { get; }
+
+		public IElectricEnergyStorage Battery { get; }
+		public IElectricEnergyStorage BatterySystem { get; }
+		public IElectricEnergyStorage SuperCap { get; }
+		private readonly ElectricMotor _em;
 
 		public TestGenset(ISimpleVehicleContainer container, IDataBus realContainer)
 		{
 			Container = container;
-			CombustionEngine = Container.EngineInfo as StopStartCombustionEngine;
-			ElectricMotor = container.ElectricMotors.FirstOrDefault(x => x.Key == PowertrainPosition.GEN).Value as ElectricMotor;
-			ElectricMotorCtl = ElectricMotor.Control as GensetMotorController;
+			CombustionEngine = Container.EngineInfo as ICombustionEngine;
+			EngineAux = (CombustionEngine as StopStartCombustionEngine)?.EngineAux;
+            _em = container.ElectricMotors.FirstOrDefault(x => x.Key == PowertrainPosition.GEN).Value as ElectricMotor;
+			ElectricMotorCtl = _em.Control as IGensetMotorController;
 
 			Battery = Container.BatteryInfo as Battery;
 			BatterySystem = container.BatteryInfo as BatterySystem;
 
 			SuperCap = Container.BatteryInfo as SuperCap;
 		}
+
+		public NewtonMeter ConvertEmTorqueToDrivetrain(PerSecond emSpeed, NewtonMeter tq, bool dryRun)
+		{
+			return _em.ConvertEmTorqueToDrivetrain(emSpeed, tq, dryRun);
+		}
+
+		public PerSecond ConvertEmSpeedToDrivetrain(PerSecond emSpeed)
+		{
+			return _em.ConvertEmSpeedToDrivetrain(emSpeed);
+		}
 	}
 
-	public class TestPowertrain<T> where T: class, IHybridControlledGearbox, IGearbox
+
+	public class TestPowertrain<T> : ITestPowertrain<T> where T : class, IHybridControlledGearbox, IGearbox
 	{
-		public ISimpleVehicleContainer Container;
+		public ISimpleVehicleContainer Container { get; }
 		public IDataBus RealContainer;
 
-		public T Gearbox;
+		public T Gearbox { get; }
 		
-		public SimpleHybridController HybridController;
+		public ISimpleHybridController HybridController { get; }
 		public Battery Battery;
-		public BatterySystem BatterySystem;
+		public IElectricEnergyStorage BatterySystem { get; }
 		public SuperCap SuperCap;
-		public Clutch Clutch;
-		public IBrakes Brakes;
+		public IClutch Clutch { get; }
+		public IBrakes Brakes { get; }
 
-		public StopStartCombustionEngine CombustionEngine;
-		public ElectricMotor ElectricMotor;
-		public GensetChargerAdapter Charger;
-		public Dictionary<PowertrainPosition, ElectricMotor> ElectricMotorsUpstreamTransmission = new Dictionary<PowertrainPosition, ElectricMotor>();
-		public TorqueConverter TorqueConverter;
-		public DCDCConverter DCDCConverter;
+		public ICombustionEngine CombustionEngine { get; }
+		public IAuxPort EngineAux { get; }
+		public IElectricMotor ElectricMotor { get; }
+		public IElectricChargerPort Charger { get; }
+		public Dictionary<PowertrainPosition, ElectricMotor> ElectricMotorsUpstreamTransmission { get; } = new Dictionary<PowertrainPosition, ElectricMotor>();
+		public ITorqueConverter TorqueConverter { get; }
+		public IDCDCConverter DCDCConverter { get; }
 		public WHRCharger WHRCharger;
 
 		public TestPowertrain(ISimpleVehicleContainer container, IDataBus realContainer)
@@ -69,15 +106,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			Gearbox = Container.GearboxCtl as T;
 			
-			HybridController = Container.HybridController as SimpleHybridController;
+			HybridController = Container.HybridController as ISimpleHybridController;
 			Battery = Container.BatteryInfo as Battery;
 			BatterySystem = container.BatteryInfo as BatterySystem;
 			
 			SuperCap = Container.BatteryInfo as SuperCap;
 			Clutch = Container.ClutchInfo as Clutch;
 			CombustionEngine = Container.EngineInfo as StopStartCombustionEngine;
+			EngineAux = (CombustionEngine as StopStartCombustionEngine)?.EngineAux;
 			ElectricMotor = container.ElectricMotors.FirstOrDefault().Value as ElectricMotor;
-			Charger = ((ElectricMotor?.ElectricPower as ElectricSystem)?.Charger.FirstOrDefault(x => x is GensetChargerAdapter)) as GensetChargerAdapter;
+			Charger = (((ElectricMotor as ElectricMotor)?.ElectricPower as ElectricSystem)?.Charger.FirstOrDefault(x => x is GensetChargerAdapter)) as GensetChargerAdapter;
 			foreach (var pos in container.ElectricMotorPositions) {
 				if (pos == PowertrainPosition.HybridP1 || pos == PowertrainPosition.HybridP2 || pos == PowertrainPosition.IHPC ||
 					pos == PowertrainPosition.HybridP2_5 || pos == PowertrainPosition.HybridP3) {
@@ -108,7 +146,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var driver = new MockDriver(container, realContainer);
 			var cycle = new MockDrivingCycle(container, realContainer);
 
-			Brakes = container.Brakes as Brakes;
+			Brakes = container.Brakes;
 			if (Brakes == null) {
 				throw new VectoException("Unknown or missing brakes in TestContainer: {0}", Container.Brakes?.GetType().FullName);
 			}

@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed,
 				DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
 			
-			if (TestPowertrain.CombustionEngine.EngineAux is BusAuxiliariesAdapter busAux) {
+			if (TestPowertrain.EngineAux is BusAuxiliariesAdapter busAux) {
 				busAux.CurrentState.ExcessiveDragPower =
 					((DataBus.EngineInfo as CombustionEngine)?.EngineAux as BusAuxiliariesAdapter)?.CurrentState
 					.ExcessiveDragPower ?? 0.SI<Watt>();
@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
 			TestPowertrain.DCDCConverter?.UpdateFrom(DataBus.DCDCConverter);
 			
-			if (TestPowertrain.CombustionEngine.EngineAux is BusAuxiliariesAdapter busAux) {
+			if (TestPowertrain.EngineAux is BusAuxiliariesAdapter busAux) {
 				busAux.CurrentState.ExcessiveDragPower =
 					((DataBus.EngineInfo as CombustionEngine)?.EngineAux as BusAuxiliariesAdapter)?.CurrentState
 					.ExcessiveDragPower ?? 0.SI<Watt>();
@@ -289,7 +289,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		protected ISimplePowertrainBuilder PowertrainBuilder { get; private set; }
 
-		protected TestPowertrain<T> TestPowertrain;
+		protected ITestPowertrain<T> TestPowertrain;
 
 		public VelocityRollingLookup VelocityDropData { get; } = new VelocityRollingLookup();
 
@@ -348,7 +348,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			// create testcontainer
 			var testContainer = BuildSimplePowertrain(runData);
 
-			TestPowertrain = new TestPowertrain<T>(testContainer, DataBus);
+			TestPowertrain = PowertrainBuilder.CreateTestPowertrain<T>(testContainer, DataBus);
 
 
 

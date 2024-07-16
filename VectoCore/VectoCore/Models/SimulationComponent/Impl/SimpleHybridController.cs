@@ -12,15 +12,16 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
-	public class SimpleHybridController : VectoSimulationComponent, IHybridController, ITnInPort, ITnOutPort
-	{
+namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
+{
+    public class SimpleHybridController : VectoSimulationComponent, ISimpleHybridController
+    {
 
 		//private SwitchableClutch clutch;
 		private ElectricSystem ElectricSystem;
 
 		protected readonly Dictionary<PowertrainPosition, ElectricMotorController> _electricMotorCtl = new Dictionary<PowertrainPosition, ElectricMotorController>();
-		public ITnOutPort NextComponent;
+		public ITnOutPort NextComponent { get; protected set; }
 
 		private Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> _electricMotorTorque = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>();
 

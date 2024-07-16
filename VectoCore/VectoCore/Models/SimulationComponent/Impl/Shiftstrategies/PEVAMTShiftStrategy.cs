@@ -17,7 +17,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -90,7 +89,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected bool DriveOffStandstill { get; set; }
 
 		protected ISimplePowertrainBuilder PowertrainBuilder { get; private set; }
-		protected TestPowertrain<Gearbox> TestPowertrain;
+		protected ITestPowertrain<Gearbox> TestPowertrain;
 
 		public PEVAMTShiftStrategy(IVehicleContainer dataBus) : this(dataBus, false)
 		{
@@ -144,7 +143,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			// create testcontainer
 			var testContainer = PowertrainBuilder.BuildSimplePowertrainElectric(runData);
 
-			TestPowertrain = new TestPowertrain<Gearbox>(testContainer, DataBus);
+			TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, DataBus);
 			foreach (var motor in testContainer.ElectricMotors.Values)
 			{
 				if ((motor as ElectricMotor).Control is SimpleElectricMotorControl emCtl) {

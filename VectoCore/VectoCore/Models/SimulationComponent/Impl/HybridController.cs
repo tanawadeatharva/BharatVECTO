@@ -17,13 +17,12 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
-using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class HybridController :
+    public class HybridController :
 		StatefulProviderComponent<HybridController.HybridControllerState, ITnOutPort, ITnInPort, ITnOutPort>,
 		IHybridController, ITnInPort, ITnOutPort
 	{
@@ -366,7 +365,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			protected readonly GearList GearList;
 			protected readonly VectoRunData _runData;
 
-			protected TestPowertrain<Gearbox> TestPowertrain;
+			protected ITestPowertrain<Gearbox> TestPowertrain;
 
 			public HybridCtlShiftStrategy(HybridController hybridController, IVehicleContainer container) : base(
 				container)
@@ -401,7 +400,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					? PowertrainBuilder.BuildSimpleHybridPowertrainGear(_runData)
 					: PowertrainBuilder.BuildSimpleHybridPowertrain(_runData);
 
-				TestPowertrain = new TestPowertrain<Gearbox>(testContainer, DataBus);
+				TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, DataBus);
 			}
 
 			public override ShiftPolygon ComputeDeclarationShiftPolygon(GearboxType gearboxType, int i,

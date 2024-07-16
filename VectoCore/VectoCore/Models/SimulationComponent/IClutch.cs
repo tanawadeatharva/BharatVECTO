@@ -33,7 +33,7 @@ using TUGraz.VectoCore.Models.Simulation.DataBus;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public interface IClutch : IPowerTrainComponent, IClutchInfo
+	public interface IClutch : IPowerTrainComponent, IClutchInfo, IUpdateable
 	{
 		//ITnOutPort IdleControlPort { get; }
 		IIdleController IdleController { get; set; }
