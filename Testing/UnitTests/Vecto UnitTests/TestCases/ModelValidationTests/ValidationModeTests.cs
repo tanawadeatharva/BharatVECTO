@@ -4,7 +4,9 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -14,7 +16,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+using Assert = NUnit.Framework.Assert;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.ModelValidationTests;
 
@@ -63,21 +65,47 @@ public class ValidationModeTests
     [TestCase]
     public void ValidationModeVectoRunDataTest()
     {
-        var container = new Mock<IVehicleContainer>();
         var engineData = new CombustionEngineData {
             FullLoadCurves =
                 new Dictionary<uint, EngineFullLoadCurve>() {
                         { 0, FullLoadCurveReader.Create(InputDataHelper.InputDataAsTableData(EngineFldHeader, EngineFldData)) },
                         { 1, FullLoadCurveReader.Create(InputDataHelper.InputDataAsTableData(EngineFldHeader, EngineFldData)) },
                 },
-            IdleSpeed = 560.RPMtoRad()
+            IdleSpeed = 560.RPMtoRad(),
+            Displacement = 5.5.SI(Unit.SI.Liter).Cast<CubicMeter>(),
+            Inertia = 3.SI<KilogramSquareMeter>(),
+            Fuels = new List<CombustionEngineFuelData>() {
+                new CombustionEngineFuelData() {
+                    FuelConsumptionCorrectionFactor = 1.0,
+                    FuelData = FuelData.Diesel,
+                    ConsumptionMap = new FuelConsumptionMap(new DelaunayMap("Dummy"))
+				}
+			},
+            EngineStartTime = 1.SI<Second>(),
         };
 
-        var gearboxData = new GearboxData();
+		var gbxInput = new Mock<IGearboxDeclarationInputData>();
+		gbxInput.Setup(g => g.Gears).Returns(new List<ITransmissionInputData>() {
+			new TransmissionInputData() {
+				Gear = 1
+			},
+			new TransmissionInputData() {
+				Gear = 2
+			}
+		});
+        var gearboxData = new GearboxData() {
+            Inertia = 0.SI<KilogramSquareMeter>(),
+            TractionInterruption = 1.SI<Second>(),
+            InputData = gbxInput.Object
+		};
         gearboxData.Gears[1] = new GearData {
             LossMap = TransmissionLossMapReader.Create(0.98, 1, "1"),
-            Ratio = 1
-        };
+            Ratio = 2,
+		};
+		gearboxData.Gears[1] = new GearData {
+			LossMap = TransmissionLossMapReader.Create(0.98, 1, "2"),
+			Ratio = 1,
+		};
 
         var axleGearData = new AxleGearData {
             AxleGear = new GearData {
@@ -100,21 +128,25 @@ public class ValidationModeTests
                         AxleWeightShare = 0.4,
                         Inertia = 0.5.SI<KilogramSquareMeter>(),
                         RollResistanceCoefficient = 0.00555,
-                        TyreTestLoad = 33000.SI<Newton>()
+                        TyreTestLoad = 33000.SI<Newton>(),
+                        WheelsDimension = "225/70 R17.5",
                     },
                     new Axle {
                         AxleType = AxleType.VehicleNonDriven,
                         AxleWeightShare = 0.6,
                         Inertia = 0.5.SI<KilogramSquareMeter>(),
                         RollResistanceCoefficient = 0.00555,
-                        TyreTestLoad = 33000.SI<Newton>()
+                        TyreTestLoad = 33000.SI<Newton>(),
+                        WheelsDimension = "225/70 R17.5"
                     },
-                }
+                },
+            InputData = new Mock<IVehicleDeclarationInputData>().Object
         };
 
-        container.Setup(c => c.RunData).Returns(new VectoRunData {
+		var runData = new VectoRunData {
+            JobName = "Validation Job",
             JobRunId = 0,
-            VehicleData = vehicleData,
+			VehicleData = vehicleData,
             AirdragData = new AirdragData() {
                 CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
                 CrossWindCorrectionCurve =
@@ -124,19 +156,25 @@ public class ValidationModeTests
             },
             GearboxData = gearboxData,
             EngineData = engineData,
-            AxleGearData = axleGearData
-        });
-		var data = new DistanceRun(container.Object);
-
+            AxleGearData = axleGearData,
+            Cycle = new DrivingCycleData() {
+                Entries = new List<DrivingCycleData.DrivingCycleEntry>() {
+                    new DrivingCycleData.DrivingCycleEntry() {
+                        Time = 0.SI<Second>()
+					}
+				}
+			}
+        };
+		
         var stopwatch = new Stopwatch();
 		stopwatch.Start();
-        var results = data.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);
+        var results = runData.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);
 		stopwatch.Stop();
 		Console.WriteLine(stopwatch.Elapsed + " " + stopwatch.ElapsedMilliseconds);
         Assert.IsTrue(results.Any(), "Validation should have failed, but succeded.");
 
         ValidationHelper.ClearValHistory();
-        results = vehicleData.Validate(ExecutionMode.Engineering, VectoSimulationJobType.ConventionalVehicle, null, null, false);
+        results = runData.Validate(ExecutionMode.Engineering, VectoSimulationJobType.ConventionalVehicle, null, null, false);
         Assert.IsTrue(!results.Any());
     }
 

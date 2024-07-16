@@ -8,6 +8,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
@@ -29,7 +30,7 @@ public class RetarderTests
     ]
 	public void RetarderRequestTest(double cardanTorque, double cardanSpeed, double ratio, double expectedRetarderLoss)
 	{
-		var vehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, null, null, null);
+		var vehicle = new Mock<IVehicleContainer>().Object;
 		var data = InputDataHelper.InputDataAsTableData(RetarderHdr, RetarderData);
 		var retarderData = RetarderLossMapReader.Create(data);
 		var retarder = new Retarder(vehicle, retarderData, ratio);
@@ -64,8 +65,8 @@ public class RetarderTests
 	[TestCase]
 	public void RetarderSubsequentRequestTest()
 	{
-		var vehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, null, null, null);
-		var data = InputDataHelper.InputDataAsTableData(RetarderHdr, RetarderData);
+		var vehicle = new Mock<IVehicleContainer>().Object;
+        var data = InputDataHelper.InputDataAsTableData(RetarderHdr, RetarderData);
 		var retarderData = RetarderLossMapReader.Create(data);
         var retarder = new Retarder(vehicle, retarderData, 1.0);
 
@@ -111,8 +112,9 @@ public class RetarderTests
 	{
 		var data = InputDataHelper.InputDataAsTableData(RetarderHdr, RetarderData);
 		var retarderData = RetarderLossMapReader.Create(data);
-		var declVehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, null, null, null);
-		var retarder = new Retarder(declVehicle, retarderData, 2.0);
+		var declVehicle = new Mock<IVehicleContainer>().Object;
+		Mock.Get(declVehicle).Setup(c => c.ExecutionMode).Returns(ExecutionMode.Declaration);
+        var retarder = new Retarder(declVehicle, retarderData, 2.0);
 		var mockPort = new Mock<ITnOutPort>();
 		NewtonMeter tqRequest = null;
 		PerSecond rpmRequest = null;

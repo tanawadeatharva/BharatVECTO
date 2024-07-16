@@ -43,7 +43,7 @@ public class RetarderDataReaderTests
         };
         var retarderTbl =  InputDataHelper.InputDataAsTableData("Retarder Speed [rpm],Loss Torque [Nm]",
                 retarderEntries);
-        var vehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, null, null);
+        var vehicle = new Mock<IVehicleContainer>().Object;
         var retarderData = RetarderLossMapReader.Create(retarderTbl);
         var retarder = new Retarder(vehicle, retarderData, 2.0);
 

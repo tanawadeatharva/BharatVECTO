@@ -5,6 +5,7 @@ using TUGraz.Vecto.UnitTests.Utils.MockComponents;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -23,17 +24,23 @@ public class LorryAuxTests
 	]
     public void AuxConstant(double rpm, double tq, double auxPwrDemand)
     {
+		var speed = rpm.RPMtoRad();
+		var torque = tq.SI<NewtonMeter>();
+		var t = 0.SI<Second>();
+
         var dataWriter = new MockModalDataContainer();
-        var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, dataWriter, null);
+		var container = new Mock<IVehicleContainer>().Object;
+		var eng = new Mock<IEngineInfo>();
+		var engCtl = eng.As<IEngineControl>();
+		eng.Setup(e => e.EngineOn).Returns(true);
+		eng.Setup(e => e.EngineSpeed).Returns(() => speed);
+		engCtl.Setup(e => e.CombustionEngineOn).Returns(true);
+		Mock.Get(container).Setup(c => c.EngineInfo).Returns(eng.Object);
+		Mock.Get(container).Setup(c => c.EngineCtl).Returns(engCtl.Object);
 		var aux = new EngineAuxiliary(container);
-        new MockEngine(container);
 
         var constPower = auxPwrDemand.SI<Watt>();
         aux.AddConstant("CONSTANT", constPower);
-
-        var speed = rpm.RPMtoRad();
-        var torque = tq.SI<NewtonMeter>();
-        var t = 0.SI<Second>();
 
         aux.Initialize(torque, speed);
         var auxDemand = aux.TorqueDemand(t, t, torque, speed);
@@ -44,20 +51,29 @@ public class LorryAuxTests
     [TestCase]
     public void AuxDirect()
     {
+		var speed = 2358.RPMtoRad();
+		var torque = 500.SI<NewtonMeter>();
+
         var dataWriter = new MockModalDataContainer();
-        var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, dataWriter, null);
+		var container = new Mock<IVehicleContainer>().Object;
+		var eng = new Mock<IEngineInfo>();
+		var engCtl = eng.As<IEngineControl>();
+		eng.Setup(e => e.EngineOn).Returns(true);
+		eng.Setup(e => e.EngineSpeed).Returns(() => speed);
+		engCtl.Setup(e => e.CombustionEngineOn).Returns(true);
+		Mock.Get(container).Setup(c => c.EngineInfo).Returns(eng.Object);
+		Mock.Get(container).Setup(c => c.EngineCtl).Returns(engCtl.Object);
+		
 		var data = DrivingCycleDataReader.ReadFromStream(InputDataHelper.InputDataAsStream(Header, CycleData),
 			CycleType.MeasuredSpeed, "TestCycle", false);
         var cycle = new MockDrivingCycle(container, data);
 
+		Mock.Get(container).Setup(c => c.DrivingCycleInfo).Returns(cycle);
+
         var aux = new EngineAuxiliary(container);
-        new MockEngine(container);
 		
         aux.AddCycle("CYCLE");
         container.AddAuxiliary("CYCLE");
-
-        var speed = 2358.RPMtoRad();
-        var torque = 500.SI<NewtonMeter>();
 
         var t = 0.SI<Second>();
 
@@ -77,14 +93,27 @@ public class LorryAuxTests
         var dataWriter = new MockModalDataContainer();
         dataWriter.AddAuxiliary("CONSTANT");
 
-        var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, dataWriter, null);
-        var data = DrivingCycleDataReader.ReadFromStream(InputDataHelper.InputDataAsStream(Header, CycleData),
+		var speed = 578.22461991.RPMtoRad(); // = 2358 (nAuxiliary) * ratio
+		var torque = 500.SI<NewtonMeter>();
+
+        var container = new Mock<IVehicleContainer>().Object;
+		var eng = new Mock<IEngineInfo>();
+		var engCtl = eng.As<IEngineControl>();
+		eng.Setup(e => e.EngineOn).Returns(true);
+		eng.Setup(e => e.EngineSpeed).Returns(() => speed);
+		engCtl.Setup(e => e.CombustionEngineOn).Returns(true);
+		Mock.Get(container).Setup(c => c.EngineInfo).Returns(eng.Object);
+		Mock.Get(container).Setup(c => c.EngineCtl).Returns(engCtl.Object);
+		
+		var data = DrivingCycleDataReader.ReadFromStream(InputDataHelper.InputDataAsStream(Header, CycleData),
             CycleType.MeasuredSpeed, "TestCycle", false);
         // cycle ALT1 is set to values to equal the first few fixed points in the auxiliary file.
         // ALT1.aux file: nAuxiliary speed 2358: 0, 0.38, 0.49, 0.64, ...
         // ALT1 in cycle file: 0, 0.3724 (=0.38*0.96), 0.4802 (=0.49*0.96), 0.6272 (0.64*0.96), ...
 
         var cycle = new MockDrivingCycle(container, data);
+
+		Mock.Get(container).Setup(c => c.DrivingCycleInfo).Returns(cycle);
 
         var aux = new EngineAuxiliary(container);
         new MockEngine(container);
@@ -93,8 +122,6 @@ public class LorryAuxTests
         var constPower = 1200.SI<Watt>();
         aux.AddConstant("CONSTANT", constPower);
 
-        var speed = 578.22461991.RPMtoRad(); // = 2358 (nAuxiliary) * ratio
-        var torque = 500.SI<NewtonMeter>();
         var t = 0.SI<Second>();
         // MQ 2021-03-03: updated expected values - mapping auxiliary is no longer supported
         var expected = new[] {

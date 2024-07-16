@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Moq;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -8,6 +9,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -39,10 +41,12 @@ public class VTPCycleValidationTests
 				    1.5 ,    0,  600, 400, 200, 200, {1}, {1}	, 100, 3 , 0 , 0 , 0 , 0 , 0 , 0 , 0
 				", wheelSpeed, wheelSpeed * DeclarationData.VTPMode.WheelSpeedDifferenceFactor * 1.1);
 
-		var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, new VectoRunData() {
+		var container = new Mock<IVehicleContainer>().Object;
+		Mock.Get(container).Setup(c => c.RunData).Returns(new VectoRunData() {
 			Aux = new List<VectoRunData.AuxData>()
-		}, null, null);
-		var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
+		});
+
+        var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
         var cycleData = DrivingCycleDataReader.ReadFromDataTable(VectoCSVFile.ReadStream(cycle), "VTP Cycle", false);
         var vtpCycle = new VTPCycle(container, cycleData);
 
@@ -66,13 +70,11 @@ public class VTPCycleValidationTests
 				    1.5 ,    0,  600, 400, 200, 200, {1}, {1}	, 100, 3 , 0 , 0 , 0 , 0 , 0 , 0 , 0
 				", wheelSpeed, wheelSpeed * DeclarationData.VTPMode.WheelSpeedDifferenceFactor * 1.1);
 
-		var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, new VectoRunData() {
-			VehicleData = new VehicleData() {
-				VehicleCategory = VehicleCategory.RigidTruck,
-			},
+		var container = new Mock<IVehicleContainer>().Object;
+		Mock.Get(container).Setup(c => c.RunData).Returns(new VectoRunData() {
 			Aux = new List<VectoRunData.AuxData>()
-		}, null, null);
-		var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
+		});
+        var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
         var cycleData = DrivingCycleDataReader.ReadFromDataTable(VectoCSVFile.ReadStream(cycle), "VTP Cycle", false);
         var vtpCycle = new VTPCycle(container, cycleData);
 
@@ -96,10 +98,11 @@ public class VTPCycleValidationTests
 				    1.5 ,    0,  600, 400, 200, 200, {1}, {1}	, 100, 3 , 0 , 0 , 0 , 0 , 0 , 0 , 0
 				", wheelSpeed.ToString(CultureInfo.InvariantCulture), (wheelSpeed + DeclarationData.VTPMode.MaxWheelSpeedDifferenceStandstill.AsRPM * 1.1).ToString(CultureInfo.InvariantCulture));
 
-		var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, new VectoRunData() {
+		var container = new Mock<IVehicleContainer>().Object;
+		Mock.Get(container).Setup(c => c.RunData).Returns(new VectoRunData() {
 			Aux = new List<VectoRunData.AuxData>()
-		}, null, null);
-		var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
+		});
+        var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
         var cycleData = DrivingCycleDataReader.ReadFromDataTable(VectoCSVFile.ReadStream(cycle), "VTP Cycle", false);
         var vtpCycle = new VTPCycle(container, cycleData);
         vtpCycle.VerifyInputData();
@@ -122,10 +125,11 @@ public class VTPCycleValidationTests
 				    1.5 ,    0,  600, 400, 200, 200, {1}, {1}	, 100, 3 , 0 , 0 , 0 , 0 , 0 , 0 , 0
 				", wheelSpeed.ToString(CultureInfo.InvariantCulture), (wheelSpeed + DeclarationData.VTPMode.MaxWheelSpeedDifferenceStandstill.AsRPM * 1.1).ToString(CultureInfo.InvariantCulture));
 
-		var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, new VectoRunData() {
+		var container = new Mock<IVehicleContainer>().Object;
+		Mock.Get(container).Setup(c => c.RunData).Returns(new VectoRunData() {
 			Aux = new List<VectoRunData.AuxData>()
-		}, null, null);
-		var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
+		});
+        var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
         var cycleData = DrivingCycleDataReader.ReadFromDataTable(VectoCSVFile.ReadStream(cycle), "VTP Cycle", false);
         var vtpCycle = new VTPCycle(container, cycleData);
 
@@ -150,15 +154,17 @@ public class VTPCycleValidationTests
 				    1.5 ,    0,  600, {0}, 300 , 290 , 50 , 50 , 100, 3	, 0, 0, 0 , 0 , 0 , 0 , 0
 				", fanSpeed.ToString(CultureInfo.InvariantCulture), (fanSpeed * 0.9).ToString(CultureInfo.InvariantCulture));
 
-		var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, new VectoRunData() {
+		
+		var container = new Mock<IVehicleContainer>().Object;
+		Mock.Get(container).Setup(c => c.RunData).Returns(new VectoRunData() {
 			Aux = new List<VectoRunData.AuxData>() {
 				new VectoRunData.AuxData() {
 					ID = Constants.Auxiliaries.IDs.Fan,
 					Technology = new List<string>() { "Crankshaft mounted - On/off clutch" }
 				}
 			}
-		}, null, null);
-		var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
+		});
+        var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
         var cycleData = DrivingCycleDataReader.ReadFromDataTable(VectoCSVFile.ReadStream(cycle), "VTP Cycle", false);
         var vtpCycle = new VTPCycle(container, cycleData);
         vtpCycle.VerifyInputData();
@@ -181,15 +187,16 @@ public class VTPCycleValidationTests
 				    1.5 ,    0,  600, {0}, 300 , 290 , 50 , 50 , 100, 3	, 0 , 0 , 0 , 0 , 0 , 0 , 0
 				", fanSpeed, 1.1 * fanSpeed);
 
-		var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, new VectoRunData() {
+		var container = new Mock<IVehicleContainer>().Object;
+		Mock.Get(container).Setup(c => c.RunData).Returns(new VectoRunData() {
 			Aux = new List<VectoRunData.AuxData>() {
 				new VectoRunData.AuxData() {
 					ID = Constants.Auxiliaries.IDs.Fan,
 					Technology = new List<string>() { "Crankshaft mounted - On/off clutch" }
 				}
 			}
-		}, null, null);
-		var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
+		});
+        var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
         var cycleData = DrivingCycleDataReader.ReadFromDataTable(VectoCSVFile.ReadStream(cycle), "VTP Cycle", false);
         var vtpCycle = new VTPCycle(container, cycleData);
         vtpCycle.VerifyInputData();
@@ -213,15 +220,16 @@ public class VTPCycleValidationTests
 				    1.5 ,    0,  600, {0}, 300 , 290 , 50 , 50 , 100, 3	, 0 , 0 , 0 , 0 , 0 , 0 , 0
 				", fanSpeed.ToString(CultureInfo.InvariantCulture), (fanSpeed * 0.9).ToString(CultureInfo.InvariantCulture));
 
-		var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, new VectoRunData() {
+		var container = new Mock<IVehicleContainer>().Object;
+		Mock.Get(container).Setup(c => c.RunData).Returns(new VectoRunData() {
 			Aux = new List<VectoRunData.AuxData>() {
 				new VectoRunData.AuxData() {
 					ID = Constants.Auxiliaries.IDs.Fan,
 					Technology = new List<string>() { "Electrically driven - Electronically controlled" }
-				}
+                }
 			}
-		}, null, null);
-		var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
+		});
+        var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
         var cycleData = DrivingCycleDataReader.ReadFromDataTable(VectoCSVFile.ReadStream(cycle), "VTP Cycle", false);
         var vtpCycle = new VTPCycle(container, cycleData);
         vtpCycle.VerifyInputData();
@@ -243,15 +251,16 @@ public class VTPCycleValidationTests
 				    1.5 ,    0,  600, {0}, 300 , 290 , 50 , 50 , 100, 3	, 0 , 0 , 0 , 0 , 0 , 0 , 0
 				", fanSpeed, 1.1 * fanSpeed);
 
-		var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, new VectoRunData() {
+		var container = new Mock<IVehicleContainer>().Object;
+		Mock.Get(container).Setup(c => c.RunData).Returns(new VectoRunData() {
 			Aux = new List<VectoRunData.AuxData>() {
 				new VectoRunData.AuxData() {
 					ID = Constants.Auxiliaries.IDs.Fan,
 					Technology = new List<string>() { "Electrically driven - Electronically controlled" }
 				}
 			}
-		}, null, null);
-		var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
+		});
+        var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
         var cycleData = DrivingCycleDataReader.ReadFromDataTable(VectoCSVFile.ReadStream(cycle), "VTP Cycle", false);
         var vtpCycle = new VTPCycle(container, cycleData);
         vtpCycle.VerifyInputData();
@@ -274,12 +283,13 @@ public class VTPCycleValidationTests
         for (var i = 0; i < 2000; i++)
             cycleEntries += string.Format("  {0} ,    0,  600, 400, 500 , 500 , 100 , 100 , {1}, 3	, 0 , 0 , 0 , 0 , 0 , 0 , 0 \n", (i / 2.0).ToString(CultureInfo.InvariantCulture), ((fcLimit * 1.01 * (1 - i / 100000.0)).ConvertToGrammPerHour().Value).ToString(CultureInfo.InvariantCulture));
 
-		var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, new VectoRunData() {
+		var container = new Mock<IVehicleContainer>().Object;
+		Mock.Get(container).Setup(c => c.RunData).Returns(new VectoRunData() {
 			Aux = new List<VectoRunData.AuxData>(),
 			TorqueDriftLeftWheel = 0.SI<NewtonMeter>(),
 			TorqueDriftRightWheel = 0.SI<NewtonMeter>(),
-		}, null, null);
-		var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
+		});
+        var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
         var cycleData = DrivingCycleDataReader.ReadFromDataTable(VectoCSVFile.ReadStream(cycle), "VTP Cycle", false);
         var vtpCycle = new VTPCycle(container, cycleData);
         vtpCycle.PrepareCycleData();
@@ -304,12 +314,13 @@ public class VTPCycleValidationTests
         for (var i = 0; i < 2000; i++)
             cycleEntries += string.Format("  {0} ,    0,  600, 400, 500 , 500 , 100 , 100 , {1}, 3	, 0 , 0 , 0 , 0 , 0 , 0 , 0 \n", (i / 2.0).ToString(CultureInfo.InvariantCulture), ((fcLimit * 1.0001).ConvertToGrammPerHour().Value).ToString(CultureInfo.InvariantCulture));
 
-		var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, new VectoRunData() {
+		var container = new Mock<IVehicleContainer>().Object;
+		Mock.Get(container).Setup(c => c.RunData).Returns(new VectoRunData() {
 			Aux = new List<VectoRunData.AuxData>(),
 			TorqueDriftLeftWheel = 0.SI<NewtonMeter>(),
 			TorqueDriftRightWheel = 0.SI<NewtonMeter>(),
-		}, null, null);
-		var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
+		});
+        var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
         var cycleData = DrivingCycleDataReader.ReadFromDataTable(VectoCSVFile.ReadStream(cycle), "VTP Cycle", false);
         var vtpCycle = new VTPCycle(container, cycleData);
         vtpCycle.PrepareCycleData();
@@ -333,12 +344,13 @@ public class VTPCycleValidationTests
         for (var i = 0; i < 2000; i++)
             cycleEntries += string.Format("  {0} ,    0,  600, 400, 500 , 500 , 100 , 100 , {1}, 3	, 0 , 0 , 0 , 0 , 0 , 0 , 0 \n", (i / 2.0).ToString(CultureInfo.InvariantCulture), ((fcLimit * 0.99 * (1 + i / 100000.0)).ConvertToGrammPerHour().Value).ToString(CultureInfo.InvariantCulture));
 
-		var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, new VectoRunData() {
+		var container = new Mock<IVehicleContainer>().Object;
+		Mock.Get(container).Setup(c => c.RunData).Returns(new VectoRunData() {
 			Aux = new List<VectoRunData.AuxData>(),
 			TorqueDriftLeftWheel = 0.SI<NewtonMeter>(),
 			TorqueDriftRightWheel = 0.SI<NewtonMeter>(),
-		}, null, null);
-		var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
+		});
+        var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
         var cycleData = DrivingCycleDataReader.ReadFromDataTable(VectoCSVFile.ReadStream(cycle), "VTP Cycle", false);
         var vtpCycle = new VTPCycle(container, cycleData);
         vtpCycle.PrepareCycleData();
@@ -362,12 +374,13 @@ public class VTPCycleValidationTests
         for (var i = 0; i < 2000; i++)
             cycleEntries += string.Format("  {0} ,    0,  600, 400, 500 , 500 , 100 , 100 , {1}, 3 	, 0 , 0 , 0 , 0 , 0 , 0 , 0 \n", (i / 2.0).ToString(CultureInfo.InvariantCulture), ((fcLimit * 0.9999).ConvertToGrammPerHour().Value).ToString(CultureInfo.InvariantCulture));
 
-		var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, new VectoRunData() {
+		var container = new Mock<IVehicleContainer>().Object;
+		Mock.Get(container).Setup(c => c.RunData).Returns(new VectoRunData() {
 			Aux = new List<VectoRunData.AuxData>(),
 			TorqueDriftLeftWheel = 0.SI<NewtonMeter>(),
 			TorqueDriftRightWheel = 0.SI<NewtonMeter>(),
-		}, null, null);
-		var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
+		});
+        var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
         var cycleData = DrivingCycleDataReader.ReadFromDataTable(VectoCSVFile.ReadStream(cycle), "VTP Cycle", false);
         var vtpCycle = new VTPCycle(container, cycleData);
         vtpCycle.PrepareCycleData();

@@ -1,9 +1,11 @@
-﻿using NUnit.Framework;
+﻿using Moq;
+using NUnit.Framework;
 using TUGraz.Vecto.UnitTests.Utils;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -76,7 +78,7 @@ public class MeasuredSpeedDrivingCycleReaderTests
     private static void TestCycleRead(string inputData, CycleType cycleType, bool autoCycle = true,
         bool crossWindRequired = false)
     {
-        var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, null, null);
+        var container = new Mock<IVehicleContainer>().Object;
 
         if (autoCycle) {
             var cycleTypeCalc = DrivingCycleDataReader.DetectCycleType(VectoCSVFile.ReadStream(inputData.ToStream()));

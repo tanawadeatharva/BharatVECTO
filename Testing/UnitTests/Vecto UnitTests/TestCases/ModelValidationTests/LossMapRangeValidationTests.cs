@@ -98,7 +98,7 @@ public class LossMapRangeValidationTests
         Assert.IsFalse(ValidationResult.Success == result);
         Assert.IsFalse(runData.IsValid(), GetValidationMessage(runData));
 		Assert.IsNotNull(result.ErrorMessage);
-		Assert.IsTrue(result.ErrorMessage.Contains("Axlegear data is required for conventional and parallel hybrid vehicles! "), result.ErrorMessage);
+		Assert.IsTrue(result.ErrorMessage.Contains("Axlegear data is required for conventional and parallel hybrid vehicles!"), result.ErrorMessage);
     }
 
     /// <summary>

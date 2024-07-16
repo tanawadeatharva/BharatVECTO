@@ -7,6 +7,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
@@ -19,8 +20,8 @@ public class AxlegearTests
 {
     [TestCase(520, 20.320, 279698.4, 2220.9965722057)]
     public void AxleGearTest(double rdyn, double speed, double power, double expectedTqIn)
-    {
-        var vehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, null, null, null);
+	{
+		var vehicle = new Mock<IVehicleContainer>().Object;
 		var inputData = GetAxleInputData();
 		var axleGearData = new AxleGearDataAdapter().CreateAxleGearData(inputData); // MockSimulationDataFactory.CreateAxleGearDataFromFile(GearboxDataFile);
         var axleGear = new AxleGear(vehicle, axleGearData);

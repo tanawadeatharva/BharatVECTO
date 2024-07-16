@@ -7,11 +7,13 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using Assert = NUnit.Framework.Assert;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.Components.Vehicle;
@@ -59,10 +61,11 @@ public class VehicleTests
 		Assert.AreEqual(expectedVelocity, velocity.Value(), 0.0001);
 	}
 
-	private static Mock<VehicleContainer> GetMockContainer()
+	private static Mock<IVehicleContainer> GetMockContainer()
 	{
-		var container = new Mock<VehicleContainer>(ExecutionMode.Declaration, null, null);
+		var container = new Mock<IVehicleContainer>();
 		var runData = new VectoRunData() {
+			ExecutionMode = ExecutionMode.Declaration,
 			ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 		};
 		var driver = new Mock<IDriverInfo>();
@@ -72,7 +75,23 @@ public class VehicleTests
 		container.Setup(c => c.DriverInfo).Returns(driver.Object);
 		container.Setup(c => c.DrivingCycleInfo).Returns(cycle.Object);
 		container.Setup(c => c.RunData).Returns(runData);
-		return container;
+		var pi = new Mock<IPowertainInfo>();
+		pi.Setup(p => p.VehicleArchitecutre).Returns(VectoSimulationJobType.ConventionalVehicle);
+		pi.Setup(p => p.HasCombustionEngine).Returns(true);
+		container.Setup(c => c.PowertrainInfo).Returns(pi.Object);
+		var eng = new Mock<IEngineInfo>();
+		eng.Setup(e => e.EngineN95hSpeed).Returns(2500.RPMtoRad());
+		container.Setup(c => c.EngineInfo).Returns(eng.Object);
+		var axl = new Mock<IAxlegearInfo>();
+		axl.Setup(a => a.Ratio).Returns(1);
+		container.Setup(c => c.AxlegearInfo).Returns(axl.Object);
+		var whl = new Mock<IWheelsInfo>();
+		whl.Setup(w => w.DynamicTyreRadius).Returns(0.5.SI<Meter>());
+		container.Setup(c => c.WheelsInfo).Returns(whl.Object);
+		var gbx = new Mock<IGearboxInfo>();
+		gbx.Setup(g => g.GetGearData(It.IsAny<uint>())).Returns(new GearData() { Ratio = 1 });
+		container.Setup(c => c.GearboxInfo).Returns(gbx.Object);
+        return container;
 	}
 
 	private AirdragData GetAirdragData(string airdragParams, SquareMeter cdxA, Meter height)

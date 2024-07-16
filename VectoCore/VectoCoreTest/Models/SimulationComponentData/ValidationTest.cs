@@ -313,6 +313,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var results = data.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);
 			Assert.IsTrue(results.Any(), "Validation should have failed, but succeded.");
 
+			ValidationHelper.ClearValHistory();
 			results = vehicleData.Validate(ExecutionMode.Engineering, VectoSimulationJobType.ConventionalVehicle, null, null, false);
 			Assert.IsTrue(!results.Any());
 		}
