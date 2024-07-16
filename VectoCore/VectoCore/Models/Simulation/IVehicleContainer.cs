@@ -32,12 +32,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Simulation
@@ -93,6 +95,28 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 	public interface IExemptedVehicleContainer : IVehicleContainer
 	{
+
+	}
+
+	public interface ISimpleVehicleContainer : IVehicleContainer
+	{
+		IDriverDemandOutPort VehiclePort { get; }
+
+		ITnOutPort GearboxOutPort { get; }
+
+		bool HasGearbox { get; }
+
+		VectoSimulationJobType VehicleArchitecutre { get; }
+
+		PowertrainPosition[] ElectricMotorPositions { get; }
+
+        Dictionary<PowertrainPosition, IElectricMotorInfo> ElectricMotors { get; }
+		
+		IHybridController HybridController { get; }
+
+		IReadOnlyCollection<VectoSimulationComponent> SimulationComponents();
+
+		void UpdateComponents(IDataBus realContainer);
 
 	}
 }

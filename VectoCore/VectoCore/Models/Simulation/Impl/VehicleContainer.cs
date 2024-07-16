@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		internal readonly IList<ISimulationPreprocessor> Preprocessors = new List<ISimulationPreprocessor>();
 
-		internal readonly Dictionary<PowertrainPosition, IElectricMotorInfo> ElectricMotors =
+		protected readonly Dictionary<PowertrainPosition, IElectricMotorInfo> ElectricMotors =
 			new Dictionary<PowertrainPosition, IElectricMotorInfo>();
 
 		private IList<IResetableVectoSimulationComponent> _resetableComponents = new List<IResetableVectoSimulationComponent>(3);

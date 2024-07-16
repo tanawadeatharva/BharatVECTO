@@ -38,6 +38,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils.Ninject;
 using TUGraz.VectoHashing;
@@ -55,6 +56,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 			Bind<IVehicleContainerFactory>().ToFactory().InSingletonScope();
 			Bind<IVehicleContainer>().To<VehicleContainer>();
 			Bind<IExemptedVehicleContainer>().To<ExemptedVehicleContainer>();
+			Bind<ISimpleVehicleContainer>().To<SimplePowertrainContainer>();
 
             Bind<IPowertrainBuilder>().To<PowertrainBuilder>().InSingletonScope();
 			Bind<ISimplePowertrainBuilder>().To<SimplePowertrainBuilder>().InSingletonScope();

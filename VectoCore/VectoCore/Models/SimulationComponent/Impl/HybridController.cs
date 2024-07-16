@@ -397,14 +397,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				// create testcontainer
-				var testContainer = new SimplePowertrainContainer(_runData, PowertrainBuilder);
-				if (_runData.Cycle.CycleType == CycleType.MeasuredSpeedGear) {
-					PowertrainBuilder.BuildSimpleHybridPowertrainGear(_runData, testContainer);
-				}
-				else {
-					PowertrainBuilder.BuildSimpleHybridPowertrain(_runData, testContainer);
-				}
-	
+				var testContainer = _runData.Cycle.CycleType == CycleType.MeasuredSpeedGear
+					? PowertrainBuilder.BuildSimpleHybridPowertrainGear(_runData)
+					: PowertrainBuilder.BuildSimpleHybridPowertrain(_runData);
+
 				TestPowertrain = new TestPowertrain<Gearbox>(testContainer, DataBus);
 			}
 

@@ -1770,7 +1770,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 	public class DummyVehicleInfo : VectoSimulationComponent, IVehicleInfo
 	{
-		public DummyVehicleInfo(VehicleContainer container) : base(container)
+		public DummyVehicleInfo(IVehicleContainer container) : base(container)
 		{
 
 		}

@@ -195,9 +195,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
             base(runData, vehicleContainer)
         {}
 
-        protected override void BuildSimplePowertrain(VectoRunData runData, SimplePowertrainContainer testContainer)
+        protected override ISimpleVehicleContainer BuildSimplePowertrain(VectoRunData runData)
 		{
-			PowertrainBuilder.BuildSimpleHybridPowertrainGear(runData, testContainer);
+			return PowertrainBuilder.BuildSimpleHybridPowertrainGear(runData);
         }
 
         protected override void WarnGearShiftRange()

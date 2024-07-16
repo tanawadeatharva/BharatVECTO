@@ -12,13 +12,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 	public class PCCEcoRollEngineStopPreprocessor : ISimulationPreprocessor
 	{
-		protected SimplePowertrainContainer Container;
+		protected ISimpleVehicleContainer Container;
 		private MeterPerSecond MaxSpeed;
 		private MeterPerSecond MinSpeed;
 		private Dictionary<MeterPerSecond, Radian> SlopeData;
 
 		public PCCEcoRollEngineStopPreprocessor(
-			SimplePowertrainContainer simpleContainer, Dictionary<MeterPerSecond, Radian> slopeData, MeterPerSecond minSpeed,
+			ISimpleVehicleContainer simpleContainer, Dictionary<MeterPerSecond, Radian> slopeData, MeterPerSecond minSpeed,
 			MeterPerSecond maxSpeed)
 		{
 			Container = simpleContainer;
@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return selected;
 		}
 
-		private Radian SearchSlope(Vehicle vehicle, SimplePowertrainContainer container)
+		private Radian SearchSlope(Vehicle vehicle, ISimpleVehicleContainer container)
 		{
 			var simulationInterval = Constants.SimulationSettings.TargetTimeInterval;
 			var acceleration = 0.SI<MeterPerSquareSecond>();

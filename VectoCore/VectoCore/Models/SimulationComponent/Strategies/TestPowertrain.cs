@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 	public class TestGenset
 	{
 
-		public SimplePowertrainContainer Container;
+		public ISimpleVehicleContainer Container;
 		public StopStartCombustionEngine CombustionEngine;
 		public ElectricMotor ElectricMotor;
 		public GensetMotorController ElectricMotorCtl;
@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public BatterySystem BatterySystem;
 		public SuperCap SuperCap;
 
-		public TestGenset(SimplePowertrainContainer container, IDataBus realContainer)
+		public TestGenset(ISimpleVehicleContainer container, IDataBus realContainer)
 		{
 			Container = container;
 			CombustionEngine = Container.EngineInfo as StopStartCombustionEngine;
@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 	public class TestPowertrain<T> where T: class, IHybridControlledGearbox, IGearbox
 	{
-		public SimplePowertrainContainer Container;
+		public ISimpleVehicleContainer Container;
 		public IDataBus RealContainer;
 
 		public T Gearbox;
@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public DCDCConverter DCDCConverter;
 		public WHRCharger WHRCharger;
 
-		public TestPowertrain(SimplePowertrainContainer container, IDataBus realContainer)
+		public TestPowertrain(ISimpleVehicleContainer container, IDataBus realContainer)
 		{
 			Container = container;
 			RealContainer = realContainer;
@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 	{
 		private IDataBus realContainer;
 
-		public MockDrivingCycle(VehicleContainer container, IDataBus rcontainer) : base(container)
+		public MockDrivingCycle(ISimpleVehicleContainer container, IDataBus rcontainer) : base(container)
 		{
 			realContainer = rcontainer;
 		}
@@ -187,7 +187,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 	{
 		private IDataBus realContainer;
 
-		public MockDriver(VehicleContainer container, IDataBus rcontainer) : base(container)
+		public MockDriver(ISimpleVehicleContainer container, IDataBus rcontainer) : base(container)
 		{
 			realContainer = rcontainer;
 		}

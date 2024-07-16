@@ -22,29 +22,9 @@ namespace TUGraz.VectoCore.Models.Simulation
         ///       └(Aux)
         /// </code>
         /// </summary>
-        void BuildSimplePowertrain(VectoRunData data, IVehicleContainer container);
+		ISimpleVehicleContainer BuildSimplePowertrain(VectoRunData data);
 
-        void BuildSimpleHybridPowertrainGear(VectoRunData data, VehicleContainer container);
-
-        /// <summary>
-        /// Builds a simple serial hybrid powertrain with either E4, E3, or E2.
-        /// <code>
-        /// Vehicle
-        /// └Wheels
-        ///  └SimpleHybridController
-        ///   └Brakes
-        ///    │ └Engine E4
-        ///    └AxleGear
-        ///     │ ├(AxlegearInputRetarder)
-        ///     │ └Engine E3
-        ///     ├(AngleDrive)
-        ///     ├(TransmissionOutputRetarder)
-        ///     └Gearbox or APTNGearbox
-        ///      ├(TransmissionInputRetarder)
-        ///      └Engine E2
-        /// </code>
-        /// </summary>
-        void BuildSimpleSerialHybridPowertrain(VectoRunData data, VehicleContainer container);
+		ISimpleVehicleContainer BuildSimpleHybridPowertrainGear(VectoRunData data);
 
         /// <summary>
         /// Builds a simple serial hybrid powertrain with either E4, E3, or E2.
@@ -64,7 +44,27 @@ namespace TUGraz.VectoCore.Models.Simulation
         ///      └Engine E2
         /// </code>
         /// </summary>
-        void BuildSimpleIEPCHybridPowertrain(VectoRunData data, VehicleContainer container);
+		ISimpleVehicleContainer BuildSimpleSerialHybridPowertrain(VectoRunData data);
+
+        /// <summary>
+        /// Builds a simple serial hybrid powertrain with either E4, E3, or E2.
+        /// <code>
+        /// Vehicle
+        /// └Wheels
+        ///  └SimpleHybridController
+        ///   └Brakes
+        ///    │ └Engine E4
+        ///    └AxleGear
+        ///     │ ├(AxlegearInputRetarder)
+        ///     │ └Engine E3
+        ///     ├(AngleDrive)
+        ///     ├(TransmissionOutputRetarder)
+        ///     └Gearbox or APTNGearbox
+        ///      ├(TransmissionInputRetarder)
+        ///      └Engine E2
+        /// </code>
+        /// </summary>
+		ISimpleVehicleContainer BuildSimpleIEPCHybridPowertrain(VectoRunData data);
 
         /// <summary>
         /// Builds a simple genset
@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Models.Simulation
         ///  └CombustionEngine
         /// </code>
         /// </summary>
-        void BuildSimpleGenSet(VectoRunData data, VehicleContainer container);
+		ISimpleVehicleContainer BuildSimpleGenSet(VectoRunData data);
 
         /// <summary>
         /// Builds a simple hybrid powertrain.
@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Models.Simulation
         ///         └(Aux)
         /// </code>
         /// </summary>
-        void BuildSimpleHybridPowertrain(VectoRunData data, VehicleContainer container);
+		ISimpleVehicleContainer BuildSimpleHybridPowertrain(VectoRunData data);
 
         /// <summary>
         /// Builds a simple battery electric powertrain for PEVs.
@@ -112,6 +112,6 @@ namespace TUGraz.VectoCore.Models.Simulation
         ///      └Electric Motor
         /// </code>
         /// </summary>
-        void BuildSimplePowertrainElectric(VectoRunData data, VehicleContainer container);
+		ISimpleVehicleContainer BuildSimplePowertrainElectric(VectoRunData data);
     }
 }

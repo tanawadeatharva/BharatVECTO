@@ -1,4 +1,6 @@
-﻿using TUGraz.VectoCommon.Utils;
+﻿using System.Collections.Generic;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -9,9 +11,9 @@ using TUGraz.VectoCore.OutputData;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 
-	public class SimplePowertrainContainer : VehicleContainer, IDriverInfo
-	{
-		public SimplePowertrainContainer(VectoRunData runData, ISimplePowertrainBuilder ptBuilder, IModalDataContainer modData = null) : base(runData.ExecutionMode, runData, modData, null, ptBuilder)
+	public class SimplePowertrainContainer : VehicleContainer, IDriverInfo, ISimpleVehicleContainer
+    {
+		public SimplePowertrainContainer(VectoRunData runData, ISimplePowertrainBuilder ptBuilder) : base(runData.ExecutionMode, runData, null, null, ptBuilder)
 		{
 			RunData = runData;
 		}
@@ -40,6 +42,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 		public MeterPerSecond ApplyOverspeed(MeterPerSecond targetSpeed) => targetSpeed;
 
 		#endregion
+
+		public Dictionary<PowertrainPosition, IElectricMotorInfo> ElectricMotors => base.ElectricMotors;
 
 		public void UpdateComponents(IDataBus realContainer) => UpdateComponentsInternal(realContainer);
 	}

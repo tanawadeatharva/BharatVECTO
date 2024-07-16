@@ -34,8 +34,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				grad = 2;
 			}
 
-			var testContainer = new SimplePowertrainContainer(runData, PowertrainBuilder);
-			PowertrainBuilder.BuildSimpleHybridPowertrain(runData, testContainer);
+			var testContainer = PowertrainBuilder.BuildSimpleHybridPowertrain(runData);
 
 			return new VelocitySpeedGearshiftPreprocessor(VelocityDropData, runData.GearboxData.TractionInterruption,
 				testContainer, -grad, grad);
@@ -347,8 +346,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					* x.FuelData.LowerHeatingValueVecto * StrategyParameters.MinICEOnTime).Value());
 
 			// create testcontainer
-			var testContainer = new SimplePowertrainContainer(runData, PowertrainBuilder);
-			BuildSimplePowertrain(runData, testContainer);
+			var testContainer = BuildSimplePowertrain(runData);
 
 			TestPowertrain = new TestPowertrain<T>(testContainer, DataBus);
 
@@ -376,9 +374,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			AllowEmergencyShift = false;
 		}
 
-		protected virtual void BuildSimplePowertrain(VectoRunData runData, SimplePowertrainContainer testContainer)
+		protected virtual ISimpleVehicleContainer BuildSimplePowertrain(VectoRunData runData)
 		{
-			PowertrainBuilder.BuildSimpleHybridPowertrain(runData, testContainer);
+			return PowertrainBuilder.BuildSimpleHybridPowertrain(runData);
         }
 
 		protected virtual void WarnGearShiftRange()

@@ -10,6 +10,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 
@@ -18,25 +19,35 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 	public class SimplePowertrainBuilder : PowertrainBuilderBase, ISimplePowertrainBuilder
 	{
-		/// <summary>
-		/// Builds a simple conventional powertrain.
-		/// <code>
-		///(MeasuredSpeedDrivingCycle)
-		/// └Vehicle
-		///  └Wheels
-		///   └Brakes
-		///    └AxleGear
-		///     ├(Angledrive)
-		///     ├(TransmissionOutputRetarder)
-		///     └ATGearbox or Gearbox
-		///      ├(TransmissionInputRetarder)
-		///      ├(Clutch)
-		///      └CombustionEngine
-		///       └(Aux)
-		/// </code>
-		/// </summary>
-		public void BuildSimplePowertrain(VectoRunData data, IVehicleContainer container)
+
+		private IVehicleContainerFactory _vehicleContainerFactory;
+
+		public SimplePowertrainBuilder(IVehicleContainerFactory vehicleContainerFactory)
+        {
+            _vehicleContainerFactory = vehicleContainerFactory;
+        }
+
+
+        /// <summary>
+        /// Builds a simple conventional powertrain.
+        /// <code>
+        ///(MeasuredSpeedDrivingCycle)
+        /// └Vehicle
+        ///  └Wheels
+        ///   └Brakes
+        ///    └AxleGear
+        ///     ├(Angledrive)
+        ///     ├(TransmissionOutputRetarder)
+        ///     └ATGearbox or Gearbox
+        ///      ├(TransmissionInputRetarder)
+        ///      ├(Clutch)
+        ///      └CombustionEngine
+        ///       └(Aux)
+        /// </code>
+        /// </summary>
+        public ISimpleVehicleContainer BuildSimplePowertrain(VectoRunData data)
 		{
+			var container = GetVehicleContainer(data);
 			IVehicle vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
 			// TODO: MQ 2018-11-19: engineering mode needs AUX power from cycle, use face cycle...
 			//       should be a reference/proxy to the main driving cyle. but how to access it?
@@ -73,13 +84,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (gearbox is ATGearbox atGbx) {
 				atGbx.IdleController = idleController;
 			}
-		}
+			return container;
+        }
 
-		public void BuildSimpleHybridPowertrainGear(VectoRunData data, VehicleContainer container)
+		public ISimpleVehicleContainer BuildSimpleHybridPowertrainGear(VectoRunData data)
 		{
 			VerifyCycleType(data, CycleType.MeasuredSpeedGear);
-
-			var es = ConnectREESS(data, container);
+			var container = GetVehicleContainer(data);
+            var es = ConnectREESS(data, container);
 
 			// add engine before gearbox so that gearbox can obtain if an ICE is available already in constructor
 			var engine = new StopStartCombustionEngine(container, data.EngineData);
@@ -106,7 +118,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
 			AddHighVoltageAuxiliaries(data, container, es, dcdc);
 			AddHybridBusAuxiliaries(data, container, es, dcdc);
-		}
+			return container;
+        }
 
 		/// <summary>
 		/// Builds a simple serial hybrid powertrain with either E4, E3, or E2.
@@ -126,8 +139,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///      └Engine E2
 		/// </code>
 		/// </summary>
-		public void BuildSimpleSerialHybridPowertrain(VectoRunData data, VehicleContainer container)
+		public ISimpleVehicleContainer BuildSimpleSerialHybridPowertrain(VectoRunData data)
 		{
+			var container = GetVehicleContainer(data);
 			var es = ConnectREESS(data, container);
 			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
 			AddElectricAuxiliaries(data, container, es, null, dcdc);
@@ -193,7 +207,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					throw new ArgumentOutOfRangeException(nameof(pos), pos,
 						"Invalid engine powertrain position for simple serial hybrid vehicles.");
 			}
-		}
+			return container;
+        }
 
 		/// <summary>
 		/// Builds a simple serial hybrid powertrain with either E4, E3, or E2.
@@ -213,8 +228,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///      └Engine E2
 		/// </code>
 		/// </summary>
-		public void BuildSimpleIEPCHybridPowertrain(VectoRunData data, VehicleContainer container)
+		public ISimpleVehicleContainer BuildSimpleIEPCHybridPowertrain(VectoRunData data)
 		{
+			var container = GetVehicleContainer(data);
 			var es = ConnectREESS(data, container);
 			es.Connect(new GensetChargerAdapter(null));
 
@@ -238,7 +254,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(em);
 			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
 			AddElectricAuxiliaries(data, container, es, null, dcdc);
-		}
+			return container;
+        }
 
 		/// <summary>
 		/// Builds a simple genset
@@ -247,8 +264,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///  └CombustionEngine
 		/// </code>
 		/// </summary>
-		public void BuildSimpleGenSet(VectoRunData data, VehicleContainer container)
+		public ISimpleVehicleContainer BuildSimpleGenSet(VectoRunData data)
 		{
+			var container = GetVehicleContainer(data);
 			var es = ConnectREESS(data, container);
 			var ctl = new GensetMotorController(container, es);
 
@@ -279,7 +297,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					es.Connect(dcdc);
 				}
 			}
-		}
+			return container;
+        }
 
 		/// <summary>
 		/// Builds a simple hybrid powertrain.
@@ -304,8 +323,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///         └(Aux)
 		/// </code>
 		/// </summary>
-		public void BuildSimpleHybridPowertrain(VectoRunData data, VehicleContainer container)
+		public ISimpleVehicleContainer BuildSimpleHybridPowertrain(VectoRunData data)
 		{
+			var container = GetVehicleContainer(data);
 			var es = ConnectREESS(data, container);
 			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
 			AddHighVoltageAuxiliaries(data, container, es, dcdc);
@@ -398,22 +418,24 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					es.Connect(dcdc);
 				}
 			}
+			return container;
 		}
 
-		/// <summary>
-		/// Builds a simple battery electric powertrain for PEVs.
-		/// <code>
-		/// (Dummy MeasureSpeedDrivingCycle)
-		/// └Vehicle
-		///  └Wheels
-		///   └Brakes
-		///    └AxleGear
-		///     └ATGearbox or Gearbox
-		///      └Electric Motor
-		/// </code>
-		/// </summary>
-		public void BuildSimplePowertrainElectric(VectoRunData data, VehicleContainer container)
+        /// <summary>
+        /// Builds a simple battery electric powertrain for PEVs.
+        /// <code>
+        /// (Dummy MeasureSpeedDrivingCycle)
+        /// └Vehicle
+        ///  └Wheels
+        ///   └Brakes
+        ///    └AxleGear
+        ///     └ATGearbox or Gearbox
+        ///      └Electric Motor
+        /// </code>
+        /// </summary>
+        public ISimpleVehicleContainer BuildSimplePowertrainElectric(VectoRunData data)
 		{
+			var container = GetVehicleContainer(data);
 			var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
 
 			// TODO: MQ 2018-11-19: engineering mode needs AUX power from cycle, use face cycle...
@@ -449,6 +471,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.AxleGearData == null) {
 				new DummyAxleGearInfo(container); // necessary for certain IEPC configurations
 			}
+			return container;
 		}
-	}
+
+		protected ISimpleVehicleContainer GetVehicleContainer(VectoRunData runData)
+		{
+			var container = _vehicleContainerFactory.CreateSimpleVehicleContainer(runData);
+			return container;
+		}
+    }
 }
