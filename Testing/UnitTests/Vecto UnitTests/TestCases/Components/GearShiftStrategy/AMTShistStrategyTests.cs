@@ -10,6 +10,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -101,12 +102,26 @@ TestCase(8, 4, 15000, 200, typeof(ResponseGearShift)),]
 		var eng = new Mock<IEngineInfo>();
 		container.Setup(c => c.EngineInfo).Returns(eng.Object);
 		eng.Setup(e => e.EngineIdleSpeed).Returns(560.RPMtoRad());
-		//var ptBuilder = new Mock<ISimplePowertrainBuilder>();
+        var ptBuilder = new Mock<ISimplePowertrainBuilder>();
+		var testPt = new Mock<ISimpleVehicleContainer>();
+		testPt.Setup(v => v.ElectricMotors).Returns(new Dictionary<PowertrainPosition, IElectricMotorInfo>());
+		testPt.Setup(v => v.RunData).Returns(runData);
+		testPt.Setup(v => v.SimulationComponents()).Returns(new List<VectoSimulationComponent>());
+		var gbx = new Mock<Gearbox>(testPt.Object, null);
+		var brakes = new Mock<IBrakes>();
+		var pi = new Mock<IPowertainInfo>();
+		pi.Setup(p => p.HasCombustionEngine).Returns(true);
+		brakes.Setup(c => c.BrakePower).Returns(0.SI<Watt>());
+		testPt.Setup(c => c.PowertrainInfo).Returns(pi.Object);
+		testPt.Setup(c => c.Brakes).Returns(brakes.Object);
+		testPt.Setup(c => c.GearboxCtl).Returns(gbx.Object);
+		
 
-		var shiftStrategy = new AMTShiftStrategy(container.Object);
+		ptBuilder.Setup(p => p.BuildSimplePowertrain(It.IsAny<VectoRunData>())).Returns(testPt.Object);
 
-        
-        // the first element 0.0 is just a placeholder for axlegear, not used in this test
+		container.Setup(c => c.PowertrainBuilder).Returns(ptBuilder.Object);
+
+        var shiftStrategy = new AMTShiftStrategy(container.Object);
 
         var absTime = 0.SI<Second>();
         var dt = 2.SI<Second>();
