@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			}
 
 			var retVal = XElement.Load(xmlTyre.GetXmlNode.CreateNavigator().ReadSubtree());
-			var ptr = (retVal.FirstNode as XElement).FirstAttribute;
+			var ptr = retVal.DescendantNodes().OfType<XElement>().First().FirstAttribute;
 			while (ptr != null) {
 				if (!ptr.IsNamespaceDeclaration && ptr.Name.LocalName == "type" && ptr.Name.Namespace == _xsi && ptr.Value.Contains(':')) {
 					var parts = ptr.Value.Split(':');

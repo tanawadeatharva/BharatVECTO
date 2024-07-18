@@ -2615,7 +2615,7 @@
 		<xs:complexContent>
 			<xs:extension base="AbstractResultSummaryType">
 				<xs:sequence>
-					<xs:element name="Vocational" type="xs:boolean"></xs:element>
+					<xs:element name="Vocational" type="xs:boolean" minOccurs="0"></xs:element>
 					<xs:choice>
 						<xs:element name="AveragePayload">
 							<xs:annotation>
@@ -2656,7 +2656,7 @@
 		<xs:complexContent>
 			<xs:extension base="AbstractResultSummaryType">
 				<xs:sequence>
-					<xs:element name="Vocational" type="xs:boolean"></xs:element>
+					<xs:element name="Vocational" type="xs:boolean" minOccurs="0"></xs:element>
 					<xs:choice>
 						<xs:element name="AveragePayload">
 							<xs:annotation>
@@ -2709,7 +2709,7 @@
 		<xs:complexContent>
 			<xs:extension base="AbstractResultSummaryType">
 				<xs:sequence>
-					<xs:element name="Vocational" type="xs:boolean"></xs:element>
+					<xs:element name="Vocational" type="xs:boolean" minOccurs="0"></xs:element>
 					<xs:choice>
 						<xs:element name="AveragePayload">
 							<xs:annotation>
