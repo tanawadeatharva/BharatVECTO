@@ -38,8 +38,7 @@ public class ATGearboxTests
     public void TestShiftLossComputation(double torqueDemand, uint gear, uint nextGear, double preShiftRpm,
             double postShiftRpm, double expectedShiftLoss, double expectedShiftLossEnergy)
     {
-        //var cycleDataStr = "0, 0, 0, 2\n100, 20, 0, 0\n1000, 50, 0, 0";
-		var ratios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
+        var ratios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
         var container = CreateVehicle(ratios);
 
 		var shiftStrategy = new Mock<IShiftStrategy>();
@@ -87,9 +86,7 @@ public class ATGearboxTests
 
 		var init = gbx.Initialize(0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad());
         var response = gbx.Request(absTime, dt, 0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad());
-        
-		var axlRatio = 6.2;
-
+		
         Assert.IsInstanceOf<ResponseSuccess>(response);
         container.Object.CommitSimulationStep(absTime, dt);
         absTime += dt;
@@ -112,10 +109,113 @@ public class ATGearboxTests
         }
     }
 
-	private Mock<IVehicleContainer> CreateVehicle(double[] ratios)
-	{
-		
+    [Test,
+        //TestCase(200, 2u, 562, 620, 19.5023),
+        TestCase(400, 2u, 3u, 562, 620, 39.0046, 3183.0086),
+        //TestCase(600, 2u, 562, 620, 58.5069),
+        //TestCase(800, 2u, 562, 620, 78.0092),
+        //TestCase(200, 2u, 562, 600, 19.7908),
+        //TestCase(400, 2u, 562, 600, 39.5816),
+        TestCase(600, 2u, 3u, 562, 600, 59.3723, 4774.5128),
+        //TestCase(800, 2u, 562, 600, 79.1632),
+        //TestCase(400, 3u, 500, 490, 30.7900),
+        TestCase(400, 3u, 2u, 550, 490, 32.4643, 2328.0855),
+        //TestCase(600, 3u, 550, 490, 48.6965),
+        ]
+    public void TestSplittingShiftLossesTwoIntervals(double torqueDemand, uint gear, uint nextGear, double preShiftRpm,
+            double postShiftRpm, double expectedShiftLoss, double expectedShiftLossEnergy)
+    {
+		var ratios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
+		var container = CreateVehicle(ratios);
 
+		var shiftStrategy = new Mock<IShiftStrategy>();
+
+		var port = new Mock<ITnOutPort>();
+		port.Setup(p => p.Request(It.IsAny<Second>(), It.IsAny<Second>(), It.IsAny<NewtonMeter>(),
+			It.IsAny<PerSecond>(), It.IsAny<bool>())).Returns(new ResponseSuccess(this));
+
+		var idleCtl = new Mock<IIdleController>();
+
+		// Setup DUT:
+		var gbx = new ATGearbox(container.Object, shiftStrategy.Object);
+		gbx.Connect(port.Object);
+		gbx.IdleController = idleCtl.Object;
+
+		// mock shift strategy behavior
+		shiftStrategy
+			.Setup(s => s.InitGear(It.IsAny<Second>(), It.IsAny<Second>(), It.IsAny<NewtonMeter>(),
+				It.IsAny<PerSecond>())).Returns(() => {
+				gbx.Disengaged = false;
+				return new GearshiftPosition(gear, true);
+			});
+		bool gearshiftDone = false;
+		shiftStrategy.Setup(s => s.ShiftRequired(It.IsAny<Second>(), It.IsAny<Second>(), It.IsAny<NewtonMeter>(),
+			It.IsAny<PerSecond>(), It.IsAny<NewtonMeter>(), It.IsAny<PerSecond>(), It.IsAny<GearshiftPosition>(),
+			It.IsAny<Second>(), It.IsAny<IResponse>())).Returns(
+			(Second t, Second dt, NewtonMeter to, PerSecond no, NewtonMeter ti, PerSecond ni, GearshiftPosition g,
+				Second lst, IResponse resp) => {
+				var retVal = no.IsEqual(preShiftRpm.RPMtoRad()) || gearshiftDone ? false : true;
+				gearshiftDone = gearshiftDone || retVal;
+				return retVal;
+			});
+		shiftStrategy.Setup(s => s.NextGear).Returns(new GearshiftPosition(nextGear, true));
+		shiftStrategy
+			.Setup(s => s.Engage(It.IsAny<Second>(), It.IsAny<Second>(), It.IsAny<NewtonMeter>(),
+				It.IsAny<PerSecond>())).Returns(new GearshiftPosition(nextGear, true));
+
+		var engineSpeed = preShiftRpm.RPMtoRad() * ratios[gear - 1];
+		Mock.Get(container.Object.EngineInfo).Setup(e => e.EngineSpeed).Returns(() => engineSpeed);
+
+		var modData = new MockModalDataContainer();
+
+        gbx.Gear = new GearshiftPosition(gear, true);
+
+        var absTime = 20.SI<Second>();
+        var dt = 0.5.SI<Second>();
+		var init = gbx.Initialize(0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad());
+        var response = gbx.Request(absTime, dt, 0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad());
+        gbx.Request(absTime, dt, 0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad(), false);
+
+
+        Assert.IsInstanceOf<ResponseSuccess>(response);
+        gbx.CommitSimulationStep(absTime, dt, modData);
+        absTime += dt;
+
+        response = gbx.Request(absTime, dt, torqueDemand.SI<NewtonMeter>(), postShiftRpm.RPMtoRad());
+        Assert.IsInstanceOf<ResponseFailTimeInterval>(response);
+
+        var splitFactor = 0.75;
+        var shiftTime = ((ResponseFailTimeInterval)response).DeltaT;
+        dt = shiftTime * splitFactor;
+        response = gbx.Request(absTime, dt, torqueDemand.SI<NewtonMeter>(), postShiftRpm.RPMtoRad());
+
+        Assert.IsInstanceOf<ResponseSuccess>(response);
+        Assert.AreEqual(expectedShiftLoss, gbx.CurrentState.PowershiftLoss.Value(), 1e-3);
+        Assert.AreEqual(gear + (postShiftRpm > preShiftRpm ? 1 : -1), gbx.Gear.Gear);
+
+		gbx.CommitSimulationStep(absTime, dt, modData);
+        var shiftLoss1 = (Watt)modData[ModalResultField.P_gbx_shift_loss] * dt;
+        Assert.AreEqual(expectedShiftLossEnergy * splitFactor, shiftLoss1.Value(), 1e-3);
+        gbx.Request(absTime, dt, 0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad(), false);
+
+        absTime += dt;
+        dt = 0.5.SI<Second>();
+		engineSpeed = postShiftRpm.RPMtoRad() * ratios[nextGear - 1];
+
+
+        response = gbx.Request(absTime, dt, torqueDemand.SI<NewtonMeter>(), postShiftRpm.RPMtoRad());
+
+        Assert.IsInstanceOf<ResponseSuccess>(response);
+        gbx.CommitSimulationStep(absTime, dt, modData);
+        var shiftLoss2 = (Watt)modData[ModalResultField.P_gbx_shift_loss] * dt;
+        Console.WriteLine("expected shiftloss energy: {0}, sum of shift loss energy: {1} ({2} + {3})", expectedShiftLossEnergy, shiftLoss1 + shiftLoss2, shiftLoss1, shiftLoss2);
+        Assert.AreEqual(expectedShiftLossEnergy * (1 - splitFactor), shiftLoss2.Value(), 1e-3);
+
+        Assert.AreEqual(expectedShiftLossEnergy, (shiftLoss1 + shiftLoss2).Value(), 1e-3);
+    }
+
+    private Mock<IVehicleContainer> CreateVehicle(double[] ratios)
+	{
 		var runData = new VectoRunData() {
 			EngineData = new CombustionEngineData() {
 				IdleSpeed = 600.RPMtoRad(),

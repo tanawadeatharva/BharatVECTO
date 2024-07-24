@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.XPath;
-using Moq;
+﻿using Moq;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
@@ -22,7 +16,7 @@ using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFa
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDataFactory;
 using Assert = NUnit.Framework.Assert;
 
-namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
+namespace TUGraz.Vecto.UnitTests.TestCases.InputData.RunDataFactory
 {
     [TestFixture]
 	[Parallelizable(ParallelScope.All)]

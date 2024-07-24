@@ -134,6 +134,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		//TestCase(400, 3u, 500, 490, 30.7900),
 		TestCase(400, 3u, 550, 490, 32.4643, 2328.0855),
 		//TestCase(600, 3u, 550, 490, 48.6965),
+		Category(Definitions.TESTCASE_MIGRATED)
 		]
 		public void TestSplittingShiftLossesTwoIntervals(double torqueDemand, uint gear, double preShiftRpm,
 			double postShiftRpm, double expectedShiftLoss, double expectedShiftLossEnergy)

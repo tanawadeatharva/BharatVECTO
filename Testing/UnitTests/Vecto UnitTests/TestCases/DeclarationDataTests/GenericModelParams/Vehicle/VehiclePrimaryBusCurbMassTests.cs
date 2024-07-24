@@ -2,6 +2,7 @@
 using Moq;
 using Ninject;
 using NUnit.Framework;
+using TUGraz.Vecto.UnitTests.TestCases.InputData.RunDataFactory;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -9,7 +10,6 @@ using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDataFactory;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Tests.InputData.RunDataFactory;
 using Assert = NUnit.Framework.Assert;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.DeclarationDataTests.GenericModelParams.Vehicle;
