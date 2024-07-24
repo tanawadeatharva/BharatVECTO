@@ -437,18 +437,19 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			gearbox.CommitSimulationStep(absTime, dt, modData);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.DEPRECATED)] // does not test intersection of full-load curves
 		public void Gearbox_IntersectFullLoadCurves()
 		{
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, GetDummyRunData(gearboxData), null, null);
+			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, GetDummyRunData(gearboxData), null, null) as VehicleContainer;
             var gearbox = new Gearbox(container, new AMTShiftStrategy( container));
 			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 0.KMPHtoMeterPerSecond() };
 			var driver = new MockDriver(container);
 
 			var port = new MockTnOutPort();
 			gearbox.InPort().Connect(port);
-			//container.EngineInfo = port;
+			container.EngineInfo = port;
 
 			gearbox.Initialize(0.SI<NewtonMeter>(), 0.RPMtoRad());
 

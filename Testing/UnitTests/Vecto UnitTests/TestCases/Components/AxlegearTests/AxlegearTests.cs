@@ -8,13 +8,12 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
-namespace TUGraz.Vecto.UnitTests.TestCases.Components.Axlegear;
+namespace TUGraz.Vecto.UnitTests.TestCases.Components.AxlegearTests;
 
 public class AxlegearTests
 {

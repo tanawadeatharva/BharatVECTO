@@ -211,7 +211,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(7, gbx.Gears.Count);
 		}
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestATGearboxLastButOneGearDisabled()
 		{
 			var limits = new List<ITorqueLimitInputData>() {

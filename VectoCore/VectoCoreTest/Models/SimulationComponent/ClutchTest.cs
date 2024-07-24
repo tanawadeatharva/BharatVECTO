@@ -71,6 +71,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		TestCase(DrivingBehavior.Driving, 100, 30, 3, 100, 30),
 			// clutch opened due to braking
 			//TestCase(DrivingBehavior.Braking, 0, 55, null, null),
+			Category(Definitions.TESTCASE_MIGRATED)
 		]
 		public void TestClutch(DrivingBehavior drivingBehavior, double torque, double angularSpeed, int gear, double expectedTorque,
 			double expectedEngineSpeed)

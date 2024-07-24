@@ -83,6 +83,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		TestCase(400, 3u, 500, 490, 30.7900, double.NaN),
 		TestCase(400, 3u, 550, 490, 32.4643, 2328.0855),
 		TestCase(600, 3u, 550, 490, 48.6965, double.NaN),
+			Category(Definitions.TESTCASE_MIGRATED)
 		]
 		public void TestShiftLossComputation(double torqueDemand, uint gear, double preShiftRpm,
 			double postShiftRpm, double expectedShiftLoss, double expectedShiftLossEnergy)
@@ -105,6 +106,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			response = gbx.Request(absTime, dt, torqueDemand.SI<NewtonMeter>(), postShiftRpm.RPMtoRad());
 			Assert.IsInstanceOf<ResponseFailTimeInterval>(response);
 
+			Console.WriteLine($"initial gear: {gear}, after GS: {gbx._strategy.NextGear}");
 			dt = ((ResponseFailTimeInterval)response).DeltaT;
 			response = gbx.Request(absTime, dt, torqueDemand.SI<NewtonMeter>(), postShiftRpm.RPMtoRad());
 
