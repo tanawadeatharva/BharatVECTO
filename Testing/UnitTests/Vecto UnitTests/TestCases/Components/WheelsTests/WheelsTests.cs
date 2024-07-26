@@ -23,7 +23,6 @@ public class WheelsTests
     public void WheelsRequestTest(double force, double velocity, double expTorque, double expAngVel)
     {
         var container = new Mock<IVehicleContainer>();
-        //var reader = new EngineeringModeSimulationDataReader();
         var vehicleData = new VehicleData()
         {
             DynamicTyreRadius = 0.520.SI<Meter>(),
