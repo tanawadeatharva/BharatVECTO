@@ -178,7 +178,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 				}
 				return retVal;
 			} catch (VectoSearchFailedException vsfe) {
+#if DEBUG
 				Log.Error("Failed to find mechanic power for given electric power! n_avg: {0} P_el: {1}; {2}", avgSpeed.AsRPM, batPower, vsfe.Message);
+#endif
 			}
 
 			return null;

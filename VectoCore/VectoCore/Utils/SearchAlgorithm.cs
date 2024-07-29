@@ -177,8 +177,9 @@ namespace TUGraz.VectoCore.Utils
 
 			//iterationCount += 100;
 			log.Debug("LineSearch could not find an operating point.");
+#if DEBUG
 			log.Error("Exceeded max iterations when searching for operating point!");
-
+#endif
 			WriteSearch(debug, "LineSearch.csv");
 			throw new VectoSearchFailedException("Failed to find operating point! points: {0}", debug.LocalData.Select(d => d.b).Join());
 		}
