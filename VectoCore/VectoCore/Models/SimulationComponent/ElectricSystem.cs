@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 			if (!dryRun)
 			{
-				CurrentState.SetState(powerDemand, auxDemand, chargePower, connectorLoss, batResponse.PowerDemand);
+				CurrentState.SetState(powerDemand, auxDemand, chargePower + fcPower, connectorLoss, batResponse.PowerDemand);
 			}
 
 			response.AbsTime = absTime;
