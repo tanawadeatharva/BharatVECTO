@@ -240,7 +240,7 @@ public class SegmentAndMissionParametersTest
         var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
         TestAcceleration(data);
 
-        NUnit.Framework.Assert.AreEqual(4, segment.Missions.Length);
+        NUnit.Framework.Assert.AreEqual(5, segment.Missions.Length);
 
         AssertMission(segment.Missions[0],
             vehicleData: vehicleData,
@@ -329,9 +329,9 @@ public class SegmentAndMissionParametersTest
         var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
         TestAcceleration(data);
 
-        NUnit.Framework.Assert.AreEqual(2, segment.Missions.Length);
+        NUnit.Framework.Assert.AreEqual(5, segment.Missions.Length);
 
-        AssertMission(segment.Missions[0],
+        AssertMission(segment.Missions[3],
             vehicleData: vehicleData,
             missionType: MissionType.MunicipalUtility,
             cosswindCorrection: "RigidSolo",
@@ -347,7 +347,7 @@ public class SegmentAndMissionParametersTest
             deltaCdA: 0,
             maxLoad: 4500);
 
-        AssertMission(segment.Missions[1],
+        AssertMission(segment.Missions[4],
                     vehicleData: vehicleData,
                     missionType: MissionType.Construction,
                     cosswindCorrection: "RigidSolo",
@@ -386,7 +386,7 @@ public class SegmentAndMissionParametersTest
         var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
         TestAcceleration(data);
 
-        NUnit.Framework.Assert.AreEqual(5, segment.Missions.Length);
+        NUnit.Framework.Assert.AreEqual(6, segment.Missions.Length);
 
         AssertMission(segment.Missions[0],
             vehicleData: vehicleData,
@@ -490,9 +490,9 @@ public class SegmentAndMissionParametersTest
         var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
         TestAcceleration(data);
 
-        NUnit.Framework.Assert.AreEqual(1, segment.Missions.Length);
+        NUnit.Framework.Assert.AreEqual(6, segment.Missions.Length);
 
-        AssertMission(segment.Missions[0],
+        AssertMission(segment.Missions[5],
             vehicleData: vehicleData,
             missionType: MissionType.Construction,
             cosswindCorrection: "TractorSemitrailer",
@@ -531,7 +531,7 @@ public class SegmentAndMissionParametersTest
         var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
         TestAcceleration(data);
 
-        NUnit.Framework.Assert.AreEqual(5, segment.Missions.Length);
+        NUnit.Framework.Assert.AreEqual(6, segment.Missions.Length);
 
         AssertMission(segment.Missions[0],
             vehicleData: vehicleData,
@@ -638,9 +638,9 @@ public class SegmentAndMissionParametersTest
         var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
         TestAcceleration(data);
 
-        NUnit.Framework.Assert.AreEqual(2, segment.Missions.Length);
+        NUnit.Framework.Assert.AreEqual(6, segment.Missions.Length);
 
-        AssertMission(segment.Missions[0],
+        AssertMission(segment.Missions[4],
             vehicleData: vehicleData,
             missionType: MissionType.MunicipalUtility,
             cosswindCorrection: "RigidSolo",
@@ -656,7 +656,7 @@ public class SegmentAndMissionParametersTest
             deltaCdA: 0,
             maxLoad: 9750);
 
-        AssertMission(segment.Missions[1],
+        AssertMission(segment.Missions[5],
                     vehicleData: vehicleData,
                     missionType: MissionType.Construction,
                     cosswindCorrection: "RigidSolo",
@@ -696,7 +696,7 @@ public class SegmentAndMissionParametersTest
         var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
         TestAcceleration(data);
 
-        NUnit.Framework.Assert.AreEqual(4, segment.Missions.Length);
+        NUnit.Framework.Assert.AreEqual(5, segment.Missions.Length);
 
         AssertMission(segment.Missions[0],
             vehicleData: vehicleData,
@@ -787,9 +787,9 @@ public class SegmentAndMissionParametersTest
         var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
         TestAcceleration(data);
 
-        NUnit.Framework.Assert.AreEqual(1, segment.Missions.Length);
+        NUnit.Framework.Assert.AreEqual(5, segment.Missions.Length);
 
-        AssertMission(segment.Missions[0],
+        AssertMission(segment.Missions[4],
             vehicleData: vehicleData,
             missionType: MissionType.Construction,
             cosswindCorrection: "TractorSemitrailer",
@@ -1059,9 +1059,9 @@ public class SegmentAndMissionParametersTest
         var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
         TestAcceleration(data);
 
-        NUnit.Framework.Assert.AreEqual(1, segment.Missions.Length);
+        NUnit.Framework.Assert.AreEqual(5, segment.Missions.Length);
 
-        AssertMission(segment.Missions[0],
+        AssertMission(segment.Missions[4],
             vehicleData: vehicleData,
             missionType: MissionType.Construction,
             cosswindCorrection: "RigidSolo",

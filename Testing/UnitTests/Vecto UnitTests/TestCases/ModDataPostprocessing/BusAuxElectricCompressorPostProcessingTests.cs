@@ -660,7 +660,7 @@ public class BusAuxElectricCompressorPostProcessingTests
         var mock = new Mock<IResultEntry>();
 
         mock.Setup(m => m.Status).Returns(VectoRun.Status.Success);
-
+		mock.Setup(m => m.Distance).Returns(100000.SI<Meter>());
         var fcMock = new Mock<IFuelConsumptionCorrection>();
         fcMock.Setup(f => f.TotalFuelConsumptionCorrected).Returns(32.SI<Kilogram>());
 
