@@ -66,6 +66,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 		protected bool _simulate = true;
 
+		
 		public bool CreateFollowUpSimulatorFactory { get; set; } = false;
 		protected readonly ExecutionMode _mode;
 
@@ -107,16 +108,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
         #endregion
 
-		public ISimulatorFactory FollowUpSimulatorFactory {
-			get {
-				var factory = _followUpSimulatorFactoryCreator?.GetNextFactory();
-				if (factory != null) {
-					factory.WriteModalResults = this.WriteModalResults;
-					//factory.SerializeVectoRunData = this.SerializeVectoRunData;
-				}
-
-				return factory;
+		public ISimulatorFactory FollowUpSimulatorFactory(IDictionary<int, JobContainer.ProgressEntry> progressEntries)
+		{
+			var factory = _followUpSimulatorFactoryCreator?.GetNextFactory(progressEntries);
+			if (factory != null) {
+				factory.WriteModalResults = this.WriteModalResults;
+				//factory.SerializeVectoRunData = this.SerializeVectoRunData;
 			}
+			return factory;
 		}
 
         public bool Validate { get; set; }
@@ -135,6 +134,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 		public bool SerializeVectoRunData { get; set; }
 
+		public List<string> MissingInputEntries { get; protected set; } = new List<string>();
 
 		/// <summary>
 		/// Only for testing purposes
@@ -152,6 +152,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			bool firstRun = true;
 			var warning1Hz = false;
 			if (!_simulate) {
+				if (MissingInputEntries.Count > 0) {
+					throw new VectoException(MissingInputEntries.Select(x => $"<{x}> is bad or missing.").Join("\n"));
+				}
 				yield break;
 			}
 			foreach (var data in RunDataFactory.NextRun()) {

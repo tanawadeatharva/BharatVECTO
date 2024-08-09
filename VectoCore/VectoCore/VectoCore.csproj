@@ -80,6 +80,7 @@
     <None Remove="Resources\MockupCIFResults.xml" />
     <None Remove="Resources\MockupMRFResults.xml" />
     <None Remove="Resources\XSD\VectoDeclarationDefinitions.2.2.1.xsd" />
+    <None Remove="Resources\XSD\VectoMonitoring.1.0.xsd" />
     <None Remove="Resources\XSD\VectoOutputPrimaryBus.xsd" />
   </ItemGroup>
 

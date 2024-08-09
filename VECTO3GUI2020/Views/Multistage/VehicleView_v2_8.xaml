@@ -48,7 +48,7 @@
                     Content="{Binding ParameterViewModels[AirdragModifiedEnum]}"/>
 
                 <ContentControl 
-                    Content="{Binding ParameterViewModels[TankSystem]}"/>
+                    Content="{Binding ParameterViewModels[TankSystem]}" Visibility="{Binding TankSystemEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                 <ContentControl 
                     Content="{Binding ParameterViewModels[RegisteredClass]}"/>
@@ -115,19 +115,19 @@
                     <Label Content="Advanced Driver Assistant Systems" Style="{DynamicResource LabelStyle1}"/>
 
                 <ContentControl 
-                    Content="{Binding ParameterViewModels[EngineStopStartNullable]}"/>
+                    Content="{Binding ParameterViewModels[EngineStopStartNullable]}" Visibility="{Binding EngineStopStartEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
 
 
                 <ContentControl 
-                    Content="{Binding ParameterViewModels[EcoRollTypeNullable]}"/>
+                    Content="{Binding ParameterViewModels[EcoRollTypeNullable]}" Visibility="{Binding EcoRollEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
 
                 <ContentControl 
-                    Content="{Binding ParameterViewModels[PredictiveCruiseControlNullable]}"/>
+                    Content="{Binding ParameterViewModels[PredictiveCruiseControlNullable]}" Visibility="{Binding PredictiveCruiseControlEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                 <ContentControl 
-                    Content="{Binding ParameterViewModels[ATEcoRollReleaseLockupClutch]}"/>
+                    Content="{Binding ParameterViewModels[ATEcoRollReleaseLockupClutch]}" Visibility="{Binding ATEcoRollReleaseLockupClutchEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 </StackPanel>
         </DockPanel>
         </ScrollViewer>

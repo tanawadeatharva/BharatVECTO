@@ -44,6 +44,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			return new ShiftPolygon(shiftLine.Downshift.ToList(), upshift);
 		}
 
+		public ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
+			GearboxType gearboxType,
+			int i,
+			EngineFullLoadCurve engineDataFullLoadCurve,
+			IList<ITransmissionInputData> gearboxGears,
+			CombustionEngineData engineData,
+			double axlegearRatio,
+			Meter dynamicTyreRadius,
+			ElectricMotorData electricMotorData = null)
+		{
+			throw new NotImplementedException("Not applicable to AT transmissions.");
+		}
+
 	}
 
 	public class ATShiftStrategyOptimized : ATShiftStrategy

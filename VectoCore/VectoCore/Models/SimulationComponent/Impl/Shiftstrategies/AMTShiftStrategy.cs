@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
@@ -55,6 +56,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
 		{
 			return DeclarationData.Gearbox.ComputeManualTransmissionShiftPolygon(
+				i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
+		}
+
+		public ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
+			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
+			CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
+		{
+			return DeclarationData.Gearbox.ComputeManualTransmissionShiftPolygonExtended(
 				i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
 		}
 	}
@@ -124,6 +133,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			return _shiftPolygonCalculator.ComputeDeclarationShiftPolygon(gearboxType,
 				i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius, electricMotorData);
+		}
+
+		public override ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
+			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
+			CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
+		{
+			throw new NotImplementedException("Not applicable to AMT Gearbox.");
 		}
 
 		public static string Name => "AMT - Classic";

@@ -29,6 +29,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//return DeclarationData.Gearbox.ComputeManualTransmissionShiftPolygon(
 			//	i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
 		}
+
+		public ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
+			GearboxType gearboxType,
+			int i,
+			EngineFullLoadCurve engineDataFullLoadCurve,
+			IList<ITransmissionInputData> gearboxGears,
+			CombustionEngineData engineData,
+			double axlegearRatio,
+			Meter dynamicTyreRadius,
+			ElectricMotorData electricMotorData = null)
+		{
+			throw new NotImplementedException("Not applicable to AMT Gearbox.");
+		}
 	}
 	public class AMTShiftStrategyOptimized : AMTShiftStrategy
 	{

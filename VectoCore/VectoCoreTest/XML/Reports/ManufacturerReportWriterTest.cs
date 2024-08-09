@@ -60,6 +60,8 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/HeavyLorry/HEV-S_heavyLorry_S4.xml";
 		protected const string HEV_IEPC_S_HeavyLorry = 
 			@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/HeavyLorry/HEV-S_heavyLorry_IEPC-S.xml";
+		protected const string HEV_IEPC_S_NoAxlegear_HeavyLorry = 
+			@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/HeavyLorry/HEV-S_heavyLorry_IEPC-S_NoAxlegear.xml";
 		protected const string PEV_E2_HeavyLorry = 
 			@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/HeavyLorry/PEV_heavyLorry_AMT_E2.xml";
 		protected const string PEV_E3_HeavyLorry = 
@@ -68,6 +70,8 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/HeavyLorry/PEV_heavyLorry_E4.xml";
 		protected const string PEV_IEPC_HeavyLorry =
 			@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/HeavyLorry/IEPC_heavyLorry.xml";
+		protected const string PEV_IEPC_NoAxlegear_HeavyLorry = 
+			@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/HeavyLorry/IEPC_heavyLorry_NoAxlegear.xml";
 
 		protected const string Exempted_HeavyLorry =
 			@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/ExemptedVehicles/exempted_heavyLorry.xml";
@@ -101,6 +105,10 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 
 		protected const string Exempted_CompletedBus = @"TestData/XML/XMLReaderDeclaration/SchemaVersionMultistage.0.1/exempted_completed.VIF_Report_2.xml";
 		//@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/ExemptedVehicles/exempted_completedBus_input_full.xml";
+
+		protected const string HEVCompletedBus = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/CompletedBus/HEVCompletedBus_3.xml";
+		 
+		protected const string PEVCompletedBus = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/CompletedBus/PEV_completedBus_3.xml";
 
 		public static bool ValidateAndPrint(XDocument document, XmlDocumentType documentType)
 		{

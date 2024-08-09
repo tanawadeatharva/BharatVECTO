@@ -29,6 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+using System.Collections.Generic;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -38,6 +41,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -48,6 +52,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		protected readonly PerSecond _idleSpeed;
 		protected readonly PerSecond _ratedSpeed;
+		protected readonly Dictionary<uint, EngineFullLoadCurve> _engineFullLoadCurves;
+
+		protected readonly MeterPerSquareSecond _startAcceleration;
 
 		private bool firstInitialize = true;
 
@@ -65,11 +72,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Clutch(IVehicleContainer container, CombustionEngineData engineData) : base(container)
 		{
+			_engineFullLoadCurves = engineData.FullLoadCurves;
 			_idleSpeed = engineData.IdleSpeed;
-			_ratedSpeed = engineData.FullLoadCurves[0].RatedSpeed;
+			_ratedSpeed = _engineFullLoadCurves[0].RatedSpeed;
 			_clutchSpeedSlippingFactor = Constants.SimulationSettings.ClutchClosingSpeedNorm * (_ratedSpeed - _idleSpeed) /
 										(_idleSpeed + Constants.SimulationSettings.ClutchClosingSpeedNorm * (_ratedSpeed - _idleSpeed));
-		}
+			_startAcceleration = container.RunData.GearshiftParameters?.StartAcceleration ?? 1.0.SI<MeterPerSquareSecond>();
+        }
 
 		public virtual IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
@@ -213,11 +222,87 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			torqueIn = torque;
 			angularVelocityIn = angularVelocity;
 
-			var engineSpeedNorm = (angularVelocity - _idleSpeed) / (_ratedSpeed - _idleSpeed);
-			if (allowSlipping && engineSpeedNorm < Constants.SimulationSettings.ClutchClosingSpeedNorm) {
-				var engineSpeed = VectoMath.Max(_idleSpeed, angularVelocity);
-				angularVelocityIn = _clutchSpeedSlippingFactor * engineSpeed + _idleSpeed;
+			/* clutch slipping part */
+			var engMaxTorque = _engineFullLoadCurves[0].MaxTorque;
+			var acc = _startAcceleration;
+			var engTorque = 0.SI<NewtonMeter>();
+
+            /* gear used for clutch slipping: saturation to avoid case where Gear==0 (where GetGearData crash) and Gear>2 (allowslipping does not allow slipping at speed higher than 2) */
+            
+			if ((DataBus.DrivingCycleInfo.RoadGradient != null) && (DataBus.WheelsInfo != null))
+			{
+				var slipGear = Math.Min(Math.Max(DataBus.GearboxInfo?.Gear?.Gear ?? 1, 1), 2);
+				var ratioGB = DataBus.GearboxInfo?.GetGearData(slipGear)?.Ratio ?? 1.0;
+				var ratioAxl = DataBus.AxlegearInfo?.Ratio ?? 1.0;
+				var axlegearlossP = DataBus.AxlegearInfo?.AxlegearLoss() ?? 0.0.SI<Watt>();
+				var gearboxlossP = DataBus.GearboxInfo?.GearboxLoss() ?? 0.0.SI<Watt>();
+
+				var fWheel = DataBus.VehicleInfo.RollingResistance(DataBus.DrivingCycleInfo.RoadGradient)
+                    + DataBus.VehicleInfo.SlopeResistance(DataBus.DrivingCycleInfo.RoadGradient)
+                    + DataBus.VehicleInfo.TotalMass*acc;
+				engTorque = (fWheel*DataBus.WheelsInfo.DynamicTyreRadius) / ratioGB / ratioAxl;
+				if (angularVelocity.IsGreater(0))
+				{
+					engTorque += (axlegearlossP + gearboxlossP) / angularVelocity; // adding transmission losses
+				}
+
+				/* additional 1% safety for overloaded vehicles (no effect on Tractors even if concerned, because engine is big enough, 
+				 * but effective on small primary buses with oversized default body.
+				 * It allows to solve some issues. This line needs to be removed if primary load mass becomes saturated to TPMLM.
+				*/
+				if (DataBus.VehicleInfo.VehicleLoading.IsGreater(0.9*DataBus.VehicleInfo.VehicleMass))
+				{
+					engTorque /= 0.99; 
+				}
 			}
+
+			var angularVelocityForTorque = GetSpeedForTorque(VectoMath.Min(engMaxTorque*0.95, VectoMath.Max(engTorque, 0.0.SI<NewtonMeter>())));
+			var slipVelocity = VectoMath.Max(_idleSpeed + _clutchSpeedSlippingFactor * _idleSpeed, angularVelocityForTorque) ;
+			if (allowSlipping && angularVelocity < slipVelocity)
+			{
+				angularVelocityIn = slipVelocity;
+			}
+			
+		}
+
+		private PerSecond GetSpeedForTorque(NewtonMeter torque)
+		{
+			NewtonMeter previousFullLoadTorque = 0.SI<NewtonMeter>();
+			PerSecond previousSpeed = 0.SI<PerSecond>();
+			PerSecond engineSpeed = 0.SI<PerSecond>();
+			NewtonMeter maxTorque = 0.SI<NewtonMeter>();
+			PerSecond engineSpeedAtMaxTorque = 0.SI<PerSecond>();
+
+			if (torque.IsEqual(0.0))
+			{
+				return engineSpeed;
+			}
+
+			foreach (var curvePoint in _engineFullLoadCurves[0].FullLoadEntries)
+			{
+				if (previousFullLoadTorque < torque && curvePoint.TorqueFullLoad >= torque)
+				{
+					engineSpeed = curvePoint.EngineSpeed + (previousSpeed-curvePoint.EngineSpeed)/(previousFullLoadTorque-curvePoint.TorqueFullLoad)*(torque-curvePoint.TorqueFullLoad);
+					break;
+				}
+				if (curvePoint.TorqueFullLoad > maxTorque)
+				{
+					maxTorque = curvePoint.TorqueFullLoad;
+					engineSpeedAtMaxTorque = curvePoint.EngineSpeed;
+				}
+				previousFullLoadTorque = curvePoint.TorqueFullLoad;
+				previousSpeed = curvePoint.EngineSpeed;
+			}
+
+			if ((engineSpeed <= 0.0) || (engineSpeed == null))
+			{
+				return engineSpeedAtMaxTorque;
+			}
+			else
+			{
+				return engineSpeed;
+			}
+
 		}
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)

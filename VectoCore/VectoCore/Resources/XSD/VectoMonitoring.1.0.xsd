@@ -1,0 +1,860 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<xs:schema
+  xmlns="urn:tugraz:ivt:VectoAPI:MonitoringOutput:v1.0"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0"
+  xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9"
+  targetNamespace="urn:tugraz:ivt:VectoAPI:MonitoringOutput:v1.0"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
+  >
+
+  <xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" schemaLocation="VectoOutputManufacturer.0.9.xsd"/>
+  <xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
+
+  <xs:element name="VectoMonitoring" type="VectoMonitoringOutputType"/>
+
+  <xs:complexType name="VectoMonitoringOutputType" abstract="true">
+    <xs:attribute name="schemaVersion" type="xs:decimal" use="required"/>
+  </xs:complexType>
+  
+  <!-- VectoMonitoring Output Types-->
+  <xs:complexType name="ConventionalLorryDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:ConventionalLorryManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="Conventional_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ConventionalPrimaryBusDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:ConventionalPrimaryBusManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="Conventional_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ConventionalCompletedBusDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:ConventionalCompletedBusManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="Completed_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="HEV-Px_IHPCLorryDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:HEV-Px_IHPCLorryManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="HEV-Px_IHPC_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="HEV-Px_IHPCPrimaryBusDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:HEV-Px_IHPCPrimaryBusManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="HEV-Px_IHPC_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="HEV-S2_LorryDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:HEV-S2_LorryManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="HEV-S2_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="HEV-S2_PrimaryBusDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:HEV-S2_PrimaryBusManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="HEV-S2_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="HEV-S3_LorryDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:HEV-S3_LorryManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="HEV-S3_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="HEV-S3_PrimaryBusDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:HEV-S3_PrimaryBusManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="HEV-S3_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="HEV-S4_LorryDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:HEV-S4_LorryManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="HEV-S4_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="HEV-S4_PrimaryBusDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:HEV-S4_PrimaryBusManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="HEV-S4_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="HEV-IEPC-S_LorryDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:HEV-IEPC-S_LorryManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="HEV-IEPC-S_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="HEV-IEPC-S_PrimaryBusDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:HEV-IEPC-S_PrimaryBusManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="HEV-IEPC-S_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="HEVCompletedBusDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:HEVCompletedBusManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="Completed_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PEV-E2_LorryDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:PEV-E2_LorryManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="PEV-E2_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PEV-E2_PrimaryBusDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:PEV-E2_PrimaryBusManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="PEV-E2_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PEV-E3_LorryDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:PEV-E3_LorryManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="PEV-E3_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PEV-E3_PrimaryBusDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:PEV-E3_PrimaryBusManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="PEV-E3_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PEV-E4_LorryDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:PEV-E4_LorryManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="PEV-E4_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PEV-E4_PrimaryBusDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:PEV-E4_PrimaryBusManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="PEV-E4_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PEV-IEPC_LorryDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:PEV-IEPC_LorryManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="PEV-IEPC_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PEV-IEPC_PrimaryBusDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:PEV-IEPC_PrimaryBusManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="PEV-IEPC_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PEVCompletedBusDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:PEVCompletedBusManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="Completed_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ExemptedLorryDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:ExemptedLorryManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="Exempted_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ExemptedPrimaryBusDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:ExemptedPrimaryBusManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="Exempted_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ExemptedCompletedBusDataType">
+    <xs:complexContent>
+      <xs:extension base="VectoMonitoringOutputType">
+        <xs:sequence>
+          <xs:element name="ManufacturerRecord">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Data" type="mrf:ExemptedCompletedBusManufacturerOutputDataType"/>
+                <xs:element name="Signature" type="v1.0:SignatureType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="AdditionalData" type="Exempted_DataType"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <!-- MonitoringData Vehicle Data Types-->
+  <xs:complexType name="Completed_DataType">
+    <xs:sequence>
+      <xs:group ref="BaseVehicleData"/>
+      <xs:element name="AdvancedReducingTechnologies" type="AdvReducingTechDataType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Exempted_DataType">
+    <xs:sequence>
+      <xs:group ref="BaseVehicleData"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Conventional_DataType">
+    <xs:sequence>
+      <xs:group ref="BaseVehicleData"/>
+      <xs:group ref="FullConventionalComponents"/>
+      <xs:element name="AdvancedReducingTechnologies" type="AdvReducingTechDataType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="HEV-Px_IHPC_DataType">
+    <xs:sequence>
+      <xs:group ref="BaseVehicleData"/>
+      <xs:group ref="FullConventionalComponents"/>
+      <xs:group ref="xEV-ElectricComponents"/>
+      <xs:element name="AdvancedReducingTechnologies" type="AdvReducingTechDataType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="HEV-S2_DataType">
+    <xs:sequence>
+      <xs:group ref="BaseVehicleData"/>
+      <xs:group ref="FullConventionalComponents"/>
+      <xs:group ref="HEV-Sx-ElectricComponents"/>
+      <xs:element name="AdvancedReducingTechnologies" type="AdvReducingTechDataType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="HEV-S3_DataType">
+    <xs:sequence>
+      <xs:group ref="BaseVehicleData"/>
+      <xs:group ref="NoGearboxConventionalComponents"/>
+      <xs:group ref="HEV-Sx-ElectricComponents"/>
+      <xs:element name="AdvancedReducingTechnologies" type="AdvReducingTechDataType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="HEV-S4_DataType">
+    <xs:sequence>
+      <xs:group ref="BaseVehicleData"/>
+      <xs:group ref="NoGearboxNoAxlegearConventionalComponents"/>
+      <xs:group ref="HEV-Sx-ElectricComponents"/>
+      <xs:element name="AdvancedReducingTechnologies" type="AdvReducingTechDataType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="HEV-IEPC-S_DataType">
+    <xs:sequence>
+      <xs:group ref="BaseVehicleData"/>
+      <xs:group ref="NoGearboxOptionalAxlegearConventionalComponents"/>
+      <xs:group ref="HEV-Sx-ElectricComponents"/>
+      <xs:element name="AdvancedReducingTechnologies" type="AdvReducingTechDataType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PEV-E2_DataType">
+    <xs:sequence>
+      <xs:group ref="BaseVehicleData"/>
+      <xs:group ref="NoEngineConventionalComponents"/>
+      <xs:group ref="xEV-ElectricComponents"/>
+      <xs:element name="AdvancedReducingTechnologies" type="AdvReducingTechDataType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PEV-E3_DataType">
+    <xs:sequence>
+      <xs:group ref="BaseVehicleData"/>
+      <xs:group ref="NoEngineNoGearboxConventionalComponents"/>
+      <xs:group ref="xEV-ElectricComponents"/>
+      <xs:element name="AdvancedReducingTechnologies" type="AdvReducingTechDataType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PEV-E4_DataType">
+    <xs:sequence>
+      <xs:group ref="BaseVehicleData"/>
+      <xs:group ref="AxleWheelsConventionalComponents"/>
+      <xs:group ref="xEV-ElectricComponents"/>
+      <xs:element name="AdvancedReducingTechnologies" type="AdvReducingTechDataType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PEV-IEPC_DataType">
+    <xs:sequence>
+      <xs:group ref="BaseVehicleData"/>
+      <xs:group ref="OptionalAxlegearConventionalComponents"/>
+      <xs:group ref="xEV-ElectricComponents"/>
+      <xs:element name="AdvancedReducingTechnologies" type="AdvReducingTechDataType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- MonitoringData Component Groups-->
+  <xs:group name="FullConventionalComponents">
+    <xs:sequence>
+      <xs:element name="Engine" type="EngineDataType"/>
+      <xs:element name="Gearbox" type="GearboxDataType"/>
+      <xs:element name="Axlegear" type="AxlegearDataType"/>
+      <xs:element name="AxleWheels" type="AxleWheelsDataType"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="NoEngineConventionalComponents">
+    <xs:sequence>
+      <xs:element name="Gearbox" type="GearboxDataType"/>
+      <xs:element name="Axlegear" type="AxlegearDataType"/>
+      <xs:element name="AxleWheels" type="AxleWheelsDataType"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="NoGearboxConventionalComponents">
+    <xs:sequence>
+      <xs:element name="Engine" type="EngineDataType"/>
+      <xs:element name="Axlegear" type="AxlegearDataType"/>
+      <xs:element name="AxleWheels" type="AxleWheelsDataType"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="NoGearboxNoAxlegearConventionalComponents">
+    <xs:sequence>
+      <xs:element name="Engine" type="EngineDataType"/>
+      <xs:element name="AxleWheels" type="AxleWheelsDataType"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="NoGearboxOptionalAxlegearConventionalComponents">
+    <xs:sequence>
+      <xs:element name="Engine" type="EngineDataType"/>
+      <xs:element name="Axlegear" type="AxlegearDataType" minOccurs="0"/>
+      <xs:element name="AxleWheels" type="AxleWheelsDataType"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="NoEngineNoGearboxConventionalComponents">
+    <xs:sequence>
+      <xs:element name="Axlegear" type="AxlegearDataType"/>
+      <xs:element name="AxleWheels" type="AxleWheelsDataType"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="OptionalAxlegearConventionalComponents">
+    <xs:sequence>
+      <xs:element name="Axlegear" type="AxlegearDataType" minOccurs="0"/>
+      <xs:element name="AxleWheels" type="AxleWheelsDataType"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="AxleWheelsConventionalComponents">
+    <xs:sequence>
+      <xs:element name="AxleWheels" type="AxleWheelsDataType"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="BaseVehicleData">
+    <xs:sequence>
+      <xs:element name="VectoLicenseNbr" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>#72</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Vehicle" type="VehicleDataType"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="xEV-ElectricComponents">
+    <xs:sequence>
+      <xs:element name="ElectricMachine" type="ElectricMachineDataType"/>
+      <xs:element name="ElectricEnergyStorage" type="ElectricEnergyStorageDataType"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="HEV-Sx-ElectricComponents">
+    <xs:sequence>
+      <xs:group ref="xEV-ElectricComponents"/>
+      <xs:element name="ElectricMachineGEN" type="ElectricMachineGENDataType" />
+    </xs:sequence>
+  </xs:group>
+  <!-- MonitoringData Component Types-->
+  <xs:complexType name="VehicleDataType">
+    <xs:sequence>
+      <xs:element name="Make" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>#15</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EngineDataType">
+    <xs:sequence>
+	  <xs:element name="Manufacturer" type="xs:string"/>
+	  <xs:element name="ManufacturerAddress" type="xs:string"/>
+      <xs:element name="Make" type="xs:string"/>
+      <xs:element name="WHTC">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="CO2">
+              <xs:annotation>
+                <xs:documentation>#75</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:simpleContent>
+                  <xs:extension base="xs:double">
+                    <xs:attribute name="unit" use="required">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="g/kWh"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:attribute>
+                  </xs:extension>
+                </xs:simpleContent>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="FuelConsumption">
+              <xs:annotation>
+                <xs:documentation>#76</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:simpleContent>
+                  <xs:extension base="xs:double">
+                    <xs:attribute name="unit" use="required">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="g/kWh"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:attribute>
+                  </xs:extension>
+                </xs:simpleContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="WHSC">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="CO2">
+              <xs:annotation>
+                <xs:documentation>#77</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:simpleContent>
+                  <xs:extension base="xs:double">
+                    <xs:attribute name="unit" use="required">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="g/kWh"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:attribute>
+                  </xs:extension>
+                </xs:simpleContent>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="FuelConsumption">
+              <xs:annotation>
+                <xs:documentation>#78</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:simpleContent>
+                  <xs:extension base="xs:double">
+                    <xs:attribute name="unit" use="required">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="g/kWh"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:attribute>
+                  </xs:extension>
+                </xs:simpleContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="TypeApprovalNumber" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GearboxDataType">
+    <xs:sequence>
+      <xs:element name="Manufacturer" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>#24</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ManufacturerAddress" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>#24</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Make" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>#25</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AxlegearDataType">
+    <xs:sequence>
+      <xs:element name="Manufacturer" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>#32</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ManufacturerAddress" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>#32</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Make" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>#33</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AxleWheelsDataType">
+    <xs:sequence>
+      <xs:element name="Axle" minOccurs="2" maxOccurs="4">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Tyre">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Manufacturer" type="xs:string">
+                    <xs:annotation>
+                      <xs:documentation>#39</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                  <xs:element name="ManufacturerAddress" type="xs:string">
+                    <xs:annotation>
+                      <xs:documentation>#39</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                  <xs:element name="Make" type="xs:string">
+                    <xs:annotation>
+                      <xs:documentation>#40</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="axleNumber" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:int">
+                <xs:minInclusive value="1"/>
+                <xs:maxInclusive value="4"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AdvReducingTechDataType">
+    <xs:annotation>
+      <xs:documentation>#74</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Entry" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="category" use="required">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="advanced aerodynamic measures"/>
+                    <xs:enumeration value="advanced rolling resistance measures"/>
+                    <xs:enumeration value="advanced drivetrain technologies"/>
+                    <xs:enumeration value="advanced engine technologies"/>
+                    <xs:enumeration value="advanced auxiliary technologies"/>
+                    <xs:enumeration value="additional ADAS technologies"/>
+                    <xs:enumeration value="advanced powertrain integration and hybridisation"/>
+                    <xs:enumeration value="other"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ElectricMachineDataType">
+    <xs:sequence>
+      <xs:element name="Manufacturer" type="xs:string"/>
+      <xs:element name="ManufacturerAddress" type="xs:string"/>
+      <xs:element name="Make" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ElectricEnergyStorageDataType">
+    <xs:sequence>
+      <xs:element name="Manufacturer" type="xs:string"/>
+      <xs:element name="ManufacturerAddress" type="xs:string"/>
+      <xs:element name="Make" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ElectricMachineGENDataType">
+    <xs:sequence>
+      <xs:element name="Manufacturer" type="xs:string"/>
+      <xs:element name="ManufacturerAddress" type="xs:string"/>
+      <xs:element name="Make" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

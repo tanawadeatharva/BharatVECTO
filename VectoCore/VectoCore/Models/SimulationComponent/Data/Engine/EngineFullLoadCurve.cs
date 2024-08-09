@@ -271,13 +271,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			}
 		}
 
-		public PerSecond NTq99hSpeed => _nTq99hSpeed ?? (_nTq99hSpeed = FindEnginSpeedForTorque(0.99 * MaxTorque).Last());
+		public PerSecond MaxSpeed => FullLoadEntries.MaxBy(e => e.EngineSpeed).EngineSpeed;
 
-		public PerSecond NTq99lSpeed => _nTq99lSpeed ?? (_nTq99lSpeed = FindEnginSpeedForTorque(0.99 * MaxTorque).First());
+		public PerSecond NTq99hSpeed => _nTq99hSpeed ?? (_nTq99hSpeed = FindEngineSpeedForTorque(0.99 * MaxTorque).Last());
+
+		public PerSecond NTq99lSpeed => _nTq99lSpeed ?? (_nTq99lSpeed = FindEngineSpeedForTorque(0.99 * MaxTorque).First());
 
 		public PerSecond NP99hSpeed => _nP99hSpeed ?? (_nP99hSpeed = ComputeNP99HSpeed());
 
-		public PerSecond NTq98hSpeed => _nTq98hSpeed ?? (_nTq98hSpeed = FindEnginSpeedForTorque(0.98 * MaxTorque).Last());
+		public PerSecond NTq98hSpeed => _nTq98hSpeed ?? (_nTq98hSpeed = FindEngineSpeedForTorque(0.98 * MaxTorque).Last());
 
 		public PerSecond NP98hSpeed => _nP98hSpeed ?? (_nP98hSpeed = ComputeNP98HSpeed());
 
@@ -358,11 +360,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			return retVal.First(x => x.IsBetween(p1.EngineSpeed, p2.EngineSpeed)).SI<PerSecond>();
 		}
 
-		private List<PerSecond> FindEnginSpeedForTorque(NewtonMeter torque)
+		private List<PerSecond> FindEngineSpeedForTorque(NewtonMeter torque)
 		{
 			var retVal = new List<PerSecond>();
 			foreach (var pair in FullLoadEntries.Pairwise(Tuple.Create)) {
-				var solution = FindEnginSpeedForTorque(pair.Item1, pair.Item2, torque);
+				var solution = FindEngineSpeedForTorque(pair.Item1, pair.Item2, torque);
 				if (solution != null) {
 					retVal.Add(solution);
 				}
@@ -371,7 +373,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			return retVal.Distinct(new SI.EqualityComparer<PerSecond>()).ToList();
 		}
 
-		private PerSecond FindEnginSpeedForTorque(FullLoadCurveEntry p1, FullLoadCurveEntry p2, NewtonMeter torque)
+		private PerSecond FindEngineSpeedForTorque(FullLoadCurveEntry p1, FullLoadCurveEntry p2, NewtonMeter torque)
 		{
 			if (p1.TorqueFullLoad.IsEqual(p2.TorqueFullLoad) && p1.TorqueFullLoad.IsEqual(torque)) {
 				// horizontal line in FLD that equals requested torque

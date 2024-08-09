@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					.Cast<XmlNode>().Select(x => {
 						var ratedCapacity = GetNode("RatedCapacity", x).InnerText.ToDouble().SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>();
 						var voltage = GetNode("NominalVoltage", x).InnerText.ToDouble().SI<Volt>();
-						var technology = GetNode("BatteryTechnology", x).InnerText;
+						var technology = ConvertToValidTechnology(GetNode("BatteryTechnology", x).InnerText);
 						return new BusAuxBatteryInputData(technology, voltage, ratedCapacity);
 					})
 					.Concat(GetNodes(new [] { XMLNames.BusAux_ElectricSystem, "Capacitor" }).Cast<XmlNode>()
@@ -222,6 +222,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual bool? AirElectricHeater => false;
 
 		#endregion
+
+		private string ConvertToValidTechnology(string technology)
+		{
+			// Replace invalid character '–' (En Dash; U+2013) by '-' (Hyphen Minus; U+002D).
+			return technology.Contains('–') ? technology.Replace('–', '-') : technology;
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------

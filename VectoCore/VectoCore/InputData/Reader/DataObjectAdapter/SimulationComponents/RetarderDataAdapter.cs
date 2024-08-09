@@ -6,6 +6,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
@@ -122,9 +123,26 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		
 	}
 
-	public class GenericRetarderDataAdapter : IRetarderDataAdapter
+	public class GenericRetarderDataAdapter : IGenericRetarderDataAdapter
 	{
 		private readonly GenericBusRetarderData _genericRetarderData = new GenericBusRetarderData();
+
+		public RetarderData CreateGenericRetarderData(IRetarderInputData retarder, VectoRunData vehicleData)
+		{
+			bool isBatteryElectric =
+				vehicleData.JobType == VectoSimulationJobType.BatteryElectricVehicle
+				|| vehicleData.JobType == VectoSimulationJobType.IEPC_E;
+			
+			PerSecond maxMotorSpeed = isBatteryElectric
+				? vehicleData.ElectricMachinesData[0].Item2.EfficiencyData.MaxSpeed
+				: vehicleData.EngineData.FullLoadCurves[0].MaxSpeed;
+			
+			double maxGbxRatio = vehicleData.GearboxData?.Gears[(uint)vehicleData.GearboxData.Gears.Count].Ratio ?? 1;
+			double combinedRatios = isBatteryElectric ? maxGbxRatio * vehicleData.ElectricMachinesData[0].Item2.RatioADC : maxGbxRatio;
+
+			return _genericRetarderData.CreateGenericBusRetarderData(retarder, maxMotorSpeed, combinedRatios);
+		}
+
 		public RetarderData CreateRetarderData(IRetarderInputData retarder, ArchitectureID architecture,
 			IIEPCDeclarationInputData iepcInputData)
 		{

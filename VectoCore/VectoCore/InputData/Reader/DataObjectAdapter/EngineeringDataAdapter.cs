@@ -368,8 +368,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2);
 				}
 
+				ShiftPolygon extendedShiftPolygon = null;
+				if (gearbox.Type == GearboxType.MT)
+				{
+					extendedShiftPolygon = shiftPolygonCalc != null
+						? shiftPolygonCalc.ComputeDeclarationExtendedShiftPolygon(
+							gearbox.Type, (int)i, engineData?.FullLoadCurves[i + 1], gearbox.Gears, engineData, axlegearRatio,
+							dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2)
+						: DeclarationData.Gearbox.ComputeManualTransmissionShiftPolygonExtended(
+							(int)i, engineData?.FullLoadCurves[i + 1],
+							gearsInput,
+							engineData,
+							axlegearRatio,
+							dynamicTyreRadius);
+				}
+
 				var gearData = new GearData {
 					ShiftPolygon = shiftPolygon,
+					ExtendedShiftPolygon = extendedShiftPolygon,
 					MaxSpeed = gear.MaxInputSpeed,
 					MaxTorque = gear.MaxTorque,
 					Ratio = gear.Ratio,

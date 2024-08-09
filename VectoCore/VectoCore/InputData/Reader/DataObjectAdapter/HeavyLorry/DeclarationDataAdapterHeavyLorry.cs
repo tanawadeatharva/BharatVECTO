@@ -218,6 +218,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			{
 				return ElectricMachinesDataAdapter.CreateIEPCElectricMachines(iepc, averageVoltage);
 			}
+
+			public RetarderData CreateGenericRetarderData(IRetarderInputData retarderData, VectoRunData vectoRun)
+			{
+				throw new NotImplementedException("Not applicable to Heavy Lorries");
+			}
 		}
 
 		public class Conventional : LorryBase
