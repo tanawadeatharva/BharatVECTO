@@ -2,8 +2,10 @@
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 {
@@ -71,7 +73,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
                                 runData.EngineData.IdleSpeed) *
                             engFuel.FuelConsumptionCorrectionFactor;
 
-            var elPowerGenerated = modData.TimeIntegral<WattSecond>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(), PowertrainPosition.GEN));
+            var elPowerGenerated = modData.TimeIntegral<WattSecond>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(), PowertrainPosition.GEN, Constants.NOT_IN_AXLE_POWERTRAIN.FormatAxleNumber()));
             var fcGenCharging = modData.TotalFuelConsumption(ModalResultField.FCFinal, fuel);
             var socCorr = elPowerGenerated.IsEqual(0)
                 ? (runData.GenSet.GenSetCharacteristics.OptimalPoint.FuelConsumption /

@@ -241,7 +241,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				maxEnginePower / nextEngineSpeed * GearboxModelData.Gears[gear.Gear].Ratio).Value * nextEngineSpeed;
 			//DataBus.GearboxLoss();
 			var slopeLoss = Container.VehicleInfo.SlopeResistance(avgSlope) * Container.VehicleInfo.VehicleSpeed;
-			var axleLoss = Container.AxlegearInfo.AxlegearLoss();
+			var axleLoss = Container.AxlegearInfo().AxlegearLoss();
 
 			var accelerationPower = maxEnginePower - gearboxLoss - axleLoss - airDragLoss - rollResistanceLoss - slopeLoss;
 

@@ -81,6 +81,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					ResultWriterNamingHelper.RESULT_WRITER_2nd_AMDM)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) =>
 					c.GetElectricRangeWriter(null, XNamespace.None));
+
 			Bind<IElectricRangeWriter>().To<ElectricRangeWriter_BOL>().When(request =>
 					AccessedViaMRFResultsWriterFactory(request) && request.ParentContext?.Binding.Metadata.Name ==
 					ResultWriterNamingHelper.RESULT_WRITER_3rd_AMDM)
@@ -179,6 +180,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				.NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetBusFCHVNonOVCSuccessResultWriter(null, XNamespace.None));
 			Bind<IResultGroupWriter>().To<BusFCHVOVC_MRF_ResultWriter>().When(AccessedViaMRFResultsWriterFactory)
 				.NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetBusFCHVOVCSuccessResultWriter(null, XNamespace.None));
+
             Bind<IResultGroupWriter>().To<BusPEVMRFResultWriter>().When(AccessedViaMRFResultsWriterFactory)
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetBusPEVSuccessResultWriter(null, XNamespace.None));
 

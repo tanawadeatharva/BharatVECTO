@@ -37,6 +37,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -171,6 +172,11 @@ namespace TUGraz.VectoCore.Utils
 			}
 
 			return source;
+		}
+
+		public static string FormatAxleNumber(this int axleNumber)
+		{
+			return (axleNumber == Constants.NOT_IN_AXLE_POWERTRAIN) ? "" : $"_axl{axleNumber}";
 		}
 	}
 }

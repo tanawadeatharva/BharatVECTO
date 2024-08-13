@@ -61,20 +61,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.UpdateComponents();
 
 			if (TestPowertrain.Gearbox != null) {
-				if (!(DataBus.GearboxInfo is IAPTNGearbox)) {
-					throw new VectoException("AT Gearbox Required!");
-				}
-				var gearboxInfo = DataBus.GearboxInfo;
-				var currentGear = DataBus.VehicleInfo.VehicleStopped ? gearboxInfo.NextGear : DataBus.GearboxInfo.Gear;
+				var gearboxInfo = DataBus.GearboxesInfo.FirstOrDefault() as IAPTNGearbox 
+					?? throw new VectoException("AT Gearbox Required!");
+				var currentGear = DataBus.VehicleInfo.VehicleStopped ? gearboxInfo.NextGear : gearboxInfo.Gear;
 				TestPowertrain.Gearbox.SetDisengaged = gearboxInfo.Disengaged;
-				TestPowertrain.Gearbox.SetDisengageGearbox = gearboxInfo.DisengageGearbox;
+				TestPowertrain.Gearbox.SetDisengageGearbox = (gearboxInfo as IGearboxInfo).DisengageGearbox;
 				TestPowertrain.Gearbox.SetGear = currentGear;
 				TestPowertrain.Gearbox.SetNextGear = gearboxInfo.NextGear;
 			}
 			TestPowertrain.Vehicle.Initialize(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
 			TestPowertrain.Charger.UpdateFrom(maxPowerGenset);
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
-			TestPowertrain.Gearbox?.UpdateFrom(DataBus.GearboxInfo);
+			TestPowertrain.Gearbox?.UpdateFrom(DataBus.GearboxesInfo.FirstOrDefault());
 			
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
 			TestPowertrain.ElectricMotor.UpdateFrom(DataBus.GetElectricMotors()
@@ -113,20 +111,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.UpdateComponents();
 
 			if (TestPowertrain.Gearbox != null) {
-				if (!(DataBus.GearboxInfo is IAMTGearbox || DataBus.GearboxInfo is IPEVGearbox || DataBus.GearboxInfo is IIEPCGearbox)) {
+				var g = DataBus.GearboxesInfo.FirstOrDefault();
+				if (!(g is IAMTGearbox || g is IPEVGearbox || g is IIEPCGearbox)) {
 					throw new VectoException("AMT Gearbox Required!");
-                }
-				var g = DataBus.GearboxInfo ?? throw new VectoException("AMT Gearbox Required!");
+				}
 				TestPowertrain.Gearbox.SetDisengaged = g.Disengaged;
 				TestPowertrain.Gearbox.SetDisengageGearbox = g.DisengageGearbox;
-				TestPowertrain.Gearbox.SetGear = DataBus.VehicleInfo.VehicleStopped || g.Disengaged ? g.NextGear : DataBus.GearboxInfo.Gear;
+				TestPowertrain.Gearbox.SetGear = DataBus.VehicleInfo.VehicleStopped || g.Disengaged ? g.NextGear : g.Gear;
 				TestPowertrain.Gearbox.SetNextGear = g.NextGear;
 			}
 
 			TestPowertrain.Vehicle.Initialize(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
 			TestPowertrain.Charger.UpdateFrom(maxPowerGenset);
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
-			TestPowertrain.Gearbox?.UpdateFrom(DataBus.GearboxInfo);
+			TestPowertrain.Gearbox?.UpdateFrom(DataBus.GearboxesInfo.FirstOrDefault());
 
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
 			TestPowertrain.ElectricMotor.UpdateFrom(DataBus.GetElectricMotors()
@@ -216,7 +214,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			//	.Select(x => new KeyValuePair<PowertrainPosition, NewtonMeter>(x.Item1, null))
 			//	.ToDictionary(x => x.Key, x => new Tuple<PerSecond, NewtonMeter>(null, x.Value));
 
-			var emDtData = runData.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item2;
+			var emDtData = runData.GetEMData().First(x => x.Item1.Position != PowertrainPosition.GEN).Item2;
 			var minGensetPower = emDtData.EfficiencyData.VoltageLevels.First().FullLoadCurve.MaxPower * StrategyParameters.GensetMinOptPowerFactor;
 
 			GenSetCharacteristics = new GenSetCharacteristics(minGensetPower);
@@ -233,8 +231,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		public virtual IHybridStrategyResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			EmPosition = DataBus.PowertrainInfo.ElectricMotorPositions.FirstOrDefault(x =>
-				x != PowertrainPosition.GEN);
+			EmPosition = DataBus.ElectricMotorsInfo.FirstOrDefault(x => x.Position != PowertrainPosition.GEN).Position;
 
 			var retVal = new HybridStrategyResponse() { MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>() };
 
@@ -273,7 +270,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				};
 				return tmp;
 			}
-			var gensetDeRated = DataBus.ElectricMotorInfo(PowertrainPosition.GEN).DeRatingActive;
+			var gensetDeRated = DataBus.ElectricMotorsInfo.First(x => x.Position == PowertrainPosition.GEN).DeRatingActive;
 
 			var maxPowerGenset = gensetDeRated
 				? ApproachGensetOperatingPoint(absTime, dt, GenSetCharacteristics.MaxPowerDeRated,
@@ -347,7 +344,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					genSetOperatingPoint = MaxGensetPower(absTime, dt, drivetrainDemand, maxPowerGenset, gensetState);
 					emTorque = TestPowertrain.ElectricMotor.GetTorqueForElectricPower(
 						DataBus.BatteryInfo.InternalVoltage, drivetrainDemand.Response.ElectricSystem.MaxPowerDrive,
-						drivetrainDemand.Response.ElectricMotor.AngularVelocity, dt, DataBus.GearboxInfo?.Gear ?? new GearshiftPosition(0), dryRun);
+						drivetrainDemand.Response.ElectricMotor.AngularVelocity, dt, DataBus.GearboxesInfo.FirstOrDefault()?.Gear ?? new GearshiftPosition(0), dryRun);
 					if (emTorque == null) {
 						emTorque = -emResponse.MaxDriveTorque;
 					} else {
@@ -427,8 +424,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		protected virtual NewtonMeter GetMechanicalAssistPower(Second absTime, Second dt, NewtonMeter emOutTorque, ElectricMotorResponse emResponse, PerSecond currOutAngularVelocity)
 		{
-			if (!DataBus.GearboxInfo.GearEngaged(absTime) && DataBus.DriverInfo.DrivingAction == DrivingAction.Roll) {
-				var em = DataBus.ElectricMotorInfo(EmPosition);
+			if (!DataBus.GearboxesInfo.First().GearEngaged(absTime) && DataBus.DriverInfo.DrivingAction == DrivingAction.Roll) {
+				var em = DataBus.ElectricMotorsInfo.First(x => x.Position == EmPosition);
 				var avgSpeed = (em.ElectricMotorSpeed + currOutAngularVelocity) / 2;
 				var inertiaTorqueLoss = avgSpeed.IsEqual(0)
 					? 0.SI<NewtonMeter>()
@@ -463,7 +460,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		{
 			var electricPowerDemand = drivetrainDemand.ElectricPowerDemand;
 
-			var gensetLimit = DataBus.ElectricMotorInfo(PowertrainPosition.GEN).DeRatingActive
+			var gensetLimit = DataBus.ElectricMotorsInfo.First(x => x.Position == PowertrainPosition.GEN).DeRatingActive
 				? GenSetCharacteristics.MaxPowerDeRated
 				: GenSetCharacteristics.MaxPower;
 			if (maxPowerGenset.ElectricPower.IsSmaller(gensetLimit.ElectricPower)) {
@@ -508,7 +505,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				return StateMachineState.Acc_S3;
 			}
 
-			var optimalGensetPoint = DataBus.ElectricMotorInfo(PowertrainPosition.GEN).DeRatingActive
+			var optimalGensetPoint = DataBus.ElectricMotorsInfo.First(x => x.Position == PowertrainPosition.GEN).DeRatingActive
 				? GenSetCharacteristics.OptimalPointDeRated
 				: GenSetCharacteristics.OptimalPoint;
 			switch (PreviousState.SMState) {
@@ -616,12 +613,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 					break;
 			}
-			TestGenSet.EM_ThermalBuffer =
-				(DataBus.ElectricMotorInfo(PowertrainPosition.GEN) as ElectricMotor).ThermalBuffer;
-			TestGenSet.EM_DeRatingActive =
-				(DataBus.ElectricMotorInfo(PowertrainPosition.GEN) as ElectricMotor).DeRatingActive;
-			TestGenSet.EM_DrivetrainSpeed = (DataBus.ElectricMotorInfo(PowertrainPosition.GEN) as ElectricMotor).PreviousState.DrivetrainSpeed;
-			TestGenSet.EM_Speed = (DataBus.ElectricMotorInfo(PowertrainPosition.GEN) as ElectricMotor).PreviousState.EMSpeed;
+			var emGen = DataBus.ElectricMotorsInfo.First(x => x.Position == PowertrainPosition.GEN) as ElectricMotor;
+			TestGenSet.EM_ThermalBuffer = emGen.ThermalBuffer;
+			TestGenSet.EM_DeRatingActive = emGen.DeRatingActive;
+			TestGenSet.EM_DrivetrainSpeed = emGen.PreviousState.DrivetrainSpeed;
+			TestGenSet.EM_Speed = emGen.PreviousState.EMSpeed;
 
 			if (TestPowertrain.BatterySystem is BatterySystem bs) {
 				var batSystem = DataBus.BatteryInfo as BatterySystem;

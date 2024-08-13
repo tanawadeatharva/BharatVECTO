@@ -12,7 +12,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public int AxleNumber { get; internal set; }
 
 		[Required]
-		public VectoSimulationJobType Type { get; internal set; }
+		public ArchitectureID Architecture { get; internal set; }
 
 		[ValidateObject]
 		public GearboxData GearboxData { get; internal set; }
@@ -29,8 +29,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[ValidateObject]
 		public PTOData PTO { get; internal set; }
 
-		public ShiftStrategyParameters GearshiftParameters { get; internal set; }
+        public IDrivingCycleData PTOCycleWhileDrive { get; internal set; }
+
+        public ShiftStrategyParameters GearshiftParameters { get; internal set; }
 
 		public Tuple<PowertrainPosition, ElectricMotorData> ElectricMachineData { get; internal set; }
+
+		public string ShiftStrategy { get; set; }
 	}
 }

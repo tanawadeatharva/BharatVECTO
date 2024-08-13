@@ -150,10 +150,29 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return DoCreateGearboxData(inputData, runData, shiftPolygonCalculator, supportedGearboxTypes);
 		}
 
-		protected abstract GearboxData DoCreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes);
+        public GearboxData CreateGearboxData(IVehicleDeclarationInputData vehicle, VectoRunData runData,
+            IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes, IGearboxDeclarationInputData gearbox,
+            ITorqueConverterDeclarationInputData torqueConverter)
+		{
+            CheckDeclarationMode(gearbox, "Gearbox");
+            CheckGearNumbers(gearbox);
+            return DoCreateGearboxData(vehicle, runData, shiftPolygonCalculator, supportedGearboxTypes, gearbox, torqueConverter);
+        }
 
+		public GearboxData CreateGearboxData(VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalculator, IIEPCDeclarationInputData iepc)
+		{
+			return DoCreateGearboxData(runData, shiftPolygonCalculator, iepc);
+        }
 
-		public ShiftStrategyParameters CreateGearshiftData(double axleRatio,
+        protected abstract GearboxData DoCreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes);
+
+		protected abstract GearboxData DoCreateGearboxData(IVehicleDeclarationInputData vehicle, VectoRunData runData,
+			IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes, IGearboxDeclarationInputData gearbox,
+			ITorqueConverterDeclarationInputData torqueConverter);
+
+        protected abstract GearboxData DoCreateGearboxData(VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalculator, IIEPCDeclarationInputData iepc);
+
+        public ShiftStrategyParameters CreateGearshiftData(double axleRatio,
 			PerSecond engineIdlingSpeed, GearboxType gearboxType, int gearsCount)
 		{
 			var retVal = new ShiftStrategyParameters
@@ -264,23 +283,35 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		{
 			_torqueConverterDataAdapter = torqueConverterDataAdapter;
 		}
-		#region Overrides of GearBoxDataAdapterBase
+        #region Overrides of GearBoxDataAdapterBase
 
-		protected override GearboxData DoCreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
+        protected override GearboxData DoCreateGearboxData(VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalculator, IIEPCDeclarationInputData iepc)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override GearboxData DoCreateGearboxData(IVehicleDeclarationInputData vehicle, VectoRunData runData,
 			IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes)
 		{
-			var gearbox = inputData.Components.GearboxInputData;
+            var gearbox = vehicle.Components.GearboxInputData;
+            var torqueConverter = vehicle.Components.TorqueConverterInputData;
 
-			var adas = inputData.ADAS;
-			var torqueConverter = inputData.Components.TorqueConverterInputData;
+			return DoCreateGearboxData(vehicle, runData, shiftPolygonCalculator, supportedGearboxTypes, gearbox, torqueConverter);
+        }
 
+        protected override GearboxData DoCreateGearboxData(IVehicleDeclarationInputData vehicle, VectoRunData runData,
+			IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes, IGearboxDeclarationInputData gearbox,
+			ITorqueConverterDeclarationInputData torqueConverter)
+		{
+            var adas = vehicle.ADAS;
+			
 			var engine = runData.EngineData;
 			var axlegearRatio = runData.AxleGearData?.AxleGear.Ratio ?? 1.0f;
 			var dynamicTyreRadius = runData.VehicleData.DynamicTyreRadius;
 
 			var retVal = SetCommonGearboxData(gearbox);
 
-			var isBatteryElectric = inputData.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
+			var isBatteryElectric = vehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
 				VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.FCHV);
 			if (isBatteryElectric && (runData.ElectricMachinesData == null || runData.ElectricMachinesData.Count == 0)) {
 				throw new VectoException(
@@ -292,10 +323,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					"Gearshift parameters have to be set for battery electric vehicles before creating gearbox data!");
 			}
 
-            if (inputData.VehicleType.IsOneOf(
+            if (vehicle.VehicleType.IsOneOf(
 					VectoSimulationJobType.BatteryElectricVehicle, 
 					VectoSimulationJobType.SerialHybridVehicle, 
-					VectoSimulationJobType.FCHV) &&
+					VectoSimulationJobType.FCHV,
+					VectoSimulationJobType.Multiple_FCHV,
+                    VectoSimulationJobType.Multiple_PEV,
+                    VectoSimulationJobType.Multiple_SHEV) &&
 				gearbox.Type.AutomaticTransmission())
 			{
 				// PEV with APT-S or APT-P transmission are simulated as APT-N
@@ -319,7 +353,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				throw new VectoSimulationException("Unsupported gearbox type: {0}!", gearbox.Type);
 			}
 
-			var gearsInput = FilterDisabledGears(inputData.TorqueLimits, gearbox);  //gearbox.Gears;
+			var gearsInput = FilterDisabledGears(vehicle.TorqueLimits, gearbox);  //gearbox.Gears;
 			if (gearsInput.Count < 1)
 			{
 				throw new VectoSimulationException(
@@ -338,7 +372,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			
 			var vehicleCategory = runData.VehicleData.VehicleCategory == VehicleCategory.GenericBusVehicle
 				? VehicleCategory.GenericBusVehicle
-				: inputData.VehicleCategory;
+				: vehicle.VehicleCategory;
 			
             for (uint i = 0; i < gearsInput.Count; i++)
 			{
@@ -390,9 +424,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 
 			// remove disabled gears (only the last or last two gears may be removed)
-			if (inputData.TorqueLimits != null)
+			if (vehicle.TorqueLimits != null)
 			{
-				var toRemove = (from tqLimit in inputData.TorqueLimits
+				var toRemove = (from tqLimit in vehicle.TorqueLimits
 								where tqLimit.Gear >= gears.Keys.Max() - 1 && tqLimit.MaxTorque.IsEqual(0)
 								select (uint)tqLimit.Gear).ToList();
 				if (toRemove.Count > 0 && toRemove.Min() <= gears.Count - toRemove.Count)
@@ -523,10 +557,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 	public class IEPCGearboxDataAdapter : GearboxDataAdapterBase
 	{
 
-		private GearboxData CreateIEPCGearboxData(IVehicleDeclarationInputData vehicle, VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalc)
+		private GearboxData CreateIEPCGearboxData(IIEPCDeclarationInputData iepc, VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalc)
 		{
-			var iepc = vehicle.Components.IEPC;
-
 			var axlegearRatio = runData.AxleGearData?.AxleGear.Ratio ?? 1.0;
 			var dynamicTyreRadius = runData.VehicleData.DynamicTyreRadius;
 
@@ -639,10 +671,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
         protected override GearboxData DoCreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
 			IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes)
 		{
-			return CreateIEPCGearboxData(inputData, runData, shiftPolygonCalculator);
+			return CreateIEPCGearboxData(inputData.Components.IEPC, runData, shiftPolygonCalculator);
 		}
 
-		protected override void CheckGearNumbers(IGearboxDeclarationInputData gbxInputData)
+        protected override GearboxData DoCreateGearboxData(VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalculator, IIEPCDeclarationInputData iepc)
+        {
+            return CreateIEPCGearboxData(iepc, runData, shiftPolygonCalculator);
+        }
+
+        protected override GearboxData DoCreateGearboxData(IVehicleDeclarationInputData vehicle, VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes, IGearboxDeclarationInputData gearbox, ITorqueConverterDeclarationInputData torqueConverter)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void CheckGearNumbers(IGearboxDeclarationInputData gbxInputData)
 		{
 			// TODO?
 		}

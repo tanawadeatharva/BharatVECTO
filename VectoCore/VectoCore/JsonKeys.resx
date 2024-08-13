@@ -594,4 +594,13 @@
   <data name="VTP_CustomerInformationFile" xml:space="preserve">
     <value>CustomerInformationFile</value>
   </data>
+  <data name="Vehicle_EM_Count" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="Vehicle_IEPC" xml:space="preserve">
+    <value>IEPC</value>
+  </data>
+  <data name="Vehicle_HybridStrategyParams" xml:space="preserve">
+    <value>HybridStrategyParams</value>
+  </data>
 </root>

@@ -509,7 +509,7 @@ TestCase(8, 4, 15000, 200, true),]
 		container.Setup(c => c.WheelsInfo).Returns(wi.Object);
 		wi.Setup(w => w.ReducedMassWheels).Returns(0.SI<Kilogram>());
 		var axli = new Mock<IAxlegearInfo>();
-		container.Setup(c => c.AxlegearInfo).Returns(axli.Object);
+		container.Setup(c => c.AxlegearInfo(Constants.NOT_IN_AXLE_POWERTRAIN)).Returns(axli.Object);
 		axli.Setup(a => a.AxlegearLoss()).Returns(0.SI<Watt>());
         return container;
     }
@@ -538,7 +538,7 @@ TestCase(8, 4, 15000, 200, true),]
 		simplePt.Setup(s => s.IsTestPowertrain).Returns(true);
 
 		var gbx = GetMockTestGearbox(runData.GearboxData.Gears);
-		simplePt.Setup(s => s.GearboxInfo).Returns(gbx.Object);
+		simplePt.Setup(s => s.GearboxInfo(Constants.NOT_IN_AXLE_POWERTRAIN)).Returns(gbx.Object);
 		simplePt.Setup(s => s.GearboxCtl).Returns(gbx.Object);
 		simplePt.Setup(s => s.GearboxOutPort).Returns(gbx.Object);
 		//Vehicle Info

@@ -78,6 +78,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			Bind<ILorryDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.Exempted>()
 				.WhenInjectedExactlyInto<DeclarationModeHeavyLorryRunDataFactory.Exempted>();
 
+			Bind<ILorryDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.MultipleFCHVLorryDataAdapter>()
+				.WhenInjectedExactlyInto<DeclarationModeHeavyLorryRunDataFactory.MultipleFCHV>();
+
+			Bind<ILorryDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.MultiplePEVLorryDataAdapter>()
+				.WhenInjectedExactlyInto<DeclarationModeHeavyLorryRunDataFactory.MultiplePEV>();
+
+			Bind<ILorryDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.MultipleSHEVLorryDataAdapter>()
+				.WhenInjectedExactlyInto<DeclarationModeHeavyLorryRunDataFactory.MultipleSHEV>();
+
 			Bind<ILorryDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.Conventional>()
 				.WhenInjectedExactlyInto<DeclarationVTPModeVectoRunDataFactoryLorries>();
             #endregion HeavyLorry
@@ -140,7 +149,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			Bind<IPrimaryBusDeclarationDataAdapter>().To<DeclarationDataAdapterPrimaryBus.PEV_E_IEPC>()
 				.WhenInjectedExactlyInto<DeclarationModePrimaryBusRunDataFactory.PEV_E_IEPC>();
 
-			Bind<IPrimaryBusDeclarationDataAdapter>().To<DeclarationDataAdapterPrimaryBus.Exempted>()
+			Bind<IPrimaryBusDeclarationDataAdapter>().To<DeclarationDataAdapterPrimaryBus.MultiplePEV>()
+				.WhenInjectedExactlyInto<DeclarationModePrimaryBusRunDataFactory.MultiplePEV>();
+
+            Bind<IPrimaryBusDeclarationDataAdapter>().To<DeclarationDataAdapterPrimaryBus.MultipleFCHV>()
+                .WhenInjectedExactlyInto<DeclarationModePrimaryBusRunDataFactory.MultipleFCHV>();
+
+            Bind<IPrimaryBusDeclarationDataAdapter>().To<DeclarationDataAdapterPrimaryBus.MultipleSHEV>()
+                .WhenInjectedExactlyInto<DeclarationModePrimaryBusRunDataFactory.MultipleSHEV>();
+
+            Bind<IPrimaryBusDeclarationDataAdapter>().To<DeclarationDataAdapterPrimaryBus.Exempted>()
 				.WhenInjectedExactlyInto<DeclarationModePrimaryBusRunDataFactory.Exempted>();
 
 			Bind<IPrimaryBusDeclarationDataAdapter>().To<DeclarationDataAdapterPrimaryBus.Conventional>()

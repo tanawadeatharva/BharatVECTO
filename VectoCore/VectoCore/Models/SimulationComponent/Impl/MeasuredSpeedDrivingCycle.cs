@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="container">The container.</param>
 		/// <param name="cycle">The cycle.</param>
 		public MeasuredSpeedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle)
-			: base(container)
+			: base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			Data = cycle;
 			CycleIterator = new DrivingCycleEnumerator(cycle);
@@ -128,16 +128,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			else if ((RunData.JobType == VectoSimulationJobType.BatteryElectricVehicle) ||
 				(RunData.JobType == VectoSimulationJobType.ConventionalVehicle)) {
 				
-				if (DataBus.GearboxCtl != null) {
-					DataBus.GearboxCtl.GearShiftTriggered -= GearShiftTriggered;
-					DataBus.GearboxCtl.GearShiftTriggered += GearShiftTriggered;
+				if (DataBus.GearboxesCtl.Count() > 0) {
+					DataBus.GearboxesCtl.First().GearShiftTriggered -= GearShiftTriggered;
+					DataBus.GearboxesCtl.First().GearShiftTriggered += GearShiftTriggered;
 				}
             }
 		}
 
 		private void GearShiftTriggered()
         {
-			if (DataBus.GearboxInfo.GearboxType == GearboxType.IHPC) {
+			if (DataBus.GearboxesInfo.First(x => x.AxleNumber == Constants.NOT_IN_AXLE_POWERTRAIN).GearboxType == GearboxType.IHPC) {
 				return;
             }
 
@@ -298,7 +298,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             }
 			else {
 				DriverBehavior = DrivingBehavior.Driving;
-				DrivingAction = DataBus.GearboxInfo.GearEngaged(absTime)
+				DrivingAction = DataBus.GearboxesInfo.First(x => x.AxleNumber == Constants.NOT_IN_AXLE_POWERTRAIN).GearEngaged(absTime)
 					? (gearShiftStarted 
 						? DrivingAction.Roll 
 						: DrivingAction.Accelerate) 
@@ -312,7 +312,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				DetermineDriverActionWithoutVelocityDropData(absTime);
             }
 			else if (Data.CycleType == CycleType.MeasuredSpeed) {
-				if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+				if (DataBus.GearboxesInfo.First(x => x.AxleNumber == Constants.NOT_IN_AXLE_POWERTRAIN).GearboxType.AutomaticTransmission()) {
 					DetermineDriverActionForAutomaticTransmission(absTime);	
 				}
 				else {
@@ -327,7 +327,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				DriverBehavior = DrivingBehavior.Halted;
 				DrivingAction = DrivingAction.Halt;
 
-				DataBus.GearboxCtl.DisengageGearbox = false;
+				DataBus.GearboxesCtl.First().DisengageGearbox = false;
 			}
 			else if ((DriverAcceleration < 0) && (DrivingAction != DrivingAction.Roll)) {
 				DriverBehavior = DrivingBehavior.Braking;
@@ -335,11 +335,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             }
 			else {
 				DriverBehavior = DrivingBehavior.Driving;
-				DrivingAction = DataBus.GearboxInfo.GearEngaged(absTime) || (DataBus.GearboxInfo.GearboxType == GearboxType.IHPC)
+				var gearbox = DataBus.GearboxesInfo.First(x => x.AxleNumber == Constants.NOT_IN_AXLE_POWERTRAIN);
+
+				DrivingAction = gearbox.GearEngaged(absTime) || (gearbox.GearboxType == GearboxType.IHPC)
 					? DrivingAction.Accelerate 
 					: DrivingAction.Roll;
 
-				DataBus.GearboxCtl.DisengageGearbox = false;
+				DataBus.GearboxesCtl.First().DisengageGearbox = false;
 			}
 		}
 		
@@ -355,7 +357,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             }
 			else {
 				DriverBehavior = DrivingBehavior.Driving;
-				DrivingAction = DataBus.GearboxInfo.GearEngaged(absTime) ? DrivingAction.Accelerate : DrivingAction.Roll;
+				DrivingAction = DataBus.GearboxesInfo.First(x => x.AxleNumber == Constants.NOT_IN_AXLE_POWERTRAIN).GearEngaged(absTime) 
+					? DrivingAction.Accelerate 
+					: DrivingAction.Roll;
 			}
         }
 
@@ -376,7 +380,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				DrivingAction =  DrivingAction.Halt;
 				DriverBehavior = DrivingBehavior.Halted;
 				
-				DataBus.GearboxCtl.DisengageGearbox = false;
+				DataBus.GearboxesCtl.First().DisengageGearbox = false;
             }
 			else {
 				if (!AreVelocityDropDataAvailable()) {
@@ -389,26 +393,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var tolerance = (((DataBus.VehicleInfo.VehicleSpeed + nextSpeed) / 2) * 0.001).Abs();
 
 				if (CycleData.RightSample.VehicleTargetSpeed.IsGreater(nextSpeed, tolerance)) {
-
-					DrivingAction = DataBus.GearboxInfo.GearEngaged(absTime) || (DataBus.GearboxInfo.GearboxType == GearboxType.IHPC) 
+					var gearbox = DataBus.GearboxesInfo.First(x => x.AxleNumber == Constants.NOT_IN_AXLE_POWERTRAIN);
+					
+					DrivingAction = gearbox.GearEngaged(absTime) || (gearbox.GearboxType == GearboxType.IHPC) 
 						? DrivingAction.Accelerate 
 						: DrivingAction.Roll;
 
 					DriverBehavior = (DrivingAction == DrivingAction.Accelerate) ? DrivingBehavior.Accelerating : DrivingBehavior.Driving;
 
-					DataBus.GearboxCtl.DisengageGearbox = false;
+					DataBus.GearboxesCtl.First().DisengageGearbox = false;
 				}
 				else if (CycleData.RightSample.VehicleTargetSpeed.IsEqual(nextSpeed, tolerance)) {
 					DrivingAction = DrivingAction.Roll;
 					DriverBehavior = DrivingBehavior.Driving;
 
-					DataBus.GearboxCtl.DisengageGearbox = true;
+					DataBus.GearboxesCtl.First().DisengageGearbox = true;
 				}
 				else if (CycleData.RightSample.VehicleTargetSpeed.IsSmaller(nextSpeed, tolerance)) {
 					DrivingAction = DrivingAction.Brake;
 					DriverBehavior = DrivingBehavior.Braking;
 
-					DataBus.GearboxCtl.DisengageGearbox = false;
+					DataBus.GearboxesCtl.First().DisengageGearbox = false;
 				}
 			}
         }
@@ -417,15 +422,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			return ((DataBus.HybridControllerCtl != null) 
 				? DataBus.HybridControllerCtl.Strategy.VelocityDropData
-				: DataBus.GearboxInfo.Strategy.VelocityDropData) 
+				: DataBus.GearboxesInfo.First(x => x.AxleNumber == Constants.NOT_IN_AXLE_POWERTRAIN).Strategy.VelocityDropData) 
 				!= null;
 		}
 
         private MeterPerSecond CalculateVehicleSpeedAtNextStep(Second absTime)
         {
+			var gearbox = DataBus.GearboxesInfo.First(x => x.AxleNumber == Constants.NOT_IN_AXLE_POWERTRAIN);
+
 			var velocityDropData = (DataBus.HybridControllerCtl != null) 
 				? DataBus.HybridControllerCtl.Strategy.VelocityDropData
-				: DataBus.GearboxInfo.Strategy.VelocityDropData;
+				: gearbox.Strategy.VelocityDropData;
 
 			var currentSpeed = DataBus.VehicleInfo.VehicleSpeed;
 			var interruptionSpeed = velocityDropData.Interpolate(currentSpeed, RoadGradient ?? 0.SI<Radian>());
@@ -433,9 +440,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var deltaTime = CycleData.RightSample.Time - absTime;
 			
-			if (DataBus.GearboxInfo.TractionInterruption > deltaTime) {
+			if (gearbox.TractionInterruption > deltaTime) {
 				//Linear interpolation: currSpeed, interruptionSpeed
-				var interruptionTime = absTime + DataBus.GearboxInfo.TractionInterruption;
+				var interruptionTime = absTime + gearbox.TractionInterruption;
 
 				nextSpeed = ((currentSpeed * (interruptionTime - CycleData.RightSample.Time)) + (interruptionSpeed * deltaTime)) 
 							/ (interruptionTime - absTime);
@@ -456,14 +463,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			MeterPerSquareSecond acc = acceleration;
 			DataBus.Brakes.BrakePower = SearchAlgorithm.Search(DataBus.Brakes.BrakePower, r.Delta, -r.Delta,
-				getYValue: result => DataBus.ClutchInfo.ClutchClosed(absTime)
+				getYValue: result => DataBus.ClutchesInfo.First().ClutchClosed(absTime)
 					? ((ResponseDryRun)result).DeltaDragLoad
 					: ((ResponseDryRun)result).Gearbox.PowerRequest,
 				evaluateFunction: x => {
 					DataBus.Brakes.BrakePower = x;
 					return NextComponent.Request(absTime, dt, acc, gradient, true);
 				},
-				criterion: y => DataBus.ClutchInfo.ClutchClosed(absTime)
+				criterion: y => DataBus.ClutchesInfo.First().ClutchClosed(absTime)
 					? ((ResponseDryRun)y).DeltaDragLoad.Value()
 					: ((ResponseDryRun)y).Gearbox.PowerRequest.Value(),
 				searcher: this);
@@ -499,9 +506,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if ((RunData.JobType == VectoSimulationJobType.ParallelHybridVehicle)
 				&& (DrivingAction == DrivingAction.Brake)
 				&& ((r.Engine.EngineSpeed ?? 0.SI<PerSecond>()) < DataBus.EngineInfo.EngineIdleSpeed)
-				&& (DataBus.GearboxInfo.Gear.Gear == 1)) {
+				&& (DataBus.GearboxesInfo.First(x => x.AxleNumber == Constants.NOT_IN_AXLE_POWERTRAIN).Gear.Gear == 1)) {
 
-				DataBus.GearboxCtl.DisengageGearbox = true;
+				DataBus.GearboxesCtl.First().DisengageGearbox = true;
 
 				return NextComponent.Request(absTime, dt, acceleration, gradient, false);
             }
@@ -512,7 +519,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private IResponse HandleOverload(Second absTime, Second dt, ResponseOverload r, Radian gradient,
 			ref MeterPerSquareSecond acceleration)
 		{
-			if (DataBus.ClutchInfo.ClutchClosed(absTime)) {
+			if (DataBus.ClutchesInfo.First().ClutchClosed(absTime)) {
 				acceleration = SearchAlgorithm.Search(acceleration, r.Delta,
 					Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
 					getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
@@ -526,14 +533,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} else {
 				var acc = acceleration;
 				DataBus.Brakes.BrakePower = SearchAlgorithm.Search(DataBus.Brakes.BrakePower, r.Delta, -r.Delta,
-					getYValue: result => DataBus.ClutchInfo.ClutchClosed(absTime)
+					getYValue: result => DataBus.ClutchesInfo.First().ClutchClosed(absTime)
 						? ((ResponseDryRun)result).DeltaDragLoad
 						: ((ResponseDryRun)result).Gearbox.PowerRequest,
 					evaluateFunction: x => {
 						DataBus.Brakes.BrakePower = x;
 						return NextComponent.Request(absTime, dt, acc, gradient, true);
 					},
-					criterion: y => DataBus.ClutchInfo.ClutchClosed(absTime)
+					criterion: y => DataBus.ClutchesInfo.First().ClutchClosed(absTime)
 						? ((ResponseDryRun)y).DeltaDragLoad.Value()
 						: ((ResponseDryRun)y).Gearbox.PowerRequest.Value(),
 					searcher: this);

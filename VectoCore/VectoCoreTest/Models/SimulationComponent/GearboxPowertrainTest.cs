@@ -30,6 +30,7 @@
 */
 
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -61,7 +62,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = Truck40tPowerTrain.CreatePowerTrain(cycle, "Gearbox_Initialize", 7500.0.SI<Kilogram>(),
 				0.SI<Kilogram>()) as VehicleContainer;
 			var retVal = container.Cycle.Initialize();
-			Assert.AreEqual(4u, container.GearboxInfo.Gear.Gear);
+			Assert.AreEqual(4u, container.GearboxesInfo.First().Gear.Gear);
 			Assert.IsInstanceOf<ResponseSuccess>(retVal);
 
 			AssertHelper.AreRelativeEqual(560.RPMtoRad(), container.EngineInfo.EngineSpeed);
@@ -78,7 +79,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			container.Cycle.Request(absTime, ds);
 			container.CommitSimulationStep(absTime, retVal.SimulationInterval);
-			Assert.AreEqual(4u, container.GearboxInfo.Gear.Gear);
+			Assert.AreEqual(4u, container.GearboxesInfo.First().Gear.Gear);
 			AssertHelper.AreRelativeEqual(65.6890, container.EngineInfo.EngineSpeed);
 		}
 
@@ -93,7 +94,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = Truck40tPowerTrain.CreatePowerTrain(cycle, "Gearbox_Initialize", 7500.0.SI<Kilogram>(),
 				19300.SI<Kilogram>()) as VehicleContainer;
 			var retVal = container.Cycle.Initialize();
-			Assert.AreEqual(4u, container.GearboxInfo.Gear.Gear);
+			Assert.AreEqual(4u, container.GearboxesInfo.First().Gear.Gear);
 			Assert.IsInstanceOf<ResponseSuccess>(retVal);
 
 			AssertHelper.AreRelativeEqual(560.RPMtoRad(), container.EngineInfo.EngineSpeed);
@@ -125,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = Truck40tPowerTrain.CreatePowerTrain(cycle, "Gearbox_Initialize", 7500.0.SI<Kilogram>(),
 				19300.SI<Kilogram>()) as VehicleContainer;
 			var retVal = container.Cycle.Initialize();
-			Assert.AreEqual(12u, container.GearboxInfo.Gear.Gear);
+			Assert.AreEqual(12u, container.GearboxesInfo.First().Gear.Gear);
 			Assert.IsInstanceOf<ResponseSuccess>(retVal);
 
 			AssertHelper.AreRelativeEqual(1195.996.RPMtoRad(), container.EngineInfo.EngineSpeed, toleranceFactor: 1e-3);

@@ -583,7 +583,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.IsTrue(axlePts.Count() > 0);
 
 			Assert.IsTrue(axlePts[0].AxleNumber == 1);
-			Assert.IsTrue(axlePts[0].Type == VectoSimulationJobType.BatteryElectricVehicle);
+			Assert.IsTrue(axlePts[0].Architecture == ArchitectureID.E2);
 			Assert.NotNull(axlePts[0].GearboxInputData);
 			Assert.NotNull(axlePts[0].AxleGearInputData);
 			Assert.NotNull(axlePts[0].TorqueConverterInputData);

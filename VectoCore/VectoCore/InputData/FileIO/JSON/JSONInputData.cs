@@ -1482,9 +1482,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public JSONInputDataV16_MultiplePowertrains(JObject json, string filename, bool tolerateMissing) : base(json, filename, tolerateMissing)
 		{
 			VehicleData = ReadVehicle();
+
+			if (Body[JsonKeys.Vehicle_EngineFile] != null)
+			{
+				Engine = ReadEngine();
+			}
 		}
 
-		public override VectoSimulationJobType JobType => base.JobType;
+		public override VectoSimulationJobType JobType => VehicleData.VehicleType;
+		
+		public override IHybridStrategyParameters HybridStrategyParameters =>
+			(Body[JsonKeys.Vehicle_HybridStrategyParams] == null)
+			? null 
+			: JSONInputDataFactory.ReadHybridStrategyParameters(
+					Path.Combine(BasePath, Body.GetEx<string>(JsonKeys.Vehicle_HybridStrategyParams)), 
+					false);
 	}
 
 

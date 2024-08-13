@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+﻿using System.Linq;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCommon.Models;
@@ -24,8 +25,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (DataBus.VehicleInfo.VehicleStopped && strategySettings.NextGear.Gear != 0) {
 				_shiftStrategy.SetNextGear(nextGear);
 			}
-			
-			strategySettings.ShiftRequired = DataBus.GearboxInfo.GearEngaged(DataBus.AbsTime) && 
+
+			var gearbox = DataBus.GearboxesInfo.First(x => x.AxleNumber == AxleNumber);
+			strategySettings.ShiftRequired = gearbox.GearEngaged(DataBus.AbsTime) && 
 				(DataBus.DrivingCycleInfo.CycleData.LeftSample.Gear != DataBus.DrivingCycleInfo.CycleData.RightSample.Gear);
 			
 			if (strategySettings.ShiftRequired) {

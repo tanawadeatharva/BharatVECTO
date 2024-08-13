@@ -30,7 +30,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				GetElectricalUserConfig(mission, primaryVehicle, actuations, runData.VehicleData.VehicleClass);
 
 			var pneumaticUserInputsConfig = GetPneumaticUserConfig(primaryVehicle, mission);
-			var pneumaticAuxiliariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type);
+
+			var retarderType = (runData.AxlePowertrainsData.Count() > 0) 
+				? (runData.AxlePowertrainsData.FirstOrDefault(x => x.Retarder.Type != RetarderType.None)?.Retarder.Type ?? RetarderType.None)
+                : runData.Retarder.Type;
+			
+			var pneumaticAuxiliariesConfig = CreatePneumaticAuxConfig(retarderType);
 			
 			if (primaryVehicle.Components.BusAuxiliaries.PneumaticSupply.CompressorDrive == CompressorDrive.electrically)
 			{
@@ -263,7 +268,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					VectoSimulationJobType.BatteryElectricVehicle,
 					VectoSimulationJobType.IEPC_E,
 					VectoSimulationJobType.FCHV,
-					VectoSimulationJobType.FCHV_IEPC)
+					VectoSimulationJobType.FCHV_IEPC,
+					VectoSimulationJobType.Multiple_FCHV,
+					VectoSimulationJobType.Multiple_PEV)
 					? AlternatorType.None
 					: busAux.ElectricSupply.AlternatorTechnology;
 			retVal.ElectricalConsumers = currentDemand;
@@ -445,11 +452,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				case VectoSimulationJobType.SerialHybridVehicle:
 				case VectoSimulationJobType.IEPC_S:
 				case VectoSimulationJobType.IHPC:
+				case VectoSimulationJobType.Multiple_SHEV:
 					return batteryOnly ? busParams.HVACPEV : busParams.HVACHEV;
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.FCHV:
 				case VectoSimulationJobType.FCHV_IEPC:
+				case VectoSimulationJobType.Multiple_FCHV:
+				case VectoSimulationJobType.Multiple_PEV:
 					return busParams.HVACPEV;
 				case VectoSimulationJobType.EngineOnlySimulation:
 				default:
@@ -604,12 +614,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				case VectoSimulationJobType.SerialHybridVehicle:
 				case VectoSimulationJobType.IEPC_S:
 				case VectoSimulationJobType.IHPC:
+				case VectoSimulationJobType.Multiple_SHEV:
 					hvacParams = mission.BusParameter.HVACHEV;
 					break;
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.FCHV_IEPC:
 				case VectoSimulationJobType.FCHV:
 				case VectoSimulationJobType.IEPC_E:
+				case VectoSimulationJobType.Multiple_FCHV:
+				case VectoSimulationJobType.Multiple_PEV:
 					hvacParams = mission.BusParameter.HVACPEV;
 					break;
 				case VectoSimulationJobType.EngineOnlySimulation:

@@ -31,6 +31,9 @@
 
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Utils
 {

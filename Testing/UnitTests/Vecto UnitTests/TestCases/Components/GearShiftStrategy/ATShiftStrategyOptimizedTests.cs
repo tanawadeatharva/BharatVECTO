@@ -4,6 +4,7 @@ using NUnit.Framework.Internal;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -587,7 +588,7 @@ public class ATShiftStrategyOptimizedTests
 		
 		//AxleGearInfo
 		var axleGearInfo = new Mock<IAxlegearInfo>();
-		vehicleContainer.Setup(c => c.AxlegearInfo).Returns(axleGearInfo.Object);
+		vehicleContainer.Setup(c => c.AxlegearInfo(Constants.NOT_IN_AXLE_POWERTRAIN)).Returns(axleGearInfo.Object);
 		axleGearInfo.Setup(a => a.AxlegearLoss()).Returns(0.SI<Watt>());
 
 		//WheelsInfo
@@ -812,7 +813,7 @@ public class ATShiftStrategyOptimizedTests
 		testGearbox = GetMockTestGearbox(runData.GearboxData.Gears);
 
 
-		simplePt.Setup(s => s.GearboxInfo).Returns(testGearbox.Object);
+		simplePt.Setup(s => s.GearboxInfo(Constants.NOT_IN_AXLE_POWERTRAIN)).Returns(testGearbox.Object);
 		simplePt.Setup(s => s.GearboxOutPort).Returns(testGearbox.Object);
 
 

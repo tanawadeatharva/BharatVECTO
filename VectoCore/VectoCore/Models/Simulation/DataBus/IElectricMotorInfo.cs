@@ -20,5 +20,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		bool EmOffPrev { get; }
 		bool? EmOffCurr { get; }
 		bool DeRatingActive { get; }
+
+		int AxleNumber { get; }
 	}
 }

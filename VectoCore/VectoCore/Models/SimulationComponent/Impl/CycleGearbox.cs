@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			TorqueConverter = new TorqueConverterWrapper(runData.Cycle.Entries.All(x => x.EngineSpeed != null),
 				new CycleTorqueConverter(container, ModelData.TorqueConverterData),
-				new TorqueConverter(this, strategy, container, ModelData.TorqueConverterData, runData));
+				new TorqueConverter(this, strategy, container, ModelData.TorqueConverterData, runData, Constants.NOT_IN_AXLE_POWERTRAIN));
 			if (TorqueConverter == null) {
 				throw new VectoException("Torque Converter required for AT transmission!");
 			}

@@ -3,6 +3,7 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
@@ -345,7 +346,7 @@ public class ElectricMotorTests
 	{
 		var container = new Mock<IVehicleContainer>();
 		var gbx = new Mock<IGearboxInfo>();
-		container.SetupGet(c => c.GearboxInfo).Returns(gbx.Object);
+		container.Setup(c => c.GearboxInfo(Constants.NOT_IN_AXLE_POWERTRAIN)).Returns(gbx.Object);
 		var bat = new Mock<IRESSInfo>();
 		container.SetupGet(c => c.BatteryInfo).Returns(bat.Object);
 		var ice = new Mock<IEngineControl>();

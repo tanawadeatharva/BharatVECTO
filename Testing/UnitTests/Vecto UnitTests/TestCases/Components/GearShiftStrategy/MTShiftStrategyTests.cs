@@ -448,7 +448,7 @@ public class MTShiftStrategyTests
 
         //AxlegearInfo
         var axleGearInfo = new Mock<IAxlegearInfo>();
-		vehicleContainer.Setup(c => c.AxlegearInfo).Returns(axleGearInfo.Object);
+		vehicleContainer.Setup(c => c.AxlegearInfo(Constants.NOT_IN_AXLE_POWERTRAIN)).Returns(axleGearInfo.Object);
 		axleGearInfo.Setup(a => a.AxlegearLoss()).Returns(0.SI<Watt>());
 
         //Powertrain Info

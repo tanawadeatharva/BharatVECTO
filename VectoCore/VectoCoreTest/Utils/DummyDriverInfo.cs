@@ -1,4 +1,5 @@
 ﻿using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -8,7 +9,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 {
 	internal class DummyDriverInfo : VectoSimulationComponent, IDriverInfo
 	{
-		public DummyDriverInfo(IVehicleContainer container) : base(container)
+		public DummyDriverInfo(IVehicleContainer container) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 
 		}

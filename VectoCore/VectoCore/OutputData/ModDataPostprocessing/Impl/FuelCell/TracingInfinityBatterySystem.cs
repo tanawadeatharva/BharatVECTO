@@ -9,6 +9,7 @@ using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 {
@@ -30,7 +31,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 		public IList<double> SoCTrace = new List<double>();
 
 
-		public TracingInfinityBatterySystem(BatterySystemData batData) : base(null)
+		public TracingInfinityBatterySystem(BatterySystemData batData) : base(null, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			var tmp_batData = batData.Clone();
 			tmp_batData.ChargeSustainingBatterySystem = true;

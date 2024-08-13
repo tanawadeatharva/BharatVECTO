@@ -51,13 +51,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
     {
         [NonSerialized] protected IDataBus DataBus;
 
-        /// <summary>
-        /// Constructor. Registers the component in the cockpit.
-        /// </summary>
-        /// <param name="dataBus">The vehicle container</param>
-        protected VectoSimulationComponent(IVehicleContainer dataBus)
-        {
-            DataBus = dataBus;
+		public int AxleNumber { get; private set; }
+
+		/// <summary>
+		/// Constructor. Registers the component in the cockpit.
+		/// </summary>
+		/// <param name="dataBus">The vehicle container</param>
+		protected VectoSimulationComponent(IVehicleContainer dataBus, int axleNumber)
+		{
+			DataBus = dataBus;
+			AxleNumber = axleNumber;
 
             // if a component doesn't want to be registered in DataBus, it supplies null to the constructor
             // (mk 2016-08-31: currently the only example is PTOCycleController, in order to not interfere with the real DrivingCycle)
@@ -105,12 +108,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         protected internal TStateType CurrentState;
         protected internal TStateType PreviousState;
 
-        protected StatefulVectoSimulationComponent(IVehicleContainer container)
-            : base(container)
-        {
-            CurrentState = new TStateType();
-            PreviousState = new TStateType();
-        }
+		protected StatefulVectoSimulationComponent(IVehicleContainer container, int axleNumber)
+			: base(container, axleNumber)
+		{
+			CurrentState = new TStateType();
+			PreviousState = new TStateType();
+		}
 
         protected void AdvanceState()
         {
@@ -127,7 +130,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
     {
         protected TOutPort NextComponent;
 
-        protected StatefulProviderComponent(IVehicleContainer container) : base(container) { }
+		protected StatefulProviderComponent(IVehicleContainer container, int axleNumber) : base(container, axleNumber) { }
 
         public TProviderOutPort OutPort()
         {

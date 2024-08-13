@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 
 		public Watt LookupPowerDemand(VehicleClass hdvClass, VectoSimulationJobType jobType, MissionType mission)
 		{
-			var FCHV_JOBS = new[] { VectoSimulationJobType.FCHV, VectoSimulationJobType.FCHV_IEPC };
+			var FCHV_JOBS = new[] { VectoSimulationJobType.FCHV, VectoSimulationJobType.FCHV_IEPC, VectoSimulationJobType.Multiple_FCHV };
 			if (FCHV_JOBS.Contains(jobType))
 			{
 				return hdvClass.IsBus()

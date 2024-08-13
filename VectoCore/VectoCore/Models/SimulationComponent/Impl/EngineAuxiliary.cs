@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected double EngineStopStartUtilityFactor;
 		private bool _writePTO;
 
-		public EngineAuxiliary(IVehicleContainer container) : base(container)
+		public EngineAuxiliary(IVehicleContainer container) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			EngineStopStartUtilityFactor = 1; // container.RunData?.DriverData?.EngineStopStart?.UtilityFactorStandstill ?? double.NaN;
 			_writePTO = container.RunData?.PTO?.ConsumerType == PTOConsumerType.mechanical;

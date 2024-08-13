@@ -606,7 +606,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			absTime += dt;
 			var successResponse = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, torque, angularVelocity, false);
-			Assert.AreEqual((uint)newGear, container.GearboxInfo.Gear.Gear);
+			Assert.AreEqual((uint)newGear, container.GearboxesInfo.First().Gear.Gear);
 		}
 
 		[TestCase(7, 8, 1000, 1400, typeof(ResponseGearShift)),
@@ -652,7 +652,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				CycleData = new CycleData() {
 					LeftSample = cycleData.Entries.First(),
 				},
-				ElectricMotorPositions = new PowertrainPosition[]{},
 				HasCombustionEngine = true,
 			};
 			var cycle = new MockDrivingCycle(container, cycleData);

@@ -11,6 +11,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.A
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.StrategyDataAdapter;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -54,6 +55,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 			}
 
             #region Implementation of IDeclarationDataAdapter
+
+            public IList<AxlePowertrainData> CreateAxlePowertrainsData(IDeclarationInputDataProvider input, Volt averageVoltage, 
+				bool batteryOnlyHybridMode, VehicleData vehicleData, Mission mission)
+            {
+                return null;
+            }
 
             public VehicleData CreateVehicleData(ISingleBusInputDataProvider vehicle, Segment segment, Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
@@ -187,7 +194,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 				return ElectricMachinesDataAdapter.CreateElectricMachines(electricMachines, torqueLimits, averageVoltage, gears);
             }
 
-			public abstract void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
+            public virtual Tuple<PowertrainPosition, ElectricMotorData> CreateElectricMachine(
+                ElectricMachineEntry<IElectricMotorDeclarationInputData> em,
+                IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> torqueLimits,
+                Volt averageVoltage,
+                int axleNumber)
+            {
+                return ElectricMachinesDataAdapter.CreateElectricMachine(em, torqueLimits, averageVoltage, axleNumber);
+            }
+
+            public abstract void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData,
 				Action<SuperCapData> setSuperCapData);
 

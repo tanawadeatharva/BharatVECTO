@@ -1,4 +1,5 @@
 ﻿using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 

@@ -106,6 +106,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
 
 		public IShiftStrategy Strategy => _impl.Strategy;
 
+		public int AxleNumber => _impl.AxleNumber;
+
 		#endregion
 
 		#region Implementation of IUpdateable

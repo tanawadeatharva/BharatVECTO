@@ -45,7 +45,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
-
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {

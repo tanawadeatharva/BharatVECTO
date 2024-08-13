@@ -32,6 +32,7 @@
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -52,7 +53,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public new TransmissionState Clone() => (TransmissionState)MemberwiseClone();
 		}
 
-		protected TransmissionComponent(IVehicleContainer container, TransmissionData modelData) : base(container)
+		protected TransmissionComponent(IVehicleContainer container, TransmissionData modelData, int axleNumber) : 
+			base(container, axleNumber)
 		{
 			ModelData = modelData;
 		}

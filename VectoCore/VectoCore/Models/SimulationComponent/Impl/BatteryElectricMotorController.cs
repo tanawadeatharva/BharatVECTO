@@ -17,12 +17,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected readonly GearboxData GearboxModelData;
 
+		public int AxleNumber {  get; private set; }
+
 		public BatteryElectricMotorController(IVehicleContainer container, IElectricSystem es)
 		{
 			DataBus = container;
 			ElectricMotorData = container.RunData.ElectricMachinesData.FirstOrDefault()?.Item2;
 			ElectricSystem = es;
 			GearboxModelData = container.RunData.GearboxData;
+			AxleNumber = Constants.NOT_IN_AXLE_POWERTRAIN;
+		}
+
+		public BatteryElectricMotorController(IVehicleContainer container, AxlePowertrainData axlePt, IElectricSystem es)
+		{
+			DataBus = container;
+			ElectricMotorData = axlePt.ElectricMachineData.Item2;
+			ElectricSystem = es;
+			GearboxModelData = axlePt.GearboxData;
+			AxleNumber = axlePt.AxleNumber;
 		}
 
 		#region Implementation of IElectricMotorControl
@@ -31,7 +43,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PerSecond prevOutAngularVelocity, PerSecond currOutAngularVelocity, NewtonMeter maxDriveTorque, 
 			NewtonMeter maxRecuperationTorque, PowertrainPosition position, bool dryRun)
 		{
-			if (!DataBus.GearboxInfo.GearEngaged(absTime) && DataBus.DriverInfo.DrivingAction == DrivingAction.Roll) {
+			var gearbox = DataBus.GearboxesInfo.First(x => x.AxleNumber == AxleNumber);
+
+			if (!gearbox.GearEngaged(absTime) && DataBus.DriverInfo.DrivingAction == DrivingAction.Roll) {
 				var avgSpeed = (prevOutAngularVelocity + currOutAngularVelocity) / 2;
 				var inertiaTorqueLoss = avgSpeed.IsEqual(0)
 					? 0.SI<NewtonMeter>()

@@ -4,7 +4,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 {
-    internal class FCHEVIterativeRunStrategy : AbstractIterativeRunStrategy<FCHEVIterativeRunStrategy.FCHEVIterativeRunResult>
+    public class FCHEVIterativeRunStrategy : AbstractIterativeRunStrategy<FCHEVIterativeRunStrategy.FCHEVIterativeRunResult>
 	{
 		public delegate void DoUpdateRunData(IModalDataContainer modData, VectoRunData runData); 
 		

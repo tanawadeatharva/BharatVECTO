@@ -39,6 +39,7 @@ using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -49,7 +50,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public event Action GearShiftTriggered;
 
-		public MockGearbox(IVehicleContainer cockpit) : base(cockpit)
+		public MockGearbox(IVehicleContainer cockpit, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) : 
+			base(cockpit, axleNumber)
 		{
 			_clutchClosed = true;
 		}
@@ -167,7 +169,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 	public class MockAxlegear : VectoSimulationComponent, IAxlegear
 	{
-		public MockAxlegear(IVehicleContainer vehicleContainer) : base(vehicleContainer)
+		public MockAxlegear(IVehicleContainer vehicleContainer, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) : 
+			base(vehicleContainer, axleNumber)
 		{
 			
 		}

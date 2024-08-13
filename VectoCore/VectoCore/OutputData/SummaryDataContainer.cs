@@ -441,6 +441,9 @@ namespace TUGraz.VectoCore.OutputData
 		protected IList<string> AuxColumns = new List<string>();
 		protected IList<string> EmColumns = new List<string>();
 		protected IList<string> GearRatioColumns = new List<string>();
+		protected IList<string> AxlegearCols = new List<string>();
+		protected IList<string> RetarderCols = new List<string>();
+		protected IList<string> AngledriveCols = new List<string>();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SummaryDataContainer"/> class.
@@ -492,13 +495,13 @@ namespace TUGraz.VectoCore.OutputData
 					CreateColumns(TorqueConverterColumns);
 					break;
 				case IAngledrive _:
-					CreateColumns(AngledriveColumns);
+					CreateAngledriveColumns(component.AxleNumber);
 					break;
 				case IAxlegear _:
-					CreateColumns(AxlegearColumns);
+					CreateAxleGearColumns(component.AxleNumber);
 					break;
 				case Retarder _:
-					CreateColumns(RetarderColumns);
+					CreateRetarderColumns(component.AxleNumber);
 					break;
 				case IWheels _:
 					CreateColumns(WheelColumns);
@@ -531,10 +534,10 @@ namespace TUGraz.VectoCore.OutputData
 					}
 					break;
 				case IElectricMotor c3 when c3.Position == PowertrainPosition.IEPC:
-					CreateElectricMotorColumns(c3, runData, IEPCColumns);
+					CreateElectricMotorColumns(c3, component.AxleNumber, runData, IEPCColumns);
 					break;
 				case IElectricMotor c4 when c4.Position != PowertrainPosition.IEPC:
-					CreateElectricMotorColumns(c4, runData, ElectricMotorColumns);
+					CreateElectricMotorColumns(c4, component.AxleNumber,runData, ElectricMotorColumns);
 					break;
 				case IElectricEnergyStorage c5 when c5 is BatterySystem:
 					CreateColumns(ElectricEnergyConsumption.Where(x => runData.VehicleData.VehicleCategory.IsBus() || x.Item1 != SumDataFields.ElectricEnergyConsumption_PKM).ToArray());
@@ -574,12 +577,12 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		private void CreateElectricMotorColumns(IElectricMotor em, VectoRunData runData, Tuple<string, Type>[] cols)
+		private void CreateElectricMotorColumns(IElectricMotor em, int axleNumber, VectoRunData runData, Tuple<string, Type>[] cols)
 		{
 			lock (Table) {
-				var emColNames = cols.Select(x => string.Format(x.Item1, em.Position.GetName()));
+				var emColNames = cols.Select(x => string.Format(x.Item1, em.Position.GetName(), axleNumber.FormatAxleNumber()));
 				Table.Columns.AddRange(cols
-					.Select(x => Tuple.Create(string.Format(x.Item1, em.Position.GetName()), x.Item2))
+					.Select(x => Tuple.Create(string.Format(x.Item1, em.Position.GetName(), axleNumber.FormatAxleNumber()), x.Item2))
 					.Where(x => !Table.Columns.Contains(x.Item1)).Select(x => new DataColumn(x.Item1, x.Item2))
 					.ToArray());
 				foreach (var emColName in emColNames) {
@@ -587,6 +590,69 @@ namespace TUGraz.VectoCore.OutputData
 						continue;
 					}
 					EmColumns.Add(emColName);
+				}
+			}
+		}
+
+		private void CreateRetarderColumns(int axleNumber)
+		{
+			lock (Table)
+			{
+				var colNames = RetarderColumns.Select(x => string.Format(x.Item1, axleNumber.FormatAxleNumber()));
+
+				Table.Columns.AddRange(RetarderColumns
+					.Select(x => Tuple.Create(string.Format(x.Item1, axleNumber.FormatAxleNumber()), x.Item2))
+					.Where(x => !Table.Columns.Contains(x.Item1)).Select(x => new DataColumn(x.Item1, x.Item2))
+					.ToArray());
+
+				foreach (var axColName in colNames)
+				{
+					if (!RetarderCols.Contains(axColName))
+					{
+						RetarderCols.Add(axColName);
+					}
+				}
+			}
+		}
+
+		private void CreateAngledriveColumns(int axleNumber)
+		{
+			lock (Table)
+			{
+				var colNames = AngledriveColumns.Select(x => string.Format(x.Item1, axleNumber.FormatAxleNumber()));
+
+				Table.Columns.AddRange(AngledriveColumns
+					.Select(x => Tuple.Create(string.Format(x.Item1, axleNumber.FormatAxleNumber()), x.Item2))
+					.Where(x => !Table.Columns.Contains(x.Item1)).Select(x => new DataColumn(x.Item1, x.Item2))
+					.ToArray());
+
+				foreach (var colName in colNames)
+				{
+					if (!AngledriveCols.Contains(colName))
+					{
+						AngledriveCols.Add(colName);
+					}
+				}
+			}
+		}
+
+		private void CreateAxleGearColumns(int axleNumber)
+		{
+			lock (Table)
+			{
+				var colNames = AxlegearColumns.Select(x => string.Format(x.Item1, axleNumber.FormatAxleNumber()));
+				
+				Table.Columns.AddRange(AxlegearColumns
+					.Select(x => Tuple.Create(string.Format(x.Item1, axleNumber.FormatAxleNumber()), x.Item2))
+					.Where(x => !Table.Columns.Contains(x.Item1)).Select(x => new DataColumn(x.Item1, x.Item2))
+					.ToArray());
+				
+				foreach (var axColName in colNames)
+				{
+					if (!AxlegearCols.Contains(axColName))
+					{
+						AxlegearCols.Add(axColName); 
+					}
 				}
 			}
 		}
@@ -619,7 +685,7 @@ namespace TUGraz.VectoCore.OutputData
 					.Select(x => string.Format(SumDataFields.RATIO_PER_GEAR_FORMAT, x))
 					.Where(x => !Table.Columns.Contains(x)).Select(x => new DataColumn(x, typeof(ConvertedSI)));
 					
-				if (runData.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP2_5)) {
+				if (runData.GetEMData().Any(x => x.Item1.Position == PowertrainPosition.HybridP2_5)) {
 					gearColNames = gearColNames.Concat(
 						gearNumbers
 							.Select(x => string.Format(SumDataFields.P2_5_RATIO_PER_GEAR_FORMAT, x))
@@ -638,7 +704,8 @@ namespace TUGraz.VectoCore.OutputData
 
 		protected internal void CreateColumns(Tuple<string, Type>[] cols)
 		{
-			lock (Table) {
+			lock (Table)
+			{
 				Table.Columns.AddRange(cols.Where(x => !Table.Columns.Contains(x.Item1))
 					.Select(x => new DataColumn(x.Item1, x.Item2)).ToArray());
 			}
@@ -769,10 +836,7 @@ namespace TUGraz.VectoCore.OutputData
 			});
 
 			cols.AddRange(EmColumns);
-
-
-
-
+			
 			cols.AddRange(new[] {
 				SumDataFields.REESS_StartSoC,
 				SumDataFields.REESS_EndSoC,
@@ -789,14 +853,20 @@ namespace TUGraz.VectoCore.OutputData
 			cols.AddRange(new[] {
 				SumDataFields.E_AUX,
 				SumDataFields.E_AUX_EL,
-				SumDataFields.E_AUX_EL_HV, 
+				SumDataFields.E_AUX_EL_HV,
 				SumDataFields.E_CLUTCH_LOSS,
-				SumDataFields.E_TC_LOSS, 
-				SumDataFields.E_SHIFT_LOSS, 
-				SumDataFields.E_GBX_LOSS, 
-				SumDataFields.E_RET_LOSS,
-				SumDataFields.E_ANGLE_LOSS,
-				SumDataFields.E_AXL_LOSS, 
+				SumDataFields.E_TC_LOSS,
+				SumDataFields.E_SHIFT_LOSS,
+				SumDataFields.E_GBX_LOSS
+			});
+
+			cols.AddRange(RetarderCols);
+
+			cols.AddRange(AngledriveCols);
+
+			cols.AddRange(AxlegearCols);
+
+			cols.AddRange(new[] {
 				SumDataFields.E_WHEELEND_SAVED,
 				SumDataFields.E_BRAKE, 
 				SumDataFields.E_VEHICLE_INERTIA, 
@@ -854,10 +924,8 @@ namespace TUGraz.VectoCore.OutputData
 				SumDataFields.RETARDER_CERTIFICATION_NUMBER, 
 				SumDataFields.ANGLEDRIVE_CERTIFICATION_METHOD, 
 				SumDataFields.ANGLEDRIVE_CERTIFICATION_NUMBER,
-				SumDataFields.AVERAGE_ANGLEDRIVE_EFFICIENCY,
 				SumDataFields.AXLEGEAR_CERTIFICATION_METHOD, 
 				SumDataFields.AXLEGEAR_CERTIFICATION_NUMBER, 
-				SumDataFields.AVERAGE_AXLEGEAR_EFFICIENCY, 
 				SumDataFields.AIRDRAG_CERTIFICATION_NUMBER,
 				SumDataFields.AIRDRAG_CERTIFICATION_METHOD, 
 			});
@@ -1017,14 +1085,54 @@ namespace TUGraz.VectoCore.OutputData
 					}
 				}
 			}
-
-			foreach (var em in runData.ElectricMachinesData) {
-				var fields = em.Item1 == PowertrainPosition.IEPC
+			
+			foreach (var em in runData.GetEMData()) {
+				var fields = em.Item1.Position == PowertrainPosition.IEPC
 					? SumDataFields.IEPCValue
 					: SumDataFields.ElectricMotorValue;
 				foreach (var entry in fields) {
-					var value = entry.Value(runData, modData, em.Item1);
-					row[string.Format(entry.Key, em.Item1.GetName())] = value;
+					var value = entry.Value(runData, modData, em.Item1.Position, em.Item1.AxleNumber);
+					row[string.Format(entry.Key, em.Item1.Position.GetName(), em.Item1.AxleNumber.FormatAxleNumber())] = value;
+				}
+			}
+
+			foreach (var axlegear in runData.GetAxlegearData())
+			{
+				foreach (var field in SumDataFields.AxlegearValue)
+				{
+					var value = field.Value.Item2(runData, modData, axlegear.Item1);
+					var name = string.Format(field.Key, axlegear.Item1.FormatAxleNumber());
+					row[name] = value;
+				}
+			}
+
+			foreach (var retarder in runData.GetRetarderData())
+			{
+				if (retarder.Item2.Type == RetarderType.None)
+				{
+					continue;
+				}
+
+				foreach (var field in SumDataFields.RetarderValue)
+				{
+					var value = field.Value.Item2(runData, modData, retarder.Item1);
+					var name = string.Format(field.Key, retarder.Item1.FormatAxleNumber());
+					row[name] = value;
+				}
+			}
+
+			foreach (var angledrive in runData.GetAngledriveData())
+			{
+				if (angledrive.Item2.Type == AngledriveType.None)
+				{
+					continue;
+				}
+
+				foreach (var field in SumDataFields.AngledriveValue)
+				{
+					var value = field.Value.Item2(runData, modData, angledrive.Item1);
+					var name = string.Format(field.Key, angledrive.Item1.FormatAxleNumber());
+					row[name] = value;
 				}
 			}
 
@@ -1096,10 +1204,8 @@ namespace TUGraz.VectoCore.OutputData
 		}
 
 		private void WriteGearRatios(Dictionary<string, object> row, VectoRunData runData)
-		{ 
-			var emData = runData.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP2_5)
-				? runData.ElectricMachinesData.First(x => x.Item1 == PowertrainPosition.HybridP2_5).Item2
-				: null;
+		{
+			var emData = runData.GetEMData().FirstOrDefault(x => x.Item1.Position == PowertrainPosition.HybridP2_5);
 
 			foreach (var gear in runData.GearboxData.Gears) {
 				var colName = string.Format(SumDataFields.RATIO_PER_GEAR_FORMAT, gear.Key);
@@ -1111,7 +1217,7 @@ namespace TUGraz.VectoCore.OutputData
 				if (emData != null) {
 					var colNameP2_5 = string.Format(SumDataFields.P2_5_RATIO_PER_GEAR_FORMAT, gear.Key);
 
-					row[colNameP2_5] = (ConvertedSI)emData.RatioPerGear[gear.Key - 1].SI<Scalar>();
+					row[colNameP2_5] = (ConvertedSI)emData.Item2.RatioPerGear[gear.Key - 1].SI<Scalar>();
 				}
 			}
 		}

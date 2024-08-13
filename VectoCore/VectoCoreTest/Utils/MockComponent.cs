@@ -31,6 +31,7 @@
 
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -40,7 +41,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 {
     public class MockComponent : VectoSimulationComponent, ITnOutPort
 	{
-		public MockComponent() : base(null) {}
+		public MockComponent(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) : base(null, axleNumber) {}
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container) {}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval) {}
