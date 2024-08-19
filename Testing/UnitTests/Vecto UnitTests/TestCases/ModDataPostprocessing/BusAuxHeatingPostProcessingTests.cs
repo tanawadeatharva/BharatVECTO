@@ -1,5 +1,6 @@
 ﻿using Moq;
 using NUnit.Framework;
+using TUGraz.Vecto.UnitTests.Utils.MockInputData;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -17,7 +18,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
-using TUGraz.VectoCore.Tests.Models.Declaration.BusAux;
 using Assert = NUnit.Framework.Assert;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.ModDataPostprocessing;
