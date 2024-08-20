@@ -844,6 +844,7 @@ public class LorrySimulation
 
 	[TestCase(@"HeavyLorry/PEV/Group5_ PEV_IEPC_E-EffCorrection.xml", 413.75, -1396.825, -61756.61)]
 	[TestCase(@"HeavyLorry/PEV/Group5_ PEV_IEPC_E-EffCorrection.xml", 827.50, 161.085, 13679.79)]
+	[Category(Definitions.TESTCASE_MIGRATED)]
     public void TestIEPC_EfficiencyCorrection(string jobFile, double rpm, double tq, double expectedPel)
 	{
 		var jobContainer = GetJobContainer(jobFile, null, out var fileWriter, out var runs, out var sumDataContainer,
