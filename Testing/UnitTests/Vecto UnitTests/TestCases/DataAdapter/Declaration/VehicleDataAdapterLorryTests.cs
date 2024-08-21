@@ -10,6 +10,7 @@ using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory;
 using TUGraz.VectoCore.Models.Declaration;
 using Assert = NUnit.Framework.Assert;
@@ -39,7 +40,7 @@ public class VehicleDataAdapterLorryTests
 		//	JSONInputDataFactory.ReadJsonJob(@"TestData/Jobs/12t Delivery Truck.vecto") as IDeclarationInputDataProvider;
 		//var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>());
 
-		var dataProvider = GetMockVehicleInputData(VehicleClass.Class2);
+		var dataProvider = GetMockJobInputData(VehicleClass.Class2);
 		var runDataFactoryFactory = _kernel.Get<IVectoRunDataFactoryFactory>();
 		var runDataFactory = runDataFactoryFactory.CreateDeclarationRunDataFactory(dataProvider, null, null);
 
@@ -69,7 +70,7 @@ public class VehicleDataAdapterLorryTests
         //        @"TestData/Jobs/Class4_40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
         //var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>());
 
-		var dataProvider = GetMockVehicleInputData(VehicleClass.Class4);
+		var dataProvider = GetMockJobInputData(VehicleClass.Class4);
 		var runDataFactoryFactory = _kernel.Get<IVectoRunDataFactoryFactory>();
 		var runDataFactory = runDataFactoryFactory.CreateDeclarationRunDataFactory(dataProvider, null, null);
 
@@ -99,7 +100,7 @@ public class VehicleDataAdapterLorryTests
         //    JSONInputDataFactory.ReadJsonJob(@"TestData/Jobs/40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
         //var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>());
 
-		var dataProvider = GetMockVehicleInputData(VehicleClass.Class5);
+		var dataProvider = GetMockJobInputData(VehicleClass.Class5);
 		var runDataFactoryFactory = _kernel.Get<IVectoRunDataFactoryFactory>();
 		var runDataFactory = runDataFactoryFactory.CreateDeclarationRunDataFactory(dataProvider, null, null);
 
@@ -129,8 +130,77 @@ public class VehicleDataAdapterLorryTests
         CollectionAssert.AreEqual(withSTT1, runs[9].VehicleData.AxleData.Select(a => a.Inertia.Value()));
     }
 
+	[TestCase()]
+	public void TestMaxMassInMunicipalCycle()
+	{
+		var doa = new LorryVehicleDataAdapter();
 
-	private IInputDataProvider GetMockVehicleInputData(VehicleClass vehicleClass)
+		var segment = DeclarationData.TruckSegments.Lookup(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2,
+			18000.SI<Kilogram>(), 9300.SI<Kilogram>(), true);
+		var mission = segment.Missions.First(m => m.MissionType == MissionType.MunicipalUtility);
+
+        var vehicleInputData = GetMockVehicleInputData();
+
+		var muRefLoadData = doa.CreateVehicleData(vehicleInputData, segment, mission,
+			new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.ReferenceLoad,
+				mission.Loadings[LoadingType.ReferenceLoad]), true);
+
+		Assert.AreEqual(2700, muRefLoadData.Loading.Value());
+		Assert.AreEqual(6000, muRefLoadData.BodyAndTrailerMass.Value());
+		Assert.AreEqual(18000, muRefLoadData.TotalVehicleMass.Value());
+
+	}
+
+	private IVehicleDeclarationInputData GetMockVehicleInputData()
+	{
+        var veh = new Mock<IVehicleDeclarationInputData>();
+        var comp = new Mock<IVehicleComponentsDeclaration>();
+        var eng = new Mock<IEngineDeclarationInputData>();
+        var gbx = new Mock<IGearboxDeclarationInputData>();
+        var axlWhls = new Mock<IAxlesDeclarationInputData>();
+        var axlWhl1 = new Mock<IAxleDeclarationInputData>();
+        var axlWhl2 = new Mock<IAxleDeclarationInputData>();
+        var tyre = new Mock<ITyreDeclarationInputData>();
+		var adas = new Mock<IAdvancedDriverAssistantSystemDeclarationInputData>();
+
+		veh.Setup(v => v.ADAS).Returns(adas.Object);
+		veh.Setup(v => v.Components).Returns(comp.Object);
+        comp.Setup(c => c.EngineInputData).Returns(eng.Object);
+        comp.Setup(c => c.AxleWheels).Returns(axlWhls.Object);
+        comp.Setup(c => c.GearboxInputData).Returns(gbx.Object);
+
+        veh.Setup(v => v.ExemptedVehicle).Returns(false);
+        veh.Setup(v => v.ArchitectureID).Returns(ArchitectureID.UNKNOWN);
+        veh.Setup(v => v.VehicleType).Returns(VectoSimulationJobType.ConventionalVehicle);
+        veh.Setup(v => v.LegislativeClass).Returns(LegislativeClass.M3);
+        veh.Setup(v => v.OvcHev).Returns(false);
+
+		adas.Setup(a => a.EngineStopStart).Returns(false);
+		adas.Setup(a => a.PredictiveCruiseControl).Returns(PredictiveCruiseControlType.None);
+		adas.Setup(a => a.EcoRoll).Returns(EcoRollType.None);
+
+		axlWhls.Setup(a => a.AxlesDeclaration).Returns(new List<IAxleDeclarationInputData> { axlWhl1.Object, axlWhl2.Object });
+        axlWhl1.Setup(a => a.AxleType).Returns(AxleType.VehicleNonDriven);
+        axlWhl1.Setup(a => a.Steered).Returns(true);
+        axlWhl1.Setup(a => a.TwinTyres).Returns(false);
+        axlWhl1.Setup(a => a.Tyre).Returns(tyre.Object);
+
+        axlWhl2.Setup(a => a.AxleType).Returns(AxleType.VehicleDriven);
+        axlWhl2.Setup(a => a.Steered).Returns(false);
+        axlWhl2.Setup(a => a.TwinTyres).Returns(true);
+        axlWhl2.Setup(a => a.Tyre).Returns(tyre.Object);
+
+        
+        veh.Setup(v => v.VehicleCategory).Returns(VehicleCategory.RigidTruck);
+        veh.Setup(v => v.AxleConfiguration).Returns(AxleConfiguration.AxleConfig_4x2);
+        veh.Setup(v => v.CurbMassChassis).Returns(9300.SI<Kilogram>());
+        veh.Setup(v => v.GrossVehicleMassRating).Returns(18000.SI<Kilogram>());
+        tyre.Setup(t => t.Dimension).Returns("315/70 R22.5");
+		
+        return veh.Object;
+    }
+
+	private IInputDataProvider GetMockJobInputData(VehicleClass vehicleClass)
 	{
 		var mock = new Mock<IDeclarationInputDataProvider>();
 		var job = new Mock<IDeclarationJobInputData>();
