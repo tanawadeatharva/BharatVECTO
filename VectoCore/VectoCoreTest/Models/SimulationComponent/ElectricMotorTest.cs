@@ -41,6 +41,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		[TestCase(1),
 		TestCase(2),
+			Category(Definitions.TESTCASE_MIGRATED)
 		]
 		public void ElectricMotorModelDataTest(int count)
 		{
@@ -83,7 +84,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		 TestCase(600, 100, -7292.591952),
 		 TestCase(600, 300, -21459.016866),
 		 TestCase(800, -100, 7174.730264),
-		 TestCase(800, -300, 22354.108093)]
+		 TestCase(800, -300, 22354.108093),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void ElectricMotorOnlyRequestTest(double speed, double torque, double expectedBatteryPower)
 		{
 			var container = new MockVehicleContainer();
@@ -131,7 +133,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		 TestCase(600, 100, -7653.267447),
 		 TestCase(600, 300, -22631.653148),
 		 TestCase(800, -100, 6785.258050),
-		 TestCase(800, -300, 21273.378603)]
+		 TestCase(800, -300, 21273.378603),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void ElectricMotorOnlyRequestTestMechLoss(double speed, double torque, double expectedBatteryPower)
 		{
 			var container = new MockVehicleContainer();
@@ -177,7 +180,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		TestCase(600, 100, 100, 5367.264248),
 		TestCase(600, 300, -50, -3925.642046),
 		TestCase(800, -100, 200, 14907.629627),
-		TestCase(800, -300, 200, 14907.629627),]
+		TestCase(800, -300, 200, 14907.629627),
+		Category(Definitions.TESTCASE_MIGRATED),]
 		public void ElectricMotorAssistingRequestTest(double speed, double torque, double electricTorque, double expectedBatteryPower)
 		{
 			var container = new MockVehicleContainer();
@@ -228,7 +232,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		TestCase(600, 100, 100, 5075.160087),
 		TestCase(600, 300, -50, -4102.198874),
 		TestCase(800, -100, 200, 14165.993213),
-		TestCase(800, -300, 200, 14165.993213),]
+		TestCase(800, -300, 200, 14165.993213),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void ElectricMotorAssistingRequestTestMechLoss(double speed, double torque, double electricTorque, double expectedBatteryPower)
 		{
 			var container = new MockVehicleContainer();
@@ -272,7 +277,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.IsTrue(response.ElectricSystem.ConsumerPower.Value() < response.ElectricMotor.ElectricMotorPowerMech.Value());
 		}
 
-		[TestCase(800, 300)]
+		[TestCase(800, 300),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void ElectricMotorWithBatteryIdlingRequestTest(double speed, double torque)
 		{
 			var container = new MockVehicleContainer();
@@ -334,8 +340,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		TestCase(0.5, 600, 100, -7292.591952, 65.92202),
 		TestCase(0.5, 600, 300, -21459.016866, 591.97964),
 		TestCase(0.5, 800, -100, 7174.730264, 61.59876),
-		TestCase(0.5, 800, -300, 22354.108093, 577.346990)
-		]
+		TestCase(0.5, 800, -300, 22354.108093, 577.346990),
+		Category(Definitions.TESTCASE_MIGRATED)
+        ]
 		public void ElectricMotorOnlyWithBatteryRequestTest(double initialSoc, double speed, double torque, double expectedBatteryPower, double expectedBatteryLoss)
 		{
 			var container = new MockVehicleContainer();
@@ -386,7 +393,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestElectricMotorThermalDeRating()
 		{
 			var initialSoc = 0.8;

@@ -138,12 +138,11 @@ public class VehicleDataAdapterLorryTests
 		var segment = DeclarationData.TruckSegments.Lookup(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2,
 			18000.SI<Kilogram>(), 9300.SI<Kilogram>(), true);
 		var mission = segment.Missions.First(m => m.MissionType == MissionType.MunicipalUtility);
+		var loading = mission.Loadings.First(l => l.Key.Equals(LoadingType.ReferenceLoad));
 
         var vehicleInputData = GetMockVehicleInputData();
 
-		var muRefLoadData = doa.CreateVehicleData(vehicleInputData, segment, mission,
-			new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.ReferenceLoad,
-				mission.Loadings[LoadingType.ReferenceLoad]), true);
+		var muRefLoadData = doa.CreateVehicleData(vehicleInputData, segment, mission, loading, true);
 
 		Assert.AreEqual(2700, muRefLoadData.Loading.Value());
 		Assert.AreEqual(6000, muRefLoadData.BodyAndTrailerMass.Value());
