@@ -91,7 +91,7 @@ public class RetarderDataAdapterTests
     [Combinatorial]
     public void RetarderTypeApplicableToArchP_HEV_Test([Values] RetarderType retarderType, [Values(ArchitectureID.P1, ArchitectureID.P2, ArchitectureID.P2_5, ArchitectureID.P3, ArchitectureID.P4, ArchitectureID.P_IHPC)] ArchitectureID archID)
     {
-        var retarderMoq = RetarderMoq(retarderType);
+        var retarderMoq = RetarderMock(retarderType);
 
         var shouldWork = P_HEVRetarderShouldWork(retarderType, archID);
 
@@ -104,7 +104,7 @@ public class RetarderDataAdapterTests
         [Values(ArchitectureID.S_IEPC, ArchitectureID.S2, ArchitectureID.S3, ArchitectureID.S4)]
             ArchitectureID archID)
     {
-        var retarderMoq = RetarderMoq(retarderType);
+        var retarderMoq = RetarderMock(retarderType);
 
         var shouldWork = S_HEVRetarderShouldWork(retarderType, archID);
 
@@ -117,7 +117,7 @@ public class RetarderDataAdapterTests
         [Values(ArchitectureID.E2, ArchitectureID.E3, ArchitectureID.E4)]
             ArchitectureID archID)
     {
-        var retarderMoq = RetarderMoq(retarderType);
+        var retarderMoq = RetarderMock(retarderType);
 
         var shouldWork = PEVRetarderShouldWork(retarderType, archID);
 
@@ -130,7 +130,7 @@ public class RetarderDataAdapterTests
     public void RetarderTypeApplicableToArch_IEPC_E_Test([Values] RetarderType retarderType,
         [Values] bool differentialIncluded, [Values] bool designTypeWheelMotor)
     {
-        var retarderMoq = RetarderMoq(retarderType);
+        var retarderMoq = RetarderMock(retarderType);
         var iepcMoq = IEPCMoq(differentialIncluded, designTypeWheelMotor);
 
         var shouldWork = IEPCShouldWork(retarderType, differentialIncluded, designTypeWheelMotor);
@@ -244,7 +244,7 @@ public class RetarderDataAdapterTests
     }
 
 
-    private Mock<IRetarderInputData> RetarderMoq(RetarderType retarderType)
+    private Mock<IRetarderInputData> RetarderMock(RetarderType retarderType)
     {
         var retarderMoq = new Mock<IRetarderInputData>();
         retarderMoq.Setup(m => m.Type).Returns(retarderType);
