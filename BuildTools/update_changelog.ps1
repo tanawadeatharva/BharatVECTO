@@ -24,16 +24,13 @@ function Update-MarkdownContent ([string] $targetFile, [string] $contentFile, [s
                 } else {
                     $newHeader = "#"
                 }
+                "`r`n"
                 $(Get-Content $contentFile).Replace("##", $newHeader)
               }
           }
       } |
   Set-Content $targetFile
 }
-
-# Set project default variables.
-$CI_API_V4_URL="https://code.europa.eu/api/v4"
-$CI_PROJECT_ID=89
 
 if(!$RELEASE_VERSION){
     $numberOfDays = $(New-TimeSpan -Start $(Get-Date -Year 2015 -Month 1 -Day 1) -End $(Get-Date)).Days
@@ -78,20 +75,10 @@ Write-Host "Current version points to $($CURRENT_RELEASE_SHA)"
 Write-Host "Previous version points to $($PREVIOUS_RELEASE_SHA)"
 
 # Get the latest changes for the release changelog.
-$response = Invoke-WebRequest "$($CI_API_V4_URL)/projects/$($CI_PROJECT_ID)/repository/changelog?version=$($changelogVersion)&from=$PREVIOUS_RELEASE_SHA&to=$CURRENT_RELEASE_SHA" `
--UseBasicParsing `
--Method "Get" `
--Headers @{
-    Accept          = 'application/json'
-    "PRIVATE-TOKEN" = "$GITLAB_API_TOKEN"
-}
+git cliff "$CURRENT_RELEASE_SHA..$PREVIOUS_RELEASE_SHA" --unreleased --tag "$changelogVersion" -o cliff_changelog.md --config ./BuildTools/cliff.toml
 
 $ReleaseNotesUpdateMarkdown = "Documentation/User Manual Source/ReleaseNotesMDs/release_notes.md";
-if($(Test-Path $ReleaseNotesUpdateMarkdown)){
-  Clear-Content $ReleaseNotesUpdateMarkdown
-}
-
-($response | ConvertFrom-Json).notes > ./$ReleaseNotesUpdateMarkdown
+Copy-Item cliff_changelog.md ./$ReleaseNotesUpdateMarkdown -Force
 
 # Update Release Notes and changelog markdowns.
 # Based on the major, determine the ReleaseNotes for the given version.
