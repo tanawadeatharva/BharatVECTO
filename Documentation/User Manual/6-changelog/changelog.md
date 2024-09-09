@@ -1,5 +1,21 @@
 # Changelog
 
+**VECTO-4.2.2-RC**
+
+**Build 3539 (2024-09-09)**
+
+- Bugfixes
+   * CodeEU-710: Hashing tool check fail with VECTO version 3330
+   * CodeEU-711: Hashing tool check fail with VECTO 4.1.3.3415
+   * CodeEU-712: VECTO VTP error
+   * CodeEU-754: "Failed to find operating point"; "Failed to find mechanic power for given electric power" in E2 vehicle
+   * CodeEU-727: Failure in simulating HEV in different VECTO versions
+   * CodeEU-749: Double summary for electric vehicles
+   * CodeEU-542: IVECO confidential : BUG REPORT : CRW LE T7D VOITH NXT 5.63
+   * CodeEU-663: IHPC: Failed to find operating point 
+   * CodeEU-634: Article 10(2) issue - VIN YS2G6X20002202570
+   * CodeEU-671: IHPC: simulation abort due to unexpected response 
+   
 **VECTO-4.2.1**
 
 **Build 3469 (2024-07-01)**
