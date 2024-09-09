@@ -1053,6 +1053,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			try {
+				var forceLineSearch = DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && !DataBus.GearboxInfo.TCLocked;
 				DataBus.Brakes.BrakePower = SearchAlgorithm.Search(DataBus.Brakes.BrakePower, deltaPower,
 					deltaPower.Abs() * (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() ? 0.5 : 1),
 					getYValue: result => {
@@ -1073,7 +1074,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					criterion: result => {
 						var response = (ResponseDryRun)result;
 						var delta = DataBus.ClutchInfo.ClutchClosed(absTime) && DataBus.GearboxInfo.GearEngaged(absTime)
-							? response.DeltaDragLoad
+							? response.DeltaDragLoad * (forceLineSearch ? 1.1 : 1.0) // in case LineSearch is used, increase criteria to force more precision on the solution
 							: response.Gearbox.PowerRequest;
 						return delta.Value();
 					},
@@ -1088,7 +1089,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 						return DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && response.DeltaDragLoad.Value().IsSmallerOrEqual(-double.MaxValue / 20);
 					},
-					forceLineSearch: DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && !DataBus.GearboxInfo.TCLocked,
+					forceLineSearch: forceLineSearch,
 					searcher: this);
 
 				return operatingPoint;

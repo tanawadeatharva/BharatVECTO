@@ -155,6 +155,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					return gearShiftResponse; 
                 }
 
+				if (retryAfterGearshift) {
+					retryCount++;
+				}
 				retry = retryAfterGearshift;
 
 				if (!dryRun /*&& DataBus.VehicleInfo.VehicleStopped*/) {
@@ -241,6 +244,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				_shiftStrategy.SetNextGear(strategySettings.NextGear);
 				SelectedGear = strategySettings.NextGear;
+
+				if (DataBus.GearboxInfo.GearboxType == GearboxType.IHPC) {
+					retry = true;
+					return null;
+				}
 
 				if (!DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
 		

@@ -1865,6 +1865,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 					(1 - D32_utilityFactor) * csResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected))
 				.ToDictionary(x => x.Item1, x => x.Item2);
 
+			var fcPerMeter = cdResult.FuelData.Select(f => Tuple.Create(f,
+				(cdResult.FuelConsumptionFinal(f.FuelType).TotalFuelConsumptionCorrected / cdResult.Distance) * cdResult.WeightingFactor))
+					.ToDictionary(x => x.Item1, x => x.Item2);
+
 			var retVal = new WeightedResult() {
 				Status = cdResult.Status == VectoRun.Status.PrimaryBusSimulationIgnore || csResult.Status == VectoRun.Status.PrimaryBusSimulationIgnore ? VectoRun.Status.PrimaryBusSimulationIgnore : VectoRun.Status.Success,
 				Distance = cdResult.Distance,
@@ -1879,6 +1883,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				UtilityFactor = D32_utilityFactor,
 				ElectricEnergyConsumption = D36_electricEnergyConsumptionWeighted,
 				FuelConsumption = D37_fuelConsumptionWeighted,
+				FuelConsumptionPerMeter = fcPerMeter,
 
 				CO2PerMeter = (D32_utilityFactor * (cdResult.CO2Total / cdResult.Distance)) + ((1 - D32_utilityFactor) * (csResult.CO2Total / csResult.Distance)),
 
@@ -2026,6 +2031,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 						entries.Sum(e =>
 							e.Weighted.FuelConsumption[f] * e.ChargeDepletingResult.WeightingFactor)))
 					.ToDictionary(x => x.Item1, x => x.Item2),
+				FuelConsumptionPerMeter = fuels.Select(f => Tuple.Create(f,
+						entries.Sum(e => e.Weighted.FuelConsumptionPerMeter[f] * e.ChargeDepletingResult.WeightingFactor)))
+						.ToDictionary(x => x.Item1, x => x.Item2),
 				ElectricEnergyConsumption = entries.Sum(e => e.Weighted.ElectricEnergyConsumption * e.ChargeDepletingResult.WeightingFactor),
 				CO2PerMeter = entries.All(e => e.Weighted.CO2PerMeter != null) ? entries.Sum(e => (e.Weighted.CO2PerMeter) * e.ChargeDepletingResult.WeightingFactor) : null,
 				ActualChargeDepletingRange = entries.Sum(e => e.Weighted.ActualChargeDepletingRange * e.ChargeDepletingResult.WeightingFactor),
