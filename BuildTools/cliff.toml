@@ -8,35 +8,40 @@
 [changelog]
 # template for the changelog footer
 header = """
-# Changelog\n
-All notable changes to this project will be documented in this file.\n
 """
 # template for the changelog body
 # https://keats.github.io/tera/docs/#introduction
 body = """
-{% if version %}\
-    ## VECTO {{ version | trim_start_matches(pat="Release/v") }} ({{ timestamp | date(format="%Y_%m_%d") }}) Official Release
+{% if version -%}\
+    ## ({{ timestamp | date(format="%Y_%m_%d") }}) {{ version }}
 {% else %}\
     ## [unreleased]
 {% endif %}\
-{% for group, commits in commits | group_by(attribute="group") %}
+{% set_global filtered_commits = [] %}
+{% for commit in commits -%}
+  {% if commit.footers | length > 0 and commit.footers.0.token == "mr" -%}
+    {% set_global filtered_commits = filtered_commits | concat(with= commit) -%}
+  {% endif -%}
+{%endfor -%}
+{% for group, commits in filtered_commits | group_by(attribute="group") %}
+
     ### {{ group | striptags | trim | upper_first }}
     {% for commit in commits %}
-        - {% if commit.scope %}*({{ commit.scope }})* {% endif %}\
-            {% if commit.breaking %}[**breaking**] {% endif %}\
-            {% if not commit.footers -%} {{ commit.message | upper_first }} {% endif %}\
-            {% if commit.footers -%}
-              {% if commit.footers.1.token == "issue" and commit.footers.1.token != "" -%}
-                {{ commit.footers.1.value }}: {{ commit.message | upper_first }}\
-              {% elif commit.footers.0.token == "mr" -%}
-                {{ commit.footers.0.value }}: {{ commit.message | upper_first }}\
+          - {% if commit.scope %}*({{ commit.scope }})* {% endif %}\
+              {% if commit.breaking %}[**breaking**] {% endif %}\
+              {% if not commit.footers -%} {{ commit.message | upper_first }} {% endif %}\
+              {% if commit.footers -%}
+                {% if commit.footers.1.token == "issue" and commit.footers.1.token != "" -%}
+                  {{ commit.footers.1.value }}: {{ commit.message | upper_first }}\
+                {% elif commit.footers.0.token == "mr" -%}
+                  {{ commit.footers.0.value }}: {{ commit.message | upper_first }}\
+                {% endif -%}
+                {#{% if commit.footers.2.token == "description" and commit.footers.2.value != "" %}
+                  <p>{{ commit.footers.2.value }}</p>
+                {% endif -%} -#}
               {% endif -%}
-              {#{% if commit.footers.2.token == "description" and commit.footers.2.value != "" %}
-                <p>{{ commit.footers.2.value }}</p>
-              {% endif -%} -#}
-            {% endif -%}
-    {% endfor %}
-{% endfor %}\n
+    {% endfor -%}
+{% endfor -%}\n
 """
 # template for the changelog footer
 footer = """
