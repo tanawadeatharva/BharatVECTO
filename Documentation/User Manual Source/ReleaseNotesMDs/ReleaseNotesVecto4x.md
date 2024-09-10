@@ -7,9 +7,11 @@
 # Vecto 4.2.1.3469 OFFICIAL RELEASE (01-07-2024)
 
 <span style="color:#000000"> __Features__ </span>
+
 * <span style="color:#000000">CodeEU\-726: Build an XML converter tool for older VECTO jobs</span>
 
 <span style="color:#000000"> __Bugfixes__ </span>
+
 * <span style="color:#000000">CodeEU\-719: the six new tyre dimensions from line 126 onwards to the latest "wheels\.csv" file in the VECTO repository</span>
 * <span style="color:#000000">CodeEU\-717: VECTO\-4\.2\.0\.3448\-RC \- Buses AMT Gearbox Type with 1% higher C02 in primary results</span>
 * <span style="color:#000000">CodeEU\-724: Error in Primary Bus Simulation: Object reference not set to an instance of an object</span>

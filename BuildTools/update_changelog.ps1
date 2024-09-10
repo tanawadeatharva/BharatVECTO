@@ -37,12 +37,6 @@ if(!$RELEASE_VERSION){
     $RELEASE_VERSION = Read-Host "Version number (build number is $numberOfDays)"
 }
 
-# If multiple tokens are set for different repos rename $env:GITLAB_API_TOKEN by GITLAB_API_TOKEN_{CURRENT_REPO}
-$GITLAB_API_TOKEN = $env:GITLAB_API_TOKEN
-if(!$GITLAB_API_TOKEN){
-    throw "GITLAB_API_TOKEN not assigned."
-}
-
 # Get release version and suffix from version string.
 $VersionTag = $RELEASE_VERSION
 $VersionTag -match '((\d+)\.\d+\.\d+\.\d+)(-(RC|DEV))?' > $null
@@ -78,7 +72,7 @@ Write-Host "Previous version points to $($PREVIOUS_RELEASE_SHA)"
 git cliff "$CURRENT_RELEASE_SHA..$PREVIOUS_RELEASE_SHA" --unreleased --tag "$changelogVersion" -o cliff_changelog.md --config ./BuildTools/cliff.toml
 
 $ReleaseNotesUpdateMarkdown = "Documentation/User Manual Source/ReleaseNotesMDs/release_notes.md";
-Copy-Item cliff_changelog.md ./$ReleaseNotesUpdateMarkdown -Force
+Move-Item cliff_changelog.md ./$ReleaseNotesUpdateMarkdown -Force
 
 # Update Release Notes and changelog markdowns.
 # Based on the major, determine the ReleaseNotes for the given version.
@@ -86,6 +80,7 @@ if ($MajorVersionNumber -ne 3 -and $MajorVersionNumber -ne 4){
     throw "Release Notes version ${MajorVersionNumber} not supported."
 } else {
     $ReleaseNotesMarkdown = "Documentation/User Manual Source/ReleaseNotesMDs/ReleaseNotesVecto${MajorVersionNumber}x.md"
+    $ReleaseNotesPdf = "Documentation/User Manual Source/Release Notes Vecto${MajorVersionNumber}.x.pdf"
 }
 
 # Insert new changelog features into Release Notes.
@@ -97,10 +92,16 @@ $ChangelogInjectMark = "# Changelog"
 $ChangelogFilePath = "Documentation/User Manual/6-changelog/changelog.md"
 Update-MarkdownContent $ChangelogFilePath $ReleaseNotesUpdateMarkdown $ChangelogInjectMark
 
+# Convert md to pdf
+Push-Location "Documentation/User Manual Source/ReleaseNotesMDs"
+pandoc "..\..\..\$ReleaseNotesMarkdown" -o "..\..\..\$ReleaseNotesPdf" --css "..\..\..\BuildTools\templates\md-style.css" --pdf-engine=$Env:weasyprint
+Pop-Location
+
 # Stage the modified files by the script in git.
 git add $ReleaseNotesMarkdown
 git add $ChangelogFilePath
 git add $ReleaseNotesUpdateMarkdown
+git add $ReleaseNotesPdf
 
 Write-Host "----- Next release tag -----"
 Write-Host "     ${VersionTag}"
