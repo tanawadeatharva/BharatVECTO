@@ -268,7 +268,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 					.Replace(".", "_");
 
 
-			var metricKey = $"{TestContext.CurrentContext.Test.MethodName}.{vehicleFile}.{cycleName}_({metricFieldFormatted},{expectedValue})";
+			var metricKey = $"GENVEH.{TestContext.CurrentContext.Test.MethodName}.{vehicleFile}.{cycleName}_({metricFieldFormatted},{expectedValue})";
 
 			var filePath = Path.Join(TestContext.CurrentContext.TestDirectory, "gitlab_metrics.log");
 			File.AppendAllLines(
