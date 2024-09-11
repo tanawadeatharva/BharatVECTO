@@ -270,7 +270,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			var metricKey = $"GENVEH.{TestContext.CurrentContext.Test.MethodName}.{vehicleFile}.{cycleName}_({metricFieldFormatted},{expectedValue})";
 
-			var filePath = Path.Join(TestContext.CurrentContext.TestDirectory, "gitlab_metrics.log");
+			var metricsFile = Environment.GetEnvironmentVariable("GENVEH_METRICS_FPATH");
+			var filePath = !string.IsNullOrEmpty(metricsFile) 
+				? metricsFile
+				: Path.Join(TestContext.CurrentContext.TestDirectory, "gitlab_metrics.log");
+
 			File.AppendAllLines(
 				filePath,
 				new List<string>() { $"{metricKey} {actual}" });
