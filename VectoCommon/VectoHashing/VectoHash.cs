@@ -110,7 +110,7 @@ namespace TUGraz.VectoHashing
 		public IList<VectoComponents> GetContainigComponents()
 		{
 			var retVal = new List<VectoComponents>();
-			var rootName = Document.FirstChild.NextSibling.LocalName;
+			var rootName = Document.FirstChild.NextSibling?.LocalName ?? Document.FirstChild.LocalName;
 
 			foreach (var component in EnumHelper.GetValues<VectoComponents>()) {
 				// special treatment for REESS: can be either supercap or multiple batteries where the component node may contain several sub-components
@@ -139,7 +139,7 @@ namespace TUGraz.VectoHashing
 
 		public string ComputeHash(IEnumerable<string> canonicalization = null, string digestMethod = null)
 		{
-			var isMultiStep = (Document.ChildNodes.Count > 0) 
+			var isMultiStep = (Document.ChildNodes.Count > 1) 
 				&& Document.ChildNodes[1].ChildNodes.Cast<XmlNode>().Any(x => x.LocalName == XMLNames.ManufacturingStep);
 			
 			var nodes = Document.SelectNodes(GetComponentQueryString(null, isMultiStep));
