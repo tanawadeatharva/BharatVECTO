@@ -33,13 +33,12 @@ function Update-MarkdownContent ([string] $targetFile, [string] $contentFile, [s
 }
 
 if(!$RELEASE_VERSION){
-    $numberOfDays = $(New-TimeSpan -Start $(Get-Date -Year 2015 -Month 1 -Day 1) -End $(Get-Date)).Days
-    $RELEASE_VERSION = Read-Host "Version number (build number is $numberOfDays)"
+    $RELEASE_VERSION = Read-Host "Version number"
 }
 
 # Get release version and suffix from version string.
 $VersionTag = $RELEASE_VERSION
-$VersionTag -match '((\d+)\.\d+\.\d+\.\d+)(-(RC|DEV))?' > $null
+$VersionTag -match '((\d+)\.\d+\.\d+)(-(RC|DEV))?' > $null
 $VersionNumber = $Matches[1]
 $MajorVersionNumber = $Matches[2]
 $VersionSuffix = $Matches[4]
@@ -108,6 +107,3 @@ git add $ReleaseNotesMarkdown
 git add $ChangelogFilePath
 git add $ChangesMarkdown
 git add $ReleaseNotesPdf
-
-Write-Host "----- Next release tag -----"
-Write-Host "     ${VersionTag}"

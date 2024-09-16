@@ -1,4 +1,4 @@
-<Project DefaultTargets = "Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" >	
+<Project DefaultTargets = "Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" >
 	<Target Name="CustomClean">
 		<Message Text="Removing old files $(ProjectDir)bin\" Importance="high" />
 		<Message Text="Removing old files $(ProjectDir)obj\" Importance="high" />
@@ -7,8 +7,6 @@
 	</Target>
 
 	<Target Name="Packaging" AfterTargets="DispatchToInnerBuilds" Condition="('$(Configuration)'=='Deploy') Or ('$(Configuration)' == 'MockupDeploy')">
-
-
 		<Message Text="Packaging in $(Configuration) Configuration $(VersionPrefix)" Importance="high" />
 		<PropertyGroup>
 			<CurrentDate>$([System.DateTime]::Now.ToString(yyy_MM_dd))</CurrentDate>
@@ -39,7 +37,7 @@
 			<Net48XMLConverterCmdLine Include="$(SolutionDir)XMLConverterCmdLine\bin\Release\net48\*.exe*"/>
 			<Net48XMLConverterCmdLine Include="$(SolutionDir)XMLConverterCmdLine\bin\Release\net48\*.dll*"/>
 		</ItemGroup>
-			
+
 		<!--MockupDeploy-->
 		<ItemGroup Condition="'$(Configuration)'=='MockupDeploy'">
 			<!-- All files for net48 -->
@@ -87,7 +85,7 @@
 			<VectoMultistepRuntimes Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net6.0-windows\runtimes\**\*.*"/>
 		</ItemGroup>
 		<!--MockupDeploy-->
-			
+
 		<ItemGroup Condition="'$(Configuration)'=='MockupDeploy'">
 			<!-- All files for net6.0 -->
 			<Vecto Include="$(SolutionDir)VECTO\bin\MockupRelease\net6.0-windows\VECTO.*" Exclude="*.dev.json"/>
@@ -107,7 +105,7 @@
 			<VectoMultistep Include="$(SolutionDir)VECTO3GUI2020\bin\MockupRelease\net6.0-windows\*.dll"/>
 			<VectoMultistepRuntimes Include="$(SolutionDir)VECTO3GUI2020\bin\MockupRelease\net6.0-windows\runtimes\**\*.*"/>
 		</ItemGroup>
-	
+
 		<Copy SourceFiles="@(HashingTool)" DestinationFolder="$(DeployPath)net60"/>
 		<Copy SourceFiles="@(VectoMultistep)" DestinationFolder="$(DeployPath)net60"/>
 		<Copy SourceFiles="@(VectoCommandLine)" DestinationFolder="$(DeployPath)net60"/>
@@ -118,7 +116,7 @@
 		<Copy SourceFiles="@(VectoRuntimes)" DestinationFiles="@(VectoRuntimes->'$(DeployPath)net60\runtimes\%(RecursiveDir)%(Filename)%(Extension)')"/>
 		<Copy SourceFiles="@(XMLConverterCmdLine)" DestinationFolder="$(DeployPath)net60"/>
 		<Copy SourceFiles="@(XMLConverterCmdLineRuntimes)" DestinationFiles="@(XMLConverterCmdLineRuntimes->'$(DeployPath)net60\runtimes\%(RecursiveDir)%(Filename)%(Extension)')"/>
-		
+
 		<ItemGroup Condition="'$(Configuration)'=='Deploy'">
 			<!-- All files for the VECTO starters -->
 			<VectoStart Include="$(SolutionDir)Tools\VECTOStart\bin\Deploy\net48\VECTO.exe" />
@@ -206,7 +204,7 @@
 		<!-- <Copy SourceFiles="@(DeclarationData)" DestinationFolder="$(DeployPath)Declaration" /> -->
 		<Copy SourceFiles="@(DeclarationData)" DestinationFiles="@(DeclarationData->'$(DeployPath)Declaration\%(RecursiveDir)%(Filename)%(Extension)')"/>
 		<Copy SourceFiles="@(MissionProfiles)" DestinationFolder="$(DeployPath)Mission Profiles" />
-		
+
 		<Copy SourceFiles="@(VectoXMLExamples)" DestinationFolder="$(DeployPath)XML\Examples" />
 		<Copy SourceFiles="@(VectoXMLExamplesMultistep)" DestinationFiles="@(VectoXMLExamplesMultistep->'$(DeployPath)XML\Examples\multistep_v0.1\(Filename)%(Extension)')" />
 		<Copy SourceFiles="@(VectoXMLExamples_v25)" DestinationFiles="@(VectoXMLExamples_v25->'$(DeployPath)XML\Examples\v2.5\%(Filename)%(Extension)')" />
@@ -215,7 +213,7 @@
 		<Copy SourceFiles="@(VectoXMLExamples_v20)" DestinationFiles="@(VectoXMLExamples_v20->'$(DeployPath)XML\Examples\v2.0\%(Filename)%(Extension)')" />
 		<Copy SourceFiles="@(VectoXMLExamples_V10)" DestinationFiles="@(VectoXMLExamples_v10->'$(DeployPath)XML\Examples\v1.0\%(Filename)%(Extension)')" />
 
-		
+
 		<Copy SourceFiles="@(VectoXSD)" DestinationFolder="$(DeployPath)XML\XSD" />
 		<Copy SourceFiles="@(UserManual)" DestinationFolder="$(DeployPath)User Manual" />
 		<Copy SourceFiles="@(ReleaseNotes3)" DestinationFiles="$(DeployPath)User Manual\Release Notes Vecto 3.md" />
@@ -223,29 +221,29 @@
 		<Copy SourceFiles="@(VectoConfigurationSample)" DestinationFolder="$(DeployPath)"/>
 		<Copy SourceFiles="$(SolutionDir)\Documentation\User Manual Source\README for Mission Profiles Directory.txt" DestinationFiles="$(DeployPath)Mission Profiles\!! README !!.TXT"/>
 		<Copy SourceFiles="$(SolutionDir)\Documentation\User Manual Source\README for Declaration Directory.txt" DestinationFiles="$(DeployPath)Declaration\!! README !!.TXT"/>
-		
+
 		<Copy SourceFiles="@(ParameterDocu)" DestinationFolder="$(DeployPath)User Manual\ParameterDocumentation"/>
 		<Copy SourceFiles="@(ParameterDocuStyle)" DestinationFolder="$(DeployPath)User Manual\ParameterDocumentation\HTML\css"/>
-		
+
 
 
 		<!-- <Copy SourceFiles="$(ParameterDocuStyle)" DestinationFolder="$(DeployPath)User Manual\Parameter Documentation\HTML\css"/> -->
 		<!-- NuGet Files-->
 		<ItemGroup Condition="'$(Configuration)'=='Deploy'">
-			<VectoNuget Include ="$(SolutionDir)VectoCore\VectoCore\bin\Release\*$(Days)*.nupkg" />
-			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoCommon\bin\Release\*$(Days)*.nupkg" />
-			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoHashing\bin\Release\*$(Days)*.nupkg" />
+			<VectoNuget Include ="$(SolutionDir)VectoCore\VectoCore\bin\Release\*$(Version)*.nupkg" />
+			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoCommon\bin\Release\*$(Version)*.nupkg" />
+			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoHashing\bin\Release\*$(Version)*.nupkg" />
 		</ItemGroup>
 		<ItemGroup Condition="'$(Configuration)'=='MockupDeploy'">
-			<VectoNuget Include ="$(SolutionDir)VectoCore\VectoCore\bin\MockupRelease\*$(Days)*.nupkg" />
-			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoCommon\bin\Release\*$(Days)*.nupkg" />
-			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoHashing\bin\Release\*$(Days)*.nupkg" />
+			<VectoNuget Include ="$(SolutionDir)VectoCore\VectoCore\bin\MockupRelease\*$(Version)*.nupkg" />
+			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoCommon\bin\Release\*$(Version)*.nupkg" />
+			<VectoNuget Include ="$(SolutionDir)VectoCommon\VectoHashing\bin\Release\*$(Version)*.nupkg" />
 		</ItemGroup>
 
 		<Copy SourceFiles="@(VectoNuget)" DestinationFolder ="$(NuGetPath)"/>
 
 		<Copy SourceFiles="@(VectoNuget)" DestinationFolder ="$(DeployPath)NuGet"/>
-		
+
 		<PropertyGroup>
 			<NugetDestinationZip>$(ReleasePath)$(CurrentDate)-VECTO-NuGet-$(Version).zip</NugetDestinationZip>
 			<NugetDestinationZip Condition="'$(Configuration)'=='MockupDeploy'">$(ReleasePath)$(CurrentDate)-VECTO-NuGet-$(Version).zip</NugetDestinationZip>
