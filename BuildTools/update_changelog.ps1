@@ -1,4 +1,4 @@
-param([string]$RELEASE_VERSION=$null)
+param([string]$RELEASE_VERSION=$null, [switch]$Force)
 
 function Update-MarkdownContent ([string] $targetFile, [string] $contentFile, [string] $injectionMarker = ""){
   $changelogAdded = $false
@@ -68,11 +68,13 @@ if($CI_COMMIT_TAG){
 Write-Host "Current version points to $($CURRENT_RELEASE_SHA)"
 Write-Host "Previous version points to $($PREVIOUS_RELEASE_SHA)"
 
-# Get the latest changes for the release changelog.
-git cliff "$CURRENT_RELEASE_SHA..$PREVIOUS_RELEASE_SHA" --unreleased --tag "$changelogVersion" -o cliff_changelog.md --config ./BuildTools/cliff.toml
+if($Force){
+    # Get the latest changes for the release changelog.
+    git cliff "$CURRENT_RELEASE_SHA..$PREVIOUS_RELEASE_SHA" --unreleased --tag "$changelogVersion" -o cliff_changelog.md --config ./BuildTools/cliff.toml
 
-$ReleaseNotesUpdateMarkdown = "Documentation/User Manual Source/ReleaseNotesMDs/release_notes.md";
-Move-Item cliff_changelog.md ./$ReleaseNotesUpdateMarkdown -Force
+    $ReleaseNotesUpdateMarkdown = "Documentation/User Manual Source/ReleaseNotesMDs/release_notes.md";
+    Move-Item cliff_changelog.md ./$ReleaseNotesUpdateMarkdown -Force
+}
 
 # Update Release Notes and changelog markdowns.
 # Based on the major, determine the ReleaseNotes for the given version.
@@ -92,15 +94,19 @@ $ChangelogInjectMark = "# Changelog"
 $ChangelogFilePath = "Documentation/User Manual/6-changelog/changelog.md"
 Update-MarkdownContent $ChangelogFilePath $ReleaseNotesUpdateMarkdown $ChangelogInjectMark
 
+$ChangesMarkdown = "CHANGES.md"
+Copy-Item $ChangelogFilePath $ChangesMarkdown -Force
+
 # Convert md to pdf
 Push-Location "Documentation/User Manual Source/ReleaseNotesMDs"
 pandoc "..\..\..\$ReleaseNotesMarkdown" -o "..\..\..\$ReleaseNotesPdf" --css "..\..\..\BuildTools\templates\md-style.css" --pdf-engine=$Env:weasyprint
 Pop-Location
 
 # Stage the modified files by the script in git.
+git add $ReleaseNotesUpdateMarkdown
 git add $ReleaseNotesMarkdown
 git add $ChangelogFilePath
-git add $ReleaseNotesUpdateMarkdown
+git add $ChangesMarkdown
 git add $ReleaseNotesPdf
 
 Write-Host "----- Next release tag -----"
