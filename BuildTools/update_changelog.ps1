@@ -67,11 +67,11 @@ if($CI_COMMIT_TAG){
 Write-Host "Current version points to $($CURRENT_RELEASE_SHA)"
 Write-Host "Previous version points to $($PREVIOUS_RELEASE_SHA)"
 
-if($Force){
+$ReleaseNotesUpdateMarkdown = "Documentation/User Manual Source/ReleaseNotesMDs/release_notes.md";
+if(-not $Force){
     # Get the latest changes for the release changelog.
     git cliff "$CURRENT_RELEASE_SHA..$PREVIOUS_RELEASE_SHA" --unreleased --tag "$changelogVersion" -o cliff_changelog.md --config ./BuildTools/cliff.toml
 
-    $ReleaseNotesUpdateMarkdown = "Documentation/User Manual Source/ReleaseNotesMDs/release_notes.md";
     Move-Item cliff_changelog.md ./$ReleaseNotesUpdateMarkdown -Force
 }
 
@@ -98,8 +98,14 @@ Copy-Item $ChangelogFilePath $ChangesMarkdown -Force
 
 # Convert md to pdf
 Push-Location "Documentation/User Manual Source/ReleaseNotesMDs"
-pandoc "..\..\..\$ReleaseNotesMarkdown" -o "..\..\..\$ReleaseNotesPdf" --css "..\..\..\BuildTools\templates\md-style.css" --pdf-engine=$Env:weasyprint
+pandoc "..\..\..\$ReleaseNotesMarkdown" -o "..\..\..\$ReleaseNotesPdf" --css "..\..\..\BuildTools\templates\md-style.css" --pdf-engine=$Env:weasyprint  --title="Changelog"
 Pop-Location
+
+Push-Location "Documentation/User Manual/"
+& './convert.bat'
+Pop-Location
+
+$UserManualHtml = "Documentation/User Manual/help.html"
 
 # Stage the modified files by the script in git.
 git add $ReleaseNotesUpdateMarkdown
@@ -107,3 +113,4 @@ git add $ReleaseNotesMarkdown
 git add $ChangelogFilePath
 git add $ChangesMarkdown
 git add $ReleaseNotesPdf
+git add $UserManualHtml
