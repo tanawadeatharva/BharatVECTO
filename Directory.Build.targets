@@ -195,10 +195,10 @@
 			<UserManual Include="$(SolutionDir)Documentation\XML\Documentation_OfficialResults_2ndAmendment_20230425.xlsx"/>
 			<ParameterDocu Include="$(SolutionDir)Documentation\XML\ParameterDocumentation\*.*"/>
 			<ParameterDocuStyle Include="$(SolutionDir)Documentation\XML\ParameterDocumentation\HTML\css\*.*"/>
-			<!-- <ReleaseNotes3 Include="$(SolutionDir)Documentation\User Manual Source\Release Notes Vecto3.x.pdf"/>
-			<ReleaseNotes4 Include="$(SolutionDir)Documentation\User Manual Source\Release Notes Vecto4.x.pdf"/> -->
-			<ReleaseNotes3 Include="$(SolutionDir)Documentation\User Manual Source\ReleaseNotesMDs\ReleaseNotesVecto3x.md"/>
-			<ReleaseNotes4 Include="$(SolutionDir)Documentation\User Manual Source\ReleaseNotesMDs\ReleaseNotesVecto4x.md"/>
+			<ReleaseNotesPdf3 Include="$(SolutionDir)Documentation\User Manual Source\Release Notes Vecto3.x.pdf"/>
+			<ReleaseNotesPdf4 Include="$(SolutionDir)Documentation\User Manual Source\Release Notes Vecto4.x.pdf"/>
+			<ReleaseNotesMd3 Include="$(SolutionDir)Documentation\User Manual Source\ReleaseNotesMDs\ReleaseNotesVecto3x.md"/>
+			<ReleaseNotesMd4 Include="$(SolutionDir)Documentation\User Manual Source\ReleaseNotesMDs\ReleaseNotesVecto4x.md"/>
 		</ItemGroup>
 		<Copy SourceFiles="@(GenericVehicles)" DestinationFiles="@(GenericVehicles->'$(DeployPath)Generic Vehicles\%(RecursiveDir)%(Filename)%(Extension)')" />
 		<!-- <Copy SourceFiles="@(DeclarationData)" DestinationFolder="$(DeployPath)Declaration" /> -->
@@ -216,8 +216,11 @@
 
 		<Copy SourceFiles="@(VectoXSD)" DestinationFolder="$(DeployPath)XML\XSD" />
 		<Copy SourceFiles="@(UserManual)" DestinationFolder="$(DeployPath)User Manual" />
-		<Copy SourceFiles="@(ReleaseNotes3)" DestinationFiles="$(DeployPath)User Manual\Release Notes Vecto 3.md" />
-		<Copy SourceFiles="@(ReleaseNotes4)" DestinationFiles="$(DeployPath)User Manual\Release Notes Vecto 4.md" />
+
+		<Copy SourceFiles="@(ReleaseNotesMd3)" DestinationFiles="$(DeployPath)User Manual\Release Notes Vecto 3.md" />
+		<Copy SourceFiles="@(ReleaseNotesMd4)" DestinationFiles="$(DeployPath)User Manual\Release Notes Vecto 4.md" />
+		<Copy SourceFiles="@(ReleaseNotesPdf3)" DestinationFiles="$(DeployPath)User Manual\Release Notes Vecto3.x.pdf" />
+		<Copy SourceFiles="@(ReleaseNotesPdf4)" DestinationFiles="$(DeployPath)User Manual\Release Notes Vecto4.x.pdf" />
 		<Copy SourceFiles="@(VectoConfigurationSample)" DestinationFolder="$(DeployPath)"/>
 		<Copy SourceFiles="$(SolutionDir)\Documentation\User Manual Source\README for Mission Profiles Directory.txt" DestinationFiles="$(DeployPath)Mission Profiles\!! README !!.TXT"/>
 		<Copy SourceFiles="$(SolutionDir)\Documentation\User Manual Source\README for Declaration Directory.txt" DestinationFiles="$(DeployPath)Declaration\!! README !!.TXT"/>
