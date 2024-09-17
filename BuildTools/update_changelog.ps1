@@ -84,13 +84,19 @@ if ($MajorVersionNumber -ne 3 -and $MajorVersionNumber -ne 4){
     $ReleaseNotesPdf = "Documentation/User Manual Source/Release Notes Vecto${MajorVersionNumber}.x.pdf"
 }
 
+$UserManualHtml = "Documentation/User Manual/help.html"
+$ChangelogMarkdownPath = "Documentation/User Manual/6-changelog/changelog.md"
+
+# Reset files content to clean previous executions output.
+git reset -- $ChangelogMarkdownPath $ChangesMarkdown $ReleaseNotesPdf $UserManualHtml $TempReleaseNotesMarkdown -q
+git checkout -- $ChangelogMarkdownPath $ChangesMarkdown $ReleaseNotesPdf $UserManualHtml $TempReleaseNotesMarkdown
+
 # Insert new changelog features into Release Notes.
 $InjectNewFeaturesMark = "<!-- Cover Slide -->"
 Update-MarkdownContent $TempReleaseNotesMarkdown $CliffReleaseNotesMarkdown $InjectNewFeaturesMark
 
 # Insert new changelog features into VECTO changelog.
 $ChangelogInjectMark = "# Changelog"
-$ChangelogFilePath = "Documentation/User Manual/6-changelog/changelog.md"
 Update-MarkdownContent $ChangelogMarkdownPath $CliffReleaseNotesMarkdown $ChangelogInjectMark
 
 $ChangesMarkdown = "CHANGES.md"
@@ -106,11 +112,11 @@ Push-Location "Documentation/User Manual/"
 & './convert.bat'
 Pop-Location
 
-$UserManualHtml = "Documentation/User Manual/help.html"
+# Clean intermediary output files
+git restore $TempReleaseNotesMarkdown
 
 # Stage the modified files by the script in git.
 git add $CliffReleaseNotesMarkdown
-git add $TempReleaseNotesMarkdown
 git add $ChangelogMarkdownPath
 git add $ChangesMarkdown
 git add $ReleaseNotesPdf
