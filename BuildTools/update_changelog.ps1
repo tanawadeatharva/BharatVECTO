@@ -67,12 +67,12 @@ if($CI_COMMIT_TAG){
 Write-Host "Current version points to $($CURRENT_RELEASE_SHA)"
 Write-Host "Previous version points to $($PREVIOUS_RELEASE_SHA)"
 
-$ReleaseNotesUpdateMarkdown = "Documentation/User Manual Source/ReleaseNotesMDs/release_notes.md";
+$CliffReleaseNotesMarkdown = "Documentation/User Manual Source/ReleaseNotesMDs/release_notes.md";
 if(-not $Force){
     # Get the latest changes for the release changelog.
     git cliff "$CURRENT_RELEASE_SHA..$PREVIOUS_RELEASE_SHA" --unreleased --tag "$changelogVersion" -o cliff_changelog.md --config ./BuildTools/cliff.toml
 
-    Move-Item cliff_changelog.md ./$ReleaseNotesUpdateMarkdown -Force
+    Move-Item cliff_changelog.md ./$CliffReleaseNotesMarkdown -Force
 }
 
 # Update Release Notes and changelog markdowns.
@@ -80,27 +80,28 @@ if(-not $Force){
 if ($MajorVersionNumber -ne 3 -and $MajorVersionNumber -ne 4){
     throw "Release Notes version ${MajorVersionNumber} not supported."
 } else {
-    $ReleaseNotesMarkdown = "Documentation/User Manual Source/ReleaseNotesMDs/ReleaseNotesVecto${MajorVersionNumber}x.md"
+    $TempReleaseNotesMarkdown = "Documentation/User Manual Source/ReleaseNotesMDs/ReleaseNotesVecto${MajorVersionNumber}x.md"
     $ReleaseNotesPdf = "Documentation/User Manual Source/Release Notes Vecto${MajorVersionNumber}.x.pdf"
 }
 
 # Insert new changelog features into Release Notes.
 $InjectNewFeaturesMark = "<!-- Cover Slide -->"
-Update-MarkdownContent $ReleaseNotesMarkdown $ReleaseNotesUpdateMarkdown $InjectNewFeaturesMark
+Update-MarkdownContent $TempReleaseNotesMarkdown $CliffReleaseNotesMarkdown $InjectNewFeaturesMark
 
 # Insert new changelog features into VECTO changelog.
 $ChangelogInjectMark = "# Changelog"
 $ChangelogFilePath = "Documentation/User Manual/6-changelog/changelog.md"
-Update-MarkdownContent $ChangelogFilePath $ReleaseNotesUpdateMarkdown $ChangelogInjectMark
+Update-MarkdownContent $ChangelogMarkdownPath $CliffReleaseNotesMarkdown $ChangelogInjectMark
 
 $ChangesMarkdown = "CHANGES.md"
-Copy-Item $ChangelogFilePath $ChangesMarkdown -Force
+Copy-Item $ChangelogMarkdownPath $ChangesMarkdown -Force
 
 # Convert md to pdf
 Push-Location "Documentation/User Manual Source/ReleaseNotesMDs"
-pandoc "..\..\..\$ReleaseNotesMarkdown" -o "..\..\..\$ReleaseNotesPdf" --css "..\..\..\BuildTools\templates\md-style.css" --pdf-engine=$Env:weasyprint  --title="Changelog"
+pandoc "..\..\..\$TempReleaseNotesMarkdown" -o "..\..\..\$ReleaseNotesPdf" --css "..\..\..\BuildTools\templates\md-style.css" --pdf-engine=$Env:weasyprint  --title="Changelog"
 Pop-Location
 
+# User Manual HTML convertion script.
 Push-Location "Documentation/User Manual/"
 & './convert.bat'
 Pop-Location
@@ -108,9 +109,9 @@ Pop-Location
 $UserManualHtml = "Documentation/User Manual/help.html"
 
 # Stage the modified files by the script in git.
-git add $ReleaseNotesUpdateMarkdown
-git add $ReleaseNotesMarkdown
-git add $ChangelogFilePath
+git add $CliffReleaseNotesMarkdown
+git add $TempReleaseNotesMarkdown
+git add $ChangelogMarkdownPath
 git add $ChangesMarkdown
 git add $ReleaseNotesPdf
 git add $UserManualHtml
