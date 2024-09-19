@@ -32,6 +32,16 @@ function Update-MarkdownContent ([string] $targetFile, [string] $contentFile, [s
   Set-Content $targetFile
 }
 
+function Update-BuildPropsVersion([string]$version) {
+    $BuildPropsFile = "Directory.Build.props"
+    $VersionRgx = "<Version>\d+\.\d+\.\d+<\/Version>"
+    $VersionNode = "<Version>$version</Version>"
+
+    (Get-Content -Path $BuildPropsFile) |
+        ForEach-Object {$_ -Replace $VersionRgx, $VersionNode} |
+            Set-Content -Path $BuildPropsFile
+}
+
 if(!$RELEASE_VERSION){
     $RELEASE_VERSION = Read-Host "Version number"
 }
@@ -111,6 +121,8 @@ Pop-Location
 Push-Location "Documentation/User Manual/"
 & './convert.bat'
 Pop-Location
+
+Update-BuildPropsVersion $VersionNumber
 
 # Clean intermediary output files
 git restore $TempReleaseNotesMarkdown
