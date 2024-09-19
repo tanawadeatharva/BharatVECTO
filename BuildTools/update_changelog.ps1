@@ -48,10 +48,10 @@ if(!$RELEASE_VERSION){
 
 # Get release version and suffix from version string.
 $VersionTag = $RELEASE_VERSION
-$VersionTag -match '((\d+)\.\d+\.\d+)(-(RC|DEV))?' > $null
+$VersionTag -match '((\d+)\.\d+\.\d+(\.\d+)?)(-(RC|DEV))?' > $null
 $VersionNumber = $Matches[1]
 $MajorVersionNumber = $Matches[2]
-$VersionSuffix = $Matches[4]
+$VersionSuffix = $Matches[5]
 $IsReleaseCandidate = $VersionSuffix -eq "RC"
 $IsReleaseDeveloper = $VersionSuffix -eq "DEV"
 
