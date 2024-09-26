@@ -1311,7 +1311,7 @@ Public Class GearboxForm
         Implements IVehicleContainer
 
         Public Sub New(vectoRunData As VectoRunData) 
-            MyBase.New(ExecutionMode.Engineering,vectoRunData, Nothing, Nothing, Nothing)
+            MyBase.New(vectoRunData, Nothing, Nothing, Nothing)
             Throw New NotImplementedException
         End Sub
     End Class

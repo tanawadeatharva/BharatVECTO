@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
@@ -76,7 +75,7 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 			{
 				data.Report.PrepareResult(data);
 			}
-			return new MockupExemptedRun(new ExemptedVehicleContainer(data.ExecutionMode, data, null, null, SimplePowertrainBuilder), modData => {
+			return new MockupExemptedRun(new ExemptedVehicleContainer(data, null, null, SimplePowertrainBuilder), modData => {
 				if (data.Report != null)
 				{
 					data.Report.AddResult(data, modData);
@@ -87,7 +86,7 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 		protected override IVectoRun GetNonExemptedRun(VectoRunData data, int current, ref bool warning1Hz, ref bool firstRun)
 		{
 			var addReportResult = PrepareReport(data);
-			return new MockupRun(VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, data,
+			return new MockupRun(VehicleContainer.CreateVehicleContainer(data,
 					new MockupModalDataContainer(new ModalDataContainer(data, ReportWriter, null), addReportResult), null));
 			
 		}

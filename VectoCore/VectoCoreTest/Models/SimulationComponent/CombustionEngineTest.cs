@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestEngineHasOutPort()
 		{
-			var vehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, null, null);
+			var vehicle = VehicleContainer.CreateVehicleContainer(null, null, null);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 0);
 			var engine = new CombustionEngine(vehicle, engineData);
 
@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestOutPortRequestNotFailing()
 		{
-			var vehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, null, null);
+			var vehicle = VehicleContainer.CreateVehicleContainer(null, null, null);
             var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 0);
 			var engine = new CombustionEngine(vehicle, engineData);
 			var gearbox = new MockGearbox(vehicle) { Gear = new GearshiftPosition(0) };
@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestCase]
 		public void TestSimpleModalData()
 		{
-			var vehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, null, null);
+			var vehicle = VehicleContainer.CreateVehicleContainer(null, null, null);
             var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 0);
 			var engine = new CombustionEngine(vehicle, engineData);
 			var gearbox = new MockGearbox(vehicle) { Gear = new GearshiftPosition(0) };
@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void TestEngineOnlyEngineFullLoadJump(string testName, string engineFile, double rpm, double initialIdleLoad,
 			double finalIdleLoad, string resultFile)
 		{
-			var vehicleContainer = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, null, null);
+			var vehicleContainer = VehicleContainer.CreateVehicleContainer(null, null, null);
             var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile, 0);
 			var engine = new EngineOnlyCombustionEngine(vehicleContainer, engineData);
 			new EngineOnlyGearboxInfo(vehicleContainer);
@@ -235,7 +235,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void TestEngineFullLoadJump(string testName, string engineFile, double rpm, double initialIdleLoad,
 			double finalIdleLoad, string resultFile)
 		{
-			var vehicleContainer = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, null, null);
+			var vehicleContainer = VehicleContainer.CreateVehicleContainer(null, null, null);
             var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile, 0);
 			var engine = new CombustionEngine(vehicleContainer, engineData);
 			var gearbox = new MockGearbox(vehicleContainer) { Gear = new GearshiftPosition(0) };
@@ -286,7 +286,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void EngineIdleJump()
 		{
 			var dataWriter = new MockModalDataContainer();
-            var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, dataWriter, null);
+            var container = VehicleContainer.CreateVehicleContainer(null, dataWriter, null);
             var gearbox = new MockGearbox(container);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 1);
 			var vehicle = new MockVehicle(container);
@@ -542,7 +542,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			out ITnOutPort requestPort, out MockGearbox gearbox)
 		{
 			var dataWriter = new MockModalDataContainer();
-			container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, dataWriter, null);
+			container = VehicleContainer.CreateVehicleContainer(null, dataWriter, null);
 			gearbox = new MockGearbox(container);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile, 1);
 

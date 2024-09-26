@@ -948,7 +948,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				//EngineData = engineData,
 				BatteryData = batteryData,
 				GearshiftParameters = CreateGearshiftData(gearboxData, axleGearData.AxleGear.Ratio),
-				ElectricAuxDemand = pAuxEl.SI<Watt>()
+				ElectricAuxDemand = pAuxEl.SI<Watt>(),
+				ExecutionMode = ExecutionMode.Engineering,
 			};
 
 			var modDataFilter = new IModalDataFilter[] { }; //new IModalDataFilter[] { new ActualModalDataFilter(), };
@@ -964,7 +965,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				runData.GearboxData = gearboxData;
 			}
 
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, modData, sumData);
+			var container = VehicleContainer.CreateVehicleContainer(runData, modData, sumData);
 
 
 

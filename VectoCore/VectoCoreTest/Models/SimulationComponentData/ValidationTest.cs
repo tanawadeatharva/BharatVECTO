@@ -304,10 +304,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				},
 				GearboxData = gearboxData,
 				EngineData = engineData,
-				AxleGearData = axleGearData
-			};
+				AxleGearData = axleGearData,
+				ExecutionMode = ExecutionMode.Engineering,
+            };
 
-            var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, null, null);
+            var container = VehicleContainer.CreateVehicleContainer(runData, null, null);
 			var data = new DistanceRun(container);
 
 			var results = data.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);
@@ -348,13 +349,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				}
 			};
 
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering,
+			var container = VehicleContainer.CreateVehicleContainer(
 				new VectoRunData {
 					JobRunId = 0,
 					GearboxData = gearboxData,
 					EngineData = engineData,
-					AxleGearData = axleGearData
-				}, null, null);
+					AxleGearData = axleGearData,
+					ExecutionMode = ExecutionMode.Engineering,
+                }, null, null);
 			var data = new DistanceRun(container);
 
 			Stopwatch stopwatch = new Stopwatch();

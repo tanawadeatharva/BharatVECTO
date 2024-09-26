@@ -39,12 +39,12 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 	public interface IVehicleContainerFactory
 	{
-		IVehicleContainer CreateVehicleContainer(ExecutionMode executionMode, VectoRunData runData, IModalDataContainer modData,
+		IVehicleContainer CreateVehicleContainer(VectoRunData runData, IModalDataContainer modData,
 			ISumData writeSumData);
 
 		ISimpleVehicleContainer CreateSimpleVehicleContainer(VectoRunData runData);
 
-        IExemptedVehicleContainer CreateExemptedVehicleContainer(ExecutionMode executionMode, VectoRunData runData,
+        IExemptedVehicleContainer CreateExemptedVehicleContainer(VectoRunData runData,
 			IModalDataContainer modData, ISumData writeSumData);
     }
 }

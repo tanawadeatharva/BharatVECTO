@@ -112,15 +112,16 @@ namespace TUGraz.VectoCore.Tests.Integration
 				Retarder = new RetarderData() { Type = RetarderType.None },
 				Aux = new List<VectoRunData.AuxData>(),
 				SimulationType = SimulationType.DistanceCycle,
-				DriverData = driverData
-			};
+				DriverData = driverData,
+				ExecutionMode = ExecutionMode.Engineering,
+            };
 			var fileWriter = new FileOutputWriter(modFileName);
 			var modData = new ModalDataContainer(runData, fileWriter, null)
 			{
 				WriteModalResults = true,
 			};
 			var container =
-				VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, modData,
+				VehicleContainer.CreateVehicleContainer(runData, modData,
 					summaryDataContainer);
 			
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);

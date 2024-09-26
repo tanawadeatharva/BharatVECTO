@@ -973,12 +973,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var shiftPolygons = new List<ShiftPolygon>();
 
 			var runData = new VectoRunData() {
-				GearshiftParameters = new ShiftStrategyParameters()
-			};
+				GearshiftParameters = new ShiftStrategyParameters(),
+				ExecutionMode = ExecutionMode.Engineering,
+            };
 			if (factorDownshiftSpeed.HasValue) {
 				runData.GearshiftParameters.PEV_DownshiftSpeedFactor = factorDownshiftSpeed.Value;
 			}
-			var shiftStrategy = new PEVAMTShiftStrategy(VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, null, null));
+			var shiftStrategy = new PEVAMTShiftStrategy(VehicleContainer.CreateVehicleContainer(runData, null, null));
 			
 			for (var i = 0; i < gearboxData.Gears.Count; i++) {
 				shiftPolygons.Add(shiftStrategy.ComputeDeclarationShiftPolygon(GearboxType.AMT, i, null, gearboxData.Gears,
@@ -1055,11 +1056,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			fullLoadCurves[(uint)(0)] = new EngineFullLoadCurve(fullLoadCurve, null) { EngineData = engineData };
 			
 			var shiftPolygons = new List<ShiftPolygon>();
-			var runData = new VectoRunData() { GearshiftParameters = new ShiftStrategyParameters() };
+			var runData = new VectoRunData() { GearshiftParameters = new ShiftStrategyParameters(), ExecutionMode = ExecutionMode.Engineering, };
 			if (factorDownshiftSpeed.HasValue) {
 				runData.GearshiftParameters.PEV_DeRatedDownshiftSpeedFactor = factorDownshiftSpeed.Value;
 			}
-			var shiftStrategy = new PEVAMTShiftStrategy(VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, null, null));
+			var shiftStrategy = new PEVAMTShiftStrategy(VehicleContainer.CreateVehicleContainer(runData, null, null));
 			var deRatedShiftLines = shiftStrategy.CalculateDeratedShiftLines(emData, gearboxData.Gears,
 				r_dyn, axlegearRatio, gearboxData.Type);
 			for (var i = 0; i < gearboxData.Gears.Count; i++) {

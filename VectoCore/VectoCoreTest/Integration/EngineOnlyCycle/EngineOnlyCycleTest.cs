@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var data = DrivingCycleDataReader.ReadFromFile(
 				cycleFile, CycleType.EngineOnly,
 				false);
-			var vehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, null, null);
+			var vehicle = VehicleContainer.CreateVehicleContainer(null, null, null);
 
 			// ReSharper disable once ObjectCreationAsStatement
 			new MockDrivingCycle(vehicle, data);
@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 		{
 			var dataWriter = new MockModalDataContainer();
 
-			var vehicleContainer = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, null, null);
+			var vehicleContainer = VehicleContainer.CreateVehicleContainer(null, null, null);
 
 			var engine = new CombustionEngine(
 				vehicleContainer, MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 0));

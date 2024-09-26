@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public IExemptedVehicleContainer BuildExempted(VectoRunData data)
 		{
-			var container = _vehicleContainerFactory.CreateExemptedVehicleContainer(data.ExecutionMode, data, null, null);
+			var container = _vehicleContainerFactory.CreateExemptedVehicleContainer(data, null, null);
 			return container;
 		}
 
@@ -1470,7 +1470,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		protected IVehicleContainer GetVehicleContainer(ExecutionMode mode, VectoRunData runData, IModalDataContainer modData, ISumData sumWriter)
 		{
-			var container = _vehicleContainerFactory.CreateVehicleContainer(mode, runData, modData, sumWriter);
+			var container = _vehicleContainerFactory.CreateVehicleContainer(runData, modData, sumWriter);
 			return container;
 		}
 

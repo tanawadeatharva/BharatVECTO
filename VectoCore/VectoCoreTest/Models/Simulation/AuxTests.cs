@@ -125,8 +125,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 						Technology = new[] {"Default"}.ToList(),
 						PowerDemandMech = DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, "Default", hdvClass).PowerDemand
 					},
-				}
-        };
+				},
+				ExecutionMode = ExecutionMode.Engineering,
+            };
 			var modData = new ModalDataContainer(runData, fileWriter, null) {
 				WriteModalResults = true,
 			};
@@ -136,7 +137,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			sumWriter.UpdateTableColumns(runData.EngineData);
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, runData, modData,
+			var container = VehicleContainer.CreateVehicleContainer(runData, modData,
 				sumWriter);
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData/Cycles/LongHaul_short.vdri", CycleType.DistanceBased, false);
 			new MockDrivingCycle(container, data);
@@ -185,7 +186,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void AuxConstant()
 		{
 			var dataWriter = new MockModalDataContainer();
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, dataWriter, null);
+			var container = VehicleContainer.CreateVehicleContainer(null, dataWriter, null);
 			//var port = new MockTnOutPort();
 			var aux = new EngineAuxiliary(container);
 			new MockEngine(container);
@@ -219,7 +220,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void AuxDirect()
 		{
 			var dataWriter = new MockModalDataContainer();
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, dataWriter, null);
+			var container = VehicleContainer.CreateVehicleContainer(null, dataWriter, null);
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData/Cycles/Coach time based short.vdri",
 				CycleType.MeasuredSpeed, false);
 			var cycle = new MockDrivingCycle(container, data);
@@ -251,7 +252,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var dataWriter = new MockModalDataContainer();
 			dataWriter.AddAuxiliary("CONSTANT");
 
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, dataWriter, null);
+			var container = VehicleContainer.CreateVehicleContainer(null, dataWriter, null);
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData/Cycles/Coach time based short.vdri",
 				CycleType.MeasuredSpeed, false);
 			// cycle ALT1 is set to values to equal the first few fixed points in the auxiliary file.

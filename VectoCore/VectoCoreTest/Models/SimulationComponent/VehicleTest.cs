@@ -80,11 +80,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//VehicleData.ReadFromFile(VehicleDataFile);
 			//vehicleData.CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection;
 
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, new VectoRunData() {
+			var container = VehicleContainer.CreateVehicleContainer(new VectoRunData() {
 				VehicleData = vehicleData,
 				AirdragData = airdragData,
-				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
-			}, null, null);
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
+				ExecutionMode = ExecutionMode.Engineering,
+            }, null, null);
 		
 			var vehicle = new Vehicle(container, vehicleData, airdragData);
 			var driver = new MockDriver(container) { DriverBehavior = DrivingBehavior.Driving };
@@ -121,7 +122,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void VehicleAirResistanceTest(double vehicleSpeed, double acceleration, double dt, double height,
 			double expected)
 		{
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, new VectoRunData() {
+			var container = VehicleContainer.CreateVehicleContainer(new VectoRunData() {
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			}, null, null);
 
@@ -154,7 +155,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			airdragData.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(6.2985.SI<SquareMeter>(),
 				_airdragDataAdapter.GetDeclarationAirResistanceCurve("TractorSemitrailer",
 					6.2985.SI<SquareMeter>(), 3.SI<Meter>()), CrossWindCorrectionMode.DeclarationModeCorrection);
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, new VectoRunData() {
+			var container = VehicleContainer.CreateVehicleContainer(new VectoRunData() {
 				VehicleData = vehicleData,
 				AirdragData = airdragData,
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()

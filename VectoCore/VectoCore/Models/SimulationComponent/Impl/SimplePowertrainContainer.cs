@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 	public class SimplePowertrainContainer : VehicleContainer, IDriverInfo, ISimpleVehicleContainer
     {
-		public SimplePowertrainContainer(VectoRunData runData, ISimplePowertrainBuilder ptBuilder) : base(runData.ExecutionMode, runData, null, null, ptBuilder)
+		public SimplePowertrainContainer(VectoRunData runData, ISimplePowertrainBuilder ptBuilder) : base(runData, null, null, ptBuilder)
 		{
 			RunData = runData;
 		}

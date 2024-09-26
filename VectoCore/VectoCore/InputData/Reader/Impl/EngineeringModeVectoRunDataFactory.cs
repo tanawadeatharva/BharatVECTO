@@ -693,7 +693,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		private class DummyVehicleContainer : VehicleContainer
 		{
-			public DummyVehicleContainer(VectoRunData runData) : base(ExecutionMode.Engineering, runData, null,
+			public DummyVehicleContainer(VectoRunData runData) : base(runData, null,
 				null, null)
 			{ }
 		}

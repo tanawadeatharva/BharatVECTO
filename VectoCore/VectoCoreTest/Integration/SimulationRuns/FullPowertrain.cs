@@ -101,11 +101,12 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				Cycle = cycleData,
 				Aux = new List<VectoRunData.AuxData>(),
 				SimulationType = SimulationType.DistanceCycle,
-				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
-			};
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
+				ExecutionMode = ExecutionMode.Engineering,
+            };
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_SimpleGearbox");
 			var modData = new ModalDataContainer(runData, fileWriter, null);
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, modData, null);
+			var container = VehicleContainer.CreateVehicleContainer(runData, modData, null);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var cyclePort = cycle.OutPort();
@@ -179,11 +180,12 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				Retarder = new RetarderData() {Type = RetarderType.None },
 				SimulationType = SimulationType.DistanceCycle,
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
-				Aux = new List<VectoRunData.AuxData>()
-			};
+				Aux = new List<VectoRunData.AuxData>(),
+				ExecutionMode = ExecutionMode.Engineering,
+            };
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain");
 			var modData = new ModalDataContainer(runData, fileWriter, null);
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, modData, null);
+			var container = VehicleContainer.CreateVehicleContainer(runData, modData, null);
 
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
@@ -272,11 +274,12 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				DriverData = driverData,
 				Cycle = cycleData,
 				Aux = new List<VectoRunData.AuxData>(),
-				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
-			};
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
+				ExecutionMode = ExecutionMode.Engineering,
+            };
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_LowSpeed");
 			var modData = new ModalDataContainer(runData, fileWriter, null);
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, modData, null);
+			var container = VehicleContainer.CreateVehicleContainer(runData, modData, null);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var cyclePort = cycle.OutPort();

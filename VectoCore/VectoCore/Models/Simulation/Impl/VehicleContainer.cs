@@ -107,18 +107,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private IList<IResetableVectoSimulationComponent> _resetableComponents = new List<IResetableVectoSimulationComponent>(3);
 
 
-		public VehicleContainer(ExecutionMode executionMode, VectoRunData runData, IModalDataContainer modData,
+		public VehicleContainer(VectoRunData runData, IModalDataContainer modData,
 			ISumData writeSumData, ISimplePowertrainBuilder ptBuilder)
 		{
 			PowertrainBuilder = ptBuilder;
 			ModData = modData;
 			WriteSumData = writeSumData;
-			ExecutionMode = executionMode;
 			RunData = runData;
 		}
 
 		[Obsolete("Creation of VehicleContainer should be done with VehicleContainerFactory NInject Factory", false)]
-		public static IVehicleContainer CreateVehicleContainer(ExecutionMode executionMode, VectoRunData runData, IModalDataContainer modData,
+		public static IVehicleContainer CreateVehicleContainer(VectoRunData runData, IModalDataContainer modData,
 			ISumData writeSumData)
 		{
 			if (_kernel == null) {
@@ -129,7 +128,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 			}
 
-			return _kernel.Get<IVehicleContainerFactory>().CreateVehicleContainer(executionMode, runData, modData, writeSumData);
+			return _kernel.Get<IVehicleContainerFactory>().CreateVehicleContainer(runData, modData, writeSumData);
 
         }
 
@@ -382,7 +381,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		[Required, ValidateObject]
 		public VectoRunData RunData { get; protected set; }
-		public virtual ExecutionMode ExecutionMode { get; }
+
+		public virtual ExecutionMode ExecutionMode => RunData.ExecutionMode;
 
 
 
@@ -395,9 +395,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private IGearboxInfo _gearboxInfo;
 
-		public ExemptedVehicleContainer(
-			ExecutionMode executionMode, VectoRunData runData, IModalDataContainer modData, ISumData writeSumData, ISimplePowertrainBuilder simplePowertrainBuilder) 
-			: base(executionMode, runData, modData, writeSumData, simplePowertrainBuilder)
+		public ExemptedVehicleContainer(VectoRunData runData, IModalDataContainer modData, ISumData writeSumData, ISimplePowertrainBuilder simplePowertrainBuilder) 
+			: base(runData, modData, writeSumData, simplePowertrainBuilder)
 		{
 			_mileageCounter = new ZeroMileageCounter(this);
 			_vehicleInfo = new DummyVehicleInfo(this);
