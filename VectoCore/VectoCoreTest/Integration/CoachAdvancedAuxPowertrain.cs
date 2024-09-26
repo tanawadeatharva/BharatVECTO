@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				WriteModalResults = true
 			};
 
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, modData, null);
+			var container = VehicleContainer.CreateVehicleContainer(runData, modData, null);
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var engine = new CombustionEngine(container, engineData);
 

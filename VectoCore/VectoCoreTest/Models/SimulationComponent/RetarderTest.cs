@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             ]
 		public void RetarderBasicTest(double cardanTorque, double cardanSpeed, double expectedRetarderLoss)
 		{
-			var vehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, null, null, null);
+			var vehicle = VehicleContainer.CreateVehicleContainer(null, null, null);
 			var retarderData = RetarderLossMapReader.ReadFromFile(RetarderLossMapFile);
 			var retarder = new Retarder(vehicle, retarderData, 1.0);
 
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		Category(Definitions.TESTCASE_MIGRATED)]
 		public void RetarderSubsequentRequestTest()
 		{
-			var vehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, null, null, null);
+			var vehicle = VehicleContainer.CreateVehicleContainer(null, null, null);
             var retarderData = RetarderLossMapReader.ReadFromFile(RetarderLossMapFile);
 			var retarder = new Retarder(vehicle, retarderData, 1.0);
 
@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         ]
 		public void RetarderRatioTest(double cardanTorque, double cardanSpeed, double expectedRetarderLoss)
 		{
-			var vehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, null, null, null);
+			var vehicle = VehicleContainer.CreateVehicleContainer(null, null, null);
             var retarderData = RetarderLossMapReader.ReadFromFile(RetarderLossMapFile);
 			var retarder = new Retarder(vehicle, retarderData, 2.0);
 
@@ -155,7 +155,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void RetarderDeclarationTest()
 		{
 			var retarderData = RetarderLossMapReader.ReadFromFile(RetarderLossMapFile);
-			var declVehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, null, null, null);
+			var declVehicle = VehicleContainer.CreateVehicleContainer(null, null, null);
             var retarder = new Retarder(declVehicle, retarderData, 2.0);
 			var nextRequest = new MockTnOutPort();
 
@@ -183,7 +183,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var retarderTbl =
 				VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("Retarder Speed [rpm],Loss Torque [Nm]",
 					retarderEntries));
-			var vehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Declaration, null, null, null);
+			var vehicle = VehicleContainer.CreateVehicleContainer(null, null, null);
             var retarderData = RetarderLossMapReader.Create(retarderTbl);
 			var retarder = new Retarder(vehicle, retarderData, 2.0);
 

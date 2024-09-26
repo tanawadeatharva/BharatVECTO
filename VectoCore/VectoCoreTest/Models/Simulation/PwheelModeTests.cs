@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
 
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, null, null);
+			var container = VehicleContainer.CreateVehicleContainer(runData, null, null);
 			var inputData = @"<t>,<Pwheel>,<gear>,<n>,<Padd>
 							   1,89,2,1748,1.300
 							   2,120,2,1400,0.4";

@@ -690,7 +690,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var modData = new ModalDataContainer(runData, fileWriter, null, modDataFilter) {
 				WriteModalResults = true,
 			};
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, modData, 
+			var container = VehicleContainer.CreateVehicleContainer(runData, modData, 
 				sumData);
 
 			var strategy = new SerialHybridStrategy(runData, container);

@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 					CurbMass = vehicleMass.SI<Kilogram>()
 				}
 			};
-			var vehicle = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, new MockModalDataContainer(), null);
+			var vehicle = VehicleContainer.CreateVehicleContainer(runData, new MockModalDataContainer(), null);
             var engine = new CombustionEngine(vehicle, modelData);
 			//new Vehicle(vehicle, new VehicleData());
 			driver = new MockDriver(vehicle) { VehicleStopped = false, DriverBehavior = DrivingBehavior.Braking, DrivingAction = DrivingAction.Brake };

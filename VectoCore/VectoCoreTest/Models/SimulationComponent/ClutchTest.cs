@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void TestClutch(DrivingBehavior drivingBehavior, double torque, double angularSpeed, int gear, double expectedTorque,
 			double expectedEngineSpeed)
 		{
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, null, null);
+			var container = VehicleContainer.CreateVehicleContainer(null, null, null);
             var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 1);
 			var gearbox = new MockGearbox(container);
 			gearbox.Gear = new GearshiftPosition((uint)gear);
@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		//[TestCase] // this test is just to make sure the clutch characteristic has no unsteadiness
 		public void ClutchContinuityTest()
 		{
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, null, null);
+			var container = VehicleContainer.CreateVehicleContainer(null, null, null);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 1);
 			var gearbox = new MockGearbox(container);
 			gearbox.Gear = new GearshiftPosition(1);

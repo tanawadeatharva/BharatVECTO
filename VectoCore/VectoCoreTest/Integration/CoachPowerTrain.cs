@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var modData = new ModalDataContainer(runData, fileWriter, null)
 				{ WriteModalResults = true };
 
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, modData, null);
+			var container = VehicleContainer.CreateVehicleContainer(runData, modData, null);
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var engine = new CombustionEngine(container, engineData);
 			var clutch = new Clutch(container, engineData);

@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				JobName = "Coach_MinimalPowertrainOverload"
 			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, new VectoRunData() {
+			var container = VehicleContainer.CreateVehicleContainer(new VectoRunData() {
 				VehicleData = vehicleData,
 				DriverData = driverData
 			}, modData, null);
@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, modData, null);
+			var container = VehicleContainer.CreateVehicleContainer(runData, modData, null);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 
@@ -233,7 +233,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, runData, modData, null);
+			var container = VehicleContainer.CreateVehicleContainer(runData, modData, null);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))

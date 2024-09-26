@@ -197,7 +197,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		private static void TestCycleRead(string inputData, CycleType cycleType, bool autoCycle = true,
 			bool crossWindRequired = false)
 		{
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, new VectoRunData(), null, null);
+			var container = VehicleContainer.CreateVehicleContainer(new VectoRunData(), null, null);
 
 			if (autoCycle) {
 				var cycleTypeCalc = DrivingCycleDataReader.DetectCycleType(VectoCSVFile.ReadStream(inputData.ToStream()));

@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		Category(Definitions.TESTCASE_MIGRATED)]
 		public void WheelsRequestTest()
 		{
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, null, null, null);
+			var container = VehicleContainer.CreateVehicleContainer(null, null, null);
 			//var reader = new EngineeringModeSimulationDataReader();
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFile);
 

@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void TestEngineOnly()
 		{
 			var dataWriter = new MockModalDataContainer();
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, new VectoRunData(), dataWriter, null);
+			var container = VehicleContainer.CreateVehicleContainer(new VectoRunData(), dataWriter, null);
 
 			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData/Cycles/Coach Engine Only.vdri", CycleType.EngineOnly,
 				false);
@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestCase()]
 		public void TestEngineOnlyWithTimestamps()
 		{
-			var container = VehicleContainer.CreateVehicleContainer(ExecutionMode.Engineering, new VectoRunData(), null, null);
+			var container = VehicleContainer.CreateVehicleContainer(new VectoRunData(), null, null);
 
 			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData/Cycles/Coach Engine Only Paux_var-dt.vdri",
 				CycleType.EngineOnly, false);

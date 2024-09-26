@@ -1696,8 +1696,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			{
 				WriteModalResults = true,
 			};
-			var container = VehicleContainer.CreateVehicleContainer(
-				ExecutionMode.Engineering, runData, modData, sumData); 
+			var container = VehicleContainer.CreateVehicleContainer(runData, modData, sumData); 
 			
 			var strategy = gearboxType.AutomaticTransmission()
 				? (IHybridControlStrategy) new HybridStrategyAT(runData, container)
@@ -1828,8 +1827,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				WriteModalResults = true,
 			};
 
-			var container = VehicleContainer.CreateVehicleContainer(
-				ExecutionMode.Engineering, runData, modData, sumData);
+			var container = VehicleContainer.CreateVehicleContainer(runData, modData, sumData);
 			
 			var engine = new StopStartCombustionEngine(container, runData.EngineData);
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
