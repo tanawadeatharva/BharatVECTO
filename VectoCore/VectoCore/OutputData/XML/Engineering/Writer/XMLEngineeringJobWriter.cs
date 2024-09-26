@@ -38,10 +38,10 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.OutputData.XML.Engineering.Factory;
-using TUGraz.VectoCore.OutputData.XML.Engineering.Writer;
+using TUGraz.VectoCore.OutputData.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.OutputData.XML.Writer
+namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 {
 	internal class XMLEngineeringJobWriterV10 : AbstractXMLWriter, IXMLEngineeringJobWriter
 	{

@@ -30,9 +30,8 @@
 */
 
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCore.OutputData.XML.Engineering.Interfaces;
 
-namespace TUGraz.VectoCore.OutputData.XML
+namespace TUGraz.VectoCore.OutputData.XML.Engineering.Interfaces
 {
 	public interface IXMLEngineeringJobWriter
 	{

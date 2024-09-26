@@ -33,7 +33,6 @@ using Ninject.Modules;
 using TUGraz.VectoCore.OutputData.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.OutputData.XML.Engineering.Writer;
 using TUGraz.VectoCore.OutputData.XML.Engineering.Writer.DriverData;
-using TUGraz.VectoCore.OutputData.XML.Writer;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.NinjectModules
