@@ -1,3 +1,27 @@
+<#
+.SYNOPSIS
+    Updates all Release Notes related files.
+
+.DESCRIPTION
+    Updates all Release Notes related files.
+
+    Such as:
+    - CHANGES.md
+    - Directory.Build.props
+    - Documentation/User Manual/6-changelog/changelog.md
+    - Documentation/User Manual Source/Release Notes Vecto4.x.pdf
+    - Documentation/User Manual Source/ReleaseNotesMDs/release_notes.md (manually updated if custom content needed)
+
+.PARAMETER Force
+    Overrides git cliff output with release_notes.md content. Enables custom modification of all Release Notes files.
+
+.EXAMPLE
+    ./BuildTools/update_changelog.ps1 4.5.5
+
+.EXAMPLE
+    ./BuildTools/update_changelog.ps1 4.5.5 -Force
+#>
+
 param([string]$RELEASE_VERSION=$null, [switch]$Force)
 
 function Update-MarkdownContent ([string] $targetFile, [string] $contentFile, [string] $injectionMarker = ""){
