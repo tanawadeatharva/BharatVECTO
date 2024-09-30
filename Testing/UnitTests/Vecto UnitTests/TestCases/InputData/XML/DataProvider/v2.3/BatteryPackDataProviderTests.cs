@@ -2,6 +2,7 @@
 using Ninject;
 using NUnit.Framework;
 using TUGraz.IVT.VectoXML;
+using TUGraz.Vecto.UnitTests.Utils;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
@@ -37,11 +38,11 @@ public class BatteryPackDataProviderTests
 		TestName = "XMLBatterySystemData InternalResistance StandardValues")]
 	public void BatterySystemInternalResistanceTest(string xmlData, Type expectedType)
 	{
-		var document = LoadAndValidate(xmlData);
+		var document = XMLTestHelper.LoadAndValidate(xmlData);
 		Assert.IsNotNull(document);
 		TestContext.WriteLine(document);
 
-		var reessReader = CreateBatterySystemReader(document, "");
+		var reessReader = CreateBatterySystemReader(document);
 		Assert.AreEqual(reessReader.GetType(), expectedType);
 		switch (reessReader) {
 			case XMLBatteryPackDeclarationInputDataMeasuredV23 m:
@@ -63,11 +64,11 @@ public class BatteryPackDataProviderTests
 		TestName = "XMLBatterySystemData MaxCurrent StandardValues")]
 	public void BatterySystemMaxCurrentTest(string xmlData, Type expectedType)
 	{
-		var document = LoadAndValidate(xmlData);
+		var document = XMLTestHelper.LoadAndValidate(xmlData);
 		Assert.IsNotNull(document);
 		TestContext.WriteLine(document);
 
-		var reessReader = CreateBatterySystemReader(document, "");
+		var reessReader = CreateBatterySystemReader(document);
 		Assert.AreEqual(reessReader.GetType(), expectedType);
 		switch (reessReader) {
 			case XMLBatteryPackDeclarationInputDataMeasuredV23 m:
@@ -162,30 +163,17 @@ public class BatteryPackDataProviderTests
 		}
 	}
 
-	IXMLBatteryPackDeclarationInputData CreateBatterySystemReader(XmlDocument document, string source)
+	IXMLBatteryPackDeclarationInputData CreateBatterySystemReader(XmlDocument document)
 	{
-		var componentNode = document.FirstChild.NextSibling.SelectSingleNode($"./*[local-name()='{XMLNames.Component_BatterySystem}']");
-		Assert.NotNull(componentNode);
-		var dataNode = componentNode.SelectSingleNode($"./*[local-name()='{XMLNames.ComponentDataWrapper}']");
-		Assert.NotNull(dataNode);
-		var version = XMLHelper.GetXsdType(dataNode.SchemaInfo.SchemaType);
-		var input = _declarationFactory.CreateBatteryPackDeclarationInputData(version, null, componentNode, source);
+		var (version, componentNode) = XMLTestHelper.GetComponent(document, XMLNames.Component_BatterySystem);
+		var input = _declarationFactory.CreateBatteryPackDeclarationInputData(version, null, componentNode, "");
 		Assert.NotNull(input);
 		return input;
 
 	}
 
 
-	public XmlDocument LoadAndValidate(string filePath)
-	{
-		var document = new XmlDocument();
-		using (var reader = XmlReader.Create(filePath.ToStream())) {
-			document.Load(reader);
-		}
-		var xmlValidator = new XMLValidator(document, null, XMLValidator.CallBackExceptionOnError);
-		Assert.IsTrue(xmlValidator.ValidateXML(XmlDocumentType.DeclarationComponentData));
-		return document;
-	}
+	
 
     public TableData ReadInternalResistanceFromFile(XmlDocument document)
 	{
