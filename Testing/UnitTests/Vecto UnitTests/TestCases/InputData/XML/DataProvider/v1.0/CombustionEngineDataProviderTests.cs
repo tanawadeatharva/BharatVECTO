@@ -24,10 +24,10 @@ public class CombustionEngineDataProvider_v10_Tests
 		_declarationFactory = _kernel.Get<IDeclarationInjectFactory>();
 	}
 
-	[TestCase(CombustionEngine_v10)]
-	public void TestEngineDataProvider_v10(string xmlData)
+	[TestCase()]
+	public void TestEngineDataProvider_v10()
 	{
-		var doc = XMLTestHelper.LoadAndValidate(xmlData);
+		var doc = XMLTestHelper.LoadAndValidate(CombustionEngine_v10);
 		var inputData = CreateEngineInputData(doc);
 
 		Assert.AreEqual("1.0", (inputData as IXMLResource).DataSource.SourceVersion);

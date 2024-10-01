@@ -24,10 +24,10 @@ public class CombustionEngineDataProvider_v23_Tests
 		_declarationFactory = _kernel.Get<IDeclarationInjectFactory>();
 	}
 
-	[TestCase(CombustionEngine_v23_SingleFuel)]
-	public void TestEngineDataProvider_v23_SingleFuel(string xmlData)
+	[TestCase()]
+	public void TestEngineDataProvider_v23_SingleFuel()
 	{
-		var doc = XMLTestHelper.LoadAndValidate(xmlData);
+		var doc = XMLTestHelper.LoadAndValidate(CombustionEngine_v23_SingleFuel);
 		var inputData = CreateEngineInputData(doc);
 
 		Assert.AreEqual("2.3", (inputData as IXMLResource).DataSource.SourceVersion);
@@ -60,10 +60,10 @@ public class CombustionEngineDataProvider_v23_Tests
 		Assert.AreEqual(6, fuel.FuelConsumptionMap.Rows.Count);
     }
 
-	[TestCase(CombustionEngine_v23_SingleFuel_WHR)]
-	public void TestEngineDataProvider_v23_SingleFuelWHR(string xmlData)
+	[TestCase()]
+	public void TestEngineDataProvider_v23_SingleFuelWHR()
 	{
-		var doc = XMLTestHelper.LoadAndValidate(xmlData);
+		var doc = XMLTestHelper.LoadAndValidate(CombustionEngine_v23_SingleFuel_WHR);
 		var inputData = CreateEngineInputData(doc);
 
 		Assert.AreEqual("2.3", (inputData as IXMLResource).DataSource.SourceVersion);
@@ -103,10 +103,10 @@ public class CombustionEngineDataProvider_v23_Tests
 		Assert.AreEqual(6, fuel.FuelConsumptionMap.Rows.Count);
 	}
 
-	[TestCase(CombustionEngine_v23_DualFuel_WHR)]
-	public void TestEngineDataProvider_v23_DualFuelWHR(string xmlData)
+	[TestCase()]
+	public void TestEngineDataProvider_v23_DualFuelWHR()
 	{
-		var doc = XMLTestHelper.LoadAndValidate(xmlData);
+		var doc = XMLTestHelper.LoadAndValidate(CombustionEngine_v23_DualFuel_WHR);
 		var inputData = CreateEngineInputData(doc);
 
 		Assert.AreEqual("2.3", (inputData as IXMLResource).DataSource.SourceVersion);
