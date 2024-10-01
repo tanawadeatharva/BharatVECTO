@@ -3,7 +3,7 @@
     <RootNamespace>TUGraz.VectoCore</RootNamespace>
     <AssemblyName>VectoCore</AssemblyName>
     <TargetFrameworks>net48;net6.0</TargetFrameworks>
-     
+    <Description>Provides Vecto Core functionality.</Description>
     <Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
 	<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -187,6 +187,6 @@
     <Folder Conidition="('$(Configuration)' == 'MockupRelease') Or ('$(Configuration)' == 'MockupDebug')" Include="Mockup\" />
   </ItemGroup>
 
-  
+
 
 </Project>
