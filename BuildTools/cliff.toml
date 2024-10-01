@@ -32,7 +32,7 @@ body = """
               {% if not commit.footers -%} {{ commit.message | upper_first }} {% endif %}\
               {% if commit.footers -%}
                 {% if commit.footers.1.token == "issue" and commit.footers.1.token != "" -%}
-                  {{ commit.footers.1.value }}: {{ commit.message | upper_first }}\
+                  CodeEU {{ commit.footers.1.value }}: {{ commit.message | upper_first }}\
                 {% elif commit.footers.0.token == "mr" -%}
                   {{ commit.footers.0.value }}: {{ commit.message | upper_first }}\
                 {% endif -%}
