@@ -380,10 +380,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
+    // ---------------------------------------------------------------------------------------
 
-	// ---------------------------------------------------------------------------------------
+	public class XMLSuperCapDeclarationInputDataV23 : XMLSuperCapDeclarationInputDataV24
+	{
+		// class to load capacitor component data
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V23;
+		public const string XSD_TYPE = "CapacitorSystemDataType";
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		
+		public XMLSuperCapDeclarationInputDataV23(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) { }
 
-	public class XMLSuperCapDeclarationInputDataV01 : XMLSuperCapDeclarationInputDataV24
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+    }
+
+    // ---------------------------------------------------------------------------------------
+
+    public class XMLSuperCapDeclarationInputDataV01 : XMLSuperCapDeclarationInputDataV24
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 		public const string XSD_TYPE = "REESSCapacitorType";
