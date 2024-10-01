@@ -4,6 +4,21 @@
 
 <!-- Cover Slide -->
 
+# Vecto 4.2.2.3539 RELEASE CANDIDATE (09-09-2024)
+
+<span style="color:#000000"> __Bugfixes__ </span>
+
+* <span style="color:#000000">CodeEU\-710: Hashing tool check fail with VECTO version 3330</span>
+* <span style="color:#000000">CodeEU\-711: Hashing tool check fail with VECTO 4.1.3.3415</span>
+* <span style="color:#000000">CodeEU\-712: VECTO VTP error</span>
+* <span style="color:#000000">CodeEU\-754: "Failed to find operating point"; "Failed to find mechanic power for given electric power" in E2 vehicle</span>
+* <span style="color:#000000">CodeEU\-727: Failure in simulating HEV in different VECTO versions</span>
+* <span style="color:#000000">CodeEU\-749: Double summary for electric vehicles</span>
+* <span style="color:#000000">CodeEU\-542: IVECO confidential : BUG REPORT : CRW LE T7D VOITH NXT 5.63</span>
+* <span style="color:#000000">CodeEU\-663: IHPC: Failed to find operating point </span>
+* <span style="color:#000000">CodeEU\-634: Article 10(2) issue - VIN YS2G6X20002202570</span>
+* <span style="color:#000000">CodeEU\-671: IHPC: simulation abort due to unexpected response</span>
+
 # Vecto 4.2.1.3469 OFFICIAL RELEASE (01-07-2024)
 
 <span style="color:#000000"> __Features__ </span>
