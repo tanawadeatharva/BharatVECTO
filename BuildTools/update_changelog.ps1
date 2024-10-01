@@ -149,11 +149,9 @@ Pop-Location
 
 Update-BuildPropsVersion $VersionNumber
 
-# Clean intermediary output files
-git restore $TempReleaseNotesMarkdown
-
 # Stage the modified files by the script in git.
 git add $CliffReleaseNotesMarkdown
+git add $TempReleaseNotesMarkdown
 git add $ChangelogMarkdownPath
 git add $ChangesMarkdown
 git add $ReleaseNotesPdf
