@@ -316,8 +316,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLIEPCInputData>().To<XMLElectricMotorIEPCIInputDataProviderV23>()
 				.Named(XMLElectricMotorIEPCIInputDataProviderV23.QUALIFIED_XSD_TYPE);
 
-			Bind<IXMLIEPCInputData>().To<XMLElectricMotorIepciStandardInputDataProviderV23>()
-				.Named(XMLElectricMotorIepciStandardInputDataProviderV23.QUALIFIED_XSD_TYPE);
+			Bind<IXMLIEPCInputData>().To<XMLElectricMotorIepcStandardInputDataProviderV23>()
+				.Named(XMLElectricMotorIepcStandardInputDataProviderV23.QUALIFIED_XSD_TYPE);
 			
 			Bind<IXMLElectricStorageSystemDeclarationInputData>().To<XMLElectricStorageSystemDeclarationInputDataV24>()
 				.Named(XMLElectricStorageSystemDeclarationInputDataV24.QUALIFIED_XSD_TYPE);
@@ -329,6 +329,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 				.Named(XMLBatteryPackDeclarationInputDataMeasuredV23.QUALIFIED_XSD_TYPE);
 			Bind<IXMLBatteryPackDeclarationInputData>().To<XMLBatteryPackDeclarationInputDataStandardV23>()
 				.Named(XMLBatteryPackDeclarationInputDataStandardV23.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLSuperCapDeclarationInputData>().To<XMLSuperCapDeclarationInputDataV23>()
+				.Named(XMLSuperCapDeclarationInputDataV23.QUALIFIED_XSD_TYPE);
+
 
             Bind<IXMLSuperCapDeclarationInputData>().To<XMLSuperCapDeclarationInputDataV24>()
 				.Named(XMLSuperCapDeclarationInputDataV24.QUALIFIED_XSD_TYPE);
