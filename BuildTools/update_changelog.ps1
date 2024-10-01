@@ -57,7 +57,6 @@ function Update-MarkdownContent ([string] $targetFile, [string] $contentFile, [s
 }
 
 function Update-BuildPropsVersion([string]$version) {
-    $BuildPropsFile = "Directory.Build.props"
     $VersionRgx = "<Version>\d+\.\d+\.\d+<\/Version>"
     $VersionNode = "<Version>$version</Version>"
 
@@ -118,8 +117,10 @@ if ($MajorVersionNumber -ne 3 -and $MajorVersionNumber -ne 4){
     $ReleaseNotesPdf = "Documentation/User Manual Source/Release Notes Vecto${MajorVersionNumber}.x.pdf"
 }
 
+# Declare files to update
 $UserManualHtml = "Documentation/User Manual/help.html"
 $ChangelogMarkdownPath = "Documentation/User Manual/6-changelog/changelog.md"
+$BuildPropsFile = "Directory.Build.props"
 
 # Reset files content to clean previous executions output.
 git reset -- $ChangelogMarkdownPath $ChangesMarkdown $ReleaseNotesPdf $UserManualHtml $TempReleaseNotesMarkdown -q
@@ -157,3 +158,4 @@ git add $ChangelogMarkdownPath
 git add $ChangesMarkdown
 git add $ReleaseNotesPdf
 git add $UserManualHtml
+git add $BuildPropsFile
