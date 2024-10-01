@@ -16,6 +16,8 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		public override string XMLFullReportName => Path.ChangeExtension(BaseWriter.JobFile, "RSLT_MANUFACTURER_PRIMARY.xml");
 
+		public override string XMLMonitoringReportName => Path.ChangeExtension(BaseWriter.JobFile, "RSLT_MONITORING_PRIMARY.xml");
+
 		#endregion
 
 		/// <summary>

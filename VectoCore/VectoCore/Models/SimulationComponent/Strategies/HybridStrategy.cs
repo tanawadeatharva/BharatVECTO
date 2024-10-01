@@ -55,9 +55,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.Gearbox.Disengaged = !useNextGear.Engaged;
 			TestPowertrain.Gearbox.DisengageGearbox = !useNextGear.Engaged;
 			TestPowertrain.Gearbox._nextGear = NextGear;
-			TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed,
-				DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
-			
+			if (ModelData.GearboxData.TractionInterruption.IsGreater(0)) {
+				TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed,
+					DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
+			}
+
 			if (TestPowertrain.CombustionEngine.EngineAux is BusAuxiliariesAdapter busAux) {
 				busAux.CurrentState.ExcessiveDragPower =
 					((DataBus.EngineInfo as CombustionEngine)?.EngineAux as BusAuxiliariesAdapter)?.CurrentState
