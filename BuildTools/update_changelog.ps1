@@ -13,7 +13,7 @@
     - Documentation/User Manual Source/ReleaseNotesMDs/release_notes.md (manually updated if custom content needed)
 
 .PARAMETER Force
-    Overrides git cliff output with release_notes.md content. Enables custom modification of all Release Notes files.
+    Enables custom modification of all Release Notes files by overriding git cliff output with release_notes.md content.
 
 .EXAMPLE
     ./BuildTools/update_changelog.ps1 4.5.5
@@ -65,6 +65,11 @@ function Update-BuildPropsVersion([string]$version) {
             Set-Content -Path $BuildPropsFile
 }
 
+function Remove-CliffArtifacts([string] $filename){
+    # When git trailer/footers are empty git cliff produces undesired artifacts that need removal.
+    $(Get-Content $filename).Replace("description::", ":").Replace("CodeEU : ", "") | Set-Content $filename
+}
+
 if(!$RELEASE_VERSION){
     $RELEASE_VERSION = Read-Host "Version number"
 }
@@ -101,11 +106,14 @@ Write-Host "Current version points to $($CURRENT_RELEASE_SHA)"
 Write-Host "Previous version points to $($PREVIOUS_RELEASE_SHA)"
 
 $CliffReleaseNotesMarkdown = "Documentation/User Manual Source/ReleaseNotesMDs/release_notes.md";
+$CliffReleaseNotesHtmlMarkdown = "Documentation/User Manual Source/ReleaseNotesMDs/release_notes_html.md";
 if(-not $Force){
     # Get the latest changes for the release changelog.
-    git cliff "$CURRENT_RELEASE_SHA..$PREVIOUS_RELEASE_SHA" --unreleased --tag "$changelogVersion" -o cliff_changelog.md --config ./BuildTools/cliff.toml
+    git cliff "$CURRENT_RELEASE_SHA..$PREVIOUS_RELEASE_SHA" --unreleased --tag "$changelogVersion" -o $CliffReleaseNotesMarkdown --config ./BuildTools/cliff.toml
+    git cliff "$CURRENT_RELEASE_SHA..$PREVIOUS_RELEASE_SHA" --unreleased --tag "$changelogVersion" -o $CliffReleaseNotesHtmlMarkdown --config ./BuildTools/cliff_html.toml
 
-    Move-Item cliff_changelog.md ./$CliffReleaseNotesMarkdown -Force
+    Remove-CliffArtifacts $CliffReleaseNotesMarkdown
+    Remove-CliffArtifacts $CliffReleaseNotesHtmlMarkdown
 }
 
 # Update Release Notes and changelog markdowns.
@@ -113,7 +121,7 @@ if(-not $Force){
 if ($MajorVersionNumber -ne 3 -and $MajorVersionNumber -ne 4){
     throw "Release Notes version ${MajorVersionNumber} not supported."
 } else {
-    $TempReleaseNotesMarkdown = "Documentation/User Manual Source/ReleaseNotesMDs/ReleaseNotesVecto${MajorVersionNumber}x.md"
+    $ReleaseNotesPdfMarkdown = "Documentation/User Manual Source/ReleaseNotesMDs/ReleaseNotesVecto${MajorVersionNumber}x.md"
     $ReleaseNotesPdf = "Documentation/User Manual Source/Release Notes Vecto${MajorVersionNumber}.x.pdf"
 }
 
@@ -123,23 +131,23 @@ $ChangelogMarkdownPath = "Documentation/User Manual/6-changelog/changelog.md"
 $BuildPropsFile = "Directory.Build.props"
 
 # Reset files content to clean previous executions output.
-git reset -- $ChangelogMarkdownPath $ChangesMarkdown $ReleaseNotesPdf $UserManualHtml $TempReleaseNotesMarkdown -q
-git checkout -- $ChangelogMarkdownPath $ChangesMarkdown $ReleaseNotesPdf $UserManualHtml $TempReleaseNotesMarkdown
+git reset -- $ChangelogMarkdownPath $ChangesMarkdown $ReleaseNotesPdf $UserManualHtml $ReleaseNotesPdfMarkdown -q
+git checkout -- $ChangelogMarkdownPath $ChangesMarkdown $ReleaseNotesPdf $UserManualHtml $ReleaseNotesPdfMarkdown
 
 # Insert new changelog features into Release Notes.
 $InjectNewFeaturesMark = "<!-- Cover Slide -->"
-Update-MarkdownContent $TempReleaseNotesMarkdown $CliffReleaseNotesMarkdown $InjectNewFeaturesMark
+Update-MarkdownContent $ReleaseNotesPdfMarkdown $CliffReleaseNotesMarkdown $InjectNewFeaturesMark
 
 # Insert new changelog features into VECTO changelog.
 $ChangelogInjectMark = "# Changelog"
-Update-MarkdownContent $ChangelogMarkdownPath $CliffReleaseNotesMarkdown $ChangelogInjectMark
+Update-MarkdownContent $ChangelogMarkdownPath $CliffReleaseNotesHtmlMarkdown $ChangelogInjectMark
 
 $ChangesMarkdown = "CHANGES.md"
 Copy-Item $ChangelogMarkdownPath $ChangesMarkdown -Force
 
 # Convert md to pdf
 Push-Location "Documentation/User Manual Source/ReleaseNotesMDs"
-pandoc "..\..\..\$TempReleaseNotesMarkdown" -o "..\..\..\$ReleaseNotesPdf" --css "..\..\..\BuildTools\templates\md-style.css" --pdf-engine=$Env:weasyprint  --title="Changelog"
+pandoc "..\..\..\$ReleaseNotesPdfMarkdown" -o "..\..\..\$ReleaseNotesPdf" --css "..\..\..\BuildTools\templates\md-style.css" --pdf-engine=$Env:weasyprint  --title="Changelog"
 Pop-Location
 
 # User Manual HTML convertion script.
@@ -150,8 +158,7 @@ Pop-Location
 Update-BuildPropsVersion $VersionNumber
 
 # Stage the modified files by the script in git.
-git add $CliffReleaseNotesMarkdown
-git add $TempReleaseNotesMarkdown
+git add $ReleaseNotesPdfMarkdown
 git add $ChangelogMarkdownPath
 git add $ChangesMarkdown
 git add $ReleaseNotesPdf
