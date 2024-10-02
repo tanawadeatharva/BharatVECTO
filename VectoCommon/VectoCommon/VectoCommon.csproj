@@ -3,7 +3,7 @@
     <RootNamespace>TUGraz.VectoCommon</RootNamespace>
     <AssemblyName>VectoCommon</AssemblyName>
     <TargetFrameworks>net48;net6.0</TargetFrameworks>
-     
+    <Description>Provides Vecto models and utils.</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
