@@ -41,8 +41,15 @@ namespace TUGraz.VectoCore.Utils
 		private const string SUFFIX = "-DEV";
 #endif
 
-		public static string VersionNumber => typeof(VectoSimulationCore).Assembly.GetName().Version + SUFFIX;
+		public static string VersionNumber => GetVersionNumber();
 
 		public static string BranchSuffix => SUFFIX;
+
+		private static string GetVersionNumber()
+		{
+			var version = typeof(VectoSimulationCore).Assembly.GetName().Version;
+
+			return $"{version.Major}.{version.Minor}.{version.Build}{SUFFIX}";
+		}
 	}
 }
