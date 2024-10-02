@@ -9,9 +9,10 @@
 # VECTO v4.2.5 Official Release (02-10-2024)
 
 
-## Hot Fix
+## Hot Fixes
 
 - Missing Build.props DefineConstants (!268)
+- Version 4th number read from Build.props (!269)
 
 
 # VECTO v4.2.3 Official Release (01-10-2024)
