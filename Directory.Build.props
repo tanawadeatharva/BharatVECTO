@@ -8,13 +8,14 @@
     <Deterministic>true</Deterministic>
     <!-- Set to true for VectoCore to fix Ninject version conflicts-->
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Version>4.2.3</Version>
+    <Version>4.2.5</Version>
 	  <DefineTrace>false</DefineTrace>
     <DisableDiagnosticTracing>true</DisableDiagnosticTracing>
     <RemoveIntegerChecks>true</RemoveIntegerChecks>
     <DebugType>none</DebugType>
     <WarningLevel>5</WarningLevel>
     <DebugSymbols>false</DebugSymbols>
+    <DefineConstants></DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
