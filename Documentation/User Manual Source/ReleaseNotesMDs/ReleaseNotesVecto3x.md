@@ -6,8 +6,8 @@
 
 # Vecto 4.0.0.xx  Development Version NOT FOR CERTIFICATION!  June 2023
 
-* <span style="color:#000000"> First fully functional tool version according to the provisions of the 2nd amendment of Regulation \(EU\) 2017/2400. 
-* <span style="color:#000000"> __Changes__ </span>
+* <span style="color:#000000"> First fully functional tool version according to the provisions of the 2nd amendment of Regulation \(EU\) 2017/2400.
+## Changes
   * <span style="color:#000000">Dropped support for </span>  <span style="color:#000000">\.Net</span>  <span style="color:#000000"> Framework 4\.5 \(EOL 04/2022\)</span>
     * <span style="color:#000000">Supported </span>  <span style="color:#000000">\.Net</span>  <span style="color:#000000"> versions: </span>  <span style="color:#000000">\.Net</span>  <span style="color:#000000"> Framework 4\.8\, </span>  <span style="color:#000000">\.Net</span>  <span style="color:#000000"> 6\.0</span>
   * <span style="color:#000000">Implementation of Declaration\-Mode for </span>  <span style="color:#000000">xEV</span>  <span style="color:#000000">\-Buses \(see next slides\)</span>
@@ -304,7 +304,7 @@ Factor method simulations at the complete\(d\) vehicle stage
 # Vecto 0.7.10.2996  Development Version  March 2023
 
 * <span style="color:#000000"> __Important Note__ </span>  <span style="color:#000000">This is a development release for </span>  <span style="color:#000000">xEV</span>  <span style="color:#000000">\-Lorries\. Bus related functionalities may be broken\. </span>  <span style="color:#000000"> </span>
-* <span style="color:#000000"> __Changes__ </span>
+## Changes
   * <span style="color:#000000">Test settings:</span>
     * <span style="color:#000000">Charge\-Sustaining\-Mode:</span>
       * <span style="color:#000000">Iterative </span>  <span style="color:#000000">simulation for OVC\-P\-HEVs </span>
@@ -711,7 +711,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 # Vecto 0.7.9.2864 JRC Development Version  November 2022
 
 * <span style="color:#000000"> __Important Note__ </span>  <span style="color:#000000">This is a special development release by JRC to validate the time\-runs for BEVs\. </span>  <span style="color:#000000"> </span>
-* <span style="color:#000000"> __Changes__ </span>
+## Changes
   * <span style="color:#000000">Implementation of measured speed cycle for BEVs \(E2\, E3\, E4\, IEPC\)</span>
   * <span style="color:#000000">Implementation of measured speed with gear for BEVs \(E2\, IEPC\)</span>
   * <span style="color:#000000">Implementation of Pwheel mode for BEVs \(E2\, E3\, E4\, IEPC\)</span>  <span style="color:#000000">In this type of cycle\, the input field </span>  <span style="color:#000000"> __\<n>__ </span>  <span style="color:#000000"> stands for the speed of the electric motor\.</span>
@@ -1153,7 +1153,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 0.7.6.2451 Development Version September 2021
 
-* <span style="color:#000000"> __Changes__ </span>
+## Changes
   * <span style="color:#000000">ADAS for HEV and PEV vehicles</span>
     * <span style="color:#000000">For HEV vehicles interaction of PCC and HEV strategy under further analysis</span>
   * <span style="color:#000000">Update electric motor model: support for different voltage levels</span>
@@ -1163,7 +1163,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 0.7.5.2353 Development Version June 2021
 
-* <span style="color:#000000"> __Changes__ </span>
+## Changes
   * <span style="color:#000000">Bugfixes in shift strategy for PEV \(E2\)</span>
   * <span style="color:#000000">Additional Powertrain architectures</span>
     * <span style="color:#000000">P1 AMT and APT\-S/P</span>
@@ -1181,7 +1181,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 0.7.3.2164 Development Version December 2020
 
-* <span style="color:#000000"> __Changes__ </span>
+## Changes
   * <span style="color:#000000">Bugfixes in shift strategy for PEV \(E2\)</span>
   * <span style="color:#000000">Refined electric motor model: model transmission stage of electric machine as individual sub\-component instead of transforming the maps\. Adapted columns in \.vmod and \.vsum regarding electric machine\. See user manual for details\. </span>
   * <span style="color:#000000">Bugfixes SuperCap model</span>
@@ -1189,12 +1189,12 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 0.7.2.2118 Development Version October 2020
 
-* <span style="color:#000000"> __Changes__ </span>
+## Changes
   * <span style="color:#000000">Implementation of PEV architecture E2 with EffShift\-like gearshift strategy</span>
   * <span style="color:#000000">Bugfix REESS Dialog \(\.vimax\)</span>
   * <span style="color:#000000">Bugfix in output of EM overload output in \.vmod file </span>
 
-* <span style="color:#000000"> __Changes__ </span>
+## Changes
   * <span style="color:#000000">More stable operating point search hybrid strategy</span>
   * <span style="color:#000000">Bugfixes hybrid strategy</span>
   * <span style="color:#000000">Adding Super Cap as REESS </span>
@@ -1206,7 +1206,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 0.7.0.2076 Development Version September 2020
 
-* <span style="color:#000000"> __Changes__ </span>
+## Changes
   * <span style="color:#000000"> _This release is the first beta version with capabilities to simulate hybrid and battery electric vehicles_ </span>  <span style="color:#000000">\.</span>
   * <span style="color:#000000">It covers powertrain architectures "P2"\, "P3"\, "P4" for hybrid electric vehicles \(HEV\) and  "E3"\, "E4" for battery electric vehicles \(PEV\, pure electric vehicles\)\.</span>
   * <span style="color:#000000">The definitions of the powertrain architectures and other input parameters on vehicle level can be found in the document </span>  <span style="color:#000000"> _Input parameters vehicle level 20200907\.docx_ </span>  <span style="color:#000000">\. This document is an excerpt of working document 3 of the HDV CO2 Editing board\. Items marked in red are not yet featured by the tool and will follow in the next releases\. </span>
@@ -1220,7 +1220,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 0.6.1.1975 Development Version May 2020
 
-* <span style="color:#000000"> __Bugfixes __ </span>
+## Bug Fixes
   * <span style="color:#000000">Change passenger density primary vehicle for IU cycle</span>
   * <span style="color:#000000">primary vehicle: ignore TPMLM \(to limit payload\, do not abort simulation\)</span>
   * <span style="color:#000000">completed vehicle: limit total mass with TPMLM \(abort simulation\)</span>
@@ -1245,7 +1245,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
   * <span style="color:#000000">Bus VTP: Fan Parameter C4</span>
   * <span style="color:#000000">don't write CIF for primary vehicle</span>
 
-* <span style="color:#000000"> __Improvements __ </span>
+## Improvements
   * <span style="color:#000000">Declaration mode for complete and completed buses via "factor method"</span>
   * <span style="color:#000000">VTP mode for heavy buses</span>
   * <span style="color:#000000">VTP mode for dual\-fuel vehicles \(new cycle file required\!\)</span>
@@ -1262,14 +1262,15 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
   * <span style="color:#953735"> _Expert feature:_ </span>  <span style="color:#000000"> allow adding torque converter data to PIF manually \(not added by VECTO automatically\)  to investigate on generic TC data for APT\-P \(see generic vehicles for reference\)</span>
   * <span style="color:#953735"> _Expert feature: _ </span>  <span style="color:#000000">allow writing internal model data used for VECTO simulation as JSON file\. Allows to compare model data between primary bus\, completed bus generic body\, completed bus specific body \(factor method\) as well as single bus</span>
 
-* <span style="color:#000000"> __Bugfixes heavy buses __ </span>
+## Bugfixes (Heavy Buses)
   * <span style="color:#000000">Correcting power demand for engine fan</span>
   * <span style="color:#000000">Consider electric auxiliaries \(fan\, steering pump\) as electrical consumer</span>
   * <span style="color:#000000">Correcting power demand pneumatic system with mechanical clutch</span>
   * <span style="color:#000000">Correcting electrical consumers LED bonus</span>
   * <span style="color:#000000">Correction for double compensation of smart electrics \(battery & generated vs\. consumed\)</span>
   * <span style="color:#000000">Correcting passenger count depending on HVAC configuration</span>
-* <span style="color:#000000">Bugfixes medium lorries</span>
+
+## Bugfixes (Medium Lorries)
   * <span style="color:#000000">New technologies for electric steering pump</span>
   * <span style="color:#000000">New tyre xml supported</span>
   * <span style="color:#000000">Bugfixes graphical user interface</span>
@@ -1277,7 +1278,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 0.6.0.1908 Development Version March. 2020
 
-* <span style="color:#000000"> __Bugfixes __ </span>
+## Bug Fixes
   * <span style="color:#000000">Consider vehicle's max speed when validating input data\, calculating velocity drop during traction interruption </span>
   * <span style="color:#000000">Reading vehicle design speed \(85km/h\) from segment table \(also related to vehicle's max speed\)</span>
   * <span style="color:#000000">Fix JobEditor GUI - toolbar with icons not visible</span>
@@ -1285,7 +1286,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 0.6.0.1884 Development Version Feb. 2020
 
-* <span style="color:#000000"> __Improvements __ </span>
+## Improvements
   * <span style="color:#000000">Refactoring and bug fixes in bus auxiliaries model \(former Ricardo AAUX model\)\, parametrization of bus auxiliaries model \(HVAC\) from "primary bus" input data and generic values in segmentation matrix\, </span>
   * <span style="color:#000000">Support for P0 hybrids in bus auxiliaries model</span>
   * <span style="color:#000000">Support for "primary bus" \(declaration mode\)</span>
@@ -1298,7 +1299,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 0.5.0 Development Version Dec. 2019
 
-* <span style="color:#000000"> __Improvements __ </span>
+## Improvements
   * <span style="color:#000000">Adding in\-the\-loop simulation of advanced driver assistant systems \(ADAS\)</span>
     * <span style="color:#000000">Engine stop\-start during vehicle stop</span>
     * <span style="color:#000000">Eco\-roll with and without engine stop</span>
@@ -1310,18 +1311,18 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 3.3.10.2401 Official Release 2020-07-29
 
-* <span style="color:#000000"> __Improvements__ </span>
+## Improvements
   * <span style="color:#000000">Handling of exempted vehicles \(not changed since release candidate\) - see next slides for details</span>
-* <span style="color:#000000"> __Bugfixes__ </span>
+## Bug Fixes
   * <span style="color:#000000">No additional bugfixes compared to VECTO 3\.3\.10\.2401</span>
 
 # Vecto 3.3.10.2373 Release Candidate 2020-07-01
 
-* <span style="color:#000000"> __Improvements__ </span>
+## Improvements
   * <span style="color:#000000">\[VECTO\-1421\] - Added vehicle sub\-group \(CO</span>  <span style="color:#000000">2</span>  <span style="color:#000000">\-standards to MRF and CIF\)</span>
   * <span style="color:#000000">\[VECTO 1449\] - Handling of exempted vehicles: See next slide for details</span>
   * <span style="color:#000000">\[VECTO\-1404\] - Corrected URL for CSS in MRF and CIF</span>
-* <span style="color:#000000"> __Bugfixes__ </span>
+## Bug Fixes
   * <span style="color:#000000">\[VECTO\-1419\] - Simulation abort in urban cycle: failed to find operating point on search braking power with TC gear</span>
   * <span style="color:#000000">\[VECTO\-1439\] - Bugfix handling duplicate entries in engine full\-load curve when intersecting with max\-torque of gearbox</span>
   * <span style="color:#000000">\[VECTO\-1429\] - error in XML schema 2\.x for exempted vehicles - MaxNetPower1/2 are optional input parameters</span>
@@ -1337,65 +1338,65 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 3.3.9.2175 Official Release 2020-12-15
 
-* <span style="color:#000000"> __Bugfixes \(compared to version 3\.3\.9\.2147\)__ </span>
+## Bug Fixes (compared to version 3.3.9.2147)
   * <span style="color:#000000">\[VECTO\-1374\] \- VECTO VTP error - regression update</span>
 
 # Vecto 3.3.9.2147 Release Candidate 2020-11-17
 
-* <span style="color:#000000"> __Bugfixes__ </span>
+## Bug Fixes
   * <span style="color:#000000">\[VECTO\-1331\] \- VTP Mode does not function for vehicles of group 3</span>
   * <span style="color:#000000">\[VECTO\-1355\] \- VTP Simulation Abort</span>
   * <span style="color:#000000">\[VECTO\-1356\] \- PTO Losses not considered in VTP simulation</span>
   * <span style="color:#000000">\[VECTO\-1361\] \- Torque Converter in use for the First and Second Gear VTP file does not allow for this</span>
   * <span style="color:#000000">\[VECTO\-1372\] \- Deviation of CdxA Input vs\. Output for HDV16</span>
   * <span style="color:#000000">\[VECTO\-1374\] \- VECTO VTP error</span>
-* <span style="color:#000000"> __Improvements__ </span>
+## Improvements
   * <span style="color:#000000">\[VECTO\-1360\] \- make unit tests execute in parallel</span>
 
 # Vecto 3.3.8.2052 Official Release 2020-08-14
 
-* <span style="color:#000000"> __Bugfixes__ </span>
+## Bug Fixes
   * <span style="color:#000000">No additional bugfixes compared to VECTO 3\.3\.8\.2024</span>
 
 # Vecto 3.3.8.2024 Release Candidate 2020-07-17
 
-* <span style="color:#000000"> __Bugfixes__ </span>
+## Bug Fixes
   * <span style="color:#000000">\[VECTO\-1288\] \- Simulation Abort UD RL</span>
   * <span style="color:#000000">\[VECTO\-1327\] \- Simulation abort Construction RefLoad: unexpected response ResponseOverload</span>
   * <span style="color:#000000">\[VECTO\-1266\] \- Gear 4 Loss\-Map was extrapolated</span>
 
 # Vecto 3.3.7.1964 Official Release 2020-05-18
 
-* <span style="color:#000000"> __Bugfixes__ </span>
+## Bug Fixes
   * <span style="color:#000000">\[VECTO\-1254\] \- Hashing method does not ignore certain XML attributes</span>
   * <span style="color:#000000">\[VECTO\-1259\] \- Mission profile weighting factors for vehicles of group 16 are not correct</span>
 
 # Vecto 3.3.6.1916 Official Release 2020-03-31
 
-* <span style="color:#000000"> __Bugfixes__ </span>
+## Bug Fixes
   * <span style="color:#000000">\[VECTO\-1250\] \- Error creating new gearbox file from scratch</span>
 
 # Vecto 3.3.6.1898 Release Candidate 2020-03-13
 
-* <span style="color:#000000"> __Improvement__ </span>
+## Improvements
   * <span style="color:#000000">\[VECTO\-1239\] \- Adaptation of Mission Profile Weighting Factors</span>
   * <span style="color:#000000">\[VECTO\-1241\] \- Engineering mode: Adding support for additional PTO activations</span>
-* <span style="color:#000000"> __Bugfixes__ </span>
+## Bug Fixes
   * <span style="color:#000000">\[VECTO\-1243\] \- Bug in VTP mode for heavy lorries</span>
   * <span style="color:#000000">\[VECTO\-1234\] \- urban cycle at reference load not running for bug when find braking operating point</span>
 
 # Vecto 3.3.5.1812 Official Release 2019-12-18
 
-* <span style="color:#000000"> __Bugfixes __ </span>  <span style="color:#000000">\(compared to VECTO 3\.3\.5\.1783\-RC\)</span>
+## Bug Fixes  (compared to VECTO 3.3.5.1783-RC)
   * <span style="color:#000000">\[VECTO\-1220\] \- Simulation Abort Urban Delivery RefLoad</span>
 
 # Vecto 3.3.5.1783 Release Candidate 2019-11-19
 
-* <span style="color:#000000"> __Improvement__ </span>
+## Improvements
   * <span style="color:#000000">\[VECTO\-1194\] \- Handling input parameter 'vocational' for groups other than 4\, 5\, 9\, 10</span>
   * <span style="color:#000000">\[VECTO\-1147\] \- Updating declaration mode cycles values in user manual </span>
   * <span style="color:#000000">\[VECTO\-1207\] \- run VECTO in 64bit mode by default</span>
-* <span style="color:#000000"> __Bugfixes__ </span>
+## Bug Fixes
   * <span style="color:#000000">\[VECTO\-1074\] \- Vecto Calculation Aborts with Interpolation Error</span>
   * <span style="color:#000000">\[VECTO\-1159\] \- Simulation Abort in UrbanDelivery LowLoading</span>
   * <span style="color:#000000">\[VECTO\-1189\] \- Error in delaunay triangulation invariant violated</span>
@@ -1405,16 +1406,16 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 3.3.4.1716 Official Release 2019-09-13
 
-* <span style="color:#000000"> __Bugfixes __ </span>  <span style="color:#000000">\(compared to VECTO 3\.3\.4\.1686\-RC\)</span>
+## Bug Fixes  (compared to VECTO 3.3.4.1686-RC)
   * <span style="color:#000000">\[VECTO\-1074\] \- Vecto Calculation Aborts with Interpolation Error \(\[VECTO\-1046\]\)</span>
   * <span style="color:#000000">\[VECTO\-1111\] \- Simulation Abort in Municipal Reference Load</span>
 
 # Vecto 3.3.4.1686 Release Candidate 2019-08-14
 
-* <span style="color:#000000"> __Improvement__ </span>
+## Improvements
   * <span style="color:#000000">\[VECTO\-1042\] \- Add option to write results into a certain directory</span>
   * <span style="color:#000000">\[VECTO\-1064\] \- add weighting factors for vehicle groups 1\, 2\, 3\, 11\, 12\, 16</span>
-* <span style="color:#000000"> __Bugfixes__ </span>
+## Bug Fixes
   * <span style="color:#000000">\[VECTO\-1030\] \- Exceeded max iterations when searching for operating point\! Failed to find operating point\!</span>
   * <span style="color:#000000">\[VECTO\-1032\] \- Gear 5 LossMap data was extrapolated in Declaration Mode: range for loss map is not sufficient</span>
   * <span style="color:#000000">\[VECTO\-1067\] \- Vair and Beta correction for Aerodynamics</span>
@@ -1424,7 +1425,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 3.3.3.1639 Official Release 2019-06-27
 
-* <span style="color:#000000"> __Bugfixes __ </span>  <span style="color:#000000">\(compared to VECTO 3\.3\.3\.1609\-RC\)</span>
+## Bug Fixes  (compared to VECTO 3.3.3.1609-RC)
   * <span style="color:#000000">\[VECTO\-1003\] \- Vecto Error: Loss\-Map extrapolation in declaration mode required</span>  <span style="color:#000000">\(issue VECTO\-991\)</span>
   * <span style="color:#000000">\[VECTO\-1006\] \- Failed to find torque converter operating point on UD cycle </span>  <span style="color:#000000">\(issue VECTO\-996\)</span>
   * <span style="color:#000000">\[VECTO\-1010\] \- Unexpected Response: ResponseOverload in UD cycle </span>  <span style="color:#000000">\(issue VECTO\-996\)</span>
@@ -1441,7 +1442,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
   * <span style="color:#000000">\[VECTO\-965\] \- Add input fields for ADAS into VECTO GUI</span>
   * <span style="color:#000000">\[VECTO\-966\] \- Allow selecting Tank System for NG engines in GUI</span>
   * <span style="color:#000000">\[VECTO\-932\] \- Consistency in NA values in the vsum file</span>
-* <span style="color:#000000"> __Bugfixes__ </span>
+## Bug Fixes
   * <span style="color:#000000">\[VECTO\-954\] \- Failed to find operating point for braking power \(Fix for Notification Art\. 10\(2\) \- \[VECTO\-952\]\)</span>
   * <span style="color:#000000">\[VECTO\-979\] \- VECTO Simulation abort with 8\-speed MT transmission \(Fix for Notification Art\. 10\(2\) \- \[VECTO\-978\]\)</span>
   * <span style="color:#000000">\[VECTO\-931\] \- AT error in VECTO version 3\.3\.2\.1519</span>
@@ -1461,12 +1462,12 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 3.3.2.1519 Release Candidate 2019-03-01
 
-* <span style="color:#000000"> __Improvements__ </span>
+## Improvements
   * <span style="color:#000000">\[VECTO\-869\] \- change new vehicle input fields \(ADAS\, sleeper cab\, etc\.\) to be mandatory</span>
   * <span style="color:#000000">\[VECTO\-784\] \- Configuration file for VECTO log files</span>
   * <span style="color:#000000">\[VECTO\-865\] \- Extend Sum\-Data</span>
   * <span style="color:#000000">\[VECTO\-873\] \- Add digest value to SumData</span>
-* <span style="color:#000000"> __Bugfixes__ </span>
+## Bug Fixes
   * <span style="color:#000000">\[VECTO\-729\] \- Bugs APT submodel</span>
   * <span style="color:#000000">\[VECTO\-787\] \- APT: DrivingAction Accelerate after Overload</span>
   * <span style="color:#000000">\[VECTO\-789\] \- APT: ResponseUnderload</span>
@@ -1476,7 +1477,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
   * <span style="color:#000000">\[VECTO\-827\] \- Torque converter inertia </span>
   * <span style="color:#000000">\[VECTO\-838\] \- APT: ResponseOverload</span>
 
-* <span style="color:#000000"> __Bugfixes__ </span>
+## Bug Fixes
   * <span style="color:#000000">\[VECTO\-843\] \- AT Transmissions problem on VECTO 3\.3\.1\.1463</span>
   * <span style="color:#000000">\[VECTO\-844\] \- Error with AT gearbox model</span>
   * <span style="color:#000000">\[VECTO\-847\] \- Simulation abort due to error in NLog?</span>
@@ -1492,7 +1493,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
   * <span style="color:#000000">\[VECTO\-820\] \- DistanceRun got an unexpected response: ResponseSpeedLimitExceeded</span>
   * <span style="color:#000000">\[VECTO\-864\] \- Prevent VECTO loss\-map extension to result in negative torque loss</span>
 
-* <span style="color:#000000"> __Installation Option __ </span>  <span style="color:#000000">\(VECTO\-784\)</span>
+## Installation Option (VECTO-784)
   * <span style="color:#000000">VECTO 3\.3\.2 adds a new feature to run as 'installed application' instead of the 'portable' mode</span>
   * <span style="color:#000000">VECTO as 'installed application'</span>
     * <span style="color:#000000">Needs no write permissions to the VECTO application folder</span>
@@ -1504,7 +1505,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 3.3.1.1492 Official Release 2019-02-01
 
-* <span style="color:#000000"> __Bugfixes \(compared to 3\.3\.1\.1463\-RC\)__ </span>
+## Bug Fixes (compared to 3.3.1.1463-RC)
   * <span style="color:#000000">\[VECTO\-845\] \- Fixing bug for VECTO\-840</span>
   * <span style="color:#000000">\[VECTO\-826\] \- DistanceRun got an unexpected response: ResponseSpeedLimitExceeded</span>
   * <span style="color:#000000">\[VECTO\-837\] \- VECTO GUI displays incorrect cycles prior to simulation</span>
@@ -1512,7 +1513,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 3.3.1.1463 Release Candidate 2019-01-03
 
-* <span style="color:#000000"> __Changes according to 2017/2400 amendments__ </span>
+## Changes according to 2017/2400 amendments
   * <span style="color:#000000">\[VECTO\-761\] \- Adaptation of input XML Schema</span>
   * <span style="color:#000000">\[VECTO\-762\] \- Extension of Input Interfaces</span>
   * <span style="color:#000000">\[VECTO\-763\] \- Extension of Segmentation Table</span>
@@ -1528,7 +1529,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
   * <span style="color:#000000">\[VECTO\-493\] \- Implementation of generic body weights and air drag values for construction cycle</span>
   * <span style="color:#000000">\[VECTO\-565\] \- Consideration of LNG as possible fuel is missing</span>
 
-* <span style="color:#000000"> __New input parameters__ </span>
+## New input parameters
   * <span style="color:#000000">The new input fields \(see table below\) are optional in this version\. When this release candidate will be an official version manufacturers MAY certify their new vehicles using the new input parameters\. As from 1</span>  <span style="color:#000000">st</span>  <span style="color:#000000"> July 2019 the new input fields will become mandatory\. Further details are provided in the timetable on the next page\.</span>
   * <span style="color:#000000">Default values when the new input parameters are not provided:</span>
 
@@ -1556,7 +1557,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 | 1. May 2019 |  | Mandatory use of 3.3.1.x for certification |
 | 1. July 2019 |  | Mandatory use of 3.3.2.x for certification |
 
-* <span style="color:#000000"> __Changes/Improvements__ </span>
+## Changes/Improvements
   * <span style="color:#000000">\[VECTO\-799\] \- Remove TUG Logos from Simulation Tool\, Hashing Tool</span>
   * <span style="color:#000000">\[VECTO\-808\] \- Add Monitoring Report</span>
   * <span style="color:#000000">\[VECTO\-754\] \- Extending Loss\-Maps in case of AT gearbox for each gear\, axlegear\, gearbox </span>
@@ -1587,7 +1588,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 <span style="color:#000000">CONCAWE/JEC \(2018\): </span>  <span style="color:#000000">Specifications are based on a recent analysis \(2018\) performed by CONCAWE/EUCAR and shall reflect typical fuel on the European market\. The data is scheduled to be published in March 2019 in the context of the study: </span>  <span style="color:#000000">Well\-To\-Wheels Analysis Of Future Automotive Fuels And Powertrains in the European Context - Heavy Duty vehicles</span>
 
-* <span style="color:#000000"> __Bugfixes__ </span>
+## Bug Fixes
   * <span style="color:#000000">\[VECTO\-819\] \- object reference not set to an instance of an object</span>
   * <span style="color:#000000">\[VECTO\-818\] \- SearchOperatingPoint: Unknown response type\. ResponseOverload</span>
   * <span style="color:#000000">\[VECTO\-813\] \- Error "Infinity \[\] is not allowed for SI\-Value"</span>
@@ -1604,10 +1605,10 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 3.3.0.1433 Official Release 2018-12-04
 
-* <span style="color:#000000"> __Bugfixes \(compared to 3\.3\.0\.1398\)__ </span>
+## Bugfixes (compared to 3.3.0.1398)
   * <span style="color:#000000">\[VECTO\-795\] - VECTO Hashing Tool crashes</span>
   * <span style="color:#000000">\[VECTO\-802\] - Error in XML schema for manufacturer's record file</span>
-* <span style="color:#000000"> __Bugfixes \(compared to 3\.3\.0\.1250\)__ </span>
+## Bugfixes (compared to 3.3.0.1250)
   * <span style="color:#000000">\[VECTO\-723\] \- Simulation aborts with engine speed too high in RD cycle</span>
   * <span style="color:#000000">\[VECTO\-724\] \- Simulation aborts with error 'EngineSpeedTooHigh' \- duplicate of VECTO\-744</span>
   * <span style="color:#000000">\[VECTO\-728\] \- Simulation aborts when vehicle's max speed \(n95h\) is below the target speed</span>
@@ -1618,12 +1619,12 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
   * <span style="color:#000000">\[VECTO\-757\] \- Correct contact mail address in Hashing Tool</span>
   * <span style="color:#000000">\[VECTO\-703\] \- PTO output in MRF file</span>
   * <span style="color:#000000">\[VECTO\-713\] \- Manufacturer Information File in the legislation is not compatible with the Simulation results</span>
-* <span style="color:#000000"> __Improvement \(compared to 3\.3\.0\.1250\)__ </span>
+## Improvement (compared to 3.3.0.1250)
   * <span style="color:#000000">\[VECTO\-704\] \- Allow VTP\-simulations for AT gearboxes</span>
 
 # Vecto 3.3.0.1398 Release Candiate 2018-10-30
 
-* <span style="color:#000000"> __Bugfixes__ </span>
+## Bug Fixes
   * <span style="color:#000000">\[VECTO\-723\] \- Simulation aborts with engine speed too high in RD cycle</span>
   * <span style="color:#000000">\[VECTO\-724\] \- Simulation aborts with error 'EngineSpeedTooHigh' \- duplicate of VECTO\-744</span>
   * <span style="color:#000000">\[VECTO\-728\] \- Simulation aborts when vehicle's max speed \(n95h\) is below the target speed</span>
@@ -1634,12 +1635,12 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
   * <span style="color:#000000">\[VECTO\-757\] \- Correct contact mail address in Hashing Tool</span>
   * <span style="color:#000000">\[VECTO\-703\] \- PTO output in MRF file</span>
   * <span style="color:#000000">\[VECTO\-713\] \- Manufacturer Information File in the legislation is not compatible with the Simulation results</span>
-* <span style="color:#000000"> __Improvement__ </span>
+## Improvements
   * <span style="color:#000000">\[VECTO\-704\] \- Allow VTP\-simulations for AT gearboxes</span>
 
 # Vecto 3.3.0.1250 2018-06-04
 
-* <span style="color:#000000"> __Improvement__ </span>
+## Improvements
   * <span style="color:#000000">\[VECTO\-665\] \- Adding style information to XML Reports</span>
   * <span style="color:#000000">\[VECTO\-669\] \- Group 1 vehicle comprises vehicles with gross vehicle weight > 7\.5t</span>
   * <span style="color:#000000">\[VECTO\-672\] \- Keep manual choice for "Validate data"</span>
@@ -1653,7 +1654,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
   * <span style="color:#000000">\[VECTO\-679\] \- Engine n95h computation gives wrong \(too high\) engine speed \(above measured FLD\, n70h\)</span>
   * <span style="color:#000000">\[VECTO\-693\] \- extend vehicle performance in manufacturer record</span>
 
-* <span style="color:#000000"> __Bugfixes__ </span>
+## Bug Fixes
   * <span style="color:#000000">\[VECTO\-656\] \- Distance computation in vsum</span>
   * <span style="color:#000000">\[VECTO\-666\] \- CF\_RegPer no effect in vehicle simulation \-\- added to the engine correction factors</span>
   * <span style="color:#000000">\[VECTO\-687\] \- Saving a Engine\-Only Job is not possible</span>
@@ -1663,9 +1664,9 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 3.2.1.1133 2018-02-07
 
-* <span style="color:#000000"> __Improvement__ </span>
+## Improvements
   * <span style="color:#000000">\[VECTO\-634\] \- VTP Mode: specific fuel consumption</span>
-* <span style="color:#000000"> __Bugfixes__ </span>
+## Bug Fixes
   * <span style="color:#000000">\[VECTO\-642\] \- VECTO BUG - secondary retarder losses: </span>  <span style="color:#000000"> __IMPORTANT:__ </span>  <span style="color:#000000"> Fuel\-consumption relevant bug\! wrong calculation of retarder losses for retarder ratio not equal to 1</span>
   * <span style="color:#000000">\[VECTO\-624\] \- Crash w/o comment: Infinite recursion</span>
   * <span style="color:#000000">\[VECTO\-627\] \- Cannot open Engine\-Only Job</span>
@@ -1677,13 +1678,13 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 3.2.1.1079 2017-12-15
 
-* <span style="color:#000000"> __Improvement__ </span>
+## Improvements
   * <span style="color:#000000">\[VECTO\-618\] \- Add Hash value of tyres to manufacturer's record file</span>
   * <span style="color:#000000">\[VECTO\-590\] \- Handling of hash values: customer's record contains hash of manufacturer's record</span>
   * <span style="color:#000000">\[VECTO\-612\] \- Continuously changing hashes: Info in GUI of HashingTool</span>
   * <span style="color:#000000">\[VECTO\-560\] \- Change Mail\-Address of general VECTO contact</span>
   * <span style="color:#000000">\[VECTO\-616\] \- SI\-Unit \- display derived unit instead of base units</span>
-* <span style="color:#000000"> __Bugfixes__ </span>
+## Bug Fixes
   * <span style="color:#000000">\[VECTO\-608\] \- Power balance in EPT\-mode not closed</span>
   * <span style="color:#000000"> \[VECTO\-611\] \- Invalid input\. Cannot cast Newtonsoft\.Json\.Linq\.JObject to Newtonsoft\.Json\.Linq\.Jtoken</span>
   * <span style="color:#000000">\[VECTO\-610\] \- TyreCertificationNumber missing in Manufacturer Report</span>
@@ -1694,13 +1695,13 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 3.2.1.1054 2017-11-20
 
-<span style="color:#000000"> __Improvements__ </span>
+## Improvements
 
 <span style="color:#000000">\[VECTO\-592\] \- VTP Simulation Mode</span>
 
 <span style="color:#000000">\[VECTO\-605\] \- Improve simulation speed</span>
 
-<span style="color:#000000"> __Bugfixes__ </span>
+## Bugfixes
 
 <span style="color:#000000">\[VECTO\-602\] \- Error in simulation without airdrag component</span>
 
@@ -1708,7 +1709,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # VTP Simulation Mode
 
-* <span style="color:#000000">Verification Test Procedure \(VTP\) Simulation Mode</span>
+## Verification Test Procedure (VTP) Simulation Mode
   * <span style="color:#000000">Similar to Pwheel mode\, different cycle format \(see user manual\)</span>
   * <span style="color:#000000">Requires:</span>
     * <span style="color:#000000">Vehicle in declaration mode \(XML\)</span>
@@ -1726,7 +1727,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 3.2.0.1022 2017-10-19
 
-<span style="color:#000000"> __Bugfixes__ </span>
+## Bugfixes
 
 <span style="color:#000000">\[VECTO\-585\, VECTO\-587\] - VECTO Simulation aborts when run as WCF Service</span>
 
@@ -1736,13 +1737,13 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 3.2.0.1005 2017-10-02
 
-<span style="color:#000000"> __Improvements__ </span>
+## Improvements
 
-<span style="color:#000000"> __Release of Vecto Hashing Tool__ </span>
+## Release of Vecto Hashing Tool
 
 <span style="color:#000000">\[VECTO\-557\] Engine speed simulated too high during long stops</span>
 
-<span style="color:#000000"> __Bugfixes__ </span>
+## Bugfixes
 
 <span style="color:#000000">\[VECTO\-569\] \- 'Engine Retarder' not correctly recognized as input</span>
 
@@ -1766,7 +1767,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 3.2.0.940 2017-07-28
 
-<span style="color:#000000"> __Bugfixes__ </span>
+## Bugfixes
 
 <span style="color:#000000">\[VECTO\-546\] \- GearboxCertificationOptionType Option 2 not accepted by VECTO</span>
 
@@ -1786,7 +1787,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 3.2.0.925 2017-07-14
 
-<span style="color:#000000"> __Improvements__ </span>
+## Improvements
 
 <span style="color:#000000">\[VECTO\-366\] added EMS vehicle configuration\, EMS is only simulated when engine rated power > 300kW</span>
 
@@ -1814,8 +1815,6 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 <span style="color:#000000">\[VECTO\-479</span>  <span style="color:#000000">\] Added PTO option 'only one engaged gearwheel above oil level' with 0 losses</span>
 
-<span style="color:#000000"> __Improvements__ </span>
-
 <span style="color:#000000">\[VECTO\-483\] Adapt CdxA supplement for additional trailers</span>
 
 <span style="color:#000000">\[VECTO\-494\] Implementation of different fuel types</span>
@@ -1842,8 +1841,6 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 <span style="color:#000000">\[VECTO\-474\] new driving cycles for Municipal and Regional Delivery</span>
 
-<span style="color:#000000"> __Improvements__ </span>
-
 <span style="color:#000000">\[VECTO\-522\] step\-up ratio for using torque converter in second gear set to 1\.85 for busses \(still 1\.8 for trucks\)</span>
 
 <span style="color:#000000">\[VECTO\-525\] remove info\-box with max loading in GUI</span>
@@ -1858,7 +1855,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 <span style="color:#000000">\[VECTO\-542\] reduce overspeed in declaration mode to 2\.5km/h</span>
 
-<span style="color:#000000"> __Bugfixes__ </span>
+## Bugfixes
 
 <span style="color:#000000">\[VECTO\-462\] fix: decision if PTO cycle is simulated</span>
 
@@ -1888,7 +1885,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 3.1.2.810 2017-01-18
 
-<span style="color:#000000"> __Improvements__ </span>
+## Improvements
 
 <span style="color:#000000">\[VECTO\-445\] Additional columns in vsum file</span>
 
@@ -1898,13 +1895,13 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 <span style="color:#000000">Torque converter: better handling of 'creeping' situations</span>
 
-<span style="color:#000000"> __Bugfixes:__ </span>
+## Bugfixes
 
 <span style="color:#000000">\[VECTO\-443\] Bugfix in AMT shift strategy: skip gears not working correctly</span>
 
 # Vecto 3.1.2.796 2017-03-07
 
-<span style="color:#000000"> __Improvements:__ </span>
+## Improvements
 
 <span style="color:#000000">\[VECTO\-405\] Adding clutch\-losses for AMT/MT gearboxes during drive\-off\, reduce drive\-off distance after stop from 1m to 0\.25m\, set clutch closing speed \(normalized\) to 6\.5%\, changes in clutch model</span>
 
@@ -1930,7 +1927,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 <span style="color:#000000">\[VECTO\-436\] fix simulation aborts with AT gearbox \(neg\. braking power\, unexpected response\, underload\)</span>
 
-<span style="color:#000000"> __Bugfixes:__ </span>
+## Bugfixes
 
 <span style="color:#000000">\[VECTO\-415\] Powershift Losses were not considered for AT gearboxes with PowerSplit</span>
 
@@ -1942,11 +1939,11 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 3.1.1.748 2017-01-18
 
-<span style="color:#000000"> __Bugfixes:__ </span>
+## Bugfixes
 
 <span style="color:#000000">\[VECTO\-404\] Driving Cycle with PTO stopped simulation after first PTO activation</span>
 
-<span style="color:#000000"> __Improvements:__ </span>
+## Improvements
 
 <span style="color:#000000">\[VECTO\-390\, VECTO\-400\] Adapt engine speed to estimated engine speed after gear shift during traction interruption \(double clutching\)</span>
 
@@ -1970,7 +1967,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 <span style="color:#000000">\[VECTO\-386\] Gearbox window: disable input fields not applicable for the selected gearbox type</span>
 
-<span style="color:#000000"> __Bugfixes:__ </span>
+## Bugfixes
 
 <span style="color:#000000">\[VECTO\-401\] Computation of n\_95h etc\. fails if engine's max torque is constant 0 </span>
 
@@ -1980,7 +1977,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 3.1.0.683 2016-11-14
 
-<span style="color:#000000"> __Bugfixes:__ </span>
+## Bugfixes
 
 <span style="color:#000000">\[VECTO\-375\] Fixed bug when braking during slope change from negative to positive values\.</span>
 
@@ -2010,7 +2007,7 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 <span style="color:#990000"> __Vecto 3\.1\.0\.683__ </span>  <span style="color:#990000"> __2016\-11\-14__ </span>
 
-<span style="color:#000000"> __Improvements:__ </span>
+## Improvements
 
 <span style="color:#000000">\[VECTO\-355\] Updated documentation\, added powertrain schematics in chapter "Simulation Models"</span>
 
@@ -2032,20 +2029,20 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Vecto 3.1.0.662 2016-10-24
 
-* <span style="color:#000000"> __Bugfixes__ </span>  <span style="color:#000000">:</span>
+## Bug Fixes
   * <span style="color:#000000">\[VECTO\-360\] Fixed error during startup of VECTO \(loading of DLLs\)\.</span>
   * <span style="color:#000000">\[VECTO\-358\] Fixed errors during simulation where vehicle unintentionally was driving backwards\. Fixed 1Hz\-Filter for ModFiles \(distance was wrong under certain circumstances\, vehicle seemingly jumping back before halt\)</span>
   * <span style="color:#000000">\[VECTO\-361\] Fixed classification of vehicles with GVM of exactly 7500kg</span>
   * <span style="color:#000000">\[VECTO\-364\] Fixed an error in measured speed mode \(run aborts\)\.</span>
   * <span style="color:#000000">\[VECTO\-363\] Compute shift polygons in declaration mode now uses correct boundary for full load margin\.</span>
   * <span style="color:#000000">\[VECTO\-365\] Fixed editing gears in declaration mode</span>
-* <span style="color:#000000"> __Improvements__ </span>  <span style="color:#000000">:</span>
+## Improvements
   * <span style="color:#000000">\[VECTO\-355\] User Manual updated \(Screenshots\, Descriptions\, File Formats\, Vecto V2 Comments removed\)\.</span>
   * <span style="color:#000000">\[VECTO\-317\] Declaration data for Wheel sizes updated</span>
   * <span style="color:#000000">\[VECTO\-359\] Simplified code regarding PT1 behavior\.</span>
   * <span style="color:#000000">\[VECTO\-323\] PTO\-Cycle may now be left empty when not used in driving cycle\.</span>
 
-* <span style="color:#000000">Main Updates</span>
+## Main Updates
   * <span style="color:#000000">Removed VECTO Core 2\.2</span>
   * <span style="color:#000000">Refactoring of the User\-Interface Backend: loading\, saving files and validating user input uses Vecto 3 models</span>
   * <span style="color:#000000">AT\-Gearbox Model: differentiate between AT gearbox with serial torque converter and AT gearbox using powersplit</span>
@@ -2055,8 +2052,6 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
   * <span style="color:#000000">Added PTO option for municipal utility vehicles: PTO idle losses\, separate PTO cycle during standstill</span>
   * <span style="color:#000000">Added Angledrive Component</span>
   * <span style="color:#000000">Option for constant Auxiliary Power Demand in Job\-File</span>
-
-* <span style="color:#000000">Main Updates \(cont\.\)</span>
   * <span style="color:#000000">Normalize x/y values before triangulating Delaunay map \(transmission loss\-maps\, fuel consumption loss map\)</span>
   * <span style="color:#000000">Additional fuel consumption correction factor in declaration mode: cold/hot balancing factor</span>
   * <span style="color:#000000">Added fuel consumption correction factor \(WHTC\, Cold/Hot balancing\, …\) in engineering mode</span>
@@ -2071,14 +2066,15 @@ _Calculation_  _ _  _of_  _ UF _  _as_  _ _  _share of electric range in CD mode
 
 # Status quo VECTO software and open issues (Oct. 2016)
 
-<span style="color:#000000"> __Next issues on the to do list__ </span>
+## Next issues on the to do list
 
 * <span style="color:#000000"> __Further development of the AT model__ </span>  <span style="color:#000000">Consideration of losses during power shifts\, update of gear shift logics</span>
 * <span style="color:#000000"> __Reimplementation of engine stop/start__ </span>
 * <span style="color:#000000"> __Declaration mode: implementation of EMS vehicle configurations__ </span>
 * <span style="color:#000000"> _Items waiting for decision on methods and resources:_ </span>
 * <span style="color:#000000"> __Update engine data \(according to update of Annex II\)__ </span>  <span style="color:#000000">Other fuels than diesel\, "top torque" feature\, correction factor for periodic regerating DPFs</span>
-* <span style="color:#000000"> __Declaration mode: __ </span>
+
+**Declaration mode:**
   * <span style="color:#000000"> __Revision of calculated vehicle loads__ </span>
   * <span style="color:#000000"> __implementation of refuse cycle \(instead "municipal"\)__ </span>  <span style="color:#000000">Update of driving cycle\, consideration of generic PTO loads during collection part\,</span>  <span style="color:#000000">generic body weight and payload</span>
   * <span style="color:#000000"> __VECTO output \(approval authorities\, customer info\, monitoring\)__ </span>

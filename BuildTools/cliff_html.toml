@@ -13,9 +13,9 @@ header = """
 # https://keats.github.io/tera/docs/#introduction
 body = """
 {% if version -%}\
-    ## {{ version }} ({{ timestamp | date(format="%d-%m-%Y") }})
+    **{{ version }} ({{ timestamp | date(format="%d-%m-%Y") }})**
 {% else %}\
-    ## [unreleased]
+    **[unreleased]**
 {% endif %}\
 {% set_global filtered_commits = [] -%}
 {% for commit in commits -%}
@@ -25,21 +25,24 @@ body = """
 {%endfor -%}
 {% for group, commits in filtered_commits | group_by(attribute="group") %}
 
-    ### {{ group | striptags | trim | upper_first }}
-    {% for commit in commits %}
-          - {% if commit.breaking %}[**breaking**] {% endif %}\
-              {% if not commit.footers -%} {{ commit.message | upper_first }} {% endif %}\
-              {% if commit.footers -%}
-                {% if commit.footers.1.token == "issue" and commit.footers.1.value != "" -%}
-                  CodeEU {{ commit.footers.1.value }}: {{ commit.message | upper_first }}\
-                {% elif commit.footers.1.token == "" -%}
-                  {{ commit.message | upper_first }}\
+    - {{ group | striptags | trim | upper_first }}
+    {% filter indent(width=4) -%}
+      {% for commit in commits %}
+            * {% if commit.breaking -%}[**breaking**] {% endif %}\
+                {% if not commit.footers -%} {{ commit.message | upper_first }} {% endif %}\
+                {% if commit.footers -%}
+                  {% if commit.footers.1.token == "issue" and commit.footers.1.value != "" -%}
+                    CodeEU {{ commit.footers.1.value }}: {{ commit.message | upper_first }}\
+                  {% elif commit.footers.1.token == "" -%}
+                    {{ commit.message | upper_first }}\
+                  {% endif -%}
+                  {#{% if commit.footers.2.token == "description" and commit.footers.2.value != "" %}
+                    <p>{{ commit.footers.2.value }}</p>
+                  {% endif -%} -#}
                 {% endif -%}
-                {#{% if commit.footers.2.token == "description" and commit.footers.2.value != "" %}
-                  <p>{{ commit.footers.2.value }}</p>
-                {% endif -%} -#}
-              {% endif -%}
-    {% endfor -%}
+      {% endfor -%}
+    {% endfilter -%}
+
 {% endfor -%}\n
 """
 # template for the changelog footer
