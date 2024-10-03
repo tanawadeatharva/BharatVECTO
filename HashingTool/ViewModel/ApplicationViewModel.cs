@@ -35,6 +35,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Input;
+using TUGraz.VectoCore.Utils;
 
 namespace HashingTool.ViewModel
 {
@@ -46,7 +47,7 @@ namespace HashingTool.ViewModel
 		private IMainView _currentView;
 		public static List<IMainView> AvailableViews;
 		private string _hashingLib;
-		private string _myVersion;
+		private string _coreVersion;
 
 		public ApplicationViewModel()
 		{
@@ -63,15 +64,19 @@ namespace HashingTool.ViewModel
 			HomeView = new RelayCommand(() => CurrentViewModel = homeView);
 
 			try {
-				_hashingLib = Assembly.LoadFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "VectoHashing.dll"))
-					.GetName().Version.ToString();
-			} catch (Exception) {
+				var hashinVersion = Assembly.LoadFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "VectoHashing.dll"))
+					.GetName().Version;
+				_hashingLib = $"{hashinVersion.Major}.{hashinVersion.Minor}.{hashinVersion.Build}";
+			}
+			catch (Exception) {
 				_hashingLib = "NOT FOUND";
 			}
+
 			try {
-				_myVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-			} catch (Exception) {
-				_myVersion = "NOT FOUND";
+				_coreVersion = VectoSimulationCore.VersionNumber;
+			}
+			catch (Exception) {
+				_coreVersion = "NOT FOUND";
 			}
 		}
 
@@ -103,6 +108,6 @@ namespace HashingTool.ViewModel
 			CurrentViewModel = MainViewModels.FirstOrDefault(mv => mv == mainView);
 		}
 
-		public string VersionInformation => $"Vecto Hashing Tool {_myVersion} / Hashing Library {_hashingLib}";
+		public string VersionInformation => $"Vecto Hashing Tool {_coreVersion} / Hashing Library {_hashingLib}";
 	}
 }
