@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using System.Windows.Input;
-using System.Reflection;
 using CommunityToolkit.Mvvm.Input;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
+using TUGraz.VectoCore.Utils;
 
 namespace VECTO3GUI2020.ViewModel.Implementation
 {
@@ -71,10 +71,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 
 #if MOCKUP
-		
-		public string Version => "[MOCKUP] VECTO Multistep " + Assembly.GetExecutingAssembly().GetName().Version + " (For Testing and Feedback)";
+		public string Version => "[MOCKUP] VECTO Multistep " + VectoSimulationCore.VersionNumber + " (For Testing and Feedback)";
 #else
-		public string Version => "VECTO Multistep " + Assembly.GetExecutingAssembly().GetName().Version;
+		public string Version => "VECTO Multistep " + VectoSimulationCore.VersionNumber;
 
 #endif
 
@@ -114,3 +113,4 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 	}
 }
+	
