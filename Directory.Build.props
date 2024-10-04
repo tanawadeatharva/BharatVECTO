@@ -1,9 +1,18 @@
 <Project>
   <PropertyGroup>
     <!-- Global VECTO Version -->
-    <Authors>Graz University of Technology</Authors>
+    <Authors>Graz University of Technology, European Commission</Authors>
     <Company>European Union</Company>
     <Copyright>Copyright © 2012-$([System.DateTime]::UtcNow.Year)</Copyright>
+    <PackageLicenseExpression>EUPL-1.2</PackageLicenseExpression>
+    <RepositoryUrl>https://code.europa.eu/vecto/vecto</RepositoryUrl>
+    <PackageReadmeFile>https://code.europa.eu/vecto/vecto/-/blob/stable/README.md</PackageReadmeFile>
+    <PackageChangelogFile>https://code.europa.eu/vecto/vecto/-/blob/stable/CHANGES.md</PackageChangelogFile>
+    <RepositoryBranch>https://code.europa.eu/vecto/vecto/-/tree/stable</RepositoryBranch>
+    <Tags>automotive;CO2;HDV;energy;fuel;simulator;engineering</Tags>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Deterministic>true</Deterministic>
     <!-- Set to true for VectoCore to fix Ninject version conflicts-->
