@@ -118,8 +118,8 @@ if(-not $Force){
 
 # Update Release Notes and changelog markdowns.
 # Based on the major, determine the ReleaseNotes for the given version.
-if ($MajorVersionNumber -ne 3 -and $MajorVersionNumber -ne 4){
-    throw "Release Notes version ${MajorVersionNumber} not supported."
+if ($MajorVersionNumber -ne 3 -and $MajorVersionNumber -ne 4 -and $MajorVersionNumber -ne 0){
+    throw "Release Notes version ${MajorVersionNumber} not supported. Consider creating 'Release Notes Xx.md' file."
 } else {
     $ReleaseNotesPdfMarkdown = "Documentation/User Manual Source/ReleaseNotesMDs/ReleaseNotesVecto${MajorVersionNumber}x.md"
     $ReleaseNotesPdf = "Documentation/User Manual Source/Release Notes Vecto${MajorVersionNumber}.x.pdf"
