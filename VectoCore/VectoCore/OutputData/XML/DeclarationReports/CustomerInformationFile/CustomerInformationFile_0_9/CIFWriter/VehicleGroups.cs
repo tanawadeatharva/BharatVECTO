@@ -121,30 +121,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
-	public class ConventionalCompletedBusVehicleSequenceGroupCIF : AbstractCIFGroupWriter
-	{
-		public ConventionalCompletedBusVehicleSequenceGroupCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
-
-		#region Overrides of AbstractCIFGroupWriter
-
-		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
-		{
-			var multistep = inputData as IMultistepBusInputDataProvider;
-			if (multistep == null) {
-				throw new VectoException("Completed Bus CIF requires bus input data");
-			}
-			var vehicleData = multistep.JobInputData.PrimaryVehicle.Vehicle;
-			var dualFuel = vehicleData.Components.EngineInputData.EngineModes.Any(x => x.Fuels.Count > 1);
-			return new List<XElement>() {
-				new XElement(_cif + "WasteHeatRecovery",
-					vehicleData.Components.EngineInputData.WHRType != WHRType.None),
-				new XElement(_cif + XMLNames.Vehicle_DualFuelVehicle, dualFuel)
-			};
-		}
-
-		#endregion
-	}
-
 	public class HEV_LorryVehicleTypeGroupCIF : AbstractCIFGroupWriter
 	{
 		public HEV_LorryVehicleTypeGroupCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }

@@ -1117,7 +1117,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			get => _manufacturingStages.Select(s => s.Vehicle.Components.BusAuxiliaries.DataSource).FirstOrDefault();
 		}
-		public XmlNode XMLSource => _xmlNode ?? (_xmlNode = GetBusAuxXMLSource());
 
 		public string FanTechnology => null;
 
@@ -1205,23 +1204,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return _invalidEntries.Concat(_consolidateElectricConsumerData?.GetInvalidEntries(jobType) 
 					?? new List<string>() { XMLNames.BusAux_ElectricSystem })
 				.Concat(_consolidatedHVACBusAuxiliariesData?.GetInvalidEntries(jobType) ?? new List<string>()).ToList();
-		}
-
-
-		private XmlNode GetBusAuxXMLSource()
-		{
-			var multistageBusReport = new XMLMultistageBusReport();
-			var auxElement = multistageBusReport.GetBusAuxiliaries(this);
-			
-			if (auxElement == null)
-				return null;
-			
-			using (var xmlReader = auxElement.CreateReader())
-			{
-				var xmlDoc = new XmlDocument();
-				xmlDoc.Load(xmlReader);
-				return xmlDoc.FirstChild;
-			}
 		}
 
 	}

@@ -10,18 +10,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 {
 	internal abstract class PrimaryBus_ManufacturerReportBase : AbstractManufacturerReport
 	{
-		protected XNamespace _mrf = XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9");
 		protected PrimaryBus_ManufacturerReportBase(IManufacturerReportFactory mrfFactory, IResultsWriterFactory resultFactory) : base(mrfFactory, resultFactory) { }
 
-		protected void GenerateReport(string outputDataType)
-		{
-			Report = new XDocument(new XElement(_mrf + "VectoOutput",
-				new XAttribute("xmlns", _mrf),
-				new XAttribute(XNamespace.Xmlns + "xsi", xsi),
-				new XAttribute(xsi + XMLNames.XSIType, $"{outputDataType}"),
-				Vehicle,
-				new XElement(_mrf + "Results")));
-		}
 	}
 
 	internal class Conventional_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
