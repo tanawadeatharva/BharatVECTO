@@ -90,8 +90,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var modData = new ModalDataContainer(rundata, null, null);
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 			modData.Data.CreateColumns(ModalResults.DriverSignals);
-			var initalSpeed = initialSpeedVal.KMPHtoMeterPerSecond();
-			var speed = initalSpeed;
+			var initialSpeed = initialSpeedVal.KMPHtoMeterPerSecond();
+			var speed = initialSpeed;
 			var dist = 0.SI<Meter>();
 			var dt = 0.5.SI<Second>();
 			var acc = accVal.SI<MeterPerSquareSecond>();
@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			// distance = 80km/h * 50s + acc/2 * 50s * 50s
 			var totalTime = 50.SI<Second>();
-			var expected = initalSpeed * totalTime + acc / 2.0 * totalTime * totalTime;
+			var expected = initialSpeed * totalTime + acc / 2.0 * totalTime * totalTime;
 
 			Assert.AreEqual(expected.Value(), modData.Distance.Value(), 1e-6);
 		}
