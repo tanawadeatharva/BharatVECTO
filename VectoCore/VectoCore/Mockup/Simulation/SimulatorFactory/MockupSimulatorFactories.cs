@@ -21,7 +21,7 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
     internal class MockupEngineeringSimulatorFactory : SimulatorFactoryEngineering
 	{
 		public MockupEngineeringSimulatorFactory(IInputDataProvider dataProvider, IOutputDataWriter writer,
-			bool validate) : base(dataProvider, writer, validate, null)
+			bool validate) : base(dataProvider, writer, validate, null, null)
 		{
 			throw new VectoException("Engineering mode is not supported in Mockup Vecto");
 		}
@@ -37,9 +37,9 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 			// the following parameters are injected
 			IXMLInputDataReader xmlInputDataReader, ISimulatorFactoryFactory simulatorFactoryFactory,
 			IXMLDeclarationReportFactory xmlDeclarationReportFactory, IVectoRunDataFactoryFactory runDataFactoryFactory,
-			IPowertrainBuilder ptBuilder, ISimplePowertrainBuilder simplePtBuilder)
+			IPowertrainBuilder ptBuilder, ISimplePowertrainBuilder simplePtBuilder, IModalDataFactory modDataFactory)
 			: base(dataProvider, writer, declarationReport, vtpReport, validate, xmlInputDataReader,
-				simulatorFactoryFactory, xmlDeclarationReportFactory, runDataFactoryFactory, ptBuilder)
+				simulatorFactoryFactory, xmlDeclarationReportFactory, runDataFactoryFactory, ptBuilder, modDataFactory)
 		{
 			SimplePowertrainBuilder = simplePtBuilder;
 			CheckInputData(dataProvider);
@@ -51,10 +51,10 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 			IXMLInputDataReader xmlInputDataReader,
 			ISimulatorFactoryFactory simulatorFactoryFactory,
 			IXMLDeclarationReportFactory xmlDeclarationReportFactory,
-			IVectoRunDataFactoryFactory runDataFactoryFactory, IPowertrainBuilder ptBuilder)
+			IVectoRunDataFactoryFactory runDataFactoryFactory, IPowertrainBuilder ptBuilder, IModalDataFactory modDataFactory)
 			: base(dataProvider, writer, validate,
 				xmlInputDataReader, simulatorFactoryFactory, xmlDeclarationReportFactory, runDataFactoryFactory,
-				ptBuilder)
+				ptBuilder, modDataFactory)
 		{
 			CheckInputData(dataProvider);
 		}
@@ -87,7 +87,7 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 		{
 			var addReportResult = PrepareReport(data);
 			return new MockupRun(VehicleContainer.CreateVehicleContainer(data,
-					new MockupModalDataContainer(new ModalDataContainer(data, ReportWriter, null), addReportResult), null));
+					new MockupModalDataContainer(ModDataFactory.CreateModDataContainer(data, ReportWriter, null, null), addReportResult), null));
 			
 		}
 		protected new static Action<IModalDataContainer> PrepareReport(VectoRunData data)

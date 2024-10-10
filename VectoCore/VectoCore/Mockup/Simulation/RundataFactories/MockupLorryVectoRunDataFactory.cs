@@ -140,6 +140,15 @@ namespace TUGraz.VectoCore.Mockup.Simulation.RundataFactories
             {
 				var cycle = CycleFactory.GetDeclarationCycle(mission);
 
+				var segment = new Segment() {
+					AccelerationFile = @"v [km/h],acc [m/s²],dec [m/s²]
+0,1,-1
+25,1,-1
+50,0.642857143,-1
+60,0.5,-0.5
+120,0.5,-0.5
+".ToStream(),
+				};
                 runData = new VectoRunData()
                 {
                     Loading = loading.Key,
@@ -152,7 +161,7 @@ namespace TUGraz.VectoCore.Mockup.Simulation.RundataFactories
                     EngineData = CreateMockupEngineData(vehicle, modeIdx),
                     GearboxData = CreateMockupGearboxData(vehicle),
                     AxleGearData = CreateMockupAxleGearData(vehicle),
-
+                    DriverData = CreateDriverData(segment),
                     JobType = InputDataProvider.JobInputData.JobType,
 
                 };
@@ -167,10 +176,7 @@ namespace TUGraz.VectoCore.Mockup.Simulation.RundataFactories
 
         }
 
-
-
-
-        protected override void Initialize()
+		protected override void Initialize()
         {
             _segment = DeclarationData.GetTruckSegment(InputDataProvider.JobInputData.Vehicle).Segment;
 
