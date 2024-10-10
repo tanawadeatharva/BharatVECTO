@@ -61,6 +61,9 @@ namespace TUGraz.VectoCore.Models.Simulation
             Bind<IPowertrainBuilder>().To<PowertrainBuilder>().InSingletonScope();
 			Bind<ISimplePowertrainBuilder>().To<SimplePowertrainBuilder>().InSingletonScope();
 
+			Bind<IModalDataFactory>().ToFactory().InSingletonScope();
+			Bind<IModalDataContainer>().To<ModalDataContainer>();
+
 			Bind<ISimulatorFactory>().To<SimulatorFactoryDeclaration>().Named(ExecutionMode.Declaration.ToString());
 			Bind<ISimulatorFactory>().To<SimulatorFactoryEngineering>().Named(ExecutionMode.Engineering.ToString());
 

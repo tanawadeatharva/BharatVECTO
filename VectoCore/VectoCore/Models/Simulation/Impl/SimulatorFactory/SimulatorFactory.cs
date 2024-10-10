@@ -70,11 +70,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		public bool CreateFollowUpSimulatorFactory { get; set; } = false;
 		protected readonly ExecutionMode _mode;
 
-		protected IPowertrainBuilder PowertrainBuilder { get; private set; }
+		protected IPowertrainBuilder PowertrainBuilder { get; }
 
-        #region Constructors and Factory Methods to instantiate Instances of SimulatorFactory without NInject (should only be used in Testcases that are not updated yet)
+		protected IModalDataFactory ModDataFactory { get; }
 
-		protected SimulatorFactory(ExecutionMode mode, IOutputDataWriter writer, bool validate, IPowertrainBuilder ptBuilder)
+
+		#region Constructors and Factory Methods to instantiate Instances of SimulatorFactory without NInject (should only be used in Testcases that are not updated yet)
+
+        protected SimulatorFactory(ExecutionMode mode, IOutputDataWriter writer, bool validate, IPowertrainBuilder ptBuilder, IModalDataFactory modDataFactory)
 		{
 			System.Diagnostics.Debug.WriteLine("Created Simulator Factory");
 			Log.Info("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
@@ -83,6 +86,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			Validate = validate;
 			_mode = mode;
 			PowertrainBuilder = ptBuilder;
+			ModDataFactory = modDataFactory;
 
 			ThreadPool.GetMinThreads(out var workerThreads, out var completionThreads);
 			if (workerThreads < 12) {
@@ -92,7 +96,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 		}
 
-        [Obsolete("Creation of new SimulatorFactories should be done with SimulatorFactoryFactory NInject Factory", false)]
+
+		[Obsolete("Creation of new SimulatorFactories should be done with SimulatorFactoryFactory NInject Factory", false)]
 		public static ISimulatorFactory CreateSimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer, IDeclarationReport declarationReport = null, IVTPReport vtpReport=null, bool validate = true)
 		{
 			if (_kernel == null) {
@@ -195,14 +200,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 				warning1Hz = true;
 			}
 			var fuels = data.EngineData != null ? data.EngineData.Fuels.Select(x => x.FuelData).ToList() : new List<IFuelProperties>();
-			IModalDataContainer modContainer =
-				new ModalDataContainer(
-					data, ReportWriter,
-					(_mode == ExecutionMode.Declaration) ? addReportResult : null,
-					GetModDataFilter(data)) {
-						WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults,
-				};
-
+			var modContainer = ModDataFactory.CreateModDataContainer(
+				//new ModalDataContainer(
+				data, ReportWriter,
+				(_mode == ExecutionMode.Declaration) ? addReportResult : null,
+				GetModDataFilter(data));
+			modContainer.WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults;
+			
 
 			// TODO: MQ 20200410 - Remove for official release!
 			if (SerializeVectoRunData) {
@@ -294,12 +298,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			return run;
 		}
 
-		protected static Action<ModalDataContainer> PrepareReport(VectoRunData data)
+		protected static Action<IModalDataContainer> PrepareReport(VectoRunData data)
 		{
 			if (data.Report != null) {
 				data.Report.PrepareResult(data);
 			}
-			Action<ModalDataContainer> addReportResult = modData => {
+			Action<IModalDataContainer> addReportResult = modData => {
 				if (data.Report != null) {
 					data.Report.AddResult(data, modData);
 				}

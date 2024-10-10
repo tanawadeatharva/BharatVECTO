@@ -10,8 +10,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
     public class SimulatorFactoryEngineering : SimulatorFactory
     {
 		public SimulatorFactoryEngineering(IInputDataProvider dataProvider, IOutputDataWriter writer, bool validate,
-			IPowertrainBuilder ptBuilder)
-			: base(ExecutionMode.Engineering, writer, validate, ptBuilder)
+			IPowertrainBuilder ptBuilder, IModalDataFactory modDataFactory)
+			: base(ExecutionMode.Engineering, writer, validate, ptBuilder, modDataFactory)
 		{
 			CreateEngineeringDataReader(dataProvider);
 		}

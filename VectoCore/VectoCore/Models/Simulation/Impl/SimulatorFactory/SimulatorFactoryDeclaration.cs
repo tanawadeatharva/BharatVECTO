@@ -33,8 +33,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			ISimulatorFactoryFactory simulatorFactoryFactory,
 			IXMLDeclarationReportFactory xmlDeclarationReportFactory,
 			IVectoRunDataFactoryFactory runDataFactoryFactory,
-			IPowertrainBuilder ptBuilder
-		) : base(ExecutionMode.Declaration, writer, validate, ptBuilder)
+			IPowertrainBuilder ptBuilder,
+			IModalDataFactory modDataFactory
+		) : base(ExecutionMode.Declaration, writer, validate, ptBuilder, modDataFactory)
 		{
 			_xmlInputDataReader = xmlInputDataReader;
 			_simFactoryFactory = simulatorFactoryFactory;
@@ -87,7 +88,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			ISimulatorFactoryFactory simulatorFactoryFactory,
 			IXMLDeclarationReportFactory xmlDeclarationReportFactory,
 			IVectoRunDataFactoryFactory runDataFactoryFactory,
-			IPowertrainBuilder ptBuilder
+			IPowertrainBuilder ptBuilder,
+			IModalDataFactory modDataFactory
 		) : this(
 			dataProvider: dataProvider,
 			declarationReport: null,
@@ -98,7 +100,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			simulatorFactoryFactory: simulatorFactoryFactory,
 			xmlDeclarationReportFactory: xmlDeclarationReportFactory,
 			runDataFactoryFactory: runDataFactoryFactory,
-			ptBuilder: ptBuilder) { }
+			ptBuilder: ptBuilder,
+			modDataFactory:modDataFactory) { }
 
 		private bool CanBeSimulated(IInputDataProvider dataProvider)
 		{

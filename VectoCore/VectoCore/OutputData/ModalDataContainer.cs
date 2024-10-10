@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.OutputData
 		//	new Dictionary<int, Dictionary<ModalResultField, DataColumn>>();
 
 
-		private readonly Dictionary<String, SI> _timeIntegrals = new Dictionary<string, SI>();
+		private readonly Dictionary<string, SI> _timeIntegrals = new Dictionary<string, SI>();
 		private readonly Dictionary<FuelType, KilogramPerWattSecond> _engLine = new Dictionary<FuelType, KilogramPerWattSecond>();
 		private readonly Dictionary<FuelType, KilogramPerWattSecond> _vehLine = new Dictionary<FuelType, KilogramPerWattSecond>();
 		
@@ -88,11 +88,16 @@ namespace TUGraz.VectoCore.OutputData
 
 		public IModalDataPostProcessor PostProcessingCorrection { set; protected get; }
 
-
+		[Obsolete("Avoid creating ModalDataContainer via constructor - use dependency injection!")]
 		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer,
-			Action<ModalDataContainer> addReportResult, params IModalDataFilter[] filter)
+			Action<ModalDataContainer> addReportResult,
+			params IModalDataFilter[] filter) : this(runData, writer, addReportResult, filter, null) { }
+
+        public ModalDataContainer(VectoRunData runData, IModalDataWriter writer,
+			Action<ModalDataContainer> addReportResult,
+			IModalDataFilter[] filter, IModalDataPostProcessorFactory postProcessorFactory)
 		{
-			_runData = runData;
+            _runData = runData;
 			_writer = writer;
 
 			_filters = filter ?? new IModalDataFilter[0];
@@ -102,9 +107,7 @@ namespace TUGraz.VectoCore.OutputData
 			Data = new ModalResults();
 			CurrentRow = Data.NewRow();
 
-			// todo: MQ 6.4.2023 - inject!
-			var kernel = new StandardKernel(new VectoNinjectModule());
-			PostProcessingCorrection = kernel.Get<IModalDataPostProcessorFactory>().GetPostProcessor(runData.JobType);
+			PostProcessingCorrection = postProcessorFactory.GetPostProcessor(runData.JobType);
 			
 			if (runData.EngineData != null) {
 				
