@@ -50,6 +50,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
@@ -85,6 +86,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var kernel = new StandardKernel(new VectoNinjectModule());
 			var powertrainBuilder = kernel.Get<ISimplePowertrainBuilder>();
+			var postprocessorFactory = kernel.Get<IModalDataPostProcessorFactory>();
 
             var gearboxData = CreateGearboxData(gbxType);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);

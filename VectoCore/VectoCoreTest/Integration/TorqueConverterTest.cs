@@ -18,14 +18,16 @@ namespace TUGraz.VectoCore.Tests.Integration
         public const String P1SerialJob = @"TestData/Integration/EngineeringMode/CityBus_AT/CityBus_AT_Ser-TC_all_gears.vecto";
 
 		protected IPowertrainBuilder PowertrainBuilder;
+		private IModalDataFactory ModDataFactory;
 
-        [OneTimeSetUp]
+		[OneTimeSetUp]
         public void Init()
         {
             Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 			var kernel = new StandardKernel(new VectoNinjectModule());
 			PowertrainBuilder = kernel.Get<IPowertrainBuilder>();
-        }
+			ModDataFactory = kernel.Get<IModalDataFactory>();
+		}
 
         [Category("Integration")]
         [
@@ -37,7 +39,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			var writer = new FileOutputWriter(jobFile);
 
-			var factory = new SimulatorFactoryEngineering(inputProvider, writer, false, PowertrainBuilder) { WriteModalResults = false };
+			var factory = new SimulatorFactoryEngineering(inputProvider, writer, false, PowertrainBuilder, ModDataFactory) { WriteModalResults = false };
 			factory.SumData = new SummaryDataContainer(writer);
 
 			var run = factory.SimulationRuns().ToArray()[cycleIdx];

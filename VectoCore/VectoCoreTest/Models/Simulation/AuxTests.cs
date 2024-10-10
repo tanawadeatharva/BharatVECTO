@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -128,9 +129,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				},
 				ExecutionMode = ExecutionMode.Engineering,
             };
-			var modData = new ModalDataContainer(runData, fileWriter, null) {
-				WriteModalResults = true,
-			};
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			var modData = kernel.Get<IModalDataFactory>().CreateModDataContainer(runData, fileWriter, null, null) as ModalDataContainer;
+			Assert.NotNull(modData);
+			modData.WriteModalResults = true;
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 			
 			modData.Data.CreateCombustionEngineColumns(runData);

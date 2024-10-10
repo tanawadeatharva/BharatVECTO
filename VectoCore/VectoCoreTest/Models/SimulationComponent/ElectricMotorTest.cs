@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -431,7 +432,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				ElectricMachinesData = data
 			};
 
-			var modData = new ModalDataContainer(runData, new FileOutputWriter("debug.csv"), null);
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			var modData = kernel.Get<IModalDataFactory>().CreateModDataContainer(runData, new FileOutputWriter("debug.csv"), null, null) as ModalDataContainer;
+			Assert.NotNull(modData);
+			modData.WriteModalResults = true;
+
 			//modData.AddElectricMotor(PowertrainPosition.HybridP2);
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 			

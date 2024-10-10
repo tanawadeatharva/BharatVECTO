@@ -31,6 +31,7 @@
 
 using System.IO;
 using System.Linq;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -110,7 +111,10 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 
 			//Path.GetFileNameWithoutExtension(Path.GetRandomFileName()); // + ".vmod";
 			var fileWriter = new FileOutputWriter(modFile);
-			var modData = new ModalDataContainer(runData, fileWriter, null) { WriteModalResults = true };
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			var modData = kernel.Get<IModalDataFactory>().CreateModDataContainer(runData, fileWriter, null, null) as ModalDataContainer;
+			Assert.NotNull(modData);
+			modData.WriteModalResults = true;
 			modData.AddAuxiliary(Constants.Auxiliaries.Cycle);
 			modData.Data.CreateColumns(ModalResults.TimeCycleSignals);
 			modData.Data.CreateCombustionEngineColumns(runData);

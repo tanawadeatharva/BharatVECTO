@@ -27,14 +27,16 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
         private const string IHPC_12SPEED_JOB= @"TestData/Integration/TimeRun/MeasuredSpeed/GenericIHPC/12SpeedGbx/IHPC Group 5.vecto";
 
 		protected IPowertrainBuilder _powertrainBuilder;
+		private IModalDataFactory _modDataFactory;
 
-        [OneTimeSetUp]
+		[OneTimeSetUp]
         public void Init()
         {
             Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 			var kernel = new StandardKernel(new VectoNinjectModule());
 			_powertrainBuilder = kernel.Get<IPowertrainBuilder>();
-        }
+			_modDataFactory = kernel.Get<IModalDataFactory>();
+		}
 
         /*
          * How to correct vdri data for time runs with gear
@@ -173,7 +175,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			string outputFile = InputDataHelper.CreateUniqueSubfolder(jobFile);
 			var writer = new FileOutputWriter(outputFile);
 
-			var factory = new SimulatorFactoryEngineering(inputProvider, writer, false, _powertrainBuilder) { WriteModalResults = true };
+			var factory = new SimulatorFactoryEngineering(inputProvider, writer, false, _powertrainBuilder, _modDataFactory) { WriteModalResults = true };
 			factory.SumData = new SummaryDataContainer(writer);
 
 			var run = factory.SimulationRuns().ToArray()[cycleIdx];
@@ -196,7 +198,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			string outputFile = InputDataHelper.CreateUniqueSubfolder(jobFile);
 			var writer = new FileOutputWriter(outputFile);
 
-			var factory = new SimulatorFactoryEngineering(inputProvider, writer, false, _powertrainBuilder) { WriteModalResults = true };
+			var factory = new SimulatorFactoryEngineering(inputProvider, writer, false, _powertrainBuilder, _modDataFactory) { WriteModalResults = true };
 			factory.SumData = new SummaryDataContainer(writer);
 
 			var run = factory.SimulationRuns().ToArray()[cycleIdx];
