@@ -156,15 +156,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 	{
 		public MRFConventionalCompletedBusAuxType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
-		#region Overrides of AbstractMrfXmlType
-
-		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
-		{
-			throw new NotImplementedException();
-		}
-
-		#endregion
-
 		#region Implementation of IMRFBusAuxiliariesType
 
 		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
@@ -183,15 +174,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 	{
 		public MRFHEVCompletedBusAuxType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
-		#region Overrides of AbstractMrfXmlType
-
-		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
-		{
-			throw new NotImplementedException();
-		}
-
-		#endregion
-
 		#region Implementation of IMRFBusAuxiliariesType
 
 		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
@@ -209,15 +191,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 	internal class MRFPEVCompletedBusAuxType : AbstractMrfXmlType, IMRFBusAuxiliariesType
 	{
 		public MRFPEVCompletedBusAuxType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
-
-		#region Overrides of AbstractMrfXmlType
-
-		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
-		{
-			throw new NotImplementedException();
-		}
-
-		#endregion
 
 		#region Implementation of IMRFBusAuxiliariesType
 
