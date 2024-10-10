@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -13,6 +15,14 @@ namespace TUGraz.Vecto.UnitTests.TestCases.ModDataPostprocessing;
 
 public class BusAuxEsPostProcessingTests
 {
+	private StandardKernel _kernel;
+
+	[OneTimeSetUp]
+	public void Setup()
+	{
+		_kernel = new StandardKernel(new VectoNinjectModule());
+	}
+
     [TestCase(500, 0, 4000, AlternatorType.Conventional),
         TestCase(500, 500, 4000, AlternatorType.Conventional),
         TestCase(500, 0, 550, AlternatorType.Conventional),
@@ -26,9 +36,8 @@ public class BusAuxEsPostProcessingTests
         var runData = PostProcessingRunData.GetRunData(true, alternatorType: alternatorType);
         runData.JobName = new StackTrace().GetFrame(0).GetMethod().Name + $"_{p_es_cons}_{p_es_gen}_{p_es_smartgen}";
         var writer = new FileOutputWriter(".");
-        var modData = new ModalDataContainer(runData, writer, null) {
-            //WriteModalResults = true
-        };
+		var modData = _kernel.Get<IModalDataFactory>().CreateModDataContainer(runData, null, null, null) as ModalDataContainer;
+		Assert.IsNotNull(modData);
         modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
         modData.Data.CreateCombustionEngineColumns(runData);
         modData.Data.CreateColumns(ModalResults.DriverSignals);

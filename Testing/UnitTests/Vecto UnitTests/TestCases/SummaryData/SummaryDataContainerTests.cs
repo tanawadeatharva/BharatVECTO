@@ -1,7 +1,9 @@
-﻿using NUnit.Framework;
+﻿using Ninject;
+using NUnit.Framework;
 using TUGraz.Vecto.UnitTests.Utils.MockComponents;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -18,6 +20,14 @@ namespace TUGraz.Vecto.UnitTests.TestCases.SummaryData;
 
 public class SummaryDataContainerTests
 {
+	private StandardKernel _kernel;
+
+	[OneTimeSetUp]
+	public void Setup()
+	{
+		_kernel = new StandardKernel(new VectoNinjectModule());
+	}
+
     [TestCase]
     public void TestSumCalcFixedTime()
     {
@@ -143,9 +153,10 @@ public class SummaryDataContainerTests
         Assert.AreEqual(0.934722222, (ConvertedSI)sumData["E_brake [kWh]"], 1e-3);
     }
 
-	private static ModalDataContainer GetModalDataContainer(VectoRunData rundata)
+	private ModalDataContainer GetModalDataContainer(VectoRunData rundata)
 	{
-		var modData = new ModalDataContainer(rundata, null, null);
+		var modData = _kernel.Get<IModalDataFactory>().CreateModDataContainer(rundata, null, null, null) as ModalDataContainer;
+		Assert.IsNotNull(modData);
 		modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 		modData.Data.CreateCombustionEngineColumns(rundata);
 		modData.Data.CreateColumns(ModalResults.VehicleSignals);

@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -18,6 +20,14 @@ public class REESS_SoCPostProcessingTests
 
 	private AmpereSecond BatCapacity = 10000.SI<AmpereSecond>();
 
+	private StandardKernel _kernel;
+
+	[OneTimeSetUp]
+	public void Setup()
+	{
+		_kernel = new StandardKernel(new VectoNinjectModule());
+	}
+
     [TestCase(10),
          TestCase(-10)]
     public void TestREESSoC_ModDataCorrection(double batPowerDemand)
@@ -25,9 +35,9 @@ public class REESS_SoCPostProcessingTests
         var runData = PostProcessingRunData.GetRunData(true, alternatorType: AlternatorType.Smart);
         runData.JobName = new StackTrace().GetFrame(0).GetMethod().Name;
         var writer = new FileOutputWriter(".");
-        var modData = new ModalDataContainer(runData, writer, null) {
-            //WriteModalResults = true
-        };
+		var modData = _kernel.Get<IModalDataFactory>().CreateModDataContainer(runData, writer, null, null) as ModalDataContainer;
+		Assert.IsNotNull(modData);
+
         modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
         modData.Data.CreateCombustionEngineColumns(runData);
         modData.Data.CreateColumns(ModalResults.DriverSignals);

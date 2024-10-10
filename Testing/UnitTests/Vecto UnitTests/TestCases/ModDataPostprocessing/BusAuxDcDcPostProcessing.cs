@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -16,15 +18,22 @@ public class BusAuxDcDcPostProcessing
 
 	const double emEff = 0.95;
 
+	private StandardKernel _kernel;
+
+	[OneTimeSetUp]
+	public void Setup()
+	{
+		_kernel = new StandardKernel(new VectoNinjectModule());
+	}
+
     [TestCase()]
     public void TestBusAuxDCDCMissingConventional_ModDataCorrection()
     {
         var runData = PostProcessingRunData.GetRunData(true, alternatorType: AlternatorType.None);
         runData.JobName = new StackTrace().GetFrame(0).GetMethod().Name;
         var writer = new FileOutputWriter(".");
-        var modData = new ModalDataContainer(runData, writer, null) {
-            //WriteModalResults = true
-        };
+		var modData = _kernel.Get<IModalDataFactory>().CreateModDataContainer(runData, null, null, null) as ModalDataContainer;
+		Assert.IsNotNull(modData);
         //modData.AddElectricMotor(emPos);
 
         modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
@@ -212,9 +221,8 @@ public class BusAuxDcDcPostProcessing
         var runData = PostProcessingRunData.GetRunData(true, alternatorType: AlternatorType.Smart);
         runData.JobName = new StackTrace().GetFrame(0).GetMethod().Name;
         var writer = new FileOutputWriter(".");
-        var modData = new ModalDataContainer(runData, writer, null) {
-            //WriteModalResults = true
-        };
+		var modData = _kernel.Get<IModalDataFactory>().CreateModDataContainer(runData, null, null, null) as ModalDataContainer;
+		Assert.IsNotNull(modData);
 
         //modData.AddElectricMotor(emPos);
 

@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -16,16 +18,23 @@ namespace TUGraz.Vecto.UnitTests.TestCases.ModDataPostprocessing;
 
 public class LorryESSModDataCorrectionTests
 {
+	private StandardKernel _kernel;
 
-	[TestCase()]
+	[OneTimeSetUp]
+	public void Setup()
+	{
+		_kernel = new StandardKernel(new VectoNinjectModule());
+	}
+
+    [TestCase()]
     public void TestAuxESSStandstill_ModDataCorrection()
     {
         var runData = PostProcessingRunData.GetRunData();
         runData.JobName = new StackTrace().GetFrame(0).GetMethod().Name;
         var writer = new FileOutputWriter(".");
-        var modData = new ModalDataContainer(runData, writer, null) {
-            //WriteModalResults = true
-        };
+		var modData = _kernel.Get<IModalDataFactory>().CreateModDataContainer(runData, null, null, null) as ModalDataContainer;
+		Assert.IsNotNull(modData);
+
 
         modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
         modData.Data.CreateCombustionEngineColumns(runData);
@@ -183,9 +192,8 @@ public class LorryESSModDataCorrectionTests
         var runData = PostProcessingRunData.GetRunData();
         runData.JobName = new StackTrace().GetFrame(0).GetMethod().Name;
         var writer = new FileOutputWriter(".");
-        var modData = new ModalDataContainer(runData, writer, null) {
-            //WriteModalResults = true
-        };
+		var modData = _kernel.Get<IModalDataFactory>().CreateModDataContainer(runData, null, null, null) as ModalDataContainer;
+		Assert.IsNotNull(modData);
 
         modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
         modData.Data.CreateCombustionEngineColumns(runData);
@@ -344,9 +352,9 @@ public class LorryESSModDataCorrectionTests
         var runData = PostProcessingRunData.GetRunData();
         runData.JobName = new StackTrace().GetFrame(0).GetMethod().Name;
         var writer = new FileOutputWriter(".");
-        var modData = new ModalDataContainer(runData, writer, null) {
-            //WriteModalResults = true
-        };
+		var modData = _kernel.Get<IModalDataFactory>().CreateModDataContainer(runData, null, null, null) as ModalDataContainer;
+		Assert.IsNotNull(modData);
+
 
         modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
         modData.Data.CreateCombustionEngineColumns(runData);

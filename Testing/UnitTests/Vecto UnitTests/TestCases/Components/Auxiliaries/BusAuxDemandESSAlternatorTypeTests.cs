@@ -1,9 +1,11 @@
 ﻿using Moq;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.AuxiliaryDataAdapter;
@@ -60,6 +62,14 @@ public class BusAuxDemandESSAlternatorTypeTests
 	public const double REESS_Capacity = 4.5;
 	public const double REESS_MinSoC = 0.2;
 	public const double REESS_MaxSoC = 0.8;
+
+	private StandardKernel _kernel;
+
+	[OneTimeSetUp]
+	public void Setup()
+	{
+		_kernel = new StandardKernel(new VectoNinjectModule());
+	}
 
     [TestCase(DrivingBehavior.Driving, true, 0,
             P_aux_m_Base + P_PS_1000 + P_ES_base / AlternatorEfficiency, P_ES_base, P_ES_base,
@@ -747,7 +757,7 @@ public class BusAuxDemandESSAlternatorTypeTests
 		"2100,1000,45643",
 		"2100,1100,50653",
 	};
-    public static MockVehicleContainer CreatePowerTrain(AlternatorType alternatorType, double initialSoC,
+    public MockVehicleContainer CreatePowerTrain(AlternatorType alternatorType, double initialSoC,
             double? reessSoC, bool connectEsToReess)
 	{
 		var fld = FullLoadCurveReader.Create(
@@ -794,9 +804,9 @@ public class BusAuxDemandESSAlternatorTypeTests
         };
 
 
-        var modData = new ModalDataContainer(runData, null, null) {
-            WriteModalResults = false
-        };
+		var modData = _kernel.Get<IModalDataFactory>().CreateModDataContainer(runData, null, null, null) as ModalDataContainer;
+		Assert.IsNotNull(modData);
+
 
         var container = new MockVehicleContainer() {
             CycleData = new CycleData() { LeftSample = cycleData.Entries.First() },

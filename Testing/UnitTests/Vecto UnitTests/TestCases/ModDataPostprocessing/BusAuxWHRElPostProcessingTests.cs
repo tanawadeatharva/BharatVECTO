@@ -1,10 +1,12 @@
 ﻿using System.Diagnostics;
 using Moq;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
@@ -26,16 +28,25 @@ public class BusAuxWHRElPostProcessingTests
 {
 	
 	const double emEff = 0.95;
-	
+
+	private StandardKernel _kernel;
+
+	[OneTimeSetUp]
+	public void Setup()
+	{
+		_kernel = new StandardKernel(new VectoNinjectModule());
+	}
+
+
     [TestCase()]
     public void TestWHRElBusAuxAlternator_ModDataCorrection()
     {
         var runData = PostProcessingRunData.GetRunData(true, alternatorType: AlternatorType.Conventional);
         runData.JobName = new StackTrace().GetFrame(0).GetMethod().Name;
         var writer = new FileOutputWriter(".");
-        var modData = new ModalDataContainer(runData, writer, null) {
-            //WriteModalResults = true
-        };
+		var modData = _kernel.Get<IModalDataFactory>().CreateModDataContainer(runData, writer, null, null) as ModalDataContainer;
+		Assert.IsNotNull(modData);
+
 
         //modData.AddElectricMotor(emPos);
         modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
@@ -187,9 +198,9 @@ public class BusAuxWHRElPostProcessingTests
         var runData = PostProcessingRunData.GetRunData(true, alternatorType: AlternatorType.Smart);
         runData.JobName = new StackTrace().GetFrame(0).GetMethod().Name;
         var writer = new FileOutputWriter(".");
-        var modData = new ModalDataContainer(runData, writer, null) {
-            //WriteModalResults = true
-        };
+		var modData = _kernel.Get<IModalDataFactory>().CreateModDataContainer(runData, writer, null, null) as ModalDataContainer;
+		Assert.IsNotNull(modData);
+
 
         //modData.AddElectricMotor(emPos);
         modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);

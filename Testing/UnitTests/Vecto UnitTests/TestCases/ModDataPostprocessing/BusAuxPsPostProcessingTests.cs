@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -13,6 +15,13 @@ namespace TUGraz.Vecto.UnitTests.TestCases.ModDataPostprocessing;
 
 public class BusAuxPsPostProcessingTests
 {
+	private StandardKernel _kernel;
+
+	[OneTimeSetUp]
+	public void Setup()
+	{
+		_kernel = new StandardKernel(new VectoNinjectModule());
+	}
 
     [TestCase()]
     public void TestBusAuxPsESSStandstill_ModDataCorrection()
@@ -20,9 +29,9 @@ public class BusAuxPsPostProcessingTests
         var runData = PostProcessingRunData.GetRunData(true);
         runData.JobName = new StackTrace().GetFrame(0).GetMethod().Name;
         var writer = new FileOutputWriter(".");
-        var modData = new ModalDataContainer(runData, writer, null) {
-            WriteModalResults = true
-        };
+		var modData = _kernel.Get<IModalDataFactory>().CreateModDataContainer(runData, writer, null, null) as ModalDataContainer;
+		Assert.IsNotNull(modData);
+		modData.WriteModalResults = true;
 
         modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
         modData.Data.CreateCombustionEngineColumns(runData);
@@ -242,9 +251,9 @@ public class BusAuxPsPostProcessingTests
         var runData = PostProcessingRunData.GetRunData(true);
         runData.JobName = new StackTrace().GetFrame(0).GetMethod().Name;
         var writer = new FileOutputWriter(".");
-        var modData = new ModalDataContainer(runData, writer, null) {
-            WriteModalResults = true
-        };
+		var modData = _kernel.Get<IModalDataFactory>().CreateModDataContainer(runData, writer, null, null) as ModalDataContainer;
+		Assert.IsNotNull(modData);
+		modData.WriteModalResults = true;
 
         modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
         modData.Data.CreateCombustionEngineColumns(runData);
@@ -470,9 +479,10 @@ public class BusAuxPsPostProcessingTests
         var runData = PostProcessingRunData.GetRunData(true);
         runData.JobName = new StackTrace().GetFrame(0).GetMethod().Name + $"_{nlConsumedCorrected}";
         var writer = new FileOutputWriter(".");
-        var modData = new ModalDataContainer(runData, writer, null) {
-            //WriteModalResults = true
-        };
+		var modData = _kernel.Get<IModalDataFactory>().CreateModDataContainer(runData, writer, null, null) as ModalDataContainer;
+		Assert.IsNotNull(modData);
+		modData.WriteModalResults = true;
+
         modData.Data.CreateCombustionEngineColumns(runData);
         modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
         modData.Data.CreateColumns(ModalResults.DriverSignals);

@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
@@ -20,18 +22,25 @@ namespace TUGraz.Vecto.UnitTests.TestCases.ModDataPostprocessing;
 
 public class LorryWHRPostProcessingTests
 {
-	
+	private StandardKernel _kernel;
+
+	[OneTimeSetUp]
+	public void Setup()
+	{
+		_kernel = new StandardKernel(new VectoNinjectModule());
+	}
+
+
     [TestCase()]
     public void TestWHRElTruckAlternator_ModDataCorrection()
     {
         var runData = PostProcessingRunData.GetRunData();
         runData.JobName = new StackTrace().GetFrame(0).GetMethod().Name;
         var writer = new FileOutputWriter(".");
-        var modData = new ModalDataContainer(runData, writer, null) {
-            //WriteModalResults = true
-        };
+		var modData = _kernel.Get<IModalDataFactory>().CreateModDataContainer(runData, writer, null, null) as ModalDataContainer;
+		Assert.IsNotNull(modData);
 
-        modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
+		modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
         modData.Data.CreateCombustionEngineColumns(runData);
         modData.Data.CreateColumns(ModalResults.DriverSignals);
         modData.Data.CreateColumns(ModalResults.WheelSignals);
@@ -157,11 +166,10 @@ public class LorryWHRPostProcessingTests
         var runData = PostProcessingRunData.GetRunData();
         runData.JobName = new StackTrace().GetFrame(0).GetMethod().Name;
         var writer = new FileOutputWriter(".");
-        var modData = new ModalDataContainer(runData, writer, null) {
-            //WriteModalResults = true
-        };
+		var modData = _kernel.Get<IModalDataFactory>().CreateModDataContainer(runData, writer, null, null) as ModalDataContainer;
+		Assert.IsNotNull(modData);
 
-        modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
+		modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
         modData.Data.CreateCombustionEngineColumns(runData);
         modData.Data.CreateColumns(ModalResults.DriverSignals);
         modData.Data.CreateColumns(ModalResults.WheelSignals);
