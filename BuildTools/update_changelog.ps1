@@ -67,7 +67,11 @@ function Update-BuildPropsVersion([string]$version) {
 
 function Remove-CliffArtifacts([string] $filename){
     # When git trailer/footers are empty git cliff produces undesired artifacts that need removal.
-    $(Get-Content $filename).Replace("description::", ":").Replace("CodeEU : ", "") | Set-Content $filename
+    $ArtifactFreeChangelog = $(Get-Content $filename).Replace("description::", ":").Replace("CodeEU : ", "")
+
+    # Gitlab issue clossing pattern: https://code.europa.eu/help/user/project/issues/managing_issues.md#default-closing-pattern
+    $GITLAB_ISSUE_CLOSING_REGEX = "\b((?:[Cc]los(?:e[sd]?|ing)|\b[Ff]ix(?:e[sd]|ing)?|\b[Rr]esolv(?:e[sd]?|ing)|\b[Ii]mplement(?:s|ed|ing)?)(:?)) "
+    $ArtifactFreeChangelog -replace $GITLAB_ISSUE_CLOSING_REGEX | Set-Content $filename
 }
 
 if(!$RELEASE_VERSION){
@@ -118,8 +122,8 @@ if(-not $Force){
 
 # Update Release Notes and changelog markdowns.
 # Based on the major, determine the ReleaseNotes for the given version.
-if ($MajorVersionNumber -ne 3 -and $MajorVersionNumber -ne 4){
-    throw "Release Notes version ${MajorVersionNumber} not supported."
+if ($MajorVersionNumber -ne 3 -and $MajorVersionNumber -ne 4 -and $MajorVersionNumber -ne 0){
+    throw "Release Notes version ${MajorVersionNumber} not supported. Consider creating 'Release Notes Xx.md' file."
 } else {
     $ReleaseNotesPdfMarkdown = "Documentation/User Manual Source/ReleaseNotesMDs/ReleaseNotesVecto${MajorVersionNumber}x.md"
     $ReleaseNotesPdf = "Documentation/User Manual Source/Release Notes Vecto${MajorVersionNumber}.x.pdf"
