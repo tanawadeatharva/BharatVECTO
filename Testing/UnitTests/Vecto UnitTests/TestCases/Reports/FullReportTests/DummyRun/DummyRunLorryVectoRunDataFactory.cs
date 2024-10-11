@@ -160,11 +160,14 @@ public class DummyRunLorryVectoRunDataFactory : DeclarationModeHeavyLorryRunData
 
 		}
 
-		runData.VehicleData.Loading = loading.Value.Item1;
-		runData.VehicleData.CargoVolume = mission.MissionType != MissionType.Construction
-			? mission.TotalCargoVolume
-			: 0.SI<CubicMeter>();
-        runData.InputData = InputDataProvider;
+		if (!vehicle.ExemptedVehicle) {
+			runData.VehicleData.Loading = loading.Value.Item1;
+			runData.VehicleData.CargoVolume = mission.MissionType != MissionType.Construction
+				? mission.TotalCargoVolume
+				: 0.SI<CubicMeter>();
+		}
+
+		runData.InputData = InputDataProvider;
 
 
 		return runData;

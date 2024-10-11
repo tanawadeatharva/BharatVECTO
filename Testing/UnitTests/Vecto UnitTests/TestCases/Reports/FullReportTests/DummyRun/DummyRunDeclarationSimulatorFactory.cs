@@ -1,11 +1,14 @@
-﻿using TUGraz.VectoCommon.Exceptions;
+﻿using Moq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
@@ -72,9 +75,16 @@ public class DummyRunDeclarationSimulatorFactory : SimulatorFactoryDeclaration
 			data, ReportWriter,
 			(_mode == ExecutionMode.Declaration) ? addReportResult : null,
 			null);
-        
-        return new DummyRunNonExemptedRun(PowertrainBuilder.Build(data,
-                modContainer, null));
+
+		var container = PowertrainBuilder.Build(data, modContainer, null);
+		var mock = Mock.Get(container);
+		var milage = new Mock<IMileageCounter>();
+		milage.Setup(m => m.Distance).Returns(0.SI<Meter>());
+		var vi = new Mock<IVehicleInfo>();
+		vi.Setup(m => m.VehicleSpeed).Returns(0.KMPHtoMeterPerSecond());
+		mock.Setup(c => c.MileageCounter).Returns(milage.Object);
+		mock.Setup(c => c.VehicleInfo).Returns(vi.Object);
+		return new DummyRunNonExemptedRun(mock.Object);
 
     }
     protected new static Action<IModalDataContainer> PrepareReport(VectoRunData data)

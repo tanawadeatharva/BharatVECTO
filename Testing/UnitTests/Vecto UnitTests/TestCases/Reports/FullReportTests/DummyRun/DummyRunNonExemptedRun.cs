@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCommon.Models;
+﻿using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
@@ -20,6 +21,7 @@ public class DummyRunNonExemptedRun : VectoRun
 
 	#region Overrides of VectoRun
 	public override double Progress => 1;
+	public bool FinishedWithError { get; set; }
 
 	protected override IResponse DoSimulationStep()
 	{
@@ -28,7 +30,11 @@ public class DummyRunNonExemptedRun : VectoRun
 		_vehicleContainer.ModalData[ModalResultField.ICEOn] = false;
 		_vehicleContainer.ModalData[ModalResultField.simulationInterval] = 1.SI<Second>();
 		_vehicleContainer.ModalData.CommitSimulationStep();
-		
+
+		if (FinishedWithError) {
+			throw new VectoException("Simulation run intentionally aborted!");
+		}
+
 		FinishedWithoutErrors = true;
 
 		return new ResponseCycleFinished(this);
