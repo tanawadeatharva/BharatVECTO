@@ -1,4 +1,8 @@
-﻿using NUnit.Framework;
+﻿using System.Xml.XPath;
+using NUnit.Framework;
+using TUGraz.Vecto.UnitTests.TestCases.Reports.FullReportTests.DummyRun;
+using TUGraz.Vecto.UnitTests.Utils;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -13,49 +17,49 @@ public class HeavyLorryFullReportTests : FullReportTestsBase
 {
 	
     #region Heavy Lorry Testfiles
-    protected const string ConventionalHeavyLorry = BasePath + @"HeavyLorry\Conventional_heavyLorry_AMT.xml";
-    protected const string ConventionalHeavyLorry_DifferentTyres = BasePath + @"HeavyLorry\Conventional_heavyLorry_AMT_DifferentTyres.xml";
-    protected const string ConventionalHeavyLorry_AT_Angledrive = BasePath + @"HeavyLorry\Conventional_heavyLorry_AT_Angledrive.xml";
-    protected const string ConventionalHeavyLorry_NoRetarder = BasePath + @"HeavyLorry\Conventional_heavyLorry_AMT_NoRetarder.xml";
-    protected const string ConventionalHeavyLorry_NoAirdrag = BasePath + @"HeavyLorry\Conventional_heavyLorry_AMT_NoAirdrag.xml";
+    protected const string ConventionalHeavyLorry = BasePath + "HeavyLorry/Conventional_heavyLorry_AMT.xml";
+    protected const string ConventionalHeavyLorry_DifferentTyres = BasePath + "HeavyLorry/Conventional_heavyLorry_AMT_DifferentTyres.xml";
+    protected const string ConventionalHeavyLorry_AT_Angledrive = BasePath + "HeavyLorry/Conventional_heavyLorry_AT_Angledrive.xml";
+    protected const string ConventionalHeavyLorry_NoRetarder = BasePath + "HeavyLorry/Conventional_heavyLorry_AMT_NoRetarder.xml";
+    protected const string ConventionalHeavyLorry_NoAirdrag = BasePath + "HeavyLorry/Conventional_heavyLorry_AMT_NoAirdrag.xml";
 
-    protected const string ConventionalHeavyLorry_Vocational =
-        BasePath + @"HeavyLorry\Conventional_heavyLorry_AMT_Vocational.xml";
+    protected const string ConventionalHeavyLorry_Vocational = BasePath + "HeavyLorry/Conventional_heavyLorry_AMT_Vocational.xml";
 
-    protected const string HEV_Px_HeavyLorry = BasePath + @"HeavyLorry\HEV_heavyLorry_AMT_Px.xml";
-    protected const string HEV_Px_HeavyLorry_BatteryStd = BasePath + @"HeavyLorry\HEV_heavyLorry_Px_ADC_BatteryStd.xml";
-    protected const string HEV_S2_HeavyLorry = BasePath + @"HeavyLorry\HEV-S_heavyLorry_AMT_S2.xml";
-    protected const string HEV_S2_HeavyLorry_NoRetarder = BasePath + @"HeavyLorry\HEV-S_heavyLorry_AMT_S2_NoRetarder.xml";
-    protected const string HEV_S3_HeavyLorry = BasePath + @"HeavyLorry\HEV-S_heavyLorry_S3.xml";
-    protected const string HEV_S3_HeavyLorry_ovc = BasePath + @"HeavyLorry\HEV-S_heavyLorry_S3_ovc.xml";
-    protected const string HEV_S4_HeavyLorry = BasePath + @"HeavyLorry\HEV-S_heavyLorry_S4.xml";
-    protected const string HEV_IEPC_S_HeavyLorry = BasePath + @"HeavyLorry\HEV-S_heavyLorry_IEPC-S.xml";
-    protected const string PEV_E2_HeavyLorry = BasePath + @"HeavyLorry\PEV_heavyLorry_AMT_E2.xml";
-    protected const string PEV_E2_HeavyLorry_NoRetarder = BasePath + @"HeavyLorry\PEV_heavyLorry_AMT_E2_NoRetarder.xml";
-    protected const string PEV_E2_HeavyLorry_NoAirdrag = BasePath + @"HeavyLorry\PEV_heavyLorry_AMT_E2_NoAirdrag.xml";
-    protected const string PEV_E2_HeavyLorry_Vocational = BasePath + @"HeavyLorry\PEV_heavyLorry_AMT_E2_Vocational.xml";
-    protected const string PEV_E2_HeavyLorry_BatteryStd = BasePath + @"HeavyLorry\PEV_heavyLorry_AMT_E2_BatteryStd.xml";
-    protected const string PEV_E3_HeavyLorry = BasePath + @"HeavyLorry\PEV_heavyLorry_E3.xml";
-    protected const string PEV_E4_HeavyLorry = BasePath + @"HeavyLorry\PEV_heavyLorry_E4.xml";
-    protected const string PEV_IEPC_HeavyLorry = BasePath + @"HeavyLorry\IEPC_heavyLorry.xml";
+    protected const string HEV_Px_HeavyLorry = BasePath + "HeavyLorry/HEV_heavyLorry_AMT_Px.xml";
+    protected const string HEV_Px_HeavyLorry_BatteryStd = BasePath + "HeavyLorry/HEV_heavyLorry_Px_ADC_BatteryStd.xml";
+    protected const string HEV_S2_HeavyLorry = BasePath + "HeavyLorry/HEV-S_heavyLorry_AMT_S2.xml";
+    protected const string HEV_S2_HeavyLorry_NoRetarder = BasePath + "HeavyLorry/HEV-S_heavyLorry_AMT_S2_NoRetarder.xml";
+    protected const string HEV_S3_HeavyLorry = BasePath + "HeavyLorry/HEV-S_heavyLorry_S3.xml";
+    protected const string HEV_S3_HeavyLorry_ovc = BasePath + "HeavyLorry/HEV-S_heavyLorry_S3_ovc.xml";
+    protected const string HEV_S4_HeavyLorry = BasePath + "HeavyLorry/HEV-S_heavyLorry_S4.xml";
+    protected const string HEV_IEPC_S_HeavyLorry = BasePath + "HeavyLorry/HEV-S_heavyLorry_IEPC-S.xml";
+    protected const string PEV_E2_HeavyLorry = BasePath + "HeavyLorry/PEV_heavyLorry_AMT_E2.xml";
+    protected const string PEV_E2_HeavyLorry_NoRetarder = BasePath + "HeavyLorry/PEV_heavyLorry_AMT_E2_NoRetarder.xml";
+    protected const string PEV_E2_HeavyLorry_NoAirdrag = BasePath + "HeavyLorry/PEV_heavyLorry_AMT_E2_NoAirdrag.xml";
+    protected const string PEV_E2_HeavyLorry_Vocational = BasePath + "HeavyLorry/PEV_heavyLorry_AMT_E2_Vocational.xml";
+    protected const string PEV_E2_HeavyLorry_BatteryStd = BasePath + "HeavyLorry/PEV_heavyLorry_AMT_E2_BatteryStd.xml";
+    protected const string PEV_E3_HeavyLorry = BasePath + "HeavyLorry/PEV_heavyLorry_E3.xml";
+    protected const string PEV_E4_HeavyLorry = BasePath + "HeavyLorry/PEV_heavyLorry_E4.xml";
+    protected const string PEV_IEPC_HeavyLorry = BasePath + "HeavyLorry/IEPC_heavyLorry.xml";
 
-    protected const string PEV_IEPC_HeavyLorry_Gbx1 = BasePath + @"HeavyLorry\PEV_heavyLorry_IEPC_Gbx1.xml";
-    protected const string PEV_IEPC_HeavyLorry_Gbx1Axl = BasePath + @"HeavyLorry\PEV_heavyLorry_IEPC_Gbx1Axl.xml";
-    protected const string PEV_IEPC_HeavyLorry_Gbx1Whl = BasePath + @"HeavyLorry\PEV_heavyLorry_IEPC_Gbx1Axl.xml";
+    protected const string PEV_IEPC_HeavyLorry_Gbx1 = BasePath + "HeavyLorry/PEV_heavyLorry_IEPC_Gbx1.xml";
+    protected const string PEV_IEPC_HeavyLorry_Gbx1Axl = BasePath + "HeavyLorry/PEV_heavyLorry_IEPC_Gbx1Axl.xml";
+    protected const string PEV_IEPC_HeavyLorry_Gbx1Whl = BasePath + "HeavyLorry/PEV_heavyLorry_IEPC_Gbx1Axl.xml";
 
-    protected const string PEV_IEPC_HeavyLorry_Gbx2 = BasePath + @"HeavyLorry\PEV_heavyLorry_IEPC_Gbx3.xml";
-    protected const string PEV_IEPC_HeavyLorry_Gbx2_drag = BasePath + @"HeavyLorry\PEV_heavyLorry_IEPC_Gbx3_drag.xml";
-    protected const string PEV_IEPC_HeavyLorry_Gbx2Axl = BasePath + @"HeavyLorry\PEV_heavyLorry_IEPC_Gbx3Axl.xml";
-    protected const string PEV_IEPC_HeavyLorry_Gbx2Axl_drag = BasePath + @"HeavyLorry\PEV_heavyLorry_IEPC_Gbx3Axl_drag.xml";
-    protected const string PEV_IEPC_HeavyLorry_Gbx2Whl = BasePath + @"HeavyLorry\PEV_heavyLorry_IEPC_Gbx3Axl.xml";
+    protected const string PEV_IEPC_HeavyLorry_Gbx2 = BasePath + "HeavyLorry/PEV_heavyLorry_IEPC_Gbx3.xml";
+    protected const string PEV_IEPC_HeavyLorry_Gbx2_drag = BasePath + "HeavyLorry/PEV_heavyLorry_IEPC_Gbx3_drag.xml";
+    protected const string PEV_IEPC_HeavyLorry_Gbx2Axl = BasePath + "HeavyLorry/PEV_heavyLorry_IEPC_Gbx3Axl.xml";
+    protected const string PEV_IEPC_HeavyLorry_Gbx2Axl_drag = BasePath + "HeavyLorry/PEV_heavyLorry_IEPC_Gbx3Axl_drag.xml";
+    protected const string PEV_IEPC_HeavyLorry_Gbx2Whl = BasePath + "HeavyLorry/PEV_heavyLorry_IEPC_Gbx3Axl.xml";
 
-    protected const string HEV_IHPC_HeavyLorry = BasePath + @"HeavyLorry\HEV_heavyLorry_IHPC.xml";
-    protected const string HEV_Px_HeavyLorry_NoRetarder = BasePath + @"HeavyLorry\HEV_heavyLorry_AMT_Px_NoRetarder.xml";
-    protected const string HEV_Px_HeavyLorry_NoAirDrag = BasePath + @"HeavyLorry\HEV_heavyLorry_AMT_Px_NoAirdrag.xml";
-    protected const string HEV_Px_HeavyLorry_ADC = BasePath + @"HeavyLorry\HEV_heavyLorry_Px_ADC.xml";
-    protected const string HEV_S3_HeavyLorry_ADC = BasePath + @"HeavyLorry\HEV-S_heavyLorry_S3_ADC_GenSetADC.xml";
-    protected const string HEV_Px_HeavyLorry_SuperCap = BasePath + @"HeavyLorry\HEV_heavyLorry_Px_SuperCap.xml";
+    protected const string HEV_IHPC_HeavyLorry = BasePath + "HeavyLorry/HEV_heavyLorry_IHPC.xml";
+    protected const string HEV_Px_HeavyLorry_NoRetarder = BasePath + "HeavyLorry/HEV_heavyLorry_AMT_Px_NoRetarder.xml";
+    protected const string HEV_Px_HeavyLorry_NoAirDrag = BasePath + "HeavyLorry/HEV_heavyLorry_AMT_Px_NoAirdrag.xml";
+    protected const string HEV_Px_HeavyLorry_ADC = BasePath + "HeavyLorry/HEV_heavyLorry_Px_ADC.xml";
+    protected const string HEV_S3_HeavyLorry_ADC = BasePath + "HeavyLorry/HEV-S_heavyLorry_S3_ADC_GenSetADC.xml";
+    protected const string HEV_Px_HeavyLorry_SuperCap = BasePath + "HeavyLorry/HEV_heavyLorry_Px_SuperCap.xml";
 
+	protected const string ExemptedHeavyLorry = BasePath + "HeavyLorry/exempted_heavyLorry.xml";
     #endregion
 
     [OneTimeSetUp]
@@ -64,9 +68,9 @@ public class HeavyLorryFullReportTests : FullReportTestsBase
 		// update all necessary bindings so that no simulation is performed
 		SetupNinject();
 
-		//WRITE_REPORTS_TO_FILESYSTEM = true;
-  //      WRITE_REPORTS_TO_OUTPUT = true;
-	}
+        //WRITE_REPORTS_TO_FILESYSTEM = true;
+        WRITE_REPORTS_TO_OUTPUT = true;
+    }
 
 	[TestCase(ConventionalHeavyLorry, TestName = "ConventionalHeavyLorry")]
     [TestCase(ConventionalHeavyLorry_NoRetarder, TestName = "ConventionalHeavyLorry_NoRetarder")]
@@ -107,7 +111,9 @@ public class HeavyLorryFullReportTests : FullReportTestsBase
     [TestCase(HEV_Px_HeavyLorry_NoAirDrag, TestName = "HEV_Px_HeavyLorry_NoAirDrag")]
     [TestCase(HEV_S3_HeavyLorry_ADC, TestName = "HEV_S3_HeavyLorry_ADC")]
     [TestCase(HEV_Px_HeavyLorry_SuperCap, TestName = "HEV_Px_HeavyLorry_SuperCap")]
-    public void HeavyLorryMockupTest(string fileName)
+
+    [TestCase(ExemptedHeavyLorry, TestName = "ExemptedHeavyLorry")]
+    public void HeavyLorryFullReportSuccessTest(string fileName)
     {
         CopyInputFile(fileName);
         var inputProvider = _inputDataReader.CreateDeclaration(fileName);
@@ -129,9 +135,46 @@ public class HeavyLorryFullReportTests : FullReportTestsBase
         Assert.IsTrue(ValidateAndPrint(reportWriter.XMLManufacturerReport, XmlDocumentType.ManufacturerReport), "MRF invalid");
         Assert.IsTrue(ValidateAndPrint(reportWriter.XMLCustomerReport, XmlDocumentType.CustomerReport), "CIF invalid");
 
-        Assert.IsTrue(CheckElementExists(XMLNames.Report_Results_Summary, reportWriter.XMLCustomerReport));
-		//CheckElementCount(XMLNames.Report_Results_Summary, reportWriter.XMLCustomerReport, 2);
+		if (!inputProvider.JobInputData.Vehicle.ExemptedVehicle) {
+			Assert.IsTrue(CheckElementExists(XMLNames.Report_Results_Summary, reportWriter.XMLCustomerReport));
+			//CheckElementCount(XMLNames.Report_Results_Summary, reportWriter.XMLCustomerReport, 2);
+		}
 
+	}
+
+	[TestCase(ConventionalHeavyLorry, TestName = "ConventionalHeavyLorry_Error")]
+	[TestCase(HEV_Px_HeavyLorry, TestName = "HEV_Px_HeavyLorry Error")]
+	[TestCase(HEV_S2_HeavyLorry, TestName = "HEV_S2_HeavyLorry Error")]
+    [TestCase(PEV_E2_HeavyLorry, TestName = "PEV_E2_HeavyLorry Error")]
+    public void HeavyLorryFullReportErrorTest(string fileName)
+	{
+        CopyInputFile(fileName);
+        var inputProvider = _inputDataReader.CreateDeclaration(fileName);
+		var reportWriter = GetReportWriter(TestContext.CurrentContext.Test.Name, fileName);
+		var sumWriter = new SummaryDataContainer(null);
+		var jobContainer = new JobContainer(sumWriter);
+
+		var _simulatorFactory =
+			_simFactoryFactory.Factory(ExecutionMode.Declaration, inputProvider, reportWriter, null, null, true);
+        Clearfiles(reportWriter);
+        jobContainer.AddRuns(_simulatorFactory);
+		(jobContainer.Runs[0].Run as DummyRunNonExemptedRun).FinishedWithError = true;
+		jobContainer.Execute(false);
+        AssertHelper.Exception<Exception>(() => jobContainer.WaitFinished());
+
+		if (WRITE_REPORTS_TO_FILESYSTEM) {
+			reportWriter.WriteAllReports();
+		}
+		CheckReportExists(reportWriter);
+		Assert.IsTrue(ValidateAndPrint(reportWriter.XMLManufacturerReport, XmlDocumentType.ManufacturerReport), "MRF invalid");
+		Assert.IsTrue(ValidateAndPrint(reportWriter.XMLCustomerReport, XmlDocumentType.CustomerReport), "CIF invalid");
+
+	    Assert.IsTrue(CheckElementExists(XMLNames.Report_Results_Error, reportWriter.XMLCustomerReport));
+		var statusNode = reportWriter.XMLCustomerReport.XPathSelectElement(
+			$"//*[local-name()='{XMLNames.Report_Results}']/*[local-name()='{XMLNames.Report_Result_Status}']");
+        Assert.AreEqual(XMLNames.Report_Results_Status_Error_Val, statusNode.Value);
+        CheckElementCount(XMLNames.Report_Results_Summary, reportWriter.XMLCustomerReport, 0);
+    
     }
 
     

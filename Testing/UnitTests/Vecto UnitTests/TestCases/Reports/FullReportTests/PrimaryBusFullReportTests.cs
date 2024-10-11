@@ -1,4 +1,7 @@
-﻿using NUnit.Framework;
+﻿using System.Xml.XPath;
+using NUnit.Framework;
+using TUGraz.Vecto.UnitTests.TestCases.Reports.FullReportTests.DummyRun;
+using TUGraz.Vecto.UnitTests.Utils;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -15,42 +18,43 @@ public class PrimaryBusFullReportTests : FullReportTestsBase
    
     #region PrimaryBus
 
-    protected const string Conventional_PrimaryBus = BasePath + @"PrimaryBus\Conventional_primaryBus_AMT.xml";
-    protected const string Conventional_PrimaryBus_AT_Angledrive = BasePath + @"PrimaryBus\Conventional_primaryBus_AT_Angledrive.xml";
-    protected const string Conventional_PrimaryBus_NoRetarder = BasePath + @"PrimaryBus\Conventional_primaryBus_AT_NoRetarder.xml";
-    protected const string Conventional_PrimaryBus_RetarderMeasured = BasePath + @"PrimaryBus\Conventional_primaryBus_AMT_RetarderMeasured.xml";
-    protected const string Conventional_PrimaryBus_Tyres = BasePath + @"PrimaryBus\Conventional_primaryBus_AMT_DifferentTyres.xml";
-    protected const string HEV_Px_PrimaryBus = BasePath + @"PrimaryBus\HEV_primaryBus_AMT_Px.xml";
-    protected const string HEV_Px_PrimaryBus_BatteryStd = BasePath + @"PrimaryBus\HEV_primaryBus_AMT_Px_BatteryStd.xml";
-    protected const string HEV_IHPC_PrimaryBus = BasePath + @"PrimaryBus\HEV_primaryBus_AMT_IHPC.xml";
-    protected const string HEV_IHPC_PrimaryBus_NoRetarder = BasePath + @"PrimaryBus\HEV_primaryBus_AMT_IHPC_NoRetarder.xml";
-    protected const string HEV_Px_PrimaryBus_SuperCap = BasePath + @"PrimaryBus\HEV_primaryBus_AMT_Px_SuperCap.xml";
-    protected const string HEV_S2_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_AMT_S2.xml";
-    protected const string HEV_S2_PrimaryBus_GenSetADC = BasePath + @"PrimaryBus\HEV-S_primaryBus_AMT_S2_GenSetADC.xml";
-    protected const string HEV_S2_PrimaryBus_ADC = BasePath + @"PrimaryBus\HEV-S_primaryBus_AMT_S2_ADC.xml";
-    protected const string HEV_S3_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_S3.xml";
-    protected const string HEV_S4_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_S4.xml";
-    protected const string HEV_IEPC_S_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_IEPC-S.xml";
-    protected const string HEV_IEPC_S_PrimaryBus_BatteryStd = BasePath + @"PrimaryBus\HEV-S_primaryBus_IEPC-S_BatteryStd.xml";
-    protected const string PEV_E2_PrimaryBus = BasePath + @"PrimaryBus\PEV_primaryBus_AMT_E2.xml";
-    protected const string PEV_E3_PrimaryBus = BasePath + @"PrimaryBus\PEV_primaryBus_E3.xml";
-    protected const string PEV_E4_PrimaryBus = BasePath + @"PrimaryBus\PEV_primaryBus_E4.xml";
-    protected const string PEV_IEPC_PrimaryBus = BasePath + @"PrimaryBus\IEPC_primaryBus.xml";
-    protected const string PEV_IEPC_PrimaryBus_Gbx1 = BasePath + @"PrimaryBus\IEPC_primaryBus_Gbx1.xml";
-    protected const string PEV_IEPC_PrimaryBus_Gbx1Axl = BasePath + @"PrimaryBus\IEPC_primaryBus_Gbx1Axl.xml";
-    protected const string PEV_IEPC_PrimaryBus_Gbx1Whl = BasePath + @"PrimaryBus\IEPC_primaryBus_Gbx1Whl.xml";
-    protected const string PEV_IEPC_PrimaryBus_Gbx2 = BasePath + @"PrimaryBus\IEPC_primaryBus_Gbx2.xml";
-    protected const string PEV_IEPC_PrimaryBus_Gbx2_drag = BasePath + @"PrimaryBus\IEPC_primaryBus_Gbx2_drag.xml";
-    protected const string PEV_IEPC_PrimaryBus_Gbx2Axl = BasePath + @"PrimaryBus\IEPC_primaryBus_Gbx2Axl.xml";
-    protected const string PEV_IEPC_PrimaryBus_Gbx2Axl_drag = BasePath + @"PrimaryBus\IEPC_primaryBus_Gbx2Axl_drag.xml";
-    protected const string PEV_IEPC_PrimaryBus_Gbx2Whl = BasePath + @"PrimaryBus\IEPC_primaryBus_Gbx2Whl.xml";
+    protected const string Conventional_PrimaryBus = BasePath + "PrimaryBus/Conventional_primaryBus_AMT.xml";
+    protected const string Conventional_PrimaryBus_AT_Angledrive = BasePath + "PrimaryBus/Conventional_primaryBus_AT_Angledrive.xml";
+    protected const string Conventional_PrimaryBus_NoRetarder = BasePath + "PrimaryBus/Conventional_primaryBus_AT_NoRetarder.xml";
+    protected const string Conventional_PrimaryBus_RetarderMeasured = BasePath + "PrimaryBus/Conventional_primaryBus_AMT_RetarderMeasured.xml";
+    protected const string Conventional_PrimaryBus_Tyres = BasePath + "PrimaryBus/Conventional_primaryBus_AMT_DifferentTyres.xml";
+    protected const string HEV_Px_PrimaryBus = BasePath + "PrimaryBus/HEV_primaryBus_AMT_Px.xml";
+    protected const string HEV_Px_PrimaryBus_BatteryStd = BasePath + "PrimaryBus/HEV_primaryBus_AMT_Px_BatteryStd.xml";
+    protected const string HEV_IHPC_PrimaryBus = BasePath + "PrimaryBus/HEV_primaryBus_AMT_IHPC.xml";
+    protected const string HEV_IHPC_PrimaryBus_NoRetarder = BasePath + "PrimaryBus/HEV_primaryBus_AMT_IHPC_NoRetarder.xml";
+    protected const string HEV_Px_PrimaryBus_SuperCap = BasePath + "PrimaryBus/HEV_primaryBus_AMT_Px_SuperCap.xml";
+    protected const string HEV_S2_PrimaryBus = BasePath + "PrimaryBus/HEV-S_primaryBus_AMT_S2.xml";
+    protected const string HEV_S2_PrimaryBus_GenSetADC = BasePath + "PrimaryBus/HEV-S_primaryBus_AMT_S2_GenSetADC.xml";
+    protected const string HEV_S2_PrimaryBus_ADC = BasePath + "PrimaryBus/HEV-S_primaryBus_AMT_S2_ADC.xml";
+    protected const string HEV_S3_PrimaryBus = BasePath + "PrimaryBus/HEV-S_primaryBus_S3.xml";
+    protected const string HEV_S4_PrimaryBus = BasePath + "PrimaryBus/HEV-S_primaryBus_S4.xml";
+    protected const string HEV_IEPC_S_PrimaryBus = BasePath + "PrimaryBus/HEV-S_primaryBus_IEPC-S.xml";
+    protected const string HEV_IEPC_S_PrimaryBus_BatteryStd = BasePath + "PrimaryBus/HEV-S_primaryBus_IEPC-S_BatteryStd.xml";
+    protected const string PEV_E2_PrimaryBus = BasePath + "PrimaryBus/PEV_primaryBus_AMT_E2.xml";
+    protected const string PEV_E3_PrimaryBus = BasePath + "PrimaryBus/PEV_primaryBus_E3.xml";
+    protected const string PEV_E4_PrimaryBus = BasePath + "PrimaryBus/PEV_primaryBus_E4.xml";
+    protected const string PEV_IEPC_PrimaryBus = BasePath + "PrimaryBus/IEPC_primaryBus.xml";
+    protected const string PEV_IEPC_PrimaryBus_Gbx1 = BasePath + "PrimaryBus/IEPC_primaryBus_Gbx1.xml";
+    protected const string PEV_IEPC_PrimaryBus_Gbx1Axl = BasePath + "PrimaryBus/IEPC_primaryBus_Gbx1Axl.xml";
+    protected const string PEV_IEPC_PrimaryBus_Gbx1Whl = BasePath + "PrimaryBus/IEPC_primaryBus_Gbx1Whl.xml";
+    protected const string PEV_IEPC_PrimaryBus_Gbx2 = BasePath + "PrimaryBus/IEPC_primaryBus_Gbx2.xml";
+    protected const string PEV_IEPC_PrimaryBus_Gbx2_drag = BasePath + "PrimaryBus/IEPC_primaryBus_Gbx2_drag.xml";
+    protected const string PEV_IEPC_PrimaryBus_Gbx2Axl = BasePath + "PrimaryBus/IEPC_primaryBus_Gbx2Axl.xml";
+    protected const string PEV_IEPC_PrimaryBus_Gbx2Axl_drag = BasePath + "PrimaryBus/IEPC_primaryBus_Gbx2Axl_drag.xml";
+    protected const string PEV_IEPC_PrimaryBus_Gbx2Whl = BasePath + "PrimaryBus/IEPC_primaryBus_Gbx2Whl.xml";
 
-    protected const string PEV_IEPC_std_PrimaryBus = BasePath + @"PrimaryBus\IEPC_primaryBus_StdValues.xml";
+    protected const string PEV_IEPC_std_PrimaryBus = BasePath + "PrimaryBus/IEPC_primaryBus_StdValues.xml";
 
-    protected const string PEV_E2_PrimaryBus_StdEM = BasePath + @"PrimaryBus\PEV_primaryBus_AMT_E2_EMStd.xml";
-    protected const string PEV_E2_PrimaryBus_StdBat = BasePath + @"PrimaryBus\PEV_primaryBus_AMT_E2_BatteryStd.xml";
-    protected const string Conventional_PrimaryBus_DF = BasePath + @"PrimaryBus\Conventional_primaryBus_AMT_DF.xml";
+    protected const string PEV_E2_PrimaryBus_StdEM = BasePath + "PrimaryBus/PEV_primaryBus_AMT_E2_EMStd.xml";
+    protected const string PEV_E2_PrimaryBus_StdBat = BasePath + "PrimaryBus/PEV_primaryBus_AMT_E2_BatteryStd.xml";
+    protected const string Conventional_PrimaryBus_DF = BasePath + "PrimaryBus/Conventional_primaryBus_AMT_DF.xml";
 
+	protected const string Exempted_PrimaryBus = BasePath + "PrimaryBus/exempted_primaryBus.xml";
     #endregion
 
     [OneTimeSetUp]
@@ -60,7 +64,7 @@ public class PrimaryBusFullReportTests : FullReportTestsBase
 		SetupNinject();
 
         //WRITE_REPORTS_TO_FILESYSTEM = true;
-        //WRITE_REPORTS_TO_OUTPUT = true;
+        WRITE_REPORTS_TO_OUTPUT = true;
     }
 
 
@@ -97,7 +101,9 @@ public class PrimaryBusFullReportTests : FullReportTestsBase
     [TestCase(PEV_E2_PrimaryBus_StdEM, TestName = "FullReportTest_PEV_E2_PrimaryBus_EM-Std")]
     [TestCase(PEV_E2_PrimaryBus_StdBat, TestName = "FullReportTest_PEV_E2_PrimaryBus_BatteryStd")]
     [TestCase(Conventional_PrimaryBus_DF, TestName = "FullReportTest_ConventionalPrimaryBus_DualFuel")]
-    public void PrimaryBusMockupTest(string fileName)
+
+    [TestCase(Exempted_PrimaryBus, TestName = "FullReportTest_ExemptedPrimaryBus")]
+    public void PrimaryBusFullReportSuccessTest(string fileName)
     {
         CopyInputFile(fileName);
         var inputProvider = _inputDataReader.CreateDeclaration(fileName);
@@ -124,5 +130,37 @@ public class PrimaryBusFullReportTests : FullReportTestsBase
 
     }
 
-    
+	[TestCase(Conventional_PrimaryBus, TestName = "FullReportTest_ConventionalPrimaryBus Error")]
+	[TestCase(HEV_Px_PrimaryBus, TestName = "FullReportTest_HEV_Px_PrimaryBus Error")]
+	[TestCase(HEV_S2_PrimaryBus_GenSetADC, TestName = "FullReportTest_HEV_S2_PrimaryBus_GenSetADC Error")]
+	[TestCase(PEV_E3_PrimaryBus, TestName = "FullReportTest_PEV_E3_PrimaryBus Error")]
+	public void PrimaryBusFullReportErrorTest(string fileName)
+	{
+		CopyInputFile(fileName);
+		var inputProvider = _inputDataReader.CreateDeclaration(fileName);
+		var reportWriter = GetReportWriter(TestContext.CurrentContext.Test.Name, fileName);
+		var sumWriter = new SummaryDataContainer(null);
+		var jobContainer = new JobContainer(sumWriter);
+
+		var _simulatorFactory =
+			_simFactoryFactory.Factory(ExecutionMode.Declaration, inputProvider, reportWriter, null, null, true);
+		Clearfiles(reportWriter);
+		jobContainer.AddRuns(_simulatorFactory);
+		(jobContainer.Runs[0].Run as DummyRunNonExemptedRun).FinishedWithError = true;
+        jobContainer.Execute(false);
+		AssertHelper.Exception<Exception>(() => jobContainer.WaitFinished());
+
+        if (WRITE_REPORTS_TO_FILESYSTEM) {
+			reportWriter.WriteAllReports();
+		}
+		CheckReportExists(reportWriter, CifShouldExist: false, VifShouldExist: true);
+		Assert.IsTrue(ValidateAndPrint(reportWriter.XMLMultistageReport, XmlDocumentType.MultistepOutputData), "VIF invalid");
+		Assert.IsTrue(ValidateAndPrint(reportWriter.XMLManufacturerReport, XmlDocumentType.ManufacturerReport), "MRF invalid");
+
+		Assert.IsTrue(CheckElementExists(XMLNames.Report_Results_Error, reportWriter.XMLManufacturerReport));
+		var statusNode = reportWriter.XMLManufacturerReport.XPathSelectElement(
+			$"//*[local-name()='{XMLNames.Report_Results}']/*[local-name()='{XMLNames.Report_Result_Status}']");
+		Assert.AreEqual(XMLNames.Report_Results_Status_Error_Val, statusNode.Value);
+
+    }
 }

@@ -1,4 +1,7 @@
-﻿using NUnit.Framework;
+﻿using System.Xml.XPath;
+using NUnit.Framework;
+using TUGraz.Vecto.UnitTests.TestCases.Reports.FullReportTests.DummyRun;
+using TUGraz.Vecto.UnitTests.Utils;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -14,26 +17,28 @@ public class MediumLorryFullReportTests : FullReportTestsBase
 	
     #region Medium Lorry Testfiles
 
-    protected const string Conventional_mediumLorry_AMT = BasePath + @"MediumLorry/Conventional_mediumLorry_AMT.xml";
-    protected const string HEV_S_mediumLorry_AMT_S2 = BasePath + @"MediumLorry/HEV-S_mediumLorry_AMT_S2.xml";
-    protected const string HEV_S_mediumLorry_IEPC_S = BasePath + @"MediumLorry/HEV-S_mediumLorry_IEPC-S.xml";
-    protected const string HEV_S_mediumLorry_S3 = BasePath + @"MediumLorry/HEV-S_mediumLorry_S3.xml";
-    protected const string HEV_S_mediumLorry_S3_BatteryStd = BasePath + @"MediumLorry/HEV-S_mediumLorry_S3_BatteryStd.xml";
-    protected const string HEV_S_mediumLorry_S4 = BasePath + @"MediumLorry/HEV-S_mediumLorry_S4.xml";
-    protected const string HEV_mediumLorry_AMT_Px = BasePath + @"MediumLorry/HEV_mediumLorry_AMT_Px.xml";
-    protected const string IEPC_mediumLorry = BasePath + @"MediumLorry/IEPC_mediumLorry.xml";
-    protected const string PEV_mediumLorry_AMT_E2 = BasePath + @"MediumLorry/PEV_mediumLorry_AMT_E2.xml";
-    protected const string PEV_mediumLorry_AMT_E2_EM_Std = BasePath + @"MediumLorry/PEV_mediumLorry_AMT_E2_EM_Std.xml";
-    protected const string PEV_mediumLorry_APT_N_E2 = BasePath + @"MediumLorry/PEV_mediumLorry_APT-N_E2.xml";
-    protected const string PEV_mediumLorry_E3 = BasePath + @"MediumLorry/PEV_mediumLorry_E3.xml";
-    protected const string PEV_mediumLorry_E4 = BasePath + @"MediumLorry/PEV_mediumLorry_E4.xml";
-    protected const string PEV_mediumLorry_E3_BatteryStd = BasePath + @"MediumLorry/PEV_mediumLorry_E3_BatteryStd.xml";
+    protected const string Conventional_mediumLorry_AMT = BasePath + "MediumLorry/Conventional_mediumLorry_AMT.xml";
+    protected const string HEV_S_mediumLorry_AMT_S2 = BasePath + "MediumLorry/HEV-S_mediumLorry_AMT_S2.xml";
+    protected const string HEV_S_mediumLorry_IEPC_S = BasePath + "MediumLorry/HEV-S_mediumLorry_IEPC-S.xml";
+    protected const string HEV_S_mediumLorry_S3 = BasePath + "MediumLorry/HEV-S_mediumLorry_S3.xml";
+    protected const string HEV_S_mediumLorry_S3_BatteryStd = BasePath + "MediumLorry/HEV-S_mediumLorry_S3_BatteryStd.xml";
+    protected const string HEV_S_mediumLorry_S4 = BasePath + "MediumLorry/HEV-S_mediumLorry_S4.xml";
+    protected const string HEV_mediumLorry_AMT_Px = BasePath + "MediumLorry/HEV_mediumLorry_AMT_Px.xml";
+    protected const string IEPC_mediumLorry = BasePath + "MediumLorry/IEPC_mediumLorry.xml";
+    protected const string PEV_mediumLorry_AMT_E2 = BasePath + "MediumLorry/PEV_mediumLorry_AMT_E2.xml";
+    protected const string PEV_mediumLorry_AMT_E2_EM_Std = BasePath + "MediumLorry/PEV_mediumLorry_AMT_E2_EM_Std.xml";
+    protected const string PEV_mediumLorry_APT_N_E2 = BasePath + "MediumLorry/PEV_mediumLorry_APT-N_E2.xml";
+    protected const string PEV_mediumLorry_E3 = BasePath + "MediumLorry/PEV_mediumLorry_E3.xml";
+    protected const string PEV_mediumLorry_E4 = BasePath + "MediumLorry/PEV_mediumLorry_E4.xml";
+    protected const string PEV_mediumLorry_E3_BatteryStd = BasePath + "MediumLorry/PEV_mediumLorry_E3_BatteryStd.xml";
 
-    protected const string HEV_mediumLorry_IHPC = BasePath + @"MediumLorry/HEV_mediumLorry_IHPC.xml";
-    protected const string HEV_mediumLorry_Px_SuperCap = BasePath + @"MediumLorry/HEV_mediumLorry_Px_SuperCap.xml";
-    protected const string PEV_mediumLorry_AMT_E2_BatStd = BasePath + @"MediumLorry/PEV_mediumLorry_AMT_E2_BatteryStd.xml";
-    //protected const string HEV_mediumLorry_Px_ADC = BasePathMockup + @"MediumLorry/HEV_heavyLorry_IHPC.xml";
-    //protected const string HEV_mediumLorry_S3_ADC_GenSetADC = BasePathMockup + @"MediumLorry/HEV_heavyLorry_IHPC.xml";
+    protected const string HEV_mediumLorry_IHPC = BasePath + "MediumLorry/HEV_mediumLorry_IHPC.xml";
+    protected const string HEV_mediumLorry_Px_SuperCap = BasePath + "MediumLorry/HEV_mediumLorry_Px_SuperCap.xml";
+    protected const string PEV_mediumLorry_AMT_E2_BatStd = BasePath + "MediumLorry/PEV_mediumLorry_AMT_E2_BatteryStd.xml";
+    //protected const string HEV_mediumLorry_Px_ADC = BasePathMockup + "MediumLorry/HEV_heavyLorry_IHPC.xml";
+    //protected const string HEV_mediumLorry_S3_ADC_GenSetADC = BasePathMockup + "MediumLorry/HEV_heavyLorry_IHPC.xml";
+
+	protected const string ExemptedMediumLorry = BasePath + "MediumLorry/exempted_mediumLorry.xml";
     #endregion
 
     [OneTimeSetUp]
@@ -63,7 +68,9 @@ public class MediumLorryFullReportTests : FullReportTestsBase
 	[TestCase(HEV_mediumLorry_IHPC, TestName = "HEV_IHPC_MediumLorry")]
 	[TestCase(HEV_mediumLorry_Px_SuperCap, TestName = "HEV_Px_Medium_Lorry_SuperCap")]
 	[TestCase(PEV_mediumLorry_AMT_E2_BatStd, TestName = "PEV_E2_Medium_Lorry_BatteryStd")]
-    public void MediumLorryMockupTest(string fileName)
+
+    [TestCase(ExemptedMediumLorry, TestName = "Exempted_MediumLorry")]
+    public void MediumLorryFullReportSuccessTest(string fileName)
     {
         CopyInputFile(fileName);
         var inputProvider = _inputDataReader.CreateDeclaration(fileName);
@@ -85,10 +92,47 @@ public class MediumLorryFullReportTests : FullReportTestsBase
         Assert.IsTrue(ValidateAndPrint(reportWriter.XMLManufacturerReport, XmlDocumentType.ManufacturerReport), "MRF invalid");
         Assert.IsTrue(ValidateAndPrint(reportWriter.XMLCustomerReport, XmlDocumentType.CustomerReport), "CIF invalid");
 
-        Assert.IsTrue(CheckElementExists(XMLNames.Report_Results_Summary, reportWriter.XMLCustomerReport));
-		//CheckElementCount(XMLNames.Report_Results_Summary, reportWriter.XMLCustomerReport, 2);
+		if (!inputProvider.JobInputData.Vehicle.ExemptedVehicle) {
+			Assert.IsTrue(CheckElementExists(XMLNames.Report_Results_Summary, reportWriter.XMLCustomerReport));
+			//CheckElementCount(XMLNames.Report_Results_Summary, reportWriter.XMLCustomerReport, 2);
+		}
+
+	}
+
+	[TestCase(Conventional_mediumLorry_AMT, TestName = "Conventional_Medium_Lorry Error")]
+	[TestCase(HEV_S_mediumLorry_S3, TestName = "HEV_S3_Medium_Lorry Error")]
+	[TestCase(HEV_mediumLorry_AMT_Px, TestName = "HEV_Px_Medium_Lorry Error")]
+	[TestCase(PEV_mediumLorry_AMT_E2, TestName = "PEV_E2_Medium_Lorry Error")]
+    public void MediumLorryFullReportErrorTest(string fileName)
+	{
+		CopyInputFile(fileName);
+		var inputProvider = _inputDataReader.CreateDeclaration(fileName);
+		var reportWriter = GetReportWriter(TestContext.CurrentContext.Test.Name, fileName);
+		var sumWriter = new SummaryDataContainer(null);
+		var jobContainer = new JobContainer(sumWriter);
+
+		var _simulatorFactory =
+			_simFactoryFactory.Factory(ExecutionMode.Declaration, inputProvider, reportWriter, null, null, true);
+		Clearfiles(reportWriter);
+		jobContainer.AddRuns(_simulatorFactory);
+		(jobContainer.Runs[0].Run as DummyRunNonExemptedRun).FinishedWithError = true;
+        jobContainer.Execute(false);
+		AssertHelper.Exception<Exception>(() => jobContainer.WaitFinished());
+
+        if (WRITE_REPORTS_TO_FILESYSTEM) {
+			reportWriter.WriteAllReports();
+		}
+		CheckReportExists(reportWriter);
+		Assert.IsTrue(ValidateAndPrint(reportWriter.XMLManufacturerReport, XmlDocumentType.ManufacturerReport), "MRF invalid");
+		Assert.IsTrue(ValidateAndPrint(reportWriter.XMLCustomerReport, XmlDocumentType.CustomerReport), "CIF invalid");
+
+		Assert.IsTrue(CheckElementExists(XMLNames.Report_Results_Error, reportWriter.XMLCustomerReport));
+		var statusNode = reportWriter.XMLCustomerReport.XPathSelectElement(
+			$"//*[local-name()='{XMLNames.Report_Results}']/*[local-name()='{XMLNames.Report_Result_Status}']");
+		Assert.AreEqual(XMLNames.Report_Results_Status_Error_Val, statusNode.Value);
+		CheckElementCount(XMLNames.Report_Results_Summary, reportWriter.XMLCustomerReport, 0);
+
 
     }
 
-    
 }

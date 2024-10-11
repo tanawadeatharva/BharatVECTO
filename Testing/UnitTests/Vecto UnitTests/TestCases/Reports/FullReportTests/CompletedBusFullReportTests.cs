@@ -14,69 +14,72 @@ public class CompletedBusFullReportTests : FullReportTestsBase
 
     #region PrimaryBus
 
-    protected const string Conventional_PrimaryBus = BasePath + @"PrimaryBus\Conventional_primaryBus_AMT.xml";
-    protected const string Conventional_PrimaryBus_AT_Angledrive = BasePath + @"PrimaryBus\Conventional_primaryBus_AT_Angledrive.xml";
-    protected const string Conventional_PrimaryBus_NoRetarder = BasePath + @"PrimaryBus\Conventional_primaryBus_AT_NoRetarder.xml";
-    protected const string Conventional_PrimaryBus_RetarderMeasured = BasePath + @"PrimaryBus\Conventional_primaryBus_AMT_RetarderMeasured.xml";
-    protected const string Conventional_PrimaryBus_Tyres = BasePath + @"PrimaryBus\Conventional_primaryBus_AMT_DifferentTyres.xml";
-    protected const string HEV_Px_PrimaryBus = BasePath + @"PrimaryBus\HEV_primaryBus_AMT_Px.xml";
-    protected const string HEV_Px_PrimaryBus_BatteryStd = BasePath + @"PrimaryBus\HEV_primaryBus_AMT_Px_BatteryStd.xml";
-    protected const string HEV_IHPC_PrimaryBus = BasePath + @"PrimaryBus\HEV_primaryBus_AMT_IHPC.xml";
-    protected const string HEV_IHPC_PrimaryBus_NoRetarder = BasePath + @"PrimaryBus\HEV_primaryBus_AMT_IHPC_NoRetarder.xml";
-    protected const string HEV_Px_PrimaryBus_SuperCap = BasePath + @"PrimaryBus\HEV_primaryBus_AMT_Px_SuperCap.xml";
-    protected const string HEV_S2_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_AMT_S2.xml";
-    protected const string HEV_S2_PrimaryBus_GenSetADC = BasePath + @"PrimaryBus\HEV-S_primaryBus_AMT_S2_GenSetADC.xml";
-    protected const string HEV_S2_PrimaryBus_ADC = BasePath + @"PrimaryBus\HEV-S_primaryBus_AMT_S2_ADC.xml";
-    protected const string HEV_S3_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_S3.xml";
-    protected const string HEV_S4_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_S4.xml";
-    protected const string HEV_IEPC_S_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_IEPC-S.xml";
-    protected const string HEV_IEPC_S_PrimaryBus_BatteryStd = BasePath + @"PrimaryBus\HEV-S_primaryBus_IEPC-S_BatteryStd.xml";
-    protected const string PEV_E2_PrimaryBus = BasePath + @"PrimaryBus\PEV_primaryBus_AMT_E2.xml";
-    protected const string PEV_E3_PrimaryBus = BasePath + @"PrimaryBus\PEV_primaryBus_E3.xml";
-    protected const string PEV_E4_PrimaryBus = BasePath + @"PrimaryBus\PEV_primaryBus_E4.xml";
-    protected const string PEV_IEPC_PrimaryBus = BasePath + @"PrimaryBus\IEPC_primaryBus.xml";
-    protected const string PEV_IEPC_PrimaryBus_Gbx1 = BasePath + @"PrimaryBus\IEPC_primaryBus_Gbx1.xml";
-    protected const string PEV_IEPC_PrimaryBus_Gbx1Axl = BasePath + @"PrimaryBus\IEPC_primaryBus_Gbx1Axl.xml";
-    protected const string PEV_IEPC_PrimaryBus_Gbx1Whl = BasePath + @"PrimaryBus\IEPC_primaryBus_Gbx1Whl.xml";
-    protected const string PEV_IEPC_PrimaryBus_Gbx2 = BasePath + @"PrimaryBus\IEPC_primaryBus_Gbx2.xml";
-    protected const string PEV_IEPC_PrimaryBus_Gbx2_drag = BasePath + @"PrimaryBus\IEPC_primaryBus_Gbx2_drag.xml";
-    protected const string PEV_IEPC_PrimaryBus_Gbx2Axl = BasePath + @"PrimaryBus\IEPC_primaryBus_Gbx2Axl.xml";
-    protected const string PEV_IEPC_PrimaryBus_Gbx2Axl_drag = BasePath + @"PrimaryBus\IEPC_primaryBus_Gbx2Axl_drag.xml";
-    protected const string PEV_IEPC_PrimaryBus_Gbx2Whl = BasePath + @"PrimaryBus\IEPC_primaryBus_Gbx2Whl.xml";
+    protected const string Conventional_PrimaryBus = BasePath + "PrimaryBus/Conventional_primaryBus_AMT.xml";
+    protected const string Conventional_PrimaryBus_AT_Angledrive = BasePath + "PrimaryBus/Conventional_primaryBus_AT_Angledrive.xml";
+    protected const string Conventional_PrimaryBus_NoRetarder = BasePath + "PrimaryBus/Conventional_primaryBus_AT_NoRetarder.xml";
+    protected const string Conventional_PrimaryBus_RetarderMeasured = BasePath + "PrimaryBus/Conventional_primaryBus_AMT_RetarderMeasured.xml";
+    protected const string Conventional_PrimaryBus_Tyres = BasePath + "PrimaryBus/Conventional_primaryBus_AMT_DifferentTyres.xml";
+    protected const string HEV_Px_PrimaryBus = BasePath + "PrimaryBus/HEV_primaryBus_AMT_Px.xml";
+    protected const string HEV_Px_PrimaryBus_BatteryStd = BasePath + "PrimaryBus/HEV_primaryBus_AMT_Px_BatteryStd.xml";
+    protected const string HEV_IHPC_PrimaryBus = BasePath + "PrimaryBus/HEV_primaryBus_AMT_IHPC.xml";
+    protected const string HEV_IHPC_PrimaryBus_NoRetarder = BasePath + "PrimaryBus/HEV_primaryBus_AMT_IHPC_NoRetarder.xml";
+    protected const string HEV_Px_PrimaryBus_SuperCap = BasePath + "PrimaryBus/HEV_primaryBus_AMT_Px_SuperCap.xml";
+    protected const string HEV_S2_PrimaryBus = BasePath + "PrimaryBus/HEV-S_primaryBus_AMT_S2.xml";
+    protected const string HEV_S2_PrimaryBus_GenSetADC = BasePath + "PrimaryBus/HEV-S_primaryBus_AMT_S2_GenSetADC.xml";
+    protected const string HEV_S2_PrimaryBus_ADC = BasePath + "PrimaryBus/HEV-S_primaryBus_AMT_S2_ADC.xml";
+    protected const string HEV_S3_PrimaryBus = BasePath + "PrimaryBus/HEV-S_primaryBus_S3.xml";
+    protected const string HEV_S4_PrimaryBus = BasePath + "PrimaryBus/HEV-S_primaryBus_S4.xml";
+    protected const string HEV_IEPC_S_PrimaryBus = BasePath + "PrimaryBus/HEV-S_primaryBus_IEPC-S.xml";
+    protected const string HEV_IEPC_S_PrimaryBus_BatteryStd = BasePath + "PrimaryBus/HEV-S_primaryBus_IEPC-S_BatteryStd.xml";
+    protected const string PEV_E2_PrimaryBus = BasePath + "PrimaryBus/PEV_primaryBus_AMT_E2.xml";
+    protected const string PEV_E3_PrimaryBus = BasePath + "PrimaryBus/PEV_primaryBus_E3.xml";
+    protected const string PEV_E4_PrimaryBus = BasePath + "PrimaryBus/PEV_primaryBus_E4.xml";
+    protected const string PEV_IEPC_PrimaryBus = BasePath + "PrimaryBus/IEPC_primaryBus.xml";
+    protected const string PEV_IEPC_PrimaryBus_Gbx1 = BasePath + "PrimaryBus/IEPC_primaryBus_Gbx1.xml";
+    protected const string PEV_IEPC_PrimaryBus_Gbx1Axl = BasePath + "PrimaryBus/IEPC_primaryBus_Gbx1Axl.xml";
+    protected const string PEV_IEPC_PrimaryBus_Gbx1Whl = BasePath + "PrimaryBus/IEPC_primaryBus_Gbx1Whl.xml";
+    protected const string PEV_IEPC_PrimaryBus_Gbx2 = BasePath + "PrimaryBus/IEPC_primaryBus_Gbx2.xml";
+    protected const string PEV_IEPC_PrimaryBus_Gbx2_drag = BasePath + "PrimaryBus/IEPC_primaryBus_Gbx2_drag.xml";
+    protected const string PEV_IEPC_PrimaryBus_Gbx2Axl = BasePath + "PrimaryBus/IEPC_primaryBus_Gbx2Axl.xml";
+    protected const string PEV_IEPC_PrimaryBus_Gbx2Axl_drag = BasePath + "PrimaryBus/IEPC_primaryBus_Gbx2Axl_drag.xml";
+    protected const string PEV_IEPC_PrimaryBus_Gbx2Whl = BasePath + "PrimaryBus/IEPC_primaryBus_Gbx2Whl.xml";
 
-    protected const string PEV_IEPC_std_PrimaryBus = BasePath + @"PrimaryBus\IEPC_primaryBus_StdValues.xml";
+    protected const string PEV_IEPC_std_PrimaryBus = BasePath + "PrimaryBus/IEPC_primaryBus_StdValues.xml";
 
-    protected const string PEV_E2_PrimaryBus_StdEM = BasePath + @"PrimaryBus\PEV_primaryBus_AMT_E2_EMStd.xml";
-    protected const string PEV_E2_PrimaryBus_StdBat = BasePath + @"PrimaryBus\PEV_primaryBus_AMT_E2_BatteryStd.xml";
-    protected const string Conventional_PrimaryBus_DF = BasePath + @"PrimaryBus\Conventional_primaryBus_AMT_DF.xml";
+    protected const string PEV_E2_PrimaryBus_StdEM = BasePath + "PrimaryBus/PEV_primaryBus_AMT_E2_EMStd.xml";
+    protected const string PEV_E2_PrimaryBus_StdBat = BasePath + "PrimaryBus/PEV_primaryBus_AMT_E2_BatteryStd.xml";
+    protected const string Conventional_PrimaryBus_DF = BasePath + "PrimaryBus/Conventional_primaryBus_AMT_DF.xml";
 
+	protected const string Exempted_PrimaryBus = BasePath + "PrimaryBus/exempted_primaryBus.xml";
     #endregion
 
-	#region Interim Bus Input
+    #region Interim Bus Input
 
-	protected const string Conventional_InterimBusInput = BasePath + @"CompletedBus\Conventional_InterimBus_Min.xml";
-	protected const string Conventional_InterimBusInput_AirdragV10 = BasePath + @"CompletedBus\Conventional_interimBus_AirdragV10.xml";
-	protected const string Conventional_InterimBusInput_AirdragV20 = BasePath + @"CompletedBus\Conventional_interimBus_AirdragV20.xml";
-	protected const string HEV_InterimBusInput = BasePath + @"CompletedBus\HEV_InterimBus_Min.xml";
-	protected const string PEV_InterimBusInput = BasePath + @"CompletedBus\PEV_InterimBus_Min.xml";
-	protected const string PEV_IEPC_InterimBusInput = BasePath + @"CompletedBus\IEPC_InterimBus_Min.xml";
+    protected const string Conventional_InterimBusInput = BasePath + "CompletedBus/Conventional_InterimBus_Min.xml";
+	protected const string Conventional_InterimBusInput_AirdragV10 = BasePath + "CompletedBus/Conventional_interimBus_AirdragV10.xml";
+	protected const string Conventional_InterimBusInput_AirdragV20 = BasePath + "CompletedBus/Conventional_interimBus_AirdragV20.xml";
+	protected const string HEV_InterimBusInput = BasePath + "CompletedBus/HEV_InterimBus_Min.xml";
+	protected const string PEV_InterimBusInput = BasePath + "CompletedBus/PEV_InterimBus_Min.xml";
+	protected const string PEV_IEPC_InterimBusInput = BasePath + "CompletedBus/IEPC_InterimBus_Min.xml";
 
-	#endregion
+	protected const string Exempted_InterimBus = BasePath + "CompletedBus/exempted_completedBus_min.xml";
+    #endregion
 
     #region Complete(d) Bus Input
 
-    protected const string Conventional_CompletedBusInput = BasePath + @"CompletedBus\Conventional_completedBus_2.xml";
-    protected const string Conventional_CompletedBusInputNoAirdrag = BasePath + @"CompletedBus\Conventional_completedBus_NoAirdrag.xml";
-    protected const string Conventional_CompletedBusInput_TypeApproval = BasePath + @"CompletedBus\Conventional_completedBus_2_TypeApprovalNumber.xml";
-    protected const string Conventional_CompletedBusInput_AirdragV10 = BasePath + @"CompletedBus\Conventional_completedBus_AirdragV10.xml";
-    protected const string Conventional_CompletedBusInput_AirdragV20 = BasePath + @"CompletedBus\Conventional_completedBus_AirdragV20.xml";
-    protected const string HEV_CompletedBusInput = BasePath + @"CompletedBus\HEV_completedBus_2.xml";
-    protected const string PEV_CompletedBusInput = BasePath + @"CompletedBus\PEV_completedBus_2.xml";
-    protected const string PEV_IEPC_CompletedBusInput = BasePath + @"CompletedBus\IEPC_completedBus_2.xml";
+    protected const string Conventional_CompletedBusInput = BasePath + "CompletedBus/Conventional_completedBus_2.xml";
+    protected const string Conventional_CompletedBusInputNoAirdrag = BasePath + "CompletedBus/Conventional_completedBus_NoAirdrag.xml";
+    protected const string Conventional_CompletedBusInput_TypeApproval = BasePath + "CompletedBus/Conventional_completedBus_2_TypeApprovalNumber.xml";
+    protected const string Conventional_CompletedBusInput_AirdragV10 = BasePath + "CompletedBus/Conventional_completedBus_AirdragV10.xml";
+    protected const string Conventional_CompletedBusInput_AirdragV20 = BasePath + "CompletedBus/Conventional_completedBus_AirdragV20.xml";
+    protected const string HEV_CompletedBusInput = BasePath + "CompletedBus/HEV_completedBus_2.xml";
+    protected const string PEV_CompletedBusInput = BasePath + "CompletedBus/PEV_completedBus_2.xml";
+    protected const string PEV_IEPC_CompletedBusInput = BasePath + "CompletedBus/IEPC_completedBus_2.xml";
 
+	protected const string Exempted_CompletedBus = BasePath + "CompletedBus/exempted_completedBus_2.xml";
     #endregion
 
-	[OneTimeSetUp]
+    [OneTimeSetUp]
 	public void OneTimeSetup()
 	{
 		// update all necessary bindings so that no simulation is performed
@@ -112,7 +115,9 @@ public class CompletedBusFullReportTests : FullReportTestsBase
     [TestCase(PEV_IEPC_PrimaryBus_Gbx2Whl, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2Whl")]
     [TestCase(PEV_IEPC_std_PrimaryBus, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC-std_PrimaryBus")]
     [TestCase(PEV_E2_PrimaryBus_StdEM, PEV_InterimBusInput, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E2_PrimaryBus_EM-Std")]
-    public void CompletedTest(string primaryBusInput, string completeBusInput, string completedBusInput, params string[] expectedType)
+
+    [TestCase(Exempted_PrimaryBus, Exempted_InterimBus, Exempted_CompletedBus, "Exempted", TestName = "Completed Exempted Bus")]
+    public void CompletedBusFullReportSuccessTest(string primaryBusInput, string completeBusInput, string completedBusInput, params string[] expectedType)
     {
         var completeCopy = CopyInputFile(completeBusInput);
         CopyInputFile(primaryBusInput);
