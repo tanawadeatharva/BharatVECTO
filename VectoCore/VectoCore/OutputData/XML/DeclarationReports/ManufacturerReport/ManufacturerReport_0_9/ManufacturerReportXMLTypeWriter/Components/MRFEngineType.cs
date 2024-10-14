@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				}
 
 				if ((whrType & engineData.WHRType) == whrType) {
-					result.Add(_mrf + "WasteHeatRecoverySystemType", whrType.ToXMLFormat());
+					result.Add(new XElement(_mrf + "WasteHeatRecoverySystemType", whrType.ToXMLFormat()));
 				}
 			}
 
