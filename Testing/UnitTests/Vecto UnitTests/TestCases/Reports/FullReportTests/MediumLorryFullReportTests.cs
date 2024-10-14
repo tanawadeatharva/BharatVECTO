@@ -127,12 +127,9 @@ public class MediumLorryFullReportTests : FullReportTestsBase
 		Assert.IsTrue(ValidateAndPrint(reportWriter.XMLCustomerReport, XmlDocumentType.CustomerReport), "CIF invalid");
 
 		Assert.IsTrue(CheckElementExists(XMLNames.Report_Results_Error, reportWriter.XMLCustomerReport));
-		var statusNode = reportWriter.XMLCustomerReport.XPathSelectElement(
-			$"//*[local-name()='{XMLNames.Report_Results}']/*[local-name()='{XMLNames.Report_Result_Status}']");
-		Assert.AreEqual(XMLNames.Report_Results_Status_Error_Val, statusNode.Value);
-		CheckElementCount(XMLNames.Report_Results_Summary, reportWriter.XMLCustomerReport, 0);
+		AssertElementValue(reportWriter.XMLManufacturerReport, XMLNames.Report_Results_Status_Error_Val,
+			XMLNames.Report_Results, XMLNames.Report_Result_Status);
 
-
-    }
+	}
 
 }

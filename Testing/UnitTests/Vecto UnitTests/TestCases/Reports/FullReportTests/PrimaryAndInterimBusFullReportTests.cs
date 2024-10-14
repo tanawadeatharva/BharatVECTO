@@ -169,8 +169,63 @@ public class PrimaryAndInterimBusFullReportTests : FullReportTestsBase
 		//CheckElementTypeNameContains(reportWriter.XMLMultistageReport, "Vehicle", expectedType);
 
 		Assert.IsTrue(CheckElementExists(XMLNames.Report_Results_Error, reportWriter.XMLManufacturerReport));
-		var statusNode = reportWriter.XMLManufacturerReport.XPathSelectElement(
-			$"//*[local-name()='{XMLNames.Report_Results}']/*[local-name()='{XMLNames.Report_Result_Status}']");
-		Assert.AreEqual(XMLNames.Report_Results_Status_Error_Val, statusNode.Value);
+		AssertElementValue(reportWriter.XMLManufacturerReport, XMLNames.Report_Results_Status_Error_Val,
+			XMLNames.Report_Results, XMLNames.Report_Result_Status);
+
+    }
+
+    [TestCase(Conventional_PrimaryBus_Tyres, Conventional_InterimBusInput, "Conventional", TestName = "PrimaryAndInterim Conventional Bus Different Tyres Ignore")]
+    [TestCase(HEV_Px_PrimaryBus, HEV_InterimBusInput, "Px", "HEV", TestName = "PrimaryAndInterim HEV_Px_PrimaryBus Ignore")]
+    [TestCase(HEV_S2_PrimaryBus, HEV_InterimBusInput, "Sx", "HEV", TestName = "PrimaryAndInterim HEV_S2_PrimaryBus Ignore")]
+    [TestCase(PEV_E3_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "PrimaryAndInterim PEV_E3_PrimaryBus Ignore")]
+    public void PrimaryWithInterimFullReportIgnoreTest(string primaryBusInput, string interimInput, params string[] expectedType)
+    {
+        var copied = CopyInputFile(primaryBusInput, interimInput);
+        // complete: primary input + complete input (full) => MRF Primary, VIF (step 1), MRF Complete, CIF Complete
+        // (approach: first simulate primary on its own to have an up-to-date VIF
+        // (no need to maintain this in the testfiles)
+
+
+        var job = new DummyRunPrimaryWithCompletedBusInputDataProvider(XmlReader.Create(primaryBusInput), XmlReader.Create(interimInput), _inputDataReader);
+        var reportWriter = GetReportWriter(TestContext.CurrentContext.Test.Name, interimInput);
+        var sumWriter = new SummaryDataContainer(null);
+        var jobContainer = new JobContainer(sumWriter);
+
+        var completedSimulatorFactory =
+            _simFactoryFactory.Factory(ExecutionMode.Declaration, job, reportWriter, null, null, true);
+
+        Clearfiles(reportWriter); //remove files from previous test runs
+        jobContainer.AddRuns(completedSimulatorFactory);
+        (jobContainer.Runs[0].Run as DummyRunNonExemptedRun).IgnoreSimulationRun = true;
+        jobContainer.Execute(false);
+        jobContainer.WaitFinished();
+
+        // assertions
+
+        CheckReportExists(reportWriter, VifShouldExist: true, CifShouldExist: false, MrfShouldExist: true);
+
+        //CheckElementTypeNameContains(reportWriter.XMLMultistageReport, "Vehicle", expectedType);
+
+        AssertElementValue(reportWriter.XMLManufacturerReport, XMLNames.Report_Results_Status_Success_Val,
+            XMLNames.Report_Results, XMLNames.Report_Result_Status);
+
+		if (GetElements(reportWriter.XMLMultistageReport, XMLNames.Report_Results,
+				XMLNames.Report_Results_FuelConsumption).Any()) {
+			Assert.IsTrue(
+				GetElements(reportWriter.XMLManufacturerReport, XMLNames.Report_Results,
+					XMLNames.Report_Results_FuelConsumption).Any(x => x.Value == double.NaN.ToString()));
+		}
+
+		if (GetElements(reportWriter.XMLMultistageReport, XMLNames.Report_Results, XMLNames.Report_Results_CO2).Any()) {
+			Assert.IsTrue(
+				GetElements(reportWriter.XMLManufacturerReport, XMLNames.Report_Results, XMLNames.Report_Results_CO2)
+					.Any(x => x.Value == double.NaN.ToString()));
+		}
+
+		if (GetElements(reportWriter.XMLMultistageReport, XMLNames.Report_Results, XMLNames.Report_ResultEntry_ElectricEnergyConsumption).Any()) {
+			Assert.IsTrue(
+				GetElements(reportWriter.XMLManufacturerReport, XMLNames.Report_Results, XMLNames.Report_ResultEntry_VIF_ElectricEnergyConsumption)
+					.Any(x => x.Value == double.NaN.ToString()));
+		}
     }
 }

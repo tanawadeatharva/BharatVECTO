@@ -22,6 +22,8 @@ public class HeavyLorryFullReportTests : FullReportTestsBase
     protected const string ConventionalHeavyLorry_AT_Angledrive = BasePath + "HeavyLorry/Conventional_heavyLorry_AT_Angledrive.xml";
     protected const string ConventionalHeavyLorry_NoRetarder = BasePath + "HeavyLorry/Conventional_heavyLorry_AMT_NoRetarder.xml";
     protected const string ConventionalHeavyLorry_NoAirdrag = BasePath + "HeavyLorry/Conventional_heavyLorry_AMT_NoAirdrag.xml";
+	protected const string ConventionalHeavyLorry_DualFuel = BasePath + "HeavyLorry/Conventional_heavyLorry_AMT_DF.xml";
+	protected const string ConventionalHeavyLorry_WHR = BasePath + "HeavyLorry/Conventional_heavyLorry_AMT_WHR.xml";
 
     protected const string ConventionalHeavyLorry_Vocational = BasePath + "HeavyLorry/Conventional_heavyLorry_AMT_Vocational.xml";
 
@@ -73,6 +75,8 @@ public class HeavyLorryFullReportTests : FullReportTestsBase
     }
 
 	[TestCase(ConventionalHeavyLorry, TestName = "ConventionalHeavyLorry")]
+	[TestCase(ConventionalHeavyLorry_DualFuel, TestName = "ConventionalHeavyLorry_DualFuel")]
+	[TestCase(ConventionalHeavyLorry_WHR, TestName = "ConventionalHeavyLorry_WHR")]
     [TestCase(ConventionalHeavyLorry_NoRetarder, TestName = "ConventionalHeavyLorry_NoRetarder")]
     [TestCase(ConventionalHeavyLorry_NoAirdrag, TestName = "ConventionalHeavyLorry_NoAirdrag")]
     [TestCase(ConventionalHeavyLorry_DifferentTyres, TestName = "ConventionalHeavyLorry_DifferentTyres")]
@@ -170,12 +174,11 @@ public class HeavyLorryFullReportTests : FullReportTestsBase
 		Assert.IsTrue(ValidateAndPrint(reportWriter.XMLCustomerReport, XmlDocumentType.CustomerReport), "CIF invalid");
 
 	    Assert.IsTrue(CheckElementExists(XMLNames.Report_Results_Error, reportWriter.XMLCustomerReport));
-		var statusNode = reportWriter.XMLCustomerReport.XPathSelectElement(
-			$"//*[local-name()='{XMLNames.Report_Results}']/*[local-name()='{XMLNames.Report_Result_Status}']");
-        Assert.AreEqual(XMLNames.Report_Results_Status_Error_Val, statusNode.Value);
-        CheckElementCount(XMLNames.Report_Results_Summary, reportWriter.XMLCustomerReport, 0);
-    
-    }
+		AssertElementValue(reportWriter.XMLManufacturerReport, XMLNames.Report_Results_Status_Error_Val,
+			XMLNames.Report_Results, XMLNames.Report_Result_Status);
 
-    
+
+	}
+
+
 }

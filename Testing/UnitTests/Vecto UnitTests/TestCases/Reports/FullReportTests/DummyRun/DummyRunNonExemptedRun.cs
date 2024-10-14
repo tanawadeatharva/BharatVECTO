@@ -12,16 +12,21 @@ public class DummyRunNonExemptedRun : VectoRun
 {
 	private IVehicleContainer _vehicleContainer;
 
-	public DummyRunNonExemptedRun(IVehicleContainer container) : base(container)
+	public DummyRunNonExemptedRun(IVehicleContainer container, IPostMortemAnalyzer postMortem = null) : base(container, postMortem: postMortem)
 	{
 		_vehicleContainer = container;
-
+		if (postMortem != null) {
+			var dummyPm = postMortem as DummyRunPostMortemAnalyzer;
+			dummyPm.Run = this;
+		}
 	}
 
 
 	#region Overrides of VectoRun
 	public override double Progress => 1;
 	public bool FinishedWithError { get; set; }
+
+	public bool IgnoreSimulationRun { get; set; }
 
 	protected override IResponse DoSimulationStep()
 	{
@@ -34,6 +39,11 @@ public class DummyRunNonExemptedRun : VectoRun
 		if (FinishedWithError) {
 			throw new VectoException("Simulation run intentionally aborted!");
 		}
+
+		if (IgnoreSimulationRun) {
+			throw new VectoException("Simulation run shall be ignored");
+		}
+		
 
 		FinishedWithoutErrors = true;
 

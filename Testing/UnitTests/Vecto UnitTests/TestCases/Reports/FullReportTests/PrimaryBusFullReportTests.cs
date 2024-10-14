@@ -1,4 +1,5 @@
-﻿using System.Xml.XPath;
+﻿using System.Xml.Linq;
+using System.Xml.XPath;
 using NUnit.Framework;
 using TUGraz.Vecto.UnitTests.TestCases.Reports.FullReportTests.DummyRun;
 using TUGraz.Vecto.UnitTests.Utils;
@@ -125,12 +126,16 @@ public class PrimaryBusFullReportTests : FullReportTestsBase
         Assert.IsTrue(ValidateAndPrint(reportWriter.XMLMultistageReport, XmlDocumentType.MultistepOutputData), "VIF invalid");
         Assert.IsTrue(ValidateAndPrint(reportWriter.XMLManufacturerReport, XmlDocumentType.ManufacturerReport), "MRF invalid");
 
-        //Assert.IsTrue(CheckElementExists(XMLNames.Report_Results_Summary, reportWriter.XMLCustomerReport));
+		AssertElementValue(reportWriter.XMLManufacturerReport, XMLNames.Report_Results_Status_Success_Val,
+			XMLNames.Report_Results, XMLNames.Report_Result_Status);
+
+
+		//Assert.IsTrue(CheckElementExists(XMLNames.Report_Results_Summary, reportWriter.XMLCustomerReport));
 		//CheckElementCount(XMLNames.Report_Results_Summary, reportWriter.XMLCustomerReport, 2);
 
-    }
+	}
 
-	[TestCase(Conventional_PrimaryBus, TestName = "FullReportTest_ConventionalPrimaryBus Error")]
+    [TestCase(Conventional_PrimaryBus, TestName = "FullReportTest_ConventionalPrimaryBus Error")]
 	[TestCase(HEV_Px_PrimaryBus, TestName = "FullReportTest_HEV_Px_PrimaryBus Error")]
 	[TestCase(HEV_S2_PrimaryBus_GenSetADC, TestName = "FullReportTest_HEV_S2_PrimaryBus_GenSetADC Error")]
 	[TestCase(PEV_E3_PrimaryBus, TestName = "FullReportTest_PEV_E3_PrimaryBus Error")]
@@ -158,9 +163,59 @@ public class PrimaryBusFullReportTests : FullReportTestsBase
 		Assert.IsTrue(ValidateAndPrint(reportWriter.XMLManufacturerReport, XmlDocumentType.ManufacturerReport), "MRF invalid");
 
 		Assert.IsTrue(CheckElementExists(XMLNames.Report_Results_Error, reportWriter.XMLManufacturerReport));
-		var statusNode = reportWriter.XMLManufacturerReport.XPathSelectElement(
-			$"//*[local-name()='{XMLNames.Report_Results}']/*[local-name()='{XMLNames.Report_Result_Status}']");
-		Assert.AreEqual(XMLNames.Report_Results_Status_Error_Val, statusNode.Value);
+		AssertElementValue(reportWriter.XMLManufacturerReport, XMLNames.Report_Results_Status_Error_Val,
+			XMLNames.Report_Results, XMLNames.Report_Result_Status);
+	}
 
+	
+
+	[TestCase(Conventional_PrimaryBus, TestName = "FullReportTest_ConventionalPrimaryBus Ignore")]
+	[TestCase(HEV_Px_PrimaryBus, TestName = "FullReportTest_HEV_Px_PrimaryBus Ignore")]
+	[TestCase(HEV_S2_PrimaryBus_GenSetADC, TestName = "FullReportTest_HEV_S2_PrimaryBus_GenSetADC Ignore")]
+	[TestCase(PEV_E3_PrimaryBus, TestName = "FullReportTest_PEV_E3_PrimaryBus Ignore")]
+	public void PrimaryBusFullReportIgnoreTest(string fileName)
+	{
+		CopyInputFile(fileName);
+		var inputProvider = _inputDataReader.CreateDeclaration(fileName);
+		var reportWriter = GetReportWriter(TestContext.CurrentContext.Test.Name, fileName);
+		var sumWriter = new SummaryDataContainer(null);
+		var jobContainer = new JobContainer(sumWriter);
+
+		var _simulatorFactory =
+			_simFactoryFactory.Factory(ExecutionMode.Declaration, inputProvider, reportWriter, null, null, true);
+		Clearfiles(reportWriter);
+		jobContainer.AddRuns(_simulatorFactory);
+		(jobContainer.Runs[0].Run as DummyRunNonExemptedRun).IgnoreSimulationRun = true;
+		jobContainer.Execute(false);
+		jobContainer.WaitFinished();
+
+		if (WRITE_REPORTS_TO_FILESYSTEM) {
+			reportWriter.WriteAllReports();
+		}
+		CheckReportExists(reportWriter, CifShouldExist: false, VifShouldExist: true);
+		Assert.IsTrue(ValidateAndPrint(reportWriter.XMLMultistageReport, XmlDocumentType.MultistepOutputData), "VIF invalid");
+		Assert.IsTrue(ValidateAndPrint(reportWriter.XMLManufacturerReport, XmlDocumentType.ManufacturerReport), "MRF invalid");
+
+		AssertElementValue(reportWriter.XMLManufacturerReport, XMLNames.Report_Results_Status_Success_Val,
+			XMLNames.Report_Results, XMLNames.Report_Result_Status);
+
+		if (GetElements(reportWriter.XMLManufacturerReport, XMLNames.Report_Results,
+				XMLNames.Report_Results_FuelConsumption).Any()) {
+			Assert.IsTrue(
+				GetElements(reportWriter.XMLManufacturerReport, XMLNames.Report_Results,
+					XMLNames.Report_Results_FuelConsumption).Any(x => x.Value == double.NaN.ToString()));
+		}
+
+		if (GetElements(reportWriter.XMLManufacturerReport, XMLNames.Report_Results, XMLNames.Report_Results_CO2).Any()) {
+			Assert.IsTrue(
+				GetElements(reportWriter.XMLManufacturerReport, XMLNames.Report_Results, XMLNames.Report_Results_CO2)
+					.Any(x => x.Value == double.NaN.ToString()));
+		}
+
+		if (GetElements(reportWriter.XMLManufacturerReport, XMLNames.Report_Results, XMLNames.Report_ResultEntry_ElectricEnergyConsumption).Any()) {
+			Assert.IsTrue(
+				GetElements(reportWriter.XMLManufacturerReport, XMLNames.Report_Results, XMLNames.Report_Result_EnergyConsumption)
+					.Any(x => x.Value == double.NaN.ToString()));
+		}
     }
 }

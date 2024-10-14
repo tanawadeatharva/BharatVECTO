@@ -25,7 +25,6 @@ public class DummyRunNinjectModule : AbstractNinjectModule
 
 		Rebind<IModalDataFactory>().To<DummyRunModDataFactory>().InSingletonScope();
 
-		//Rebind<IModalDataContainer>().To<DummyRunModalDataContainer>();
 		Rebind<IVectoRunDataFactoryFactory>().To<DummyRunRunDataFactoryFactory>();
 		Rebind<IVectoRunDataFactoryFactory>().To<DummyRunRunDataFactoryFactory>();
 		Rebind<IPowertrainBuilder>().To<DummyRunPowertrainBuilder>().InSingletonScope();

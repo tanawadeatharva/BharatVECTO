@@ -174,4 +174,165 @@ public class VifAndInterimBusFullReportTests : FullReportTestsBase
 
     }
 
+	[TestCase(Conventional_PrimaryBus_DF, Conventional_InterimBusInput, "Conventional", TestName = "Interim_ConventionalPrimaryBus_DualFuel Ignore")]
+	[TestCase(HEV_Px_PrimaryBus, HEV_InterimBusInput, "Px", "HEV", TestName = "Interim HEV_Px_Bus Ignore")]
+	[TestCase(HEV_S3_PrimaryBus, HEV_InterimBusInput, "Sx", "HEV", TestName = "Interim HEV_S3_Bus Ignore")]
+	[TestCase(PEV_E2_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "Interim PEV_E2_Bus Ignore")]
+    public void VifAndInterimFullReportIgnoreTest(string primaryBusInput, string interimBusInput, params string[] expectedType)
+    {
+        var interimCopy = CopyInputFile(interimBusInput);
+        // VIF + interim input =>  VIF
+        // (approach: first simulate primary on its own to have an up-to-date VIF
+        // (no need to maintain this in the testfiles)
+
+        // setting up testcase 
+        // run primary simulation
+        var inputProvider = _inputDataReader.Create(primaryBusInput);
+        var fileWriter = GetReportWriter(TestContext.CurrentContext.Test.Name, primaryBusInput);
+        var sumWriter = new SummaryDataContainer(null);
+        var jobContainer = new JobContainer(sumWriter);
+
+        var _simulatorFactory =
+            _simFactoryFactory.Factory(ExecutionMode.Declaration, inputProvider, fileWriter, null, null, true);
+
+        Clearfiles(fileWriter); //remove files from previous test runs
+        jobContainer.AddRuns(_simulatorFactory);
+		(jobContainer.Runs[0].Run as DummyRunNonExemptedRun).IgnoreSimulationRun = true;
+        jobContainer.Execute(false);
+        jobContainer.WaitFinished();
+
+        CheckReportExists(fileWriter, CifShouldExist: false, VifShouldExist: true, MrfShouldExist: true);
+        File.Delete(fileWriter.XMLFullReportName);
+
+        if (WRITE_REPORTS_TO_FILESYSTEM) {
+            fileWriter.WriteAllReports();
+            var primaryVif = CopyInputFile(fileWriter.XMLPrimaryVehicleReportName)[0];
+            fileWriter.WriteJSONJobCompleted(primaryVif, interimCopy[0], TestContext.CurrentContext.Test.Name);
+        }
+        // done preparing testcase...
+
+        // this is the actual test: run completed simulation
+
+        var interimJob = new DummyRunVIFWithInterimBusInputDataProvider(fileWriter.XMLMultistageReport, XmlReader.Create(interimBusInput), _inputDataReader);
+        var interimFileWriter = GetReportWriter(TestContext.CurrentContext.Test.Name, interimBusInput);
+
+        var interimSumWriter = new SummaryDataContainer(null);
+        var interimJobContainer = new JobContainer(interimSumWriter);
+
+        var completedSimulatorFactory =
+            _simFactoryFactory.Factory(ExecutionMode.Declaration, interimJob, interimFileWriter, null, null, true);
+
+        Clearfiles(interimFileWriter); //remove files from previous test runs
+        interimJobContainer.AddRuns(completedSimulatorFactory);
+        interimJobContainer.Execute(false);
+        interimJobContainer.WaitFinished();
+
+        // assertions
+        File.Delete(fileWriter.XMLPrimaryVehicleReportName);
+
+        CheckReportExists(interimFileWriter, VifShouldExist: true, MrfShouldExist: false, CifShouldExist: false);
+
+        CheckElementTypeNameContains(interimFileWriter.XMLMultistageReport, "Vehicle", expectedType);
+
+		if (GetElements(interimFileWriter.XMLMultistageReport, XMLNames.Report_Results,
+				XMLNames.Report_Results_FuelConsumption).Any()) {
+			Assert.IsTrue(
+				GetElements(interimFileWriter.XMLManufacturerReport, XMLNames.Report_Results,
+					XMLNames.Report_Results_FuelConsumption).Any(x => x.Value == double.NaN.ToString()));
+		}
+
+		if (GetElements(interimFileWriter.XMLMultistageReport, XMLNames.Report_Results, XMLNames.Report_Results_CO2).Any()) {
+			Assert.IsTrue(
+				GetElements(interimFileWriter.XMLManufacturerReport, XMLNames.Report_Results, XMLNames.Report_Results_CO2)
+					.Any(x => x.Value == double.NaN.ToString()));
+		}
+
+		if (GetElements(interimFileWriter.XMLMultistageReport, XMLNames.Report_Results, XMLNames.Report_ResultEntry_ElectricEnergyConsumption).Any()) {
+			Assert.IsTrue(
+				GetElements(interimFileWriter.XMLManufacturerReport, XMLNames.Report_Results, XMLNames.Report_ResultEntry_VIF_ElectricEnergyConsumption)
+					.Any(x => x.Value == double.NaN.ToString()));
+		}
+
+    }
+
+    [TestCase(Conventional_PrimaryBus_DF, Conventional_InterimBusInput, "Conventional", TestName = "Interim_ConventionalPrimaryBus_DualFuel IgnoreError")]
+    [TestCase(HEV_Px_PrimaryBus, HEV_InterimBusInput, "Px", "HEV", TestName = "Interim HEV_Px_Bus IgnoreError")]
+    [TestCase(HEV_S3_PrimaryBus, HEV_InterimBusInput, "Sx", "HEV", TestName = "Interim HEV_S3_Bus IgnoreError")]
+    [TestCase(PEV_E2_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "Interim PEV_E2_Bus IgnoreError")]
+    public void VifAndInterimFullReportIgnoreErrorTest(string primaryBusInput, string interimBusInput, params string[] expectedType)
+    {
+        var interimCopy = CopyInputFile(interimBusInput);
+        // VIF + interim input =>  VIF
+        // (approach: first simulate primary on its own to have an up-to-date VIF
+        // (no need to maintain this in the testfiles)
+
+        // setting up testcase 
+        // run primary simulation
+        var inputProvider = _inputDataReader.Create(primaryBusInput);
+        var fileWriter = GetReportWriter(TestContext.CurrentContext.Test.Name, primaryBusInput);
+        var sumWriter = new SummaryDataContainer(null);
+        var jobContainer = new JobContainer(sumWriter);
+
+        var _simulatorFactory =
+            _simFactoryFactory.Factory(ExecutionMode.Declaration, inputProvider, fileWriter, null, null, true);
+
+        Clearfiles(fileWriter); //remove files from previous test runs
+        jobContainer.AddRuns(_simulatorFactory);
+		jobContainer.Runs.ForEach(x => (x.Run as DummyRunNonExemptedRun).IgnoreSimulationRun = true);
+        jobContainer.Execute(false);
+        jobContainer.WaitFinished();
+
+        CheckReportExists(fileWriter, CifShouldExist: false, VifShouldExist: true, MrfShouldExist: true);
+        File.Delete(fileWriter.XMLFullReportName);
+
+        if (WRITE_REPORTS_TO_FILESYSTEM) {
+            fileWriter.WriteAllReports();
+            var primaryVif = CopyInputFile(fileWriter.XMLPrimaryVehicleReportName)[0];
+            fileWriter.WriteJSONJobCompleted(primaryVif, interimCopy[0], TestContext.CurrentContext.Test.Name);
+        }
+        // done preparing testcase...
+
+        // this is the actual test: run completed simulation
+
+        var interimJob = new DummyRunVIFWithInterimBusInputDataProvider(fileWriter.XMLMultistageReport, XmlReader.Create(interimBusInput), _inputDataReader);
+        var interimFileWriter = GetReportWriter(TestContext.CurrentContext.Test.Name, interimBusInput);
+
+        var interimSumWriter = new SummaryDataContainer(null);
+        var interimJobContainer = new JobContainer(interimSumWriter);
+
+        var completedSimulatorFactory =
+            _simFactoryFactory.Factory(ExecutionMode.Declaration, interimJob, interimFileWriter, null, null, true);
+
+        Clearfiles(interimFileWriter); //remove files from previous test runs
+        interimJobContainer.AddRuns(completedSimulatorFactory);
+        interimJobContainer.Execute(false);
+        interimJobContainer.WaitFinished();
+
+        // assertions
+        File.Delete(fileWriter.XMLPrimaryVehicleReportName);
+
+        CheckReportExists(interimFileWriter, VifShouldExist: true, MrfShouldExist: false, CifShouldExist: false);
+
+        CheckElementTypeNameContains(interimFileWriter.XMLMultistageReport, "Vehicle", expectedType);
+
+        if (GetElements(interimFileWriter.XMLMultistageReport, XMLNames.Report_Results,
+                XMLNames.Report_Results_FuelConsumption).Any()) {
+            Assert.IsTrue(
+                GetElements(interimFileWriter.XMLManufacturerReport, XMLNames.Report_Results,
+                    XMLNames.Report_Results_FuelConsumption).Any(x => x.Value == double.NaN.ToString()));
+        }
+
+        if (GetElements(interimFileWriter.XMLMultistageReport, XMLNames.Report_Results, XMLNames.Report_Results_CO2).Any()) {
+            Assert.IsTrue(
+                GetElements(interimFileWriter.XMLManufacturerReport, XMLNames.Report_Results, XMLNames.Report_Results_CO2)
+                    .Any(x => x.Value == double.NaN.ToString()));
+        }
+
+        if (GetElements(interimFileWriter.XMLMultistageReport, XMLNames.Report_Results, XMLNames.Report_ResultEntry_ElectricEnergyConsumption).Any()) {
+            Assert.IsTrue(
+                GetElements(interimFileWriter.XMLManufacturerReport, XMLNames.Report_Results, XMLNames.Report_ResultEntry_VIF_ElectricEnergyConsumption)
+                    .Any(x => x.Value == double.NaN.ToString()));
+        }
+
+    }
 }

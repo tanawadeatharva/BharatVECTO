@@ -1,10 +1,13 @@
 ﻿using System.Xml;
 using NUnit.Framework;
 using TUGraz.Vecto.UnitTests.TestCases.Reports.FullReportTests.DummyRun;
+using TUGraz.Vecto.UnitTests.Utils;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
+using Assert = NUnit.Framework.Assert;
 using TestContext = NUnit.Framework.TestContext;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.Reports.FullReportTests;
@@ -138,11 +141,95 @@ public class CompleteBusFullReportTests : FullReportTestsBase
 
         CheckElementTypeNameContains(completeFileWriter.XMLMultistageReport, "Vehicle", expectedType);
 
-        //var xmlComparer = new XMLElementComparer();
-        //xmlComparer.AddDocument(primaryBusInput, XmlDocumentType.DeclarationJobData);
-        //xmlComparer.AddDocument(completeFileWriter.XMLFullReportName, XmlDocumentType.ManufacturerReport);
-        //Assert.IsTrue(xmlComparer.AreEqual(primaryBusInput, "/tns:VectoInputDeclaration/v2.0:Vehicle/ZeroEmissionVehicle", 
-        //	completeFileWriter.XMLFullReportName, "/mrf:VectoOutput/mrf:Data/Vehicle/ZeroEmissionHDV"));
+	}
+
+	[TestCase(Conventional_PrimaryBus, Conventional_CompletedBusInput_TypeApproval, "Conventional", TestName = "Complete Conventional Bus Type Approval Ignore")]
+	[TestCase(HEV_Px_PrimaryBus_BatteryStd, HEV_CompletedBusInput, "Px", "HEV", TestName = "Complete HEV_Px_PrimaryBus_BatteryStd Ignore")]
+	[TestCase(HEV_S3_PrimaryBus, HEV_CompletedBusInput, "S3", "HEV", TestName = "Complete HEV_S3_PrimaryBus Ignore")]
+	[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus Ignore")]
+	public void CompleteBusFullReportIgnoreTest(string primaryBusInput, string completeBusInput, params string[] expectedType)
+	{
+		var copied = CopyInputFile(primaryBusInput, completeBusInput);
+		// complete: primary input + complete input (full) => MRF Primary, VIF (step 1), MRF Complete, CIF Complete
+		// (approach: first simulate primary on its own to have an up-to-date VIF
+		// (no need to maintain this in the testfiles)
+
+
+		var completeJob = new DummyRunPrimaryWithCompletedBusInputDataProvider(XmlReader.Create(primaryBusInput),
+			XmlReader.Create(completeBusInput), _inputDataReader, true);
+		var completeReportWriter = GetReportWriter(TestContext.CurrentContext.Test.Name, completeBusInput);
+		var completeSumWriter = new SummaryDataContainer(null);
+		var completeJobContainer = new JobContainer(completeSumWriter);
+
+		var completedSimulatorFactory =
+			_simFactoryFactory.Factory(ExecutionMode.Declaration, completeJob, completeReportWriter, null, null, true);
+
+		Clearfiles(completeReportWriter); //remove files from previous test runs
+		completeJobContainer.AddRuns(completedSimulatorFactory);
+		(completeJobContainer.Runs[0].Run as DummyRunNonExemptedRun).IgnoreSimulationRun = true;
+        completeJobContainer.Execute(false);
+		completeJobContainer.WaitFinished();
+
+		// assertions
+
+		CheckReportExists(completeReportWriter, PrimaryMrfShouldExist: true, VifShouldExist: true, CifShouldExist: true, MrfShouldExist: true);
+
+		if (WRITE_REPORTS_TO_FILESYSTEM) {
+			completeReportWriter.WriteAllReports();
+		}
+
+        CheckElementTypeNameContains(completeReportWriter.XMLMultistageReport, "Vehicle", expectedType);
+
+		AssertElementValue(completeReportWriter.XMLManufacturerReport, XMLNames.Report_Results_Status_Success_Val,
+			XMLNames.Report_Results, XMLNames.Report_Result_Status);
+
+		if (GetElements(completeReportWriter.XMLMultistageReport, XMLNames.Report_Results,
+				XMLNames.Report_Results_FuelConsumption).Any()) {
+			Assert.IsTrue(
+				GetElements(completeReportWriter.XMLManufacturerReport, XMLNames.Report_Results,
+					XMLNames.Report_Results_FuelConsumption).Any(x => x.Value == double.NaN.ToString()));
+		}
+
+		if (GetElements(completeReportWriter.XMLMultistageReport, XMLNames.Report_Results, XMLNames.Report_Results_CO2).Any()) {
+			Assert.IsTrue(
+				GetElements(completeReportWriter.XMLManufacturerReport, XMLNames.Report_Results, XMLNames.Report_Results_CO2)
+					.Any(x => x.Value == double.NaN.ToString()));
+		}
+
+		if (GetElements(completeReportWriter.XMLMultistageReport, XMLNames.Report_Results, XMLNames.Report_ResultEntry_ElectricEnergyConsumption).Any()) {
+			Assert.IsTrue(
+				GetElements(completeReportWriter.XMLManufacturerReport, XMLNames.Report_Results, XMLNames.Report_ResultEntry_VIF_ElectricEnergyConsumption)
+					.Any(x => x.Value == double.NaN.ToString()));
+		}
+    }
+
+    [TestCase(Conventional_PrimaryBus, Conventional_CompletedBusInput_TypeApproval, "Conventional", TestName = "Complete Conventional Bus Type Approval IgnoreAndError")]
+    [TestCase(HEV_Px_PrimaryBus_BatteryStd, HEV_CompletedBusInput, "Px", "HEV", TestName = "Complete HEV_Px_PrimaryBus_BatteryStd IgnoreAndError")]
+    [TestCase(HEV_S3_PrimaryBus, HEV_CompletedBusInput, "S3", "HEV", TestName = "Complete HEV_S3_PrimaryBus IgnoreAndError")]
+    [TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus IgnoreAndError")]
+    public void CompleteBusFullReportIgnoreErrorTest(string primaryBusInput, string completeBusInput, params string[] expectedType)
+    {
+        var copied = CopyInputFile(primaryBusInput, completeBusInput);
+        // complete: primary input + complete input (full) => MRF Primary, VIF (step 1), MRF Complete, CIF Complete
+        // (approach: first simulate primary on its own to have an up-to-date VIF
+        // (no need to maintain this in the testfiles)
+
+
+        var completeJob = new DummyRunPrimaryWithCompletedBusInputDataProvider(XmlReader.Create(primaryBusInput),
+            XmlReader.Create(completeBusInput), _inputDataReader, true);
+        var completeReportWriter = GetReportWriter(TestContext.CurrentContext.Test.Name, completeBusInput);
+        var completeSumWriter = new SummaryDataContainer(null);
+        var completeJobContainer = new JobContainer(completeSumWriter);
+
+        var completedSimulatorFactory =
+            _simFactoryFactory.Factory(ExecutionMode.Declaration, completeJob, completeReportWriter, null, null, true);
+
+        Clearfiles(completeReportWriter); //remove files from previous test runs
+		completeJobContainer.AddRuns(completedSimulatorFactory);
+		completeJobContainer.Runs.ForEach(x => (x.Run as DummyRunNonExemptedRun).IgnoreSimulationRun = true);
+
+		completeJobContainer.Execute(false);
+		AssertHelper.Exception<Exception>(() => completeJobContainer.WaitFinished());
 
 
     }
