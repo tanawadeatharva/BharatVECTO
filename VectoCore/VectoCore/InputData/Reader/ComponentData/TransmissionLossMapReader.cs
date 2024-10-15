@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					}
 				}
 			}
-			var rnd = new Random();
+			var rnd = new Random(1);
 			foreach (var speedBucket in speedBuckets) {
 				if (speedBucket.Value.Count < 2) {
 					continue;
