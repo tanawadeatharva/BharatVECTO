@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <!-- Global VECTO Version -->
-    <Authors>Graz University of Technology, European Commission</Authors>
+    <Authors>Graz University of Technology, DG JRC</Authors>
     <Company>European Union</Company>
     <Copyright>Copyright © 2012-$([System.DateTime]::UtcNow.Year)</Copyright>
     <PackageLicenseExpression>EUPL-1.2</PackageLicenseExpression>
