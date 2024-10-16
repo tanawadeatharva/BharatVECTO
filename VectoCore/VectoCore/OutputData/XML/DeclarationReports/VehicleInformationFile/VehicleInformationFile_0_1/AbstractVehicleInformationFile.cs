@@ -89,8 +89,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		public XDocument Report { get; protected set; }
 
-		public XNamespace Tns => _tns;
-
         #endregion
 
 		protected virtual XElement GeneratePrimaryVehicle(XElement resultSignature)
