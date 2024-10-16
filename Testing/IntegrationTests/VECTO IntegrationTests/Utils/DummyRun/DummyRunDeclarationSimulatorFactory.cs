@@ -14,7 +14,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
 
-namespace TUGraz.Vecto.UnitTests.TestCases.Reports.FullReportTests.DummyRun;
+namespace TUGraz.Vecto.IntegrationTests.Utils.DummyRun;
 
 public class DummyRunDeclarationSimulatorFactory : SimulatorFactoryDeclaration
 {
@@ -49,7 +49,8 @@ public class DummyRunDeclarationSimulatorFactory : SimulatorFactoryDeclaration
 
     private void CheckInputData(IInputDataProvider dataProvider)
     {
-        if (dataProvider is JSONFile json && !(dataProvider is JSONInputDataV10_PrimaryAndStageInputBus || dataProvider is JSONInputDataCompletedBusFactorMethodV7)) {
+        if (dataProvider is JSONFile json && !(dataProvider is JSONInputDataV10_PrimaryAndStageInputBus || dataProvider is JSONInputDataCompletedBusFactorMethodV7))
+        {
             throw new VectoException($"JSON input data is not supported");
         }
     }
@@ -57,11 +58,14 @@ public class DummyRunDeclarationSimulatorFactory : SimulatorFactoryDeclaration
     protected override IVectoRun GetExemptedRun(VectoRunData data)
     {
 
-        if (data.Report != null) {
+        if (data.Report != null)
+        {
             data.Report.PrepareResult(data);
         }
-        return new DummyRunExemptedRun(new ExemptedVehicleContainer(data, null, null, SimplePowertrainBuilder), modData => {
-            if (data.Report != null) {
+        return new DummyRunExemptedRun(new ExemptedVehicleContainer(data, null, null, SimplePowertrainBuilder), modData =>
+        {
+            if (data.Report != null)
+            {
                 data.Report.AddResult(data, modData);
             }
         });
@@ -70,31 +74,33 @@ public class DummyRunDeclarationSimulatorFactory : SimulatorFactoryDeclaration
     protected override IVectoRun GetNonExemptedRun(VectoRunData data, int current, ref bool warning1Hz, ref bool firstRun)
     {
         var addReportResult = PrepareReport(data);
-		var modContainer = ModDataFactory.CreateModDataContainer(
-			//new ModalDataContainer(
-			data, ReportWriter,
-			(_mode == ExecutionMode.Declaration) ? addReportResult : null,
-			null);
+        var modContainer = ModDataFactory.CreateModDataContainer(
+            //new ModalDataContainer(
+            data, ReportWriter,
+            _mode == ExecutionMode.Declaration ? addReportResult : null,
+            null);
 
-		var container = PowertrainBuilder.Build(data, modContainer, null);
-		var mock = Mock.Get(container);
-		var milage = new Mock<IMileageCounter>();
-		milage.Setup(m => m.Distance).Returns(0.SI<Meter>());
-		var vi = new Mock<IVehicleInfo>();
-		vi.Setup(m => m.VehicleSpeed).Returns(0.KMPHtoMeterPerSecond());
-		mock.Setup(c => c.MileageCounter).Returns(milage.Object);
-		mock.Setup(c => c.VehicleInfo).Returns(vi.Object);
-		return new DummyRunNonExemptedRun(mock.Object, new DummyRunPostMortemAnalyzer());
+        var container = PowertrainBuilder.Build(data, modContainer, null);
+        var mock = Mock.Get(container);
+        var milage = new Mock<IMileageCounter>();
+        milage.Setup(m => m.Distance).Returns(0.SI<Meter>());
+        var vi = new Mock<IVehicleInfo>();
+        vi.Setup(m => m.VehicleSpeed).Returns(0.KMPHtoMeterPerSecond());
+        mock.Setup(c => c.MileageCounter).Returns(milage.Object);
+        mock.Setup(c => c.VehicleInfo).Returns(vi.Object);
+        return new DummyRunNonExemptedRun(mock.Object, new DummyRunPostMortemAnalyzer());
 
     }
     protected new static Action<IModalDataContainer> PrepareReport(VectoRunData data)
     {
-        if (data.Report != null) {
+        if (data.Report != null)
+        {
             data.Report.PrepareResult(data);
         }
-        Action<IModalDataContainer> addReportResult = modData => {
+        Action<IModalDataContainer> addReportResult = modData =>
+        {
             data?.Report?.AddResult(data, modData);
-		};
+        };
 
         return addReportResult;
     }

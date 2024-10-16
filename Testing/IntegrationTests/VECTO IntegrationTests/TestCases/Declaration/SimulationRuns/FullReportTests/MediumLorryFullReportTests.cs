@@ -1,7 +1,5 @@
-﻿using System.Xml.XPath;
-using NUnit.Framework;
-using TUGraz.Vecto.UnitTests.TestCases.Reports.FullReportTests.DummyRun;
-using TUGraz.Vecto.UnitTests.Utils;
+﻿using TUGraz.Vecto.IntegrationTests.Utils;
+using TUGraz.Vecto.IntegrationTests.Utils.DummyRun;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -10,7 +8,7 @@ using Assert = NUnit.Framework.Assert;
 using TestContext = NUnit.Framework.TestContext;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
-namespace TUGraz.Vecto.UnitTests.TestCases.Reports.FullReportTests;
+namespace TUGraz.Vecto.IntegrationTests.TestCases.Declaration.SimulationRuns.FullReportTests;
 
 public class MediumLorryFullReportTests : FullReportTestsBase
 {

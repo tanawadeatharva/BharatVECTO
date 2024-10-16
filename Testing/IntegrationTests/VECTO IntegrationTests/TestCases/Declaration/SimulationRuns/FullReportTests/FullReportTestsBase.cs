@@ -3,18 +3,17 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using Ninject;
-using TUGraz.Vecto.UnitTests.TestCases.Reports.FullReportTests.DummyRun;
+using TUGraz.Vecto.IntegrationTests.Utils.DummyRun;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
 using Assert = NUnit.Framework.Assert;
 using TestContext = NUnit.Framework.TestContext;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
-namespace TUGraz.Vecto.UnitTests.TestCases.Reports.FullReportTests;
+namespace TUGraz.Vecto.IntegrationTests.TestCases.Declaration.SimulationRuns.FullReportTests;
 
 public class FullReportTestsBase
 {
