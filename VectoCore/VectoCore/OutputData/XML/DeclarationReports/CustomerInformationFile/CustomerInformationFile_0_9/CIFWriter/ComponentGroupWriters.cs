@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -418,6 +419,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	}
 
 
+	[ExcludeFromCodeCoverage] // not used for official calculations - no reports needed
 	public class ConventionalSingleBusAuxGroup : AbstractCIFGroupWriter
 	{
 		public ConventionalSingleBusAuxGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
