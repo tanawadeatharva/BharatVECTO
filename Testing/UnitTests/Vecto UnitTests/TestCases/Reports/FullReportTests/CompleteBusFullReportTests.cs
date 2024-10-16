@@ -9,6 +9,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using Assert = NUnit.Framework.Assert;
 using TestContext = NUnit.Framework.TestContext;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.Reports.FullReportTests;
 
@@ -22,6 +23,7 @@ public class CompleteBusFullReportTests : FullReportTestsBase
     protected const string Conventional_PrimaryBus_RetarderMeasured = BasePath + "PrimaryBus/Conventional_primaryBus_AMT_RetarderMeasured.xml";
     protected const string Conventional_PrimaryBus_Tyres = BasePath + "PrimaryBus/Conventional_primaryBus_AMT_DifferentTyres.xml";
     protected const string HEV_Px_PrimaryBus = BasePath + "PrimaryBus/HEV_primaryBus_AMT_Px.xml";
+	protected const string HEV_Px_PrimaryBus_OVC = BasePath + "PrimaryBus/HEV_primaryBus_AMT_Px_OVC.xml";
     protected const string HEV_Px_PrimaryBus_BatteryStd = BasePath + "PrimaryBus/HEV_primaryBus_AMT_Px_BatteryStd.xml";
     protected const string HEV_IHPC_PrimaryBus = BasePath + "PrimaryBus/HEV_primaryBus_AMT_IHPC.xml";
     protected const string HEV_IHPC_PrimaryBus_NoRetarder = BasePath + "PrimaryBus/HEV_primaryBus_AMT_IHPC_NoRetarder.xml";
@@ -77,9 +79,9 @@ public class CompleteBusFullReportTests : FullReportTestsBase
 		// update all necessary bindings so that no simulation is performed
 		SetupNinject();
 
-		//WRITE_REPORTS_TO_FILESYSTEM = true;
-		//      WRITE_REPORTS_TO_OUTPUT = true;
-	}
+        //WRITE_REPORTS_TO_FILESYSTEM = true;
+        WRITE_REPORTS_TO_OUTPUT = true;
+    }
 
 
     [TestCase(Conventional_PrimaryBus_Tyres, Conventional_CompletedBusInput, "Conventional", TestName = "Complete Conventional Bus Different Tyres")]
@@ -91,6 +93,7 @@ public class CompleteBusFullReportTests : FullReportTestsBase
     [TestCase(HEV_IEPC_S_PrimaryBus, HEV_CompletedBusInput, "IEPC-S", "HEV", TestName = "Complete HEV_IEPC_S_PrimaryBus")]
     [TestCase(HEV_IEPC_S_PrimaryBus_BatteryStd, HEV_CompletedBusInput, "IEPC-S", "HEV", TestName = "Complete HEV_IEPC_S_PrimaryBus_BatteryStd")]
     [TestCase(HEV_Px_PrimaryBus, HEV_CompletedBusInput, "Px", "HEV", TestName = "Complete HEV_Px_PrimaryBus")]
+	[TestCase(HEV_Px_PrimaryBus_OVC, HEV_CompletedBusInput, "Px", "HEV", TestName = "Complete HEV_Px_PrimaryBus_OVC")]
     [TestCase(HEV_Px_PrimaryBus_BatteryStd, HEV_CompletedBusInput, "Px", "HEV", TestName = "Complete HEV_Px_PrimaryBus_BatteryStd")]
     [TestCase(HEV_IHPC_PrimaryBus, HEV_CompletedBusInput, "Px", "HEV", TestName = "Complete HEV_IHPC_PrimaryBus")]
     [TestCase(HEV_IHPC_PrimaryBus_NoRetarder, HEV_CompletedBusInput, "Px", "HEV", TestName = "Complete HEV_IHPC_PrimaryBus_NoRetarder")]
@@ -138,6 +141,9 @@ public class CompleteBusFullReportTests : FullReportTestsBase
         // assertions
 
         CheckReportExists(completeFileWriter, PrimaryMrfShouldExist: true, VifShouldExist: true, CifShouldExist: true, MrfShouldExist: true);
+
+		ValidateAndPrint(completeFileWriter.XMLManufacturerReport, XmlDocumentType.ManufacturerReport);
+		ValidateAndPrint(completeFileWriter.XMLCustomerReport, XmlDocumentType.CustomerReport);
 
         CheckElementTypeNameContains(completeFileWriter.XMLMultistageReport, "Vehicle", expectedType);
 

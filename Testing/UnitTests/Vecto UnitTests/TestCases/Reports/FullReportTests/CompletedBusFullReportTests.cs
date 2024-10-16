@@ -21,6 +21,7 @@ public class CompletedBusFullReportTests : FullReportTestsBase
     protected const string Conventional_PrimaryBus_AT_Angledrive = BasePath + "PrimaryBus/Conventional_primaryBus_AT_Angledrive.xml";
     protected const string Conventional_PrimaryBus_NoRetarder = BasePath + "PrimaryBus/Conventional_primaryBus_AT_NoRetarder.xml";
     protected const string Conventional_PrimaryBus_RetarderMeasured = BasePath + "PrimaryBus/Conventional_primaryBus_AMT_RetarderMeasured.xml";
+	protected const string HEV_Px_PrimaryBus_OVC = BasePath + "PrimaryBus/HEV_primaryBus_AMT_Px_OVC.xml";
     protected const string Conventional_PrimaryBus_Tyres = BasePath + "PrimaryBus/Conventional_primaryBus_AMT_DifferentTyres.xml";
     protected const string HEV_Px_PrimaryBus = BasePath + "PrimaryBus/HEV_primaryBus_AMT_Px.xml";
     protected const string HEV_Px_PrimaryBus_BatteryStd = BasePath + "PrimaryBus/HEV_primaryBus_AMT_Px_BatteryStd.xml";
@@ -71,6 +72,7 @@ public class CompletedBusFullReportTests : FullReportTestsBase
     #region Complete(d) Bus Input
 
     protected const string Conventional_CompletedBusInput = BasePath + "CompletedBus/Conventional_completedBus_2.xml";
+	protected const string Conventional_CompletedBusInput_NoTankSystem = BasePath + "CompletedBus/Conventional_completedBus_3.xml";
     protected const string Conventional_CompletedBusInputNoAirdrag = BasePath + "CompletedBus/Conventional_completedBus_NoAirdrag.xml";
     protected const string Conventional_CompletedBusInput_TypeApproval = BasePath + "CompletedBus/Conventional_completedBus_2_TypeApprovalNumber.xml";
     protected const string Conventional_CompletedBusInput_AirdragV10 = BasePath + "CompletedBus/Conventional_completedBus_AirdragV10.xml";
@@ -92,12 +94,14 @@ public class CompletedBusFullReportTests : FullReportTestsBase
 		//      WRITE_REPORTS_TO_OUTPUT = true;
 	}
 
+	[TestCase(Conventional_PrimaryBus, Conventional_InterimBusInput, Conventional_CompletedBusInput_NoTankSystem, "Conventional", TestName = "Completed Conventional Bus")]
     [TestCase(Conventional_PrimaryBus_Tyres, Conventional_InterimBusInput, Conventional_CompletedBusInput, "Conventional", TestName = "Completed Conventional Bus Different Tyres")]
     [TestCase(Conventional_PrimaryBus_DF, Conventional_InterimBusInput, Conventional_CompletedBusInput, "Conventional", TestName = "Completed ConventionalPrimaryBus_DualFuel")]
     [TestCase(Conventional_PrimaryBus_AT_Angledrive, Conventional_InterimBusInput, Conventional_CompletedBusInput, "Conventional", TestName = "Completed Conventional Bus_AT_Angledrive")]
     [TestCase(HEV_IEPC_S_PrimaryBus, HEV_InterimBusInput, HEV_CompletedBusInput, "IEPC-S", "HEV", TestName = "Completed HEV_IEPC_S_PrimaryBus")]
     [TestCase(HEV_IEPC_S_PrimaryBus_BatteryStd, HEV_InterimBusInput, HEV_CompletedBusInput, "IEPC-S", "HEV", TestName = "Completed HEV_IEPC_S_PrimaryBus_BatteryStd")]
     [TestCase(HEV_Px_PrimaryBus, HEV_InterimBusInput, HEV_CompletedBusInput, "Px", "HEV", TestName = "Completed HEV_Px_PrimaryBus")]
+	[TestCase(HEV_Px_PrimaryBus_OVC, HEV_InterimBusInput, HEV_CompletedBusInput, "Px", "HEV", TestName = "Completed HEV_Px_PrimaryBus")]
     [TestCase(HEV_Px_PrimaryBus_BatteryStd, HEV_InterimBusInput, HEV_CompletedBusInput, "Px", "HEV", TestName = "Completed HEV_Px_PrimaryBus_BatteryStd")]
     [TestCase(HEV_IHPC_PrimaryBus, HEV_InterimBusInput, HEV_CompletedBusInput, "Px", "HEV", TestName = "Completed HEV_IHPC_PrimaryBus")]
     [TestCase(HEV_IHPC_PrimaryBus_NoRetarder, HEV_InterimBusInput, HEV_CompletedBusInput, "Px", "HEV", TestName = "Completed HEV_IHPC_PrimaryBus_NoRetarder")]
@@ -173,7 +177,77 @@ public class CompletedBusFullReportTests : FullReportTestsBase
         CheckElementTypeNameContains(completedFileWriter.XMLMultistageReport, "Vehicle", expectedType);
     }
 
-	[TestCase(Conventional_PrimaryBus_DF, Conventional_InterimBusInput, Conventional_CompletedBusInput, "Conventional", TestName = "Completed ConventionalPrimaryBus_DualFuel Ignore")]
+
+	[TestCase(Conventional_PrimaryBus_Tyres, Conventional_InterimBusInput, Conventional_CompletedBusInput, "Conventional", TestName = "Completed Conventional Bus Different Tyres Error")]
+	[TestCase(HEV_Px_PrimaryBus, HEV_InterimBusInput, HEV_CompletedBusInput, "Px", "HEV", TestName = "Completed HEV_Px_PrimaryBus Error")]
+	[TestCase(HEV_Px_PrimaryBus_OVC, HEV_InterimBusInput, HEV_CompletedBusInput, "Px", "HEV", TestName = "Completed HEV_Px_PrimaryBus Error")]
+	[TestCase(HEV_S4_PrimaryBus, HEV_InterimBusInput, HEV_CompletedBusInput, "Sx", "HEV", TestName = "Completed HEV_S4_PrimaryBus Error")]
+	[TestCase(PEV_E2_PrimaryBus, PEV_InterimBusInput, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E2_PrimaryBus Error")]
+    public void CompletedBusFullReportErrorTest(string primaryBusInput, string completeBusInput, string completedBusInput, params string[] expectedType)
+    {
+        var completeCopy = CopyInputFile(completeBusInput);
+        CopyInputFile(primaryBusInput);
+        // completed: VIF + complete input (full) =>  VIF , MRF Completed, CIF Completed
+        // (approach: first simulate primary on its own to have an up-to-date VIF
+        // (no need to maintain this in the testfiles)
+
+        // setting up testcase 
+        // run primary simulation
+        var completeInputData = new DummyRunPrimaryWithCompletedBusInputDataProvider(XmlReader.Create(primaryBusInput),
+            XmlReader.Create(completeBusInput), _inputDataReader);
+        var fileWriter = GetReportWriter(TestContext.CurrentContext.Test.Name, primaryBusInput);
+        var sumWriter = new SummaryDataContainer(null);
+        var jobContainer = new JobContainer(sumWriter);
+
+        var _simulatorFactory =
+            _simFactoryFactory.Factory(ExecutionMode.Declaration, completeInputData, fileWriter, null, null, true);
+
+        Clearfiles(fileWriter); //remove files from previous test runs
+        jobContainer.AddRuns(_simulatorFactory);
+        jobContainer.Execute(false);
+        jobContainer.WaitFinished();
+
+        CheckReportExists(fileWriter, CifShouldExist: false, MrfShouldExist: true, VifShouldExist: true);
+        //File.Delete(fileWriter.XMLFullReportName);
+        var primaryVif = CopyInputFile(fileWriter.XMLPrimaryVehicleReportName);
+        // done preparing testcase...
+
+        var completedInputData = new DummyRunVIFWithInterimBusInputDataProvider(fileWriter.XMLMultistageReport,
+            XmlReader.Create(completedBusInput), _inputDataReader, false);
+        var completedFileWriter = GetReportWriter(TestContext.CurrentContext.Test.Name, completedBusInput);
+        var completedSumWriter = new SummaryDataContainer(null);
+        var completedJobContainer = new JobContainer(completedSumWriter);
+
+        var completedSimulatorFactory =
+            _simFactoryFactory.Factory(ExecutionMode.Declaration, completedInputData, completedFileWriter, null, null, true);
+
+        Clearfiles(completedFileWriter); //remove files from previous test runs
+        completedJobContainer.AddRuns(completedSimulatorFactory);
+		completedJobContainer.Execute(false);
+        completedJobContainer.WaitFinished();
+
+        CheckReportExists(completedFileWriter, CifShouldExist: false, MrfShouldExist: false, VifShouldExist: true);
+		CheckElementTypeNameContains(completedFileWriter.XMLMultistageReport, "Vehicle", expectedType);
+
+		// this is the actual test: run completed simulation
+		var completedInputData2 =
+			new DummyRunVIFWithInterimBusInputDataProvider(completedFileWriter.XMLMultistageReport, null,
+				_inputDataReader, true);
+		var completedFileWriter2 = GetReportWriter(TestContext.CurrentContext.Test.Name, completedBusInput);
+		var completedSumWriter2 = new SummaryDataContainer(null);
+		var completedJobContainer2 = new JobContainer(completedSumWriter2);
+
+		var completedSimulatorFactory2 =
+			_simFactoryFactory.Factory(ExecutionMode.Declaration, completedInputData2, completedFileWriter2, null, null, true);
+
+		Clearfiles(completedFileWriter2); //remove files from previous test runs
+		completedJobContainer2.AddRuns(completedSimulatorFactory2);
+		(completedJobContainer2.Runs[0].Run as DummyRunNonExemptedRun).FinishedWithError = true;
+        completedJobContainer2.Execute(false);
+		AssertHelper.Exception<Exception>(() => completedJobContainer2.WaitFinished());
+    }
+
+    [TestCase(Conventional_PrimaryBus_DF, Conventional_InterimBusInput, Conventional_CompletedBusInput, "Conventional", TestName = "Completed ConventionalPrimaryBus_DualFuel Ignore")]
 	[TestCase(HEV_Px_PrimaryBus, HEV_InterimBusInput, HEV_CompletedBusInput, "Px", "HEV", TestName = "Completed HEV_Px_PrimaryBus Ignore")]
 	[TestCase(HEV_S4_PrimaryBus, HEV_InterimBusInput, HEV_CompletedBusInput, "Sx", "HEV", TestName = "Completed HEV_S4_PrimaryBus Ignore")]
 	[TestCase(PEV_E4_PrimaryBus, PEV_InterimBusInput, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E4_PrimaryBus Ignore")]

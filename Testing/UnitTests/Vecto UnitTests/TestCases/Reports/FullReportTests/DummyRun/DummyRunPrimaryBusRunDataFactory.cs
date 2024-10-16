@@ -95,7 +95,13 @@ public class DummyRunPrimaryBusRunDataFactory : DeclarationModePrimaryBusRunData
 					if (simulationRunData == null) {
 						continue;
 					}
-					yield return simulationRunData;
+					if (vehicle.OvcHev) {
+						simulationRunData.OVCMode = OvcHevMode.ChargeDepleting;
+						yield return simulationRunData;
+						simulationRunData = CreateVectoRunData(mission, loading, modeIdx);
+						simulationRunData.OVCMode = OvcHevMode.ChargeSustaining;
+					}
+                    yield return simulationRunData;
 				}
 			}
 		}
@@ -397,7 +403,10 @@ public class DummyRunPrimaryBusRunDataFactory : DeclarationModePrimaryBusRunData
 			LegislativeClass = vehicleData.LegislativeClass,
 			AxleConfiguration = vehicleData.AxleConfiguration,
 			Date = vehicleData.Date,
-		};
+			AxleData = vehicleData.Components.AxleWheels.AxlesDeclaration.Select((x, idx) => new Axle() {
+				AxleType = idx == 1 ? AxleType.VehicleDriven : AxleType.VehicleNonDriven,
+			}).ToList(),
+        };
 	}
 
 	public static VehicleData.ADASData CreateDummyAdasData(IVehicleDeclarationInputData vehicleData)

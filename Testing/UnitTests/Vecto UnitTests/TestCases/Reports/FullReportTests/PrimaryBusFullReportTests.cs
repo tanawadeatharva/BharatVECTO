@@ -20,11 +20,13 @@ public class PrimaryBusFullReportTests : FullReportTestsBase
     #region PrimaryBus
 
     protected const string Conventional_PrimaryBus = BasePath + "PrimaryBus/Conventional_primaryBus_AMT.xml";
+	protected const string Conventional_PrimaryBus_TyreNS = BasePath + "PrimaryBus/Conventional_primaryBus_AMT_TyreNS-1.xml";
     protected const string Conventional_PrimaryBus_AT_Angledrive = BasePath + "PrimaryBus/Conventional_primaryBus_AT_Angledrive.xml";
     protected const string Conventional_PrimaryBus_NoRetarder = BasePath + "PrimaryBus/Conventional_primaryBus_AT_NoRetarder.xml";
     protected const string Conventional_PrimaryBus_RetarderMeasured = BasePath + "PrimaryBus/Conventional_primaryBus_AMT_RetarderMeasured.xml";
     protected const string Conventional_PrimaryBus_Tyres = BasePath + "PrimaryBus/Conventional_primaryBus_AMT_DifferentTyres.xml";
     protected const string HEV_Px_PrimaryBus = BasePath + "PrimaryBus/HEV_primaryBus_AMT_Px.xml";
+	protected const string HEV_Px_PrimaryBus_OVC = BasePath + "PrimaryBus/HEV_primaryBus_AMT_Px_OVC.xml";
     protected const string HEV_Px_PrimaryBus_BatteryStd = BasePath + "PrimaryBus/HEV_primaryBus_AMT_Px_BatteryStd.xml";
     protected const string HEV_IHPC_PrimaryBus = BasePath + "PrimaryBus/HEV_primaryBus_AMT_IHPC.xml";
     protected const string HEV_IHPC_PrimaryBus_NoRetarder = BasePath + "PrimaryBus/HEV_primaryBus_AMT_IHPC_NoRetarder.xml";
@@ -70,6 +72,7 @@ public class PrimaryBusFullReportTests : FullReportTestsBase
 
 
     [TestCase(Conventional_PrimaryBus, TestName = "FullReportTest_ConventionalPrimaryBus")]
+	[TestCase(Conventional_PrimaryBus_TyreNS, TestName = "FullReportTest_ConventionalPrimaryBus_TyreNamespace")]
     [TestCase(Conventional_PrimaryBus_NoRetarder, TestName = "FullReportTest_ConventionalPrimaryBus_NoRetarder")]
     [TestCase(Conventional_PrimaryBus_RetarderMeasured, TestName = "FullReportTest_ConventionalPrimaryBus_RetarderMeasured")]
     [TestCase(Conventional_PrimaryBus_AT_Angledrive, TestName = "FullReportTest_ConventionalPrimaryBus_AT_Angledrive")]
@@ -77,6 +80,7 @@ public class PrimaryBusFullReportTests : FullReportTestsBase
     [TestCase(HEV_IEPC_S_PrimaryBus, TestName = "FullReportTest_HEV_IEPC_S_PrimaryBus")]
     [TestCase(HEV_IEPC_S_PrimaryBus_BatteryStd, TestName = "FullReportTest_HEV_IEPC_S_PrimaryBus_BatteryStd")]
     [TestCase(HEV_Px_PrimaryBus, TestName = "FullReportTest_HEV_Px_PrimaryBus")]
+	[TestCase(HEV_Px_PrimaryBus_OVC, TestName = "FullReportTest_HEV_Px_PrimaryBus OVC")]
     [TestCase(HEV_Px_PrimaryBus_BatteryStd, TestName = "FullReportTest_HEV_Px_PrimaryBus_BatteryStd")]
     [TestCase(HEV_IHPC_PrimaryBus, TestName = "FullReportTest_HEV_IHPC_PrimaryBus")]
     [TestCase(HEV_IHPC_PrimaryBus_NoRetarder, TestName = "FullReportTest_HEV_IHPC_PrimaryBus_NoRetarder")]
@@ -139,6 +143,7 @@ public class PrimaryBusFullReportTests : FullReportTestsBase
 	[TestCase(HEV_Px_PrimaryBus, TestName = "FullReportTest_HEV_Px_PrimaryBus Error")]
 	[TestCase(HEV_S2_PrimaryBus_GenSetADC, TestName = "FullReportTest_HEV_S2_PrimaryBus_GenSetADC Error")]
 	[TestCase(PEV_E3_PrimaryBus, TestName = "FullReportTest_PEV_E3_PrimaryBus Error")]
+	[TestCase(HEV_Px_PrimaryBus_OVC, TestName = "FullReportTest_HEV_Px_PrimaryBus OVC")]
 	public void PrimaryBusFullReportErrorTest(string fileName)
 	{
 		CopyInputFile(fileName);

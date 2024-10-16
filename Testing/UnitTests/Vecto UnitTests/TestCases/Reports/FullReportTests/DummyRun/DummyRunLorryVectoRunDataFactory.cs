@@ -263,6 +263,9 @@ public class DummyRunLorryVectoRunDataFactory : DeclarationModeHeavyLorryRunData
 			VehicleCategory = VehicleCategory.RigidTruck,
 			OffVehicleCharging = vehicleData.OvcHev,
 			VocationalVehicle = vehicleData.VocationalVehicle,
+			AxleData = vehicleData.ExemptedVehicle ? null : vehicleData.Components.AxleWheels.AxlesDeclaration.Select((x, idx) => new Axle() {
+				AxleType = idx == 1 ? AxleType.VehicleDriven : AxleType.VehicleNonDriven,
+			}).ToList(),
 		};
 	}
 }

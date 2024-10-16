@@ -150,7 +150,8 @@ public class HeavyLorryFullReportTests : FullReportTestsBase
 	[TestCase(HEV_Px_HeavyLorry, TestName = "HEV_Px_HeavyLorry Error")]
 	[TestCase(HEV_S2_HeavyLorry, TestName = "HEV_S2_HeavyLorry Error")]
     [TestCase(PEV_E2_HeavyLorry, TestName = "PEV_E2_HeavyLorry Error")]
-    public void HeavyLorryFullReportErrorTest(string fileName)
+	[TestCase(HEV_S3_HeavyLorry_ovc, TestName = "HEV_S3_HeavyLorry_ovc")]
+	public void HeavyLorryFullReportErrorTest(string fileName)
 	{
         CopyInputFile(fileName);
         var inputProvider = _inputDataReader.CreateDeclaration(fileName);

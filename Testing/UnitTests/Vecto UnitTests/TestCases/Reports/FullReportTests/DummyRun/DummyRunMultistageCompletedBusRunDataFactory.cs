@@ -140,12 +140,18 @@ internal class DummyRunMultistageCompletedBusRunDataFactory : DeclarationModeCom
 	private IEnumerable<VectoRunData> CreateVectoRunDataForMissions(int modeIdx, string fuelMode)
 	{
 		var InputDataProvider = DataProvider.MultistageJobInputData;
+		var ovc = PrimaryVehicle.OvcHev;
 		foreach (var mission in _segment.Missions) {
 			foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
 				var simulationRunData = CreateVectoRunDataSpecific(mission, loading, modeIdx);
-				if (simulationRunData != null) {
+				if (ovc) {
+					simulationRunData.OVCMode = OvcHevMode.ChargeDepleting;
 					yield return simulationRunData;
+					simulationRunData = CreateVectoRunDataSpecific(mission, loading, modeIdx);
+					simulationRunData.OVCMode = OvcHevMode.ChargeSustaining;
 				}
+                yield return simulationRunData;
+				
 
 				var primarySegment = GetPrimarySegment();
 				var primaryMission = primarySegment.Missions.Where(
@@ -155,40 +161,67 @@ internal class DummyRunMultistageCompletedBusRunDataFactory : DeclarationModeCom
 								m.MissionType == mission.MissionType &&
 								m.BusParameter.FloorType == CompletedVehicle.VehicleCode.GetFloorType();
 					}).First();
+
 				simulationRunData = CreateVectoRunDataGeneric(
 					primaryMission,
 					new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(loading.Key,
 						primaryMission.Loadings[loading.Key]),
 					primarySegment, modeIdx);
+				if (ovc) {
+					var primaryResult = GetPrimaryResult(fuelMode, InputDataProvider, simulationRunData, OvcHevMode.ChargeDepleting);
+					simulationRunData.PrimaryResult = primaryResult;
+					simulationRunData.OVCMode = OvcHevMode.ChargeDepleting;
+                    yield return simulationRunData;
 
-				var primaryResult = InputDataProvider.JobInputData.PrimaryVehicle.GetResult(
-					simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
-					simulationRunData.VehicleData.Loading, OvcHevMode.NotApplicable);
-				if (primaryResult == null) {
-					throw new VectoException(
-						"Failed to find results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3}. Make sure PIF and completed vehicle data match!",
-						simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
-						simulationRunData.VehicleData.Loading);
-				}
-				if (primaryResult.ResultStatus == ResultStatus.PrimaryRunIgnored) {
-					throw new VectoException(
-						"The vehicle group of the complete(d) vehicle falls into a primary vehicle sub-group for which no result could be calculated due to the criterion of insufficient powertrain power.   mission: {1}, fuel mode: '{2}', payload: {3}.",
-						simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
-						simulationRunData.VehicleData.Loading);
-				}
-				if (primaryResult.ResultStatus != ResultStatus.Success) {
-					throw new VectoException(
-						"Simulation results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3} not finished successfully.",
-						simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
-						simulationRunData.VehicleData.Loading);
-				}
+					simulationRunData = CreateVectoRunDataGeneric(
+						primaryMission,
+						new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(loading.Key,
+							primaryMission.Loadings[loading.Key]),
+						primarySegment, modeIdx);
+					primaryResult = GetPrimaryResult(fuelMode, InputDataProvider, simulationRunData, OvcHevMode.ChargeSustaining);
+					simulationRunData.OVCMode = OvcHevMode.ChargeSustaining;
+                    simulationRunData.PrimaryResult = primaryResult;
+				} else {
+					var primaryResult = GetPrimaryResult(fuelMode, InputDataProvider, simulationRunData, OvcHevMode.NotApplicable);
+					simulationRunData.PrimaryResult = primaryResult;
+                }
 
-				simulationRunData.PrimaryResult = primaryResult;
 
-				yield return simulationRunData;
+                yield return simulationRunData;
 			}
 		}
 	}
+
+	private static IResult? GetPrimaryResult(string fuelMode, IMultistepBusInputDataProvider InputDataProvider,
+		VectoRunData simulationRunData, OvcHevMode ovc)
+	{
+		var primaryResult = InputDataProvider.JobInputData.PrimaryVehicle.GetResult(
+			simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
+			simulationRunData.VehicleData.Loading, ovc);
+		if (primaryResult == null) {
+			throw new VectoException(
+				"Failed to find results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3}. Make sure PIF and completed vehicle data match!",
+				simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
+				simulationRunData.VehicleData.Loading);
+		}
+
+		if (primaryResult.ResultStatus == ResultStatus.PrimaryRunIgnored) {
+			throw new VectoException(
+				"The vehicle group of the complete(d) vehicle falls into a primary vehicle sub-group for which no result could be calculated due to the criterion of insufficient powertrain power.   mission: {1}, fuel mode: '{2}', payload: {3}.",
+				simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
+				simulationRunData.VehicleData.Loading);
+		}
+
+		if (primaryResult.ResultStatus != ResultStatus.Success) {
+			throw new VectoException(
+				"Simulation results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3} not finished successfully.",
+				simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
+				simulationRunData.VehicleData.Loading);
+		}
+
+		return primaryResult;
+	}
+
 	protected override VectoRunData CreateVectoRunDataGeneric(Mission mission,
 		KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int? modeIdx,
 		OvcHevMode ovcHevMode = OvcHevMode.NotApplicable)
