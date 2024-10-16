@@ -109,7 +109,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestProjects", "TestProject
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XMLConverter", "XMLConverter", "{C1DAC201-B65B-4C48-8520-A366B5736830}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vecto UnitTests", "Testing\UnitTests\Vecto UnitTests\Vecto UnitTests.csproj", "{0EEAC4E2-29E4-4FC7-8D5D-DD7D3A995B96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vecto UnitTests", "Testing\UnitTests\Vecto UnitTests\Vecto UnitTests.csproj", "{0EEAC4E2-29E4-4FC7-8D5D-DD7D3A995B96}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XMLConverterLibrary", "XMLConverterLibrary\XMLConverterLibrary.csproj", "{090025B2-15F8-4C0C-916C-8E65AE4F64BA}"
 EndProject
@@ -117,7 +117,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XMLConverterLibraryTests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XMLConverterCmdLine", "XMLConverterCmdLine\XMLConverterCmdLine.csproj", "{1F146056-ADCE-4845-80F6-9BA7F3EAC449}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XMLConverterCmdLineStart", "Tools\XMLConverterCmdLineStart\XMLConverterCmdLineStart.csproj", "{DE50CAEF-6282-476D-A09B-AD16D6F2476F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XMLConverterCmdLineStart", "Tools\XMLConverterCmdLineStart\XMLConverterCmdLineStart.csproj", "{DE50CAEF-6282-476D-A09B-AD16D6F2476F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VECTO IntegrationTests", "Testing\IntegrationTests\VECTO IntegrationTests\VECTO IntegrationTests.csproj", "{765E8BAF-EEEC-46D3-B04F-A918BE77617A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -480,6 +482,18 @@ Global
 		{DE50CAEF-6282-476D-A09B-AD16D6F2476F}.MockupRelease|Any CPU.Build.0 = Release|Any CPU
 		{DE50CAEF-6282-476D-A09B-AD16D6F2476F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE50CAEF-6282-476D-A09B-AD16D6F2476F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{765E8BAF-EEEC-46D3-B04F-A918BE77617A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{765E8BAF-EEEC-46D3-B04F-A918BE77617A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{765E8BAF-EEEC-46D3-B04F-A918BE77617A}.Deploy|Any CPU.ActiveCfg = Debug|Any CPU
+		{765E8BAF-EEEC-46D3-B04F-A918BE77617A}.Deploy|Any CPU.Build.0 = Debug|Any CPU
+		{765E8BAF-EEEC-46D3-B04F-A918BE77617A}.MockupDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{765E8BAF-EEEC-46D3-B04F-A918BE77617A}.MockupDebug|Any CPU.Build.0 = Debug|Any CPU
+		{765E8BAF-EEEC-46D3-B04F-A918BE77617A}.MockupDeploy|Any CPU.ActiveCfg = Debug|Any CPU
+		{765E8BAF-EEEC-46D3-B04F-A918BE77617A}.MockupDeploy|Any CPU.Build.0 = Debug|Any CPU
+		{765E8BAF-EEEC-46D3-B04F-A918BE77617A}.MockupRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{765E8BAF-EEEC-46D3-B04F-A918BE77617A}.MockupRelease|Any CPU.Build.0 = Release|Any CPU
+		{765E8BAF-EEEC-46D3-B04F-A918BE77617A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{765E8BAF-EEEC-46D3-B04F-A918BE77617A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -509,6 +523,7 @@ Global
 		{CE4A3D7D-33D6-4552-8542-335B5B8C0552} = {C1DAC201-B65B-4C48-8520-A366B5736830}
 		{1F146056-ADCE-4845-80F6-9BA7F3EAC449} = {C1DAC201-B65B-4C48-8520-A366B5736830}
 		{DE50CAEF-6282-476D-A09B-AD16D6F2476F} = {351FF7E8-B56B-445E-8E98-A61E07C990DA}
+		{765E8BAF-EEEC-46D3-B04F-A918BE77617A} = {BE8CBCC8-8638-45D0-9045-003FE2FA64CB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B38F3172-132E-43F7-9C4B-5FDC3A28C051}
