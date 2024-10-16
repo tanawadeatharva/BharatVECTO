@@ -7,7 +7,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 
-namespace TUGraz.Vecto.UnitTests.TestCases.DataAdapter.Declaration;
+namespace TUGraz.Vecto.UnitTests.TestCases.DataAdapter.Declaration.Components;
 
 public class BatteryDataAdapterTests
 {
@@ -40,24 +40,25 @@ public class BatteryDataAdapterTests
         var _electricStorageAdapter = new ElectricStorageAdapter();
 
         BatterySystemData batteryData;
-        if (vectoSimulationJobType == VectoSimulationJobType.BatteryElectricVehicle && !ovc) {
+        if (vectoSimulationJobType == VectoSimulationJobType.BatteryElectricVehicle && !ovc)
+        {
 
-            NUnit.Framework.Assert.Throws<VectoException>(() => _electricStorageAdapter.CreateBatteryData(inputData.Object, vectoSimulationJobType, ovc));
-            NUnit.Framework.Assert.Pass();
+            Assert.Throws<VectoException>(() => _electricStorageAdapter.CreateBatteryData(inputData.Object, vectoSimulationJobType, ovc));
+            Assert.Pass();
         }
 
         batteryData = _electricStorageAdapter.CreateBatteryData(inputData.Object, vectoSimulationJobType, ovc);
 
 
 
-        NUnit.Framework.Assert.AreEqual(1, batteryData.Batteries.Count);
+        Assert.AreEqual(1, batteryData.Batteries.Count);
 
         var battery = batteryData.Batteries.FirstOrDefault().Item2;
 
-        NUnit.Framework.Assert.IsTrue(battery.MinSOC.IsEqual(expectedMinSoc), $"Expected: {expectedMinSoc}, Actual{battery.MinSOC}");
-        NUnit.Framework.Assert.IsTrue(battery.MaxSOC.IsEqual(expectedMaxSoc), $"Expected: {expectedMaxSoc}, Actual{battery.MaxSOC}");
+        Assert.IsTrue(battery.MinSOC.IsEqual(expectedMinSoc), $"Expected: {expectedMinSoc}, Actual{battery.MinSOC}");
+        Assert.IsTrue(battery.MaxSOC.IsEqual(expectedMaxSoc), $"Expected: {expectedMaxSoc}, Actual{battery.MaxSOC}");
 
-        NUnit.Framework.Assert.IsTrue(usableSocRange.IsEqual(battery.GetUsableSocRange()),
+        Assert.IsTrue(usableSocRange.IsEqual(battery.GetUsableSocRange()),
             $"Invalid {nameof(usableSocRange)} expected {usableSocRange} got {battery.GetUsableSocRange()}");
     }
 
@@ -75,11 +76,13 @@ public class BatteryDataAdapterTests
         var result = new TableData();
 
 
-        foreach (var col in values.First()) {
+        foreach (var col in values.First())
+        {
             result.Columns.Add(new DataColumn());
         }
 
-        foreach (var row in values) {
+        foreach (var row in values)
+        {
             result.Rows.Add(result.NewRow().ItemArray = row);
         }
         return result;
@@ -92,7 +95,7 @@ public class BatteryDataAdapterTests
         var elStorage = new Mock<IElectricStorageDeclarationInputData>();
         var ressPack = new Mock<IBatteryPackDeclarationInputData>();
 
-        ressPack.Setup(m => m.Capacity).Returns((1000).SI<AmpereSecond>());
+        ressPack.Setup(m => m.Capacity).Returns(1000.SI<AmpereSecond>());
 
         ressPack.Setup(m => m.MinSOC).Returns(() => minSoc);
         ressPack.Setup(m => m.MaxSOC).Returns(() => maxSoc);
@@ -123,8 +126,8 @@ public class BatteryDataAdapterTests
 
 internal static class BatteryDataExtension
 {
-	public static double GetUsableSocRange(this BatteryData battery)
-	{
-		return battery.MaxSOC - battery.MinSOC;
-	}
+    public static double GetUsableSocRange(this BatteryData battery)
+    {
+        return battery.MaxSOC - battery.MinSOC;
+    }
 }

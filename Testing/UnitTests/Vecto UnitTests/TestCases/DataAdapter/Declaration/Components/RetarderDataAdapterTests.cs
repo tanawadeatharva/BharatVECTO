@@ -8,81 +8,85 @@ using TUGraz.VectoCore.Tests.Utils;
 using Assert = NUnit.Framework.Assert;
 using TestContext = NUnit.Framework.TestContext;
 
-namespace TUGraz.Vecto.UnitTests.TestCases.DataAdapter.Declaration;
+namespace TUGraz.Vecto.UnitTests.TestCases.DataAdapter.Declaration.Components;
 
 public class RetarderDataAdapterTests
 {
 
-	private RetarderDataAdapter _retarderDataAdapter;
+    private RetarderDataAdapter _retarderDataAdapter;
 
-	[SetUp]
-	public void Setup()
-	{
-		_retarderDataAdapter = new RetarderDataAdapter();
-	}
+    [SetUp]
+    public void Setup()
+    {
+        _retarderDataAdapter = new RetarderDataAdapter();
+    }
 
     // TODO: MQ 20240510: mismatch of allowed retarder positions in declaration mode and engineering mode!
     [TestCase(RetarderType.AxlegearInputRetarder, ArchitectureID.E2, true),
-	TestCase(RetarderType.AxlegearInputRetarder, ArchitectureID.E3, false),
-	TestCase(RetarderType.AxlegearInputRetarder, ArchitectureID.E4, true),
-	TestCase(RetarderType.AxlegearInputRetarder, ArchitectureID.P2, true),
-	TestCase(RetarderType.AxlegearInputRetarder, ArchitectureID.P3, true),
-	TestCase(RetarderType.AxlegearInputRetarder, ArchitectureID.UNKNOWN, false),
+    TestCase(RetarderType.AxlegearInputRetarder, ArchitectureID.E3, false),
+    TestCase(RetarderType.AxlegearInputRetarder, ArchitectureID.E4, true),
+    TestCase(RetarderType.AxlegearInputRetarder, ArchitectureID.P2, true),
+    TestCase(RetarderType.AxlegearInputRetarder, ArchitectureID.P3, true),
+    TestCase(RetarderType.AxlegearInputRetarder, ArchitectureID.UNKNOWN, false),
 
-	TestCase(RetarderType.EngineRetarder, ArchitectureID.E2, true),
-	TestCase(RetarderType.EngineRetarder, ArchitectureID.E3, true),
-	TestCase(RetarderType.EngineRetarder, ArchitectureID.E4, true),
-	TestCase(RetarderType.EngineRetarder, ArchitectureID.P2, false),
-	TestCase(RetarderType.EngineRetarder, ArchitectureID.P3, false),
-	TestCase(RetarderType.EngineRetarder, ArchitectureID.UNKNOWN, false),
+    TestCase(RetarderType.EngineRetarder, ArchitectureID.E2, true),
+    TestCase(RetarderType.EngineRetarder, ArchitectureID.E3, true),
+    TestCase(RetarderType.EngineRetarder, ArchitectureID.E4, true),
+    TestCase(RetarderType.EngineRetarder, ArchitectureID.P2, false),
+    TestCase(RetarderType.EngineRetarder, ArchitectureID.P3, false),
+    TestCase(RetarderType.EngineRetarder, ArchitectureID.UNKNOWN, false),
 
-	TestCase(RetarderType.LossesIncludedInTransmission, ArchitectureID.E2, false),
-	TestCase(RetarderType.LossesIncludedInTransmission, ArchitectureID.E3, true),
-	TestCase(RetarderType.LossesIncludedInTransmission, ArchitectureID.E4, true),
-	TestCase(RetarderType.LossesIncludedInTransmission, ArchitectureID.P2, false),
-	TestCase(RetarderType.LossesIncludedInTransmission, ArchitectureID.P3, false),
-	TestCase(RetarderType.LossesIncludedInTransmission, ArchitectureID.UNKNOWN, false),
+    TestCase(RetarderType.LossesIncludedInTransmission, ArchitectureID.E2, false),
+    TestCase(RetarderType.LossesIncludedInTransmission, ArchitectureID.E3, true),
+    TestCase(RetarderType.LossesIncludedInTransmission, ArchitectureID.E4, true),
+    TestCase(RetarderType.LossesIncludedInTransmission, ArchitectureID.P2, false),
+    TestCase(RetarderType.LossesIncludedInTransmission, ArchitectureID.P3, false),
+    TestCase(RetarderType.LossesIncludedInTransmission, ArchitectureID.UNKNOWN, false),
 
-	TestCase(RetarderType.None, ArchitectureID.E2, false),
-	TestCase(RetarderType.None, ArchitectureID.E3, false),
-	TestCase(RetarderType.None, ArchitectureID.E4, false),
-	TestCase(RetarderType.None, ArchitectureID.P2, false),
-	TestCase(RetarderType.None, ArchitectureID.P3, false),
-	TestCase(RetarderType.None, ArchitectureID.UNKNOWN, false),
+    TestCase(RetarderType.None, ArchitectureID.E2, false),
+    TestCase(RetarderType.None, ArchitectureID.E3, false),
+    TestCase(RetarderType.None, ArchitectureID.E4, false),
+    TestCase(RetarderType.None, ArchitectureID.P2, false),
+    TestCase(RetarderType.None, ArchitectureID.P3, false),
+    TestCase(RetarderType.None, ArchitectureID.UNKNOWN, false),
 
-	TestCase(RetarderType.TransmissionInputRetarder, ArchitectureID.E2, false),
-	TestCase(RetarderType.TransmissionInputRetarder, ArchitectureID.E3, true),
-	TestCase(RetarderType.TransmissionInputRetarder, ArchitectureID.E4, true),
-	TestCase(RetarderType.TransmissionInputRetarder, ArchitectureID.P2, false),
-	TestCase(RetarderType.TransmissionInputRetarder, ArchitectureID.P3, false),
-	TestCase(RetarderType.TransmissionInputRetarder, ArchitectureID.UNKNOWN, false),
+    TestCase(RetarderType.TransmissionInputRetarder, ArchitectureID.E2, false),
+    TestCase(RetarderType.TransmissionInputRetarder, ArchitectureID.E3, true),
+    TestCase(RetarderType.TransmissionInputRetarder, ArchitectureID.E4, true),
+    TestCase(RetarderType.TransmissionInputRetarder, ArchitectureID.P2, false),
+    TestCase(RetarderType.TransmissionInputRetarder, ArchitectureID.P3, false),
+    TestCase(RetarderType.TransmissionInputRetarder, ArchitectureID.UNKNOWN, false),
 
-	TestCase(RetarderType.TransmissionOutputRetarder, ArchitectureID.E2, false),
-	TestCase(RetarderType.TransmissionOutputRetarder, ArchitectureID.E3, true),
-	TestCase(RetarderType.TransmissionOutputRetarder, ArchitectureID.E4, true),
-	TestCase(RetarderType.TransmissionOutputRetarder, ArchitectureID.P2, false),
-	TestCase(RetarderType.TransmissionOutputRetarder, ArchitectureID.P3, false),
-	TestCase(RetarderType.TransmissionOutputRetarder, ArchitectureID.UNKNOWN, false),
+    TestCase(RetarderType.TransmissionOutputRetarder, ArchitectureID.E2, false),
+    TestCase(RetarderType.TransmissionOutputRetarder, ArchitectureID.E3, true),
+    TestCase(RetarderType.TransmissionOutputRetarder, ArchitectureID.E4, true),
+    TestCase(RetarderType.TransmissionOutputRetarder, ArchitectureID.P2, false),
+    TestCase(RetarderType.TransmissionOutputRetarder, ArchitectureID.P3, false),
+    TestCase(RetarderType.TransmissionOutputRetarder, ArchitectureID.UNKNOWN, false),
     ]
     public void CreateRetarderDataTest(RetarderType type, ArchitectureID arch, bool throwsExeption)
     {
         var lossMap = InputDataHelper.InputDataAsTableData("Retarder Speed [rpm],Loss Torque [Nm]",
             new[] { "0, 10", "1000, 12", "2000, 18", "2300, 20.58" });
 
-		var inputData = new Mock<IRetarderInputData>();
-		inputData.Setup(r => r.Type).Returns(type);
-		if (type.IsDedicatedComponent()) {
-			inputData.Setup(r => r.LossMap).Returns(lossMap);
-		}
+        var inputData = new Mock<IRetarderInputData>();
+        inputData.Setup(r => r.Type).Returns(type);
+        if (type.IsDedicatedComponent())
+        {
+            inputData.Setup(r => r.LossMap).Returns(lossMap);
+        }
 
-		if (throwsExeption) {
-			Assert.Throws<VectoException>(() => _retarderDataAdapter.CreateRetarderData(inputData.Object, arch, null));
-		} else {
-			var retarderData = _retarderDataAdapter.CreateRetarderData(inputData.Object, arch, null);
-			Assert.NotNull(retarderData);
-		}
+        if (throwsExeption)
+        {
+            Assert.Throws<VectoException>(() => _retarderDataAdapter.CreateRetarderData(inputData.Object, arch, null));
+        }
+        else
+        {
+            var retarderData = _retarderDataAdapter.CreateRetarderData(inputData.Object, arch, null);
+            Assert.NotNull(retarderData);
+        }
 
-	}
+    }
 
 
     [Test]
@@ -137,16 +141,19 @@ public class RetarderDataAdapterTests
 
     }
 
-	private void CreateRetarderData(ArchitectureID archID, bool shouldWork, Mock<IRetarderInputData> retarderMoq,
+    private void CreateRetarderData(ArchitectureID archID, bool shouldWork, Mock<IRetarderInputData> retarderMoq,
         Mock<IIEPCDeclarationInputData> iepcInputData)
     {
-        if (shouldWork) {
+        if (shouldWork)
+        {
             TestContext.Progress.WriteLine("Should work");
             var data = _retarderDataAdapter.CreateRetarderData(retarderMoq.Object, archID, iepcInputData?.Object);
 
             Assert.NotNull(data, "Should work");
-        } else {
-            Assert.Throws<VectoException>((() => { _retarderDataAdapter.CreateRetarderData(retarderMoq.Object, archID, iepcInputData?.Object); }), "Should not work - but does!");
+        }
+        else
+        {
+            Assert.Throws<VectoException>(() => { _retarderDataAdapter.CreateRetarderData(retarderMoq.Object, archID, iepcInputData?.Object); }, "Should not work - but does!");
             TestContext.Progress.WriteLine("Doesnt work");
         }
     }
@@ -154,7 +161,8 @@ public class RetarderDataAdapterTests
 
     private bool PEVRetarderShouldWork(RetarderType retarderType, ArchitectureID archId)
     {
-        if (retarderType == RetarderType.None) {
+        if (retarderType == RetarderType.None)
+        {
             return true;
         }
         var s_hev_supported_types = new Dictionary<ArchitectureID, HashSet<RetarderType>>() {
@@ -176,7 +184,8 @@ public class RetarderDataAdapterTests
 
     private bool S_HEVRetarderShouldWork(RetarderType retarderType, ArchitectureID archId)
     {
-        if (retarderType == RetarderType.None) {
+        if (retarderType == RetarderType.None)
+        {
             return true;
         }
         var s_hev_supported_types = new Dictionary<ArchitectureID, HashSet<RetarderType>>() {
@@ -203,12 +212,14 @@ public class RetarderDataAdapterTests
 
     public bool P_HEVRetarderShouldWork(RetarderType type, ArchitectureID arch)
     {
-        if (type == RetarderType.TransmissionInputRetarder && arch == ArchitectureID.P_IHPC) {
+        if (type == RetarderType.TransmissionInputRetarder && arch == ArchitectureID.P_IHPC)
+        {
             return false;
         }
 
 
-        if (type != RetarderType.AxlegearInputRetarder) {
+        if (type != RetarderType.AxlegearInputRetarder)
+        {
             return true;
 
         }
@@ -216,23 +227,27 @@ public class RetarderDataAdapterTests
         return false;
     }
 
-    
+
     public bool IEPCShouldWork(RetarderType retarderType, bool differentialIncluded, bool DesignTypeWheelMotor)
     {
-        if (retarderType == RetarderType.None) {
+        if (retarderType == RetarderType.None)
+        {
             return true;
         }
-        if (DesignTypeWheelMotor) {
+        if (DesignTypeWheelMotor)
+        {
             //This property "wins"!
             return false;
         }
 
-        if (retarderType == RetarderType.LossesIncludedInTransmission) {
+        if (retarderType == RetarderType.LossesIncludedInTransmission)
+        {
             return true;
         }
 
 
-        if (retarderType == RetarderType.AxlegearInputRetarder && !differentialIncluded) {
+        if (retarderType == RetarderType.AxlegearInputRetarder && !differentialIncluded)
+        {
             return true;
         }
 
@@ -252,10 +267,12 @@ public class RetarderDataAdapterTests
 
     TableData MockLossMap()
     {
-        var tableData = new TableData("Mock") {
+        var tableData = new TableData("Mock")
+        {
             Columns = { "c_1", "c_2" }
         };
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++)
+        {
             var row = tableData.NewRow();
             row[0] = 3.0;
             row[1] = 42.0;

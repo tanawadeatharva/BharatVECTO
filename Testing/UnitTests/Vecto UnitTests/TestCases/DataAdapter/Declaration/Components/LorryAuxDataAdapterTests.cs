@@ -11,7 +11,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using Assert = NUnit.Framework.Assert;
 
-namespace TUGraz.Vecto.UnitTests.TestCases.DataAdapter.Declaration;
+namespace TUGraz.Vecto.UnitTests.TestCases.DataAdapter.Declaration.Components;
 
 public class LorryAuxDataAdapterTests
 {
@@ -255,7 +255,8 @@ public class LorryAuxDataAdapterTests
         var auxData = GetAuxData(fail, dataAdapter, auxInput, VectoSimulationJobType.ParallelHybridVehicle, steeredAxles, 4.SI<Meter>(), VehicleClass.Class2, MissionType.LongHaul);
 
         VectoRunData.AuxData sp = null;
-        if (hasElectric && !hasMechanic) {
+        if (hasElectric && !hasMechanic)
+        {
             sp = auxData.Single(data =>
                 data.ID is Constants.Auxiliaries.IDs.SteeringPump or Constants.Auxiliaries.IDs.SteeringPump_el);
 
@@ -263,7 +264,8 @@ public class LorryAuxDataAdapterTests
             Assert.Pass();
         }
 
-        if (hasElectric && hasMechanic) {
+        if (hasElectric && hasMechanic)
+        {
             var spS = auxData.Where(data => data.ID is Constants.Auxiliaries.IDs.SteeringPump);
             Assert.AreEqual(2, spS.Count());
 
@@ -271,7 +273,8 @@ public class LorryAuxDataAdapterTests
             Assert.Pass();
         }
 
-        if (!hasElectric && hasMechanic) {
+        if (!hasElectric && hasMechanic)
+        {
             sp = auxData.Single(data =>
                 data.ID is Constants.Auxiliaries.IDs.SteeringPump);
 
@@ -335,7 +338,8 @@ public class LorryAuxDataAdapterTests
         var auxData = new Mock<IAuxiliariesDeclarationInputData>();
 
         Mock<IAuxiliaryDeclarationInputData> steeringSystem = new Mock<IAuxiliaryDeclarationInputData>();
-        foreach (var spTechnoly in spTechnologies) {
+        foreach (var spTechnoly in spTechnologies)
+        {
             steeringSystem.SetType(AuxiliaryType.SteeringPump)
                 .AddTechnology(spTechnoly);
         }
@@ -354,13 +358,19 @@ public class LorryAuxDataAdapterTests
 
 
         auxData.AddAuxiliaries(steeringSystem.Object, hvac.Object, pneumatic.Object, elSystem.Object);
-        try {
+        try
+        {
             dataAdapter.CreateAuxiliaryData(auxData.Object, null, MissionType.LongHaul, VehicleClass.Class12,
                 4.SI<Meter>(), steeredAxles ?? 1, VectoSimulationJobType.BatteryElectricVehicle);
-        } catch (Exception ex) {
-            if (fail) {
+        }
+        catch (Exception ex)
+        {
+            if (fail)
+            {
                 Assert.Pass($"Expected Exception {ex.Message}");
-            } else {
+            }
+            else
+            {
                 throw new Exception("Exception occured", ex);
             }
         }
@@ -370,13 +380,19 @@ public class LorryAuxDataAdapterTests
     private static IList<VectoRunData.AuxData> GetAuxData(bool fail, HeavyLorryAuxiliaryDataAdapter dataAdapter, Mock<IAuxiliariesDeclarationInputData> auxInput, VectoSimulationJobType vectoSimulationJobType, int numSteeredAxles, Meter vehicleLength, VehicleClass vehicleClass, MissionType missionType)
     {
         IList<VectoRunData.AuxData> auxData = null;
-        try {
+        try
+        {
             auxData = dataAdapter.CreateAuxiliaryData(auxInput.Object, null, missionType, vehicleClass,
                 vehicleLength, numSteeredAxles, vectoSimulationJobType);
-        } catch (VectoException ex) {
-            if (fail) {
+        }
+        catch (VectoException ex)
+        {
+            if (fail)
+            {
                 Assert.Pass(ex.Message);
-            } else {
+            }
+            else
+            {
                 Assert.Fail(ex.Message, "Unexpected exception");
             }
         }
@@ -391,8 +407,10 @@ public class LorryAuxDataAdapterTests
         var auxInput = new Mock<IAuxiliariesDeclarationInputData>();
 
         Mock<IAuxiliaryDeclarationInputData> steeringSystem = new Mock<IAuxiliaryDeclarationInputData>();
-        foreach (var spTechnoly in spTechnologies) {
-            if (spTechnoly.IsNullOrEmpty()) {
+        foreach (var spTechnoly in spTechnologies)
+        {
+            if (spTechnoly.IsNullOrEmpty())
+            {
                 continue;
 
             }
@@ -411,7 +429,8 @@ public class LorryAuxDataAdapterTests
             .AddTechnology(elSystemTechnology);
 
         Mock<IAuxiliaryDeclarationInputData> fan = null;
-        if (!fanTech.IsNullOrEmpty()) {
+        if (!fanTech.IsNullOrEmpty())
+        {
             fan = new Mock<IAuxiliaryDeclarationInputData>().SetType(AuxiliaryType.Fan).AddTechnology(fanTech);
             auxInput.AddAuxiliary(fan.Object);
         }

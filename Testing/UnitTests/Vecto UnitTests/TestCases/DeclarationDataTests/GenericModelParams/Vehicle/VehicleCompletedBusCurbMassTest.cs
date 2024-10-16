@@ -2,7 +2,7 @@
 using Moq;
 using Ninject;
 using NUnit.Framework;
-using TUGraz.Vecto.UnitTests.TestCases.InputData.RunDataFactory;
+using TUGraz.Vecto.UnitTests.TestCases.RunDataFactory;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;

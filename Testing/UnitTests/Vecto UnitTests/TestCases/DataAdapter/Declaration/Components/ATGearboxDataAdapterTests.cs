@@ -13,121 +13,126 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Tests.Utils;
 
-namespace TUGraz.Vecto.UnitTests.TestCases.DataAdapter.Declaration;
+namespace TUGraz.Vecto.UnitTests.TestCases.DataAdapter.Declaration.Components;
 
 public class ATGearboxDataAdapterTests
 {
-	GearboxType[] GbxTypes = new[] { GearboxType.ATSerial };
+    GearboxType[] GbxTypes = new[] { GearboxType.ATSerial };
 
     [TestCase()]
-	public void TestATGearboxLastGearDisabled()
-	{
-		var limits = new List<ITorqueLimitInputData>() {
-			new TorqueLimitInputData() {
-				Gear = 8,
-				MaxTorque = 0.SI<NewtonMeter>()
-			}
-		};
+    public void TestATGearboxLastGearDisabled()
+    {
+        var limits = new List<ITorqueLimitInputData>() {
+            new TorqueLimitInputData() {
+                Gear = 8,
+                MaxTorque = 0.SI<NewtonMeter>()
+            }
+        };
 
-		var inputData = GetMockInputData(limits);
-		var runData = GetDummyVectoRunData(inputData.Components.GearboxInputData.Gears.Count);
+        var inputData = GetMockInputData(limits);
+        var runData = GetDummyVectoRunData(inputData.Components.GearboxInputData.Gears.Count);
 
-		var dao = new GearboxDataAdapter(new TorqueConverterDataAdapter());
-		var gbxData = dao.CreateGearboxData(inputData, runData, null, GbxTypes);
+        var dao = new GearboxDataAdapter(new TorqueConverterDataAdapter());
+        var gbxData = dao.CreateGearboxData(inputData, runData, null, GbxTypes);
 
-		Assert.AreEqual(7, gbxData.Gears.Count);
-	}
+        Assert.AreEqual(7, gbxData.Gears.Count);
+    }
 
-	[TestCase()]
-	public void TestATGearboxLastButOneGearDisabled()
-	{
-		var limits = new List<ITorqueLimitInputData>() {
-			new TorqueLimitInputData() {
-				Gear = 7,
-				MaxTorque = 0.SI<NewtonMeter>()
-			}
-		};
+    [TestCase()]
+    public void TestATGearboxLastButOneGearDisabled()
+    {
+        var limits = new List<ITorqueLimitInputData>() {
+            new TorqueLimitInputData() {
+                Gear = 7,
+                MaxTorque = 0.SI<NewtonMeter>()
+            }
+        };
 
-		var inputData = GetMockInputData(limits);
-		var runData = GetDummyVectoRunData(inputData.Components.GearboxInputData.Gears.Count);
+        var inputData = GetMockInputData(limits);
+        var runData = GetDummyVectoRunData(inputData.Components.GearboxInputData.Gears.Count);
 
-		var dao = new GearboxDataAdapter(new TorqueConverterDataAdapter());
-		
+        var dao = new GearboxDataAdapter(new TorqueConverterDataAdapter());
+
         AssertHelper.Exception<VectoException>(
-			() => {
-				var gbx = dao.CreateGearboxData(inputData, runData, null, GbxTypes);
-			}, "Only the last 1 or 2 gears can be disabled. Disabling gear 7 for a 8-speed gearbox is not allowed.");
+            () =>
+            {
+                var gbx = dao.CreateGearboxData(inputData, runData, null, GbxTypes);
+            }, "Only the last 1 or 2 gears can be disabled. Disabling gear 7 for a 8-speed gearbox is not allowed.");
 
-	}
+    }
 
-	[TestCase()]
-	public void TestATGearboxLastTwoGearsDisabled()
-	{
-		var limits = new List<ITorqueLimitInputData>() {
-			new TorqueLimitInputData() {
-				Gear = 7,
-				MaxTorque = 0.SI<NewtonMeter>()
-			},
-			new TorqueLimitInputData() {
-				Gear = 8,
-				MaxTorque = 0.SI<NewtonMeter>()
-			}
-		};
+    [TestCase()]
+    public void TestATGearboxLastTwoGearsDisabled()
+    {
+        var limits = new List<ITorqueLimitInputData>() {
+            new TorqueLimitInputData() {
+                Gear = 7,
+                MaxTorque = 0.SI<NewtonMeter>()
+            },
+            new TorqueLimitInputData() {
+                Gear = 8,
+                MaxTorque = 0.SI<NewtonMeter>()
+            }
+        };
 
-		var inputData = GetMockInputData(limits);
-		var runData = GetDummyVectoRunData(inputData.Components.GearboxInputData.Gears.Count);
+        var inputData = GetMockInputData(limits);
+        var runData = GetDummyVectoRunData(inputData.Components.GearboxInputData.Gears.Count);
 
-		var dao = new GearboxDataAdapter(new TorqueConverterDataAdapter());
-		var gbxData = dao.CreateGearboxData(inputData, runData, null, GbxTypes);
+        var dao = new GearboxDataAdapter(new TorqueConverterDataAdapter());
+        var gbxData = dao.CreateGearboxData(inputData, runData, null, GbxTypes);
         Assert.AreEqual(6, gbxData.Gears.Count);
-	}
+    }
 
-	[TestCase()]
-	public void TestATGearboxFirstGearDisabled()
-	{
-		var limits = new List<ITorqueLimitInputData>() {
-			new TorqueLimitInputData() {
-				Gear = 1,
-				MaxTorque = 0.SI<NewtonMeter>()
-			},
+    [TestCase()]
+    public void TestATGearboxFirstGearDisabled()
+    {
+        var limits = new List<ITorqueLimitInputData>() {
+            new TorqueLimitInputData() {
+                Gear = 1,
+                MaxTorque = 0.SI<NewtonMeter>()
+            },
 
-		};
+        };
 
-		var inputData = GetMockInputData(limits);
-		var runData = GetDummyVectoRunData(inputData.Components.GearboxInputData.Gears.Count);
+        var inputData = GetMockInputData(limits);
+        var runData = GetDummyVectoRunData(inputData.Components.GearboxInputData.Gears.Count);
 
-		var dao = new GearboxDataAdapter(new TorqueConverterDataAdapter());
+        var dao = new GearboxDataAdapter(new TorqueConverterDataAdapter());
 
-        AssertHelper.Exception<VectoException>(() => {
-			var gbxData = dao.CreateGearboxData(inputData, runData, null, GbxTypes);
-		}, messageContains: "Only the last 1 or 2 gears can be disabled.");
-	}
+        AssertHelper.Exception<VectoException>(() =>
+        {
+            var gbxData = dao.CreateGearboxData(inputData, runData, null, GbxTypes);
+        }, messageContains: "Only the last 1 or 2 gears can be disabled.");
+    }
 
     private IVehicleDeclarationInputData GetMockInputData(List<ITorqueLimitInputData> torqueLimits)
     {
         var input = new Mock<IVehicleDeclarationInputData>();
         var components = new Mock<IVehicleComponentsDeclaration>();
         input.Setup(i => i.Components).Returns(components.Object);
-		input.Setup(i => i.TorqueLimits).Returns(torqueLimits);
+        input.Setup(i => i.TorqueLimits).Returns(torqueLimits);
         var gbx = new Mock<IGearboxDeclarationInputData>();
         var tc = new Mock<ITorqueConverterDeclarationInputData>();
 
         components.Setup(c => c.GearboxInputData).Returns(gbx.Object);
         components.Setup(c => c.TorqueConverterInputData).Returns(tc.Object);
-        
-		var gearRatios = new double[] {
+
+        var gearRatios = new double[] {
             3.4, 1.9, 1.42, 1.0, 0.7, 0.62, 0.62, 0.62
         };
         var header = "Input Speed [rpm],Input Torque [Nm],Torque Loss [Nm]";
         var efficiency = 0.98;
         var data = new List<string>();
-        foreach (var speed in new[] { 0, 10000 }) {
-            foreach (var tq in new[] { 1e5, -1e5, 0 }) {
+        foreach (var speed in new[] { 0, 10000 })
+        {
+            foreach (var tq in new[] { 1e5, -1e5, 0 })
+            {
                 data.Add($"{speed:f2}, {tq:f2}, {(1 - efficiency) * Math.Abs(tq)}");
             }
         }
         var lossmap = InputDataHelper.InputDataAsTableData(header, data.ToArray());
-        var gears = gearRatios.Select((x, idx) => {
+        var gears = gearRatios.Select((x, idx) =>
+        {
             var gear = new Mock<ITransmissionInputData>();
             gear.Setup(g => g.Ratio).Returns(x);
             gear.Setup(g => g.Gear).Returns(idx + 1);
@@ -187,17 +192,20 @@ public class ATGearboxDataAdapterTests
     {
         var fldData = InputDataHelper.InputDataAsTableData(EngineFldHeader, EngineFldData);
         var fld = FullLoadCurveReader.Create(fldData);
-        var runData = new VectoRunData() {
-            VehicleData = new VehicleData() {
+        var runData = new VectoRunData()
+        {
+            VehicleData = new VehicleData()
+            {
                 DynamicTyreRadius = 0.465.SI<Meter>(),
             },
-            EngineData = new CombustionEngineData() {
+            EngineData = new CombustionEngineData()
+            {
                 Inertia = 0.SI<KilogramSquareMeter>(),
                 FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(),
             }
         };
         for (uint i = 0; i <= numGears; i++)
-			runData.EngineData.FullLoadCurves[i] = fld;
+            runData.EngineData.FullLoadCurves[i] = fld;
         return runData;
     }
 
