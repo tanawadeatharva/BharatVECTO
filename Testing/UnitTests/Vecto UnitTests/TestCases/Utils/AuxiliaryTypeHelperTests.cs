@@ -2,7 +2,6 @@
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.Utils;
 

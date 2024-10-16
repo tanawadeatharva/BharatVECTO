@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Moq;
 using NUnit.Framework;
-using TUGraz.Vecto.UnitTests.Utils;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;

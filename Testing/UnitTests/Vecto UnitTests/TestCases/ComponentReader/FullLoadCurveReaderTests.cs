@@ -2,14 +2,11 @@
 using NLog.Config;
 using NLog.Targets;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 using TUGraz.Vecto.UnitTests.Utils;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.ComponentReader;
 

@@ -1,6 +1,5 @@
 ﻿using Moq;
 using NUnit.Framework;
-using System.Data.Common;
 using TUGraz.Vecto.UnitTests.Utils;
 using TUGraz.Vecto.UnitTests.Utils.MockInputData;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -8,14 +7,10 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
-using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.AuxiliaryDataAdapter;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.OutputData.FileIO;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.DataAdapter.Declaration.BusAux.HVAC;
 

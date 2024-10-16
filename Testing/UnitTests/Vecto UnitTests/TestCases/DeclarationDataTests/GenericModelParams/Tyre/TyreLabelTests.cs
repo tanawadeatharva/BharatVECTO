@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using TUGraz.VectoCore.Models.Declaration;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.DeclarationDataTests.GenericModelParams.Tyre;
 

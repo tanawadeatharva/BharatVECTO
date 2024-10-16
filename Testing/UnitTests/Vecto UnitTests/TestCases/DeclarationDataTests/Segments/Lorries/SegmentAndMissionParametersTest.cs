@@ -1,13 +1,10 @@
 ﻿using NUnit.Framework;
-using NUnit.Framework.Constraints;
 using TUGraz.Vecto.UnitTests.Utils;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
-using CollectionAssert = Microsoft.VisualStudio.TestTools.UnitTesting.CollectionAssert;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.DeclarationDataTests.Segments.Lorries;
 

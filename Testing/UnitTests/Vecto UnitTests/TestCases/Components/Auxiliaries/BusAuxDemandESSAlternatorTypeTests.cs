@@ -1,5 +1,4 @@
-﻿using Moq;
-using Ninject;
+﻿using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;

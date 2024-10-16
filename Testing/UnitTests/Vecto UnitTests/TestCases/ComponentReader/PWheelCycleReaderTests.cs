@@ -1,16 +1,7 @@
-﻿using System.Text;
-using NUnit.Framework;
-using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Utils;
+﻿using NUnit.Framework;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.ComponentReader;
 

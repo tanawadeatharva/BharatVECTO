@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.Utils.ExtensionMethods;
 

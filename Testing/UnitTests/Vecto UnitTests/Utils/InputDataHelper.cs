@@ -29,9 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
-using System.Data;
-using System.IO;
 using System.Text.RegularExpressions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;

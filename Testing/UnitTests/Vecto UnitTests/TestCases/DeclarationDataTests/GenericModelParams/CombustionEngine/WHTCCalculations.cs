@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Declaration;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.DeclarationDataTests.GenericModelParams.CombustionEngine;
 

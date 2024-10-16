@@ -15,7 +15,6 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Utils;
 using Assert = NUnit.Framework.Assert;
 using TestContext = NUnit.Framework.TestContext;
-using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.InputData.XML.DataProvider.v2_3;
 

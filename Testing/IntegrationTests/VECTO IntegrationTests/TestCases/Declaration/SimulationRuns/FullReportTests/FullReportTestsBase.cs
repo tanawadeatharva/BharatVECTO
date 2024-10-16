@@ -9,8 +9,6 @@ using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Utils;
-using Assert = NUnit.Framework.Assert;
-using TestContext = NUnit.Framework.TestContext;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.Vecto.IntegrationTests.TestCases.Declaration.SimulationRuns.FullReportTests;

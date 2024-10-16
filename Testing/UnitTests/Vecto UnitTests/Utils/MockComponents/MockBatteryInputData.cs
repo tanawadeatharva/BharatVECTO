@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using TUGraz.VectoCommon.InputData;
+﻿using TUGraz.VectoCommon.InputData;
 
 namespace TUGraz.VectoCore.Tests.Utils {
 	public class MockBatteryInputData : IElectricStorageSystemEngineeringInputData
