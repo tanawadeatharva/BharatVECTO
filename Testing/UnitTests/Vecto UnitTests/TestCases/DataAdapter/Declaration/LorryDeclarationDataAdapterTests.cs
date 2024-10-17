@@ -1,10 +1,5 @@
-﻿using System.Collections;
-using Ninject;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System.Reflection;
-using TUGraz.VectoCore;
-using TUGraz.VectoCore.InputData;
-using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.AuxiliaryDataAdapter;
