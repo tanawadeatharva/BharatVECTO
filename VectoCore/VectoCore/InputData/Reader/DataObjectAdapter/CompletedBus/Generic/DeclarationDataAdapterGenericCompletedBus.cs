@@ -26,12 +26,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 				{ GearboxType.MT, GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial };
 
             #region ComponentDataAdapter
-			private readonly IDriverDataAdapterBus _driverDataAdapter = new CompletedBusGenericDriverDataAdapter();
-			//protected readonly IVehicleDataAdapter _vehicleDataAdapter = new CompletedBusGenericVehicleDataAdapter();
-			private readonly IAxleGearDataAdapter _axleGearDataAdapter = new GenericCompletedBusAxleGearDataAdapter();
-			private readonly IGenericRetarderDataAdapter _retarderDataAdapter = new GenericRetarderDataAdapter();
-			private readonly IAirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
-			private readonly IAngledriveDataAdapter _angledriveDataAdapter = new GenericAngledriveDataAdapter();
+			protected virtual IDriverDataAdapterBus DriverDataAdapter => new CompletedBusGenericDriverDataAdapter();
+			protected virtual IAxleGearDataAdapter AxleGearDataAdapter => new GenericCompletedBusAxleGearDataAdapter();
+			protected virtual IGenericRetarderDataAdapter RetarderDataAdapter => new GenericRetarderDataAdapter();
+			protected virtual IAirdragDataAdapter AirdragDataAdapter => new AirdragDataAdapter();
+			protected virtual IAngledriveDataAdapter AngledriveDataAdapter => new GenericAngledriveDataAdapter();
             #endregion
 
 			protected virtual IVehicleDataAdapter VehicleDataAdapter { get; } =
@@ -58,13 +57,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 
 			public AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment)
 			{
-				return _airdragDataAdapter.CreateAirdragData(airdragData, mission, segment);
+				return AirdragDataAdapter.CreateAirdragData(airdragData, mission, segment);
 			}
 
 			public DriverData CreateBusDriverData(Segment segment, VectoSimulationJobType jobType, ArchitectureID arch,
 				CompressorDrive compressorDrive)
 			{
-				return _driverDataAdapter.CreateBusDriverData(segment, jobType, arch, compressorDrive);
+				return DriverDataAdapter.CreateBusDriverData(segment, jobType, arch, compressorDrive);
 			}
 
 			public CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx, Mission mission)
@@ -83,12 +82,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 
 			public virtual AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData)
 			{
-				return _axleGearDataAdapter.CreateAxleGearData(axlegearData);
+				return AxleGearDataAdapter.CreateAxleGearData(axlegearData);
 			}
 
 			public virtual AngledriveData CreateAngledriveData(IAngledriveInputData angledriveData)
 			{
-				return _angledriveDataAdapter.CreateAngledriveData(angledriveData);
+				return AngledriveDataAdapter.CreateAngledriveData(angledriveData);
 			}
 
 			public virtual GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
@@ -111,7 +110,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 
 			public RetarderData CreateGenericRetarderData(IRetarderInputData retarderData, VectoRunData vectoRun)
 			{
-				return _retarderDataAdapter.CreateGenericRetarderData(retarderData, vectoRun);
+				return RetarderDataAdapter.CreateGenericRetarderData(retarderData, vectoRun);
 			}
 
 			public virtual IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits,
@@ -376,7 +375,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
             protected override ICompletedBusAuxiliaryDataAdapter AuxDataAdapter => throw new NotImplementedException();
 			protected override IElectricStorageAdapter ElectricStorageAdapter => throw new NotImplementedException();
 
-			public override VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
+			protected override IAxleGearDataAdapter AxleGearDataAdapter => throw new NotImplementedException();
+
+			protected override IGenericRetarderDataAdapter RetarderDataAdapter => throw new NotImplementedException();
+
+			protected override IAirdragDataAdapter AirdragDataAdapter => throw new NotImplementedException();
+
+			protected override IAngledriveDataAdapter AngledriveDataAdapter => throw new NotImplementedException();
+
+            public override VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
 			{
 				throw new NotImplementedException();
