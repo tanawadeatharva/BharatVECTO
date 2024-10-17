@@ -25,7 +25,7 @@ public class MissionProfileWeightsTests
         TestCase(WeightingGroup.Group4RD, 0.05, 0.05, 0.45, 0.45, 0, 0, 0.25, 0.25, 0.25, 0.25, TestName = "TestMissionProfileWeights Grp 4RD"),
         TestCase(WeightingGroup.Group4LH, 0.45, 0.45, 0.05, 0.05, 0, 0, 0.25, 0.25, 0.25, 0.25, TestName = "TestMissionProfileWeights Grp 4LH"),
 
-        TestCase(WeightingGroup.Group5RD, 0.03, 0.07, 0.27, 0.63, 0, 0, TestName = "TestMissionProfileWeights Grp 5RD"),
+        TestCase(WeightingGroup.Group5RD, 0.03, 0.07, 0.27, 0.63, 0, 0, 0, 0, 0.5, 0.5, TestName = "TestMissionProfileWeights Grp 5RD"),
         TestCase(WeightingGroup.Group5LH, 0.27, 0.63, 0.03, 0.07, 0, 0, 0, 0, 0.5, 0.5, TestName = "TestMissionProfileWeights Grp 5LH"),
 
         TestCase(WeightingGroup.Group9RD, 0.03, 0.07, 0.27, 0.63, 0, 0, 0.25, 0.25, 0.25, 0.25, TestName = "TestMissionProfileWeights Grp 9RD"),
@@ -42,7 +42,7 @@ public class MissionProfileWeightsTests
     {
         var factors = DeclarationData.WeightingFactors.Lookup(group);
 
-		if (new[] { WeightingGroup.Group4LH, WeightingGroup.Group4RD, WeightingGroup.Group4UD, WeightingGroup.Group5LH, WeightingGroup.Group9LH, 
+		if (new[] { WeightingGroup.Group4LH, WeightingGroup.Group4RD, WeightingGroup.Group4UD, WeightingGroup.Group5LH, WeightingGroup.Group5RD, WeightingGroup.Group9LH, 
 				WeightingGroup.Group9RD, WeightingGroup.Group11, WeightingGroup.Group12, WeightingGroup.Group10LH, WeightingGroup.Group10RD }.Contains(group)) {
 			Assert.AreEqual(2, factors.Values.Sum(x => x), 1e-9);
 		} else {

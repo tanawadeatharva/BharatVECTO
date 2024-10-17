@@ -110,7 +110,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestProjects", "TestProject
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XMLConverter", "XMLConverter", "{C1DAC201-B65B-4C48-8520-A366B5736830}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vecto UnitTests", "Testing\UnitTests\Vecto UnitTests\Vecto UnitTests.csproj", "{0EEAC4E2-29E4-4FC7-8D5D-DD7D3A995B96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VECTO UnitTests", "Testing\UnitTests\Vecto UnitTests\VECTO UnitTests.csproj", "{0EEAC4E2-29E4-4FC7-8D5D-DD7D3A995B96}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XMLConverterLibrary", "XMLConverterLibrary\XMLConverterLibrary.csproj", "{090025B2-15F8-4C0C-916C-8E65AE4F64BA}"
 EndProject
@@ -120,7 +120,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XMLConverterCmdLine", "XMLC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XMLConverterCmdLineStart", "Tools\XMLConverterCmdLineStart\XMLConverterCmdLineStart.csproj", "{DE50CAEF-6282-476D-A09B-AD16D6F2476F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VECTO IntegrationTests", "Testing\IntegrationTests\VECTO IntegrationTests\VECTO IntegrationTests.csproj", "{765E8BAF-EEEC-46D3-B04F-A918BE77617A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VECTO IntegrationTests", "Testing\IntegrationTests\VECTO IntegrationTests\VECTO IntegrationTests.csproj", "{765E8BAF-EEEC-46D3-B04F-A918BE77617A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
