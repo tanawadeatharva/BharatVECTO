@@ -110,7 +110,7 @@ namespace TUGraz.VectoHashing
 		public IList<VectoComponents> GetContainigComponents()
 		{
 			var retVal = new List<VectoComponents>();
-			var rootName = Document.FirstChild.NextSibling.LocalName;
+			var rootName = Document.FirstChild.NextSibling?.LocalName ?? Document.FirstChild.LocalName;
 
 			foreach (var component in EnumHelper.GetValues<VectoComponents>()) {
 				// special treatment for REESS: can be either supercap or multiple batteries where the component node may contain several sub-components

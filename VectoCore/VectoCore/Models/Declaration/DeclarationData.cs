@@ -1852,8 +1852,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				.ToDictionary(x => x.Item1, x => x.Item2);
 
 			var fcPerMeter = cdResult.FuelData.Select(f => Tuple.Create(f,
-					(cdResult.FuelConsumptionFinal(f.FuelType).TotalFuelConsumptionCorrected / cdResult.Distance) * cdResult.WeightingFactor))
-				.ToDictionary(x => x.Item1, x => x.Item2);
+				(cdResult.FuelConsumptionFinal(f.FuelType).TotalFuelConsumptionCorrected / cdResult.Distance) * cdResult.WeightingFactor))
+					.ToDictionary(x => x.Item1, x => x.Item2);
 
             var retVal = new WeightedResult() {
 				Status = cdResult.Status == VectoRun.Status.PrimaryBusSimulationIgnore || csResult.Status == VectoRun.Status.PrimaryBusSimulationIgnore ? VectoRun.Status.PrimaryBusSimulationIgnore : VectoRun.Status.Success,
@@ -2019,7 +2019,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					.ToDictionary(x => x.Item1, x => x.Item2),
 				FuelConsumptionPerMeter = fuels.Select(f => Tuple.Create(f,
 						entries.Sum(e => e.Weighted.FuelConsumptionPerMeter[f] * e.ChargeDepletingResult.WeightingFactor)))
-					.ToDictionary(x => x.Item1, x => x.Item2),
+						.ToDictionary(x => x.Item1, x => x.Item2),
                 ElectricEnergyConsumption = entries.Sum(e => e.Weighted.ElectricEnergyConsumption * e.ChargeDepletingResult.WeightingFactor),
 				CO2PerMeter = entries.All(e => e.Weighted.CO2PerMeter != null) ? entries.Sum(e => (e.Weighted.CO2PerMeter) * e.ChargeDepletingResult.WeightingFactor) : null,
 				ActualChargeDepletingRange = entries.Sum(e => e.Weighted.ActualChargeDepletingRange * e.ChargeDepletingResult.WeightingFactor),

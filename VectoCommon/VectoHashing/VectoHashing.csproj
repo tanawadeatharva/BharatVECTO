@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <!-- Version Information (only needed if it differs from Global VECTO Version)-->
-    <MainProductVersion>1.2.9</MainProductVersion>
-    <VersionPrefix>$(MainProductVersion).$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</VersionPrefix>
-
+    <Title>Vehicle Energy Consumption Calculation TOol: VectoHashing</Title>
+    <Description>Provides Vecto Hashing functionality.</Description>
+  </PropertyGroup>
+  <PropertyGroup>
     <RootNamespace>TUGraz.VectoHashing</RootNamespace>
     <AssemblyName>VectoHashing</AssemblyName>
     <TargetFrameworks>net48;net6.0</TargetFrameworks>
-     
     <Configurations>Debug;Release;MockupRelease</Configurations>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>

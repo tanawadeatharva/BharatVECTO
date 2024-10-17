@@ -1,5 +1,37 @@
 # Changelog
 
+
+**VECTO v4.2.5 Official Release (02-10-2024)**
+
+- Hot Fixes
+  - Missing Build.props DefineConstants (!268)
+  - Version 4th number read from Build.props (!269)
+
+**VECTO v4.2.3 Official Release (01-10-2024)**
+
+- Enhancements
+  - CodeEU #799: Adapt VECTO for the new CI updates (!263)
+
+- Bug Fixes
+  - CodeEU #794: Added missing monitoring report file (!265)
+  - CodeEU #780: Update weights for bus subgroups (!264)
+
+**VECTO-4.2.2-RC**
+
+**Build 3539 (2024-09-09)**
+
+- Bugfixes
+   * CodeEU-710: Hashing tool check fail with VECTO version 3330
+   * CodeEU-711: Hashing tool check fail with VECTO 4.1.3.3415
+   * CodeEU-712: VECTO VTP error
+   * CodeEU-754: "Failed to find operating point"; "Failed to find mechanic power for given electric power" in E2 vehicle
+   * CodeEU-727: Failure in simulating HEV in different VECTO versions
+   * CodeEU-749: Double summary for electric vehicles
+   * CodeEU-542: IVECO confidential : BUG REPORT : CRW LE T7D VOITH NXT 5.63
+   * CodeEU-663: IHPC: Failed to find operating point
+   * CodeEU-634: Article 10(2) issue - VIN YS2G6X20002202570
+   * CodeEU-671: IHPC: simulation abort due to unexpected response
+
 **VECTO-4.2.1**
 
 **Build 3469 (2024-07-01)**
@@ -240,7 +272,7 @@
 
 ***Build 3078 (2023-06-06) RELEASE CANDIDATE***
 
-- First fully functional tool version according to the provisions of the 2nd amendment of Regulation (EU) 2017/2400.   
+- First fully functional tool version according to the provisions of the 2nd amendment of Regulation (EU) 2017/2400.  
 - Changes
    - Dropped support for .Net Framework 4.5 (EOL 04/2022)
    - Multi-target build. Supported .Net versions: .Net Framework 4.8, .Net 6.0
@@ -249,9 +281,9 @@
    - New generic vehicles (XML)
 - Known issues
    - Elements not yet implemented
-       - Battery connectors / junction box not included define and implement generic additional resistances (i.e. loss factors) 
+       - Battery connectors / junction box not included define and implement generic additional resistances (i.e. loss factors)
        - Technical elements as resulting from the revision of the CO2 Standards to be added
-          - Sub-group allocation for the for the newly covered vehicle groups 
+          - Sub-group allocation for the for the newly covered vehicle groups
           - Generation of weighted results for vocational vehicles
           - Anything related to ZEV definition?
    - Elements still under discussion
@@ -279,11 +311,11 @@
 
 ***Handling of exempted vehicles***
 
-- Axle configuration and sleeper cab are optional input parameters for exempted vehicles (XML schema 1.0 and 2.2.1). 
+- Axle configuration and sleeper cab are optional input parameters for exempted vehicles (XML schema 1.0 and 2.2.1).
     * OEMs are recommended to provide these parameters for exempted vehicles.
-    * If the axle configuration is provided as input parameter, the MRF contains the vehicle group. 
+    * If the axle configuration is provided as input parameter, the MRF contains the vehicle group.
     * The sleeper cab input parameter is also part of the MRF if provided as input.
-- Input parameters MaxNetPower1/2 are optional input parameters for all exempted vehicles. 
+- Input parameters MaxNetPower1/2 are optional input parameters for all exempted vehicles.
     * If provided in the input these parameters are part of the MRF for all exempted vehicle types
     * It is recommended that those parameters are used to specify the rated power also for PEV (pure electric vehicles)
 
@@ -318,7 +350,7 @@
 
 ***Build 2024 (2020-07-17) RELEASE CANDIDATE***
 
-- Bugfixes 
+- Bugfixes
     * [VECTO-1288] - Simulation Abort UD RL
     * [VECTO-1327] - Simulation abort Construction RefLoad: unexpected response ResponseOverload
     * [VECTO-1266] - Gear 4 Loss-Map was extrapolated
@@ -362,7 +394,7 @@
 
 - Improvement
     * [VECTO-1194] - Handling input parameter 'vocational' for groups other than 4, 5, 9, 10
-    * [VECTO-1147] - Updating declaration mode cycles values in user manual 
+    * [VECTO-1147] - Updating declaration mode cycles values in user manual
     * [VECTO-1207] - run VECTO in 64bit mode by default
 
 - Bugfixes
@@ -464,7 +496,7 @@ Release Notes - VECTO: Vehicle Energy Calculation Tool - Version 3.3.2.1519-RC
     * [VECTO-797] - VECTO abort with AT transmission and TC table value
     * [VECTO-798] - VECTO abort with certified AT transmission data and certified TC data
     * [VECTO-807] - VECTO errors in vehicle class 1/2/3
-    * [VECTO-827] - Torque converter inertia 
+    * [VECTO-827] - Torque converter inertia
     * [VECTO-838] - APT: ResponseOverload
     * [VECTO-843] - AT Transmissions problem on VECTO 3.3.1.1463
     * [VECTO-844] - Error with AT gearbox model
@@ -491,7 +523,7 @@ Release Notes - VECTO: Vehicle Energy Calculation Tool - Version 3.3.2.1519-RC
     * [VECTO-826] - DistanceRun got an unexpected response: ResponseSpeedLimitExceeded
     * [VECTO-837] - VECTO GUI displays incorrect cycles prior to simulation
     * [VECTO-831] - Addition of indication to be added in Help and Release notes for simulations with LNG
- 
+
 
 ***Build 1463 (2019-01-03) RELEASE CANDIDATE***
 
@@ -514,7 +546,7 @@ Release Notes - VECTO: Vehicle Energy Calculation Tool - Version 3.3.2.1519-RC
  - Changes/Improvements
     * [VECTO-799] - Remove TUG Logos from Simulation Tool, Hashing Tool
     * [VECTO-808] - Add Moitoring Report
-    * [VECTO-754] - Extending Loss-Maps in case of AT gearbox for each gear, axlegear, gearbox 
+    * [VECTO-754] - Extending Loss-Maps in case of AT gearbox for each gear, axlegear, gearbox
     * [VECTO-757] - Correct contact mail address in Hashing Tool
     * [VECTO-779] - Update Construction Cycle - shorter stop times
     * [VECTO-783] - Rename columns in segmentation table and GUI
@@ -602,7 +634,7 @@ Release Notes - VECTO: Vehicle Energy Calculation Tool - Version 3.3.2.1519-RC
     * [VECTO-687] - Saving a Engine-Only Job is not possible
     * [VECTO-695] - Bug in vectocmd.exe - process does not terminate
     * [VECTO-699] - Output in manufacturer report and customer report (VECTO) uses different units than described in legislation
-    * [VECTO-700] - errorr in simulation with 0 stop time at the beginning of the cycle 
+    * [VECTO-700] - errorr in simulation with 0 stop time at the beginning of the cycle
 
 
 **VECTO 3.2.1**
@@ -621,7 +653,7 @@ Release Notes - VECTO: Vehicle Energy Calculation Tool - Version 3.3.2.1519-RC
     * [VECTO-640] - Exceeded max. iterations: driving fully-loaded vehicle steep uphill. fixed by allowing full-stop and drive off again
     * [VECTO-633] - unable to start VTP Mode simulation
     * [VECTO-645] - Encountered error while validating Vecto output (generated by API) through Hashing tool for vehicle without retarder
-   
+
 
 
 ***Build 1079 (2017-12-15)***
@@ -682,12 +714,12 @@ Release Notes - VECTO: Vehicle Energy Calculation Tool - Version 3.3.2.1519-RC
     + [VECTO-566] - Vehicle height not correctly read (engineering mode)
     + [VECTO-545] - Update documentation on Settings dialog
 
-	
+
 ***Build 940 (2017-07-28)***
 
 - Bugfixes:
     + [VECTO-546] - GearboxCertificationOptionType Option 2 not accepted by VECTO
-    + [VECTO-547] - Engine Manufacturer and Engine Model are empty in .vsum 
+    + [VECTO-547] - Engine Manufacturer and Engine Model are empty in .vsum
     + [VECTO-548] - online user manual
     + [VECTO-549] - Inconsistent (and wrong) decimal separator in XML output (manufacturer report)
     + [VECTO-551] - Average Tyre RRC not in Customer Information File output
@@ -812,7 +844,7 @@ Release Notes - VECTO: Vehicle Energy Calculation Tool - Version 3.3.2.1519-RC
     + [VECTO-391] Gearbox output speed and output torque added to .vmod files
     + [VECTO-386] Gearbox window: disable input fields not applicable for the selected gearbox type
 - Bugfixes:
-    + [VECTO-401] Computation of n_95h etc. fails if engine’s max torque is constant 0 
+    + [VECTO-401] Computation of n_95h etc. fails if engine’s max torque is constant 0
 Lookup of Airdrag parameters in declaration mode
     + [VECTO-378] Improved file-handling in AAUX module
 

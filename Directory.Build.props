@@ -1,41 +1,29 @@
 <Project>
   <PropertyGroup>
-     
-    <!-- For a Release-Candidate uncomment the following line: -->
-    <!--<DefineConstants>RELEASE_CANDIDATE</DefineConstants>--> 
-
-    <!-- For a Release uncomment the following line: -->
-    <DefineConstants>CERTIFICATION_RELEASE</DefineConstants>
-
     <!-- Global VECTO Version -->
-    <MainProductVersion>4.2.1</MainProductVersion>
-    <!--<VersionSuffix>RC</VersionSuffix>--> 
-
-    <!-- The following settings are used as default values for ALL projects -->
-    <Days>$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</Days>
-    <VersionPrefix>$(MainProductVersion).$(Days)</VersionPrefix>
-
-    <Authors>Graz University of Technology</Authors>
+    <Authors>Graz University of Technology, DG JRC</Authors>
     <Company>European Union</Company>
     <Copyright>Copyright © 2012-$([System.DateTime]::UtcNow.Year)</Copyright>
+    <PackageLicenseExpression>EUPL-1.2</PackageLicenseExpression>
+    <RepositoryUrl>https://code.europa.eu/vecto/vecto</RepositoryUrl>
+    <PackageChangelogFile>https://code.europa.eu/vecto/vecto/-/blob/stable/CHANGES.md</PackageChangelogFile>
+    <RepositoryBranch>https://code.europa.eu/vecto/vecto/-/tree/stable</RepositoryBranch>
+    <Tags>automotive;CO2;HDV;energy;fuel;simulator;engineering</Tags>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Deterministic>true</Deterministic>
     <!-- Set to true for VectoCore to fix Ninject version conflicts-->
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Version>4.2.5</Version>
 	  <DefineTrace>false</DefineTrace>
     <DisableDiagnosticTracing>true</DisableDiagnosticTracing>
     <RemoveIntegerChecks>true</RemoveIntegerChecks>
     <DebugType>none</DebugType>
     <WarningLevel>5</WarningLevel>
     <DebugSymbols>false</DebugSymbols>
-  </PropertyGroup>
-
-
-  <PropertyGroup Condition="$(DefineConstants.Contains('RELEASE_CANDIDATE'))">
-    <VersionSuffix>RC</VersionSuffix>
-  </PropertyGroup>
-  <PropertyGroup Condition="$(DefineConstants.Contains('CERTIFICATION_RELEASE'))">
-    <VersionSuffix></VersionSuffix>
+    <DefineConstants></DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">

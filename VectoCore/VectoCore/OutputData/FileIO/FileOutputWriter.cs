@@ -92,7 +92,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		public string XMLPrimaryVehicleReportName => Path.ChangeExtension(_jobFile, "RSLT_VIF.xml");
 
-		public string XMLMonitoringReportName => Path.ChangeExtension(_jobFile, "RSLT_MONITORING.xml");
+		public virtual string XMLMonitoringReportName => Path.ChangeExtension(_jobFile, "RSLT_MONITORING.xml");
 
 		public string XMLVTPReportName => Path.ChangeExtension(_jobFile, "VTP_Report.xml");
 

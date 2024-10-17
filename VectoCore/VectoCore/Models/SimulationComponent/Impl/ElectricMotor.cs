@@ -486,9 +486,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// has to be positive for recuperation - battery is full
 				return null;
 			}
-			var maxBatRecuperationTorque = maxBatPower.IsEqual(0, 1e-3)
-				? ModelData.DragCurveLookup(avgSpeed, gear)
-				: ModelData.EfficiencyData.EfficiencyMapLookupTorque(volt, maxBatPower, avgSpeed, maxEmTorque, gear);
+
+			NewtonMeter maxBatRecuperationTorque;
+			try {
+				maxBatRecuperationTorque = maxBatPower.IsEqual(0, 1e-3)
+					? ModelData.DragCurveLookup(avgSpeed, gear)
+					: ModelData.EfficiencyData.EfficiencyMapLookupTorque(volt, maxBatPower, avgSpeed, maxEmTorque,
+						gear);
+			} catch (VectoException e) {
+				var pwr = ModelData.EfficiencyData.LookupElectricPower(volt, avgSpeed, maxEmTorque, gear);
+				if (pwr.ElectricalPower.IsSmaller(maxBatPower)) {
+					maxBatRecuperationTorque = maxEmTorque;
+				} else {
+					throw new VectoException("Failed to get max. recuperation torque", e);
+				}
+			}
+
 			var maxTorqueRecuperate = VectoMath.Min(maxEmTorque, maxBatRecuperationTorque);
 			if (maxTorqueRecuperate < 0) {
 				return null;
