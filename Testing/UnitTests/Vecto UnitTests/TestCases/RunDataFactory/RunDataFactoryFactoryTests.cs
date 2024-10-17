@@ -50,7 +50,9 @@ namespace TUGraz.Vecto.UnitTests.TestCases.RunDataFactory
                 .Conventional()
                 .Lorry();
 
-           CreateRunDataFactory(input, expectedRunDataFactory, expectedDataAdapter);
+            dynamic factory = CreateRunDataFactory(input);
+            Assert.IsInstanceOf(expectedRunDataFactory, factory, $"Invalid type of RunDataFactory! Expected {expectedRunDataFactory} got {factory.GetType()}");
+            Assert.IsInstanceOf(expectedDataAdapter, factory.DataAdapter, $"Invalid type of DeclarationDataAdapter! Expected {expectedDataAdapter} got {factory.DataAdapter.GetType()}");
 		}
        
 		[TestCase(ArchitectureID.S2, typeof(DeclarationModeHeavyLorryRunDataFactory.HEV_S2), typeof(DeclarationDataAdapterHeavyLorry.HEV_S2))]
@@ -68,10 +70,13 @@ namespace TUGraz.Vecto.UnitTests.TestCases.RunDataFactory
             var input = new Mock<IDeclarationInputDataProvider>()
                 .HEV(arch)
                 .Lorry();
-            CreateRunDataFactory(input,expectedRunDataFactory, expectedDataAdapter);
+			dynamic factory = CreateRunDataFactory(input);
+			Assert.IsInstanceOf(expectedRunDataFactory, factory, $"Invalid type of RunDataFactory! Expected {expectedRunDataFactory} got {factory.GetType()}");
+			Assert.IsInstanceOf(expectedDataAdapter, factory.DataAdapter, $"Invalid type of DeclarationDataAdapter! Expected {expectedDataAdapter} got {factory.DataAdapter.GetType()}");
+
         }
 
-		[TestCase(ArchitectureID.E2, typeof(DeclarationModeHeavyLorryRunDataFactory.PEV_E2), typeof(DeclarationDataAdapterHeavyLorry.PEV_E2))]
+        [TestCase(ArchitectureID.E2, typeof(DeclarationModeHeavyLorryRunDataFactory.PEV_E2), typeof(DeclarationDataAdapterHeavyLorry.PEV_E2))]
         [TestCase(ArchitectureID.E3, typeof(DeclarationModeHeavyLorryRunDataFactory.PEV_E3), typeof(DeclarationDataAdapterHeavyLorry.PEV_E3))]
         [TestCase(ArchitectureID.E4, typeof(DeclarationModeHeavyLorryRunDataFactory.PEV_E4), typeof(DeclarationDataAdapterHeavyLorry.PEV_E4))]
         [TestCase(ArchitectureID.E_IEPC, typeof(DeclarationModeHeavyLorryRunDataFactory.PEV_E_IEPC), typeof(DeclarationDataAdapterHeavyLorry.PEV_E_IEPC))]
@@ -80,20 +85,27 @@ namespace TUGraz.Vecto.UnitTests.TestCases.RunDataFactory
             var input = new Mock<IDeclarationInputDataProvider>()
                 .PEV(arch)
                 .Lorry();
-            CreateRunDataFactory(input, expectedRunDataFactory, expectedDataAdapter);
+			dynamic factory = CreateRunDataFactory(input);
+			Assert.IsInstanceOf(expectedRunDataFactory, factory, $"Invalid type of RunDataFactory! Expected {expectedRunDataFactory} got {factory.GetType()}");
+			Assert.IsInstanceOf(expectedDataAdapter, factory.DataAdapter, $"Invalid type of DeclarationDataAdapter! Expected {expectedDataAdapter} got {factory.DataAdapter.GetType()}");
+
         }
 
-		[Test]
+        [Test]
         public void Exempted_HeavyLorryTest([Values] ArchitectureID architectureId, [Values] VectoSimulationJobType simType)
-        {
+		{
+			var expectedRunDataFactory = typeof(DeclarationModeHeavyLorryRunDataFactory.Exempted);
+			var expectedDataAdapter = typeof(DeclarationDataAdapterHeavyLorry.Exempted);
             var input = new Mock<IDeclarationInputDataProvider>()
                 .Exempted()
                 .Lorry();
 
             input.Setup(m => m.JobInputData.JobType).Returns(simType);
             input.Setup(m => m.JobInputData.Vehicle.ArchitectureID).Returns(architectureId);
-            CreateRunDataFactory(input, typeof(DeclarationModeHeavyLorryRunDataFactory.Exempted),
-                typeof(DeclarationDataAdapterHeavyLorry.Exempted));
+            dynamic factory = CreateRunDataFactory(input);
+			Assert.IsInstanceOf(expectedRunDataFactory, factory, $"Invalid type of RunDataFactory! Expected {expectedRunDataFactory} got {factory.GetType()}");
+			Assert.IsInstanceOf(expectedDataAdapter, factory.DataAdapter, $"Invalid type of DeclarationDataAdapter! Expected {expectedDataAdapter} got {factory.DataAdapter.GetType()}");
+
 
         }
 
@@ -107,7 +119,10 @@ namespace TUGraz.Vecto.UnitTests.TestCases.RunDataFactory
             var input = new Mock<IDeclarationInputDataProvider>()
                 .Conventional()
                 .PrimaryBus();
-            CreateRunDataFactory(input, expectedRunDataFactory , expectedDataAdapter);
+			dynamic factory = CreateRunDataFactory(input);
+			Assert.IsInstanceOf(expectedRunDataFactory, factory, $"Invalid type of RunDataFactory! Expected {expectedRunDataFactory} got {factory.GetType()}");
+			Assert.IsInstanceOf(expectedDataAdapter, factory.DataAdapter, $"Invalid type of DeclarationDataAdapter! Expected {expectedDataAdapter} got {factory.DataAdapter.GetType()}");
+
         }
 
         [TestCase(ArchitectureID.S2, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_S2), typeof(DeclarationDataAdapterPrimaryBus.HEV_S2))]
@@ -124,7 +139,10 @@ namespace TUGraz.Vecto.UnitTests.TestCases.RunDataFactory
             var input = new Mock<IDeclarationInputDataProvider>()
                 .HEV(arch)
                 .PrimaryBus();
-            CreateRunDataFactory(input, expectedRunDataFactory, expectedDataAdapter);
+			dynamic factory = CreateRunDataFactory(input);
+			Assert.IsInstanceOf(expectedRunDataFactory, factory, $"Invalid type of RunDataFactory! Expected {expectedRunDataFactory} got {factory.GetType()}");
+			Assert.IsInstanceOf(expectedDataAdapter, factory.DataAdapter, $"Invalid type of DeclarationDataAdapter! Expected {expectedDataAdapter} got {factory.DataAdapter.GetType()}");
+
         }
 
         [TestCase(ArchitectureID.E2, typeof(DeclarationModePrimaryBusRunDataFactory.PEV_E2), typeof(DeclarationDataAdapterPrimaryBus.PEV_E2))]
@@ -136,25 +154,32 @@ namespace TUGraz.Vecto.UnitTests.TestCases.RunDataFactory
             var input = new Mock<IDeclarationInputDataProvider>()
                 .PEV(arch)
                 .PrimaryBus();
-            CreateRunDataFactory(input, expectedRunDataFactory, expectedDataAdapter);
+			dynamic factory = CreateRunDataFactory(input);
+			Assert.IsInstanceOf(expectedRunDataFactory, factory, $"Invalid type of RunDataFactory! Expected {expectedRunDataFactory} got {factory.GetType()}");
+			Assert.IsInstanceOf(expectedDataAdapter, factory.DataAdapter, $"Invalid type of DeclarationDataAdapter! Expected {expectedDataAdapter} got {factory.DataAdapter.GetType()}");
+
         }
 
         [Test]
         public void Exempted_PrimaryBusTest([Values] ArchitectureID architectureId, [Values] VectoSimulationJobType simType)
-        {
+		{
+			var expectedRunDataFactory = typeof(DeclarationModePrimaryBusRunDataFactory.Exempted);
+			var expectedDataAdapter = typeof(DeclarationDataAdapterPrimaryBus.Exempted);
             var input = new Mock<IDeclarationInputDataProvider>()
                 .Exempted()
                 .PrimaryBus();
 
             input.Setup(m => m.JobInputData.JobType).Returns(simType);
             input.Setup(m => m.JobInputData.Vehicle.ArchitectureID).Returns(architectureId);
-            CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.Exempted), typeof(DeclarationDataAdapterPrimaryBus.Exempted));
+            dynamic factory = CreateRunDataFactory(input);
+			Assert.IsInstanceOf(expectedRunDataFactory, factory, $"Invalid type of RunDataFactory! Expected {expectedRunDataFactory} got {factory.GetType()}");
+			Assert.IsInstanceOf(expectedDataAdapter, factory.DataAdapter, $"Invalid type of DeclarationDataAdapter! Expected {expectedDataAdapter} got {factory.DataAdapter.GetType()}");
 
         }
 
         #endregion PrimaryBus
-        
-		#region CompletedBus
+
+        #region CompletedBus
 
         [TestCase(typeof(DeclarationModeCompletedBusRunDataFactory.Conventional), typeof(DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.Conventional), typeof(DeclarationDataAdapterSpecificCompletedBus.Conventional))]
         public void ConventionalCompletedBus(Type expectedRunDataFactory, Type expectedDataAdapterGeneric, Type expectedDataAdapterSpecific)
@@ -162,9 +187,10 @@ namespace TUGraz.Vecto.UnitTests.TestCases.RunDataFactory
             var input = new Mock<IMultistageVIFInputData>()
                 .Conventional()
                 .CompletedBus();
-            var fact = CreateRunDataFactory(input, expectedRunDataFactory, null);
-            CheckCompletedBusAdapters(fact, expectedDataAdapterGeneric,
-                expectedDataAdapterSpecific);
+			dynamic fact = CreateRunDataFactory(input);
+			Assert.IsInstanceOf(expectedRunDataFactory, fact);
+			Assert.IsInstanceOf(expectedDataAdapterGeneric, fact.DataAdapterGeneric);
+			Assert.IsInstanceOf(expectedDataAdapterSpecific, fact.DataAdapterSpecific);
 
         }
 
@@ -182,9 +208,11 @@ namespace TUGraz.Vecto.UnitTests.TestCases.RunDataFactory
             var input = new Mock<IMultistageVIFInputData>()
                 .HEV(arch)
                 .CompletedBus();
-            var fact = CreateRunDataFactory(input, expectedRunDataFactory,  null);
-            CheckCompletedBusAdapters(fact, expectedDataAdapterGeneric, expectedDataAdapterSpecific);
-		}
+            dynamic fact = CreateRunDataFactory(input);
+			Assert.IsInstanceOf(expectedRunDataFactory, fact);
+			Assert.IsInstanceOf(expectedDataAdapterGeneric, fact.DataAdapterGeneric);
+			Assert.IsInstanceOf(expectedDataAdapterSpecific, fact.DataAdapterSpecific);
+        }
 
         [TestCase(ArchitectureID.E2, typeof(DeclarationModeCompletedBusRunDataFactory.PEV_E2), typeof(DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.PEV_E2), typeof(DeclarationDataAdapterSpecificCompletedBus.PEV_E2))]
 		[TestCase(ArchitectureID.E3, typeof(DeclarationModeCompletedBusRunDataFactory.PEV_E3), typeof(DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.PEV_E3), typeof(DeclarationDataAdapterSpecificCompletedBus.PEV_E3))]
@@ -195,43 +223,23 @@ namespace TUGraz.Vecto.UnitTests.TestCases.RunDataFactory
             var input = new Mock<IMultistageVIFInputData>()
                 .PEV(arch)
                 .CompletedBus();
-            var fact = CreateRunDataFactory(input, expectedRunDataFactory, null);
-            CheckCompletedBusAdapters(fact, expectedDataAdapterGeneric, expectedDataAdapterSpecific );
-        }
+            dynamic fact = CreateRunDataFactory(input);
+			Assert.IsInstanceOf(expectedRunDataFactory, fact);
+            Assert.IsInstanceOf(expectedDataAdapterGeneric, fact.DataAdapterGeneric);
+            Assert.IsInstanceOf(expectedDataAdapterSpecific, fact.DataAdapterSpecific);
+		}
 
         #endregion CompletedBus
 
-		private IVectoRunDataFactory CreateRunDataFactory(Mock inputMock, Type expectedRunDataType,
-			Type? expectedDeclarationDataAdapterType)
+		private IVectoRunDataFactory CreateRunDataFactory(Mock inputMock)
 		{
 			var s = inputMock.Object;
 			var result = _runDataFactoryFactory.CreateDeclarationRunDataFactory((IInputDataProvider)inputMock.Object, null,
 				null);
-			Assert.IsTrue(result.GetType() == expectedRunDataType, $"Invalid type of RunDataFactory! Expected {expectedRunDataType} got {result.GetType()}");
-			if (expectedDeclarationDataAdapterType != null) {
-				dynamic concreteResult = result;
-				Assert.IsTrue(concreteResult.DataAdapter.GetType() == expectedDeclarationDataAdapterType, $"Invalid type of DeclarationDataAdapter! Expected {expectedDeclarationDataAdapterType} got {concreteResult.DataAdapter.GetType()}");
-			}
-
 			return result;
 		}
 
-		private void CheckCompletedBusAdapters(IVectoRunDataFactory runDataResult, Type genericDataAdapter,
-			Type specificDataAdapter)
-		{
-
-			var genericPropertyInfo = runDataResult.GetType().GetProperty(nameof(DeclarationModeCompletedBusRunDataFactory.CompletedBusBase.DataAdapterGeneric));
-			var generic = genericPropertyInfo.GetValue(runDataResult, null);
-
-
-			var specificPropertyInfo = runDataResult.GetType().GetProperty(nameof(DeclarationModeCompletedBusRunDataFactory.CompletedBusBase.DataAdapterSpecific));
-			var specific = specificPropertyInfo.GetValue(runDataResult, null);
-
-			Assert.AreEqual(genericDataAdapter, generic.GetType());
-			Assert.AreEqual(specificDataAdapter, specific.GetType());
-		}
-
-    }
+	}
 
     internal static class InputDataProviderMockExtension
     {
