@@ -324,7 +324,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			private readonly HeavyLorryPEVAuxiliaryDataAdapter
 				_auxDataAdapter = new HeavyLorryPEVAuxiliaryDataAdapter();
 
-			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new GearboxDataAdapter(null);
+			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = null;
 
 			protected override IEngineDataAdapter EngineDataAdapter => throw new NotImplementedException();
 
@@ -407,7 +407,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 		{
 			#region Overrides of BatteryElectric
 
-			protected override GearboxType[] SupportedGearboxTypes => new[]
+			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new GearboxDataAdapter(null);
+
+            protected override GearboxType[] SupportedGearboxTypes => new[]
 				{ GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial, GearboxType.APTN };
 
 			#endregion
@@ -462,7 +464,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			protected override IPTODataAdapter PtoDataAdapter => throw new NotImplementedException();
 
-			#endregion
-		}
-	}
+			protected override IAxleGearDataAdapter AxleGearDataAdapter => throw new NotImplementedException();
+
+			protected override IRetarderDataAdapter RetarderDataAdapter => throw new NotImplementedException();
+
+			protected override IAirdragDataAdapter AirdragDataAdapter => throw new NotImplementedException();
+
+			protected override IAngledriveDataAdapter AngleDriveDataAdapter => throw new NotImplementedException();
+
+            #endregion
+        }
+    }
 }
