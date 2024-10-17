@@ -28,14 +28,7 @@ namespace TUGraz.Vecto.UnitTests.TestCases.RunDataFactory
         public void OneTimeSetup()
 		{
 			var kernel = new StandardKernel(new VectoNinjectModule());
-
-            kernel.Bind<IDeclarationDataAdapter>().ToMethod(
-                x =>
-                {
-                    var mock = new Mock<IDeclarationDataAdapter>();
-                    return mock.Object;
-                });
-            _runDataFactoryFactory = kernel.Get<IVectoRunDataFactoryFactory>();
+			_runDataFactoryFactory = kernel.Get<IVectoRunDataFactoryFactory>();
 
             Assert.IsTrue(_runDataFactoryFactory.GetType() == typeof(VectoRunDataFactoryFactory));
 
