@@ -27,6 +27,7 @@ public class LorryDeclarationDataAdapterTests
 		{"PtoDataAdapter", typeof(PTODataAdapterLorry)},
 		{"ElectricMachinesDataAdapter", null},
 		{"HybridStrategyDataAdapter", null},
+		{"DriverDataAdapter", typeof(LorryDriverDataAdapter)}
     };
 
 	private static readonly Dictionary<string, Type?> CompDataAdapter_ParallelHybrid = new() {
@@ -41,6 +42,7 @@ public class LorryDeclarationDataAdapterTests
 		{"PtoDataAdapter", typeof(PTODataAdapterLorry)},
 		{"ElectricMachinesDataAdapter", typeof(ElectricMachinesDataAdapter)},
 		{"HybridStrategyDataAdapter", typeof(ParallelHybridStrategyParameterDataAdapter)},
+		{"DriverDataAdapter", typeof(LorryDriverDataAdapter)}
 	};
 
 	private static readonly Dictionary<string, Type?> CompDataAdapter_SeriallHybrid_S2 = new() {
@@ -55,6 +57,7 @@ public class LorryDeclarationDataAdapterTests
 		{"PtoDataAdapter", typeof(PTODataAdapterLorry)},
 		{"ElectricMachinesDataAdapter", typeof(ElectricMachinesDataAdapter)},
 		{"HybridStrategyDataAdapter", typeof(SerialHybridStrategyParameterDataAdapter)},
+		{"DriverDataAdapter", typeof(LorryDriverDataAdapter)}
 	};
 
 	private static readonly Dictionary<string, Type?> CompDataAdapter_SeriallHybrid_S_IEPC = new() {
@@ -69,6 +72,7 @@ public class LorryDeclarationDataAdapterTests
 		{"PtoDataAdapter", typeof(PTODataAdapterLorry)},
 		{"ElectricMachinesDataAdapter", typeof(ElectricMachinesDataAdapter)},
 		{"HybridStrategyDataAdapter", typeof(SerialHybridStrategyParameterDataAdapter)},
+		{"DriverDataAdapter", typeof(LorryDriverDataAdapter)}
 	};
 
 
@@ -84,6 +88,7 @@ public class LorryDeclarationDataAdapterTests
 		{"PtoDataAdapter", typeof(PTODataAdapterLorry)},
 		{"ElectricMachinesDataAdapter", typeof(ElectricMachinesDataAdapter)},
 		{"HybridStrategyDataAdapter", typeof(SerialHybridStrategyParameterDataAdapter)},
+		{"DriverDataAdapter", typeof(LorryDriverDataAdapter)}
 	};
 
 	private static readonly Dictionary<string, Type?> CompDataAdapter_SeriallHybrid_E2 = new() {
@@ -112,6 +117,7 @@ public class LorryDeclarationDataAdapterTests
 		{"PtoDataAdapter", typeof(PTODataAdapterLorry)},
 		{"ElectricMachinesDataAdapter", typeof(ElectricMachinesDataAdapter)},
 		{"HybridStrategyDataAdapter", null},
+		{"DriverDataAdapter", typeof(LorryDriverDataAdapter)}
 	};
 
 	private static readonly Dictionary<string, Type?> CompDataAdapter_SeriallHybrid_Ex = new() {
@@ -126,6 +132,7 @@ public class LorryDeclarationDataAdapterTests
 		{"PtoDataAdapter", typeof(PTODataAdapterLorry)},
 		{"ElectricMachinesDataAdapter", typeof(ElectricMachinesDataAdapter)},
 		{"HybridStrategyDataAdapter", null},
+		{"DriverDataAdapter", typeof(LorryDriverDataAdapter)}
 	};
 
 	private static readonly Dictionary<string, Type?> CompDataAdapter_Exempted = new() {
@@ -140,6 +147,7 @@ public class LorryDeclarationDataAdapterTests
 		{"PtoDataAdapter", null},
 		{"ElectricMachinesDataAdapter", null},
 		{"HybridStrategyDataAdapter", null},
+		{"DriverDataAdapter", typeof(LorryDriverDataAdapter)}
 	};
 
     private static readonly Dictionary<Type, Dictionary<string, Type?>> ComponentDataAdapterMapping = new() {
