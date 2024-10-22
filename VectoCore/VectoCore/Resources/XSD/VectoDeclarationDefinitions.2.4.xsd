@@ -25,6 +25,7 @@ Changelog:
                 added another entry for the same technology without the non-visible character.
 	10.04.2024: change "Fuel cell vehicle" to "FCV Article 9 exempted" according to regulation
 	19.04.2024: restore wrong exempted techs along with correct ones.
+	22.10.2024: removed wrong exempted techs.
 	-->
 	<xs:complexType name="Abstract_ADAS_ConventionalType" abstract="true">
 		<xs:complexContent>
@@ -1800,14 +1801,10 @@ Changelog:
 								<xs:enumeration value="PEV Article 9 exempted"/>
 								<xs:enumeration value="HV Article 9 exempted"/>
 								<xs:enumeration value="FCV Article 9 exempted"/>
-								<xs:enumeration value="Fuel cell vehicle"/>
 								<xs:enumeration value="H2 ICE Article 9 exempted"/>
-								<xs:enumeration value="H2 ICE"/>
 								<xs:enumeration value="Dual fuel vehicle Article 9 exempted"/>
 								<xs:enumeration value="In-motion charging Article 9 exempted"/>
-								<xs:enumeration value="Multiple power­trains Article 9 exempted"/>
 								<xs:enumeration value="Multiple powertrains Article 9 exempted"/>
-								<xs:enumeration value="Other technology Article 9 exempted"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
@@ -1865,14 +1862,10 @@ Changelog:
 								<xs:enumeration value="PEV Article 9 exempted"/>
 								<xs:enumeration value="HV Article 9 exempted"/>
 								<xs:enumeration value="FCV Article 9 exempted"/>
-								<xs:enumeration value="Fuel cell vehicle"/>
 								<xs:enumeration value="H2 ICE Article 9 exempted"/>
-								<xs:enumeration value="H2 ICE"/>
 								<xs:enumeration value="Dual fuel vehicle Article 9 exempted"/>
 								<xs:enumeration value="In-motion charging Article 9 exempted"/>
-								<xs:enumeration value="Multiple power­trains Article 9 exempted"/>
 								<xs:enumeration value="Multiple powertrains Article 9 exempted"/>
-								<xs:enumeration value="Other technology Article 9 exempted"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
@@ -1905,14 +1898,10 @@ Changelog:
 								<xs:enumeration value="PEV Article 9 exempted"/>
 								<xs:enumeration value="HV Article 9 exempted"/>
 								<xs:enumeration value="FCV Article 9 exempted"/>
-								<xs:enumeration value="Fuel cell vehicle"/>
 								<xs:enumeration value="H2 ICE Article 9 exempted"/>
-								<xs:enumeration value="H2 ICE"/>
 								<xs:enumeration value="Dual fuel vehicle Article 9 exempted"/>
 								<xs:enumeration value="In-motion charging Article 9 exempted"/>
-								<xs:enumeration value="Multiple power­trains Article 9 exempted"/>
 								<xs:enumeration value="Multiple powertrains Article 9 exempted"/>
-								<xs:enumeration value="Other technology Article 9 exempted"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
