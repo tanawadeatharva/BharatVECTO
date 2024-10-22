@@ -1436,5 +1436,14 @@ namespace TUGraz.VectoCore {
                 return ResourceManager.GetString("Vehicle_VehicleFile", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CompletedVIF.
+        /// </summary>
+        internal static string VTP_CompletedVIF {
+            get {
+                return ResourceManager.GetString("VTP_CompletedVIF", resourceCulture);
+            }
+        }
     }
 }

@@ -120,6 +120,7 @@ Public Class MainForm
         VehicleFileBrowser = New FileBrowser("vveh")
         VehicleXMLFileBrowser = New FileBrowser("vveh_xml")
         ManRXMLFileBrowser = New FileBrowser("xml")
+        CompletedVIFFileBrowser = New FileBrowser("xml")
         FuelConsumptionMapFileBrowser = New FileBrowser("vmap")
         DrivingCycleFileBrowser = New FileBrowser("vdri")
         FullLoadCurveFileBrowser = New FileBrowser("vfld")
@@ -177,6 +178,7 @@ Public Class MainForm
         VehicleFileBrowser.Extensions = New String() {"vveh"}
         VehicleXMLFileBrowser.Extensions = New String() {"xml"}
         ManRXMLFileBrowser.Extensions = New String() {"xml"}
+        CompletedVIFFileBrowser.Extensions = New String() {"xml"}
         FuelConsumptionMapFileBrowser.Extensions = New String() {"vmap"}
         DrivingCycleFileBrowser.Extensions = New String() {"vdri"}
         FullLoadCurveFileBrowser.Extensions = New String() {"vfld"}
@@ -233,6 +235,7 @@ Public Class MainForm
         VehicleFileBrowser.Close()
         VehicleXMLFileBrowser.Close()
         ManRXMLFileBrowser.Close()
+        CompletedVIFFileBrowser.Close()
         FuelConsumptionMapFileBrowser.Close()
         DrivingCycleFileBrowser.Close()
         FullLoadCurveFileBrowser.Close()

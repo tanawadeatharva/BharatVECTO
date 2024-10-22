@@ -601,15 +601,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	}
 
 	public class JSONVTPInputDataV4 : JSONFile, IVTPEngineeringInputDataProvider, IVTPEngineeringJobInputData,
-		IVTPDeclarationInputDataProvider, IManufacturerReport
+		IVTPDeclarationInputDataProvider, IManufacturerReport, ICompletedVIF
 	{
 		private IDictionary<VectoComponents, IList<string>> _componentDigests;
 		private DigestData _jobDigest;
 		private IXMLInputDataReader _inputReader;
 		private IResultsInputData _manufacturerResults;
-		private Meter _vehicleLenght;
-		private VehicleClass _vehicleClass;
-		private VehicleCode _vehicleCode;
+		private Meter _vehicleLength;
+		private VehicleCode _bodyworkCode;
 
 		public JSONVTPInputDataV4(JObject data, string filename, bool tolerateMissing = false) : base(
 			data, filename, tolerateMissing)
@@ -623,11 +622,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 			var kernel = new StandardKernel(new VectoNinjectModule());
 			_inputReader = kernel.Get<IXMLInputDataReader>();
+
+			_bodyworkCode = VehicleCode.NOT_APPLICABLE;
 		}
 
 		public IVTPEngineeringJobInputData JobInputData => this;
 
 		public IManufacturerReport ManufacturerReportInputData => this;
+
+		public ICompletedVIF CompletedVIFInputData => this;
 
 		public IVehicleDeclarationInputData Vehicle =>
 			_inputReader.CreateDeclaration(
@@ -640,6 +643,32 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public Meter Mileage => Body.GetEx<double>("Mileage").SI(Unit.SI.Kilo.Meter).Cast<Meter>();
 
 		string IManufacturerReport.Source => Body["ManufacturerRecord"].Value<string>();
+
+		string ICompletedVIF.Source => Body[JsonKeys.VTP_CompletedVIF]?.Value<string>();
+
+		public Meter VehicleLength 
+		{
+			get
+			{
+				if (_vehicleLength == null)
+				{
+					ReadCompletedVIF();
+				}
+				return _vehicleLength;
+			}
+		}
+
+		public VehicleCode BodyworkCode 
+		{
+			get
+			{
+				if (_bodyworkCode == VehicleCode.NOT_APPLICABLE)
+				{
+					ReadCompletedVIF();
+				}
+				return _bodyworkCode;
+			}
+		}
 
 		public IResultsInputData Results
 		{
@@ -758,36 +787,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public Meter VehicleLength
-		{
-			get {
-				if (_vehicleLenght == null) {
-					ReadManufacturerReport();
-				}
-				return _vehicleLenght;
-			}
-		}
-
-		public VehicleClass VehicleClass
-		{
-			get {
-				if (_vehicleClass == VehicleClass.Unknown) {
-					ReadManufacturerReport();
-				}
-				return _vehicleClass;
-			}
-		}
-
-		public VehicleCode VehicleCode
-		{
-			get {
-				if (_vehicleCode == VehicleCode.NOT_APPLICABLE) {
-					ReadManufacturerReport();
-				}
-				return _vehicleCode;
-			}
-		}
-
 		public void ValidateSimulationToolVersion()
 		{
 			var xmlDoc = new XmlDocument();
@@ -823,6 +822,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#endregion
 
+		private void ReadCompletedVIF()
+		{
+			var xmlDoc = new XmlDocument();
+			xmlDoc.Load(Path.Combine(Path.GetFullPath(BasePath), Body[JsonKeys.VTP_CompletedVIF].Value<string>()));
+
+			var code = xmlDoc.SelectSingleNode($"//*[local-name()='{XMLNames.Vehicle_BodyworkCode}']").InnerText;
+			_bodyworkCode = code.ParseEnum<VehicleCode>();
+
+			var length = xmlDoc.SelectSingleNode($"//*[local-name()='{XMLNames.Bus_VehicleLength}']").InnerText.ToDouble();
+			_vehicleLength = (length / 1000).SI<Meter>();
+		}
+
 		private void ReadManufacturerReport()
 		{
 			var xmlDoc = new XmlDocument();
@@ -852,10 +863,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				_jobDigest = new DigestData("", new string[] { }, "", "");
 			}
 
-			_manufacturerResults = new ManufacturerResults(xmlDoc.SelectSingleNode("//*[local-name() = 'Results']"));
-			_vehicleLenght = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleLength']")?.InnerText.ToDouble().SI<Meter>();
-			_vehicleClass = VehicleClassHelper.Parse(xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleGroup']")?.InnerText);
-			_vehicleCode = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleCode']")?.InnerText.ParseEnum<VehicleCode>() ?? VehicleCode.NOT_APPLICABLE;
+			_manufacturerResults = new ManufacturerResults(xmlDoc.SelectSingleNode("//*[local-name() = 'Results']"));			
 		}
 	}
 
