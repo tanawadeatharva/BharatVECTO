@@ -10,7 +10,7 @@
 	x:Class="HashingTool.Views.VerifyCompletedBusResults"
 	mc:Ignorable="d">
 	<UserControl.DataContext>
-        <viewModel:VerifyResultDataViewModel />
+        <viewModel:VerifyCompletedBusViewModel />
 	</UserControl.DataContext>
 	<UserControl.Resources>
 		<helper:CollectionConverter x:Key="CollectionConverter" />

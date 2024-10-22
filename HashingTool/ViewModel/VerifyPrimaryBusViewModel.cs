@@ -47,8 +47,13 @@ namespace HashingTool.ViewModel
 
 		public VerifyPrimaryBusViewModel()
 		{
-			_jobFile = new VectoJobFile("Job File", HashingHelper.IsJobFile, HashingHelper.HashJobFile);
-			_manufacturerReport = new ManufacturerReportXMLFile("Manufacturer Report", HashingHelper.IsManufacturerReport,
+			_jobFile = new VectoJobFile(
+				"Primary Bus Job File",
+				HashingHelper.IsPrimaryJobFile,
+				HashingHelper.HashJobFile);
+			_manufacturerReport = new ManufacturerReportXMLFile(
+				"Primary Bus Manufacturer Report",
+				HashingHelper.IsPrimaryManufacturerFile,
 				HashingHelper.ValidateDocumentHash);
 			_manufacturerReport.JobData = _jobFile;
 

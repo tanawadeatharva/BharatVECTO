@@ -49,12 +49,20 @@ namespace HashingTool.ViewModel
 
 		public VerifyCompletedBusViewModel()
 		{
-			_jobFile = new VectoJobFile("Job File", HashingHelper.IsJobFile, HashingHelper.HashJobFile);
-			_manufacturerReport = new ManufacturerReportXMLFile("Manufacturer Report", HashingHelper.IsManufacturerReport,
+			_jobFile = new VectoJobFile(
+				"Completed Bus VIF",
+				HashingHelper.IsCompletedJobFile,
+				HashingHelper.HashJobFile);
+			_manufacturerReport = new ManufacturerReportXMLFile(
+				"Completed Bus Manufacturer Report",
+				HashingHelper.IsCompletedManufacturerFile,
 				HashingHelper.ValidateDocumentHash);
+			_customerReport = new CustomerReportXMLFile(
+				"Completed Bus Customer Report",
+				HashingHelper.IsCustomerReport,
+				HashingHelper.ValidateDocumentHash);
+
 			_manufacturerReport.JobData = _jobFile;
-			_customerReport = new CustomerReportXMLFile("Customer Report", HashingHelper.IsCustomerReport,
-				HashingHelper.ValidateDocumentHash);
 			_customerReport.JobData = _jobFile;
 			_customerReport.ManufacturerReport = _manufacturerReport;
 			Files = new ObservableCollection<VectoXMLFile> { _jobFile, _manufacturerReport, _customerReport };
