@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Threading;
 using System.Windows;
 using Ninject;
 using TUGraz.VectoCore;
@@ -25,8 +27,9 @@ namespace VECTO3GUI2020
 			}
             ConfigureContainer();
             ConfigureMainWindow();
-            
-        }
+
+			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+		}
 
         private void ConfigureContainer()
         {
@@ -39,12 +42,6 @@ namespace VECTO3GUI2020
                 new MultistageModule(),
                 new Vecto3GUI2020Module()
 			);
-
-
-
-
-
-
 		}
 
         private void ConfigureMainWindow()
