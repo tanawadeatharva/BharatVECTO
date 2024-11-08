@@ -46,11 +46,10 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
-using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class AMTShiftStrategyPolygonCalculator : IShiftPolygonCalculator
+    public class AMTShiftStrategyPolygonCalculator : IShiftPolygonCalculator
 	{
 		public ShiftPolygon ComputeDeclarationShiftPolygon(
 			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
@@ -79,7 +78,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private GearshiftPosition DesiredGearRoadsweeping;
 		private readonly IShiftPolygonCalculator _shiftPolygonCalculator;
 
-		protected TestPowertrain<Gearbox> TestPowertrain;
+		protected ITestPowertrain<Gearbox> TestPowertrain;
 
 		public AMTShiftStrategy(IVehicleContainer dataBus) : base(dataBus)
 		{
@@ -110,10 +109,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// create testcontainer
-			var testContainer = new SimplePowertrainContainer(runData);
-			PowertrainBuilder.BuildSimplePowertrain(runData, testContainer);
-
-			TestPowertrain = new TestPowertrain<Gearbox>(testContainer, DataBus);
+			var testContainer = PowertrainBuilder.BuildSimplePowertrain(runData);
+			TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, DataBus);
 		}
 
 		private bool SpeedTooLowForEngine(GearshiftPosition gear, PerSecond outAngularSpeed)

@@ -19,7 +19,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 {
-	public class SerialHybridStrategyAT : AbstractSerialHybridStrategy<APTNGearbox>
+    public class SerialHybridStrategyAT : AbstractSerialHybridStrategy<APTNGearbox>
 	{
 		public SerialHybridStrategyAT(VectoRunData runData, IVehicleContainer container) : base(runData, container) { }
 
@@ -151,8 +151,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		protected StrategyState CurrentState = new StrategyState();
 		protected StrategyState PreviousState = new StrategyState();
 
-		protected TestPowertrain<T> TestPowertrain;
-		protected TestGenset TestGenSet;
+		protected ITestPowertrain<T> TestPowertrain;
+		protected ITestGenset TestGenSet;
 		protected GenSetCharacteristics GenSetCharacteristics;
 
 		protected PowertrainPosition EmPosition;
@@ -186,19 +186,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			runData.GenSet = new VectoRunData.GenSetData() { GenSetCharacteristics = GenSetCharacteristics };
 
 			// create testcontainer
-			var testContainer = new SimplePowertrainContainer(runData);
-			if (runData.JobType == VectoSimulationJobType.IEPC_S) {
-				PowertrainBuilder.BuildSimpleIEPCHybridPowertrain(runData, testContainer);
-			} else {
-				PowertrainBuilder.BuildSimpleSerialHybridPowertrain(runData, testContainer);
-			}
+			var testContainer = runData.JobType == VectoSimulationJobType.IEPC_S
+				? container.SimplePowertrainBuilder.BuildSimpleIEPCHybridPowertrain(runData)
+				: container.SimplePowertrainBuilder.BuildSimpleSerialHybridPowertrain(runData);
 
-			TestPowertrain = new TestPowertrain<T>(testContainer, DataBus);
-
-			var gensetContainer = new SimplePowertrainContainer(runData);
-			PowertrainBuilder.BuildSimpleGenSet(runData, gensetContainer);
-			TestGenSet = new TestGenset(gensetContainer, DataBus);
-
+			TestPowertrain = container.SimplePowertrainBuilder.CreateTestPowertrain<T>(testContainer, DataBus);
+			
+			var gensetContainer = container.SimplePowertrainBuilder.BuildSimpleGenSet(runData);
+			TestGenSet = container.SimplePowertrainBuilder.CreateTestGenset(gensetContainer, DataBus);
 
 			container.AddPreprocessor(new GensetPreprocessor(GenSetCharacteristics, TestGenSet, runData.EngineData,
 				runData.ElectricMachinesData.FirstOrDefault(x => x.Item1 == PowertrainPosition.GEN)?.Item2, container));
@@ -558,21 +553,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestGenSet.CombustionEngine.Initialize(
 				(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorque,
 				(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineSpeed);
-			TestGenSet.CombustionEngine.PreviousState.EngineOn = //true;
+			(TestGenSet.CombustionEngine as CombustionEngine).PreviousState.EngineOn = //true;
 				(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineOn;
-			TestGenSet.CombustionEngine.PreviousState.EnginePower =
+			(TestGenSet.CombustionEngine as CombustionEngine).PreviousState.EnginePower =
 				(DataBus.EngineInfo as CombustionEngine).PreviousState.EnginePower;
-			TestGenSet.CombustionEngine.PreviousState.dt = (DataBus.EngineInfo as CombustionEngine).PreviousState.dt;
-			TestGenSet.CombustionEngine.PreviousState.EngineSpeed =
+			(TestGenSet.CombustionEngine as CombustionEngine).PreviousState.dt = (DataBus.EngineInfo as CombustionEngine).PreviousState.dt;
+			(TestGenSet.CombustionEngine as CombustionEngine).PreviousState.EngineSpeed =
 				(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineSpeed;
-			TestGenSet.CombustionEngine.PreviousState.EngineTorque =
+			(TestGenSet.CombustionEngine as CombustionEngine).PreviousState.EngineTorque =
 				(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorque;
-			TestGenSet.CombustionEngine.PreviousState.EngineTorqueOut =
+			(TestGenSet.CombustionEngine as CombustionEngine).PreviousState.EngineTorqueOut =
 				(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorqueOut;
-			TestGenSet.CombustionEngine.PreviousState.DynamicFullLoadTorque =
+			(TestGenSet.CombustionEngine as CombustionEngine).PreviousState.DynamicFullLoadTorque =
 				(DataBus.EngineInfo as CombustionEngine).PreviousState.DynamicFullLoadTorque;
 
-			switch (TestGenSet.CombustionEngine.EngineAux) {
+			switch (TestGenSet.EngineAux) {
 				case EngineAuxiliary engineAux:
 					engineAux.PreviousState.AngularSpeed =
 						((DataBus.EngineInfo as CombustionEngine).EngineAux as EngineAuxiliary).PreviousState
@@ -590,38 +585,38 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 					break;
 			}
-			TestGenSet.ElectricMotor.ThermalBuffer =
+			TestGenSet.EM_ThermalBuffer =
 				(DataBus.ElectricMotorInfo(PowertrainPosition.GEN) as ElectricMotor).ThermalBuffer;
-			TestGenSet.ElectricMotor.DeRatingActive =
+			TestGenSet.EM_DeRatingActive =
 				(DataBus.ElectricMotorInfo(PowertrainPosition.GEN) as ElectricMotor).DeRatingActive;
-			TestGenSet.ElectricMotor.PreviousState.DrivetrainSpeed = (DataBus.ElectricMotorInfo(PowertrainPosition.GEN) as ElectricMotor).PreviousState.DrivetrainSpeed;
-			TestGenSet.ElectricMotor.PreviousState.EMSpeed = (DataBus.ElectricMotorInfo(PowertrainPosition.GEN) as ElectricMotor).PreviousState.EMSpeed;
+			TestGenSet.EM_DrivetrainSpeed = (DataBus.ElectricMotorInfo(PowertrainPosition.GEN) as ElectricMotor).PreviousState.DrivetrainSpeed;
+			TestGenSet.EM_Speed = (DataBus.ElectricMotorInfo(PowertrainPosition.GEN) as ElectricMotor).PreviousState.EMSpeed;
 
-			if (TestPowertrain.BatterySystem != null) {
+			if (TestPowertrain.BatterySystem is BatterySystem bs) {
 				var batSystem = DataBus.BatteryInfo as BatterySystem;
 				foreach (var bsKey in batSystem.Batteries.Keys) {
 					for (var i = 0; i < batSystem.Batteries[bsKey].Batteries.Count; i++) {
-						TestPowertrain.BatterySystem.Batteries[bsKey].Batteries[i]
+						bs.Batteries[bsKey].Batteries[i]
 							.Initialize(batSystem.Batteries[bsKey].Batteries[i].StateOfCharge);
 					}
 				}
-				TestPowertrain.BatterySystem.PreviousState.PulseDuration =
+				bs.PreviousState.PulseDuration =
 					(DataBus.BatteryInfo as BatterySystem).PreviousState.PulseDuration;
-				TestPowertrain.BatterySystem.PreviousState.PowerDemand = (DataBus.BatteryInfo as BatterySystem).PreviousState.PowerDemand;
+				bs.PreviousState.PowerDemand = (DataBus.BatteryInfo as BatterySystem).PreviousState.PowerDemand;
 			}
 
 			var iceSpeed = op.ICESpeed;
 			var emTqDt = op.ICETorque;
 
 			TestGenSet.ElectricMotorCtl.EMTorque = emTqDt;
-			var r1 = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), iceSpeed);
+			var r1 = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), iceSpeed, false);
 
 			if (op.EMTorque != null && !op.EMTorque.IsBetween(r1.ElectricMotor.MaxDriveTorque ?? 0.SI<NewtonMeter>(),
 				r1.ElectricMotor.MaxRecuperationTorque ?? 0.SI<NewtonMeter>())) {
 				emTqDt = emTqDt.LimitTo(r1.ElectricMotor.MaxDriveTorque ?? 0.SI<NewtonMeter>(),
 					r1.ElectricMotor.MaxRecuperationTorque ?? 0.SI<NewtonMeter>());
 				TestGenSet.ElectricMotorCtl.EMTorque = emTqDt;
-				r1 = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), iceSpeed);
+				r1 = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), iceSpeed, false);
 			}
 
 			if (r1 is ResponseOverload || r1 is ResponseUnderload) {
@@ -639,12 +634,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 				if (emTqDt == null || !op.ICETorque.IsEqual(emTqDt)) {
 					TestGenSet.ElectricMotorCtl.EMTorque = emTqDt;
-					r1 = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), iceSpeed);
+					r1 = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), iceSpeed, false);
 				}
 				if (rampUp && r1 is ResponseOverload) {
 					emTqDt = null;
 					TestGenSet.ElectricMotorCtl.EMTorque = emTqDt;
-					r1 = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), iceSpeed);
+					r1 = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), iceSpeed, false);
 				}
 				if (r1 is ResponseOverload ovl && (!op.ICESpeed.IsEqual(iceSpeed) || rampUp)) {
 					(emTqDt, iceSpeed, r1) = SearchICESpeed(absTime, dt, iceSpeed, emTqDt, ovl.Delta, true);
@@ -675,7 +670,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						r1.ElectricMotor.MaxDriveTorque ?? 0.SI<NewtonMeter>(),
 						r1.ElectricMotor.MaxRecuperationTorque ?? 0.SI<NewtonMeter>());
 					TestGenSet.ElectricMotorCtl.EMTorque = emTqDt;
-					r1 = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), iceSpeed);
+					r1 = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), iceSpeed, false);
 				}
 			}
 
@@ -742,7 +737,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 			emTqDt = tmpEmTqDt;
 			TestGenSet.ElectricMotorCtl.EMTorque = emTqDt;
-			var r1 = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), iceSpeed);
+			var r1 = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), iceSpeed, false);
 			return (tqDt, iceSpeed, r1);
 		}
 
@@ -764,14 +759,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				},
 				searcher: this);
 			TestGenSet.ElectricMotorCtl.EMTorque = emTqDt;
-			var r1 = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), iceSpeed);
+			var r1 = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), iceSpeed, false);
 
 			if (emTqDt != null && !emTqDt.IsBetween(r1.ElectricMotor.MaxDriveTorque ?? 0.SI<NewtonMeter>(),
 				r1.ElectricMotor.MaxRecuperationTorque ?? 0.SI<NewtonMeter>())) {
 				emTqDt = emTqDt.LimitTo(r1.ElectricMotor.MaxDriveTorque ?? 0.SI<NewtonMeter>(),
 					r1.ElectricMotor.MaxRecuperationTorque ?? 0.SI<NewtonMeter>());
 				TestGenSet.ElectricMotorCtl.EMTorque = emTqDt;
-				r1 = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), iceSpeed);
+				r1 = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), iceSpeed, false);
 			}
 
 			return (tqDt, iceSpeed, r1);

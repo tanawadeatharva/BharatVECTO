@@ -35,6 +35,7 @@ using System.Text;
 using System.Data;
 using System.Linq;
 using System.Collections.Generic;
+using Ninject;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -52,19 +53,23 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
+using TUGraz.VectoCore.Models.Simulation;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
-	[TestFixture]
+    [TestFixture]
 	[Parallelizable(ParallelScope.All)]
 	public class PwheelModeTests
 	{
+		protected IPowertrainBuilder PowertrainBuilder;
 
-		[OneTimeSetUp]
+        [OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-		}
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			PowertrainBuilder = kernel.Get<IPowertrainBuilder>();
+        }
 
 
 		/// <summary>
@@ -92,8 +97,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
 
-			var container = new VehicleContainer(ExecutionMode.Engineering);
-			container.RunData = runData;
+			var container = VehicleContainer.CreateVehicleContainer(runData, null, null);
 			var inputData = @"<t>,<Pwheel>,<gear>,<n>,<Padd>
 							   1,89,2,1748,1.300
 							   2,120,2,1400,0.4";

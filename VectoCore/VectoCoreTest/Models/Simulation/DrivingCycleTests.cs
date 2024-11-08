@@ -32,10 +32,10 @@
 using System.IO;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void TestEngineOnly()
 		{
 			var dataWriter = new MockModalDataContainer();
-			var container = new VehicleContainer(ExecutionMode.Engineering, dataWriter);
+			var container = VehicleContainer.CreateVehicleContainer(new VectoRunData(), dataWriter, null);
 
 			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData/Cycles/Coach Engine Only.vdri", CycleType.EngineOnly,
 				false);
@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestCase()]
 		public void TestEngineOnlyWithTimestamps()
 		{
-			var container = new VehicleContainer(ExecutionMode.Engineering);
+			var container = VehicleContainer.CreateVehicleContainer(new VectoRunData(), null, null);
 
 			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData/Cycles/Coach Engine Only Paux_var-dt.vdri",
 				CycleType.EngineOnly, false);

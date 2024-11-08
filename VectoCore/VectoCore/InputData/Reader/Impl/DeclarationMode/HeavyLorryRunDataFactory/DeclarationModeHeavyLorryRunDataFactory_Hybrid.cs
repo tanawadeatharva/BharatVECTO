@@ -10,24 +10,24 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory
 {
-	public abstract partial class DeclarationModeHeavyLorryRunDataFactory
+    public abstract partial class DeclarationModeHeavyLorryRunDataFactory
 	{
 		
 		public abstract class Hybrid : LorryBase
 		{
 			public Hybrid(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report,
-				declarationDataAdapter, cycleFactory, missionFilter)
-			{
-
-			}
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report,
+					declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 
 			#region Overrides of AbstractDeclarationVectoRunDataFactory
 
@@ -87,11 +87,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			#endregion
 
 			public SerialHybrid(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report,
-				declarationDataAdapter, cycleFactory, missionFilter)	
-			{
-
-			}
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report,
+					declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 
 			#region Overrides of Hybrid
 
@@ -196,7 +196,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 		public class ParallelHybrid : Hybrid
 		{
-			public ParallelHybrid(IDeclarationInputDataProvider dataProvider, IDeclarationReport report, ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
+			public ParallelHybrid(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 
 
 			protected override VectoRunData CreateVectoRunData(Mission mission,
@@ -315,12 +319,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 		public class HEV_S2 : SerialHybrid
 		{
 			public HEV_S2(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report,
-				declarationDataAdapter, cycleFactory, missionFilter)
-			{
-
-
-			}
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report,
+					declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 
 			#region Overrides of SerialHybrid
 
@@ -345,20 +348,29 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 		public class HEV_S3 : SerialHybrid
 		{
-			public HEV_S3(IDeclarationInputDataProvider dataProvider, IDeclarationReport report, ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
+			public HEV_S3(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 		}
 
 		public class HEV_S4 : SerialHybrid
 		{
-			public HEV_S4(IDeclarationInputDataProvider dataProvider, IDeclarationReport report, ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
+			public HEV_S4(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 		}
 
 		public class HEV_S_IEPC : SerialHybrid
 		{
-			public HEV_S_IEPC(IDeclarationInputDataProvider dataProvider, IDeclarationReport report, ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter)
-			{
-
-			}
+			public HEV_S_IEPC(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 
 			#region Overrides of LorryBase
 
@@ -431,36 +443,57 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 		public class HEV_P1 : ParallelHybrid
 		{
-			public HEV_P1(IDeclarationInputDataProvider dataProvider, IDeclarationReport report, ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
+			public HEV_P1(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 		}
 
 		public class HEV_P2 : ParallelHybrid
 		{
-			public HEV_P2(IDeclarationInputDataProvider dataProvider, IDeclarationReport report, ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
+			public HEV_P2(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 		}	
 
 		public class HEV_P2_5 : ParallelHybrid
 		{
-			public HEV_P2_5(IDeclarationInputDataProvider dataProvider, IDeclarationReport report, ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
+			public HEV_P2_5(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 		}
 
 		public class HEV_P3 : ParallelHybrid
 		{
-			public HEV_P3(IDeclarationInputDataProvider dataProvider, IDeclarationReport report, ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
+			public HEV_P3(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 		}
 
 		public class HEV_P4 : ParallelHybrid
 		{
-			public HEV_P4(IDeclarationInputDataProvider dataProvider, IDeclarationReport report, ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
+			public HEV_P4(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 		}
 
 		public class HEV_P_IHPC : HEV_P2
 		{
 
-			public HEV_P_IHPC(IDeclarationInputDataProvider dataProvider, IDeclarationReport report, ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter)
-			{
-
-			}
+			public HEV_P_IHPC(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 		}
 	}
 }

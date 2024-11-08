@@ -33,7 +33,6 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
@@ -80,7 +79,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var data = DrivingCycleDataReader.ReadFromFile(
 				cycleFile, CycleType.EngineOnly,
 				false);
-			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
+			var vehicle = VehicleContainer.CreateVehicleContainer(null, null, null);
 
 			// ReSharper disable once ObjectCreationAsStatement
 			new MockDrivingCycle(vehicle, data);
@@ -118,7 +117,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			foreach (var cycleEntry in data.Entries) {
 				// ReSharper disable once UnusedVariable
 				var response = (ResponseSuccess)port.Request(absTime, dt, cycleEntry.Torque, cycleEntry.AngularVelocity, false);
-				foreach (var sc in vehicle.SimulationComponents()) {
+				foreach (var sc in vehicle.Components) {
 					modData[ModalResultField.time] = absTime + dt / 2;
 					sc.CommitSimulationStep(absTime, dt, modData);
 				}
@@ -137,7 +136,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 		{
 			var dataWriter = new MockModalDataContainer();
 
-			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering);
+			var vehicleContainer = VehicleContainer.CreateVehicleContainer(null, null, null);
 
 			var engine = new CombustionEngine(
 				vehicleContainer, MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 0));
@@ -152,7 +151,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			engine.OutPort().Initialize(power / angularVelocity, angularVelocity);
 			engine.OutPort().Request(absTime, dt, power / angularVelocity, angularVelocity, false);
 
-			foreach (var sc in vehicleContainer.SimulationComponents()) {
+			foreach (var sc in vehicleContainer.Components) {
 				sc.CommitSimulationStep(absTime, dt, dataWriter);
 			}
 

@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var engineFLDFilePath = @"TestData/Integration/BusAuxiliaries/24t Coach.vfld";
 			var engineFCMapFilePath = @"TestData/Integration/BusAuxiliaries/24t Coach.vmap";
 
-			var vehicle = new VehicleContainer(ExecutionMode.Engineering, new MockModalDataContainer());
+			
 			var fcMap = FuelConsumptionMapReader.ReadFromFile(engineFCMapFilePath);
 			var fld = FullLoadCurveReader.ReadFromFile(engineFLDFilePath);
 			var modelData = new CombustionEngineData() {
@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 				FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, fld }, { 1, fld } },
 				IdleSpeed = 560.SI<PerSecond>()
 			};
-			vehicle.RunData = new VectoRunData() {
+			var runData = new VectoRunData() {
 				EngineData = modelData,
 				VehicleData = new VehicleData() {
 					//Length = 10.655.SI< Meter>(),
@@ -153,7 +153,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 					CurbMass = vehicleMass.SI<Kilogram>()
 				}
 			};
-			var engine = new CombustionEngine(vehicle, modelData);
+			var vehicle = VehicleContainer.CreateVehicleContainer(runData, new MockModalDataContainer(), null);
+            var engine = new CombustionEngine(vehicle, modelData);
 			//new Vehicle(vehicle, new VehicleData());
 			driver = new MockDriver(vehicle) { VehicleStopped = false, DriverBehavior = DrivingBehavior.Braking, DrivingAction = DrivingAction.Brake };
 			var gbx = new MockGearbox(vehicle) { Gear = new GearshiftPosition(1) };

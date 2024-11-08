@@ -154,8 +154,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 		private VelocitySpeedGearshiftPreprocessor ConfigureSpeedPreprocessor(IVehicleContainer bus)
 		{
-			var TestContainer = new SimplePowertrainContainer(bus.RunData);
-			PowertrainBuilder.BuildSimplePowertrain(bus.RunData, TestContainer);
+			var TestContainer = PowertrainBuilder.BuildSimplePowertrain(bus.RunData);
 			var TestContainerGbx = TestContainer.GearboxCtl as Gearbox;
 			if (TestContainerGbx == null)
 			{
