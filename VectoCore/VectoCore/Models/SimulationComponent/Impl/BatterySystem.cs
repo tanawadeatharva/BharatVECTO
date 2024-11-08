@@ -29,6 +29,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_batteries = new List<Battery>();
             }
 
+			//public IReadOnlyList<Battery> Batteries { get; }
 			public IReadOnlyList<Battery> Batteries => _batteries;
 
 			public void AddBattery(Battery bat)
@@ -102,7 +103,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public AmpereSecond CapacityMaxSoc =>
 				_capacityMaxSoc ?? (_capacityMaxSoc = _batteries.Min(x => x.Capacity * x.MaxSoC));
 
-			public Volt NominalVoltage => Batteries.Sum(x => x.NominalVoltage);
+			public Volt NominalVoltage => _batteries.Sum(x => x.NominalVoltage);
 
 			private Ampere SelectSolution(double[] solutions, double sign, Second dt)
 			{
@@ -408,5 +409,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		#endregion
+
 	}
 }

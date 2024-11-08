@@ -9,8 +9,8 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
@@ -19,7 +19,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory
 {
-	public abstract partial class DeclarationModeHeavyLorryRunDataFactory
+    public abstract partial class DeclarationModeHeavyLorryRunDataFactory
 	{
 		public abstract class LorryBase : AbstractDeclarationVectoRunDataFactory
 		{
@@ -28,7 +28,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			public IDeclarationReport Report { get; }
 
 			protected LorryBase(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, cycleFactory, missionFilter, false)
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, cycleFactory, missionFilter, false, ptBuilder)
 			{
 				DataAdapter = declarationDataAdapter;
 				InputDataProvider = dataProvider;
@@ -178,7 +181,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 		public class Conventional : LorryBase
 		{
 			public Conventional(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 
 			#region Overrides of LorryBase
 			protected override IEnumerable<VectoRunData> GetNextRun()
@@ -308,11 +314,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			#endregion
 
 			public BatteryElectric(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report,
-				declarationDataAdapter, cycleFactory, missionFilter)
-			{
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report,
+					declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 
-			}
 			#region Overrides of AbstractDeclarationVectoRunDataFactory
 
 			protected override IEnumerable<VectoRunData> GetNextRun()
@@ -431,11 +438,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 		public class PEV_E2 : BatteryElectric
 		{
 			public PEV_E2(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report,
-				declarationDataAdapter, cycleFactory, missionFilter)
-			{
-
-			}
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report,
+					declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 
 
 			#region Overrides of BatteryElectric
@@ -469,26 +476,29 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 		public class PEV_E3 : BatteryElectric
 		{
 			public PEV_E3(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				// the following parameters are injected
 				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
-				IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 		}
 
 		public class PEV_E4 : BatteryElectric
 		{
 			public PEV_E4(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				// the following parameters are injected
 				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
-				IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 		}
 
 		public class PEV_E_IEPC : BatteryElectric
 		{
 			public PEV_E_IEPC(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				// the following parameters are injected
 				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
-				IMissionFilter missionFilter) : base(dataProvider, report,
-				declarationDataAdapter, cycleFactory, missionFilter:missionFilter)
-			{
-
-			}
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report,
+					declarationDataAdapter, cycleFactory, missionFilter: missionFilter, ptBuilder) { }
 
 			protected override bool AxleGearRequired()
 			{
@@ -547,8 +557,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 		public class Exempted : LorryBase
 		{
 			public Exempted(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				// the following parameters are injected
 				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
-				IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 
 			#region Overrides of AbstractDeclarationVectoRunDataFactory
 

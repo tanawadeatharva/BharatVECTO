@@ -38,6 +38,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
@@ -45,7 +46,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
 	public class EngineOnlyVectoRunDataFactory : EngineeringModeVectoRunDataFactory
 	{
-		internal EngineOnlyVectoRunDataFactory(IEngineeringInputDataProvider dataProvider) : base(dataProvider) {}
+		internal EngineOnlyVectoRunDataFactory(IEngineeringInputDataProvider dataProvider, IPowertrainBuilder ptBuilder) : base(dataProvider, ptBuilder) {}
 
 		public override IEnumerable<VectoRunData> NextRun()
 		{

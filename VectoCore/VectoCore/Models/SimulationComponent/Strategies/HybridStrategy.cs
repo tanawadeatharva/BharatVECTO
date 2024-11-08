@@ -11,7 +11,6 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -19,7 +18,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 {
-	public class HybridStrategy : AbstractHybridStrategy<Gearbox>
+    public class HybridStrategy : AbstractHybridStrategy<Gearbox>
 	{
 		public HybridStrategy(VectoRunData runData, IVehicleContainer vehicleContainer) : base(runData, vehicleContainer)
 		{
@@ -35,8 +34,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				grad = 2;
 			}
 
-			var testContainer = new SimplePowertrainContainer(runData);
-			PowertrainBuilder.BuildSimpleHybridPowertrain(runData, testContainer);
+			var testContainer = PowertrainBuilder.BuildSimpleHybridPowertrain(runData);
 
 			return new VelocitySpeedGearshiftPreprocessor(VelocityDropData, runData.GearboxData.TractionInterruption,
 				testContainer, -grad, grad);
@@ -60,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
 			}
 
-			if (TestPowertrain.CombustionEngine.EngineAux is BusAuxiliariesAdapter busAux) {
+			if (TestPowertrain.EngineAux is BusAuxiliariesAdapter busAux) {
 				busAux.CurrentState.ExcessiveDragPower =
 					((DataBus.EngineInfo as CombustionEngine)?.EngineAux as BusAuxiliariesAdapter)?.CurrentState
 					.ExcessiveDragPower ?? 0.SI<Watt>();
@@ -150,7 +148,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
 			TestPowertrain.DCDCConverter?.UpdateFrom(DataBus.DCDCConverter);
 			
-			if (TestPowertrain.CombustionEngine.EngineAux is BusAuxiliariesAdapter busAux) {
+			if (TestPowertrain.EngineAux is BusAuxiliariesAdapter busAux) {
 				busAux.CurrentState.ExcessiveDragPower =
 					((DataBus.EngineInfo as CombustionEngine)?.EngineAux as BusAuxiliariesAdapter)?.CurrentState
 					.ExcessiveDragPower ?? 0.SI<Watt>();
@@ -291,7 +289,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		//private Second lastShiftTime;
 
-		protected TestPowertrain<T> TestPowertrain;
+		protected ISimplePowertrainBuilder PowertrainBuilder { get; private set; }
+
+		protected ITestPowertrain<T> TestPowertrain;
 
 		public VelocityRollingLookup VelocityDropData { get; } = new VelocityRollingLookup();
 
@@ -318,6 +318,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public AbstractHybridStrategy(VectoRunData runData, IVehicleContainer vehicleContainer)
 		{
 			DataBus = vehicleContainer;
+			PowertrainBuilder = vehicleContainer.SimplePowertrainBuilder;
 			ModelData = runData;
 			if (ModelData.ElectricMachinesData.Select(x => x.Item1).Distinct().Count() > 1) {
 				throw new VectoException("More than one electric motors are currently not supported");
@@ -347,10 +348,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					* x.FuelData.LowerHeatingValueVecto * StrategyParameters.MinICEOnTime).Value());
 
 			// create testcontainer
-			var testContainer = new SimplePowertrainContainer(runData);
-			BuildSimplePowertrain(runData, testContainer);
+			var testContainer = BuildSimplePowertrain(runData);
 
-			TestPowertrain = new TestPowertrain<T>(testContainer, DataBus);
+			TestPowertrain = PowertrainBuilder.CreateTestPowertrain<T>(testContainer, DataBus);
 
 
 
@@ -376,9 +376,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			AllowEmergencyShift = false;
 		}
 
-		protected virtual void BuildSimplePowertrain(VectoRunData runData, SimplePowertrainContainer testContainer)
+		protected virtual ISimpleVehicleContainer BuildSimplePowertrain(VectoRunData runData)
 		{
-			PowertrainBuilder.BuildSimpleHybridPowertrain(runData, testContainer);
+			return PowertrainBuilder.BuildSimpleHybridPowertrain(runData);
         }
 
 		protected virtual void WarnGearShiftRange()

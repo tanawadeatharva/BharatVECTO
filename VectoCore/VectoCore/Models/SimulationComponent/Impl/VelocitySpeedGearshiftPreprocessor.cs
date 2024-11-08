@@ -20,10 +20,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		protected readonly Second TractionInterruption;
 		protected readonly VelocityRollingLookup VehicleVelocityDropLookup;
-		protected SimplePowertrainContainer Container;
+		protected ISimpleVehicleContainer Container;
 
 		public VelocitySpeedGearshiftPreprocessor(
-			VelocityRollingLookup velocityDropData, Second tracktionInterruption, SimplePowertrainContainer simpleContainer,
+			VelocityRollingLookup velocityDropData, Second tracktionInterruption, ISimpleVehicleContainer simpleContainer,
 			int minGradient = -24, int maxGradient = 24, int gradientStep = 2)
 		{
 			Container = simpleContainer;
@@ -210,7 +210,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class VelocitySpeedGearshiftPreprocessorE2 : VelocitySpeedGearshiftPreprocessor
 	{
 		public VelocitySpeedGearshiftPreprocessorE2(VelocityRollingLookup velocityDropData,
-			Second tracktionInterruption, SimplePowertrainContainer simpleContainer, int minGradient = -24,
+			Second tracktionInterruption, ISimpleVehicleContainer simpleContainer, int minGradient = -24,
 			int maxGradient = 24, int gradientStep = 2) : base(velocityDropData, tracktionInterruption, simpleContainer,
 			minGradient, maxGradient, gradientStep) { }
 

@@ -32,21 +32,23 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Simulation
 {
-	/// <summary>
-	/// Defines Methods for adding components, commiting a simulation step and finishing the simulation.
-	/// Also defines interfaces for all cockpit access to data.
-	/// </summary>
-	public interface IVehicleContainer : IDataBus
+    /// <summary>
+    /// Defines Methods for adding components, commiting a simulation step and finishing the simulation.
+    /// Also defines interfaces for all cockpit access to data.
+    /// </summary>
+    public interface IVehicleContainer : IDataBus
 	{
 		IModalDataContainer ModalData { get; }
 
@@ -57,13 +59,15 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		VectoRun.Status RunStatus { get; set; }
 
-		
+		ISimplePowertrainBuilder SimplePowertrainBuilder { get; }
+
+		IAuxInProvider BusAux { get; }
 
 		/// <summary>
-		/// Adds a component to the vehicle container.
-		/// </summary>
-		/// <param name="component"></param>
-		void AddComponent(VectoSimulationComponent component);
+        /// Adds a component to the vehicle container.
+        /// </summary>
+        /// <param name="component"></param>
+        void AddComponent(VectoSimulationComponent component);
 
 		void AddAuxiliary(string id, string columnName = null);
 
@@ -87,5 +91,32 @@ namespace TUGraz.VectoCore.Models.Simulation
 		void FinishSingleSimulationRun(Exception e = null);
 
 		IReadOnlyList<VectoSimulationComponent> Components { get; }
+	}
+
+	public interface IExemptedVehicleContainer : IVehicleContainer
+	{
+
+	}
+
+	public interface ISimpleVehicleContainer : IVehicleContainer
+	{
+		IDriverDemandOutPort VehiclePort { get; }
+
+		ITnOutPort GearboxOutPort { get; }
+
+		bool HasGearbox { get; }
+
+		VectoSimulationJobType VehicleArchitecutre { get; }
+
+		PowertrainPosition[] ElectricMotorPositions { get; }
+
+        Dictionary<PowertrainPosition, IElectricMotorInfo> ElectricMotors { get; }
+		
+		IHybridController HybridController { get; }
+
+		IReadOnlyCollection<VectoSimulationComponent> SimulationComponents();
+
+		void UpdateComponents(IDataBus realContainer);
+
 	}
 }

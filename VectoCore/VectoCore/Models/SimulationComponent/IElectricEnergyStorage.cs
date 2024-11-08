@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCommon.Models;
+﻿using System.Collections.Generic;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -25,8 +26,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		void Connect(IElectricChargerPort charger);
 	}
 
-	public interface IElectricEnergyStorage : IBatteryProvider, IRESSInfo
-	{
-
+	public interface IElectricEnergyStorage : IBatteryProvider, IRESSInfo, IElectricEnergyStoragePort
+    {
+		
 	}
 }
