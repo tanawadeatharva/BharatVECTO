@@ -397,7 +397,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private IGearboxInfo _gearboxInfo;
 
 		public ExemptedVehicleContainer(
-			ExecutionMode executionMode, VectoRunData runData, IModalDataContainer modData, ISumData writeSumData, ISimplePowertrainBuilder simplePowertrainBuilder) 
+			VectoRunData runData, IModalDataContainer modData, ISumData writeSumData, ISimplePowertrainBuilder simplePowertrainBuilder) 
 			: base(runData, modData, writeSumData, simplePowertrainBuilder)
 		{
 			_mileageCounter = new ZeroMileageCounter(this);
