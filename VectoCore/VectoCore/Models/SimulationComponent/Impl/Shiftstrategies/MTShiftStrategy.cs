@@ -38,6 +38,7 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
@@ -124,8 +125,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				? DataBus.VehicleInfo.VehicleSpeed : interpolatedDroppedSpeed;
 
 			double droppedSpeedRatio = DataBus.VehicleInfo.VehicleSpeed / droppedSpeed;
-			if ((IsBelowDownShiftCurve(currentGear, inTorque, inAngularVelocity) && droppedSpeedRatio.IsSmallerOrEqual(2.0)) ||
-				IsBelowExtendedDownShiftCurve(currentGear, inTorque, inAngularVelocity))
+			var UphillBrakingLowSpeed = inTorque.IsSmaller(0.0) && interpolatedDroppedSpeed.IsSmaller(GearboxModelData.DisengageWhenHaltingSpeed) && DataBus.DrivingCycleInfo.RoadGradient.IsGreater(0.0);
+
+			if ((((IsBelowDownShiftCurve(currentGear, inTorque, inAngularVelocity) && droppedSpeedRatio.IsSmallerOrEqual(2.0)) || IsBelowExtendedDownShiftCurve(currentGear, inTorque, inAngularVelocity)) && !(UphillBrakingLowSpeed)) ||
+				(inAngularVelocity.IsSmaller(DataBus.EngineInfo.EngineIdleSpeed) && UphillBrakingLowSpeed))
 			{
 				currentGear = Gears.Predecessor(currentGear);
 				while (SkipGears && currentGear.Gear > 1) {
@@ -151,6 +154,99 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			}
 			return currentGear;
 		}
+
+        protected override bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
+            PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, GearshiftPosition gear,
+            Second lastShiftTime, IResponse response)
+        {
+            // no shift when vehicle stands
+            if (DataBus.VehicleInfo.VehicleStopped)
+            {
+                return false;
+            }
+
+            // emergency shift to not stall the engine ------------------------
+            if (Gears.First().Equals(gear) &&
+                SpeedTooLowForEngine(_nextGear, inAngularVelocity / GearboxModelData.Gears[gear.Gear].Ratio))
+            {
+                return true;
+            }
+
+            _nextGear = gear;
+            while (Gears.HasPredecessor(_nextGear) && SpeedTooLowForEngine(_nextGear,
+                inAngularVelocity / GearboxModelData.Gears[gear.Gear].Ratio))
+            {
+                _nextGear = Gears.Predecessor(_nextGear);
+            }
+
+            // upshift if max speed is exceeded 
+            // except if upshift results in immediate downshift
+            var interpolatedDroppedSpeed = velocityDropData.Interpolate(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
+            var droppedSpeed = interpolatedDroppedSpeed == 0.SI<MeterPerSecond>() || interpolatedDroppedSpeed == null
+                ? DataBus.VehicleInfo.VehicleSpeed : interpolatedDroppedSpeed;
+
+            var ShiftSpeedDropRatio = Math.Max(droppedSpeed / DataBus.VehicleInfo.VehicleSpeed, 0.10);
+
+            while (Gears.HasSuccessor(_nextGear) &&
+                    SpeedTooHighForEngine(_nextGear, inAngularVelocity / GearboxModelData.Gears[gear.Gear].Ratio) &&
+                    IsAboveDownShiftCurve(Gears.Successor(_nextGear), outTorque / GearboxModelData.Gears[Gears.Successor(_nextGear).Gear].Ratio, ShiftSpeedDropRatio * outAngularVelocity * GearboxModelData.Gears[Gears.Successor(_nextGear).Gear].Ratio))
+            {
+                _nextGear = Gears.Successor(_nextGear);
+            }
+
+            if (!_nextGear.Equals(gear))
+            {
+                return true;
+            }
+
+            // PTO Active while drive (roadsweeping) shift rules
+            if (DataBus.DrivingCycleInfo.CycleData.LeftSample.PTOActive == PTOActivity.PTOActivityRoadSweeping)
+            {
+                if (gear.Equals(DesiredGearRoadsweeping))
+                {
+                    return false;
+                }
+
+                if (gear > DesiredGearRoadsweeping)
+                {
+                    if (IsAboveDownShiftCurve(DesiredGearRoadsweeping, inTorque, inAngularVelocity))
+                    {
+                        _nextGear = DesiredGearRoadsweeping;
+                        return true;
+                    }
+                }
+
+                if (gear < DesiredGearRoadsweeping)
+                {
+                    if (!SpeedTooHighForEngine(
+                        DesiredGearRoadsweeping, inAngularVelocity / GearboxModelData.Gears[DesiredGearRoadsweeping.Gear].Ratio))
+                    {
+                        _nextGear = DesiredGearRoadsweeping;
+                        return true;
+                    }
+                }
+            }
+
+            // normal shift when all requirements are fullfilled ------------------
+            var minimumShiftTimePassed =
+                (lastShiftTime + GearshiftParams.TimeBetweenGearshifts).IsSmallerOrEqual(absTime);
+            if (!minimumShiftTimePassed)
+            {
+                return false;
+            }
+
+            _nextGear = CheckDownshift(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear,
+                response);
+            if (!_nextGear.Equals(gear))
+            {
+                return true;
+            }
+
+            _nextGear = CheckUpshift(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear,
+                response);
+
+            return !_nextGear.Equals(gear);
+        }
 
 		private VelocitySpeedGearshiftPreprocessor ConfigureSpeedPreprocessor(IVehicleContainer bus)
 		{

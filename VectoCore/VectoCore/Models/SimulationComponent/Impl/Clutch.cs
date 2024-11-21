@@ -55,8 +55,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected readonly Dictionary<uint, EngineFullLoadCurve> _engineFullLoadCurves;
 
 		protected readonly MeterPerSquareSecond _startAcceleration;
+        protected readonly Watt _auxPower;
 
-		private bool firstInitialize = true;
+        private bool firstInitialize = true;
 
 		public IIdleController IdleController
 		{
@@ -78,6 +79,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_clutchSpeedSlippingFactor = Constants.SimulationSettings.ClutchClosingSpeedNorm * (_ratedSpeed - _idleSpeed) /
 										(_idleSpeed + Constants.SimulationSettings.ClutchClosingSpeedNorm * (_ratedSpeed - _idleSpeed));
 			_startAcceleration = container.RunData.GearshiftParameters?.StartAcceleration ?? 1.0.SI<MeterPerSquareSecond>();
+			_auxPower = 0.0.SI<Watt>();
+			foreach (var item in container.RunData.Aux)
+			{
+				_auxPower = _auxPower + (item.PowerDemandMech == null ? 0.0.SI<Watt>() : item.PowerDemandMech);
+			}
         }
 
 		public virtual IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
@@ -226,10 +232,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var engMaxTorque = _engineFullLoadCurves[0].MaxTorque;
 			var acc = _startAcceleration;
 			var engTorque = 0.SI<NewtonMeter>();
+			var auxPower = _auxPower;
 
             /* gear used for clutch slipping: saturation to avoid case where Gear==0 (where GetGearData crash) and Gear>2 (allowslipping does not allow slipping at speed higher than 2) */
-            
-			if ((DataBus.DrivingCycleInfo.RoadGradient != null) && (DataBus.WheelsInfo != null))
+
+            if ((DataBus.DrivingCycleInfo.RoadGradient != null) && (DataBus.WheelsInfo != null))
 			{
 				var slipGear = Math.Min(Math.Max(DataBus.GearboxInfo?.Gear?.Gear ?? 1, 1), 2);
 				var ratioGB = DataBus.GearboxInfo?.GetGearData(slipGear)?.Ratio ?? 1.0;
@@ -243,7 +250,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				engTorque = (fWheel*DataBus.WheelsInfo.DynamicTyreRadius) / ratioGB / ratioAxl;
 				if (angularVelocity.IsGreater(0))
 				{
-					engTorque += (axlegearlossP + gearboxlossP) / angularVelocity; // adding transmission losses
+					engTorque += (axlegearlossP + gearboxlossP + auxPower) / angularVelocity; // adding transmission losses
 				}
 
 				/* additional 1% safety for overloaded vehicles (no effect on Tractors even if concerned, because engine is big enough, 
