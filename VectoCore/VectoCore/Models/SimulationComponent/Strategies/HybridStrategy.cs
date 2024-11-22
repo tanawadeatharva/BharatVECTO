@@ -1363,14 +1363,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					eval.Add(downshift);
 					return;
 				}
-				if (resp.Gearbox.Gear.IsLockedGear() && !resp.Gearbox.Gear.Equals(new GearshiftPosition(0)) && GearList.HasSuccessor(resp.Gearbox.Gear) && ModelData.GearboxData
+				if (resp.Gearbox.Gear.IsLockedGear() && !resp.Gearbox.Gear.Equals(new GearshiftPosition(0)) && 
+					GearList.HasSuccessor(resp.Gearbox.Gear) && 
+					ModelData.GearboxData
 					.Gears[resp.Gearbox.Gear.Gear].ShiftPolygon
 					.IsAboveUpshiftCurve(resp.Engine.TorqueOutDemand, engineSpeed)) {
-					// consider downshift
-					var upshift = ResponseEmOff;
-					upshift.Gear = GearList.Successor(nextGear);
-					eval.Add(upshift);
-					return;
+					// consider upshift
+					if (DataBus.DriverInfo.DriverAcceleration.IsGreaterOrEqual(0)) {
+						var upshift = ResponseEmOff;
+						upshift.Gear = GearList.Successor(nextGear);
+						eval.Add(upshift);
+						return;
+					}
 				}
 			}
 
