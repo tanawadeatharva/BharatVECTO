@@ -44,6 +44,10 @@ namespace TUGraz.VectoCore.Tests.Integration.GenericVehicles
 		private const string SINGLEBUS_31B	   = @$"{DeclarationBasePath}ICE/SingleBus_31b_vecto2xml/SingleBus31b.vecto";
 		private const string SINGLEBUS_34F	   = @$"{DeclarationBasePath}ICE/SingleBus_34f_vecto2xml/SingleBus34f.vecto";
 		
+		// Factor Method Bus
+		private const string SINGLEBUS_31B_FM  = @$"{DeclarationBasePath}ICE/SingleBus_31b_FactorMethod/SingleBus31b_FM.vecto";
+		private const string SINGLEBUS_34F_FM  = @$"{DeclarationBasePath}ICE/SingleBus_34f_FactorMethod/SingleBus34f_FM.vecto";
+		
 		// VTP
 		private const string VTP_TRUCK = @$"{DeclarationBasePath}ICE/VTP_Truck_vecto2xml/VTP.vecto";
 		
@@ -181,6 +185,27 @@ namespace TUGraz.VectoCore.Tests.Integration.GenericVehicles
 			RunDistanceCycle(jobFile, cycleName, LoadingType.ReferenceLoad, metrics);
 		}
 
+
+		[Category("Integration")]
+		[
+			TestCase(SINGLEBUS_31B_FM, "Coach", 863.7348),
+			TestCase(SINGLEBUS_31B_FM, "HeavyUrban", 1829.8076),
+			TestCase(SINGLEBUS_31B_FM, "Interurban", 1039.5758),
+
+			TestCase(SINGLEBUS_34F_FM, "Coach", 686.0818),
+			TestCase(SINGLEBUS_34F_FM, "HeavyUrban", 1860.2187),
+			TestCase(SINGLEBUS_34F_FM, "Interurban", 950.3305),
+		]
+		public void ICE_DistanceRun_FactorMethod(string jobFile, string cycleName, double expectedECFinal)
+		{
+			Dictionary<string, double> metrics = new Dictionary<string, double>()
+			{
+				{ SumDataFields.CO2_KM, expectedECFinal }
+			};
+
+			RunDistanceCycle(jobFile, cycleName, LoadingType.ReferenceLoad, metrics);
+		}
+
 		public void RunDistanceCycle(
 			string jobFile,
 			string cycleName,
@@ -208,6 +233,13 @@ namespace TUGraz.VectoCore.Tests.Integration.GenericVehicles
 			IVectoRun cycleToRun = factory.SimulationRuns()
 				.Where(r => r.CycleName == cycleName && r.RunSuffix == loading.ToString())
 				.FirstOrDefault();
+
+			if(cycleToRun == null && factory.SimulationRuns().Any(r => r.RunName.ToLower().Contains("bus")))
+			{
+				cycleToRun = factory.SimulationRuns()
+					.Where(r => r.CycleName == cycleName && r.RunSuffix.Contains(loading.ToString()))
+					.FirstOrDefault();
+			}
 
 			Assert.IsNotNull(cycleToRun, $"Cycle {cycleName} is not configured for the current vehicle.");
 
