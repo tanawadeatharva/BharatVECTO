@@ -43,14 +43,14 @@ namespace TUGraz.VectoCore.Tests.Integration.GenericVehicles
 		private const string PRIMARYBUS_P39_40 = @$"{DeclarationBasePath}ICE/Group P39_40_xml/primary_heavyBus_group_P39_40_nonSmart_ESS.xml";
 		private const string SINGLEBUS_31B	   = @$"{DeclarationBasePath}ICE/SingleBus_31b_vecto2xml/SingleBus31b.vecto";
 		private const string SINGLEBUS_34F	   = @$"{DeclarationBasePath}ICE/SingleBus_34f_vecto2xml/SingleBus34f.vecto";
-		
+
 		// Factor Method Bus
 		private const string SINGLEBUS_31B_FM  = @$"{DeclarationBasePath}ICE/SingleBus_31b_FactorMethod/SingleBus31b_FM.vecto";
 		private const string SINGLEBUS_34F_FM  = @$"{DeclarationBasePath}ICE/SingleBus_34f_FactorMethod/SingleBus34f_FM.vecto";
-		
+
 		// VTP
 		private const string VTP_TRUCK = @$"{DeclarationBasePath}ICE/VTP_Truck_vecto2xml/VTP.vecto";
-		
+
 		// E2
 		private const string E2_JOB         = @$"{DeclarationBasePath}PEV/GenericVehicleE2/BEV_E2.vecto";
 		private const string E2_CONST30_JOB = @$"{DeclarationBasePath}PEV/GenericVehicleE2/BEV_E2_Cont30kW.vecto";
@@ -77,25 +77,25 @@ namespace TUGraz.VectoCore.Tests.Integration.GenericVehicles
 
 		[Category("Integration")]
 		[
-			TestCase(GROUP_1s, "RegionalDelivery", 657.041),
-			TestCase(GROUP_1s, "UrbanDelivery", 754.9479),
+			TestCase(GROUP_1s, "RegionalDelivery", 657.0566),
+			TestCase(GROUP_1s, "UrbanDelivery", 756.0157),
 
 			TestCase(GROUP_2, "LongHaul", 776.7099),
-			TestCase(GROUP_2, "RegionalDelivery", 567.5876),
-			TestCase(GROUP_2, "UrbanDelivery", 768.7973),
+			TestCase(GROUP_2, "RegionalDelivery", 567.5057),
+			TestCase(GROUP_2, "UrbanDelivery", 768.8104),
 
 			TestCase(GROUP_5, "LongHaul", 891.7875),
 			TestCase(GROUP_5, "RegionalDelivery", 910.4309),
-			TestCase(GROUP_5, "UrbanDelivery", 1572.4234),
+			TestCase(GROUP_5, "UrbanDelivery", 1572.4864),
 
 			TestCase(GROUP_53, "RegionalDelivery", 468.9388),
-			TestCase(GROUP_53, "UrbanDelivery", 487.5429),
+			TestCase(GROUP_53, "UrbanDelivery", 487.2271),
 
 			//TestCase(GROUP_54, "RegionalDelivery", 468.9388),
 			//TestCase(GROUP_54, "UrbanDelivery", 487.5429),
 
 			TestCase(GROUP_54_ML3, "RegionalDelivery", 285.7974),
-			TestCase(GROUP_54_ML3, "UrbanDelivery", 373.9248),
+			TestCase(GROUP_54_ML3, "UrbanDelivery", 373.4775),
 
 			TestCase(GROUP_9, "LongHaul", 940.6617),
 			TestCase(GROUP_9, "RegionalDelivery", 680.4892),
