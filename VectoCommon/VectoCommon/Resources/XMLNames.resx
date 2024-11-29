@@ -2175,10 +2175,19 @@
   <data name="MonitoringElectricMachineGEN" xml:space="preserve">
     <value>ElectricMachineGEN</value>
   </data>
-  <data name="REESS" xml:space="preserve">
-    <value>REESS</value>
-  </data>
   <data name="XMLCustomerReportIsVocational" xml:space="preserve">
     <value>Vocational</value>
+  </data>
+  <data name="CompletedBusManufacturerOutputDataType" xml:space="preserve">
+    <value>CompletedBusManufacturerOutputDataType</value>
+  </data>
+  <data name="CompletedBusVehicleVIFType" xml:space="preserve">
+    <value>VehicleVIFType</value>
+  </data>
+  <data name="PrimaryBusDeclarationType" xml:space="preserve">
+    <value>PrimaryBusDeclarationType</value>
+  </data>
+  <data name="PrimaryBusManufacturerOutputDataType" xml:space="preserve">
+    <value>PrimaryBusManufacturerOutputDataType</value>
   </data>
 </root>

@@ -31,6 +31,7 @@
 
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
 using HashingTool.ViewModel.UserControl;
 using TUGraz.VectoCommon.Hashing;
@@ -49,19 +50,6 @@ namespace HashingTool.Helper
 		public const string ToolTipNone = "";
 		public static string ToolTipComponentHashInvalid = "Job-Data validation failed!";
 
-		public static bool? IsManufacturerReport(XmlDocument x, IErrorLogger errorLog)
-		{
-			if (x == null || x.DocumentElement == null) {
-				return null;
-			}
-			var valid = x.DocumentElement.LocalName == XMLNames.VectoManufacturerReport;
-			if (!valid) {
-				errorLog.LogError($"Invalid XML file given ({x.DocumentElement.LocalName}). " +
-								$"Expected Manufacturer Report XML ({XMLNames.VectoManufacturerReport})!");
-			}
-			return valid;
-		}
-
 		public static bool? IsCustomerReport(XmlDocument x, IErrorLogger errorLog)
 		{
 			if (x == null || x.DocumentElement == null) {
@@ -69,31 +57,136 @@ namespace HashingTool.Helper
 			}
 			var valid = x.DocumentElement != null && x.DocumentElement.LocalName == XMLNames.VectoCustomerReport;
 			if (!valid) {
-				errorLog.LogError($"Invalid XML file given ({x.DocumentElement.LocalName}). " +
+				errorLog.LogError($"Invalid XML file selected ({x.DocumentElement.LocalName}). " +
 								$"Expected Customer Report XML ({XMLNames.VectoCustomerReport})!");
 			}
 			return valid;
 		}
 
+		public static bool? IsManufacturerReport(XmlDocument x, IErrorLogger errorLog)
+		{
+			return IsVehicleManufacturerReport(x, errorLog);
+		}
+
 		public static bool? IsJobFile(XmlDocument x, IErrorLogger errorLog)
 		{
-			if (x == null || x.DocumentElement == null) {
+			return IsVehicleJobFile(x, errorLog);
+		}
+
+		public static bool? IsPrimaryJobFile(XmlDocument x, IErrorLogger errorLog)
+		{
+			return IsVehicleJobFile(x, errorLog, XMLNames.PrimaryBusDeclarationType);
+		}
+
+		public static bool? IsPrimaryManufacturerFile(XmlDocument x, IErrorLogger errorLog)
+		{
+			return IsVehicleManufacturerReport(x, errorLog, XMLNames.PrimaryBusManufacturerOutputDataType);
+		}
+
+		public static bool? IsCompletedJobFile(XmlDocument x, IErrorLogger errorLog)
+		{
+			return IsVehicleJobFile(x, errorLog, XMLNames.CompletedBusVehicleVIFType);
+		}
+
+		public static bool? IsCompletedManufacturerFile(XmlDocument x, IErrorLogger errorLog)
+		{
+			return IsVehicleManufacturerReport(x, errorLog, XMLNames.CompletedBusManufacturerOutputDataType);
+		}
+
+		public static bool? IsVehicleManufacturerReport(XmlDocument x, IErrorLogger errorLog, string vehicleFileType = null)
+		{
+			if (x == null || x.DocumentElement == null)
+			{
 				return null;
 			}
+
+			var isSupportedVehicleFile = IsSupportedVehicleFile(x, vehicleFileType);
+			var valid = x.DocumentElement.LocalName == XMLNames.VectoManufacturerReport && isSupportedVehicleFile;
+
+			if (!valid)
+			{
+				string errorMessage =
+					$"Invalid XML file selected ({x.DocumentElement.LocalName}). " +
+					$"Expected Manufacturer Report XML ({XMLNames.VectoManufacturerReport})!";
+
+				errorMessage = isSupportedVehicleFile ? errorMessage : $"Incorrect file provided. Select a {vehicleFileType} vehicle.";
+				errorLog.LogError(errorMessage);
+			}
+
+			return valid;
+		}
+
+		public static bool? IsVehicleJobFile(XmlDocument x, IErrorLogger errorLog, string vehicleFileType = null)
+		{
+			if (x == null || x.DocumentElement == null)
+			{
+				return null;
+			}
+
 			var validSingleStep = (x.DocumentElement.LocalName == XMLNames.VectoInputDeclaration &&
 						x.DocumentElement.FirstChild.LocalName == XMLNames.Component_Vehicle);
-
-			var validMultiStep = (x.DocumentElement.LocalName == XMLNames.VectoOutputMultistep && 
+			var validMultiStep = (x.DocumentElement.LocalName == XMLNames.VectoOutputMultistep &&
 						x.DocumentElement.FirstChild.LocalName == XMLNames.Bus_PrimaryVehicle);
 
-			var valid = validSingleStep || validMultiStep;
+			var isSupportedVehicleFile = IsSupportedVehicleFile(x, vehicleFileType);
+			var valid = (validMultiStep || validSingleStep) && isSupportedVehicleFile;
 
-			if (!valid) {
-				errorLog.LogError($"Invalid XML file given ({x.DocumentElement.LocalName}/{x.DocumentElement.FirstChild.LocalName}). " +
-								$"Expected Vehicle XML ({XMLNames.VectoInputDeclaration}/{XMLNames.Component_Vehicle}) or " +
-								$"({XMLNames.VectoOutputMultistep}/{XMLNames.Bus_PrimaryVehicle}) !");
+			if (!valid)
+			{
+				string errorMessage = $"Invalid XML file selected ({x.DocumentElement.LocalName}/{x.DocumentElement.FirstChild.LocalName}). " +
+					$"Expected Vehicle XML ({XMLNames.VectoInputDeclaration}/{XMLNames.Component_Vehicle}) or " +
+					$"({XMLNames.VectoOutputMultistep}/{XMLNames.Bus_PrimaryVehicle})!";
+
+				errorMessage = isSupportedVehicleFile ? errorMessage : $"Incorrect file provided. Select a {vehicleFileType} vehicle.";
+				errorLog.LogError(errorMessage);
 			}
+
 			return valid;
+		}
+
+		private static bool IsSupportedVehicleFile(XmlDocument x, string vehicleFileType)
+		{
+			var fileType = ReadVehicleFileType(x);
+			if (string.IsNullOrEmpty(vehicleFileType) || string.IsNullOrEmpty(fileType))
+			{
+				return true;
+			}
+
+			return Regex.Matches(fileType, $"{vehicleFileType}$").Count > 0;
+		}
+
+		private static string ReadVehicleFileType(XmlDocument xmlDocument)
+		{
+			if (xmlDocument == null)
+			{
+				return "";
+			}
+
+			var jobTypeRaw = GetVehicleType(xmlDocument);
+			string namespacePrefixRegex = "^(.+:)?";
+			var jobType = new Regex(namespacePrefixRegex).Replace(jobTypeRaw, string.Empty);
+
+			return jobType;
+		}
+
+		private static string GetVehicleType(XmlDocument xmlDocument)
+		{
+			string GetJobType(string localName)
+			{
+				return xmlDocument
+					.SelectSingleNode($"//*[local-name()='{localName}']")?
+					.Attributes?
+					.GetNamedItem("xsi:type")?
+					.Value ?? string.Empty;
+			}
+
+			var jobTypeRaw = GetJobType("Vehicle");
+			if (string.IsNullOrEmpty(jobTypeRaw) || string.IsNullOrWhiteSpace(jobTypeRaw))
+			{
+				jobTypeRaw = GetJobType("Data");
+			}
+
+			return string.IsNullOrEmpty(jobTypeRaw) || string.IsNullOrWhiteSpace(jobTypeRaw) ? string.Empty : jobTypeRaw;
 		}
 
 		public static bool? IsComponentFile(XmlDocument x, IErrorLogger errorLog)
