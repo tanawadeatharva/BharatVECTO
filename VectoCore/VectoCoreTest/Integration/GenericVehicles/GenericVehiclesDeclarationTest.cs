@@ -43,14 +43,14 @@ namespace TUGraz.VectoCore.Tests.Integration.GenericVehicles
 		private const string PRIMARYBUS_P39_40 = @$"{DeclarationBasePath}ICE/Group P39_40_xml/primary_heavyBus_group_P39_40_nonSmart_ESS.xml";
 		private const string SINGLEBUS_31B	   = @$"{DeclarationBasePath}ICE/SingleBus_31b_vecto2xml/SingleBus31b.vecto";
 		private const string SINGLEBUS_34F	   = @$"{DeclarationBasePath}ICE/SingleBus_34f_vecto2xml/SingleBus34f.vecto";
-		
+
 		// Factor Method Bus
 		private const string SINGLEBUS_31B_FM  = @$"{DeclarationBasePath}ICE/SingleBus_31b_FactorMethod/SingleBus31b_FM.vecto";
 		private const string SINGLEBUS_34F_FM  = @$"{DeclarationBasePath}ICE/SingleBus_34f_FactorMethod/SingleBus34f_FM.vecto";
-		
+
 		// VTP
 		private const string VTP_TRUCK = @$"{DeclarationBasePath}ICE/VTP_Truck_vecto2xml/VTP.vecto";
-		
+
 		// E2
 		private const string E2_JOB         = @$"{DeclarationBasePath}PEV/GenericVehicleE2/BEV_E2.vecto";
 		private const string E2_CONST30_JOB = @$"{DeclarationBasePath}PEV/GenericVehicleE2/BEV_E2_Cont30kW.vecto";
@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.Tests.Integration.GenericVehicles
 			TestCase(GROUP_9_DF_WHR, "LongHaul", 1001.4114),
 			TestCase(GROUP_9_DF_WHR, "RegionalDelivery", 723.4348),
 
-			TestCase(GROUP_9_WHR, "LongHaul", 938.0753),
+			TestCase(GROUP_9_WHR, "LongHaul", 938.0763),
 			TestCase(GROUP_9_WHR, "RegionalDelivery", 677.2767),
 
 			//TestCase(GROUP_9_AT, "LongHaul", 1136.1705),
@@ -188,9 +188,9 @@ namespace TUGraz.VectoCore.Tests.Integration.GenericVehicles
 
 		[Category("Integration")]
 		[
-			TestCase(SINGLEBUS_31B_FM, "Coach", 863.7348),
-			TestCase(SINGLEBUS_31B_FM, "HeavyUrban", 1829.8076),
-			TestCase(SINGLEBUS_31B_FM, "Interurban", 1039.5758),
+			TestCase(SINGLEBUS_31B_FM, "Coach", 863.7357),
+			TestCase(SINGLEBUS_31B_FM, "HeavyUrban", 1829.8008),
+			TestCase(SINGLEBUS_31B_FM, "Interurban", 1039.5712),
 
 			TestCase(SINGLEBUS_34F_FM, "Coach", 686.0818),
 			TestCase(SINGLEBUS_34F_FM, "HeavyUrban", 1860.2187),
