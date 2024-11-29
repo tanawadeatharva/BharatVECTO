@@ -656,7 +656,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					_parameterViewModels[nameof(NumberPassengersStandingUpperDeck)].EditingEnabled = value;
 					_parameterViewModels[nameof(NumberPassengersStandingLowerDeck)].EditingEnabled = value;
 				}
-				
 			}
 		}
 
