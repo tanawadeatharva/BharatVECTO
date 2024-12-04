@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
 
 			foreach (var entry in motorData.VoltageLevels.OrderBy(x => x.VoltageLevel)) {
-				var fullLoadCurve = ElectricFullLoadCurveReader.Create(entry.FullLoadCurve, count);
+				var fullLoadCurve = ElectricFullLoadCurveReader.Create(entry.FullLoadCurve.First().LoadCurve, count);
 				var maxTorqueCurve = torqueLimits == null
 					? null
 					: ElectricFullLoadCurveReader.Create(
@@ -278,17 +278,28 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			foreach (var entry in iepc.VoltageLevels.OrderBy(x => x.VoltageLevel).AsEnumerable()) {
 				var effMap = new Dictionary<uint, EfficiencyMap>();
-				var fldCurve =
-					IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, gearRatioUsedForMeasurement.Ratio);
-				for (var i = 0u; i < entry.PowerMap.Count; i++) {
-					var ratio = iepc.Gears.First(x => x.GearNumber == i + 1).Ratio;
-					effMap.Add(i + 1, IEPCMapReader.Create(entry.PowerMap[(int)i].PowerMap, count, ratio, fldCurve, ExecutionMode.Declaration));
-					//fullLoadCurves.Add(i + 1, IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, ratio));
+
+                var fldCurve = (entry.FullLoadCurve.Count() == 1) && (entry.FullLoadCurve.First().Gear == 0)
+                    ? IEPCFullLoadCurveReader.Create(entry.FullLoadCurve.First().LoadCurve, count, gearRatioUsedForMeasurement.Ratio)
+					: null;
+
+				var fldCurves = new Dictionary<uint, ElectricMotorFullLoadCurve>();
+				foreach (var curve in entry.FullLoadCurve.Where(x => x.Gear > 0))
+				{
+                    var ratio = iepc.Gears.First(x => x.GearNumber == curve.Gear).Ratio;
+					fldCurves.Add((uint)curve.Gear, IEPCFullLoadCurveReader.Create(curve.LoadCurve, count, ratio));
 				}
+					
+                for (var i = 0u; i < entry.PowerMap.Count; i++) {
+					var ratio = iepc.Gears.First(x => x.GearNumber == i + 1).Ratio;
+					effMap.Add(i + 1, IEPCMapReader.Create(entry.PowerMap[(int)i].PowerMap, count, ratio, fldCurve ?? fldCurves[i + 1], ExecutionMode.Declaration));
+				}
+
 				voltageLevels.Add(new IEPCVoltageLevelData() {
 
 					Voltage = iepc.CertificationMethod != CertificationMethod.StandardValues ? entry.VoltageLevel : null, //No voltagelevel is provided for standard values
 					FullLoadCurve = fldCurve,
+					FullLoadCurves = fldCurves,
 					EfficiencyMaps = effMap,
 				});
 			}
@@ -396,7 +407,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var contElPwr = voltageLevel.LookupElectricPower(voltageEntry.VoltageLevel, extimatedContTqSpeed,
 								-estimatedContTq, gear).ElectricalPower ??
 							voltageLevel.LookupElectricPower(voltageEntry.VoltageLevel, extimatedContTqSpeed,
-								voltageLevel.FullLoadDriveTorque(voltageEntry.VoltageLevel, extimatedContTqSpeed),
+								voltageLevel.FullLoadDriveTorque(voltageEntry.VoltageLevel, extimatedContTqSpeed, gear.Gear),
 								gear, true).ElectricalPower;
 
             var continuousPowerLoss = -contElPwr - estimatedContTq * extimatedContTqSpeed; // loss needs to be positive
@@ -438,7 +449,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var contElPwr = voltageLevel.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
 								-continuousTorque, gear).ElectricalPower ??
 							voltageLevel.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
-								voltageLevel.FullLoadDriveTorque(voltageEntry.VoltageLevel, continuousTorqueSpeed),
+								voltageLevel.FullLoadDriveTorque(voltageEntry.VoltageLevel, continuousTorqueSpeed, gear.Gear),
 								gear, true).ElectricalPower;
 			var continuousPowerLoss = -contElPwr - continuousTorque * continuousTorqueSpeed; // loss needs to be positive
 			var overloadBuffer = (peakPwrLoss - continuousPowerLoss) * voltageEntry.OverloadTime;
@@ -467,7 +478,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 								(voltageEntry.OverloadTestSpeed ?? 0.RPMtoRad());
 				var maxTqContSpeed = overloadPwr / continuousTorqueSpeed;
 				var maxTorqueFldContSpeed =
-					-voltageLevel.FullLoadDriveTorque(voltageEntry.VoltageLevel, continuousTorqueSpeed);
+					-voltageLevel.FullLoadDriveTorque(voltageEntry.VoltageLevel, continuousTorqueSpeed, gear.Gear);
 
 				var overloadTorqueTrans = VectoMath.Min(maxTqContSpeed, maxTorqueFldContSpeed);
 				var etaOvl = continuousTorqueSpeed * overloadTorqueTrans / -voltageLevel.LookupElectricPower(
@@ -498,7 +509,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 									(voltageEntry.ContinuousTorqueSpeed ?? 0.RPMtoRad());
 				var maxTqOvlSpeed = continuousPwr / overloadTestSpeed;
 				var maxTorqueFldOvlSpeed =
-					-voltageLevel.FullLoadDriveTorque(voltageEntry.VoltageLevel, overloadTestSpeed);
+					-voltageLevel.FullLoadDriveTorque(voltageEntry.VoltageLevel, overloadTestSpeed, gear.Gear);
 				var continuousTorqueTrans = VectoMath.Min(maxTqOvlSpeed, maxTorqueFldOvlSpeed);
 				var overloadTorque = (voltageEntry.OverloadTorque ?? 0.SI<NewtonMeter>()) * count / gearRatioUsedForMeasurement;
 				var etaOvl = overloadTestSpeed * overloadTorque / -voltageLevel.LookupElectricPower(
@@ -643,7 +654,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
             public Second OverloadTime => _electricMotorVoltageLevelImplementation.OverloadTime;
 
-            public TableData FullLoadCurve => _electricMotorVoltageLevelImplementation.FullLoadCurve;
+            public IList<IElectricMotorLoadCurve> FullLoadCurve => _electricMotorVoltageLevelImplementation.FullLoadCurve;
 
             public IList<IElectricMotorPowerMap> PowerMap => _electricMotorVoltageLevelImplementation.PowerMap;
 
@@ -723,6 +734,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
             public IList<IDragCurve> DragCurves => _iiepcDeclarationInputDataImplementation.DragCurves;
 
             public TableData Conditioning => _iiepcDeclarationInputDataImplementation.Conditioning;
+
+			public bool DisengagementClutch => _iiepcDeclarationInputDataImplementation.DisengagementClutch;
 
             #endregion
         }

@@ -33,6 +33,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
             Bind<IXMLSuperCapDeclarationInputData>().To<XMLSuperCapDeclarationInputDataV26>()
                 .Named(XMLSuperCapDeclarationInputDataV26.QUALIFIED_XSD_TYPE);
+
+            Bind<IXMLIEPCInputData>().To<XMLElectricMotorIEPCIInputDataProviderV26>().Named(XMLElectricMotorIEPCIInputDataProviderV26.QUALIFIED_XSD_TYPE);
+
+            Bind<IXMLIEPCInputData>().To<XMLElectricMotorIepciStandardInputDataProviderV26>().Named(XMLElectricMotorIepciStandardInputDataProviderV26.QUALIFIED_XSD_TYPE);
         }
     }
 }

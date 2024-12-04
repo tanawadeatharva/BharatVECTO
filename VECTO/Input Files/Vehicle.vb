@@ -1044,6 +1044,7 @@ Public Class IEPCWrapper
     Public ReadOnly Property Inertia As KilogramSquareMeter Implements IIEPCDeclarationInputData.Inertia
 	Public ReadOnly Property DifferentialIncluded As Boolean Implements IIEPCDeclarationInputData.DifferentialIncluded
 	Public ReadOnly Property DesignTypeWheelMotor As Boolean Implements IIEPCDeclarationInputData.DesignTypeWheelMotor
+	Public ReadOnly Property DisengagementClutch As Boolean Implements IIEPCDeclarationInputData.DisengagementClutch
 	Public ReadOnly Property NrOfDesignTypeWheelMotorMeasured As Integer? Implements IIEPCDeclarationInputData.NrOfDesignTypeWheelMotorMeasured
 	Public ReadOnly Property Gears As IList(Of IGearEntry) Implements IIEPCDeclarationInputData.Gears
 	Public ReadOnly Property VoltageLevels As IList(Of IElectricMotorVoltageLevel) Implements IIEPCDeclarationInputData.VoltageLevels

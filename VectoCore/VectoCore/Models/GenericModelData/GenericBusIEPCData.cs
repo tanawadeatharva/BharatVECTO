@@ -90,10 +90,13 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 			var result = new List<ElectricMotorVoltageLevelData>();
 			foreach (var entry in voltageLevels.OrderBy(x => x.VoltageLevel)) {
 				var fld = GetElectricMotorFullLoadCurve(entry, count);
-				var iepcVoltageLevel = new IEPCVoltageLevelData {
-					EfficiencyMaps = GetEfficiencyMaps(entry, count, electricMachineType, fld),
+				var flds = GetElectricMotorFullLoadCurves(entry, count);
+
+                var iepcVoltageLevel = new IEPCVoltageLevelData {
+					EfficiencyMaps = GetEfficiencyMaps(entry, count, electricMachineType, (flds.Count > 0) ? flds : new Dictionary<uint, ElectricMotorFullLoadCurve>() { { 0, fld } }),
 					Voltage = entry.VoltageLevel,
-					FullLoadCurve = fld
+					FullLoadCurve = fld,
+					FullLoadCurves = flds
 				};
 				result.Add(iepcVoltageLevel);
 			}
@@ -101,26 +104,43 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 			return result;
 		}
 
-		private ElectricMotorFullLoadCurve GetElectricMotorFullLoadCurve(IElectricMotorVoltageLevel voltageLevel,
-			int count)
+		private ElectricMotorFullLoadCurve GetElectricMotorFullLoadCurve(IElectricMotorVoltageLevel voltageLevel, int count)
 		{
-			return IEPCFullLoadCurveReader.Create(voltageLevel.FullLoadCurve, count, _gearRatioAtMeasurement.Value);
+			return (voltageLevel.FullLoadCurve.Count == 1) && (voltageLevel.FullLoadCurve.First().Gear == 0) 
+				? IEPCFullLoadCurveReader.Create(voltageLevel.FullLoadCurve.First().LoadCurve, count, _gearRatioAtMeasurement.Value)
+				: null;
 		}
 
-		
-		private Dictionary<uint, EfficiencyMap> GetEfficiencyMaps(IElectricMotorVoltageLevel voltageLevel, int count,
-			ElectricMachineType electricMachineType, ElectricMotorFullLoadCurve fullLoadCurve)
+		private Dictionary<uint, ElectricMotorFullLoadCurve> GetElectricMotorFullLoadCurves(IElectricMotorVoltageLevel voltageLevel, int count)
+		{
+            var fldCurves = new Dictionary<uint, ElectricMotorFullLoadCurve>();
+
+            foreach (var curve in voltageLevel.FullLoadCurve.Where(x => x.Gear > 0))
+            {
+                var ratio = _gearRatios.First(x => x.Key == curve.Gear).Value;
+                fldCurves.Add((uint)curve.Gear, IEPCFullLoadCurveReader.Create(curve.LoadCurve, count, ratio));
+            }
+
+			return fldCurves;
+        }
+
+        private Dictionary<uint, EfficiencyMap> GetEfficiencyMaps(IElectricMotorVoltageLevel voltageLevel, int count,
+			ElectricMachineType electricMachineType, Dictionary<uint, ElectricMotorFullLoadCurve> fullLoadCurves)
 		{
 			var result = new Dictionary<uint, EfficiencyMap>();
 
 			foreach (var gearEntry in _gearRatios) {
 
 				var gearRatio = gearEntry.Value;
-				
-				var ratedPoint = GenericRatedPointHelper.GetRatedPointOfFullLoadCurveAtIEPC(voltageLevel.FullLoadCurve,
-					_axleRatio, _gearRatioAtMeasurement.Value, GenericGearEfficiency, _axleEfficiency);
-				
-				var deNormalizedMap = DeNormalizeData(GetNormalizedEfficiencyMap(electricMachineType), ratedPoint, gearRatio);
+
+				var loadCurve = voltageLevel.FullLoadCurve.FirstOrDefault(x => x.Gear == gearEntry.Key) ?? voltageLevel.FullLoadCurve.First();
+
+                var ratedPoint = GenericRatedPointHelper.GetRatedPointOfFullLoadCurveAtIEPC(loadCurve.LoadCurve,
+					_axleRatio, (loadCurve.Gear == 0) ? _gearRatioAtMeasurement.Value : gearRatio, GenericGearEfficiency, _axleEfficiency);
+
+                var fullLoadCurve = fullLoadCurves.ContainsKey((uint)gearEntry.Key) ? fullLoadCurves[(uint)gearEntry.Key] : fullLoadCurves.First().Value;
+
+                var deNormalizedMap = DeNormalizeData(GetNormalizedEfficiencyMap(electricMachineType), ratedPoint, gearRatio);
 				result.Add((uint) gearEntry.Key, IEPCMapReader.Create(deNormalizedMap, count, gearRatio, fullLoadCurve, ExecutionMode.Declaration));
 			}
 
@@ -235,7 +255,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
             var contElPwr = voltageLevel.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
                                 -continuousTorque, gear).ElectricalPower ??
                             voltageLevel.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
-                                voltageLevel.FullLoadDriveTorque(voltageEntry.VoltageLevel, continuousTorqueSpeed),
+                                voltageLevel.FullLoadDriveTorque(voltageEntry.VoltageLevel, continuousTorqueSpeed, gear.Gear),
                                 gear, true).ElectricalPower;
             var continuousPowerLoss = -contElPwr - continuousTorque * continuousTorqueSpeed; // loss needs to be positive
             var overloadBuffer = (peakPwrLoss - continuousPowerLoss) * voltageEntry.OverloadTime;

@@ -10,6 +10,7 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -221,8 +222,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (em == null) {
 				throw new VectoException("E2 EM required for PEV E2 GearshiftPreprocessing");
 			}
-			return 0.5 * em.Item2.EfficiencyData.VoltageLevels.First().FullLoadCurve
-				.MaxSpeed / em.Item2.RatioADC;
+
+            var voltageLevel = em.Item2.EfficiencyData.VoltageLevels.First();
+
+            return 0.5 * (voltageLevel.FullLoadCurve?.MaxSpeed ?? (voltageLevel as IEPCVoltageLevelData).FullLoadCurves.Min(x => x.Value.MaxSpeed)) / em.Item2.RatioADC;
 		}
 
 		protected override PerSecond GetMaxMotorspeed(VectoRunData runData)
@@ -232,7 +235,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (em == null) {
 				throw new VectoException("E2 EM required for PEV E2 GearshiftPreprocessing");
 			}
-			return em.Item2.EfficiencyData.VoltageLevels.First().FullLoadCurve.MaxSpeed / em.Item2.RatioADC;
+
+			var voltageLevel = em.Item2.EfficiencyData.VoltageLevels.First();
+            return (voltageLevel.FullLoadCurve?.MaxSpeed ?? (voltageLevel as IEPCVoltageLevelData).FullLoadCurves.Min(x => x.Value.MaxSpeed)) / em.Item2.RatioADC;
         }
 	}
 }

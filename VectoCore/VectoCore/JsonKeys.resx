@@ -582,4 +582,10 @@
   <data name="FuelCell_maxWindowSize" xml:space="preserve">
     <value>MaxWindowSize</value>
   </data>
+  <data name="IEPC_FullLoadCurves" xml:space="preserve">
+    <value>FullLoadCurves</value>
+  </data>
+  <data name="IEPC_DisengagementClutch" xml:space="preserve">
+    <value>DisengagementClutch</value>
+  </data>
 </root>

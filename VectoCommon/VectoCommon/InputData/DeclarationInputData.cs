@@ -829,10 +829,10 @@ namespace TUGraz.VectoCommon.InputData
 		/// OverloadDuration
 		/// </summary>
 		Second OverloadTime { get; }
-		/// <summary>
-		/// MaxTorqueCurve
-		/// </summary>
-		TableData FullLoadCurve { get; }
+        /// <summary>
+        /// MaxTorqueCurve
+        /// </summary>
+        IList<IElectricMotorLoadCurve> FullLoadCurve { get; }
 
 		IList<IElectricMotorPowerMap> PowerMap { get; }
 	}
@@ -845,7 +845,14 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		TableData PowerMap { get; }
 	}
-	
+
+	public interface IElectricMotorLoadCurve
+	{
+        int Gear { get; }
+        
+		TableData LoadCurve { get; }
+    }
+
 	public interface IElectricMachinesDeclarationInputData
 	{
 		IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> Entries { get; }
@@ -960,7 +967,9 @@ namespace TUGraz.VectoCommon.InputData
 		IList<IDragCurve> DragCurves { get; }
 
 		TableData Conditioning { get; }
-	}
+
+		bool DisengagementClutch { get; }
+    }
 
 	public interface IDragCurve
 	{

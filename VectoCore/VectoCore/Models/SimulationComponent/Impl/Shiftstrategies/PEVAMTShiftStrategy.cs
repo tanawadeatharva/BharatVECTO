@@ -53,7 +53,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			{
 				throw new VectoException("ElectricMotorData is required to calculate Shift Polygon!");
 			}
-			var emFld = electricMotorData.EfficiencyData.VoltageLevels.First().FullLoadCurve;
+
+			var voltageLevel = electricMotorData.EfficiencyData.VoltageLevels.First();
+			var emFld = voltageLevel.FullLoadCurve ?? (voltageLevel as IEPCVoltageLevelData).FullLoadCurves[(uint)i + 1];
+
 			return ComputeDeclarationShiftPolygon(i, gearboxGears, axlegearRatio, dynamicTyreRadius, electricMotorData,
 				_shiftStrategyParameters.PEV_DownshiftSpeedFactor.LimitTo(0, 1) * emFld.RatedSpeed, _shiftStrategyParameters.PEV_DownshiftMinSpeedFactor * emFld.RatedSpeed);
 		}
@@ -64,8 +67,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			Meter dynamicTyreRadius,
 			ElectricMotorData electricMotorData, PerSecond downshiftMaxSpeed, PerSecond downshiftMinSpeed)
 		{
-			return DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(i,
-				electricMotorData.EfficiencyData.VoltageLevels.First().FullLoadCurve, electricMotorData.RatioADC,
+            var voltageLevel = electricMotorData.EfficiencyData.VoltageLevels.First();
+            var emFld = voltageLevel.FullLoadCurve ?? (voltageLevel as IEPCVoltageLevelData).FullLoadCurves[(uint)i + 1];
+
+            return DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(i,
+				emFld, electricMotorData.RatioADC,
 				gearboxGears, axlegearRatio, dynamicTyreRadius, downshiftMaxSpeed, downshiftMinSpeed);
 		}
 	}
@@ -198,8 +204,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		{
 			var retVal = new Dictionary<uint, ShiftPolygon>();
 			for (var i = 0u; i < gearData.Count; i++) {
-				var emFld = em.EfficiencyData.VoltageLevels.First().FullLoadCurve;
-				var contTq = em.Overload.ContinuousTorque;
+				var voltageLevel = em.EfficiencyData.VoltageLevels.First();
+                var emFld = voltageLevel.FullLoadCurve ?? (voltageLevel as IEPCVoltageLevelData).FullLoadCurves[(uint)i + 1];
+                var contTq = em.Overload.ContinuousTorque;
 				var limitedFld = DeclarationData.Gearbox.LimitElectricMotorFullLoadCurve(emFld, contTq);
 				var limitedEm = new ElectricMotorData() {
 					EfficiencyData = new VoltageLevelData() {
@@ -248,7 +255,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				DataBus.VehicleInfo.VehicleSpeed.IsGreaterOrEqual(DataBus.DrivingCycleInfo.TargetSpeed)) {
 				DriveOffStandstill = false;
 			}
-			if (DriveOffStandstill && response.ElectricMotor.AngularVelocity.IsGreater(VoltageLevels.VoltageLevels.First().FullLoadCurve.NP80low)) {
+
+			var voltageLevel = VoltageLevels.VoltageLevels.First();
+
+            if (DriveOffStandstill && response.ElectricMotor.AngularVelocity.IsGreater(voltageLevel.FullLoadCurve?.NP80low ?? (voltageLevel as IEPCVoltageLevelData).FullLoadCurves[gear.Gear].NP80low)) {
 				DriveOffStandstill = false;
 			}
 
@@ -522,7 +532,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				return tmpGear;
 			}
 
-			var ratedSpeed = VoltageLevels.VoltageLevels.First().FullLoadCurve.RatedSpeed;
+			var curve = VoltageLevels.VoltageLevels.First().FullLoadCurve ?? (VoltageLevels.VoltageLevels.First() as IEPCVoltageLevelData).FullLoadCurves[currentGear.Gear];
+            var ratedSpeed = curve.RatedSpeed;
 			var maxSpeedNorm = VoltageLevels.MaxSpeed / ratedSpeed;
 			var targetMotor = (_shiftStrategyParameters.PEV_TargetSpeedBrakeNorm * (maxSpeedNorm - 1) + 1) * ratedSpeed;
 

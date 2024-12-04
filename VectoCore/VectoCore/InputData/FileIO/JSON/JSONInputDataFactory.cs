@@ -266,6 +266,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			switch (version) {
 				case 1:
 					return new JSONIEPCData(json, filename, tolerateMissing);
+				case 2:
+					return new JSONIEPCDataV2(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("Engineering IEPC: Unsupported FileVersion. Got {0}", version);
 			}

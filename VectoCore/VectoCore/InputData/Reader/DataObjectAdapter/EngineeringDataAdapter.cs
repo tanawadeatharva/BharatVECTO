@@ -1374,7 +1374,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
 
 			foreach (var entry in motorData.VoltageLevels.OrderBy(x => x.VoltageLevel)) {
-				var fullLoadCurve = ElectricFullLoadCurveReader.Create(entry.FullLoadCurve, count);
+				var fullLoadCurve = ElectricFullLoadCurveReader.Create(entry.FullLoadCurve.First().LoadCurve, count);
 				var maxTorqueCurve = torqueLimits == null
 					? null
 					: ElectricFullLoadCurveReader.Create(
@@ -1509,7 +1509,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var contElPwr = voltageLevels.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
 								-continuousTorque, gear).ElectricalPower ??
 							voltageLevels.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
-								voltageLevels.FullLoadDriveTorque(voltageEntry.VoltageLevel, continuousTorqueSpeed),
+								voltageLevels.FullLoadDriveTorque(voltageEntry.VoltageLevel, continuousTorqueSpeed, gear.Gear),
 								gear, true).ElectricalPower;
 			var continuousPowerLoss = -contElPwr - continuousTorque * continuousTorqueSpeed; // loss needs to be positive
 			var overloadBuffer = (peakPwrLoss - continuousPowerLoss) * voltageEntry.OverloadTime;
@@ -1649,15 +1649,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			foreach (var entry in iepc.VoltageLevels.OrderBy(x => x.VoltageLevel)) {
 				var effMap = new Dictionary<uint, EfficiencyMap>();
 				var fldCurve =
-					IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, gearRatioUsedForMeasurement.Ratio);
-				for (var i = 0u; i < entry.PowerMap.Count; i++) {
+					IEPCFullLoadCurveReader.Create(entry.FullLoadCurve.First().LoadCurve, count, gearRatioUsedForMeasurement.Ratio);
+
+                var fldCurves = new Dictionary<uint, ElectricMotorFullLoadCurve>();
+                foreach (var curve in entry.FullLoadCurve.Where(x => x.Gear > 0))
+                {
+                    var ratio = iepc.Gears.First(x => x.GearNumber == curve.Gear).Ratio;
+                    fldCurves.Add((uint)curve.Gear, IEPCFullLoadCurveReader.Create(curve.LoadCurve, count, ratio));
+                }
+
+                for (var i = 0u; i < entry.PowerMap.Count; i++) {
 					var ratio = iepc.Gears.First(x => x.GearNumber == i + 1).Ratio;
-					effMap.Add(i + 1, IEPCMapReader.Create(entry.PowerMap[(int)i].PowerMap, count, ratio, fldCurve, ExecutionMode.Engineering));
-					//fullLoadCurves.Add(i + 1, IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, ratio));
+					effMap.Add(i + 1, IEPCMapReader.Create(entry.PowerMap[(int)i].PowerMap, count, ratio, fldCurve ?? fldCurves[i + 1], ExecutionMode.Engineering));
 				}
-				voltageLevels.Add(new IEPCVoltageLevelData() {
+
+                voltageLevels.Add(new IEPCVoltageLevelData() {
 					Voltage = entry.VoltageLevel,
 					FullLoadCurve = fldCurve,
+					FullLoadCurves = fldCurves,
 					EfficiencyMaps = effMap,
 				});
 			}

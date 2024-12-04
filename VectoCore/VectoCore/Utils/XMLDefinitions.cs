@@ -102,14 +102,10 @@ namespace TUGraz.VectoCore.Utils
 
 		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V24 = DECLARATION_NAMESPACE + ":v2.4";
 		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V25 = DECLARATION_NAMESPACE + ":v2.5";
-		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_DEV_V26 = DECLARATION_NAMESPACE + ":DEV:v2.6";
+        public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V26 = DECLARATION_NAMESPACE + ":v2.6";
+        public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_DEV_V26 = DECLARATION_NAMESPACE + ":DEV:v2.6";
 
 		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_DEV_V211 = DECLARATION_NAMESPACE + ":DEV:v2.11";
-
-
-
-        public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V26 = DECLARATION_NAMESPACE + ":v2.6";
-
 
         public const string DECLARATION_INPUT_NAMESPACE = "urn:tugraz:ivt:VectoAPI:DeclarationInput";
 
@@ -127,7 +123,10 @@ namespace TUGraz.VectoCore.Utils
 		public const string DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1 =
 			DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE + ":v0.1";
 
-		public const string MONITORING_NAMESPACE = "urn:tugraz:ivt:VectoAPI:MonitoringOutput";
+        public const string DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V10 =
+            DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE + ":v1.0";
+
+        public const string MONITORING_NAMESPACE = "urn:tugraz:ivt:VectoAPI:MonitoringOutput";
 
 		public const string MONITORING_SCHEMA_VERSION = "1.1";
 
@@ -154,7 +153,7 @@ namespace TUGraz.VectoCore.Utils
 			{XmlDocumentType.CustomerReport , "VectoOutputCustomer.xsd"},
 			{XmlDocumentType.MonitoringReport , "VectoMonitoring.xsd"},
 			{XmlDocumentType.VTPReport , "VTPReport.xsd"},
-			{XmlDocumentType.MultistepOutputData, "VectoOutputMultistep.0.1.xsd"}
+			{XmlDocumentType.MultistepOutputData, "VectoOutputMultistep.xsd"}
 		};
 
 		public static XNamespace DECLARATION_OUTPUT_PRIMARY_HEAVY_BUS = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1";
