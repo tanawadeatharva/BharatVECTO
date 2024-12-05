@@ -93,6 +93,11 @@ namespace HashingTool.Helper
 			return IsVehicleManufacturerReport(x, errorLog, XMLNames.CompletedBusManufacturerOutputDataType);
 		}
 
+		public static bool? IsPrimaryVifFile(XmlDocument x, IErrorLogger errorLog)
+		{
+			return IsVehicleJobFile(x, errorLog, XMLNames.Hashing_VehicleVIFType);
+		}
+
 		public static bool? IsVehicleManufacturerReport(XmlDocument x, IErrorLogger errorLog, string vehicleFileType = null)
 		{
 			if (x == null || x.DocumentElement == null)

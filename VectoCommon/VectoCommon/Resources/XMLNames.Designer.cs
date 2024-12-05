@@ -3355,6 +3355,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to VehicleVIFType.
+        /// </summary>
+        public static string Hashing_VehicleVIFType {
+            get {
+                return ResourceManager.GetString("Hashing_VehicleVIFType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to IEPC.
         /// </summary>
         public static string IEPC_Component {

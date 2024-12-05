@@ -100,15 +100,16 @@ namespace HashingTool.ViewModel.UserControl
 			}
 			try {
 				var h = VectoHash.Load(_jobData.XMLFile.Document);
-				var jobDigest = h.ComputeHash(JobCanonicalizationMethodRead,
+				JobDigestValueComputed = h.ComputeHash(
+					JobCanonicalizationMethodRead,
 					JobDigestMethodRead);
-				JobDigestValueComputed = jobDigest;
-				var digestMatch = _jobDigestComputed == JobDigestValueRead;
+
+				var digestMatch = JobDigestValueComputed == JobDigestValueRead;
 				var vinMatch = _jobData.VehicleIdentificationNumber == ReportVIN;
 
 				if (!digestMatch) {
 					_validationErrors.Add("Job Digest Value mismatch! " +
-										$"Computed job digest: '{_jobDigestComputed}', " +
+										$"Computed job digest: '{JobDigestValueComputed}', " +
 										$"digest read: '{JobDigestValueRead}'");
 				}
 

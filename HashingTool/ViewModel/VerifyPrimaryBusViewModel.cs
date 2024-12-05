@@ -43,6 +43,7 @@ namespace HashingTool.ViewModel
 	public class VerifyPrimaryBusViewModel : ObservableObject, IMainView
 	{
 		private readonly VectoJobFile _jobFile;
+		private readonly VehicleInformationXMLFile _vifFile;
 		private readonly ManufacturerReportXMLFile _manufacturerReport;
 
 		public VerifyPrimaryBusViewModel()
@@ -56,14 +57,22 @@ namespace HashingTool.ViewModel
 				HashingHelper.IsPrimaryManufacturerFile,
 				HashingHelper.ValidateDocumentHash);
 			_manufacturerReport.JobData = _jobFile;
+			_vifFile = new VehicleInformationXMLFile(
+				"Primary Bus VIF",
+				HashingHelper.IsPrimaryVifFile,
+				TUGraz.VectoCore.Utils.XmlDocumentType.MultistepOutputData,
+				HashingHelper.ValidateDocumentHash);
+			_vifFile.JobData = _jobFile;
 
-			Files = new ObservableCollection<VectoXMLFile> { _jobFile, _manufacturerReport };
+			Files = new ObservableCollection<VectoXMLFile> { _jobFile, _manufacturerReport, _vifFile };
 
 			ErrorsAndWarnings = new CompositeCollection();
 
 			AddErrorCollection(_jobFile.XMLFile.XMLValidationErrors);
 			AddErrorCollection(_manufacturerReport.XMLFile.XMLValidationErrors);
 			AddErrorCollection(_manufacturerReport.ValidationErrors);
+			AddErrorCollection(_vifFile.XMLFile.XMLValidationErrors);
+			AddErrorCollection(_vifFile.ValidationErrors);
 
 			RaisePropertyChanged("CanonicalizationMethods");
 		}
@@ -91,6 +100,8 @@ namespace HashingTool.ViewModel
 		public VectoJobFile JobFile => _jobFile;
 
 		public ManufacturerReportXMLFile ManufacturerReport => _manufacturerReport;
+
+		public VehicleInformationXMLFile VIFReport => _vifFile;
 
 		public ObservableCollection<VectoXMLFile> Files { get; private set; }
 
