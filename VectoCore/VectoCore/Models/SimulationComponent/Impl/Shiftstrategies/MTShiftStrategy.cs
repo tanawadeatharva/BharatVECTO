@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			double droppedSpeedRatio = DataBus.VehicleInfo.VehicleSpeed / droppedSpeed;
 			var UphillBrakingLowSpeed = inTorque.IsSmaller(0.0) && interpolatedDroppedSpeed.IsSmaller(GearboxModelData.DisengageWhenHaltingSpeed) && DataBus.DrivingCycleInfo.RoadGradient.IsGreater(0.0);
 
-			if ((((IsBelowDownShiftCurve(currentGear, inTorque, inAngularVelocity) && droppedSpeedRatio.IsSmallerOrEqual(2.0)) || IsBelowExtendedDownShiftCurve(currentGear, inTorque, inAngularVelocity)) && !(UphillBrakingLowSpeed)) ||
+			if ((((IsBelowDownShiftCurve(currentGear, inTorque, inAngularVelocity) && droppedSpeedRatio.IsSmallerOrEqual(2.0)) || (IsBelowExtendedDownShiftCurve(currentGear, inTorque, inAngularVelocity) && interpolatedDroppedSpeed.IsGreater(GearboxModelData.DisengageWhenHaltingSpeed))) && !(UphillBrakingLowSpeed)) ||
 				(inAngularVelocity.IsSmaller(DataBus.EngineInfo.EngineIdleSpeed) && UphillBrakingLowSpeed))
 			{
 				currentGear = Gears.Predecessor(currentGear);
