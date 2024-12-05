@@ -6,6 +6,200 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" schemaLocation="VectoDeclarationDefinitions.2.0.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" schemaLocation="VectoDeclarationDefinitions.2.3.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" schemaLocation="VectoDeclarationDefinitions.2.4.xsd"/>
+	<xs:complexType name="WHRTypeType">
+		<xs:sequence>
+			<xs:element name="MechanicalOutputICE" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P335 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MechanicalOutputDrivetrain" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P336 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricalOutput" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P337 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="FuelTypeType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Engine">193</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Diesel CI"/>
+			<xs:enumeration value="Ethanol CI"/>
+			<xs:enumeration value="Petrol PI"/>
+			<xs:enumeration value="Ethanol PI"/>
+			<xs:enumeration value="LPG PI"/>
+			<xs:enumeration value="NG PI"/>
+			<xs:enumeration value="NG CI"/>
+			<xs:enumeration value="H2 CI"/>
+			<xs:enumeration value="H2 PI"/>
+			<xs:enumeration value="Diesel B100 CI"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="EngineDataDeclarationType">
+		<xs:complexContent>
+			<xs:extension base="v1.0:AbstractCombustionEngineDataDeclarationType">
+				<xs:sequence>
+					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+						<xs:annotation>
+							<xs:documentation>P200 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Model" type="v1.0:ModelType">
+						<xs:annotation>
+							<xs:documentation>P201 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType">
+						<xs:annotation>
+							<xs:documentation>P261 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+						<xs:annotation>
+							<xs:documentation>P203 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AppVersion" type="v1.0:AppVersionType">
+						<xs:annotation>
+							<xs:documentation>P204 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Displacement" type="v1.0:EngineDisplacementType" nillable="false">
+						<xs:annotation>
+							<xs:documentation>P061 - [cm³]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="RatedSpeed" type="v1.0:EngineDeclaredSpeedType">
+						<xs:annotation>
+							<xs:documentation>P249 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="RatedPower" type="v1.0:EngineRatedPower">
+						<xs:annotation>
+							<xs:documentation>P250 - [W]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="MaxEngineTorque" type="v1.0:EngineMaxTorque">
+						<xs:annotation>
+							<xs:documentation>P259 - [Nm]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="WHRType" type="v2.6:WHRTypeType"/>
+					<xs:element name="Mode" type="v2.6:EngineFuelModeType" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="EngineFuelModeType">
+		<xs:sequence>
+			<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
+				<xs:annotation>
+					<xs:documentation>P063 - [1/min]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FullLoadAndDragCurve">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Entry" type="v1.0:FullLoadAndDragCurveEntryType" minOccurs="2" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Fuel" type="v2.6:EngineFuelType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EngineFuelType">
+		<xs:sequence>
+			<xs:element name="WHTCUrban" type="v2.3:EngineWHTCType">
+				<xs:annotation>
+					<xs:documentation>P109 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="WHTCRural" type="v2.3:EngineWHTCType">
+				<xs:annotation>
+					<xs:documentation>P110 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="WHTCMotorway" type="v2.3:EngineWHTCType">
+				<xs:annotation>
+					<xs:documentation>P111 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BFColdHot" type="v2.3:EngineColdHotBalancingFactorType">
+				<xs:annotation>
+					<xs:documentation>P159 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CFRegPer" type="v2.3:EngineCFRegPerType">
+				<xs:annotation>
+					<xs:documentation>P192 [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CFNCV" type="v1.0:EngineNCVCFType">
+				<xs:annotation>
+					<xs:documentation>P260 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="WHRCorrectionFactors" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Electrical" type="v2.3:WHRElectricalCorrectionFactorsType" minOccurs="0"/>
+						<xs:element name="Mechanical" type="v2.3:WHRMechanicalCorrectionFactorsType" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="FuelConsumptionMap">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Entry" type="v2.3:FuelConsumptionEntryType" minOccurs="4" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="type" type="v2.6:FuelTypeType" use="required">
+			<xs:annotation>
+				<xs:documentation>P193 [enum]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="FuelConsumptionEntryType">
+		<xs:attribute name="engineSpeed" type="v1.0:EngineSpeedType" use="required">
+			<xs:annotation>
+				<xs:documentation>P072 - [1/min]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="torque" type="v1.0:EngineFuelConsumptionMapTorqueType" use="required">
+			<xs:annotation>
+				<xs:documentation>P073 - [Nm]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="fuelConsumption" type="v1.0:EngineFuelConsumptionMapFuelConsumptionType" use="required">
+			<xs:annotation>
+				<xs:documentation>P074 - [g/h]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="electricPower" type="v1.0:Double2">
+			<xs:annotation>
+				<xs:documentation>P348 - [W]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="mechanicalPower" type="v1.0:Double2">
+			<xs:annotation>
+				<xs:documentation>P349 - [W]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
 	<xs:complexType name="CapacitorSystemDataType">
 		<xs:complexContent>
 			<xs:extension base="v2.3:AbstractCapacitorSystemDataType">
@@ -756,68 +950,6 @@
 		<xs:sequence>
 			<xs:element name="Data" type="v2.6:AbstractFuelCellDataType"/>
 			<xs:element name="Signature" type="v2.0:SignatureType"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<!-- fch -->
-	<xs:complexType name="FuelCellSystemComponentDeclarationType">
-		<xs:sequence>
-			<xs:element name="FuelCellModule" type="v2.6:FuelCellModuleDeclarationType" minOccurs="1" maxOccurs="2"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="FuelCellModuleDeclarationType">
-		<xs:sequence>
-			<xs:element name="Count">
-				<xs:annotation>
-					<xs:documentation>P558 - [-]</xs:documentation>
-					<xs:appinfo>
-						<vectoParam:description>
-							<vectoParam:parameterId component="FuelCell">558</vectoParam:parameterId>
-							<vectoParam:unit>-</vectoParam:unit>
-						</vectoParam:description>
-					</xs:appinfo>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:int">
-						<xs:enumeration value="1"/>
-						<xs:enumeration value="2"/>
-						<xs:enumeration value="3"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="FuelCell" type="v2.6:FuelCellComponentDeclarationType"/>
-			<xs:element name="MinPower">
-				<xs:annotation>
-					<xs:documentation>P559 - W</xs:documentation>
-					<xs:appinfo>
-						<vectoParam:description>
-							<vectoParam:parameterId component="FuelCell">559</vectoParam:parameterId>
-							<vectoParam:unit>W</vectoParam:unit>
-						</vectoParam:description>
-					</xs:appinfo>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:int">
-						<xs:minExclusive value="0"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="MaxPower">
-				<xs:annotation>
-					<xs:documentation>P560 - W</xs:documentation>
-					<xs:appinfo>
-						<vectoParam:description>
-							<vectoParam:parameterId component="FuelCell">560</vectoParam:parameterId>
-							<vectoParam:unit>W</vectoParam:unit>
-						</vectoParam:description>
-					</xs:appinfo>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:int">
-						<xs:minExclusive value="0"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AbstractFuelCellDataType" abstract="true">
