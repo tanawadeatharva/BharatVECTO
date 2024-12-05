@@ -208,16 +208,28 @@ namespace HashingTool.Helper
 			}
 
 			var localName = x.DocumentElement.FirstChild.LocalName;
-			var components = new[] {
-				VectoComponents.Engine, VectoComponents.Airdrag, VectoComponents.Angledrive, VectoComponents.Axlegear,
-				VectoComponents.Gearbox, VectoComponents.Retarder, VectoComponents.TorqueConverter, VectoComponents.Tyre,
-				VectoComponents.BatterySystem, VectoComponents.CapacitorSystem, VectoComponents.ElectricMachineSystem,
-				VectoComponents.IEPC, VectoComponents.ADC
+			var supportedComponents = new[]
+			{
+				VectoComponents.Engine,
+				VectoComponents.Airdrag,
+				VectoComponents.Angledrive,
+				VectoComponents.Axlegear,
+				VectoComponents.Gearbox,
+				VectoComponents.Retarder,
+				VectoComponents.TorqueConverter,
+				VectoComponents.Tyre,
+				VectoComponents.BatterySystem,
+				VectoComponents.CapacitorSystem,
+				VectoComponents.ElectricMachineSystem,
+				VectoComponents.IEPC,
+				VectoComponents.ADC,
+				VectoComponents.FuelCell
 			};
-			var valid = components.Where(c => c.XMLElementName() == localName).Any();
+			
+			var valid = supportedComponents.Where(c => c.XMLElementName() == localName).Any();
 			if (!valid) {
 				errorLog.LogError($"Invalid XML file given ({localName}). " +
-								$"Expected Component XML ({String.Join(", ", components.Select(c => c.XMLElementName()))})!");
+								$"Expected Component XML ({String.Join(", ", supportedComponents.Select(c => c.XMLElementName()))})!");
 			}
 			return valid;
 		}

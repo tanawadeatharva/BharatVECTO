@@ -1798,6 +1798,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FuelCell.
+        /// </summary>
+        public static string Component_FuelCell {
+            get {
+                return ResourceManager.GetString("Component_FuelCell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gearbox.
         /// </summary>
         public static string Component_Gearbox {
