@@ -952,68 +952,6 @@
 			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
-
-	<!-- fch -->
-	<xs:complexType name="FuelCellSystemComponentDeclarationType">
-		<xs:sequence>
-			<xs:element name="FuelCellModule" type="v2.6:FuelCellModuleDeclarationType" minOccurs="1" maxOccurs="2"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="FuelCellModuleDeclarationType">
-		<xs:sequence>
-			<xs:element name="Count">
-				<xs:annotation>
-					<xs:documentation>P558 - [-]</xs:documentation>
-					<xs:appinfo>
-						<vectoParam:description>
-							<vectoParam:parameterId component="FuelCell">558</vectoParam:parameterId>
-							<vectoParam:unit>-</vectoParam:unit>
-						</vectoParam:description>
-					</xs:appinfo>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:int">
-						<xs:enumeration value="1"/>
-						<xs:enumeration value="2"/>
-						<xs:enumeration value="3"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="FuelCell" type="v2.6:FuelCellComponentDeclarationType"/>
-			<xs:element name="MinPower">
-				<xs:annotation>
-					<xs:documentation>P559 - W</xs:documentation>
-					<xs:appinfo>
-						<vectoParam:description>
-							<vectoParam:parameterId component="FuelCell">559</vectoParam:parameterId>
-							<vectoParam:unit>W</vectoParam:unit>
-						</vectoParam:description>
-					</xs:appinfo>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:int">
-						<xs:minExclusive value="0"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="MaxPower">
-				<xs:annotation>
-					<xs:documentation>P560 - W</xs:documentation>
-					<xs:appinfo>
-						<vectoParam:description>
-							<vectoParam:parameterId component="FuelCell">560</vectoParam:parameterId>
-							<vectoParam:unit>W</vectoParam:unit>
-						</vectoParam:description>
-					</xs:appinfo>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:int">
-						<xs:minExclusive value="0"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
 	<xs:complexType name="AbstractFuelCellDataType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="v1.0:VectoSimulationComponent"/>
