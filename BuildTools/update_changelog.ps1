@@ -154,7 +154,7 @@ Push-Location "Documentation/User Manual Source/ReleaseNotesMDs"
 pandoc "..\..\..\$ReleaseNotesPdfMarkdown" -o "..\..\..\$ReleaseNotesPdf" --css "..\..\..\BuildTools\templates\md-style.css" --pdf-engine=$Env:weasyprint  --title="Changelog"
 Pop-Location
 
-# User Manual HTML convertion script.
+# User Manual HTML conversion script.
 Push-Location "Documentation/User Manual/"
 & './convert.bat'
 Pop-Location
@@ -162,6 +162,7 @@ Pop-Location
 Update-BuildPropsVersion $VersionNumber
 
 # Stage the modified files by the script in git.
+git add $CliffReleaseNotesMarkdown
 git add $ReleaseNotesPdfMarkdown
 git add $ChangelogMarkdownPath
 git add $ChangesMarkdown
