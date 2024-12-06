@@ -30,7 +30,6 @@
 */
 
 using NUnit.Framework;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -48,7 +47,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestCase]
 		public void WheelsRequestTest()
 		{
-			var container = new VehicleContainer(ExecutionMode.Engineering);
+			var container = VehicleContainer.CreateVehicleContainer(null, null, null);
 			//var reader = new EngineeringModeSimulationDataReader();
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFile);
 

@@ -218,11 +218,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DeltaEngineSpeed = operatingPoint.InAngularVelocity - maxEngineSpeed,
 					TorqueConverter = { TorqueConverterOperatingPoint = operatingPoint},
 					Engine = {
-					TorqueOutDemand = inTorque,
-					EngineSpeed = engineResponse.Engine.EngineSpeed,
-					PowerRequest = engineResponse.Engine.PowerRequest
-					}
-				};
+						TorqueOutDemand = inTorque,
+						EngineSpeed = engineResponse.Engine.EngineSpeed,
+						PowerRequest = engineResponse.Engine.PowerRequest,
+						//
+						TotalTorqueDemand = engineResponse.Engine.TotalTorqueDemand,
+						DynamicFullLoadTorque = engineResponse.Engine.DynamicFullLoadTorque,
+						DragTorque = engineResponse.Engine.DragTorque,
+                    }
+                };
 			}
 
 			var dryOperatingPointMax = GetMaxPowerOperatingPoint(
@@ -266,9 +270,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					TorqueOutDemand = inTorque,
 					EngineSpeed = dryOperatingPointMax?.InAngularVelocity ??
 								dryOperatingPointMin?.InAngularVelocity ?? 0.RPMtoRad(),
-					PowerRequest = engineResponse.Engine.PowerRequest
+					PowerRequest = engineResponse.Engine.PowerRequest,
+					//
+					TotalTorqueDemand = engineResponse.Engine.TotalTorqueDemand,
+					DynamicFullLoadTorque = engineResponse.Engine.DynamicFullLoadTorque,
+					DragTorque = engineResponse.Engine.DragTorque,
 				}
-			};
+            };
 		}
 
 		private TorqueConverterOperatingPoint GetDragPowerOperatingPoint(

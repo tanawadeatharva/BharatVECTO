@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		Watt PowerDemand(Second absTime, Second dt, bool dryRun);
 	}
 
-	public interface IElectricChargerPort
+	public interface IElectricChargerPort : IUpdateable
 	{
 		Watt Initialize();
 

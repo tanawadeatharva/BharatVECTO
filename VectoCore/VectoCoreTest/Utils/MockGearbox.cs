@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 	public class MockAxlegear : VectoSimulationComponent, IAxlegear
 	{
-		public MockAxlegear(VehicleContainer vehicleContainer) : base(vehicleContainer)
+		public MockAxlegear(IVehicleContainer vehicleContainer) : base(vehicleContainer)
 		{
 			
 		}

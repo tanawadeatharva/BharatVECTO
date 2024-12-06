@@ -12,6 +12,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRunDataFactory;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
@@ -24,7 +25,8 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 		public MockupMultistageCompletedBusRunDataFactory(IMultistageVIFInputData dataProvider,
             IDeclarationReport report,
 			ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
-			IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter)
+			IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter, IPowertrainBuilder ptBuilder) 
+			: base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter, ptBuilder)
         {
 
         }

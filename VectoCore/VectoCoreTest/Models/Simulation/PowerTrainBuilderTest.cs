@@ -46,11 +46,13 @@ using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
-	[TestFixture]
+    [TestFixture]
 	[Parallelizable(ParallelScope.All)]
 	public class PowerTrainBuilderTest
 	{
-		public const string JobFile = @"TestData/Jobs/24t Coach.vecto";
+		protected IPowertrainBuilder PowertrainBuilder;
+
+        public const string JobFile = @"TestData/Jobs/24t Coach.vecto";
 		public const string JobFileNoAngular = @"TestData/Jobs/24t CoachNoAng.vecto";
 		public const string JobFileAngEfficiency = @"TestData/Jobs/24t Coach_Ang_Efficiency.vecto";
 
@@ -66,7 +68,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-		}
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			PowertrainBuilder = kernel.Get<IPowertrainBuilder>();
+        }
 
 		[Category("LongRunning")]
 		[TestCase(JobFile, 12),
@@ -79,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			if (engineeringProvider == null) {
 				throw new VectoException("Failed to cast to Engineering InputDataProvider");
 			}
-			var reader = new EngineeringModeVectoRunDataFactory(engineeringProvider);
+			var reader = new EngineeringModeVectoRunDataFactory(engineeringProvider, PowertrainBuilder);
 			var runData = reader.NextRun().First();
 
 			var powerTrain = PowertrainBuilder.Build(runData, new MockModalDataContainer()) as VehicleContainer;
@@ -137,7 +141,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			{
 				throw new VectoException("Failed to cast to Engineering InputDataProvider");
 			}
-			var reader = new EngineeringModeVectoRunDataFactory(engineeringProvider);
+			var reader = new EngineeringModeVectoRunDataFactory(engineeringProvider, PowertrainBuilder);
 			var runData = reader.NextRun().First();
 
 			var writer = new MockModalDataContainer();

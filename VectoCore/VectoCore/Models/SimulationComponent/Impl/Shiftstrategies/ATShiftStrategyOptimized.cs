@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		private List<CombustionEngineFuelData> fcMap;
 		private Dictionary<uint, EngineFullLoadCurve> fld;
 		private ShiftStrategyParameters shiftStrategyParameters;
-		private SimplePowertrainContainer TestContainer;
+		private ISimpleVehicleContainer TestContainer;
 		private ATGearbox TestContainerGbx;
 
 		private Kilogram vehicleMass;
@@ -149,9 +149,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		private void InitializeTestContainer(VectoRunData runData)
 		{
 			// fuel list here has no effect as this is the mod-container for the test-powertrain only
-			TestContainer = new SimplePowertrainContainer(runData);
-
-			PowertrainBuilder.BuildSimplePowertrain(runData, TestContainer);
+			TestContainer = PowertrainBuilder.BuildSimplePowertrain(runData);
 			TestContainerGbx = TestContainer.GearboxCtl as ATGearbox;
 			if (TestContainerGbx == null) {
 				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
