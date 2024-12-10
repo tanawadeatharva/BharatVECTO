@@ -43,10 +43,14 @@ namespace TUGraz.VectoCore.Tests.Integration.GenericVehicles
 		private const string PRIMARYBUS_P39_40 = @$"{DeclarationBasePath}ICE/Group P39_40_xml/primary_heavyBus_group_P39_40_nonSmart_ESS.xml";
 		private const string SINGLEBUS_31B	   = @$"{DeclarationBasePath}ICE/SingleBus_31b_vecto2xml/SingleBus31b.vecto";
 		private const string SINGLEBUS_34F	   = @$"{DeclarationBasePath}ICE/SingleBus_34f_vecto2xml/SingleBus34f.vecto";
-		
+
+		// Factor Method Bus
+		private const string SINGLEBUS_31B_FM  = @$"{DeclarationBasePath}ICE/SingleBus_31b_FactorMethod/SingleBus31b_FM.vecto";
+		private const string SINGLEBUS_34F_FM  = @$"{DeclarationBasePath}ICE/SingleBus_34f_FactorMethod/SingleBus34f_FM.vecto";
+
 		// VTP
 		private const string VTP_TRUCK = @$"{DeclarationBasePath}ICE/VTP_Truck_vecto2xml/VTP.vecto";
-		
+
 		// E2
 		private const string E2_JOB         = @$"{DeclarationBasePath}PEV/GenericVehicleE2/BEV_E2.vecto";
 		private const string E2_CONST30_JOB = @$"{DeclarationBasePath}PEV/GenericVehicleE2/BEV_E2_Cont30kW.vecto";
@@ -73,25 +77,25 @@ namespace TUGraz.VectoCore.Tests.Integration.GenericVehicles
 
 		[Category("Integration")]
 		[
-			TestCase(GROUP_1s, "RegionalDelivery", 657.041),
-			TestCase(GROUP_1s, "UrbanDelivery", 754.9479),
+			TestCase(GROUP_1s, "RegionalDelivery", 657.0566),
+			TestCase(GROUP_1s, "UrbanDelivery", 755.9948),
 
 			TestCase(GROUP_2, "LongHaul", 776.7099),
-			TestCase(GROUP_2, "RegionalDelivery", 567.5876),
-			TestCase(GROUP_2, "UrbanDelivery", 768.7973),
+			TestCase(GROUP_2, "RegionalDelivery", 567.5057),
+			TestCase(GROUP_2, "UrbanDelivery", 768.6607),
 
 			TestCase(GROUP_5, "LongHaul", 891.7875),
 			TestCase(GROUP_5, "RegionalDelivery", 910.4309),
-			TestCase(GROUP_5, "UrbanDelivery", 1572.4234),
+			TestCase(GROUP_5, "UrbanDelivery", 1572.4864),
 
 			TestCase(GROUP_53, "RegionalDelivery", 468.9388),
-			TestCase(GROUP_53, "UrbanDelivery", 487.5429),
+			TestCase(GROUP_53, "UrbanDelivery", 487.1529),
 
 			//TestCase(GROUP_54, "RegionalDelivery", 468.9388),
 			//TestCase(GROUP_54, "UrbanDelivery", 487.5429),
 
 			TestCase(GROUP_54_ML3, "RegionalDelivery", 285.7974),
-			TestCase(GROUP_54_ML3, "UrbanDelivery", 373.9248),
+			TestCase(GROUP_54_ML3, "UrbanDelivery", 373.4537),
 
 			TestCase(GROUP_9, "LongHaul", 940.6617),
 			TestCase(GROUP_9, "RegionalDelivery", 680.4892),
@@ -102,7 +106,7 @@ namespace TUGraz.VectoCore.Tests.Integration.GenericVehicles
 			TestCase(GROUP_9_DF_WHR, "LongHaul", 1001.4114),
 			TestCase(GROUP_9_DF_WHR, "RegionalDelivery", 723.4348),
 
-			TestCase(GROUP_9_WHR, "LongHaul", 938.0753),
+			TestCase(GROUP_9_WHR, "LongHaul", 938.0763),
 			TestCase(GROUP_9_WHR, "RegionalDelivery", 677.2767),
 
 			//TestCase(GROUP_9_AT, "LongHaul", 1136.1705),
@@ -181,6 +185,27 @@ namespace TUGraz.VectoCore.Tests.Integration.GenericVehicles
 			RunDistanceCycle(jobFile, cycleName, LoadingType.ReferenceLoad, metrics);
 		}
 
+
+		[Category("Integration")]
+		[
+			TestCase(SINGLEBUS_31B_FM, "Coach", 863.7357),
+			TestCase(SINGLEBUS_31B_FM, "HeavyUrban", 1829.8008),
+			TestCase(SINGLEBUS_31B_FM, "Interurban", 1039.5712),
+
+			TestCase(SINGLEBUS_34F_FM, "Coach", 686.0818),
+			TestCase(SINGLEBUS_34F_FM, "HeavyUrban", 1860.2187),
+			TestCase(SINGLEBUS_34F_FM, "Interurban", 950.3305),
+		]
+		public void ICE_DistanceRun_FactorMethod(string jobFile, string cycleName, double expectedECFinal)
+		{
+			Dictionary<string, double> metrics = new Dictionary<string, double>()
+			{
+				{ SumDataFields.CO2_KM, expectedECFinal }
+			};
+
+			RunDistanceCycle(jobFile, cycleName, LoadingType.ReferenceLoad, metrics);
+		}
+
 		public void RunDistanceCycle(
 			string jobFile,
 			string cycleName,
@@ -208,6 +233,13 @@ namespace TUGraz.VectoCore.Tests.Integration.GenericVehicles
 			IVectoRun cycleToRun = factory.SimulationRuns()
 				.Where(r => r.CycleName == cycleName && r.RunSuffix == loading.ToString())
 				.FirstOrDefault();
+
+			if(cycleToRun == null && factory.SimulationRuns().Any(r => r.RunName.ToLower().Contains("bus")))
+			{
+				cycleToRun = factory.SimulationRuns()
+					.Where(r => r.CycleName == cycleName && r.RunSuffix.Contains(loading.ToString()))
+					.FirstOrDefault();
+			}
 
 			Assert.IsNotNull(cycleToRun, $"Cycle {cycleName} is not configured for the current vehicle.");
 

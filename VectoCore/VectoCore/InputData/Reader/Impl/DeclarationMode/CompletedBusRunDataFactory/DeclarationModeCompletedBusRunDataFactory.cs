@@ -11,8 +11,8 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
@@ -40,8 +40,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 			protected override IVehicleDeclarationInputData Vehicle => throw new NotImplementedException();
 
 			public CompletedBusBase(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
 				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
-				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(null, report, cycleFactory, missionFilter,false)
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder) : base(null, report, cycleFactory, missionFilter, false, ptBuilder)
 			{
 				DataAdapterSpecific = dataAdapterSpecific;
 				DataAdapterGeneric = dataAdapterGeneric;
@@ -180,11 +182,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				}
 				if (primaryResult.ResultStatus == ResultStatus.PrimaryRunIgnored) {
 					throw new VectoException(
-                        "The vehicle group of the complete(d) vehicle falls into a primary vehicle sub-group for which no result could be calculated due to the criterion of insufficient powertrain power.   mission: {1}, fuel mode: '{2}', payload: {3}.",
+						"The vehicle group of the complete(d) vehicle falls into a primary vehicle sub-group for which no result could be calculated due to the criterion of insufficient powertrain power.   mission: {1}, fuel mode: '{2}', payload: {3}.",
 						simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
 						simulationRunData.VehicleData.Loading);
 				}
-                if (primaryResult.ResultStatus != ResultStatus.Success) {
+				if (primaryResult.ResultStatus != ResultStatus.Success) {
 					throw new VectoException(
 						"Simulation results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3} not finished successfully.",
 						simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
@@ -217,10 +219,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 		public class Conventional : CompletedBusBase
 		{
 			public Conventional(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
 				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
-				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific,
-				dataAdapterGeneric, cycleFactory, missionFilter)
-			{ }
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, dataAdapterSpecific,
+					dataAdapterGeneric, cycleFactory, missionFilter, ptBuilder) { }
 
 			protected override IEnumerable<VectoRunData> GetNextRun()
 			{
@@ -266,24 +270,24 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
                     primarySegment.VehicleClass, mission.BusParameter.VehicleLength,
                     PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
 
-                simulationRunData.EngineData.FuelMode = 0;
-                simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
-                var shiftStrategyName =
-                    PowertrainBuilder.GetShiftStrategyName(PrimaryVehicle.Components.GearboxInputData.Type,
-                        PrimaryVehicle.VehicleType);
-                simulationRunData.GearboxData = DataAdapterGeneric.CreateGearboxData(PrimaryVehicle, simulationRunData,
-                    ShiftPolygonCalculator.Create(shiftStrategyName, simulationRunData.GearshiftParameters));
+				simulationRunData.EngineData.FuelMode = 0;
+				simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
+				var shiftStrategyName =
+					PowertrainBuilder.GetShiftStrategyName(PrimaryVehicle.Components.GearboxInputData.Type,
+						PrimaryVehicle.VehicleType);
+				simulationRunData.GearboxData = DataAdapterGeneric.CreateGearboxData(PrimaryVehicle, simulationRunData,
+					ShiftPolygonCalculator.Create(shiftStrategyName, simulationRunData.GearshiftParameters));
 				GearboxData gbx = simulationRunData.GearboxData;
 				simulationRunData.GearshiftParameters =
 					DataAdapterGeneric.CreateGearshiftData((simulationRunData.AxleGearData?.AxleGear.Ratio ?? 1.0) *
 															(simulationRunData.AngledriveData?.Angledrive.Ratio ?? 1.0),
-                        PrimaryVehicle.EngineIdleSpeed, gbx.Type, gbx.Gears.Count);
+						PrimaryVehicle.EngineIdleSpeed, gbx.Type, gbx.Gears.Count);
 				simulationRunData.Retarder =
 					DataAdapterGeneric.CreateGenericRetarderData(PrimaryVehicle.Components.RetarderInputData, simulationRunData);
 				simulationRunData.BusAuxiliaries =
 					DataAdapterGeneric.CreateBusAuxiliariesData(mission, PrimaryVehicle, CompletedVehicle, simulationRunData);
 				return simulationRunData;
-            }
+			}
 
 			protected override VectoRunData CreateVectoRunDataSpecific(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int? modeIdx,
@@ -337,9 +341,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 		public abstract class Hybrid : CompletedBusBase
 		{
 			protected Hybrid(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
 				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
-				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report,
-				dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report,
+					dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter, ptBuilder) { }
 
 			protected override IEnumerable<VectoRunData> GetNextRun()
 			{
@@ -430,7 +437,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 		{
 
 
-			protected SerialHybrid(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
+			protected SerialHybrid(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter, ptBuilder) { }
 
 			#region Overrides of Hybrid
 
@@ -458,7 +470,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					iepcData.ForEach(iepc => rd.ElectricMachinesData.Add(iepc));
 				}
 
-                var primaryBusAuxiliaries = PrimaryVehicle.Components.BusAuxiliaries;
+				var primaryBusAuxiliaries = PrimaryVehicle.Components.BusAuxiliaries;
 
                 rd.VehicleData =
                     DataAdapterGeneric.CreateVehicleData(PrimaryVehicle, primarySegment, mission, loading, false);
@@ -475,8 +487,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
                     primarySegment.VehicleClass, mission.BusParameter.VehicleLength,
                     PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
 				rd.EngineData.FuelMode = 0;
-                rd.VehicleData.VehicleClass = _segment.VehicleClass;
-                
+				rd.VehicleData.VehicleClass = _segment.VehicleClass;
+				
 				CreateGearboxAndGearshiftData(rd);
 				rd.Retarder =
 					DataAdapterGeneric.CreateGenericRetarderData(PrimaryVehicle.Components.RetarderInputData, rd);
@@ -582,7 +594,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 		public class HEV_S2 : SerialHybrid
 		{
-			public HEV_S2(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
+			public HEV_S2(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter, ptBuilder) { }
 
 			#region Overrides of SerialHybrid
 
@@ -611,17 +628,35 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 	   
 		public class HEV_S3 : SerialHybrid
 		{
-			public HEV_S3(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
+			public HEV_S3(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric,
+					cycleFactory, missionFilter, ptBuilder) { }
 		}
 		
 		public class HEV_S4 : SerialHybrid
 		{
-			public HEV_S4(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
+			public HEV_S4(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter,
+					ptBuilder) { }
 		}
 		
 		public class HEV_S_IEPC : SerialHybrid
 		{
-			public HEV_S_IEPC(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
+			public HEV_S_IEPC(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter,
+					ptBuilder) { }
 
 			#region Overrides of SerialHybrid
 
@@ -650,7 +685,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 		#region ParallelHybrid
 		public abstract class ParallelHybrid : Hybrid
 		{
-			protected ParallelHybrid(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
+			protected ParallelHybrid(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter,
+					ptBuilder) { }
 
 			#region Overrides of Hybrid
 
@@ -682,26 +723,26 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				rd.EngineData =
 					DataAdapterGeneric.CreateEngineData(PrimaryVehicle, modeIdx.Value, mission);
 
-                rd.AxleGearData =
-                    DataAdapterGeneric.CreateAxleGearData(PrimaryVehicle.Components.AxleGearInputData);
-                rd.AngledriveData =
-                    DataAdapterGeneric.CreateAngledriveData(PrimaryVehicle.Components.AngledriveInputData);
-                rd.Aux = DataAdapterGeneric.CreateAuxiliaryData(
-                    PrimaryVehicle.Components.AuxiliaryInputData, primaryBusAuxiliaries, mission.MissionType,
-                    primarySegment.VehicleClass, mission.BusParameter.VehicleLength,
-                    PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
-                rd.EngineData.FuelMode = 0;
-                rd.VehicleData.VehicleClass = _segment.VehicleClass;
-                var shiftStrategyName =
-                    PowertrainBuilder.GetShiftStrategyName(PrimaryVehicle.Components.GearboxInputData.Type,
-                        PrimaryVehicle.VehicleType);
-                rd.GearboxData = DataAdapterGeneric.CreateGearboxData(PrimaryVehicle, rd,
-                    ShiftPolygonCalculator.Create(shiftStrategyName, rd.GearshiftParameters));
-                GearboxData gbx = rd.GearboxData;
-                rd.GearshiftParameters =
-                    DataAdapterGeneric.CreateGearshiftData((rd.AxleGearData?.AxleGear.Ratio ?? 1.0) *
-                                                            (rd.AngledriveData?.Angledrive.Ratio ?? 1.0),
-                        PrimaryVehicle.EngineIdleSpeed, gbx.Type, gbx.Gears.Count);
+				rd.AxleGearData =
+					DataAdapterGeneric.CreateAxleGearData(PrimaryVehicle.Components.AxleGearInputData);
+				rd.AngledriveData =
+					DataAdapterGeneric.CreateAngledriveData(PrimaryVehicle.Components.AngledriveInputData);
+				rd.Aux = DataAdapterGeneric.CreateAuxiliaryData(
+					PrimaryVehicle.Components.AuxiliaryInputData, primaryBusAuxiliaries, mission.MissionType,
+					primarySegment.VehicleClass, mission.BusParameter.VehicleLength,
+					PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
+				rd.EngineData.FuelMode = 0;
+				rd.VehicleData.VehicleClass = _segment.VehicleClass;
+				var shiftStrategyName =
+					PowertrainBuilder.GetShiftStrategyName(PrimaryVehicle.Components.GearboxInputData.Type,
+						PrimaryVehicle.VehicleType);
+				rd.GearboxData = DataAdapterGeneric.CreateGearboxData(PrimaryVehicle, rd,
+					ShiftPolygonCalculator.Create(shiftStrategyName, rd.GearshiftParameters));
+				GearboxData gbx = rd.GearboxData;
+				rd.GearshiftParameters =
+					DataAdapterGeneric.CreateGearshiftData((rd.AxleGearData?.AxleGear.Ratio ?? 1.0) *
+															(rd.AngledriveData?.Angledrive.Ratio ?? 1.0),
+						PrimaryVehicle.EngineIdleSpeed, gbx.Type, gbx.Gears.Count);
 				rd.Retarder =
 					DataAdapterGeneric.CreateGenericRetarderData(PrimaryVehicle.Components.RetarderInputData, rd);
 				rd.BusAuxiliaries =
@@ -809,32 +850,68 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 		public class HEV_P1 : ParallelHybrid
 		{
-			public HEV_P1(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
+			public HEV_P1(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter,
+					ptBuilder) { }
 		}
 		
 		public class HEV_P2 : ParallelHybrid
 		{
-			public HEV_P2(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
+			public HEV_P2(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter,
+					ptBuilder) { }
 		}
 		
 		public class HEV_P2_5 : ParallelHybrid
 		{
-			public HEV_P2_5(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
+			public HEV_P2_5(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter,
+					ptBuilder) { }
 		}
 		
 		public class HEV_P3 : ParallelHybrid
 		{
-			public HEV_P3(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
+			public HEV_P3(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter,
+					ptBuilder) { }
 		}
 		
 		public class HEV_P4 : ParallelHybrid
 		{
-			public HEV_P4(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
+			public HEV_P4(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter,
+					ptBuilder) { }
 		}
 
 		public class HEV_P_IHPC : HEV_P2
 		{
-			public HEV_P_IHPC(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
+			public HEV_P_IHPC(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter,
+					ptBuilder) { }
 		}
 
 		#endregion ParallelHybrid
@@ -845,9 +922,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 		public abstract class BatteryElectric : CompletedBusBase
 		{
 			public BatteryElectric(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
 				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
-				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report,
-				dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report,
+					dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter, ptBuilder) { }
 
 			protected override IEnumerable<VectoRunData> GetNextRun()
 			{
@@ -897,25 +977,25 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 						DataAdapterGeneric.CreateAxleGearData(PrimaryVehicle.Components.AxleGearInputData);
 				}
 
-                result.AngledriveData =
-                    DataAdapterGeneric.CreateAngledriveData(PrimaryVehicle.Components.AngledriveInputData);
-                result.Aux = DataAdapterGeneric.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
-                    PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
-                    CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles,
-                    PrimaryVehicle.VehicleType);
-                result.MaxChargingPower = PrimaryVehicle.MaxChargingPower;
+				result.AngledriveData =
+					DataAdapterGeneric.CreateAngledriveData(PrimaryVehicle.Components.AngledriveInputData);
+				result.Aux = DataAdapterGeneric.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
+					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
+					CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles,
+					PrimaryVehicle.VehicleType);
+				result.MaxChargingPower = PrimaryVehicle.MaxChargingPower;
 
-                //result.EngineData.FuelMode = 0;
-                result.VehicleData.VehicleClass = _segment.VehicleClass;
+				//result.EngineData.FuelMode = 0;
+				result.VehicleData.VehicleClass = _segment.VehicleClass;
 
-                CreateGearboxAndGearshiftData(result);
+				CreateGearboxAndGearshiftData(result);
 				result.Retarder = DataAdapterGeneric.CreateGenericRetarderData(PrimaryVehicle.Components.RetarderInputData, result);
 				result.BusAuxiliaries =
 					DataAdapterGeneric.CreateBusAuxiliariesData(mission, PrimaryVehicle, CompletedVehicle,
 						result);
 
 				return result;
-            }
+			}
 
 			protected override VectoRunData CreateVectoRunDataSpecific(Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int? modeIdx,
@@ -957,14 +1037,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				//result.EngineData.FuelMode = 0;
 				result.VehicleData.VehicleClass = _segment.VehicleClass;
 
-                CreateGearboxAndGearshiftData(result);
+				CreateGearboxAndGearshiftData(result);
 				result.Retarder = DataAdapterGeneric.CreateGenericRetarderData(PrimaryVehicle.Components.RetarderInputData, result);
 				result.BusAuxiliaries =
 					DataAdapterSpecific.CreateBusAuxiliariesData(mission, PrimaryVehicle, CompletedVehicle,
 						result);
-                
+				
 				return result;
-            }
+			}
 
 			
 			protected virtual bool AxleGearRequired()
@@ -990,7 +1070,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 	
 		public class PEV_E2 : BatteryElectric
 		{
-			public PEV_E2(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
+			public PEV_E2(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter,
+					ptBuilder) { }
 
 			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
 			{
@@ -1014,15 +1100,33 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 		}
 		public class PEV_E3 : BatteryElectric
 		{
-			public PEV_E3(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
+			public PEV_E3(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter,
+					ptBuilder) { }
 		}
 		public class PEV_E4 : BatteryElectric
 		{
-			public PEV_E4(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
+			public PEV_E4(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter,
+					ptBuilder) { }
 		}
 		public class PEV_E_IEPC : BatteryElectric
 		{
-			public PEV_E_IEPC(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
+			public PEV_E_IEPC(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter,
+					ptBuilder) { }
 
 
 			#region Overrides of BatteryElectric
@@ -1081,7 +1185,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 		public class Exempted : CompletedBusBase
 		{
-			public Exempted(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter) { }
+			public Exempted(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+				// the following parameters are injected
+				ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+				IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter,
+					ptBuilder) { }
 
 			protected override IEnumerable<VectoRunData> GetNextRun()
 			{

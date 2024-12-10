@@ -97,9 +97,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				GearboxData = new GearboxData() { Type = GearboxType.AMT }
 			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
-			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
-				RunData = runData,
-			};
+			var vehicleContainer = VehicleContainer.CreateVehicleContainer(runData, modData, null);
 			var mockCycle = new MockDrivingCycle(vehicleContainer, null);
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 
@@ -169,9 +167,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
-            var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
-				RunData = runData
-			};
+			var vehicleContainer = VehicleContainer.CreateVehicleContainer(runData, modData, null);
+
 			var mockCycle = new MockDrivingCycle(vehicleContainer, null);
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 
@@ -246,11 +243,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				GearboxData = new GearboxData() { Type = GearboxType.AMT }
 			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
-            var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
-				RunData = runData
-			};
+			var vehicleContainer = VehicleContainer.CreateVehicleContainer(runData, modData, null);
 
-			var cycleData = DrivingCycleDataReader.ReadFromStream("s,v,grad,stop\n0,0,0,10\n10,20,0,0\n20,21,0,0\n30,22,0,0\n40,23,0,0\n50,24,0,0\n60,25,0,0\n70,26,0,0\n80,27,0,0\n90,28,0,0\n100,29,0,0".ToStream(), CycleType.DistanceBased, "DummyCycle", false);
+            var cycleData = DrivingCycleDataReader.ReadFromStream("s,v,grad,stop\n0,0,0,10\n10,20,0,0\n20,21,0,0\n30,22,0,0\n40,23,0,0\n50,24,0,0\n60,25,0,0\n70,26,0,0\n80,27,0,0\n90,28,0,0\n100,29,0,0".ToStream(), CycleType.DistanceBased, "DummyCycle", false);
 			var cycle = new MockDrivingCycle(vehicleContainer, cycleData);
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 			
@@ -298,13 +293,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var driverData = MockSimulationDataFactory.CreateDriverDataFromFile(JobFile);
 			var cycleData = DrivingCycleDataReader.ReadFromStream("s,v,grad,stop\n0,0,0,10\n10,20,0,0\n20,21,0,0\n30,22,0,0\n40,23,0,0\n50,24,0,0\n60,25,0,0\n70,26,0,0\n80,27,0,0\n90,28,0,0\n100,29,0,0".ToStream(), CycleType.DistanceBased, "DummyCycle", false);
-			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering) {
-				RunData = new VectoRunData() {
-					DriverData = driverData,
-					Cycle = cycleData,
-					VehicleData = new VehicleData() { VehicleCategory = VehicleCategory.RigidTruck },
-				}
-			};
+			var vehicleContainer = VehicleContainer.CreateVehicleContainer(new VectoRunData() {
+				DriverData = driverData,
+				Cycle = cycleData,
+				VehicleData = new VehicleData() { VehicleCategory = VehicleCategory.RigidTruck },
+			}, null, null);
 			var vehicle = new MockVehicle(vehicleContainer);
 
 			var cycle = new MockDrivingCycle(vehicleContainer, cycleData);
@@ -376,13 +369,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var driverData = MockSimulationDataFactory.CreateDriverDataFromFile(JobFile);
 			var cycleData = DrivingCycleDataReader.ReadFromStream("s,v,grad,stop\n0,0,0,10\n10,20,0,0\n20,21,0,0\n30,22,0,0\n40,23,0,0\n50,24,0,0\n60,25,0,0\n70,26,0,0\n80,27,0,0\n90,28,0,0\n100,29,0,0\n110,20,0,0\n120,21,0,0\n130,22,0,0\n140,23,0,0\n150,24,0,0\n160,25,0,0\n170,26,0,0\n180,27,0,0\n190,28,0,0\n200,29,0,0".ToStream(), CycleType.DistanceBased, "DummyCycle", false);
-			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering) {
-				RunData = new VectoRunData() {
-					VehicleData = new VehicleData() { VehicleCategory = VehicleCategory.RigidTruck },
-					Cycle = cycleData,
-					DriverData = driverData
-				}
-			};
+			var vehicleContainer = VehicleContainer.CreateVehicleContainer(new VectoRunData() {
+				VehicleData = new VehicleData() { VehicleCategory = VehicleCategory.RigidTruck },
+				Cycle = cycleData,
+				DriverData = driverData
+			}, null, null);
 			var vehicle = new MockVehicle(vehicleContainer);
 			new MockEngine(vehicleContainer);
 			new EngineOnlyGearboxInfo(vehicleContainer);

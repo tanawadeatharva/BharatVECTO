@@ -68,6 +68,7 @@ using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
@@ -151,7 +152,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				};
 		}
 
-		public IList<AxlePowertrainData> CreateAxlePowertrainsData(IEngineeringInputDataProvider input, Volt averageVoltage)
+		public IList<AxlePowertrainData> CreateAxlePowertrainsData(IEngineeringInputDataProvider input, Volt averageVoltage, IPowertrainBuilder powertrainBuilder)
 		{
 			IList<AxlePowertrainData> axlePts = new List<AxlePowertrainData>();
 
@@ -176,7 +177,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				var angledriveData = CreateAngledriveData(axlePtData.AngledriveInputData);
 
 				var (gearboxData, gearshiftParams) = CreateGearboxDataForAxlePowertrain(
-					emData, axlePtData, axlegearData, angledriveData, input);
+					emData, axlePtData, axlegearData, angledriveData, input, powertrainBuilder);
 
 				var pto = axlePtData.Type.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E)
 					? CreateBatteryElectricPTOTransmissionData(axlePtData.PTOTransmissionInputData)
@@ -204,7 +205,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			IAxlePowertrainEngineeringInputData axlePtData,
 			AxleGearData axlegearData,
 			AngledriveData angledriveData,
-			IEngineeringInputDataProvider input
+			IEngineeringInputDataProvider input,
+			IPowertrainBuilder powertrainBuilder
 			)
 		{
 			GearboxData gearboxData = null;
@@ -231,9 +233,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				};
 
 				var tempVehicle = CreateVehicleData(input.JobInputData.Vehicle);
-				var tmpStrategy = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData));
+				var tmpStrategy = powertrainBuilder.GetShiftStrategy(new DummyVehicleContainer(tmpRunData));
 
-				gearboxData = CreateGearboxData(
+                gearboxData = CreateGearboxData(
 					input,
 					axlePtData.GearboxInputData,
 					axlePtData.TorqueConverterInputData,
@@ -2026,8 +2028,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return entries;
 		}
 
-
-	}
+        private class DummyVehicleContainer : VehicleContainer
+        {
+            public DummyVehicleContainer(VectoRunData runData) : base(runData, null,
+                null, null)
+            { }
+        }
+    }
 
 	public class IEPCGearboxInputData : IGearboxDeclarationInputData
 	{

@@ -2,6 +2,7 @@
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -10,13 +11,13 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 	public class BatteryElectricMotorController : IElectricMotorControl
 	{
-		protected VehicleContainer DataBus;
+		protected IVehicleContainer DataBus;
 		private ElectricSystem ElectricSystem;
 		protected ElectricMotorData ElectricMotorData;
 
 		protected readonly GearboxData GearboxModelData;
 
-		public BatteryElectricMotorController(VehicleContainer container, ElectricSystem es)
+		public BatteryElectricMotorController(IVehicleContainer container, ElectricSystem es)
 		{
 			DataBus = container;
 			ElectricMotorData = container.RunData.ElectricMachinesData.FirstOrDefault()?.Item2;

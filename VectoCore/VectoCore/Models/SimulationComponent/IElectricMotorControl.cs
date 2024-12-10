@@ -46,4 +46,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		///// <returns>power at full retardation (for current driving situation), has to be greater than 0!</returns>
 		//NewtonMeter MaxDragTorque(PerSecond avgSpeed, Second dt);
 	}
+
+	public interface IGensetMotorController : IElectricMotorControl
+	{
+		NewtonMeter EMTorque { get; set; }
+	}
 }

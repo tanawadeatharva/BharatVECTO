@@ -99,6 +99,7 @@
 			<xs:enumeration value="BatterySystem/CurrentLimits"/>
 			<xs:enumeration value="CapacitorSystem"/>
 			<xs:enumeration value="IEPC/DragTorque"/>
+			<xs:enumeration value="FuelCell"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="UnitType">
@@ -127,6 +128,7 @@
 			<xs:enumeration value="F"/>
 			<xs:enumeration value="mOhm"/>
 			<xs:enumeration value="Ah"/>
+			<xs:enumeration value="kW"/>
 		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>

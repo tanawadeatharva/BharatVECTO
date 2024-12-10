@@ -156,13 +156,14 @@ namespace TUGraz.VectoCore.Utils
 						throw new VectoSearchAbortedException("LineSearch");
 					}
 					y = getYValue(result);
+					var criterionResult = criterion(result);
 					debug.Add($"[SA.LS-3-{iterationCount}]", new {
 						x = x.Value(),
 						y = y.Value(),
-						delta = criterion(result),
+						delta = criterionResult,
 						result
 					});
-					if (criterion(result).IsEqual(0, Constants.SimulationSettings.LineSearchTolerance / 2)) {
+					if (criterionResult.IsEqual(0, Constants.SimulationSettings.LineSearchTolerance / 2)) {
 						LogManager.EnableLogging();
 						log.Debug("LineSearch found an operating point after {0} function calls.", count);
 						//iterationCount += count;

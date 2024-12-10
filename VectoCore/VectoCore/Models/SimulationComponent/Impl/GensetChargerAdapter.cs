@@ -5,7 +5,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class GensetChargerAdapter : IElectricChargerPort, IUpdateable
+	public class GensetChargerAdapter : IElectricChargerPort
 	{
 		protected IElectricSystem es;
 		protected Watt PowerGenerated;

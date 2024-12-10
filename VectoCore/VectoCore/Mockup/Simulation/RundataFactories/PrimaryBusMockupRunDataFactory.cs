@@ -13,6 +13,7 @@ using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDataFactory;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -25,8 +26,8 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
         public PrimaryBusMockupRunDataFactory(IDeclarationInputDataProvider dataProvider,
 			IDeclarationReport report,
 			IPrimaryBusDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
-			IMissionFilter missionFilter) :
-            base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter)
+			IMissionFilter missionFilter, IPowertrainBuilder ptBuilder) :
+            base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder)
         { }
 
         #region Overrides of AbstractDeclarationVectoRunDataFactory

@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
@@ -19,10 +18,10 @@ using TUGraz.VectoMockup.Reports;
 
 namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 {
-	internal class MockupEngineeringSimulatorFactory : SimulatorFactoryEngineering
+    internal class MockupEngineeringSimulatorFactory : SimulatorFactoryEngineering
 	{
 		public MockupEngineeringSimulatorFactory(IInputDataProvider dataProvider, IOutputDataWriter writer,
-			bool validate) : base(dataProvider, writer, validate)
+			bool validate) : base(dataProvider, writer, validate, null, null)
 		{
 			throw new VectoException("Engineering mode is not supported in Mockup Vecto");
 		}
@@ -31,6 +30,37 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 
 	internal class MockupDeclarationSimulatorFactory : SimulatorFactoryDeclaration
     {
+		protected ISimplePowertrainBuilder  SimplePowertrainBuilder { get; private set; }
+
+		public MockupDeclarationSimulatorFactory(IInputDataProvider dataProvider, IOutputDataWriter writer,
+			IDeclarationReport declarationReport, IVTPReport vtpReport, bool validate,
+			// the following parameters are injected
+			IXMLInputDataReader xmlInputDataReader, ISimulatorFactoryFactory simulatorFactoryFactory,
+			IXMLDeclarationReportFactory xmlDeclarationReportFactory, IVectoRunDataFactoryFactory runDataFactoryFactory,
+			IPowertrainBuilder ptBuilder, ISimplePowertrainBuilder simplePtBuilder, IModalDataFactory modDataFactory)
+			: base(dataProvider, writer, declarationReport, vtpReport, validate, xmlInputDataReader,
+				simulatorFactoryFactory, xmlDeclarationReportFactory, runDataFactoryFactory, ptBuilder, modDataFactory)
+		{
+			SimplePowertrainBuilder = simplePtBuilder;
+			CheckInputData(dataProvider);
+		}
+
+		public MockupDeclarationSimulatorFactory(IInputDataProvider dataProvider,
+			IOutputDataWriter writer, bool validate,
+			// the following parameters are injected
+			IXMLInputDataReader xmlInputDataReader,
+			ISimulatorFactoryFactory simulatorFactoryFactory,
+			IXMLDeclarationReportFactory xmlDeclarationReportFactory,
+			IVectoRunDataFactoryFactory runDataFactoryFactory, IPowertrainBuilder ptBuilder, IModalDataFactory modDataFactory)
+			: base(dataProvider, writer, validate,
+				xmlInputDataReader, simulatorFactoryFactory, xmlDeclarationReportFactory, runDataFactoryFactory,
+				ptBuilder, modDataFactory)
+		{
+			CheckInputData(dataProvider);
+		}
+
+        #region Overrides of SimulatorFactory
+
 		private void CheckInputData(IInputDataProvider dataProvider)
 		{
 			if (dataProvider is JSONFile json && !(dataProvider is JSONInputDataV10_PrimaryAndStageInputBus || dataProvider is JSONInputDataCompletedBusFactorMethodV7)) {
@@ -38,38 +68,14 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 			}
 		}
 
-		public MockupDeclarationSimulatorFactory(IInputDataProvider dataProvider, IOutputDataWriter writer,
-			IDeclarationReport declarationReport, IVTPReport vtpReport, bool validate,
-			IXMLInputDataReader xmlInputDataReader, ISimulatorFactoryFactory simulatorFactoryFactory,
-			IXMLDeclarationReportFactory xmlDeclarationReportFactory, IVectoRunDataFactoryFactory runDataFactoryFactory)
-			: base(dataProvider, writer, declarationReport, vtpReport, validate, xmlInputDataReader,
-				simulatorFactoryFactory, xmlDeclarationReportFactory, runDataFactoryFactory)
-		{
-			CheckInputData(dataProvider);
-		}
-
-		public MockupDeclarationSimulatorFactory(IInputDataProvider dataProvider,
-			IOutputDataWriter writer, bool validate,
-			IXMLInputDataReader xmlInputDataReader,
-			ISimulatorFactoryFactory simulatorFactoryFactory,
-			IXMLDeclarationReportFactory xmlDeclarationReportFactory,
-			IVectoRunDataFactoryFactory runDataFactoryFactory) : base(dataProvider, writer, validate,
-			xmlInputDataReader, simulatorFactoryFactory, xmlDeclarationReportFactory, runDataFactoryFactory)
-		{
-			CheckInputData(dataProvider);
-		}
-
-		#region Overrides of SimulatorFactory
-
-
-		protected override IVectoRun GetExemptedRun(VectoRunData data)
+        protected override IVectoRun GetExemptedRun(VectoRunData data)
 		{
 
 			if (data.Report != null)
 			{
 				data.Report.PrepareResult(data);
 			}
-			return new MockupExemptedRun(new ExemptedRunContainer(data.ExecutionMode) { RunData = data }, modData => {
+			return new MockupExemptedRun(new ExemptedVehicleContainer(data, null, null, SimplePowertrainBuilder), modData => {
 				if (data.Report != null)
 				{
 					data.Report.AddResult(data, modData);
@@ -80,9 +86,8 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 		protected override IVectoRun GetNonExemptedRun(VectoRunData data, int current, ref bool warning1Hz, ref bool firstRun)
 		{
 			var addReportResult = PrepareReport(data);
-			return new MockupRun(new VehicleContainer(ExecutionMode.Declaration,
-					new MockupModalDataContainer(new ModalDataContainer(data, ReportWriter, null), addReportResult))
-				{ RunData = data });
+			return new MockupRun(VehicleContainer.CreateVehicleContainer(data,
+					new MockupModalDataContainer(ModDataFactory.CreateModDataContainer(data, ReportWriter, null, null), addReportResult), null));
 			
 		}
 		protected new static Action<IModalDataContainer> PrepareReport(VectoRunData data)

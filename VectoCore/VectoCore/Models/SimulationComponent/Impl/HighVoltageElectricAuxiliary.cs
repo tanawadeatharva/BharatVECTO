@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 
@@ -15,7 +16,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private IDataBus DataBus;
 
-		public HighVoltageElectricAuxiliary(VehicleContainer container)
+		public HighVoltageElectricAuxiliary(IVehicleContainer container)
 		{
 			DataBus = container;
 		}

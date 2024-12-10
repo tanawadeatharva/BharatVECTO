@@ -1,11 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <Title>Vehicle Energy Consumption Calculation TOol: VectoHashing</Title>
+    <Description>Provides Vecto Hashing functionality.</Description>
+  </PropertyGroup>
+  <PropertyGroup>
     <RootNamespace>TUGraz.VectoHashing</RootNamespace>
     <AssemblyName>VectoHashing</AssemblyName>
     <TargetFrameworks>net48;net6.0</TargetFrameworks>
     <Configurations>Debug;Release;MockupRelease</Configurations>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Description>Provides Vecto Hashing functionality.</Description>
   </PropertyGroup>
 
 

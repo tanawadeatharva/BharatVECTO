@@ -13,12 +13,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 	public class PCCSegmentPreprocessor : ISimulationPreprocessor
 	{
-		protected SimplePowertrainContainer Container;
+		protected ISimpleVehicleContainer Container;
 		protected PCCSegments PCCSegments;
 		protected DriverData.PCCData PCCDriverData;
 
 		public PCCSegmentPreprocessor(
-			SimplePowertrainContainer simpleContainer, PCCSegments segments, DriverData.PCCData driverDataPCC)
+			ISimpleVehicleContainer simpleContainer, PCCSegments segments, DriverData.PCCData driverDataPCC)
 		{
 			Container = simpleContainer;
 			PCCSegments = segments;

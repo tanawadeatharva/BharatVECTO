@@ -18,9 +18,11 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 
 
 
-		#region Implementation of IModalDataContainer
+        #region Implementation of IModalDataContainer
 
-		public object this[ModalResultField key]
+        public bool WriteModalResults { get; set; }
+
+        public object this[ModalResultField key]
 		{
 			get => throw new NotImplementedException();
 			set => _data[GetColumnName(key)] = value;
