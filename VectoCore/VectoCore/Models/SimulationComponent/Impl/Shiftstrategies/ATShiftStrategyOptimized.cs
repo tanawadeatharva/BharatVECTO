@@ -187,7 +187,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 					response);
 			}
 
-			return CheckEarlyUpshiftFromLocked(
+			if (currentGear.TorqueConverterLocked==false) {
+				return false;
+			}
+
+            return CheckEarlyUpshiftFromLocked(
 				absTime, dt, outTorque, outAngularVelocity, origInTorque, origInAngularVelocity, currentGear, lastShiftTime,
 				response);
 		}
