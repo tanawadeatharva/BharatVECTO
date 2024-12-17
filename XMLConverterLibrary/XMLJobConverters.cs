@@ -217,6 +217,7 @@ namespace XMLConverterLibrary
 			XMLUtils.SetElementsType(doc, "Auxiliaries", null);
 			XMLUtils.SetElementsType(doc, "Auxiliaries/Data", "AUX_Conventional_LorryDataType");
 			XMLUtils.SetElementsAttribute(doc, "Auxiliaries/Data/SteeringPump/Technology", "axleNumber", "1");
+			XMLUtils.FixElementsValue(doc, "Auxiliaries/Data/SteeringPump/Technology");
 		}
 
 		protected void ConvertAirDrag(XDocument doc)
@@ -344,7 +345,7 @@ namespace XMLConverterLibrary
 
 			XMLUtils.SetElementName(doc, "Vehicle/LegislativeClass", "LegislativeCategory", TargetNamespace);
 			XMLUtils.SetElementName(doc, "Vehicle/VehicleCategory", "ChassisConfiguration", TargetNamespace);
-			XMLUtils.FixElementValue(doc, "ChassisConfiguration");
+			XMLUtils.FixElementsValue(doc, "Vehicle/ChassisConfiguration");
 
 			XMLUtils.SetElementName(doc, "Vehicle/CurbMassChassis", "CorrectedActualMass", TargetNamespace);
 			XMLUtils.SetElementName(doc, "Vehicle/GrossVehicleMass", "TechnicalPermissibleMaximumLadenMass", TargetNamespace);
