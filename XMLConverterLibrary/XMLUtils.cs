@@ -33,11 +33,12 @@ namespace XMLConverterLibrary
 			};
 
 			_valueFixes = new Dictionary<string, Dictionary<string, string>>() {
-				{ 
-					"ChassisConfiguration", new Dictionary<string, string>() {
-							{ "Rigid Truck", "Rigid Lorry" }
-						}
-				}
+				{
+                    "Vehicle/ChassisConfiguration", new Dictionary<string, string>() { { "Rigid Truck", "Rigid Lorry" } }
+                },
+				{
+                    "Auxiliaries/Data/SteeringPump/Technology", new Dictionary<string, string>() { { "Electric", "Electric driven pump" } }
+                }
 			};
 		}
 
@@ -99,19 +100,17 @@ namespace XMLConverterLibrary
 			node.Name = xs + name;
 		}
 
-		public static void FixElementValue(XDocument doc, string element)
+		public static void FixElementsValue(XDocument doc, string elementPath)
 		{
-			var node = doc.XPathSelectElement(QueryLocalName(element));
+			var nodes = doc.XPathSelectElements(QueryLocalName(elementPath.Split('/')));
 
-			if (node == null)
+            foreach (var node in nodes)
 			{
-				return;
-			}
-
-			if (_valueFixes.ContainsKey(element) && _valueFixes[element].ContainsKey(node.Value))
-			{
-				node.Value = _valueFixes[element][node.Value];
-			}
+                if (_valueFixes.ContainsKey(elementPath) && _valueFixes[elementPath].ContainsKey(node.Value))
+                {
+                    node.Value = _valueFixes[elementPath][node.Value];
+                }
+            }
 		}
 
 		public static IEnumerable<XElement> GetElements(XDocument doc, string elementPath)
