@@ -921,7 +921,7 @@
 							<xs:documentation>P491 - [s]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="MaxTorqueCurve" type="v2.6:ElectricMachineSystemMaxTorqueCurveType" maxOccurs="2"/>
+					<xs:element name="MaxTorqueCurve" type="v2.6:ElectricMachineSystemMaxTorqueCurveType" maxOccurs="unbounded"/>
 					<xs:element name="PowerMap" maxOccurs="unbounded">
 						<xs:complexType>
 							<xs:sequence>
@@ -944,7 +944,13 @@
 		<xs:sequence>
 			<xs:element name="Entry" type="v2.3:ElectricMachineSystemMaxTorqueEntryType" minOccurs="2" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="gear" type="xs:integer" />
+		<xs:attribute name="gear" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:int">
+					<xs:minInclusive value="0"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:complexType name="FuelCellComponentDeclarationType">
 		<xs:sequence>
