@@ -390,7 +390,12 @@ namespace XMLConverterLibrary
 			XMLUtils.AddElementAfter(doc, "Vehicle/ZeroEmissionVehicle", "VocationalVehicle", "false");
 			XMLUtils.AddElementAfter(doc, "Vehicle/VocationalVehicle", "SleeperCab", "true");
 
-			AddADAS(doc);
+            if (XMLUtils.GetElements(doc, "Mode/Fuel").Count() > 1)
+            {
+				XMLUtils.AddElementAfter(doc, "Vehicle/VocationalVehicle", "NgTankSystem", "Compressed");
+            }
+
+            AddADAS(doc);
 
 			return doc;
 		}
