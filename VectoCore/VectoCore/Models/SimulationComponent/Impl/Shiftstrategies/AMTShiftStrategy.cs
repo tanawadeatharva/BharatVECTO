@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		//protected readonly GearshiftPosition MaxStartGear;
 		protected GearshiftPosition _nextGear;
-		private GearshiftPosition DesiredGearRoadsweeping;
+		protected GearshiftPosition DesiredGearRoadsweeping;
 		private readonly IShiftPolygonCalculator _shiftPolygonCalculator;
 
 		protected ITestPowertrain<Gearbox> TestPowertrain;
@@ -113,12 +113,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, DataBus);
 		}
 
-		private bool SpeedTooLowForEngine(GearshiftPosition gear, PerSecond outAngularSpeed)
+		protected bool SpeedTooLowForEngine(GearshiftPosition gear, PerSecond outAngularSpeed)
 		{
 			return (outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsSmaller(DataBus.EngineInfo.EngineIdleSpeed);
 		}
 
-		private bool SpeedTooHighForEngine(GearshiftPosition gear, PerSecond outAngularSpeed)
+		protected bool SpeedTooHighForEngine(GearshiftPosition gear, PerSecond outAngularSpeed)
 		{
 			return
 				(outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsGreaterOrEqual(VectoMath.Min(GearboxModelData.Gears[gear.Gear].MaxSpeed,
@@ -143,6 +143,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public static string Name => "AMT - Classic";
+
 
 		public override GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
@@ -226,8 +227,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Constants.SimulationSettings.MeasuredSpeedTargetTimeInterval, outTorque, outAngularVelocity,
 					true);
 
-				var fullLoadPower = response.Engine.DynamicFullLoadPower; //EnginePowerRequest - response.DeltaFullLoad;
-				var reserve = 1 - response.Engine.PowerRequest / fullLoadPower;
+				var reserve = 1 - response.Engine.TotalTorqueDemand / response.Engine.DynamicFullLoadTorque; //response.Engine.PowerRequest/response.Engine.DynamicFullLoadPower does not contain auxiliary power
 
 				if (response.Engine.EngineSpeed > DataBus.EngineInfo.EngineIdleSpeed && reserve >= GearshiftParams.StartTorqueReserve) {
 					_nextGear = gear;

@@ -30,7 +30,6 @@
 */
 
 using NUnit.Framework;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;

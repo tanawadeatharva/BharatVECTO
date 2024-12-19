@@ -354,9 +354,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					JobRunId = 0,
 					GearboxData = gearboxData,
 					EngineData = engineData,
-					AxleGearData = axleGearData,
-					ExecutionMode = ExecutionMode.Engineering,
-                }, null, null);
+					AxleGearData = axleGearData
+				}, null, null);
 			var data = new DistanceRun(container);
 
 			Stopwatch stopwatch = new Stopwatch();

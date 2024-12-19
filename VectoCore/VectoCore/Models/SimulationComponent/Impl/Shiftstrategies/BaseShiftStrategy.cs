@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected BaseShiftStrategy(IVehicleContainer dataBus)
 		{
-			PowertrainBuilder = dataBus.PowertrainBuilder;
+			PowertrainBuilder = dataBus.SimplePowertrainBuilder;
 			GearboxModelData = dataBus.RunData.GearboxData;
 			GearshiftParams = dataBus.RunData.GearshiftParameters;
 			DataBus = dataBus;

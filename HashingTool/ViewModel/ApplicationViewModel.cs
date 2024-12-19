@@ -57,6 +57,8 @@ namespace HashingTool.ViewModel
 				new VerifyComponentInputDataViewModel(),
 				new VerifyJobInputDataViewModel(),
 				new VerifyResultDataViewModel(),
+				new VerifyPrimaryBusViewModel(),
+				new VerifyCompletedBusViewModel(),
 			};
 
 			CurrentViewModel = homeView;

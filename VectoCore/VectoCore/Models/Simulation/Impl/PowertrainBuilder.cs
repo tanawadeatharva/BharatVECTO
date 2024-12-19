@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -177,7 +178,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
         ///  └(Aux)
         /// </code>
         /// </summary>
-        private IVehicleContainer BuildEngineOnly(VectoRunData data, IModalDataContainer modData, ISumData _sumWriter)
+		private IVehicleContainer BuildEngineOnly(VectoRunData data, IModalDataContainer modData, ISumData _sumWriter)
 		{
 			if (_sumWriter == null)
 				throw new ArgumentNullException(nameof(_sumWriter));
@@ -226,7 +227,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var container = GetVehicleContainer(ExecutionMode.Engineering, data, modData, _sumWriter);
-				//new VehicleContainer(ExecutionMode.Engineering, _simplePowertrainBuilder, modData, _sumWriter) { RunData = data };
+
 			var engine = new StopStartCombustionEngine(container, data.EngineData, pt1Disabled: true);
 			new PWheelCycle(container, data.Cycle)
 				.AddComponent(new AxleGear(container, data.AxleGearData))
@@ -399,7 +400,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var container = GetVehicleContainer(ExecutionMode.Engineering, data, modData, sumWriter);
-			//new VehicleContainer(ExecutionMode.Engineering, _simplePowertrainBuilder, modData, sumWriter) { RunData = data };
 			var engine = new StopStartCombustionEngine(container, data.EngineData);
 			new MeasuredSpeedDrivingCycle(container, data.Cycle)
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
@@ -515,7 +515,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				throw new VectoException("P0 Hybrids are modeled as SmartAlternator in the BusAuxiliary model.");
 			}
 
-			var container = GetVehicleContainer(ExecutionMode.Engineering, data, modData, sumWriter);
+			var container = GetVehicleContainer(data.ExecutionMode, data, modData, sumWriter);
 			//new VehicleContainer(data.ExecutionMode, _simplePowertrainBuilder, modData, sumWriter) { RunData = data };
 			var es = ConnectREESS(data, container);
 

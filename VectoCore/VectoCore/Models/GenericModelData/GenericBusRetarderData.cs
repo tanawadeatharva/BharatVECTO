@@ -63,9 +63,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			{
 				maxRetarderSpeed = retarderData.Ratio * engineSpeedRPM;
 
-				if (retarderData.Type.IsOneOf(RetarderType.TransmissionOutputRetarder, RetarderType.AxlegearInputRetarder))
-				{
-					maxRetarderSpeed = retarderData.Ratio * (engineSpeedRPM / gearboxRatio);
+				if (retarderData.Type.IsOneOf(RetarderType.TransmissionOutputRetarder, RetarderType.AxlegearInputRetarder)) {
+                    maxRetarderSpeed = retarderData.Ratio * (engineSpeedRPM / gearboxRatio);
 				}
 			}
 

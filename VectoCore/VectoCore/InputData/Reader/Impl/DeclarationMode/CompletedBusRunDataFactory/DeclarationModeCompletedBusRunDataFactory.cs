@@ -19,7 +19,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRunDataFactory
 {
-    public abstract class DeclarationModeCompletedBusRunDataFactory
+	public abstract class DeclarationModeCompletedBusRunDataFactory
 	{
 		public abstract class CompletedBusBase : AbstractDeclarationVectoRunDataFactory
 		{
@@ -488,7 +488,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
 				rd.EngineData.FuelMode = 0;
 				rd.VehicleData.VehicleClass = _segment.VehicleClass;
-                
+				
 				CreateGearboxAndGearshiftData(rd);
 				rd.Retarder =
 					DataAdapterGeneric.CreateGenericRetarderData(PrimaryVehicle.Components.RetarderInputData, rd);
@@ -988,7 +988,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				//result.EngineData.FuelMode = 0;
 				result.VehicleData.VehicleClass = _segment.VehicleClass;
 
-                CreateGearboxAndGearshiftData(result);
+				CreateGearboxAndGearshiftData(result);
 				result.Retarder = DataAdapterGeneric.CreateGenericRetarderData(PrimaryVehicle.Components.RetarderInputData, result);
 				result.BusAuxiliaries =
 					DataAdapterGeneric.CreateBusAuxiliariesData(mission, PrimaryVehicle, CompletedVehicle,
@@ -1037,12 +1037,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				//result.EngineData.FuelMode = 0;
 				result.VehicleData.VehicleClass = _segment.VehicleClass;
 
-                CreateGearboxAndGearshiftData(result);
+				CreateGearboxAndGearshiftData(result);
 				result.Retarder = DataAdapterGeneric.CreateGenericRetarderData(PrimaryVehicle.Components.RetarderInputData, result);
 				result.BusAuxiliaries =
 					DataAdapterSpecific.CreateBusAuxiliariesData(mission, PrimaryVehicle, CompletedVehicle,
 						result);
-                
+				
 				return result;
 			}
 

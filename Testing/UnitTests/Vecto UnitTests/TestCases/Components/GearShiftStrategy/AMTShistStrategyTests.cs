@@ -43,7 +43,7 @@ TestCase(8, 4, 15000, 200, true),]
 		var ptBuilder = new Mock<ISimplePowertrainBuilder>();
 		ptBuilder.Setup(p => p.CreateTestPowertrain<Gearbox>(It.IsAny<ISimpleVehicleContainer>(), It.IsAny<IDataBus>()))
 			.Returns(testPt.Object);
-		container.Setup(c => c.PowertrainBuilder).Returns(ptBuilder.Object);
+		container.Setup(c => c.SimplePowertrainBuilder).Returns(ptBuilder.Object);
 
         var gbx = GetMockGearbox(container);
 
@@ -93,7 +93,7 @@ TestCase(8, 4, 15000, 200, true),]
 		var ptBuilder = new Mock<ISimplePowertrainBuilder>();
 		ptBuilder.Setup(p => p.CreateTestPowertrain<Gearbox>(It.IsAny<ISimpleVehicleContainer>(), It.IsAny<IDataBus>()))
 			.Returns(testPt.Object);
-		container.Setup(c => c.PowertrainBuilder).Returns(ptBuilder.Object);
+		container.Setup(c => c.SimplePowertrainBuilder).Returns(ptBuilder.Object);
 
 		var gbx = GetMockGearbox(container);
 		Mock.Get(container.Object.EngineInfo).Setup(e => e.EngineSpeed).Returns(() => n.RPMtoRad());

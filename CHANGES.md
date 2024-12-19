@@ -1,6 +1,31 @@
 # Changelog
 
 
+
+**VECTO v4.2.6-RC (06-12-2024)**
+
+
+- Features
+
+    * Support Gitlab issue pattern (vecto/vecto!272)
+    * CodeEU #854: Verify primary bus VIF hash against Job (vecto/vecto!295)
+    * CodeEU #833, #834, #835, #836, #837: Add 3rd amendment XSD definitions (vecto/vecto!291)
+    * CodeEU #838: Include Engine into v2.6 (vecto/vecto!297)
+
+- Bug Fixes
+
+    * Homogenize versions across tools (vecto/vecto!270)
+    * CodeEU #807: Produce same data from ADC loss map (#807) (vecto/vecto!278)
+    * Authors and readme metadata content (vecto/vecto!277)
+    * CodeEU #809: Writing engine information in MRF (#809) (vecto/vecto!275)
+    * CodeEU #842, #840, #841, #839, #798: Driver model: in case of an APT vehicle where the driving action is Brake... (vecto/vecto!287)
+    * CodeEU #812, #788: Conversion of doubles for SI (vecto/vecto!283)
+    * CodeEU #750, #758, #769, #816, #821, #829: Avoid wrong upshift and downshift for light SMT vehicles (vecto/vecto!290)
+    * CodeEU #844, #705, #530: During a coasting action (look-ahead coasting) a gear hunting occurs in the... (vecto/vecto!289)
+    * CodeEU #784: Override DoWriteModalResult for VTP (vecto/vecto!294)
+    * CodeEU #495, #642, #739: Add SMT downshift condition - DroppedSpd>DisengSpd (vecto/vecto!293)
+
+
 **VECTO v4.2.5 Official Release (02-10-2024)**
 
 - Hot Fixes
@@ -874,7 +899,7 @@ Lookup of Airdrag parameters in declaration mode
     + Updated many error messages to be more explicit about the reason of error
     + Added "Mission Profiles" Directory with driving cycles publicly available in the application root directory.
     + Added "Declaration" directory with the declaration data files in the application root directory.
-    + Added warning when engine inertia is 0
+	+ Added warning when engine inertia is 0
     + Added check that engine speed must not fall below idle speed (even in measured speed mode)
     + Shift curve validation for AT gearboxes: shift curves may now overlap due to different shift logic in AutomaticTransmissions.
     + Updated Crosswind Coefficients for Tractor+Semitrailer

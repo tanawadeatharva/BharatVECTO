@@ -32,6 +32,7 @@
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Simulation
@@ -46,5 +47,6 @@ namespace TUGraz.VectoCore.Models.Simulation
 
         IExemptedVehicleContainer CreateExemptedVehicleContainer(VectoRunData runData,
 			IModalDataContainer modData, ISumData writeSumData);
-    }
+
+	}
 }

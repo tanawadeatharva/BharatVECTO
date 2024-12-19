@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.Tests.Integration
     public class Auxiliaries
     {
 		private IPowertrainBuilder PowertrainBuilder;
-		private IModalDataFactory ModDataFactory;
+		public IModalDataFactory ModDataFactory;
 
 		private const string TRACTOR_AT_JOB = @"TestData/Integration/ConventionalTimeruns/Class5_Tractor_4x2/Class5_Tractor_ENG_Aux.vecto";
 
@@ -44,8 +44,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 			PowertrainBuilder = kernel.Get<IPowertrainBuilder>();
 			ModDataFactory = kernel.Get<IModalDataFactory>();
 		}
-		
-        [Category("Integration")]
+
+
+		[Category("Integration")]
 		[Ignore("Temporarily disabling fix for codeu issue 15 because it causes distance-based testcases to fail")]
         [
 			TestCase(TRACTOR_AT_JOB, TestName = "Tractor AT distance Padd cycle")

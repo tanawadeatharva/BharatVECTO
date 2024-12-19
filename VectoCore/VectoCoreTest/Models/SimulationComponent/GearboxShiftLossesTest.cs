@@ -199,9 +199,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var runData = new VectoRunData() {
 				GearboxData = gearboxData,
 				GearshiftParameters = ATPowerTrain.CreateGearshiftData(),
-				EngineData = new CombustionEngineData() { Inertia = 5.SI<KilogramSquareMeter>() },
-				ExecutionMode = ExecutionMode.Engineering,
-            };
+				EngineData = new CombustionEngineData() { Inertia = 5.SI<KilogramSquareMeter>() }
+			};
             var container = VehicleContainer.CreateVehicleContainer(runData, null, null) as VehicleContainer;
             gearboxData.PowershiftShiftTime = 0.8.SI<Second>();
 			new ATClutchInfo(container);

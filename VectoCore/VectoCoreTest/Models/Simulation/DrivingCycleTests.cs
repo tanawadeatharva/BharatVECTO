@@ -32,7 +32,6 @@
 using System.IO;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;

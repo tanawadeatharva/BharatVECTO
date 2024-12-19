@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		VectoRun.Status RunStatus { get; set; }
 
-		ISimplePowertrainBuilder PowertrainBuilder { get; }
+		ISimplePowertrainBuilder SimplePowertrainBuilder { get; }
 
 		IAuxInProvider BusAux { get; }
 

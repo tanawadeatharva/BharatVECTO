@@ -120,7 +120,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected PEVAMTShiftStrategy(IVehicleContainer dataBus, bool dummy)
 		{
 			DataBus = dataBus;
-			PowertrainBuilder = dataBus.PowertrainBuilder;
+			PowertrainBuilder = dataBus.SimplePowertrainBuilder;
 			var runData = dataBus.RunData;
 			_shiftStrategyParameters = runData.GearshiftParameters;
 			_shiftPolygonImplementation =

@@ -85,8 +85,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					StartSpeed = DeclarationData.GearboxTCU.StartSpeed,
 					StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration
 				},
-				ExecutionMode = ExecutionMode.Engineering,
-            }, null, null);
+			}, null, null);
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 
 			var gbx = new MockGearbox(container);
@@ -175,9 +174,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				GearshiftParameters = new ShiftStrategyParameters() {
 					StartSpeed = DeclarationData.GearboxTCU.StartSpeed,
 					StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration
-				},
-				ExecutionMode = ExecutionMode.Engineering,
-            }, null, null);
+				}
+			}, null, null);
+		
 		
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 

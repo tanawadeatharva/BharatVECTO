@@ -32,7 +32,6 @@
 using System.Data;
 using System.IO;
 using NUnit.Framework;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;

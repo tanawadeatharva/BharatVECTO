@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			xmlDeclarationReportFactory: xmlDeclarationReportFactory,
 			runDataFactoryFactory: runDataFactoryFactory,
 			ptBuilder: ptBuilder,
-			modDataFactory:modDataFactory) { }
+			modDataFactory: modDataFactory) { }
 
 		private bool CanBeSimulated(IInputDataProvider dataProvider)
 		{

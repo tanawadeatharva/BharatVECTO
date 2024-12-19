@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void RetarderBasicTest(double cardanTorque, double cardanSpeed, double expectedRetarderLoss)
 		{
 			var vehicle = VehicleContainer.CreateVehicleContainer(null, null, null);
-			var retarderData = RetarderLossMapReader.ReadFromFile(RetarderLossMapFile);
+            var retarderData = RetarderLossMapReader.ReadFromFile(RetarderLossMapFile);
 			var retarder = new Retarder(vehicle, retarderData, 1.0);
 
 			var nextRequest = new MockTnOutPort();

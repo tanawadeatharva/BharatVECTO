@@ -41,7 +41,9 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
+using static TUGraz.VectoCore.Models.SimulationComponent.Data.Engine.FuelConsumptionMap;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -110,7 +112,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var fullDragTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].DragLoadStationaryTorque(avgEngineSpeed);
 			var fullLoadTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].FullLoadStationaryTorque(avgEngineSpeed);
-			
+
+			if (fullLoadTorque < 0)
+			{
+				fullLoadTorque = 0.SI<NewtonMeter>();
+			}
+
 			var inertiaTorqueLoss =
 				Formulas.InertiaPower(angularVelocity, PreviousState.EngineSpeed, ModelData.Inertia, dt) /
 				avgEngineSpeed;
@@ -224,6 +231,116 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return DataBus.DrivingCycleInfo.CycleData.LeftSample.EngineSpeed;
         }
 
+		/// <summary>
+		/// Overrides StopStartCombustionEngine implementation to avoid calling base.DoWriteModalResults() on clipped torque.
+		/// </summary>
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+			if (CombustionEngineOn)
+			{
+				WriteModalResults(time, simulationInterval, container);
+				var engineStart = !PreviousState.EngineOn && CurrentState.EngineOn;
+
+				//var engineRampUpEnergy = Formulas.InertiaPower(modelData.IdleSpeed, 0.RPMtoRad(), modelData.Inertia, modelData.EngineStartTime) * modelData.EngineStartTime;
+				//var engineDragEnergy = VectoMath.Abs(modelData.FullLoadCurves[0].DragLoadStationaryTorque(modelData.IdleSpeed)) *
+				//	modelData.IdleSpeed / 2.0 * modelData.EngineStartTime;
+
+				if (engineStart)
+				{
+					var engineRampUpEnergy = Formulas.InertiaPower(PreviousState.EngineSpeed, ModelData.IdleSpeed,
+						ModelData.Inertia, ModelData.EngineStartTime) * ModelData.EngineStartTime;
+					var avgRampUpSpeed = (ModelData.IdleSpeed + PreviousState.EngineSpeed) / 2.0;
+					var engineDragEnergy =
+						VectoMath.Abs(ModelData.FullLoadCurves[0].DragLoadStationaryTorque(avgRampUpSpeed)) *
+						avgRampUpSpeed * 0.5.SI<Second>();
+
+					container[ModalResultField.P_ice_start] =
+						(EngineStartEnergy + (engineRampUpEnergy + engineDragEnergy)) /
+						CurrentState.dt;
+				}
+				else
+				{
+					container[ModalResultField.P_ice_start] = 0.SI<Watt>();
+				}
+
+				container[ModalResultField.P_aux_ESS_mech_ice_off] = 0.SI<Watt>();
+				container[ModalResultField.P_aux_ESS_mech_ice_on] = 0.SI<Watt>();
+			}
+			else
+			{
+				container[ModalResultField.P_ice_start] = 0.SI<Watt>();
+				DoWriteEngineOffResults(time, simulationInterval, container);
+			}
+		}
+
+		private void WriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+			ValidatePowerDemand(CurrentState.EngineTorque, CurrentState.DynamicFullLoadTorque, CurrentState.FullDragTorque);
+
+			var avgEngineSpeed = GetEngineSpeed(CurrentState.EngineSpeed);
+			if (avgEngineSpeed.IsSmaller(EngineIdleSpeed,
+				DataBus.ExecutionMode == ExecutionMode.Engineering ? 20.RPMtoRad() : 1e-3.RPMtoRad()))
+			{
+				Log.Warn("EngineSpeed below idling speed! n_eng_avg: {0}, n_idle: {1}", avgEngineSpeed.AsRPM, EngineIdleSpeed.AsRPM);
+			}
+			container[ModalResultField.P_ice_fcmap] = CurrentState.EngineTorque * avgEngineSpeed;
+			container[ModalResultField.P_ice_out] = container[ModalResultField.P_ice_out] is DBNull
+				? CurrentState.EngineTorqueOut * avgEngineSpeed
+				: container[ModalResultField.P_ice_out];
+			container[ModalResultField.P_ice_inertia] = CurrentState.InertiaTorqueLoss * avgEngineSpeed;
+
+			container[ModalResultField.n_ice_avg] = avgEngineSpeed;
+			container[ModalResultField.T_ice_fcmap] = CurrentState.EngineTorque;
+
+			container[ModalResultField.P_ice_full] = CurrentState.DynamicFullLoadTorque * avgEngineSpeed;
+			container[ModalResultField.P_ice_full_stat] = CurrentState.StationaryFullLoadTorque * avgEngineSpeed;
+			container[ModalResultField.P_ice_drag] = CurrentState.FullDragTorque * avgEngineSpeed;
+			container[ModalResultField.T_ice_full] = CurrentState.DynamicFullLoadTorque;
+			container[ModalResultField.T_ice_drag] = CurrentState.FullDragTorque;
+			container[ModalResultField.ICEOn] = CurrentState.EngineOn;
+
+			WriteWHRPower(container, avgEngineSpeed, CurrentState.EngineTorque, simulationInterval);
+
+			foreach (var fuel in ModelData.Fuels)
+			{
+				bool isClippingTorque = CurrentState.DynamicFullLoadTorque < 0.SI<NewtonMeter>() || CurrentState.DynamicFullLoadTorque == 0.SI<NewtonMeter>();
+				var result = !isClippingTorque ? fuel.ConsumptionMap.GetFuelConsumption(
+					CurrentState.EngineTorque,
+					avgEngineSpeed,
+					DataBus.ExecutionMode != ExecutionMode.Declaration) : new FuelConsumptionResult() { Value = 0.SI<KilogramPerSecond>() };
+
+				var fuelData = fuel.FuelData;
+				if (DataBus.ExecutionMode != ExecutionMode.Declaration && result.Extrapolated)
+				{
+					Log.Warn(
+						"FuelConsumptionMap for fuel {2} was extrapolated: range for FC-Map is not sufficient: n: {0}, torque: {1}",
+						avgEngineSpeed.Value(), CurrentState.EngineTorque.Value(), fuelData.FuelType.GetLabel());
+				}
+				var pt1 = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].PT1(avgEngineSpeed);
+				if (DataBus.ExecutionMode == ExecutionMode.Declaration && pt1.Extrapolated)
+				{
+					Log.Error(
+						"requested rpm below minimum rpm in pt1 - extrapolating. n_eng_avg: {0}",
+						avgEngineSpeed);
+				}
+
+				var fc = result.Value;
+				var fcNCVcorr = fc * fuelData.HeatingValueCorrection; // TODO: wird fcNCVcorr
+
+				var fcWHTC = fcNCVcorr * WHTCCorrectionFactor(fuel.FuelData);
+
+				if (EngineAux is BusAuxiliariesAdapter advancedAux)
+				{
+					advancedAux.DoWriteModalResultsICE(time, simulationInterval, container);
+				}
+				var fcFinal = fcWHTC;
+
+				container[ModalResultField.FCMap, fuelData] = fc;
+				container[ModalResultField.FCNCVc, fuel.FuelData] = fcNCVcorr;
+				container[ModalResultField.FCWHTCc, fuel.FuelData] = fcWHTC;
+				container[ModalResultField.FCFinal, fuel.FuelData] = fcFinal;
+			}
+		}
 
 		// TODO: MQ 2019-07-30
 		protected override double WHTCCorrectionFactor (IFuelProperties fuel)

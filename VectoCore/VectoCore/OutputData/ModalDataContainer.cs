@@ -93,6 +93,7 @@ namespace TUGraz.VectoCore.OutputData
 			Action<ModalDataContainer> addReportResult,
 			params IModalDataFilter[] filter) : this(runData, writer, addReportResult, filter, null) { }
 
+		
         public ModalDataContainer(VectoRunData runData, IModalDataWriter writer,
 			Action<ModalDataContainer> addReportResult,
 			IModalDataFilter[] filter, IModalDataPostProcessorFactory postProcessorFactory)
@@ -107,9 +108,14 @@ namespace TUGraz.VectoCore.OutputData
 			Data = new ModalResults();
 			CurrentRow = Data.NewRow();
 
+			if (postProcessorFactory == null) {
+				// was not injected but called by the obsolete constructor
+				postProcessorFactory =
+					new StandardKernel(new VectoNinjectModule()).Get<IModalDataPostProcessorFactory>();
+			}
 			PostProcessingCorrection = postProcessorFactory.GetPostProcessor(runData.JobType);
-			
-			if (runData.EngineData != null) {
+
+            if (runData.EngineData != null) {
 				
 			}
 

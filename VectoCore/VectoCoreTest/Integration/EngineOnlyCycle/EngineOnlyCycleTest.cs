@@ -34,7 +34,6 @@ using System.Linq;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;

@@ -121,14 +121,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
                     case VectoSimulationJobType.SerialHybridVehicle:
                     case VectoSimulationJobType.IEPC_E:
                     case VectoSimulationJobType.IEPC_S:
-						testContainer = container.PowertrainBuilder.BuildSimplePowertrainElectric(data);
+						testContainer = container.SimplePowertrainBuilder.BuildSimplePowertrainElectric(data);
 						break;
                     case VectoSimulationJobType.IHPC:
 					case VectoSimulationJobType.ParallelHybridVehicle:
-						testContainer = container.PowertrainBuilder.BuildSimpleHybridPowertrain(data);
+						testContainer = container.SimplePowertrainBuilder.BuildSimpleHybridPowertrain(data);
 						break;
 					case VectoSimulationJobType.ConventionalVehicle:
-						testContainer = container.PowertrainBuilder.BuildSimplePowertrain(data);
+						testContainer = container.SimplePowertrainBuilder.BuildSimplePowertrain(data);
 						break;
 					default:
 						throw new ArgumentOutOfRangeException(nameof(data.JobType));

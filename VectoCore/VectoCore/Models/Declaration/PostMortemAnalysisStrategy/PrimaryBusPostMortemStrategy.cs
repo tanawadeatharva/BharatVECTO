@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
 		protected virtual Radian GetMaxGradability(IVehicleContainer container)
 		{
 			ISimpleVehicleContainer testContainer = null;
-			switch (container.PowertrainInfo.VehicleArchitecutre) {
+            switch (container.PowertrainInfo.VehicleArchitecutre) {
 				//case VectoSimulationJobType.ConventionalVehicle:
 				//	PowertrainBuilder.BuildSimplePowertrain(container.RunData, testContainer);
 				//	break;
@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
 				//	break;
                 case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
-					testContainer = container.PowertrainBuilder.BuildSimplePowertrainElectric(container.RunData);
+					testContainer = container.SimplePowertrainBuilder.BuildSimplePowertrainElectric(container.RunData);
 					break;
 				default:
 					throw new VectoException($"unhandled powertrain architecture {container.PowertrainInfo.VehicleArchitecutre} to calculate gradability");

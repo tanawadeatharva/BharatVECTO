@@ -14,7 +14,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class StopStartCombustionEngine : CombustionEngine
 	{
-		private WattSecond EngineStartEnergy;
+		protected WattSecond EngineStartEnergy;
 
 		public StopStartCombustionEngine(
 			IVehicleContainer container, CombustionEngineData modelData, bool pt1Disabled = false) : base(
@@ -236,7 +236,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region Implementation of IUpdateable
 
-		public bool UpdateFrom(object other)
+		protected override bool DoUpdateFrom(object other)
 		{
 			if (other is CombustionEngine e) {
 				PreviousState = e.PreviousState;

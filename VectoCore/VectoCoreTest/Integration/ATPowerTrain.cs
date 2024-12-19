@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var kernel = new StandardKernel(new VectoNinjectModule());
 			var powertrainBuilder = kernel.Get<ISimplePowertrainBuilder>();
-			var postprocessorFactory = kernel.Get<IModalDataPostProcessorFactory>();
+
 
             var gearboxData = CreateGearboxData(gbxType);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);

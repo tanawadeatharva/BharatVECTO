@@ -145,7 +145,7 @@ namespace VECTO3GUI2020.Util.XML.Vehicle
 			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.Bus_LowEntry, _inputData.LowEntry));
 
 			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.Bus_HeightIntegratedBody,
-				_inputData.Height?.ConvertToMilliMeter()));
+				_inputData.Height?.ConvertToMilliMeter().ToXMLFormat(0)));
 		}
 
 		#endregion

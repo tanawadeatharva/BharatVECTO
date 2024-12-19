@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Tests.Models
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 			_runDataFactory = _kernel.Get<IVectoRunDataFactoryFactory>();
 			PowertrainBuilder = _kernel.Get<IPowertrainBuilder>();
-		}
+        }
 
 		[TestCase,
 		Category(Definitions.TESTCASE_MIGRATED)]

@@ -261,7 +261,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public VectoRun.Status RunStatus { get; set; }
-		public ISimplePowertrainBuilder PowertrainBuilder { get; }
+		public ISimplePowertrainBuilder SimplePowertrainBuilder { get; }
 		public IAuxInProvider BusAux { get; }
 
 		public bool PTOActive { get; private set; }
