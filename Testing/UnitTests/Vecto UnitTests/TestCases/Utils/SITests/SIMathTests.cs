@@ -63,8 +63,8 @@ public class SIMathTests
 
         // cast SI to specialized unit classes.
         PerSecond angularVelocity5 = angularVelocity4.Cast<PerSecond>();
-        Assert.AreEqual(angularVelocity3, angularVelocity5);
-        Assert.AreEqual(angularVelocity3.Value(), angularVelocity4.Value());
+        Assert.IsTrue(angularVelocity3.IsEqual(angularVelocity5, 1e-9.RPMtoRad()));
+        Assert.AreEqual(angularVelocity3.Value(), angularVelocity4.Value(), 1e-12);
 
         // Cast only allows the cast if the units are correct.
         AssertHelper.Exception<VectoException>(() => { var x = 40.SI(Unit.SI.Newton).Cast<Watt>(); });

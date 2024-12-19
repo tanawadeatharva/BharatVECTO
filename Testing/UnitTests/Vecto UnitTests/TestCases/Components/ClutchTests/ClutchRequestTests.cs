@@ -94,7 +94,8 @@ public class ClutchRequestTests
 		var runData = new VectoRunData() {
 			GearshiftParameters = new ShiftStrategyParameters() {
 				StartAcceleration = 0.8.SI<MeterPerSquareSecond>()
-			}
+			},
+			Aux = new List<VectoRunData.AuxData>()
 		};
 		container.Setup(c => c.RunData).Returns(runData);
 
