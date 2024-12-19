@@ -12,15 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="TestCases\InputData\InputDataReader\**" />
-    <Compile Remove="Utils\ExtensionMethods\**" />
-    <EmbeddedResource Remove="TestCases\InputData\InputDataReader\**" />
-    <EmbeddedResource Remove="Utils\ExtensionMethods\**" />
-    <None Remove="TestCases\InputData\InputDataReader\**" />
-    <None Remove="Utils\ExtensionMethods\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="3.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
     <PackageReference Include="Moq" Version="4.18.4" />
@@ -36,7 +27,6 @@
 
   <ItemGroup>
     <Folder Include="TestCases\Components\Angledrive\" />
-    <Folder Include="TestCases\Components\TorqueConverter\" />
     <Folder Include="TestCases\DataAdapter\Engineering\" />
     <Folder Include="TestCases\DeclarationDataTests\CO2StandardsGroups\" />
     <Folder Include="TestCases\DeclarationDataTests\GenericModelParams\Vehicle\" />
