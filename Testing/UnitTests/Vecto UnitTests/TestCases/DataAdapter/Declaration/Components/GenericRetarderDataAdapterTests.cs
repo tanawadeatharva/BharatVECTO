@@ -17,7 +17,7 @@ namespace TUGraz.Vecto.UnitTests.TestCases.DataAdapter.Declaration.Components;
 
 public class GenericRetarderDataAdapterTests
 {
-	[TestCase(RetarderType.TransmissionInputRetarder)]
+	[Test]
 	public void TestGenericRetarderDataAdapter_Conventional([Values] RetarderType retarderType)
 	{
 		var dao = new GenericRetarderDataAdapter();
@@ -59,7 +59,7 @@ public class GenericRetarderDataAdapterTests
 		}
 	}
 
-	[TestCase(RetarderType.TransmissionInputRetarder)]
+	[Test]
 	public void TestGenericRetarderDataAdapter_ParallelHybrid([Values] RetarderType retarderType)
 	{
 		var dao = new GenericRetarderDataAdapter();
@@ -101,7 +101,7 @@ public class GenericRetarderDataAdapterTests
 		}
 	}
 
-	[TestCase(RetarderType.TransmissionInputRetarder)]
+	[Test]
 	public void TestGenericRetarderDataAdapter_SerialHybrid([Values] RetarderType retarderType)
 	{
 		var dao = new GenericRetarderDataAdapter();
@@ -143,7 +143,7 @@ public class GenericRetarderDataAdapterTests
 		}
 	}
 
-	[TestCase(RetarderType.TransmissionInputRetarder)]
+	[Test]
 	public void TestGenericRetarderDataAdapter_BatteryElectric([Values] RetarderType retarderType)
 	{
 		var dao = new GenericRetarderDataAdapter();

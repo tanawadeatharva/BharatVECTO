@@ -49,7 +49,8 @@ public class ElectricMotorTests
 
 		ctl.Setup(c => c.MechanicalAssistPower(It.IsAny<Second>(), It.IsAny<Second>(), It.IsAny<NewtonMeter>(),
 			It.IsAny<PerSecond>(), It.IsAny<PerSecond>(), It.IsAny<NewtonMeter>(), It.IsAny<NewtonMeter>(),
-			It.IsAny<PowertrainPosition>(), It.IsAny<bool>())).Returns(-torque.SI<NewtonMeter>());
+			It.IsAny<PowertrainPosition>(), It.IsAny<bool>()))
+			.Returns(-torque.SI<NewtonMeter>());
 
 		motor.Initialize(0.SI<NewtonMeter>(), speed.RPMtoRad());
 
