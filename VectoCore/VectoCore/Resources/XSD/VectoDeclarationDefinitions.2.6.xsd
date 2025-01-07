@@ -944,10 +944,10 @@
 		<xs:sequence>
 			<xs:element name="Entry" type="v2.3:ElectricMachineSystemMaxTorqueEntryType" minOccurs="2" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="gear" use="required">
+		<xs:attribute name="gear" use="optional">
 			<xs:simpleType>
 				<xs:restriction base="xs:int">
-					<xs:minInclusive value="0"/>
+					<xs:minInclusive value="1"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
