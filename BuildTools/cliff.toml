@@ -5,6 +5,8 @@
 # Configuration options are organized into tables and keys.
 # See documentation for more information on available options.
 
+# Note: To get the context for a given command run said command with -x flag.
+
 [changelog]
 # template for the changelog footer
 header = """
@@ -29,7 +31,7 @@ body = """
     {% for commit in commits %}
           - {% if commit.breaking %}[**breaking**] {% endif %}\
               {% if not commit.footers -%} {{ commit.message | upper_first }} {% endif %}\
-              {% if commit.footers -%}
+              {% if commit.footers | length > 2 -%}
                 {% if commit.footers.1.token == "issue" and commit.footers.1.value != "" -%}
                   CodeEU {{ commit.footers.1.value }}: {{ commit.message | upper_first }}\
                 {% elif commit.footers.1.token == "" -%}
@@ -38,6 +40,8 @@ body = """
                 {#{% if commit.footers.2.token == "description" and commit.footers.2.value != "" %}
                   <p>{{ commit.footers.2.value }}</p>
                 {% endif -%} -#}
+              {% else -%}
+                {{ commit.message | upper_first }}
               {% endif -%}
     {% endfor -%}
 {% endfor -%}\n
