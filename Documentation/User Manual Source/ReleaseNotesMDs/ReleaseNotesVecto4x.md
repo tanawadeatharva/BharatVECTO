@@ -6,6 +6,15 @@
 
 
 
+# VECTO v4.2.6 Official Release (07-01-2025)
+
+
+## Bug Fixes
+
+- CodeEU #858: Convert steering pump tech (vecto/vecto!303)
+
+
+
 # VECTO v4.2.6-RC (06-12-2024)
 
 
