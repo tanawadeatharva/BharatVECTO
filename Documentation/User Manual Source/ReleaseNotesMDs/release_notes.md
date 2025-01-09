@@ -1,5 +1,5 @@
 
-## VECTO v4.2.6 Official Release (07-01-2025)
+## VECTO v4.2.7 Official Release (09-01-2025)
 
 ### Bug Fixes
 

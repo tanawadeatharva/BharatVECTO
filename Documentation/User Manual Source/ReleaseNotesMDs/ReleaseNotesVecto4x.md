@@ -6,7 +6,7 @@
 
 
 
-# VECTO v4.2.6 Official Release (07-01-2025)
+# VECTO v4.2.7 Official Release (09-01-2025)
 
 ## Bug Fixes
 
@@ -14,15 +14,6 @@
 - CodeEU #858: Convert steering pump tech (vecto/vecto!303)
 - Converter Tool: ngTankSystem for dual fuel (vecto/vecto!304)
 - CodeEU #836: Restrictions on IEPC gear and MaxTorqueCurve XSD attributes (vecto/vecto!302)
-
-
-
-# VECTO v4.2.6 Official Release (07-01-2025)
-
-
-## Bug Fixes
-
-- CodeEU #858: Convert steering pump tech (vecto/vecto!303)
 
 
 
