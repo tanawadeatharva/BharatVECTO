@@ -9,20 +9,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 	{
 		public APTNShiftStrategy(IVehicleContainer dataBus) : base(dataBus, false)
 		{
-			//VelocityDropData.Data = new[] {
-			//	new VelocitySpeedGearshiftPreprocessor.Entry() {
-			//		StartVelocity = 0.KMPHtoMeterPerSecond(), EndVelocity = 0.KMPHtoMeterPerSecond(), Gradient = VectoMath.InclinationToAngle(-20),
-			//	},
-			//	new VelocitySpeedGearshiftPreprocessor.Entry() {
-			//		StartVelocity = 0.KMPHtoMeterPerSecond(), EndVelocity = 0.KMPHtoMeterPerSecond(), Gradient = VectoMath.InclinationToAngle(20),
-			//	},
-			//	new VelocitySpeedGearshiftPreprocessor.Entry() {
-			//		StartVelocity = 200.KMPHtoMeterPerSecond(), EndVelocity = 200.KMPHtoMeterPerSecond(), Gradient = VectoMath.InclinationToAngle(-20),
-			//	},
-			//	new VelocitySpeedGearshiftPreprocessor.Entry() {
-			//		StartVelocity = 200.KMPHtoMeterPerSecond(), EndVelocity = 200.KMPHtoMeterPerSecond(), Gradient = VectoMath.InclinationToAngle(20),
-			//	},
-			//};
 			if (dataBus.RunData.VehicleData == null) {
 				return;
 			}

@@ -85,8 +85,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public override VelocityRollingLookup VelocityDropData { get; } = new VelocityRollingLookup();
-
 		private void SetupVelocityDropPreprocessor(IVehicleContainer dataBus)
 		{
 			var runData = dataBus.RunData;
@@ -326,23 +324,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		//protected ResponseDryRun RequestDryRunWithGear(
-		//	Second absTime, Second dt, MeterPerSecond vehicleSpeed, MeterPerSquareSecond acceleration, uint tryNextGear)
-		//{
-		//	LogEnabled = false;
-		//	TestContainerGbx.Disengaged = false;
-		//	TestContainerGbx.Gear = tryNextGear;
-
-		//	//TestContainer.GearboxOutPort.Initialize(outTorque, outAngularVelocity);
-		//	TestContainer.VehiclePort.Initialize(vehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient);
-		//	var response = (ResponseDryRun)TestContainer.VehiclePort.Request(
-		//		0.SI<Second>(), dt, acceleration, DataBus.DrivingCycleInfo.RoadGradient, true);
-
-		//	//var response = (ResponseDryRun)TestContainer.GearboxOutPort.Request(
-		//	//	0.SI<Second>(), dt, outTorque, outAngularVelocity, true);
-		//	LogEnabled = true;
-		//	return response;
-		//}
 
 		protected override ResponseDryRun RequestDryRunWithGear(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition tryNextGear)

@@ -227,7 +227,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
                 }
             }
 
-            // normal shift when all requirements are fullfilled ------------------
+            // normal shift when all requirements are fulfilled ------------------
             var minimumShiftTimePassed =
                 (lastShiftTime + GearshiftParams.TimeBetweenGearshifts).IsSmallerOrEqual(absTime);
             if (!minimumShiftTimePassed)
