@@ -72,6 +72,8 @@ namespace TUGraz.VectoMockup
 
 		#region Implementation of IModalDataContainer
 
+		public bool WriteModalResults { get; set; }
+
 		public object this[ModalResultField key]
 		{
 			get => _modalDataContainerImplementation[key];

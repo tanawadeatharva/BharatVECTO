@@ -12,13 +12,20 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using System.Collections.Generic;
+using Ninject;
+using TUGraz.VectoCore.Models.Simulation;
 
 namespace TUGraz.VectoCore.Tests.Integration
 {
+	
+
     [TestFixture]
 	[Parallelizable(ParallelScope.All)]
     public class Auxiliaries
     {
+		private IPowertrainBuilder PowertrainBuilder;
+		public IModalDataFactory ModDataFactory;
+
         private const string TRACTOR_AT_JOB = @"TestData/Integration/ConventionalTimeruns/Class5_Tractor_4x2/Class5_Tractor_ENG_Aux.vecto";
 
         private const string E2_JOB = @"TestData\Integration\Auxiliaries\GenericVehicleE2\BEV_ENG.vecto";
@@ -33,9 +40,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public void Init()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			PowertrainBuilder = kernel.Get<IPowertrainBuilder>();
+			ModDataFactory = kernel.Get<IModalDataFactory>();
 		}
-		
-        [Category("Integration")]
+
+
+		[Category("Integration")]
 		[Ignore("Temporarily disabling fix for codeu issue 15 because it causes distance-based testcases to fail")]
         [
 			TestCase(TRACTOR_AT_JOB, TestName = "Tractor AT distance Padd cycle")
@@ -46,7 +57,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
 			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactoryEngineering(dataProvider, fileWriter, false) {
+			var runsFactory = new SimulatorFactoryEngineering(dataProvider, fileWriter, false, PowertrainBuilder, ModDataFactory) {
 				ModalResults1Hz = false,
 				WriteModalResults = true,
 				ActualModalData = false
@@ -77,7 +88,7 @@ namespace TUGraz.VectoCore.Tests.Integration
             var sumWriter = new SummaryDataContainer(fileWriter);
             var jobContainer = new JobContainer(sumWriter);
             var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
-            var runsFactory = new SimulatorFactoryEngineering(dataProvider, fileWriter, false)
+            var runsFactory = new SimulatorFactoryEngineering(dataProvider, fileWriter, false, PowertrainBuilder, ModDataFactory)
             {
                 ModalResults1Hz = false,
                 WriteModalResults = true,
@@ -124,7 +135,7 @@ namespace TUGraz.VectoCore.Tests.Integration
             var sumWriter = new SummaryDataContainer(fileWriter);
             var jobContainer = new JobContainer(sumWriter);
             var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
-            var runsFactory = new SimulatorFactoryEngineering(dataProvider, fileWriter, false)
+            var runsFactory = new SimulatorFactoryEngineering(dataProvider, fileWriter, false, PowertrainBuilder, ModDataFactory)
             {
                 ModalResults1Hz = false,
                 WriteModalResults = true,

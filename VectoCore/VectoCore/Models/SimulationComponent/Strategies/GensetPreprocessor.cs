@@ -17,15 +17,15 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 {
-	public class GensetPreprocessor : ISimulationPreprocessor
+    public class GensetPreprocessor : ISimulationPreprocessor
 	{
-		protected TestGenset Genset;
+		protected ITestGenset Genset;
 		private CombustionEngineData IceData;
 		private ElectricMotorData EmData;
 		protected GenSetCharacteristics OptimalPoints;
 		private readonly IVehicleContainer _container;
 
-		public GensetPreprocessor(GenSetCharacteristics optimalPoints, TestGenset testGenSet, CombustionEngineData engineData,
+		public GensetPreprocessor(GenSetCharacteristics optimalPoints, ITestGenset testGenSet, CombustionEngineData engineData,
 			ElectricMotorData electricMotorData, IVehicleContainer container)
 		{
 			Genset = testGenSet;
@@ -59,17 +59,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				.FullLoadEntries.Select(x =>
 					new ElectricMotorFullLoadCurve.FullLoadEntry() {
 						FullGenerationTorque =
-							Genset.ElectricMotor.ConvertEmTorqueToDrivetrain(x.MotorSpeed, VectoMath.Min(continuousTq ,x.FullGenerationTorque), false),
+							Genset.ConvertEmTorqueToDrivetrain(x.MotorSpeed, VectoMath.Min(continuousTq ,x.FullGenerationTorque), false),
 						FullDriveTorque =
-							Genset.ElectricMotor.ConvertEmTorqueToDrivetrain(x.MotorSpeed, VectoMath.Max(-continuousTq, x.FullDriveTorque), false),
-						MotorSpeed = Genset.ElectricMotor.ConvertEmSpeedToDrivetrain(x.MotorSpeed)
+							Genset.ConvertEmTorqueToDrivetrain(x.MotorSpeed, VectoMath.Max(-continuousTq, x.FullDriveTorque), false),
+						MotorSpeed = Genset.ConvertEmSpeedToDrivetrain(x.MotorSpeed)
 					}).Where(x => x.MotorSpeed.IsSmallerOrEqual(maxSpeed)).ToList());
 			if (!emFldDrivetrain.FullLoadEntries.Any(x => x.MotorSpeed.IsEqual(maxSpeed))) {
 				emFldDrivetrain.FullLoadEntries.Add(new ElectricMotorFullLoadCurve.FullLoadEntry() {
 					FullGenerationTorque =
-						Genset.ElectricMotor.ConvertEmTorqueToDrivetrain(maxSpeed, VectoMath.Min(continuousTq, emFldDrivetrain.FullGenerationTorque(maxSpeed)), false),
+						Genset.ConvertEmTorqueToDrivetrain(maxSpeed, VectoMath.Min(continuousTq, emFldDrivetrain.FullGenerationTorque(maxSpeed)), false),
 					FullDriveTorque =
-						Genset.ElectricMotor.ConvertEmTorqueToDrivetrain(maxSpeed, VectoMath.Max(-continuousTq, emFldDrivetrain.FullLoadDriveTorque(maxSpeed)), false),
+						Genset.ConvertEmTorqueToDrivetrain(maxSpeed, VectoMath.Max(-continuousTq, emFldDrivetrain.FullLoadDriveTorque(maxSpeed)), false),
 					MotorSpeed = maxSpeed
 				});
 			}
@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var ratedSpeed = combinedFld.RatedSpeed;
 			Genset.ElectricMotorCtl.EMTorque = combinedFld.FullLoadStationaryTorque(ratedSpeed);
 			Genset.ElectricMotor.Initialize(combinedFld.FullLoadStationaryTorque(ratedSpeed), ratedSpeed);
-			var response = Genset.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), ratedSpeed);
+			var response = Genset.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), ratedSpeed, false);
 
 			if (response is ResponseSuccess) {
 				var fc = IceData.Fuels.Sum(x =>
@@ -151,10 +151,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var tolerance = 0.5 / 100;
 
 			Genset.Battery?.Initialize(Genset.Battery.MinSoC);
-			if (Genset.BatterySystem != null) {
-				foreach (var bsKey in Genset.BatterySystem.Batteries.Keys) {
-					for (var i = 0; i < Genset.BatterySystem.Batteries[bsKey].Batteries.Count; i++) {
-						Genset.BatterySystem.Batteries[bsKey].Batteries[i]
+			if (Genset.BatterySystem is BatterySystem bs) {
+				foreach (var bsKey in bs.Batteries.Keys) {
+					for (var i = 0; i < bs.Batteries[bsKey].Batteries.Count; i++) {
+						bs.Batteries[bsKey].Batteries[i]
 							.Initialize(Genset.BatterySystem.MinSoC);
 					}
 				}
@@ -181,7 +181,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 						Genset.ElectricMotorCtl.EMTorque = tq;
 
-						var response = Genset.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), speed);
+						var response = Genset.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), speed, false);
 						responses.Add(Tuple.Create(speed, response));
 						if (response is ResponseSuccess) {
 							var fc = IceData.Fuels.Sum(x =>

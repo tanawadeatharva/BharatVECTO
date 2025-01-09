@@ -26,6 +26,7 @@ Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 
 Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Models.Simulation
 Imports TUGraz.VectoCore.Models.Simulation.Data
 Imports TUGraz.VectoCore.Models.Simulation.Impl
 Imports TUGraz.VectoCore.Models.SimulationComponent
@@ -1100,7 +1101,9 @@ Public Class GearboxForm
                 .GearshiftParameters = New  ShiftStrategyParameters(), 
                 .JobType = VectoSimulationJobType.BatteryElectricVehicle
                 }
-        Dim tmpStrategy as IShiftPolygonCalculator = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData))
+        Dim kernel As IKernel = new StandardKernel(new VectoNinjectModule)
+        dim ptBuilder as IPowertrainBuilder = kernel.Get(of IPowertrainBuilder)()
+        Dim tmpStrategy as IShiftPolygonCalculator = ptBuilder.GetShiftStrategy(new DummyVehicleContainer(tmpRunData))
         
         dim em as ElectricMotorData = ConvertToElectricMotorData(emFld, gear)
 
@@ -1111,6 +1114,8 @@ Public Class GearboxForm
             (rDyn), em)
         Return shiftLines
     End Function
+
+
 
     Private Function GetShiftLines(idleSpeed As PerSecond, engineFullLoadCurve As EngineFullLoadCurve, vehicle As IVehicleEngineeringInputData, gears As IList(Of ITransmissionInputData), gear As Integer) _
         As ShiftPolygon
@@ -1139,7 +1144,9 @@ Public Class GearboxForm
             },
             .JobType = _vehicleJobType
         }
-        Dim tmpStrategy as IShiftPolygonCalculator = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData))
+        Dim kernel As IKernel = new StandardKernel(new VectoNinjectModule)
+        dim ptBuilder as IPowertrainBuilder = kernel.Get(of IPowertrainBuilder)()
+        Dim tmpStrategy as IShiftPolygonCalculator = ptBuilder.GetShiftStrategy(new DummyVehicleContainer(tmpRunData))
             
 
         Dim shiftLines As ShiftPolygon = tmpStrategy.ComputeDeclarationShiftPolygon(
@@ -1298,6 +1305,16 @@ Public Class GearboxForm
             End If
         End If
     End Sub
+
+    Private Class DummyVehicleContainer
+        Inherits VehicleContainer
+        Implements IVehicleContainer
+
+        Public Sub New(vectoRunData As VectoRunData) 
+            MyBase.New(vectoRunData, Nothing, Nothing, Nothing)
+            Throw New NotImplementedException
+        End Sub
+    End Class
 End Class
 
 

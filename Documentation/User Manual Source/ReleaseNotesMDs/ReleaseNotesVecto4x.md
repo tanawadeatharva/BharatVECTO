@@ -6,6 +6,42 @@
 
 
 
+# VECTO v4.2.7 Official Release (09-01-2025)
+
+## Bug Fixes
+
+- Track release_notes.md for release
+- CodeEU #858: Convert steering pump tech (vecto/vecto!303)
+- Converter Tool: ngTankSystem for dual fuel (vecto/vecto!304)
+- CodeEU #836: Restrictions on IEPC gear and MaxTorqueCurve XSD attributes (vecto/vecto!302)
+
+
+
+# VECTO v4.2.6-RC (06-12-2024)
+
+
+## Features
+
+- Support Gitlab issue pattern (vecto/vecto!272)
+- CodeEU #854: Verify primary bus VIF hash against Job (vecto/vecto!295)
+- CodeEU #833, #834, #835, #836, #837: Add 3rd amendment XSD definitions (vecto/vecto!291)
+- CodeEU #838: Include Engine into v2.6 (vecto/vecto!297)
+
+## Bug Fixes
+
+- Homogenize versions across tools (vecto/vecto!270)
+- CodeEU #807: Produce same data from ADC loss map (#807) (vecto/vecto!278)
+- Authors and readme metadata content (vecto/vecto!277)
+- CodeEU #809: Writing engine information in MRF (#809) (vecto/vecto!275)
+- CodeEU #842, #840, #841, #839, #798: Driver model: in case of an APT vehicle where the driving action is Brake... (vecto/vecto!287)
+- CodeEU #812, #788: Conversion of doubles for SI (vecto/vecto!283)
+- CodeEU #750, #758, #769, #816, #821, #829: Avoid wrong upshift and downshift for light SMT vehicles (vecto/vecto!290)
+- CodeEU #844, #705, #530: During a coasting action (look-ahead coasting) a gear hunting occurs in the... (vecto/vecto!289)
+- CodeEU #784: Override DoWriteModalResult for VTP (vecto/vecto!294)
+- CodeEU #495, #642, #739: Add SMT downshift condition - DroppedSpd>DisengSpd (vecto/vecto!293)
+
+
+
 # VECTO v4.2.5 Official Release (02-10-2024)
 
 
@@ -26,7 +62,7 @@
 
 # Vecto 4.2.2.3539 RELEASE CANDIDATE (09-09-2024)
 
-<span style="color:#000000"> __Bugfixes__ </span>
+## Bug Fixes
 
 * <span style="color:#000000">CodeEU\-710: Hashing tool check fail with VECTO version 3330</span>
 * <span style="color:#000000">CodeEU\-711: Hashing tool check fail with VECTO 4.1.3.3415</span>
@@ -41,11 +77,11 @@
 
 # Vecto 4.2.1.3469 OFFICIAL RELEASE (01-07-2024)
 
-<span style="color:#000000"> __Features__ </span>
+## Features
 
 * <span style="color:#000000">CodeEU\-726: Build an XML converter tool for older VECTO jobs</span>
 
-<span style="color:#000000"> __Bugfixes__ </span>
+## Bug Fixes
 
 * <span style="color:#000000">CodeEU\-719: the six new tyre dimensions from line 126 onwards to the latest "wheels\.csv" file in the VECTO repository</span>
 * <span style="color:#000000">CodeEU\-717: VECTO\-4\.2\.0\.3448\-RC \- Buses AMT Gearbox Type with 1% higher C02 in primary results</span>
@@ -58,7 +94,7 @@
 
 # Vecto 4.2.0.3448 RELEASE CANDIDATE (10-06-2024)
 
-<span style="color:#000000"> __Features__ </span>
+## Features
 
 <span style="color:#000000">CodeEU\-696: Double summary in CIF for vocationals and non vocational missions\.</span>
 
@@ -68,7 +104,7 @@
 
 <span style="color:#000000">CodeEU\-676: Feature: Implement monitoring report</span>
 
-<span style="color:#000000"> __Bugfixes \(1/4\)__ </span>
+## Bug fixes (1/4)
 
 * <span style="color:#000000">CodeEU\-471: VectoSimulationException: VF640J869RB022573</span>
 
@@ -92,7 +128,7 @@
 
 * <span style="color:#000000">CodeEU\-394: Article10\-2\-issue | Order\-Nr 28204065 | HEV P1 Error Mercedes\-Benz and Setra Hybrid Buses</span>
 
-<span style="color:#000000"> __Bugfixes \(2/4\)__ </span>
+## Bug fixes (2/4)
 
 * <span style="color:#000000">CodeEU\-433: Article10\-2\-issue | Order\-Nr 28192321 | HEV P1 Error Mercedes\-Benz and Setra Hybrid Buses</span>
 
@@ -122,7 +158,7 @@
 
 * <span style="color:#000000">CodeEU\-529: Article10\-2\-issue | VECTO\-4\.0\.3 | Order\-Nr 28199994 | HEV P1 Error Mercedes\-Benz and Setra Hybrid Buses</span>
 
-<span style="color:#000000"> __Bugfixes \(3/4\)__ </span>
+## Bug fixes (3/4)
 
 * <span style="color:#000000">CodeEU\-544: IVECO confidential : BUG REPORT : HEV\-P1 : CRW LE C9 VOITH NXT CRU 48V mild hybrid</span>
 
@@ -142,7 +178,7 @@
 
 * <span style="color:#000000">CodeEU\-674: Article10\-2\-issue | VECTO\-4\.1\.3 | Order\-Nr 28211540 | HEV P1 Error Mercedes\-Benz and Setra Hybrid Buses</span>
 
-<span style="color:#000000"> __Bugfixes \(4/4\)__ </span>
+## Bug fixes (4/4)
 
 * <span style="color:#000000">CodeEU\-678: Article10\-2\-issue | VECTO\-4\.1\.3 | Order\-Nr 28192673 | HEV P1 Error Mercedes\-Benz and Setra Hybrid Buses</span>
 
@@ -158,10 +194,10 @@
 
 # Vecto 4.1.3.3415 OFFICIAL RELEASE (08-05-2024)
 
-* __Hotfixes__
+## Hot fixes
   * <span style="color:#000000">CodeEU\-638: Incorrect construction payloads for group 9 non\-vocational vehicle</span>
 
-* __Bugfixes__
+## Bug fixes
   * <span style="color:#000000">CodeEU\-615: Multistep freezes after loading VIF chassis</span>
   * <span style="color:#000000">CodeEU\-616: Multistep tool freezes</span>
   * <span style="color:#000000">CodeEU\-619: restore wrong exempted techs in XSD for backwards compatibility</span>
@@ -170,8 +206,10 @@
 
 # Vecto 4.1.0.3392 RELEASE CANDIDATE (15-04-2024)
 
-* <span style="color:#000000"> __Features__ </span>  __CodeEU\-577: Add missing mission profiles to vocational and non\-vocational__
-* <span style="color:#000000"> __Bugfixes \(1/4\)__ </span>
+## Features
+  * <span style="color:#000000">CodeEU\-577: Add missing mission profiles to vocational and non\-vocational</span>
+
+## Bug fixes (1/4)
   * <span style="color:#000000">CodeEU\-331: Gear 1 DrivingActionAccelerate: Fail</span>
   * <span style="color:#000000">CodeEU\-367: Gear 1 DrivingActionAccelerate: Fail</span>
   * <span style="color:#000000">CodeEU\-372: ADT Error on Bus Category Primary Vehicle Simulation on VECTO</span>
@@ -184,7 +222,7 @@
   * <span style="color:#000000">CodeEU\-449: Finished Run VEH\-PrimaryBus\_nonSmart Interurban \_P32SD\_ReferenceLoad with ERROR: 16</span>
   * <span style="color:#000000">CodeEU\-478: Finished Run VEH\-PrimaryBus\_nonSmart Urban \_P31SD\_ReferenceLoad with ERROR: 4 \(Urban \_P31SD\_ReferenceLoad\) \- absTime: 8606\.6241 \[s\]\, distance: 39112\.5127 \[m\]\, dt: 1\.1131 \[s\]\, v: 0\.1833 \[m/s\]\, Gear: 1 | DrivingActionAccelerate: Failed to find operating poi</span>
 
-* <span style="color:#000000"> __Bugfixes \(2/4\)__ </span>
+## Bug fixes (2/4)
   * <span style="color:#000000">CodeEU\-481: Finished Run VEH\-PrimaryBus\_nonSmart Urban \_P31SD\_ReferenceLoad with ERROR: 4 \(Urban \_P31SD\_ReferenceLoad\) \- absTime: 8606\.6241 \[s\]\, distance: 39112\.5127 \[m\]\, dt: 1\.1131 \[s\]\, v: 0\.1833 \[m/s\]\, Gear: 1 |</span>
   * <span style="color:#000000">CodeEU\-488: Finished Run VEH\-PrimaryBus\_nonSmart Urban \_P31SD\_ReferenceLoad with ERROR: 4 \(Urban \_P31SD\_ReferenceLoad\) \- absTime: 8606\.6241 \[s\]\, distance: 39112\.5127 \[m\]\, dt: 1\.1131 \[s\]\, v: 0\.1833 \[m/s\]\, Gear: 1 | DrivingActionAccelerate: Failed to find operating poi</span>
   * <span style="color:#000000">CodeEU\-494: Finished Run VEH\-PrimaryBus\_nonSmart Urban \_P31SD\_ReferenceLoad with ERROR: 26 \(Urban \_P31SD\_ReferenceLoad\) \- absTime: 8606\.6241 \[s\]\, distance: 39112\.5127 \[m\]\, dt: 1\.1131 \[s\]\, v: 0\.1833 \[m/s\]\, Gear: 1 | DrivingActionAccelerate: Failed to fi</span>
@@ -199,7 +237,7 @@
   * <span style="color:#000000">CodeEU\-547: Max ICE Off timespan for buses</span>
   * <span style="color:#000000">CodeEU\-583: Incorrect internal resistance for SuperCap used in factor method</span>
 
-* <span style="color:#000000"> __Bugfixes \(3/4\)__ </span>
+## Bug fixes (3/4)
   * <span style="color:#000000">CodeEU\-571: Article10\-2\-issue | VECTO\-4\.0\.3 | Order\-Nr 28202896 | HEV P1 Error Mercedes\-Benz and Setra Hybrid Buses</span>
   * <span style="color:#000000">CodeEU\-526: VTP calculation aborted on fuel consumption map</span>
   * <span style="color:#000000">CodeEU\-502: Error in VECTO calculation WMA10CZZ0RF022326</span>
@@ -215,7 +253,7 @@
   * <span style="color:#000000">CodeEU\-516: Article10\-2\-issue | VECTO\-4\.0\.3 | Order\-Nr 28208044 | HEV P1 Error Mercedes\-Benz and Setra Hybrid Buses</span>
   * <span style="color:#000000">CodeEU\-517: Article10\-2\-issue | VECTO\-4\.0\.3 | Order\-Nr 28208037 | HEV P1 Error Mercedes\-Benz and Setra Hybrid Buses</span>
 
-* <span style="color:#000000"> __Bugfixes \(4/4\)__ </span>
+## Bug fixes (4/4)
   * <span style="color:#000000">CodeEU\-519: Article10\-2\-issue | VECTO\-4\.0\.3 | Order\-Nr 10098181 | HEV P1 Error Mercedes\-Benz and Setra Hybrid Buses</span>
   * <span style="color:#000000">CodeEU\-527: Article10\-2\-issue | VECTO\-4\.0\.3 | Order\-Nr 28196233 | HEV P1 Error Mercedes\-Benz and Setra Hybrid Buses</span>
   * <span style="color:#000000">CodeEU\-528: Article10\-2\-issue | VECTO\-4\.0\.3 | Order\-Nr 28196652 | HEV P1 Error Mercedes\-Benz and Setra Hybrid Buses</span>
@@ -225,7 +263,7 @@
 
 # Vecto 4.0.3.3330 OFFICIAL RELEASE (13-02-2024)
 
-* <span style="color:#000000"> __Bugfixes__ </span>
+* ## Bug Fixes
   * <span style="color:#000000">CodeEU\-293: DistanceRun got an unexpected response</span>
   * <span style="color:#000000">CodeEU\-298: Object reference not set to an instance of an object</span>
   * <span style="color:#000000">CodeEU\-300: Full drive torque miscalculation</span>
@@ -245,11 +283,11 @@
 
 # Vecto 4.0.2.3275 OFFICIAL RELEASE (20-12-2023)
 
-* <span style="color:#000000"> __Hotfix__ </span>
+## Hot fix
   * <span style="color:#000000">CodeEU\-273\, CodeEU\-274: Changes in the AMT shift strategy regarding idling speed caused simulation aborts</span>
   * <span style="color:#000000">CodeEU\-260: regression fix handling overload buffer</span>
 
-* <span style="color:#000000"> __Bugfixes \(1/2\)__ </span>
+## Bug fixes (1/2)
   * <span style="color:#000000">CodeEU\-94: DistanceRun got an unexpected response</span>
   * <span style="color:#000000">CodeEU\-153: DrivingActionAccelerate: Failed to find operating point after Overload</span>
   * <span style="color:#000000">CodeEU\-158: Urban RefLoad DrivingActionAccelerate: Failed to find operating point \(IEPC Wheelhub 1 measured\)</span>
@@ -270,7 +308,7 @@
   * <span style="color:#000000">CodeEU\-243: Simulation aborted: Gear 5 Lossmap not sufficiant</span>
   * <span style="color:#000000">CodeEU\-244: Signature validation fails for old \(prior to v4\) Manufacturer reports</span>
 
-* <span style="color:#000000"> __Bugfixes \(2/2\)__ </span>
+## Bug fixes (2/2)
   * <span style="color:#000000">CodeEU\-249: Fix handling gear torque limits in case of IEPC WheelHub motor and only one side is measured</span>
   * <span style="color:#000000">CodeEU\-250: Maximum vehicle speed exceeded during pre\-processing</span>
   * <span style="color:#000000">CodeEU\-253: Replace VTP HeavyBus in Generic Vehicles with VTP Truck</span>
@@ -282,9 +320,10 @@
 
 # Vecto 4.0.1.3217 OFFICIAL RELEASE (23-10-2023)
 
-* <span style="color:#000000"> __Improvements__ </span>
+## Improvements
   * <span style="color:#000000">VTP mode: create zip archive for input and output files</span>
-* <span style="color:#000000"> __Bugfixes__ </span>
+
+## Bug Fixes
   * <span style="color:#000000">bugfix in CIF for complete\(d\) buses \- do not write PrimaryVehicleSubgroup element</span>
   * <span style="color:#000000">fix hybrid strategy: power comparison</span>
   * <span style="color:#000000">fix exempted vehicles do not work \(error message that XML version is not supported\)</span>

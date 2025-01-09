@@ -30,7 +30,6 @@
 */
 
 using NUnit.Framework;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
@@ -46,7 +45,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestCase]
 		public void VechicleContainerHasEngine()
 		{
-			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
+			var vehicle = VehicleContainer.CreateVehicleContainer(null, null, null);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 0);
 			var engine = new CombustionEngine(vehicle, engineData);
 

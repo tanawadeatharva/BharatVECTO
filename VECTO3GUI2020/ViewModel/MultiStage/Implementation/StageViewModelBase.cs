@@ -83,7 +83,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private bool _showSaveAndCloseButtons = false;
 
 
-
 		public bool ShowSaveAndCloseButtons
 		{
 			get => _showSaveAndCloseButtons;
@@ -129,15 +128,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public ICommand SaveInputDataAsCommand =>
 			_saveInputDataAsCommand ?? new RelayCommand(() => { SaveInputDataExecute(filename: null); }, () => true);
 
-
-
-
-
         private ICommand _loadVehicleDataCommand;
 		private string _vehicleInputDataFilePath;
-
-
-
 
 		public ICommand LoadVehicleDataCommand
 		{

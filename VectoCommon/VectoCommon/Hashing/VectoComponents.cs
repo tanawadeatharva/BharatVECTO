@@ -55,6 +55,7 @@ namespace TUGraz.VectoCommon.Hashing
 		ElectricMachineSystem,
 		IEPC,
 		ADC,
+		FuelCell,
 		CertifiedAeroReduction,
 		ElectricEnergyStorage
 	}
@@ -100,6 +101,8 @@ namespace TUGraz.VectoCommon.Hashing
 					return XMLNames.Component_IEPC;
 				case VectoComponents.ADC:
 					return XMLNames.Component_ADC;
+				case VectoComponents.FuelCell:
+					return XMLNames.Component_FuelCell;
 				case VectoComponents.CertifiedAeroReduction:
 					return XMLNames.Component_CertifiedAeroReduction;
 				case VectoComponents.ElectricEnergyStorage:
@@ -163,6 +166,8 @@ namespace TUGraz.VectoCommon.Hashing
 					return "IEPC-";
 				case VectoComponents.ADC:
 					return "ADC-";
+				case VectoComponents.FuelCell:
+					return "FC-";
 				case VectoComponents.CertifiedAeroReduction:
 					return "AERO-";
 				case VectoComponents.ElectricEnergyStorage:

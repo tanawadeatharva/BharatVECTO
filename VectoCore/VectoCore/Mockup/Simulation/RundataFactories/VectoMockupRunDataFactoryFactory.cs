@@ -13,6 +13,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.OutputData;
 
 
@@ -24,9 +25,12 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 
 		private IDeclarationCycleFactory _cycleFactory;
 
-		public VectoMockUpRunDataFactoryFactory(IDeclarationCycleFactory cycleFactory)
+        protected IPowertrainBuilder PowertrainBuilder;
+
+		public VectoMockUpRunDataFactoryFactory(IDeclarationCycleFactory cycleFactory, IPowertrainBuilder ptBuilder)
 		{
 			_cycleFactory = cycleFactory;
+            PowertrainBuilder = ptBuilder;
 		}
 
         public IVectoRunDataFactory CreateDeclarationRunDataFactory(IInputDataProvider inputDataProvider,
@@ -61,7 +65,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 					multiStepVifInputData,
 					report, new DeclarationDataAdapterSpecificCompletedBus.Conventional(),
 					new DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.Conventional(),
-					_cycleFactory, null);
+					_cycleFactory, null, PowertrainBuilder);
 			}
 			else {
 				return new DeclarationModeMultistageBusVectoRunDataFactory(multiStepVifInputData, report);
@@ -75,7 +79,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
             if (vehicleCategory.IsLorry())
             {
                 return new MockupLorryVectoRunDataFactory(declDataProvider, report, new DeclarationDataAdapterHeavyLorry.Conventional(), 
-					_cycleFactory, null);
+					_cycleFactory, null, PowertrainBuilder);
             }
 
             if (vehicleCategory.IsBus())
@@ -87,7 +91,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                         //return new DeclarationModeMultistageBusVectoRunDataFactory(declDataProvider, report);
                     case VehicleCategory.HeavyBusPrimaryVehicle:
                         return new PrimaryBusMockupRunDataFactory(declDataProvider, report, new DeclarationDataAdapterPrimaryBus.Conventional(),
-							_cycleFactory, null);
+							_cycleFactory, null, PowertrainBuilder);
                     default:
                         break;
                 }

@@ -354,16 +354,11 @@ namespace TUGraz.VectoCommon.Utils
 			return new ConvertedSI(m3pm3m.Value() * CubicMeterToLiter * Kilo, "l/m³-km");
 		}
 
-	
-
 		public static Meter ConvertToMeter(this ConvertedSI mm)
 		{
 			if (mm.Units != "mm") {
 				return null;
 			}
-			//return ElementExists(XMLNames.Bus_HeighIntegratedBody)
-			//	? GetDouble(XMLNames.Bus_HeighIntegratedBody).SI(Unit.SI.Milli.Meter).Cast<Meter>()
-			//	: null;
 
 			return mm.Value.SI(Unit.SI.Milli.Meter).Cast<Meter>();
 		}

@@ -2,6 +2,7 @@
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -11,7 +12,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class DummyGearboxInfo : VectoSimulationComponent, IGearboxInfo
 	{
-		public DummyGearboxInfo(VehicleContainer container, GearshiftPosition gear = null) : base(container)
+		public DummyGearboxInfo(IVehicleContainer container, GearshiftPosition gear = null) : base(container)
 		{
 			Gear = gear ?? new GearshiftPosition(1);
 		}

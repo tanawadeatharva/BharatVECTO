@@ -34,8 +34,6 @@
 			<Net48VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net48\*.dll*"/>
 			<Net48VectoMultistep Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net48\*.exe*"/>
 			<Net48VectoMultistep Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net48\*.dll*"/>
-			<Net48XMLConverterCmdLine Include="$(SolutionDir)XMLConverterCmdLine\bin\Release\net48\*.exe*"/>
-			<Net48XMLConverterCmdLine Include="$(SolutionDir)XMLConverterCmdLine\bin\Release\net48\*.dll*"/>
 		</ItemGroup>
 
 		<!--MockupDeploy-->
@@ -52,15 +50,12 @@
 			<Net48VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\MockupRelease\net48\*.dll*" />
 			<Net48VectoMultistep Include="$(SolutionDir)VECTO3GUI2020\bin\MockupRelease\net48\*.exe*" />
 			<Net48VectoMultistep Include="$(SolutionDir)VECTO3GUI2020\bin\MockupRelease\net48\*.dll*" />
-			<Net48XMLConverterCmdLine Include="$(SolutionDir)XMLConverterCmdLine\bin\Release\net48\*.exe*"/>
-			<Net48XMLConverterCmdLine Include="$(SolutionDir)XMLConverterCmdLine\bin\Release\net48\*.dll*"/>
 		</ItemGroup>
 
 		<Copy SourceFiles="@(Net48VectoCommandLine)" DestinationFolder="$(DeployPath)net48"/>
 		<Copy SourceFiles="@(Net48HashingTool)" DestinationFolder="$(DeployPath)net48"/>
 		<Copy SourceFiles="@(Net48VectoMultistep)" DestinationFolder="$(DeployPath)net48"/>
 		<Copy SourceFiles="@(Net48VECTO)" DestinationFolder="$(DeployPath)net48"/>
-		<Copy SourceFiles="@(Net48XMLConverterCmdLine)" DestinationFolder="$(DeployPath)net48"/>
 
 		<ItemGroup Condition="'$(Configuration)'=='Deploy'">
 			<!-- All files for net6.0 -->
@@ -71,9 +66,6 @@
 			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net6.0\vectocmd.*" Exclude="*.dev.json"/>
 			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net6.0\*.dll"/>
 			<VectoCommandLineRuntimes Include="$(SolutionDir)VectoConsole\bin\Release\net6.0\runtimes\**\*.*"/>
-			<XMLConverterCmdLine Include="$(SolutionDir)XMLConverterCmdLine\bin\Release\net6.0\XMLConverterCmdLine.*" Exclude="*.dev.json"/>
-			<XMLConverterCmdLine Include="$(SolutionDir)XMLConverterCmdLine\bin\Release\net6.0\*.dll"/>
-			<XMLConverterCmdLineRuntimes Include="$(SolutionDir)XMLConverterCmdLine\bin\Release\net6.0\runtimes\**\*.*"/>
 			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\hashingcmd.*" Exclude="*.dev.json"/>
 			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\*.dll"/>
 			<HashingToolRuntimes Include="$(SolutionDir)HashingCmd\bin\Release\net6.0-windows\runtimes\**\*.*"/>
@@ -114,8 +106,6 @@
 		<Copy SourceFiles="@(VectoMultistepRuntimes)" DestinationFiles="@(VectoMultistepRuntimes->'$(DeployPath)net60\runtimes\%(RecursiveDir)%(Filename)%(Extension)')"/>
 		<Copy SourceFiles="@(VectoCommandLineRuntimes)" DestinationFiles="@(VectoCommandLineRuntimes->'$(DeployPath)net60\runtimes\%(RecursiveDir)%(Filename)%(Extension)')"/>
 		<Copy SourceFiles="@(VectoRuntimes)" DestinationFiles="@(VectoRuntimes->'$(DeployPath)net60\runtimes\%(RecursiveDir)%(Filename)%(Extension)')"/>
-		<Copy SourceFiles="@(XMLConverterCmdLine)" DestinationFolder="$(DeployPath)net60"/>
-		<Copy SourceFiles="@(XMLConverterCmdLineRuntimes)" DestinationFiles="@(XMLConverterCmdLineRuntimes->'$(DeployPath)net60\runtimes\%(RecursiveDir)%(Filename)%(Extension)')"/>
 
 		<ItemGroup Condition="'$(Configuration)'=='Deploy'">
 			<!-- All files for the VECTO starters -->
@@ -124,7 +114,6 @@
 			<VectoStart Include="$(SolutionDir)Tools\HashingCmdStart\bin\Release\net48\hashingcmd.exe" />
 			<VectoStart Include="$(SolutionDir)Tools\HashingToolStart\bin\Release\net48\HashingTool.exe" />
 			<VectoStart Include="$(SolutionDir)Tools\VECTOConsoleStart\bin\Release\net48\vectocmd.exe" />
-			<VectoStart Include="$(SolutionDir)Tools\XMLConverterCmdLineStart\bin\Release\net48\XMLConverterCmdLine.exe" />
 		</ItemGroup>
 		<ItemGroup Condition="'$(Configuration)'=='MockupDeploy'">
 			<!-- All files for the VECTO starters -->
@@ -197,8 +186,6 @@
 			<ParameterDocuStyle Include="$(SolutionDir)Documentation\XML\ParameterDocumentation\HTML\css\*.*"/>
 			<ReleaseNotesPdf3 Include="$(SolutionDir)Documentation\User Manual Source\Release Notes Vecto3.x.pdf"/>
 			<ReleaseNotesPdf4 Include="$(SolutionDir)Documentation\User Manual Source\Release Notes Vecto4.x.pdf"/>
-			<ReleaseNotesMd3 Include="$(SolutionDir)Documentation\User Manual Source\ReleaseNotesMDs\ReleaseNotesVecto3x.md"/>
-			<ReleaseNotesMd4 Include="$(SolutionDir)Documentation\User Manual Source\ReleaseNotesMDs\ReleaseNotesVecto4x.md"/>
 		</ItemGroup>
 		<Copy SourceFiles="@(GenericVehicles)" DestinationFiles="@(GenericVehicles->'$(DeployPath)Generic Vehicles\%(RecursiveDir)%(Filename)%(Extension)')" />
 		<!-- <Copy SourceFiles="@(DeclarationData)" DestinationFolder="$(DeployPath)Declaration" /> -->
@@ -217,8 +204,6 @@
 		<Copy SourceFiles="@(VectoXSD)" DestinationFolder="$(DeployPath)XML\XSD" />
 		<Copy SourceFiles="@(UserManual)" DestinationFolder="$(DeployPath)User Manual" />
 
-		<Copy SourceFiles="@(ReleaseNotesMd3)" DestinationFiles="$(DeployPath)User Manual\Release Notes Vecto 3.md" />
-		<Copy SourceFiles="@(ReleaseNotesMd4)" DestinationFiles="$(DeployPath)User Manual\Release Notes Vecto 4.md" />
 		<Copy SourceFiles="@(ReleaseNotesPdf3)" DestinationFiles="$(DeployPath)User Manual\Release Notes Vecto3.x.pdf" />
 		<Copy SourceFiles="@(ReleaseNotesPdf4)" DestinationFiles="$(DeployPath)User Manual\Release Notes Vecto4.x.pdf" />
 		<Copy SourceFiles="@(VectoConfigurationSample)" DestinationFolder="$(DeployPath)"/>
