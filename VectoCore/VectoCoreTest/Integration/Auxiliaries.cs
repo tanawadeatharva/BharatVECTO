@@ -14,6 +14,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using System.Collections.Generic;
 using Ninject;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Tests.Integration
 {
@@ -25,6 +26,7 @@ namespace TUGraz.VectoCore.Tests.Integration
     {
 		private IPowertrainBuilder PowertrainBuilder;
 		public IModalDataFactory ModDataFactory;
+        private IShiftStrategyFactory ShiftStrategyFactory;
 
 		private const string TRACTOR_AT_JOB = @"TestData/Integration/ConventionalTimeruns/Class5_Tractor_4x2/Class5_Tractor_ENG_Aux.vecto";
 
@@ -43,6 +45,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var kernel = new StandardKernel(new VectoNinjectModule());
 			PowertrainBuilder = kernel.Get<IPowertrainBuilder>();
 			ModDataFactory = kernel.Get<IModalDataFactory>();
+			ShiftStrategyFactory = kernel.Get<IShiftStrategyFactory>();
 		}
 
 

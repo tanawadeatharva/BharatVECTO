@@ -10,6 +10,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies.ShiftPolygonCalc;
 using Assert = NUnit.Framework.Assert;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.DeclarationDataTests.GenericModelParams.GearShiftStrategy;
@@ -357,11 +358,28 @@ public class PEV_ShiftLineTests
 		var runData = new VectoRunData() { GearshiftParameters = new ShiftStrategyParameters() };
 		var container = new Mock<IVehicleContainer>();
 		container.Setup(c => c.RunData).Returns(runData);
-        var shiftStrategy = new PEVAMTShiftStrategy(container.Object);
-        var deRatedShiftLines = shiftStrategy.CalculateDeratedShiftLines(emData, gearboxData.Gears,
-            r_dyn, axlegearRatio, GearboxType.AMT);
-        for (var i = 0; i < gearboxData.Gears.Count; i++) {
-            shiftPolygons.Add(deRatedShiftLines[(uint)(i + 1)]);
+        var shiftStrategy = new PEVAMTShiftStrategyPolygonCreator(runData.GearshiftParameters);
+        //var deRatedShiftLines = shiftStrategy.CalculateDeratedShiftLines(emData, gearboxData.Gears,
+        //    r_dyn, axlegearRatio, GearboxType.AMT);
+
+		for (var i = 0; i < gearboxData.Gears.Count; i++) {
+			//var emFld = emData.EfficiencyData.VoltageLevels.First().FullLoadCurve;
+			var contTq = emData.Overload.ContinuousTorque;
+			var limitedFld = DeclarationData.Gearbox.LimitElectricMotorFullLoadCurve(emFld, contTq);
+			var limitedEm = new ElectricMotorData() {
+				EfficiencyData = new VoltageLevelData() {
+					VoltageLevels = new List<ElectricMotorVoltageLevelData>() {
+						new ElectricMotorVoltageLevelData() {
+							FullLoadCurve = limitedFld
+						}
+					}
+				},
+				RatioADC = emData.RatioADC,
+			};
+
+            var deratedShiftLine = shiftStrategy.ComputeElectricMotorDeclarationShiftPolygon(GearboxType.APTN, i,
+				gearboxData.Gears, axlegearRatio, r_dyn, emData, limitedEm);
+			shiftPolygons.Add(deratedShiftLine);
         }
 
 		for (var i = 0; i < Math.Min(gearboxData.Gears.Count, Math.Min(expectedDownshift.Length, expectedUpshift.Length)); i++) {

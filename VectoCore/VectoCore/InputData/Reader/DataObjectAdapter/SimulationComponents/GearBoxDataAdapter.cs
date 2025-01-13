@@ -283,8 +283,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			var retVal = SetCommonGearboxData(gearbox);
 
-           
-			if ((inputData.VehicleType == VectoSimulationJobType.BatteryElectricVehicle || inputData.VehicleType == VectoSimulationJobType.SerialHybridVehicle) &&
+			var isBatteryElectric = inputData.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
+				VectoSimulationJobType.SerialHybridVehicle);
+			if (isBatteryElectric && (runData.ElectricMachinesData == null || runData.ElectricMachinesData.Count == 0)) {
+				throw new VectoException(
+					"Electric motor data has to be set for battery electric vehicles before creating gearbox data!");
+			}
+
+			if (isBatteryElectric && runData.GearshiftParameters == null) {
+				throw new VectoException(
+					"Gearshift parameters have to be set for battery electric vehicles before creating gearbox data!");
+			}
+
+            if ((inputData.VehicleType == VectoSimulationJobType.BatteryElectricVehicle || inputData.VehicleType == VectoSimulationJobType.SerialHybridVehicle) &&
 				gearbox.Type.AutomaticTransmission())
 			{
 
@@ -337,19 +348,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				var shiftPolygon = shiftPolygonCalculator != null
 					? shiftPolygonCalculator.ComputeDeclarationShiftPolygon(
 						gearbox.Type, (int)i, engine?.FullLoadCurves[i + 1], gearbox.Gears, engine, axlegearRatio,
-						dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2)
+						dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault(x => x.Item1 != PowertrainPosition.GEN)?.Item2)
 					: DeclarationData.Gearbox.ComputeShiftPolygon(
 						gearbox.Type, (int)i, engine?.FullLoadCurves[i + 1],
 						gearsInput, engine,
 						axlegearRatio, dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2);
 
 				ShiftPolygon extendedShiftPolygon = null;
-				if (gearbox.Type == GearboxType.MT)
-				{
+				if (gearbox.Type == GearboxType.MT) {
 					extendedShiftPolygon = shiftPolygonCalculator != null
 						? shiftPolygonCalculator.ComputeDeclarationExtendedShiftPolygon(
 							gearbox.Type, (int)i, engine?.FullLoadCurves[i + 1], gearbox.Gears, engine, axlegearRatio,
-							dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2)
+							dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault(x => x.Item1 != PowertrainPosition.GEN)?.Item2)
 						: DeclarationData.Gearbox.ComputeManualTransmissionShiftPolygonExtended(
 							(int)i, engine?.FullLoadCurves[i + 1],
 							gearsInput,
@@ -358,9 +368,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 							dynamicTyreRadius);
 				}
 
+				var deratedEmShiftPolygon = isBatteryElectric
+					? CalculateDeratedEmShiftPolygon(runData, shiftPolygonCalculator, gearbox, i, axlegearRatio,
+						dynamicTyreRadius)
+					: null;
+
 				var gearData = new GearData
 				{
 					ShiftPolygon = shiftPolygon,
+					DeRatedEmShiftPolygon = deratedEmShiftPolygon,
 					ExtendedShiftPolygon = extendedShiftPolygon,
 					MaxSpeed = gear.MaxInputSpeed,
 					MaxTorque = gear.MaxTorque,
@@ -432,6 +448,32 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 
 			return retVal;
+		}
+
+		private static ShiftPolygon CalculateDeratedEmShiftPolygon(VectoRunData runData,
+			IShiftPolygonCalculator shiftPolygonCalculator, IGearboxDeclarationInputData gearbox, uint i, double axlegearRatio,
+			Meter dynamicTyreRadius)
+		{
+			var em = runData.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item2;
+			var shiftStrategyParameters = runData.GearshiftParameters;
+			var emFld = em.EfficiencyData.VoltageLevels.First().FullLoadCurve;
+			var contTq = em.Overload.ContinuousTorque;
+			var limitedFld = DeclarationData.Gearbox.LimitElectricMotorFullLoadCurve(emFld, contTq);
+			var limitedEm = new ElectricMotorData() {
+				EfficiencyData = new VoltageLevelData() {
+					VoltageLevels = new List<ElectricMotorVoltageLevelData>() {
+						new ElectricMotorVoltageLevelData() {
+							FullLoadCurve = limitedFld
+						}
+					}
+				},
+				RatioADC = em.RatioADC,
+			};
+			var deratedEmShiftPolygon = shiftPolygonCalculator.ComputeElectricMotorDeclarationShiftPolygon(gearbox.Type, (int)i,
+				gearbox.Gears, axlegearRatio,
+				dynamicTyreRadius, em, limitedEm);
+			return deratedEmShiftPolygon;
+			//retVal[i + 1] = shiftPolygon;
 		}
 
 		#endregion

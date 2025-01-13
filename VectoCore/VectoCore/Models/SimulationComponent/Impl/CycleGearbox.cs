@@ -611,19 +611,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public override GearshiftPosition NextGear => throw new NotImplementedException();
 
-			public override ShiftPolygon ComputeDeclarationShiftPolygon(
-				GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
-				CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
-			{
-				return null;
-			}
-
-			public override ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
-				GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
-				CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
-			{
-				return null;
-			}
+			
 		}
 	}
 }

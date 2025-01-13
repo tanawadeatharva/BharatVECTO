@@ -207,7 +207,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						DynamicTyreRadius = 0.5.SI<Meter>()
 					},
 					AxleGearData = new AxleGearData() { AxleGear = new TransmissionData() { Ratio = 2.1} }
-				}, null);
+				});
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
 
 			// interpreted as gearbox with first and second gear using TC (due to gear ratios)
@@ -249,7 +249,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						DynamicTyreRadius = 0.5.SI<Meter>()
 					},
 					AxleGearData = new AxleGearData() { AxleGear = new TransmissionData() { Ratio = 2.1 } }
-				}, null);
+				});
 
 				//inputProvider,
 				//MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
@@ -298,7 +298,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						DynamicTyreRadius = 0.5.SI<Meter>()
 					},
 					AxleGearData = new AxleGearData() { AxleGear = new TransmissionData() { Ratio = 2.1 } }
-				}, null);
+				});
 
 				//inputProvider,
 				//MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
@@ -346,7 +346,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						DynamicTyreRadius = 0.5.SI<Meter>()
 					},
 					AxleGearData = new AxleGearData() { AxleGear = new TransmissionData() { Ratio = 2.1 } }
-				}, null);
+				});
 				//inputProvider,
 				//MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
 				//(IGearshiftEngineeringInputData)inputProvider, 2.1,
@@ -395,7 +395,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						DynamicTyreRadius = 0.5.SI<Meter>()
 					},
 					AxleGearData = new AxleGearData() { AxleGear = new TransmissionData() { Ratio = 2.1 } }
-				}, null);
+				});
 				//inputProvider,
 				//MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
 				//(IGearshiftEngineeringInputData)inputProvider, 2.1,
@@ -444,7 +444,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						DynamicTyreRadius = 0.5.SI<Meter>()
 					},
 					AxleGearData = new AxleGearData() { AxleGear = new TransmissionData() { Ratio = 2.1 } }
-				}, null);
+				});
 				
 				//inputProvider,
 				//MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),

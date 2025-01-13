@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public IDrivingCycleData PTOCycleWhileDrive { get; internal set; }
 
-		public string ShiftStrategy { get; set; }
+		public string ShiftStrategy => GearboxData?.ShiftStrategy;
 
 		// only used for factor method
 		public IResult PrimaryResult { get; set; }

@@ -411,28 +411,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, DataBus);
 			}
 
-			public override ShiftPolygon ComputeDeclarationShiftPolygon(GearboxType gearboxType, int i,
-				EngineFullLoadCurve engineDataFullLoadCurve,
-				IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio,
-				Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
-			{
-				return DeclarationData.Gearbox.ComputeEfficiencyShiftPolygon(
-					i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
-			}
+			//public override ShiftPolygon ComputeDeclarationShiftPolygon(GearboxType gearboxType, int i,
+			//	EngineFullLoadCurve engineDataFullLoadCurve,
+			//	IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio,
+			//	Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
+			//{
+			//	return DeclarationData.Gearbox.ComputeEfficiencyShiftPolygon(
+			//		i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
+			//}
 
-			public override ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
-				GearboxType gearboxType,
-				int i,
-				EngineFullLoadCurve engineDataFullLoadCurve,
-				IList<ITransmissionInputData> gearboxGears,
-				CombustionEngineData engineData,
-				double axlegearRatio,
-				Meter dynamicTyreRadius,
-				ElectricMotorData electricMotorData = null)
-			{
-				return DeclarationData.Gearbox.ComputeManualTransmissionShiftPolygonExtended(
-					i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
-			}
+			//public override ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
+			//	GearboxType gearboxType,
+			//	int i,
+			//	EngineFullLoadCurve engineDataFullLoadCurve,
+			//	IList<ITransmissionInputData> gearboxGears,
+			//	CombustionEngineData engineData,
+			//	double axlegearRatio,
+			//	Meter dynamicTyreRadius,
+			//	ElectricMotorData electricMotorData = null)
+			//{
+			//	return DeclarationData.Gearbox.ComputeManualTransmissionShiftPolygonExtended(
+			//		i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
+			//}
 
 			protected override bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
 				PerSecond outAngularVelocity, NewtonMeter inTorque,

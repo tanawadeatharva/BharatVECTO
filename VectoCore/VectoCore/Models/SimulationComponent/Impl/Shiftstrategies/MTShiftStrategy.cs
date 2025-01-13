@@ -42,7 +42,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
-	public class MTShiftStrategy : AMTShiftStrategy
+	public class  MTShiftStrategy : AMTShiftStrategy
 	{
 		VelocitySpeedGearshiftPreprocessor PreprocessorSpeed;
 		VelocityRollingLookup velocityDropData = new VelocityRollingLookup();

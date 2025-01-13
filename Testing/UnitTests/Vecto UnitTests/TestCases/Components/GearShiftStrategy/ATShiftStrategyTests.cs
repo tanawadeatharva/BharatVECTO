@@ -1,5 +1,6 @@
 ﻿using Moq;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -7,6 +8,7 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -55,7 +57,7 @@ public class ATShiftStrategyTests
 
         var vehicleContainer = GetMockVehicleContainer(runData, out var vehicleInfo);
 		vehicleInfo.Setup(v => v.VehicleSpeed).Returns(vehicleSpeed.KMPHtoMeterPerSecond());
-		var shiftStrategy = new ATShiftStrategy(vehicleContainer);
+		var shiftStrategy = new ATShiftStrategyOptimized(vehicleContainer);
         
 		var gearbox = new ATGearbox(vehicleContainer, shiftStrategy);
 
@@ -89,14 +91,24 @@ public class ATShiftStrategyTests
 	{
 		var fldData = InputDataHelper.InputDataAsTableData(EngineFldHeader, EngineFldData);
 		var fld = FullLoadCurveReader.Create(fldData);
+		var engineIdlingSpeed = 600.RPMtoRad();
 		var runData = new VectoRunData() {
+			Cycle = new DrivingCycleData() {
+				CycleType = CycleType.DistanceBased,
+			},
 			VehicleData = new VehicleData() {
 				DynamicTyreRadius = 0.465.SI<Meter>(),
 			},
 			EngineData = new CombustionEngineData() {
 				Inertia = 0.SI<KilogramSquareMeter>(),
 				FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>()
-			}
+			},
+			GearshiftParameters = new ShiftStrategyParameters() {
+				LoadStageThresoldsUp = DeclarationData.GearboxTCU.LoadStageThresholdsUp,
+				LoadStageThresoldsDown = DeclarationData.GearboxTCU.LoadStageThresoldsDown,
+				ShiftSpeedsTCToLocked = engineIdlingSpeed == null ? null : DeclarationData.GearboxTCU.ShiftSpeedsTCToLocked
+					.Select(x => x.Select(y => y + engineIdlingSpeed.AsRPM).ToArray()).ToArray(),
+            }
 		};
 		for(uint i = 0; i <= inputData; i++)
 			runData.EngineData.FullLoadCurves[i] = fld;
@@ -121,11 +133,23 @@ public class ATShiftStrategyTests
 		var vehicleContainer = new Mock<IVehicleContainer>();
 		vehicleInfo = new Mock<IVehicleInfo>();
 		var engineInfo = new Mock<IEngineInfo>();
+		var ptBuilder = new Mock<ISimplePowertrainBuilder>();
+		var testContainer = new Mock<ISimpleVehicleContainer>();
+		var vehiclePort = new Mock<IDriverDemandOutPort>();
+
 		vehicleContainer.Setup(c => c.RunData).Returns(runData);
 		vehicleContainer.Setup(c => c.VehicleInfo).Returns(vehicleInfo.Object);
 		vehicleContainer.Setup(c => c.EngineInfo).Returns(engineInfo.Object);
+		vehicleContainer.Setup(c => c.SimplePowertrainBuilder).Returns(ptBuilder.Object);
+		
 		engineInfo.Setup(e => e.EngineIdleSpeed).Returns(600.RPMtoRad());
 		engineInfo.Setup(e => e.EngineRatedSpeed).Returns(2000.RPMtoRad());
+
+		ptBuilder.Setup(b => b.BuildSimplePowertrain(It.IsAny<VectoRunData>())).Returns(testContainer.Object);
+
+		testContainer.Setup(c => c.RunData).Returns(runData);
+		testContainer.Setup(c => c.GearboxCtl).Returns(new ATGearbox(testContainer.Object, null));
+		testContainer.Setup(c => c.VehiclePort).Returns(vehiclePort.Object);
 		return vehicleContainer.Object;
 	}
 

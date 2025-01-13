@@ -72,15 +72,19 @@ namespace TUGraz.VectoCore
 
 		public VectoNinjectModule()
 		{
-			
-		}
+            
+        }
 		
 	
 
 		public override void Load()
 		{
-			
-			LoadModule<XMLInputDataNinjectModule>();
+			// necessary for injecting IShiftStrategyFactory into AbstractSimulationDataAdapter, PrimaryBusBase, CompletedBusDeclarationBase, SingleBusBase
+			// as the property there is private
+			Kernel.Settings.InjectNonPublic = true;
+			Kernel.Settings.InjectParentPrivateProperties = true;
+
+            LoadModule<XMLInputDataNinjectModule>();
 
 			LoadModule<SimulatorFactoryNinjectModule>();
 

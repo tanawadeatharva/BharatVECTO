@@ -274,17 +274,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						Vehicle.Components.GearboxInputData.Gears.Count
 					);
 
-
-				var shiftStrategyName =
-					PowertrainBuilder.GetShiftStrategyName(Vehicle.Components.GearboxInputData.Type,
-						Vehicle.VehicleType);
                 if (InputDataProvider.JobInputData.Vehicle.AxleConfiguration.AxlegearIncludedInGearbox()) {
 					runData.AxleGearData = DataAdapter.CreateDummyAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.GearboxInputData);
                 } else {
 					runData.AxleGearData = DataAdapter.CreateAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData);
                 }
-				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
-					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData);
 			}
 
 			protected override bool AxleGearRequired()
@@ -461,12 +456,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						Vehicle.Components.GearboxInputData.Gears.Count
 					);
 
-
-				var shiftStrategyName =
-					PowertrainBuilder.GetShiftStrategyName(Vehicle.Components.GearboxInputData.Type,
-						Vehicle.VehicleType);
-				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
-					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData);
 
 			}
 
@@ -543,11 +533,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						GearboxType.APTN,
 						Vehicle.Components.IEPC.Gears.Count
 					);
-				var shiftStrategyName =
-					PowertrainBuilder.GetShiftStrategyName(GearboxType.APTN,
-						Vehicle.VehicleType);
-				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
-					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+				
+				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData);
 
 			}
 

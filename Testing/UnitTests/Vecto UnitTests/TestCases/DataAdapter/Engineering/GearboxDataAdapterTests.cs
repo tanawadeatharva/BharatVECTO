@@ -27,7 +27,7 @@ public class GearboxDataAdapterTests
 		var axleData = dao.CreateAxleGearData(GetMockAxlegearInputdata());
 		Assert.AreEqual(3.240355, axleData.AxleGear.Ratio, 0.0001);
 
-		var gbxData = dao.CreateGearboxData(input, GetDummyRunData(input.JobInputData.Vehicle.Components.GearboxInputData), null);
+		var gbxData = dao.CreateGearboxData(input, GetDummyRunData(input.JobInputData.Vehicle.Components.GearboxInputData));
 		Assert.AreEqual(GearboxType.AMT, gbxData.Type);
 		Assert.AreEqual(1.0, gbxData.TractionInterruption.Value(), 0.0001);
 		Assert.AreEqual(8, gbxData.Gears.Count);
@@ -61,8 +61,7 @@ public class GearboxDataAdapterTests
 		var runData = GetDummyVectoRunData(VehicleCategory.Tractor);
         var gbxData = new EngineeringDataAdapter().CreateGearboxData(
             inputData,
-			runData,
-			null);
+			runData);
 
         //inputProvider,
         //MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
@@ -99,7 +98,7 @@ public class GearboxDataAdapterTests
 		var inputData = GetMockInputData(inputProvider, tcInputProvider);
 		var runData = GetDummyVectoRunData(VehicleCategory.Tractor);
         var gbxData = new EngineeringDataAdapter().CreateGearboxData(
-            inputData, runData, null);
+            inputData, runData);
 
         //inputProvider,
         //MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
@@ -136,7 +135,7 @@ public class GearboxDataAdapterTests
 		var runData = GetDummyVectoRunData(VehicleCategory.Tractor);
 
         var gbxData = new EngineeringDataAdapter().CreateGearboxData(
-           inputData, runData, null);
+           inputData, runData);
         //inputProvider,
         //MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
         //(IGearshiftEngineeringInputData)inputProvider, 2.1,
@@ -171,7 +170,7 @@ public class GearboxDataAdapterTests
 		var inputData = GetMockInputData(inputProvider, tcInputProvider);
 		var runData = GetDummyVectoRunData(VehicleCategory.HeavyBusPrimaryVehicle);
         var gbxData = new EngineeringDataAdapter().CreateGearboxData(
-            inputData, runData, null);
+            inputData, runData);
         //inputProvider,
         //MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),
         //(IGearshiftEngineeringInputData)inputProvider, 2.1,
@@ -206,7 +205,7 @@ public class GearboxDataAdapterTests
 		var inputData = GetMockInputData(inputProvider, tcInputProvider);
 		var runData = GetDummyVectoRunData(VehicleCategory.HeavyBusPrimaryVehicle);
         var gbxData = new EngineeringDataAdapter().CreateGearboxData(
-            inputData, runData, null);
+            inputData, runData);
 
         //inputProvider,
         //MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData/Components/AT_GBX/Engine.veng", 0),

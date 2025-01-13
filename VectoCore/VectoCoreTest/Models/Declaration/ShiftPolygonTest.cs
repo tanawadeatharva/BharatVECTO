@@ -52,6 +52,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies.ShiftPolygonCalc;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Point = TUGraz.VectoCommon.Utils.Point;
@@ -979,7 +980,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			if (factorDownshiftSpeed.HasValue) {
 				runData.GearshiftParameters.PEV_DownshiftSpeedFactor = factorDownshiftSpeed.Value;
 			}
-			var shiftStrategy = new PEVAMTShiftStrategy(VehicleContainer.CreateVehicleContainer(runData, null, null));
+			var shiftStrategy = new PEVAMTShiftStrategyPolygonCreator(runData.GearshiftParameters);
 			
 			for (var i = 0; i < gearboxData.Gears.Count; i++) {
 				shiftPolygons.Add(shiftStrategy.ComputeDeclarationShiftPolygon(GearboxType.AMT, i, null, gearboxData.Gears,
@@ -1060,11 +1061,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			if (factorDownshiftSpeed.HasValue) {
 				runData.GearshiftParameters.PEV_DeRatedDownshiftSpeedFactor = factorDownshiftSpeed.Value;
 			}
-			var shiftStrategy = new PEVAMTShiftStrategy(VehicleContainer.CreateVehicleContainer(runData, null, null));
-			var deRatedShiftLines = shiftStrategy.CalculateDeratedShiftLines(emData, gearboxData.Gears,
-				r_dyn, axlegearRatio, gearboxData.Type);
-			for (var i = 0; i < gearboxData.Gears.Count; i++) {
-				shiftPolygons.Add(deRatedShiftLines[(uint)(i + 1)]);
+			var shiftStrategy = new PEVAMTShiftStrategyPolygonCreator(runData.GearshiftParameters);
+			//var deRatedShiftLines = shiftStrategy.ComputeElectricMotorDeclarationShiftPolygon(emData, gearboxData.Gears,
+			//	r_dyn, axlegearRatio, gearboxData.Type);
+
+            for (var i = 0; i < gearboxData.Gears.Count; i++) {
+				var deratedShiftLine = shiftStrategy.ComputeElectricMotorDeclarationShiftPolygon(GearboxType.APTN, i,
+					gearboxData.Gears, axlegearRatio, r_dyn, emData, emData);
+				shiftPolygons.Add(deratedShiftLine);
 				fullLoadCurves[(uint)(i + 1)] = new EngineFullLoadCurve(fullLoadCurve, null) { EngineData = engineData };
 			}
 

@@ -99,13 +99,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			
 		}
 
-		public abstract ShiftPolygon ComputeDeclarationShiftPolygon(
-			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
-			CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null);
+		//public abstract ShiftPolygon ComputeDeclarationShiftPolygon(
+		//	GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
+		//	CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null);
 
-		public abstract ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
-			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
-			CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null);
+		//public abstract ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
+		//	GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
+		//	CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null);
 
 		protected MeterPerSquareSecond EstimateAccelerationForGear(GearshiftPosition gear, PerSecond gbxAngularVelocityOut)
 		{

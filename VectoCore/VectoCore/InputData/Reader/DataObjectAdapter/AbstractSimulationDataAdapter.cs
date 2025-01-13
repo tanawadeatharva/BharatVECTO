@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ninject;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -43,6 +44,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -53,6 +55,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public abstract class AbstractSimulationDataAdapter : LoggingObject
 	{
+		[Inject]
+		public IShiftStrategyFactory ShiftStrategyFactory { get; private set; }
+
 		// =========================
 		internal AirdragData SetCommonAirdragData(IAirdragDeclarationInputData data)
 		{
@@ -68,6 +73,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 			return retVal;
 		}
+
+		protected string GetShiftStrategyName(IVehicleDeclarationInputData inputData,
+			GearboxType? overrideGearboxType)
+		{
+			var gbxType = overrideGearboxType ?? inputData.Components.GearboxInputData.Type;
+			return ShiftStrategyFactory.GetShiftStrategyName(gbxType, inputData.VehicleType);
+		}
+
 		internal CombustionEngineData SetCommonCombustionEngineData(IEngineDeclarationInputData data, TankSystem? tankSystem)
 		{
 			var retVal = new CombustionEngineData
@@ -92,6 +105,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 			return retVal;
 		}
+
 		protected virtual TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i,
 			bool useEfficiencyFallback, VehicleCategory vehicleCategory, GearboxType gearboxType)
 		{
@@ -105,6 +119,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 			throw new InvalidFileFormatException("Gear {0} LossMap missing.", i + 1);
 		}
+
 		internal TransmissionLossMap ReadAxleLossMap(IAxleGearInputData data, bool useEfficiencyFallback)
 		{
 			TransmissionLossMap axleLossMap;

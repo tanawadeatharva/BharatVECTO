@@ -30,44 +30,20 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-    public class AMTShiftStrategyPolygonCalculator : IShiftPolygonCalculator
-	{
-		public ShiftPolygon ComputeDeclarationShiftPolygon(
-			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
-			CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
-		{
-			return DeclarationData.Gearbox.ComputeManualTransmissionShiftPolygon(
-				i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
-		}
-
-		public ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
-			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
-			CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
-		{
-			return DeclarationData.Gearbox.ComputeManualTransmissionShiftPolygonExtended(
-				i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
-		}
-	}
-
 	/// <summary>
 	/// AMTShiftStrategy implements the AMT Shifting Behaviour.
 	/// </summary>
@@ -76,8 +52,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		//protected readonly GearshiftPosition MaxStartGear;
 		protected GearshiftPosition _nextGear;
 		protected GearshiftPosition DesiredGearRoadsweeping;
-		private readonly IShiftPolygonCalculator _shiftPolygonCalculator;
-
+		
 		protected ITestPowertrain<Gearbox> TestPowertrain;
 
 		public AMTShiftStrategy(IVehicleContainer dataBus) : base(dataBus)
@@ -86,7 +61,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			EarlyShiftUp = true;
 			SkipGears = true;
 
-			_shiftPolygonCalculator = ShiftPolygonCalculator.Create(Name, null);
 			if (runData.EngineData == null) {
 				return;
 			}
@@ -126,21 +100,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public override GearshiftPosition NextGear => _nextGear;
-
-		public override ShiftPolygon ComputeDeclarationShiftPolygon(
-			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
-			CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
-		{
-			return _shiftPolygonCalculator.ComputeDeclarationShiftPolygon(gearboxType,
-				i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius, electricMotorData);
-		}
-
-		public override ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
-			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
-			CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
-		{
-			throw new NotImplementedException("Not applicable to AMT Gearbox.");
-		}
 
 		public static string Name => "AMT - Classic";
 

@@ -28,9 +28,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Dictionary<PowertrainPosition, Action<VectoRunData, IVehicleContainer, TimeRunHybridComponents>>
 			_timerunGearHybridBuilders;
 
+		protected readonly IShiftStrategyFactory ShiftStrategyFactory;
 
-		protected PowertrainBuilderBase()
+		protected PowertrainBuilderBase(IShiftStrategyFactory shiftStrategyFactory)
 		{
+			ShiftStrategyFactory = shiftStrategyFactory;
 			_timerunGearHybridBuilders =
 				new Dictionary<PowertrainPosition, Action<VectoRunData, IVehicleContainer, TimeRunHybridComponents>>() {
 					{ PowertrainPosition.HybridP1, BuildTimerunGearHybridForP1 },
@@ -680,79 +682,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		public string GetShiftStrategyName(GearboxType gearboxType, VectoSimulationJobType jobType,
-			bool isTestPowerTrain)
-		{
-			switch (gearboxType) {
-				case GearboxType.AMT:
-					switch (jobType) {
-						case VectoSimulationJobType.ConventionalVehicle:
-						case VectoSimulationJobType.ParallelHybridVehicle:
-							return AMTShiftStrategyOptimized.Name;
-						case VectoSimulationJobType.BatteryElectricVehicle:
-						case VectoSimulationJobType.SerialHybridVehicle:
-							return PEVAMTShiftStrategy.Name;
-						default:
-							throw new VectoException(
-								"no default gearshift strategy available for gearbox type {0} and job type {1}",
-								gearboxType, jobType);
-					}
-				case GearboxType.MT:
-					return MTShiftStrategy.Name;
-
-				case GearboxType.ATPowerSplit:
-				case GearboxType.ATSerial:
-					switch (jobType) {
-						case VectoSimulationJobType.ParallelHybridVehicle:
-						case VectoSimulationJobType.ConventionalVehicle:
-							return ATShiftStrategyOptimized.Name;
-						case VectoSimulationJobType.SerialHybridVehicle:
-						case VectoSimulationJobType.BatteryElectricVehicle:
-							return APTNShiftStrategy.Name;
-						default:
-							throw new VectoException(
-								"no default gearshift strategy available for gearbox type {0} and job type {1}",
-								gearboxType, jobType);
-					}
-				case GearboxType.APTN:
-					switch (jobType) {
-						case VectoSimulationJobType.ParallelHybridVehicle:
-						case VectoSimulationJobType.SerialHybridVehicle:
-						case VectoSimulationJobType.BatteryElectricVehicle:
-						case VectoSimulationJobType.IEPC_E:
-						case VectoSimulationJobType.IEPC_S:
-							return APTNShiftStrategy.Name;
-						case VectoSimulationJobType.ConventionalVehicle when isTestPowerTrain:
-							return null;
-						default:
-							throw new ArgumentException(
-								"APT-N Gearbox is only applicable on hybrids and battery electric vehicles.");
-					}
-				case GearboxType.IHPC:
-					switch (jobType) {
-						case VectoSimulationJobType.IHPC:
-							return AMTShiftStrategyOptimized.Name;
-						default:
-							throw new ArgumentException(
-								"IHPC Gearbox is only applicable on hybrid vehicle of type IHPC.");
-					}
-				default:
-					throw new ArgumentOutOfRangeException("GearboxType", gearboxType,
-						"VECTO can not automatically derive shift strategy for GearboxType.");
-			}
-		}
-
 		public IShiftStrategy GetShiftStrategy(IVehicleContainer container)
 		{
 			var runData = container.RunData;
-
-			var gearboxType = runData.GearboxData.Type;
-			var jobType = runData.JobType;
-			var isTestPowerTrain = container.IsTestPowertrain;
-
-			var shiftStrategyName = GetShiftStrategyName(gearboxType, jobType, isTestPowerTrain);
-			runData.ShiftStrategy = shiftStrategyName;
-			return ShiftStrategy.Create(container, runData.ShiftStrategy);
+			
+			return ShiftStrategyFactory.GetShiftStrategy(runData.ShiftStrategy, container);
 		}
 
 		protected IGearbox GetSimpleGearbox(IVehicleContainer container, VectoRunData runData)

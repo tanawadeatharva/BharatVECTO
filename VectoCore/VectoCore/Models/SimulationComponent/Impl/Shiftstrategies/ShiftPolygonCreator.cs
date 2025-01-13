@@ -3,12 +3,13 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies.ShiftPolygonCalc;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
 	public abstract class ShiftPolygonCalculator
 	{
-		public static IShiftPolygonCalculator Create(string name, ShiftStrategyParameters shiftStrategyParameters)
+		public IShiftPolygonCalculator Create(string name, ShiftStrategyParameters shiftStrategyParameters)
 		{
 			if (name == AMTShiftStrategyOptimized.Name) {
 				return new AMTShiftStrategyOptimizedPolygonCalculator();
@@ -40,9 +41,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				}
 				return new PEVAMTShiftStrategyPolygonCreator(shiftStrategyParameters);
 			}
-			if (name == ATShiftStrategy.Name) {
-				return new ATShiftStrategyPolygonCalculator();
-			}
+			//if (name == ATShiftStrategy.Name) {
+			//	return new ATShiftStrategyPolygonCalculator();
+			//}
 
 
 			throw new ArgumentException($"Could not create ShiftPolygonCalculator for {name}");

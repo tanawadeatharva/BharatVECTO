@@ -12,6 +12,7 @@ using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Tests.Integration
 {
@@ -23,6 +24,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 		protected IPowertrainBuilder _powertrainBuilder;
 		private IModalDataFactory _modDataFactory;
+        private IShiftStrategyFactory _shiftStrategyFactory;
 
 		[OneTimeSetUp]
         public void Init()

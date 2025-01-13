@@ -64,6 +64,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 	public class EngineeringDataAdapter : AbstractSimulationDataAdapter
 	{
 		private AirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
+
+
+
 		internal VehicleData CreateVehicleData(IVehicleEngineeringInputData data)
 		{
 			if (data.SavedInDeclarationMode) {
@@ -289,7 +292,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		internal GearboxData CreateGearboxData(IEngineeringInputDataProvider inputData, VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalc)
+		internal GearboxData CreateGearboxData(IEngineeringInputDataProvider inputData, VectoRunData runData)
 		{
 			var vehicle = inputData.JobInputData.Vehicle;
 			var gearbox = vehicle.Components.GearboxInputData;
@@ -351,11 +354,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					? ShiftPolygonReader.Create(torqueConverter.ShiftPolygon)
 					: DeclarationData.TorqueConverter.ComputeShiftPolygon(engineData.FullLoadCurves[0]);
 			}
-			for (uint i = 0; i < gearsInput.Count; i++) {
+
+			retVal.ShiftStrategy = ShiftStrategyFactory?.GetShiftStrategyName(gearbox.Type, vehicle.VehicleType);
+			var shiftPolygonCalc = ShiftStrategyFactory?.CreateShiftPolygonCalculator(retVal.ShiftStrategy);
+
+            for (uint i = 0; i < gearsInput.Count; i++) {
 				var gear = gearsInput[(int)i];
 				var lossMap = CreateGearLossMap(gear, i, true, VehicleCategory.Unknown, gearbox.Type);
 
 				ShiftPolygon shiftPolygon;
+
 				if (gear.ShiftPolygon != null && gear.ShiftPolygon.SourceType != DataSourceType.Missing) {
 					shiftPolygon = ShiftPolygonReader.Create(gear.ShiftPolygon);
 				} else if (shiftPolygonCalc != null) {
@@ -1259,7 +1267,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 
 
-		public GearboxData CreateIEPCGearboxData(IEngineeringInputDataProvider inputData, VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalc)
+		public GearboxData CreateIEPCGearboxData(IEngineeringInputDataProvider inputData, VectoRunData runData)
 		{
 			var vehicle = inputData.JobInputData.Vehicle;
 
@@ -1283,6 +1291,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				MaxTorque = x.MaxOutputShaftTorque == null ? null : x.MaxOutputShaftTorque / x.Ratio,
 			}).Cast<ITransmissionInputData>().ToList();
 			var gears = new Dictionary<uint, GearData>();
+
+			retVal.ShiftStrategy =
+				ShiftStrategyFactory?.GetShiftStrategyName(vehicle.Components.GearboxInputData.Type,
+					vehicle.VehicleType);
+			var shiftPolygonCalc = ShiftStrategyFactory?.CreateShiftPolygonCalculator(retVal.ShiftStrategy);
+            
 			for (uint i = 0; i < iepc.Gears.Count; i++) {
 				var gear = iepc.Gears[(int)i];
 				var lossMap = TransmissionLossMapReader.Create(1, gear.Ratio, $"Gear{i+1}");

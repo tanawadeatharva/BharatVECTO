@@ -160,10 +160,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return EngineDataAdapter.CreateEngineData(vehicle, engineMode, mission);
 			}
 
-			public virtual GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
-				IShiftPolygonCalculator shiftPolygonCalc)
+			public virtual GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData, GearboxType? overrideGearboxType = null)
 			{
-				return GearboxDataAdapter.CreateGearboxData(inputData, runData, shiftPolygonCalc, SupportedGearboxTypes);
+				var name = GetShiftStrategyName(inputData, overrideGearboxType);
+				var retVal = GearboxDataAdapter.CreateGearboxData(inputData, runData, ShiftStrategyFactory.CreateShiftPolygonCalculator(name), SupportedGearboxTypes);
+				retVal.ShiftStrategy = name;
+				return retVal;
 			}
 
 			public virtual ShiftStrategyParameters CreateGearshiftData(double axleRatio,

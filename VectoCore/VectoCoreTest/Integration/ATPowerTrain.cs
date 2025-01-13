@@ -69,8 +69,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public const string TorqueConverterGenericFile = @"TestData/Components/AT_GBX/TorqueConverter.vtcc";
 		public const string TorqueConverterPowerSplitFile = @"TestData/Components/AT_GBX/TorqueConverterPowerSplit.vtcc";
 		public const string GearboxShiftPolygonFile = @"TestData/Components/AT_GBX/AT-Shift.vgbs";
-		
-		
+
+
 		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, GearboxType gbxType,
 			SummaryDataContainer summaryDataContainer, string modFileName,
 			bool overspeed = false, KilogramSquareMeter gearBoxInertia = null)
@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var powertrainBuilder = kernel.Get<ISimplePowertrainBuilder>();
 
 
-            var gearboxData = CreateGearboxData(gbxType);
+			var gearboxData = CreateGearboxData(gbxType);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var axleGearData = CreateAxleGearData(gbxType);
 
@@ -116,16 +116,15 @@ namespace TUGraz.VectoCore.Tests.Integration
 				SimulationType = SimulationType.DistanceCycle,
 				DriverData = driverData,
 				ExecutionMode = ExecutionMode.Engineering,
-            };
+			};
 			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(runData, fileWriter, null)
-			{
+			var modData = new ModalDataContainer(runData, fileWriter, null) {
 				WriteModalResults = true,
 			};
 			var container =
 				VehicleContainer.CreateVehicleContainer(runData, modData,
 					summaryDataContainer);
-			
+
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var engine = new CombustionEngine(container, engineData);
 			var tmp = cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
@@ -133,7 +132,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
-				.AddComponent(new ATGearbox(container, new ATShiftStrategy(container)))
+				.AddComponent(new ATGearbox(container, new ATShiftStrategyOptimized(container)))
 				.AddComponent(engine);
 			new ATClutchInfo(container);
 

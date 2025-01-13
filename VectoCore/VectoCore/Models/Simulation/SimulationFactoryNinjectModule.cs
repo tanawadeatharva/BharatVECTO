@@ -38,6 +38,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils.Ninject;
@@ -66,6 +67,8 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 			Bind<ISimulatorFactory>().To<SimulatorFactoryDeclaration>().Named(ExecutionMode.Declaration.ToString());
 			Bind<ISimulatorFactory>().To<SimulatorFactoryEngineering>().Named(ExecutionMode.Engineering.ToString());
+
+			Bind<IShiftStrategyFactory>().To<ShiftStrategyFactory>().InSingletonScope();
 
 			// ToDo: MQ 2023-05-09: REMOVE CLASS IN PRODUCTION!!!
 			//Bind<IDeclarationCycleFactory>().To<DeclarationCycleFromFilesystemFactory>().InSingletonScope();

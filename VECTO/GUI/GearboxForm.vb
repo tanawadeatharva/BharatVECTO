@@ -1094,17 +1094,11 @@ Public Class GearboxForm
             Return Nothing
         End If
 
-        Dim tmpRunData as VectoRunData = New VectoRunData() With {
-                .GearboxData = New GearboxData() with {
-                .Type = CType(CbGStype.SelectedValue, GearboxType)
-                },
-                .GearshiftParameters = New  ShiftStrategyParameters(), 
-                .JobType = VectoSimulationJobType.BatteryElectricVehicle
-                }
         Dim kernel As IKernel = new StandardKernel(new VectoNinjectModule)
-        dim ptBuilder as IPowertrainBuilder = kernel.Get(of IPowertrainBuilder)()
-        Dim tmpStrategy as IShiftPolygonCalculator = ptBuilder.GetShiftStrategy(new DummyVehicleContainer(tmpRunData))
-        
+        dim shiftStrategyFactory as IShiftStrategyFactory = kernel.Get(of IShiftStrategyFactory)()
+        Dim tmpStrategyName as String = shiftStrategyFactory.GetShiftStrategyName( CType(CbGStype.SelectedValue, GearboxType), VectoSimulationJobType.BatteryElectricVehicle)
+        Dim tmpStrategy As IShiftPolygonCalculator = shiftStrategyFactory.CreateShiftPolygonCalculator(tmpStrategyName)
+
         dim em as ElectricMotorData = ConvertToElectricMotorData(emFld, gear)
 
         Dim shiftLines As ShiftPolygon = tmpStrategy.ComputeDeclarationShiftPolygon(
@@ -1138,16 +1132,10 @@ Public Class GearboxForm
             Return Nothing
         End If
 
-        Dim tmpRunData as VectoRunData = New VectoRunData() With {
-            .GearboxData = New GearboxData() with {
-                .Type = CType(CbGStype.SelectedValue, GearboxType)
-            },
-            .JobType = _vehicleJobType
-        }
         Dim kernel As IKernel = new StandardKernel(new VectoNinjectModule)
-        dim ptBuilder as IPowertrainBuilder = kernel.Get(of IPowertrainBuilder)()
-        Dim tmpStrategy as IShiftPolygonCalculator = ptBuilder.GetShiftStrategy(new DummyVehicleContainer(tmpRunData))
-            
+        dim shiftStrategyFactory as IShiftStrategyFactory = kernel.Get(of IShiftStrategyFactory)()
+        Dim tmpStrategyName as String = shiftStrategyFactory.GetShiftStrategyName( CType(CbGStype.SelectedValue, GearboxType), _vehicleJobType)
+        Dim tmpStrategy As IShiftPolygonCalculator = shiftStrategyFactory.CreateShiftPolygonCalculator(tmpStrategyName)
 
         Dim shiftLines As ShiftPolygon = tmpStrategy.ComputeDeclarationShiftPolygon(
             CType(CbGStype.SelectedValue, GearboxType), gear - 1,

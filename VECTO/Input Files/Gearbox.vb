@@ -293,7 +293,7 @@ Public Class Gearbox
                                                        .VehicleData =
                                                        New VehicleData() _
                                                        With { .DynamicTyreRadius = rdyn,
-                                                       .VehicleCategory = vehiclecategory}}, Nothing)
+                                                       .VehicleCategory = vehiclecategory}})
                 'gearbox, engine, gearbox, axlegearData.AxleGear.Ratio, rdyn,
                 '                                vehiclecategory, gearbox, Nothing, Nothing)
             End If

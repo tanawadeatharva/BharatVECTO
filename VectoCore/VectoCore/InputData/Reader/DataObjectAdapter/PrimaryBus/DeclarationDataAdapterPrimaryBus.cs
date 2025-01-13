@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ninject;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -22,8 +23,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 	{
 		public abstract class PrimaryBusBase : IPrimaryBusDeclarationDataAdapter
 		{
+			[Inject]
+			public IShiftStrategyFactory ShiftStrategyFactory { get; private set; }
 
-			public abstract GearboxType[] SupportedGearboxTypes { get; }
+            public abstract GearboxType[] SupportedGearboxTypes { get; }
 
 			protected virtual IDriverDataAdapterBus DriverDataAdapter => new PrimaryBusDriverDataAdapter();
 			protected virtual IAxleGearDataAdapter AxleGearDataAdapter => new AxleGearDataAdapter();
@@ -42,8 +45,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 			protected abstract IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter { get; }
 
+			protected string GetShiftStrategyName(IVehicleDeclarationInputData inputData,
+				GearboxType? overrideGearboxType, bool isTestPowertrain = false)
+			{
+				var gbxType = overrideGearboxType ?? inputData.Components.GearboxInputData.Type;
+				return ShiftStrategyFactory.GetShiftStrategyName(gbxType, inputData.VehicleType);
+			}
 
-			public DriverData CreateBusDriverData(Segment segment, VectoSimulationJobType jobType, ArchitectureID arch,
+            public DriverData CreateBusDriverData(Segment segment, VectoSimulationJobType jobType, ArchitectureID arch,
 				CompressorDrive compressorDrive)
 			{
 				return DriverDataAdapter.CreateBusDriverData(segment, jobType, arch, compressorDrive);
@@ -112,13 +121,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 				return EngineDataAdapter.CreateEngineData(vehicle, engineMode, mission);
 			}
 
-			public virtual GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
-				IShiftPolygonCalculator shiftPolygonCalc)
+			public virtual GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData, GearboxType? overrideGearboxType = null)
 			{
-				return GearboxDataAdapter.CreateGearboxData(inputData, runData, shiftPolygonCalc, SupportedGearboxTypes);
-			}
+				var name = GetShiftStrategyName(inputData, overrideGearboxType);
+				var retVal = GearboxDataAdapter.CreateGearboxData(inputData, runData, ShiftStrategyFactory.CreateShiftPolygonCalculator(name), supportedGearboxTypes: SupportedGearboxTypes);
+				retVal.ShiftStrategy = name;
+				return retVal;
 
-			public virtual ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed,
+            }
+
+            public virtual ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed,
 				GearboxType gearboxType, int gearsCount)
 			{
 				return GearboxDataAdapter.CreateGearshiftData(axleRatio, engineIdlingSpeed, gearboxType, gearsCount);

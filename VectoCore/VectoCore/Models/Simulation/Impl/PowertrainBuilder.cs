@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private IVehicleContainerFactory _vehicleContainerFactory;
 
-		public PowertrainBuilder(IVehicleContainerFactory vehicleContainerFactory)
+		public PowertrainBuilder(IVehicleContainerFactory vehicleContainerFactory, IShiftStrategyFactory shiftStrategyFactory) : base(shiftStrategyFactory)
 		{
 			_vehicleContainerFactory = vehicleContainerFactory;
 

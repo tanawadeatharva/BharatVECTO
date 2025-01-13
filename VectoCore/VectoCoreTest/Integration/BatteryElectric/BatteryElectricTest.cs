@@ -26,6 +26,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies.ShiftPolygonCalc;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.SimulationComponentData;
@@ -1015,7 +1016,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 					new ATClutchInfo(container);
 					break;
 				case PowertrainPosition.BatteryElectricE2:
-					var strategy = new PEVAMTShiftStrategy(container);
+					var strategy = new PEVAMTShiftStrategyPolygonCreator(runData.GearshiftParameters);
 
 					foreach (var entry in gearboxData.Gears) {
 						entry.Value.ShiftPolygon = strategy.ComputeDeclarationShiftPolygon(GearboxType.AMT,
@@ -1027,7 +1028,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 						.AddComponent(new AxleGear(container, runData.AxleGearData))
 						.AddComponent(runData.AngledriveData != null ? new Angledrive(container, runData.AngledriveData) : null)
 						.AddComponent(runData.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
-						.AddComponent(new PEVGearbox(container, strategy))
+						.AddComponent(new PEVGearbox(container, new PEVAMTShiftStrategy(container)))
 						.AddComponent(runData.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
 						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2, runData.ElectricMachinesData, container, es, ctl));
 					new ATClutchInfo(container);

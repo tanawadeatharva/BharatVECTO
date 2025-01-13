@@ -294,11 +294,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						Vehicle.Components.GearboxInputData.Type,
 						Vehicle.Components.GearboxInputData.Gears.Count
 					);
-				var shiftStrategyName =
-					PowertrainBuilder.GetShiftStrategyName(Vehicle.Components.GearboxInputData.Type,
-						Vehicle.VehicleType);
-				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
-					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData);
 			}
 
 			protected override bool AxleGearRequired()
@@ -336,11 +332,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						Vehicle.Components.GearboxInputData.Type,
 						Vehicle.Components.GearboxInputData.Gears.Count
 					);
-				var shiftStrategyName =
-					PowertrainBuilder.GetShiftStrategyName(Vehicle.Components.GearboxInputData.Type,
-						Vehicle.VehicleType);
-				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
-					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData);
 			}
 
 			#endregion
@@ -430,11 +422,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						GearboxType.APTN,
 						Vehicle.Components.IEPC.Gears.Count
 					);
-				var shiftStrategyName =
-					PowertrainBuilder.GetShiftStrategyName(GearboxType.APTN,
-						Vehicle.VehicleType);
-				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
-					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
+				
+				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData, GearboxType.APTN);
 
 			}
 
