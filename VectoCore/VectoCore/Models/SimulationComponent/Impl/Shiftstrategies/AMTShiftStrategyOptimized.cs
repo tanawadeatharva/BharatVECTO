@@ -309,7 +309,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return response;
 		}
 
-		public new static string Name => "AMT - EffShift";
+		public const string Name = "AMT - EffShift";
 
 	}
 }

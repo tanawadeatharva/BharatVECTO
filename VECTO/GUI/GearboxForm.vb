@@ -1097,7 +1097,7 @@ Public Class GearboxForm
         Dim kernel As IKernel = new StandardKernel(new VectoNinjectModule)
         dim shiftStrategyFactory as IShiftStrategyFactory = kernel.Get(of IShiftStrategyFactory)()
         Dim tmpStrategyName as String = shiftStrategyFactory.GetShiftStrategyName( CType(CbGStype.SelectedValue, GearboxType), VectoSimulationJobType.BatteryElectricVehicle)
-        Dim tmpStrategy As IShiftPolygonCalculator = shiftStrategyFactory.CreateShiftPolygonCalculator(tmpStrategyName)
+        Dim tmpStrategy As IShiftPolygonCalculator = shiftStrategyFactory.CreateShiftPolygonCalculator(tmpStrategyName, Nothing)
 
         dim em as ElectricMotorData = ConvertToElectricMotorData(emFld, gear)
 
@@ -1135,7 +1135,7 @@ Public Class GearboxForm
         Dim kernel As IKernel = new StandardKernel(new VectoNinjectModule)
         dim shiftStrategyFactory as IShiftStrategyFactory = kernel.Get(of IShiftStrategyFactory)()
         Dim tmpStrategyName as String = shiftStrategyFactory.GetShiftStrategyName( CType(CbGStype.SelectedValue, GearboxType), _vehicleJobType)
-        Dim tmpStrategy As IShiftPolygonCalculator = shiftStrategyFactory.CreateShiftPolygonCalculator(tmpStrategyName)
+        Dim tmpStrategy As IShiftPolygonCalculator = shiftStrategyFactory.CreateShiftPolygonCalculator(tmpStrategyName, Nothing)
 
         Dim shiftLines As ShiftPolygon = tmpStrategy.ComputeDeclarationShiftPolygon(
             CType(CbGStype.SelectedValue, GearboxType), gear - 1,

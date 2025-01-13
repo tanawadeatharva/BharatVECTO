@@ -5,11 +5,13 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies.ShiftPolygonCalc;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
@@ -19,9 +21,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		string GetShiftStrategyName(GearboxType gearboxType, VectoSimulationJobType jobType);
 
-		IShiftPolygonCalculator CreateShiftPolygonCalculator(string shiftStrategyName);
+		IShiftPolygonCalculator CreateShiftPolygonCalculator(string shiftStrategyName, ShiftStrategyParameters shiftParams);
 
-		IShiftPolygonCalculator CreateShiftPolygonCalculator(GearboxType gearboxType, VectoSimulationJobType jobType);
+		IShiftPolygonCalculator CreateShiftPolygonCalculator(GearboxType gearboxType, VectoSimulationJobType jobType, ShiftStrategyParameters shiftParams);
 	}
 
 	public interface IShiftPolygonCalculator
@@ -131,14 +133,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
             }
         }
 
-		public IShiftPolygonCalculator CreateShiftPolygonCalculator(string shiftStrategyName)
+		public IShiftPolygonCalculator CreateShiftPolygonCalculator(string shiftStrategyName, ShiftStrategyParameters shiftParams)
 		{
-			return null;
+			switch (shiftStrategyName) {
+                case AMTShiftStrategyOptimized.Name:
+					return new AMTShiftStrategyOptimizedPolygonCalculator();
+                case AMTShiftStrategy.Name:
+					return new AMTShiftStrategyPolygonCalculator();
+                case APTNShiftStrategy.Name:
+					return new PEVAMTShiftStrategyPolygonCreator(shiftParams);
+                case ATShiftStrategyOptimized.Name:
+                    return new ATShiftStrategyOptimizedPolygonCalculator();
+                default:
+					throw new VectoException(
+						$"undefined shift polygon calculator for shift strategy ${shiftStrategyName}");
+			}
 		}
 
-		public IShiftPolygonCalculator CreateShiftPolygonCalculator(GearboxType gearboxType, VectoSimulationJobType jobType)
+		public IShiftPolygonCalculator CreateShiftPolygonCalculator(GearboxType gearboxType, VectoSimulationJobType jobType, ShiftStrategyParameters shiftParams)
 		{
-			return CreateShiftPolygonCalculator(GetShiftStrategyName(gearboxType, jobType));
+			return CreateShiftPolygonCalculator(GetShiftStrategyName(gearboxType, jobType), shiftParams);
 		}
 	}
 }

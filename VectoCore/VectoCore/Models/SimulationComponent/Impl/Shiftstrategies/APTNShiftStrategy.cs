@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			}
 		}
 
-		public new static string Name => "APT-N";
+		public const string Name = "APT-N";
 
 		protected override GearshiftPosition CheckEarlyDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition currentGear, IResponse resp)
 		{

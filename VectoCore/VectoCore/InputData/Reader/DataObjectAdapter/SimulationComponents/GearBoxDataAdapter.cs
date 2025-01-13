@@ -450,7 +450,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return retVal;
 		}
 
-		private static ShiftPolygon CalculateDeratedEmShiftPolygon(VectoRunData runData,
+		protected virtual ShiftPolygon CalculateDeratedEmShiftPolygon(VectoRunData runData,
 			IShiftPolygonCalculator shiftPolygonCalculator, IGearboxDeclarationInputData gearbox, uint i, double axlegearRatio,
 			Meter dynamicTyreRadius)
 		{

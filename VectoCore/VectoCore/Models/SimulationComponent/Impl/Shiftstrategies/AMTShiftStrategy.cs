@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override GearshiftPosition NextGear => _nextGear;
 
-		public static string Name => "AMT - Classic";
+		public const string Name = "AMT - Classic";
 
 
 		public override GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
