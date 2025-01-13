@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 			if (reessElements.Any(x => x.REESSPack.StorageType == REESSType.Battery)) {
 				var eletricStorageAdapter = new ElectricStorageAdapter();
-				var batData = eletricStorageAdapter.CreateBatteryData(reess, vehicle.VehicleType, vehicle.OvcHev);
+				var batData = eletricStorageAdapter.CreateBatteryData(reess, vehicle.VehicleType, vehicle.OVC);
 				foreach (var entry in batData.Batteries.OrderBy(x => x.Item1)) {
 					var batteryPackInput = entry.Item2.InputData;
 					var battery = batteryPackInput.REESSPack as IBatteryPackDeclarationInputData;

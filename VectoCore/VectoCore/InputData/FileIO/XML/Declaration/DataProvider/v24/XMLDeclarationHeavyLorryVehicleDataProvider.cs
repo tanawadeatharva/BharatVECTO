@@ -128,7 +128,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		}
 
 		public override bool HybridElectricHDV => true;
-
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -159,7 +158,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override CubicMeter CargoVolume => null;
 
-		public override bool OvcHev => true;
+		public override bool OVC => true;
 
 		#endregion
 
@@ -189,7 +188,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
-		public override bool OvcHev => true;
+		public override bool OVC => true;
 
 		#endregion
 
@@ -242,7 +241,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		}
 
 		public override bool HybridElectricHDV => true;
-
 	}
 
 	// ---------------------------------------------------------------------------------------

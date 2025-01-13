@@ -148,7 +148,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 #else
 
 #endif
-				
 
 				iterativeRunStrategy.Update = (modData, runData) => {
 					runData.JobType = jobType;

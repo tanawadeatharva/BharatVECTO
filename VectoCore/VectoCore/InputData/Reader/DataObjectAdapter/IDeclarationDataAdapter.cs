@@ -9,6 +9,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
@@ -78,6 +79,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			CombustionEngineData engineData,
 			IList<Tuple<PowertrainPosition, ElectricMotorData>> emData,
             ArchitectureID archId);
+
+		FuelCellSystemDeclarationData CreateFuelCells(IFuelCellSystemDeclarationInputData fuelCellSystem);
 	}
 
 	public interface IPrimaryBusDeclarationDataAdapter : IDeclarationDataAdapter
@@ -112,6 +115,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			ArchitectureID architectureId);
 		
 		RetarderData CreateGenericRetarderData(IRetarderInputData retarderData, VectoRunData vectoRun);
+		
+		FuelCellSystemDeclarationData CreateFuelCells(IFuelCellSystemDeclarationInputData fuelCellSystem);
 	}
 
 	public interface IGenericCompletedBusDeclarationDataAdapter : IDeclarationDataAdapter

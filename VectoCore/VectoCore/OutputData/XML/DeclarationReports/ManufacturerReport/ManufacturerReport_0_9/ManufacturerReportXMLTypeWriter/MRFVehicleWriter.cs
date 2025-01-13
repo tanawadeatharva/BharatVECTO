@@ -137,6 +137,73 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
+	public class HevF2LorryVehicleTypeWriter : VehicleTypeWriter
+	{
+		public HevF2LorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetFuelCell_lorryVehicleOutputSequenceGroup().GetElements(inputData),
+				//_mrfFactory.GetEngineTorqueLimitationsType().GetElement(inputData),
+				_mrfFactory.GetHEV_F2_LorryComponentsType().GetElement(inputData));
+				//_mrfFactory.GetHEV_S2_LorryComponentsType().GetElement(inputData));
+		}
+
+		#endregion
+	}
+
+	public class HevF3LorryVehicleTypeWriter : VehicleTypeWriter
+	{
+		public HevF3LorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetFuelCell_lorryVehicleOutputSequenceGroup().GetElements(inputData),
+				_mrfFactory.GetHEV_F3_LorryComponentsType().GetElement(inputData));
+		}
+
+		#endregion
+	}
+
+	public class HevF4LorryVehicleTypeWriter : VehicleTypeWriter
+	{
+		public HevF4LorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetFuelCell_lorryVehicleOutputSequenceGroup().GetElements(inputData),
+				_mrfFactory.GetHEV_F4_LorryComponentsType().GetElement(inputData));
+		}
+
+		#endregion
+	}
+
+	public class HevIepcFLorryVehicleTypeWriter : VehicleTypeWriter
+	{
+		public HevIepcFLorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetFuelCell_lorryVehicleOutputSequenceGroup().GetElements(inputData),
+				_mrfFactory.GetHEV_IEPC_F_LorryComponentsType().GetElement(inputData));
+		}
+
+		#endregion
+	}
+
 	public class PevE2LorryVehicleTypeWriter : VehicleTypeWriter
 	{
 		public PevE2LorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
@@ -328,6 +395,70 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
 				_mrfFactory.GetHEV_IEPC_S_PrimaryBusComponentsType().GetElement(inputData));
+		}
+
+		#endregion
+	}
+
+	// todo amogoda: bus4. implement correct FC methods in GetElement().
+	public class HevF2PrimaryBusVehicleTypeWriter : VehicleTypeWriter
+	{
+		public HevF2PrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetFuelCell_PrimaryBusVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetHEV_F2_PrimaryBusComponentsType().GetElement(inputData));
+		}
+
+		#endregion
+	}
+
+	public class HevF3PrimaryBusVehicleTypeWriter : VehicleTypeWriter
+	{
+		public HevF3PrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetFuelCell_PrimaryBusVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetHEV_F3_PrimaryBusComponentsType().GetElement(inputData));
+		}
+
+		#endregion
+	}
+	public class HevF4PrimaryBusVehicleTypeWriter : VehicleTypeWriter
+	{
+		public HevF4PrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetFuelCell_PrimaryBusVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetHEV_F4_PrimaryBusComponentsType().GetElement(inputData));
+		}
+
+		#endregion
+	}
+
+	public class HevIepcFPrimaryBusVehicleTypeWriter : VehicleTypeWriter
+	{
+		public HevIepcFPrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetFuelCell_PrimaryBusVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetHEV_IEPC_F_PrimaryBusComponentsType().GetElement(inputData));
 		}
 
 		#endregion

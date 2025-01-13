@@ -22,6 +22,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         IResultGroupWriter GetLorryHEVNonOVCSuccessResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IResultGroupWriter GetLorryHEVOVCSuccessResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IResultGroupWriter GetLorryPEVSuccessResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
+        IResultGroupWriter GetLorryPEVNonOVCSuccessResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
 
         IResultGroupWriter GetLorryErrorResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
 
@@ -67,6 +68,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         IReportResultsSummaryWriter GetLorryHEVNonOVCSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IReportResultsSummaryWriter GetLorryHEVOVCSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IReportResultsSummaryWriter GetLorryPEVSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
+        IReportResultsSummaryWriter GetLorryPEVNonOVCSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
 
         IReportResultsSummaryWriter GetBusConvSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IReportResultsSummaryWriter GetBusHEVNonOVCSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);

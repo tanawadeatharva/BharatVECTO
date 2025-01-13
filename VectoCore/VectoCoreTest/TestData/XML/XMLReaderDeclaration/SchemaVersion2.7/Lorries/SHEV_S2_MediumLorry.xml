@@ -24,16 +24,17 @@
 		<IdlingSpeed>650</IdlingSpeed>
 		<CargoVolume>20.300</CargoVolume>
 		<!-- optional -->
-		<RetarderType>None</RetarderType>
-		<AngledriveType>None</AngledriveType>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<RetarderType>Transmission Input Retarder</RetarderType>
+		<RetarderRatio>1.000</RetarderRatio>
+		<AngledriveType>Separate Angledrive</AngledriveType>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<NgTankSystem>Liquefied</NgTankSystem>
 		<!-- optional -->
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>S2</ArchitectureID>
 		<OVC>true</OVC>
 		<BatteryOnlyMode>true</BatteryOnlyMode>
-		<DynamicChargingTechnology>None</DynamicChargingTechnology>
+		<DynamicChargingTechnology>Wireless</DynamicChargingTechnology>
 		<ADAS>
 			<EngineStopStart>true</EngineStopStart>
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>

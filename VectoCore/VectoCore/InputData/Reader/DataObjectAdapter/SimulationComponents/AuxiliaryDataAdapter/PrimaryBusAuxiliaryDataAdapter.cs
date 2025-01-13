@@ -441,9 +441,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					return busParams.HVACHEV;
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
-					return busParams.HVACPEV;
-				case VectoSimulationJobType.FCHV:
+				case VectoSimulationJobType.FCHV: // todo amogoda: bus2. HVAC PEV or HEV?
 				case VectoSimulationJobType.FCHV_IEPC:
+					return busParams.HVACPEV;
 				case VectoSimulationJobType.EngineOnlySimulation:
 				default:
 					throw new ArgumentOutOfRangeException(nameof(vehicleType), vehicleType, null);
@@ -600,11 +600,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					hvacParams = mission.BusParameter.HVACHEV;
 					break;
 				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.FCHV_IEPC:
+				case VectoSimulationJobType.FCHV:
 				case VectoSimulationJobType.IEPC_E:
 					hvacParams = mission.BusParameter.HVACPEV;
 					break;
-				case VectoSimulationJobType.FCHV:
-				case VectoSimulationJobType.FCHV_IEPC:
 				case VectoSimulationJobType.EngineOnlySimulation:
 				default:
 					throw new ArgumentOutOfRangeException();
@@ -670,7 +670,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				DemandType = AuxiliaryDemandType.Dynamic,
 				ID = Constants.Auxiliaries.IDs.Cond,
 				ConnectToREESS = true,
-				PowerDemandElectric = DeclarationData.Conditioning.LookupPowerDemand(hdv, mission),
+				PowerDemandElectric = DeclarationData.Conditioning.LookupPowerDemand(hdv, jobType, mission),
 			};
 
 			auxDataList.Add(aux);

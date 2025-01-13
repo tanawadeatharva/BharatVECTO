@@ -616,6 +616,11 @@ Public Class DummyVehicle
 	Public Property Manufacturer As String Implements IComponentInputData.Manufacturer
 	Public Property Model As String Implements IComponentInputData.Model
 	Public Property [Date] As DateTime Implements IComponentInputData.[Date]
+	Public Property SimulationToolLicenseNumber As String Implements IVehicleDeclarationInputData.SimulationToolLicenseNumber
+	Public Property H2StorageUsableCapacity As Kilogram Implements IVehicleDeclarationInputData.H2StorageUsableCapacity
+	Public Property HydrogenStorageTechnology As HydrogenStorageTechnology? Implements IVehicleDeclarationInputData.HydrogenStorageTechnology
+	Public Property BatteryOnlyMode As Boolean Implements IVehicleDeclarationInputData.BatteryOnlyMode
+	Public Property DynamicChargingTechnology As DynamicChargingTechnology Implements IVehicleDeclarationInputData.DynamicChargingTechnology
 	Public ReadOnly Property AppVersion As String Implements IComponentInputData.AppVersion
 	Public Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
 	Public Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
@@ -688,7 +693,7 @@ Public Class DummyVehicle
 	Public ReadOnly Property XMLSource As XmlNode Implements IVehicleDeclarationInputData.XMLSource
 	Public ReadOnly Property VehicleTypeApprovalNumber As String Implements IVehicleDeclarationInputData.VehicleTypeApprovalNumber
 	Public ReadOnly Property ArchitectureID As ArchitectureID Implements IVehicleDeclarationInputData.ArchitectureID
-	Public ReadOnly Property OvcHev As Boolean Implements IVehicleDeclarationInputData.OvcHev
+	Public ReadOnly Property OVC As Boolean Implements IVehicleDeclarationInputData.OVC
 	Public ReadOnly Property MaxChargingPower As Watt Implements IVehicleDeclarationInputData.MaxChargingPower
 	Public ReadOnly Property IVehicleDeclarationInputData_VehicleType As VectoSimulationJobType Implements IVehicleDeclarationInputData.VehicleType
 
@@ -721,7 +726,8 @@ Public Class DummyVehicle
 	Public ReadOnly Property ElectricMachines As IElectricMachinesDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricMachines
 	Public ReadOnly Property IEPCEngineeringInputData As IIEPCEngineeringInputData Implements IVehicleComponentsEngineering.IEPCEngineeringInputData
 	Public ReadOnly Property FuelCellSystemInputData As IFuelCellSystemEngineeringInputData Implements IVehicleComponentsEngineering.FuelCellSystemInputData
-	Public ReadOnly Property IEPC As IIEPCDeclarationInputData Implements IVehicleComponentsDeclaration.IEPC
+    Public ReadOnly Property IEPC As IIEPCDeclarationInputData Implements IVehicleComponentsDeclaration.IEPC
+    Public ReadOnly Property FuelCellSystem As IFuelCellSystemDeclarationInputData Implements IVehicleComponentsDeclaration.FuelCellSystem
 End Class
 
 

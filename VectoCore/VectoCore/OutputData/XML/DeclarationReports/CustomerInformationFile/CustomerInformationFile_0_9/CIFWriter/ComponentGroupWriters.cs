@@ -182,7 +182,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			IList<IElectricMotorVoltageLevel> voltageLevels = null;
 			var vehicle = GetVehicle(inputData);
 			var count = 1;
-			if (vehicle.ArchitectureID == ArchitectureID.S_IEPC || vehicle.ArchitectureID == ArchitectureID.E_IEPC) {
+			if (vehicle.ArchitectureID == ArchitectureID.S_IEPC || vehicle.ArchitectureID == ArchitectureID.E_IEPC || vehicle.ArchitectureID == ArchitectureID.F_IEPC) {
 				count = vehicle.Components.IEPC.DesignTypeWheelMotor && vehicle.Components.IEPC.NrOfDesignTypeWheelMotorMeasured == 1 ? 2 : 1;
                 totalRatedPropulsionPower = vehicle.Components.IEPC.TotalRatedPowerCalculated;
 				voltageLevels = vehicle.Components.IEPC.VoltageLevels.ToList();
@@ -238,7 +238,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			var batUsableCap = 0.SI<WattSecond>();
 			if (reess.ElectricStorageElements.Any(x => x.REESSPack.StorageType == REESSType.Battery)) {
 				var eletricStorageAdapter = new ElectricStorageAdapter();
-				var batData = eletricStorageAdapter.CreateBatteryData(reess, vehicle.VehicleType, vehicle.OvcHev);
+				var batData = eletricStorageAdapter.CreateBatteryData(reess, vehicle.VehicleType, vehicle.OVC);
 				batUsableCap = batData.UseableStoredEnergy;
 				batTotalCap = batData.TotalStoredEnergy;
 			}

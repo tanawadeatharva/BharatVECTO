@@ -130,9 +130,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
-	// ---------------------------------------------------------------------------------------
+    public class XMLDeclarationADASDataConventionalProviderV27 : XMLDeclarationADASDataConventionalProviderV24
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
 
-	public class XMLDeclarationADASDataHEVProviderV24 : XMLDeclarationADASDataProviderV21
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationADASDataConventionalProviderV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+            : base(vehicle, componentNode, sourceFile) { }
+    }
+
+    // ---------------------------------------------------------------------------------------
+
+    public class XMLDeclarationADASDataHEVProviderV24 : XMLDeclarationADASDataProviderV21
 	{
 		/*
 		 * new field added in version 2.3
@@ -157,9 +167,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
-	// ---------------------------------------------------------------------------------------
+    public class XMLDeclarationADASDataHEVProviderV27 : XMLDeclarationADASDataHEVProviderV24
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
 
-	public class XMLDeclarationADASDataPEVProviderV24 : XMLDeclarationADASDataProviderV21
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationADASDataHEVProviderV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+            : base(vehicle, componentNode, sourceFile) { }
+
+        #region Overrides of XMLDeclarationADASDataProviderV10
+
+        public override bool? ATEcoRollReleaseLockupClutch => null;
+
+        public override EcoRollType EcoRoll => EcoRollType.None;
+        #endregion
+
+        protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+    }
+
+    // ---------------------------------------------------------------------------------------
+
+    public class XMLDeclarationADASDataPEVProviderV24 : XMLDeclarationADASDataProviderV21
 	{
 		
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
@@ -184,9 +213,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
-	// ---------------------------------------------------------------------------------------
+    public class XMLDeclarationADASDataPEVProviderV27 : XMLDeclarationADASDataProviderV21
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
 
-	public class XMLDeclarationADASDataIEPCProviderV24 : XMLDeclarationADASDataProviderV21
+        public new const string XSD_TYPE = "ADAS_PEV_Type";
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationADASDataPEVProviderV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+            : base(vehicle, componentNode, sourceFile) { }
+
+        public override bool? ATEcoRollReleaseLockupClutch => null;
+
+        public override EcoRollType EcoRoll => EcoRollType.None;
+
+        public override bool EngineStopStart => false;
+
+        protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+    }
+
+    // ---------------------------------------------------------------------------------------
+
+    public class XMLDeclarationADASDataIEPCProviderV24 : XMLDeclarationADASDataProviderV21
 	{
 		
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;

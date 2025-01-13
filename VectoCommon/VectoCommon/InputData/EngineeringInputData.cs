@@ -67,7 +67,7 @@ namespace TUGraz.VectoCommon.InputData
 		IEPC_E,
 		IEPC_S,
 		IHPC,
-		MultiplePowertrains
+		MultiplePowertrains,
 	}
 
 	public static class VectoSimulationJobTypeHelper
@@ -75,11 +75,16 @@ namespace TUGraz.VectoCommon.InputData
 		public const string Conventional = "Conventional";
 		public const string Hybrid = "Hybrid";
 		public const string PureElectric = "PureElectric";
-		
+		public const string FuelCell = "FuelCell";
 
 		public static bool IsBatteryElectric(this VectoSimulationJobType jobType)
 		{
 			return jobType == VectoSimulationJobType.BatteryElectricVehicle || jobType == VectoSimulationJobType.IEPC_E;
+		}
+
+		public static bool IsIEPC(this VectoSimulationJobType jobType)
+		{
+			return jobType == VectoSimulationJobType.IEPC_S || jobType == VectoSimulationJobType.IEPC_E || jobType == VectoSimulationJobType.FCHV_IEPC;
 		}
 
 		public static string GetPowertrainArchitectureType(this VectoSimulationJobType jobType)
@@ -98,7 +103,7 @@ namespace TUGraz.VectoCommon.InputData
 					return PureElectric;
 				case VectoSimulationJobType.FCHV:
 				case VectoSimulationJobType.FCHV_IEPC:
-					throw new NotImplementedException("Relevant for Reports");
+					return FuelCell;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
 			}
@@ -131,7 +136,7 @@ namespace TUGraz.VectoCommon.InputData
 					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
 			}
 		}
-		
+
 		public static bool HasEngine(this VectoSimulationJobType jobType)
 		{
 			switch (jobType) {
@@ -160,10 +165,11 @@ namespace TUGraz.VectoCommon.InputData
 
 			switch (jobType) {
 				case VectoSimulationJobType.IEPC_E:
-				case VectoSimulationJobType.FCHV_IEPC:
 					return ArchitectureID.E_IEPC;
 				case VectoSimulationJobType.IEPC_S:
 					return ArchitectureID.S_IEPC;
+				case VectoSimulationJobType.FCHV_IEPC:
+					return ArchitectureID.F_IEPC;
 				default:
 					throw new ArgumentException(nameof(jobType));
 			}
@@ -215,12 +221,12 @@ namespace TUGraz.VectoCommon.InputData
 			}
 		}
 	}
-	
+
 
 	public interface IHybridStrategyParameters
 	{
 		double EquivalenceFactorDischarge { get; }
-		
+
 		double EquivalenceFactorCharge { get; }
 
 		double MinSoC { get; }
@@ -263,11 +269,11 @@ namespace TUGraz.VectoCommon.InputData
 
         Meter Height { get; }
 
-		
+
 		new IVehicleComponentsEngineering Components { get; }
 
 		new IAdvancedDriverAssistantSystemsEngineering ADAS { get; }
-		
+
 		double InitialSOC { get; }
 
 		new IVehicleInMotionChargingEngineering InMotionCharging { get; }
@@ -404,7 +410,7 @@ namespace TUGraz.VectoCommon.InputData
 		TableData PTOCycleWhileDriving { get; }
 
 	}
-	
+
 	public interface IAxleEngineeringInputData : IAxleDeclarationInputData
 	{
 		/// <summary>
@@ -835,7 +841,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IAuxiliaryEngineeringInputData
 	{
-		
+
 		/// <summary>
 		/// P178
 		/// additional constant auxiliary load, similar to Padd; not specified in the cycle but as auxiliary
@@ -843,7 +849,7 @@ namespace TUGraz.VectoCommon.InputData
 		Watt ConstantPowerDemand { get; }
 
 		Watt PowerDemandICEOffDriving { get; }
-		
+
 		Watt PowerDemandICEOffStandstill { get; }
 
 

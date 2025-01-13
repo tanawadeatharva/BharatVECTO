@@ -31,10 +31,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		public IResultsWriter GetMRFResultsWriter(string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
 		{
 			try {
-				return _internalFactory.GetMRFResultsWriter(
-					new VehicleTypeAndArchitectureStringHelperResults.ResultsVehicleClassification(
+				var resultsVehicleClassification = new VehicleTypeAndArchitectureStringHelperResults.ResultsVehicleClassification(
 						XmlDocumentType.ManufacturerReport, vehicleCategory,
-						jobType.GetPowertrainArchitectureType(), ovc, exempted));
+						jobType.GetPowertrainArchitectureType(), ovc, exempted);
+				return _internalFactory.GetMRFResultsWriter(resultsVehicleClassification);
 			} catch (Exception e) {
 				throw new Exception($"Could not create ResultsWriter for vehicle category {vehicleCategory}, {jobType}, ovc: {ovc}, exempted: {exempted}", e);
 			}

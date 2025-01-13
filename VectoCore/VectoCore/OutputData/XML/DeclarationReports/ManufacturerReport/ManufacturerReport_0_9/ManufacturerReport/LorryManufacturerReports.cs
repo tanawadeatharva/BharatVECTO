@@ -128,6 +128,75 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
+	internal class HEV_F2_LorryManufacturerReport : LorryManufacturerReportBase
+	{
+		public HEV_F2_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
+
+		#region Overrides of AbstractManufacturerReport
+
+		public override string OutputDataType => XMLNames.MRF_OutputDataType_HEV_F2_LorryManufacturerOutputDataType;
+
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _mRFReportFactory.GetHEV_F2_LorryVehicleType().GetElement(inputData);
+		}
+
+		#endregion
+	}
+
+	internal class HEV_F3_LorryManufacturerReport : LorryManufacturerReportBase
+	{
+		public override string OutputDataType => XMLNames.MRF_OutputDataType_HEV_F3_LorryManufacturerOutputDataType;
+
+		public HEV_F3_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory)
+			: base(MRFReportFactory, resultFactory)
+		{
+		}
+
+		#region Overrides of AbstractManufacturerReport
+
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _mRFReportFactory.GetHEV_F3_LorryVehicleType().GetElement(inputData);
+		}
+
+		#endregion
+	}
+
+	internal class HEV_F4_LorryManufacturerReport : LorryManufacturerReportBase
+	{
+		public HEV_F4_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory)
+			: base(MRFReportFactory, resultFactory) { }
+
+		#region Overrides of AbstractManufacturerReport
+
+		public override string OutputDataType => XMLNames.MRF_OutputDataType_HEV_F4_LorryManufacturerOutputDataType;
+
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _mRFReportFactory.GetHEV_F4_LorryVehicleType().GetElement(inputData);
+		}
+
+		#endregion
+	}
+
+	internal class HEV_IEPC_F_LorryManufacturerReport : LorryManufacturerReportBase
+	{
+		public HEV_IEPC_F_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory)
+			: base(MRFReportFactory, resultFactory) { }
+
+		#region Overrides of AbstractManufacturerReport
+
+		public override string OutputDataType => XMLNames.MRF_OutputDataType_HEV_IEPC_F_LorryManufacturerOutputDataType;
+
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _mRFReportFactory.GetHEV_IEPC_F_LorryVehicleType().GetElement(inputData);
+		}
+
+		#endregion
+	}
+
 	internal class PEV_E2_LorryManufacturerReport : LorryManufacturerReportBase
 	{
 		public PEV_E2_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }

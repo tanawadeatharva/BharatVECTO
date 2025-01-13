@@ -95,7 +95,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLDeclarationInputDataProviderV20(XmlDocument xmlDoc, string fileName) : base(xmlDoc, fileName) { }
-
-
 	}
+
+
+	// ---------------------------------------------------------------------------------------
+
+    public class XMLDeclarationInputDataProviderV27 : XMLDeclarationInputDataProviderV10
+    {
+        public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+
+        public new const string XSD_TYPE = "VectoDeclarationJobType";
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationInputDataProviderV27(XmlDocument xmlDoc, string fileName) : base(xmlDoc, fileName) { }
+    }
 }

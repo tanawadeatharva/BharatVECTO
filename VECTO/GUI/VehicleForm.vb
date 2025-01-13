@@ -527,9 +527,9 @@ Public Class VehicleForm
 					pnMaxChargingPwr.Enabled = False
 					tbMaxChargingPwr.Text = String.Empty
 				Else
-					cbOvc.Checked = vehicle.OvcHev
-					pnMaxChargingPwr.Enabled = vehicle.OvcHev
-					If vehicle.OvcHev Then
+					cbOvc.Checked = vehicle.OVC
+					pnMaxChargingPwr.Enabled = vehicle.OVC
+					If vehicle.OVC Then
 						tbMaxChargingPwr.Text = vehicle.MaxChargingPower.ConvertToKiloWatt().Value.ToGUIFormat()
 					End If
 				End If
@@ -1104,7 +1104,7 @@ Public Class VehicleForm
 				veh.ReessPacks.Add(Tuple.Create(reess.SubItems(REESPackTbl.ReessFile).Text, reess.SubItems(REESPackTbl.Count).Text.ToInt(), reess.SubItems(REESPackTbl.StringId).Text.ToInt()))
 			Next
 			veh.InitialSOC = tbInitialSoC.Text.ToDouble(80) / 100.0
-			veh.OvcHev = cbOvc.Checked
+			veh.OVC = cbOvc.Checked
 			veh.MaxChargingPower = tbMaxChargingPwr.Text.ToDouble(0).SI(Unit.SI.Kilo.Watt).Cast(Of Watt)
 
 			If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse

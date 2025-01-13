@@ -21,14 +21,16 @@
 		<CorrectedActualMass>6995</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>18000</TechnicalPermissibleMaximumLadenMass>
 		<IdlingSpeed>600</IdlingSpeed>
-		<RetarderType>None</RetarderType>
+		<RetarderType>Transmission Input Retarder</RetarderType>
+		<RetarderRatio>1.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
 		<PTO>
-			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
-			<PTOOtherElements>none</PTOOtherElements>
+			<PTOShaftsGearWheels>only the drive shaft of the PTO</PTOShaftsGearWheels>
+			<PTOOtherElements>multi-disc clutch</PTOOtherElements>
 		</PTO>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
-		<VocationalVehicle>false</VocationalVehicle>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
+		<VocationalVehicle>true</VocationalVehicle>
+		<NgTankSystem>Compressed</NgTankSystem>
 		<SleeperCab>true</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ADAS>
@@ -37,6 +39,8 @@
 			<EcoRollWithEngineStop>true</EcoRollWithEngineStop>
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
+		<H2StorageUsableCapacity>1.0</H2StorageUsableCapacity>
+		<HydrogenStorageTechnology>Compressed</HydrogenStorageTechnology>
 		<Components>
 			<Engine>
 				<v2.0:Data xsi:type="EngineDataDeclarationType" id="ENG-gooZah3D" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.6">

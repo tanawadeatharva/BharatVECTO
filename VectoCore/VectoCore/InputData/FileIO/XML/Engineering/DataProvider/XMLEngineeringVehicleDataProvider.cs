@@ -92,7 +92,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>();
 
-		public virtual VehicleCategory VehicleCategory =>
+		public virtual string SimulationToolLicenseNumber => null;
+
+		public virtual Kilogram H2StorageUsableCapacity => null;
+
+        public virtual HydrogenStorageTechnology? HydrogenStorageTechnology => null;
+
+		public virtual bool BatteryOnlyMode => false;
+
+		public virtual DynamicChargingTechnology DynamicChargingTechnology => DynamicChargingTechnology.None;
+
+        public virtual VehicleCategory VehicleCategory =>
 			GetNode(XMLNames.Vehicle_VehicleCategory, required: false)?.InnerText.ParseEnum<VehicleCategory>() ??
 			VehicleCategory.Unknown;
 
@@ -155,7 +165,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components => null;
 		public string VehicleTypeApprovalNumber => null;
 		public ArchitectureID ArchitectureID { get; }
-		public bool OvcHev { get; }
+		public bool OVC { get; }
 		public Watt MaxChargingPower { get; }
 
 		IAdvancedDriverAssistantSystemDeclarationInputData IVehicleDeclarationInputData.ADAS => null;

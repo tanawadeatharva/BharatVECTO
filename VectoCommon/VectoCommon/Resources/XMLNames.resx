@@ -2211,10 +2211,64 @@
   <data name="TorqueCurve_Gear" xml:space="preserve">
     <value>gear</value>
   </data>
-  <data name="IEPC_DisengagementClutch" xml:space="preserve">
-    <value>DisengagementClutch</value>
-  </data>
   <data name="MaxTorqueCurve_attr_gear" xml:space="preserve">
     <value>gear</value>
+  </data>
+  <data name="FuelCell_Consumption" xml:space="preserve">
+    <value>fuelConsumption</value>
+  </data>
+  <data name="FuelCell_ConsumptionEntry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="FuelCell_FCSRatedPower" xml:space="preserve">
+    <value>FCSRatedPower</value>
+  </data>
+  <data name="FuelCell_PowerOutput" xml:space="preserve">
+    <value>powerOutput</value>
+  </data>
+  <data name="FuelCell_PowerOutputConsumptionMap" xml:space="preserve">
+    <value>FuelCellPowerOutputConsumptionMap</value>
+  </data>
+  <data name="IEPC_DisengagementClutch" xml:space="preserve">
+    <value>DisengagementCluth</value>
+  </data>
+  <data name="FuelCell_Count" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="FuelCell_Cell" xml:space="preserve">
+    <value>FuelCell</value>
+  </data>
+  <data name="FuelCell_Module" xml:space="preserve">
+    <value>FuelCellModule</value>
+  </data>
+  <data name="FuelCell_MaxPower" xml:space="preserve">
+    <value>MaxPower</value>
+  </data>
+  <data name="FuelCell_MinPower" xml:space="preserve">
+    <value>MinPower</value>
+  </data>
+  <data name="CIF_OutputDataType_HEV_F2_LorryOutputType" xml:space="preserve">
+    <value>HEV_F2_LorryOutputType</value>
+  </data>
+  <data name="CIF_OutputDataType_HEV_F3_LorryOutputType" xml:space="preserve">
+    <value>HEV_F3_LorryOutputType</value>
+  </data>
+  <data name="CIF_OutputDataType_HEV_F4_LorryOutputType" xml:space="preserve">
+    <value>HEV_F4_LorryOutputType</value>
+  </data>
+  <data name="CIF_OutputDataType_HEV_IEPC_F_LorryOutputType" xml:space="preserve">
+    <value>HEV_IEPC_F_LorryOutputType</value>
+  </data>
+  <data name="MRF_OutputDataType_HEV_F2_LorryManufacturerOutputDataType" xml:space="preserve">
+    <value>HEV-F2_LorryManufacturerOutputDataType</value>
+  </data>
+  <data name="MRF_OutputDataType_HEV_F3_LorryManufacturerOutputDataType" xml:space="preserve">
+    <value>HEV-F3_LorryManufacturerOutputDataType</value>
+  </data>
+  <data name="MRF_OutputDataType_HEV_F4_LorryManufacturerOutputDataType" xml:space="preserve">
+    <value>HEV-F4_LorryManufacturerOutputDataType</value>
+  </data>
+  <data name="MRF_OutputDataType_HEV_IEPC_F_LorryManufacturerOutputDataType" xml:space="preserve">
+    <value>HEV-IEPC-F_LorryManufacturerOutputDataType</value>
   </data>
 </root>
