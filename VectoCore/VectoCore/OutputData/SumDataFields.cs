@@ -526,7 +526,7 @@ namespace TUGraz.VectoCore.OutputData
 			{ E_PS_CompressorOn, SumFunc((r, m) => m.EnergyPneumaticCompressorOn().ConvertToKiloWattHour(), ModalResultField.Nl_busAux_PS_generated)},
 			{ E_BusAux_ES_generated, SumFunc((r, m) => m.EnergyBusAuxESGenerated().ConvertToKiloWattHour(), ModalResultField.P_busAux_ES_generated)},
 			{ E_BusAux_ES_consumed, SumFunc((r, m) => m.EnergyBusAuxESConsumed().ConvertToKiloWattHour(), ModalResultField.P_busAux_ES_consumer_sum)},
-			{ Delta_E_BusAux_Battery, SumFunc((r, m) => (r.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
+			{ Delta_E_BusAux_Battery, SumFunc((r, m) => (r.BusAuxiliaries?.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
 					? m.DeltaSOCBusAuxBattery() * r.BusAuxiliaries.ElectricalUserInputsConfig.ElectricStorageCapacity
 					: 0.SI<WattSecond>())
 				.ConvertToKiloWattHour()) },
