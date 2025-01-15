@@ -534,7 +534,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						Vehicle.Components.IEPC.Gears.Count
 					);
 				
-				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData);
+				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData, GearboxType.APTN);
 
 			}
 

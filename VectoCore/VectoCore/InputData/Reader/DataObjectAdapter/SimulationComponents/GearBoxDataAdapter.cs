@@ -566,9 +566,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 							dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2);
 					}
 				}
-				var gearData = new GearData
+
+				var deratedEmShiftPolygon = CalculateDeratedEmShiftPolygon(runData, shiftPolygonCalc, gearInput, i, axlegearRatio,
+						dynamicTyreRadius);
+                var gearData = new GearData
 				{
 					ShiftPolygon = shiftPolygon,
+					DeRatedEmShiftPolygon = deratedEmShiftPolygon,
 					MaxSpeed = gear.MaxOutputShaftSpeed == null ? null : gear.MaxOutputShaftSpeed * gear.Ratio,
 					MaxTorque = gear.MaxOutputShaftTorque == null ? null : gear.MaxOutputShaftTorque * count / gear.Ratio,
 					Ratio = gear.Ratio,
@@ -594,9 +598,36 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return retVal;
 		}
 
-		#region Overrides of GearboxDataAdapterBase
+		protected virtual ShiftPolygon CalculateDeratedEmShiftPolygon(VectoRunData runData,
+			IShiftPolygonCalculator shiftPolygonCalculator, List<ITransmissionInputData> gearInput, uint i,
+			double axlegearRatio,
+			Meter dynamicTyreRadius)
+		{
+			var em = runData.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item2;
+			var shiftStrategyParameters = runData.GearshiftParameters;
+			var emFld = em.EfficiencyData.VoltageLevels.First().FullLoadCurve;
+			var contTq = em.Overload.ContinuousTorque;
+			var limitedFld = DeclarationData.Gearbox.LimitElectricMotorFullLoadCurve(emFld, contTq);
+			var limitedEm = new ElectricMotorData() {
+				EfficiencyData = new VoltageLevelData() {
+					VoltageLevels = new List<ElectricMotorVoltageLevelData>() {
+						new ElectricMotorVoltageLevelData() {
+							FullLoadCurve = limitedFld
+						}
+					}
+				},
+				RatioADC = em.RatioADC,
+			};
+			var deratedEmShiftPolygon = shiftPolygonCalculator.ComputeElectricMotorDeclarationShiftPolygon(GearboxType.APTN, (int)i,
+				gearInput, axlegearRatio,
+				dynamicTyreRadius, em, limitedEm);
+			return deratedEmShiftPolygon;
+			//retVal[i + 1] = shiftPolygon;
+		}
 
-		protected override GearboxData DoCreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
+        #region Overrides of GearboxDataAdapterBase
+
+        protected override GearboxData DoCreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
 			IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes)
 		{
 			return CreateIEPCGearboxData(inputData, runData, shiftPolygonCalculator);

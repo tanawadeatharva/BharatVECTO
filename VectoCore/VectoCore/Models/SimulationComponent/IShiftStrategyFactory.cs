@@ -141,6 +141,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
                 case AMTShiftStrategy.Name:
 					return new AMTShiftStrategyPolygonCalculator();
                 case APTNShiftStrategy.Name:
+				case PEVAMTShiftStrategy.Name:
 					return new PEVAMTShiftStrategyPolygonCreator(shiftParams);
                 case ATShiftStrategyOptimized.Name:
                     return new ATShiftStrategyOptimizedPolygonCalculator();

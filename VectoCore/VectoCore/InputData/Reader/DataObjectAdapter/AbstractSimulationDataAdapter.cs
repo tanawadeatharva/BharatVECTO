@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		protected string GetShiftStrategyName(IVehicleDeclarationInputData inputData,
+		protected virtual string GetShiftStrategyName(IVehicleDeclarationInputData inputData,
 			GearboxType? overrideGearboxType)
 		{
 			var gbxType = overrideGearboxType ?? inputData.Components.GearboxInputData.Type;

@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected PowertrainPosition EMPos;
 		//private PEVAMTShiftStrategyPolygonCreator _shiftPolygonImplementation;
 
-		public static string Name => "AMT - EffShift (BEV)";
+		public const string Name = "AMT - EffShift (BEV)";
 
 		protected bool DriveOffStandstill { get; set; }
 
