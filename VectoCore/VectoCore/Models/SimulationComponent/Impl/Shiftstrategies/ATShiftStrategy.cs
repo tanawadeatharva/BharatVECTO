@@ -448,8 +448,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(GearshiftParams.TimeBetweenGearshifts);
 
 			if (shiftTimeReached && IsBelowDownShiftCurve(gear, inTorque, inAngularVelocity)) {
-				Downshift(absTime, gear);
-				return true;
+				var next_gear = Gears.Predecessor(gear);
+
+				if (!(next_gear.TorqueConverterLocked.Equals(true)) || !(IsAboveUpShiftCurve(next_gear, outTorque / GearboxModelData.Gears[next_gear.Gear].Ratio, outAngularVelocity * GearboxModelData.Gears[next_gear.Gear].Ratio, true)))
+				{
+					Downshift(absTime, gear);
+					return true;
+				}
 			}
 
 			if (shiftTimeReached && DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate) {
