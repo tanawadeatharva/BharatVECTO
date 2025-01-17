@@ -6,8 +6,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 	{
 		public override void Load()
 		{
-			Bind<IEngineeringDataAdapter>().To<EngineeringDataAdapter>()
-				.WhenInjectedExactlyInto<EngineeringModeVectoRunDataFactory>();
+			Bind<IEngineeringDataAdapter>().To<EngineeringDataAdapter>();
 		}
 	}
 }

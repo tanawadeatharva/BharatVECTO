@@ -60,11 +60,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
 			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactoryEngineering(dataProvider, fileWriter, false, PowertrainBuilder, ModDataFactory) {
-				ModalResults1Hz = false,
-				WriteModalResults = true,
-				ActualModalData = false
-			};
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, dataProvider, fileWriter);
+			runsFactory.ModalResults1Hz = false;
+			runsFactory.WriteModalResults = true;
+			runsFactory.ActualModalData = false;
 
 			jobContainer.AddRuns(runsFactory);
 			
@@ -91,12 +90,10 @@ namespace TUGraz.VectoCore.Tests.Integration
             var sumWriter = new SummaryDataContainer(fileWriter);
             var jobContainer = new JobContainer(sumWriter);
             var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
-            var runsFactory = new SimulatorFactoryEngineering(dataProvider, fileWriter, false, PowertrainBuilder, ModDataFactory)
-            {
-                ModalResults1Hz = false,
-                WriteModalResults = true,
-                ActualModalData = false
-            };
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, dataProvider, fileWriter);
+			runsFactory.ModalResults1Hz = false;
+			runsFactory.WriteModalResults = true;
+			runsFactory.ActualModalData = false;
 
             jobContainer.AddRuns(runsFactory);
 
@@ -138,12 +135,10 @@ namespace TUGraz.VectoCore.Tests.Integration
             var sumWriter = new SummaryDataContainer(fileWriter);
             var jobContainer = new JobContainer(sumWriter);
             var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
-            var runsFactory = new SimulatorFactoryEngineering(dataProvider, fileWriter, false, PowertrainBuilder, ModDataFactory)
-            {
-                ModalResults1Hz = false,
-                WriteModalResults = true,
-                ActualModalData = false
-            };
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, dataProvider, fileWriter);
+			runsFactory.ModalResults1Hz = false;
+			runsFactory.WriteModalResults = true;
+			runsFactory.ActualModalData = false;
 
             jobContainer.AddRuns(runsFactory);
 

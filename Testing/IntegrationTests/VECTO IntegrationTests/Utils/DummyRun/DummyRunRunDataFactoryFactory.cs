@@ -105,7 +105,7 @@ public class DummyRunRunDataFactoryFactory : IVectoRunDataFactoryFactory
         throw new NotImplementedException();
     }
 
-    public IVectoRunDataFactory CreateEngineeringRunDataFactory(IEngineeringInputDataProvider inputDataProvider)
+    public IVectoRunDataFactory CreateEngineeringRunDataFactory(IInputDataProvider inputDataProvider)
     {
         throw new NotImplementedException();
     }
