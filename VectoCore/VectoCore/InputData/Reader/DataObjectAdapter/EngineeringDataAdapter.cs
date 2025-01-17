@@ -61,13 +61,58 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
-	public class EngineeringDataAdapter : AbstractSimulationDataAdapter
+	public interface IEngineeringDataAdapter
+	{
+		VehicleData CreateVehicleData(IVehicleEngineeringInputData data);
+		VehicleData.ADASData CreateADAS(IAdvancedDriverAssistantSystemsEngineering adas);
+		AirdragData CreateAirdragData(IAirdragEngineeringInputData airdragData, IVehicleEngineeringInputData data);
+
+		CombustionEngineData CreateEngineData(
+			IVehicleEngineeringInputData vehicle, IEngineModeEngineeringInputData engineMode);
+
+		CombustionEngineData CreateEngineData(IEngineEngineeringInputData engine, IEngineModeEngineeringInputData engineMode);
+		WHRData CreateWHRData(IWHRData whrInputData, WHRType whrType);
+		GearboxData CreateGearboxData(IEngineeringInputDataProvider inputData, VectoRunData runData);
+		AxleGearData CreateAxleGearData(IAxleGearInputData data);
+		AngledriveData CreateAngledriveData(IAngledriveInputData data);
+		IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesEngineeringInputData auxInputData);
+		DriverData CreateDriverData(IDriverEngineeringInputData driver);
+		RetarderData CreateRetarderData(IRetarderInputData retarder, PowertrainPosition powertrainPosition);
+		PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto);
+
+		IAuxiliaryConfig CreateBusAuxiliariesData(IAuxiliariesEngineeringInputData auxInputData,
+			VehicleData vehicleData, VectoSimulationJobType jobType);
+
+		ShiftStrategyParameters CreateGearshiftData(GearboxType gbxType, IGearshiftEngineeringInputData gsInputData, double axleRatio, PerSecond engineIdlingSpeed);
+		BatterySystemData CreateBatteryData(IElectricStorageSystemEngineeringInputData batteryInputData, double initialSOC);
+		SuperCapData CreateSuperCapData(IElectricStorageSystemEngineeringInputData reessInputData, double initialSOC);
+
+		IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(
+			IElectricMachinesEngineeringInputData electricMachines,
+			IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage,
+			GearList gearlist = null);
+
+		ElectricMotorData CreateElectricMachine(PowertrainPosition powertrainPosition,
+			IElectricMotorEngineeringInputData motorData, int count,
+			double ratio, double[] ratioPerGear, double efficiency, TableData adcLossMap,
+			IList<Tuple<Volt, TableData>> torqueLimits, Volt averageVoltage, GearList gearList);
+
+		HybridStrategyParameters CreateHybridStrategyParameters(
+			IEngineeringJobInputData jobInputData,
+			CombustionEngineData combustionEngineData, GearboxData gearboxData);
+
+		List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(IIEPCEngineeringInputData iepc, Volt averageVoltage);
+		GearboxData CreateIEPCGearboxData(IEngineeringInputDataProvider inputData, VectoRunData runData);
+		PTOData CreateBatteryElectricPTOTransmissionData(IPTOTransmissionInputData pto);
+	}
+
+	public class EngineeringDataAdapter : AbstractSimulationDataAdapter, IEngineeringDataAdapter
 	{
 		private AirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
 
+		//private EngineeringDataAdapter() {}
 
-
-		internal VehicleData CreateVehicleData(IVehicleEngineeringInputData data)
+		public VehicleData CreateVehicleData(IVehicleEngineeringInputData data)
 		{
 			if (data.SavedInDeclarationMode) {
 				WarnEngineeringMode("VehicleData");
@@ -100,7 +145,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		private VehicleData.ADASData CreateADAS(IAdvancedDriverAssistantSystemsEngineering adas)
+		public VehicleData.ADASData CreateADAS(IAdvancedDriverAssistantSystemsEngineering adas)
 		{
 			return adas == null ?
 				new VehicleData.ADASData() {
@@ -192,7 +237,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			Log.Error("{0} is in Declaration Mode but is used for Engineering Mode!", msg);
 		}
 
-		internal CombustionEngineData CreateEngineData(
+		public CombustionEngineData CreateEngineData(
 			IVehicleEngineeringInputData vehicle, IEngineModeEngineeringInputData engineMode)
 		{
 			var engine = vehicle.Components.EngineInputData;
@@ -248,7 +293,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		private WHRData CreateWHRData(IWHRData whrInputData, WHRType whrType)
+		public WHRData CreateWHRData(IWHRData whrInputData, WHRType whrType)
 		{
 			if (whrInputData == null || whrInputData.GeneratedPower == null) {
 				return null;
@@ -266,7 +311,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		internal CombustionEngineData CreateEngineData(IEngineEngineeringInputData engine, IEngineModeEngineeringInputData engineMode)
+		public CombustionEngineData CreateEngineData(IEngineEngineeringInputData engine, IEngineModeEngineeringInputData engineMode)
 		{
 			if (engine.SavedInDeclarationMode) {
 				WarnEngineeringMode("EngineData");
@@ -292,7 +337,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		internal GearboxData CreateGearboxData(IEngineeringInputDataProvider inputData, VectoRunData runData)
+		public GearboxData CreateGearboxData(IEngineeringInputDataProvider inputData, VectoRunData runData)
 		{
 			var vehicle = inputData.JobInputData.Vehicle;
 			var gearbox = vehicle.Components.GearboxInputData;
@@ -544,7 +589,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return auxList;
 		}
 
-		internal DriverData CreateDriverData(IDriverEngineeringInputData driver) {
+		public DriverData CreateDriverData(IDriverEngineeringInputData driver) {
 			if (driver.SavedInDeclarationMode) {
 				WarnEngineeringMode("DriverData");
 			}
@@ -977,7 +1022,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						x.MechanicalTransmissionLossMap, torqueLimits?.First(t =>t.Key == x.Position).Value, averageVoltage, gearlist))).ToList();
 		}
 
-		private ElectricMotorData CreateElectricMachine(PowertrainPosition powertrainPosition,
+		public ElectricMotorData CreateElectricMachine(PowertrainPosition powertrainPosition,
 			IElectricMotorEngineeringInputData motorData, int count,
 			double ratio, double[] ratioPerGear, double efficiency, TableData adcLossMap,
 			IList<Tuple<Volt, TableData>> torqueLimits, Volt averageVoltage, GearList gearList)
@@ -1332,8 +1377,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var gears = new Dictionary<uint, GearData>();
 
 			retVal.ShiftStrategy =
-				ShiftStrategyFactory?.GetShiftStrategyName(vehicle.Components.GearboxInputData.Type,
-					vehicle.VehicleType);
+				ShiftStrategyFactory?.GetShiftStrategyName(GearboxType.APTN,  vehicle.VehicleType);
 			var shiftPolygonCalc = ShiftStrategyFactory?.CreateShiftPolygonCalculator(retVal.ShiftStrategy, runData.GearshiftParameters);
             
 			for (uint i = 0; i < iepc.Gears.Count; i++) {

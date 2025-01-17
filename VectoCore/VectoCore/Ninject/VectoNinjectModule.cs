@@ -94,6 +94,8 @@ namespace TUGraz.VectoCore
 
 			LoadModule<DeclarationDataAdapterNinjectModule>();
 
+			LoadModule<EngineeringDataAdapterNinjectModule>();
+
 			LoadModule<GroupWriterNinjectModule>();
 
 			LoadModule<ComponentWriterNinjectModule>();

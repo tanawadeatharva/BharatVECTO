@@ -278,7 +278,9 @@ namespace TUGraz.VectoCore.OutputData
 				}
 
 				DoStoreResult(entry, runData, modData);
-				StoredResults.Add(Tuple.Create(entry, runData, modData));
+				lock (StoredResults) {
+					StoredResults.Add(Tuple.Create(entry, runData, modData));
+				}
 			}
 
 			WriteResults();

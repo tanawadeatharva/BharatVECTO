@@ -23,6 +23,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 		private VehicleTypeAndArchitectureStringHelperRundata _vehicleStringHelper = new VehicleTypeAndArchitectureStringHelperRundata();
 
+		private UseFirstArgumentStringHelper _useFirstArgHelper = new UseFirstArgumentStringHelper();
 
 		#region Overrides of NinjectModule
 
@@ -48,9 +49,21 @@ namespace TUGraz.VectoCore.InputData.Reader
 								},
 								skipArguments = 1,
 								takeArguments = 1,
+							},
+							new CombineArgumentsToNameInstanceProvider.MethodSettings() {
+								combineToNameDelegate = _useFirstArgHelper.CreateName,
+								methods = new [] {
+									typeof(IInternalRunDataFactoryFactory)
+										.GetMethod(nameof(IInternalRunDataFactoryFactory.CreateEngineeringRunDataFactory)),
+									typeof(IInternalRunDataFactoryFactory).GetMethod(nameof(IInternalRunDataFactoryFactory.CreateEngineOnlyRunDataFactory))
+								},
+								skipArguments = 1,
+								takeArguments = 1,
 							}
 						)).InSingletonScope();
 
+
+			Bind<IVectoRunDataFactory>().To<EngineeringModeVectoRunDataFactory>().Named("EngineeringRunDataFactory");
 
 			#region Lorries
 
