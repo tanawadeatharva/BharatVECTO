@@ -362,13 +362,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		///=======================================================================================
 
-		public class HybridCtlShiftStrategy : ShiftStrategy
+		public class HybridCtlShiftStrategy : BaseShiftStrategy<Gearbox>
 		{
 			protected HybridController _controller;
 
-
-			//protected readonly GearshiftPosition MaxStartGear;
-			protected GearshiftPosition _nextGear { get; set; }
+			protected Gearbox _gearbox;
+            protected GearshiftPosition _nextGear { get; set; }
 
 			protected readonly GearList GearList;
 			protected readonly VectoRunData _runData;
@@ -410,29 +409,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, DataBus);
 			}
-
-			//public override ShiftPolygon ComputeDeclarationShiftPolygon(GearboxType gearboxType, int i,
-			//	EngineFullLoadCurve engineDataFullLoadCurve,
-			//	IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio,
-			//	Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
-			//{
-			//	return DeclarationData.Gearbox.ComputeEfficiencyShiftPolygon(
-			//		i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
-			//}
-
-			//public override ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
-			//	GearboxType gearboxType,
-			//	int i,
-			//	EngineFullLoadCurve engineDataFullLoadCurve,
-			//	IList<ITransmissionInputData> gearboxGears,
-			//	CombustionEngineData engineData,
-			//	double axlegearRatio,
-			//	Meter dynamicTyreRadius,
-			//	ElectricMotorData electricMotorData = null)
-			//{
-			//	return DeclarationData.Gearbox.ComputeManualTransmissionShiftPolygonExtended(
-			//		i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
-			//}
 
 			protected override bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
 				PerSecond outAngularVelocity, NewtonMeter inTorque,
@@ -563,14 +539,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return _nextGear;
 			}
 
-
-			protected virtual bool SpeedTooLowForEngine(GearshiftPosition gear, PerSecond outAngularSpeed) => 
-				(outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsSmaller(DataBus.EngineInfo.EngineIdleSpeed);
-
-			protected virtual bool SpeedTooHighForEngine(GearshiftPosition gear, PerSecond outAngularSpeed) =>
-				(outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsGreaterOrEqual(
-					VectoMath.Min(GearboxModelData.Gears[gear.Gear].MaxSpeed, DataBus.EngineInfo.EngineN95hSpeed));
-
 			public override GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
 				var tmpGear = new GearshiftPosition(_nextGear.Gear);
@@ -609,12 +577,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 					_nextGear = gear;
 				}
-			}
-
-			public override IGearbox Gearbox
-			{
-				get => _gearbox;
-				set => _gearbox = value as Gearbox ?? throw new VectoException("This shift strategy can't handle gearbox of type {0}", value.GetType());
 			}
 
 			public override GearshiftPosition NextGear => _nextGear;

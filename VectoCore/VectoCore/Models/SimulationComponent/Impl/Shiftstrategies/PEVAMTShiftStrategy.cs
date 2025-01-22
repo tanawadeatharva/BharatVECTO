@@ -25,6 +25,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
     public class PEVAMTShiftStrategy : LoggingObject, IShiftStrategy
 	{
+		public const string Name = "AMT - EffShift (BEV)";
+		
 		protected IDataBus DataBus;
 		protected readonly GearboxData GearboxModelData;
 
@@ -43,14 +45,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		private SI TransmissionRatio;
 		private ShiftStrategyParameters GearshiftParams;
 		private GearList GearList;
-		//private Dictionary<uint, ShiftPolygon> DeRatedShiftpolygons;
 		private SimpleCharger TestContainerElectricSystemCharger;
 		private double EMRatio;
 
 		protected PowertrainPosition EMPos;
-		//private PEVAMTShiftStrategyPolygonCreator _shiftPolygonImplementation;
-
-		public const string Name = "AMT - EffShift (BEV)";
 
 		protected bool DriveOffStandstill { get; set; }
 
@@ -76,8 +74,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			PowertrainBuilder = dataBus.SimplePowertrainBuilder;
 			var runData = dataBus.RunData;
 			_shiftStrategyParameters = runData.GearshiftParameters;
-			//_shiftPolygonImplementation =
-			//	ShiftPolygonCalculator.Create(Name, _shiftStrategyParameters) as PEVAMTShiftStrategyPolygonCreator;
+
 			if (runData.VehicleData == null) {
 				return;
 			}
@@ -102,9 +99,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 			var em = runData.ElectricMachinesData.First(x => x.Item1 == EMPos).Item2;
 			EMRatio = em.RatioADC;
-			//DeRatedShiftpolygons = CalculateDeratedShiftLines(em,
-			//	runData.GearboxData.InputData.Gears, runData.VehicleData.DynamicTyreRadius,
-			//	runData.AxleGearData?.AxleGear.Ratio ?? 1.0, runData.GearboxData.Type);
 
 			// create testcontainer
 			var testContainer = PowertrainBuilder.BuildSimplePowertrainElectric(runData);
@@ -112,7 +106,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, DataBus);
 			foreach (var motor in testContainer.ElectricMotors.Values)
 			{
-				if ((motor as ElectricMotor).Control is SimpleElectricMotorControl emCtl) {
+				if ((motor as ElectricMotor)?.Control is SimpleElectricMotorControl emCtl) {
 					emCtl.EmOff = false; //Make sure em is switched on
 				}
 			}
@@ -144,37 +138,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			dataBus.AddPreprocessor(
 				new VelocitySpeedGearshiftPreprocessorE2(VelocityDropData, runData.GearboxData.TractionInterruption, TestContainer, -grad, grad, 2));
 		}
-
-
-		//protected internal Dictionary<uint, ShiftPolygon> CalculateDeratedShiftLines(ElectricMotorData em,
-		//	IList<ITransmissionInputData> gearData, Meter rDyn, double axleGearRatio, GearboxType gearboxType)
-		//{
-		//	var retVal = new Dictionary<uint, ShiftPolygon>();
-		//	for (var i = 0u; i < gearData.Count; i++) {
-		//		var emFld = em.EfficiencyData.VoltageLevels.First().FullLoadCurve;
-		//		var contTq = em.Overload.ContinuousTorque;
-		//		var limitedFld = DeclarationData.Gearbox.LimitElectricMotorFullLoadCurve(emFld, contTq);
-		//		var limitedEm = new ElectricMotorData() {
-		//			EfficiencyData = new VoltageLevelData() {
-		//				VoltageLevels = new List<ElectricMotorVoltageLevelData>() {
-		//					new ElectricMotorVoltageLevelData() {
-		//						FullLoadCurve = limitedFld
-		//					}
-		//				}
-		//			},
-		//			RatioADC = em.RatioADC,
-		//		};
-  //              var shiftPolygon = _shiftPolygonImplementation.ComputeDeclarationShiftPolygon((int)i,
-		//			gearData, axleGearRatio,
-		//			rDyn, limitedEm, _shiftStrategyParameters.PEV_DeRatedDownshiftSpeedFactor * emFld.RatedSpeed,
-		//			_shiftStrategyParameters.PEV_DownshiftMinSpeedFactor * emFld.RatedSpeed);
-		//		retVal[i + 1] = shiftPolygon;
-		//	}
-
-		//	return retVal;
-		//}
-
-		
 
 		#region Implementation of IShiftStrategy
 

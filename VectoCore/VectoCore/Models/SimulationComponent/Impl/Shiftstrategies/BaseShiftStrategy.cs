@@ -29,10 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -40,19 +38,19 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-    public abstract class BaseShiftStrategy : LoggingObject, IShiftStrategy
+    public abstract class BaseShiftStrategy<T> : LoggingObject, IShiftStrategy where T : class, IGearbox
 	{
 		protected readonly IDataBus DataBus;
 		protected readonly GearboxData GearboxModelData;
 		protected readonly ShiftStrategyParameters GearshiftParams;
 
 		protected readonly GearList Gears;
+
+		protected T _gearbox;
 
 		protected ISimplePowertrainBuilder PowertrainBuilder { get; private set; }
 
@@ -67,7 +65,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Gears = GearboxModelData.GearList;
 		}
 
-		public virtual bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
+		public virtual IGearbox Gearbox {
+			get => _gearbox;
+			set {
+				var myGearbox = value as T;
+				if (myGearbox == null) {
+					throw new VectoException("This shift strategy can't handle gearbox of type {0}", value.GetType());
+				}
+				_gearbox = myGearbox;
+			}
+		}
+
+        public virtual bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
 			PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, GearshiftPosition gear,
 			Second lastShiftTime, IResponse response)
 		{
@@ -84,7 +93,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public abstract GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity);
 		public abstract GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
 		public abstract void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
-		public abstract IGearbox Gearbox { get; set; }
+		
 		public abstract GearshiftPosition NextGear { get; }
 
 		public bool CheckGearshiftRequired { get; protected set; }
@@ -100,13 +109,111 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			
 		}
 
-		//public abstract ShiftPolygon ComputeDeclarationShiftPolygon(
-		//	GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
-		//	CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null);
+		/// <summary>
+		/// Tests if the operating point is below the down-shift curve (=outside of shift curve).
+		/// </summary>
+		/// <param name="gear">The gear.</param>
+		/// <param name="inTorque">The in torque.</param>
+		/// <param name="inEngineSpeed">The in engine speed.</param>
+		/// <returns><c>true</c> if the operating point is below the down-shift curv; otherwise, <c>false</c>.</returns>
+		protected bool IsBelowDownShiftCurve(GearshiftPosition gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
+		{
+			if (!Gears.HasPredecessor(gear)) {
+				return false;
+			}
+			return GearboxModelData.Gears[gear.Gear].ShiftPolygon.IsBelowDownshiftCurve(inTorque, inEngineSpeed);
+		}
 
-		//public abstract ShiftPolygon ComputeDeclarationExtendedShiftPolygon(
-		//	GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
-		//	CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null);
+		#region Helper Functions ICE operating point vs. Upshift/Downshift curve
+
+        /// <summary>
+        /// Tests if the operating point is below the down-shift curve (=outside of shift curve).
+        /// </summary>
+        /// <param name="gear">The gear.</param>
+        /// <param name="inTorque">The in torque.</param>
+        /// <param name="inEngineSpeed">The in engine speed.</param>
+        /// <returns><c>true</c> if the operating point is below the down-shift curve; otherwise, <c>false</c>.</returns>
+        protected virtual bool IsAboveDownShiftCurve(GearshiftPosition gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
+		{
+			if (!Gears.HasPredecessor(gear)) {
+				return true;
+			}
+			return GearboxModelData.Gears[gear.Gear].ShiftPolygon.IsAboveDownshiftCurve(inTorque, inEngineSpeed);
+		}
+
+		/// <summary>
+		/// Tests if the operating point is below the extended down-shift curve (=outside of shift curve).
+		/// </summary>
+		/// <param name="gear">The gear.</param>
+		/// <param name="inTorque">The in torque.</param>
+		/// <param name="inEngineSpeed">The in engine speed.</param>
+		/// <returns><c>true</c> if the operating point is below the extended down-shift curve; otherwise, <c>false</c>.</returns>
+		protected virtual bool IsBelowExtendedDownShiftCurve(GearshiftPosition gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
+		{
+			if (!Gears.HasPredecessor(gear)) {
+				return false;
+			}
+			return GearboxModelData.Gears[gear.Gear].ExtendedShiftPolygon.IsBelowDownshiftCurve(inTorque, inEngineSpeed);
+		}
+
+		/// <summary>
+		/// Tests if the operating point is above the down-shift curve (=outside of shift curve).
+		/// </summary>
+		/// <param name="gear">The gear.</param>
+		/// <param name="inTorque">The in torque.</param>
+		/// <param name="inEngineSpeed">The in engine speed.</param>
+		/// <returns><c>true</c> if the operating point is above the extended down-shift curve; otherwise, <c>false</c>.</returns>
+		protected virtual bool IsAboveExtendedDownShiftCurve(GearshiftPosition gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
+		{
+			if (!Gears.HasPredecessor(gear)) {
+				return true;
+			}
+			return GearboxModelData.Gears[gear.Gear].ExtendedShiftPolygon.IsAboveDownshiftCurve(inTorque, inEngineSpeed);
+		}
+
+		/// <summary>
+		/// Tests if the operating point is above the up-shift curve (=outside of shift curve).
+		/// </summary>
+		/// <param name="gear">The gear.</param>
+		/// <param name="inTorque">The in torque.</param>
+		/// <param name="inEngineSpeed">The in engine speed.</param>
+		/// <returns><c>true</c> if the operating point is above the up-shift curve; otherwise, <c>false</c>.</returns>
+		protected virtual bool IsAboveUpShiftCurve(GearshiftPosition gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
+		{
+			if (!Gears.HasSuccessor(gear)) {
+				return false;
+			}
+			return GearboxModelData.Gears[gear.Gear].ShiftPolygon.IsAboveUpshiftCurve(inTorque, inEngineSpeed);
+		}
+
+		/// <summary>
+		/// Tests if the operating point is velow the up-shift curve (=outside of shift curve).
+		/// </summary>
+		/// <param name="gear">The gear.</param>
+		/// <param name="inTorque">The in torque.</param>
+		/// <param name="inEngineSpeed">The in engine speed.</param>
+		/// <returns><c>true</c> if the operating point is below the up-shift curve; otherwise, <c>false</c>.</returns>
+		protected virtual bool IsBelowUpShiftCurve(GearshiftPosition gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
+		{
+			if (!Gears.HasSuccessor(gear)) {
+				return true;
+			}
+			return GearboxModelData.Gears[gear.Gear].ShiftPolygon.IsBelowUpshiftCurve(inTorque, inEngineSpeed);
+		}
+
+		#endregion
+
+		#region Helper Functions checking engine speed
+
+		protected virtual bool SpeedTooLowForEngine(GearshiftPosition gear, PerSecond outAngularSpeed) =>
+			(outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsSmaller(DataBus.EngineInfo.EngineIdleSpeed);
+
+		protected virtual bool SpeedTooHighForEngine(GearshiftPosition gear, PerSecond outAngularSpeed) =>
+			(outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsGreaterOrEqual(VectoMath.Min(
+				GearboxModelData.Gears[gear.Gear].MaxSpeed,
+				DataBus.EngineInfo.EngineN95hSpeed - 1.RPMtoRad()));
+
+		#endregion
 
 		protected MeterPerSquareSecond EstimateAccelerationForGear(GearshiftPosition gear, PerSecond gbxAngularVelocityOut)
 		{

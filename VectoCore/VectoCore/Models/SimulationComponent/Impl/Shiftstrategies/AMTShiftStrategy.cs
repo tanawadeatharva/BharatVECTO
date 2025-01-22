@@ -36,18 +36,16 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	/// <summary>
 	/// AMTShiftStrategy implements the AMT Shifting Behaviour.
 	/// </summary>
-	public class AMTShiftStrategy : ShiftStrategy
+	[Obsolete("no longer maintained - use AMTShiftStrategyOptimized")]
+	public class AMTShiftStrategy : BaseShiftStrategy<Gearbox>
 	{
 		//protected readonly GearshiftPosition MaxStartGear;
 		protected GearshiftPosition _nextGear;
@@ -55,12 +53,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		
 		protected ITestPowertrain<Gearbox> TestPowertrain;
 
-		public AMTShiftStrategy(IVehicleContainer container) : base(container)
+		protected Gearbox _gearbox;
+
+        public AMTShiftStrategy(IVehicleContainer container) : base(container)
 		{
 			var runData = container.RunData;
-			EarlyShiftUp = true;
-			SkipGears = true;
-
+			
 			if (runData.EngineData == null) {
 				return;
 			}
@@ -85,18 +83,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// create testcontainer
 			var testContainer = PowertrainBuilder.BuildSimplePowertrain(runData);
 			TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, DataBus);
-		}
-
-		protected bool SpeedTooLowForEngine(GearshiftPosition gear, PerSecond outAngularSpeed)
-		{
-			return (outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsSmaller(DataBus.EngineInfo.EngineIdleSpeed);
-		}
-
-		protected bool SpeedTooHighForEngine(GearshiftPosition gear, PerSecond outAngularSpeed)
-		{
-			return
-				(outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsGreaterOrEqual(VectoMath.Min(GearboxModelData.Gears[gear.Gear].MaxSpeed,
-																				DataBus.EngineInfo.EngineN95hSpeed - 1.RPMtoRad()));
 		}
 
 		public override GearshiftPosition NextGear => _nextGear;
@@ -314,7 +300,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (IsAboveUpShiftCurve(currentGear, inTorque, inAngularVelocity)) {
 				currentGear = Gears.Successor(currentGear);
 
-				while (SkipGears && Gears.HasSuccessor(currentGear)) {
+				while (Gears.HasSuccessor(currentGear)) {
 					currentGear = Gears.Successor(currentGear);
 					var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
 
@@ -340,7 +326,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// early up shift to higher gear ---------------------------------------
-			if (EarlyShiftUp && Gears.HasSuccessor(currentGear)) {
+			if (Gears.HasSuccessor(currentGear)) {
 				currentGear = CheckEarlyUpshift(absTime, dt, outTorque, outAngularVelocity, currentGear, response1);
 			}
 			return currentGear;
@@ -375,23 +361,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// down shift
 			if (IsBelowDownShiftCurve(currentGear, inTorque, inAngularVelocity)) {
 				currentGear = Gears.Predecessor(currentGear);
-				//while (SkipGears && currentGear > 1) {
-				//	currentGear--;
-				//	var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
-
-				//	inAngularVelocity = ModelData.Gears[currentGear].Ratio * outAngularVelocity;
-				//	inTorque = response.ClutchPowerRequest / inAngularVelocity;
-				//	var maxTorque = VectoMath.Min(response.DynamicFullLoadPower / ((DataBus.EngineSpeed + response.EngineSpeed) / 2),
-				//		currentGear > 1
-				//			? ModelData.Gears[currentGear].ShiftPolygon.InterpolateDownshift(response.EngineSpeed)
-				//			: double.MaxValue.SI<NewtonMeter>());
-				//	var reserve = maxTorque.IsEqual(0) ? -1 : (1 - inTorque / maxTorque).Value();
-				//	if (reserve >= ModelData.TorqueReserve && IsBelowUpShiftCurve(currentGear, inTorque, inAngularVelocity)) {
-				//		continue;
-				//	}
-				//	currentGear++;
-				//	break;
-				//}
 			}
 			return currentGear;
 		}

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -12,7 +11,6 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -20,8 +18,10 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
-	public class ATShiftStrategyOptimized : BaseShiftStrategy // ATShiftStrategy
+	public class ATShiftStrategyOptimized : BaseShiftStrategy<ATGearbox> // ATShiftStrategy
 	{
+		public const string Name = "AT - EffShift";
+
 		protected readonly NextGearState _nextGear = new NextGearState();
 		protected ATGearbox _gearbox;
 
@@ -38,8 +38,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 		private List<SchmittTrigger> LoadStageSteps = new List<SchmittTrigger>();
 		private ShiftLineSet UpshiftLineTCLocked = new ShiftLineSet();
-
-		public const string Name = "AT - EffShift";
 
 		public ATShiftStrategyOptimized(IVehicleContainer container) : base(container)
 		{
@@ -66,16 +64,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 			InitializeTestContainer(runData);
 
-		}
-
-		public override IGearbox Gearbox {
-			get => _gearbox;
-			set {
-				_gearbox = value as ATGearbox;
-				if (_gearbox == null) {
-					throw new VectoException("AT Shift strategy can only handle AT gearboxes, given: {0}", value.GetType());
-				}
-			}
 		}
 
 		public override GearshiftPosition NextGear => _nextGear.Gear;

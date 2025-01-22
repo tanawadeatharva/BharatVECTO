@@ -58,7 +58,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Batter
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using Point = TUGraz.VectoCommon.Utils.Point;
-using System.Diagnostics;
+using ElectricSystem = TUGraz.VectoCore.Models.Declaration.Auxiliaries.ElectricSystem;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
