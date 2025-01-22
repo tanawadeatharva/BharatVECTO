@@ -14,7 +14,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class BatterySystem : StatefulVectoSimulationComponent<BatterySystem.State>, IElectricEnergyStorage, IElectricEnergyStoragePort, IUpdateable
+    public class BatterySystem : StatefulVectoSimulationComponent<BatterySystem.State>, IElectricEnergyStorage, IElectricEnergyStoragePort, IUpdateable
 	{
 		public class BatteryString: IUpdateable
 		{

@@ -48,10 +48,10 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	/// <summary>
-	/// Driving Cycle for the Measured Speed Gear driving cycle.
-	/// </summary>
-	public class MeasuredSpeedDrivingCycle :
+    /// <summary>
+    /// Driving Cycle for the Measured Speed Gear driving cycle.
+    /// </summary>
+    public class MeasuredSpeedDrivingCycle :
 		StatefulProviderComponent
 			<MeasuredSpeedDrivingCycle.DrivingCycleState, ISimulationOutPort, IDriverDemandInPort, IDriverDemandOutPort>,
 		IDriverInfo, IDrivingCycleInfo, IMileageCounter, IDriverDemandInProvider, IDriverDemandInPort, ISimulationOutProvider,

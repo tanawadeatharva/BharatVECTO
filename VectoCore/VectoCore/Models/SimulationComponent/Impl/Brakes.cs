@@ -40,7 +40,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Brakes : StatefulProviderComponent<SimpleComponentState, ITnOutPort, ITnInPort, ITnOutPort>,
+    public class Brakes : StatefulProviderComponent<SimpleComponentState, ITnOutPort, ITnInPort, ITnOutPort>,
 		IPowerTrainComponent, ITnOutPort, ITnInPort, IBrakes, IUpdateable
 	{
 		public Watt BrakePower { get; set; }

@@ -44,10 +44,10 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	/// <summary>
-	/// Represents a driving cycle which directly is connected to the powertrain (e.g. engine, or axle gear).
-	/// </summary>
-	public class PowertrainDrivingCycle :
+    /// <summary>
+    /// Represents a driving cycle which directly is connected to the powertrain (e.g. engine, or axle gear).
+    /// </summary>
+    public class PowertrainDrivingCycle :
 		StatefulProviderComponent<SimpleComponentState, ISimulationOutPort, ITnInPort, ITnOutPort>,
 		IDrivingCycleInfo, ISimulationOutPort, ITnInProvider, ITnInPort
 	{

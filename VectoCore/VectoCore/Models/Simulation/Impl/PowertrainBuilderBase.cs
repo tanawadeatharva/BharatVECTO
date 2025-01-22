@@ -22,7 +22,7 @@ using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 
-	public abstract class PowertrainBuilderBase
+    public abstract class PowertrainBuilderBase
 	{
 		protected readonly
 			Dictionary<PowertrainPosition, Action<VectoRunData, IVehicleContainer, TimeRunHybridComponents>>

@@ -46,7 +46,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Vehicle : StatefulProviderComponent<Vehicle.VehicleState, IDriverDemandOutPort, IFvInPort, IFvOutPort>,
+    public class Vehicle : StatefulProviderComponent<Vehicle.VehicleState, IDriverDemandOutPort, IFvInPort, IFvOutPort>,
 		IVehicle, IMileageCounter, IFvInPort, IDriverDemandOutPort, IUpdateable
 	{
 		internal readonly VehicleData ModelData;

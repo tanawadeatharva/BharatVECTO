@@ -48,7 +48,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class TorqueConverter : StatefulVectoSimulationComponent<TorqueConverter.TorqueConverterComponentState>,
+    public class TorqueConverter : StatefulVectoSimulationComponent<TorqueConverter.TorqueConverterComponentState>,
 		ITnInPort, ITnOutPort, ITorqueConverter, IUpdateable
 	{
 		protected readonly IGearboxInfo Gearbox;

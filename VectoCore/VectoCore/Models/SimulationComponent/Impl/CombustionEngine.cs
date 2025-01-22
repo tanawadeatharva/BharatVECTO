@@ -50,10 +50,10 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	/// <summary>
-	/// Component for a combustion engine.
-	/// </summary>
-	public class CombustionEngine : StatefulVectoSimulationComponent<CombustionEngine.EngineState>, ICombustionEngine,
+    /// <summary>
+    /// Component for a combustion engine.
+    /// </summary>
+    public class CombustionEngine : StatefulVectoSimulationComponent<CombustionEngine.EngineState>, ICombustionEngine,
 		ITnOutPort
 	{
 		public bool PT1Disabled { get; set; }

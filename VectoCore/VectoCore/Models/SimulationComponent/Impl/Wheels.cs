@@ -39,7 +39,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Wheels : StatefulProviderComponent<Wheels.WheelsState, IFvOutPort, ITnInPort, ITnOutPort>, IWheels,
+    public class Wheels : StatefulProviderComponent<Wheels.WheelsState, IFvOutPort, ITnInPort, ITnOutPort>, IWheels,
 		IFvOutPort, ITnInPort, IUpdateable
 	{
 		private readonly KilogramSquareMeter _totalWheelsInertia;

@@ -10,7 +10,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class DummyGearboxInfo : VectoSimulationComponent, IGearboxInfo
+    public class DummyGearboxInfo : VectoSimulationComponent, IGearboxInfo
 	{
 		public DummyGearboxInfo(IVehicleContainer container, GearshiftPosition gear = null) : base(container)
 		{

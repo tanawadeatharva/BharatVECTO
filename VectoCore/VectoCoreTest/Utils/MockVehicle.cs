@@ -37,11 +37,12 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockVehicle : VectoSimulationComponent, IVehicle, IFvInPort, IDriverDemandOutPort, IMileageCounter
+    public class MockVehicle : VectoSimulationComponent, IVehicle, IFvInPort, IDriverDemandOutPort, IMileageCounter
 	{
 		internal MeterPerSecond MyVehicleSpeed;
 		internal IFvOutPort NextComponent;

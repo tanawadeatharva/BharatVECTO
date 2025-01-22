@@ -42,7 +42,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public abstract class AbstractGearbox<TStateType> :
+    public abstract class AbstractGearbox<TStateType> :
 		StatefulProviderComponent<TStateType, ITnOutPort, ITnInPort, ITnOutPort>, ITnOutPort, ITnInPort, IGearbox
 		where TStateType : GearboxState, new()
 	{

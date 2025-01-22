@@ -6,7 +6,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class DummyAxleGearInfo : VectoSimulationComponent, IAxlegearInfo
+    public class DummyAxleGearInfo : VectoSimulationComponent, IAxlegearInfo
 	{
 		public DummyAxleGearInfo(IVehicleContainer dataBus) : base(dataBus) { }
 

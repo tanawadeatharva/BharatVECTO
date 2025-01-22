@@ -32,12 +32,12 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.SimulationComponentData;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
-using ElectricSystem = TUGraz.VectoCore.Models.SimulationComponent.ElectricSystem;
+using ElectricSystem = TUGraz.VectoCore.Models.SimulationComponent.Impl.ElectricSystem;
 
 
 namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 {
-	[TestFixture]
+    [TestFixture]
 	[Parallelizable(ParallelScope.All)]
 	public class BatteryElectricTest
 	{

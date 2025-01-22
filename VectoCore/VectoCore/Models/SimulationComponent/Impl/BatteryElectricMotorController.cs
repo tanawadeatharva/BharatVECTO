@@ -8,8 +8,9 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
-	public class BatteryElectricMotorController : IElectricMotorControl
+namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
+{
+    public class BatteryElectricMotorController : IElectricMotorControl
 	{
 		protected IVehicleContainer DataBus;
 		private ElectricSystem ElectricSystem;

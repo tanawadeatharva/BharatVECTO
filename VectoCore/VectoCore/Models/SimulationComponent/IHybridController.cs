@@ -4,9 +4,11 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent {
-	public interface IHybridController : IPowerTrainComponent, IHybridControllerInfo, IHybridControllerCtl
+namespace TUGraz.VectoCore.Models.SimulationComponent
+{
+    public interface IHybridController : IPowerTrainComponent, IHybridControllerInfo, IHybridControllerCtl
 	{
 		IShiftStrategy ShiftStrategy { get; }
 

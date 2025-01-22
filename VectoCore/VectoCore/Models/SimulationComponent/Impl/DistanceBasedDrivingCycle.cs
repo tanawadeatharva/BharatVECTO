@@ -48,10 +48,10 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	/// <summary>
-	///     Class representing one Distance Based Driving Cycle
-	/// </summary>
-	public sealed class DistanceBasedDrivingCycle : StatefulProviderComponent
+    /// <summary>
+    ///     Class representing one Distance Based Driving Cycle
+    /// </summary>
+    public sealed class DistanceBasedDrivingCycle : StatefulProviderComponent
 		<DistanceBasedDrivingCycle.DrivingCycleState, ISimulationOutPort, IDrivingCycleInPort, IDrivingCycleOutPort>,
 		IDrivingCycle, ISimulationOutPort, IDrivingCycleInPort, IDisposable, IUpdateable, IResetableVectoSimulationComponent
 	{

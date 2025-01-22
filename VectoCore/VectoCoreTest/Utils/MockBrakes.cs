@@ -32,11 +32,12 @@
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockBrakes : VectoSimulationComponent, IBrakes, IUpdateable
+    public class MockBrakes : VectoSimulationComponent, IBrakes, IUpdateable
 	{
 		public MockBrakes(IVehicleContainer vehicle) : base(vehicle)
 		{

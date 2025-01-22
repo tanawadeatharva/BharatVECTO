@@ -1,11 +1,12 @@
 ﻿using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	public class WHRCharger : StatefulVectoSimulationComponent<WHRCharger.State>, IElectricChargerPort, IUpdateable
+    public class WHRCharger : StatefulVectoSimulationComponent<WHRCharger.State>, IElectricChargerPort, IUpdateable
 	{
 		public double Efficiency { get; }
 

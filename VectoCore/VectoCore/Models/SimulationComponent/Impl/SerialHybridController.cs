@@ -13,7 +13,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class SerialHybridController : StatefulProviderComponent<SerialHybridController.HybridControllerState,
+    public class SerialHybridController : StatefulProviderComponent<SerialHybridController.HybridControllerState,
 			ITnOutPort, ITnInPort, ITnOutPort>, IHybridController, ITnOutPort, ITnInPort
 	{
 		protected readonly Dictionary<PowertrainPosition, ElectricMotorController> _electricMotorCtl;

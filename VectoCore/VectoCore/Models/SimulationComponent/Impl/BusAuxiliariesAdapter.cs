@@ -44,7 +44,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class BusAuxiliariesAdapter : VectoSimulationComponent, IAuxInProvider, IAuxPort
+    public class BusAuxiliariesAdapter : VectoSimulationComponent, IAuxInProvider, IAuxPort
 	{
 		protected internal BusAuxState CurrentState;
 		protected internal BusAuxState PreviousState;

@@ -51,9 +51,9 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData
 {
-	//public delegate void WriteSumData(IModalDataContainer data);
+    //public delegate void WriteSumData(IModalDataContainer data);
 
-	public interface ISumData
+    public interface ISumData
 	{
 		void Write(IModalDataContainer modData, VectoRunData runData);
 		void RegisterComponent(VectoSimulationComponent component, VectoRunData runData);
