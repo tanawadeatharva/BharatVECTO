@@ -59,7 +59,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
     public class EngineeringModeVectoRunDataFactory : LoggingObject, IVectoRunDataFactory
 	{
-		private static readonly Dictionary<string, Tuple<DrivingCycleData, DateTime>> CyclesCache = new Dictionary<string, Tuple<DrivingCycleData, DateTime>>();
+		public const string Name = "EngineeringModeVectoRunDataFactory";
+
+        private static readonly Dictionary<string, Tuple<DrivingCycleData, DateTime>> CyclesCache = new Dictionary<string, Tuple<DrivingCycleData, DateTime>>();
 
 		protected readonly IEngineeringInputDataProvider InputDataProvider;
 		protected IEngineeringDataAdapter DataAdapter { get; }

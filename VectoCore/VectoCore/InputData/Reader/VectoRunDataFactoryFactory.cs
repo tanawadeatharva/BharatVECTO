@@ -147,9 +147,9 @@ namespace TUGraz.VectoCore.InputData.Reader
 				case IVTPEngineeringInputDataProvider vtpProvider when vtpProvider.JobInputData.Vehicle.VehicleCategory.IsBus():
 					throw new NotImplementedException();
 				case IEngineeringInputDataProvider engDataProvider when engDataProvider.JobInputData.JobType == VectoSimulationJobType.EngineOnlySimulation:
-					return _internalFactory.CreateEngineOnlyRunDataFactory("EngineOnlyRunDataFactory", engDataProvider);
+					return _internalFactory.CreateEngineOnlyRunDataFactory(EngineOnlyVectoRunDataFactory.Name, engDataProvider);
 				case IEngineeringInputDataProvider engDataProvider:
-					return _internalFactory.CreateEngineeringRunDataFactory("EngineeringRunDataFactory", engDataProvider);
+					return _internalFactory.CreateEngineeringRunDataFactory(EngineeringModeVectoRunDataFactory.Name, engDataProvider);
 				default:
 					throw new VectoException("Unknown InputData for Engineering Mode!");
 			}

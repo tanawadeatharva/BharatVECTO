@@ -62,12 +62,16 @@ namespace TUGraz.VectoCore.InputData.Reader
 							}
 						)).InSingletonScope();
 
+			#region EngineeringMode
 
-			Bind<IVectoRunDataFactory>().To<EngineeringModeVectoRunDataFactory>().Named("EngineeringRunDataFactory");
+			Bind<IVectoRunDataFactory>().To<EngineeringModeVectoRunDataFactory>().Named(EngineeringModeVectoRunDataFactory.Name);
+			Bind<IVectoRunDataFactory>().To<EngineOnlyVectoRunDataFactory>().Named(EngineOnlyVectoRunDataFactory.Name);
+
+			#endregion
 
 			#region Lorries
 
-			
+
 			Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.Conventional>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.ConventionalVehicle));
 
