@@ -48,12 +48,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class AMTShiftStrategy : BaseShiftStrategy<Gearbox>
 	{
 		//protected readonly GearshiftPosition MaxStartGear;
-		protected GearshiftPosition _nextGear;
 		protected GearshiftPosition DesiredGearRoadsweeping;
 		
 		protected ITestPowertrain<Gearbox> TestPowertrain;
-
-		protected Gearbox _gearbox;
 
         public AMTShiftStrategy(IVehicleContainer container) : base(container)
 		{
@@ -84,8 +81,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var testContainer = PowertrainBuilder.BuildSimplePowertrain(runData);
 			TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, DataBus);
 		}
-
-		public override GearshiftPosition NextGear => _nextGear;
 
 		public const string Name = "AMT - Classic";
 

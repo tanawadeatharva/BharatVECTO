@@ -45,6 +45,7 @@ using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -78,7 +79,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var strategy = new CycleShiftStrategy(container);
 
-			
 			TorqueConverter = new TorqueConverterWrapper(runData.Cycle.Entries.All(x => x.EngineSpeed != null),
 				new CycleTorqueConverter(container, ModelData.TorqueConverterData),
 				new TorqueConverter(this, strategy, container, ModelData.TorqueConverterData, runData));

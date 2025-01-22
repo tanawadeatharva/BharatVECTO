@@ -15,7 +15,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		SimpleComponentState PreviousState { get; }
 
 		IElectricMotorControl ElectricMotorControl(PowertrainPosition pos);
+		
 		void AddElectricMotor(PowertrainPosition pos, ElectricMotorData motorDataItem2);
-		//ResponseDryRun RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, HybridStrategyResponse strategySettings);
+
 	}
 }

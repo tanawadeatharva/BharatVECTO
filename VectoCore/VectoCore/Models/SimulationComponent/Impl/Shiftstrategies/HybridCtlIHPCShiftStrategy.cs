@@ -1,0 +1,157 @@
+﻿using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Utils;
+
+namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
+{
+    public class HybridCtlIHPCShiftStrategy : BaseShiftStrategy<ATGearbox>
+    {
+		protected IHybridControllerInternal Controller;
+
+		protected ITestPowertrain<Gearbox> TestPowertrain;
+
+        public HybridCtlIHPCShiftStrategy(IHybridControllerInternal hybridController, IVehicleContainer container) :
+			base(container)
+		{
+			Controller = hybridController;
+			if (RunData?.EngineData == null) {
+				return;
+			}
+
+            // create testcontainer
+            var testContainer = RunData.Cycle.CycleType == CycleType.MeasuredSpeedGear
+				? PowertrainBuilder.BuildSimpleHybridPowertrainGear(RunData)
+				: PowertrainBuilder.BuildSimpleHybridPowertrain(RunData);
+
+			TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, DataBus);
+        }
+
+        public override GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity)
+        {
+            if (DataBus.VehicleInfo.VehicleSpeed.IsEqual(0)) {
+                return InitStartGear(absTime, torque, outAngularVelocity);
+            }
+
+            foreach (var gear in Gears.Reverse()) {
+                TestPowertrain.UpdateComponents();
+                TestPowertrain.Gearbox.Gear = gear;
+                TestPowertrain.Gearbox._nextGear = gear;
+                if (Controller.CurrentStrategySettings != null) {
+                    TestPowertrain.HybridController.ApplyStrategySettings(Controller.CurrentStrategySettings);
+                }
+
+                var response = TestPowertrain.Gearbox.Initialize(torque, outAngularVelocity);
+                response = TestPowertrain.Gearbox.Request(absTime,
+                    Constants.SimulationSettings.MeasuredSpeedTargetTimeInterval, torque, outAngularVelocity,
+                    true);
+                if (response.Engine.EngineSpeed > DataBus.EngineInfo.EngineRatedSpeed || response.Engine.EngineSpeed < DataBus.EngineInfo.EngineIdleSpeed) {
+                    continue;
+                }
+
+                if (!IsBelowDownShiftCurve(gear, response.Engine.PowerRequest / response.Engine.EngineSpeed, response.Engine.EngineSpeed)) {
+                    _gearbox.Disengaged = false;
+                    return gear;
+                }
+            }
+
+            // fallback: start with first gear;
+            _gearbox.Disengaged = false;
+            return Gears.First();
+		}
+
+        protected virtual GearshiftPosition InitStartGear(Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity)
+        {
+            if (!DataBus.EngineCtl.CombustionEngineOn) {
+                return _nextGear;
+            }
+
+            foreach (var gear in Gears.IterateGears(MaxStartGear, Gears.First())) {
+                //for (var gear = MaxStartGear; gear > 1; gear--) {
+                var inAngularSpeed = outAngularVelocity * GearboxModelData.Gears[gear.Gear].Ratio;
+
+                var ratedSpeed = DataBus.EngineInfo.EngineRatedSpeed;
+                if (inAngularSpeed > ratedSpeed || inAngularSpeed.IsEqual(0)) {
+                    continue;
+                }
+
+                //var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
+                TestPowertrain.UpdateComponents();
+                TestPowertrain.Gearbox.Gear = gear;
+                TestPowertrain.Gearbox._nextGear = gear;
+                if (Controller.CurrentStrategySettings != null) {
+                    TestPowertrain.HybridController.ApplyStrategySettings(Controller.CurrentStrategySettings);
+                }
+
+                var response = TestPowertrain.Gearbox.Initialize(outTorque, outAngularVelocity);
+                response = TestPowertrain.Gearbox.Request(absTime,
+                    Constants.SimulationSettings.MeasuredSpeedTargetTimeInterval, outTorque, outAngularVelocity,
+                    true);
+
+                var fullLoadPower =
+                    response.Engine.DynamicFullLoadTorque; //EnginePowerRequest - response.DeltaFullLoad;
+                var reserve = 1 - response.Engine.TorqueOutDemand / fullLoadPower;
+
+                if (RunData != null && RunData.HybridStrategyParameters.MaxPropulsionTorque?.GetVECTOValueOrDefault(gear) != null) {
+                    var tqRequest = response.Gearbox.InputTorque;
+                    var maxTorque = RunData.HybridStrategyParameters.MaxPropulsionTorque[gear].FullLoadDriveTorque(response.Gearbox.InputSpeed);
+                    reserve = 1 - VectoMath.Min(response.Engine.TorqueOutDemand / fullLoadPower, tqRequest / maxTorque);
+                }
+
+                if (response.Engine.EngineSpeed > DataBus.EngineInfo.EngineIdleSpeed &&
+                    reserve.IsGreaterOrEqual(0)) {
+                    //reserve >= GearshiftParams.StartTorqueReserve) {
+                    _nextGear = gear;
+                    return gear;
+                }
+            }
+
+            _nextGear = Gears.First();
+            return _nextGear;
+        }
+
+		public override GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+		{
+			var tmpGear = new GearshiftPosition(_nextGear.Gear, false);
+			if (DataBus.EngineCtl.CombustionEngineOn) {
+				//  GX -> 0: disengage before halting
+				var vehicleSpeed = DataBus.VehicleInfo.VehicleSpeed + DataBus.DriverInfo.DriverAcceleration * dt;
+				var isSlowerThanDisengageSpeed = vehicleSpeed.IsSmaller(GearboxModelData.DisengageWhenHaltingSpeed);
+				var isNegativeTorque = outTorque.IsSmaller(0);
+				var isBraking = DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Braking;
+				var disengageBeforeHalting = isBraking && isSlowerThanDisengageSpeed && isNegativeTorque;
+
+				if (disengageBeforeHalting) {
+					if (_gearbox != null) {
+						_gearbox.Disengaged = true;
+						return tmpGear;
+					}
+				}
+
+				while (Gears.HasPredecessor(_nextGear) && SpeedTooLowForEngine(_nextGear, outAngularVelocity)) {
+					_nextGear = Gears.Predecessor(_nextGear);
+				}
+
+				while (Gears.HasSuccessor(_nextGear) && SpeedTooHighForEngine(_nextGear, outAngularVelocity)) {
+					_nextGear = Gears.Successor(_nextGear);
+				}
+			}
+
+			return _nextGear;
+		}
+
+        protected override bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
+			PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, GearshiftPosition gear,
+			Second lastShiftTime, IResponse response) =>
+			false;
+
+        public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity) { }
+
+    }
+}

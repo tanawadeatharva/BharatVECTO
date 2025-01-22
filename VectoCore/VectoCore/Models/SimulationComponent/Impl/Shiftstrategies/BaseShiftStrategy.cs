@@ -44,15 +44,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
     public abstract class BaseShiftStrategy<T> : LoggingObject, IShiftStrategy where T : class, IGearbox
 	{
-		protected readonly IDataBus DataBus;
+		protected readonly IVehicleContainer DataBus;
 		protected readonly GearboxData GearboxModelData;
 		protected readonly ShiftStrategyParameters GearshiftParams;
+		protected readonly VectoRunData RunData;
 
-		protected readonly GearList Gears;
+        protected readonly GearList Gears;
 
 		protected T _gearbox;
 
-		protected ISimplePowertrainBuilder PowertrainBuilder { get; private set; }
+		protected GearshiftPosition _nextGear;
+
+        protected ISimplePowertrainBuilder PowertrainBuilder { get; private set; }
 
 		protected BaseShiftStrategy(IVehicleContainer dataBus)
 		{
@@ -61,6 +64,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			GearboxModelData = dataBus.RunData.GearboxData;
 			GearshiftParams = dataBus.RunData.GearshiftParameters;
 			DataBus = dataBus;
+			RunData = dataBus.RunData;
 
 			Gears = GearboxModelData.GearList;
 		}
@@ -91,23 +95,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second lastShiftTime, IResponse response);
 
 		public abstract GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity);
-		public abstract GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
-		public abstract void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
 		
-		public abstract GearshiftPosition NextGear { get; }
+		public abstract GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
+		
+		public abstract void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
+
+		public virtual GearshiftPosition NextGear => _nextGear;
 
 		public bool CheckGearshiftRequired { get; protected set; }
+		
 		public GearshiftPosition MaxStartGear { get; protected set; }
 
-		public virtual VelocityRollingLookup VelocityDropData { get; protected set; }
+		public VelocityRollingLookup VelocityDropData { get; protected set; }
 
 		public virtual void Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{ }
 
 		public virtual void WriteModalResults(IModalDataContainer container)
-		{
-			
-		}
+		{ }
+
+        #region Helper Functions ICE operating point vs. Upshift/Downshift curve
 
 		/// <summary>
 		/// Tests if the operating point is below the down-shift curve (=outside of shift curve).
@@ -116,15 +123,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="inTorque">The in torque.</param>
 		/// <param name="inEngineSpeed">The in engine speed.</param>
 		/// <returns><c>true</c> if the operating point is below the down-shift curv; otherwise, <c>false</c>.</returns>
-		protected bool IsBelowDownShiftCurve(GearshiftPosition gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
+		protected virtual bool IsBelowDownShiftCurve(GearshiftPosition gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
 		{
 			if (!Gears.HasPredecessor(gear)) {
 				return false;
 			}
 			return GearboxModelData.Gears[gear.Gear].ShiftPolygon.IsBelowDownshiftCurve(inTorque, inEngineSpeed);
 		}
-
-		#region Helper Functions ICE operating point vs. Upshift/Downshift curve
 
         /// <summary>
         /// Tests if the operating point is below the down-shift curve (=outside of shift curve).

@@ -50,8 +50,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
         VelocitySpeedGearshiftPreprocessor PreprocessorSpeed;
 		
-		protected GearshiftPosition _nextGear;
 		protected ITestPowertrain<Gearbox> TestPowertrain;
+
 		protected GearshiftPosition DesiredGearRoadsweeping;
 
         public MTShiftStrategy(IVehicleContainer container) : base(container)
@@ -59,19 +59,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			PreprocessorSpeed = ConfigureSpeedPreprocessor(container);
 			container.AddPreprocessor(PreprocessorSpeed);
 
-			var runData = container.RunData;
-
-			if (runData.EngineData == null) {
+			if (RunData.EngineData == null) {
 				return;
 			}
 
-			var transmissionRatio = runData.AxleGearData.AxleGear.Ratio *
-									(runData.AngledriveData?.Angledrive.Ratio ?? 1.0) /
-									runData.VehicleData.DynamicTyreRadius;
-			var minEngineSpeed = (runData.EngineData.FullLoadCurves[0].RatedSpeed - runData.EngineData.IdleSpeed) *
-				Constants.SimulationSettings.ClutchClosingSpeedNorm + runData.EngineData.IdleSpeed;
+			var transmissionRatio = RunData.AxleGearData.AxleGear.Ratio *
+									(RunData.AngledriveData?.Angledrive.Ratio ?? 1.0) /
+									RunData.VehicleData.DynamicTyreRadius;
+			var minEngineSpeed = (RunData.EngineData.FullLoadCurves[0].RatedSpeed - RunData.EngineData.IdleSpeed) *
+				Constants.SimulationSettings.ClutchClosingSpeedNorm + RunData.EngineData.IdleSpeed;
 
-			DesiredGearRoadsweeping = runData.DriverData?.PTODriveRoadsweepingGear;
+			DesiredGearRoadsweeping = RunData.DriverData?.PTODriveRoadsweepingGear;
 
 			MaxStartGear = GearboxModelData.GearList.First();
 			foreach (var gear in GearboxModelData.GearList.Reverse()) {
@@ -83,15 +81,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			}
 
 			// create testcontainer
-			var testContainer = PowertrainBuilder.BuildSimplePowertrain(runData);
+			var testContainer = PowertrainBuilder.BuildSimplePowertrain(RunData);
 			TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, DataBus);
 
-            DesiredGearRoadsweeping = runData.DriverData?.PTODriveRoadsweepingGear;
+            DesiredGearRoadsweeping = RunData.DriverData?.PTODriveRoadsweepingGear;
         }
 
-		public override GearshiftPosition NextGear => _nextGear;
-
-        public override GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+		public override GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
         {
             if (DataBus.VehicleInfo.VehicleSpeed.IsEqual(0)) {
                 return InitStartGear(absTime, outTorque, outAngularVelocity);
