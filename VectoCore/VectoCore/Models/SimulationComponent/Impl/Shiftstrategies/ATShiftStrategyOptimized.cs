@@ -41,10 +41,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 		public const string Name = "AT - EffShift";
 
-		public ATShiftStrategyOptimized(IVehicleContainer dataBus) : base(dataBus)
+		public ATShiftStrategyOptimized(IVehicleContainer container) : base(container)
 		{
-			var runData = dataBus.RunData;
-			EngineInertia = dataBus.RunData.EngineData?.Inertia ?? 0.SI<KilogramSquareMeter>();
+			var runData = container.RunData;
+			EngineInertia = container.RunData.EngineData?.Inertia ?? 0.SI<KilogramSquareMeter>();
 
             if (runData.EngineData == null) {
 				return;

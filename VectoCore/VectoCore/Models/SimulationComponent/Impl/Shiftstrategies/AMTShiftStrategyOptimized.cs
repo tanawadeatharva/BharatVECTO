@@ -29,9 +29,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private Kilogram vehicleMass;
 		
-		public AMTShiftStrategyOptimized(IVehicleContainer dataBus) : base(dataBus)
+		public AMTShiftStrategyOptimized(IVehicleContainer container) : base(container)
 		{
-			var runData = dataBus.RunData;
+			var runData = container.RunData;
 			_shiftStrategyParameters = runData.GearshiftParameters;
 			if (runData.EngineData == null) {
 				return;
@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				throw new VectoException("Parameters for shift strategy missing!");
 			}
 
-			SetupVelocityDropPreprocessor(dataBus);
+			SetupVelocityDropPreprocessor(container);
 
 			if (_shiftStrategyParameters.AllowedGearRangeFC > 2 || _shiftStrategyParameters.AllowedGearRangeFC < 1) {
 				Log.Warn("Gear-range for FC-based gearshift must be either 1 or 2!");

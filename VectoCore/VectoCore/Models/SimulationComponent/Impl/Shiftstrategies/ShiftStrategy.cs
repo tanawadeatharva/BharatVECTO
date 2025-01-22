@@ -46,32 +46,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected bool EarlyShiftUp;
 		protected Gearbox _gearbox;
 
-		//public static IShiftStrategy Create(IVehicleContainer container, string name)
-		//{
-			
-		//	if (name == AMTShiftStrategyOptimized.Name) {
-		//		return new AMTShiftStrategyOptimized(container);
-		//	}
-
-		//	if (name == PEVAMTShiftStrategy.Name) {
-		//		return new PEVAMTShiftStrategy(container);
-		//	}
-
-		//	if (name == MTShiftStrategy.Name) {
-		//		return new MTShiftStrategy(container);
-		//	}
-
-		//	if (name == ATShiftStrategyOptimized.Name) {
-		//		return new ATShiftStrategyOptimized(container);
-		//	}
-
-		//	if (name == APTNShiftStrategy.Name) {
-		//		return new APTNShiftStrategy(container);
-		//	}
-
-		//	throw new ArgumentOutOfRangeException(nameof(name), $@"Could not create shift strategy {name}");
-		//}
-
 		protected ShiftStrategy(IVehicleContainer dataBus) : base(dataBus) {}
 
 		public override IGearbox Gearbox

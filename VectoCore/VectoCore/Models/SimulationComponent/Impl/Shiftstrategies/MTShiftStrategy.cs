@@ -47,16 +47,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		VelocitySpeedGearshiftPreprocessor PreprocessorSpeed;
 		VelocityRollingLookup velocityDropData = new VelocityRollingLookup();
 
-		public MTShiftStrategy(IVehicleContainer bus) : base(bus)
+		public MTShiftStrategy(IVehicleContainer container) : base(container)
 		{
 			EarlyShiftUp = false;
 			SkipGears = true;
 
-			PreprocessorSpeed = ConfigureSpeedPreprocessor(bus);
-			bus.AddPreprocessor(PreprocessorSpeed);
+			PreprocessorSpeed = ConfigureSpeedPreprocessor(container);
+			container.AddPreprocessor(PreprocessorSpeed);
 		}
 
-		public new static string Name => "MT Shift Strategy";
+		public const string Name = "MT Shift Strategy";
 
 		protected override GearshiftPosition DoCheckUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			NewtonMeter inTorque, PerSecond inAngularVelocity, GearshiftPosition currentGear, IResponse response1)

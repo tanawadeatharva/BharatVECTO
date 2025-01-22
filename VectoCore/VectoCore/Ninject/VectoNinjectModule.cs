@@ -68,15 +68,6 @@ namespace TUGraz.VectoCore
 
 		#region Overrides of NinjectModule
 
-		
-
-		public VectoNinjectModule()
-		{
-            
-        }
-		
-	
-
 		public override void Load()
 		{
 			// necessary for injecting IShiftStrategyFactory into AbstractSimulationDataAdapter, PrimaryBusBase, CompletedBusDeclarationBase, SingleBusBase
@@ -91,6 +82,8 @@ namespace TUGraz.VectoCore
 			LoadModule<XMLDeclarationReportFactoryNinjectModule>();	
 
 			LoadModule<VectoRunDataFactoryNinjectModule>();
+
+			LoadModule<ShiftStrategyNinjectModule>();
 
 			LoadModule<DeclarationDataAdapterNinjectModule>();
 

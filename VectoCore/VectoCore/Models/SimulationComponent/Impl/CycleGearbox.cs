@@ -583,7 +583,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public class CycleShiftStrategy : BaseShiftStrategy
 		{
-			public CycleShiftStrategy(IVehicleContainer dataBus) : base(dataBus) { }
+			public CycleShiftStrategy(IVehicleContainer container) : base(container) { }
 
 			public override IGearbox Gearbox { get; set; }
 

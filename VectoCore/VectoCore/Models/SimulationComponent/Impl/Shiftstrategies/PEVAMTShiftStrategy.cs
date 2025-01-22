@@ -57,15 +57,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected ISimplePowertrainBuilder PowertrainBuilder { get; private set; }
 		protected ITestPowertrain<Gearbox> TestPowertrain;
 
-		public PEVAMTShiftStrategy(IVehicleContainer dataBus) : this(dataBus, false)
+		public PEVAMTShiftStrategy(IVehicleContainer container) : this(container, false)
 		{
-			if (dataBus.RunData.VehicleData == null) {
+			if (container.RunData.VehicleData == null) {
 				return;
 			}
 
-			EMPos = dataBus.RunData.ElectricMachinesData.FirstOrDefault(x =>
+			EMPos = container.RunData.ElectricMachinesData.FirstOrDefault(x =>
 				x.Item1 == PowertrainPosition.BatteryElectricE2 || x.Item1 == PowertrainPosition.IEPC)?.Item1 ?? PowertrainPosition.HybridPositionNotSet;
-			SetupVelocityDropPreprocessor(dataBus);
+			SetupVelocityDropPreprocessor(container);
 		}
 
 		public VelocityRollingLookup VelocityDropData { get; } = new VelocityRollingLookup();

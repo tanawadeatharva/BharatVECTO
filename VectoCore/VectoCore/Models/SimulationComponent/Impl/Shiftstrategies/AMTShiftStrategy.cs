@@ -55,9 +55,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		
 		protected ITestPowertrain<Gearbox> TestPowertrain;
 
-		public AMTShiftStrategy(IVehicleContainer dataBus) : base(dataBus)
+		public AMTShiftStrategy(IVehicleContainer container) : base(container)
 		{
-			var runData = dataBus.RunData;
+			var runData = container.RunData;
 			EarlyShiftUp = true;
 			SkipGears = true;
 

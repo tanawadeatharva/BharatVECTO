@@ -23,7 +23,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		IShiftPolygonCalculator CreateShiftPolygonCalculator(string shiftStrategyName, ShiftStrategyParameters shiftParams);
 
-		IShiftPolygonCalculator CreateShiftPolygonCalculator(GearboxType gearboxType, VectoSimulationJobType jobType, ShiftStrategyParameters shiftParams);
 	}
 
 	public interface IShiftPolygonCalculator
@@ -44,35 +43,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 	}
 
+	public interface IInternalShiftStrategyFactory
+	{
+		IShiftStrategy CreateShiftStrategy(string name, IVehicleContainer container);
+
+		IShiftPolygonCalculator CreateShiftPolygonCalculator(string shiftStrategyName,
+			ShiftStrategyParameters shiftParams);
+
+
+	}
+
     public class ShiftStrategyFactory : IShiftStrategyFactory
 	{
-		public IShiftStrategy GetShiftStrategy(string name, IVehicleContainer container)
+		protected readonly IInternalShiftStrategyFactory _internalFactory;
+
+		public ShiftStrategyFactory(IInternalShiftStrategyFactory internalFactory)
 		{
-
-			if (name == AMTShiftStrategyOptimized.Name) {
-				return new AMTShiftStrategyOptimized(container);
-			}
-
-			if (name == PEVAMTShiftStrategy.Name) {
-				return new PEVAMTShiftStrategy(container);
-			}
-
-			if (name == MTShiftStrategy.Name) {
-				return new MTShiftStrategy(container);
-			}
-
-			if (name == ATShiftStrategyOptimized.Name) {
-				return new ATShiftStrategyOptimized(container);
-			}
-
-			if (name == APTNShiftStrategy.Name) {
-				return new APTNShiftStrategy(container);
-			}
-
-			throw new ArgumentOutOfRangeException(nameof(name), $@"Could not create shift strategy {name}");
+			_internalFactory = internalFactory;
 		}
 
-        public string GetShiftStrategyName(GearboxType gearboxType, VectoSimulationJobType jobType)
+		public string GetShiftStrategyName(GearboxType gearboxType, VectoSimulationJobType jobType)
         {
             switch (gearboxType) {
                 case GearboxType.AMT:
@@ -133,27 +123,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
             }
         }
 
-		public IShiftPolygonCalculator CreateShiftPolygonCalculator(string shiftStrategyName, ShiftStrategyParameters shiftParams)
+		public IShiftStrategy GetShiftStrategy(string name, IVehicleContainer container)
 		{
-			switch (shiftStrategyName) {
-                case AMTShiftStrategyOptimized.Name:
-					return new AMTShiftStrategyOptimizedPolygonCalculator();
-                case AMTShiftStrategy.Name:
-					return new AMTShiftStrategyPolygonCalculator();
-                case APTNShiftStrategy.Name:
-				case PEVAMTShiftStrategy.Name:
-					return new PEVAMTShiftStrategyPolygonCreator(shiftParams);
-                case ATShiftStrategyOptimized.Name:
-                    return new ATShiftStrategyOptimizedPolygonCalculator();
-                default:
-					throw new VectoException(
-						$"undefined shift polygon calculator for shift strategy ${shiftStrategyName}");
+			try {
+				return _internalFactory.CreateShiftStrategy(name, container);
+			} catch (Exception ex) {
+				throw new ArgumentOutOfRangeException($@"Could not create shift strategy {name}", ex);
 			}
 		}
 
-		public IShiftPolygonCalculator CreateShiftPolygonCalculator(GearboxType gearboxType, VectoSimulationJobType jobType, ShiftStrategyParameters shiftParams)
+        public IShiftPolygonCalculator CreateShiftPolygonCalculator(string shiftStrategyName, ShiftStrategyParameters shiftParams)
 		{
-			return CreateShiftPolygonCalculator(GetShiftStrategyName(gearboxType, jobType), shiftParams);
+			try {
+				return _internalFactory.CreateShiftPolygonCalculator(shiftStrategyName, shiftParams);
+			} catch (Exception ex) {
+				throw new ArgumentOutOfRangeException($@"Could not create shift polygon calculator for shift strategy {shiftStrategyName}", ex);
+            }
 		}
+
 	}
 }

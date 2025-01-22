@@ -17,9 +17,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies.Shift
     {
         private ShiftStrategyParameters _shiftStrategyParameters;
 
-        public PEVAMTShiftStrategyPolygonCreator(ShiftStrategyParameters shiftStrategyparamets)
+        public PEVAMTShiftStrategyPolygonCreator(ShiftStrategyParameters shiftParams)
         {
-            _shiftStrategyParameters = shiftStrategyparamets;
+            _shiftStrategyParameters = shiftParams;
         }
 
         public ShiftPolygon ComputeDeclarationExtendedShiftPolygon(

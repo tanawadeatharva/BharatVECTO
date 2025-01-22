@@ -7,14 +7,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
 	public class APTNShiftStrategy : PEVAMTShiftStrategy
 	{
-		public APTNShiftStrategy(IVehicleContainer dataBus) : base(dataBus, false)
+		public APTNShiftStrategy(IVehicleContainer container) : base(container, false)
 		{
-			if (dataBus.RunData.VehicleData == null) {
+			if (container.RunData.VehicleData == null) {
 				return;
 			}
 
-			if (!dataBus.IsTestPowertrain) {
-				SetupVelocityDropPreprocessor(dataBus);
+			if (!container.IsTestPowertrain) {
+				SetupVelocityDropPreprocessor(container);
 			}
 		}
 
