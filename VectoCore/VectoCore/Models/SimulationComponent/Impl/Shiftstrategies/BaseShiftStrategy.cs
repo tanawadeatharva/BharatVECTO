@@ -44,10 +44,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
     public abstract class BaseShiftStrategy<T> : LoggingObject, IShiftStrategy where T : class, IGearbox
 	{
-		protected readonly IVehicleContainer DataBus;
+		protected readonly IVehicleContainer Container;
+		protected readonly VectoRunData RunData;
 		protected readonly GearboxData GearboxModelData;
 		protected readonly ShiftStrategyParameters GearshiftParams;
-		protected readonly VectoRunData RunData;
 
         protected readonly GearList Gears;
 
@@ -55,17 +55,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected GearshiftPosition _nextGear;
 
-        protected ISimplePowertrainBuilder PowertrainBuilder { get; private set; }
+		protected ISimplePowertrainBuilder PowertrainBuilder => Container.SimplePowertrainBuilder;
 
-		protected BaseShiftStrategy(IVehicleContainer dataBus)
+		protected BaseShiftStrategy(IVehicleContainer container)
 		{
 			VelocityDropData = new VelocityRollingLookup();
-			PowertrainBuilder = dataBus.SimplePowertrainBuilder;
-			GearboxModelData = dataBus.RunData.GearboxData;
-			GearshiftParams = dataBus.RunData.GearshiftParameters;
-			DataBus = dataBus;
-			RunData = dataBus.RunData;
-
+			Container = container;
+			RunData = container.RunData;
+			GearboxModelData = container.RunData.GearboxData;
+			GearshiftParams = container.RunData.GearshiftParameters;
+			
 			Gears = GearboxModelData.GearList;
 		}
 
@@ -211,12 +210,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		#region Helper Functions checking engine speed
 
 		protected virtual bool SpeedTooLowForEngine(GearshiftPosition gear, PerSecond outAngularSpeed) =>
-			(outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsSmaller(DataBus.EngineInfo.EngineIdleSpeed);
+			(outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsSmaller(Container.EngineInfo.EngineIdleSpeed);
 
 		protected virtual bool SpeedTooHighForEngine(GearshiftPosition gear, PerSecond outAngularSpeed) =>
 			(outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsGreaterOrEqual(VectoMath.Min(
 				GearboxModelData.Gears[gear.Gear].MaxSpeed,
-				DataBus.EngineInfo.EngineN95hSpeed - 1.RPMtoRad()));
+				Container.EngineInfo.EngineN95hSpeed - 1.RPMtoRad()));
 
 		#endregion
 
@@ -226,26 +225,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				throw new VectoSimulationException("EstimateAccelerationForGear: invalid gear: {0}", gear);
 			}
 
-			var vehicleSpeed = DataBus.VehicleInfo.VehicleSpeed;
+			var vehicleSpeed = Container.VehicleInfo.VehicleSpeed;
 
 			var nextEngineSpeed = gbxAngularVelocityOut * GearboxModelData.Gears[gear.Gear].Ratio;
-			var maxEnginePower = DataBus.EngineInfo.EngineStationaryFullPower(nextEngineSpeed);
+			var maxEnginePower = Container.EngineInfo.EngineStationaryFullPower(nextEngineSpeed);
 
 			var avgSlope =
-				((DataBus.DrivingCycleInfo.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
-				DataBus.DrivingCycleInfo.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
+				((Container.DrivingCycleInfo.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
+				Container.DrivingCycleInfo.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
 
-			var airDragLoss = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, vehicleSpeed) * DataBus.VehicleInfo.VehicleSpeed;
-			var rollResistanceLoss = DataBus.VehicleInfo.RollingResistance(avgSlope) * DataBus.VehicleInfo.VehicleSpeed;
+			var airDragLoss = Container.VehicleInfo.AirDragResistance(vehicleSpeed, vehicleSpeed) * Container.VehicleInfo.VehicleSpeed;
+			var rollResistanceLoss = Container.VehicleInfo.RollingResistance(avgSlope) * Container.VehicleInfo.VehicleSpeed;
 			var gearboxLoss = GearboxModelData.Gears[gear.Gear].LossMap.GetTorqueLoss(gbxAngularVelocityOut,
 				maxEnginePower / nextEngineSpeed * GearboxModelData.Gears[gear.Gear].Ratio).Value * nextEngineSpeed;
 			//DataBus.GearboxLoss();
-			var slopeLoss = DataBus.VehicleInfo.SlopeResistance(avgSlope) * DataBus.VehicleInfo.VehicleSpeed;
-			var axleLoss = DataBus.AxlegearInfo.AxlegearLoss();
+			var slopeLoss = Container.VehicleInfo.SlopeResistance(avgSlope) * Container.VehicleInfo.VehicleSpeed;
+			var axleLoss = Container.AxlegearInfo.AxlegearLoss();
 
 			var accelerationPower = maxEnginePower - gearboxLoss - axleLoss - airDragLoss - rollResistanceLoss - slopeLoss;
 
-			var acceleration = accelerationPower / DataBus.VehicleInfo.VehicleSpeed / (DataBus.VehicleInfo.TotalMass + DataBus.WheelsInfo.ReducedMassWheels);
+			var acceleration = accelerationPower / Container.VehicleInfo.VehicleSpeed / (Container.VehicleInfo.TotalMass + Container.WheelsInfo.ReducedMassWheels);
 
 			return acceleration.Cast<MeterPerSquareSecond>();
 		}

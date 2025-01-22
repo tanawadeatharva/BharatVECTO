@@ -1,10 +1,8 @@
 ﻿using System.Linq;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
@@ -30,12 +28,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				? PowertrainBuilder.BuildSimpleHybridPowertrainGear(RunData)
 				: PowertrainBuilder.BuildSimpleHybridPowertrain(RunData);
 
-			TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, DataBus);
+			TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, Container);
         }
 
         public override GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity)
         {
-            if (DataBus.VehicleInfo.VehicleSpeed.IsEqual(0)) {
+            if (Container.VehicleInfo.VehicleSpeed.IsEqual(0)) {
                 return InitStartGear(absTime, torque, outAngularVelocity);
             }
 
@@ -51,7 +49,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
                 response = TestPowertrain.Gearbox.Request(absTime,
                     Constants.SimulationSettings.MeasuredSpeedTargetTimeInterval, torque, outAngularVelocity,
                     true);
-                if (response.Engine.EngineSpeed > DataBus.EngineInfo.EngineRatedSpeed || response.Engine.EngineSpeed < DataBus.EngineInfo.EngineIdleSpeed) {
+                if (response.Engine.EngineSpeed > Container.EngineInfo.EngineRatedSpeed || response.Engine.EngineSpeed < Container.EngineInfo.EngineIdleSpeed) {
                     continue;
                 }
 
@@ -68,7 +66,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
         protected virtual GearshiftPosition InitStartGear(Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity)
         {
-            if (!DataBus.EngineCtl.CombustionEngineOn) {
+            if (!Container.EngineCtl.CombustionEngineOn) {
                 return _nextGear;
             }
 
@@ -76,7 +74,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
                 //for (var gear = MaxStartGear; gear > 1; gear--) {
                 var inAngularSpeed = outAngularVelocity * GearboxModelData.Gears[gear.Gear].Ratio;
 
-                var ratedSpeed = DataBus.EngineInfo.EngineRatedSpeed;
+                var ratedSpeed = Container.EngineInfo.EngineRatedSpeed;
                 if (inAngularSpeed > ratedSpeed || inAngularSpeed.IsEqual(0)) {
                     continue;
                 }
@@ -104,7 +102,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
                     reserve = 1 - VectoMath.Min(response.Engine.TorqueOutDemand / fullLoadPower, tqRequest / maxTorque);
                 }
 
-                if (response.Engine.EngineSpeed > DataBus.EngineInfo.EngineIdleSpeed &&
+                if (response.Engine.EngineSpeed > Container.EngineInfo.EngineIdleSpeed &&
                     reserve.IsGreaterOrEqual(0)) {
                     //reserve >= GearshiftParams.StartTorqueReserve) {
                     _nextGear = gear;
@@ -119,12 +117,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		public override GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			var tmpGear = new GearshiftPosition(_nextGear.Gear, false);
-			if (DataBus.EngineCtl.CombustionEngineOn) {
+			if (Container.EngineCtl.CombustionEngineOn) {
 				//  GX -> 0: disengage before halting
-				var vehicleSpeed = DataBus.VehicleInfo.VehicleSpeed + DataBus.DriverInfo.DriverAcceleration * dt;
+				var vehicleSpeed = Container.VehicleInfo.VehicleSpeed + Container.DriverInfo.DriverAcceleration * dt;
 				var isSlowerThanDisengageSpeed = vehicleSpeed.IsSmaller(GearboxModelData.DisengageWhenHaltingSpeed);
 				var isNegativeTorque = outTorque.IsSmaller(0);
-				var isBraking = DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Braking;
+				var isBraking = Container.DriverInfo.DriverBehavior == DrivingBehavior.Braking;
 				var disengageBeforeHalting = isBraking && isSlowerThanDisengageSpeed && isNegativeTorque;
 
 				if (disengageBeforeHalting) {

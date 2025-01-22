@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
                 ? PowertrainBuilder.BuildSimpleHybridPowertrainGear(RunData)
                 : PowertrainBuilder.BuildSimpleHybridPowertrain(RunData);
 
-            TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, DataBus);
+            TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, Container);
         }
 
         protected override bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
         public override void Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
         {
             base.Request(absTime, dt, outTorque, outAngularVelocity);
-            if (DataBus.DriverInfo.DrivingAction == DrivingAction.Halt) {
+            if (Container.DriverInfo.DrivingAction == DrivingAction.Halt) {
                 _nextGear = MaxStartGear;
             }
         }
@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
         public override GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter outTorque,
             PerSecond outAngularVelocity)
         {
-            if (DataBus.VehicleInfo.VehicleSpeed.IsEqual(0)) {
+            if (Container.VehicleInfo.VehicleSpeed.IsEqual(0)) {
                 return InitStartGear(absTime, outTorque, outAngularVelocity);
             }
 
@@ -103,8 +103,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
                 if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) &&
                     !IsAboveUpShiftCurve(gear, inTorque, inAngularSpeed) &&
                     reserve >= GearshiftParams.StartTorqueReserve) {
-                    if ((inAngularSpeed - DataBus.EngineInfo.EngineIdleSpeed) /
-                        (DataBus.EngineInfo.EngineRatedSpeed - DataBus.EngineInfo.EngineIdleSpeed) <
+                    if ((inAngularSpeed - Container.EngineInfo.EngineIdleSpeed) /
+                        (Container.EngineInfo.EngineRatedSpeed - Container.EngineInfo.EngineIdleSpeed) <
                         Constants.SimulationSettings.ClutchClosingSpeedNorm && Gears.HasPredecessor(gear)) {
                         gear = Gears.Predecessor(gear);
                     }
@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
                 //for (var gear = MaxStartGear; gear > 1; gear--) {
                 var inAngularSpeed = outAngularVelocity * GearboxModelData.Gears[gear.Gear].Ratio;
 
-                var ratedSpeed = DataBus.EngineInfo.EngineRatedSpeed;
+                var ratedSpeed = Container.EngineInfo.EngineRatedSpeed;
                 if (inAngularSpeed > ratedSpeed || inAngularSpeed.IsEqual(0)) {
                     continue;
                 }
@@ -161,7 +161,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
                     reserve = 1 - VectoMath.Min(response.Engine.TorqueOutDemand / fullLoadPower, tqRequest / maxTorque);
                 }
 
-                if (response.Engine.EngineSpeed > DataBus.EngineInfo.EngineIdleSpeed &&
+                if (response.Engine.EngineSpeed > Container.EngineInfo.EngineIdleSpeed &&
                     reserve.IsGreaterOrEqual(0)) {
                     //reserve >= GearshiftParams.StartTorqueReserve) {
                     _nextGear = gear;
@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
         public override GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
         {
-            if (DataBus.EngineCtl.CombustionEngineOn) {
+            if (Container.EngineCtl.CombustionEngineOn) {
                 while (Gears.HasPredecessor(_nextGear) && SpeedTooLowForEngine(_nextGear, outAngularVelocity)) {
                     _nextGear = Gears.Predecessor(_nextGear);
                 }
@@ -191,7 +191,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
         public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque,
             PerSecond outAngularVelocity)
         {
-            if (!Controller.ShiftRequired && !Controller.CurrentStrategySettings.GearboxInNeutral && DataBus.DriverInfo.DrivingAction != DrivingAction.Halt) {
+            if (!Controller.ShiftRequired && !Controller.CurrentStrategySettings.GearboxInNeutral && Container.DriverInfo.DrivingAction != DrivingAction.Halt) {
                 // gearbox disengaged on its own! set next gear!
                 var gear = _nextGear;
                 while (Gears.HasPredecessor(gear) && SpeedTooLowForEngine(gear, outAngularVelocity)) {
