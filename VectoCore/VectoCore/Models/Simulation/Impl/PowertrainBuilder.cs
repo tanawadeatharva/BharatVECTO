@@ -1353,8 +1353,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
-				.AddComponent(new Brakes(container)
-				.AddComponent(new WheelEnd(container, data.WheelEndData)));
+				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData));
 
 			var pos = data.ElectricMachinesData.First().Item1;
 			IElectricMotor em;
@@ -1454,8 +1454,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ctl)
-				.AddComponent(new Brakes(container)
-				.AddComponent(new WheelEnd(container, data.WheelEndData)));
+				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData));
 
 			var pos = data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
 			IElectricMotor em;
