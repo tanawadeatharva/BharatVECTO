@@ -8,7 +8,7 @@ using TUGraz.VectoCore.Models.Simulation.DataBus;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
 
-    public class HybridCtlATShiftStrategy : BaseShiftStrategy<ATGearbox> 
+    public class HybridCtlATShiftStrategy : BaseShiftStrategy<ATGearbox>, IHybridControlShiftStrategy
     {
 		public HybridCtlATShiftStrategy(IHybridControllerInternal hybridController, IVehicleContainer container) :
 			base(container)
@@ -95,5 +95,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
             return base.SpeedTooHighForEngine(gear, outAngularSpeed);
         }
+
+		public void SetNextGear(GearshiftPosition nextGear) => _nextGear = nextGear;
     }
 }

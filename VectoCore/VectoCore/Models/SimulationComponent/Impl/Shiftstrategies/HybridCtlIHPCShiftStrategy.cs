@@ -9,7 +9,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
-    public class HybridCtlIHPCShiftStrategy : BaseShiftStrategy<ATGearbox>
+    public class HybridCtlIHPCShiftStrategy : BaseShiftStrategy<ATGearbox>, IHybridControlShiftStrategy
     {
 		protected IHybridControllerInternal Controller;
 
@@ -151,5 +151,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
         public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity) { }
 
+		public void SetNextGear(GearshiftPosition nextGear) => _nextGear = nextGear;
     }
 }

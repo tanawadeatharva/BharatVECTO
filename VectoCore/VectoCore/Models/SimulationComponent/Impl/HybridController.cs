@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		IHybridController, ITnInPort, ITnOutPort, IHybridControllerInternal
 	{
 		protected readonly Dictionary<PowertrainPosition, HybridCtlElectricMotorController> _electricMotorCtl;
-		protected readonly HybridCtlShiftStrategy _shiftStrategy;
+		protected readonly IHybridControlShiftStrategy _shiftStrategy;
 		protected readonly IHybridControlStrategy _hybridStrategy;
 
 		protected Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> _electricMotorTorque =

@@ -54,6 +54,7 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 
 namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 {

@@ -9,7 +9,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
-    public class HybridCtlShiftStrategy : BaseShiftStrategy<Gearbox>
+    public class HybridCtlShiftStrategy : BaseShiftStrategy<Gearbox>, IHybridControlShiftStrategy
     {
         protected IHybridControllerInternal Controller;
 

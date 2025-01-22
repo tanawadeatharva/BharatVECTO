@@ -56,6 +56,7 @@ using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 
 // ReSharper disable RedundantAssignment
 // ReSharper disable UnusedVariable

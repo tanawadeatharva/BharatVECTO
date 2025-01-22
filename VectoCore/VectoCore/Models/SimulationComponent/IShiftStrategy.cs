@@ -110,4 +110,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		VelocityRollingLookup VelocityDropData { get; }
 	}
 
+	public interface IHybridControlShiftStrategy : IShiftStrategy
+	{
+		void SetNextGear(GearshiftPosition nextGear);
+    }
 }
