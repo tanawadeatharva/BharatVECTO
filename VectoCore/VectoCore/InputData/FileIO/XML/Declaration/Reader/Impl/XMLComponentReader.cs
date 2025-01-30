@@ -615,8 +615,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public const string XSD_TYPE = "ElectricEnergyStorageType";
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-        public const double MINIMUM_CORRECTLY_PLACED_SUPERCAP_TYPE_VERSION = 2.6;
-
         [Inject] public virtual IDeclarationInjectFactory Factory { protected get; set; }
 
 		public XMLREESSReaderV24(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
@@ -654,9 +652,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			XmlNode componentNode, string sourcefile)
 		{
             var dataNode = GetNode(XMLNames.ComponentDataWrapper, componentNode);
-            var dataVersion = XMLHelper.GetXsdType(dataNode.SchemaInfo.SchemaType);
-			var capVersion = XMLHelper.GetVersion(dataNode) >= MINIMUM_CORRECTLY_PLACED_SUPERCAP_TYPE_VERSION ? dataVersion : version;
-            return Factory.CreateSuperCapDeclarationInputData(capVersion, componentNode, sourcefile);
+            version = XMLHelper.GetXsdType(dataNode.SchemaInfo.SchemaType);
+			return Factory.CreateSuperCapDeclarationInputData(version, componentNode, sourcefile);
 		}
 
 		#endregion

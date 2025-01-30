@@ -468,15 +468,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
     // ---------------------------------------------------------------------------------------
 
-    public class XMLSuperCapDeclarationInputDataV24 : AbstractCommonComponentType, IXMLSuperCapDeclarationInputData
+    public class XMLSuperCapDeclarationInputDataV23 : AbstractCommonComponentType, IXMLSuperCapDeclarationInputData
 	{
-		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
-		public const string XSD_TYPE = "REESSCapacitorType";
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V23;
+		public const string XSD_TYPE = "CapacitorSystemDataType";
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		
-		public XMLSuperCapDeclarationInputDataV24(XmlNode componentNode, string sourceFile, bool disallowed = true) : base(componentNode, sourceFile)
+		public XMLSuperCapDeclarationInputDataV23(XmlNode componentNode, string sourceFile, bool disallowed = true) : base(componentNode, sourceFile)
 		{
-			if (disallowed)
+			if (disallowed && CertificationMethod == CertificationMethod.StandardValues)
 			{
 				throw new VectoException($"Capacitor v2.3 is no longer supported. Use newer version instead.");
 			}
@@ -530,7 +530,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
-	public class XMLSuperCapDeclarationInputDataV26 : XMLSuperCapDeclarationInputDataV24
+	// ---------------------------------------------------------------------------------------
+
+    public class XMLSuperCapDeclarationInputDataV26 : XMLSuperCapDeclarationInputDataV23
 	{
         public static new readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
         public const string XSD_TYPE = "CapacitorSystemDataType";
@@ -544,7 +546,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLSuperCapDeclarationInputDataV01 : XMLSuperCapDeclarationInputDataV24
+	public class XMLSuperCapDeclarationInputDataV01 : XMLSuperCapDeclarationInputDataV23
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 		public const string XSD_TYPE = "REESSCapacitorType";
