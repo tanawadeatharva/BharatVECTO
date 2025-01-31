@@ -324,38 +324,39 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			const int SoC = 50;
 			
 			var mapSoC = BatterySOCReader.Create(VoltageCurve);
-			if (!mapSoC.ContainsSoC(SoC / 100))
+			if (!mapSoC.ContainsSoC(SoC / 100.0))
 			{
 				throw new VectoException($"Battery SoC map does not contain entry with SoC: {SoC}");
 			}
 
-            var vNom = mapSoC.Lookup(SoC / 100);
+            var vNom = mapSoC.Lookup(SoC / 100.0);
 			var minCells = vNom / 4.0.SI<Volt>();
 			var maxCells = vNom / 3.0.SI<Volt>();
 
             var resistances = base.GetInternalResistanceCurve();
             var specificResistanceData = _specificResistances.Lookup(BatteryType);
 
-            DataRow rowSoC = resistances.AsEnumerable().First(x => x.ParseDouble(0) == SoC);
+            //var rowSoC = resistances.AsEnumerable().First();
+			foreach (DataRow rowSoC in resistances.AsEnumerable()) {
+				var soc = rowSoC.ParseDouble(0);
+				for (var i = 1; i < resistances.Columns.Count; i++) {
+					var resistance = rowSoC.ParseDouble(i).SI(Unit.SI.Milli.Ohm).Cast<Ohm>();
+					var resistanceName = resistances.Columns[i].ColumnName;
 
-            for (var i = 1; i < resistances.Columns.Count; i++)
-            {
-				var resistance = rowSoC.ParseDouble(i);
-				var resistanceName = resistances.Columns[i].ColumnName;
+					var specificResistance = specificResistanceData.GetValue(resistanceName);
+					var cellResistance = specificResistance / Capacity;
 
-                var specificResistance = specificResistanceData.GetValue(resistanceName);
-				var cellResistance = specificResistance / Capacity.AsAmpHour;
+					var minResistance = cellResistance * minCells.Value();
+					var maxResistance = cellResistance * maxCells.Value();
 
-                var minResistance = cellResistance * minCells.Value();
-				var maxResistance = cellResistance * maxCells.Value();
-
-				if ((resistance < minResistance) || (resistance > maxResistance))
-				{
-					Log.Warn($@"Battery {resistanceName}: {resistance}, for SoC: {SoC}, out of range [{minResistance.ToString("N2")}, {maxResistance.ToString("N2")}]");
+					if ((resistance < minResistance) || (resistance > maxResistance)) {
+						Log.Warn(
+							$@"Battery {resistanceName}: {resistance.AsMilliOhm}, for SoC: {soc}, out of range [{minResistance.AsMilliOhm.ToString("N2")}, {maxResistance.AsMilliOhm.ToString("N2")}]");
+					}
 				}
-            }
+			}
 
-            return resistances;
+			return resistances;
         }
     }
 

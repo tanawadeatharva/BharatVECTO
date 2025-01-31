@@ -18,12 +18,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 
         public struct SpecificResistancesData 
         {
-            public double Ri_2;
-            public double Ri_10;
-            public double Ri_20;
-            public double Ri_120;
+            public SpecificResistance Ri_2;  // mOhm x Ah
+            public SpecificResistance Ri_10;
+            public SpecificResistance Ri_20;
+            public SpecificResistance Ri_120;
 
-            public double GetValue(string variable)
+            public SpecificResistance GetValue(string variable)
             {
                 var modifiedVariable = variable.Replace('-', '_');
 
@@ -51,10 +51,10 @@ namespace TUGraz.VectoCore.Models.Declaration
             {    
                 var val = new SpecificResistancesData()
                 {
-                    Ri_2 = row.ParseDouble(nameof(SpecificResistancesData.Ri_2).ToLower()),
-                    Ri_10 = row.ParseDouble(nameof(SpecificResistancesData.Ri_10).ToLower()),
-                    Ri_20 = row.ParseDouble(nameof(SpecificResistancesData.Ri_20).ToLower()),
-                    Ri_120 = !row.IsNull(ri120) && !String.IsNullOrWhiteSpace(row[ri120].ToString()) ? row.ParseDouble(ri120) : double.NaN
+                    Ri_2 = row.ParseDouble(nameof(SpecificResistancesData.Ri_2).ToLower()).SI(Unit.SI.Milli.Ohm.Ampere.Hour).Cast<SpecificResistance>(),
+                    Ri_10 = row.ParseDouble(nameof(SpecificResistancesData.Ri_10).ToLower()).SI(Unit.SI.Milli.Ohm.Ampere.Hour).Cast<SpecificResistance>(),
+                    Ri_20 = row.ParseDouble(nameof(SpecificResistancesData.Ri_20).ToLower()).SI(Unit.SI.Milli.Ohm.Ampere.Hour).Cast<SpecificResistance>(),
+                    Ri_120 = !row.IsNull(ri120) && !String.IsNullOrWhiteSpace(row[ri120].ToString()) ? row.ParseDouble(ri120).SI(Unit.SI.Milli.Ohm.Ampere.Hour).Cast<SpecificResistance>() : null
                 };
 
                 var type = (BatteryType)Enum.Parse(typeof(BatteryType), row["type"].ToString());
