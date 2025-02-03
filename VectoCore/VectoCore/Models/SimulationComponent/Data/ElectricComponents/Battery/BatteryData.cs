@@ -140,6 +140,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 				Entries[idx].BatteryVolts, soc);
 		}
 
+		public bool ContainsSoC(double soc)
+		{
+			return Entries.Any(x => x.SOC.IsEqual(soc));
+		}
+
 		protected int FindIndex(double soc)
 		{
 			if (soc < Entries.First().SOC)
