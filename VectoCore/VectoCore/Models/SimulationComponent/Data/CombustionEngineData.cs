@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public double FuelConsumptionCorrectionFactor { get; internal set; }
 
 		[Required, ValidateObject]
-		public FuelConsumptionMap ConsumptionMap { get; internal set; }
+		public IFuelConsumptionMap ConsumptionMap { get; internal set; }
 
 		public IFuelProperties FuelData { get; internal set; }
 	}

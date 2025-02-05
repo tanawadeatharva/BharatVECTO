@@ -1,5 +1,6 @@
 ﻿
 Imports TUGraz.VectoCommon.BusAuxiliaries
+Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 
 Public Class MockFuel50PC
