@@ -1,4 +1,8 @@
-﻿using System;
+﻿#if CERTIFICATION_RELEASE || RELEASE_CANDIDATE
+#define PROHIBIT_OLD_XML
+#endif
+
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
@@ -213,7 +217,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLBatteryPackDeclarationInputDataStandardV23(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) 
 		{
+#if PROHIBIT_OLD_XML
 			throw new VectoException($"{XSD_TYPE} v2.3 is no longer supported. Use newer version instead.");
+#endif
 		}
 
 		#region Overrides of AbstractBatteryPackDeclarationInputDataProvider
@@ -400,10 +406,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		public XMLSuperCapDeclarationInputDataV23(XmlNode componentNode, string sourceFile, bool disallowed = true) : base(componentNode, sourceFile)
 		{
+#if PROHIBIT_OLD_XML
 			if (disallowed && CertificationMethod == CertificationMethod.StandardValues)
 			{
 				throw new VectoException($"Capacitor v2.3 is no longer supported. Use newer version instead.");
 			}
+#endif
 		}
 		
 		#region Implementation of IREESSPackInputData
