@@ -484,6 +484,15 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MaxWindowSize.
+        /// </summary>
+        internal static string FuelCell_maxWindowSize {
+            get {
+                return ResourceManager.GetString("FuelCell_maxWindowSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MinElectricPower.
         /// </summary>
         internal static string FuelCell_MinPower {

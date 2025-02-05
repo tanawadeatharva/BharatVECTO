@@ -1196,6 +1196,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 			
 			var fuelCellSystemData = new FuelCellSystemData();
+			fuelCellSystemData.MaxWindowSize = fuelCellSystemInputData.MaxWindowSize;
 			fuelCellSystemData.FuelCellStrings = new List<FuelCellStringData>();
 			var id = 0;
 			foreach (var fcC in fuelCellSystemInputData.FuelCellStrings) {

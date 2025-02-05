@@ -579,4 +579,7 @@
   <data name="VTP_CompletedVIF" xml:space="preserve">
     <value>CompletedVIF</value>
   </data>
+  <data name="FuelCell_maxWindowSize" xml:space="preserve">
+    <value>MaxWindowSize</value>
+  </data>
 </root>

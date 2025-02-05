@@ -707,7 +707,9 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IFuelCellSystemEngineeringInputData
 	{
 		IList<FuelCellStringEntry<IFuelCellComponentEngineeringInputData>> FuelCellStrings { get; }
-	}
+
+        Meter MaxWindowSize { get; }
+    }
 	public class FuelCellStringEntry<T> where T : class, IFuelCellComponentEngineeringInputData //Generic to reuse for declaration?
 	{
 		public int Count { get; set; }

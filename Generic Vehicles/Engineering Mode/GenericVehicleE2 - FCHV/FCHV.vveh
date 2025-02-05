@@ -39,7 +39,8 @@
         },{
           "Count": 1,
           "FuelCellSystemFile": "GenericFuelCellSystem.vfcc"
-        }]
+        }],
+		"MaxWindowSize": 85000
     },
     "InitialSoC": 50,
     "TorqueLimits": {},

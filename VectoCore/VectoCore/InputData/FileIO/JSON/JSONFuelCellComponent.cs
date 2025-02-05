@@ -36,6 +36,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public Watt MaxElectricPower => Body.GetEx<double>("MaxElectricPower").SI(Unit.SI.Kilo.Watt).Cast<Watt>();
 
         public Watt MinElectricPower => Body.GetEx<double>("MinElectricPower").SI(Unit.SI.Kilo.Watt).Cast<Watt>();
+
 		#endregion
     }
 

@@ -1138,7 +1138,15 @@ Public Class FuelCellSystemWrapper
 		Vehicle = veh
 	End Sub
 
+	Public ReadOnly Property MaxWindowSize As Meter Implements IFuelCellSystemEngineeringInputData.MaxWindowSize
+		Get
+			If (Vehicle.VehicleType <> VectoSimulationJobType.FCHV AndAlso Vehicle.VehicleType <> VectoSimulationJobType.FCHV_IEPC) Then
+				Return Nothing
+			End If
 
+			Return Vehicle.FuelCellSystemInputData.MaxWindowSize
+		End Get
+	End Property
 
 	Public ReadOnly Property FuelCellStrings As IList(Of FuelCellStringEntry(Of IFuelCellComponentEngineeringInputData)) Implements IFuelCellSystemEngineeringInputData.FuelCellStrings
 		Get

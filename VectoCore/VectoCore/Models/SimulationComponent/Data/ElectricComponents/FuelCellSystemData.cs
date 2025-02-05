@@ -67,7 +67,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 			}
 		}
 
-	}
+        public Meter MaxWindowSize { get; set; }
+    }
 
 	public class FuelCellData
 	{

@@ -122,9 +122,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				}
 			}
 
+			Meter maxWindowSize = (fcsJson[JsonKeys.FuelCell_maxWindowSize] != null)
+				? fcsJson.GetEx<int>(JsonKeys.FuelCell_maxWindowSize).SI<Meter>()
+				: null;
+
 			return new JSONFuelCellSystemEngineeringInputData()
 			{
-				FuelCellStrings = fcList
+				FuelCellStrings = fcList,
+				MaxWindowSize = maxWindowSize
 			};
 		}
 
