@@ -49,6 +49,7 @@ using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
 using System.IO;
 using Ninject;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
@@ -58,7 +59,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Reports
 {
-	[TestFixture]
+    [TestFixture]
 	[Parallelizable(ParallelScope.All)]
 	public class ModDataTest
 	{
@@ -572,7 +573,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		}
 
 		private static void AssertModDataIntegrity(ModalResults modData, Dictionary<string, DataColumn> auxKeys,
-			double totalDistance, FuelConsumptionMap consumptionMap, bool distanceBased, VectoRunData runData)
+			double totalDistance, IFuelConsumptionMap consumptionMap, bool distanceBased, VectoRunData runData)
 		{
 			Assert.IsTrue(modData.Rows.Count > 0);
 

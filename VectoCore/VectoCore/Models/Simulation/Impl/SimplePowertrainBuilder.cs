@@ -30,9 +30,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
         }
 
 
-		public ITestPowertrain<T> CreateTestPowertrain<T>(ISimpleVehicleContainer testContainer, IDataBus dataBus) where T : class, IHybridControlledGearbox, IGearbox
+		public ITestPowertrain<T> CreateTestPowertrain<T>(ISimpleVehicleContainer testContainer, IDataBus realContainer) where T : class, IHybridControlledGearbox, IGearbox
 		{
-			return new TestPowertrain<T>(testContainer, dataBus);
+			return new TestPowertrain<T>(testContainer, realContainer);
 		}
 
 		public ITestGenset CreateTestGenset(ISimpleVehicleContainer testContainer, IDataBus realContainer)

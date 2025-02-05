@@ -1,6 +1,7 @@
 ﻿using Moq;
 using NUnit.Framework;
 using TUGraz.Vecto.UnitTests.Utils;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports;

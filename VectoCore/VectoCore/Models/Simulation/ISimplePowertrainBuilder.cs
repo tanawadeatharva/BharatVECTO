@@ -7,7 +7,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 {
     public interface ISimplePowertrainBuilder
     {
-		ITestPowertrain<T> CreateTestPowertrain<T>(ISimpleVehicleContainer testContainer, IDataBus dataBus) where T : class, IHybridControlledGearbox, IGearbox;
+		ITestPowertrain<T> CreateTestPowertrain<T>(ISimpleVehicleContainer testContainer, IDataBus realContainer) where T : class, IHybridControlledGearbox, IGearbox;
 
 		ITestGenset CreateTestGenset(ISimpleVehicleContainer testContainer, IDataBus realContainer);
 

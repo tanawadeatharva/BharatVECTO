@@ -18,7 +18,7 @@ using DeclarationDataAdapterHeavyLorry = TUGraz.VectoCore.InputData.Reader.DataO
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class GenericBusEngineData
+    public class GenericBusEngineData
 	{
 		#region Constants
 

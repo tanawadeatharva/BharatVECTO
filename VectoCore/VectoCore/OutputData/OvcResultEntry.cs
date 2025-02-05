@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 
 namespace TUGraz.VectoCore.OutputData
 {
-	public class OvcResultEntry : IOVCResultEntry
+    public class OvcResultEntry : IOVCResultEntry
 	{
 		#region Implementation of IOVCResultEntry
 

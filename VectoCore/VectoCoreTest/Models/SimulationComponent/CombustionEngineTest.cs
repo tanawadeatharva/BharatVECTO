@@ -43,6 +43,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using System.IO;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Simulation;
 
 // ReSharper disable UnusedVariable
