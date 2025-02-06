@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
@@ -24,6 +25,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public string StringId => _stringId.ToString(CultureInfo.InvariantCulture);
 		private IList<FuelCell> _fuelCells = new List<FuelCell>();
+
+		public IReadOnlyCollection<FuelCell> FuelCells => new ReadOnlyCollection<FuelCell>(_fuelCells);
 
 		public FuelCellString(FuelCellStringData fcData, int stringId, IVehicleContainer dataBus) : base(null)
 		{
