@@ -1354,7 +1354,21 @@ namespace TUGraz.VectoCommon.Utils
 		public double AsMilliOhm => Val * 1000;
 	}
 
-	public class Farad : SIBase<Farad>
+	public class SpecificResistance : SIBase<SpecificResistance>
+	{
+		private static readonly int[] Units = { 1, 2, -3 + 1, -2 + 1, 0, 0, 0 };
+
+        private SpecificResistance(double val) : base(val, Units) { }
+
+		public override string UnitString => "ΩAs";
+
+		public static Ohm operator /(SpecificResistance spr, AmpereSecond amps)
+		{
+			return SIBase<Ohm>.Create(spr.Val / amps.Value());
+		}
+	}
+
+    public class Farad : SIBase<Farad>
 	{
 		private static readonly int[] Units = { -1, -2, 4, 2, 0, 0, 0 };
 

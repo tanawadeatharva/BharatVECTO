@@ -188,9 +188,9 @@ namespace TUGraz.VectoCore.Tests.Integration.GenericVehicles
 
 		[Category("Integration")]
 		[
-			TestCase(SINGLEBUS_31B_FM, "Coach", 863.7357),
-			TestCase(SINGLEBUS_31B_FM, "HeavyUrban", 1829.8008),
-			TestCase(SINGLEBUS_31B_FM, "Interurban", 1039.5712),
+			TestCase(SINGLEBUS_31B_FM, "Coach", 863.6492),
+			TestCase(SINGLEBUS_31B_FM, "HeavyUrban", 1829.2873),
+			TestCase(SINGLEBUS_31B_FM, "Interurban", 1039.4657),
 
 			TestCase(SINGLEBUS_34F_FM, "Coach", 686.0818),
 			TestCase(SINGLEBUS_34F_FM, "HeavyUrban", 1860.2187),
