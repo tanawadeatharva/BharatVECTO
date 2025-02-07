@@ -992,5 +992,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	public class JSONFuelCellSystemEngineeringInputData : IFuelCellSystemEngineeringInputData
 	{
 		public IList<FuelCellStringEntry<IFuelCellComponentEngineeringInputData>> FuelCellStrings { get; internal set; }
-	}
+
+        public Meter MaxWindowSize { get; internal set; }
+    }
 }

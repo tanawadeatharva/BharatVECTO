@@ -165,15 +165,16 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 			//tmpBatSystem.Initialize(batData.InitialSoC);
 			var es = GetElectricSystem(batData, batData.InitialSoC, out _);
 
+			var maxWindowSize = fcData.MaxWindowSize ?? TotalDistance;
 
-			var rawFcCalcEntries = GetRawFuelCellPowerDemand(TotalDistance, 0.SI<Watt>(), fcData.MaxElectricPower, es,
+            var rawFcCalcEntries = GetRawFuelCellPowerDemand(maxWindowSize, 0.SI<Watt>(), fcData.MaxElectricPower, es,
 				_preRunResults);
 
-			ApplyBatterySafetyMargin(batData, rawFcCalcEntries);
-
+			ApplyBatterySafetyMargin(batData, rawFcCalcEntries, maxWindowSize);
+			
 			if (TryWithFullDistance(fcData, ref batData, out var result)) {
 				StartSoC = result.InitSoc;
-				WindowSize = TotalDistance;
+				WindowSize = maxWindowSize;
 				BinarySearchIterations = 0;
 				return result;
 			}
@@ -184,16 +185,17 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 		{
 			double searchThreshold = 0.05;
 			var minWindowSize = 5.SI<Meter>();
-			//Start binary search
-			var accepted = new List<SearchResult>();
+            var maxWindowSize = fcData.MaxWindowSize ?? TotalDistance;
+            //Start binary search
+            var accepted = new List<SearchResult>();
 			// we can add the full distance already beforehand because the search starts only if the full distance is not 
 			// feasible.
 			var rejected = new List<SearchResult>() {
-				new SearchResult(false, batData.InitialSoC, TotalDistance, Array.Empty<FCCalcEntry>(), "init assumption for binary search")
+				new SearchResult(false, batData.InitialSoC, maxWindowSize, Array.Empty<FCCalcEntry>(), "init assumption for binary search")
 			};
 			var iterationCount = 0;
 			try {
-				SearchAlgorithm.BinarySearch(0.SI<Meter>(), TotalDistance,
+				SearchAlgorithm.BinarySearch(0.SI<Meter>(), maxWindowSize,
 					evaluateFunction:
 					distance => {
 						CalculateFuelCellPowerDemandForWindowSize(distance, fcData, batData, out var result);
@@ -235,7 +237,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 				);
 			} finally {
 				BinarySearchIterations = iterationCount;
-				WindowSize = accepted.LastOrDefault()?.Distance ?? TotalDistance;
+				WindowSize = accepted.LastOrDefault()?.Distance ?? maxWindowSize;
 				RejectedSearchResults = rejected.ToArray();
 				AcceptedSearchResults = accepted.ToArray();
 				StartSoC = accepted.LastOrDefault()?.InitSoc ?? 0.0;
@@ -253,8 +255,8 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 				throw new VectoException($"FuelCell power not sufficient {msg}");
 			}
 
-			//try with window size = full distance
-			return CalculateFuelCellPowerDemandForWindowSize(TotalDistance, fcData, batData, out result);
+            var maxWindowSize = fcData.MaxWindowSize ?? TotalDistance;
+            return CalculateFuelCellPowerDemandForWindowSize(maxWindowSize, fcData, batData, out result);
 		}
 
 		public bool TryShiftInitialSoC(double batMinSoc, double batMaxSoc, double initSoc, double minSocTrace,
@@ -496,13 +498,13 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 		}
 
 
-		private BatterySystemData ApplyBatterySafetyMargin(BatterySystemData batData, IEnumerable<FCCalcEntry> fcCalcEntries)
+		private BatterySystemData ApplyBatterySafetyMargin(BatterySystemData batData, IEnumerable<FCCalcEntry> fcCalcEntries, Meter maxWindowSize)
 		{
 			var tmpBatSystem = new BatterySystem(null, batData);
 			var first = fcCalcEntries.First();
-			Debug.Assert(first.WindowSize == TotalDistance); 
-			//When window size equals TotalDistance, P_FC_raw == average P_el_dem
-			var energy_safety_margin = first.P_FC_raw * 10.SI<Second>(); 
+            Debug.Assert(first.WindowSize == maxWindowSize); 
+            //When window size equals TotalDistance, P_FC_raw == average P_el_dem
+            var energy_safety_margin = first.P_FC_raw * 10.SI<Second>(); 
 			var dSocSafety =
 				Math.Abs((energy_safety_margin / tmpBatSystem.NominalVoltage / tmpBatSystem.TotalCapacity).Value());
 			var minSocSafe = tmpBatSystem.MinSoC + dSocSafety;
@@ -606,10 +608,12 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 			var maxFcPower = fcData.MaxElectricPower;
 
 			var es = GetElectricSystem(batData, batData.InitialSoC, out var _);
-            //var tmpBatSystem = new BatterySystem(null, batData);
-            //tmpBatSystem.Initialize(batData.InitialSoC);
+			//var tmpBatSystem = new BatterySystem(null, batData);
+			//tmpBatSystem.Initialize(batData.InitialSoC);
 
-			var avgPowerDemand = GetRawFuelCellPowerDemand(TotalDistance, minFcPower, maxFcPower, es, _preRunResults).First().P_FC_raw;
+			var maxWindowSize = fcData.MaxWindowSize ?? TotalDistance;
+
+			var avgPowerDemand = GetRawFuelCellPowerDemand(maxWindowSize, minFcPower, maxFcPower, es, _preRunResults).First().P_FC_raw;
 
 			if (avgPowerDemand > maxFcPower)
             {

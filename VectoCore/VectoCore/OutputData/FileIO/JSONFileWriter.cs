@@ -770,6 +770,11 @@ public class JSONFileWriter : IOutputFileWriter
 
 		ret[JsonKeys.FuelCell_FuelCells] = GetFuelCells(fcS, basePath);
 
+		if (fcS.MaxWindowSize != null)
+		{
+			ret[JsonKeys.FuelCell_maxWindowSize] = (int)fcS.MaxWindowSize.Value();
+		}
+
 		return ret;
 	}
 
@@ -1733,7 +1738,6 @@ public class JSONFileWriter : IOutputFileWriter
 			{ "MassFlowMap", GetRelativePath(fuelCellComponent.MassFlowMap.Source, Path.GetDirectoryName(filePath))}
 		};
 
-		WriteFile(header, body, filePath);
-		
+		WriteFile(header, body, filePath);		
     }
 }
