@@ -440,7 +440,7 @@
 					<xs:element name="CurrentLimits">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Entry" type="v2.3:BatterySystemCurrentLimitsEntryType" minOccurs="2" maxOccurs="unbounded"/>
+								<xs:element name="Entry" type="v2.3:BatterySystemCurrentLimitsEntryType" minOccurs="4" maxOccurs="unbounded"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>

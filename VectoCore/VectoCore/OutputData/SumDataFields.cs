@@ -781,7 +781,21 @@ namespace TUGraz.VectoCore.OutputData
 				{ E_AUX_ESS_missing, SumFunc((r, m) => m.CorrectedModalData.WorkESSMissing.ConvertToKiloWattHour()) },
 
 
-				{ E_WHEEL, SumFunc((r, m) => m.WorkWheels().ConvertToKiloWattHour(), ModalResultField.P_wheel_in) },
+			{E_WHEEL, SumFunc((r, m) => m.WorkWheels().ConvertToKiloWattHour(), ModalResultField.P_wheel_in)},
+			
+			// BusAux
+			{ AirGenerated, SumFunc((r, m) => (ConvertedSI)m.AirGenerated(), ModalResultField.Nl_busAux_PS_generated)},
+			{ AirConsumed, SumFunc((r, m) => (ConvertedSI)m.AirConsumed(), ModalResultField.Nl_busAux_PS_consumer)},
+			{ E_PS_CompressorOff, SumFunc((r, m) => m.EnergyPneumaticCompressorPowerOff().ConvertToKiloWattHour(), ModalResultField.P_busAux_PS_generated_dragOnly)},
+			{ E_PS_CompressorOn, SumFunc((r, m) => m.EnergyPneumaticCompressorOn().ConvertToKiloWattHour(), ModalResultField.Nl_busAux_PS_generated)},
+			{ E_BusAux_ES_generated, SumFunc((r, m) => m.EnergyBusAuxESGenerated().ConvertToKiloWattHour(), ModalResultField.P_busAux_ES_generated)},
+			{ E_BusAux_ES_consumed, SumFunc((r, m) => m.EnergyBusAuxESConsumed().ConvertToKiloWattHour(), ModalResultField.P_busAux_ES_consumer_sum)},
+			{ Delta_E_BusAux_Battery, SumFunc((r, m) => ((r.BusAuxiliaries != null && r.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart)
+					? m.DeltaSOCBusAuxBattery() * r.BusAuxiliaries.ElectricalUserInputsConfig.ElectricStorageCapacity
+					: 0.SI<WattSecond>())
+				.ConvertToKiloWattHour()) },
+			{ E_BusAux_HVAC_Mech, SumFunc((r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_busAux_HVACmech_consumer).ConvertToKiloWattHour(), ModalResultField.P_busAux_HVACmech_consumer)}, 
+			{ E_BusAux_HVAC_El, SumFunc((r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_busAux_ES_HVAC).ConvertToKiloWattHour(), ModalResultField.P_busAux_ES_HVAC)},
 
 				// BusAux
 				{

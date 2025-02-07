@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
+<tns:VectoInputDeclaration 
+	xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	schemaVersion="2.0" 
+	xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" 
+	xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
+	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" 
+	xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" 
+	xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"  
+	xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" 
+	xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.6">
 	<v2.0:Vehicle xsi:type="Vehicle_HEV-Px_HeavyLorryDeclarationType" id="Group5_HEV_P2_sc">
 		<Manufacturer>TU Graz</Manufacturer>
 		<ManufacturerAddress>Inffeldgasse 19</ManufacturerAddress>
@@ -2219,19 +2229,19 @@
 			</ElectricMachine>
 			<ElectricEnergyStorage>
 				<Capacitor>
-					<Data xsi:type="v2.3:CapacitorSystemDataType" id="CAP-qwertz">
-						<v2.3:Manufacturer>SuperCAP Factory</v2.3:Manufacturer>
-						<v2.3:Model>Super cap 7000</v2.3:Model>
-						<v2.3:CertificationNumber>123456789</v2.3:CertificationNumber>
-						<v2.3:Date>2017-01-01T00:00:00Z</v2.3:Date>
-						<v2.3:AppVersion>aaaaa</v2.3:AppVersion>
-						<v2.3:CertificationMethod>Measured</v2.3:CertificationMethod>
-						<v2.3:Capacitance>37.00</v2.3:Capacitance>
-						<v2.3:InternalResistance>5.00</v2.3:InternalResistance>
-						<v2.3:MinVoltage>100.00</v2.3:MinVoltage>
-						<v2.3:MaxVoltage>900.00</v2.3:MaxVoltage>
-						<v2.3:MaxChargingCurrent>2200.00</v2.3:MaxChargingCurrent>
-						<v2.3:MaxDischargingCurrent>2200.00</v2.3:MaxDischargingCurrent>
+					<Data xsi:type="v2.6:CapacitorSystemDataType" id="CAP-qwertz">
+						<v2.6:Manufacturer>SuperCAP Factory</v2.6:Manufacturer>
+						<v2.6:Model>Super cap 7000</v2.6:Model>
+						<v2.6:CertificationNumber>123456789</v2.6:CertificationNumber>
+						<v2.6:Date>2017-01-01T00:00:00Z</v2.6:Date>
+						<v2.6:AppVersion>aaaaa</v2.6:AppVersion>
+						<v2.6:CertificationMethod>Measured</v2.6:CertificationMethod>
+						<v2.6:Capacitance>37.00</v2.6:Capacitance>
+						<v2.6:InternalResistance>5000.00</v2.6:InternalResistance>
+						<v2.6:MinVoltage>100.00</v2.6:MinVoltage>
+						<v2.6:MaxVoltage>900.00</v2.6:MaxVoltage>
+						<v2.6:MaxChargingCurrent>2200.00</v2.6:MaxChargingCurrent>
+						<v2.6:MaxDischargingCurrent>2200.00</v2.6:MaxDischargingCurrent>
 					</Data>
 					<Signature>
 						<di:Reference>

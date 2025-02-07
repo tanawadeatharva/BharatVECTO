@@ -330,8 +330,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLBatteryPackDeclarationInputData>().To<XMLBatteryPackDeclarationInputDataStandardV23>()
 				.Named(XMLBatteryPackDeclarationInputDataStandardV23.QUALIFIED_XSD_TYPE);
 
-            Bind<IXMLSuperCapDeclarationInputData>().To<XMLSuperCapDeclarationInputDataV24>()
-				.Named(XMLSuperCapDeclarationInputDataV24.QUALIFIED_XSD_TYPE);
+            Bind<IXMLSuperCapDeclarationInputData>().To<XMLSuperCapDeclarationInputDataV23>()
+				.Named(XMLSuperCapDeclarationInputDataV23.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLADCDeclarationInputData>().To<XMLADCDeclarationInputDataV23>()
 				.Named(XMLADCDeclarationInputDataV23.QUALIFIED_XSD_TYPE);
