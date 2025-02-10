@@ -434,13 +434,8 @@ namespace TUGraz.VectoHashing
 				throw new Exception("Invalid structure of input XML!");
 			}
 
-			if (nodes[index].Attributes[XMLNames.Component_ID_Attr] == null) {
-				return false;
-			}
+			var nodesDV = parent.SelectNodes("./*[local-name()='Signature']");
 
-			var elementToHash = nodes[index].Attributes[XMLNames.Component_ID_Attr].Value;
-			var nodesDV = parent.SelectNodes(".//*[@URI='#" + elementToHash + "']/*[local-name() = 'DigestValue']");
-			
 			return (nodesDV != null && nodesDV.Count > 0);
 		}
 
