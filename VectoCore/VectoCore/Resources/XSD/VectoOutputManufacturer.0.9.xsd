@@ -7,6 +7,7 @@ Changelog
 	 2.10.2023: make Airdrag component in output mandatory (provide standard values in case no Airdrag is provided in input). make Model and DigestValue optional (only in output for measured component)
 	10.04.2024: change "Fuel cell vehicle" to "FCV Article 9 exempted" according to regulation
 	19.04.2024: restore wrong exempt techs along with the correct ones.
+	11.02.2025: made ngTankSystem optional for HEV lorries.
 -->
 	<!-- Imports_______________________________________________ -->
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
@@ -1086,7 +1087,7 @@ Changelog
 					<xs:documentation>I.1.1.13.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType">
+			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>I.1.1.29</xs:documentation>
 				</xs:annotation>
