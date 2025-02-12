@@ -17,6 +17,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.Tests.Utils;
 using Assert = NUnit.Framework.Assert;
@@ -59,7 +60,7 @@ public class ATShiftStrategyTests
 		vehicleInfo.Setup(v => v.VehicleSpeed).Returns(vehicleSpeed.KMPHtoMeterPerSecond());
 		var shiftStrategy = new ATShiftStrategyOptimized(vehicleContainer);
         
-		var gearbox = new ATGearbox(vehicleContainer, shiftStrategy);
+		var gearbox = new APTGearbox(vehicleContainer, shiftStrategy);
 
 		var mockPort = new Mock<ITnOutPort>();
 		NewtonMeter tqRequest = null;
@@ -134,8 +135,10 @@ public class ATShiftStrategyTests
 		vehicleInfo = new Mock<IVehicleInfo>();
 		var engineInfo = new Mock<IEngineInfo>();
 		var ptBuilder = new Mock<ISimplePowertrainBuilder>();
+		var testPt = new Mock<ITestPowertrain>();
 		var testContainer = new Mock<ISimpleVehicleContainer>();
 		var vehiclePort = new Mock<IDriverDemandOutPort>();
+		var testGbx = new Mock<ITestPowertrainTransmission>();
 
 		vehicleContainer.Setup(c => c.RunData).Returns(runData);
 		vehicleContainer.Setup(c => c.VehicleInfo).Returns(vehicleInfo.Object);
@@ -146,10 +149,15 @@ public class ATShiftStrategyTests
 		engineInfo.Setup(e => e.EngineRatedSpeed).Returns(2000.RPMtoRad());
 
 		ptBuilder.Setup(b => b.BuildSimplePowertrain(It.IsAny<VectoRunData>())).Returns(testContainer.Object);
+		ptBuilder.Setup(b => b.CreateTestPowertrain(It.IsAny<ISimpleVehicleContainer>(), It.IsAny<IVehicleContainer>(), It.IsAny<bool>())).Returns(testPt.Object);
 
-		testContainer.Setup(c => c.RunData).Returns(runData);
-		testContainer.Setup(c => c.GearboxCtl).Returns(new ATGearbox(testContainer.Object, null));
+		testPt.Setup(t => t.Gearbox).Returns(testGbx.Object);
+		testPt.Setup(t => t.Container).Returns(testContainer.Object);
+
+        testContainer.Setup(c => c.RunData).Returns(runData);
+		testContainer.Setup(c => c.GearboxCtl).Returns(new APTGearbox(testContainer.Object, null));
 		testContainer.Setup(c => c.VehiclePort).Returns(vehiclePort.Object);
+		
 		return vehicleContainer.Object;
 	}
 

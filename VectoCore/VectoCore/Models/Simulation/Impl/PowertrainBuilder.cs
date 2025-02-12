@@ -51,6 +51,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
@@ -464,7 +465,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(engine, idleController);
 			AddAuxiliaries(engine, container, data);
 
-			if (gearbox is ATGearbox atGbx) {
+			if (gearbox is IAPTGearbox atGbx) {
 				atGbx.IdleController = idleController;
 			}
 
@@ -574,7 +575,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			if (data.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP1)) {
 				// this has to be done _after_ the powertrain is connected together so that the cluch already has its nextComponent set (necessary in the idle controlelr)
-				if (gearbox is ATGearbox atGbx) {
+				if (gearbox is IAPTGearbox atGbx) {
 					atGbx.IdleController = idleController;
 				} else {
 					clutch.IdleController = idleController;
@@ -750,8 +751,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					break;
 
 				case PowertrainPosition.BatteryElectricE2:
-					//-->AxleGear-->(AngleDrive)-->(TransmissionOutputRetarder)-->PEVGearbox or APTNGearbox-->(TransmissionInputRetarder)-->Engine E2
-					Gearbox gearbox;
+                    //-->AxleGear-->(AngleDrive)-->(TransmissionOutputRetarder)-->PEVGearbox or APTNGearbox-->(TransmissionInputRetarder)-->Engine E2
+					AbstractAMTGearbox gearbox;
 					if (data.GearboxData.Type == GearboxType.APTN) {
 						gearbox = new APTNGearbox(container, new APTNShiftStrategy(container));
 					} else {
@@ -878,7 +879,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case PowertrainPosition.BatteryElectricE2:
 					//-->AxleGear-->(Angledrive)-->(TransmissionOutputRetarder)-->APTNGearbox or PEVGearbox-->(TransmissionInputRetarder)-->Engine E2
 					var gearbox = data.GearboxData.Type == GearboxType.APTN
-						? (Gearbox)new APTNGearbox(container, new APTNShiftStrategy(container))
+						? (AbstractAMTGearbox)new APTNGearbox(container, new APTNShiftStrategy(container))
 						: new PEVGearbox(container, new PEVAMTShiftStrategy(container));
 					em = GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData, container, es, ctl);
 					powertrain
@@ -1091,7 +1092,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				new APTNShiftStrategy(container) : new PEVAMTShiftStrategy(container);
 
 			var gearbox = (data.GearboxData.Type == GearboxType.APTN) ? 
-				(Gearbox) new APTNGearbox(container, strategy) : new PEVGearbox(container, strategy);
+				(AbstractAMTGearbox) new APTNGearbox(container, strategy) : new PEVGearbox(container, strategy);
 
 			IElectricMotor em = GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData, container, es, ctl);
 
@@ -1474,8 +1475,34 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
-		
-	}
+		protected IGearbox GetGearbox(IVehicleContainer container, IShiftStrategy strategy = null)
+		{
+			strategy = strategy ?? GetShiftStrategy(container);
+
+			var isMeasuredSpeedHybrid = (container.RunData.JobType == VectoSimulationJobType.ParallelHybridVehicle)
+										&& (container.RunData.Cycle.CycleType == CycleType.MeasuredSpeed);
+			
+			switch (container.RunData.GearboxData.Type) {
+				case GearboxType.AMT:
+				case GearboxType.MT:
+					return isMeasuredSpeedHybrid
+						? (AbstractAMTGearbox) new MeasuredSpeedHybridsGearbox(container, strategy)
+						: new AMTGearbox(container, strategy);
+				case GearboxType.ATPowerSplit:
+				case GearboxType.ATSerial:
+					new ATClutchInfo(container);
+					return new APTGearbox(container, strategy);
+				case GearboxType.APTN:
+					return new APTNGearbox(container, strategy);
+				case GearboxType.IHPC:
+					return new APTNGearbox(container, strategy);
+				default:
+					throw new ArgumentOutOfRangeException("Unknown Gearbox Type",
+						container.RunData.GearboxData.Type.ToString());
+			}
+		}
+
+    }
 
 	public class SimpleCharger : IElectricChargerPort, IUpdateable
 	{
@@ -1723,6 +1750,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public Second TractionInterruption => throw new NotImplementedException();
 
 		public uint NumGears => throw new NotImplementedException();
+		public bool Disengaged { get; }
 
 		public bool DisengageGearbox => throw new VectoException("No Gearbox available.");
 

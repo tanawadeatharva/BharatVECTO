@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         public bool SwitchToNeutral
 		{
-			set => Disengaged = value ? DataBus.AbsTime : null;
+			set => DisengagedTstmp = value ? DataBus.AbsTime : null;
 		}
 
         protected override PerSecond CalculateInAngularSpeed(PerSecond outAngularVelocity)

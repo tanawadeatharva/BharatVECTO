@@ -12,22 +12,23 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
-	public class AMTShiftStrategyOptimized : BaseShiftStrategy<Gearbox> //AMTShiftStrategy
+    public class AMTShiftStrategyOptimized : BaseShiftStrategy<AMTGearbox> //AMTShiftStrategy
 	{
 		public const string Name = "AMT - EffShift";
 
 		protected List<CombustionEngineFuelData> fcMap;
 		protected Dictionary<uint, EngineFullLoadCurve> fld;
-		protected ISimpleVehicleContainer TestContainer;
-		protected Gearbox TestContainerGbx;
+		//protected ISimpleVehicleContainer TestContainer;
+		//protected Gearbox TestContainerGbx;
 
 		private Kilogram vehicleMass;
 
 		protected GearshiftPosition DesiredGearRoadsweeping;
-		protected ITestPowertrain<Gearbox> TestPowertrain;
+		protected ITestPowertrain TestPowertrain;
 
         public AMTShiftStrategyOptimized(IVehicleContainer container) : base(container)
 		{
@@ -53,8 +54,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			}
 
             // create testcontainer
-            var testContainer = PowertrainBuilder.BuildSimplePowertrain(RunData);
-			TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, Container);
+            TestPowertrain = PowertrainBuilder.CreateTestPowertrain(Container, false);
 
             fcMap = RunData.EngineData.Fuels;
 			fld = RunData.EngineData.FullLoadCurves;
@@ -78,10 +78,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		{
 			var runData = dataBus.RunData;
 			// MQ: 2019-11-29 - fuel used here has no effect as this is the modDatacontainer for the test-powertrain only!
-			TestContainer = PowertrainBuilder.BuildSimplePowertrain(runData);
-			TestContainerGbx = TestContainer.GearboxCtl as Gearbox;
-			if (TestContainerGbx == null) {
-				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
+			//TestContainer = PowertrainBuilder.BuildSimplePowertrain(runData);
+			//TestContainerGbx = TestContainer.GearboxCtl as Gearbox;
+			//if (TestContainerGbx == null) {
+			if (!(TestPowertrain.Gearbox is IAMTGearbox)) {
+				throw new VectoException("Unknown gearboxtype: {0}", TestPowertrain.Container.GearboxCtl.GetType().FullName);
 			}
 
 			// register pre-processors
@@ -93,7 +94,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 			dataBus.AddPreprocessor(
 				new VelocitySpeedGearshiftPreprocessor(VelocityDropData, runData.GearboxData.TractionInterruption,
-					TestContainer, -grad, grad, 2));
+					TestPowertrain, -grad, grad, 2));
 		}
 
 		
@@ -108,8 +109,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
                 //var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
 
                 TestPowertrain.UpdateComponents();
-                TestPowertrain.Gearbox.Gear = gear;
-                TestPowertrain.Gearbox._nextGear = gear;
+                TestPowertrain.Gearbox.SetGear = gear;
+                TestPowertrain.Gearbox.SetNextGear = gear;
 
                 var response = TestPowertrain.Gearbox.Initialize(outTorque, outAngularVelocity);
                 response = TestPowertrain.Gearbox.Request(absTime,
@@ -157,8 +158,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 				//var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
 				TestPowertrain.UpdateComponents();
-				TestPowertrain.Gearbox.Gear = gear;
-				TestPowertrain.Gearbox._nextGear = gear;
+				TestPowertrain.Gearbox.SetGear = gear;
+				TestPowertrain.Gearbox.SetNextGear = gear;
 
 				var response = TestPowertrain.Gearbox.Initialize(outTorque, outAngularVelocity);
 				response = TestPowertrain.Gearbox.Request(absTime,
@@ -599,11 +600,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition tryNextGear)
 		{
 			LogEnabled = false;
-			TestContainerGbx.Disengaged = false;
-			TestContainerGbx.Gear = tryNextGear;
+			TestPowertrain.UpdateComponents();
+            TestPowertrain.Gearbox.SetDisengaged = false;
+			TestPowertrain.Gearbox.SetGear = tryNextGear;
 
-			TestContainer.GearboxOutPort.Initialize(outTorque, outAngularVelocity);
-			var response = (ResponseDryRun)TestContainer.GearboxOutPort.Request(
+			TestPowertrain.Container.GearboxOutPort.Initialize(outTorque, outAngularVelocity);
+			var response = (ResponseDryRun)TestPowertrain.Container.GearboxOutPort.Request(
 				0.SI<Second>(), dt, outTorque, outAngularVelocity, true);
 			LogEnabled = true;
 			return response;

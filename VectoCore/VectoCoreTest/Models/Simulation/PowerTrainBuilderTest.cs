@@ -45,6 +45,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
@@ -99,7 +100,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.AreEqual(componentCount, powerTrain.SimulationComponents().Count);
 
 			Assert.IsInstanceOf<CombustionEngine>(powerTrain.EngineInfo);
-			Assert.IsInstanceOf<Gearbox>(powerTrain.GearboxInfo);
+			Assert.IsInstanceOf<AMTGearbox>(powerTrain.GearboxInfo);
 			Assert.IsInstanceOf<ISimulationOutPort>(powerTrain.Cycle);
 			Assert.IsInstanceOf<Vehicle>(powerTrain.VehicleInfo);
 		}
@@ -128,7 +129,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				Assert.AreEqual(componentCount, powerTrain.SimulationComponents().Count);
 
 				Assert.IsInstanceOf<CombustionEngine>(powerTrain.EngineInfo);
-				Assert.IsInstanceOf<Gearbox>(powerTrain.GearboxInfo);
+				Assert.IsInstanceOf<AMTGearbox>(powerTrain.GearboxInfo);
 				Assert.IsInstanceOf<ISimulationOutPort>(powerTrain.Cycle);
 				Assert.IsInstanceOf<Vehicle>(powerTrain.VehicleInfo);
 			} else {

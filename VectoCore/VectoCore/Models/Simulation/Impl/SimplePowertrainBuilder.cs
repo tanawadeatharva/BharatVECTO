@@ -11,6 +11,7 @@ using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -30,12 +31,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
         }
 
 
-		public ITestPowertrain<T> CreateTestPowertrain<T>(ISimpleVehicleContainer testContainer, IDataBus realContainer) where T : class, IHybridControlledGearbox, IGearbox
+		public ITestPowertrain CreateTestPowertrain(ISimpleVehicleContainer testContainer, IDataBus realContainer, bool createDriver)
 		{
-			return new TestPowertrain<T>(testContainer, realContainer);
+			return new TestPowertrain(testContainer, realContainer, createDriver);
 		}
 
-		public ITestGenset CreateTestGenset(ISimpleVehicleContainer testContainer, IDataBus realContainer)
+		public ITestPowertrain CreateTestPowertrain(IVehicleContainer realContainer, bool createDriver)
+		{
+			var testContainer = BuildSimplePowertrain(realContainer.RunData);
+			return new TestPowertrain(testContainer, realContainer, createDriver);
+		}
+
+        public ITestGenset CreateTestGenset(ISimpleVehicleContainer testContainer, IDataBus realContainer)
 		{
 			return new TestGenset(testContainer, realContainer);
 		}
@@ -93,7 +100,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(engine, idleController);
 			AddAuxiliaries(engine, container, data);
 
-			if (gearbox is ATGearbox atGbx) {
+			if (gearbox is IAPTGearbox atGbx) {
 				atGbx.IdleController = idleController;
 			}
 			return container;
@@ -192,11 +199,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				case PowertrainPosition.BatteryElectricE2:
 					//-->AxleGear-->(AngleDrive)-->(TransmissionOutputRetarder)-->APTNGearbox or Gearbox-->(TransmissionInputRetarder)-->Engine E2
-					Gearbox gearbox;
+					AbstractAMTGearbox gearbox;
 					if (data.GearboxData.Type.AutomaticTransmission()) {
-						gearbox = new APTNGearbox(container, ctl.ShiftStrategy);
+						gearbox = new TestPowertrainAPTNGearbox(container, ctl.ShiftStrategy);
 					} else {
-						gearbox = new Gearbox(container, ctl.ShiftStrategy);
+						gearbox = new TestPowertrainGearbox(container, ctl.ShiftStrategy);
 					}
 
 					ctl.Gearbox = gearbox;
@@ -256,7 +263,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var pos = data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
 			var gearbox = data.GearboxData.Gears.Count > 1
-				? (IGearbox)new APTNGearbox(container, ctl.ShiftStrategy)
+				? (IGearbox)new TestPowertrainAPTNGearbox(container, ctl.ShiftStrategy)
 				: new SingleSpeedGearbox(container, data.GearboxData);
 			var em = GetElectricMachine(PowertrainPosition.IEPC, data.ElectricMachinesData, container, es, ctl);
 			powertrain
@@ -406,7 +413,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			if (data.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP1)) {
 				// this has to be done _after_ the powertrain is connected together so that the cluch already has its nextComponent set (necessary in the idle controlelr)
-				if (gearbox is ATGearbox atGbx) {
+				if (gearbox is IAPTGearbox atGbx) {
 					atGbx.IdleController = idleController;
 					new ATClutchInfo(container);
 				} else {
@@ -490,6 +497,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			var container = _vehicleContainerFactory.CreateSimpleVehicleContainer(runData);
 			return container;
+		}
+
+		protected IGearbox GetSimpleGearbox(IVehicleContainer container, VectoRunData runData)
+		{
+			if (runData.GearboxData.Type.AutomaticTransmission() && runData.GearboxData.Type != GearboxType.APTN &&
+				runData.GearboxData.Type != GearboxType.IHPC) {
+				new ATClutchInfo(container);
+				return new TestPowertrainAPTGearbox(container, null);
+			}
+
+			var isMeasuredSpeedHybrid = (container.RunData.JobType == VectoSimulationJobType.ParallelHybridVehicle)
+										&& (container.RunData.Cycle.CycleType == CycleType.MeasuredSpeed);
+
+			return isMeasuredSpeedHybrid
+				? new MeasuredSpeedHybridsGearbox(container, null)
+				: (IGearbox)new TestPowertrainGearbox(container, null);
 		}
     }
 }

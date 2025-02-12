@@ -14,6 +14,7 @@ using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
 using Assert = NUnit.Framework.Assert;
 using IIdleController = TUGraz.VectoCore.Models.SimulationComponent.IIdleController;
@@ -50,7 +51,7 @@ public class ATGearboxTests
 		var idleCtl = new Mock<IIdleController>();
 
 		// Setup DUT:
-        var gbx = new ATGearbox(container.Object, shiftStrategy.Object);
+        var gbx = new APTGearbox(container.Object, shiftStrategy.Object);
 		gbx.Connect(port.Object);
 		gbx.IdleController = idleCtl.Object;
 
@@ -137,7 +138,7 @@ public class ATGearboxTests
 		var idleCtl = new Mock<IIdleController>();
 
 		// Setup DUT:
-		var gbx = new ATGearbox(container.Object, shiftStrategy.Object);
+		var gbx = new APTGearbox(container.Object, shiftStrategy.Object);
 		gbx.Connect(port.Object);
 		gbx.IdleController = idleCtl.Object;
 

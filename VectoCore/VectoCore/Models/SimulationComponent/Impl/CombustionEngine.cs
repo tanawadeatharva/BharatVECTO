@@ -45,6 +45,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -70,7 +71,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected internal IAuxPort EngineAux;
 
-		public WHRCharger WHRCharger { get; set; }
+		public IWHRCharger WHRCharger { get; set; }
 
 		public CombustionEngine(IVehicleContainer container, CombustionEngineData modelData, bool pt1Disabled = false)
 			: base(container)
@@ -613,7 +614,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (dynFullPowerCalculated < 0) {
 				return 0.SI<Watt>();
 			}
-			var atGbx = (DataBus as VehicleContainer)?.GearboxInfo as ATGearbox;
+			var atGbx = (DataBus as IVehicleContainer)?.GearboxInfo as IAPTGearbox;
 			if (atGbx != null && atGbx.ShiftToLocked && PreviousState.EngineTorque.IsGreater(0)) {
 
 				return VectoMath.Min(PreviousState.EngineTorque * avgAngularVelocity, dynFullPowerCalculated);

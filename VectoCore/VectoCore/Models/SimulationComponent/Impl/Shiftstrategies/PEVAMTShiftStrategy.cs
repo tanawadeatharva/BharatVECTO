@@ -27,25 +27,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 	{
 		public const string Name = "AMT - EffShift (BEV)";
 		
-		protected IDataBus DataBus;
+		protected IVehicleContainer DataBus;
 		protected readonly GearboxData GearboxModelData;
 
-		protected Gearbox _gearbox;
+		protected IGearbox _gearbox;
 		protected GearshiftPosition _nextGear;
 
 		private readonly ShiftStrategyParameters _shiftStrategyParameters;
-		private ISimpleVehicleContainer TestContainer;
-		private Gearbox TestContainerGbx;
-		private Battery TestContainerBattery;
-		private BatterySystem TestContainerBatterySystem;
-		private SuperCap TestContainerSuperCap;
-		private ElectricMotor TestContainerElectricMotor;
 
 		private VoltageLevelData VoltageLevels;
 		private SI TransmissionRatio;
 		private ShiftStrategyParameters GearshiftParams;
 		private GearList GearList;
-		private SimpleCharger TestContainerElectricSystemCharger;
+		
 		private double EMRatio;
 
 		protected PowertrainPosition EMPos;
@@ -53,7 +47,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected bool DriveOffStandstill { get; set; }
 
 		protected ISimplePowertrainBuilder PowertrainBuilder { get; private set; }
-		protected ITestPowertrain<Gearbox> TestPowertrain;
+
+		protected ITestPowertrain TestPowertrain;
 
 		public PEVAMTShiftStrategy(IVehicleContainer container) : this(container, false)
 		{
@@ -63,11 +58,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 			EMPos = container.RunData.ElectricMachinesData.FirstOrDefault(x =>
 				x.Item1 == PowertrainPosition.BatteryElectricE2 || x.Item1 == PowertrainPosition.IEPC)?.Item1 ?? PowertrainPosition.HybridPositionNotSet;
-			SetupVelocityDropPreprocessor(container);
+			SetupVelocityDropPreprocessor();
 		}
 
 		public VelocityRollingLookup VelocityDropData { get; } = new VelocityRollingLookup();
 
+		// this constructor is called by derived classes and the public constructor. performs common initialization
 		protected PEVAMTShiftStrategy(IVehicleContainer dataBus, bool dummy)
 		{
 			DataBus = dataBus;
@@ -102,8 +98,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 			// create testcontainer
 			var testContainer = PowertrainBuilder.BuildSimplePowertrainElectric(runData);
+			TestPowertrain = PowertrainBuilder.CreateTestPowertrain(testContainer, DataBus, false);
 
-			TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, DataBus);
 			foreach (var motor in testContainer.ElectricMotors.Values)
 			{
 				if ((motor as ElectricMotor)?.Control is SimpleElectricMotorControl emCtl) {
@@ -112,31 +108,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			}
 		}
 
-		protected void SetupVelocityDropPreprocessor(IVehicleContainer dataBus)
+		protected void SetupVelocityDropPreprocessor()
 		{
-			var runData = dataBus.RunData;
-			// MQ: 2019-11-29 - fuel used here has no effect as this is the modDatacontainer for the test-powertrain only!
-			TestContainer = PowertrainBuilder.BuildSimplePowertrainElectric(runData);
-			TestContainerGbx = TestContainer.GearboxCtl as Gearbox;
-			TestContainerBattery = TestContainer.BatteryInfo as Battery;
-			TestContainerBatterySystem = TestContainer.BatteryInfo as BatterySystem;
-			TestContainerSuperCap = TestContainer.BatteryInfo as SuperCap;
-			TestContainerElectricSystemCharger = (TestContainer.ElectricSystemInfo as ElectricSystem)?.Charger.FirstOrDefault(x => x is SimpleCharger) as SimpleCharger ;
-			TestContainerElectricMotor =
-				TestContainer.ElectricMotorInfo(EMPos) as ElectricMotor;
-			if (TestContainerGbx == null) {
-				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
-			}
-
 			// register pre-processors
-			var maxG = runData.Cycle.Entries.Max(x => Math.Abs(x.RoadGradientPercent.Value())) + 1;
+			var maxG = DataBus.RunData.Cycle.Entries.Max(x => Math.Abs(x.RoadGradientPercent.Value())) + 1;
 			var grad = Convert.ToInt32(maxG / 2) * 2;
 			if (grad == 0) {
 				grad = 2;
 			}
 
-			dataBus.AddPreprocessor(
-				new VelocitySpeedGearshiftPreprocessorE2(VelocityDropData, runData.GearboxData.TractionInterruption, TestContainer, -grad, grad, 2));
+			DataBus.AddPreprocessor(
+				new VelocitySpeedGearshiftPreprocessorE2(VelocityDropData, DataBus.RunData.GearboxData.TractionInterruption, TestPowertrain, -grad, grad, 2));
 		}
 
 		#region Implementation of IShiftStrategy
@@ -197,12 +179,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			}
 
 			_nextGear = CheckUpshift(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, response);
-
-			//if ((ModelData.Gears[_nextGear].Ratio * outAngularVelocity - DataBus.EngineIdleSpeed) /
-			//	(DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed) <
-			//	Constants.SimulationSettings.ClutchClosingSpeedNorm && _nextGear > 1) {
-			//	_nextGear--;
-			//}
 
 			return _nextGear != gear;
 		}
@@ -536,41 +512,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected ResponseDryRun RequestDryRunWithGear(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition tryNextGear)
 		{
-			LogEnabled = false;
-			TestContainerGbx.Disengaged = false;
-			TestContainerGbx.Gear = tryNextGear;
+			LogEnabled = false; 
 
-			TestContainerBattery?.Initialize(DataBus.BatteryInfo.StateOfCharge);
-			//TestContainerBatterySystem?.Initialize(DataBus.BatteryInfo.StateOfCharge);
-			//TestContainerSuperCap?.Initialize(DataBus.BatteryInfo.StateOfCharge);
-			if (TestContainerBattery != null) {
-				TestContainerBattery.PreviousState.PulseDuration =
-					(DataBus.BatteryInfo as Battery).PreviousState.PulseDuration;
-			}
-			if (TestContainerBatterySystem != null) {
-				var batSystem = DataBus.BatteryInfo as BatterySystem;
-				foreach (var bsKey in batSystem.Batteries.Keys) {
-					for (var i = 0; i < batSystem.Batteries[bsKey].Batteries.Count; i++) {
-						TestContainerBatterySystem.Batteries[bsKey].Batteries[i]
-							.Initialize(batSystem.Batteries[bsKey].Batteries[i].StateOfCharge);
-					}
-				}
-				TestContainerBatterySystem.PreviousState.PulseDuration =
-					(DataBus.BatteryInfo as BatterySystem).PreviousState.PulseDuration;
-			}
-			TestContainerSuperCap?.Initialize(DataBus.BatteryInfo.StateOfCharge);
+			TestPowertrain.UpdateComponents();
+			
+			TestPowertrain.Gearbox.SetDisengaged = false;
+			TestPowertrain.Gearbox.SetGear = tryNextGear;
 
-			TestContainerElectricSystemCharger?.UpdateFrom(DataBus.ElectricSystemInfo.ChargePower);
-
-
-			//var pos = ModelData.ElectricMachinesData.FirstOrDefault().Item1;
-			TestContainerElectricMotor.ThermalBuffer =
-				(DataBus.ElectricMotorInfo(EMPos) as ElectricMotor).ThermalBuffer;
-			TestContainerElectricMotor.DeRatingActive =
-				(DataBus.ElectricMotorInfo(EMPos) as ElectricMotor).DeRatingActive;
-
-			TestContainer.GearboxOutPort.Initialize(outTorque, outAngularVelocity);
-			var response = (ResponseDryRun)TestContainer.GearboxOutPort.Request(
+			TestPowertrain.Container.GearboxOutPort.Initialize(outTorque, outAngularVelocity);
+			var response = (ResponseDryRun)TestPowertrain.Container.GearboxOutPort.Request(
 				0.SI<Second>(), dt, outTorque, outAngularVelocity, true);
 			LogEnabled = true;
 			return response;
@@ -594,8 +544,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
                 //for (var gear = (uint)GearboxModelData.Gears.Count; gear > 1; gear--) {
                 //var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
                 TestPowertrain.UpdateComponents();
-                TestPowertrain.Gearbox.Gear = gear;
-                TestPowertrain.Gearbox._nextGear = gear;
+                TestPowertrain.Gearbox.SetGear = gear;
+                TestPowertrain.Gearbox.SetNextGear = gear;
 
                 var response = TestPowertrain.Gearbox.Initialize(outTorque, outAngularVelocity);
                 response = TestPowertrain.Gearbox.Request(absTime,
@@ -642,8 +592,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
                 //var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
                 TestPowertrain.UpdateComponents();
-                TestPowertrain.Gearbox.Gear = gear;
-                TestPowertrain.Gearbox._nextGear = gear;
+                TestPowertrain.Gearbox.SetGear = gear;
+                TestPowertrain.Gearbox.SetNextGear = gear;
 
                 var response = TestPowertrain.Gearbox.Initialize(outTorque, outAngularVelocity);
                 response = TestPowertrain.Gearbox.Request(absTime,
@@ -781,11 +731,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		public IGearbox Gearbox {
 			get => _gearbox;
 			set {
-				var myGearbox = value as Gearbox;
-				if (myGearbox == null) {
+				if (!(value is IPEVGearbox || value is IIEPCGearbox || value is IAPTNGearbox)) {
 					throw new VectoException("This shift strategy can't handle gearbox of type {0}", value.GetType());
 				}
-				_gearbox = myGearbox;
+				_gearbox = value;
 			}
 		}
 

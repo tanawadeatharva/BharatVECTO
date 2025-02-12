@@ -39,16 +39,17 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
-	public class  MTShiftStrategy : BaseShiftStrategy<Gearbox>
+    public class  MTShiftStrategy : BaseShiftStrategy<AMTGearbox>
 	{
 		public const string Name = "MT Shift Strategy";
 
         VelocitySpeedGearshiftPreprocessor PreprocessorSpeed;
 		
-		protected ITestPowertrain<Gearbox> TestPowertrain;
+		protected ITestPowertrain TestPowertrain;
 
 		protected GearshiftPosition DesiredGearRoadsweeping;
 
@@ -79,8 +80,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			}
 
 			// create testcontainer
-			var testContainer = PowertrainBuilder.BuildSimplePowertrain(RunData);
-			TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, Container);
+			TestPowertrain = PowertrainBuilder.CreateTestPowertrain(Container, true);
 
             DesiredGearRoadsweeping = RunData.DriverData?.PTODriveRoadsweepingGear;
         }
@@ -96,8 +96,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
                 //var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
 
                 TestPowertrain.UpdateComponents();
-                TestPowertrain.Gearbox.Gear = gear;
-                TestPowertrain.Gearbox._nextGear = gear;
+                TestPowertrain.Gearbox.SetGear = gear;
+                TestPowertrain.Gearbox.SetNextGear = gear;
 
                 var response = TestPowertrain.Gearbox.Initialize(outTorque, outAngularVelocity);
                 response = TestPowertrain.Gearbox.Request(absTime,
@@ -145,8 +145,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
                 //var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
                 TestPowertrain.UpdateComponents();
-                TestPowertrain.Gearbox.Gear = gear;
-                TestPowertrain.Gearbox._nextGear = gear;
+                TestPowertrain.Gearbox.SetGear = gear;
+                TestPowertrain.Gearbox.SetNextGear = gear;
 
                 var response = TestPowertrain.Gearbox.Initialize(outTorque, outAngularVelocity);
                 response = TestPowertrain.Gearbox.Request(absTime,
@@ -388,11 +388,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
         private VelocitySpeedGearshiftPreprocessor ConfigureSpeedPreprocessor(IVehicleContainer bus)
 		{
-			var TestContainer = PowertrainBuilder.BuildSimplePowertrain(bus.RunData);
-			var TestContainerGbx = TestContainer.GearboxCtl as Gearbox;
-			if (TestContainerGbx == null)
+			var testPowertrain = PowertrainBuilder.CreateTestPowertrain(bus, false);
+			var testContainer = testPowertrain.Container;
+
+			if (testContainer.GearboxCtl is IMTGearbox)
 			{
-				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
+				throw new VectoException("Unknown gearboxtype: {0}", testContainer.GearboxCtl.GetType().FullName);
 			}
 
 			var maxGradient = bus.RunData.Cycle.Entries.Max(x => Math.Abs(x.RoadGradientPercent.Value())) + 1;
@@ -405,7 +406,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			return new VelocitySpeedGearshiftPreprocessor(
 					VelocityDropData,
 					bus.RunData.GearboxData.TractionInterruption,
-					TestContainer,
+					testPowertrain,
 					-gradient,
 					gradient,
 					2);

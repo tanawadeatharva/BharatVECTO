@@ -6,8 +6,13 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-    public class WHRCharger : StatefulVectoSimulationComponent<WHRCharger.State>, IElectricChargerPort, IUpdateable
-	{
+	public interface IWHRCharger
+    {
+		void GeneratedEnergy(WattSecond eWHR);
+	}
+
+    public class WHRCharger : StatefulVectoSimulationComponent<WHRCharger.State>, IElectricChargerPort, IWHRCharger
+    {
 		public double Efficiency { get; }
 
 		public WHRCharger(IVehicleContainer container, double efficiency) : base(container)

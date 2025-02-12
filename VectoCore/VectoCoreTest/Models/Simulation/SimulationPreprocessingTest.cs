@@ -289,11 +289,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 		protected virtual VelocityRollingLookup SimulationRunPreprocessingVelocityTractionInterruption(IVectoRun run)
 		{
-			var data = run.GetContainer().RunData;
-			var simpleContainer = PowertrainBuilder.BuildSimplePowertrain(data);
+			//var data = run.GetContainer().RunData;
+			//var simpleContainer = PowertrainBuilder.BuildSimplePowertrain(data);
+			var testPowertrain = PowertrainBuilder.CreateTestPowertrain(run.GetContainer(), false);
 
 			var tmp = new VelocityRollingLookup();
-			var preprocessor = new VelocitySpeedGearshiftPreprocessor(tmp, 1.SI<Second>(), simpleContainer, minGradient: -12, maxGradient: 12);
+			var preprocessor = new VelocitySpeedGearshiftPreprocessor(tmp, 1.SI<Second>(), testPowertrain, minGradient: -12, maxGradient: 12);
 			var t = Stopwatch.StartNew();
 
 			preprocessor.RunPreprocessing();

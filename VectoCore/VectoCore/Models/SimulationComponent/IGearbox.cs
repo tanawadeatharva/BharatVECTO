@@ -30,6 +30,8 @@
 */
 
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
@@ -37,6 +39,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	/// Defines interfaces for a gearbox.
 	/// </summary>
 	public interface IGearbox : IPowerTrainComponent, IGearboxInfo, IGearboxControl { }
+
+	public interface IGearboxType {}
+
+	public interface IMTGearbox : IGearboxType {}
+
+	public interface IAMTGearbox : IGearboxType
+	{
+		GearboxState GetPreviousState { get; }
+	}
+
+	public interface IAPTGearbox : IGearboxType
+	{
+		ATGearboxState GetPreviousState { get; }
+		bool ShiftToLocked { get; }
+		IIdleController IdleController { set; }
+	}
+
+	public interface IAPTNGearbox : IGearboxType { }
+
+	public interface IPEVGearbox : IGearboxType { }
+
+	public interface IIEPCGearbox : IGearboxType { }
 
 	public interface ITorqueConverter : ITorqueConverterInfo, ITorqueConverterControl, IUpdateable { }
 }

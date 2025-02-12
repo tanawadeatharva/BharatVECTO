@@ -8,13 +8,15 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
 {
 
-	public class PrimaryBusPostMortemStrategy : IPostMortemAnalyzeStrategy
+    public class PrimaryBusPostMortemStrategy : IPostMortemAnalyzeStrategy
 	{
 		protected static readonly MeterPerSecond MinSpeed = 5.KMPHtoMeterPerSecond();
 
@@ -98,8 +100,8 @@ namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
 			}
 
 			if (container.HasGearbox) {
-				var gbx = container.GearboxCtl as Gearbox;
-				gbx.Gear = gbx.ModelData.GearList.First();
+				var gbx = container.GearboxCtl as AMTGearbox;
+				gbx.Gear = container.RunData.GearboxData.GearList.First();
 			}
 			vehicle.Initialize(0.KMPHtoMeterPerSecond(), gradient);
 

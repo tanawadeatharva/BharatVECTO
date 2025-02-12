@@ -15,6 +15,7 @@ using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
@@ -214,7 +215,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			SwitchableClutch clutch)
 		{
 			if (data.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP1)) {
-				if (gearbox is ATGearbox atGbx) {
+				if (gearbox is IAPTGearbox atGbx) {
 					atGbx.IdleController = idleController;
 				} else {
 					if (clutch != null) {
@@ -655,32 +656,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			});
 		}
 
-		protected IGearbox GetGearbox(IVehicleContainer container, IShiftStrategy strategy = null)
-		{
-			strategy = strategy ?? GetShiftStrategy(container);
-
-			var isMeasuredSpeedHybrid = (container.RunData.JobType == VectoSimulationJobType.ParallelHybridVehicle)
-										&& (container.RunData.Cycle.CycleType == CycleType.MeasuredSpeed);
-
-			switch (container.RunData.GearboxData.Type) {
-				case GearboxType.AMT:
-				case GearboxType.MT:
-					return isMeasuredSpeedHybrid
-						? new MeasuredSpeedHybridsGearbox(container, strategy)
-						: new Gearbox(container, strategy);
-				case GearboxType.ATPowerSplit:
-				case GearboxType.ATSerial:
-					new ATClutchInfo(container);
-					return new ATGearbox(container, strategy);
-				case GearboxType.APTN:
-					return new APTNGearbox(container, strategy);
-				case GearboxType.IHPC:
-					return new APTNGearbox(container, strategy);
-				default:
-					throw new ArgumentOutOfRangeException("Unknown Gearbox Type",
-						container.RunData.GearboxData.Type.ToString());
-			}
-		}
 
 		public IShiftStrategy GetShiftStrategy(IVehicleContainer container)
 		{
@@ -689,20 +664,5 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return ShiftStrategyFactory.GetShiftStrategy(runData.ShiftStrategy, container);
 		}
 
-		protected IGearbox GetSimpleGearbox(IVehicleContainer container, VectoRunData runData)
-		{
-			if (runData.GearboxData.Type.AutomaticTransmission() && runData.GearboxData.Type != GearboxType.APTN &&
-				runData.GearboxData.Type != GearboxType.IHPC) {
-				new ATClutchInfo(container);
-				return new ATGearbox(container, null);
-			}
-
-			var isMeasuredSpeedHybrid = (container.RunData.JobType == VectoSimulationJobType.ParallelHybridVehicle)
-										&& (container.RunData.Cycle.CycleType == CycleType.MeasuredSpeed);
-
-			return isMeasuredSpeedHybrid
-				? new MeasuredSpeedHybridsGearbox(container, null)
-				: new Gearbox(container, null);
-		}
 	}
 }

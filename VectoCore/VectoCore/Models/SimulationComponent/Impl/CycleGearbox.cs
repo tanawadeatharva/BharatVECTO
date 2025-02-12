@@ -51,12 +51,18 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class CycleGearbox : AbstractGearbox<CycleGearbox.CycleGearboxState>
+	public class CycleGearbox : AbstractGearbox<CycleGearbox.CycleGearboxState>, IGearboxType
 	{
 		/// <summary>
 		/// True if gearbox is disengaged (no gear is set).
 		/// </summary>
-		protected internal Second Disengaged;
+		protected internal Second DisengagedTstmp;
+
+		public override bool Disengaged
+		{
+			get { return DisengagedTstmp != null; }
+			set {}
+		}
 
 		protected internal readonly TorqueConverterWrapper TorqueConverter;
 
@@ -223,7 +229,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun)
 		{
-			Disengaged = null;
+			DisengagedTstmp = null;
 
 			Gear = new GearshiftPosition(GetGearFromCycle(), !GetTCActiveFromCycle());
 
@@ -327,8 +333,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun)
 		{
-			if (Disengaged == null) {
-				Disengaged = absTime;
+			if (DisengagedTstmp == null) {
+				DisengagedTstmp = absTime;
 			}
 
 			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
@@ -439,7 +445,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgOutAngularSpeed = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
 			var inPower = CurrentState.InTorque * avgInAngularSpeed;
 			var outPower = CurrentState.OutTorque * avgOutAngularSpeed;
-			container[ModalResultField.Gear] = Disengaged != null ? 0 : Gear.Gear;
+			container[ModalResultField.Gear] = DisengagedTstmp != null ? 0 : Gear.Gear;
 			container[ModalResultField.P_gbx_loss] = inPower - outPower;
 			container[ModalResultField.P_gbx_inertia] = CurrentState.InertiaTorqueLossOut * avgOutAngularSpeed;
 			container[ModalResultField.P_gbx_in] = inPower;
@@ -494,7 +500,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override GearshiftPosition NextGear
 		{
 			get {
-				if (Disengaged == null) {
+				if (DisengagedTstmp == null) {
 					return Gear;
 				}
 
@@ -527,7 +533,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override Second TractionInterruption
 		{
 			get {
-				if (Disengaged == null) {
+				if (DisengagedTstmp == null) {
 					return ModelData.TractionInterruption;
 				}
 
@@ -546,7 +552,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						continue;
 					}
 
-					return entry.Time - Disengaged;
+					return entry.Time - DisengagedTstmp;
 				}
 
 				return ModelData.TractionInterruption;

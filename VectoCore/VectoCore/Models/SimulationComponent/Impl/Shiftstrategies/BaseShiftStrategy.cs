@@ -42,8 +42,8 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-    public abstract class BaseShiftStrategy<T> : LoggingObject, IShiftStrategy where T : class, IGearbox
-	{
+    public abstract class BaseShiftStrategy<T> : LoggingObject, IShiftStrategy where T : class, IGearbox, IGearboxType
+    {
 		protected readonly IVehicleContainer Container;
 		protected readonly VectoRunData RunData;
 		protected readonly GearboxData GearboxModelData;

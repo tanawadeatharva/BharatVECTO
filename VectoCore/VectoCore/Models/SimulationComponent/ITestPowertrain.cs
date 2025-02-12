@@ -4,16 +4,15 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
 
-    public interface ITestPowertrain<T> where T : class, IHybridControlledGearbox, IGearbox
+    public interface ITestPowertrain 
     {
         void UpdateComponents();
 
-        T Gearbox { get; }
+        ITestPowertrainTransmission Gearbox { get; }
 
         ICombustionEngine CombustionEngine { get; }
 
@@ -28,11 +27,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
         IBrakes Brakes { get; }
 
         IElectricMotor ElectricMotor { get; }
-        Dictionary<PowertrainPosition, ElectricMotor> ElectricMotorsUpstreamTransmission { get; }
+        Dictionary<PowertrainPosition, IElectricMotor> ElectricMotorsUpstreamTransmission { get; }
         IDCDCConverter DCDCConverter { get; }
         ITorqueConverter TorqueConverter { get; }
         IElectricChargerPort Charger { get; }
-		IElectricEnergyStorage BatterySystem { get; }
+		IRESSInfo BatterySystem { get; }
+
     }
 
     public interface ITestGenset

@@ -15,6 +15,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.Tests.Utils;
 using Assert = NUnit.Framework.Assert;
@@ -43,7 +44,7 @@ TestCase(8, 4, 15000, 200, true),]
 		var testPt = GetMockTestPowertrain(runData);
 
 		var ptBuilder = new Mock<ISimplePowertrainBuilder>();
-		ptBuilder.Setup(p => p.CreateTestPowertrain<Gearbox>(It.IsAny<ISimpleVehicleContainer>(), It.IsAny<IDataBus>()))
+		ptBuilder.Setup(p => p.CreateTestPowertrain(It.IsAny<ISimpleVehicleContainer>(), It.IsAny<IDataBus>(), It.IsAny<bool>()))
 			.Returns(testPt.Object);
 		container.Setup(c => c.SimplePowertrainBuilder).Returns(ptBuilder.Object);
 
@@ -93,7 +94,7 @@ TestCase(8, 4, 15000, 200, true),]
 		var testPt = GetMockTestPowertrain(runData);
 
 		var ptBuilder = new Mock<ISimplePowertrainBuilder>();
-		ptBuilder.Setup(p => p.CreateTestPowertrain<Gearbox>(It.IsAny<ISimpleVehicleContainer>(), It.IsAny<IDataBus>()))
+		ptBuilder.Setup(p => p.CreateTestPowertrain(It.IsAny<ISimpleVehicleContainer>(), It.IsAny<IDataBus>(), It.IsAny<bool>()))
 			.Returns(testPt.Object);
 		container.Setup(c => c.SimplePowertrainBuilder).Returns(ptBuilder.Object);
 
@@ -126,15 +127,15 @@ TestCase(8, 4, 15000, 200, true),]
 		Assert.AreEqual(newGear, shiftStrategy.NextGear.Gear);
     }
 
-    private Mock<ITestPowertrain<Gearbox>> GetMockTestPowertrain(VectoRunData runData)
+    private Mock<ITestPowertrain> GetMockTestPowertrain(VectoRunData runData)
     {
-        var testPt = new Mock<ITestPowertrain<Gearbox>>();
+        var testPt = new Mock<ITestPowertrain>();
         var tCnt = new Mock<ISimpleVehicleContainer>();
         tCnt.Setup(c => c.RunData).Returns(runData);
         var tPi = new Mock<IPowertainInfo>();
         tPi.Setup(p => p.HasCombustionEngine).Returns(true);
         tCnt.Setup(c => c.PowertrainInfo).Returns(tPi.Object);
-        var tGbx = new Mock<Gearbox>(tCnt.Object, null);
+        var tGbx = new Mock<ITestPowertrainTransmission>();
         testPt.Setup(t => t.Gearbox).Returns(tGbx.Object);
         tGbx.Setup(g => g.Initialize(It.IsAny<NewtonMeter>(), It.IsAny<PerSecond>()))
             .Returns((NewtonMeter t, PerSecond n) => new ResponseSuccess(this) {
@@ -209,9 +210,9 @@ TestCase(8, 4, 15000, 200, true),]
         return container;
     }
 
-	private Mock<Gearbox> GetMockGearbox(Mock<IVehicleContainer> container)
+	private Mock<AMTGearbox> GetMockGearbox(Mock<IVehicleContainer> container)
 	{
-		var gbx = new Mock<Gearbox>(container.Object, null);
+		var gbx = new Mock<AMTGearbox>(container.Object, null);
         var ratios = container.Object.RunData.GearboxData.Gears;
 		gbx.Setup(g => g.LastUpshift).Returns(-double.MaxValue.SI<Second>());
 		gbx.Setup(g => g.LastDownshift).Returns(-double.MaxValue.SI<Second>());

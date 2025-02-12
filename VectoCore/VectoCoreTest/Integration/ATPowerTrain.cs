@@ -47,6 +47,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -132,7 +133,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
-				.AddComponent(new ATGearbox(container, new ATShiftStrategyOptimized(container)))
+				.AddComponent(new APTGearbox(container, new ATShiftStrategyOptimized(container)))
 				.AddComponent(engine);
 			new ATClutchInfo(container);
 

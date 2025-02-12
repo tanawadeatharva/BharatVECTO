@@ -14,11 +14,12 @@ using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
-	public class ATShiftStrategyOptimized : BaseShiftStrategy<ATGearbox>
+    public class ATShiftStrategyOptimized : BaseShiftStrategy<APTGearbox>
 	{
 		public const string Name = "AT - EffShift";
 
@@ -28,8 +29,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected List<CombustionEngineFuelData> fcMap;
 		protected Dictionary<uint, EngineFullLoadCurve> fld;
 
-		protected ISimpleVehicleContainer TestContainer;
-		protected ATGearbox TestContainerGbx;
+		//protected ISimpleVehicleContainer TestContainer;
+		//protected ATGearbox TestContainerGbx;
+
+		protected ITestPowertrain TestPowertrain;
 
 		protected Kilogram vehicleMass;
 		protected Kilogram MinMass;
@@ -110,20 +113,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		private void InitializeTestContainer(VectoRunData runData)
 		{
 			// fuel list here has no effect as this is the mod-container for the test-powertrain only
-			TestContainer = PowertrainBuilder.BuildSimplePowertrain(runData);
-			TestContainerGbx = TestContainer.GearboxCtl as ATGearbox;
-			if (TestContainerGbx == null) {
-				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
-			}
+			TestPowertrain = Container.SimplePowertrainBuilder.CreateTestPowertrain(Container, false);
 
 			// initialize vehicle so that vehicleStopped of the testcontainer is false (required for test-runs)
-			TestContainerGbx.Gear = new GearshiftPosition(2u, true);
-			TestContainer.VehiclePort.Initialize(10.KMPHtoMeterPerSecond(), 0.SI<Radian>());
+			TestPowertrain.Gearbox.SetGear = new GearshiftPosition(2u, true);
+			TestPowertrain.Container.VehiclePort.Initialize(10.KMPHtoMeterPerSecond(), 0.SI<Radian>());
 
 			if (runData.Cycle.CycleType == CycleType.MeasuredSpeed) {
 				try {
-					TestContainer.GetCycleOutPort().Initialize();
-					TestContainer.GetCycleOutPort().Request(0.SI<Second>(), 1.SI<Second>());
+					TestPowertrain.Container.GetCycleOutPort().Initialize();
+					TestPowertrain.Container.GetCycleOutPort().Request(0.SI<Second>(), 1.SI<Second>());
 				} catch (Exception) { }
 			}
 
@@ -833,11 +832,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected ResponseDryRun RequestDryRunWithGear(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition gear)
 		{
-			TestContainerGbx.Disengaged = false;
-			TestContainerGbx.Gear = gear;
-			
-			TestContainer.GearboxOutPort.Initialize(outTorque, outAngularVelocity);
-			var response = (ResponseDryRun)TestContainer.GearboxOutPort.Request(
+			TestPowertrain.Gearbox.SetDisengaged = false;
+			TestPowertrain.Gearbox.SetGear = gear;
+
+			TestPowertrain.Container.GearboxOutPort.Initialize(outTorque, outAngularVelocity);
+			var response = (ResponseDryRun)TestPowertrain.Container.GearboxOutPort.Request(
 				0.SI<Second>(), dt, outTorque, outAngularVelocity, true);
 			return response;
 		}
@@ -890,7 +889,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				Gear = nextGearState.Gear;
 			}
 
-			public NextGearState(Second absTime, ATGearbox gearbox)
+			public NextGearState(Second absTime, APTGearbox gearbox)
 			{
 				SetState(absTime, gearbox);
 			}
@@ -902,7 +901,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				Gear = gear;
 			}
 
-			public void SetState(Second absTime, ATGearbox gearbox)
+			public void SetState(Second absTime, APTGearbox gearbox)
 			{
 				AbsTime = absTime;
 				Disengaged = gearbox.Disengaged;

@@ -24,6 +24,7 @@ using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
@@ -1713,8 +1714,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			var engine = new StopStartCombustionEngine(container, runData.EngineData);
 			var gearbox = gearboxType.AutomaticTransmission()
-				? (IHybridControlledGearbox)new ATGearbox(container, ctl.ShiftStrategy)
-				: new Gearbox(container, ctl.ShiftStrategy);
+				? (IHybridControlledGearbox)new APTGearbox(container, ctl.ShiftStrategy)
+				: new AMTGearbox(container, ctl.ShiftStrategy);
 			//var hybridStrategy = new DelegateParallelHybridStrategy();
 			ctl.Gearbox = gearbox;
 
@@ -1751,7 +1752,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			PowertrainBuilderBase.AddAuxiliaries(engine, container, runData);
 
 			if (runData.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP1)) {
-				if (gearbox is ATGearbox atGbx) {
+				if (gearbox is IAPTGearbox atGbx) {
 					atGbx.IdleController = idleController;
 					new ATClutchInfo(container);
 				}
@@ -1844,7 +1845,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				.AddComponent(runData.AngledriveData != null ? new Angledrive(container, runData.AngledriveData) : null)
 				.AddComponent(runData.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, 
 					runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
-				.AddComponent(new Gearbox(container, new AMTShiftStrategyOptimized(container)))
+				.AddComponent(new AMTGearbox(container, new AMTShiftStrategyOptimized(container)))
 				.AddComponent(runData.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, 
 					runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
 				.AddComponent(new SwitchableClutch(container, runData.EngineData))

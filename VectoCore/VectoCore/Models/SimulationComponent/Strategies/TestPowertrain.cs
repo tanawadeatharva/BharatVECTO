@@ -76,17 +76,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 	}
 
 
-	public class TestPowertrain<T> : ITestPowertrain<T> where T : class, IHybridControlledGearbox, IGearbox
-	{
+	public class TestPowertrain : ITestPowertrain
+    {
 		public ISimpleVehicleContainer Container { get; }
 		public IDataBus RealContainer;
 
-		public T Gearbox { get; }
+		public ITestPowertrainTransmission Gearbox { get; }
 		
 		public ISimpleHybridController HybridController { get; }
-		public Battery Battery;
-		public IElectricEnergyStorage BatterySystem { get; }
-		public SuperCap SuperCap;
+		public IRESSInfo BatterySystem { get; }
 		public IClutch Clutch { get; }
 		public IBrakes Brakes { get; }
 
@@ -94,37 +92,35 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public IAuxPort EngineAux { get; }
 		public IElectricMotor ElectricMotor { get; }
 		public IElectricChargerPort Charger { get; }
-		public Dictionary<PowertrainPosition, ElectricMotor> ElectricMotorsUpstreamTransmission { get; } = new Dictionary<PowertrainPosition, ElectricMotor>();
+		public Dictionary<PowertrainPosition, IElectricMotor> ElectricMotorsUpstreamTransmission { get; } = new Dictionary<PowertrainPosition, IElectricMotor>();
 		public ITorqueConverter TorqueConverter { get; }
 		public IDCDCConverter DCDCConverter { get; }
-		public WHRCharger WHRCharger;
+		public IWHRCharger WHRCharger;
 
-		public TestPowertrain(ISimpleVehicleContainer container, IDataBus realContainer)
+		public TestPowertrain(ISimpleVehicleContainer container, IDataBus realContainer, bool createDriver)
 		{
 			Container = container;
 			RealContainer = realContainer;
 
-			Gearbox = Container.GearboxCtl as T;
+			Gearbox = Container.GearboxCtl as ITestPowertrainTransmission;
 			
 			HybridController = Container.HybridController as ISimpleHybridController;
-			Battery = Container.BatteryInfo as Battery;
-			BatterySystem = container.BatteryInfo as BatterySystem;
+			BatterySystem = container.BatteryInfo;
 			
-			SuperCap = Container.BatteryInfo as SuperCap;
-			Clutch = Container.ClutchInfo as Clutch;
-			CombustionEngine = Container.EngineInfo as StopStartCombustionEngine;
+			Clutch = Container.ClutchInfo as IClutch;
+			CombustionEngine = Container.EngineInfo as ICombustionEngine;
 			EngineAux = (CombustionEngine as StopStartCombustionEngine)?.EngineAux;
-			ElectricMotor = container.ElectricMotors.FirstOrDefault().Value as ElectricMotor;
+			ElectricMotor = container.ElectricMotors.FirstOrDefault().Value as IElectricMotor;
 			Charger = (((ElectricMotor as ElectricMotor)?.ElectricPower as ElectricSystem)?.Charger.FirstOrDefault(x => x is GensetChargerAdapter)) as GensetChargerAdapter;
 			foreach (var pos in container.ElectricMotorPositions) {
 				if (pos == PowertrainPosition.HybridP1 || pos == PowertrainPosition.HybridP2 || pos == PowertrainPosition.IHPC ||
 					pos == PowertrainPosition.HybridP2_5 || pos == PowertrainPosition.HybridP3) {
-					ElectricMotorsUpstreamTransmission[pos] = container.ElectricMotors[pos] as ElectricMotor;
+					ElectricMotorsUpstreamTransmission[pos] = container.ElectricMotors[pos] as IElectricMotor;
 				}
 			}
 			
 			if (Gearbox != null && Gearbox.GearboxType.AutomaticTransmission() && Gearbox.GearboxType != GearboxType.APTN && Gearbox.GearboxType != GearboxType.IHPC) {
-				TorqueConverter = Container.TorqueConverterInfo as TorqueConverter;
+				TorqueConverter = Container.TorqueConverterInfo as ITorqueConverter;
 				if (TorqueConverter == null) {
 					throw new VectoException("Torque converter missing for automatic transmission: {0}", Container.TorqueConverterInfo?.GetType().FullName);
 				}
@@ -139,11 +135,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				DCDCConverter = container.DCDCConverter as DCDCConverter;
 			}
 
-			var whrCharger = container.SimulationComponents().FirstOrDefault(x => x is WHRCharger);
+			var whrCharger = container.SimulationComponents().FirstOrDefault(x => x is IWHRCharger);
 			if (whrCharger != null) {
-				WHRCharger = whrCharger as WHRCharger;
+				WHRCharger = whrCharger as IWHRCharger;
 			}
-			var driver = new MockDriver(container, realContainer);
+
+			if (createDriver) {
+				var driver = new MockDriver(container, realContainer);
+			}
+
 			var cycle = new MockDrivingCycle(container, realContainer);
 
 			Brakes = container.Brakes;

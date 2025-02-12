@@ -5,15 +5,16 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
-    public class HybridCtlShiftStrategy : BaseShiftStrategy<Gearbox>, IHybridControlShiftStrategy
+    public class HybridCtlShiftStrategy : BaseShiftStrategy<AMTGearbox>, IHybridControlShiftStrategy
     {
         protected IHybridControllerInternal Controller;
 
-        protected ITestPowertrain<Gearbox> TestPowertrain;
+        protected ITestPowertrain TestPowertrain;
 
         public HybridCtlShiftStrategy(IHybridControllerInternal hybridController, IVehicleContainer container) : base(
             container)
@@ -46,7 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
                 ? PowertrainBuilder.BuildSimpleHybridPowertrainGear(RunData)
                 : PowertrainBuilder.BuildSimpleHybridPowertrain(RunData);
 
-            TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, Container);
+            TestPowertrain = PowertrainBuilder.CreateTestPowertrain(testContainer, Container, true);
         }
 
         protected override bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
@@ -84,8 +85,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
                 //for (var gear = (uint)GearboxModelData.Gears.Count; gear > 1; gear--) {
 
                 TestPowertrain.UpdateComponents();
-                TestPowertrain.Gearbox.Gear = gear;
-                TestPowertrain.Gearbox._nextGear = gear;
+                TestPowertrain.Gearbox.SetGear = gear;
+                TestPowertrain.Gearbox.SetNextGear = gear;
                 if (Controller.CurrentStrategySettings != null) {
                     TestPowertrain.HybridController.ApplyStrategySettings(Controller.CurrentStrategySettings);
                 }
@@ -138,8 +139,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				
 				TestPowertrain.UpdateComponents();
 
-                TestPowertrain.Gearbox.Gear = gear;
-                TestPowertrain.Gearbox._nextGear = gear;
+                TestPowertrain.Gearbox.SetGear = gear;
+                TestPowertrain.Gearbox.SetNextGear = gear;
                 if (Controller.CurrentStrategySettings != null) {
                     TestPowertrain.HybridController.ApplyStrategySettings(Controller.CurrentStrategySettings);
                 }

@@ -4,11 +4,12 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
 
-    public class HybridCtlATShiftStrategy : BaseShiftStrategy<ATGearbox>, IHybridControlShiftStrategy
+    public class HybridCtlATShiftStrategy : BaseShiftStrategy<APTGearbox>, IHybridControlShiftStrategy
     {
 		public HybridCtlATShiftStrategy(IHybridControllerInternal hybridController, IVehicleContainer container) :
 			base(container)

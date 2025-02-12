@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		IReadOnlyCollection<VectoSimulationComponent> SimulationComponents();
 
-		void UpdateComponents(IDataBus realContainer);
+        void UpdateComponents(IDataBus realContainer);
 
 	}
 }

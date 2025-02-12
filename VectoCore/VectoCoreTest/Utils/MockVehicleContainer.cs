@@ -83,6 +83,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public Second TractionInterruption => 1.SI<Second>();
 
 		public uint NumGears { get; set; }
+		public bool Disengaged { get; }
 
 		public MeterPerSecond StartSpeed { get; set; }
 		public MeterPerSquareSecond StartAcceleration { get; set; }
@@ -125,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IHybridControllerCtl HybridControllerCtl { get; }
 		public IAngledriveInfo AngledriveInfo { get; }
 		public IDCDCConverter DCDCConverter { get; }
-		public WHRCharger WHRCharger { get; }
+		public IWHRCharger WHRCharger { get; }
 
 		public bool IsTestPowertrain => false;
 

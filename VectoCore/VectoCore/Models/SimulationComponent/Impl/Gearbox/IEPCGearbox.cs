@@ -1,20 +1,28 @@
-﻿using TUGraz.VectoCommon.Models;
+﻿using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Utils;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
+namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
 {
-	/// <summary>
-	/// Gearbox for Automatic Power Transmission - No Torque Converter.
-	/// </summary>
-	public class APTNGearbox : Gearbox
-	{
-		public APTNGearbox(IVehicleContainer container, IShiftStrategy strategy) : base(container, strategy)
-		{ }
+    public class IEPCGearbox : AbstractAMTGearbox, IIEPCGearbox
+    {
+		public IEPCGearbox(IVehicleContainer container, IShiftStrategy strategy) : this(container, strategy, false)
+		{
+			if (container.IsTestPowertrain) {
+				throw new VectoException(
+					"This class shall not be used in a testpowertrain - use the dedicated class instead!");
+			}
+        }
+
+        protected IEPCGearbox(IVehicleContainer container, IShiftStrategy strategy, bool dummy) : base(container, strategy, dummy)
+		{
+            _gear = new GearshiftPosition(0);
+        }
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
@@ -53,5 +61,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return response;
 		}
 
-	}
+        protected override void DoWriteModalResults(Second time, Second simulationInterval,
+            IModalDataContainer container)
+        {
+            container[ModalResultField.Gear] = Disengaged || DataBus.VehicleInfo.VehicleStopped ? 0 : Gear.Gear;
+            container[ModalResultField.n_IEPC_out_avg] = (PreviousState.OutAngularVelocity +
+                                                        CurrentState.OutAngularVelocity) / 2.0;
+            container[ModalResultField.T_IEPC_out] = CurrentState.OutTorque;
+            _strategy.WriteModalResults(container);
+        }
+    }
 }

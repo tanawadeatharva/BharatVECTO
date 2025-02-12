@@ -6,10 +6,12 @@ using TUGraz.VectoCore.Models.SimulationComponent;
 namespace TUGraz.VectoCore.Models.Simulation
 {
     public interface ISimplePowertrainBuilder
-    {
-		ITestPowertrain<T> CreateTestPowertrain<T>(ISimpleVehicleContainer testContainer, IDataBus realContainer) where T : class, IHybridControlledGearbox, IGearbox;
+	{
+		ITestPowertrain CreateTestPowertrain(ISimpleVehicleContainer testContainer, IDataBus realContainer, bool createDriver);
 
-		ITestGenset CreateTestGenset(ISimpleVehicleContainer testContainer, IDataBus realContainer);
+		ITestPowertrain CreateTestPowertrain(IVehicleContainer realContainer, bool createDriver);
+
+        ITestGenset CreateTestGenset(ISimpleVehicleContainer testContainer, IDataBus realContainer);
 
         /// <summary>
         /// Builds a simple conventional powertrain.

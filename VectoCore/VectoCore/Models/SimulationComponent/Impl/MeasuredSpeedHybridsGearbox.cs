@@ -4,10 +4,11 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-    public class MeasuredSpeedHybridsGearbox : Gearbox
+    public class MeasuredSpeedHybridsGearbox : AbstractAMTGearbox
     {
         public MeasuredSpeedHybridsGearbox(IVehicleContainer container, IShiftStrategy strategy) : base(container, strategy) 
         {}

@@ -13,6 +13,7 @@ using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
 using Assert = NUnit.Framework.Assert;
 
@@ -46,7 +47,7 @@ public class GearboxTests
 			.Setup(s => s.InitGear(It.IsAny<Second>(), It.IsAny<Second>(), It.IsAny<NewtonMeter>(),
 				It.IsAny<PerSecond>())).Returns(new GearshiftPosition((uint)gear));
 
-		var gearbox = new Gearbox(container.Object, shiftStrategy.Object);
+		var gearbox = new AMTGearbox(container.Object, shiftStrategy.Object);
 
         Second reqAbsTime = null;
 		Second reqDt = null;

@@ -62,6 +62,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public Second TractionInterruption => 0.SI<Second>();
 
 		public uint NumGears => 1;
+		public bool Disengaged => false;
 
 		public bool DisengageGearbox => false;
 

@@ -6,12 +6,13 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	public class PCCEcoRollEngineStopPreprocessor : ISimulationPreprocessor
+    public class PCCEcoRollEngineStopPreprocessor : ISimulationPreprocessor
 	{
 		protected ISimpleVehicleContainer Container;
 		private MeterPerSecond MaxSpeed;
@@ -38,10 +39,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			switch (Container.GearboxInfo) {
-				case Gearbox gearbox:
+				case AMTGearbox gearbox:
 					RunPreprocessingAMTGearbox(gearbox, vehicle);
 					return;
-				case ATGearbox atGearbox:
+				case APTGearbox atGearbox:
 					RunPreprocessingATGearbox(atGearbox, vehicle);
 					return;
 				case null when !Container.HasGearbox:
@@ -52,7 +53,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		private void RunPreprocessingATGearbox(ATGearbox gearbox, Vehicle vehicle)
+		private void RunPreprocessingATGearbox(APTGearbox gearbox, Vehicle vehicle)
 		{
 			var modData = Container.ModalData as ModalDataContainer;
 			SlopeData.Clear();
@@ -81,7 +82,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		private void RunPreprocessingAMTGearbox(Gearbox gearbox, Vehicle vehicle)
+		private void RunPreprocessingAMTGearbox(AMTGearbox gearbox, Vehicle vehicle)
 		{
 			var modData = Container.ModalData as ModalDataContainer;
 			SlopeData.Clear();

@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public IDCDCConverter DCDCConverter { get; protected set; }
 
-		public WHRCharger WHRCharger { get; protected set; }
+		public IWHRCharger WHRCharger { get; protected set; }
 
 		public IElectricSystemInfo ElectricSystemInfo { get; protected set; }
 
@@ -219,7 +219,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				HasElectricMotor = true;
 			}
 
-			if (component is WHRCharger c25) {
+			if (component is IWHRCharger c25) {
 				WHRCharger = c25;
 			}
 			

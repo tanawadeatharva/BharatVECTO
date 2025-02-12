@@ -73,6 +73,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public Second TractionInterruption => 1.SI<Second>();
 
 		public uint NumGears { get; set; }
+		public bool Disengaged { get; }
 
 		public MeterPerSecond StartSpeed => 2.SI<MeterPerSecond>();
 

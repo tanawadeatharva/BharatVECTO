@@ -5,15 +5,16 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
-    public class HybridCtlIHPCShiftStrategy : BaseShiftStrategy<ATGearbox>, IHybridControlShiftStrategy
+    public class HybridCtlIHPCShiftStrategy : BaseShiftStrategy<APTNGearbox>, IHybridControlShiftStrategy
     {
 		protected IHybridControllerInternal Controller;
 
-		protected ITestPowertrain<Gearbox> TestPowertrain;
+		protected ITestPowertrain TestPowertrain;
 
         public HybridCtlIHPCShiftStrategy(IHybridControllerInternal hybridController, IVehicleContainer container) :
 			base(container)
@@ -23,12 +24,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				return;
 			}
 
+			var transmissionRatio = RunData.AxleGearData.AxleGear.Ratio *
+									(RunData.AngledriveData?.Angledrive.Ratio ?? 1.0) /
+									RunData.VehicleData.DynamicTyreRadius;
+			var minEngineSpeed = (RunData.EngineData.FullLoadCurves[0].RatedSpeed - RunData.EngineData.IdleSpeed) *
+				Constants.SimulationSettings.ClutchClosingSpeedNorm + RunData.EngineData.IdleSpeed;
+			MaxStartGear = Gears.First();
+			foreach (var gear in Gears.Reverse()) {
+				var gearData = GearboxModelData.Gears[gear.Gear];
+				if (gear.TorqueConverterLocked.HasValue && !gear.TorqueConverterLocked.Value) {
+					continue;
+				}
+				if (GearshiftParams.StartSpeed * transmissionRatio * gearData.Ratio <= minEngineSpeed)
+					continue;
+				MaxStartGear = gear;
+				break;
+			}
+
             // create testcontainer
             var testContainer = RunData.Cycle.CycleType == CycleType.MeasuredSpeedGear
 				? PowertrainBuilder.BuildSimpleHybridPowertrainGear(RunData)
 				: PowertrainBuilder.BuildSimpleHybridPowertrain(RunData);
 
-			TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, Container);
+			TestPowertrain = PowertrainBuilder.CreateTestPowertrain(testContainer, Container, true);
         }
 
         public override GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity)
@@ -39,8 +57,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
             foreach (var gear in Gears.Reverse()) {
                 TestPowertrain.UpdateComponents();
-                TestPowertrain.Gearbox.Gear = gear;
-                TestPowertrain.Gearbox._nextGear = gear;
+                TestPowertrain.Gearbox.SetGear = gear;
+                TestPowertrain.Gearbox.SetNextGear = gear;
                 if (Controller.CurrentStrategySettings != null) {
                     TestPowertrain.HybridController.ApplyStrategySettings(Controller.CurrentStrategySettings);
                 }
@@ -81,8 +99,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
                 //var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
                 TestPowertrain.UpdateComponents();
-                TestPowertrain.Gearbox.Gear = gear;
-                TestPowertrain.Gearbox._nextGear = gear;
+                TestPowertrain.Gearbox.SetGear = gear;
+                TestPowertrain.Gearbox.SetNextGear = gear;
                 if (Controller.CurrentStrategySettings != null) {
                     TestPowertrain.HybridController.ApplyStrategySettings(Controller.CurrentStrategySettings);
                 }
@@ -126,10 +144,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				var disengageBeforeHalting = isBraking && isSlowerThanDisengageSpeed && isNegativeTorque;
 
 				if (disengageBeforeHalting) {
-					if (_gearbox != null) {
-						_gearbox.Disengaged = true;
-						return tmpGear;
-					}
+					//if (_gearbox != null) {
+					//	_gearbox.Disengaged = true;
+					//	return tmpGear;
+					//}
 				}
 
 				while (Gears.HasPredecessor(_nextGear) && SpeedTooLowForEngine(_nextGear, outAngularVelocity)) {
