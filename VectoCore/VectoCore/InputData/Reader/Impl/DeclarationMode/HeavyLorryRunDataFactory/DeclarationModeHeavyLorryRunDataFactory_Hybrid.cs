@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 {
     public abstract partial class DeclarationModeHeavyLorryRunDataFactory
 	{
-		
+
 		public abstract class Hybrid : LorryBase
 		{
 			public Hybrid(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					}
 				}
 			}
-			
+
 			#endregion
 
 			protected void CheckMaxChargingPowerPresent(IVehicleDeclarationInputData vehicle)
@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				CheckMaxChargingPowerPresent(Vehicle);
-				
+
 				var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 				var engineModes = engine.EngineModes;
 				var engineMode = engineModes[modeIdx.Value];
@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				runData.WheelEndData = DataAdapter.CreateWheelEndData(_segment.VehicleClass, Vehicle);
 
 				runData.EngineData = DataAdapter.CreateEngineData(Vehicle, engineMode, mission);
-				
+
 				DataAdapter.CreateREESSData(Vehicle.Components.ElectricStorage, Vehicle.VehicleType, Vehicle.OVC,
 					((batteryData) => runData.BatteryData = batteryData),
 					((sCdata => runData.SuperCapData = sCdata)));
@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				if (AxleGearRequired()) {
 					runData.AxleGearData = DataAdapter.CreateAxleGearData(Vehicle.Components.AxleGearInputData);
 				}
-				
+
 				runData.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData, Vehicle.ArchitectureID, Vehicle.Components.IEPC);
 
 				runData.Aux = DataAdapter.CreateAuxiliaryData(Vehicle.Components.AuxiliaryInputData, null, mission.MissionType,
@@ -240,7 +240,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					_segment.VehicleClass, Vehicle.Length, Vehicle.Components.AxleWheels.NumSteeredAxles,
 					VectoSimulationJobType.ParallelHybridVehicle);
 
-		
+
 				CreateGearboxAndGearshiftData(runData);
 				runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
 					Vehicle.Components.ElectricMachines, Vehicle.ElectricMotorTorqueLimits,
@@ -285,9 +285,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				return runData;
 			}
 
-			
 
-			
+
+
 			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
 			{
 				runData.GearshiftParameters =
@@ -524,10 +524,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 				CreateGearboxAndGearshiftData(runData);
 
-				runData.Aux = DataAdapter.CreateAuxiliaryData(Vehicle.Components.AuxiliaryInputData, null,
-					mission.MissionType, _segment.VehicleClass, Vehicle.Length,
-					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType);
-
+				runData.Aux = DataAdapter.CreateAuxiliaryData(
+					Vehicle.Components.AuxiliaryInputData,
+					null,
+					mission.MissionType,
+					_segment.VehicleClass,
+					Vehicle.Length,
+					Vehicle.Components.AxleWheels.NumSteeredAxles,
+					Vehicle.VehicleType);
 
 				var ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(Vehicle.Components.PTOTransmissionInputData, Vehicle.Components.GearboxInputData);
 
@@ -542,6 +546,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				return runData;
 			}
 
+			// runData.IterativeRunStrategy = SetUpFuelCellIterativeRunStrategy(runData);
 			private FCHEVIterativeRunStrategy SetUpFuelCellIterativeRunStrategy(VectoRunData runData)
 			{
 				var iterativeRunStrategy = SetUpFCHEVIterativeRunStrategy();
@@ -553,14 +558,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 					/// Refer to [1] EngineeringModeVectoRunDataFactory.GetFCHV_RunData():
 					/// Comment from [1]:
-					///		In case the battery is modified after creating the rundata 
+					///		In case the battery is modified after creating the rundata
 					///		(testing, do not create new battery data).
 					// todo amogoda: m12. create FcAdapter "wrapper".
 					iterationRunData.BatteryData = engDataAdapter.CreateFuelCellPreProcessingBattery(
 						fuelCellSystemData,
 						iterationRunData.BatteryData,
 						out var fcBatteries);
-					
+
 					runData.BatteryData.Batteries = runData.BatteryData.Batteries
 						.Where(b => b.Item1 != fcBatteries.Item1)
 						.ToList();
@@ -608,7 +613,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			protected override bool AxleGearRequired()
 			{
 				return InputDataProvider.JobInputData.Vehicle.ArchitectureID != ArchitectureID.E4
-					|| InputDataProvider.JobInputData.Vehicle.ArchitectureID != ArchitectureID.F4;
+					&& InputDataProvider.JobInputData.Vehicle.ArchitectureID != ArchitectureID.F4;
 			}
 		}
 
@@ -787,7 +792,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
 				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
 				: base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
-		}	
+		}
 
 		public class HEV_P2_5 : ParallelHybrid
 		{

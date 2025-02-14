@@ -639,7 +639,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 					/// Refer to [1] EngineeringModeVectoRunDataFactory.GetFCHV_RunData():
 					/// Comment from [1]:
-					///		In case the battery is modified after creating the rundata 
+					///		In case the battery is modified after creating the rundata
 					///		(testing, do not create new battery data).
 					// todo amogoda: m12. create FcAdapter "wrapper".
 					iterationRunData.BatteryData = engDataAdapter.CreateFuelCellPreProcessingBattery(
@@ -694,7 +694,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 			{
 				return InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData != null && 
 					(InputDataProvider.JobInputData.Vehicle.ArchitectureID != ArchitectureID.E4
-					|| InputDataProvider.JobInputData.Vehicle.ArchitectureID != ArchitectureID.F4);
+					&& InputDataProvider.JobInputData.Vehicle.ArchitectureID != ArchitectureID.F4);
 			}
 
 			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
