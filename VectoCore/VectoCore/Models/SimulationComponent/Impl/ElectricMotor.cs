@@ -30,6 +30,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		#region Implementation of ITestpowertrainElectricMotor
 
 		public IElectricSystem GetElectricSystem => ElectricPower;
+		public ElectricMotorState GetPreviousState => PreviousState.Clone();
+		public Joule SetThermalBuffer
+		{
+			set { ThermalBuffer = value; }
+		}
+		public bool SetDeRatingActive
+		{
+			set { DeRatingActive = value; }
+		}
 
 		#endregion
 	}
@@ -564,7 +573,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected internal NewtonMeter ConvertEmTorqueToDrivetrain(PerSecond emSpeed, NewtonMeter emTorque, bool dryRun)
+		public NewtonMeter ConvertEmTorqueToDrivetrain(PerSecond emSpeed, NewtonMeter emTorque, bool dryRun)
 		{
 			var dtTorque = ModelData.TransmissionLossMap.GetOutTorque(emSpeed, emTorque, DataBus.IsTestPowertrain || dryRun);
 
@@ -705,7 +714,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			ElectricPower = powersupply;
 		}
 
-		protected internal PerSecond ConvertEmSpeedToDrivetrain(PerSecond emSpeed)
+		public PerSecond ConvertEmSpeedToDrivetrain(PerSecond emSpeed)
 		{
 			return emSpeed / ModelData.RatioADC;
 		}

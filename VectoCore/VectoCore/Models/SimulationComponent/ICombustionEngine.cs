@@ -42,5 +42,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		IIdleController IdleController { get; }
 	}
 
+	public interface ITestpowertrainCombustionEngine : ICombustionEngine
+	{
+		IAuxPort GetEngineAux { get; }
+	}
+
 	
 }

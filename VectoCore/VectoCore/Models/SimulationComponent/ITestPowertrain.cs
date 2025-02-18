@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
         ITestPowertrainTransmission Gearbox { get; }
 
-        ICombustionEngine CombustionEngine { get; }
+		ITestpowertrainCombustionEngine CombustionEngine { get; }
 
         ISimpleVehicleContainer Container { get; }
 
@@ -40,9 +40,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
     public interface ITestGenset
     {
-        ICombustionEngine CombustionEngine { get; }
+		ITestpowertrainCombustionEngine CombustionEngine { get; }
 
-        IElectricMotor ElectricMotor { get; }
+		ITestpowertrainElectricMotor ElectricMotor { get; }
 
         IGensetMotorController ElectricMotorCtl { get; }
 

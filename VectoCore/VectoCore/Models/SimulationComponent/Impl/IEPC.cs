@@ -22,7 +22,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         }
 
 		public IElectricSystem GetElectricSystem => ElectricPower;
-
+		public ElectricMotorState GetPreviousState { get => PreviousState; }
+		public Joule SetThermalBuffer
+		{
+			set { ThermalBuffer = value; }
+		}
+		public bool SetDeRatingActive
+		{
+			set { DeRatingActive = value; }
+		}
 	}
 
 	public class IEPC : ElectricMotor

@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         public IClutch Clutch { get; }
         public IBrakes Brakes { get; }
 
-        public ICombustionEngine CombustionEngine { get; }
+        public ITestpowertrainCombustionEngine CombustionEngine { get; }
         public IAuxPort EngineAux { get; }
         public ITestpowertrainElectricMotor ElectricMotor { get; }
         public ITestpowertrainGensetChargerAdapter Charger { get; }
@@ -48,8 +48,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             BatterySystem = container.BatteryInfo;
 
             Clutch = Container.ClutchInfo as IClutch;
-            CombustionEngine = Container.EngineInfo as ICombustionEngine;
-            EngineAux = (CombustionEngine as StopStartCombustionEngine)?.EngineAux;
+            CombustionEngine = Container.EngineInfo as ITestpowertrainCombustionEngine;
+            EngineAux = CombustionEngine?.GetEngineAux;
             ElectricMotor = container.ElectricMotors.FirstOrDefault().Value as ITestpowertrainElectricMotor;
             Charger =
                 ((ElectricMotor?.GetElectricSystem as ITestpowertrainElectricSystem)?.Charger.FirstOrDefault(x =>

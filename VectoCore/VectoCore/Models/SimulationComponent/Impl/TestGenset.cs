@@ -10,24 +10,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 
 		public ISimpleVehicleContainer Container;
-		public ICombustionEngine CombustionEngine { get; }
-		public IElectricMotor ElectricMotor => _em;
+		public ITestpowertrainCombustionEngine CombustionEngine { get; }
+		public ITestpowertrainElectricMotor ElectricMotor => _em;
 		public IGensetMotorController ElectricMotorCtl { get; }
 
 		public Joule EM_ThermalBuffer {
-			set { _em.ThermalBuffer = value; }
+			set { _em.SetThermalBuffer = value; }
 		}
 
 		public bool EM_DeRatingActive {
-			set { _em.DeRatingActive = value; }
+			set { _em.SetDeRatingActive = value; }
 		}
 
 		public PerSecond EM_DrivetrainSpeed {
-			set { _em.PreviousState.DrivetrainSpeed = value; }
+			set { _em.GetPreviousState.DrivetrainSpeed = value; }
 		}
 
 		public PerSecond EM_Speed {
-			set { _em.PreviousState.EMSpeed = value; }
+			set { _em.GetPreviousState.EMSpeed = value; }
 		}
 
 		public IAuxPort EngineAux { get; }
@@ -35,14 +35,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IElectricEnergyStorage Battery { get; }
 		public IElectricEnergyStorage BatterySystem { get; }
 		public IElectricEnergyStorage SuperCap { get; }
-		private readonly ElectricMotor _em;
+		private readonly ITestpowertrainElectricMotor _em;
 
 		public TestGenset(ISimpleVehicleContainer container, IDataBus realContainer)
 		{
 			Container = container;
-			CombustionEngine = Container.EngineInfo as ICombustionEngine;
-			EngineAux = (CombustionEngine as StopStartCombustionEngine)?.EngineAux;
-			_em = container.ElectricMotors.FirstOrDefault(x => x.Key == PowertrainPosition.GEN).Value as ElectricMotor;
+			CombustionEngine = Container.EngineInfo as ITestpowertrainCombustionEngine;
+			EngineAux = CombustionEngine?.GetEngineAux;
+			_em = container.ElectricMotors.FirstOrDefault(x => x.Key == PowertrainPosition.GEN).Value as ITestpowertrainElectricMotor;
 			ElectricMotorCtl = _em.Control as IGensetMotorController;
 
 			Battery = Container.BatteryInfo as Battery;
