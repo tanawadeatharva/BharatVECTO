@@ -188,13 +188,13 @@ namespace TUGraz.VectoCore.Tests.Integration.GenericVehicles
 
 		[Category("Integration")]
 		[
-			TestCase(SINGLEBUS_31B_FM, "Coach", 863.6492),
-			TestCase(SINGLEBUS_31B_FM, "HeavyUrban", 1829.2873),
+            //TestCase(SINGLEBUS_31B_FM, "Coach", 863.6492), // primary vehicle cycle pruning -> cycle is not configured for the current vehicle.
+            TestCase(SINGLEBUS_31B_FM, "HeavyUrban", 1829.2873),
 			TestCase(SINGLEBUS_31B_FM, "Interurban", 1039.4657),
 
-			TestCase(SINGLEBUS_34F_FM, "Coach", 686.0818),
-			TestCase(SINGLEBUS_34F_FM, "HeavyUrban", 1860.2187),
-			TestCase(SINGLEBUS_34F_FM, "Interurban", 950.3305),
+			TestCase(SINGLEBUS_34F_FM, "Coach", 781.6859),
+            //TestCase(SINGLEBUS_34F_FM, "HeavyUrban", 1860.2187), // primary vehicle cycle pruning -> cycle cycle is not configured for the current vehicle.
+            TestCase(SINGLEBUS_34F_FM, "Interurban", 1110.4781),
 		]
 		public void ICE_DistanceRun_FactorMethod(string jobFile, string cycleName, double expectedECFinal)
 		{

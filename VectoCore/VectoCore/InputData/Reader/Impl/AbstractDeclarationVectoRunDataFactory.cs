@@ -76,7 +76,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			return GetNextRun();
 		}
 
-		public IInputDataProvider DataProvider => InputDataProvider;
+        public IVehicleDeclarationInputData CompletedVehicle { get; set; }
+
+        public IInputDataProvider DataProvider => InputDataProvider;
 
 		protected abstract IEnumerable<VectoRunData> GetNextRun();
 

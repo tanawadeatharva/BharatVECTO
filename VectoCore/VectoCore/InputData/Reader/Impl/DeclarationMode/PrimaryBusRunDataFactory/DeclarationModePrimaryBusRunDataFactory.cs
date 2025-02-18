@@ -30,7 +30,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 			//public IDeclarationReport Report { get; }
 
-			protected PrimaryBusBase(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+			private PrimaryAndCompletedGroups _primaryAndCompletedGroups;
+
+            protected PrimaryBusBase(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
 				// the following parameters are injected
 				IPrimaryBusDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
 				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
@@ -39,6 +41,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				DataAdapter = declarationDataAdapter;
 				DataProvider = dataProvider;
 				Report = report;
+
+				_primaryAndCompletedGroups = new PrimaryAndCompletedGroups();
 			}
 
 			#region Overrides of AbstractDeclarationVectoRunDataFactory
@@ -51,9 +55,31 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				return DataAdapter.CreateBusDriverData(segment, jobType, arch, compressorDrive);
 			}
 
-			#endregion
+            #endregion
 
-			protected override VectoRunData GetPowertrainConfigForReportInit()
+            protected Mission[] GetMissions()
+            {
+                if (CompletedVehicle == null)
+                {
+                    return _segment.Missions;
+                }
+
+                var completedVehicleSegment = DeclarationData.CompletedBusSegments.Lookup(
+                    Vehicle.AxleConfiguration.NumAxles(), CompletedVehicle.VehicleCode, CompletedVehicle.RegisteredClass, CompletedVehicle.NumberPassengerSeatsLowerDeck,
+                    CompletedVehicle.Height, CompletedVehicle.LowEntry);
+
+                var missionTypes = completedVehicleSegment.Missions.Select(x => x.MissionType).Distinct();
+				
+				var completedGroup = VehicleClassHelper.GetClassNumber(completedVehicleSegment.VehicleClass);
+                var groupData = _primaryAndCompletedGroups.Lookup(completedGroup);
+				
+                return _segment.Missions.Where(x => 
+					missionTypes.Contains(x.MissionType) && 
+					VehicleClassHelper.GetClassNumber(x.BusParameter.BusGroup) == groupData.PrimaryGroup)
+						.ToArray();
+            }
+
+            protected override VectoRunData GetPowertrainConfigForReportInit()
 			{
 				return GetNextRun().First(x => x != null);
 			}
@@ -144,9 +170,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				var vehicle = DataProvider.JobInputData.Vehicle;
 				var engine = vehicle.Components.EngineInputData;
 				var engineModes = engine.EngineModes;
+				var missions = GetMissions();
 
 				for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
-					foreach (var mission in _segment.Missions) {
+					foreach (var mission in missions) {
 						foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
 							var simulationRunData = CreateVectoRunData(mission, loading, modeIdx);
 							if (simulationRunData == null) {
@@ -245,9 +272,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				var vehicle = DataProvider.JobInputData.Vehicle;
 				var engine = vehicle.Components.EngineInputData;
 				var engineModes = engine.EngineModes;
+                var missions = GetMissions();
 
-				for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
-					foreach (var mission in _segment.Missions) {
+                for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
+					foreach (var mission in missions) {
 						foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
 
 							if (vehicle.OvcHev) {
@@ -675,7 +703,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
             protected override IEnumerable<VectoRunData> GetNextRun()
 			{
 				var vehicle = InputDataProvider.JobInputData.Vehicle;
-				foreach (var mission in _segment.Missions) {
+                var missions = GetMissions();
+
+                foreach (var mission in missions) {
 					foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
 						var simulationRunData = CreateVectoRunData(mission, loading);
 						simulationRunData.BatteryData.Batteries.ForEach(t => t.Item2.ChargeDepletingBattery = true);
