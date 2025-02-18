@@ -10,4 +10,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		BusAuxiliariesAdapter BusAux { set; }
 	}
+
+	public interface ITestpowertrainElectricMotor : IElectricMotor, ITnOutPort
+	{
+		IElectricMotorControl Control { get; }
+		IElectricSystem GetElectricSystem { get; }
+	}
+
+	public interface ITestPowertrainElectricMotorControl : IElectricMotorControl
+	{
+		bool EmOff { get; set; }
+	}
 }

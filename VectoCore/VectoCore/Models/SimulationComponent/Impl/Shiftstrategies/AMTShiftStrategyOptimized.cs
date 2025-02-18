@@ -77,10 +77,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		private void SetupVelocityDropPreprocessor(IVehicleContainer dataBus)
 		{
 			var runData = dataBus.RunData;
-			// MQ: 2019-11-29 - fuel used here has no effect as this is the modDatacontainer for the test-powertrain only!
-			//TestContainer = PowertrainBuilder.BuildSimplePowertrain(runData);
-			//TestContainerGbx = TestContainer.GearboxCtl as Gearbox;
-			//if (TestContainerGbx == null) {
 			if (!(TestPowertrain.Gearbox is IAMTGearbox)) {
 				throw new VectoException("Unknown gearboxtype: {0}", TestPowertrain.Container.GearboxCtl.GetType().FullName);
 			}

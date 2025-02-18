@@ -12,6 +12,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
     {
         void UpdateComponents();
 
+		ITestPowertrainVehicle Vehicle { get; }
+
         ITestPowertrainTransmission Gearbox { get; }
 
         ICombustionEngine CombustionEngine { get; }
@@ -26,11 +28,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
         IBrakes Brakes { get; }
 
-        IElectricMotor ElectricMotor { get; }
+		ITestpowertrainElectricMotor ElectricMotor { get; }
+		Dictionary<PowertrainPosition, ITestpowertrainElectricMotor> ElectricMotors { get; }
         Dictionary<PowertrainPosition, IElectricMotor> ElectricMotorsUpstreamTransmission { get; }
         IDCDCConverter DCDCConverter { get; }
         ITorqueConverter TorqueConverter { get; }
-        IElectricChargerPort Charger { get; }
+		ITestpowertrainGensetChargerAdapter Charger { get; }
 		IRESSInfo BatterySystem { get; }
 
     }

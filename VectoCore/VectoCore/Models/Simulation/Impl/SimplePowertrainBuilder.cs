@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -10,6 +11,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
@@ -36,15 +38,39 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return new TestPowertrain(testContainer, realContainer, createDriver);
 		}
 
-		public ITestPowertrain CreateTestPowertrain(IVehicleContainer realContainer, bool createDriver)
+		public ITestPowertrain CreateTestPowertrain(IVehicleContainer realContainer, bool createDriver, VectoSimulationJobType? overrideJobType)
 		{
-			var testContainer = BuildSimplePowertrain(realContainer.RunData);
+			var testContainer = BuildSimplePowertrain(realContainer.RunData, overrideJobType);
 			return new TestPowertrain(testContainer, realContainer, createDriver);
 		}
 
-        public ITestGenset CreateTestGenset(ISimpleVehicleContainer testContainer, IDataBus realContainer)
+        public ITestGenset CreateTestGenset(IVehicleContainer realContainer)
 		{
+			var testContainer = BuildSimpleGenSet(realContainer.RunData);
 			return new TestGenset(testContainer, realContainer);
+		}
+
+		protected ISimpleVehicleContainer BuildSimplePowertrain(VectoRunData data, VectoSimulationJobType? overrideJobType)
+		{
+			var jobType = overrideJobType.HasValue ? overrideJobType.Value : data.JobType;
+			switch (jobType) {
+				case VectoSimulationJobType.ConventionalVehicle:
+					return BuildSimplePowertrainConventional(data);
+				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.IHPC:
+					return data.Cycle.CycleType == CycleType.MeasuredSpeedGear
+						? BuildSimpleHybridPowertrainGear(data)
+						: BuildSimpleHybridPowertrain(data);
+				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.IEPC_E:
+					return BuildSimplePowertrainElectric(data);
+				case VectoSimulationJobType.SerialHybridVehicle:
+					return BuildSimpleSerialHybridPowertrain(data);
+				case VectoSimulationJobType.IEPC_S:
+					return BuildSimpleIEPCHybridPowertrain(data);
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
 		}
 
         /// <summary>
@@ -64,10 +90,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
         ///       └(Aux)
         /// </code>
         /// </summary>
-        public ISimpleVehicleContainer BuildSimplePowertrain(VectoRunData data)
+        public ISimpleVehicleContainer BuildSimplePowertrainConventional(VectoRunData data)
 		{
 			var container = GetVehicleContainer(data);
-			IVehicle vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
+			IVehicle vehicle = new TestPowertrainVehicle(container, data.VehicleData, data.AirdragData);
 			// TODO: MQ 2018-11-19: engineering mode needs AUX power from cycle, use face cycle...
 			//       should be a reference/proxy to the main driving cyle. but how to access it?
 			switch (data.Cycle.CycleType) {
@@ -164,12 +190,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var es = ConnectREESS(data, container);
 			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
 			AddElectricAuxiliaries(data, container, es, null, dcdc);
-			es.Connect(new GensetChargerAdapter(null));
+			es.Connect(new TestpowertrainGensetChargeAdapter(null));
 
 			var ctl = new SimpleHybridController(container, es);
 
 			//Vehicle-->Wheels-->SimpleHybridController-->Brakes
-			var powertrain = new Vehicle(container, data.VehicleData, data.AirdragData)
+			var powertrain = new TestPowertrainVehicle(container, data.VehicleData, data.AirdragData)
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ctl)
 				.AddComponent(new Brakes(container));
@@ -251,12 +277,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			var container = GetVehicleContainer(data);
 			var es = ConnectREESS(data, container);
-			es.Connect(new GensetChargerAdapter(null));
+			es.Connect(new TestpowertrainGensetChargeAdapter(null));
 
 			var ctl = new SimpleHybridController(container, es);
 
 			//Vehicle-->Wheels-->SimpleHybridController-->Brakes
-			var powertrain = new Vehicle(container, data.VehicleData, data.AirdragData)
+			var powertrain = new TestPowertrainVehicle(container, data.VehicleData, data.AirdragData)
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ctl)
 				.AddComponent(new Brakes(container));
@@ -363,7 +389,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				: null;
 
 
-			var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
+			var vehicle = new TestPowertrainVehicle(container, data.VehicleData, data.AirdragData);
 
 			// TODO: MQ 2018-11-19: engineering mode needs AUX power from cycle, use face cycle...
 			//       should be a reference/proxy to the main driving cyle. but how to access it?
@@ -455,7 +481,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
         public ISimpleVehicleContainer BuildSimplePowertrainElectric(VectoRunData data)
 		{
 			var container = GetVehicleContainer(data);
-			var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
+			var vehicle = new TestPowertrainVehicle(container, data.VehicleData, data.AirdragData);
 
 			// TODO: MQ 2018-11-19: engineering mode needs AUX power from cycle, use face cycle...
 			//       should be a reference/proxy to the main driving cyle. but how to access it?
@@ -514,5 +540,56 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				? new MeasuredSpeedHybridsGearbox(container, null)
 				: (IGearbox)new TestPowertrainGearbox(container, null);
 		}
-    }
+
+		// used for battery electric powertrains
+        protected IElectricMotor GetElectricMachine(PowertrainPosition pos, IList<Tuple<PowertrainPosition,
+				ElectricMotorData>> electricMachinesData, IVehicleContainer container, IElectricSystem es,
+			IElectricMotorControl ctl)
+		{
+			var motorData = electricMachinesData.FirstOrDefault(x => x.Item1 == pos);
+			if (motorData is null) {
+				return null;
+			}
+
+            //container.ModData?.AddElectricMotor(pos);
+			var motor = pos == PowertrainPosition.IEPC
+				? (IElectricMotor)new TestpowertrainIEPC(container, motorData.Item2, ctl, pos)
+				: new TestpowertrainElectricMotor(container, motorData.Item2, ctl, pos);
+			motor.Connect(es);
+			return motor;
+		}
+
+		// used for hybrid electric powertrains
+        protected IElectricMotor GetElectricMachine(PowertrainPosition pos, IList<Tuple<PowertrainPosition,
+				ElectricMotorData>> electricMachinesData, IVehicleContainer container, IElectricSystem es,
+			IHybridController ctl)
+		{
+			var motorData = electricMachinesData.FirstOrDefault(x => x.Item1 == pos);
+			if (motorData is null) {
+				return null;
+			}
+
+			//container.ModData?.AddElectricMotor(pos);
+			ctl.AddElectricMotor(pos, motorData.Item2);
+			var motor = pos == PowertrainPosition.IEPC
+				? (IElectricMotor)new TestpowertrainIEPC(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos)
+				: new TestpowertrainElectricMotor(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos);
+            if (pos == PowertrainPosition.GEN) {
+				es.Connect(new TestpowertrainGensetChargeAdapter(motor));
+			} else {
+				motor.Connect(es);
+			}
+
+			return motor;
+		}
+
+		#region Overrides of PowertrainBuilderBase
+
+		protected override IElectricSystem CreateElectricSystem(IVehicleContainer container, BatterySystemData batterySystemData)
+		{
+			return new TestpowertrainElectricSystem(container, batterySystemData);
+		}
+
+		#endregion
+	}
 }

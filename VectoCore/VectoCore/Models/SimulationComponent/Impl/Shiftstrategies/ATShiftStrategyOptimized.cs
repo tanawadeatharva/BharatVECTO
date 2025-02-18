@@ -29,9 +29,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected List<CombustionEngineFuelData> fcMap;
 		protected Dictionary<uint, EngineFullLoadCurve> fld;
 
-		//protected ISimpleVehicleContainer TestContainer;
-		//protected ATGearbox TestContainerGbx;
-
 		protected ITestPowertrain TestPowertrain;
 
 		protected Kilogram vehicleMass;
@@ -117,7 +114,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 			// initialize vehicle so that vehicleStopped of the testcontainer is false (required for test-runs)
 			TestPowertrain.Gearbox.SetGear = new GearshiftPosition(2u, true);
-			TestPowertrain.Container.VehiclePort.Initialize(10.KMPHtoMeterPerSecond(), 0.SI<Radian>());
+			TestPowertrain.Vehicle.Initialize(10.KMPHtoMeterPerSecond(), 0.SI<Radian>());
 
 			if (runData.Cycle.CycleType == CycleType.MeasuredSpeed) {
 				try {

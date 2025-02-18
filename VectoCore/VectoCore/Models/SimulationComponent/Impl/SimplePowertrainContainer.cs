@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			RunData = runData;
 		}
 
-		public IDriverDemandOutPort VehiclePort => (VehicleInfo as Vehicle)?.OutPort();
+		//public IDriverDemandOutPort VehiclePort => (VehicleInfo as Vehicle)?.OutPort();
 
 		public ITnOutPort GearboxOutPort => (GearboxInfo as IGearbox)?.OutPort();
 

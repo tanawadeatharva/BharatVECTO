@@ -137,7 +137,7 @@ public class ATShiftStrategyTests
 		var ptBuilder = new Mock<ISimplePowertrainBuilder>();
 		var testPt = new Mock<ITestPowertrain>();
 		var testContainer = new Mock<ISimpleVehicleContainer>();
-		var vehiclePort = new Mock<IDriverDemandOutPort>();
+		var vehiclePort = new Mock<ITestPowertrainVehicle>();
 		var testGbx = new Mock<ITestPowertrainTransmission>();
 
 		vehicleContainer.Setup(c => c.RunData).Returns(runData);
@@ -148,15 +148,14 @@ public class ATShiftStrategyTests
 		engineInfo.Setup(e => e.EngineIdleSpeed).Returns(600.RPMtoRad());
 		engineInfo.Setup(e => e.EngineRatedSpeed).Returns(2000.RPMtoRad());
 
-		ptBuilder.Setup(b => b.BuildSimplePowertrain(It.IsAny<VectoRunData>())).Returns(testContainer.Object);
-		ptBuilder.Setup(b => b.CreateTestPowertrain(It.IsAny<ISimpleVehicleContainer>(), It.IsAny<IVehicleContainer>(), It.IsAny<bool>())).Returns(testPt.Object);
+		ptBuilder.Setup(b => b.CreateTestPowertrain(It.IsAny<IVehicleContainer>(), It.IsAny<bool>(), It.IsAny<VectoSimulationJobType?>())).Returns(testPt.Object);
 
 		testPt.Setup(t => t.Gearbox).Returns(testGbx.Object);
 		testPt.Setup(t => t.Container).Returns(testContainer.Object);
+		testPt.Setup(t => t.Vehicle).Returns(vehiclePort.Object);
 
         testContainer.Setup(c => c.RunData).Returns(runData);
 		testContainer.Setup(c => c.GearboxCtl).Returns(new APTGearbox(testContainer.Object, null));
-		testContainer.Setup(c => c.VehiclePort).Returns(vehiclePort.Object);
 		
 		return vehicleContainer.Object;
 	}

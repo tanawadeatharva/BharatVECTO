@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			}
 
 			if (!container.IsTestPowertrain) {
-				SetupVelocityDropPreprocessor();
+				SetupVelocityDropPreprocessor(container.SimplePowertrainBuilder);
 			}
 		}
 

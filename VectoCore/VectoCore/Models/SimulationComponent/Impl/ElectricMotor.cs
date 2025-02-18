@@ -16,12 +16,31 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
+	public class TestpowertrainElectricMotor : ElectricMotor, ITestpowertrainElectricMotor
+	{
+		public TestpowertrainElectricMotor(IVehicleContainer container, ElectricMotorData data,
+			IElectricMotorControl control, PowertrainPosition position) : base(container, data, control, position, false)
+		{
+			if (!container.IsTestPowertrain) {
+				throw new VectoException(
+					"TestpowertrainElectricMotor component must not be used in real powertrain - use dedicated component instead");
+			}
+        }
+
+		#region Implementation of ITestpowertrainElectricMotor
+
+		public IElectricSystem GetElectricSystem => ElectricPower;
+
+		#endregion
+	}
+
+
     public class ElectricMotor : StatefulProviderComponent<ElectricMotorState, ITnOutPort, ITnInPort, ITnOutPort>, 
 		IPowerTrainComponent, IElectricMotor, ITnOutPort, ITnInPort, IUpdateable
 	{
 
 		protected internal IElectricSystem ElectricPower;
-		internal IElectricMotorControl Control { get; set; }
+		public IElectricMotorControl Control { get; }
 		protected ElectricMotorData ModelData;
 		private PerSecond _maxSpeed;
 
@@ -34,8 +53,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public BusAuxiliariesAdapter BusAux { protected get; set; }
 
+		public ElectricMotor(IVehicleContainer container, ElectricMotorData data, IElectricMotorControl control,
+			PowertrainPosition position) : this(container, data, control, position, false)
+		{
+			if (container.IsTestPowertrain) {
+				throw new VectoException(
+					"IEPC component must not be used in test powertrain - use dedicated component instead");
+			}
+        }
 
-		public ElectricMotor(IVehicleContainer container, ElectricMotorData data, IElectricMotorControl control, PowertrainPosition position) : base(container)
+
+		protected ElectricMotor(IVehicleContainer container, ElectricMotorData data, IElectricMotorControl control, PowertrainPosition position, bool dummy) : base(container)
 		{
 			Control = control;
 			ModelData = data;

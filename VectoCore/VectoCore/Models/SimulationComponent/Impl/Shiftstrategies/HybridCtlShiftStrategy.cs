@@ -42,12 +42,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
                 break;
             }
 
-            // create testcontainer
-            var testContainer = RunData.Cycle.CycleType == CycleType.MeasuredSpeedGear
-                ? PowertrainBuilder.BuildSimpleHybridPowertrainGear(RunData)
-                : PowertrainBuilder.BuildSimpleHybridPowertrain(RunData);
-
-            TestPowertrain = PowertrainBuilder.CreateTestPowertrain(testContainer, Container, true);
+			TestPowertrain = PowertrainBuilder.CreateTestPowertrain(Container, true);
         }
 
         protected override bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,

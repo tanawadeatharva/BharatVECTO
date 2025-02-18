@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.Gearbox.SetDisengageGearbox = !useNextGear.Engaged;
 			TestPowertrain.Gearbox.SetNextGear = NextGear;
 			if (ModelData.GearboxData.TractionInterruption.IsGreater(0)) {
-				TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed,
+				TestPowertrain.Vehicle.Initialize(DataBus.VehicleInfo.VehicleSpeed,
 					DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
 			}
 
@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 
 				TestPowertrain.Gearbox.SetGear = useNextGear;
-				var init = TestPowertrain.Container.VehiclePort.Initialize(estimatedVelocityPostShift, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
+				var init = TestPowertrain.Vehicle.Initialize(estimatedVelocityPostShift, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
 				if (!AllowEmergencyShift && init.Engine.EngineSpeed.IsSmaller(ModelData.EngineData.IdleSpeed)) {
 					return null;
 				}
@@ -143,7 +143,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.Gearbox.SetGear = PreviousState.GearboxEngaged ? CurrentGear : NextGear;
 			TestPowertrain.Gearbox.SetDisengaged = !nextGear.Engaged;
 			TestPowertrain.Gearbox.SetDisengageGearbox = !nextGear.Engaged;
-			TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
+			TestPowertrain.Vehicle.Initialize(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
 			TestPowertrain.HybridController.ApplyStrategySettings(cfg);
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
 			
@@ -352,8 +352,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					* x.FuelData.LowerHeatingValueVecto * StrategyParameters.MinICEOnTime).Value());
 
             // create testcontainer
-			var testContainer = BuildSimplePowertrain(runData);
-            TestPowertrain = PowertrainBuilder.CreateTestPowertrain(testContainer, DataBus, true);
+            TestPowertrain = PowertrainBuilder.CreateTestPowertrain(DataBus, true);
 
 			var shiftStrategyParameters = runData.GearshiftParameters;
 			if (shiftStrategyParameters == null) {
@@ -377,10 +376,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			AllowEmergencyShift = false;
 		}
 
-		protected virtual ISimpleVehicleContainer BuildSimplePowertrain(VectoRunData runData)
-		{
-			return PowertrainBuilder.BuildSimpleHybridPowertrain(runData);
-        }
 
 		protected virtual void WarnGearShiftRange()
 		{

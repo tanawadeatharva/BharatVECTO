@@ -32,13 +32,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -48,9 +46,9 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
@@ -68,8 +66,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	{
 		private readonly Dictionary<CycleType, Dictionary<VectoSimulationJobType, Func<VectoRunData, IModalDataContainer, ISumData, IVehicleContainer>>> _builders;
 		
-		private readonly Dictionary<PowertrainPosition, Func<VectoRunData, IVehicleContainer, ElectricSystem, IPowerTrainComponent, IElectricMotor>> _MeasuredSpeedBEVBuilders;
-		private readonly Dictionary<PowertrainPosition, Func<VectoRunData, IVehicleContainer, ElectricSystem, PWheelCycle, IElectricMotor>> _PWheelBEVBuilders;
+		private readonly Dictionary<PowertrainPosition, Func<VectoRunData, IVehicleContainer, IElectricSystem, IPowerTrainComponent, IElectricMotor>> _MeasuredSpeedBEVBuilders;
+		private readonly Dictionary<PowertrainPosition, Func<VectoRunData, IVehicleContainer, IElectricSystem, PWheelCycle, IElectricMotor>> _PWheelBEVBuilders;
 
 
 		private IVehicleContainerFactory _vehicleContainerFactory;
@@ -134,7 +132,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				{ CycleType.EngineOnly, engineOnlyBuilders }
 			};
 
-			_MeasuredSpeedBEVBuilders = new Dictionary<PowertrainPosition, Func<VectoRunData, IVehicleContainer, ElectricSystem, IPowerTrainComponent, IElectricMotor>>()
+			_MeasuredSpeedBEVBuilders = new Dictionary<PowertrainPosition, Func<VectoRunData, IVehicleContainer, IElectricSystem, IPowerTrainComponent, IElectricMotor>>()
 			{
 				{ PowertrainPosition.BatteryElectricE2, BuildMeasuredSpeedForE2 },
 				{ PowertrainPosition.BatteryElectricE3, BuildMeasuredSpeedForE3 },
@@ -142,7 +140,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				{ PowertrainPosition.IEPC, BuildMeasuredSpeedForIEPC }
 			};
 			
-			_PWheelBEVBuilders = new Dictionary<PowertrainPosition, Func<VectoRunData, IVehicleContainer, ElectricSystem, PWheelCycle, IElectricMotor>>()
+			_PWheelBEVBuilders = new Dictionary<PowertrainPosition, Func<VectoRunData, IVehicleContainer, IElectricSystem, PWheelCycle, IElectricMotor>>()
 			{
 				{ PowertrainPosition.BatteryElectricE2, BuildPWheelForE2 },
 				{ PowertrainPosition.BatteryElectricE3, BuildPWheelForE3 },
@@ -947,7 +945,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
         }
 
-        private IElectricMotor BuildPWheelForIEPC(VectoRunData data, IVehicleContainer container, ElectricSystem es, PWheelCycle cycle)
+        private IElectricMotor BuildPWheelForIEPC(VectoRunData data, IVehicleContainer container, IElectricSystem es, PWheelCycle cycle)
         { 
 			var ctl = new PWheelBatteryElectricMotorController(container, es);
 			
@@ -975,7 +973,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return em;
 		}
 
-        private IElectricMotor BuildPWheelForE2(VectoRunData data, IVehicleContainer container, ElectricSystem es, PWheelCycle powertrain)
+        private IElectricMotor BuildPWheelForE2(VectoRunData data, IVehicleContainer container, IElectricSystem es, PWheelCycle powertrain)
 		{
 			var ctl = new PWheelBatteryElectricMotorController(container, es);
 			
@@ -997,7 +995,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return em;
         }
 
-		private IElectricMotor BuildPWheelForE3(VectoRunData data, IVehicleContainer container, ElectricSystem es, PWheelCycle powertrain)
+		private IElectricMotor BuildPWheelForE3(VectoRunData data, IVehicleContainer container, IElectricSystem es, PWheelCycle powertrain)
 		{
 			var ctl = new PWheelBatteryElectricMotorController(container, es);
 
@@ -1015,7 +1013,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return em;
         }
 
-		private IElectricMotor BuildPWheelForE4(VectoRunData data, IVehicleContainer container, ElectricSystem es, PWheelCycle powertrain)
+		private IElectricMotor BuildPWheelForE4(VectoRunData data, IVehicleContainer container, IElectricSystem es, PWheelCycle powertrain)
 		{
 			var ctl = new PWheelBatteryElectricMotorController(container, es);
 
@@ -1059,7 +1057,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
         }
 
-		private IElectricMotor BuildMeasuredSpeedForIEPC(VectoRunData data, IVehicleContainer container, ElectricSystem es, IPowerTrainComponent powertrain)
+		private IElectricMotor BuildMeasuredSpeedForIEPC(VectoRunData data, IVehicleContainer container,IElectricSystem es, IPowerTrainComponent powertrain)
         { 
 			var ctl = new BatteryElectricMotorController(container, es);
 
@@ -1084,7 +1082,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return em;
 		}
 
-        private IElectricMotor BuildMeasuredSpeedForE2(VectoRunData data, IVehicleContainer container, ElectricSystem es, IPowerTrainComponent powertrain)
+        private IElectricMotor BuildMeasuredSpeedForE2(VectoRunData data, IVehicleContainer container, IElectricSystem es, IPowerTrainComponent powertrain)
         {
 			var ctl = new BatteryElectricMotorController(container, es);
 
@@ -1109,7 +1107,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return em;
         }
 
-        private IElectricMotor BuildMeasuredSpeedForE3(VectoRunData data, IVehicleContainer container, ElectricSystem es, IPowerTrainComponent powertrain)
+        private IElectricMotor BuildMeasuredSpeedForE3(VectoRunData data, IVehicleContainer container, IElectricSystem es, IPowerTrainComponent powertrain)
         { 
 			var ctl = new BatteryElectricMotorController(container, es);
 			
@@ -1126,7 +1124,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return em;
         }
 
-        private IElectricMotor BuildMeasuredSpeedForE4(VectoRunData data, IVehicleContainer container, ElectricSystem es, IPowerTrainComponent powertrain)
+        private IElectricMotor BuildMeasuredSpeedForE4(VectoRunData data, IVehicleContainer container, IElectricSystem es, IPowerTrainComponent powertrain)
         {
 			var ctl = new BatteryElectricMotorController(container, es);
 			
@@ -1141,7 +1139,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return em;
 		}
 
-        private void AddBEVBusAuxiliaries(VectoRunData data, IVehicleContainer container, ElectricSystem es, IElectricMotor em, DCDCConverter dcdc)
+        private void AddBEVBusAuxiliaries(VectoRunData data, IVehicleContainer container, IElectricSystem es, IElectricMotor em, DCDCConverter dcdc)
         {
 			if (data.BusAuxiliaries == null) {
 				return;
@@ -1484,10 +1482,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			
 			switch (container.RunData.GearboxData.Type) {
 				case GearboxType.AMT:
-				case GearboxType.MT:
+					return isMeasuredSpeedHybrid
+						? (AbstractAMTGearbox)new MeasuredSpeedHybridsGearbox(container, strategy)
+						: new AMTGearbox(container, strategy);
+                case GearboxType.MT:
 					return isMeasuredSpeedHybrid
 						? (AbstractAMTGearbox) new MeasuredSpeedHybridsGearbox(container, strategy)
-						: new AMTGearbox(container, strategy);
+						: new MTGearbox(container, strategy);
 				case GearboxType.ATPowerSplit:
 				case GearboxType.ATSerial:
 					new ATClutchInfo(container);
@@ -1502,9 +1503,60 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-    }
+		// used for battery electric powertrains
+		protected IElectricMotor GetElectricMachine(PowertrainPosition pos, IList<Tuple<PowertrainPosition,
+				ElectricMotorData>> electricMachinesData, IVehicleContainer container, IElectricSystem es,
+			IElectricMotorControl ctl)
+		{
+			var motorData = electricMachinesData.FirstOrDefault(x => x.Item1 == pos);
+			if (motorData is null) {
+				return null;
+			}
 
-	public class SimpleCharger : IElectricChargerPort, IUpdateable
+			//container.ModData?.AddElectricMotor(pos);
+			var motor = pos == PowertrainPosition.IEPC
+				? new IEPC(container, motorData.Item2, ctl, pos)
+				: new ElectricMotor(container, motorData.Item2, ctl, pos);
+			motor.Connect(es);
+			return motor;
+		}
+
+		// used for hybrid electric powertrains
+		protected IElectricMotor GetElectricMachine(PowertrainPosition pos, IList<Tuple<PowertrainPosition,
+				ElectricMotorData>> electricMachinesData, IVehicleContainer container, IElectricSystem es,
+			IHybridController ctl)
+		{
+			var motorData = electricMachinesData.FirstOrDefault(x => x.Item1 == pos);
+			if (motorData is null) {
+				return null;
+			}
+
+			//container.ModData?.AddElectricMotor(pos);
+			ctl.AddElectricMotor(pos, motorData.Item2);
+			var motor = pos == PowertrainPosition.IEPC
+				? new IEPC(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos)
+				: new ElectricMotor(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos);
+			if (pos == PowertrainPosition.GEN) {
+				es.Connect(new GensetChargerAdapter(motor));
+			} else {
+				motor.Connect(es);
+			}
+
+			return motor;
+		}
+
+		#region Overrides of PowertrainBuilderBase
+
+		protected override IElectricSystem CreateElectricSystem(IVehicleContainer container,
+			BatterySystemData batterySystemData)
+		{
+			return new ElectricSystem(container, batterySystemData);
+		}
+
+		#endregion
+	}
+
+    public class SimpleCharger : IElectricChargerPort, IUpdateable
 	{
 		#region Implementation of IElectricChargerPort
 		private Watt _chargingPower;
@@ -1601,8 +1653,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 	}
 
-	public class SimpleElectricMotorControl : IElectricMotorControl
-	{
+	public class SimpleElectricMotorControl : ITestPowertrainElectricMotorControl
+    {
 		public bool EmOff { get; set; }
 
 		public NewtonMeter MechanicalAssistPower(Second absTime, Second dt, NewtonMeter outTorque, PerSecond prevOutAngularVelocity,
@@ -1623,7 +1675,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 	public class GensetMotorController : IGensetMotorController
     {
-		public GensetMotorController(IVehicleContainer container, ElectricSystem es)
+		public GensetMotorController(IVehicleContainer container, IElectricSystem es)
 		{
 
 		}

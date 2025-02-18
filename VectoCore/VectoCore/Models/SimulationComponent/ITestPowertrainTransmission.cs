@@ -12,4 +12,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
         bool SetDisengageGearbox { set; }
         Second SetEngageTime { set; }
     }
+
+	public interface ITestPowertrainVehicle : IVehicle, IDriverDemandOutPort
+	{
+
+	}
 }

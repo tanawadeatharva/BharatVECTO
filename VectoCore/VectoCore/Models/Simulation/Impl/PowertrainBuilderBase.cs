@@ -13,6 +13,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
@@ -185,7 +186,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return clutch;
 		}
 
-		protected void AddHybridBusAuxiliaries(VectoRunData data, IVehicleContainer container, ElectricSystem es,
+		protected void AddHybridBusAuxiliaries(VectoRunData data, IVehicleContainer container, IElectricSystem es,
 			DCDCConverter dcdc)
 		{
 			if (data.BusAuxiliaries == null) {
@@ -236,7 +237,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected void AddElectricAuxiliaries(
 			VectoRunData data,
 			IVehicleContainer container,
-			ElectricSystem es,
+			IElectricSystem es,
 			DistanceBasedDrivingCycle cycle,
 			DCDCConverter dcdc)
 		{
@@ -273,7 +274,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected void AddHighVoltageAuxiliaries(
 			VectoRunData data,
 			IVehicleContainer container,
-			ElectricSystem es,
+			IElectricSystem es,
 			DCDCConverter dcdc)
 		{
 			var elAux = new ElectricAuxiliaries(container);
@@ -378,45 +379,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected Retarder GetRetarder(RetarderType type, RetarderData data, IVehicleContainer container) =>
 			type == data.Type ? new Retarder(container, data.LossMap, data.Ratio) : null;
 
-		protected IElectricMotor GetElectricMachine(PowertrainPosition pos, IList<Tuple<PowertrainPosition,
-				ElectricMotorData>> electricMachinesData, IVehicleContainer container, IElectricSystem es,
-			IHybridController ctl)
-		{
-			var motorData = electricMachinesData.FirstOrDefault(x => x.Item1 == pos);
-			if (motorData is null) {
-				return null;
-			}
-
-			//container.ModData?.AddElectricMotor(pos);
-			ctl.AddElectricMotor(pos, motorData.Item2);
-			var motor = pos == PowertrainPosition.IEPC
-				? new IEPC(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos)
-				: new ElectricMotor(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos);
-			if (pos == PowertrainPosition.GEN) {
-				es.Connect(new GensetChargerAdapter(motor));
-			} else {
-				motor.Connect(es);
-			}
-
-			return motor;
-		}
-
-		protected IElectricMotor GetElectricMachine(PowertrainPosition pos, IList<Tuple<PowertrainPosition,
-				ElectricMotorData>> electricMachinesData, IVehicleContainer container, IElectricSystem es,
-			IElectricMotorControl ctl)
-		{
-			var motorData = electricMachinesData.FirstOrDefault(x => x.Item1 == pos);
-			if (motorData is null) {
-				return null;
-			}
-
-			//container.ModData?.AddElectricMotor(pos);
-			var motor = pos == PowertrainPosition.IEPC
-				? new IEPC(container, motorData.Item2, ctl, pos)
-				: new ElectricMotor(container, motorData.Item2, ctl, pos);
-			motor.Connect(es);
-			return motor;
-		}
 
 		protected IElectricMotor GetElectricMachine<TElectricMotor>(PowertrainPosition pos,
 			IList<Tuple<PowertrainPosition, ElectricMotorData>> electricMachinesData, IVehicleContainer container,
@@ -438,7 +400,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 
-		protected ElectricSystem ConnectREESS(VectoRunData data, IVehicleContainer container)
+		protected IElectricSystem ConnectREESS(VectoRunData data, IVehicleContainer container)
 		{
 			if (data.BatteryData != null && data.SuperCapData != null) {
 				throw new VectoException("Powertrain requires either Battery OR SuperCapacitor, but both are defined.");
@@ -448,7 +410,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				throw new VectoException("Powertrain requires either Battery OR SuperCapacitor, but none are defined.");
 			}
 
-			var es = new ElectricSystem(container, data.BatteryData);
+			var es = CreateElectricSystem(container, data.BatteryData);
 			if (data.BatteryData != null) {
 				if (data.BatteryData.InitialSoC < data.BatteryData.Batteries.Min(x => x.Item2.MinSOC)) {
 					throw new VectoException("Battery: Initial SoC has to be higher than min SoC");
@@ -471,6 +433,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			return es;
 		}
+
+		protected abstract IElectricSystem CreateElectricSystem(IVehicleContainer container,
+			BatterySystemData batterySystemData);
 
 		protected DrivingCycleData GetMeasuredSpeedDummyCycle() =>
 			DrivingCycleDataReader.ReadFromStream((

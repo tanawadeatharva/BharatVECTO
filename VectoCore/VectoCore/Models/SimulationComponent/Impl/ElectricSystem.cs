@@ -11,6 +11,18 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
+	public class TestpowertrainElectricSystem : ElectricSystem, ITestpowertrainElectricSystem
+	{
+		public TestpowertrainElectricSystem(IVehicleContainer container, BatterySystemData batterySystemData) : base(container,
+			batterySystemData, false)
+		{
+			if (!container.IsTestPowertrain) {
+				throw new VectoException(
+                    "TestpowertrainElectricSystem component must not be used in real powertrain - use dedicated component instead");
+			}
+        }
+    }
+
     public class ElectricSystem : StatefulVectoSimulationComponent<ElectricSystem.State>, IElectricSystem, IElectricAuxConnector,
         IElectricChargerConnector, IBatteryConnector, IUpdateable
     {
@@ -22,7 +34,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         protected IElectricEnergyStorage Battery;
         private readonly BatterySystemData ModelData;
 
-        public ElectricSystem(IVehicleContainer container, BatterySystemData batterySystemData) : base(container)
+		public ElectricSystem(IVehicleContainer container, BatterySystemData batterySystemData) : this(container,
+			batterySystemData, false)
+		{
+			if (container.IsTestPowertrain) {
+				throw new VectoException(
+					"ElectricSystem component must not be used in test powertrain - use dedicated component instead");
+			}
+        }
+
+		protected ElectricSystem(IVehicleContainer container, BatterySystemData batterySystemData, bool dummy) : base(container)
         {
             Charger = new List<IElectricChargerPort>();
             ModelData = batterySystemData;

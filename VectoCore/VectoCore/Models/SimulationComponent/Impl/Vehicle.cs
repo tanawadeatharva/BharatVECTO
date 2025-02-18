@@ -46,26 +46,42 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-    public class Vehicle : StatefulProviderComponent<Vehicle.VehicleState, IDriverDemandOutPort, IFvInPort, IFvOutPort>,
-		IVehicle, IMileageCounter, IFvInPort, IDriverDemandOutPort, IUpdateable
+	public class TestPowertrainVehicle : Vehicle, ITestPowertrainVehicle
 	{
+		public TestPowertrainVehicle(IVehicleContainer container, VehicleData modelData, AirdragData airdrag) : base(
+			container, modelData, airdrag, false)
+		{
+			if (!container.IsTestPowertrain) {
+				throw new VectoException("This class shall not be used in a real powertrain!");
+            }
+		}
+	}
+
+    public class Vehicle : StatefulProviderComponent<Vehicle.VehicleState, IDriverDemandOutPort, IFvInPort, IFvOutPort>,
+		IVehicle, IMileageCounter, IFvInPort, IDriverDemandOutPort
+    {
 		internal readonly VehicleData ModelData;
 
 		public readonly AirdragData AirdragData;
 
+		public Vehicle(IVehicleContainer container, VehicleData modelData, AirdragData airdrag) : this(container,
+			modelData, airdrag, false)
+		{
+			if (container.IsTestPowertrain) {
+				throw new VectoException(
+					"This class shall not be used in a testpowertrain - use the dedicated class instead!");
+            }
+		}
 
-		public Vehicle(IVehicleContainer container, VehicleData modelData, AirdragData airdrag) : base(container)
+
+		protected Vehicle(IVehicleContainer container, VehicleData modelData, AirdragData airdrag, bool dummy) : base(container)
 		{
 			ModelData = modelData;
 			AirdragData = airdrag;
 			if (AirdragData?.CrossWindCorrectionCurve != null) {
 				AirdragData.CrossWindCorrectionCurve.SetDataBus(container);
 			}
-			var model = container.RunData;
-			
-			
 		}
-
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
 		{

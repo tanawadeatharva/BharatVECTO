@@ -200,7 +200,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		protected virtual Dictionary<MeterPerSecond, Radian> SimulationRunPreprocessingEcoRoll(IVectoRun run)
 		{
 			var data = run.GetContainer().RunData;
-			var simpleContainer = PowertrainBuilder.BuildSimplePowertrain(data);
+			var simpleContainer = PowertrainBuilder.CreateTestPowertrain(run.GetContainer(), false);
 
 			var tmp = new Dictionary<MeterPerSecond, Radian>();
 			var preprocessor = new PCCEcoRollEngineStopPreprocessor(simpleContainer, tmp, 50.KMPHtoMeterPerSecond(), 90.KMPHtoMeterPerSecond());
@@ -221,7 +221,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		protected virtual PCCSegments SimulationRunPreprocessingPCCSegments(IVectoRun run)
 		{
 			var data = run.GetContainer().RunData;
-			var simpleContainer = PowertrainBuilder.BuildSimplePowertrain(data);
+			var simpleContainer = PowertrainBuilder.CreateTestPowertrain(run.GetContainer(), false);
 
 			var tmp = new PCCSegments();
 			var preprocessor = new PCCSegmentPreprocessor(simpleContainer, tmp, data.DriverData.PCC);

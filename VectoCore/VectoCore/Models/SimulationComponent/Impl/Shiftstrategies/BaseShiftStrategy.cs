@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			set {
 				var myGearbox = value as T;
 				if (myGearbox == null) {
-					throw new VectoException("This shift strategy can't handle gearbox of type {0}", value.GetType());
+					throw new VectoException("This shift strategy can't handle gearbox of type {0}, expected {1}", value.GetType().Name, typeof(T).Name);
 				}
 				_gearbox = myGearbox;
 			}

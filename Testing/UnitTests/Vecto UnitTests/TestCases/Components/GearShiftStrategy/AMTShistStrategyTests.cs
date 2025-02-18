@@ -44,7 +44,7 @@ TestCase(8, 4, 15000, 200, true),]
 		var testPt = GetMockTestPowertrain(runData);
 
 		var ptBuilder = new Mock<ISimplePowertrainBuilder>();
-		ptBuilder.Setup(p => p.CreateTestPowertrain(It.IsAny<ISimpleVehicleContainer>(), It.IsAny<IDataBus>(), It.IsAny<bool>()))
+		ptBuilder.Setup(p => p.CreateTestPowertrain(It.IsAny<IVehicleContainer>(), It.IsAny<bool>(), It.IsAny<VectoSimulationJobType?>()))
 			.Returns(testPt.Object);
 		container.Setup(c => c.SimplePowertrainBuilder).Returns(ptBuilder.Object);
 
@@ -94,7 +94,7 @@ TestCase(8, 4, 15000, 200, true),]
 		var testPt = GetMockTestPowertrain(runData);
 
 		var ptBuilder = new Mock<ISimplePowertrainBuilder>();
-		ptBuilder.Setup(p => p.CreateTestPowertrain(It.IsAny<ISimpleVehicleContainer>(), It.IsAny<IDataBus>(), It.IsAny<bool>()))
+		ptBuilder.Setup(p => p.CreateTestPowertrain(It.IsAny<IVehicleContainer>(), It.IsAny<bool>(), It.IsAny<VectoSimulationJobType?>()))
 			.Returns(testPt.Object);
 		container.Setup(c => c.SimplePowertrainBuilder).Returns(ptBuilder.Object);
 
