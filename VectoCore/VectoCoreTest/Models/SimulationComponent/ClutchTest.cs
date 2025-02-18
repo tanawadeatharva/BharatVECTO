@@ -43,6 +43,7 @@ using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Integration.BatteryElectric;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
+using MockDriver = TUGraz.VectoCore.Tests.Utils.MockDriver;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {

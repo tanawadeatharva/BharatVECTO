@@ -45,6 +45,7 @@ using TUGraz.VectoCore.Utils;
 using System.IO;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Simulation;
+using MockDriver = TUGraz.VectoCore.Tests.Utils.MockDriver;
 
 // ReSharper disable UnusedVariable
 // ReSharper disable NotAccessedVariable

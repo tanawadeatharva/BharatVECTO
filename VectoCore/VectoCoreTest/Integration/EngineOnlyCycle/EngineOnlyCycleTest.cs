@@ -46,6 +46,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
+using MockDrivingCycle = TUGraz.VectoCore.Tests.Utils.MockDrivingCycle;
 
 namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 {

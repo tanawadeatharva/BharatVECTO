@@ -55,6 +55,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using MockDrivingCycle = TUGraz.VectoCore.Tests.Utils.MockDrivingCycle;
 
 // ReSharper disable ObjectCreationAsStatement
 

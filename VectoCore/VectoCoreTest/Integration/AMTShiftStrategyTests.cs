@@ -30,13 +30,42 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 
-		[TestCase(
-			@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\Group2_HEV_IEPC_S.xml", 0)]
-		[TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\Group5_Conv_ES_Standard.xml", 8)]
-		[TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\HeavyLorry_IHPC.xml", 4)]
+		//[TestCase(
+		//	@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\Group2_HEV_IEPC_S.xml", 0)]
+		//[TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\Group5_Conv_ES_Standard.xml", 8)]
+		//[TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\HeavyLorry_IHPC.xml", 4)]
+
+        [TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\exempted_heavy_lorry.xml", -1)]
+        [TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\Group2_HEV_IEPC_S.xml", -1)]
+        [TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\Group2_HEV_S2_ovc.xml", -1)]
+        [TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\Group5_ PEV_E4.xml", -1)]
+        [TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\Group5_ PEV_IEPC_E.xml", -1)]
+        [TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\Group5_Conv_ES_Standard.xml", -1)]
+        [TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\Group5_HEV_P2_non-ovc.xml", -1)]
+        [TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\Group5_HEV_P2_ovc.xml", -1)]
+        [TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\Group5_HEV_P2_supercap.xml", -1)]
+        [TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\HeavyLorry_IHPC.xml", -1)]
+        [TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\PEV_heavyLorry_AMT_E2.xml", -1)]
+        [TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\PrimaryBuses\PEV_primaryBus_AMT_E2.xml", -1)]
+        [TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\PrimaryBuses\PrimaryCoach_S2_Base_AMT.xml", -1)]
+        [TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\Group P31_32\primary_heavyBus group_P31_32_Smart_ES.xml", -1)]
+        //[TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Engineering Mode\GenericVehicleE2\BEV_ENG.vecto", 0)]
+        //[TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Engineering Mode\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 0)]
+        //[TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Engineering Mode\GenericVehicle_Group5_P2\P2 Group 5.vecto", 0)]
+        //[TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Engineering Mode\GenericIEPC\IEPC_Gbx3Speed+Axle\IEPC_ENG_Gbx3Axl.vecto", 0)]
+        //[TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Engineering Mode\CityBus_AT\CityBus_AT_PS.vecto", 0)]
+        //[TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Engineering Mode\EngineOnly\EngineOnly.vecto", 0)]
+        [TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\Group 53\ML3r.vecto", -1)]
+        [TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\PEV_heavyLorry_APTN_E2..xml", -1)]
+        [TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\Group2_HEV_S2_APTN.xml", -1)]
+        [TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\Group2_HEV_IEPC_S-APTN.xml", -1)]
 		public void RunJob_G2_HEV_IEPC_S(string job, int runIdx)
 		{
-			RunJob_DeclSingle(job, runIdx);
+			if (runIdx < 0) {
+				RunJob_DeclAll(job);
+			} else {
+				RunJob_DeclSingle(job, runIdx);
+			}
 		}
 
 		//[TestCase()]
@@ -49,8 +78,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 
         public void RunJob_DeclSingle(string jobName, int runIdx)
 		{
-			var relativeJobPath = jobName;
-			var writer = new FileOutputWriter(relativeJobPath);
+			if (!Directory.Exists(Path.Combine(Path.GetDirectoryName(jobName), _tmpDir))) {
+				Directory.CreateDirectory(Path.Combine(Path.GetDirectoryName(jobName), _tmpDir));
+			}
+			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), _tmpDir, Path.GetFileName(jobName)));
+
+            var relativeJobPath = jobName;
+			//var writer = new FileOutputWriter(relativeJobPath);
 			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
 				? xmlInputReader.CreateDeclaration(relativeJobPath)
 				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
@@ -66,11 +100,17 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
 		}
 
+		private const string _tmpDir = "tmp2";
 
 		public void RunJob_DeclAll(string jobName)
 		{
-			var relativeJobPath = jobName;
-			var writer = new FileOutputWriter(relativeJobPath);
+			if (!Directory.Exists(Path.Combine(Path.GetDirectoryName(jobName), _tmpDir))) {
+				Directory.CreateDirectory(Path.Combine(Path.GetDirectoryName(jobName), _tmpDir));
+			}
+			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), _tmpDir, Path.GetFileName(jobName)));
+
+            var relativeJobPath = jobName;
+			//var writer = new FileOutputWriter(relativeJobPath);
 			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
 				? xmlInputReader.CreateDeclaration(relativeJobPath)
 				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);

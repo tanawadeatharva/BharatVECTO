@@ -49,6 +49,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Utils;
+using MockDriver = TUGraz.VectoCore.Tests.Utils.MockDriver;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {

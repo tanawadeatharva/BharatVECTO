@@ -48,6 +48,7 @@ using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Declaration;
 using Newtonsoft.Json;
+using MockDriver = TUGraz.VectoCore.Tests.Utils.MockDriver;
 
 namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 {

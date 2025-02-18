@@ -158,7 +158,7 @@ TestCase(8, 4, 15000, 200, true),]
 				Engine = { PowerRequest = n * t, EngineSpeed = n },
 				Clutch = { PowerRequest = n * t }
 			});
-        var tEng = new Mock<ICombustionEngine>();
+        var tEng = new Mock<ITestpowertrainCombustionEngine>();
         testPt.Setup(t => t.CombustionEngine).Returns(tEng.Object);
         tEng.Setup(e => e.EngineStationaryFullPower(It.IsAny<PerSecond>()))
             .Returns((PerSecond n) => runData.EngineData.FullLoadCurves[0].FullLoadStationaryPower(n));

@@ -58,6 +58,8 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
+using MockDriver = TUGraz.VectoCore.Tests.Utils.MockDriver;
+using MockDrivingCycle = TUGraz.VectoCore.Tests.Utils.MockDrivingCycle;
 
 // ReSharper disable RedundantAssignment
 // ReSharper disable UnusedVariable
