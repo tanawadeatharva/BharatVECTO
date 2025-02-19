@@ -383,5 +383,23 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		#endregion
+
+		#region Implementation of ITnInProvider
+
+		public ITnInPort InPort()
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+
+		#region Implementation of ITnOutProvider
+
+		public ITnOutPort OutPort()
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
 	}
 }

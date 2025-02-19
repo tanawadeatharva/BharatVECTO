@@ -11,7 +11,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
     public class NoBattery : VectoSimulationComponent, ISimpleBattery
 	{
-		public NoBattery(IVehicleContainer dataBus) : base(dataBus) { }
+		public NoBattery(IVehicleContainer container) : base(container) { }
 
 		#region Implementation of ISimpleBatteryInfo
 

@@ -53,8 +53,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public WheelsState Clone() => (WheelsState)MemberwiseClone();
 		}
 
-		public Wheels(IVehicleContainer cockpit, Meter rdyn, KilogramSquareMeter totalWheelsInertia)
-			: base(cockpit)
+		public Wheels(IVehicleContainer container, Meter rdyn, KilogramSquareMeter totalWheelsInertia)
+			: base(container)
 		{
 			DynamicTyreRadius = rdyn;
 			_totalWheelsInertia = totalWheelsInertia;

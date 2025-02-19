@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Utils
 			return next;
 		}
 
-		public static CombustionEngine AddComponent(this IPowerTrainComponent prev, CombustionEngine next,
+		public static ICombustionEngine AddComponent(this IPowerTrainComponent prev, ICombustionEngine next,
 			IIdleController idleController = null)
 		{
 			prev.InPort().Connect(next.OutPort());

@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 			}
 
-			return _kernel.Get<IVehicleContainerFactory>().CreateVehicleContainer(runData, modData, writeSumData);
+			return _kernel.Get<IPowertrainBuilder>().Build(runData, modData, writeSumData);
 
         }
 
@@ -188,7 +188,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (component is IEngineInfo c17){
 				EngineInfo = c17;
 				commitPriority = 2;
-				HasCombustionEngine = !(component is DummyEngineInfo); // true;
+				HasCombustionEngine = !(component is IDummyEngineInfo); // true;
 			}
 			if (component is IGearboxInfo c18) {
 				GearboxInfo = c18;

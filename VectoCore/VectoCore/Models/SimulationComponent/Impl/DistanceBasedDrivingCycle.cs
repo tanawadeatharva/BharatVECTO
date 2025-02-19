@@ -59,7 +59,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		internal readonly IDrivingCycleData Data;
 		internal DrivingCycleEnumerator CycleIntervalIterator;
 		private bool _intervalProlonged;
-		internal IIdleControllerSwitcher IdleController;
 		private Meter CycleEndDistance;
 
 		
@@ -70,7 +69,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private DrivingCycleData.DrivingCycleEntry Right => CycleIntervalIterator.RightSample;
 
-		public DistanceBasedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle) : base(container)
+		public IIdleControllerSwitcher IdleController { get; set; }
+
+        public DistanceBasedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle) : base(container)
 		{
 			Data = cycle;
 			CycleIntervalIterator = new DrivingCycleEnumerator(Data);

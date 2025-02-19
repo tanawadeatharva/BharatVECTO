@@ -1,14 +1,21 @@
 ﻿using Moq;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
+using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
@@ -29,8 +36,9 @@ public class DummyRunNinjectModule : AbstractNinjectModule
         Rebind<IVectoRunDataFactoryFactory>().To<DummyRunRunDataFactoryFactory>();
         Rebind<IVectoRunDataFactoryFactory>().To<DummyRunRunDataFactoryFactory>();
         Rebind<IPowertrainBuilder>().To<DummyRunPowertrainBuilder>().InSingletonScope();
-        Rebind<IVehicleContainerFactory>().To<DummyRunVehicleContainerFactory>().InSingletonScope();
-    }
+		Rebind<IPowertrainComponentFactory>().To<DummyRunPowertrainComponentFactory>().InSingletonScope();
+		//Rebind<IVehicleContainerFactory>().To<DummyRunVehicleContainerFactory>().InSingletonScope();
+	}
 
     #endregion
 }
@@ -123,7 +131,7 @@ public class DummyRunModDataFactory : IModalDataFactory
 
 }
 
-public class DummyRunVehicleContainerFactory : IVehicleContainerFactory
+public class DummyRunPowertrainComponentFactory : IPowertrainComponentFactory
 {
     #region Implementation of IVehicleContainerFactory
 
@@ -151,7 +159,190 @@ public class DummyRunVehicleContainerFactory : IVehicleContainerFactory
         return new Mock<ISimpleVehicleContainer>().Object;
     }
 
-    public IExemptedVehicleContainer CreateExemptedVehicleContainer(VectoRunData runData, IModalDataContainer modData,
+	public IDrivingCycle CreateDistanceBasedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IDriverDemandInProvider CreateMeasuredSpeedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IVehicle CreateVehicle(IVehicleContainer container, VehicleData modelData, AirdragData airdrag)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IWheels CreateWheels(IVehicleContainer container, Meter rdyn, KilogramSquareMeter totalWheelsInertia)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IDriver CreateDriver(IVehicleContainer container, DriverData driverData, IDriverStrategy strategy)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IDriverStrategy CreateDriverStrategy(IVehicleContainer container)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IBrakes CreateBrakes(IVehicleContainer container)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IAxlegear CreateAxleGear(IVehicleContainer container, AxleGearData modelData)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IAngledrive CreateAngledrive(IVehicleContainer container, AngledriveData modelData)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IRetarder CreateRetarder(IVehicleContainer container, RetarderLossMap lossMap, double ratio)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IGearbox CreateGearbox(GearboxType gbxType, bool measuredSpeedHybrid, IVehicleContainer container,
+		IShiftStrategy strategy)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IClutchInfo CreateATClutchInfo(IVehicleContainer container)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IClutch CreateClutch(IVehicleContainer container, CombustionEngineData engineData)
+	{
+		throw new NotImplementedException();
+	}
+
+	public ICombustionEngine CreateCombustionEngine(bool engineOnly, IVehicleContainer container, CombustionEngineData modelData,
+		bool pt1Disabled = false)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IWHRCharger CreateWHRCharger(IVehicleContainer container, double dcDcConverterEfficiency)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IDCDCConverter CreateDCDCConverter(IVehicleContainer container, double efficiency)
+	{
+		throw new NotImplementedException();
+	}
+
+	public ISimpleBattery CreateSimpleBattery(bool smartAlternator, IVehicleContainer container, WattSecond capacity,
+		double efficiency)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IBusAuxiliariesAdapter CreateBusAuxiliariesAdapter(IVehicleContainer container, IAuxiliaryConfig auxiliaryConfig,
+		IAuxPort additionalAux = null)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IElectricMotor CreateElectricMotor(bool isIEPC, IVehicleContainer container, ElectricMotorData data,
+		IElectricMotorControl control, PowertrainPosition position)
+	{
+		throw new NotImplementedException();
+	}
+
+	public ISimpleBattery CreateSimpleBattery(IVehicleContainer container, WattSecond capacity, double efficiency)
+	{
+		throw new NotImplementedException();
+	}
+
+	public ISimpleBattery CreateNoBattery(IVehicleContainer container)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IBusAuxiliariesAdapter CreateBusAuxiliariesAdapter(IVehicleContainer container, IAuxiliaryConfig auxiliaryConfig)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IPWheelCycle CreatePWheelCycle(IVehicleContainer container, IDrivingCycleData dataCycle)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IElectricMotor CreateElectricMotor(IVehicleContainer container, ElectricMotorData data, IElectricMotorControl control,
+		PowertrainPosition position)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IElectricMotor CreateIEPC(IVehicleContainer container, ElectricMotorData data, IElectricMotorControl control,
+		PowertrainPosition position)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IElectricChargerPort CreateGensetChargerAdapter(IElectricMotor motor)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IElectricSystem CreateElectricSystem(IVehicleContainer container, BatterySystemData batterySystemData)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IElectricEnergyStorage CreateREESS(REESSType reessType, IVehicleContainer container, SuperCapData modelData)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IElectricEnergyStorage CreateREESS(REESSType reessType, IVehicleContainer container,
+		BatterySystemData batterySystemData)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IGearboxInfo CreateDummyGearboxInfo(bool engineOnly, IVehicleContainer container, GearshiftPosition gear = null)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IGearboxInfo CreateDummyGearboxInfo(IVehicleContainer container, GearshiftPosition gear = null)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IAxlegearInfo CreateDummyAxleGearInfo(IVehicleContainer container)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IEngineInfo CreateDummyEngineInfo(IVehicleContainer container)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IDriverInfo CreateDummyDriverInfo(IVehicleContainer container)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IMileageCounter CreateDummyMileageCounter(IVehicleContainer container)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IExemptedVehicleContainer CreateExemptedVehicleContainer(VectoRunData runData, IModalDataContainer modData,
         ISumData writeSumData)
     {
         return new Mock<IExemptedVehicleContainer>().Object;

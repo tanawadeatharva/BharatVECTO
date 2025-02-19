@@ -6,7 +6,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	public interface IWHRCharger
+	public interface IWHRCharger : IElectricChargerPort
     {
 		void GeneratedEnergy(WattSecond eWHR);
 	}

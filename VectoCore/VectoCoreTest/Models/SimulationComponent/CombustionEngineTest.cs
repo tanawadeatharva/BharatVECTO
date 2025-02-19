@@ -45,6 +45,7 @@ using TUGraz.VectoCore.Utils;
 using System.IO;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Simulation;
+using DummyDriverInfo = TUGraz.VectoCore.Tests.Utils.DummyDriverInfo;
 using MockDriver = TUGraz.VectoCore.Tests.Utils.MockDriver;
 
 // ReSharper disable UnusedVariable

@@ -9,23 +9,23 @@ namespace TUGraz.Vecto.IntegrationTests.Utils.DummyRun;
 
 internal class DummyRunPowertrainBuilder : IPowertrainBuilder
 {
-    protected readonly IVehicleContainerFactory _vehicleContainerFactory;
+    protected readonly IPowertrainComponentFactory _powertrainComponentFactory;
 
-    public DummyRunPowertrainBuilder(IVehicleContainerFactory vehicleContainerFactory)
+    public DummyRunPowertrainBuilder(IPowertrainComponentFactory powertrainComponentFactory)
     {
-        _vehicleContainerFactory = vehicleContainerFactory;
+        _powertrainComponentFactory = powertrainComponentFactory;
     }
 
     #region Implementation of IPowertrainBuilder
 
     public IVehicleContainer Build(VectoRunData data, IModalDataContainer modData, ISumData sumWriter = null)
     {
-        return _vehicleContainerFactory.CreateVehicleContainer(data, modData, sumWriter);
+        return _powertrainComponentFactory.CreateVehicleContainer(data, modData, sumWriter);
     }
 
     public IExemptedVehicleContainer BuildExempted(VectoRunData data)
     {
-        return _vehicleContainerFactory.CreateExemptedVehicleContainer(data, null, null);
+        return _powertrainComponentFactory.CreateExemptedVehicleContainer(data, null, null);
     }
 
     public IShiftStrategy GetShiftStrategy(IVehicleContainer container)

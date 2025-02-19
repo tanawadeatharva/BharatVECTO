@@ -10,7 +10,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
     public class MeasuredSpeedHybridsGearbox : AbstractAMTGearbox
     {
-        public MeasuredSpeedHybridsGearbox(IVehicleContainer container, IShiftStrategy strategy) : base(container, strategy) 
+        public MeasuredSpeedHybridsGearbox(IVehicleContainer container, IShiftStrategy strategy) : base(container, strategy, false) 
         {}
 
         protected override void DoNotEngageWhenBraking(NewtonMeter outTorque, Second absTime, Second dt, PerSecond outAngularVelocity)

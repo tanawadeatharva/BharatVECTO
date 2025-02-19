@@ -9,7 +9,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	{
 		void Connect(IElectricSystem powersupply);
 
-		BusAuxiliariesAdapter BusAux { set; }
+		IBusAuxiliariesAdapter BusAux { set; }
 	}
 
 	public interface ITestpowertrainElectricMotor : IElectricMotor, ITnOutPort

@@ -30,6 +30,7 @@
 */
 
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -60,6 +61,24 @@ namespace TUGraz.VectoCore.Tests.Utils
 			}
 
 			return false;
+		}
+
+		#endregion
+
+		#region Implementation of ITnInProvider
+
+		public ITnInPort InPort()
+		{
+			throw new System.NotImplementedException();
+		}
+
+		#endregion
+
+		#region Implementation of ITnOutProvider
+
+		public ITnOutPort OutPort()
+		{
+			throw new System.NotImplementedException();
 		}
 
 		#endregion

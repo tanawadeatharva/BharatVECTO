@@ -60,14 +60,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public bool EmOff => PreviousState.EMTorque == null /*|| PreviousState.EMTorque.IsEqual(0)*/
 			? true : false;
 
-		public BusAuxiliariesAdapter BusAux { protected get; set; }
+		public IBusAuxiliariesAdapter BusAux { protected get; set; }
 
 		public ElectricMotor(IVehicleContainer container, ElectricMotorData data, IElectricMotorControl control,
 			PowertrainPosition position) : this(container, data, control, position, false)
 		{
 			if (container.IsTestPowertrain) {
 				throw new VectoException(
-					"IEPC component must not be used in test powertrain - use dedicated component instead");
+					"ElectricMotor component must not be used in test powertrain - use dedicated component instead");
 			}
         }
 

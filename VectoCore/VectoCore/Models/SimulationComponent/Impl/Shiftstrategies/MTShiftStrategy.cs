@@ -43,7 +43,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
-    public class  MTShiftStrategy : BaseShiftStrategy<AMTGearbox>
+    public class  MTShiftStrategy : BaseShiftStrategy<MTGearbox>
 	{
 		public const string Name = "MT Shift Strategy";
 

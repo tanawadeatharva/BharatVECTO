@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		public Watt BrakePower { get; set; }
 
-		public Brakes(IVehicleContainer dataBus) : base(dataBus) {}
+		public Brakes(IVehicleContainer container) : base(container) {}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{

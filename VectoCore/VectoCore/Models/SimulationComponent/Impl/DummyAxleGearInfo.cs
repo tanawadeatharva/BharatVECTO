@@ -8,7 +8,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
     public class DummyAxleGearInfo : VectoSimulationComponent, IAxlegearInfo
 	{
-		public DummyAxleGearInfo(IVehicleContainer dataBus) : base(dataBus) { }
+		public DummyAxleGearInfo(IVehicleContainer container) : base(container) { }
 
 		#region Overrides of VectoSimulationComponent
 

@@ -11,6 +11,7 @@ using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
@@ -31,10 +32,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_timerunGearHybridBuilders;
 
 		protected readonly IShiftStrategyFactory ShiftStrategyFactory;
+		protected readonly IPowertrainComponentFactory ComponentFactory;
 
-		protected PowertrainBuilderBase(IShiftStrategyFactory shiftStrategyFactory)
+		protected PowertrainBuilderBase(IPowertrainComponentFactory powertrainComponentFactory,
+			IShiftStrategyFactory shiftStrategyFactory)
 		{
 			ShiftStrategyFactory = shiftStrategyFactory;
+			ComponentFactory = powertrainComponentFactory;
 			_timerunGearHybridBuilders =
 				new Dictionary<PowertrainPosition, Action<VectoRunData, IVehicleContainer, TimeRunHybridComponents>>() {
 					{ PowertrainPosition.HybridP1, BuildTimerunGearHybridForP1 },
@@ -50,12 +54,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			TimeRunHybridComponents components)
 		{
 			components.Cycle
-				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
-				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+				.AddComponent(ComponentFactory.CreateVehicle(container, data.VehicleData, data.AirdragData))
+				.AddComponent(ComponentFactory.CreateWheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(components.HybridController)
-				.AddComponent(new Brakes(container))
-				.AddComponent(new AxleGear(container, data.AxleGearData))
-				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+				.AddComponent(ComponentFactory.CreateBrakes(container))
+				.AddComponent(ComponentFactory.CreateAxleGear(container, data.AxleGearData))
+				.AddComponent(data.AngledriveData != null ? ComponentFactory.CreateAngledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
 				.AddComponent(components.Gearbox)
 				.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
@@ -71,12 +75,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			TimeRunHybridComponents components)
 		{
 			components.Cycle
-				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
-				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+				.AddComponent(ComponentFactory.CreateVehicle(container, data.VehicleData, data.AirdragData))
+				.AddComponent(ComponentFactory.CreateWheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(components.HybridController)
-				.AddComponent(new Brakes(container))
-				.AddComponent(new AxleGear(container, data.AxleGearData))
-				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+				.AddComponent(ComponentFactory.CreateBrakes(container))
+				.AddComponent(ComponentFactory.CreateAxleGear(container, data.AxleGearData))
+				.AddComponent(data.AngledriveData != null ? ComponentFactory.CreateAngledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
 				.AddComponent(components.Gearbox)
 				.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
@@ -90,13 +94,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			TimeRunHybridComponents components)
 		{
 			components.Cycle
-				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
-				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+				.AddComponent(ComponentFactory.CreateVehicle(container, data.VehicleData, data.AirdragData))
+				.AddComponent(ComponentFactory.CreateWheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(components.HybridController)
-				.AddComponent(new Brakes(container))
-				.AddComponent(new AxleGear(container, data.AxleGearData))
+				.AddComponent(ComponentFactory.CreateBrakes(container))
+				.AddComponent(ComponentFactory.CreateAxleGear(container, data.AxleGearData))
 				.AddComponent(components.ElectricMotor)
-				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+				.AddComponent(data.AngledriveData != null ? ComponentFactory.CreateAngledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
 				.AddComponent(components.Gearbox)
 				.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
@@ -109,13 +113,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			TimeRunHybridComponents components)
 		{
 			components.Cycle
-				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
-				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+				.AddComponent(ComponentFactory.CreateVehicle(container, data.VehicleData, data.AirdragData))
+				.AddComponent(ComponentFactory.CreateWheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(components.HybridController)
-				.AddComponent(new Brakes(container))
+				.AddComponent(ComponentFactory.CreateBrakes(container))
 				.AddComponent(components.ElectricMotor)
-				.AddComponent(new AxleGear(container, data.AxleGearData))
-				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+				.AddComponent(ComponentFactory.CreateAxleGear(container, data.AxleGearData))
+				.AddComponent(data.AngledriveData != null ? ComponentFactory.CreateAngledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
 				.AddComponent(components.Gearbox)
 				.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
@@ -180,14 +184,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.GearboxData.Type.ManualTransmission() || (data.GearboxData.Type == GearboxType.IHPC)) {
 				clutch = new SwitchableClutch(container, data.EngineData);
 			} else {
-				new ATClutchInfo(container);
+				ComponentFactory.CreateATClutchInfo(container);
 			}
 
 			return clutch;
 		}
 
 		protected void AddHybridBusAuxiliaries(VectoRunData data, IVehicleContainer container, IElectricSystem es,
-			DCDCConverter dcdc)
+			IDCDCConverter dcdc)
 		{
 			if (data.BusAuxiliaries == null) {
 				return;
@@ -199,10 +203,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var auxCfg = data.BusAuxiliaries;
 
-			var electricStorage = auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
-				? new SimpleBattery(container, auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity,
-					auxCfg.ElectricalUserInputsConfig.StoredEnergyEfficiency)
-				: (ISimpleBattery)new NoBattery(container);
+			var electricStorage = ComponentFactory.CreateSimpleBattery(
+				auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart, container,
+				auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity,
+				auxCfg.ElectricalUserInputsConfig.StoredEnergyEfficiency);
 
 			busAux.ElectricStorage = electricStorage;
 
@@ -238,8 +242,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			VectoRunData data,
 			IVehicleContainer container,
 			IElectricSystem es,
-			DistanceBasedDrivingCycle cycle,
-			DCDCConverter dcdc)
+			IDrivingCycle cycle,
+			IDCDCConverter dcdc)
 		{
 			var elAux = new ElectricAuxiliaries(container);
 
@@ -275,7 +279,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			VectoRunData data,
 			IVehicleContainer container,
 			IElectricSystem es,
-			DCDCConverter dcdc)
+			IDCDCConverter dcdc)
 		{
 			var elAux = new ElectricAuxiliaries(container);
 
@@ -376,8 +380,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return dcdcEff;
 		}
 
-		protected Retarder GetRetarder(RetarderType type, RetarderData data, IVehicleContainer container) =>
-			type == data.Type ? new Retarder(container, data.LossMap, data.Ratio) : null;
+		protected IPowerTrainComponent GetRetarder(RetarderType type, RetarderData data, IVehicleContainer container) =>
+			type == data.Type ? ComponentFactory.CreateRetarder(container, data.LossMap, data.Ratio) : null;
 
 
 		protected IElectricMotor GetElectricMachine<TElectricMotor>(PowertrainPosition pos,
@@ -410,13 +414,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				throw new VectoException("Powertrain requires either Battery OR SuperCapacitor, but none are defined.");
 			}
 
-			var es = CreateElectricSystem(container, data.BatteryData);
+			var es = ComponentFactory.CreateElectricSystem(container, data.BatteryData);
 			if (data.BatteryData != null) {
 				if (data.BatteryData.InitialSoC < data.BatteryData.Batteries.Min(x => x.Item2.MinSOC)) {
 					throw new VectoException("Battery: Initial SoC has to be higher than min SoC");
 				}
 
-				var battery = new BatterySystem(container, data.BatteryData);
+				var battery = ComponentFactory.CreateREESS(REESSType.Battery, container, data.BatteryData);
 				battery.Initialize(data.BatteryData.InitialSoC);
 				es.Connect(battery);
 			}
@@ -426,16 +430,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					throw new VectoException("SuperCap: Initial SoC has to be higher than min SoC");
 				}
 
-				var superCap = new SuperCap(container, data.SuperCapData);
+				var superCap = ComponentFactory.CreateREESS(REESSType.SuperCap, container, data.SuperCapData);
 				superCap.Initialize(data.SuperCapData.InitialSoC);
 				es.Connect(superCap);
 			}
 
 			return es;
 		}
-
-		protected abstract IElectricSystem CreateElectricSystem(IVehicleContainer container,
-			BatterySystemData batterySystemData);
 
 		protected DrivingCycleData GetMeasuredSpeedDummyCycle() =>
 			DrivingCycleDataReader.ReadFromStream((
@@ -453,7 +454,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			IVehicleContainer container) =>
 			pto?.PTOCycle is null ? null : new EPTOCycleController(container, pto?.PTOCycle);
 
-		protected internal static void AddAuxiliaries(CombustionEngine engine, IVehicleContainer container,
+		protected internal static void AddAuxiliaries(ICombustionEngine engine, IVehicleContainer container,
 			VectoRunData data)
 		{
 			// aux --> engine
@@ -466,7 +467,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		protected void AddAuxiliariesSerialHybrid(CombustionEngine engine, IVehicleContainer container,
+		protected void AddAuxiliariesSerialHybrid(ICombustionEngine engine, IVehicleContainer container,
 			VectoRunData data)
 		{
 			// aux --> engine

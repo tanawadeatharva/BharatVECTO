@@ -5,9 +5,9 @@ using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class TestpowertrainGensetChargeAdapter : GensetChargerAdapter, ITestpowertrainGensetChargerAdapter
+	public class TestpowertrainGensetChargerAdapter : GensetChargerAdapter, ITestpowertrainGensetChargerAdapter
     {
-		public TestpowertrainGensetChargeAdapter(IElectricMotor motor) : base(motor, false)
+		public TestpowertrainGensetChargerAdapter(IElectricMotor motor) : base(motor, false)
 		{
 			// check that it is used in testpowertrain
 		}

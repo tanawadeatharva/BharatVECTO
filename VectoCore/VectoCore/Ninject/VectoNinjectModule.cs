@@ -79,6 +79,8 @@ namespace TUGraz.VectoCore
 
 			LoadModule<SimulatorFactoryNinjectModule>();
 
+			LoadModule<PowertrainComponentNinjectModule>();
+
 			LoadModule<XMLDeclarationReportFactoryNinjectModule>();	
 
 			LoadModule<VectoRunDataFactoryNinjectModule>();

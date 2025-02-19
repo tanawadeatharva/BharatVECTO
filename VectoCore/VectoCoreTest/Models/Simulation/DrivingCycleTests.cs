@@ -41,6 +41,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
+using DummyDriverInfo = TUGraz.VectoCore.Tests.Utils.DummyDriverInfo;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
