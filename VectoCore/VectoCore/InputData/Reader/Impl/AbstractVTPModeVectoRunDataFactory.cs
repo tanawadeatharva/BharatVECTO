@@ -107,11 +107,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		public abstract IEnumerable<VectoRunData> NextRun();
 
 		public abstract IInputDataProvider DataProvider { get; }
-		
-		#endregion
 
-		
-		protected virtual AuxFanData GetFanData()
+        public IVehicleDeclarationInputData CompletedVehicle { get; set; }
+
+
+        #endregion
+
+
+        protected virtual AuxFanData GetFanData()
 		{
 			return new AuxFanData() {
 				FanCoefficients = DeclarationData.VTPMode.FanParameters,

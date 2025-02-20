@@ -50,12 +50,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 			UpdateCurrentStage();
 
-
-
 			_simulate = CanBeSimulated(dataProvider);
 			if (_simulate) {
 				RunDataFactory = runDataFactoryFactory.CreateDeclarationRunDataFactory(_currentStageInputData, _currentStageDeclarationReport,
 					_currentStageVTPReport);
+
+				RunDataFactory.CompletedVehicle = _followUpSimulatorFactoryCreator?.CompletedVehicle;
 			} else {
 				System.Diagnostics.Debug.Assert(_followUpSimulatorFactoryCreator == null,
 					"We should not create a followupSimulator factory if we aren't simulating anything in this step");
