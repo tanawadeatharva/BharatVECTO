@@ -5,7 +5,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public interface IElectricMotor : IPowerTrainComponent, ITnOutPort, IElectricMotorInfo, IUpdateable
+    public interface IElectricMotor : IPowerTrainComponent, ITnOutPort, IElectricMotorInfo, IUpdateable
 	{
 		void Connect(IElectricSystem powersupply);
 

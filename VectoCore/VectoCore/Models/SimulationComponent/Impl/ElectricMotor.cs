@@ -16,7 +16,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class TestpowertrainElectricMotor : ElectricMotor, ITestpowertrainElectricMotor
+    public class TestpowertrainElectricMotor : ElectricMotor, ITestpowertrainElectricMotor
 	{
 		public TestpowertrainElectricMotor(IVehicleContainer container, ElectricMotorData data,
 			IElectricMotorControl control, PowertrainPosition position) : base(container, data, control, position, false)

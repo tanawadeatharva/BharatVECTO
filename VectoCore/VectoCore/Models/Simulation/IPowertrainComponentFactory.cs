@@ -17,7 +17,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Simulation
 {
-	public interface IPowertrainComponentFactory
+    public interface IPowertrainComponentFactory
 	{
 		IVehicleContainer CreateVehicleContainer(VectoRunData runData, IModalDataContainer modData,
 			ISumData writeSumData);
@@ -27,9 +27,10 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		ISimpleVehicleContainer CreateSimpleVehicleContainer(VectoRunData runData);
 
-        IDrivingCycle CreateDistanceBasedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle);
-		IDriverDemandInProvider CreateMeasuredSpeedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle);
+        IDistanceBasedDrivingCycle CreateDistanceBasedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle);
+		IMeasuredSpeedDrivingCycle CreateMeasuredSpeedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle);
 		IPWheelCycle CreatePWheelCycle(IVehicleContainer container, IDrivingCycleData dataCycle);
+		IVTPCycle CreateVTPCycle(IVehicleContainer container, IDrivingCycleData cycle);
 
         IVehicle CreateVehicle(IVehicleContainer container, VehicleData modelData, AirdragData airdrag);
 
@@ -47,11 +48,12 @@ namespace TUGraz.VectoCore.Models.Simulation
 		
 		IRetarder CreateRetarder(IVehicleContainer container, RetarderLossMap lossMap, double ratio);
 
-		IGearbox CreateGearbox(GearboxType gbxType, bool measuredSpeedHybrid, IVehicleContainer container, IShiftStrategy strategy);
+		IGearbox CreateGearbox(VectoSimulationJobType jobType, CycleType cycle, GearboxType gbxType, IVehicleContainer container, IShiftStrategy strategy);
 
         IClutchInfo CreateATClutchInfo(IVehicleContainer container);
 
-        IClutch CreateClutch(IVehicleContainer container, CombustionEngineData engineData);
+        IClutch CreateClutch(VectoSimulationJobType jobType, IVehicleContainer container,
+			CombustionEngineData engineData);
 
 		ICombustionEngine CreateCombustionEngine(bool engineOnly, IVehicleContainer container, CombustionEngineData modelData,
 			bool pt1Disabled = false);
@@ -83,6 +85,21 @@ namespace TUGraz.VectoCore.Models.Simulation
 		IDriverInfo CreateDummyDriverInfo(IVehicleContainer container);
 
 		IMileageCounter CreateDummyMileageCounter(IVehicleContainer container);
+
+		IPowertrainDrivingCycle CreatePowertrainDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle);
+
+		IEngineAuxiliary CreateEngineAuxiliary(IVehicleContainer container);
+		
+		IHybridControlStrategy CreateHybridStrategy(VectoSimulationJobType jobType, CycleType cycleType,
+			bool atTransmission, VectoRunData runData, IVehicleContainer container);
+		
+		IHybridController CreateHybridController(CycleType cycleType,
+			IVehicleContainer container, IHybridControlStrategy strategy, IElectricSystem es);
+		
+		ISerialHybridController CreateSerialHybridController(CycleType cycleType,
+			IVehicleContainer container, IHybridControlStrategy strategy, IElectricSystem es);
+
+		IElectricMotorControl CreateElectricMotorController(CycleType cycle, IVehicleContainer container, IElectricSystem es);
 	}
 
 }

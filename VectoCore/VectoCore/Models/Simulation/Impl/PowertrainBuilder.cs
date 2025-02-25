@@ -180,9 +180,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var container = GetVehicleContainer(ExecutionMode.Engineering, data, modData, _sumWriter);
 				//new VehicleContainer(ExecutionMode.Engineering, _simplePowertrainBuilder, modData, _sumWriter) { RunData = data };
 
-			var cycle = new PowertrainDrivingCycle(container, data.Cycle);
+			var cycle = ComponentFactory.CreatePowertrainDrivingCycle(container, data.Cycle);
 			var engine = ComponentFactory.CreateCombustionEngine(true, container, data.EngineData);
-			var directAux = new EngineAuxiliary(container);
+			var directAux = ComponentFactory.CreateEngineAuxiliary(container);
 
 			cycle.InPort().Connect(engine.OutPort());
 			engine.Connect(directAux.Port());
@@ -220,13 +220,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var container = GetVehicleContainer(ExecutionMode.Engineering, data, modData, _sumWriter);
 
 			var engine = ComponentFactory.CreateCombustionEngine(false, container, data.EngineData, pt1Disabled: true);
-			new PWheelCycle(container, data.Cycle)
+			ComponentFactory.CreatePWheelCycle(container, data.Cycle)
 				.AddComponent(ComponentFactory.CreateAxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? ComponentFactory.CreateAngledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
-				.AddComponent(new CycleGearbox(container, data))
+				.AddComponent(ComponentFactory.CreateGearbox(data.JobType, data.Cycle.CycleType, GearboxType.DrivingCycle, container, null))
 				.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
-				.AddComponent(ComponentFactory.CreateClutch(container, data.EngineData))
+				.AddComponent(ComponentFactory.CreateClutch(data.JobType, container, data.EngineData))
 				.AddComponent(engine, GetIdleController(data.PTO, engine, container));
 			AddAuxiliaries(engine, container, data);
 
@@ -262,13 +262,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				//new VehicleContainer(data.ExecutionMode, _simplePowertrainBuilder, modData, sumWriter) { RunData = data };
 			var engine = new VTPCombustionEngine(container, data, pt1Disabled: true);
 
-			new VTPCycle(container, data.Cycle)
+			ComponentFactory.CreateVTPCycle(container, data.Cycle)
 				.AddComponent(ComponentFactory.CreateAxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? ComponentFactory.CreateAngledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
-				.AddComponent(new VTPGearbox(container, data))
+				.AddComponent(new VTPGearbox(container))
 				.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
-				.AddComponent(ComponentFactory.CreateClutch(container, data.EngineData))
+				.AddComponent(ComponentFactory.CreateClutch(data.JobType, container, data.EngineData))
 				.AddComponent(engine, new CombustionEngine.CombustionEngineNoDoubleClutchIdleController(engine, container));
 
 			ComponentFactory.CreateDummyMileageCounter(container);
@@ -306,9 +306,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var container = GetVehicleContainer(ExecutionMode.Engineering, data, modData, sumWriter);
-			//new VehicleContainer(ExecutionMode.Engineering, _simplePowertrainBuilder, modData, sumWriter) { RunData = data };
+			
 			var engine = ComponentFactory.CreateCombustionEngine(false, container, data.EngineData);
-			new MeasuredSpeedDrivingCycle(container, data.Cycle)
+			ComponentFactory.CreateMeasuredSpeedDrivingCycle(container, data.Cycle)
 				.AddComponent(ComponentFactory.CreateVehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(ComponentFactory.CreateWheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ComponentFactory.CreateBrakes(container))
@@ -317,7 +317,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
 				.AddComponent(GetGearbox(container))
 				.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
-				.AddComponent(data.GearboxData.Type.ManualTransmission() ? ComponentFactory.CreateClutch(container, data.EngineData) : null)
+				.AddComponent(data.GearboxData.Type.ManualTransmission() ? ComponentFactory.CreateClutch(data.JobType, container, data.EngineData) : null)
 				.AddComponent(engine, GetIdleController(data.PTO, engine, container));
 			AddAuxiliaries(engine, container, data);
 			return container;
@@ -331,21 +331,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			
 			var es = ConnectREESS(data, container);
 
-			var strategy = (data.GearboxData.Type.ManualTransmission() || data.GearboxData.Type == GearboxType.IHPC) 
-				? (IHybridControlStrategy) new MeasuredSpeedGearHybridStrategy(data, container)
-				: (IHybridControlStrategy) new MeasuredSpeedGearATHybridStrategy(data, container);
-
+			var isATTransmission =
+				!(data.GearboxData.Type.ManualTransmission() || data.GearboxData.Type == GearboxType.IHPC);
+			var strategy = ComponentFactory.CreateHybridStrategy(data.JobType, data.Cycle.CycleType, isATTransmission, data, container);
+			
 			// add engine before gearbox so that gearbox can obtain if an ICE is available already in constructor
 			var engine = ComponentFactory.CreateCombustionEngine(false, container, data.EngineData);
-			var gearbox = new MeasuredSpeedHybridsCycleGearbox(container, data);
-			
-			var ctl = new MeasuredSpeedGearHybridController(container, strategy, es) { Gearbox = gearbox, Engine = engine };
+			var gearbox = new MeasuredSpeedHybridsCycleGearbox(container);
+
+			var ctl = ComponentFactory.CreateHybridController(data.Cycle.CycleType, container, strategy, es);
+			ctl.Gearbox = gearbox;
+			ctl.Engine = engine;
 
 			var position = data.ElectricMachinesData[0].Item1;
 
 			TimeRunHybridComponents components = new TimeRunHybridComponents() 
 			{
-				Cycle = new MeasuredSpeedDrivingCycle(container, data.Cycle),
+				Cycle = ComponentFactory.CreateMeasuredSpeedDrivingCycle(container, data.Cycle),
 				Engine = engine,
 				Gearbox =  gearbox,
 				Clutch = AddClutch(data, container),
@@ -391,16 +393,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var container = GetVehicleContainer(ExecutionMode.Engineering, data, modData, sumWriter);
 			var engine = ComponentFactory.CreateCombustionEngine(false, container, data.EngineData);
-			new MeasuredSpeedDrivingCycle(container, data.Cycle)
+			ComponentFactory.CreateMeasuredSpeedDrivingCycle(container, data.Cycle)
 				.AddComponent(ComponentFactory.CreateVehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(ComponentFactory.CreateWheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ComponentFactory.CreateBrakes(container))
 				.AddComponent(ComponentFactory.CreateAxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? ComponentFactory.CreateAngledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
-				.AddComponent(new CycleGearbox(container, data))
+				.AddComponent(ComponentFactory.CreateGearbox(data.JobType, data.Cycle.CycleType, GearboxType.DrivingCycle, container, null))
 				.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
-				.AddComponent(data.GearboxData.Type.ManualTransmission() ? ComponentFactory.CreateClutch(container, data.EngineData) : null)
+				.AddComponent(data.GearboxData.Type.ManualTransmission() ? ComponentFactory.CreateClutch(data.JobType, container, data.EngineData) : null)
 				.AddComponent(engine);
 			AddAuxiliaries(engine, container, data);
 
@@ -450,7 +452,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
 				.AddComponent(gearbox)
 				.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
-				.AddComponent(data.GearboxData.Type.ManualTransmission() ? ComponentFactory.CreateClutch(container, data.EngineData) : null)
+				.AddComponent(data.GearboxData.Type.ManualTransmission() ? ComponentFactory.CreateClutch(data.JobType, container, data.EngineData) : null)
 				.AddComponent(engine, idleController);
 			AddAuxiliaries(engine, container, data);
 
@@ -506,23 +508,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var container = GetVehicleContainer(data.ExecutionMode, data, modData, sumWriter);
-			//new VehicleContainer(data.ExecutionMode, _simplePowertrainBuilder, modData, sumWriter) { RunData = data };
 			var es = ConnectREESS(data, container);
 
-            HybridController ctl;
-			SwitchableClutch clutch = null;
+			IClutch clutch = null;
 			
-			if (data.GearboxData.Type.ManualTransmission() || data.GearboxData.Type == GearboxType.IHPC) {
-				ctl = new HybridController(container,new HybridStrategy(data, container), es);
-				clutch = new SwitchableClutch(container, data.EngineData);
-			} else {
-				ctl = new HybridController(container, new HybridStrategyAT(data, container), es);
-				ComponentFactory.CreateATClutchInfo(container);
-			}
-		
-
-			// add engine before gearbox in the container, that gearbox can obtain it
-			var engine = ComponentFactory.CreateCombustionEngine(false, container, data.EngineData);
+			var isAtTransmission = !(data.GearboxData.Type.ManualTransmission() || data.GearboxData.Type == GearboxType.IHPC);
+			if (!isAtTransmission) {
+				clutch = ComponentFactory.CreateClutch(data.JobType, container, data.EngineData);
+            }
+			var strategy = ComponentFactory.CreateHybridStrategy(data.JobType, data.Cycle.CycleType, isAtTransmission, data, container);
+			var ctl = ComponentFactory.CreateHybridController(data.Cycle.CycleType, container, strategy, es);
+			
+            // add engine before gearbox in the container, that gearbox can obtain it
+            var engine = ComponentFactory.CreateCombustionEngine(false, container, data.EngineData);
 
 			var gearbox = GetGearbox(container, ctl.ShiftStrategy);
 			if (!(gearbox is IHybridControlledGearbox gbx)) {
@@ -603,16 +601,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			VerifyCycleType(data, CycleType.MeasuredSpeed);
 
 			var container = GetVehicleContainer(ExecutionMode.Engineering, data, modData, sumWriter);
-			//new VehicleContainer(data.ExecutionMode, _simplePowertrainBuilder, modData, sumWriter) { RunData = data };
 			var es = ConnectREESS(data, container);
 
-			SwitchableClutch clutch = AddClutch(data, container);
+			var clutch = AddClutch(data, container);
 
-			var strategy = (data.GearboxData.Type.ManualTransmission() || data.GearboxData.Type == GearboxType.IHPC)
-				? (IHybridControlStrategy) new MeasuredSpeedHybridStrategy(data, container)
-				: (IHybridControlStrategy) new MeasuredSpeedHybridStrategyAT(data, container);
-			
-			HybridController ctl = new HybridController(container, strategy, es);
+			var isATTransmission = !(data.GearboxData.Type.ManualTransmission() || data.GearboxData.Type == GearboxType.IHPC);
+			var strategy = ComponentFactory.CreateHybridStrategy(data.JobType, data.Cycle.CycleType, isATTransmission, data, container);
+
+            var ctl = ComponentFactory.CreateHybridController(data.Cycle.CycleType, container, strategy, es);
 
 			// add engine before gearbox so that gearbox can obtain if an ICE is available already in constructor
 			var engine = ComponentFactory.CreateCombustionEngine(false, container, data.EngineData);
@@ -692,12 +688,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var container = GetVehicleContainer(data.ExecutionMode, data, modData, sumWriter);
 			
 			var es = ConnectREESS(data, container);
-			var strategy = data.GearboxData != null && data.GearboxData.Type.AutomaticTransmission()
-				? (IHybridControlStrategy)new SerialHybridStrategyAT(data, container)
-				: new SerialHybridStrategy(data, container);
+			
+			var atTransmission = data.GearboxData != null && data.GearboxData.Type.AutomaticTransmission();
+			var strategy = ComponentFactory.CreateHybridStrategy(data.JobType, data.Cycle.CycleType, atTransmission,
+				data, container);
 
-			var ctl = new SerialHybridController(container, strategy, es);
-
+			var ctl = ComponentFactory.CreateSerialHybridController(data.Cycle.CycleType, container, strategy,
+				es); 
+			
 			var engine = ComponentFactory.CreateCombustionEngine(false, container, data.EngineData);
 
 			var idleController = engine.IdleController;
@@ -787,8 +785,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						busAux.DCDCConverter = dcdc;
 						es.Connect(dcdc);
 					}
-
-					//new DummyVehicleInfo(container);
 				} else {
 					throw new VectoException("BusAux data set but no BusAux component found!");
 				}
@@ -831,10 +827,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 			
 			var container = GetVehicleContainer(data.ExecutionMode, data, modData, sumWriter);
-			//new VehicleContainer(data.ExecutionMode, _simplePowertrainBuilder, modData, sumWriter) { RunData = data };
+			
 			var es = ConnectREESS(data, container);
 
-			var ctl = new BatteryElectricMotorController(container, es);
+			var ctl = ComponentFactory.CreateElectricMotorController(data.Cycle.CycleType, container, es);
 
 			var cycle = ComponentFactory.CreateDistanceBasedDrivingCycle(container, data.Cycle);
 
@@ -918,7 +914,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			ValidateBatteryElectric(data);
 
 			var container = GetVehicleContainer(data.ExecutionMode, data, modData, sumWriter);
-			//new VehicleContainer(data.ExecutionMode, _simplePowertrainBuilder, modData, sumWriter) { RunData = data };
+			
 			var es = ConnectREESS(data, container);
 			
 			var powertrain = ComponentFactory.CreatePWheelCycle(container, data.Cycle);
@@ -940,7 +936,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
         private IElectricMotor BuildPWheelForIEPC(VectoRunData data, IVehicleContainer container, IElectricSystem es, IPWheelCycle cycle)
         { 
-			var ctl = new PWheelBatteryElectricMotorController(container, es);
+			var ctl = ComponentFactory.CreateElectricMotorController(data.Cycle.CycleType, container, es);
 			
 			IElectricMotor em = GetElectricMachine(PowertrainPosition.IEPC, data.ElectricMachinesData, container, es, ctl);
 
@@ -968,7 +964,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
         private IElectricMotor BuildPWheelForE2(VectoRunData data, IVehicleContainer container, IElectricSystem es, IPWheelCycle powertrain)
 		{
-			var ctl = new PWheelBatteryElectricMotorController(container, es);
+			var ctl = ComponentFactory.CreateElectricMotorController(data.Cycle.CycleType, container, es);
 			
 			IElectricMotor em = GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData, container, es, ctl);
 			
@@ -990,7 +986,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private IElectricMotor BuildPWheelForE3(VectoRunData data, IVehicleContainer container, IElectricSystem es, IPWheelCycle powertrain)
 		{
-			var ctl = new PWheelBatteryElectricMotorController(container, es);
+			var ctl = ComponentFactory.CreateElectricMotorController(data.Cycle.CycleType, container, es);
 
 			IElectricMotor em = GetElectricMachine(PowertrainPosition.BatteryElectricE3, data.ElectricMachinesData, container, es, ctl);
 			
@@ -1008,7 +1004,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private IElectricMotor BuildPWheelForE4(VectoRunData data, IVehicleContainer container, IElectricSystem es, IPWheelCycle powertrain)
 		{
-			var ctl = new PWheelBatteryElectricMotorController(container, es);
+			var ctl = ComponentFactory.CreateElectricMotorController(data.Cycle.CycleType, container, es);
 
 			IElectricMotor em = GetElectricMachine(PowertrainPosition.BatteryElectricE4, data.ElectricMachinesData, container, es, ctl);
 			
@@ -1026,7 +1022,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			ValidateBatteryElectric(data);
 
 			var container = GetVehicleContainer(data.ExecutionMode, data, modData, sumWriter);
-			//new VehicleContainer(data.ExecutionMode, _simplePowertrainBuilder, modData, sumWriter) { RunData = data };
+			
 			var es = ConnectREESS(data, container);
 
 			IPowerTrainComponent powertrain = ComponentFactory.CreateMeasuredSpeedDrivingCycle(container, data.Cycle)
@@ -1052,7 +1048,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private IElectricMotor BuildMeasuredSpeedForIEPC(VectoRunData data, IVehicleContainer container,IElectricSystem es, IPowerTrainComponent powertrain)
         { 
-			var ctl = new BatteryElectricMotorController(container, es);
+			var ctl = ComponentFactory.CreateElectricMotorController(data.Cycle.CycleType, container, es);
 
 			var gearbox = data.GearboxData.Gears.Count > 1
 				? (IGearbox)new IEPCGearbox(container, new APTNShiftStrategy(container))
@@ -1077,7 +1073,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
         private IElectricMotor BuildMeasuredSpeedForE2(VectoRunData data, IVehicleContainer container, IElectricSystem es, IPowerTrainComponent powertrain)
         {
-			var ctl = new BatteryElectricMotorController(container, es);
+			var ctl = ComponentFactory.CreateElectricMotorController(data.Cycle.CycleType, container, es);
 
             var strategy = (data.GearboxData.Type == GearboxType.APTN) ? 
 				new APTNShiftStrategy(container) : new PEVAMTShiftStrategy(container);
@@ -1102,7 +1098,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
         private IElectricMotor BuildMeasuredSpeedForE3(VectoRunData data, IVehicleContainer container, IElectricSystem es, IPowerTrainComponent powertrain)
         { 
-			var ctl = new BatteryElectricMotorController(container, es);
+			var ctl = ComponentFactory.CreateElectricMotorController(data.Cycle.CycleType, container, es);
 			
 			IElectricMotor em = GetElectricMachine(PowertrainPosition.BatteryElectricE3, data.ElectricMachinesData, container, es, ctl);
 
@@ -1119,7 +1115,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
         private IElectricMotor BuildMeasuredSpeedForE4(VectoRunData data, IVehicleContainer container, IElectricSystem es, IPowerTrainComponent powertrain)
         {
-			var ctl = new BatteryElectricMotorController(container, es);
+			var ctl = ComponentFactory.CreateElectricMotorController(data.Cycle.CycleType, container, es);
 			
 			IElectricMotor em = GetElectricMachine(PowertrainPosition.BatteryElectricE4, data.ElectricMachinesData, container, es, ctl);
 
@@ -1158,7 +1154,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			ValidateBatteryElectric(data);
 
 			var container = GetVehicleContainer(data.ExecutionMode, data, modData, sumWriter);
-			//new VehicleContainer(data.ExecutionMode, _simplePowertrainBuilder, modData, sumWriter) { RunData = data };
+			
 			var es = ConnectREESS(data, container);
 			
 			var position = data.ElectricMachinesData.First().Item1;
@@ -1167,10 +1163,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				throw new ArgumentOutOfRangeException(nameof(position), position, null);
             }
 
-			var ctl = new BatteryElectricMotorController(container, es);
+			var ctl = ComponentFactory.CreateElectricMotorController(data.Cycle.CycleType, container, es);
 			IElectricMotor em = GetElectricMachine(position, data.ElectricMachinesData, container, es, ctl);
 
-			var timeBasedCycle = new MeasuredSpeedDrivingCycle(container, data.Cycle);
+			var timeBasedCycle = ComponentFactory.CreateMeasuredSpeedDrivingCycle(container, data.Cycle);
 			
 			timeBasedCycle
 				.AddComponent(ComponentFactory.CreateVehicle(container, data.VehicleData, data.AirdragData))
@@ -1204,7 +1200,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			ValidateBatteryElectric(data);
 
 			var container = GetVehicleContainer(data.ExecutionMode, data, modData, sumWriter);
-			//new VehicleContainer(data.ExecutionMode, _simplePowertrainBuilder, modData, sumWriter) { RunData = data };
+			
 			var es = ConnectREESS(data, container);
 			
 			var position = data.ElectricMachinesData.First().Item1;
@@ -1213,7 +1209,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				throw new ArgumentOutOfRangeException(nameof(position), position, null);
             }
 
-			var ctl = new BatteryElectricMotorController(container, es);
+			var ctl = ComponentFactory.CreateElectricMotorController(data.Cycle.CycleType, container, es);
 			IElectricMotor em = GetElectricMachine(position, data.ElectricMachinesData, container, es, ctl);
 
 			var timeBasedCycle = ComponentFactory.CreateMeasuredSpeedDrivingCycle(container, data.Cycle);
@@ -1222,7 +1218,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(ComponentFactory.CreateVehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(ComponentFactory.CreateWheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ComponentFactory.CreateBrakes(container))
-				.AddComponent(data.AxleGearData != null ? new AxleGear(container, data.AxleGearData) : null)
+				.AddComponent(data.AxleGearData != null ? ComponentFactory.CreateAxleGear(container, data.AxleGearData) : null)
 				.AddComponent(GetRetarder(RetarderType.AxlegearInputRetarder, data.Retarder, container))
 				.AddComponent(new BEVCycleGearbox(container, data))
 				.AddComponent(em);
@@ -1234,7 +1230,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				ComponentFactory.CreateDummyAxleGearInfo(container);
 			}
 
-			var dcdc = new DCDCConverter(container, GetDCDCEfficiency(data));
+			var dcdc = ComponentFactory.CreateDCDCConverter(container, GetDCDCEfficiency(data));
             if (data.BusAuxiliaries != null) {
 				AddBEVBusAuxiliaries(data, container, es, em, dcdc);
 			}
@@ -1300,14 +1296,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var container = GetVehicleContainer(data.ExecutionMode, data, modData, sumWriter);
-			//new VehicleContainer(data.ExecutionMode, _simplePowertrainBuilder, modData, sumWriter) { RunData = data };
+			
 			var es = ConnectREESS(data, container);
 
-			var ctl = new BatteryElectricMotorController(container, es);
+			var ctl = ComponentFactory.CreateElectricMotorController(data.Cycle.CycleType, container, es);
 
 			var cycle = ComponentFactory.CreateDistanceBasedDrivingCycle(container, data.Cycle);
 			var powertrain = cycle
-				.AddComponent(ComponentFactory.CreateDriver(container, data.DriverData, new DefaultDriverStrategy(container)))
+				.AddComponent(ComponentFactory.CreateDriver(container, data.DriverData, ComponentFactory.CreateDriverStrategy(container)))
 				.AddComponent(ComponentFactory.CreateVehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(ComponentFactory.CreateWheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ComponentFactory.CreateBrakes(container));
@@ -1387,11 +1383,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var container = GetVehicleContainer(data.ExecutionMode, data, modData, sumWriter);
-			//new VehicleContainer(data.ExecutionMode, _simplePowertrainBuilder, modData, _sumWriter) { RunData = data };
+			
 			var es = ConnectREESS(data, container);
 
-			var strategy = new SerialHybridStrategy(data, container);
-			var ctl = new SerialHybridController(container, strategy, es);
+			var strategy = ComponentFactory.CreateHybridStrategy(data.JobType, data.Cycle.CycleType, false, data, container);
+			var ctl = ComponentFactory.CreateSerialHybridController(data.Cycle.CycleType, container, strategy, es);
 
 			var engine = ComponentFactory.CreateCombustionEngine(false, container, data.EngineData);
 
@@ -1470,13 +1466,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			strategy = strategy ?? GetShiftStrategy(container);
 
-			var isMeasuredSpeedHybrid = (container.RunData.JobType == VectoSimulationJobType.ParallelHybridVehicle)
-										&& (container.RunData.Cycle.CycleType == CycleType.MeasuredSpeed);
 			if (container.RunData.GearboxData.Type.IsOneOf(GearboxType.ATSerial, GearboxType.ATPowerSplit)) {
 				ComponentFactory.CreateATClutchInfo(container);
             }
 
-			return ComponentFactory.CreateGearbox(container.RunData.GearboxData.Type, isMeasuredSpeedHybrid, container,
+			return ComponentFactory.CreateGearbox(container.RunData.JobType, container.RunData.Cycle.CycleType, container.RunData.GearboxData.Type, container,
 				strategy);
 		}
 
@@ -1618,49 +1612,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 	}
 
-	public class SimpleElectricMotorControl : ITestPowertrainElectricMotorControl
-    {
-		public bool EmOff { get; set; }
-
-		public NewtonMeter MechanicalAssistPower(Second absTime, Second dt, NewtonMeter outTorque, PerSecond prevOutAngularVelocity,
-			PerSecond currOutAngularVelocity, NewtonMeter maxDriveTorque, NewtonMeter maxRecuperationTorque,
-			PowertrainPosition position, bool dryRun)
-		{
-			if (EmOff) {
-				return null;
-			}
-
-			
-			if (dryRun) {
-				return -outTorque;
-			}
-			return (-outTorque).LimitTo(maxDriveTorque ?? 0.SI<NewtonMeter>(), maxRecuperationTorque ?? VectoMath.Max(maxDriveTorque, 0.SI<NewtonMeter>()));
-		}
-	}
-
-	public class GensetMotorController : IGensetMotorController
-    {
-		public GensetMotorController(IVehicleContainer container, IElectricSystem es)
-		{
-
-		}
-
-		#region Implementation of IElectricMotorControl
-
-		public NewtonMeter MechanicalAssistPower(Second absTime, Second dt, NewtonMeter outTorque, PerSecond prevOutAngularVelocity,
-			PerSecond currOutAngularVelocity, NewtonMeter maxDriveTorque, NewtonMeter maxRecuperationTorque,
-			PowertrainPosition position, bool dryRun)
-		{
-			return EMTorque;
-		}
-
-		public NewtonMeter EMTorque { get; set; }
-
-		#endregion
-	}
-
-
-	// only used in tests - move to test-project!
 	internal class DummyDriverInfo : VectoSimulationComponent, IDriverInfo
 	{
 		public DummyDriverInfo(IVehicleContainer container) : base(container)
@@ -1859,13 +1810,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 	public class TimeRunHybridComponents
     {
-		internal MeasuredSpeedDrivingCycle Cycle { get; set; }
+		internal IMeasuredSpeedDrivingCycle Cycle { get; set; }
 
 		public ICombustionEngine Engine { get; set; }
 
 		public IGearbox Gearbox { get; set; }
 
-		public SwitchableClutch Clutch { get; set; }
+		public IClutch Clutch { get; set; }
 
 		public IIdleController IdleController { get; set; }
 

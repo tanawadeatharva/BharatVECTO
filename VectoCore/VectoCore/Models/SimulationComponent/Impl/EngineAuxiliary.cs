@@ -45,8 +45,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
     /// <summary>
     /// Container Class for Auxiliaries which are connected to the Engine.
     /// </summary>
-    public class EngineAuxiliary : StatefulVectoSimulationComponent<EngineAuxiliary.State>, IAuxInProvider,
-		IAuxPort
+    public class EngineAuxiliary : StatefulVectoSimulationComponent<EngineAuxiliary.State>, IEngineAuxiliary
 	{
 		protected readonly Dictionary<string, Func<PerSecond, Second, Second, bool, Watt>> Auxiliaries =
 			new Dictionary<string, Func<PerSecond, Second, Second, bool, Watt>>();

@@ -206,7 +206,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				commitPriority = 6;
 			}
 			if (component is PTOCycleController c21) { commitPriority = 99; }
-			if (component is VTPCycle c22) { commitPriority = 0; }
+			if (component is IVTPCycle c22) { commitPriority = 0; }
 			if (component is IElectricMotorInfo c23) {
 				if (c23.Position == PowertrainPosition.HybridPositionNotSet) {
 					return;

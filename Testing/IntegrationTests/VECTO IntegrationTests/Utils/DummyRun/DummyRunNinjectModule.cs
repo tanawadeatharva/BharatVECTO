@@ -159,12 +159,17 @@ public class DummyRunPowertrainComponentFactory : IPowertrainComponentFactory
         return new Mock<ISimpleVehicleContainer>().Object;
     }
 
-	public IDrivingCycle CreateDistanceBasedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle)
+	public IDistanceBasedDrivingCycle CreateDistanceBasedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle)
 	{
 		throw new NotImplementedException();
 	}
 
-	public IDriverDemandInProvider CreateMeasuredSpeedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle)
+	public IMeasuredSpeedDrivingCycle CreateMeasuredSpeedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IVTPCycle CreateVTPCycle(IVehicleContainer container, IDrivingCycleData cycle)
 	{
 		throw new NotImplementedException();
 	}
@@ -209,6 +214,12 @@ public class DummyRunPowertrainComponentFactory : IPowertrainComponentFactory
 		throw new NotImplementedException();
 	}
 
+	public IGearbox CreateGearbox(VectoSimulationJobType jobType, CycleType cycle, GearboxType gbxType,
+		IVehicleContainer container, IShiftStrategy strategy)
+	{
+		throw new NotImplementedException();
+	}
+
 	public IGearbox CreateGearbox(GearboxType gbxType, bool measuredSpeedHybrid, IVehicleContainer container,
 		IShiftStrategy strategy)
 	{
@@ -220,7 +231,8 @@ public class DummyRunPowertrainComponentFactory : IPowertrainComponentFactory
 		throw new NotImplementedException();
 	}
 
-	public IClutch CreateClutch(IVehicleContainer container, CombustionEngineData engineData)
+	public IClutch CreateClutch(VectoSimulationJobType vectoSimulationJobType, IVehicleContainer container,
+		CombustionEngineData engineData)
 	{
 		throw new NotImplementedException();
 	}
@@ -255,21 +267,6 @@ public class DummyRunPowertrainComponentFactory : IPowertrainComponentFactory
 
 	public IElectricMotor CreateElectricMotor(bool isIEPC, IVehicleContainer container, ElectricMotorData data,
 		IElectricMotorControl control, PowertrainPosition position)
-	{
-		throw new NotImplementedException();
-	}
-
-	public ISimpleBattery CreateSimpleBattery(IVehicleContainer container, WattSecond capacity, double efficiency)
-	{
-		throw new NotImplementedException();
-	}
-
-	public ISimpleBattery CreateNoBattery(IVehicleContainer container)
-	{
-		throw new NotImplementedException();
-	}
-
-	public IBusAuxiliariesAdapter CreateBusAuxiliariesAdapter(IVehicleContainer container, IAuxiliaryConfig auxiliaryConfig)
 	{
 		throw new NotImplementedException();
 	}
@@ -317,11 +314,6 @@ public class DummyRunPowertrainComponentFactory : IPowertrainComponentFactory
 		throw new NotImplementedException();
 	}
 
-	public IGearboxInfo CreateDummyGearboxInfo(IVehicleContainer container, GearshiftPosition gear = null)
-	{
-		throw new NotImplementedException();
-	}
-
 	public IAxlegearInfo CreateDummyAxleGearInfo(IVehicleContainer container)
 	{
 		throw new NotImplementedException();
@@ -338,6 +330,39 @@ public class DummyRunPowertrainComponentFactory : IPowertrainComponentFactory
 	}
 
 	public IMileageCounter CreateDummyMileageCounter(IVehicleContainer container)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IPowertrainDrivingCycle CreatePowertrainDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IEngineAuxiliary CreateEngineAuxiliary(IVehicleContainer container)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IHybridControlStrategy CreateHybridStrategy(VectoSimulationJobType jobType, CycleType cycleType, bool atTransmission,
+		VectoRunData runData, IVehicleContainer container)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IHybridController CreateHybridController(CycleType cycleType, IVehicleContainer container,
+		IHybridControlStrategy strategy, IElectricSystem es)
+	{
+		throw new NotImplementedException();
+	}
+
+	public ISerialHybridController CreateSerialHybridController(CycleType cycleType, IVehicleContainer container,
+		IHybridControlStrategy strategy, IElectricSystem es)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IElectricMotorControl CreateElectricMotorController(CycleType cycle, IVehicleContainer container, IElectricSystem es)
 	{
 		throw new NotImplementedException();
 	}

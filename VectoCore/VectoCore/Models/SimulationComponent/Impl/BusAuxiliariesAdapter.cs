@@ -45,14 +45,6 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public interface IBusAuxiliariesAdapter : IAuxInProvider, IAuxPort
-	{
-		void DoWriteModalResultsICE(Second time, Second simulationInterval, IModalDataContainer container);
-
-		ISimpleBattery ElectricStorage { get; set; }
-		IDCDCConverter DCDCConverter { get; set; }
-	}
-
     public class BusAuxiliariesAdapter : VectoSimulationComponent, IBusAuxiliariesAdapter
 	{
 		protected internal BusAuxState CurrentState;

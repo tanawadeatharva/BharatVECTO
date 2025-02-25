@@ -14,6 +14,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		SimpleComponentState PreviousState { get; }
 
+		IHybridControlledGearbox Gearbox { set; }
+
+		ICombustionEngine Engine { set; }
+
 		IElectricMotorControl ElectricMotorControl(PowertrainPosition pos);
 		
 		void AddElectricMotor(PowertrainPosition pos, ElectricMotorData motorDataItem2);

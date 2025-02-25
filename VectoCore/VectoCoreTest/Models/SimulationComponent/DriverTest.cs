@@ -509,7 +509,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		// ========================
 
-		protected virtual IDriver AddComponent(IDrivingCycle prev, IDriver next)
+		protected virtual IDriver AddComponent(IDistanceBasedDrivingCycle prev, IDriver next)
 		{
 			prev.InPort().Connect(next.OutPort());
 			return next;

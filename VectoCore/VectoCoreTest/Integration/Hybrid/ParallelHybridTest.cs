@@ -1749,7 +1749,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				.AddComponent(clutch)
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP1, runData.ElectricMachinesData, container, es, ctl))
 				.AddComponent(engine, idleController);
-			PowertrainBuilderBase.AddAuxiliaries(engine, container, runData);
+			//AddAuxiliaries(engine, container, runData);
 
 			if (runData.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP1)) {
 				if (gearbox is IAPTGearbox atGbx) {
@@ -1850,7 +1850,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 					runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
 				.AddComponent(new SwitchableClutch(container, runData.EngineData))
 				.AddComponent(engine, engine.IdleController);
-			PowertrainBuilderBase.AddAuxiliaries(engine, container, runData);
+			//PowertrainBuilderBase.AddAuxiliaries(engine, container, runData);
 
             return container;
 		}

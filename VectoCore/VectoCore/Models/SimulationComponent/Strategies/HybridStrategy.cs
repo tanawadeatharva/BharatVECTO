@@ -21,10 +21,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 {
     public class HybridStrategy : AbstractHybridStrategy
 	{
-		public HybridStrategy(VectoRunData runData, IVehicleContainer vehicleContainer) : base(runData, vehicleContainer)
+		public HybridStrategy(VectoRunData runData, IVehicleContainer container) : base(runData, container)
 		{
-			// register pre-processors
-			vehicleContainer.AddPreprocessor(GetGearshiftPreprocessor());
+            // register pre-processors
+			container.AddPreprocessor(GetGearshiftPreprocessor());
 		}
 
 		protected ISimulationPreprocessor GetGearshiftPreprocessor()

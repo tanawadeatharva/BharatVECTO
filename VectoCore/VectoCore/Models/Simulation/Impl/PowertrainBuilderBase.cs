@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		protected void AddVTPBusAuxiliaries(VectoRunData data, IVehicleContainer container, VTPCombustionEngine engine)
 		{
-			var aux = new EngineAuxiliary(container);
+			var aux = ComponentFactory.CreateEngineAuxiliary(container);
 			foreach (var auxData in data.Aux) {
 				// id's in upper case
 				var id = auxData.ID.ToUpper();
@@ -177,12 +177,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			engine.Connect(aux.Port());
 		}
 
-		protected SwitchableClutch AddClutch(VectoRunData data, IVehicleContainer container)
+		protected IClutch AddClutch(VectoRunData data, IVehicleContainer container)
 		{
-			SwitchableClutch clutch = null;
+			IClutch clutch = null;
 
 			if (data.GearboxData.Type.ManualTransmission() || (data.GearboxData.Type == GearboxType.IHPC)) {
-				clutch = new SwitchableClutch(container, data.EngineData);
+				clutch = ComponentFactory.CreateClutch(data.JobType, container, data.EngineData);
 			} else {
 				ComponentFactory.CreateATClutchInfo(container);
 			}
@@ -217,7 +217,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 		protected void SetIdleControllerForHybridP1(VectoRunData data, IGearbox gearbox, IIdleController idleController,
-			SwitchableClutch clutch)
+			IClutch clutch)
 		{
 			if (data.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP1)) {
 				if (gearbox is IAPTGearbox atGbx) {
@@ -242,7 +242,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			VectoRunData data,
 			IVehicleContainer container,
 			IElectricSystem es,
-			IDrivingCycle cycle,
+			IDistanceBasedDrivingCycle cycle,
 			IDCDCConverter dcdc)
 		{
 			var elAux = new ElectricAuxiliaries(container);
@@ -454,7 +454,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			IVehicleContainer container) =>
 			pto?.PTOCycle is null ? null : new EPTOCycleController(container, pto?.PTOCycle);
 
-		protected internal static void AddAuxiliaries(ICombustionEngine engine, IVehicleContainer container,
+		protected internal void AddAuxiliaries(ICombustionEngine engine, IVehicleContainer container,
 			VectoRunData data)
 		{
 			// aux --> engine
@@ -480,7 +480,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		protected static IAuxInProvider CreateAdvancedAuxiliaries(VectoRunData data, IVehicleContainer container)
+		protected IAuxInProvider CreateAdvancedAuxiliaries(VectoRunData data, IVehicleContainer container)
 		{
 			var conventionalAux = CreateAuxiliaries(data, container);
 			// TODO: MQ 2019-07-30 -- which fuel map for advanced auxiliaries?!
@@ -494,9 +494,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return busAux;
 		}
 
-		protected static EngineAuxiliary CreateAuxiliaries(VectoRunData data, IVehicleContainer container)
+		protected IEngineAuxiliary CreateAuxiliaries(VectoRunData data, IVehicleContainer container)
 		{
-			var aux = new EngineAuxiliary(container);
+			var aux = ComponentFactory.CreateEngineAuxiliary(container);
 			foreach (var auxData in data.Aux) {
 				// id's in upper case
 				var id = auxData.ID.ToUpper();
@@ -564,10 +564,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return aux;
 		}
 
-		protected EngineAuxiliary CreateAuxiliariesSerialHybrid(VectoRunData data,
+		protected IEngineAuxiliary CreateAuxiliariesSerialHybrid(VectoRunData data,
 			IVehicleContainer container)
 		{
-			var aux = new EngineAuxiliary(container);
+			var aux = ComponentFactory.CreateEngineAuxiliary(container);
 			foreach (var auxData in data.Aux) {
 				if (auxData.ConnectToREESS == true) {
 					continue;
@@ -592,9 +592,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return aux;
 		}
 
-		protected EngineAuxiliary CreateSpeedDependentAuxiliaries(VectoRunData data, IVehicleContainer container)
+		protected IEngineAuxiliary CreateSpeedDependentAuxiliaries(VectoRunData data, IVehicleContainer container)
 		{
-			var aux = new EngineAuxiliary(container);
+			var aux = ComponentFactory.CreateEngineAuxiliary(container);
 			var auxData = data.Aux.ToArray();
 			AddSwitchingAux(aux, Constants.Auxiliaries.IDs.HeatingVentilationAirCondition, auxData);
 			AddSwitchingAux(aux, Constants.Auxiliaries.IDs.SteeringPump, auxData);
@@ -603,7 +603,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return aux;
 		}
 
-		protected void AddSwitchingAux(EngineAuxiliary aux, string auxId, VectoRunData.AuxData[] auxData)
+		protected void AddSwitchingAux(IEngineAuxiliary aux, string auxId, VectoRunData.AuxData[] auxData)
 		{
 			var urban = auxData.First(x => x.ID == auxId && x.MissionType == MissionType.UrbanDelivery);
 			var rural = auxData.First(x => x.ID == auxId && x.MissionType == MissionType.RegionalDelivery);

@@ -434,10 +434,10 @@ namespace TUGraz.VectoCore.OutputData
 					UpdateTableColumns(runData.EngineData);
 					CreateColumns(CO2Columns);
 					break;
-				case BusAuxiliariesAdapter _:
+				case IBusAuxiliariesAdapter _:
 					CreateColumns(BusAuxiliariesSignals);
 					break;
-				case EngineAuxiliary _:
+				case IEngineAuxiliary _:
 					break;
 				case IClutch _:
 					CreateColumns(ClutchColumns);
@@ -455,7 +455,7 @@ namespace TUGraz.VectoCore.OutputData
 					CreateGearTimeShareColumns(runData.GearboxData.GearList);
 					CreateGearRatioColumns(runData);
 					break;
-				case VTPCycle _:
+				case IVTPCycle _:
 					CreateColumns(VTPCycleColumns);
 					break;
 				case ITorqueConverter _:

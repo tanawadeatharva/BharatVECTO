@@ -778,7 +778,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			ctl.GenSet.AddComponent(GetElectricMachine(PowertrainPosition.GEN, runData.ElectricMachinesData, container,
 					es, ctl))
 				.AddComponent(engine, idleController);
-			PowertrainBuilderBase.AddAuxiliaries(engine, container, runData);
+			//PowertrainBuilderBase.AddAuxiliaries(engine, container, runData);
 
 			return container;
 		}

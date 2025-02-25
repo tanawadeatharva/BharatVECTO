@@ -29,24 +29,16 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
+namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public class VTPGearbox : CycleGearbox
+	/// <summary>
+	/// Defines interfaces for a  driver demand driving cycle.
+	/// </summary>
+	public interface IDistanceBasedDrivingCycle : IDrivingCycleInfo, ISimulationOutProvider, IDrivingCycleInProvider
 	{
-		public VTPGearbox(IVehicleContainer container) : base(container) { }
-
-		protected override uint GetGearFromCycle()
-		{
-			return DataBus.DrivingCycleInfo.CycleData.LeftSample.Gear;
-		}
-
-		public override bool GearEngaged(Second absTime)
-		{
-			return DataBus.DrivingCycleInfo.CycleData.LeftSample.Gear != 0;
-		}
+		IIdleControllerSwitcher IdleController { get; set; }
 	}
 }

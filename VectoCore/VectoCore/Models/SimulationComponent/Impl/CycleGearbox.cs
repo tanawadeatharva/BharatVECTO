@@ -66,12 +66,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected internal readonly TorqueConverterWrapper TorqueConverter;
 
-		public CycleGearbox(IVehicleContainer container, VectoRunData runData)
+		public CycleGearbox(IVehicleContainer container)
 			: base(container)
 		{
 			if (!ModelData.Type.AutomaticTransmission()) {
 				return;
 			}
+
+			var runData = container.RunData;
 
 			// Because APTN gearbox does not have a torque converter.
 			if (ModelData.Type == GearboxType.APTN) {

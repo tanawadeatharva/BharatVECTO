@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
     /// </summary>
     public sealed class DistanceBasedDrivingCycle : StatefulProviderComponent
 		<DistanceBasedDrivingCycle.DrivingCycleState, ISimulationOutPort, IDrivingCycleInPort, IDrivingCycleOutPort>,
-		IDrivingCycle, ISimulationOutPort, IDrivingCycleInPort, IDisposable, IUpdateable, IResetableVectoSimulationComponent
+		IDistanceBasedDrivingCycle, ISimulationOutPort, IDrivingCycleInPort, IDisposable, IUpdateable, IResetableVectoSimulationComponent
 	{
 		private const double LookaheadTimeSafetyMargin = 1.5;
 		internal readonly IDrivingCycleData Data;

@@ -48,6 +48,8 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
+	public interface IMeasuredSpeedDrivingCycle : IDriverDemandInProvider { }
+
     /// <summary>
     /// Driving Cycle for the Measured Speed Gear driving cycle.
     /// </summary>
@@ -55,7 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		StatefulProviderComponent
 			<MeasuredSpeedDrivingCycle.DrivingCycleState, ISimulationOutPort, IDriverDemandInPort, IDriverDemandOutPort>,
 		IDriverInfo, IDrivingCycleInfo, IMileageCounter, IDriverDemandInProvider, IDriverDemandInPort, ISimulationOutProvider,
-		ISimulationOutPort
+		ISimulationOutPort, IMeasuredSpeedDrivingCycle
 	{
 		public class DrivingCycleState
 		{
