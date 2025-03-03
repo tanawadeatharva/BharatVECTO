@@ -470,21 +470,36 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
         }
 
         protected object[] GetEngineData()
-        { 
-            return new object[] {
-                GetStandardFields(PlaceHolder.ENGINE.ToString()),
-                new XElement(
-                    _tns + XMLNames.MonitoringWHTC,
-                    new XElement(_tns + XMLNames.MonitoringCO2, double.NaN.ValueAsUnit(XMLNames.GramsPerKWattHour, 0)),
-                    new XElement(_tns + XMLNames.MonitoringFuelConsumption, double.NaN.ValueAsUnit(XMLNames.GramsPerKWattHour, 0))
-                ),
-                new XElement(
-                    _tns + XMLNames.MonitoringWHSC,
-                    new XElement(_tns + XMLNames.MonitoringCO2, double.NaN.ValueAsUnit(XMLNames.GramsPerKWattHour, 0)),
-                    new XElement(_tns + XMLNames.MonitoringFuelConsumption, double.NaN.ValueAsUnit(XMLNames.GramsPerKWattHour, 0))
-                ),
-                new XElement(_tns + XMLNames.MonitoringTypeApprovalNumber, GetPlaceholder(PlaceHolder.TYPE_APPROVAL_NUMBER))
-            };
+        {
+            var elements = new List<object>() { GetStandardFields(PlaceHolder.ENGINE.ToString()) };
+
+            foreach (var fuel in _modelData.EngineData.Fuels)
+            {
+                elements.Add(
+                    new XElement(
+                        _tns + XMLNames.MonitoringWHTC,
+                        new XElement(_tns + XMLNames.MonitoringFuelType, fuel.FuelData.FuelType.ToXMLFormat()),
+                        new XElement(_tns + XMLNames.MonitoringCO2, double.NaN.ValueAsUnit(XMLNames.GramsPerKWattHour, 0)),
+                        new XElement(_tns + XMLNames.MonitoringFuelConsumption, double.NaN.ValueAsUnit(XMLNames.GramsPerKWattHour, 0))
+                    )
+                );
+            }
+
+            foreach (var fuel in _modelData.EngineData.Fuels)
+            {
+                elements.Add(
+                    new XElement(
+                        _tns + XMLNames.MonitoringWHSC,
+                        new XElement(_tns + XMLNames.MonitoringFuelType, fuel.FuelData.FuelType.ToXMLFormat()),
+                        new XElement(_tns + XMLNames.MonitoringCO2, double.NaN.ValueAsUnit(XMLNames.GramsPerKWattHour, 0)),
+                        new XElement(_tns + XMLNames.MonitoringFuelConsumption, double.NaN.ValueAsUnit(XMLNames.GramsPerKWattHour, 0))
+                    )
+                );
+            }
+
+            elements.Add(new XElement(_tns + XMLNames.MonitoringTypeApprovalNumber, GetPlaceholder(PlaceHolder.TYPE_APPROVAL_NUMBER)));
+
+            return elements.ToArray();
         }
 
         protected object[] GetAxleData()

@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public const string MONITORING_NAMESPACE = "urn:tugraz:ivt:VectoAPI:MonitoringOutput";
 
-		public const string MONITORING_SCHEMA_VERSION = "1.0";
+		public const string MONITORING_SCHEMA_VERSION = "1.1";
 
 		public const string MONITORING_NAMESPACE_URI = MONITORING_NAMESPACE + ":v" + MONITORING_SCHEMA_VERSION;
 

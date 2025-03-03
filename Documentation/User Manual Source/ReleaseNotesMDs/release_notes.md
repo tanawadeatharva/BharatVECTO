@@ -1,18 +1,18 @@
 
-## VECTO v4.3.2-RC (06-02-2025)
+## VECTO v4.3.3 Official Release (03-03-2025)
 
-### Features
-
-- New battery and supercap readers (vecto/vecto!309)
 
 ### Bug Fixes
 
-- ATShiftStrategyOptimized - No UpshiftFomL if not locked (vecto/vecto!301)
+- Check if XML element is signed (#950) (vecto/vecto!314)
 
-- Forbid downshift to locked gear in APT-S if it generates direct upshift condition (vecto/vecto!307)
+- NgTankSystem optional for HEV lorries MRF XSD (vecto/vecto!315)
 
-- Add condition to write BusAuxiliaries output data in vsum (vecto/vecto!306)
+- fix: monitoring report for dual fuel vehicles (vecto/vecto!318)
 
-- Allow old XMLs for battery and supercap in development only (vecto/vecto!311)
+- fix: secure XML loading against external entity injection (vecto/vecto!319)
 
-- Correct binding for supercap input data class; use correct xml data type in xml component reader for supercap (vecto/vecto!310)
+- fix: correct interim supercap reader type (vecto/vecto!320)
+
+- fix: parameter IDs for XSDs v2.3 and v2.6 (vecto/vecto!322)
+

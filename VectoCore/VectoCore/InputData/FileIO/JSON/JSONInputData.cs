@@ -774,10 +774,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public void ValidateSimulationToolVersion()
 		{
-			var xmlDoc = new XmlDocument();
-			xmlDoc.Load(Path.Combine(Path.GetFullPath(BasePath), Body["ManufacturerRecord"].Value<string>()));
-			
-			string simToolVersionStr = XMLManufacturerReportReader.ReadElementValue(xmlDoc, "SimulationToolVersion");
+			var xmlDoc = XMLHelper.SecureLoadXML(Path.Combine(Path.GetFullPath(BasePath), Body["ManufacturerRecord"].Value<string>()));
+
+            string simToolVersionStr = XMLManufacturerReportReader.ReadElementValue(xmlDoc, "SimulationToolVersion");
 			string vectoVersionStr = VectoSimulationCore.VersionNumber;
 
 			bool xmlVersionNewer = VersioningUtil.CompareVersions(simToolVersionStr, vectoVersionStr) > 0;
@@ -789,10 +788,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public void ValidateHash()
 		{
-			var xmlDoc = new XmlDocument();
-			xmlDoc.Load(Path.Combine(Path.GetFullPath(BasePath), Body["ManufacturerRecord"].Value<string>()));
-			
-			var signatureNode = xmlDoc.SelectSingleNode("//*[local-name()='Signature']");
+			var xmlDoc = XMLHelper.SecureLoadXML(Path.Combine(Path.GetFullPath(BasePath), Body["ManufacturerRecord"].Value<string>()));
+
+            var signatureNode = xmlDoc.SelectSingleNode("//*[local-name()='Signature']");
 			var signatureDigest = new DigestData(signatureNode);
 
 			var hash = XMLHashProvider.ComputeHash(xmlDoc, signatureDigest.Reference.Remove(0, 1), signatureDigest.CanonicalizationMethods,
@@ -807,8 +805,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		private void ReadManufacturerReport()
 		{
-			var xmlDoc = new XmlDocument();
-			xmlDoc.Load(Path.Combine(Path.GetFullPath(BasePath), Body["ManufacturerRecord"].Value<string>()));
+			var xmlDoc = XMLHelper.SecureLoadXML(Path.Combine(Path.GetFullPath(BasePath), Body["ManufacturerRecord"].Value<string>()));
+
 			var components = XMLManufacturerReportReader.GetContainingComponents(xmlDoc).GroupBy(s => s)
 														.Select(g => new { Entry = g.Key, Count = g.Count() });
 			_componentDigests = new Dictionary<VectoComponents, IList<string>>();
