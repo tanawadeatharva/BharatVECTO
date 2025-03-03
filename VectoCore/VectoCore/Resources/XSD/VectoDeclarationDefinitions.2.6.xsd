@@ -261,10 +261,10 @@
 					</xs:element>
 					<xs:element name="CertificationMethod" type="v2.3:CertificationMethodType">
 						<xs:annotation>
-							<xs:documentation>P537 - enum</xs:documentation>
+							<xs:documentation>P538 - enum</xs:documentation>
 							<xs:appinfo>
 								<vectoParam:description>
-									<vectoParam:parameterId component="CapacitorSystem">537</vectoParam:parameterId>
+									<vectoParam:parameterId component="CapacitorSystem">538</vectoParam:parameterId>
 									<vectoParam:unit>-</vectoParam:unit>
 								</vectoParam:description>
 							</xs:appinfo>
@@ -272,10 +272,10 @@
 					</xs:element>
 					<xs:element name="Capacitance" type="v2.3:CapacitanceType">
 						<xs:annotation>
-							<xs:documentation>P538 - [F]</xs:documentation>
+							<xs:documentation>P539 - [F]</xs:documentation>
 							<xs:appinfo>
 								<vectoParam:description>
-									<vectoParam:parameterId component="CapacitorSystem">538</vectoParam:parameterId>
+									<vectoParam:parameterId component="CapacitorSystem">539</vectoParam:parameterId>
 									<vectoParam:unit>F</vectoParam:unit>
 								</vectoParam:description>
 							</xs:appinfo>
@@ -283,10 +283,10 @@
 					</xs:element>
 					<xs:element name="InternalResistance" type="v2.3:InternalResistanceSuperCapType">
 						<xs:annotation>
-							<xs:documentation>P539 - [mOhm]</xs:documentation>
+							<xs:documentation>P540 - [mOhm]</xs:documentation>
 							<xs:appinfo>
 								<vectoParam:description>
-									<vectoParam:parameterId component="CapacitorSystem">539</vectoParam:parameterId>
+									<vectoParam:parameterId component="CapacitorSystem">540</vectoParam:parameterId>
 									<vectoParam:unit>mOhm</vectoParam:unit>
 								</vectoParam:description>
 							</xs:appinfo>
@@ -294,10 +294,10 @@
 					</xs:element>
 					<xs:element name="MinVoltage" type="v2.3:CapacitorVoltageType">
 						<xs:annotation>
-							<xs:documentation>P540 - [V]</xs:documentation>
+							<xs:documentation>P541 - [V]</xs:documentation>
 							<xs:appinfo>
 								<vectoParam:description>
-									<vectoParam:parameterId component="CapacitorSystem">540</vectoParam:parameterId>
+									<vectoParam:parameterId component="CapacitorSystem">541</vectoParam:parameterId>
 									<vectoParam:unit>V</vectoParam:unit>
 								</vectoParam:description>
 							</xs:appinfo>
@@ -305,17 +305,17 @@
 					</xs:element>
 					<xs:element name="MaxVoltage" type="v2.3:CapacitorVoltageType">
 						<xs:annotation>
-							<xs:documentation>P541 - [V]</xs:documentation>
+							<xs:documentation>P542 - [V]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="MaxChargingCurrent" type="v2.3:CapacitorMaxCurrentType">
 						<xs:annotation>
-							<xs:documentation>P542 - [A]</xs:documentation>
+							<xs:documentation>P543 - [A]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="MaxDischargingCurrent" type="v2.3:CapacitorMaxCurrentType">
 						<xs:annotation>
-							<xs:documentation>P543 - [A]</xs:documentation>
+							<xs:documentation>P544 - [A]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="TestingTemperature" type="xs:int" minOccurs="0">
@@ -323,7 +323,7 @@
 							<xs:documentation>P537 - [°C]</xs:documentation>
 							<xs:appinfo>
 								<vectoParam:description>
-									<vectoParam:parameterId component="CapacitorSystem">544</vectoParam:parameterId>
+									<vectoParam:parameterId component="CapacitorSystem">537</vectoParam:parameterId>
 									<vectoParam:unit>°C</vectoParam:unit>
 								</vectoParam:description>
 							</xs:appinfo>
@@ -394,7 +394,7 @@
 					</xs:element>
 					<xs:element name="CertificationMethod">
 						<xs:annotation>
-							<xs:documentation>P516 - enum</xs:documentation>
+							<xs:documentation>P517 - enum</xs:documentation>
 						</xs:annotation>
 						<xs:simpleType>
 							<xs:restriction base="v2.3:CertificationMethodType">
@@ -404,15 +404,15 @@
 					</xs:element>
 					<xs:element name="BatteryType" type="v2.3:BatteryTypeType">
 						<xs:annotation>
-							<xs:documentation>P517 - enum</xs:documentation>
+							<xs:documentation>P518 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="RatedCapacity">
 						<xs:annotation>
-							<xs:documentation>P518 - [Ah]</xs:documentation>
+							<xs:documentation>P519 - [Ah]</xs:documentation>
 							<xs:appinfo>
 								<vectoParam:description>
-									<vectoParam:parameterId component="BatterySystem">518</vectoParam:parameterId>
+									<vectoParam:parameterId component="BatterySystem">519</vectoParam:parameterId>
 									<vectoParam:unit>Ah</vectoParam:unit>
 								</vectoParam:description>
 							</xs:appinfo>
