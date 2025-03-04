@@ -4,26 +4,32 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
 {
-	public class IEPCGearbox : IIEPCGearbox, IGearbox
+	public class TestPowertrainIEPCGearbox : ITestPowertrainTransmission
 	{
-		protected IGearbox _impl;
+		protected ITestPowertrainTransmission _impl;
 
-		public IEPCGearbox(IVehicleContainer container, IShiftStrategy strategy, IIEPCGearboxFactory gbxFactory) : this(container, strategy, gbxFactory, false)
+		//public TestPowertrainIEPCGearbox(IVehicleContainer container, IShiftStrategy strategy) : this(container, strategy, null, false) { }
+
+
+		public TestPowertrainIEPCGearbox(IVehicleContainer container, IShiftStrategy strategy,
+			IIEPCGearboxFactory gbxFactory) : this(container, strategy, gbxFactory, false)
 		{
-			if (container.IsTestPowertrain) {
-				throw new VectoException(
-					"This class shall not be used in a testpowertrain - use the dedicated class instead!");
+			if (!container.IsTestPowertrain) {
+				throw new VectoException("This class shall not be used in a real powertrain!");
 			}
-        }
+		}
 
-		protected IEPCGearbox(IVehicleContainer container, IShiftStrategy strategy, IIEPCGearboxFactory gbxFactory, bool dummy)
+		protected TestPowertrainIEPCGearbox(IVehicleContainer container, IShiftStrategy strategy,
+			IIEPCGearboxFactory gbxFactory, bool dummy)
 		{
-			_impl = gbxFactory.CreateIEPCGearbox(container.RunData.GearboxData.Gears.Count == 1, container, strategy);
+			_impl = gbxFactory.CreateIEPCGearbox(container.RunData.GearboxData.Gears.Count == 1, container, strategy) as ITestPowertrainTransmission;
+			if (_impl == null) {
+				throw new VectoException("Invalid implementation provided for Testpowertrain!");
+			}
 		}
 
 		#region Implementation of ITnInProvider
@@ -78,8 +84,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
 
 		public bool DisengageGearbox
 		{
-			get => (_impl as IGearboxInfo).DisengageGearbox;
-			set => (_impl as IGearboxControl).DisengageGearbox = value;
+			get => ((TUGraz.VectoCore.Models.Simulation.DataBus.IGearboxInfo)_impl).DisengageGearbox;
+			set => ((TUGraz.VectoCore.Models.Simulation.DataBus.IGearboxControl)_impl).DisengageGearbox = value;
 		}
 
 		public void TriggerGearshift(Second absTime, Second dt)
@@ -113,6 +119,49 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
 		public bool UpdateFrom(object other)
 		{
 			return _impl.UpdateFrom(other);
+		}
+
+		#endregion
+
+		#region Implementation of ITnOutPort
+
+		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
+		{
+			return _impl.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
+		}
+
+		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		{
+			return _impl.Initialize(outTorque, outAngularVelocity);
+		}
+
+		#endregion
+
+		#region Implementation of ITestPowertrainTransmission
+
+		public GearshiftPosition SetGear
+		{
+			set => _impl.SetGear = value;
+		}
+
+		public GearshiftPosition SetNextGear
+		{
+			set => _impl.SetNextGear = value;
+		}
+
+		public bool SetDisengaged
+		{
+			set => _impl.SetDisengaged = value;
+		}
+
+		public bool SetDisengageGearbox
+		{
+			set => _impl.SetDisengageGearbox = value;
+		}
+
+		public Second SetEngageTime
+		{
+			set => _impl.SetEngageTime = value;
 		}
 
 		#endregion

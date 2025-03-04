@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.ComponentModel;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
@@ -57,6 +58,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			RunData = runData;
 		}
+
+		#region Overrides of CombustionEngine
+
+		protected override IIdleController CreateIdleController()
+		{
+			return new CombustionEngineNoDoubleClutchIdleController(this, DataBus);
+
+		}
+
+		#endregion
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{

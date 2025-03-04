@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					throw new VectoException("Wrong CycleType for SimplePowertrain");
 			}
 
-			var engine = ComponentFactory.CreateCombustionEngine(false, container, data.EngineData);
+			var engine = ComponentFactory.CreateCombustionEngine(data.Cycle.CycleType, container, data.EngineData);
 			var gearbox = GetSimpleGearbox(container, data);
 			var idleController = GetIdleController(data.PTO, engine, container);
 
@@ -138,11 +138,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
             var es = ConnectREESS(data, container);
 
 			// add engine before gearbox so that gearbox can obtain if an ICE is available already in constructor
-			var engine = ComponentFactory.CreateCombustionEngine(false, container, data.EngineData);
-			var gearbox = new MeasuredSpeedHybridsCycleGearbox(container);
+			var engine = ComponentFactory.CreateCombustionEngine(data.Cycle.CycleType, container, data.EngineData);
+			var gearbox = ComponentFactory.CreateGearbox(data.JobType, data.Cycle.CycleType, data.GearboxData.Type,
+				container, null);
+			
 
 			var ctl = ComponentFactory.CreateHybridController(data.Cycle.CycleType, container, null, es);
-			ctl.Gearbox = gearbox;
+			ctl.Gearbox = gearbox as IHybridControlledGearbox;
 			ctl.Engine = engine;
 
 			var position = data.ElectricMachinesData[0].Item1;
@@ -285,9 +287,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(ComponentFactory.CreateBrakes(container));
 
 			var pos = data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
-			var gearbox = data.GearboxData.Gears.Count > 1
-				? (IGearbox)new TestPowertrainAPTNGearbox(container, ctl.ShiftStrategy)
-				: new SingleSpeedGearbox(container, data.GearboxData);
+			var gearbox = ComponentFactory.CreateGearbox(data.JobType, data.Cycle.CycleType, data.GearboxData.Type,
+				container, ctl.ShiftStrategy);
 			var em = GetElectricMachine(PowertrainPosition.IEPC, data.ElectricMachinesData, container, es, ctl);
 			powertrain
 				.AddComponent(data.AxleGearData != null ? ComponentFactory.CreateAxleGear(container, data.AxleGearData) : null)
@@ -312,7 +313,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var es = ConnectREESS(data, container);
 			var ctl = new GensetMotorController(container, es);
 
-			var ice = ComponentFactory.CreateCombustionEngine(false, container, data.EngineData);
+			var ice = ComponentFactory.CreateCombustionEngine(data.Cycle.CycleType, container, data.EngineData);
 			AddAuxiliariesSerialHybrid(ice, container, data);
 
 			GetElectricMachine(PowertrainPosition.GEN, data.ElectricMachinesData, container, es, ctl)
@@ -372,7 +373,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			AddHighVoltageAuxiliaries(data, container, es, dcdc);
 
 			//IMPORTANT HINT: add engine BEFORE gearbox to container that gearbox can obtain if an ICE is available
-			var engine = ComponentFactory.CreateCombustionEngine(false, container, data.EngineData);
+			var engine = ComponentFactory.CreateCombustionEngine(data.Cycle.CycleType, container, data.EngineData);
 			var gearbox = GetSimpleGearbox(container, data);
 			if (!(gearbox is IHybridControlledGearbox gbx)) {
 				throw new VectoException("Gearbox can not be used for parallel hybrid");
@@ -384,7 +385,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var idleController = GetIdleController(data.PTO, engine, container);
 			var clutch = (data.GearboxData.Type.ManualTransmission() || data.GearboxData.Type == GearboxType.IHPC)
-				? new SwitchableClutch(container, data.EngineData)
+				? ComponentFactory.CreateClutch(data.JobType, container, data.EngineData) 
 				: null;
 
 
@@ -508,7 +509,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(data.GearboxData is null ? null : GetSimpleGearbox(container, data))
 				.AddComponent(GetElectricMachine(
 					data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1,
-					data.ElectricMachinesData, container, es, new SimpleElectricMotorControl()));
+					data.ElectricMachinesData, container, es, ComponentFactory.CreateElectricMotorController(data.Cycle.CycleType, container, es)));
 			var dcdc = ComponentFactory.CreateDCDCConverter(container, data.DCDCData.DCDCEfficiency);
 
 			AddElectricAuxiliaries(data, container, es, null, dcdc);
@@ -529,15 +530,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (runData.GearboxData.Type.AutomaticTransmission() && runData.GearboxData.Type != GearboxType.APTN &&
 				runData.GearboxData.Type != GearboxType.IHPC) {
 				ComponentFactory.CreateATClutchInfo(container);
-				return new TestPowertrainAPTGearbox(container, null);
 			}
 
-			var isMeasuredSpeedHybrid = (container.RunData.JobType == VectoSimulationJobType.ParallelHybridVehicle)
-										&& (container.RunData.Cycle.CycleType == CycleType.MeasuredSpeed);
-
-			return isMeasuredSpeedHybrid
-				? new MeasuredSpeedHybridsGearbox(container, null)
-				: (IGearbox)new TestPowertrainGearbox(container, null);
+			return ComponentFactory.CreateGearbox(runData.JobType, runData.Cycle.CycleType, runData.GearboxData.Type,
+				container, null);
 		}
 
 		// used for battery electric powertrains

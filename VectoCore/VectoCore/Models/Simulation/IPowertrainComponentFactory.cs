@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Models.Simulation
         IClutch CreateClutch(VectoSimulationJobType jobType, IVehicleContainer container,
 			CombustionEngineData engineData);
 
-		ICombustionEngine CreateCombustionEngine(bool engineOnly, IVehicleContainer container, CombustionEngineData modelData,
+		ICombustionEngine CreateCombustionEngine(CycleType cycleType, IVehicleContainer container, CombustionEngineData modelData,
 			bool pt1Disabled = false);
 
 		IWHRCharger CreateWHRCharger(IVehicleContainer container, double dcDcConverterEfficiency);
@@ -100,6 +100,11 @@ namespace TUGraz.VectoCore.Models.Simulation
 			IVehicleContainer container, IHybridControlStrategy strategy, IElectricSystem es);
 
 		IElectricMotorControl CreateElectricMotorController(CycleType cycle, IVehicleContainer container, IElectricSystem es);
+	}
+
+	public interface IIEPCGearboxFactory
+	{
+		IGearbox CreateIEPCGearbox(bool singleSpeed, IVehicleContainer container, IShiftStrategy strategy);
 	}
 
 }

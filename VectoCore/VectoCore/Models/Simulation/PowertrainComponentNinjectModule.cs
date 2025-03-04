@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using Ninject.Extensions.Factory;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -36,236 +37,42 @@ namespace TUGraz.VectoCore.Models.Simulation
 		const GearboxType APTNGearbox = GearboxType.APTN;
 		const GearboxType IHPCGearbox = GearboxType.IHPC;
 		const GearboxType IEPCGearbox = GearboxType.IEPC;
-		const GearboxType Drivingcycle = GearboxType.DrivingCycle;
-
-        private Dictionary<Tuple<CycleType, VectoSimulationJobType>, Dictionary<GearboxType, Type>> GearboxConfig() 
-		{
-			var mtGearboxT = typeof(MTGearbox);
-			var amtGearboxT = typeof(AMTGearbox);
-			var aptGearboxT = typeof(APTGearbox);
-			var aptnGearboxT = typeof(APTNGearbox);
-			var pevGearboxT = typeof(PEVGearbox);
-			var iepcGearboxT = typeof(IEPCGearbox);
-			var measSpdPHEVGbxT = typeof(MeasuredSpeedHybridsGearbox);
-			var measSpdPHEVGearGbxT = typeof(MeasuredSpeedHybridsCycleGearbox);
-			var bevCycleGbxT = typeof(BEVCycleGearbox);
-			var cycleGearboxT = typeof(CycleGearbox);
-
-            #region distance based
-            var GbxClass_Distance_Conv = new Dictionary<GearboxType, Type>() {
-				{MTGearbox, mtGearboxT},
-				{AMTGearbox, amtGearboxT},
-				{APTSGearbox, aptGearboxT},
-				{APTPGearbox, aptGearboxT},
-			};
-			var GbxClass_Distance_PHEV = new Dictionary<GearboxType, Type>() {
-				{IHPCGearbox, aptnGearboxT}
-			};
-			var GbxClass_Distance_IHPC = new Dictionary<GearboxType, Type>() {
-				{IHPCGearbox, aptnGearboxT}
-			};
-			var GbxClass_Distance_SHEV = new Dictionary<GearboxType, Type>() {
-				{AMTGearbox, pevGearboxT},
-				{APTSGearbox, pevGearboxT},
-				{APTPGearbox, pevGearboxT},
-				{APTNGearbox, aptnGearboxT},
-			};
-			var GbxClass_Distance_SIEPC = new Dictionary<GearboxType, Type>() {
-				{IEPCGearbox, iepcGearboxT},
-			};
-			var GbxClass_Distance_PEV = new Dictionary<GearboxType, Type>() {
-				{AMTGearbox, pevGearboxT},
-				{APTSGearbox, pevGearboxT},
-				{APTPGearbox, pevGearboxT},
-				{APTNGearbox, aptnGearboxT},
-				{IHPCGearbox, pevGearboxT}
-			};
-	        var GbxClass_Distance_EIEPC = new Dictionary<GearboxType, Type>() {
-				{IEPCGearbox, iepcGearboxT},
-			};
-            #endregion
-
-            #region measured speed
-			var GbxClass_MeasSpd_Conv = new Dictionary<GearboxType, Type>() {
-				{MTGearbox, mtGearboxT},
-				{AMTGearbox, amtGearboxT},
-				{APTSGearbox, aptGearboxT},
-				{APTPGearbox, aptGearboxT},
-			};
-			var GbxClass_MeasSpd_PHEV = new Dictionary<GearboxType, Type>() {
-				{AMTGearbox, measSpdPHEVGbxT},
-				{APTSGearbox, aptGearboxT},
-				{APTPGearbox, aptGearboxT},
-			};
-			var GbxClass_MeasSpd_IHPC = new Dictionary<GearboxType, Type>() {
-				{IHPCGearbox, aptnGearboxT}
-			};
-			var GbxClass_MeasSpd_PEV = new Dictionary<GearboxType, Type>() {
-				{AMTGearbox, pevGearboxT},
-				{APTSGearbox, pevGearboxT},
-				{APTPGearbox, pevGearboxT},
-				{APTNGearbox, aptnGearboxT},
-			};
-			var GbxClass_MeasSpd_EIEPC = new Dictionary<GearboxType, Type>() {
-				{IEPCGearbox, iepcGearboxT},
-			};
-            #endregion
-
-            #region measured speed gear
-			var GbxClass_MeasSpdGear_Conv = new Dictionary<GearboxType, Type>() {
-				{MTGearbox, cycleGearboxT},
-				{AMTGearbox, cycleGearboxT},
-				{APTSGearbox, cycleGearboxT},
-				{APTPGearbox, cycleGearboxT},
-			};
-			var GbxClass_MeasSpdGear_PHEV = new Dictionary<GearboxType, Type>() {
-				{AMTGearbox, measSpdPHEVGearGbxT},
-				{APTSGearbox, measSpdPHEVGearGbxT},
-				{APTPGearbox, measSpdPHEVGearGbxT},
-			};
-			var GbxClass_MeasSpdGear_IHPC = new Dictionary<GearboxType, Type>() {
-				{IHPCGearbox, measSpdPHEVGearGbxT}
-			};
-            var GbxClass_MeasSpdGear_PEV = new Dictionary<GearboxType, Type>() {
-				{AMTGearbox, bevCycleGbxT},
-				{APTSGearbox, bevCycleGbxT},
-				{APTPGearbox, bevCycleGbxT},
-				{APTNGearbox, bevCycleGbxT},
-			};
-			var GbxClass_MeasSpdGear_EIEPC = new Dictionary<GearboxType, Type>() {
-				{IEPCGearbox, bevCycleGbxT},
-			};
-            #endregion
-
-			#region PWheel
-			var GbxClass_PWheel_Conv = new Dictionary<GearboxType, Type>() {
-				{MTGearbox, cycleGearboxT},
-				{AMTGearbox, cycleGearboxT},
-				{APTSGearbox, cycleGearboxT},
-				{APTPGearbox, cycleGearboxT},
-			};
-			var GbxClass_PWheel_PEV = new Dictionary<GearboxType, Type>() {
-				{AMTGearbox, bevCycleGbxT},
-				{APTSGearbox, bevCycleGbxT},
-				{APTPGearbox, bevCycleGbxT},
-				{APTNGearbox, bevCycleGbxT},
-			};
-			var GbxClass_PWheel_EIEPC = new Dictionary<GearboxType, Type>() {
-				{IEPCGearbox, bevCycleGbxT},
-			};
-            #endregion
-
-			#region PWheel
-			var GbxClass_VTP_Conv = new Dictionary<GearboxType, Type>() {
-				{MTGearbox, cycleGearboxT},
-				{AMTGearbox, cycleGearboxT},
-				{APTSGearbox, cycleGearboxT},
-				{APTPGearbox, cycleGearboxT},
-			};
-			#endregion
-
-            return new Dictionary<Tuple<CycleType, VectoSimulationJobType>, Dictionary<GearboxType, Type>>() {
-					// distance based cycles
-					{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.ConventionalVehicle) , GbxClass_Distance_Conv},
-					{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.ParallelHybridVehicle) , GbxClass_Distance_PHEV},
-					{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.IHPC) , GbxClass_Distance_IHPC},
-					{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.SerialHybridVehicle) , GbxClass_Distance_SHEV},
-					{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.IEPC_S) , GbxClass_Distance_SIEPC},
-					{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.BatteryElectricVehicle) , GbxClass_Distance_PEV},
-					{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.IEPC_E) , GbxClass_Distance_EIEPC},
-					// measured speed cycles
-					{ Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.ConventionalVehicle) , GbxClass_MeasSpd_Conv},
-					{ Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.ParallelHybridVehicle) , GbxClass_MeasSpd_PHEV},
-					{ Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.IHPC) , GbxClass_MeasSpd_IHPC},
-					{ Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.BatteryElectricVehicle) , GbxClass_MeasSpd_PEV},
-					{ Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.IEPC_E) , GbxClass_MeasSpd_EIEPC},
-					// measured speed with gear cycles
-					{ Tuple.Create(CycleType.MeasuredSpeedGear, VectoSimulationJobType.ConventionalVehicle) , GbxClass_MeasSpdGear_Conv},
-					{ Tuple.Create(CycleType.MeasuredSpeedGear, VectoSimulationJobType.ParallelHybridVehicle) , GbxClass_MeasSpdGear_PHEV},
-					{ Tuple.Create(CycleType.MeasuredSpeedGear, VectoSimulationJobType.IHPC) , GbxClass_MeasSpdGear_IHPC},
-					{ Tuple.Create(CycleType.MeasuredSpeedGear, VectoSimulationJobType.BatteryElectricVehicle) , GbxClass_MeasSpdGear_PEV},
-					{ Tuple.Create(CycleType.MeasuredSpeedGear, VectoSimulationJobType.IEPC_E) , GbxClass_MeasSpdGear_EIEPC},
-					// pwheel cycles
-					{ Tuple.Create(CycleType.PWheel, VectoSimulationJobType.ConventionalVehicle) , GbxClass_PWheel_Conv},
-					{ Tuple.Create(CycleType.PWheel, VectoSimulationJobType.BatteryElectricVehicle) , GbxClass_PWheel_PEV},
-					{ Tuple.Create(CycleType.PWheel, VectoSimulationJobType.IEPC_E) , GbxClass_PWheel_EIEPC},
-					// VTP cycles
-					{ Tuple.Create(CycleType.VTP, VectoSimulationJobType.ConventionalVehicle) , GbxClass_VTP_Conv},
-				};
-		}
-
-		private Dictionary<Tuple<CycleType, VectoSimulationJobType>, Dictionary<GearboxType, Type>> GearboxTestpowertrainConfig()
-		{
-			var amtGearboxT = typeof(TestPowertrainGearbox);
-			var aptGearboxT = typeof(TestPowertrainAPTGearbox);
-			var aptnGearboxT = typeof(TestPowertrainAPTNGearbox);
-
-
-			#region distance based
-			var GbxClass_Distance_Conv = new Dictionary<GearboxType, Type>() {
-				{MTGearbox, amtGearboxT},
-				{AMTGearbox, amtGearboxT},
-				{APTSGearbox, aptGearboxT},
-				{APTPGearbox, aptGearboxT},
-			};
-			var GbxClass_Distance_PHEV = new Dictionary<GearboxType, Type>() {
-				{AMTGearbox, amtGearboxT},
-				{APTSGearbox, aptGearboxT},
-				{APTPGearbox, aptGearboxT},
-				{IHPCGearbox, aptnGearboxT}
-			};
-			var GbxClass_Distance_SHEV = new Dictionary<GearboxType, Type>() {
-				{AMTGearbox, amtGearboxT},
-				{APTSGearbox, amtGearboxT},
-				{APTPGearbox, aptnGearboxT},
-				{APTNGearbox, aptnGearboxT},
-			};
-			//var GbxClass_Distance_SIEPC = new Dictionary<GearboxType, Type>() {
-			//	{IEPCGearbox, iepcGearboxT},
-			//};
-			//var GbxClass_Distance_PEV = new Dictionary<GearboxType, Type>() {
-			//	{AMTGearbox, pevGearboxT},
-			//	{APTSGearbox, pevGearboxT},
-			//	{APTPGearbox, pevGearboxT},
-			//	{APTNGearbox, aptnGearboxT},
-			//	{IHPCGearbox, pevGearboxT}
-			//};
-			//var GbxClass_Distance_EIEPC = new Dictionary<GearboxType, Type>() {
-			//	{IEPCGearbox, iepcGearboxT},
-			//};
-			#endregion
-
-            return new Dictionary<Tuple<CycleType, VectoSimulationJobType>, Dictionary<GearboxType, Type>>() {
-				// distance based cycles
-				{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.ConventionalVehicle) , GbxClass_Distance_Conv},
-				{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.ParallelHybridVehicle) , GbxClass_Distance_PHEV},
-				{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.SerialHybridVehicle) , GbxClass_Distance_SHEV},
-				//{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.IEPC_S) , GbxClass_Distance_SIEPC},
-
-            };
-		}
 
         public override void Load()
 		{
-			#region Setup Factories for powertrain components
+			Bind<IPowertrainBuilder>().To<PowertrainBuilder>().InSingletonScope().Named(_realPowertrain.Prefix);
+			Bind<ISimplePowertrainBuilder>().To<SimplePowertrainBuilder>().InSingletonScope().Named(_testPowertrain.Prefix);
 
-			Bind<IPowertrainComponentFactory>().ToFactory(() => GetMethodSettings(_realPowertrain))
-				.WhenInjectedExactlyInto<PowertrainBuilder>().InSingletonScope();
+
+            #region Setup Factories for powertrain components
+
+            Bind<IPowertrainComponentFactory>().ToFactory(() => GetMethodSettings(_realPowertrain))
+				.WhenInjectedExactlyInto<PowertrainBuilder>().InSingletonScope().Named(_realPowertrain.Prefix);
 
 			Bind<IPowertrainComponentFactory>().ToFactory(() => GetMethodSettings(_testPowertrain))
-				.WhenInjectedExactlyInto<SimplePowertrainBuilder>().InSingletonScope();
+				.WhenInjectedExactlyInto<SimplePowertrainBuilder>().InSingletonScope().Named(_testPowertrain.Prefix);
 
-			#endregion
+			Bind<IIEPCGearboxFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(true, 
+					GetMethodSettings(_realPowertrain.CreateIEPCName, 1, null))).When(r => r.ParentContext?.Binding.Metadata.Name?.StartsWith(_realPowertrain.Prefix) ?? false)
+				.Named(_realPowertrain.Prefix);
+			Bind<IIEPCGearboxFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(true,
+					GetMethodSettings(_testPowertrain.CreateIEPCName, 1, null))).When(r => r.ParentContext?.Binding.Metadata.Name?.StartsWith(_testPowertrain.Prefix) ?? false)
+				.Named(_testPowertrain.Prefix);
 
-			#region Real Powertrain
+            #endregion
 
-			AddCommonMappings(_realPowertrain);
+            #region Real Powertrain
+
+            AddCommonMappings(_realPowertrain);
 
             Bind<IVehicle>().To<Vehicle>().Named(_realPowertrain.Prefix);
-			Bind<ICombustionEngine>().To<StopStartCombustionEngine>().Named(_realPowertrain.ICEName(false));
-			Bind<ICombustionEngine>().To<EngineOnlyCombustionEngine>().Named(_realPowertrain.ICEName(true));
-			
-			Bind<IElectricSystem>().To<ElectricSystem>().Named(_realPowertrain.Prefix);
+			foreach (var cycleType in new[] {CycleType.DistanceBased, CycleType.MeasuredSpeed, CycleType.MeasuredSpeedGear, CycleType.PWheel}) {
+				Bind<ICombustionEngine>().To<StopStartCombustionEngine>().Named(_realPowertrain.ICEName(cycleType));
+			}
+            Bind<ICombustionEngine>().To<EngineOnlyCombustionEngine>().Named(_realPowertrain.ICEName(CycleType.EngineOnly));
+			Bind<ICombustionEngine>().To<VTPCombustionEngine>().Named(_realPowertrain.ICEName(CycleType.VTP));
+
+            Bind<IElectricSystem>().To<ElectricSystem>().Named(_realPowertrain.Prefix);
 			Bind<IElectricChargerPort>().To<GensetChargerAdapter>().Named(_realPowertrain.Prefix);
 			Bind<IElectricMotor>().To<ElectricMotor>().Named(_realPowertrain.ElectricMotorName(false));
 			Bind<IElectricMotor>().To<IEPC>().Named(_realPowertrain.ElectricMotorName(true));
@@ -276,17 +83,13 @@ namespace TUGraz.VectoCore.Models.Simulation
 				}
 			}
 
-			Bind<IHybridController>().To<HybridController>().WhenInjectedInto<IPowertrainBuilder>(); // fallback binding
+			Bind<IHybridController>().To<HybridController>().Named(_realPowertrain.HybridControllerName(CycleType.DistanceBased));
+			Bind<IHybridController>().To<HybridController>().Named(_realPowertrain.HybridControllerName(CycleType.MeasuredSpeed));
 			Bind<IHybridController>().To<MeasuredSpeedGearHybridController>().Named(_realPowertrain.HybridControllerName(CycleType.MeasuredSpeedGear));
-			
-			Bind<ISerialHybridController>().To<SerialHybridController>().WhenInjectedInto<IPowertrainBuilder>(); // fallback binding
 
-            // CycleType == MeasuredSpeedGear
-            //var strategy = (data.GearboxData.Type.ManualTransmission() || data.GearboxData.Type == GearboxType.IHPC) 
-            //	? (IHybridControlStrategy) new MeasuredSpeedGearHybridStrategy(data, container)
-            //	: (IHybridControlStrategy) new MeasuredSpeedGearATHybridStrategy(data, container);
+			Bind<ISerialHybridController>().To<SerialHybridController>().Named(_realPowertrain.HybridControllerName(CycleType.DistanceBased));
 
-            Bind<IHybridControlStrategy>().To<MeasuredSpeedGearHybridStrategy>()
+			Bind<IHybridControlStrategy>().To<MeasuredSpeedGearHybridStrategy>()
 				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.ParallelHybridVehicle, CycleType.MeasuredSpeedGear, false));
 			Bind<IHybridControlStrategy>().To<MeasuredSpeedGearATHybridStrategy>()
 				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.ParallelHybridVehicle, CycleType.MeasuredSpeedGear, true));
@@ -294,11 +97,6 @@ namespace TUGraz.VectoCore.Models.Simulation
 				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.IHPC, CycleType.MeasuredSpeedGear, false));
 			Bind<IHybridControlStrategy>().To<MeasuredSpeedGearATHybridStrategy>()
 				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.IHPC, CycleType.MeasuredSpeedGear, true));
-
-            // CycleType == MeasuredSpeed
-            //var strategy = (data.GearboxData.Type.ManualTransmission() || data.GearboxData.Type == GearboxType.IHPC)
-            //	? (IHybridControlStrategy) new MeasuredSpeedHybridStrategy(data, container)
-            //	: (IHybridControlStrategy) new MeasuredSpeedHybridStrategyAT(data, container);
 
             Bind<IHybridControlStrategy>().To<MeasuredSpeedHybridStrategy>()
 				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.ParallelHybridVehicle,CycleType.MeasuredSpeed, false));
@@ -309,13 +107,6 @@ namespace TUGraz.VectoCore.Models.Simulation
 			Bind<IHybridControlStrategy>().To<MeasuredSpeedHybridStrategyAT>()
 				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.IHPC, CycleType.MeasuredSpeed, true));
 
-            //if (data.GearboxData.Type.ManualTransmission() || data.GearboxData.Type == GearboxType.IHPC) {
-            //	ctl = ComponentFactory.CreateHybridController(data.Cycle.CycleType, container, new HybridStrategy(data, container), es);
-            //	clutch = new SwitchableClutch(container, data.EngineData);
-            //} else {
-            //	ctl = ComponentFactory.CreateHybridController(data.Cycle.CycleType, container, new HybridStrategyAT(data, container), es);
-            //	ComponentFactory.CreateATClutchInfo(container);
-            //}
             Bind<IHybridControlStrategy>().To<HybridStrategy>()
 				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.ParallelHybridVehicle, CycleType.DistanceBased, false));
 			Bind<IHybridControlStrategy>().To<HybridStrategyAT>()
@@ -332,7 +123,6 @@ namespace TUGraz.VectoCore.Models.Simulation
 			Bind<IHybridControlStrategy>().To<SerialHybridStrategy>()
 				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.IEPC_S, CycleType.DistanceBased, false));
 
-
             Bind<IElectricMotorControl>().To<BatteryElectricMotorController>()
 				.Named(_realPowertrain.ElectricMotorControllerName(CycleType.DistanceBased));
 			Bind<IElectricMotorControl>().To<BatteryElectricMotorController>()
@@ -342,45 +132,304 @@ namespace TUGraz.VectoCore.Models.Simulation
             Bind<IElectricMotorControl>().To<PWheelBatteryElectricMotorController>()
 				.Named(_realPowertrain.ElectricMotorControllerName(CycleType.PWheel));
 
+			Bind<IGearbox>().To<IEPCGearboxMultipleGears>().Named(_realPowertrain.IEPCName(false));
+			Bind<IGearbox>().To<IEPCGearboxSingleSpeed>().Named(_realPowertrain.IEPCName(true));
+
             #endregion
 
             #region Test Powertrain
 
-            Bind<IClutch>().To<Clutch>(); // fallback binding
-
             AddCommonMappings(_testPowertrain);
 
             Bind<IVehicle>().To<TestPowertrainVehicle>().Named(_testPowertrain.Prefix);
-			Bind<ICombustionEngine>().To<TestpowertrainCombustionEngine>().Named(_testPowertrain.ICEName(false));
-			Bind<IElectricSystem>().To<TestpowertrainElectricSystem>().Named(_testPowertrain.Prefix);
+			foreach (var cycleType in EnumHelper.GetValues<CycleType>()) {
+				Bind<ICombustionEngine>().To<TestpowertrainCombustionEngine>().Named(_testPowertrain.ICEName(cycleType));
+			}
+            Bind<IElectricSystem>().To<TestpowertrainElectricSystem>().Named(_testPowertrain.Prefix);
 			Bind<IElectricChargerPort>().To<TestpowertrainGensetChargerAdapter>().Named(_testPowertrain.Prefix);
 			Bind<IElectricMotor>().To<TestpowertrainElectricMotor>().Named(_testPowertrain.ElectricMotorName(false));
 			Bind<IElectricMotor>().To<TestpowertrainIEPC>().Named(_testPowertrain.ElectricMotorName(true));
 
-			Bind<IHybridController>().To<SimpleHybridController>().WhenInjectedInto<ISimplePowertrainBuilder>(); // no differentiation for testpowertrain
+			Bind<IElectricMotorControl>().To<SimpleElectricMotorControl>().Named(_testPowertrain.ElectricMotorControllerName(CycleType.DistanceBased));
 
-            //if (data.GearboxData.Type.AutomaticTransmission()) {
-            //	gearbox = new TestPowertrainAPTNGearbox(container, ctl.ShiftStrategy);
-            //} else {
-            //	gearbox = new TestPowertrainGearbox(container, ctl.ShiftStrategy);
-            //}
-            //Bind<IGearbox>().To<TestPowertrainGearbox>(); // fallback binding
-
+			// no differentiation for testpowertrain (fallback binding collides with other bindings, WhenAnyAncestorNamed does not work because both real and testpowertrain are parents
+			foreach (var cycleType in EnumHelper.GetValues<CycleType>()) {
+				Bind<IHybridController>().To<SimpleHybridController>().Named(_testPowertrain.HybridControllerName(cycleType));
+			}
+			
 			foreach (var entry in GearboxTestpowertrainConfig()) {
 				foreach (var gbxType in entry.Value) {
 					Bind<IGearbox>().To(gbxType.Value).Named(_testPowertrain.GearboxName(entry.Key.Item2, entry.Key.Item1, gbxType.Key));
 				}
 			}
-
-            //Bind<IGearbox>().To<TestPowertrainAPTGearbox>().Named(_testPowertrain.GearboxName(CycleType.DistanceBased, GearboxType.ATPowerSplit));
-            //Bind<IGearbox>().To<TestPowertrainAPTGearbox>().Named(_testPowertrain.GearboxName(CycleType.DistanceBased, GearboxType.ATSerial));
-            //Bind<IGearbox>().To<TestPowertrainAPTGearbox>().Named(_testPowertrain.GearboxName(CycleType.DistanceBased, GearboxType.APTN));
-
-
+			
+            Bind<IGearbox>().To<TestpowertrainIEPCGearboxMultipleGears>().Named(_testPowertrain.IEPCName(false));
+			Bind<IGearbox>().To<TestpowertrainIEPCGearboxSingleSpeed>().Named(_testPowertrain.IEPCName(true));
 
             #endregion
 
         }
+
+        private Dictionary<Tuple<CycleType, VectoSimulationJobType>, Dictionary<GearboxType, Type>> GearboxConfig()
+        {
+            var mtGearboxT = typeof(MTGearbox);
+            var amtGearboxT = typeof(AMTGearbox);
+            var aptGearboxT = typeof(APTGearbox);
+            var aptnGearboxT = typeof(APTNGearbox);
+            var pevGearboxT = typeof(PEVGearbox);
+            var iepcGearboxT = typeof(IEPCGearbox);
+            var measSpdPHEVGbxT = typeof(MeasuredSpeedHybridsGearbox);
+            var measSpdPHEVGearGbxT = typeof(MeasuredSpeedHybridsCycleGearbox);
+            var bevCycleGbxT = typeof(BEVCycleGearbox);
+            var cycleGearboxT = typeof(CycleGearbox);
+
+            #region distance based
+            var GbxClass_Distance_Conv = new Dictionary<GearboxType, Type>() {
+                {MTGearbox, mtGearboxT},
+                {AMTGearbox, amtGearboxT},
+                {APTSGearbox, aptGearboxT},
+                {APTPGearbox, aptGearboxT},
+            };
+            var GbxClass_Distance_PHEV = new Dictionary<GearboxType, Type>() {
+                {AMTGearbox, amtGearboxT},
+                {APTSGearbox, aptGearboxT},
+                {APTPGearbox, aptGearboxT},
+            };
+            var GbxClass_Distance_IHPC = new Dictionary<GearboxType, Type>() {
+                {IHPCGearbox, aptnGearboxT}
+            };
+            var GbxClass_Distance_SHEV = new Dictionary<GearboxType, Type>() {
+                {AMTGearbox, pevGearboxT},
+                {APTSGearbox, pevGearboxT},
+                {APTPGearbox, pevGearboxT},
+                {APTNGearbox, aptnGearboxT},
+            };
+            var GbxClass_Distance_SIEPC = new Dictionary<GearboxType, Type>() {
+                {IEPCGearbox, iepcGearboxT},
+				{APTNGearbox, iepcGearboxT},
+            };
+            var GbxClass_Distance_PEV = new Dictionary<GearboxType, Type>() {
+                {AMTGearbox, pevGearboxT},
+                {APTSGearbox, pevGearboxT},
+                {APTPGearbox, pevGearboxT},
+                {APTNGearbox, aptnGearboxT},
+                {IHPCGearbox, pevGearboxT}
+            };
+            var GbxClass_Distance_EIEPC = new Dictionary<GearboxType, Type>() {
+                {IEPCGearbox, iepcGearboxT},
+				{APTNGearbox, iepcGearboxT},
+            };
+            #endregion
+
+            #region measured speed
+            var GbxClass_MeasSpd_Conv = new Dictionary<GearboxType, Type>() {
+                {MTGearbox, mtGearboxT},
+                {AMTGearbox, amtGearboxT},
+                {APTSGearbox, aptGearboxT},
+                {APTPGearbox, aptGearboxT},
+            };
+            var GbxClass_MeasSpd_PHEV = new Dictionary<GearboxType, Type>() {
+                {AMTGearbox, measSpdPHEVGbxT},
+                {APTSGearbox, aptGearboxT},
+                {APTPGearbox, aptGearboxT},
+            };
+            var GbxClass_MeasSpd_IHPC = new Dictionary<GearboxType, Type>() {
+                {IHPCGearbox, aptnGearboxT}
+            };
+            var GbxClass_MeasSpd_PEV = new Dictionary<GearboxType, Type>() {
+                {AMTGearbox, pevGearboxT},
+                {APTSGearbox, pevGearboxT},
+                {APTPGearbox, pevGearboxT},
+                {APTNGearbox, aptnGearboxT},
+            };
+            var GbxClass_MeasSpd_EIEPC = new Dictionary<GearboxType, Type>() {
+                {IEPCGearbox, iepcGearboxT},
+				{APTNGearbox, iepcGearboxT},
+            };
+            #endregion
+
+            #region measured speed gear
+            var GbxClass_MeasSpdGear_Conv = new Dictionary<GearboxType, Type>() {
+                {MTGearbox, cycleGearboxT},
+                {AMTGearbox, cycleGearboxT},
+                {APTSGearbox, cycleGearboxT},
+                {APTPGearbox, cycleGearboxT},
+            };
+            var GbxClass_MeasSpdGear_PHEV = new Dictionary<GearboxType, Type>() {
+                {AMTGearbox, measSpdPHEVGearGbxT},
+                {APTSGearbox, measSpdPHEVGearGbxT},
+                {APTPGearbox, measSpdPHEVGearGbxT},
+            };
+            var GbxClass_MeasSpdGear_IHPC = new Dictionary<GearboxType, Type>() {
+                {IHPCGearbox, measSpdPHEVGearGbxT}
+            };
+            var GbxClass_MeasSpdGear_PEV = new Dictionary<GearboxType, Type>() {
+                {AMTGearbox, bevCycleGbxT},
+                {APTSGearbox, bevCycleGbxT},
+                {APTPGearbox, bevCycleGbxT},
+                {APTNGearbox, bevCycleGbxT},
+            };
+            var GbxClass_MeasSpdGear_EIEPC = new Dictionary<GearboxType, Type>() {
+                {IEPCGearbox, bevCycleGbxT},
+				{APTNGearbox, bevCycleGbxT},
+            };
+            #endregion
+
+            #region PWheel
+            var GbxClass_PWheel_Conv = new Dictionary<GearboxType, Type>() {
+                {MTGearbox, cycleGearboxT},
+                {AMTGearbox, cycleGearboxT},
+                {APTSGearbox, cycleGearboxT},
+                {APTPGearbox, cycleGearboxT},
+            };
+            var GbxClass_PWheel_PEV = new Dictionary<GearboxType, Type>() {
+                {AMTGearbox, bevCycleGbxT},
+                {APTSGearbox, bevCycleGbxT},
+                {APTPGearbox, bevCycleGbxT},
+                {APTNGearbox, bevCycleGbxT},
+            };
+            var GbxClass_PWheel_EIEPC = new Dictionary<GearboxType, Type>() {
+                {IEPCGearbox, bevCycleGbxT},
+				{APTNGearbox, bevCycleGbxT},
+            };
+            #endregion
+
+            #region VTP
+            var GbxClass_VTP_Conv = new Dictionary<GearboxType, Type>() {
+                {MTGearbox, cycleGearboxT},
+                {AMTGearbox, cycleGearboxT},
+                {APTSGearbox, cycleGearboxT},
+                {APTPGearbox, cycleGearboxT},
+            };
+            #endregion
+
+            return new Dictionary<Tuple<CycleType, VectoSimulationJobType>, Dictionary<GearboxType, Type>>() {
+					// distance based cycles
+					{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.ConventionalVehicle) , GbxClass_Distance_Conv},
+                    { Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.ParallelHybridVehicle) , GbxClass_Distance_PHEV},
+                    { Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.IHPC) , GbxClass_Distance_IHPC},
+                    { Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.SerialHybridVehicle) , GbxClass_Distance_SHEV},
+                    { Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.IEPC_S) , GbxClass_Distance_SIEPC},
+                    { Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.BatteryElectricVehicle) , GbxClass_Distance_PEV},
+                    { Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.IEPC_E) , GbxClass_Distance_EIEPC},
+					// measured speed cycles
+					{ Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.ConventionalVehicle) , GbxClass_MeasSpd_Conv},
+                    { Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.ParallelHybridVehicle) , GbxClass_MeasSpd_PHEV},
+                    { Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.IHPC) , GbxClass_MeasSpd_IHPC},
+                    { Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.BatteryElectricVehicle) , GbxClass_MeasSpd_PEV},
+                    { Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.IEPC_E) , GbxClass_MeasSpd_EIEPC},
+					// measured speed with gear cycles
+					{ Tuple.Create(CycleType.MeasuredSpeedGear, VectoSimulationJobType.ConventionalVehicle) , GbxClass_MeasSpdGear_Conv},
+                    { Tuple.Create(CycleType.MeasuredSpeedGear, VectoSimulationJobType.ParallelHybridVehicle) , GbxClass_MeasSpdGear_PHEV},
+                    { Tuple.Create(CycleType.MeasuredSpeedGear, VectoSimulationJobType.IHPC) , GbxClass_MeasSpdGear_IHPC},
+                    { Tuple.Create(CycleType.MeasuredSpeedGear, VectoSimulationJobType.BatteryElectricVehicle) , GbxClass_MeasSpdGear_PEV},
+                    { Tuple.Create(CycleType.MeasuredSpeedGear, VectoSimulationJobType.IEPC_E) , GbxClass_MeasSpdGear_EIEPC},
+					// pwheel cycles
+					{ Tuple.Create(CycleType.PWheel, VectoSimulationJobType.ConventionalVehicle) , GbxClass_PWheel_Conv},
+                    { Tuple.Create(CycleType.PWheel, VectoSimulationJobType.BatteryElectricVehicle) , GbxClass_PWheel_PEV},
+                    { Tuple.Create(CycleType.PWheel, VectoSimulationJobType.IEPC_E) , GbxClass_PWheel_EIEPC},
+					// VTP cycles
+					{ Tuple.Create(CycleType.VTP, VectoSimulationJobType.ConventionalVehicle) , GbxClass_VTP_Conv},
+                };
+        }
+
+        private Dictionary<Tuple<CycleType, VectoSimulationJobType>, Dictionary<GearboxType, Type>> GearboxTestpowertrainConfig()
+        {
+            var amtGearboxT = typeof(TestPowertrainGearbox);
+            var aptGearboxT = typeof(TestPowertrainAPTGearbox);
+            var aptnGearboxT = typeof(TestPowertrainAPTNGearbox);
+			var iepcGearboxT = typeof(TestPowertrainIEPCGearbox);
+
+			var measuredSpdHybGbxT = typeof(MeasuredSpeedHybridsGearbox);
+			var measuredSpdHybGearGbxT = typeof(MeasuredSpeedHybridsCycleGearbox);
+
+            #region distance based
+            var GbxClass_Distance_Conv = new Dictionary<GearboxType, Type>() {
+                {MTGearbox, amtGearboxT},
+                {AMTGearbox, amtGearboxT},
+                {APTSGearbox, aptGearboxT},
+				{APTPGearbox, aptGearboxT},
+			};
+            var GbxClass_Distance_PHEV = new Dictionary<GearboxType, Type>() {
+                {AMTGearbox, amtGearboxT},
+                {APTSGearbox, aptGearboxT},
+                {APTPGearbox, aptGearboxT},
+			};
+			var GbxClass_Distance_IHPC = new Dictionary<GearboxType, Type>() {
+				{IHPCGearbox, amtGearboxT}
+			};
+            var GbxClass_Distance_SHEV = new Dictionary<GearboxType, Type>() {
+                {AMTGearbox, amtGearboxT},
+                //{APTSGearbox, aptnGearboxT},
+                //{APTPGearbox, aptnGearboxT},
+                {APTNGearbox, aptnGearboxT},
+            };
+			var GbxClass_Distance_SIEPC = new Dictionary<GearboxType, Type>() {
+				{IEPCGearbox, iepcGearboxT},
+				{APTNGearbox, iepcGearboxT},
+            };
+			var GbxClass_Distance_PEV = new Dictionary<GearboxType, Type>() {
+				{AMTGearbox, amtGearboxT},
+				//{APTSGearbox, amtGearboxT},
+				//{APTPGearbox, amtGearboxT},
+				{APTNGearbox, aptnGearboxT},
+			};
+			var GbxClass_Distance_EIEPC = new Dictionary<GearboxType, Type>() {
+				{IEPCGearbox, iepcGearboxT},
+				{APTNGearbox, iepcGearboxT},
+			};
+			#endregion
+
+			#region measured speed
+
+			var GbxClass_MeasuredSpd_Conv = new Dictionary<GearboxType, Type>() {
+				{ MTGearbox, amtGearboxT },
+				{ AMTGearbox, amtGearboxT },
+				{ APTSGearbox, aptGearboxT },
+				{ APTPGearbox, aptGearboxT },
+			};
+			var GbxClass_MeasuredSpd_PHEV = new Dictionary<GearboxType, Type>() {
+				{AMTGearbox, measuredSpdHybGbxT},
+				{APTSGearbox, aptGearboxT},
+				{APTPGearbox, aptGearboxT},
+			};
+			var GbxClass_MeasuredSpd_IHPC = new Dictionary<GearboxType, Type>() {
+				{IHPCGearbox, measuredSpdHybGbxT}
+			};
+			var GbxClass_MeasuredSpd_PEV = new Dictionary<GearboxType, Type>() {
+				{AMTGearbox, amtGearboxT},
+				//{APTSGearbox, amtGearboxT},
+				//{APTPGearbox, aptGearboxT},
+				{APTNGearbox, aptnGearboxT},
+			};
+			var GbxClass_MeasuredSpd_EIEPC = new Dictionary<GearboxType, Type>() {
+				{IEPCGearbox, iepcGearboxT},
+				{APTNGearbox, iepcGearboxT},
+			};
+            #endregion
+
+            #region measured speed gear
+			var GbxClass_MeasuredSpdGear_PHEV = new Dictionary<GearboxType, Type>() {
+				{AMTGearbox, measuredSpdHybGearGbxT},
+				{APTSGearbox, measuredSpdHybGearGbxT},
+				{APTPGearbox, measuredSpdHybGearGbxT},
+			};
+            #endregion
+
+            return new Dictionary<Tuple<CycleType, VectoSimulationJobType>, Dictionary<GearboxType, Type>>() {
+				// distance based cycles
+				{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.ConventionalVehicle) , GbxClass_Distance_Conv},
+                { Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.ParallelHybridVehicle) , GbxClass_Distance_PHEV},
+				{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.IHPC) , GbxClass_Distance_IHPC},
+                { Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.SerialHybridVehicle) , GbxClass_Distance_SHEV},
+				{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.IEPC_S) , GbxClass_Distance_SIEPC},
+				{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.BatteryElectricVehicle) , GbxClass_Distance_PEV},
+				{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.IEPC_E) , GbxClass_Distance_EIEPC},
+
+            };
+        }
+
+
 
         private void AddCommonMappings(ComponentBindingNameHelper namingHelper)
 		{
@@ -398,8 +447,8 @@ namespace TUGraz.VectoCore.Models.Simulation
             Bind<IAngledrive>().To<Angledrive>().Named(namingHelper.Prefix);
             Bind<IRetarder>().To<Retarder>().Named(namingHelper.Prefix);
 
-			// concrete bindings for Clutch
-			Bind<IClutch>().To<SwitchableClutch>()
+			Bind<IClutch>().To<Clutch>().Named(namingHelper.ClutchName(VectoSimulationJobType.ConventionalVehicle));
+            Bind<IClutch>().To<SwitchableClutch>()
 				.Named(namingHelper.ClutchName(VectoSimulationJobType.ParallelHybridVehicle));
 			Bind<IClutch>().To<SwitchableClutch>()
 				.Named(namingHelper.ClutchName(VectoSimulationJobType.IHPC));
@@ -427,7 +476,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 		
 		private IInstanceProvider GetMethodSettings(ComponentBindingNameHelper namingHelper)
 		{
-			return new CombineArgumentsToNameInstanceProvider(true,
+			return new CombineArgumentsToNameInstanceProvider(false,
 				// method settings for creating name bindings for combustion engine
 				GetMethodSettings(namingHelper.CreatICEName, 1, typeof(IPowertrainComponentFactory).GetMethod(
 					nameof(IPowertrainComponentFactory
@@ -526,9 +575,9 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		public string GearboxInfoName(bool engineOnly) => $"{_prefix}_{(engineOnly ? "EngOnly" : "Full")}";
 
-		public string CreatICEName(object[] arguments) => CheckArguments<bool>(arguments, ICEName);
+		public string CreatICEName(object[] arguments) => CheckArguments<CycleType>(arguments, ICEName);
 
-		public string ICEName(bool engineOnly) => $"{_prefix}_{(engineOnly ? "EngOnly" : "Full")}";
+		public string ICEName(CycleType cycleType) => $"{_prefix}_{cycleType.ToString()}";
 
 		public string CreateHybridStrategyName(object[] arguments) => CheckArguments<VectoSimulationJobType,CycleType, bool>(arguments, HybridStrategyName);
 
@@ -545,6 +594,10 @@ namespace TUGraz.VectoCore.Models.Simulation
 		public string CreateElectricMotorControllerName(object[] arguments) => CheckArguments<CycleType>(arguments, ElectricMotorControllerName);
 
 		public string ElectricMotorControllerName(CycleType cycle) => $"{_prefix}_{cycle}";
+
+		public string CreateIEPCName(object[] arguments) => CheckArguments<bool>(arguments, IEPCName);
+
+		public string IEPCName(bool singleSpeed) => $"{_prefix}_IEPC_{singleSpeed}";
 
         // -----
 

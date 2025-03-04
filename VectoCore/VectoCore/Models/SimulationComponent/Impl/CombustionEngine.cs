@@ -127,9 +127,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public PerSecond EngineN80hSpeed => ModelData.FullLoadCurves[0].N80hSpeed;
 
-		public IIdleController IdleController => EngineIdleController ?? (EngineIdleController = new CombustionEngineIdleController(this, DataBus));
+		public IIdleController IdleController => EngineIdleController ?? (EngineIdleController = CreateIdleController());
 
-		protected CombustionEngineIdleController EngineIdleController { get; set; }
+		protected IIdleController EngineIdleController { get; set; }
 
 		#endregion
 
@@ -549,6 +549,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override bool DoUpdateFrom(object other) => false;
 
 		#endregion
+
+		protected virtual IIdleController CreateIdleController()
+		{
+			return new CombustionEngineIdleController(this, DataBus);
+
+		}
 
 		/// <summary>
 		///     computes full load power from gear [-], angularVelocity [rad/s] and dt [s].

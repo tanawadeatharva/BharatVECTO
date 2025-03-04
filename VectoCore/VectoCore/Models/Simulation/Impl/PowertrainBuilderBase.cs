@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			AddAuxiliaries(components.Engine, container, data);
 		}
 
-		protected void AddVTPBusAuxiliaries(VectoRunData data, IVehicleContainer container, VTPCombustionEngine engine)
+		protected void AddVTPBusAuxiliaries(VectoRunData data, IVehicleContainer container, ICombustionEngine engine)
 		{
 			var aux = ComponentFactory.CreateEngineAuxiliary(container);
 			foreach (var auxData in data.Aux) {
@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 		protected void AddVTPTruckAuxiliaries(VectoRunData data, IVehicleContainer container,
-			VTPCombustionEngine engine)
+			ICombustionEngine engine)
 		{
 			var aux = CreateSpeedDependentAuxiliaries(data, container);
 			var engineFan = new EngineFanAuxiliary(data.FanDataVTP.FanCoefficients.Take(3).ToArray(),

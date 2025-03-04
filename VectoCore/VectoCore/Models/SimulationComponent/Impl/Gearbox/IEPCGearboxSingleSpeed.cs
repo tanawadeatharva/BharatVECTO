@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
@@ -10,8 +11,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
 {
-
-    public class SingleSpeedGearbox : TransmissionComponent, IGearbox
+	public class IEPCGearboxSingleSpeed : TransmissionComponent, IGearbox
     {
         protected GearData GearData;
 
@@ -19,7 +19,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
 
         public IShiftStrategy Strategy => null;
 
-        public SingleSpeedGearbox(IVehicleContainer container, GearboxData modelData) : base(container,
+		public IEPCGearboxSingleSpeed(IVehicleContainer container, GearboxData modelData) : this(container,
+			modelData, false)
+		{
+			if (container.IsTestPowertrain) {
+				throw new VectoException(
+					"This class shall not be used in a testpowertrain - use the dedicated class instead!");
+			}
+        }
+
+        protected IEPCGearboxSingleSpeed(IVehicleContainer container, GearboxData modelData, bool dummy) : base(container,
             modelData.Gears.First().Value)
         {
             GearboxType = modelData.Type;

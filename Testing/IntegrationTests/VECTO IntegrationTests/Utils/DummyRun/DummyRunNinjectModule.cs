@@ -237,8 +237,8 @@ public class DummyRunPowertrainComponentFactory : IPowertrainComponentFactory
 		throw new NotImplementedException();
 	}
 
-	public ICombustionEngine CreateCombustionEngine(bool engineOnly, IVehicleContainer container, CombustionEngineData modelData,
-		bool pt1Disabled = false)
+	public ICombustionEngine CreateCombustionEngine(CycleType cycleType, IVehicleContainer container,
+		CombustionEngineData modelData, bool pt1Disabled = false)
 	{
 		throw new NotImplementedException();
 	}

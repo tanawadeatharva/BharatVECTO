@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.UpdateComponents();
 
 			if (TestPowertrain.Gearbox != null) {
-				if (!(DataBus.GearboxInfo is IAMTGearbox || DataBus.GearboxInfo is IPEVGearbox || DataBus.GearboxInfo is IEPCGearbox)) {
+				if (!(DataBus.GearboxInfo is IAMTGearbox || DataBus.GearboxInfo is IPEVGearbox || DataBus.GearboxInfo is IIEPCGearbox)) {
 					throw new VectoException("AMT Gearbox Required!");
                 }
 				var g = DataBus.GearboxInfo ?? throw new VectoException("AMT Gearbox Required!");

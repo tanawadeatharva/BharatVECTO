@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			}
 
 			// create testcontainer
-			TestPowertrain = PowertrainBuilder.CreateTestPowertrain(Container, true);
+			TestPowertrain = PowertrainBuilder.CreateTestPowertrain(Container, false);
 
             DesiredGearRoadsweeping = RunData.DriverData?.PTODriveRoadsweepingGear;
         }

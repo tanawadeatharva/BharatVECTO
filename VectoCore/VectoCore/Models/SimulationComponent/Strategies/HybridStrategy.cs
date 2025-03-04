@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 	public class HybridStrategyAT : AbstractHybridStrategy
 	{
-		public HybridStrategyAT(VectoRunData runData, IVehicleContainer vehicleContainer) : base(runData, vehicleContainer)
+		public HybridStrategyAT(VectoRunData runData, IVehicleContainer container) : base(runData, container)
 		{ }
 
 		protected override IResponse RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition nextGear, HybridStrategyResponse cfg)

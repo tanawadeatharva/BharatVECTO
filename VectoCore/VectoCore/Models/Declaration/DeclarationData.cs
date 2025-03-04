@@ -1059,15 +1059,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 					case GearboxType.ATSerial:
 					case GearboxType.ATPowerSplit:
 						return TorqueConverter.ComputeShiftPolygon(fullLoadCurve, gearIdx == 0, gearIdx >= gears.Count - 1);
-					case GearboxType.DrivingCycle: break;
 					default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
 				}
 
-				return type.AutomaticTransmission()
-					? TorqueConverter.ComputeShiftPolygon(fullLoadCurve, gearIdx == 0, gearIdx >= gears.Count - 1)
-
-					// That's the same for all gears, so call the same method...
-					: ComputeManualTransmissionShiftPolygon(gearIdx, fullLoadCurve, gears, engine, axlegearRatio, dynamicTyreRadius);
 			}
 
 			public static ShiftPolygon ComputeElectricMotorShiftPolygon(int gearIdx,
