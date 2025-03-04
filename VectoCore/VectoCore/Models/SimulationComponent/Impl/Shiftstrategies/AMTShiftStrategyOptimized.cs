@@ -16,7 +16,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
-    public class AMTShiftStrategyOptimized : BaseShiftStrategy<AMTGearbox> //AMTShiftStrategy
+    public class AMTShiftStrategyOptimized : BaseShiftStrategy //AMTShiftStrategy
 	{
 		public const string Name = "AMT - EffShift";
 
@@ -29,6 +29,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 		protected GearshiftPosition DesiredGearRoadsweeping;
 		protected ITestPowertrain TestPowertrain;
+
+		protected IGearbox _gearbox;
 
         public AMTShiftStrategyOptimized(IVehicleContainer container) : base(container)
 		{
@@ -93,8 +95,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 					TestPowertrain, -grad, grad, 2));
 		}
 
-		
-        public override GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+		public override IGearbox Gearbox
+		{
+			get => _gearbox;
+			set
+			{
+				if (value is IAMTGearbox) {
+					_gearbox = value;
+					return;
+				}
+				throw new VectoException("This shift strategy can't handle gearbox of type {0}, expected {1}", value.GetType().Name, nameof(IAMTGearbox));
+            }
+		}
+
+		public override GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
         {
             if (Container.VehicleInfo.VehicleSpeed.IsEqual(0)) {
                 return InitStartGear(absTime, outTorque, outAngularVelocity);
@@ -187,8 +201,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		}
 
 		public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity) { }
+		
 
-        protected override bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
+		protected override bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
 			PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, GearshiftPosition gear,
 			Second lastShiftTime, IResponse response)
 		{

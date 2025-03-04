@@ -42,7 +42,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-    public abstract class BaseShiftStrategy<T> : LoggingObject, IShiftStrategy where T : class, IGearbox, IGearboxType
+    public abstract class BaseShiftStrategy : LoggingObject, IShiftStrategy
     {
 		protected readonly IVehicleContainer Container;
 		protected readonly VectoRunData RunData;
@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         protected readonly GearList Gears;
 
-		protected T _gearbox;
+		//protected T _gearbox;
 
 		protected GearshiftPosition _nextGear;
 
@@ -68,16 +68,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Gears = GearboxModelData.GearList;
 		}
 
-		public virtual IGearbox Gearbox {
-			get => _gearbox;
-			set {
-				var myGearbox = value as T;
-				if (myGearbox == null) {
-					throw new VectoException("This shift strategy can't handle gearbox of type {0}, expected {1}", value.GetType().Name, typeof(T).Name);
-				}
-				_gearbox = myGearbox;
-			}
-		}
+		//public virtual IGearbox Gearbox {
+		//	get => _gearbox;
+		//	set {
+		//		var myGearbox = value as T;
+		//		if (myGearbox == null) {
+		//			throw new VectoException("This shift strategy can't handle gearbox of type {0}, expected {1}", value.GetType().Name, typeof(T).Name);
+		//		}
+		//		_gearbox = myGearbox;
+		//	}
+		//}
+
+		public abstract IGearbox Gearbox { get; set; }
 
         public virtual bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
 			PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, GearshiftPosition gear,

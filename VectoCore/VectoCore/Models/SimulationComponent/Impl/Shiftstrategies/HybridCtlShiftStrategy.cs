@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -10,11 +11,13 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
-    public class HybridCtlShiftStrategy : BaseShiftStrategy<AMTGearbox>, IHybridControlShiftStrategy
+    public class HybridCtlShiftStrategy : BaseShiftStrategy, IHybridControlShiftStrategy
     {
         protected IHybridControllerInternal Controller;
 
         protected ITestPowertrain TestPowertrain;
+
+		protected IGearbox _gearbox;
 
         public HybridCtlShiftStrategy(IHybridControllerInternal hybridController, IVehicleContainer container) : base(
             container)
@@ -44,6 +47,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 			TestPowertrain = PowertrainBuilder.CreateTestPowertrain(Container, true);
         }
+
+		public override IGearbox Gearbox {
+			get => _gearbox;
+			set {
+				if (value is IAMTGearbox || value is MeasuredSpeedHybridsGearbox) {
+					_gearbox = value;
+					return;
+				}
+				throw new VectoException("This shift strategy can't handle gearbox of type {0}, expected {1} or {2}", value.GetType().Name, nameof(IAMTGearbox), nameof(MeasuredSpeedHybridsGearbox));
+			}
+		}
 
         protected override bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque,
             PerSecond outAngularVelocity, NewtonMeter inTorque,

@@ -31,6 +31,7 @@
 
 using System;
 using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -46,12 +47,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
     /// AMTShiftStrategy implements the AMT Shifting Behaviour.
     /// </summary>
     [Obsolete("no longer maintained - use AMTShiftStrategyOptimized")]
-	public class AMTShiftStrategy : BaseShiftStrategy<AMTGearbox>
+	public class AMTShiftStrategy : BaseShiftStrategy
 	{
-		//protected readonly GearshiftPosition MaxStartGear;
-		protected GearshiftPosition DesiredGearRoadsweeping;
+		public const string Name = "AMT - Classic";
+
+        //protected readonly GearshiftPosition MaxStartGear;
+        protected GearshiftPosition DesiredGearRoadsweeping;
 		
 		protected ITestPowertrain TestPowertrain;
+
+		protected AMTGearbox _gearbox;
 
         public AMTShiftStrategy(IVehicleContainer container) : base(container)
 		{
@@ -82,10 +87,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			TestPowertrain = PowertrainBuilder.CreateTestPowertrain(Container, true);
 		}
 
-		public const string Name = "AMT - Classic";
+		public override IGearbox Gearbox {
+			get => _gearbox;
+			set {
+				if (value is AMTGearbox gbx) {
+					_gearbox = gbx;
+					return;
+				}
+				throw new VectoException("This shift strategy can't handle gearbox of type {0}, expected {1}", value.GetType().Name, nameof(IAMTGearbox));
+			}
+		}
 
-
-		public override GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+        public override GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			while (Gears.HasPredecessor(_nextGear) && SpeedTooLowForEngine(_nextGear, outAngularVelocity)) {
 				_nextGear = Gears.Predecessor(_nextGear);

@@ -19,7 +19,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
-    public class ATShiftStrategyOptimized : BaseShiftStrategy<APTGearbox>
+    public class ATShiftStrategyOptimized : BaseShiftStrategy
 	{
 		public const string Name = "AT - EffShift";
 
@@ -38,7 +38,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected List<SchmittTrigger> LoadStageSteps = new List<SchmittTrigger>();
 		protected ShiftLineSet UpshiftLineTCLocked = new ShiftLineSet();
 
-		public ATShiftStrategyOptimized(IVehicleContainer container) : base(container)
+		protected APTGearbox _gearbox;
+
+        public ATShiftStrategyOptimized(IVehicleContainer container) : base(container)
 		{
 			EngineInertia = container.RunData.EngineData?.Inertia ?? 0.SI<KilogramSquareMeter>();
 
@@ -63,7 +65,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 		}
 
-		public override GearshiftPosition NextGear => _nextGear.Gear;
+		public override IGearbox Gearbox {
+			get => _gearbox;
+			set {
+				if (value is APTGearbox gbx) {
+					_gearbox = gbx;
+					return;
+				}
+				throw new VectoException("This shift strategy can't handle gearbox of type {0}, expected {1}", value.GetType().Name, nameof(APTGearbox));
+			}
+		}
+
+        public override GearshiftPosition NextGear => _nextGear.Gear;
 
         private void InitializeShiftlinesTCToLocked()
 		{

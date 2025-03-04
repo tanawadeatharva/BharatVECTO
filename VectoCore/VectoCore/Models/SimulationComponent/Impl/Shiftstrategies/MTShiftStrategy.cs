@@ -43,7 +43,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
-    public class  MTShiftStrategy : BaseShiftStrategy<MTGearbox>
+    public class  MTShiftStrategy : BaseShiftStrategy
 	{
 		public const string Name = "MT Shift Strategy";
 
@@ -52,6 +52,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected ITestPowertrain TestPowertrain;
 
 		protected GearshiftPosition DesiredGearRoadsweeping;
+
+		protected MTGearbox _gearbox;
 
         public MTShiftStrategy(IVehicleContainer container) : base(container)
 		{
@@ -85,7 +87,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
             DesiredGearRoadsweeping = RunData.DriverData?.PTODriveRoadsweepingGear;
         }
 
-		public override GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+		public override IGearbox Gearbox {
+			get => _gearbox;
+			set {
+				if (value is MTGearbox gbx) {
+					_gearbox = gbx;
+					return;
+				}
+				throw new VectoException("This shift strategy can't handle gearbox of type {0}, expected {1}", value.GetType().Name, nameof(MTGearbox));
+			}
+		}
+
+        public override GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
         {
             if (Container.VehicleInfo.VehicleSpeed.IsEqual(0)) {
                 return InitStartGear(absTime, outTorque, outAngularVelocity);

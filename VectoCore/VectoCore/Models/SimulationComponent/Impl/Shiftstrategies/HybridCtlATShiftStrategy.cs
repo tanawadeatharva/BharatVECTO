@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
@@ -9,9 +10,12 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
 
-    public class HybridCtlATShiftStrategy : BaseShiftStrategy<APTGearbox>, IHybridControlShiftStrategy
+    public class HybridCtlATShiftStrategy : BaseShiftStrategy, IHybridControlShiftStrategy
     {
-		public HybridCtlATShiftStrategy(IHybridControllerInternal hybridController, IVehicleContainer container) :
+		protected APTGearbox _gearbox;
+
+
+        public HybridCtlATShiftStrategy(IHybridControllerInternal hybridController, IVehicleContainer container) :
 			base(container)
 		{ }
 
@@ -40,6 +44,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
             _gearbox.Disengaged = false;
             return base.Gears.First();
         }
+
+		public override IGearbox Gearbox {
+			get => _gearbox;
+			set {
+				if (value is APTGearbox gbx) {
+					_gearbox = gbx;
+					return;
+				}
+				throw new VectoException("This shift strategy can't handle gearbox of type {0}, expected {1}", value.GetType().Name, nameof(APTGearbox));
+			}
+		}
 
         public override GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
         {
