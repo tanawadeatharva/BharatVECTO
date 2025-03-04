@@ -1,5 +1,5 @@
 
-## VECTO v4.3.3 Official Release (03-03-2025)
+## VECTO v4.3.3 Official Release (04-03-2025)
 
 
 ### Bug Fixes
@@ -15,4 +15,8 @@
 - fix: correct interim supercap reader type (vecto/vecto!320)
 
 - fix: parameter IDs for XSDs v2.3 and v2.6 (vecto/vecto!322)
+
+### Documentation
+
+- Update XSD parameter IDs documentation (vecto/vecto!327)
 
