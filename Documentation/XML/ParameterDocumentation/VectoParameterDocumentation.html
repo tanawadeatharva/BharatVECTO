@@ -30,11 +30,11 @@
             onclick="openTab(event, 'AnonymousTypes')">
             Anonymous Types
         </button>
-        <button if="btn_missing" 
+        <!-- <button if="btn_missing" 
             class="btn btn-info tablinks"
             onclick="openTab(event, 'MissingTypes')">
             Missing Types
-        </button>
+        </button> -->
     </div>
 
     <!-- Tab content -->
@@ -82,14 +82,14 @@
         </table>
     </div>
   
-    <div id="MissingTypes" class="tabcontent">
+    <!-- <div id="MissingTypes" class="tabcontent">
         <table id=missingTypesTable class="table table-striped table-hover hidden">
             <thead>
             </thead>
             <tbody>
             </tbody>
             </table>
-    </div>
+    </div> -->
 
     <script>
         function openTab(evt, tabName) {
@@ -143,16 +143,16 @@
     <script type="text/javascript"> 
         const mergedTypesData = mergedTypes;
         const anonymousTypesData = anonymousTypes;
-        const missingTypesData = missingTypes;
+        //const missingTypesData = missingTypes;
         var topBarHeight = 0;
     </script> 
     <script>          
     
     $( document ).ready(function() {
-        console.log( "ready!" );
-        console.log( "Init tables!");
+        // console.log( "ready!" );
+        // console.log( "Init tables!");
         topBarHeight = $( "#topContainer" ).outerHeight();
-        console.log(topBarHeight);
+        // console.log(topBarHeight);
         initTables();
     });
 
@@ -332,10 +332,10 @@
 
     function getBackgroundClass(modeEnum){
         var classes = [
+            'bg-red', //undefined
             'bg-green', //Declaration
             'bg-yellow', //Engineering
             'bg-blue', //Declaration and Engineering
-            'bg-red', //undefined
         ]
 
         return classes[modeEnum]
@@ -393,8 +393,8 @@
 
     function restrictionFormatter(index, restrictions){
         var parentDiv = $('<div>');
-        console.log('Restrictionformatter');
-        console.log(restrictions);
+        // console.log('Restrictionformatter');
+        // console.log(restrictions);
         restrictions.forEach(restriction => {
             parentDiv.append(createToolTipDiv(restriction.RestrictionDescription.replace('--', '&#9642;'),
             ('defined in: ' + restriction.Versions.join(',')), 'right'))
@@ -428,31 +428,38 @@
     }
 
     function xmlPathsFormatter(paths){
-        console.log('xmlPathsFormatter');
-        console.log(typeof(paths));
-        console.log(paths);
+        // console.log('xmlPathsFormatter');
+        // console.log(typeof(paths));
+        // console.log(paths);
         var parentDiv = $('<div>');
         paths.forEach(path => parentDiv.append(xmlPathFormatter(path)));
         return parentDiv;
     }
 
     function xmlPathFormatter(xmlPath){
-        console.log('xmlPathFormatter')
-        console.log(xmlPath);
+        //console.log('xmlPathFormatter')
+        //console.log(xmlPath);
         var parentDiv = $('<div>').addClass('path-div').addClass(getBackgroundClass(xmlPath.Mode));
 
-        parentDiv.append($('<div>')
-            .html(xmlPath.RootNodeType.substring(0,3))
-            .append(createToolTipDiv("&#8505;", xmlPath.RootNodeVersion))
-        );
+        // parentDiv.append($('<div>')
+        //     .html(xmlPath.RootNodeType.substring(0,3))
+        //     .append(createToolTipDiv("&#8505;", xmlPath.RootNodeVersion))
+        // );
 
-        xmlPath.PathElements.forEach(pathElement => parentDiv.append(pathElementFormatter(pathElement)));
+        xmlPath.PathElements.forEach(pathElement => {
+            var separator = " /";
+            if(pathElement === xmlPath.PathElements[0]){
+                parentDiv.append(pathElementFormatter(pathElement, ""));
+            }else {
+                parentDiv.append(pathElementFormatter(pathElement, separator));
+            }
+        });
         return parentDiv;
     }
 
-    function pathElementFormatter(pathElement){
-        console.log(pathElement);
-        var pathName = " /";
+    function pathElementFormatter(pathElement, separator){
+        //console.log(pathElement);
+        var pathName = separator;
         if(pathElement.IsAttribute){
             pathName += '@';
         }
@@ -462,7 +469,7 @@
         if(pathElement.IsOptional){
             pathName += '*';
         }
-        console.log(pathName);
+        // console.log(pathName);
         var resultDiv = $('<div>').html(pathName);
 
         resultDiv.append(
@@ -475,7 +482,7 @@
     }
 
     function createTooltipTextFromSchemaTypes(schemaTypeNames, seperator){
-        console.log(schemaTypeNames);
+        // console.log(schemaTypeNames);
         var result = "";
         schemaTypeNames.forEach((schemaTypeName) => {
             var version = getVersion(schemaTypeName.Namespace);

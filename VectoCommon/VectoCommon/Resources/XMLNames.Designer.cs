@@ -3778,6 +3778,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FuelType.
+        /// </summary>
+        public static string MonitoringFuelType {
+            get {
+                return ResourceManager.GetString("MonitoringFuelType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gearbox.
         /// </summary>
         public static string MonitoringGearbox {

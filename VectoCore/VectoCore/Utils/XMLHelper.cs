@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -436,7 +437,20 @@ namespace TUGraz.VectoCore.Utils
 			return type;
         }
 		
+		public static XmlDocument SecureLoadXML(string filePath)
+		{
+            var document = new XmlDocument();
+            MemoryStream stream = new MemoryStream(File.ReadAllBytes(filePath));
+			
+			XmlReaderSettings settings = new XmlReaderSettings() { DtdProcessing = DtdProcessing.Ignore, XmlResolver = null };
+            
+			document.Load(XmlReader.Create(stream, settings));
 
+			stream.Close();
+			stream.Dispose();
+
+			return document;
+		}
 
 	}
 }

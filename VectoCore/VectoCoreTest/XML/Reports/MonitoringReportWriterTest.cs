@@ -109,13 +109,44 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 						: null
 					: null;
 
-			return new VectoRunData() {
+			var engineData = (dataProvider is IMultistepBusInputDataProvider)
+                ? null
+                : (dataProvider.JobInputData.Vehicle.Components != null)
+                    ? (dataProvider.JobInputData.Vehicle.Components.EngineInputData != null)
+                        ? new CombustionEngineData() 
+                        : null
+                    : null;
+
+			if (engineData != null)
+			{
+				var fuelTypes = new List<FuelType>();
+
+				foreach (var mode in dataProvider.JobInputData.Vehicle.Components.EngineInputData.EngineModes)
+				{
+					var types = mode.Fuels.Select(x => x.FuelType);
+
+					foreach (var type in types)
+					{
+						if (!fuelTypes.Contains(type))
+						{
+							fuelTypes.Add(type);
+						}
+					}
+				}
+
+				engineData.Fuels = fuelTypes.Select(x => new CombustionEngineFuelData() { 
+					FuelData = DeclarationData.FuelData.Lookup(x, dataProvider.JobInputData.Vehicle.TankSystem) 
+				} ).ToList();
+            }
+
+            return new VectoRunData() {
 				InputData = dataProvider,
 				VehicleData = new VehicleData() {
 					OffVehicleCharging = false,
 					AxleData = axleData
 				},
-				AxleGearData = axleGearData
+				AxleGearData = axleGearData,
+				EngineData = engineData
 			};
 		}
 
