@@ -66,7 +66,8 @@ namespace TUGraz.VectoCommon.Exceptions
 		}
 	}
 
-	public class VectoXMLException : VectoException
+    [Serializable]
+    public class VectoXMLException : VectoException
 	{
 		protected VectoXMLException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 		public VectoXMLException(string message) : base(message) { }

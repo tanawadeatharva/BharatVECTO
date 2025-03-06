@@ -26,6 +26,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public string Source => null;
 
-		#endregion
-	}
+        #endregion
+
+        public override bool Equals(object obj)
+        {
+			var other = obj as SimpleAlternator;
+            return (other != null) && (other._efficiency == _efficiency);
+        }
+
+    }
 }
