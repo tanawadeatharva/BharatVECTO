@@ -33,7 +33,7 @@ namespace TUGraz.VECTO
 				string argumentsString = "";
 				if (cmdArguments.Length > 0) {
 					foreach (var cmdArgument in cmdArguments) {
-						argumentsString += "\"" +  cmdArgument + "\" ";
+						argumentsString += "\"" +  SanitizeInput(cmdArgument) + "\" ";
 					}
 				}
 
@@ -59,7 +59,19 @@ namespace TUGraz.VECTO
 			}
 		}
 
-		private static void ValidateVersion(string version, params string[] validVersions)
+        public static string SanitizeInput(string input)
+        {
+            var disallowedChars = new char[] { '&', ';', '|', '$' };
+
+            foreach (var c in disallowedChars)
+            {
+                input = input.Replace(c.ToString(), string.Empty);
+            }
+
+            return input;
+        }
+
+        private static void ValidateVersion(string version, params string[] validVersions)
 		{
 			if (!((IList)validVersions).Contains(version))
 				throw new Exception($"Invalid .NET Version supplied. Only the following values are valid: {string.Join(", ", validVersions)}");
