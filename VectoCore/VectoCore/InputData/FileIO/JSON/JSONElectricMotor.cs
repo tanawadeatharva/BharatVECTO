@@ -31,8 +31,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				OverloadTime = entry.GetValueOrDefault<double>("OverloadTime")?.SI<Second>() ?? 0.SI<Second>(),
 				PowerMap = ReadPowermap(entry),
 				// DragCurve = ReadTableData(entry.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"),
-				FullLoadCurve = ReadTableData(entry.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve")
-			}).Cast<IElectricMotorVoltageLevel>().ToList();
+				FullLoadCurve = new List<IElectricMotorLoadCurve>() {
+                    new ElectricMotorLoadCurve() {
+                        Gear = 0,
+                        LoadCurve = ReadTableData(entry.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve")
+                    }
+                }
+            }).Cast<IElectricMotorVoltageLevel>().ToList();
 		}
 
 		protected virtual IList<IElectricMotorPowerMap> ReadPowermap(JToken entry)
@@ -70,6 +75,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#endregion
 	}
 
+	public class ElectricMotorLoadCurve : IElectricMotorLoadCurve 
+	{
+        public int Gear { get; set; }
+
+        public TableData LoadCurve { get; set; }
+    }
+
 	public class JSONElectricMotorV4 : JSONElectricMotorV3
 	{
 		public JSONElectricMotorV4(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
@@ -101,7 +113,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					}
 				},
 				// DragCurve = ReadTableData(entry.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"),
-				FullLoadCurve = ReadTableData(entry.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve")
+				FullLoadCurve = new List<IElectricMotorLoadCurve>() { 
+					new ElectricMotorLoadCurve() { 
+						Gear = 0, 
+						LoadCurve = ReadTableData(entry.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve") 
+					} 
+				}
 			}).Cast<IElectricMotorVoltageLevel>().ToList();
 		}
 
@@ -133,7 +150,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 							PowerMap = ReadTableData(Body.GetEx<string>("EfficiencyMap"), "ElectricMotor Map").ApplyFactor(ElectricMotorMapReader.Fields.PowerElectrical, 1000.0)
 						}
 					},// DragCurve = ReadTableData(Body.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"),
-					FullLoadCurve = ReadTableData(Body.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve")
+					FullLoadCurve = new List<IElectricMotorLoadCurve>() { 
+						new ElectricMotorLoadCurve() { 
+							Gear = 0, 
+							LoadCurve = ReadTableData(Body.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve") 
+						} 
+					}
 				},
 				new ElectricMotorVoltageLevel() {
 					VoltageLevel = 1e9.SI<Volt>(),
@@ -149,7 +171,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						}
 					},
 					// DragCurve = ReadTableData(Body.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"),
-					FullLoadCurve = ReadTableData(Body.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve")
+					FullLoadCurve = new List<IElectricMotorLoadCurve>() {
+						new ElectricMotorLoadCurve() { 
+							Gear = 0, 
+							LoadCurve = ReadTableData(Body.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve") 
+						} 
+					}
 				},
 			};
 		}
@@ -188,7 +215,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						}
 					},
 					// DragCurve = ReadTableData(Body.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"),
-					FullLoadCurve = ReadTableData(Body.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve")
+					FullLoadCurve = new List<IElectricMotorLoadCurve>() { 
+						new ElectricMotorLoadCurve() { 
+							Gear = 0, 
+							LoadCurve = ReadTableData(Body.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve") 
+						} 
+					}
 				},
 				new ElectricMotorVoltageLevel() {
 					VoltageLevel = 1e9.SI<Volt>(),
@@ -204,7 +236,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						}
 					},
 					// DragCurve = ReadTableData(Body.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"),
-					FullLoadCurve = ReadTableData(Body.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve")
+					FullLoadCurve = new List<IElectricMotorLoadCurve>() { 
+						new ElectricMotorLoadCurve() { 
+							Gear = 0, 
+							LoadCurve = ReadTableData(Body.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve") 
+						} 
+					}
 				},
 			};
 		}

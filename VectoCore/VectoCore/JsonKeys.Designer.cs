@@ -781,6 +781,15 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DisengagementClutch.
+        /// </summary>
+        internal static string IEPC_DisengagementClutch {
+            get {
+                return ResourceManager.GetString("IEPC_DisengagementClutch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DragCurves.
         /// </summary>
         internal static string IEPC_DragCurves {
@@ -795,6 +804,15 @@ namespace TUGraz.VectoCore {
         internal static string IEPC_FullLoadCurve {
             get {
                 return ResourceManager.GetString("IEPC_FullLoadCurve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FullLoadCurves.
+        /// </summary>
+        internal static string IEPC_FullLoadCurves {
+            get {
+                return ResourceManager.GetString("IEPC_FullLoadCurves", resourceCulture);
             }
         }
         

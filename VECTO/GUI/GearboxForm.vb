@@ -1000,7 +1000,7 @@ Public Class GearboxForm
     Private sub DrawEmFld(em As ElectricMachineEntry(Of IElectricMotorEngineeringInputData), chart As chart)
         
         Dim s As Series
-        Dim emFld = ElectricFullLoadCurveReader.Create(em.ElectricMachine.VoltageLevels.First().FullLoadCurve, em.Count)
+        Dim emFld = ElectricFullLoadCurveReader.Create(em.ElectricMachine.VoltageLevels.First().FullLoadCurve.First().LoadCurve, em.Count)
 
 
         s = New Series
@@ -1028,8 +1028,8 @@ Public Class GearboxForm
         if (em Is nothing) then 
             return
         End If
-        
-         Dim emFld = ElectricFullLoadCurveReader.Create(em.ElectricMachine.VoltageLevels.First().FullLoadCurve, em.Count)
+
+        Dim emFld = ElectricFullLoadCurveReader.Create(em.ElectricMachine.VoltageLevels.First().FullLoadCurve.First().LoadCurve, em.Count)
         If VectoJobForm.Visible Then
             'If FLD0.Init(VectoJobForm.n_idle) Then
 

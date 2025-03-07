@@ -2205,4 +2205,16 @@
   <data name="MonitoringFuelType" xml:space="preserve">
     <value>FuelType</value>
   </data>
+  <data name="TorqueCurve_Entry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="TorqueCurve_Gear" xml:space="preserve">
+    <value>gear</value>
+  </data>
+  <data name="IEPC_DisengagementClutch" xml:space="preserve">
+    <value>DisengagementClutch</value>
+  </data>
+  <data name="MaxTorqueCurve_attr_gear" xml:space="preserve">
+    <value>gear</value>
+  </data>
 </root>

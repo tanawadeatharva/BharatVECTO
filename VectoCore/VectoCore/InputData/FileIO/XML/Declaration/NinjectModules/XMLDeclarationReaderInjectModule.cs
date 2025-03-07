@@ -56,8 +56,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 				new XMLDeclarationInputDataV25InjectModule(),
 				new XMLDeclarationInputDataV26InjectModule(),
 				new XMLDeclarationInputDataMultistageV01InjectModule(),
+                new XMLDeclarationInputDataMultistageV10InjectModule(),
 
-				new XMLDeclarationInputDataDEVV211InjectModule(),
+                new XMLDeclarationInputDataDEVV211InjectModule(),
 
             });
 

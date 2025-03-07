@@ -142,7 +142,7 @@ public class JSONFileWriter : IOutputFileWriter
 				{ JsonKeys.EM_OverloadTorque, entry.OverloadTorque.Value() },
 				{ JsonKeys.EM_OverloadTorqueSpeed, entry.OverloadTestSpeed.AsRPM },
 				{ JsonKeys.EM_OverloadTime, entry.OverloadTime.Value() },
-				{ JsonKeys.EM_FullLoadCurve, GetRelativePath(entry.FullLoadCurve.Source, Path.GetDirectoryName(filename)) }
+				{ JsonKeys.EM_FullLoadCurve, GetRelativePath(entry.FullLoadCurve.First().LoadCurve.Source, Path.GetDirectoryName(filename)) }
 			};
 			var powerMaps = new Dictionary<int, object>();
 			foreach (var pMap in entry.PowerMap.OrderBy(x => x.Gear))
@@ -197,7 +197,7 @@ public class JSONFileWriter : IOutputFileWriter
 				{JsonKeys.IEPC_OverloadTorque, voltageLevel.OverloadTorque.Value()},
 				{JsonKeys.IEPC_OverloadTorqueSpeed,Convert.ToDouble(voltageLevel.OverloadTestSpeed.AsRPM.ToString())},
 				{JsonKeys.IEPC_OverloadTime, voltageLevel.OverloadTime.Value()},
-				{JsonKeys.IEPC_FullLoadCurve, GetRelativePath(voltageLevel.FullLoadCurve.Source, Path.GetDirectoryName(filename))},
+				{JsonKeys.IEPC_FullLoadCurve, GetRelativePath(voltageLevel.FullLoadCurve.First().LoadCurve.Source, Path.GetDirectoryName(filename))},
 
 			};
 			var powerMaps = new Dictionary<string, object>();

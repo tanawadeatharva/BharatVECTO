@@ -556,6 +556,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to WheelEnd.
+        /// </summary>
+        public static string AxleWheels_Axles_Axle_WheelEnd {
+            get {
+                return ResourceManager.GetString("AxleWheels_Axles_Axle_WheelEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AxleWheelsDataDeclarationType.
         /// </summary>
         public static string AxleWheels_Type_Attr_AxleWheelsDeclarationType {
@@ -3409,6 +3418,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DisengagementClutch.
+        /// </summary>
+        public static string IEPC_DisengagementClutch {
+            get {
+                return ResourceManager.GetString("IEPC_DisengagementClutch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to NrOfDesignTypeWheelMotorMeasured.
         /// </summary>
         public static string IEPC_NrOfDesignTypeWheelMotorMeasured {
@@ -3531,6 +3549,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string MaxTorqueCurve {
             get {
                 return ResourceManager.GetString("MaxTorqueCurve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to gear.
+        /// </summary>
+        public static string MaxTorqueCurve_attr_gear {
+            get {
+                return ResourceManager.GetString("MaxTorqueCurve_attr_gear", resourceCulture);
             }
         }
         
@@ -5286,6 +5313,24 @@ namespace TUGraz.VectoCommon.Resources {
         public static string TorqueConverterDataMapping_InputTorqueRef_Attr {
             get {
                 return ResourceManager.GetString("TorqueConverterDataMapping_InputTorqueRef_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entry.
+        /// </summary>
+        public static string TorqueCurve_Entry {
+            get {
+                return ResourceManager.GetString("TorqueCurve_Entry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to gear.
+        /// </summary>
+        public static string TorqueCurve_Gear {
+            get {
+                return ResourceManager.GetString("TorqueCurve_Gear", resourceCulture);
             }
         }
         

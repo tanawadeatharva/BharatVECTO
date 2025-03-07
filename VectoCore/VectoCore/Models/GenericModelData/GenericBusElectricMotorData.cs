@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
             var contElPwr = voltageLevel.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
                                 -continuousTorque, gear).ElectricalPower ??
                             voltageLevel.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
-                                voltageLevel.FullLoadDriveTorque(voltageEntry.VoltageLevel, continuousTorqueSpeed),
+                                voltageLevel.FullLoadDriveTorque(voltageEntry.VoltageLevel, continuousTorqueSpeed, gear.Gear),
                                 gear, true).ElectricalPower;
             var continuousPowerLoss = -contElPwr - continuousTorque * continuousTorqueSpeed; // loss needs to be positive
             var overloadBuffer = (peakPwrLoss - continuousPowerLoss) * voltageEntry.OverloadTime;
@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 
 			foreach (var voltageLevel in voltageLevels) {
 
-				var ratedPoint = GenericRatedPointHelper.GetRatedPointOfFullLoadCurveAtEM(voltageLevels[0].FullLoadCurve);
+				var ratedPoint = GenericRatedPointHelper.GetRatedPointOfFullLoadCurveAtEM(voltageLevels[0].FullLoadCurve.First().LoadCurve);
 				var efficiencyMap = DeNormalizeData(normalizedMap, ratedPoint);
 				
 				var electricMotorVoltageLevel = new ElectricMotorVoltageLevelData {
@@ -180,7 +180,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 			IList<Tuple<Volt, TableData>> torqueLimits)
 		{
 			//var entries = new List<ElectricMotorFullLoadCurve.FullLoadEntry>();
-			var fullLoadCurve = ElectricFullLoadCurveReader.Create(entry.FullLoadCurve, count);
+			var fullLoadCurve = ElectricFullLoadCurveReader.Create(entry.FullLoadCurve.First().LoadCurve, count);
             var maxTorqueCurve = torqueLimits == null
 				? null
 				: ElectricFullLoadCurveReader.Create(
