@@ -14,6 +14,7 @@ using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+// using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
@@ -97,6 +98,205 @@ TestCase(8, 4, 15000, 200, true),]
 		ptBuilder.Setup(p => p.CreateTestPowertrain(It.IsAny<IVehicleContainer>(), It.IsAny<bool>(), It.IsAny<VectoSimulationJobType?>()))
 			.Returns(testPt.Object);
 		container.Setup(c => c.SimplePowertrainBuilder).Returns(ptBuilder.Object);
+
+		var gbx = GetMockGearbox(container);
+		Mock.Get(container.Object.EngineInfo).Setup(e => e.EngineSpeed).Returns(() => n.RPMtoRad());
+        Mock.Get(container.Object.EngineInfo).Setup(e => e.EngineN95hSpeed).Returns(2000.RPMtoRad());
+
+        var shiftStrategy = new AMTShiftStrategy(container.Object);
+		shiftStrategy.Gearbox = gbx.Object;
+
+        var absTime = 0.SI<Second>();
+        var dt = 2.SI<Second>();
+
+        var expectedN = n.RPMtoRad();
+        var angularVelocity = expectedN / ratios[gear];
+
+		var gearShiftPosition = shiftStrategy.InitGear(0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval, 1.SI<NewtonMeter>(),
+			angularVelocity);
+
+        absTime += dt;
+
+        var expectedT = tq.SI<NewtonMeter>();
+		var torque = expectedT * ratios[gear];
+
+
+		var shiftRequired = shiftStrategy.ShiftRequired(absTime, dt, torque, angularVelocity, expectedT, expectedN,
+			new GearshiftPosition((uint)gear), -double.MaxValue.SI<Second>(), new ResponseSuccess(this));
+
+        Assert.AreEqual(shiftExpected, shiftRequired);
+		Assert.AreEqual(newGear, shiftStrategy.NextGear.Gear);
+    }
+
+
+	[TestCase(2, 3, 800, 1400, 20_000, true, Description = "A gear would be skipped, but due to the uphill driving conditions, the next gear should be used")]
+	[TestCase(3, 3, 1000, 1400, 30_000, false, Description = "No upshifting because acceleration would be to low")]
+    public void Gearbox_ShiftUpUphill(int gear, int newGear, double tq, double n, double slopeResistance, bool shiftExpected)
+	{
+		// the first element 0.0 is just a placeholder for axlegear, not used in this test
+		var ratios = new[] { 0.0, 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
+		var runData = GetRunData(ratios);
+
+		var container = GetMockVehicleContainer(runData);
+
+		var accEstimationLookAhead = Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation;
+
+		container.Setup(c => c.VehicleInfo.SlopeResistance(It.IsAny<Radian>())).Returns(slopeResistance.SI<Newton>());
+
+		
+		//container.Setup(c => c.DrivingCycleInfo.CycleLookAhead(accEstimationLookAhead))
+		//	.Returns(new DrivingCycleData.DrivingCycleEntry() {
+		//		Altitude = 100.SI<Meter>()
+		//	});
+		//container.Setup(c => c.DrivingCycleInfo.Altitude).Returns(0.SI<Meter>());
+
+
+
+
+
+
+        var testPt = GetMockTestPowertrain(runData);
+
+		var ptBuilder = new Mock<ISimplePowertrainBuilder>();
+		ptBuilder.Setup(p => p.CreateTestPowertrain(It.IsAny<IVehicleContainer>(), It.IsAny<bool>(), It.IsAny<VectoSimulationJobType?>()))
+			.Returns(testPt.Object);
+		container.Setup(c => c.SimplePowertrainBuilder).Returns(ptBuilder.Object);
+
+		var gbx = GetMockGearbox(container);
+		Mock.Get(container.Object.EngineInfo).Setup(e => e.EngineSpeed).Returns(() => n.RPMtoRad());
+		Mock.Get(container.Object.EngineInfo).Setup(e => e.EngineN95hSpeed).Returns(2000.RPMtoRad());
+
+		var shiftStrategy = new AMTShiftStrategy(container.Object);
+		shiftStrategy.Gearbox = gbx.Object;
+
+		var absTime = 0.SI<Second>();
+		var dt = 2.SI<Second>();
+
+		var expectedN = n.RPMtoRad();
+		var angularVelocity = expectedN / ratios[gear];
+
+		var gearShiftPosition = shiftStrategy.InitGear(0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval, 1.SI<NewtonMeter>(),
+			angularVelocity);
+
+		absTime += dt;
+
+		var expectedT = tq.SI<NewtonMeter>();
+		var torque = expectedT * ratios[gear];
+
+
+		var shiftRequired = shiftStrategy.ShiftRequired(absTime, dt, torque, angularVelocity, expectedT, expectedN,
+			new GearshiftPosition((uint)gear), -double.MaxValue.SI<Second>(), new ResponseSuccess(this));
+
+		Assert.AreEqual(shiftExpected, shiftRequired);
+		Assert.AreEqual(newGear, shiftStrategy.NextGear.Gear);
+    }
+
+
+
+    [TestCase(7, 1, 1000, 1400, true)]
+	[TestCase(7, 2, 400, 200, true)]
+    public void InitStartGear(int gear, int newGear, double tq, double n, bool shiftExpected)
+	{
+		// the first element 0.0 is just a placeholder for axlegear, not used in this test
+		var ratios = new[] { 0.0, 6.38, 5.2, 4.3, 3.2, 2.5, 1.8, 1, 0.76 };
+		var runData = GetRunData(ratios);
+
+		var container = GetMockVehicleContainer(runData);
+		container.Setup(c => c.VehicleInfo.VehicleSpeed).Returns(0.KMPHtoMeterPerSecond());
+		var testPt = GetMockTestPowertrain(runData);
+
+		var ptBuilder = new Mock<ISimplePowertrainBuilder>();
+		ptBuilder.Setup(p => p.CreateTestPowertrain(It.IsAny<IVehicleContainer>(), It.IsAny<bool>(), It.IsAny<VectoSimulationJobType?>()))
+			.Returns(testPt.Object);
+		container.Setup(c => c.SimplePowertrainBuilder).Returns(ptBuilder.Object);
+
+		var gbx = GetMockGearbox(container);
+		Mock.Get(container.Object.EngineInfo).Setup(e => e.EngineSpeed).Returns(() => n.RPMtoRad());
+		Mock.Get(container.Object.EngineInfo).Setup(e => e.EngineN95hSpeed).Returns(2000.RPMtoRad());
+
+		var shiftStrategy = new AMTShiftStrategy(container.Object);
+		shiftStrategy.Gearbox = gbx.Object;
+
+		var absTime = 0.SI<Second>();
+		var dt = 2.SI<Second>();
+
+		var expectedN = n.RPMtoRad();
+		var angularVelocity = expectedN / ratios[gear];
+
+
+		testPt.Setup(t => t.Gearbox.Request(
+			It.IsAny<Second>(),
+			It.IsAny<Second>(),
+			It.IsAny<NewtonMeter>(),
+			It.IsAny<PerSecond>(),
+			true)).Returns(new ResponseDryRun(null)
+		{
+			Engine = {
+				TotalTorqueDemand = 2.SI<NewtonMeter>(),
+				DynamicFullLoadTorque = 4.SI<NewtonMeter>(),
+				EngineSpeed = 600.RPMtoRad(),
+			}
+		});
+
+		var gearShiftPosition = shiftStrategy.InitGear(0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval, 1.SI<NewtonMeter>(),
+			angularVelocity);
+
+		absTime += dt;
+
+		var expectedT = tq.SI<NewtonMeter>();
+		var torque = expectedT * ratios[gear];
+
+
+		//var shiftRequired = shiftStrategy.ShiftRequired(absTime, dt, torque, angularVelocity, expectedT, expectedN,
+		//	new GearshiftPosition((uint)gear), -double.MaxValue.SI<Second>(), new ResponseSuccess(this));
+
+		//Assert.AreEqual(shiftExpected, shiftRequired);
+		Assert.GreaterOrEqual(shiftStrategy.MaxStartGear.Gear, newGear);
+		Assert.AreEqual(newGear, shiftStrategy.NextGear.Gear);
+    }
+
+
+		[TestCase(2, 1, 2, 1000, 300)]
+		[TestCase(3, 2, 2, 1000, 1400)]
+		[TestCase(8, 7, 2, 1800, 750)]
+		[TestCase(7, 6, 2, 1800, 750)]
+		[TestCase(6, 5, 2, 1800, 750)]
+		[TestCase(5, 4, 2, 1800, 750)]
+		[TestCase(4, 3, 2, 1800, 750)]
+		[TestCase(3, 2, 2, 1800, 750)]
+		[TestCase(2, 2, 2, 1900, 750)]
+		[TestCase(1, 2, 2, 1200, 700)]
+		[TestCase(8, 4, 2, 15000, 200)]
+		[TestCase(2, 2, 2, 300, 1000)]
+    public void Gearbox_PTO(int gear, int newGear, int ptoGear, double tq, double n)
+	{
+		var shiftExpected = gear != newGear;
+        // the first element 0.0 is just a placeholder for axlegear, not used in this test
+        var ratios = new[] { 0.0, 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
+        var runData = GetRunData(ratios);
+
+		runData.DriverData = new DriverData() {
+			PTODriveRoadsweepingGear = new GearshiftPosition((uint)ptoGear)
+		};
+
+        var container = GetMockVehicleContainer(runData);
+
+		container.Setup(c => c.DrivingCycleInfo.CycleData).Returns(
+			new CycleData() {
+				LeftSample = new DrivingCycleData.DrivingCycleEntry() {
+					PTOActive = PTOActivity.PTOActivityRoadSweeping,
+					RoadGradient = 0.SI<Radian>(),
+				}
+			}
+		);
+
+
+        var testPt = GetMockTestPowertrain(runData);
+
+        var ptBuilder = new Mock<ISimplePowertrainBuilder>();
+		ptBuilder.Setup(p => p.CreateTestPowertrain(It.IsAny<IVehicleContainer>(), It.IsAny<bool>(), It.IsAny<VectoSimulationJobType?>()))
+			.Returns(testPt.Object);
+        container.Setup(c => c.SimplePowertrainBuilder).Returns(ptBuilder.Object);
 
 		var gbx = GetMockGearbox(container);
 		Mock.Get(container.Object.EngineInfo).Setup(e => e.EngineSpeed).Returns(() => n.RPMtoRad());
