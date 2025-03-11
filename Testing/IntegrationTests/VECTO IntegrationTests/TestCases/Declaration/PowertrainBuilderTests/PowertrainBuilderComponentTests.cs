@@ -61,11 +61,10 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
-using TUGraz.VectoCore.Tests.Utils;
-using MockDriver = TUGraz.VectoCore.Models.SimulationComponent.Strategies.MockDriver;
-using MockDrivingCycle = TUGraz.VectoCore.Models.SimulationComponent.Strategies.MockDrivingCycle;
+using TUGraz.VectoCore.OutputData;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
@@ -75,20 +74,20 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
     public class PowerTrainBuilderComponentsTest
     {
         private StandardKernel _kernel;
-
+		private ISimplePowertrainBuilder _simplePowertrainBuilder;
+		
         protected IPowertrainBuilder PowertrainBuilder;
-        //protected ISimplePowertrainBuilder SimplePowertrainBuilder;
-
+       
         [OneTimeSetUp]
         public void RunBeforeAnyTests()
         {
             Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
             _kernel = new StandardKernel(new VectoNinjectModule());
+			_simplePowertrainBuilder = _kernel.Get<ISimplePowertrainBuilder>();
             _kernel.Rebind<ISimplePowertrainBuilder>().ToMethod(CreateInterceptSimplePowertrainBuilder).InThreadScope(); //.InSingletonScope();
 
             PowertrainBuilder = _kernel.Get<IPowertrainBuilder>();
-            //SimplePowertrainBuilder = _kernel.Get<ISimplePowertrainBuilder>();
-        }
+		}
 
         [SetUp]
         public void RunBeforeEveryTest()
@@ -104,19 +103,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         private ISimplePowertrainBuilder CreateInterceptSimplePowertrainBuilder(IContext arg)
         {
             var retVal = new Mock<ISimplePowertrainBuilder>();
-            var ptBuilder = new SimplePowertrainBuilder(_kernel.Get<IVehicleContainerFactory>());
-            retVal.Setup(b => b.BuildSimpleGenSet(It.IsAny<VectoRunData>())).Returns(ptBuilder.BuildSimpleGenSet);
-            retVal.Setup(b => b.BuildSimpleHybridPowertrain(It.IsAny<VectoRunData>())).Returns(ptBuilder.BuildSimpleHybridPowertrain);
-            retVal.Setup(b => b.BuildSimpleHybridPowertrainGear(It.IsAny<VectoRunData>())).Returns(ptBuilder.BuildSimpleHybridPowertrainGear);
-            retVal.Setup(b => b.BuildSimpleIEPCHybridPowertrain(It.IsAny<VectoRunData>())).Returns(ptBuilder.BuildSimpleIEPCHybridPowertrain);
-            retVal.Setup(b => b.BuildSimplePowertrain(It.IsAny<VectoRunData>())).Returns(ptBuilder.BuildSimplePowertrain);
-            retVal.Setup(b => b.BuildSimplePowertrainElectric(It.IsAny<VectoRunData>())).Returns(ptBuilder.BuildSimplePowertrainElectric);
-            retVal.Setup(b => b.BuildSimpleSerialHybridPowertrain(It.IsAny<VectoRunData>()))
-                .Returns(ptBuilder.BuildSimpleSerialHybridPowertrain);
-            retVal.Setup(b => b.CreateTestPowertrain<Gearbox>(It.IsAny<ISimpleVehicleContainer>(), It.IsAny<IDataBus>())).Returns(ptBuilder.CreateTestPowertrain<Gearbox>);
-            retVal.Setup(b => b.CreateTestPowertrain<ATGearbox>(It.IsAny<ISimpleVehicleContainer>(), It.IsAny<IDataBus>())).Returns(ptBuilder.CreateTestPowertrain<ATGearbox>);
-            retVal.Setup(b => b.CreateTestPowertrain<APTNGearbox>(It.IsAny<ISimpleVehicleContainer>(), It.IsAny<IDataBus>())).Returns(ptBuilder.CreateTestPowertrain<APTNGearbox>);
-            retVal.Setup(b => b.CreateTestPowertrain<MeasuredSpeedHybridsCycleGearbox>(It.IsAny<ISimpleVehicleContainer>(), It.IsAny<IDataBus>())).Returns(ptBuilder.CreateTestPowertrain<MeasuredSpeedHybridsCycleGearbox>);
+            //var ptBuilder = new SimplePowertrainBuilder(_kernel.Get<IPowertrainComponentFactory>(), _kernel.Get<IShiftStrategyFactory>());
+			retVal.Setup(b => b.CreateTestPowertrain(It.IsAny<IVehicleContainer>(), It.IsAny<bool>(),
+					It.IsAny<VectoSimulationJobType?>()))
+				.Returns((IVehicleContainer container, bool createDriver, VectoSimulationJobType? jobType) =>
+					_simplePowertrainBuilder.CreateTestPowertrain(container, createDriver, jobType));
             return retVal.Object;
         }
 
@@ -125,6 +116,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         protected enum TestPowertrainSource
         {
             Unknown,
+            Driver,
             ShiftStrategySimplePowertrain,
             ShiftStrategyTestPowertrain,
             HybridStrategyTestPowertrain,
@@ -147,6 +139,23 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             return null;
         }
 
+		private ISimpleVehicleContainer FindSimpleVehicleContainerInDriver(IDriverInfo driver)
+		{
+			if (driver == null) {
+				return null;
+			}
+			var fields = driver.GetType().GetFields(
+				BindingFlags.NonPublic |
+				BindingFlags.Instance);
+			foreach (var field in fields) {
+				if (field.GetValue(driver) is ITestPowertrain testPt) {
+					return testPt.Container;
+				}
+			}
+
+			return null;
+		}
+
         private ISimpleVehicleContainer FindTestpowertrainSimpleVehicleContainerInShiftStrategy(IShiftStrategy strategy)
         {
             if (strategy == null) {
@@ -157,16 +166,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
                 BindingFlags.Instance);
             foreach (var field in fields) {
                 var value = field.GetValue(strategy);
-                if (value is ITestPowertrain<Gearbox> testpt1) {
+                if (value is ITestPowertrain testpt1) {
                     return testpt1.Container;
                 }
-                if (value is ITestPowertrain<ATGearbox> testpt2) {
-                    return testpt2.Container;
-                }
-                if (value is ITestPowertrain<MeasuredSpeedHybridsCycleGearbox> testpt3) {
-                    return testpt3.Container;
-                }
-            }
+			}
 
             return null;
         }
@@ -181,16 +184,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
                 BindingFlags.Instance);
             foreach (var field in fields) {
                 var value = field.GetValue(ctl);
-                if (value is ITestPowertrain<Gearbox> testpt1) {
+                if (value is ITestPowertrain testpt1) {
                     return testpt1.Container;
                 }
-                if (value is ITestPowertrain<ATGearbox> testpt2) {
-                    return testpt2.Container;
-                }
-                if (value is ITestPowertrain<MeasuredSpeedHybridsCycleGearbox> testpt3) {
-                    return testpt3.Container;
-                }
-            }
+			}
 
             return null;
         }
@@ -220,8 +217,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             }
 
             return gbx switch {
-                Gearbox gearbox => gearbox._strategy,
-                ATGearbox atgearbox => atgearbox._strategy,
+				AbstractAMTGearbox gearbox => gearbox._strategy,
+                APTGearbox atgearbox => atgearbox._strategy,
                 CycleGearbox cycleGbx => cycleGbx.Strategy,
                 _ => throw new ArgumentException($"unhandled gearbox type {gbx.GetType()}")
             };
@@ -230,12 +227,24 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         private Dictionary<TestPowertrainSource, ISimpleVehicleContainer> GetSimpleVehicleContainer(IVehicleContainer vehicleContainer)
         {
             var retVal = new Dictionary<TestPowertrainSource, ISimpleVehicleContainer> {
+				{ TestPowertrainSource.Driver , FindSimpleVehicleContainerInDriver(vehicleContainer.DriverInfo)},
                 {TestPowertrainSource.ShiftStrategySimplePowertrain, FindSimpleVehicleContainerInShiftStrategy(GetShiftStrategy(vehicleContainer.GearboxInfo))},
                 {TestPowertrainSource.ShiftStrategyTestPowertrain, FindTestpowertrainSimpleVehicleContainerInShiftStrategy(GetShiftStrategy(vehicleContainer.GearboxInfo))},
                 {TestPowertrainSource.HybridStrategyTestPowertrain, FindTestpowertrainSimpleVehicleContainerHybridStrategy(GetHybridStrategy(vehicleContainer.HybridControllerInfo))}
             };
             return retVal.Where(x => x.Value != null).ToDictionary(x => x.Key, x => x.Value);
         }
+
+
+		private IModalDataContainer GetMockModalDataContainer()
+		{
+			return new Mock<IModalDataContainer>().Object;
+		}
+
+		private ISumData GetMockSumWriter()
+		{
+			return new Mock<ISumData>().Object;
+		}
 
         protected void AssertPowertrainComponents(IVehicleContainer container, Type vehicleContainer, Type drivingCycle,
             Type driver, Type vehicle, Type wheels, Type brakes, Type axlegear, Type angledrive, Type retarder,
@@ -345,6 +354,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         protected void AssertTestpowertrains(bool expectTestPT,
             Dictionary<TestPowertrainSource, ISimpleVehicleContainer> simpleVehicleContainers)
         {
+            Assert.IsFalse(simpleVehicleContainers.ContainsKey(TestPowertrainSource.ShiftStrategySimplePowertrain));
             if (expectTestPT) {
                 if (simpleVehicleContainers.Count == 0) {
                     Assert.Fail("Testpowertrain expected, but didn't find one");
@@ -371,12 +381,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         private static Type WheelsT = typeof(Wheels);
         private static Type BrakesT = typeof(Brakes);
         private static Type AxleGearT = typeof(AxleGear);
-        private static Type MTGearboxT = typeof(Gearbox);
-        private static Type AMTGearboxT = typeof(Gearbox);
-        private static Type APTSGearboxT = typeof(ATGearbox);
-        private static Type APTPGearboxT = typeof(ATGearbox);
+        private static Type MTGearboxT = typeof(MTGearbox);
+        private static Type AMTGearboxT = typeof(AMTGearbox);
+        private static Type APTSGearboxT = typeof(APTGearbox);
+        private static Type APTPGearboxT = typeof(APTGearbox);
         private static Type APTNGearboxT = typeof(APTNGearbox);
-        private static Type IEPCGearboxT = typeof(IEPCGearbox);
+        private static Type IEPCGearboxT = typeof(IEPCGearboxMultipleGears);
         private static Type PEVGearboxT = typeof(PEVGearbox);
         private static Type CycleGearboxT = typeof(CycleGearbox);
         private static Type VTPGearboxT = typeof(VTPGearbox);
@@ -390,10 +400,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         private static Type AMTShiftStrategyT = typeof(AMTShiftStrategyOptimized);
         private static Type ATShiftStrategyT = typeof(ATShiftStrategyOptimized);
         private static Type PEVShiftStrategyT = typeof(PEVAMTShiftStrategy);
-        private static Type HybridShiftStrategyT = typeof(HybridController.HybridCtlShiftStrategy);
-        private static Type HybridATShiftStrategyT = typeof(HybridController.HybridCtlATShiftStrategy);
-        private static Type HybridIHPCShiftStrategyT = typeof(HybridController.HybridCtlIHPCShiftStrategy);
-        private static Type MeasuredSpeedHybridCycleGearboxT = typeof(MeasuredSpeedHybridsCycleGearbox);
+        private static Type HybridShiftStrategyT = typeof(HybridCtlShiftStrategy);
+        private static Type HybridATShiftStrategyT = typeof(HybridCtlATShiftStrategy);
+        private static Type HybridIHPCShiftStrategyT = typeof(HybridCtlIHPCShiftStrategy);
+		private static Type MeasuredSpeedHybridsGearboxT = typeof(MeasuredSpeedHybridsGearbox); 
+		private static Type MeasuredSpeedHybridCycleGearboxT = typeof(MeasuredSpeedHybridsCycleGearbox);
 
         private static Type HybridCtlT = typeof(HybridController);
         private static Type SerialHybridCtl = typeof(SerialHybridController);
@@ -418,11 +429,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         private static Type TestWheelsT = typeof(Wheels);
         private static Type TestBrakesT = typeof(Brakes);
         private static Type TestAxleGearT = typeof(AxleGear);
-        private static Type TestMTGearboxT = typeof(Gearbox);
-        private static Type TestAMTGearboxT = typeof(Gearbox);
-        private static Type TestAPTSGearboxT = typeof(ATGearbox);
-        private static Type TestAPTPGearboxT = typeof(ATGearbox);
-        private static Type TestAPTNGearboxT = typeof(Gearbox);
+        private static Type TestMTGearboxT = typeof(TestPowertrainGearbox);
+        private static Type TestAMTGearboxT = typeof(TestPowertrainGearbox);
+        private static Type TestAPTSGearboxT = typeof(TestPowertrainAPTGearbox);
+        private static Type TestAPTPGearboxT = typeof(TestPowertrainAPTGearbox);
+        private static Type TestAPTNGearboxT = typeof(TestPowertrainAPTNGearbox);
+		private static Type TestIEPCGearboxMultipleGearsT = typeof(TestpowertrainIEPCGearboxMultipleGears);
+		private static Type TestMeasuredSpeedHybridsGearboxT = typeof(MeasuredSpeedHybridsGearbox);
         private static Type TestMeasuredSpeedHybridsCycleGearboxT = typeof(MeasuredSpeedHybridsCycleGearbox);
 
         private static Type TestEngineT = typeof(StopStartCombustionEngine);
@@ -449,13 +462,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public void TestPowertrainBuilder_Components_Distance_Conventional(string nuame, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.ConventionalVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             AssertPowertrainComponents(pt, VehicleContainerT, DistanceBasedDrivingCycleT, DriverT, VehicleT, WheelsT, BrakesT, AxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, EngineT, null, null, expectedTorqueConverterT);
 
         }
 
-        public static object[] DistanceBased_Conventional_TestPT_Source =
+
+		public static object[] DistanceBased_Conventional_TestPT_Source =
         {
             new object[] {"Dist Conv MT", true, CycleType.DistanceBased, GearboxType.MT, TestMTGearboxT, null, null, ClutchT},
             new object[] {"Dist Conv AMT", true, CycleType.DistanceBased, GearboxType.AMT, TestAMTGearboxT, null, null, ClutchT},
@@ -468,22 +482,20 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public void TestPowertrainBuilder_Components_Distance_Conventional_TestPT(string nuame, bool expectTestPT, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.ConventionalVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             var testpowertrains = GetSimpleVehicleContainer(pt);
-
+			AssertTestpowertrains(expectTestPT, testpowertrains);
             if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategySimplePowertrain, out var c1)) {
                 AssertPowertrainComponents(c1, TestVehicleContainerT, TestDistanceBasedDrivingCycleT, TestDriverSimpleContT, TestVehicleT, TestWheelsT, TestBrakesT, TestAxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, TestEngineT, null, null, expectedTorqueConverterT);
             }
             if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategyTestPowertrain, out var c2)) {
-                AssertPowertrainComponents(c2, TestVehicleContainerT, TestPowertrainCycleT, TestDriverTestPTT, TestVehicleT, TestWheelsT, TestBrakesT, TestAxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, TestEngineT, null, null, expectedTorqueConverterT);
+                AssertPowertrainComponents(c2, TestVehicleContainerT, TestPowertrainCycleT, TestDriverSimpleContT, TestVehicleT, TestWheelsT, TestBrakesT, TestAxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, TestEngineT, null, null, expectedTorqueConverterT);
             }
             if (testpowertrains.TryGetValue(TestPowertrainSource.HybridStrategyTestPowertrain, out var c3)) {
                 AssertPowertrainComponents(c3, TestVehicleContainerT, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
             }
-
-            AssertTestpowertrains(expectTestPT, testpowertrains);
-        }
+		}
 
         #endregion
 
@@ -504,7 +516,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public void TestPowertrainBuilder_Components_MeasuredSpeed_Conventional(string nuame, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.ConventionalVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             AssertPowertrainComponents(pt, VehicleContainerT, MeasuredspeedDrivingCycleT, MeasuredspeedDrivingCycleT, VehicleT, WheelsT, BrakesT, AxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, EngineT, null, null, expectedTorqueConverterT);
 
@@ -523,22 +535,20 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public void TestPowertrainBuilder_Components_MeasuredSpeed_Conventional_TestPT(string nuame, bool expectTestPT, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.ConventionalVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             var testpowertrains = GetSimpleVehicleContainer(pt);
-
+			AssertTestpowertrains(expectTestPT, testpowertrains);
             if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategySimplePowertrain, out var c1)) {
                 AssertPowertrainComponents(c1, TestVehicleContainerT, MeasuredspeedDrivingCycleT, MeasuredspeedDrivingCycleT, TestVehicleT, TestWheelsT, TestBrakesT, TestAxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, TestEngineT, null, null, expectedTorqueConverterT);
             }
             if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategyTestPowertrain, out var c2)) {
-                AssertPowertrainComponents(c2, TestVehicleContainerT, TestPowertrainCycleT, TestDriverTestPTT, TestVehicleT, TestWheelsT, TestBrakesT, TestAxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, TestEngineT, null, null, expectedTorqueConverterT);
+                AssertPowertrainComponents(c2, TestVehicleContainerT, TestPowertrainCycleT, MeasuredspeedDrivingCycleT, TestVehicleT, TestWheelsT, TestBrakesT, TestAxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, TestEngineT, null, null, expectedTorqueConverterT);
             }
             if (testpowertrains.TryGetValue(TestPowertrainSource.HybridStrategyTestPowertrain, out var c3)) {
                 AssertPowertrainComponents(c3, TestVehicleContainerT, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
             }
-
-            AssertTestpowertrains(expectTestPT, testpowertrains);
-        }
+		}
 
         #endregion
 
@@ -559,7 +569,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public void TestPowertrainBuilder_Components_MeasuredSpeedGear_Conventional(string nuame, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.ConventionalVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             AssertPowertrainComponents(pt, VehicleContainerT, MeasuredspeedDrivingCycleT, MeasuredspeedDrivingCycleT, VehicleT, WheelsT, BrakesT, AxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, EngineT, null, null, expectedTorqueConverterT);
 
@@ -579,7 +589,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public void TestPowertrainBuilder_Components_MeasuredSpeedGear_Conventional_TestPT(string nuame, bool expectTestPT, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedClutchT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.ConventionalVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             var testpowertrains = GetSimpleVehicleContainer(pt);
             if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategySimplePowertrain, out var c1)) {
@@ -614,13 +624,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public void TestPowertrainBuilder_Components_PWheel_Conventional(string nuame, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.ConventionalVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer(), new MockSumWriter());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer(), GetMockSumWriter());
 
             AssertPowertrainComponents(pt, VehicleContainerT, PWheelCycleT, PWheelCycleT, PWheelCycleT, null, null, AxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, EngineT, null, null, expectedTorqueConverterT);
 
         }
 
-        public static object[] PWheel_Conventional_TestPT_Source = {
+		public static object[] PWheel_Conventional_TestPT_Source = {
             new object[] { "PWheel Conv MT", false, CycleType.PWheel, GearboxType.MT, null, null, null, null },
             new object[] { "PWheel Conv AMT", false, CycleType.PWheel, GearboxType.AMT, null, null, null, null },
             new object[] { "PWheel Conv APT-S", false, CycleType.PWheel, GearboxType.ATSerial, null, null, null, null },
@@ -632,7 +642,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public void TestPowertrainBuilder_Components_PWheel_Conventional_TestPT(string nuame, bool expectTestPT, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.ConventionalVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer(), new MockSumWriter());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer(), GetMockSumWriter());
 
             var testpowertrains = GetSimpleVehicleContainer(pt);
             if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategySimplePowertrain, out var c1)) {
@@ -667,7 +677,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public void TestPowertrainBuilder_Components_VTP_Conventional(string nuame, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.ConventionalVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             AssertPowertrainComponents(pt, VehicleContainerT, VTPCycleT, VTPCycleT, VTPCycleT, null, null, AxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, EngineT, null, null, expectedTorqueConverterT);
 
@@ -687,7 +697,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public void TestPowertrainBuilder_Components_VTP_Conventional_TestPT(string nuame, bool expectTestPT, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.ConventionalVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             var testpowertrains = GetSimpleVehicleContainer(pt);
             if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategySimplePowertrain, out var c1)) {
@@ -725,7 +735,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             Type expectedHybridStrategyT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.ParallelHybridVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             AssertPowertrainComponents(pt, VehicleContainerT, DistanceBasedDrivingCycleT, DriverT, VehicleT, WheelsT,
                 BrakesT, AxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, EngineT, expectedHybridControllerT, expectedHybridStrategyT, expectedTorqueConverterT);
@@ -744,7 +754,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public void TestPowertrainBuilder_Components_Distance_PHEV_TestPT(string nuame, bool expectTestPT, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT, Type expectedHybridController, Type expectedHybridStrategy)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.ParallelHybridVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             var testpowertrains = GetSimpleVehicleContainer(pt);
             if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategySimplePowertrain, out var c1)) {
@@ -771,7 +781,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public static object[] MeasuredSpeed_PHEV_Source =
         {
             //new object[] {"Dist PHEV MT", CycleType.DistanceBased, GearboxType.MT, MTGearboxT, ClutchT},
-            new object[] { "MeasuredSpeed PHEV AMT", CycleType.MeasuredSpeed, GearboxType.AMT, AMTGearboxT, null, HybridShiftStrategyT, ClutchT, HybridCtlT, HybridStrategyT},
+            new object[] { "MeasuredSpeed PHEV AMT", CycleType.MeasuredSpeed, GearboxType.AMT, MeasuredSpeedHybridsGearboxT, null, HybridShiftStrategyT, ClutchT, HybridCtlT, HybridStrategyT},
             new object[] { "MeasuredSpeed PHEV APT-S", CycleType.MeasuredSpeed, GearboxType.ATSerial, APTSGearboxT, TorqueConverterT, HybridATShiftStrategyT, ATClutchInfoT, HybridCtlT, HybridStrategyATT},
             new object[] { "MeasuredSpeed PHEV APT-P", CycleType.MeasuredSpeed, GearboxType.ATPowerSplit, APTPGearboxT, TorqueConverterT, HybridATShiftStrategyT, ATClutchInfoT, HybridCtlT, HybridStrategyATT},
         };
@@ -782,7 +792,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             Type expectedHybridStrategyT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.ParallelHybridVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             AssertPowertrainComponents(pt, VehicleContainerT, MeasuredspeedDrivingCycleT, MeasuredspeedDrivingCycleT, VehicleT, WheelsT,
                 BrakesT, AxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, EngineT, expectedHybridControllerT, expectedHybridStrategyT, expectedTorqueConverterT);
@@ -791,7 +801,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public static object[] MeasuredSpeed_PHEV_TestPT_Source =
         {
             //new object[] {"Dist PHEV MT", true, CycleType.DistanceBased, GearboxType.MT, MTGearboxT, ClutchT},
-            new object[] { "MeasuredSpeed PHEV AMT", true, CycleType.MeasuredSpeed, GearboxType.AMT, TestAMTGearboxT, null, null, ClutchT, TestHybridCtl, null},
+            new object[] { "MeasuredSpeed PHEV AMT", true, CycleType.MeasuredSpeed, GearboxType.AMT, TestMeasuredSpeedHybridsGearboxT, null, null, ClutchT, TestHybridCtl, null},
             new object[] { "MeasuredSpeed PHEV APT-S", true, CycleType.MeasuredSpeed, GearboxType.ATSerial, TestAPTSGearboxT, TorqueConverterT, null, ATClutchInfoT, TestHybridCtl, null},
             new object[] { "MeasuredSpeed PHEV APT-P", true, CycleType.MeasuredSpeed, GearboxType.ATPowerSplit, TestAPTPGearboxT, TorqueConverterT, null, ATClutchInfoT, TestHybridCtl, null},
 
@@ -801,7 +811,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public void TestPowertrainBuilder_Components_MeasuredSpeed_PHEV_TestPT(string nuame, bool expectTestPT, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT, Type expectedHybridController, Type expectedHybridStrategy)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.ParallelHybridVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             var testpowertrains = GetSimpleVehicleContainer(pt);
             if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategySimplePowertrain, out var c1)) {
@@ -837,7 +847,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             Type expectedHybridStrategyT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.ParallelHybridVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             AssertPowertrainComponents(pt, VehicleContainerT, MeasuredspeedDrivingCycleT, MeasuredspeedDrivingCycleT, VehicleT, WheelsT,
                 BrakesT, AxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, EngineT, expectedHybridControllerT, expectedHybridStrategyT, expectedTorqueConverterT);
@@ -856,7 +866,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public void TestPowertrainBuilder_Components_MeasuredSpeedGear_PHEV_TestPT(string nuame, bool expectTestPT, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT, Type expectedHybridController, Type expectedHybridStrategy)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.ParallelHybridVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             var testpowertrains = GetSimpleVehicleContainer(pt);
             if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategySimplePowertrain, out var c1)) {
@@ -893,7 +903,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             Type expectedHybridStrategyT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.IHPC, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             AssertPowertrainComponents(pt, VehicleContainerT, DistanceBasedDrivingCycleT, DriverT, VehicleT, WheelsT,
                 BrakesT, AxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, EngineT, expectedHybridControllerT, expectedHybridStrategyT, expectedTorqueConverterT);
@@ -901,16 +911,17 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
         public static object[] DistanceBased_IHPC_TestPT_Source =
         {
-            new object[] {"Dist PHEV AMT", true, CycleType.DistanceBased, GearboxType.IHPC, TestAPTNGearboxT, null, null, ClutchT, TestHybridCtl, null},
+            new object[] {"Dist PHEV AMT", true, CycleType.DistanceBased, GearboxType.IHPC, TestAMTGearboxT, null, null, ClutchT, TestHybridCtl, null},
         };
 
         [TestCaseSource(nameof(DistanceBased_IHPC_TestPT_Source))]
         public void TestPowertrainBuilder_Components_Distance_IHPC_TestPT(string nuame, bool expectTestPT, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT, Type expectedHybridController, Type expectedHybridStrategy)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.IHPC, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             var testpowertrains = GetSimpleVehicleContainer(pt);
+			AssertTestpowertrains(expectTestPT, testpowertrains);
             if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategySimplePowertrain, out var c1)) {
                 AssertPowertrainComponents(c1, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
             }
@@ -921,7 +932,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
                 AssertPowertrainComponents(c3, TestVehicleContainerT, TestPowertrainCycleT, TestDriverTestPTT, TestVehicleT, TestWheelsT, TestBrakesT, TestAxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, TestEngineT, expectedHybridController, expectedHybridStrategy, expectedTorqueConverterT);
             }
 
-            AssertTestpowertrains(expectTestPT, testpowertrains);
+            
         }
 
 
@@ -944,7 +955,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             Type expectedHybridStrategyT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.IHPC, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             AssertPowertrainComponents(pt, VehicleContainerT, DistanceBasedDrivingCycleT, DriverT, VehicleT, WheelsT,
                 BrakesT, AxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, EngineT, expectedHybridControllerT, expectedHybridStrategyT, expectedTorqueConverterT);
@@ -960,7 +971,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public void TestPowertrainBuilder_Components_MeasuredSpeed_IHPC_TestPT(string nuame, bool expectTestPT, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT, Type expectedHybridController, Type expectedHybridStrategy)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.IHPC, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             var testpowertrains = GetSimpleVehicleContainer(pt);
             if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategySimplePowertrain, out var c1)) {
@@ -996,7 +1007,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             Type expectedHybridStrategyT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.IHPC, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             AssertPowertrainComponents(pt, VehicleContainerT, DistanceBasedDrivingCycleT, DriverT, VehicleT, WheelsT,
                 BrakesT, AxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, EngineT, expectedHybridControllerT, expectedHybridStrategyT, expectedTorqueConverterT);
@@ -1012,7 +1023,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public void TestPowertrainBuilder_Components_MeasuredSpeedGear_IHPC_TestPT(string nuame, bool expectTestPT, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT, Type expectedHybridController, Type expectedHybridStrategy)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.IHPC, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             var testpowertrains = GetSimpleVehicleContainer(pt);
             if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategySimplePowertrain, out var c1)) {
@@ -1053,7 +1064,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             Type expectedHybridStrategyT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.SerialHybridVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             AssertPowertrainComponents(pt, VehicleContainerT, DistanceBasedDrivingCycleT, DriverT, VehicleT, WheelsT,
                 BrakesT, AxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, EngineT, expectedHybridControllerT, expectedHybridStrategyT, expectedTorqueConverterT);
@@ -1072,7 +1083,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public void TestPowertrainBuilder_Components_Distance_SHEV_TestPT(string nuame, bool expectTestPT, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT, Type expectedHybridController, Type expectedHybridStrategy)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.SerialHybridVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             var testpowertrains = GetSimpleVehicleContainer(pt);
             if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategySimplePowertrain, out var c1)) {
@@ -1108,7 +1119,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             Type expectedHybridStrategyT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.IEPC_S, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             AssertPowertrainComponents(pt, VehicleContainerT, DistanceBasedDrivingCycleT, DriverT, VehicleT, WheelsT,
                 BrakesT, AxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, EngineT, expectedHybridControllerT, expectedHybridStrategyT, expectedTorqueConverterT);
@@ -1116,14 +1127,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
         public static object[] DistanceBased_IEPCS_TestPT_Source =
         {
-            new object[] { "Dist IEPC-S", true, CycleType.DistanceBased, GearboxType.APTN, TestAPTNGearboxT, null, null, null, TestHybridCtl, null},
+            new object[] { "Dist IEPC-S", true, CycleType.DistanceBased, GearboxType.APTN, TestIEPCGearboxMultipleGearsT, null, null, null, TestHybridCtl, null},
         };
 
         [TestCaseSource(nameof(DistanceBased_IEPCS_TestPT_Source))]
         public void TestPowertrainBuilder_Components_Distance_IEPCS_TestPT(string nuame, bool expectTestPT, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT, Type expectedHybridController, Type expectedHybridStrategy)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.IEPC_S, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             var testpowertrains = GetSimpleVehicleContainer(pt);
             if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategySimplePowertrain, out var c1)) {
@@ -1162,7 +1173,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             Type expectedHybridStrategyT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.BatteryElectricVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             AssertPowertrainComponents(pt, VehicleContainerT, DistanceBasedDrivingCycleT, DriverT, VehicleT, WheelsT,
                 BrakesT, AxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, DummyEngineT, expectedHybridControllerT, expectedHybridStrategyT, expectedTorqueConverterT);
@@ -1181,10 +1192,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public void TestPowertrainBuilder_Components_Distance_PEV_TestPT(string nuame, bool expectTestPT, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT, Type expectedHybridController, Type expectedHybridStrategy)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.BatteryElectricVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             var testpowertrains = GetSimpleVehicleContainer(pt);
-            if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategySimplePowertrain, out var c1)) {
+			
+			AssertTestpowertrains(expectTestPT, testpowertrains);
+
+			if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategySimplePowertrain, out var c1)) {
                 AssertPowertrainComponents(c1, TestVehicleContainerT, TestDistanceBasedDrivingCycleT, TestDriverSimpleContT, TestVehicleT, TestWheelsT, TestBrakesT, TestAxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, null, null, null, expectedTorqueConverterT);
             }
             if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategyTestPowertrain, out var c2)) {
@@ -1194,7 +1208,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
                 AssertPowertrainComponents(c3, TestVehicleContainerT, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
             }
 
-            AssertTestpowertrains(expectTestPT, testpowertrains);
         }
 
         #endregion
@@ -1218,7 +1231,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             Type expectedHybridStrategyT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.BatteryElectricVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             AssertPowertrainComponents(pt, VehicleContainerT, MeasuredspeedDrivingCycleT, MeasuredspeedDrivingCycleT, VehicleT, WheelsT,
                 BrakesT, AxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, null, expectedHybridControllerT, expectedHybridStrategyT, expectedTorqueConverterT);
@@ -1237,7 +1250,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public void TestPowertrainBuilder_Components_MeasuredSpeed_PEV_TestPT(string nuame, bool expectTestPT, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT, Type expectedHybridController, Type expectedHybridStrategy)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.BatteryElectricVehicle, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             var testpowertrains = GetSimpleVehicleContainer(pt);
             if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategySimplePowertrain, out var c1)) {
@@ -1272,7 +1285,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             Type expectedHybridStrategyT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.IEPC_E, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             AssertPowertrainComponents(pt, VehicleContainerT, DistanceBasedDrivingCycleT, DriverT, VehicleT, WheelsT,
                 BrakesT, AxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, DummyEngineT, expectedHybridControllerT, expectedHybridStrategyT, expectedTorqueConverterT);
@@ -1280,14 +1293,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
         public static object[] DistanceBased_IEPCE_TestPT_Source =
         {
-            new object[] { "Dist IEPC-E", true, CycleType.DistanceBased, GearboxType.APTN, TestAPTNGearboxT, null, null, null, null, null},
+            new object[] { "Dist IEPC-E", true, CycleType.DistanceBased, GearboxType.APTN, TestIEPCGearboxMultipleGearsT, null, null, null, null, null},
         };
 
         [TestCaseSource(nameof(DistanceBased_IEPCE_TestPT_Source))]
         public void TestPowertrainBuilder_Components_Distance_IEPCE_TestPT(string nuame, bool expectTestPT, CycleType cycleType, GearboxType gbxType, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT, Type expectedHybridController, Type expectedHybridStrategy)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.IEPC_E, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             var testpowertrains = GetSimpleVehicleContainer(pt);
             if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategySimplePowertrain, out var c1)) {
@@ -1322,7 +1335,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             Type expectedHybridStrategyT)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.IEPC_E, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             AssertPowertrainComponents(pt, VehicleContainerT, MeasuredspeedDrivingCycleT, MeasuredspeedDrivingCycleT, VehicleT, WheelsT,
                 BrakesT, AxleGearT, null, null, expectedGearboxT, expectedShiftStrategyT, expectedClutchT, DummyEngineT, expectedHybridControllerT, expectedHybridStrategyT, expectedTorqueConverterT);
@@ -1333,11 +1346,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             new object[] { "Dist IEPC-E", true, CycleType.MeasuredSpeed, GearboxType.APTN, IEPCGearboxT, TestAPTNGearboxT, null, null, null, null, null},
         };
 
-        [TestCaseSource(nameof(MeasuredSpeed_IEPCE_TestPT_Source))]
+		[TestCaseSource(nameof(MeasuredSpeed_IEPCE_TestPT_Source))]
         public void TestPowertrainBuilder_Components_MeasuredSpeed_IEPCE_TestPT(string nuame, bool expectTestPT, CycleType cycleType, GearboxType gbxType, Type gbxT, Type expectedGearboxT, Type expectedTorqueConverterT, Type expectedShiftStrategyT, Type expectedClutchT, Type expectedHybridController, Type expectedHybridStrategy)
         {
             var runData = CreateRunData(cycleType, VectoSimulationJobType.IEPC_E, gbxType);
-            var pt = PowertrainBuilder.Build(runData, new MockModalDataContainer());
+            var pt = PowertrainBuilder.Build(runData, GetMockModalDataContainer());
 
             var testpowertrains = GetSimpleVehicleContainer(pt);
             if (testpowertrains.TryGetValue(TestPowertrainSource.ShiftStrategySimplePowertrain, out var c1)) {
@@ -1367,7 +1380,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             var engineIdlingSpeed = 600.RPMtoRad();
             var retVal = new VectoRunData() {
                 JobType = jobType,
-                Cycle = new DrivingCycleData() {
+				Cycle = new DrivingCycleData() {
                     CycleType = cycleType,
                     Entries = new List<DrivingCycleData.DrivingCycleEntry>() {
                         new DrivingCycleData.DrivingCycleEntry() {
@@ -1430,7 +1443,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
                                 Ratio = 0.9,
                                 LossMap = TransmissionLossMapReader.Create(1.0, 0.9, "Gear 2")
                         } }
-                    }
+                    },
+                    ShiftStrategy = _kernel.Get<IShiftStrategyFactory>().GetShiftStrategyName(gbxType, jobType),
                 },
                 GearshiftParameters = new ShiftStrategyParameters() {
                     StartSpeed = 8.KMPHtoMeterPerSecond(),

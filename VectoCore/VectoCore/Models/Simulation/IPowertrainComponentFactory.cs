@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 
         IDistanceBasedDrivingCycle CreateDistanceBasedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle);
 		IMeasuredSpeedDrivingCycle CreateMeasuredSpeedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle);
-		IPWheelCycle CreatePWheelCycle(IVehicleContainer container, IDrivingCycleData dataCycle);
+		IPWheelCycle CreatePWheelCycle(IVehicleContainer container, IDrivingCycleData cycle);
 		IVTPCycle CreateVTPCycle(IVehicleContainer container, IDrivingCycleData cycle);
 
         IVehicle CreateVehicle(IVehicleContainer container, VehicleData modelData, AirdragData airdrag);

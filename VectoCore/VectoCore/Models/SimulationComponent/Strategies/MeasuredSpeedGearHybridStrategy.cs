@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 {
     public class MeasuredSpeedGearHybridStrategy : AbstractMeasuredSpeedGearHybridStrategy
     {
-        public MeasuredSpeedGearHybridStrategy(VectoRunData runData, IVehicleContainer vehicleContainer) : base(runData,vehicleContainer)
+        public MeasuredSpeedGearHybridStrategy(VectoRunData runData, IVehicleContainer container) : base(runData, container)
         {}
 
 		protected override IResponse RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, 
@@ -79,8 +79,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 	public class MeasuredSpeedGearATHybridStrategy : AbstractMeasuredSpeedGearHybridStrategy
 	{
 
-		public MeasuredSpeedGearATHybridStrategy(VectoRunData runData, IVehicleContainer vehicleContainer) : base(runData,
-			vehicleContainer)
+		public MeasuredSpeedGearATHybridStrategy(VectoRunData runData, IVehicleContainer container) : base(runData, container)
 		{}
 
 		protected override IResponse RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,

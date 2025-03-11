@@ -401,12 +401,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
         private VelocitySpeedGearshiftPreprocessor ConfigureSpeedPreprocessor(IVehicleContainer bus)
 		{
-			var testPowertrain = PowertrainBuilder.CreateTestPowertrain(bus, false);
-			var testContainer = testPowertrain.Container;
+			//var testPowertrain = PowertrainBuilder.CreateTestPowertrain(bus, false);
+			//var testContainer = testPowertrain.Container;
 
-			if (testContainer.GearboxCtl is IMTGearbox)
+			if (TestPowertrain.Container.GearboxCtl is IMTGearbox)
 			{
-				throw new VectoException("Unknown gearboxtype: {0}", testContainer.GearboxCtl.GetType().FullName);
+				throw new VectoException("Unknown gearboxtype: {0}", TestPowertrain.Container.GearboxCtl.GetType().FullName);
 			}
 
 			var maxGradient = bus.RunData.Cycle.Entries.Max(x => Math.Abs(x.RoadGradientPercent.Value())) + 1;
@@ -419,7 +419,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			return new VelocitySpeedGearshiftPreprocessor(
 					VelocityDropData,
 					bus.RunData.GearboxData.TractionInterruption,
-					testPowertrain,
+					TestPowertrain,
 					-gradient,
 					gradient,
 					2);

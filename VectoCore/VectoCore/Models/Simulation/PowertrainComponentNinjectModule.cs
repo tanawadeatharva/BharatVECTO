@@ -151,9 +151,9 @@ namespace TUGraz.VectoCore.Models.Simulation
 			Bind<IElectricMotor>().To<TestpowertrainIEPC>().Named(_testPowertrain.ElectricMotorName(true));
 
 			Bind<IElectricMotorControl>().To<SimpleElectricMotorControl>().Named(_testPowertrain.ElectricMotorControllerName(CycleType.DistanceBased));
-
-			// no differentiation for testpowertrain (fallback binding collides with other bindings, WhenAnyAncestorNamed does not work because both real and testpowertrain are parents
-			foreach (var cycleType in EnumHelper.GetValues<CycleType>()) {
+			Bind<IElectricMotorControl>().To<SimpleElectricMotorControl>().Named(_testPowertrain.ElectricMotorControllerName(CycleType.MeasuredSpeed));
+            // no differentiation for testpowertrain (fallback binding collides with other bindings, WhenAnyAncestorNamed does not work because both real and testpowertrain are parents
+            foreach (var cycleType in EnumHelper.GetValues<CycleType>()) {
 				Bind<IHybridController>().To<SimpleHybridController>().Named(_testPowertrain.HybridControllerName(cycleType));
 			}
 			
@@ -182,6 +182,7 @@ namespace TUGraz.VectoCore.Models.Simulation
             var measSpdPHEVGearGbxT = typeof(MeasuredSpeedHybridsCycleGearbox);
             var bevCycleGbxT = typeof(BEVCycleGearbox);
             var cycleGearboxT = typeof(CycleGearbox);
+			var vtpGearboxT = typeof(VTPGearbox);
 
             #region distance based
             var GbxClass_Distance_Conv = new Dictionary<GearboxType, Type>() {
@@ -296,10 +297,10 @@ namespace TUGraz.VectoCore.Models.Simulation
 
             #region VTP
             var GbxClass_VTP_Conv = new Dictionary<GearboxType, Type>() {
-                {MTGearbox, cycleGearboxT},
-                {AMTGearbox, cycleGearboxT},
-                {APTSGearbox, cycleGearboxT},
-                {APTPGearbox, cycleGearboxT},
+                {MTGearbox, vtpGearboxT},
+                {AMTGearbox, vtpGearboxT},
+                {APTSGearbox, vtpGearboxT},
+                {APTPGearbox, vtpGearboxT},
             };
             #endregion
 
@@ -426,6 +427,13 @@ namespace TUGraz.VectoCore.Models.Simulation
 				{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.BatteryElectricVehicle) , GbxClass_Distance_PEV},
 				{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.IEPC_E) , GbxClass_Distance_EIEPC},
 
+				{ Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.ConventionalVehicle) , GbxClass_MeasuredSpd_Conv},
+				{ Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.ParallelHybridVehicle) , GbxClass_MeasuredSpd_PHEV},
+				{ Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.IHPC) , GbxClass_MeasuredSpd_IHPC},
+				{ Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.BatteryElectricVehicle) , GbxClass_MeasuredSpd_PEV},
+				{ Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.IEPC_E) , GbxClass_MeasuredSpd_EIEPC},
+
+				{ Tuple.Create(CycleType.MeasuredSpeedGear, VectoSimulationJobType.ParallelHybridVehicle) , GbxClass_MeasuredSpdGear_PHEV},
             };
         }
 
@@ -440,6 +448,9 @@ namespace TUGraz.VectoCore.Models.Simulation
             Bind<IWheels>().To<Wheels>().Named(namingHelper.Prefix);
             Bind<IDistanceBasedDrivingCycle>().To<DistanceBasedDrivingCycle>().Named(namingHelper.Prefix);
             Bind<IMeasuredSpeedDrivingCycle>().To<MeasuredSpeedDrivingCycle>().Named(namingHelper.Prefix);
+			Bind<IPWheelCycle>().To<PWheelCycle>().Named(namingHelper.Prefix);
+			Bind<IVTPCycle>().To<VTPCycle>().Named(namingHelper.Prefix);
+
             Bind<IDriver>().To<Driver>().Named(namingHelper.Prefix);
             Bind<IDriverStrategy>().To<DefaultDriverStrategy>().Named(namingHelper.Prefix);
             Bind<IBrakes>().To<Brakes>().Named(namingHelper.Prefix);
