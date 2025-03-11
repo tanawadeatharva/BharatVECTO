@@ -22,7 +22,7 @@ using Assert = NUnit.Framework.Assert;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy;
 
-public class AMTShistStrategyTests
+public class AMTShiftStrategyTests
 {
     [TestCase(8, 7, 1800, 750, true),
 TestCase(7, 6, 1800, 750, true),
