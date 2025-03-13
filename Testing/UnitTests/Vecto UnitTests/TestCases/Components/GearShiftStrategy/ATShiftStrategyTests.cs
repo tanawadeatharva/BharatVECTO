@@ -148,7 +148,7 @@ public class ATShiftStrategyTests
 		engineInfo.Setup(e => e.EngineIdleSpeed).Returns(600.RPMtoRad());
 		engineInfo.Setup(e => e.EngineRatedSpeed).Returns(2000.RPMtoRad());
 
-		ptBuilder.Setup(b => b.CreateTestPowertrain(It.IsAny<IVehicleContainer>(), It.IsAny<bool>(), It.IsAny<VectoSimulationJobType?>())).Returns(testPt.Object);
+		ptBuilder.Setup(b => b.CreateTestPowertrain(It.IsAny<IVehicleContainer>(), It.IsAny<bool>())).Returns(testPt.Object);
 
 		testPt.Setup(t => t.Gearbox).Returns(testGbx.Object);
 		testPt.Setup(t => t.Container).Returns(testContainer.Object);
