@@ -24,7 +24,7 @@ using Assert = NUnit.Framework.Assert;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy;
 
-public class ATShiftStrategyOptimizedTests
+public class ATShiftStrategyTests
 {
 	[Test,
 	TestCase(0, 100, 1),
