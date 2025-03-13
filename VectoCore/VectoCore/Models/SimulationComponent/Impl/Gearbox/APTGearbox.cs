@@ -195,8 +195,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
         }
 
 
-
-        internal ResponseDryRun Initialize(GearshiftPosition gear, NewtonMeter outTorque,
+        public ResponseDryRun Initialize(GearshiftPosition gear, NewtonMeter outTorque,
             PerSecond outAngularVelocity)
         {
             var effectiveRatio = gear.TorqueConverterLocked.Value

@@ -29,6 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
@@ -54,6 +57,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		ATGearboxState GetPreviousState { get; }
 		bool ShiftToLocked { get; }
 		IIdleController IdleController { set; }
+		ResponseDryRun Initialize(GearshiftPosition gear, NewtonMeter outTorque,
+			PerSecond outAngularVelocity);
 	}
 
 	public interface IAPTNGearbox : IGearboxType { }
