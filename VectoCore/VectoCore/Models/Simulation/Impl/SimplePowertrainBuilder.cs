@@ -32,9 +32,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
         }
 
 
-		public ITestPowertrain CreateTestPowertrain(IVehicleContainer realContainer, bool createDriver, VectoSimulationJobType? overrideJobType)
+		public ITestPowertrain CreateTestPowertrain(IVehicleContainer realContainer, bool createDriver, VectoSimulationJobType overrideJobType)
 		{
 			var testContainer = BuildSimplePowertrain(realContainer.RunData, overrideJobType);
+			return new TestPowertrain(testContainer, realContainer, createDriver);
+		}
+
+		public ITestPowertrain CreateTestPowertrain(IVehicleContainer realContainer, bool createDriver)
+		{
+			var testContainer = BuildSimplePowertrain(realContainer.RunData, null);
 			return new TestPowertrain(testContainer, realContainer, createDriver);
 		}
 
