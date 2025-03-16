@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	/// </summary>
 	public interface IGearbox : IPowerTrainComponent, IGearboxInfo, IGearboxControl, IUpdateable { }
 
-	public interface IGearboxType {}
+	public interface IGearboxType : IGearbox {}
 
 	public interface IMTGearbox : IGearboxType {}
 
