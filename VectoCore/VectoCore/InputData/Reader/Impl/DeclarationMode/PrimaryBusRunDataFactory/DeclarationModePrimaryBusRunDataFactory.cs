@@ -68,6 +68,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
                     Vehicle.AxleConfiguration.NumAxles(), CompletedVehicle.VehicleCode, CompletedVehicle.RegisteredClass, CompletedVehicle.NumberPassengerSeatsLowerDeck,
                     CompletedVehicle.Height, CompletedVehicle.LowEntry);
 
+				if (completedVehicleSegment.Missions == null)
+				{
+					throw new VectoException(
+						$"Failed to find missions for completed vehicle with code: {CompletedVehicle.VehicleCode}, registration class: {CompletedVehicle.RegisteredClass}, " +
+						$"passenger seats in lower deck: {CompletedVehicle.NumberPassengerSeatsLowerDeck}, height: {CompletedVehicle.Height}, " +
+						$"low entry: {CompletedVehicle.LowEntry}, number of axles: {Vehicle.AxleConfiguration.NumAxles()}");
+				}
+
                 var missionTypes = completedVehicleSegment.Missions.Select(x => x.MissionType).Distinct();
 				
 				var completedGroup = VehicleClassHelper.GetClassNumber(completedVehicleSegment.VehicleClass);
