@@ -523,30 +523,8 @@ TestCase(8, 4, 15000, 200, true),]
 	{
 		var shiftStrategy = new AMTShiftStrategyOptimized(vehicleContainer.Object);
 
-
 		gbx = GetMockGearbox();
-		var mockPort = new Mock<ITnOutPort>();
 		shiftStrategy.Gearbox = gbx.Object;
-
-
-		// NewtonMeter tqRequest = null;
-		// PerSecond rpmRequest = null;
-		// mockPort.Setup(p => p.Initialize(It.IsAny<NewtonMeter>(),
-		// 	It.IsAny<PerSecond>())).Returns((NewtonMeter tq, PerSecond rpm) => {
-		// 	tqRequest = tq;
-		// 	rpmRequest = rpm;
-		// 	return new ResponseSuccess(this)
-		// 	{
-		// 		Engine = {
-		// 			EngineSpeed = rpm,
-		// 			PowerRequest = tq * rpm,
-		// 		},
-		// 	};
-		// });
-		// mockPort.Setup(p => p.Request(It.IsAny<Second>(), It.IsAny<Second>(), It.IsAny<NewtonMeter>(),
-		// 	It.IsAny<PerSecond>(), true)).Returns(new ResponseDryRun(this));
-		//
-		// gbx.Connect(mockPort.Object);
 
 		SetVelocityDropLookupData(shiftStrategy);
         return shiftStrategy;
