@@ -26,6 +26,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies.ShiftPolygonCalc;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
@@ -62,43 +63,46 @@ public class ATShiftStrategyOptimizedTests
 			out var runData,
 			out _,
 			out _);
-		
-		var shiftStrategy = new ATShiftStrategyOptimized(vehicleContainer.Object);
+
+		var shiftStrategy = GetShiftStrategyAndGearbox(vehicleContainer, out var gbx, out _);
 		var angularVelocity = GetAngularVelocityBySpeed(vehicleSpeed, runData);
 		var response = shiftStrategy.InitGear(
 			0.SI<Second>(),
 			1.SI<Second>(),
-			torque.SI<NewtonMeter>(), 
+			torque.SI<NewtonMeter>(),
 			angularVelocity);
-		
+
 		Assert.AreEqual(expectedGear, response.Gear);
 	}
+
 	private Mock<IVehicleContainer> GetMockVehicleContainer(double speedKmh, DrivingBehavior driverBehavior,
 		double[] gearRatios,
 		out Mock<IVehicleDeclarationInputData> inputData, out VectoRunData runData, out GearboxData gearboxData,
 		out Mock<ISimpleVehicleContainer> simplePt)
 	{
 		var vehicleContainer = new Mock<IVehicleContainer>();
-		
+
 		inputData = GetMockInputData(gearRatios);
 		runData = GetDummyVectoRunData(inputData.Object);
-
-		
 		
 		vehicleContainer.Setup(c => c.RunData).Returns(runData);
+
 		
 		//Testpowertrain
 		var testPowertrain = GetMockTestPowertrain(
-			runData, 
+			runData,
 			out simplePt);
-			
+
 		vehicleContainer.Setup(c => c.SimplePowertrainBuilder.CreateTestPowertrain(It.IsAny<IVehicleContainer>(),
 			It.IsAny<bool>())).Returns(testPowertrain.Object);
-		
+
 		//VehicleInfo
-		vehicleContainer.Setup(v => v.VehicleInfo)
+		vehicleContainer.Setup(c => c.VehicleInfo)
 			.Returns(GetVehicleInfo(speedKmh.KMPHtoMeterPerSecond()).Object);
 
+		//EngineInfo
+		vehicleContainer.Setup(c => c.EngineInfo).Returns(GetEngineInfo(vehicleContainer, runData));
+		
 		//AxleGearInfo
 		var axleGearInfo = new Mock<IAxlegearInfo>();
 		vehicleContainer.Setup(c => c.AxlegearInfo).Returns(axleGearInfo.Object);
@@ -117,8 +121,7 @@ public class ATShiftStrategyOptimizedTests
 		cycleInfo.Setup(c => c.RoadGradient).Returns(0.SI<Radian>());
 
 
-		cycleInfo.Setup(c => c.CycleLookAhead(It.IsAny<Meter>())).Returns(new DrivingCycleData.DrivingCycleEntry()
-		{
+		cycleInfo.Setup(c => c.CycleLookAhead(It.IsAny<Meter>())).Returns(new DrivingCycleData.DrivingCycleEntry() {
 			Altitude = 0.SI<Meter>()
 		});
 		cycleInfo.Setup(c => c.Altitude).Returns(0.SI<Meter>());
@@ -126,8 +129,7 @@ public class ATShiftStrategyOptimizedTests
 		//DriverINfo
 		vehicleContainer.Setup(v => v.DriverInfo.DriverBehavior).Returns(driverBehavior);
 		var acc = 0.SI<MeterPerSquareSecond>();
-		switch (driverBehavior)
-		{
+		switch (driverBehavior) {
 			case DrivingBehavior.Accelerating:
 				acc = 1.SI<MeterPerSquareSecond>();
 				break;
@@ -141,7 +143,7 @@ public class ATShiftStrategyOptimizedTests
 				throw new ArgumentOutOfRangeException();
 		}
 
-		
+
 
 
 
@@ -149,17 +151,35 @@ public class ATShiftStrategyOptimizedTests
 		gearboxData = new GearboxData();
 		return vehicleContainer;
 	}
+
+	private IEngineInfo GetEngineInfo(Mock<IVehicleContainer> vehicleContainer, VectoRunData runData)
+	{
+		        //EngineInfo
+        var engineInfo = new Mock<IEngineInfo>();
+		vehicleContainer.Setup(c => c.EngineInfo).Returns(engineInfo.Object);
+		engineInfo.Setup(e => e.EngineIdleSpeed).Returns(runData.EngineData.IdleSpeed);
+		engineInfo.Setup(e => e.EngineRatedSpeed).Returns(runData.EngineData.FullLoadCurves.First().Value.RatedSpeed);
+
+		engineInfo.Setup(e => e.EngineSpeed).Returns(1400.RPMtoRad());
+		engineInfo.Setup(e => e.EngineN95hSpeed).Returns
+			(runData.EngineData.FullLoadCurves.First().Value.N95hSpeed);
+		engineInfo.Setup(e => e.EngineN80hSpeed).Returns(
+			runData.EngineData.FullLoadCurves.First().Value.N80hSpeed);
+		engineInfo.Setup(e => e.EngineStationaryFullPower(It.IsAny<PerSecond>())).Returns((PerSecond n) =>
+			runData.EngineData.FullLoadCurves[0].FullLoadStationaryPower(n));
+		return engineInfo.Object;
+	}
+
 	private CycleData GetCycleData()
 	{
-		return new CycleData()
-		{
-			LeftSample = new DrivingCycleData.DrivingCycleEntry()
-			{
+		return new CycleData() {
+			LeftSample = new DrivingCycleData.DrivingCycleEntry() {
 				PTOActive = PTOActivity.Inactive,
 				VehicleTargetSpeed = 10.KMPHtoMeterPerSecond()
 			}
 		};
 	}
+
 	private Mock<IVehicleInfo> GetVehicleInfo(MeterPerSecond speed)
 	{
 		var vehicleInfo = new Mock<IVehicleInfo>();
@@ -171,29 +191,30 @@ public class ATShiftStrategyOptimizedTests
 		vehicleInfo.Setup(v => v.TotalMass).Returns(12000.SI<Kilogram>());
 		return vehicleInfo;
 	}
+
 	private Mock<ITestPowertrain> GetMockTestPowertrain(VectoRunData runData,
 		out Mock<ISimpleVehicleContainer> simpleContainer)
 	{
 		var testPt = new Mock<ITestPowertrain>();
-		simpleContainer = GetSimplePowertrain(runData, 
+		simpleContainer = GetSimplePowertrain(runData,
 			out var testGearbox);
-		
-		
-		
+
+
+
 		testPt.Setup(t => t.Container).Returns(simpleContainer.Object);
 		testPt.Setup(t => t.Gearbox).Returns(testGearbox.Object);
 
-		
 		//Vehicle
 		var vehicle = new Mock<ITestPowertrainVehicle>();
 		vehicle.Setup(v => v.Initialize(
 			It.IsAny<MeterPerSecond>(),
 			It.IsAny<Radian>())).Returns(new ResponseSuccess(this));
 		testPt.Setup(t => t.Vehicle).Returns(vehicle.Object);
-		
+
 
 		return testPt;
 	}
+
 	private Mock<IVehicleDeclarationInputData> GetMockInputData(double[]? gearRatios)
 	{
 		var input = new Mock<IVehicleDeclarationInputData>();
@@ -204,18 +225,17 @@ public class ATShiftStrategyOptimizedTests
 
 		components.Setup(c => c.GearboxInputData).Returns(gbx.Object);
 		components.Setup(c => c.TorqueConverterInputData).Returns(tc.Object);
-		gearRatios = gearRatios ?? new double[] {
-
-		};
+		gearRatios = gearRatios ?? new double[] { };
 		var header = "Input Speed [rpm],Input Torque [Nm],Torque Loss [Nm]";
 		var efficiency = 0.98;
 		var data = new List<string>();
-		
-		foreach (var speed in new[] {0, 10000}) {
-			foreach (var tq in new[] {1e5, -1e5, 0}) {
+
+		foreach (var speed in new[] { 0, 10000 }) {
+			foreach (var tq in new[] { 1e5, -1e5, 0 }) {
 				data.Add(FormattableString.Invariant($"{speed:f2}, {tq:f2}, {(1 - efficiency) * Math.Abs(tq)}"));
 			}
 		}
+
 		var lossmap = InputDataHelper.InputDataAsTableData(header, data.ToArray());
 		//lossmap.Columns
 		var gears = gearRatios.Select((x, idx) => {
@@ -234,26 +254,27 @@ public class ATShiftStrategyOptimizedTests
 		tc.Setup(t => t.TCData).Returns(tcData);
 		return input;
 	}
+
 	private static VectoRunData GetDummyVectoRunData(IVehicleDeclarationInputData inputData)
 	{
 		var nrOfGears = inputData.Components.GearboxInputData.Gears.Count;
 		var fldData = InputDataHelper.InputDataAsTableData(EngineFldHeader, EngineFldData);
 		var fld = FullLoadCurveReader.Create(fldData);
-		
+
 		// create gearbox data
 		var tcDataAdapter = new TorqueConverterDataAdapter();
 
 		// fuel data
-        var fuelData = new CombustionEngineFuelData() {
+		var fuelData = new CombustionEngineFuelData() {
 			ConsumptionMap = FuelConsumptionMapReader.Create(
 				InputDataHelper.InputDataAsTableData(
 					"engine speed [rpm] ,torque [Nm] ,fuel consumption [g/h] ,whr power electrical [W]",
 					"500,-131,0,0",
-						"500,95.6,1814.959,0",
-						"500,573.6,9771.095,0",
-						"2453,-209.12,0,0",
-						"2453,764.8,39097.94,0"
-                    )),
+					"500,95.6,1814.959,0",
+					"500,573.6,9771.095,0",
+					"2453,-209.12,0,0",
+					"2453,764.8,39097.94,0"
+				)),
 			FuelData = DeclarationData.FuelData.Lookup(FuelType.DieselCI),
 		};
 
@@ -285,65 +306,63 @@ public class ATShiftStrategyOptimizedTests
 			GearboxType.ATSerial, GearboxType.ATPowerSplit
 		};
 
-		var gearboxData = gbxDataAdapter.CreateGearboxData(inputData, runData, new ATShiftStrategyOptimizedPolygonCalculator(), new GearboxType[] {
-			GearboxType.ATSerial,
-			GearboxType.ATPowerSplit
-		});
+		var gearboxData = gbxDataAdapter.CreateGearboxData(inputData, runData,
+			new ATShiftStrategyOptimizedPolygonCalculator(), new GearboxType[] {
+				GearboxType.ATSerial,
+				GearboxType.ATPowerSplit
+			});
 
 		var gearShiftParams =
 			gbxDataAdapter.CreateGearshiftData(1.0, runData.EngineData.IdleSpeed, GearboxType.ATSerial, nrOfGears);
 
 		runData.GearboxData = gearboxData;
 		runData.GearshiftParameters = gearShiftParams;
-        return runData;
+		return runData;
 	}
-	private Mock<ISimpleVehicleContainer> GetSimplePowertrain(VectoRunData runData, out Mock<ITestPowertrainTransmission> testGearbox)
+
+	private Mock<ISimpleVehicleContainer> GetSimplePowertrain(VectoRunData runData,
+		out Mock<ITestPowertrainTransmission> testGearbox)
 	{
 		var simplePt = new Mock<ISimpleVehicleContainer>();
 
 		testGearbox = GetMockTestGearbox(runData.GearboxData.Gears);
-		
-		
+
+
 		simplePt.Setup(s => s.GearboxInfo).Returns(testGearbox.Object);
-		
-		
-		
-		
-		
+		simplePt.Setup(s => s.GearboxOutPort).Returns(testGearbox.Object);
+
+
+
+
 		//VehiclePort
 		return simplePt;
 	}
+
 	private Mock<ITestPowertrainTransmission> GetMockTestGearbox(Dictionary<uint, GearData> ratios)
 	{
 		Mock<IAPTGearbox> amtGearbox = new Mock<IAPTGearbox>();
 		amtGearbox.Name = "APT_TestGearbox";
 		Mock<ITestPowertrainTransmission> gbx = amtGearbox.As<ITestPowertrainTransmission>();
 
-		
-		
+
+
 		gbx.Setup(g => g.LastUpshift).Returns(-double.MaxValue.SI<Second>());
 		gbx.Setup(g => g.LastDownshift).Returns(-double.MaxValue.SI<Second>());
 
 		GearshiftPosition gear = null;
-		gbx.SetupGet(g => g.Gear).Returns(() => {
-			
-			return gear;
-		});
+		gbx.SetupGet(g => g.Gear).Returns(() => { return gear; });
 		gbx.SetupSet(g => g.SetGear = It.IsAny<GearshiftPosition>())
-			.Callback<GearshiftPosition>(p => {
-				gear = p;
-			});
+			.Callback<GearshiftPosition>(p => { gear = p; });
 
 
 		GearshiftPosition nextGear = null;
 		gbx.SetupGet(g => g.NextGear).Returns(() => nextGear);
 		gbx.SetupSet(g => g.SetNextGear = It.IsAny<GearshiftPosition>())
 			.Callback<GearshiftPosition>(p => nextGear = p);
-			
+
 		gbx.Setup(p => p.Initialize(It.IsAny<NewtonMeter>(),
 			It.IsAny<PerSecond>())).Returns((NewtonMeter tq, PerSecond rpm) => {
-			return new ResponseSuccess(this)
-			{
+			return new ResponseSuccess(this) {
 				Engine = {
 					EngineSpeed = rpm,
 					PowerRequest = tq * rpm,
@@ -370,6 +389,7 @@ public class ATShiftStrategyOptimizedTests
 						PowerRequest = n * t, EngineSpeed = n * ratio,
 						DynamicFullLoadPower = (t / ratio + 2300.SI<NewtonMeter>()) * n * ratio,
 						TotalTorqueDemand = t,
+						TorqueOutDemand = t,
 					},
 					Clutch = { PowerRequest = n * t },
 					DeltaFullLoad = n * t / 2 * (-1)
@@ -386,83 +406,6 @@ public class ATShiftStrategyOptimizedTests
 		return gbx;
 	}
 
-	private Mock<IAPTGearbox> GetGearbox(Dictionary<uint, GearData> ratios)
-	{
-				
-		Mock<IAPTGearbox> amtGearbox = new Mock<IAPTGearbox>();
-		amtGearbox.Name = "APT_Gearbox";
-		
-		var gbx = amtGearbox.As<IAPTGearbox>();
-		// Mock<ITestPowertrainTransmission> gbx = amtGearbox.As<ITestPowertrainTransmission>();
-
-		
-		
-		
-		// gbx.Setup(g => g.LastUpshift).Returns(-double.MaxValue.SI<Second>());
-		// gbx.Setup(g => g.LastDownshift).Returns(-double.MaxValue.SI<Second>());
-		//
-		// GearshiftPosition gear = null;
-		// gbx.SetupGet(g => g.Gear).Returns(() => {
-		// 	
-		// 	return gear;
-		// });
-		// gbx.SetupSet(g => g.SetGear = It.IsAny<GearshiftPosition>())
-		// 	.Callback<GearshiftPosition>(p => {
-		// 		gear = p;
-		// 	});
-
-
-		// GearshiftPosition nextGear = null;
-		// gbx.SetupGet(g => g.NextGear).Returns(() => nextGear);
-		// gbx.SetupSet(g => g.SetNextGear = It.IsAny<GearshiftPosition>())
-		// 	.Callback<GearshiftPosition>(p => nextGear = p);
-		// 	
-		// gbx.Setup(p => p.Initialize(It.IsAny<NewtonMeter>(),
-		// 	It.IsAny<PerSecond>())).Returns((NewtonMeter tq, PerSecond rpm) => {
-		// 	return new ResponseSuccess(this)
-		// 	{
-		// 		Engine = {
-		// 			EngineSpeed = rpm,
-		// 			PowerRequest = tq * rpm,
-		// 		},
-		// 	};
-		// });
-		// gbx.Setup(p => p.Request(
-		// 	It.IsAny<Second>(),
-		// 	It.IsAny<Second>(),
-		// 	It.IsAny<NewtonMeter>(),
-		// 	It.IsAny<PerSecond>(),
-		// 	true)).Returns((
-		// 	Second absTime,
-		// 	Second dt,
-		// 	NewtonMeter t,
-		// 	PerSecond n,
-		// 	bool dryRun) => {
-		//
-		// 	var ratio =
-		// 		gbx.Object.Gear == null ? 1.0 : ratios[gbx.Object.Gear.Gear].Ratio;
-		// 	return dryRun
-		// 		? new ResponseDryRun(this) {
-		// 			Engine = {
-		// 				PowerRequest = n * t, EngineSpeed = n * ratio,
-		// 				DynamicFullLoadPower = (t / ratio + 2300.SI<NewtonMeter>()) * n * ratio,
-		// 				TotalTorqueDemand = t,
-		// 			},
-		// 			Clutch = { PowerRequest = n * t },
-		// 			DeltaFullLoad = n * t / 2 * (-1)
-		// 		}
-		// 		: new ResponseSuccess(this) {
-		// 			Engine = {
-		// 				PowerRequest = n * t,
-		// 				EngineSpeed = n * ratio
-		//
-		// 			},
-		// 			Clutch = { PowerRequest = n * t }
-		// 		};
-		// });
-		
-		return gbx;
-	}
 	private static PerSecond GetAngularVelocityBySpeed(double speedKmh, VectoRunData runData)
 	{
 		// r_dyn = 0.465m, i_axle = 6.2
@@ -472,11 +415,11 @@ public class ATShiftStrategyOptimizedTests
 		return angularVelocity;
 	}
 
-	
-	
-	
-	
-	
+
+
+
+
+
 	public const string TcHeader = "Speed Ratio, Torque Ratio,MP1000";
 
 	public static readonly string[] TcData = new[] {
@@ -517,400 +460,346 @@ public class ATShiftStrategyOptimizedTests
 		"2100,1100,-320,0.25",
 	};
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-}
+	[TestCase(1, 1, 1000, 1500, 0, Description = "Engage 0-> 1C")]
+	public void Gearbox_Engage(int gear, int newGear, double tqNm, double nRPM, double speedKmh)
+	{
+		var gearRatios = new[] { 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
 
-// 	public void TestATGearInitialize(double vehicleSpeed, double torque, int expectedGear)
-// 	{
-// 		var gearRatios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
-//
-//         var gbxTypes = new[] {
-// 			GearboxType.ATSerial
-// 		};
-//
-// 		var vehicleContainer = GetMockVehicleContainer(
-// 			vehicleSpeed,
-// 			DrivingBehavior.Accelerating,
-// 			gearRatios,
-// 			out var inputData, 
-// 			out var runData, 
-// 			out var gearboxData, out _);
-//
-// 		var shiftStrategy = GetShiftStrategyAndGearbox(vehicleContainer, out var gbx);
-//
-//         var angularVelocity = GetAngularVelocityBySpeed(vehicleSpeed, runData);
-// 		var response = gbx.Initialize(torque.SI<NewtonMeter>(), angularVelocity);
-//
-// 		Assert.IsInstanceOf(typeof(ResponseSuccess), response);
-// 		Assert.AreEqual(expectedGear, gbx.Gear.Gear);
-// 		Assert.AreEqual(vehicleSpeed.IsEqual(0), gbx.Disengaged);
-// 	}
-//
-//
-// 	[TestCase(1, 1, 1000, 1500, 0, Description = "Engage 0-> 1C")]
-// 	public void Gearbox_Engage(int gear, int newGear, double tqNm, double nRPM, double speedKmh)
-// 	{
-// 		var gearRatios = new[] { 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
-//
-// 		var vehicleContainer = GetMockVehicleContainer(speedKmh, DrivingBehavior.Accelerating, gearRatios, 
-// 			inputData: out _,
-// 			runData: out var runData,
-// 			gearboxData: out _, simplePt: out _);
-//
-// 		var shiftStrategy = GetShiftStrategyAndGearbox(vehicleContainer, out var gbx);
-// 		var angularVelocity = GetAngularVelocityBySpeed(speedKmh, runData: runData);
-//
-// 		var response = gbx.Initialize(0.SI<NewtonMeter>(), angularVelocity);
-//
-//
-//
-// 		var absTime = 0.SI<Second>();
-// 		var dt = 2.SI<Second>();
-//
-//
-// 		var expectedN = nRPM.RPMtoRad();
-// 		angularVelocity = expectedN / gearRatios[gear];
-//
-//
-// 		gbx.CurrentState = new ATGearbox.ATGearboxState()
-// 		{
-// 			Gear = gbx.Gear,
-// 		};
-//
-// 		var expectedT = tqNm.SI<NewtonMeter>();
-// 		var torque = expectedT * gearRatios[gear];
-//
-// 		var shiftRequired = shiftStrategy.ShiftRequired(absTime, dt, torque, angularVelocity, expectedT, expectedN,
-// 			new GearshiftPosition((uint)gear), -double.MaxValue.SI<Second>(), new ResponseSuccess(this));
-//
-// 		Assert.AreEqual(newGear, shiftStrategy.NextGear.Gear);
-//
-// 		var shiftExpected = gear != newGear; //Different Gear
-// 		shiftExpected = shiftRequired || gbx.Disengaged; //Gearbox was disengaged
-//
-// 		Assert.AreEqual(shiftExpected, shiftRequired);
-// 	}
-//
-// 	[TestCase(2, 1, -1000, 1500, 4, DrivingBehavior.Braking, Description = "_ -> 0: disengage before halting")]
-// 	public void Gearbox_Disengange(int gear, int newGear, double tqNm, double nRPM, double speedKmh,
-// 		DrivingBehavior driverBehavior)
-// 	{
-// 		var gearRatios = new[] { 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
-//
-// 		var vehicleContainer = GetMockVehicleContainer(speedKmh,
-// 			driverBehavior,
-// 			gearRatios,
-// 			out var inputData,
-// 			out var runData,
-// 			out var gearboxData, out _);
-//
-// 		var shiftStrategy = GetShiftStrategyAndGearbox(vehicleContainer, out var gbx);
-// 		var angularVelocity = GetAngularVelocityBySpeed(speedKmh, runData);
-//
-// 		gbx.Initialize(0.SI<NewtonMeter>(), angularVelocity);
-//
-//
-// 		var absTime = 0.SI<Second>();
-// 		var dt = 2.SI<Second>();
-//
-//
-// 		var expectedN = nRPM.RPMtoRad();
-// 		angularVelocity = expectedN / gearRatios[gear];
-//
-// 		//Called in gbx initialize
-// 		//var gearShiftPosition = shiftStrategy.InitGear(absTime, Constants.SimulationSettings.TargetTimeInterval, 1.SI<NewtonMeter>(),
-// 		//    angularVelocity);
-// 		var engagedPosition = shiftStrategy.Engage(absTime, dt, null, null);
-//
-//
-// 		Assert.IsTrue(engagedPosition.Engaged);
-//
-// 		gbx.CurrentState = new ATGearbox.ATGearboxState()
-// 		{
-// 			Disengaged = gbx.Disengaged,
-// 			Gear = gbx.Gear,
-// 		};
-//
-// 		var expectedT = tqNm.SI<NewtonMeter>();
-// 		var torque = expectedT * gearRatios[gear];
-//
-//
-// 		var shiftRequired = shiftStrategy.ShiftRequired(absTime, dt, torque, angularVelocity, expectedT, expectedN,
-// 			new GearshiftPosition((uint)gear), -double.MaxValue.SI<Second>(), new ResponseSuccess(this));
-//
-// 		Assert.AreEqual(newGear, shiftStrategy.NextGear.Gear);
-//
-// 		var shiftExpected = gear != newGear; //Different Gear
-// 		shiftExpected = shiftRequired || gbx.Disengaged; //Gearbox was disengaged
-//
-// 		Assert.AreEqual(shiftExpected, shiftRequired);
-// 	}
-//
-//
-// 	[TestCase(2, true, 3, true, 100, 1800, 13, Description = "Upshift-TCLocked", TestName="Upshift-TCLocked")]
-// 	[TestCase(1, false, 1, true, 100, 1000, 1, Description = "Upshift-TC", TestName = "Upshift-TC")]
-//
-//
-//     [TestCase(2, true, 3, true, 100, 800, 13, Description = "Upshift-TCLocked", TestName = "EarlyUpshift")]
-//
-//     [TestCase(1, false, 1, true, 100, 500, 1, Description = "EarlyUpshift-TC", TestName="EarlyUpshift-TC")]
-//     public void Gearbox_Upshift(int gear, bool tcLocked, int newGear, bool newTcLocked, double tqNm, double nRPM, double speedKmh)
-// 	{
-//         var gearRatios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
-//
-//         var vehicleContainer = GetMockVehicleContainer(
-// 			speedKmh, 
-// 			DrivingBehavior.Accelerating, 
-// 			gearRatios, 
-// 			out var inputData, out var runData, out var gearboxData, out var simplePt);
-//
-//
-// 		var shiftStrategy = GetShiftStrategyAndGearbox(vehicleContainer, out var gbx);
-// 		var angularVelocity = GetAngularVelocityBySpeed(speedKmh, runData);
-//
-// 		var gbxResponse = gbx.Initialize(0.SI<NewtonMeter>(), angularVelocity);
-//
-// 		Assert.AreEqual((uint)gear, gbx.Gear.Gear);
-// 		Assert.That(gbx.Gear.TorqueConverterLocked, Is.EqualTo(tcLocked));
-//
-//
-//         var absTime = 0.SI<Second>();
-//         var dt = 2.SI<Second>();
-//
-//         gbx.CurrentState = new ATGearbox.ATGearboxState()
-//         {
-//             Disengaged = gbx.Disengaged,
-//             Gear = gbx.Gear,
-//         };
-//
-//
-// 		var inAngularVelocity = nRPM.RPMtoRad();
-// 		var outAngularVelocity = inAngularVelocity / gearRatios[gear];
-//
-//         var inTorque = tqNm.SI<NewtonMeter>();
-//         var outTortque = inTorque * gearRatios[gear];
-//
-// 		var response = new ResponseSuccess(this);
-// 		response.Engine.DynamicFullLoadTorque = 50.SI<NewtonMeter>();
-// 		response.Engine.EngineSpeed = inAngularVelocity;
-// 		response.Engine.TorqueOutDemand = inTorque;
-//
-//
-// 		runData.GearshiftParameters.RatingFactorCurrentGear = 1.1;
-//
-//
-//         var shiftRequired = shiftStrategy.ShiftRequired(absTime, dt, outTortque, outAngularVelocity, inTorque, inAngularVelocity, gbx.Gear, -double.MaxValue.SI<Second>(), response);
-//
-//
-// 		Assert.That(shiftStrategy.NextGear.Gear, Is.EqualTo(newGear));
-// 		Assert.That(shiftStrategy.NextGear.TorqueConverterLocked ?? true, Is.EqualTo(newTcLocked));
-//
-//         var shiftExpected = gear != newGear; //Different Gear
-//         shiftExpected = shiftRequired || gbx.Disengaged; //Gearbox was disengaged
-//
-//         Assert.AreEqual(shiftExpected, shiftRequired);
-//     }
-//
-//
-// 	[TestCase(2, true, 3, true, 100, 1800, 13, Description = "Upshift-TCLocked")]
-// 	[TestCase(1, false, 1, true, 100, 1000, 1, Description = "Upshift-TC")]
-// 	public void Gearbox_EarlyUpshift(int gear, bool tcLocked, int newGear, bool newTcLocked, double tqNm, double nRPM, double speedKmh)
-// 	{
-// 		var gearRatios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
-//
-// 		var vehicleContainer = GetMockVehicleContainer(
-// 			speedKmh,
-// 			DrivingBehavior.Accelerating,
-// 			gearRatios,
-// 			out var inputData, out var runData, out var gearboxData, out _);
-//
-//
-// 		var shiftStrategy = GetShiftStrategyAndGearbox(vehicleContainer, out var gbx);
-// 		var angularVelocity = GetAngularVelocityBySpeed(speedKmh, runData);
-//
-// 		var response = gbx.Initialize(0.SI<NewtonMeter>(), angularVelocity);
-//
-// 		Assert.AreEqual((uint)gear, gbx.Gear.Gear);
-// 		Assert.That(gbx.Gear.TorqueConverterLocked, Is.EqualTo(tcLocked));
-//
-//
-// 		var absTime = 0.SI<Second>();
-// 		var dt = 2.SI<Second>();
-//
-// 		gbx.CurrentState = new ATGearbox.ATGearboxState()
-// 		{
-// 			Disengaged = gbx.Disengaged,
-// 			Gear = gbx.Gear,
-// 		};
-//
-//
-// 		var inAngularVelocity = nRPM.RPMtoRad();
-// 		var outAngularVelocity = inAngularVelocity / gearRatios[gear];
-//
-// 		var inTorque = tqNm.SI<NewtonMeter>();
-// 		var outTortque = inTorque * gearRatios[gear];
-//
-// 		var shiftRequired = shiftStrategy.ShiftRequired(absTime, dt, outTortque, outAngularVelocity, inTorque, inAngularVelocity, gbx.Gear, -double.MaxValue.SI<Second>(), new ResponseSuccess(this));
-//
-//
-// 		Assert.That(shiftStrategy.NextGear.Gear, Is.EqualTo(newGear));
-// 		Assert.That(shiftStrategy.NextGear.TorqueConverterLocked ?? true, Is.EqualTo(newTcLocked));
-//
-// 		var shiftExpected = gear != newGear; //Different Gear
-// 		shiftExpected = shiftRequired || gbx.Disengaged; //Gearbox was disengaged
-//
-// 		Assert.AreEqual(shiftExpected, shiftRequired);
-// 	}
-//
-//
-//     [TestCase(1, false, 2, false, 100, 1000, 1, Description = "Upshift-TC")]
-//     public void Gearbox_Upshift_TC_TC(int gear, bool tcLocked, int newGear, bool newTcLocked, double tqNm, double nRPM, double speedKmh)
-//     {
-//         var gearRatios = new[] { 3.4, 1.3, 1.1, 1.0, 0.7, 0.62 };
-//
-//         var vehicleContainer = GetMockVehicleContainer(
-//             speedKmh,
-//             DrivingBehavior.Accelerating,
-//             gearRatios,
-//             out var inputData, out var runData, out var gearboxData, out _);
-//
-//
-//         var shiftStrategy = GetShiftStrategyAndGearbox(vehicleContainer, out var gbx);
-//         var angularVelocity = GetAngularVelocityBySpeed(speedKmh, runData);
-//
-//         var gbxResponse = gbx.Initialize(0.SI<NewtonMeter>(), angularVelocity);
-//
-//         Assert.AreEqual((uint)gear, gbx.Gear.Gear);
-//         Assert.That(gbx.Gear.TorqueConverterLocked, Is.EqualTo(tcLocked));
-//
-//
-//         var absTime = 0.SI<Second>();
-//         var dt = 2.SI<Second>();
-//
-//         gbx.CurrentState = new ATGearbox.ATGearboxState()
-//         {
-//             Disengaged = gbx.Disengaged,
-//             Gear = gbx.Gear,
-//         };
-//
-// 		Assert.That(gbx.ModelData.GearList.First(p => p.Gear == 2).TorqueConverterLocked, Is.False, "Expected 2nd gear with TC");
-//         var inAngularVelocity = nRPM.RPMtoRad();
-//         var outAngularVelocity = inAngularVelocity / gearRatios[gear];
-//
-//         var inTorque = tqNm.SI<NewtonMeter>();
-//         var outTortque = inTorque * gearRatios[gear];
-//
-// 		var response = new ResponseSuccess(this);
-// 		response.Engine.EngineSpeed = inAngularVelocity;
-// 		response.Engine.TorqueOutDemand = inTorque;
-//
-//
-//         var shiftRequired = shiftStrategy.ShiftRequired(absTime, dt, outTortque, outAngularVelocity, inTorque, inAngularVelocity, gbx.Gear, -double.MaxValue.SI<Second>(), response);
-//
-//
-//         Assert.That(shiftStrategy.NextGear.Gear, Is.EqualTo(newGear));
-//         Assert.That(shiftStrategy.NextGear.TorqueConverterLocked ?? true, Is.EqualTo(newTcLocked));
-//
-//         var shiftExpected = gear != newGear; //Different Gear
-//         shiftExpected = shiftRequired || gbx.Disengaged; //Gearbox was disengaged
-//
-//         Assert.AreEqual(shiftExpected, shiftRequired);
-//     }
-//
-//
-//
-//
-//     [TestCase(3, true, 2, true, 900, 600, 15, Description = "Downshift", TestName="Gearbox_DownShift_1")]
-//     public void Gearbox_Downshift(int gear, bool tcLocked, int newGear, bool newTcLocked, double tqNm, double nRPM, double speedKmh)
-//     {
-//         var gearRatios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
-//
-//         var vehicleContainer = GetMockVehicleContainer(
-//             speedKmh,
-//             DrivingBehavior.Accelerating,
-//             gearRatios,
-//             out var inputData, out var runData, out var gearboxData, out var simplePt);
-//
-// 		vehicleContainer.Setup(v => v.DriverInfo.DrivingAction).Returns(DrivingAction.Accelerate);
-//
-//         var shiftStrategy = GetShiftStrategyAndGearbox(vehicleContainer, out var gbx);
-//         var angularVelocity = GetAngularVelocityBySpeed(speedKmh, runData);
-//
-//         var gbxResponse = gbx.Initialize(0.SI<NewtonMeter>(), angularVelocity);
-//
-//         Assert.AreEqual((uint)gear, gbx.Gear.Gear);
-//         Assert.That(gbx.Gear.TorqueConverterLocked, Is.EqualTo(tcLocked));
-//
-//
-//         var absTime = 0.SI<Second>();
-//         var dt = 2.SI<Second>();
-//
-//         gbx.CurrentState = new ATGearbox.ATGearboxState()
-//         {
-//             Disengaged = gbx.Disengaged,
-//             Gear = gbx.Gear,
-//         };
-//
-//
-//         var inAngularVelocity = nRPM.RPMtoRad();
-//         var outAngularVelocity = inAngularVelocity / gearRatios[gear];
-//
-//         var inTorque = tqNm.SI<NewtonMeter>();
-//         var outTortque = inTorque * gearRatios[gear];
-//
-// 		var response = new ResponseSuccess(this);
-// 		response.Engine.EngineSpeed = inAngularVelocity;
-// 		response.Engine.TorqueOutDemand = inTorque;
-//
-//
-// 		var mockPort = new Mock<ITnOutPort>();
-// 		
-// 		simplePt.Setup(s => s.GearboxOutPort).Returns(mockPort.Object);
-// 		mockPort.Setup(p => p.Request(
-// 			It.IsAny<Second>(),
-// 			It.IsAny<Second>(),
-// 			It.IsAny<NewtonMeter>(),
-// 			It.IsAny<PerSecond>(),
-// 			true
-// 		)).Returns((Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun) => {
-// 			var response = new ResponseDryRun(this);
-// 			response.Engine.PowerRequest = outTorque * outAngularVelocity;
-// 			return response;
-// 		});
-//
-//
-//
-//
-// 		var shiftRequired = shiftStrategy.ShiftRequired(absTime, dt, outTortque, outAngularVelocity, inTorque, inAngularVelocity, gbx.Gear, -double.MaxValue.SI<Second>(), response);
-//
-//
-//         Assert.That(shiftStrategy.NextGear.Gear, Is.EqualTo(newGear));
-//         Assert.That(shiftStrategy.NextGear.TorqueConverterLocked ?? true, Is.EqualTo(newTcLocked));
-//
-//         var shiftExpected = gear != newGear; //Different Gear
-//         shiftExpected = shiftRequired || gbx.Disengaged; //Gearbox was disengaged
-//
-//         Assert.AreEqual(shiftExpected, shiftRequired);
-//     }
+		var vehicleContainer = GetMockVehicleContainer(speedKmh, DrivingBehavior.Accelerating, gearRatios, 
+			inputData: out _,
+			runData: out var runData,
+			gearboxData: out _, simplePt: out _);
+
+		var shiftStrategy = GetShiftStrategyAndGearbox(vehicleContainer, out var gbx);
+		var angularVelocity = GetAngularVelocityBySpeed(speedKmh, runData: runData);
+
+		var response = gbx.Initialize(0.SI<NewtonMeter>(), angularVelocity);
+
+
+
+		var absTime = 0.SI<Second>();
+		var dt = 2.SI<Second>();
+
+
+		var expectedN = nRPM.RPMtoRad();
+		angularVelocity = expectedN / gearRatios[gear];
+
+
+		gbx.CurrentState = new ATGearboxState()
+		{
+			Gear = gbx.Gear,
+		};
+
+		var expectedT = tqNm.SI<NewtonMeter>();
+		var torque = expectedT * gearRatios[gear];
+
+		var shiftRequired = shiftStrategy.ShiftRequired(absTime, dt, torque, angularVelocity, expectedT, expectedN,
+			new GearshiftPosition((uint)gear), -double.MaxValue.SI<Second>(), new ResponseSuccess(this));
+
+		Assert.AreEqual(newGear, shiftStrategy.NextGear.Gear);
+
+		var shiftExpected = gear != newGear; //Different Gear
+		shiftExpected = shiftRequired || gbx.Disengaged; //Gearbox was disengaged
+
+		Assert.AreEqual(shiftExpected, shiftRequired);
+	}
+
+	[TestCase(2, 1, -1000, 1500, 4, DrivingBehavior.Braking, Description = "_ -> 0: disengage before halting")]
+	public void Gearbox_Disengange(int gear, int newGear, double tqNm, double nRPM, double speedKmh,
+		DrivingBehavior driverBehavior)
+	{
+		var gearRatios = new[] { 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
+
+		var vehicleContainer = GetMockVehicleContainer(speedKmh,
+			driverBehavior,
+			gearRatios,
+			out var inputData,
+			out var runData,
+			out var gearboxData, out _);
+
+		var shiftStrategy = GetShiftStrategyAndGearbox(vehicleContainer, out var gbx);
+		var angularVelocity = GetAngularVelocityBySpeed(speedKmh, runData);
+
+		gbx.Initialize(0.SI<NewtonMeter>(), angularVelocity);
+
+
+		var absTime = 0.SI<Second>();
+		var dt = 2.SI<Second>();
+
+
+		var expectedN = nRPM.RPMtoRad();
+		angularVelocity = expectedN / gearRatios[gear];
+
+		//Called in gbx initialize
+		//var gearShiftPosition = shiftStrategy.InitGear(absTime, Constants.SimulationSettings.TargetTimeInterval, 1.SI<NewtonMeter>(),
+		//    angularVelocity);
+		var engagedPosition = shiftStrategy.Engage(absTime, dt, null, null);
+
+
+		Assert.IsTrue(engagedPosition.Engaged);
+
+		gbx.CurrentState = new ATGearboxState()
+		{
+			Disengaged = gbx.Disengaged,
+			Gear = gbx.Gear,
+		};
+
+		var expectedT = tqNm.SI<NewtonMeter>();
+		var torque = expectedT * gearRatios[gear];
+
+
+		var shiftRequired = shiftStrategy.ShiftRequired(absTime, dt, torque, angularVelocity, expectedT, expectedN,
+			new GearshiftPosition((uint)gear), -double.MaxValue.SI<Second>(), new ResponseSuccess(this));
+
+		Assert.AreEqual(newGear, shiftStrategy.NextGear.Gear);
+
+		var shiftExpected = gear != newGear; //Different Gear
+		shiftExpected = shiftRequired || gbx.Disengaged; //Gearbox was disengaged
+
+		Assert.AreEqual(shiftExpected, shiftRequired);
+	}
+
+	[TestCase(2, true, 3, true, 100, 1800, 13, Description = "Upshift-TCLocked", TestName="Upshift-TCLocked")]
+	[TestCase(1, false, 1, true, 100, 1000, 1, Description = "Upshift-TC", TestName = "Upshift-TC")]
+    [TestCase(2, true, 3, true, 100, 800, 13, Description = "Upshift-TCLocked", TestName = "EarlyUpshift")]
+    [TestCase(1, false, 1, true, 100, 500, 1, Description = "EarlyUpshift-TC", TestName="EarlyUpshift-TC")]
+    public void Gearbox_Upshift(int gear, bool tcLocked, int newGear, bool newTcLocked, double tqNm, double nRPM, double speedKmh)
+	{
+        var gearRatios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
+
+        var vehicleContainer = GetMockVehicleContainer(
+			speedKmh, 
+			DrivingBehavior.Accelerating, 
+			gearRatios, 
+			out var inputData, out var runData, out var gearboxData, out var simplePt);
+
+
+		var shiftStrategy = GetShiftStrategyAndGearbox(vehicleContainer, out var gbx);
+		var angularVelocity = GetAngularVelocityBySpeed(speedKmh, runData);
+
+		var gbxResponse = gbx.Initialize(0.SI<NewtonMeter>(), angularVelocity);
+
+		Assert.AreEqual((uint)gear, gbx.Gear.Gear);
+		Assert.That(gbx.Gear.TorqueConverterLocked, Is.EqualTo(tcLocked));
+
+
+        var absTime = 0.SI<Second>();
+        var dt = 2.SI<Second>();
+
+        gbx.CurrentState = new ATGearboxState()
+        {
+            Disengaged = gbx.Disengaged,
+            Gear = gbx.Gear,
+        };
+
+
+		var inAngularVelocity = nRPM.RPMtoRad();
+		var outAngularVelocity = inAngularVelocity / gearRatios[gear];
+
+        var inTorque = tqNm.SI<NewtonMeter>();
+        var outTortque = inTorque * gearRatios[gear];
+
+		var response = new ResponseSuccess(this);
+		response.Engine.DynamicFullLoadTorque = 50.SI<NewtonMeter>();
+		response.Engine.EngineSpeed = inAngularVelocity;
+		response.Engine.TorqueOutDemand = inTorque;
+
+
+		runData.GearshiftParameters.RatingFactorCurrentGear = 1.1;
+
+
+        var shiftRequired = shiftStrategy.ShiftRequired(absTime, dt, outTortque, outAngularVelocity, inTorque, inAngularVelocity, gbx.Gear, -double.MaxValue.SI<Second>(), response);
+
+
+		Assert.That(shiftStrategy.NextGear.Gear, Is.EqualTo(newGear));
+		Assert.That(shiftStrategy.NextGear.TorqueConverterLocked ?? true, Is.EqualTo(newTcLocked));
+
+        var shiftExpected = gear != newGear; //Different Gear
+        shiftExpected = shiftRequired || gbx.Disengaged; //Gearbox was disengaged
+
+        Assert.AreEqual(shiftExpected, shiftRequired);
+    }
+
+	[TestCase(2, true, 3, true, 100, 1800, 13, Description = "Upshift-TCLocked")]
+	[TestCase(1, false, 1, true, 100, 1000, 1, Description = "Upshift-TC")]
+	public void Gearbox_EarlyUpshift(int gear, bool tcLocked, int newGear, bool newTcLocked, double tqNm, double nRPM, double speedKmh)
+	{
+		var gearRatios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
+
+		var vehicleContainer = GetMockVehicleContainer(
+			speedKmh,
+			DrivingBehavior.Accelerating,
+			gearRatios,
+			out var inputData, out var runData, out var gearboxData, out _);
+
+
+		var shiftStrategy = GetShiftStrategyAndGearbox(vehicleContainer, out var gbx);
+		var angularVelocity = GetAngularVelocityBySpeed(speedKmh, runData);
+
+		var response = gbx.Initialize(0.SI<NewtonMeter>(), angularVelocity);
+
+		Assert.AreEqual((uint)gear, gbx.Gear.Gear);
+		Assert.That(gbx.Gear.TorqueConverterLocked, Is.EqualTo(tcLocked));
+
+
+		var absTime = 0.SI<Second>();
+		var dt = 2.SI<Second>();
+
+		gbx.CurrentState = new ATGearboxState()
+		{
+			Disengaged = gbx.Disengaged,
+			Gear = gbx.Gear,
+		};
+
+
+		var inAngularVelocity = nRPM.RPMtoRad();
+		var outAngularVelocity = inAngularVelocity / gearRatios[gear];
+
+		var inTorque = tqNm.SI<NewtonMeter>();
+		var outTortque = inTorque * gearRatios[gear];
+
+		var shiftRequired = shiftStrategy.ShiftRequired(absTime, dt, outTortque, outAngularVelocity, inTorque, inAngularVelocity, gbx.Gear, -double.MaxValue.SI<Second>(), new ResponseSuccess(this));
+
+
+		Assert.That(shiftStrategy.NextGear.Gear, Is.EqualTo(newGear));
+		Assert.That(shiftStrategy.NextGear.TorqueConverterLocked ?? true, Is.EqualTo(newTcLocked));
+
+		var shiftExpected = gear != newGear; //Different Gear
+		shiftExpected = shiftRequired || gbx.Disengaged; //Gearbox was disengaged
+
+		Assert.AreEqual(shiftExpected, shiftRequired);
+	}
+
+//
+    [TestCase(1, false, 2, false, 100, 1000, 1, Description = "Upshift-TC")]
+    public void Gearbox_Upshift_TC_TC(int gear, bool tcLocked, int newGear, bool newTcLocked, double tqNm, double nRPM, double speedKmh)
+    {
+        var gearRatios = new[] { 3.4, 1.3, 1.1, 1.0, 0.7, 0.62 };
+
+        var vehicleContainer = GetMockVehicleContainer(
+            speedKmh,
+            DrivingBehavior.Accelerating,
+            gearRatios,
+            out var inputData, out var runData, out var gearboxData, out _);
+
+
+        var shiftStrategy = GetShiftStrategyAndGearbox(vehicleContainer, out var gbx);
+        var angularVelocity = GetAngularVelocityBySpeed(speedKmh, runData);
+
+        var gbxResponse = gbx.Initialize(0.SI<NewtonMeter>(), angularVelocity);
+
+        Assert.AreEqual((uint)gear, gbx.Gear.Gear);
+        Assert.That(gbx.Gear.TorqueConverterLocked, Is.EqualTo(tcLocked));
+
+
+        var absTime = 0.SI<Second>();
+        var dt = 2.SI<Second>();
+
+        gbx.CurrentState = new ATGearboxState()
+        {
+            Disengaged = gbx.Disengaged,
+            Gear = gbx.Gear,
+        };
+
+		Assert.That(gbx.ModelData.GearList.First(p => p.Gear == 2).TorqueConverterLocked, Is.False, "Expected 2nd gear with TC");
+        var inAngularVelocity = nRPM.RPMtoRad();
+        var outAngularVelocity = inAngularVelocity / gearRatios[gear];
+
+        var inTorque = tqNm.SI<NewtonMeter>();
+        var outTortque = inTorque * gearRatios[gear];
+
+		var response = new ResponseSuccess(this);
+		response.Engine.EngineSpeed = inAngularVelocity;
+		response.Engine.TorqueOutDemand = inTorque;
+
+
+        var shiftRequired = shiftStrategy.ShiftRequired(absTime, dt, outTortque, outAngularVelocity, inTorque, inAngularVelocity, gbx.Gear, -double.MaxValue.SI<Second>(), response);
+
+
+        Assert.That(shiftStrategy.NextGear.Gear, Is.EqualTo(newGear));
+        Assert.That(shiftStrategy.NextGear.TorqueConverterLocked ?? true, Is.EqualTo(newTcLocked));
+
+        var shiftExpected = gear != newGear; //Different Gear
+        shiftExpected = shiftRequired || gbx.Disengaged; //Gearbox was disengaged
+
+        Assert.AreEqual(shiftExpected, shiftRequired);
+    }
+//
+//
+//
+//
+    [TestCase(3, true, 2, true, 900, 600, 15, Description = "Downshift", TestName="Gearbox_DownShift_1")]
+    public void Gearbox_Downshift(int gear, bool tcLocked, int newGear, bool newTcLocked, double tqNm, double nRPM, double speedKmh)
+    {
+        var gearRatios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
+
+        var vehicleContainer = GetMockVehicleContainer(
+            speedKmh,
+            DrivingBehavior.Accelerating,
+            gearRatios,
+            out var inputData, out var runData, out var gearboxData, out var simplePt);
+
+		vehicleContainer.Setup(v => v.DriverInfo.DrivingAction).Returns(DrivingAction.Accelerate);
+
+        var shiftStrategy = GetShiftStrategyAndGearbox(vehicleContainer, out var gbx);
+        var angularVelocity = GetAngularVelocityBySpeed(speedKmh, runData);
+
+        var gbxResponse = gbx.Initialize(0.SI<NewtonMeter>(), angularVelocity);
+
+        Assert.AreEqual((uint)gear, gbx.Gear.Gear);
+        Assert.That(gbx.Gear.TorqueConverterLocked, Is.EqualTo(tcLocked));
+
+
+        var absTime = 0.SI<Second>();
+        var dt = 2.SI<Second>();
+
+        gbx.CurrentState = new ATGearboxState()
+        {
+            Disengaged = gbx.Disengaged,
+            Gear = gbx.Gear,
+        };
+
+
+        var inAngularVelocity = nRPM.RPMtoRad();
+        var outAngularVelocity = inAngularVelocity / gearRatios[gear];
+
+        var inTorque = tqNm.SI<NewtonMeter>();
+        var outTortque = inTorque * gearRatios[gear];
+
+		var response = new ResponseSuccess(this);
+		response.Engine.EngineSpeed = inAngularVelocity;
+		response.Engine.TorqueOutDemand = inTorque;
+
+
+		var mockPort = new Mock<ITnOutPort>();
+		
+		simplePt.Setup(s => s.GearboxOutPort).Returns(mockPort.Object);
+		mockPort.Setup(p => p.Request(
+			It.IsAny<Second>(),
+			It.IsAny<Second>(),
+			It.IsAny<NewtonMeter>(),
+			It.IsAny<PerSecond>(),
+			true
+		)).Returns((Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun) => {
+			var response = new ResponseDryRun(this);
+			response.Engine.PowerRequest = outTorque * outAngularVelocity;
+			return response;
+		});
+
+
+
+
+		var shiftRequired = shiftStrategy.ShiftRequired(absTime, dt, outTortque, outAngularVelocity, inTorque, inAngularVelocity, gbx.Gear, -double.MaxValue.SI<Second>(), response);
+
+
+        Assert.That(shiftStrategy.NextGear.Gear, Is.EqualTo(newGear));
+        Assert.That(shiftStrategy.NextGear.TorqueConverterLocked ?? true, Is.EqualTo(newTcLocked));
+
+        var shiftExpected = gear != newGear; //Different Gear
+        shiftExpected = shiftRequired || gbx.Disengaged; //Gearbox was disengaged
+
+        Assert.AreEqual(shiftExpected, shiftRequired);
+    }
 //
 // 	[TestCase(3, true, 2, true, 200, 700, 15, Description = "Downshift_3", TestName = "Gearbox_DownShift_3")]
 // 	public void Gearbox_Downshift_2(int gear, bool tcLocked, int newGear, bool newTcLocked, double tqNm, double nRPM,
@@ -991,133 +880,129 @@ public class ATShiftStrategyOptimizedTests
 //         Assert.AreEqual(shiftExpected, shiftRequired);
 //     }
 //
-//     [TestCase(3, true, 2, true, 1700, 700, 15, Description = "Downshift", TestName = "Gearbox_Early_DownShift_1")]
-//     public void Gearbox_Early_Downshift(int gear, bool tcLocked, int newGear, bool newTcLocked, double tqNm, double nRPM, double speedKmh)
-//     {
-//         var gearRatios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
-//
-//         var vehicleContainer = GetMockVehicleContainer(
-//             speedKmh,
-//             DrivingBehavior.Accelerating,
-//             gearRatios,
-//             out var inputData, out var runData, out var gearboxData, out var simplePt);
-//
-//         vehicleContainer.Setup(v => v.DriverInfo.DrivingAction).Returns(DrivingAction.Accelerate);
-//
-//         var shiftStrategy = GetShiftStrategyAndGearbox(vehicleContainer, out var gbx);
-//         var angularVelocity = GetAngularVelocityBySpeed(speedKmh, runData);
-//
-//         var gbxResponse = gbx.Initialize(0.SI<NewtonMeter>(), angularVelocity);
-//
-//         Assert.AreEqual((uint)gear, gbx.Gear.Gear);
-//         Assert.That(gbx.Gear.TorqueConverterLocked, Is.EqualTo(tcLocked));
-//
-//
-//         var absTime = 0.SI<Second>();
-//         var dt = 2.SI<Second>();
-//
-//         gbx.CurrentState = new ATGearbox.ATGearboxState()
-//         {
-//             Disengaged = gbx.Disengaged,
-//             Gear = gbx.Gear,
-//         };
-//
-//
-//         var inAngularVelocity = nRPM.RPMtoRad();
-//         var outAngularVelocity = inAngularVelocity / gearRatios[gear];
-//
-//         var inTorque = tqNm.SI<NewtonMeter>();
-//         var outTortque = inTorque * gearRatios[gear];
-//
-//         var response = new ResponseSuccess(this);
-//         response.Engine.EngineSpeed = inAngularVelocity;
-//         response.Engine.TorqueOutDemand = inTorque;
-//
-//
-//         var mockPort = new Mock<ITnOutPort>();
-//
-//         simplePt.Setup(s => s.GearboxOutPort).Returns(mockPort.Object);
-//         mockPort.Setup(p => p.Request(
-//             It.IsAny<Second>(),
-//             It.IsAny<Second>(),
-//             It.IsAny<NewtonMeter>(),
-//             It.IsAny<PerSecond>(),
-//             true
-//         )).Returns((Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun) => {
-//             var response = new ResponseDryRun(this);
-//             response.Engine.PowerRequest = outTorque * outAngularVelocity;
-//             return response;
-//         });
-//
-//
-//
-//
-//         var shiftRequired = shiftStrategy.ShiftRequired(absTime, dt, outTortque, outAngularVelocity, inTorque, inAngularVelocity, gbx.Gear, -double.MaxValue.SI<Second>(), response);
-//
-//
-//         Assert.That(shiftStrategy.NextGear.Gear, Is.EqualTo(newGear));
-//         Assert.That(shiftStrategy.NextGear.TorqueConverterLocked ?? true, Is.EqualTo(newTcLocked));
-//
-//         var shiftExpected = gear != newGear; //Different Gear
-//         shiftExpected = shiftRequired || gbx.Disengaged; //Gearbox was disengaged
-//
-//         Assert.AreEqual(shiftExpected, shiftRequired);
-//     }
-//
-//     private ATShiftStrategy GetShiftStrategyAndGearbox(Mock<IVehicleContainer> vehicleContainer, out ATGearbox gbx)
-// 	{
-// 		return GetShiftStrategyAndGearbox(vehicleContainer, out gbx, out _);
-// 	}
-//
-// 	private ATShiftStrategy GetShiftStrategyAndGearbox(Mock<IVehicleContainer> vehicleContainer, out ATGearbox gbx,
-// 		out Mock<ITnOutPort> gbxNextComponent)
-// 	{
-// 		var shiftStrategy = new ATShiftStrategyOptimized(vehicleContainer.Object);
-//
-// 		gbx = new ATGearbox(vehicleContainer.Object, shiftStrategy);
-// 		var mockPort = new Mock<ITnOutPort>();
-// 		NewtonMeter tqRequest = null;
-// 		PerSecond rpmRequest = null;
-// 		mockPort.Setup(p => p.Initialize(It.IsAny<NewtonMeter>(),
-// 			It.IsAny<PerSecond>())).Returns((NewtonMeter tq, PerSecond rpm) => {
-// 			tqRequest = tq;
-// 			rpmRequest = rpm;
-// 			return new ResponseSuccess(this)
-// 			{
-// 				Engine = {
-// 					EngineSpeed = rpm,
-// 					PowerRequest = tq * rpm,
-// 				},
-// 			};
-// 		});
-// 		mockPort.Setup(p => p.Request(It.IsAny<Second>(), It.IsAny<Second>(), It.IsAny<NewtonMeter>(),
-// 			It.IsAny<PerSecond>(), true)).Returns(new ResponseDryRun(this));
-//
-// 		var idleController = new Mock<IIdleController>();
-//
-//
-// 		gbx.IdleController = idleController.Object;
-// 		gbx.Connect(mockPort.Object);
-//
-// 		gbxNextComponent = mockPort;
-// 		return shiftStrategy;
-// 	}
-//
-// 	/// <summary>
-// 	/// Calculated the angular velocity based on the vehicle speed
-// 	/// </summary>
-// 	/// <param name="speedKmh"></param>
-// 	/// <param name="runData"></param>
-// 	/// <returns></returns>
-// 	private static PerSecond GetAngularVelocityBySpeed(double speedKmh, VectoRunData runData)
-// 	{
-// 		// r_dyn = 0.465m, i_axle = 6.2
-//         var angularVelocity =
-// 			speedKmh.KMPHtoMeterPerSecond()
-// 			/ runData.VehicleData.DynamicTyreRadius * 6.2;
-// 		return angularVelocity;
-// 	}
-//
+    [TestCase(3, true, 2, true, 1700, 700, 15, Description = "Downshift", TestName = "Gearbox_Early_DownShift_1")]
+    public void Gearbox_Early_Downshift(int gear, bool tcLocked, int newGear, bool newTcLocked, double tqNm, double nRPM, double speedKmh)
+    {
+        var gearRatios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
+
+        var vehicleContainer = GetMockVehicleContainer(
+            speedKmh,
+            DrivingBehavior.Accelerating,
+            gearRatios,
+            out var inputData, out var runData, out var gearboxData, out var simplePt);
+
+        vehicleContainer.Setup(v => v.DriverInfo.DrivingAction).Returns(DrivingAction.Accelerate);
+
+        var shiftStrategy = GetShiftStrategyAndGearbox(vehicleContainer, out var gbx);
+        var angularVelocity = GetAngularVelocityBySpeed(speedKmh, runData);
+
+        var gbxResponse = gbx.Initialize(0.SI<NewtonMeter>(), angularVelocity);
+
+        Assert.AreEqual((uint)gear, gbx.Gear.Gear);
+        Assert.That(gbx.Gear.TorqueConverterLocked, Is.EqualTo(tcLocked));
+
+
+        var absTime = 0.SI<Second>();
+        var dt = 2.SI<Second>();
+
+        gbx.CurrentState = new ATGearboxState()
+        {
+            Disengaged = gbx.Disengaged,
+            Gear = gbx.Gear,
+        };
+
+
+        var inAngularVelocity = nRPM.RPMtoRad();
+        var outAngularVelocity = inAngularVelocity / gearRatios[gear];
+
+        var inTorque = tqNm.SI<NewtonMeter>();
+        var outTortque = inTorque * gearRatios[gear];
+
+        var response = new ResponseSuccess(this);
+        response.Engine.EngineSpeed = inAngularVelocity;
+        response.Engine.TorqueOutDemand = inTorque;
+
+
+        var mockPort = new Mock<ITnOutPort>();
+
+        simplePt.Setup(s => s.GearboxOutPort).Returns(mockPort.Object);
+        mockPort.Setup(p => p.Request(
+            It.IsAny<Second>(),
+            It.IsAny<Second>(),
+            It.IsAny<NewtonMeter>(),
+            It.IsAny<PerSecond>(),
+            true
+        )).Returns((Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun) => {
+            var response = new ResponseDryRun(this);
+            response.Engine.PowerRequest = outTorque * outAngularVelocity;
+            return response;
+        });
+
+
+
+
+        var shiftRequired = shiftStrategy.ShiftRequired(absTime, dt, outTortque, outAngularVelocity, inTorque, inAngularVelocity, gbx.Gear, -double.MaxValue.SI<Second>(), response);
+
+
+        Assert.That(shiftStrategy.NextGear.Gear, Is.EqualTo(newGear));
+        Assert.That(shiftStrategy.NextGear.TorqueConverterLocked ?? true, Is.EqualTo(newTcLocked));
+
+        var shiftExpected = gear != newGear; //Different Gear
+        shiftExpected = shiftRequired || gbx.Disengaged; //Gearbox was disengaged
+
+        Assert.AreEqual(shiftExpected, shiftRequired);
+    }
+	
+
+	private ATShiftStrategyOptimized GetShiftStrategyAndGearbox(Mock<IVehicleContainer> vehicleContainer,
+		out APTGearbox gbx)
+	{
+		return GetShiftStrategyAndGearbox(vehicleContainer, out gbx, out _);
+	}
+
+	private ATShiftStrategyOptimized GetShiftStrategyAndGearbox(Mock<IVehicleContainer> vehicleContainer,
+		out APTGearbox gbx,
+		out Mock<ITnOutPort> gbxNextComponent)
+	{
+		var shiftStrategy = new ATShiftStrategyOptimized(vehicleContainer.Object);
+		
+		var gbxMock = new Mock<APTGearbox>(vehicleContainer.Object, shiftStrategy) {
+			CallBase = true
+		};
+		
+		gbx = gbxMock.Object;
+		shiftStrategy.Gearbox = gbx;
+		
+		var mockPort = new Mock<ITnOutPort>();
+		NewtonMeter tqRequest = null;
+		PerSecond rpmRequest = null;
+
+		mockPort.Setup(p => p.Initialize(It.IsAny<NewtonMeter>(),
+			It.IsAny<PerSecond>())).Returns((NewtonMeter tq, PerSecond rpm) => {
+			tqRequest = tq;
+			rpmRequest = rpm;
+			return new ResponseSuccess(this) {
+				Engine = {
+					EngineSpeed = rpm,
+					PowerRequest = tq * rpm,
+				},
+			};
+		});
+		
+		mockPort.Setup(p => p.Request(It.IsAny<Second>(), It.IsAny<Second>(), It.IsAny<NewtonMeter>(),
+			It.IsAny<PerSecond>(), true)).Returns(new ResponseDryRun(this));
+
+		var idleController = new Mock<IIdleController>();
+
+
+		gbx.IdleController = idleController.Object;
+		gbx.Connect(mockPort.Object);
+
+		gbxNextComponent = mockPort;
+		return shiftStrategy;
+	}
+}
+
 // 	private Mock<IVehicleContainer> GetMockVehicleContainer(double speedKmh, DrivingBehavior driverBehavior,
 // 		double[] gearRatios,
 // 		out IVehicleDeclarationInputData inputData, out VectoRunData runData, out GearboxData gearboxData,
@@ -1290,14 +1175,6 @@ public class ATShiftStrategyOptimizedTests
 // 		};
 // 	}
 //
-//
-//
-//     [TestCase(2, 3, 400, 2300, 5, DrivingBehavior.Accelerating, Description = "Upshift")]
-//     public void Gearbox_EmergencyShift(int gear, int newGear, double tqNm, double nRPM, double speedKmh,
-// 		DrivingBehavior driverBehavior)
-// 	{
-//
-// 	}
 //
 //
 // 	private static VectoRunData GetDummyVectoRunData(IVehicleDeclarationInputData inputData)
