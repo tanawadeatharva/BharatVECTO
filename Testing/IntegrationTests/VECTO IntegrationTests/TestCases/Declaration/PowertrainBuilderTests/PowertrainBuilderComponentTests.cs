@@ -105,9 +105,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             var retVal = new Mock<ISimplePowertrainBuilder>();
             //var ptBuilder = new SimplePowertrainBuilder(_kernel.Get<IPowertrainComponentFactory>(), _kernel.Get<IShiftStrategyFactory>());
 			retVal.Setup(b => b.CreateTestPowertrain(It.IsAny<IVehicleContainer>(), It.IsAny<bool>(),
-					It.IsAny<VectoSimulationJobType?>()))
-				.Returns((IVehicleContainer container, bool createDriver, VectoSimulationJobType? jobType) =>
+					It.IsAny<VectoSimulationJobType>()))
+				.Returns((IVehicleContainer container, bool createDriver, VectoSimulationJobType jobType) =>
 					_simplePowertrainBuilder.CreateTestPowertrain(container, createDriver, jobType));
+            retVal.Setup(b => b.CreateTestPowertrain(It.IsAny<IVehicleContainer>(), It.IsAny<bool>()))
+                .Returns((IVehicleContainer container, bool createDriver) =>
+                    _simplePowertrainBuilder.CreateTestPowertrain(container, createDriver));
             return retVal.Object;
         }
 
