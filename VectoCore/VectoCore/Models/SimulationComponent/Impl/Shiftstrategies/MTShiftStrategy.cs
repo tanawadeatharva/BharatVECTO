@@ -230,11 +230,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			TestPowertrain.UpdateComponents();
 			var testGearbox = TestPowertrain.Gearbox;
 			var tmpGear = testGearbox.Gear;
-			// _gearbox.Gear = currentGear;
+
+			
 			testGearbox.SetGear = currentGear;
-			// _gearbox.Gear = tmpGear;
-			testGearbox.SetGear = tmpGear;
+			
 			var response = (ResponseDryRun)testGearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
+			
+			testGearbox.SetGear = tmpGear;
 			return response;
 		}
 
