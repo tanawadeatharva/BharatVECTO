@@ -152,7 +152,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return nextGear.TorqueConverterLocked.HasValue && nextGear.TorqueConverterLocked.Value;
 		}
 
-		protected internal WattSecond ComputeShiftLosses(NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition gear)
+		public WattSecond ComputeShiftLosses(NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition gear)
 		{
 			var ratio = ModelData.Gears[gear.Gear].Ratio;
 			if (double.IsNaN(ratio)) {

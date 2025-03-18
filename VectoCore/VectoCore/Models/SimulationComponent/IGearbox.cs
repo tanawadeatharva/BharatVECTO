@@ -57,8 +57,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		ATGearboxState GetPreviousState { get; }
 		bool ShiftToLocked { get; }
 		IIdleController IdleController { set; }
+		bool TorqueConverterLocked { get; }
+
+		
+		
 		ResponseDryRun Initialize(GearshiftPosition gear, NewtonMeter outTorque,
 			PerSecond outAngularVelocity);
+
+		new bool Disengaged { get; set; }
+		KilogramSquareMeter EngineInertia { get; }
+		TorqueConverter TorqueConverter { get; }
+
+		WattSecond ComputeShiftLosses(NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition nextGearPos);
 	}
 
 	public interface IAPTNGearbox : ITypedGearbox { }
