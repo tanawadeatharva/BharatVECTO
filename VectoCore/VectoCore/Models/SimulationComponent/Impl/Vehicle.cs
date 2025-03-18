@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var pos = positions.First();
 				if (pos.IsBatteryElectric()) {
-					var maxEMSpeed = DataBus.ElectricMotorInfo(pos).MaxSpeed;
+					var maxEMSpeed = DataBus.ElectricMotorInfo(pos).MaxSpeedDt;
 
 					var ratio = 1.0;
 					if (pos == PowertrainPosition.BatteryElectricE3) {
@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								(DataBus.AngledriveInfo?.Ratio ?? 1.0);
 
 						maxEMSpeed = VectoMath.Min(
-							DataBus.ElectricMotorInfo(pos).MaxSpeed,
+							DataBus.ElectricMotorInfo(pos).MaxSpeedDt,
 							DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.NumGears).MaxSpeed);
 					}
 					MaxVehicleSpeed = maxEMSpeed / ratio * DataBus.WheelsInfo.DynamicTyreRadius * 0.995;
