@@ -43,16 +43,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	/// </summary>
 	public interface IGearbox : IPowerTrainComponent, IGearboxInfo, IGearboxControl, IUpdateable { }
 
-	public interface IGearboxType : IGearbox {}
+	public interface ITypedGearbox : IGearbox {}
 
-	public interface IMTGearbox : IGearboxType {}
+	public interface IMTGearbox : ITypedGearbox {}
 
-	public interface IAMTGearbox : IGearboxType
+	public interface IAMTGearbox : ITypedGearbox
 	{
 		GearboxState GetPreviousState { get; }
 	}
 
-	public interface IAPTGearbox : IGearboxType
+	public interface IAPTGearbox : ITypedGearbox
 	{
 		ATGearboxState GetPreviousState { get; }
 		bool ShiftToLocked { get; }
@@ -61,11 +61,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			PerSecond outAngularVelocity);
 	}
 
-	public interface IAPTNGearbox : IGearboxType { }
+	public interface IAPTNGearbox : ITypedGearbox { }
 
-	public interface IPEVGearbox : IGearboxType { }
+	public interface IPEVGearbox : ITypedGearbox { }
 
-	public interface IIEPCGearbox : IGearboxType { }
+	public interface IIEPCGearbox : ITypedGearbox { }
 
 	public interface ITorqueConverter : ITorqueConverterInfo, ITorqueConverterControl, IUpdateable { }
 }
