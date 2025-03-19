@@ -168,14 +168,14 @@ Public Class Vehicle
 																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis, False)
 				vehicleData = New LorryVehicleDataAdapter().CreateVehicleData(vehicle, segment, segment.Missions.First(),
 													segment.Missions.First().Loadings.First(), True)
-				airdragData = New AirdragDataAdapter().CreateAirdragData(vehicle, vehicle.InMotionChargingDecl, segment.Missions.First(), segment,OvcHevMode.NotApplicable, 0)
+				airdragData = New AirdragDataAdapter().CreateAirdragData(vehicle, vehicle.InMotionChargingDecl, segment.Missions.First(), segment,OvcHevMode.NotApplicable)
 				retarderData = New RetarderDataAdapter().CreateRetarderData(vehicle, vehicle.ArchitectureID, vehicle.Components?.IEPC)
 				angledriveData = New AngledriveDataAdapter().CreateAngledriveData(vehicle)
 				ptoData = New PTODataAdapterLorry().CreatePTOTransmissionData(vehicle, vehicle.Components.GearboxInputData)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				vehicleData = doa.CreateVehicleData(vehicle)
-				airdragData = doa.CreateAirdragData(vehicle, vehicle, If(vehicle.InMotionCharging.Enabled, vehicle.InMotionCharging.ShareIMCAvailabilityTotalMission * 0.5, 0))
+				airdragData = doa.CreateAirdragData(vehicle, vehicle)
 				retarderData = doa.CreateRetarderData(vehicle, emPos)
 				angledriveData = doa.CreateAngledriveData(vehicle)
 				ptoData = doa.CreatePTOTransmissionData(vehicle)
@@ -268,7 +268,6 @@ Public Class Vehicle
 		'IMC
 		IMCEnabled = False
 		IMCDeltaCdxA = 0.SI(of SquareMeter)
-		IMCOnMotorwayOnly = False
 		ShareIMCAvailabilityTotalMission = 0
 
 		SavedInDeclMode = False
@@ -1008,7 +1007,6 @@ Public Class Vehicle
 	Public Property IMCEnabled As Boolean Implements IVehicleInMotionChargingEngineering.Enabled
 	Public Property ShareIMCAvailabilityTotalMission As Double Implements IVehicleInMotionChargingEngineering.ShareIMCAvailabilityTotalMission
 	Public Property IMCDeltaCdxA As SquareMeter Implements IVehicleInMotionChargingEngineering.DeltaCdxA
-	Public Property IMCOnMotorwayOnly As Boolean Implements IVehicleInMotionChargingEngineering.IMCOnMotorwayOnly
    
     Public Property IMCDeclarationTechnology As IMCTechnology Implements IVehicleInMotionChargingDeclaration.Technology
 End Class

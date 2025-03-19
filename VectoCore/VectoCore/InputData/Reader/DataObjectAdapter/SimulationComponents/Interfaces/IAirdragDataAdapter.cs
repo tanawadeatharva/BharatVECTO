@@ -9,8 +9,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
     {
         AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragInputData,
 			IVehicleInMotionChargingDeclaration imcData, Mission mission,
-			Segment segment, OvcHevMode ovcMode, double cycleShareDistanceHighway);
+			Segment segment, OvcHevMode ovcMode);
 
-        AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission);
+        AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission, Segment segment,
+			OvcHevMode ovcMode);
     }
 }

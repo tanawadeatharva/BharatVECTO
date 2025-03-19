@@ -30,13 +30,22 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 
-		//[TestCase()]
-		//public void VECTO_EffShift()
-		//{
-		//	var jobName =
-		//		@"E:/QUAM/tmp/1a_EffShift_high-engine-rev_UD-cycle_LH-tractor_model/vecto_tractor_4x2_overdr_EffShift-def.vecto";
-		//	RunJob_DeclSingle(jobName, 9);
-		//}
+		[TestCase(
+			@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\Group2_HEV_IEPC_S.xml", 0)]
+		[TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\Group5_Conv_ES_Standard.xml", 8)]
+		[TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\HeavyLorry_IHPC.xml", 4)]
+		public void RunJob_G2_HEV_IEPC_S(string job, int runIdx)
+		{
+			RunJob_DeclSingle(job, runIdx);
+		}
+
+        //[TestCase()]
+        //public void VECTO_EffShift()
+        //{
+        //	var jobName =
+        //		@"E:/QUAM/tmp/1a_EffShift_high-engine-rev_UD-cycle_LH-tractor_model/vecto_tractor_4x2_overdr_EffShift-def.vecto";
+        //	RunJob_DeclSingle(jobName, 9);
+        //}
 
         public void RunJob_DeclSingle(string jobName, int runIdx)
 		{

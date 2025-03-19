@@ -648,7 +648,6 @@ public class JSONFileWriter : IOutputFileWriter
 			imcDictionary.Add("IMC_Enabled", vehicle.InMotionCharging.Enabled);
 			imcDictionary.Add("IMC_TotalDistance", vehicle.InMotionCharging.ShareIMCAvailabilityTotalMission * 100);
 			imcDictionary.Add("IMC_CdxA", vehicle.InMotionCharging.DeltaCdxA.Value());
-			imcDictionary.Add("IMC_MotorwaySection", vehicle.InMotionCharging.IMCOnMotorwayOnly);
 		} else {
 			imcDictionary.Add("IMC_Enabled", vehicle.InMotionCharging.Enabled);
 		}

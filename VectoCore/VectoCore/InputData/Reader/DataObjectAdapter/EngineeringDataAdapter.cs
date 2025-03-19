@@ -275,42 +275,32 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						gearlist));
 		}
 
-		public AirdragData CreateAirdragData(IAirdragEngineeringInputData airdragData, IVehicleEngineeringInputData data, double shareHighwayIMCOnTotalCycle)
+		public AirdragData CreateAirdragData(IAirdragEngineeringInputData airdragData, IVehicleEngineeringInputData data)
 		{
 			var retVal = SetCommonAirdragData(airdragData);
 			retVal.CrossWindCorrectionMode = airdragData.CrossWindCorrectionMode;
 
 			var deltaCdxAIMC = 0.SI<SquareMeter>();
-			var deltaCdxAIMCHighway = 0.SI<SquareMeter>();
 			if (data.InMotionCharging.Enabled) {
 				if (data.InMotionCharging.ShareIMCAvailabilityTotalMission < 0 || data.InMotionCharging.ShareIMCAvailabilityTotalMission > 1) {
 					throw new VectoException(
 						"Share of In-motion charging infrastructure availability has to be between 0% and 100%");
 				}
-                if (data.InMotionCharging.IMCOnMotorwayOnly) {
-					if (data.InMotionCharging.ShareIMCAvailabilityTotalMission > shareHighwayIMCOnTotalCycle) {
-						throw new VectoException(
-							"Share of In-motion charging availability can not be higher than share of motorway sections when IMC is only available on motorways (share motorway: {0})",
-							shareHighwayIMCOnTotalCycle);
-					}
-					deltaCdxAIMCHighway = data.InMotionCharging.DeltaCdxA *
-										data.InMotionCharging.ShareIMCAvailabilityTotalMission / shareHighwayIMCOnTotalCycle;
-				} else {
-					deltaCdxAIMC = data.InMotionCharging.DeltaCdxA *
-									data.InMotionCharging.ShareIMCAvailabilityTotalMission;
-				}
+                deltaCdxAIMC = data.InMotionCharging.DeltaCdxA *
+								data.InMotionCharging.ShareIMCAvailabilityTotalMission;
+				
 			}
 
 			switch (airdragData.CrossWindCorrectionMode) {
 				case CrossWindCorrectionMode.NoCorrection:
 					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-						airdragData.AirDragArea, deltaCdxAIMC, deltaCdxAIMCHighway,
+						airdragData.AirDragArea, deltaCdxAIMC,
 						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(airdragData.AirDragArea),
 						CrossWindCorrectionMode.NoCorrection);
 					break;
 				case CrossWindCorrectionMode.SpeedDependentCorrectionFactor:
 					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-						airdragData.AirDragArea, deltaCdxAIMC, deltaCdxAIMCHighway,
+						airdragData.AirDragArea, deltaCdxAIMC,
                         CrossWindCorrectionCurveReader.ReadSpeedDependentCorrectionCurve(
 							airdragData.CrosswindCorrectionMap,
 							airdragData.AirDragArea), CrossWindCorrectionMode.SpeedDependentCorrectionFactor);
@@ -330,7 +320,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 										data.GrossVehicleMassRating, false)
 									: 4.SI<Meter>());
 					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-						airDragArea, deltaCdxAIMC, deltaCdxAIMCHighway,
+						airDragArea, deltaCdxAIMC,
                         _airdragDataAdapter.GetDeclarationAirResistanceCurve(
 							GetAirdragParameterSet(
 								data.VehicleCategory, data.AxleConfiguration, data.Components.AxleWheels.AxlesEngineering.Count, data.GrossVehicleMassRating), airDragArea,

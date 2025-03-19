@@ -79,9 +79,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 
 			#region Implementation of ISingleBusDeclarationDataAdapter
 
-			public AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission)
+			public AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission, Segment segment, OvcHevMode ovcMode)
 			{
-				return _airdragDataAdapter.CreateAirdragData(completedVehicle, mission);
+				return _airdragDataAdapter.CreateAirdragData(completedVehicle, mission, segment, ovcMode);
 			}
 
 			public virtual CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle,
