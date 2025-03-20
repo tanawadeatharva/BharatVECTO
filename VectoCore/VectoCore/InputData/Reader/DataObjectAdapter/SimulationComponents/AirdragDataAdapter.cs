@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 	public class AirdragDataAdapter : IAirdragDataAdapter
 	{
-		public List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> GetDeclarationAirResistanceCurve(
+		public virtual List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> GetDeclarationAirResistanceCurve(
 			string crosswindCorrectionParameters, SquareMeter aerodynamicDragAera, Meter vehicleHeight)
 		{
 			return AirdragDataAdapterHelper.GetDeclarationAirResistanceCurve(crosswindCorrectionParameters,
@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					DeclaredAirdragArea = mission.DefaultCDxA,
 					CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
 						mission.DefaultCDxA,
-						AirdragDataAdapterHelper.GetDeclarationAirResistanceCurve(
+						GetDeclarationAirResistanceCurve(
 							mission.CrossWindCorrectionParameters, mission.DefaultCDxA, completedVehicle.Height + mission.BusParameter.DeltaHeight),
 						CrossWindCorrectionMode.DeclarationModeCorrection),
 					CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection
@@ -183,7 +183,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			retVal.DeclaredAirdragArea = aerodynamicDragArea;
 			retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
 				aerodynamicDragArea,
-				AirdragDataAdapterHelper.GetDeclarationAirResistanceCurve(
+				GetDeclarationAirResistanceCurve(
 					mission.CrossWindCorrectionParameters,
 					aerodynamicDragArea,
 					completedVehicle.Height + mission.BusParameter.DeltaHeight),
