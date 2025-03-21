@@ -224,7 +224,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[ValidateObject]
 		public Dictionary<uint, EfficiencyMap> EfficiencyMaps {  get; set; }
 
-        public Dictionary<uint, ElectricMotorFullLoadCurve> FullLoadCurves { get; set; }
+        public Dictionary<uint, ElectricMotorFullLoadCurve> FullLoadCurves { get; set; } = new Dictionary<uint, ElectricMotorFullLoadCurve>();
 
         public override PerSecond MaxSpeed => _maxSpeed ?? (_maxSpeed = VectoMath.Min(
 			FullLoadCurve?.MaxSpeed ?? FullLoadCurves.Min(x => x.Value.MaxSpeed), EfficiencyMaps.Values.Min(x => x.MaxSpeed)));
