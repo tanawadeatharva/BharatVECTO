@@ -29,6 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
@@ -40,27 +43,42 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	/// </summary>
 	public interface IGearbox : IPowerTrainComponent, IGearboxInfo, IGearboxControl, IUpdateable { }
 
-	public interface IGearboxType {}
+	public interface ITypedGearbox : IGearbox {}
 
-	public interface IMTGearbox : IGearboxType {}
+	public interface IMTGearbox : ITypedGearbox {}
 
-	public interface IAMTGearbox : IGearboxType
+	public interface IAMTGearbox : ITypedGearbox
 	{
 		GearboxState GetPreviousState { get; }
 	}
 
-	public interface IAPTGearbox : IGearboxType
+	public interface IAPTGearbox : ITypedGearbox
 	{
 		ATGearboxState GetPreviousState { get; }
 		bool ShiftToLocked { get; }
 		IIdleController IdleController { set; }
+		bool TorqueConverterLocked { get; }
+
+		
+		
+		ResponseDryRun Initialize(GearshiftPosition gear, NewtonMeter outTorque,
+			PerSecond outAngularVelocity);
+
+		new bool Disengaged { get; set; }
+		KilogramSquareMeter EngineInertia { get; }
+		ITorqueConverter TorqueConverter { get; }
+
+		WattSecond ComputeShiftLosses(NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition nextGearPos);
 	}
 
-	public interface IAPTNGearbox : IGearboxType { }
+	public interface IAPTNGearbox : ITypedGearbox { }
 
-	public interface IPEVGearbox : IGearboxType { }
+	public interface IPEVGearbox : ITypedGearbox { }
 
-	public interface IIEPCGearbox : IGearboxType { }
+	public interface IIEPCGearbox : ITypedGearbox { }
 
-	public interface ITorqueConverter : ITorqueConverterInfo, ITorqueConverterControl, IUpdateable { }
+	public interface ITorqueConverter : ITorqueConverterInfo, ITorqueConverterControl, IUpdateable
+	{
+		TorqueConverterOperatingPoint FindOperatingPoint(Second absTime, Second dt, NewtonMeter nextGearboxInTorque, PerSecond nextGearboxInSpeed);
+	}
 }

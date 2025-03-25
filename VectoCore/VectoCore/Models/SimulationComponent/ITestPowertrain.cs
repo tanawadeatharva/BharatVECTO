@@ -29,8 +29,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
         IBrakes Brakes { get; }
 
 		ITestpowertrainElectricMotor ElectricMotor { get; }
-		Dictionary<PowertrainPosition, ITestpowertrainElectricMotor> ElectricMotors { get; }
-        Dictionary<PowertrainPosition, IElectricMotor> ElectricMotorsUpstreamTransmission { get; }
+		Dictionary<PowertrainPosition, ITestpowertrainElectricMotor> ElectricMotors { get; } 
+		Dictionary<PowertrainPosition, IElectricMotor> ElectricMotorsUpstreamTransmission { get; }
         IDCDCConverter DCDCConverter { get; }
         ITorqueConverter TorqueConverter { get; }
 		ITestpowertrainGensetChargerAdapter Charger { get; }

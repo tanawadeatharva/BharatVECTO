@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 			}
             Bind<IElectricSystem>().To<TestpowertrainElectricSystem>().Named(_testPowertrain.Prefix);
 			Bind<IElectricChargerPort>().To<TestpowertrainGensetChargerAdapter>().Named(_testPowertrain.Prefix);
-			Bind<IElectricMotor>().To<TestpowertrainElectricMotor>().Named(_testPowertrain.ElectricMotorName(false));
+			Bind<IElectricMotor>().To<TestPowertrainElectricMotor>().Named(_testPowertrain.ElectricMotorName(false));
 			Bind<IElectricMotor>().To<TestpowertrainIEPC>().Named(_testPowertrain.ElectricMotorName(true));
 
 			Bind<IElectricMotorControl>().To<SimpleElectricMotorControl>().Named(_testPowertrain.ElectricMotorControllerName(CycleType.DistanceBased));

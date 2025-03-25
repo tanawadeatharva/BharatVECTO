@@ -9,9 +9,8 @@ namespace TUGraz.VectoCore.Models.Simulation
     public interface ISimplePowertrainBuilder
 	{
 		//ITestPowertrain CreateTestPowertrain(ISimpleVehicleContainer testContainer, IDataBus realContainer, bool createDriver);
-
-		ITestPowertrain CreateTestPowertrain(IVehicleContainer realContainer, bool createDriver, VectoSimulationJobType? overrideJobType = null);
-
+		ITestPowertrain CreateTestPowertrain(IVehicleContainer realContainer, bool createDriver, VectoSimulationJobType overrideJobType);
+		ITestPowertrain CreateTestPowertrain(IVehicleContainer realContainer, bool createDriver);
         ITestGenset CreateTestGenset(IVehicleContainer realContainer);
 
         /// <summary>

@@ -35,21 +35,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies.Shift
             throw new NotImplementedException("Not applicable to PEVAMT Gearbox.");
         }
 
-        public ShiftPolygon ComputeDeclarationShiftPolygon(GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve,
-            IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius,
-            ElectricMotorData electricMotorData = null)
-        {
-            if (electricMotorData == null) {
-                throw new VectoException("ElectricMotorData is required to calculate Shift Polygon!");
-            }
-            var emFld = electricMotorData.EfficiencyData.VoltageLevels.First().FullLoadCurve;
+		public ShiftPolygon ComputeDeclarationShiftPolygon(GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve,
+			IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius,
+			ElectricMotorData electricMotorData = null)
+		{
+			if (electricMotorData == null)
+			{
+				throw new VectoException("ElectricMotorData is required to calculate Shift Polygon!");
+			}
+			var emFld = electricMotorData.EfficiencyData.VoltageLevels.First().FullLoadCurve;
+			return ComputeDeclarationShiftPolygon(i, gearboxGears, axlegearRatio, dynamicTyreRadius, electricMotorData,
+				_shiftStrategyParameters.PEV_DownshiftSpeedFactor.LimitTo(0, 1), _shiftStrategyParameters.PEV_DownshiftMinSpeedFactor);
+		}
+		
+		public ShiftPolygon ComputeDeclarationShiftPolygon(int i,
+			IList<ITransmissionInputData> gearboxGears, double axlegearRatio,
+			Meter dynamicTyreRadius,
+			ElectricMotorData electricMotorData, double? downshiftMaxSpeed, double? downshiftMinSpeed)
+		{
 			return DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(i,
-				electricMotorData.EfficiencyData.VoltageLevels.First().FullLoadCurve,
-				electricMotorData.RatioADC, gearboxGears, axlegearRatio, dynamicTyreRadius,
-				_shiftStrategyParameters.PEV_DownshiftSpeedFactor.LimitTo(0, 1) * emFld.RatedSpeed,
-				_shiftStrategyParameters.PEV_DownshiftMinSpeedFactor * emFld.RatedSpeed);
-			//return ComputeElectricMotorDeclarationShiftPolygon(gearboxType, i, gearboxGears, axlegearRatio, dynamicTyreRadius, electricMotorData,
-			//             _shiftStrategyParameters.PEV_DownshiftSpeedFactor.LimitTo(0, 1) * emFld.RatedSpeed, _shiftStrategyParameters.PEV_DownshiftMinSpeedFactor * emFld.RatedSpeed);
+				electricMotorData,  gearboxGears, downshiftMaxSpeed, downshiftMinSpeed);
 		}
 
 
@@ -57,13 +62,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies.Shift
 			IList<ITransmissionInputData> gearboxGears, double axlegearRatio,
 			Meter dynamicTyreRadius,
 			ElectricMotorData electricMotorData, ElectricMotorData emDataLimited)
-        {
-			var emFld = electricMotorData.EfficiencyData.VoltageLevels.First().FullLoadCurve;
-            return DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(i,
-				emDataLimited.EfficiencyData.VoltageLevels.First().FullLoadCurve, electricMotorData.RatioADC,
-                gearboxGears, axlegearRatio, dynamicTyreRadius,
-				_shiftStrategyParameters.PEV_DeRatedDownshiftSpeedFactor * emFld.RatedSpeed,
-				_shiftStrategyParameters.PEV_DownshiftMinSpeedFactor * emFld.RatedSpeed);
-        }
+		{
+			if (!electricMotorData.EfficiencyData.MaxSpeed.IsEqual(emDataLimited.EfficiencyData.MaxSpeed)) {
+				throw new VectoException("Limited em data should have the same max speed as the original data");
+			}
+			return DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(
+				i,
+				emDataLimited,
+				gearboxGears,
+				_shiftStrategyParameters.PEV_DeRatedDownshiftSpeedFactor.LimitTo(0, 1),
+				_shiftStrategyParameters.PEV_DownshiftMinSpeedFactor);
+
+			//         return DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(i,
+			// emDataLimited.EfficiencyData.VoltageLevels.First().FullLoadCurve, electricMotorData.RatioADC,
+			//             gearboxGears, axlegearRatio, dynamicTyreRadius,
+			// _shiftStrategyParameters.PEV_DeRatedDownshiftSpeedFactor,
+			// _shiftStrategyParameters.PEV_DownshiftMinSpeedFactor);
+		}
     }
 }

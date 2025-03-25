@@ -462,16 +462,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var limitedEm = new ElectricMotorData() {
 				EfficiencyData = new VoltageLevelData() {
 					VoltageLevels = new List<ElectricMotorVoltageLevelData>() {
-						new ElectricMotorVoltageLevelData() {
+						new DeratedVoltageLevelData(em.EfficiencyData.MaxSpeed) {
 							FullLoadCurve = limitedFld
 						}
 					}
 				},
 				RatioADC = em.RatioADC,
 			};
-			var deratedEmShiftPolygon = shiftPolygonCalculator.ComputeElectricMotorDeclarationShiftPolygon(gearbox.Type, (int)i,
+			var deratedEmShiftPolygon = shiftPolygonCalculator.ComputeElectricMotorDeclarationShiftPolygon(
+				gearbox.Type, (int)i,
 				gearbox.Gears, axlegearRatio,
-				dynamicTyreRadius, em, limitedEm);
+				dynamicTyreRadius, 
+				em, 
+				limitedEm);
 			return deratedEmShiftPolygon;
 			//retVal[i + 1] = shiftPolygon;
 		}
@@ -611,7 +614,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var limitedEm = new ElectricMotorData() {
 				EfficiencyData = new VoltageLevelData() {
 					VoltageLevels = new List<ElectricMotorVoltageLevelData>() {
-						new ElectricMotorVoltageLevelData() {
+						new DeratedVoltageLevelData(em.EfficiencyData.MaxSpeed) {
 							FullLoadCurve = limitedFld
 						}
 					}

@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected List<SchmittTrigger> LoadStageSteps = new List<SchmittTrigger>();
 		protected ShiftLineSet UpshiftLineTCLocked = new ShiftLineSet();
 
-		protected APTGearbox _gearbox;
+		protected IAPTGearbox _gearbox;
 
         public ATShiftStrategyOptimized(IVehicleContainer container) : base(container)
 		{
@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		public override IGearbox Gearbox {
 			get => _gearbox;
 			set {
-				if (value is APTGearbox gbx) {
+				if (value is IAPTGearbox gbx) {
 					_gearbox = gbx;
 					return;
 				}
@@ -151,7 +151,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			}
 
 			foreach (var gear in Gears.Reverse()) {
-				var response = _gearbox.Initialize(gear, torque, outAngularVelocity);
+				var response = RequestDryRunWithGear(absTime, dt, torque, outAngularVelocity, gear);
+				//var response = _gearbox.Initialize(gear, torque, outAngularVelocity);
 
 				if (response.Engine.EngineSpeed > Container.EngineInfo.EngineRatedSpeed || response.Engine.EngineSpeed < Container.EngineInfo.EngineIdleSpeed) {
 					continue;
@@ -648,15 +649,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
             if (shiftTimeReached && Container.DriverInfo.DrivingAction == DrivingAction.Accelerate) {
                 if (Container.VehicleInfo.VehicleSpeed < Container.DrivingCycleInfo.CycleData.LeftSample.VehicleTargetSpeed - 10.KMPHtoMeterPerSecond() &&
                     Container.DriverInfo.DriverAcceleration < 0.SI<MeterPerSquareSecond>()) {
-                    var tmpResponseCurr = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
+					var currentGear = gear;
+					var tmpResponseCurr = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, gear);
+					
+                    // var tmpResponseCurr = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
                     if (_gearbox.Gear > Gears.First()) {
+						// var tmpGear = 
+						
                         // clone current state of _nextgear, set gearbox state to lower gear, issue request, restore old gearbox state
-                        var tmp = _nextGear.Clone();
-                        var gbxState = new NextGearState(absTime, _gearbox);
-                        tmp.Gear = Gears.Predecessor(_gearbox.Gear);
-                        SetGear(tmp);
-                        var tmpResponseDs = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
-                        SetGear(gbxState);
+                        // var tmp = _nextGear.Clone();
+                        // var gbxState = new NextGearState(absTime, _gearbox);
+                        // tmp.Gear = Gears.Predecessor(_gearbox.Gear);
+                        // SetGear(tmp);
+                        // var tmpResponseDs = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
+                        // SetGear(gbxState);
+						var tmpGear = Gears.Predecessor(currentGear);
+						var tmpResponseDs = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tmpGear);
+						
                         // done
                         if (tmpResponseDs.Engine.EngineSpeed.IsSmaller(Container.EngineInfo.EngineN95hSpeed) && tmpResponseDs.DeltaFullLoad - Formulas.InertiaPower(
                                 tmpResponseDs.Engine.EngineSpeed, Container.EngineInfo.EngineSpeed, EngineInertia, dt) < tmpResponseCurr.DeltaFullLoad) {
@@ -773,12 +782,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			_nextGear.SetState(absTime, false, Gears.Predecessor(gear));
 		}
 
-		protected virtual void SetGear(NextGearState gbxState)
-		{
-			_gearbox.Gear = gbxState.Gear;
-			//_gearbox.TorqueConverterLocked = gbxState.TorqueConverterLocked;
-			_gearbox.Disengaged = gbxState.Disengaged;
-		}
+		// protected virtual void SetGear(NextGearState gbxState)
+		// {
+		// 	_gearbox.Gear = gbxState.Gear;
+		// 	//_gearbox.TorqueConverterLocked = gbxState.TorqueConverterLocked;
+		// 	_gearbox.Disengaged = gbxState.Disengaged;
+		// }
 
         private double GetFCRating(PerSecond engineSpeed, NewtonMeter tqCurrent)
 		{
@@ -899,10 +908,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				Gear = nextGearState.Gear;
 			}
 
-			public NextGearState(Second absTime, APTGearbox gearbox)
-			{
-				SetState(absTime, gearbox);
-			}
+			// public NextGearState(Second absTime, IAPTGearbox gearbox)
+			// {
+			// 	SetState(absTime, gearbox);
+			// }
 
 			public void SetState(Second absTime, bool disengaged, GearshiftPosition gear)
 			{
@@ -911,17 +920,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				Gear = gear;
 			}
 
-			public void SetState(Second absTime, APTGearbox gearbox)
-			{
-				AbsTime = absTime;
-				Disengaged = gearbox.Disengaged;
-				Gear = gearbox.Gear;
-			}
-
-			public NextGearState Clone()
-			{
-				return new NextGearState(this);
-			}
+			// public void SetState(Second absTime, IAPTGearbox gearbox)
+			// {
+			// 	AbsTime = absTime;
+			// 	Disengaged = gearbox.Disengaged;
+			// 	Gear = gearbox.Gear;
+			// }
+			//
+			// public NextGearState Clone()
+			// {
+			// 	return new NextGearState(this);
+			// }
 		}
     }
 }

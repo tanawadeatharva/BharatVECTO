@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		
 		protected ITestPowertrain TestPowertrain;
 
-		protected AMTGearbox _gearbox;
+		protected IAMTGearbox _gearbox;
 
         public AMTShiftStrategy(IVehicleContainer container) : base(container)
 		{
@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		public override IGearbox Gearbox {
 			get => _gearbox;
 			set {
-				if (value is AMTGearbox gbx) {
+				if (value is IAMTGearbox gbx) {
 					_gearbox = gbx;
 					return;
 				}
@@ -376,10 +376,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected virtual ResponseDryRun RequestDryRunWithGear(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition tryNextGear)
 		{
-			var tmpGear = Gearbox.Gear;
-			_gearbox.Gear = tryNextGear;
-			var response = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
-			_gearbox.Gear = tmpGear;
+			// var tmpGear = Gearbox.Gear;
+			// _gearbox.Gear = tryNextGear;
+			// var response = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
+			// _gearbox.Gear = tmpGear;
+			
+			
+			
+			LogEnabled = false;
+			TestPowertrain.UpdateComponents();
+			TestPowertrain.Gearbox.SetDisengaged = false;
+			TestPowertrain.Gearbox.SetGear = tryNextGear;
+
+			TestPowertrain.Container.GearboxOutPort.Initialize(outTorque, outAngularVelocity);
+			var response = (ResponseDryRun)TestPowertrain.Container.GearboxOutPort.Request(
+				0.SI<Second>(), dt, outTorque, outAngularVelocity, true);
+			LogEnabled = true;
 			return response;
 		}
 	}

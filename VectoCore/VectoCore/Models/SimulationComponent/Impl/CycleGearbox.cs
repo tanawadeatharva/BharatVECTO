@@ -51,7 +51,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class CycleGearbox : AbstractGearbox<CycleGearbox.CycleGearboxState>, IGearboxType
+	public class CycleGearbox : AbstractGearbox<CycleGearbox.CycleGearboxState>, ITypedGearbox
 	{
 		/// <summary>
 		/// True if gearbox is disengaged (no gear is set).

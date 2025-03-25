@@ -3,14 +3,18 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies.ShiftPolygonCalc;
+using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
 using Assert = NUnit.Framework.Assert;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.DeclarationDataTests.GenericModelParams.GearShiftStrategy;
@@ -18,6 +22,156 @@ namespace TUGraz.Vecto.UnitTests.TestCases.DeclarationDataTests.GenericModelPara
 public class PEV_ShiftLineTests
 {
     [TestCase]
+    public void ComputePEVShiftLinesADC()
+    {
+		var axlegearRatio = 2.64;
+		var r_dyn = 0.421.SI<Meter>();
+
+		var expectedDownshiftNoADC = new[] {
+			// Gear 1
+            new Point[] {
+
+			},
+            // Gear 2
+            new[] {
+				new Point(1969.345479169557, -1067),
+				new Point(1969.345479169557, -950.6),
+				new Point(253.98783622789142, -950.6),
+				new Point(253.98783622789142, 950.6),
+				new Point(2452.135493, 950.6),
+				new Point(2461.1589140000006, 950.6),
+				new Point(2466.8630340000004, 948.41362),
+				new Point(2481.590574, 942.781315),
+				new Point(2496.3181150000005, 937.220305),
+				new Point(2503.681885, 934.463565),
+				new Point(2539.878362278914, 921.3333994166501),
+				new Point(2539.878362278914, 1067),
+            },
+			// Gear 3
+			new[] {
+				new Point(1969.345479169557, -1067),
+				new Point(1969.345479169557, -950.6),
+				new Point(253.98783622789142, -950.6),
+				new Point(253.98783622789142, 950.6),
+				new Point(2452.135493, 950.6),
+				new Point(2461.1589140000006, 950.6),
+				new Point(2466.8630340000004, 948.41362),
+				new Point(2481.590574, 942.781315),
+				new Point(2496.3181150000005, 937.220305),
+				new Point(2503.681885, 934.463565),
+				new Point(2539.878362278914, 921.3333994166501),
+				new Point(2539.878362278914, 1067),
+			},
+        };
+		var expectedUpshiftNoADC = new[] {
+			// Gear 1
+			new[] {
+				new Point(6627.393225000001, 1067),
+				new Point(6627.393225000001, -1067),
+			},
+			// Gear 2
+			new[] {
+				new Point(6627.393225000001, 1067),
+				new Point(6627.393225000001, -1067),
+			},
+			// Gear 3
+			new[] {
+				new Point(6627.393225000001, 1067),
+				new Point(6627.393225000001, -1067),
+			},
+        };
+		var countEm = 2;
+		var emRatio = 2.0;
+
+		var expectedUpshift =
+			expectedUpshiftNoADC.Select(ps => ps.Select(p => new Point(p.X / emRatio, p.Y * emRatio)).ToArray()).ToArray();
+		var expectedDownshift =
+			expectedDownshiftNoADC.Select(ps => ps.Select(p => new Point(p.X / emRatio, p.Y * emRatio)).ToArray()).ToArray();
+
+
+
+        var emFld = new ElectricMotorFullLoadCurve(EM_FullLoad_125kW_485Nm.Select(x =>
+			new ElectricMotorFullLoadCurve.FullLoadEntry() {
+				// invert motor full load curve here as would be done in respective reader class
+				MotorSpeed = x[0].RPMtoRad(),
+				FullDriveTorque = -x[1].SI<NewtonMeter>() * countEm,
+				FullGenerationTorque = -x[2].SI<NewtonMeter>() * countEm,
+			}).ToList());
+		
+		var emEffMap = GetEffMap(emFld, countEm);
+
+
+		
+
+		var emData = new ElectricMotorData() {
+			EfficiencyData = new VoltageLevelData() {
+				VoltageLevels = new List<ElectricMotorVoltageLevelData>() {
+					new ElectricMotorVoltageLevelData() {
+						FullLoadCurve = emFld,
+						EfficiencyMap = emEffMap,
+					}
+				}
+			},
+			TransmissionLossMap = TransmissionLossMapReader.CreateEmADCLossMap(1, emRatio, "ADC"),
+			RatioADC = emRatio
+		};
+		var gearboxData = new Mock<IGearboxEngineeringInputData>().Object;
+		var gear = new Mock<ITransmissionInputData>().Object;
+		Mock.Get(gearboxData).Setup(g => g.Gears).Returns(new List<ITransmissionInputData>() {
+			gear, gear, gear, gear, gear, gear, gear, gear, gear, gear, gear, gear,
+        });
+
+		var shiftPolygons = new List<ShiftPolygon>();
+
+		var shiftStrategyParams = new ShiftStrategyParameters(); // use default (declaration) shift strategy params
+		// var downshiftMaxSpeed = emFld.RatedSpeed * shiftStrategyParams.PEV_DownshiftSpeedFactor.LimitTo(0, 1);
+		// var downshiftMinSpeed = emFld.RatedSpeed * shiftStrategyParams.PEV_DownshiftMinSpeedFactor;
+
+		
+		
+        for (var i = 0; i < gearboxData.Gears.Count; i++) {
+			var shiftPolygon = DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(
+				i,
+				emData,
+				gearboxData.Gears,
+				shiftStrategyParams.PEV_DownshiftSpeedFactor.LimitTo(0,1),
+				shiftStrategyParams.PEV_DownshiftMinSpeedFactor
+			);
+			
+			// var shiftpolygon = DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(i, 
+			// 	emFld, emRatio, 
+			// 	gearboxData.Gears, 
+			// 	axlegearRatio,
+			// 	r_dyn, 
+			// 	downshiftMaxSpeed, 
+			// 	downshiftMinSpeed);
+            shiftPolygons.Add(shiftPolygon);
+        }
+
+
+		CommonSanityChecks(shiftPolygons, emData.EfficiencyData.MaxSpeed / emRatio);
+		
+
+		for (var i = 0; i < Math.Min(gearboxData.Gears.Count, Math.Min(expectedDownshift.Length, expectedUpshift.Length)); i++) {
+			foreach (var tuple in expectedDownshift[i].Zip(shiftPolygons[i].Downshift, Tuple.Create)) {
+				Assert.AreEqual(tuple.Item1.X, tuple.Item2.AngularSpeed.AsRPM, 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Torque.Value(), 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+			}
+
+			foreach (var tuple in expectedUpshift[i].Zip(shiftPolygons[i].Upshift, Tuple.Create)) {
+				Assert.AreEqual(tuple.Item1.X, tuple.Item2.AngularSpeed.AsRPM, 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Torque.Value(), 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+			}
+		}
+
+		Assert.AreEqual(0, shiftPolygons.First().Downshift.Count);
+		Assert.AreEqual(0, shiftPolygons.Last().Upshift.Count);
+
+        //var suffix = factorDownshiftSpeed.HasValue ? $"_{factorDownshiftSpeed.Value}" : "";
+
+    }
+
+	[TestCase]
     public void ComputePEVShiftLines()
     {
 		var axlegearRatio = 2.64;
@@ -78,7 +232,7 @@ public class PEV_ShiftLineTests
         };
 
 		var countEm = 2;
-		var emRatio = 2.0;
+		var emRatio = 1.0;
 
         var emFld = new ElectricMotorFullLoadCurve(EM_FullLoad_125kW_485Nm.Select(x =>
 			new ElectricMotorFullLoadCurve.FullLoadEntry() {
@@ -88,6 +242,23 @@ public class PEV_ShiftLineTests
 				FullGenerationTorque = -x[2].SI<NewtonMeter>() * countEm,
 			}).ToList());
 		
+		var emEffMap = GetEffMap(emFld, countEm);
+
+
+		
+
+		var emData = new ElectricMotorData() {
+			EfficiencyData = new VoltageLevelData() {
+				VoltageLevels = new List<ElectricMotorVoltageLevelData>() {
+					new ElectricMotorVoltageLevelData() {
+						FullLoadCurve = emFld,
+						EfficiencyMap = emEffMap,
+					}
+				}
+			},
+			TransmissionLossMap = TransmissionLossMapReader.CreateEmADCLossMap(1, emRatio, "ADC"),
+			RatioADC = emRatio
+		};
 		var gearboxData = new Mock<IGearboxEngineeringInputData>().Object;
 		var gear = new Mock<ITransmissionInputData>().Object;
 		Mock.Get(gearboxData).Setup(g => g.Gears).Returns(new List<ITransmissionInputData>() {
@@ -97,13 +268,32 @@ public class PEV_ShiftLineTests
 		var shiftPolygons = new List<ShiftPolygon>();
 
 		var shiftStrategyParams = new ShiftStrategyParameters(); // use default (declaration) shift strategy params
-		var downshiftMaxSpeed = emFld.RatedSpeed * shiftStrategyParams.PEV_DownshiftSpeedFactor.LimitTo(0, 1);
-		var downshiftMinSpeed = emFld.RatedSpeed * shiftStrategyParams.PEV_DownshiftMinSpeedFactor;
+		// var downshiftMaxSpeed = emFld.RatedSpeed * shiftStrategyParams.PEV_DownshiftSpeedFactor.LimitTo(0, 1);
+		// var downshiftMinSpeed = emFld.RatedSpeed * shiftStrategyParams.PEV_DownshiftMinSpeedFactor;
 
+		
+		
         for (var i = 0; i < gearboxData.Gears.Count; i++) {
-			var shiftpolygon = DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(i, emFld, emRatio, gearboxData.Gears, axlegearRatio, r_dyn, downshiftMaxSpeed, downshiftMinSpeed);
-            shiftPolygons.Add(shiftpolygon);
+			var shiftPolygon = DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(
+				i,
+				emData,
+				gearboxData.Gears,
+				shiftStrategyParams.PEV_DownshiftSpeedFactor.LimitTo(0,1),
+				shiftStrategyParams.PEV_DownshiftMinSpeedFactor
+			);
+			
+			// var shiftpolygon = DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(i, 
+			// 	emFld, emRatio, 
+			// 	gearboxData.Gears, 
+			// 	axlegearRatio,
+			// 	r_dyn, 
+			// 	downshiftMaxSpeed, 
+			// 	downshiftMinSpeed);
+            shiftPolygons.Add(shiftPolygon);
         }
+
+
+		CommonSanityChecks(shiftPolygons, emData.EfficiencyData.MaxSpeed / emRatio);
 
 		for (var i = 0; i < Math.Min(gearboxData.Gears.Count, Math.Min(expectedDownshift.Length, expectedUpshift.Length)); i++) {
 			foreach (var tuple in expectedDownshift[i].Zip(shiftPolygons[i].Downshift, Tuple.Create)) {
@@ -124,7 +314,339 @@ public class PEV_ShiftLineTests
 
     }
 
-    [TestCase]
+	
+	
+	[TestCase]
+    public void ComputePEVShiftLinesDeratedSanity()
+    {
+		var axlegearRatio = 2.64;
+		var r_dyn = 0.421.SI<Meter>();
+
+		var expectedDownshift = new[] {
+			// Gear 1
+            new Point[] {
+
+			},
+            // Gear 2
+            new[] {
+				new Point(1969.345479169557, -1067),
+				new Point(1969.345479169557, -950.6),
+				new Point(253.98783622789142, -950.6),
+				new Point(253.98783622789142, 950.6),
+				new Point(2452.135493, 950.6),
+				new Point(2461.1589140000006, 950.6),
+				new Point(2466.8630340000004, 948.41362),
+				new Point(2481.590574, 942.781315),
+				new Point(2496.3181150000005, 937.220305),
+				new Point(2503.681885, 934.463565),
+				new Point(2539.878362278914, 921.3333994166501),
+				new Point(2539.878362278914, 1067),
+            },
+			// Gear 3
+			new[] {
+				new Point(1969.345479169557, -1067),
+				new Point(1969.345479169557, -950.6),
+				new Point(253.98783622789142, -950.6),
+				new Point(253.98783622789142, 950.6),
+				new Point(2452.135493, 950.6),
+				new Point(2461.1589140000006, 950.6),
+				new Point(2466.8630340000004, 948.41362),
+				new Point(2481.590574, 942.781315),
+				new Point(2496.3181150000005, 937.220305),
+				new Point(2503.681885, 934.463565),
+				new Point(2539.878362278914, 921.3333994166501),
+				new Point(2539.878362278914, 1067),
+			},
+        };
+		var expectedUpshift = new[] {
+			// Gear 1
+			new[] {
+				new Point(6627.393225000001, 1067),
+				new Point(6627.393225000001, -1067),
+			},
+			// Gear 2
+			new[] {
+				new Point(6627.393225000001, 1067),
+				new Point(6627.393225000001, -1067),
+			},
+			// Gear 3
+			new[] {
+				new Point(6627.393225000001, 1067),
+				new Point(6627.393225000001, -1067),
+			},
+        };
+
+		var countEm = 2;
+		var emRatio = 1.0;
+
+        var emFld = new ElectricMotorFullLoadCurve(EM_FullLoad_125kW_485Nm.Select(x =>
+			new ElectricMotorFullLoadCurve.FullLoadEntry() {
+				// invert motor full load curve here as would be done in respective reader class
+				MotorSpeed = x[0].RPMtoRad(),
+				FullDriveTorque = -x[1].SI<NewtonMeter>() * countEm,
+				FullGenerationTorque = -x[2].SI<NewtonMeter>() * countEm,
+			}).ToList());
+		
+		var emEffMap = GetEffMap(emFld, countEm);
+
+
+
+		var continuousTorque = emFld.MaxGenerationTorque;
+		var emData = new ElectricMotorData() {
+			Overload = new OverloadData() {
+				ContinuousTorque = continuousTorque,
+			},
+			EfficiencyData = new VoltageLevelData() {
+				VoltageLevels = new List<ElectricMotorVoltageLevelData>() {
+					new ElectricMotorVoltageLevelData() {
+						FullLoadCurve = emFld,
+						EfficiencyMap = emEffMap,
+					}
+				}
+			},
+			TransmissionLossMap = TransmissionLossMapReader.CreateEmADCLossMap(1, emRatio, "ADC"),
+			RatioADC = emRatio
+		};
+		var gearboxData = new Mock<IGearboxEngineeringInputData>().Object;
+		var gear = new Mock<ITransmissionInputData>().Object;
+		Mock.Get(gearboxData).Setup(g => g.Gears).Returns(new List<ITransmissionInputData>() {
+			gear, gear, gear, gear, gear, gear, gear, gear, gear, gear, gear, gear,
+        });
+
+		var shiftPolygons = new List<ShiftPolygon>();
+		var runData = new VectoRunData() { GearshiftParameters = new ShiftStrategyParameters() };
+		var container = new Mock<IVehicleContainer>();
+		container.Setup(c => c.RunData).Returns(runData);
+		// var shiftStrategy = new PEVAMTShiftStrategy(container.Object);
+		// var deRatedShiftLines = shiftStrategy.CalculateDeratedShiftLines(emData, gearboxData.Gears,
+		// 	r_dyn, axlegearRatio, GearboxType.AMT);
+		
+		var shiftStrategy = new PEVAMTShiftStrategyPolygonCreator(runData.GearshiftParameters);
+		//var deRatedShiftLines = shiftStrategy.CalculateDeratedShiftLines(emData, gearboxData.Gears,
+		//    r_dyn, axlegearRatio, GearboxType.AMT);
+
+		for (var i = 0; i < gearboxData.Gears.Count; i++) {
+			//var emFld = emData.EfficiencyData.VoltageLevels.First().FullLoadCurve;
+			var contTq = emData.Overload.ContinuousTorque;
+			var limitedFld = DeclarationData.Gearbox.LimitElectricMotorFullLoadCurve(emFld, contTq);
+			var limitedEm = new ElectricMotorData() {
+				EfficiencyData = new VoltageLevelData() {
+					VoltageLevels = new List<ElectricMotorVoltageLevelData>() {
+						new DeratedVoltageLevelData(emFld.MaxSpeed) {
+							FullLoadCurve = limitedFld
+						}
+					}
+				},
+				RatioADC = emData.RatioADC,
+			};
+
+			var deratedShiftLine = shiftStrategy.ComputeElectricMotorDeclarationShiftPolygon(GearboxType.APTN, i,
+				gearboxData.Gears, axlegearRatio, r_dyn, emData, limitedEm);
+			shiftPolygons.Add(deratedShiftLine);
+		}
+
+
+		CommonSanityChecks(shiftPolygons, emData.EfficiencyData.MaxSpeed / emRatio);
+
+		for (var i = 0; i < Math.Min(gearboxData.Gears.Count, Math.Min(expectedDownshift.Length, expectedUpshift.Length)); i++) {
+			foreach (var tuple in expectedDownshift[i].Zip(shiftPolygons[i].Downshift, Tuple.Create)) {
+				Assert.AreEqual(tuple.Item1.X, tuple.Item2.AngularSpeed.AsRPM, 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Torque.Value(), 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+			}
+
+			foreach (var tuple in expectedUpshift[i].Zip(shiftPolygons[i].Upshift, Tuple.Create)) {
+				Assert.AreEqual(tuple.Item1.X, tuple.Item2.AngularSpeed.AsRPM, 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Torque.Value(), 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+			}
+		}
+
+		Assert.AreEqual(0, shiftPolygons.First().Downshift.Count);
+		Assert.AreEqual(0, shiftPolygons.Last().Upshift.Count);
+
+        //var suffix = factorDownshiftSpeed.HasValue ? $"_{factorDownshiftSpeed.Value}" : "";
+
+    }
+
+	
+	
+	[TestCase]
+    public void ComputePEVShiftLinesDeratedSanityADC()
+    {
+		var axlegearRatio = 2.64;
+		var r_dyn = 0.421.SI<Meter>();
+
+		var expectedDownshiftNoADC = new[] {
+			// Gear 1
+            new Point[] {
+
+			},
+            // Gear 2
+            new[] {
+				new Point(1969.345479169557, -1067),
+				new Point(1969.345479169557, -950.6),
+				new Point(253.98783622789142, -950.6),
+				new Point(253.98783622789142, 950.6),
+				new Point(2452.135493, 950.6),
+				new Point(2461.1589140000006, 950.6),
+				new Point(2466.8630340000004, 948.41362),
+				new Point(2481.590574, 942.781315),
+				new Point(2496.3181150000005, 937.220305),
+				new Point(2503.681885, 934.463565),
+				new Point(2539.878362278914, 921.3333994166501),
+				new Point(2539.878362278914, 1067),
+            },
+			// Gear 3
+			new[] {
+				new Point(1969.345479169557, -1067),
+				new Point(1969.345479169557, -950.6),
+				new Point(253.98783622789142, -950.6),
+				new Point(253.98783622789142, 950.6),
+				new Point(2452.135493, 950.6),
+				new Point(2461.1589140000006, 950.6),
+				new Point(2466.8630340000004, 948.41362),
+				new Point(2481.590574, 942.781315),
+				new Point(2496.3181150000005, 937.220305),
+				new Point(2503.681885, 934.463565),
+				new Point(2539.878362278914, 921.3333994166501),
+				new Point(2539.878362278914, 1067),
+			},
+        };
+		var expectedUpshiftNoADC = new[] {
+			// Gear 1
+			new[] {
+				new Point(6627.393225000001, 1067),
+				new Point(6627.393225000001, -1067),
+			},
+			// Gear 2
+			new[] {
+				new Point(6627.393225000001, 1067),
+				new Point(6627.393225000001, -1067),
+			},
+			// Gear 3
+			new[] {
+				new Point(6627.393225000001, 1067),
+				new Point(6627.393225000001, -1067),
+			},
+        };
+
+		var countEm = 2;
+		var emRatio = 2.0;
+
+		var expectedUpshift =
+			expectedUpshiftNoADC.Select(ps => ps.Select(p => new Point(p.X / emRatio, p.Y * emRatio)).ToArray()).ToArray();
+		var expectedDownshift =
+			expectedDownshiftNoADC.Select(ps => ps.Select(p => new Point(p.X / emRatio, p.Y * emRatio)).ToArray()).ToArray();
+
+		
+        var emFld = new ElectricMotorFullLoadCurve(EM_FullLoad_125kW_485Nm.Select(x =>
+			new ElectricMotorFullLoadCurve.FullLoadEntry() {
+				// invert motor full load curve here as would be done in respective reader class
+				MotorSpeed = x[0].RPMtoRad(),
+				FullDriveTorque = -x[1].SI<NewtonMeter>() * countEm,
+				FullGenerationTorque = -x[2].SI<NewtonMeter>() * countEm,
+			}).ToList());
+		
+		var emEffMap = GetEffMap(emFld, countEm);
+
+
+
+		var continuousTorque = emFld.MaxGenerationTorque;
+		var emData = new ElectricMotorData() {
+			Overload = new OverloadData() {
+				ContinuousTorque = continuousTorque,
+			},
+			EfficiencyData = new VoltageLevelData() {
+				VoltageLevels = new List<ElectricMotorVoltageLevelData>() {
+					new ElectricMotorVoltageLevelData() {
+						FullLoadCurve = emFld,
+						EfficiencyMap = emEffMap,
+					}
+				}
+			},
+			TransmissionLossMap = TransmissionLossMapReader.CreateEmADCLossMap(1, emRatio, "ADC"),
+			RatioADC = emRatio
+		};
+		var gearboxData = new Mock<IGearboxEngineeringInputData>().Object;
+		var gear = new Mock<ITransmissionInputData>().Object;
+		Mock.Get(gearboxData).Setup(g => g.Gears).Returns(new List<ITransmissionInputData>() {
+			gear, gear, gear, gear, gear, gear, gear, gear, gear, gear, gear, gear,
+        });
+
+		var shiftPolygons = new List<ShiftPolygon>();
+		var runData = new VectoRunData() { GearshiftParameters = new ShiftStrategyParameters() };
+		var container = new Mock<IVehicleContainer>();
+		container.Setup(c => c.RunData).Returns(runData);
+
+		var polygonCreator = new PEVAMTShiftStrategyPolygonCreator(runData.GearshiftParameters);
+		//var deRatedShiftLines = shiftStrategy.CalculateDeratedShiftLines(emData, gearboxData.Gears,
+		//    r_dyn, axlegearRatio, GearboxType.AMT);
+
+		for (var i = 0; i < gearboxData.Gears.Count; i++) {
+			//var emFld = emData.EfficiencyData.VoltageLevels.First().FullLoadCurve;
+			var contTq = emData.Overload.ContinuousTorque;
+			var limitedFld = DeclarationData.Gearbox.LimitElectricMotorFullLoadCurve(emFld, contTq);
+			var limitedEm = new ElectricMotorData() {
+				EfficiencyData = new VoltageLevelData() {
+					VoltageLevels = new List<ElectricMotorVoltageLevelData>() {
+						new DeratedVoltageLevelData(emFld.MaxSpeed) {
+							FullLoadCurve = limitedFld
+						}
+					}
+				},
+				RatioADC = emData.RatioADC,
+			};
+
+			var deratedShiftLine = polygonCreator.ComputeElectricMotorDeclarationShiftPolygon(GearboxType.APTN, i,
+				gearboxData.Gears, axlegearRatio, r_dyn, emData, limitedEm);
+			shiftPolygons.Add(deratedShiftLine);
+		}
+
+
+		CommonSanityChecks(shiftPolygons, emData.EfficiencyData.MaxSpeed / emRatio);
+		
+		for (var i = 0; i < Math.Min(gearboxData.Gears.Count, Math.Min(expectedDownshift.Length, expectedUpshift.Length)); i++) {
+			foreach (var tuple in expectedDownshift[i].Zip(shiftPolygons[i].Downshift, Tuple.Create)) {
+				Assert.AreEqual(tuple.Item1.X, tuple.Item2.AngularSpeed.AsRPM, 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Torque.Value(), 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+			}
+
+			foreach (var tuple in expectedUpshift[i].Zip(shiftPolygons[i].Upshift, Tuple.Create)) {
+				Assert.AreEqual(tuple.Item1.X, tuple.Item2.AngularSpeed.AsRPM, 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Torque.Value(), 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+			}
+		}
+
+		Assert.AreEqual(0, shiftPolygons.First().Downshift.Count);
+		Assert.AreEqual(0, shiftPolygons.Last().Upshift.Count);
+
+        //var suffix = factorDownshiftSpeed.HasValue ? $"_{factorDownshiftSpeed.Value}" : "";
+
+    }
+
+	
+	
+	private static EfficiencyMap GetEffMap(ElectricMotorFullLoadCurve emFld, int countEm)
+	{
+		var emEffMap = ElectricMotorMapReader.Create(
+			InputDataHelper.InputDataAsTableData(
+				"n [rpm] , T [Nm] , P_el [kW]",
+				$"0, {emFld.MaxDriveTorque.Value()}, 0",
+				$"0, {emFld.MaxGenerationTorque.Value()}, 0",
+				$"0, 0, 0",
+				$"{emFld.MaxSpeed.AsRPM / 3}, {emFld.MaxDriveTorque.Value()}, -300",
+				$"{emFld.MaxSpeed.AsRPM / 3}, {emFld.MaxGenerationTorque.Value()}, 750",
+				$"{emFld.MaxSpeed.AsRPM / 3}, 0, 100",
+				$"{emFld.MaxSpeed.AsRPM / 2}, {emFld.MaxDriveTorque.Value()}, -300",
+				$"{emFld.MaxSpeed.AsRPM / 2}, {emFld.MaxGenerationTorque.Value()}, 750",
+				$"{emFld.MaxSpeed.AsRPM / 2}, 0, 100",
+				$"{emFld.MaxSpeed.AsRPM}, {emFld.MaxDriveTorque.Value()}, -300",
+				$"{emFld.MaxSpeed.AsRPM}, {emFld.MaxGenerationTorque.Value()}, 750",
+				$"{emFld.MaxSpeed.AsRPM}, 0, 100"
+			).ApplyFactor(ElectricMotorMapReader.Fields.PowerElectrical, 1E3), countEm, ExecutionMode.Declaration);
+		return emEffMap;
+	}
+
+	[TestCase]
     public void ComputePEVShiftLinesDeRated()
     {
 
@@ -312,7 +834,7 @@ public class PEV_ShiftLineTests
         //    });
 
 		var countEm = 2;
-		var emRatio = 2.0;
+		var emRatio = 1.0;
 		var continuousTorque = 145.SI<NewtonMeter>() * countEm;
         var emFld = new ElectricMotorFullLoadCurve(EM_FullLoad_125kW_485Nm.Select(x =>
 			new ElectricMotorFullLoadCurve.FullLoadEntry() {
@@ -322,6 +844,9 @@ public class PEV_ShiftLineTests
 				FullGenerationTorque = -x[2].SI<NewtonMeter>() * countEm,
 			}).ToList());
 
+		var emEffMap = GetEffMap(emFld: emFld, countEm: countEm);
+		
+
 		var emData = new ElectricMotorData() {
 			RatioADC = emRatio,
 			Overload = new OverloadData() {
@@ -330,10 +855,12 @@ public class PEV_ShiftLineTests
 			EfficiencyData = new VoltageLevelData() {
 				VoltageLevels = new List<ElectricMotorVoltageLevelData>() {
 					new ElectricMotorVoltageLevelData() {
-						FullLoadCurve = emFld
+						FullLoadCurve = emFld,
+						EfficiencyMap = emEffMap
 					}
 				}
-			}
+			},
+			TransmissionLossMap = TransmissionLossMapReader.CreateEmADCLossMap(1, emRatio, "ADC")
 		};
 		var gearboxData = new Mock<IGearboxEngineeringInputData>().Object;
 		var gear = new Mock<ITransmissionInputData>().Object;
@@ -358,9 +885,10 @@ public class PEV_ShiftLineTests
 		var runData = new VectoRunData() { GearshiftParameters = new ShiftStrategyParameters() };
 		var container = new Mock<IVehicleContainer>();
 		container.Setup(c => c.RunData).Returns(runData);
-        var shiftStrategy = new PEVAMTShiftStrategyPolygonCreator(runData.GearshiftParameters);
-        //var deRatedShiftLines = shiftStrategy.CalculateDeratedShiftLines(emData, gearboxData.Gears,
-        //    r_dyn, axlegearRatio, GearboxType.AMT);
+
+		var polygonCreator = new PEVAMTShiftStrategyPolygonCreator(runData.GearshiftParameters);
+		//var deRatedShiftLines = shiftStrategy.CalculateDeratedShiftLines(emData, gearboxData.Gears,
+		//    r_dyn, axlegearRatio, GearboxType.AMT);
 
 		for (var i = 0; i < gearboxData.Gears.Count; i++) {
 			//var emFld = emData.EfficiencyData.VoltageLevels.First().FullLoadCurve;
@@ -369,7 +897,7 @@ public class PEV_ShiftLineTests
 			var limitedEm = new ElectricMotorData() {
 				EfficiencyData = new VoltageLevelData() {
 					VoltageLevels = new List<ElectricMotorVoltageLevelData>() {
-						new ElectricMotorVoltageLevelData() {
+						new DeratedVoltageLevelData(emFld.MaxSpeed) {
 							FullLoadCurve = limitedFld
 						}
 					}
@@ -377,11 +905,14 @@ public class PEV_ShiftLineTests
 				RatioADC = emData.RatioADC,
 			};
 
-            var deratedShiftLine = shiftStrategy.ComputeElectricMotorDeclarationShiftPolygon(GearboxType.APTN, i,
+			var deratedShiftLine = polygonCreator.ComputeElectricMotorDeclarationShiftPolygon(GearboxType.APTN, i,
 				gearboxData.Gears, axlegearRatio, r_dyn, emData, limitedEm);
 			shiftPolygons.Add(deratedShiftLine);
-        }
+		}
 
+		
+		CommonSanityChecks(shiftPolygons, emData.EfficiencyData.MaxSpeed / emRatio);
+		
 		for (var i = 0; i < Math.Min(gearboxData.Gears.Count, Math.Min(expectedDownshift.Length, expectedUpshift.Length)); i++) {
 			foreach (var tuple in expectedDownshift[i].Zip(shiftPolygons[i].Downshift, Tuple.Create)) {
 				Assert.AreEqual(tuple.Item1.X, tuple.Item2.AngularSpeed.AsRPM, 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
@@ -477,4 +1008,30 @@ public class PEV_ShiftLineTests
 		new[] { 7290.132548,163.736,-163.736 },
 		new[] { 7363.77025,162.099125,-162.099125 },
     };
+
+
+
+
+	private void CommonSanityChecks(IEnumerable<ShiftPolygon> shiftPolygons, PerSecond emMaxSpeed)
+	{
+		var polygonList = shiftPolygons.ToList();
+		foreach (var upShiftPolygon in polygonList.Select(p => p.Upshift)) {
+			foreach (var entry in upShiftPolygon) {
+				Assert.Less(entry.AngularSpeed, emMaxSpeed );
+			}
+		}
+
+		foreach (var shiftPolygon in polygonList) {
+			var upshift = shiftPolygon.Upshift;
+			var downshift = shiftPolygon.Downshift;
+			if (upshift.Count > 0 && downshift.Count > 0) {
+				Assert.True(downshift.All(d => d.AngularSpeed.IsSmallerOrEqual(upshift.First().AngularSpeed)));
+			}
+		}
+
+
+
+
+
+	}
 }

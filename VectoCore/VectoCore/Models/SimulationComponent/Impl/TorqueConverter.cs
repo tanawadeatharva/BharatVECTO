@@ -426,7 +426,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		protected internal TorqueConverterOperatingPoint FindOperatingPoint(Second absTime, Second dt,
+		public TorqueConverterOperatingPoint FindOperatingPoint(Second absTime, Second dt,
 			NewtonMeter outTorque,
 			PerSecond outAngularVelocity)
 		{

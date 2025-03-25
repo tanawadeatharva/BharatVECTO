@@ -53,10 +53,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 		protected GearshiftPosition DesiredGearRoadsweeping;
 
-		protected MTGearbox _gearbox;
+		protected IMTGearbox _gearbox;
 
         public MTShiftStrategy(IVehicleContainer container) : base(container)
 		{
+			// create testcontainer
+			TestPowertrain = PowertrainBuilder.CreateTestPowertrain(Container, false);
 			PreprocessorSpeed = ConfigureSpeedPreprocessor(container);
 			container.AddPreprocessor(PreprocessorSpeed);
 
@@ -81,8 +83,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				}
 			}
 
-			// create testcontainer
-			TestPowertrain = PowertrainBuilder.CreateTestPowertrain(Container, false);
+
 
             DesiredGearRoadsweeping = RunData.DriverData?.PTODriveRoadsweepingGear;
         }
@@ -90,7 +91,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		public override IGearbox Gearbox {
 			get => _gearbox;
 			set {
-				if (value is MTGearbox gbx) {
+				if (value is IMTGearbox gbx) {
 					_gearbox = gbx;
 					return;
 				}
@@ -200,10 +201,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 				while (currentGear.Gear < GearboxModelData.Gears.Count) {
 					currentGear = Gears.Successor(currentGear);
-					var tmpGear = Gearbox.Gear;
-					_gearbox.Gear = currentGear;
-					var response = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
-					_gearbox.Gear = tmpGear;
+					var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
 
 					inAngularVelocity = response.Engine.EngineSpeed; //ModelData.Gears[currentGear].Ratio * outAngularVelocity;
 					inTorque = response.Clutch.PowerRequest / inAngularVelocity;
@@ -226,6 +224,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			return currentGear;
 		}
 
+		private ResponseDryRun RequestDryRunWithGear(Second absTime, Second dt, NewtonMeter outTorque,
+			PerSecond outAngularVelocity, GearshiftPosition currentGear)
+		{
+			TestPowertrain.UpdateComponents();
+			var testGearbox = TestPowertrain.Gearbox;
+			var tmpGear = testGearbox.Gear;
+
+			
+			testGearbox.SetGear = currentGear;
+			
+			var response = (ResponseDryRun)testGearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
+			
+			testGearbox.SetGear = tmpGear;
+			return response;
+		}
+
 		protected virtual GearshiftPosition DoCheckDownshift(Second absTime, Second dt, NewtonMeter outTorque,
 			PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, GearshiftPosition currentGear, IResponse response1)
 		{
@@ -243,10 +257,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				currentGear = Gears.Predecessor(currentGear);
 				while (currentGear.Gear > 1) {
 					currentGear = Gears.Predecessor(currentGear);
-					var tmpGear = Gearbox.Gear;
-					_gearbox.Gear = currentGear;
-					var response = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
-					_gearbox.Gear = tmpGear;
+					var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
+					// var tmpGear = Gearbox.Gear;
+					// _gearbox.Gear = currentGear;
+					// var response = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
+					// _gearbox.Gear = tmpGear;
 
 					inAngularVelocity = GearboxModelData.Gears[currentGear.Gear].Ratio * outAngularVelocity;
 					inTorque = response.Clutch.PowerRequest / inAngularVelocity;

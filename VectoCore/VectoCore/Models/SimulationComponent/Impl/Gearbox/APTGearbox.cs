@@ -51,17 +51,37 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
 	public class APTGearbox : AbstractGearbox<ATGearboxState>, IHybridControlledGearbox, IAPTGearbox
     {
         protected internal readonly IShiftStrategy _strategy;
-        protected internal readonly TorqueConverter TorqueConverter;
+
         private IIdleController _idleController;
 
         internal WattSecond _powershiftLossEnergy;
-        protected internal KilogramSquareMeter EngineInertia;
 
         public bool TorqueConverterLocked => CurrentState.Gear.TorqueConverterLocked.Value;
 
         //set { CurrentState.TorqueConverterLocked = value; }
         public override bool TCLocked => Gear.TorqueConverterLocked.Value;
 
+        ITorqueConverter IAPTGearbox.TorqueConverter
+        {
+            get => TorqueConverter;
+        }
+        public TorqueConverter TorqueConverter
+        {
+            get;
+            private set;
+        }
+
+        // public WattSecond ComputeShiftLosses(NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition nextGearPos)
+        // {
+        //     return base.ComputeShiftLosses(outTorque, outAngularVelocity, nextGearPos);
+        // }
+
+        public KilogramSquareMeter EngineInertia
+        {
+            get;
+            private set;
+        }
+        
         public APTGearbox(IVehicleContainer container, IShiftStrategy strategy)
             : this(container, strategy, false)
         {
@@ -195,8 +215,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
         }
 
 
-
-        internal ResponseDryRun Initialize(GearshiftPosition gear, NewtonMeter outTorque,
+        public ResponseDryRun Initialize(GearshiftPosition gear, NewtonMeter outTorque,
             PerSecond outAngularVelocity)
         {
             var effectiveRatio = gear.TorqueConverterLocked.Value
@@ -608,7 +627,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
 
 		public ATGearboxState GetPreviousState => PreviousState.Clone();
 
-		#endregion
+
+
+        #endregion
 	}
 
 	public class ATGearboxState : GearboxState
