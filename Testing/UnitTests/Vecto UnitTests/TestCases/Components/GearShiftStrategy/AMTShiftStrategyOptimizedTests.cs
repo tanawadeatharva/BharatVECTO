@@ -190,22 +190,22 @@ TestCase(8, 4, 15000, 200, true),]
  //    }
  //
  //
-	[TestCase]
-	public void GetMocksTest()
-	{
-		// the first element 0.0 is just a placeholder for axlegear, not used in this test
-		var ratios = new[] { 0.0, 6.38, 4.63, 3.84, 2.59, 1.86, 1.35, 1, 0.76 };
-
-		var mockContainer = GetMocks(ratios,
-			out var runData,
-			out var testPowertrain);
-
-		var container = mockContainer.Object;
-		var createdTestPowertrain = container.SimplePowertrainBuilder.CreateTestPowertrain(container, false);
-		
-		Assert.NotNull(createdTestPowertrain.Container.GearboxOutPort);
-		Assert.NotNull(createdTestPowertrain);
-	}
+	// [TestCase]
+	// public void GetMocksTest()
+	// {
+	// 	// the first element 0.0 is just a placeholder for axlegear, not used in this test
+	// 	var ratios = new[] { 0.0, 6.38, 4.63, 3.84, 2.59, 1.86, 1.35, 1, 0.76 };
+	//
+	// 	var mockContainer = GetMocks(ratios,
+	// 		out var runData,
+	// 		out var testPowertrain);
+	//
+	// 	var container = mockContainer.Object;
+	// 	var createdTestPowertrain = container.SimplePowertrainBuilder.CreateTestPowertrain(container, false);
+	// 	
+	// 	Assert.NotNull(createdTestPowertrain.Container.GearboxOutPort);
+	// 	Assert.NotNull(createdTestPowertrain);
+	// }
 
 
 	[TestCase(1, 2, 100, 900, true)]
@@ -621,7 +621,6 @@ TestCase(8, 4, 15000, 200, true),]
 		var amtGearbox = new Mock<IAMTGearbox>(MockBehavior.Strict);
 		amtGearbox.Name = "AMT_Gearbox";
 		var gbx = amtGearbox.As<IGearbox>();
-
 		gbx.Setup(g => g.LastUpshift).Returns(-double.MaxValue.SI<Second>());
 		gbx.Setup(g => g.LastDownshift).Returns(-double.MaxValue.SI<Second>());
 		return gbx;

@@ -335,37 +335,13 @@ public class MTShiftStrategyTests
 
 	private Mock<IGearbox> GetMockGearbox()
 	{
-		var mtGbx = new Mock<IMTGearbox>();
+		var mtGbx = new Mock<IMTGearbox>(MockBehavior.Strict);
 		var gbx = mtGbx.As<IGearbox>();
 		
 		gbx.Setup(g => g.LastUpshift).Returns(-double.MaxValue.SI<Second>());
 		gbx.Setup(g => g.LastDownshift).Returns(-double.MaxValue.SI<Second>());
 		
 		return gbx;
-		// var gbx = new Mock<DeclarationData.Gearbox>(container, null);
-		// var ratios = container.RunData.GearboxData.Gears;
-
-		//
-
-		// gbx.SetupProperty(g => g.Gear);
-		// gbx.Setup(g => g.Request(It.IsAny<Second>(), It.IsAny<Second>(), It.IsAny<NewtonMeter>(), It.IsAny<PerSecond>(),
-		// 		It.IsAny<bool>()))
-		// 	.Returns((Second absTime, Second dt, NewtonMeter t, PerSecond n, bool dryRun) => {
-		// 		var ratio = gbx.Object.Gear == null ? 1.0 : ratios[gbx.Object.Gear.Gear].Ratio;
-		// 		return dryRun
-		// 			? new ResponseDryRun(this) {
-		// 				Engine = {
-		// 					PowerRequest = n * t, EngineSpeed = n * ratio,
-		// 					DynamicFullLoadPower = (t / ratio + 2300.SI<NewtonMeter>()) * n * ratio,
-		// 				},
-		// 				Clutch = { PowerRequest = n * t }
-		// 			}
-		// 			: new ResponseSuccess(this) {
-		// 				Engine = { PowerRequest = n * t, EngineSpeed = n * ratio },
-		// 				Clutch = { PowerRequest = n * t }
-		// 			};
-		// 	});
-		// return gbx;
 	}
 
 

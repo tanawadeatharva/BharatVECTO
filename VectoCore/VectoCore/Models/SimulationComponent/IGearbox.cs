@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		new bool Disengaged { get; set; }
 		KilogramSquareMeter EngineInertia { get; }
-		TorqueConverter TorqueConverter { get; }
+		ITorqueConverter TorqueConverter { get; }
 
 		WattSecond ComputeShiftLosses(NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition nextGearPos);
 	}
@@ -77,5 +77,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 	public interface IIEPCGearbox : ITypedGearbox { }
 
-	public interface ITorqueConverter : ITorqueConverterInfo, ITorqueConverterControl, IUpdateable { }
+	public interface ITorqueConverter : ITorqueConverterInfo, ITorqueConverterControl, IUpdateable
+	{
+		TorqueConverterOperatingPoint FindOperatingPoint(Second absTime, Second dt, NewtonMeter nextGearboxInTorque, PerSecond nextGearboxInSpeed);
+	}
 }

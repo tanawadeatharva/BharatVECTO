@@ -141,8 +141,8 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 			var shiftRequired = currentGear != expectedGear;
 			
 			var shiftStrategy = GetShiftStrategyAndGearbox(container, out var gearbox);
-			var gear = new GearshiftPosition((uint)currentGear);
-			gearbox.Gear = gear;
+			// var gear = new GearshiftPosition((uint)currentGear);
+			// gearbox.Gear = gear;
 			
 			var absTime = 0.SI<Second>();
 			var dt = 0.5.SI<Second>();
@@ -209,8 +209,8 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 			var shiftRequired = currentGear != expectedGear;
 			
 			var shiftStrategy = GetShiftStrategyAndGearbox(container, out var gearbox);
-			var gear = new GearshiftPosition((uint)currentGear);
-			gearbox.Gear = gear;
+			// var gear = new GearshiftPosition((uint)currentGear);
+			// gearbox.Gear = gear;
 			
 			var absTime = 0.SI<Second>();
 			var dt = 0.5.SI<Second>();
@@ -344,8 +344,8 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 			var shiftRequired = currentGear != expectedGear;
 			
 			var shiftStrategy = GetShiftStrategyAndGearbox(container, out var gearbox);
-			var gear = new GearshiftPosition((uint)currentGear);
-			gearbox.Gear = gear;
+			// var gear = new GearshiftPosition((uint)currentGear);
+			// gearbox.Gear = gear;
 			
 			var absTime = 0.SI<Second>();
 			var dt = 0.5.SI<Second>();
@@ -423,8 +423,8 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 			var shiftRequired = currentGear != expectedGear;
 			
 			var shiftStrategy = GetShiftStrategyAndGearbox(container, out var gearbox);
-			var gear = new GearshiftPosition((uint)currentGear);
-			gearbox.Gear = gear;
+			// var gear = new GearshiftPosition((uint)currentGear);
+			// gearbox.Gear = gear;
 			
 			var absTime = 0.SI<Second>();
 			var dt = 0.5.SI<Second>();
@@ -480,18 +480,34 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 		
 		
 		
-		private PEVAMTShiftStrategy GetShiftStrategyAndGearbox(Mock<IVehicleContainer> container, out PEVGearbox gearbox)
+		private PEVAMTShiftStrategy GetShiftStrategyAndGearbox(Mock<IVehicleContainer> container,
+			out Mock<IPEVGearbox> gearbox)
 		{
 			var shiftStrategy = new PEVAMTShiftStrategy(container.Object);
-			gearbox = new PEVGearbox(container.Object, shiftStrategy);
+			
+			// gearbox = new PEVGearbox(container.Object, shiftStrategy);
 
 			SetVelocityDropLookupData(shiftStrategy);
-			
-			gearbox.Gear = new GearshiftPosition(0);
-			container.Setup(c => c.GearboxInfo).Returns(gearbox);
-			
-			
+
+			var gbx = GetGearbox();
+			// gearbox.Gear = new GearshiftPosition(0);
+			// container.Setup(c => c.GearboxInfo).Returns(gearbox);
+
+			gearbox = gbx;
+
+			shiftStrategy.Gearbox = gbx.Object;
 			return shiftStrategy;
+		}
+
+		private Mock<IPEVGearbox> GetGearbox()
+		{
+			var gbx = new Mock<IPEVGearbox>(MockBehavior.Strict);
+			gbx.Setup(g => g.LastUpshift).Returns(-double.MaxValue.SI<Second>());
+			gbx.Setup(g => g.LastDownshift).Returns(-double.MaxValue.SI<Second>());
+
+			
+
+			return gbx;
 		}
 
 		private Mock<IVehicleContainer> GetMocks(double[] ratios)

@@ -1,9 +1,9 @@
-﻿using Moq;
+﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using Moq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
@@ -20,6 +20,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.Tests.Utils;
 using Assert = NUnit.Framework.Assert;
+using Constants = TUGraz.VectoCore.Configuration.Constants;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy;
 
@@ -330,96 +331,55 @@ TestCase(8, 4, 15000, 200, true),]
 		Assert.AreEqual(newGear, shiftStrategy.NextGear.Gear);
     }
 
-    private Mock<ITestPowertrain> GetMockTestPowertrain(VectoRunData runData)
-    {
-        var testPt = new Mock<ITestPowertrain>();
-        var tCnt = new Mock<ISimpleVehicleContainer>();
-        tCnt.Setup(c => c.RunData).Returns(runData);
-        var tPi = new Mock<IPowertainInfo>();
-        tPi.Setup(p => p.HasCombustionEngine).Returns(true);
-        tCnt.Setup(c => c.PowertrainInfo).Returns(tPi.Object);
-        var tGbx = new Mock<ITestPowertrainTransmission>();
-        testPt.Setup(t => t.Gearbox).Returns(tGbx.Object);
-        tGbx.Setup(g => g.Initialize(It.IsAny<NewtonMeter>(), It.IsAny<PerSecond>()))
-            .Returns((NewtonMeter t, PerSecond n) => new ResponseSuccess(this) {
-                Engine = { PowerRequest = n * t, EngineSpeed = n },
-                Clutch = { PowerRequest = n * t }
-            });
-        tGbx.Setup(g => g.Request(It.IsAny<Second>(), It.IsAny<Second>(), It.IsAny<NewtonMeter>(), It.IsAny<PerSecond>(),
-                It.IsAny<bool>()))
-            .Returns((Second absTime, Second dt, NewtonMeter t, PerSecond n, bool dryRun) => new ResponseSuccess(this) {
-                Engine = { PowerRequest = n * t, EngineSpeed = n },
-                Clutch = { PowerRequest = n * t }
-            });
-		tGbx.Setup(g => g.Request(It.IsAny<Second>(), It.IsAny<Second>(), It.IsAny<NewtonMeter>(), It.IsAny<PerSecond>(),
-				It.IsAny<bool>()))
-			.Returns((Second absTime, Second dt, NewtonMeter t, PerSecond n, bool dryRun) => dryRun ? 
-			new ResponseDryRun(this) {
-				Engine = { PowerRequest = n * t, EngineSpeed = n },
-				Clutch = { PowerRequest = n * t }
-			}: new ResponseSuccess(this) {
-				Engine = { PowerRequest = n * t, EngineSpeed = n },
-				Clutch = { PowerRequest = n * t }
-			});
-        var tEng = new Mock<ITestpowertrainCombustionEngine>();
-        testPt.Setup(t => t.CombustionEngine).Returns(tEng.Object);
-        tEng.Setup(e => e.EngineStationaryFullPower(It.IsAny<PerSecond>()))
-            .Returns((PerSecond n) => runData.EngineData.FullLoadCurves[0].FullLoadStationaryPower(n));
-        return testPt;
-    }
-
-    private static Mock<IVehicleContainer> GetMockVehicleContainer(VectoRunData runData)
-    {
-        var container = new Mock<IVehicleContainer>();
-        container.Setup(c => c.RunData).Returns(runData);
-        var veh = new Mock<IVehicleInfo>();
-        veh.Setup(v => v.VehicleSpeed).Returns(10.SI<MeterPerSecond>());
-        container.Setup(c => c.VehicleInfo).Returns(veh.Object);
-        var eng = new Mock<IEngineInfo>();
-        container.Setup(c => c.EngineInfo).Returns(eng.Object);
-        eng.Setup(e => e.EngineIdleSpeed).Returns(runData.EngineData.IdleSpeed);
-        eng.Setup(e => e.EngineRatedSpeed).Returns(runData.EngineData.FullLoadCurves.First().Value.RatedSpeed);
-        eng.Setup(e => e.EngineN95hSpeed).Returns(runData.EngineData.FullLoadCurves.First().Value.N95hSpeed);
-		eng.Setup(e => e.EngineStationaryFullPower(It.IsAny<PerSecond>()))
-			.Returns((PerSecond n) => runData.EngineData.FullLoadCurves[0].FullLoadStationaryPower(n));
-        var ci = new Mock<IDrivingCycleInfo>();
-        container.Setup(c => c.DrivingCycleInfo).Returns(ci.Object);
-        var di = new Mock<IDriverInfo>();
-		di.Setup(d => d.DriverBehavior).Returns(DrivingBehavior.Accelerating);
-		di.Setup(d => d.DrivingAction).Returns(DrivingAction.Accelerate);
-        container.Setup(c => c.DriverInfo).Returns(di.Object);
-        ci.Setup(c => c.CycleData).Returns(new CycleData() { LeftSample = new DrivingCycleData.DrivingCycleEntry() { PTOActive = PTOActivity.Inactive } });
-		ci.Setup(c => c.CycleLookAhead(It.IsAny<Meter>())).Returns(new DrivingCycleData.DrivingCycleEntry() {
-			Altitude = 0.SI<Meter>()
-		});
-		ci.Setup(c => c.Altitude).Returns(0.SI<Meter>());
-		var pi = new Mock<IPowertainInfo>();
-        pi.Setup(p => p.HasCombustionEngine).Returns(true);
-        container.Setup(c => c.PowertrainInfo).Returns(pi.Object);
-        var vi = new Mock<IVehicleInfo>();
-		vi.Setup(v => v.AirDragResistance(It.IsAny<MeterPerSecond>(), It.IsAny<MeterPerSecond>()))
-			.Returns(0.SI<Newton>());
-		vi.Setup(v => v.RollingResistance(It.IsAny<Radian>())).Returns(0.SI<Newton>());
-		vi.Setup(v => v.SlopeResistance(It.IsAny<Radian>())).Returns(0.SI<Newton>());
-		vi.Setup(v => v.VehicleSpeed).Returns(30.KMPHtoMeterPerSecond());
-		vi.Setup(v => v.TotalMass).Returns(12000.SI<Kilogram>());
-		container.Setup(c => c.VehicleInfo).Returns(vi.Object);
-		var wi = new Mock<IWheelsInfo>();
-		container.Setup(c => c.WheelsInfo).Returns(wi.Object);
-		wi.Setup(w => w.ReducedMassWheels).Returns(0.SI<Kilogram>());
-		var axli = new Mock<IAxlegearInfo>();
-		container.Setup(c => c.AxlegearInfo).Returns(axli.Object);
-		axli.Setup(a => a.AxlegearLoss()).Returns(0.SI<Watt>());
-        return container;
-    }
-
-	private Mock<AMTGearbox> GetMockGearbox(Mock<IVehicleContainer> container)
+	private Mock<ISimpleVehicleContainer> GetSimpleVehicleContainer(VectoRunData runData, out Mock<ITestPowertrainTransmission> gbx)
 	{
-		var gbx = new Mock<AMTGearbox>(container.Object, null);
-        var ratios = container.Object.RunData.GearboxData.Gears;
+		var simpleContainer = new Mock<ISimpleVehicleContainer>();
+
+		simpleContainer.Setup(c => c.RunData).Returns(runData);
+		simpleContainer.Setup(c => c.PowertrainInfo.HasCombustionEngine).Returns(true);
+
+		gbx = GetTestGearbox(runData.GearboxData.Gears);
+		
+		simpleContainer.Setup(c => c.GearboxOutPort).Returns(gbx.Object);
+
+		return simpleContainer;
+	}
+
+	private Mock<ITestPowertrainTransmission> GetTestGearbox(Dictionary<uint, GearData> ratios)
+	{
+		var gbx = new Mock<ITestPowertrainTransmission>();
+		
 		gbx.Setup(g => g.LastUpshift).Returns(-double.MaxValue.SI<Second>());
 		gbx.Setup(g => g.LastDownshift).Returns(-double.MaxValue.SI<Second>());
-		gbx.SetupProperty(g => g.Gear);
+
+		GearshiftPosition gear = null;
+		gbx.SetupGet(g => g.Gear).Returns(() => {
+			
+			return gear;
+		});
+		gbx.SetupSet(g => g.SetGear = It.IsAny<GearshiftPosition>())
+			.Callback<GearshiftPosition>(p => {
+				gear = p;
+			});
+
+
+		GearshiftPosition nextGear = null;
+		gbx.SetupGet(g => g.NextGear).Returns(() => nextGear);
+		gbx.SetupSet(g => g.SetNextGear = It.IsAny<GearshiftPosition>())
+			.Callback<GearshiftPosition>(p => nextGear = p);
+			
+		gbx.Setup(p => p.Initialize(It.IsAny<NewtonMeter>(),
+			It.IsAny<PerSecond>())).Returns((NewtonMeter tq, PerSecond rpm) => {
+			return new ResponseSuccess(this)
+			{
+				Engine = {
+					EngineSpeed = rpm,
+					PowerRequest = tq * rpm,
+				},
+			};
+		});
+		
+		
 		gbx.Setup(g => g.Request(It.IsAny<Second>(), It.IsAny<Second>(), It.IsAny<NewtonMeter>(), It.IsAny<PerSecond>(),
 				It.IsAny<bool>()))
 			.Returns((Second absTime, Second dt, NewtonMeter t, PerSecond n, bool dryRun) => {
@@ -437,6 +397,150 @@ TestCase(8, 4, 15000, 200, true),]
 						Clutch = { PowerRequest = n * t }
 					};
 			});
+		return gbx;
+	}
+    private Mock<ITestPowertrain> GetMockTestPowertrain(VectoRunData runData)
+    {
+        var testPt = new Mock<ITestPowertrain>();
+
+		var simpleContainer = GetSimpleVehicleContainer(runData, out var gbx);
+        // var tCnt = new Mock<ISimpleVehicleContainer>();
+		testPt.Setup(t => t.Container).Returns(simpleContainer.Object);
+		testPt.Setup(t => t.Gearbox).Returns(gbx.Object);
+		
+        var tEng = new Mock<ITestpowertrainCombustionEngine>();
+        testPt.Setup(t => t.CombustionEngine).Returns(tEng.Object);
+        tEng.Setup(e => e.EngineStationaryFullPower(It.IsAny<PerSecond>()))
+            .Returns((PerSecond n) => runData.EngineData.FullLoadCurves[0].FullLoadStationaryPower(n));
+        return testPt;
+    }
+
+    private static Mock<IVehicleContainer> GetMockVehicleContainer(VectoRunData runData)
+    {
+        var container = new Mock<IVehicleContainer>();
+        container.Setup(c => c.RunData).Returns(runData);
+        var veh = new Mock<IVehicleInfo>();
+        veh.Setup(v => v.VehicleSpeed).Returns(10.SI<MeterPerSecond>());
+        container.Setup(c => c.VehicleInfo).Returns(veh.Object);
+		
+		//EngineInfo
+        var eng = GetEngineInfo(runData);
+		container.Setup(c => c.EngineInfo).Returns(eng.Object);
+		
+        var ci = new Mock<IDrivingCycleInfo>();
+        container.Setup(c => c.DrivingCycleInfo).Returns(ci.Object);
+        var di = new Mock<IDriverInfo>();
+		di.Setup(d => d.DriverBehavior).Returns(DrivingBehavior.Accelerating);
+		di.Setup(d => d.DrivingAction).Returns(DrivingAction.Accelerate);
+        container.Setup(c => c.DriverInfo).Returns(di.Object);
+        ci.Setup(c => c.CycleData).Returns(new CycleData() { LeftSample = new DrivingCycleData.DrivingCycleEntry() { PTOActive = PTOActivity.Inactive } });
+		ci.Setup(c => c.CycleLookAhead(It.IsAny<Meter>())).Returns(new DrivingCycleData.DrivingCycleEntry() {
+			Altitude = 0.SI<Meter>()
+		});
+		ci.Setup(c => c.Altitude).Returns(0.SI<Meter>());
+		var pi = new Mock<IPowertainInfo>();
+        pi.Setup(p => p.HasCombustionEngine).Returns(true);
+        container.Setup(c => c.PowertrainInfo).Returns(pi.Object);
+		
+        var vi = GetVehicleInfo();
+		container.Setup(c => c.VehicleInfo).Returns(vi.Object);
+		
+		
+		var wi = new Mock<IWheelsInfo>();
+		container.Setup(c => c.WheelsInfo).Returns(wi.Object);
+		wi.Setup(w => w.ReducedMassWheels).Returns(0.SI<Kilogram>());
+		var axli = new Mock<IAxlegearInfo>();
+		container.Setup(c => c.AxlegearInfo).Returns(axli.Object);
+		axli.Setup(a => a.AxlegearLoss()).Returns(0.SI<Watt>());
+        return container;
+    }
+
+	private static Mock<IVehicleInfo> GetVehicleInfo()
+	{
+		var vi = new Mock<IVehicleInfo>();
+		vi.Setup(v => v.AirDragResistance(It.IsAny<MeterPerSecond>(), It.IsAny<MeterPerSecond>()))
+			.Returns(0.SI<Newton>());
+		vi.Setup(v => v.RollingResistance(It.IsAny<Radian>())).Returns(0.SI<Newton>());
+		vi.Setup(v => v.SlopeResistance(It.IsAny<Radian>())).Returns(0.SI<Newton>());
+		vi.Setup(v => v.VehicleSpeed).Returns(30.KMPHtoMeterPerSecond());
+		vi.Setup(v => v.TotalMass).Returns(12000.SI<Kilogram>());
+		return vi;
+	}
+
+	private static Mock<IEngineInfo> GetEngineInfo(VectoRunData runData)
+	{
+		var eng = new Mock<IEngineInfo>();
+
+		eng.Setup(e => e.EngineIdleSpeed).Returns(runData.EngineData.IdleSpeed);
+		eng.Setup(e => e.EngineRatedSpeed).Returns(runData.EngineData.FullLoadCurves.First().Value.RatedSpeed);
+		eng.Setup(e => e.EngineN95hSpeed).Returns(runData.EngineData.FullLoadCurves.First().Value.N95hSpeed);
+		eng.Setup(e => e.EngineStationaryFullPower(It.IsAny<PerSecond>()))
+			.Returns((PerSecond n) => runData.EngineData.FullLoadCurves[0].FullLoadStationaryPower(n));
+		return eng;
+	}
+
+	private Mock<ITestPowertrainTransmission> GetMockTestGearbox(Dictionary<uint, GearData> ratios)
+	{
+		var gbx = new Mock<ITestPowertrainTransmission>();
+		
+		gbx.Setup(g => g.LastUpshift).Returns(-double.MaxValue.SI<Second>());
+		gbx.Setup(g => g.LastDownshift).Returns(-double.MaxValue.SI<Second>());
+
+		GearshiftPosition gear = null;
+		gbx.SetupGet(g => g.Gear).Returns(() => {
+			
+			return gear;
+		});
+		gbx.SetupSet(g => g.SetGear = It.IsAny<GearshiftPosition>())
+			.Callback<GearshiftPosition>(p => {
+				gear = p;
+			});
+
+
+		GearshiftPosition nextGear = null;
+		gbx.SetupGet(g => g.NextGear).Returns(() => nextGear);
+		gbx.SetupSet(g => g.SetNextGear = It.IsAny<GearshiftPosition>())
+			.Callback<GearshiftPosition>(p => nextGear = p);
+			
+		gbx.Setup(p => p.Initialize(It.IsAny<NewtonMeter>(),
+			It.IsAny<PerSecond>())).Returns((NewtonMeter tq, PerSecond rpm) => {
+			return new ResponseSuccess(this)
+			{
+				Engine = {
+					EngineSpeed = rpm,
+					PowerRequest = tq * rpm,
+				},
+			};
+		});
+		
+		
+		gbx.Setup(g => g.Request(It.IsAny<Second>(), It.IsAny<Second>(), It.IsAny<NewtonMeter>(), It.IsAny<PerSecond>(),
+				It.IsAny<bool>()))
+			.Returns((Second absTime, Second dt, NewtonMeter t, PerSecond n, bool dryRun) => {
+				var ratio = gbx.Object.Gear == null ? 1.0 : ratios[gbx.Object.Gear.Gear].Ratio;
+				return dryRun
+					? new ResponseDryRun(this) {
+						Engine = {
+							PowerRequest = n * t, EngineSpeed = n * ratio,
+							DynamicFullLoadPower = (t / ratio + 2300.SI<NewtonMeter>()) * n * ratio,
+						},
+						Clutch = { PowerRequest = n * t }
+					}
+					: new ResponseSuccess(this) {
+						Engine = { PowerRequest = n * t, EngineSpeed = n * ratio },
+						Clutch = { PowerRequest = n * t }
+					};
+			});
+		return gbx;
+	}
+	
+
+	private Mock<IAMTGearbox> GetMockGearbox(Mock<IVehicleContainer> container)
+	{
+		//Make sure no method that is not explicitly mocked is called
+		var gbx = new Mock<IAMTGearbox>(MockBehavior.Strict);
+		gbx.Setup(g => g.LastUpshift).Returns(-double.MaxValue.SI<Second>());
+		gbx.Setup(g => g.LastDownshift).Returns(-double.MaxValue.SI<Second>());
 		return gbx;
 	}
 

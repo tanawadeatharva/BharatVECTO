@@ -61,6 +61,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
         //set { CurrentState.TorqueConverterLocked = value; }
         public override bool TCLocked => Gear.TorqueConverterLocked.Value;
 
+        ITorqueConverter IAPTGearbox.TorqueConverter
+        {
+            get => TorqueConverter;
+        }
         public TorqueConverter TorqueConverter
         {
             get;

@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected List<SchmittTrigger> LoadStageSteps = new List<SchmittTrigger>();
 		protected ShiftLineSet UpshiftLineTCLocked = new ShiftLineSet();
 
-		protected APTGearbox _gearbox;
+		protected IAPTGearbox _gearbox;
 
         public ATShiftStrategyOptimized(IVehicleContainer container) : base(container)
 		{
@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		public override IGearbox Gearbox {
 			get => _gearbox;
 			set {
-				if (value is APTGearbox gbx) {
+				if (value is IAPTGearbox gbx) {
 					_gearbox = gbx;
 					return;
 				}
@@ -151,7 +151,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			}
 
 			foreach (var gear in Gears.Reverse()) {
-				var response = _gearbox.Initialize(gear, torque, outAngularVelocity);
+				var response = RequestDryRunWithGear(absTime, dt, torque, outAngularVelocity, gear);
+				//var response = _gearbox.Initialize(gear, torque, outAngularVelocity);
 
 				if (response.Engine.EngineSpeed > Container.EngineInfo.EngineRatedSpeed || response.Engine.EngineSpeed < Container.EngineInfo.EngineIdleSpeed) {
 					continue;

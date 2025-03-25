@@ -377,27 +377,20 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 		
 		
 		
-		private PEVAMTShiftStrategy GetShiftStrategyAndGearbox(Mock<IVehicleContainer> container, out IEPCGearbox gearbox)
+		private APTNShiftStrategy GetShiftStrategyAndGearbox(Mock<IVehicleContainer> container, out Mock<IIEPCGearbox> gearbox)
 		{
 			var shiftStrategy = new APTNShiftStrategy(container.Object);
 
-			var gbxFactory = new Mock<IIEPCGearboxFactory>();
-			gbxFactory.Setup(g => g.CreateIEPCGearbox(
-				false,
-				It.IsAny<IVehicleContainer>(),
-				It.IsAny<IShiftStrategy>())).Returns(
-				(bool singleSpeed, IVehicleContainer container, IShiftStrategy shiftStrategy) => {
-					return new IEPCGearboxMultipleGears(container, shiftStrategy);
-				});
+			var gbx = new Mock<IIEPCGearbox>(MockBehavior.Strict);
+			gbx.Name = "MockGearbox";
+			gbx.Setup(g => g.LastUpshift).Returns(-double.MaxValue.SI<Second>());
+			gbx.Setup(g => g.LastDownshift).Returns(-double.MaxValue.SI<Second>());
 			
-			gearbox = new IEPCGearbox(container.Object, 
-				shiftStrategy, gbxFactory.Object);
-
+			shiftStrategy.Gearbox = gbx.Object;
 			SetVelocityDropLookupData(shiftStrategy);
-			
-			container.Setup(c => c.GearboxInfo).Returns(gearbox);
-			
-			
+			container.Setup(c => c.GearboxInfo).Returns(gbx.Object);
+
+			gearbox = gbx;
 			return shiftStrategy;
 		}
 
