@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		private static VehicleClass DetectVehicleClass(IVehicleEngineeringInputData data)
 		{
-			var segmentTruck = DeclarationData.GetTruckSegment(data);
+			var segmentTruck = DeclarationData.GetTruckSegment(data, throwException: false);
 			if (segmentTruck.Segment.Found) {
 				return segmentTruck.Segment.VehicleClass;
 			}
