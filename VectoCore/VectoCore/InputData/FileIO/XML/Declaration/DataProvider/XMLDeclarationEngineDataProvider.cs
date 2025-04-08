@@ -411,18 +411,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
     }
 
-    public class XMLDeclarationEngineDataProvider_DEV_V211 : XMLDeclarationEngineDataProviderV23
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_DEV_V211;
-
-		public new static readonly string QUALIFIED_XSD_TYPE =
-			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-        public XMLDeclarationEngineDataProvider_DEV_V211(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
-
-
-	}
-
 	public class XMLDeclarationMultistagePrimaryVehicleBusEngineDataProviderV01 : XMLDeclarationEngineDataProviderV23
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
