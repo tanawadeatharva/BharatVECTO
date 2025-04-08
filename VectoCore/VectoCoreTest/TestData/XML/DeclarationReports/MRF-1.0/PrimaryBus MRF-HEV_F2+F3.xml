@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mrf:VectoOutput xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v1.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput" xmlns:mrf0.8="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.8" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput file:///W:/VectoCore/VectoCore/Resources/XSD/VectoOutputManufacturer.xsd">
+	<mrf:Data xsi:type="HEV-Fx_PrimaryBusManufacturerOutputDataType" id="MRF-Lorry_F2_F3">
+		<Vehicle>
+			<Manufacturer>a</Manufacturer>
+			<ManufacturerAddress>token</ManufacturerAddress>
+			<Model>a</Model>
+			<VIN>a</VIN>
+			<VehicleCategory>N2</VehicleCategory>
+			<AxleConfiguration>4x2</AxleConfiguration>
+			<TechnicalPermissibleMaximumLadenMass unit="kg">3500</TechnicalPermissibleMaximumLadenMass>
+			<VehicleGroup>String</VehicleGroup>
+			<VehicleGroupCO2>a</VehicleGroupCO2>
+			<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
+			<HybridElectricHDV>false</HybridElectricHDV>
+			<FCHVArchitecture>E2</FCHVArchitecture>
+			<OffVehicleChargingCapability>true</OffVehicleChargingCapability>
+			<ADAS>
+				<PredictiveCruiseControl>true</PredictiveCruiseControl>
+			</ADAS>
+			<Components xsi:type="HEV-Multiple-Fx-PrimaryBusComponentsType">
+				<FuelCellSystem>
+					<FuelCellModule>
+						<Model>a</Model>
+						<CertificationNumber>token</CertificationNumber>
+						<CertificationMethod>String</CertificationMethod>
+						<FCSRatedPower>0</FCSRatedPower>
+						<Count>1</Count>
+					</FuelCellModule>
+				</FuelCellSystem>
+				<REESSSpecifications>
+					<Battery stringId="1">
+						<Model>a</Model>
+						<CertificationNumber>token</CertificationNumber>
+						<CertificationMethod>String</CertificationMethod>
+						<NominalVoltage>0</NominalVoltage>
+						<TotalStorageCapacity unit="kWh">0</TotalStorageCapacity>
+						<TotalUsableCapacityInSimulation unit="kWh">0</TotalUsableCapacityInSimulation>
+					</Battery>
+				</REESSSpecifications>
+				<Powertrain axleNumber="1" xsi:type="PowertrainEM2Type">
+					<ElectricMachine>
+						<Position>2</Position>
+						<CountAtPosition>1</CountAtPosition>
+						<ElectricMachineSystem>
+							<Model>a</Model>
+							<CertificationNumber/>
+							<ElectricMachineType/>
+							<CertificationMethod/>
+							<RatedPower>120000</RatedPower>
+							<VoltageLevels>
+								<VoltageLevel>
+									<MaxContinuousPower>100000</MaxContinuousPower>
+								</VoltageLevel>
+							</VoltageLevels>
+						</ElectricMachineSystem>
+					</ElectricMachine>
+					<Transmission>
+						<Model>b</Model>
+						<CertificationNumber/>
+						<CertificationMethod/>
+						<Type>AMT</Type>
+						<NrOfGears>3</NrOfGears>
+						<FinalGearRatio>1.000</FinalGearRatio>
+					</Transmission>
+					<Retarder>
+						<RetarderType/>
+					</Retarder>
+					<Axlegear>
+						<Model>c</Model>
+						<CertificationNumber/>
+						<CertificationMethod>Measured</CertificationMethod>
+						<AxleType>Single portal axle</AxleType>
+						<Ratio>3.000	</Ratio>
+					</Axlegear>
+				</Powertrain>
+				<Powertrain axleNumber="2" xsi:type="PowertrainEM3Type">
+					<ElectricMachine>
+						<Position>3</Position>
+						<CountAtPosition>1</CountAtPosition>
+						<ElectricMachineSystem>
+							<Model>a</Model>
+							<CertificationNumber>token</CertificationNumber>
+							<ElectricMachineType>String</ElectricMachineType>
+							<CertificationMethod>String</CertificationMethod>
+							<RatedPower>0</RatedPower>
+							<VoltageLevels>
+								<VoltageLevel>
+									<MaxContinuousPower>0</MaxContinuousPower>
+								</VoltageLevel>
+							</VoltageLevels>
+						</ElectricMachineSystem>
+					</ElectricMachine>
+					<Retarder>
+						<RetarderType>String</RetarderType>
+					</Retarder>
+					<Axlegear>
+						<Model>a</Model>
+						<CertificationNumber>token</CertificationNumber>
+						<CertificationMethod>Measured</CertificationMethod>
+						<AxleType>Single reduction axle</AxleType>
+						<Ratio>3.000</Ratio>
+					</Axlegear>
+				</Powertrain>
+				<AxleWheels>
+					<Axle axleNumber="1">
+						<Tyre>
+							<TyreDimension>asdf</TyreDimension>
+							<CertificationNumber/>
+							<SpecificRRC>0.0055</SpecificRRC>
+							<DigestValue>asdf</DigestValue>
+						</Tyre>
+					</Axle>
+					<Axle axleNumber="2">
+						<Tyre>
+							<TyreDimension/>
+							<CertificationNumber/>
+							<SpecificRRC>0.0055</SpecificRRC>
+							<DigestValue/>
+						</Tyre>
+					</Axle>
+				</AxleWheels>
+				<Auxiliaries>
+					<SteeringPumpTechnology>Dual displacement</SteeringPumpTechnology>
+					<ElectricSystem>
+					</ElectricSystem>
+					<PneumaticSystem>
+						<Technology>Large Supply</Technology>
+						<SmartRegenerationSystem>true</SmartRegenerationSystem>
+						<AirsuspensionControl>mechanic</AirsuspensionControl>
+					</PneumaticSystem>
+				</Auxiliaries>
+			</Components>
+		</Vehicle>
+		<InputDataSignature>
+			<di:Reference>
+				<di:DigestMethod Algorithm="http://www.altova.com/"/>
+				<di:DigestValue>UjBsR09EbGhjZ0dTQUxNQUFBUUNBRU1tQ1p0dU1GUXhEUzhi</di:DigestValue>
+			</di:Reference>
+		</InputDataSignature>
+		<Results>
+			<Status>success</Status>
+			<Result xsi:type="ResultErrorType" status="error">
+				<Mission>asion</Mission>
+				<SimulationParameters>
+					<TotalVehicleMass unit="t">3.1415926535897900073734945</TotalVehicleMass>
+					<Payload unit="t">3.1415926535897900073734945</Payload>
+				</SimulationParameters>
+				<VehicleGroup>String</VehicleGroup>
+				<Error/>
+				<ErrorDetails/>
+			</Result>
+		</Results>
+		<ApplicationInformation>
+			<SimulationToolVersion>String</SimulationToolVersion>
+			<Date>2017-01-01T00:00:00Z</Date>
+		</ApplicationInformation>
+	</mrf:Data>
+	<mrf:Signature>
+		<di:Reference>
+			<di:DigestMethod Algorithm="http://www.altova.com/"/>
+			<di:DigestValue>UjBsR09EbGhjZ0dTQUxNQUFBUUNBRU1tQ1p0dU1GUXhEUzhi</di:DigestValue>
+		</di:Reference>
+	</mrf:Signature>
+</mrf:VectoOutput>
