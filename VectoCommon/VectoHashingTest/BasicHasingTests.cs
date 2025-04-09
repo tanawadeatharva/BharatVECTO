@@ -75,6 +75,7 @@ namespace VectoHashingTest
 		public const string v3_Axlegear = @"TestData/XML/v3-validation/Axlegear_SIGNED.xml";
 		public const string v3_Angledrive = @"TestData/XML/v3-validation/Angledrive_SIGNED.xml";
 		public const string v3_ADC = @"TestData/XML/v3-validation/ADC_SIGNED.xml";
+		public const string v3_FuelCell = @"TestData/XML/v3-validation/FuelCell_Measurement_v26_SIGNED.xml";
 
 		public string[] Canonicalization;
 		public string DigestAlgorithm;
@@ -110,6 +111,7 @@ namespace VectoHashingTest
 		TestCase("AXL-asdf", v3_Axlegear, "YmFY7xgB9vMOailhGDLaDqdBUUr0+z1W639012penoc=", TestName="Hash_v3_Axlegear"),
 		TestCase("ANGL-asdf", v3_Angledrive, "43MVTl2L+7ymEoGrOc4yosrDG789RR0LoyYUg6z2e5c=", TestName="Hash_v3_Angledrive"),
 		TestCase("ADC-123", v3_ADC, "bW4LoHHne1A1L+y2bGbJBa/rKQ7WrZS3hfLPRNpHHKI=", TestName="Hash_v3_ADC"),
+        TestCase("FuelCell", v3_FuelCell, "vb0raVf5I8hQzQS3MQtUsPgeBfNSk7V2G8BZnvSOeCc=", TestName = "Hash_v3_FuelCell"),
 		]
 		public void HashXMLElement(string elementToHash, string xmlFile, string hashValue)
 		{ 
