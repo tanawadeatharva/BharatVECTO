@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mrf:VectoOutput xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v1.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput" xmlns:mrf0.8="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.8" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput file:///W:/VectoCore/VectoCore/Resources/XSD/VectoOutputManufacturer.xsd">
-	<mrf:Data xsi:type="PEV-Ex-IEPC_LorryManufacturerOutputDataType" id="MRF-Lorry_E2_E3">
+	<mrf:Data xsi:type="HEVCompletedBusManufacturerOutputDataType" id="MRF-Lorry_P2">
 		<Vehicle>
-			<Manufacturer>a</Manufacturer>
-			<ManufacturerAddress>token</ManufacturerAddress>
+			<Manufacturers>
+				<Step Count="1">
+					<Manufacturer>a</Manufacturer>
+					<ManufacturerAddress>token</ManufacturerAddress>
+				</Step>
+				<Step Count="2">
+					<Manufacturer>b</Manufacturer>
+					<ManufacturerAddress>c</ManufacturerAddress>
+				</Step>
+			</Manufacturers>
 			<Model>a</Model>
 			<VIN>a</VIN>
 			<VehicleCategory>N2</VehicleCategory>
@@ -14,72 +22,56 @@
 			<CorrectedActualMass unit="kg">500</CorrectedActualMass>
 			<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 			<HybridElectricHDV>false</HybridElectricHDV>
-			<SleeperCab>true</SleeperCab>
-			<PEVArchitecture>E2</PEVArchitecture>
-			<OffVehicleChargingCapability>true</OffVehicleChargingCapability>
+			<ClassBus>I</ClassBus>
+			<NumberPassengersUpperDeck>0</NumberPassengersUpperDeck>
+			<NumberPassengersLowerDeck>0</NumberPassengersLowerDeck>
+			<BodyworkCode>CA</BodyworkCode>
+			<LowEntry>true</LowEntry>
+			<HeightIntegratedBody>0</HeightIntegratedBody>
+			<VehicleLength>0</VehicleLength>
+			<VehicleWidth>0</VehicleWidth>
+			<DoorDriveTechnology>electric</DoorDriveTechnology>
+			<TankSystem>tank system</TankSystem>
 			<ADAS>
+				<EngineStopStart>true</EngineStopStart>
 				<PredictiveCruiseControl>true</PredictiveCruiseControl>
 			</ADAS>
 			<SimulationToolLicenseNumber>a</SimulationToolLicenseNumber>
-			<Components xsi:type="PEV-E4-LorryComponentsType">
-				<REESSSpecifications>
-					<Battery stringId="1">
-						<Model>a</Model>
-						<CertificationNumber>token</CertificationNumber>
-						<CertificationMethod>String</CertificationMethod>
-						<NominalVoltage>0</NominalVoltage>
-						<TotalStorageCapacity unit="kWh">0</TotalStorageCapacity>
-						<TotalUsableCapacityInSimulation unit="kWh">0</TotalUsableCapacityInSimulation>
-					</Battery>
-				</REESSSpecifications>
-				<ElectricMachine>
-					<Position>2</Position>
-					<CountAtPosition>1</CountAtPosition>
-					<ElectricMachineSystem>
-						<Model>a</Model>
-						<CertificationNumber/>
-						<ElectricMachineType/>
-						<CertificationMethod/>
-						<RatedPower>120000</RatedPower>
-						<VoltageLevels>
-							<VoltageLevel>
-								<MaxContinuousPower>100000</MaxContinuousPower>
-							</VoltageLevel>
-						</VoltageLevels>
-					</ElectricMachineSystem>
-				</ElectricMachine>
-				<AxleWheels>
-					<Axle axleNumber="1">
-						<Tyre>
-							<TyreDimension>asdf</TyreDimension>
-							<CertificationNumber/>
-							<SpecificRRC>0.0055</SpecificRRC>
-							<DigestValue>asdf</DigestValue>
-						</Tyre>
-					</Axle>
-					<Axle axleNumber="2">
-						<Tyre>
-							<TyreDimension/>
-							<CertificationNumber/>
-							<SpecificRRC>0.0055</SpecificRRC>
-							<DigestValue/>
-						</Tyre>
-					</Axle>
-				</AxleWheels>
-				<Auxiliaries>
-					<SteeringPumpTechnology>Dual displacement</SteeringPumpTechnology>
-					<PneumaticSystem>
-						<Technology>Large Supply</Technology>
-					</PneumaticSystem>
-					<ElectricSystem>
-						<LEDHeadLights>true</LEDHeadLights>
-					</ElectricSystem>
-				</Auxiliaries>
+			<Components>
 				<AirDrag>
 					<CertificationMethod>measured</CertificationMethod>
-					<CdxA>4.50</CdxA>
-					<DigestValue>asdf</DigestValue>
+					<CertificationNumber>asdf</CertificationNumber>
+					<CFDMethodLicenseNumber>xxx</CFDMethodLicenseNumber>
+					<DeltaCdxACFD>0.00</DeltaCdxACFD>
+					<CdxA>1.00</CdxA>
 				</AirDrag>
+				<Auxiliaries>
+					<ElectricSystem>
+						<DayRunningLightsLED>true</DayRunningLightsLED>
+						<HeadLightsLED>true</HeadLightsLED>
+						<PositionLightsLED>true</PositionLightsLED>
+						<BrakeLightsLED>true</BrakeLightsLED>
+						<InteriorLightsLED>true</InteriorLightsLED>
+					</ElectricSystem>
+					<HVACSystem>
+						<SystemConfiguration>text</SystemConfiguration>
+						<HeatPumpTypeDriverCompartment>
+							<Cooling>none</Cooling>
+							<Heating>none</Heating>
+						</HeatPumpTypeDriverCompartment>
+						<HeatPumpTypePassengerCompartment>
+							<Cooling>none</Cooling>
+							<Heating>none</Heating>
+						</HeatPumpTypePassengerCompartment>
+						<DoubleGlazing>true</DoubleGlazing>
+						<AdjustableAuxiliaryHeater>true</AdjustableAuxiliaryHeater>
+						<SeparateAirDistributionDucts>true</SeparateAirDistributionDucts>
+						<AuxiliaryHeaterPower>0</AuxiliaryHeaterPower>
+						<WaterElectricHeater>true</WaterElectricHeater>
+						<AirElectricHeater>true</AirElectricHeater>
+						<OtherHeatingTechnology>true</OtherHeatingTechnology>
+					</HVACSystem>
+				</Auxiliaries>
 			</Components>
 		</Vehicle>
 		<InputDataSignature>

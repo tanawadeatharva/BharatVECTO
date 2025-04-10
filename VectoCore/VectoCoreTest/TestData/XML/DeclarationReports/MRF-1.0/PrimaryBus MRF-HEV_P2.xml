@@ -20,6 +20,7 @@
 				<EngineStopStart>true</EngineStopStart>
 				<PredictiveCruiseControl>true</PredictiveCruiseControl>
 			</ADAS>
+			<SimulationToolLicenseNumber>a</SimulationToolLicenseNumber>
 			<Components xsi:type="HEV-Px_IHPC-PrimaryBusComponentsType">
 				<Engine>
 					<Model>a</Model>

@@ -22,6 +22,7 @@
 				<EngineStopStart>true</EngineStopStart>
 				<PredictiveCruiseControl>true</PredictiveCruiseControl>
 			</ADAS>
+			<SimulationToolLicenseNumber>a</SimulationToolLicenseNumber>
 			<Components xsi:type="HEV-Multiple-Sx-LorryComponentsType">
 				<Engine>
 					<Model>a</Model>

@@ -18,6 +18,7 @@
 			<ADAS>
 				<PredictiveCruiseControl>true</PredictiveCruiseControl>
 			</ADAS>
+			<SimulationToolLicenseNumber>a</SimulationToolLicenseNumber>
 			<Components xsi:type="HEV-Multiple-Fx-PrimaryBusComponentsType">
 				<FuelCellSystem>
 					<FuelCellModule>

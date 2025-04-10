@@ -18,6 +18,7 @@
 			<ADAS>
 				<PredictiveCruiseControl>true</PredictiveCruiseControl>
 			</ADAS>
+			<SimulationToolLicenseNumber>a</SimulationToolLicenseNumber>
 			<Components xsi:type="PEV-E3-PrimaryBusComponentsType">
 				<REESSSpecifications>
 					<Battery stringId="1">
