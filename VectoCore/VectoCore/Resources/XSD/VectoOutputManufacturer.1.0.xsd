@@ -299,6 +299,7 @@ Changelog
 					<xs:documentation>I.1.12.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="SimulationToolLicenseNumber" type="mrf:SimulationToolLicenceNumberType"/>
 			<xs:element name="Components">
 				<xs:complexType>
 					<xs:sequence>
@@ -516,6 +517,7 @@ Changelog
 					<xs:documentation>I.1.11</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="SimulationToolLicenseNumber" type="mrf:SimulationToolLicenceNumberType"/>
 			<xs:element name="Components" type="mrf:ConventionalPrimaryBusComponentsType"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -895,6 +897,11 @@ Changelog
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="FCHVADASType">
+		<xs:sequence>
+			<xs:group ref="mrf:FCHVADASGroup"/>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="FuelCellSystemType">
 		<xs:sequence>
 			<xs:element name="FuelCellModule" type="mrf:FuelCellType" maxOccurs="unbounded"/>
@@ -945,11 +952,25 @@ Changelog
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="HEVCompletedBusManufacturerOutputDataType">
+	<xs:complexType name="FCHVCompletedBusAuxOutputType">
+		<xs:sequence>
+			<xs:element name="ElectricSystem" type="mrf:CompletedBusElectricSystemType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HVACSystem" type="mrf:xEV_CompletedBusHVACSystemType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="FCHVCompletedBusManufacturerOutputDataType">
 		<xs:complexContent>
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
-					<xs:element name="Vehicle" type="mrf:HEV-CompletedBusVehicleOutputType"/>
+					<xs:element name="Vehicle" type="mrf:FCHVCompletedBusVehicleOutputType"/>
 					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>I.1.3.3.</xs:documentation>
@@ -980,10 +1001,69 @@ Changelog
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="HEV-CompletedBusVehicleOutputType">
+	<xs:complexType name="FCHVCompletedBusVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:HEV-CompletedBusVehicleOutputTypeGroup"/>
+			<xs:element name="ADAS" type="mrf:FCHVADASType"/>
+			<xs:element name="SimulationToolLicenseNumber" type="mrf:SimulationToolLicenceNumberType"/>
+			<xs:element name="Components">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="AirDrag" type="mrf:AirdragType">
+							<xs:annotation>
+								<xs:documentation>I.1.8.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="Auxiliaries" type="mrf:FCHVCompletedBusAuxOutputType">
+							<xs:annotation>
+								<xs:documentation>I.1.10.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEVCompletedBusManufacturerOutputDataType">
+		<xs:complexContent>
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="mrf:HEVCompletedBusVehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.2.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="HEVCompletedBusVehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:HEV-CompletedBusVehicleOutputTypeGroup"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
+			<xs:element name="SimulationToolLicenseNumber" type="mrf:SimulationToolLicenceNumberType"/>
 			<xs:element name="Components">
 				<xs:complexType>
 					<xs:sequence>
@@ -1216,12 +1296,14 @@ Changelog
 	<xs:complexType name="HEV-Fx-LorryVehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:FCHV-LorryVehicleOutputTypeGroup"/>
+			<xs:element name="SimulationToolLicenseNumber" type="mrf:SimulationToolLicenceNumberType"/>
 			<xs:element name="Components" type="mrf:AbstractComponents-HEV-F-LorryType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-Fx-PrimaryBusVehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:FCHV-PrimaryBus-VehicleOutputTypeGroup"/>
+			<xs:element name="SimulationToolLicenseNumber" type="mrf:SimulationToolLicenceNumberType"/>
 			<xs:element name="Components" type="mrf:AbstractComponents-HEV-F_PrimaryBusType"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -1579,6 +1661,7 @@ Changelog
 		<xs:sequence>
 			<xs:group ref="mrf:HEV-LorryVehicleOutputTypeGroup"/>
 			<xs:element name="EngineTorqueLimitations" type="mrf:EngineTorqueLimitsType" minOccurs="0"/>
+			<xs:element name="SimulationToolLicenseNumber" type="mrf:SimulationToolLicenceNumberType"/>
 			<xs:element name="Components" type="mrf:HEV-Px_IHPC-LorryComponentsType"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -1671,6 +1754,7 @@ Changelog
 					<xs:documentation>I.1.11.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="SimulationToolLicenseNumber" type="mrf:SimulationToolLicenceNumberType"/>
 			<xs:element name="Components" type="mrf:HEV-Px_IHPC-PrimaryBusComponentsType"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -1918,12 +2002,14 @@ Changelog
 	<xs:complexType name="HEV-Sx-LorryVehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:HEV-LorryVehicleOutputTypeGroup"/>
+			<xs:element name="SimulationToolLicenseNumber" type="mrf:SimulationToolLicenceNumberType"/>
 			<xs:element name="Components" type="mrf:AbstractComponents-HEV-S-LorryType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-Sx-PrimaryBusVehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:HEV-PrimaryBus-VehicleOutputTypeGroup"/>
+			<xs:element name="SimulationToolLicenseNumber" type="mrf:SimulationToolLicenceNumberType"/>
 			<xs:element name="Components" type="mrf:AbstractComponents-HEV-S_PrimaryBusType"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -2001,6 +2087,7 @@ Changelog
 					<xs:documentation>I.1.12.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="SimulationToolLicenseNumber" type="mrf:SimulationToolLicenceNumberType"/>
 			<xs:element name="Components">
 				<xs:complexType>
 					<xs:sequence>
@@ -2231,12 +2318,14 @@ Changelog
 	<xs:complexType name="PEV-Ex-IEPC-LorryVehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:PEV-LorryVehicleOutputTypeGroup"/>
+			<xs:element name="SimulationToolLicenseNumber" type="mrf:SimulationToolLicenceNumberType"/>
 			<xs:element name="Components" type="mrf:AbstractComponents-PEV-LorryType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-Ex-IEPC-PrimaryBusVehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:PEV-PrimaryBus-VehicleOutputTypeGroup"/>
+			<xs:element name="SimulationToolLicenseNumber" type="mrf:SimulationToolLicenceNumberType"/>
 			<xs:element name="Components" type="mrf:AbstractComponents-PEV-PrimaryBusType"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -2611,6 +2700,36 @@ Changelog
 										<xs:documentation>I.2.3.13 - I.2.3.16 / #68</xs:documentation>
 									</xs:annotation>
 								</xs:element>
+								<xs:sequence minOccurs="0">
+									<xs:element name="FC_ZEV_AuxHeater">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="FuelConsumption" type="mrf:FuelConsumptionType" maxOccurs="unbounded">
+													<xs:annotation>
+														<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+											<xs:attribute name="type" type="xs:string" use="required"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="CO2_ZEV_AuxHeater">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="CO2" type="mrf:CO2Type" maxOccurs="unbounded">
+													<xs:annotation>
+														<xs:documentation>I.2.3.13 - I.2.3.16 / #68</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+								<xs:element name="Ranges" minOccurs="0">
+									<xs:complexType>
+										<xs:group ref="mrf:HydrogenRangesSequenceGroup"/>
+									</xs:complexType>
+								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -2694,9 +2813,135 @@ Changelog
 										<xs:documentation>I.2.3.13 - I.2.3.16 / #68</xs:documentation>
 									</xs:annotation>
 								</xs:element>
-								<xs:group ref="mrf:ElectricRangeSequenceGroup"/>
+								<xs:sequence minOccurs="0">
+									<xs:element name="FC_ZEV_AuxHeater">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="FuelConsumption" type="mrf:FuelConsumptionType" maxOccurs="unbounded">
+													<xs:annotation>
+														<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+											<xs:attribute name="type" type="xs:string" use="required"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="CO2_ZEV_AuxHeater">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="CO2" type="mrf:CO2Type" maxOccurs="unbounded">
+													<xs:annotation>
+														<xs:documentation>I.2.3.13 - I.2.3.16 / #68</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+								<xs:element name="Ranges" minOccurs="2" maxOccurs="2">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:group ref="mrf:ElectricRangeSequenceGroup"/>
+											<xs:element name="HydrogenRange" type="mrf:DrivingRangeType" minOccurs="0">
+												<xs:annotation>
+													<xs:documentation>I.2.4.3.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="lifetime" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
 								<xs:element name="UtilityFactor" type="xs:double"/>
 							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ResultSuccessFCHVType">
+		<xs:complexContent>
+			<xs:extension base="mrf:AbstractResultType">
+				<xs:sequence>
+					<xs:group ref="mrf:ResultSuccessSimulationParametersGroup"/>
+					<xs:element name="OVCMode" maxOccurs="2">
+						<xs:annotation>
+							<xs:documentation>I.2.1.4.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="VehiclePerformance" type="mrf:VehiclePerformanceType">
+									<xs:annotation>
+										<xs:documentation>I.2.2.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Fuel" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="FuelConsumption" type="mrf:FuelConsumptionType" maxOccurs="unbounded">
+												<xs:annotation>
+													<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="type" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="ElectricEnergy" type="mrf:ElectricEnergyType" minOccurs="0"/>
+								<xs:sequence minOccurs="0">
+									<xs:element name="FC_ZEV_AuxHeater">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="FuelConsumption" type="mrf:FuelConsumptionType" maxOccurs="unbounded">
+													<xs:annotation>
+														<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+											<xs:attribute name="type" type="xs:string" use="required"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="CO2_ZEV_AuxHeater">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="CO2" type="mrf:CO2Type" maxOccurs="unbounded">
+													<xs:annotation>
+														<xs:documentation>I.2.3.13 - I.2.3.16 / #68</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+								<xs:element name="Ranges" maxOccurs="2">
+									<xs:complexType>
+										<xs:choice>
+											<xs:group ref="mrf:ElectricRangeSequenceGroup"/>
+											<xs:sequence>
+												<xs:element name="ZeroCO2EmissionsRange" type="mrf:DrivingRangeType">
+													<xs:annotation>
+														<xs:documentation>I.2.4.3.</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element name="HydrogenRange" type="mrf:DrivingRangeType">
+													<xs:annotation>
+														<xs:documentation>I.2.4.3.</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+										</xs:choice>
+										<xs:attribute name="lifetime" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="type" use="required">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="charge depleting"/>
+										<xs:enumeration value="charge sustaining"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
 						</xs:complexType>
 					</xs:element>
 				</xs:sequence>
@@ -2738,7 +2983,14 @@ Changelog
 										</xs:complexType>
 									</xs:element>
 								</xs:sequence>
-								<xs:group ref="mrf:ElectricRangeSequenceGroup"/>
+								<xs:element name="Ranges" minOccurs="2" maxOccurs="2">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:group ref="mrf:ElectricRangeSequenceGroup"/>
+										</xs:sequence>
+										<xs:attribute name="lifetime" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -3353,7 +3605,7 @@ Changelog
 						<xs:element name="Step">
 							<xs:complexType>
 								<xs:group ref="mrf:ManufacturerGroup"/>
-								<xs:attribute name="Count" type="xs:int"/>
+								<xs:attribute name="Count" type="xs:int" use="required"/>
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
@@ -3473,7 +3725,7 @@ Changelog
 					<xs:documentation>I.1.1.28.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType" minOccurs="0">
+			<xs:element name="TankSystem" type="mrf:TankSystemType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>I.1.1.29.</xs:documentation>
 				</xs:annotation>
@@ -3569,41 +3821,20 @@ Changelog
 	</xs:group>
 	<xs:group name="ElectricRangeSequenceGroup">
 		<xs:sequence>
-			<xs:element name="ActualChargeDepletingRange">
+			<xs:element name="ActualChargeDepletingRange" type="mrf:DrivingRangeType">
 				<xs:annotation>
 					<xs:documentation>I.2.4.1.</xs:documentation>
 				</xs:annotation>
-				<xs:complexType>
-					<xs:simpleContent>
-						<xs:extension base="xs:double">
-							<xs:attribute name="unit" type="mrf:DistanceUnitType" use="required"/>
-						</xs:extension>
-					</xs:simpleContent>
-				</xs:complexType>
 			</xs:element>
-			<xs:element name="EquivalentAllElectricRange">
+			<xs:element name="EquivalentAllElectricRange" type="mrf:DrivingRangeType">
 				<xs:annotation>
 					<xs:documentation>I.2.4.2.</xs:documentation>
 				</xs:annotation>
-				<xs:complexType>
-					<xs:simpleContent>
-						<xs:extension base="xs:double">
-							<xs:attribute name="unit" type="mrf:DistanceUnitType" use="required"/>
-						</xs:extension>
-					</xs:simpleContent>
-				</xs:complexType>
 			</xs:element>
-			<xs:element name="ZeroCO2EmissionsRange">
+			<xs:element name="ZeroCO2EmissionsRange" type="mrf:DrivingRangeType">
 				<xs:annotation>
 					<xs:documentation>I.2.4.3.</xs:documentation>
 				</xs:annotation>
-				<xs:complexType>
-					<xs:simpleContent>
-						<xs:extension base="xs:double">
-							<xs:attribute name="unit" type="mrf:DistanceUnitType" use="required"/>
-						</xs:extension>
-					</xs:simpleContent>
-				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
@@ -3614,6 +3845,52 @@ Changelog
 			<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
 				<xs:annotation>
 					<xs:documentation>I.1.1.10.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="FCHVADASGroup">
+		<xs:sequence>
+			<xs:element name="PredictiveCruiseControl" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.12.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="FCHV-LorryVehicleOutputTypeGroup">
+		<xs:sequence>
+			<xs:group ref="mrf:LorryGeneralVehicleOutputGroup"/>
+			<xs:element name="SleeperCab" type="v1.0:SleeperCabType">
+				<xs:annotation>
+					<xs:documentation>1.1.13 Sleeper cab</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:group ref="mrf:FCHVVehicleSequenceGroup"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="FCHV-PrimaryBus-VehicleOutputTypeGroup">
+		<xs:sequence>
+			<xs:group ref="mrf:PrimaryBusGeneralVehicleOutputGroup"/>
+			<xs:group ref="mrf:FCHVVehicleSequenceGroup"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="FCHVVehicleSequenceGroup">
+		<xs:sequence>
+			<xs:element name="FCHVArchitecture" type="v2.4:ArchitectureIDType">
+				<xs:annotation>
+					<xs:documentation>I.1.1.15.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OffVehicleChargingCapability" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.1.16.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DynamicChargingTechnology" type="mrf:DynamicChargingTechnologyType" minOccurs="0"/>
+			<xs:element name="ADAS" type="mrf:PEVADASType">
+				<xs:annotation>
+					<xs:documentation>I.1.12.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
@@ -3697,7 +3974,7 @@ Changelog
 					<xs:documentation>I.1.1.28.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType" minOccurs="0">
+			<xs:element name="TankSystem" type="mrf:TankSystemType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>I.1.1.29</xs:documentation>
 				</xs:annotation>
@@ -3878,23 +4155,6 @@ Changelog
 			<xs:group ref="mrf:PEVVehicleSequenceGroup"/>
 		</xs:sequence>
 	</xs:group>
-	<xs:group name="FCHV-PrimaryBus-VehicleOutputTypeGroup">
-		<xs:sequence>
-			<xs:group ref="mrf:PrimaryBusGeneralVehicleOutputGroup"/>
-			<xs:group ref="mrf:FCHVVehicleSequenceGroup"/>
-		</xs:sequence>
-	</xs:group>
-	<xs:group name="FCHV-LorryVehicleOutputTypeGroup">
-		<xs:sequence>
-			<xs:group ref="mrf:LorryGeneralVehicleOutputGroup"/>
-			<xs:element name="SleeperCab" type="v1.0:SleeperCabType">
-				<xs:annotation>
-					<xs:documentation>1.1.13 Sleeper cab</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:group ref="mrf:FCHVVehicleSequenceGroup"/>
-		</xs:sequence>
-	</xs:group>
 	<xs:group name="PEV-LorryVehicleOutputTypeSequenceGroup">
 		<xs:sequence>
 			<xs:element name="SleeperCab" type="v1.0:SleeperCabType">
@@ -3915,26 +4175,6 @@ Changelog
 	<xs:group name="PEVVehicleSequenceGroup">
 		<xs:sequence>
 			<xs:element name="PEVArchitecture" type="v2.4:ArchitectureIDType">
-				<xs:annotation>
-					<xs:documentation>I.1.1.15.</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="OffVehicleChargingCapability" type="xs:boolean">
-				<xs:annotation>
-					<xs:documentation>I.1.1.16.</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="DynamicChargingTechnology" type="mrf:DynamicChargingTechnologyType" minOccurs="0"/>
-			<xs:element name="ADAS" type="mrf:PEVADASType">
-				<xs:annotation>
-					<xs:documentation>I.1.12.</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
-	</xs:group>
-	<xs:group name="FCHVVehicleSequenceGroup">
-		<xs:sequence>
-			<xs:element name="FCHVArchitecture" type="v2.4:ArchitectureIDType">
 				<xs:annotation>
 					<xs:documentation>I.1.1.15.</xs:documentation>
 				</xs:annotation>
@@ -4139,4 +4379,39 @@ Changelog
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
+	<xs:group name="xEVCompletedBusADASGroup">
+		<xs:sequence>
+			<xs:element name="EngineStopStart" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>I.1.12.1.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PredictiveCruiseControl" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>I.1.12.4.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="HydrogenRangesSequenceGroup">
+		<xs:sequence>
+			<xs:element name="ZeroCO2EmissionRange" type="mrf:DrivingRangeType">
+				<xs:annotation>
+					<xs:documentation>I.2.4.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HydrogenRange" type="mrf:DrivingRangeType">
+				<xs:annotation>
+					<xs:documentation>I.2.4.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:complexType name="DrivingRangeType">
+		<xs:simpleContent>
+			<xs:extension base="xs:double">
+				<xs:attribute name="unit" type="mrf:DistanceUnitType" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
 </xs:schema>
