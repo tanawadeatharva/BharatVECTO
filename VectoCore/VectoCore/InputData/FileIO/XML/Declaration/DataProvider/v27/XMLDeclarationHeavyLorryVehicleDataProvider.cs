@@ -42,10 +42,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 
         public override bool HybridElectricHDV => true;
 
-        public override VectoSimulationJobType VehicleType => Components.ElectricMachines.Entries.Any(em => em.ElectricMachine.IsIHPC()) 
-            ? VectoSimulationJobType.IHPC 
+        public override VectoSimulationJobType VehicleType => Components.ElectricMachines.Entries.Any(em => em.ElectricMachine.IsIHPC())
+            ? VectoSimulationJobType.IHPC
             : VectoSimulationJobType.ParallelHybridVehicle;
-        
+
         public override bool OVC => GetBool("OVC");
 
         public override bool BatteryOnlyMode => GetBool("BatteryOnlyMode");
@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
         public override string PowertrainPositionPrefix => "E";
-                
+
         public override VectoSimulationJobType VehicleType => VectoSimulationJobType.SerialHybridVehicle;
 
         public override bool HybridElectricHDV => true;
@@ -101,13 +101,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
         public XMLDeclaration_PEV_HeavyLorry_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-            : base(jobData, xmlNode, sourceFile) 
+            : base(jobData, xmlNode, sourceFile)
         {
             if (!OVC)
             {
                 throw new VectoException("OVC must be set to true for PEVs.");
             }
-        
+
             if (!BatteryOnlyMode)
             {
                 throw new VectoException("BatteryOnlyMode must be set to true for PEVs.");
@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
         public XMLDeclaration_PEV_IEPC_HeavyLorry_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-            : base(jobData, xmlNode, sourceFile) 
+            : base(jobData, xmlNode, sourceFile)
         {}
 
         public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_E;
@@ -148,10 +148,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 		public new const string XSD_TYPE = "Vehicle_FCHV_Fx_HeavyLorryDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-        public XMLDeclaration_FCHV_HeavyLorry_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-            : base(jobData, xmlNode, sourceFile) { }
-
         public override string PowertrainPositionPrefix => "F";
+
+		public XMLDeclaration_FCHV_HeavyLorry_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
+			: base(jobData, xmlNode, sourceFile)
+		{
+		}
+
+		#region Overrides of XMLDeclarationHevPxHeavyLorryDataProviderV24
+
+		public override TableData BoostingLimitations => null;
+
+		public override IList<ITorqueLimitInputData> TorqueLimits => null;
+
+		#endregion
 
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.FCHV;
 
@@ -167,7 +177,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 
 		public XMLDeclaration_FCHV_IEPC_HeavyLorry_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
-		
+
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.FCHV_IEPC;
 
         public override XmlElement PTONode => null;

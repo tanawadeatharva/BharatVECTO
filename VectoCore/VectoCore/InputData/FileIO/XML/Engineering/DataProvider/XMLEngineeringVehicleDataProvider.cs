@@ -274,7 +274,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		protected override DataSourceType SourceType { get; }
 		#endregion
-    }
+	}
 
 
 	internal class XMLEngineeringVehicleDataProviderV10 : XMLEngineeringVehicleDataProviderV07

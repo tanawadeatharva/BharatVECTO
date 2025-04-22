@@ -77,9 +77,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			var vehicle = Factory.CreateVehicleData(version, JobData, vehicleNode, sourceFile, AllowDeprecated);
 
-			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);  	
+			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
 			vehicle.ADASReader =  GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader);
-			vehicle.PTOReader = GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader); 
+			vehicle.PTOReader = GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader);
 
 			return vehicle;
 		}
@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected override IVehicleDeclarationInputData VehicleCreator(string version, XmlNode vehicleNode, string sourceFile)
 		{
 			var vehicle = Factory.CreateVehicleData(version, JobData, vehicleNode, sourceFile, AllowDeprecated);
-			
+
 			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
 			vehicle.ADASReader = vehicle.ADASNode == null ? null : GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader); //null;
 			vehicle.PTOReader = vehicle.PTONode == null ? null : GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader);
@@ -110,31 +110,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return vehicle;
 		}
 	}
-
-    public class XMLJobDataReaderV27 : XMLJobDataReaderV10
-    {
-        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
-
-        public new const string XSD_TYPE = "VectoDeclarationJobType";
-
-        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-        public XMLJobDataReaderV27(IXMLDeclarationJobInputData jobData, XmlNode jobNode, bool allowDeprecated) : base(
-            jobData, jobNode, allowDeprecated)
-        { }
-
-        protected override IVehicleDeclarationInputData VehicleCreator(string version, XmlNode vehicleNode, string sourceFile)
-        {
-            var vehicle = Factory.CreateVehicleData(version, JobData, vehicleNode, sourceFile, AllowDeprecated);
-
-            vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
-            vehicle.ADASReader = vehicle.ADASNode == null ? null : GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader);
-            vehicle.PTOReader = vehicle.PTONode == null ? null : GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader);
-			vehicle.MonitoringReader = (vehicle.MonitoringNode == null) ? null : GetReader(vehicle, vehicle.MonitoringNode, Factory.CreateMonitoringReader);
-
-            return vehicle;
-        }
-    }
 
     // ---------------------------------------------------------------------------------------
 
@@ -161,10 +136,37 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return vehicle;
 		}
 	}
-	
+
 
 	// ---------------------------------------------------------------------------------------
-	
+
+	public class XMLJobDataReaderV27 : XMLJobDataReaderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+
+		public new const string XSD_TYPE = "VectoDeclarationJobType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLJobDataReaderV27(IXMLDeclarationJobInputData jobData, XmlNode jobNode, bool allowDeprecated) : base(
+			jobData, jobNode, allowDeprecated)
+		{ }
+
+		protected override IVehicleDeclarationInputData VehicleCreator(string version, XmlNode vehicleNode, string sourceFile)
+		{
+			var vehicle = Factory.CreateVehicleData(version, JobData, vehicleNode, sourceFile, AllowDeprecated);
+
+			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
+			vehicle.ADASReader = vehicle.ADASNode == null ? null : GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader); //null;
+			vehicle.PTOReader = vehicle.PTONode == null ? null : GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader);
+			vehicle.MonitoringReader = (vehicle.MonitoringNode == null) ? null : GetReader(vehicle, vehicle.MonitoringNode, Factory.CreateMonitoringReader);
+
+			return vehicle;
+		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+
 	public class XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01 : AbstractComponentReader, IXMLJobDataReader
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;

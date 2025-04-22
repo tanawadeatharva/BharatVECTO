@@ -2271,4 +2271,10 @@
   <data name="MRF_OutputDataType_HEV_IEPC_F_LorryManufacturerOutputDataType" xml:space="preserve">
     <value>HEV-IEPC-F_LorryManufacturerOutputDataType</value>
   </data>
+  <data name="Vehicle_H2StorageTechnology" xml:space="preserve">
+    <value>HydrogenStorageTechnology</value>
+  </data>
+  <data name="Vehicle_H2StorageUsableCapacity" xml:space="preserve">
+    <value>H2StorageUsableCapacity</value>
+  </data>
 </root>
