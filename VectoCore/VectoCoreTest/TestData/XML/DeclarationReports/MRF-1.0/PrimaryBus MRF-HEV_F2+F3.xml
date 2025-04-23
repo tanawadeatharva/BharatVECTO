@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mrf:VectoOutput xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v1.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput" xmlns:mrf0.8="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.8" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput file:///W:/VectoCore/VectoCore/Resources/XSD/VectoOutputManufacturer.xsd">
-	<mrf:Data xsi:type="HEV-Fx_PrimaryBusManufacturerOutputDataType" id="MRF-Lorry_F2_F3">
+	<mrf:Data xsi:type="FCHV-Fx_PrimaryBusManufacturerOutputDataType" id="MRF-Lorry_F2_F3">
 		<Vehicle>
 			<Manufacturer>a</Manufacturer>
 			<ManufacturerAddress>token</ManufacturerAddress>
@@ -20,7 +20,7 @@
 				<PredictiveCruiseControl>true</PredictiveCruiseControl>
 			</ADAS>
 			<SimulationToolLicenseNumber>a</SimulationToolLicenseNumber>
-			<Components xsi:type="HEV-Multiple-Fx-PrimaryBusComponentsType">
+			<Components xsi:type="FCHV-Multiple-Fx-PrimaryBusComponentsType">
 				<FuelCellSystem>
 					<FuelCellModule>
 						<Model>a</Model>

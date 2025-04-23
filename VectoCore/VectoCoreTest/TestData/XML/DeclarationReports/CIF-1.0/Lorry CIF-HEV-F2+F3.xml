@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cif:VectoCustomerInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cif="urn:tugraz:ivt:VectoAPI:CustomerOutput" xmlns="urn:tugraz:ivt:VectoAPI:CustomerOutput:v1.0" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput file:///W:/VectoCore/VectoCore/Resources/XSD/VectoOutputCustomer.xsd" xmlns:di="http://www.w3.org/2000/09/xmldsig#">
-	<cif:Data xsi:type="HEV_Fx_LorryOutputType" id="CIF-PEV-E2-Lorry" xmlns:di="http://www.w3.org/2000/09/xmldsig#">
-		<Vehicle xsi:type="HEV_Multiple-Fx_LorryVehicleType">
+	<cif:Data xsi:type="FCHV_Fx_LorryOutputType" id="CIF-PEV-E2-Lorry" xmlns:di="http://www.w3.org/2000/09/xmldsig#">
+		<Vehicle xsi:type="FCHV_Multiple-Fx_LorryVehicleType">
 			<VIN>a</VIN>
 			<VehicleCategory>N2</VehicleCategory>
 			<AxleConfiguration>4x2</AxleConfiguration>
