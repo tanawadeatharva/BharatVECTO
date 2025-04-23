@@ -19,8 +19,9 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:complexType name="Abstract_Conventional_CompltededBusVehicleType" abstract="true"/>
+	<xs:complexType name="Abstract_FCHV_CompletedBusVehicleType" abstract="true"/>
 	<xs:complexType name="Abstract_HEV_CompletedBusVehicleType" abstract="true"/>
-	<xs:complexType name="Abstract_HEV-F_LorryVehicleType" abstract="true"/>
+	<xs:complexType name="Abstract_FCHV_LorryVehicleType" abstract="true"/>
 	<xs:complexType name="Abstract_HEV-S_LorryVehicleType" abstract="true"/>
 	<xs:complexType name="Abstract_PEV_CompletedBusVehicleType" abstract="true"/>
 	<xs:complexType name="Abstract_PEV_LorryVehicleType" abstract="true"/>
@@ -270,6 +271,183 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="FCHV_CompletedBusOutputType">
+		<xs:complexContent>
+			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="Abstract_FCHV_CompletedBusVehicleType"/>
+					<xs:group ref="CompletedBusOutputGroup"/>
+				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV_F2_CompletedBusVehicleType">
+		<xs:complexContent>
+			<xs:extension base="Abstract_FCHV_CompletedBusVehicleType">
+				<xs:sequence>
+					<xs:group ref="FCHVCompletedBusVehicleTypeGroup"/>
+					<xs:group ref="FCHV_CompletedBusArchitectureGroup"/>
+					<xs:element name="ADAS" type="PEVADASType"/>
+					<xs:group ref="FuelCellGroup"/>
+					<xs:group ref="REESSGroup"/>
+					<xs:group ref="Powertrain-E2-Group"/>
+					<xs:group ref="AxleWheelsGroup"/>
+					<xs:group ref="HEV_Sx_CompletedBusAuxGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV_F2_LorryVehicleType">
+		<xs:complexContent>
+			<xs:extension base="Abstract_FCHV_LorryVehicleType">
+				<xs:sequence>
+					<xs:group ref="FCHV_LorryVehicleTypeGroup"/>
+					<xs:element name="ADAS" type="PEVADASType"/>
+					<xs:group ref="FuelCellGroup"/>
+					<xs:group ref="REESSGroup"/>
+					<xs:group ref="Powertrain-E2-Group"/>
+					<xs:group ref="AxleWheelsGroup"/>
+					<xs:group ref="LorryAuxGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV_F3_CompletedBusVehicleType">
+		<xs:complexContent>
+			<xs:extension base="Abstract_FCHV_CompletedBusVehicleType">
+				<xs:sequence>
+					<xs:group ref="FCHVCompletedBusVehicleTypeGroup"/>
+					<xs:group ref="FCHV_CompletedBusArchitectureGroup"/>
+					<xs:element name="ADAS" type="PEVADASType"/>
+					<xs:group ref="FuelCellGroup"/>
+					<xs:group ref="REESSGroup"/>
+					<xs:group ref="Powertrain-E3-Group"/>
+					<xs:group ref="AxleWheelsGroup"/>
+					<xs:group ref="HEV_Sx_CompletedBusAuxGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV_F3_LorryVehicleType">
+		<xs:complexContent>
+			<xs:extension base="Abstract_FCHV_LorryVehicleType">
+				<xs:sequence>
+					<xs:group ref="FCHV_LorryVehicleTypeGroup"/>
+					<xs:element name="ADAS" type="PEVADASType"/>
+					<xs:group ref="FuelCellGroup"/>
+					<xs:group ref="REESSGroup"/>
+					<xs:group ref="Powertrain-E3-Group"/>
+					<xs:group ref="AxleWheelsGroup"/>
+					<xs:group ref="LorryAuxGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV_F4_CompletedBusVehicleType">
+		<xs:complexContent>
+			<xs:extension base="Abstract_FCHV_CompletedBusVehicleType">
+				<xs:sequence>
+					<xs:group ref="FCHVCompletedBusVehicleTypeGroup"/>
+					<xs:group ref="FCHV_CompletedBusArchitectureGroup"/>
+					<xs:element name="ADAS" type="PEVADASType"/>
+					<xs:group ref="FuelCellGroup"/>
+					<xs:group ref="REESSGroup"/>
+					<xs:group ref="Powertrain-E4-Group"/>
+					<xs:group ref="AxleWheelsGroup"/>
+					<xs:group ref="HEV_Sx_CompletedBusAuxGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV_F4_LorryVehicleType">
+		<xs:complexContent>
+			<xs:extension base="Abstract_FCHV_LorryVehicleType">
+				<xs:sequence>
+					<xs:group ref="FCHV_LorryVehicleTypeGroup"/>
+					<xs:element name="ADAS" type="PEVADASType"/>
+					<xs:group ref="FuelCellGroup"/>
+					<xs:group ref="REESSGroup"/>
+					<xs:group ref="Powertrain-E4-Group"/>
+					<xs:group ref="AxleWheelsGroup"/>
+					<xs:group ref="LorryAuxGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV_Fx_LorryOutputType">
+		<xs:complexContent>
+			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="Abstract_FCHV_LorryVehicleType"/>
+					<xs:group ref="LorryOutputGroup"/>
+				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV_IEPC_F_LorryVehicleType">
+		<xs:complexContent>
+			<xs:extension base="Abstract_FCHV_LorryVehicleType">
+				<xs:sequence>
+					<xs:group ref="FCHV_LorryVehicleTypeGroup"/>
+					<xs:element name="ADAS" type="PEVADASType"/>
+					<xs:group ref="FuelCellGroup"/>
+					<xs:group ref="REESSGroup"/>
+					<xs:group ref="Powertrain-IEPC-Group"/>
+					<xs:group ref="AxleWheelsGroup"/>
+					<xs:group ref="LorryAuxGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV_IEPC-F_CompletedBusVehicleType">
+		<xs:complexContent>
+			<xs:extension base="Abstract_FCHV_CompletedBusVehicleType">
+				<xs:sequence>
+					<xs:group ref="FCHVCompletedBusVehicleTypeGroup"/>
+					<xs:group ref="FCHV_CompletedBusArchitectureGroup"/>
+					<xs:element name="ADAS" type="PEVADASType"/>
+					<xs:group ref="FuelCellGroup"/>
+					<xs:group ref="REESSGroup"/>
+					<xs:group ref="Powertrain-IEPC-Group"/>
+					<xs:group ref="AxleWheelsGroup"/>
+					<xs:group ref="HEV_Sx_CompletedBusAuxGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV_Multiple-Fx_CompletedBusVehicleType">
+		<xs:complexContent>
+			<xs:extension base="Abstract_FCHV_CompletedBusVehicleType">
+				<xs:sequence>
+					<xs:group ref="FCHVCompletedBusVehicleTypeGroup"/>
+					<xs:group ref="FCHV_CompletedBusArchitectureGroup"/>
+					<xs:element name="ADAS" type="PEVADASType"/>
+					<xs:group ref="FuelCellGroup"/>
+					<xs:group ref="REESSGroup"/>
+					<xs:element name="Powertrain" type="AbstractPowertrainType" minOccurs="2" maxOccurs="2"/>
+					<xs:group ref="AxleWheelsGroup"/>
+					<xs:group ref="HEV_Sx_CompletedBusAuxGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV_Multiple-Fx_LorryVehicleType">
+		<xs:complexContent>
+			<xs:extension base="Abstract_FCHV_LorryVehicleType">
+				<xs:sequence>
+					<xs:group ref="FCHV_LorryVehicleTypeGroup"/>
+					<xs:element name="ADAS" type="PEVADASType"/>
+					<xs:group ref="FuelCellGroup"/>
+					<xs:group ref="REESSGroup"/>
+					<xs:element name="Powertrain" type="AbstractPowertrainType" minOccurs="2" maxOccurs="2"/>
+					<xs:group ref="AxleWheelsGroup"/>
+					<xs:group ref="LorryAuxGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="FuelConsumptionType">
 		<xs:simpleContent>
 			<xs:extension base="xs:double">
@@ -289,125 +467,6 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="HEV_F2_CompletedBusVehicleType">
-		<xs:complexContent>
-			<xs:extension base="Abstract_HEV_CompletedBusVehicleType">
-				<xs:sequence>
-					<xs:group ref="FCHVCompletedBusVehicleTypeGroup"/>
-					<xs:group ref="FCHV_CompletedBusArchitectureGroup"/>
-					<xs:element name="ADAS" type="PEVADASType"/>
-					<xs:group ref="FuelCellGroup"/>
-					<xs:group ref="REESSGroup"/>
-					<xs:group ref="Powertrain-E2-Group"/>
-					<xs:group ref="AxleWheelsGroup"/>
-					<xs:group ref="HEV_Sx_CompletedBusAuxGroup"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="HEV_F2_LorryVehicleType">
-		<xs:complexContent>
-			<xs:extension base="Abstract_HEV-F_LorryVehicleType">
-				<xs:sequence>
-					<xs:group ref="FCHV_LorryVehicleTypeGroup"/>
-					<xs:element name="ADAS" type="PEVADASType"/>
-					<xs:group ref="FuelCellGroup"/>
-					<xs:group ref="REESSGroup"/>
-					<xs:group ref="Powertrain-E2-Group"/>
-					<xs:group ref="AxleWheelsGroup"/>
-					<xs:group ref="LorryAuxGroup"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="HEV_F3_CompletedBusVehicleType">
-		<xs:complexContent>
-			<xs:extension base="Abstract_HEV_CompletedBusVehicleType">
-				<xs:sequence>
-					<xs:group ref="FCHVCompletedBusVehicleTypeGroup"/>
-					<xs:group ref="FCHV_CompletedBusArchitectureGroup"/>
-					<xs:element name="ADAS" type="PEVADASType"/>
-					<xs:group ref="FuelCellGroup"/>
-					<xs:group ref="REESSGroup"/>
-					<xs:group ref="Powertrain-E3-Group"/>
-					<xs:group ref="AxleWheelsGroup"/>
-					<xs:group ref="HEV_Sx_CompletedBusAuxGroup"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="HEV_F3_LorryVehicleType">
-		<xs:complexContent>
-			<xs:extension base="Abstract_HEV-F_LorryVehicleType">
-				<xs:sequence>
-					<xs:group ref="FCHV_LorryVehicleTypeGroup"/>
-					<xs:element name="ADAS" type="PEVADASType"/>
-					<xs:group ref="FuelCellGroup"/>
-					<xs:group ref="REESSGroup"/>
-					<xs:group ref="Powertrain-E3-Group"/>
-					<xs:group ref="AxleWheelsGroup"/>
-					<xs:group ref="LorryAuxGroup"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="HEV_F4_CompletedBusVehicleType">
-		<xs:complexContent>
-			<xs:extension base="Abstract_HEV_CompletedBusVehicleType">
-				<xs:sequence>
-					<xs:group ref="FCHVCompletedBusVehicleTypeGroup"/>
-					<xs:group ref="FCHV_CompletedBusArchitectureGroup"/>
-					<xs:element name="ADAS" type="PEVADASType"/>
-					<xs:group ref="FuelCellGroup"/>
-					<xs:group ref="REESSGroup"/>
-					<xs:group ref="Powertrain-E4-Group"/>
-					<xs:group ref="AxleWheelsGroup"/>
-					<xs:group ref="HEV_Sx_CompletedBusAuxGroup"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="HEV_F4_LorryVehicleType">
-		<xs:complexContent>
-			<xs:extension base="Abstract_HEV-F_LorryVehicleType">
-				<xs:sequence>
-					<xs:group ref="FCHV_LorryVehicleTypeGroup"/>
-					<xs:element name="ADAS" type="PEVADASType"/>
-					<xs:group ref="FuelCellGroup"/>
-					<xs:group ref="REESSGroup"/>
-					<xs:group ref="Powertrain-E4-Group"/>
-					<xs:group ref="AxleWheelsGroup"/>
-					<xs:group ref="LorryAuxGroup"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="HEV_Fx_LorryOutputType">
-		<xs:complexContent>
-			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
-				<xs:sequence>
-					<xs:element name="Vehicle" type="Abstract_HEV-F_LorryVehicleType"/>
-					<xs:group ref="LorryOutputGroup"/>
-				</xs:sequence>
-				<xs:attribute name="id" type="xs:NCName" use="required"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="HEV_IEPC_F_LorryVehicleType">
-		<xs:complexContent>
-			<xs:extension base="Abstract_HEV-F_LorryVehicleType">
-				<xs:sequence>
-					<xs:group ref="FCHV_LorryVehicleTypeGroup"/>
-					<xs:element name="ADAS" type="PEVADASType"/>
-					<xs:group ref="FuelCellGroup"/>
-					<xs:group ref="REESSGroup"/>
-					<xs:group ref="Powertrain-IEPC-Group"/>
-					<xs:group ref="AxleWheelsGroup"/>
-					<xs:group ref="LorryAuxGroup"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
 	<xs:complexType name="HEV_IEPC_S_LorryVehicleType">
 		<xs:complexContent>
 			<xs:extension base="Abstract_HEV-S_LorryVehicleType">
@@ -419,22 +478,6 @@
 					<xs:group ref="Powertrain-IEPC-Group"/>
 					<xs:group ref="AxleWheelsGroup"/>
 					<xs:group ref="LorryAuxGroup"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="HEV_IEPC-F_CompletedBusVehicleType">
-		<xs:complexContent>
-			<xs:extension base="Abstract_HEV_CompletedBusVehicleType">
-				<xs:sequence>
-					<xs:group ref="FCHVCompletedBusVehicleTypeGroup"/>
-					<xs:group ref="FCHV_CompletedBusArchitectureGroup"/>
-					<xs:element name="ADAS" type="PEVADASType"/>
-					<xs:group ref="FuelCellGroup"/>
-					<xs:group ref="REESSGroup"/>
-					<xs:group ref="Powertrain-IEPC-Group"/>
-					<xs:group ref="AxleWheelsGroup"/>
-					<xs:group ref="HEV_Sx_CompletedBusAuxGroup"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -451,37 +494,6 @@
 					<xs:group ref="Powertrain-IEPC-Group"/>
 					<xs:group ref="AxleWheelsGroup"/>
 					<xs:group ref="HEV_Sx_CompletedBusAuxGroup"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="HEV_Multiple-Fx_CompletedBusVehicleType">
-		<xs:complexContent>
-			<xs:extension base="Abstract_HEV_CompletedBusVehicleType">
-				<xs:sequence>
-					<xs:group ref="FCHVCompletedBusVehicleTypeGroup"/>
-					<xs:group ref="FCHV_CompletedBusArchitectureGroup"/>
-					<xs:element name="ADAS" type="PEVADASType"/>
-					<xs:group ref="FuelCellGroup"/>
-					<xs:group ref="REESSGroup"/>
-					<xs:element name="Powertrain" type="AbstractPowertrainType" minOccurs="2" maxOccurs="2"/>
-					<xs:group ref="AxleWheelsGroup"/>
-					<xs:group ref="HEV_Sx_CompletedBusAuxGroup"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="HEV_Multiple-Fx_LorryVehicleType">
-		<xs:complexContent>
-			<xs:extension base="Abstract_HEV-F_LorryVehicleType">
-				<xs:sequence>
-					<xs:group ref="FCHV_LorryVehicleTypeGroup"/>
-					<xs:element name="ADAS" type="PEVADASType"/>
-					<xs:group ref="FuelCellGroup"/>
-					<xs:group ref="REESSGroup"/>
-					<xs:element name="Powertrain" type="AbstractPowertrainType" minOccurs="2" maxOccurs="2"/>
-					<xs:group ref="AxleWheelsGroup"/>
-					<xs:group ref="LorryAuxGroup"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

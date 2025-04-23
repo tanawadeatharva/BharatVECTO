@@ -521,6 +521,13 @@ Changelog
 			<xs:element name="Components" type="mrf:ConventionalPrimaryBusComponentsType"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="DrivingRangeType">
+		<xs:simpleContent>
+			<xs:extension base="xs:double">
+				<xs:attribute name="unit" type="mrf:DistanceUnitType" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
 	<xs:complexType name="ElectricEnergyType">
 		<xs:sequence>
 			<xs:element name="EnergyConsumption" type="mrf:EnergyConsumptionType" maxOccurs="unbounded"/>
@@ -902,56 +909,6 @@ Changelog
 			<xs:group ref="mrf:FCHVADASGroup"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="FuelCellSystemType">
-		<xs:sequence>
-			<xs:element name="FuelCellModule" type="mrf:FuelCellType" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="FuelCellType">
-		<xs:sequence>
-			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="CertificationMethod" type="xs:string">
-				<xs:annotation>
-					<xs:documentation>I.1.15.6</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="FCSRatedPower" type="mrf:RatedPowerType"/>
-			<xs:element name="Count">
-				<xs:simpleType>
-					<xs:restriction base="xs:int">
-						<xs:minInclusive value="1"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="FuelConsumptionType">
-		<xs:simpleContent>
-			<xs:extension base="xs:double">
-				<xs:attribute name="unit" type="mrf:FuelConsumptionUnitType" use="required"/>
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
-	<xs:complexType name="FuelType"/>
-	<xs:complexType name="HEVADASType">
-		<xs:sequence>
-			<xs:group ref="mrf:HEVADASGroup"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="HEVCompletedBusAuxOutputType">
-		<xs:sequence>
-			<xs:element name="ElectricSystem" type="mrf:CompletedBusElectricSystemType">
-				<xs:annotation>
-					<xs:documentation>I.1.10.3.</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="HVACSystem" type="mrf:xEV_CompletedBusHVACSystemType">
-				<xs:annotation>
-					<xs:documentation>I.1.10.5.</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
 	<xs:complexType name="FCHVCompletedBusAuxOutputType">
 		<xs:sequence>
 			<xs:element name="ElectricSystem" type="mrf:CompletedBusElectricSystemType">
@@ -1024,6 +981,375 @@ Changelog
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="FCHV-F2-LorryComponentsType">
+		<xs:complexContent>
+			<xs:extension base="mrf:AbstractComponents-HEV-F-LorryType">
+				<xs:sequence>
+					<xs:element name="FuelCellSystem" type="mrf:FuelCellSystemType"/>
+					<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
+					<xs:group ref="mrf:Powertrain-E2-SequenceGroup"/>
+					<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+						<xs:annotation>
+							<xs:documentation>I.1.9.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType">
+						<xs:annotation>
+							<xs:documentation>I.1.10.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AirDrag" type="mrf:AirdragType">
+						<xs:annotation>
+							<xs:documentation>I.1.8.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV-F2-PrimaryBusComponentsType">
+		<xs:complexContent>
+			<xs:extension base="mrf:AbstractComponents-HEV-F_PrimaryBusType">
+				<xs:sequence>
+					<xs:element name="FuelCellSystem" type="mrf:FuelCellSystemType"/>
+					<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
+					<xs:group ref="mrf:Powertrain-E2-SequenceGroup"/>
+					<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+						<xs:annotation>
+							<xs:documentation>I.1.9.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType">
+						<xs:annotation>
+							<xs:documentation>I.1.10.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV-F3-LorryComponentsType">
+		<xs:complexContent>
+			<xs:extension base="mrf:AbstractComponents-HEV-F-LorryType">
+				<xs:sequence>
+					<xs:element name="FuelCellSystem" type="mrf:FuelCellSystemType"/>
+					<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
+					<xs:group ref="mrf:Powertrain-E3-SequenceGroup"/>
+					<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+						<xs:annotation>
+							<xs:documentation>I.1.9.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType">
+						<xs:annotation>
+							<xs:documentation>I.1.10.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AirDrag" type="mrf:AirdragType">
+						<xs:annotation>
+							<xs:documentation>I.1.8.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV-F3-PrimaryBusComponentsType">
+		<xs:complexContent>
+			<xs:extension base="mrf:AbstractComponents-HEV-F_PrimaryBusType">
+				<xs:sequence>
+					<xs:element name="FuelCellSystem" type="mrf:FuelCellSystemType"/>
+					<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
+					<xs:group ref="mrf:Powertrain-E3-SequenceGroup"/>
+					<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+						<xs:annotation>
+							<xs:documentation>I.1.9.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType">
+						<xs:annotation>
+							<xs:documentation>I.1.10.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV-F4-LorryComponentsType">
+		<xs:complexContent>
+			<xs:extension base="mrf:AbstractComponents-HEV-F-LorryType">
+				<xs:sequence>
+					<xs:element name="FuelCellSystem" type="mrf:FuelCellSystemType"/>
+					<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
+					<xs:group ref="mrf:Powertrain-E4-SequenceGroup"/>
+					<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+						<xs:annotation>
+							<xs:documentation>I.1.9.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType">
+						<xs:annotation>
+							<xs:documentation>I.1.10.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AirDrag" type="mrf:AirdragType">
+						<xs:annotation>
+							<xs:documentation>I.1.8.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV-F4-PrimaryBusComponentsType">
+		<xs:complexContent>
+			<xs:extension base="mrf:AbstractComponents-HEV-F_PrimaryBusType">
+				<xs:sequence>
+					<xs:element name="FuelCellSystem" type="mrf:FuelCellSystemType"/>
+					<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
+					<xs:group ref="mrf:Powertrain-E4-SequenceGroup"/>
+					<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+						<xs:annotation>
+							<xs:documentation>I.1.9.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType">
+						<xs:annotation>
+							<xs:documentation>I.1.10.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV-Fx_LorryManufacturerOutputDataType">
+		<xs:complexContent>
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="mrf:FCHV-Fx-LorryVehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV-Fx_PrimaryBusManufacturerOutputDataType">
+		<xs:complexContent>
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="mrf:FCHV-Fx-PrimaryBusVehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>I.1.3.3.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:annotation>
+							<xs:documentation>I.3.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.2.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV-Fx-LorryVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:FCHV-LorryVehicleOutputTypeGroup"/>
+			<xs:element name="SimulationToolLicenseNumber" type="mrf:SimulationToolLicenceNumberType"/>
+			<xs:element name="Components" type="mrf:AbstractComponents-HEV-F-LorryType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="FCHV-Fx-PrimaryBusVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:FCHV-PrimaryBus-VehicleOutputTypeGroup"/>
+			<xs:element name="SimulationToolLicenseNumber" type="mrf:SimulationToolLicenceNumberType"/>
+			<xs:element name="Components" type="mrf:AbstractComponents-HEV-F_PrimaryBusType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="FCHV-IEPC-F-LorryComponentsType">
+		<xs:complexContent>
+			<xs:extension base="mrf:AbstractComponents-HEV-F-LorryType">
+				<xs:sequence>
+					<xs:element name="FuelCellSystem" type="mrf:FuelCellSystemType"/>
+					<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
+					<xs:group ref="mrf:Powertrain-IEPC-SequenceGroup"/>
+					<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+						<xs:annotation>
+							<xs:documentation>I.1.9.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType">
+						<xs:annotation>
+							<xs:documentation>I.1.10.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AirDrag" type="mrf:AirdragType">
+						<xs:annotation>
+							<xs:documentation>I.1.8.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV-IEPC-F-PrimaryBusComponentsType">
+		<xs:complexContent>
+			<xs:extension base="mrf:AbstractComponents-HEV-F_PrimaryBusType">
+				<xs:sequence>
+					<xs:element name="FuelCellSystem" type="mrf:FuelCellSystemType"/>
+					<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
+					<xs:group ref="mrf:Powertrain-IEPC-SequenceGroup"/>
+					<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+						<xs:annotation>
+							<xs:documentation>I.1.9.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType">
+						<xs:annotation>
+							<xs:documentation>I.1.10.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV-Multiple-Fx-LorryComponentsType">
+		<xs:complexContent>
+			<xs:extension base="mrf:AbstractComponents-HEV-F-LorryType">
+				<xs:sequence>
+					<xs:element name="FuelCellSystem" type="mrf:FuelCellSystemType"/>
+					<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
+					<xs:element name="Powertrain" type="mrf:AbstractPowertrainType" minOccurs="2" maxOccurs="2"/>
+					<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+						<xs:annotation>
+							<xs:documentation>I.1.9.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType">
+						<xs:annotation>
+							<xs:documentation>I.1.10.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AirDrag" type="mrf:AirdragType">
+						<xs:annotation>
+							<xs:documentation>I.1.8.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV-Multiple-Fx-PrimaryBusComponentsType">
+		<xs:complexContent>
+			<xs:extension base="mrf:AbstractComponents-HEV-F_PrimaryBusType">
+				<xs:sequence>
+					<xs:element name="FuelCellSystem" type="mrf:FuelCellSystemType"/>
+					<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
+					<xs:element name="Powertrain" type="mrf:AbstractPowertrainType" minOccurs="2" maxOccurs="2"/>
+					<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
+						<xs:annotation>
+							<xs:documentation>I.1.9.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType">
+						<xs:annotation>
+							<xs:documentation>I.1.10.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FuelCellSystemType">
+		<xs:sequence>
+			<xs:element name="FuelCellModule" type="mrf:FuelCellType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="FuelCellType">
+		<xs:sequence>
+			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
+			<xs:element name="CertificationMethod" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>I.1.15.6</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FCSRatedPower" type="mrf:RatedPowerType"/>
+			<xs:element name="Count">
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minInclusive value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="FuelConsumptionType">
+		<xs:simpleContent>
+			<xs:extension base="xs:double">
+				<xs:attribute name="unit" type="mrf:FuelConsumptionUnitType" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="FuelType"/>
+	<xs:complexType name="HEVADASType">
+		<xs:sequence>
+			<xs:group ref="mrf:HEVADASGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEVCompletedBusAuxOutputType">
+		<xs:sequence>
+			<xs:element name="ElectricSystem" type="mrf:CompletedBusElectricSystemType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HVACSystem" type="mrf:xEV_CompletedBusHVACSystemType">
+				<xs:annotation>
+					<xs:documentation>I.1.10.5.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="HEVCompletedBusManufacturerOutputDataType">
 		<xs:complexContent>
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
@@ -1081,278 +1407,6 @@ Changelog
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="HEV-F2-LorryComponentsType">
-		<xs:complexContent>
-			<xs:extension base="mrf:AbstractComponents-HEV-F-LorryType">
-				<xs:sequence>
-					<xs:element name="FuelCellSystem" type="mrf:FuelCellSystemType"/>
-					<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-					<xs:group ref="mrf:Powertrain-E2-SequenceGroup"/>
-					<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
-						<xs:annotation>
-							<xs:documentation>I.1.9.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType">
-						<xs:annotation>
-							<xs:documentation>I.1.10.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="AirDrag" type="mrf:AirdragType">
-						<xs:annotation>
-							<xs:documentation>I.1.8.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="HEV-F2-PrimaryBusComponentsType">
-		<xs:complexContent>
-			<xs:extension base="mrf:AbstractComponents-HEV-F_PrimaryBusType">
-				<xs:sequence>
-					<xs:element name="FuelCellSystem" type="mrf:FuelCellSystemType"/>
-					<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-					<xs:group ref="mrf:Powertrain-E2-SequenceGroup"/>
-					<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
-						<xs:annotation>
-							<xs:documentation>I.1.9.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType">
-						<xs:annotation>
-							<xs:documentation>I.1.10.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="HEV-F3-LorryComponentsType">
-		<xs:complexContent>
-			<xs:extension base="mrf:AbstractComponents-HEV-F-LorryType">
-				<xs:sequence>
-					<xs:element name="FuelCellSystem" type="mrf:FuelCellSystemType"/>
-					<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-					<xs:group ref="mrf:Powertrain-E3-SequenceGroup"/>
-					<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
-						<xs:annotation>
-							<xs:documentation>I.1.9.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType">
-						<xs:annotation>
-							<xs:documentation>I.1.10.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="AirDrag" type="mrf:AirdragType">
-						<xs:annotation>
-							<xs:documentation>I.1.8.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="HEV-F3-PrimaryBusComponentsType">
-		<xs:complexContent>
-			<xs:extension base="mrf:AbstractComponents-HEV-F_PrimaryBusType">
-				<xs:sequence>
-					<xs:element name="FuelCellSystem" type="mrf:FuelCellSystemType"/>
-					<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-					<xs:group ref="mrf:Powertrain-E3-SequenceGroup"/>
-					<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
-						<xs:annotation>
-							<xs:documentation>I.1.9.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType">
-						<xs:annotation>
-							<xs:documentation>I.1.10.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="HEV-F4-LorryComponentsType">
-		<xs:complexContent>
-			<xs:extension base="mrf:AbstractComponents-HEV-F-LorryType">
-				<xs:sequence>
-					<xs:element name="FuelCellSystem" type="mrf:FuelCellSystemType"/>
-					<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-					<xs:group ref="mrf:Powertrain-E4-SequenceGroup"/>
-					<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
-						<xs:annotation>
-							<xs:documentation>I.1.9.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType">
-						<xs:annotation>
-							<xs:documentation>I.1.10.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="AirDrag" type="mrf:AirdragType">
-						<xs:annotation>
-							<xs:documentation>I.1.8.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="HEV-F4-PrimaryBusComponentsType">
-		<xs:complexContent>
-			<xs:extension base="mrf:AbstractComponents-HEV-F_PrimaryBusType">
-				<xs:sequence>
-					<xs:element name="FuelCellSystem" type="mrf:FuelCellSystemType"/>
-					<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-					<xs:group ref="mrf:Powertrain-E4-SequenceGroup"/>
-					<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
-						<xs:annotation>
-							<xs:documentation>I.1.9.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType">
-						<xs:annotation>
-							<xs:documentation>I.1.10.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="HEV-Fx_LorryManufacturerOutputDataType">
-		<xs:complexContent>
-			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
-				<xs:sequence>
-					<xs:element name="Vehicle" type="mrf:HEV-Fx-LorryVehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
-						<xs:annotation>
-							<xs:documentation>I.3.3.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Results" type="mrf:ResultsType"/>
-					<xs:element name="ApplicationInformation">
-						<xs:annotation>
-							<xs:documentation>I.3.</xs:documentation>
-						</xs:annotation>
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="SimulationToolVersion" type="xs:string">
-									<xs:annotation>
-										<xs:documentation>I.3.1.</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
-									<xs:annotation>
-										<xs:documentation>I.3.1.</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-				</xs:sequence>
-				<xs:attribute name="id" type="xs:NCName" use="required"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="HEV-Fx_PrimaryBusManufacturerOutputDataType">
-		<xs:complexContent>
-			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
-				<xs:sequence>
-					<xs:element name="Vehicle" type="mrf:HEV-Fx-PrimaryBusVehicleOutputType"/>
-					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
-						<xs:annotation>
-							<xs:documentation>I.1.3.3.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Results" type="mrf:ResultsType"/>
-					<xs:element name="ApplicationInformation">
-						<xs:annotation>
-							<xs:documentation>I.3.</xs:documentation>
-						</xs:annotation>
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="SimulationToolVersion" type="xs:string">
-									<xs:annotation>
-										<xs:documentation>I.3.1.</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
-									<xs:annotation>
-										<xs:documentation>I.3.2.</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-				</xs:sequence>
-				<xs:attribute name="id" type="xs:NCName" use="required"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="HEV-Fx-LorryVehicleOutputType">
-		<xs:sequence>
-			<xs:group ref="mrf:FCHV-LorryVehicleOutputTypeGroup"/>
-			<xs:element name="SimulationToolLicenseNumber" type="mrf:SimulationToolLicenceNumberType"/>
-			<xs:element name="Components" type="mrf:AbstractComponents-HEV-F-LorryType"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="HEV-Fx-PrimaryBusVehicleOutputType">
-		<xs:sequence>
-			<xs:group ref="mrf:FCHV-PrimaryBus-VehicleOutputTypeGroup"/>
-			<xs:element name="SimulationToolLicenseNumber" type="mrf:SimulationToolLicenceNumberType"/>
-			<xs:element name="Components" type="mrf:AbstractComponents-HEV-F_PrimaryBusType"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="HEV-IEPC-F-LorryComponentsType">
-		<xs:complexContent>
-			<xs:extension base="mrf:AbstractComponents-HEV-F-LorryType">
-				<xs:sequence>
-					<xs:element name="FuelCellSystem" type="mrf:FuelCellSystemType"/>
-					<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-					<xs:group ref="mrf:Powertrain-IEPC-SequenceGroup"/>
-					<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
-						<xs:annotation>
-							<xs:documentation>I.1.9.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType">
-						<xs:annotation>
-							<xs:documentation>I.1.10.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="AirDrag" type="mrf:AirdragType">
-						<xs:annotation>
-							<xs:documentation>I.1.8.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="HEV-IEPC-F-PrimaryBusComponentsType">
-		<xs:complexContent>
-			<xs:extension base="mrf:AbstractComponents-HEV-F_PrimaryBusType">
-				<xs:sequence>
-					<xs:element name="FuelCellSystem" type="mrf:FuelCellSystemType"/>
-					<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-					<xs:group ref="mrf:Powertrain-IEPC-SequenceGroup"/>
-					<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
-						<xs:annotation>
-							<xs:documentation>I.1.9.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType">
-						<xs:annotation>
-							<xs:documentation>I.1.10.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="HEV-IEPC-S-LorryComponentsType">
 		<xs:complexContent>
@@ -1434,53 +1488,6 @@ Changelog
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="HEV-Multiple-Fx-LorryComponentsType">
-		<xs:complexContent>
-			<xs:extension base="mrf:AbstractComponents-HEV-F-LorryType">
-				<xs:sequence>
-					<xs:element name="FuelCellSystem" type="mrf:FuelCellSystemType"/>
-					<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-					<xs:element name="Powertrain" type="mrf:AbstractPowertrainType" minOccurs="2" maxOccurs="2"/>
-					<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
-						<xs:annotation>
-							<xs:documentation>I.1.9.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType">
-						<xs:annotation>
-							<xs:documentation>I.1.10.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="AirDrag" type="mrf:AirdragType">
-						<xs:annotation>
-							<xs:documentation>I.1.8.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="HEV-Multiple-Fx-PrimaryBusComponentsType">
-		<xs:complexContent>
-			<xs:extension base="mrf:AbstractComponents-HEV-F_PrimaryBusType">
-				<xs:sequence>
-					<xs:element name="FuelCellSystem" type="mrf:FuelCellSystemType"/>
-					<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-					<xs:element name="Powertrain" type="mrf:AbstractPowertrainType" minOccurs="2" maxOccurs="2"/>
-					<xs:element name="AxleWheels" type="mrf:AxleWheelsType">
-						<xs:annotation>
-							<xs:documentation>I.1.9.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType">
-						<xs:annotation>
-							<xs:documentation>I.1.10.</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="HEV-Multiple-Sx-LorryComponentsType">
 		<xs:complexContent>
@@ -2737,6 +2744,95 @@ Changelog
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="ResultSuccessFCHVType">
+		<xs:complexContent>
+			<xs:extension base="mrf:AbstractResultType">
+				<xs:sequence>
+					<xs:group ref="mrf:ResultSuccessSimulationParametersGroup"/>
+					<xs:element name="OVCMode" maxOccurs="2">
+						<xs:annotation>
+							<xs:documentation>I.2.1.4.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="VehiclePerformance" type="mrf:VehiclePerformanceType">
+									<xs:annotation>
+										<xs:documentation>I.2.2.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Fuel" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="FuelConsumption" type="mrf:FuelConsumptionType" maxOccurs="unbounded">
+												<xs:annotation>
+													<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="type" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="ElectricEnergy" type="mrf:ElectricEnergyType" minOccurs="0"/>
+								<xs:sequence minOccurs="0">
+									<xs:element name="FC_ZEV_AuxHeater">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="FuelConsumption" type="mrf:FuelConsumptionType" maxOccurs="unbounded">
+													<xs:annotation>
+														<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+											<xs:attribute name="type" type="xs:string" use="required"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="CO2_ZEV_AuxHeater">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="CO2" type="mrf:CO2Type" maxOccurs="unbounded">
+													<xs:annotation>
+														<xs:documentation>I.2.3.13 - I.2.3.16 / #68</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+								<xs:element name="Ranges" maxOccurs="2">
+									<xs:complexType>
+										<xs:choice>
+											<xs:group ref="mrf:ElectricRangeSequenceGroup"/>
+											<xs:sequence>
+												<xs:element name="ZeroCO2EmissionsRange" type="mrf:DrivingRangeType">
+													<xs:annotation>
+														<xs:documentation>I.2.4.3.</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element name="HydrogenRange" type="mrf:DrivingRangeType">
+													<xs:annotation>
+														<xs:documentation>I.2.4.3.</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+										</xs:choice>
+										<xs:attribute name="lifetime" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="type" use="required">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="charge depleting"/>
+										<xs:enumeration value="charge sustaining"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="ResultSuccessNonOVCHEVType">
 		<xs:complexContent>
 			<xs:extension base="mrf:ResultSuccessConventionalType"/>
@@ -2853,95 +2949,6 @@ Changelog
 								</xs:element>
 								<xs:element name="UtilityFactor" type="xs:double"/>
 							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="ResultSuccessFCHVType">
-		<xs:complexContent>
-			<xs:extension base="mrf:AbstractResultType">
-				<xs:sequence>
-					<xs:group ref="mrf:ResultSuccessSimulationParametersGroup"/>
-					<xs:element name="OVCMode" maxOccurs="2">
-						<xs:annotation>
-							<xs:documentation>I.2.1.4.</xs:documentation>
-						</xs:annotation>
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="VehiclePerformance" type="mrf:VehiclePerformanceType">
-									<xs:annotation>
-										<xs:documentation>I.2.2.</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-								<xs:element name="Fuel" maxOccurs="unbounded">
-									<xs:complexType>
-										<xs:sequence>
-											<xs:element name="FuelConsumption" type="mrf:FuelConsumptionType" maxOccurs="unbounded">
-												<xs:annotation>
-													<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
-												</xs:annotation>
-											</xs:element>
-										</xs:sequence>
-										<xs:attribute name="type" type="xs:string" use="required"/>
-									</xs:complexType>
-								</xs:element>
-								<xs:element name="ElectricEnergy" type="mrf:ElectricEnergyType" minOccurs="0"/>
-								<xs:sequence minOccurs="0">
-									<xs:element name="FC_ZEV_AuxHeater">
-										<xs:complexType>
-											<xs:sequence>
-												<xs:element name="FuelConsumption" type="mrf:FuelConsumptionType" maxOccurs="unbounded">
-													<xs:annotation>
-														<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
-													</xs:annotation>
-												</xs:element>
-											</xs:sequence>
-											<xs:attribute name="type" type="xs:string" use="required"/>
-										</xs:complexType>
-									</xs:element>
-									<xs:element name="CO2_ZEV_AuxHeater">
-										<xs:complexType>
-											<xs:sequence>
-												<xs:element name="CO2" type="mrf:CO2Type" maxOccurs="unbounded">
-													<xs:annotation>
-														<xs:documentation>I.2.3.13 - I.2.3.16 / #68</xs:documentation>
-													</xs:annotation>
-												</xs:element>
-											</xs:sequence>
-										</xs:complexType>
-									</xs:element>
-								</xs:sequence>
-								<xs:element name="Ranges" maxOccurs="2">
-									<xs:complexType>
-										<xs:choice>
-											<xs:group ref="mrf:ElectricRangeSequenceGroup"/>
-											<xs:sequence>
-												<xs:element name="ZeroCO2EmissionsRange" type="mrf:DrivingRangeType">
-													<xs:annotation>
-														<xs:documentation>I.2.4.3.</xs:documentation>
-													</xs:annotation>
-												</xs:element>
-												<xs:element name="HydrogenRange" type="mrf:DrivingRangeType">
-													<xs:annotation>
-														<xs:documentation>I.2.4.3.</xs:documentation>
-													</xs:annotation>
-												</xs:element>
-											</xs:sequence>
-										</xs:choice>
-										<xs:attribute name="lifetime" type="xs:string" use="required"/>
-									</xs:complexType>
-								</xs:element>
-							</xs:sequence>
-							<xs:attribute name="type" use="required">
-								<xs:simpleType>
-									<xs:restriction base="xs:string">
-										<xs:enumeration value="charge depleting"/>
-										<xs:enumeration value="charge sustaining"/>
-									</xs:restriction>
-								</xs:simpleType>
-							</xs:attribute>
 						</xs:complexType>
 					</xs:element>
 				</xs:sequence>
@@ -4039,6 +4046,20 @@ Changelog
 			<xs:element name="BoostingLimitations" type="mrf:BoostingLimitationsType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:group>
+	<xs:group name="HydrogenRangesSequenceGroup">
+		<xs:sequence>
+			<xs:element name="ZeroCO2EmissionRange" type="mrf:DrivingRangeType">
+				<xs:annotation>
+					<xs:documentation>I.2.4.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HydrogenRange" type="mrf:DrivingRangeType">
+				<xs:annotation>
+					<xs:documentation>I.2.4.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
 	<xs:group name="IEPCGroup">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
@@ -4417,25 +4438,4 @@ Changelog
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
-	<xs:group name="HydrogenRangesSequenceGroup">
-		<xs:sequence>
-			<xs:element name="ZeroCO2EmissionRange" type="mrf:DrivingRangeType">
-				<xs:annotation>
-					<xs:documentation>I.2.4.3.</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="HydrogenRange" type="mrf:DrivingRangeType">
-				<xs:annotation>
-					<xs:documentation>I.2.4.3.</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
-	</xs:group>
-	<xs:complexType name="DrivingRangeType">
-		<xs:simpleContent>
-			<xs:extension base="xs:double">
-				<xs:attribute name="unit" type="mrf:DistanceUnitType" use="required"/>
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
 </xs:schema>
