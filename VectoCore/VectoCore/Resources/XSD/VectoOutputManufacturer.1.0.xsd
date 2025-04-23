@@ -2842,14 +2842,14 @@ Changelog
 									<xs:complexType>
 										<xs:sequence>
 											<xs:group ref="mrf:ElectricRangeSequenceGroup"/>
-											<xs:element name="HydrogenRange" type="mrf:DrivingRangeType" minOccurs="0">
-												<xs:annotation>
-													<xs:documentation>I.2.4.3.</xs:documentation>
-												</xs:annotation>
-											</xs:element>
 										</xs:sequence>
 										<xs:attribute name="lifetime" type="xs:string" use="required"/>
 									</xs:complexType>
+								</xs:element>
+								<xs:element name="HydrogenRange" type="mrf:DrivingRangeType" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>I.2.4.3.</xs:documentation>
+									</xs:annotation>
 								</xs:element>
 								<xs:element name="UtilityFactor" type="xs:double"/>
 							</xs:sequence>
@@ -4325,6 +4325,30 @@ Changelog
 						</xs:extension>
 					</xs:simpleContent>
 				</xs:complexType>
+			</xs:element>
+			<xs:element name="DeteriorationPerformanceRatio" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:double">
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SOCmin" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:double">
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SOCmax" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:double">
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
