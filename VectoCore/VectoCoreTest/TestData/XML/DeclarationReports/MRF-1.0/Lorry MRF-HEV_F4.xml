@@ -17,6 +17,7 @@
 			<SleeperCab>true</SleeperCab>
 			<FCHVArchitecture>E2</FCHVArchitecture>
 			<OffVehicleChargingCapability>true</OffVehicleChargingCapability>
+			<DynamicChargingTechnology>String</DynamicChargingTechnology>
 			<ADAS>
 				<PredictiveCruiseControl>true</PredictiveCruiseControl>
 			</ADAS>

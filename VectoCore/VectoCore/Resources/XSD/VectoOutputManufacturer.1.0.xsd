@@ -3887,7 +3887,7 @@ Changelog
 					<xs:documentation>I.1.1.16.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DynamicChargingTechnology" type="mrf:DynamicChargingTechnologyType" minOccurs="0"/>
+			<xs:element name="DynamicChargingTechnology" type="mrf:DynamicChargingTechnologyType"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType">
 				<xs:annotation>
 					<xs:documentation>I.1.12.</xs:documentation>
@@ -4121,7 +4121,7 @@ Changelog
 					<xs:documentation>I.1.1.16.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DynamicChargingTechnology" type="mrf:DynamicChargingTechnologyType" minOccurs="0"/>
+			<xs:element name="DynamicChargingTechnology" type="mrf:DynamicChargingTechnologyType"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="PEVADASGroup">
@@ -4184,7 +4184,7 @@ Changelog
 					<xs:documentation>I.1.1.16.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DynamicChargingTechnology" type="mrf:DynamicChargingTechnologyType" minOccurs="0"/>
+			<xs:element name="DynamicChargingTechnology" type="mrf:DynamicChargingTechnologyType"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType">
 				<xs:annotation>
 					<xs:documentation>I.1.12.</xs:documentation>

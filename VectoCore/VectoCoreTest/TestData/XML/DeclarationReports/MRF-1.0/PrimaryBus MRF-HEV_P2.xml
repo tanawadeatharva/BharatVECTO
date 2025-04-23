@@ -16,6 +16,7 @@
 			<DualFuelVehicle>true</DualFuelVehicle>
 			<HEVArchitecture>String</HEVArchitecture>
 			<OffVehicleChargingCapability>true</OffVehicleChargingCapability>
+			<DynamicChargingTechnology>String</DynamicChargingTechnology>
 			<ADAS>
 				<EngineStopStart>true</EngineStopStart>
 				<PredictiveCruiseControl>true</PredictiveCruiseControl>

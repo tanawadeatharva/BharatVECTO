@@ -17,6 +17,7 @@
 			<SleeperCab>true</SleeperCab>
 			<PEVArchitecture>E2</PEVArchitecture>
 			<OffVehicleChargingCapability>true</OffVehicleChargingCapability>
+			<DynamicChargingTechnology>String</DynamicChargingTechnology>
 			<ADAS>
 				<PredictiveCruiseControl>true</PredictiveCruiseControl>
 			</ADAS>
