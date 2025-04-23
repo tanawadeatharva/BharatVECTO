@@ -105,9 +105,15 @@ Conventional Lorry / Bus - H2 ICE -->
 				<!-- only for completed buses -->
 				<FC_ZEV_AuxHeater type="Diesel">
 					<FuelConsumption unit="g/km">1.23</FuelConsumption>
+					<FuelConsumption unit="g/p-km">1.23</FuelConsumption>
+					<FuelConsumption unit="l/100km">1.23</FuelConsumption>
+					<FuelConsumption unit="l/p-km">1.23</FuelConsumption>
+					<FuelConsumption unit="MJ/km">1.23</FuelConsumption>
+					<FuelConsumption unit="MJ/p-km">1.23</FuelConsumption>
 				</FC_ZEV_AuxHeater>
 				<CO2_ZEV_AuxHeater>
 					<CO2 unit="g/km">1.23</CO2>
+					<CO2 unit="g/p-km">1.23</CO2>
 				</CO2_ZEV_AuxHeater>
 				<Ranges>
 					<ZeroCO2EmissionRange unit="km">345.0</ZeroCO2EmissionRange>
@@ -218,9 +224,15 @@ Non-OVC Hybrid electric Lorry / Bus - H2 ICE -->
 				<!-- only for completed buses -->
 				<FC_ZEV_AuxHeater type="Diesel">
 					<FuelConsumption unit="g/km">1.23</FuelConsumption>
+					<FuelConsumption unit="g/p-km">1.23</FuelConsumption>
+					<FuelConsumption unit="l/100km">1.23</FuelConsumption>
+					<FuelConsumption unit="l/p-km">1.23</FuelConsumption>
+					<FuelConsumption unit="MJ/km">1.23</FuelConsumption>
+					<FuelConsumption unit="MJ/p-km">1.23</FuelConsumption>
 				</FC_ZEV_AuxHeater>
 				<CO2_ZEV_AuxHeater>
 					<CO2 unit="g/km">1.23</CO2>
+					<CO2 unit="g/p-km">1.23</CO2>
 				</CO2_ZEV_AuxHeater>
 				<Ranges>
 					<ZeroCO2EmissionRange unit="km">456.0</ZeroCO2EmissionRange>
@@ -512,23 +524,88 @@ OVC Hybrid electric Lorry / Bus - H2 ICE -->
 				<!-- only for completed buses -->
 				<FC_ZEV_AuxHeater type="Diesel">
 					<FuelConsumption unit="g/km">1.23</FuelConsumption>
+					<FuelConsumption unit="g/p-km">1.23</FuelConsumption>
+					<FuelConsumption unit="l/100km">1.23</FuelConsumption>
+					<FuelConsumption unit="l/p-km">1.23</FuelConsumption>
+					<FuelConsumption unit="MJ/km">1.23</FuelConsumption>
+					<FuelConsumption unit="MJ/p-km">1.23</FuelConsumption>
 				</FC_ZEV_AuxHeater>
 				<CO2_ZEV_AuxHeater>
 					<CO2 unit="g/km">1.23</CO2>
+					<CO2 unit="g/p-km">1.23</CO2>
 				</CO2_ZEV_AuxHeater>
 				<Ranges lifetime="begin of life">
 					<ActualChargeDepletingRange unit="km">3.141</ActualChargeDepletingRange>
 					<EquivalentAllElectricRange unit="km">3.141</EquivalentAllElectricRange>
 					<ZeroCO2EmissionsRange unit="km">3.14</ZeroCO2EmissionsRange>
-					<HydrogenRange unit="km">3.141</HydrogenRange>
 				</Ranges>
 				<Ranges lifetime="end of life">
 					<ActualChargeDepletingRange unit="km">3.141</ActualChargeDepletingRange>
 					<EquivalentAllElectricRange unit="km">3.141</EquivalentAllElectricRange>
 					<ZeroCO2EmissionsRange unit="km">3.14</ZeroCO2EmissionsRange>
-					<HydrogenRange unit="km">3.141</HydrogenRange>
 				</Ranges>
+				<HydrogenRange unit="km">3.141</HydrogenRange>
 				<UtilityFactor>0.3141</UtilityFactor>
+			</Total>
+		</Result>
+<!-- 
+PEV Lorry / Bus -->
+		<Result xsi:type="ResultSuccessPEVType" status="success">
+			<Mission>Mission</Mission>
+			<Distance unit="km">100.0</Distance>
+			<SimulationParameters>
+				<TotalVehicleMass unit="kg">12345.0</TotalVehicleMass>
+				<Payload unit="kg">1234.0</Payload>
+				<!-- only available for buses -->
+				<PassengerCount>123.0</PassengerCount>
+			</SimulationParameters>
+			<PrimaryVehicleSubgroup>Pxx</PrimaryVehicleSubgroup>
+			<Total>
+				<VehiclePerformance>
+					<AverageSpeed unit="km/h">50.0</AverageSpeed>
+					<AverageDrivingSpeed unit="km/h">55.0</AverageDrivingSpeed>
+					<MinSpeed unit="km/h">0.0</MinSpeed>
+					<MaxSpeed unit="km/h">85.0</MaxSpeed>
+					<MaxDeceleration unit="m/s²">-1.0</MaxDeceleration>
+					<MaxAcceleration unit="m/s²">1.0</MaxAcceleration>
+					<FullLoadDrivingtimePercentage>80</FullLoadDrivingtimePercentage>
+					<GearshiftCount>30</GearshiftCount>
+				</VehiclePerformance>
+				<ElectricEnergy>
+					<!-- depending on vehicle type and fuel type not all units are present -->
+					<EnergyConsumption unit="MJ/km">234.0</EnergyConsumption>
+					<EnergyConsumption unit="MJ/m³-km">234.0</EnergyConsumption>
+					<EnergyConsumption unit="MJ/p-km">234.0</EnergyConsumption>
+					<EnergyConsumption unit="MJ/t-km">234.0</EnergyConsumption>
+					<EnergyConsumption unit="kWh/km">234.0</EnergyConsumption>
+					<EnergyConsumption unit="kWh/m³-km">234.0</EnergyConsumption>
+					<EnergyConsumption unit="kWh/p-km">234.0</EnergyConsumption>
+					<EnergyConsumption unit="kWh/t-km">234.0</EnergyConsumption>
+				</ElectricEnergy>
+				<!-- depending on vehicle type and fuel type not all units are present -->
+				<!-- only for completed buses -->
+				<FC_ZEV_AuxHeater type="Diesel">
+					<FuelConsumption unit="g/km">1.23</FuelConsumption>
+					<FuelConsumption unit="g/p-km">1.23</FuelConsumption>
+					<FuelConsumption unit="l/100km">1.23</FuelConsumption>
+					<FuelConsumption unit="l/p-km">1.23</FuelConsumption>
+					<FuelConsumption unit="MJ/km">1.23</FuelConsumption>
+					<FuelConsumption unit="MJ/p-km">1.23</FuelConsumption>
+				</FC_ZEV_AuxHeater>
+				<CO2_ZEV_AuxHeater>
+					<CO2 unit="g/km">1.23</CO2>
+					<CO2 unit="g/p-km">1.23</CO2>
+				</CO2_ZEV_AuxHeater>
+				<Ranges lifetime="begin of life">
+					<ActualChargeDepletingRange unit="km">3.141</ActualChargeDepletingRange>
+					<EquivalentAllElectricRange unit="km">3.141</EquivalentAllElectricRange>
+					<ZeroCO2EmissionsRange unit="km">3.14</ZeroCO2EmissionsRange>
+				</Ranges>
+				<Ranges lifetime="end of life">
+					<ActualChargeDepletingRange unit="km">3.141</ActualChargeDepletingRange>
+					<EquivalentAllElectricRange unit="km">3.141</EquivalentAllElectricRange>
+					<ZeroCO2EmissionsRange unit="km">3.14</ZeroCO2EmissionsRange>
+				</Ranges>
 			</Total>
 		</Result>
 		<!-- 
@@ -578,9 +655,15 @@ Non-OVC FuelCell Lorry / Bus -->
 				<!-- only for completed buses -->
 				<FC_ZEV_AuxHeater type="Diesel">
 					<FuelConsumption unit="g/km">1.23</FuelConsumption>
+					<FuelConsumption unit="g/p-km">1.23</FuelConsumption>
+					<FuelConsumption unit="l/100km">1.23</FuelConsumption>
+					<FuelConsumption unit="l/p-km">1.23</FuelConsumption>
+					<FuelConsumption unit="MJ/km">1.23</FuelConsumption>
+					<FuelConsumption unit="MJ/p-km">1.23</FuelConsumption>
 				</FC_ZEV_AuxHeater>
 				<CO2_ZEV_AuxHeater>
 					<CO2 unit="g/km">1.23</CO2>
+					<CO2 unit="g/p-km">1.23</CO2>
 				</CO2_ZEV_AuxHeater>
 				<Ranges lifetime="independent">
 					<ZeroCO2EmissionsRange unit="km">3.14</ZeroCO2EmissionsRange>
@@ -631,10 +714,23 @@ OVC FuelCell Lorry / Bus -->
 					<FuelConsumption unit="MJ/p-km">123.0</FuelConsumption>
 					<FuelConsumption unit="MJ/t-km">123.0</FuelConsumption>
 				</Fuel>
+				<!-- only for completed buses -->
+				<FC_ZEV_AuxHeater type="Diesel">
+					<FuelConsumption unit="g/km">1.23</FuelConsumption>
+					<FuelConsumption unit="g/p-km">1.23</FuelConsumption>
+					<FuelConsumption unit="l/100km">1.23</FuelConsumption>
+					<FuelConsumption unit="l/p-km">1.23</FuelConsumption>
+					<FuelConsumption unit="MJ/km">1.23</FuelConsumption>
+					<FuelConsumption unit="MJ/p-km">1.23</FuelConsumption>
+				</FC_ZEV_AuxHeater>
+				<CO2_ZEV_AuxHeater>
+					<CO2 unit="g/km">1.23</CO2>
+					<CO2 unit="g/p-km">1.23</CO2>
+				</CO2_ZEV_AuxHeater>
 				<!-- no electric energy consumption for charge sustaining - 0 by definition -->
 				<Ranges lifetime="independent">
-					<ZeroCO2EmissionsRange unit="km">3.14</ZeroCO2EmissionsRange>
-					<HydrogenRange unit="km">3.1434945</HydrogenRange>
+					<ZeroCO2EmissionsRange unit="km">300.0</ZeroCO2EmissionsRange>
+					<HydrogenRange unit="km">300.0</HydrogenRange>
 				</Ranges>
 			</OVCMode>
 			<OVCMode type="charge depleting">
@@ -682,19 +778,25 @@ OVC FuelCell Lorry / Bus -->
 				<!-- only for completed buses -->
 				<FC_ZEV_AuxHeater type="Diesel">
 					<FuelConsumption unit="g/km">1.23</FuelConsumption>
+					<FuelConsumption unit="g/p-km">1.23</FuelConsumption>
+					<FuelConsumption unit="l/100km">1.23</FuelConsumption>
+					<FuelConsumption unit="l/p-km">1.23</FuelConsumption>
+					<FuelConsumption unit="MJ/km">1.23</FuelConsumption>
+					<FuelConsumption unit="MJ/p-km">1.23</FuelConsumption>
 				</FC_ZEV_AuxHeater>
 				<CO2_ZEV_AuxHeater>
 					<CO2 unit="g/km">1.23</CO2>
+					<CO2 unit="g/p-km">1.23</CO2>
 				</CO2_ZEV_AuxHeater>
 				<Ranges lifetime="begin of life">
-					<ActualChargeDepletingRange unit="km">3.14</ActualChargeDepletingRange>
-					<EquivalentAllElectricRange unit="km">3.1415926535897900073734945</EquivalentAllElectricRange>
+					<ActualChargeDepletingRange unit="km">300.0</ActualChargeDepletingRange>
+					<EquivalentAllElectricRange unit="km">300.0</EquivalentAllElectricRange>
 					<ZeroCO2EmissionsRange unit="km">3.14</ZeroCO2EmissionsRange>
 				</Ranges>
 				<Ranges lifetime="end of life">
-					<ActualChargeDepletingRange unit="km">3.14</ActualChargeDepletingRange>
-					<EquivalentAllElectricRange unit="km">3.1415926535897900073734945</EquivalentAllElectricRange>
-					<ZeroCO2EmissionsRange unit="km">3.14</ZeroCO2EmissionsRange>
+					<ActualChargeDepletingRange unit="km">300.0</ActualChargeDepletingRange>
+					<EquivalentAllElectricRange unit="km">300.0</EquivalentAllElectricRange>
+					<ZeroCO2EmissionsRange unit="km">300.0</ZeroCO2EmissionsRange>
 				</Ranges>
 			</OVCMode>
 		</Result>

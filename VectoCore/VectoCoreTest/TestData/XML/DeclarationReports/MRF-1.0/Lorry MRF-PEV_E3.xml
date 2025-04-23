@@ -30,6 +30,9 @@
 						<NominalVoltage>0</NominalVoltage>
 						<TotalStorageCapacity unit="kWh">0</TotalStorageCapacity>
 						<TotalUsableCapacityInSimulation unit="kWh">0</TotalUsableCapacityInSimulation>
+						<DeteriorationPerformanceRatio>0</DeteriorationPerformanceRatio>
+						<SOCmin>0</SOCmin>
+						<SOCmax>0</SOCmax>
 					</Battery>
 				</REESSSpecifications>
 				<ElectricMachine>
