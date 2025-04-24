@@ -13,9 +13,16 @@
 			<xs:documentation>This element is just for developing the XML Schema of the different types of results - can be removed later on</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
-			<xs:sequence>
+			<xs:choice>
 				<xs:element name="Results" type="ResultsType"/>
-			</xs:sequence>
+				<xs:element name="Summaries">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Summary" type="AbstractResultSummaryType" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
 		</xs:complexType>
 	</xs:element>
 	<xs:complexType name="Abstract_Conventional_CompltededBusVehicleType" abstract="true"/>
@@ -233,6 +240,7 @@
 	</xs:complexType>
 	<xs:complexType name="Exempted_LorryVehicleType">
 		<xs:sequence>
+			<xs:group ref="GeneralVehicleSequenceGroup"/>
 			<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
 				<xs:annotation>
 					<xs:documentation>II.1.1.6.</xs:documentation>
@@ -248,23 +256,29 @@
 					<xs:documentation>II.1.1.7.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:group ref="GeneralVehicleSequenceGroup"/>
-			<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType">
+			<xs:element name="CorrectedActualMass">
 				<xs:annotation>
 					<xs:documentation>II.1.1.8.</xs:documentation>
 				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="v1.0:VehicleCurbMassChassisType">
+							<xs:attribute name="unit" type="MassUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
 			</xs:element>
 			<xs:element name="SleeperCab" type="v1.0:SleeperCabType">
 				<xs:annotation>
 					<xs:documentation>II.1.1.13.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="ZeroEmissionVehicle">
+			<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
 				<xs:annotation>
 					<xs:documentation>II.1.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="VehicleTechnologyExempted">
+			<xs:element name="VehicleTechnologyExempted" type="xs:string">
 				<xs:annotation>
 					<xs:documentation>II.1.1.19.</xs:documentation>
 				</xs:annotation>
@@ -1016,6 +1030,28 @@
 										<xs:documentation>II.2.4.1. - II.2.4.5.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
+								<xs:sequence minOccurs="0">
+									<xs:element name="FC_ZEV_AuxHeater">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded"/>
+											</xs:sequence>
+											<xs:attribute name="type" type="xs:string" use="required"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="CO2_ZEV_AuxHeater">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+								<xs:element name="Ranges" minOccurs="0">
+									<xs:complexType>
+										<xs:group ref="HydrogenRangesSequenceGroup"/>
+									</xs:complexType>
+								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -1113,9 +1149,114 @@
 										<xs:documentation>II.2.4.1 - II.2.4.5.</xs:documentation>
 									</xs:annotation>
 								</xs:element>
-								<xs:group ref="ElectricRangeSequenceGroup"/>
+								<xs:sequence minOccurs="0">
+									<xs:element name="FC_ZEV_AuxHeater">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded"/>
+											</xs:sequence>
+											<xs:attribute name="type" type="xs:string" use="required"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="CO2_ZEV_AuxHeater">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+								<xs:element name="Ranges" minOccurs="2" maxOccurs="2">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:group ref="ElectricRangeSequenceGroup"/>
+										</xs:sequence>
+										<xs:attribute name="lifetime" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="HydrogenRange" type="DrivingRangeType" minOccurs="0"/>
 								<xs:element name="UtilityFactor" type="xs:double"/>
 							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ResultSuccessFCHVType">
+		<xs:complexContent>
+			<xs:extension base="AbstractResultType">
+				<xs:sequence>
+					<xs:group ref="ResultSuccessSimulationParametersGroup"/>
+					<xs:element name="OVCMode" maxOccurs="2">
+						<xs:annotation>
+							<xs:documentation>II.2.1.5.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="AverageSpeed">
+									<xs:annotation>
+										<xs:documentation>II.2.2.</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="xs:double">
+												<xs:attribute name="unit" type="SpeedUnitType" use="required"/>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="Fuel" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded">
+												<xs:annotation>
+													<xs:documentation>II.2.3.1. - II.2.3.8.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="type" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="ElectricEnergy" type="ElectricEnergyType" minOccurs="0"/>
+								<xs:sequence minOccurs="0">
+									<xs:element name="FC_ZEV_AuxHeater">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded"/>
+											</xs:sequence>
+											<xs:attribute name="type" type="xs:string" use="required"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="CO2_ZEV_AuxHeater">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+								<xs:element name="Ranges" maxOccurs="2">
+									<xs:complexType>
+										<xs:choice>
+											<xs:group ref="ElectricRangeSequenceGroup"/>
+											<xs:sequence>
+												<xs:element name="ZeroCO2EmissionsRange" type="DrivingRangeType"/>
+												<xs:element name="HydrogenRange" type="DrivingRangeType"/>
+											</xs:sequence>
+										</xs:choice>
+										<xs:attribute name="lifetime" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="type" use="required">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="charge depleting"/>
+										<xs:enumeration value="charge sustaining"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
 						</xs:complexType>
 					</xs:element>
 				</xs:sequence>
@@ -1160,7 +1301,14 @@
 										</xs:complexType>
 									</xs:element>
 								</xs:sequence>
-								<xs:group ref="ElectricRangeSequenceGroup"/>
+								<xs:element name="Ranges" minOccurs="2" maxOccurs="2">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:group ref="ElectricRangeSequenceGroup"/>
+										</xs:sequence>
+										<xs:attribute name="lifetime" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -1172,7 +1320,7 @@
 		<xs:complexContent>
 			<xs:extension base="AbstractResultSummaryType">
 				<xs:sequence>
-					<xs:element name="Vocational" type="xs:boolean" minOccurs="0"/>
+					<xs:element name="Vocational" type="xs:boolean"/>
 					<xs:choice>
 						<xs:element name="AveragePayload">
 							<xs:annotation>
@@ -1205,6 +1353,28 @@
 							<xs:documentation>II.2.6.2, II.2.6.4</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:sequence minOccurs="0">
+						<xs:element name="FC_ZEV_AuxHeater">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded"/>
+								</xs:sequence>
+								<xs:attribute name="type" type="xs:string" use="required"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="CO2_ZEV_AuxHeater">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:element name="Ranges" minOccurs="0">
+						<xs:complexType>
+							<xs:group ref="HydrogenRangesSequenceGroup"/>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1218,7 +1388,7 @@
 		<xs:complexContent>
 			<xs:extension base="AbstractResultSummaryType">
 				<xs:sequence>
-					<xs:element name="Vocational" type="xs:boolean" minOccurs="0"/>
+					<xs:element name="Vocational" type="xs:boolean"/>
 					<xs:choice>
 						<xs:element name="AveragePayload">
 							<xs:annotation>
@@ -1262,8 +1432,114 @@
 							<xs:documentation>II.2.6.1, II.2.6.4</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="ElectricRangeSequenceGroup"/>
+					<xs:sequence minOccurs="0">
+						<xs:element name="FC_ZEV_AuxHeater">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded"/>
+								</xs:sequence>
+								<xs:attribute name="type" type="xs:string" use="required"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="CO2_ZEV_AuxHeater">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:element name="Ranges" minOccurs="2" maxOccurs="2">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:group ref="ElectricRangeSequenceGroup"/>
+							</xs:sequence>
+							<xs:attribute name="lifetime" type="xs:string" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="HydrogenRange" type="DrivingRangeType" minOccurs="0"/>
 				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ResultSummaryFCHVType">
+		<xs:complexContent>
+			<xs:extension base="AbstractResultSummaryType">
+				<xs:choice>
+					<xs:sequence>
+						<xs:element name="Vocational" type="xs:boolean"/>
+						<xs:choice>
+							<xs:element name="AveragePayload">
+								<xs:annotation>
+									<xs:documentation>II.2.6.4</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:double">
+											<xs:attribute name="unit" type="MassUnitType" use="required"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="AveragePassengerCount" type="xs:double">
+								<xs:annotation>
+									<xs:documentation>II.2.6.6</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:choice>
+						<xs:element name="Fuel" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded"/>
+								</xs:sequence>
+								<xs:attribute name="type" type="xs:string" use="required"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>II.2.6.1, II.2.6.4</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:sequence minOccurs="0">
+							<xs:element name="FC_ZEV_AuxHeater">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded"/>
+									</xs:sequence>
+									<xs:attribute name="type" type="xs:string" use="required"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="CO2_ZEV_AuxHeater">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:element name="Ranges">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="ZeroCO2EmissionsRange" type="DrivingRangeType">
+										<xs:annotation>
+											<xs:documentation>II.2.6.9.</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="HydrogenRange" type="DrivingRangeType"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="Info">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="Not applicable for OVC-FCHV"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:choice>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -1271,7 +1547,7 @@
 		<xs:complexContent>
 			<xs:extension base="AbstractResultSummaryType">
 				<xs:sequence>
-					<xs:element name="Vocational" type="xs:boolean" minOccurs="0"/>
+					<xs:element name="Vocational" type="xs:boolean"/>
 					<xs:choice>
 						<xs:element name="AveragePayload">
 							<xs:annotation>
@@ -1302,6 +1578,11 @@
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
+					<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>II.2.6.1, II.2.6.4</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:sequence minOccurs="0">
 						<xs:element name="FC_ZEV_AuxHeater">
 							<xs:complexType>
@@ -1319,7 +1600,14 @@
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
-					<xs:group ref="ElectricRangeSequenceGroup"/>
+					<xs:element name="Ranges" minOccurs="2" maxOccurs="2">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:group ref="ElectricRangeSequenceGroup"/>
+							</xs:sequence>
+							<xs:attribute name="lifetime" type="xs:string" use="required"/>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1421,6 +1709,20 @@
 			<xs:enumeration value="MJ/p-km"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:group name="HydrogenRangesSequenceGroup">
+		<xs:sequence>
+			<xs:element name="ZeroCO2EmissionsRange" type="DrivingRangeType">
+				<xs:annotation>
+					<xs:documentation>I.2.4.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HydrogenRange" type="DrivingRangeType">
+				<xs:annotation>
+					<xs:documentation>I.2.4.3.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
 	<xs:simpleType name="LegislativeCategoryType">
 		<xs:union memberTypes="v2.4:LegislativeCategoryHeavyLorryDeclarationType v2.4:LegislativeCategoryMediumLorryDeclarationType v2.4:LegislativeCategoryPrimaryBusDeclarationType"/>
 	</xs:simpleType>
@@ -1765,41 +2067,20 @@
 	</xs:group>
 	<xs:group name="ElectricRangeSequenceGroup">
 		<xs:sequence>
-			<xs:element name="ActualChargeDepletingRange">
+			<xs:element name="ActualChargeDepletingRange" type="DrivingRangeType">
 				<xs:annotation>
 					<xs:documentation>II.2.6.7.</xs:documentation>
 				</xs:annotation>
-				<xs:complexType>
-					<xs:simpleContent>
-						<xs:extension base="xs:double">
-							<xs:attribute name="unit" type="DistanceUnitType" use="required"/>
-						</xs:extension>
-					</xs:simpleContent>
-				</xs:complexType>
 			</xs:element>
-			<xs:element name="EquivalentAllElectricRange">
+			<xs:element name="EquivalentAllElectricRange" type="DrivingRangeType">
 				<xs:annotation>
 					<xs:documentation>II.2.6.8.</xs:documentation>
 				</xs:annotation>
-				<xs:complexType>
-					<xs:simpleContent>
-						<xs:extension base="xs:double">
-							<xs:attribute name="unit" type="DistanceUnitType" use="required"/>
-						</xs:extension>
-					</xs:simpleContent>
-				</xs:complexType>
 			</xs:element>
-			<xs:element name="ZeroCO2EmissionsRange">
+			<xs:element name="ZeroCO2EmissionsRange" type="DrivingRangeType">
 				<xs:annotation>
 					<xs:documentation>II.2.6.9.</xs:documentation>
 				</xs:annotation>
-				<xs:complexType>
-					<xs:simpleContent>
-						<xs:extension base="xs:double">
-							<xs:attribute name="unit" type="DistanceUnitType" use="required"/>
-						</xs:extension>
-					</xs:simpleContent>
-				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
@@ -2805,4 +3086,11 @@
 	<!--Vehicle Types-->
 	<!--Results-->
 	<!--ADAS-->
+	<xs:complexType name="DrivingRangeType">
+		<xs:simpleContent>
+			<xs:extension base="xs:double">
+				<xs:attribute name="unit" type="DistanceUnitType" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
 </xs:schema>

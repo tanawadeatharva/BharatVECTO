@@ -676,7 +676,7 @@ Changelog
 		<xs:complexContent>
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
-					<xs:element name="Vehicle" type="mrf:Exempted-CompletedBusVehicleOutputType"/>
+					<xs:element name="Vehicle" type="mrf:ExemptedCompletedBusVehicleOutputType"/>
 					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>I.1.3.3.</xs:documentation>
@@ -704,7 +704,7 @@ Changelog
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="Exempted-CompletedBusVehicleOutputType">
+	<xs:complexType name="ExemptedCompletedBusVehicleOutputType">
 		<xs:sequence>
 			<xs:sequence>
 				<xs:element name="Manufacturers">
@@ -764,6 +764,7 @@ Changelog
 						</xs:annotation>
 					</xs:element>
 				</xs:sequence>
+				<xs:element name="SimulationToolLicenseNumber" type="mrf:SimulationToolLicenceNumberType"/>
 			</xs:sequence>
 		</xs:sequence>
 	</xs:complexType>
@@ -771,7 +772,7 @@ Changelog
 		<xs:complexContent>
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
-					<xs:element name="Vehicle" type="mrf:Exempted-LorryVehicleOutputType"/>
+					<xs:element name="Vehicle" type="mrf:ExemptedLorryVehicleOutputType"/>
 					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>I.1.3.3.</xs:documentation>
@@ -802,7 +803,7 @@ Changelog
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="Exempted-LorryVehicleOutputType">
+	<xs:complexType name="ExemptedLorryVehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:ManufacturerGroup"/>
 			<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
@@ -818,17 +819,17 @@ Changelog
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="SleeperCab" type="v1.0:SleeperCabType">
-				<xs:annotation>
-					<xs:documentation>I.1.1.13.</xs:documentation>
-				</xs:annotation>
-			</xs:element>
 			<xs:element name="ZeroEmissionVehicle" type="v1.0:ZeroEmissionVehicleType">
 				<xs:annotation>
 					<xs:documentation>I.1.1.10.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="VehicleTechnologyExempted">
+			<xs:element name="SleeperCab" type="v1.0:SleeperCabType">
+				<xs:annotation>
+					<xs:documentation>I.1.1.13.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VehicleTechnologyExempted" type="xs:string">
 				<xs:annotation>
 					<xs:documentation>I.1.1.19.</xs:documentation>
 				</xs:annotation>
@@ -845,13 +846,14 @@ Changelog
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="SimulationToolLicenseNumber" type="mrf:SimulationToolLicenceNumberType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ExemptedPrimaryBusManufacturerOutputDataType">
 		<xs:complexContent>
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
-					<xs:element name="Vehicle" type="mrf:Exempted-PrimaryBusVehicleOutputType"/>
+					<xs:element name="Vehicle" type="mrf:ExemptedPrimaryBusVehicleOutputType"/>
 					<xs:element name="InputDataSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>I.1.3.3.</xs:documentation>
@@ -882,7 +884,7 @@ Changelog
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="Exempted-PrimaryBusVehicleOutputType">
+	<xs:complexType name="ExemptedPrimaryBusVehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:ExemptedPrimaryBusGeneralVehicleOutputGroup"/>
 			<xs:element name="VehicleTechnologyExempted" type="xs:string">
@@ -902,6 +904,7 @@ Changelog
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="SimulationToolLicenseNumber" type="mrf:SimulationToolLicenceNumberType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="FCHVADASType">
