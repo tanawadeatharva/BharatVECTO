@@ -40,6 +40,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -132,7 +133,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>();
 			//get { return GetString("LegislativeCategory").ParseEnum<LegislativeClass>(); }
 
-		public virtual VehicleCategory VehicleCategory
+		public virtual string SimulationToolLicenseNumber => null;
+
+		public virtual Kilogram H2StorageUsableCapacity => null;
+
+		public virtual HydrogenStorageTechnology? HydrogenStorageTechnology => null;
+
+		public virtual bool BatteryOnlyMode => false;
+
+		public virtual DynamicChargingTechnology DynamicChargingTechnology => DynamicChargingTechnology.None;
+
+        public virtual VehicleCategory VehicleCategory
 		{
 			get {
 				var val = GetString(XMLNames.Vehicle_VehicleCategory);
@@ -255,7 +266,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		public virtual string VehicleTypeApprovalNumber => ElementExists(XMLNames.VehicleTypeApprovalNumber) ? GetString(XMLNames.Vehicle_TypeApprovalNumber) : null;
 		public virtual ArchitectureID ArchitectureID => ElementExists(XMLNames.Vehicle_ArchitectureID) ? ArchitectureIDHelper.Parse(GetString(XMLNames.Vehicle_ArchitectureID)) : ArchitectureID.UNKNOWN;
-		public virtual bool OvcHev => ElementExists(XMLNames.Vehicle_OvcHev) && GetBool(XMLNames.Vehicle_OvcHev);
+		public virtual bool OVC => ElementExists(XMLNames.Vehicle_OvcHev) && GetBool(XMLNames.Vehicle_OvcHev);
 		public virtual Watt MaxChargingPower => ElementExists(XMLNames.Vehicle_MaxChargingPower) ?
 			XmlConvert.ToInt32(GetString(XMLNames.Vehicle_MaxChargingPower)).SI<Watt>() : null;
 
@@ -350,9 +361,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 	}
 
-	// ---------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationVehicleDataProviderV21 : XMLDeclarationVehicleDataProviderV10
+    public class XMLDeclarationVehicleDataProviderV21 : XMLDeclarationVehicleDataProviderV10
 	{
 		/*
 		 * added new parameters introduced in 2019/318 (amendment of 2017/2400) (already implemented in version 1.0)
@@ -549,7 +560,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public string VIN => GetString(XMLNames.Vehicle_VIN);
 
-		public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeCategory)?.ParseEnum<LegislativeClass>();
+		public string SimulationToolLicenseNumber => ElementExists("SimulationToolLicenseNumber") ? GetString("SimulationToolLicenseNumber") : null;
+
+		public Kilogram H2StorageUsableCapacity => ElementExists("H2StorageUsableCapacity") ? GetDouble("H2StorageUsableCapacity").SI<Kilogram>() : null;
+
+		public HydrogenStorageTechnology? HydrogenStorageTechnology => HydrogenStorageTechnologyHelper.Parse(GetString("HydrogenStorageTechnology"));
+
+		public bool BatteryOnlyMode => ElementExists("BatteryOnlyMode") ? GetBool("BatteryOnlyMode") : false;
+
+		public DynamicChargingTechnology DynamicChargingTechnology => DynamicChargingTechnologyHelper.Parse(GetString("DynamicChargingTechnology"));
+
+        public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeCategory)?.ParseEnum<LegislativeClass>();
 
 		public virtual VehicleCategory VehicleCategory => VehicleCategoryHelper.Parse(GetString("ChassisConfiguration"));
 
@@ -609,7 +630,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual string VehicleTypeApprovalNumber { get; }
 		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
 		public virtual ArchitectureID ArchitectureID => ElementExists(XMLNames.Vehicle_ArchitectureID) ? ArchitectureIDHelper.Parse(GetString(XMLNames.Vehicle_ArchitectureID)) : ArchitectureID.UNKNOWN;
-		public virtual bool OvcHev => ElementExists(XMLNames.Vehicle_OvcHev) && GetBool(XMLNames.Vehicle_OvcHev);
+		public virtual bool OVC => ElementExists(XMLNames.Vehicle_OvcHev) && GetBool(XMLNames.Vehicle_OvcHev);
 		public virtual Watt MaxChargingPower => ElementExists(XMLNames.Vehicle_MaxChargingPower) ? GetDouble(XMLNames.Vehicle_MaxChargingPower).SI<Watt>() : null;
 
 
@@ -759,7 +780,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.BatteryElectricVehicle; }
 
-		public override bool OvcHev => true;
+		public override bool OVC => true;
 
 		public override string PowertrainPositionPrefix => "E";
 	}
@@ -780,7 +801,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.IEPC_E; }
 
-		public override bool OvcHev => true;
+		public override bool OVC => true;
 
 	}
 
@@ -842,7 +863,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override bool Articulated => GetBool(XMLNames.Vehicle_Articulated);
 
 		public override LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeCategory).ParseEnum<LegislativeClass>();
-		//get { return GetString("LegislativeCategory").ParseEnum<LegislativeClass>(); }
 
 		public override TankSystem? TankSystem => ElementExists(XMLNames.Vehicle_NgTankSystem)
 			? GetString(XMLNames.Vehicle_NgTankSystem).ParseEnum<TankSystem>()
@@ -920,9 +940,31 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 	}
 
-
 	// ---------------------------------------------------------------------------------------
 
+	public abstract class AbstractXMLVehicleDataProviderV27 : AbstractXMLVehicleDataProviderV24
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
 
-	
+        protected AbstractXMLVehicleDataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) :
+            base(jobData, xmlNode, sourceFile)
+        { }
+
+        public override string PowertrainPositionPrefix => null;
+
+        public override string SimulationToolLicenseNumber => GetString("SimulationToolLicenseNumber");
+
+        public override Kilogram H2StorageUsableCapacity => ElementExists("H2StorageUsableCapacity") ? GetDouble("H2StorageUsableCapacity").SI<Kilogram>() : null;
+
+        public override HydrogenStorageTechnology? HydrogenStorageTechnology => ElementExists("HydrogenStorageTechnology")
+            ? HydrogenStorageTechnologyHelper.Parse(GetString("HydrogenStorageTechnology"))
+            : (HydrogenStorageTechnology?)null;
+
+        public override TableData BoostingLimitations => ElementExists(XMLNames.Vehicle_BoostingLimitation)
+             ? ReadTableData(XMLNames.Vehicle_BoostingLimitation, XMLNames.BoostingLimitation_Entry, AttributeMappings.BoostingLimitsMapping)
+             : null;
+
+    }
+
+
 }

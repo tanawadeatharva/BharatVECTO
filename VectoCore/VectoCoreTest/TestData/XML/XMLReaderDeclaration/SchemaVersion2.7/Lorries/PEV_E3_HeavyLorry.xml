@@ -12,20 +12,21 @@
 		<AxleConfiguration>4x2</AxleConfiguration>
 		<CorrectedActualMass>10143</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>18000</TechnicalPermissibleMaximumLadenMass>
-		<RetarderType>None</RetarderType>
+		<RetarderType>Transmission Input Retarder</RetarderType>
+		<RetarderRatio>1.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
 		<PTO>
 			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
 			<PTOOtherElements>none</PTOOtherElements>
 		</PTO>
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
-		<VocationalVehicle>false</VocationalVehicle>
-		<SleeperCab>false</SleeperCab>
+		<VocationalVehicle>true</VocationalVehicle>
+		<SleeperCab>true</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>E3</ArchitectureID>
-		<OVC>false</OVC>
+		<OVC>true</OVC>
 		<BatteryOnlyMode>true</BatteryOnlyMode>
-		<DynamicChargingTechnology>None</DynamicChargingTechnology>
+		<DynamicChargingTechnology>Wireless</DynamicChargingTechnology>
 		<ADAS>
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>

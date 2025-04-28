@@ -114,7 +114,7 @@ namespace TUGraz.VectoMockup
 					ovc = false; //TODO implement
 					jobType = mst.JobInputData.JobType; //runData.InputData.JobInputData.JobType;
 				} else {
-					ovc = runData.InputData.JobInputData.Vehicle.OvcHev;
+					ovc = runData.InputData.JobInputData.Vehicle.OVC;
 					jobType = runData.InputData.JobInputData.JobType;
 				}
 

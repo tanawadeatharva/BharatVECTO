@@ -350,6 +350,38 @@ Public Class Vehicle
 		End Get
 	End Property
 
+	Public ReadOnly Property SimulationToolLicenseNumber As String Implements IVehicleDeclarationInputData.SimulationToolLicenseNumber
+		Get
+			' Just for the interface. Value is not available in GUI yet.
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVAILABLE
+		End Get
+	End Property
+
+	Public ReadOnly Property H2StorageUsableCapacity As Kilogram Implements IVehicleDeclarationInputData.H2StorageUsableCapacity
+		Get
+			' Just for the interface. Value is not available in GUI yet.
+			Return Nothing
+		End Get
+	End Property
+
+	Public ReadOnly Property HydrogenStorageTechnology As HydrogenStorageTechnology? Implements IVehicleDeclarationInputData.HydrogenStorageTechnology
+		Get
+			' Just for the interface. Value is not available in GUI yet.
+			Return Nothing
+		End Get
+	End Property
+	Public ReadOnly Property BatteryOnlyMode As Boolean Implements IVehicleDeclarationInputData.BatteryOnlyMode
+		Get
+			' Just for the interface. Value is not available in GUI yet.
+			Return Nothing
+		End Get
+	End Property
+	Public ReadOnly Property DynamicChargingTechnology As DynamicChargingTechnology Implements IVehicleDeclarationInputData.DynamicChargingTechnology
+		Get
+			' Just for the interface. Value is not available in GUI yet.
+			Return Nothing
+		End Get
+	End Property
 
 	Public ReadOnly Property [Date] As DateTime Implements IComponentInputData.[Date]
 		Get
@@ -971,7 +1003,7 @@ Public Class Vehicle
 	Public ReadOnly Property XMLSource As XmlNode Implements IAdvancedDriverAssistantSystemDeclarationInputData.XMLSource
 	Public ReadOnly Property VehicleTypeApprovalNumber As String Implements IVehicleDeclarationInputData.VehicleTypeApprovalNumber
 	Public ReadOnly Property ArchitectureID As ArchitectureID Implements IVehicleDeclarationInputData.ArchitectureID
-	Public Property OvcHev As Boolean Implements IVehicleDeclarationInputData.OvcHev
+	Public Property OVC As Boolean Implements IVehicleDeclarationInputData.OVC
 	Public Property MaxChargingPower As Watt Implements IVehicleDeclarationInputData.MaxChargingPower
 	Public ReadOnly Property IVehicleDeclarationInputData_VehicleType As VectoSimulationJobType Implements IVehicleDeclarationInputData.VehicleType
 
@@ -1011,6 +1043,12 @@ Public Class Vehicle
 	Public Property IMCOnMotorwayOnly As Boolean Implements IVehicleInMotionChargingEngineering.IMCOnMotorwayOnly
    
     Public Property IMCDeclarationTechnology As IMCTechnology Implements IVehicleInMotionChargingDeclaration.Technology
+
+    Public ReadOnly Property FuelCellSystem As IFuelCellSystemDeclarationInputData Implements IVehicleComponentsDeclaration.FuelCellSystem
+        Get
+            Return Nothing
+        End Get
+    End Property
 End Class
 
 Public Class IEPCWrapper

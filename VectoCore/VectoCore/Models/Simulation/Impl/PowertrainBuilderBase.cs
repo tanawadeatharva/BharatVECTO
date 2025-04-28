@@ -687,6 +687,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public string GetShiftStrategyName(GearboxType gearboxType, VectoSimulationJobType jobType,
 			bool isTestPowerTrain)
 		{
+			// todo amogoda: m10. what shift strategy is assigned to Fxs?
 			switch (gearboxType) {
 				case GearboxType.AMT:
 					switch (jobType) {
@@ -695,6 +696,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							return AMTShiftStrategyOptimized.Name;
 						case VectoSimulationJobType.BatteryElectricVehicle:
 						case VectoSimulationJobType.SerialHybridVehicle:
+						case VectoSimulationJobType.FCHV:
 							return PEVAMTShiftStrategy.Name;
 						default:
 							throw new VectoException(
@@ -725,6 +727,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						case VectoSimulationJobType.BatteryElectricVehicle:
 						case VectoSimulationJobType.IEPC_E:
 						case VectoSimulationJobType.IEPC_S:
+						case VectoSimulationJobType.FCHV:
+						case VectoSimulationJobType.FCHV_IEPC:
 							return APTNShiftStrategy.Name;
 						case VectoSimulationJobType.ConventionalVehicle when isTestPowerTrain:
 							return null;

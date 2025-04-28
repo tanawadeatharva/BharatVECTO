@@ -37,7 +37,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public Kilogram GrossVehicleMassRating { get; }
 		public IList<ITorqueLimitInputData> TorqueLimits => new List<ITorqueLimitInputData>();
 		public string ManufacturerAddress { get; }
-		public PerSecond EngineIdleSpeed { get; }
+		public string SimulationToolLicenseNumber { get; }
+        public Kilogram H2StorageUsableCapacity { get; }
+        public HydrogenStorageTechnology? HydrogenStorageTechnology { get; }
+        public bool BatteryOnlyMode { get; }
+        public DynamicChargingTechnology DynamicChargingTechnology { get; }
+        public PerSecond EngineIdleSpeed { get; }
 		public bool VocationalVehicle { get; }
 		public bool? SleeperCab { get; }
 		public bool? AirdragModifiedMultistep { get; }
@@ -70,7 +75,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public XmlNode XMLSource { get; }
 		public string VehicleTypeApprovalNumber { get; }
 		public ArchitectureID ArchitectureID { get; }
-		public bool OvcHev { get; }
+		public bool OVC { get; }
 		public Watt MaxChargingPower { get; }
 		public VectoSimulationJobType VehicleType { get; }
 
@@ -92,6 +97,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IElectricStorageSystemDeclarationInputData ElectricStorage { get; set; }
 		public IElectricMachinesDeclarationInputData ElectricMachines { get; set; }
 		public IIEPCDeclarationInputData IEPC { get; set; }
+		public IFuelCellSystemDeclarationInputData FuelCellSystem { get; set; }
 
 		#endregion
 	}
@@ -142,7 +148,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public XmlNode XMLSource { get; }
 		public string VehicleTypeApprovalNumber { get; }
 		public ArchitectureID ArchitectureID { get; }
-		public bool OvcHev { get; }
+		public bool OVC { get; }
 		public Watt MaxChargingPower { get; }
 
 		public IVehicleComponentsEngineering Components => this;
@@ -161,8 +167,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool? SleeperCab { get; }
 		public bool? AirdragModifiedMultistep { get; }
 		public TankSystem? TankSystem { get; }
-
-		IAdvancedDriverAssistantSystemDeclarationInputData IVehicleDeclarationInputData.ADAS => null;
+		public string SimulationToolLicenseNumber { get; }
+        public Kilogram H2StorageUsableCapacity { get; }
+        public HydrogenStorageTechnology? HydrogenStorageTechnology { get; }
+        public bool BatteryOnlyMode { get; }
+        public DynamicChargingTechnology DynamicChargingTechnology { get; }
+        IAdvancedDriverAssistantSystemDeclarationInputData IVehicleDeclarationInputData.ADAS => null;
 		IVehicleInMotionChargingDeclaration IVehicleDeclarationInputData.InMotionCharging => InMotionCharging;
 
 		public double InitialSOC { get; }

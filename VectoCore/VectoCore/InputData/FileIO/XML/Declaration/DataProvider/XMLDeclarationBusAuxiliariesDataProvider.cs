@@ -284,6 +284,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
+	// todo amogoda: bus1. remove from this file.
+	public class XMLDeclarationAuxiliaries_FCHV_PrimaryBus_DataProviderV27 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24
+	{
+        public static readonly new XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+        public const string XSD_TYPE = "AUX_FCHV_PrimaryBusType";
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationAuxiliaries_FCHV_PrimaryBus_DataProviderV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : 
+			base(componentNode) { }
+
+		public override bool SmartElectrics => false;
+
+		public override bool SmartAirCompression => false;
+	}
+
+	// ---------------------------------------------------------------------------------------
+
 	public class XMLDeclarationPrimaryBusAuxiliariesPEVDataProviderV24 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24
 	{
 		

@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				DemandType = AuxiliaryDemandType.Dynamic,
 				ID = Constants.Auxiliaries.IDs.Cond,
 				ConnectToREESS = true,
-				PowerDemandElectric = DeclarationData.Conditioning.LookupPowerDemand(hdv, mission),
+				PowerDemandElectric = DeclarationData.Conditioning.LookupPowerDemand(hdv, jobType, mission),
 			};
 
 			auxDataList.Add(aux);

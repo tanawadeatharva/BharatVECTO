@@ -232,7 +232,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var allowVocational = true;
 			var ng = vehicle.ExemptedVehicle ? false : vehicle.Components.EngineInputData?.EngineModes.Any(e =>
 				e.Fuels.Any(f => f.FuelType.IsOneOf(FuelType.LPGPI, FuelType.NGCI, FuelType.NGPI))) ?? false;
-			var ovcHev = vehicle.ExemptedVehicle ? false : vehicle.OvcHev;
+			var ovcHev = vehicle.ExemptedVehicle ? false : vehicle.OVC;
 			Segment segment;
 			try {
 				segment = DeclarationData.TruckSegments.Lookup(

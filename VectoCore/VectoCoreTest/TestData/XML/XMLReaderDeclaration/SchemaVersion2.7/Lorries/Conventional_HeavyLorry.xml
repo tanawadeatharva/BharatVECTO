@@ -13,14 +13,16 @@
 		<CorrectedActualMass>6995</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>18000</TechnicalPermissibleMaximumLadenMass>
 		<IdlingSpeed>600</IdlingSpeed>
-		<RetarderType>None</RetarderType>
-		<AngledriveType>None</AngledriveType>
+		<RetarderType>Transmission Input Retarder</RetarderType>
+		<RetarderRatio>1.000</RetarderRatio>
+		<AngledriveType>Separate Angledrive</AngledriveType>
 		<PTO>
-			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
-			<PTOOtherElements>none</PTOOtherElements>
+			<PTOShaftsGearWheels>only the drive shaft of the PTO</PTOShaftsGearWheels>
+			<PTOOtherElements>multi-disc clutch</PTOOtherElements>
 		</PTO>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
-		<VocationalVehicle>false</VocationalVehicle>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
+		<VocationalVehicle>true</VocationalVehicle>
+		<NgTankSystem>Compressed</NgTankSystem>
 		<SleeperCab>true</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ADAS>
@@ -468,7 +470,6 @@
 				</v2.0:Signature>
 			</Angledrive>
 			<Retarder>
-				<!-- optional -->
 				<v2.0:Data id="RET-Shai9imi" xsi:type="RetarderDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Retarder Manufacturer</Manufacturer>
 					<Model>Generic Retarder</Model>

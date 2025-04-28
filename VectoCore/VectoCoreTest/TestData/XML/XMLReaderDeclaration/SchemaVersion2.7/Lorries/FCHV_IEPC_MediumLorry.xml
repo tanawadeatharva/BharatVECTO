@@ -13,7 +13,7 @@
 	<Vehicle xsi:type="Vehicle_FCHV_IEPC_MediumLorryDeclarationType" id="a">
 		<Manufacturer>TU Graz</Manufacturer>
 		<ManufacturerAddress>Inffeldgasse 19</ManufacturerAddress>
-		<Model>HEV Heavy Lorry Px</Model>
+		<Model>FCHV Medium Lorry IEPC</Model>
 		<VIN>1234</VIN>
 		<Date>2017-01-01T00:00:00Z</Date>
 		<SimulationToolLicenseNumber>x</SimulationToolLicenseNumber>
@@ -24,16 +24,17 @@
 		<TechnicalPermissibleMaximumLadenMass>7100</TechnicalPermissibleMaximumLadenMass>
 		<CargoVolume>20.300</CargoVolume>
 		<!-- optional -->
-		<RetarderType>None</RetarderType>
+		<RetarderType>Transmission Input Retarder</RetarderType>
+		<RetarderRatio>1.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<NgTankSystem>Liquefied</NgTankSystem>
 		<!-- optional -->
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>F-IEPC</ArchitectureID>
 		<OVC>true</OVC>
 		<BatteryOnlyMode>true</BatteryOnlyMode>
-		<DynamicChargingTechnology>None</DynamicChargingTechnology>
+		<DynamicChargingTechnology>Wireless</DynamicChargingTechnology>
 		<ADAS>
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>

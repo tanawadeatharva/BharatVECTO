@@ -124,6 +124,72 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
+
+	internal class HEV_F2_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
+	{
+		public HEV_F2_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
+
+		#region Overrides of AbstractManufacturerReport
+
+		public override string OutputDataType => "HEV-F2_PrimaryBusManufacturerOutputDataType";
+
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _mRFReportFactory.GetHEV_F2_PrimaryBusVehicleType().GetElement(inputData);
+		}
+
+		#endregion
+	}
+
+	internal class HEV_F3_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
+	{
+		public HEV_F3_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
+
+		#region Overrides of AbstractManufacturerReport
+
+		public override string OutputDataType => "HEV-F3_PrimaryBusManufacturerOutputDataType";
+
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _mRFReportFactory.GetHEV_F3_PrimaryBusVehicleType().GetElement(inputData);
+		}
+
+		#endregion
+	}
+
+	internal class HEV_F4_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
+	{
+		public HEV_F4_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
+
+		#region Overrides of AbstractManufacturerReport
+
+		public override string OutputDataType => "HEV-F4_PrimaryBusManufacturerOutputDataType";
+
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _mRFReportFactory.GetHEV_F4_PrimaryBusVehicleType().GetElement(inputData);
+
+		}
+
+		#endregion
+	}
+
+	internal class HEV_IEPC_F_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
+	{
+		public HEV_IEPC_F_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
+
+		#region Overrides of AbstractManufacturerReport
+
+		public override string OutputDataType => "HEV-IEPC-F_PrimaryBusManufacturerOutputDataType";
+
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _mRFReportFactory.GetHEV_IEPC_F_PrimaryBusVehicleType().GetElement(inputData);
+		}
+
+		#endregion
+	}
+
 	internal class PEV_E2_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
 	{
 		public PEV_E2_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }

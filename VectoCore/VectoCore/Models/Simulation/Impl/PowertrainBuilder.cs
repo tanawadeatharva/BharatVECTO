@@ -32,13 +32,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -48,10 +46,8 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
@@ -155,11 +151,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			
         }
 
+		// todo amogoda: m9. understand how declaration fc and engineering fc work together. should fc engineering be deprecated.
+		// todo amogoda: m9. implement IFuelCellPort.
 		private IVehicleContainer BuildFullPowertrainFCHV_IEPC(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
 		{
 			var container = BuildFullPowertrainIEPCE(data, modData, sumWriter);
 
-			ConnectFuelCellSystem(container.ElectricSystemInfo as ElectricSystem, data.FuelCellSystemData, container);
+			ConnectFuelCellSystem(container.ElectricSystemInfo as ElectricSystem, data, container);
 			
 			return container;
 		}
@@ -168,7 +166,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			var container = BuildFullPowertrainBatteryElectric(data, modData, sumWriter);
 			var es = container.ElectricSystemInfo as ElectricSystem;
-			ConnectFuelCellSystem(es, data.FuelCellSystemData, container);
+			ConnectFuelCellSystem(es, data, container);
 			return container;
 		}
 
@@ -939,17 +937,32 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		}
 
-		private static void ConnectFuelCellSystem(ElectricSystem es, FuelCellSystemData fcSystemData, IVehicleContainer container)
+		//private static void ConnectFuelCellSystem(ElectricSystem es, FuelCellSystemData fcSystemData, IVehicleContainer container)
+		private static void ConnectFuelCellSystem(ElectricSystem es, VectoRunData runData, IVehicleContainer container)
 		{
-			if (fcSystemData != null) {
-				var fuelCellSystem = new FuelCellSystem(fcSystemData, container);
-				var id = 1;
-				foreach (var fuelCell in fcSystemData.FuelCellStrings) {
-					var fcs = new FuelCellString(fuelCell, id++, dataBus:container);
-					fuelCellSystem.AddFuelCellString(fcs);
-				}
-				es.Connect(fuelCellSystem);
+			if(runData.FuelCellSystemData == null)
+			{
+				return;
 			}
+
+			//if(runData.FuelCellSystemData.FuelCellPowerMap == null)
+			//{
+			//	runData.FuelCellSystemData.SetFuelCellSystemPowerMap(runData.BatteryData, container.ModalData);
+			//}
+			
+			//if (runData.FuelCellSystemData.FuelCellShareMap == null)
+			//{
+			//	runData.FuelCellSystemData.SetFuelCellSystemSharedMap();
+			//}
+
+			var id = 1;
+			var fuelCellSystem = new FuelCellSystem(runData.FuelCellSystemData, container);
+			foreach (var fuelCell in runData.FuelCellSystemData.FuelCellStrings) {
+				var fcs = new FuelCellString(fuelCell, id++, dataBus:container);
+				fuelCellSystem.AddFuelCellString(fcs);
+			}
+				
+			es.Connect(fuelCellSystem);
 		}
 		
 		private IVehicleContainer BuildPWheelBatteryElectric(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)

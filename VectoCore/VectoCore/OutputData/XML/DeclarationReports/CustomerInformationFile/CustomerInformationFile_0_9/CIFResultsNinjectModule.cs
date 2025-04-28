@@ -30,18 +30,32 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				_namingHelper.GetName(cif, VehicleCategoryHelper.Lorry, VectoSimulationJobTypeHelper.Hybrid, false));
 			Bind<IResultsWriter>().To<CIFResultsWriter.HEVOVCLorry>().Named(
 				_namingHelper.GetName(cif, VehicleCategoryHelper.Lorry, VectoSimulationJobTypeHelper.Hybrid, true));
+			Bind<IResultsWriter>().To<CIFResultsWriter.FuelCellNonOVCLorry>().Named(
+				_namingHelper.GetName(cif, VehicleCategoryHelper.Lorry, VectoSimulationJobTypeHelper.FuelCell, false));
+			Bind<IResultsWriter>().To<CIFResultsWriter.FuelCellOVCLorry>().Named(
+				_namingHelper.GetName(cif, VehicleCategoryHelper.Lorry, VectoSimulationJobTypeHelper.FuelCell, true));
 			Bind<IResultsWriter>().To<CIFResultsWriter.PEVLorry>().Named(
 				_namingHelper.GetName(cif, VehicleCategoryHelper.Lorry, VectoSimulationJobTypeHelper.PureElectric, true));
 			Bind<IResultsWriter>().To<CIFResultsWriter.ExemptedVehicle>().Named(
 				_namingHelper.GetName(cif, VehicleCategoryHelper.Lorry, true));
 
+			// FuelCell vehicles are in simulation are considered BEV but Hybrids in real life.
+			Bind<IResultsWriter>().To<CIFResultsWriter.PEVNonOVCLorry>().Named(
+				_namingHelper.GetName(cif, VehicleCategoryHelper.Lorry, VectoSimulationJobTypeHelper.PureElectric, false));
+
 			Bind<IResultsWriter>().To<CIFResultsWriter.ConventionalBus>().Named(
 				_namingHelper.GetName(cif, VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.Conventional,
 					false));
+
+			// todo amogoda: 2.6 - check for correct methods for buses
 			Bind<IResultsWriter>().To<CIFResultsWriter.HEVNonOVCBus>().Named(
 				_namingHelper.GetName(cif, VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.Hybrid, false));
 			Bind<IResultsWriter>().To<CIFResultsWriter.HEVOVCBus>().Named(
 				_namingHelper.GetName(cif, VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.Hybrid, true));
+			//Bind<IResultsWriter>().To<CIFResultsWriter.HEVNonOVCBus>().Named(
+			//	_namingHelper.GetName(cif, VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.FuelCell, false));
+			//Bind<IResultsWriter>().To<CIFResultsWriter.HEVOVCBus>().Named(
+			//	_namingHelper.GetName(cif, VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.FuelCell, true));
 			Bind<IResultsWriter>().To<CIFResultsWriter.PEVBus>().Named(
 				_namingHelper.GetName(cif, VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.PureElectric,
 					true));
@@ -62,6 +76,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetLorryHEVOVCSuccessResultWriter(null, XNamespace.None));
 			Bind<IResultGroupWriter>().To<LorryPEVResultWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetLorryPEVSuccessResultWriter(null, XNamespace.None));
+			Bind<IResultGroupWriter>().To<LorryPEVNonOVCResultWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetLorryPEVNonOVCSuccessResultWriter(null, XNamespace.None));
 			Bind<IResultGroupWriter>().To<ErrorResultWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetLorryErrorResultWriter(null, XNamespace.None));
 
@@ -111,6 +127,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetLorryHEVOVCSummaryWriter(null, XNamespace.None));
 			Bind<IReportResultsSummaryWriter>().To<LorryPEVSummaryWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetLorryPEVSummaryWriter(null, XNamespace.None));
+			Bind<IReportResultsSummaryWriter>().To<LorryPEVNonOVCSummaryWriter>().When(AccessedViaCIFResultsWriterFactory)
+				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetLorryPEVNonOVCSummaryWriter(null, XNamespace.None));
 
 			// -- Bus
 

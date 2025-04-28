@@ -29,6 +29,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
             Bind<IXMLIEPCInputData>().To<XMLElectricMotorIepciStandardInputDataProviderV26>().Named(XMLElectricMotorIepciStandardInputDataProviderV26.QUALIFIED_XSD_TYPE);
 
             Bind<IXMLEngineDeclarationInputData>().To<XMLDeclarationEngineDataProviderV26>().Named(XMLDeclarationEngineDataProviderV26.QUALIFIED_XSD_TYPE);
-        }
-    }
+
+			Bind<IXMLFuelCellSystemDeclarationInputData>().To<XMLFuelCellSystemDeclarationInputDataProviderV26>().Named(
+				XMLFuelCellSystemDeclarationInputDataProviderV26.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLFuelCellDeclarationInputData>().To<XMLFuelCellDeclarationInputDataProviderV26>()
+				.Named(XMLFuelCellDeclarationInputDataProviderV26.QUALIFIED_XSD_TYPE);
+		}
+	}
 }

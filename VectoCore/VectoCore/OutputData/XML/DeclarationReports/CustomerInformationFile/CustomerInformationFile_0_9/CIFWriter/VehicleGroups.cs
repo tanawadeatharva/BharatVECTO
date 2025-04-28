@@ -121,6 +121,23 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
+	public class FuelCellLorryVehicleSequenceGroupCIF : AbstractCIFGroupWriter
+	{
+		public FuelCellLorryVehicleSequenceGroupCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCIFGroupWriter
+
+		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+			return new List<XElement>()
+			{
+				// todo amogoda: 2.9 - fill fc commmon components data
+			};
+		}
+
+		#endregion
+	}
+
 	public class ConventionalCompletedBusVehicleSequenceGroupCIF : AbstractCIFGroupWriter
 	{
 		public ConventionalCompletedBusVehicleSequenceGroupCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
@@ -163,6 +180,27 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#endregion
 	}
+
+	public class FuelCell_LorryVehicleTypeGroupCIF : AbstractCIFGroupWriter
+	{
+		public FuelCell_LorryVehicleTypeGroupCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCIFGroupWriter
+
+		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+			// todo amogoda: 2.5. check and fix inconsistencies
+			var result = new List<XElement>();
+			result.AddRange(_cifFactory.GetGeneralVehicleSequenceGroupWriter().GetElements(inputData.JobInputData.Vehicle));
+			result.AddRange(_cifFactory.GetLorryGeneralVehicleSequenceGroupWriter().GetElements(inputData));
+			result.AddRange(_cifFactory.GetFuelCell_LorryVehicleSequenceGroupWriter().GetElements(inputData));
+
+			return result;
+		}
+
+		#endregion
+	}
+
 	public class PEV_LorryVehicleTypeGroupCIF : AbstractCIFGroupWriter
 	{
 		public PEV_LorryVehicleTypeGroupCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
@@ -192,7 +230,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
 			var result = new List<XElement>();
-			var ovCc = inputData.JobInputData.Vehicle.OvcHev;
+			var ovCc = inputData.JobInputData.Vehicle.OVC;
 			result.AddRange(_cifFactory.GetConventionalLorryVehicleSequenceGroupWriter().GetElements(inputData));
 			var vehicleData = inputData.JobInputData.Vehicle;
 			var ihpc = vehicleData.Components?.GearboxInputData?.Type == GearboxType.IHPC;
@@ -201,6 +239,34 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + "OffVehicleChargingCapability", ovCc)
 			});
 			if (ovCc) {
+				result.Add(new XElement(_cif + "OffVehicleChargingMaxPower", inputData.JobInputData.Vehicle.MaxChargingPower.ValueAsUnit("kW", 1)));
+			}
+			return result;
+		}
+
+		#endregion
+	}
+
+	public class FuelCell_LorryVehicleSequenceGroupWriter : AbstractCIFGroupWriter
+	{
+		public FuelCell_LorryVehicleSequenceGroupWriter(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCIFGroupWriter
+
+		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+			// todo amogoda: 2.5. check and fix inconsistencies
+			var result = new List<XElement>();
+			var ovCc = inputData.JobInputData.Vehicle.OVC;
+			result.AddRange(_cifFactory.GetFuelCellLorryVehicleSequenceGroupWriter().GetElements(inputData));
+			var vehicleData = inputData.JobInputData.Vehicle;
+			var ihpc = vehicleData.Components?.GearboxInputData?.Type == GearboxType.IHPC;
+			result.AddRange(new List<XElement>() {
+				new XElement(_cif + "HEVArchitecture", ihpc ? GearboxType.IHPC.ToXMLFormat() : vehicleData.ArchitectureID.GetLabel()),
+				new XElement(_cif + "OffVehicleChargingCapability", ovCc)
+			});
+			if (ovCc)
+			{
 				result.Add(new XElement(_cif + "OffVehicleChargingMaxPower", inputData.JobInputData.Vehicle.MaxChargingPower.ValueAsUnit("kW", 1)));
 			}
 			return result;
@@ -220,7 +286,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 			var result = new List<XElement>();
 			var vehicle = GetVehicle(inputData);
-			var ovCc = vehicle.OvcHev;
+			var ovCc = vehicle.OVC;
 			result.AddRange(new List<XElement>() {
 				new XElement(_cif + "PEVArchitecture", vehicle.ArchitectureID.GetLabel()),
 				new XElement(_cif + "OffVehicleChargingCapability", ovCc)
@@ -245,7 +311,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				throw new VectoException("Completed Bus CIF requires bus input data");
 			}
 			var result = new List<XElement>();
-			var ovCc = multistep.JobInputData.PrimaryVehicle.Vehicle.OvcHev;
+			var ovCc = multistep.JobInputData.PrimaryVehicle.Vehicle.OVC;
 			//result.AddRange(_cifFactory.GetConventionalCompletedBusVehicleSequenceGroupWriter().GetElements(inputData));
 			var vehicleData = multistep.JobInputData.PrimaryVehicle.Vehicle;
 			var ihpc = vehicleData.Components?.GearboxInputData?.Type == GearboxType.IHPC;
@@ -276,7 +342,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				throw new VectoException("Completed Bus CIF requires bus input data");
 			}
 			var result = new List<XElement>();
-			var ovCc = multistep.JobInputData.PrimaryVehicle.Vehicle.OvcHev;
+			var ovCc = multistep.JobInputData.PrimaryVehicle.Vehicle.OVC;
 			result.AddRange(new List<XElement>() {
 				new XElement(_cif + "PEVArchitecture",  multistep.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID.GetLabel()),
 				new XElement(_cif + "OffVehicleChargingCapability", ovCc)

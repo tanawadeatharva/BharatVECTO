@@ -14,7 +14,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public HEV_LorryVehicleOutputTypeGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlGroup
-
+		
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
 			var result = new List<XElement>();

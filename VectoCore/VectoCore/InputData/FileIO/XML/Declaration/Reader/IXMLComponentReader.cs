@@ -50,6 +50,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader
 		IElectricMachinesDeclarationInputData ElectricMachines { get; }
 		IElectricStorageSystemDeclarationInputData ElectricStorageSystem { get; }
 		IIEPCDeclarationInputData IEPCInputData { get; }
+		IFuelCellSystemDeclarationInputData FuelCellSystem { get; }
 	}
 
 	public interface IXMLAxlesReader
@@ -84,5 +85,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader
 		IREESSPackInputData CreateREESSInputData(XmlNode storageNode, REESSType reessType);
 	}
 
+	public interface IXMLFuelCellSystemReader
+	{
+		IFuelCellSystemDeclarationInputData CreateFuelCellSystemInputData(XmlNode xmlNode);
+	}
+
+	public interface IXMLFuelCellDeclarationInputData : IFuelCellDeclarationInputData
+	{
+	}
 
 }

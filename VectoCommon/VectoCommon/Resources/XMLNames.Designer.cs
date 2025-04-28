@@ -1537,6 +1537,42 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HEV_F2_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_HEV_F2_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_HEV_F2_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV_F3_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_HEV_F3_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_HEV_F3_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV_F4_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_HEV_F4_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_HEV_F4_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV_IEPC_F_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_HEV_IEPC_F_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_HEV_IEPC_F_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to HEV_IEPC_S_LorryOutputType.
         /// </summary>
         public static string CIF_OutputDataType_HEV_IEPC_S_LorryOutputType {
@@ -3130,6 +3166,96 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FuelCell.
+        /// </summary>
+        public static string FuelCell_Cell {
+            get {
+                return ResourceManager.GetString("FuelCell_Cell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to fuelConsumption.
+        /// </summary>
+        public static string FuelCell_Consumption {
+            get {
+                return ResourceManager.GetString("FuelCell_Consumption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entry.
+        /// </summary>
+        public static string FuelCell_ConsumptionEntry {
+            get {
+                return ResourceManager.GetString("FuelCell_ConsumptionEntry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Count.
+        /// </summary>
+        public static string FuelCell_Count {
+            get {
+                return ResourceManager.GetString("FuelCell_Count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FCSRatedPower.
+        /// </summary>
+        public static string FuelCell_FCSRatedPower {
+            get {
+                return ResourceManager.GetString("FuelCell_FCSRatedPower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaxPower.
+        /// </summary>
+        public static string FuelCell_MaxPower {
+            get {
+                return ResourceManager.GetString("FuelCell_MaxPower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MinPower.
+        /// </summary>
+        public static string FuelCell_MinPower {
+            get {
+                return ResourceManager.GetString("FuelCell_MinPower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FuelCellModule.
+        /// </summary>
+        public static string FuelCell_Module {
+            get {
+                return ResourceManager.GetString("FuelCell_Module", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to powerOutput.
+        /// </summary>
+        public static string FuelCell_PowerOutput {
+            get {
+                return ResourceManager.GetString("FuelCell_PowerOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FuelCellPowerOutputConsumptionMap.
+        /// </summary>
+        public static string FuelCell_PowerOutputConsumptionMap {
+            get {
+                return ResourceManager.GetString("FuelCell_PowerOutputConsumptionMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gear.
         /// </summary>
         public static string Gear_EntryName {
@@ -3418,7 +3544,7 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DisengagementClutch.
+        ///   Looks up a localized string similar to DisengagementCluth.
         /// </summary>
         public static string IEPC_DisengagementClutch {
             get {
@@ -3936,6 +4062,42 @@ namespace TUGraz.VectoCommon.Resources {
         public static string MRF_OutputDataType_ConventionalPrimaryBusManufacturerOutputDataType {
             get {
                 return ResourceManager.GetString("MRF_OutputDataType_ConventionalPrimaryBusManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV-F2_LorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_HEV_F2_LorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_HEV_F2_LorryManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV-F3_LorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_HEV_F3_LorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_HEV_F3_LorryManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV-F4_LorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_HEV_F4_LorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_HEV_F4_LorryManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV-IEPC-F_LorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_HEV_IEPC_F_LorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_HEV_IEPC_F_LorryManufacturerOutputDataType", resourceCulture);
             }
         }
         
