@@ -94,15 +94,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			: base(inputData, baseNode, allowDeprecated) { }
 	}
 
-    public class XMLDeclarationInputReaderV27 : XMLDeclarationInputReaderV10
-    {
-        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+	// ---------------------------------------------------------------------------------------
 
-        public new const string XSD_TYPE = "VectoDeclarationJobType";
+	// todo amogoda: correct v2.7? - assumption: yes
+	public class XMLDeclarationInputReaderV27 : XMLDeclarationInputReaderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
 
-        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public new const string XSD_TYPE = "VectoDeclarationJobType";
 
-        public XMLDeclarationInputReaderV27(IXMLDeclarationInputData inputData, XmlNode baseNode, bool allowDeprecated)
-            : base(inputData, baseNode, allowDeprecated) { }
-    }
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationInputReaderV27(IXMLDeclarationInputData inputData, XmlNode baseNode, bool allowDeprecated)
+			: base(inputData, baseNode, allowDeprecated) { }
+	}
 }

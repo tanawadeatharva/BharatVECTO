@@ -491,6 +491,16 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.GetHevIepcFVehicleParameterGroup();
 			}
 
+			public IXmlTypeWriter GetFuelCellType()
+			{
+				return _vifReportFactoryImplementation.GetFuelCellType();
+			}
+
+			public IXmlTypeWriter GetAuxiliaryHevFType()
+			{
+				return _vifReportFactoryImplementation.GetAuxiliaryHevFType();
+			}
+
 			#endregion
 		}
 

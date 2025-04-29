@@ -102,14 +102,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{ }
 	}
 
-    public class XMLPTOReaderV27 : XMLPTOReaderV20
-    {
-        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+	// ---------------------------------------------------------------------------------------
 
-        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+	public class XMLPTOReaderV27 : XMLPTOReaderV20
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
 
-        public XMLPTOReaderV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode) : base(
-            vehicle, componentNode)
-        { }
-    }
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLPTOReaderV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode) : base(
+			vehicle, componentNode)
+		{ }
+	}
 }

@@ -3544,7 +3544,7 @@ namespace TUGraz.VectoCommon.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to DisengagementCluth.
+        ///   Looks up a localized string similar to DisengagementClutch.
         /// </summary>
         public static string IEPC_DisengagementClutch {
             get {
@@ -4066,7 +4066,7 @@ namespace TUGraz.VectoCommon.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to HEV-F2_LorryManufacturerOutputDataType.
+        ///   Looks up a localized string similar to FCHV-F2_LorryManufacturerOutputDataType.
         /// </summary>
         public static string MRF_OutputDataType_HEV_F2_LorryManufacturerOutputDataType {
             get {
@@ -4075,7 +4075,7 @@ namespace TUGraz.VectoCommon.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to HEV-F3_LorryManufacturerOutputDataType.
+        ///   Looks up a localized string similar to FCHV-F3_LorryManufacturerOutputDataType.
         /// </summary>
         public static string MRF_OutputDataType_HEV_F3_LorryManufacturerOutputDataType {
             get {
@@ -4084,7 +4084,7 @@ namespace TUGraz.VectoCommon.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to HEV-F4_LorryManufacturerOutputDataType.
+        ///   Looks up a localized string similar to FCHV-F4_LorryManufacturerOutputDataType.
         /// </summary>
         public static string MRF_OutputDataType_HEV_F4_LorryManufacturerOutputDataType {
             get {
@@ -4093,7 +4093,7 @@ namespace TUGraz.VectoCommon.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to HEV-IEPC-F_LorryManufacturerOutputDataType.
+        ///   Looks up a localized string similar to FCHV-IEPC-F_LorryManufacturerOutputDataType.
         /// </summary>
         public static string MRF_OutputDataType_HEV_IEPC_F_LorryManufacturerOutputDataType {
             get {
@@ -6080,7 +6080,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_GrossVehicleMass", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HydrogenStorageTechnology.
         /// </summary>
@@ -6089,7 +6089,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_H2StorageTechnology", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to H2StorageUsableCapacity.
         /// </summary>
@@ -6098,7 +6098,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_H2StorageUsableCapacity", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HybridElectricHDV.
         /// </summary>

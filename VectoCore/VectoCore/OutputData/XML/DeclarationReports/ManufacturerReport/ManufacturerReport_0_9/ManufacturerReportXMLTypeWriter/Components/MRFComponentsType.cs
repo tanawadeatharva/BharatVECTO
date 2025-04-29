@@ -193,7 +193,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 				_mrfFactory.GetAxleGearType().GetElement(inputData),
 				_mrfFactory.GetAxleWheelsType().GetElement(inputData),
-				_mrfFactory.GetHEV_LorryAuxiliariesType().GetXmlType(components.AuxiliaryInputData),
+				_mrfFactory.GetFCHV_LorryAuxiliariesType().GetXmlType(components.AuxiliaryInputData),
 				_mrfFactory.GetAirdragType().GetXmlType(inputData.JobInputData.Vehicle, inputData.JobInputData.Vehicle.Components.AirdragInputData)
 				);
 		}
@@ -539,7 +539,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 				_mrfFactory.GetAxleGearType().GetElement(inputData),
 				_mrfFactory.GetAxleWheelsType().GetElement(inputData),
-				_mrfFactory.GetPrimaryBusAuxType_HEV_S().GetElement(inputData.JobInputData.Vehicle.Components.BusAuxiliaries)
+				_mrfFactory.GetPrimaryBusAuxType_HEV_F().GetElement(inputData.JobInputData.Vehicle.Components.BusAuxiliaries)
 			);
 		}
 
