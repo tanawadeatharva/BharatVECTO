@@ -15,11 +15,6 @@
 		<RetarderType>Transmission Input Retarder</RetarderType>
 		<RetarderRatio>1.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
-		<PTO>
-			<!-- syntactically allowed, not supported by VECTO - no gearbox! -->
-			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
-			<PTOOtherElements>none</PTOOtherElements>
-		</PTO>
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<VocationalVehicle>true</VocationalVehicle>
 		<SleeperCab>true</SleeperCab>

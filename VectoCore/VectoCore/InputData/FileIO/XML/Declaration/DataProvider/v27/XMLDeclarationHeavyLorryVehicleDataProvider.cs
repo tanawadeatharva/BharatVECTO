@@ -30,7 +30,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
         public XMLDeclaration_PHEV_HeavyLorry_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-            : base(jobData, xmlNode, sourceFile) { }
+            : base(jobData, xmlNode, sourceFile) 
+        {}
 
         public override string PowertrainPositionPrefix => "P";
 
@@ -45,6 +46,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         public override bool BatteryOnlyMode => GetBool("BatteryOnlyMode");
 
         public override DynamicChargingTechnology DynamicChargingTechnology => DynamicChargingTechnologyHelper.Parse(GetString("DynamicChargingTechnology"));
+
+        public override XmlElement PTONode => (VehicleType == VectoSimulationJobType.IHPC) ? null : base.PTONode;
+
+        public override IPTOTransmissionInputData PTOTransmissionInputData => (VehicleType == VectoSimulationJobType.IHPC) ? null : base.PTOTransmissionInputData;
     }
 
     public class XMLDeclaration_SHEV_HeavyLorry_DataProviderV27 : AbstractXMLVehicleDataProviderV27
@@ -79,6 +84,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
             : base(jobData, xmlNode, sourceFile) { }
 
         public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_S;
+
+        public override XmlElement PTONode => null;
+
+        public override IPTOTransmissionInputData PTOTransmissionInputData => null;
     }
 
     public class XMLDeclaration_PEV_HeavyLorry_DataProviderV27 : AbstractXMLVehicleDataProviderV27
@@ -123,6 +132,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         {}
 
         public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_E;
+
+        public override XmlElement PTONode => null;
+
+        public override IPTOTransmissionInputData PTOTransmissionInputData => null;
     }
 
     public class XMLDeclaration_FCHV_HeavyLorry_DataProviderV27 : XMLDeclaration_PEV_HeavyLorry_DataProviderV27
@@ -151,5 +164,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 			: base(jobData, xmlNode, sourceFile) { }
 		
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.FCHV_IEPC;
-	}
+
+        public override XmlElement PTONode => null;
+
+        public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+    }
 }

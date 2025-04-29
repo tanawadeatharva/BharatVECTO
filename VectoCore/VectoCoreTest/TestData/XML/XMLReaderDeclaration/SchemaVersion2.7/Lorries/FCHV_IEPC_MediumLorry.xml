@@ -28,8 +28,6 @@
 		<RetarderRatio>1.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
-		<NgTankSystem>Liquefied</NgTankSystem>
-		<!-- optional -->
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>F-IEPC</ArchitectureID>
 		<OVC>true</OVC>
