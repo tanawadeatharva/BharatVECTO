@@ -444,7 +444,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			#endregion
 		}
 
-		public class FuelCellHybrid : SerialHybrid
+		public class FuelCellHybrid : BatteryElectric
 		{
 			public FuelCellHybrid(IDeclarationInputDataProvider dataProvider,
 						 IDeclarationReport report,

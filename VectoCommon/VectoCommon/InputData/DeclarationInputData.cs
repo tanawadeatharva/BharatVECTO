@@ -1411,10 +1411,13 @@ namespace TUGraz.VectoCommon.InputData
 				case nameof(ArchitectureID.S2):
 				case nameof(ArchitectureID.S3):
 				case nameof(ArchitectureID.S4):
-                case nameof(ArchitectureID.F2):
-                case nameof(ArchitectureID.F3):
-                case nameof(ArchitectureID.F4):
-                    return parse.ParseEnum<ArchitectureID>();
+					return parse.ParseEnum<ArchitectureID>();
+				case nameof(ArchitectureID.F2):
+					return ArchitectureID.E2;
+				case nameof(ArchitectureID.F3):
+					return ArchitectureID.E3;
+				case nameof(ArchitectureID.F4):
+					return ArchitectureID.E4;
 				case E_IEPC_ID:
 					return ArchitectureID.E_IEPC;
 				case P2_5_ID:
