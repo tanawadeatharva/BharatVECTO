@@ -857,7 +857,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual string SimulationToolLicenseNumber => Constants.NOT_AVAILABLE;
 
-		public virtual Kilogram H2StorageUsableCapacity => (Body["H2StorageUsableCapacity"] != null) ? Body.GetEx<double>("H2StorageUsableCapacity").SI<Kilogram>() : null;
+        public string VehicleMonitoringData { get; }
+
+        public virtual Kilogram H2StorageUsableCapacity => (Body["H2StorageUsableCapacity"] != null) ? Body.GetEx<double>("H2StorageUsableCapacity").SI<Kilogram>() : null;
 
 		public virtual HydrogenStorageTechnology? HydrogenStorageTechnology => (Body["HydrogenStorageTechnology"] != null) 
 			? HydrogenStorageTechnologyHelper.Parse(Body.GetEx<string>("HydrogenStorageTechnology")) 

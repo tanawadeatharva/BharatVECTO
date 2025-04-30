@@ -968,6 +968,12 @@ Public Class Vehicle
 		End Get
 	End Property
 
+	Public ReadOnly Property VehicleMonitoringData As String Implements IVehicleDeclarationInputData.VehicleMonitoringData
+		Get
+			Return Nothing
+		End Get
+	End Property
+
 	Public ReadOnly Property IVehicleDeclarationInputData_XMLSource As XmlNode Implements IVehicleDeclarationInputData.XMLSource
 
 	Public ReadOnly Property EngineStopStart As Boolean Implements IAdvancedDriverAssistantSystemDeclarationInputData.EngineStopStart

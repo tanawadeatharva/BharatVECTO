@@ -22,6 +22,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public string SimulationToolLicenseNumber { get; set; }
 
+        public string VehicleMonitoringData { get; set; }
+
         public Kilogram H2StorageUsableCapacity { get; set; }
 
         public HydrogenStorageTechnology? HydrogenStorageTechnology { get; set; }

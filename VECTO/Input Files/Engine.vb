@@ -617,6 +617,7 @@ Public Class DummyVehicle
 	Public Property Model As String Implements IComponentInputData.Model
 	Public Property [Date] As DateTime Implements IComponentInputData.[Date]
 	Public Property SimulationToolLicenseNumber As String Implements IVehicleDeclarationInputData.SimulationToolLicenseNumber
+	Public Property VehicleMonitoringData As String Implements IVehicleDeclarationInputData.VehicleMonitoringData
 	Public Property H2StorageUsableCapacity As Kilogram Implements IVehicleDeclarationInputData.H2StorageUsableCapacity
 	Public Property HydrogenStorageTechnology As HydrogenStorageTechnology? Implements IVehicleDeclarationInputData.HydrogenStorageTechnology
 	Public Property BatteryOnlyMode As Boolean Implements IVehicleDeclarationInputData.BatteryOnlyMode

@@ -584,7 +584,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public DigestData DigestValue { get; }
 		public string Identifier { get; }
 		public string SimulationToolLicenseNumber { get; }
-        
+        public string VehicleMonitoringData { get; }
+
         public bool ExemptedVehicle
 		{
 			get

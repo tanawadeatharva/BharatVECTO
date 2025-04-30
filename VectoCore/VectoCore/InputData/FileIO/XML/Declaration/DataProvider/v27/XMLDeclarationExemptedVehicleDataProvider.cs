@@ -8,6 +8,7 @@ using System.Xml;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
+using TUGraz.VectoCommon.InputData;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 {
@@ -20,6 +21,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         {}
 
         public override string SimulationToolLicenseNumber => GetString("SimulationToolLicenseNumber");
+
+        public override XmlElement MonitoringNode => _monitoringNode ?? (_monitoringNode = GetNode("MonitoringData", required: false) as XmlElement);
+
+        public override string VehicleMonitoringData => MonitoringReader?.Data;
     }
 
     public class XMLDeclaration_Exempted_HeavyLorry_DataProviderV27 : AbstractXMLDeclarationExemptedVehicleDataProviderV27

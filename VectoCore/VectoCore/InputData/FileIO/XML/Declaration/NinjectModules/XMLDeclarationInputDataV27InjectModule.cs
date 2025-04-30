@@ -268,6 +268,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			
             Bind<IXMLFuelCellSystemDeclarationInputData>().To<XMLFuelCellSystemDeclarationInputDataProviderV27>()
                 .Named(XMLFuelCellSystemDeclarationInputDataProviderV27.QUALIFIED_XSD_TYPE);
+
+            // Monitoring Data
+            Bind<IXMLMonitoringReader>().To<XMLMonitoringReaderV27>().Named(XMLMonitoringReaderV27.QUALIFIED_XSD_TYPE_EXEMPTED);
+            Bind<IXMLMonitoringReader>().To<XMLMonitoringReaderV27>().Named(XMLMonitoringReaderV27.QUALIFIED_XSD_TYPE_CONVENTIONAL);
+            Bind<IXMLMonitoringReader>().To<XMLMonitoringReaderV27>().Named(XMLMonitoringReaderV27.QUALIFIED_XSD_TYPE_COMPLETED);
+            Bind<IXMLMonitoringReader>().To<XMLMonitoringReaderV27>().Named(XMLMonitoringReaderV27.QUALIFIED_XSD_TYPE_PHEV);
+            Bind<IXMLMonitoringReader>().To<XMLMonitoringReaderV27>().Named(XMLMonitoringReaderV27.QUALIFIED_XSD_TYPE_SHEV_S2);
+            Bind<IXMLMonitoringReader>().To<XMLMonitoringReaderV27>().Named(XMLMonitoringReaderV27.QUALIFIED_XSD_TYPE_SHEV_S3);
+            Bind<IXMLMonitoringReader>().To<XMLMonitoringReaderV27>().Named(XMLMonitoringReaderV27.QUALIFIED_XSD_TYPE_SHEV_S4);
+            Bind<IXMLMonitoringReader>().To<XMLMonitoringReaderV27>().Named(XMLMonitoringReaderV27.QUALIFIED_XSD_TYPE_SHEV_IEPC);
+            Bind<IXMLMonitoringReader>().To<XMLMonitoringReaderV27>().Named(XMLMonitoringReaderV27.QUALIFIED_XSD_TYPE_PEV_E2);
+            Bind<IXMLMonitoringReader>().To<XMLMonitoringReaderV27>().Named(XMLMonitoringReaderV27.QUALIFIED_XSD_TYPE_PEV_E3);
+            Bind<IXMLMonitoringReader>().To<XMLMonitoringReaderV27>().Named(XMLMonitoringReaderV27.QUALIFIED_XSD_TYPE_PEV_E4);
+            Bind<IXMLMonitoringReader>().To<XMLMonitoringReaderV27>().Named(XMLMonitoringReaderV27.QUALIFIED_XSD_TYPE_PEV_IEPC);
+            Bind<IXMLMonitoringReader>().To<XMLMonitoringReaderV27>().Named(XMLMonitoringReaderV27.QUALIFIED_XSD_TYPE_FCHV_F2);
+            Bind<IXMLMonitoringReader>().To<XMLMonitoringReaderV27>().Named(XMLMonitoringReaderV27.QUALIFIED_XSD_TYPE_FCHV_F3);
+            Bind<IXMLMonitoringReader>().To<XMLMonitoringReaderV27>().Named(XMLMonitoringReaderV27.QUALIFIED_XSD_TYPE_FCHV_F4);
+            Bind<IXMLMonitoringReader>().To<XMLMonitoringReaderV27>().Named(XMLMonitoringReaderV27.QUALIFIED_XSD_TYPE_FCHV_IEPC);
+            Bind<IXMLMonitoringReader>().To<XMLMonitoringReaderV27>().Named(XMLMonitoringReaderV27.QUALIFIED_XSD_TYPE_MULTIPLE_FCHV);
+            Bind<IXMLMonitoringReader>().To<XMLMonitoringReaderV27>().Named(XMLMonitoringReaderV27.QUALIFIED_XSD_TYPE_MULTIPLE_PEV);
+            Bind<IXMLMonitoringReader>().To<XMLMonitoringReaderV27>().Named(XMLMonitoringReaderV27.QUALIFIED_XSD_TYPE_MULTIPLE_SHEV);
         }
     }
 }
