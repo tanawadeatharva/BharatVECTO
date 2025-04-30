@@ -803,7 +803,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(RetarderType.TransmissionInputRetarder, vehicle.Components.RetarderInputData.Type);
             Assert.AreEqual(1.0, vehicle.Components.RetarderInputData.Ratio);
             Assert.AreEqual(AngledriveType.SeparateAngledrive, vehicle.Components.AngledriveInputData.Type);
-            Assert.AreEqual("only one engaged gearwheel above oil level", vehicle.Components.PTOTransmissionInputData.PTOTransmissionType);
+            Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(true, vehicle.VocationalVehicle);
             Assert.AreEqual(TankSystem.Compressed, vehicle.TankSystem);
@@ -923,7 +923,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(600, vehicle.EngineIdleSpeed.AsRPM);
             Assert.AreEqual(RetarderType.TransmissionInputRetarder, vehicle.Components.RetarderInputData.Type);
             Assert.AreEqual(1.0, vehicle.Components.RetarderInputData.Ratio);
-            Assert.AreEqual("only one engaged gearwheel above oil level", vehicle.Components.PTOTransmissionInputData.PTOTransmissionType);
+            Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(true, vehicle.VocationalVehicle);
             Assert.AreEqual(TankSystem.Liquefied, vehicle.TankSystem);
@@ -980,7 +980,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(600, vehicle.EngineIdleSpeed.AsRPM);
             Assert.AreEqual(RetarderType.None, vehicle.Components.RetarderInputData.Type);
             Assert.Throws<VectoException>(() => { var x = vehicle.Components.RetarderInputData.Ratio; });
-            Assert.AreEqual("only one engaged gearwheel above oil level", vehicle.Components.PTOTransmissionInputData.PTOTransmissionType);
+            Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(true, vehicle.VocationalVehicle);
             Assert.AreEqual(null, vehicle.TankSystem);
@@ -2524,7 +2524,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(RetarderType.TransmissionInputRetarder, vehicle.Components.RetarderInputData.Type);
             Assert.AreEqual(1, vehicle.Components.RetarderInputData.Ratio);
             Assert.AreEqual(null, vehicle.Components.AngledriveInputData);
-            Assert.AreEqual("None", vehicle.Components.PTOTransmissionInputData.PTOTransmissionType);
+            Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(true, vehicle.VocationalVehicle);
             Assert.AreEqual(null, vehicle.TankSystem);
@@ -2581,7 +2581,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(RetarderType.None, vehicle.Components.RetarderInputData.Type);
             Assert.Throws<VectoException>(() => { var x = vehicle.Components.RetarderInputData.Ratio; });
             Assert.AreEqual(null, vehicle.Components.AngledriveInputData);
-            Assert.AreEqual("None", vehicle.Components.PTOTransmissionInputData.PTOTransmissionType);
+            Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(true, vehicle.VocationalVehicle);
             Assert.AreEqual(null, vehicle.TankSystem);
@@ -3469,10 +3469,10 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(RetarderType.TransmissionInputRetarder, vehicle.Components.RetarderInputData.Type);
             Assert.AreEqual(1, vehicle.Components.RetarderInputData.Ratio);
             Assert.AreEqual(null, vehicle.Components.AngledriveInputData);
-            Assert.AreEqual("None", vehicle.Components.PTOTransmissionInputData.PTOTransmissionType);
+            Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(true, vehicle.VocationalVehicle);
-            Assert.AreEqual(TankSystem.Liquefied, vehicle.TankSystem);
+            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(true, vehicle.SleeperCab);
             Assert.AreEqual("ASDF", vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.F_IEPC, vehicle.ArchitectureID);
@@ -3527,7 +3527,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(RetarderType.None, vehicle.Components.RetarderInputData.Type);
             Assert.Throws<VectoException>(() => { var x = vehicle.Components.RetarderInputData.Ratio; });
             Assert.AreEqual(null, vehicle.Components.AngledriveInputData);
-            Assert.AreEqual("None", vehicle.Components.PTOTransmissionInputData.PTOTransmissionType);
+            Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(true, vehicle.VocationalVehicle);
             Assert.AreEqual(null, vehicle.TankSystem);
@@ -3589,7 +3589,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(TankSystem.Liquefied, vehicle.TankSystem);
+            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual("ASDF", vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.F_IEPC, vehicle.ArchitectureID);

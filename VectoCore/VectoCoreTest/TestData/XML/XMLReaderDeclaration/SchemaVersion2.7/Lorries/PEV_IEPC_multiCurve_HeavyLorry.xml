@@ -14,11 +14,6 @@
 		<TechnicalPermissibleMaximumLadenMass>18000</TechnicalPermissibleMaximumLadenMass>
 		<RetarderType>None</RetarderType>
 		<AngledriveType>None</AngledriveType>
-		<PTO>
-			<!-- syntactically allowed, not supported by VECTO - no gearbox! -->
-			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
-			<PTOOtherElements>none</PTOOtherElements>
-		</PTO>
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<VocationalVehicle>false</VocationalVehicle>
 		<SleeperCab>false</SleeperCab>

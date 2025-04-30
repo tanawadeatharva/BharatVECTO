@@ -15,10 +15,6 @@
 		<IdlingSpeed>600</IdlingSpeed>
 		<RetarderType>None</RetarderType>
 		<AngledriveType>None</AngledriveType>
-		<PTO>
-			<PTOShaftsGearWheels>only one engaged gearwheel above oil level</PTOShaftsGearWheels>
-			<PTOOtherElements>none</PTOOtherElements>
-		</PTO>
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<VocationalVehicle>true</VocationalVehicle>
 		<SleeperCab>true</SleeperCab>

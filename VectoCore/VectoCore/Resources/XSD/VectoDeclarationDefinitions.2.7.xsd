@@ -25,6 +25,8 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" schemaLocation="VectoDeclarationDefinitions.2.4.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.6" schemaLocation="VectoDeclarationDefinitions.2.6.xsd"/>
 	
+	<!-- 29-04-2025: Removed PTO element from IEPC vehicles and NgTankSystem from vehicles without ICE. Added NgTankSystem to multiple-SHEV Primary Bus. -->
+	
 	<!--                      JOB                           -->
 	<xs:complexType name="VectoDeclarationJobType">
 		<xs:sequence>
@@ -192,7 +194,7 @@
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
 					<xs:group ref="Vehicle_HeavyLorryParametersSequenceGroup_1"/>
-					<xs:group ref="Vehicle_HeavyLorryPEVParametersSequenceGroup_2"/>
+					<xs:group ref="Vehicle_HeavyLorryIEPCParametersSequenceGroup_2"/>
 					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_IEPC_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
@@ -261,7 +263,7 @@
 							<xs:documentation>P198 - [1/min]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="Vehicle_HeavyLorryParametersSequenceGroup_2"/>
+					<xs:group ref="Vehicle_HeavyLorry_S_IEPC_ParametersSequenceGroup_2"/>
 					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_HEV-IEPC-S_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
@@ -291,7 +293,7 @@
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
 					<xs:group ref="Vehicle_HeavyLorryParametersSequenceGroup_1"/>
-					<xs:group ref="Vehicle_HeavyLorryParametersSequenceGroup_2"/>
+					<xs:group ref="Vehicle_HeavyLorryPEVParametersSequenceGroup_2"/>
 					<xs:element name="ArchitectureID" type="ArchitectureID_FCHV_Fx_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
@@ -327,7 +329,7 @@
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
 					<xs:group ref="Vehicle_HeavyLorryParametersSequenceGroup_1"/>
-					<xs:group ref="Vehicle_HeavyLorryParametersSequenceGroup_2"/>
+					<xs:group ref="Vehicle_HeavyLorryIEPCParametersSequenceGroup_2"/>
 					<xs:element name="ArchitectureID" type="ArchitectureID_FCHV_IEPC_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
@@ -397,7 +399,7 @@
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
 					<xs:group ref="Vehicle_HeavyLorryParametersSequenceGroup_1"/>
-					<xs:group ref="Vehicle_MultiplePowertrains_HeavyLorryParametersSequenceGroup_2"/>
+					<xs:group ref="Vehicle_MultiplePowertrains_HeavyLorryPEVParametersSequenceGroup_2"/>
 					<xs:element name="ArchitectureID" type="ArchitectureID_FCHV_Fx_IEPC_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
@@ -719,7 +721,7 @@
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
 					<xs:group ref="Vehicle_MediumLorryParametersSequenceGroup_1"/>
-					<xs:group ref="Vehicle_MediumLorryParametersSequenceGroup_2"/>
+					<xs:group ref="Vehicle_MediumLorryPEVParametersSequenceGroup_2"/>
 					<xs:element name="ArchitectureID" type="ArchitectureID_FCHV_Fx_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
@@ -755,7 +757,7 @@
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
 					<xs:group ref="Vehicle_MediumLorryParametersSequenceGroup_1"/>
-					<xs:group ref="Vehicle_MediumLorryParametersSequenceGroup_2"/>
+					<xs:group ref="Vehicle_MediumLorryPEVParametersSequenceGroup_2"/>
 					<xs:element name="ArchitectureID" type="ArchitectureID_FCHV_IEPC_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
@@ -1267,6 +1269,11 @@
 					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
 						<xs:annotation>
 							<xs:documentation>P269 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="NgTankSystem" type="v2.1:NgTankSystemType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P275 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="ArchitectureID" type="ArchitectureID_SHEV_Sx_IEPC_Type">
@@ -2101,6 +2108,41 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
+	<xs:group name="Vehicle_HeavyLorry_S_IEPC_ParametersSequenceGroup_2">
+		<xs:sequence>
+			<xs:group ref="Vehicle_RetarderSequenceGroup"/>
+			<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
+				<xs:annotation>
+					<xs:documentation>P180 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P269 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VocationalVehicle" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P270 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NgTankSystem" type="v2.1:NgTankSystemType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P275 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SleeperCab" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P276 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VehicleTypeApprovalNumber" type="v2.4:VehicleTypeApprovalNumberType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P352 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
 	<xs:group name="Vehicle_MultiplePowertrains_HeavyLorryParametersSequenceGroup_2">
 		<xs:sequence>
 			<xs:group ref="Vehicle_MultiplePowertrains_RetarderSequenceGroup"/>
@@ -2146,6 +2188,36 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="PTO" type="PTOType"/>
+			<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P269 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VocationalVehicle" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P270 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SleeperCab" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P276 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VehicleTypeApprovalNumber" type="v2.4:VehicleTypeApprovalNumberType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P352 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="Vehicle_HeavyLorryIEPCParametersSequenceGroup_2">
+		<xs:sequence>
+			<xs:group ref="Vehicle_RetarderSequenceGroup"/>
+			<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
+				<xs:annotation>
+					<xs:documentation>P180 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
 				<xs:annotation>
 					<xs:documentation>P269 - bool</xs:documentation>

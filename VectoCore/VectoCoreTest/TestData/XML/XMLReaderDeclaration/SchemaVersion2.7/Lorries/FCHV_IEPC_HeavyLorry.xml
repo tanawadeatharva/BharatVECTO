@@ -24,14 +24,8 @@
 		<RetarderType>Transmission Input Retarder</RetarderType>
 		<RetarderRatio>1.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
-		<PTO>
-			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
-			<PTOOtherElements>none</PTOOtherElements>
-		</PTO>
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<VocationalVehicle>true</VocationalVehicle>
-		<NgTankSystem>Liquefied</NgTankSystem>
-		<!-- optional -->
 		<SleeperCab>true</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>F-IEPC</ArchitectureID>

@@ -23,14 +23,8 @@
 		<TechnicalPermissibleMaximumLadenMass>11990</TechnicalPermissibleMaximumLadenMass>
 		<RetarderType>None</RetarderType>
 		<AngledriveType>None</AngledriveType>
-		<PTO>
-			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
-			<PTOOtherElements>none</PTOOtherElements>
-		</PTO>
 		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
 		<VocationalVehicle>false</VocationalVehicle>
-		<NgTankSystem>Liquefied</NgTankSystem>
-		<!-- optional -->
 		<SleeperCab>false</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>F-IEPC</ArchitectureID>

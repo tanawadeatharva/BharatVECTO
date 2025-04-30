@@ -31,6 +31,7 @@
 
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
@@ -174,7 +175,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
         public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
         public XMLDeclarationADASDataHEVProviderV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
-            : base(vehicle, componentNode, sourceFile) { }
+            : base(vehicle, componentNode, sourceFile) 
+		{
+			if (vehicle.OVC && !EngineStopStart)
+			{
+				throw new VectoException("EngineStopStart must be set to true for OVC-HEV vehicles.");
+			}
+		}
 
         #region Overrides of XMLDeclarationADASDataProviderV10
 

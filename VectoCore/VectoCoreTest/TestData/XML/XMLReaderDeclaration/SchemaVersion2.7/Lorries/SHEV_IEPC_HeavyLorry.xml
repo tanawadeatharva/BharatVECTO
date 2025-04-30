@@ -16,10 +16,6 @@
 		<RetarderType>Transmission Input Retarder</RetarderType>
 		<RetarderRatio>1.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
-		<PTO>
-			<PTOShaftsGearWheels>only one engaged gearwheel above oil level</PTOShaftsGearWheels>
-			<PTOOtherElements>none</PTOOtherElements>
-		</PTO>
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<VocationalVehicle>true</VocationalVehicle>
 		<NgTankSystem>Liquefied</NgTankSystem>
