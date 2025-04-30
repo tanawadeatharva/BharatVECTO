@@ -168,7 +168,7 @@ Public Class Vehicle
 																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis, False)
 				vehicleData = New LorryVehicleDataAdapter().CreateVehicleData(vehicle, segment, segment.Missions.First(),
 													segment.Missions.First().Loadings.First(), True)
-				airdragData = New AirdragDataAdapter().CreateAirdragData(vehicle, vehicle.InMotionChargingDecl, segment.Missions.First(), segment,OvcHevMode.NotApplicable)
+				airdragData = New AirdragDataAdapter().CreateAirdragData(vehicle, segment.Missions.First(), segment,OvcHevMode.NotApplicable)
 				retarderData = New RetarderDataAdapter().CreateRetarderData(vehicle, vehicle.ArchitectureID, vehicle.Components?.IEPC)
 				angledriveData = New AngledriveDataAdapter().CreateAngledriveData(vehicle)
 				ptoData = New PTODataAdapterLorry().CreatePTOTransmissionData(vehicle, vehicle.Components.GearboxInputData)

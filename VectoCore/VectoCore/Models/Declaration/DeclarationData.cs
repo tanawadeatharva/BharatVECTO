@@ -2142,7 +2142,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var etaChgInMotion = 1 - ((respInMotionChg.LossPower + connectorLossInM) / respInMotionChg.PowerDemand).Value();
 
 			return energyDepot / (energyDepot + energyInMotion) * etaChgBatDepot +
-					energyInMotion / (energyDepot + energyDepot) * etaChgInMotion;
+					energyInMotion / (energyDepot + energyInMotion) * etaChgInMotion;
 		}
 
 		public static ChargingEfficiencies CalculateChargingEfficiencyIMCOVCHEV(VectoRunData runData, VehicleOperationLookup.VehicleOperationData vehicleOperation,
@@ -2350,8 +2350,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var distance = modData.Distance;
 			var electricEnergyConsumptionSoCCorr = modData.CorrectedModalData.ElectricEnergyConsumption_SoC_Corr;
 
-
-			var vehicleOperation = VehicleOperation.LookupVehicleOperation(runData.VehicleData.VehicleClass, runData.Mission.MissionType);
+			// runData.Mission.BusParameter?.BusGroup ?? runData.VehicleData.VehicleClass
+            var vehicleOperation = VehicleOperation.LookupVehicleOperation(runData.Mission.BusParameter?.BusGroup ?? runData.VehicleData.VehicleClass, runData.Mission.MissionType);
 
 			var D9_useableBatteryCapacityForR_CDA = batteryData.UseableStoredEnergy;
 			var D10_electricEnergyConsumption = electricEnergyConsumptionSoCCorr / distance;

@@ -137,11 +137,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			}
 
 
-			public virtual AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData,
-				IVehicleInMotionChargingDeclaration imcData, Mission mission,
+			public virtual AirdragData CreateAirdragData(IVehicleDeclarationInputData vehicleData, Mission mission,
 				Segment segment, OvcHevMode ovcMode)
 			{
-				return _airdragDataAdapter.CreateAirdragData(airdragData, imcData, mission, segment, ovcMode);
+				return _airdragDataAdapter.CreateAirdragData(vehicleData, mission, segment, ovcMode);
 			}
 
 			public AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData)
