@@ -280,7 +280,9 @@ namespace TUGraz.VectoCore.OutputData
 				}
 
 				DoStoreResult(entry, runData, modData);
-				StoredResults.Add(Tuple.Create(entry, runData, modData));
+				lock (StoredResults) {
+					StoredResults.Add(Tuple.Create(entry, runData, modData));
+				}
 			}
 
 			WriteResults();
@@ -310,7 +312,11 @@ namespace TUGraz.VectoCore.OutputData
 		protected internal virtual void DoWriteReport()
 		{
 			/// Check if LH does not meet LH requierements, i.e. ReferenceLoad and OperationalRange > 350km.
-			var RDGroupEntry = StoredResults.SingleOrDefault(e => DeclarationData.EvaluateLHSubgroupConditions(e.Item1));
+			Tuple<T, VectoRunData, IModalDataContainer> RDGroupEntry = null;
+			lock (StoredResults) {
+				RDGroupEntry =
+					StoredResults.SingleOrDefault(e => DeclarationData.EvaluateLHSubgroupConditions(e.Item1));
+			}
 
 			foreach (var resultEntry in OrderedResults)
 			{
