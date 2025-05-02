@@ -254,6 +254,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public string Manufacturer { get; }
 		public string Model { get; }
 		public string SimulationToolLicenseNumber { get; }
+		public string VehicleMonitoringData { get; }
         public Kilogram H2StorageUsableCapacity { get; }
         public HydrogenStorageTechnology? HydrogenStorageTechnology { get; }
         public bool BatteryOnlyMode { get; }

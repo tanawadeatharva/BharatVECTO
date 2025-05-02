@@ -111,7 +111,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public bool BatteryOnlyMode { get; }
 
-		public DynamicChargingTechnology DynamicChargingTechnology { get; }
+        public string VehicleMonitoringData { get; }
+
+        public DynamicChargingTechnology DynamicChargingTechnology { get; }
 
 		public Kilogram H2StorageUsableCapacity { get; }
 

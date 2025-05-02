@@ -38,6 +38,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IList<ITorqueLimitInputData> TorqueLimits => new List<ITorqueLimitInputData>();
 		public string ManufacturerAddress { get; }
 		public string SimulationToolLicenseNumber { get; }
+        public string VehicleMonitoringData { get; }
         public Kilogram H2StorageUsableCapacity { get; }
         public HydrogenStorageTechnology? HydrogenStorageTechnology { get; }
         public bool BatteryOnlyMode { get; }
@@ -168,6 +169,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool? AirdragModifiedMultistep { get; }
 		public TankSystem? TankSystem { get; }
 		public string SimulationToolLicenseNumber { get; }
+        public string VehicleMonitoringData { get; }
         public Kilogram H2StorageUsableCapacity { get; }
         public HydrogenStorageTechnology? HydrogenStorageTechnology { get; }
         public bool BatteryOnlyMode { get; }

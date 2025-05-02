@@ -69,6 +69,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected XmlElement _componentNode;
 		protected XmlElement _ptoNode;
 		protected XmlElement _adasNode;
+		protected XmlElement _monitoringNode;
 
 
 		public XMLDeclarationVehicleDataProviderV10(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile,
@@ -105,6 +106,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual IXMLComponentReader ComponentReader { protected get; set; }
 
+		public virtual XmlElement MonitoringNode => null;
+
+		public virtual IXMLMonitoringReader MonitoringReader { protected get; set; }
+
 		public virtual XmlElement PTONode
 		{
 			get {
@@ -135,7 +140,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual string SimulationToolLicenseNumber => null;
 
-		public virtual Kilogram H2StorageUsableCapacity => null;
+		public virtual string VehicleMonitoringData => null;
+
+        public virtual Kilogram H2StorageUsableCapacity => null;
 
 		public virtual HydrogenStorageTechnology? HydrogenStorageTechnology => null;
 
@@ -562,7 +569,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public string SimulationToolLicenseNumber => ElementExists("SimulationToolLicenseNumber") ? GetString("SimulationToolLicenseNumber") : null;
 
-		public Kilogram H2StorageUsableCapacity => ElementExists("H2StorageUsableCapacity") ? GetDouble("H2StorageUsableCapacity").SI<Kilogram>() : null;
+        public string VehicleMonitoringData { get; }
+
+        public Kilogram H2StorageUsableCapacity => ElementExists("H2StorageUsableCapacity") ? GetDouble("H2StorageUsableCapacity").SI<Kilogram>() : null;
 
 		public HydrogenStorageTechnology? HydrogenStorageTechnology => HydrogenStorageTechnologyHelper.Parse(GetString("HydrogenStorageTechnology"));
 
@@ -619,6 +628,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		public virtual IXMLComponentReader ComponentReader { get; set; }
+
+		public virtual XmlElement MonitoringNode => null;
+
+		public virtual IXMLMonitoringReader MonitoringReader { get; set; }
 
 		public virtual Meter EntranceHeight { get; }
 
@@ -964,6 +977,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
              ? ReadTableData(XMLNames.Vehicle_BoostingLimitation, XMLNames.BoostingLimitation_Entry, AttributeMappings.BoostingLimitsMapping)
              : null;
 
+		public override XmlElement MonitoringNode => _monitoringNode ?? (_monitoringNode = GetNode("MonitoringData", required: false) as XmlElement);
+
+        public override string VehicleMonitoringData => MonitoringReader?.Data;
     }
 
 

@@ -171,7 +171,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
         public HydrogenStorageTechnology? HydrogenStorageTechnology { get; private set; }
 		public bool BatteryOnlyMode { get; private set; }
         public DynamicChargingTechnology DynamicChargingTechnology { get; private set; }
-
+        public string VehicleMonitoringData { get; }
 
         IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle => Vehicle;
 

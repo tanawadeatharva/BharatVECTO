@@ -94,7 +94,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public virtual string SimulationToolLicenseNumber => null;
 
-		public virtual Kilogram H2StorageUsableCapacity => null;
+		public virtual string VehicleMonitoringData => null;
+
+        public virtual Kilogram H2StorageUsableCapacity => null;
 
         public virtual HydrogenStorageTechnology? HydrogenStorageTechnology => null;
 

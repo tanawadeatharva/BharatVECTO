@@ -201,6 +201,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 		IXMLFuelCellDeclarationInputData CreateFuelCellInputData(string version, XmlNode componentNode, string sourceFile);
 
 		IXMLFuelCellSystemDeclarationInputData CreateFuelCellSystemInputData(string version, XmlNode componentNode, string sourceFile);
-	}
+
+        IXMLMonitoringReader CreateMonitoringReader(string version, IXMLDeclarationVehicleData vehicle, XmlNode monitoringNode);
+    }
 
 }

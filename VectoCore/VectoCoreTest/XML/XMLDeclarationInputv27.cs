@@ -13,6 +13,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.XML
@@ -41,6 +42,7 @@ namespace TUGraz.VectoCore.Tests.XML
             TestCase(@"Conventional_HeavyLorry.xml", LORRIES, TestName = "v27_Conventional_HeavyLorry"),
             TestCase(@"Conventional_HeavyLorry_requiredOnly.xml", LORRIES, TestName = "v27_Conventional_HeavyLorry_requiredOnly"),
             TestCase(@"Exempted_HeavyLorry.xml", LORRIES, TestName = "v27_Exempted_HeavyLorry"),
+            TestCase(@"Exempted_HeavyLorry_requiredOnly.xml", LORRIES, TestName = "v27_Exempted_HeavyLorry_requiredOnly"),
             TestCase(@"SHEV_IEPC_HeavyLorry.xml", LORRIES, TestName = "v27_SHEV_IEPC_HeavyLorry"),
             TestCase(@"SHEV_IEPC_HeavyLorry_requiredOnly.xml", LORRIES, TestName = "v27_SHEV_IEPC_HeavyLorry_requiredOnly"),
             TestCase(@"SHEV_S2_HeavyLorry.xml", LORRIES, TestName = "v27_SHEV_S2_HeavyLorry"),
@@ -84,6 +86,7 @@ namespace TUGraz.VectoCore.Tests.XML
             TestCase(@"Conventional_MediumLorry.xml", LORRIES, TestName = "v27_Conventional_MediumLorry"),
             TestCase(@"Conventional_MediumLorry_requiredOnly.xml", LORRIES, TestName = "v27_Conventional_MediumLorry_requiredOnly"),
             TestCase(@"Exempted_MediumLorry.xml", LORRIES, TestName = "v27_Exempted_MediumLorry"),
+            TestCase(@"Exempted_MediumLorry_requiredOnly.xml", LORRIES, TestName = "v27_Exempted_MediumLorry_requiredOnly"),
             TestCase(@"H2_ICE_MediumLorry.xml", LORRIES, TestName = "v27_H2_ICE_MediumLorry"),
             TestCase(@"HEV_P2_MediumLorry.xml", LORRIES, TestName = "v27_HEV_P2_MediumLorry"),
             TestCase(@"HEV_P2_MediumLorry_requiredOnly.xml", LORRIES, TestName = "v27_HEV_P2_MediumLorry_requiredOnly"),
@@ -224,6 +227,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"Conventional_HeavyLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_Conventional_HeavyLorry_requiredOnly")]
@@ -276,6 +281,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"Conventional_MediumLorry.xml", LORRIES, TestName = "v27_Reader_Conventional_MediumLorry")]
@@ -329,6 +336,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"Conventional_MediumLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_Conventional_MediumLorry_requiredOnly")]
@@ -380,6 +389,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"H2_ICE_HeavyLorry.xml", LORRIES, TestName = "v27_Reader_H2_ICE_HeavyLorry")]
@@ -432,6 +443,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"H2_ICE_MediumLorry.xml", LORRIES, TestName = "v27_Reader_H2_ICE_MediumLorry")]
@@ -483,6 +496,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"Exempted_HeavyLorry.xml", LORRIES, TestName = "v27_Reader_Exempted_HeavyLorry")]
@@ -512,9 +527,42 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(400000, vehicle.MaxNetPower1.Value());
             Assert.AreEqual("In-motion charging Article 9 exempted", vehicle.ExemptedTechnology);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
-        [TestCase(@"exempted_mediumLorry.xml", LORRIES, TestName = "v27_Reader_Exempted_MediumLorry")]
+        [TestCase(@"Exempted_HeavyLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_Exempted_HeavyLorry_requiredOnly")]
+        public void TestReaderExemptedHeavyLorryRequiredOnly(string jobfile, string testDir)
+        {
+            var filename = Path.Combine(testDir, jobfile);
+            var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
+
+            Assert.NotNull(dataProvider);
+            Assert.NotNull(dataProvider.JobInputData);
+
+            var vehicle = dataProvider.JobInputData.Vehicle;
+            Assert.NotNull(vehicle);
+
+            Assert.AreEqual("TU Graz", vehicle.Manufacturer);
+            Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
+            Assert.AreEqual("HEV Heavy Lorry Px", vehicle.Model);
+            Assert.AreEqual("1234", vehicle.VIN);
+            Assert.AreEqual("2017-01-01T00:00:00Z", vehicle.Date.ToXmlFormat());
+            Assert.AreEqual("x", vehicle.SimulationToolLicenseNumber);
+            Assert.AreEqual(LegislativeClass.N3, vehicle.LegislativeClass);
+            Assert.AreEqual(VehicleCategory.RigidTruck, vehicle.VehicleCategory);
+            Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, vehicle.AxleConfiguration);
+            Assert.AreEqual(6000.SI<Kilogram>(), vehicle.CurbMassChassis);
+            Assert.AreEqual(12000.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
+            Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
+            Assert.AreEqual(false, vehicle.SleeperCab);
+            Assert.AreEqual(400000, vehicle.MaxNetPower1.Value());
+            Assert.AreEqual("In-motion charging Article 9 exempted", vehicle.ExemptedTechnology);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
+        }
+
+        [TestCase(@"Exempted_MediumLorry.xml", LORRIES, TestName = "v27_Reader_Exempted_MediumLorry")]
         public void TestReaderExemptedMediumLorry(string jobfile, string testDir)
         {
             var filename = Path.Combine(testDir, jobfile);
@@ -540,6 +588,38 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(350000, vehicle.MaxNetPower1.Value());
             Assert.AreEqual("FCV Article 9 exempted", vehicle.ExemptedTechnology);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
+        }
+
+        [TestCase(@"Exempted_MediumLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_Exempted_MediumLorry_requiredOnly")]
+        public void TestReaderExemptedMediumLorryRequiredOnly(string jobfile, string testDir)
+        {
+            var filename = Path.Combine(testDir, jobfile);
+            var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
+
+            Assert.NotNull(dataProvider);
+            Assert.NotNull(dataProvider.JobInputData);
+
+            var vehicle = dataProvider.JobInputData.Vehicle;
+            Assert.NotNull(vehicle);
+
+            Assert.AreEqual("ML Manufacturer", vehicle.Manufacturer);
+            Assert.AreEqual("ML Street 1", vehicle.ManufacturerAddress);
+            Assert.AreEqual("Sample ML Model", vehicle.Model);
+            Assert.AreEqual("VEH-ML34567890", vehicle.VIN);
+            Assert.AreEqual("2020-01-09T11:00:00Z", vehicle.Date.ToXmlFormat());
+            Assert.AreEqual("x", vehicle.SimulationToolLicenseNumber);
+            Assert.AreEqual(LegislativeClass.N2, vehicle.LegislativeClass);
+            Assert.AreEqual(VehicleCategory.Van, vehicle.VehicleCategory);
+            Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, vehicle.AxleConfiguration);
+            Assert.AreEqual(3600.SI<Kilogram>(), vehicle.CurbMassChassis);
+            Assert.AreEqual(7300.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
+            Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
+            Assert.AreEqual(350000, vehicle.MaxNetPower1.Value());
+            Assert.AreEqual("FCV Article 9 exempted", vehicle.ExemptedTechnology);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"HEV_P2_HeavyLorry.xml", LORRIES, TestName = "v27_Reader_HEV_P2_HeavyLorry")]
@@ -601,6 +681,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"HEV_P2_HeavyLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_HEV_P2_HeavyLorry_requiredOnly")]
@@ -658,6 +740,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"HEV_P2_MediumLorry.xml", LORRIES, TestName = "v27_Reader_HEV_P2_MediumLorry")]
@@ -718,6 +802,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"HEV_P2_MediumLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_HEV_P2_MediumLorry_requiredOnly")]
@@ -774,6 +860,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"HEV_IHPC_HeavyLorry.xml", LORRIES, TestName = "v27_Reader_HEV_IHPC_HeavyLorry")]
@@ -835,6 +923,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"HEV_IHPC_MediumLorry.xml", LORRIES, TestName = "v27_Reader_HEV_IHPC_MediumLorry")]
@@ -895,6 +985,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"SHEV_IEPC_HeavyLorry.xml", LORRIES, TestName = "v27_Reader_SHEV_IEPC_HeavyLorry")]
@@ -952,6 +1044,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+            
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"SHEV_IEPC_HeavyLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_SHEV_IEPC_HeavyLorry_requiredOnly")]
@@ -1008,6 +1102,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"SHEV_IEPC_MediumLorry.xml", LORRIES, TestName = "v27_Reader_SHEV_IEPC_MediumLorry")]
@@ -1064,6 +1160,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"SHEV_IEPC_MediumLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_SHEV_IEPC_MediumLorry_requiredOnly")]
@@ -1119,6 +1217,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"SHEV_S2_HeavyLorry.xml", LORRIES, TestName = "v27_Reader_SHEV_S2_HeavyLorry")]
@@ -1178,6 +1278,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"SHEV_S2_HeavyLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_SHEV_S2_HeavyLorry_requiredOnly")]
@@ -1235,6 +1337,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"SHEV_S2_MediumLorry.xml", LORRIES, TestName = "v27_Reader_SHEV_S2_MediumLorry")]
@@ -1293,6 +1397,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"SHEV_S2_MediumLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_SHEV_S2_MediumLorry_requiredOnly")]
@@ -1349,6 +1455,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"SHEV_S3_HeavyLorry.xml", LORRIES, TestName = "v27_Reader_SHEV_S3_HeavyLorry")]
@@ -1407,6 +1515,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"SHEV_S3_HeavyLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_SHEV_S3_HeavyLorry_requiredOnly")]
@@ -1463,6 +1573,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"SHEV_S3_MediumLorry.xml", LORRIES, TestName = "v27_Reader_SHEV_S3_MediumLorry")]
@@ -1520,6 +1632,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"SHEV_S3_MediumLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_SHEV_S3_MediumLorry_requiredOnly")]
@@ -1575,6 +1689,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"SHEV_S4_HeavyLorry.xml", LORRIES, TestName = "v27_Reader_SHEV_S4_HeavyLorry")]
@@ -1633,6 +1749,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"SHEV_S4_HeavyLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_SHEV_S4_HeavyLorry_requiredOnly")]
@@ -1689,6 +1807,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"SHEV_S4_MediumLorry.xml", LORRIES, TestName = "v27_Reader_SHEV_S4_MediumLorry")]
@@ -1746,6 +1866,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"SHEV_S4_MediumLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_SHEV_S4_MediumLorry_requiredOnly")]
@@ -1801,6 +1923,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"PEV_E2_HeavyLorry.xml", LORRIES, TestName = "v27_Reader_PEV_E2_HeavyLorry")]
@@ -1860,6 +1984,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"PEV_E2_HeavyLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_PEV_E2_HeavyLorry_requiredOnly")]
@@ -1918,6 +2044,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"PEV_E2_MediumLorry.xml", LORRIES, TestName = "v27_Reader_PEV_E2_MediumLorry")]
@@ -1976,6 +2104,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"PEV_E2_MediumLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_PEV_E2_MediumLorry_requiredOnly")]
@@ -2033,6 +2163,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"PEV_E3_HeavyLorry.xml", LORRIES, TestName = "v27_Reader_PEV_E3_HeavyLorry")]
@@ -2092,6 +2224,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"PEV_E3_HeavyLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_PEV_E3_HeavyLorry_requiredOnly")]
@@ -2150,6 +2284,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"PEV_E3_MediumLorry.xml", LORRIES, TestName = "v27_Reader_PEV_E3_MediumLorry")]
@@ -2208,6 +2344,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"PEV_E3_MediumLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_PEV_E3_MediumLorry_requiredOnly")]
@@ -2265,6 +2403,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"PEV_E4_HeavyLorry.xml", LORRIES, TestName = "v27_Reader_PEV_E4_HeavyLorry")]
@@ -2324,6 +2464,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"PEV_E4_HeavyLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_PEV_E4_HeavyLorry_requiredOnly")]
@@ -2382,6 +2524,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"PEV_E4_MediumLorry.xml", LORRIES, TestName = "v27_Reader_PEV_E4_MediumLorry")]
@@ -2440,6 +2584,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"PEV_E4_MediumLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_PEV_E4_MediumLorry_requiredOnly")]
@@ -2496,6 +2642,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"PEV_IEPC_HeavyLorry.xml", LORRIES, TestName = "v27_Reader_PEV_IEPC_HeavyLorry")]
@@ -2553,6 +2701,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"PEV_IEPC_HeavyLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_PEV_IEPC_HeavyLorry_requiredOnly")]
@@ -2610,6 +2760,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"PEV_IEPC_MediumLorry.xml", LORRIES, TestName = "v27_Reader_PEV_IEPC_MediumLorry")]
@@ -2666,6 +2818,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"PEV_IEPC_MediumLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_PEV_IEPC_MediumLorry_requiredOnly")]
@@ -2722,6 +2876,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_F2_HeavyLorry.xml", LORRIES, TestName = "v27_Reader_FCHV_F2_HeavyLorry")]
@@ -2782,6 +2938,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_F2_HeavyLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_FCHV_F2_HeavyLorry_requiredOnly")]
@@ -2841,6 +2999,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_F2_MediumLorry.xml", LORRIES, TestName = "v27_Reader_FCHV_F2_MediumLorry")]
@@ -2902,6 +3062,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_F2_MediumLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_FCHV_F2_MediumLorry_requiredOnly")]
@@ -2962,6 +3124,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_F3_HeavyLorry.xml", LORRIES, TestName = "v27_Reader_FCHV_F3_HeavyLorry")]
@@ -3022,6 +3186,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_F3_HeavyLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_FCHV_F3_HeavyLorry_requiredOnly")]
@@ -3080,6 +3246,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_F3_MediumLorry.xml", LORRIES, TestName = "v27_Reader_FCHV_F3_MediumLorry")]
@@ -3141,6 +3309,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_F3_MediumLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_FCHV_F3_MediumLorry_requiredOnly")]
@@ -3201,6 +3371,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_F4_HeavyLorry.xml", LORRIES, TestName = "v27_Reader_FCHV_F4_HeavyLorry")]
@@ -3261,6 +3433,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_F4_HeavyLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_FCHV_F4_HeavyLorry_requiredOnly")]
@@ -3320,6 +3494,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_F4_MediumLorry.xml", LORRIES, TestName = "v27_Reader_FCHV_F4_MediumLorry")]
@@ -3381,6 +3557,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_F4_MediumLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_FCHV_F4_MediumLorry_requiredOnly")]
@@ -3441,6 +3619,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_IEPC_HeavyLorry.xml", LORRIES, TestName = "v27_Reader_FCHV_IEPC_HeavyLorry")]
@@ -3499,6 +3679,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_IEPC_HeavyLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_FCHV_IEPC_HeavyLorry_requiredOnly")]
@@ -3557,6 +3739,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_IEPC_MediumLorry.xml", LORRIES, TestName = "v27_Reader_FCHV_IEPC_MediumLorry")]
@@ -3616,6 +3800,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNotNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_IEPC_MediumLorry_requiredOnly.xml", LORRIES, TestName = "v27_Reader_FCHV_IEPC_MediumLorry_requiredOnly")]
@@ -3675,6 +3861,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData.AirDragArea);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_F2_PrimaryBus.xml", PRIMARYBUSES, TestName = "v27_Reader_FCHV_F2_PrimaryBus")]
@@ -3736,6 +3924,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.BusAuxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_F2_PrimaryBus_requiredOnly.xml", PRIMARYBUSES, TestName = "v27_Reader_FCHV_F2_PrimaryBus_requiredOnly")]
@@ -3796,6 +3986,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.BusAuxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_F3_PrimaryBus.xml", PRIMARYBUSES, TestName = "v27_Reader_FCHV_F3_PrimaryBus")]
@@ -3857,6 +4049,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.BusAuxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_F3_PrimaryBus_requiredOnly.xml", PRIMARYBUSES, TestName = "v27_Reader_FCHV_F3_PrimaryBus_requiredOnly")]
@@ -3917,6 +4111,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.BusAuxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_F4_PrimaryBus.xml", PRIMARYBUSES, TestName = "v27_Reader_FCHV_F4_PrimaryBus")]
@@ -3978,6 +4174,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.BusAuxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_F4_PrimaryBus_requiredOnly.xml", PRIMARYBUSES, TestName = "v27_Reader_FCHV_F4_PrimaryBus_requiredOnly")]
@@ -4038,6 +4236,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.BusAuxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_IEPC_PrimaryBus.xml", PRIMARYBUSES, TestName = "v27_Reader_FCHV_IEPC_PrimaryBus")]
@@ -4098,6 +4298,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.BusAuxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData);
+
+            Assert.IsNotNull(vehicle.VehicleMonitoringData);
         }
 
         [TestCase(@"FCHV_IEPC_PrimaryBus_requiredOnly.xml", PRIMARYBUSES, TestName = "v27_Reader_FCHV_IEPC_PrimaryBus_requiredOnly")]
@@ -4158,6 +4360,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNull(vehicle.Components.AuxiliaryInputData);
             Assert.IsNotNull(vehicle.Components.BusAuxiliaries);
             Assert.IsNull(vehicle.Components.AirdragInputData);
+
+            Assert.IsNull(vehicle.VehicleMonitoringData);
         }
 
     }

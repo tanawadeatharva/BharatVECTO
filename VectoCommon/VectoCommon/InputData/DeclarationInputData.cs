@@ -242,6 +242,8 @@ namespace TUGraz.VectoCommon.InputData
 		VectoSimulationJobType VehicleType { get; }
 
 		string SimulationToolLicenseNumber { get; }
+
+        string VehicleMonitoringData { get; }
     }
 
 	public interface IVehicleInMotionChargingDeclaration 
