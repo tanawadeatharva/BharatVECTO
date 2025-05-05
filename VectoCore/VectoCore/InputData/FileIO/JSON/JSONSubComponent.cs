@@ -966,7 +966,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IMCTechnology Technology => Body["InMotionCharging"]?["Technology"] != null
 			? Body["InMotionCharging"].GetEx<string>("Technology").ParseEnum<IMCTechnology>()
-			: IMCTechnology.NotApplicable;
+			: IMCTechnology.None;
 
 		#endregion
 	}
