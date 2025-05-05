@@ -30,7 +30,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public double? MaxSOC => Body.GetEx<double>("SOC_max") / 100.0;
 
-		public double? DeteriorationPerformanceRatio => null;
+		public double? DeteriorationPerformanceRatio => Body.ContainsKey("DeteriorationPerformanceRatio")
+			? Body.GetEx<double>("DeteriorationPerformanceRatio") / 100.0
+			: (double?)null;
 
         public BatteryType BatteryType { get; }
 

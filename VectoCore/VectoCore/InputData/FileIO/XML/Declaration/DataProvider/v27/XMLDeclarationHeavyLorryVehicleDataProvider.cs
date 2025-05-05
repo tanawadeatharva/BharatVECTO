@@ -31,7 +31,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 
         public XMLDeclaration_PHEV_HeavyLorry_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
             : base(jobData, xmlNode, sourceFile) 
-        {}
+        {
+            if (!OVC && BatteryOnlyMode)
+            {
+                throw new VectoException("For PHEV vehicles, BatteryOnlyMode should be false if OVC is false.");
+            }
+        }
 
         public override string PowertrainPositionPrefix => "P";
 
