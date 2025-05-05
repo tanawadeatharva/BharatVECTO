@@ -33,17 +33,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		private IList<IElectricStorageDeclarationInputData> _electricStorageElements;
-		private IXMLDeclarationVehicleData _vehicle;
+		protected IXMLDeclarationVehicleData _vehicle;
 		
 		public XMLElectricStorageSystemDeclarationInputDataV24(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile, bool obsolete = true)
 			: base(componentNode, sourceFile)
 		{
-			if (obsolete)
-			{
-				throw new VectoException($"{XSD_TYPE} v2.4 is no longer supported. Use newer version instead.");
-			}
-
             _vehicle = vehicle;
 			//SourceType = DataSourceType.XMLEmbedded;
 		}
@@ -75,10 +70,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 							StringId = XmlConvert.ToInt32(GetString(XMLNames.Battery_StringID, battery))
 					});
 				}
-			}
-			
+
+                CheckVehicleBatteryData(electricStorages);
+            }
+
 			return electricStorages.Any() ? electricStorages : null;
 		}
+
+		protected virtual void CheckVehicleBatteryData(IList<IElectricStorageDeclarationInputData> electricStorages) { }
 
 		#region Implementation of IXMLElectricStorageSystemDeclarationInputData
 
@@ -114,7 +113,31 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLElectricStorageSystemDeclarationInputDataV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
 			: base(vehicle, componentNode, sourceFile, obsolete: false)
 		{}
-	}
+
+        protected override void CheckVehicleBatteryData(IList<IElectricStorageDeclarationInputData> electricStorages)
+        {
+            if (_vehicle.ArchitectureID.IsBatteryElectricVehicle() || (_vehicle.HybridElectricHDV && _vehicle.OVC))
+            {
+                var batteries = electricStorages.Where(x => x.REESSPack.StorageType == REESSType.Battery);
+
+                if (batteries.Any(x => (x.REESSPack as IBatteryPackDeclarationInputData).MinSOC == null))
+                {
+                    throw new VectoException("Battery SOCmin is undefined");
+                }
+
+                if (batteries.Any(x => (x.REESSPack as IBatteryPackDeclarationInputData).MaxSOC == null))
+                {
+                    throw new VectoException("Battery SOCmax is undefined");
+                }
+
+                if (batteries.Any(x => (x.REESSPack as IBatteryPackDeclarationInputData).DeteriorationPerformanceRatio == null))
+                {
+                    //Disabled this check because DeteriorationPerformanceRatio is not being used yet by OEMS.
+                    //throw new VectoException("Battery DeteriorationPerformanceRatio is undefined");
+                }
+            }
+        }
+    }
 
     // ---------------------------------------------------------------------------------------
 
