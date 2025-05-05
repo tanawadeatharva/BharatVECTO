@@ -56,7 +56,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
         public XMLDeclaration_PHEV_MediumLorry_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-            : base(jobData, xmlNode, sourceFile) { }
+            : base(jobData, xmlNode, sourceFile) 
+        {
+            if (!OVC && BatteryOnlyMode)
+            {
+                throw new VectoException("For PHEV vehicles, BatteryOnlyMode should be false if OVC is false.");
+            }
+        }
 
         public override VectoSimulationJobType VehicleType => Components.ElectricMachines.Entries.Any(em => em.ElectricMachine.IsIHPC())
             ? VectoSimulationJobType.IHPC
