@@ -199,9 +199,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual IAdvancedDriverAssistantSystemDeclarationInputData ADAS => ADASReader.ADASInputData;
 
-		public virtual IVehicleInMotionChargingDeclaration InMotionCharging =>
-			throw new VectoException($"Should not get here! - {GetType()}");
-	 	// { get; protected set; } = new XMLIMCData();
+		public virtual IVehicleInMotionChargingDeclaration InMotionCharging
+		{
+			get { throw new VectoException($"Should not get here! - {GetType()}");} protected set {}
+		}
 
 		public virtual bool ZeroEmissionVehicle => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ZeroEmissionVehicle));
 
@@ -921,7 +922,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			var maxTorqueCurve = XMLHelper.ReadTableData(mapping, entries);
 			return new Tuple<Volt, TableData>(voltage, maxTorqueCurve);
 		}
-	}
+
+		public override IVehicleInMotionChargingDeclaration InMotionCharging { get; protected set; } = new XMLIMCData();
+    }
 
 
 	// ---------------------------------------------------------------------------------------

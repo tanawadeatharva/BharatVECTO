@@ -975,7 +975,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
     {
 		#region Implementation of IVehicleInMotionChargingDeclaration
 
-		public IMCTechnology Technology => IMCTechnology.NotApplicable;
+		public IMCTechnology Technology => IMCTechnology.None;
 
 		#endregion
 
