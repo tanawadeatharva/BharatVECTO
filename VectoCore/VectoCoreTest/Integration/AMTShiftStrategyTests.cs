@@ -29,16 +29,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 		}
 
-
-		[TestCase(
-			@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\Group2_HEV_IEPC_S.xml", 0)]
-		[TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\Group5_Conv_ES_Standard.xml", 8)]
-		[TestCase(@"E:\QUAM\Workspace\VECTO_DEV_SW3\Generic Vehicles\Declaration Mode\xEV XML Jobs\Lorries\HeavyLorry_IHPC.xml", 4)]
-		public void RunJob_G2_HEV_IEPC_S(string job, int runIdx)
-		{
-			RunJob_DeclSingle(job, runIdx);
-		}
-
         //[TestCase()]
         //public void VECTO_EffShift()
         //{
