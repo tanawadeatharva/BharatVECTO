@@ -32,7 +32,6 @@
 using System;
 using System.Collections.Generic;
 using System.Xml;
-using System.Xml.Schema;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -58,7 +57,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Common {
 
 		protected bool ElementExists(string nodeName)
 		{
-			return GetNode(nodeName, BaseNode, required:false) != null;
+			return GetNode(nodeName, BaseNode, required: false) != null;
 		}
 
 		protected bool ElementExists(string[] nodePath)
@@ -66,11 +65,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Common {
 			return GetNode(nodePath, BaseNode, required: false) != null;
 		}
 
-
 		protected string GetString(string nodeName, XmlNode basenode = null, bool required = true)
 		{
 			return GetNode(nodeName, basenode, required)?.InnerText;
 		}
+
 		protected string GetString(string[] nodePath, XmlNode basenode = null, bool required = true)
 		{
 			return GetNode(nodePath, basenode, required)?.InnerText;

@@ -257,8 +257,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var retVal = GetDefaultElectricalUserConfig();
 
 			retVal.AlternatorType =
-				vehicleData.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
-					VectoSimulationJobType.IEPC_E)
+				vehicleData.VehicleType.IsOneOf(
+					VectoSimulationJobType.BatteryElectricVehicle,
+					VectoSimulationJobType.IEPC_E,
+					VectoSimulationJobType.FCHV,
+					VectoSimulationJobType.FCHV_IEPC)
 					? AlternatorType.None
 					: busAux.ElectricSupply.AlternatorTechnology;
 			retVal.ElectricalConsumers = currentDemand;
@@ -441,7 +444,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					return busParams.HVACHEV;
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
-				case VectoSimulationJobType.FCHV: // todo amogoda: bus2. HVAC PEV or HEV?
+				case VectoSimulationJobType.FCHV:
 				case VectoSimulationJobType.FCHV_IEPC:
 					return busParams.HVACPEV;
 				case VectoSimulationJobType.EngineOnlySimulation:

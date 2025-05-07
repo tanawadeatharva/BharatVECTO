@@ -265,10 +265,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + "HEVArchitecture", ihpc ? GearboxType.IHPC.ToXMLFormat() : vehicleData.ArchitectureID.GetLabel()),
 				new XElement(_cif + "OffVehicleChargingCapability", ovCc)
 			});
-			if (ovCc)
-			{
-				result.Add(new XElement(_cif + "OffVehicleChargingMaxPower", inputData.JobInputData.Vehicle.MaxChargingPower.ValueAsUnit("kW", 1)));
-			}
+			
+			// todo: MaxChargingPower has been removed. Must be re-implemented with proper values.
+			//if (ovCc)
+			//{
+			//	result.Add(new XElement(_cif + "OffVehicleChargingMaxPower", inputData.JobInputData.Vehicle.MaxChargingPower.ValueAsUnit("kW", 1)));
+			//}
 			return result;
 		}
 

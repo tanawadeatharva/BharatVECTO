@@ -177,9 +177,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			return new XElement(_vif + XMLNames.Vehicle_Components,
-				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_HEV-F2_ComponentsVIFType"),
-				_vifReportFactory.GetEngineType().GetElement(inputData),
-				_vifReportFactory.GetElectricMachineGENType().GetElement(inputData),
+				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_FCHV_F2_ComponentsVIFType"),
+				_vifReportFactory.GetFuelCellType().GetElement(inputData),
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
 				_vifReportFactory.GetElectricMachineType().GetElement(inputData),
 				_vifReportFactory.GetTransmissionType().GetElement(inputData),
@@ -188,7 +187,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				_vifReportFactory.GetRetarderType().GetElement(inputData),
 				_vifReportFactory.GetAxlegearType().GetElement(inputData),
 				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
-				_vifReportFactory.GetAuxiliaryHevSType().GetElement(inputData));
+				_vifReportFactory.GetAuxiliaryHevFType().GetElement(inputData));
 		}
 
 		#endregion
@@ -204,9 +203,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			return new XElement(_vif + XMLNames.Vehicle_Components,
-				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_HEV-F3_ComponentsVIFType"),
-				_vifReportFactory.GetEngineType().GetElement(inputData),
-				_vifReportFactory.GetElectricMachineGENType().GetElement(inputData),
+				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_FCHV_F3_ComponentsVIFType"),
+				_vifReportFactory.GetFuelCellType().GetElement(inputData),
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
 				_vifReportFactory.GetElectricMachineType().GetElement(inputData),
 				_vifReportFactory.GetRetarderType().GetElement(inputData),
@@ -228,9 +226,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			return new XElement(_vif + XMLNames.Vehicle_Components,
-				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_HEV-F4_ComponentsVIFType"),
-				_vifReportFactory.GetEngineType().GetElement(inputData),
-				_vifReportFactory.GetElectricMachineGENType().GetElement(inputData),
+				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_FCHV_F4_ComponentsVIFType"),
+				_vifReportFactory.GetFuelCellType().GetElement(inputData),
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
 				_vifReportFactory.GetElectricMachineType().GetElement(inputData),
 				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
@@ -249,9 +246,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			return new XElement(_vif + XMLNames.Vehicle_Components,
-				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_HEV-IEPC-F_ComponentsVIFType"),
-				_vifReportFactory.GetEngineType().GetElement(inputData),
-				_vifReportFactory.GetElectricMachineGENType().GetElement(inputData),
+				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_FCHV_IEPC_F_ComponentsVIFType"),
+				_vifReportFactory.GetFuelCellType().GetElement(inputData),
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
 				_vifReportFactory.GetIepcType().GetElement(inputData),
 				_vifReportFactory.GetRetarderType().GetElement(inputData),
@@ -262,7 +258,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		#endregion
 	}
-
 
 	public class PevE2ComponentVIFType : PrimaryComponentVIFType
 	{

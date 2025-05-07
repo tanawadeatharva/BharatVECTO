@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;

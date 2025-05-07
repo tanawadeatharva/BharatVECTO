@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 
-		public TableData BoostingLimitations => throw new NotImplementedException();
+		public TableData BoostingLimitations { get; }
 
 		public IVehicleComponentsDeclaration Components { get; set; }
 

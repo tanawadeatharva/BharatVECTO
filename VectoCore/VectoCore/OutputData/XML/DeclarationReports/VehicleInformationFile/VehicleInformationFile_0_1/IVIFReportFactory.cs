@@ -131,6 +131,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		IXmlTypeWriter GetRetarderType();
 		IXmlTypeWriter GetAuxiliaryType();
 		IXmlTypeWriter GetAuxiliaryHevSType();
+		IXmlTypeWriter GetAuxiliaryHevFType();
 
 		IXmlTypeWriter GetAuxiliaryIEPC_SType();
 
@@ -150,6 +151,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		IXmlTypeWriter GetIepcType();
 		IXmlTypeWriter GetTorqueLimitsType();
 		IXmlTypeWriter GetTransmissionType();
+		IXmlTypeWriter GetFuelCellType();
 
 		#endregion
 

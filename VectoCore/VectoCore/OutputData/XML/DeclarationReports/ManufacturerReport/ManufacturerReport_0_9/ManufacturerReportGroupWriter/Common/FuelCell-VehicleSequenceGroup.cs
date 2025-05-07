@@ -22,7 +22,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			{
 				new XElement(_mrf + "HEVArchitecture", ihpc ? GearboxType.IHPC.ToXMLFormat() : vehicleData.ArchitectureID.GetLabel()),
 				new XElement(_mrf + "OffVehicleChargingCapability", vehicleData.OVC),
-				vehicleData.OVC ? new XElement(_mrf + "OffVehicleChargingMaxPower", vehicleData.MaxChargingPower.ValueAsUnit("kW", 1)) : null,
+		
+				// todo: MaxChargingPower has been removed. Must be re-implemented with proper values.
+				//vehicleData.OVC ? new XElement(_mrf + "OffVehicleChargingMaxPower", vehicleData.MaxChargingPower.ValueAsUnit("kW", 1)) : null,
 			};
 
 			result.Add(_mrfFactory.GetHEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));

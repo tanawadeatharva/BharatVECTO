@@ -398,6 +398,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 		public class FuelCellHybrid : SerialHybrid
 		{
 			protected override IFuelCellDataAdapter FuelCellDataAdapter { get; } = new FuelCellDataAdapter();
+
+			protected override IAuxiliaryDataAdapter AuxDataAdapter => new HeavyLorryFCHVAuxiliaryDataAdapter();
 		}
 
 		public class HEV_F2 : FuelCellHybrid
@@ -422,7 +424,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 		public class HEV_F_IEPC : FuelCellHybrid
 		{
-			// todo amogoda: m8. what types of gbx do IEPC-Fs support? APT-N only?
 			protected override GearboxType[] SupportedGearboxTypes => new[]
 			{ 
 				GearboxType.AMT,

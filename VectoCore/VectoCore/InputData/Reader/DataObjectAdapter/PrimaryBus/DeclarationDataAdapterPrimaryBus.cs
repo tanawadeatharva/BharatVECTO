@@ -297,6 +297,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 		public class FuelCellHybrid : SerialHybrid
 		{
+			protected override IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter { get; } = new PrimaryBusPEVAuxiliaryDataAdapter();
+
 			protected override IFuelCellDataAdapter FuelCellDataAdapter { get; } = new FuelCellDataAdapter();
 		}
 

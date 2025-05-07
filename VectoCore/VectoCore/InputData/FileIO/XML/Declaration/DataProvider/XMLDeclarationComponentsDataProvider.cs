@@ -1017,6 +1017,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override IIEPCDeclarationInputData IEPC => null;
 
 		public override IFuelCellSystemDeclarationInputData FuelCellSystem => _fuelCellSystem ?? (_fuelCellSystem = ComponentReader.FuelCellSystem);
+
+		public override IAngledriveInputData AngledriveInputData => null;
 	}
 
 	public class XMLDeclaration_FCHV_IEPC_Lorry_ComponentDataV27 : XMLDeclarationComponentsDataProviderV10

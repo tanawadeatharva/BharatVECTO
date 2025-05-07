@@ -37,7 +37,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual string FanTechnology
 		{
-			get { return GetNode(new[] { "Fan", XMLNames.Auxiliaries_Auxiliary_Technology }).InnerText; }
+			get
+			{
+				return GetNode(new[] { "Fan", XMLNames.Auxiliaries_Auxiliary_Technology }).InnerText;
+			}
 		}
 
 		public virtual IList<string> SteeringPumpTechnology
@@ -70,7 +73,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			{
 				return AlternatorTypeHelper.Parse(GetString(new[]
 					{ XMLNames.BusAux_ElectricSystem, XMLNames.BusAux_ElectricSystem_AlternatorTechnology }));
-				//.ParseEnum<AlternatorType>();
 			}
 		}
 
@@ -212,7 +214,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual bool EngineWasteGasHeatExchanger
 		{
-			get { return GetBool(new[] { "HVAC", "EngineWasteGasHeatExchanger" }); }
+			get
+			{
+				return GetBool(new[] { "HVAC", "EngineWasteGasHeatExchanger" });
+			}
 		}
 
 		public virtual bool? SeparateAirDistributionDucts => false;
@@ -284,23 +289,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	// todo amogoda: bus1. remove from this file.
-	public class XMLDeclarationAuxiliaries_FCHV_PrimaryBus_DataProviderV27 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24
-	{
-        public static readonly new XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
-        public const string XSD_TYPE = "AUX_FCHV_PrimaryBusType";
-		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		public XMLDeclarationAuxiliaries_FCHV_PrimaryBus_DataProviderV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : 
-			base(componentNode) { }
-
-		public override bool SmartElectrics => false;
-
-		public override bool SmartAirCompression => false;
-	}
-
-	// ---------------------------------------------------------------------------------------
-
 	public class XMLDeclarationPrimaryBusAuxiliariesPEVDataProviderV24 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24
 	{
 		
@@ -361,6 +349,37 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override ConsumerTechnology AdBlueDosing => ConsumerTechnology.Unknown;
 
 		public override bool EngineWasteGasHeatExchanger => false;
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationAuxiliaries_FCHV_PrimaryBus_DataProviderV27 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24
+	{
+		public static readonly new XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+		public const string XSD_TYPE = "AUX_FCHV_PrimaryBusType";
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationAuxiliaries_FCHV_PrimaryBus_DataProviderV27(
+			IXMLDeclarationVehicleData vehicle,
+			XmlNode componentNode,
+			string sourceFile) : base(componentNode)
+		{ }
+
+		public override bool SmartElectrics => false;
+
+		public override bool SmartAirCompression => false;
+
+		public override string Clutch => null;
+
+		public override double Ratio => double.NaN;
+
+		public override string FanTechnology => null;
+
+		public override string CompressorSize => null;
+
+		public override bool EngineWasteGasHeatExchanger => false;
+
+		public override ConsumerTechnology AdBlueDosing => ConsumerTechnology.Unknown;
 	}
 
 	// ---------------------------------------------------------------------------------------

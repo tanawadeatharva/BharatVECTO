@@ -24,9 +24,9 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" schemaLocation="VectoDeclarationDefinitions.2.3.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" schemaLocation="VectoDeclarationDefinitions.2.4.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.6" schemaLocation="VectoDeclarationDefinitions.2.6.xsd"/>
-	
+
 	<!-- 29-04-2025: Removed PTO element from IEPC vehicles and NgTankSystem from vehicles without ICE. Added NgTankSystem to multiple-SHEV Primary Bus. -->
-	
+
 	<!--                      JOB                           -->
 	<xs:complexType name="VectoDeclarationJobType">
 		<xs:sequence>
@@ -475,7 +475,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 	<!-- Medium Lorry -->
 	<xs:complexType name="Vehicle_Exempted_MediumLorryDeclarationType">
 		<xs:complexContent>
@@ -1305,7 +1305,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 	<!-- Completed Bus -->
 	<xs:complexType name="Vehicle_Exempted_CompletedBusDeclarationType">
 		<xs:annotation>
@@ -1575,7 +1575,7 @@
 			<xs:extension base="Vehicle_FCHV_CompletedBusDeclarationType"/>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 	<!--             VEHICLE PARAMETERS                     -->
 	<xs:group name="Vehicle_GeneralParametersSequenceGroup">
 		<xs:sequence>
@@ -1843,7 +1843,7 @@
 	<xs:simpleType name="ArchitectureID_SHEV_Sx_IEPC_Type">
 		<xs:union memberTypes="v2.4:ArchitectureID_HEV-IEPC-S_Type v2.4:ArchitectureID_HEV-Sx_Type"/>
 	</xs:simpleType>
-	
+
 	<xs:simpleType name="HydrogenStorageTechnologyType">
 		<xs:annotation>
 			<xs:appinfo>
@@ -1981,7 +1981,7 @@
 						<xs:documentation>P549 - [Nm]</xs:documentation>
 					</xs:annotation>
 					<xs:restriction base="v1.0:Double1">
-						<xs:minInclusive value="0"/>
+						<xs:minInclusive value="0.0"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -2035,7 +2035,7 @@
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
-	
+
 	<!-- Lorry -->
 	<xs:group name="Vehicle_ChassisLorryParametersSequenceGroup">
 		<xs:sequence>
@@ -2357,7 +2357,7 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
-	
+
 	<!-- Primary Bus -->
 	<xs:group name="Vehicle_PrimaryBusParametersSequenceGroup">
 		<xs:sequence>
@@ -2394,7 +2394,7 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
-	
+
 	<!-- Completed Bus -->
 	<xs:group name="Vehicle_CompletedBus_GeneralParametersSequenceGroup">
 		<xs:sequence>
@@ -2528,7 +2528,7 @@
 			<xs:element name="ElectricMachine" type="ElectricMachineType"/>
 		</xs:sequence>
 	</xs:group>
-	
+
 	<!-- Lorry -->
 	<xs:complexType name="Components_Conventional_LorryType">
 		<xs:sequence>
@@ -2761,7 +2761,7 @@
 			<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
-	
+
 	<!-- Primary Bus -->
 	<xs:complexType name="Components_Conventional_PrimaryBusType">
 		<xs:sequence>
@@ -2977,7 +2977,7 @@
 			<xs:element name="Auxiliaries" type="AUX_Component_SHEV_PrimaryBus_Type"/>
 		</xs:sequence>
 	</xs:complexType>
-	
+
 	<!-- Completed Bus -->
 	<xs:complexType name="Components_Conventional_CompletedBusType">
 		<xs:sequence>
@@ -3068,7 +3068,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 	<xs:complexType name="FuelCellSystemDeclarationType">
 		<xs:sequence>
 			<xs:element name="FuelCellModule" type="FuelCellModuleDeclarationType" minOccurs="1" maxOccurs="2"/>
@@ -3138,8 +3138,8 @@
 					</xs:annotation>
 					<xs:simpleType>
 						<xs:restriction base="v1.0:Double1">
-							<xs:minInclusive value="0"/>
-							<xs:maxInclusive value="100"/>
+							<xs:minInclusive value="0.0"/>
+							<xs:maxInclusive value="100.0"/>
 						</xs:restriction>
 					</xs:simpleType>
 				</xs:element>
@@ -3149,8 +3149,8 @@
 					</xs:annotation>
 					<xs:simpleType>
 						<xs:restriction base="v1.0:Double1">
-							<xs:minInclusive value="0"/>
-							<xs:maxInclusive value="100"/>
+							<xs:minInclusive value="0.0"/>
+							<xs:maxInclusive value="100.0"/>
 						</xs:restriction>
 					</xs:simpleType>
 				</xs:element>
@@ -3161,8 +3161,8 @@
 				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double2">
-						<xs:minInclusive value="0"/>
-						<xs:maxInclusive value="100"/>
+						<xs:minInclusive value="0.00"/>
+						<xs:maxInclusive value="100.00"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -4285,7 +4285,7 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
-	
+
 	<!-- Completed Bus -->
 	<xs:complexType name="AUX_Component_Conventional_CompletedBus_Type">
 		<xs:sequence>
@@ -4652,7 +4652,7 @@
 			<xs:element name="AdvancedReducingTechnologies" type="AdvReducingTechDataType"/>
 		</xs:sequence>
 	</xs:complexType>
-	
+
 	<xs:complexType name="Abstract_Powertrain_xEV_DataType" abstract="true">
 		<xs:attribute name="axleNumber" use="required">
 			<xs:simpleType>
@@ -4703,7 +4703,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 	<!-- MonitoringData Component Groups -->
 	<xs:group name="FullConventionalComponents">
 		<xs:sequence>
@@ -4779,7 +4779,7 @@
 			<xs:element name="ElectricMachineGEN" type="ElectricMachineGENDataType" />
 		</xs:sequence>
 	</xs:group>
-	
+
 	<!-- MonitoringData Component Types -->
 	<xs:complexType name="VehicleDataType">
 		<xs:sequence>

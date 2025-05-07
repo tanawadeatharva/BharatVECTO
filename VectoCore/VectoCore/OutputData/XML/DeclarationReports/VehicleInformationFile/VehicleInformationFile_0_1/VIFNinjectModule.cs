@@ -368,6 +368,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			Bind<IXmlTypeWriter>().To<HevF3VehicleType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevF3VehicleType());
 
+			// todo amogoda: vif - is implementation correct?
 			Bind<IXmlTypeWriter>().To<HevF4VehicleType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevF4VehicleType());
 
@@ -502,6 +503,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			Bind<IXmlTypeWriter>().To<VIFAuxiliaryHevSType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAuxiliaryHevSType());
 
+			Bind<IXmlTypeWriter>().To<VIFAuxiliaryHevFType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAuxiliaryHevFType());
+
 			Bind<IXmlTypeWriter>().To<VIFAuxiliaryIEPC_SType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAuxiliaryIEPC_SType());
 
@@ -555,6 +559,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			Bind<IXmlTypeWriter>().To<VIFTransmissionType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetTransmissionType());
+
+			Bind<IXmlTypeWriter>().To<VIFFuelCellType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetFuelCellType());
 
 			#endregion
 		}

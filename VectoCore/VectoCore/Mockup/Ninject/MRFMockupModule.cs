@@ -682,6 +682,26 @@ namespace TUGraz.VectoMockup.Ninject
 			return _manufacturerReportFactoryImplementation.GetFuelCell_PrimaryBusVehicleOutputGroup();
 		}
 
+		public IMRFBusAuxiliariesType GetPrimaryBusAuxType_HEV_F()
+		{
+            return _manufacturerReportFactoryImplementation.GetPrimaryBusAuxType_HEV_F();
+		}
+
+		public IMRFBusAuxiliariesType GetPrimaryBusPneumaticSystemType_HEV_F()
+		{
+			return _manufacturerReportFactoryImplementation.GetPrimaryBusPneumaticSystemType_HEV_F();
+		}
+
+		public IMRFBusAuxiliariesType GetPrimaryBusHVACSystemType_FCHV()
+		{
+			return _manufacturerReportFactoryImplementation.GetPrimaryBusHVACSystemType_FCHV();
+		}
+
+		public IMRFLorryAuxiliariesType GetFCHV_LorryAuxiliariesType()
+		{
+            return _manufacturerReportFactoryImplementation.GetFCHV_LorryAuxiliariesType();
+		}
+
 		#endregion
 	}
 }
