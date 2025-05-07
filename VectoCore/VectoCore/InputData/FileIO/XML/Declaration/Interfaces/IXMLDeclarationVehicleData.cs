@@ -42,6 +42,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces
 
 		IXMLComponentReader ComponentReader { set; }
 
+		XmlElement MonitoringNode { get; }
+
+		IXMLMonitoringReader MonitoringReader { set; }
+
 		XmlElement PTONode { get; }
 
 		IXMLPTOReader PTOReader { set; }

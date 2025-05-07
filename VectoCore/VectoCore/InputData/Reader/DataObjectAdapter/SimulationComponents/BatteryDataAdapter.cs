@@ -50,6 +50,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				if (b.ConnectorsSubsystemsIncluded != null && !b.ConnectorsSubsystemsIncluded.Value) {
 					addConnectorSystemResistance = true;
 				}
+
 				var minSoc = genericSOC.SOCMin;
 				if (b.MinSOC != null && b.MinSOC > minSoc) {
 					minSoc = b.MinSOC.Value;

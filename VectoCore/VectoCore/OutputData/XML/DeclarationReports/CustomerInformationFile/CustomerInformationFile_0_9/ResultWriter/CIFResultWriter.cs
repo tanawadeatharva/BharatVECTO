@@ -84,6 +84,48 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		}
 
+		public class FuelCellNonOVCLorry : AbstractCIFResultsWriter
+		{
+			public FuelCellNonOVCLorry(ICIFResultsWriterFactory cifFactory) : base(cifFactory) { }
+
+			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetLorryHEVNonOVCSuccessResultWriter(_cifFactory, TNS);
+			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetLorryErrorResultWriter(_cifFactory, TNS);
+
+			public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetLorryHEVNonOVCSummaryWriter(_cifFactory, TNS);
+
+		}
+
+		public class FuelCellOVCLorry : AbstractCIFResultsWriter
+		{
+			public FuelCellOVCLorry(ICIFResultsWriterFactory cifFactory) : base(cifFactory) { }
+
+			#region Overrides of AbstractResultsWriter
+
+			public override XElement GenerateResults(List<IResultEntry> results)
+			{
+				var ordered = GetOrderedResultsOVC(results);
+				var allSuccess = results.All(x => x.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore));
+				return new XElement(TNS + XMLNames.Report_Results,
+					new XElement(TNS + XMLNames.Report_Result_Status,
+						allSuccess ? XMLNames.Report_Results_Status_Success_Val : XMLNames.Report_Results_Status_Error_Val),
+					ordered.Select(x =>
+						x.ChargeDepletingResult.Status == VectoRun.Status.Success &&
+						x.ChargeSustainingResult.Status == VectoRun.Status.Success
+							? ResultSuccessWriter.GetElement(x)
+							: ResultErrorWriter.GetElement(x)),
+					SummaryWriter.GetElement(ordered)
+				);
+			}
+
+			#endregion
+
+			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetLorryHEVOVCSuccessResultWriter(_cifFactory, TNS);
+			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetLorryErrorResultWriter(_cifFactory, TNS);
+
+			public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetLorryHEVOVCSummaryWriter(_cifFactory, TNS);
+
+		}
+
 		public class PEVLorry : AbstractCIFResultsWriter
 		{
 			public PEVLorry(ICIFResultsWriterFactory cifFactory) : base(cifFactory) { }
@@ -93,6 +135,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			
             public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetLorryPEVSummaryWriter(_cifFactory, TNS);
 
+		}
+
+		public class PEVNonOVCLorry : AbstractCIFResultsWriter
+		{
+			public PEVNonOVCLorry(ICIFResultsWriterFactory cifFactory) : base(cifFactory) { }
+
+			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetLorryPEVNonOVCSuccessResultWriter(_cifFactory, TNS);
+			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetLorryErrorResultWriter(_cifFactory, TNS);
+
+			public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetLorryPEVNonOVCSummaryWriter(_cifFactory, TNS);
 		}
 
 		public class ConventionalBus : AbstractCIFResultsWriter

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" 
+	xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7" 
+	xmlns:vdd="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" 
+	targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationInput:v3.0" 
+	elementFormDefault="qualified" 
+	attributeFormDefault="unqualified" 
+	version="3.0" 
+	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd"
+	>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7" schemaLocation="VectoDeclarationDefinitions.2.7.xsd"/>
+	
+	<xs:element name="VectoInputDeclaration" type="vdecdef:VectoDeclarationJobType">
+		<xs:annotation>
+			<xs:documentation>Root Node Declaration Data</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+</xs:schema>

@@ -40,6 +40,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -68,6 +69,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected XmlElement _componentNode;
 		protected XmlElement _ptoNode;
 		protected XmlElement _adasNode;
+		protected XmlElement _monitoringNode;
 
 
 		public XMLDeclarationVehicleDataProviderV10(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile,
@@ -104,6 +106,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual IXMLComponentReader ComponentReader { protected get; set; }
 
+		public virtual XmlElement MonitoringNode => null;
+
+		public virtual IXMLMonitoringReader MonitoringReader { protected get; set; }
+
 		public virtual XmlElement PTONode
 		{
 			get {
@@ -132,7 +138,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>();
 			//get { return GetString("LegislativeCategory").ParseEnum<LegislativeClass>(); }
 
-		public virtual VehicleCategory VehicleCategory
+		public virtual string SimulationToolLicenseNumber => null;
+
+		public virtual string VehicleMonitoringData => null;
+
+        public virtual Kilogram H2StorageUsableCapacity => null;
+
+		public virtual HydrogenStorageTechnology? HydrogenStorageTechnology => null;
+
+		public virtual bool BatteryOnlyMode => false;
+
+		public virtual DynamicChargingTechnology DynamicChargingTechnology => DynamicChargingTechnology.None;
+
+        public virtual VehicleCategory VehicleCategory
 		{
 			get {
 				var val = GetString(XMLNames.Vehicle_VehicleCategory);
@@ -181,7 +199,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual IPTOTransmissionInputData PTOTransmissionInputData => _ptoData ?? (_ptoData = PTOReader.PTOInputData);
 
 		public virtual RetarderType RetarderType => RetarderTypeHelper.Parse(GetString(XMLNames.Vehicle_RetarderType));
-		
+
 		public virtual AngledriveType AngledriveType => GetString(XMLNames.Vehicle_AngledriveType).ParseEnum<AngledriveType>();
 
 		public virtual bool VocationalVehicle => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_VocationalVehicle));
@@ -206,12 +224,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual bool ZeroEmissionVehicle => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ZeroEmissionVehicle));
 
-		public virtual bool HybridElectricHDV => ElementExists(XMLNames.Vehicle_HybridElectricHDV) 
-			? XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_HybridElectricHDV)) 
+		public virtual bool HybridElectricHDV => ElementExists(XMLNames.Vehicle_HybridElectricHDV)
+			? XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_HybridElectricHDV))
 			: false;
 
-		public virtual bool DualFuelVehicle => ElementExists(XMLNames.Vehicle_DualFuelVehicle) 
-			? XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_DualFuelVehicle)) 
+		public virtual bool DualFuelVehicle => ElementExists(XMLNames.Vehicle_DualFuelVehicle)
+			? XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_DualFuelVehicle))
 			: false;
 
 		public virtual Watt MaxNetPower1 =>
@@ -231,8 +249,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual int? NumberPassengersStandingUpperDeck => 0;
 
-		public virtual CubicMeter CargoVolume => 
-			ElementExists(XMLNames.Vehicle_CargoVolume) 
+		public virtual CubicMeter CargoVolume =>
+			ElementExists(XMLNames.Vehicle_CargoVolume)
 				? GetDouble(XMLNames.Vehicle_CargoVolume).SI<CubicMeter>() : null;
 
 		public virtual VehicleCode? VehicleCode => VectoCommon.Models.VehicleCode.NOT_APPLICABLE;
@@ -256,10 +274,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 
 		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
-		
+
 		public virtual string VehicleTypeApprovalNumber => ElementExists(XMLNames.VehicleTypeApprovalNumber) ? GetString(XMLNames.Vehicle_TypeApprovalNumber) : null;
 		public virtual ArchitectureID ArchitectureID => ElementExists(XMLNames.Vehicle_ArchitectureID) ? ArchitectureIDHelper.Parse(GetString(XMLNames.Vehicle_ArchitectureID)) : ArchitectureID.UNKNOWN;
-		public virtual bool OvcHev => ElementExists(XMLNames.Vehicle_OvcHev) && GetBool(XMLNames.Vehicle_OvcHev);
+		public virtual bool OVC => ElementExists(XMLNames.Vehicle_OvcHev) && GetBool(XMLNames.Vehicle_OvcHev);
 		public virtual Watt MaxChargingPower => ElementExists(XMLNames.Vehicle_MaxChargingPower) ?
 			XmlConvert.ToInt32(GetString(XMLNames.Vehicle_MaxChargingPower)).SI<Watt>() : null;
 
@@ -354,9 +372,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 	}
 
-	// ---------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationVehicleDataProviderV21 : XMLDeclarationVehicleDataProviderV10
+    public class XMLDeclarationVehicleDataProviderV21 : XMLDeclarationVehicleDataProviderV10
 	{
 		/*
 		 * added new parameters introduced in 2019/318 (amendment of 2017/2400) (already implemented in version 1.0)
@@ -412,7 +430,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationExemptedVehicleDataProviderV22(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, 
+		public XMLDeclarationExemptedVehicleDataProviderV22(IXMLDeclarationJobInputData jobData, XmlNode xmlNode,
 			string sourceFile, bool allowDeprecated) : base(jobData, xmlNode, sourceFile, true)
 		{
 			SourceType = DataSourceType.XMLEmbedded;
@@ -496,7 +514,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLDeclarationExemptedVehicleDataProviderV221(
-			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated) : 
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated) :
 				base(jobData, xmlNode, sourceFile, true)
 		{
 #if PROHIBIT_OLD_XML
@@ -531,7 +549,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		private IAdvancedDriverAssistantSystemDeclarationInputData _adas;
 		private XmlElement _componentNode;
 		private IVehicleComponentsDeclaration _components;
-		
+
 		public XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01(
 			IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile)
 			: base(xmlNode, sourceFile)
@@ -541,7 +559,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of AbstractCommonComponentType
 
-		
+
 		public virtual string ManufacturerAddress => GetString(XMLNames.ManufacturerAddress);
 
 		#endregion
@@ -553,7 +571,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public string VIN => GetString(XMLNames.Vehicle_VIN);
 
-		public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeCategory)?.ParseEnum<LegislativeClass>();
+		public string SimulationToolLicenseNumber => ElementExists("SimulationToolLicenseNumber") ? GetString("SimulationToolLicenseNumber") : null;
+
+        public string VehicleMonitoringData { get; }
+
+        public Kilogram H2StorageUsableCapacity => ElementExists("H2StorageUsableCapacity") ? GetDouble("H2StorageUsableCapacity").SI<Kilogram>() : null;
+
+		public HydrogenStorageTechnology? HydrogenStorageTechnology => HydrogenStorageTechnologyHelper.Parse(GetString("HydrogenStorageTechnology"));
+
+		public bool BatteryOnlyMode => ElementExists("BatteryOnlyMode") ? GetBool("BatteryOnlyMode") : false;
+
+		public DynamicChargingTechnology DynamicChargingTechnology => DynamicChargingTechnologyHelper.Parse(GetString("DynamicChargingTechnology"));
+
+        public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeCategory)?.ParseEnum<LegislativeClass>();
 
 		public virtual VehicleCategory VehicleCategory => VehicleCategoryHelper.Parse(GetString("ChassisConfiguration"));
 
@@ -565,24 +595,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		//IdlingSpeed
 		public virtual PerSecond EngineIdleSpeed => GetDouble(XMLNames.Engine_IdlingSpeed).RPMtoRad();
 
-		
+
 		public virtual RetarderType RetarderType => RetarderTypeHelper.Parse(GetString(XMLNames.Vehicle_RetarderType));
 
 		public virtual double RetarderRatio => GetDouble(XMLNames.Vehicle_RetarderRatio);
 
-		
+
 		public virtual AngledriveType AngledriveType => GetString(XMLNames.Vehicle_AngledriveType).ParseEnum<AngledriveType>();
 
 
 		public virtual IVehicleInMotionChargingDeclaration InMotionCharging { get; protected set; } = new XMLIMCData();
 		public virtual bool ZeroEmissionVehicle => GetBool(XMLNames.Vehicle_ZeroEmissionVehicle);
 
-		
+
 		public virtual XmlElement ADASNode => _adasNode ?? (_adasNode = GetNode(XMLNames.Vehicle_ADAS, required: false) as XmlElement);
 
 		public virtual IXMLADASReader ADASReader { get; set; }
 
-		
+
 		public virtual IAdvancedDriverAssistantSystemDeclarationInputData ADAS => ExemptedVehicle ? null : (_adas ?? (_adas = ADASReader?.ADASInputData));
 
 
@@ -603,6 +633,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual IXMLComponentReader ComponentReader { get; set; }
 
+		public virtual XmlElement MonitoringNode => null;
+
+		public virtual IXMLMonitoringReader MonitoringReader { get; set; }
+
 		public virtual Meter EntranceHeight { get; }
 
 		public virtual ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
@@ -613,7 +647,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual string VehicleTypeApprovalNumber { get; }
 		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
 		public virtual ArchitectureID ArchitectureID => ElementExists(XMLNames.Vehicle_ArchitectureID) ? ArchitectureIDHelper.Parse(GetString(XMLNames.Vehicle_ArchitectureID)) : ArchitectureID.UNKNOWN;
-		public virtual bool OvcHev => ElementExists(XMLNames.Vehicle_OvcHev) && GetBool(XMLNames.Vehicle_OvcHev);
+		public virtual bool OVC => ElementExists(XMLNames.Vehicle_OvcHev) && GetBool(XMLNames.Vehicle_OvcHev);
 		public virtual Watt MaxChargingPower => ElementExists(XMLNames.Vehicle_MaxChargingPower) ? GetDouble(XMLNames.Vehicle_MaxChargingPower).SI<Watt>() : null;
 
 
@@ -763,7 +797,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.BatteryElectricVehicle; }
 
-		public override bool OvcHev => true;
+		public override bool OVC => true;
 
 		public override string PowertrainPositionPrefix => "E";
 	}
@@ -784,7 +818,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.IEPC_E; }
 
-		public override bool OvcHev => true;
+		public override bool OVC => true;
 
 	}
 
@@ -826,9 +860,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		protected IAdvancedDriverAssistantSystemDeclarationInputData _adas;
 
-		protected AbstractXMLVehicleDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : 
+		protected AbstractXMLVehicleDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) :
 			base(jobData, xmlNode, sourceFile, 0) { }
-		
+
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
@@ -846,7 +880,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override bool Articulated => GetBool(XMLNames.Vehicle_Articulated);
 
 		public override LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeCategory).ParseEnum<LegislativeClass>();
-		//get { return GetString("LegislativeCategory").ParseEnum<LegislativeClass>(); }
 
 		public override TankSystem? TankSystem => ElementExists(XMLNames.Vehicle_NgTankSystem)
 			? GetString(XMLNames.Vehicle_NgTankSystem).ParseEnum<TankSystem>()
@@ -889,7 +922,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				var electricMachineNodes = GetNodes(XMLNames.ElectricMotorTorqueLimit_ElectricMachine, torqueLimitNode);
 				if (electricMachineNodes == null || electricMachineNodes.Count == 0)
 					return null;
-				
+
 				foreach (XmlNode electricMachineNode in electricMachineNodes)
 				{
 					var powertrainPosition =
@@ -926,9 +959,38 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override IVehicleInMotionChargingDeclaration InMotionCharging { get; protected set; } = new XMLIMCData();
     }
 
-
 	// ---------------------------------------------------------------------------------------
 
+	public abstract class AbstractXMLVehicleDataProviderV27 : AbstractXMLVehicleDataProviderV24
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
 
-	
+		protected AbstractXMLVehicleDataProviderV27(
+			IXMLDeclarationJobInputData jobData,
+			XmlNode xmlNode,
+			string sourceFile)
+			: base(jobData, xmlNode, sourceFile)
+		{
+		}
+
+        public override string PowertrainPositionPrefix => null;
+
+        public override string SimulationToolLicenseNumber => GetString("SimulationToolLicenseNumber");
+
+        public override TableData BoostingLimitations => ElementExists(XMLNames.Vehicle_BoostingLimitation)
+             ? ReadTableData(XMLNames.Vehicle_BoostingLimitation, XMLNames.BoostingLimitation_Entry, AttributeMappings.BoostingLimitsMapping)
+             : null;
+
+		public override XmlElement MonitoringNode => _monitoringNode ?? (_monitoringNode = GetNode("MonitoringData", required: false) as XmlElement);
+
+        public override string VehicleMonitoringData => MonitoringReader?.Data;
+
+		public override Kilogram H2StorageUsableCapacity => ElementExists(XMLNames.Vehicle_H2StorageUsableCapacity) ?
+				Convert.ToDouble(GetString(XMLNames.Vehicle_H2StorageUsableCapacity)).SI<Kilogram>() :
+				null;
+
+        public override HydrogenStorageTechnology? HydrogenStorageTechnology => ElementExists(XMLNames.Vehicle_H2StorageTechnology)
+				? EnumHelper.ParseEnum<HydrogenStorageTechnology>(GetString(XMLNames.Vehicle_H2StorageTechnology))
+				: (HydrogenStorageTechnology?)null;
+	}
 }

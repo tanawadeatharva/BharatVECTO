@@ -31,5 +31,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IElectricMachinesDeclarationInputData ElectricMachines { get; }
 
 		public IIEPCDeclarationInputData IEPC { get; }
+
+		public IFuelCellSystemDeclarationInputData FuelCellSystem { get; }
 	}
 }

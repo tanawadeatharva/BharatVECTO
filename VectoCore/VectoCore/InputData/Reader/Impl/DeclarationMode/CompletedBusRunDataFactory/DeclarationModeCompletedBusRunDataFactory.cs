@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 			protected virtual IResult GetPrimaryResult(string fuelMode, VectoRunData simulationRunData,
 				OvcHevMode ovcHevMode)
 			{
-				ovcHevMode = simulationRunData.VehicleData.InputData.OvcHev ? ovcHevMode : OvcHevMode.NotApplicable; //Results are store with OvcHevMode NotApplicable for non OVC hevs
+				ovcHevMode = simulationRunData.VehicleData.InputData.OVC ? ovcHevMode : OvcHevMode.NotApplicable; //Results are store with OvcHevMode NotApplicable for non OVC hevs
 				var primaryResult = DataProvider.MultistageJobInputData.JobInputData.PrimaryVehicle.GetResult(
 					simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
 					simulationRunData.VehicleData.Loading, ovcHevMode);
@@ -357,7 +357,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 			{
 				var engineModes = PrimaryVehicle.Components.EngineInputData
 					?.EngineModes;
-				var ovc = PrimaryVehicle.OvcHev;
+				var ovc = PrimaryVehicle.OVC;
 				for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
 					var fuelMode = "single fuel mode";
 					if (engineModes[modeIdx].Fuels.Count > 1) {
@@ -427,7 +427,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					}
 				}
 
-				if (ovcHevMode != OvcHevMode.NotApplicable && PrimaryVehicle.OvcHev) {
+				if (ovcHevMode != OvcHevMode.NotApplicable && PrimaryVehicle.OVC) {
 					rd.ModFileSuffix += ovcHevMode == OvcHevMode.ChargeSustaining ? "CS" : "CD";
 				}
 

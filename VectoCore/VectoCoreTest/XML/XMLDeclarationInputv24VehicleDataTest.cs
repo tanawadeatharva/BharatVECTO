@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		private void TestxEvParametersSequenceGroup(IXMLDeclarationVehicleData vehicle)
 		{
-			Assert.AreEqual(true, vehicle.OvcHev);
+			Assert.AreEqual(true, vehicle.OVC);
 			Assert.AreEqual(11.SI<Watt>(), vehicle.MaxChargingPower);
 		}
 
@@ -380,7 +380,7 @@ namespace TUGraz.VectoCore.Tests.XML
 					break;
 			}
 
-			Assert.AreEqual(true, vehicle.OvcHev);
+			Assert.AreEqual(true, vehicle.OVC);
 			Assert.IsNull(vehicle.MaxChargingPower);
 		}
 
@@ -411,7 +411,7 @@ namespace TUGraz.VectoCore.Tests.XML
 					break;
 			}
 
-			Assert.AreEqual(true, vehicle.OvcHev);
+			Assert.AreEqual(true, vehicle.OVC);
 			Assert.IsNull(vehicle.MaxChargingPower);
 		}
 
@@ -441,7 +441,7 @@ namespace TUGraz.VectoCore.Tests.XML
 					break;
 			}
 
-			Assert.AreEqual(true, vehicle.OvcHev);
+			Assert.AreEqual(true, vehicle.OVC);
 			Assert.AreEqual(null, vehicle.MaxChargingPower);
 			//TestxEvParametersSequenceGroup(vehicle);
 		}
@@ -458,7 +458,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			TestHeavyLorryParametersSequenceGroup2(vehicle);
 			Assert.AreEqual(ArchitectureID.E_IEPC, vehicle.ArchitectureID);
 			
-			Assert.AreEqual(true, vehicle.OvcHev);
+			Assert.AreEqual(true, vehicle.OVC);
 			Assert.IsNull(vehicle.MaxChargingPower);
 
 		}
@@ -478,7 +478,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			TestMediumLorryParameterSequenceGroup2(vehicle);
 			Assert.AreEqual(ArchitectureID.E_IEPC, vehicle.ArchitectureID);
 
-			Assert.AreEqual(true, vehicle.OvcHev);
+			Assert.AreEqual(true, vehicle.OVC);
 			Assert.IsNull(vehicle.MaxChargingPower);
 
 		}
@@ -494,7 +494,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(AngledriveType.SeparateAngledrive, vehicle.AngledriveType);
 			Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
 			Assert.AreEqual(ArchitectureID.E_IEPC, vehicle.ArchitectureID);
-			Assert.AreEqual(true, vehicle.OvcHev);
+			Assert.AreEqual(true, vehicle.OVC);
 			Assert.IsNull(vehicle.MaxChargingPower);
 		}
 	}

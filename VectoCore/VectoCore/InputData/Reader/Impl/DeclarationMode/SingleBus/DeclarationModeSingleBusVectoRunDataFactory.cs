@@ -244,7 +244,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 					
 					foreach (var mission in _segment.Missions) {
 						foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
-							if (SingleBusDataProvider.PrimaryVehicle.OvcHev) {
+							if (SingleBusDataProvider.PrimaryVehicle.OVC) {
 								if (SingleBusDataProvider.PrimaryVehicle.MaxChargingPower.IsEqual(0)) {
 									throw new VectoException(
 										"MaxChargingPower has to be greater than 0 if OVC is selected");
@@ -261,7 +261,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 
 			protected void CheckMaxChargingPowerPresent(IVehicleDeclarationInputData vehicle)
 			{
-				if (vehicle.OvcHev && vehicle.MaxChargingPower == null) {
+				if (vehicle.OVC && vehicle.MaxChargingPower == null) {
 					throw new VectoException($"{XMLNames.Vehicle_MaxChargingPower} must be set for OVC Vehicles");
 				}
 			}
@@ -293,7 +293,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 
                 runData.EngineData = DataAdapter.CreateEngineData(PrimaryVehicle, engineMode, mission);
 
-                DataAdapter.CreateREESSData(PrimaryVehicle.Components.ElectricStorage, PrimaryVehicle.VehicleType, PrimaryVehicle.OvcHev,
+                DataAdapter.CreateREESSData(PrimaryVehicle.Components.ElectricStorage, PrimaryVehicle.VehicleType, PrimaryVehicle.OVC,
                     ((batteryData) => runData.BatteryData = batteryData),
                     ((sCdata => runData.SuperCapData = sCdata)));
 
@@ -335,7 +335,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                     }
                 }
 
-                if (ovcMode != OvcHevMode.NotApplicable && runData.InputData.JobInputData.Vehicle.OvcHev) {
+                if (ovcMode != OvcHevMode.NotApplicable && runData.InputData.JobInputData.Vehicle.OVC) {
                     runData.ModFileSuffix += ovcMode == OvcHevMode.ChargeSustaining ? "CS" : "CD";
                 }
 
@@ -508,7 +508,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 				runData.AirdragData = DataAdapter.CreateAirdragData(CompletedVehicle, mission, _segment, ovcMode);
 				runData.EngineData =
 					DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode, mission);
-				DataAdapter.CreateREESSData(PrimaryVehicle.Components.ElectricStorage, PrimaryVehicle.VehicleType, PrimaryVehicle.OvcHev,
+				DataAdapter.CreateREESSData(PrimaryVehicle.Components.ElectricStorage, PrimaryVehicle.VehicleType, PrimaryVehicle.OVC,
 					((batteryData) => runData.BatteryData = batteryData),
 					((sCdata => runData.SuperCapData = sCdata)));
 				runData.ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>();
@@ -562,7 +562,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 					runData.IterativeRunStrategy = new HevChargeSustainingIterativeRunStrategy();
 				}
 
-				if (ovcMode != OvcHevMode.NotApplicable && runData.InputData.JobInputData.Vehicle.OvcHev) {
+				if (ovcMode != OvcHevMode.NotApplicable && runData.InputData.JobInputData.Vehicle.OVC) {
 					runData.ModFileSuffix += ovcMode == OvcHevMode.ChargeSustaining ? "CS" : "CD";
 				}
 

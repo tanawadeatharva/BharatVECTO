@@ -145,6 +145,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	}
 
+	// todo amogoda: m13. consider removing if Non OVC PEV makes no sense. USe HEV non-OVC instead?
+	public class LorryPEVNonOVCSummaryWriter : LorryPEVSummaryWriter
+	{
+		public LorryPEVNonOVCSummaryWriter(ICIFResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		public override string ResultSummaryXMLType => "ResultSummaryPEVNonOVCType";
+	}
+
 	// ---- bus
 
 	public abstract class BusSummaryWriterBase : SummaryWriterBase

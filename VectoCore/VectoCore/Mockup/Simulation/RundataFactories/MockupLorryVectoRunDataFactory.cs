@@ -243,7 +243,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 InputData = vehicleData,
                 SleeperCab = vehicleData.SleeperCab,
                 VehicleClass = _segment.VehicleClass,
-                OffVehicleCharging = vehicleData.OvcHev,
+                OffVehicleCharging = vehicleData.OVC,
                 VocationalVehicle = vehicleData.VocationalVehicle,
             };
         }

@@ -15,8 +15,16 @@ namespace VectoHashingTest
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
-		
-		[TestCase("sYOwPn3VlMw71bjQFfACuekdAjZ8QRT3S8c71w7810A=", SortedComponentPath + "Engine.xml"),
+
+        [TestCase("vb0raVf5I8hQzQS3MQtUsPgeBfNSk7V2G8BZnvSOeCc=", SortedComponentPath + "FuelCell.xml"),
+        TestCase("vb0raVf5I8hQzQS3MQtUsPgeBfNSk7V2G8BZnvSOeCc=", UnsortedComponentPath + "FuelCell.xml")]
+        public void TestFuelCellHashSort(string expectedHash, string filePath)
+        {
+            var loadedFile = VectoHash.Load(filePath);
+            Assert.AreEqual(expectedHash, loadedFile.ComputeHash(VectoComponents.FuelCell));
+        }
+
+        [TestCase("sYOwPn3VlMw71bjQFfACuekdAjZ8QRT3S8c71w7810A=", SortedComponentPath + "Engine.xml"),
 		TestCase("sYOwPn3VlMw71bjQFfACuekdAjZ8QRT3S8c71w7810A=",  UnsortedComponentPath + "Engine.xml")]
 		public void TestEngineHashSort(string expectedHash, string filePath)
 		{

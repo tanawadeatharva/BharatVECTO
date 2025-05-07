@@ -52,8 +52,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 								ArchitectureID.E2) || (archId == ArchitectureID.E_IEPC && !iepc.DesignTypeWheelMotor);
 					break;
 				case RetarderType.AxlegearInputRetarder:
-					valid = archId.IsOneOf(ArchitectureID.E3, ArchitectureID.S3, ArchitectureID.S_IEPC) ||
-							(archId == ArchitectureID.E_IEPC && !iepc.DifferentialIncluded &&
+					valid = archId.IsOneOf(ArchitectureID.E3, ArchitectureID.S3, ArchitectureID.F3, ArchitectureID.S_IEPC) ||
+							(archId.IsOneOf(ArchitectureID.E_IEPC, ArchitectureID.F_IEPC) && !iepc.DifferentialIncluded &&
 							!iepc.DesignTypeWheelMotor);
 					break;
 				default:

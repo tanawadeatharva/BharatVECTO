@@ -1,20 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using System.IO.Ports;
 using System.Linq;
-using System.Runtime.ExceptionServices;
-using System.Threading;
-using NLog.Filters;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell;
 using TUGraz.VectoCore.Utils;
+using static TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.FuelCellMassFlowMap;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 {
@@ -28,6 +22,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		public IList<FuelCellStringData> FuelCellStrings { get; set; }
 
 		public FuelCellPowerMap FuelCellPowerMap { get; set; }
+
 		public FuelCellSystemShareMap FuelCellShareMap { get; set; }
 
 		public Watt ChargingPower(Meter mileageCounterDistance)
@@ -51,6 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 				throw new VectoException("No fuel-cells provided");
 			}
         }
+
 		public Watt MinElectricPower {
 			get {
 				CheckFcCount();
@@ -68,7 +64,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		}
 
         public Meter MaxWindowSize { get; set; }
-    }
+    
+		public void SetFuelCellSystemPowerMap(BatterySystemData batteryData, IModalDataContainer modData)
+		{
+			var fcPostProcessor = new FuelCellPreRunPostprocessor(modData);
+
+			PreRunPostProcessing = fcPostProcessor;
+
+			var powerDemand = fcPostProcessor.CalculateFuelCellPowerDemand(
+				this,
+				batteryData.Clone());
+			batteryData.InitialSoC = powerDemand.InitSoc;
+
+			FuelCellPowerMap = new FuelCellPowerMap(powerDemand.Entries);
+		}
+
+		public void SetFuelCellSystemSharedMap()
+		{
+			var fcSystemMassFlowMap = new FuelCellSystemMassFlowMap(
+				FuelCellStrings.ElementAt(0).MassFlowMap,
+				FuelCellStrings.ElementAtOrDefault(1)?.MassFlowMap);
+
+			FuelCellShareMap = new FuelCellSystemShareMap(fcSystemMassFlowMap);
+		}
+	}
 
 	public class FuelCellData
 	{
@@ -102,15 +121,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 
 	public class FuelCellStringData
 	{
+		private const double kgPerSecondConvertionFactor = 3.6E6;
+		private readonly int _count;
 		private readonly FuelCellData _fcData;
 
-		public FuelCellData FcData => _fcData;
-
-		private readonly int _count;
+		private readonly Watt _moduleMaxPower;
+		private readonly Watt _moduleMinPower;
+		private FuelCellStringMassFlowMap _massFlowMap;
 
 		public FuelCellStringData(FuelCellData fcData, int count)
 		{
-
 			if (count < 1) {
 				throw new ArgumentException("At least one fuel cell has to be provided per string");
 			}
@@ -119,14 +139,42 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 			_count = count;
 		}
 
-		public int FcCount => _count;
+        public FuelCellStringData(FuelCellModuleData fuelCellModuleData)
+        {
+            _count = fuelCellModuleData.Count;
+			_moduleMinPower = fuelCellModuleData.MinPower;
+			_moduleMaxPower = fuelCellModuleData.MaxPower;
 
-		public FuelCellStringMassFlowMap MassFlowMap { get; set; }
+			MassFlowMapEntry[] entries = fuelCellModuleData.FuelCell.PowerOutputConsumptionMap.Select(e => new MassFlowMapEntry()
+			{ 
+				P_el_out = e.PowerOutput,
+				H2 = e.FuelConsumption,
+			}).ToArray();
+			
+			var fcMassFlowMap = new FuelCellMassFlowMap(entries);
+			_massFlowMap = new FuelCellStringMassFlowMap(fcMassFlowMap, fuelCellModuleData.Count);
+			_fcData = new FuelCellData()
+			{ 
+				MassFlowMap = fcMassFlowMap,
+				MaxElectricPower = _moduleMaxPower,
+				MinElectricPower = _moduleMinPower,
+			};
+		}
+
+        public int FcCount => _count;
+
+		public FuelCellData FcData => _fcData;
+
+		public FuelCellStringMassFlowMap MassFlowMap
+		{
+			get { return _massFlowMap; }
+			set { _massFlowMap = _massFlowMap ?? value; }
+		}
 
 
+		public virtual Watt MaxPower => _moduleMaxPower ?? FcData.MaxElectricPower * _count;
 
-		public Watt MaxPower => FcData.MaxElectricPower * _count;
-		public Watt MinPower => FcData.MinElectricPower;
+		public virtual Watt MinPower => _moduleMinPower ?? FcData.MinElectricPower;
 	}
 
 
@@ -196,20 +244,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 			return SearchAlgorithm.FindClosest(_distanceEntries, distance, t => t.a.Value() - t.b.Value(), out interval);
 		}
 
-
-		//public Watt Lookup(Meter distance)
-		//{
-		//	if (_powerDelivery != null)
-		//	{
-		//		return _powerDelivery;
-		//	}
-
-		//	//Just interpolate for now ?
-		//	var idx = FindIndex(distance);
-		//	return VectoMath.Interpolate(_entries[idx - 1].Distance, _entries[idx].Distance, _entries[idx - 1].Power,
-		//		_entries[idx].Power, distance);
-		//}
-
 		protected int FindIndex(Meter distance, out (int start, int end) interval)
 		{
 
@@ -223,33 +257,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 			throw new VectoException("Distance Request {0} exceeds fuel cell model data. min: {1} max: {2}", distance, _entries.First().Distance, _entries.Last().Distance);
 		}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         public class FuelCellPowerMapEntry
 		{
 			[Required, SIRange(0, 1e8)] public Meter Distance;
 			[Required, SIRange(0, 1e8)] public Watt Power;
 		}
-
 	}
 
 	public class FuelCellMassFlowMap
 	{
-
-
 		public Watt MinPowerMap => Entries.MinBy(e => e.P_el_out).P_el_out;
+		
 		public Watt MaxPowerMap => Entries.MaxBy(e => e.P_el_out).P_el_out;
 
 		protected internal MassFlowMapEntry[] Entries;
@@ -260,7 +278,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		}
 
         /// <summary>
-		/// Cuts the map at MinPower, introduces an artificial measurepoint at MinPower if it not matches an existing measured point
+		/// Cuts the map at MinPower, introduces an artificial measure point at MinPower if it not matches an existing measured point
         /// </summary>
         public Watt MinPower
 		{
@@ -279,13 +297,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 				}
 
 				Entries = entries.ToArray();
-
-
 			}
 		}
 
 		/// <summary>
-		/// Cuts the map at MaxPower, introduces an artificial measurepoint at MaxPower if it not matches an existing measured point
+		/// Cuts the map at MaxPower, introduces an artificial measure point at MaxPower if it not matches an existing measured point
 		/// </summary>
 		public Watt MaxPower
 		{
@@ -358,46 +374,50 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		/// </summary>
 		public Watt MinEffPower => Entries.MaxBy(e => e.P_el_out / e.H2)?.P_el_out;
 
-
-
         public class MassFlowMapEntry
 		{
-			[Required, SIRange(0, 1e8)] public Watt P_el_out;
-			[Required, SIRange(0, 1e8)] public KilogramPerSecond H2;
-		}
+			[Required, SIRange(0, 1e8)]
+			public Watt P_el_out { get; set; }
+			
+			[Required, SIRange(0, 1e8)]
+			public KilogramPerSecond H2 { get; set; }
+        }
 	}
 
 	public class FuelCellStringMassFlowMap
 	{
-		public Watt MinPower => _fuelCellComponentMap.MinPowerMap;
-		public Watt MaxPower => _fuelCellComponentMap.MaxPowerMap * _fcCount;
+		private readonly int _fcCount;
+		public FuelCellMassFlowMap _fuelCellComponentMap;
 
+		private List<Watt> _measuredPoints = null;
+		private List<Watt> _switchingPoints = null;
+		private List<Watt> _supportingPoints = null;
+
+		public FuelCellStringMassFlowMap(FuelCellMassFlowMap fcMap, int fcCount)
+		{
+			_fcCount = fcCount;
+			_fuelCellComponentMap = fcMap;
+			if (fcCount < 1)
+			{
+				throw new ArgumentException("At string must consist of at least one fuel cell");
+			}
+		}
+
+		public Watt MinPower => _fuelCellComponentMap.MinPowerMap;
+		
+		public Watt MaxPower => _fuelCellComponentMap.MaxPowerMap * _fcCount;
 
 		public Watt MinPowerEff => _fuelCellComponentMap.MinEffPower;
 
-		public FuelCellMassFlowMap _fuelCellComponentMap;
-		private readonly int _fcCount;
+		public IList<Watt> SwitchingPoints => _switchingPoints ?? (_switchingPoints = GetSwitchingPoints());
 
+		public IList<Watt> MeasuredPoints => _measuredPoints ?? (_measuredPoints = GetMeasuredPoints());
 
-		private List<Watt> _supportingPoints = null;
-
-		public IList<Watt> SupportingPoints
-		{
-			get { return (_supportingPoints ?? (_supportingPoints = SwitchingPoints.Concat(MeasuredPoints).OrderBy(p => p).Distinct().ToList())); }
-		}
-
-		private List<Watt> _switchingPoints = null;
-
-		public IList<Watt> SwitchingPoints
-		{
-			get { return (_switchingPoints ?? (_switchingPoints = GetSwitchingPoints())); }
-		}
-
-
-		private List<Watt> _measuredPoints = null;
-		public IList<Watt> MeasuredPoints {
-			get { return _measuredPoints ?? (_measuredPoints = GetMeasuredPoints()); }
-		}
+		public IList<Watt> SupportingPoints => _supportingPoints ??
+			(_supportingPoints = SwitchingPoints.Concat(MeasuredPoints)
+									   .OrderBy(p => p)
+									   .Distinct()
+									   .ToList());
 
 		private List<Watt> GetSwitchingPoints()
 		{
@@ -435,8 +455,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 						H2 = active * singleFcMap.Lookup(singleFcMinPower, false)
 					});
 				}
-
-
 
 				foreach (var pair in entries.Pairwise()) {
 					//One fuel cell is on
@@ -492,7 +510,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 			return switchingPoints;
 		}
 
-
 		private List<Watt> GetMeasuredPoints()
 		{
 			var measuredPoints = new List<Watt>();
@@ -527,16 +544,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 
 
 			return measuredPoints;
-		}
-
-
-		public FuelCellStringMassFlowMap(FuelCellMassFlowMap fcMap, int fcCount)
-		{
-			_fcCount = fcCount;
-			_fuelCellComponentMap = fcMap;
-			if (fcCount < 1) {
-				throw new ArgumentException("At string must consist of at least one fuel cell");
-			}
 		}
 
 		internal int GetActiveFuelCellCount(Watt power)
@@ -577,7 +584,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 
 			return totalFc;
 		}
-		
 	}
 
 	public class FuelCellSystemMassFlowMap

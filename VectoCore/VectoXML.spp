@@ -178,6 +178,75 @@
 			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\VIF_MockupResults_OVC-HEV_Bus.xml" HomeFolder="Yes"/>
 			<File FilePath="..\VectoMockup\VectoMockup\MockupResults\VIF_MockupResults_PEV_Bus.xml" HomeFolder="Yes"/>
 		</Folder>
+		<Folder FolderName="MRF-1.0 SampleFiles">
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\Lorry MRF-Conventional.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\Lorry MRF-HEV_F2+F3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\Lorry MRF-HEV_F2.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\Lorry MRF-HEV_F3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\Lorry MRF-HEV_F4.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\Lorry MRF-HEV_P2.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\Lorry MRF-HEV_S2+S3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\Lorry MRF-HEV_S2.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\Lorry MRF-HEV_S3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\Lorry MRF-HEV_S4.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\Lorry MRF-PEV_E2+E3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\Lorry MRF-PEV_E2.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\Lorry MRF-PEV_E3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\Lorry MRF-PEV_E4.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\PrimaryBus MRF-Conventional.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\PrimaryBus MRF-HEV_F2+F3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\PrimaryBus MRF-HEV_F2.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\PrimaryBus MRF-HEV_F3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\PrimaryBus MRF-HEV_F4.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\PrimaryBus MRF-HEV_P2.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\PrimaryBus MRF-HEV_S2+S3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\PrimaryBus MRF-HEV_S2.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\PrimaryBus MRF-HEV_S3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\PrimaryBus MRF-HEV_S4.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\PrimaryBus MRF-PEV_E2+E3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\PrimaryBus MRF-PEV_E2.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\PrimaryBus MRF-PEV_E3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\PrimaryBus MRF-PEV_E4.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\MRF-1.0\Results.xml" HomeFolder="Yes"/>
+		</Folder>
+		<Folder FolderName="CIF-1.0 SampleFiles">
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\CompletedBus CIF-Conventional.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\CompletedBus CIF-HEV-F-IEPC.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\CompletedBus CIF-HEV-F2+F3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\CompletedBus CIF-HEV-F2.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\CompletedBus CIF-HEV-F3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\CompletedBus CIF-HEV-F4.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\CompletedBus CIF-HEV-Px.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\CompletedBus CIF-HEV-S-IEPC.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\CompletedBus CIF-HEV-S2+S3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\CompletedBus CIF-HEV-S2.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\CompletedBus CIF-HEV-S3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\CompletedBus CIF-HEV-S4.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\CompletedBus CIF-PEV-E-IEPC.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\CompletedBus CIF-PEV-E2+E3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\CompletedBus CIF-PEV-E2.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\CompletedBus CIF-PEV-E3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\CompletedBus CIF-PEV-E4.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\Lorry CIF-Conventional.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\Lorry CIF-HEV-F-IEPC.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\Lorry CIF-HEV-F2+F3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\Lorry CIF-HEV-F2.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\Lorry CIF-HEV-F3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\Lorry CIF-HEV-F4.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\Lorry CIF-HEV-Px.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\Lorry CIF-HEV-S-IEPC.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\Lorry CIF-HEV-S2+S3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\Lorry CIF-HEV-S2.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\Lorry CIF-HEV-S3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\Lorry CIF-HEV-S4.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\Lorry CIF-PEV-E2+E3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\Lorry CIF-PEV-E2.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\Lorry CIF-PEV-E3.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\Lorry CIF-PEV-E4.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\Lorry CIF-PEV-IEPC.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\Results.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\DeclarationReports\CIF-1.0\Summary.xml" HomeFolder="Yes"/>
+		</Folder>
 	</Folder>
 	<Folder FolderName="XML Files Vecto Testcases">
 		<Folder FolderName="SchemaVersion2.4" ExtStr=".xml">
@@ -578,6 +647,7 @@
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputCustomer.0.7.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputCustomer.0.8.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputCustomer.0.9.xsd" HomeFolder="Yes"/>
+			<File FilePath="VectoCore\Resources\XSD\VectoOutputCustomer.1.0.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputCustomer.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputDefinitions.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.0.5.xsd" HomeFolder="Yes"/>
@@ -586,6 +656,7 @@
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.0.7.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.0.8.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.0.9.xsd" HomeFolder="Yes"/>
+			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.1.0.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputMultistep.0.1.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VTPReport.0.1.xsd" HomeFolder="Yes"/>

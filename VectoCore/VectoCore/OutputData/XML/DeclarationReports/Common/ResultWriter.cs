@@ -103,8 +103,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		public override string ResultXMLType => "ResultSuccessPEVType";
 		public override IResultGroupWriter SimulationParameterWriter => _factory.GetLorrySimulationParameterWriter(_factory, TNS);
 		public override IResultGroupWriter ResultTotalWriter => _factory.GetLorryPEVTotalWriter(_factory, TNS);
+	}
 
+	// todo amogoda: m13. should this be used or hybrid non-ovc?
+	public class LorryPEVNonOVCResultWriter : ResultWriterBase
+	{
 
+		public LorryPEVNonOVCResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		public override string ResultXMLType => "ResultSuccessNonOVCPEVType";
+		public override IResultGroupWriter SimulationParameterWriter => _factory.GetLorrySimulationParameterWriter(_factory, TNS);
+		public override IResultGroupWriter ResultTotalWriter => _factory.GetLorryPEVTotalWriter(_factory, TNS);
 	}
 
 	public class LorryHEVOVCResultWriter : AbstractResultGroupWriter

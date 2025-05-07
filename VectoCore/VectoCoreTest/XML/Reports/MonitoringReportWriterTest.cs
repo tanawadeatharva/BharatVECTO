@@ -196,17 +196,19 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		[TestCase(Exempted_HeavyLorry, TestName="MonitoringReport_Exempted_HeavyLorry")]
 		[TestCase(Exempted_PrimaryBus, TestName="MonitoringReport_Exempted_PrimaryBus")]
 		[TestCase(Exempted_CompletedBus, TestName="MonitoringReport_Exempted_CompletedBus")]
-        public void TestMonitoringReport(string fileName)
+        public void TestMonitoringReport(string filePath)
 		{
-			var report = GetMonitoringReport(fileName, out var dataProvider) as XMLMonitoringReport;
+			var report = GetMonitoringReport(filePath, out var dataProvider) as XMLMonitoringReport;
 
 			report.Initialize(GetRunData(dataProvider));
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, VectoCore.Utils.XmlDocumentType.MonitoringReport));
-            Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+			var filename = Path.GetFileName(filePath);
 
-			var destPath = Path.Combine(outputBasePath, TestContext.CurrentContext.Test.MethodName+".xml");
+            Assert.IsTrue(ValidateAndPrint(report.Report, VectoCore.Utils.XmlDocumentType.MonitoringReport));
+            Assert.IsTrue(WriteToDisk(outputBasePath, filename, report.Report));
+
+			var destPath = Path.Combine(outputBasePath, filename);
 			ValidateMRFHash(destPath);
 		}
 

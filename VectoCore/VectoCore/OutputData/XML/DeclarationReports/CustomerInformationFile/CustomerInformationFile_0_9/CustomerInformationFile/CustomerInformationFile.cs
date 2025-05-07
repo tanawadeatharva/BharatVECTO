@@ -115,6 +115,66 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
+	public class HEV_F2_Lorry_CIF : CustomerInformationFile
+	{
+		public override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_F2_LorryOutputType;
+		public HEV_F2_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
+
+		#region Overrides of AbstractCustomerReport
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _cifFactory.GetHEV_F2_LorryVehicleType().GetElement(inputData);
+		}
+
+		#endregion
+	}
+
+	public class HEV_F3_Lorry_CIF : CustomerInformationFile
+	{
+		public override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_F3_LorryOutputType;
+		public HEV_F3_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
+
+		#region Overrides of AbstractCustomerReport
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _cifFactory.GetHEV_F3_LorryVehicleType().GetElement(inputData);
+		}
+
+		#endregion
+	}
+
+	public class HEV_F4_Lorry_CIF : CustomerInformationFile
+	{
+		public override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_F4_LorryOutputType;
+		public HEV_F4_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
+
+		#region Overrides of AbstractCustomerReport
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _cifFactory.GetHEV_F4_LorryVehicleType().GetElement(inputData);
+		}
+
+		#endregion
+	}
+
+	public class HEV_IEPC_F_Lorry_CIF : CustomerInformationFile
+	{
+		public override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_IEPC_F_LorryOutputType;
+		public HEV_IEPC_F_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
+
+		#region Overrides of AbstractCustomerReport
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _cifFactory.GetHEV_IEPC_F_LorryVehicleType().GetElement(inputData);
+		}
+
+		#endregion
+	}
+
 	public class PEV_E2_Lorry_CIF : CustomerInformationFile
 	{
 		public override string OutputDataType => XMLNames.CIF_OutputDataType_PEV_E2_LorryOutputType;

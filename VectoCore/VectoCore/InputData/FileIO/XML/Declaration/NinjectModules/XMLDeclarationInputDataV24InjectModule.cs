@@ -286,7 +286,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationPrimaryBusAuxiliariesHEVSDataProviderV24>()
 				.Named(XMLDeclarationPrimaryBusAuxiliariesHEVSDataProviderV24.QUALIFIED_XSD_TYPE);
-			
+
 			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationPrimaryBusAuxiliariesPEVDataProviderV24>()
 				.Named(XMLDeclarationPrimaryBusAuxiliariesPEVDataProviderV24.QUALIFIED_XSD_TYPE);
 

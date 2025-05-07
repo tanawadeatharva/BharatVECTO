@@ -226,6 +226,112 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
+	// todo amogoda: 2.7 - check and add proper elements to FC vehicles below.
+	public class CIF_HEV_F2_LorryVehicleWriter : VehicleWriter
+	{
+		public CIF_HEV_F2_LorryVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory) : base(cifFactory, mrfFactory) { }
+
+		#region Overrides of VehicleWriter
+
+		// todo amogoda: 2.8 - is GetHEVADASType correct for Fc?
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_cif + XMLNames.Component_Vehicle,
+				_cifFactory.GetFuelCell_LorryVehicleTypeGroup().GetElements(inputData),
+				_cifFactory.GetHEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS).WithXName(_cif + "ADAS"),
+				//_cifFactory.GetEngineGroup().GetElements(inputData),
+				_cifFactory.GetElectricMachineGroup().GetElements(inputData),
+				_cifFactory.GetREESSGroup().GetElements(inputData),
+				_cifFactory.GetTransmissionGroup().GetElements(inputData),
+				GetRetarder(inputData),
+				GetAxleRatio(inputData),
+				_cifFactory.GetAxleWheelsGroup().GetElements(inputData),
+
+				_cifFactory.GetLorryAuxGroup().GetElements(inputData)
+			);
+		}
+
+		#endregion
+	}
+
+	public class CIF_HEV_F3_LorryVehicleWriter : VehicleWriter
+	{
+		public CIF_HEV_F3_LorryVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory) : base(cifFactory, mrfFactory) { }
+
+		#region Overrides of VehicleWriter
+
+		// todo amogoda: 2.8 - is GetHEVADASType correct for Fc?
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_cif + XMLNames.Component_Vehicle,
+				_cifFactory.GetFuelCell_LorryVehicleTypeGroup().GetElements(inputData),
+				_cifFactory.GetHEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS).WithXName(_cif + "ADAS"),
+				//_cifFactory.GetEngineGroup().GetElements(inputData),
+				_cifFactory.GetElectricMachineGroup().GetElements(inputData),
+				_cifFactory.GetREESSGroup().GetElements(inputData),
+				_cifFactory.GetTransmissionGroupNoGearbox().GetElements(inputData),
+				GetRetarder(inputData),
+				GetAxleRatio(inputData),
+				_cifFactory.GetAxleWheelsGroup().GetElements(inputData),
+
+				_cifFactory.GetLorryAuxGroup().GetElements(inputData)
+			);
+		}
+
+		#endregion
+	}
+
+	public class CIF_HEV_F4_LorryVehicleWriter : VehicleWriter
+	{
+		public CIF_HEV_F4_LorryVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory) : base(cifFactory, mrfFactory) { }
+
+		#region Overrides of VehicleWriter
+
+		// todo amogoda: 2.8 - is GetHEVADASType correct for Fc?
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_cif + XMLNames.Component_Vehicle,
+				_cifFactory.GetFuelCell_LorryVehicleTypeGroup().GetElements(inputData),
+				_cifFactory.GetHEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS).WithXName(_cif + "ADAS"),
+				//_cifFactory.GetEngineGroup().GetElements(inputData),
+				_cifFactory.GetElectricMachineGroup().GetElements(inputData),
+				_cifFactory.GetREESSGroup().GetElements(inputData),
+				_cifFactory.GetTransmissionGroupNoGearbox().GetElements(inputData),
+				_cifFactory.GetAxleWheelsGroup().GetElements(inputData),
+				_cifFactory.GetLorryAuxGroup().GetElements(inputData)
+			);
+		}
+
+		#endregion
+	}
+
+	public class CIF_HEV_IEPC_F_LorryVehicleWriter : VehicleWriter
+	{
+		public CIF_HEV_IEPC_F_LorryVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory) : base(cifFactory, mrfFactory) { }
+
+		#region Overrides of VehicleWriter
+
+		// todo amogoda: 2.8 - is GetHEVADASType correct for Fc?
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_cif + XMLNames.Component_Vehicle,
+				_cifFactory.GetFuelCell_LorryVehicleTypeGroup().GetElements(inputData),
+				_cifFactory.GetHEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS).WithXName(_cif + "ADAS"),
+				//_cifFactory.GetEngineGroup().GetElements(inputData),
+				_cifFactory.GetElectricMachineGroup().GetElements(inputData),
+				_cifFactory.GetREESSGroup().GetElements(inputData),
+				_cifFactory.GetIEPCTransmissionGroup().GetElements(inputData),
+				GetRetarder(inputData),
+				GetAxleRatio(inputData, true),
+				_cifFactory.GetAxleWheelsGroup().GetElements(inputData),
+
+				_cifFactory.GetLorryAuxGroup().GetElements(inputData)
+			);
+		}
+
+		#endregion
+	}
+
 	public class CIF_PEV_E2_LorryVehicleWriter : VehicleWriter
 	{
 		public CIF_PEV_E2_LorryVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory) : base(cifFactory, mrfFactory) { }

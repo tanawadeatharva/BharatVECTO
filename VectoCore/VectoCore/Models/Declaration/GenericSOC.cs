@@ -90,7 +90,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				VectoSimulationJobType.ParallelHybridVehicle,
 				VectoSimulationJobType.SerialHybridVehicle,
 				VectoSimulationJobType.IHPC,
-				VectoSimulationJobType.IEPC_S
+				VectoSimulationJobType.IEPC_S,
+				VectoSimulationJobType.FCHV,
+				VectoSimulationJobType.FCHV_IEPC
 			};
 			foreach (var archs in architectures)
 			{

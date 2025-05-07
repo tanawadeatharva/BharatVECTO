@@ -227,12 +227,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 
-		public static SegmentLookup GetTruckSegment(IVehicleDeclarationInputData vehicle, bool batteryElectric = false)
+		public static SegmentLookup GetTruckSegment(IVehicleDeclarationInputData vehicle, bool batteryElectric = false, bool throwException = true)
 		{
 				var allowVocational = true;
 			var ng = vehicle.ExemptedVehicle ? false : vehicle.Components.EngineInputData?.EngineModes.Any(e =>
 				e.Fuels.Any(f => f.FuelType.IsOneOf(FuelType.LPGPI, FuelType.NGCI, FuelType.NGPI))) ?? false;
-			var ovcHev = vehicle.ExemptedVehicle ? false : vehicle.OvcHev;
+			var ovcHev = vehicle.ExemptedVehicle ? false : vehicle.OVC;
 			Segment segment;
 			try {
 				segment = DeclarationData.TruckSegments.Lookup(
@@ -247,7 +247,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					false, ng, ovcHev);
 			}
 
-			if (!segment.Found) {
+			if (!segment.Found && throwException) {
 				throw new VectoException(
 					"no segment found for vehicle configuration: vehicle category: {0}, axle configuration: {1}, GVMR: {2}",
 					vehicle.VehicleCategory, vehicle.AxleConfiguration,

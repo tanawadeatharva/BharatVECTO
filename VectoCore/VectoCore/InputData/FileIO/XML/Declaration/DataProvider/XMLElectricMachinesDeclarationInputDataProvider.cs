@@ -93,6 +93,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
+	public class XMLElectricMachinesDeclarationInputDataProviderV27 : XMLElectricMachinesDeclarationInputDataProvider
+	{
+        public static new readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+        public static new readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+        public static new readonly string QUALIFIED_GEN_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_GEN_TYPE);
+
+        public XMLElectricMachinesDeclarationInputDataProviderV27(
+            IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+            : base(vehicle, componentNode, sourceFile)
+        {}
+
+    }
+
 	public class XMLElectricMachinesDeclarationData : IElectricMachinesDeclarationInputData
 	{
 		private readonly IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> _entries;

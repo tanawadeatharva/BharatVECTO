@@ -33,6 +33,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				_namingHelper.GetName(mrf, VehicleCategoryHelper.Lorry, VectoSimulationJobTypeHelper.Hybrid, true));
 			Bind<IResultsWriter>().To<MRFResultsWriter.PEVLorry>().Named(
 				_namingHelper.GetName(mrf, VehicleCategoryHelper.Lorry, VectoSimulationJobTypeHelper.PureElectric, true));
+
+			// todo amogoda: m13. FC veh. are simulated as PEV despite being hybrids irl.
+			Bind<IResultsWriter>().To<MRFResultsWriter.PEVNonOVCLorry>().Named(
+				_namingHelper.GetName(mrf, VehicleCategoryHelper.Lorry, VectoSimulationJobTypeHelper.PureElectric, false));
+
+			// todo amogoda: 2.6 - check if mrf writers/classes are correct
+			Bind<IResultsWriter>().To<MRFResultsWriter.HEVNonOVCLorry>().Named(
+				_namingHelper.GetName(mrf, VehicleCategoryHelper.Lorry, VectoSimulationJobTypeHelper.FuelCell, false));
+			Bind<IResultsWriter>().To<MRFResultsWriter.HEVOVCLorry>().Named(
+				_namingHelper.GetName(mrf, VehicleCategoryHelper.Lorry, VectoSimulationJobTypeHelper.FuelCell, true));
 			Bind<IResultsWriter>().To<MRFResultsWriter.ExemptedVehicle>().Named(
 				_namingHelper.GetName(mrf, VehicleCategoryHelper.Lorry, true));
 
@@ -42,6 +52,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				_namingHelper.GetName(mrf, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.Hybrid, false));
 			Bind<IResultsWriter>().To<MRFResultsWriter.HEVOVCBus>().Named(
 				_namingHelper.GetName(mrf, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.Hybrid, true));
+			// todo amogoda: 2.6 - check if mrf writers/classes are correct for buses
+			Bind<IResultsWriter>().To<MRFResultsWriter.HEVNonOVCBus>().Named(
+				_namingHelper.GetName(mrf, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.FuelCell, false));
+			Bind<IResultsWriter>().To<MRFResultsWriter.HEVOVCBus>().Named(
+				_namingHelper.GetName(mrf, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.FuelCell, true));
 			Bind<IResultsWriter>().To<MRFResultsWriter.PEVBus>().Named(
 				_namingHelper.GetName(mrf, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.PureElectric, true));
 			Bind<IResultsWriter>().To<MRFResultsWriter.ExemptedVehicle>().Named(

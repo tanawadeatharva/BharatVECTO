@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VectoMockResults xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cif="urn:tugraz:ivt:VectoAPI:CustomerOutput" xmlns="urn:tugraz:ivt:VectoAPI:CustomerOutput:v1.0" 
+xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput file:///W:/XSD/VectoOutputCustomer.xsd" xmlns:di="http://www.w3.org/2000/09/xmldsig#">
+	<Summaries>
+		<!-- 
+Conventional Lorry - non H2 ICE -->
+<Summary xsi:type="ResultSummaryConventionalType">
+	<AveragePayload unit="t">3.141</AveragePayload>
+	<Fuel type="Diesel CI"><!-- repeat for every fuel used -->
+		<FuelConsumption unit="g/km">6.1</FuelConsumption>
+		<FuelConsumption unit="g/t-km">6.20</FuelConsumption>
+		<FuelConsumption unit="g/m³-km">6.220</FuelConsumption>
+		<FuelConsumption unit="MJ/km">6.221</FuelConsumption>
+		<FuelConsumption unit="MJ/t-km">6.223</FuelConsumption>
+		<FuelConsumption unit="MJ/m³-km">6.224</FuelConsumption>
+		<FuelConsumption unit="l/100km">6.230</FuelConsumption><!-- NOT for gaseous fuels -->
+		<FuelConsumption unit="l/t-km">6.2302</FuelConsumption><!-- NOT for gaseous fuels -->
+		<FuelConsumption unit="l/m³-km">6.230301</FuelConsumption><!-- NOT for gaseous fuels -->
+	</Fuel>
+	<CO2 unit="g/km">8.1</CO2>
+	<CO2 unit="g/t-km">8.3</CO2>
+	<CO2 unit="g/m³-km">8.4</CO2>
+</Summary>
+		<!-- 
+Conventional Bus - non H2 ICE -->
+<Summary xsi:type="ResultSummaryConventionalType">
+	<AveragePassengerCount>3.141</AveragePassengerCount>
+	<Fuel type="Diesel CI"><!-- repeat for every fuel used -->
+		<FuelConsumption unit="g/km">6.1</FuelConsumption>
+		<FuelConsumption unit="g/p-km">6.21</FuelConsumption>
+		<FuelConsumption unit="MJ/km">6.221</FuelConsumption>
+		<FuelConsumption unit="MJ/p-km">6.222</FuelConsumption>
+		<FuelConsumption unit="l/100km">6.230</FuelConsumption><!-- NOT for gaseous fuels -->
+		<FuelConsumption unit="l/p-km">6.2301</FuelConsumption><!-- NOT for gaseous fuels -->
+	</Fuel>
+	<CO2 unit="g/km">8.1</CO2>
+	<CO2 unit="g/p-km">8.2</CO2>
+</Summary>
+		<!-- 
+Non-OVC Hybrid electric Lorry - non H2 ICE -->
+<Summary xsi:type="ResultSummaryNonOVCHEVType">
+	<AveragePayload unit="t">3.141</AveragePayload>
+	<Fuel type="Diesel CI"><!-- repeat for every fuel used -->
+		<FuelConsumption unit="g/km">6.1</FuelConsumption>
+		<FuelConsumption unit="g/t-km">6.20</FuelConsumption>
+		<FuelConsumption unit="g/m³-km">6.220</FuelConsumption>
+		<FuelConsumption unit="MJ/km">6.221</FuelConsumption>
+		<FuelConsumption unit="MJ/t-km">6.223</FuelConsumption>
+		<FuelConsumption unit="MJ/m³-km">6.224</FuelConsumption>
+		<FuelConsumption unit="l/100km">6.230</FuelConsumption><!-- NOT for gaseous fuels -->
+		<FuelConsumption unit="l/t-km">6.2302</FuelConsumption><!-- NOT for gaseous fuels -->
+		<FuelConsumption unit="l/m³-km">6.230301</FuelConsumption><!-- NOT for gaseous fuels -->
+	</Fuel>
+	<CO2 unit="g/km">8.1</CO2>
+	<CO2 unit="g/t-km">8.3</CO2>
+	<CO2 unit="g/m³-km">8.4</CO2>
+</Summary>
+		<!-- 
+Non-OVC Hybrid electric Bus - non H2 ICE -->
+<Summary xsi:type="ResultSummaryNonOVCHEVType">
+	<AveragePassengerCount>3.141</AveragePassengerCount>
+	<Fuel type="Diesel CI"><!-- repeat for every fuel used -->
+		<FuelConsumption unit="g/km">6.1</FuelConsumption>
+		<FuelConsumption unit="g/p-km">6.21</FuelConsumption>
+		<FuelConsumption unit="MJ/km">6.221</FuelConsumption>
+		<FuelConsumption unit="MJ/p-km">6.222</FuelConsumption>
+		<FuelConsumption unit="l/100km">6.230</FuelConsumption><!-- NOT for gaseous fuels -->
+		<FuelConsumption unit="l/p-km">6.2301</FuelConsumption><!-- NOT for gaseous fuels -->
+	</Fuel>
+	<CO2 unit="g/km">8.1</CO2>
+	<CO2 unit="g/p-km">8.2</CO2>
+</Summary>
+		<!-- 
+OVC Hybrid electric Lorry - non H2 ICE -->
+<Summary xsi:type="ResultSummaryOVCHEVType">
+	<AveragePayload unit="t">3.141</AveragePayload>
+	<!-- repeat for every fuel used -->
+	<Fuel type="Diesel CI">
+		<FuelConsumption unit="g/km">6.1</FuelConsumption>
+		<FuelConsumption unit="g/t-km">6.20</FuelConsumption>
+		<FuelConsumption unit="g/m³-km">6.220</FuelConsumption>
+		<FuelConsumption unit="MJ/km">6.221</FuelConsumption>
+		<FuelConsumption unit="MJ/t-km">6.223</FuelConsumption>
+		<FuelConsumption unit="MJ/m³-km">6.224</FuelConsumption>
+		<FuelConsumption unit="l/100km">6.230</FuelConsumption><!-- NOT for gaseous fuels -->
+		<FuelConsumption unit="l/t-km">6.2302</FuelConsumption><!-- NOT for gaseous fuels -->
+		<FuelConsumption unit="l/m³-km">6.230301</FuelConsumption><!-- NOT for gaseous fuels -->
+	</Fuel>
+	<ElectricEnergy>
+		<EnergyConsumption unit="kWh/km">7.101</EnergyConsumption>
+		<EnergyConsumption unit="kWh/t-km">7.121</EnergyConsumption>
+		<EnergyConsumption unit="kWh/m³-km">7.131</EnergyConsumption>
+		<EnergyConsumption unit="MJ/km">4.101</EnergyConsumption>
+		<EnergyConsumption unit="MJ/t-km">4.121</EnergyConsumption>
+		<EnergyConsumption unit="MJ/m³-km">4.131</EnergyConsumption>
+	</ElectricEnergy>
+	<CO2 unit="g/km">8.1</CO2>
+	<CO2 unit="g/t-km">8.3</CO2>
+	<CO2 unit="g/m³-km">8.4</CO2>
+	<ActualChargeDepletingRange unit="km">9.1</ActualChargeDepletingRange>
+	<EquivalentAllElectricRange unit="km">9.2</EquivalentAllElectricRange>
+	<ZeroCO2EmissionsRange unit="km">9.3</ZeroCO2EmissionsRange>	
+</Summary>
+		<!-- 
+OVC Hybrid electric Bus - non H2 ICE -->
+<Summary xsi:type="ResultSummaryOVCHEVType">
+	<AveragePassengerCount>3.141</AveragePassengerCount>
+	<Fuel type="Diesel CI"><!-- repeat for every fuel used -->
+		<FuelConsumption unit="g/km">6.1</FuelConsumption>
+		<FuelConsumption unit="g/p-km">6.21</FuelConsumption>
+		<FuelConsumption unit="MJ/km">6.221</FuelConsumption>
+		<FuelConsumption unit="MJ/p-km">6.222</FuelConsumption>
+		<FuelConsumption unit="l/100km">6.230</FuelConsumption><!-- NOT for gaseous fuels -->
+		<FuelConsumption unit="l/p-km">6.2301</FuelConsumption><!-- NOT for gaseous fuels -->
+	</Fuel>
+	<ElectricEnergy>
+		<EnergyConsumption unit="kWh/km">7.101</EnergyConsumption>
+		<EnergyConsumption unit="kWh/p-km">7.111</EnergyConsumption>
+		<EnergyConsumption unit="MJ/km">4.101</EnergyConsumption>
+		<EnergyConsumption unit="MJ/p-km">4.111</EnergyConsumption>
+	</ElectricEnergy>
+	<CO2 unit="g/km">8.1</CO2>
+	<CO2 unit="g/p-km">8.2</CO2>
+	<ActualChargeDepletingRange unit="km">9.1</ActualChargeDepletingRange>
+	<EquivalentAllElectricRange unit="km">9.2</EquivalentAllElectricRange>
+	<ZeroCO2EmissionsRange unit="km">9.3</ZeroCO2EmissionsRange>	
+</Summary>
+
+		<!-- 
+PEV Lorry -->
+<Summary xsi:type="ResultSummaryPEVType">
+	<AveragePayload unit="t">3.141</AveragePayload>
+	<ElectricEnergy>
+		<EnergyConsumption unit="kWh/km">7.101</EnergyConsumption>
+		<EnergyConsumption unit="kWh/t-km">7.121</EnergyConsumption>
+		<EnergyConsumption unit="kWh/m³-km">7.131</EnergyConsumption>
+		<EnergyConsumption unit="MJ/km">4.101</EnergyConsumption>
+		<EnergyConsumption unit="MJ/t-km">4.121</EnergyConsumption>
+		<EnergyConsumption unit="MJ/m³-km">4.131</EnergyConsumption>
+	</ElectricEnergy>
+	<ActualChargeDepletingRange unit="km">9.1</ActualChargeDepletingRange>
+	<EquivalentAllElectricRange unit="km">9.2</EquivalentAllElectricRange>
+	<ZeroCO2EmissionsRange unit="km">9.3</ZeroCO2EmissionsRange>	
+</Summary>
+		<!-- 
+PEV Bus -->
+<Summary xsi:type="ResultSummaryPEVType">
+	<AveragePassengerCount>3.141</AveragePassengerCount>
+	<ElectricEnergy>
+		<EnergyConsumption unit="kWh/km">7.101</EnergyConsumption>
+		<EnergyConsumption unit="kWh/p-km">7.111</EnergyConsumption>
+		<EnergyConsumption unit="MJ/km">4.101</EnergyConsumption>
+		<EnergyConsumption unit="MJ/p-km">4.111</EnergyConsumption>
+	</ElectricEnergy>
+	<FC_ZEV_AuxHeater type="Diesel CI"><!-- only if aux heater power > 0 -->
+		<FuelConsumption unit="g/km">6.1</FuelConsumption>
+		<FuelConsumption unit="g/p-km">6.21</FuelConsumption>
+		<FuelConsumption unit="MJ/km">6.221</FuelConsumption>
+		<FuelConsumption unit="MJ/p-km">6.222</FuelConsumption>
+		<FuelConsumption unit="l/100km">6.230</FuelConsumption>
+		<FuelConsumption unit="l/p-km">6.2301</FuelConsumption>
+	</FC_ZEV_AuxHeater>
+	<CO2_ZEV_AuxHeater><!-- only if aux heater power > 0 -->
+		<CO2 unit="g/km">8.1</CO2>
+		<CO2 unit="g/p-km">8.2</CO2>
+	</CO2_ZEV_AuxHeater>
+	<ActualChargeDepletingRange unit="km">9.1</ActualChargeDepletingRange>
+	<EquivalentAllElectricRange unit="km">9.2</EquivalentAllElectricRange>
+	<ZeroCO2EmissionsRange unit="km">9.3</ZeroCO2EmissionsRange>	
+</Summary>
+
+	</Summaries>
+</VectoMockResults>

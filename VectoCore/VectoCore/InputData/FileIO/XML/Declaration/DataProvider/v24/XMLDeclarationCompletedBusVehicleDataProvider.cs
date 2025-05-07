@@ -264,7 +264,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public XMLDeclarationPEVCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
-		public override bool OvcHev => true;
+		public override bool OVC => true;
 
 	}
 
@@ -279,7 +279,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public XMLDeclarationIepcCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
 
-		public override bool OvcHev => true;
+		public override bool OVC => true;
 
 		public override bool HybridElectricHDV => false;
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_E;

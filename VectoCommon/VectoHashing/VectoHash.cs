@@ -112,11 +112,16 @@ namespace TUGraz.VectoHashing
 			var retVal = new List<VectoComponents>();
 			var rootName = Document.FirstChild.NextSibling?.LocalName ?? Document.FirstChild.LocalName;
 
+			// Avoid MonitoringData element in Vehicles
+			var componentsPath = "//*[local-name()='Components']";
+			var specificPath = (Document.SelectSingleNode(componentsPath) != null) ? componentsPath : string.Empty;
+
 			foreach (var component in EnumHelper.GetValues<VectoComponents>()) {
-				// special treatment for REESS: can be either supercap or multiple batteries where the component node may contain several sub-components
-				var select = component == VectoComponents.ElectricEnergyStorage
-					? $"//*[local-name()='{rootName}']//*[local-name()='{component.XMLElementName()}'  or local-name()='Capacitor']//*[local-name()='Data']"
-					: $"//*[local-name()='{rootName}']//*[local-name()='{component.XMLElementName()}']";
+				var extraPath = component.IsVehicleComponent() ? specificPath : string.Empty;
+                // special treatment for REESS: can be either supercap or multiple batteries where the component node may contain several sub-components
+                var select = component == VectoComponents.ElectricEnergyStorage
+					? $"//*[local-name()='{rootName}']{extraPath}//*[local-name()='{component.XMLElementName()}'  or local-name()='Capacitor']//*[local-name()='Data']"
+					: $"//*[local-name()='{rootName}']{extraPath}//*[local-name()='{component.XMLElementName()}']";
                 var nodes = Document.SelectNodes(select);
 				var count = nodes?.Count ?? 0;
 				for (var i = 0; i < count; i++) {
@@ -147,7 +152,19 @@ namespace TUGraz.VectoHashing
 				throw new Exception("No component found");
 			}
 			var componentId = nodes[0].Attributes[XMLNames.Component_ID_Attr].Value;
-			return GetHashValueFromSig(DoComputeHash(nodes[0], canonicalization, digestMethod), componentId);
+
+			var node = nodes[0];
+
+            // Remove MonitoringData node from Vehicle, it should not be hashed.
+            var docClone = Document.Clone();
+			var monitoringNode = docClone.SelectSingleNode("//*[local-name()='MonitoringData']");
+			if (monitoringNode != null)
+			{
+				node = monitoringNode.ParentNode;
+				node.RemoveChild(monitoringNode);
+			}
+			
+			return GetHashValueFromSig(DoComputeHash(node, canonicalization, digestMethod), componentId);
 		}
 
 

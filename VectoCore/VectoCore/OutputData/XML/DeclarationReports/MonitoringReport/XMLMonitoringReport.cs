@@ -85,7 +85,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
             PEV_IEPC_LorryDataType,
             PEV_IEPC_PrimaryBusDataType,
             PEVCompletedBusDataType,
-            ExemptedLorryDataType,
+			FCHV_F2_LorryDataType,
+			FCHV_F2_PrimaryBusDataType,
+			FCHV_F3_LorryDataType,
+			FCHV_F3_PrimaryBusDataType,
+			FCHV_F4_LorryDataType,
+			FCHV_F4_PrimaryBusDataType,
+			FCHV_IEPC_LorryDataType,
+			FCHV_IEPC_PrimaryBusDataType,
+			FCHVCompletedBusDataType,
+			ExemptedLorryDataType,
             ExemptedPrimaryBusDataType,
             ExemptedCompletedBusDataType
         }
@@ -135,9 +144,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
                 { OutputType.PEV_E3_PrimaryBusDataType, WritePEV_E3_Data },
                 { OutputType.PEV_E4_LorryDataType, WritePEV_E4_Data },
                 { OutputType.PEV_E4_PrimaryBusDataType, WritePEV_E4_Data },
-                { OutputType.PEV_IEPC_LorryDataType, WritePEV_IEPC_Data },
-                { OutputType.PEV_IEPC_PrimaryBusDataType, WritePEV_IEPC_Data },
                 { OutputType.PEVCompletedBusDataType, WriteCompleted_Data },
+				{ OutputType.FCHV_F2_LorryDataType, WriteFCHV_F2_Data },
+				{ OutputType.FCHV_F2_PrimaryBusDataType, WriteFCHV_F2_Data },
+				{ OutputType.FCHV_F3_LorryDataType, WriteFCHV_F3_Data },
+				{ OutputType.FCHV_F3_PrimaryBusDataType, WriteFCHV_F3_Data },
+				{ OutputType.FCHV_F4_LorryDataType, WriteFCHV_F4_Data },
+				{ OutputType.FCHV_F4_PrimaryBusDataType, WriteFCHV_F4_Data },
+				{ OutputType.FCHV_IEPC_LorryDataType, WritePEV_IEPC_Data },
+                { OutputType.FCHV_IEPC_PrimaryBusDataType, WritePEV_IEPC_Data },
+                { OutputType.FCHVCompletedBusDataType, WriteCompleted_Data },
                 { OutputType.ExemptedLorryDataType, WriteExempted_Data },
                 { OutputType.ExemptedPrimaryBusDataType, WriteExempted_Data },
                 { OutputType.ExemptedCompletedBusDataType, WriteExempted_Data }
@@ -262,9 +278,45 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
             WriteOptionalAxlegearConventionalComponents();
             WriteEV_ElectricComponents();
             WriteAdvancedReducingTechnologies();
-        }
+		}
 
-        protected void WriteBaseVehicleData()
+		protected void WriteFCHV_F2_Data()
+		{
+			WriteBaseVehicleData();
+			WriteNoEngineConventionalComponents();
+			WriteEV_ElectricComponents();
+			WriteAdvancedReducingTechnologies();
+			// todo amogoda: missing FCHV components.
+		}
+
+		protected void WriteFCHV_F3_Data()
+		{
+			WriteBaseVehicleData();
+			WriteNoEngineNoGearboxConventionalComponents();
+			WriteEV_ElectricComponents();
+			WriteAdvancedReducingTechnologies();
+			// todo amogoda: missing FCHV components.
+		}
+
+		protected void WriteFCHV_F4_Data()
+		{
+			WriteBaseVehicleData();
+			WriteAxleWheels();
+			WriteEV_ElectricComponents();
+			WriteAdvancedReducingTechnologies();
+			// todo amogoda: missing FCHV components.
+		}
+
+		protected void WriteFCHV_IEPC_Data()
+		{
+			WriteBaseVehicleData();
+			WriteOptionalAxlegearConventionalComponents();
+			WriteEV_ElectricComponents();
+			WriteAdvancedReducingTechnologies();
+			// todo amogoda: missing FCHV components.
+		}
+
+		protected void WriteBaseVehicleData()
         { 
             _additionalFields.Add(
                 new XElement(_tns + XMLNames.MonitoringLicenseNumber, GetPlaceholder(PlaceHolder.VECTO_LICENSE_NUMBER)),
