@@ -640,7 +640,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Bind<IXmlTypeWriter>().To<MrfhevF4PrimaryBusComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_F4_PrimaryBusComponentsType());
 			Bind<IXmlTypeWriter>().To<MrfhevIepcFPrimaryBusComponentsTypeWriter>()
-				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_IEPC_S_PrimaryBusComponentsType());
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_IEPC_F_PrimaryBusComponentsType());
 			Bind<IXmlTypeWriter>().To<MrfpevE2PrimaryBusComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E2_PrimaryBusComponentsType());
 			Bind<IXmlTypeWriter>().To<MrfpevE3PrimaryBusComponentsTypeWriter>()
