@@ -1166,14 +1166,17 @@
 										</xs:complexType>
 									</xs:element>
 								</xs:sequence>
-								<xs:element name="Ranges" minOccurs="2" maxOccurs="2">
-									<xs:complexType>
-										<xs:sequence>
-											<xs:group ref="ElectricRangeSequenceGroup"/>
-										</xs:sequence>
-										<xs:attribute name="lifetime" type="xs:string" use="required"/>
-									</xs:complexType>
-								</xs:element>
+								<xs:choice>
+									<xs:element name="Ranges" minOccurs="2" maxOccurs="2">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:group ref="ElectricRangeSequenceGroup"/>
+											</xs:sequence>
+											<xs:attribute name="lifetime" type="xs:string" use="required"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:group ref="ElectricRangeSequenceGroup"/>
+								</xs:choice>
 								<xs:element name="HydrogenRange" type="DrivingRangeType" minOccurs="0"/>
 								<xs:element name="UtilityFactor" type="xs:double"/>
 							</xs:sequence>
@@ -1301,14 +1304,36 @@
 										</xs:complexType>
 									</xs:element>
 								</xs:sequence>
-								<xs:element name="Ranges" minOccurs="2" maxOccurs="2">
-									<xs:complexType>
-										<xs:sequence>
-											<xs:group ref="ElectricRangeSequenceGroup"/>
-										</xs:sequence>
-										<xs:attribute name="lifetime" type="xs:string" use="required"/>
-									</xs:complexType>
-								</xs:element>
+								<xs:choice>
+									<xs:element name="Ranges" minOccurs="2" maxOccurs="2">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:group ref="ElectricRangeSequenceGroup"/>
+											</xs:sequence>
+											<xs:attribute name="lifetime" type="xs:string" use="required"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:sequence>
+										<xs:annotation>
+											<xs:documentation>Only for compatibility with amdm 2 output</xs:documentation>
+										</xs:annotation>
+										<xs:element name="ActualChargeDepletingRange" type="DrivingRangeType">
+											<xs:annotation>
+												<xs:documentation>II.2.6.7.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="EquivalentAllElectricRange" type="DrivingRangeType">
+											<xs:annotation>
+												<xs:documentation>II.2.6.8.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="ZeroCO2EmissionsRange" type="DrivingRangeType">
+											<xs:annotation>
+												<xs:documentation>II.2.6.9.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:choice>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -1320,7 +1345,7 @@
 		<xs:complexContent>
 			<xs:extension base="AbstractResultSummaryType">
 				<xs:sequence>
-					<xs:element name="Vocational" type="xs:boolean"/>
+					<xs:element name="Vocational" type="xs:boolean" minOccurs="0"/>
 					<xs:choice>
 						<xs:element name="AveragePayload">
 							<xs:annotation>
@@ -1388,7 +1413,7 @@
 		<xs:complexContent>
 			<xs:extension base="AbstractResultSummaryType">
 				<xs:sequence>
-					<xs:element name="Vocational" type="xs:boolean"/>
+					<xs:element name="Vocational" type="xs:boolean" minOccurs="0"/>
 					<xs:choice>
 						<xs:element name="AveragePayload">
 							<xs:annotation>
@@ -1449,14 +1474,36 @@
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
-					<xs:element name="Ranges" minOccurs="2" maxOccurs="2">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:group ref="ElectricRangeSequenceGroup"/>
-							</xs:sequence>
-							<xs:attribute name="lifetime" type="xs:string" use="required"/>
-						</xs:complexType>
-					</xs:element>
+					<xs:choice>
+						<xs:element name="Ranges" minOccurs="2" maxOccurs="2">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:group ref="ElectricRangeSequenceGroup"/>
+								</xs:sequence>
+								<xs:attribute name="lifetime" type="xs:string" use="required"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:sequence>
+							<xs:annotation>
+								<xs:documentation>Only for compatibility with amdm 2 output</xs:documentation>
+							</xs:annotation>
+							<xs:element name="ActualChargeDepletingRange" type="DrivingRangeType">
+								<xs:annotation>
+									<xs:documentation>II.2.6.7.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="EquivalentAllElectricRange" type="DrivingRangeType">
+								<xs:annotation>
+									<xs:documentation>II.2.6.8.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="ZeroCO2EmissionsRange" type="DrivingRangeType">
+								<xs:annotation>
+									<xs:documentation>II.2.6.9.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:choice>
 					<xs:element name="HydrogenRange" type="DrivingRangeType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1467,7 +1514,7 @@
 			<xs:extension base="AbstractResultSummaryType">
 				<xs:choice>
 					<xs:sequence>
-						<xs:element name="Vocational" type="xs:boolean"/>
+						<xs:element name="Vocational" type="xs:boolean" minOccurs="0"/>
 						<xs:choice>
 							<xs:element name="AveragePayload">
 								<xs:annotation>
@@ -1547,7 +1594,7 @@
 		<xs:complexContent>
 			<xs:extension base="AbstractResultSummaryType">
 				<xs:sequence>
-					<xs:element name="Vocational" type="xs:boolean"/>
+					<xs:element name="Vocational" type="xs:boolean" minOccurs="0"/>
 					<xs:choice>
 						<xs:element name="AveragePayload">
 							<xs:annotation>
@@ -1578,7 +1625,7 @@
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
-					<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded">
+					<xs:element name="CO2" type="CO2Type" minOccurs="0" maxOccurs="unbounded">
 						<xs:annotation>
 							<xs:documentation>II.2.6.1, II.2.6.4</xs:documentation>
 						</xs:annotation>
@@ -1600,14 +1647,17 @@
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
-					<xs:element name="Ranges" minOccurs="2" maxOccurs="2">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:group ref="ElectricRangeSequenceGroup"/>
-							</xs:sequence>
-							<xs:attribute name="lifetime" type="xs:string" use="required"/>
-						</xs:complexType>
-					</xs:element>
+					<xs:choice>
+						<xs:element name="Ranges" minOccurs="2" maxOccurs="2">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:group ref="ElectricRangeSequenceGroup"/>
+								</xs:sequence>
+								<xs:attribute name="lifetime" type="xs:string" use="required"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:group ref="ElectricRangeSequenceGroup"/>
+					</xs:choice>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

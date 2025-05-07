@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<VectoMockResults xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cif="urn:tugraz:ivt:VectoAPI:CustomerOutput" xmlns="urn:tugraz:ivt:VectoAPI:CustomerOutput:v1.0" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput file:///W:/VectoCore/VectoCore/Resources/XSD/VectoOutputCustomer.xsd" xmlns:di="http://www.w3.org/2000/09/xmldsig#">
+<VectoMockResults xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cif="urn:tugraz:ivt:VectoAPI:CustomerOutput" xmlns="urn:tugraz:ivt:VectoAPI:CustomerOutput:v1.0" 
+xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput file:///W:/XSD/VectoOutputCustomer.xsd" xmlns:di="http://www.w3.org/2000/09/xmldsig#">
 	<Results>
 		<Status>success</Status>
 		<!-- 
