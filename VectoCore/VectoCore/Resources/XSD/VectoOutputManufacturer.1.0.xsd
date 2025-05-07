@@ -2937,14 +2937,17 @@ Changelog
 										</xs:complexType>
 									</xs:element>
 								</xs:sequence>
-								<xs:element name="Ranges" minOccurs="2" maxOccurs="2">
-									<xs:complexType>
-										<xs:sequence>
-											<xs:group ref="mrf:ElectricRangeSequenceGroup"/>
-										</xs:sequence>
-										<xs:attribute name="lifetime" type="xs:string" use="required"/>
-									</xs:complexType>
-								</xs:element>
+								<xs:choice>
+									<xs:element name="Ranges" minOccurs="2" maxOccurs="2">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:group ref="mrf:ElectricRangeSequenceGroup"/>
+											</xs:sequence>
+											<xs:attribute name="lifetime" type="xs:string" use="required"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:group ref="mrf:ElectricRangeSequenceGroup"/>
+								</xs:choice>
 								<xs:element name="HydrogenRange" type="mrf:DrivingRangeType" minOccurs="0">
 									<xs:annotation>
 										<xs:documentation>I.2.4.3.</xs:documentation>
@@ -2993,14 +2996,17 @@ Changelog
 										</xs:complexType>
 									</xs:element>
 								</xs:sequence>
-								<xs:element name="Ranges" minOccurs="2" maxOccurs="2">
-									<xs:complexType>
-										<xs:sequence>
-											<xs:group ref="mrf:ElectricRangeSequenceGroup"/>
-										</xs:sequence>
-										<xs:attribute name="lifetime" type="xs:string" use="required"/>
-									</xs:complexType>
-								</xs:element>
+								<xs:choice>
+									<xs:element name="Ranges" minOccurs="2" maxOccurs="2">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:group ref="mrf:ElectricRangeSequenceGroup"/>
+											</xs:sequence>
+											<xs:attribute name="lifetime" type="xs:string" use="required"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:group ref="mrf:ElectricRangeSequenceGroup"/>
+								</xs:choice>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
