@@ -144,6 +144,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
                 { OutputType.PEV_E3_PrimaryBusDataType, WritePEV_E3_Data },
                 { OutputType.PEV_E4_LorryDataType, WritePEV_E4_Data },
                 { OutputType.PEV_E4_PrimaryBusDataType, WritePEV_E4_Data },
+                { OutputType.PEV_IEPC_LorryDataType, WritePEV_IEPC_Data },
+                { OutputType.PEV_IEPC_PrimaryBusDataType, WritePEV_IEPC_Data },
                 { OutputType.PEVCompletedBusDataType, WriteCompleted_Data },
 				{ OutputType.FCHV_F2_LorryDataType, WriteFCHV_F2_Data },
 				{ OutputType.FCHV_F2_PrimaryBusDataType, WriteFCHV_F2_Data },
