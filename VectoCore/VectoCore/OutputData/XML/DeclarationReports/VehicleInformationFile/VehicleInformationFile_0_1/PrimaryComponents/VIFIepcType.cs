@@ -204,12 +204,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				var coolantTempInLet = iepcData.Rows[r][XMLNames.Conditioning_CoolantTempInlet];
 				var coolingPower = iepcData.Rows[r][XMLNames.Conditioning_CoolingPower];
 
-				entries.Add(new XElement(_vif + XMLNames.Conditioning_Entry, 
+				entries.Add(new XElement(_vif10 + XMLNames.Conditioning_Entry, 
 					new XAttribute(XMLNames.Conditioning_CoolantTempInlet, coolantTempInLet),
 					new XAttribute(XMLNames.Conditioning_CoolingPower, coolingPower)));
 			}
 			
-			return new XElement(_vif + XMLNames.Conditioning, entries);
+			return new XElement(_vif10 + XMLNames.Conditioning, entries);
 		}
 	}
 }
