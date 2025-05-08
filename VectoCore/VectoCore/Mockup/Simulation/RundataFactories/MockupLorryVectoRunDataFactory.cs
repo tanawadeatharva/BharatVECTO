@@ -16,6 +16,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 
 namespace TUGraz.VectoMockup.Simulation.RundataFactories
 {
@@ -153,26 +154,49 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                     Mission = mission,
                     SimulationType = SimulationType.DistanceCycle,
                     VehicleData = CreateMockupVehicleData(vehicle),
+                    DriverData = CreateMockupDriverData(vehicle),
                     EngineData = CreateMockupEngineData(vehicle, modeIdx),
                     GearboxData = CreateMockupGearboxData(vehicle),
                     AxleGearData = CreateMockupAxleGearData(vehicle),
-
+                    BatteryData = new VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery.BatterySystemData(),
                     JobType = InputDataProvider.JobInputData.JobType,
 
+                };
+
+                runData.BatteryData.Batteries = new List<Tuple<int, BatteryData>>() {
+                    Tuple.Create(1, new BatteryData() {
+                        BatteryId = 0,
+                        Capacity = 7.5.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(),
+                        ChargeDepletingBattery = true,
+                        MinSOC = 0.2,
+                        MaxSOC = 0.8,
+                        SOCMap = BatterySOCReader.Create("SoC, V\n0, 600\n100, 650\n".ToStream()),
+                        InternalResistance = BatteryInternalResistanceReader.Create("SoC, Ri-2, Ri-10, Ri-20\n0, 20, 20, 20\n100, 20, 20, 20\n".ToStream(), true),
+                        MaxCurrent = BatteryMaxCurrentReader.Create("SoC, I_charge, I_discharge\n0, 300, 300\n100, 500, 500\n".ToStream())
+
+                    })
                 };
             }
 
             runData.InputData = InputDataProvider;
 
-
             return runData;
-
-
-
         }
 
 
+        public static DriverData CreateMockupDriverData(IVehicleDeclarationInputData vehicle)
+        {
+            var uf = DeclarationData.Driver.GetEngineStopStartLorry().UtilityFactor;
 
+            return new DriverData
+            {
+                EngineStopStart = new DriverData.EngineStopStartData()
+                {
+                    UtilityFactorDriving = uf,
+                    UtilityFactorStandstill = uf
+                }
+            };
+        }
 
         protected override void Initialize()
         {
