@@ -742,7 +742,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
 			{
-				if (Vehicle.ArchitectureID != ArchitectureID.E2 && Vehicle.VehicleType == FuelCellJobType)
+				if (Vehicle.ArchitectureID != ArchitectureID.F2 && Vehicle.VehicleType == FuelCellJobType)
 				{
 					throw new ArgumentException(nameof(Vehicle));
 				}
