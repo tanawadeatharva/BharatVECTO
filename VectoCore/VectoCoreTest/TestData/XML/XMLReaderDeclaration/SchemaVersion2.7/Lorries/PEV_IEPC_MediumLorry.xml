@@ -211,6 +211,8 @@
 							</di:Reference>
 						</v2.3:Signature>
 					</REESS>
+					<SOCmin>20.0</SOCmin>
+					<SOCmax>80.0</SOCmax>
 				</Battery>
 			</ElectricEnergyStorage>
 			<Retarder>

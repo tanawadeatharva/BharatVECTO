@@ -81,10 +81,10 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 					return VectoRunDataConventionalTruckNonExempted();
 				case VectoSimulationJobType.BatteryElectricVehicle:
                 case VectoSimulationJobType.IEPC_E:
-					return VectoRunDataBatteryElectricVehicle();
-				case VectoSimulationJobType.EngineOnlySimulation:
-				case VectoSimulationJobType.FCHV:
+                case VectoSimulationJobType.FCHV:
                 case VectoSimulationJobType.FCHV_IEPC:
+                    return VectoRunDataBatteryElectricVehicle();
+				case VectoSimulationJobType.EngineOnlySimulation:
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
@@ -200,8 +200,12 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 
         protected override void Initialize()
         {
-            _segment = DeclarationData.GetTruckSegment(InputDataProvider.JobInputData.Vehicle).Segment;
-
+            _segment = DeclarationData.GetTruckSegment(
+                InputDataProvider.JobInputData.Vehicle, 
+                batteryElectric: 
+                    InputDataProvider.JobInputData.Vehicle.ArchitectureID.IsBatteryElectricVehicle() ||
+                    InputDataProvider.JobInputData.Vehicle.ArchitectureID.IsFuelCellVehicle()
+            ).Segment;
         }
 
         #endregion

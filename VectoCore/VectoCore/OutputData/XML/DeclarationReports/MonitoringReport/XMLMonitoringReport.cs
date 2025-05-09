@@ -51,7 +51,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
         protected static readonly XNamespace _tns = XMLDefinitions.MONITORING_NAMESPACE_URI;
         
         protected const string MRF_OUTPUT_PREFIX = "m";
-        protected const string MRF_INPUT_PREFIX = "mrf";
         
         protected readonly IXMLManufacturerReport _manufacturerReport;
 
@@ -91,8 +90,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
 			FCHV_F3_PrimaryBusDataType,
 			FCHV_F4_LorryDataType,
 			FCHV_F4_PrimaryBusDataType,
-			FCHV_IEPC_LorryDataType,
-			FCHV_IEPC_PrimaryBusDataType,
+			FCHV_IEPC_F_LorryDataType,
+			FCHV_IEPC_F_PrimaryBusDataType,
 			FCHVCompletedBusDataType,
 			ExemptedLorryDataType,
             ExemptedPrimaryBusDataType,
@@ -153,8 +152,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
 				{ OutputType.FCHV_F3_PrimaryBusDataType, WriteFCHV_F3_Data },
 				{ OutputType.FCHV_F4_LorryDataType, WriteFCHV_F4_Data },
 				{ OutputType.FCHV_F4_PrimaryBusDataType, WriteFCHV_F4_Data },
-				{ OutputType.FCHV_IEPC_LorryDataType, WritePEV_IEPC_Data },
-                { OutputType.FCHV_IEPC_PrimaryBusDataType, WritePEV_IEPC_Data },
+				{ OutputType.FCHV_IEPC_F_LorryDataType, WritePEV_IEPC_Data },
+                { OutputType.FCHV_IEPC_F_PrimaryBusDataType, WritePEV_IEPC_Data },
                 { OutputType.FCHVCompletedBusDataType, WriteCompleted_Data },
                 { OutputType.ExemptedLorryDataType, WriteExempted_Data },
                 { OutputType.ExemptedPrimaryBusDataType, WriteExempted_Data },
@@ -483,7 +482,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
                         XMLDeclarationNamespaces.Xsi + XMLNames.SchemaLocation,
                         $"{XMLDefinitions.MONITORING_NAMESPACE} {AbstractXMLWriter.SchemaLocationBaseUrl}" +
                         $"{XMLDefinitions.GetSchemaFilename(XmlDocumentType.MonitoringReport)}"),
-                    new XAttribute(XNamespace.Xmlns + MRF_OUTPUT_PREFIX, XMLDefinitions.DECLARATION_OUTPUT_NAMESPACE_URI_V09)
+                    new XAttribute(XNamespace.Xmlns + MRF_OUTPUT_PREFIX, XMLDefinitions.DECLARATION_OUTPUT_NAMESPACE_URI)
                 )
             );
         }
@@ -501,16 +500,20 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
         }
 
         protected void DetectOutputType()
-        { 
-            XmlNamespaceManager nsmgr = new XmlNamespaceManager(new NameTable());
-            nsmgr.AddNamespace(MRF_INPUT_PREFIX, XMLDefinitions.DECLARATION_OUTPUT);
+        {
+            var mrfData = _manufacturerReport.Report.XPathSelectElement(XMLHelper.QueryLocalName("Data"));
+            string dataType = mrfData.Attributes().First(x => x.Name.LocalName == XMLDefinitions.XSI_TYPE_LOCALNAME).Value;
 
-            var xpathData = $"//{MRF_INPUT_PREFIX}:{XMLNames.MRFDataNode}";
-            var mrfData = _manufacturerReport.Report.XPathSelectElement(xpathData, nsmgr);
-            
-            string type = mrfData.Attributes().First(x => x.Name.LocalName == XMLDefinitions.XSI_TYPE_LOCALNAME).Value;
-
-            _outputType = type.Substring(0, type.Length - XMLNames.MRFDataTypeSuffix.Length) + XMLNames.MonitoringDataTypeSuffix;
+            if (dataType.Contains("PEV-Ex-IEPC") || dataType.Contains("FCHV"))
+            {
+                var mrfComponents = _manufacturerReport.Report.XPathSelectElement(XMLHelper.QueryLocalName("Data", "Components"));
+                string componentsType = mrfComponents.Attributes().First(x => x.Name.LocalName == XMLDefinitions.XSI_TYPE_LOCALNAME).Value;
+                _outputType = componentsType.Replace("Components", "Data");
+            }
+            else
+            {
+                _outputType = dataType.Substring(0, dataType.Length - XMLNames.MRFDataTypeSuffix.Length) + XMLNames.MonitoringDataTypeSuffix;
+            }
         }
 
         protected static string GetPlaceholder(string item)

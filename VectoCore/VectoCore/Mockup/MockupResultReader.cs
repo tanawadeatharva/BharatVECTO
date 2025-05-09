@@ -127,7 +127,7 @@ namespace TUGraz.VectoMockup
 					return ovc ? "OVC-HEV" : "non-OVC-HEV";
 				}
 
-				if (jobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E)) {
+				if (jobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.FCHV, VectoSimulationJobType.FCHV_IEPC)) {
 					return "PEV";
 				}
 

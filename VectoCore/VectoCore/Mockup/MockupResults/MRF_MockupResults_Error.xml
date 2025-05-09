@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<VectoMockResults xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" 
+<VectoMockResults xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v1.0" 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9 V:\VectoCore\VectoCore\Resources\XSD\VectoOutputManufacturer.0.9.xsd">
+xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v1.0 V:\VectoCore\VectoCore\Resources\XSD\VectoOutputManufacturer.1.0.xsd">
 	<Results>
 		<Status>success</Status>
 		<!-- All powertrain architectures and vehicle types  -->
